@@ -1,47 +1,49 @@
-Return-Path: <kweihmann@outlook.com>
+Return-Path: <quentin.schulz@cherry.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5136CF9C69
-	for <webhook@archiver.kernel.org>; Mon, 23 Sep 2024 14:36:04 +0000 (UTC)
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (EUR05-VI1-obe.outbound.protection.outlook.com [40.92.90.36])
- by mx.groups.io with SMTP id smtpd.web10.38121.1727102157972388387
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60C7CF9C6F
+	for <webhook@archiver.kernel.org>; Mon, 23 Sep 2024 14:58:04 +0000 (UTC)
+Received: from AM0PR83CU005.outbound.protection.outlook.com (AM0PR83CU005.outbound.protection.outlook.com [52.101.69.16])
+ by mx.groups.io with SMTP id smtpd.web10.38716.1727103475846453025
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 23 Sep 2024 07:35:58 -0700
+ Mon, 23 Sep 2024 07:57:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@outlook.com header.s=selector1 header.b=FAZgfVu0;
- spf=pass (domain: outlook.com, ip: 40.92.90.36, mailfrom: kweihmann@outlook.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@cherry.de header.s=selector1 header.b=oGJx/xCN;
+ spf=pass (domain: cherry.de, ip: 52.101.69.16, mailfrom: quentin.schulz@cherry.de)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sfkZHLhMODiPcT9XEfiYMFCLQPVrjEhbbdp1rlc5wjGUBUQqAkx16PpWZxlq1twPn7SKlbrGv5GP+3AQVFlnbJMrvxzBmnVKo4aroePm8COcNzefZt6YfeTyPX145yg+DpiDm2lRY410SqZV04ojImMsFReNoyv0pAdDWf09vKiIOZmiqLsajWC7jWHf1CIabmNULekz1Wr883DrLfpm51NcvjCsM5C5mOd1PBqCm42yKWfFYBzZkgSadLuNkkbdrsce66j00o4+x767mISjriAiGq4S4atNCFaEFj59YuIYvDlJGMhA/PPeWFgvS8JWDcj3u5hmuzqlez8azkuxhw==
+ b=YZ0HPh4bqsY9JUahiPR/fjEVBrxrt0tknnlLtTqYgJFMpfwDVKFB9wi/6EqOL6IArm55Cwwm3st15wZZg1mzf9ue09wIGYqJIF2yo9GgkrrCGj1LS2pLyrgG2aGU1TVbG0Gewcjz9/SXxtwXBqaHDm/WwBn7KGjoWsDQmQI7wzudEj4B294twtVErQLzSVHESM2PovFvs1FaUUTTYD/7F1XGUtU8iyw/wwpw7WpL1Wv543ui7ZSICcFV5VETMUhyOu5+yrgBJMYHDLCULsjwBM08iw49My/GJyrvyOLcajixGPN4jbmabGY8rt0KVuTPc3i0NEawNFAH36+RtSqnMA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LE+XHjTuJP7cPSNiqywbsWfJS9LTvzvLz3CY8YSvelQ=;
- b=IlLZoVKThVK84wyIlh1i+jrhUYrCyk6b192ghNXFg5BmWc3MFrGGWjasPLZ2ERQOakfLViUfb/zGcuMvE6v+7HdVVEQHT97WiIPvgr2WCf4mHNvdAScda4qd+02JTQ1QAZmTqjvo/SO9sDovtxKKN8zn/TVl/FXxjcwA7HXDHRweP6HgINMJar5PpofYxeUD62A1JDqkHo1MzvHpSdvZGlLlIafcFAHrw4TCHkwi8loa3p5YCWuOsFFTwi40auLURceZZWj1SpeOjhWTgYLSv98WUWRmzT02PuR7T1DFwptRWLr00cnCOVxNDpJ2285jnm0381dlV8G5c9+PEEkCUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ bh=UKpO8um3m+y0kz17iqJx1LHFHjh5wrevDvE740R+758=;
+ b=zPirchsO8/gFAmDLpNzdMUoQbimvfhobV+d4vWcjSddHhJIO2j3tGXNru18h0RiOrk0zFE+62kdpD0XE3VF4bcfD2MJYyrz9PKADcQYqwGOjynb9E7+8FOHu1M5DcJkTYRVr5bdO9dXtKapb6OsgNs50byKQLbvmsXsOx7sdMxSH/+rQGw9luPYYDJrl6cwg1Is4S5yMn7+EUS/IOP+7rawiNjYTobu9JX7leGGzsrJ6bSNQhhSHpE+9dv2t42jNupMAA+HCgHFlgIGMpWGv5bqdlQdolf4qts0oV2UnZmiXXQ4YisEHmI6d7AH17i7s8zDyVgojfgLiuoiYkhgitw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LE+XHjTuJP7cPSNiqywbsWfJS9LTvzvLz3CY8YSvelQ=;
- b=FAZgfVu0dMn4lMoJOXrfQQgd6qjqCFbENn99CCoafB6mQJJQtxB2cjdAxS2vKOoncp9SW9G4LNxZw7NJv47dADe72JBkMr0XWmgiqvoAfWzO5MUs2phhMlMB3J108gT5lRHVm4aKYiSUKeaG2076uuYOKhfO8SkQibqcYYw5VcCARuY3IOYPMymxCLkOrlSPmmsz+gCd+3L239UpYLFpkIZrgCLQKRbko9WOMzERtMtv5hzGftVVldwFtQLQDBm7WkGgx6lxoCrlpKfv2LIyFRaRbr2woaY6VyVv6Oy7hHv0K8ydIy26CMrSYGewFppDb9qWtjeX2xr6vkjcWS63Lg==
-Received: from GV1PR07MB9120.eurprd07.prod.outlook.com (2603:10a6:150:80::7)
- by PAXPR07MB7821.eurprd07.prod.outlook.com (2603:10a6:102:13c::11) with
+ bh=UKpO8um3m+y0kz17iqJx1LHFHjh5wrevDvE740R+758=;
+ b=oGJx/xCNOJotDzE3GkR2kN5GhYBrifJ0b7poGurOS7F9f93U1Y5+h6D43ZhGIpOlUXzq/YZ7h3FBV+bIFWHuRgQ8JbZdBh61nCKmVNgkhDQIllZjEh0+G+YQtEu2ocqneoo200tbnUBYt6w+d2I2yfD04Qs2jCSETfjq+Xfhfhk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from AM9PR04MB8906.eurprd04.prod.outlook.com (2603:10a6:20b:409::9)
+ by AM9PR04MB8422.eurprd04.prod.outlook.com (2603:10a6:20b:3ea::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.25; Mon, 23 Sep
- 2024 14:35:54 +0000
-Received: from GV1PR07MB9120.eurprd07.prod.outlook.com
- ([fe80::a630:7019:63e4:a48a]) by GV1PR07MB9120.eurprd07.prod.outlook.com
- ([fe80::a630:7019:63e4:a48a%6]) with mapi id 15.20.7982.022; Mon, 23 Sep 2024
- 14:35:54 +0000
-Message-ID: 
- <GV1PR07MB912070578293398A70DD8198A86F2@GV1PR07MB9120.eurprd07.prod.outlook.com>
-Date: Mon, 23 Sep 2024 16:35:52 +0200
+ 2024 14:57:44 +0000
+Received: from AM9PR04MB8906.eurprd04.prod.outlook.com
+ ([fe80::d379:5378:b1:cea]) by AM9PR04MB8906.eurprd04.prod.outlook.com
+ ([fe80::d379:5378:b1:cea%2]) with mapi id 15.20.7918.024; Mon, 23 Sep 2024
+ 14:57:44 +0000
+Message-ID: <f8bb79e4-b752-4561-976a-a03c5c2f2039@cherry.de>
+Date: Mon, 23 Sep 2024 16:57:43 +0200
 User-Agent: Mozilla Thunderbird
 Subject: Re: [bitbake-devel] [PATCH 2/3] bb/data_smart: fix override syntax
  warning
-To: Quentin Schulz <quentin.schulz@cherry.de>
-Cc: bitbake-devel@lists.openembedded.org, richard.purdie@linuxfoundation.org
+To: Konrad Weihmann <kweihmann@outlook.com>
+CC: bitbake-devel@lists.openembedded.org, richard.purdie@linuxfoundation.org
 References: <GV1PR07MB91206C44D7FEA544DE6D6374A86D2@GV1PR07MB9120.eurprd07.prod.outlook.com>
  <1497c21f2add634469d205a55a155324f0e0bfab.camel@linuxfoundation.org>
  <DU0PR07MB9116AA51410D7EBC4F8982CAA86E2@DU0PR07MB9116.eurprd07.prod.outlook.com>
@@ -49,158 +51,203 @@ References: <GV1PR07MB91206C44D7FEA544DE6D6374A86D2@GV1PR07MB9120.eurprd07.prod.
  <GV1PR07MB91204368C096EDEF0107B58CA86F2@GV1PR07MB9120.eurprd07.prod.outlook.com>
  <06a9081a919ea08fdf0c6a43f82ac695a25f17d7.camel@linuxfoundation.org>
  <b69d0035-b4a2-420d-8ab3-d9df94f119d3@cherry.de>
+ <GV1PR07MB912070578293398A70DD8198A86F2@GV1PR07MB9120.eurprd07.prod.outlook.com>
 Content-Language: en-US
-From: Konrad Weihmann <kweihmann@outlook.com>
-In-Reply-To: <b69d0035-b4a2-420d-8ab3-d9df94f119d3@cherry.de>
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <GV1PR07MB912070578293398A70DD8198A86F2@GV1PR07MB9120.eurprd07.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BE1P281CA0103.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:b10:79::20) To GV1PR07MB9120.eurprd07.prod.outlook.com
- (2603:10a6:150:80::7)
-X-Microsoft-Original-Message-ID: 
- <c43bf344-76fe-4ff8-b7f6-97fd5205ed20@outlook.com>
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: FR3P281CA0106.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a3::16) To AM9PR04MB8906.eurprd04.prod.outlook.com
+ (2603:10a6:20b:409::9)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV1PR07MB9120:EE_|PAXPR07MB7821:EE_
-X-MS-Office365-Filtering-Correlation-Id: a21a1884-c3a1-43c1-0462-08dcdbdd0749
-X-Microsoft-Antispam: 
-	BCL:0;ARA:14566002|5072599009|6090799003|461199028|8060799006|19110799003|7092599003|15080799006|3412199025|440099028;
+X-MS-TrafficTypeDiagnostic: AM9PR04MB8906:EE_|AM9PR04MB8422:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9cb095fb-2337-40ff-759e-08dcdbe01458
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info: 
-	1dvDW8xmOTdY58V5n6uKMryQ3EITsPGulI+bZAeLSwyPqF4HnDCf5U3lRXQ3X9lvqYXBT4A5b5lUlQUqJSZyDrC83KWbsSGxqf11mm+IMtcjjjy0NQxz/2EmxOzWxbDE0zRWkogUiwEKG/Dtj/usHDvTnifKqGIiVZ4YujlVkl4+kZizo/8KtpFBfs9DoqTAyA4DJWaqB32qvbgWkH8OZTOhMTKokXJIQykyIRmRNjR8gBX+qDdPojj2R8aHP004ZibLaG7/a8qKBg4FluJbWrqvgT1+OVO9NZmqxJ43ZiNkGKtVS272ptcJkY4qMz9y8/AQ8uYUAmyC1zBXieVasKD0TQTNMAzuvW0o+aXNl1CCAC6G7zkN8GyLHR2UyG+q0j+wNjRBrdhJBz/s8Zau1FoGcAZBaRY3eZpj4H2rHGRJv78G8ZCMKL2oIaiI+NMDGNKqS5/Psa7O0KV++1imusQFVv4Daz++uprEFTrZKlbIEP7ew6BcQ+RnFlH5kGCR5ytIX5p0e8KDoXZZhPhnMlB1smuxT/O/UyKdK53if673aE3b+3oqCRQnd8MJcib/d3z9W3vunsV5abMQK3rKlPcTyLYga51gLVOxqRTtrfjk/OJuYFxkzYXL4XAW3XPWspj9/uhEJjcr+bqaC0RHBGVyPt/zyrtXZJQ+el3mt4I/cfjTRh+8ovJ2VLOR+y9fL/gc3ex4kx1uuvG4vM/NCgZ59x3ITW+zcvx4z+oGfTwHh09MjjsEGr4f+u1OzA9+tRlY4Yz/5LDvbAIOhj51Fw==
+	=?us-ascii?Q?Q3o+kUizq+PZ4JFke4hMPhlJTZx91LwSkhqhVNpN1uODLNYSy5uBqFsOj8oH?=
+ =?us-ascii?Q?Wxx+Gsx/HhymCUiOsrqWwmDfhL84eJdyLwC+59sInury0A66V094UsrGgac6?=
+ =?us-ascii?Q?9KI8VOtV/VdOsdZo5jIFi/p446jXpYnEyrCctw/KCKgTXXIgentDaTxrWOKI?=
+ =?us-ascii?Q?fPDspDQ7rqA6gs+qlIR8q1YRO4j6X6e/bNUpbdvJ3H9BokLPwmkH4afVASqw?=
+ =?us-ascii?Q?2tQOlnaCg1WjGc837q9jItP2aXTFscDBgP1pq4m3pXmPuOf0t7XpppeB8Y2M?=
+ =?us-ascii?Q?YtK/UcUakquhzzO8Wnmww8paS2q3xHS57+VNg48yrikXns6AmMMopdmwLQdL?=
+ =?us-ascii?Q?PuYAt5QKmKk2X0PdtUBk/N8IukfH4jenqnI7h9Tn+p6Fqg8so6+vG6AXiVT+?=
+ =?us-ascii?Q?3Rru5WvGH85uL0842BkU+AgdevGajMlzke1/u8AevxLpeAd4RA/BCnjySXVa?=
+ =?us-ascii?Q?8qnDmmKxmDZI8Pnvr5cg2EKf8ypTt6bLdg/NR+yb8BiKsmY7iCTwx4Wa+A3+?=
+ =?us-ascii?Q?np2PQGXH7YZr9JYGTgw8dlSmdf/XYOW0FNWipblFzJHc7bdCmM3OtQipiZ2a?=
+ =?us-ascii?Q?bC0b/pW46CePnbKIhaxZrWnNOkdxhYzwodcerN9rdO5YTtaAnoOGSpwLS7AU?=
+ =?us-ascii?Q?4BzlxtDurxPLWU2qj49Z5l22wi+yycDVcdx7qWe1AYywaqwtKKTsfFdeDRUM?=
+ =?us-ascii?Q?Cu9kHSIssXzX3tRuXynAO8w7HwrpWFO7GSSSMKLFH50aOY0iFGD+VhrwQEJK?=
+ =?us-ascii?Q?uLTZh3NuD/g7wvZBe04ayDWNFOEX413Vla1cTxfoE6dSdopOx+nqUXbsUCOh?=
+ =?us-ascii?Q?Ue1h5I3dWi2nnHyAnZTnlRdDF4OK34sjHanmltOq0dIew3wGL32l6v8XtXwI?=
+ =?us-ascii?Q?REU6vUn83a2k1EH0be85nboiZJA/cosppKtLsU4gCwaCsR5tnfB1Ez/K93QO?=
+ =?us-ascii?Q?N1hMuiyUYHQjO5h08PRBhaIjA6vwCZzbMQEv4iPKUfmtgQsVgHR3ZOnffT0k?=
+ =?us-ascii?Q?GyH2FM786om6SEvocGGqGFuCerHViAUVWd/QyvR+9L4USI2Ga+jCYY05KHmI?=
+ =?us-ascii?Q?lII0juKQVCbF50kExgx+PMDFrOnGruuX9On2XVBA/0JTlweQ3t/fwF7KUeaU?=
+ =?us-ascii?Q?idIUuZJHZiT/z0wUkRjiqu1r3gULToAK2eTTHfigquBmpQCo/z+rSvEl9xso?=
+ =?us-ascii?Q?y44PXVERTLUJItPPi21CHMhU+qs4X7+4Rby7mD4csTVuHIv90v+e+g9982Nn?=
+ =?us-ascii?Q?SbZbM6SQys3/NqYlgFWPTRswgfSvdUOtHSvjG8ToXj/NCPqj4ZVpHinf4L85?=
+ =?us-ascii?Q?qvglP7KvTUjSokiku/Gbni52rCs7kZULzW+zHF39xcPX9A=3D=3D?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8906.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?ejBIY3NWMm1Yd0VDRlZaMGYrWTdwK1owZFNTcE05TnRPZkk2UmFkdzRhcERj?=
- =?utf-8?B?NEVOekVVckFsSWdlTVFRS0UrT1RqL2U0dGkzQ1BZSndpWER1L2x3aTJGWUJk?=
- =?utf-8?B?UGd5YjR1eE5FSEh3UlZOU2RYbWM5R2hXRm8wNGxYcmhoVzdYT2dmNEphQVZk?=
- =?utf-8?B?NjRnR1JjS2ptZDdiQ0wyYUxNNHJaR2h4dXJwUnBSVmZLaDRLb2N1blNjcDJ6?=
- =?utf-8?B?WXNhbmxQSGh4UForUGk4VGJydm80dEdrSDJjay9JT2lzWkJXWnJXVHdRSEtl?=
- =?utf-8?B?QXIrNGU2bzB5VkRQSU0wQmJReFpKUHlHUndDMy9JbXltVVlWTDErUVc1cWhZ?=
- =?utf-8?B?Zy9nRzBVQk1NaEdCRisranA2QTYwQWRjY1RxZytObXU3d0x6TTFYZHU0bjZr?=
- =?utf-8?B?LzJOS1g4aktjOE5JckhwWWNQSHdRd1hkaFJwMWkyWHUxYjJsTHZsU2xMdnBx?=
- =?utf-8?B?YUdOb0tva1g2TUNjRXZ0QVE4aVYrR0dVSzdCZ2V5VGx2aEt0eXZiZEJGWDRh?=
- =?utf-8?B?SS9Pd0xCUjgvNmcyTTdlS2d5aWM0Wkd5T2lqYW9UMUZtbU94dVJ0OGtSVFM1?=
- =?utf-8?B?RTM3bktMQ0N5anRualkwNGJoSHpwL2dYamFtNDBSaGxWN3N3QlRCVDNKTDdU?=
- =?utf-8?B?OXZFQW14U3ZwQ2x0Y2RWR1RIb2ZBU0pHZVVWZmVJSTNJL1ptdWpJWlU3WmIw?=
- =?utf-8?B?L3BBeTkwc0dWNFRXeHE1ck9ZR1g4Q21taUNMenRCQ3F1aFZtaDFTQk0xbElB?=
- =?utf-8?B?RGovcm9SeWMzOXcxU25Dakg2MUR2UWZwSC9QeFVqblN1V0M0c2loL2srVEx2?=
- =?utf-8?B?dVM4N253d050V3RqcmRGcWIvWDRFcktsNzJtOVAzcTVxTy84cWZNU2VyMGVt?=
- =?utf-8?B?SFg5ZHprUENvc1dXM3dYNUp2MEF0L281Wm1jWXQwOHBIVjJTWEYvaDU1WlhK?=
- =?utf-8?B?a2x5TzEyR1lzQjhPTi84dklZeE5VMktuY3VpU3dVNkRtL0Y5U1hLa2s4dXJU?=
- =?utf-8?B?OUZtRjJteCtiRFhUamdhN2tlRTEzZ24rL0gxQlRyK0szNStRWDlPb0RFQmFM?=
- =?utf-8?B?QUdrcjFXU05jMkZRRFN4NVJ2bjdDQmVGNFFnRTVKN1RLUURaQ2xLVlVYdzkz?=
- =?utf-8?B?SnFwRmd2TWppaTFnVzZ1dnJmT3UzbkxNMTdCZmIzVXZNa0IwL3FyVWlNRDBa?=
- =?utf-8?B?NlN3T2sycmVHcHZhekdzQ1dPcitRYlpIUXl2cXRDOHVGYWIwYURySHgzdm9R?=
- =?utf-8?B?c2VGSjIrdWhUQ2tJR1hKWXEyamF1cDMrZTB5Q2tERlJqcUtScWZEbi8wNkZX?=
- =?utf-8?B?dEg0NXhKY1hKZ0w2RUJLZlhoSHdCcU1mTWFwa25PTUI5NzFvaE9yZFVFcER4?=
- =?utf-8?B?aGNIM2VuYlJYVmdpVTNWcERkdm9tR2ZCbndBUDVNYzE4VnUxdktlaEF6cWpW?=
- =?utf-8?B?dnpKLzdBU3dwZW1hdzQzbExJLzVkMzNsVCtYaFFsMkc2MTB0cHFmbXJOUnZ4?=
- =?utf-8?B?SXRNeEdaQlQrTXRwc3FIdnE5MitxVzhlbWQxMDYzWDBpeTBNVk1rVkNnVFlv?=
- =?utf-8?B?ditoaE1EZzBqRFdDWllrd0I3NUtkbFFpU3hzMlhXNzNFNDVhQ1Vvei8yOWMr?=
- =?utf-8?B?USthZWJ1TzduQ1drbFFqQk9jM1BvdjhoVW9ROWFFVGFmbFVpYnMrZXhhd3RN?=
- =?utf-8?B?NDZ6dUF1MjBua3MyeW1xYll5OEgydE1lTS95S1lrb0ZON0FjUEU5NHNwOTR3?=
- =?utf-8?Q?JCDiA2II9KxOtdQbrw=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a21a1884-c3a1-43c1-0462-08dcdbdd0749
-X-MS-Exchange-CrossTenant-AuthSource: GV1PR07MB9120.eurprd07.prod.outlook.com
+	=?us-ascii?Q?V52Yubn3Xl2AZt2V9lc89BkE5pzLx8ByBi2QuD+HA1YuvMgeKbnLjkM2SL9p?=
+ =?us-ascii?Q?8vs0uagpF4ACVZGZb46n9GKyKQYCDnMrnT/fw482u535Ke/ldrhNrN8qrNju?=
+ =?us-ascii?Q?d6AInd8B8zw11KqTMtDrsWEjS3Lm36IHT38tfZwUY07xZ+h5/irMo6pM7t6Z?=
+ =?us-ascii?Q?Sj6bysMhBq0LcDbmvA4xcuQ0QrpgzCJZEW9OKflD0isLDnnL/gU9cm+C56NK?=
+ =?us-ascii?Q?+MH02MADBHC50vND28CheTz55tlE+zXa4XN1EslCbIktgB3BuOzvKWdjSz2A?=
+ =?us-ascii?Q?fkDOQwR2GcFQFwGA5jhMMsTfRhJVEyEvHNcyplM074cN86q8HhEFmrTyNiyg?=
+ =?us-ascii?Q?bckkCIIdk9zk70IIQ0OkbyIX0Yqc/0htI6OdGGVIgOZc29rK4Po0qhJLv0y5?=
+ =?us-ascii?Q?/Ko6u7AYpD4UjYaLqG9GeLLep3owTW6AqE9af5dCeNOZNdB/pPzS+DJ0VA6P?=
+ =?us-ascii?Q?Xe+810Qz3pQkRC/fbQqj8GGNwG0wgNVMJLK7m+rtlKNhvJMee5JzyIgMBJio?=
+ =?us-ascii?Q?o1ZAbQ/rVESfS45jFcY9z6XSP5hx2cAV5RPVtdw76NCa2WO9ukpV8E+Q3V3n?=
+ =?us-ascii?Q?wEzKEpEsmgqEnxb4ozniaspb1PMiJopEUu61nLWtcM1Cb0i3v5GsnvQXD1z0?=
+ =?us-ascii?Q?fs4VLa4sWAr3Y5w+7vZFu9pKlZYL5KKtVk772hFkXGrM3RfyDILRlJzEKrdx?=
+ =?us-ascii?Q?2Wvn4Ghqd0hCGOhf6esCA16o0Lfz6GCtkpqmpt+wd92GWLqnW17ubIL1EV16?=
+ =?us-ascii?Q?2PnLzSe0JL5RThcouRWFvUvM3EZcCq2BmU4xFiLDw6pU9sNT12Gfj+Vqn6Zr?=
+ =?us-ascii?Q?3G35S8vzEGsghWmcKh/29hNcBukDoWsrQtxck7J86NFq0eFFYH3ojt0CZzdj?=
+ =?us-ascii?Q?beHSYw6erQytvGpIUkb6BTGUeT2ZaalUdl8W5qvsA8GX7RqAaZJOKSgm9Naq?=
+ =?us-ascii?Q?ixv9vCzg4j+fcTs7CcuxYRAILrfOeX+oKp1abBe369UW2rbyizXXhK/PVZJd?=
+ =?us-ascii?Q?3YHwV51vfyPouWNtB5Vn2wfravnuCGwuAfMQCKB78XBRxGTF1xTWn5XWrPwT?=
+ =?us-ascii?Q?B8CTZZqgxkhBpTBYAVCGG9wuOlxvcBddA3G3/rHcJkraNs/JwyUD2m0Ry7Wh?=
+ =?us-ascii?Q?qvwLPSszzIxtzsFeJ7CDXfmVq6zM7rMCA4+QNpTLmh3JB0fel9j2sZgHKfdR?=
+ =?us-ascii?Q?QSvtTbalsaSYdKg26zyQm0ndCMynqNknFEudIQkpbWHA6eZtbnL7ayJQ5Skv?=
+ =?us-ascii?Q?XmZF139rkypLRLU/r3HsnP18vHH2qmX+36zwWCm6W3tRFDHGHo/1nm1Izt9Y?=
+ =?us-ascii?Q?3YkoZ3Uicv2wn6um9x/SmJjme36+xBWLTfkigoZyxKRmMXSyUIY6cS6GQNFh?=
+ =?us-ascii?Q?9oz43yvruysTh/gP+61OarVdhGiTAKVeJqFnKh4xNXel/+Fo+9BnPYZrh8sf?=
+ =?us-ascii?Q?O5eHPgIUUCuYSHAgBI9EoyaytvgIW7P7tAEB1qLoh4AKlKLroCw5eJUXD7Tm?=
+ =?us-ascii?Q?gC1S1X51WcBABtItTiiceKyb30x1GU8m1azXB+B4+xGCWIaOJQephYuyOh3t?=
+ =?us-ascii?Q?0vYQYPh/m2nJi1Y9m0BN1p77rtQpeYNn8I1aEASqWM42bk5MNg+7doK9gVGb?=
+ =?us-ascii?Q?sw=3D=3D?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9cb095fb-2337-40ff-759e-08dcdbe01458
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8906.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2024 14:35:53.8282
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2024 14:57:44.1848
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR07MB7821
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: f5D+hiE0h0//bCfnvvLOAzdkcrgVSA98knNm3F+oLO8QwrSo/OQdcIA/Avixz/DqprU8FF0fVAZO49SDAayrZATWZ0mrCewLunKtaTK3wVg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8422
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 23 Sep 2024 14:36:04 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16591
+ <bitbake-devel@lists.openembedded.org>; Mon, 23 Sep 2024 14:58:04 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16592
 
+Hi Konrad,
 
+On 9/23/24 4:35 PM, Konrad Weihmann wrote:
+>=20
+>=20
+> On 23.09.24 12:56, Quentin Schulz wrote:
+>>
+>> any(x in ("append", "prepend", "remove") for x in var.split("_"))
+>=20
+> I ran a test with timeit (5 repetitions, 100000 runs).
+> with various ways to implement that check (not all of them perfect)
+>=20
+> here's the code
+> ----
+>=20
+>=20
+> import timeit
+>=20
+> pattern =3D [
+> '''
+> var =3D 'do_removesomething'
+> if not var.startswith("__anon_") and re.search(r"(_append|_prepend|=20
+> _remove)(_|$)", var):
+>  =C2=A0=C2=A0=C2=A0 pass
+> ''',
+> '''
+> var =3D 'do_removesomething'
+> if not var.startswith("__anon_") and re.search(pattern, var):
+>  =C2=A0=C2=A0=C2=A0 pass
+> ''',
+> '''
+> var =3D 'do_removesomething'
+> if not var.startswith("__anon_") and (var.endswith("_append") or=20
+> var.endswith("_prepend") or var.endswith("_remove")):
+>  =C2=A0=C2=A0=C2=A0 pass
+> ''',
+> '''
+> var =3D 'do_removesomething'
+> if not var.startswith("__anon_") and (var.rfind("_append") !=3D -1 or=20
+> var.rfind("_prepend") !=3D -1 or var.rfind("_remove") !=3D -1):
+>  =C2=A0=C2=A0=C2=A0 pass
+> ''',
+> '''
+> var =3D 'do_removesomething'
+> if not var.startswith("__anon_") and any(x in var for x in ["_append",=20
+> "_prepend", "_remove"]):
+>  =C2=A0=C2=A0=C2=A0 pass
+> ''',
+> '''
+> var =3D 'do_removesomething'
+> if not var.startswith("__anon_") and ("_append" in var or "_prepend" in=20
+> var or "_remove" in var):
+>  =C2=A0=C2=A0=C2=A0 pass
+> ''',
+> '''
+> var =3D 'do_removesomething'
+> if not var.startswith("__anon_") and any(x in ("append", "prepend",=20
+> "remove") for x in var.split("_")) :
+>  =C2=A0=C2=A0=C2=A0 pass
+> ''',
+> ]
+> setup =3D '''
+> import re
+> pattern =3D re.compile(r"(_append|_prepend|_remove)(_|$)")
 
-On 23.09.24 12:56, Quentin Schulz wrote:
-> 
-> any(x in ("append", "prepend", "remove") for x in var.split("_"))
+By having two variables named pattern, this was a bit confusing to read.
 
-I ran a test with timeit (5 repetitions, 100000 runs).
-with various ways to implement that check (not all of them perfect)
+So, the thing is... those aren't actually testing the same things.
 
-here's the code
-----
+pattern2 only checks if the function ends with _append/_remove/_prepend=20
+instead of checking if it also appears somewhere in the string (which is=20
+what we do today). Additionally, we could merge all those into one=20
+function with var.endswith(('_append', '_prepend', '_remove')).
 
+Not sure why we would use rfind instead of find in pattern3?
 
-import timeit
+For pattern4, I think you may want to use a tuple instead of an array,=20
+it's usually better optimized as tuples are immutable in Python.
 
-pattern = [
-'''
-var = 'do_removesomething'
-if not var.startswith("__anon_") and 
-re.search(r"(_append|_prepend|_remove)(_|$)", var):
-     pass
-''',
-'''
-var = 'do_removesomething'
-if not var.startswith("__anon_") and re.search(pattern, var):
-     pass
-''',
-'''
-var = 'do_removesomething'
-if not var.startswith("__anon_") and (var.endswith("_append") or 
-var.endswith("_prepend") or var.endswith("_remove")):
-     pass
-''',
-'''
-var = 'do_removesomething'
-if not var.startswith("__anon_") and (var.rfind("_append") != -1 or 
-var.rfind("_prepend") != -1 or var.rfind("_remove") != -1):
-     pass
-''',
-'''
-var = 'do_removesomething'
-if not var.startswith("__anon_") and any(x in var for x in ["_append", 
-"_prepend", "_remove"]):
-     pass
-''',
-'''
-var = 'do_removesomething'
-if not var.startswith("__anon_") and ("_append" in var or "_prepend" in 
-var or "_remove" in var):
-     pass
-''',
-'''
-var = 'do_removesomething'
-if not var.startswith("__anon_") and any(x in ("append", "prepend", 
-"remove") for x in var.split("_")) :
-     pass
-''',
-]
-setup = '''
-import re
-pattern = re.compile(r"(_append|_prepend|_remove)(_|$)")
-'''
-res = []
+What about pattern6:
 
-import statistics
+if not var.startswith("__anon_") and (("_append" in var and=20
+(var.endswith("_append") or "_append_" in var)) or ("_prepend" in var=20
+and (var.endswith("_prepend") or "_prepend_" in var)) or ("_remove" in=20
+var and (var.endswith("_remove") or "_remove_" in var))):
 
-for index, pat in enumerate(pattern):
-     print(f'Pattern {index} = {statistics.mean(timeit.repeat(pat, 
-setup=setup, number=1000000))}')
+and pattern7:
 
----
+if not var.startswith("__anon_") and ((var.endswith("_append") or=20
+"_append_" in var) or (var.endswith("_prepend") or "_prepend_" in var)=20
+or (var.endswith("_remove") or "_remove_" in var)):
 
-and here are the results
+> '''
+> res =3D []
+>=20
+> import statistics
+>=20
+> for index, pat in enumerate(pattern):
+>  =C2=A0=C2=A0=C2=A0 print(f'Pattern {index} =3D {statistics.mean(timeit.r=
+epeat(pat,=20
+> setup=3Dsetup, number=3D1000000))}')
+>=20
 
-Pattern 0 = 0.6844888394000008
-Pattern 1 = 0.9764905843883753
-Pattern 2 = 0.32475767740397715
-Pattern 3 = 0.3955688206013292
-Pattern 4 = 0.5456381111929659
-Pattern 5 = 0.17395127240451985
-Pattern 6 = 0.5362491855979897
+Why are we compiling the re for cases where we don't need it? I'm also=20
+not entirely sure how much is kept in cache here? Should we spawn a new=20
+interpreter and clear caches before each iteration of the pattern (the=20
+same interpreter for the 1000000 instances of that one pattern).
 
-"Pattern 5" being the current implementation.
-"Pattern 6" your suggestion.
-
-So I think the penalty of the split will be way too high
+Cheers,
+Quentin
 
