@@ -2,154 +2,189 @@ Return-Path: <kweihmann@outlook.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF106CF9C6B
-	for <webhook@archiver.kernel.org>; Tue, 24 Sep 2024 06:44:21 +0000 (UTC)
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (EUR02-DB5-obe.outbound.protection.outlook.com [40.92.50.67])
- by mx.groups.io with SMTP id smtpd.web11.7764.1727160259992914853
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF69ACF9C71
+	for <webhook@archiver.kernel.org>; Tue, 24 Sep 2024 06:53:21 +0000 (UTC)
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (EUR02-DB5-obe.outbound.protection.outlook.com [40.92.50.15])
+ by mx.groups.io with SMTP id smtpd.web10.7968.1727160792357487736
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 23 Sep 2024 23:44:20 -0700
+ Mon, 23 Sep 2024 23:53:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@outlook.com header.s=selector1 header.b=jGUG5gaX;
- spf=pass (domain: outlook.com, ip: 40.92.50.67, mailfrom: kweihmann@outlook.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@outlook.com header.s=selector1 header.b=Vi/Ou3GU;
+ spf=pass (domain: outlook.com, ip: 40.92.50.15, mailfrom: kweihmann@outlook.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hUdCuR+glVy+g3t2vq0pu6+s8k+HdFPGtgC0vy77vzJ/CoqhWKJuOT9LpZp1fn0SkRkL5yXIE6+VrPR+62NgFyL+lDzw0k8U1ipqZGn2YRYGAvFDEzOWT5F0hyXLYBF47awQsovrCoLsQjYCD9HcD+Qbeq1Hl3sEnbOL6o6scPWkrAANsHRNrGQRjjicuKzPCd4ozkx8qCPqg9Ez88zH565cJwsLTOwSwAjA/J2+keAPEBqnxuIlSdQhFO0WFZW2QQwHUmxRkHHA/PJTd03H8/jskmojVKnvRoTO+YodBahOVs0TLAfkD/x0/HVvjKS12nOQH0zWgn1MrAmokA6SGQ==
+ b=h3SgwGuovX2/famwvzGEiuvtIy1QhmtUHMjRu9WyB1Lj9GXz+GknuHpJCv9WiBYK43FhNHiXlsz/h4AkIOyhktTD2SPVrWG1xBKA1GbkjasYlzv92Ng8PV74AYC0v0w4HUVl7tmGxH0iZ4DF1F+akr12KO5mJLW3PTXZjFo31p+s1di8SsMxisQaW2JmVUzEhW/5/lEnbdRsPyiCNcFXLeIi+g4QR1LB4Er1KqlE9RfQoxtA/Ok/ZtfT9wI1BSHIAzAhxVyx6b2PPBCsLJc4097RRFDHYFG0dW/r4KoBL98VqE5XtfiSt2Lr1NHJqAxwonPT/zKMYmKAMYnaul+sVQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7GrDObMofvhTMSuE8J/gR6UH0FYZYivnnjlqVY4ZJWk=;
- b=TtiO+sKDtjfIXz9OehI61nGjbCKdexXwnC+4kAUCQSA9IjLLhUnXiQg6PMMvDHDDd5R/x/9RawSBn+OdDG4x7IoOwzAoLrNUy1vOCxpyuA+CUtEi3JyhK4uPc48lvJ5kXE9JgSfgw9u8HjEUin5PYSPU+Tpr7ShMTEvtuiMoOpNUWBjDXs3Z3gGcXcmp0wBmLVT+Bs8jkq/6DHed5f4cIheA5XTJwvkLRQUXDcQOx73i3jkPFlgYhw8EgygqJcrlyHGr4q6I7YXZU4BG1uDxpg4dwUxhSslsDAaAa8paQO0EIKcB8ellmbxWN5nV9CMytH2kFRf0lNrJLZX4PuduQg==
+ bh=PK7Dn2CN3/UNPW++FBh4GOYGRXYyWrgOlisLexQRLfY=;
+ b=AxO+2OMgqyoAdyGkuxCx0dl0+oct0kZmN9xQU8HIh5BEcii+PR56G78zRx5AVGQCEpbLCp5GEKrjcWumyfCv5aYyL9Y+ofGcAmJT9yR0kiLSwc/h9alZHgAEEKG8n9nOmpEXeC4Y6Y6P+War7uwoGTiKdvVqNYvE2dVd50gji68DNJ2SFICwrilahjRuGY2IcS8Srv39iuPpQ0bhLbSC4Masbi5BWFpnkHSwszONONlT+K+14E7xEGJzsnJY1IFSvqiZJEHCqiQI7Op4zYK4WCZm8klvdb2oCfi49/OaxIWCb50No8EFl/MctQMHtKOXzlcFdYHySsKEWSyOOxxBmQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7GrDObMofvhTMSuE8J/gR6UH0FYZYivnnjlqVY4ZJWk=;
- b=jGUG5gaXp4GlSBsvtkURtlTeWtMf5QY5bNs0+t1AIMvGyHaQSg/8lE17gIt/NXKjjq/hp0ogBAv/vl7mkfFgItGbX1+AbUJhuvcnE74mHlhcB2UkL9EwnTlIQl39Rkej1pA1QVnoWwuaPQ7WsUw99At5lmL5QjIv95RYA5eRXDx6+1/KFzZYbs6nvW5S6a6sGz5cLgcUtA3iXQ08YWqvpJEqPmNgp3J83gYhZM5KeVKuSluLvJj3tJfrbQIPi/fHiUYrdh2piSjyylZP0KDH5uW7CFshIfT5QxoNAKKEMzGPN6+AyeWbgdfqJGQTCp7zvLkvxWR4RZTo/dwMq8GbpQ==
+ bh=PK7Dn2CN3/UNPW++FBh4GOYGRXYyWrgOlisLexQRLfY=;
+ b=Vi/Ou3GU5yyMZOx3kBEV4ZwmneOr+pq30kb4w1zspTVeuBlHOh2cAizFJnd7mMvIyVUKFfvblGuFxpC71Y12zGJM2ac504bthBH4mYw/gNXOOpr4zMsdx0PKZw6SI4XQWaOBLseZ8OuovGIrbccIRwOTSLaAm70qzkE+X7NYrsEKIXUKrvY2EaWs8AQuTYDQAO0H7kPYV90Mn3mEvLfdhMkzcowtS5blVYAPKTLxvKaiXBLqLFXCbFnncQumK4Cs+l3MnPgKh87VkVnrKVltb1jr0XP+w+GHqqQHW93qgEfrPHs8P8/LfrrQlQm9HrUeX685pTsypBs63BnszHvDtA==
 Received: from GV1PR07MB9120.eurprd07.prod.outlook.com (2603:10a6:150:80::7)
- by PAWPR07MB9855.eurprd07.prod.outlook.com (2603:10a6:102:388::7) with
+ by DB8PR07MB6217.eurprd07.prod.outlook.com (2603:10a6:10:13c::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.25; Tue, 24 Sep
- 2024 06:44:17 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.17; Tue, 24 Sep
+ 2024 06:53:09 +0000
 Received: from GV1PR07MB9120.eurprd07.prod.outlook.com
  ([fe80::a630:7019:63e4:a48a]) by GV1PR07MB9120.eurprd07.prod.outlook.com
  ([fe80::a630:7019:63e4:a48a%6]) with mapi id 15.20.7982.022; Tue, 24 Sep 2024
- 06:44:17 +0000
+ 06:53:09 +0000
 From: Konrad Weihmann <kweihmann@outlook.com>
 To: bitbake-devel@lists.openembedded.org
 CC: Konrad Weihmann <kweihmann@outlook.com>
-Subject: [PATCH 2/3 v2] bb/data_smart: fix override syntax warning
-Date: Tue, 24 Sep 2024 06:43:38 +0000
-Message-ID: <GV1PR07MB91209FE660BF5A5CCB712373A8682@GV1PR07MB9120.eurprd07.prod.outlook.com>
+Subject: [RFC PATCH 4/3] data_smart: remove old override syntax check
+Date: Tue, 24 Sep 2024 06:52:51 +0000
+Message-ID: <GV1PR07MB9120FC24D85ECE5A38069B0CA8682@GV1PR07MB9120.eurprd07.prod.outlook.com>
 X-Mailer: git-send-email 2.34.1
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
-X-ClientProxiedBy: BE1P281CA0368.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:b10:82::7) To GV1PR07MB9120.eurprd07.prod.outlook.com
+X-ClientProxiedBy: BE1P281CA0327.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:87::6) To GV1PR07MB9120.eurprd07.prod.outlook.com
  (2603:10a6:150:80::7)
-X-Microsoft-Original-Message-ID: <20240924064338.1817107-1-kweihmann@outlook.com>
+X-Microsoft-Original-Message-ID: <20240924065251.1854249-1-kweihmann@outlook.com>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV1PR07MB9120:EE_|PAWPR07MB9855:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6673c64d-3da1-473b-de31-08dcdc644f89
-X-MS-Exchange-SLBlob-MailProps: 
-	02NmSoc12DdpACTrfqp54YIzaU4Z5SJbHnx2y9osjhWxUJLBuYtEbzkWRcFvoyWEVnPsC1lU9AmTssNJ3xJlyhRXGCBu4t1tePnOXiOLu6TA4So2/XEruGtqLX3XzPgoazj1nAMSHGv9Jk7pYlP4+ar1STWA2yy+9+w1hVLOkxH4YDzrZ84JhAuvCIxBBDym08DBSRkXV/eoZREFPWwyUhDAc2ZpwZCrT5cNFONRf3Y2DYUUximw8CeHdxvIZLuuBuzg4y4yrGMV1lnSMB+htgdg+8U/JXgi4eh+vQRqXznAxSO8Vk0NplFIzkKnbaNGtjZh3V2NkGWQ9GoLpmEs9auDO7Xwz55dGCjU9dyriot06IcEmLOw8fXCa06fS81PIAgr9dzV6v52DW5cU03P5JEfnc93y1wCO1H2JFcK7BPLB3s9lJrY6b0v/pEMmaqm91iUAgrlijZyQb2p+GC2WSG8uBnch/yJMhQB5INBeMqi442fDIMNj00Wt4lKbLloDEOmRvDonN1GO1oVONR+sDqScWKi9l+LK/RcBEOKGQgDoqgI+XNqY5S9Voj+72FCaZ+V6Fd6+DuMM308rpqg6hcU7PQhidPq3R1MSDXSaHRcXdAIWd42C6JZKQSQYQh4cdv2gyudG9ZItt7tXrKztd1nE8sPDo5ewSxvtfWkHUZk5gtyVkfEtFnGWKvhS0K1V6gZMhBmFFPBTTbxJ7LAhrmxYu8qmq5kya5OKrhL90lbGVKno1ujENrpbOgfFTfH
+X-MS-TrafficTypeDiagnostic: GV1PR07MB9120:EE_|DB8PR07MB6217:EE_
+X-MS-Office365-Filtering-Correlation-Id: 401cab49-97ab-407c-10d7-08dcdc658cc9
 X-Microsoft-Antispam: 
-	BCL:0;ARA:14566002|15080799006|7092599003|461199028|8060799006|5062599005|5072599009|19110799003|440099028|3412199025|1710799026;
+	BCL:0;ARA:14566002|8060799006|19110799003|461199028|5072599009|5062599005|7092599003|15080799006|3412199025|440099028|1710799026;
 X-Microsoft-Antispam-Message-Info: 
-	r5cdT95IHuYXeNnls70SxrZZ/K0Qo7RGNBFcEMWOqZN1BG5F56lZcMupl6itq92mEYpCXCaDbE6m0otQ4LEag1LC00iGrycJ41l40S2aiX5J6yWR4J8XDv/Cjff28svQjmiQDj2TEKIE8p6Ao/JJTuCTEQSrQpf9st07+VbviyPkfRf3YAb2qP+qvuqJ4XmTjcmnbp58+yyuXzmZSsYeXNEBwfAOBI97cRbZ5kf2Udd7VctdLQZyp9pPBV+rGmiURpLrhy7fRjB63nUX9TeTnPB4Q3jaGR2RKeP0R8csxB7aIzWDxxsd6Sl0Dk4SuyzRn6i6hSSWtJ5rBaOMjRP/MT1IHUnjqS/yd4MFStKqeH37I4we74bYhRhhd6JLwEUlF4uC0sdj+y/khcUn1Ovbv7j10au6ifiIuMiEHvViyUdXGeXWK1g8BVrVm33utxuiefpSYB9ZkAlQKtaUZETjXJvs0yjfKO2nex6+7KR82FNX8wuHvBKv86ltl+ISQJFgAdTo1SdAkfYx+Bey3BI9On7te6mYcKhQyO/ezcogorAvxrTxo2fq1/40Ak4LpUzB+NPZ4OA3c6arwsF8tsPOTRhGjzgGjhRJt0L0+AfeDKY4+KiDYDxlkJP9ojPiBN+S67mYRkVoZJtQj9FKmZ8yoAfl89AFF9cLTwZBToRyhl5Lyau1T8Xe22ufjJzX0OYpjPqRdYFmXwuAMNEh/KGaCgYgYkhn2xu+nzGVy0spkYmSSizFoe6ZHdqFC0ChXkVwjAv993/k9OSKYudv78X1x1GmtkFD9a0DCN8oezzllGE=
+	52piIzSDrFYIkxyJMwCr68umTPm8LK0Y0t97OyyUJ9r4+Q0kPQoFX+of9j4PEzCIdS0MQohf4h/jXNttok5x1Xx35jgat3X+Xi0nOMHC7PiXiF0muYtS3G2WfPtMaDYdCWA1b2ECOmsjEZZd9pV9quqmNbFweUkyJsEHArAdK6kDH7gwBpOj7KB5IIy5pbL0kYs2bmjJNQhhBoeDOMXBv7IG2M184kxFL3/niUvI3BK+aVkQQzLTMDR0F/EJbc+yQzNSBaUi1ZL6XVluYk4qY2Nk0haKrN+8jUx9u9P10w8JJnNldsR341bEtKnbHMUofQ2HHLcLSzsZ3QemIbY6A1/0yVOx8bkhttPtoxNPQjSlhEnH7+B62f68W8AU4tg86btVg31YFNROJCKlp4AmktcC3psJOV8QRI8jEIqo4QiwH13nnbtcQHWxRpf/178j/GIug/U2N/sIwaydJNSG43G/BOZXqBZjYdMBSM8us/eDLaPixrG/JZgc/fKvLEkPzDfxJd0LxivOeq6pT8Dd1LVkvk9ozKxc4H02Kr/koSuLlj4QYRcMkbeCl/9EyhYFEZbUB46xOsoNPK0Mzx//3t5TWh+Eg4zCtfWdLkePNxEd5+lRTWimbtoW4y2kzX8QNez8QxgrzD6uzNmbg8ahoX6vOJnzr/1GWyQKmEpic4HoRFXXRKYWALPqyiLeLM/T6joiVwx4Z0U7rNf8TKtNrkc+wzjlnTmbXq38pcjSwuLXJ3ho1QJv1sK1+L+4RCgiGKIcnbw8D6Ri+QLKrZcBb7J1YIpStPfsXHkgLWMQgwc=
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?NaRagcYNZvP/n/curkgUmLV97fZMkz6I6Xf2JBJ/EMwDFQgdrIpSKKzUzC7z?=
- =?us-ascii?Q?gkej4F6u48znWKqfAemCRGb33zojFIaxxiX4vRR5E/np+vj9sTHHMAuzn8ng?=
- =?us-ascii?Q?NwxMRir3PjZ3/eCxYJUQtVZ/QFAfsepswAKbSUKwMKrimQ10+2bZ5x2ufOuY?=
- =?us-ascii?Q?MvLdP/LVT81bAQ1wibcxWTYQGMSAYZenRFnr4O6NK9UXcW5XDgfR07QGaaIc?=
- =?us-ascii?Q?4vZsGd+4LWni3x9dSbI2BuGVrg02ruODpLHunhZNcUbujoy5F2+HYraT9jIX?=
- =?us-ascii?Q?29/5ZHmj1djKtYLSTycGBnYAu7qX5T5wcZdwjVwbm5HWhVFnWy399elFUJgm?=
- =?us-ascii?Q?AdrvIIpQeQVz+y9mZg2J2V5L1+n+wg6pel/BtARInna4BMF6zKZxZo1/e53O?=
- =?us-ascii?Q?LIXlSJQjGLvJLSBRtx3o0FV6mCq3J4bEVKhF/8cnuTLASE2YMs7bxB/AGiy/?=
- =?us-ascii?Q?fepRJyOSmx+AQNyPSsDeTQBGGGI4zAYOkE5IL9yAhG6oLQdBUwTL/OvYARqF?=
- =?us-ascii?Q?YfwZIbCOMWBbEqUxf43YVBjgNY0AcIpyJcbQqiUsMlWg/lULgVQUbjsxaojB?=
- =?us-ascii?Q?qAfMOk4WysEyls572UiE6DMZdDM96Pjg2jlSYUikuTV2c3EZ/gC8TTwSay1q?=
- =?us-ascii?Q?8DLVzOnV40C0twLXVQdH9eo92lAvSkirOOLnc3Wd5I3oGi/SUXmaZaOjQAI0?=
- =?us-ascii?Q?Vd8CWMlh8KQfaD0ZyFCrELialxnqR8yQTdy0mZobPLttzBdvjYRNAjXZfMDl?=
- =?us-ascii?Q?KSfbBdUiA8+8DwkFGKzbE9JlSSMEGPtXzIvd0xy7bDgk08tfUVi8blvUBxWi?=
- =?us-ascii?Q?xj3oSjDE5tOLrMWPpG09cf5Y1uVLdWMODJNIVr/3BC/g/BSj6sADp24ctnpi?=
- =?us-ascii?Q?XpVsSsJ0sweubHXvkRWRVR8K0XJTaJGBU0j2KeoN3w+EIXnjUCG/d9ripBeL?=
- =?us-ascii?Q?Z6D/A055jNZr5YRFF4FBZltOk8tT7gloKjj9ksXfG88LIVmnrYAOzBht4Uoa?=
- =?us-ascii?Q?3VSCUy0an0xLgJMC4qKAu8ffcnyLI7RTmJrZ1vf76TzsU/SKkhh+790JBC0m?=
- =?us-ascii?Q?WDEdIO/eB98XEieAfYlNMXmOl52BTPTLbJbMsmjD8VwQl9rzX5fZBOSvlzfN?=
- =?us-ascii?Q?KdzTA8keaFuei9kzl9WgUvonnNpHegs2v/cGhIiIQn6uAstH2RSjoPgFAq3I?=
- =?us-ascii?Q?g1GVaOhGEsXMYAQkyzJC1qk0KShbGCi74JSEPI18YA8nbooUCa5CljBmhznB?=
- =?us-ascii?Q?wcff8K9Sia6/8lcz8PA2gDqquAgZhzOSZla9aiap4vnD8aOI0l0g2nOqopUA?=
- =?us-ascii?Q?xws=3D?=
+	=?us-ascii?Q?xtzaKh4Iy48MeWj2feAe8Tho/4Lxn4OgIzEPVQmhUIZEFAy9ViLO2K9iHKn9?=
+ =?us-ascii?Q?OeecHLuUCOQ9MVoqtaMAe0GZ8kraJJS330qYoc3igpym80DfaCQvE757TsVO?=
+ =?us-ascii?Q?0DyFlwDh5Esc/5SSAKUJg6NWZcV8tN4VmHw236MLvxjJOH4SxIFzP4kEOCcp?=
+ =?us-ascii?Q?zFcTlYIVsPTLwQUo9wbD+sXJB2M3egRmjeSoI8A1GspCyEPUtS6RCMOPYhX6?=
+ =?us-ascii?Q?vmwx0KrhAPalV2bQlrnRFjpOR/cBCnUXau7JLNWTZKsz1b+MuOKZDwR3zWkR?=
+ =?us-ascii?Q?1N8I7bii1FIMjp3GX/+AuQZxyKxW8k7TjPvSMPKrAEKdFjoJJq14CrqIhU7i?=
+ =?us-ascii?Q?YGaUq72opHUmw1ECozjJPR8Rd3cxtZYNwiG5K0XCG1QuxYMccIvhRqnjfuCF?=
+ =?us-ascii?Q?SjIjoPmD7A46NNRjE0WuIB3n2yS3ZvrDLn+6a0/R4OqQTjhFgpy9H4GoMseB?=
+ =?us-ascii?Q?AcSxO+q1O1IcZ3iHUVLarcZPJaf+QycGNmFGr1C/lSNL/JH7okD6q81nDpo8?=
+ =?us-ascii?Q?i90KRFRFeB3gw7X4TVLhFyatMk/YQT1EQmPFMAqdlqnz4bFdzRZzrxdd3MUS?=
+ =?us-ascii?Q?dHypjNmFtcQOteg0JRJ2YmbRsT9nJw5dHLHqAWOIHCuBgHl03HApbn0rK/g2?=
+ =?us-ascii?Q?9AO7YftMco+J816i6oG6wFjv9yaHdQZov3b8WjwZ8Bsj5M6Wj/JGqdT5lu1Y?=
+ =?us-ascii?Q?TZlcxeLFmrBz1L4iuelV7Z9JnpartK/EFaWSJyz5vsrk3n2YtZYf54tl//Ep?=
+ =?us-ascii?Q?bwsQ35M4KlU+lsrg6DHvq45WwJDrRdvP2jnGr+HvUE46pQbrDueI7TCk0ahf?=
+ =?us-ascii?Q?z4X+WqewxqjJB5cS9HRBHMDta2VpMZiHEpZUMJ2eBAbCHzZxC+0En7fJ+UVN?=
+ =?us-ascii?Q?muYjC9nx7Coa22z41flQangfbO7mIhegoPA4F91NSlhxPo7JaAqx9Fh01pgX?=
+ =?us-ascii?Q?JxMEsIS3a6TpyJ92JIhGAwoLVLpuvRh8wkR/q78cUvLbA6SxCjBnW/wVt9A2?=
+ =?us-ascii?Q?aXFRzh4+r1JQ1GqPmNUVcL97TBi500rlASbF5gFN0NNBuMWner/W8JXQ97RP?=
+ =?us-ascii?Q?rUXYvTvmM+DspnkFRJntAmEATFYshb2nprF7X17mLh2ugpZdv9ZtkQ+y6Lh0?=
+ =?us-ascii?Q?NkQ3OBbankqsV/Xgiuo964rOdsigb2ya9tArxhTTiWMkASk/mbabIyCvbbtn?=
+ =?us-ascii?Q?+hauy8vhJMc+C9oUW0jvH+Z83tBfhfAdIBLUiRN/jKRiDiWNAbecXy3Qo/5S?=
+ =?us-ascii?Q?TAUvx8p0wnG7NTP+qHC9KcDvyHKXyzQjuqddIyJhK5TJdU3xDtohIJIMG5KP?=
+ =?us-ascii?Q?6Lw=3D?=
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6673c64d-3da1-473b-de31-08dcdc644f89
+X-MS-Exchange-CrossTenant-Network-Message-Id: 401cab49-97ab-407c-10d7-08dcdc658cc9
 X-MS-Exchange-CrossTenant-AuthSource: GV1PR07MB9120.eurprd07.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2024 06:44:17.1896
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2024 06:53:09.3205
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 
 	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR07MB9855
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR07MB6217
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 24 Sep 2024 06:44:21 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16593
+ <bitbake-devel@lists.openembedded.org>; Tue, 24 Sep 2024 06:53:21 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16594
 
-when defining a function do_removesomething,
-the parser warned about
+after the override syntax change is now out in the field for
+a longer time, the expensive check for the old syntax can be
+removed.
 
-Variable do_removesomething contains an operation using the
-old override syntax. Please convert this layer/metadata before
-attempting to use with a newer bitbake
+This will save time while parsing, and should be side effect free,
+as variables in the old syntax are simply rendered into
+unapplicable variables.
 
-correct it would be to search for a override operator at the end
-of the string or for the next operator.
-
-To avoid running the expensive regex search on every setVar call
-the current "cheap" check would be have to be triggered,
-before the more precise check is run.
+A more complete check (e.g. RDEPENDS_${PN} checks) could be implemented els=
+ewhere. as part of a sanity check
 
 Signed-off-by: Konrad Weihmann <kweihmann@outlook.com>
 ---
- lib/bb/data_smart.py | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ lib/bb/data_smart.py  |  9 ---------
+ lib/bb/tests/parse.py | 35 -----------------------------------
+ 2 files changed, 44 deletions(-)
 
 diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 4e15a43c2..8344981fc 100644
+index 8344981fc..fe4c50740 100644
 --- a/lib/bb/data_smart.py
 +++ b/lib/bb/data_smart.py
-@@ -539,14 +539,14 @@ class DataSmart(MutableMapping):
+@@ -539,15 +539,6 @@ class DataSmart(MutableMapping):
          return var in self.overridedata
 =20
      def setVar(self, var, value, **loginfo):
--
-         if not var.startswith("__anon_") and ("_append" in var or "_prepen=
+-        if not var.startswith("__anon_") and ("_append" in var or "_prepen=
 d" in var or "_remove" in var):
--            info =3D "%s" % var
--            if "file" in loginfo:
--                info +=3D " file: %s" % loginfo["file"]
--            if "line" in loginfo:
--                info +=3D " line: %s" % loginfo["line"]
--            bb.fatal("Variable %s contains an operation using the old over=
-ride syntax. Please convert this layer/metadata before attempting to use wi=
-th a newer bitbake." % info)
-+            if re.search(r"(_append|_prepend|_remove)(_|$)", var) is None:
-+                info =3D "%s" % var
-+                if "file" in loginfo:
-+                    info +=3D " file: %s" % loginfo["file"]
-+                if "line" in loginfo:
-+                    info +=3D " line: %s" % loginfo["line"]
-+                bb.fatal("Variable %s contains an operation using the old =
+-            if re.search(r"(_append|_prepend|_remove)(_|$)", var) is None:
+-                info =3D "%s" % var
+-                if "file" in loginfo:
+-                    info +=3D " file: %s" % loginfo["file"]
+-                if "line" in loginfo:
+-                    info +=3D " line: %s" % loginfo["line"]
+-                bb.fatal("Variable %s contains an operation using the old =
 override syntax. Please convert this layer/metadata before attempting to us=
 e with a newer bitbake." % info)
-=20
+-
          shortvar =3D var.split(":", 1)[0]
          if shortvar in self._var_renames:
+             _print_rename_error(shortvar, loginfo, self._var_renames, full=
+var=3Dvar)
+diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
+index 2da3a2a22..6832952f8 100644
+--- a/lib/bb/tests/parse.py
++++ b/lib/bb/tests/parse.py
+@@ -132,41 +132,6 @@ DESCRIPTION:${PN}-dev =3D "${DESCRIPTION} B"
+ PN =3D "bc"
+ """
+=20
+-    override_old_append =3D """
+-EXTRA_OECONF_append =3D " c"
+-"""
+-
+-    def test_parse_old_override_syntax_append(self):
+-        f =3D self.parsehelper(self.override_old_append)
+-        try:
+-            bb.parse.handle(f.name, self.d)['']
+-            self.fail('Pattern should have raised bb.BBHandledException')
+-        except bb.BBHandledException:
+-            pass
+-
+-    override_old_prepend =3D """
+-EXTRA_OECONF_prepend =3D " c"
+-"""
+-
+-    def test_parse_old_override_syntax_prepend(self):
+-        f =3D self.parsehelper(self.override_old_prepend)
+-        try:
+-            bb.parse.handle(f.name, self.d)['']
+-            self.fail('Pattern should have raised bb.BBHandledException')
+-        except bb.BBHandledException:
+-            pass
+-
+-    override_old_remove =3D """
+-EXTRA_OECONF_remove =3D " c"
+-"""
+-
+-    def test_parse_old_override_syntax_remove(self):
+-        f =3D self.parsehelper(self.override_old_remove)
+-        try:
+-            bb.parse.handle(f.name, self.d)['']
+-            self.fail('Pattern should have raised bb.BBHandledException')
+-        except bb.BBHandledException:
+-            pass
+=20
+     override_old_valid_append =3D """
+ do_appendsomething () {
 --=20
 2.34.1
 
