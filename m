@@ -1,153 +1,159 @@
-Return-Path: <alexandre.belloni@bootlin.com>
+Return-Path: <brennan.coslett@bluerivertech.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FC5CCF9ED
-	for <webhook@archiver.kernel.org>; Wed, 25 Sep 2024 19:58:00 +0000 (UTC)
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
- by mx.groups.io with SMTP id smtpd.web10.25844.1727294271881436343
- for <bitbake-devel@lists.openembedded.org>;
- Wed, 25 Sep 2024 12:57:52 -0700
-Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=G96kAoVA;
- spf=pass (domain: bootlin.com, ip: 217.70.183.200, mailfrom: alexandre.belloni@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2D7A220004;
-	Wed, 25 Sep 2024 19:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1727294269;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K5k7wifYajkv0WbkI4fQf+87MoflLpcmYeUGH0kkd3U=;
-	b=G96kAoVAYiUVwJ1aM9PaKphsfTZ3D/uu5aZCWZGWvCuZ0hUYyN+XXMwjTjghOPnku88M8t
-	6SyT7gpqw1r9bl9w61/pZQduOUBGDaauXRh9syTwp3V1mbtoNycmB3IuDbedMIk6FxMJIF
-	5Pf304ZdSU/TH3V2hWYGK4rd7Q6iCXm3mP1eNHy4fBA+5EDgiAh1SM7WmjI0NFROUlMi8+
-	NjCDQkAjPcqwwDM2sNOe4VIJ/pxfYJXNZwwZnraINlNXMXy/Jmh5CDTQ8hCLqz+wDu3ShI
-	AYwsuOmq3CdwLwQsglfA/yfXLc8sEtxmKsXfA0z7y+eo7RIUpoyzjX0ysTwwgg==
-Date: Wed, 25 Sep 2024 21:57:48 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Konrad Weihmann <kweihmann@outlook.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] [RFC PATCH 4/3 v2] data_smart: remove old
- override syntax check
-Message-ID: <202409251957489e611f83@mail.local>
-References: <20240924090905.4097-1-kweihmann@outlook.com>
- <GV1PR07MB912042E2A43F852836D065DBA8682@GV1PR07MB9120.eurprd07.prod.outlook.com>
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5891CCF9FA
+	for <webhook@archiver.kernel.org>; Wed, 25 Sep 2024 21:38:01 +0000 (UTC)
+Subject: URL encoding/decoding bug with files like "serialgetty@.service" or "sshd@.service" with archiver.bbclass #bitbake #kirkstone #poky
+To: bitbake-devel@lists.openembedded.org
+From: "Brennan Coslett" <brennan.coslett@bluerivertech.com>
+X-Originating-Location: Denver, Colorado, US (165.225.11.61)
+X-Originating-Platform: Linux Chrome 129
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <GV1PR07MB912042E2A43F852836D065DBA8682@GV1PR07MB9120.eurprd07.prod.outlook.com>
-X-GND-Sasl: alexandre.belloni@bootlin.com
+Date: Wed, 25 Sep 2024 14:37:58 -0700
+Message-ID: <bhfQ.1727300278439114446.Ff3Z@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="lia5g1rdlS2qKsP4Hb0u"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 25 Sep 2024 19:58:00 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16601
+ <bitbake-devel@lists.openembedded.org>; Wed, 25 Sep 2024 21:38:01 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16602
 
-Please send properly versioned and complete series, don't expect
-maintainers to do your work and collected patches send a random times
-with random versions.
+--lia5g1rdlS2qKsP4Hb0u
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 24/09/2024 09:09:08+0000, Konrad Weihmann wrote:
-> after the override syntax change is now out in the field for
-> a longer time, the expensive check for the old syntax can be
-> removed.
-> 
-> This will save time while parsing, and should be side effect free,
-> as variables in the old syntax are simply rendered into
-> unapplicable variables.
-> 
-> A more complete check (e.g. RDEPENDS_${PN} checks) could be implemented elsewhere. as part of a sanity check
-> 
-> Signed-off-by: Konrad Weihmann <kweihmann@outlook.com>
-> ---
->  lib/bb/data_smart.py  |  9 ---------
->  lib/bb/tests/parse.py | 35 -----------------------------------
->  2 files changed, 44 deletions(-)
-> 
-> diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-> index 0523744de..fe4c50740 100644
-> --- a/lib/bb/data_smart.py
-> +++ b/lib/bb/data_smart.py
-> @@ -539,15 +539,6 @@ class DataSmart(MutableMapping):
->          return var in self.overridedata
->  
->      def setVar(self, var, value, **loginfo):
-> -        if not var.startswith("__anon_") and ("_append" in var or "_prepend" in var or "_remove" in var):
-> -            if re.search(r"(_append|_prepend|_remove)(_|$)", var) is not None:
-> -                info = "%s" % var
-> -                if "file" in loginfo:
-> -                    info += " file: %s" % loginfo["file"]
-> -                if "line" in loginfo:
-> -                    info += " line: %s" % loginfo["line"]
-> -                bb.fatal("Variable %s contains an operation using the old override syntax. Please convert this layer/metadata before attempting to use with a newer bitbake." % info)
-> -
->          shortvar = var.split(":", 1)[0]
->          if shortvar in self._var_renames:
->              _print_rename_error(shortvar, loginfo, self._var_renames, fullvar=var)
-> diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
-> index 2da3a2a22..6832952f8 100644
-> --- a/lib/bb/tests/parse.py
-> +++ b/lib/bb/tests/parse.py
-> @@ -132,41 +132,6 @@ DESCRIPTION:${PN}-dev = "${DESCRIPTION} B"
->  PN = "bc"
->  """
->  
-> -    override_old_append = """
-> -EXTRA_OECONF_append = " c"
-> -"""
-> -
-> -    def test_parse_old_override_syntax_append(self):
-> -        f = self.parsehelper(self.override_old_append)
-> -        try:
-> -            bb.parse.handle(f.name, self.d)['']
-> -            self.fail('Pattern should have raised bb.BBHandledException')
-> -        except bb.BBHandledException:
-> -            pass
-> -
-> -    override_old_prepend = """
-> -EXTRA_OECONF_prepend = " c"
-> -"""
-> -
-> -    def test_parse_old_override_syntax_prepend(self):
-> -        f = self.parsehelper(self.override_old_prepend)
-> -        try:
-> -            bb.parse.handle(f.name, self.d)['']
-> -            self.fail('Pattern should have raised bb.BBHandledException')
-> -        except bb.BBHandledException:
-> -            pass
-> -
-> -    override_old_remove = """
-> -EXTRA_OECONF_remove = " c"
-> -"""
-> -
-> -    def test_parse_old_override_syntax_remove(self):
-> -        f = self.parsehelper(self.override_old_remove)
-> -        try:
-> -            bb.parse.handle(f.name, self.d)['']
-> -            self.fail('Pattern should have raised bb.BBHandledException')
-> -        except bb.BBHandledException:
-> -            pass
->  
->      override_old_valid_append = """
->  do_appendsomething () {
-> -- 
-> 2.34.1
-> 
+Hey All,
 
-> 
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#16598): https://lists.openembedded.org/g/bitbake-devel/message/16598
-> Mute This Topic: https://lists.openembedded.org/mt/108625078/3617179
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
-> 
+I believe there is a bug with how bitbake handles systemd template files wh=
+en archiving source, as the files are ending up in the rootfs. I was workin=
+g on getting a script working to package up the tmp/deploy/source directory=
+ and noticed that while the archiver was creating tmp/deploy/sources/aarch6=
+4-shasta-linux/systemd-serialgetty-1.0-r5/ there wasn't anything inside it.=
+ I think this is the base case for the bug as it has a SRC_URI of "file://s=
+erial-getty@.service" vs some of the other packages which include these tem=
+plate systemd files that end in @.service contain a ton of other files (I v=
+erified the same issue shows up with openssh).
 
+I assume that it will happen with all of these files:
+```
+$ find layers/ meta-* -name '*@*'
+layers/meta-openembedded/meta-networking/recipes-support/nuttcp/nuttcp/nutt=
+cp@.service
+layers/meta-openembedded/meta-networking/recipes-support/openvpn/openvpn/op=
+envpn@.service
+layers/poky/meta/recipes-connectivity/openssh/openssh/sshd@.service
+layers/poky/meta/recipes-connectivity/dhcpcd/files/dhcpcd@.service
+layers/poky/meta/recipes-connectivity/ppp/ppp/ppp@.service
+layers/poky/meta/recipes-core/dropbear/dropbear/dropbear@.service
+layers/poky/meta/recipes-core/systemd/systemd-serialgetty/serial-getty@.ser=
+vice
+```
 
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+I was able to add some additional debug prints in archiver.bbclass and trie=
+d to dig further but the insides of `fetch2` were a bit over my head.
+```
+diff --git a/meta/classes/archiver.bbclass b/meta/classes/archiver.bbclass
+index 4a5865d7b5..daf7b4605b 100644
+--- a/meta/classes/archiver.bbclass
++++ b/meta/classes/archiver.bbclass
+@@ -181,6 +181,7 @@ python do_ar_original() {
+ar_outdir =3D d.getVar('ARCHIVER_OUTDIR')
+bb.note('Archiving the original source...')
+urls =3D d.getVar("SRC_URI").split()
++ =C2=A0 =C2=A0bb.debug(1, "BRENNAN full SRC_URI %s" % urls)
+# destsuffix (git fetcher) and subdir (everything else) are allowed to be
+# absolute paths (for example, destsuffix=3D${S}/foobar).
+# That messes with unpacking inside our tmpdir below, because the fetchers
+@@ -198,7 +199,7 @@ python do_ar_original() {
+del decoded[5][param]
+encoded =3D bb.fetch2.encodeurl(decoded)
+urls[i] =3D encoded
+-
++ =C2=A0 =C2=A0bb.debug(1, "BRENNAN %s" % urls)
+# Cleanup SRC_URI before call bb.fetch2.Fetch() since now SRC_URI is in the
+# variable "urls", otherwise there might be errors like:
+# The SRCREV_FORMAT variable must be set when multiple SCMs are used
+```
+
+This was tested with kirkstone, (this commit specifically e938b18b5342bd28e=
+adb44ad39dbf1f5cf5be09b):
+```
+DEBUG: systemd-serialgetty-1.0-r5 do_ar_original: BRENNAN full SRC_URI ['fi=
+le://serial-getty@.service']
+DEBUG: systemd-serialgetty-1.0-r5 do_ar_original: BRENNAN ['file://.service=
+']
+```
+It then can't find that file and so then the archiver doesn't package anyth=
+ing up.
+
+Hopefully bitbake-devel is the right mailing list for folks with more knowl=
+edge of this stuff?
+
+Thanks,
+Brennan Coslett
+
+--lia5g1rdlS2qKsP4Hb0u
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div>Hey All,</div>
+<div><br />I believe there is a bug with how bitbake handles systemd templa=
+te files when archiving source, as the files are ending up in the rootfs. I=
+ was working on getting a script working to package up the tmp/deploy/sourc=
+e directory and noticed that while the archiver was creating tmp/deploy/sou=
+rces/aarch64-shasta-linux/systemd-serialgetty-1.0-r5/ there wasn't anything=
+ inside it. I think this is the base case for the bug as it has a SRC_URI o=
+f "file://serial-getty@.service" vs some of the other packages which includ=
+e these template systemd files that end in @.service contain a ton of other=
+ files (I verified the same issue shows up with openssh).<br /><br />I assu=
+me that it will happen with all of these files:<br />```</div>
+<div>$ find layers/ meta-* -name '*@*'<br />layers/meta-openembedded/meta-n=
+etworking/recipes-support/nuttcp/nuttcp/nuttcp@.service<br />layers/meta-op=
+enembedded/meta-networking/recipes-support/openvpn/openvpn/openvpn@.service=
+<br />layers/poky/meta/recipes-connectivity/openssh/openssh/sshd@.service<b=
+r />layers/poky/meta/recipes-connectivity/dhcpcd/files/dhcpcd@.service<br /=
+>layers/poky/meta/recipes-connectivity/ppp/ppp/ppp@.service<br />layers/pok=
+y/meta/recipes-core/dropbear/dropbear/dropbear@.service<br />layers/poky/me=
+ta/recipes-core/systemd/systemd-serialgetty/serial-getty@.service<br />```<=
+br /><br />I was able to add some additional debug prints in archiver.bbcla=
+ss and tried to dig further but the insides of `fetch2` were a bit over my =
+head.<br />```</div>
+<div>diff --git a/meta/classes/archiver.bbclass b/meta/classes/archiver.bbc=
+lass<br />index 4a5865d7b5..daf7b4605b 100644<br />--- a/meta/classes/archi=
+ver.bbclass<br />+++ b/meta/classes/archiver.bbclass<br />@@ -181,6 +181,7 =
+@@ python do_ar_original() {<br />&nbsp; &nbsp; &nbsp;ar_outdir =3D d.getVa=
+r('ARCHIVER_OUTDIR')<br />&nbsp; &nbsp; &nbsp;bb.note('Archiving the origin=
+al source...')<br />&nbsp; &nbsp; &nbsp;urls =3D d.getVar("SRC_URI").split(=
+)<br />+ &nbsp; &nbsp;bb.debug(1, "BRENNAN full SRC_URI %s" % urls)<br />&n=
+bsp; &nbsp; &nbsp;# destsuffix (git fetcher) and subdir (everything else) a=
+re allowed to be<br />&nbsp; &nbsp; &nbsp;# absolute paths (for example, de=
+stsuffix=3D${S}/foobar).<br />&nbsp; &nbsp; &nbsp;# That messes with unpack=
+ing inside our tmpdir below, because the fetchers<br />@@ -198,7 +199,7 @@ =
+python do_ar_original() {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &n=
+bsp; &nbsp; &nbsp;del decoded[5][param]<br />&nbsp; &nbsp; &nbsp; &nbsp; &n=
+bsp;encoded =3D bb.fetch2.encodeurl(decoded)<br />&nbsp; &nbsp; &nbsp; &nbs=
+p; &nbsp;urls[i] =3D encoded<br />-<br />+ &nbsp; &nbsp;bb.debug(1, "BRENNA=
+N %s" % urls)<br />&nbsp; &nbsp; &nbsp;# Cleanup SRC_URI before call bb.fet=
+ch2.Fetch() since now SRC_URI is in the<br />&nbsp; &nbsp; &nbsp;# variable=
+ "urls", otherwise there might be errors like:<br />&nbsp; &nbsp; &nbsp;# T=
+he SRCREV_FORMAT variable must be set when multiple SCMs are used<br />```<=
+/div>
+<div>&nbsp;</div>
+<div>This was tested with kirkstone, (this commit specifically e938b18b5342=
+bd28eadb44ad39dbf1f5cf5be09b):<br />```<br />&nbsp; &nbsp; &nbsp; &nbsp; DE=
+BUG: systemd-serialgetty-1.0-r5 do_ar_original: BRENNAN full SRC_URI ['file=
+://serial-getty@.service']<br />&nbsp; &nbsp; &nbsp; &nbsp; DEBUG: systemd-=
+serialgetty-1.0-r5 do_ar_original: BRENNAN ['file://.service']<br />```</di=
+v>
+<div>It then can't find that file and so then the archiver doesn't package =
+anything up.</div>
+<div>&nbsp;</div>
+<div>Hopefully bitbake-devel is the right mailing list for folks with more =
+knowledge of this stuff?</div>
+<div>&nbsp;</div>
+<div>Thanks,<br />Brennan Coslett</div>
+
+--lia5g1rdlS2qKsP4Hb0u--
 
