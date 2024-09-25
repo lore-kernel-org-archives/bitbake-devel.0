@@ -1,103 +1,153 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <alexandre.belloni@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 080A7C369D0
-	for <webhook@archiver.kernel.org>; Wed, 25 Sep 2024 11:10:57 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.13194.1727262654729135185
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FC5CCF9ED
+	for <webhook@archiver.kernel.org>; Wed, 25 Sep 2024 19:58:00 +0000 (UTC)
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+ by mx.groups.io with SMTP id smtpd.web10.25844.1727294271881436343
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 25 Sep 2024 04:10:55 -0700
+ Wed, 25 Sep 2024 12:57:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2951212FC
-	for <bitbake-devel@lists.openembedded.org>; Wed, 25 Sep 2024 04:11:23 -0700 (PDT)
-Received: from cesw-amp-gbt-1s-m12830-04.oss.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5E8543F6A8
-	for <bitbake-devel@lists.openembedded.org>; Wed, 25 Sep 2024 04:10:53 -0700 (PDT)
-From: Ross Burton <ross.burton@arm.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH v2] fetch2: don't try to preserve all attributes when unpacking files
-Date: Wed, 25 Sep 2024 12:10:46 +0100
-Message-Id: <20240925111046.1286362-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.34.1
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=G96kAoVA;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.200, mailfrom: alexandre.belloni@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2D7A220004;
+	Wed, 25 Sep 2024 19:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1727294269;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K5k7wifYajkv0WbkI4fQf+87MoflLpcmYeUGH0kkd3U=;
+	b=G96kAoVAYiUVwJ1aM9PaKphsfTZ3D/uu5aZCWZGWvCuZ0hUYyN+XXMwjTjghOPnku88M8t
+	6SyT7gpqw1r9bl9w61/pZQduOUBGDaauXRh9syTwp3V1mbtoNycmB3IuDbedMIk6FxMJIF
+	5Pf304ZdSU/TH3V2hWYGK4rd7Q6iCXm3mP1eNHy4fBA+5EDgiAh1SM7WmjI0NFROUlMi8+
+	NjCDQkAjPcqwwDM2sNOe4VIJ/pxfYJXNZwwZnraINlNXMXy/Jmh5CDTQ8hCLqz+wDu3ShI
+	AYwsuOmq3CdwLwQsglfA/yfXLc8sEtxmKsXfA0z7y+eo7RIUpoyzjX0ysTwwgg==
+Date: Wed, 25 Sep 2024 21:57:48 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Konrad Weihmann <kweihmann@outlook.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] [RFC PATCH 4/3 v2] data_smart: remove old
+ override syntax check
+Message-ID: <202409251957489e611f83@mail.local>
+References: <20240924090905.4097-1-kweihmann@outlook.com>
+ <GV1PR07MB912042E2A43F852836D065DBA8682@GV1PR07MB9120.eurprd07.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <GV1PR07MB912042E2A43F852836D065DBA8682@GV1PR07MB9120.eurprd07.prod.outlook.com>
+X-GND-Sasl: alexandre.belloni@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 25 Sep 2024 11:10:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16600
+ <bitbake-devel@lists.openembedded.org>; Wed, 25 Sep 2024 19:58:00 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16601
 
-When copying files as part of the unpack we currently use cp -p, which
-is a shortcut for --preserve=3Dmode,ownership,timestamps.
+Please send properly versioned and complete series, don't expect
+maintainers to do your work and collected patches send a random times
+with random versions.
 
-We do want to preserve timestamps, because some fetchers set these
-explicitly.
+On 24/09/2024 09:09:08+0000, Konrad Weihmann wrote:
+> after the override syntax change is now out in the field for
+> a longer time, the expensive check for the old syntax can be
+> removed.
+> 
+> This will save time while parsing, and should be side effect free,
+> as variables in the old syntax are simply rendered into
+> unapplicable variables.
+> 
+> A more complete check (e.g. RDEPENDS_${PN} checks) could be implemented elsewhere. as part of a sanity check
+> 
+> Signed-off-by: Konrad Weihmann <kweihmann@outlook.com>
+> ---
+>  lib/bb/data_smart.py  |  9 ---------
+>  lib/bb/tests/parse.py | 35 -----------------------------------
+>  2 files changed, 44 deletions(-)
+> 
+> diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+> index 0523744de..fe4c50740 100644
+> --- a/lib/bb/data_smart.py
+> +++ b/lib/bb/data_smart.py
+> @@ -539,15 +539,6 @@ class DataSmart(MutableMapping):
+>          return var in self.overridedata
+>  
+>      def setVar(self, var, value, **loginfo):
+> -        if not var.startswith("__anon_") and ("_append" in var or "_prepend" in var or "_remove" in var):
+> -            if re.search(r"(_append|_prepend|_remove)(_|$)", var) is not None:
+> -                info = "%s" % var
+> -                if "file" in loginfo:
+> -                    info += " file: %s" % loginfo["file"]
+> -                if "line" in loginfo:
+> -                    info += " line: %s" % loginfo["line"]
+> -                bb.fatal("Variable %s contains an operation using the old override syntax. Please convert this layer/metadata before attempting to use with a newer bitbake." % info)
+> -
+>          shortvar = var.split(":", 1)[0]
+>          if shortvar in self._var_renames:
+>              _print_rename_error(shortvar, loginfo, self._var_renames, fullvar=var)
+> diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
+> index 2da3a2a22..6832952f8 100644
+> --- a/lib/bb/tests/parse.py
+> +++ b/lib/bb/tests/parse.py
+> @@ -132,41 +132,6 @@ DESCRIPTION:${PN}-dev = "${DESCRIPTION} B"
+>  PN = "bc"
+>  """
+>  
+> -    override_old_append = """
+> -EXTRA_OECONF_append = " c"
+> -"""
+> -
+> -    def test_parse_old_override_syntax_append(self):
+> -        f = self.parsehelper(self.override_old_append)
+> -        try:
+> -            bb.parse.handle(f.name, self.d)['']
+> -            self.fail('Pattern should have raised bb.BBHandledException')
+> -        except bb.BBHandledException:
+> -            pass
+> -
+> -    override_old_prepend = """
+> -EXTRA_OECONF_prepend = " c"
+> -"""
+> -
+> -    def test_parse_old_override_syntax_prepend(self):
+> -        f = self.parsehelper(self.override_old_prepend)
+> -        try:
+> -            bb.parse.handle(f.name, self.d)['']
+> -            self.fail('Pattern should have raised bb.BBHandledException')
+> -        except bb.BBHandledException:
+> -            pass
+> -
+> -    override_old_remove = """
+> -EXTRA_OECONF_remove = " c"
+> -"""
+> -
+> -    def test_parse_old_override_syntax_remove(self):
+> -        f = self.parsehelper(self.override_old_remove)
+> -        try:
+> -            bb.parse.handle(f.name, self.d)['']
+> -            self.fail('Pattern should have raised bb.BBHandledException')
+> -        except bb.BBHandledException:
+> -            pass
+>  
+>      override_old_valid_append = """
+>  do_appendsomething () {
+> -- 
+> 2.34.1
+> 
 
-We don't care about ownership. If the files are owned by us then they
-ill remain owned by us, and if they're not then the attempt to change
-ownership will be silently ignored.  In a shared DL_DIR where files have
-group ownership this group access isn't relevant in the single-user build
-tree.
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#16598): https://lists.openembedded.org/g/bitbake-devel/message/16598
+> Mute This Topic: https://lists.openembedded.org/mt/108625078/3617179
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alexandre.belloni@bootlin.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
 
-We do want to preserve executable bits in the mode, but cp always does
-this.  The difference between --preserve=3Dmode and no --preserve is that
-the mode isn't preserved exactly (no sticky bits, no suid, umask is
-applied) but this also isn't a relevant difference in a build tree.
 
-Also expand the arguments to be clearer about what options are being
-passed.
-
-The impetus for this is that coreutils 9.4 includes a change in gnulib[1]
-and will now try to preserve permission-based xattrs if asked to preserve
-the mode.  This can result in cp failing when copying a file from a
-NFSv4 server with ACLs stored in xattrs to a non-NFS directory where
-those xattrs cannot be written:
-
-cp: preserving permissions for =E2=80=98./jquery-3.7.1.js=E2=80=99: Opera=
-tion not supported
-
-The error comes from the kernel refusing to write a system.nfs4_acl
-xattr to a file on ext4.
-
-This situation doesn't appear on all systems with coreutils 9.4, at the
-time of writing it fails on Ubuntu 24.04 onwards but not Fedora 40. This
-is because /etc/xattr.conf is used to determine which xattrs describe
-permissions, and Fedora 40 has removed the NFSv4 attributes[2].
-
-Also, use long-form options to make the cp command clearer.
-
-[1] https://github.com/coreutils/gnulib/commit/eb6a8a4dfb
-[2] https://src.fedoraproject.org/rpms/attr/blob/rawhide/f/0003-attr-2.4.=
-48-xattr-conf-nfs4-acls.patch
-
-[ YOCTO #15596 ]
-
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- bitbake/lib/bb/fetch2/__init__.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__=
-init__.py
-index ddee4400bbe..33a8086f279 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -1606,7 +1606,7 @@ class FetchMethod(object):
-                     if urlpath.find("/") !=3D -1:
-                         destdir =3D urlpath.rsplit("/", 1)[0] + '/'
-                         bb.utils.mkdirhier("%s/%s" % (unpackdir, destdir=
-))
--                cmd =3D 'cp -fpPRH "%s" "%s"' % (file, destdir)
-+                cmd =3D 'cp --force --preserve=3Dtimestamps --no-derefer=
-ence --recursive -H "%s" "%s"' % (file, destdir)
-         else:
-             urldata.unpack_tracer.unpack("archive-extract", unpackdir)
-=20
---=20
-2.34.1
-
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
