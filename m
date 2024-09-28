@@ -2,99 +2,99 @@ Return-Path: <kweihmann@outlook.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F1FCF6493
-	for <webhook@archiver.kernel.org>; Sat, 28 Sep 2024 07:00:22 +0000 (UTC)
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (EUR02-AM0-obe.outbound.protection.outlook.com [40.92.49.39])
- by mx.groups.io with SMTP id smtpd.web10.9219.1727506814732853398
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E99CF649A
+	for <webhook@archiver.kernel.org>; Sat, 28 Sep 2024 07:00:32 +0000 (UTC)
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (EUR02-AM0-obe.outbound.protection.outlook.com [40.92.49.98])
+ by mx.groups.io with SMTP id smtpd.web11.9180.1727506826095922038
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 28 Sep 2024 00:00:15 -0700
+ Sat, 28 Sep 2024 00:00:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@outlook.com header.s=selector1 header.b=AnoJioLz;
- spf=pass (domain: outlook.com, ip: 40.92.49.39, mailfrom: kweihmann@outlook.com)
+ dkim=pass header.i=@outlook.com header.s=selector1 header.b=kjHgmO7z;
+ spf=pass (domain: outlook.com, ip: 40.92.49.98, mailfrom: kweihmann@outlook.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w+sxNLiOEQsoVgGsenvg0tAW89GXzHRFJFwXalv36i+gGFlVO1g0oBXmZIATf4Qc9ZKaGbPXHBB4U++HPJVwPU2fAdQplWAnpA5l6iEy1WVPPvKExhf1rkGQxc4X4Nu1Wtuee1JSFuXnZltwTH+fPWBWmdYf/xpoFESXv69FQRb0Y0j6AFzwmqa89xD8bXvAaKdAWA+wB2/lPT54ki1yfzoIL8yCMP6INItCB/WdCUfT1cV5BbPRWC2gGaLe1GU87DULoAKA90qGYiOYteD0NPmYqpuif7JFqVSyGQt//7rNWRW2a8qpJY2PM37C3vKfRek76E4ODvbLOYf7Fi6Wvw==
+ b=pmTKOUiuAc7cbU+Ez/m0UHMyL5XNeSiCHXnL13Okfr3SThPX9p/bGLCC+lSRMRkp+U5/oCbWR+vkRaaqOUPs87XelySSZtBY9f7wOCie5STWRnXrm4vKXQ/le+mERcH8+mk6L72dN5a1+iMkM6xeWOAftukAwC7AarQaZyK43exSfxhM0cFCv0rWzX+IWlXWqmt+bZOWZwzgUl3Q9DIPSBHG4nLqnYs0J3mEvLwAx2NhsKosTeulbRYWeOxpQwslsVVNCmEi9QWX7DyWcmOlUmhEyyPWDVC0UKYTe0nPkZMFNatjkGGQoESXmTEJaLPsVZcFL9hFFzHO7v5GUdEQaw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=K/vC4KthfmfUmLGogUPiBxzDrY1ZtNI93LmCSBCGjCk=;
- b=VtkH7VoNQXeymhhLs0KGKOxrfTiEWNlmjFRKemmKDPCVI7z+hPkPxrnD05yat4h6BCfFoNahzPwUWmQPMaBrwYh1cRAvSxdcnDPutaEQjSk5PpXvoW2p8z0iYYjXPP9cX7M+9O7lMm+K67BrBldbwvNzT2Pm4o2JmWgoo/QAYqPTTQpNq/TogLCznwveZlXGgWQ45TWdEjEKnb09A8KhDIzMieMFjUpOqQAQaeiSuGybRRZsyOU51XYk8413wPC0GwDhxQASwOJm0EYE08F1SWCkXVqVfiYdwxL5rI/vScwI9cpUmQ6YjO36xTwRi4Aaqy2gtHMWvVx3TQ3Bh0Dryw==
+ bh=5ov3C355UgNZCnsJLM5d16CGXQSJGnBNJ/E87CwBzhI=;
+ b=dzcp/wWkGGmPRQ/fwWWnU2Rd2fN0D3SIvoxs8550SqGCZUBqwZD0XDqtQ6JbkszzQoRFB0+PZpdMgy890+3GtB3qMeo50FWdfRmhOWIPuud9JWcTUVhfJkgRQDKjvwFzjA7lkIMxmDErn3ts8JRgu6eN6vjrEAtKBtHtstVl/KgkJWvfJTbB+aQVVWRXJ1N9++3HjGWOg9RMUbEdt2BqqJmT0JLMsiqmgozitbvZZ08sDab76QQYQCHS3i96GW2FxjxexpqOIRMVp+Y4aLsYCs3G0exz8+RsKBqwV5VM5iMQ94ns0yjCw6a4q1OPg1rgn7t7xKoZV0wV/gPEcl8EQw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K/vC4KthfmfUmLGogUPiBxzDrY1ZtNI93LmCSBCGjCk=;
- b=AnoJioLzvjqy0IMtircu6aZ1K3Jam5+8CNw38sm0If4/2XXcj9eJxcrsIZQt40OjnsDXl99DyarCPnETB9LzALZl16oKaXVuoD3FSsWwQhV+6t0he1yKijn7sqaqqKZLAPBSirOfKnh7Xz3s+rTu7+LBl9NVot+CyZXZTjsxJDLsQM3AQCpuZEmXZG07fpHfUB01ceEFylWq58zCF6G2xGQrWIA7xlF8fggQ0k1Kl5NY1WQplJqzxObsXY/eDo0TipNwRPwXozIF08YrNNLGfJk+JyobAJ6aiXQGPt6+q3F3ClP8KMTCE0xITxZb/GvwTJdZzPBTODcQ3C1mmlLwiQ==
+ bh=5ov3C355UgNZCnsJLM5d16CGXQSJGnBNJ/E87CwBzhI=;
+ b=kjHgmO7zwuNVuY8/HCddNBe2oGx6PT7ZW+F3HHCOQyPrcG6yDR5rLXrCh9IwdzxPLrhehlvZR0lZqxa5bp1vkZtXLxVlQ7aoNIDs9OQfFMoJWVqIE5JzR/t/GcHGCipYfAtPBu83RuP/FQoY5iOM49wuhFfQlLnUI53UOKRIbPVQJK64kZo4uHWZnZ19AxUvzJm26pplWjxl1KRIb2POLkWvPF/B1gkldMJCG8kNpKpZsNirPTV2DEEuZ0pYNbvigL4cXvcuLrH/W94dyBTGXwcdxfI7AUjJLiKIc4WNemPX0SrFBMx4oJA+m0jMbNZ2rBZIOOrwr12gaciI2htq5w==
 Received: from GV1PR07MB9120.eurprd07.prod.outlook.com (2603:10a6:150:80::7)
  by DB9PR07MB7945.eurprd07.prod.outlook.com (2603:10a6:10:2a0::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8005.24; Sat, 28 Sep
- 2024 07:00:12 +0000
+ 2024 07:00:19 +0000
 Received: from GV1PR07MB9120.eurprd07.prod.outlook.com
  ([fe80::a630:7019:63e4:a48a]) by GV1PR07MB9120.eurprd07.prod.outlook.com
  ([fe80::a630:7019:63e4:a48a%6]) with mapi id 15.20.8005.020; Sat, 28 Sep 2024
- 07:00:12 +0000
+ 07:00:19 +0000
 Message-ID: 
- <GV1PR07MB9120F25EE86DFDB0CF63AD9FA8742@GV1PR07MB9120.eurprd07.prod.outlook.com>
-Date: Sat, 28 Sep 2024 09:00:11 +0200
+ <GV1PR07MB91208FE4BD9DE31DFD4A7318A8742@GV1PR07MB9120.eurprd07.prod.outlook.com>
+Date: Sat, 28 Sep 2024 09:00:18 +0200
 User-Agent: Mozilla Thunderbird
 From: Konrad Weihmann <kweihmann@outlook.com>
-Subject: [PATCH v3 1/3] bb/data_smart: remove dead code
+Subject: [PATCH v3 2/3] bb/data_smart: fix override syntax warning
 To: bitbake-devel@lists.openembedded.org
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR2P281CA0119.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:9d::15) To GV1PR07MB9120.eurprd07.prod.outlook.com
+X-ClientProxiedBy: FR2P281CA0118.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:9d::10) To GV1PR07MB9120.eurprd07.prod.outlook.com
  (2603:10a6:150:80::7)
 X-Microsoft-Original-Message-ID: 
- <804e0805-6469-4f39-9571-31b98aa36041@outlook.com>
+ <73b7a342-3cf7-4fcc-b73a-a7add197c89b@outlook.com>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: GV1PR07MB9120:EE_|DB9PR07MB7945:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8d6f866a-b56b-4d2a-6300-08dcdf8b32d6
+X-MS-Office365-Filtering-Correlation-Id: dad54c37-37c1-40d4-fde6-08dcdf8b3703
 X-Microsoft-Antispam: 
 	BCL:0;ARA:14566002|5072599009|8060799006|15080799006|7092599003|6090799003|19110799003|461199028|5062599005|440099028|3412199025;
 X-Microsoft-Antispam-Message-Info: 
-	mAiXoFvulz3wC2dE148XnPxmL/YWt42Ut9XLB/ZM+FtB8k3wUFCasQfRc/grkSjaQJsWn1788clgU4/sTDk/ywADh/8Znr9San+x3Whsg1WHG2F/z3Sf0KJ/HtyXTjyQGb6dHOQgvOpuAfwwUmtZ+74kVasoXH8HpKiil91IPK/XGpA7GX0oqbRR8H8TCbnBOnoedWPDsWVB+ZmonywD0lzYJKN7ccr3yFmH6cj+H0taQerT0FwvC27t1h6YoaTD5YusVHXWg9RECP+DiAOmfCETl5Hny2i+HAI7etLVwPQBmJTOwfxJoHTPwcgMv2ToPsTVgSO+TZA22vPA132TBaTA//3rf13W/c44u/4/wv+fsn7h3s0PM1tjuiCVqnRaTjbzYYNjjYN+1wQkLuCJMdNA6mO+ay6qPux6+XYCxJ2h0Yb8BJu041lfy3lnY/6CrXuejKSCprvAZj73VCeV4Cp5JRPsl8WcgCwi8EowMnNddlzGyfiueXCITpcon/Qp6f5fA6jCQdW0vd97eUqxtSR1wWFJXWtzdHnVuebW9Btgf6ph9aVQPi65LxxUbWcqVvtqAjzL++UkSUMDt1n3eVqm3oAz2VASW05rz+kmvqIhxoCCqHUZSK7/oCbWjSfYwShD+FBI/boS+JNtnW6Q/TtiAuYPm75+enM2GKJ8i63xiXd2hZfCLEg5xyI52WYAJeDGxcF048dXM0af1HeF9dj8233kyGs5hPmj45wQA3H9KMGaeVRHyh+khTK+UsU1QN7r3LA4HyjRRq3b16o8X0Gx9anjG/eYJ82ENxT2zPY=
+	9Cmc+wgpYYeGwlc/VOA1oF2Rw1ofuHxOe6OjIZk07cHUr1fG1nAruBrsCEULqsjhnDbGugyALOKmk4TZusVrdoWSffqoO4UzvXI2f9yhLBHxnumCv/TxZRmfMFoRrfMuO5WXya9q/VLwxF04hNjVGK9m+yata+v163GzTdfgnOSNS9effi3u7mE97+xTIl9a2lKbyYstsGfceG6waBV+1AiYrcOc6DxJJw9f7o79ESb85MtF3DiknPcTpN+Cpa+VABW1lTVMzaOajho9RF0W+68gPsMK7QeuTfu7DyBibKJROdC072SZIvnJupEBKm++nWCA2vV7tQnnkaasLFo0oPHY3kCT1myuaqscLlHbDdaFjC8OqbbNQH7xfcnh7USRBiY5LdPRCSJo9nW12NazoV3Zi6r8KrceozSy5nXALotWgN7rGYOj12bq4aszfw+d5MuJFftJJX1WkNfOLLWS+jqsGDPy2IlG+tQbnFsjZ1bumiA7y2gpbD2Sjv6j1023S1NypjqFqPStMQbkkcrU7cUThkhDYwwnDNrVryoFu5tbQ4fee4C11NbZMlkUNTQpTRDS+otYNxLctQlu44ASlM3Gvz8THcwnh+EL1vm0bt1c4IqTQxXRw8tnuOetId7d5kMEuXDcxoOFNekIKcQLWLZda5JrH12OMZzZIUBm+K3WlpMHdnGQVbFEiQfibjIMVbFXfmZQ2wTq6a7ElN5DXtlAgnZkTxJj78bEWRbSW3PB5z/W18rfcbleOSEttT1YS8B7fFeoEzIr1pAuLeYSObt4z6K2FCmuBtT0syLT4as=
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?WStCV3NsZ2pIZzlFbkMwQU1tUkpTOURkVHdrT2xIWXVwSTZrY2l2TWRuNFJo?=
- =?utf-8?B?WTFZZ044V0hLZ0NiUUMvWWJMZWpVTjk2MHp4NGVjMEM2TXNybjB5SWVEQ1FK?=
- =?utf-8?B?SWlvSkpCRTN3Wit6eHY1N3I5RWRkcm5Qb3VZQUNmQmQxVHhLMHl2TEZEbzVW?=
- =?utf-8?B?eXJJLzZtY0JLNEhrMG90NTZTUGNmYnFGVFlBd0M5Q29Ha29XNFRxdTB1WE1G?=
- =?utf-8?B?dDRycEk4UFpmMkRreXczQ2tGYmtxdWxxdVJwSFArYjgrWmM0TnhwNVRuSlFN?=
- =?utf-8?B?Z09DSGg5SDIyQnRscERGeFF6ZksvYWVpSHh1cEdkdkY1M2x1WEkvVFphdTdq?=
- =?utf-8?B?Y2c0OHlRcmhyYnhKWXpUOGdqN0YzUW1FK2NsWGN3LzUvRFZLY2tmRlU4QkJ4?=
- =?utf-8?B?T1FVRXViY0xDb2IwRVpOY1I1OTdvZkYvRFVYdVZoTExBU3JTdC9LRCtWYzc0?=
- =?utf-8?B?VFBYdXZGNGEzYW12WFE2cFNyaGh1anJybHhXRkNmNndOMzB1akgrM2pJRisx?=
- =?utf-8?B?aFNBaVhPMTU1OG5JVmFOV1hmRUdzeU5pK0lObmNkYTBUZGlxWDhlejhOWDY0?=
- =?utf-8?B?VkpiVUhERXByTnRXbHRrY0hvVU9WUmE3OFYrNXkva00vbTRZQzQyVnRiQXNQ?=
- =?utf-8?B?TDFDaXlJcVkySXJyY2FpQ3pJSXFRcjBld2xUTlJpeU1MeEY0TjNiQ1BZSWwv?=
- =?utf-8?B?TXRBZ3hLNVB3blE2bnU0dnlwRFNrUE5LWmlEWmkxcGR3ak0rbXhDcHdFTHh3?=
- =?utf-8?B?R3FJNGM4cXpjYnJ1KzZ4TXFEQ1gwWHNXREh4M0xvSTFzY1BHVERkb0k2MjV1?=
- =?utf-8?B?bTZoMUgxaDhPekZ6eVBjWVpVRVhaekxacHRGUldVMFY1V2F5TC9UTlc4NzJK?=
- =?utf-8?B?T05VZUNhc1ZUZEIrbXVLNDMvTVZtWVhBRmRPeFFjZXU5YktLcTY4bzlqaUNM?=
- =?utf-8?B?VGNHcllnV0FNdUl6T0pidXc3Si80Z3YvRksyT21LL3ZoaVZ6ZVZ3eVIzVVJY?=
- =?utf-8?B?VHpYS1pXYjZuZDdneGdvaEtWTXViVWVHV3YzTmtWbjczMTlhVko3ZXNwMzRK?=
- =?utf-8?B?MVV0RUk2bitsb3E5R1FOaFBLNW9vMjFVb1BFLzRsRmNKakdjK1lNRldkSlVC?=
- =?utf-8?B?VGdkMGtuSUt6NE55c1k0VW1jN1M4MStENzhJU3hwdzZjU1FXbmxNbDNNeDA1?=
- =?utf-8?B?TkU0Rjc0dG5OZC9tRUFPYlU3UFJlYktEdDhORHNNYlNKS0h6ekR3dWEyckVL?=
- =?utf-8?B?eUMyS2hwc1pxMWRpZG9JMnNZNEs2eHp0WXlQOXI2UGZYSUZBZytVLzlqd3Y0?=
- =?utf-8?B?WlFGelpJNVMzSkxFUmNoRk5lQmw4M1hYb1BUQ3ZhdTE3Q21qcng5ZHFiUUdH?=
- =?utf-8?B?d0RWTDdTZWZuL1NiN1JlNVNXWUpKdXg0QzJFZHVyeFBHbUJJSFdlNm1ZY28w?=
- =?utf-8?B?NVNSL05WUWt1UDYzRTBQUFRYZnk5WkxhdnVGQlpPRlV0d3F5cHN3WlgvKzRu?=
- =?utf-8?B?OGFSK09qY3hLZE01UFNCS2thdm1QQmowMEJDclcveDA4eG12NVQ4TTAwWWcy?=
- =?utf-8?B?ZEwvb051L2ZIeXA2UGhXNXAyNFhiNUpkck8yL3JvTFpwWXQvcDZGUXVyc1dq?=
- =?utf-8?B?NFU1elJVVG55bld3WlNlK2s2QURUNzhTZXZnYVFiYnJnL3ErK05oakRpZzJ6?=
- =?utf-8?B?SmFVSE5Vd1lLcm94clI0RUEySGlnZUpCd2dxN1J2Q1pYbWFsMDl3dFJHUTJU?=
- =?utf-8?Q?V69gFkQIVQY41x5R4cdZnxpzmCwhHydxg/4njEB?=
+	=?utf-8?B?VXJuSmVWSURSWE4yQWdvSjFQbkFBd3NPZzdUeW9NMWRld0laQUV6aEZGYUk0?=
+ =?utf-8?B?ZDRIWXZzM1M2YW9FVnZzWGhqSzhWSzYrVEpnNVZuM1hBKzdQNkJxdk9Xd0xz?=
+ =?utf-8?B?U0lRQmE2V1dQZGJlLytsd203MVMrRDVwTUtYKzd0ZS9XTDBlaWZIcWd6N0xK?=
+ =?utf-8?B?ZWZxNmkrcGpXMHFwSVBNcEoxb3NsakNYN05YL1J2QU1xa1M0eHlMaEt5a1gz?=
+ =?utf-8?B?WUMvNFREd3IrNTN4K01DMlR0R2M2aWtxZXBORWd3bVlpYjk1S1Vya0xKUmFt?=
+ =?utf-8?B?NVdqTllvQUpnaEE1WU96M3E4OFA4aDgwRDZHNk0rKzUyZ293N1RnRUVFbmhG?=
+ =?utf-8?B?bnI1T2E4ODR1VEQxN2t1bUtWU1BaTXNJVHBCdEw0RU9sSjMyZTFRUUY2b1hJ?=
+ =?utf-8?B?dGlMdEFpci9ZU3dMdWM4TW5FSm0vTjJYOHQyRnVJWVlFU0RVVDhEZlZqREox?=
+ =?utf-8?B?RTRWcTZ4TFJ0VmtRcWVmZDJXK3ZFTmx0TUV5VzhFMUVrR0hOMk0rc2w4Z0NM?=
+ =?utf-8?B?ZFI0bkN0MGpNaEwwWFVybUh4aHc5MmFJWDg3c01NMDJ1bFJucUhmNlNnTTA0?=
+ =?utf-8?B?R2UrWHlxRkZYRWw1VlkxakY1SDRraEpJbmt0NDVyWlhjanRROVZJWWwzd0JC?=
+ =?utf-8?B?OWgwT0gwSGlRR1BJZ0wrMEJaN0J3WmVwVmluaXcvNFVLK3Q0bXVKS0VCNVhz?=
+ =?utf-8?B?SUlTUUlYSDZCVjl2bUhRUUtOMVBvT2xhNGMvQVJ6TDBlN0dZeHBGZVhwV3Z0?=
+ =?utf-8?B?OWZxNzVqbXd0ZVBUVHFLK0hJUnZxcUFEaXhTa1RMZ3VCSVR4TEYrL1dKdVVP?=
+ =?utf-8?B?V0duVktIdUJta2c0c3k5NGxyRDBDV2krTG1MVGNXRlJzVklZbm1scFhFUGQ1?=
+ =?utf-8?B?YlpTVHFNMGp4WHAwcVdPZG1lQXB6TWR4bGVOVXNhdm0xclFPTXRlTFlzZzNj?=
+ =?utf-8?B?ZjJhcUtJbTJGZ05LM0FEWk1qaGlvMUZtSGVNc2tWSWtDUDZCVllrMnlRaDB0?=
+ =?utf-8?B?SXIzbmljTk5JY291dUdZcWNRTjBSOHJNZU1CM1phZVpBV3MzUm16SWREZWpl?=
+ =?utf-8?B?ajJwWGR2cklqTVdybjBQVExMMW8vR2xDOU9yS0c5dmpzQUthQXFaSmFsVkZC?=
+ =?utf-8?B?NGdlWVR1Y3haYndVUDlWSXk1dHZ0U2NCd2hTeUptVnBnTHB3a3dMby9TMExS?=
+ =?utf-8?B?YTRPWkVwc05uSlBRSFMzcHNyWXM2OENrQldadWRxZnVVMWZXcW1WZUt1QlFC?=
+ =?utf-8?B?NC9KQXpTeDNhRmE2MTZ5SUh4MmZ4UDdKcXJEYXRPRGZTa1Y2RzFGTGNiMXho?=
+ =?utf-8?B?Q3dPcWQzS21jMTFlelc5ZG1lb3YwRlRQZWt0bFUrTUg4eUZBelBBRWdZdCs5?=
+ =?utf-8?B?WnZIcm5Ycm1mb1U3MDJaQXVuV2hqSkZTSEpUcysyT2lxeno5UVYwL2VzSFkz?=
+ =?utf-8?B?R0Nlb0tHTTVvQVlLL2tFWDA3bmZxOTRkcUxmQ1lQVlYvK2pMZWVCVlRNS3ZT?=
+ =?utf-8?B?OWVQa2ZGRmVVc3pVcjFBUmhqMVZkS3ZJMTBJOEJobW00WEN6aGFaY2ZvOEN1?=
+ =?utf-8?B?MHhzMmVYSDNsdUZFazg3VGowbVpNN0U4eDEyZisvVEg5cGRnK0dFNkIzdkdl?=
+ =?utf-8?B?ejZaK053K3NhTWdVZlVTWHhqbVB3UHIrTkxoNnFNZEQ4ZUp6UmNDRlh6eXZu?=
+ =?utf-8?B?MXJjTWNLMzBhN2dGSDcyK3hiTTFqWHl0cmszQzRNRnRIV1ZGSm9RTHMxTEtC?=
+ =?utf-8?Q?y23ozygJY/EkBdBbkWz/a3cE/hN4fL4+72lW0OR?=
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d6f866a-b56b-4d2a-6300-08dcdf8b32d6
+X-MS-Exchange-CrossTenant-Network-Message-Id: dad54c37-37c1-40d4-fde6-08dcdf8b3703
 X-MS-Exchange-CrossTenant-AuthSource: GV1PR07MB9120.eurprd07.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Sep 2024 07:00:12.7439
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Sep 2024 07:00:19.7598
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -104,34 +104,58 @@ X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR07MB7945
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 28 Sep 2024 07:00:22 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16612
+ <bitbake-devel@lists.openembedded.org>; Sat, 28 Sep 2024 07:00:32 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16613
+
+when defining a function do_removesomething,
+the parser warned about
+
+Variable do_removesomething contains an operation using the
+old override syntax. Please convert this layer/metadata before
+attempting to use with a newer bitbake
+
+correct it would be to search for a override operator at the end
+of the string or for the next operator.
+
+To avoid running the expensive regex search on every setVar call
+the current "cheap" check would be have to be triggered,
+before the more precise check is run.
 
 Signed-off-by: Konrad Weihmann <kweihmann@outlook.com>
 ---
-  lib/bb/data_smart.py | 2 --
-  1 file changed, 2 deletions(-)
+  lib/bb/data_smart.py | 14 +++++++-------
+  1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index c6049d578..4e15a43c2 100644
+index 4e15a43c2..0523744de 100644
 --- a/lib/bb/data_smart.py
 +++ b/lib/bb/data_smart.py
-@@ -320,7 +320,6 @@ class VariableHistory(object):
-              else:
-                  o.write("#\n# $%s [%d operations]\n" % (var, 
-len(history)))
-              for event in history:
--                # o.write("# %s\n" % str(event))
-                  if 'func' in event:
-                      # If we have a function listed, this is internal
-                      # code, not an operation in a config file, and the
-@@ -540,7 +539,6 @@ class DataSmart(MutableMapping):
+@@ -539,14 +539,14 @@ class DataSmart(MutableMapping):
           return var in self.overridedata
        def setVar(self, var, value, **loginfo):
--        #print("var=" + str(var) + "  val=" + str(value))
-           if not var.startswith("__anon_") and ("_append" in var or 
+-
+          if not var.startswith("__anon_") and ("_append" in var or 
 "_prepend" in var or "_remove" in var):
-              info = "%s" % var
+-            info = "%s" % var
+-            if "file" in loginfo:
+-                info += " file: %s" % loginfo["file"]
+-            if "line" in loginfo:
+-                info += " line: %s" % loginfo["line"]
+-            bb.fatal("Variable %s contains an operation using the old 
+override syntax. Please convert this layer/metadata before attempting to 
+use with a newer bitbake." % info)
++            if re.search(r"(_append|_prepend|_remove)(_|$)", var) is 
+not None:
++                info = "%s" % var
++                if "file" in loginfo:
++                    info += " file: %s" % loginfo["file"]
++                if "line" in loginfo:
++                    info += " line: %s" % loginfo["line"]
++                bb.fatal("Variable %s contains an operation using the 
+old override syntax. Please convert this layer/metadata before 
+attempting to use with a newer bitbake." % info)
+           shortvar = var.split(":", 1)[0]
+          if shortvar in self._var_renames:
 -- 
 2.34.1
 
