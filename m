@@ -1,200 +1,106 @@
-Return-Path: <kweihmann@outlook.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A54CF6493
-	for <webhook@archiver.kernel.org>; Sat, 28 Sep 2024 07:00:32 +0000 (UTC)
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (EUR02-AM0-obe.outbound.protection.outlook.com [40.92.49.98])
- by mx.groups.io with SMTP id smtpd.web11.9180.1727506826095922038
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E19C1CF649D
+	for <webhook@archiver.kernel.org>; Mon, 30 Sep 2024 09:12:09 +0000 (UTC)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.web10.50104.1727687507869734353
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 28 Sep 2024 00:00:27 -0700
+ Mon, 30 Sep 2024 02:11:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@outlook.com header.s=selector1 header.b=OmmdZRVJ;
- spf=pass (domain: outlook.com, ip: 40.92.49.98, mailfrom: kweihmann@outlook.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UJA/3sWtzSuiQ0R9DNTPNKScGH30rDy9g8PsYHs2bb+7X4jZObkobETQp8cxCG+DK933B998GRzv7TJF3XEa/FuwIgpeWi64FVg4prJhqqGaGS9dVUty+BZmIlL4/SundQzUmAEMOz8Wz6FGgtObPyl67hHDzHULH/WdxgCDDDjuxYagHLr52Myean0F6zv0Q3GryE5RxUcj0zWWIAu8o9B5vhaQ4yTmLTDPvji+MFe4QkUgAjfQxKma4Gqe85vombPWmLkaVuYRMJKyyvd5owqXJ8/dPJcoDDGUDJVjCbraxTAkeOnVZ9BN6bHxjW+hEDfb3rRqRoe6MCsNMRodNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=M4mMVEDXxYkgbmatEC3Jact7khixa+nQdVZO19Zh3dU=;
- b=Finz8uEDH/Zjt9arG3Pn+iVRbsw/WOAitRPguzSM6Cib/+/zv1kdZN4v7osrMAoH21g4KavdXR+zSbjlrcUbjEwxFV+NVNsXC/R6vh/AnStv8q3KHSQjpZJrlLgEz0hkO7p1ukGoHTohHselcQ2jtl+xf3w3bn23RbWi4GIrE83Hagg9RlOMYHRw5ivfDMplRj4e+cSPAGcwDzgsEVkr/j4aYqzOF6SeyKE/97kyHxGOJvVC9al0OIO7ZVkQYM0xq4o/UYpK8ZVhdvpHA92gLE9J76an1HoVjGR5RQT0LrsvOYdAzim9unKF8cXf0kIHqvVkz0BeRRbrPfNCEOSuzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M4mMVEDXxYkgbmatEC3Jact7khixa+nQdVZO19Zh3dU=;
- b=OmmdZRVJ/UZFr41m09bRu79CZ2ZcVmY1O32B4YMBbQi/8eEe7wRSp1Mjhrdr7Kl9jrninHP2rpmjmRADhdXAYmml/C2ADdTU1d40PDGqcoTVOoNuUv/k2jeHcXvaVg52iuEpbXcgBN8UCGsc60S2rcbzjYP6s2Jff5bJ+QgM4iQIhMqKy6lMIo3Gu2XkSwHLw96jf9sbD27AUvBT7FbKSc3CpbNBVL00MEt3g0wp1gVvtRP/wJv9g2tvgJnjMXbtVOvJ92caIXCZrJC0q07nH045r6b1yD5LujfIRCP7DPQVqwxVxTWffO9zyc0Py6iqA4SpUbnQJl+niXICTPjI1A==
-Received: from GV1PR07MB9120.eurprd07.prod.outlook.com (2603:10a6:150:80::7)
- by DB9PR07MB7945.eurprd07.prod.outlook.com (2603:10a6:10:2a0::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8005.24; Sat, 28 Sep
- 2024 07:00:24 +0000
-Received: from GV1PR07MB9120.eurprd07.prod.outlook.com
- ([fe80::a630:7019:63e4:a48a]) by GV1PR07MB9120.eurprd07.prod.outlook.com
- ([fe80::a630:7019:63e4:a48a%6]) with mapi id 15.20.8005.020; Sat, 28 Sep 2024
- 07:00:24 +0000
-Message-ID: 
- <GV1PR07MB91208B4ECFB120D35707021DA8742@GV1PR07MB9120.eurprd07.prod.outlook.com>
-Date: Sat, 28 Sep 2024 09:00:23 +0200
-User-Agent: Mozilla Thunderbird
-From: Konrad Weihmann <kweihmann@outlook.com>
-Subject: [PATCH v3 3/3] tests/parse: add coverage for old override syntax
-To: bitbake-devel@lists.openembedded.org
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR2P281CA0118.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:9d::10) To GV1PR07MB9120.eurprd07.prod.outlook.com
- (2603:10a6:150:80::7)
-X-Microsoft-Original-Message-ID: 
- <0228e795-3175-4fa3-9ea8-af2c3490f686@outlook.com>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=RShVBHBa;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-37cd1ccaf71so1891368f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Sep 2024 02:11:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1727687506; x=1728292306; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aYpQBnX+5kPA0MceCe7tUBRvxCkGAfDq4DmKYP5KvoQ=;
+        b=RShVBHBa2Fx4j+6yxKlYhxgT/70nXUnBAKd/QEiZQw6dHaa5fyPqca4R3OzOa3oKjQ
+         /q6CrXqQUwK0Bq8/erkGjKziDC3m+ZoiTCOj8Y/Vvohx8UxTsDZJffowdPEJkKh7Bf6T
+         HdW5tmEHw6ULmJ8RqSC7R+gFBT1a2GMSqkY74=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727687506; x=1728292306;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=aYpQBnX+5kPA0MceCe7tUBRvxCkGAfDq4DmKYP5KvoQ=;
+        b=Ds3kIJQOyCvhmNNCJE/gfi61svXuGQnS8Ww1uCrMkkkQOmFFtvMBkW6U+d03bTeI1a
+         GBb/offvy/3qDD7yUgb97/vGtXfQXA0AH7x5mk4vWcwOV5W/ZLvzQyWLEoql21eIFFnb
+         6mhg11gbb8m8lkY7p7f3u7AqnMSNjPTNr+RJkPdiuOerXnQ8zgZckaDlBUK7k4MhXjzA
+         AjGF4O58Nb5ErappRW4DVW0ixQmbO9GdqKxS6Kn/xV5a4sfeIc2HxePhX6sR+LkYZGNT
+         p48RMIlIbyicZefSu5bd3FPTqgfr8IDXs5PfXwU14NN7HmxLHNowtYrsjAVeO0vgPaWQ
+         Z0hg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBD1aIaMQZlNOPsLvnK64dbhbLIat4z/Qsdnp0DGLJqLmmGcwkSA4KApN0wvFlN/uiC4W3KaX92hc/mLBH@lists.openembedded.org
+X-Gm-Message-State: AOJu0YwFGaWmvDMW4a1+zrAP16nqNc5FOSzdg3O0O4joAfgI7YEnRDE2
+	j+BLQonP2GMfSUZdomx7R09OD+g2aG5qI1qSP9GyTZlSRfgbcZNMp9Nayts7vOA=
+X-Google-Smtp-Source: AGHT+IEPaeq7JTnRIjrhHLO3vA27BwQOKns18ZWu1VyXOxMIbOgncsvgFcj+Pj+iY257uCJ8kqL5DQ==
+X-Received: by 2002:adf:f512:0:b0:376:e2f4:5414 with SMTP id ffacd0b85a97d-37ccdb099fbmr7640199f8f.5.1727687506291;
+        Mon, 30 Sep 2024 02:11:46 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:bbd1:92ec:a53b:af7d? ([2001:8b0:aba:5f3c:bbd1:92ec:a53b:af7d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42f57e13a28sm98041635e9.29.2024.09.30.02.11.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2024 02:11:45 -0700 (PDT)
+Message-ID: <956666c1c49ae4e4b1056d25ddbe9e125726d218.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH v3 3/3] tests/parse: add coverage for
+ old override syntax
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: kweihmann@outlook.com, bitbake-devel@lists.openembedded.org
+Date: Mon, 30 Sep 2024 10:11:44 +0100
+In-Reply-To: <GV1PR07MB91208B4ECFB120D35707021DA8742@GV1PR07MB9120.eurprd07.prod.outlook.com>
+References: 
+	<GV1PR07MB91208B4ECFB120D35707021DA8742@GV1PR07MB9120.eurprd07.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.52.3-0ubuntu1 
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV1PR07MB9120:EE_|DB9PR07MB7945:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7c6e4ab2-7236-4067-ea2a-08dcdf8b3959
-X-Microsoft-Antispam: 
-	BCL:0;ARA:14566002|5072599009|8060799006|15080799006|7092599003|6090799003|19110799003|461199028|5062599005|440099028|3412199025;
-X-Microsoft-Antispam-Message-Info: 
-	uygXrfqlL8HLE1/av906B0b48kgf0Ek6wJRMn99ksFbhizVaUg1ucnkP/4i9a9ZaTTuB4ndMqjhBoavVin7H4kgmX5Xya7NUAwB+JppFPnwM4M/8/NewBvwx7hLm0/1gCfyVjU+t8aNtdtHa4y9+B6OIT9lYx7IhhoutxZa93Jj1XF7a3W7S7VPVTNupmxem8mB6zPDDZ8wHQVYZJgnYdWIm3qI4V3+ZI67G/PiZn3/e6Qpr/x11cMwj3IEOfvERARlQEEO/rWOony8iLBFdn5l5FmUo9ixJ4lxOBS90VMFp8hhsNTZ8zu8nqCfK/yBSELNt0DkAwr5/7P2JLHOu14LxOs+oc91BbrgU8H6TIfJApLqXVota0TGAl63XBzcaUsbCVtTv3RwHQEFDkskgQHOId+DSSsT5Z1lGXCy4rS7pgR97ZbRHVXVutJBYy2HjOGUaAE9nGX27aH/eDsi8vinnP+t2GCTcggcz9+q9BDJ0CEvEukDVtn9bPRQRJO/85l8TgCguEz51+14yLnFqsAqdkrDW+vib1Im98FgBOklT9KP5LAT38JwzAY8LsM3rNsFi484Wym7sMBO7ieEy+kVlYKlSZtOoXOu72pSA20XmIWzUVCjBhyGr+E1DtYHc1DVnU+37ceAP1J1udeUPWAqUPBvkHybFTSPFEdk6N9+rTzSQp2Y6W9+ECO+GSAX/oE3aDnMZzc2dD8lsI/qsUE4vU/9A2WX+zD6A9C8yljeq/nIVvbCXvWYyTiBT+njNbCh2pwu+YB1Qe+YelpdbqJrlPADZEDEb8i1YBkkrPRI=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?dkZjeDVGcEhxbkhuRkRNbXdDdkpScHorcVFZRlhDSmVrWTBmRHBYK2NmTmx5?=
- =?utf-8?B?NXZ1aFRJbWtrWDA2OG02bXNqRjFiY2VqRTZoQkhrWmZtNm1UZzcwcDFqWG85?=
- =?utf-8?B?UVNpcWVpY1RZSjZwY29jRG10UGpuNHB4ZnNPWTVpYVppTFJYaHFWbGZPQ1ZU?=
- =?utf-8?B?TEtlVW56YXlvSDRHcnc5KzdoYXU0OGhpMlZJQWJvWjJWWWVmc0RzcXVuRUxx?=
- =?utf-8?B?UU82a1hHUXRWTDdrNVlTdG8rVGFKdWk5Nk14a3AweFBOUzBHbWZ0aXEwMDQy?=
- =?utf-8?B?d1ZDK1FIVkRwbkRqdi9kZk5JVWh1L2xRcUVPZC8xeVJMOFdGZ0xHN3hkNDdC?=
- =?utf-8?B?TnN3aFozNXF3QkxVYXZOTWlLcFlyc3MyRVlURDkxK0xQT0wyaFpjME5YNlVS?=
- =?utf-8?B?blloa1NJWUVrdGZrSXNnQXIzYldoaCtHaVNkdkdKV3l0Nzg2Q0dzYTJYTkxB?=
- =?utf-8?B?WFJlcFpEN0FVSTQ5SS9PUXNtQVl0b0RpWHg2d2F0aE1kNlNwVHdtTTNBL0d6?=
- =?utf-8?B?ZlIyRzNNOEZCYXIzVzg2OXdKZXk5VkZrTGdvaHczSUNsNDU1NS9SdVhlWVR3?=
- =?utf-8?B?NHhCVnlla3o1d2g1WGFybGFZcGl3Q0YwZjI4V01oNFMwRGRoeTk3d1phcU51?=
- =?utf-8?B?TGRPVmdPZ2ZqTHBhd2lteUpsaEZENW1MdDhZWHNGWEVjK3JHaldSaWdjT0Jw?=
- =?utf-8?B?cFo5aWUxcUxMZ29mVjd4Q3FXZkdaUUpFZzBRUDJjbVBEdGxGRmJuNzFOME9U?=
- =?utf-8?B?b09HQlNHSTVUVHhHblhHREwzWU0xNTZFNm9zZGhLdU42Y2hUcDBJL2t5VjRM?=
- =?utf-8?B?MEdteU96am5xOGZCNmNaZDlvMUhkTFU2SzA2ZWlSd3FkajMvSzhQYVQ1NWF2?=
- =?utf-8?B?ZUw3VkREYTFnMUxzZHRUWThuZGdPdmRLdndoeE0rRDZZUWFCRTRNZzdreWM1?=
- =?utf-8?B?MTNYdXVaRThQbFNYUGZlQXJOcGd0dXUwbndvWHNud1RlK0ZPcUh6cGpFRFJa?=
- =?utf-8?B?MTV5OWY5VHBUQmI0ZEJHdld6VG9FMjVEY1BicEwyZTZIdXNXQUh2eWhmb00y?=
- =?utf-8?B?R05IeVhjME1lWDNMQTRiRmg2WnFDM2lFM2ZFZkFMYVh0eFNQMDA3Zy9GUW5U?=
- =?utf-8?B?cmpKNTdhSkR6dVUvcVFRTEc5SloxSVJWR3RqSFBxODY5L3E3azN3ckdDb1pZ?=
- =?utf-8?B?WllpeW4xbTJkOXlaWlRBS3BHRE5adlpxVDBvMkdtOHYzZVdWYlZDd3J0RDJE?=
- =?utf-8?B?WDZmS3JER0hwU1NXR08rNytkbUdmVmY1Vk9FTk5yZFczdzM5WUNmMzVXMW04?=
- =?utf-8?B?S21aQTNCRVRUbktRTDB4dGc4azFUb3dXN1lUQWc0WitnVG1QRGZBVXBrMFNG?=
- =?utf-8?B?emhTekpEaDVsS0YyNGJpTnlSN2hsakJaeXN2di9lbC9xYk1Pc3Bob09pRTVz?=
- =?utf-8?B?SFNmV3JaMUJQS2NyYUNPOW9tVVhyYXNsMzNEaWlQVkU2K0tTaUlHdE5FRE1P?=
- =?utf-8?B?QlU0RjlHZDFtY3ZjT0h5M3ltenM4bGx0eFBhbHUrMDVyM2hlZkVwM0J6MXd6?=
- =?utf-8?B?dVZHcjB0VTBvRG1USjVYMnd4bXhyeGhkYlRHTW1ISVhwUElJWUtmYkNzOG8v?=
- =?utf-8?B?UkVYblkzNTlNU050cWxHUk1hN1kyVzVVOFZGNlE4L1F1K1A3cXBWeEpKWk1U?=
- =?utf-8?B?bitOSDNZVEFYZVo1UDByQzZWck8vYUxWdG12Z3N0cHlMSzJhSlBwWG90NE9s?=
- =?utf-8?Q?FaZx/+wfds5jNHNmzvNH3NP9ztXHXdHTlizSKd8?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c6e4ab2-7236-4067-ea2a-08dcdf8b3959
-X-MS-Exchange-CrossTenant-AuthSource: GV1PR07MB9120.eurprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Sep 2024 07:00:23.6441
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR07MB7945
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 28 Sep 2024 07:00:32 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16614
+ <bitbake-devel@lists.openembedded.org>; Mon, 30 Sep 2024 09:12:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16615
 
-including previously unconvered tests for true failure cases of
-_prepend/_append/_remove.
-In addition add tests for not valid cases
+T24gU2F0LCAyMDI0LTA5LTI4IGF0IDA5OjAwICswMjAwLCBLb25yYWQgV2VpaG1hbm4gdmlhIGxp
+c3RzLm9wZW5lbWJlZGRlZC5vcmcgd3JvdGU6Cj4gaW5jbHVkaW5nIHByZXZpb3VzbHkgdW5jb252
+ZXJlZCB0ZXN0cyBmb3IgdHJ1ZSBmYWlsdXJlIGNhc2VzIG9mCj4gX3ByZXBlbmQvX2FwcGVuZC9f
+cmVtb3ZlLgo+IEluIGFkZGl0aW9uIGFkZCB0ZXN0cyBmb3Igbm90IHZhbGlkIGNhc2VzCj4gCj4g
+U2lnbmVkLW9mZi1ieTogS29ucmFkIFdlaWhtYW5uIDxrd2VpaG1hbm5Ab3V0bG9vay5jb20+Cj4g
+LS0tCj4gwqAgbGliL2JiL3Rlc3RzL3BhcnNlLnB5IHwgNjkgKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKwo+IMKgIDEgZmlsZSBjaGFuZ2VkLCA2OSBpbnNlcnRpb25z
+KCspCj4gCj4gZGlmZiAtLWdpdCBhL2xpYi9iYi90ZXN0cy9wYXJzZS5weSBiL2xpYi9iYi90ZXN0
+cy9wYXJzZS5weQo+IGluZGV4IDQxMDY3OWQ1YS4uMmRhM2EyYTIyIDEwMDY0NAo+IC0tLSBhL2xp
+Yi9iYi90ZXN0cy9wYXJzZS5weQo+ICsrKyBiL2xpYi9iYi90ZXN0cy9wYXJzZS5weQo+IEBAIC0x
+MzIsNiArMTMyLDc1IEBAIERFU0NSSVBUSU9OOiR7UE59LWRldiA9ICIke0RFU0NSSVBUSU9OfSBC
+Igo+IMKgIFBOID0gImJjIgo+IMKgICIiIgo+IMKgICvCoMKgwqAgb3ZlcnJpZGVfb2xkX2FwcGVu
+ZCA9ICIiIgo+ICtFWFRSQV9PRUNPTkZfYXBwZW5kID0gIiBjIgo+ICsiIiIKPiArCj4gK8KgwqDC
+oCBkZWYgdGVzdF9wYXJzZV9vbGRfb3ZlcnJpZGVfc3ludGF4X2FwcGVuZChzZWxmKToKPiArwqDC
+oMKgwqDCoMKgwqAgZiA9IHNlbGYucGFyc2VoZWxwZXIoc2VsZi5vdmVycmlkZV9vbGRfYXBwZW5k
+KQo+ICvCoMKgwqDCoMKgwqDCoCB0cnk6Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYmIucGFy
+c2UuaGFuZGxlKGYubmFtZSwgc2VsZi5kKVsnJ10KPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBz
+ZWxmLmZhaWwoJ1BhdHRlcm4gc2hvdWxkIGhhdmUgcmFpc2VkIGJiLkJCSGFuZGxlZEV4Y2VwdGlv
+bicpCj4gK8KgwqDCoMKgwqDCoMKgIGV4Y2VwdCBiYi5CQkhhbmRsZWRFeGNlcHRpb246Cj4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgcGFzcwo+ICsKPiArwqDCoMKgIG92ZXJyaWRlX29sZF9wcmVw
+ZW5kID0gIiIiCj4gK0VYVFJBX09FQ09ORl9wcmVwZW5kID0gIiBjIgo+ICsiIiIKPiArCj4gK8Kg
+wqDCoCBkZWYgdGVzdF9wYXJzZV9vbGRfb3ZlcnJpZGVfc3ludGF4X3ByZXBlbmQoc2VsZik6Cj4g
+K8KgwqDCoMKgwqDCoMKgIGYgPSBzZWxmLnBhcnNlaGVscGVyKHNlbGYub3ZlcnJpZGVfb2xkX3By
+ZXBlbmQpCj4gK8KgwqDCoMKgwqDCoMKgIHRyeToKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBi
+Yi5wYXJzZS5oYW5kbGUoZi5uYW1lLCBzZWxmLmQpWycnXQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIHNlbGYuZmFpbCgnUGF0dGVybiBzaG91bGQgaGF2ZSByYWlzZWQgYmIuQkJIYW5kbGVkRXhj
+ZXB0aW9uJykKPiArwqDCoMKgwqDCoMKgwqAgZXhjZXB0IGJiLkJCSGFuZGxlZEV4Y2VwdGlvbjoK
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwYXNzCj4gKwo+ICvCoMKgwqAgb3ZlcnJpZGVfb2xk
+X3JlbW92ZSA9ICIiIgo+ICtFWFRSQV9PRUNPTkZfcmVtb3ZlID0gIiBjIgo+ICsiIiIKPiArCj4g
+K8KgwqDCoCBkZWYgdGVzdF9wYXJzZV9vbGRfb3ZlcnJpZGVfc3ludGF4X3JlbW92ZShzZWxmKToK
+PiArwqDCoMKgwqDCoMKgwqAgZiA9IHNlbGYucGFyc2VoZWxwZXIoc2VsZi5vdmVycmlkZV9vbGRf
+cmVtb3ZlKQo+ICvCoMKgwqDCoMKgwqDCoCB0cnk6Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+YmIucGFyc2UuaGFuZGxlKGYubmFtZSwgc2VsZi5kKVsnJ10KPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBzZWxmLmZhaWwoJ1BhdHRlcm4gc2hvdWxkIGhhdmUgcmFpc2VkIGJiLkJCSGFuZGxlZEV4
+Y2VwdGlvbicpCj4gK8KgwqDCoMKgwqDCoMKgIGV4Y2VwdCBiYi5CQkhhbmRsZWRFeGNlcHRpb246
+Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGFzcwo+ICsKPiArCgpUaGlzIGNhbiBiZSBzaW1w
+bGlmaWVkIHRvIGE6Cgpmb3IgeHh4IGluIFsicmVtb3ZlIiwgInByZXBlbmQiLCAiYXBwZW5kIl06
+Cgpsb29wIHRvIHJlbW92ZSB0aGUgZHVwbGljYXRpb24gaW4gdGhlIHRlc3RzLgoKQ2hlZXJzLAoK
+UmljaGFyZAoK
 
-Signed-off-by: Konrad Weihmann <kweihmann@outlook.com>
----
-  lib/bb/tests/parse.py | 69 +++++++++++++++++++++++++++++++++++++++++++
-  1 file changed, 69 insertions(+)
-
-diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
-index 410679d5a..2da3a2a22 100644
---- a/lib/bb/tests/parse.py
-+++ b/lib/bb/tests/parse.py
-@@ -132,6 +132,75 @@ DESCRIPTION:${PN}-dev = "${DESCRIPTION} B"
-  PN = "bc"
-  """
-  +    override_old_append = """
-+EXTRA_OECONF_append = " c"
-+"""
-+
-+    def test_parse_old_override_syntax_append(self):
-+        f = self.parsehelper(self.override_old_append)
-+        try:
-+            bb.parse.handle(f.name, self.d)['']
-+            self.fail('Pattern should have raised bb.BBHandledException')
-+        except bb.BBHandledException:
-+            pass
-+
-+    override_old_prepend = """
-+EXTRA_OECONF_prepend = " c"
-+"""
-+
-+    def test_parse_old_override_syntax_prepend(self):
-+        f = self.parsehelper(self.override_old_prepend)
-+        try:
-+            bb.parse.handle(f.name, self.d)['']
-+            self.fail('Pattern should have raised bb.BBHandledException')
-+        except bb.BBHandledException:
-+            pass
-+
-+    override_old_remove = """
-+EXTRA_OECONF_remove = " c"
-+"""
-+
-+    def test_parse_old_override_syntax_remove(self):
-+        f = self.parsehelper(self.override_old_remove)
-+        try:
-+            bb.parse.handle(f.name, self.d)['']
-+            self.fail('Pattern should have raised bb.BBHandledException')
-+        except bb.BBHandledException:
-+            pass
-+
-+    override_old_valid_append = """
-+do_appendsomething () {
-+   :
-+}
-+addtask do_appendsomething
-+"""
-+
-+    def test_parse_old_override_syntax_no_warning_append(self):
-+        f = self.parsehelper(self.override_old_valid_append)
-+        bb.parse.handle(f.name, self.d)['']
-+
-+    override_old_valid_prepend = """
-+do_prependsomething () {
-+   :
-+}
-+addtask do_prependsomething
-+"""
-+
-+    def test_parse_old_override_syntax_no_warning_prepend(self):
-+        f = self.parsehelper(self.override_old_valid_prepend)
-+        bb.parse.handle(f.name, self.d)['']
-+
-+    override_old_valid_remove = """
-+do_removesomething () {
-+   :
-+}
-+addtask do_removesomething
-+"""
-+
-+    def test_parse_old_override_syntax_no_warning_remove(self):
-+        f = self.parsehelper(self.override_old_valid_remove)
-+        bb.parse.handle(f.name, self.d)['']
-+
-      def test_parse_combinations(self):
-          f = self.parsehelper(self.overridetest3)
-          d = bb.parse.handle(f.name, self.d)['']
--- 
-2.34.1
 
