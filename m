@@ -2,89 +2,84 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3DACF64B3
-	for <webhook@archiver.kernel.org>; Mon, 30 Sep 2024 12:57:11 +0000 (UTC)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.web10.53612.1727701027736986063
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3F4CE8346
+	for <webhook@archiver.kernel.org>; Mon, 30 Sep 2024 13:19:01 +0000 (UTC)
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+ by mx.groups.io with SMTP id smtpd.web10.54131.1727702331932537898
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 30 Sep 2024 05:57:08 -0700
+ Mon, 30 Sep 2024 06:18:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Ow/rDOwd;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.51, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42cde6b5094so38303455e9.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Sep 2024 05:57:07 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=P7heLe4z;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-42cbface8d6so53934655e9.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Sep 2024 06:18:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1727701026; x=1728305826; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q0BaLWRcevc/+mJje1g9aXqqsfpP42pwxHxgaZg+O+A=;
-        b=Ow/rDOwd8aSNF/21BjwOGk05m5ov7MUI3/qC6Ac3l0UBdmr748SWS5uiIzxnD4a34P
-         zwaXvn/E6AN6q8xESsiDRsgBQtdye+fgyCku3tm61R6TtkfJo9xr36CHLtauEN/CrQ6S
-         HmmdAl7iQtsV2b1KbXL+g1NTt1QJQB2m6bdbo=
+        d=linuxfoundation.org; s=google; t=1727702330; x=1728307130; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IXZ/NN6TPBVEUQ1MCZxl2MnXVGq2F40S3OJYuvnixCg=;
+        b=P7heLe4zT7qECXCVypqL2gGQVjE6NpeX7u+sAOnhYdEuOhe7UhYHc5n/208tkzHG2q
+         GXSnmmDB7bJyUOt0/WvXM8cM4cTKZSt/6pdSidTZQfqYzkNjC5ZReue6Rbj+GfT0oYVU
+         rRt96t14BQCx8Dc3AW5fXSkiST+CuIfmtfo6A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727701026; x=1728305826;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Q0BaLWRcevc/+mJje1g9aXqqsfpP42pwxHxgaZg+O+A=;
-        b=J/0g7zxJbZ6cmC6+zT99EED+g9FGy4PkO89EkybpU9Lko4SVmFPKKRI1QvjJQPlS/G
-         ZuP2fiaLuU2/4Hd6frKOSz/amiNZCuioXZoaZPVptyOFcLQ6+O23QLPJqOckBlv4SDuI
-         k6a2w3m1zMVsshub01CpWoQDIMKl2mzhimHJPXeAXZO2NEtQ7XCfU8Bm4K5MUNmbBDjL
-         orOnzYqvT/r2692NrOVm/nc+TwOgO4G+sZMHsBfu+y3QKUlflpR4hkvYLDxJQjs1QoRs
-         rni2ids4QPoxyWu4DZ2lH3RcEpFqZAsSdaiicutR7K1Rp6WWJbnmi0DkveVNHtFTJn9C
-         q8fg==
-X-Forwarded-Encrypted: i=1; AJvYcCWns8JfuXsQL8LfXsJ+TPdxqCb5O2VrrOR/uaz+MNVUIy67UImrrof0/5p7Uyb3857AYV6V2fRumG8fs1Ko@lists.openembedded.org
-X-Gm-Message-State: AOJu0YwiYKrDGczfL4O6tQMRjty9vKlFoZkBt+6AFc3Q23+NS8pr8iU3
-	GUiDQgBWvWexZcPhd4vMKv6VJiHDRBnx/XEOtMF6kFF0+NK3ynU3Pa63EdW4Ivs=
-X-Google-Smtp-Source: AGHT+IEBE1YtleUlbra3PwB9CcV85ugtZ+zxNMSKGBspBwTaTLcRcREwaSr7cJYp4HwoaD0zfvZE8A==
-X-Received: by 2002:a05:600c:3581:b0:42c:b4f1:f281 with SMTP id 5b1f17b1804b1-42f584973e0mr92643025e9.34.1727701025970;
-        Mon, 30 Sep 2024 05:57:05 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:bbd1:92ec:a53b:af7d? ([2001:8b0:aba:5f3c:bbd1:92ec:a53b:af7d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37cd564d287sm9059214f8f.11.2024.09.30.05.57.05
+        d=1e100.net; s=20230601; t=1727702330; x=1728307130;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IXZ/NN6TPBVEUQ1MCZxl2MnXVGq2F40S3OJYuvnixCg=;
+        b=t51pxfuzIGl6b1ewCbOSM885ABPKOYBPYksz3I5cX1cx7EwcdQ1sYE2puuSrVrhCh8
+         HO1hwcruGKKOjmo1efDU5FBBnb4F9QpoW3N8NA34NzvlTKztVdnItB5Rdp8iYF0Nakx1
+         J1+Z9r22RnSyl/ZWgCV5SzQ4nSVlEBunXI4p1ZAiyTGeJt/MMZZvUz2tTx7ihahZuIJi
+         ZWLZihyUUwU9BZ5kJ4RX5wl3AZs4B80DtesXmKTSAmgKZZIQ6a0SYZRk7rrdcYyJXLxW
+         ZJnXWO8icssiWquSAFkwjaObwBnu0aSf+41n/3iJCh3jJbNla5teRLtLM5M72Pttno5Q
+         HUdQ==
+X-Gm-Message-State: AOJu0YxSnIrhqM6ZRNGsD51k232K40nf5/g1oN5ezvH9mhPgUDVz/qa4
+	P4GzgXsmrV0dVsv8BuCx0Pyo0pP0Jlp57r+3RzgaY6HalEVoRcnCt4nd6OiupDbqOxWHQ0G9IMo
+	z
+X-Google-Smtp-Source: AGHT+IFbvLhY1R9YD0vLwSiUTvS9cAhxCXKvZheZBh0TUAZne+A/vHJoqni2YTWekQcd9Cl6hKrs9A==
+X-Received: by 2002:a05:600c:4751:b0:42c:de34:34d8 with SMTP id 5b1f17b1804b1-42f5849771fmr116916655e9.27.1727702329930;
+        Mon, 30 Sep 2024 06:18:49 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:bbd1:92ec:a53b:af7d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42e969ffb11sm150891055e9.21.2024.09.30.06.18.49
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2024 05:57:05 -0700 (PDT)
-Message-ID: <a61e5d9ef44ecc34a6251f33ec53d4c008100b53.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH v3 2/3] bb/data_smart: fix override
- syntax warning
+        Mon, 30 Sep 2024 06:18:49 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Konrad Weihmann <kweihmann@outlook.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Mon, 30 Sep 2024 13:57:05 +0100
-In-Reply-To: <GV1PR07MB91202E0541450DC69A204E4FA8762@GV1PR07MB9120.eurprd07.prod.outlook.com>
-References: 
-	<GV1PR07MB91208FE4BD9DE31DFD4A7318A8742@GV1PR07MB9120.eurprd07.prod.outlook.com>
-	 <e6694732a1e929e0a33aeba62713433019ea1dc4.camel@linuxfoundation.org>
-	 <GV1PR07MB91202E0541450DC69A204E4FA8762@GV1PR07MB9120.eurprd07.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] fetch2/git: Use quote from shlex, not pipes
+Date: Mon, 30 Sep 2024 14:18:48 +0100
+Message-ID: <20240930131848.2419329-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 30 Sep 2024 12:57:11 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16619
+ <bitbake-devel@lists.openembedded.org>; Mon, 30 Sep 2024 13:19:01 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16620
 
-On Mon, 2024-09-30 at 13:13 +0200, Konrad Weihmann wrote:
-> > Also, I would still prefer a pre-compiled regex. I appreciate python
-> > just have a last used cache but I'd prefer not to rely on python's
-> > implementation details which can and do change.
->=20
-> Wouldn't that have an overall penalty on the runtime behavior (I know
-> it's only once)?
-> With this inline expression, it would actually only be applicable on the=
-=20
-> pattern in question, so for an already converted layer set it runtime
-> penalty is +/- 0, while with the precompiled expression we would add=20
-> something on top for all users.
-> Just want to make sure that is would be acceptable for you, as my=20
-> understanding was that any penalty should be avoided
+The pipes module is removed in python 3.13. It was already using the
+quote function from shlex so use that directly instead.
 
-You'll see a number of regex compiles at the top of data_smart.py. I'd
-imagine one more there for this wouldn't be noticed.
+The module already imports shlex too so it is an easy substitution.
 
-Cheers,
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/fetch2/git.py | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Richard
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 6a1f47a32e..5b678827ed 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -952,9 +952,8 @@ class Git(FetchMethod):
+             commits = None
+         else:
+             if not os.path.exists(rev_file) or not os.path.getsize(rev_file):
+-                from pipes import quote
+                 commits = bb.fetch2.runfetchcmd(
+-                        "git rev-list %s -- | wc -l" % quote(rev),
++                        "git rev-list %s -- | wc -l" % shlex.quote(rev),
+                         d, quiet=True).strip().lstrip('0')
+                 if commits:
+                     open(rev_file, "w").write("%d\n" % int(commits))
 
