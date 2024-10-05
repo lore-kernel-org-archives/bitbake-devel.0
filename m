@@ -2,94 +2,106 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B093CF887E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A57CFA742
 	for <webhook@archiver.kernel.org>; Sat,  5 Oct 2024 13:45:08 +0000 (UTC)
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
- by mx.groups.io with SMTP id smtpd.web11.11804.1728135898125500320
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+ by mx.groups.io with SMTP id smtpd.web10.11706.1728135904062699508
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 05 Oct 2024 06:44:58 -0700
+ Sat, 05 Oct 2024 06:45:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=AqbJfFhh;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.46, mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2e109539aedso2604213a91.0
-        for <bitbake-devel@lists.openembedded.org>; Sat, 05 Oct 2024 06:44:58 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=pJopUML5;
+ spf=softfail (domain: sakoman.com, ip: 209.85.215.173, mailfrom: steve@sakoman.com)
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7e9f8d67df9so478717a12.1
+        for <bitbake-devel@lists.openembedded.org>; Sat, 05 Oct 2024 06:45:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1728135897; x=1728740697; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OQ7+TIjC6lFbNev4U2yQiyHhEmGBVx3ZjHWSf43aknU=;
-        b=AqbJfFhhspPEg+HeqEqD6uO5ZbTrmQ6yWiPQXU/jqYsI79R4nMNVjRehkakl9SekNX
-         IrcX3PyuBrAElBLvgevpIK/nCMBrzD2/ryds79l3scaUagzMn6u7lNE4mGsaYi9+Ozyt
-         owzzciNscQV49m23EpXi5RwV2mYmtlPTGl9zSvmV4tp2ks7kqVbjeT0XcxbsWsR5O9ks
-         PN3Nvmpd1Hf21tI43RI4toFNbc9/eUe01sMoaYlBrd/JdWIKsr7ZH5c6itW6U+sg6DZV
-         bXfUrnI045+wRa4zK/A13Gq4iChPEyxgeqCg0NKYt+/y1BvsW6k6vIfticjm7pRH/pjD
-         7nWg==
+        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1728135903; x=1728740703; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=i/VvMUnrpLzefVY0jP966Q2lBB8psSFaxQ7klS6H9VU=;
+        b=pJopUML57uXtDV+q0aS1Cx8hxNepIib79CIrtRAqxfAk/YdZxGxiSsdRAkj7ZVNF2r
+         90kBypgYyyw1Sr9NZjVvZMp79VcIIL2Xb4oxdinqDMxvi1qPvYbjwKJ4atKdGYWZrW0+
+         za+h0LLgXy3u5pWzcLzP0tTaRgaH6Sz52p8S3orNvdIpyx8k3+IhdblNC8pLSWQbkLHv
+         s65DoAtT76xAgdQcKioyl5NLRoYPggbq118OzHZzq5KJ6oTlrcAlUMhVyZdWaHxMYXiP
+         QUJYNGX6ESpbQtU5DLCwOlaeLQOUA5wDHSCxmjpS4conhNEewsD8X33S4odpzIiBr5rl
+         DkSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728135897; x=1728740697;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OQ7+TIjC6lFbNev4U2yQiyHhEmGBVx3ZjHWSf43aknU=;
-        b=veeuMgIFxKpmaaJ4lZOAuOjQx3GNR1DheBx29mIFe2/zmLRfm/QLPV+HDWli5IL00A
-         2xKaIa+iPifZUb4wYXzH8WODquYvyfeWrBRspoR/vu2t4S0I9XSHtmkJMqRUVXMBfItm
-         R0f7QfCqExVObUCBIwYavlayiw9JKuPqNrtNRYBkGBvAKMcEG2ngf28rAQyk69ZW4qDx
-         uI6AbGZjFIj7D2bk4eMln8QMzx3xzPQIA7dJjkdCgeF2L+ko1LljZtkyXQP3KGZ0siXb
-         QqrB46SACMfvSwhSjL/+MY49EA6JjyakdJThGN5gAldXE4k0EAx0w3Qpqb8GMcqw+mEi
-         sb5A==
-X-Gm-Message-State: AOJu0YyMyRNC/q6ChsW/ELYG3sw3ec91/3xqnIddOSDYH/4pPR8EmlIf
-	nBJGL0sFTtJWhGoxyzshEbQ9PMdM/p/4xs5TJYH7ZCfkX72XBTWX/CNXcDbFY0SYU4/FDWnFS50
-	/GAg=
-X-Google-Smtp-Source: AGHT+IHKxDI4ILJyac8ZaNp7rjdi7lz2MOHWiPvx5LmskZcLP3boMEeTy2rtFW9jqbvqd/KjbI6xdA==
-X-Received: by 2002:a17:90a:ad8e:b0:2e0:78a0:55c4 with SMTP id 98e67ed59e1d1-2e1e622723bmr7561481a91.9.1728135897194;
-        Sat, 05 Oct 2024 06:44:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1728135903; x=1728740703;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i/VvMUnrpLzefVY0jP966Q2lBB8psSFaxQ7klS6H9VU=;
+        b=v/Y+TesVTiTTx3IeMFlAjVW52g8GR683HZ9a+kkpjGc+9zJfIXFsJP2cb1+0g6UNb0
+         z/a96GryEixgYOkJKt/yDBau3awRi8Qjo5UZ0pOA1dn14pPOmmKwBI/24KduSJQdqbHl
+         9gvCJK8Tmm0YVdDmV4C49VzzW8OOIo6iywJrXiBBiMFvqIjfH8Br5I+WnYsLXB5d7QzG
+         X9y5UjEUx+keeBGxC612swbcqd00kUJmjfWXUmL7sGE/mWb8p1+1IMyQq2iaMAvY/+zI
+         yvnW2ihzEHAYxxtYdcpSaoVyypXptDrqmWamQ+GJHtyBy2WJw2byzD6/W+YSa3+J53yO
+         /22A==
+X-Gm-Message-State: AOJu0Yyk8X/SPqhqX9Q+3r66qHmcjIaqi4VQEPRuuWyU9oSV9lsDWj0j
+	KwdRM2cXZ7Hy0f6eJrJV7wvAEyenUWzJ+/zx1fSRTLAafDjb+cE/JJtQdjlJC4I9nYpzqxs49Q0
+	U2DU=
+X-Google-Smtp-Source: AGHT+IG5i6BhS7LPrD8sGPXs4G3HDIfE1tc5vcgJo3i1Qaaca5eswrGeFfARXnsBZ5umb3zNFK6kWg==
+X-Received: by 2002:a17:90a:b805:b0:2d8:7804:b3a with SMTP id 98e67ed59e1d1-2e1e631ef6emr6974022a91.26.1728135903299;
+        Sat, 05 Oct 2024 06:45:03 -0700 (PDT)
 Received: from hexa.. ([98.142.47.158])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e20b0f919csm1831617a91.44.2024.10.05.06.44.56
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e20b0f919csm1831617a91.44.2024.10.05.06.45.02
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Oct 2024 06:44:56 -0700 (PDT)
+        Sat, 05 Oct 2024 06:45:03 -0700 (PDT)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 0/4] Patch review
-Date: Sat,  5 Oct 2024 06:44:47 -0700
-Message-Id: <cover.1728135724.git.steve@sakoman.com>
+Subject: [bitbake][kirkstone][2.0][PATCH 3/4] fetch/wget: Move files into place atomically
+Date: Sat,  5 Oct 2024 06:44:50 -0700
+Message-Id: <aaf9c1b8673f5b181255a08eee4e9a342863e896.1728135724.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1728135724.git.steve@sakoman.com>
+References: <cover.1728135724.git.steve@sakoman.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Sat, 05 Oct 2024 13:45:08 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16640
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16643
 
-Please review this set of changes for 2.0/kirkstone and have comments back by
-end of day Tuesday, October 8
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Passed a-full on autobuilder:
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit cd7cce4cf4be5c742d29671169354fe84220b47a)
+Signed-off-by: Steve Sakoman <steve@sakoman.com>
+---
+ lib/bb/fetch2/wget.py | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-https://autobuilder.yoctoproject.org/typhoon/#/builders/83/builds/7372
-
-The following changes since commit ec2a99a077da9aa0e99e8b05e0c65dcbd45864b1:
-
-  data_smart: Improve performance for VariableHistory (2024-08-08 09:19:30 -0700)
-
-are available in the Git repository at:
-
-  https://git.openembedded.org/bitbake-contrib stable/2.0-nut
-  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.0-nut
-
-Richard Purdie (2):
-  tests/fetch: Tweak to work on Fedora40
-  fetch/wget: Move files into place atomically
-
-Rob Woolley (1):
-  wget: Make wget --passive-ftp option conditional on ftp/ftps
-
-Rudolf J Streif (1):
-  fetch2/wget: Canonicalize DL_DIR paths for wget2 compatibility
-
- lib/bb/fetch2/wget.py | 21 ++++++++++++++-------
- lib/bb/tests/fetch.py |  6 +++---
- 2 files changed, 17 insertions(+), 10 deletions(-)
-
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index 9bcb0d4b7..708f3a42e 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -109,10 +109,9 @@ class Wget(FetchMethod):
+ 
+         fetchcmd = self.basecmd
+ 
+-        if 'downloadfilename' in ud.parm:
+-            localpath = os.path.join(d.getVar("DL_DIR"), ud.localfile)
+-            bb.utils.mkdirhier(os.path.dirname(localpath))
+-            fetchcmd += " -O %s" % shlex.quote(localpath)
++        localpath = os.path.join(d.getVar("DL_DIR"), ud.localfile) + ".tmp"
++        bb.utils.mkdirhier(os.path.dirname(localpath))
++        fetchcmd += " -O %s" % shlex.quote(localpath)
+ 
+         if ud.user and ud.pswd:
+             fetchcmd += " --auth-no-challenge"
+@@ -136,6 +135,10 @@ class Wget(FetchMethod):
+ 
+         self._runwget(ud, d, fetchcmd, False)
+ 
++        # Remove the ".tmp" and move the file into position atomically
++        # Our lock prevents multiple writers but mirroring code may grab incomplete files
++        os.rename(localpath, localpath[:-4])
++
+         # Sanity check since wget can pretend it succeed when it didn't
+         # Also, this used to happen if sourceforge sent us to the mirror page
+         if not os.path.exists(ud.localpath):
 -- 
 2.34.1
 
