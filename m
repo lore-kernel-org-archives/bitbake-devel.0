@@ -1,99 +1,96 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43313CFA757
-	for <webhook@archiver.kernel.org>; Tue,  8 Oct 2024 09:01:50 +0000 (UTC)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
- by mx.groups.io with SMTP id smtpd.web10.4532.1728378106235940748
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 733F9CEF164
+	for <webhook@archiver.kernel.org>; Tue,  8 Oct 2024 12:36:31 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web11.8046.1728390990708555304
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 08 Oct 2024 02:01:46 -0700
+ Tue, 08 Oct 2024 05:36:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=CIZsG/5Q;
- spf=pass (domain: gmail.com, ip: 209.85.167.42, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-53991d05416so6510943e87.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 08 Oct 2024 02:01:45 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=LE/sLVmK;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-42e748f78d6so50080295e9.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 08 Oct 2024 05:36:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728378104; x=1728982904; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g3aTkjmbY9Nu40VHbykpoVumc6OhlFXTNqVDVd8WXHE=;
-        b=CIZsG/5Q2R0CyBArslY1X/d/tf36AMHog4M13uCNyzv2gAl7aqvsXhnn5UNis3ijVd
-         ji5UR8+NeZglh3QTHGxT55ndtX5qQZUzSTkswyRathtFF1f882oUKscSHCRrMwX1EI4U
-         N3P0b7CElsBaSUPli1nV4KZrbjX+ry39ApQ0dGZib68UaDUPNaoKmi9bUbzI08XNvX9k
-         gll8vRAJz6r5AsPL5AZ7AGzzj0rsdkvlGTnq9EBbWPI+TyiCa9D/+5ruG3p3ZBF4Zltw
-         rjhpZpKZGemG+B12fTI0CJy9NAXvTwLCJ2jiyndOYyGFFp9QM5q+dOB2wpnA7oWc20MY
-         hAvQ==
+        d=linuxfoundation.org; s=google; t=1728390989; x=1728995789; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xkkPCPfKEMmjFLM8D1jGEC3Z/sB1AWbZTK+36QpNdFs=;
+        b=LE/sLVmKYohWGvJaAd3QSsYHdn0T62oZ839pN4Npi1aH22qG2ZTRfHpPqZ+C5ei6ZK
+         9+/chh4jaoQmdAt/deg4HbUNuNkCoXcIE0MaBs7rFbcXtrWo4GP5nFG3vTfNPLcCccSt
+         cuLqzvEK+szyDN6EeI4/7GFmlW2HCSaSuRD5o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728378104; x=1728982904;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g3aTkjmbY9Nu40VHbykpoVumc6OhlFXTNqVDVd8WXHE=;
-        b=wOCKOmzTgQkkU5GIsMB7pt+ZVtrAmmBy694enEuKzCzVNePpcKh2hJE+nREHRuNsZS
-         O4XE6O2QHVyd6VP4LvNwcTdn2yJNtj07PyFa8DLsZZ73d6cDLm3nKaM3L5LGbEbZoWvu
-         TNor1K791S+xhUwpXEfsn+Xak9i3MhVPsG0fBNG03JeLjDIsZY2McyvcfyUwaCT+Mx+r
-         bjSGsyTyj7rnGAQOh5kvjTSK32mUefh6UuktjpCwTGyD8tj+m+c5rYazMrlsA4yfshBA
-         Zer0mqBsJLM7a1Uye/Yqvd3XdWRhsMbAuCNOhaczvRBWB19ICr7WbBcbcsX3n8frg/RG
-         G27Q==
-X-Gm-Message-State: AOJu0YyHKOvDkpsJuTkOjUGvDpcQm90DrYFXuIWaCfa857hYrrmR5adu
-	De3rPjvtFj7BGjxkQciC9U0OQuOb1e4TJ52VL9O6JiJybGO0YuBnpZl7QjNhwOf145gCbpsNXVA
-	G6Ymsa5dT9J0EK5u/ArrcV6K6XBSAoGbw
-X-Google-Smtp-Source: AGHT+IG1c0jCPcR+t6rTyGeaXMrG7iSqxlJiKrTz1QHP8BIbGssHhn610Q5FcdSOWjJY8ozDbuRuxF5UyZxprcOxBeM=
-X-Received: by 2002:a05:6512:1256:b0:536:741a:6bc5 with SMTP id
- 2adb3069b0e04-539ab84e0ebmr8127059e87.12.1728378104015; Tue, 08 Oct 2024
- 02:01:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1728390989; x=1728995789;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xkkPCPfKEMmjFLM8D1jGEC3Z/sB1AWbZTK+36QpNdFs=;
+        b=rKRGOPFzcOl0APiIt9iYE3BP1KUBsBMe9Lb+dAxg6v3YcMf7evxynFUOSAYV807aZu
+         pruiKfiiSg7g3g0Z7n/dOPooCQaDV2ARE2e+bxvRirtauR+xyhw4tK/Dvi82nhd5IAwa
+         Kdknp5uYw5g2bfwkkUF+U2eFsfZnGnM+SlXXpmLxV09ocXolHhF138iZ7rB6hgvI1tl7
+         ljbOi3h2T5Pgs+w40NhkOUWALak7BPHjwjyQWlPm4kKQFvLStCv3OrO9iMj03BXAgzNN
+         h5mbVgbQJM9b+SGIGH8kRx1Ro6qbXzk8q+/GrBxJrUsjd3N9xIwWB6EBbrOLl4gyuIww
+         KPzQ==
+X-Gm-Message-State: AOJu0Yx+BP0ZzkpB1V1a/ifNUW1Oaxy7h6ixed9gpdYkEU8GCa3vLCxM
+	aTLYSR8zI7HI9wrvmrxTkz6InvRSp05WGtsXBDiPNM/GMYupXgLdR+SJ3czurJ0JIPHQuuxIJNe
+	q
+X-Google-Smtp-Source: AGHT+IGczexDuxpqAabtRiVaFp3Y6htlvk59RQLlxfAyvzIst9CAKvGwml7vCTjf7GGO/CCG2q8E/A==
+X-Received: by 2002:a5d:5582:0:b0:37c:cc01:f7e with SMTP id ffacd0b85a97d-37d0e8d98e0mr7814938f8f.58.1728390988754;
+        Tue, 08 Oct 2024 05:36:28 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:3f9a:5ae5:8636:3d57])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d1691a47esm8019492f8f.28.2024.10.08.05.36.28
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2024 05:36:28 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 1/8] COW: Fix hardcoded magic numbers and work with python 3.13
+Date: Tue,  8 Oct 2024 13:36:20 +0100
+Message-ID: <20241008123627.252307-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-References: <CANNYZj9B2LV2ZH1VivrwdfH1T2FJTV1FU9MV3X+TwWcDCUqtFw@mail.gmail.com>
- <17710.1728337442729823697@lists.openembedded.org>
-In-Reply-To: <17710.1728337442729823697@lists.openembedded.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Tue, 8 Oct 2024 11:01:32 +0200
-Message-ID: <CANNYZj9+CLT81zNGCw8nTZAZa-1BPMn5UYjy3hUuAUDGGs0_ZA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] fetch2: add GitHub Codespaces support
-To: git@oliver-kaestner.de
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 08 Oct 2024 09:01:50 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16653
+ <bitbake-devel@lists.openembedded.org>; Tue, 08 Oct 2024 12:36:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16654
 
-On Mon, 7 Oct 2024 at 23:44, Oliver K=C3=A4stner via lists.openembedded.org
-<git=3Doliver-kaestner.de@lists.openembedded.org> wrote:
-> GitHub Codespaces use a Git credential helper that provides access to
-> authorized private GitHub repos. To do this, it requires access to the
-> `GITHUB_TOKEN` env var, so add it to FETCH_EXPORT_VARS.
->
-> Which fetcher would be using this environment variable? Presumably it
-> would be picked up by some external executable run by one of the
-> fetchers, which one is that?
->
-> Alex
->
-> You're right, it's the git fetcher calling the host system's git executab=
-le, which uses the configured `credential.helper=3D/.codespaces/bin/gitcred=
-ential_github.sh`. This script only contains:
->
-> #!/bin/sh
-> echo protocol=3Dhttps
-> echo host=3Dgithub.com
-> echo path=3D
-> echo username=3DPersonalAccessToken
-> echo password=3D$GITHUB_TOKEN
->
-> That's why we need to retain the GITHUB_TOKEN env var.
+The COW tests started failing on python 3.13. Looks like it is time
+to fix the FIXME and drop the magic numbers!
 
-Thanks, where is this gitcredential_github.sh coming from though? Is
-it an official script maintained by github? Where? I don't see it in I
-don't see it in https://git-scm.com/doc/credential-helpers
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/COW.py | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-If you can find the link, and place it into the commit message and/or
-comment in the code, then we'd be able to track down actual usage of
-the variable in the future when needed.
-
-Alex
+diff --git a/lib/bb/COW.py b/lib/bb/COW.py
+index 76bc08a3ea..4af03c54ad 100644
+--- a/lib/bb/COW.py
++++ b/lib/bb/COW.py
+@@ -36,8 +36,9 @@ class COWDictMeta(COWMeta):
+     __marker__ = tuple()
+ 
+     def __str__(cls):
+-        # FIXME: I have magic numbers!
+-        return "<COWDict Level: %i Current Keys: %i>" % (cls.__count__, len(cls.__dict__) - 3)
++        ignored_keys = set(["__count__", "__doc__", "__module__", "__firstlineno__", "__static_attributes__"])
++        keys = set(cls.__dict__.keys()) - ignored_keys
++        return "<COWDict Level: %i Current Keys: %i>" % (cls.__count__, len(keys))
+ 
+     __repr__ = __str__
+ 
+@@ -161,8 +162,9 @@ class COWDictMeta(COWMeta):
+ 
+ class COWSetMeta(COWDictMeta):
+     def __str__(cls):
+-        # FIXME: I have magic numbers!
+-        return "<COWSet Level: %i Current Keys: %i>" % (cls.__count__, len(cls.__dict__) - 3)
++        ignored_keys = set(["__count__", "__doc__", "__module__", "__firstlineno__", "__static_attributes__"])
++        keys = set(cls.__dict__.keys()) - ignored_keys
++        return "<COWSet Level: %i Current Keys: %i>" % (cls.__count__, len(keys))
+ 
+     __repr__ = __str__
+ 
 
