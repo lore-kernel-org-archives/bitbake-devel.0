@@ -1,89 +1,135 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1799CF042B
-	for <webhook@archiver.kernel.org>; Tue,  8 Oct 2024 22:46:14 +0000 (UTC)
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
- by mx.groups.io with SMTP id smtpd.web10.2247.1728427573098832569
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA2BCEE333
+	for <webhook@archiver.kernel.org>; Wed,  9 Oct 2024 17:25:13 +0000 (UTC)
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+ by mx.groups.io with SMTP id smtpd.web10.22901.1728494711988954243
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 08 Oct 2024 15:46:13 -0700
+ Wed, 09 Oct 2024 10:25:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=gtP0SJF4;
- spf=softfail (domain: sakoman.com, ip: 209.85.214.169, mailfrom: steve@sakoman.com)
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-20b0b2528d8so70300475ad.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 08 Oct 2024 15:46:13 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=KshEEzyG;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-430ee5c9570so64565e9.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 09 Oct 2024 10:25:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1728427572; x=1729032372; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1728494710; x=1729099510; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=m6lyRb06MlB/nn3yjpJmyhoHi8zdkndeZAY8/01x2LA=;
-        b=gtP0SJF42y/NnDQerJIWYZ0CtoSyRqK2PRnKOXszLxbwJaZx06t3OiFyO7tDdNCr6p
-         jZMFHldOQq6Z268FAPs8uDcah+qvw3OrO5RTOXd06ibOlT5XoMNDytzTbHrDYMGfFrzq
-         MBZ7o+dzuaUZW3hpaZ7e9TAbgGPPWkwNZdec+W+2Nb72oT88iSYfBv2lfz0jORVTizC9
-         +hrOR5h2rBMXXho4dw5eEh2ClNjJdd8yJOmaLmdVo6Ocq2RPHlJkplJhDPjMH4Eq7kNw
-         3VUy1f1VCOXVXss8dkQtzsGWh0pGy4GwNFWf7sHqM4SOb9vZajpYYoO1lih5UA8xK+F+
-         thBw==
+        bh=4H71FBESL0OMq3treR52HpgMiiQLpeZwmFrLZY0YOYw=;
+        b=KshEEzyGkdKbM0M/496EkVW94MtdmXvWFbAEJWPhmMD3SQdRM+aQIRHT7p6b8/0YbN
+         mE4pqN8YaJDye8ffB2CxUyygJWhldqOGYf1US9Y/8Pir1VdAvRXZVKPMb4xdBzXxbyxi
+         wv+XXuY+D2S1us+5b+60RpZ7mjhErlLUJoVE4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728427572; x=1729032372;
+        d=1e100.net; s=20230601; t=1728494710; x=1729099510;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m6lyRb06MlB/nn3yjpJmyhoHi8zdkndeZAY8/01x2LA=;
-        b=RfiMZaTksr/+8/LFpApmshH47TgZ2d2S8BpcmUtNLKZtIIfMr8CakvrKVzhL0av1UP
-         z8kuKCv4M0ZA7CvIanjTST4Mo2VSgsjG0bKAcY4K3I6DJw2tAQevGASYMDnPEeR2Izqz
-         9vNJv00vtSA2PHZqONU85KXS9S3eLXj1A6L34hDVSWBrBjsOCSimnRCDN+rFgB3BE57n
-         0f350ldkEIAYd6Cvq8iMiBeLZl7lL/S0Hc+eAaMvX7ZJWMmcI4GzeZ0BG7Ut9WF2UKTF
-         6WT/IqjSEG5Pmpldjm8wCSA4UTA4QfnxjcZ9Q2xgQRC2FdzGXJNkQLru/yRXvtXwM2j5
-         FaBw==
-X-Gm-Message-State: AOJu0Yx8LPOBIstc9ypiQfR16lMg5DT+uIeeAAt82gQl6rNEjSGj+Mq3
-	im8ETQbbDC4tcmItQPG9EBGiyS7hq6as9ncH4IBg7tMqxxJ5yhas4DFu3M+lYv1Ags+oxt9JjEi
-	/
-X-Google-Smtp-Source: AGHT+IEPChQto1eT7OiS1Z4Tcbwzv4GwpiqOwxMWh6yinzV3XY1dmjsv9BT8VLed0JuOFrCS9N7DRw==
-X-Received: by 2002:a17:902:d2cf:b0:202:4b65:65af with SMTP id d9443c01a7336-20c6378ea43mr8013645ad.52.1728427572175;
-        Tue, 08 Oct 2024 15:46:12 -0700 (PDT)
-Received: from hexa.. ([98.142.47.158])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c575165dasm15236625ad.222.2024.10.08.15.46.11
+        bh=4H71FBESL0OMq3treR52HpgMiiQLpeZwmFrLZY0YOYw=;
+        b=eEKZgkrYH91HNq9MjUmN7fhMUx3PNiWv9GtWtUpRFZCgjO8n5vXiRH0cyriI0JQPhj
+         Ex/30uIszncEqmOXrS293z7pqGJF8PXXUeLIrDAoICFx7QEWfKTiijZZst/8UnjwLPsK
+         EhiPm3ECWbU+sOkDuE0wAjxiFKoH4+HnfJCoYrSB+itIPR8M1NAxuzNQGIhQNajADe5i
+         o+/ThMOiBSWke3EtjKvgoUDkem2s1HjlOGpm0IQB7ItzUSQJAn1zLejNuTu6CQ7d909v
+         Tqe/9zHpwtqlgocitaqJv23VhBHwIYdy6J12SIKLc1+4TZn4Ly22lybggZ0j6+pKsgCM
+         dXmw==
+X-Gm-Message-State: AOJu0YwyfGnzjSstjJWJ7DDrkM1+QmYWQ2kisGfxH+5MHNzIWKj2JBkL
+	nYsTgPUy3168IHd3N4zRwzuk4xUJ2A8RkepD1cr/KsDZd1nF8EIPd4qLFAg/pjCEO621jAKC6nI
+	v
+X-Google-Smtp-Source: AGHT+IF8j6TY67u/aSyfsjPIFSFGYO0uugoZtAtxtWKlo/oZd6C7kdvzjRhoWmaFHWyAPowkVJVfjA==
+X-Received: by 2002:a05:600c:4f14:b0:430:9fde:3b92 with SMTP id 5b1f17b1804b1-430ccf312c9mr37928945e9.14.1728494709844;
+        Wed, 09 Oct 2024 10:25:09 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:fb33:4e5d:4941:5018])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d3f568fd7sm1761267f8f.102.2024.10.09.10.25.09
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2024 15:46:11 -0700 (PDT)
-From: Steve Sakoman <steve@sakoman.com>
+        Wed, 09 Oct 2024 10:25:09 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 0/4] Pull request (cover letter only)
-Date: Tue,  8 Oct 2024 15:46:06 -0700
-Message-Id: <cover.1728427515.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.34.1
+Subject: [PATCH 1/3] toaster/tests/functional: Fix later details page test issues
+Date: Wed,  9 Oct 2024 18:25:06 +0100
+Message-ID: <20241009172508.447620-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 08 Oct 2024 22:46:14 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16663
+ <bitbake-devel@lists.openembedded.org>; Wed, 09 Oct 2024 17:25:13 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16664
 
-The following changes since commit ec2a99a077da9aa0e99e8b05e0c65dcbd45864b1:
+Consistently use meta-poky as the test target, instead of a magic number
+ID which can vary.
 
-  data_smart: Improve performance for VariableHistory (2024-08-08 09:19:30 -0700)
+Fix incorrect comments.
 
-are available in the Git repository at:
+Also ensure the viewport is scrolled to the top when changing tabs.
+This breaks if other layers are selected like openembedded-core due
+to the number of recipes.
 
-  https://git.openembedded.org/bitbake-contrib stable/2.0-next
-  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.0-next
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ .../tests/functional/test_project_page.py     | 21 ++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-Richard Purdie (2):
-  tests/fetch: Tweak to work on Fedora40
-  fetch/wget: Move files into place atomically
-
-Rob Woolley (1):
-  wget: Make wget --passive-ftp option conditional on ftp/ftps
-
-Rudolf J Streif (1):
-  fetch2/wget: Canonicalize DL_DIR paths for wget2 compatibility
-
- lib/bb/fetch2/wget.py | 21 ++++++++++++++-------
- lib/bb/tests/fetch.py |  6 +++---
- 2 files changed, 17 insertions(+), 10 deletions(-)
-
--- 
-2.34.1
-
+diff --git a/lib/toaster/tests/functional/test_project_page.py b/lib/toaster/tests/functional/test_project_page.py
+index deb26812ea..6b6d45eaba 100644
+--- a/lib/toaster/tests/functional/test_project_page.py
++++ b/lib/toaster/tests/functional/test_project_page.py
+@@ -699,7 +699,7 @@ class TestProjectPage(SeleniumFunctionalTestCase):
+         )
+ 
+     def test_single_layer_page(self):
+-        """ Test layer page
++        """ Test layer details page using meta-poky as an example (assumes is added to start with)
+             - Check if title is displayed
+             - Check add/remove layer button works
+             - Check tabs(layers, recipes, machines) are displayed
+@@ -708,13 +708,14 @@ class TestProjectPage(SeleniumFunctionalTestCase):
+                 - Check layer summary
+                 - Check layer description
+         """
+-        url = reverse("layerdetails", args=(TestProjectPage.project_id, 7))
+-        self.get(url)
++        self._navigate_to_config_nav('layerstable', 6)
++        layer_link = self.driver.find_element(By.XPATH, '//tr/td[@class="layer__name"]/a[contains(text(),"meta-poky")]')
++        layer_link.click()
+         self.wait_until_visible('.page-header')
+         # check title is displayed
+         self.assertTrue(self.find('.page-header h1').is_displayed())
+ 
+-        # check add layer button works
++        # check remove layer button works
+         remove_layer_btn = self.find('#add-remove-layer-btn')
+         remove_layer_btn.click()
+         self.wait_until_visible('#change-notification', poll=2)
+@@ -722,7 +723,7 @@ class TestProjectPage(SeleniumFunctionalTestCase):
+         self.assertIn(
+             f'You have removed 1 layer from your project', str(change_notification.text)
+         )
+-        # check add layer button works, 18 is the random layer id
++        # check add layer button works
+         add_layer_btn = self.find('#add-remove-layer-btn')
+         add_layer_btn.click()
+         self.wait_until_visible('#change-notification')
+@@ -738,12 +739,18 @@ class TestProjectPage(SeleniumFunctionalTestCase):
+         self.assertTrue(
+             'active' in str(self.find('#information').get_attribute('class'))
+         )
+-        # Check second tab
++        # Check second tab (recipes)
++        # Ensure page is scrolled to the top
++        self.driver.find_element(By.XPATH, '//body').send_keys(Keys.CONTROL + Keys.HOME)
++        self.wait_until_visible('.nav-tabs')
+         tabs[1].click()
+         self.assertTrue(
+             'active' in str(self.find('#recipes').get_attribute('class'))
+         )
+-        # Check third tab
++        # Check third tab (machines)
++        # Ensure page is scrolled to the top
++        self.driver.find_element(By.XPATH, '//body').send_keys(Keys.CONTROL + Keys.HOME)
++        self.wait_until_visible('.nav-tabs')
+         tabs[2].click()
+         self.assertTrue(
+             'active' in str(self.find('#machines').get_attribute('class'))
 
