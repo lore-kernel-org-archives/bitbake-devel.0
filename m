@@ -1,116 +1,84 @@
-Return-Path: <git@oliver-kaestner.de>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6657ACF256D
-	for <webhook@archiver.kernel.org>; Sat, 12 Oct 2024 15:29:20 +0000 (UTC)
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
- by mx.groups.io with SMTP id smtpd.web10.12940.1728746950391595839
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB2CCF256E
+	for <webhook@archiver.kernel.org>; Sat, 12 Oct 2024 16:07:00 +0000 (UTC)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+ by mx.groups.io with SMTP id smtpd.web11.13800.1728749212520660783
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 12 Oct 2024 08:29:12 -0700
+ Sat, 12 Oct 2024 09:06:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@oliver-kaestner.de header.s=key2 header.b=Q/m2E80Y;
- spf=pass (domain: oliver-kaestner.de, ip: 188.68.61.103, mailfrom: git@oliver-kaestner.de)
-Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4XQnTc3vv0z80Dw
-	for <bitbake-devel@lists.openembedded.org>; Sat, 12 Oct 2024 17:29:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=oliver-kaestner.de;
-	s=key2; t=1728746948;
-	bh=+pvRePAZrO9EAQHeJOz7qcMhF2+lmUCAK3gGyG4AmxA=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Q/m2E80Y+T5/04H4wkp6e8Jo1IdDnOzsMMin+Fki0Ac46dADC//H9gMVYtlQlskoz
-	 S37oVQ5Yh4/nnrUk+g6My/a+9zwI64gmHkPdzUUg4y1J8N3ST1PaMD6i1kwStsAV0H
-	 uvTSk/ei7YJZM62XduDFOkVVZCUYSQxuMsL/RPL2HODg72RfSuaz7F96BzeU4FCcxr
-	 dvEmx/33gndLhaLFsh51jasRE1DXojDVddRhCdU/vr53oE2RZHLqkaZpD5k1Kci0m+
-	 2ShiUCpNubrGt80sOOwExuEo46RjOzqTqO0lhyCyo/3a0ZjgHGPqXeInpzxgVIbjPu
-	 jN4RQaGhBoJvw==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4XQnTc3WVHz808P
-	for <bitbake-devel@lists.openembedded.org>; Sat, 12 Oct 2024 17:29:08 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-Received: from mx2fa3.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4XQnTb67lmz8t2h
-	for <bitbake-devel@lists.openembedded.org>; Sat, 12 Oct 2024 17:29:07 +0200 (CEST)
-Received: from [192.168.178.10] (p5de75435.dip0.t-ipconnect.de [93.231.84.53])
-	by mx2fa3.netcup.net (Postfix) with ESMTPSA id 2394CE0224
-	for <bitbake-devel@lists.openembedded.org>; Sat, 12 Oct 2024 17:29:03 +0200 (CEST)
-Authentication-Results: mx2fa3;
-        spf=pass (sender IP is 93.231.84.53) smtp.mailfrom=git@oliver-kaestner.de smtp.helo=[192.168.178.10]
-Received-SPF: pass (mx2fa3: connection is authenticated)
-Message-ID: <8c2a1863-8b07-45ff-b519-3cc6b8fe3b14@oliver-kaestner.de>
-Date: Sat, 12 Oct 2024 17:29:02 +0200
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=CYur0Brh;
+ spf=pass (domain: gmail.com, ip: 209.85.167.49, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5398d171fa2so3867894e87.0
+        for <bitbake-devel@lists.openembedded.org>; Sat, 12 Oct 2024 09:06:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728749211; x=1729354011; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UorF9tGUp+2YbTxZXmksjG8oN21vpk4M1xw76pSqWGs=;
+        b=CYur0BrhCbda+ekimnmyQOuUHFgh7NBKCsFSFZiurl4zhnKtzM6eqKOjTbKQRoS/pQ
+         PjwC3GHGXSVPRHwmdryunY2w1GGcjEMCJRIfnOm/HpF8qCJKYWJzmm0NZHzNZpIIyXwY
+         cLXmC4L+NH9Hta8Y2pFovTpn4gIfxiHdB+KHewvYLN3xvVB5sGVHp869Uy/m4kCfdQMK
+         gG+htEqu5MnMAVbnXGi/incnwri9GiEC0mTnARt+gXtUGjrV3rZyUKJgBPY8jayMhCZG
+         aGCsLPUVPk0VIYKkedmjN6NhcrNYKfiKV+E0blGbePCBE5zqTUPQ3MHG6/u1xBbRIwmd
+         NE+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728749211; x=1729354011;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UorF9tGUp+2YbTxZXmksjG8oN21vpk4M1xw76pSqWGs=;
+        b=KADa5mC/csX0JyfgL31EtBc+OA9aK97jRD/Pf28D+hK03nGyUK4ljMOQf/1tLrNOq9
+         EB8PBHswoRqfNuhZWPjacdDUcYwybzgoFmKmPeC6Y6o9pNnkfnCBKIuaEOEQBLyUOD1o
+         TfQSJOh1cWwDuzLqgO6CrRBoaygM1edgda33Uo3WFzuu+QBAsMz2+0cmqkTZ/nTTz9IB
+         fsIoguX8sSgb+imaKBffbHOPnJzHB1NvlfztY/118X49bGif91hQJiv30Swl1V5oXa65
+         bA/PbCFvheCNtMVf3uyPtRGrjWIufx2cyETSpC2/E1dSf2O4RTHcQAAWSWwbX0tojZt9
+         O+FQ==
+X-Gm-Message-State: AOJu0Yzu1hvwZhV3/9BZY+upM6TyMH4ywmyE+DjEXOVYKNCf2/8uJiY/
+	BsizhC5LRNgbcy7hZ7xPP0XW86WZZMixuYKCWeE/NPiM31A0kp3qws4dV9fvGipJhA61hee2GKr
+	MypuXq41Y9WDQsKMCLfdaVMvhqVE=
+X-Google-Smtp-Source: AGHT+IE9zSZ52J/a+ng1Piq28Zt4tsDtRZdS3flynYVA0Daz7dc05CVipNL+9YgUAsQz1xivlLvRFml2JlUMOypTkJs=
+X-Received: by 2002:a05:6512:2384:b0:539:8f4d:a7c9 with SMTP id
+ 2adb3069b0e04-539da552ebfmr3384442e87.41.1728749210260; Sat, 12 Oct 2024
+ 09:06:50 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+References: <CANNYZj9B2LV2ZH1VivrwdfH1T2FJTV1FU9MV3X+TwWcDCUqtFw@mail.gmail.com>
+ <17710.1728337442729823697@lists.openembedded.org> <CANNYZj9+CLT81zNGCw8nTZAZa-1BPMn5UYjy3hUuAUDGGs0_ZA@mail.gmail.com>
+ <8c2a1863-8b07-45ff-b519-3cc6b8fe3b14@oliver-kaestner.de>
+In-Reply-To: <8c2a1863-8b07-45ff-b519-3cc6b8fe3b14@oliver-kaestner.de>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Sat, 12 Oct 2024 18:06:38 +0200
+Message-ID: <CANNYZj-iaojsDJUcFqU976c3q7gvo0i-Mt6bnJXtNB3Sx68o0w@mail.gmail.com>
 Subject: Re: [bitbake-devel] [PATCH] fetch2: add GitHub Codespaces support
-To: bitbake-devel@lists.openembedded.org
-References: 
- <CANNYZj9B2LV2ZH1VivrwdfH1T2FJTV1FU9MV3X+TwWcDCUqtFw@mail.gmail.com>
- <17710.1728337442729823697@lists.openembedded.org>
- <CANNYZj9+CLT81zNGCw8nTZAZa-1BPMn5UYjy3hUuAUDGGs0_ZA@mail.gmail.com>
-Content-Language: de-DE
-From: =?UTF-8?Q?Oliver_K=C3=A4stner?= <git@oliver-kaestner.de>
-In-Reply-To: 
- <CANNYZj9+CLT81zNGCw8nTZAZa-1BPMn5UYjy3hUuAUDGGs0_ZA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-X-PPP-Message-ID: <172874694338.24889.16538766652903137297@mx2fa3.netcup.net>
-X-Rspamd-Queue-Id: 2394CE0224
-X-Rspamd-Server: rspamd-worker-8404
-X-NC-CID: cnjNmrn8vt4Dl0zNUwYEe3zuQMqfW8/0f93oBQ1FmscO4TGJtu2M
+To: git@oliver-kaestner.de
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 12 Oct 2024 15:29:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16673
+ <bitbake-devel@lists.openembedded.org>; Sat, 12 Oct 2024 16:07:00 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16674
 
-On 08.10.24 11:01, Alexander Kanavin wrote:
-> On Mon, 7 Oct 2024 at 23:44, Oliver K=C3=A4stner via lists.openembedded=
-.org
-> <git=3Doliver-kaestner.de@lists.openembedded.org> wrote:
->> GitHub Codespaces use a Git credential helper that provides access to
->> authorized private GitHub repos. To do this, it requires access to the
->> `GITHUB_TOKEN` env var, so add it to FETCH_EXPORT_VARS.
->>
->> Which fetcher would be using this environment variable? Presumably it
->> would be picked up by some external executable run by one of the
->> fetchers, which one is that?
->>
->> Alex
->>
->> You're right, it's the git fetcher calling the host system's git execu=
-table, which uses the configured `credential.helper=3D/.codespaces/bin/gi=
-tcredential_github.sh`. This script only contains:
->>
->> #!/bin/sh
->> echo protocol=3Dhttps
->> echo host=3Dgithub.com
->> echo path=3D
->> echo username=3DPersonalAccessToken
->> echo password=3D$GITHUB_TOKEN
->>
->> That's why we need to retain the GITHUB_TOKEN env var.
-> Thanks, where is this gitcredential_github.sh coming from though? Is
-> it an official script maintained by github? Where? I don't see it in I
-> don't see it in https://git-scm.com/doc/credential-helpers
+On Sat, 12 Oct 2024 at 17:29, Oliver K=C3=A4stner via
+lists.openembedded.org <git=3Doliver-kaestner.de@lists.openembedded.org>
+wrote:
+
+> I couldn't find a source for this script. I assume it is injected into th=
+e Codespaces container at creation time. However, the script is mentioned i=
+n the GitHub docs: https://docs.github.com/en/codespaces/troubleshooting/tr=
+oubleshooting-gpg-verification-for-github-codespaces#checking-for-conflicti=
+ng-configuration
 >
-> If you can find the link, and place it into the commit message and/or
-> comment in the code, then we'd be able to track down actual usage of
-> the variable in the future when needed.
->
-> Alex
-
-I couldn't find a source for this script. I assume it is injected into th=
-e Codespaces container at creation time. However, the script is mentioned=
- in the GitHub docs: https://docs.github.com/en/codespaces/troubleshootin=
-g/troubleshooting-gpg-verification-for-github-codespaces#checking-for-con=
-flicting-configuration
-
-Please let me know if you think that this reference should be part of the=
+> Please let me know if you think that this reference should be part of the=
  commit.
 
-Oliver
+How is this environment set up in the first place? Is it on your local
+machine, or is it something that github magically creates and lets you
+access remotely?
 
+Alex
 
