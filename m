@@ -2,109 +2,143 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A90CD16260
-	for <webhook@archiver.kernel.org>; Mon, 14 Oct 2024 12:54:16 +0000 (UTC)
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
- by mx.groups.io with SMTP id smtpd.web10.54290.1728910454627508836
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09A9D16265
+	for <webhook@archiver.kernel.org>; Mon, 14 Oct 2024 13:35:16 +0000 (UTC)
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+ by mx.groups.io with SMTP id smtpd.web11.55005.1728912910250395721
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 14 Oct 2024 05:54:14 -0700
+ Mon, 14 Oct 2024 06:35:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=aQM/WydZ;
- spf=pass (domain: gmail.com, ip: 209.85.218.51, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a99f646ff1bso268012366b.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 14 Oct 2024 05:54:14 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=I8UkjMRu;
+ spf=pass (domain: gmail.com, ip: 209.85.218.54, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a99c0beaaa2so523522866b.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 14 Oct 2024 06:35:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728910453; x=1729515253; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1728912908; x=1729517708; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hxHgMxFnJpTxJkFJJ/Sm+GDTV49uKy0ERUBEn/dv1gM=;
-        b=aQM/WydZadIdihO8zJmtHGDNhDC660YUqVdSO21mz6LXnuAqppIhhmlqFmRt/IwI1I
-         KM86Vj2lA+cJxywx5C7b2W0KhF39E57uXZaIYsXO+G8hVOF27Z9DYJYUTGNYA4MPwBGi
-         wxHd2FYPAIOGM0WieGVcj/zTfJf7rpNN/YKOTJ02Zs2rh3kkT6f5dZd7vA6GCRB2Wcif
-         UZhhRwx+i1fo5xbwAcDEmN5Ddk7nr2uKaqIyDlu5vH81+BHWQOaqfFFKsreLk6vzGCL9
-         JIJUgn62eza7/zq0+irN93et+94+nwgcsUXgeC01tQz6HzHIhku6lNq9PWu48TfzkR9C
-         mV+g==
+        bh=/UWqXmCvos3djQcSqUbSquTtMYADK0Zu4mruRU3Ec7c=;
+        b=I8UkjMRuzsarW0FywvPwXOvsY7KsTMxpE6avB6r8L9eZu15Tk7QzBXn7beszO4Glnn
+         X0mw+ZTLuyxkKGpKQLYXhuAuFHSqtxTEV5JaOfsG7UOrN4fQZWIZj9xd7GrZkhmc4o90
+         DtblmXJ2P1F1qP9F0XgyUmxgQJwxRsYqh0KcYlo5BukzygI9cSNSUjG6K4RM7WfNQqu+
+         P6FApCvwrAOOCmxVjjt+UrGu4fTc1UTt4oGAQaGjli57fvyzNiMyKcHj6ha6A8R9lR6P
+         xXZpCNnZRm6D/DSIWDvUNE436OZI0dn1QiFrsPyFbpL4eCPS47/dooE47aD839ckNBn6
+         tW/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728910453; x=1729515253;
+        d=1e100.net; s=20230601; t=1728912908; x=1729517708;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hxHgMxFnJpTxJkFJJ/Sm+GDTV49uKy0ERUBEn/dv1gM=;
-        b=dtxsT4KoEK4wA/e1I860xLSWElEXs1J5kqMF4zvkFlQm81LeaS1+zX3hxzui18/pbh
-         BRRAKAudT2ZIwWyXkm3NdxGaPIzBEVtCqfiDxVTdnX83OY+ks9CIPLOUwi5FgTMf74GY
-         zxTpbQOp7LCf1uOLRUWnXZEuVPbYR1Le3U85V2oVe7EMVyQwz2nCfCpFJeULADAbbDvT
-         g/QgYe4ZtC8MygLc9tXWtGQ4v8/NtJhl9SSnWrfFAUj8R/PVckS+84KHf1JDHgcj0+21
-         LRo8MXkDIKvfZG5qqD5et+6ucmYBIRwUEhjJSXqgJN+AM/I7IXD7iXNchoUiR1lPseAZ
-         xKOA==
-X-Gm-Message-State: AOJu0YwkbXCJcB8QgjhnSdiluflpSMSx68vaeVzkPdpXS/gHl3bx2Zxi
-	lvcHLuCVu+JEhSSQfzbG155KiV2WNznclOJw7H4xi2jTcUPL2ew4FDGfjA==
-X-Google-Smtp-Source: AGHT+IGQqq/Z/+LmoE8HnxnSD7Kky7XR8p2TCJEfCJokmfh475hvhOgDXah1gti/PksKp6ZqOHigtQ==
-X-Received: by 2002:a17:906:7956:b0:a9a:1918:c6c6 with SMTP id a640c23a62f3a-a9a1918d031mr156044966b.8.1728910452599;
-        Mon, 14 Oct 2024 05:54:12 -0700 (PDT)
+        bh=/UWqXmCvos3djQcSqUbSquTtMYADK0Zu4mruRU3Ec7c=;
+        b=FyhyKYpd//qkNEvRWoVgrei9pdRKdb3Pm8FpOzMzNhFnvom9dQnnY6/G7qdKMOFcoq
+         VyjoMu2JBM2X9mxy++4wOm1uzcHiff4yItfnXA4gliUUcHDm2jB/zBfJ5eYae1feOx0B
+         uOlZKXqxdUnCoklBzl0TXwWoBT/mO6Z6SkLMVFw0Uhy3kzWZrrx7DMwLRb0Y+ryMSsyO
+         bK2YEbBKa5mLCj89xVjgqxvUU+F7wnvYBL0ioCVORa2GLrWhAe4/hnfuqc1L3tMdfYGg
+         Mxqd6WgDuz1fo7zcjAs7yR5Bl5d0+UY3yhLncjzc3xjdQhdRgecZBBg2loVEdg/ZZSjP
+         YdOQ==
+X-Gm-Message-State: AOJu0Yz6zqUFrYfqIR2sORH7h8zdcxZmghzJSh/7KX1xAZSBY4Pf/L7S
+	KlLuc+tENCj3/L8tDe7TVcKsWwuwFGuHcKLnBNOqpnx8gW01dBM5ug36HQ==
+X-Google-Smtp-Source: AGHT+IEm1MfN6yBnWN1ebGpH0MY91BrIcYWCycPE2zTJk9ZD72Rl2qe9CtVmex4zbfqXW1W0JSzY+Q==
+X-Received: by 2002:a17:907:3ea8:b0:a99:fd32:11dc with SMTP id a640c23a62f3a-a99fd321240mr407199766b.24.1728912908272;
+        Mon, 14 Oct 2024 06:35:08 -0700 (PDT)
 Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9a07662ffbsm203129366b.130.2024.10.14.05.54.12
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9a009cceedsm239622866b.61.2024.10.14.06.35.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2024 05:54:12 -0700 (PDT)
+        Mon, 14 Oct 2024 06:35:07 -0700 (PDT)
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-To: bitbake-devel@lists.openembedded.org
+To: bitbake-devel@lists.openembedded.org,
+	christophe.priouzeau@st.com,
+	paul@pbarker.dev
 Cc: Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH] fetch2/wget.py: use default wget user-agent in upstream version checks
-Date: Mon, 14 Oct 2024 14:54:06 +0200
-Message-Id: <20241014125406.2322310-1-alex.kanavin@gmail.com>
+Subject: [RFC PATCH] fetch2/wget: set User-Agent to 'bitbake/version' in checkstatus()
+Date: Mon, 14 Oct 2024 15:35:04 +0200
+Message-Id: <20241014133504.2390211-1-alex.kanavin@gmail.com>
 X-Mailer: git-send-email 2.39.5
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 14 Oct 2024 12:54:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16679
+ <bitbake-devel@lists.openembedded.org>; Mon, 14 Oct 2024 13:35:16 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16680
 
 From: Alexander Kanavin <alex@linutronix.de>
 
-This has been set to various mozilla versions from this point onwards without
-explanation or specific examples:
-https://git.yoctoproject.org/poky/commit/?h=master-next&id=ba06cc8943d021f406c3d292ce415b77319ca5c6
+This eliminates the last usage of 'fake mozilla' in bitbake, and
+it's then truthful everywhere about presenting itself, or wget
+(when that is used).
 
-However, sourceforge has recently banned the current 'fake mozilla' version
-we've been supplying, resulting in broken version checks:
+I understand this will make people nervous so I want to provide
+an extended decription.
 
-alex@Zen2:/srv/storage/alex/yocto/build-test-sourceforge$ devtool check-upgrade-status gptfdisk
-...
---2024-10-12 11:53:23--  https://sourceforge.net/projects/gptfdisk/files/gptfdisk/
-Resolving sourceforge.net (sourceforge.net)... 172.64.150.145, 104.18.37.111, 2606:4700:4400::6812:256f, ...
-Connecting to sourceforge.net (sourceforge.net)|172.64.150.145|:443... connected.
-HTTP request sent, awaiting response... 403 Forbidden
-2024-10-12 11:53:24 ERROR 403: Forbidden.
+1. How was this tested?
 
-gptfdisk                  1.0.10          UNKNOWN_BROKEN  Alexander Kanavin <alex.kanavin@gmail.com>
+- bitbake-selftest -k FetchCheckStatusTest
+(tests a few hardcoded URIs, all passed)
 
-On the other hand, using wget's default user-agent works just fine:
+- bitbake -k -c checkuri world
+(runs checkstatus() over all recipes in oe-core, and all passed again -
+this hopefully goes a long way to reassure everyone that hosts around
+the world and various CDNs typically do not have a problem with user-agent
+strings they haven't seen before or bitbake user-agent specifically)
 
---2024-10-12 12:16:06--  https://sourceforge.net/projects/gptfdisk/files/gptfdisk/
-Resolving sourceforge.net (sourceforge.net)... 104.18.37.111, 172.64.150.145, 2606:4700:4400::6812:256f, ...
-Connecting to sourceforge.net (sourceforge.net)|104.18.37.111|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: unspecified [text/html]
+2. What about that removed cloudflare comment?
+
+I digged into git history, and I think it is not fully accurate. First, 'fake
+mozilla' agent is used only for checkstatus() - in actual fetching with wget
+it is not. And that has not been a problem for anyone.
+
+Second, here's how the comment occured. Usage of 'fake mozilla' was introduced here:
+https://git.yoctoproject.org/poky/commit/?h=master&id=ab26fdae9e5ae56bb84196698d3fa4fd568fe903
+
+At that point it did not have to be specifically 'mozilla', the commit message
+indicates that any User-Agent would have been ok. Mozilla was simply copied
+from upstream version check for convenience.
+
+Later on, the string was updated to a more recent Mozilla:
+https://git.yoctoproject.org/poky/commit/?h=master&id=9f123238261a68e37cec634782e9320633cac5d4
+
+The claim in the added comment become something else: that User-Agent *must* a browser,
+without evidence or tests. Even though it demonstrably doesn't have to be - wget is ok.
+
+3. What if someone has a server that is ok with wget agent, but not ok with bitbake agent?
+
+Please see point one. It's not impossible but I think it's highly unlikely. I do think
+we should rather tell servers the truth, and learn where the actual issues are. Then
+we can consider options - whether that would be pretending to be wget, or allowing user-agent
+to be configured. We should also add such servers to bitbake-selftest so we know what they
+are.
 
 Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- bitbake/lib/bb/fetch2/wget.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/lib/bb/fetch2/wget.py | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index e8b1292433f..493a5b62ee2 100644
+index 493a5b62ee2..7856d10fa4b 100644
 --- a/bitbake/lib/bb/fetch2/wget.py
 +++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -463,7 +463,7 @@ class Wget(FetchMethod):
-         f = tempfile.NamedTemporaryFile()
-         with tempfile.TemporaryDirectory(prefix="wget-index-") as workdir, tempfile.NamedTemporaryFile(dir=workdir, prefix="wget-listing-") as f:
-             fetchcmd = self.basecmd
--            fetchcmd += " -O " + f.name + " --user-agent='" + self.user_agent + "' '" + uri + "'"
-+            fetchcmd += " -O " + f.name + " '" + uri + "'"
-             try:
-                 self._runwget(ud, d, fetchcmd, True, workdir=workdir)
-                 fetchresult = f.read()
+@@ -53,11 +53,6 @@ class WgetProgressHandler(bb.progress.LineFilterProgressHandler):
+ class Wget(FetchMethod):
+     """Class to fetch urls via 'wget'"""
+ 
+-    # CDNs like CloudFlare may do a 'browser integrity test' which can fail
+-    # with the standard wget/urllib User-Agent, so pretend to be a modern
+-    # browser.
+-    user_agent = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gecko/20100101 Firefox/84.0"
+-
+     def check_certs(self, d):
+         """
+         Should certificates be checked?
+@@ -356,7 +351,7 @@ class Wget(FetchMethod):
+                 # Some servers (FusionForge, as used on Alioth) require that the
+                 # optional Accept header is set.
+                 r.add_header("Accept", "*/*")
+-                r.add_header("User-Agent", self.user_agent)
++                r.add_header("User-Agent", "bitbake/{}".format(bb.__version__))
+                 def add_basic_auth(login_str, request):
+                     '''Adds Basic auth to http request, pass in login:password as string'''
+                     import base64
 -- 
 2.39.5
 
