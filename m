@@ -1,145 +1,86 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <riemensjesse@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A09A9D16265
-	for <webhook@archiver.kernel.org>; Mon, 14 Oct 2024 13:35:16 +0000 (UTC)
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
- by mx.groups.io with SMTP id smtpd.web11.55005.1728912910250395721
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F945D18125
+	for <webhook@archiver.kernel.org>; Mon, 14 Oct 2024 15:11:07 +0000 (UTC)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+ by mx.groups.io with SMTP id smtpd.web11.57387.1728918657960067872
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 14 Oct 2024 06:35:10 -0700
+ Mon, 14 Oct 2024 08:10:58 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=I8UkjMRu;
- spf=pass (domain: gmail.com, ip: 209.85.218.54, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a99c0beaaa2so523522866b.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 14 Oct 2024 06:35:10 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=nphKVX2/;
+ spf=pass (domain: gmail.com, ip: 209.85.218.48, mailfrom: riemensjesse@gmail.com)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a9a14cb0147so117624466b.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 14 Oct 2024 08:10:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728912908; x=1729517708; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1728918655; x=1729523455; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/UWqXmCvos3djQcSqUbSquTtMYADK0Zu4mruRU3Ec7c=;
-        b=I8UkjMRuzsarW0FywvPwXOvsY7KsTMxpE6avB6r8L9eZu15Tk7QzBXn7beszO4Glnn
-         X0mw+ZTLuyxkKGpKQLYXhuAuFHSqtxTEV5JaOfsG7UOrN4fQZWIZj9xd7GrZkhmc4o90
-         DtblmXJ2P1F1qP9F0XgyUmxgQJwxRsYqh0KcYlo5BukzygI9cSNSUjG6K4RM7WfNQqu+
-         P6FApCvwrAOOCmxVjjt+UrGu4fTc1UTt4oGAQaGjli57fvyzNiMyKcHj6ha6A8R9lR6P
-         xXZpCNnZRm6D/DSIWDvUNE436OZI0dn1QiFrsPyFbpL4eCPS47/dooE47aD839ckNBn6
-         tW/w==
+        bh=1hhYOD0Y1BJ5ZllNJVQV5JfEk8yfAnAPbwjX0aLwQV8=;
+        b=nphKVX2/VQrbPFU31FoohztYOzJYyW0E58h4BGbjmvopAj42bNdmAyBvlWsLJ0JoVL
+         BePjuKM7pzjAFcqlJ/lmfE9Tnj5Jzxl5uhhVfZEeEj2l7kdpNqKG4FellZecuumORyVo
+         5chIqwO+CAlxaVg2BIzlpXDLLw+LhvyHCCnQD/cFUhX6csxwhPFFQKG5t/YwnMm19adL
+         9hWpqny19AlB2snUfs/7/aMPKEVOI+8dDMGLZe4Jx5jJUVMkI1eTpoXlBvDmP7vCvdmu
+         s7Z5a5lZYsVv4A/c/JtmjWtwtN6qUUoFGFT66+ecmLShiYnbU5GiLb8O+vTdFiECX/Pa
+         +gEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728912908; x=1729517708;
+        d=1e100.net; s=20230601; t=1728918655; x=1729523455;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/UWqXmCvos3djQcSqUbSquTtMYADK0Zu4mruRU3Ec7c=;
-        b=FyhyKYpd//qkNEvRWoVgrei9pdRKdb3Pm8FpOzMzNhFnvom9dQnnY6/G7qdKMOFcoq
-         VyjoMu2JBM2X9mxy++4wOm1uzcHiff4yItfnXA4gliUUcHDm2jB/zBfJ5eYae1feOx0B
-         uOlZKXqxdUnCoklBzl0TXwWoBT/mO6Z6SkLMVFw0Uhy3kzWZrrx7DMwLRb0Y+ryMSsyO
-         bK2YEbBKa5mLCj89xVjgqxvUU+F7wnvYBL0ioCVORa2GLrWhAe4/hnfuqc1L3tMdfYGg
-         Mxqd6WgDuz1fo7zcjAs7yR5Bl5d0+UY3yhLncjzc3xjdQhdRgecZBBg2loVEdg/ZZSjP
-         YdOQ==
-X-Gm-Message-State: AOJu0Yz6zqUFrYfqIR2sORH7h8zdcxZmghzJSh/7KX1xAZSBY4Pf/L7S
-	KlLuc+tENCj3/L8tDe7TVcKsWwuwFGuHcKLnBNOqpnx8gW01dBM5ug36HQ==
-X-Google-Smtp-Source: AGHT+IEm1MfN6yBnWN1ebGpH0MY91BrIcYWCycPE2zTJk9ZD72Rl2qe9CtVmex4zbfqXW1W0JSzY+Q==
-X-Received: by 2002:a17:907:3ea8:b0:a99:fd32:11dc with SMTP id a640c23a62f3a-a99fd321240mr407199766b.24.1728912908272;
-        Mon, 14 Oct 2024 06:35:08 -0700 (PDT)
-Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9a009cceedsm239622866b.61.2024.10.14.06.35.07
+        bh=1hhYOD0Y1BJ5ZllNJVQV5JfEk8yfAnAPbwjX0aLwQV8=;
+        b=fvpR44SG1Iy8tSj5YJ0zSHZbDlvZGTfdU7ogMcLOt98wVFJBvjRBdZIEooytqsqk+H
+         3+PcEBgn17ySXd6q+QcBSxqVnV0QUUoTlteIYAiGvzwfnje6EW3Xf4vWnYkd2eXnvxZw
+         9vsNi0e6gBb52kdS84j/uZscy6ix9WgioIRMxKWkVP/ACMjcHorSqbz7ZrSdDtSV5cjP
+         Mwi1f1Qq+A0VvpvgTG2QouP0wH7jLow7EgGvsRWu3gJGnDDkCTz/MlZ/G8IW6cA5+pPT
+         ZJNeBvl7NRmKJH9/IkglU8s8ILljw9XTItFXNbs7rv56gxbKwygCs/pAPwuHr+mTr8ou
+         6olw==
+X-Gm-Message-State: AOJu0YzOr4yrug9f63ujVLU19geIyJug4qpKUVQkW/CKWXIpCR6ZJpUY
+	ABNHryIZ0dZXWhO84Q+z2K9DNnvohT8dQ/GLJgBlbPBkAJN4L8ehauAb0uRL
+X-Google-Smtp-Source: AGHT+IG4ODGj8BzAl+vXiKfUCIvMyGUnZykyzlWggN6LBWkHpVVRgDPJDQMXIGcaVUAOJ8k4NvIgbA==
+X-Received: by 2002:a17:907:9288:b0:a9a:1739:91e9 with SMTP id a640c23a62f3a-a9a17399666mr148051466b.24.1728918655416;
+        Mon, 14 Oct 2024 08:10:55 -0700 (PDT)
+Received: from jesse-hp.localdomain (216-130-172-081.dynamic.caiway.nl. [81.172.130.216])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a99ef8c4d50sm356671066b.11.2024.10.14.08.10.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2024 06:35:07 -0700 (PDT)
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-To: bitbake-devel@lists.openembedded.org,
-	christophe.priouzeau@st.com,
-	paul@pbarker.dev
-Cc: Alexander Kanavin <alex@linutronix.de>
-Subject: [RFC PATCH] fetch2/wget: set User-Agent to 'bitbake/version' in checkstatus()
-Date: Mon, 14 Oct 2024 15:35:04 +0200
-Message-Id: <20241014133504.2390211-1-alex.kanavin@gmail.com>
-X-Mailer: git-send-email 2.39.5
+        Mon, 14 Oct 2024 08:10:54 -0700 (PDT)
+From: Jesse Riemens <riemensjesse@gmail.com>
+X-Google-Original-From: Jesse Riemens <j.riemens@alvatechnology.nl>
+To: bitbake-devel@lists.openembedded.org
+Cc: Jesse Riemens <riemensjesse@gmail.com>
+Subject: [PATCH] contrib/hashserv/Dockerfile: Add libgcc as dependency
+Date: Mon, 14 Oct 2024 17:10:52 +0200
+Message-ID: <20241014151052.866580-1-j.riemens@alvatechnology.nl>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 14 Oct 2024 13:35:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16680
+ <bitbake-devel@lists.openembedded.org>; Mon, 14 Oct 2024 15:11:07 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16681
 
-From: Alexander Kanavin <alex@linutronix.de>
+From: Jesse Riemens <riemensjesse@gmail.com>
 
-This eliminates the last usage of 'fake mozilla' in bitbake, and
-it's then truthful everywhere about presenting itself, or wget
-(when that is used).
-
-I understand this will make people nervous so I want to provide
-an extended decription.
-
-1. How was this tested?
-
-- bitbake-selftest -k FetchCheckStatusTest
-(tests a few hardcoded URIs, all passed)
-
-- bitbake -k -c checkuri world
-(runs checkstatus() over all recipes in oe-core, and all passed again -
-this hopefully goes a long way to reassure everyone that hosts around
-the world and various CDNs typically do not have a problem with user-agent
-strings they haven't seen before or bitbake user-agent specifically)
-
-2. What about that removed cloudflare comment?
-
-I digged into git history, and I think it is not fully accurate. First, 'fake
-mozilla' agent is used only for checkstatus() - in actual fetching with wget
-it is not. And that has not been a problem for anyone.
-
-Second, here's how the comment occured. Usage of 'fake mozilla' was introduced here:
-https://git.yoctoproject.org/poky/commit/?h=master&id=ab26fdae9e5ae56bb84196698d3fa4fd568fe903
-
-At that point it did not have to be specifically 'mozilla', the commit message
-indicates that any User-Agent would have been ok. Mozilla was simply copied
-from upstream version check for convenience.
-
-Later on, the string was updated to a more recent Mozilla:
-https://git.yoctoproject.org/poky/commit/?h=master&id=9f123238261a68e37cec634782e9320633cac5d4
-
-The claim in the added comment become something else: that User-Agent *must* a browser,
-without evidence or tests. Even though it demonstrably doesn't have to be - wget is ok.
-
-3. What if someone has a server that is ok with wget agent, but not ok with bitbake agent?
-
-Please see point one. It's not impossible but I think it's highly unlikely. I do think
-we should rather tell servers the truth, and learn where the actual issues are. Then
-we can consider options - whether that would be pretending to be wget, or allowing user-agent
-to be configured. We should also add such servers to bitbake-selftest so we know what they
-are.
-
-Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- bitbake/lib/bb/fetch2/wget.py | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ contrib/hashserv/Dockerfile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index 493a5b62ee2..7856d10fa4b 100644
---- a/bitbake/lib/bb/fetch2/wget.py
-+++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -53,11 +53,6 @@ class WgetProgressHandler(bb.progress.LineFilterProgressHandler):
- class Wget(FetchMethod):
-     """Class to fetch urls via 'wget'"""
+diff --git a/contrib/hashserv/Dockerfile b/contrib/hashserv/Dockerfile
+index 74b4a3be1..aec1f86fc 100644
+--- a/contrib/hashserv/Dockerfile
++++ b/contrib/hashserv/Dockerfile
+@@ -11,7 +11,7 @@
  
--    # CDNs like CloudFlare may do a 'browser integrity test' which can fail
--    # with the standard wget/urllib User-Agent, so pretend to be a modern
--    # browser.
--    user_agent = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gecko/20100101 Firefox/84.0"
--
-     def check_certs(self, d):
-         """
-         Should certificates be checked?
-@@ -356,7 +351,7 @@ class Wget(FetchMethod):
-                 # Some servers (FusionForge, as used on Alioth) require that the
-                 # optional Accept header is set.
-                 r.add_header("Accept", "*/*")
--                r.add_header("User-Agent", self.user_agent)
-+                r.add_header("User-Agent", "bitbake/{}".format(bb.__version__))
-                 def add_basic_auth(login_str, request):
-                     '''Adds Basic auth to http request, pass in login:password as string'''
-                     import base64
+ FROM alpine:3.13.1
+ 
+-RUN apk add --no-cache python3
++RUN apk add --no-cache python3 libgcc
+ 
+ COPY bin/bitbake-hashserv /opt/bbhashserv/bin/
+ COPY lib/hashserv /opt/bbhashserv/lib/hashserv/
 -- 
-2.39.5
+2.43.0
 
 
