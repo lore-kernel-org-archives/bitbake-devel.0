@@ -2,80 +2,80 @@ Return-Path: <alban.bedel@aerq.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9E7CFC299
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8E4CFC29A
 	for <webhook@archiver.kernel.org>; Tue, 15 Oct 2024 11:46:20 +0000 (UTC)
-Received: from mx-relay94-hz2.antispameurope.com (mx-relay94-hz2.antispameurope.com [94.100.136.194])
- by mx.groups.io with SMTP id smtpd.web10.11329.1728992775315232563
+Received: from mx-relay100-hz2.antispameurope.com (mx-relay100-hz2.antispameurope.com [94.100.136.201])
+ by mx.groups.io with SMTP id smtpd.web10.11328.1728992772020333499
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 15 Oct 2024 04:46:15 -0700
+ Tue, 15 Oct 2024 04:46:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@l2task.onmicrosoft.com header.s=selector1-l2task-onmicrosoft-com header.b=Xutub1dq;
- dkim=fail reason="dkim: body hash did not verify" header.i=@l2task.onmicrosoft.com header.s=selector1-l2task-onmicrosoft-com header.b=mIME4+qk;
- dkim=pass header.i=@aerq.com header.s=hse1 header.b=dIFj3tqN;
- spf=pass (domain: aerq.com, ip: 94.100.136.194, mailfrom: alban.bedel@aerq.com)
-Received: from mail-am7eur03lp2237.outbound.protection.outlook.com ([104.47.51.237]) by mx-relay94-hz2.antispameurope.com;
- Tue, 15 Oct 2024 13:46:13 +0200
+ dkim=fail reason="dkim: body hash did not verify" header.i=@l2task.onmicrosoft.com header.s=selector1-l2task-onmicrosoft-com header.b=fV5NnU7/;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@l2task.onmicrosoft.com header.s=selector1-l2task-onmicrosoft-com header.b=VWV8m/Bx;
+ dkim=pass header.i=@aerq.com header.s=hse1 header.b=FjOX6JdC;
+ spf=pass (domain: aerq.com, ip: 94.100.136.201, mailfrom: alban.bedel@aerq.com)
+Received: from mail-am7eur03lp2238.outbound.protection.outlook.com ([104.47.51.238]) by mx-relay100-hz2.antispameurope.com;
+ Tue, 15 Oct 2024 13:46:07 +0200
 ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=fail;
- b=lGH3fpYs4rPWCO1HS4ppJy4bPcwf2Xa94dsejXgbXZ5BoDEBGFLWfIdi1thTM5gLRCTFEcE8iRC9BAg012TpF0aL9wxV6Ru8NU2o3iWjgsdUUGCh+i0X4ibDZzSETx921mzvGsRD+Jy+6L4kCbZg2Ow3rPxC7+xAqglBUaR3cLu93XHfFYwlnWf4PT6yXsi0Gykht+9POGrrH4vg/CbF5dLQMY3H5hc+4d7jBTPecsPaB7Lp9liimOfSH3AghC4BtvPKtULtiuZ9OXPr3wsgqSH9ZT5ckcJZoKwRZ7+buJlXGvaLC5wFveTo2cjSzSjS7mdpv5r6ehqYW2GA4FonBA==
+ b=FuXbKRjqzGTi/TpBkyeYTjxQvouCvZvaJ7TLA+MEOXvWnCbLP1xeWTV7Ix4DLIilDQN7xaxZ08VxWnvgKl7tuLX16ZLyY1YsOaMSDjOU8d9AGI7mnXFs1HA8YvhZXyB86xKqOxAvThN2oY6HnThI+ASCVbziOfsPPJ+LDGws+YtvtbuL2kQMg6yDS5aRcPGETYXu/Q1zxUolwBwV2RvRg9wxEzV0pmbVGpGK8tiNLfzqZuBY0Sst4NHTqgCuWw8stgDH5mosPuM+7jU631hPycQTNa64rMU/jHmbUmv+Ws93TI1on0uL8kIev1NEACM0Jr4drGqKt6H7K0kCGYKPZg==
 ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+fVOwhGgMB5kj0ydKVNfY2HXGP1pqVG/P7tlnzLO9pw=;
- b=ZgqzbCzjuOC5yT0aN4gZwENX9zY5w3tC+qCpefsTPH6qIE9GFnU4UWBJLL5QMt7eA2pa+ptaqWeBO/l0cFY7hirwneExjxARa3CVGH5EZ1O8IonDe26ScuN4J0BsePItFZbKLr9f+DJ0CUQQxSEVwlp6d7OZ1rbSsbkN5A8mUtzT4IKf5cFAUp/E1VYNqd0FLI1mOFM2Ud5gz8GxCs1V2Ha0TpiLQw9mFsA0R9FZeXyZp7xs/rjPSTezeHEOqiJtWiF4Pc5TGSxQXbqUVD9CnZDIdKEgcxw791u4yurVBHIuGtAEWlu4tKpoMZdlz8VfEkjdLfQhtDOiSLWcatKufg==
+ bh=6iuvwl3wALznsCMyDWkRIHADpny7qCMcmcD3Fmrkh/M=;
+ b=kjS2/wwP1ZulpH9oqViREIUboPr9T9vzXroQGELNV6YtXf5dBrIX2g2jXbrbd+MXZWoP8ZWS/2uHUXqsE6jP0UYVHBqj1AMdSXb3lWW/cc+b0O9z7beE5I30hlmIjXWmgzuS06TbnFSx6Lr+ohiadJIJ41RnozCZa6GgwC2oSKzi1X3tZm4ZMnZWWCbwMkpe5b6ljmlBC8dOq91XmGPkgQmKckjkA5quqAiLkTLVGD3UVEf+aX4sSu9wM4WA54X0uVBDAMxbkNl3XakXeq3i6MTUB32+p1YoXbcqyzdjY6Uq9aqf2Zi8pi/eJI44ATX6puHVTXWINXyMzdCOVODOLw==
 ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=softfail (sender ip
  is 104.40.229.156) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=aerq.com; dmarc=temperror action=none header.from=aerq.com;
- dkim=fail (body hash did not verify) header.d=l2task.onmicrosoft.com;
- arc=fail (47)
+ smtp.mailfrom=aerq.com; dmarc=fail (p=quarantine sp=quarantine pct=100)
+ action=quarantine header.from=aerq.com; dkim=fail (body hash did not verify)
+ header.d=l2task.onmicrosoft.com; arc=fail (47)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=l2task.onmicrosoft.com; s=selector1-l2task-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+fVOwhGgMB5kj0ydKVNfY2HXGP1pqVG/P7tlnzLO9pw=;
- b=Xutub1dqu894MAadytCr7WhISTgznTTVVl4Y5zymO9te91fW/tc2ywfWGUvKFd9qiYlrhCIBCHw8CvuqAqD2gmiVppkSgKhbkQVpzJhz6+dq5J5XUQHDNFF/5npn3RvZZdTEg5wYfalC2EF3dc6qGplIReklMA6ncLtVcZJf4KA=
-Received: from DUZPR01CA0176.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4b3::12) by AM7PR10MB3157.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:105::14) with Microsoft SMTP Server (version=TLS1_2,
+ bh=6iuvwl3wALznsCMyDWkRIHADpny7qCMcmcD3Fmrkh/M=;
+ b=fV5NnU7/eoi/fRhMqb1IUtrEHplfJt5AybK2ZW+Zwr4DlLYbugCjrKEhcqlvufhrTNhmiqHbQL/D1/R45RrfawPhmg8JWLZFyvJ+EMvUFkBNimnLGvKrHYRn+D4aAJv+LvEzHLbZsp8NDSKvym8hEeHBNwuVyTznl2c5b0tZK2E=
+Received: from DU7P189CA0022.EURP189.PROD.OUTLOOK.COM (2603:10a6:10:552::13)
+ by AS8PR10MB6128.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:549::9) with
+ Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.16; Tue, 15 Oct
- 2024 11:46:03 +0000
-Received: from DU2PEPF00028D12.eurprd03.prod.outlook.com
- (2603:10a6:10:4b3:cafe::38) by DUZPR01CA0176.outlook.office365.com
- (2603:10a6:10:4b3::12) with Microsoft SMTP Server (version=TLS1_2,
+ 2024 11:45:58 +0000
+Received: from DB3PEPF00008860.eurprd02.prod.outlook.com
+ (2603:10a6:10:552:cafe::5) by DU7P189CA0022.outlook.office365.com
+ (2603:10a6:10:552::13) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.27 via Frontend
- Transport; Tue, 15 Oct 2024 11:46:03 +0000
+ Transport; Tue, 15 Oct 2024 11:45:58 +0000
 X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
  104.40.229.156) smtp.mailfrom=aerq.com; dkim=fail (body hash did not verify)
- header.d=l2task.onmicrosoft.com;dmarc=temperror action=none
+ header.d=l2task.onmicrosoft.com;dmarc=fail action=quarantine
  header.from=aerq.com;
 Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
  aerq.com discourages use of 104.40.229.156 as permitted sender)
 Received: from eu1.smtp.exclaimer.net (104.40.229.156) by
- DU2PEPF00028D12.mail.protection.outlook.com (10.167.242.26) with Microsoft
+ DB3PEPF00008860.mail.protection.outlook.com (10.167.242.11) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8069.17 via Frontend Transport; Tue, 15 Oct 2024 11:46:01 +0000
+ 15.20.8069.17 via Frontend Transport; Tue, 15 Oct 2024 11:45:56 +0000
 Received: from EUR02-DB5-obe.outbound.protection.outlook.com (104.47.11.112)
 	 by eu1.smtp.exclaimer.net (104.40.229.156) with Exclaimer Signature Manager
 	 ESMTP Proxy eu1.smtp.exclaimer.net (tlsversion=TLS12,
-	 tlscipher=TLS_DIFFIEHELLMAN_WITH_AES256_NONE); Tue, 15 Oct 2024 11:46:01
+	 tlscipher=TLS_DIFFIEHELLMAN_WITH_AES256_NONE); Tue, 15 Oct 2024 11:45:56
 	 +0000
 X-ExclaimerHostedSignatures-MessageProcessed: true
-X-ExclaimerProxyLatency: 4823145
-X-ExclaimerImprintLatency: 481523
-X-ExclaimerImprintAction: cb85e160023a4bd69b2f70e063af1e1a
+X-ExclaimerProxyLatency: 6029361
+X-ExclaimerImprintLatency: 862308
+X-ExclaimerImprintAction: d8d4f9b0cdc9444491daa47a233f5fbc
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kLffBDEiTJNl+BOTqSMlicvO0+wyncEuWBztiH6rvU3+xqrh8ylPIssoOUy30WRtMC5/Bn5W17yDvOOIQuw74A4G65MQ427Mf54n5Bjcqu3ZlczrYbeZbkmF0T43C8mgJU0qcEOf514aHdNg13hjS5bAjCkr5Nw3mayp7NOyPyUMD2OUi8AY7b7dWYmNza3tvTFj2U+dwWChyPAZOd9rhNH9dmjykZeMrWRRKr7EaxrTCU2gtgplVQs18cd0ttYo9UatnJJKql4dMQ+3eSjRIGnTQUL/r/qjpiwZoDCCSD158JV5wm8Qnz9xoI/xXamfIDLahyokIVjrA/jYnTcfFA==
+ b=d71XpMnAh1EJmfN54nmJbZUUuDAz8DuE2i3g29Wl169F3uIhcesyGMM9AvFw05sthXArgotJ4xjy0IXW2dRC1KErua6oYcforW+uZxFVKBhRaiRMEXSm1HcpZ8Zk/4JrRW7fv6I9ZUOpeGQqwu1G5bvaqAJ/RhyjC9mwhLVzdr//REKRGQ6GgXJG8fxD+Hm4mOX2bJJzvkyumIysiFrjkTrfBUTSqhU2rw+qiBu5EiHEpRx46LOxb3JbB78QLHQWMaWi7+ymudNdQJPTG7WwVEip3Ug0wOhPWsBMAgZImES6IXvuO6JLXJKf7REBfNUne9vDPxC/KNZG/h+NYUAeEA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XutEum3sEpOstURazXg0Uf+pxB94uihVamBcHQN+kL0=;
- b=HjdwyiXS6Hims/oUxpx+fZ37w+8MsUOUWslF7Ku1m+S2aPFVGlGW0RxqtHZYMf9Cx8CdY7YmjzUvG1YNpj3PfOAIe8uuNYB6hyJf/opsQgB1r+7F4LKN70wNrqFy1ehtf0VMeJW69XoqgtyjRTtne9FO1HW8CcpwtaNMYUc599j0d7hvXyCoEF2/pzfINQMWT5ZKYozd0AnGSQGrGM9iGt4W5m/NLLedoqW5WIdr1BV6VBBBtq9JN1jMZFyZfm+LEs2FeAbdoAoUTQcwcqou9wBwsp+IEk1muVKpxAkyrGTdVjaz8gtJQDQrxRjE3b58pWY/fko646VqcyGHn8zOag==
+ bh=W7YGVJ8iP3E8EG6Z/TZmIRzmNVbzrDWvPZysavayj3o=;
+ b=PNeGFQJtcc6VDoiztzCES6t5ob1/IF+qBp5tGHvIJ6zcHBrvBvCg+ViMb/AtvLmHCjxw/KvJmmelrlWCjYBlMDwTYUfIUGQvl2O6jFyeCEpCfqeaK/24zaQkV5FYh0xly5gojcbVSWAKcY/0FZ0CAUVwApshb/4+T/S3yhxJVGEAFiCA0i4OHXjPGSYgmVos/NVjNM1GtctnWplrbr3Tr4ulwvsTeYecqrMPtrNRLntZfps1kxNkkGwfBYDJoehCkmsYk+jhpj1lks7s1fjLag/coFdJNLqTME73a+pSvJnrJ6SJjV+1gfcI2feERUaz+b1ro87UmZ+bUCoBHrgdJQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=aerq.com; dmarc=pass action=none header.from=aerq.com;
  dkim=pass header.d=aerq.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=l2task.onmicrosoft.com; s=selector1-l2task-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XutEum3sEpOstURazXg0Uf+pxB94uihVamBcHQN+kL0=;
- b=mIME4+qkQHpHKpXDknZnH2IyFon4dOQL129AJYFZHzkSeuP4yoQe6o2Dhpo5tiiisxGTMoCYDCHdvU+lUAum6W3n2gSGFbB6gpH4mZhQQXEEdfR7OuJf5+JgbEXmvzxoxsQx1krYZK3uVAUUR1jSlq2pgH0QPEg7dJ9GcuvD2X4=
+ bh=W7YGVJ8iP3E8EG6Z/TZmIRzmNVbzrDWvPZysavayj3o=;
+ b=VWV8m/BxXSS9/8DBLEeJQag/k6QYjmrb7b8zob6eojkVA4ycP6dJ5qS8oq3rhJFQfNQY1Q2DDmbuHzPl5poAmzRzhhHdyb54cyO/qEWXfr10n2IQG3fPpDNKpTneER9K+kPkUsF0E5Wj9Eh4XbdC0AUCU29iFRksp5T0XN7NWh0=
 Authentication-Results-Original: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=aerq.com;
 Received: from AS8PR10MB5000.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:405::24)
@@ -89,111 +89,113 @@ Received: from AS8PR10MB5000.EURPRD10.PROD.OUTLOOK.COM
  11:45:53 +0000
 From: Alban Bedel <alban.bedel@aerq.com>
 To: bitbake-devel@lists.openembedded.org
-CC: Alban Bedel <alban.bedel@aerq.com>
-Subject: [scarthgap][2.8][ 0/2] Bug fixes backport
-Date: Tue, 15 Oct 2024 13:45:13 +0200
-Message-ID: <20241015114515.1331555-1-alban.bedel@aerq.com>
+CC: =?UTF-8?q?Enrico=20J=C3=B6rns?= <ejo@pengutronix.de>,
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [scarthgap][2.8][ 1/2] bitbake-diffsigs: fix handling when finding only a single sigfile
+Date: Tue, 15 Oct 2024 13:45:14 +0200
+Message-ID: <20241015114515.1331555-2-alban.bedel@aerq.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20241015114515.1331555-1-alban.bedel@aerq.com>
+References: <20241015114515.1331555-1-alban.bedel@aerq.com>
 Content-Transfer-Encoding: quoted-printable
 X-ClientProxiedBy: FR0P281CA0187.DEUP281.PROD.OUTLOOK.COM
  (2603:10a6:d10:ab::17) To AS8PR10MB5000.EURPRD10.PROD.OUTLOOK.COM
  (2603:10a6:20b:405::24)
 X-MS-TrafficTypeDiagnostic: 
-	AS8PR10MB5000:EE_|PAVPR10MB6940:EE_|DU2PEPF00028D12:EE_|AM7PR10MB3157:EE_
-X-MS-Office365-Filtering-Correlation-Id: d65d89ab-200c-4c3c-628a-08dced0ef182
+	AS8PR10MB5000:EE_|PAVPR10MB6940:EE_|DB3PEPF00008860:EE_|AS8PR10MB6128:EE_
+X-MS-Office365-Filtering-Correlation-Id: acb40c8a-e840-435e-659d-08dced0eee9b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam-Untrusted: 
  BCL:0;ARA:13230040|52116014|366016|1800799024|376014|10070799003;
 X-Microsoft-Antispam-Message-Info-Original: 
- =?utf-8?B?bURLc293NHRzRXl5U09uYm1RWXdjZkpRZTlsV2MyVzJaQ1JIeHg5NmNra2l2?=
- =?utf-8?B?azhKTVJRZExFSFIzZU1qdk1GZVZRRnFzRHJ4NHhtaGhqZElrU1YvNjhDTzVs?=
- =?utf-8?B?RkJVOUdwS2NlaWxURXJBUC9TWk0xaE1YYmxEMm1EZUlnaVZCSDdUdmhHdUtZ?=
- =?utf-8?B?aVpHeGVqd3dKNVZxVXNRT3FyN09qLzIxWnJNaWdkTnBNMCtKNU9QQnZMMWh4?=
- =?utf-8?B?cEhIcVArUjdkR3Y0UDdCSHBJeHI4Q0ZOa0VDK29Nc1ptMnFzWTdCY1RwT0VI?=
- =?utf-8?B?bVJ0Wkx1L0FRZ2RkdFdqSWJyKytHdUxWMjRwbEFpNXhySjBwbmpFZlBodnBQ?=
- =?utf-8?B?Z3ZPNmZWN3JoeGYwK0hTTkoxNTZtejlyeVdLR0ZSVWtKQWlmM0piTUZ3VVlL?=
- =?utf-8?B?aGpaNExJS21kenlqTVg0ZER1SUplYUZoWnFIU3JqdUM4Ujc1YmMwek1hUHl6?=
- =?utf-8?B?UUFCMm9iZHhQTWtWOFZGT1o5UVpsbzA4SXpyS0RMZjBhQWVSdEp3eENwOVY3?=
- =?utf-8?B?LzRWZUQrc3lKNTV0WjBDNUJhT3d0OS9MOXRGUVNXOVN6RkgvVC9lN0NMd3o4?=
- =?utf-8?B?V1dPRVVQSUZHSTl6OGt6Z21ZTWdoVnVQU2swTnNPeCtmVUJEUi9EK1NNeDBF?=
- =?utf-8?B?akpQN0ZJRE52WCt1RFkrSUZjQWRBM2xRcUk4LzllSUIwUks5LzRLaGdsclk3?=
- =?utf-8?B?K25ueE5Ia2RTK3U3Sk5xVkNiUWFGWUpPOHFBcGdDQkl5TzhzY1JjcENtWHRC?=
- =?utf-8?B?RHpTSmNMOTdkS1k4RVBtM25PQmsyN1kxeVB5VUlZOHJ4QTdJaXRrWGpGemM4?=
- =?utf-8?B?RGsvWm5BZXRyTVh6VUNpVkp0YjZ6SFBuRGxvYS9Db2IvSEswU3EyendPRUpi?=
- =?utf-8?B?emJNTlQ2RWN5amw5cE1abzJycXJjR3J2SEMyK3ZzcGZsck5pKzNoa0Evb09B?=
- =?utf-8?B?TjNjM3pYMk5TSlIyam1WTXVNbXhrc3dqWlJ3cjZjL0xwdnZHam5lUVA4bkpN?=
- =?utf-8?B?ZFBzeHJBaGJLaHUySmVsVWdBNlFXYi9CTnh1THFnM2xHNHA1NFVKMmdpM0pK?=
- =?utf-8?B?b0JQY21mZnV3dnlpY2hyVURTWUJ0UUo3NkVZQk5CaUxaTzhocGlvd3d4T0dQ?=
- =?utf-8?B?YkFONXFSWVVLN0huUFZLb3FnZ1VEa01KOUdSdzVRNkdsdlcreHZLMVlqMzRl?=
- =?utf-8?B?OU1ZL3FoYTN4Wk5vVnBRL3dPbDB1ME1aVUQ0Z2ZkVHI0NVdWbm54WjFtazFl?=
- =?utf-8?B?TWV4bmx1Q0NNeTJBNEVHY1d4cHdYa1l5OTQ4VkJYUUJJdHNtSVdhUWg1Y3dE?=
- =?utf-8?B?OUdzbjhNSm0rR0JDRzY3c3VJZFZTU3MrWWNnaWtrTGtEcEhLc0xSVWZDa05k?=
- =?utf-8?B?c29nSGpTdnJPbXpiRjZwTE5DK2VYRG9aUzlzZ2g5SFR6ZHFxb0IrOEZPZVg4?=
- =?utf-8?B?N2FoT0tBM3hqbk14NEg0TWUxdUF5TVBZMk1kcXhCdVpoclQyTXJKOXQ2akVK?=
- =?utf-8?B?Y2pLVVdrelJOdUJZZ0pQSGJETEJEaFI5RENMaDVHNVhvd29lWHZlVEdRM3dR?=
- =?utf-8?B?anoxSTlKZG01TkUwRDFFZlJnRUQrNzdVME1uTDQ0aWNnQVpsWGd2UEIwMGlr?=
- =?utf-8?B?WnQwV1JqSHYyenhLSnJsQ0dqNkI2cW90aEZmQlFIZHBKSi9YQ0VZNU1pM1lO?=
- =?utf-8?B?c0NnV1BPSmdXcVZkazF3cG9OMjd1SStyNmlDTjFBREJ4ZnhEVldJeVJBPT0=?=
+ =?utf-8?B?SDczMVYzR29LK2diSVpCc3hpU2I5eTJJYjJ6NUg3aEpPQmpSN2w1ZWJ6bkU0?=
+ =?utf-8?B?dEJaTWwzNndETnppa3VDeE1VOGo0ZjdBYy9MTGkwK25wMTZ5eUVGeWJFRVdW?=
+ =?utf-8?B?Y3VDZkszYndyNWRzcm1hYzhBeENBWm05NkR1SysrbWNFSzBHY3psUU95V3BH?=
+ =?utf-8?B?SkNFc1l0UGR4NEswRzVqb1U3Y21ubjlKZ0NTajNVS0R5K0JDUTkxTUdRNFho?=
+ =?utf-8?B?Z2VsODFWVEhIY25JTitSUTc0L1Myb095a0h4Sk5EemppaGFrQmlLeEVPa25Y?=
+ =?utf-8?B?WnYxcFRsY2dFaGF4d2ltY2REcjhWV013ZkZ0aXU5cGs4T0V2NFp4SU5QOEpD?=
+ =?utf-8?B?UzVuNHZZMDVVelBSMXFnUjNrUGlHSmdTazhUbllTanY1bnlkK0Q5N0QvSVF3?=
+ =?utf-8?B?R080NEJBTDZpbkV6SFJYdkxSKzFuYTA5Rko1dDg1Vk1lUy90ejRzQkw5ZjVD?=
+ =?utf-8?B?T1poU2xJTE1lRVNEeEV6YlVQaDUyS1MzREtGZlpnMVArVDUzVGY1dGhIQ2ZO?=
+ =?utf-8?B?UXRCTWdhUDI4SU5mM1ZKaGRJRlNLdmFDM0cvUUhSNmVyUHE4WTRlU0c3US9N?=
+ =?utf-8?B?VFlEc29SK0R1VGVIUG5oM2JUQmJ3cVEyRW91QTdpNnZwWkhWeldZc2orRTRV?=
+ =?utf-8?B?MEY1YWs0WktPQmUwMWtEQnBVZHVvT1EvdzEyYVlIV0wwYi9MUHFLSy9lTUpW?=
+ =?utf-8?B?V3FIdEdaRTY1TEJTUkwrRFBxWFg3cTJXWGc1bktRMlVkUUU0ejZhUWRLVE1M?=
+ =?utf-8?B?bC81STlBeXJFL2tOVlkzSVJlcGhMcWZObitTRDdZSEIzSS9FbVZFYzNOcXhD?=
+ =?utf-8?B?N1NNZmVydUhycFVyVjJMUEtjMXpYNllQL1laVU1NSUM1STJ6cGpxZ3YyN0ZK?=
+ =?utf-8?B?Q1hyakcyaG45cHBXTjMwcUxjbDJiemkxSE5hVnBTMUZRM241b3pmbjMxQmpi?=
+ =?utf-8?B?aDhLS2hFZHNETllYb1JMOUhDb1pzVHc5ak1ZaVRiVnRBb2tHRmZwNTFBaTdT?=
+ =?utf-8?B?Tmsva0RRU0ZJVk9HeEFCNmN2U0ZvYmFEbDVoMlJYZi9DS2pSTXZoR3BGVTJJ?=
+ =?utf-8?B?U1RDUlRSV0ZmQ1VuM09taWlJeFJHVUYzR0lyNU9IcUttQUlKWDd1ZjJYbWtP?=
+ =?utf-8?B?ZkdSUUxSc0hKWXBwLy9KVEh6eTBnYkxjZjdNa1ovYUpvdWg3WTlucFpXaFdi?=
+ =?utf-8?B?Z3ZudW5LTjZVY0NWcDN1VEtjRlNQZEVnZWRmKzFmVitHc1k0aWJLTS9UN2hU?=
+ =?utf-8?B?NUJMZDdaRmN0Y2F4VmFUc2ZKN0JxWTRuaGdIVkVFTzN6MHl3T0FTRHU3Z29a?=
+ =?utf-8?B?Mm9PN24wMFFVM1BleDBUUzRUNmplVWpqZVVPY0w1Mk56elVOQmlrdkhCODJi?=
+ =?utf-8?B?QmlXczB4Q3dnazYvR0U2dlNsKzBPZWdTSE5WbVpEZ0cwMXdqeitQakJ6TDFz?=
+ =?utf-8?B?bXFrazltNlROZW54VGpES3dTeXhJTFRFV0dIU3QzMEs0OE9sN3IwMjBPME9y?=
+ =?utf-8?B?UVFFb0xRcFAvQUFGL0Z4NGRrVHZEWmR1UjdyaFBHNmFqKzRleFZqbFNUckcv?=
+ =?utf-8?B?ZWx6YlBUcklGalowYTBhRFQwTmw1akx6Umt3TFBsa1pyNzQyL28vRHpOL1A1?=
+ =?utf-8?B?SzloTFd2VmlWcjFpQnpwSHgzaDVaVmN4OEFCbjQxM05TR2J5Slo2NW9IN0Rp?=
+ =?utf-8?B?ZEp6Vy9JbVlJWTY0NThocHhVN1owN2NOOW5hYUswcnAyazIxMmd1TWJBPT0=?=
 X-Forefront-Antispam-Report-Untrusted: 
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR10MB5000.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(52116014)(366016)(1800799024)(376014)(10070799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR10MB6940
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- DU2PEPF00028D12.eurprd03.prod.outlook.com
+ DB3PEPF00008860.eurprd02.prod.outlook.com
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	1b33f534-4493-478d-b92b-08dced0eec38
+	70efd2fa-7b25-4457-b191-08dced0eec9a
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|376014|35042699022|36860700013|1800799024|82310400026;
+	BCL:0;ARA:13230040|82310400026|35042699022|1800799024|376014|36860700013;
 X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?MkhJOVo0SjIxTHpZbFJpRkJyQ0cvTXhGYUlOcWVSeWtTaDZPWXFaSzdXYk43?=
- =?utf-8?B?NjQwdzhYUDlVZTRjMlYwTCtNYlh4cEd0MEJqbWpaMmJBbnBaRFZZeHUwd2FH?=
- =?utf-8?B?cWxZRG1KNm00b2gvdU1VWTN2bUZ1VjcwOE4wcUFMUGt0MmFGVFBnMkN0dmJK?=
- =?utf-8?B?VFFnUWpZV1BaS25zTUNLS081Z0lUaWxkMWN5RElYSnFzZEFFSzhnN0lvQ0s4?=
- =?utf-8?B?c1Y3VE9aYm1IVlhCUnkzRGdsVUpsZmwzN0RLaVUwWXVzMjNXeUZBWFRmQ3NC?=
- =?utf-8?B?WVhYMElIVStla2RpemJzZ29YR3BkTXJLbXg3SnpXdmp2QTNzVlliSkVadGMz?=
- =?utf-8?B?UzVWY1U4TW5BK2JrQVZBamJnMWkyU0E2b2N2K3RWSy9JRXRIZWxLQms0SnVN?=
- =?utf-8?B?Z0VhSUkzKzIwUUxlNWpoTjcyYXIvaEllRlNTVmd6cW1CY2JvNW1neWQ1U29a?=
- =?utf-8?B?UnBJNExocG9ibi9NVVFrT1B5UW14SUNiY3d2Ni9tdHcrZmNmTEZyM1VLRnEx?=
- =?utf-8?B?RjgybytvYjh6T1Z1TUFzUW5kUkZhNjEvRnp1ZW5jNXJVNnZraVBFM2x1aHpI?=
- =?utf-8?B?QmF3KzhBOFhmdU5aOE5kbFVOeUcrd1RZTFNNaFd2MzBLMXFNQW5IN3BIb256?=
- =?utf-8?B?dFdlVnpmOW1taFhIdm5Uc0d6MUg1STlzMEpKOWd6Wjl3U0I4RFdWcW05L2c5?=
- =?utf-8?B?ZFRHYWF2M0xvTnNMdU9tRzJBT055d0FBOXhOUU9zRElPSy8zV0hNT29JdEs0?=
- =?utf-8?B?WmhoTnBLWDdIZ3ZkQ3Y5a2kzQVMrNEp6dmZOYm1RUVNrdFhyU2ZQUCtCQy90?=
- =?utf-8?B?c1U5ZjFKZVRSQjRqUmJvUkVPcUJvZ0pLUjdhS01hMXRYbG00d01nWFgzQWJV?=
- =?utf-8?B?MkZxMTd4VVpWVzIrQTkzczhEN21UMjNBR3p1VzF2WmlrZUhtUUtnSXlHUmlj?=
- =?utf-8?B?bEUrRnhXc3k4YnJvbHFMNUY3bllLVVIzTEtaVlgzN0xySkdNU3pEbEs4bFNZ?=
- =?utf-8?B?R0xhQ245WENheVloTzlsS0JSQ04yb1Mwc1puck83all6bzZmTWlPRTdubU5J?=
- =?utf-8?B?bjBDOS9ESCtDa2FId2RPZFhWNXhPNFBNMGpmK1B1YXZrUGhQWnhPQ1B6RzBa?=
- =?utf-8?B?WXIrbnd6TmUxdGx4QVoraVhjMVJOcGNQYngyTDZleEU5ZStVQm5uVjJKNUg0?=
- =?utf-8?B?cTlSUVU4V3R1YjZ5Z0UvRHp6QmFCdWg1UDEyZlZVdHMxQkprd2phR2trNDQw?=
- =?utf-8?B?YysxOC9wdzFLT2xBcWFobk5WK2NTODdvYi8rWnVCaUhsRlBrOFRnb3J5VUJP?=
- =?utf-8?B?Z2RDVWhvSHYrZmNLNXZtN0R2NGRVVzBSZXNEMlZINC81SlVkNmFDVHRTLzVS?=
- =?utf-8?B?VWt0V0QzVGVOTkExM05tVnFKN3pjOFNhVjI4TnA4bFQvNVY1VGI3aHhwZGpQ?=
- =?utf-8?B?VXAzekdvcEN6UWJwSFJabWU3U3c0ODBZNjRDei9rK3FPMTVOSXVyNHk2aUk2?=
- =?utf-8?B?T0J1dURLREJxWVhGZENsODdFTkZNZmQ4U0Zwd1h1Z25CTFZ6azZWT041b1JD?=
- =?utf-8?B?QnVUZDRvZ0NyZjJGMWdFVWswTWt3NFJUUU5vanp2c0UzSWV4TWk3aE4xQWtX?=
- =?utf-8?B?bmVNUTZjY3FnV0ptZFgxSzdkOTV3U25XYXdtRUhqZllBV3ZORE5yUWJJYTBo?=
- =?utf-8?B?MU1tdTZXdlVBSC9udG9xQTV4dDRBb2RIQ0tyV0lYMmkxVzdRUnBXWDgrV08y?=
- =?utf-8?B?TVZSb0NJTnRvSi9POUl4UUdSSjBLMFJYZS9Jc0llNEtLQ3pBNzlJdVExVThj?=
- =?utf-8?B?UE1XMWVRbWg2V0lLTUFUUU8rK05KVGxkYUx1ZjJycWdENFdXZ2dEUVVraE1O?=
- =?utf-8?Q?5grX8qp751gjK?=
+	=?utf-8?B?aUhYNUFac3EzQmZuMFVQZ3M4N2hDZ3d3QnFJY3kxSWNseXFGcmtSb1Y3SFdu?=
+ =?utf-8?B?djluVjYvREhTNFg5RXh3R2hTWGVEem01YVF5dVdFZ0p6TmRMY2FVcjlacjlP?=
+ =?utf-8?B?anJlK2NJSUc2bTJpcVRYVXRpLzAvNVZuSXVMRjR1SVV6M2FlUUc1WEk3Z0Rr?=
+ =?utf-8?B?bDFldFB2OWtmaHhrWUdOeHFmQ3F1RjZKMU8wSHh6TXVWdXJJeFVKcnFEdVkr?=
+ =?utf-8?B?RDIyenlvMDVOWWtQck40RGJ2Q1lFdUZNSENxbGkzdVRsdThMa1BoKzlnNUNJ?=
+ =?utf-8?B?UmlLMllvUk9seVFJeFd2NmlETS8zV1hyaGhXSHc0Ym90UWUrQWN6ekxmV1Uz?=
+ =?utf-8?B?Smthb05YRUcrQVV0R1l2TnNaTXBKcXl5Ukd5RmVXRzEvRTg3VkdLT0NZcDNJ?=
+ =?utf-8?B?UW4vRVpPTFZjb0I1cytjNVJ2WThjT2t6ck1aVG4wUDIzUzB2Y1RMNnJmYU5t?=
+ =?utf-8?B?SzQwcjhLZzNaWGxKT21XVklNd3lGWlpzcWRqV05xMlJkd0hSaTlJMlVweUVO?=
+ =?utf-8?B?ODlTYzRjZ0ZTbVAxV1hHNzVGMTlBa3Q4bUNVcW5lOXc2TmU2SEgvRWZPMkgr?=
+ =?utf-8?B?Y25GajByb09aRitUYSsvQnlSSkZMSjZ0aHpzVDJtMVZxVU1jQWwvWVltSjlj?=
+ =?utf-8?B?cisveWRlRjRLNlpnckdYQkF1REZBUnRUZzhXVDVJQWtlLzlxM1hpS3VwZzZO?=
+ =?utf-8?B?UW5HOXF0SU5EYWlNWlltZHEyTkczOVFnVkJHMEZKRmpEZlNCQk9lMlhaL0Zk?=
+ =?utf-8?B?c2xESllBMzNWY2QwWkJjY29WdExZVnZnMHphWEhTekFnOFg1UWtpRTFEOTM4?=
+ =?utf-8?B?WkhwUURzRFN3bHp6WTNwaEJQc0dtTHJmT3JGWFlXMEVBMVZkbzlPdGErcSts?=
+ =?utf-8?B?QVB0cUU0N1dVWlhONDF3Mkp5Y2ZEdjhUWmVYZ1Zrd25HaWFyc3FVbmd6SGx3?=
+ =?utf-8?B?bkJkMWRjYStOSGFMdUFPZG9HNGsxbTREamVveGZkOUhkclNQbHFraHlDd3FV?=
+ =?utf-8?B?ek5XRDJLaHB3SS9zblpLd29zeHU0RGhzZUNxYjZFdGtIdW1pR1NhaDU2YUth?=
+ =?utf-8?B?WlMxbmFBMDg1ak95SFFYeVNCelRZZUJIR29Jc3B4eHRNQW5wYi9Ock9CV1dS?=
+ =?utf-8?B?ZkZZUi9GWUM5UnlrdVRPOEpZbGlxcVJWTkhpTjZCZzkrRlRJQVBLQ0gzbnJm?=
+ =?utf-8?B?UE8yWnNranJHUHYwSXVLVnZKN2JoMm5nbFV1RGlNcFNHOFlQOUlsT2NZYVBn?=
+ =?utf-8?B?RmdSU2pnVG9XRDAxM2RTYXBXYUdVMHhCV24xSlpqZTVKRHMvaXYzSStqOFRD?=
+ =?utf-8?B?a3Fjc3M1bHp3U1dBV2FZc2NkdGF5Zk9PUExmc1FCWjRXVTVCTmlEK0hiOVl0?=
+ =?utf-8?B?SUtBNFNFVkU1Z2dTUER4dG9SRUMxOWZIQzlNWlZ4RTNMVDFJbWMxSFZ1T2tC?=
+ =?utf-8?B?NzJlb212UnczajEwMFRISG9sME1QbkhibEQ1VHlJRWRMckVibVRqcFhXMnN6?=
+ =?utf-8?B?UFZzR3dlajF2S0pFMDdqcG9yWTd3V3pEQ3pyNGV3ZXdXQ210amtrRnpmRG5G?=
+ =?utf-8?B?MzZzdGErbVRDOEhxdG1vQ0JlZGJNQlZqc3hOcDd0ckpYMFl0bER5RHF1aXRm?=
+ =?utf-8?B?VlhQd3htSnRxTjgyUkxYeWx2MUd2bTc3Nlc5VDdJaSt3Sm8wbVBYUzEreGJy?=
+ =?utf-8?B?a3NGNmFkZ084dGVRenRoZ2J2MXNjSFdKenlSMWhDdXlGRmhDZ1QySlIxa20v?=
+ =?utf-8?B?bUxDZWdLdXBZNlg5TStraVQrSlNKcHdGSm5XQVBka2JiMFd6YkROcWx1UkZp?=
+ =?utf-8?Q?XJ4oa4ZWuOFG5sqbnTkicSgOdp07Cs+Z1QS98=3D?=
 X-Forefront-Antispam-Report: 
-	CIP:104.40.229.156;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:eu1.smtp.exclaimer.net;PTR:eu1.smtp.exclaimer.net;CAT:NONE;SFS:(13230040)(376014)(35042699022)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+	CIP:104.40.229.156;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:eu1.smtp.exclaimer.net;PTR:eu1.smtp.exclaimer.net;CAT:NONE;SFS:(13230040)(82310400026)(35042699022)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: aerq.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2024 11:46:01.5540
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2024 11:45:56.5754
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d65d89ab-200c-4c3c-628a-08dced0ef182
+X-MS-Exchange-CrossTenant-Network-Message-Id: acb40c8a-e840-435e-659d-08dced0eee9b
 X-MS-Exchange-CrossTenant-Id: bf24ff3e-ad0a-4c79-a44a-df7092489e22
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bf24ff3e-ad0a-4c79-a44a-df7092489e22;Ip=[104.40.229.156];Helo=[eu1.smtp.exclaimer.net]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	DU2PEPF00028D12.eurprd03.prod.outlook.com
+	DB3PEPF00008860.eurprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR10MB3157
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR10MB6128
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="----9D6E9B7233899CE39F7D94679C3669B8"
+Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="----D85484A958A1B39326061145823B7F72"
 X-cloud-security-sender: alban.bedel@aerq.com
 X-cloud-security-recipient: bitbake-devel@lists.openembedded.org
 X-cloud-security-crypt: load encryption module
@@ -201,55 +203,107 @@ X-cloud-security-crypt-policy: TRYSMIME
 X-cloud-security-Mailarchiv: E-Mail archived for: alban.bedel@aerq.com
 X-cloud-security-Mailarchivtype: outbound
 X-cloud-security-Virusscan: CLEAN
-X-cloud-security-disclaimer: This E-Mail was scanned by E-Mailservice on mx-relay94-hz2.antispameurope.com with 4XSXNv086cz3dG9f
-X-cloud-security-connect: mail-am7eur03lp2237.outbound.protection.outlook.com[104.47.51.237], TLS=1, IP=104.47.51.237
-X-cloud-security-Digest: 0448bd73a9ca84a020f17ff3ff4a672e
+X-cloud-security-disclaimer: This E-Mail was scanned by E-Mailservice on mx-relay100-hz2.antispameurope.com with 4XSXNn5z67z3NtHb
+X-cloud-security-connect: mail-am7eur03lp2238.outbound.protection.outlook.com[104.47.51.238], TLS=1, IP=104.47.51.238
+X-cloud-security-Digest: 4cdb037a379d97a7d840bff1167f68d0
 X-cloud-security-crypt: smime sign status=06 sign_complete
-X-cloud-security: scantime:1.886
+X-cloud-security: scantime:1.813
 DKIM-Signature: a=rsa-sha256;
- bh=OE5kX1l6YaTh7ZCCVioUX0C0bo6fUZWw1C3UTm4VuKA=; c=relaxed/relaxed;
+ bh=Y7pOhNznt3ipWH8/QGtubc9JL3nPBk10DPuo4WZEkEs=; c=relaxed/relaxed;
  d=aerq.com; h=content-type:mime-version:subject:from:to:message-id:date;
- s=hse1; t=1728992773; v=1;
- b=dIFj3tqNCKdV97Ne4K9ouuhDL7ko/DWC3QzKb/yBKeFSBiTsZxxFcV2GlqfkJcU+WHzMGvnL
- cVDbDdwQn6PzSVck9hBCnrwR4DF2JQu1fEJWJTu3U51oTeEG4ojCljK2raF8xyNfLXoRyBEJgVV
- +XS4AagX9+xCZibtG/geWyryGzSV/hWoGhP56/mTEhC8ekNjp5hC4q0l/X7YkcBYwemE0fHijYW
- ximgARbvnb1yL64p7/Dcc/CVFaA6y+O2AvvN/HkXH3yHCmHaI+cDU5wEF2BVK0Nn29rn7rla6/D
- BCeMO1kDLf5P0NZie+WCuPQeHPKnZ2p4Q7OFP0n44LQiw==
+ s=hse1; t=1728992767; v=1;
+ b=FjOX6JdC0xfCojy0LJcs7aiQVWkvhQ90E6rrg4jkfZWvaaf+x9Hts/qSyG3Z2aL8TG1JZzHd
+ c3T67imVivggtVp5b46EY566e+tqCSbo2zVarnlJ9XmQpegKWPszRYy3XMLWzutWnrGV2pJaLqm
+ xTuj/s6ydQ0cprc4EZYdtvA+e2GI/mQzl+vnUs6chR2EjpIesf9I4G5IKxOSAZwIPonKJnkpbZA
+ 8PaH0ccJN8HpV2rwpz+aQ1lMQ0tMIw+RgezRqFbnn1WHfQ82IZ0mCkzclyA0WYpmUV9wwQh2QCb
+ VhS1dm6Us9BLdiiUxOmdYiYdTlw4TEeBoes0qZZ5eqprg==
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 15 Oct 2024 11:46:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16685
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16683
 
 This is an S/MIME signed message
 
-------9D6E9B7233899CE39F7D94679C3669B8
+------D85484A958A1B39326061145823B7F72
 To: bitbake-devel@lists.openembedded.org
-CC: Alban Bedel <alban.bedel@aerq.com>
-Subject: [scarthgap][2.8][ 0/2] Bug fixes backport
-Date: Tue, 15 Oct 2024 13:45:13 +0200
+CC: =?UTF-8?q?Enrico=20J=C3=B6rns?= <ejo@pengutronix.de>,
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [scarthgap][2.8][ 1/2] bitbake-diffsigs: fix handling when finding only a single sigfile
+Date: Tue, 15 Oct 2024 13:45:14 +0200
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 
-This series backport 2 bug fixes from master. The first make
-`bitbake-dumpsig` usable again and the second fix some potentialy
-huge sstate mismatch between different build environments.
+From: Enrico J=C3=B6rns <ejo@pengutronix.de>
 
-Enrico J=C3=B6rns (1):
-  bitbake-diffsigs: fix handling when finding only a single sigfile
+This fixes the following error when calling 'bitbake-dumpsig' or
+'bitbake-diffsigs' when having only a single sigfile available:
 
-Richard Purdie (1):
-  siggen: Fix rare file-checksum hash issue
+| Traceback (most recent call last):
+|   File "[..]/poky/bitbake/bin/bitbake-dumpsig", line 171, in <module>
+|     files =3D find_siginfo_task(tinfoil, options.taskargs[0], options.tas=
+kargs[1])
+|             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^=
+^^^^^^^
+|   File "[..]/poky/bitbake/bin/bitbake-dumpsig", line 83, in find_siginfo_=
+task
+|     sig2 =3D latestsigs[1]
+|            ~~~~~~~~~~^^^
+| IndexError: list index out of range
 
+Handle this by adding (and returning) the path for the second sigfile
+only if one is found. This way it will work for both diffsigs and
+dumpsig use case.
+
+The calling argparse code already deals with find_siginfo_task()
+returning only a single file.
+For 'bitbake-dumpsig' it will just dump the single sigfile, for
+'bitbake-diffsigs' it will emit a proper error message again:
+
+| ERROR: Only one matching sigdata file found for the specified task (syste=
+md configure)
+
+Signed-off-by: Enrico J=C3=B6rns <ejo@pengutronix.de>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
  bin/bitbake-diffsigs | 9 +++++----
- lib/bb/siggen.py     | 2 +-
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
+diff --git a/bin/bitbake-diffsigs b/bin/bitbake-diffsigs
+index 8202c786239e..9d6cb8c944bc 100755
+--- a/bin/bitbake-diffsigs
++++ b/bin/bitbake-diffsigs
+@@ -72,16 +72,17 @@ def find_siginfo_task(bbhandler, pn, taskname, sig1=3DN=
+one, sig2=3DNone):
+         elif sig2 not in sigfiles:
+             logger.error('No sigdata files found matching %s %s with signa=
+ture %s' % (pn, taskname, sig2))
+             sys.exit(1)
++
++        latestfiles =3D [sigfiles[sig1]['path'], sigfiles[sig2]['path']]
+     else:
+         sigfiles =3D find_siginfo(bbhandler, pn, taskname)
+         latestsigs =3D sorted(sigfiles.keys(), key=3Dlambda h: sigfiles[h]=
+['time'])[-2:]
+         if not latestsigs:
+             logger.error('No sigdata files found matching %s %s' % (pn, ta=
+skname))
+             sys.exit(1)
+-        sig1 =3D latestsigs[0]
+-        sig2 =3D latestsigs[1]
+-
+-    latestfiles =3D [sigfiles[sig1]['path'], sigfiles[sig2]['path']]
++        latestfiles =3D [sigfiles[latestsigs[0]]['path']]
++        if len(latestsigs) > 1:
++            latestfiles.append(sigfiles[latestsigs[1]]['path'])
+=20
+     return latestfiles
+=20
 --=20
 2.34.1
 
-------9D6E9B7233899CE39F7D94679C3669B8
+------D85484A958A1B39326061145823B7F72
 Content-Type: application/x-pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -320,17 +374,17 @@ c3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYGA1UEChMPU2VjdGlnbyBMaW1pdGVk
 MT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5k
 IFNlY3VyZSBFbWFpbCBDQQIQFQW69G80baV6q1Oyg2uFLjANBglghkgBZQMEAgEF
 AKCB5DAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0y
-NDEwMTUxMTQ2MTFaMC8GCSqGSIb3DQEJBDEiBCDvqLWsWphALyAyML+C5UPkwZHD
-CsnTR3UqFqMpWQI+RzB5BgkqhkiG9w0BCQ8xbDBqMAsGCWCGSAFlAwQBKjALBglg
+NDEwMTUxMTQ2MDVaMC8GCSqGSIb3DQEJBDEiBCDgt9sutFhFdJb10ollrwML9jDz
+rL9uzxHxhIAKf3Un5zB5BgkqhkiG9w0BCQ8xbDBqMAsGCWCGSAFlAwQBKjALBglg
 hkgBZQMEARYwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIA
 gDANBggqhkiG9w0DAgIBQDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDANBgkqhkiG
-9w0BAQEFAASCAQAMYLhXTM1j6G23GYYphZ6kwxzzVmYapW1vJyXzW5asH2/GQSvR
-ujvQ/cyHeljayEhtgNrlaQgDPDuXDHiw/3xqt7OD0tNEwxiLY1oh5cXSPiTIOlCY
-28EqwzXQ/RWFHA2Wx6FwN7ms88I0mOL93SCiyc9oYNCMd0FY6teXLYzXFT/OeyLb
-x+YzEaFmLs5bnsWkJQN6dh2DHcHaXBw57UkwGvXtJBkEyL6yds0yw19M8lTyZqEb
-NIUFiPt80LWx3ws477nv+uf+aJ3ABFEXGB4dWno2ajcZf4jht97Wy/FQ7zVMg098
-4MWbONIxS14TY9jPwYq1aTDmkE0576Unng+m
+9w0BAQEFAASCAQBVo9+7Vd39VoomZR6obtvVLQZVFz9iUdLfR1eAYUOkE6O6wgcH
+zfqmzvtk9qY8PRz9ML68A0Z+2XrcpuBBMhMd/z1bVLuT7H1ss5JCN98SdRQgxXDT
+UAlT9bAjHfO/201G3PmrwiZWV8q5npVLK9j8XTrRa+0tp98F5XS2fPHqpaWctsfn
+4bFe4xmq3Te5qdLZ9DcPg3g6kIdlgIHJsWZA9KrC6bgTk5RGuCkikOipRGgtvv0+
+hrgwL1Yrky+aVZhuGHXZ6SQvIDh4njetHu7cqEzo7u4eyxxti4wJj9LYZZ6xwHmn
+VgVhdVAnpyzcp9uiJfGPCcbxU572jSXI1RFU
 
-------9D6E9B7233899CE39F7D94679C3669B8--
+------D85484A958A1B39326061145823B7F72--
 
 
