@@ -1,161 +1,139 @@
-Return-Path: <reatmon@ti.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5F7D2A523
-	for <webhook@archiver.kernel.org>; Wed, 16 Oct 2024 14:32:47 +0000 (UTC)
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
- by mx.groups.io with SMTP id smtpd.web10.24379.1729089165381744898
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADE0D1AD45
+	for <webhook@archiver.kernel.org>; Thu, 17 Oct 2024 08:31:23 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web11.44435.1729153874678372096
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 16 Oct 2024 07:32:45 -0700
+ Thu, 17 Oct 2024 01:31:15 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@ti.com header.s=ti-com-17Q1 header.b=PMAXq1WV;
- spf=pass (domain: ti.com, ip: 198.47.23.249, mailfrom: reatmon@ti.com)
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 49GEWg58089740;
-	Wed, 16 Oct 2024 09:32:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1729089162;
-	bh=WDE6v6APt9YRnWCpBa1lerHmMJhkyjCwm9/4c5TFKoU=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=PMAXq1WVh92PRBW6Kml6S3LvCcFi86YA8d0TvYjd/0b4pEjrwjBtBu7+JMOeT+Sey
-	 69I3fq6YbbZRdITM4EUatTHQFnYVjjJ30W0Mv+rNHl6L3HRcCa70bs+8kJuYcwsYQi
-	 Kmo+rqmyybyn0to2B/3EUcsNcYaZcMUFCTihm3E4=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 49GEWg6I087184
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 16 Oct 2024 09:32:42 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 16
- Oct 2024 09:32:41 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 16 Oct 2024 09:32:41 -0500
-Received: from [10.249.35.83] ([10.249.35.83])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 49GEWfJw092710;
-	Wed, 16 Oct 2024 09:32:41 -0500
-Message-ID: <9816e9b8-3a96-4017-801a-37c159c00337@ti.com>
-Date: Wed, 16 Oct 2024 09:32:41 -0500
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=SHkqOJ70;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-431137d12a5so7076405e9.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 17 Oct 2024 01:31:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1729153873; x=1729758673; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1612T9S4cWNbUQ+V7nnJouNRArZbQCsTUS+vOG3N/+Q=;
+        b=SHkqOJ70tG4CSi2rTBMK7TvEz/s2tVlMuKKMuv9dYpb/YuShUDJchUsssat4ptpBYT
+         yucED+VspymL5GARVrWgj+bkacnAgx893DGDDTHEExRQA2pRngGMpS+i6hDPys9Npktu
+         o6wat+iYeybS8r8FRy2EaD/ODVsTvnCitqQsg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729153873; x=1729758673;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1612T9S4cWNbUQ+V7nnJouNRArZbQCsTUS+vOG3N/+Q=;
+        b=SJELNUx/+mkHM3caOL9enuDNWADPsPIcuGGxGa2ak5ApQ2qRUyFXBYdi+TfsnLWgib
+         hZjP8p4MARAbdE5xE1guJ3uh81wVFwO+jFz3/cSeolR8kjZgjn1WgRwutwQORtztR8LH
+         O00yUUrOmC0GYVlwfLq7BoKXSATmgx87ch2Vn0hFjgigbw27Gr/TMz9g0rxN2QYYwcGt
+         a2rYOO4NKyeoeZqBhuLluHaW+3VURrVYTsYxGPTyuPZwU1UTLbldpRxh2J4byfJ5EFEP
+         /Zd5EQkdVVMuR2XJE6ELC1gpS0g/pkHMROA+cqeB64nuB/48G40utE7gBDMbDDYO0+Y+
+         qlvA==
+X-Gm-Message-State: AOJu0Ywn8mk4bt3dscDrhz1KufUZocrpdCZ4toLMlfGIrZgG++eZ0NYM
+	nrImhEavFg6GLLNA81uYgryD1MoQb4hIq7v2ycKO2EcSn7nRn7Y/4KH3VWmWixF1w/VtPFdEvjg
+	0
+X-Google-Smtp-Source: AGHT+IGKnB+vT7CVi4By/GLx+bTRMvc1e5+gtoUi7GwOYI5F1T2KEszf8E6t/kYh+ZTayqRuqrr3uw==
+X-Received: by 2002:a05:600c:4895:b0:431:5043:87c3 with SMTP id 5b1f17b1804b1-43150438cffmr44075595e9.22.1729153872608;
+        Thu, 17 Oct 2024 01:31:12 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:9bb:752a:967d:580d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d7fa7a04asm6522192f8f.8.2024.10.17.01.31.12
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2024 01:31:12 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] toaster/tests/functional: Improve project creation tests
+Date: Thu, 17 Oct 2024 09:31:11 +0100
+Message-ID: <20241017083111.2130049-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel] [RFC PATCH] fetch2/wget: set User-Agent to
- 'bitbake/version' in checkstatus()
-To: Alexander Kanavin <alex.kanavin@gmail.com>,
-        <bitbake-devel@lists.openembedded.org>, <christophe.priouzeau@st.com>,
-        <paul@pbarker.dev>
-CC: Alexander Kanavin <alex@linutronix.de>
-References: <20241014133504.2390211-1-alex.kanavin@gmail.com>
-Content-Language: en-US
-From: Ryan Eatmon <reatmon@ti.com>
-In-Reply-To: <20241014133504.2390211-1-alex.kanavin@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 16 Oct 2024 14:32:47 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16689
+ <bitbake-devel@lists.openembedded.org>; Thu, 17 Oct 2024 08:31:23 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16690
 
+Mixing database access and access via a running server is fraught with
+danger and problems. The "django_db" marker means the transactions are
+dropped at the end of the test but the transactions made via the webapi
+remain so the database ends up confused at best.
 
-Initial testing behind the TI firewall showed no issues with these two 
-changes.  It *should* be ok to move ahead with it.
+Drop the database accesses and use the server API. This means slightly
+abusing the typeahead to get lists of projects in the database.
 
+Add code to delete a project if it already exists. This allows tests
+to re-run against an existing database. Deletion is done using the
+server API but this means handling CSRF tokens.
 
-On 10/14/2024 8:35 AM, Alexander Kanavin wrote:
-> From: Alexander Kanavin <alex@linutronix.de>
-> 
-> This eliminates the last usage of 'fake mozilla' in bitbake, and
-> it's then truthful everywhere about presenting itself, or wget
-> (when that is used).
-> 
-> I understand this will make people nervous so I want to provide
-> an extended decription.
-> 
-> 1. How was this tested?
-> 
-> - bitbake-selftest -k FetchCheckStatusTest
-> (tests a few hardcoded URIs, all passed)
-> 
-> - bitbake -k -c checkuri world
-> (runs checkstatus() over all recipes in oe-core, and all passed again -
-> this hopefully goes a long way to reassure everyone that hosts around
-> the world and various CDNs typically do not have a problem with user-agent
-> strings they haven't seen before or bitbake user-agent specifically)
-> 
-> 2. What about that removed cloudflare comment?
-> 
-> I digged into git history, and I think it is not fully accurate. First, 'fake
-> mozilla' agent is used only for checkstatus() - in actual fetching with wget
-> it is not. And that has not been a problem for anyone.
-> 
-> Second, here's how the comment occured. Usage of 'fake mozilla' was introduced here:
-> https://git.yoctoproject.org/poky/commit/?h=master&id=ab26fdae9e5ae56bb84196698d3fa4fd568fe903
-> 
-> At that point it did not have to be specifically 'mozilla', the commit message
-> indicates that any User-Agent would have been ok. Mozilla was simply copied
-> from upstream version check for convenience.
-> 
-> Later on, the string was updated to a more recent Mozilla:
-> https://git.yoctoproject.org/poky/commit/?h=master&id=9f123238261a68e37cec634782e9320633cac5d4
-> 
-> The claim in the added comment become something else: that User-Agent *must* a browser,
-> without evidence or tests. Even though it demonstrably doesn't have to be - wget is ok.
-> 
-> 3. What if someone has a server that is ok with wget agent, but not ok with bitbake agent?
-> 
-> Please see point one. It's not impossible but I think it's highly unlikely. I do think
-> we should rather tell servers the truth, and learn where the actual issues are. Then
-> we can consider options - whether that would be pretending to be wget, or allowing user-agent
-> to be configured. We should also add such servers to bitbake-selftest so we know what they
-> are.
-> 
-> Signed-off-by: Alexander Kanavin <alex@linutronix.de>
-> ---
->   bitbake/lib/bb/fetch2/wget.py | 7 +------
->   1 file changed, 1 insertion(+), 6 deletions(-)
-> 
-> diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-> index 493a5b62ee2..7856d10fa4b 100644
-> --- a/bitbake/lib/bb/fetch2/wget.py
-> +++ b/bitbake/lib/bb/fetch2/wget.py
-> @@ -53,11 +53,6 @@ class WgetProgressHandler(bb.progress.LineFilterProgressHandler):
->   class Wget(FetchMethod):
->       """Class to fetch urls via 'wget'"""
->   
-> -    # CDNs like CloudFlare may do a 'browser integrity test' which can fail
-> -    # with the standard wget/urllib User-Agent, so pretend to be a modern
-> -    # browser.
-> -    user_agent = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gecko/20100101 Firefox/84.0"
-> -
->       def check_certs(self, d):
->           """
->           Should certificates be checked?
-> @@ -356,7 +351,7 @@ class Wget(FetchMethod):
->                   # Some servers (FusionForge, as used on Alioth) require that the
->                   # optional Accept header is set.
->                   r.add_header("Accept", "*/*")
-> -                r.add_header("User-Agent", self.user_agent)
-> +                r.add_header("User-Agent", "bitbake/{}".format(bb.__version__))
->                   def add_basic_auth(login_str, request):
->                       '''Adds Basic auth to http request, pass in login:password as string'''
->                       import base64
-> 
-> 
-> 
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#16680): https://lists.openembedded.org/g/bitbake-devel/message/16680
-> Mute This Topic: https://lists.openembedded.org/mt/109001174/6551054
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [reatmon@ti.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
-> 
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ .../functional/test_create_new_project.py     | 30 ++++++++++++++-----
+ 1 file changed, 22 insertions(+), 8 deletions(-)
 
--- 
-Ryan Eatmon                reatmon@ti.com
------------------------------------------
-Texas Instruments, Inc.  -  LCPD  -  MGTS
+diff --git a/lib/toaster/tests/functional/test_create_new_project.py b/lib/toaster/tests/functional/test_create_new_project.py
+index f7d17847ae..f3eb28b22a 100644
+--- a/lib/toaster/tests/functional/test_create_new_project.py
++++ b/lib/toaster/tests/functional/test_create_new_project.py
+@@ -6,17 +6,16 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-import re
++import json
+ import pytest
++import re
++import requests
+ from django.urls import reverse
+ from selenium.webdriver.support.select import Select
+ from tests.functional.functional_helpers import SeleniumFunctionalTestCase
+ from orm.models import Project
+ from selenium.webdriver.common.by import By
+ 
+-
+-@pytest.mark.django_db
+-@pytest.mark.order("last")
+ class TestCreateNewProject(SeleniumFunctionalTestCase):
+ 
+     def _create_test_new_project(
+@@ -31,6 +30,20 @@ class TestCreateNewProject(SeleniumFunctionalTestCase):
+           - Release: Any string
+           - Merge Toaster settings: True or False
+         """
++
++        # Obtain a CSRF token from a suitable URL
++        projs = requests.get(self.live_server_url + reverse('newproject'))
++        csrftoken = projs.cookies.get('csrftoken')
++
++        # Use the projects typeahead to find out if the project already exists
++        req = requests.get(self.live_server_url + reverse('xhr_projectstypeahead'), {'search': project_name, 'format' : 'json'})
++        data = req.json()
++        # Delete any existing projects
++        for result in data['results']:
++            del_url = reverse('xhr_project', args=(result['id'],))
++            del_response = requests.delete(self.live_server_url + del_url, cookies={'csrftoken': csrftoken}, headers={'X-CSRFToken': csrftoken})
++            self.assertEqual(del_response.status_code, 200)
++
+         self.get(reverse('newproject'))
+         self.wait_until_visible('#new-project-name', poll=3)
+         self.driver.find_element(By.ID,
+@@ -59,10 +72,11 @@ class TestCreateNewProject(SeleniumFunctionalTestCase):
+             project_name in element.text,
+             f"New project name:{project_name} not in new project notification"
+         )
+-        self.assertTrue(
+-            Project.objects.filter(name=project_name).count(),
+-            f"New project:{project_name} not found in database"
+-        )
++
++        # Use the projects typeahead again to check the project now exists
++        req = requests.get(self.live_server_url + reverse('xhr_projectstypeahead'), {'search': project_name, 'format' : 'json'})
++        data = req.json()
++        self.assertGreater(len(data['results']), 0, f"New project:{project_name} not found in database")
+ 
+         # check release
+         self.assertTrue(re.search(
 
