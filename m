@@ -2,54 +2,54 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD448CDDE4D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4FBCDDE49
 	for <webhook@archiver.kernel.org>; Wed, 23 Oct 2024 10:00:09 +0000 (UTC)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web11.5151.1729677606218820841
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+ by mx.groups.io with SMTP id smtpd.web10.5141.1729677604183341408
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 23 Oct 2024 03:00:06 -0700
+ Wed, 23 Oct 2024 03:00:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ijGnuRee;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43167ff0f91so46832585e9.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 23 Oct 2024 03:00:05 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=YiABFCeD;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-37d49ffaba6so4619754f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 23 Oct 2024 03:00:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1729677604; x=1730282404; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1729677602; x=1730282402; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=b5vqNGYk03XSukKM0jAFxT3G9NXwuCbSiQcvJRD7XO8=;
-        b=ijGnuRee12bGgotpDL9IzXCPL/31nkl5lWRS0+zcIbHfQRd8k/ioJRyfyq2Mt5SiSM
-         r9H1Hz+QPsYYCxR20IatIg0BxNhtUmZD6S8XtlbxX6NjyepHavLul2mPsJi0fJydUJXe
-         W2fI02nLLIb2PnB4QEV5iuY9QzM8m77Gr+i4s=
+        bh=hBcJjJxtGAeG5XTX0gIQ8MFz+gZtuRpeHhXT0hG3RNQ=;
+        b=YiABFCeDGam5QPwL4kPOQIUrTRyeiUMOVB/dfPJNzf+oy1MonF8nUKiOiJPLhxzMaZ
+         9xj7KQ+grY42OxhVTiR7FJC11PCoFo5EwsBiti0p/DLguI1UXZ1ewHQEraaDnVI3abvu
+         cfByOBeGtpaaU/6GOK25Z1BWb9oFAVNo56K6A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729677604; x=1730282404;
+        d=1e100.net; s=20230601; t=1729677602; x=1730282402;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=b5vqNGYk03XSukKM0jAFxT3G9NXwuCbSiQcvJRD7XO8=;
-        b=xSxOstaEJitKwxUPfZe3428zYhvDUrx7K79GxxWzBRSID1jVt5AfJcCWNF2UQLkci9
-         HE0nQ7auN20HP8jfy8GZ+9eUeiiieb1LLuV7KboGT7mtiaNGpS3UpSqfDSKT3lbmmG/E
-         IHgnojHv7z4HwBZovmOMMYo+XSp7QNp7bK4I/GwuPnX+Bn4V0tybNWq9XNn33EZvuBwu
-         qKsreedJ600scPwaPal6i+bwVq0pBHdMz0XTdOPrP+qHrwfoI3DVB5l3p1PmPM6ruVMY
-         zaGatFzxbVQGcXeGaL1s0l8X8uJEmr2KvP2iTbnppuKKYy7HGtvY/H7XQCD59jaqBqzB
-         Vi6g==
-X-Gm-Message-State: AOJu0YyJv5Lm+VRcH3rQROlaVLTdq518ZECCO3AX5c6glnxwKvhKp00a
-	bGLCVZPUlrbnbI5gEtLa+Y7ccg/aruItjZ7w/bRKAjE+XiGwofci8S2Zv+n2nj7w/93+0QclLdp
-	7
-X-Google-Smtp-Source: AGHT+IFIdqo6WHxmAqlXliFbXAcXadyOTPEKnm1AnL/f0BOmkDpdrAxEI9J8XcdIwZZXl+njn4WHxA==
-X-Received: by 2002:a05:600c:4f48:b0:431:5ecf:2a39 with SMTP id 5b1f17b1804b1-431841b2ef1mr13000005e9.35.1729677604395;
-        Wed, 23 Oct 2024 03:00:04 -0700 (PDT)
+        bh=hBcJjJxtGAeG5XTX0gIQ8MFz+gZtuRpeHhXT0hG3RNQ=;
+        b=rjRs8h+8OBiTAOFw4sX+P1tiKtbQTnw6yYIVE1iFq7MFsiPYhOj4AvkrNp0yEkaw82
+         6bTbELA7lCFQuxzOuZj1llyeZgE1Lm6y5D40Xj1T2oFMvaDl2ZNv6W7Ro1V9oGcFGLgn
+         jUzeWrPPOBnLUI+f+MApG+XfM69annvfsibJlCfbEqoGeumtm6ZhWWYsgosQY3g9Xkcf
+         wv5t66d6ji7NNgK9INFZwI9S+YYQcXn5YNxiQF0QDPttLrq/pIXoBz8pvg3pNsMNUsrS
+         MGsJULXpbop8dyP3bfcDNZmI2wK8XE/l9lLoIWDHSgI2LvgeDeXGd+PbfW2kOXaYAjea
+         94Jw==
+X-Gm-Message-State: AOJu0YynTLJOI66WHbrDejkjGj+bXcitc0eD3sTyRTrBZQIBItwR4G2R
+	fpnYX86iqU5RadnVTUrY3oamM9UXBybORozMuyYSaKOPpFlhge0DrFBbn90IW/vtEofCXqdgHMM
+	l
+X-Google-Smtp-Source: AGHT+IFKAyiHWl0zQ0i7yxtPmt/u0DiEO6mpUQi97Zfyc16vqPrMSF9qmQIxYzK8BluC+j7o3hilQQ==
+X-Received: by 2002:adf:eb06:0:b0:374:c84d:1cfe with SMTP id ffacd0b85a97d-37efcf06b6bmr1164632f8f.21.1729677602322;
+        Wed, 23 Oct 2024 03:00:02 -0700 (PDT)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:ad34:30ba:19ab:e41f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43186c001c7sm11668795e9.29.2024.10.23.03.00.03
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43186c001c7sm11668795e9.29.2024.10.23.03.00.01
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2024 03:00:04 -0700 (PDT)
+        Wed, 23 Oct 2024 03:00:01 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 13/28] toaster/tests/functiona/project_page: Drop pointless test covered elsewhere
-Date: Wed, 23 Oct 2024 10:59:34 +0100
-Message-ID: <20241023095949.3351980-13-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 11/28] toaster/tests/functional/project_config: Fix the wait calls to avoid polling
+Date: Wed, 23 Oct 2024 10:59:32 +0100
+Message-ID: <20241023095949.3351980-11-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241023095949.3351980-1-richard.purdie@linuxfoundation.org>
 References: <20241023095949.3351980-1-richard.purdie@linuxfoundation.org>
@@ -59,34 +59,184 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 23 Oct 2024 10:00:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16704
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16702
 
-The project creation test is well covered in another module so just
-drop this one as there isn't any extra value added here.
+Drop poll calls within the module, adding wait calls for elements of the
+page where testing showed it was needed.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/toaster/tests/functional/test_project_page.py | 9 ---------
- 1 file changed, 9 deletions(-)
+ .../tests/functional/test_project_config.py   | 47 +++++++++----------
+ 1 file changed, 21 insertions(+), 26 deletions(-)
 
-diff --git a/lib/toaster/tests/functional/test_project_page.py b/lib/toaster/tests/functional/test_project_page.py
-index 40ef5f486a..7e73cac438 100644
---- a/lib/toaster/tests/functional/test_project_page.py
-+++ b/lib/toaster/tests/functional/test_project_page.py
-@@ -182,15 +182,6 @@ class TestProjectPageBase(SeleniumFunctionalTestCase):
+diff --git a/lib/toaster/tests/functional/test_project_config.py b/lib/toaster/tests/functional/test_project_config.py
+index 41149e5e55..fcb1bc3284 100644
+--- a/lib/toaster/tests/functional/test_project_config.py
++++ b/lib/toaster/tests/functional/test_project_config.py
+@@ -36,10 +36,10 @@ class TestProjectConfig(SeleniumFunctionalTestCase):
  
- class TestProjectPage(TestProjectPageBase):
+         url = reverse('projectconf', args=(TestProjectConfig.project_id,))
+         self.get(url)
+-        self.wait_until_visible('#config-nav', poll=3)
++        self.wait_until_visible('#config-nav')
+         bbv_page_link = self._get_config_nav_item(9)
+         bbv_page_link.click()
+-        self.wait_until_visible('#config-nav', poll=3)
++        self.wait_until_visible('#config-nav')
  
--    def test_create_project(self):
--        """ Create/Test new project using:
--          - Project Name: Any string
--          - Release: Any string
--          - Merge Toaster settings: True or False
--        """
--        self._create_project(project_name=self.PROJECT_NAME)
+     def test_no_underscore_iamgefs_type(self):
+         """
+@@ -48,13 +48,13 @@ class TestProjectConfig(SeleniumFunctionalTestCase):
+         self._navigate_bbv_page()
+         imagefs_type = "foo_bar"
+ 
+-        self.wait_until_visible('#change-image_fstypes-icon', poll=2)
++        self.wait_until_visible('#change-image_fstypes-icon')
+ 
+         self.click('#change-image_fstypes-icon')
+ 
+         self.enter_text('#new-imagefs_types', imagefs_type)
+ 
+-        element = self.wait_until_visible('#hintError-image-fs_type', poll=2)
++        element = self.wait_until_visible('#hintError-image-fs_type')
+ 
+         self.assertTrue(("A valid image type cannot include underscores" in element.text),
+                         "Did not find underscore error message")
+@@ -68,7 +68,7 @@ class TestProjectConfig(SeleniumFunctionalTestCase):
+ 
+         imagefs_type = "btrfs"
+ 
+-        self.wait_until_visible('#change-image_fstypes-icon', poll=2)
++        self.wait_until_visible('#change-image_fstypes-icon')
+ 
+         self.click('#change-image_fstypes-icon')
+ 
+@@ -87,22 +87,20 @@ class TestProjectConfig(SeleniumFunctionalTestCase):
+         """
+         self._navigate_bbv_page()
+ 
+-        self.wait_until_visible('#change-image_fstypes-icon', poll=2)
 -
++        self.wait_until_visible('#change-image_fstypes-icon')
+         self.click('#change-image_fstypes-icon')
+ 
+         checkboxes_selector = '.fs-checkbox-fstypes'
+ 
+-        self.wait_until_visible(checkboxes_selector, poll=2)
++        self.wait_until_visible(checkboxes_selector)
+         checkboxes = self.find_all(checkboxes_selector)
+ 
+         for checkbox in checkboxes:
+             if checkbox.get_attribute("value") == "cpio":
+                checkbox.click()
++               self.wait_until_visible('#new-imagefs_types')
+                element = self.driver.find_element(By.ID, 'new-imagefs_types')
+ 
+-               self.wait_until_visible('#new-imagefs_types', poll=2)
 -
-     def test_page_header_on_project_page(self):
-         """ Check page header in project page:
-           - AT LEFT -> Logo of Yocto project, displayed, clickable
+                self.assertTrue(("cpio" in element.get_attribute('value'),
+                                "Imagefs not added into the textbox"))
+                checkbox.click()
+@@ -118,20 +116,19 @@ class TestProjectConfig(SeleniumFunctionalTestCase):
+ 
+         # activate the input to edit download dir
+         try:
+-            change_dl_dir_btn = self.wait_until_visible('#change-dl_dir-icon', poll=2)
++            change_dl_dir_btn = self.wait_until_visible('#change-dl_dir-icon')
+         except TimeoutException:
+             # If download dir is not displayed, test is skipped
+             change_dl_dir_btn = None
+ 
+         if change_dl_dir_btn:
+-            change_dl_dir_btn = self.wait_until_visible('#change-dl_dir-icon', poll=2)
+             change_dl_dir_btn.click()
+ 
+             # downloads dir path doesn't start with / or ${...}
+-            input_field = self.wait_until_visible('#new-dl_dir', poll=2)
++            input_field = self.wait_until_visible('#new-dl_dir')
+             input_field.clear()
+             self.enter_text('#new-dl_dir', 'home/foo')
+-            element = self.wait_until_visible('#hintError-initialChar-dl_dir', poll=2)
++            element = self.wait_until_visible('#hintError-initialChar-dl_dir')
+ 
+             msg = 'downloads directory path starts with invalid character but ' \
+                 'treated as valid'
+@@ -141,7 +138,7 @@ class TestProjectConfig(SeleniumFunctionalTestCase):
+             self.driver.find_element(By.ID, 'new-dl_dir').clear()
+             self.enter_text('#new-dl_dir', '/foo/bar a')
+ 
+-            element = self.wait_until_visible('#hintError-dl_dir', poll=2)
++            element = self.wait_until_visible('#hintError-dl_dir')
+             msg = 'downloads directory path characters invalid but treated as valid'
+             self.assertTrue((self.INVALID_PATH_CHAR_TEXT in element.text), msg)
+ 
+@@ -149,7 +146,7 @@ class TestProjectConfig(SeleniumFunctionalTestCase):
+             self.driver.find_element(By.ID,'new-dl_dir').clear()
+             self.enter_text('#new-dl_dir', '${TOPDIR}/down foo')
+ 
+-            element = self.wait_until_visible('#hintError-dl_dir', poll=2)
++            element = self.wait_until_visible('#hintError-dl_dir')
+             msg = 'downloads directory path characters invalid but treated as valid'
+             self.assertTrue((self.INVALID_PATH_CHAR_TEXT in element.text), msg)
+ 
+@@ -177,10 +174,7 @@ class TestProjectConfig(SeleniumFunctionalTestCase):
+         self._navigate_bbv_page()
+ 
+         try:
+-            btn_chg_sstate_dir = self.wait_until_visible(
+-                '#change-sstate_dir-icon',
+-                poll=2
+-            )
++            btn_chg_sstate_dir = self.wait_until_visible('#change-sstate_dir-icon')
+             self.click('#change-sstate_dir-icon')
+         except TimeoutException:
+             # If sstate_dir is not displayed, test is skipped
+@@ -188,10 +182,10 @@ class TestProjectConfig(SeleniumFunctionalTestCase):
+ 
+         if btn_chg_sstate_dir:  # Skip continuation if sstate_dir is not displayed
+             # path doesn't start with / or ${...}
+-            input_field = self.wait_until_visible('#new-sstate_dir', poll=2)
++            input_field = self.wait_until_visible('#new-sstate_dir')
+             input_field.clear()
+             self.enter_text('#new-sstate_dir', 'home/foo')
+-            element = self.wait_until_visible('#hintError-initialChar-sstate_dir', poll=2)
++            element = self.wait_until_visible('#hintError-initialChar-sstate_dir')
+ 
+             msg = 'sstate directory path starts with invalid character but ' \
+                 'treated as valid'
+@@ -201,7 +195,7 @@ class TestProjectConfig(SeleniumFunctionalTestCase):
+             self.driver.find_element(By.ID, 'new-sstate_dir').clear()
+             self.enter_text('#new-sstate_dir', '/foo/bar a')
+ 
+-            element = self.wait_until_visible('#hintError-sstate_dir', poll=2)
++            element = self.wait_until_visible('#hintError-sstate_dir')
+             msg = 'sstate directory path characters invalid but treated as valid'
+             self.assertTrue((self.INVALID_PATH_CHAR_TEXT in element.text), msg)
+ 
+@@ -209,7 +203,7 @@ class TestProjectConfig(SeleniumFunctionalTestCase):
+             self.driver.find_element(By.ID,'new-sstate_dir').clear()
+             self.enter_text('#new-sstate_dir', '${TOPDIR}/down foo')
+ 
+-            element = self.wait_until_visible('#hintError-sstate_dir', poll=2)
++            element = self.wait_until_visible('#hintError-sstate_dir')
+             msg = 'sstate directory path characters invalid but treated as valid'
+             self.assertTrue((self.INVALID_PATH_CHAR_TEXT in element.text), msg)
+ 
+@@ -233,13 +227,14 @@ class TestProjectConfig(SeleniumFunctionalTestCase):
+         var_name, field, btn_id, input_id, value, save_btn, *_ = kwargs.values()
+         """ Change bitbake variable value """
+         self._navigate_bbv_page()
+-        self.wait_until_visible(f'#{btn_id}', poll=2)
++        self.wait_until_visible(f'#{btn_id}')
+         if kwargs.get('new_variable'):
+             self.find(f"#{btn_id}").clear()
+             self.enter_text(f"#{btn_id}", f"{var_name}")
+         else:
+             self.click(f'#{btn_id}')
+-            self.wait_until_visible(f'#{input_id}', poll=2)
++
++        self.wait_until_visible(f'#{input_id}')
+ 
+         if kwargs.get('is_select'):
+             select = Select(self.find(f'#{input_id}'))
 
