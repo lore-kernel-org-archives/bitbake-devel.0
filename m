@@ -2,54 +2,54 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B65CDDE54
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E96FCDDE51
 	for <webhook@archiver.kernel.org>; Wed, 23 Oct 2024 10:00:20 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.web10.5152.1729677613331943733
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+ by mx.groups.io with SMTP id smtpd.web11.5158.1729677612138175212
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 23 Oct 2024 03:00:13 -0700
+ Wed, 23 Oct 2024 03:00:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=JPN+MJPK;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43163667f0eso50974695e9.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 23 Oct 2024 03:00:13 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Kr7teBdl;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.50, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43161e7bb25so53294255e9.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 23 Oct 2024 03:00:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1729677611; x=1730282411; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1729677610; x=1730282410; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=nVyW7ugoMg9S14L8pvKIO+VjclJYvy1k0Oqvvi2qSAg=;
-        b=JPN+MJPKogpgQYOUJ5v7Wb1aA3y3ZZUeweMsdhz93llCx0EqKDHVATViZ1y2+WM1h6
-         Meb2vg5gvh/JNlk1wnEpvknZjWJGkh6XxTgBbMxrtc974zJWdmvzyF1QAVyqNPR0kLW7
-         FIkjsZYhkRWxQB1f0XxFsk9wdPw+90c368ff0=
+        bh=jv4xsGBB2jiSVmDLqiEaC6vVRq/BLs0Tmoem7ZFLu9k=;
+        b=Kr7teBdlRc/YavNgzV46969zUtciJP1Gk/ewz2j4qvrN1vuxL0cfpqM9d60Q3roih7
+         Eo8eZZFnAf8XPj0fUDzZogtFOUgq5NxII3XuZtsqWxAWZo/kNdx6JFYzdCrhtRR059hJ
+         hd6qD+V5eKmmGmystOcUSk1dMfADnjNiy/WP8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729677611; x=1730282411;
+        d=1e100.net; s=20230601; t=1729677610; x=1730282410;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nVyW7ugoMg9S14L8pvKIO+VjclJYvy1k0Oqvvi2qSAg=;
-        b=Ckm8Y9UsbgoMiW9ddkanpsyhbLu6BhUSbkD3rETpkjY62UrcD/ivbvk6heP5RG3ig+
-         IkdbjrUgVFHa0WYZ+4lbzGsKoDk5W6efxAemYXnfYpA9A0XSt2G5QVBK1+GVKw/76lTQ
-         4d/lYkikLyzy+1dvbiT5qH1VcwOCDrNW6TJfcd+9Ei2t/MXQk4BTsmBEcWCfcyee2qvz
-         MhAn+zSWlImy8pIA+TWg6o0T7W1JdVkmsKwvZvgvy/e0wTfnm0a5hPZi8gxkX0z3iGwX
-         +4scYLikcXiYnNLZNYafoiOu3qTp8a90lBBwYNIaTHAPbDF1Xk8RlRJRJGLDpF2Zx4ld
-         PYmw==
-X-Gm-Message-State: AOJu0Yw63X0eBO8gdCMdVZmEFYqNl5Aq8+rHN7HewcwLH65SUmha53YM
-	PI+0lpta0XcJne2q8YH43dT1V+kqUKJbJit07ZsduYSblGFmeQIs97on3aRibyZt8qxMPWEBDjG
-	s
-X-Google-Smtp-Source: AGHT+IEd6QrceQHNCWlTeRn6fPU9U6ubA7QNcBXVYIfaVIxWEPbAuNCYoNmtcX+qyebEIFiYVGRXsQ==
-X-Received: by 2002:a05:600c:3b05:b0:431:54f3:11b1 with SMTP id 5b1f17b1804b1-4318424d1f6mr15455405e9.34.1729677611318;
-        Wed, 23 Oct 2024 03:00:11 -0700 (PDT)
+        bh=jv4xsGBB2jiSVmDLqiEaC6vVRq/BLs0Tmoem7ZFLu9k=;
+        b=NE5ljpA0Fsb3LVu+C60hM7VsJWS3x0Tj5I/ktyDtiqOJc0cE7eum6n7Vj+hCCnPHwb
+         1r0/X5dP2NT7EnWSjhZfclBsHFdyBn0TNIte0MNe5TfaNZ9YzBJRru1W07+f3sAwxtO9
+         OwpXPrgdRTTAiwDktW64PvPyZTr8UeeZhe+NRSHEviTKkA1nS8tUlrh6kM01w1AdaWoF
+         NPdURiaJIgTzah/ubGw1IRou56RdIhYNmUsjF7SW8q0wgxvfG8XKZFwJ4ZUuuA8lx9xO
+         GSjOSRGvWGzF/eEoZYXs1f5BWWIBkMBZNV2QJ8wrVQzE/tYHuYxqgxYh4wfGvp3mIe2f
+         GtTg==
+X-Gm-Message-State: AOJu0YysuHcyIUTdWMV/N6yNIpSAoAeBoGQfTfBZFZPBQKeDxSd7LCVX
+	VHXdQP3tRS8P5EGdB2I4fyh1rfu4ldPXHk1xoEIkJvfPRkhg2YIkwinmCJJ/Mwnku6xJbvvoaC6
+	M
+X-Google-Smtp-Source: AGHT+IGt0HOy171bVjESY2q9BWKUlZ4lrfiUmtVJLyC91973kWh0599vUi9ooyabfnVzAFdtDAKXCg==
+X-Received: by 2002:a5d:6487:0:b0:37d:3964:e0f1 with SMTP id ffacd0b85a97d-37efcef0c90mr1529259f8f.4.1729677610158;
+        Wed, 23 Oct 2024 03:00:10 -0700 (PDT)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:ad34:30ba:19ab:e41f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43186c001c7sm11668795e9.29.2024.10.23.03.00.10
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43186c001c7sm11668795e9.29.2024.10.23.03.00.08
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2024 03:00:10 -0700 (PDT)
+        Wed, 23 Oct 2024 03:00:09 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 19/28] functional/utils: Drop unused code from wait_until_build_cancelled
-Date: Wed, 23 Oct 2024 10:59:40 +0100
-Message-ID: <20241023095949.3351980-19-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 18/28] toaster/tests/browser/helpers: Drop remains of polling/sleep calls
+Date: Wed, 23 Oct 2024 10:59:39 +0100
+Message-ID: <20241023095949.3351980-18-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241023095949.3351980-1-richard.purdie@linuxfoundation.org>
 References: <20241023095949.3351980-1-richard.purdie@linuxfoundation.org>
@@ -59,41 +59,77 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 23 Oct 2024 10:00:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16710
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16709
 
-The code modifying the build object requires direct database access
-which is potentially problematic. It was being run on a database which
-was being reset after changes anyway so the code effectively did nothing.
-Remove it as it is unneeded.
+Drop the remaining poll parameters from the helpers code along
+with the remaining sleep call since the tests no longer depend
+on this.
+
+This has the nice benefit of significantly speeding up the toaster
+test runs (45 minutes down to 12 minutes overall).
+
+If a parameter is needed, it should be the timeout, not the polling
+frequency.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/toaster/tests/functional/utils.py | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ .../tests/browser/selenium_helpers_base.py      | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/lib/toaster/tests/functional/utils.py b/lib/toaster/tests/functional/utils.py
-index 7269fa1805..8e81c29984 100644
---- a/lib/toaster/tests/functional/utils.py
-+++ b/lib/toaster/tests/functional/utils.py
-@@ -48,7 +48,6 @@ def wait_until_build_cancelled(test_instance):
-     """
-     timeout = 30
-     start_time = 0
--    build = None
-     while True:
-         try:
-             if start_time > timeout:
-@@ -64,11 +63,7 @@ def wait_until_build_cancelled(test_instance):
-             if 'failed' in str(build_state).lower():
-                 break
-             if 'cancelling' in str(build_state).lower():
--                # Change build state to cancelled
--                if not build:  # get build object only once
--                    build = Build.objects.last()
--                    build.outcome = Build.CANCELLED
--                    build.save()
-+                pass
-             if 'cancelled' in str(build_state).lower():
-                 break
+diff --git a/lib/toaster/tests/browser/selenium_helpers_base.py b/lib/toaster/tests/browser/selenium_helpers_base.py
+index b664166055..45eabaf1ce 100644
+--- a/lib/toaster/tests/browser/selenium_helpers_base.py
++++ b/lib/toaster/tests/browser/selenium_helpers_base.py
+@@ -186,7 +186,7 @@ class SeleniumTestCaseBase(unittest.TestCase):
+         self.driver.get(abs_url)
+ 
+         try:  # Ensure page is loaded before proceeding
+-            self.wait_until_visible("#global-nav", poll=3)
++            self.wait_until_visible("#global-nav")
          except NoSuchElementException:
+             self.driver.implicitly_wait(3)
+         except TimeoutException:
+@@ -211,20 +211,18 @@ class SeleniumTestCaseBase(unittest.TestCase):
+         """ Return the element which currently has focus on the page """
+         return self.driver.switch_to.active_element
+ 
+-    def wait_until_present(self, selector, poll=0.5):
++    def wait_until_present(self, selector, timeout=Wait._TIMEOUT):
+         """ Wait until element matching CSS selector is on the page """
+         is_present = lambda driver: self.find(selector)
+         msg = 'An element matching "%s" should be on the page' % selector
+-        element = Wait(self.driver, poll=poll).until(is_present, msg)
+-        if poll > 2:
+-            time.sleep(poll)  # element need more delay to be present
++        element = Wait(self.driver, timeout=timeout).until(is_present, msg)
+         return element
+ 
+-    def wait_until_visible(self, selector, poll=1):
++    def wait_until_visible(self, selector, timeout=Wait._TIMEOUT):
+         """ Wait until element matching CSS selector is visible on the page """
+         is_visible = lambda driver: self.find(selector).is_displayed()
+         msg = 'An element matching "%s" should be visible' % selector
+-        Wait(self.driver, poll=poll).until(is_visible, msg)
++        Wait(self.driver, timeout=timeout).until(is_visible, msg)
+         return self.find(selector)
+ 
+     def wait_until_not_visible(self, selector, timeout=Wait._TIMEOUT):
+@@ -234,15 +232,14 @@ class SeleniumTestCaseBase(unittest.TestCase):
+         Wait(self.driver, timeout=timeout).until_not(is_visible, msg)
+         return self.find(selector)
+ 
+-    def wait_until_clickable(self, selector, poll=1):
++    def wait_until_clickable(self, selector, timeout=Wait._TIMEOUT):
+         """ Wait until element matching CSS selector is visible on the page """
+         sel = selector
+         if sel.startswith('#'):
+             sel = selector[1:]
+         WebDriverWait(
+             self.driver,
+-            Wait._TIMEOUT,
+-            poll_frequency=poll
++            timeout=timeout,
+         ).until(
+             EC.element_to_be_clickable((By.ID, sel
+                                         )
 
