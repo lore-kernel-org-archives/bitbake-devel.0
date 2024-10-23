@@ -1,98 +1,81 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 936B2CDDE63
-	for <webhook@archiver.kernel.org>; Wed, 23 Oct 2024 10:46:30 +0000 (UTC)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web11.5940.1729680387322980667
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2845FCFA444
+	for <webhook@archiver.kernel.org>; Wed, 23 Oct 2024 15:40:26 +0000 (UTC)
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+ by mx.groups.io with SMTP id smtpd.web10.581.1729698021597593930
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 23 Oct 2024 03:46:27 -0700
+ Wed, 23 Oct 2024 08:40:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=TwLDdoUf;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4315839a7c9so73069685e9.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 23 Oct 2024 03:46:27 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=bvUFYxiW;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.177, mailfrom: steve@sakoman.com)
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-20cf3e36a76so68742015ad.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 23 Oct 2024 08:40:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1729680385; x=1730285185; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NnAe2AH/EgLzlk0D4eeHQ2Rydzp5OEhNcDn/FQOZO88=;
-        b=TwLDdoUfn/BXq0WEBq3gnWpLClSI0cB+8x8/DmSzuT/tUdsu0psm/3t7WBSgfJsdi2
-         yykr/IGTJSLBfRQJS76Ab156HNm1a6LE8+SwPg7UGvk47Gjrzc2PSlVwpWmNuj+0PQWg
-         blpOP84FtH4BhkCUo3v5Jle4fJEYsoS5b9ly8=
+        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1729698021; x=1730302821; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fuxn0hvoLRzbPL9RH7JoCbZN79MsU7NlDRJkIS5nHRE=;
+        b=bvUFYxiWrT3bX7Mz9QcGD0MDxu+3Z0dyYTTCCJ++lWcDS0ZICSTj0NdGtXjOX6oJJJ
+         NceoxoUU7CqGbtUzwDI9lSyXtwrkpkqE15TEzAALsVcj2fZmC8/UjxREp55/w/acaM2t
+         G6v8mYYdU2wes34e1ED+QRCDT98uO3Nh+E/5nnIr/c06wHk4kmbMv9ooKlFhG31q81iS
+         roZysC/UpGGwbo87mC22/i4liTzfMdk6LLf07pHJAVIUndJZUTYz1PX1gwSeklUqq7Ub
+         eFbDINYeRRMXspa++dcnx9FxphosMF7BQ62QUGYUzsp8vNHdFbjtCE9bM72nICWG4J/A
+         9zTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729680385; x=1730285185;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=NnAe2AH/EgLzlk0D4eeHQ2Rydzp5OEhNcDn/FQOZO88=;
-        b=EkgF6afyJz1OTX+yEzs9cvxA2d/uau1t/gnG51ptJgQEYLnc1/vAG+5NYJsVWk34RK
-         21umvD7gOzs/w0lMseGoC/vG5XuYixNYikUTK0dzVuAot/v7YHEJ2jbbSvWaGULBwk6A
-         pw56G1CAh96F1/7IUfCri4qD89p6iiFFLHI1BsG17TFwAgppAnWTSU1K+lYJWB0nXK4b
-         KX1Bmc+xkkM7KD8cfso/U349ozFc+JD2NLovlxRpy5L28OOrNPH4bHHuR3giuy2vbPzm
-         XoKZt4HvrNOpKQQK3NSg8bMAAFleulbfl2XW8/pT8MLHSnohOxNkqYYuIp4IeGoViwsJ
-         migA==
-X-Gm-Message-State: AOJu0YzXoeWLs2iGT5qtoWHMeK8Iv832AS/J5nzC9NaUukdAkseuV7bM
-	UavhRNBD8PQJPOmzx6NyoKrdDIPHX3dD2M1FzIKza5uMY5Gaiq2VoREoslzDPDsM6dtdplPsIbd
-	3
-X-Google-Smtp-Source: AGHT+IHktYP8EGwzQAnwO6Looq4FoZuT5mhbnj0jVhuIoCBPGRF6mkjCNCJOs8GpwhE3d+/pPXU80A==
-X-Received: by 2002:a05:600c:1907:b0:42c:c003:edd1 with SMTP id 5b1f17b1804b1-4318413e287mr19771995e9.10.1729680385417;
-        Wed, 23 Oct 2024 03:46:25 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:ad34:30ba:19ab:e41f? ([2001:8b0:aba:5f3c:ad34:30ba:19ab:e41f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43186beff77sm12689425e9.23.2024.10.23.03.46.24
+        d=1e100.net; s=20230601; t=1729698021; x=1730302821;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fuxn0hvoLRzbPL9RH7JoCbZN79MsU7NlDRJkIS5nHRE=;
+        b=cMSb3UBs8GANKcYieedCk/cu+5m+60fZ5ldYeIztNRzhRTCM4MPtqW9frIquBcIK0I
+         R7pCA3xHrkJ9Wf16zyW50YyF9mfHuWIUZzZSF2QBltbRaKtsB0+DmWb9p3xT2lq6MzlJ
+         fPnr5yGhEW2jAyCxyxSrdz7bmu6KQJHPHHImepgp8LCPL4RZLdP3Fplnzshq3N4+k5Xb
+         yHgWIGLszdQgGAZpye1m5qVHkc+w6wIYyMlMRYg5zh2RHbdj5yQnSIJR7g+i+pLDgqNb
+         G7hUY5mZVCPLAp1rd+ENqignEJHk5mKZkhFnuod5klHJQoSq1mj+uujVMsWhCiqjMaQM
+         DEew==
+X-Gm-Message-State: AOJu0YzJ2LVV/4gOQQNrgohcyDxURRl7mPcTtfc44gDFieR3ZoWMZNVB
+	rNuC9eoCEAcfpa6PCkeC+FeaDZ1pQSPxvF2HzTBvIyiW5OtyoIb7rCeDrY3JDhbCh1ssuk23sGV
+	z
+X-Google-Smtp-Source: AGHT+IEtEwxOYf1f9GNshY+Ykktfl8T2tntySfQ9nNxsRp0/Pjq8p1VraKGL4cuWyhLYZBIBV2C1zw==
+X-Received: by 2002:a17:902:f686:b0:20b:8ef3:67a with SMTP id d9443c01a7336-20fa9deb678mr37873385ad.7.1729698020692;
+        Wed, 23 Oct 2024 08:40:20 -0700 (PDT)
+Received: from hexa.. ([2602:feb4:3b:2100:8a3a:42f2:dbca:b2f4])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20e7f0f32f0sm59161655ad.249.2024.10.23.08.40.20
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2024 03:46:25 -0700 (PDT)
-Message-ID: <095e6a1845c0946773aa78ee5aa541c31633becb.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] toaster/tests/functional: Improve
- project creation tests
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Wed, 23 Oct 2024 08:40:20 -0700 (PDT)
+From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 23 Oct 2024 11:46:24 +0100
-In-Reply-To: <18010F0CB9861BA6.17315@lists.openembedded.org>
-References: <18010F0CB9861BA6.17315@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+Subject: [bitbake][scarthgap][2.8][PATCH 0/1] Pull request (cover letter only)
+Date: Wed, 23 Oct 2024 08:40:16 -0700
+Message-Id: <cover.1729697951.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 23 Oct 2024 10:46:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16721
+ <bitbake-devel@lists.openembedded.org>; Wed, 23 Oct 2024 15:40:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16722
 
-On Wed, 2024-10-23 at 11:44 +0100, Richard Purdie via lists.openembedded.or=
-g wrote:
-> Mixing database access and access via a running server is fraught with
-> danger and problems. The "django_db" marker means the transactions are
-> dropped at the end of the test but the transactions made via the webapi
-> remain so the database ends up confused at best.
->=20
-> Drop the database accesses and use the server API. This means slightly
-> abusing the typeahead to get lists of projects in the database.
->=20
-> Add code to delete a project if it already exists. This allows tests
-> to re-run against an existing database. Deletion is done using the
-> server API but this means handling CSRF tokens.
->=20
-> Add requests module requirement to requirements file since the project
-> creation code now uses requests.
->=20
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
-> =C2=A0.../functional/test_create_new_project.py=C2=A0=C2=A0=C2=A0=C2=A0 |=
- 28 +++++++++++++------
-> =C2=A0.../tests/toaster-tests-requirements.txt=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0 2 ++
-> =C2=A02 files changed, 22 insertions(+), 8 deletions(-)
+The following changes since commit d251668d9a7a8dd25bd8767efb30d6d9ff8b1ad3:
 
-This was meant to be at the start of that 28 patch series, sorry. I had
-an off by 1 error when sending. I decided not to spam the list with the
-whole thing again...
+  data_smart: Improve performance for VariableHistory (2024-08-08 09:20:02 -0700)
 
-Cheers,
+are available in the Git repository at:
 
-Richard
+  https://git.openembedded.org/bitbake-contrib stable/2.8-next
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.8-next
+
+Joshua Watt (1):
+  asyncrpc: Use client timeout for websocket open timeout
+
+ lib/bb/asyncrpc/client.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+-- 
+2.34.1
+
 
