@@ -2,54 +2,54 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFFCCDDE4A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0844CDDE40
 	for <webhook@archiver.kernel.org>; Wed, 23 Oct 2024 10:00:09 +0000 (UTC)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web10.5138.1729677602782704450
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web11.5147.1729677600594665726
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 23 Oct 2024 03:00:03 -0700
+ Wed, 23 Oct 2024 03:00:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=BqkqniOC;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.47, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4315839a7c9so72639265e9.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 23 Oct 2024 03:00:02 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=AOUGyQlU;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4314a26002bso72856795e9.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 23 Oct 2024 03:00:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1729677601; x=1730282401; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1729677599; x=1730282399; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Fhpzv6XJPkz0xg7HJqtYVgbpFBZ7mGMyZCBsq0rCHok=;
-        b=BqkqniOCTNrkb3aR3VdDCt3jbslMSrp51/GK5ABesX1B7/1WxQv1KGI5ca6sYQLYq4
-         sNsn4NRgizb/A21Ehsrz69JQekHVouGOzFCW8OBNlrE/tyq4jzG6Z/QHrGLiEvjFyjrZ
-         nA2OoweYWP0jOydPLWICOFMRnhxFDZ/nC46lU=
+        bh=rFGIN9R8u/3oSpdsb4RenPPPK9+HW3v6VQeYXJI+Mgs=;
+        b=AOUGyQlU14mNDaCXfptcbnzprL6z8OVGdcmbbfVHKSsS9VvNk0/6mFd1tdHSRBIb8D
+         LPUf6iHFPD3htF+3LgfONCvpAz1YYCWdo4L0+JzvGnpt9JbtxjGurLRWpiRBEKlmHZ+R
+         1lQVQIq4PGDkUmClUjApEtfbKC77HmfmOYDRg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729677601; x=1730282401;
+        d=1e100.net; s=20230601; t=1729677599; x=1730282399;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Fhpzv6XJPkz0xg7HJqtYVgbpFBZ7mGMyZCBsq0rCHok=;
-        b=ujO2LqrJDZyqcvD9FDU6WqaJgW7iJQzT7II3W512hFhNgixABxVc7jJtIkjs1Zjb3S
-         r/336TXQ5lsBU22679XAjIroEZbz+Xx1feV7Hl+LP+R+DAFMhbHZN9LFnWlH9vjof7g3
-         BDhumxh6shHXxt6Ri/QawtHl6sLfONrAn2JGFWeN65KzBTycUsVlK3fLXf8wIAYzdN/s
-         7TM2eMETNqbJX426dyXUJt4Fbrd8NfnSc5Q+AYbW00LzYEhBq3Ou3pA0WEJKSaubntnI
-         gi9MPMH54eLYnIEWty7aq0V16Ft9R6qh87aPgapp+lxCbnC3ar1OjRcbW+PrEIFfTeva
-         ZaXQ==
-X-Gm-Message-State: AOJu0Yy/TJJOX+IizdBNBpo3FWOoJPWiTP5N/QCu0d/mFiVUAojz73Fj
-	KlRmEibKxGkT8kOCqHKgcZWtjF1vf+k2wZu4YqgONiQQFfxHklvdZTKQKlSMHIHzKItfJ7sKPye
-	v
-X-Google-Smtp-Source: AGHT+IGFZDmzU1ug7qMp5Py7N1KC4xf81eeCd59I179t7t1Pm3I3kY7FcTEglrewEN9fdkTMuKHcZA==
-X-Received: by 2002:a05:600c:1c9d:b0:431:12a8:7f1a with SMTP id 5b1f17b1804b1-4318415a497mr18654625e9.16.1729677600899;
-        Wed, 23 Oct 2024 03:00:00 -0700 (PDT)
+        bh=rFGIN9R8u/3oSpdsb4RenPPPK9+HW3v6VQeYXJI+Mgs=;
+        b=oBD00Sk/+6Khl3gmdr5lNmUvG8XcstO05dAOSXm11h8BAZ7NJugjh1dmUf8A6LnOYs
+         zworydRSze1Q/UGPtzubXRmMA6y5vssX1+HpkknsVjdetuMo9CQRGjRry57yPiQr6Xno
+         xXFG6ZdoVJy0AZklGKz2+7pKlM/QGqQGtMzze9/abZtNm0SrJuYc/qsrWK+nOGOBVl/M
+         AJvS/1VKFIstQcd4zUnFdtxGOgRrwwZSUXcQ2idxc6cDkVYi0ml+CTGymgJKq56qsKEJ
+         bEslzheM7VfQii3C6ja84wy81CbbBvjpqrdXulMYGXsCwSaYpUz2FlEpmVrqTh4OH0dA
+         8ncg==
+X-Gm-Message-State: AOJu0YxVURrOmfj1Fi7x4TY1ktDk+VImXudrYW+6rxzqRZMnHJQnOMRE
+	Cd9ztWFdYhySl91KOBOddRKqOn7SXg8WzfzdB5TumTo87jnBh0eyvU5lBid9eUzHjlmwq6e5r4+
+	W
+X-Google-Smtp-Source: AGHT+IGOVyw9Wrk5T+OAufhrzUeo+xEFGGuV85WSVyz6/3/wWl9Y/vTDocOpqyyAVHddxRbrq20nLg==
+X-Received: by 2002:a05:600c:45c3:b0:431:7ca6:57b1 with SMTP id 5b1f17b1804b1-431841a3bdamr19992895e9.32.1729677598682;
+        Wed, 23 Oct 2024 02:59:58 -0700 (PDT)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:ad34:30ba:19ab:e41f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43186c001c7sm11668795e9.29.2024.10.23.02.59.59
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43186c001c7sm11668795e9.29.2024.10.23.02.59.57
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2024 02:59:59 -0700 (PDT)
+        Wed, 23 Oct 2024 02:59:58 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 10/28] toaster/tests/functional/basic: Improve the projects table selection to a common function
-Date: Wed, 23 Oct 2024 10:59:31 +0100
-Message-ID: <20241023095949.3351980-10-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 08/28] toaster/tests/browser: Drop unneeded poll parameters
+Date: Wed, 23 Oct 2024 10:59:29 +0100
+Message-ID: <20241023095949.3351980-8-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241023095949.3351980-1-richard.purdie@linuxfoundation.org>
 References: <20241023095949.3351980-1-richard.purdie@linuxfoundation.org>
@@ -59,104 +59,216 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 23 Oct 2024 10:00:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16701
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16699
 
-The project page selection code is race prone. Create a common function to resolve
-the race issue and use it from all the call sites rather than duplicate code.
+In my testing I wasn't able to see issues needing the poll parameter in the
+browser tests. Drop those.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- .../tests/functional/functional_helpers.py        |  6 ++++++
- .../tests/functional/test_functional_basic.py     | 15 ++++++++-------
- 2 files changed, 14 insertions(+), 7 deletions(-)
+ lib/toaster/tests/browser/test_all_builds_page.py    |  6 +++---
+ lib/toaster/tests/browser/test_all_projects_page.py  | 12 ++++++------
+ .../tests/browser/test_builddashboard_page.py        |  2 +-
+ lib/toaster/tests/browser/test_landing_page.py       |  2 +-
+ lib/toaster/tests/browser/test_layerdetails_page.py  |  8 ++++----
+ .../tests/browser/test_new_custom_image_page.py      |  2 +-
+ lib/toaster/tests/browser/test_new_project_page.py   |  8 ++++----
+ 7 files changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/lib/toaster/tests/functional/functional_helpers.py b/lib/toaster/tests/functional/functional_helpers.py
-index a7a3459630..e28f2024f5 100644
---- a/lib/toaster/tests/functional/functional_helpers.py
-+++ b/lib/toaster/tests/functional/functional_helpers.py
-@@ -216,3 +216,9 @@ class SeleniumFunctionalTestCase(SeleniumTestCaseBase):
-                             'The project release is not defined')
+diff --git a/lib/toaster/tests/browser/test_all_builds_page.py b/lib/toaster/tests/browser/test_all_builds_page.py
+index b9356a0344..a1f8057113 100644
+--- a/lib/toaster/tests/browser/test_all_builds_page.py
++++ b/lib/toaster/tests/browser/test_all_builds_page.py
+@@ -224,7 +224,7 @@ class TestAllBuildsPage(SeleniumTestCase):
  
-         return project_id
-+        
-+    def load_projects_page_helper(self):        
-+        self.wait_until_present('#projectstable')
-+        # Need to wait for some data in the table too
-+        self.wait_until_present('td[class="updated"]')
-+
-diff --git a/lib/toaster/tests/functional/test_functional_basic.py b/lib/toaster/tests/functional/test_functional_basic.py
-index c73a278f6c..d5c9708617 100644
---- a/lib/toaster/tests/functional/test_functional_basic.py
-+++ b/lib/toaster/tests/functional/test_functional_basic.py
-@@ -20,6 +20,7 @@ from tests.functional.utils import get_projectId_from_url
- class FuntionalTestBasic(SeleniumFunctionalTestCase):
-     """Basic functional tests for Toaster"""
-     project_id = None
-+    project_url = None
+         url = reverse('all-builds')
+         self.get(url)
+-        self.wait_until_visible('#allbuildstable', poll=3)
++        self.wait_until_visible('#allbuildstable')
  
-     def setUp(self):
-         super(FuntionalTestBasic, self).setUp()
-@@ -29,7 +30,7 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
-  #  testcase (1515)
-     def test_verify_left_bar_menu(self):
-         self.get(reverse('all-projects'))
--        self.wait_until_present('#projectstable', poll=10)
-+        self.load_projects_page_helper()
-         self.find_element_by_link_text_in_table('projectstable', 'selenium-project').click()
-         self.wait_until_present('#config-nav')
-         self.assertTrue(self.element_exists('#config-nav'),'Configuration Tab does not exist')
-@@ -82,7 +83,7 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
- #   testcase (1516)
-     def test_review_configuration_information(self):
-         self.get(reverse('all-projects'))
--        self.wait_until_present('#projectstable', poll=10)
-+        self.load_projects_page_helper()
-         self.find_element_by_link_text_in_table('projectstable', 'selenium-project').click()
-         project_URL=self.get_URL()
+         # get the project name cells from the table
+         cells = self.find_all('#allbuildstable td[class="project"]')
+@@ -257,7 +257,7 @@ class TestAllBuildsPage(SeleniumTestCase):
  
-@@ -131,7 +132,7 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
- #   testcase (1517)
-     def test_verify_machine_information(self):
-         self.get(reverse('all-projects'))
--        self.wait_until_present('#projectstable', poll=10)
-+        self.load_projects_page_helper()
-         self.find_element_by_link_text_in_table('projectstable', 'selenium-project').click()
+         url = reverse('all-builds')
+         self.get(url)
+-        self.wait_until_visible('#allbuildstable', poll=3)
++        self.wait_until_visible('#allbuildstable')
  
-         self.wait_until_visible('#machine-section')
-@@ -149,7 +150,7 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
- #   testcase (1518)
-     def test_verify_most_built_recipes_information(self):
-         self.get(reverse('all-projects'))
--        self.wait_until_present('#projectstable', poll=10)
-+        self.load_projects_page_helper()
-         self.find_element_by_link_text_in_table('projectstable', 'selenium-project').click()
-         self.wait_until_present('#config-nav')
-         project_URL=self.get_URL()
-@@ -166,7 +167,7 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
- #   testcase (1519)
-     def test_verify_project_release_information(self):
-         self.get(reverse('all-projects'))
--        self.wait_until_present('#projectstable', poll=10)
-+        self.load_projects_page_helper()
-         self.find_element_by_link_text_in_table('projectstable', 'selenium-project').click()
-         self.wait_until_visible('#project-release-title')
-         self.assertTrue(re.search("Yocto Project master",self.driver.find_element(By.ID, "project-release-title").text), 'No project release title information in project detail page')
-@@ -174,7 +175,7 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
- #   testcase (1520)
-     def test_verify_layer_information(self):
-         self.get(reverse('all-projects'))
--        self.wait_until_present('#projectstable', poll=10)
-+        self.load_projects_page_helper()
-         self.find_element_by_link_text_in_table('projectstable', 'selenium-project').click()
-         self.wait_until_present('#config-nav')
-         project_URL=self.get_URL()
-@@ -210,7 +211,7 @@ class FuntionalTestBasic(SeleniumFunctionalTestCase):
- #   testcase (1521)
-     def test_verify_project_detail_links(self):
-         self.get(reverse('all-projects'))
--        self.wait_until_present('#projectstable', poll=10)
-+        self.load_projects_page_helper()
-         self.find_element_by_link_text_in_table('projectstable', 'selenium-project').click()
-         self.wait_until_present('#config-nav')
-         project_URL=self.get_URL()
+         # test recent builds area for successful build
+         element = self._get_build_time_element(build1)
+@@ -452,7 +452,7 @@ class TestAllBuildsPage(SeleniumTestCase):
+         def test_show_rows(row_to_show, show_row_link):
+             # Check that we can show rows == row_to_show
+             show_row_link.select_by_value(str(row_to_show))
+-            self.wait_until_visible('#allbuildstable tbody tr', poll=3)
++            self.wait_until_visible('#allbuildstable tbody tr')
+             # check at least some rows are visible
+             self.assertTrue(
+                 len(self.find_all('#allbuildstable tbody tr')) > 0
+diff --git a/lib/toaster/tests/browser/test_all_projects_page.py b/lib/toaster/tests/browser/test_all_projects_page.py
+index 9ed1901cc9..05e12892be 100644
+--- a/lib/toaster/tests/browser/test_all_projects_page.py
++++ b/lib/toaster/tests/browser/test_all_projects_page.py
+@@ -81,7 +81,7 @@ class TestAllProjectsPage(SeleniumTestCase):
+ 
+     def _get_row_for_project(self, project_name):
+         """ Get the HTML row for a project, or None if not found """
+-        self.wait_until_visible('#projectstable tbody tr', poll=3)
++        self.wait_until_visible('#projectstable tbody tr')
+         rows = self.find_all('#projectstable tbody tr')
+ 
+         # find the row with a project name matching the one supplied
+@@ -236,7 +236,7 @@ class TestAllProjectsPage(SeleniumTestCase):
+         self.get(url)
+ 
+         # Chseck search box is present and works
+-        self.wait_until_visible('#projectstable tbody tr', poll=3)
++        self.wait_until_visible('#projectstable tbody tr')
+         search_box = self.find('#search-input-projectstable')
+         self.assertTrue(search_box.is_displayed())
+ 
+@@ -244,7 +244,7 @@ class TestAllProjectsPage(SeleniumTestCase):
+         search_box.send_keys('test project 10')
+         search_btn = self.find('#search-submit-projectstable')
+         search_btn.click()
+-        self.wait_until_visible('#projectstable tbody tr', poll=3)
++        self.wait_until_visible('#projectstable tbody tr')
+         rows = self.find_all('#projectstable tbody tr')
+         self.assertTrue(len(rows) == 1)
+ 
+@@ -290,7 +290,7 @@ class TestAllProjectsPage(SeleniumTestCase):
+                 )
+         url = reverse('all-projects')
+         self.get(url)
+-        self.wait_until_visible('#projectstable tbody tr', poll=3)
++        self.wait_until_visible('#projectstable tbody tr')
+ 
+         # Check edit column
+         edit_column = self.find('#edit-columns-button')
+@@ -313,7 +313,7 @@ class TestAllProjectsPage(SeleniumTestCase):
+         def test_show_rows(row_to_show, show_row_link):
+             # Check that we can show rows == row_to_show
+             show_row_link.select_by_value(str(row_to_show))
+-            self.wait_until_visible('#projectstable tbody tr', poll=3)
++            self.wait_until_visible('#projectstable tbody tr')
+             # check at least some rows are visible
+             self.assertTrue(
+                 len(self.find_all('#projectstable tbody tr')) > 0
+@@ -321,7 +321,7 @@ class TestAllProjectsPage(SeleniumTestCase):
+ 
+         url = reverse('all-projects')
+         self.get(url)
+-        self.wait_until_visible('#projectstable tbody tr', poll=3)
++        self.wait_until_visible('#projectstable tbody tr')
+ 
+         show_rows = self.driver.find_elements(
+             By.XPATH,
+diff --git a/lib/toaster/tests/browser/test_builddashboard_page.py b/lib/toaster/tests/browser/test_builddashboard_page.py
+index d838ce363a..82367108e2 100644
+--- a/lib/toaster/tests/browser/test_builddashboard_page.py
++++ b/lib/toaster/tests/browser/test_builddashboard_page.py
+@@ -162,7 +162,7 @@ class TestBuildDashboardPage(SeleniumTestCase):
+         """
+         url = reverse('builddashboard', args=(build.id,))
+         self.get(url)
+-        self.wait_until_visible('#global-nav', poll=3)
++        self.wait_until_visible('#global-nav')
+ 
+     def _get_build_dashboard_errors(self, build):
+         """
+diff --git a/lib/toaster/tests/browser/test_landing_page.py b/lib/toaster/tests/browser/test_landing_page.py
+index 62fdf83c91..f3300430ba 100644
+--- a/lib/toaster/tests/browser/test_landing_page.py
++++ b/lib/toaster/tests/browser/test_landing_page.py
+@@ -224,7 +224,7 @@ class TestLandingPage(SeleniumTestCase):
+ 
+         self.get(reverse('landing'))
+ 
+-        self.wait_until_visible("#latest-builds", poll=3)
++        self.wait_until_visible("#latest-builds")
+         elements = self.find_all('#allbuildstable')
+         self.assertEqual(len(elements), 1, 'should redirect to builds')
+         content = self.get_page_source()
+diff --git a/lib/toaster/tests/browser/test_layerdetails_page.py b/lib/toaster/tests/browser/test_layerdetails_page.py
+index 5c29548b78..c4f3f79d34 100644
+--- a/lib/toaster/tests/browser/test_layerdetails_page.py
++++ b/lib/toaster/tests/browser/test_layerdetails_page.py
+@@ -108,9 +108,9 @@ class TestLayerDetailsPage(SeleniumTestCase):
+             save_btn.click()
+ 
+         try:
+-            self.wait_until_visible("#save-changes-for-switch", poll=3)
++            self.wait_until_visible("#save-changes-for-switch")
+             btn_save_chg_for_switch = self.wait_until_clickable(
+-                "#save-changes-for-switch", poll=3)
++                "#save-changes-for-switch")
+             btn_save_chg_for_switch.click()
+         except ElementClickInterceptedException:
+             self.skipTest(
+@@ -148,9 +148,9 @@ class TestLayerDetailsPage(SeleniumTestCase):
+         dir_input.send_keys(new_dir)
+ 
+         try:
+-            self.wait_until_visible("#save-changes-for-switch", poll=3)
++            self.wait_until_visible("#save-changes-for-switch")
+             btn_save_chg_for_switch = self.wait_until_clickable(
+-                "#save-changes-for-switch", poll=3)
++                "#save-changes-for-switch")
+             btn_save_chg_for_switch.click()
+         except ElementClickInterceptedException:
+             self.skipTest(
+diff --git a/lib/toaster/tests/browser/test_new_custom_image_page.py b/lib/toaster/tests/browser/test_new_custom_image_page.py
+index 9f0b6397fe..bf0304dbec 100644
+--- a/lib/toaster/tests/browser/test_new_custom_image_page.py
++++ b/lib/toaster/tests/browser/test_new_custom_image_page.py
+@@ -90,7 +90,7 @@ class TestNewCustomImagePage(SeleniumTestCase):
+         """
+         url = reverse('newcustomimage', args=(self.project.id,))
+         self.get(url)
+-        self.wait_until_visible('#global-nav', poll=3)
++        self.wait_until_visible('#global-nav')
+ 
+         self.click('button[data-recipe="%s"]' % self.recipe.id)
+ 
+diff --git a/lib/toaster/tests/browser/test_new_project_page.py b/lib/toaster/tests/browser/test_new_project_page.py
+index 458bb6538d..b6187db105 100644
+--- a/lib/toaster/tests/browser/test_new_project_page.py
++++ b/lib/toaster/tests/browser/test_new_project_page.py
+@@ -47,7 +47,7 @@ class TestNewProjectPage(SeleniumTestCase):
+ 
+         url = reverse('newproject')
+         self.get(url)
+-        self.wait_until_visible('#new-project-name', poll=3)
++        self.wait_until_visible('#new-project-name')
+         self.enter_text('#new-project-name', project_name)
+ 
+         select = Select(self.find('#projectversion'))
+@@ -58,7 +58,7 @@ class TestNewProjectPage(SeleniumTestCase):
+         # We should get redirected to the new project's page with the
+         # notification at the top
+         element = self.wait_until_visible(
+-            '#project-created-notification', poll=3)
++            '#project-created-notification')
+ 
+         self.assertTrue(project_name in element.text,
+                         "New project name not in new project notification")
+@@ -79,7 +79,7 @@ class TestNewProjectPage(SeleniumTestCase):
+ 
+         url = reverse('newproject')
+         self.get(url)
+-        self.wait_until_visible('#new-project-name', poll=3)
++        self.wait_until_visible('#new-project-name')
+ 
+         self.enter_text('#new-project-name', project_name)
+ 
+@@ -91,7 +91,7 @@ class TestNewProjectPage(SeleniumTestCase):
+ 
+         self.click("#create-project-button")
+ 
+-        self.wait_until_present('#hint-error-project-name', poll=3)
++        self.wait_until_present('#hint-error-project-name')
+         element = self.find('#hint-error-project-name')
+ 
+         self.assertTrue(("Project names must be unique" in element.text),
 
