@@ -1,78 +1,85 @@
-Return-Path: <matthias.schoepfer@googlemail.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE95ECE8E77
-	for <webhook@archiver.kernel.org>; Thu, 24 Oct 2024 13:42:07 +0000 (UTC)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.web11.14832.1729777322194671793
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA7BCE8E7C
+	for <webhook@archiver.kernel.org>; Thu, 24 Oct 2024 14:07:37 +0000 (UTC)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+ by mx.groups.io with SMTP id smtpd.web10.15466.1729778849621949683
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 24 Oct 2024 06:42:02 -0700
+ Thu, 24 Oct 2024 07:07:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@googlemail.com header.s=20230601 header.b=HepF7zx1;
- spf=pass (domain: googlemail.com, ip: 209.85.128.49, mailfrom: matthias.schoepfer@googlemail.com)
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-431481433bdso9518025e9.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 24 Oct 2024 06:42:01 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=AfC92Sws;
+ spf=pass (domain: gmail.com, ip: 209.85.167.41, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-53a0c160b94so1184925e87.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 24 Oct 2024 07:07:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1729777320; x=1730382120; darn=lists.openembedded.org;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qQMvkOotP9+r+lR2F66uKJI7YMzadcWWjq6HtM7X2i0=;
-        b=HepF7zx1fhGo163PFDmLAAOwP34Y51PnJBZKJ7ND+r9OCBp7pzJX34IWhAyQpt+EqK
-         EWaKcKjSaJN0Rh3N85uM4ITJgEbk5/KFobgmF2+2jUR+4QyMpPWOnzU/srkc014QCPsA
-         WiGwH4FqgAaIcr+3/2d8f/qQr201VDmgqfNT719P6YI21YcAju9T2m/vMlmIqMK5wpg+
-         +2fmmL96c/smZqLrlbqM3/jRFeUbylI9uRwumUNmXmoPz3qbnbji0+hp4baUjHoro7oO
-         8aXQPjB2bP9O3zh/Xa462obUosKwNJLVKDGM3M5x3oBcQd8exkAm7pl6CBCQgXSdw+Vz
-         3SCw==
+        d=gmail.com; s=20230601; t=1729778848; x=1730383648; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=sEEDqMqqjEZKSM3PfZpBh/iFkV08yxJXG3k7mlHRyiw=;
+        b=AfC92SwsGub8qiC4sQpuBL2G2rce3SScZRhDjla5uVXQS3t6ZrK+B5xOZXGu9x181h
+         vEYGKRqn6yx+HkInfs7kWIVjFNSl03vkUfTyypAcT5ZaVbEIKI4ZAAAdWSQXYJmFdNxq
+         ysfYmV+klbt5LOk5omCF3haPkic4BqCGRSJ8XQLMqZB35EL41KtAZMLC1s8mOPO32dAr
+         /Qw6doySLtDdgrxnWizn4qBDqf498qWJgBIpP4jFmubKqEyDL/Nn12O1FsGlSFqvih1P
+         gQjB8V16gY9Msok//bIJpB80marAtMONVXDMTbY58uJdcm5YiGGOJZ1tS6Ofxi1d8nhW
+         5lYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729777320; x=1730382120;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qQMvkOotP9+r+lR2F66uKJI7YMzadcWWjq6HtM7X2i0=;
-        b=Li1Rre323im7A7Lg8nwo16KcG2h94NJo0tQNa3629HWMJCfm9lYp/xcFec5nnIqiCT
-         C8+JNFCcSLlrC79tzn4VNB6xVrC+GxBpRylMZGmWrQpKwLKy6Bcd5SrBzkMXMhvbwXs9
-         qlgSRh+XuXl33/TU6BQfe6mbsJAeQFWIkzuy+s/BPQiNVQy3lzMAiomfyzQVZRbU2gDX
-         phRKBRp3LQbTHDJFGzABJfAlJduehZFQolmqKwixGjeJEnlBV13JJeiLFzjQ5c/F/o0j
-         Ye+axJjFqB3BgGexeR6wRE6pRJgaco0W9PwD8GDxEmhU8PWXfKFMQlmaRBuQ7tui8AuL
-         bVYg==
-X-Gm-Message-State: AOJu0YyJL1omZ4/tEH2f3Um/HpJqK8RBHxio/iDpy+XijrF8bJM79uZX
-	TcMxXpGDXhOpMjzWNqTulIkqO9jWY0OMbHpoyc90QTjHrU0u1y3AD17ZZA==
-X-Google-Smtp-Source: AGHT+IEXRVk9VEx3M+u73oUcon97/AVHBKqdT7EZdFIoOFbN1b3Bvj8KSr+4Plxnr+8j4yo5VZTsDw==
-X-Received: by 2002:a05:600c:1c11:b0:42c:a574:6360 with SMTP id 5b1f17b1804b1-431841aff4emr54491555e9.29.1729777320300;
-        Thu, 24 Oct 2024 06:42:00 -0700 (PDT)
-Received: from [192.168.178.41] (ip-088-152-186-249.um26.pools.vodafone-ip.de. [88.152.186.249])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43186bd6856sm47023215e9.6.2024.10.24.06.41.59
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Oct 2024 06:41:59 -0700 (PDT)
-Message-ID: <00b87e99-7b7d-4cdb-b800-000860eb0263@googlemail.com>
-Date: Thu, 24 Oct 2024 15:41:58 +0200
+        d=1e100.net; s=20230601; t=1729778848; x=1730383648;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sEEDqMqqjEZKSM3PfZpBh/iFkV08yxJXG3k7mlHRyiw=;
+        b=H1vadxnHZ9U3iLxwUGdntlalb3amRMRgSOCa0mTCiPD9Bkn9pgQugC9BrGX78h0eOY
+         sGcttJI+hWDvdTk2yZj2wDPVbAsW85wd7yEeJP0M9nGZ6EKs6nHNpqpyxkJjj2cGhVZ2
+         /m2q6Z+VGMMd7XrTmPmQquULCf0YBymms/fQQCYf/a5x9NRFNfNDiKOamfeMnuT8Apof
+         QJ3JQd40S+6QF3OuK4gosd32/CapncQzb2cNUDM0is+YbiblFUPMn4B4yEhEkDXQ5x4Z
+         V4H5nnELJJ7m9PtTRql5kEBu/waZ0vCpJhT5+gNOZE721RCGRDzhxw8wgNHu8Svc5yMC
+         7FRw==
+X-Gm-Message-State: AOJu0Yy5S0QAkaSgLwmUwFZDQ3Fo69h3OH9YXH5NaF7UPn/Os4UOsXqg
+	Z79XOXbhe39ecB0zAKLeUfyab8KsvRf8jmoDybIhUbC3dK/yyIs3/RyP0OONgM66CCgiaEfyALJ
+	5ChvqmHJ6or7hlJ6H/ZgJhQ7GDQc=
+X-Google-Smtp-Source: AGHT+IGZl/tLhoYVh5Q12aOPjWIs0S1jLXVp+ohQB2ri/cDLQmIkjonaGueyD+LGz/NpOZtJLj1f7q2pYo2Pls6Ksb4=
+X-Received: by 2002:a05:6512:3f17:b0:538:9e24:a3c9 with SMTP id
+ 2adb3069b0e04-53b1a302932mr3272097e87.20.1729778847406; Thu, 24 Oct 2024
+ 07:07:27 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US, de-DE
-To: bitbake-devel@lists.openembedded.org
-From: Matthias Schoepfer <matthias.schoepfer@googlemail.com>
-Subject: Stupid Noob question
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <00b87e99-7b7d-4cdb-b800-000860eb0263@googlemail.com>
+In-Reply-To: <00b87e99-7b7d-4cdb-b800-000860eb0263@googlemail.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Thu, 24 Oct 2024 16:07:14 +0200
+Message-ID: <CANNYZj-nrsNXbhLQ+m67ck6Ss+Twcxx=Xh8JfKFc=UO3FZ8OJg@mail.gmail.com>
+Subject: Re: [bitbake-devel] Stupid Noob question
+To: matthias.schoepfer@googlemail.com
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 24 Oct 2024 13:42:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16723
+ <bitbake-devel@lists.openembedded.org>; Thu, 24 Oct 2024 14:07:37 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16724
 
-Hi!
+On Thu, 24 Oct 2024 at 15:42, Matthias Schoepfer via
+lists.openembedded.org
+<matthias.schoepfer=googlemail.com@lists.openembedded.org> wrote:
+> I am stepping totally out of my comfort zone and had the idea to write a
+> custom fetcher (shall pull docker images O.o). From reading through some
+> of the code of fetch2, I would guess there is no way to register a new
+> fetcher from outside of the bitbake code itself. Please correct me, if I
+> am wrong.
 
-I am stepping totally out of my comfort zone and had the idea to write a 
-custom fetcher (shall pull docker images O.o). From reading through some 
-of the code of fetch2, I would guess there is no way to register a new 
-fetcher from outside of the bitbake code itself. Please correct me, if I 
-am wrong.
+Please remember to write a good subject for your message that tells
+what it's about.
 
-Thanks and Regards,
+Fetcher set is non-extensible by design, as allowing easy additions
+would only result in people writing all sorts of crazy layer-specific
+stuff that works around restrictions in existing implementations that
+are there for good reasons.
 
-     Matthias
+You're still welcome to add your own fetcher as a way to learn and
+experiment, but if it's merely pulling things over http with a
+specific custom URL schema, then that might be implemented in a class
+instead, reusing existing http fetcher.
 
+Alex
 
