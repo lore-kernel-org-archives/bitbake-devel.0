@@ -1,81 +1,78 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <matthias.schoepfer@googlemail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2845FCFA444
-	for <webhook@archiver.kernel.org>; Wed, 23 Oct 2024 15:40:26 +0000 (UTC)
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
- by mx.groups.io with SMTP id smtpd.web10.581.1729698021597593930
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE95ECE8E77
+	for <webhook@archiver.kernel.org>; Thu, 24 Oct 2024 13:42:07 +0000 (UTC)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web11.14832.1729777322194671793
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 23 Oct 2024 08:40:21 -0700
+ Thu, 24 Oct 2024 06:42:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=bvUFYxiW;
- spf=softfail (domain: sakoman.com, ip: 209.85.214.177, mailfrom: steve@sakoman.com)
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-20cf3e36a76so68742015ad.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 23 Oct 2024 08:40:21 -0700 (PDT)
+ dkim=pass header.i=@googlemail.com header.s=20230601 header.b=HepF7zx1;
+ spf=pass (domain: googlemail.com, ip: 209.85.128.49, mailfrom: matthias.schoepfer@googlemail.com)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-431481433bdso9518025e9.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 24 Oct 2024 06:42:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1729698021; x=1730302821; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fuxn0hvoLRzbPL9RH7JoCbZN79MsU7NlDRJkIS5nHRE=;
-        b=bvUFYxiWrT3bX7Mz9QcGD0MDxu+3Z0dyYTTCCJ++lWcDS0ZICSTj0NdGtXjOX6oJJJ
-         NceoxoUU7CqGbtUzwDI9lSyXtwrkpkqE15TEzAALsVcj2fZmC8/UjxREp55/w/acaM2t
-         G6v8mYYdU2wes34e1ED+QRCDT98uO3Nh+E/5nnIr/c06wHk4kmbMv9ooKlFhG31q81iS
-         roZysC/UpGGwbo87mC22/i4liTzfMdk6LLf07pHJAVIUndJZUTYz1PX1gwSeklUqq7Ub
-         eFbDINYeRRMXspa++dcnx9FxphosMF7BQ62QUGYUzsp8vNHdFbjtCE9bM72nICWG4J/A
-         9zTA==
+        d=googlemail.com; s=20230601; t=1729777320; x=1730382120; darn=lists.openembedded.org;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qQMvkOotP9+r+lR2F66uKJI7YMzadcWWjq6HtM7X2i0=;
+        b=HepF7zx1fhGo163PFDmLAAOwP34Y51PnJBZKJ7ND+r9OCBp7pzJX34IWhAyQpt+EqK
+         EWaKcKjSaJN0Rh3N85uM4ITJgEbk5/KFobgmF2+2jUR+4QyMpPWOnzU/srkc014QCPsA
+         WiGwH4FqgAaIcr+3/2d8f/qQr201VDmgqfNT719P6YI21YcAju9T2m/vMlmIqMK5wpg+
+         +2fmmL96c/smZqLrlbqM3/jRFeUbylI9uRwumUNmXmoPz3qbnbji0+hp4baUjHoro7oO
+         8aXQPjB2bP9O3zh/Xa462obUosKwNJLVKDGM3M5x3oBcQd8exkAm7pl6CBCQgXSdw+Vz
+         3SCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729698021; x=1730302821;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fuxn0hvoLRzbPL9RH7JoCbZN79MsU7NlDRJkIS5nHRE=;
-        b=cMSb3UBs8GANKcYieedCk/cu+5m+60fZ5ldYeIztNRzhRTCM4MPtqW9frIquBcIK0I
-         R7pCA3xHrkJ9Wf16zyW50YyF9mfHuWIUZzZSF2QBltbRaKtsB0+DmWb9p3xT2lq6MzlJ
-         fPnr5yGhEW2jAyCxyxSrdz7bmu6KQJHPHHImepgp8LCPL4RZLdP3Fplnzshq3N4+k5Xb
-         yHgWIGLszdQgGAZpye1m5qVHkc+w6wIYyMlMRYg5zh2RHbdj5yQnSIJR7g+i+pLDgqNb
-         G7hUY5mZVCPLAp1rd+ENqignEJHk5mKZkhFnuod5klHJQoSq1mj+uujVMsWhCiqjMaQM
-         DEew==
-X-Gm-Message-State: AOJu0YzJ2LVV/4gOQQNrgohcyDxURRl7mPcTtfc44gDFieR3ZoWMZNVB
-	rNuC9eoCEAcfpa6PCkeC+FeaDZ1pQSPxvF2HzTBvIyiW5OtyoIb7rCeDrY3JDhbCh1ssuk23sGV
-	z
-X-Google-Smtp-Source: AGHT+IEtEwxOYf1f9GNshY+Ykktfl8T2tntySfQ9nNxsRp0/Pjq8p1VraKGL4cuWyhLYZBIBV2C1zw==
-X-Received: by 2002:a17:902:f686:b0:20b:8ef3:67a with SMTP id d9443c01a7336-20fa9deb678mr37873385ad.7.1729698020692;
-        Wed, 23 Oct 2024 08:40:20 -0700 (PDT)
-Received: from hexa.. ([2602:feb4:3b:2100:8a3a:42f2:dbca:b2f4])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20e7f0f32f0sm59161655ad.249.2024.10.23.08.40.20
+        d=1e100.net; s=20230601; t=1729777320; x=1730382120;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qQMvkOotP9+r+lR2F66uKJI7YMzadcWWjq6HtM7X2i0=;
+        b=Li1Rre323im7A7Lg8nwo16KcG2h94NJo0tQNa3629HWMJCfm9lYp/xcFec5nnIqiCT
+         C8+JNFCcSLlrC79tzn4VNB6xVrC+GxBpRylMZGmWrQpKwLKy6Bcd5SrBzkMXMhvbwXs9
+         qlgSRh+XuXl33/TU6BQfe6mbsJAeQFWIkzuy+s/BPQiNVQy3lzMAiomfyzQVZRbU2gDX
+         phRKBRp3LQbTHDJFGzABJfAlJduehZFQolmqKwixGjeJEnlBV13JJeiLFzjQ5c/F/o0j
+         Ye+axJjFqB3BgGexeR6wRE6pRJgaco0W9PwD8GDxEmhU8PWXfKFMQlmaRBuQ7tui8AuL
+         bVYg==
+X-Gm-Message-State: AOJu0YyJL1omZ4/tEH2f3Um/HpJqK8RBHxio/iDpy+XijrF8bJM79uZX
+	TcMxXpGDXhOpMjzWNqTulIkqO9jWY0OMbHpoyc90QTjHrU0u1y3AD17ZZA==
+X-Google-Smtp-Source: AGHT+IEXRVk9VEx3M+u73oUcon97/AVHBKqdT7EZdFIoOFbN1b3Bvj8KSr+4Plxnr+8j4yo5VZTsDw==
+X-Received: by 2002:a05:600c:1c11:b0:42c:a574:6360 with SMTP id 5b1f17b1804b1-431841aff4emr54491555e9.29.1729777320300;
+        Thu, 24 Oct 2024 06:42:00 -0700 (PDT)
+Received: from [192.168.178.41] (ip-088-152-186-249.um26.pools.vodafone-ip.de. [88.152.186.249])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43186bd6856sm47023215e9.6.2024.10.24.06.41.59
         for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2024 08:40:20 -0700 (PDT)
-From: Steve Sakoman <steve@sakoman.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][scarthgap][2.8][PATCH 0/1] Pull request (cover letter only)
-Date: Wed, 23 Oct 2024 08:40:16 -0700
-Message-Id: <cover.1729697951.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.34.1
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Oct 2024 06:41:59 -0700 (PDT)
+Message-ID: <00b87e99-7b7d-4cdb-b800-000860eb0263@googlemail.com>
+Date: Thu, 24 Oct 2024 15:41:58 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US, de-DE
+To: bitbake-devel@lists.openembedded.org
+From: Matthias Schoepfer <matthias.schoepfer@googlemail.com>
+Subject: Stupid Noob question
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 23 Oct 2024 15:40:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16722
+ <bitbake-devel@lists.openembedded.org>; Thu, 24 Oct 2024 13:42:07 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16723
 
-The following changes since commit d251668d9a7a8dd25bd8767efb30d6d9ff8b1ad3:
+Hi!
 
-  data_smart: Improve performance for VariableHistory (2024-08-08 09:20:02 -0700)
+I am stepping totally out of my comfort zone and had the idea to write a 
+custom fetcher (shall pull docker images O.o). From reading through some 
+of the code of fetch2, I would guess there is no way to register a new 
+fetcher from outside of the bitbake code itself. Please correct me, if I 
+am wrong.
 
-are available in the Git repository at:
+Thanks and Regards,
 
-  https://git.openembedded.org/bitbake-contrib stable/2.8-next
-  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.8-next
-
-Joshua Watt (1):
-  asyncrpc: Use client timeout for websocket open timeout
-
- lib/bb/asyncrpc/client.py | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
--- 
-2.34.1
+     Matthias
 
 
