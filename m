@@ -1,92 +1,94 @@
-Return-Path: <liezhi.yang@windriver.com>
+Return-Path: <martin.jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C585ED10BF2
-	for <webhook@archiver.kernel.org>; Sat, 26 Oct 2024 09:40:14 +0000 (UTC)
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
- by mx.groups.io with SMTP id smtpd.web10.7514.1729935596443147927
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9DAD13584
+	for <webhook@archiver.kernel.org>; Sun, 27 Oct 2024 20:20:45 +0000 (UTC)
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web11.36969.1730060437460248251
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 26 Oct 2024 02:39:56 -0700
+ Sun, 27 Oct 2024 13:20:37 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=0029577ea3=liezhi.yang@windriver.com)
-Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49Q9duLM015201;
-	Sat, 26 Oct 2024 02:39:56 -0700
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 42guq3r3ky-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Sat, 26 Oct 2024 02:39:55 -0700 (PDT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Sat, 26 Oct 2024 02:39:55 -0700
-Received: from ala-lpggp7.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.39 via Frontend Transport; Sat, 26 Oct 2024 02:39:55 -0700
-From: <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH 0/5] Fix do_clean for git and gitsm
-Date: Sat, 26 Oct 2024 02:39:50 -0700
-Message-ID: <cover.1729933869.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=khfVaGRE;
+ spf=pass (domain: gmail.com, ip: 209.85.221.52, mailfrom: martin.jansa@gmail.com)
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-37d6a2aa748so2397637f8f.1
+        for <bitbake-devel@lists.openembedded.org>; Sun, 27 Oct 2024 13:20:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730060436; x=1730665236; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+mhRyUnYiFras+YF5AHMDacLcrjznH8Qc+IIuo5wzSM=;
+        b=khfVaGREV0GcM5ZA0cAF3uayd+vzmwvhlw8VWJqRhF+RwQmRbFhSe2loulx1kfP2Uf
+         QpC01eoQaWcFXYVUaFrx2AtzvbsZya0rFPRvEh3Y0hS+8xYYxtCFA9rXNUqHvxTeuXfv
+         rKuLdT4QWqk1JKq5s6NXwF12z8B/vn7tw4dk1J9lepwCnZ/7Hxas3tVZ19VB7vYC8qk2
+         Uxt1a5g5V7StN+cO1iVSxvZV+Lwoss9M3jxvv/+wwXNCrLWCfndaHBEj4Zxh31v2GDMm
+         bqXdIEoDCbAbD4SGhA7nFzD3VPYaBYzWBvgnAUXfyh1JhxaMTNTYeikKhkriul9+9n/6
+         9LOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730060436; x=1730665236;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+mhRyUnYiFras+YF5AHMDacLcrjznH8Qc+IIuo5wzSM=;
+        b=nHUMj/uBCyJykCX1SxCE7tC4x5w7//Uz0e+A9cEhI8J6uVh3BPcv5U+9vkVRVgKnHJ
+         KyYEtSqXaviQxAbIAspHQEcSyUSzwDUFboIfwLbICFZKjWn35g/qAqtzT/EJvCzgHBug
+         NK6p6v40BTa2hsD7Tsb39hMMdezYoGNwbWf22HZkOMrGH3NzBFT07YsBUAv2tdWdKoOX
+         RUT+jBqtxVz8O5rf9i/Ugf4Lq0LbhJAclUWfLhcFbbsn/NEi3qHLvlWJqTT4G+AQMdvL
+         chNfR9JFLaZ6T4DdvIjOecaBPEoBdd0Q9j5Bx2NhXbS2BPwSdp/Bp1VYrJjQf0e6zpDw
+         duEA==
+X-Gm-Message-State: AOJu0Yw/7sIg1Ds3yh5TzESvX/qL3WUedP7r3vNfPGMIRrMqsHrcF+6A
+	faJctIyOfM9IA9giFyZT/MlEdxonc9sBNo0til09FDxQugbXoiwGTz+cMA==
+X-Google-Smtp-Source: AGHT+IFoXINnx/rXJGsEMNkTdcLVilvH7rggvtPd19hxu7OylFg9NEgNOYeNS4ykkcP5bvG4XoaPGA==
+X-Received: by 2002:a5d:6083:0:b0:37d:48ee:d6fc with SMTP id ffacd0b85a97d-380610f43f7mr4299711f8f.7.1730060435508;
+        Sun, 27 Oct 2024 13:20:35 -0700 (PDT)
+Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4319360eb09sm85307545e9.48.2024.10.27.13.20.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Oct 2024 13:20:35 -0700 (PDT)
+From: Martin Jansa <martin.jansa@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: steve@sakoman.com,
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [2.0][PATCH] fetch2/git: Use quote from shlex, not pipes
+Date: Sun, 27 Oct 2024 21:20:30 +0100
+Message-ID: <20241027202030.3875780-1-martin.jansa@gmail.com>
+X-Mailer: git-send-email 2.47.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: KQcbOMY745pp3DFlQfbUiR-nMR1BzhcB
-X-Proofpoint-GUID: KQcbOMY745pp3DFlQfbUiR-nMR1BzhcB
-X-Authority-Analysis: v=2.4 cv=T9jeTOKQ c=1 sm=1 tr=0 ts=671cb8eb cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=DAUX931o1VcA:10 a=t7CeM3EgAAAA:8 a=NEAV23lmAAAA:8 a=FCwessrq5VRITtibp8cA:9 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-25_14,2024-10-25_02,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- mlxlogscore=808 priorityscore=1501 impostorscore=0 malwarescore=0
- spamscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 clxscore=1011
- bulkscore=0 classifier=spam authscore=0 adjust=0 reason=mlx scancount=1
- engine=8.21.0-2409260000 definitions=main-2410260080
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 26 Oct 2024 09:40:14 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16726
+ <bitbake-devel@lists.openembedded.org>; Sun, 27 Oct 2024 20:20:45 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16732
 
-From: Robert Yang <liezhi.yang@windriver.com>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-* Test info
-$ bitbake world --runall=fetch && bitbake world --runall=cleanall
-$ ls downloads/
-git2  uninative
-$ ls downloads/git2/
-[No output]
+The pipes module is removed in python 3.13. It was already using the
+quote function from shlex so use that directly instead.
 
-$ bitbake-selftest
-Works well
+The module already imports shlex too so it is an easy substitution.
 
-Now all known do_clean issues have been fixed.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/fetch2/git.py | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-// Robert
-
-The following changes since commit 95e61f3dacacb3a001d9f0e2db4c4a2960d96640:
-
-  contrib/hashserv/Dockerfile: Add libgcc to image for runtime dependency (2024-10-25 15:40:52 +0100)
-
-are available in the Git repository at:
-
-  https://github.com/robertlinux/bitbake rbt/clean
-  https://github.com/robertlinux/bitbake/tree/rbt/clean
-
-Robert Yang (5):
-  gitsm: Add call_process_submodules() to remove duplicated code
-  gitsm: Remove downloads/tmpdir when failed
-  gitsm: Add clean function
-  git: Clean shallow mirror tarball
-  git: Clean broken symlink
-
- lib/bb/fetch2/git.py   |  7 +++++-
- lib/bb/fetch2/gitsm.py | 57 +++++++++++++++++++++---------------------
- 2 files changed, 35 insertions(+), 29 deletions(-)
-
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 9ecc855af..dc86aabfe 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -861,9 +861,8 @@ class Git(FetchMethod):
+             commits = None
+         else:
+             if not os.path.exists(rev_file) or not os.path.getsize(rev_file):
+-                from pipes import quote
+                 commits = bb.fetch2.runfetchcmd(
+-                        "git rev-list %s -- | wc -l" % quote(rev),
++                        "git rev-list %s -- | wc -l" % shlex.quote(rev),
+                         d, quiet=True).strip().lstrip('0')
+                 if commits:
+                     open(rev_file, "w").write("%d\n" % int(commits))
 -- 
-2.25.1
+2.47.0
 
 
