@@ -1,94 +1,44 @@
-Return-Path: <martin.jansa@gmail.com>
+Return-Path: <amikan@ilbers.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9DAD13584
-	for <webhook@archiver.kernel.org>; Sun, 27 Oct 2024 20:20:45 +0000 (UTC)
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.web11.36969.1730060437460248251
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 192FAD13588
+	for <webhook@archiver.kernel.org>; Mon, 28 Oct 2024 07:57:39 +0000 (UTC)
+Received: from shymkent.ilbers.de (shymkent.ilbers.de [85.214.156.166])
+ by mx.groups.io with SMTP id smtpd.web11.46337.1730102255514236717
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 27 Oct 2024 13:20:37 -0700
+ Mon, 28 Oct 2024 00:57:36 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=khfVaGRE;
- spf=pass (domain: gmail.com, ip: 209.85.221.52, mailfrom: martin.jansa@gmail.com)
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-37d6a2aa748so2397637f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Sun, 27 Oct 2024 13:20:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730060436; x=1730665236; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+mhRyUnYiFras+YF5AHMDacLcrjznH8Qc+IIuo5wzSM=;
-        b=khfVaGREV0GcM5ZA0cAF3uayd+vzmwvhlw8VWJqRhF+RwQmRbFhSe2loulx1kfP2Uf
-         QpC01eoQaWcFXYVUaFrx2AtzvbsZya0rFPRvEh3Y0hS+8xYYxtCFA9rXNUqHvxTeuXfv
-         rKuLdT4QWqk1JKq5s6NXwF12z8B/vn7tw4dk1J9lepwCnZ/7Hxas3tVZ19VB7vYC8qk2
-         Uxt1a5g5V7StN+cO1iVSxvZV+Lwoss9M3jxvv/+wwXNCrLWCfndaHBEj4Zxh31v2GDMm
-         bqXdIEoDCbAbD4SGhA7nFzD3VPYaBYzWBvgnAUXfyh1JhxaMTNTYeikKhkriul9+9n/6
-         9LOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730060436; x=1730665236;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+mhRyUnYiFras+YF5AHMDacLcrjznH8Qc+IIuo5wzSM=;
-        b=nHUMj/uBCyJykCX1SxCE7tC4x5w7//Uz0e+A9cEhI8J6uVh3BPcv5U+9vkVRVgKnHJ
-         KyYEtSqXaviQxAbIAspHQEcSyUSzwDUFboIfwLbICFZKjWn35g/qAqtzT/EJvCzgHBug
-         NK6p6v40BTa2hsD7Tsb39hMMdezYoGNwbWf22HZkOMrGH3NzBFT07YsBUAv2tdWdKoOX
-         RUT+jBqtxVz8O5rf9i/Ugf4Lq0LbhJAclUWfLhcFbbsn/NEi3qHLvlWJqTT4G+AQMdvL
-         chNfR9JFLaZ6T4DdvIjOecaBPEoBdd0Q9j5Bx2NhXbS2BPwSdp/Bp1VYrJjQf0e6zpDw
-         duEA==
-X-Gm-Message-State: AOJu0Yw/7sIg1Ds3yh5TzESvX/qL3WUedP7r3vNfPGMIRrMqsHrcF+6A
-	faJctIyOfM9IA9giFyZT/MlEdxonc9sBNo0til09FDxQugbXoiwGTz+cMA==
-X-Google-Smtp-Source: AGHT+IFoXINnx/rXJGsEMNkTdcLVilvH7rggvtPd19hxu7OylFg9NEgNOYeNS4ykkcP5bvG4XoaPGA==
-X-Received: by 2002:a5d:6083:0:b0:37d:48ee:d6fc with SMTP id ffacd0b85a97d-380610f43f7mr4299711f8f.7.1730060435508;
-        Sun, 27 Oct 2024 13:20:35 -0700 (PDT)
-Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4319360eb09sm85307545e9.48.2024.10.27.13.20.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Oct 2024 13:20:35 -0700 (PDT)
-From: Martin Jansa <martin.jansa@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: steve@sakoman.com,
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [2.0][PATCH] fetch2/git: Use quote from shlex, not pipes
-Date: Sun, 27 Oct 2024 21:20:30 +0100
-Message-ID: <20241027202030.3875780-1-martin.jansa@gmail.com>
-X-Mailer: git-send-email 2.47.0
+ dkim=none (message not signed); spf=pass (domain: ilbers.de, ip: 85.214.156.166, mailfrom: amikan@ilbers.de)
+Received: from [127.0.0.1] (host-80-81-17-52.static.customer.m-online.net [80.81.17.52])
+	(authenticated bits=0)
+	by shymkent.ilbers.de (8.15.2/8.15.2/Debian-8+deb9u1) with ESMTPSA id 49S7vVHB005119
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Oct 2024 08:57:32 +0100
+Message-ID: <e189adfe-65b7-4d04-a2a2-0aed0ddeedae@ilbers.de>
+Date: Mon, 28 Oct 2024 09:57:31 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US, ru-RU
+To: bitbake-devel@lists.openembedded.org
+Cc: Baurzhan Ismagulov <ibr@ilbers.de>
+From: Anton Mikanovich <amikan@ilbers.de>
+Subject: Why bb.warning output goes to stdout?
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 27 Oct 2024 20:20:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16732
+ <bitbake-devel@lists.openembedded.org>; Mon, 28 Oct 2024 07:57:39 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16733
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Hello all,
 
-The pipes module is removed in python 3.13. It was already using the
-quote function from shlex so use that directly instead.
-
-The module already imports shlex too so it is an easy substitution.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/fetch2/git.py | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 9ecc855af..dc86aabfe 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -861,9 +861,8 @@ class Git(FetchMethod):
-             commits = None
-         else:
-             if not os.path.exists(rev_file) or not os.path.getsize(rev_file):
--                from pipes import quote
-                 commits = bb.fetch2.runfetchcmd(
--                        "git rev-list %s -- | wc -l" % quote(rev),
-+                        "git rev-list %s -- | wc -l" % shlex.quote(rev),
-                         d, quiet=True).strip().lstrip('0')
-                 if commits:
-                     open(rev_file, "w").write("%d\n" % int(commits))
--- 
-2.47.0
+I've just noticed that bb.warning() API (and also bbwarn FIFO API) output
+messages to stdout, while warnings are usually goes to stderr.
+Having warnings in stderr can be useful if using pipes to inform the user
+about any issues without hiding them. Python logger is also output warnings
+to stderr.
+Is there any reason of bitbake to output warnings to stdout?
 
 
