@@ -1,90 +1,82 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAF3D33996
-	for <webhook@archiver.kernel.org>; Mon, 28 Oct 2024 15:16:41 +0000 (UTC)
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
- by mx.groups.io with SMTP id smtpd.web11.54226.1730128591681009698
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3946D3A699
+	for <webhook@archiver.kernel.org>; Tue, 29 Oct 2024 20:14:54 +0000 (UTC)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web10.3917.1730232889640882449
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 28 Oct 2024 08:16:31 -0700
+ Tue, 29 Oct 2024 13:14:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=sTuVlftj;
- spf=softfail (domain: sakoman.com, ip: 209.85.219.181, mailfrom: steve@sakoman.com)
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e290d48d3f7so4494743276.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 28 Oct 2024 08:16:31 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=hjWIvPMa;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.48, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-37d4ac91d97so4861724f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Tue, 29 Oct 2024 13:14:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1730128590; x=1730733390; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EpttrnDELEXikNlANx2Q02EtfcugjwPi4+Ac2cTUDe4=;
-        b=sTuVlftjnnoriscc42NYhFWO5veRXQn/Yk2BO5hHhmr9tfrnmOMwZayJrKpKfKewBC
-         ez4Q7zmqYINxv7nwfAgnG+cVa9tj+l0IkV3L29pNaHeXS6t0tMstkRxNA79UGnCxxqQQ
-         KrsFqP7rGgWjzM58JIQ2js1aj3JrhoDiFI2OE+l+YMI0Ksaflk9j29beBtyfPhfFd666
-         iJRXmRDSqJ2ZTVIE2QIZ87b0EXOoSTyhuyxUJMsw11M3fZ3xkTqY4zxAWNkfgMygtaYC
-         EzW7h+IGWZNfToicIib3zU/27dHTYIhRxSWE4RWWSATv1LzLSZLKVLKMKjzGMkDDfYXC
-         uN8A==
+        d=linuxfoundation.org; s=google; t=1730232887; x=1730837687; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eEvVnUUdC0VFplp6NZaJClaaWGZcTf9HnEJMof2m/u4=;
+        b=hjWIvPMaoiVznMhOJQKSYfiTwvgwk4N2EG7O5Med6ESvP7A6B9PXHvStN51+WDpK1t
+         gTa8N3LmConI39G6OLj18xyEZDx+YBomliB6d2wk/hoXw98SiSY7cRAtSAn1UG5sTGIj
+         ZC7xsMrRkZq1QgXlDfOfQagn+sgBg/MQVmSI4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730128590; x=1730733390;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EpttrnDELEXikNlANx2Q02EtfcugjwPi4+Ac2cTUDe4=;
-        b=MNgJuZ8PninussNNxK++RDQLf4SyDQ1QjnUag/w+KAsT4yGsYOqFZJa3ZfXtb/6LRT
-         P60UFjhJ9j83RS1JlzqsvPjI7TX+KHH7/52VRs2YL99e37Si9kmT3C3yKTO6KiuL5SOv
-         FGbUZT2OLXs1TENNXHLi2l5ze2w/dgEasFvqQ3iGBGRuS2GBhlL9ncVxpW/+EktesNTq
-         eMdyqFMw0nDNBe7N+x4dTDkqjcDVfl+o/Qv2SEY84Sc3v6+fdeVfibwSOuSXs/GWs1nl
-         EXviP9FCTF232BEmRePKjv6S/B54006hxKBD2OJUn6bEPkHJECcoro3VF20wR3AZTZAo
-         VFzg==
-X-Forwarded-Encrypted: i=1; AJvYcCWbU4xPzCzGnNbqwDL/JLI+XMA79IfOYWcxRFN16jFNb/Cq1dxRmKpkDOJLPmXv0Muz77eVaJ66HoALAH4b@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yxa7uSWoRHHgjFJ4nTmon2+9AlqSazNyhOvZQrbGirjcmTa1at9
-	s2KuViAK+e3MJYkoAIBfK2BqnLnCWUeBshK5Nrjtlk8fuMxykW85VAB+rFXsrc2RuUcN3Q1eIo3
-	ltF+f8IlmpYaEo79jMdaM3rWugITQtVqrTy1aBU/UxmsrLOpTfK8=
-X-Google-Smtp-Source: AGHT+IFsJqTdGJPcDJOmMd7Zf82BQrFSmfX8B/aeI87T4d71NEp1ssdwd6pYD0U3lCn7acmH9XbhG9/8pFf80Cd8ojo=
-X-Received: by 2002:a05:6902:2b0b:b0:e2e:35db:9b94 with SMTP id
- 3f1490d57ef6-e3087bfd514mr7694763276.39.1730128590590; Mon, 28 Oct 2024
- 08:16:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1730232887; x=1730837687;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eEvVnUUdC0VFplp6NZaJClaaWGZcTf9HnEJMof2m/u4=;
+        b=UcYDm3VCPNtRHmWjc5nFFRF6+xaTiisvTiPgKAcRy930OrHSZntF0YkP+a5Ld0GA04
+         Xe4ZhDQkx+aKqvJJcnfrdFvQ0OX3VBbpTSxBatIvtVuT55upvi1hBFCXrVeRUfN10b8r
+         0V90ggY0mcqjCKueH324ACOdp2sqNKnnum3f3M/ALsdvFd/aFDmBVqKoFCxGX9sr/ywn
+         Vb8ji/8n8CblIaaAnJ5S98kLaOjP2L58xOVbJDUIiYTbD86e6WMzzdvYuBZIrUENpDp/
+         tqMX1NAML7DMF1DhFDsJa8vqaq8rwJTg1H07Kbe/F3X/F/kyWT7eOD4Teu6deNQZAP0x
+         xigg==
+X-Gm-Message-State: AOJu0YzD1r2QHMcNfKmKNutT1y5mdulqLREZazA7YYfoeXEr40ARWKoR
+	EtdhE9T47ZQPK6qfi2/3zsCruLE0j3hRxWK/eZEmxKc8CshDPhZlTp0CbxJkASzqtJJPWyWGEME
+	AMqc=
+X-Google-Smtp-Source: AGHT+IEs/lXUWaHsf1erUdMC6IOBjc7GYXld54cr169r8lGrZgp0kw7Hlaj6VIkGSf6g4QcOpq/YJg==
+X-Received: by 2002:adf:fb06:0:b0:37d:4eeb:7366 with SMTP id ffacd0b85a97d-3806114195cmr12190876f8f.4.1730232887247;
+        Tue, 29 Oct 2024 13:14:47 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:bbb2:5c44:fa05:1e5f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431935a4acdsm154891985e9.26.2024.10.29.13.14.45
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2024 13:14:46 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] tests/fetch: Use our own mirror of mobile-broadband-provider to decouple from gnome gitlab
+Date: Tue, 29 Oct 2024 20:14:44 +0000
+Message-ID: <20241029201444.281473-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.2
 MIME-Version: 1.0
-References: <cover.1729933869.git.liezhi.yang@windriver.com>
- <c4e94db7e266f90dde06cd7d0e73dd3b035e121f.1729933869.git.liezhi.yang@windriver.com>
- <d122bfdf0fc1684d7aea91f3020e2037cb95356a.camel@linuxfoundation.org>
-In-Reply-To: <d122bfdf0fc1684d7aea91f3020e2037cb95356a.camel@linuxfoundation.org>
-From: Steve Sakoman <steve@sakoman.com>
-Date: Mon, 28 Oct 2024 08:16:19 -0700
-Message-ID: <CAOSpxdYyvjS7T8pTPgwYd+iH4GhXkB_MiqFPaaeG3ybF1ujz1A@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 2/5] gitsm: Remove downloads/tmpdir when failed
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: liezhi.yang@windriver.com, bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 28 Oct 2024 15:16:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16738
+ <bitbake-devel@lists.openembedded.org>; Tue, 29 Oct 2024 20:14:54 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16739
 
-On Mon, Oct 28, 2024 at 7:06=E2=80=AFAM Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
->
-> On Sat, 2024-10-26 at 02:39 -0700, Robert Yang via
-> lists.openembedded.org wrote:
-> > From: Robert Yang <liezhi.yang@windriver.com>
-> >
-> > The tmpdir such as downloads/tmplp3cnemv won't be removed without
-> > this fix.
-> >
-> > Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
->
-> Thanks, I've been meaning to track down the cause of those!
->
-> Steve: We might want to consider this to help the autobuilder.
+GNOME gitlab has occasional downtime which impacts bitbake-selftest
+and causes autobuilder failures. Switch to our own mirror for test
+purposes to avoid those issues.
 
-This won't apply unless I also take gitsm: Add
-call_process_submodules() to remove duplicated code
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/tests/fetch.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I've added both to all three stable branches and will test when the
-autobuilder is usable again.
-
-Steve
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index d9883e12a8..363f3a2185 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -1432,7 +1432,7 @@ class FetchLatestVersionTest(FetcherTest):
+         ("u-boot-mkimage", "git://source.denx.de/u-boot/u-boot.git;branch=master;protocol=https", "62c175fbb8a0f9a926c88294ea9f7e88eb898f6c", "", "")
+             : "2014.01",
+         # version pattern "yyyymmdd"
+-        ("mobile-broadband-provider-info", "git://gitlab.gnome.org/GNOME/mobile-broadband-provider-info.git;protocol=https;branch=master", "4ed19e11c2975105b71b956440acdb25d46a347d", "", "")
++        ("mobile-broadband-provider-info", "git://git.yoctoproject.org/mobile-broadband-provider-info.git;protocol=https;branch=master", "4ed19e11c2975105b71b956440acdb25d46a347d", "", "")
+             : "20120614",
+         # packages with a valid UPSTREAM_CHECK_GITTAGREGEX
+                 # mirror of git://anongit.freedesktop.org/xorg/driver/xf86-video-omap since network issues interfered with testing
 
