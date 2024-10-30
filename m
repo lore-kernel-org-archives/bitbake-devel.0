@@ -2,57 +2,57 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C787ED6B6C8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4315D6B6CC
 	for <webhook@archiver.kernel.org>; Wed, 30 Oct 2024 19:12:30 +0000 (UTC)
 Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
- by mx.groups.io with SMTP id smtpd.web10.23854.1730315546829945934
+ by mx.groups.io with SMTP id smtpd.web11.23489.1730315543920601201
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 30 Oct 2024 12:12:26 -0700
+ Wed, 30 Oct 2024 12:12:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=tUQrvkuy;
+ dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=ALb5ZpTZ;
  spf=softfail (domain: sakoman.com, ip: 209.85.216.53, mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2e30116efc9so112083a91.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 30 Oct 2024 12:12:26 -0700 (PDT)
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2e2e88cb0bbso114384a91.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 30 Oct 2024 12:12:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1730315546; x=1730920346; darn=lists.openembedded.org;
+        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1730315543; x=1730920343; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ua1Y8MYlBYy7eUQW32ZaxvYjIa9Ulhp55RZb+m4VjLg=;
-        b=tUQrvkuyWXsvtGXfCj+OAvbVOo45PCGUfNmpevm9kXnv4L1AXkABZIePHz4/0DjPzG
-         WJZfVwqGVAS8IM1yUITJkamJ9aIfG4wU1ReW7SJ8uuXYrH75Q/0QJMxA6adJrTDC/PZN
-         A0dRKAK7/Mm4CQlfuOS4vUlb4kvgjrMESsVLWBntSmXHrReoX3/8sH6jhcz3vv7oOUrx
-         zg5fgLmM8cSwdeEzJThSrMacm88/29cQw8bzxgk+bVeyRHnSi0FAncopOnt+3xMpzCha
-         jhFg1u30GkPCMEaqBOlWdUZ1oAnVpkzLENc34FUQaklevhQGuJFkFTKY+xV7nU401UvW
-         oQHQ==
+        bh=v+P6VO2Dt2ncFUue5XYCYncaHg/N/ar9MngzijxPvv8=;
+        b=ALb5ZpTZpfY0+0c0fgXmZTYI54veE4LOtKDljUxBxRwF+8YUZmEJQNKo126w4yuRZa
+         6win9clQ6y9a5cXGPV5k8Qc2SHI952OOnQ0rfo4X1TJ2sZ8ZP5Toc/eJdbeatnzAJIl+
+         pT5FxrZ3K839a+AqtTBWJ5j8r6rZ7AoFztK+uasuqqGd86rWtsWXbDYrdMmYS1TYCPgX
+         8SZZv+WcN+l8446EiwiDVOlZHMNPxkuwpvXutCTx2KTviubyI++i3pQjoC4gWZRj1M1L
+         oXIoF95boeYKBt9/glMcBBn7Fg29x5Apum3VfojB4Ekh8gpqisbBTZqJSk1CPm7/coRS
+         UhrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730315546; x=1730920346;
+        d=1e100.net; s=20230601; t=1730315543; x=1730920343;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ua1Y8MYlBYy7eUQW32ZaxvYjIa9Ulhp55RZb+m4VjLg=;
-        b=TkJ4qqn4CcV6JV4VrAsbIV2S5EKH305KXqCoe/xUEjHMqmFDyBXAg96MJ6w6wDT0Z7
-         vx2l9ein9l2MrB2MUhEvDpdP4L1L0WVI8rQj75zXGgVLCIYRC62IH0aCaNBI+5/vrQLq
-         SqC1Bdb6kLtUgVOMRVvSSkfmVQB7UbLIraruhlXXTXO4lLfI/vdDvENP3BtFSCIeHnFO
-         X4CmvXVI+bdkxhjUpZCOR5Pko0GVKf6eaFeZ0I8BHCky78WRz7YDHZz9lqXqsIHaM7lV
-         1akJBnbnVh5sMRPDNSuoz09Rai8o60y/HVerlc8SYb8W9Jrvn8Ii4HACgA872MdbZ/5f
-         gevQ==
-X-Gm-Message-State: AOJu0Yx1iQC1q9dVnvDYchPOdDNVQhWIuRK0rQTHmjk3vgsr1fFp03fs
-	B2zmXlL/U0V1OHYm/89T4X3h0EDVsH7n4Vhk6wgo17O/mDGmUFcqClM2qUhgUO96KoSKyySD0b4
-	u
-X-Google-Smtp-Source: AGHT+IFBEqXjK6yb/L8NJQNTnuwVJRkhDMrgjAu3mufPprGIHOwj18TFptLlGxHR+9IXD4hm7ZPKDw==
-X-Received: by 2002:a17:90a:4e0a:b0:2e2:c6b9:fd4a with SMTP id 98e67ed59e1d1-2e8f1072087mr19616630a91.18.1730315546076;
-        Wed, 30 Oct 2024 12:12:26 -0700 (PDT)
+        bh=v+P6VO2Dt2ncFUue5XYCYncaHg/N/ar9MngzijxPvv8=;
+        b=gasK122RbI3+HGMCwNGIlwEE9xU0Gwcyq1p4YAeQ7RxvxSIZVbzo1w7Udz15GThi/h
+         22weS161mZKetqTyzal1O6LsASwBVZuokXKUk9yltD7CbmtKAAu+c9kNsES20QiiCou2
+         rSAHUZGB+MhLmPTOTFkxP5SvRED0LFndccip9icqulMLiMUWiN/x7m0DGZ7N85EfmYX/
+         ldt4L8/AOHawklh58SlUNyovX/h3lNYkzZuOts24rI9whjRyO0c14/kHhCWD2LA2m3lJ
+         JYz26TPUrIFvtBP7jT0OLAkM1tdqmOjxKp1tFoRKFT3Dl4Xn8JIrOoH0iZJ57jixj0XQ
+         Pz5g==
+X-Gm-Message-State: AOJu0YweMzoPtbFu0EhNtRb9prO1hJ/m59lnF1yCuhBse9M+h3XFzXXb
+	Re9YDHtPur/2h+atI02dMrIYZYQyQTcEVLj68jKoVYRVRikrbX0xmWUqRWr1MEQKatMnwPJWOWl
+	z
+X-Google-Smtp-Source: AGHT+IHdviYvk7H+vqJ7BavcyEiRqOOzpfKTlXBO1h5B/wK9GE9GEhR8IConTTM4Xjum4gsiWqKkDA==
+X-Received: by 2002:a17:90b:3755:b0:2e2:de27:db09 with SMTP id 98e67ed59e1d1-2e8f1078c4dmr17634206a91.19.1730315543046;
+        Wed, 30 Oct 2024 12:12:23 -0700 (PDT)
 Received: from hexa.. ([98.142.47.158])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e92fa36672sm2248203a91.14.2024.10.30.12.12.25
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e92fa36672sm2248203a91.14.2024.10.30.12.12.22
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2024 12:12:25 -0700 (PDT)
+        Wed, 30 Oct 2024 12:12:22 -0700 (PDT)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][scarthgap][2.8][PATCH 3/4] tests/fetch: Use our own mirror of sysprof to decouple from gnome gitlab
-Date: Wed, 30 Oct 2024 12:12:07 -0700
-Message-Id: <7f98c7db475b7f805c8c5be5964e84c82caf1903.1730315315.git.steve@sakoman.com>
+Subject: [bitbake][scarthgap][2.8][PATCH 1/4] gitsm: Add call_process_submodules() to remove duplicated code
+Date: Wed, 30 Oct 2024 12:12:05 -0700
+Message-Id: <e3443a490035fb0fba465efcd154ffa24f044916.1730315315.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1730315315.git.steve@sakoman.com>
 References: <cover.1730315315.git.steve@sakoman.com>
@@ -62,34 +62,93 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 30 Oct 2024 19:12:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16759
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16757
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+From: Robert Yang <liezhi.yang@windriver.com>
 
-GNOME gitlab has occasional downtime which impacts bitbake-selftest
-and causes autobuilder failures. Switch to our own mirror for test
-purposes to avoid those issues.
+There are 14 lines can be removed, and can make it easy to maintain.
 
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 008808755ed6cfeb6c41273e69ce718f0833c26c)
+(cherry picked from commit 0ea2c1ac079d63349407a69172ff80cd9acc7252)
 Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- lib/bb/tests/fetch.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/fetch2/gitsm.py | 42 ++++++++++++++----------------------------
+ 1 file changed, 14 insertions(+), 28 deletions(-)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 33cc9bcac..70494693a 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -1419,7 +1419,7 @@ class FetchLatestVersionTest(FetcherTest):
-         ("dtc", "git://git.yoctoproject.org/bbfetchtests-dtc.git;branch=master;protocol=https", "65cc4d2748a2c2e6f27f1cf39e07a5dbabd80ebf", "", "")
-             : "1.4.0",
-         # combination version pattern
--        ("sysprof", "git://gitlab.gnome.org/GNOME/sysprof.git;protocol=https;branch=master", "cd44ee6644c3641507fb53b8a2a69137f2971219", "", "")
-+        ("sysprof", "git://git.yoctoproject.org/sysprof.git;protocol=https;branch=master", "cd44ee6644c3641507fb53b8a2a69137f2971219", "", "")
-             : "1.2.0",
-         ("u-boot-mkimage", "git://source.denx.de/u-boot/u-boot.git;branch=master;protocol=https", "62c175fbb8a0f9a926c88294ea9f7e88eb898f6c", "", "")
-             : "2014.01",
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index f7f3af721..17aac6357 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -147,6 +147,17 @@ class GitSM(Git):
+ 
+         return submodules != []
+ 
++    def call_process_submodules(self, ud, d, extra_check, subfunc):
++        # If we're using a shallow mirror tarball it needs to be
++        # unpacked temporarily so that we can examine the .gitmodules file
++        if ud.shallow and os.path.exists(ud.fullshallow) and extra_check:
++            tmpdir = tempfile.mkdtemp(dir=d.getVar("DL_DIR"))
++            runfetchcmd("tar -xzf %s" % ud.fullshallow, d, workdir=tmpdir)
++            self.process_submodules(ud, tmpdir, subfunc, d)
++            shutil.rmtree(tmpdir)
++        else:
++            self.process_submodules(ud, ud.clonedir, subfunc, d)
++
+     def need_update(self, ud, d):
+         if Git.need_update(self, ud, d):
+             return True
+@@ -164,15 +175,7 @@ class GitSM(Git):
+                 logger.error('gitsm: submodule update check failed: %s %s' % (type(e).__name__, str(e)))
+                 need_update_result = True
+ 
+-        # If we're using a shallow mirror tarball it needs to be unpacked
+-        # temporarily so that we can examine the .gitmodules file
+-        if ud.shallow and os.path.exists(ud.fullshallow) and not os.path.exists(ud.clonedir):
+-            tmpdir = tempfile.mkdtemp(dir=d.getVar("DL_DIR"))
+-            runfetchcmd("tar -xzf %s" % ud.fullshallow, d, workdir=tmpdir)
+-            self.process_submodules(ud, tmpdir, need_update_submodule, d)
+-            shutil.rmtree(tmpdir)
+-        else:
+-            self.process_submodules(ud, ud.clonedir, need_update_submodule, d)
++        self.call_process_submodules(ud, d, not os.path.exists(ud.clonedir), need_update_submodule)
+ 
+         if need_update_list:
+             logger.debug('gitsm: Submodules requiring update: %s' % (' '.join(need_update_list)))
+@@ -195,16 +198,7 @@ class GitSM(Git):
+                 raise
+ 
+         Git.download(self, ud, d)
+-
+-        # If we're using a shallow mirror tarball it needs to be unpacked
+-        # temporarily so that we can examine the .gitmodules file
+-        if ud.shallow and os.path.exists(ud.fullshallow) and self.need_update(ud, d):
+-            tmpdir = tempfile.mkdtemp(dir=d.getVar("DL_DIR"))
+-            runfetchcmd("tar -xzf %s" % ud.fullshallow, d, workdir=tmpdir)
+-            self.process_submodules(ud, tmpdir, download_submodule, d)
+-            shutil.rmtree(tmpdir)
+-        else:
+-            self.process_submodules(ud, ud.clonedir, download_submodule, d)
++        self.call_process_submodules(ud, d, self.need_update(ud, d), download_submodule)
+ 
+     def unpack(self, ud, destdir, d):
+         def unpack_submodules(ud, url, module, modpath, workdir, d):
+@@ -263,14 +257,6 @@ class GitSM(Git):
+             newfetch = Fetch([url], d, cache=False)
+             urldata.extend(newfetch.expanded_urldata())
+ 
+-        # If we're using a shallow mirror tarball it needs to be unpacked
+-        # temporarily so that we can examine the .gitmodules file
+-        if ud.shallow and os.path.exists(ud.fullshallow) and ud.method.need_update(ud, d):
+-            tmpdir = tempfile.mkdtemp(dir=d.getVar("DL_DIR"))
+-            subprocess.check_call("tar -xzf %s" % ud.fullshallow, cwd=tmpdir, shell=True)
+-            self.process_submodules(ud, tmpdir, add_submodule, d)
+-            shutil.rmtree(tmpdir)
+-        else:
+-            self.process_submodules(ud, ud.clonedir, add_submodule, d)
++        self.call_process_submodules(ud, d, ud.method.need_update(ud, d), add_submodule)
+ 
+         return urldata
 -- 
 2.34.1
 
