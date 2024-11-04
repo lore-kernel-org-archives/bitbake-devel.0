@@ -1,184 +1,131 @@
-Return-Path: <rpurdie@rpsys.net>
+Return-Path: <jsbronder@cold-front.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6631EE67809
-	for <webhook@archiver.kernel.org>; Sat,  2 Nov 2024 19:50:41 +0000 (UTC)
-Received: from dan.rpsys.net (dan.rpsys.net [217.169.23.60])
- by mx.groups.io with SMTP id smtpd.web11.23736.1730577032137738441
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CCDD1BDD3
+	for <webhook@archiver.kernel.org>; Mon,  4 Nov 2024 17:36:06 +0000 (UTC)
+Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
+ by mx.groups.io with SMTP id smtpd.web11.1595.1730741763325179433
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 02 Nov 2024 12:50:33 -0700
+ Mon, 04 Nov 2024 09:36:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@rpsys.net header.s=default header.b=pHjpZU4k;
- spf=pass (domain: rpsys.net, ip: 217.169.23.60, mailfrom: rpurdie@rpsys.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=rpsys.net; s=default;
-	t=1730577029; bh=KYU2XCtl6X1t9S/hixQSsdMvw5QBTq6Wa2yxEt7YKa4=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=pHjpZU4k5HzGBZwVHBCgAhst2dPSrHXCoPhcYbL+hfck3ag8iky5vvtuDNr6AaYGC
-	 MSTJBK8WHk2v6IdE5IlFXRn64IOBI4u9C0u9umLmcVs6XctEREicHGwdhC4gUWKYvz
-	 bdad5Puq6qyVF68EHN/ucdTtkDPHgJyk+VIxC7/T9xVQKNigqqPDC/+lNGFKkVcLma
-	 kvI4Fv9O8PcItw6yRy9NcWhSq7bzdHo83ClLHTEoC7VY2tg8FR2W32HVDzgxWa9ZQi
-	 G4Bi68BcIq224IXcmDOfySAEBAzUMc1koZpRPUfboX04X8sVSbrQVZcVr6pY1GQgYH
-	 I3aI6hVHxqo4A==
-Received: from [192.168.1.7] (dan.rpsys.net [217.169.23.61] (may be forged))
-	(authenticated bits=0)
-	by dan.rpsys.net (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTPSA id 4A2JoR7v2838916
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Sat, 2 Nov 2024 19:50:29 GMT
-Message-ID: <aaaa7953e8d11224fb6ca4608577720b896c7251.camel@rpsys.net>
-Subject: Re: [bitbake-devel] [RFC PATCH] bitbake-getvar: Expand keys and run
- anonymous functions to get identical result to "bitbake -e"
-From: Richard Purdie <rpurdie@rpsys.net>
-To: yoann.congal@smile.fr, bitbake-devel@lists.openembedded.org
-Date: Sat, 02 Nov 2024 19:50:21 +0000
-In-Reply-To: <20241102162124.2048662-1-yoann.congal@smile.fr>
-References: <20241102162124.2048662-1-yoann.congal@smile.fr>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.0-1 
+ dkim=pass header.i=@cold-front.org header.s=fm1 header.b=TYgyasmb;
+ dkim=pass header.i=@messagingengine.com header.s=fm3 header.b=QbBdnaGF;
+ spf=pass (domain: cold-front.org, ip: 202.12.124.155, mailfrom: jsbronder@cold-front.org)
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 741E22540162;
+	Mon,  4 Nov 2024 12:36:02 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-12.internal (MEProxy); Mon, 04 Nov 2024 12:36:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cold-front.org;
+	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
+	:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to; s=fm1; t=1730741762; x=1730828162; bh=IjIE6EoZl3
+	DIAPHfHw0RXUSsrIBJr6EY+5gMWf4BuLA=; b=TYgyasmb94V/sT4e4MmD6jzb4V
+	M8pQ9J0hafW8YxLPBGti3HdNDfW9GfcFR4HYwOEqPajtGL0Pmjo7HfHj59JaiTqZ
+	/nzJ5dwYgO5RXsQpO904GEVQiRqmAGm/zURuT2Za8Hb/0s8fZF2BNuL9ULKA2WeU
+	W3A0jBl2QBOnEz1amq6VP678EIn1smoQ8aZXaXO5BMK/X+JEnbaDiQe9PhPNp75v
+	2Z7bGBZvqqKG3+7dVyyf6AmtZxc3CvrzRsPg8g6dtARJ7OuxmQOJ8SjQ4oXGi30c
+	xrP2zCOKDE4BmLzSxZIgiCTw5wdL9e1SRF2inxcSsqU6HynGXGfJ65vj7g5w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1730741762; x=1730828162; bh=IjIE6EoZl3DIAPHfHw0RXUSsrIBJr6EY+5g
+	MWf4BuLA=; b=QbBdnaGFovVOfzZx1ZXlZ5ZsG8t3yz4JuJ/vbpJAThvT7E2ZfiT
+	hK0/DXptbzhI31X0Yp9RAxGaTXw7v719Csq4qZiWWteDAq0zjnzX527OQsEp5GW5
+	GP+/jg1ZNBOLo9PFvXmtf5utl3/KyBsDNCgeNJVfqtluruq2jJSw/DjULwVrYHAV
+	sdcPDadvTcJ6LPfg3sp3+ogO1QiTXNZ6w7nIPJlFElvIyeygoPde7tmA9hivAaV+
+	hX5+nGzlwjcHB1zGi7Pa/D6jiDZ2/GDs/b1qTD8abIZSRJNCOXmOzlx/vX49YZSy
+	c6SgMKhr+zX/2r1uTw4q9cqy4dn0I/QOotQ==
+X-ME-Sender: <xms:AQYpZ3qC7hr1i5NsJ-cDC3KWgYOQGcJv_sGFJL0oAVjag4n4OzVDTw>
+    <xme:AQYpZxpGNR1jf2HDwPWSyv_c15HBCSeXrai6W9tAXKJUxGzsOWRXAUQ9U382TxiGO
+    s0aOI_PpALrkKZpfA>
+X-ME-Received: <xmr:AQYpZ0ONAnBlG_QDYlj3vq-Q6IowEU_rttM41OMvmTZpQWplf0hKjPR73A6755KmQxWOggX6gsIGT_llPbCgnjOLqWS_ncy7MQfvqhYs6w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdeliedguddttdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhephffvve
+    fufffkofgggfestdekredtredttdenucfhrhhomheplfhushhtihhnuceurhhonhguvghr
+    uceojhhssghrohhnuggvrhestgholhguqdhfrhhonhhtrdhorhhgqeenucggtffrrghtth
+    gvrhhnpeffudfgffefuedvuddttdfgfeehgfeikeffudfhgfehieefteefgedvieehvdeg
+    vdenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomhepjhhssghrohhnuggvrhestgholhguqdhfrhho
+    nhhtrdhorhhgpdhnsggprhgtphhtthhopedvpdhmohguvgepshhmthhpohhuthdprhgtph
+    htthhopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmhgsvgguuggv
+    ugdrohhrghdprhgtphhtthhopehjshgsrhhonhguvghrsegtohhlugdqfhhrohhnthdroh
+    hrgh
+X-ME-Proxy: <xmx:AQYpZ67Dp5R3uFyR09k8tfg6Fy-fGXlan2qN0Dna93Le46a-dk6Q3A>
+    <xmx:AQYpZ25p6InmlcObQvZlw-mSM0xsByruw1tv1MIPNwd4Fl4rlQL6eQ>
+    <xmx:AQYpZyhU_JwepJyr47hWCc8jHlv1akTIMYNDVo48AJ971F_pfCfWUA>
+    <xmx:AQYpZ45WiUJNQiCoIuVjflDFP3jCXiQgEyp-io_JSMiGlc759Y8Zjw>
+    <xmx:AgYpZ2H2IWyLmd_8Mp7UZB7VsucJoP1Gf8QBh1jYy6QAHpi_A8vlVqov>
+Feedback-ID: iea0042cb:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 4 Nov 2024 12:36:01 -0500 (EST)
+From: Justin Bronder <jsbronder@cold-front.org>
+To: bitbake-devel@lists.openembedded.org
+Cc: Justin Bronder <jsbronder@cold-front.org>
+Subject: [PATCH] bb: compress: use lz4 instead of lz4c
+Date: Mon,  4 Nov 2024 12:35:57 -0500
+Message-ID: <20241104173557.2712213-1-jsbronder@cold-front.org>
+X-Mailer: git-send-email 2.46.1
 MIME-Version: 1.0
-X-Virus-Scanned: clamav-milter 0.103.12 at dan
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 02 Nov 2024 19:50:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16772
+ <bitbake-devel@lists.openembedded.org>; Mon, 04 Nov 2024 17:36:06 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16773
 
-On Sat, 2024-11-02 at 17:21 +0100, Yoann Congal via
-lists.openembedded.org wrote:
-> From: Yoann Congal <yoann.congal@smile.fr>
->=20
-> With this path, outputs of
-> =C2=A0 bitbake-getvar DISTRO_FEATURES
-> and
-> =C2=A0 bitbake -e |grep '^DISTRO_FEATURES=3D'
-> are the same.
->=20
-> Fixes [YOCTO #15638]
->=20
-> Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
->=20
-> ---
-> RFC:
-> * I don't know if a "sync command" is the right choice here.
-> * Maybe the runAnonFunc call needs to be more integrated in the
-> default
-> =C2=A0 flow?
+lz4c has been considered deprecated by upstream since at least 2018 [1]
+and has been disabled by default recently [2].  openSUSE Tumbleweed is
+no longer packaging the deprecated version and others will likely
+follow.
 
-This looks like the right direction.
+Luckily, we're not using any legacy-specific options and, going back as
+far as Ubuntu 16.04/Fedora 25, both lz4 and lz4cli are installed as part
+of the same package
 
-I'm a bit concerned this modifies cooker.data on the server side
-though. That is not meant to be expanded like this and may cause some
-interesting other issues if left like this.
+1. https://github.com/lz4/lz4/pull/553
+2. https://github.com/lz4/lz4/pull/1479
 
-We therefore need to work on a copy of the datastore, so the sequence
-is:
+Signed-off-by: Justin Bronder <jsbronder@cold-front.org>
+---
+ lib/bb/compress/lz4.py      | 4 ++--
+ lib/bb/tests/compression.py | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-newdata =3D d.createCopy()
-bb.data.expandKeys(newdata)
-bb.parse.ast.runAnonFuncs(newdata)
-
-and we just need to make that happen over the IPC. I think tinfoil's
-datastore connector does already support this.
-
-Also, it may be more efficient and a lot faster to run the expandKeys
-on the server side. We might want to combine both operations into a
-single piece of new tinfoil API?
-
-A sync command should fine.
-
-Cheers,
-
-Richard
-
-> ---
-> =C2=A0bin/bitbake-getvar | 5 +++++
-> =C2=A0lib/bb/command.py=C2=A0 | 4 ++++
-> =C2=A0lib/bb/tinfoil.py=C2=A0 | 6 ++++++
-> =C2=A03 files changed, 15 insertions(+)
->=20
-> diff --git a/bin/bitbake-getvar b/bin/bitbake-getvar
-> index 8901f99ae..1002d827b 100755
-> --- a/bin/bitbake-getvar
-> +++ b/bin/bitbake-getvar
-> @@ -45,6 +45,11 @@ if __name__ =3D=3D "__main__":
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-tinfoil.prepare(quiet=3D2, config_only=3DTrue)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-d =3D tinfoil.config_data
-> =C2=A0
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # Expand keys and run anonymo=
-us functions to get identical
-> result to
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # "bitbake -e"
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bb.data.expandKeys(d)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tinfoil.runAnonFuncs()
-> +
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D None
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if args.flag:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-value =3D d.getVarFlag(args.variable, args.flag,
-> expand=3Dnot args.unexpand)
-> diff --git a/lib/bb/command.py b/lib/bb/command.py
-> index 1fcb9bf14..27e99a584 100644
-> --- a/lib/bb/command.py
-> +++ b/lib/bb/command.py
-> @@ -24,6 +24,7 @@ import io
-> =C2=A0import bb.event
-> =C2=A0import bb.cooker
-> =C2=A0import bb.remotedata
-> +import bb.parse
-> =C2=A0
-> =C2=A0class DataStoreConnectionHandle(object):
-> =C2=A0=C2=A0=C2=A0=C2=A0 def __init__(self, dsindex=3D0):
-> @@ -582,6 +583,9 @@ class CommandsSync:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return DataStoreConnecti=
-onHandle(idx)
-> =C2=A0=C2=A0=C2=A0=C2=A0 parseRecipeFile.readonly =3D True
-> =C2=A0
-> +=C2=A0=C2=A0=C2=A0 def runAnonFuncs(self, command, params):
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bb.parse.ast.runAnonFuncs(com=
-mand.cooker.data)
-> +
-> =C2=A0class CommandsAsync:
-> =C2=A0=C2=A0=C2=A0=C2=A0 """
-> =C2=A0=C2=A0=C2=A0=C2=A0 A class of asynchronous commands
-> diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
-> index dcd3910cc..4d6d07539 100644
-> --- a/lib/bb/tinfoil.py
-> +++ b/lib/bb/tinfoil.py
-> @@ -633,6 +633,12 @@ class Tinfoil:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fn =3D self.get_recipe_f=
-ile(pn)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return self.parse_recipe=
-_file(fn)
-> =C2=A0
-> +=C2=A0=C2=A0=C2=A0 def runAnonFuncs(self):
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 """
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Run anonymous functions
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 """
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.run_command('runAnonFunc=
-s')
-> +
-> =C2=A0=C2=A0=C2=A0=C2=A0 def parse_recipe_file(self, fn, appends=3DTrue, =
-appendlist=3DNone,
-> config_data=3DNone):
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 """
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Parse the specified reci=
-pe file (with or without bbappends)
->=20
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#16771):
-> https://lists.openembedded.org/g/bitbake-devel/message/16771
-> Mute This Topic: https://lists.openembedded.org/mt/109354058/1686473
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe:
-> https://lists.openembedded.org/g/bitbake-devel/unsub=C2=A0[richard.purdie=
-@linuxfoundation.org
-> ]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->=20
+diff --git a/lib/bb/compress/lz4.py b/lib/bb/compress/lz4.py
+index 88b098932..2a64681c8 100644
+--- a/lib/bb/compress/lz4.py
++++ b/lib/bb/compress/lz4.py
+@@ -13,7 +13,7 @@ def open(*args, **kwargs):
+ 
+ class LZ4File(bb.compress._pipecompress.PipeFile):
+     def get_compress(self):
+-        return ["lz4c", "-z", "-c"]
++        return ["lz4", "-z", "-c"]
+ 
+     def get_decompress(self):
+-        return ["lz4c", "-d", "-c"]
++        return ["lz4", "-d", "-c"]
+diff --git a/lib/bb/tests/compression.py b/lib/bb/tests/compression.py
+index 95af3f96d..16c297b31 100644
+--- a/lib/bb/tests/compression.py
++++ b/lib/bb/tests/compression.py
+@@ -66,8 +66,8 @@ class CompressionTests(object):
+ 
+ class LZ4Tests(CompressionTests, unittest.TestCase):
+     def setUp(self):
+-        if shutil.which("lz4c") is None:
+-            self.skipTest("'lz4c' not found")
++        if shutil.which("lz4") is None:
++            self.skipTest("'lz4' not found")
+         super().setUp()
+ 
+     @contextlib.contextmanager
+-- 
+2.46.1
 
 
