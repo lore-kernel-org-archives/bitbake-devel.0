@@ -1,131 +1,181 @@
-Return-Path: <jsbronder@cold-front.org>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CCDD1BDD3
-	for <webhook@archiver.kernel.org>; Mon,  4 Nov 2024 17:36:06 +0000 (UTC)
-Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
- by mx.groups.io with SMTP id smtpd.web11.1595.1730741763325179433
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A40D1BDD4
+	for <webhook@archiver.kernel.org>; Mon,  4 Nov 2024 17:46:36 +0000 (UTC)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+ by mx.groups.io with SMTP id smtpd.web11.1837.1730742394118716779
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 04 Nov 2024 09:36:03 -0800
+ Mon, 04 Nov 2024 09:46:34 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@cold-front.org header.s=fm1 header.b=TYgyasmb;
- dkim=pass header.i=@messagingengine.com header.s=fm3 header.b=QbBdnaGF;
- spf=pass (domain: cold-front.org, ip: 202.12.124.155, mailfrom: jsbronder@cold-front.org)
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 741E22540162;
-	Mon,  4 Nov 2024 12:36:02 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-12.internal (MEProxy); Mon, 04 Nov 2024 12:36:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cold-front.org;
-	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
-	:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to; s=fm1; t=1730741762; x=1730828162; bh=IjIE6EoZl3
-	DIAPHfHw0RXUSsrIBJr6EY+5gMWf4BuLA=; b=TYgyasmb94V/sT4e4MmD6jzb4V
-	M8pQ9J0hafW8YxLPBGti3HdNDfW9GfcFR4HYwOEqPajtGL0Pmjo7HfHj59JaiTqZ
-	/nzJ5dwYgO5RXsQpO904GEVQiRqmAGm/zURuT2Za8Hb/0s8fZF2BNuL9ULKA2WeU
-	W3A0jBl2QBOnEz1amq6VP678EIn1smoQ8aZXaXO5BMK/X+JEnbaDiQe9PhPNp75v
-	2Z7bGBZvqqKG3+7dVyyf6AmtZxc3CvrzRsPg8g6dtARJ7OuxmQOJ8SjQ4oXGi30c
-	xrP2zCOKDE4BmLzSxZIgiCTw5wdL9e1SRF2inxcSsqU6HynGXGfJ65vj7g5w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1730741762; x=1730828162; bh=IjIE6EoZl3DIAPHfHw0RXUSsrIBJr6EY+5g
-	MWf4BuLA=; b=QbBdnaGFovVOfzZx1ZXlZ5ZsG8t3yz4JuJ/vbpJAThvT7E2ZfiT
-	hK0/DXptbzhI31X0Yp9RAxGaTXw7v719Csq4qZiWWteDAq0zjnzX527OQsEp5GW5
-	GP+/jg1ZNBOLo9PFvXmtf5utl3/KyBsDNCgeNJVfqtluruq2jJSw/DjULwVrYHAV
-	sdcPDadvTcJ6LPfg3sp3+ogO1QiTXNZ6w7nIPJlFElvIyeygoPde7tmA9hivAaV+
-	hX5+nGzlwjcHB1zGi7Pa/D6jiDZ2/GDs/b1qTD8abIZSRJNCOXmOzlx/vX49YZSy
-	c6SgMKhr+zX/2r1uTw4q9cqy4dn0I/QOotQ==
-X-ME-Sender: <xms:AQYpZ3qC7hr1i5NsJ-cDC3KWgYOQGcJv_sGFJL0oAVjag4n4OzVDTw>
-    <xme:AQYpZxpGNR1jf2HDwPWSyv_c15HBCSeXrai6W9tAXKJUxGzsOWRXAUQ9U382TxiGO
-    s0aOI_PpALrkKZpfA>
-X-ME-Received: <xmr:AQYpZ0ONAnBlG_QDYlj3vq-Q6IowEU_rttM41OMvmTZpQWplf0hKjPR73A6755KmQxWOggX6gsIGT_llPbCgnjOLqWS_ncy7MQfvqhYs6w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdeliedguddttdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhephffvve
-    fufffkofgggfestdekredtredttdenucfhrhhomheplfhushhtihhnuceurhhonhguvghr
-    uceojhhssghrohhnuggvrhestgholhguqdhfrhhonhhtrdhorhhgqeenucggtffrrghtth
-    gvrhhnpeffudfgffefuedvuddttdfgfeehgfeikeffudfhgfehieefteefgedvieehvdeg
-    vdenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomhepjhhssghrohhnuggvrhestgholhguqdhfrhho
-    nhhtrdhorhhgpdhnsggprhgtphhtthhopedvpdhmohguvgepshhmthhpohhuthdprhgtph
-    htthhopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmhgsvgguuggv
-    ugdrohhrghdprhgtphhtthhopehjshgsrhhonhguvghrsegtohhlugdqfhhrohhnthdroh
-    hrgh
-X-ME-Proxy: <xmx:AQYpZ67Dp5R3uFyR09k8tfg6Fy-fGXlan2qN0Dna93Le46a-dk6Q3A>
-    <xmx:AQYpZ25p6InmlcObQvZlw-mSM0xsByruw1tv1MIPNwd4Fl4rlQL6eQ>
-    <xmx:AQYpZyhU_JwepJyr47hWCc8jHlv1akTIMYNDVo48AJ971F_pfCfWUA>
-    <xmx:AQYpZ45WiUJNQiCoIuVjflDFP3jCXiQgEyp-io_JSMiGlc759Y8Zjw>
-    <xmx:AgYpZ2H2IWyLmd_8Mp7UZB7VsucJoP1Gf8QBh1jYy6QAHpi_A8vlVqov>
-Feedback-ID: iea0042cb:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 4 Nov 2024 12:36:01 -0500 (EST)
-From: Justin Bronder <jsbronder@cold-front.org>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=dfOtXs68;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.167.50, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-539fe76e802so5279444e87.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 04 Nov 2024 09:46:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1730742392; x=1731347192; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rTaBb6ja2JoMBbc2vA7FZi9V2wo1fpimMOSw641ZluQ=;
+        b=dfOtXs68sDMMS2p5bLsCDx3exR72kQPILOT50HnEwTAXKm9+40c4osbqe/w0i7zaGb
+         QO+Z6AEmrMnFg69+zzTiXm6aNy+33aDmLb33+jOUsJUn3R1Mm9XcY+J7TWrd3+Fiii+c
+         pdumHtHazuYsYZpvd6ex6NTBHep5O1gdBfosQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730742392; x=1731347192;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rTaBb6ja2JoMBbc2vA7FZi9V2wo1fpimMOSw641ZluQ=;
+        b=scRneFC330IbV5J+Kj8129MOtbRRJ+qWdMbH3b/aMeHtwMTkKblH6D2LriMGQznENP
+         +loHEsQOCaeQs90vEfCIyRfmBNckbRVnNKOXKpMJg7Gm37HjKfKZS5WWP0nfQiM8WU8f
+         FHx6oR2r396BEFaC23KIlY7yRm1HkHDLD9aAC7cu/og8TaYTGy7sa45D12PyrjV8EhDB
+         4UWjVkusr6Upz/4Ik1rDoyCQFzkiy1wAciuUcFWQj/y8GHcydEZHUyYJEOxBZkLU7Dpk
+         JdVqTPjIh1mBi44b2AXhtxk9kdriDwRG1/qH9IMEBIgyxa/g5LsZ02InFXcFtzf/Wcz/
+         goBA==
+X-Gm-Message-State: AOJu0Yx4fdeMQALkJTv0mEMwoDTuodidTj6qp8Y7B5tiW3LpjgszgwsR
+	JccciHzAJtzFI9jGM8Y0mHIxkRDS2ZceLh7rJbEtE0FUr8n1Qq57qsYNyD5W33z9jZdOeUKt1rA
+	25d4=
+X-Google-Smtp-Source: AGHT+IEsbZx4wHs2T9+KAeT+fArQ8lHj62zQLDQQIYUmSm5i9Q9cM7C8l7/c2r0kQnyKMxQLvZ/fhg==
+X-Received: by 2002:a05:6512:3d21:b0:53c:7363:90c with SMTP id 2adb3069b0e04-53d65df7d34mr6268708e87.35.1730742391324;
+        Mon, 04 Nov 2024 09:46:31 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:ce35:7d7b:4b91:8e7d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431bd9ca7ebsm190851955e9.42.2024.11.04.09.46.30
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2024 09:46:30 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: Justin Bronder <jsbronder@cold-front.org>
-Subject: [PATCH] bb: compress: use lz4 instead of lz4c
-Date: Mon,  4 Nov 2024 12:35:57 -0500
-Message-ID: <20241104173557.2712213-1-jsbronder@cold-front.org>
-X-Mailer: git-send-email 2.46.1
+Subject: [PATCH] runqueue: Avoid dumpsigs idle loop blocking
+Date: Mon,  4 Nov 2024 17:46:30 +0000
+Message-ID: <20241104174630.1274186-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 04 Nov 2024 17:36:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16773
+ <bitbake-devel@lists.openembedded.org>; Mon, 04 Nov 2024 17:46:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16774
 
-lz4c has been considered deprecated by upstream since at least 2018 [1]
-and has been disabled by default recently [2].  openSUSE Tumbleweed is
-no longer packaging the deprecated version and others will likely
-follow.
+We're seeing some failures on hosts where slow "idle" loop iterations are
+causing bitbake server timeouts. These seem to happen particularly in the
+dump_signatures() function within runqueue.
 
-Luckily, we're not using any legacy-specific options and, going back as
-far as Ubuntu 16.04/Fedora 25, both lz4 and lz4cli are installed as part
-of the same package
+That isn't entirely surprising since it creates a pool of threads to execute
+work an at best can take around 10s to execture and return control backto the
+main loop. On a slow system, it is understandable this can take longer,
+particularly as these functions are creating large chunks of IO.
 
-1. https://github.com/lz4/lz4/pull/553
-2. https://github.com/lz4/lz4/pull/1479
+Since the work is being done in threads, we can launch them, return to idle
+and check on the results periodically as they complete.
 
-Signed-off-by: Justin Bronder <jsbronder@cold-front.org>
+This should hopefully address some of the remaining timeout issues we see on
+the autobuilder in oe-selftest sstate tests.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/compress/lz4.py      | 4 ++--
- lib/bb/tests/compression.py | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ lib/bb/runqueue.py | 69 ++++++++++++++++++++++++++++------------------
+ 1 file changed, 42 insertions(+), 27 deletions(-)
 
-diff --git a/lib/bb/compress/lz4.py b/lib/bb/compress/lz4.py
-index 88b098932..2a64681c8 100644
---- a/lib/bb/compress/lz4.py
-+++ b/lib/bb/compress/lz4.py
-@@ -13,7 +13,7 @@ def open(*args, **kwargs):
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 3462ed4457..bee315c36d 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -128,6 +128,7 @@ class RunQueueStats:
+ # runQueue state machine
+ runQueuePrepare = 2
+ runQueueSceneInit = 3
++runQueueDumpSigs = 4
+ runQueueRunning = 6
+ runQueueFailed = 7
+ runQueueCleanUp = 8
+@@ -1588,13 +1589,18 @@ class RunQueue:
+             self.rqdata.init_progress_reporter.next_stage()
+             self.rqexe = RunQueueExecute(self)
  
- class LZ4File(bb.compress._pipecompress.PipeFile):
-     def get_compress(self):
--        return ["lz4c", "-z", "-c"]
-+        return ["lz4", "-z", "-c"]
+-            dump = self.cooker.configuration.dump_signatures
+-            if dump:
++            dumpsigs = self.cooker.configuration.dump_signatures
++            if dumpsigs:
+                 self.rqdata.init_progress_reporter.finish()
+-                if 'printdiff' in dump:
++                if 'printdiff' in dumpsigs:
+                     invalidtasks = self.print_diffscenetasks()
+-                self.dump_signatures(dump)
+-                if 'printdiff' in dump:
++                self.state = runQueueDumpSigs
++
++        if self.state is runQueueDumpSigs:
++            dumpsigs = self.cooker.configuration.dump_signatures
++            retval = self.dump_signatures(dumpsigs)
++            if retval is False:
++                if 'printdiff' in dumpsigs:
+                     self.write_diffscenetasks(invalidtasks)
+                 self.state = runQueueComplete
  
-     def get_decompress(self):
--        return ["lz4c", "-d", "-c"]
-+        return ["lz4", "-d", "-c"]
-diff --git a/lib/bb/tests/compression.py b/lib/bb/tests/compression.py
-index 95af3f96d..16c297b31 100644
---- a/lib/bb/tests/compression.py
-+++ b/lib/bb/tests/compression.py
-@@ -66,8 +66,8 @@ class CompressionTests(object):
+@@ -1686,33 +1692,42 @@ class RunQueue:
+             bb.parse.siggen.dump_sigtask(taskfn, taskname, dataCaches[mc].stamp[taskfn], True)
  
- class LZ4Tests(CompressionTests, unittest.TestCase):
-     def setUp(self):
--        if shutil.which("lz4c") is None:
--            self.skipTest("'lz4c' not found")
-+        if shutil.which("lz4") is None:
-+            self.skipTest("'lz4' not found")
-         super().setUp()
+     def dump_signatures(self, options):
+-        if bb.cooker.CookerFeatures.RECIPE_SIGGEN_INFO not in self.cooker.featureset:
+-            bb.fatal("The dump signatures functionality needs the RECIPE_SIGGEN_INFO feature enabled")
+-
+-        bb.note("Writing task signature files")
+-
+-        max_process = int(self.cfgData.getVar("BB_NUMBER_PARSE_THREADS") or os.cpu_count() or 1)
+-        def chunkify(l, n):
+-            return [l[i::n] for i in range(n)]
+-        tids = chunkify(list(self.rqdata.runtaskentries), max_process)
+-        # We cannot use the real multiprocessing.Pool easily due to some local data
+-        # that can't be pickled. This is a cheap multi-process solution.
+-        launched = []
+-        while tids:
+-            if len(launched) < max_process:
+-                p = Process(target=self._rq_dump_sigtid, args=(tids.pop(), ))
++        if not hasattr(self, "dumpsigs_launched"):
++            if bb.cooker.CookerFeatures.RECIPE_SIGGEN_INFO not in self.cooker.featureset:
++                bb.fatal("The dump signatures functionality needs the RECIPE_SIGGEN_INFO feature enabled")
++
++            bb.note("Writing task signature files")
++
++            max_process = int(self.cfgData.getVar("BB_NUMBER_PARSE_THREADS") or os.cpu_count() or 1)
++            def chunkify(l, n):
++                return [l[i::n] for i in range(n)]
++            dumpsigs_tids = chunkify(list(self.rqdata.runtaskentries), max_process)
++
++            # We cannot use the real multiprocessing.Pool easily due to some local data
++            # that can't be pickled. This is a cheap multi-process solution.
++            self.dumpsigs_launched = []
++
++            for tid in dumpsigs_tids:
++                p = Process(target=self._rq_dump_sigtid, args=(dumpsigs_tids.pop(), ))
+                 p.start()
+-                launched.append(p)
+-            for q in launched:
+-                # The finished processes are joined when calling is_alive()
+-                if not q.is_alive():
+-                    launched.remove(q)
+-        for p in launched:
++                self.dumpsigs_launched.append(p)
++
++            return 1.0
++
++        for q in self.dumpsigs_launched:
++            # The finished processes are joined when calling is_alive()
++            if not q.is_alive():
++                self.dumpsigs_launched.remove(q)
++
++        if self.dumpsigs_launched:
++            return 1.0
++
++        for p in self.dumpsigs_launched:
+                 p.join()
  
-     @contextlib.contextmanager
--- 
-2.46.1
-
+         bb.parse.siggen.dump_sigs(self.rqdata.dataCaches, options)
+ 
+-        return
++        return False
+ 
+     def print_diffscenetasks(self):
+         def get_root_invalid_tasks(task, taskdepends, valid, noexec, visited_invalid):
 
