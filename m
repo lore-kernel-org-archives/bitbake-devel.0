@@ -2,183 +2,80 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A4ED2B933
-	for <webhook@archiver.kernel.org>; Tue,  5 Nov 2024 13:55:09 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web10.18534.1730814904936639527
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF11FD2C11B
+	for <webhook@archiver.kernel.org>; Tue,  5 Nov 2024 15:06:32 +0000 (UTC)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web11.20385.1730819191742216438
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 05 Nov 2024 05:55:05 -0800
+ Tue, 05 Nov 2024 07:06:32 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ao0+2Tfu;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-431481433bdso48701805e9.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 05 Nov 2024 05:55:04 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Bb2SJiVA;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.48, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-37d4c1b1455so3422497f8f.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 05 Nov 2024 07:06:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1730814903; x=1731419703; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1730819190; x=1731423990; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DdhzT21XL0HT/AMj3Zzo7uwKlIuBH03eQtczQ3+0Mi8=;
-        b=ao0+2Tfu1a/TIgkjpmlIFed5ipZ6y/W4xz18o4OuE0Hqdpmfwkjik6AzU/a8WTr/Jl
-         gIVk4EwrT6hHP24ty/Rd+k/jnPQcm7JRdW8CiT/N0MU3R46qyR2ICQrDYTx49LAh0+om
-         s+XiWue8VIg3oKmbTrF/xhiM+6ojbaGrsJbr4=
+        bh=guwJN/OdgO0urXmRMOrluMwyMZ6mK73/xEwRUIg/zA0=;
+        b=Bb2SJiVA0MOM3YkWfA+AeP+Z4mKO7LKEERvtPMndTfGm9RbtLfvK/qvfE9GqmJEIhH
+         r7Qcix2TMUc6lnjQ2nu5T8k8UK8dyY12x5FRmgNFJhCneDfLb7j/mLtDCbgyN2vrTzZK
+         ju6Hw0VAkoJthbcsJBbdY7gwtCZ1401zEkO2g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730814903; x=1731419703;
+        d=1e100.net; s=20230601; t=1730819190; x=1731423990;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DdhzT21XL0HT/AMj3Zzo7uwKlIuBH03eQtczQ3+0Mi8=;
-        b=WMLFwegWsa5AxG/khnpDFSdL7P+H7nDa3Olds2p9Ue5Yqq/OiZj6ImdPr9f4Zt5I+Q
-         7DUoGDBd4ZmNm+a492VjIVNWyGB0oqtYRuT8CWvcviFtudeZbxUquT2iHDBxZ2xeCaKk
-         ycmkmbrerCxBwl2uv9mHQl4kVUiDVplLN7XYtytAdpcxqCuDxs/0Fvc3ok2egBQJl2+w
-         +6H6l/mkASPt3COe/xd03qz7G/jy6CegK8g5EVZztn7dDCI7BPUZUHBDSdZgjMMcoBqr
-         sR3hna3KbXu/8QAgh8ogXkR0EsNrQVPyJgPj5xdH129P+5bbh5fUdlfZ6BeDUGVWOGF9
-         ceQQ==
-X-Gm-Message-State: AOJu0Yxb+Y7zERENgwt94Cw7DerczepGiBroAsSex5G41p4PsCPB64EC
-	rP6SAHSPqRc5u6wP3rKwh1ljQ2QTI9LdeMu5PPRFnhbFk3dw0X2kTMQq6bWhck/jjGSphnCm+js
-	TQjM=
-X-Google-Smtp-Source: AGHT+IHTPAV+F/oO7i4NG1wWROIxA/109X9BsZkLcvtb8FGDe4H/juOfyFYBeqS3OSED2+AaAbFbig==
-X-Received: by 2002:a05:6000:4601:b0:381:e702:af15 with SMTP id ffacd0b85a97d-381e702b189mr134582f8f.37.1730814902675;
-        Tue, 05 Nov 2024 05:55:02 -0800 (PST)
+        bh=guwJN/OdgO0urXmRMOrluMwyMZ6mK73/xEwRUIg/zA0=;
+        b=kqUEiS2oFnotQ8jocpWq7D0uP4pAXkNF8BUfOocjmMoEp0kEXynZwy7lXmATkiT85g
+         Ikb+dsVVOMXLui0cPz83kP9EJ2n+liwoKPsdv5bsivQen2jNvZ2g/JdP/KG/psb1Rxih
+         D3rJ5HRsqd7swpliJUnZwkYCRLdfLJyDBDs2tRr82QJgdKXh6ZX+zBkoY2hbgfAFDj85
+         9W2CAGMXk9jdWEl7J63wBbdupsQ1SJJuhecQBi/2yGatcur0vF6CFmruG9dB849oVIzk
+         a30joEdkBmq3DCPLVTgLVuHrk/7i7OQYyXLgZncX36Og73noijwm7vPR2trm/Ldstj25
+         jPdw==
+X-Gm-Message-State: AOJu0YwIRlCXK5xwSVwaHjZlz3nYtO2jLpqNsqYqLWoqMB1RANSEDnTs
+	TzEC2t3bUIcuNGaNvtBBW/B0ijl4nOwFPIoiJOUxrgLsMp9Oeq/KbTxS0O2XFa8Ml/Cj2awkDcd
+	iA9g=
+X-Google-Smtp-Source: AGHT+IHA2x6WfJYR580krnmrWrEX7CpXRBN8AkU1EioO+K3fNsOFKLwHceSt0L0rNfnL3crtBZtM/A==
+X-Received: by 2002:a5d:6d84:0:b0:381:bf27:e845 with SMTP id ffacd0b85a97d-381bf27e8demr17082079f8f.1.1730819189769;
+        Tue, 05 Nov 2024 07:06:29 -0800 (PST)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:7614:7622:3cf4:a240])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c10b7b65sm16634414f8f.4.2024.11.05.05.55.02
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c10b7d20sm16656323f8f.7.2024.11.05.07.06.29
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2024 05:55:02 -0800 (PST)
+        Tue, 05 Nov 2024 07:06:29 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH v2] runqueue: Avoid dumpsigs idle loop blocking
-Date: Tue,  5 Nov 2024 13:55:01 +0000
-Message-ID: <20241105135501.2754494-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 1/2] server/process: Don't send heartbeats when no idle functions
+Date: Tue,  5 Nov 2024 15:06:27 +0000
+Message-ID: <20241105150628.2827698-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.45.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 05 Nov 2024 13:55:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16775
+ <bitbake-devel@lists.openembedded.org>; Tue, 05 Nov 2024 15:06:32 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16777
 
-We're seeing some failures on hosts where slow "idle" loop iterations are
-causing bitbake server timeouts. These seem to happen particularly in the
-dump_signatures() function within runqueue.
-
-That isn't entirely surprising since it creates a pool of threads to execute
-work an at best can take around 10s to execture and return control backto the
-main loop. On a slow system, it is understandable this can take longer,
-particularly as these functions are creating large chunks of IO.
-
-Since the work is being done in threads, we can launch them, return to idle
-and check on the results periodically as they complete.
-
-This should hopefully address some of the remaining timeout issues we see on
-the autobuilder in oe-selftest sstate tests.
+If there are no idle functions present, don't sent heartbeat events. These
+are only meant to happen while builds are active.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/runqueue.py | 73 ++++++++++++++++++++++++++++------------------
- 1 file changed, 44 insertions(+), 29 deletions(-)
+ lib/bb/server/process.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 3462ed4457..1b5b58f352 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -128,6 +128,7 @@ class RunQueueStats:
- # runQueue state machine
- runQueuePrepare = 2
- runQueueSceneInit = 3
-+runQueueDumpSigs = 4
- runQueueRunning = 6
- runQueueFailed = 7
- runQueueCleanUp = 8
-@@ -1588,14 +1589,19 @@ class RunQueue:
-             self.rqdata.init_progress_reporter.next_stage()
-             self.rqexe = RunQueueExecute(self)
+diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
+index ad4035a738..b627ae0ab6 100644
+--- a/lib/bb/server/process.py
++++ b/lib/bb/server/process.py
+@@ -477,7 +477,7 @@ class ProcessServer():
  
--            dump = self.cooker.configuration.dump_signatures
--            if dump:
-+            dumpsigs = self.cooker.configuration.dump_signatures
-+            if dumpsigs:
-                 self.rqdata.init_progress_reporter.finish()
--                if 'printdiff' in dump:
--                    invalidtasks = self.print_diffscenetasks()
--                self.dump_signatures(dump)
--                if 'printdiff' in dump:
--                    self.write_diffscenetasks(invalidtasks)
-+                if 'printdiff' in dumpsigs:
-+                    self.invalidtasks_dump = self.print_diffscenetasks()
-+                self.state = runQueueDumpSigs
-+
-+        if self.state is runQueueDumpSigs:
-+            dumpsigs = self.cooker.configuration.dump_signatures
-+            retval = self.dump_signatures(dumpsigs)
-+            if retval is False:
-+                if 'printdiff' in dumpsigs:
-+                    self.write_diffscenetasks(self.invalidtasks_dump)
-                 self.state = runQueueComplete
- 
-         if self.state is runQueueSceneInit:
-@@ -1686,33 +1692,42 @@ class RunQueue:
-             bb.parse.siggen.dump_sigtask(taskfn, taskname, dataCaches[mc].stamp[taskfn], True)
- 
-     def dump_signatures(self, options):
--        if bb.cooker.CookerFeatures.RECIPE_SIGGEN_INFO not in self.cooker.featureset:
--            bb.fatal("The dump signatures functionality needs the RECIPE_SIGGEN_INFO feature enabled")
--
--        bb.note("Writing task signature files")
--
--        max_process = int(self.cfgData.getVar("BB_NUMBER_PARSE_THREADS") or os.cpu_count() or 1)
--        def chunkify(l, n):
--            return [l[i::n] for i in range(n)]
--        tids = chunkify(list(self.rqdata.runtaskentries), max_process)
--        # We cannot use the real multiprocessing.Pool easily due to some local data
--        # that can't be pickled. This is a cheap multi-process solution.
--        launched = []
--        while tids:
--            if len(launched) < max_process:
--                p = Process(target=self._rq_dump_sigtid, args=(tids.pop(), ))
-+        if not hasattr(self, "dumpsigs_launched"):
-+            if bb.cooker.CookerFeatures.RECIPE_SIGGEN_INFO not in self.cooker.featureset:
-+                bb.fatal("The dump signatures functionality needs the RECIPE_SIGGEN_INFO feature enabled")
-+
-+            bb.note("Writing task signature files")
-+
-+            max_process = int(self.cfgData.getVar("BB_NUMBER_PARSE_THREADS") or os.cpu_count() or 1)
-+            def chunkify(l, n):
-+                return [l[i::n] for i in range(n)]
-+            dumpsigs_tids = chunkify(list(self.rqdata.runtaskentries), max_process)
-+
-+            # We cannot use the real multiprocessing.Pool easily due to some local data
-+            # that can't be pickled. This is a cheap multi-process solution.
-+            self.dumpsigs_launched = []
-+
-+            for tids in dumpsigs_tids:
-+                p = Process(target=self._rq_dump_sigtid, args=(tids, ))
-                 p.start()
--                launched.append(p)
--            for q in launched:
--                # The finished processes are joined when calling is_alive()
--                if not q.is_alive():
--                    launched.remove(q)
--        for p in launched:
-+                self.dumpsigs_launched.append(p)
-+
-+            return 1.0
-+
-+        for q in self.dumpsigs_launched:
-+            # The finished processes are joined when calling is_alive()
-+            if not q.is_alive():
-+                self.dumpsigs_launched.remove(q)
-+
-+        if self.dumpsigs_launched:
-+            return 1.0
-+
-+        for p in self.dumpsigs_launched:
-                 p.join()
- 
-         bb.parse.siggen.dump_sigs(self.rqdata.dataCaches, options)
- 
--        return
-+        return False
- 
-     def print_diffscenetasks(self):
-         def get_root_invalid_tasks(task, taskdepends, valid, noexec, visited_invalid):
+             # Create new heartbeat event?
+             now = time.time()
+-            if bb.event._heartbeat_enabled and now >= self.next_heartbeat:
++            if items and bb.event._heartbeat_enabled and now >= self.next_heartbeat:
+                 # We might have missed heartbeats. Just trigger once in
+                 # that case and continue after the usual delay.
+                 self.next_heartbeat += self.heartbeat_seconds
 
