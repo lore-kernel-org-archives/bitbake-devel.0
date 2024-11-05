@@ -2,60 +2,60 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A40D1BDD4
-	for <webhook@archiver.kernel.org>; Mon,  4 Nov 2024 17:46:36 +0000 (UTC)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
- by mx.groups.io with SMTP id smtpd.web11.1837.1730742394118716779
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A4ED2B933
+	for <webhook@archiver.kernel.org>; Tue,  5 Nov 2024 13:55:09 +0000 (UTC)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web10.18534.1730814904936639527
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 04 Nov 2024 09:46:34 -0800
+ Tue, 05 Nov 2024 05:55:05 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=dfOtXs68;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.167.50, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-539fe76e802so5279444e87.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 04 Nov 2024 09:46:33 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ao0+2Tfu;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-431481433bdso48701805e9.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 05 Nov 2024 05:55:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1730742392; x=1731347192; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1730814903; x=1731419703; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rTaBb6ja2JoMBbc2vA7FZi9V2wo1fpimMOSw641ZluQ=;
-        b=dfOtXs68sDMMS2p5bLsCDx3exR72kQPILOT50HnEwTAXKm9+40c4osbqe/w0i7zaGb
-         QO+Z6AEmrMnFg69+zzTiXm6aNy+33aDmLb33+jOUsJUn3R1Mm9XcY+J7TWrd3+Fiii+c
-         pdumHtHazuYsYZpvd6ex6NTBHep5O1gdBfosQ=
+        bh=DdhzT21XL0HT/AMj3Zzo7uwKlIuBH03eQtczQ3+0Mi8=;
+        b=ao0+2Tfu1a/TIgkjpmlIFed5ipZ6y/W4xz18o4OuE0Hqdpmfwkjik6AzU/a8WTr/Jl
+         gIVk4EwrT6hHP24ty/Rd+k/jnPQcm7JRdW8CiT/N0MU3R46qyR2ICQrDYTx49LAh0+om
+         s+XiWue8VIg3oKmbTrF/xhiM+6ojbaGrsJbr4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730742392; x=1731347192;
+        d=1e100.net; s=20230601; t=1730814903; x=1731419703;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rTaBb6ja2JoMBbc2vA7FZi9V2wo1fpimMOSw641ZluQ=;
-        b=scRneFC330IbV5J+Kj8129MOtbRRJ+qWdMbH3b/aMeHtwMTkKblH6D2LriMGQznENP
-         +loHEsQOCaeQs90vEfCIyRfmBNckbRVnNKOXKpMJg7Gm37HjKfKZS5WWP0nfQiM8WU8f
-         FHx6oR2r396BEFaC23KIlY7yRm1HkHDLD9aAC7cu/og8TaYTGy7sa45D12PyrjV8EhDB
-         4UWjVkusr6Upz/4Ik1rDoyCQFzkiy1wAciuUcFWQj/y8GHcydEZHUyYJEOxBZkLU7Dpk
-         JdVqTPjIh1mBi44b2AXhtxk9kdriDwRG1/qH9IMEBIgyxa/g5LsZ02InFXcFtzf/Wcz/
-         goBA==
-X-Gm-Message-State: AOJu0Yx4fdeMQALkJTv0mEMwoDTuodidTj6qp8Y7B5tiW3LpjgszgwsR
-	JccciHzAJtzFI9jGM8Y0mHIxkRDS2ZceLh7rJbEtE0FUr8n1Qq57qsYNyD5W33z9jZdOeUKt1rA
-	25d4=
-X-Google-Smtp-Source: AGHT+IEsbZx4wHs2T9+KAeT+fArQ8lHj62zQLDQQIYUmSm5i9Q9cM7C8l7/c2r0kQnyKMxQLvZ/fhg==
-X-Received: by 2002:a05:6512:3d21:b0:53c:7363:90c with SMTP id 2adb3069b0e04-53d65df7d34mr6268708e87.35.1730742391324;
-        Mon, 04 Nov 2024 09:46:31 -0800 (PST)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:ce35:7d7b:4b91:8e7d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431bd9ca7ebsm190851955e9.42.2024.11.04.09.46.30
+        bh=DdhzT21XL0HT/AMj3Zzo7uwKlIuBH03eQtczQ3+0Mi8=;
+        b=WMLFwegWsa5AxG/khnpDFSdL7P+H7nDa3Olds2p9Ue5Yqq/OiZj6ImdPr9f4Zt5I+Q
+         7DUoGDBd4ZmNm+a492VjIVNWyGB0oqtYRuT8CWvcviFtudeZbxUquT2iHDBxZ2xeCaKk
+         ycmkmbrerCxBwl2uv9mHQl4kVUiDVplLN7XYtytAdpcxqCuDxs/0Fvc3ok2egBQJl2+w
+         +6H6l/mkASPt3COe/xd03qz7G/jy6CegK8g5EVZztn7dDCI7BPUZUHBDSdZgjMMcoBqr
+         sR3hna3KbXu/8QAgh8ogXkR0EsNrQVPyJgPj5xdH129P+5bbh5fUdlfZ6BeDUGVWOGF9
+         ceQQ==
+X-Gm-Message-State: AOJu0Yxb+Y7zERENgwt94Cw7DerczepGiBroAsSex5G41p4PsCPB64EC
+	rP6SAHSPqRc5u6wP3rKwh1ljQ2QTI9LdeMu5PPRFnhbFk3dw0X2kTMQq6bWhck/jjGSphnCm+js
+	TQjM=
+X-Google-Smtp-Source: AGHT+IHTPAV+F/oO7i4NG1wWROIxA/109X9BsZkLcvtb8FGDe4H/juOfyFYBeqS3OSED2+AaAbFbig==
+X-Received: by 2002:a05:6000:4601:b0:381:e702:af15 with SMTP id ffacd0b85a97d-381e702b189mr134582f8f.37.1730814902675;
+        Tue, 05 Nov 2024 05:55:02 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:7614:7622:3cf4:a240])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c10b7b65sm16634414f8f.4.2024.11.05.05.55.02
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2024 09:46:30 -0800 (PST)
+        Tue, 05 Nov 2024 05:55:02 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] runqueue: Avoid dumpsigs idle loop blocking
-Date: Mon,  4 Nov 2024 17:46:30 +0000
-Message-ID: <20241104174630.1274186-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH v2] runqueue: Avoid dumpsigs idle loop blocking
+Date: Tue,  5 Nov 2024 13:55:01 +0000
+Message-ID: <20241105135501.2754494-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.45.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 04 Nov 2024 17:46:36 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16774
+ <bitbake-devel@lists.openembedded.org>; Tue, 05 Nov 2024 13:55:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16775
 
 We're seeing some failures on hosts where slow "idle" loop iterations are
 causing bitbake server timeouts. These seem to happen particularly in the
@@ -74,11 +74,11 @@ the autobuilder in oe-selftest sstate tests.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/runqueue.py | 69 ++++++++++++++++++++++++++++------------------
- 1 file changed, 42 insertions(+), 27 deletions(-)
+ lib/bb/runqueue.py | 73 ++++++++++++++++++++++++++++------------------
+ 1 file changed, 44 insertions(+), 29 deletions(-)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 3462ed4457..bee315c36d 100644
+index 3462ed4457..1b5b58f352 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
 @@ -128,6 +128,7 @@ class RunQueueStats:
@@ -89,7 +89,7 @@ index 3462ed4457..bee315c36d 100644
  runQueueRunning = 6
  runQueueFailed = 7
  runQueueCleanUp = 8
-@@ -1588,13 +1589,18 @@ class RunQueue:
+@@ -1588,14 +1589,19 @@ class RunQueue:
              self.rqdata.init_progress_reporter.next_stage()
              self.rqexe = RunQueueExecute(self)
  
@@ -99,10 +99,12 @@ index 3462ed4457..bee315c36d 100644
 +            if dumpsigs:
                  self.rqdata.init_progress_reporter.finish()
 -                if 'printdiff' in dump:
-+                if 'printdiff' in dumpsigs:
-                     invalidtasks = self.print_diffscenetasks()
+-                    invalidtasks = self.print_diffscenetasks()
 -                self.dump_signatures(dump)
 -                if 'printdiff' in dump:
+-                    self.write_diffscenetasks(invalidtasks)
++                if 'printdiff' in dumpsigs:
++                    self.invalidtasks_dump = self.print_diffscenetasks()
 +                self.state = runQueueDumpSigs
 +
 +        if self.state is runQueueDumpSigs:
@@ -110,9 +112,10 @@ index 3462ed4457..bee315c36d 100644
 +            retval = self.dump_signatures(dumpsigs)
 +            if retval is False:
 +                if 'printdiff' in dumpsigs:
-                     self.write_diffscenetasks(invalidtasks)
++                    self.write_diffscenetasks(self.invalidtasks_dump)
                  self.state = runQueueComplete
  
+         if self.state is runQueueSceneInit:
 @@ -1686,33 +1692,42 @@ class RunQueue:
              bb.parse.siggen.dump_sigtask(taskfn, taskname, dataCaches[mc].stamp[taskfn], True)
  
@@ -147,8 +150,8 @@ index 3462ed4457..bee315c36d 100644
 +            # that can't be pickled. This is a cheap multi-process solution.
 +            self.dumpsigs_launched = []
 +
-+            for tid in dumpsigs_tids:
-+                p = Process(target=self._rq_dump_sigtid, args=(dumpsigs_tids.pop(), ))
++            for tids in dumpsigs_tids:
++                p = Process(target=self._rq_dump_sigtid, args=(tids, ))
                  p.start()
 -                launched.append(p)
 -            for q in launched:
