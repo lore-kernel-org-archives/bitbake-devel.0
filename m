@@ -1,128 +1,119 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9254DD31769
-	for <webhook@archiver.kernel.org>; Tue,  5 Nov 2024 16:52:43 +0000 (UTC)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web11.24912.1730825556376208682
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20659D3E779
+	for <webhook@archiver.kernel.org>; Tue,  5 Nov 2024 22:06:39 +0000 (UTC)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+ by mx.groups.io with SMTP id smtpd.web11.32537.1730844391874997728
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 05 Nov 2024 08:52:36 -0800
+ Tue, 05 Nov 2024 14:06:32 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=g+zMxxfE;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.44, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43152b79d25so48929515e9.1
-        for <bitbake-devel@lists.openembedded.org>; Tue, 05 Nov 2024 08:52:36 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=EW1E4pK9;
+ spf=pass (domain: gmail.com, ip: 209.85.167.45, mailfrom: jpewhacker@gmail.com)
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-539f4d8ef66so7443891e87.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 05 Nov 2024 14:06:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1730825554; x=1731430354; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=T2vuHOuyDk42vyVKAa5VyPXFWQWm8O3xA+2djCQCRSM=;
-        b=g+zMxxfEFFjEKsgHfwapzwUAr4nNI3ng/DpgbVfS6e5eSK7XmQgPRjlELCDrArmCot
-         cBDu1wMz270b3nVZmA4R9zh7bVsgrWHI6vEJnDsuTctJ8M82EKceIUSAGpZJv8SI6Jan
-         ueom1TCaoI6AnGiizq8HtFVN0AVou+jcPizQA=
+        d=gmail.com; s=20230601; t=1730844390; x=1731449190; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NUzkeCeCfCqmCSkF1K1C5KKDQXJxuxp7TdKFnONvy7k=;
+        b=EW1E4pK9WZh5mSc9FF8p+5kb14iKwXNQ+LsqxfUhq+AHvxveSIsrCy1n2LApNka28F
+         Ye6qVvYhM5CAUGvnjEuWFOpfHtwX20GtX4Qzcx9GG6DRFjPhB3SnJ8Dmp1lMA7WCFdtR
+         ZYJ8f+xb6ZEZxZtE8zduAPrzvjBb9PVD6Aa5rNhyG/PoTdykV3g9wC1gaSgKuaguqTQq
+         Vwp9Rl1onA8JTSL2seDCMvai8UaMmKlnwbBCw8U0Y2W3rS7997HR3y320onnbDUpo8rb
+         P+y06Ojo/VLjLoT7qx27U/W0FfVCPqdPzztObJ/Kf2VUSaGN8jo7dIpsiiewWb0r23my
+         b9PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730825554; x=1731430354;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T2vuHOuyDk42vyVKAa5VyPXFWQWm8O3xA+2djCQCRSM=;
-        b=P0dcQ2Zy9MMVZ9AEtjy/HeE1+oqzk5DvU5GfSzCFut/cGxIsTO2Dm0Ohpk2Oj1w7lj
-         tl/cC4/lAkuIpkrNMRV+DZd31b/YO0q5b5jWW+zk3nNmVuOHrMTNVpCxcTtAJlggTIa3
-         zur9hnU3vXpMLW3O/83ToBXmnhrSAiQZizoIbp070SYTHUfLqXegqpfkSBe/oGf0WYhz
-         JZoRA3JwGd4wvPW50Z+2ed2yJigKg06RQmRWKpI77l9eW88hndrHV0SiWXmOLuiWbphy
-         Oeh7zI6J8ljB9IMajoKrpuDQ2cU9t9Cc6qQIga4wlTQHWxzLrpOo93XG137QvGka7PdP
-         9Pug==
-X-Gm-Message-State: AOJu0Yyv/0Ve38lmGBo5TG2Tzx+wAXFZgv0lO/K/0zH6eHLWJHfDMGKZ
-	/2V+0mM/LZU9w86OtQlPY6yHHEsIyiNgmpxezxywRpBYLMI6HziMb5YfvHVLeMxsKnSGkrzoZaw
-	XrjU=
-X-Google-Smtp-Source: AGHT+IFBQpIAzNgFTHYb1xXpRxm0/c9s33SaaoSM2j2odOX6Wh7fIl/2xXnNXgGTMxZHYK/Z/DrHDQ==
-X-Received: by 2002:a05:600c:4688:b0:431:5957:27e8 with SMTP id 5b1f17b1804b1-4327b7ea52dmr160026785e9.28.1730825554327;
-        Tue, 05 Nov 2024 08:52:34 -0800 (PST)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:7614:7622:3cf4:a240])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4327d685308sm191738305e9.33.2024.11.05.08.52.33
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2024 08:52:33 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] server/process: Merge a function to simplfy code
-Date: Tue,  5 Nov 2024 16:52:33 +0000
-Message-ID: <20241105165233.2842065-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1730844390; x=1731449190;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NUzkeCeCfCqmCSkF1K1C5KKDQXJxuxp7TdKFnONvy7k=;
+        b=BXacucLJA1AAP9tHG/tKCy/qClsbsLvt7t7mk0Zh/dP/wbDUOsaL8H4o6vN5oSd2jS
+         lnVr76LeSA0tJSX8PPNDNJYNe/oXSnH91eUYHkOpY1wqGvJvflhRr2rHrT+fwM7bDC6U
+         4gqvY2VKuvAxgVlCmKs88M15xVw70Wvg+/OajpVZL8n3GeDaFUEqjfXkZRAQL8kx/Jbc
+         O1GfGqWKJNdC7f2aoQT5JbhoiBC/DF5WyWOWMb0SyWlBsoSm1PmADFMokzB88gMjaWbh
+         MuiODYM55m7qEyMpWDiWtnrLWfNw7/NCQuJMrX97aJ57FoQBZRIjI/UzVUrwsBQZKuen
+         yH8Q==
+X-Gm-Message-State: AOJu0YzPzd80h9/nsIVXPgNiruyEdZVyfi/84J5vY4r+fuqIp6ramMhv
+	heEJCd4Eb0lGRMxOjz2fzoYidQv+EQo5lKFK9Y5SNCbzSmBwmUHwGeZ6Qjf4B5HwSHkLYNApeGJ
+	+ZKERHzrQ915+xXcUsX+OCoiqicU=
+X-Google-Smtp-Source: AGHT+IEvk5ie57ZSsUaLebNXAXdeAf8LOqiz9/LGWqFPrGTP93rxxy5dWgn2mGxUbKXKK8yb23qh2o4sosSLhlmORbk=
+X-Received: by 2002:a05:6512:1392:b0:536:73b5:d971 with SMTP id
+ 2adb3069b0e04-53b34c5f886mr18916409e87.38.1730844389309; Tue, 05 Nov 2024
+ 14:06:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241105154238.3611453-1-jsbronder@cold-front.org>
+In-Reply-To: <20241105154238.3611453-1-jsbronder@cold-front.org>
+From: Joshua Watt <jpewhacker@gmail.com>
+Date: Tue, 5 Nov 2024 15:06:17 -0700
+Message-ID: <CAJdd5GaL4tOJAREOfXp5vzeQ+zrrL41Sio1e8XaktoDM7=fk5g@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] asyncrpc: timeout attempting to create a
+ TCP connection
+To: jsbronder@cold-front.org
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 05 Nov 2024 16:52:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16780
+ <bitbake-devel@lists.openembedded.org>; Tue, 05 Nov 2024 22:06:39 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16781
 
-Keeping this code separate just makes the code harder to understand,
-merge them.
+On Tue, Nov 5, 2024 at 8:42=E2=80=AFAM Justin Bronder via
+lists.openembedded.org
+<jsbronder=3Dcold-front.org@lists.openembedded.org> wrote:
+>
+> Timeout when trying to connect to an upstream that may be filtering
+> connections (instead of waiting endlessly) and raise a ConnectionError
+> which will allow the caller to note that the client is not connected.
+> This, for instance, ensures that a firewalled BB_HASHSERVE_UPSTREAM will
+> trigger warnings.
+>
+> Signed-off-by: Justin Bronder <jsbronder@cold-front.org>
+> ---
+>  lib/bb/asyncrpc/client.py | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/lib/bb/asyncrpc/client.py b/lib/bb/asyncrpc/client.py
+> index 9be49261c..92e140dfe 100644
+> --- a/lib/bb/asyncrpc/client.py
+> +++ b/lib/bb/asyncrpc/client.py
+> @@ -68,7 +68,12 @@ class AsyncClient(object):
+>
+>      async def connect_tcp(self, address, port):
+>          async def connect_sock():
+> -            reader, writer =3D await asyncio.open_connection(address, po=
+rt)
+> +            try:
+> +                reader, writer =3D await asyncio.wait_for(
+> +                        asyncio.open_connection(address, port),
+> +                        timeout=3D5)
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/server/process.py | 42 +++++++++++++++-------------------------
- 1 file changed, 16 insertions(+), 26 deletions(-)
+Use self.timeout instead of "5" so that users can configure this
+through the normal timeout methods.
 
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 76b189291d..ad4035a738 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -321,7 +321,22 @@ class ProcessServer():
-                     bb.warn('Ignoring invalid BB_SERVER_TIMEOUT=%s, must be a float specifying seconds.' % self.timeout)
-                 seendata = True
- 
--            ready = self.idle_commands(.1, fds)
-+            if not self.idle:
-+                self.idle = threading.Thread(target=self.idle_thread)
-+                self.idle.start()
-+            elif self.idle and not self.idle.is_alive():
-+                serverlog("Idle thread terminated, main thread exiting too")
-+                bb.error("Idle thread terminated, main thread exiting too")
-+                self.quit = True
-+
-+            nextsleep = 0.1
-+            if self.xmlrpc:
-+                nextsleep = self.xmlrpc.get_timeout(nextsleep)
-+            try:
-+                ready = select.select(fds,[],[],nextsleep)[0]
-+            except InterruptedError:
-+                # Ignore EINTR
-+                ready = []
- 
-         if self.idle:
-             self.idle.join()
-@@ -485,31 +500,6 @@ class ProcessServer():
-             if nextsleep is not None:
-                 select.select(fds,[],[],nextsleep)[0]
- 
--    def idle_commands(self, delay, fds=None):
--        nextsleep = delay
--        if not fds:
--            fds = []
--
--        if not self.idle:
--            self.idle = threading.Thread(target=self.idle_thread)
--            self.idle.start()
--        elif self.idle and not self.idle.is_alive():
--            serverlog("Idle thread terminated, main thread exiting too")
--            bb.error("Idle thread terminated, main thread exiting too")
--            self.quit = True
--
--        if nextsleep is not None:
--            if self.xmlrpc:
--                nextsleep = self.xmlrpc.get_timeout(nextsleep)
--            try:
--                return select.select(fds,[],[],nextsleep)[0]
--            except InterruptedError:
--                # Ignore EINTR
--                return []
--        else:
--            return select.select(fds,[],[],0)[0]
--
--
- class ServerCommunicator():
-     def __init__(self, connection, recv):
-         self.connection = connection
+> +            except asyncio.TimeoutError as e:
+> +                raise ConnectionError(f"Timeout connecting to {address}:=
+{port}") from e
+>              return StreamConnection(reader, writer, self.timeout, self.m=
+ax_chunk)
+>
+>          self._connect_sock =3D connect_sock
+> --
+> 2.46.1
+>
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#16778): https://lists.openembedded.org/g/bitbake-deve=
+l/message/16778
+> Mute This Topic: https://lists.openembedded.org/mt/109407941/3616693
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [JPEWha=
+cker@gmail.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
 
