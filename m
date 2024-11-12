@@ -1,82 +1,88 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8155FD597B0
-	for <webhook@archiver.kernel.org>; Tue, 12 Nov 2024 22:01:20 +0000 (UTC)
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
- by mx.groups.io with SMTP id smtpd.web11.99349.1731448873512007171
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA919D597B7
+	for <webhook@archiver.kernel.org>; Tue, 12 Nov 2024 23:06:30 +0000 (UTC)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+ by mx.groups.io with SMTP id smtpd.web11.100835.1731452789070642252
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 12 Nov 2024 14:01:13 -0800
+ Tue, 12 Nov 2024 15:06:29 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=MpjUqtpT;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.53, mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2e2d1858cdfso4751447a91.1
-        for <bitbake-devel@lists.openembedded.org>; Tue, 12 Nov 2024 14:01:13 -0800 (PST)
+ dkim=pass header.i=@smile.fr header.s=google header.b=Z7nqb9B2;
+ spf=pass (domain: smile.fr, ip: 209.85.167.53, mailfrom: yoann.congal@smile.fr)
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-53da07b78dfso82959e87.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 12 Nov 2024 15:06:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1731448873; x=1732053673; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XVb1izzWsQw5GSVM+t/ZEoCeNBovJI6PjIK5Vra8IEE=;
-        b=MpjUqtpTmMG5kQEDXe5yqeWkxJbtZmtfenOX3rqGhIfZMcneyMpicuJRsz5c8kJR3Q
-         BLhUUuQyGtk9B657ioNz1aFC9306qxZ5aP1DT9DnZvoI9z3GhCHsbiCu+RMi18v/YvkY
-         H13hGQUUuf9cGye6x8gTpCQ/6WCa86KExCkkMlwsc02mbVj+Ty35ZPTYAOLJbmIeKod5
-         aK5xga6E6zJha7wBojICKHXXxxWVYcTUFOy34LH1XOpsyGVA35fMyYiTft/ejw3runLb
-         gc8cLveGZJyx45Pr3Bc/CSgLVu/Q7WelqeSKKig/4KmUj8qi4MNWOcoFP2mKlIs4Xtkt
-         FvNQ==
+        d=smile.fr; s=google; t=1731452786; x=1732057586; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hl6PWBdg1RGkEp5az9MC7O2W35G0xw8LaXnxIcVvMSs=;
+        b=Z7nqb9B2upszLVxcMJ3GpPvZWpWT3WnQk8y30itPAPJbbOnmkzZ8hb+sE/jD2Q2nXG
+         1yiq+alkJIuwROOVdeghUc9GJM/Eo3HO5v+5B91l9ZvPGxUDmPThRutwfThJkSGTXUMt
+         GTJpTsc1vc2RJrdr/HpUcLPgtSoslRGiXSCMg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731448873; x=1732053673;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XVb1izzWsQw5GSVM+t/ZEoCeNBovJI6PjIK5Vra8IEE=;
-        b=cbDgpf9nb9U+qn7Dqva9hX+hKAisTthb6uUWvPG6QGbiUq1I5YvTfOKBQkSytIj42E
-         m/3vCK8fXUGgPOJVrvwLvgXun2Cdnev/Dw76oT5hWOLe+AsfDd0mwEERpgmASchkDKsV
-         7Hgwk+bgWOYSlbM0rYjoH7yuOE0nGPqyQVgHhGhtj8N/sOLmGJXfjlkIjERmDpBY6tsH
-         9Oiae4GKEyHhTnXdu99bC7orMgNm5NXAw5gbZojOdPJKqCJ2vYA/bA899OQ1+AG+nUqA
-         4Z9U84n9YLUv79+HO52tKEbaX5YbM6b9m6FyESYYYEnRm7qdwx3dP7XPKYguyhUhcAxX
-         l/xg==
-X-Gm-Message-State: AOJu0Yz5qY6osrahrBM0ICD+fTtwfFRwKbS12RgEiC5fum4J1Q97ukXk
-	w5/GHuH+GjgceJHdCHHT0JhIrjsW65agYHrQVr/Yw1/h4CHhFzgjC8CVMwzsZYRPlim7f3YPqAB
-	p
-X-Google-Smtp-Source: AGHT+IF1gsyDtYNnXfrhgMvnlJCx48QhSd/vlxZPIK9oD/rNWQWwdf4USMjLjp/Gpgt4UQwmBTtBvQ==
-X-Received: by 2002:a17:90b:2b4d:b0:2e2:af05:71b9 with SMTP id 98e67ed59e1d1-2e9b1713cf4mr24042896a91.9.1731448872589;
-        Tue, 12 Nov 2024 14:01:12 -0800 (PST)
-Received: from hexa.. ([98.142.47.158])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e9f3ef36d6sm29332a91.33.2024.11.12.14.01.11
-        for <bitbake-devel@lists.openembedded.org>
+        d=1e100.net; s=20230601; t=1731452786; x=1732057586;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hl6PWBdg1RGkEp5az9MC7O2W35G0xw8LaXnxIcVvMSs=;
+        b=I7mqk3c/U/O8c4ek78L6uOFChgAI7AW2Oe+MQU1xcvV39QDkcwnb/qSu+iqWPL7grL
+         JIlAppcFKnDhKDneW4VTwe3Y/aUpQfL+iXgAKKGj7fpTU+kAEDCFPW2R8oBqPp9ItB2d
+         T/5fmFZJuhq6RkW6FczhMb2TehBenH4GetHJFroKcR0tZuKZImd4Hr9Yad+XbLx1qKQ+
+         KB/Bq7756MIm3JdnPIljn9vCAYHxvdALGKrDQsZQWBzeIJssJ6nyQ4fw8irE9mRutJbD
+         FHJJ1khuus7SGrB5bfew1eU+/IqCZkc/S/vw/zncYub1gkh0f5enRJdlADBAAQrx8dCO
+         TBDQ==
+X-Gm-Message-State: AOJu0YxAkihM0POlQkGgX4nUe9MpM1Iqsbb/x0Z2qANlOZkiYjmGQkKI
+	hcJ/Tr8J4gqj7wRPzisVac8ELrgHHAWgcWx0Dts1yzmUEyEXtCxecsmy4lRkOojpw7wz1KbB/6N
+	c
+X-Google-Smtp-Source: AGHT+IEpyvA44JSUhPl9UuF4zuvGfbuWp8BPbbPeUJ78RdxVp6ipcTlot3ewzNOeKa9H24YidUb2tA==
+X-Received: by 2002:a05:6512:3b27:b0:539:ea49:d163 with SMTP id 2adb3069b0e04-53d9fe8076bmr293132e87.21.1731452786469;
+        Tue, 12 Nov 2024 15:06:26 -0800 (PST)
+Received: from P-ASN-ECS-830T8C3.local (53.1.159.89.rev.sfr.net. [89.159.1.53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432d550c505sm2283635e9.33.2024.11.12.15.06.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2024 14:01:12 -0800 (PST)
-From: Steve Sakoman <steve@sakoman.com>
+        Tue, 12 Nov 2024 15:06:26 -0800 (PST)
+From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][kirkstone][2.0][PATCH 0/1] Pull request (cover letter only)
-Date: Tue, 12 Nov 2024 14:01:05 -0800
-Message-Id: <cover.1731448811.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.34.1
+Cc: Yoann Congal <yoann.congal@smile.fr>
+Subject: [PATCH 2/2] bitbake-getvar: use finalizeData tinfoil API to get identical result to "bitbake -e"
+Date: Wed, 13 Nov 2024 00:05:59 +0100
+Message-Id: <20241112230559.2035910-2-yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20241112230559.2035910-1-yoann.congal@smile.fr>
+References: <20241112230559.2035910-1-yoann.congal@smile.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 12 Nov 2024 22:01:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16792
+ <bitbake-devel@lists.openembedded.org>; Tue, 12 Nov 2024 23:06:30 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16794
 
-The following changes since commit 0c30e9aadd30fc6f0dcf811eb8340687b52eb00b:
+From: Yoann Congal <yoann.congal@smile.fr>
 
-  tests/fetch: Use our own mirror of mobile-broadband-provider to decouple from gnome gitlab (2024-11-02 09:45:13 +0000)
+Fixes [YOCTO #15638]
 
-are available in the Git repository at:
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+---
+ bin/bitbake-getvar | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-  https://git.openembedded.org/bitbake-contrib stable/2.0-next
-  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.0-next
-
-Philip Lorenz (1):
-  codeparser: Fix handling of string AST nodes with older Python
-    versions
-
- lib/bb/codeparser.py | 46 +++++++++++++++++++++++++++++++-------------
- 1 file changed, 33 insertions(+), 13 deletions(-)
-
--- 
-2.34.1
-
+diff --git a/bin/bitbake-getvar b/bin/bitbake-getvar
+index 8901f99ae..bc0b989c8 100755
+--- a/bin/bitbake-getvar
++++ b/bin/bitbake-getvar
+@@ -45,6 +45,10 @@ if __name__ == "__main__":
+             tinfoil.prepare(quiet=2, config_only=True)
+             d = tinfoil.config_data
+ 
++        # Expand keys and run anonymous functions to get identical result to
++        # "bitbake -e"
++        d = tinfoil.finalizeData()
++
+         value = None
+         if args.flag:
+             value = d.getVarFlag(args.variable, args.flag, expand=not args.unexpand)
 
