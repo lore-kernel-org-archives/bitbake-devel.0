@@ -1,97 +1,118 @@
-Return-Path: <vvavrychuk@gmail.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA7FD65C49
-	for <webhook@archiver.kernel.org>; Thu, 14 Nov 2024 12:28:38 +0000 (UTC)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
- by mx.groups.io with SMTP id smtpd.web10.36157.1731587310431617534
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 816DDD6A249
+	for <webhook@archiver.kernel.org>; Thu, 14 Nov 2024 22:18:08 +0000 (UTC)
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+ by mx.groups.io with SMTP id smtpd.web10.6940.1731622682107202076
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 14 Nov 2024 04:28:30 -0800
+ Thu, 14 Nov 2024 14:18:02 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=Tfmh5bMy;
- spf=pass (domain: gmail.com, ip: 209.85.208.170, mailfrom: vvavrychuk@gmail.com)
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2fb49510250so5297041fa.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 14 Nov 2024 04:28:30 -0800 (PST)
+ dkim=pass header.i=@smile.fr header.s=google header.b=eQugWm/4;
+ spf=pass (domain: smile.fr, ip: 209.85.221.44, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-37d49ffaba6so744715f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 14 Nov 2024 14:18:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731587308; x=1732192108; darn=lists.openembedded.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=iuqK17IqwK6ik9EuOaeJR5/l+xhLvk8wZB3XueJ5ceY=;
-        b=Tfmh5bMyYk0QShfwXeTRsGAQ9wWqkO9vSqxVI4jUv2cbBd37MVnks7d8byosUn17DD
-         Y4lVwssosb7hNJwQqOja5049zl47g3XKiKYelXrqofR1yapH/UbTbaDv/8P0SHjgFg5n
-         PBjsX7/wW9lLf8FNROxY7Wzz7Y6HrK6U2HtxUs1LLC9JbNx7R+hrP+dl4rJ57aHNZTES
-         oVpo+841rZEoLUkwbmz0RDKzLJvstE66WfbHku+nWxoif4AmocBb2VvO512gEcU28mCT
-         XMy3WdWrYSA0IE42KO+5iqCz1kNMbi1CwMbeUHhGczitU+pl3S3HkjZ7/oMvQSZD1jGr
-         JPGw==
+        d=smile.fr; s=google; t=1731622680; x=1732227480; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RbOgv1FfVWtwzgD2fU/mGiMnkC7x/PAOffhLrnMZon0=;
+        b=eQugWm/4nM6JKMJrNatQS8ijRWx2uArsod7D13a29rxZjxtpsO1c67T5Rd38ZTeNHT
+         RWHNulfc2QflcPO3UtGRWa6YlsOc42yvMqaHfK3a3V0unNksqoDLfnUKXlsP7JrH2yCU
+         jwv2CWMONZbBxEmiQWWdmj7MwHEx7wnLLQaJ8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731587308; x=1732192108;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iuqK17IqwK6ik9EuOaeJR5/l+xhLvk8wZB3XueJ5ceY=;
-        b=B6oif0Ok/SLEUwMEdPfaqze+G+7ieHiyzeSuk/eM74E2aEO0NgiFlirMmQ+EdaDwdB
-         kdG9dbxhC053a/D2/RnxZMH02wp5oXCasHbxcR20XWNz73gfVl7Bb0oaLwMZyJ60LM1p
-         GsROHifWM2tr5MxA3U+7XJALhK5hbxBcdtzvU+svKq1mzi/BgRHgcGvVvEqEa+Vmqc5u
-         TdbDJhb/Qm4HJ+9n4f8cDSdjll8RhHD61BojKQP3LhM/a4d0P4JVOiN/MkvcHRtyLKNC
-         NIlKupFeu3IPDRKoMeyh11Bb54mGvPFGsEpZCJtWLyBtmZCUpG4Iv1TZY2J0pT64V6k4
-         WF1g==
-X-Gm-Message-State: AOJu0YxbZ+/0u7jiRLFoVVGsUcwim8pdSgGOCJBlTPd/uNVcJxCmx+Oe
-	XsTaHGP/CnQynWMtw1o51vLmK966U37qs7EdtiUl4VabtJ3STVaB0MG1NYx1s578CZ1njmYfAiA
-	Q9T0vn6ubItvcdsJReBTBfw9Khi7ha2st6lE=
-X-Google-Smtp-Source: AGHT+IHK0prtouCIaq/fjZwSp1dZqw6WyGwahFpZJgg2q+mOBsgKY033CHlasi7voyfAOdOhP0VR9UhIpnx8qBCObrM=
-X-Received: by 2002:a05:651c:1146:b0:2ff:183d:df1d with SMTP id
- 38308e7fff4ca-2ff4c6184a1mr36669691fa.27.1731587308077; Thu, 14 Nov 2024
- 04:28:28 -0800 (PST)
-MIME-Version: 1.0
-From: Vasyl Vavrychuk <vvavrychuk@gmail.com>
-Date: Thu, 14 Nov 2024 14:28:16 +0200
-Message-ID: <CAGj4m+72ZBL6rtaGRQq13X-JJg5Okp0NTYhASOr2-zPG5zVVHQ@mail.gmail.com>
-Subject: using non-existing variable in inline Python variable expansion
- results in parsing changed
+        d=1e100.net; s=20230601; t=1731622680; x=1732227480;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RbOgv1FfVWtwzgD2fU/mGiMnkC7x/PAOffhLrnMZon0=;
+        b=T4wPutJxCHPboY2hoNolf0gwlhVtXk1aWjpTySMstP4PFBa7vI6VgTlRdvdMppVnjm
+         8JlLtSG8QezpQKMRGKHnfVhzsSOTW2ouvwNKrG8ra1ixlpNhr7r5vHCujbRB4JCo6kw5
+         CHrgTD7kZ/HRk4u7lOliowl/DTqJcpeji6Ak+r/TV3Cjf1S5aozHdlp7qLzVnCtxbGFl
+         jCFsWhzzbxg16oVPUGpS+GEYXYFGlCOcfZ5Y3z/T7Q1j6JDaV1zLGJNAvXy6k8AmOhnI
+         Le7JwMOaKm3XOnOXaMtjaXE2ogMdBXlENPPAblQ7ywG4oJbu9O2zEELkAMxPig2Lw2ao
+         yRJQ==
+X-Gm-Message-State: AOJu0YyP1TxCn2aL9XuzmidyCmY85NTUVklooqkm0x0z79+zp8ggmW87
+	TJp6AzQAXM7z5wUgKWeh+ME2Aw7h7UAxfW7efmf6XXplxlRjBPaideHMpmNL49khWGoi0OZIstc
+	k
+X-Google-Smtp-Source: AGHT+IG3/3GDb2qPuH8W6Hr++XezcEGserWcK8HaNb7AxovRWemBWEG2tXk9z1m+4UJEgKUmxinQ1w==
+X-Received: by 2002:a05:6000:144f:b0:37c:d23a:1e4 with SMTP id ffacd0b85a97d-38225a26471mr241425f8f.30.1731622680311;
+        Thu, 14 Nov 2024 14:18:00 -0800 (PST)
+Received: from P-ASN-ECS-830T8C3.local ([2a04:cec0:11fb:21bd:1f18:7aa1:7b8e:5f4a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3821ae4c125sm2578731f8f.110.2024.11.14.14.17.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2024 14:18:00 -0800 (PST)
+From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
+Cc: Yoann Congal <yoann.congal@smile.fr>
+Subject: [PATCH v2 1/2] tinfoil: add new "finalizeData" API
+Date: Thu, 14 Nov 2024 23:17:25 +0100
+Message-Id: <20241114221725.3826753-1-yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.39.5
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 14 Nov 2024 12:28:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16800
+ <bitbake-devel@lists.openembedded.org>; Thu, 14 Nov 2024 22:18:08 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16801
 
-BitBake code
+From: Yoann Congal <yoann.congal@smile.fr>
 
-----
-def python_function(value, other_value):
-    return value
+Create a new tinfoil API "finalizeData" which does key expantion and
+runs the anonymous functions to allow bitbake-getvar to have the same
+output as "bitbake -e".
 
-DEPENDS = "${@python_function("${NOT_EXISTING}", "")}"
-----
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+---
+v1->v2: No change
+---
+ lib/bb/command.py | 8 ++++++++
+ lib/bb/tinfoil.py | 6 ++++++
+ 2 files changed, 14 insertions(+)
 
-produces errors
-
-----
-$ bitbake --dry-run example
-Loading cache: 100% |#| Time: 0:00:00
-Loaded 1868 entries from dependency cache.
-NOTE: Resolving any missing task queue dependencies
-ERROR: Nothing PROVIDES '${@python_function("${NOT_EXISTING}",' (but
-.../example_0.1.bb DEPENDS on or otherwise requires it)
-ERROR: Required build target 'example' has no buildable providers.
-Missing or unbuildable dependency chain was: ['example',
-'${@python_function("${NOT_EXISTING}",']
-
-Summary: There were 2 ERROR messages, returning a non-zero exit code.
-$ bitbake --dry-run example
-Loading cache: 100% |#| Time: 0:00:00
-Loaded 1868 entries from dependency cache.
-NOTE: Resolving any missing task queue dependencies
-ERROR: Nothing PROVIDES '"")}' (but .../example_0.1.bb DEPENDS on or
-otherwise requires it)
-ERROR: Required build target 'example' has no buildable providers.
-Missing or unbuildable dependency chain was: ['example', '"")}']
-
-Summary: There were 2 ERROR messages, returning a non-zero exit code.
-----
-
-Looks like when using an undefined variable in inline Python variable
-expansion, then inline Python variable expansion is not parsed. Can we
-avoid this? Can we have more user-friendly errors?
+diff --git a/lib/bb/command.py b/lib/bb/command.py
+index 695277f1e..a63427660 100644
+--- a/lib/bb/command.py
++++ b/lib/bb/command.py
+@@ -24,6 +24,7 @@ import io
+ import bb.event
+ import bb.cooker
+ import bb.remotedata
++import bb.parse
+ 
+ class DataStoreConnectionHandle(object):
+     def __init__(self, dsindex=0):
+@@ -582,6 +583,13 @@ class CommandsSync:
+         return DataStoreConnectionHandle(idx)
+     parseRecipeFile.readonly = True
+ 
++    def finalizeData(self, command, params):
++        newdata = command.cooker.data.createCopy()
++        bb.data.expandKeys(newdata)
++        bb.parse.ast.runAnonFuncs(newdata)
++        idx = command.remotedatastores.store(newdata)
++        return DataStoreConnectionHandle(idx)
++
+ class CommandsAsync:
+     """
+     A class of asynchronous commands
+diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
+index dcd3910cc..0e937fba3 100644
+--- a/lib/bb/tinfoil.py
++++ b/lib/bb/tinfoil.py
+@@ -633,6 +633,12 @@ class Tinfoil:
+         fn = self.get_recipe_file(pn)
+         return self.parse_recipe_file(fn)
+ 
++    def finalizeData(self):
++        """
++        Run anonymous functions and expand keys
++        """
++        return self._reconvert_type(self.run_command('finalizeData'), 'DataStoreConnectionHandle')
++
+     def parse_recipe_file(self, fn, appends=True, appendlist=None, config_data=None):
+         """
+         Parse the specified recipe file (with or without bbappends)
 
