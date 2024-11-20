@@ -1,114 +1,96 @@
-Return-Path: <bhstalel@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2441D743C5
-	for <webhook@archiver.kernel.org>; Wed, 20 Nov 2024 19:08:36 +0000 (UTC)
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
- by mx.groups.io with SMTP id smtpd.web11.23146.1732129708178363346
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28351D743DA
+	for <webhook@archiver.kernel.org>; Wed, 20 Nov 2024 21:32:27 +0000 (UTC)
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+ by mx.groups.io with SMTP id smtpd.web11.26.1732138337175767615
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 20 Nov 2024 11:08:28 -0800
+ Wed, 20 Nov 2024 13:32:17 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=La+tyOUX;
- spf=pass (domain: gmail.com, ip: 209.85.160.180, mailfrom: bhstalel@gmail.com)
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4609acd6bf4so146091cf.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 20 Nov 2024 11:08:28 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=eZ+Slm8P;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.44, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3823e45339bso142180f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 20 Nov 2024 13:32:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732129707; x=1732734507; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TUKePqHIz/e5YIH7/oJ4WJp7RYqpM7+37WWpSR8ENWA=;
-        b=La+tyOUXfJYd2Ga64Tzgc1SkKiA9L+qfyKb9NsHPSomvZw0zlh8N4S3YD486DT0MU2
-         82NUPVHHte36/iduHkh04Halt7xbPKGbxmwSNFcBVGee0A7DViSWrcw+Yo8zKgUdt87A
-         XHvVGkwqMQBEB6SJRVAeZ3l+KFCuuA7pDVSBP9qCsr8eh2TIoZ0JDHVoTUnwPpbLMyt3
-         rSZQxziaYFI77vei+HgDRQzvYXczbueoM4YlgOHLdZRVaptxuj6DYfLevC0Ko7q2ViUe
-         Hwdbn4qGPORWz/Ahn1de+hLjYRFfX6oOPjsORgTe2nZ7gxkGmASwJ0ebA5CZK9Clfv/Q
-         xucg==
+        d=linuxfoundation.org; s=google; t=1732138335; x=1732743135; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=11ato+NutFdB/QXJ9RGwV2usvYU23qmnf8m0AVj75Wk=;
+        b=eZ+Slm8PceMgErA0/NOReuHPiZJuQgoIlo3Nz3FWo79W8jE9gNzhRtRAS/FhehEqzr
+         s3B5iKWE76D9dGKhFDbHXjk3B4G31Vr8LAuLF4TjaGXeETyeCZGMoYyaddFfFIsOnJTZ
+         pb8w+WzulHl4lhjJrF1tWCbesTg1/XdUE8C3E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732129707; x=1732734507;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TUKePqHIz/e5YIH7/oJ4WJp7RYqpM7+37WWpSR8ENWA=;
-        b=OivSAgDKoiUE1d/UNzDRL8kefUeV07YZFb8tCqu4Qxlq4UWJwFOyGTspRJvifM+qWU
-         NEy/7DtI5w4+iRquKcUUIsJKnLcSM6qpIOLOBlZo+t6bHYd9m0MyH2ifr1DdUABhQ+wZ
-         1CE34JGYDIMl9/Ha/qDkNT6xR1OguYQPKJGLgz9Be12HcggwqOPouEtqHWqOtPbQKdT6
-         Db8MU5Q/h2DaUSD3U5gNqd6Ps20rdFcRNI9fV/gXrZCjKZeaDq2hod6RDvO6DtiHkPK9
-         fPAcPf5t1LSwajbkqgWQBi5wJ3CzQe0Hy3A8fHwBYNnJo6HjOECKJs8kB90u/aiq1htK
-         4l8w==
-X-Gm-Message-State: AOJu0YweDrmWUugeY/QPDxw5DEgIcGIrRIRs3ji7Ao4W2h4v6icSD9R3
-	uUoV0St1XiYHnH73L8wahs7ebRRAUM3NGGZ/0inZQL6yNIwAuU+WaT6Evw==
-X-Gm-Gg: ASbGncvbq9/rXD4HT6BQd3kykzVstL/XXG2dQ2USqq0in3TtZF94cR3uxMv6vp6/Y8h
-	czOZkRc52BdVlyjBqVJqWp+K4xfTdgFL7IYMeD4aLhSxOcYoCmDYN8kiF9kDtPA+2G3RPZ/TRZe
-	mzaw0Tcei+GksBNOJZPm4e9PPWXXJBQ1+1ezlwcpShiQs6Y695gfbNy+bxP9zRyUOMOdph09SoW
-	cv2OPHuF9qHukj0h9d8ACgleBtRYzqZkG9fYgV7dNVz
-X-Google-Smtp-Source: AGHT+IHyAX5tDpKUGk3F+yiUmMd49NF2Ic/9hsBjgT4+PScxgHrfzviJh8taT/tBIm0eto2tJ941yA==
-X-Received: by 2002:ac8:5903:0:b0:461:2416:13c3 with SMTP id d75a77b69052e-4652b44d0a7mr12738971cf.15.1732129707071;
-        Wed, 20 Nov 2024 11:08:27 -0800 (PST)
-Received: from bhstpc.. ([196.176.166.73])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4646ac162b8sm13144541cf.88.2024.11.20.11.08.25
+        d=1e100.net; s=20230601; t=1732138335; x=1732743135;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=11ato+NutFdB/QXJ9RGwV2usvYU23qmnf8m0AVj75Wk=;
+        b=pRyrTEcZ3k0gZFegGb3+h3bCyImLPcjo/aq82LJ/ufpDl0/N2n84xB2NETpZgm3KFQ
+         z8JHaOg5b5BTXQlbzAzJw0il0BQDld230KVu6ImOun+S6FuFQbiQkob2NhdV6H5T/gLw
+         JDYIRosbaJTjjXfUKZqL8VnoDbl0V5VvkM9+nrd6kSmLOveVD5ygdRaLcV4hdRTuji7J
+         kLtpDpvSODsJObeWWTXMAI/R4k3EeTC0FMNbrqdYvpb3pQMHt0Y5cM35hXB6U28xGGNn
+         Qk2CxZRH8I1XQR81fRzK7Lcf8drfc1lN4rkZd2bGuUcvWfze5Og6BvXuXkuWVMniQhAP
+         kuZQ==
+X-Gm-Message-State: AOJu0YzPtgvD0Zs1CsNNbyn85ok9sPBgK1am9m+JzsZIGxHDTGI8c/rF
+	PamiUuII4FNVfc/V13aXIC2OkKbphieliPOTnJPmpvY5OwaR3ucpJjAv4QDIRVP8o1X7rHbaVkI
+	yES0=
+X-Gm-Gg: ASbGnctWKODY/5sPs48jSMu/FyKUDpUszxn+FtFja8sES/DssTCttvDMSC0n3jRV9li
+	Qc4WGIXObC7NwJRGsw+Z0Kd+oGavKDGNm4KyqMceVyMbwnFw2k0FozrlhHKprv2R39k6UY7yDVO
+	Qm96Upt6FSh6Gqgvu8r8lAoxGwaFNJTXT63EqKoXIi+B96szPUcE3YsrGqMKohb07qO6gWegR63
+	vrbqs4LrJLW/VqgdUwikDYl8CFLw4y0chfmTDUdtx4o3Y84d/693krtiK14KZLLXo6G5VyHQ57t
+	xg4=
+X-Google-Smtp-Source: AGHT+IFqc6hZylN8x64s5vDqAnSDN49WJCvSFBSVAlY0g3VdfMWQqd/KayEYwXLx5PApWz9fC0yJqQ==
+X-Received: by 2002:a05:6000:2801:b0:382:2f62:bd45 with SMTP id ffacd0b85a97d-38254afa5c3mr2573404f8f.29.1732138334878;
+        Wed, 20 Nov 2024 13:32:14 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:5abf:50dd:d6fd:8415])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-382549107f9sm3064319f8f.51.2024.11.20.13.32.13
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2024 11:08:26 -0800 (PST)
-From: Talel BELHAJSALEM <bhstalel@gmail.com>
+        Wed, 20 Nov 2024 13:32:14 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: Talel BELHAJSALEM <bhstalel@gmail.com>
-Subject: [PATCH v2] bitbake-getvar: Catch NoProvider exception
-Date: Wed, 20 Nov 2024 20:08:21 +0100
-Message-ID: <20241120190821.7073-1-bhstalel@gmail.com>
-X-Mailer: git-send-email 2.43.0
+Subject: [PATCH] fetch/wget: Increase timeout to 100s from 30s
+Date: Wed, 20 Nov 2024 21:32:13 +0000
+Message-ID: <20241120213213.2481909-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 20 Nov 2024 19:08:36 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16820
+ <bitbake-devel@lists.openembedded.org>; Wed, 20 Nov 2024 21:32:27 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16821
 
-When the recipe provided by (-r, --recipe) is not found
-tinfoil raises an exception that is not catched for
-readability, example:
+Testing shows the worst case CDN response time can be up to 100s. The wget fetcher
+is used for accessing sstate from the CDN so increase our timeouts there to match
+our worst case repsonse times.
 
-Traceback (most recent call last):
-  File "/.../poky/bitbake/bin/bitbake-getvar", line 45, in <module>
-    d = tinfoil.parse_recipe(args.recipe)
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/.../poky/bitbake/lib/bb/tinfoil.py", line 633, in parse_recipe
-    fn = self.get_recipe_file(pn)
-         ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/.../poky/bitbake/lib/bb/tinfoil.py", line 550, in get_recipe_file
-    raise bb.providers.NoProvider('Unable to find any recipe file matching "%s"' % pn)
-bb.providers.NoProvider: Unable to find any recipe file matching "aaa"
-
-Signed-off-by: Talel BELHAJSALEM <bhstalel@gmail.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/bin/bitbake-getvar | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ lib/bb/fetch2/wget.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/bin/bitbake-getvar b/bitbake/bin/bitbake-getvar
-index 20c0b696f7..1719824d95 100755
---- a/bitbake/bin/bitbake-getvar
-+++ b/bitbake/bin/bitbake-getvar
-@@ -16,6 +16,7 @@ bindir = os.path.dirname(__file__)
- topdir = os.path.dirname(bindir)
- sys.path[0:0] = [os.path.join(topdir, 'lib')]
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index 7856d10fa4..773d41ca81 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -82,7 +82,7 @@ class Wget(FetchMethod):
+         if not ud.localfile:
+             ud.localfile = d.expand(urllib.parse.unquote(ud.host + ud.path).replace("/", "."))
  
-+import bb.providers
- import bb.tinfoil
+-        self.basecmd = d.getVar("FETCHCMD_wget") or "/usr/bin/env wget -t 2 -T 30"
++        self.basecmd = d.getVar("FETCHCMD_wget") or "/usr/bin/env wget -t 2 -T 100"
  
- if __name__ == "__main__":
-@@ -40,7 +41,10 @@ if __name__ == "__main__":
-     with bb.tinfoil.Tinfoil(tracking=True, setup_logging=not quiet) as tinfoil:
-         if args.recipe:
-             tinfoil.prepare(quiet=3 if quiet else 2)
--            d = tinfoil.parse_recipe(args.recipe)
-+            try:
-+                d = tinfoil.parse_recipe(args.recipe)
-+            except bb.providers.NoProvider as e:
-+                sys.exit(str(e))
-         else:
-             tinfoil.prepare(quiet=2, config_only=True)
-             # Expand keys and run anonymous functions to get identical result to
--- 
-2.43.0
-
+         if ud.type == 'ftp' or ud.type == 'ftps':
+             self.basecmd += " --passive-ftp"
+@@ -371,7 +371,7 @@ class Wget(FetchMethod):
+                 except (FileNotFoundError, netrc.NetrcParseError):
+                     pass
+ 
+-                with opener.open(r, timeout=30) as response:
++                with opener.open(r, timeout=100) as response:
+                     pass
+             except (urllib.error.URLError, ConnectionResetError, TimeoutError) as e:
+                 if try_again:
 
