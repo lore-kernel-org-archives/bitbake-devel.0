@@ -1,197 +1,175 @@
-Return-Path: <chris.laplante@agilent.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D21D6E2AB
-	for <webhook@archiver.kernel.org>; Wed, 20 Nov 2024 04:09:51 +0000 (UTC)
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (NAM12-BN8-obe.outbound.protection.outlook.com [40.107.237.45])
- by mx.groups.io with SMTP id smtpd.web10.5674.1732075784340407329
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA00CD60D17
+	for <webhook@archiver.kernel.org>; Wed, 20 Nov 2024 09:30:12 +0000 (UTC)
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+ by mx.groups.io with SMTP id smtpd.web11.9661.1732095010037828648
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 19 Nov 2024 20:09:44 -0800
+ Wed, 20 Nov 2024 01:30:10 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@agilent.com header.s=selector1 header.b=U+u9Mb0E;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.237.45, mailfrom: chris.laplante@agilent.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iD/YVc6jWuNdewPk1jxBVn65nAsQKh6n8x1WmcF49rm1seJq1andxqSCoz0orLQ98ReLwGzPFGA2vJ/iwjSS2WNOkD/ndX0V9fcBuzb+p2jLkd8ZwnozHrqIsCQXUcpJdWIVex31K30bMDhQQ4Nlw2jfVrwWEjXJ3DahjhT5vWrdE5/66ECOS7/JeOj3xGD8hOdENJZE4TJWsuStnD/US0HlyV4+eygMB0ZyN1eeeGbbPIYRn1tFTnwjh+WVPEeayRz/A+SfTNUNAmR41pdNLXQYslWrC3XLEWwygMNeQDkP2CzkiXn4wwN6pBG/Lxt9pmJMw/fyshs891nHKCmw2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DhIXfHtU+yzhUTJnKc5e0LzozuMjDs9+Va7vwYznn1A=;
- b=VDc46WKid6U5bnJyY6jfsIT72ArFMVZ8wKerJufCAMXH8OXJHVfhjST8xLvccwa4oiHJ6N9WD4MBhLA/3BDgkwBOpKkyYSuL9ZAsU3UUXY5J+yhY7/jajL2xMlfgcO87/Unrj2GbqhESh9frhMbyCf2ONmjkG8QSbWR6A7bpSEU4CGb+l+Z1Hk0pAulI2gBen1rxEbS8gp8crUwWt+/fDLlBu0TpVwDOu+ODNNLa2IYAOLfp9grk2/u/N5zy1aVFERpNJWDM2W2HbbEEax6jToebJRbLlHAnchFyaRsqO7k5uCr5uObxjVAKe1jLS900S6liepyLeM/LwxMTey7G3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=agilent.com; dmarc=pass action=none header.from=agilent.com;
- dkim=pass header.d=agilent.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DhIXfHtU+yzhUTJnKc5e0LzozuMjDs9+Va7vwYznn1A=;
- b=U+u9Mb0EWRcrIqnjz901NS/HtfPOcGAZPzUmtBk4avzaYzz3TNRhCLz/Eu6jjPxpscXWOyx0U5uCLX3EVdD0WuHxO+FT5YCc2U17aOXWHUfLAJAvR7T35TlPDIxbVoZXwmscnoVMmcvY9w7aJdhzdSMPxdrC26GXdPX7Avs4clUweqM52SKwLDO8rc5Maox/5lt076MBL64UlHusV+JNX31lfVJOUEurudWvXKUbNM2v+CwfY/HgHl38rElU7lBqNulmZugohu6yCeL44JVJDGj3tJAK/VdMVV99FhnxXDiXvqGerg3VxtJFAgkV1wHGVIKoUZDIlUDaUagDXq7k0Q==
-Received: from DM8PR12MB5430.namprd12.prod.outlook.com (2603:10b6:8:28::6) by
- PH7PR12MB9175.namprd12.prod.outlook.com (2603:10b6:510:2e6::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.24; Wed, 20 Nov
- 2024 04:09:41 +0000
-Received: from DM8PR12MB5430.namprd12.prod.outlook.com
- ([fe80::604e:bc05:9357:c7d7]) by DM8PR12MB5430.namprd12.prod.outlook.com
- ([fe80::604e:bc05:9357:c7d7%5]) with mapi id 15.20.8158.023; Wed, 20 Nov 2024
- 04:09:41 +0000
-From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
-To: "richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-CC: "steve@sakoman.com" <steve@sakoman.com>
-Subject: RE: [bitbake-devel] [PATCH 3/8] checksum/fetch2: Switch from
- persist_data to a standard cache file
-Thread-Topic: [bitbake-devel] [PATCH 3/8] checksum/fetch2: Switch from
- persist_data to a standard cache file
-Thread-Index: AQHbGX65WALcs3wjNUOGQEjavFXHBLK/znQw
-Date: Wed, 20 Nov 2024 04:09:41 +0000
-Message-ID: 
- <DM8PR12MB5430F82E66A733A5687F5FB78B212@DM8PR12MB5430.namprd12.prod.outlook.com>
-References: <20241008123627.252307-1-richard.purdie@linuxfoundation.org>
- <20241008123627.252307-3-richard.purdie@linuxfoundation.org>
-In-Reply-To: <20241008123627.252307-3-richard.purdie@linuxfoundation.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
- MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_ActionId=44e0bf41-855f-4f53-9c35-8f715c8e71d4;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_ContentBits=0;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Enabled=true;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Method=Standard;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Name=General;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_SetDate=2024-11-20T04:00:22Z;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_SiteId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=agilent.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR12MB5430:EE_|PH7PR12MB9175:EE_
-x-ms-office365-filtering-correlation-id: 962a5332-cc60-469a-3235-08dd09192844
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
-x-microsoft-antispam-message-info: 
- =?us-ascii?Q?u4/iTCkV/D9m+KmZwIRDLxkgjU753HIjZVFWw6Sji/O8X9Y1pW9rn8jk0T5F?=
- =?us-ascii?Q?1Nqqahz6w4J/F3ugBLZRMZF8GtYxVprAizZP8WU34LhpXnkHbM7ET2tMmBfJ?=
- =?us-ascii?Q?GTfaOCKkzlROHhXXl0m8j6VtHkI42joXojrGzUBbFrD9T6Jp2QLPWuOmuA9u?=
- =?us-ascii?Q?9ZDXFyBjsqSJO2IEIt0IAf3yS7P2AM//7O4MJvPpZ7FjfceLlk35dQ0aEEy/?=
- =?us-ascii?Q?1Na2hYdJZVy0Omst03xztyv75IKy7W+wKuIOpJwEpbBxlhSTlF8NoXnhVgkA?=
- =?us-ascii?Q?9F67irCm3JCutEwn0x9zSgPPRzuemDxTvjJKi8hcaHcUK4gGpH0vECGtMtVM?=
- =?us-ascii?Q?0qjA54qKHzUDEM5CcWF2fOYOUiCvL1Rsfo0PsbfqXHMnEhq0wfPWLfYia+l0?=
- =?us-ascii?Q?6lwkEmyhKj/flDcangUbHqTD8NoeJcsSoJe+cO3xQkn9sgfeVzTw4MX+v40u?=
- =?us-ascii?Q?vRyYuVRJPlu195dax/wMw7Lz5asb/TMtb/2YKjNeT7AelfzbR4CAI2MTQb2+?=
- =?us-ascii?Q?6h/Bw7B/8f3aYvBVt0WupTbEztcGy/XtytxYbf+sz4ryn8KSh3inQGsJH9KV?=
- =?us-ascii?Q?dODFtxwF7Ri7TG2hUq9oBZkr8xXyjLNv+owgYnr57/z00NgXdiVTxGFyRDDg?=
- =?us-ascii?Q?uPS+R7D2Bs+CDVfG/24soPaUHfE0L1hVhygti3IOm4gef5d+Y26fxc66NlYD?=
- =?us-ascii?Q?2bjqzf9e0NRD9NyUIKcg2cn+iVuPws9eKSu9xEy22iGo/AnhM1Ohx4ufOFL5?=
- =?us-ascii?Q?LBvO9Z4JXj3io4yPczBQFlyBkqlaucE4qIUIU/5/pVLfwLW28DPwHDhdYOME?=
- =?us-ascii?Q?bKWxThhEUzTxbUEYMdcXF2WPyke3qmAbqzeLrFEzaG1q+kC7y6WtyNS7SJPK?=
- =?us-ascii?Q?YESOYihwO0E8Vh2RL/3rEmpJ+M7U2RO7JlmYVh5bjnY3HVuIN01PGC1SEn2c?=
- =?us-ascii?Q?M8kOLLQJ6f+ez7eZJbKr53d9yUGbPh/MuDu2Vhy3HQFjuKjbaOjRWRWXSO5L?=
- =?us-ascii?Q?+WigiUw03BsXtlWYDXA0jMr08Bkfb9edCG38pIVcies+0tRetX6h2Er9xGp+?=
- =?us-ascii?Q?mWRdU4wCzAXB24hTQB7CZBKBqzBWG2ldfoX7tpSmQc0pj6z69G51VoyInnR7?=
- =?us-ascii?Q?mbiSVRDeVgju9+S0Cr42WuygQGpXjWEDFy+qsB/2hArHXNCGe3IgyndbMwrm?=
- =?us-ascii?Q?UhGeerSGeGY/irKZu4QcNylhbzNDjfghYwpGA2y46RgBtKUl8E+J6sWSBlsc?=
- =?us-ascii?Q?GfBAA228Bazlcx8oqluK0u5z8fXNzv5wJzEAfpsf24JhWN3rCEJO1SGan4ry?=
- =?us-ascii?Q?WlRfYOVQXWmhxKWKpYsok1tdiQu+DmvlfbnKZfToc5hRMqJ1DVMYBG/lJmrS?=
- =?us-ascii?Q?3NB+0cfb/JfNdQeouncc0mvqQCmW?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR12MB5430.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?8+z+gPqUyQOtbHwWma411hrAH6gjdZoBAJbAIF7+Kp2sh7CHaf54tvJrdxOx?=
- =?us-ascii?Q?RuqzongEJ7J//oCmQEFwtLT+a1S26CIrzel5e02tMjdhg8Y8/VqbGmRcR+1N?=
- =?us-ascii?Q?E87paVPXNS/YEBlcgzNfKLMXNcuywB+zmJu5U8Kpb80nYCx8uNhTG+bmJaJa?=
- =?us-ascii?Q?LLA/Ez4ETEVJaqUi8ZsRdaq0jZ4ritS1gfLQiU65PWAUP4aMnWm2QfCE0aYy?=
- =?us-ascii?Q?IhTz760Wo1Z8ApIuPF4TA9rPQLN/i2L5I/QorthVdlbk9Uk3Q3ngifw4Z/Ri?=
- =?us-ascii?Q?ylstU3GOZ9uiuHw6jwQL/WD5hghlWXIONshB29UCajtoQQvtBPQkw+Fe/xW8?=
- =?us-ascii?Q?tnx1nTlnrh9Drq9LZ3PqrjyaJSXuiwTemj6n7b3u5S8BSLEkP47e7C7OsHw+?=
- =?us-ascii?Q?o8tEPQFth0vOfq1iePE2Aglpa/EzG4klreNLXt5u2zYlSZ0l7T9W43ZM8ou5?=
- =?us-ascii?Q?Yn4OGzq63rYZ7f5HIH5D8vaT1wWhYSPJ5MhcC2KUqJhdRZPYwuEUuxKwfVJG?=
- =?us-ascii?Q?nVXKujWD4IjQjrklvTTIa1QBuVSL8JJfFrTgag0oi1WMmkGka2UaCdbujYwR?=
- =?us-ascii?Q?A2sNYaw23fcs+0Bn89Bc1N5u2yegH+x9VmnzwBaJfV88yDcV2Xvc6MAgVdJT?=
- =?us-ascii?Q?CycyjJoR25j1kjqJ4oXGESwAHexdXi5uQG1DMtSlcTshUXt/VZg1TlihowNW?=
- =?us-ascii?Q?ypkSYse5mYjn3meMn2xMCg4cKBsMmArNw2kUbSwlBW/8XwpQN+aXGDRnTGbf?=
- =?us-ascii?Q?Y35GeKKUgiIJVYfcPPwCuZ3Lrw1wgTAY0W6iqqb3kJ548sx/GnUOciFK2wd4?=
- =?us-ascii?Q?Lb3I0Md70pUZDd+hzv9xMH+9gSiOYsBUz54ndPrd60Qfkb4nX1tUYnF0cyRg?=
- =?us-ascii?Q?bZGeQv5ODYKX0AV/IjScU6IVLMGVlRM34SCX+ragye9tO5TPVq0a4hSU9lXt?=
- =?us-ascii?Q?ytV4qeJKQ8qFD94NZpx5yEqa6BjIPcSUme4gJx5U+ldnUbpZCSOo9bV1+bbo?=
- =?us-ascii?Q?j+xZsOdljj91hPfF9bS6/L3Rpuy+Hn1WZwTvW17qslI51ClTHrBWZ2y53F+w?=
- =?us-ascii?Q?gws9SmfqXLGkG0kbQZn+ilvwjjvE3RaFwW56M7fbfz+hRvtdgfEdFgjdMA1X?=
- =?us-ascii?Q?r2i7Dwk6JYbu32OP1ja3+kCFZhdj+D2fq4x2cuanV5GbxtdKQqot2tymE5jk?=
- =?us-ascii?Q?OPJWN/ZS/YVtvMU5WUagNkRrh+3NUBHpCFsjcggLbfMKKOMh4Mzd/hPbL8bV?=
- =?us-ascii?Q?jMqnYNro27jC8Nq4OneY/JtaiAZtT3OQ/PWXtt5IxddWRBFEJU28kcgbPlfU?=
- =?us-ascii?Q?JyyVHXihgtyyVe3a0Di/kBrLT4ns0hn/PSjfOu8QeA9h8KglEgryMEKf8HV+?=
- =?us-ascii?Q?4VXUlVk9tTCcjMoMT0EmxeHaZj3Q7C4C2JmVz8P16/7Hnz363SgvV6H11Ftn?=
- =?us-ascii?Q?Y+WF6tXQ9GGk7kiDM//3oxoe3EN22OyUFpIiu+schIEAZBDPRrX6JxwQ6sV6?=
- =?us-ascii?Q?bnL3cGEkVM5/oG/BMSZY2p1izMIIro7xcHH6PxY6J3m8/yLT4Ev7WxBeaxTj?=
- =?us-ascii?Q?AnYgYrFr5pKj7YVghklSxLIkdf2JxWlG5oV42/ad?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=a4kgNOfe;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.197, mailfrom: antonin.godard@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A55471C000B;
+	Wed, 20 Nov 2024 09:30:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1732095008;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gg2N3YTQ57E/oKv4xuN+GKIcixb++bUxgChh+5uKHig=;
+	b=a4kgNOfei/wQRcP8FuTUwnQfBhshrAT+maODzUOeq2j04iWqCJqqtRidnukvopDCMG5d0G
+	QtBQf0B2v4+lcY9sD1PglFT8zLqyqRSl0yxUtlOSV7RhXD45A3x6JkM7CqKsg+1gW1VTiB
+	xFUH9GQwRNb8nvJ3EHmcDU4G4b++Uj+BhCNwUHiSgXGRiG4fAXFHWM2BPcF9U74UJgw9Qo
+	HIKv/nUaA9CW/T9z6CCu+bHcqD9zoU1OMyP0RMli1NV84aW5P2EHpbIHFS67i96yhtLxH5
+	b65w34jeQsWYSrydCIQ+r4Z7EvQf6JOtR7keR1/AsxvEet7Jks33xN7LGVVm1A==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Date: Wed, 20 Nov 2024 10:30:02 +0100
+Subject: [bitbake-devel PATCH v2] doc: bitbake-user-manual: document
+ inherit_defer
 MIME-Version: 1.0
-X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR12MB5430.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 962a5332-cc60-469a-3235-08dd09192844
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2024 04:09:41.0543
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mtZkyNfUpYCUXxS2OxaYhHNA2akaD13r0ccchF7yMQzx5YJvNMLWoXMK/X2iB9VwvVU1sVO0Yns2yW6INGABAij80sRLNvxDo0up84Sv23U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9175
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20241120-inherit-defer-v2-1-e9291b7cf59b@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIABmsPWcC/3WMQQrCMBAAv1L27Eo2lhg8+Q/poUm2ZkETSUpRS
+ v9u7N3jDMysULkIV7h0KxRepEpODfShAx/HdGeU0Bi00j0RWZQUWzFj4IkL9jacvGXllT1Da16
+ FJ3nvv9vQOEqdc/ns+4V+9t9pISTUxhozGjU6cleX8/yQdPT5CcO2bV+xo9rprAAAAA==
+X-Change-ID: 20241118-inherit-defer-48d3c8e0c087
+To: bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Quentin Schulz <quentin.schulz@cherry.de>, 
+ Yoann Congal <yoann.congal@smile.fr>, 
+ Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4209;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=5cMxa9xG71+NMrgwj9gtATB/j3ad7mgaNasbOx5pW6Q=;
+ b=owEBbQKS/ZANAwAIAdGAQUApo6g2AcsmYgBnPawfaY2c/lpNh/0bvMUTWNk51EhVPz/THEa2f
+ Ctvl2yibUOJAjMEAAEIAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCZz2sHwAKCRDRgEFAKaOo
+ NtgfD/9Un3L89jLIN3Ydb1oLQzDeM+cufSG2oVrsckapt+Ltvvw4u1dtkyDqfRPdh/x6lMmwg5v
+ qR2vAeG3Ny1QcMc2VXmKEeG3FvhiNit7qtDhDRHcdlrepWf48xJMhyrf9ypkr6rsIcxEwmigkT/
+ so67qnm1xTO64n64jvnFfBBv8qqTtqR2/IPFHbxHOvCDe86MtSdyQPoWOqJS+2mMQ64VGHupsnC
+ 3UzfFzSzmRC3mlCkoLYm3C/Ybb4U+OPMrIKZiWcEkUTM9zEQUcnkAMDH2hA2bRtxjzVAo3/mbCe
+ B8XjW4cKcytplOjlo0OAJoRT4pETXzlEVBgfW3IVskee4DQeNaZoMMVsTgDl0t5+IOL2xZW/Zms
+ w4irEdbHaz3jh2t2wrMqRnGCOSTWqjeFY/5ktC81GO2rkl/ugsyZLy6H02laJCn44Uyix2KuoUv
+ eRYeMYtq60vSoQ1WQzieKl4NjBg1XrwaBLkyiROM6kgQ0JdglE8SkvPCM1kiE1Z/9G1MbDk1htX
+ RrttF6tPK72AegIVPU3xXowMlMV0D7QhgbMVq0/vZl2ZmI5HlkC/6iAp+Sa7hZ18TkVvgb2YTMf
+ 7RouNi98sVuumNswS/nInrBUTKyIQizOQo9+4HpWCHDaV0TmNZXUBMMKJ9vnvKP4hvXxM6S9UBn
+ Te2drfMyMcSo1GQ==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
+X-GND-Sasl: antonin.godard@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 20 Nov 2024 04:09:51 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16814
+ <bitbake-devel@lists.openembedded.org>; Wed, 20 Nov 2024 09:30:12 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16815
 
-Hi Richard, Steve,
+This was added in 2.7.2. Since using inherit_defer is safer that inherit
+when inheriting conditionally, move the instructions about that in
+inherit_defer.
 
-> -----Original Message-----
-> From: bitbake-devel@lists.openembedded.org <bitbake-
-> devel@lists.openembedded.org> On Behalf Of Richard Purdie via
-> lists.openembedded.org
-> Sent: Tuesday, October 8, 2024 8:36 AM
-> To: bitbake-devel@lists.openembedded.org
-> Subject: [bitbake-devel] [PATCH 3/8] checksum/fetch2: Switch from
-> persist_data to a standard cache file
->=20
->=20
-> The sqlite connection handling is causing problems with python 3.13. The
-> connection can be closed at gc time which causing warnings and those can
-> appear at 'random' points and break output, causing weird failures in dif=
-ferent
-> tinfoil tools and other tests.
->=20
-> Using sqlite as an IPC was never a great idea so drop that usage entirely=
- and
-> just use the standard cache mechanism we already have for other situation=
-s.
+Fixes [YOCTO #15640].
 
-I revisited these warnings on Scarthgap (which doesn't yet have the persist=
-_data changes), and was able to resolve them. Ultimately, it seemed the con=
-text managers were just not set up correctly for managing the Connection.
+Reported-by: Yoann Congal <yoann.congal@smile.fr>
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+---
+Changes in v2:
+- Move the instructions on conditional inherits in the inherit_defer
+  section, since it is a safer call
+- Link to v1: https://lore.kernel.org/r/20241118-inherit-defer-v1-1-26866a60ab1b@bootlin.com
+---
+ .../bitbake-user-manual-metadata.rst               | 43 ++++++++++++++++++----
+ 1 file changed, 36 insertions(+), 7 deletions(-)
 
-The __exit__ method of Connection only deals with transactions, and doesn't=
- close any connection to the database: https://docs.python.org/3/library/sq=
-lite3.html#how-to-use-the-connection-context-manager. But we were never usi=
-ng a context manager anyway when dealing with persist_data.
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+index 58975f4c88ce549a2fd27136c0cb37b636bafcdb..40a0c6f02d9c35297dbb51da465efda83d832917 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+@@ -771,6 +771,8 @@ In order for include and class files to be found by BitBake, they need
+ to be located in a "classes" subdirectory that can be found in
+ :term:`BBPATH`.
+ 
++.. _ref-bitbake-user-manual-metadata-inherit:
++
+ ``inherit`` Directive
+ ---------------------
+ 
+@@ -809,19 +811,43 @@ An advantage with the inherit directive as compared to both the
+ :ref:`include <bitbake-user-manual/bitbake-user-manual-metadata:\`\`include\`\` directive>` and :ref:`require <bitbake-user-manual/bitbake-user-manual-metadata:\`\`require\`\` directive>`
+ directives is that you can inherit class files conditionally. You can
+ accomplish this by using a variable expression after the ``inherit``
+-statement. Here is an example::
++statement.
++
++For inheriting classes conditionally, using the :ref:`inherit_defer
++<ref-bitbake-user-manual-metadata-inherit-defer>` directive is advised as
++:ref:`inherit_defer <ref-bitbake-user-manual-metadata-inherit-defer>` is
++evaluated at the end of parsing.
++
++.. _ref-bitbake-user-manual-metadata-inherit-defer:
++
++``inherit_defer`` Directive
++~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++The :ref:`inherit_defer <ref-bitbake-user-manual-metadata-inherit-defer>`
++directive works like the :ref:`inherit
++<ref-bitbake-user-manual-metadata-inherit>` directive, except that it is only
++evaluated at the end of parsing. Its usage is recommended when a conditional
++expression is used.
+ 
+-   inherit ${VARNAME}
++This allows conditional expressions to be evaluated "late", meaning changes to
++the variable after the line is parsed will take effect. With the :ref:`inherit
++<ref-bitbake-user-manual-metadata-inherit>` directive this is not the case.
++
++Here is an example::
++
++   inherit_defer ${VARNAME}
+ 
+ If ``VARNAME`` is
+-going to be set, it needs to be set before the ``inherit`` statement is
++going to be set, it needs to be set before the ``inherit_defer`` statement is
+ parsed. One way to achieve a conditional inherit in this case is to use
+ overrides::
+ 
+    VARIABLE = ""
+    VARIABLE:someoverride = "myclass"
+ 
+-Another method is by using anonymous Python. Here is an example::
++Another method is by using :ref:`anonymous Python
++<bitbake-user-manual/bitbake-user-manual-metadata:Anonymous Python Functions>`.
++Here is an example::
+ 
+    python () {
+        if condition == value:
+@@ -830,11 +856,14 @@ Another method is by using anonymous Python. Here is an example::
+            d.setVar('VARIABLE', '')
+    }
+ 
+-Alternatively, you could use an in-line Python expression in the
++Alternatively, you could use an inline Python expression in the
+ following form::
+ 
+-   inherit ${@'classname' if condition else ''}
+-   inherit ${@functionname(params)}
++   inherit_defer ${@'classname' if condition else ''}
++
++Or::
++
++   inherit_defer ${@bb.utils.contains('VARIABLE', 'something', 'classname', '', d)}
+ 
+ In all cases, if the expression evaluates to an
+ empty string, the statement does not trigger a syntax error because it
 
-I was able to get rid of the warnings by adding this 'close' method to SQLT=
-able:
+---
+base-commit: e41c70372ee83320a224d04f46768dc21e6ddd3e
+change-id: 20241118-inherit-defer-48d3c8e0c087
 
-    def close(self):
-        self.connection.close()
+Best regards,
+-- 
+Antonin Godard <antonin.godard@bootlin.com>
 
-And then changing usages of persist_data in fetch2 from something like this=
-:
-
-revs =3D bb.persist_data.persist('BB_URI_HEADREVS', d)
-
-to this:
-
-with contextlib.closing(bb.persist_data.persist('BB_URI_HEADREVS', d)) as r=
-evs:
-
-
-I was wondering if you or Steve would be interested in a patch for this to =
-apply to Scarthgap. If so, I'd be happy to send one in.=20
-
-Thanks,
-Chris
 
