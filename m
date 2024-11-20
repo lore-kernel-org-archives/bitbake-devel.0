@@ -1,136 +1,114 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <bhstalel@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B38D711DE
-	for <webhook@archiver.kernel.org>; Wed, 20 Nov 2024 18:39:56 +0000 (UTC)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web10.22375.1732127990300620267
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2441D743C5
+	for <webhook@archiver.kernel.org>; Wed, 20 Nov 2024 19:08:36 +0000 (UTC)
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+ by mx.groups.io with SMTP id smtpd.web11.23146.1732129708178363346
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 20 Nov 2024 10:39:50 -0800
+ Wed, 20 Nov 2024 11:08:28 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=h3SKB3yY;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.44, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4314f38d274so48815e9.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 20 Nov 2024 10:39:50 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=La+tyOUX;
+ spf=pass (domain: gmail.com, ip: 209.85.160.180, mailfrom: bhstalel@gmail.com)
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4609acd6bf4so146091cf.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 20 Nov 2024 11:08:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1732127989; x=1732732789; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=v/kKdVV787+Jd4GPoLO/Of7EtHMtc+LpyO5udDz6Qwo=;
-        b=h3SKB3yY83Fpr9wdGuVg8EB04t32PZQwaxYbu/HyVt79QfyLg0UW+rJEJl3Fx4RylQ
-         SCznWyEtnalJ56k7PLihduHYw5lPG9DMLdkNhLb961F3rxz/1/hQTk5PaC10QCSwuDqM
-         GFuWe2bet+8Ag5F3dEqYXQsl2ZbTj2ju0MZqQ=
+        d=gmail.com; s=20230601; t=1732129707; x=1732734507; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TUKePqHIz/e5YIH7/oJ4WJp7RYqpM7+37WWpSR8ENWA=;
+        b=La+tyOUXfJYd2Ga64Tzgc1SkKiA9L+qfyKb9NsHPSomvZw0zlh8N4S3YD486DT0MU2
+         82NUPVHHte36/iduHkh04Halt7xbPKGbxmwSNFcBVGee0A7DViSWrcw+Yo8zKgUdt87A
+         XHvVGkwqMQBEB6SJRVAeZ3l+KFCuuA7pDVSBP9qCsr8eh2TIoZ0JDHVoTUnwPpbLMyt3
+         rSZQxziaYFI77vei+HgDRQzvYXczbueoM4YlgOHLdZRVaptxuj6DYfLevC0Ko7q2ViUe
+         Hwdbn4qGPORWz/Ahn1de+hLjYRFfX6oOPjsORgTe2nZ7gxkGmASwJ0ebA5CZK9Clfv/Q
+         xucg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732127989; x=1732732789;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=v/kKdVV787+Jd4GPoLO/Of7EtHMtc+LpyO5udDz6Qwo=;
-        b=SnnQTSNM9iGwjimhOACm+6OP8Qqxyscb328EaOYqqi2sE4lj+IpnPcW06j28eZam3V
-         CeWD3+cbeJWRVXcnqSFedwy7K0JFsQeDOtBY8gFZNE4aeEsOBX2GDriB+e1EA/HLdWWz
-         Qfcq+0HADTOTVsi2hkcBFTLnawURsDNvc6odasbpWnqiDW7e6D4MY58kCVK/5/7DQuAd
-         qatIl8GiG0FczcTUxKjzMaqnhqYDmr1i2SNT+ApeUaTIUL/KyUk1rydrnmEBZ67UtJ/P
-         1qQLI5rqcGoeDbJjwikDNTqlnIuJaxxYlNy/xY2WAu8vCeCd7tor3Ae01sIQJA0HOuiD
-         69Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIsYWSsCqX5/gU0Jg2FDIYqSHDPUevUpX5JRklDmbiJzwyFjOQjZaQz/l1hCDbC3THppZ14NCYEcfUCyEG@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yx2kfIPIoAd41TDOjLz/AfUnLYWZKNPb0wB87+CILL8M+9R00Pm
-	DD9omaR062rKWKXVzwS+eiaoAFzuyl3BgpBa5QFPb3PyJZUN/U6XiRFLNQecLuk=
-X-Google-Smtp-Source: AGHT+IG7akocawb+pg71oc/6SpoojWTuoS/ww5kgyF42TuwaeZ0sM4PIY3Q4jT2yPos1+QNcgOo4OA==
-X-Received: by 2002:a05:600c:4f46:b0:42f:8229:a09e with SMTP id 5b1f17b1804b1-4334f01d75bmr38325585e9.29.1732127988705;
-        Wed, 20 Nov 2024 10:39:48 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:5abf:50dd:d6fd:8415? ([2001:8b0:aba:5f3c:5abf:50dd:d6fd:8415])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-433b463ad45sm28919455e9.39.2024.11.20.10.39.47
+        d=1e100.net; s=20230601; t=1732129707; x=1732734507;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TUKePqHIz/e5YIH7/oJ4WJp7RYqpM7+37WWpSR8ENWA=;
+        b=OivSAgDKoiUE1d/UNzDRL8kefUeV07YZFb8tCqu4Qxlq4UWJwFOyGTspRJvifM+qWU
+         NEy/7DtI5w4+iRquKcUUIsJKnLcSM6qpIOLOBlZo+t6bHYd9m0MyH2ifr1DdUABhQ+wZ
+         1CE34JGYDIMl9/Ha/qDkNT6xR1OguYQPKJGLgz9Be12HcggwqOPouEtqHWqOtPbQKdT6
+         Db8MU5Q/h2DaUSD3U5gNqd6Ps20rdFcRNI9fV/gXrZCjKZeaDq2hod6RDvO6DtiHkPK9
+         fPAcPf5t1LSwajbkqgWQBi5wJ3CzQe0Hy3A8fHwBYNnJo6HjOECKJs8kB90u/aiq1htK
+         4l8w==
+X-Gm-Message-State: AOJu0YweDrmWUugeY/QPDxw5DEgIcGIrRIRs3ji7Ao4W2h4v6icSD9R3
+	uUoV0St1XiYHnH73L8wahs7ebRRAUM3NGGZ/0inZQL6yNIwAuU+WaT6Evw==
+X-Gm-Gg: ASbGncvbq9/rXD4HT6BQd3kykzVstL/XXG2dQ2USqq0in3TtZF94cR3uxMv6vp6/Y8h
+	czOZkRc52BdVlyjBqVJqWp+K4xfTdgFL7IYMeD4aLhSxOcYoCmDYN8kiF9kDtPA+2G3RPZ/TRZe
+	mzaw0Tcei+GksBNOJZPm4e9PPWXXJBQ1+1ezlwcpShiQs6Y695gfbNy+bxP9zRyUOMOdph09SoW
+	cv2OPHuF9qHukj0h9d8ACgleBtRYzqZkG9fYgV7dNVz
+X-Google-Smtp-Source: AGHT+IHyAX5tDpKUGk3F+yiUmMd49NF2Ic/9hsBjgT4+PScxgHrfzviJh8taT/tBIm0eto2tJ941yA==
+X-Received: by 2002:ac8:5903:0:b0:461:2416:13c3 with SMTP id d75a77b69052e-4652b44d0a7mr12738971cf.15.1732129707071;
+        Wed, 20 Nov 2024 11:08:27 -0800 (PST)
+Received: from bhstpc.. ([196.176.166.73])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4646ac162b8sm13144541cf.88.2024.11.20.11.08.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2024 10:39:48 -0800 (PST)
-Message-ID: <e7fcf2110ae769882a989d104e92bb7291245a6a.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 3/8] checksum/fetch2: Switch from
- persist_data to a standard cache file
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "chris.laplante@agilent.com" <chris.laplante@agilent.com>, 
- "bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Cc: "steve@sakoman.com" <steve@sakoman.com>
-Date: Wed, 20 Nov 2024 18:39:47 +0000
-In-Reply-To: <DM8PR12MB5430F82E66A733A5687F5FB78B212@DM8PR12MB5430.namprd12.prod.outlook.com>
-References: <20241008123627.252307-1-richard.purdie@linuxfoundation.org>
-	 <20241008123627.252307-3-richard.purdie@linuxfoundation.org>
-	 <DM8PR12MB5430F82E66A733A5687F5FB78B212@DM8PR12MB5430.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.0-1 
+        Wed, 20 Nov 2024 11:08:26 -0800 (PST)
+From: Talel BELHAJSALEM <bhstalel@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Talel BELHAJSALEM <bhstalel@gmail.com>
+Subject: [PATCH v2] bitbake-getvar: Catch NoProvider exception
+Date: Wed, 20 Nov 2024 20:08:21 +0100
+Message-ID: <20241120190821.7073-1-bhstalel@gmail.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 20 Nov 2024 18:39:56 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16819
+ <bitbake-devel@lists.openembedded.org>; Wed, 20 Nov 2024 19:08:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16820
 
-On Wed, 2024-11-20 at 04:09 +0000, chris.laplante@agilent.com wrote:
-> Hi Richard, Steve,
->=20
-> > -----Original Message-----
-> > From: bitbake-devel@lists.openembedded.org=C2=A0<bitbake-
-> > devel@lists.openembedded.org> On Behalf Of Richard Purdie via
-> > lists.openembedded.org
-> > Sent: Tuesday, October 8, 2024 8:36 AM
-> > To: bitbake-devel@lists.openembedded.org
-> > Subject: [bitbake-devel] [PATCH 3/8] checksum/fetch2: Switch from
-> > persist_data to a standard cache file
-> >=20
-> >=20
-> > The sqlite connection handling is causing problems with python
-> > 3.13. The
-> > connection can be closed at gc time which causing warnings and
-> > those can
-> > appear at 'random' points and break output, causing weird failures
-> > in different
-> > tinfoil tools and other tests.
-> >=20
-> > Using sqlite as an IPC was never a great idea so drop that usage
-> > entirely and
-> > just use the standard cache mechanism we already have for other
-> > situations.
->=20
-> I revisited these warnings on Scarthgap (which doesn't yet have the
-> persist_data changes), and was able to resolve them. Ultimately, it
-> seemed the context managers were just not set up correctly for
-> managing the Connection.
->=20
-> The __exit__ method of Connection only deals with transactions, and
-> doesn't close any connection to the database:
-> https://docs.python.org/3/library/sqlite3.html#how-to-use-the-connection-=
-context-manager
-> . But we were never using a context manager anyway when dealing with
-> persist_data.
->=20
-> I was able to get rid of the warnings by adding this 'close' method
-> to SQLTable:
->=20
-> =C2=A0=C2=A0=C2=A0 def close(self):
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.connection.close()
->=20
-> And then changing usages of persist_data in fetch2 from something
-> like this:
->=20
-> revs =3D bb.persist_data.persist('BB_URI_HEADREVS', d)
->=20
-> to this:
->=20
-> with contextlib.closing(bb.persist_data.persist('BB_URI_HEADREVS',
-> d)) as revs:
->=20
->=20
-> I was wondering if you or Steve would be interested in a patch for
-> this to apply to Scarthgap. If so, I'd be happy to send one in.=20
+When the recipe provided by (-r, --recipe) is not found
+tinfoil raises an exception that is not catched for
+readability, example:
 
-I think scarthgap and older users would probably appreciate having this
-fixed so I'd be willing to take a patch.
+Traceback (most recent call last):
+  File "/.../poky/bitbake/bin/bitbake-getvar", line 45, in <module>
+    d = tinfoil.parse_recipe(args.recipe)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/.../poky/bitbake/lib/bb/tinfoil.py", line 633, in parse_recipe
+    fn = self.get_recipe_file(pn)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/.../poky/bitbake/lib/bb/tinfoil.py", line 550, in get_recipe_file
+    raise bb.providers.NoProvider('Unable to find any recipe file matching "%s"' % pn)
+bb.providers.NoProvider: Unable to find any recipe file matching "aaa"
 
-Cheers,
+Signed-off-by: Talel BELHAJSALEM <bhstalel@gmail.com>
+---
+ bitbake/bin/bitbake-getvar | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Richard
-
+diff --git a/bitbake/bin/bitbake-getvar b/bitbake/bin/bitbake-getvar
+index 20c0b696f7..1719824d95 100755
+--- a/bitbake/bin/bitbake-getvar
++++ b/bitbake/bin/bitbake-getvar
+@@ -16,6 +16,7 @@ bindir = os.path.dirname(__file__)
+ topdir = os.path.dirname(bindir)
+ sys.path[0:0] = [os.path.join(topdir, 'lib')]
+ 
++import bb.providers
+ import bb.tinfoil
+ 
+ if __name__ == "__main__":
+@@ -40,7 +41,10 @@ if __name__ == "__main__":
+     with bb.tinfoil.Tinfoil(tracking=True, setup_logging=not quiet) as tinfoil:
+         if args.recipe:
+             tinfoil.prepare(quiet=3 if quiet else 2)
+-            d = tinfoil.parse_recipe(args.recipe)
++            try:
++                d = tinfoil.parse_recipe(args.recipe)
++            except bb.providers.NoProvider as e:
++                sys.exit(str(e))
+         else:
+             tinfoil.prepare(quiet=2, config_only=True)
+             # Expand keys and run anonymous functions to get identical result to
+-- 
+2.43.0
 
 
