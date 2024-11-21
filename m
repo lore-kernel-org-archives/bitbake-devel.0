@@ -2,95 +2,137 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28351D743DA
-	for <webhook@archiver.kernel.org>; Wed, 20 Nov 2024 21:32:27 +0000 (UTC)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web11.26.1732138337175767615
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4804D6ED12
+	for <webhook@archiver.kernel.org>; Thu, 21 Nov 2024 12:13:02 +0000 (UTC)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+ by mx.groups.io with SMTP id smtpd.web11.9338.1732191174783629226
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 20 Nov 2024 13:32:17 -0800
+ Thu, 21 Nov 2024 04:12:55 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=eZ+Slm8P;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.44, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3823e45339bso142180f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 20 Nov 2024 13:32:16 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=CPMosdtc;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.167.54, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-53da209492cso970286e87.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 21 Nov 2024 04:12:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1732138335; x=1732743135; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1732191172; x=1732795972; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=11ato+NutFdB/QXJ9RGwV2usvYU23qmnf8m0AVj75Wk=;
-        b=eZ+Slm8PceMgErA0/NOReuHPiZJuQgoIlo3Nz3FWo79W8jE9gNzhRtRAS/FhehEqzr
-         s3B5iKWE76D9dGKhFDbHXjk3B4G31Vr8LAuLF4TjaGXeETyeCZGMoYyaddFfFIsOnJTZ
-         pb8w+WzulHl4lhjJrF1tWCbesTg1/XdUE8C3E=
+        bh=Htm8NP0FhNM0/LSyHeJENe1y21iJJnAXp3VPZgEQw7M=;
+        b=CPMosdtcSxPrdyxpaAgDytC/Qrs5XjGHtJZp6fYMZ4h2Dy7ncEYeZcjTXjZOBz0W9/
+         WF84mO5Heca+LlAowiHsXKneKKrFuDUCAFxmepqd+cwx6kfOccXoVcGROarA02MAc2WJ
+         zRmPzqmZFxetszUalU6Wv569afvbr1QKhXARA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732138335; x=1732743135;
+        d=1e100.net; s=20230601; t=1732191172; x=1732795972;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=11ato+NutFdB/QXJ9RGwV2usvYU23qmnf8m0AVj75Wk=;
-        b=pRyrTEcZ3k0gZFegGb3+h3bCyImLPcjo/aq82LJ/ufpDl0/N2n84xB2NETpZgm3KFQ
-         z8JHaOg5b5BTXQlbzAzJw0il0BQDld230KVu6ImOun+S6FuFQbiQkob2NhdV6H5T/gLw
-         JDYIRosbaJTjjXfUKZqL8VnoDbl0V5VvkM9+nrd6kSmLOveVD5ygdRaLcV4hdRTuji7J
-         kLtpDpvSODsJObeWWTXMAI/R4k3EeTC0FMNbrqdYvpb3pQMHt0Y5cM35hXB6U28xGGNn
-         Qk2CxZRH8I1XQR81fRzK7Lcf8drfc1lN4rkZd2bGuUcvWfze5Og6BvXuXkuWVMniQhAP
-         kuZQ==
-X-Gm-Message-State: AOJu0YzPtgvD0Zs1CsNNbyn85ok9sPBgK1am9m+JzsZIGxHDTGI8c/rF
-	PamiUuII4FNVfc/V13aXIC2OkKbphieliPOTnJPmpvY5OwaR3ucpJjAv4QDIRVP8o1X7rHbaVkI
-	yES0=
-X-Gm-Gg: ASbGnctWKODY/5sPs48jSMu/FyKUDpUszxn+FtFja8sES/DssTCttvDMSC0n3jRV9li
-	Qc4WGIXObC7NwJRGsw+Z0Kd+oGavKDGNm4KyqMceVyMbwnFw2k0FozrlhHKprv2R39k6UY7yDVO
-	Qm96Upt6FSh6Gqgvu8r8lAoxGwaFNJTXT63EqKoXIi+B96szPUcE3YsrGqMKohb07qO6gWegR63
-	vrbqs4LrJLW/VqgdUwikDYl8CFLw4y0chfmTDUdtx4o3Y84d/693krtiK14KZLLXo6G5VyHQ57t
-	xg4=
-X-Google-Smtp-Source: AGHT+IFqc6hZylN8x64s5vDqAnSDN49WJCvSFBSVAlY0g3VdfMWQqd/KayEYwXLx5PApWz9fC0yJqQ==
-X-Received: by 2002:a05:6000:2801:b0:382:2f62:bd45 with SMTP id ffacd0b85a97d-38254afa5c3mr2573404f8f.29.1732138334878;
-        Wed, 20 Nov 2024 13:32:14 -0800 (PST)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:5abf:50dd:d6fd:8415])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-382549107f9sm3064319f8f.51.2024.11.20.13.32.13
+        bh=Htm8NP0FhNM0/LSyHeJENe1y21iJJnAXp3VPZgEQw7M=;
+        b=tR3y9Ae9561XUWyY0gRtlnz3o2g6v7ngNaQ9oinsY/IJgMDfQYqKCj5Vw+OTPX+DIE
+         WTmUyZNgVedd5oE49eN+l6c6lKgnieMaM0h5JMy0asKMTQVyHLmTnSE9ftafs4gG41Of
+         SuKRVZpd433KIdBGbyxB6JTLR89jlzr/duFkz8M3e1dLmz22mlRXuW0WeXSTO/z1XTJj
+         V3UiqDRgFY0m7J1fSJ7T6zVpilsmH7XCN3GAiYeJTnXweIbqu4YzxtPZ1GlXbRTy4DeH
+         YsaclICGyzhvI9DJ1LSkufk0Jehb0IIqMXH6IDF0HiKz3HqTX+a4zF6zrUDBYFGFp0UQ
+         Ajxg==
+X-Gm-Message-State: AOJu0YyyvCFrgxGvkQ9VL0cIwab/BhzsTNb3PMlEPQL9C8s3dsFKoPc0
+	ec3PWCzLdO53BG4GYMITuFoZuJEuJfn5+fYHjizRAdW2LSIv2FZn/1Dqd4PuVOrwVWiLC3QtZ3z
+	X/Y8=
+X-Google-Smtp-Source: AGHT+IEAR5z/Pn1gtg6GstWeqpRkuy8b21wdi1DH2gbnm1KHqIZvZjd54pja8zfkPuVQPtFhUYaBHQ==
+X-Received: by 2002:a05:6512:3b24:b0:53d:c062:b5b7 with SMTP id 2adb3069b0e04-53dc136739dmr3296660e87.42.1732191171765;
+        Thu, 21 Nov 2024 04:12:51 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:a4ee:c091:1f03:6404])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3825490c682sm4883126f8f.31.2024.11.21.04.12.50
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2024 13:32:14 -0800 (PST)
+        Thu, 21 Nov 2024 04:12:51 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] fetch/wget: Increase timeout to 100s from 30s
-Date: Wed, 20 Nov 2024 21:32:13 +0000
-Message-ID: <20241120213213.2481909-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH v3] bitbake-worker/cooker: Increase default pipe size
+Date: Thu, 21 Nov 2024 12:12:49 +0000
+Message-ID: <20241121121249.2574880-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.45.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 20 Nov 2024 21:32:27 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16821
+ <bitbake-devel@lists.openembedded.org>; Thu, 21 Nov 2024 12:13:02 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16822
 
-Testing shows the worst case CDN response time can be up to 100s. The wget fetcher
-is used for accessing sstate from the CDN so increase our timeouts there to match
-our worst case repsonse times.
+The default pipe size is 64kb on builds, which can be inefficient
+for larger log files from workers. Increase the pipe size to 512kb
+since build systems have decent amounts of memory and this is a more
+efficient way of batching the data.
+
+Tweak the default read sizes to match the pipe size for efficiency.
+
+Since the contstant is only present in python 3.10 onwards, add
+some compatibility code.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/fetch2/wget.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ bin/bitbake-worker | 14 ++++++++++++--
+ lib/bb/runqueue.py |  2 +-
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index 7856d10fa4..773d41ca81 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -82,7 +82,7 @@ class Wget(FetchMethod):
-         if not ud.localfile:
-             ud.localfile = d.expand(urllib.parse.unquote(ud.host + ud.path).replace("/", "."))
+diff --git a/bin/bitbake-worker b/bin/bitbake-worker
+index a8a9660c5f..88217182fb 100755
+--- a/bin/bitbake-worker
++++ b/bin/bitbake-worker
+@@ -21,9 +21,14 @@ import traceback
+ import queue
+ import shlex
+ import subprocess
++import fcntl
+ from multiprocessing import Lock
+ from threading import Thread
  
--        self.basecmd = d.getVar("FETCHCMD_wget") or "/usr/bin/env wget -t 2 -T 30"
-+        self.basecmd = d.getVar("FETCHCMD_wget") or "/usr/bin/env wget -t 2 -T 100"
++# Remove when we have a minimum of python 3.10
++if not hasattr(fcntl, 'F_SETPIPE_SZ'):
++    fcntl.F_SETPIPE_SZ = 1031
++
+ bb.utils.check_system_locale()
  
-         if ud.type == 'ftp' or ud.type == 'ftps':
-             self.basecmd += " --passive-ftp"
-@@ -371,7 +371,7 @@ class Wget(FetchMethod):
-                 except (FileNotFoundError, netrc.NetrcParseError):
-                     pass
+ # Users shouldn't be running this code directly
+@@ -44,7 +49,6 @@ if sys.argv[1].startswith("decafbadbad"):
+ # updates to log files for use with tail
+ try:
+     if sys.stdout.name == '<stdout>':
+-        import fcntl
+         fl = fcntl.fcntl(sys.stdout.fileno(), fcntl.F_GETFL)
+         fl |= os.O_SYNC 
+         fcntl.fcntl(sys.stdout.fileno(), fcntl.F_SETFL, fl)
+@@ -56,6 +60,12 @@ logger = logging.getLogger("BitBake")
  
--                with opener.open(r, timeout=30) as response:
-+                with opener.open(r, timeout=100) as response:
-                     pass
-             except (urllib.error.URLError, ConnectionResetError, TimeoutError) as e:
-                 if try_again:
+ worker_pipe = sys.stdout.fileno()
+ bb.utils.nonblockingfd(worker_pipe)
++# Try to make the pipe buffers larger as it is much more efficient. If we can't
++# e.g. out of buffer space (/proc/sys/fs/pipe-user-pages-soft) then just pass over.
++try:
++    fcntl.fcntl(worker_pipe, fcntl.F_SETPIPE_SZ, 512 * 1024)
++except:
++    pass
+ # Need to guard against multiprocessing being used in child processes
+ # and multiple processes trying to write to the parent at the same time
+ worker_pipe_lock = None
+@@ -357,7 +367,7 @@ class runQueueWorkerPipe():
+     def read(self):
+         start = len(self.queue)
+         try:
+-            self.queue.extend(self.input.read(102400) or b"")
++            self.queue.extend(self.input.read(512*1024) or b"")
+         except (OSError, IOError) as e:
+             if e.errno != errno.EAGAIN:
+                 raise
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 1b5b58f352..61608ac603 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -3318,7 +3318,7 @@ class runQueuePipe():
+ 
+         start = len(self.queue)
+         try:
+-            self.queue.extend(self.input.read(102400) or b"")
++            self.queue.extend(self.input.read(512 * 1024) or b"")
+         except (OSError, IOError) as e:
+             if e.errno != errno.EAGAIN:
+                 raise
 
