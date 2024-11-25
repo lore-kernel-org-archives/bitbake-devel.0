@@ -2,22 +2,22 @@ Return-Path: <chris.laplante@agilent.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C62D58D6E
-	for <webhook@archiver.kernel.org>; Mon, 25 Nov 2024 17:22:35 +0000 (UTC)
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (NAM12-MW2-obe.outbound.protection.outlook.com [40.107.244.74])
- by mx.groups.io with SMTP id smtpd.web11.24313.1732555353747269265
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2E3D58D71
+	for <webhook@archiver.kernel.org>; Mon, 25 Nov 2024 17:22:45 +0000 (UTC)
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (NAM04-MW2-obe.outbound.protection.outlook.com [40.107.101.40])
+ by mx.groups.io with SMTP id smtpd.web10.24049.1732555358904555666
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 25 Nov 2024 09:22:33 -0800
+ Mon, 25 Nov 2024 09:22:39 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@agilent.com header.s=selector1 header.b=BL9lytWz;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.244.74, mailfrom: chris.laplante@agilent.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@agilent.com header.s=selector1 header.b=Udd4w7R2;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.101.40, mailfrom: chris.laplante@agilent.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=T2nwfd8/flyV7lZCjCzhgi5Qk0xAUq8wx9Yn3vf5DBb4S1Q3PkDO6pKub/Vt1WijSvZoJaMLRCWoFAoYlEZo3Vd4r58vkGPHoleJm1bzEyIKRW6mSCJvxN83O6WS5knh4QLGbzTufRQ/q4Ibz3Vm5AOiBxk4WiwO/edYJrGUklExa4bVjoNsne2Y+Qh0OxL3C5eIB8qSJkw9F52WFSRnjWswmhaInh8eU3BHx4MjP6/oN0TmBe1m1ASE3gItudIHsC8mCeydKbafudcf9qBQ0JCYcdZSlJKeGfdTr5/MQawWJOPBJRNjx3xu3ZIlkpMByQawBNPE/vLS8x5E22+9tA==
+ b=qZ0uS8wSldiFMdNIuBuRGFrPdiyd/AIWf7J6qW8KSCIsjDITKdoFo21UWjRw0EXFnM4Mtckcm8FL3+LhVvjswGfwkH08Bev/D0ZAiqNgv7lienV7+YxuYAkwU2aVdUGxVN87R31gLmw8tW4TPEcf03JMAWSoDg0CYagk28+LMKIduUjP2tvDBHU1gRmVqgf1E0HGa/QnMw3I4pp5KoQQGKr/c8+nrxOeR2VbBMO3/J2gP3KYq1pxVxvAHbxx9acpiyo8rc8mKsLZB2+rDsRjoMnRDZhCnsqNgqHs6+BBisJ8BJ0wDXe0ubSybEGRalhfARpVl5el8fbzXVq1400Z3g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aFR0L+r362k99SUGX90JZxUt2Yw63p8Kk9psiNhi57E=;
- b=x1M7pKfGBLQ8KWobROhw1Y7zsYBVSb8qBCKx7qPIwJIWGj4o1+JQFoCgBV8uIgLjJlmLFVP/lrurPwbv9wb4ZOiNG+VJsHm52xNj4yKNB7BvyCHalUe/6zPrMK3fdge9I2lFxH1kYIGrsOnw31gH7oCaGWBAiaPRI8mes6uQJR4RU2XnoD5CcFnWKmlh7LEDuARpM0aIKoSpabZ/WA9wYlZtbSRcp6HC//soMZeNQimDctwN7j29QqLMYtQeOeRGLg5WeZaZioOV6V4etGw5aB/akFgWFlWsFb7sJPavg3A1OathvQkVmEI67JdsK6FM/mJmLY4zJMLozjzGm8ppwQ==
+ bh=lLCc4aHbltNJCnYL1iXYk/NA3IXF4rueMKYf+HtzanU=;
+ b=lpiHBHV7yxcbp0OB5y3DEKWU5vvN8kB0WeulwK9xX+5SyB9Ik+rYcNyAp3+KpO2bnKWPSVJKlLsX+XZgmJuNNfCiZFsMQQlDldezdXxb+9Y1D7tSvs7nAWSfozH5aSfWtMbwmsyHKtF1kWiCCur5uBRZTEpIJGW2LhJ42lYj3kacFkzfeGzL1LZTk0zUpeTYUMTgf25iQoGb45ti50/k40FY2SMwqntID/4wuD/kGk1b6u2iNVyM0WGYN8ECI8wiAsuK8uoUkUMndYCDsKkZpJ/huaqY+pCCdEyIXLj6TGIK4QQUm6QyQsuaxPPNdJNb5P6w3qs1Is6P1AB2S7SKYg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  192.25.218.41) smtp.rcpttodomain=lists.openembedded.org
  smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
@@ -26,18 +26,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aFR0L+r362k99SUGX90JZxUt2Yw63p8Kk9psiNhi57E=;
- b=BL9lytWzHJUnYnrpXlduj+itFtbrLxGyr1tsWoydZjHPSWBFbGEIlEj5jWExvwSdNJFnImL7SZrTeK5tVW06YYvbP5o3kPF4iFS+tUOtG+WD0dYLNfnkRfrh7u4FPbfxkUkzNHVZcIO4rRy+zfsFbHs5Sf0ereHYwOU+aDJreZowY68ljwkL6KCWgHb/Cr9Hz+9dBayq4FSzhUz4FSx9rN4tHFcJYpzBz76rgWyGeiXjOzisqiBXfBTvI3D7fstpghVy5ZgB7EpFgeTuYwBZstoIOKRVSd8fCplWeax1Lp0+M/dpRmgP05tBwkCLkIVdF2MZQJHzqimJX0TCeNOajQ==
-Received: from BN9PR03CA0430.namprd03.prod.outlook.com (2603:10b6:408:113::15)
- by PH7PR12MB7426.namprd12.prod.outlook.com (2603:10b6:510:201::18) with
+ bh=lLCc4aHbltNJCnYL1iXYk/NA3IXF4rueMKYf+HtzanU=;
+ b=Udd4w7R25aaXa2zflstvyKtRFPTKRikik9BcLxNv7IRALIGVwHQRmaE1YzTdolJAvTlSzTIiqHqPPZqvScGXqA1rlGXPgZAWqIo8YvqQsr/I5lxTuZIbSz9IElLIpeDZ3XPWg1RH8gC24xEVsJluv2csxObijwaijVUmXRfKsfQlTsSGgyiAi627bwnQePIWhvSd4nHRKcMKbMjr5Kr/2jhqumXvALo6O+HqNAv+uBtPFMgZk9B6YBcCEYboHEseajSQC4qge6iu2dpRCIBeW6dhYnzPHM19jjG3BFwGE0mCYLfT0Jf5UWV3vrL2kXLkOdCPeMen4n7dgOwBE6pr/A==
+Received: from CH5P221CA0024.NAMP221.PROD.OUTLOOK.COM (2603:10b6:610:1f2::18)
+ by CH2PR12MB4152.namprd12.prod.outlook.com (2603:10b6:610:a7::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8182.19; Mon, 25 Nov
- 2024 17:22:27 +0000
-Received: from CY4PEPF0000EE3F.namprd03.prod.outlook.com
- (2603:10b6:408:113:cafe::67) by BN9PR03CA0430.outlook.office365.com
- (2603:10b6:408:113::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8182.20; Mon, 25 Nov
+ 2024 17:22:32 +0000
+Received: from CY4PEPF0000EE39.namprd03.prod.outlook.com
+ (2603:10b6:610:1f2:cafe::5) by CH5P221CA0024.outlook.office365.com
+ (2603:10b6:610:1f2::18) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8182.21 via Frontend Transport; Mon,
- 25 Nov 2024 17:22:26 +0000
+ 25 Nov 2024 17:22:32 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.41)
  smtp.mailfrom=agilent.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=agilent.com;
@@ -45,101 +45,191 @@ Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
  192.25.218.41 as permitted sender) receiver=protection.outlook.com;
  client-ip=192.25.218.41; helo=edgeappmail.agilent.com; pr=C
 Received: from edgeappmail.agilent.com (192.25.218.41) by
- CY4PEPF0000EE3F.mail.protection.outlook.com (10.167.242.17) with Microsoft
+ CY4PEPF0000EE39.mail.protection.outlook.com (10.167.242.11) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8207.12 via Frontend Transport; Mon, 25 Nov 2024 17:22:26 +0000
+ 15.20.8207.12 via Frontend Transport; Mon, 25 Nov 2024 17:22:31 +0000
 Received: from laplante-B650.lfs.agilent.com (192.25.126.4) by
  edgeappmail.agilent.com (192.25.218.41) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 25 Nov 2024 10:22:23 -0700
+ 15.1.2507.39; Mon, 25 Nov 2024 10:22:29 -0700
 From: <chris.laplante@agilent.com>
 To: <bitbake-devel@lists.openembedded.org>
 CC: Chris Laplante <chris.laplante@agilent.com>
-Subject: [styhead][2.10][PATCH 1/2] persist_data: close connection in SQLTable __exit__
-Date: Mon, 25 Nov 2024 12:22:03 -0500
-Message-ID: <20241125172204.1601601-1-chris.laplante@agilent.com>
+Subject: [styhead][2.10][PATCH 2/2] fetch2: use persist_data context managers
+Date: Mon, 25 Nov 2024 12:22:04 -0500
+Message-ID: <20241125172204.1601601-2-chris.laplante@agilent.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241125172204.1601601-1-chris.laplante@agilent.com>
+References: <20241125172204.1601601-1-chris.laplante@agilent.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE3F:EE_|PH7PR12MB7426:EE_
-X-MS-Office365-Filtering-Correlation-Id: 33935f33-2f30-4bd9-57f9-08dd0d75bb7d
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE39:EE_|CH2PR12MB4152:EE_
+X-MS-Office365-Filtering-Correlation-Id: 237ae501-4905-43df-b8fc-08dd0d75bece
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
 	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?UpiVriItJBYo9amiBN91cL+0EGRV1QbSMqVMpDLQ44pe4nbmw8b8Op/D8SVs?=
- =?us-ascii?Q?9H856mlQOtG3DA2uBEp9wio9IAsKu88xwqzuUUoe9DTd91LrD5f3T0L2eNzW?=
- =?us-ascii?Q?CsNkR1uluSW+Vp0/iRitfH2qVVz1ZdDdD8TL0rxngF3ytvB8rzb4HzLp650u?=
- =?us-ascii?Q?bNMWcmJEbh8H13p6+ZeFGQiLlyfRJxdYq/ETI3uW0VwW2e2JAQEwpG0zGAnB?=
- =?us-ascii?Q?eb0NoTNzCyklf7JFMrIXCUkJCivCFXTL2mHwUgjkfp7nedCscVEnItmrF7zZ?=
- =?us-ascii?Q?Z20vatYp5nMF1KFKybfoKdXtkUKtZuBJbWz8RgSB8hZahmck5vp2Xs3xfHLc?=
- =?us-ascii?Q?wZiFdtH6kqyLYgr81wUe7ZQJHTRoYUNf1BnbKUWgu9bjcE9T8iSVitQUJpmm?=
- =?us-ascii?Q?YtRNlEOvSdK7z7Ta+IzEW9aQrUa5u3nQMRI0VA3zfRqAM1gQveaR76QZ+xG/?=
- =?us-ascii?Q?+u6vWfyAL8chMvBPODCxjxNgBZ3DsL6jYZ0MeIoHylGvD0P7CKXBGCNjee0l?=
- =?us-ascii?Q?YKm/AUXfwmxLIDeZhheSyZ4wrrBZmP/RVRY/KLnIE1PRARXQCF0VSAsNRrc8?=
- =?us-ascii?Q?YlEU/Eoelc1+ZiUZeaU8ZI1wwN8bI4lpkNIoBB1O+U9JhAXu7TxUjve+OTmr?=
- =?us-ascii?Q?JGDYT7wF5XCUoel5kK1yUwo8Y3w7bd4MSTWJ+Bn3adAFBYCTwAEuliVNpdba?=
- =?us-ascii?Q?48XlAIugvCLPBdC5h/3IkgsPJA6cOTjQg1dRPY6zgYGGyGpD8s+YPOHTSI0I?=
- =?us-ascii?Q?KWpZGrM2vKdessjj1kNfk3rjbNSOj0bYRsIEVUSMbclNhjFXXtdAc8tTLkN8?=
- =?us-ascii?Q?oeeFhBepZQ/aWq6KIz2wtF37LCn7q5xVkl5mXH8BuRSMO4w2ZXL4BWJOLVCC?=
- =?us-ascii?Q?okC+ZV2QIO8x+P/B543RKHLbNA49Lt79Zvd+UFRw7fL3vvNtlmOLbft4lU71?=
- =?us-ascii?Q?6Mv11XBvVKvWUmBUdzW/ceJCOjOC53Gc3BVMIhEwyiztNm8DYNCPofe5sU8j?=
- =?us-ascii?Q?ocIPZUghXmoOEl4V6IeAXrddmfo3bCHMoFoBLqCKr1x35t5bE7MYFvpABf9p?=
- =?us-ascii?Q?WdSSv09jdYcTu612zDTfWfMHALLBLPprqM/NE1172hH+TSy4aKBmgih5igim?=
- =?us-ascii?Q?rV1xNDoheDteMTrirRZMkqIyEK4Q09Vg1ptCYIOTzIlL+yJfq95pkrl8hxrK?=
- =?us-ascii?Q?nVQbrDWjlVZppcBmGvStUiw9tC4NTmTKGvj/kxyeRHwVAZhTBuA5ny8RDIcg?=
- =?us-ascii?Q?JjweHAzlqfgv/Nh05sNsWncwEo4JJvHoT681L2Gwa7Xi71Ngv/NIW1Kw6rsu?=
- =?us-ascii?Q?Rj4g/Hs55M3otPygI7boi+cvdymVv2R0RbznDiQIjUjHtlyZxCP5YQcWW4dA?=
- =?us-ascii?Q?Mxn+KfMNt9RJasG+B6SHMGSjq7FlWf4n7+LBEvvL7vA3ehS1Ig=3D=3D?=
+	=?us-ascii?Q?pr/wzHdzVIq6BzLD8gwlXgfwaMmmIsnvEwZnRhij38br+YOXqEgE/HnqHMcZ?=
+ =?us-ascii?Q?nE6tG5pSxIQbEV1uG41ydKf6dwLUsmHxWYyCYBGRvZfWIhJkpJs3n+qZEtnN?=
+ =?us-ascii?Q?kNA/CPfioQ5bbnfoP6UQwXE+gABBPmkP2ytEBP0KG4B+BahYl3Vk0IbdkBqc?=
+ =?us-ascii?Q?FHn+3pjDyTAMTWdIBeiNtHsKg/J8bNBJiNLoEFGdGh6bGurm75kaulYkhF3E?=
+ =?us-ascii?Q?Y2ISq95Slw9jpr6Bmdb19z+RjeWdH/6QvD0An9Jf7aAOzuFGYmqtRQSJ8Vh4?=
+ =?us-ascii?Q?hI68jsLvf7HauS5/0BeklaKDOMjDDzNeJ/2YwuQaUJRGLY7vNJpFSLUAGobr?=
+ =?us-ascii?Q?x08uK1iZW7ISKHr8rMCIUTMj7lbVOGb8dTXTf3oq5r9oVtsIxLRs9SRgskkR?=
+ =?us-ascii?Q?kzsC4rHx7x0UX0TKpIDKs6Nq87JeaizlRRhCXTo5MrLE4/ninM1hYyON5+vx?=
+ =?us-ascii?Q?Cdw1W2WjjNNbpygVXQ/OafUs83p6Ci3F3qhtKkVUCKqRnYzEylhsn0ZNsSt+?=
+ =?us-ascii?Q?J5W0VH6w/KlN3PgJOLjHRHiiukEsgWFCaqLf/x6Zb6k7ZVyDzSXez4yDDTnf?=
+ =?us-ascii?Q?qaRFt5c2n8+Om7WbtQ/R3gxromgkY4VGrebrLLG9cjNqHPQ4PXzPOEeuDNwD?=
+ =?us-ascii?Q?rqLYu0ZG0mDlsHFuGXeMeOveJhFY60/XMgeeg++lGnqeNzfML5J+zem4Z5/b?=
+ =?us-ascii?Q?WOmmenpCW9eTMjS3Y4f6GlyZZOiO2F+7VCBsWqy36G1i7W6QBb2/YdUEKFQJ?=
+ =?us-ascii?Q?G5catG8XoKcdmhCMv+cE7PZDY0eHrruhJkyUm3E320Ex4/c6HmALwONAMBqf?=
+ =?us-ascii?Q?CZhfZPoIyQ6tD1UM585LFJrzxcIsqOAR0gRGUScxCrqw25y0vAVfUCw8w1MI?=
+ =?us-ascii?Q?GM2P3g68DkncRK9Rm2yUUD2Zu3y6Ftti0YTrXIVtbXvMxHaQqWuHzbE1wi5L?=
+ =?us-ascii?Q?iLJPDKiBCOPofiXGH/qks49J2kh6c8p0kx32VgdOgulsZOR0MKA2s9ejhW/r?=
+ =?us-ascii?Q?u+yMYcg3pv0TeeWDGrKwOvisGq4eeJaSGr4GGXzoSd3kPV8fjLbbQvrxOt9j?=
+ =?us-ascii?Q?r8JRQ/N0XONk4OBpr1YP49rCMo4RW6E+LVlaTV/tqHYU0RaKBbZOc/inIi5n?=
+ =?us-ascii?Q?y2Yb3rGbSf1aaNsZo6zOHpj2g1qr6ntNaeaZRsid1dAzlFgB9yb4WelILKRb?=
+ =?us-ascii?Q?l87sf80Mqon40q/TmYGqi2mal5T0GPpliaZZgXKYkmgMz0jv6aT8OINjYNtO?=
+ =?us-ascii?Q?z45OwuI8jqi2otjdHuhqW9XFeTRVnaqwuz8Fhs28bJBZ2OkdvKOQ9nCAamhQ?=
+ =?us-ascii?Q?afa3w+Kb7PxBO5MVCbu76P1d4ZPg97NjcDZanejHNpqddCcwKpzYz5PsHsnU?=
+ =?us-ascii?Q?ELAcMu4Ot3EmK7Sj8FMpTyOVjnV1+9b9HPT+LD/Ozq+KKesyfA=3D=3D?=
 X-Forefront-Antispam-Report: 
 	CIP:192.25.218.41;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:exch.smtp.agilent.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2024 17:22:26.4054
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2024 17:22:31.9719
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 33935f33-2f30-4bd9-57f9-08dd0d75bb7d
+X-MS-Exchange-CrossTenant-Network-Message-Id: 237ae501-4905-43df-b8fc-08dd0d75bece
 X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.41];Helo=[edgeappmail.agilent.com]
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-CY4PEPF0000EE3F.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-CY4PEPF0000EE39.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7426
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4152
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 25 Nov 2024 17:22:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16832
+ <bitbake-devel@lists.openembedded.org>; Mon, 25 Nov 2024 17:22:45 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16833
 
 From: Chris Laplante <chris.laplante@agilent.com>
 
-A Connection's __exit__ does not close the connection, but rather deals
-with transactions. See https://docs.python.org/3/library/sqlite3.html#how-t=
-o-use-the-connection-context-manager
+Python 3.13 emits a ResourceWarning for unclosed sqlite3 `Connection`s.
+See https://docs.python.org/3/whatsnew/3.13.html#sqlite3
+
+The previous commit fixed persist_data's context manager to close the
+connection, but we were never actually using `with` in the first place.
 
 This change is not necessary on 'master' because persist_data was
 removed.
 
 Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
-(cherry picked from commit b0fba0f5af555ff970406b5cf3bf8fb113d953d1)
+(cherry picked from commit 61f803c7d92a012b62837b0cdae4789a394b260e)
 ---
- lib/bb/persist_data.py | 1 +
- 1 file changed, 1 insertion(+)
+ lib/bb/fetch2/__init__.py | 62 +++++++++++++++++++--------------------
+ 1 file changed, 31 insertions(+), 31 deletions(-)
 
-diff --git a/lib/bb/persist_data.py b/lib/bb/persist_data.py
-index bcca791ed..c4454b153 100644
---- a/lib/bb/persist_data.py
-+++ b/lib/bb/persist_data.py
-@@ -154,6 +154,7 @@ class SQLTable(collections.abc.MutableMapping):
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 33a8086f2..8f0ed2b9e 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -499,30 +499,30 @@ def fetcher_init(d):
+     Calls before this must not hit the cache.
+     """
 =20
-     def __exit__(self, *excinfo):
-         self.connection.__exit__(*excinfo)
-+        self.connection.close()
+-    revs =3D bb.persist_data.persist('BB_URI_HEADREVS', d)
+-    try:
+-        # fetcher_init is called multiple times, so make sure we only save=
+ the
+-        # revs the first time it is called.
+-        if not bb.fetch2.saved_headrevs:
+-            bb.fetch2.saved_headrevs =3D dict(revs)
+-    except:
+-        pass
+-
+-    # When to drop SCM head revisions controlled by user policy
+-    srcrev_policy =3D d.getVar('BB_SRCREV_POLICY') or "clear"
+-    if srcrev_policy =3D=3D "cache":
+-        logger.debug("Keeping SRCREV cache due to cache policy of: %s", sr=
+crev_policy)
+-    elif srcrev_policy =3D=3D "clear":
+-        logger.debug("Clearing SRCREV cache due to cache policy of: %s", s=
+rcrev_policy)
+-        revs.clear()
+-    else:
+-        raise FetchError("Invalid SRCREV cache policy of: %s" % srcrev_pol=
+icy)
++    with bb.persist_data.persist('BB_URI_HEADREVS', d) as revs:
++        try:
++            # fetcher_init is called multiple times, so make sure we only =
+save the
++            # revs the first time it is called.
++            if not bb.fetch2.saved_headrevs:
++                bb.fetch2.saved_headrevs =3D dict(revs)
++        except:
++            pass
 =20
-     @_Decorators.retry()
-     @_Decorators.transaction
+-    _checksum_cache.init_cache(d.getVar("BB_CACHEDIR"))
++        # When to drop SCM head revisions controlled by user policy
++        srcrev_policy =3D d.getVar('BB_SRCREV_POLICY') or "clear"
++        if srcrev_policy =3D=3D "cache":
++            logger.debug("Keeping SRCREV cache due to cache policy of: %s"=
+, srcrev_policy)
++        elif srcrev_policy =3D=3D "clear":
++            logger.debug("Clearing SRCREV cache due to cache policy of: %s=
+", srcrev_policy)
++            revs.clear()
++        else:
++            raise FetchError("Invalid SRCREV cache policy of: %s" % srcrev=
+_policy)
++
++        _checksum_cache.init_cache(d.getVar("BB_CACHEDIR"))
+=20
+-    for m in methods:
+-        if hasattr(m, "init"):
+-            m.init(d)
++        for m in methods:
++            if hasattr(m, "init"):
++                m.init(d)
+=20
+ def fetcher_parse_save():
+     _checksum_cache.save_extras()
+@@ -536,8 +536,8 @@ def fetcher_compare_revisions(d):
+     when bitbake was started and return true if they have changed.
+     """
+=20
+-    headrevs =3D dict(bb.persist_data.persist('BB_URI_HEADREVS', d))
+-    return headrevs !=3D bb.fetch2.saved_headrevs
++    with dict(bb.persist_data.persist('BB_URI_HEADREVS', d)) as headrevs:
++        return headrevs !=3D bb.fetch2.saved_headrevs
+=20
+ def mirror_from_string(data):
+     mirrors =3D (data or "").replace('\\n',' ').split()
+@@ -1662,13 +1662,13 @@ class FetchMethod(object):
+         if not hasattr(self, "_latest_revision"):
+             raise ParameterError("The fetcher for this URL does not suppor=
+t _latest_revision", ud.url)
+=20
+-        revs =3D bb.persist_data.persist('BB_URI_HEADREVS', d)
+-        key =3D self.generate_revision_key(ud, d, name)
+-        try:
+-            return revs[key]
+-        except KeyError:
+-            revs[key] =3D rev =3D self._latest_revision(ud, d, name)
+-            return rev
++        with bb.persist_data.persist('BB_URI_HEADREVS', d) as revs:
++            key =3D self.generate_revision_key(ud, d, name)
++            try:
++                return revs[key]
++            except KeyError:
++                revs[key] =3D rev =3D self._latest_revision(ud, d, name)
++                return rev
+=20
+     def sortable_revision(self, ud, d, name):
+         latest_rev =3D self._build_revision(ud, d, name)
 --=20
 2.43.0
 
