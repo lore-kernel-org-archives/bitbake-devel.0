@@ -1,126 +1,92 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4F1D6EC08
-	for <webhook@archiver.kernel.org>; Fri, 29 Nov 2024 13:13:14 +0000 (UTC)
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
- by mx.groups.io with SMTP id smtpd.web11.115612.1732885990868321050
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4D7D729F4
+	for <webhook@archiver.kernel.org>; Fri, 29 Nov 2024 18:05:46 +0000 (UTC)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.web10.120101.1732903536296122024
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 29 Nov 2024 05:13:11 -0800
+ Fri, 29 Nov 2024 10:05:36 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=mbAZTSTG;
- spf=pass (domain: gmail.com, ip: 209.85.219.44, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6d88d3d1eb6so235126d6.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 29 Nov 2024 05:13:10 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fCcNb8qY;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-434a45f05feso23638265e9.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 29 Nov 2024 10:05:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732885990; x=1733490790; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lOgIs4wwxqVsnp6EGfCnGSLCheLpLHpT68Mm2b8qsHw=;
-        b=mbAZTSTGris5iw7PtLD3YkRjflEQN5QZdigBDgT9ZwetkmwneokZ1xfuAVtet9t6E1
-         KliCtur/yJ40P5x+tepMpfmdZtuyr4GP5+I4IMuD9DW9DYf/D3oRNuWK83cmrxLw/2ko
-         oZ5CbqGXYvZheNf3G76xdJxgmhfm7ERycTBVu+NikSce0b5OfBfrKtrPzVerckBfcgN3
-         5TTc3hIxAtuQYA5qc6R6N+esBCYOvjfmx/deJsc4lqON0KMXY1u9vAr5JBjGB0r+Geky
-         BDf2CFxkQ88XaOzW+oHroudYye38lL+ZIu0h5j8ncXPprg5crWsbqz3WWH8PaIkNF7fa
-         qAJQ==
+        d=linuxfoundation.org; s=google; t=1732903534; x=1733508334; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dARY4UWfaMK5KlmdIBDbuxs67x7Z2OJfCPG0HHJk5H4=;
+        b=fCcNb8qYXiz+pKzSpa9XHEOAhHSKrbA2jfG+I/6yfOu+G1wJaVaWmLJflvQGUeBCdN
+         vxVfKXcCBQQWAzHIL+1LpigwBJFt0+T1ZlFb9N0YrF9VYpk9QaWGWCzBHbZ/Clvq+bGB
+         Ws5BhSYpDBVRq/wOsMiTS7+3YT4n5nRinXUjM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732885990; x=1733490790;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lOgIs4wwxqVsnp6EGfCnGSLCheLpLHpT68Mm2b8qsHw=;
-        b=poONOunAdIxIviIjQ5c9lsY/G4ltZXPj4dq7PI3YCWvglMx3DkgdlySjPQc6UL8P9i
-         UQBfWDezbqhwGqY8MwKnQuJGK+G5R0aIbYSjm9hRekeKRej9gerPKWxXCqQsWxIV5Swo
-         c+6SFegK5cyQ0j4kTIoe/lY5wUv3aETDcfvh97VbWAjw9GBXAdpxCAoFtwDM2NPBMIYP
-         sewWE3LN2fBUNAz3Ojac125DJfuBSVnaSTyLXaRPDv5wEPHmLpUt2CmCqxx7IHAN3kgI
-         JTts/HOl04WnGsZvFK0/K8hE5KJ6IlgnmwgzqzhlYK9W0Qd6aKRHfnaf2AjiJTdMznu0
-         FbRA==
-X-Gm-Message-State: AOJu0Yyqji+uz0Zo5WIKcaDhyfPna1pQT6m9l06qwpDwcDliG3AbpAe4
-	KLRFHYpV4b/1HYybVoMeE5wRGAVy5Cd8bTGTJirQQ4WqxN7IzljF2uUTu+jH/kQE/e5tGWypZy9
-	S6NVHHftatD4G0NBhnG+l0keCp0Y=
-X-Gm-Gg: ASbGnctRpCvF9tlHRRD4J1Xfmw3pClbppnZvZdk9GxJ/JgUCZRejPmPPT7I4N1qVbv9
-	uMSpPy49sIX45pplDHBhbBhkN88Qgqo5GtcXwHap+4Gh+4sTMRqTZHsV0695yHeGwIA==
-X-Google-Smtp-Source: AGHT+IHwwKYIooSX61lHgWn9brtC7i+wLWkqSibDm/Rq+rJyNp7qmld5r97zUmwDOOrYKbzIq88QV8xvFEixEVZs1as=
-X-Received: by 2002:a05:6214:2428:b0:6d4:cec:2ffd with SMTP id
- 6a1803df08f44-6d8729ce698mr128600086d6.15.1732885989687; Fri, 29 Nov 2024
- 05:13:09 -0800 (PST)
-MIME-Version: 1.0
-References: <20241129125524.131362-1-richard.purdie@linuxfoundation.org>
-In-Reply-To: <20241129125524.131362-1-richard.purdie@linuxfoundation.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Fri, 29 Nov 2024 14:12:58 +0100
-Message-ID: <CANNYZj_sJuUFJc9V37yhvjeFukqQ-A7GRC5SUwc+WMM24bvSeA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] runqueue: Fix performance of multiconfigs
- with large overlap
-To: richard.purdie@linuxfoundation.org
+        d=1e100.net; s=20230601; t=1732903534; x=1733508334;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dARY4UWfaMK5KlmdIBDbuxs67x7Z2OJfCPG0HHJk5H4=;
+        b=qfrDa/Lz6Rucv0hyELlKCbFLR+58OSJt8IbF4gFUCSBmFN+/lj8rYCTioTnUTxkqdn
+         zpWExlWWUxwdKKWuZyV+NtQs5/RT3QWc/4qc0f8GmwQ7e7mZqJNQWhdk27sEpvDgSGvo
+         65r96pOHlCwym0w8VlXmocievuEVSXmTOhyK33tFTAtmcEnTeXhXnur4UpHNco3Dw8pO
+         TJLHMsWF1urQB4/uJZ2JtaHJ3cvadXXY7PbIMU12H0RsgIxe5PP7x1up36pGfbcqnF0Q
+         MdQzRHOypaW4u6BRcTQMOunylxJAXS16V9Y8lvzC+KUezbzGa6kxo2tTGba1VAoEkevM
+         ZYMQ==
+X-Gm-Message-State: AOJu0Yx1ByJbc4om7X6U7u02Du4sFfMFY1NU4TG0cGrAFiaT6ZH4k/Bn
+	Q1JJoVYY2UlNpD5aRB3yNLMl5NnLzFNwrnRyRLjny9qiTyAnjX4gP7Lp2hqVLtas8ZOoIYMMVyU
+	d
+X-Gm-Gg: ASbGncvJ5pNeXC2IL74wgiv8yt1t9PrS3gmuKR0QHH15nuc/Zi+cvHwgW14zpsf4675
+	eFW6z1+12I22sybPz930+g02GjZ0jS4/79WeaGGVYssOdp86aatqy+npVZunCSYGeUghcXVGQRk
+	UGiyiguT3Z2K4PTOBkWmcnp5dC5BMsBAf3EO7muPFLlBecxvJOQHWUx7asonUwMJsciCoGF6/uZ
+	T3fP3A/OvqfpD4CvIBfqIYTiqb4Wff6mVZ9iBhrvoEHGoO6c/0mLdhDUikfR286ncIRIv6DJYgN
+	tVyNRyHB2My7CcoXce1aiAY9YP1rRHkHVVR1lxw=
+X-Google-Smtp-Source: AGHT+IFq2goOfsp0acqj9Uch6quC+QqeoweNdbziSwYycVXByGD+MrmTup6daQqKByngo4q2cnc4Rw==
+X-Received: by 2002:a5d:584c:0:b0:382:4f7a:7a87 with SMTP id ffacd0b85a97d-385c6edd128mr12688907f8f.48.1732903533595;
+        Fri, 29 Nov 2024 10:05:33 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:1083:22d7:abf5:ae6f? ([2001:8b0:aba:5f3c:1083:22d7:abf5:ae6f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-385ccd3a6a6sm5004582f8f.56.2024.11.29.10.05.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Nov 2024 10:05:32 -0800 (PST)
+Message-ID: <5d5f3ab9c2f7091de5827e40cf9f7c7e7917708f.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] runqueue: Fix performance of
+ multiconfigs with large overlap
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alexander Kanavin <alex.kanavin@gmail.com>
 Cc: bitbake-devel@lists.openembedded.org
+Date: Fri, 29 Nov 2024 18:05:31 +0000
+In-Reply-To: <CANNYZj_sJuUFJc9V37yhvjeFukqQ-A7GRC5SUwc+WMM24bvSeA@mail.gmail.com>
+References: <20241129125524.131362-1-richard.purdie@linuxfoundation.org>
+	 <CANNYZj_sJuUFJc9V37yhvjeFukqQ-A7GRC5SUwc+WMM24bvSeA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.0-1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 29 Nov 2024 13:13:14 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16849
+ <bitbake-devel@lists.openembedded.org>; Fri, 29 Nov 2024 18:05:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16850
 
-I noticed that particularly 'bitbake core-image-ptest-all' tends to
-sit for significant amount of time without spawning tasks. I
-cherry-picked this patch and it doesn't seem to be helping :(
+On Fri, 2024-11-29 at 14:12 +0100, Alexander Kanavin wrote:
+> I noticed that particularly 'bitbake core-image-ptest-all' tends to
+> sit for significant amount of time without spawning tasks. I
+> cherry-picked this patch and it doesn't seem to be helping :(
 
-Alex
+Is that with an already populated sstate cache or empty? Hash
+equivalence enabled locally or remote?
 
-On Fri, 29 Nov 2024 at 13:55, Richard Purdie via
-lists.openembedded.org
-<richard.purdie=linuxfoundation.org@lists.openembedded.org> wrote:
->
-> There have been complaints about the performance of large multiconfig builds
-> for a while. The key missing data point was that the builds needed to have large
-> overlaps in sstate objects. This can be simulated by building the same things with
-> just different TMPDIRs. In runqueue/bitbake terms this equates to large numbers of
-> deferred tasks.
->
-> The issue is that the expensive checks in the setscene loop were hit every time
-> through runqueue's execute function before the check on deferred tasks. This leads
-> to task execution starvation as that only happens once per iteration.
->
-> Move the skip check earlier in the function which speeds things up enormously
-> and should improve performance of such builds for users.
->
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
->  lib/bb/runqueue.py | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-> index 61608ac603..2179ee1302 100644
-> --- a/lib/bb/runqueue.py
-> +++ b/lib/bb/runqueue.py
-> @@ -2210,6 +2210,9 @@ class RunQueueExecute:
->              # Find the next setscene to run
->              for nexttask in self.sorted_setscene_tids:
->                  if nexttask in self.sq_buildable and nexttask not in self.sq_running and self.sqdata.stamps[nexttask] not in self.build_stamps.values() and nexttask not in self.sq_harddep_deferred:
-> +                    if nexttask in self.sq_deferred and self.sq_deferred[nexttask] not in self.runq_complete:
-> +                        # Skip deferred tasks quickly before the 'expensive' tests below - this is key to performant multiconfig builds
-> +                        continue
->                      if nexttask not in self.sqdata.unskippable and self.sqdata.sq_revdeps[nexttask] and \
->                              nexttask not in self.sq_needed_harddeps and \
->                              self.sqdata.sq_revdeps[nexttask].issubset(self.scenequeue_covered) and \
-> @@ -2239,8 +2242,7 @@ class RunQueueExecute:
->                          if t in self.runq_running and t not in self.runq_complete:
->                              continue
->                      if nexttask in self.sq_deferred:
-> -                        if self.sq_deferred[nexttask] not in self.runq_complete:
-> -                            continue
-> +                        # Deferred tasks that were still deferred were skipped above so we now need to process
->                          logger.debug("Task %s no longer deferred" % nexttask)
->                          del self.sq_deferred[nexttask]
->                          valid = self.rq.validate_hashes(set([nexttask]), self.cooker.data, 0, False, summary=False)
->
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#16848): https://lists.openembedded.org/g/bitbake-devel/message/16848
-> Mute This Topic: https://lists.openembedded.org/mt/109833404/1686489
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alex.kanavin@gmail.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
+Does:
+
+https://git.yoctoproject.org/poky/commit/?h=3Dmaster-next&id=3Dd8620795a780=
+0801f52b098fe3f9508e9f3f26f2
+
+help?
+
+I'd like to try and reproduce if not...
+
+Cheers,
+
+Richard
 
