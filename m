@@ -1,366 +1,245 @@
-Return-Path: <chris.laplante@agilent.com>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B877E77171
-	for <webhook@archiver.kernel.org>; Wed,  4 Dec 2024 17:31:25 +0000 (UTC)
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (NAM11-BN8-obe.outbound.protection.outlook.com [40.107.236.69])
- by mx.groups.io with SMTP id smtpd.web10.20751.1733333480853553493
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461AAE7716D
+	for <webhook@archiver.kernel.org>; Wed,  4 Dec 2024 17:46:45 +0000 (UTC)
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.76])
+ by mx.groups.io with SMTP id smtpd.web10.21263.1733334400636956238
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 04 Dec 2024 09:31:21 -0800
+ Wed, 04 Dec 2024 09:46:41 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@agilent.com header.s=selector1 header.b=j8nzGmla;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.236.69, mailfrom: chris.laplante@agilent.com)
+ dkim=pass header.i=@arm.com header.s=selector1 header.b=UdcgBtcH;
+ dkim=pass header.i=@arm.com header.s=selector1 header.b=UdcgBtcH;
+ spf=pass (domain: arm.com, ip: 40.107.20.76, mailfrom: ross.burton@arm.com)
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=PILqkhLOzkhZ0tzfTY/0jz1P22pIzRm+keIMyQ845SFLpnPqBM6oXxBUeHbHwq/5DgupACG/9us+T6VezXEXROit41lH/E/AH5rchGm/3HQkNCSQPV0o1dWef1DgX8A7AAtjKsA4s73K5twZG/w2PyEui1TsZxPzCwDlQNjoU4AN/FUtI6ywg3U0oi6k/lzxFtTbNDD1fl/KlQZzCWQ8DrV54GocbbiqUB2AOWJb6WQIoTFGv6CAopyatWqzoOWc3oNuhXShqPYnXy+BDgO1dVKfJCQDdELgM0segGkU82erpcIu/qfR3PyJQRekgE2Gb8kIeZBXUA0YV7+1AhLWug==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VVGaN2FsWUeg8n8NwVVWALQ9KJ2NGABN/hLGqOKte28=;
+ b=KtOKWEw9bWAYuy5/sq21ft22leMbcZFk3HDahYXPT/q4bBymgW10iNmo5p68/drvaOHBiK0TC+ayrEtreg+tgAfs4aYkbc2RKrZQ166ILZljNycBYh3EG9PJTY4BYT/OJ97xFsx3unO5xeEOHPp6dYDxMZcMb7Wt2v7KROzfquHgctxNDLxT1yg4Er1nQqtJEDY6BzyhGcBwwvNYY1ZcKVvhIr/9u/jyt8MXQ0/uNJ8TUzAynSAM0GTvG7bUxFNBs42nIhFCoPQ9zPWi4wgV4X8U7aB8N8YdhJAx4d9ESy2Wno+vFMDjFqoNSQxFdm/TWEtS/fuwQHs1DGu7TH5aSg==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 63.35.35.123) smtp.rcpttodomain=lists.openembedded.org smtp.mailfrom=arm.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
+ dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VVGaN2FsWUeg8n8NwVVWALQ9KJ2NGABN/hLGqOKte28=;
+ b=UdcgBtcHJdZcD4q1v7qHY71q9L5+wPPeud1Rl4hMbPDcR85EHvmfakXtMJE/qVExGh9fU8NmCNOQgXOeNe9b+mJs8UP9XXwu5iPzHV3GlO+7Av9e7ENMRviS6jC/mZujYB9eTNR23vY8g5Ecoh2Bw/vMAenjqxBOZIrmeQPbPy0=
+Received: from DB3PR08CA0009.eurprd08.prod.outlook.com (2603:10a6:8::22) by
+ PAWPR08MB9006.eurprd08.prod.outlook.com (2603:10a6:102:33f::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.10; Wed, 4 Dec
+ 2024 17:46:34 +0000
+Received: from DU2PEPF00028CFF.eurprd03.prod.outlook.com
+ (2603:10a6:8:0:cafe::d0) by DB3PR08CA0009.outlook.office365.com
+ (2603:10a6:8::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8207.19 via Frontend Transport; Wed,
+ 4 Dec 2024 17:46:34 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+ pr=C
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DU2PEPF00028CFF.mail.protection.outlook.com (10.167.242.183) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8230.7
+ via Frontend Transport; Wed, 4 Dec 2024 17:46:34 +0000
+Received: ("Tessian outbound e5f180d9e249:v522"); Wed, 04 Dec 2024 17:46:34 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 3d9ee869294614d8
+X-TessianGatewayMetadata: N9KbB7yBDjOmj00nISlPtSEJzyNhGeKxuZ7WOTDAUkaI3qvb/YCzBYXPEEHr/D4ez1kqcRXkll1HI5rago/ja2sJibG3ylyCTYTrwOswwoZjXmiQNIRmkINSU/0c8w8y3wD8ldgWuoAs4G7w8hVMRUWX79DblizycgeTyXViAzo=
+X-CR-MTA-TID: 64aa7808
+Received: from L7fd40cfc2c4b.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 8261B867-B4DE-4466-B515-539A7D94A6DB.1;
+	Wed, 04 Dec 2024 17:46:28 +0000
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id L7fd40cfc2c4b.1
+    (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+    Wed, 04 Dec 2024 17:46:28 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FucSfOwOaY4R8b4DGshWDig22wsSXPavD38Z3f6HFZOcyQ5k5lhc+JFEXSlQEw2vRseANaIjHk87rgtsh1inIc2DrJaWcNXf28WD/4aHzW/2pm7gaj03ekHNnLrvuf1Ve7Afo99RSzgkrlETQcwl3uJA3sag8So3PvgH7J9SLuvsmugLKmliHmrRha0/fw5FhayHdRstZXpkR0yVp/ZJkzkirkjhG5871MHLc0hxSAZG66Urk8GxxvM3rUm0Ap3U7bNgs+Fb9tyn5/OdvbzvEEgT1K7McjET04HKlic0CzHkw7MKqdLDbr41xHQPog2kMw7XFMNMdgf2phfOGlNtaA==
+ b=nge07kZTKff7oZ+CI5WBYR2yZMNq/BcIAzDmjtA70wg0zvDY6HKQhBy0lFXjxRfT5KH2gySmTjAeC4bT7XyjPkvZhezgRyS8Df9P44pA2OXNvjx562f0d6WhxZBbYq9zooDjyL9VsLmkrz+TGonjRS7OMcxHaVqYZeDX8UfD4Ska/WemFpfltv5GgPttS8Ts3+aRf9DH9lQNElPe0mgmexVi4kVDhjN2bh2jFa2uYOQprz/M2uWB3BqRHHkkyf42VQnMlChIA79wcGdPAEHCysRVH4XdZkR5QWQk1Sb7lVaRqQ4xn6j9XIp0dVAWCKMK7wl6PAI1pkjfAe3C62/T7w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TYEMkfdflMHYfxu2+is1dRQNPJnn7BXr/1O2vScMzOI=;
- b=AAbyiUQwv+p7gVwzSyDrf3ebmbJnmtCV44kmgKSIhQ6fAebQvwiV6OtDlaKsttyYyd6A93fzzZHYtl1df9NHQixmSVGjczK1MXdmFMpOWGozqF+2rPQolr4fiGZ+c+HZHdc6wsQ+ZczcdRAvgZx8ViEHOfUOzQ6UgdAIV88v8DXM6CfYhE/8p8djLJj0jyfw6HmEsNb0FHLniR1bSlf1Vwbsk1LmcI9Dk0XBr2u02h4nB7n90BI/ScPzrtwMBRnJQ1qP2Tu24NG0iIajR93oOPubQWdAeNAXYegvw248ND6NvLQgIEyp/SXWVoNuu4INapqAEBwqASbkTjacLNY/iw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 192.25.218.37) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
- action=none header.from=agilent.com; dkim=none (message not signed); arc=none
- (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
- s=selector1;
+ bh=VVGaN2FsWUeg8n8NwVVWALQ9KJ2NGABN/hLGqOKte28=;
+ b=pXFZc10QwSBNRJ3LfwEgv+E5pD7SY4fXsdxgsTXl2cZcSxUx9+z3Ue2QQw1KzOKZQhnDI81wntQXz23IKfq0hqkgzxoEfaRD/TKkTgiJDteZDpfJRav5yhAIXduevXTiW/yN3S9DQQ9vsioVXYqOQKjJq1F81oWv18A575BCAY25GPAyDx2bNlhBCVmP9nsBG6B59N0ee97X2VZBsDaBVKgbiu4KYgH2j03AEncfjfGSlYYVXuTOASGzizWNt7Cue4sdzIRinoh1VvJBCy7uNJs4xkLQzPwlFUmSqGx33iisU3RQcVZUFyS7SaFVJsTpQG4i57lG225IZcFoWDf06A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TYEMkfdflMHYfxu2+is1dRQNPJnn7BXr/1O2vScMzOI=;
- b=j8nzGmlaXNw1ZMaMzjEUy7ZndgKf6teDcufJAIAt2GJGUHUQ6L8hKeeN/mPdDlDXXGtoC1fcrmvnlnJuUJ688mzip5h2TQfZLc5QSmO2spqKWNiutyjRXreX2+118Djn0aaxCVbL6gllkew5RvgZorehTdJyVYl5xH1QgaBLv/LbOXuJqNeopSQ3LYe6Rh8fdydZ5c65h1rxSilXgEt5PA1cDhD/9giu0/GIfhKsMm1wAicHDQIsuksKIz9X4atr/+xakPQuxIiDNAccTV12bCgCOqdSJeZuP5jdzZMZ+X9sr0ZgXZxKXlndS8HiWQG2sRlhfh8zqHXGH5RzEs8J3Q==
-Received: from CH3P221CA0014.NAMP221.PROD.OUTLOOK.COM (2603:10b6:610:1e7::34)
- by IA1PR12MB6283.namprd12.prod.outlook.com (2603:10b6:208:3e5::9) with
+ bh=VVGaN2FsWUeg8n8NwVVWALQ9KJ2NGABN/hLGqOKte28=;
+ b=UdcgBtcHJdZcD4q1v7qHY71q9L5+wPPeud1Rl4hMbPDcR85EHvmfakXtMJE/qVExGh9fU8NmCNOQgXOeNe9b+mJs8UP9XXwu5iPzHV3GlO+7Av9e7ENMRviS6jC/mZujYB9eTNR23vY8g5Ecoh2Bw/vMAenjqxBOZIrmeQPbPy0=
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com (2603:10a6:102:2a3::12)
+ by AM0PR08MB5507.eurprd08.prod.outlook.com (2603:10a6:208:18b::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.18; Wed, 4 Dec
- 2024 17:31:14 +0000
-Received: from CH1PEPF0000AD83.namprd04.prod.outlook.com
- (2603:10b6:610:1e7:cafe::6) by CH3P221CA0014.outlook.office365.com
- (2603:10b6:610:1e7::34) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8207.19 via Frontend Transport; Wed,
- 4 Dec 2024 17:31:14 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.37)
- smtp.mailfrom=agilent.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=agilent.com;
-Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
- 192.25.218.37 as permitted sender) receiver=protection.outlook.com;
- client-ip=192.25.218.37; helo=edgeappmail.agilent.com; pr=C
-Received: from edgeappmail.agilent.com (192.25.218.37) by
- CH1PEPF0000AD83.mail.protection.outlook.com (10.167.244.85) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8230.7 via Frontend Transport; Wed, 4 Dec 2024 17:31:14 +0000
-Received: from laplante-B650.lfs.agilent.com (192.25.126.5) by
- edgeappmail.agilent.com (192.25.218.37) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 4 Dec 2024 10:30:50 -0700
-From: <chris.laplante@agilent.com>
-To: <bitbake-devel@lists.openembedded.org>
-CC: Chris Laplante <chris.laplante@agilent.com>
-Subject: [PATCH 2/2] cooker: use enum for cooker state to improve readability
-Date: Wed, 4 Dec 2024 12:30:11 -0500
-Message-ID: <20241204173011.1415479-2-chris.laplante@agilent.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241204173011.1415479-1-chris.laplante@agilent.com>
-References: <20241204173011.1415479-1-chris.laplante@agilent.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD83:EE_|IA1PR12MB6283:EE_
-X-MS-Office365-Filtering-Correlation-Id: b2fb5797-3a32-4c7f-f7d5-08dd148973ec
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.19; Wed, 4 Dec
+ 2024 17:46:26 +0000
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::9206:40ba:ef7e:729e]) by PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::9206:40ba:ef7e:729e%5]) with mapi id 15.20.8207.017; Wed, 4 Dec 2024
+ 17:46:25 +0000
+From: Ross Burton <Ross.Burton@arm.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+CC: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH] lib/bb/tests: use bb.build.listtasks()
+ instead of __BBTASKS
+Thread-Topic: [bitbake-devel] [PATCH] lib/bb/tests: use bb.build.listtasks()
+ instead of __BBTASKS
+Thread-Index: AQHbRjYGDtf0XjsOckWwZOdfEIEBt7LWV7cAgAAEsYA=
+Date: Wed, 4 Dec 2024 17:46:25 +0000
+Message-ID: <3DE84A08-9293-4587-9723-CE1852CBB7B4@arm.com>
+References: <20241204101911.1218039-1-ross.burton@arm.com>
+ <D633ECVEQJPV.RW45QS9AIPTJ@bootlin.com>
+In-Reply-To: <D633ECVEQJPV.RW45QS9AIPTJ@bootlin.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3826.200.121)
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+x-ms-traffictypediagnostic: 
+	PA4PR08MB7411:EE_|AM0PR08MB5507:EE_|DU2PEPF00028CFF:EE_|PAWPR08MB9006:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5c3745e3-1477-432c-a50d-08dd148b984e
+x-checkrecipientrouted: true
+nodisclaimer: true
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: 
+ BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+X-Microsoft-Antispam-Message-Info-Original: 
+ =?utf-8?B?SmtFRjV3Nk5lQkZOYkdpTmNIaG1laklRS1Q4Z05LWHFQbzdlL0N2UFF4TW5k?=
+ =?utf-8?B?Rm5VbTFvMXR0a0dNL0Jsd0d1aUY5YjFyQ1JpeFc5WDdBRCt5dmZCY3RoSGpp?=
+ =?utf-8?B?TzNZYVpEQ09VVE52M3V0cDNyZC9LemRYc1paa09mNk0wM3pMZU14K0p4SUND?=
+ =?utf-8?B?U1NEVFE1UG5Nb0M0VFZoMFNoZ3hhMUQ0bnhyMGNJYXVwSDdkazFGUmpsUnJI?=
+ =?utf-8?B?M0NkdkZCWVVOZ1pWeXVqeU5WTmRZNlkvOEE1cnBVd2xkTXJDOXU0YlVvdVYw?=
+ =?utf-8?B?V2JiZGR2QXh4WlFiTVkybElaSnF5S3pqRlJna1lQK3pEMjBEQXV2ci9lNHlG?=
+ =?utf-8?B?Y291MXo4TDVmSVJFTWx4RUZHSVQxQ0hndmVKRjc5WElNWjllbTdJYk8zZk52?=
+ =?utf-8?B?emI3Y3k0NVNTWXR2Z2xXa3dYczdHWVM4NVdYcnorOXovdXpFbkhEbTlBV1FE?=
+ =?utf-8?B?QVVtUnlxRFRCVnVCNmhkbDYxUjNvcHUxMjlUc0VZYzltVkxBcFpJUzhnZnA2?=
+ =?utf-8?B?eExNdldmOExTa001UzNXd3dUVUh5YzlZRTJISFZERjRYNnJ3c2wydnNUaFdY?=
+ =?utf-8?B?TTM3UElXc0hQVnBTd1BRZmN5eVFmQmJaN1BmTmNuSThFSDY3MkxWUTN5T1Ri?=
+ =?utf-8?B?T3EvUjFIOExkLzNqVGYvZ2FmUVZqeWFMbDcxallwSEk1U0RKMmgxQ1FpS0M2?=
+ =?utf-8?B?azRBVzFQeTVMYXAvdmVMb2ZCbnZId1hmdi9Oem1zK2NUaGdrY1dPYysrY0JO?=
+ =?utf-8?B?Mk45ckpzZkRWNHp5aGlUYmRLaURkZjQvbWhJbVgvLzFLRnNKOTVDVy9Bdlc2?=
+ =?utf-8?B?T0dFY2tZUkNtTEd6dThiTmF2Wk9UQWhmbGU5QTZFaDRzZlY3c1J1MDkvVC90?=
+ =?utf-8?B?ZDBNR21NMVE3cDk3VFI1d05uR2lPZ21hMkZabjlnSlBYYlVpOWdkSnNDNnN6?=
+ =?utf-8?B?dTRKcGlaS1RLMDAxUDlEOUlJRnR3UHdZUUVHcnIycHo3bzU0ZzFMZ2JUTkFy?=
+ =?utf-8?B?QVhQamIwc1FKWEYrZk5tSS9lbXpEaGxSVGpvVFJkYnVTS3R4RDFXUHZKMHVm?=
+ =?utf-8?B?SDhsa0FTRVVUOWZyczRIUEdPWUR1TEdiczhEcjZjTjVXeVN0K0xuU2E1Vmo4?=
+ =?utf-8?B?eUlFa0tsNFF5K2t2L0U5RERTblRHNm9pWmVZazcwbVVVZ0xVa0ZWRkJvQzhG?=
+ =?utf-8?B?UXFydWRQVm5JYzdVdEFCTHFTL3l0TDRmSWNQNWNvT0RSbkYwc0NoWE52UHBY?=
+ =?utf-8?B?QjRhUWFPUm1HSkdKbVIvS1Z0R2g2NVZqZEJqYlJ6dHkxZENQNTZzbU0yT0FE?=
+ =?utf-8?B?bHdUVUpZYlRpTkQ5RVVVSFpqbnJydnNPSjlaN2NGdVRubmRGMVZkWjR4cVVk?=
+ =?utf-8?B?NVZVeEpra2xwVU1QYUNnVk5rdnY5VnhQNlNPNUx6cEdXTjZnK2E3Qm1RTnBN?=
+ =?utf-8?B?WmJad0RuV1BpMkxrQjJQT2tFNnN0K29DKzVIcFlpZUxjVHNYMFAreGZrQ3lq?=
+ =?utf-8?B?ZlBvYjBFdkViWk0wZUJFcHZ0aXlxbXlHT0RPOXZJRXcxR3l0RytiV2p5OFdQ?=
+ =?utf-8?B?MFdLYndoVXB1MzNrekFCMHJucnNBODZMWGVxeTVyZXMzSWhtOGlHek5RejhR?=
+ =?utf-8?B?OGtmbnFrQ3NPQWQxUGQ4Y2xPRmtHZDh2RnkydDZtMWlDa2xOVFVNV3o5a0RH?=
+ =?utf-8?B?aWpkbHFBV2xwc2d1WHBJVmQ4dUVTOVFzckhNakRhVEVSQXF2OTJoNUgyZWFs?=
+ =?utf-8?B?aWsyVUVTQk9GNm9mTHVUNEVxSHluM1ljQVkrRWYrODVpT2YzSUZaM1diMlhp?=
+ =?utf-8?B?SW5RUFVnMktiN2oxblpRZlk4eHdQWnR1bUJhUnZNRUlabWw5VkwyaGhOcStB?=
+ =?utf-8?B?QVZiMG9Dd2doNUdEalMxK1lTM0lVa29uRHJWZytHbFpzaFE9PQ==?=
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR08MB7411.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0C9AE48CC6DB354FA5B16F8344E02485@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB5507
+Original-Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-SkipListedInternetSender: 
+ ip=[2603:10a6:102:2a3::12];domain=PA4PR08MB7411.eurprd08.prod.outlook.com
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ DU2PEPF00028CFF.eurprd03.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	19b60525-cba9-4fa4-3cf0-08dd148b9332
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
+	BCL:0;ARA:13230040|82310400026|35042699022|14060799003|36860700013|376014|1800799024;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?f4tNiMcm0t/9CRMNj9mM/Wxs3U4vF9iYyEWYpN01W0d+ydyh/uqZoHLFH7Td?=
- =?us-ascii?Q?wnZBX331WrK22cAul/E/Kpg6vfpjimASizcimKcMDu2QiNXSpIm4P5gpVfM+?=
- =?us-ascii?Q?1fBIQUEDBgmCmh5hSxdt9uT8Et0cXq1CQ2i9CugeMeBsogLJrHZrZCqDXWd2?=
- =?us-ascii?Q?I0y6d73riaL7Fi4MTqkvNhnzMdPPCjKoRnUR+rLTdmCXc9vfGC5+OrqaNNWu?=
- =?us-ascii?Q?nygjOSwB2xMu8Cvuowj+Tvul+5na8Vkyt6BLMct/F/jbdPIJZw1mlXMMUg6r?=
- =?us-ascii?Q?zS/1haETh0EDQZ/6lYpxIp/loRhsILah7qwuwiX3sP25sE76Iu1+Z+p35PfY?=
- =?us-ascii?Q?Xecy3WdneUwe4OVwxd9k/x+9TKEhlAAhb4WtYWpp4erP/4sH4L0k1lJoC/ch?=
- =?us-ascii?Q?xcL+635bnLAePdtUWt8J59t5hUDDsEh7retn9ge2k7u5tlk5SYld/6I2T2Ak?=
- =?us-ascii?Q?///zqV7BXoGDweVyCXlDf/8g+qcfc7JrVVCF0mmmYKUDxedhs7pR0WGb0vQA?=
- =?us-ascii?Q?NFW0vZxTJNmrA0v+oiZnUPYMFG+OM99GZNG4mzul44otpzaH77fzPT8DFgju?=
- =?us-ascii?Q?heV7x9zdOsdWuxd06x8FIP41kk36UazSPTZ/7tN1YQNZbwJXXpMRNF2MvHi8?=
- =?us-ascii?Q?1Gs/fclQxWMHRB9oFSurJcPvESssZueplYjmePBlOUhT9QziaWjGDqw26ipH?=
- =?us-ascii?Q?Vcmb5qBgS2XDLowhcUQgIAsiXVSTeInvYhyjWk4NIH0D0sFRF84gzAqEykxE?=
- =?us-ascii?Q?rJR9/kLqPbAHYGu0Yr6Qj3K6IQuofpwDm+oogNPpWd9/LBQHs/hHM1RJqALS?=
- =?us-ascii?Q?4rUoz6sX2hkuafuKwdgsK5bJhy0fHOjcgIfTVPdHcsv3iZufktVsBs7Uyeug?=
- =?us-ascii?Q?q/6+w6bfrMmTPDa4UlRJiUdT3/auMLpUbhGA08zOaB3rE9vBoFeZS6gWWcdY?=
- =?us-ascii?Q?IMv65kcANsFvFYy01yDDwq3M8IWPr3ULBN0dz0CyNEafCrnkJFucx3e8Kust?=
- =?us-ascii?Q?Wo897+dOxR4w2wWj0g4xLQiON8BIpwLKK5sDMFwr/8K0sARb0w6yL2eLjI6P?=
- =?us-ascii?Q?BLLe+cUDlD1Ny4orlJap7tEJ98sOf0I+zqxyKoW7ECTwFo2NyU4doFqcOLsi?=
- =?us-ascii?Q?w9kXBp+jU337BBa4Lpkcxzslw9QA/lQtOAfSbQIYciWgvmN7L6V5XSyIz9il?=
- =?us-ascii?Q?ZGPgF3ZFJY4imdoBfCDXqg0PLdkAjEAZtOsem/wX1OG20yeJlzdxnbzeBApd?=
- =?us-ascii?Q?pJj4V2/fCGbP8eNc4Rm0a8ADDkPDTQQ9wbiuCdSCMr37REYXuw1S7F4XkXt7?=
- =?us-ascii?Q?e8L6D8F9M4BLZHFauERAhx7pahiXAaIqR/XQeUMzDQ8mh3LtaE73yDGiM8uu?=
- =?us-ascii?Q?NpvNSpuI8D99OaKz+lzNU/PJMX1aHG1y3ase1YCWjIFh8OxdRVDvshs0ra0i?=
- =?us-ascii?Q?Xk9EAcuJrRLtZZZQBKGGubPD/fqeCiwF?=
+	=?utf-8?B?LzZYb2phNGNLcGlGQ1kwOWxJa0x2aUZDQ1A1Z1JhSnVNYU5keTZ6Ym56QmdY?=
+ =?utf-8?B?M0dvZGp4T09EcUQyRVRMRWFNMjRpaE0weENsZlJSWWVLcmNPelpIcnp4MVpY?=
+ =?utf-8?B?N0Z4R2xwdWJBWFdCbGFBTzJJK3BlRVJFVThsQ2lPL2pKZmVoTzFCMFVZMitY?=
+ =?utf-8?B?RFZ2TGxsS1h3WkRSb0tQUEdub0doY3dPRE1hN0IzNTdXbGRqT0g5TnFMM0w4?=
+ =?utf-8?B?VTRjWm8zTFk4eW1JSXJEcGhzVURNMlduMjBLSXJCQmxkQlJua0tieUVkSkFH?=
+ =?utf-8?B?Rkl0alBwN01FekNjcFowUDJFSHlyODVIOVExc3QwN09GcVIweTFlaFNlcExT?=
+ =?utf-8?B?Wmo2elJlbTVDdExaQ3c4c1dNYTU3VERjQW01MlNuL0RpQzY0aCtYSi9uQ0pD?=
+ =?utf-8?B?Vi9FSzlpRnJMeVE4aUIyeVhrVVBPRVRsN0FYWjd1SUVaclNURFpqQzFndm1O?=
+ =?utf-8?B?VUVyMFAybmVmZGZsUzFYUVltQkJWNzJSQlp2RzR2MWZBaDhZUHBEdXdxSnFw?=
+ =?utf-8?B?RWMzSXlsUXl1Z2pEVmFXeTM0Q0poN2lWcTRaTWN1NW5JT0hpR2pNaFF1L0xG?=
+ =?utf-8?B?bzA0SHgzVVJMcTNHWENCWnA0RVhvNGlzMnRXa0plV3NjaENnRzZncmRqamR4?=
+ =?utf-8?B?MG1SU0NZeVRHQTdUaW9qQkJiMXVjc2JyaWtkNnlQeG9ma01FYk1vQVMxV3Ir?=
+ =?utf-8?B?VFlKcUtFbXNKSjhQeWRwc3lrdXNFc2dFS3lzOUJYTWh6UWhKdlRYOXMxaUlw?=
+ =?utf-8?B?K2NrcDNWNm54Vkd1MitNb1B4YWZqbkxaYXRZeW05MkFSd05CWWdFOXhpcm45?=
+ =?utf-8?B?SkEvWGJUc29JSUR1bWkrcDBiQlpUdXF6SkxCOVpESjRuRDFVYVZSckZrUmls?=
+ =?utf-8?B?cWo5TUxXTTc2VDJHQXgzSTF1bEdkc0dFU3lNUEtnWFNyZUViODNGeG9Zajlw?=
+ =?utf-8?B?cGVJT3FrcE81aFpxN1ZuUFF3SWZ4ZVZDOUFpVkNSY1JCNDd0d2xxa0RmSTkx?=
+ =?utf-8?B?Q3ZySkwwaTV3V2tMWE1PYTRiMXBLeHdib2JjcWdRNEx3VTBnL3FDUDY0d2VS?=
+ =?utf-8?B?ZWMxNWtGTFMraUxUMmswVll4M0JMOWgxd0k0ckNtMDNEM3VvTUpsVFJsQW1U?=
+ =?utf-8?B?RHJ4UDlybXNkeU5wN0l1NlkxeDZNZFhNSUFqTGVYRkZrdEVUaHlvOVRrdXVT?=
+ =?utf-8?B?Vlp3TFgzUGVyRjd0dUVEZE9iSHdPYVM1dVlaUmYrcC9vTWFZVzVZd04rNDN3?=
+ =?utf-8?B?VXhkL3dLVmRyejRxQWJ3Q3E1Rko3SWZEcVdiY2FraWNxam9iTFFtOUVHZHlC?=
+ =?utf-8?B?cVo4M3NST1B4eHNjQnRUQzZndFNEeldQOEhHL1VPQVhLV3F6UTZTTEE1SnFw?=
+ =?utf-8?B?NHR2L3hQemtETWtMaGRlQklKUGtybjhSQlNKUEdWQ0hGc2p4T0traHorSzVL?=
+ =?utf-8?B?SmNVSFloUmhzY2VZQm5JNVR6ZjBVa1ZXaEpGbnY3Vk5veGZDYkVGWk9FTUhQ?=
+ =?utf-8?B?QkMwY0VPOCtWT2diTnUxVi9DcHpaeVBiUGF3OVlUR011SUczK1VEaTNoS1hq?=
+ =?utf-8?B?aHA1N3lmVzFXdFBHRjY4N1hHd3RIdEwwWUVXbGs2aDZXTmdsc3hKcHZRSm1Q?=
+ =?utf-8?B?bUwwdEJmVnJwVURlVnpheWFXVVBzdzZoTEFQUXgvUjdNbExUZnQyQWVRQ0Uz?=
+ =?utf-8?B?dVlQNDREejB0TS9nZEZWWFQrVVl3L3ZURXpXM084emV0dHN6YlZFUUtlMlNR?=
+ =?utf-8?B?eXVaemF5Y3FvcDZEb3JBRXUvRW5nUVJJbDRTKzMzSXo4c3hjQWl0Ky83OVYx?=
+ =?utf-8?B?eGFqSVBIMlNBY2VRZUtwVmI1YThwc2FOakVMUWlZcWtXMlYvblVKclhDV3M4?=
+ =?utf-8?B?bjNwL3QrL2tqTjlqQTNrbm5CYVBkNnI0cklzbGFWNk1XdlBXckNCN0c1Si9l?=
+ =?utf-8?Q?1qFGonPujK3c50GO7Vr45hHp5W0id4x2?=
 X-Forefront-Antispam-Report: 
-	CIP:192.25.218.37;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:wpcosapexchedg1.windmz.agilent.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2024 17:31:14.3213
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:64aa7808-outbound-1.mta.getcheckrecipient.com;CAT:NONE;SFS:(13230040)(82310400026)(35042699022)(14060799003)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2024 17:46:34.4466
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2fb5797-3a32-4c7f-f7d5-08dd148973ec
-X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.37];Helo=[edgeappmail.agilent.com]
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-CH1PEPF0000AD83.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c3745e3-1477-432c-a50d-08dd148b984e
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	DU2PEPF00028CFF.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6283
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR08MB9006
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 04 Dec 2024 17:31:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16867
+ <bitbake-devel@lists.openembedded.org>; Wed, 04 Dec 2024 17:46:45 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16868
 
-From: Chris Laplante <chris.laplante@agilent.com>
-
-enum was introduced in Python 3.4
-
-Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
----
- lib/bb/command.py             |  4 +--
- lib/bb/cooker.py              | 58 +++++++++++++++++------------------
- lib/bb/server/xmlrpcserver.py |  4 +--
- 3 files changed, 32 insertions(+), 34 deletions(-)
-
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index a63427660..7944faf98 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -109,7 +109,7 @@ class Command:
-=20
-     def runAsyncCommand(self, _, process_server, halt):
-         try:
--            if self.cooker.state in (bb.cooker.state.error, bb.cooker.stat=
-e.shutdown, bb.cooker.state.forceshutdown):
-+            if self.cooker.state in (bb.cooker.State.ERROR, bb.cooker.Stat=
-e.SHUTDOWN, bb.cooker.State.FORCE_SHUTDOWN):
-                 # updateCache will trigger a shutdown of the parser
-                 # and then raise BBHandledException triggering an exit
-                 self.cooker.updateCache()
-@@ -119,7 +119,7 @@ class Command:
-                 (command, options) =3D cmd
-                 commandmethod =3D getattr(CommandsAsync, command)
-                 needcache =3D getattr( commandmethod, "needcache" )
--                if needcache and self.cooker.state !=3D bb.cooker.state.ru=
-nning:
-+                if needcache and self.cooker.state !=3D bb.cooker.State.RU=
-NNING:
-                     self.cooker.updateCache()
-                     return True
-                 else:
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index ca37cfea9..ceaaac11e 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -8,7 +8,7 @@
- #
- # SPDX-License-Identifier: GPL-2.0-only
- #
--
-+import enum
- import sys, os, glob, os.path, re, time
- import itertools
- import logging
-@@ -48,16 +48,15 @@ class CollectionError(bb.BBHandledException):
-     Exception raised when layer configuration is incorrect
-     """
-=20
--class state:
--    initial, parsing, running, shutdown, forceshutdown, stopped, error =3D=
- list(range(7))
-=20
--    @classmethod
--    def get_name(cls, code):
--        for name in dir(cls):
--            value =3D getattr(cls, name)
--            if type(value) =3D=3D type(cls.initial) and value =3D=3D code:
--                return name
--        raise ValueError("Invalid status code: %s" % code)
-+class State(enum.Enum):
-+    INITIAL =3D 0,
-+    PARSING =3D 1,
-+    RUNNING =3D 2,
-+    SHUTDOWN =3D 3,
-+    FORCE_SHUTDOWN =3D 4,
-+    STOPPED =3D 5,
-+    ERROR =3D 6
-=20
-=20
- class SkippedPackage:
-@@ -180,7 +179,7 @@ class BBCooker:
-             pass
-=20
-         self.command =3D bb.command.Command(self, self.process_server)
--        self.state =3D state.initial
-+        self.state =3D State.INITIAL
-=20
-         self.parser =3D None
-=20
-@@ -226,23 +225,22 @@ class BBCooker:
-             bb.warn("Cooker received SIGTERM, shutting down...")
-         elif signum =3D=3D signal.SIGHUP:
-             bb.warn("Cooker received SIGHUP, shutting down...")
--        self.state =3D state.forceshutdown
-+        self.state =3D State.FORCE_SHUTDOWN
-         bb.event._should_exit.set()
-=20
-     def setFeatures(self, features):
-         # we only accept a new feature set if we're in state initial, so w=
-e can reset without problems
--        if not self.state in [state.initial, state.shutdown, state.forcesh=
-utdown, state.stopped, state.error]:
-+        if not self.state in [State.INITIAL, State.SHUTDOWN, State.FORCE_S=
-HUTDOWN, State.STOPPED, State.ERROR]:
-             raise Exception("Illegal state for feature set change")
-         original_featureset =3D list(self.featureset)
-         for feature in features:
-             self.featureset.setFeature(feature)
-         bb.debug(1, "Features set %s (was %s)" % (original_featureset, lis=
-t(self.featureset)))
--        if (original_featureset !=3D list(self.featureset)) and self.state=
- !=3D state.error and hasattr(self, "data"):
-+        if (original_featureset !=3D list(self.featureset)) and self.state=
- !=3D State.ERROR and hasattr(self, "data"):
-             self.reset()
-=20
-     def initConfigurationData(self):
--
--        self.state =3D state.initial
-+        self.state =3D State.INITIAL
-         self.caches_array =3D []
-=20
-         sys.path =3D self.orig_syspath.copy()
-@@ -1398,11 +1396,11 @@ class BBCooker:
-=20
-             msg =3D None
-             interrupted =3D 0
--            if halt or self.state =3D=3D state.forceshutdown:
-+            if halt or self.state =3D=3D State.FORCE_SHUTDOWN:
-                 rq.finish_runqueue(True)
-                 msg =3D "Forced shutdown"
-                 interrupted =3D 2
--            elif self.state =3D=3D state.shutdown:
-+            elif self.state =3D=3D State.SHUTDOWN:
-                 rq.finish_runqueue(False)
-                 msg =3D "Stopped build"
-                 interrupted =3D 1
-@@ -1472,12 +1470,12 @@ class BBCooker:
-         def buildTargetsIdle(server, rq, halt):
-             msg =3D None
-             interrupted =3D 0
--            if halt or self.state =3D=3D state.forceshutdown:
-+            if halt or self.state =3D=3D State.FORCE_SHUTDOWN:
-                 bb.event._should_exit.set()
-                 rq.finish_runqueue(True)
-                 msg =3D "Forced shutdown"
-                 interrupted =3D 2
--            elif self.state =3D=3D state.shutdown:
-+            elif self.state =3D=3D State.SHUTDOWN:
-                 rq.finish_runqueue(False)
-                 msg =3D "Stopped build"
-                 interrupted =3D 1
-@@ -1572,7 +1570,7 @@ class BBCooker:
-=20
-=20
-     def updateCacheSync(self):
--        if self.state =3D=3D state.running:
-+        if self.state =3D=3D State.RUNNING:
-             return
-=20
-         if not self.baseconfig_valid:
-@@ -1582,19 +1580,19 @@ class BBCooker:
-=20
-     # This is called for all async commands when self.state !=3D running
-     def updateCache(self):
--        if self.state =3D=3D state.running:
-+        if self.state =3D=3D State.RUNNING:
-             return
-=20
--        if self.state in (state.shutdown, state.forceshutdown, state.error=
-):
-+        if self.state in (State.SHUTDOWN, State.FORCE_SHUTDOWN, State.ERRO=
-R):
-             if hasattr(self.parser, 'shutdown'):
-                 self.parser.shutdown(clean=3DFalse)
-                 self.parser.final_cleanup()
-             raise bb.BBHandledException()
-=20
--        if self.state !=3D state.parsing:
-+        if self.state !=3D State.PARSING:
-             self.updateCacheSync()
-=20
--        if self.state !=3D state.parsing and not self.parsecache_valid:
-+        if self.state !=3D State.PARSING and not self.parsecache_valid:
-             bb.server.process.serverlog("Parsing started")
-             self.parsewatched =3D {}
-=20
-@@ -1628,7 +1626,7 @@ class BBCooker:
-             self.parser =3D CookerParser(self, mcfilelist, total_masked)
-             self._parsecache_set(True)
-=20
--        self.state =3D state.parsing
-+        self.state =3D State.PARSING
-=20
-         if not self.parser.parse_next():
-             collectlog.debug("parsing complete")
-@@ -1638,7 +1636,7 @@ class BBCooker:
-             self.handlePrefProviders()
-             for mc in self.multiconfigs:
-                 self.recipecaches[mc].bbfile_priority =3D self.collections=
-[mc].collection_priorities(self.recipecaches[mc].pkg_fn, self.parser.mcfile=
-list[mc], self.data)
--            self.state =3D state.running
-+            self.state =3D State.RUNNING
-=20
-             # Send an event listing all stamps reachable after parsing
-             # which the metadata may use to clean up stale data
-@@ -1711,10 +1709,10 @@ class BBCooker:
-=20
-     def shutdown(self, force=3DFalse):
-         if force:
--            self.state =3D state.forceshutdown
-+            self.state =3D State.FORCE_SHUTDOWN
-             bb.event._should_exit.set()
-         else:
--            self.state =3D state.shutdown
-+            self.state =3D State.SHUTDOWN
-=20
-         if self.parser:
-             self.parser.shutdown(clean=3DFalse)
-@@ -1724,7 +1722,7 @@ class BBCooker:
-         if hasattr(self.parser, 'shutdown'):
-             self.parser.shutdown(clean=3DFalse)
-             self.parser.final_cleanup()
--        self.state =3D state.initial
-+        self.state =3D State.INITIAL
-         bb.event._should_exit.clear()
-=20
-     def reset(self):
-diff --git a/lib/bb/server/xmlrpcserver.py b/lib/bb/server/xmlrpcserver.py
-index fd4245a51..ebc271aca 100644
---- a/lib/bb/server/xmlrpcserver.py
-+++ b/lib/bb/server/xmlrpcserver.py
-@@ -103,8 +103,8 @@ class BitBakeXMLRPCServerCommands:
-         s, t =3D bb.server.xmlrpcclient._create_server(host, port)
-=20
-         # we don't allow connections if the cooker is running
--        if (self.server.cooker.state in [bb.cooker.state.parsing, bb.cooke=
-r.state.running]):
--            return None, "Cooker is busy: %s" % bb.cooker.state.get_name(s=
-elf.server.cooker.state)
-+        if self.server.cooker.state in [bb.cooker.State.PARSING, bb.cooker=
-.State.RUNNING]:
-+            return None, f"Cooker is busy: {self.server.cooker.state.name}=
-"
-=20
-         self.event_handle =3D bb.event.register_UIHhandler(s, True)
-         return self.event_handle, 'OK'
---=20
-2.43.0
-
+T24gNCBEZWMgMjAyNCwgYXQgMTc6MjksIE1hdGhpZXUgRHVib2lzLUJyaWFuZCA8bWF0aGlldS5k
+dWJvaXMtYnJpYW5kQGJvb3RsaW4uY29tPiB3cm90ZToNCj4gDQo+IE9uIFdlZCBEZWMgNCwgMjAy
+NCBhdCAxMToxOSBBTSBDRVQsIFJvc3MgQnVydG9uIHZpYSBsaXN0cy5vcGVuZW1iZWRkZWQub3Jn
+IHdyb3RlOg0KPj4gVXNlIHRoZSBuZXcgbGlzdHRhc2tzKCkgZnVuY3Rpb24gKGludHJvZHVjZWQg
+aW4gMTg1YzRiKSB0byBhdm9pZA0KPj4gYWNjZXNzaW5nIGEgcHJpdmF0ZSB2YXJpYWJsZS4NCj4+
+IA0KPj4gU2lnbmVkLW9mZi1ieTogUm9zcyBCdXJ0b24gPHJvc3MuYnVydG9uQGFybS5jb20+DQo+
+PiAtLS0NCj4gDQo+IEhpIFJvc3MsDQo+IA0KPiBJIGJlbGlldmUgc29tZSBvZS1zZWxmdGVzdCB3
+aWxsIG5lZWQgdXBkYXRlIGFmdGVyIHRoaXMgbW9kaWZpY2F0aW9uLiBJDQo+IGhhdmUgdGhlIGZv
+bGxvd2luZyBlcnJvciBvbiB0aGUgYXV0b2J1aWxkZXI6DQo+IA0KPiBGQUlMOiB0ZXN0X3BhcnNl
+X2FkZHRhc2tfZGVsdGFzayAoYmIudGVzdHMucGFyc2UuUGFyc2VUZXN0LnRlc3RfcGFyc2VfYWRk
+dGFza19kZWx0YXNrKQ0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+IFRyYWNlYmFjayAobW9zdCByZWNlbnQg
+Y2FsbCBsYXN0KToNCj4gIEZpbGUgIi9zcnYvcG9reWJ1aWxkL3lvY3RvLXdvcmtlci9vZS1zZWxm
+dGVzdC11YnVudHUvYnVpbGQvYml0YmFrZS9saWIvYmIvdGVzdHMvcGFyc2UucHkiLCBsaW5lIDIw
+NCwgaW4gdGVzdF9wYXJzZV9hZGR0YXNrX2RlbHRhc2sNCj4gICAgc2VsZi5hc3NlcnRFcXVhbChb
+J2RvX2ZldGNoMicsICdkb19wYXRjaDInLCAnZG9fbXlwbGFpbnRhc2snLCAnZG9fbXl0YXNrJywg
+J2RvX215dGFzazInLCAnZG9fbXl0YXNrNSddLCBiYi5idWlsZC5saXN0dGFza3MoZCkpDQo+IEFz
+c2VydGlvbkVycm9yOiBbJ2RvX2ZldGNoMicsICdkb19wYXRjaDInLCAnZG9fbXlwbGFpbnRhc1sz
+OSBjaGFyc11zazUnXSAhPSAoJ2RvX2ZldGNoMicsICdkb19wYXRjaDInLCAnZG9fbXlwbGFpbnRh
+c1szOSBjaGFyc11zazXigJkpDQoNCkkgdGhvdWdodCBJ4oCZZCByYW4gdGhlIHRlc3Qgc3VpdGUg
+YnV0IGl0IGxvb2tzIGxpa2UgaXTigJlzIG1vYW5pbmcgYWJvdXQgdGhlIHR5cGUgb2YgdGhlIGNv
+bnRhaW5lci4gIFNvcnJ5LCBJ4oCZbGwgZml4IHVwLg0KDQpSb3Nz
 
