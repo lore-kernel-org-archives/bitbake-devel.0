@@ -2,61 +2,61 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35C7E7717A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A10C8E77170
 	for <webhook@archiver.kernel.org>; Thu,  5 Dec 2024 17:14:04 +0000 (UTC)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web11.17029.1733418838097559850
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.web11.17028.1733418837558894669
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 05 Dec 2024 09:13:58 -0800
+ Thu, 05 Dec 2024 09:13:57 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=U990bKm2;
- spf=pass (domain: gmail.com, ip: 209.85.221.45, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-385dece873cso667868f8f.0
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=eMxXSNn3;
+ spf=pass (domain: gmail.com, ip: 209.85.128.46, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-434a9f2da82so8347075e9.2
         for <bitbake-devel@lists.openembedded.org>; Thu, 05 Dec 2024 09:13:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1733418836; x=1734023636; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zsyHWR+7C2p9Is5Zgx7ReXXJAj65L5Vs+zIIl6m76JA=;
-        b=U990bKm2Z5QmSGMnBghmAFMc9MAeFdkVtN6TZm7IQv/njgMTTrcy+t9q47CewowTcK
-         cdOT2MvwVkxjNgQ/xeX2kerwA01tK6kh+8DYtc2Xr9LlSxM93RkTbrkXc2Ub9EdhfuIg
-         N4+WszZeSHsBz5wF4uh6FUxTn8iD7OyYTpM8YOAfA2uRXHCV1TuvPMvOS2j9GL9M8pin
-         +7YzkwZotqbz2UEwWDrLWoxg2vOauv4NgEh2wRwMeUvAyg47qDARiCkqvHfwaCOacrI/
-         QVK/akhs3g2kHKhQpAT/uB0wiUjNLGH9pNjjcXCNpX3wlA8/YvN1GQa8cocjW1Pz/Tk/
-         8h1A==
+        bh=+oPhY0pdMYbDXwd5q8nfaiGt9njvutYxUMD33pNH9Yw=;
+        b=eMxXSNn3E7Uw2NjQM7tbySTiullKy10ACh3W9XC5OkgxuOls9d13CuzGnbBPWhe8sC
+         zikDqCb6JKYtqvuh5Cn+FQoJC0H+tO0jsOEXebOooTTEBO5H4ExEanQ86wrigoz+0Qw9
+         k06vMYr1G4z7SBIlMm/Jw7s/aJmkFHFJUDw9P1td5w5Uaq3aDsv0M0PoDYU+50YTZdu1
+         RFMcsHfbHfuiKq7Xi++fLLYtXO5ClVE+EHo6KRTXfdPRxLnplfYx+BHkQwUNcSyr87iY
+         kTbMqpbv/dccn4vdAThMjC1FF28kupIPEX5d/Y4j+SawwQIHhtWj5OrOEcQwep2JDNjB
+         QDAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1733418836; x=1734023636;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zsyHWR+7C2p9Is5Zgx7ReXXJAj65L5Vs+zIIl6m76JA=;
-        b=NgnrlQ8emC/WzT0dj/B0hQqKiWoYgWOeh8CsetaSDoi7WqVlhMK9BZPwnKte03XNoo
-         7nesHUKvKyJIW8YnbeYjUidifV14X99vEixsFbNMjT+YeYusjTldiy4hi+BWbnylQv08
-         flKm/aevWzhDVPBq3Im/mnaJP6GoJmn+sdNFHeSlYKzl+KaeoFPlFTvvr1H2TzM1Hqtq
-         XIOZJN1Fkwbghd54ORfbkMAxS6girUpjDlsKnj9il/rOu4NT84khX09iqDoCbfjy66An
-         Qc3DGzt5mzYuM9DOOLVB11hNZch2sWXASbm/GinR5XQG3HGqeR2m6Ilmz46M1lT4DyzM
-         lzNQ==
-X-Gm-Message-State: AOJu0YyTiiatvDQxAdU5qpuQ+AmOYtJ4REn5AZ9kj/6nLee0QbNy9nYk
-	Nr04fkmIkyry0GZ68A8vMEPs413d03grvEty9C53XeB185IF9at5Hmkutw==
-X-Gm-Gg: ASbGncvC7nMx4Ks0SNuQdI+Pry1bf+SpNKrUhmkzP5ICxj2mS4fMUQB7lHclVJ9CVoA
-	/haJCze2YEqIvwFdSjUhKQMpljlAnWNiBf5ytRLrc0/nRmlp/jn2YlAUcH/0L1P5jJHQQG+oagL
-	g0wvIC2ggRvl7OLaRr6j/IaJLnxzjrEd4vNIS3S+EjlOqTcKkHSG0P8xIb/qUX4TSxo7wvFZZB2
-	ntV4RY1sX0p/iTkrfUQOZYAtEWq0/ZZJYVp/F7G75VGSekVE/tRAnZ0PFZa+fDHhpemhMCLmjxd
-	t4IVu7VYJxU=
-X-Google-Smtp-Source: AGHT+IEySqyclzDAelRCZ0PUGKOmwLeH/idsn+dAXV5amITcAswZcYYXCNVF4LzK5yeMpXn734hOng==
-X-Received: by 2002:a5d:588b:0:b0:385:f114:15d6 with SMTP id ffacd0b85a97d-38607ac1ad6mr7514237f8f.13.1733418836290;
-        Thu, 05 Dec 2024 09:13:56 -0800 (PST)
+        bh=+oPhY0pdMYbDXwd5q8nfaiGt9njvutYxUMD33pNH9Yw=;
+        b=tPGp0/Wcr8EAkuGXxXpUnEmjN8TKUP0JEUQZXo66q3z709KNS6/JvmNMybiXjr0JMu
+         rN6ZgUjxasA/xIYBLH5yB4F23qePc+RuA8J8/cIE8h7G0/cuSy/hbxqpJDC+T9/rIsLc
+         2lPIMf+XX7yyKhr02Z0JV7N8JAqSx8o4Sy5Jk7wDtQR8eLEFcnaaqPbG1V6ULPOka1XA
+         vxpFJBugomzCKzAnjTYoIHJO9ay/g2XgoNDJyd2JMFdQIJaM1dvjVzSWOXRDFRfVOG1h
+         wlw0cZ1L4wEeJ6Fshdtk6Bipk8EU239iet4DbjiSjfJuZzXrtEFVSi91o/R+jt8ot8y0
+         yt7g==
+X-Gm-Message-State: AOJu0YwYPxGEQdH5cMABTrhViBklolt26yJHRjFHY00txdubSWiDSRMC
+	GSFMdqWSj5kaj3VzHxqFlFXHJO8pPO4svHV9oIY06p3+MIe4TOb5cv5iKw==
+X-Gm-Gg: ASbGncs7RaEoX0Yrj12zngd1cvgYX1Sa2rowscyg94yFD7t/SvK2qGcHo63c4ol22Xr
+	7fVlQ9UcLHliFFVaU2ts1bbw63RQjbzUE0SvO+tRlQSdiP432zkgj+8NBhJKApDsYFvzd6SnVIT
+	CYxsRWaxiJ3qtydFMgN243G5bsGd07lLkr/71vrbTMGPKO95Cbcl8wfJHKbJD7xcookF2Du3TV0
+	mkCB6ccy7w+WLoPo2k/Ij/UHUdtP0WFYk5XB5zyn4RqLQCPoOMCmIdmHJIU8lV5BJ5XQSfHC0GS
+	xs5PbcQM3Co=
+X-Google-Smtp-Source: AGHT+IGmvJ6gs+OaJK/XWYEcHtlqiConfeOvV1nHWk518J3GskdL2dGsuVCMdlvF1fnfSuz6i//VpQ==
+X-Received: by 2002:a05:600c:314f:b0:431:50cb:2398 with SMTP id 5b1f17b1804b1-434ddea81ecmr1013675e9.2.1733418835627;
+        Thu, 05 Dec 2024 09:13:55 -0800 (PST)
 Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
         by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434da113508sm30238775e9.35.2024.12.05.09.13.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Dec 2024 09:13:56 -0800 (PST)
+        Thu, 05 Dec 2024 09:13:55 -0800 (PST)
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH v5 3/3] bitbake-config-build: add an alias to bitbake-layers intended for managing specific local configs
-Date: Thu,  5 Dec 2024 18:13:39 +0100
-Message-Id: <20241205171339.4051793-3-alex.kanavin@gmail.com>
+Subject: [PATCH v5 2/3] parse: add support for 'addfragments' directive
+Date: Thu,  5 Dec 2024 18:13:38 +0100
+Message-Id: <20241205171339.4051793-2-alex.kanavin@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20241205171339.4051793-1-alex.kanavin@gmail.com>
 References: <20241205171339.4051793-1-alex.kanavin@gmail.com>
@@ -66,65 +66,103 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 05 Dec 2024 17:14:04 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16886
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16885
 
 From: Alexander Kanavin <alex@linutronix.de>
 
-This was prompted by adding support for config fragments (in a separate
-commit to oe-core); after some deliberation I concluded there should be
-a separate tool, as bitbake-layers is already somewhat over-stuffed,
-and this will give space for more build/conf/* operations in the future
-that anyone can come up with (such as tweaking site-specific items
-in site.conf etc.)
+It takes two parameters:
+- location prefix for fragments
+- name of variable that holds the list of enabled fragments, each of them prefixed
+by layer id
 
-The alias completely reuses existing code via symlink and
-the difference is in where it looks for plugins.
+Implementation of this directive essentially expands the fragment list
+obtained from the variable into absolute fragment paths and hands them to the
+implementation of 'require'.
 
 Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- bin/bitbake-config-build | 1 +
- bin/bitbake-layers       | 6 ++++--
- 2 files changed, 5 insertions(+), 2 deletions(-)
- create mode 120000 bitbake/bin/bitbake-config-build
+ lib/bb/parse/ast.py                  | 36 ++++++++++++++++++++++++++++
+ lib/bb/parse/parse_py/ConfHandler.py |  6 +++++
+ 2 files changed, 42 insertions(+)
 
-diff --git a/bin/bitbake-config-build b/bin/bitbake-config-build
-new file mode 120000
-index 00000000000..11e6df80c4b
---- /dev/null
-+++ b/bin/bitbake-config-build
-@@ -0,0 +1 @@
-+bitbake-layers
-\ No newline at end of file
-diff --git a/bin/bitbake-layers b/bin/bitbake-layers
-index 7bd3ea20e47..341ecbcd971 100755
---- a/bin/bitbake-layers
-+++ b/bin/bitbake-layers
-@@ -18,13 +18,14 @@ import warnings
- warnings.simplefilter("default")
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index 001ba8d289a..7abefab2c2e 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -326,6 +326,37 @@ class InheritDeferredNode(AstNode):
+         inherits.append(self.inherit)
+         data.setVar('__BBDEFINHERITS', inherits)
  
- bindir = os.path.dirname(__file__)
-+toolname = os.path.basename(__file__).split(".")[0]
- topdir = os.path.dirname(bindir)
- sys.path[0:0] = [os.path.join(topdir, 'lib')]
++class AddFragmentsNode(AstNode):
++    def __init__(self, filename, lineno, fragments_path_prefix, fragments_variable):
++        AstNode.__init__(self, filename, lineno)
++        self.fragments_path_prefix = fragments_path_prefix
++        self.fragments_variable = fragments_variable
++
++    def eval(self, data):
++        # No need to use mark_dependency since we would only match a fragment
++        # from a specific layer and there can only be a single layer with a
++        # given namespace.
++        def find_fragment(layers, layerid, full_fragment_name):
++           for layerpath in layers.split():
++               candidate_fragment_path = os.path.join(layerpath, full_fragment_name)
++               if os.path.exists(candidate_fragment_path) and bb.utils.get_file_layer(candidate_fragment_path, data) == layerid:
++                   return candidate_fragment_path
++           return None
++
++        fragments = data.getVar(self.fragments_variable)
++        layers = data.getVar('BBLAYERS')
++
++        if not fragments:
++            return
++        for f in fragments.split():
++            layerid, fragment_name = f.split('/', 1)
++            full_fragment_name = data.expand("{}/{}.conf".format(self.fragments_path_prefix, fragment_name))
++            fragment_path = find_fragment(layers, layerid, full_fragment_name)
++            if fragment_path:
++                bb.parse.ConfHandler.include(self.filename, fragment_path, self.lineno, data, "include fragment")
++            else:
++                bb.error("Could not find fragment {} in enabled layers: {}".format(f, layers))
++
+ def handleInclude(statements, filename, lineno, m, force):
+     statements.append(IncludeNode(filename, lineno, m.group(1), force))
  
- import bb.tinfoil
- import bb.msg
+@@ -370,6 +401,11 @@ def handleInheritDeferred(statements, filename, lineno, m):
+     classes = m.group(1)
+     statements.append(InheritDeferredNode(filename, lineno, classes))
  
--logger = bb.msg.logger_create('bitbake-layers', sys.stdout)
-+logger = bb.msg.logger_create(toolname, sys.stdout)
++def handleAddFragments(statements, filename, lineno, m):
++    fragments_path_prefix = m.group(1)
++    fragments_variable = m.group(2)
++    statements.append(AddFragmentsNode(filename, lineno, fragments_path_prefix, fragments_variable))
++
+ def runAnonFuncs(d):
+     code = []
+     for funcname in d.getVar("__BBANONFUNCS", False) or []:
+diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
+index 27665443dd4..35321dacfe1 100644
+--- a/lib/bb/parse/parse_py/ConfHandler.py
++++ b/lib/bb/parse/parse_py/ConfHandler.py
+@@ -47,6 +47,7 @@ __export_regexp__ = re.compile( r"export\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
+ __unset_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
+ __unset_flag_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)\[([a-zA-Z0-9\-_+.][a-zA-Z0-9\-_+.@]+)\]$" )
+ __addpylib_regexp__      = re.compile(r"addpylib\s+(.+)\s+(.+)" )
++__addfragments_regexp__  = re.compile(r"addfragments\s+(.+)\s+(.+)" )
  
- def main():
-     parser = argparse.ArgumentParser(
-@@ -67,7 +68,8 @@ def main():
-             bbpaths = tinfoil.config_data.getVar('BBPATH').split(':')
+ def init(data):
+     return
+@@ -197,6 +198,11 @@ def feeder(lineno, s, fn, statements, baseconfig=False, conffile=True):
+         ast.handlePyLib(statements, fn, lineno, m)
+         return
  
-         for path in ([topdir] + bbpaths):
--            pluginpath = os.path.join(path, 'lib', 'bblayers')
-+            pluginbasepath = {"bitbake-layers":'bblayers', 'bitbake-config-build':'bbconfigbuild'}[toolname]
-+            pluginpath = os.path.join(path, 'lib', pluginbasepath)
-             bb.utils.load_plugins(logger, plugins, pluginpath)
++    m = __addfragments_regexp__.match(s)
++    if m:
++        ast.handleAddFragments(statements, fn, lineno, m)
++        return
++
+     raise ParseError("unparsed line: '%s'" % s, fn, lineno);
  
-         registered = False
+ # Add us to the handlers list
 -- 
 2.39.5
 
