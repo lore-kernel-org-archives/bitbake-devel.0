@@ -2,111 +2,133 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D18C5E7717D
-	for <webhook@archiver.kernel.org>; Mon,  9 Dec 2024 14:59:32 +0000 (UTC)
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
- by mx.groups.io with SMTP id smtpd.web11.103478.1733756367332796547
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB4DE7717D
+	for <webhook@archiver.kernel.org>; Mon,  9 Dec 2024 15:25:23 +0000 (UTC)
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+ by mx.groups.io with SMTP id smtpd.web10.104351.1733757919836195253
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 09 Dec 2024 06:59:27 -0800
+ Mon, 09 Dec 2024 07:25:20 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=QZVyrBQp;
- spf=pass (domain: gmail.com, ip: 209.85.219.47, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6d8fa32d3d6so24206106d6.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 09 Dec 2024 06:59:27 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=KZysc6MT;
+ spf=pass (domain: gmail.com, ip: 209.85.128.51, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-434e398d28cso16207005e9.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 09 Dec 2024 07:25:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733756366; x=1734361166; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+tCm8i2csGX4naXKHcAg3uZ+dz5dwrL0yNmut4jV4Sg=;
-        b=QZVyrBQpq8sad7T8wpvnurtmEIvjfwZE2S460/5jhM2MSj+sQXyopYd3zLB0LcevS3
-         qf6X2js6MWG5AEFvb4dlm2fyhu7f49Uw/9GAl2RE2N/RSb6SyTuB7f+Zp9am8VvO1wEo
-         I+39RErOfAwuMq1GTeTEzJ6HOQ5hUD+w1fSLTtirCwZno1MWq95ee3Spd1pVvmpsrYEa
-         mDY9NkJUIZUmJFT7BAE8UnO+5Gnvq9QHN09Zb69XvGL6Rzp3pBVYUz0Y9/qQ/GGeQZvf
-         RXQWVNuLea35jv1O1rMxmIZXO7oy6ulGp0aK7zDje4rjE/4Kqz3eASGrh3SPMdjAXrUE
-         qdxQ==
+        d=gmail.com; s=20230601; t=1733757918; x=1734362718; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WB76uUejcbcVllCB2DTsu/4SzQBAu9TGFTyteZpl+7g=;
+        b=KZysc6MTl2cr26nBtgl4rSYbjz4aS4C0edi8sBBbUS+crMf4MPwRWbxjy42pQgC5S0
+         zi/Ue1SOvuSbTmO8YY3sfo6Eqbro/XGx4p5t1dE1ZaYGKaJf7whZs3ASH/lYLl9UC+9P
+         LM+GP6VS88tFb+AdcjjEv9WLZg1hYF7Ng2SlvviXmTv/91Wvz7SbQqSNDr8Ck7yzVWxv
+         vdjkCw6o7U392P55gu6WCuUZg0cOeKELdNg2CQ3n+a8JodPdwBRxugOdNJhnYxdUgte9
+         6Xm3crex4W2efrJyL0yCkCaziWRTs9cv+wpZmIdS72qN4KSwc5EpdMDpq1A7bEk0AnV1
+         4g0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733756366; x=1734361166;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1733757918; x=1734362718;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+tCm8i2csGX4naXKHcAg3uZ+dz5dwrL0yNmut4jV4Sg=;
-        b=kpF6bS13SSe+UL8qxXlWBBWKriRH9i6mGImkYnQxMYu4uMzkF8NHGHfNAGDi0iXf6x
-         LcRgWImMrjEkpPpIVlC/rCNzLvNotacVzgQoKfjP1gHp5XKCeUJGueLfbmrwkSx0KwEO
-         k7SD0exSs9aNg6DId3i1Sf5lGRxS3ULlCpkew6EXdxirfRq80/APvQiHiqRz/hS4bWAV
-         N5V3afCyL6D1h49dPhusMCrCCDLFAkcUMdQxZ4F6FcdwmdPRgqqme2nBt9I+IjSDIoZr
-         7EENvEO31ubltFarnwgNkBwdeVNtcspLW/uhTobbZEzSTK+h1GfMTe4WVjrGc5X0CMQA
-         qgFA==
-X-Gm-Message-State: AOJu0YybblmZVmdwIgTqQO8zedczFvemLL8uXxDxEKyi/iu7B9xUH5Ft
-	h7hrD+OvnQkDiOJ6SMWIO4f2ZLm5i8P9QjVHYWs3zWYlUhvAsfz7gb5app6dFU/6j884mLfWOMy
-	3S+qOwhhgNajM1+pil7EWaPUYWAU=
-X-Gm-Gg: ASbGncu77J5tmpwb2jqz3YKBJaLRf6+7dLpZgWbbOEjWYQyan+zssCZXwf2UeKfiEIu
-	SVqhux6Sy2WwejcdGb2weIM6DSaqPpIvmzmTgXDKRtfAhisJWA/ltGcGzNfklixZzpg==
-X-Google-Smtp-Source: AGHT+IFSEDP6NXD6iR4Ynmx/jWIIh5ZZHHygkD4uNgTw1XLqFkKVPXcsJrONRAcV0Jklb160XLzm7ALgWmC9F+UM5dE=
-X-Received: by 2002:ad4:5f8f:0:b0:6d4:238e:35b0 with SMTP id
- 6a1803df08f44-6d91e314546mr12655696d6.17.1733756366439; Mon, 09 Dec 2024
- 06:59:26 -0800 (PST)
-MIME-Version: 1.0
-References: <20241209133053.2494088-1-alex.kanavin@gmail.com> <e0d3f4c1-f252-44f4-9e45-dbfa13b41996@cherry.de>
-In-Reply-To: <e0d3f4c1-f252-44f4-9e45-dbfa13b41996@cherry.de>
+        bh=WB76uUejcbcVllCB2DTsu/4SzQBAu9TGFTyteZpl+7g=;
+        b=PynEDrOliO56v4eY0/rGL5eFe7LNjz4oF3oKHUDWEtEeHaEiI395EYtwVbtyckIq5R
+         AmKWH2F1jlEB6mnXaZzzDQfO1ilA8FanWUH0AgRVHc5rrxNakaKE0SG9iSLEot8SzrC8
+         yMQP7lehrNmAXlurFnLRgetnPSepA0qxkXtvOtXnsPO4a2B7TgJIfZDvIcM2yWdMMqN8
+         x3I4nv8AJKy07HGu9bytYdi18FVlCAp9/jvamALlQM6FqMsVwHNE5Q5HiLA4cHvQ5+Nl
+         wAIOzoWj0XBuOHfwzBH1tR+vSd7dNbAmtRp8qhh+XZMJwrK6QL23qxIngPks0FD2AJAT
+         YYLw==
+X-Gm-Message-State: AOJu0YyHof8aHY+3Cleqlj8QCm8ZNn+FjqkfgvrGselrY0SyaIsznlsR
+	1N59uE7WSZ7BjBfiqPrQHk9FNn0sayvmgcEJ+5ALYxabD1Hy+cnsiWfVKQ==
+X-Gm-Gg: ASbGncveMD2AgttUaHS4PGpHJtcTY5DWFw7Ro5s8KJ2S5yNfS9x8StWdBZYI8vx4WLR
+	t8q1l/sdHRCp7Jkzv042NTFFwc2aJbawCG5FEwnVpprkZd59Zf4DXEKrIgSO3XC+WOJAl0+t6y5
+	ycvq4MZoLaBme8nBb9RHiWO7UyrwoT3qHsBwC0o0ZGG/CDUkT+LVT7CBgX0Kzeemwca+44A3pDM
+	LOb1b8BnXakQtWYqYplSLgXU+FW5S5+xJKDkRg3CchYVW3IJ/yeVsrnGSDJi7lWUYtSGek55oO4
+	yQ9d/b04HIw=
+X-Google-Smtp-Source: AGHT+IE6kDWbtV7d889ZKFdsxola/UIbUqu7yFUnC40I26C+bmdGdXvEXBQMdGmqHQcbnTFXvgtPMw==
+X-Received: by 2002:a05:600c:3107:b0:434:a1d3:a331 with SMTP id 5b1f17b1804b1-434fffb2d1bmr7328415e9.22.1733757916451;
+        Mon, 09 Dec 2024 07:25:16 -0800 (PST)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434d52cbd72sm198323495e9.44.2024.12.09.07.25.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2024 07:25:16 -0800 (PST)
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Mon, 9 Dec 2024 15:59:15 +0100
-Message-ID: <CANNYZj-LziSwSdKMCTkRQgwzHBM_TFoZhkKbx9Tvcf943zBS8Q@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] bitbake-user-manual-metadata: add a
- section about 'addfragments`
-To: Quentin Schulz <quentin.schulz@cherry.de>
-Cc: bitbake-devel@lists.openembedded.org, docs@lists.yoctoproject.org, 
-	Alexander Kanavin <alex@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+To: bitbake-devel@lists.openembedded.org,
+	docs@lists.yoctoproject.org
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH v2] bitbake-user-manual-metadata: add a section about 'addfragments`
+Date: Mon,  9 Dec 2024 16:25:12 +0100
+Message-Id: <20241209152512.2496818-1-alex.kanavin@gmail.com>
+X-Mailer: git-send-email 2.39.5
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 09 Dec 2024 14:59:32 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16899
+ <bitbake-devel@lists.openembedded.org>; Mon, 09 Dec 2024 15:25:23 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16900
 
-On Mon, 9 Dec 2024 at 15:35, Quentin Schulz <quentin.schulz@cherry.de> wrote:
-> > +
-> > +   addfragments conf/fragments OE_FRAGMENTS
-> > +
-> > +``addfragments`` takes two parameters:
-> > +
-> > +-  path prefix for fragment files inside the layer file tree
-> > +
->
-> I assume you can addfragments a fragment from another layer? So that
-> would mean this is a path relative to any layer's LAYER_DIR dir?
+From: Alexander Kanavin <alex@linutronix.de>
 
-addfragments in itself does not add fragments to a currently active
-build. It declares two things:
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ .../bitbake-user-manual-metadata.rst          | 37 ++++++++++++++++++-
+ 1 file changed, 36 insertions(+), 1 deletion(-)
 
-- what is the variable name whose value contains enabled fragments in
-an active build
-- where to find the fragment files in layers when bitbake is going
-over items in that variable and transforming them into require
-directives
+diff --git a/bitbake-user-manual/bitbake-user-manual-metadata.rst b/bitbake-user-manual/bitbake-user-manual-metadata.rst
+index 40a0c6f02d9..8e25426895f 100644
+--- a/bitbake-user-manual/bitbake-user-manual-metadata.rst
++++ b/bitbake-user-manual/bitbake-user-manual-metadata.rst
+@@ -754,7 +754,9 @@ share the task.
+ This section presents the mechanisms BitBake provides to allow you to
+ share functionality between recipes. Specifically, the mechanisms
+ include ``include``, ``inherit``, :term:`INHERIT`, and ``require``
+-directives.
++directives. There is also a higher-level abstraction called
++``configuration fragments`` that is enabled with ``addfragments``
++directive.
+ 
+ Locating Include and Class Files
+ --------------------------------
+@@ -962,6 +964,39 @@ the ``autotools`` and ``pkgconfig`` classes::
+ 
+    INHERIT += "autotools pkgconfig"
+ 
++``addfragments`` Directive
++--------------------------
++
++This directive allows fine-tuning local configurations with configuration
++snippets contained in layers in a structured, controlled way. Typically it would
++go into ``bitbake.conf``, for example::
++
++   addfragments conf/fragments OE_FRAGMENTS
++
++``addfragments`` takes two parameters:
++
++-  path prefix for fragment files inside the layer file tree that bitbake
++uses to construct full paths to the fragment files
++
++-  name of variable that holds the list of enabled fragments in an
++active build
++
++This allows listing enabled configuration fragments in ``OE_FRAGMENTS``
++variable like this::
++
++   OE_FRAGMENTS = "core/domain/somefragment core/someotherfragment anotherlayer/anotherdomain/anotherfragment"
++
++Fragment names listed in this variable must be prefixed by the layer name
++where a fragment file is located, defined by :term:`BBFILE_COLLECTIONS` in ``layer.conf``.
++
++The implementation then expands this list into
++:ref:`require <bitbake-user-manual/bitbake-user-manual-metadata:\`\`require\`\` directive>`
++directives with full paths to respective layers::
++
++   require /path/to/core-layer/conf/fragments/domain/somefragment.conf
++   require /path/to/core-layer/conf/fragments/someotherfragment.conf
++   require /path/to/another-layer/conf/fragments/anotherdomain/anotherfragment.conf
++
+ Functions
+ =========
+ 
+-- 
+2.39.5
 
-There's an example below that shows how the transformation from
-fragment names to require directives happens.
-
-addfragments is not something users of fragments need to worry about.
-It's set just once in bitbake.conf, and the overwhelming majority of
-yocto users would be using bitbake.conf from oe-core. But it needs to
-be documented as a bitbake syntax item.
-
-> > +   require /path/to/core-layer/conf/fragments/domain/somefragment.conf
-> > +   require /path/to/core-layer/conf/fragments/someotherfragment.conf
-> > +   require /path/to/another-layer/conf/fragments/anotherdomain/anotherfragment.conf
-> > +
->
-> Can you tell us about a typical case this would be useful? I assume
-> there's a reason this was implemented :)
-
-This has been discussed on various mailing lists many times, you can
-search for fragments to find those dicsussions. In bitbake docs I'm
-only saying 'This directive allows fine-tuning local configurations
-with configuration snippets contained in layers in a structured,
-controlled way. ' and not more. The actual user-facing documentation
-for fragments will go into yocto manuals, once the remaining pieces
-(tools and tests for them) merge into oe-core.
-
-Alex
 
