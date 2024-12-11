@@ -2,82 +2,62 @@ Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 978FFE7717D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C200E77180
 	for <webhook@archiver.kernel.org>; Wed, 11 Dec 2024 12:08:54 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.9307.1733918933854080476
+ by mx.groups.io with SMTP id smtpd.web11.9306.1733918933474927083
  for <bitbake-devel@lists.openembedded.org>;
  Wed, 11 Dec 2024 04:08:53 -0800
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7AB721692
-	for <bitbake-devel@lists.openembedded.org>; Wed, 11 Dec 2024 04:09:21 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD1941063
+	for <bitbake-devel@lists.openembedded.org>; Wed, 11 Dec 2024 04:09:20 -0800 (PST)
 Received: from cesw-amp-gbt-1s-m12830-04.oss.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 08E253F5A1
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 400D13F5A1
 	for <bitbake-devel@lists.openembedded.org>; Wed, 11 Dec 2024 04:08:52 -0800 (PST)
 From: Ross Burton <ross.burton@arm.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH v2 2/3] classes/utility-tasks: port do_listtasks to use bb.build.listtasks
-Date: Wed, 11 Dec 2024 12:08:46 +0000
-Message-ID: <20241211120847.384816-2-ross.burton@arm.com>
+Subject: [PATCH v2 1/3] lib/bb/tests: use bb.build.listtasks() instead of __BBTASKS
+Date: Wed, 11 Dec 2024 12:08:45 +0000
+Message-ID: <20241211120847.384816-1-ross.burton@arm.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241211120847.384816-1-ross.burton@arm.com>
-References: <20241211120847.384816-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 11 Dec 2024 12:08:54 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16905
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16904
 
-Instead of iterating every datastore value by hand to find tasks, use
-the new bb.build.listtasks() function (bitbake 185c4b)
+Use the new listtasks() function (introduced in 185c4b) to avoid
+accessing a private variable.
+
+Also use assertSequenceEqual() directly as we don't really care about
+the actual type returned, only that it's a sequence.
 
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- meta/classes-global/utility-tasks.bbclass | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+ bitbake/lib/bb/tests/parse.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta/classes-global/utility-tasks.bbclass b/meta/classes-glo=
-bal/utility-tasks.bbclass
-index ae2da330b86..394cc3158d5 100644
---- a/meta/classes-global/utility-tasks.bbclass
-+++ b/meta/classes-global/utility-tasks.bbclass
-@@ -9,18 +9,17 @@ do_listtasks[nostamp] =3D "1"
- python do_listtasks() {
-     taskdescs =3D {}
-     maxlen =3D 0
--    for e in d.keys():
--        if d.getVarFlag(e, 'task'):
--            maxlen =3D max(maxlen, len(e))
--            if e.endswith('_setscene'):
--                desc =3D "%s (setscene version)" % (d.getVarFlag(e[:-9],=
- 'doc') or '')
--            else:
--                desc =3D d.getVarFlag(e, 'doc') or ''
--            taskdescs[e] =3D desc
--
--    tasks =3D sorted(taskdescs.keys())
--    for taskname in tasks:
--        bb.plain("%s  %s" % (taskname.ljust(maxlen), taskdescs[taskname]=
-))
-+    for t in bb.build.listtasks(d):
-+        maxlen =3D max(maxlen, len(t))
-+
-+        if t.endswith('_setscene'):
-+            desc =3D "%s (setscene version)" % (d.getVarFlag(t[:-9], 'do=
-c') or '')
-+        else:
-+            desc =3D d.getVarFlag(t, 'doc') or ''
-+        taskdescs[t] =3D desc
-+
-+    for task, doc in sorted(taskdescs.items()):
-+        bb.plain("%s  %s" % (task.ljust(maxlen), doc))
- }
+diff --git a/bitbake/lib/bb/tests/parse.py b/bitbake/lib/bb/tests/parse.p=
+y
+index 410679d5a1b..56eb66be9ff 100644
+--- a/bitbake/lib/bb/tests/parse.py
++++ b/bitbake/lib/bb/tests/parse.py
+@@ -201,7 +201,7 @@ deltask ${EMPTYVAR}
+         f =3D self.parsehelper(self.addtask_deltask)
+         d =3D bb.parse.handle(f.name, self.d)['']
 =20
- CLEANFUNCS ?=3D ""
+-        self.assertEqual(['do_fetch2', 'do_patch2', 'do_myplaintask', 'd=
+o_mytask', 'do_mytask2', 'do_mytask5'], d.getVar("__BBTASKS"))
++        self.assertSequenceEqual(['do_fetch2', 'do_patch2', 'do_myplaint=
+ask', 'do_mytask', 'do_mytask2', 'do_mytask5'], bb.build.listtasks(d))
+         self.assertEqual(['do_mytask'], d.getVarFlag("do_mytask5", "deps=
+"))
+=20
+     broken_multiline_comment =3D """
 --=20
 2.43.0
 
