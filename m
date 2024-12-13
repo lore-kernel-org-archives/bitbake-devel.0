@@ -1,365 +1,225 @@
-Return-Path: <chris.laplante@agilent.com>
+Return-Path: <nrhgtp22088@naver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C77E7717D
-	for <webhook@archiver.kernel.org>; Wed, 11 Dec 2024 17:41:45 +0000 (UTC)
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (NAM12-DM6-obe.outbound.protection.outlook.com [40.107.243.68])
- by mx.groups.io with SMTP id smtpd.web10.810.1733938902166612255
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AECC2E7717F
+	for <webhook@archiver.kernel.org>; Fri, 13 Dec 2024 05:27:20 +0000 (UTC)
+Received: from cvsmtppost10.nm.naver.com (cvsmtppost10.nm.naver.com [114.111.35.103])
+ by mx.groups.io with SMTP id smtpd.web11.9334.1734067630663921857
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 11 Dec 2024 09:41:42 -0800
+ Thu, 12 Dec 2024 21:27:11 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@agilent.com header.s=selector1 header.b=tS4tBLns;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.243.68, mailfrom: chris.laplante@agilent.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xKa1m4HRZXciQaSavo7+S4sMjB3B5OoUXzYkfafpj7HFWsO147KNvcVgfC5z9mjw5fcEQSu3JZGJ7hMdQKSifUMWE+qV+07MoLxCIjErRiWLo2CuLP03WYX6v8MNle0t1UxotabWN/LUDSj0SXMKvA/y+3zX6cIvmOMvgd9xD6tgFugGjfd2cWIa+WKJNJxqvXZLW+YvYCIqk5pEmivIAGqqfJ2CPrcYevQPEYDqkQtYf7eoH+PHxGXOUGCCUaoYOszp96ZnNVZYvqBIGtV4911ohBNruUdi1TaoJDtrVmdiWrBh2M66e0sbbEBaH4V+irlD12NdHtfXKs4LF8nSpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NtLcYY7FQ2+svxc21upBP3qDHO6vg0zmnFzIibKU5N4=;
- b=YxJBXrfn3XJAQTQt4KoQS63Jhg3gVHVwkfmRTHcX65ZOKE9V9YmvmUvr4YVYbFgp+Jhv6+MNkG+BHi5MzWXjQ+XqKGFOWjkGTwiKXbfB/VLCYaVlNB9jbSvBojmEwOPChWppmvW/UArdPqBf7E1Zp5usYGtLC8cZvZZsSpMaZBaAUDJJkI61GbYFfZrDq80NBsvSsTBdhzZ5H7KoYMr3qjpE8at8MbvL/dwPJd96SM2olP6ysiOgKPPHj7aeIHoq6cFIbJ6dYTZyjYHczdDMIrpEE9ovhSs3u2pWftjL1xLx8eeFbxx0VgqwjM6H/fi4/V29GoSoOpvUWWZF/lMb9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 192.25.218.37) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
- action=none header.from=agilent.com; dkim=none (message not signed); arc=none
- (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NtLcYY7FQ2+svxc21upBP3qDHO6vg0zmnFzIibKU5N4=;
- b=tS4tBLns/9uzRbbVjdFbQM58CqXJ1uEfoFamuxTJ9RqdDyj5xLIPf+uXqyXAy0pxaHB3DhB0OupR/3Jpk82H/7J23EYrSpApuQ3sVnlh7OZSgYzMUnChAEx0LW50j2yzuKbpWosZ1BLJ3XGdeG6jC5c6LUro6U8oSZA89L4zfMKa558ylRb5Q5yYyqWalyI/9Vp2Ic8Oj+fBwNqgAjlhQb50AMf9uXjHhLVlcvXIL7nLg1Iq4Kux1W8iX0qPyKqKUHFDGRnfNJOOpS4uqb8qESDbZ2HEOgY0zlelts1BrcyMhL2hKQdQ4UDF/Hbl66ThiEWLSuhz89Rqsr9t8Nl3hw==
-Received: from BN9PR03CA0074.namprd03.prod.outlook.com (2603:10b6:408:fc::19)
- by SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.18; Wed, 11 Dec
- 2024 17:41:35 +0000
-Received: from BN2PEPF00004FBE.namprd04.prod.outlook.com
- (2603:10b6:408:fc:cafe::19) by BN9PR03CA0074.outlook.office365.com
- (2603:10b6:408:fc::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8182.16 via Frontend Transport; Wed,
- 11 Dec 2024 17:41:35 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.37)
- smtp.mailfrom=agilent.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=agilent.com;
-Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
- 192.25.218.37 as permitted sender) receiver=protection.outlook.com;
- client-ip=192.25.218.37; helo=edgeappmail.agilent.com; pr=C
-Received: from edgeappmail.agilent.com (192.25.218.37) by
- BN2PEPF00004FBE.mail.protection.outlook.com (10.167.243.184) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8251.15 via Frontend Transport; Wed, 11 Dec 2024 17:41:35 +0000
-Received: from laplante-B650.lfs.agilent.com (192.25.126.5) by
- edgeappmail.agilent.com (192.25.218.37) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 11 Dec 2024 10:41:17 -0700
-From: <chris.laplante@agilent.com>
-To: <bitbake-devel@lists.openembedded.org>
-CC: Chris Laplante <chris.laplante@agilent.com>
-Subject: [PATCH] Make cooker 'skiplist' per-multiconfig/mc
-Date: Wed, 11 Dec 2024 12:41:27 -0500
-Message-ID: <20241211174127.609537-1-chris.laplante@agilent.com>
-X-Mailer: git-send-email 2.43.0
+ dkim=pass header.i=@naver.com header.s=s20171208 header.b=nooA92Qg;
+ spf=pass (domain: naver.com, ip: 114.111.35.103, mailfrom: nrhgtp22088@naver.com)
+X-Originating-IP: 218.148.19.251
+X-Works-Smtp-Source: ZrbqKAtqFqJCpNmlKoU9WHF0
+Received: from cvsendbo002.nm ([10.112.20.42])
+  by cvsmtppost10.nm.naver.com with ESMTP id Jk3ZH68ZQeCmNe9ykYiSbA
+  for <bitbake-devel@lists.openembedded.org>;
+  Fri, 13 Dec 2024 05:27:09 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=naver.com; s=s20171208;
+	t=1734067628; bh=WA4dmL2rncHRnrgkxmFI1qCZ8XFfdvRn1QK3F38z56c=;
+	h=Message-ID:Date:From:To:Subject:From:Subject:Feedback-ID:
+	 X-Works-Security;
+	b=nooA92QgFpAsGJfUzPqfr1sxJVXYLX+tvnzwE5pJBawv9Hk+dvrt37+nop0NjzYT/
+	 S7qMiN4b9WZC/Tb26I5Kdlzo2ge3rMbSAF3pSQhrDmTnCEHaykLkDIpYsg2FoD6MAF
+	 7dhY5sDt2HLj8T/rYrPD0Rv09RxeOVxZPTbvxG6GRvaixoMoZhfBxs3KL8kFuS3bcg
+	 Mmd8jx2kY6YDcHmFij89M6sVkDW2fHPbuEPwOON3pUywRrspBk+Stwn6JEolDqBgUa
+	 ESPIIog5UPgDofFb8TWi5wFOZkHNbxXo5xlPYWa5EGc1YmSgO9K24zaHR5In3wFWeD
+	 7KBfmAfeAGbkA==
+X-Session-ID: a010c4e26e83e8a4565259193bdf84f4dd6bd1bbb396587f87af65dd79fc47cf
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF00004FBE:EE_|SN7PR12MB8059:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1852cbef-ac30-45a2-05b3-08dd1a0b0ed1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?5Tlk+MhmcIHYhXYoMQ6g/GvDXcy3Ay9xtQ2vuPpjnhBbm5kfZPjt6xZjfkdQ?=
- =?us-ascii?Q?GzV8xHRKvZf6+thCDR5GLE1+DlBz+i4KspI+169O7FgDVOiRu46yt2fqpN5M?=
- =?us-ascii?Q?P9mi6eNrjikDcb4o/GNsjEYLTdBjS+UlxUK+5cJLpHCl7o9IKAyCXic59jNk?=
- =?us-ascii?Q?6utYqJZPdfaYPraZo3IyE+yH6tk4L/ZJU4DCTudqbg852mszw4POHy1r/ok4?=
- =?us-ascii?Q?+Edg9yREQYOBpdmfiIM+orXXvR7oZLKJAmGkAIXtpX4lsZT0uBraCZsA6DlY?=
- =?us-ascii?Q?4hKWPrBtjmux4UG/Kk1yrkvwlFhSW0ZNRsORD5WlG7q9DYwhaTQuKqoxw5KF?=
- =?us-ascii?Q?kFf6O1cnn+GY6hS4kQEEvEXgFVGz4mM0qCpSQQykIxglNYdvZQr/1CAO0TXH?=
- =?us-ascii?Q?PVJMNH51z0zzYv06FOhp4vuqcaOEajTuVOjQbYkTRE7fUWgj5dwhfEGug4uz?=
- =?us-ascii?Q?5KBk0JTNi0aSVahldlO+TlhG/zzAILH4XHnVUGt7R8WLtFJumgRxZxNQfpxF?=
- =?us-ascii?Q?EfL6bZqH04ZCwhswFLBvydnitaGkuj8/M2rIwcFyqkkowJMClToXUm+iaqOK?=
- =?us-ascii?Q?ksBpzFiN8l/+6xAkYU9FcTdX5WTzK6kfwqUpdrFTCCIJmkvxXNbnmINN4GYU?=
- =?us-ascii?Q?0X0ZksIYi1HW7FAy3Q7yEXkIxpiY7J6S11A3SBHF//GOjvl0k8Cq2fQBGla3?=
- =?us-ascii?Q?WgxvMyRK/k2Okbz1/JJ4PlE3NlRoc+V8/1+ym6/TXo5gN0pFWiajjJceDdLs?=
- =?us-ascii?Q?7e0UV7Uyo7yba5/W78cSRdTYz/HPeh+znJBu6WQ8sffu8vRD0X6n61MI4rw/?=
- =?us-ascii?Q?XyOXfvBVcaX0clSbzn8bl9GfDhmL0dIkqY6D4fKMQh4jWXh/XIR+bCK85iGE?=
- =?us-ascii?Q?W6cqN2IFE52MEvbXZpZpjgDLOe6A/t4QGTdvdgrFfASTTBLA5SpQJOKiOubM?=
- =?us-ascii?Q?LMHBRfuarkKPMjjUc46Ec28Yl4SG7jFtmlOBmPYH8x4j7FzKkFUuAz7A7SL6?=
- =?us-ascii?Q?uTgwVggiWo/yfh0pWFH9rM2U1dnS5sEG1uLFgk7+lyx/N2VadVhFsxTtx9W7?=
- =?us-ascii?Q?4v8AJCOw1tTZ7tuwxkKJh04usT83cavYowGW3whORQ7zrRXOSSFJA2hc5SC8?=
- =?us-ascii?Q?1vTYF0FLI/Nci4ztu/IGdDxuuRfyTRXMcRbM1fUL2SVSnHFOmco4KIfSTOgc?=
- =?us-ascii?Q?LYEMlf1LYn+bowwO/q6Zr16XL8yy6HMoVth53GhxHuqSALCp1wNkj212ixrZ?=
- =?us-ascii?Q?6aL45qWRIteFPZRfc2fthJUyOKnsI2G/p2jsf7x6vpMTIo4ZyZt3u8+U8TBG?=
- =?us-ascii?Q?FdVIxO7EFwhE99HCbmWKDBEjyzfVa8D7X3ZqtUMvMrdLZwOrgyaU+xgIEaxz?=
- =?us-ascii?Q?S1KJ87eQ2Wq4AdR3Y9uIKpl8kfYmBWrDOI9yM8c3+8NfF7ERDUUAle5RNxYM?=
- =?us-ascii?Q?mZYdTRmLMdKrQMrx3VhBDG0FoiQXCWyv?=
-X-Forefront-Antispam-Report: 
-	CIP:192.25.218.37;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:wpcosapexchedg1.windmz.agilent.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2024 17:41:35.0926
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1852cbef-ac30-45a2-05b3-08dd1a0b0ed1
-X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.37];Helo=[edgeappmail.agilent.com]
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-BN2PEPF00004FBE.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8059
+Message-ID: <1215f45bebff14dda48bcb7c9b5aa96@cweb011.nm>
+Date: Fri, 13 Dec 2024 14:27:08 +0900
+From: =?utf-8?B?6rmA64+E7Jew?= <nrhgtp22088@naver.com>
+In-Reply-To: <ea52961fcdc1f5e766efe2fdbd96db11@cweb002.nm>
+References: <53b418b1879ea9ed4dcc6479aff9ab@cweb006.nm>
+	<ea52961fcdc1f5e766efe2fdbd96db11@cweb002.nm>
+Importance: normal
+To: <bitbake-devel@lists.openembedded.org>
+Subject: =?utf-8?B?W0hvdyB0byBib290IG9uIHRhcmdldGJvYXJkIGJ5IGNyZWF0aW5nIGFuIGltYWdlIHRoYQ==?=
+	=?utf-8?B?dCBjYW4gYm9vdCByYW0gdG8gZGlzayBpbiBhIFlPQ1RPXQ==?=
+X-Originating-IP: 218.148.19.251
+X-Works-Send-Opt: 3YnwjAIYjHm/aAtlKqJYKqMXKBwkx0eFjAJYKg==
+Content-Type: multipart/alternative;
+	boundary="-----Boundary-WM=_7f7bf37e7700.1734067628993"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 11 Dec 2024 17:41:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16910
+ <bitbake-devel@lists.openembedded.org>; Fri, 13 Dec 2024 05:27:20 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16911
 
-From: Chris Laplante <chris.laplante@agilent.com>
+-------Boundary-WM=_7f7bf37e7700.1734067628993
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Previously, the cooker skiplist was shared across multiconfigs
-(including default ''). If you had a recipe that was incompatible with
-several multiconfigs for different reasons, then the displayed reason
-(i.e. the "ERROR: Nothing PROVIDES" and "* was skipped" messages) might
-vary across invocations of bitbake. This was caused by the random order
-in which recipes are parsed under different multiconfig contexts, with
-each skip reason overwriting the previously assigned reason.
+SGVsbG8sIFRoaXMgaXMgQW5uaWUgaW4gUmVwdWJsaWMgb2YgS29yZWEuCgpJIHdvdWxkIGxpa2Ug
+dG8gYm9vdCByYW1kaXNrIGZyb20gdGhlIFlvY3RvIHByb2plY3QuCgpsb2NhbC5jb25mIGlzIGFz
+IGZvbGxvd3MuCgpDb250ZW50IG9mIGxvY2FsLmNvbmYKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpDT05GX1ZFUlNJ
+T04gPSAiMiIKTUFDSElORSA9ICJpbnRlbC1jb3JlaTctNjQiCklOSVRSQU1GU19JTUFHRSA9ICJj
+b3JlLWltYWdlLW1pbmltYWwtaW5pdHJhbWZzIgpJTklUUkFNRlNfSU1BR0VfQlVORExFID0gIjEi
+ClBSRUZFUlJFRF9QUk9WSURFUl92aXJ0dWFsL2tlcm5lbCA9ICJsaW51eC15b2N0byIKUFJFRkVS
+UkVEX1ZFUlNJT05fbGludXgteW9jdG8gPSI1LjE1JSIKUFJFRkVSUkVEX1BST1ZJREVSX3ZpcnR1
+YWwva2VybmVsLXJ0ID0gIiIKRElTVFJPX0ZFQVRVUkVTOmFwcGVuZCA9ICJwYW0gc21iZnMgc3lz
+dGVtZCB1ZGV2IgpDT1JFX0lNQUdFX0VYVFJBX0lOU1RBTEwgPSAic3lzdGVtZCBsZGQiCkRJU1RS
+T19GRUFUVVJFU19CQUNLRklJTExfQ09OU0lERVJFRCArPSAic3lzdmluaXQiClZJUlRVQUwtUlVO
+VElNRV9pbml0X21hbmFnZXIgPSAic3lzdGVtZCIKVklSVFVBTC1SVU5USU1FX2luaXRzY3JpcHRz
+ID0gInN5c3RlbWQtY29tcGF0LXVuaXRzIgpJTUFHRV9JTlNUQUxMOmFwcGVuZCA9ICIgbmN1cnNl
+cyBiYXNoIHN0cmFjZSBiaXNvbiBiYyBncnViIGdydWItZWZpIGlwbWl0b29sIGNpZnMtdXRpbHMg
+cGNpdXRpbHMgZ251LWNvbmZpZyBnbGliYyBiaW51dGlscyBwYWNrYWdlZ3JvdXAtY29yZS1idWls
+ZGVzc2VudGlhbCBvcGVuc3NoLXNmdHAtc2VydmVyIHBhY2thZ2Vncm91cC1jb3JlLXNzaC1vcGVu
+c3NoIGd0aysgY21ha2UgeHogcHl0aG9uMyB2aW0gZ2l0IGZsZXggc3VkbyBlbGZ1dGlscyB1c2J1
+dGlscyB1dGlsLWxpbnV4IGxpbnBhY2sgbGliZ3Bpb2QgbGliZ3Bpb2QtdG9vbHMgbmV0cGxhbiB1
+ZncgZ2xpYmMtdXRpbHMgaXBlcmYzIHVkZXYtZXh0cmFjb25mIHN5c3RlbWQga2VybmVsLWRldnNy
+YyBrbW9kIGtlcm5lbC1kZXYga2VybmVsLW1vZHVsZXMgbWVtdGVzdGVyIGkyYy10b29scyBldGh0
+b29sIGV0Yy1pcG1pLWRyaXZlciIKQ09SRV9JTUFHRV9FWFRSQV9JTlNUQUxMICs9ICJkaGNwY2Qg
+ZG5zbWFzcSIKTUFDSElORV9FU1NFTlRJQUxfRVhUUkFfUlJFQ09NTUVORFMgKz0gImtlcm5lbC1t
+b2R1bGVzIgpJTUFHRV9GU1RZUEVTID0gImlzbyBjcGlvLmd6IgpESVNUUk9fVkVSU0lPTiA9ICIy
+LjAuMSIKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLQoKMS4gRmlyc3QsIEkgcmFuIGJpdGJha2UgYW5kIGNvcGllZCB0
+aGUgYnpJbWFnZS1pbml0cmFtZnMgYW5kIGNvcmUtaW1hZ2UtbWluaW1hbC1pbml0cm1hZnMuY3Bp
+by5neiBmaWxlcyB0byB0aGUgdGFyZ2V0IGJvYXJkLgoKQWxzbywgSSB0cmllZCBib3RoIGJpdGJh
+a2UgY29yZS1pbWFnZS1taW5pbWFsIGFuZCBiaXRiYWtlIGNvcmUtaW1hZ2UtbWluaW1hbC1pbml0
+cm1hZnMuCgoKMi4gU2Vjb3VuZCwgVGhlIHRhcmdldCBib2FyZCBjcmVhdGVkIGEgL2Jvb3QvbG9h
+ZGVyL2VudGlyZXMvbGludXguY29uZiBmaWxlIHRvIHVzZSBzeXN0ZW1kLWJvb3QgYW5kIHdyb3Rl
+IGl0IGFzIGZvbGxvd3MuCgpDb250ZW50IC9ib290L2xvYWRlci9lbnRpcmVzL2xpbnV4LmNvbmYK
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLQp0aXRsZSBsaW51eCB3aXRoIGluaXRyYW1mcwoKbGludXggL2J6SW1hZ2UK
+CmluaXRyZCAvY29yZS1pbWFnZS1taW5pbWFsLWluaXRyYW1mcy5jcGlvLmd6CgpvcHRpb25zID0v
+ZGV2L3JhbTAgcncKCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCjMuIFRocmlkLCBJIHJhbiByZWJvb3QuCgpJbiB0
+aGUgYm9vdCBtZXNzYWdlLAp3YWl0aW5nIGZvciByZW1vdmFibGUgbWVkaWEuLi4gIDI5IDI4IDI3
+IC4uLgoKQWZ0ZXIgY291bnRpbmcgdGhlIG51bWJlcnMKCmNhbm5vdCBmaW5kIHJvb3Rmcy5pbWcg
+ZmlsZSBpbiAvcnVuL21lZGlhL2Jvb3QtbnZtZTBuMXAxIC9ydW4vbWVkaWEvYm9vdC1udm1lMG4x
+cDIgL3J1bi9tZWRpYS9ib290LW52bWUwbjFwMyAsZHJvcHBpbmcgdG8gYSBzaGVsbCAKCkFuIGVy
+cm9yIGhhcyBvY2N1cnJlZCBsaWtlIHRoaXMuCgpJcyB0aGVyZSBhIHdheSB0byBzb2x2ZSBpdD8K
+ClRoYW5rIHlvdS4KCkJlc3QgcmVnYXJkcywKCg==
 
-I hit this specificially when using COMPATIBLE_MACHINE, but
-COMPATIBLE_HOST (or anything using bb.parse.SkipRecipe) would have done it =
-too.
+-------Boundary-WM=_7f7bf37e7700.1734067628993
+Content-Type: text/html;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
----
- lib/bb/command.py     | 21 ++++++++++++++++++---
- lib/bb/cooker.py      | 11 ++++++-----
- lib/bb/tinfoil.py     | 16 ++++++++++++----
- lib/bblayers/query.py | 14 +++++++-------
- 4 files changed, 43 insertions(+), 19 deletions(-)
+PGh0bWw+PGhlYWQ+PHN0eWxlPnB7bWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbTowcHg7fTwv
+c3R5bGU+PC9oZWFkPjxib2R5PjxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxNHB4OyBmb250LWZhbWls
+eTpNYWxndW4gR290aGljLOunkeydgCDqs6DrlJUsc2Fucy1zZXJpZjsiPjxkaXYgc3R5bGU9ImZv
+bnQtc2l6ZTogMTRweDsgZm9udC1mYW1pbHk6ICZxdW90O01hbGd1biBHb3RoaWMmcXVvdDssICZx
+dW90O+unkeydgCDqs6DrlJUmcXVvdDssIHNhbnMtc2VyaWY7Ij5IZWxsbywgVGhpcyBpcyBBbm5p
+ZSBpbiBSZXB1YmxpYyBvZiBLb3JlYS48YnI+PGRpdj48YnI+PC9kaXY+PGRpdj48c3BhbiBzdHls
+ZT0iIj5JIHdvdWxkIGxpa2UgdG8gYm9vdCByYW1kaXNrIGZyb20gdGhlIFlvY3RvIHByb2plY3Qu
+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImZvbnQtd2VpZ2h0OiBib2xkOyI+PGJyPjwv
+c3Bhbj48L2Rpdj48ZGl2PjxzcGFuPmxvY2FsLmNvbmYgaXMgYXMgZm9sbG93cy48L3NwYW4+PC9k
+aXY+PGRpdj48c3Bhbj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImZvbnQtd2Vp
+Z2h0OiBib2xkOyBjb2xvcjogcmdiKDAsIDAsIDApOyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1
+LCAyMjAsIDE1Mik7Ij5Db250ZW50IG9mIGxvY2FsLmNvbmY8L3NwYW4+PC9kaXY+PGRpdj48c3Bh
+bj4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+Q09ORl9WRVJTSU9OID0gIjIi
+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+TUFDSElORSA9ICJpbnRlbC1jb3JlaTctNjQiPC9zcGFu
+PjwvZGl2PjxkaXY+PHNwYW4+SU5JVFJBTUZTX0lNQUdFID0gImNvcmUtaW1hZ2UtbWluaW1hbC1p
+bml0cmFtZnMiPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+SU5JVFJBTUZTX0lNQUdFX0JVTkRMRSA9
+ICIxIjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPlBSRUZFUlJFRF9QUk9WSURFUl92aXJ0dWFsL2tl
+cm5lbCA9ICJsaW51eC15b2N0byI8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj5QUkVGRVJSRURfVkVS
+U0lPTl9saW51eC15b2N0byA9IjUuMTUlIjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPlBSRUZFUlJF
+RF9QUk9WSURFUl92aXJ0dWFsL2tlcm5lbC1ydCA9ICIiPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+
+RElTVFJPX0ZFQVRVUkVTOmFwcGVuZCA9ICJwYW0gc21iZnMgc3lzdGVtZCB1ZGV2Ijwvc3Bhbj48
+L2Rpdj48ZGl2PjxzcGFuPkNPUkVfSU1BR0VfRVhUUkFfSU5TVEFMTCA9ICJzeXN0ZW1kIGxkZCI8
+L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj5ESVNUUk9fRkVBVFVSRVNfQkFDS0ZJSUxMX0NPTlNJREVS
+RUQgKz0gInN5c3Zpbml0Ijwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPlZJUlRVQUwtUlVOVElNRV9p
+bml0X21hbmFnZXIgPSAic3lzdGVtZCI8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj5WSVJUVUFMLVJV
+TlRJTUVfaW5pdHNjcmlwdHMgPSAic3lzdGVtZC1jb21wYXQtdW5pdHMiPC9zcGFuPjwvZGl2Pjxk
+aXY+PHNwYW4+SU1BR0VfSU5TVEFMTDphcHBlbmQgPSAiIG5jdXJzZXMgYmFzaCBzdHJhY2UgYmlz
+b24gYmMgZ3J1YiBncnViLWVmaSBpcG1pdG9vbCBjaWZzLXV0aWxzIHBjaXV0aWxzIGdudS1jb25m
+aWcgZ2xpYmMgYmludXRpbHMgcGFja2FnZWdyb3VwLWNvcmUtYnVpbGRlc3NlbnRpYWwgb3BlbnNz
+aC1zZnRwLXNlcnZlciBwYWNrYWdlZ3JvdXAtY29yZS1zc2gtb3BlbnNzaCBndGsrIGNtYWtlIHh6
+IHB5dGhvbjMgdmltIGdpdCBmbGV4IHN1ZG8gZWxmdXRpbHMgdXNidXRpbHMgdXRpbC1saW51eCBs
+aW5wYWNrIGxpYmdwaW9kIGxpYmdwaW9kLXRvb2xzIG5ldHBsYW4gdWZ3IGdsaWJjLXV0aWxzIGlw
+ZXJmMyB1ZGV2LWV4dHJhY29uZiBzeXN0ZW1kIGtlcm5lbC1kZXZzcmMga21vZCBrZXJuZWwtZGV2
+IGtlcm5lbC1tb2R1bGVzIG1lbXRlc3RlciBpMmMtdG9vbHMgZXRodG9vbCBldGMtaXBtaS1kcml2
+ZXIiPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+Q09SRV9JTUFHRV9FWFRSQV9JTlNUQUxMICs9ICJk
+aGNwY2QgZG5zbWFzcSI8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj5NQUNISU5FX0VTU0VOVElBTF9F
+WFRSQV9SUkVDT01NRU5EUyArPSAia2VybmVsLW1vZHVsZXMiPC9zcGFuPjwvZGl2PjxkaXY+PHNw
+YW4+SU1BR0VfRlNUWVBFUyA9ICJpc28gY3Bpby5neiI8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj5E
+SVNUUk9fVkVSU0lPTiA9ICIyLjAuMSI8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29s
+b3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6ICZxdW90O01hbGd1biBHb3RoaWMmcXVvdDss
+ICZxdW90O+unkeydgCDqs6DrlJUmcXVvdDssIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTRweDsg
+Zm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtbGlnYXR1cmVzOiBub3JtYWw7IGZvbnQt
+dmFyaWFudC1jYXBzOiBub3JtYWw7IGZvbnQtd2VpZ2h0OiA0MDA7IGxldHRlci1zcGFjaW5nOiBu
+b3JtYWw7IG9ycGhhbnM6IDI7IHRleHQtYWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0
+ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2lkb3dzOiAyOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtp
+dC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyB3aGl0ZS1zcGFjZTogbm9ybWFsOyB0ZXh0LWRlY29y
+YXRpb24tdGhpY2tuZXNzOiBpbml0aWFsOyB0ZXh0LWRlY29yYXRpb24tc3R5bGU6IGluaXRpYWw7
+IHRleHQtZGVjb3JhdGlvbi1jb2xvcjogaW5pdGlhbDsgZmxvYXQ6IG5vbmU7IGRpc3BsYXk6IGlu
+bGluZSAhaW1wb3J0YW50OyI+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLTwvc3Bhbj48c3Bhbj48YnI+PC9zcGFuPjwv
+ZGl2PjxkaXY+PHNwYW4+PGJyPjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJmb250LXdl
+aWdodDogYm9sZDsiPjEuIEZpcnN0LCBJIHJhbiBiaXRiYWtlIGFuZCBjb3BpZWQgdGhlIGJ6SW1h
+Z2UtaW5pdHJhbWZzIGFuZCBjb3JlLWltYWdlLW1pbmltYWwtaW5pdHJtYWZzLmNwaW8uZ3ogZmls
+ZXMgdG8gdGhlIHRhcmdldCBib2FyZC48L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj48YnI+PC9zcGFu
+PjwvZGl2PjxkaXY+PHNwYW4+QWxzbywgSSB0cmllZCBib3RoIGJpdGJha2UgY29yZS1pbWFnZS1t
+aW5pbWFsIGFuZCBiaXRiYWtlIGNvcmUtaW1hZ2UtbWluaW1hbC1pbml0cm1hZnMuPC9zcGFuPjwv
+ZGl2PjxkaXY+PHNwYW4+PGJyPjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPjxicj48L3NwYW4+PC9k
+aXY+PGRpdj48c3BhbiBzdHlsZT0iZm9udC13ZWlnaHQ6IGJvbGQ7Ij4yLiBTZWNvdW5kLCBUaGUg
+dGFyZ2V0IGJvYXJkIGNyZWF0ZWQgYSAvYm9vdC9sb2FkZXIvZW50aXJlcy9saW51eC5jb25mIGZp
+bGUgdG8gdXNlIHN5c3RlbWQtYm9vdCBhbmQgd3JvdGUgaXQgYXMgZm9sbG93cy48L3NwYW4+PC9k
+aXY+PGRpdj48c3Bhbj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImJhY2tncm91
+bmQtY29sb3I6IHJnYigyNTUsIDIyMCwgMTUyKTsgZm9udC13ZWlnaHQ6IGJvbGQ7Ij5Db250ZW50
+IC9ib290L2xvYWRlci9lbnRpcmVzL2xpbnV4LmNvbmY8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBz
+dHlsZT0iY29sb3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6ICZxdW90O01hbGd1biBHb3Ro
+aWMmcXVvdDssICZxdW90O+unkeydgCDqs6DrlJUmcXVvdDssIHNhbnMtc2VyaWY7IGZvbnQtc2l6
+ZTogMTRweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtbGlnYXR1cmVzOiBub3Jt
+YWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7IGZvbnQtd2VpZ2h0OiA0MDA7IGxldHRlci1z
+cGFjaW5nOiBub3JtYWw7IG9ycGhhbnM6IDI7IHRleHQtYWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVu
+dDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2lkb3dzOiAyOyB3b3JkLXNwYWNpbmc6IDBw
+eDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyB3aGl0ZS1zcGFjZTogbm9ybWFsOyB0
+ZXh0LWRlY29yYXRpb24tdGhpY2tuZXNzOiBpbml0aWFsOyB0ZXh0LWRlY29yYXRpb24tc3R5bGU6
+IGluaXRpYWw7IHRleHQtZGVjb3JhdGlvbi1jb2xvcjogaW5pdGlhbDsgZmxvYXQ6IG5vbmU7IGRp
+c3BsYXk6IGlubGluZSAhaW1wb3J0YW50OyI+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLTwvc3Bhbj48c3Bhbj48YnI+
+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+dGl0bGUgbGludXggd2l0aCBpbml0cmFtZnM8L3NwYW4+
+PC9kaXY+PGRpdj48c3Bhbj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+bGludXggL2J6SW1h
+Z2U8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+aW5p
+dHJkIC9jb3JlLWltYWdlLW1pbmltYWwtaW5pdHJhbWZzLmNwaW8uZ3o8L3NwYW4+PC9kaXY+PGRp
+dj48c3Bhbj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+b3B0aW9ucyA9L2Rldi9yYW0wIHJ3
+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+PGJyPjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxl
+PSJjb2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWlseTogJnF1b3Q7TWFsZ3VuIEdvdGhpYyZx
+dW90OywgJnF1b3Q766eR7J2AIOqzoOuUlSZxdW90Oywgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAx
+NHB4OyBmb250LXN0eWxlOiBub3JtYWw7IGZvbnQtdmFyaWFudC1saWdhdHVyZXM6IG5vcm1hbDsg
+Zm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsgZm9udC13ZWlnaHQ6IDQwMDsgbGV0dGVyLXNwYWNp
+bmc6IG5vcm1hbDsgb3JwaGFuczogMjsgdGV4dC1hbGlnbjogc3RhcnQ7IHRleHQtaW5kZW50OiAw
+cHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aWRvd3M6IDI7IHdvcmQtc3BhY2luZzogMHB4OyAt
+d2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IHdoaXRlLXNwYWNlOiBub3JtYWw7IHRleHQt
+ZGVjb3JhdGlvbi10aGlja25lc3M6IGluaXRpYWw7IHRleHQtZGVjb3JhdGlvbi1zdHlsZTogaW5p
+dGlhbDsgdGV4dC1kZWNvcmF0aW9uLWNvbG9yOiBpbml0aWFsOyBmbG9hdDogbm9uZTsgZGlzcGxh
+eTogaW5saW5lICFpbXBvcnRhbnQ7Ij4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPC9zcGFuPjxzcGFuPjxicj48L3Nw
+YW4+PC9kaXY+PGRpdj48c3Bhbj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImZv
+bnQtd2VpZ2h0OiBib2xkOyI+My4gVGhyaWQsIEkgcmFuIHJlYm9vdC48L3NwYW4+PC9kaXY+PGRp
+dj48c3Bhbj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+SW4gdGhlIGJvb3QgbWVzc2FnZSw8
+L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj53YWl0aW5nIGZvciByZW1vdmFibGUgbWVkaWEuLi4mbmJz
+cDsmbmJzcDsyOSAyOCAyNyAuLi48L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj48YnI+PC9zcGFuPjwv
+ZGl2PjxkaXY+PHNwYW4+QWZ0ZXIgY291bnRpbmcgdGhlIG51bWJlcnM8L3NwYW4+PC9kaXY+PGRp
+dj48c3Bhbj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+Y2Fubm90IGZpbmQgcm9vdGZzLmlt
+ZyBmaWxlIGluIC9ydW4vbWVkaWEvYm9vdC1udm1lMG4xcDEgL3J1bi9tZWRpYS9ib290LW52bWUw
+bjFwMiAvcnVuL21lZGlhL2Jvb3QtbnZtZTBuMXAzICxkcm9wcGluZyB0byBhIHNoZWxsJm5ic3A7
+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+PGJyPjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxl
+PSJmb250LXdlaWdodDogYm9sZDsgYmFja2dyb3VuZC1jb2xvcjogcmdiKDI1NSwgMjQ4LCAxMjgp
+OyI+QW4gZXJyb3IgaGFzIG9jY3VycmVkIGxpa2UgdGhpcy48L3NwYW4+PC9kaXY+PGRpdj48c3Bh
+bj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImJhY2tncm91bmQtY29sb3I6IHJn
+YigyNTUsIDI0OCwgMTI4KTsgZm9udC13ZWlnaHQ6IGJvbGQ7Ij5JcyB0aGVyZSBhIHdheSB0byBz
+b2x2ZSBpdD88L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjog
+cmdiKDI1NSwgMjQ4LCAxMjgpOyBmb250LXdlaWdodDogYm9sZDsiPjxicj48L3NwYW4+PC9kaXY+
+PGRpdj48c3BhbiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjogcmdiYSgwLCAwLCAwLCAwKTsiPjxz
+cGFuPlRoYW5rIHlvdS48L3NwYW4+PC9zcGFuPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PHNw
+YW4gc3R5bGU9ImJhY2tncm91bmQtY29sb3I6IHJnYmEoMCwgMCwgMCwgMCk7Ij48c3Bhbj5CZXN0
+IHJlZ2FyZHMsPC9zcGFuPjwvc3Bhbj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48L2Rpdj4KCgoKPC9k
+aXY+PC9ib2R5PjwvaHRtbD48dGFibGUgc3R5bGU9J2Rpc3BsYXk6bm9uZSc+PHRyPjx0ZD48aW1n
+IHNyYz0iaHR0cHM6Ly9tYWlsLm5hdmVyLmNvbS9yZWFkUmVjZWlwdC9ub3RpZnkvP2ltZz14ZWVt
+JTJCeiUyQmNiNCUyRllhcTIlMkZLQVVaS3hVd0Y2TWRGNmkwTTRwNEt4M3ZwenVkYXppb01vJTJC
+b2E2VTlNNnVsRnZJbyUyQnJrU0tBdXc3NGxSaG9SUzFCM1NNNlIwNzYzMCUyQjRrbnR6d0diWDNx
+NzRlbXA2bDBXNmkwcHozMHBWbFRiNGIlM0QuZ2lmIiBib3JkZXI9IjAiLz48L3RkPjwvdHI+PC90
+YWJsZT4=
 
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index 7944faf981..baa7cbade1 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -421,15 +421,30 @@ class CommandsSync:
-         return command.cooker.recipecaches[mc].pkg_dp
-     getDefaultPreference.readonly =3D True
-=20
-+
-     def getSkippedRecipes(self, command, params):
-+        """
-+        Get the map of skipped recipes for the specified multiconfig/mc na=
-me (`params[0]`).
-+
-+        Invoked by `bb.tinfoil.Tinfoil.get_skipped_recipes`
-+
-+        :param command: Internally used parameter.
-+        :param params: Parameter array. params[0] is multiconfig/mc name. =
-If not given, then default mc '' is assumed.
-+        :return: Dict whose keys are virtualfns and values are `bb.cooker.=
-SkippedPackage`
-+        """
-+        try:
-+            mc =3D params[0]
-+        except IndexError:
-+            mc =3D ''
-+
-         # Return list sorted by reverse priority order
-         import bb.cache
-         def sortkey(x):
-             vfn, _ =3D x
--            realfn, _, mc =3D bb.cache.virtualfn2realfn(vfn)
--            return (-command.cooker.collections[mc].calc_bbfile_priority(r=
-ealfn)[0], vfn)
-+            realfn, _, item_mc =3D bb.cache.virtualfn2realfn(vfn)
-+            return -command.cooker.collections[item_mc].calc_bbfile_priori=
-ty(realfn)[0], vfn
-=20
--        skipdict =3D OrderedDict(sorted(command.cooker.skiplist.items(), k=
-ey=3Dsortkey))
-+        skipdict =3D OrderedDict(sorted(command.cooker.skiplist_by_mc[mc].=
-items(), key=3Dsortkey))
-         return list(skipdict.items())
-     getSkippedRecipes.readonly =3D True
-=20
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index ceaaac11ee..5b885cddd7 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -133,7 +133,8 @@ class BBCooker:
-         self.baseconfig_valid =3D False
-         self.parsecache_valid =3D False
-         self.eventlog =3D None
--        self.skiplist =3D {}
-+        # The skiplists, one per multiconfig
-+        self.skiplist_by_mc =3D defaultdict(dict)
-         self.featureset =3D CookerFeatures()
-         if featureSet:
-             for f in featureSet:
-@@ -614,8 +615,8 @@ class BBCooker:
-         localdata =3D {}
-=20
-         for mc in self.multiconfigs:
--            taskdata[mc] =3D bb.taskdata.TaskData(halt, skiplist=3Dself.sk=
-iplist, allowincomplete=3Dallowincomplete)
--            localdata[mc] =3D data.createCopy(self.databuilder.mcdata[mc])
-+            taskdata[mc] =3D bb.taskdata.TaskData(halt, skiplist=3Dself.sk=
-iplist_by_mc[mc], allowincomplete=3Dallowincomplete)
-+            localdata[mc] =3D bb.data.createCopy(self.databuilder.mcdata[m=
-c])
-             bb.data.expandKeys(localdata[mc])
-=20
-         current =3D 0
-@@ -936,7 +937,7 @@ class BBCooker:
-         for mc in self.multiconfigs:
-             # First get list of recipes, including skipped
-             recipefns =3D list(self.recipecaches[mc].pkg_fn.keys())
--            recipefns.extend(self.skiplist.keys())
-+            recipefns.extend(self.skiplist_by_mc[mc].keys())
-=20
-             # Work out list of bbappends that have been applied
-             applied_appends =3D []
-@@ -2355,7 +2356,7 @@ class CookerParser(object):
-         for virtualfn, info_array in result:
-             if info_array[0].skipped:
-                 self.skipped +=3D 1
--                self.cooker.skiplist[virtualfn] =3D SkippedPackage(info_ar=
-ray[0])
-+                self.cooker.skiplist_by_mc[mc][virtualfn] =3D SkippedPacka=
-ge(info_array[0])
-             self.bb_caches[mc].add_info(virtualfn, info_array, self.cooker=
-.recipecaches[mc],
-                                         parsed=3Dparsed, watcher =3D self.=
-cooker.add_filewatch)
-         return True
-diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
-index 0e937fba36..13b05cec2d 100644
---- a/lib/bb/tinfoil.py
-+++ b/lib/bb/tinfoil.py
-@@ -188,11 +188,19 @@ class TinfoilCookerAdapter:
-             self._cache[name] =3D attrvalue
-             return attrvalue
-=20
-+    class TinfoilSkiplistByMcAdapter:
-+        def __init__(self, tinfoil):
-+            self.tinfoil =3D tinfoil
-+
-+        def __getitem__(self, mc):
-+            return self.tinfoil.get_skipped_recipes(mc)
-+
-     def __init__(self, tinfoil):
-         self.tinfoil =3D tinfoil
-         self.multiconfigs =3D [''] + (tinfoil.config_data.getVar('BBMULTIC=
-ONFIG') or '').split()
-         self.collections =3D {}
-         self.recipecaches =3D {}
-+        self.skiplist_by_mc =3D self.TinfoilSkiplistByMcAdapter(tinfoil)
-         for mc in self.multiconfigs:
-             self.collections[mc] =3D self.TinfoilCookerCollectionAdapter(t=
-infoil, mc)
-             self.recipecaches[mc] =3D self.TinfoilRecipeCacheAdapter(tinfo=
-il, mc)
-@@ -201,8 +209,6 @@ class TinfoilCookerAdapter:
-         # Grab these only when they are requested since they aren't always=
- used
-         if name in self._cache:
-             return self._cache[name]
--        elif name =3D=3D 'skiplist':
--            attrvalue =3D self.tinfoil.get_skipped_recipes()
-         elif name =3D=3D 'bbfile_config_priorities':
-             ret =3D self.tinfoil.run_command('getLayerPriorities')
-             bbfile_config_priorities =3D []
-@@ -514,12 +520,12 @@ class Tinfoil:
-         """
-         return defaultdict(list, self.run_command('getOverlayedRecipes', m=
-c))
-=20
--    def get_skipped_recipes(self):
-+    def get_skipped_recipes(self, mc=3D''):
-         """
-         Find recipes which were skipped (i.e. SkipRecipe was raised
-         during parsing).
-         """
--        return OrderedDict(self.run_command('getSkippedRecipes'))
-+        return OrderedDict(self.run_command('getSkippedRecipes', mc))
-=20
-     def get_all_providers(self, mc=3D''):
-         return defaultdict(list, self.run_command('allProviders', mc))
-@@ -533,6 +539,7 @@ class Tinfoil:
-     def get_runtime_providers(self, rdep):
-         return self.run_command('getRuntimeProviders', rdep)
-=20
-+    # TODO: teach this method about mc
-     def get_recipe_file(self, pn):
-         """
-         Get the file name for the specified recipe/target. Raises
-@@ -541,6 +548,7 @@ class Tinfoil:
-         """
-         best =3D self.find_best_provider(pn)
-         if not best or (len(best) > 3 and not best[3]):
-+            # TODO: pass down mc
-             skiplist =3D self.get_skipped_recipes()
-             taskdata =3D bb.taskdata.TaskData(None, skiplist=3Dskiplist)
-             skipreasons =3D taskdata.get_reasons(pn)
-diff --git a/lib/bblayers/query.py b/lib/bblayers/query.py
-index bfc18a7593..eb7cb465b4 100644
---- a/lib/bblayers/query.py
-+++ b/lib/bblayers/query.py
-@@ -142,10 +142,10 @@ skipped recipes will also be listed, with a " (skippe=
-d)" suffix.
-         # Ensure we list skipped recipes
-         # We are largely guessing about PN, PV and the preferred version h=
-ere,
-         # but we have no choice since skipped recipes are not fully parsed
--        skiplist =3D list(self.tinfoil.cooker.skiplist.keys())
--        mcspec =3D 'mc:%s:' % mc
-+        skiplist =3D list(self.tinfoil.cooker.skiplist_by_mc[mc].keys())
-+
-         if mc:
--            skiplist =3D [s[len(mcspec):] for s in skiplist if s.startswit=
-h(mcspec)]
-+            skiplist =3D [s.removeprefix(f'mc:{mc}:') for s in skiplist]
-=20
-         for fn in skiplist:
-             recipe_parts =3D os.path.splitext(os.path.basename(fn))[0].spl=
-it('_')
-@@ -162,7 +162,7 @@ skipped recipes will also be listed, with a " (skipped)=
-" suffix.
-         def print_item(f, pn, ver, layer, ispref):
-             if not selected_layer or layer =3D=3D selected_layer:
-                 if not bare and f in skiplist:
--                    skipped =3D ' (skipped: %s)' % self.tinfoil.cooker.ski=
-plist[f].skipreason
-+                    skipped =3D ' (skipped: %s)' % self.tinfoil.cooker.ski=
-plist_by_mc[mc][f].skipreason
-                 else:
-                     skipped =3D ''
-                 if show_filenames:
-@@ -301,7 +301,7 @@ Lists recipes with the bbappends that apply to them as =
-subitems.
-             if self.show_appends_for_pn(pn, cooker_data, args.mc):
-                 appends =3D True
-=20
--        if not args.pnspec and self.show_appends_for_skipped():
-+        if not args.pnspec and self.show_appends_for_skipped(args.mc):
-             appends =3D True
-=20
-         if not appends:
-@@ -317,9 +317,9 @@ Lists recipes with the bbappends that apply to them as =
-subitems.
-=20
-         return self.show_appends_output(filenames, best_filename)
-=20
--    def show_appends_for_skipped(self):
-+    def show_appends_for_skipped(self, mc):
-         filenames =3D [os.path.basename(f)
--                    for f in self.tinfoil.cooker.skiplist.keys()]
-+                    for f in self.tinfoil.cooker.skiplist_by_mc[mc].keys()=
-]
-         return self.show_appends_output(filenames, None, " (skipped)")
-=20
-     def show_appends_output(self, filenames, best_filename, name_suffix =
-=3D ''):
---=20
-2.43.0
-
+-------Boundary-WM=_7f7bf37e7700.1734067628993--
 
