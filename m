@@ -1,225 +1,145 @@
-Return-Path: <nrhgtp22088@naver.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AECC2E7717F
-	for <webhook@archiver.kernel.org>; Fri, 13 Dec 2024 05:27:20 +0000 (UTC)
-Received: from cvsmtppost10.nm.naver.com (cvsmtppost10.nm.naver.com [114.111.35.103])
- by mx.groups.io with SMTP id smtpd.web11.9334.1734067630663921857
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B23E7717F
+	for <webhook@archiver.kernel.org>; Mon, 16 Dec 2024 14:36:10 +0000 (UTC)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web11.57809.1734359761315541896
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 12 Dec 2024 21:27:11 -0800
+ Mon, 16 Dec 2024 06:36:01 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@naver.com header.s=s20171208 header.b=nooA92Qg;
- spf=pass (domain: naver.com, ip: 114.111.35.103, mailfrom: nrhgtp22088@naver.com)
-X-Originating-IP: 218.148.19.251
-X-Works-Smtp-Source: ZrbqKAtqFqJCpNmlKoU9WHF0
-Received: from cvsendbo002.nm ([10.112.20.42])
-  by cvsmtppost10.nm.naver.com with ESMTP id Jk3ZH68ZQeCmNe9ykYiSbA
-  for <bitbake-devel@lists.openembedded.org>;
-  Fri, 13 Dec 2024 05:27:09 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=naver.com; s=s20171208;
-	t=1734067628; bh=WA4dmL2rncHRnrgkxmFI1qCZ8XFfdvRn1QK3F38z56c=;
-	h=Message-ID:Date:From:To:Subject:From:Subject:Feedback-ID:
-	 X-Works-Security;
-	b=nooA92QgFpAsGJfUzPqfr1sxJVXYLX+tvnzwE5pJBawv9Hk+dvrt37+nop0NjzYT/
-	 S7qMiN4b9WZC/Tb26I5Kdlzo2ge3rMbSAF3pSQhrDmTnCEHaykLkDIpYsg2FoD6MAF
-	 7dhY5sDt2HLj8T/rYrPD0Rv09RxeOVxZPTbvxG6GRvaixoMoZhfBxs3KL8kFuS3bcg
-	 Mmd8jx2kY6YDcHmFij89M6sVkDW2fHPbuEPwOON3pUywRrspBk+Stwn6JEolDqBgUa
-	 ESPIIog5UPgDofFb8TWi5wFOZkHNbxXo5xlPYWa5EGc1YmSgO9K24zaHR5In3wFWeD
-	 7KBfmAfeAGbkA==
-X-Session-ID: a010c4e26e83e8a4565259193bdf84f4dd6bd1bbb396587f87af65dd79fc47cf
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=YnY5VPsU;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3862d16b4f5so2726193f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 16 Dec 2024 06:36:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1734359759; x=1734964559; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yUwUed360k5O14ZjVfgktxEwNCaL+oLf7myYJ3PHHtw=;
+        b=YnY5VPsUz2zHbig+lqv8OhLJs/2UTkKdKCMK5GbNnroEdgyuyBm7VVurd/ltfARpa0
+         pmFJI4y4vwoW8BPLBgJjkeKo+rTY5ijzeABIAnTxtIU8elR23S4b9PtK+Hwggdg4iPFm
+         OWVDvrXmRoVT5g6a0NCQeC5hW62DKLNMfWkTs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734359759; x=1734964559;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yUwUed360k5O14ZjVfgktxEwNCaL+oLf7myYJ3PHHtw=;
+        b=CsijxOS7Kc0WfIrbpAPjYEKd7tYSDjYb8iPeyz1y6DezMzN87o2/meNEdfn6XMyKid
+         EJLhwzviOTcrZRfKJuYSdzRKk+9JOl6MRwj5NHZImhexsaQOmvNP23zoHa0h8aEv3Cxs
+         /EJMFCivS467eJ/MP+wGLGCey7AMPxZbSyb2Vp7uO2HWjzzBC/XG+XsVroH+OhZ89qZu
+         hFj2r6MTD3rQofuDgRN7SJ8xN18B5/+M4VMaAOHqGXAPyFLCmBA4rMjME9c61ZhfrN+d
+         GHJS4nTCRBpTnU4cDgt1t0Zmj/5Exw8SgMa+mBzsmxMGdIPMyejvNyp0XafRlP1iAbq9
+         mr4w==
+X-Gm-Message-State: AOJu0Yz+V9J+GsMvTigqLeje7WcbZGdT52g980YfW3f1mGt+aatSetfr
+	zd/BpEouXaR6NGoqBa9tOQL8m6OhCyX15WI2+OUz8WcaUsvSM86HixUWqdYbbyFg3oz5zI9Jshr
+	c
+X-Gm-Gg: ASbGncvNXw39Myv/LDXV2s1OlBj4TmqoCGdvrORJOFrf2cLUw4nY6+Pdv3Y5+an08Kq
+	tEPm0Bb4s144BSqMJlt1qXv+6D1Hur4yUbMoSO6numMw3TjEQ2IlhdU8XczTJwi/SDpZFt082gC
+	SuNbsoHFCfwtyLkM2oZD2zAFnXV5mi7MUfuSlHY+AqvG6sEQrgKSDyEEkwHhCXXQvrP4ld51VZE
+	WhGyCYQmSozclbcchbXepf+0f9EfCijG5WRMVdxgxjYCVKrlHVUdBybzuFT9nAKCsCaKUUZ7fPw
+	8Vq3s7B3Sg==
+X-Google-Smtp-Source: AGHT+IEMk8Iwkey9DTyHVTG/7zfwBPDruyUVpd3gcKX/YMyHd58jhkrm6LGcTEVl0VXKOvRKfbeOdQ==
+X-Received: by 2002:a05:6000:1fad:b0:386:42b1:d7e4 with SMTP id ffacd0b85a97d-3878884729bmr14638641f8f.19.1734359759130;
+        Mon, 16 Dec 2024 06:35:59 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:1ad8:ac77:3170:84a7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-388c80473ffsm8501433f8f.72.2024.12.16.06.35.58
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2024 06:35:58 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] parse: Add include_all conf file directive
+Date: Mon, 16 Dec 2024 14:35:57 +0000
+Message-ID: <20241216143557.1484923-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.2
 MIME-Version: 1.0
-Message-ID: <1215f45bebff14dda48bcb7c9b5aa96@cweb011.nm>
-Date: Fri, 13 Dec 2024 14:27:08 +0900
-From: =?utf-8?B?6rmA64+E7Jew?= <nrhgtp22088@naver.com>
-In-Reply-To: <ea52961fcdc1f5e766efe2fdbd96db11@cweb002.nm>
-References: <53b418b1879ea9ed4dcc6479aff9ab@cweb006.nm>
-	<ea52961fcdc1f5e766efe2fdbd96db11@cweb002.nm>
-Importance: normal
-To: <bitbake-devel@lists.openembedded.org>
-Subject: =?utf-8?B?W0hvdyB0byBib290IG9uIHRhcmdldGJvYXJkIGJ5IGNyZWF0aW5nIGFuIGltYWdlIHRoYQ==?=
-	=?utf-8?B?dCBjYW4gYm9vdCByYW0gdG8gZGlzayBpbiBhIFlPQ1RPXQ==?=
-X-Originating-IP: 218.148.19.251
-X-Works-Send-Opt: 3YnwjAIYjHm/aAtlKqJYKqMXKBwkx0eFjAJYKg==
-Content-Type: multipart/alternative;
-	boundary="-----Boundary-WM=_7f7bf37e7700.1734067628993"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 13 Dec 2024 05:27:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16911
+ <bitbake-devel@lists.openembedded.org>; Mon, 16 Dec 2024 14:36:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16912
 
--------Boundary-WM=_7f7bf37e7700.1734067628993
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
+In some cases it would be helpful to be able to have an include file
+in a standard location which is included in all layers that are added
+to the system. The intent is for these to provide configuration tweaks
+of specific types so that a given file pattern can be adopted more widely
+for such configuration.
 
-SGVsbG8sIFRoaXMgaXMgQW5uaWUgaW4gUmVwdWJsaWMgb2YgS29yZWEuCgpJIHdvdWxkIGxpa2Ug
-dG8gYm9vdCByYW1kaXNrIGZyb20gdGhlIFlvY3RvIHByb2plY3QuCgpsb2NhbC5jb25mIGlzIGFz
-IGZvbGxvd3MuCgpDb250ZW50IG9mIGxvY2FsLmNvbmYKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpDT05GX1ZFUlNJ
-T04gPSAiMiIKTUFDSElORSA9ICJpbnRlbC1jb3JlaTctNjQiCklOSVRSQU1GU19JTUFHRSA9ICJj
-b3JlLWltYWdlLW1pbmltYWwtaW5pdHJhbWZzIgpJTklUUkFNRlNfSU1BR0VfQlVORExFID0gIjEi
-ClBSRUZFUlJFRF9QUk9WSURFUl92aXJ0dWFsL2tlcm5lbCA9ICJsaW51eC15b2N0byIKUFJFRkVS
-UkVEX1ZFUlNJT05fbGludXgteW9jdG8gPSI1LjE1JSIKUFJFRkVSUkVEX1BST1ZJREVSX3ZpcnR1
-YWwva2VybmVsLXJ0ID0gIiIKRElTVFJPX0ZFQVRVUkVTOmFwcGVuZCA9ICJwYW0gc21iZnMgc3lz
-dGVtZCB1ZGV2IgpDT1JFX0lNQUdFX0VYVFJBX0lOU1RBTEwgPSAic3lzdGVtZCBsZGQiCkRJU1RS
-T19GRUFUVVJFU19CQUNLRklJTExfQ09OU0lERVJFRCArPSAic3lzdmluaXQiClZJUlRVQUwtUlVO
-VElNRV9pbml0X21hbmFnZXIgPSAic3lzdGVtZCIKVklSVFVBTC1SVU5USU1FX2luaXRzY3JpcHRz
-ID0gInN5c3RlbWQtY29tcGF0LXVuaXRzIgpJTUFHRV9JTlNUQUxMOmFwcGVuZCA9ICIgbmN1cnNl
-cyBiYXNoIHN0cmFjZSBiaXNvbiBiYyBncnViIGdydWItZWZpIGlwbWl0b29sIGNpZnMtdXRpbHMg
-cGNpdXRpbHMgZ251LWNvbmZpZyBnbGliYyBiaW51dGlscyBwYWNrYWdlZ3JvdXAtY29yZS1idWls
-ZGVzc2VudGlhbCBvcGVuc3NoLXNmdHAtc2VydmVyIHBhY2thZ2Vncm91cC1jb3JlLXNzaC1vcGVu
-c3NoIGd0aysgY21ha2UgeHogcHl0aG9uMyB2aW0gZ2l0IGZsZXggc3VkbyBlbGZ1dGlscyB1c2J1
-dGlscyB1dGlsLWxpbnV4IGxpbnBhY2sgbGliZ3Bpb2QgbGliZ3Bpb2QtdG9vbHMgbmV0cGxhbiB1
-ZncgZ2xpYmMtdXRpbHMgaXBlcmYzIHVkZXYtZXh0cmFjb25mIHN5c3RlbWQga2VybmVsLWRldnNy
-YyBrbW9kIGtlcm5lbC1kZXYga2VybmVsLW1vZHVsZXMgbWVtdGVzdGVyIGkyYy10b29scyBldGh0
-b29sIGV0Yy1pcG1pLWRyaXZlciIKQ09SRV9JTUFHRV9FWFRSQV9JTlNUQUxMICs9ICJkaGNwY2Qg
-ZG5zbWFzcSIKTUFDSElORV9FU1NFTlRJQUxfRVhUUkFfUlJFQ09NTUVORFMgKz0gImtlcm5lbC1t
-b2R1bGVzIgpJTUFHRV9GU1RZUEVTID0gImlzbyBjcGlvLmd6IgpESVNUUk9fVkVSU0lPTiA9ICIy
-LjAuMSIKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLQoKMS4gRmlyc3QsIEkgcmFuIGJpdGJha2UgYW5kIGNvcGllZCB0
-aGUgYnpJbWFnZS1pbml0cmFtZnMgYW5kIGNvcmUtaW1hZ2UtbWluaW1hbC1pbml0cm1hZnMuY3Bp
-by5neiBmaWxlcyB0byB0aGUgdGFyZ2V0IGJvYXJkLgoKQWxzbywgSSB0cmllZCBib3RoIGJpdGJh
-a2UgY29yZS1pbWFnZS1taW5pbWFsIGFuZCBiaXRiYWtlIGNvcmUtaW1hZ2UtbWluaW1hbC1pbml0
-cm1hZnMuCgoKMi4gU2Vjb3VuZCwgVGhlIHRhcmdldCBib2FyZCBjcmVhdGVkIGEgL2Jvb3QvbG9h
-ZGVyL2VudGlyZXMvbGludXguY29uZiBmaWxlIHRvIHVzZSBzeXN0ZW1kLWJvb3QgYW5kIHdyb3Rl
-IGl0IGFzIGZvbGxvd3MuCgpDb250ZW50IC9ib290L2xvYWRlci9lbnRpcmVzL2xpbnV4LmNvbmYK
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLQp0aXRsZSBsaW51eCB3aXRoIGluaXRyYW1mcwoKbGludXggL2J6SW1hZ2UK
-CmluaXRyZCAvY29yZS1pbWFnZS1taW5pbWFsLWluaXRyYW1mcy5jcGlvLmd6CgpvcHRpb25zID0v
-ZGV2L3JhbTAgcncKCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCjMuIFRocmlkLCBJIHJhbiByZWJvb3QuCgpJbiB0
-aGUgYm9vdCBtZXNzYWdlLAp3YWl0aW5nIGZvciByZW1vdmFibGUgbWVkaWEuLi4gIDI5IDI4IDI3
-IC4uLgoKQWZ0ZXIgY291bnRpbmcgdGhlIG51bWJlcnMKCmNhbm5vdCBmaW5kIHJvb3Rmcy5pbWcg
-ZmlsZSBpbiAvcnVuL21lZGlhL2Jvb3QtbnZtZTBuMXAxIC9ydW4vbWVkaWEvYm9vdC1udm1lMG4x
-cDIgL3J1bi9tZWRpYS9ib290LW52bWUwbjFwMyAsZHJvcHBpbmcgdG8gYSBzaGVsbCAKCkFuIGVy
-cm9yIGhhcyBvY2N1cnJlZCBsaWtlIHRoaXMuCgpJcyB0aGVyZSBhIHdheSB0byBzb2x2ZSBpdD8K
-ClRoYW5rIHlvdS4KCkJlc3QgcmVnYXJkcywKCg==
+The code will search for any named configuration file within BBPATH, so
+a configuration directive of:
 
--------Boundary-WM=_7f7bf37e7700.1734067628993
-Content-Type: text/html;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
+include_all conf/distro/include/myinc.conf
 
-PGh0bWw+PGhlYWQ+PHN0eWxlPnB7bWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbTowcHg7fTwv
-c3R5bGU+PC9oZWFkPjxib2R5PjxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxNHB4OyBmb250LWZhbWls
-eTpNYWxndW4gR290aGljLOunkeydgCDqs6DrlJUsc2Fucy1zZXJpZjsiPjxkaXYgc3R5bGU9ImZv
-bnQtc2l6ZTogMTRweDsgZm9udC1mYW1pbHk6ICZxdW90O01hbGd1biBHb3RoaWMmcXVvdDssICZx
-dW90O+unkeydgCDqs6DrlJUmcXVvdDssIHNhbnMtc2VyaWY7Ij5IZWxsbywgVGhpcyBpcyBBbm5p
-ZSBpbiBSZXB1YmxpYyBvZiBLb3JlYS48YnI+PGRpdj48YnI+PC9kaXY+PGRpdj48c3BhbiBzdHls
-ZT0iIj5JIHdvdWxkIGxpa2UgdG8gYm9vdCByYW1kaXNrIGZyb20gdGhlIFlvY3RvIHByb2plY3Qu
-PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImZvbnQtd2VpZ2h0OiBib2xkOyI+PGJyPjwv
-c3Bhbj48L2Rpdj48ZGl2PjxzcGFuPmxvY2FsLmNvbmYgaXMgYXMgZm9sbG93cy48L3NwYW4+PC9k
-aXY+PGRpdj48c3Bhbj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImZvbnQtd2Vp
-Z2h0OiBib2xkOyBjb2xvcjogcmdiKDAsIDAsIDApOyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1
-LCAyMjAsIDE1Mik7Ij5Db250ZW50IG9mIGxvY2FsLmNvbmY8L3NwYW4+PC9kaXY+PGRpdj48c3Bh
-bj4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+Q09ORl9WRVJTSU9OID0gIjIi
-PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+TUFDSElORSA9ICJpbnRlbC1jb3JlaTctNjQiPC9zcGFu
-PjwvZGl2PjxkaXY+PHNwYW4+SU5JVFJBTUZTX0lNQUdFID0gImNvcmUtaW1hZ2UtbWluaW1hbC1p
-bml0cmFtZnMiPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+SU5JVFJBTUZTX0lNQUdFX0JVTkRMRSA9
-ICIxIjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPlBSRUZFUlJFRF9QUk9WSURFUl92aXJ0dWFsL2tl
-cm5lbCA9ICJsaW51eC15b2N0byI8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj5QUkVGRVJSRURfVkVS
-U0lPTl9saW51eC15b2N0byA9IjUuMTUlIjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPlBSRUZFUlJF
-RF9QUk9WSURFUl92aXJ0dWFsL2tlcm5lbC1ydCA9ICIiPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+
-RElTVFJPX0ZFQVRVUkVTOmFwcGVuZCA9ICJwYW0gc21iZnMgc3lzdGVtZCB1ZGV2Ijwvc3Bhbj48
-L2Rpdj48ZGl2PjxzcGFuPkNPUkVfSU1BR0VfRVhUUkFfSU5TVEFMTCA9ICJzeXN0ZW1kIGxkZCI8
-L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj5ESVNUUk9fRkVBVFVSRVNfQkFDS0ZJSUxMX0NPTlNJREVS
-RUQgKz0gInN5c3Zpbml0Ijwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPlZJUlRVQUwtUlVOVElNRV9p
-bml0X21hbmFnZXIgPSAic3lzdGVtZCI8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj5WSVJUVUFMLVJV
-TlRJTUVfaW5pdHNjcmlwdHMgPSAic3lzdGVtZC1jb21wYXQtdW5pdHMiPC9zcGFuPjwvZGl2Pjxk
-aXY+PHNwYW4+SU1BR0VfSU5TVEFMTDphcHBlbmQgPSAiIG5jdXJzZXMgYmFzaCBzdHJhY2UgYmlz
-b24gYmMgZ3J1YiBncnViLWVmaSBpcG1pdG9vbCBjaWZzLXV0aWxzIHBjaXV0aWxzIGdudS1jb25m
-aWcgZ2xpYmMgYmludXRpbHMgcGFja2FnZWdyb3VwLWNvcmUtYnVpbGRlc3NlbnRpYWwgb3BlbnNz
-aC1zZnRwLXNlcnZlciBwYWNrYWdlZ3JvdXAtY29yZS1zc2gtb3BlbnNzaCBndGsrIGNtYWtlIHh6
-IHB5dGhvbjMgdmltIGdpdCBmbGV4IHN1ZG8gZWxmdXRpbHMgdXNidXRpbHMgdXRpbC1saW51eCBs
-aW5wYWNrIGxpYmdwaW9kIGxpYmdwaW9kLXRvb2xzIG5ldHBsYW4gdWZ3IGdsaWJjLXV0aWxzIGlw
-ZXJmMyB1ZGV2LWV4dHJhY29uZiBzeXN0ZW1kIGtlcm5lbC1kZXZzcmMga21vZCBrZXJuZWwtZGV2
-IGtlcm5lbC1tb2R1bGVzIG1lbXRlc3RlciBpMmMtdG9vbHMgZXRodG9vbCBldGMtaXBtaS1kcml2
-ZXIiPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+Q09SRV9JTUFHRV9FWFRSQV9JTlNUQUxMICs9ICJk
-aGNwY2QgZG5zbWFzcSI8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj5NQUNISU5FX0VTU0VOVElBTF9F
-WFRSQV9SUkVDT01NRU5EUyArPSAia2VybmVsLW1vZHVsZXMiPC9zcGFuPjwvZGl2PjxkaXY+PHNw
-YW4+SU1BR0VfRlNUWVBFUyA9ICJpc28gY3Bpby5neiI8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj5E
-SVNUUk9fVkVSU0lPTiA9ICIyLjAuMSI8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29s
-b3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6ICZxdW90O01hbGd1biBHb3RoaWMmcXVvdDss
-ICZxdW90O+unkeydgCDqs6DrlJUmcXVvdDssIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTRweDsg
-Zm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtbGlnYXR1cmVzOiBub3JtYWw7IGZvbnQt
-dmFyaWFudC1jYXBzOiBub3JtYWw7IGZvbnQtd2VpZ2h0OiA0MDA7IGxldHRlci1zcGFjaW5nOiBu
-b3JtYWw7IG9ycGhhbnM6IDI7IHRleHQtYWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0
-ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2lkb3dzOiAyOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtp
-dC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyB3aGl0ZS1zcGFjZTogbm9ybWFsOyB0ZXh0LWRlY29y
-YXRpb24tdGhpY2tuZXNzOiBpbml0aWFsOyB0ZXh0LWRlY29yYXRpb24tc3R5bGU6IGluaXRpYWw7
-IHRleHQtZGVjb3JhdGlvbi1jb2xvcjogaW5pdGlhbDsgZmxvYXQ6IG5vbmU7IGRpc3BsYXk6IGlu
-bGluZSAhaW1wb3J0YW50OyI+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLTwvc3Bhbj48c3Bhbj48YnI+PC9zcGFuPjwv
-ZGl2PjxkaXY+PHNwYW4+PGJyPjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJmb250LXdl
-aWdodDogYm9sZDsiPjEuIEZpcnN0LCBJIHJhbiBiaXRiYWtlIGFuZCBjb3BpZWQgdGhlIGJ6SW1h
-Z2UtaW5pdHJhbWZzIGFuZCBjb3JlLWltYWdlLW1pbmltYWwtaW5pdHJtYWZzLmNwaW8uZ3ogZmls
-ZXMgdG8gdGhlIHRhcmdldCBib2FyZC48L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj48YnI+PC9zcGFu
-PjwvZGl2PjxkaXY+PHNwYW4+QWxzbywgSSB0cmllZCBib3RoIGJpdGJha2UgY29yZS1pbWFnZS1t
-aW5pbWFsIGFuZCBiaXRiYWtlIGNvcmUtaW1hZ2UtbWluaW1hbC1pbml0cm1hZnMuPC9zcGFuPjwv
-ZGl2PjxkaXY+PHNwYW4+PGJyPjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPjxicj48L3NwYW4+PC9k
-aXY+PGRpdj48c3BhbiBzdHlsZT0iZm9udC13ZWlnaHQ6IGJvbGQ7Ij4yLiBTZWNvdW5kLCBUaGUg
-dGFyZ2V0IGJvYXJkIGNyZWF0ZWQgYSAvYm9vdC9sb2FkZXIvZW50aXJlcy9saW51eC5jb25mIGZp
-bGUgdG8gdXNlIHN5c3RlbWQtYm9vdCBhbmQgd3JvdGUgaXQgYXMgZm9sbG93cy48L3NwYW4+PC9k
-aXY+PGRpdj48c3Bhbj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImJhY2tncm91
-bmQtY29sb3I6IHJnYigyNTUsIDIyMCwgMTUyKTsgZm9udC13ZWlnaHQ6IGJvbGQ7Ij5Db250ZW50
-IC9ib290L2xvYWRlci9lbnRpcmVzL2xpbnV4LmNvbmY8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBz
-dHlsZT0iY29sb3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6ICZxdW90O01hbGd1biBHb3Ro
-aWMmcXVvdDssICZxdW90O+unkeydgCDqs6DrlJUmcXVvdDssIHNhbnMtc2VyaWY7IGZvbnQtc2l6
-ZTogMTRweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtbGlnYXR1cmVzOiBub3Jt
-YWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7IGZvbnQtd2VpZ2h0OiA0MDA7IGxldHRlci1z
-cGFjaW5nOiBub3JtYWw7IG9ycGhhbnM6IDI7IHRleHQtYWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVu
-dDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2lkb3dzOiAyOyB3b3JkLXNwYWNpbmc6IDBw
-eDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyB3aGl0ZS1zcGFjZTogbm9ybWFsOyB0
-ZXh0LWRlY29yYXRpb24tdGhpY2tuZXNzOiBpbml0aWFsOyB0ZXh0LWRlY29yYXRpb24tc3R5bGU6
-IGluaXRpYWw7IHRleHQtZGVjb3JhdGlvbi1jb2xvcjogaW5pdGlhbDsgZmxvYXQ6IG5vbmU7IGRp
-c3BsYXk6IGlubGluZSAhaW1wb3J0YW50OyI+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLTwvc3Bhbj48c3Bhbj48YnI+
-PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+dGl0bGUgbGludXggd2l0aCBpbml0cmFtZnM8L3NwYW4+
-PC9kaXY+PGRpdj48c3Bhbj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+bGludXggL2J6SW1h
-Z2U8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+aW5p
-dHJkIC9jb3JlLWltYWdlLW1pbmltYWwtaW5pdHJhbWZzLmNwaW8uZ3o8L3NwYW4+PC9kaXY+PGRp
-dj48c3Bhbj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+b3B0aW9ucyA9L2Rldi9yYW0wIHJ3
-PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+PGJyPjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxl
-PSJjb2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWlseTogJnF1b3Q7TWFsZ3VuIEdvdGhpYyZx
-dW90OywgJnF1b3Q766eR7J2AIOqzoOuUlSZxdW90Oywgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAx
-NHB4OyBmb250LXN0eWxlOiBub3JtYWw7IGZvbnQtdmFyaWFudC1saWdhdHVyZXM6IG5vcm1hbDsg
-Zm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsgZm9udC13ZWlnaHQ6IDQwMDsgbGV0dGVyLXNwYWNp
-bmc6IG5vcm1hbDsgb3JwaGFuczogMjsgdGV4dC1hbGlnbjogc3RhcnQ7IHRleHQtaW5kZW50OiAw
-cHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aWRvd3M6IDI7IHdvcmQtc3BhY2luZzogMHB4OyAt
-d2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IHdoaXRlLXNwYWNlOiBub3JtYWw7IHRleHQt
-ZGVjb3JhdGlvbi10aGlja25lc3M6IGluaXRpYWw7IHRleHQtZGVjb3JhdGlvbi1zdHlsZTogaW5p
-dGlhbDsgdGV4dC1kZWNvcmF0aW9uLWNvbG9yOiBpbml0aWFsOyBmbG9hdDogbm9uZTsgZGlzcGxh
-eTogaW5saW5lICFpbXBvcnRhbnQ7Ij4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPC9zcGFuPjxzcGFuPjxicj48L3Nw
-YW4+PC9kaXY+PGRpdj48c3Bhbj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImZv
-bnQtd2VpZ2h0OiBib2xkOyI+My4gVGhyaWQsIEkgcmFuIHJlYm9vdC48L3NwYW4+PC9kaXY+PGRp
-dj48c3Bhbj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+SW4gdGhlIGJvb3QgbWVzc2FnZSw8
-L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj53YWl0aW5nIGZvciByZW1vdmFibGUgbWVkaWEuLi4mbmJz
-cDsmbmJzcDsyOSAyOCAyNyAuLi48L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj48YnI+PC9zcGFuPjwv
-ZGl2PjxkaXY+PHNwYW4+QWZ0ZXIgY291bnRpbmcgdGhlIG51bWJlcnM8L3NwYW4+PC9kaXY+PGRp
-dj48c3Bhbj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+Y2Fubm90IGZpbmQgcm9vdGZzLmlt
-ZyBmaWxlIGluIC9ydW4vbWVkaWEvYm9vdC1udm1lMG4xcDEgL3J1bi9tZWRpYS9ib290LW52bWUw
-bjFwMiAvcnVuL21lZGlhL2Jvb3QtbnZtZTBuMXAzICxkcm9wcGluZyB0byBhIHNoZWxsJm5ic3A7
-PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+PGJyPjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxl
-PSJmb250LXdlaWdodDogYm9sZDsgYmFja2dyb3VuZC1jb2xvcjogcmdiKDI1NSwgMjQ4LCAxMjgp
-OyI+QW4gZXJyb3IgaGFzIG9jY3VycmVkIGxpa2UgdGhpcy48L3NwYW4+PC9kaXY+PGRpdj48c3Bh
-bj48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImJhY2tncm91bmQtY29sb3I6IHJn
-YigyNTUsIDI0OCwgMTI4KTsgZm9udC13ZWlnaHQ6IGJvbGQ7Ij5JcyB0aGVyZSBhIHdheSB0byBz
-b2x2ZSBpdD88L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjog
-cmdiKDI1NSwgMjQ4LCAxMjgpOyBmb250LXdlaWdodDogYm9sZDsiPjxicj48L3NwYW4+PC9kaXY+
-PGRpdj48c3BhbiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjogcmdiYSgwLCAwLCAwLCAwKTsiPjxz
-cGFuPlRoYW5rIHlvdS48L3NwYW4+PC9zcGFuPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PHNw
-YW4gc3R5bGU9ImJhY2tncm91bmQtY29sb3I6IHJnYmEoMCwgMCwgMCwgMCk7Ij48c3Bhbj5CZXN0
-IHJlZ2FyZHMsPC9zcGFuPjwvc3Bhbj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48L2Rpdj4KCgoKPC9k
-aXY+PC9ib2R5PjwvaHRtbD48dGFibGUgc3R5bGU9J2Rpc3BsYXk6bm9uZSc+PHRyPjx0ZD48aW1n
-IHNyYz0iaHR0cHM6Ly9tYWlsLm5hdmVyLmNvbS9yZWFkUmVjZWlwdC9ub3RpZnkvP2ltZz14ZWVt
-JTJCeiUyQmNiNCUyRllhcTIlMkZLQVVaS3hVd0Y2TWRGNmkwTTRwNEt4M3ZwenVkYXppb01vJTJC
-b2E2VTlNNnVsRnZJbyUyQnJrU0tBdXc3NGxSaG9SUzFCM1NNNlIwNzYzMCUyQjRrbnR6d0diWDNx
-NzRlbXA2bDBXNmkwcHozMHBWbFRiNGIlM0QuZ2lmIiBib3JkZXI9IjAiLz48L3RkPjwvdHI+PC90
-YWJsZT4=
+would include the myinc.conf file in that subpath if present in any
+directory in BBPATH. Multiple files will be included if present.
 
--------Boundary-WM=_7f7bf37e7700.1734067628993--
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/parse/ast.py                  | 18 ++++++++++++++++++
+ lib/bb/parse/parse_py/ConfHandler.py |  6 ++++++
+ 2 files changed, 24 insertions(+)
+
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index 03370180e3..2f6c6a0055 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -43,6 +43,21 @@ class IncludeNode(AstNode):
+         else:
+             bb.parse.ConfHandler.include(self.filename, s, self.lineno, data, False)
+ 
++class IncludeAllNode(AstNode):
++    def __init__(self, filename, lineno, what_file):
++        AstNode.__init__(self, filename, lineno)
++        self.what_file = what_file
++
++    def eval(self, data):
++        """
++        Include the file and evaluate the statements
++        """
++        s = data.expand(self.what_file)
++        logger.debug2("CONF %s:%s: including %s", self.filename, self.lineno, s)
++
++        for path in data.getVar("BBPATH").split(":"):
++            bb.parse.ConfHandler.include(self.filename, os.path.join(path, s), self.lineno, data, False)
++
+ class ExportNode(AstNode):
+     def __init__(self, filename, lineno, var):
+         AstNode.__init__(self, filename, lineno)
+@@ -366,6 +381,9 @@ class AddFragmentsNode(AstNode):
+ def handleInclude(statements, filename, lineno, m, force):
+     statements.append(IncludeNode(filename, lineno, m.group(1), force))
+ 
++def handleIncludeAll(statements, filename, lineno, m):
++    statements.append(IncludeAllNode(filename, lineno, m.group(1)))
++
+ def handleExport(statements, filename, lineno, m):
+     statements.append(ExportNode(filename, lineno, m.group(1)))
+ 
+diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
+index d0711eda04..24f81f7e9e 100644
+--- a/lib/bb/parse/parse_py/ConfHandler.py
++++ b/lib/bb/parse/parse_py/ConfHandler.py
+@@ -43,6 +43,7 @@ __config_regexp__  = re.compile( r"""
+     """, re.X)
+ __include_regexp__ = re.compile( r"include\s+(.+)" )
+ __require_regexp__ = re.compile( r"require\s+(.+)" )
++__includeall_regexp__ = re.compile( r"include_all\s+(.+)" )
+ __export_regexp__ = re.compile( r"export\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
+ __unset_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
+ __unset_flag_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)\[([a-zA-Z0-9\-_+.][a-zA-Z0-9\-_+.@]+)\]$" )
+@@ -178,6 +179,11 @@ def feeder(lineno, s, fn, statements, baseconfig=False, conffile=True):
+         ast.handleInclude(statements, fn, lineno, m, True)
+         return
+ 
++    m = __includeall_regexp__.match(s)
++    if m:
++        ast.handleIncludeAll(statements, fn, lineno, m)
++        return
++
+     m = __export_regexp__.match(s)
+     if m:
+         ast.handleExport(statements, fn, lineno, m)
 
