@@ -2,966 +2,258 @@ Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB34E77198
-	for <webhook@archiver.kernel.org>; Fri, 20 Dec 2024 11:26:41 +0000 (UTC)
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.106])
- by mx.groups.io with SMTP id smtpd.web11.149743.1734693991344736713
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8C8E77188
+	for <webhook@archiver.kernel.org>; Fri, 20 Dec 2024 11:26:51 +0000 (UTC)
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.114])
+ by mx.groups.io with SMTP id smtpd.web11.149745.1734693993938884026
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 20 Dec 2024 03:26:36 -0800
+ Fri, 20 Dec 2024 03:26:42 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=5a2KgGS2;
- spf=pass (domain: weidmueller.com, ip: 40.107.22.106, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=tlmbFOax;
+ spf=pass (domain: weidmueller.com, ip: 40.107.22.114, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MO9FckC4/+pjvSl85FXCvNz8zxqy9GwgNS1P7E3RRBAgva7AHCR5Jy2QJyvpFe5Oss12H3nzSTs3E3+93XoUApuYucvu3DabJstoPsQuk8Yy2rDJTsqzn/JViFbs7LoOe74Q+qZBb2EPsRsRu/s1dn6PHWJkOoZ8kZTmwraD7qNiWNjpUYmqFsB3wyUPpeCj/MME1uxxwyj0VvavZK5xjeWhNwIsFdsyKE4LzFIfaobnp+5ZYLye746OTUxziaIXSoZ/13aefrnaMCwOp8xBVMeJPBjCXAHcMAK0tYkIPe5iyWu3SXLdrz/qoRDsWDrdJLRYLQO+tCs9pXft+uWRPg==
+ b=AKpWZ9S+RH8ffwbOpm+XLckqb54pcZttJB9bf+WzHWX5Td8+5YBxhhS5H6n9nXKUwpBanLhobIUW/GmoxSsYEU2cIDIEodmas+fjhRjCSYCCY6NHxyHmO6Ea1ZVbo9yCIZh9TAZ+Ij8ikzMYu0rFbpgN+9LdwVUcOTcyKKv0G0ndEZt3WvaYyIIkOrIP0Pm2ACC3lBizAqW0CB0TMkrH6sFCMPEnM8y9Ss5PgSeZubeargpDRZgTaLkMbI+0TBNYI6mjaMcuT/Na/l5spkivbPIcd/X2FEFL6j/w3RwVfInG+r/CT8r0Ww+IdF/QhYFKYUUFxpoZVrVgb8Z9TWZOAA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CP6PRAT6tlYMnq9DSnjr6qPmKll6BATeTNlR+i/5Rnc=;
- b=VG5eNNUX8/dXRUEDorGOI8LzTIy6Yi4crClecA9xIyKIPbb9KpRRJz1ZMm+9w+Rcy6SFAId7b2Q2u2XrCcZIa810exPEMamaLSyUTGwL0rWFDS1oxqOWF4BsPcgCZ8ASK3qZHev0q7K3bq3074gk5pIIcOjmpveHoiwmLz12JL1e5LLxBSB0MsutKnLzHN1kr1Np8yXsoX90jdVbkpwiUFw+XHQrm0DJSC+a0g87F5mUBY20qvieG06AgpRuwjD6eYjDs0xlq0o2zqkzLODWKQhAg+DaRxug0fWIUwUPHjiZC4r/H7N+nntxGiw10URB7RyU+f0m9tRqep/PxjcuhA==
+ bh=jusmXzbEL2xi/yTDZ7sX+cOybecyn5mJcQGTzq32W1c=;
+ b=aW1oX1mb5z27nfjOqp+fELd8U1tTe9MEVlmEm8knoR83r0g0X7S7T57yB0v+12j/KbS7FcZEn/BDmr3Y5CgcQgHoWbE+Oll+Vuj+lVnDHLaytuH6HRJ2dV76HOaoERrYSqHaTyRU1Q13tQUZs77yInK2CPsaFRpNeZ4b2o91OIhaKt7C84Cd9G71Mxui0JwWmspPfr9aOwE/Mi/MRsmpl+NE1vjaYcZp3wba2I7KX1rECgbM5TsAZsG0WStcXkW2DUvJAUVF3ysaqJWOcpDLuuPmKo7PfpSy/Xcc3iiCUmLHWhujY3PUShtB0HbT7Dy5FTOQgrXahe3D5s+tYfGyrA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=weidmueller.com; dmarc=pass action=none
  header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CP6PRAT6tlYMnq9DSnjr6qPmKll6BATeTNlR+i/5Rnc=;
- b=5a2KgGS2yCIIi34IhlL2817a2MP40dPaYpHe1hNUY4/h+gP+duKnbXCK6sYE5M96J/IhUWjZ6c7M34UJ1sv2AQ9l5Qy9gBSfMRyrVqTvOr1W/gTLxdBGYVdXRFjgNAIu30WwsWbaQKLaBiQ3mm/FmhWTxQpgu90bAG7CKq8Wb+M4EEvMnZo9cXJxHLKxHIFdNkEmgSZQE3bjSL6fnOacLdzjNTviD3XcXXbanmrc+63CZm3V/XUVsDP1MSy6qI8l/EO0ovywiJiKMNdvqGYPFRuhlAcImpfche+jQBE8/uqsJ2WhcJtT+CeyFn90lH6VoatCdJQ7HeRASkuGsGXDVw==
+ bh=jusmXzbEL2xi/yTDZ7sX+cOybecyn5mJcQGTzq32W1c=;
+ b=tlmbFOaxqba8kc3XvyXtSTAk1dF3lJGCUtuuX/g5amNM2oZQOTnjFXS2AYKDfsxop+0hj7cw0/D2Uch2rY4jVjXLupriLanhv+BD1lVKZByAh4zU+/v/WGyHqrsnw00MppN3tJqLZhUH0W6Q1vmMP6kGi2/usMRP9oM/I9WpOZ7ssTB4bEUaMBm0Up6fExOrMoiS2SUuD4mJ8FiNz6o245ALcmJ62K7AgnfTR3sY3/8uO5T5m4xJYlRrD3MlMQqKFoLvAL+/aqr1URUQMh2/qRu4f7OSIL/sFxGI59d+x6AiYiO0KP1vhidAJMnhObYNMyyo2GyaxooJ/NzhkJrGeQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=weidmueller.com;
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com (2603:10a6:102:1d8::23)
- by DU0PR08MB8256.eurprd08.prod.outlook.com (2603:10a6:10:410::16) with
+ by AM8PR08MB5684.eurprd08.prod.outlook.com (2603:10a6:20b:1dc::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.14; Fri, 20 Dec
- 2024 11:26:28 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.16; Fri, 20 Dec
+ 2024 11:26:32 +0000
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4]) by PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4%3]) with mapi id 15.20.8272.013; Fri, 20 Dec 2024
- 11:26:28 +0000
+ 11:26:32 +0000
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
 To: bitbake-devel@lists.openembedded.org
 CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Subject: [RFC PATCH 11/21] tests: fetch: adapt style in npm(sw) class
-Date: Fri, 20 Dec 2024 12:26:02 +0100
-Message-ID: <20241220112613.22647-12-stefan.herbrechtsmeier-oss@weidmueller.com>
+Subject: [RFC PATCH 21/21] tests: fetch: add test cases for cargolock
+Date: Fri, 20 Dec 2024 12:26:12 +0100
+Message-ID: <20241220112613.22647-22-stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
 References: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
 X-ClientProxiedBy: FR0P281CA0106.DEUP281.PROD.OUTLOOK.COM
  (2603:10a6:d10:a8::7) To PAXPR08MB6969.eurprd08.prod.outlook.com
  (2603:10a6:102:1d8::23)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR08MB6969:EE_|DU0PR08MB8256:EE_
-X-MS-Office365-Filtering-Correlation-Id: e76333fe-02b8-4f37-5e14-08dd20e924f7
+X-MS-TrafficTypeDiagnostic: PAXPR08MB6969:EE_|AM8PR08MB5684:EE_
+X-MS-Office365-Filtering-Correlation-Id: f168832f-9c2a-478f-6295-08dd20e926de
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|366016|52116014|1800799024|376014|38350700014;
+	BCL:0;ARA:13230040|52116014|376014|1800799024|366016|38350700014;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?BrulRto5BH+XqfiYhocXcdWli1bp9ch1lKuMRhENo/c4Yh+goYSLPKBkrfIO?=
- =?us-ascii?Q?Xvui6lGZhlygFjkg9PXjskegqUVXxKDSQeTo9SJ+Auwi1xLhJ+vGuE/l1bOt?=
- =?us-ascii?Q?HKKUoOp+ClncG1/s4l/CSZ4eC3reH+c8YqU17BdKD67WTfXuYUSLU7IRn/XO?=
- =?us-ascii?Q?PC0qedotWE/NXzirdPrd9vs86EutnAsz58f2qy19tZU9lAP3w+TCKqZuQx0e?=
- =?us-ascii?Q?e9IxcfrK2KoOaOqNul1E0UkM0Q/JSEOveHECYzoUWp+ZU74vV6lAbtb8CzG4?=
- =?us-ascii?Q?I4nZrPwhJr5vPD3WTWTu1haT+V1D01qFLc0kY0ew8wkp6Sjrte89KW6zWy7q?=
- =?us-ascii?Q?e+Rf7RFLBMJcYuc6ypstifScU8M6F1KYQHuFg7baFkYtdXOkqOoa1L4oSBY7?=
- =?us-ascii?Q?WH22MnA35oUh5b/4oSdRZDIwNGIOdAOoz0TMcN/OHvwDef9hmZgT/NCZutot?=
- =?us-ascii?Q?R2YOv5bwZd6+Ke7TZnEZhSqAFCiebVGPji7SDAu+V1cX4xdJkexf3W3we94J?=
- =?us-ascii?Q?vNglcxuskup99vJ/jofi/HZ8Kev/ajUTFlkP5VkMeip3rv9rjsxGKDbKfXeS?=
- =?us-ascii?Q?Hc1JNx4R74ufYPe6YcvrbQhdHcPJfDiwjLX+Ng6vH20FAbxw/zPBKXThnElE?=
- =?us-ascii?Q?5WvZ0e6Jjk3QldRhq7r7sgjxD2pqECINCECbKqIpZdGOLZZoaMfOWELQVSof?=
- =?us-ascii?Q?NUbkGKNNLZesv+brULC8wTbFh0jIvMoDwL5MBl00IlaBRR3CBgPQJOOAmAg5?=
- =?us-ascii?Q?QT2HhyEPUCD2ZFPND8NtrzH83PJYWkm5OBqC/V0Ydr6UwvMdTaR07AAvs/Av?=
- =?us-ascii?Q?QHfBAnSESD/MYPPORIz7y9rORSpklaEiD2g3rJQPr7y5Wpwy2RPsqbMgrXaK?=
- =?us-ascii?Q?6SB6GSb3gLKFRbK65o+DyBqTeXPWX1LUVJ7KqbkXxrumzswZlDdP3mTVGRuQ?=
- =?us-ascii?Q?Yekqtzwvu9kuMLpEYlhVIbjNxChI6r3cI/kkWBpiHkP89xTqBqvPWlVSpY2S?=
- =?us-ascii?Q?wHvbMBqBLI+e8nTsTct5pxL9n3/jGokrR3J1KkH94v6KNVS2NC0jwkNwB/TS?=
- =?us-ascii?Q?Wcs+JxtqpizebP7Wa5sQrw6wX424BAeH7hDSxFFNDxnGz3ztfG/ywhO6RvBk?=
- =?us-ascii?Q?wnBpbQD3szIutdMwniSyIgaqESFs58slfoCYW0ogDRn3rt5T3CN47TmKWCfD?=
- =?us-ascii?Q?Mca1z/iPY3cIcAK2hFXuB+tkScxok4RNktlXK652VqISw/5RRbJpNZtzlVgv?=
- =?us-ascii?Q?hGzbPdkzv064L4ZdG1tD5cxHF9bqcISQxOFOiXsid0EjZ7nsA+o13RdlAyq3?=
- =?us-ascii?Q?FdIoCmn2fGfmVTPbAMdcrx8nxbrpiv/Brav15QqWJSJKO7utZTv/onAFROIG?=
- =?us-ascii?Q?MKOmGc36OEYrw0vd+QMdx7UY7btJtafdaertXndMNQX7DZ9jIQ=3D=3D?=
+	=?us-ascii?Q?Z/k0wDjBgto+yCzQKdYxcFkbGEszZUGc5Gm9TZZC0pPdoKJoOXDhH9uDagA+?=
+ =?us-ascii?Q?BwGqHiGRoha45RerDnjZaKROWkxjlax6L64nw37wPmv8xdt7d7xjOE2Vt8QZ?=
+ =?us-ascii?Q?4zM8UECIBxzaHwnTtnBXepNVqsdSqBd6AAmWD9X0Gxs/nnSVhihu0cNpJ/ST?=
+ =?us-ascii?Q?0Jmp67nEN1nOmvr92GmFtYjjr8xxy3JIsPi8P2N+0dk6juKOpeQmoEs/SG7b?=
+ =?us-ascii?Q?ldp+roKD5kd71pCuG9FX2cmj/ZTEvbWRRMsXd3wKp0L085Hq6UzDJWSZN+mv?=
+ =?us-ascii?Q?F+qGLz1RiTXlNEYIgnS2fNmf1TqC4LGgFtcNNpX3jLWqui89OM5lgKopfup/?=
+ =?us-ascii?Q?qpRnyrLbuhRVdn6/66ULziPomG3MnYvSMy6TOl2WcOITdDXHzKONFdHa3BR9?=
+ =?us-ascii?Q?gQjWayN33061coRl2+VJEA6psYGt5ovzkILjayvsRwKFTW5EhyS4MX5vz9qi?=
+ =?us-ascii?Q?dJK6L0ydBW9OLZDuZ2biUbCE//zPdhMPGl6izgJgfD4Kd9iZAryBYL4i6Ota?=
+ =?us-ascii?Q?FQB7ef/ryHGt6YB5ntIr7jwIZh8JJdDybiZ/5FYpKLLTi2q9fXEXC3id11Wo?=
+ =?us-ascii?Q?15Xs3GyGUsYghG2cYHvVNyKZ1Yp8aqzLVQzjDYPhMpOmmQ19TTmw1HM74GKQ?=
+ =?us-ascii?Q?UOMlkfnmNMZbhpGrSQ2Eqa9nCIuR4gWVZ5R2plT+VjxN2YQPuZ1znp+blWU3?=
+ =?us-ascii?Q?S4nzz5zY7oEgcbqnkvuK7DsT+5I5WCcUXW42JznGUMJXf4lD28XLRI/56OpA?=
+ =?us-ascii?Q?QOOCOSoGk8jDSC3am6t9aWPGpKADS512RlOX6rXokQCVvwNGtrH7fdwqL+p8?=
+ =?us-ascii?Q?IbEBQ2DaQEoiWnqxXqYWIFdphFjFdpZ4/zsk7jeK4gIEfPD6KHJsvqkOSQKs?=
+ =?us-ascii?Q?YHksr3a+mYRh+S1NHxJBz2MwNvqhE3KbO3vljmvnSZOgXPCS+0NrWi7OlD8i?=
+ =?us-ascii?Q?Gepasabk0EnsueFdNr1K5Lv6Df18Uer8XfPScygfQlIkGzuzWx68MW9WUdfE?=
+ =?us-ascii?Q?YT4m74kJAbxkPvear+sRzLL02LfnG/bwY6fuF6Te4HaYAhONCGdaPADj2qEb?=
+ =?us-ascii?Q?PB3XtgIGZ1VSIpgLkv9/Tun/3JqXimHaljKnrH/cbakFnJvoIUV5sLufBdwe?=
+ =?us-ascii?Q?kxB8VunLJU3GRK49VZ5ZJ5FoUGrnUTyjCV5ovRx51k5XcaK4HadKPm3mocVm?=
+ =?us-ascii?Q?7HcPCa8PVDR0ohHhcHvLqxOgaM/TE+4p1UGrPcMc5j2fayVyLjLXnsB3d8/5?=
+ =?us-ascii?Q?42yQu9drvPJ7ReNp7ABh10dwfY1UXQJtgWOkw1+niyjszVwZKr2qiWFlC98/?=
+ =?us-ascii?Q?RszY5ceg1Dk76vwkJTd6MpqGFGbqC5lxBFZA0LaKx+HWTpejP50fBbLpwDgX?=
+ =?us-ascii?Q?uNWb/op8RzgA8EPUZPVQv2q0/T3schLQz6D9WLTUPZAgwHV4Pw=3D=3D?=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(1800799024)(376014)(38350700014);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?TOr71IKYxZU8n0nlkIMK+DN8XlMu8LCxqKCVIXpahF9OBjGZGXrMRgJwoftb?=
- =?us-ascii?Q?1ovPbe9xLlQYBlrFemwbEE3YJZfDy/ktTq3qULKuMB+XwaRva+hQDBzQz/bQ?=
- =?us-ascii?Q?GLKC2/rpm9LPrqv5Cws5TZkySo8wsJXB+NUDBr35oodhohM4z6RgX03QoesO?=
- =?us-ascii?Q?km4EnA+kdYjK+T0eaYAHvSd6WMI/2N7SbLTcZ67JrejC8CsH/1pfB1cyOt48?=
- =?us-ascii?Q?QCuhzbRYHEWY1j+uz0gfZae90HPSIiDucYtNuUdo+O1w/FfO46BRn4r1NuGL?=
- =?us-ascii?Q?PANBDKbrPzx5NbLTXcwa+ZDKxHGUGVCTPgNkkKeFrapDk46FsSDGlhGeXoJk?=
- =?us-ascii?Q?fSYtTgpFX90Q5pTVQLran5hk9pX8NBqr7zV1rtGNwgPERYzjKRZzutEUTt19?=
- =?us-ascii?Q?z8AvN+Fgc90vUAlVH/7nr1lVUGVb96AZHc6w46TeTJGozcELRmH5XwTbTMEs?=
- =?us-ascii?Q?DzYOOeCdiDeEsrNeaH4HHYO7ELKdxMa14+QmFFB8VJAaptJpDBpW0fg+1C/h?=
- =?us-ascii?Q?vIu2gg/D5hRIzcXHQVvR4SSa2WVe3GXoQIMb0oTDiM05vuUqm9IDj3QigCcB?=
- =?us-ascii?Q?Yfndzsj7Rh7BhmNwimR7byVTWXAsIOLcw4p1tymEGY27IqRe3cTf/4bRtlO1?=
- =?us-ascii?Q?SstGuJSCQLpZCDbGKFupZ84t7pu7WBUA/Pg6LuCRdFeBHS5IYRAyo3lZodBs?=
- =?us-ascii?Q?h0jBo/nF2m8aTfKl+K8Y5H70ZT5WDeWJvkjywgEldpGIQ7AukZG5nki5e8bD?=
- =?us-ascii?Q?uHpP91z8OXsUawLe29sovvKtD9eTLU/T+aSNeWuzmadLFwNt6YfjZlvFM9eN?=
- =?us-ascii?Q?QdVMRysv/JWykJybID1UwJNUgUqU4JGzd3jEPlRTSRgxh7Zt/SR4dE9xjwuH?=
- =?us-ascii?Q?7mJ+PgjoxPsmcuAkajJgd0R06PxxpXQkI8oK0S/1yw9sKFTkQeR3sfd+0goR?=
- =?us-ascii?Q?yo08D7J5DQBxYrkXxiXQHnFxM9cOTFbM97g2h7RIm1Z/quTw8dQBxQV1OkuZ?=
- =?us-ascii?Q?di7XRlYA9W9DGU8U3KJ5AbgliMojzi5ByfrDO3rU2D8Ojn5eTeIsFA/K87Ka?=
- =?us-ascii?Q?MbMWtQaWNIjnoeDja/q3I607QzpJRJy82HfFqBHigHsFTtsHxp+aLv+cKlIO?=
- =?us-ascii?Q?LICGbadHOASBXS2T/2uxi59fdhDi7y8egJqLRy81taJXJl/8sFpKm4Is2HYc?=
- =?us-ascii?Q?fpY6Gsh1d9xzJvQvk4kc6WvP7b+B13skunwLSQfetcJKuvcnmgo/fXpTgCpM?=
- =?us-ascii?Q?rFVB4SQsjeVGtGlCFTP3EaUk0Q5pJETA2fbb5Xk1WfbLLwQ/sup7eHNaBX8m?=
- =?us-ascii?Q?/uKiBAqRfELJByXogICMhzL0uORVVIjTWjHHau0ZKbmzIwZEqPLADaLe+n0n?=
- =?us-ascii?Q?eGFGtAs6POIUs0/qaWiO5bshTDVn6fC760aAWNb7zO8xaAPRsVZPa7JDUxR8?=
- =?us-ascii?Q?My/K5y/xR/ahSyizl1/HpQ/isDOMwhOSnlJtMpLqjU7kHwLexeGYJMxndg01?=
- =?us-ascii?Q?iiKmPxEkloDSHuvIB0Gw5pZ9Ssfy09wjOGX2DZTqodcczscuz77MKBEHWRau?=
- =?us-ascii?Q?BvRvnVe/aQe+RdXD6qfePFxqamitIe+GAV6b4ydYCAGhWmoUvAgV6XE9lHrG?=
- =?us-ascii?Q?LA=3D=3D?=
+	=?us-ascii?Q?ETcggvnqcTVs7/tP6MYXjhFTZyDYRIQBvSZ90GHrYFpK8kG6DXV06u2m9cNv?=
+ =?us-ascii?Q?rhpNlPoH4xL4KcAW8I5QKtq4FHuQU4LquiTCIw4eVeuaDl9U9GXs0SlHdb82?=
+ =?us-ascii?Q?9yP/srkTverNSBiz3j1SHreQ9p2Vxu7OZi3m3M/pXWtsVA0hxX1QgMLN8cVx?=
+ =?us-ascii?Q?TJojrCVJH26cgSr9nSsr87yGsfoo0UXXWVSBECpeP8BPnMs4YTqRJC/Hr0ox?=
+ =?us-ascii?Q?yBzLv5ezLrF8AC0le7NUPBOA3ejs4vZJGLGPngujt9X3I9gdH4Xap/sczTLc?=
+ =?us-ascii?Q?jZqqwpUOtw57ir7Nvgpp4FvbsTpp9c3ZqEgrsuwc+QcSiUk0giBSmfeefaFk?=
+ =?us-ascii?Q?WxmDX9c5vJKjMu5Vubxr986s2glg1dRVPnrpR62GNFzp3TsFDFAIcWIrH8Nr?=
+ =?us-ascii?Q?4jD4kZOg+j2HPDC1frlV3T/cyfm31FwYXIo6pn7rvf3SSDSvZWjACYE6W43a?=
+ =?us-ascii?Q?sUg0D8fPrBCtXadV1vdSGZmWmKrtqwgLnoRwPo5DM0O7urGbD+JiY8YhkEU0?=
+ =?us-ascii?Q?EG0kVYmLb1kjjVSDOvMotuaONYp4WgyICF7LrvURJaGnqBk4CRrf+LtOiG51?=
+ =?us-ascii?Q?8gcuW7G8f5w9azn8DI7aZ3LnhPMuHACzgxgvp+uoM0pbKRMs4e3VM4kb2/Lp?=
+ =?us-ascii?Q?4BJK8iq4b3kmBrvr93FTdYlyc781EBdFYvzLPxkyYS0hXns0AUtGaZoTNCt5?=
+ =?us-ascii?Q?FZWjpEqOVKwAwu6886l8bh4Y2SovIUZtEIjG0T2eIKF91wchNrPllMsgHhOP?=
+ =?us-ascii?Q?zNPm34XE/yksDpouJWmS0pwRhS/Y8jRtJm196PPBlTvpl1mrmEkYSPwanqd/?=
+ =?us-ascii?Q?Sn3urCnehnkZYzPNl1YcBBhyTMJw95Xr/kxKN2DaM/bns34Gv/ECWw3tljcU?=
+ =?us-ascii?Q?kXzR7K5Tue0w+duEPVbZ4cZ1Ac+0A4YAlsQw2tT0U7CxAcJDaKWahee3yhiW?=
+ =?us-ascii?Q?VQu9wD2YqNICnK23H7d+uBRUlusHmqgE1Vi/oxzjRP8136AHTPrgiz6uqxyC?=
+ =?us-ascii?Q?cU0JDiZvVN4ShY+MTyRVAtOVG7bzvgYRKuD8/lYeHqfhJV+Ps7S1oP+XQA3S?=
+ =?us-ascii?Q?q5GX27HjTK6iWOAAE7lRK43cC/xaQKCKwibSIMV9VQd43QVXeU1YuK0nZ7lQ?=
+ =?us-ascii?Q?bh89gLt5h0V0yAeUG/gmoI7raIi2DBhyPwu27oCFRhl4ZsS59AabXbeZlkJT?=
+ =?us-ascii?Q?j/XZNhT29bnTv4PPizXDUiNws9Yh3POdkcrhD6wI086efiJeBHViQ+X5T7mm?=
+ =?us-ascii?Q?H/Y4kgTTwcNlpnOE5A8b3n86JjoYW7J98VjU+5QAIhVfRVQEnQzQDKKRuOZY?=
+ =?us-ascii?Q?66ZX3hPY+mx1hL5QRpTNBU5JqAXRl76uYNBdmyAb3Ytn3mJV1o+1d98toDJU?=
+ =?us-ascii?Q?rhf9uFj/cCkOJL3fF7mZ6UtrQgdLgnqzHgY+iqB9GByj1lFLasiPhD8BFMIN?=
+ =?us-ascii?Q?lYWm6SvVYb/Xm79ZfP7VmDvzZ4nUSnvId30Wv9xZFJQx+/gKa2ui43bhxuqR?=
+ =?us-ascii?Q?QSEu09vLfhLFNN/FrJ4OQpPljBiiGN1Q1/Xo6yJyNNj2sFX2RTHNds09nhAS?=
+ =?us-ascii?Q?1h+6PCf6GPfZ9z3xwz/xSGEb7IxuhlG6gYFK0nWsRWDJgUaOUJkTQbp6s774?=
+ =?us-ascii?Q?Kw=3D=3D?=
 X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e76333fe-02b8-4f37-5e14-08dd20e924f7
+X-MS-Exchange-CrossTenant-Network-Message-Id: f168832f-9c2a-478f-6295-08dd20e926de
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR08MB6969.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2024 11:26:27.7618
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2024 11:26:30.8972
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7TinhaW4g8wcAujuxZh44lt/LmiTPcBTEOHj/8M+N/hg1c8SL5o5jNH6JMrTfHXup3BhP+BGFMdrlSIrgYe3ug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB8256
+X-MS-Exchange-CrossTenant-UserPrincipalName: sQ+d3w/ACy0LdfLBBYxq0mjCdHgbnQ/5kfNC03MsUFi/vur6h+uzf3Itt3AyqafNhav1MRx2zW6tf0jUd8jS4w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR08MB5684
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 20 Dec 2024 11:26:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16935
+ <bitbake-devel@lists.openembedded.org>; Fri, 20 Dec 2024 11:26:51 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16941
 
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 
 Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.c=
 om>
+
 ---
 
- lib/bb/tests/fetch.py | 348 +++++++++++++++++++++---------------------
- 1 file changed, 174 insertions(+), 174 deletions(-)
+ lib/bb/tests/fetch.py | 75 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
 diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 6b8e3e060..934b96cac 100644
+index 30c821a67..37146c087 100644
 --- a/lib/bb/tests/fetch.py
 +++ b/lib/bb/tests/fetch.py
-@@ -2620,47 +2620,47 @@ class CrateTest(FetcherTest):
- class NPMTest(FetcherTest):
-     def skipIfNoNpm():
-         import shutil
--        if not shutil.which('npm'):
--            return unittest.skip('npm not installed')
-+        if not shutil.which("npm"):
-+            return unittest.skip("npm not installed")
-         return lambda f: f
-=20
-     @skipIfNoNpm()
-     @skipIfNoNetwork()
-     def test_npm(self):
--        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0']
-+        urls =3D ["npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0"]
-         fetcher =3D bb.fetch.Fetch(urls, self.d)
-         ud =3D fetcher.ud[fetcher.urls[0]]
-         fetcher.download()
-         self.assertTrue(os.path.exists(ud.localpath))
--        self.assertTrue(os.path.exists(ud.localpath + '.done'))
-+        self.assertTrue(os.path.exists(ud.localpath + ".done"))
-         self.assertTrue(os.path.exists(ud.resolvefile))
-         fetcher.unpack(self.unpackdir)
--        unpackdir =3D os.path.join(self.unpackdir, 'npm')
--        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.js=
-on')))
-+        unpackdir =3D os.path.join(self.unpackdir, "npm")
-+        self.assertTrue(os.path.exists(os.path.join(unpackdir, "package.js=
-on")))
-=20
-     @skipIfNoNpm()
-     @skipIfNoNetwork()
-     def test_npm_bad_checksum(self):
--        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0']
-+        urls =3D ["npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0"]
-         # Fetch once to get a tarball
-         fetcher =3D bb.fetch.Fetch(urls, self.d)
-         ud =3D fetcher.ud[fetcher.urls[0]]
-         fetcher.download()
-         self.assertTrue(os.path.exists(ud.localpath))
-         # Modify the tarball
--        bad =3D b'bad checksum'
--        with open(ud.localpath, 'wb') as f:
-+        bad =3D b"bad checksum"
-+        with open(ud.localpath, "wb") as f:
-             f.write(bad)
-         # Verify that the tarball is fetched again
-         fetcher.download()
-         badsum =3D hashlib.sha512(bad).hexdigest()
--        self.assertTrue(os.path.exists(ud.localpath + '_bad-checksum_' + b=
-adsum))
-+        self.assertTrue(os.path.exists(ud.localpath + "_bad-checksum_" + b=
-adsum))
-         self.assertTrue(os.path.exists(ud.localpath))
-=20
-     @skipIfNoNpm()
-     @skipIfNoNetwork()
-     def test_npm_premirrors(self):
--        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0']
-+        urls =3D ["npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0"]
-         # Fetch once to get a tarball
-         fetcher =3D bb.fetch.Fetch(urls, self.d)
-         ud =3D fetcher.ud[fetcher.urls[0]]
-@@ -2668,17 +2668,17 @@ class NPMTest(FetcherTest):
-         self.assertTrue(os.path.exists(ud.localpath))
-=20
-         # Setup the mirror by renaming the download directory
--        mirrordir =3D os.path.join(self.tempdir, 'mirror')
-+        mirrordir =3D os.path.join(self.tempdir, "mirror")
-         bb.utils.rename(self.dldir, mirrordir)
-         os.mkdir(self.dldir)
-=20
-         # Configure the premirror to be used
--        self.d.setVar('PREMIRRORS', 'https?$://.*/.* file://%s/npm2' % mir=
-rordir)
--        self.d.setVar('BB_FETCH_PREMIRRORONLY', '1')
-+        self.d.setVar("PREMIRRORS", "https?$://.*/.* file://%s/npm2" % mir=
-rordir)
-+        self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")
-=20
-         # Fetch again
-         self.assertFalse(os.path.exists(ud.localpath))
--        # The npm fetcher doesn't handle that the .resolved file disappear=
-s
-+        # The npm fetcher doesn"t handle that the .resolved file disappear=
-s
-         # while the fetcher object exists, which it does when we rename th=
-e
-         # download directory to "mirror" above. Thus we need a new fetcher=
- to go
-         # with the now empty download directory.
-@@ -2690,19 +2690,19 @@ class NPMTest(FetcherTest):
-     @skipIfNoNpm()
-     @skipIfNoNetwork()
-     def test_npm_premirrors_with_specified_filename(self):
--        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0']
-+        urls =3D ["npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0"]
-         # Fetch once to get a tarball
-         fetcher =3D bb.fetch.Fetch(urls, self.d)
-         ud =3D fetcher.ud[fetcher.urls[0]]
-         fetcher.download()
-         self.assertTrue(os.path.exists(ud.localpath))
-         # Setup the mirror
--        mirrordir =3D os.path.join(self.tempdir, 'mirror')
-+        mirrordir =3D os.path.join(self.tempdir, "mirror")
-         bb.utils.mkdirhier(mirrordir)
-         mirrorfilename =3D os.path.join(mirrordir, os.path.basename(ud.loc=
-alpath))
-         os.replace(ud.localpath, mirrorfilename)
--        self.d.setVar('PREMIRRORS', 'https?$://.*/.* file://%s' % mirrorfi=
-lename)
--        self.d.setVar('BB_FETCH_PREMIRRORONLY', '1')
-+        self.d.setVar("PREMIRRORS", "https?$://.*/.* file://%s" % mirrorfi=
-lename)
-+        self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")
-         # Fetch again
-         self.assertFalse(os.path.exists(ud.localpath))
-         fetcher.download()
-@@ -2712,22 +2712,22 @@ class NPMTest(FetcherTest):
-     @skipIfNoNetwork()
-     def test_npm_mirrors(self):
-         # Fetch once to get a tarball
--        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0']
-+        urls =3D ["npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0"]
-         fetcher =3D bb.fetch.Fetch(urls, self.d)
-         ud =3D fetcher.ud[fetcher.urls[0]]
-         fetcher.download()
-         self.assertTrue(os.path.exists(ud.localpath))
-         # Setup the mirror
--        mirrordir =3D os.path.join(self.tempdir, 'mirror')
-+        mirrordir =3D os.path.join(self.tempdir, "mirror")
-         bb.utils.mkdirhier(mirrordir)
-         os.replace(ud.localpath, os.path.join(mirrordir, os.path.basename(=
-ud.localpath)))
--        self.d.setVar('MIRRORS', 'https?$://.*/.* file://%s/' % mirrordir)
-+        self.d.setVar("MIRRORS", "https?$://.*/.* file://%s/" % mirrordir)
-         # Update the resolved url to an invalid url
--        with open(ud.resolvefile, 'r') as f:
-+        with open(ud.resolvefile, "r") as f:
-             url =3D f.read()
-         uri =3D URI(url)
--        uri.path =3D '/invalid'
--        with open(ud.resolvefile, 'w') as f:
-+        uri.path =3D "/invalid"
-+        with open(ud.resolvefile, "w") as f:
-             f.write(str(uri))
-         # Fetch again
-         self.assertFalse(os.path.exists(ud.localpath))
-@@ -2737,17 +2737,17 @@ class NPMTest(FetcherTest):
-     @skipIfNoNpm()
-     @skipIfNoNetwork()
-     def test_npm_destsuffix_downloadfilename(self):
--        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0;destsuffix=3Dfoo/bar;downloadfilename=3Df=
-oo-bar.tgz']
-+        urls =3D ["npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0;destsuffix=3Dfoo/bar;downloadfilename=3Df=
-oo-bar.tgz"]
-         fetcher =3D bb.fetch.Fetch(urls, self.d)
-         fetcher.download()
--        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', 'f=
-oo-bar.tgz')))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "npm2/foo-=
-bar.tgz")))
-         fetcher.unpack(self.unpackdir)
--        unpackdir =3D os.path.join(self.unpackdir, 'foo', 'bar')
--        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.js=
-on')))
-+        unpackdir =3D os.path.join(self.unpackdir, "foo", "bar")
-+        self.assertTrue(os.path.exists(os.path.join(unpackdir, "package.js=
-on")))
-=20
-     def test_npm_no_network_no_tarball(self):
--        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0']
--        self.d.setVar('BB_NO_NETWORK', '1')
-+        urls =3D ["npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0"]
-+        self.d.setVar("BB_NO_NETWORK", "1")
-         fetcher =3D bb.fetch.Fetch(urls, self.d)
-         with self.assertRaises(bb.fetch2.NetworkAccess):
-             fetcher.download()
-@@ -2755,42 +2755,42 @@ class NPMTest(FetcherTest):
-     @skipIfNoNpm()
-     @skipIfNoNetwork()
-     def test_npm_no_network_with_tarball(self):
--        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0']
-+        urls =3D ["npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3D1.0.0"]
-         # Fetch once to get a tarball
-         fetcher =3D bb.fetch.Fetch(urls, self.d)
-         fetcher.download()
-         # Disable network access
--        self.d.setVar('BB_NO_NETWORK', '1')
-+        self.d.setVar("BB_NO_NETWORK", "1")
-         # Fetch again
-         fetcher.download()
-         fetcher.unpack(self.unpackdir)
--        unpackdir =3D os.path.join(self.unpackdir, 'npm')
--        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.js=
-on')))
-+        unpackdir =3D os.path.join(self.unpackdir, "npm")
-+        self.assertTrue(os.path.exists(os.path.join(unpackdir, "package.js=
-on")))
-=20
-     @skipIfNoNpm()
-     @skipIfNoNetwork()
-     def test_npm_registry_alternate(self):
--        urls =3D ['npm://skimdb.npmjs.com;package=3D@savoirfairelinux/node=
--server-example;version=3D1.0.0']
-+        urls =3D ["npm://skimdb.npmjs.com;package=3D@savoirfairelinux/node=
--server-example;version=3D1.0.0"]
-         fetcher =3D bb.fetch.Fetch(urls, self.d)
-         fetcher.download()
-         fetcher.unpack(self.unpackdir)
--        unpackdir =3D os.path.join(self.unpackdir, 'npm')
--        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.js=
-on')))
-+        unpackdir =3D os.path.join(self.unpackdir, "npm")
-+        self.assertTrue(os.path.exists(os.path.join(unpackdir, "package.js=
-on")))
-=20
-     @skipIfNoNpm()
-     @skipIfNoNetwork()
-     def test_npm_version_latest(self):
--        url =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/nod=
-e-server-example;version=3Dlatest']
-+        url =3D ["npm://registry.npmjs.org;package=3D@savoirfairelinux/nod=
-e-server-example;version=3Dlatest"]
-         fetcher =3D bb.fetch.Fetch(urls, self.d)
-         fetcher.download()
-         fetcher.unpack(self.unpackdir)
--        unpackdir =3D os.path.join(self.unpackdir, 'npm')
--        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.js=
-on')))
-+        unpackdir =3D os.path.join(self.unpackdir, "npm")
-+        self.assertTrue(os.path.exists(os.path.join(unpackdir, "package.js=
-on")))
-=20
-     @skipIfNoNpm()
-     @skipIfNoNetwork()
-     def test_npm_registry_invalid(self):
--        urls =3D ['npm://registry.invalid.org;package=3D@savoirfairelinux/=
-node-server-example;version=3D1.0.0']
-+        urls =3D ["npm://registry.invalid.org;package=3D@savoirfairelinux/=
-node-server-example;version=3D1.0.0"]
-         fetcher =3D bb.fetch.Fetch(urls, self.d)
-         with self.assertRaises(bb.fetch2.FetchError):
-             fetcher.download()
-@@ -2798,7 +2798,7 @@ class NPMTest(FetcherTest):
-     @skipIfNoNpm()
-     @skipIfNoNetwork()
-     def test_npm_package_invalid(self):
--        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/in=
-valid;version=3D1.0.0']
-+        urls =3D ["npm://registry.npmjs.org;package=3D@savoirfairelinux/in=
-valid;version=3D1.0.0"]
-         fetcher =3D bb.fetch.Fetch(urls, self.d)
-         with self.assertRaises(bb.fetch2.FetchError):
-             fetcher.download()
-@@ -2806,145 +2806,145 @@ class NPMTest(FetcherTest):
-     @skipIfNoNpm()
-     @skipIfNoNetwork()
-     def test_npm_version_invalid(self):
--        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3Dinvalid']
-+        urls =3D ["npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example;version=3Dinvalid"]
-         with self.assertRaises(bb.fetch2.ParameterError):
-             fetcher =3D bb.fetch.Fetch(urls, self.d)
-=20
-     @skipIfNoNpm()
-     @skipIfNoNetwork()
-     def test_npm_registry_none(self):
--        urls =3D ['npm://;package=3D@savoirfairelinux/node-server-example;=
-version=3D1.0.0']
-+        urls =3D ["npm://;package=3D@savoirfairelinux/node-server-example;=
-version=3D1.0.0"]
-         with self.assertRaises(bb.fetch2.MalformedUrl):
-             fetcher =3D bb.fetch.Fetch(urls, self.d)
-=20
-     @skipIfNoNpm()
-     @skipIfNoNetwork()
-     def test_npm_package_none(self):
--        urls =3D ['npm://registry.npmjs.org;version=3D1.0.0']
-+        urls =3D ["npm://registry.npmjs.org;version=3D1.0.0"]
-         with self.assertRaises(bb.fetch2.MissingParameterError):
-             fetcher =3D bb.fetch.Fetch(urls, self.d)
-=20
-     @skipIfNoNpm()
-     @skipIfNoNetwork()
-     def test_npm_version_none(self):
--        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example']
-+        urls =3D ["npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
-de-server-example"]
-         with self.assertRaises(bb.fetch2.MissingParameterError):
-             fetcher =3D bb.fetch.Fetch(urls, self.d)
-=20
-     def create_shrinkwrap_file(self, data):
-         import json
--        datadir =3D os.path.join(self.tempdir, 'data')
--        swfile =3D os.path.join(datadir, 'npm-shrinkwrap.json')
-+        datadir =3D os.path.join(self.tempdir, "data")
-+        swfile =3D os.path.join(datadir, "npm-shrinkwrap.json")
-         bb.utils.mkdirhier(datadir)
--        with open(swfile, 'w') as f:
-+        with open(swfile, "w") as f:
-             json.dump(data, f)
-         return swfile
-=20
-     @skipIfNoNetwork()
-     def test_npmsw(self):
-         swfile =3D self.create_shrinkwrap_file({
--            'packages': {
--                'node_modules/array-flatten': {
--                    'version': '1.1.1',
--                    'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
--                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D',
--                    'dependencies': {
--                        'content-type': "1.0.4"
-+            "packages": {
-+                "node_modules/array-flatten": {
-+                    "version": "1.1.1",
-+                    "resolved": "https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz",
-+                    "integrity": "sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D",
-+                    "dependencies": {
-+                        "content-type": "1.0.4"
-                     }
-                 },
--                'node_modules/array-flatten/node_modules/content-type': {
--                    'version': '1.0.4',
--                    'resolved': 'https://registry.npmjs.org/content-type/-=
-/content-type-1.0.4.tgz',
--                    'integrity': 'sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk2Zob=
-89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D',
--                    'dependencies': {
--                        'cookie': 'git+https://github.com/jshttp/cookie.gi=
-t#aec1177c7da67e3b3273df96cf476824dbc9ae09'
-+                "node_modules/array-flatten/node_modules/content-type": {
-+                    "version": "1.0.4",
-+                    "resolved": "https://registry.npmjs.org/content-type/-=
-/content-type-1.0.4.tgz",
-+                    "integrity": "sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk2Zob=
-89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D",
-+                    "dependencies": {
-+                        "cookie": "git+https://github.com/jshttp/cookie.gi=
-t#aec1177c7da67e3b3273df96cf476824dbc9ae09"
-                     }
-                 },
--                'node_modules/array-flatten/node_modules/content-type/node=
-_modules/cookie': {
--                    'resolved': 'git+https://github.com/jshttp/cookie.git#=
-aec1177c7da67e3b3273df96cf476824dbc9ae09'
-+                "node_modules/array-flatten/node_modules/content-type/node=
-_modules/cookie": {
-+                    "resolved": "git+https://github.com/jshttp/cookie.git#=
-aec1177c7da67e3b3273df96cf476824dbc9ae09"
-                 }
-             }
-         })
--        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher =3D bb.fetch.Fetch(["npmsw://" + swfile], self.d)
-         fetcher.download()
--        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', 'a=
-rray-flatten-1.1.1.tgz')))
--        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', 'c=
-ontent-type-1.0.4.tgz')))
--        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'git2', 'g=
-ithub.com.jshttp.cookie.git')))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "npm2/arra=
-y-flatten-1.1.1.tgz")))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "npm2/cont=
-ent-type-1.0.4.tgz")))
+@@ -3495,3 +3495,78 @@ class GoSumTest(FetcherTest):
+         self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "azblo=
+b/go.sum")))
+         self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "azblo=
+b/pkg/mod/cache/download/golang.org/x/net/@v/v0.0.0-20220425223048-2871e0cb=
+64e4.zip")))
+         self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "azblo=
+b/pkg/mod/cache/download/golang.org/x/net/@v/v0.0.0-20220425223048-2871e0cb=
+64e4.mod")))
++
++class CargoLockTest(FetcherTest):
++    def setUp(self):
++        super().setUp()
++        self.localsrcdir =3D os.path.join(self.tempdir, "localsrc")
++        os.makedirs(self.localsrcdir)
++        self.d.setVar("FILESPATH", self.localsrcdir)
++
++    def create_cargo_lock_file(self, data):
++        import tomllib
++        filename =3D "Cargo.lock"
++        with open(os.path.join(self.localsrcdir, filename), "w") as f:
++            for package in data.get("package", []):
++                f.write("\n[[package]]\n")
++                for key in package.keys():
++                    f.write(f'{key} =3D "{package[key]}"\n')
++        return filename
++
++    @skipIfNoNetwork()
++    def test_cargolock(self):
++        filename =3D self.create_cargo_lock_file({
++            "package": [
++                {
++                    "name": "regex",
++                    "version": "1.4.0",
++                    "source": "registry+https://github.com/rust-lang/crate=
+s.io-index",
++                    "checksum": "36f45b719a674bf4b828ff318906d6c133264c793=
+eff7a41e30074a45b5099e2"
++                }, {
++                    "name": "regex",
++                    "version": "1.5.0",
++                    "source": "git+https://github.com/rust-lang/regex.git#=
+9f9f693768c584971a4d53bc3c586c33ed3a6831"
++                }
++            ]
++        })
++        fetcher =3D bb.fetch.Fetch([f"cargolock://{filename}"], self.d)
++        fetcher.download()
++        self.assertTrue(os.path.exists(os.path.join(self.dldir, "regex-1.4=
+.0.crate")))
++        self.assertTrue(os.path.exists(os.path.join(self.dldir, "regex-1.4=
+.0.crate.done")))
 +        self.assertTrue(os.path.exists(os.path.join(self.dldir, "git2/gith=
-ub.com.jshttp.cookie.git")))
-         fetcher.unpack(self.unpackdir)
--        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'npm-s=
-hrinkwrap.json')))
--        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'node_=
-modules', 'array-flatten', 'package.json')))
--        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'node_=
-modules', 'array-flatten', 'node_modules', 'content-type', 'package.json'))=
-)
--        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'node_=
-modules', 'array-flatten', 'node_modules', 'content-type', 'node_modules', =
-'cookie', 'package.json')))
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "npm-s=
-hrinkwrap.json")))
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "node_=
-modules/array-flatten/package.json")))
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "node_=
-modules/array-flatten/node_modules/content-type/package.json")))
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "node_=
-modules/array-flatten/node_modules/content-type/node_modules/cookie/package=
-.json")))
-=20
-     @skipIfNoNetwork()
-     def test_npmsw_git(self):
-         swfile =3D self.create_shrinkwrap_file({
--            'packages': {
--                'node_modules/cookie': {
--                    'resolved': 'git+https://github.com/jshttp/cookie.git#=
-aec1177c7da67e3b3273df96cf476824dbc9ae09'
-+            "packages": {
-+                "node_modules/cookie": {
-+                    "resolved": "git+https://github.com/jshttp/cookie.git#=
-aec1177c7da67e3b3273df96cf476824dbc9ae09"
-                 }
-             }
-         })
--        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher =3D bb.fetch.Fetch(["npmsw://" + swfile], self.d)
-         fetcher.download()
--        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'git2', 'g=
-ithub.com.jshttp.cookie.git')))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "git2/gith=
-ub.com.jshttp.cookie.git")))
-=20
-     @skipIfNoNetwork()
-     def test_npmsw_dev(self):
-         swfile =3D self.create_shrinkwrap_file({
--            'packages': {
--                'node_modules/array-flatten': {
--                    'version': '1.1.1',
--                    'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
--                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+            "packages": {
-+                "node_modules/array-flatten": {
-+                    "version": "1.1.1",
-+                    "resolved": "https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz",
-+                    "integrity": "sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D"
-                 },
--                'node_modules/content-type': {
--                    'version': '1.0.4',
--                    'resolved': 'https://registry.npmjs.org/content-type/-=
-/content-type-1.0.4.tgz',
--                    'integrity': 'sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk2Zob=
-89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D',
--                    'dev': True
-+                "node_modules/content-type": {
-+                    "version": "1.0.4",
-+                    "resolved": "https://registry.npmjs.org/content-type/-=
-/content-type-1.0.4.tgz",
-+                    "integrity": "sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk2Zob=
-89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D",
-+                    "dev": True
-                 }
-             }
-         })
-         # Fetch with dev disabled
--        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher =3D bb.fetch.Fetch(["npmsw://" + swfile], self.d)
-         fetcher.download()
--        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', 'a=
-rray-flatten-1.1.1.tgz')))
--        self.assertFalse(os.path.exists(os.path.join(self.dldir, 'npm2', '=
-content-type-1.0.4.tgz')))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "npm2/arra=
-y-flatten-1.1.1.tgz")))
-+        self.assertFalse(os.path.exists(os.path.join(self.dldir, "npm2/con=
-tent-type-1.0.4.tgz")))
-         # Fetch with dev enabled
--        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile + ';dev=3D1'], sel=
-f.d)
-+        fetcher =3D bb.fetch.Fetch(["npmsw://" + swfile + ";dev=3D1"], sel=
-f.d)
-         fetcher.download()
--        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', 'a=
-rray-flatten-1.1.1.tgz')))
--        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', 'c=
-ontent-type-1.0.4.tgz')))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "npm2/arra=
-y-flatten-1.1.1.tgz")))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "npm2/cont=
-ent-type-1.0.4.tgz")))
-=20
-     @skipIfNoNetwork()
-     def test_npmsw_destsuffix(self):
-         swfile =3D self.create_shrinkwrap_file({
--            'packages': {
--                'node_modules/array-flatten': {
--                    'version': '1.1.1',
--                    'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
--                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+            "packages": {
-+                "node_modules/array-flatten": {
-+                    "version": "1.1.1",
-+                    "resolved": "https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz",
-+                    "integrity": "sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D"
-                 }
-             }
-         })
--        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile + ';destsuffix=3Df=
-oo/bar'], self.d)
-+        fetcher =3D bb.fetch.Fetch(["npmsw://" + swfile + ";destsuffix=3Df=
-oo/bar"], self.d)
-         fetcher.download()
-         fetcher.unpack(self.unpackdir)
--        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'foo',=
- 'bar', 'node_modules', 'array-flatten', 'package.json')))
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "foo/b=
-ar/node_modules/array-flatten/package.json")))
-=20
-     def test_npmsw_no_network_no_tarball(self):
-         swfile =3D self.create_shrinkwrap_file({
--            'packages': {
--                'node_modules/array-flatten': {
--                    'version': '1.1.1',
--                    'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
--                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+            "packages": {
-+                "node_modules/array-flatten": {
-+                    "version": "1.1.1",
-+                    "resolved": "https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz",
-+                    "integrity": "sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D"
-                 }
-             }
-         })
--        self.d.setVar('BB_NO_NETWORK', '1')
--        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        self.d.setVar("BB_NO_NETWORK", "1")
-+        fetcher =3D bb.fetch.Fetch(["npmsw://" + swfile], self.d)
-         with self.assertRaises(bb.fetch2.NetworkAccess):
-             fetcher.download()
-=20
-@@ -2952,112 +2952,112 @@ class NPMTest(FetcherTest):
-     @skipIfNoNetwork()
-     def test_npmsw_no_network_with_tarball(self):
-         # Fetch once to get a tarball
--        fetcher =3D bb.fetch.Fetch(['npm://registry.npmjs.org;package=3Dar=
-ray-flatten;version=3D1.1.1'], self.d)
-+        fetcher =3D bb.fetch.Fetch(["npm://registry.npmjs.org;package=3Dar=
-ray-flatten;version=3D1.1.1"], self.d)
-         fetcher.download()
-         # Disable network access
--        self.d.setVar('BB_NO_NETWORK', '1')
-+        self.d.setVar("BB_NO_NETWORK", "1")
-         # Fetch again
-         swfile =3D self.create_shrinkwrap_file({
--            'packages': {
--                'node_modules/array-flatten': {
--                    'version': '1.1.1',
--                    'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
--                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+            "packages": {
-+                "node_modules/array-flatten": {
-+                    "version": "1.1.1",
-+                    "resolved": "https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz",
-+                    "integrity": "sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D"
-                 }
-             }
-         })
--        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher =3D bb.fetch.Fetch(["npmsw://" + swfile], self.d)
-         fetcher.download()
-         fetcher.unpack(self.unpackdir)
--        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'node_=
-modules', 'array-flatten', 'package.json')))
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "node_=
-modules/array-flatten/package.json")))
-=20
-     @skipIfNoNetwork()
-     def test_npmsw_npm_reusability(self):
-         # Fetch once with npmsw
-         swfile =3D self.create_shrinkwrap_file({
--            'packages': {
--                'node_modules/array-flatten': {
--                    'version': '1.1.1',
--                    'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
--                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+            "packages": {
-+                "node_modules/array-flatten": {
-+                    "version": "1.1.1",
-+                    "resolved": "https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz",
-+                    "integrity": "sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D"
-                 }
-             }
-         })
--        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher =3D bb.fetch.Fetch(["npmsw://" + swfile], self.d)
-         fetcher.download()
-         # Disable network access
--        self.d.setVar('BB_NO_NETWORK', '1')
-+        self.d.setVar("BB_NO_NETWORK", "1")
-         # Fetch again with npm
--        fetcher =3D bb.fetch.Fetch(['npm://registry.npmjs.org;package=3Dar=
-ray-flatten;version=3D1.1.1'], self.d)
-+        fetcher =3D bb.fetch.Fetch(["npm://registry.npmjs.org;package=3Dar=
-ray-flatten;version=3D1.1.1"], self.d)
-         fetcher.download()
-         fetcher.unpack(self.unpackdir)
--        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'npm',=
- 'package.json')))
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "npm/p=
-ackage.json")))
-=20
-     @skipIfNoNetwork()
-     def test_npmsw_bad_checksum(self):
-         # Try to fetch with bad checksum
-         swfile =3D self.create_shrinkwrap_file({
--            'packages': {
--                'node_modules/array-flatten': {
--                    'version': '1.1.1',
--                    'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
--                    'integrity': 'sha1-gfNEp2hqgLTFKT6P3AsBYMgsBqg=3D'
-+            "packages": {
-+                "node_modules/array-flatten": {
-+                    "version": "1.1.1",
-+                    "resolved": "https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz",
-+                    "integrity": "sha1-gfNEp2hqgLTFKT6P3AsBYMgsBqg=3D"
-                 }
-             }
-         })
--        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher =3D bb.fetch.Fetch(["npmsw://" + swfile], self.d)
-         with self.assertRaises(bb.fetch2.FetchError):
-             fetcher.download()
-         # Fetch correctly to get a tarball
-         swfile =3D self.create_shrinkwrap_file({
--            'packages': {
--                'node_modules/array-flatten': {
--                    'version': '1.1.1',
--                    'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
--                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+            "packages": {
-+                "node_modules/array-flatten": {
-+                    "version": "1.1.1",
-+                    "resolved": "https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz",
-+                    "integrity": "sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D"
-                 }
-             }
-         })
--        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher =3D bb.fetch.Fetch(["npmsw://" + swfile], self.d)
-         fetcher.download()
--        localpath =3D os.path.join(self.dldir, 'npm2', 'array-flatten-1.1.=
-1.tgz')
-+        localpath =3D os.path.join(self.dldir, "npm2/array-flatten-1.1.1.t=
-gz")
-         self.assertTrue(os.path.exists(localpath))
-         # Modify the tarball
--        bad =3D b'bad checksum'
--        with open(localpath, 'wb') as f:
-+        bad =3D b"bad checksum"
-+        with open(localpath, "wb") as f:
-             f.write(bad)
-         # Verify that the tarball is fetched again
-         fetcher.download()
-         badsum =3D hashlib.sha1(bad).hexdigest()
--        self.assertTrue(os.path.exists(localpath + '_bad-checksum_' + bads=
-um))
-+        self.assertTrue(os.path.exists(localpath + "_bad-checksum_" + bads=
-um))
-         self.assertTrue(os.path.exists(localpath))
-=20
-     @skipIfNoNpm()
-     @skipIfNoNetwork()
-     def test_npmsw_premirrors(self):
-         # Fetch once to get a tarball
--        fetcher =3D bb.fetch.Fetch(['npm://registry.npmjs.org;package=3Dar=
-ray-flatten;version=3D1.1.1'], self.d)
-+        fetcher =3D bb.fetch.Fetch(["npm://registry.npmjs.org;package=3Dar=
-ray-flatten;version=3D1.1.1"], self.d)
-         ud =3D fetcher.ud[fetcher.urls[0]]
-         fetcher.download()
-         self.assertTrue(os.path.exists(ud.localpath))
-         # Setup the mirror
--        mirrordir =3D os.path.join(self.tempdir, 'mirror')
-+        mirrordir =3D os.path.join(self.tempdir, "mirror")
-         bb.utils.mkdirhier(mirrordir)
-         os.replace(ud.localpath, os.path.join(mirrordir, os.path.basename(=
-ud.localpath)))
--        self.d.setVar('PREMIRRORS', 'https?$://.*/.* file://%s/' % mirrord=
-ir)
--        self.d.setVar('BB_FETCH_PREMIRRORONLY', '1')
-+        self.d.setVar("PREMIRRORS", "https?$://.*/.* file://%s/" % mirrord=
-ir)
-+        self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")
-         # Fetch again
-         self.assertFalse(os.path.exists(ud.localpath))
-         swfile =3D self.create_shrinkwrap_file({
--            'packages': {
--                'node_modules/array-flatten': {
--                    'version': '1.1.1',
--                    'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
--                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+            "packages": {
-+                "node_modules/array-flatten": {
-+                    "version": "1.1.1",
-+                    "resolved": "https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz",
-+                    "integrity": "sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D"
-                 }
-             }
-         })
--        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher =3D bb.fetch.Fetch(["npmsw://" + swfile], self.d)
-         fetcher.download()
-         self.assertTrue(os.path.exists(ud.localpath))
-=20
-@@ -3065,51 +3065,51 @@ class NPMTest(FetcherTest):
-     @skipIfNoNetwork()
-     def test_npmsw_mirrors(self):
-         # Fetch once to get a tarball
--        fetcher =3D bb.fetch.Fetch(['npm://registry.npmjs.org;package=3Dar=
-ray-flatten;version=3D1.1.1'], self.d)
-+        fetcher =3D bb.fetch.Fetch(["npm://registry.npmjs.org;package=3Dar=
-ray-flatten;version=3D1.1.1"], self.d)
-         ud =3D fetcher.ud[fetcher.urls[0]]
-         fetcher.download()
-         self.assertTrue(os.path.exists(ud.localpath))
-         # Setup the mirror
--        mirrordir =3D os.path.join(self.tempdir, 'mirror')
-+        mirrordir =3D os.path.join(self.tempdir, "mirror")
-         bb.utils.mkdirhier(mirrordir)
-         os.replace(ud.localpath, os.path.join(mirrordir, os.path.basename(=
-ud.localpath)))
--        self.d.setVar('MIRRORS', 'https?$://.*/.* file://%s/' % mirrordir)
-+        self.d.setVar("MIRRORS", "https?$://.*/.* file://%s/" % mirrordir)
-         # Fetch again with invalid url
-         self.assertFalse(os.path.exists(ud.localpath))
-         swfile =3D self.create_shrinkwrap_file({
--            'packages': {
--                'node_modules/array-flatten': {
--                    'version': '1.1.1',
--                    'resolved': 'https://invalid',
--                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+            "packages": {
-+                "node_modules/array-flatten": {
-+                    "version": "1.1.1",
-+                    "resolved": "https://invalid",
-+                    "integrity": "sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D"
-                 }
-             }
-         })
--        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher =3D bb.fetch.Fetch(["npmsw://" + swfile], self.d)
-         fetcher.download()
-         self.assertTrue(os.path.exists(ud.localpath))
-=20
-     @skipIfNoNetwork()
-     def test_npmsw_bundled(self):
-         swfile =3D self.create_shrinkwrap_file({
--            'packages': {
--                'node_modules/array-flatten': {
--                    'version': '1.1.1',
--                    'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
--                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+            "packages": {
-+                "node_modules/array-flatten": {
-+                    "version": "1.1.1",
-+                    "resolved": "https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz",
-+                    "integrity": "sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D"
-                 },
--                'node_modules/content-type': {
--                    'version': '1.0.4',
--                    'resolved': 'https://registry.npmjs.org/content-type/-=
-/content-type-1.0.4.tgz',
--                    'integrity': 'sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk2Zob=
-89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D',
--                    'inBundle': True
-+                "node_modules/content-type": {
-+                    "version": "1.0.4",
-+                    "resolved": "https://registry.npmjs.org/content-type/-=
-/content-type-1.0.4.tgz",
-+                    "integrity": "sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk2Zob=
-89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D",
-+                    "inBundle": True
-                 }
-             }
-         })
--        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher =3D bb.fetch.Fetch(["npmsw://" + swfile], self.d)
-         fetcher.download()
--        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', 'a=
-rray-flatten-1.1.1.tgz')))
--        self.assertFalse(os.path.exists(os.path.join(self.dldir, 'npm2', '=
-content-type-1.0.4.tgz')))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "npm2/arra=
-y-flatten-1.1.1.tgz")))
-+        self.assertFalse(os.path.exists(os.path.join(self.dldir, "npm2/con=
-tent-type-1.0.4.tgz")))
-=20
- class GitSharedTest(FetcherTest):
-     def setUp(self):
+ub.com.rust-lang.regex.git")))
++        fetcher.unpack(self.unpackdir)
++        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "Cargo=
+.lock")))
++        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "cargo=
+_home/bitbake/regex-1.4.0/Cargo.toml")))
++        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "cargo=
+_home/bitbake/regex-1.5.0/Cargo.toml")))
++
++    @skipIfNoNetwork()
++    def test_cargolock_https(self):
++        urls =3D [
++            "cargolock+https://download.gnome.org/sources/librsvg/2.58/lib=
+rsvg-2.58.2.tar.xz;"
++            "striplevel=3D1;subdir=3Dlibrsvg-2.58.2;"
++            "sha256sum=3D18e9d70c08cf25f50d610d6d5af571561d67cf4179f962e04=
+266475df6e2e224"
++        ]
++        fetcher =3D bb.fetch.Fetch(urls, self.d)
++        fetcher.download()
++        self.assertTrue(os.path.exists(os.path.join(self.dldir, "librsvg-2=
+.58.2.tar.xz")))
++        self.assertTrue(os.path.exists(os.path.join(self.dldir, "librsvg-2=
+.58.2.tar.xz.done")))
++        self.assertTrue(os.path.exists(os.path.join(self.dldir, "adler-1.0=
+.2.crate")))
++        self.assertTrue(os.path.exists(os.path.join(self.dldir, "adler-1.0=
+.2.crate.done")))
++        fetcher.unpack(self.unpackdir)
++        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "librs=
+vg-2.58.2/Cargo.toml")))
++        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "librs=
+vg-2.58.2/cargo_home/bitbake/adler-1.0.2/Cargo.toml")))
++
++    @skipIfNoNetwork()
++    def test_cargolock_git(self):
++        urls =3D [
++            "cargolock+git://gitlab.gnome.org/GNOME/librsvg.git;protocol=
+=3Dhttps;"
++            "nobranch=3D1;rev=3Def5c94d8362c35573d7eb651cf9a07c6df9df6da"
++        ]
++        fetcher =3D bb.fetch.Fetch(urls, self.d)
++        fetcher.download()
++        self.assertTrue(os.path.exists(os.path.join(self.dldir, "git2/gitl=
+ab.gnome.org.GNOME.librsvg.git")))
++        self.assertTrue(os.path.exists(os.path.join(self.dldir, "adler-1.0=
+.2.crate")))
++        self.assertTrue(os.path.exists(os.path.join(self.dldir, "adler-1.0=
+.2.crate.done")))
++        fetcher.unpack(self.unpackdir)
++        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "git/C=
+argo.toml")))
++        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "git/c=
+argo_home/bitbake/adler-1.0.2/Cargo.toml")))
 --=20
 2.39.5
 
