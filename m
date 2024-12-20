@@ -2,269 +2,245 @@ Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3617BE7718C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 483E5E7718E
 	for <webhook@archiver.kernel.org>; Fri, 20 Dec 2024 11:26:41 +0000 (UTC)
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.104])
- by mx.groups.io with SMTP id smtpd.web10.149981.1734693987801828257
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.114])
+ by mx.groups.io with SMTP id smtpd.web11.149745.1734693993938884026
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 20 Dec 2024 03:26:28 -0800
+ Fri, 20 Dec 2024 03:26:36 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=7jawAoja;
- spf=pass (domain: weidmueller.com, ip: 40.107.20.104, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=dsXLOfrK;
+ spf=pass (domain: weidmueller.com, ip: 40.107.22.114, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RF7GjS2OlckO5B8kiu49fuJdJ5iK81carWFHXdiGdPcksEuyHZbH6rFzZDIwdg49Nv8poAmmMMCaUClnyHybn5PGrGcUPTlgy0aRWPag1M/OzX8jgSGAllGV08bRg94AXBNlPy+Olm+kXm725hnv5HQEuIc5ODCBHy+s+CIS+3hbO4hVyCxBVzkWF7Axbp/ig1qAYV7NGggBdy68SLBj+M2k/5NGsWo3/2bjLHW9D6IJOl1p0lF/WiCPIL7XgHR0jYnU6Mq6lpFFthMkMdAF03UZC0TfRh/10jfJzpGA2biQm+Jz/AnI9PMVHdPqqEqysxPuUiTw0dWksLabZUHq0A==
+ b=F0kRTJ/j41cNul61tpu5kZGHPFZvQdabCvQSMRsJgCmvSlRSDJQzQrb/ojydk45mMcg4E3AeLoIeE7VvVKS2quz+LcsW+qKLBgQOBgaGJkmcspAtkDabSmdRGActhMW+4bn0+2rQ8lyS0f21fLnZsdafzXm4xBG4Vvb2rjZZnqdcFclkfZSGq8f89YhHQZZ1mq52FEYMVKOOMe5Xc6RIo1cpjRMJS5pxlfH+4GQNQU+sZTkE65kDh24O+x2N5Y8UaprxfZY1x6WN7ffwleKlFUSMlH8Z3WUxmPNo+cXzotX917lEEw4L/0HgOu07LrcVgC8PGTltS3OaZA0l49QyEQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=y7rJVrOqMobu3b6Rc0bxsj1RphKyIHeDXoBMTd2Q95c=;
- b=htBif4+WoWYXFSFQpb+IXh5qWQDqQY6zBvn/QK7ib8KoVb8qb83SpQmuOFkthcmu2wqWO1Mze9cANj/3SNFgIyqoFKYuJTyiBaYfnH2C/hmcjc2TWFplTQcAMLTysCiLwLx4Ubfu3zo52z9cVpyNmng8IhsPMIZI3eAZsDaPMWR3gwpYgzVSw5DDsDGZJ0XjoKDKj8vT5SdSwC/OkFAOi1qaFOijK27hsLiBveuU3tj965YoQQeSdsICAMUXCTUqhkXHlJFJkpXqLKE6EZ0qvGieOCJ/JEjiNNXA6DU1BmdKiF6B/GVbJQk6aOHqUYoG1BR9ytIUEE3/gfvKIoBgoQ==
+ bh=pcdW8MubFG0xs5axX8roi4aUXLdBiwpdbBx3JxYKD4s=;
+ b=QCKeGta0MeWM31D63MHKeW9ukxbmOaqDjIuFlO3QePntYMRXcJjh5X3gcyTPKgrW6fcGx6kx/bIlwlAUffEjdx/YZiKVoVZVx1W2taO4bSKwEw+tafIfDng0bs0XRCwawcSA13VhX/RYhvoBEU4P5il/fr69szlXBpgc1HowmnyeOC197BEPeAZumErega97aMH6iD3u5W9kMeiyzjOxXFpv78s+ufB9TQBsQN/G1C8+QdYZrFbdAf1SJEQwbkxvsYM0FP3My/jgQ9Ap318kTA0PofOwXRaz0r8WemTgz6GB/tFsEvmqSw7QzBl9aYlu1nWXfHbdw9MEhvgl+GDXfQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=weidmueller.com; dmarc=pass action=none
  header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y7rJVrOqMobu3b6Rc0bxsj1RphKyIHeDXoBMTd2Q95c=;
- b=7jawAojaUA07PrCp8UWOpXLZn5qZzLmEAoYbsbn41bCNDOamlDUvnSXTzB9w7CEindB9LiaX4eWl0ACSUSf49CZEqnaFbKLZnVwzTTJ14m6CJmsWiI4DOhyT4kqi/swDrbmQ6ETfAHMK23p5OtmLUWFJSn/OpbEVu5Y2I/jUB516RVHHRJvP1nQ4/ngDP4yGUcY7e2v1mwTVOs3pw6PcryV62PG0b2tnwGw9p8T6d4szmtsiCoFX3/yHmx81ONVLUaP3t9ZrvA8+MyRXVXVi+MDgtfKeXkEJlRYzFyLHD39XY/tB/2yMJW/oUUilB8XJZRIe0NFyQCF2YU5SilMYAg==
+ bh=pcdW8MubFG0xs5axX8roi4aUXLdBiwpdbBx3JxYKD4s=;
+ b=dsXLOfrKR+iS4mw09DyAYXLJcGlVGGvpII5haYzhSHyks85d7P94u/fADm5eYvU9ILKVkU+1gEsIy5MsYQLay4ClOnzrs7JoFJGn7aK5fTiXVgIkXh58jhBN7qGSLaYMP0aaeHM1us1lBoo1J/cll3R91ixr9OaV4HGdHhUNTv6B3YWaEHRvkJdrpeFKrYYhFmSi+9XNvRPACDfZAS7wK22cIpjayaPSUU18pznaBQcxeTtIk0ArSMUatT/mwiK7hUiOJ9aLOYXM9+fWSo+M/+caY9Ciziui7898bBi83+p+0F/vg8NRWtNmPHhyfc1P2/DPPIJplUDKBUTxw39gVQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=weidmueller.com;
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com (2603:10a6:102:1d8::23)
- by DU0PR08MB8256.eurprd08.prod.outlook.com (2603:10a6:10:410::16) with
+ by AM8PR08MB5684.eurprd08.prod.outlook.com (2603:10a6:20b:1dc::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.14; Fri, 20 Dec
- 2024 11:26:24 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.16; Fri, 20 Dec
+ 2024 11:26:31 +0000
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4]) by PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4%3]) with mapi id 15.20.8272.013; Fri, 20 Dec 2024
- 11:26:24 +0000
+ 11:26:31 +0000
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
 To: bitbake-devel@lists.openembedded.org
 CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Subject: [RFC PATCH 00/21] Concept for tightly coupled package manager (Node.js, Go, Rust)
-Date: Fri, 20 Dec 2024 12:25:51 +0100
-Message-ID: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
+Subject: [RFC PATCH 18/21] fetch: add gosum fetcher
+Date: Fri, 20 Dec 2024 12:26:09 +0100
+Message-ID: <20241220112613.22647-19-stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Mailer: git-send-email 2.39.5
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
+References: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 X-ClientProxiedBy: FR0P281CA0106.DEUP281.PROD.OUTLOOK.COM
  (2603:10a6:d10:a8::7) To PAXPR08MB6969.eurprd08.prod.outlook.com
  (2603:10a6:102:1d8::23)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR08MB6969:EE_|DU0PR08MB8256:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2393a1e7-1bb4-4b18-0ddd-08dd20e922d9
+X-MS-TrafficTypeDiagnostic: PAXPR08MB6969:EE_|AM8PR08MB5684:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3d79d5fa-8ca3-4889-5b9e-08dd20e92657
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|366016|52116014|1800799024|376014|38350700014;
+	BCL:0;ARA:13230040|52116014|376014|1800799024|366016|38350700014;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?6/qGQnJJgnVAv25EDp8Lc2+ms2SX+717WCdMM/wUHktBzdbwGVs+pTJDepKo?=
- =?us-ascii?Q?KUfZr4YiJJ7hQ7u4hIDB769hDCkbK4IOq1ll0CZc3L3PfBQWhtqjofdy0MYq?=
- =?us-ascii?Q?wO8J/6g0VVOZv2oeZQmQFpIXvPu+wgP3JmTB277PB22g5ei1ZOxZUGRj5gsl?=
- =?us-ascii?Q?Aqv7fQnyioWLtzNaJGKh1tHhcqZF7edkj57dTr6KLOFdUbAcOzvNslSVLGEs?=
- =?us-ascii?Q?Jeoo5c3DAem6gPYvLC3kh55TA2Wvwly8auxUQvaG0BTUID8N1KGpob1o1vgp?=
- =?us-ascii?Q?j9s3ReKQwxaijJHvWd5WBMvyP9IkiZO+iHzwGgwZUeNAzJFIQ/ZbvcXbSfBp?=
- =?us-ascii?Q?jjoQ3Na5eu3gTOtbyKwRPg0v8NPlnCxdeei/txOdy2KYYhCus4sacjt5jGPN?=
- =?us-ascii?Q?DEF3wPUQeFfI18B2Eu+YxZ8tPjuTug37laAo0n8a5SzFckocfbqkZvjznRQ9?=
- =?us-ascii?Q?33TXcEy22OP/9B6SjxJ1kay6KUa37bj2a48NTrMRNLAHvkxQ1yVJIpatL9Yq?=
- =?us-ascii?Q?1n30gE+x9tH3VdCt4nGJU8k8xScjvpFpxGYdPPPSWZPW92M+9pja4enGH/+w?=
- =?us-ascii?Q?0oOSqlHD3gJl8N11ZKhEbH5TjRZQyq1QgLUXqWGDA9lGag666lbv0HkpSKsz?=
- =?us-ascii?Q?y+5IUJMvavtRLVNc4DM5/jM4UFMhLOGykRLO+rA0Tef8zxwjP9upZhLUkx8p?=
- =?us-ascii?Q?1rgaYXXzwnHNQQxR26V/1c6cmkQDigvBD6LjMtdcdafQcgbKu5Khr49XMk2F?=
- =?us-ascii?Q?pDE19QsDJiN+Kwq68wbZVoDr28VLEhh4bmK+VElyCTgCYugEk4zoerRCXnCN?=
- =?us-ascii?Q?ukL+A7WhxUeTrocEjs3pjEiSifLRa7P6dozYpS1cZl2eW+BwgbksbNhT92KI?=
- =?us-ascii?Q?GL7ZC7DM+hBAHpLktcKpfj/qL7IPwJUneJ4/rDYGizIRCf8LlbG9JWLfQ70n?=
- =?us-ascii?Q?LzALsr3zf4EqU706pHTfFvwXm0cbYyFLpcwV4OG1oZLvjHDi+EMiawnZW55Y?=
- =?us-ascii?Q?mxUB1Ug6bIF+sO7//HobAQ0b/e3C7kSf2UXYKEeYwaNGI+kuj24YfNU8kb9o?=
- =?us-ascii?Q?LdMRgSFp5J3/jaPO9/8MlQl/hTtivT65PoRyk1Z6Tv3zgiu/Q2hSKrEf2Cid?=
- =?us-ascii?Q?jFUM4UWeFLg67BtFbvI2D3WeYrniAK87F9H4+ma+2H6cS8DyDuPP0Prk5Kyf?=
- =?us-ascii?Q?KB2Ccmq0pR9JG881NuIyYXMHuS/OAAcC9Un6vRv5WtQqtGWPdoZqaZNjQRwb?=
- =?us-ascii?Q?ItQuxqgWUQhzWp9Ok/TrxDeUnLn1+VnOl/pF8x/ICrVBZS73mc4Z4OFcJ+E7?=
- =?us-ascii?Q?ojN0VVQRZgxeNBvH63/zS4vu48LXgjXH4E9UzbClsA7WqMT12GFYrkIk8OY0?=
- =?us-ascii?Q?8h5yUlBEiHBdV8O1RY32ISBtvZhT?=
+	=?us-ascii?Q?Fmq+GJumgtdsxwnyvqff6zt20c5JoZEi8W2/H/KNFvYnPiQj9eElKXmiFCJa?=
+ =?us-ascii?Q?GVSBwkwfK9jqSgG3/GbvxV7f7gefOpYNyEXXiXqRl2aRUMU8c7xp6YM0Eqbc?=
+ =?us-ascii?Q?waJyYKdXko2Tpar0ITbCI1DqKaZzYvaZnj3ciYfWrDThgl7zYoNHrSebZllD?=
+ =?us-ascii?Q?FLcRuUsoP4xRiLCiQL2IIo9TYpjOE/EdUiFTKwCsZKhhkHfzkAsqLhe1xXYD?=
+ =?us-ascii?Q?4zkwWK2APqztfrzeaZeZHgaaWeR9AjSqPXz2H2Wsfy58SWQx2pozjDBaRM2w?=
+ =?us-ascii?Q?xjfp8qjVL3kpKJfOV2VOwAF8aQse8LDWqf2CALofNWOcnwH4sIC8DAxppvTZ?=
+ =?us-ascii?Q?d8yzKW8TNCZeZkFm5TGWoR60Rie7XpQMU3lT/6UM3x8huxAkWWMgDslAu1eR?=
+ =?us-ascii?Q?GDIEkeb1x0XknxYusJ96aL3yAkMGZaLvY3A/dH3v3Z6mC6bKPYaXXNkdCrnE?=
+ =?us-ascii?Q?6inGYVX8A8yX0D3gMoZPWeX7E5YhjgAPd8q4+W0fVsx07e+pDdvhEaPMltlF?=
+ =?us-ascii?Q?Jo/x8syFcCiiKoxJNTT3crBjMBfFRgBIUc4AJ/A6OBMGNkGVgn5T9maoSrHS?=
+ =?us-ascii?Q?RNw1hxVcQ2kICxsSou6/p6oUA+hSzS9tmw2bRqQEZJoJ/SS9t4N/cW2a/4d5?=
+ =?us-ascii?Q?vZcseC8G6FGfQph2BtPVtsE4ZYsvbVuvVeP0vdCz0jHT4MHSWvpbqZ2sSeYt?=
+ =?us-ascii?Q?9XTGFtvohs0wiIlhhuESLpw478upGKidgcaFoNiw3Zmu0AFiYSCEdbz4Sasu?=
+ =?us-ascii?Q?3fUKXpf0xRR09W1+XHo/T6OAkIndrkIj+egJdTGKqJ83VrP2z3IqcRrY1Jpc?=
+ =?us-ascii?Q?dlazW/TK2D6viZDwdt1V6yPeuyQQKNF0W677bjpUpmq+0PpGqQaBLoKmX97N?=
+ =?us-ascii?Q?xHt8B6XRqRZqP8NDKwX8zTsA82E68OS+mtrzDJvXD0FLuzutkGNiK8kl6mCI?=
+ =?us-ascii?Q?/SVGLZJMaUuErI3zWMEOJyRzrbYz0WX2ylkImsDS+WJ6NVNY8JMscGlf9FQK?=
+ =?us-ascii?Q?+tTWiIgzCtwFOKIIIVJZLEVJvVfcu0agR1O9s4X24Jq6xQCFBSvH1kDgjCl3?=
+ =?us-ascii?Q?8r6IXQSu2itp1QHFYvfRJ4/pVTsnrOt9xNsK6z1+14O25p56xztntotvhC8p?=
+ =?us-ascii?Q?5OSvAI7p6ZBMSlLaM3ys5ZczpBahedtv5413U3jZmUmOm4A2wcEC2PCloDTp?=
+ =?us-ascii?Q?HAgAFY8tGHGruwx7KrluP+QYA5ex/3dWYSYctS6Sk20ZfRMzqS/IDJiasHlv?=
+ =?us-ascii?Q?B2D3hh/dZke/0yUQff55m2D6XcgrVkTEGtEqfsw9/oqtVhLq0KzWb91Qa3+z?=
+ =?us-ascii?Q?utxhi8e1LPcbvKGFi0aB7Mhwmokm4Dr7cJcZYr0vsNVl9CmHjSs6hFTOCS0x?=
+ =?us-ascii?Q?kZ9izSaedSYVbX20TBFKViqnqM7j?=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(1800799024)(376014)(38350700014);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?9iXLHGdriBkxpljmsMGEo9HXDTQtr1gQ5ycY8qwsVlN+zdFeYv6C1yD/E6CL?=
- =?us-ascii?Q?YSxOrD3LBV+CP+PDPlBIOZJQVEroQv9eGM130h4aSjCLtR07KQMLsC+ZA3+r?=
- =?us-ascii?Q?Lyah1OemPMkmH8bGLL1XgmlThB/rJXGk/JR+Ez1vnwL1WZ5f3VNXvHZoOyeJ?=
- =?us-ascii?Q?G+XktFo5UOrl4L1fxDII709PvOJqEOCgjMagkMMZa5pPEu9kZOLk4NZ2tYLO?=
- =?us-ascii?Q?DOF9QHylCnJ2G+xJ4Bk4t4VOGguPP9xz8jDL3Soi95Kf+K2PmIaH0SDKp2Y1?=
- =?us-ascii?Q?/dmIoUaI9Y9Bism2uUqmHZE8MagKQoXrPEKgv9atrmYNv1rr6lYhuzBkDJz1?=
- =?us-ascii?Q?FsHl9asKcSBgmh3ZM6uBo+AAM7UzOt/2fnm8g0KzFhRNEZtFjcug+EnXGV2m?=
- =?us-ascii?Q?8QhsYpDCiOPooo7Q9QWx1i/LIXhZCqcJS1M3sd7hCVhg6OXmxIr5ucNW/Gau?=
- =?us-ascii?Q?2Seo1IutygTLi/cjltiES1c86kDfWNQ/IoOj3GJD3SCgZQ2C1KY0HaUawr9f?=
- =?us-ascii?Q?urE/IoeTfdBCfgENjSiRSjutj/QGSgImMbb3MLMKPZk62l70kh3CnS6vO5I0?=
- =?us-ascii?Q?/Z6E9Kxij6OcqBM0BhqlwHd/CguN7V9FAqQPMm2wFWCD2cfNVSpuPq6YiHY7?=
- =?us-ascii?Q?94plA0ZkyItpAswFT2G2cP7Cl+tuDlTUEtaAW9ji2qJRhxwXDVOCFvykIWXX?=
- =?us-ascii?Q?SHMhfo1B6EYmtu1Pi+rxUiBAUwx8YYgux8Eeqdg6ArLyXtZyOnBflWsFFKaf?=
- =?us-ascii?Q?65AyXHo9a9wgO1LV80CxC2EDIrEXQlDVxbmp5w2bDAygpnfq00AZvO03lnrR?=
- =?us-ascii?Q?a2P1QhV7/1wBK4Zo1qo7z4TYnmSkPCC6x01ma4lB2gRRl2oE2pI7NPaXMcUc?=
- =?us-ascii?Q?a1HIvPa0OuZUbMrnolG31gnTQURy/MX2YD08pqksB9VXpXdD24Cd05Xv0SBR?=
- =?us-ascii?Q?7wO2fzOYirkoX9zNBSKTugxe/W+SMUvEgm2/bpo0OkEhd5ZSJ6IYnDmbwBgy?=
- =?us-ascii?Q?Vp0uixBFmecFX2ivZZZnVD6WSyh+isZ5orYMyqMI/vH6LPTh6xHWD1UCbYed?=
- =?us-ascii?Q?0xwc6uX69i8KHFexxIe7IRdEhkzDSqpPlBXAlglwBI4H1OMz3CuaPYP6e7Ex?=
- =?us-ascii?Q?CFn+lrzUvQPgqEsi9Eml5tC83xc7xg4GdXYTbC18CNyBv6Tmav47n8E4DATV?=
- =?us-ascii?Q?bxok81pvsfNP+RzkXeFi2EjersvBdxELhrUmDJLK2EIGmPKuo41XXq8FlKgz?=
- =?us-ascii?Q?1U3jLXQPR6k8zjtv/x95wzxPhwAVKG8JB6V22uw3ovPIJ/frXYKf45U/XB+k?=
- =?us-ascii?Q?tLLauHFYmf2wrJz9zH0/hKCE6ig/TPPCHryP//gJFhwGDw8tStev6wHiWdqT?=
- =?us-ascii?Q?bA3Dv2W2nr9ra1QdPxPnrfoS8DVD7WkMZq1/y59sLtjDpCVZ/oBSxSoXVMZJ?=
- =?us-ascii?Q?SJ5WW6Q5fozYVMSsvPh/dYVGExQrJEaEvao4tQfuvSPu9UCgOVEmv6xPt60x?=
- =?us-ascii?Q?AjkvW4ggPKEV1rEDS0nHn7EWjOGeV4oT9ms4hSHQKoGCUEsERW/QEJs3tL8X?=
- =?us-ascii?Q?ZNBENeeznfmtU0Hww6S01OKosvVCOa8tnlUQZ7S7rz75GjQKHxUeRerwF74c?=
- =?us-ascii?Q?Tg=3D=3D?=
+	=?us-ascii?Q?fWx/u5appbVk27m4Nz5afaXNR2W/2frsCs2RZH5w/vJ+SQIVYKipP5vSldJc?=
+ =?us-ascii?Q?gL81X9Ws0fuZ8O3h57yiQO/AzbHf4LkWfeCYnNf2AKt8Ga1WQ6O4vHmNppsv?=
+ =?us-ascii?Q?RaOEq1NRm0bAMwyXowUBfEiYEAAkWm7ZRLpUEXemv22D9u0CE9A0uXD2QFCr?=
+ =?us-ascii?Q?IfE3sIyVbxN48o/+rbxd/XU7jISEe4GedCFG+qsmvGf7n+M88Hlts50oRc5y?=
+ =?us-ascii?Q?KqPVKDBpgRFtNCJ5eMBUgOr9rkJkQ55FWYDyeAaEHkVpBYfYT3OHeBaF3doa?=
+ =?us-ascii?Q?7gG11hojSg3mwtJjzt/H+blz50Dyjs7nTXujwEtY7W4tl0vLhAs7XC1gYhdN?=
+ =?us-ascii?Q?WZtCgvyQ08gHd9sVEM+bLqO6m/7Qypi0KXBuLCeNhWguPRaUEfNP8VxbTZm+?=
+ =?us-ascii?Q?qxOW2oP3zP4ex4uYsaPwTQzu2j8fC82Q68zNwZSkdPEer7AuexLKHAlY3wu+?=
+ =?us-ascii?Q?4evksVl88LWvBOZJllY8zAufU6ysYK9AHJlCiYsvjyJvLfRKjjoUrPTjyi4p?=
+ =?us-ascii?Q?JrF8msytjVGRIxn2A4xmfawjf4llSk1ZrELyEVZTyXPdHipTd4gXtEfgiJGz?=
+ =?us-ascii?Q?r5ARpquyJEY10ITu8/K7MnYHfthRIFbh+Ahfc2s4Un8s2gZiC+u0tv8aF1pu?=
+ =?us-ascii?Q?OymMy1h9xX79bqJ4+Rx8Nt/O/Y9VHcZrqw06obKMK5cnQ/iFDfA1ptFMyZmH?=
+ =?us-ascii?Q?8g9qUWXGB0rmy7/YbamP5nc3lGv7jAiNgtO8lFJ55BGfvobel4NGCdWO+jJO?=
+ =?us-ascii?Q?z+IIm92pVgWmUEr09WV2NOwtxiJ/SQw9ZW2nl1ycntQYIDxUs9uBj42g5ac+?=
+ =?us-ascii?Q?vhTAc45Ij7mw7GuxRgq+zwTcp9XvcAaQ1aV/EQAlFC/d/0dKjd33aYULC7qP?=
+ =?us-ascii?Q?Fh6IsEvUSlE0/38WpdnF+nI0yD8lUdzM/N5KQ1sXGc29oxGJ7x5LGlWAPzYk?=
+ =?us-ascii?Q?J64Mv5meRd3WfROHf3zb9JsAtL/dhB+kWVdWJ+WqjfY+LuKqGQ5ozSynrD8M?=
+ =?us-ascii?Q?F7Z6j46C2Z++m8e6Tw+OYui5REHRrl57jCXBC+FwvAa/RDoVn+5UH2c5Hj2H?=
+ =?us-ascii?Q?T8npH4u/GtA+xOXSFO/qPFY3afeD1E/az1NAlKVoxjRBh14UrPhgAgY+0mHM?=
+ =?us-ascii?Q?xiIfonzddklE/NNcrxBJnjyj55jGnP0BmHzt5IB7r1GST2R/XWkKO095eHQT?=
+ =?us-ascii?Q?tqP1ZRI4Slv2BvYiKPplp56Rpbd8aJKdK97CLvqnlucf0EDR64ivVbJqHmAt?=
+ =?us-ascii?Q?SfCHUBlk1U/0N3emvgjKUf4gSPCAamTR2vhJ0XKsbL+0DQdQ4DOYWSYBeVvi?=
+ =?us-ascii?Q?Eg59XR1DtrL+IPqzS7trec6pVDFt5MY/gbHN0hw4g73ElsaC7H8Ele+WhhSJ?=
+ =?us-ascii?Q?AeYze80XyB1H+e9Hv6NA+4lDx8eDkfMve/H0JbaZL9aiuDENNNz8aMT27cSe?=
+ =?us-ascii?Q?UcFg5/PRk+dxXDqaUxHf7q1g+v49OK5pL3m0hNA8ffbwe8ExEGUXDscTJ3M/?=
+ =?us-ascii?Q?weMKOf8fNaYCoFQX50Avhax3jVkwGuYO40ZWNLzwsKHYHaenMRKsF+8D4Nfg?=
+ =?us-ascii?Q?Vco3Nzg6+qqR5rbq018na4JloL92F29EmGRjMO1E0SRXl0Dcu8pHqSWPobTy?=
+ =?us-ascii?Q?YA=3D=3D?=
 X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2393a1e7-1bb4-4b18-0ddd-08dd20e922d9
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d79d5fa-8ca3-4889-5b9e-08dd20e92657
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR08MB6969.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2024 11:26:24.2179
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2024 11:26:30.0117
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qAxdxdfnXztjWFN3Mqn+FqyvT82FGfWm7Ux8/+XtUuCDjzilFfir3nITbtUgwR4y2u5t4fJTOVuRYEc3u5UJDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB8256
+X-MS-Exchange-CrossTenant-UserPrincipalName: cn2bOJ1dp5nb1CYb49cBWLGJpfcrB1XXdpBr4MSBV9vdo5riKMD9esHXrn70BCZ+3tarVBlVhutrmtSAakkD8w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR08MB5684
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 20 Dec 2024 11:26:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16920
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16936
 
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 
-The patch series improves the fetcher support for tightly coupled
-package manager (npm, go and cargo). It adds support for embedded
-dependency fetcher via a common dependency mixin. The patch series
-reworks the npm-shrinkwrap.json (package-lock.json) support and adds a
-fetcher for go.sum and cargo.lock files. The dependency mixin contains
-two stages. The first stage locates a local specification file or
-fetches an archive or git repository with a specification file. The
-second stage resolves the dependency URLs from the specification file
-and fetches the dependencies.
+Add gosum fetcher to fetch dependencies via a go.sum file. The fetcher
+uses the dependency mixin and supports different types:
 
-SRC_URI =3D "<type>://npm-shrinkwrap.json"
-SRC_URI =3D "<type>+http://example.com/ npm-shrinkwrap.json"
-SRC_URI =3D "<type>+http://example.com/${BP}.tar.gz;striplevel=3D1;subdir=
-=3D${BP}"
-SRC_URI =3D "<type>+git://example.com/${BPN}.git;protocol=3Dhttps"
+gosum
+    The fetcher uses a local go.sum file to fetch dependencies.
 
-Additionally, the patch series reworks the npm fetcher to work without a
-npm binary and external package repository. It adds support for a common
-dependency name and version schema to integrate the dependencies into
-the SBOM.
+    SRC_URI =3D "gosum://go.sum"
 
-=3D Background
-Bitbake has diverse concepts and drawbacks for different tightly coupled
-package manager. The Python support uses a recipe per dependency and
-generates common fetcher URLs via a python function. The other languages
-embed the dependencies inside the recipe. The Node.js support offers a
-npmsw fetcher which uses a lock file beside the recipe to generates
-multiple common fetcher URLs on the fly and thereby hides the real
-download sources. This leads to a single source in the SBOM for example.
-The Go support contains two parallel implementations. A vendor-based
-solution with a common fetcher and a go-mod-based solution with a gomod
-fetcher. The vendor-based solution includes the individual dependencies
-into the SRC_URI of the recipe and uses a python function to generate
-common fetcher URLs which additional information for the vendor task.The
-gomod fetcher uses a proprietary gomod URL. It translates the URL into a
-common URL and prepares meta data during unpack. The Rust support
-includes the individual dependencies in the SRC_URI of the recipe and
-uses proprietary crate URLs. The crate fetcher translates a proprietary
-URL into a common fetcher URL and prepares meta data during unpack. The
-recipetool does not support the crate and the gomod fetcher. This leads
-to missing licenses of the dependencies in the recipe for example
-librsvg.
+gosum+https
+    The fetcher downloads a go.sum file or archive with a go.sum file in
+    the root folder and uses the go.sum  to fetch dependencies.
 
-The steps needed to fetch dependencies for Node.js, Go and Rust are
-similar:
-1. Extract the dependencies from a specification file (name, version,
-   checksum and URL)
-2. Generate proprietary fetcher URIs
-  a. npm://registry.npmjs.org/;package=3Dglob;version=3D 10.3.15
-  b. gomod://golang.org/x/net;version=3Dv0.9.0
-     gomodgit://golang.org/x/net;version=3Dv0.9.0;repo=3Dgo.googlesource.co=
-m/net
-  c. crate://crates.io/glob/0.3.1
-3. Generate wget or git fetcher URIs
-  a. https://registry.npmjs.org/glob/-/glob-10.3.15.tgz;downloadfilename=3D=
-=E2=80=A6
-  b. https://proxy.golang.org/golang.org/x/net/@v/v0.9.0.zip;downloadfilena=
-me=3D=E2=80=A6
-     git://go.googlesource.com/net;protocol=3Dhttps; subdir=3D=E2=80=A6
-  c. https://crates.io/api/v1/crates/glob/0.3.1/download;downloadfilename=
-=3D=E2=80=A6
-4. Unpack
-5. Create meta files
-  a. Update lockfile and create tar.gz archives
-  b. Create go.mod file
-     Create info, go.mod file and zip archives
-  c. Create .cargo-checksum.json files
+    SRC_URI =3D "gosum+http://example.com/go.sum"
+    SRC_URI =3D "gosum+http://example.com/${BP}.tar.gz;striplevel=3D1;subdi=
+r=3D${BP}"
 
-It looks like the recipetool is not widely used and therefore this patch
-series integrates the dependency resolving into the fetcher. After an
-agreement on a concept the fetcher could be extended. The fetcher could
-download the license information per package and a new build task could
-run the license cruncher from the recipetool.
+gosum+git
+    The fetcher checkouts a git repository with a go.sum file to fetch
+    dependencies.
 
-=3D Open questions
+    SRC_URI =3D "gosum+git://example.com/${BPN}.git;protocol=3Dhttps"
 
-* Where should we download dependencies?
-** Should we use a folder per fetcher (ex. git and npm)?
-** Should we use the main folder (ex. crate)?
-** Should we translate the name into folder (ex. gomod)?
-** Should we integrate the name into the filename (ex. git)?
-* Where should we unpack the dependencies?
-** Should we use a folder inside the parent folder (ex. node_modules)?
-** Should we use a fixed folder inside unpackdir
-   (ex. go/pkg/mod/cache/download and cargo_home/bitbake)?
-* How should we treat archives for package manager caches?
-** Should we unpack the archives to support patching (ex. npm)?
-** Should we copy the packed archive to avoid unpacking and packaging
-   (ex. gomod)?
+Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.c=
+om>
+---
 
-This patch series depends on patch series
-20241209103158.20833-1-stefan.herbrechtsmeier-oss@weidmueller.com
-("[1/4] tests: fetch: adapt npmsw tests to fixed unpack behavior").
-
-
-Stefan Herbrechtsmeier (21):
-  tests: fetch: update npmsw tests to new lockfile format
-  fetch2: npmsw: remove old lockfile format support
-  tests: fetch: replace [url] with urls for npm
-  fetch2: do not prefix embedded checksums
-  fetch2: read checksum from SRC_URI flag for npm
-  fetch2: introduce common package manager metadata
-  fetch2: add unpack support for npm archives
-  utils: add Go mod h1 checksum support
-  fetch2: add destdir to FetchData
-  fetch: npm: rework
-  tests: fetch: adapt style in npm(sw) class
-  tests: fetch: move npmsw test cases into npmsw test class
-  tests: fetch: adapt npm test cases
-  fetch: add dependency mixin
-  tests: fetch: add test cases for dependency fetcher
-  fetch: npmsw: migrate to dependency mixin
-  tests: fetch: adapt npmsw test cases
-  fetch: add gosum fetcher
-  tests: fetch: add test cases for gosum
-  fetch: add cargolock fetcher
-  tests: fetch: add test cases for cargolock
-
- lib/bb/fetch2/__init__.py   |  35 +-
- lib/bb/fetch2/cargolock.py  |  73 +++
- lib/bb/fetch2/dependency.py | 167 +++++++
- lib/bb/fetch2/gomod.py      |   5 +-
- lib/bb/fetch2/gosum.py      |  51 +++
- lib/bb/fetch2/npm.py        | 244 +++-------
- lib/bb/fetch2/npmsw.py      | 347 ++++----------
- lib/bb/tests/fetch.py       | 880 +++++++++++++++++-------------------
- lib/bb/utils.py             |  25 +
- 9 files changed, 916 insertions(+), 911 deletions(-)
- create mode 100644 lib/bb/fetch2/cargolock.py
- create mode 100644 lib/bb/fetch2/dependency.py
+ lib/bb/fetch2/__init__.py |  2 ++
+ lib/bb/fetch2/gosum.py    | 51 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 53 insertions(+)
  create mode 100644 lib/bb/fetch2/gosum.py
 
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 5dbc0598d..10b4cf24b 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -2116,6 +2116,7 @@ from . import az
+ from . import crate
+ from . import gcp
+ from . import gomod
++from . import gosum
+=20
+ methods.append(local.Local())
+ methods.append(wget.Wget())
+@@ -2140,3 +2141,4 @@ methods.append(gcp.GCP())
+ methods.append(gomod.GoMod())
+ methods.append(gomod.GoModGit())
+ methods.extend(npmsw.methods)
++methods.extend(gosum.methods)
+diff --git a/lib/bb/fetch2/gosum.py b/lib/bb/fetch2/gosum.py
+new file mode 100644
+index 000000000..001ef3304
+--- /dev/null
++++ b/lib/bb/fetch2/gosum.py
+@@ -0,0 +1,51 @@
++# Copyright (C) 2024-2025 Weidmueller Interface GmbH & Co. KG
++# Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
++#
++# SPDX-License-Identifier: MIT
++#
++"""
++BitBake 'Fetch' implementation for go.sum
++
++The gosum, gosum+https and gosum+git fetchers are used to download
++Go mod dependencies via a go.sum file.
++"""
++
++import os
++import bb
++import base64
++from bb.fetch2 import ParameterError
++from bb.fetch2 import URI
++from bb.fetch2.dependency import create_methods
++
++class GoSumMixin:
++    def resolve_dependencies(self, ud, localpath, d):
++        urls =3D []
++
++        def resolve_dependency(module_path, version, hash):
++            uri =3D URI(f"gomod://{module_path}")
++            if version.endswith("/go.mod"):
++                uri.params["version"] =3D version[:-7]
++                uri.params["mod"] =3D "1"
++            else:
++                uri.params["version"] =3D version
++            if hash.startswith("h1:"):
++                uri.params["h1sum"] =3D base64.b64decode(hash[3:]).hex()
++            else:
++                raise ParameterError(f"Invalid hash: {hash}", ud.url)
++            urls.append(str(uri))
++
++        if os.path.isdir(localpath):
++            localpath =3D os.path.join(localpath, "go.sum")
++        try:
++            with open(localpath, "r") as f:
++                for line in f:
++                    fields =3D line.strip().split()
++                    if len(fields) !=3D 3:
++                        raise ParameterError(f"Invalid go.sum line: {line}=
+", ud.url)
++                    resolve_dependency(*fields)
++        except Exception as e:
++            raise ParameterError(f"Invalid go.sum file: {str(e)}", ud.url)
++
++        return urls
++
++methods =3D create_methods("gosum", GoSumMixin)
 --=20
 2.39.5
 
