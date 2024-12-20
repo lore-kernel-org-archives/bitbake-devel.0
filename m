@@ -2,47 +2,47 @@ Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 483BEE7718B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 552BAE7718F
 	for <webhook@archiver.kernel.org>; Fri, 20 Dec 2024 11:26:41 +0000 (UTC)
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.118])
- by mx.groups.io with SMTP id smtpd.web11.149744.1734693993154756588
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.106])
+ by mx.groups.io with SMTP id smtpd.web11.149743.1734693991344736713
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 20 Dec 2024 03:26:35 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=rvUaJ610;
- spf=pass (domain: weidmueller.com, ip: 40.107.20.118, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=Yg8YWHwT;
+ spf=pass (domain: weidmueller.com, ip: 40.107.22.106, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HSMd+QmbxzHR1cUPQk7XlTQz9rWS68ASE3ZhJaftQNrsWGEA7LEQoMchQ6fmU/OSL2Z96LUf2xt7gkWx4IQ3tFVhv7dbFpnwBT5JbhqyP/SZq3IhHhLNKdAf8LaqGYwSVXVKInPwM46NvIDirjTadbEVAFdntGk3YYZ/0bcLf9Stu9R8CWGoJ4Bd36+X9i22EM0OOi2IswPA6xuy+SdWR+/lcUF4utrRPzOYH935N5YGFsifiPZQGOcEeSfUPw3y+XCpwJPh6/GPjofGMroouFoFrW8+F2p7qvYSZDW5Ya/kNz25VUo9n7IPP1v0yEC7Ww/Kg8FQIMvJZjfhCmwHww==
+ b=jX/BGaZI3emQ1O30/5z9eAoR5JuKmzVS2F9WdYC8AKX+cfavTFs36U6YPaGbME4gw2kkSdOiFehq9ZWnDeWGQqc9r0SY1slqnsCoQkI2mZqzjoJGX+LxCc3v/CeFH2lVNKqTedo+S70AAeJzMDlGjmHURu3FMemS9GzUxKQP0lM1HQbFmmQFDwg1tLZvhSFYcH3nbe4GFUKzjI3gySqOSFLNI8ECwvYy9CZpC42Z3/GVPqvz5K9muIIFOkXxvSwWiWXLYezY6nhMp1Icz88SYMWaqjZ9PBpr3HwFPsCFplD1tMSqK7uM1guX6VJ/r4I3rj3B6riAXX7DUF8wo+WzHg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eTPvKRjIRugd0DfnF+zHlcgXQw+aAS5AGA5VFuhyZQI=;
- b=u1j27tXk80XQR2BBUG7IwWACHzvJsYupHr+MO5wUL9sMGcu+JOymLqM/IoH8IWL4o3Z9Ma/jSE6fyL2pZifOcPX64XC2D7UhFb6da+YdwfQM9krPfdoCOxccA+TyO3VhHFB3PTl69eRJqFVFFvZs+JQA1Yw++6lCPGDttPUuuRBL6dJlebuI461e0MbGwzDbfrrs4XMagIDu79jkbw6HcswrmYUFtsPybPCJQ1c9PVJmrbU34t/Z2OKUQTPJmTEHk6h6O35OL0GXrg5mcb+fXXdVvfd0V3bNuf+jBNTj30//RIDDHH/RSv/PwPrW5xYfRu3N0dlS8E775EFOC3pYeA==
+ bh=lLkihzEIyZkYbf8tBr7koBGCxXvyngDqbEgVCGtUo80=;
+ b=Hb7KsFFaaOK1Jyj821Ef8g65RPoVMpm1bd7WxYlcyY6ET7gzPEdoRBPkDssj2LiyXDpsvZjV2PWkjYQz57poyf8RKYSFsae2Q1aKxtC1x5qwtUmjY+Ke6Oy6JjWKactOF7lkmBZMOJTuU395swxrbo8dUe5UYwtGA9algc64h4IVrfz3F3MjKFpVc8dTa3SOjm7oXXDtx+DcHHGDwNBLuhKcR74lFHqfqqGN4SupP/zN5wdY5kHzpYOF8mIohgCmoYYdQfN8QmZvowRKrGR+ikuJnwHX2PTnwh/wQYrFNP0yGbkhb3euLFOBHGKb3cSqcObm4C9jFLY6Ms5IJnADrQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=weidmueller.com; dmarc=pass action=none
  header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eTPvKRjIRugd0DfnF+zHlcgXQw+aAS5AGA5VFuhyZQI=;
- b=rvUaJ6102i8PJSx0+iAlPhSm5yF+OViYAW1vnte5KjlMDJ9FgqEVjgIhUeZ5ER6nZPCdr2uKovY+ltPtBFaDDiMNLleDuEEt2C3R+H8XRbNRn3053QSWzojKEnZ7xnBNQ7E5Me/OuKEtqFYBa4dTHxTHeOgL6QnauuSUhsFmOT3eUxRwUcQO/YsBmeJyLvFdppxGii7RjR1+vVd6Ibb1CU7pH4BjKw0NCDk0lfMwnSIRFjae7Q/3jV8ODY8BLh5mdC+xQu/SpJAqHnKoJ7tuUM8HVHpjBmkguxyFDk/v+lWMQM3rVTcBGWPN49ekgBZ33vFLlhvgu6fS3VAx0TMBuw==
+ bh=lLkihzEIyZkYbf8tBr7koBGCxXvyngDqbEgVCGtUo80=;
+ b=Yg8YWHwT705Fkybtk7Eaoge0Crdfo1NhA8KZtmTOcn8sHHctvDEOxdC4XkMNCwyH8PjfHVH0WNKHqzwotZGRxbK/LWvuLlkR8Cph7g71zvcgWaIg5Rfi4HwQv92bfrK2+hHc07w9Z9sSAsOWFSAYI1SBLJRD4W/hXX3FZDDaH7n7D6Q90zWHzLCu8Hw5EeMUgNoCCvtVtpqfkg7ggfP8FtUVyYsA6kiUnjxuo4D6oOVe1yxOYlD2ISj9osYC+F7Rk/qYQnlHpdnfRGegrJ8C2x/aNoDxw/LSvgCOIKNB2UkG3Cx7QNSaZflcmXfAnsmWIRCz9zCIlEUA79mjjLyyYQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=weidmueller.com;
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com (2603:10a6:102:1d8::23)
  by DU0PR08MB8256.eurprd08.prod.outlook.com (2603:10a6:10:410::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.14; Fri, 20 Dec
- 2024 11:26:25 +0000
+ 2024 11:26:27 +0000
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4]) by PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4%3]) with mapi id 15.20.8272.013; Fri, 20 Dec 2024
- 11:26:25 +0000
+ 11:26:27 +0000
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
 To: bitbake-devel@lists.openembedded.org
 CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Subject: [RFC PATCH 01/21] tests: fetch: update npmsw tests to new lockfile format
-Date: Fri, 20 Dec 2024 12:25:52 +0100
-Message-ID: <20241220112613.22647-2-stefan.herbrechtsmeier-oss@weidmueller.com>
+Subject: [RFC PATCH 09/21] fetch2: add destdir to FetchData
+Date: Fri, 20 Dec 2024 12:26:00 +0100
+Message-ID: <20241220112613.22647-10-stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
 References: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
@@ -54,373 +54,123 @@ X-ClientProxiedBy: FR0P281CA0106.DEUP281.PROD.OUTLOOK.COM
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR08MB6969:EE_|DU0PR08MB8256:EE_
-X-MS-Office365-Filtering-Correlation-Id: 412751f3-9efc-4887-3d59-08dd20e92312
+X-MS-Office365-Filtering-Correlation-Id: ae3f3697-4e20-47d8-be7e-08dd20e92492
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
 	BCL:0;ARA:13230040|366016|52116014|1800799024|376014|38350700014;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?CDv0kHn4W5CgaDnmynLTTBxz9yz1YHMHJHkk8JzFwvue7wv8FM6cSN/YCHpA?=
- =?us-ascii?Q?3sz47YBgxeSypfn512Sm884ogd0uR0m7HPjA87eE5t0tc4kSBNVmqGkkyF0+?=
- =?us-ascii?Q?ydQm3MPIPzX/K1Jvz8aURemceMJDJ7UccIYpzqBlKmjuuRsUh/slcZG9AaBJ?=
- =?us-ascii?Q?1Z0AQYVoFFCBqoZBLH3NhfoQOV5KJjog/CvEDa/CQheGaW9+EHsN0A62JfNZ?=
- =?us-ascii?Q?o84xBUuX9tCxtPzS0LxP4ZbEA6j/7F+OC5UsM+KRA1PnANIoqqfm1WhxjTbN?=
- =?us-ascii?Q?w0uEbw1iw5eG8bVcyZVbFjG/6wWePG9nadvxBON8dnPPd9QbksQOjLvhCsw6?=
- =?us-ascii?Q?mb6jm0I/EVUQi3IciTUamQb5lupckGoCFREVZ7xa9y88QY9NeCGHd134OMtv?=
- =?us-ascii?Q?ItkG0iT9jI91uJz9G8tJEV03fsNDgwLyqH7JGtlRQCy1euMy27+KGdnrSbiR?=
- =?us-ascii?Q?3dX1QyFXnuxGcs10aaKdjTW6wzkmIuPJgriX5WHBae/HtvljYSrm1HZPkIAk?=
- =?us-ascii?Q?o1mZm5swuazHHx6qg1Ww1ahke+sVDpc9wJ5vBzvNRT5JacQxZp+MIeuU6AQB?=
- =?us-ascii?Q?hQ40cHMMwH9u1xuF89mNUIhWAYs7vVMcC/p6OjcB0r3SBE+Da5UCLXszJ33j?=
- =?us-ascii?Q?kAPEMpGDlBof2BqtAhckbi5I5EQ9poZvAgahzt3XyaHr4CDYXGrTPyArUMNj?=
- =?us-ascii?Q?c2gSz+D/CYuSYxOIMFr4Jfullw0NrIM80LQ+SzfUKDL9LNtJbQZOzO5IX1tB?=
- =?us-ascii?Q?dPwq4bM6SkxK6FEh5LvQTgiioZRHt5H2bj8KPiHGB0mQJhdSIIyBnvlnS3MC?=
- =?us-ascii?Q?iRKoJsQroBYf6G1pb0ziIE68UvmXrJx91ClAUexZKYmoissNGL0tkz0DgUjv?=
- =?us-ascii?Q?uRULhcdaUHfSEmolUzVpJBq+bORgfeLYr8wuENbDftn3YNbZNE5v9FjQLz7S?=
- =?us-ascii?Q?xptzlPFm6Di+gUUsXPCAbwrn8e9ZuiCwgk50Dj1Re/Pda2cvY+wCZkmAZM+m?=
- =?us-ascii?Q?k1PDQK9eOGLtEfW8OGxetS+wkPXRwN3PD4Vud22M6ptZtfM6Varz4nqmOLrf?=
- =?us-ascii?Q?mMJRLrgD6+/a1/OSUQouZzodxoO/4g5mY0DDzIRba++pOWk9eSVqt+e84KkM?=
- =?us-ascii?Q?9nelLM9Usc7si8Zb+L+HGZhgKm1LIKxjBf4XCrc8dS5g6Fc7pIGWUFFqQ19X?=
- =?us-ascii?Q?zFFnypNCdFjgSEWG8XiinyEEBdd6JS29Fp+tx4zeX0705QqDvb2PQB/UuIyB?=
- =?us-ascii?Q?xB16FyxW+f/Ap23Qe8zLxh9l3izUGy/RcSyLHWKx+Yav0xBWWsuhAkTEV95n?=
- =?us-ascii?Q?qGK73KsizJrStmkDI9k9JZ9IqNo+jbzs1i+y/dlUoNpCz/nDoygl0nxlTgrK?=
- =?us-ascii?Q?Ui/7aYt1oHOKDSSmHg5Fq+A7JEqYGVzsvTUW9vgr/NoohVBrcg=3D=3D?=
+	=?us-ascii?Q?E1DwSfG1kl9aXqnnTtj5dppDIEo5JQU2snpq2vLV1z/qS2i0Of2aOkCIJGWR?=
+ =?us-ascii?Q?/sAX+N/Sf27wuKm8yjgUdL59HwdoIsQ6Iq5I3JDns1AFiAIOrXXqhxElA3Sn?=
+ =?us-ascii?Q?5EtitcRWrFfyWJkhTPtpCDQRa2GgRVkD7Vjbw8jLgML/e45hkuMZwbcSEmze?=
+ =?us-ascii?Q?mXW0hOUkaAWZD+NF07b6bKd++Dk7Ln95ucJDJar06G+hXDbLqNRu5PjF2MMd?=
+ =?us-ascii?Q?c9tFPW8Cedqg4/FLpd62LFlAl3Td9lEUULKOpi/fKZZaHhMbsVjtEhUxNORL?=
+ =?us-ascii?Q?UBMVQIdwO4mfl0RLxD4BM82Svoz3AM7zSduA+5T45eJ51BbbtC2Tnwb0XyQr?=
+ =?us-ascii?Q?edpQcvNM4MUDSSvyBVxk16/llJyWzPA31g1nZ1VWGpFSPS0bq3krZSLcgF4j?=
+ =?us-ascii?Q?FivBSutaTyS9heB/O60CPFkCsebIy/sdBY1pgh3wAdD/S6iLVVTYxe38Hq4H?=
+ =?us-ascii?Q?g4UIm0a4oVARZTEcjcIKDlHy/K86Aca3PL2FeixNPUzw0B2lc6BloDGgsfkm?=
+ =?us-ascii?Q?paFgzYUCZT4wOvYpb1aZeV/IKDdZBQCHr52eaRwywkISfRH3qjIIX+dhBkiI?=
+ =?us-ascii?Q?yP9083/ljtWv8Yji5XQmVGiqTKbWBhDOgYc3rAD+SulhRh7e7obyCLz11jR5?=
+ =?us-ascii?Q?K944OrTPKmf6Skk7b07EYPb+GmU9M/eN3qRBlyiUAQruydnf++qd/RDzuYQC?=
+ =?us-ascii?Q?OSl9g30tOlaswRINMbBAdnp+cPng//c24m42NmWSMk9rZ8TWPkb3sjvJxOEN?=
+ =?us-ascii?Q?wcs32YqaqxmtykjgAEM8BQ91/obJ+XRhq/magdm+z3EgfYeiwldqJ42sqbnk?=
+ =?us-ascii?Q?6kfqdCudVs7ww70Y8gPndsRlqQR5FChUri+dshOHVbCgjoKG37cMbQpNijqx?=
+ =?us-ascii?Q?//8y7a5o5rg8GJooJosOJyCI0vYcjviQzW+Ks+nr6V0Ix9LDJ4xHl6r7UvWc?=
+ =?us-ascii?Q?douyLZadipYASOTrHcvbeho7yGGBKpLZquW6s+yw/rgfRZJEj1XoB3gyE3iB?=
+ =?us-ascii?Q?m9LRcu7BHvB1OFeFV5y42/a98ME/+k3HL7ktgGBC75X9F/vTlOsOMVVi6cHO?=
+ =?us-ascii?Q?uZeGdm+wiekj34PJl869Yi+7yG92AO6gjJSPs6Jj7+cMn1swGx43DrFaeF5W?=
+ =?us-ascii?Q?6EDxPOzIcatcjG91sw76fZc1s/ePpp3yjdLFcYB+tj2UyCmS032SdSO0IYi+?=
+ =?us-ascii?Q?6JMNu9keA5pc4Woe3SQJFPUCwt6l0DfZ/jQ21OQC6XM1EoEINutDtW7ggEX8?=
+ =?us-ascii?Q?t+A4Bbzhs3uRN0RMcRx6lff65jDPqt+3bBruIEpjrj2x4sp9TCKfX0wIGeSh?=
+ =?us-ascii?Q?Mr8pbj+dLcOUETIEuBQWYzGV4LH5SPuRiBYMRJhzmxOZ90YSlm7NbA6nYcXo?=
+ =?us-ascii?Q?4Cq4Onoab3WtX+KoKlcII4XoHS8lD9UhG/UFa9JqvJK1e0bvQJcghvZOdPJE?=
+ =?us-ascii?Q?d25r6N+wXyuPF6EVqPUBYZr2+KmmOByy?=
 X-Forefront-Antispam-Report: 
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(1800799024)(376014)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?zKXgLSFdqAd4DXgqm2co+jDFq5GFX5L4pH5HpC5GFt48mYAE836vudmGDNh/?=
- =?us-ascii?Q?RqiXYYf5q/XtwLk2JXHNNPL7kHxlEF/bYnXcjef8lwOxIzJUKCfsE2hCuK03?=
- =?us-ascii?Q?isArAu3jgf8dSMXRHpfnqpL3eMw3EAo8SL3zjDSxXdH6lKZuYGbbjjZCNhc1?=
- =?us-ascii?Q?uRtlmslonjNbRK/JhvhUULtGDLkfkvFQNTIHu/vDERAkQkVqQiPqlVUewIwQ?=
- =?us-ascii?Q?sCkygSbFnWplypVyqXxZpKwV1CY6GeEZyoaJusHakNpmAemQ3dPaaOhPTdew?=
- =?us-ascii?Q?Sac2ReOgSKoUt//DPJmTPADVlX9vuTCyXMhd5UXU8A1g/yswSzhYjNAJ3LMZ?=
- =?us-ascii?Q?sWsoMUjezHr/6o6+vpNyAPoW5O4VU7paErwenx9wcecjHwaNpWBW/u7xDIYu?=
- =?us-ascii?Q?xXnWAMiHBfaSXu6KICL6asr5sJ7eXxV/nn5OoSAEiXRJ4hoP7w/f/J0tQ59g?=
- =?us-ascii?Q?n16x9KEEmusgCHCQqjemjSTVHyO5xk1NDovM7VTb73X+TH5B42rontQ69VDu?=
- =?us-ascii?Q?qB0yKo8IrCDtheGyQsunHc1Nv1+/6uuCTNT+0EhphAEPWadK+jIdYRkhL2eH?=
- =?us-ascii?Q?OTweV9+1c06xdVsWLQmCKTPUtw5L1Uxik9huNmmEbgj/AKQi5NUQxtAUe5LN?=
- =?us-ascii?Q?QsmfamzrGcrFF8ODF70DYvlevZZhVealncGw6t1mBQv5XrTtpi8jDav2mfi6?=
- =?us-ascii?Q?cB50zgpeKNs1ZbKDiLlWEfevqrG5YvCsqywreWipNffkkzP4LC+9SlNKXnpx?=
- =?us-ascii?Q?qOnTgyPt6B5/HKO0WzYr0uxkTL/JSutqnEblgOCCQFD1V8+gCKn/cTcWUNce?=
- =?us-ascii?Q?pZ1qH0xdCD1FWvVmSecZ0q1qTCAJS4Bo7v1gozmEKzQltgh+Wba4X4TBGvdA?=
- =?us-ascii?Q?UZlykk7Cwb90UbNfy2y0kbMEG4ZCJv9MFovaD5E2x4mgxCL8eoG69Y2CfaJn?=
- =?us-ascii?Q?PheSzjGC4+W5w4/pu1FVpUHWKaUh2jX0SzM8rxnV1FwFavJy11BavRIfDjJu?=
- =?us-ascii?Q?5M32IXvjIoHv8tqAloKnNko6pPi7SL4G2t+P4PEJvARPuKi8hl/tfoQsCITg?=
- =?us-ascii?Q?UDg82rQHqAhlRdOfTS+9BoucmlBynPVn8hPKh5LST4l6Fl0q4wyFO/ZPGdUh?=
- =?us-ascii?Q?hXoSehySV2lR7TckBs1gvB2PZu3kh3sjBbAhXDGydnXCjGJEerJ6++6v0TLm?=
- =?us-ascii?Q?gkmEHyopCEG5QY4SkKtmU7s/cZ3aGhDRXZ9WpQ1jaPiKbuFiwUnATvGTi2ra?=
- =?us-ascii?Q?2RJUb8Ljh9OI1p4ThjnqpzQlCf4veXI4j9lc+L7sEcxMWkKnOkpOC9A/y2be?=
- =?us-ascii?Q?5ynn7FgUMU8EYrThuk9vlSph96VQz9XdtHQFpR2+sWYOF+1Rl0xl+fubjZFJ?=
- =?us-ascii?Q?65pBxYTYY8pMhNmVRLBhq39+N6lFKLwDcJvtvZpqd3Azzgkj0J/SDQMhxoco?=
- =?us-ascii?Q?ER+tUfMRtp3xZrhgZAVZSh3VP81q0AxfsMm/70NXH0/OBIOHk4q7wUXkCCx6?=
- =?us-ascii?Q?8aCGCcf6BtQB71JEKdmkBE20r5TVuZ2bplTqVB5PrajUcv2cDAXtzGq+0m1u?=
- =?us-ascii?Q?yeRLg3JJAg8g+ibMh/76kRnlPNBg7J5BQAUWr8PVlhjMOHZ6+5ClzW2fZt87?=
- =?us-ascii?Q?VA=3D=3D?=
+	=?us-ascii?Q?nQZpKVDYs/FAWebug8BIZtMPB8AO9pR3GKDsn4TCwJqbFlQ3KgmGzDLasj/P?=
+ =?us-ascii?Q?Myip/zeDNun6PHc0/9XKz7JSWQKAxeYlMXf+uRpftPDqbNEIIqvvNNmk0gbH?=
+ =?us-ascii?Q?UCX3y3ODeFEHWdeE8DO5wkfwfdDiFT//Nb24khKyq+JccZocUw2uSOjzz/wT?=
+ =?us-ascii?Q?d7QrbcbsNDLmJMLePN33xEfDkjFQtt8oxDkuo9bV23wgOo3LgdXOJCYY2QUH?=
+ =?us-ascii?Q?LxW3+l+i1nbZ5jx3zAGmuC6PcMqY71FZUzB57XtbuwHm/05Re9/RivogWiJU?=
+ =?us-ascii?Q?hfNmrV3Cqd5bHtvqEz74Pj7FUPC0PY6rLNcVynF+ogILOhiKFol1aL0BHz4G?=
+ =?us-ascii?Q?7ytRh7pGs/p4BYPp7repMLPPjck+Midci0gTo/njn5QVMZMpcbNuxqVF5Oxp?=
+ =?us-ascii?Q?ckjW6/PiDizYJJ9gCWge8+e39xOSq8f7L871SSAvI6bHu93sbarzhufSmcqG?=
+ =?us-ascii?Q?NKnedW05yarRKGUHC7dIvy0nUkrAZuLGItrcGc+OGH31+mw6MHQqmO65e/AK?=
+ =?us-ascii?Q?b0d0jEFXSnTrer7T+cYSsoEmv+QFDvVx1jyyzY9u9Cia0eDy7KNHZ4vToOKC?=
+ =?us-ascii?Q?cXluw1IFtErUtda6MYzgrF0/5ob6X09zEtiYlyzyr2VVLUY33ixInR8tbR3D?=
+ =?us-ascii?Q?4rbgzNay8w8tMc0hb6p8utL/En9cXawGnBng3j3HIMfyHVHA42TUsYB6MIt4?=
+ =?us-ascii?Q?gvGNq1aGnBkNbF6KOAYvzZ0dTZgXlJYe4YwKEYU6QlM2FgU0b0Nw1BSjvklK?=
+ =?us-ascii?Q?oTnrYrLOypRUhoIoh111Qeh19loZ6ymPYypAhK6CP9LfccfLy4g6Nm47H+2O?=
+ =?us-ascii?Q?gYSajHT69vzaotaryK8p5pM+dCSvgp9TEt00weTIAHQoBmW1VI1OdwyXdo1O?=
+ =?us-ascii?Q?KZfp2UYSx2J5X0xZYeZeDh47YlJIHvAG7CSAk+SIjRAjIO+EwcyVhMnzFREU?=
+ =?us-ascii?Q?pr27gJxmtjh/aLhmwt+cT5XfT7jvApxYkO+uNP4cs+wOywPqGRvymIH5lsYj?=
+ =?us-ascii?Q?VmfJqdWiRT0AVjtLZNMn5xX4eOknHB0sPFzQBAKmsFyj+pm5VMIjSlQJL3kF?=
+ =?us-ascii?Q?5TydUgourwn+oimuju/Fe6hAipN6RQ4xErwd1mz65Z7kIYXluYdU69d95UIV?=
+ =?us-ascii?Q?fEvpqoTsxkvPbmi5To6ET/04yXYuypboko9Yn+zBHVb6gx771tlp60HRFQPb?=
+ =?us-ascii?Q?C6VSNaLl5druLziEahX2knqphXaMPkRo8bge3ydNeYiO5vJJ/H1CHtTMTsNz?=
+ =?us-ascii?Q?O6dy90KrnvaBKGd6vaPLMEF4l/pxw1UDqXctTVPzamBask3R+O1gQWhoJLtJ?=
+ =?us-ascii?Q?HnvYEf2B+OvKUHbdGWwzpKc68Iu/hMf1mb6UWcGQ5luQgF6BCEBut3VSRWwe?=
+ =?us-ascii?Q?A1TnweuPGTZC950JCKEPY8681fnTivGjE+m2/IhQ7X1vm+oCwNKThPnyQjc9?=
+ =?us-ascii?Q?KGPgf3nbDBsPAcUIypYdZHPQ8shSUls3MHdocdp6XBUSGQ/pVczKu7qh8+YS?=
+ =?us-ascii?Q?1Ug9uJ5nk9XUUQYQvxbGzWIJ3AYFRL81MlrpfArKUgo3cL8J2fW9QcCuaKEU?=
+ =?us-ascii?Q?Pran/dzJnfVlOsWjmNyPj8lasGs+TMncmUG1r/XfjQoF1D0jgegZb5sd5+MU?=
+ =?us-ascii?Q?KQ=3D=3D?=
 X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 412751f3-9efc-4887-3d59-08dd20e92312
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae3f3697-4e20-47d8-be7e-08dd20e92492
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR08MB6969.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2024 11:26:24.5661
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2024 11:26:27.0621
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KUtyVsNzbMkNt8wmTwHYqu6Ymixq+CJIxIyd+5NFbAve/+zxjLzPU0G5Sx5sdk/Y2N9qiPNhK5FLregm4N4Z/A==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7hQxQR5XeNX1KhJg6/aa3iP5B9aki313tXEhn6JZoPLcaZ8iRDWSFAuYp3ryUMY8bQDg/6Xrh4fRV8sybeGFTA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB8256
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 20 Dec 2024 11:26:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16930
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16931
 
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 
-Update npmsw test cases to new lockfile format. The old lockfile format
-is required by npm 6 / Node.js 14 which is out of maintenance [2].
-
-[1] https://docs.npmjs.com/cli/v6/configuring-npm/package-lock-json
-[2] https://nodejs.org/en/about/previous-releases
+Add a `destdir` variable to the `FetchData` class to record destination
+directory of unpack method. Users of the `FetchData` class can use the
+directory to unpack additional content into the directory. The git
+fetcher class already records the destination directory in `destdir`
+class variable of `FetchData`.
 
 Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.c=
 om>
 ---
 
- lib/bb/tests/fetch.py | 135 +++++++++++++++++-------------------------
- 1 file changed, 54 insertions(+), 81 deletions(-)
+ lib/bb/fetch2/__init__.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 6dda0d381..b89348236 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -2843,23 +2843,25 @@ class NPMTest(FetcherTest):
-     @skipIfNoNetwork()
-     def test_npmsw(self):
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D',
-                     'dependencies': {
--                        'content-type': {
--                            'version': 'https://registry.npmjs.org/content=
--type/-/content-type-1.0.4.tgz',
--                            'integrity': 'sha512-hIP3EEPs8tB9AT1L+NUqtwOAp=
-s4mk2Zob89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D',
--                            'dependencies': {
--                                'cookie': {
--                                    'version': 'git+https://github.com/jsh=
-ttp/cookie.git#aec1177c7da67e3b3273df96cf476824dbc9ae09',
--                                    'from': 'git+https://github.com/jshttp=
-/cookie.git'
--                                }
--                            }
--                        }
-+                        'content-type': "1.0.4"
-                     }
-+                },
-+                'node_modules/array-flatten/node_modules/content-type': {
-+                    'version': '1.0.4',
-+                    'resolved': 'https://registry.npmjs.org/content-type/-=
-/content-type-1.0.4.tgz',
-+                    'integrity': 'sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk2Zob=
-89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D',
-+                    'dependencies': {
-+                        'cookie': 'git+https://github.com/jshttp/cookie.gi=
-t#aec1177c7da67e3b3273df96cf476824dbc9ae09'
-+                    }
-+                },
-+                'node_modules/array-flatten/node_modules/content-type/node=
-_modules/cookie': {
-+                    'resolved': 'git+https://github.com/jshttp/cookie.git#=
-aec1177c7da67e3b3273df96cf476824dbc9ae09'
-                 }
-             }
-         })
-@@ -2877,10 +2879,9 @@ class NPMTest(FetcherTest):
-     @skipIfNoNetwork()
-     def test_npmsw_git(self):
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'cookie': {
--                    'version': 'github:jshttp/cookie.git#aec1177c7da67e3b3=
-273df96cf476824dbc9ae09',
--                    'from': 'github:jshttp/cookie.git'
-+            'packages': {
-+                'node_modules/cookie': {
-+                    'resolved': 'git+https://github.com/jshttp/cookie.git#=
-aec1177c7da67e3b3273df96cf476824dbc9ae09'
-                 }
-             }
-         })
-@@ -2888,40 +2889,16 @@ class NPMTest(FetcherTest):
-         fetcher.download()
-         self.assertTrue(os.path.exists(os.path.join(self.dldir, 'git2', 'g=
-ithub.com.jshttp.cookie.git')))
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 0c2d6d73e..3a7030bf3 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1314,6 +1314,7 @@ class FetchData(object):
+         if not self.pswd and "pswd" in self.parm:
+             self.pswd =3D self.parm["pswd"]
+         self.setup =3D False
++        self.destdir =3D None
 =20
--        swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'cookie': {
--                    'version': 'jshttp/cookie.git#aec1177c7da67e3b3273df96=
-cf476824dbc9ae09',
--                    'from': 'jshttp/cookie.git'
--                }
--            }
--        })
--        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
--        fetcher.download()
--        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'git2', 'g=
-ithub.com.jshttp.cookie.git')))
--
--        swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'nodejs': {
--                    'version': 'gitlab:gitlab-examples/nodejs.git#892a1f16=
-725e56cc3a2cb0d677be42935c8fc262',
--                    'from': 'gitlab:gitlab-examples/nodejs'
--                }
--            }
--        })
--        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
--        fetcher.download()
--        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'git2', 'g=
-itlab.com.gitlab-examples.nodejs.git')))
--
-     @skipIfNoNetwork()
-     def test_npmsw_dev(self):
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-                 },
--                'content-type': {
-+                'node_modules/content-type': {
-                     'version': '1.0.4',
-                     'resolved': 'https://registry.npmjs.org/content-type/-=
-/content-type-1.0.4.tgz',
-                     'integrity': 'sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk2Zob=
-89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D',
-@@ -2943,8 +2920,8 @@ class NPMTest(FetcherTest):
-     @skipIfNoNetwork()
-     def test_npmsw_destsuffix(self):
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-@@ -2958,8 +2935,8 @@ class NPMTest(FetcherTest):
+         def configure_checksum(checksum_id):
+             checksum_plain_name =3D "%ssum" % checksum_id
+@@ -1609,6 +1610,8 @@ class FetchMethod(object):
+         else:
+             unpackdir =3D rootdir
 =20
-     def test_npmsw_no_network_no_tarball(self):
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-@@ -2981,8 +2958,8 @@ class NPMTest(FetcherTest):
-         self.d.setVar('BB_NO_NETWORK', '1')
-         # Fetch again
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-@@ -2998,8 +2975,8 @@ class NPMTest(FetcherTest):
-     def test_npmsw_npm_reusability(self):
-         # Fetch once with npmsw
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-@@ -3020,8 +2997,8 @@ class NPMTest(FetcherTest):
-     def test_npmsw_bad_checksum(self):
-         # Try to fetch with bad checksum
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-gfNEp2hqgLTFKT6P3AsBYMgsBqg=3D'
-@@ -3033,8 +3010,8 @@ class NPMTest(FetcherTest):
-             fetcher.download()
-         # Fetch correctly to get a tarball
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-@@ -3072,8 +3049,8 @@ class NPMTest(FetcherTest):
-         # Fetch again
-         self.assertFalse(os.path.exists(ud.localpath))
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-@@ -3100,8 +3077,8 @@ class NPMTest(FetcherTest):
-         # Fetch again with invalid url
-         self.assertFalse(os.path.exists(ud.localpath))
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://invalid',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-@@ -3114,29 +3091,25 @@ class NPMTest(FetcherTest):
-=20
-     @skipIfNoNetwork()
-     def test_npmsw_bundled(self):
--        for packages_key, package_prefix, bundled_key in [
--            ('dependencies', '', 'bundled'),
--            ('packages', 'node_modules/', 'inBundle')
--        ]:
--            swfile =3D self.create_shrinkwrap_file({
--                packages_key: {
--                    package_prefix + 'array-flatten': {
--                        'version': '1.1.1',
--                        'resolved': 'https://registry.npmjs.org/array-flat=
-ten/-/array-flatten-1.1.1.tgz',
--                        'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
--                    },
--                    package_prefix + 'content-type': {
--                        'version': '1.0.4',
--                        'resolved': 'https://registry.npmjs.org/content-ty=
-pe/-/content-type-1.0.4.tgz',
--                        'integrity': 'sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk=
-2Zob89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D',
--                        bundled_key: True
--                    }
-+        swfile =3D self.create_shrinkwrap_file({
-+            'packages': {
-+                'node_modules/array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                },
-+                'node_modules/content-type': {
-+                    'version': '1.0.4',
-+                    'resolved': 'https://registry.npmjs.org/content-type/-=
-/content-type-1.0.4.tgz',
-+                    'integrity': 'sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk2Zob=
-89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D',
-+                    'inBundle': True
-                 }
--            })
--            fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
--            fetcher.download()
--            self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2'=
-, 'array-flatten-1.1.1.tgz')))
--            self.assertFalse(os.path.exists(os.path.join(self.dldir, 'npm2=
-', 'content-type-1.0.4.tgz')))
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', 'a=
-rray-flatten-1.1.1.tgz')))
-+        self.assertFalse(os.path.exists(os.path.join(self.dldir, 'npm2', '=
-content-type-1.0.4.tgz')))
-=20
- class GitSharedTest(FetcherTest):
-     def setUp(self):
++        urldata.destdir =3D unpackdir
++
+         if not unpack or not cmd:
+             urldata.unpack_tracer.unpack("file-copy", unpackdir)
+             # If file =3D=3D dest, then avoid any copies, as we already pu=
+t the file into dest!
 --=20
 2.39.5
 
