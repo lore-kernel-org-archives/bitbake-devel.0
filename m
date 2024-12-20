@@ -2,610 +2,269 @@ Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF75E77188
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3617BE7718C
 	for <webhook@archiver.kernel.org>; Fri, 20 Dec 2024 11:26:41 +0000 (UTC)
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.114])
- by mx.groups.io with SMTP id smtpd.web11.149745.1734693993938884026
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.104])
+ by mx.groups.io with SMTP id smtpd.web10.149981.1734693987801828257
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 20 Dec 2024 03:26:35 -0800
+ Fri, 20 Dec 2024 03:26:28 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=P+iHf2fr;
- spf=pass (domain: weidmueller.com, ip: 40.107.22.114, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=7jawAoja;
+ spf=pass (domain: weidmueller.com, ip: 40.107.20.104, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=I5TuVP5KcR3LSQg7ovFexeWEqDvcRc3ZTdhR2YHannIUVELTvQjxbv+Qqb3w5GeVlCAX9kMVJAmB2WKVnMVjtV/zvLMUAnIE8P5iVNdLI81NrIiXjABNwrc7CxjQKZJDMqBWAzqPN56MtwH2ltkvU8Zg4FABer/BxLsSltFYzCSd1E04sOsrqU46BPXhP+HG4+mQyxklx4oOu7vScwfQ4HMnthZz+Op0splX7SwFEB21m1dk49WaugUi4ZkKjXgd7mBYIHgqp/6NJDMbii3ILY+GZBYIfAOgWVw4VPbl8Xjh+OIRWpCr9WCkeH1KASR4zF9TX4QontrkiaAe7xtTFA==
+ b=RF7GjS2OlckO5B8kiu49fuJdJ5iK81carWFHXdiGdPcksEuyHZbH6rFzZDIwdg49Nv8poAmmMMCaUClnyHybn5PGrGcUPTlgy0aRWPag1M/OzX8jgSGAllGV08bRg94AXBNlPy+Olm+kXm725hnv5HQEuIc5ODCBHy+s+CIS+3hbO4hVyCxBVzkWF7Axbp/ig1qAYV7NGggBdy68SLBj+M2k/5NGsWo3/2bjLHW9D6IJOl1p0lF/WiCPIL7XgHR0jYnU6Mq6lpFFthMkMdAF03UZC0TfRh/10jfJzpGA2biQm+Jz/AnI9PMVHdPqqEqysxPuUiTw0dWksLabZUHq0A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vvdvJvJB6+N3H9ozFzVfup0kjThedpLfqngTHxqOgM8=;
- b=g6LufJ/ONd9fqQEvF8S7/khtP/3oEbUtzbA9eW168TWKKK/ph7bDhgfSedoRFWdysjzaKArKV7ONoPCLM0TreVn9N20FTimjNLqDMC8Y02KLxeSGRpykRHrPypb/Yz33b08etHgeWYuV9PsCRc11GLbfT4LxY+Hn7fyWvyZIGe+zJeOVU+Am7DptkdPEOrqkRRpBCcdnf8u/+BDiquL1QJPRu1uAAKdAK3qg4O3UtTfsNtJWlhHTZxGLp0XLv9zXHolKuuZg0olRKI4aCscmaF7/o+KekSG8USQ/vSLjV+29XOlZ//D62kltxSBJA1v0mkf0zLH+DosiuA5KOB4TiA==
+ bh=y7rJVrOqMobu3b6Rc0bxsj1RphKyIHeDXoBMTd2Q95c=;
+ b=htBif4+WoWYXFSFQpb+IXh5qWQDqQY6zBvn/QK7ib8KoVb8qb83SpQmuOFkthcmu2wqWO1Mze9cANj/3SNFgIyqoFKYuJTyiBaYfnH2C/hmcjc2TWFplTQcAMLTysCiLwLx4Ubfu3zo52z9cVpyNmng8IhsPMIZI3eAZsDaPMWR3gwpYgzVSw5DDsDGZJ0XjoKDKj8vT5SdSwC/OkFAOi1qaFOijK27hsLiBveuU3tj965YoQQeSdsICAMUXCTUqhkXHlJFJkpXqLKE6EZ0qvGieOCJ/JEjiNNXA6DU1BmdKiF6B/GVbJQk6aOHqUYoG1BR9ytIUEE3/gfvKIoBgoQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=weidmueller.com; dmarc=pass action=none
  header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vvdvJvJB6+N3H9ozFzVfup0kjThedpLfqngTHxqOgM8=;
- b=P+iHf2fr9UPNRyhKh/aVEM/iIa5BqeTtkZBZmv2VKA/U0rHBJ6Anwa344xEao5xdKosck4SeYXcm0zbrZHYjdamUxsI1bcVON8RExsH1A40R5F9ELPm/liq229RM0X0PCQDty7HgWCtinbQsk+/c4Qh5Od1PO1tU153EtIG4rXmfj3MpYIDq/fucA+IjKc4+ijDoLz9YB73sKRw3N+Vp22tn2h+7cp/S7eKsgp9IYN71owIHK6sN3cuU7z8tNaXIqT1kuoOFLd68jBkoABhibH8/Qxkcn1lSth/u/WZTJ0Uht0liwYVVlLkb8IzhnfiNErK1i/5F3Pvv1BNADm6n+g==
+ bh=y7rJVrOqMobu3b6Rc0bxsj1RphKyIHeDXoBMTd2Q95c=;
+ b=7jawAojaUA07PrCp8UWOpXLZn5qZzLmEAoYbsbn41bCNDOamlDUvnSXTzB9w7CEindB9LiaX4eWl0ACSUSf49CZEqnaFbKLZnVwzTTJ14m6CJmsWiI4DOhyT4kqi/swDrbmQ6ETfAHMK23p5OtmLUWFJSn/OpbEVu5Y2I/jUB516RVHHRJvP1nQ4/ngDP4yGUcY7e2v1mwTVOs3pw6PcryV62PG0b2tnwGw9p8T6d4szmtsiCoFX3/yHmx81ONVLUaP3t9ZrvA8+MyRXVXVi+MDgtfKeXkEJlRYzFyLHD39XY/tB/2yMJW/oUUilB8XJZRIe0NFyQCF2YU5SilMYAg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=weidmueller.com;
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com (2603:10a6:102:1d8::23)
- by AM8PR08MB5684.eurprd08.prod.outlook.com (2603:10a6:20b:1dc::20) with
+ by DU0PR08MB8256.eurprd08.prod.outlook.com (2603:10a6:10:410::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.16; Fri, 20 Dec
- 2024 11:26:31 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.14; Fri, 20 Dec
+ 2024 11:26:24 +0000
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4]) by PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4%3]) with mapi id 15.20.8272.013; Fri, 20 Dec 2024
- 11:26:31 +0000
+ 11:26:24 +0000
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
 To: bitbake-devel@lists.openembedded.org
 CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Subject: [RFC PATCH 16/21] fetch: npmsw: migrate to dependency mixin
-Date: Fri, 20 Dec 2024 12:26:07 +0100
-Message-ID: <20241220112613.22647-17-stefan.herbrechtsmeier-oss@weidmueller.com>
+Subject: [RFC PATCH 00/21] Concept for tightly coupled package manager (Node.js, Go, Rust)
+Date: Fri, 20 Dec 2024 12:25:51 +0100
+Message-ID: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
-References: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
 X-ClientProxiedBy: FR0P281CA0106.DEUP281.PROD.OUTLOOK.COM
  (2603:10a6:d10:a8::7) To PAXPR08MB6969.eurprd08.prod.outlook.com
  (2603:10a6:102:1d8::23)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR08MB6969:EE_|AM8PR08MB5684:EE_
-X-MS-Office365-Filtering-Correlation-Id: a389a305-b96e-45e3-4b1c-08dd20e925f4
+X-MS-TrafficTypeDiagnostic: PAXPR08MB6969:EE_|DU0PR08MB8256:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2393a1e7-1bb4-4b18-0ddd-08dd20e922d9
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|52116014|376014|1800799024|366016|38350700014;
+	BCL:0;ARA:13230040|366016|52116014|1800799024|376014|38350700014;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?y3huxe38ffn0XP53fvlVsBCIcJ3CagXN+uP+anoAOuJI6h4BudhqyLdZ/h4x?=
- =?us-ascii?Q?BgPz4HEVjxqYil7xlgmH/PlLn2q+is0GnGhpKl3Gd1U+klKzRE5JF6UzX8o2?=
- =?us-ascii?Q?wgW1dheCFfy7mNVDLjDuD5uD8ti/3FFGiYXH9ryE2WvzrRMus57X1QnocE3s?=
- =?us-ascii?Q?f0OyLXRye4jKSbCj4GRlUDK6StPu0G3He0UL6s5ZxdjnpBrVZEf7lkB4zE2D?=
- =?us-ascii?Q?mwv0NVokYDDJMptIYOpNKsYXhoJ8rMZCFMZxrMt2G7j3W/vgrHQOGFIB8qxV?=
- =?us-ascii?Q?RJKDOKt4kFe5b0Tg96r1a7+34Pff6Qfcmp756dBVyGRli+23WOU8+sGp8sC6?=
- =?us-ascii?Q?YeFinIL+k+G+Jktdrj13I1ESgCGFDAuQEy63fuu/4wCAXc194FThuSkt6DJs?=
- =?us-ascii?Q?PL6D/5SR9bN2zvw/N/0yjAHn/+NV9VQHXKO1o59Kwl6pL8CoSuj2vopISLlU?=
- =?us-ascii?Q?LEkVlKI59BaER3FNsS/k2EP2opyGyZdjxLHrG08qowjVsnR1jc33H5wNhPZ1?=
- =?us-ascii?Q?OibKjkNu+aKUDtmTD7JFWprLVILedmhisILIkr/MNsR0e0xj05QsRX6q+GeT?=
- =?us-ascii?Q?pbIRFbWUl4I2Kh8ntMwhVTeED2mCp9hrKLfzam75eiOmISyyQ6Wt3wVDQI5I?=
- =?us-ascii?Q?x36WupK3q1MYlne3J+tndUxF16OwQhQzdKVhWUauGIPV+MeQNxAKecXJ9j2D?=
- =?us-ascii?Q?0Y/bklo6fQgdH1MgiXpvI+mXJ9X3zuVWbqHRbLGuSAtnZu15ImVBZeffDz05?=
- =?us-ascii?Q?VLbcYlTownNHp7zxp2r9Ina+QNIfMu7cRPRcENKgT/t8asg0ZLViuY91sfMN?=
- =?us-ascii?Q?GQcG2zaLLRqdbPlz3hFtUUHDJNc523lgm9bSFfuM0QFeQc27Qoyqxg/a9brF?=
- =?us-ascii?Q?IQIU9vMEyq20dYc9EKvqRb/DKaTd8FR2IZ/Wb6zQePjIuAbT5FcG67hQy2fp?=
- =?us-ascii?Q?P0k8wrx0zFIVUStIWJJnjLpOE3PKQqsBZcYrCfqlsqlqQSpLvfLqy5pkoeit?=
- =?us-ascii?Q?XamvO557frioxNvvO7lGbPqcHdASLg5Ko0+dcaUYv8xlXIDIsGFvMmv+crNn?=
- =?us-ascii?Q?yWU17VqOanuBP7Ms0JuzeqpPT1yBUwlf4dOlI5o12qgFrrW+zjMjFOI8wv3V?=
- =?us-ascii?Q?7UF2rrroB2XcWlq6/3bX4k/mHtGPp13L10E2m8xVeeRW2MrEf6/qDbt6cu8G?=
- =?us-ascii?Q?ArtbQkRFNe4VR4glfv7/Ko0rl3K9WDXfA/7CXLfcDApvWc5ADofWe/x0poVH?=
- =?us-ascii?Q?rRo6b7V7GVZt0omUX3IkmQcTZUhZ58D006pPm3avdoT9Yv59ntFaMMTlQHmt?=
- =?us-ascii?Q?J4+jvVwNrqjddCzr8Z7sNPzQVeHJRXqeJ87GZ0e87Zj2QXP+ciyQeIlKL0xx?=
- =?us-ascii?Q?JABkVzYkLf/A54spIYELbBD3fgW2?=
+	=?us-ascii?Q?6/qGQnJJgnVAv25EDp8Lc2+ms2SX+717WCdMM/wUHktBzdbwGVs+pTJDepKo?=
+ =?us-ascii?Q?KUfZr4YiJJ7hQ7u4hIDB769hDCkbK4IOq1ll0CZc3L3PfBQWhtqjofdy0MYq?=
+ =?us-ascii?Q?wO8J/6g0VVOZv2oeZQmQFpIXvPu+wgP3JmTB277PB22g5ei1ZOxZUGRj5gsl?=
+ =?us-ascii?Q?Aqv7fQnyioWLtzNaJGKh1tHhcqZF7edkj57dTr6KLOFdUbAcOzvNslSVLGEs?=
+ =?us-ascii?Q?Jeoo5c3DAem6gPYvLC3kh55TA2Wvwly8auxUQvaG0BTUID8N1KGpob1o1vgp?=
+ =?us-ascii?Q?j9s3ReKQwxaijJHvWd5WBMvyP9IkiZO+iHzwGgwZUeNAzJFIQ/ZbvcXbSfBp?=
+ =?us-ascii?Q?jjoQ3Na5eu3gTOtbyKwRPg0v8NPlnCxdeei/txOdy2KYYhCus4sacjt5jGPN?=
+ =?us-ascii?Q?DEF3wPUQeFfI18B2Eu+YxZ8tPjuTug37laAo0n8a5SzFckocfbqkZvjznRQ9?=
+ =?us-ascii?Q?33TXcEy22OP/9B6SjxJ1kay6KUa37bj2a48NTrMRNLAHvkxQ1yVJIpatL9Yq?=
+ =?us-ascii?Q?1n30gE+x9tH3VdCt4nGJU8k8xScjvpFpxGYdPPPSWZPW92M+9pja4enGH/+w?=
+ =?us-ascii?Q?0oOSqlHD3gJl8N11ZKhEbH5TjRZQyq1QgLUXqWGDA9lGag666lbv0HkpSKsz?=
+ =?us-ascii?Q?y+5IUJMvavtRLVNc4DM5/jM4UFMhLOGykRLO+rA0Tef8zxwjP9upZhLUkx8p?=
+ =?us-ascii?Q?1rgaYXXzwnHNQQxR26V/1c6cmkQDigvBD6LjMtdcdafQcgbKu5Khr49XMk2F?=
+ =?us-ascii?Q?pDE19QsDJiN+Kwq68wbZVoDr28VLEhh4bmK+VElyCTgCYugEk4zoerRCXnCN?=
+ =?us-ascii?Q?ukL+A7WhxUeTrocEjs3pjEiSifLRa7P6dozYpS1cZl2eW+BwgbksbNhT92KI?=
+ =?us-ascii?Q?GL7ZC7DM+hBAHpLktcKpfj/qL7IPwJUneJ4/rDYGizIRCf8LlbG9JWLfQ70n?=
+ =?us-ascii?Q?LzALsr3zf4EqU706pHTfFvwXm0cbYyFLpcwV4OG1oZLvjHDi+EMiawnZW55Y?=
+ =?us-ascii?Q?mxUB1Ug6bIF+sO7//HobAQ0b/e3C7kSf2UXYKEeYwaNGI+kuj24YfNU8kb9o?=
+ =?us-ascii?Q?LdMRgSFp5J3/jaPO9/8MlQl/hTtivT65PoRyk1Z6Tv3zgiu/Q2hSKrEf2Cid?=
+ =?us-ascii?Q?jFUM4UWeFLg67BtFbvI2D3WeYrniAK87F9H4+ma+2H6cS8DyDuPP0Prk5Kyf?=
+ =?us-ascii?Q?KB2Ccmq0pR9JG881NuIyYXMHuS/OAAcC9Un6vRv5WtQqtGWPdoZqaZNjQRwb?=
+ =?us-ascii?Q?ItQuxqgWUQhzWp9Ok/TrxDeUnLn1+VnOl/pF8x/ICrVBZS73mc4Z4OFcJ+E7?=
+ =?us-ascii?Q?ojN0VVQRZgxeNBvH63/zS4vu48LXgjXH4E9UzbClsA7WqMT12GFYrkIk8OY0?=
+ =?us-ascii?Q?8h5yUlBEiHBdV8O1RY32ISBtvZhT?=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(1800799024)(376014)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?cPEEPENEtWnx/xpci+Yq6517UqGbNzDS+LJuDxWWtBQ/+JPOu8/I4RSl1ENf?=
- =?us-ascii?Q?ef8Bpuk1p4wDN9o6bX0oZ11pxv+EvFASUzimyQNjPc49yg0OjVC1GVy/DPex?=
- =?us-ascii?Q?vBxzHbu3hMTn5/b2VEt0Nlmc+PJ1g/MY/9UKnDtXDAvXLpwXzpAWyagK7PIE?=
- =?us-ascii?Q?FY92eyjmPA3QonXT+XeB98Qr3gM2CesTQtVmKZfIlOsZk1fYXu1jgE1sm3Un?=
- =?us-ascii?Q?Gsh0yKLfLNhBv6tnlpxl70ybG8dBun9DO3O/uEVP6FNLJMtaB1wHyfUB2PnK?=
- =?us-ascii?Q?aNmNb9fVbckgl+I7FUBUcKj+balTmKv3JlUuegt2L43Bylc95H+oWp5VE+iE?=
- =?us-ascii?Q?qeX2fzvT0XVoTJLkLJAeze49ZY3p6AitZktDYwTTM/Y8FubXZGDBnjbCMwZA?=
- =?us-ascii?Q?rWanvLxS4Iemgor6M7ezPg0vSJZuGbYlOYPwPH1bJ7WJpA6u4ibRqWG81PdU?=
- =?us-ascii?Q?jfdZVHR5Nj1670b2x00Gwj2jygtO8Q8weo+jGV+dsw06ueLeylO57ixZZR/R?=
- =?us-ascii?Q?nPb+RmijtHXcfhfn96gpFSjyNlaLp0VTf5sFB8aM38aVCh6PX2EaDIpZEbOC?=
- =?us-ascii?Q?u8vzsubunSlNFiHedVNtQGdKDllq/1QCKIgvdw8V525zkYY+20LPD9nOAaY1?=
- =?us-ascii?Q?EMG211boopdHj+DV8JDDPuBtfDrUVgX5KC3LlVHIrPdbdjgYNlOA3JzD6YD5?=
- =?us-ascii?Q?LwTdBKxSIOkfUTtXDMCLphZHOjdDi/nM7jcHSYdA8gLuZuEdNwOBAc2nLGqq?=
- =?us-ascii?Q?ASTo0mveaA3XDXMBbm+yqmC99yR33DeJAyJ2CG96am2ToLarBPuk9OXqNM7a?=
- =?us-ascii?Q?QuPb3RkB0jN/S/VJPUiXiHIsllSfhr+sYNXDa8DCoT0m2K/yDLNDZtOVCjJj?=
- =?us-ascii?Q?LW266L8BpCWggSX9fp5h+ulDsjpOG3RqSlpnBlQtiOMlrTNEeF2CNBtoowi9?=
- =?us-ascii?Q?B84iUX+hWAf6yD53ogdYC4kupzKT9JQ1UqE1++wLM1+G1oMMrUVr3UdkS7Lx?=
- =?us-ascii?Q?mZzGIPY2TyrYk2B8/PVX9+S2Ggbf2vmF4a6Dt1EI+Y2IWr6VtOq8kqr7ucrQ?=
- =?us-ascii?Q?Ne/Q1Hs+n/BKG08UlxYQHaH7EvBhmbLhMMzsZXQLBaCUsMON1CBSMCjF6RQr?=
- =?us-ascii?Q?mAaWgvQNFUHsRlEKOFP4nVgMiVOHThHWn2rFcPXIhExd5EJyIUgewyDrhhvq?=
- =?us-ascii?Q?rNWfBvtEINUbNQec+TkS3iqyZu7cgnnt47A2v5gsPE/DSCxkxHEFr6GAmmZ6?=
- =?us-ascii?Q?jq0ufLORsl0jG2BXiA5hDEuetH+3TbF2XkAl+YPVvCUfH3RLZ3l1ypbnBQ/p?=
- =?us-ascii?Q?PQBSZ0tDcspRZhX9VWL2EO2hFvoFNV8wQ/6GAnKgZpbcewX/+Iy6Qy9Bx1qC?=
- =?us-ascii?Q?waXpiJDYdACyVIRqT7RHWtPmofwqQ/DGCOjwa2dYRTh7jK3lHgz+Yh1LkhP1?=
- =?us-ascii?Q?PXlXJyWj3PbOQjNJhx6R9wCxmUqmIqxjVHuk2rOM3IYJB+GKzvJAPbFikwBs?=
- =?us-ascii?Q?ej1YdgSWTh3cgEZ9QwYFSTWcuWXLnuvchjQ4ig2mK33oEbCm/6UZmYM99CKf?=
- =?us-ascii?Q?uZlHyGuR/WztTGYW9Af6J1fjFxlkWjxvV0n+eod/fFBGHFb2430sBPAjv3/X?=
- =?us-ascii?Q?Sg=3D=3D?=
+	=?us-ascii?Q?9iXLHGdriBkxpljmsMGEo9HXDTQtr1gQ5ycY8qwsVlN+zdFeYv6C1yD/E6CL?=
+ =?us-ascii?Q?YSxOrD3LBV+CP+PDPlBIOZJQVEroQv9eGM130h4aSjCLtR07KQMLsC+ZA3+r?=
+ =?us-ascii?Q?Lyah1OemPMkmH8bGLL1XgmlThB/rJXGk/JR+Ez1vnwL1WZ5f3VNXvHZoOyeJ?=
+ =?us-ascii?Q?G+XktFo5UOrl4L1fxDII709PvOJqEOCgjMagkMMZa5pPEu9kZOLk4NZ2tYLO?=
+ =?us-ascii?Q?DOF9QHylCnJ2G+xJ4Bk4t4VOGguPP9xz8jDL3Soi95Kf+K2PmIaH0SDKp2Y1?=
+ =?us-ascii?Q?/dmIoUaI9Y9Bism2uUqmHZE8MagKQoXrPEKgv9atrmYNv1rr6lYhuzBkDJz1?=
+ =?us-ascii?Q?FsHl9asKcSBgmh3ZM6uBo+AAM7UzOt/2fnm8g0KzFhRNEZtFjcug+EnXGV2m?=
+ =?us-ascii?Q?8QhsYpDCiOPooo7Q9QWx1i/LIXhZCqcJS1M3sd7hCVhg6OXmxIr5ucNW/Gau?=
+ =?us-ascii?Q?2Seo1IutygTLi/cjltiES1c86kDfWNQ/IoOj3GJD3SCgZQ2C1KY0HaUawr9f?=
+ =?us-ascii?Q?urE/IoeTfdBCfgENjSiRSjutj/QGSgImMbb3MLMKPZk62l70kh3CnS6vO5I0?=
+ =?us-ascii?Q?/Z6E9Kxij6OcqBM0BhqlwHd/CguN7V9FAqQPMm2wFWCD2cfNVSpuPq6YiHY7?=
+ =?us-ascii?Q?94plA0ZkyItpAswFT2G2cP7Cl+tuDlTUEtaAW9ji2qJRhxwXDVOCFvykIWXX?=
+ =?us-ascii?Q?SHMhfo1B6EYmtu1Pi+rxUiBAUwx8YYgux8Eeqdg6ArLyXtZyOnBflWsFFKaf?=
+ =?us-ascii?Q?65AyXHo9a9wgO1LV80CxC2EDIrEXQlDVxbmp5w2bDAygpnfq00AZvO03lnrR?=
+ =?us-ascii?Q?a2P1QhV7/1wBK4Zo1qo7z4TYnmSkPCC6x01ma4lB2gRRl2oE2pI7NPaXMcUc?=
+ =?us-ascii?Q?a1HIvPa0OuZUbMrnolG31gnTQURy/MX2YD08pqksB9VXpXdD24Cd05Xv0SBR?=
+ =?us-ascii?Q?7wO2fzOYirkoX9zNBSKTugxe/W+SMUvEgm2/bpo0OkEhd5ZSJ6IYnDmbwBgy?=
+ =?us-ascii?Q?Vp0uixBFmecFX2ivZZZnVD6WSyh+isZ5orYMyqMI/vH6LPTh6xHWD1UCbYed?=
+ =?us-ascii?Q?0xwc6uX69i8KHFexxIe7IRdEhkzDSqpPlBXAlglwBI4H1OMz3CuaPYP6e7Ex?=
+ =?us-ascii?Q?CFn+lrzUvQPgqEsi9Eml5tC83xc7xg4GdXYTbC18CNyBv6Tmav47n8E4DATV?=
+ =?us-ascii?Q?bxok81pvsfNP+RzkXeFi2EjersvBdxELhrUmDJLK2EIGmPKuo41XXq8FlKgz?=
+ =?us-ascii?Q?1U3jLXQPR6k8zjtv/x95wzxPhwAVKG8JB6V22uw3ovPIJ/frXYKf45U/XB+k?=
+ =?us-ascii?Q?tLLauHFYmf2wrJz9zH0/hKCE6ig/TPPCHryP//gJFhwGDw8tStev6wHiWdqT?=
+ =?us-ascii?Q?bA3Dv2W2nr9ra1QdPxPnrfoS8DVD7WkMZq1/y59sLtjDpCVZ/oBSxSoXVMZJ?=
+ =?us-ascii?Q?SJ5WW6Q5fozYVMSsvPh/dYVGExQrJEaEvao4tQfuvSPu9UCgOVEmv6xPt60x?=
+ =?us-ascii?Q?AjkvW4ggPKEV1rEDS0nHn7EWjOGeV4oT9ms4hSHQKoGCUEsERW/QEJs3tL8X?=
+ =?us-ascii?Q?ZNBENeeznfmtU0Hww6S01OKosvVCOa8tnlUQZ7S7rz75GjQKHxUeRerwF74c?=
+ =?us-ascii?Q?Tg=3D=3D?=
 X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a389a305-b96e-45e3-4b1c-08dd20e925f4
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2393a1e7-1bb4-4b18-0ddd-08dd20e922d9
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR08MB6969.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2024 11:26:29.3882
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2024 11:26:24.2179
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LCAfQvzwLeJ8O5xWz+LREBxYJITMOGdarNbuc8kmje8kfGsAPWhSE92GNEqqq0cM2lIe3c9XLENpBc/IUT20VA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR08MB5684
+X-MS-Exchange-CrossTenant-UserPrincipalName: qAxdxdfnXztjWFN3Mqn+FqyvT82FGfWm7Ux8/+XtUuCDjzilFfir3nITbtUgwR4y2u5t4fJTOVuRYEc3u5UJDA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB8256
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 20 Dec 2024 11:26:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16929
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16920
 
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 
-Migrate npmsw fetcher to dependency mixin to support different fetcher
-subtypes. The migrated fetcher fetches dependencies via a
-npm-shrinkwrap.json file or if missing via package-lock.json file. It
-supports different types:s
+The patch series improves the fetcher support for tightly coupled
+package manager (npm, go and cargo). It adds support for embedded
+dependency fetcher via a common dependency mixin. The patch series
+reworks the npm-shrinkwrap.json (package-lock.json) support and adds a
+fetcher for go.sum and cargo.lock files. The dependency mixin contains
+two stages. The first stage locates a local specification file or
+fetches an archive or git repository with a specification file. The
+second stage resolves the dependency URLs from the specification file
+and fetches the dependencies.
 
-npmsw
-    The fetcher uses a local npm-shrinkwrap.json or package-lock.json
-    file to fetch dependencies.
+SRC_URI =3D "<type>://npm-shrinkwrap.json"
+SRC_URI =3D "<type>+http://example.com/ npm-shrinkwrap.json"
+SRC_URI =3D "<type>+http://example.com/${BP}.tar.gz;striplevel=3D1;subdir=
+=3D${BP}"
+SRC_URI =3D "<type>+git://example.com/${BPN}.git;protocol=3Dhttps"
 
-    SRC_URI =3D "npmsw://npm-shrinkwrap.json"
+Additionally, the patch series reworks the npm fetcher to work without a
+npm binary and external package repository. It adds support for a common
+dependency name and version schema to integrate the dependencies into
+the SBOM.
 
-npmsw+https
-    The fetcher downloads a npm-shrinkwrap.json or package-lock.json
-    file or archive with a npm-shrinkwrap.json or package-lock.json
-    file in the root folder and uses the npm-shrinkwrap.json or
-    package-lock.json file to fetch dependencies.
+=3D Background
+Bitbake has diverse concepts and drawbacks for different tightly coupled
+package manager. The Python support uses a recipe per dependency and
+generates common fetcher URLs via a python function. The other languages
+embed the dependencies inside the recipe. The Node.js support offers a
+npmsw fetcher which uses a lock file beside the recipe to generates
+multiple common fetcher URLs on the fly and thereby hides the real
+download sources. This leads to a single source in the SBOM for example.
+The Go support contains two parallel implementations. A vendor-based
+solution with a common fetcher and a go-mod-based solution with a gomod
+fetcher. The vendor-based solution includes the individual dependencies
+into the SRC_URI of the recipe and uses a python function to generate
+common fetcher URLs which additional information for the vendor task.The
+gomod fetcher uses a proprietary gomod URL. It translates the URL into a
+common URL and prepares meta data during unpack. The Rust support
+includes the individual dependencies in the SRC_URI of the recipe and
+uses proprietary crate URLs. The crate fetcher translates a proprietary
+URL into a common fetcher URL and prepares meta data during unpack. The
+recipetool does not support the crate and the gomod fetcher. This leads
+to missing licenses of the dependencies in the recipe for example
+librsvg.
 
-    SRC_URI =3D "npmsw+http://example.com/ npm-shrinkwrap.json"
-    SRC_URI =3D "npmsw+http://example.com/${BP}.tar.gz;striplevel=3D1;subdi=
-r=3D${BP}"
+The steps needed to fetch dependencies for Node.js, Go and Rust are
+similar:
+1. Extract the dependencies from a specification file (name, version,
+   checksum and URL)
+2. Generate proprietary fetcher URIs
+  a. npm://registry.npmjs.org/;package=3Dglob;version=3D 10.3.15
+  b. gomod://golang.org/x/net;version=3Dv0.9.0
+     gomodgit://golang.org/x/net;version=3Dv0.9.0;repo=3Dgo.googlesource.co=
+m/net
+  c. crate://crates.io/glob/0.3.1
+3. Generate wget or git fetcher URIs
+  a. https://registry.npmjs.org/glob/-/glob-10.3.15.tgz;downloadfilename=3D=
+=E2=80=A6
+  b. https://proxy.golang.org/golang.org/x/net/@v/v0.9.0.zip;downloadfilena=
+me=3D=E2=80=A6
+     git://go.googlesource.com/net;protocol=3Dhttps; subdir=3D=E2=80=A6
+  c. https://crates.io/api/v1/crates/glob/0.3.1/download;downloadfilename=
+=3D=E2=80=A6
+4. Unpack
+5. Create meta files
+  a. Update lockfile and create tar.gz archives
+  b. Create go.mod file
+     Create info, go.mod file and zip archives
+  c. Create .cargo-checksum.json files
 
-npmsw+git
-    The fetcher checkouts a git repository with a npm-shrinkwrap.json or
-    package-lock.json file to fetch dependencies.
+It looks like the recipetool is not widely used and therefore this patch
+series integrates the dependency resolving into the fetcher. After an
+agreement on a concept the fetcher could be extended. The fetcher could
+download the license information per package and a new build task could
+run the license cruncher from the recipetool.
 
-    SRC_URI =3D "npmsw+git://example.com/${BPN}.git;protocol=3Dhttps"
+=3D Open questions
 
-Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.c=
-om>
----
+* Where should we download dependencies?
+** Should we use a folder per fetcher (ex. git and npm)?
+** Should we use the main folder (ex. crate)?
+** Should we translate the name into folder (ex. gomod)?
+** Should we integrate the name into the filename (ex. git)?
+* Where should we unpack the dependencies?
+** Should we use a folder inside the parent folder (ex. node_modules)?
+** Should we use a fixed folder inside unpackdir
+   (ex. go/pkg/mod/cache/download and cargo_home/bitbake)?
+* How should we treat archives for package manager caches?
+** Should we unpack the archives to support patching (ex. npm)?
+** Should we copy the packed archive to avoid unpacking and packaging
+   (ex. gomod)?
 
- lib/bb/fetch2/__init__.py   |   2 +-
- lib/bb/fetch2/dependency.py |   8 --
- lib/bb/fetch2/npmsw.py      | 272 +++++++++---------------------------
- 3 files changed, 66 insertions(+), 216 deletions(-)
+This patch series depends on patch series
+20241209103158.20833-1-stefan.herbrechtsmeier-oss@weidmueller.com
+("[1/4] tests: fetch: adapt npmsw tests to fixed unpack behavior").
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 3a7030bf3..5dbc0598d 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -2134,9 +2134,9 @@ methods.append(osc.Osc())
- methods.append(repo.Repo())
- methods.append(clearcase.ClearCase())
- methods.append(npm.Npm())
--methods.append(npmsw.NpmShrinkWrap())
- methods.append(az.Az())
- methods.append(crate.Crate())
- methods.append(gcp.GCP())
- methods.append(gomod.GoMod())
- methods.append(gomod.GoModGit())
-+methods.extend(npmsw.methods)
-diff --git a/lib/bb/fetch2/dependency.py b/lib/bb/fetch2/dependency.py
-index 4acad8779..e30d7fb73 100644
---- a/lib/bb/fetch2/dependency.py
-+++ b/lib/bb/fetch2/dependency.py
-@@ -46,7 +46,6 @@ class DependencyMixin:
-         return returns
-=20
-     def verify_donestamp(self, ud, d):
--        """Verify the donestamp file"""
-         if not super().verify_donestamp(ud, d):
-             return False
-=20
-@@ -56,7 +55,6 @@ class DependencyMixin:
-         return all(self._foreach_proxy_method(ud, handle, d))
-=20
-     def update_donestamp(self, ud, d):
--        """Update the donestamp file"""
-         super().update_donestamp(ud, d)
-=20
-         self._init_proxy(ud, d)
-@@ -65,7 +63,6 @@ class DependencyMixin:
-         self._foreach_proxy_method(ud, handle, d)
-=20
-     def need_update(self, ud, d):
--        """Force a fetch, even if localpath exists ?"""
-         if super().need_update(ud, d):
-             return True
-=20
-@@ -75,7 +72,6 @@ class DependencyMixin:
-         return any(self._foreach_proxy_method(ud, handle, d))
-=20
-     def try_mirrors(self, fetch, ud, d, mirrors):
--        """Try to use a mirror"""
-         if not super().try_mirrors(fetch, ud, d, mirrors):
-             return False
-=20
-@@ -85,25 +81,21 @@ class DependencyMixin:
-         return all(self._foreach_proxy_method(ud, handle, d))
-=20
-     def download(self, ud, d):
--        """Fetch url"""
-         super().download(ud, d)
-         self._init_proxy(ud, d)
-         ud.proxy.download()
-=20
-     def unpack(self, ud, rootdir, d):
--        """Unpack the downloaded dependencies"""
-         super().unpack(ud, rootdir, d)
-         self._init_proxy(ud, d)
-         ud.proxy.unpack(ud.destdir)
-=20
-     def clean(self, ud, d):
--        """Clean any existing full or partial download"""
-         self._init_proxy(ud, d)
-         ud.proxy.clean()
-         super().clean(ud, d)
-=20
-     def done(self, ud, d):
--        """Is the download done ?"""
-         if not super().done(ud, d):
-             return False
-=20
-diff --git a/lib/bb/fetch2/npmsw.py b/lib/bb/fetch2/npmsw.py
-index 2f9599ee9..fffb2a102 100644
---- a/lib/bb/fetch2/npmsw.py
-+++ b/lib/bb/fetch2/npmsw.py
-@@ -1,37 +1,35 @@
- # Copyright (C) 2020 Savoir-Faire Linux
-+# Copyright (C) 2024-2025 Weidmueller Interface GmbH & Co. KG
-+# Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
- #
- # SPDX-License-Identifier: GPL-2.0-only
- #
- """
--BitBake 'Fetch' npm shrinkwrap implementation
-+BitBake 'Fetch' implementation for npm-shrinkwrap.json and package-lock.js=
-on
-=20
--npm fetcher support the SRC_URI with format of:
--SRC_URI =3D "npmsw://some.registry.url;OptionA=3Dxxx;OptionB=3Dxxx;..."
-+The npmsw, npmsw+https and npmsw+git fetchers are used to download npm pac=
-kage
-+dependencies via a npm-shrinkwrap.json and package-lock.json file.
-=20
--Supported SRC_URI options are:
-+The fetcher support the SRC_URI with format of:
-+SRC_URI =3D "npmsw://npm-shrinkwrap.json"
-+SRC_URI =3D "npmsw+https://example.com/name-1.2.3.tar.gz"
-+SRC_URI =3D "npmsw+git://example.com/repo.git"
-+
-+Additional supported SRC_URI options are:
-=20
- - dev
-    Set to 1 to also install devDependencies.
--
--- destsuffix
--    Specifies the directory to use to unpack the dependencies (default: ${=
-S}).
- """
-=20
-+import base64
- import json
- import os
- import re
- import bb
--from bb.fetch2 import Fetch
--from bb.fetch2 import FetchMethod
--from bb.fetch2 import ParameterError
--from bb.fetch2 import runfetchcmd
--from bb.fetch2 import URI
--from bb.fetch2.npm import npm_integrity
--from bb.fetch2.npm import npm_localfile
--from bb.fetch2.npm import npm_unpack
-+from bb.fetch2 import FetchError, ParameterError, URI
-+from bb.fetch2.dependency import create_methods
-+from bb.fetch2.npm import construct_url_path
- from bb.utils import is_semver
--from bb.utils import lockfile
--from bb.utils import unlockfile
-=20
- def foreach_dependencies(shrinkwrap, callback=3DNone, dev=3DFalse):
-     """
-@@ -58,40 +56,31 @@ def foreach_dependencies(shrinkwrap, callback=3DNone, d=
-ev=3DFalse):
-         name =3D location.split('node_modules/')[-1]
-         callback(name, data, location)
-=20
--class NpmShrinkWrap(FetchMethod):
--    """Class to fetch all package from a shrinkwrap file"""
--
--    def supports(self, ud, d):
--        """Check if a given url can be fetched with npmsw"""
--        return ud.type in ["npmsw"]
--
-+class NpmShrinkWrapMixin:
-     def urldata_init(self, ud, d):
-         """Init npmsw specific variables within url data"""
--
--        # Get the 'shrinkwrap' parameter
--        ud.shrinkwrap_file =3D re.sub(r"^npmsw://", "", ud.url.split(";")[=
-0])
--
--        # Get the 'dev' parameter
-+        super().urldata_init(ud, d)
-         ud.dev =3D bb.utils.to_boolean(ud.parm.get("dev"), False)
-=20
--        # Resolve the dependencies
--        ud.deps =3D []
-+    def resolve_dependencies(self, ud, localpath, d):
-+        urls =3D []
-=20
--        def _resolve_dependency(name, params, destsuffix):
-+        def resolve_dependency(name, data, location):
-             url =3D None
--            localpath =3D None
--            extrapaths =3D []
--            unpack =3D True
-=20
--            integrity =3D params.get("integrity")
--            resolved =3D params.get("resolved")
--            version =3D params.get("version")
--            link =3D params.get("link", False)
-+            integrity =3D data.get("integrity")
-+            resolved =3D data.get("resolved")
-+            version =3D data.get("version")
-+            link =3D data.get("link", False)
-+
-+            if integrity:
-+                algorithm, value =3D integrity.split("-", maxsplit=3D1)
-+                checksum_name =3D f"{algorithm}sum"
-+                checksum_value =3D base64.b64decode(value).hex()
-=20
--            # Handle link sources
-+            # Skip link sources
-             if link:
--                localpath =3D resolved
--                unpack =3D False
-+                return
-=20
-             # Handle registry sources
-             elif version and is_semver(version) and integrity:
-@@ -99,193 +88,62 @@ class NpmShrinkWrap(FetchMethod):
-                 if not resolved:
-                     return
-=20
--                localfile =3D npm_localfile(name, version)
--
-                 uri =3D URI(resolved)
--                uri.params["downloadfilename"] =3D localfile
--
--                checksum_name, checksum_expected =3D npm_integrity(integri=
-ty)
--                uri.params[checksum_name] =3D checksum_expected
--
-+                package_path =3D construct_url_path(name, version)
-+                if uri.scheme =3D=3D "https" and uri.path.endswith(package=
-_path):
-+                    uri.scheme =3D "npm"
-+                    uri.path =3D uri.path[:-len(package_path)]
-+                    uri.params["dn"] =3D name
-+                    uri.params["dv"] =3D version
-+                    uri.params["destsuffix"] =3D location
-+                else:
-+                    bb.warn(f"Please add support for the url to npm fetche=
-r: {resolved}")
-+                uri.params[checksum_name] =3D checksum_value
-                 url =3D str(uri)
-=20
--                localpath =3D os.path.join(d.getVar("DL_DIR"), localfile)
--
--                # Create a resolve file to mimic the npm fetcher and allow
--                # re-usability of the downloaded file.
--                resolvefile =3D localpath + ".resolved"
--
--                bb.utils.mkdirhier(os.path.dirname(resolvefile))
--                with open(resolvefile, "w") as f:
--                    f.write(url)
--
--                extrapaths.append(resolvefile)
--
-             # Handle http tarball sources
-             elif resolved.startswith("http") and integrity:
--                localfile =3D npm_localfile(os.path.basename(resolved))
--
-                 uri =3D URI(resolved)
--                uri.params["downloadfilename"] =3D localfile
--
--                checksum_name, checksum_expected =3D npm_integrity(integri=
-ty)
--                uri.params[checksum_name] =3D checksum_expected
--
-+                uri.params["subdir"] =3D location
-+                uri.params["striplevel"] =3D 1
-+                uri.params[checksum_name] =3D checksum_value
-                 url =3D str(uri)
-=20
--                localpath =3D os.path.join(d.getVar("DL_DIR"), localfile)
--
--            # Handle local tarball sources
-+            # Skip local tarball
-             elif resolved.startswith("file"):
--                localpath =3D resolved[5:]
-+                return
-=20
-             # Handle git sources
-             elif resolved.startswith("git"):
--                regex =3D re.compile(r"""
--                    ^
--                    git\+
--                    (?P<protocol>[a-z]+)
--                    ://
--                    (?P<url>[^#]+)
--                    \#
--                    (?P<rev>[0-9a-f]+)
--                    $
--                    """, re.VERBOSE)
--
--                match =3D regex.match(resolved)
--                if not match:
--                    raise ParameterError("Invalid git url: %s" % resolved,=
- ud.url)
--
--                groups =3D match.groupdict()
--
--                uri =3D URI("git://" + str(groups["url"]))
--                uri.params["protocol"] =3D str(groups["protocol"])
--                uri.params["rev"] =3D str(groups["rev"])
-+                url, _, rev =3D resolved.partition("#")
-+                uri =3D URI(url)
-+                scheme, _, protocol =3D uri.scheme.partition("+")
-+                if protocol:
-+                    uri.params["protocol"] =3D protocol
-+                    uri.scheme =3D scheme
-+                uri.params["rev"] =3D rev
-                 uri.params["nobranch"] =3D "1"
--                uri.params["destsuffix"] =3D destsuffix
--
-+                uri.params["destsuffix"] =3D location
-                 url =3D str(uri)
-=20
-             else:
--                raise ParameterError("Unsupported dependency: %s" % name, =
-ud.url)
-+                raise ParameterError(f"Unsupported dependency: {name}", ud=
-.url)
-=20
--            # name is needed by unpack tracer for module mapping
--            ud.deps.append({
--                "name": name,
--                "url": url,
--                "localpath": localpath,
--                "extrapaths": extrapaths,
--                "destsuffix": destsuffix,
--                "unpack": unpack,
--            })
-+            urls.append(url)
-=20
-+        if os.path.isdir(localpath):
-+            localdir =3D localpath
-+            localpath =3D os.path.join(localdir, "npm-shrinkwrap.json")
-+            if not os.path.isfile(localpath):
-+                localpath =3D os.path.join(localdir, "package-lock.json")
-         try:
--            with open(ud.shrinkwrap_file, "r") as f:
-+            with open(localpath, "r") as f:
-                 shrinkwrap =3D json.load(f)
-         except Exception as e:
-             raise ParameterError("Invalid shrinkwrap file: %s" % str(e), u=
-d.url)
-=20
--        foreach_dependencies(shrinkwrap, _resolve_dependency, ud.dev)
--
--        # Avoid conflicts between the environment data and:
--        # - the proxy url revision
--        # - the proxy url checksum
--        data =3D bb.data.createCopy(d)
--        data.delVar("SRCREV")
--        data.delVarFlags("SRC_URI")
--
--        # This fetcher resolves multiple URIs from a shrinkwrap file and t=
-hen
--        # forwards it to a proxy fetcher. The management of the donestamp =
-file,
--        # the lockfile and the checksums are forwarded to the proxy fetche=
-r.
--        shrinkwrap_urls =3D [dep["url"] for dep in ud.deps if dep["url"]]
--        if shrinkwrap_urls:
--            ud.proxy =3D Fetch(shrinkwrap_urls, data)
--        ud.needdonestamp =3D False
--
--    @staticmethod
--    def _foreach_proxy_method(ud, handle):
--        returns =3D []
--        #Check if there are dependencies before try to fetch them
--        if len(ud.deps) > 0:
--            for proxy_url in ud.proxy.urls:
--                proxy_ud =3D ud.proxy.ud[proxy_url]
--                proxy_d =3D ud.proxy.d
--                proxy_ud.setup_localpath(proxy_d)
--                lf =3D lockfile(proxy_ud.lockfile)
--                returns.append(handle(proxy_ud.method, proxy_ud, proxy_d))
--                unlockfile(lf)
--        return returns
--
--    def verify_donestamp(self, ud, d):
--        """Verify the donestamp file"""
--        def _handle(m, ud, d):
--            return m.verify_donestamp(ud, d)
--        return all(self._foreach_proxy_method(ud, _handle))
--
--    def update_donestamp(self, ud, d):
--        """Update the donestamp file"""
--        def _handle(m, ud, d):
--            m.update_donestamp(ud, d)
--        self._foreach_proxy_method(ud, _handle)
--
--    def need_update(self, ud, d):
--        """Force a fetch, even if localpath exists ?"""
--        def _handle(m, ud, d):
--            return m.need_update(ud, d)
--        return all(self._foreach_proxy_method(ud, _handle))
--
--    def try_mirrors(self, fetch, ud, d, mirrors):
--        """Try to use a mirror"""
--        def _handle(m, ud, d):
--            return m.try_mirrors(fetch, ud, d, mirrors)
--        return all(self._foreach_proxy_method(ud, _handle))
--
--    def download(self, ud, d):
--        """Fetch url"""
--        ud.proxy.download()
--
--    def unpack(self, ud, rootdir, d):
--        """Unpack the downloaded dependencies"""
--        destdir =3D rootdir
--        destsuffix =3D ud.parm.get("destsuffix")
--        if destsuffix:
--            destdir =3D os.path.join(rootdir, destsuffix)
--        ud.unpack_tracer.unpack("npm-shrinkwrap", destdir)
--
--        bb.utils.mkdirhier(destdir)
--        bb.utils.copyfile(ud.shrinkwrap_file,
--                          os.path.join(destdir, "npm-shrinkwrap.json"))
--
--        auto =3D [dep["url"] for dep in ud.deps if not dep["localpath"]]
--        manual =3D [dep for dep in ud.deps if dep["localpath"]]
--
--        if auto:
--            ud.proxy.unpack(destdir, auto)
--
--        for dep in manual:
--            depdestdir =3D os.path.join(destdir, dep["destsuffix"])
--            if dep["url"]:
--                npm_unpack(dep["localpath"], depdestdir, d)
--            else:
--                depsrcdir=3D os.path.join(destdir, dep["localpath"])
--                if dep["unpack"]:
--                    npm_unpack(depsrcdir, depdestdir, d)
--                else:
--                    bb.utils.mkdirhier(depdestdir)
--                    cmd =3D 'cp -fpPRH "%s/." .' % (depsrcdir)
--                    runfetchcmd(cmd, d, workdir=3Ddepdestdir)
--
--    def clean(self, ud, d):
--        """Clean any existing full or partial download"""
--        ud.proxy.clean()
-+        foreach_dependencies(shrinkwrap, resolve_dependency, ud.dev)
-=20
--        # Clean extra files
--        for dep in ud.deps:
--            for path in dep["extrapaths"]:
--                bb.utils.remove(path)
-+        return urls
-=20
--    def done(self, ud, d):
--        """Is the download done ?"""
--        def _handle(m, ud, d):
--            return m.done(ud, d)
--        return all(self._foreach_proxy_method(ud, _handle))
-+methods =3D create_methods("npmsw", NpmShrinkWrapMixin)
+
+Stefan Herbrechtsmeier (21):
+  tests: fetch: update npmsw tests to new lockfile format
+  fetch2: npmsw: remove old lockfile format support
+  tests: fetch: replace [url] with urls for npm
+  fetch2: do not prefix embedded checksums
+  fetch2: read checksum from SRC_URI flag for npm
+  fetch2: introduce common package manager metadata
+  fetch2: add unpack support for npm archives
+  utils: add Go mod h1 checksum support
+  fetch2: add destdir to FetchData
+  fetch: npm: rework
+  tests: fetch: adapt style in npm(sw) class
+  tests: fetch: move npmsw test cases into npmsw test class
+  tests: fetch: adapt npm test cases
+  fetch: add dependency mixin
+  tests: fetch: add test cases for dependency fetcher
+  fetch: npmsw: migrate to dependency mixin
+  tests: fetch: adapt npmsw test cases
+  fetch: add gosum fetcher
+  tests: fetch: add test cases for gosum
+  fetch: add cargolock fetcher
+  tests: fetch: add test cases for cargolock
+
+ lib/bb/fetch2/__init__.py   |  35 +-
+ lib/bb/fetch2/cargolock.py  |  73 +++
+ lib/bb/fetch2/dependency.py | 167 +++++++
+ lib/bb/fetch2/gomod.py      |   5 +-
+ lib/bb/fetch2/gosum.py      |  51 +++
+ lib/bb/fetch2/npm.py        | 244 +++-------
+ lib/bb/fetch2/npmsw.py      | 347 ++++----------
+ lib/bb/tests/fetch.py       | 880 +++++++++++++++++-------------------
+ lib/bb/utils.py             |  25 +
+ 9 files changed, 916 insertions(+), 911 deletions(-)
+ create mode 100644 lib/bb/fetch2/cargolock.py
+ create mode 100644 lib/bb/fetch2/dependency.py
+ create mode 100644 lib/bb/fetch2/gosum.py
+
 --=20
 2.39.5
 
