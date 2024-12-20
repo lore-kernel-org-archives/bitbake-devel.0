@@ -2,47 +2,47 @@ Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCC2C3DA4A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A386E77195
 	for <webhook@archiver.kernel.org>; Fri, 20 Dec 2024 11:26:41 +0000 (UTC)
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.114])
- by mx.groups.io with SMTP id smtpd.web11.149745.1734693993938884026
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.106])
+ by mx.groups.io with SMTP id smtpd.web11.149743.1734693991344736713
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 20 Dec 2024 03:26:40 -0800
+ Fri, 20 Dec 2024 03:26:38 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=NTrdkvnI;
- spf=pass (domain: weidmueller.com, ip: 40.107.22.114, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=Q1oM/ffD;
+ spf=pass (domain: weidmueller.com, ip: 40.107.22.106, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KXlUIjGP2ZyO+zSLq0on+K2zqRZL96k2VR+OR+oFNXn7K4iAPnBUAV8+UR4gv9X05oXCn29c94Ma9YQCPKDG7nnwZ83M4J7CV0sGQQNMnJz5COU/eS/QBZCFXkiuMP9iCFizVJA1D3cLi18cvr1xuyYJoYlBO5vT17dD+5pKdHn95bUpwIigevpj0liCJWeQvt783ZaxB2a8BxgxBCzRc7g7FuKEI1hBMKKJCNsDEhqQn4A77wGUIHn76mIOGNv9Jn0pI63fpmkYkdLZLfAZzMzBlB7USoVFEcR48yCQweD/VymA8UUudSon0VAQ1epyekAYz8KNmYMhg5mSOZwiug==
+ b=bWX7NH2S3CURC3kerqcvDMFTL0HfmVIueamOVAh5o0t+TBT/uxcxWOYBVlfNrT6b5t8hmiSIRP023FthVViOLud7qMIR8D+GwfRvNEnIBOrM5RsyFJ1qLY6i4tI2PENqj3aaSNmhMKHIKjrfABMf3yd7/aWKxevrlbiOn+30zAnVvje4kANGWe/U4BsRZRVwpEzYcxCl4vUVU0bTN91eZGYruzj7JYOCQW8LNGyzfEySjuMZtLXOF2EwD7ySWq9YJq/YTrVP/Uw0zkao9Ec01/y+luYDdRMxtFrVsk57Y+Y9dwyeRjzND/MRM60FRYmyCYI+i/BuJKtSO99769Cxnw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eLENERgwmHO7EYBIoxAN9UBOjHA8RShHsMMjX0MMi1A=;
- b=o7LZc3E4EXKREJ+C4fVe2bNNwWWAiDt6cgQm/3Tr4ZKIBiJnsZxXOi6VJQzW/qOj/YeHBmBl8uhxhGeQeKUYs7GStxSes5RmgdtlGJBAYXOjJ8J39eR2qgAEkZMX5GXKoLCZe5oxQ9QtVsMxp9b6vFYoLdGf45ED5Lrzd+5R3P8Bpop3j/GC6qN0WG10FZwEsDMhMoFJFTxNG9h/XwtjKTM5a9KT0RYwQtz5PGYZ7oEV0gtNI4xGy8QktGR9eJCysytsPXZciPVw2rXmZVC1SA6sQdObL3/i6JtlZ7lkcEBpwgWyXE6pESFSu8NlI9HmJ/cmApmszpZWkMJQq5Bqaw==
+ bh=4XJfSBCTU3pIgNwk3SGlO6vmqo0NIaZAi32yAPJjF4Y=;
+ b=HQ9ABuNjRMPJ4wBTU74UBbUKsNl3/2/HPZ1/59EdGMlCLOUZ2OPaOdQH8yEN8BwPhI5VgZJaJkplJkTFY1sRKJYKqlajaaD7xC1byZW154OtyvaBiRMXrzyg9EaFt6GKIPIJaYlwvY9CYaIsRYrltrsPRVniiu5fsvhN1XruKQfCE+5X5+7lECl+FXwwaeIfBOzo4wXrn06/JEZNt/bshSeIRzk9oJ9hsGCsH9jPL5hhyh8DWTjouaAx35za0z1R22//4JGkOj2s+82vZrahndamC+iOpCeCLNFejIHaj06uCThq1rGlfjs0lGC3kAZXKnwJRHrmYa/j3GaJLveaCw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=weidmueller.com; dmarc=pass action=none
  header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eLENERgwmHO7EYBIoxAN9UBOjHA8RShHsMMjX0MMi1A=;
- b=NTrdkvnIyysR4PEliaM06auU36+y2BvftokwUJq2s4gIGwBnLzHCA0xbzIj/AecV/45Of6B5xVhgJ82gqhs4k/4kpMdVL7tpo+oP8CMmKgQTsmQSMf/GfDYZAEXrnz7PkwXvTpRlsjSRuVVn+kwg3IuUsa5auHty9zZ0Q7QJ3ZUNbYQmEW9/02lEwZ9PeArBGb92YV64a9YXZ8dGRI8GWdRKBoN874MfPzPFVDFLLskHVn6JrgXDlPnlcgnp0lV36wBhI7/cq96/TajnXJhnc3kL1JwoXtPy5+VH3T5Nmq+mni8hA66/6L1zowJX4SnD4vtHi608FcSU4LdKteBzjw==
+ bh=4XJfSBCTU3pIgNwk3SGlO6vmqo0NIaZAi32yAPJjF4Y=;
+ b=Q1oM/ffDTghqYq+3XCDR8O5WviN+lB4g0thClIviOwFzSyJwJXbevGcpP3INA7VDm7DvBq5ZaXLaBP6j8dm42GcqIE/kJMAQIJqISDBu56Y9hEwqyji64vBAxem2737p7ZnprScwjK5RGbWilkhNdrKQcm305RccAzjMbr3W6SCfuX2hVP+fmlv33hz/L5NXwdzOkUWOIy+tiNmgnbe5OLYGmYeiLYlfC4DB0J8nJrK5NswW1L9XrbItdlvR7uh3xGI0aWSUcOcu9LEXQ/INVcnCMImixIy7OG1BQ8Z/qoHtqpuF3oisRadhC3YAUwQ20hnJlHFOtDn+0XnMSTaCQw==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=weidmueller.com;
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com (2603:10a6:102:1d8::23)
- by AM8PR08MB5684.eurprd08.prod.outlook.com (2603:10a6:20b:1dc::20) with
+ by DU0PR08MB8256.eurprd08.prod.outlook.com (2603:10a6:10:410::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.16; Fri, 20 Dec
- 2024 11:26:31 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.14; Fri, 20 Dec
+ 2024 11:26:30 +0000
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4]) by PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4%3]) with mapi id 15.20.8272.013; Fri, 20 Dec 2024
- 11:26:31 +0000
+ 11:26:30 +0000
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
 To: bitbake-devel@lists.openembedded.org
 CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Subject: [RFC PATCH 19/21] tests: fetch: add test cases for gosum
-Date: Fri, 20 Dec 2024 12:26:10 +0100
-Message-ID: <20241220112613.22647-20-stefan.herbrechtsmeier-oss@weidmueller.com>
+Subject: [RFC PATCH 14/21] fetch: add dependency mixin
+Date: Fri, 20 Dec 2024 12:26:05 +0100
+Message-ID: <20241220112613.22647-15-stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
 References: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
@@ -53,181 +53,309 @@ X-ClientProxiedBy: FR0P281CA0106.DEUP281.PROD.OUTLOOK.COM
  (2603:10a6:102:1d8::23)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR08MB6969:EE_|AM8PR08MB5684:EE_
-X-MS-Office365-Filtering-Correlation-Id: 238f62ed-c9e3-4a4c-964e-08dd20e92683
+X-MS-TrafficTypeDiagnostic: PAXPR08MB6969:EE_|DU0PR08MB8256:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6980f98e-ef14-4bda-7353-08dd20e92590
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|52116014|376014|1800799024|366016|38350700014;
+	BCL:0;ARA:13230040|366016|52116014|1800799024|376014|38350700014;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?2alrcqpwAHmOyeKcHUxyRwBl372NEK0TeC5RTzBPz0/+wWtb0vOSVdN6zeqV?=
- =?us-ascii?Q?DvcN/VsvrFiRdB7crvqsmjVtZ/kK5O2WA+J64jO3NoDoOwIecP6AtFqgxOaK?=
- =?us-ascii?Q?It2zgfSvuffi6dc59cOgS3IimVk0LarQPKDH7Se5dAH3ULeauVaQh/c/orti?=
- =?us-ascii?Q?CM9SYc6gvO1Tf4rLFZrpqrMComN+MJ+2hmDu1n2z8MrAS8MVjzKEQ3OaVHUL?=
- =?us-ascii?Q?3oTh2RFtB5gdDCCa2LUwN03FG3h7J1xUsAH6i6ZVlKJO4Xk5cyNkRWQXXR+b?=
- =?us-ascii?Q?8kziSyoE2QR2IjHWi8zua/4t/07S4io6W0dXc+otcc1YztUhP42y70jpTqcn?=
- =?us-ascii?Q?4/A/h4e/DoX7p75tUtLglaBlWPDBmmjBJw2ytbm32nKXlpnu5+4S410YpfD9?=
- =?us-ascii?Q?AtEhPF+qeWTee1jolDDjT8UG5ZNeHkN2jsW3QA1JsoeEekG/tgUH62f7x4mT?=
- =?us-ascii?Q?1iicAcTOw5TjfJSiA54bC8bzLJ30lzA2DrDOlDCuD+bUHr1pq1w1sELxlHkl?=
- =?us-ascii?Q?FRSiw0pwJkFmdtGsRCoVpSE6O+SxvdUyqUc4fHega9KcmpUPjX2/8EcG5B+V?=
- =?us-ascii?Q?dF0yr2q9MmxtAI5qIn33uSYAlZqlaDpV7vWJfnlkbS/3PcFCu+SN3J0/LHQI?=
- =?us-ascii?Q?hJgQQxCDoMAnLJf0T5MC1P387MSey+FNv6X8pEhkRFId72VPFNxu/MicLl6V?=
- =?us-ascii?Q?Q23AO6FddmSNS99ncy/654gsTE72c/eIkBcny754/Czcxj3xgWzi5eP6XbC1?=
- =?us-ascii?Q?1yvI03ELm3ZJa49NMGRjRhe+sXq1IckqmFS4p6Dna2u678uloWLttUpUqUfW?=
- =?us-ascii?Q?xxjNFurcU9gMnO7fQX4cxyA9cDwnYo7jJqk+Bq/GTi/6Jl3cyeVCRET+W1r5?=
- =?us-ascii?Q?vG6W6/0lwxk103vOSgAB2KfA6JJjSolj+rpGOWxaDDW7zhlmnRdE99F7XkE4?=
- =?us-ascii?Q?QrjFb/tVeiqJsgxN/tzUKBd40T4Zv9j5rCfDzcWzcH/9nZMcPnaNNfVgUkH0?=
- =?us-ascii?Q?DLEbkoVNi0efw1mbiBQcwdiGg8tD0wwDmSLfgOyYa43NJH/xGvWndmyceR3k?=
- =?us-ascii?Q?zHDaTGJmVIFERvC8SrBNxVvW/6hj+EZm3Zd4FZhVtrVTeJ4KUkhMt/EJjoR6?=
- =?us-ascii?Q?qq1e4GqkpHAvA7pMgnahTgN61jzxqLgN+eg8W7v9zoMWyGGds3+pU1c/Rrkt?=
- =?us-ascii?Q?MUzACVuiw8O7HURQA0rPMPgIRYEvGS79+IZ0sI2zPpjvgVGlcUoHScH4JM4X?=
- =?us-ascii?Q?BBNQhqQsTV48qz4ZbZQcurHEdTk6otywTGwwTXpzJP5trcVhwYNsQqO9uiSC?=
- =?us-ascii?Q?dtiuRZDKvC45MpQ3pJKan3y+Nlid8vhgdKOKXRTf/beBKOmntL4BMG9V4H89?=
- =?us-ascii?Q?yNXUK+yFGYGSPA+t1ogDGTcS6AsD8hdz5dPh268Xqdulc2nbAg=3D=3D?=
+	=?us-ascii?Q?ZSon4kxYYTYkzpVlQSaOZjfGBZe+BfnXpxVVYdxsQIhfc6hPT8NCRny1h6iI?=
+ =?us-ascii?Q?qca3fwCPfjru7Ps5hNsw94hC9qIed241kD4J657A1MFD3QkiDKAzGTtGGP0j?=
+ =?us-ascii?Q?saAuru3eBuxVu/z+FXKZzdc8ov96BNkCzQd8DATDd/v0Z8lyTFCVVB9xAlNN?=
+ =?us-ascii?Q?QbdrIBE9wL6EOA+EXVFLKSatH97QuA9lAKglXaklloSxuN3+IE7JCFGTYKVR?=
+ =?us-ascii?Q?YWMyOSZh+zP6DQ8kW1syFScwm1CppCK/naO/aB7NhArh5O8hWLVwDSJAoZ5P?=
+ =?us-ascii?Q?b580edqWudFCyrvMUovwOh78+b64waDpWEKf7hTKo8cLUjRiKpUAmLQzrUGl?=
+ =?us-ascii?Q?HCV8V15lTgAdUD8XdPKxwO4G43+D4IGiH4nTJePnMKz5dLgxwpv7KtoN7/WG?=
+ =?us-ascii?Q?iI66L4GjeqGh8My9ietX4q6xejb44ndlppaB1V4BlLabpyJo/+o1JVqa2/74?=
+ =?us-ascii?Q?RNseuieaD6zFufPQq971h/tcKhN5/ILOQlNWH33VC4qPMGDhYkT+Kq4xloWZ?=
+ =?us-ascii?Q?DN5GTOpor5JyTxCrwBK45v+bEroe6Y5iell3fXfYQyIP2U7ODhj+gaHdTWCi?=
+ =?us-ascii?Q?YVOGzipSv5BTBlrUwK5shCbxFjJYVUK2jGZQd26GcRkD67WbuBMy0J+aBtqb?=
+ =?us-ascii?Q?D3XkWCvImjJOXtRGlln0/XuFOy/CJMIAwMILHGKcSMmXbeiSp9iQ3apxkrFo?=
+ =?us-ascii?Q?WS+j0Qp7ctCtvxxYl++4BhuJ3nUBF1Kfm5jGQwI/599I5oemffDcM9dAVgYY?=
+ =?us-ascii?Q?NpACIYvvK/+tQiWtK/o11xG4mgJB1oLA+N1JgY3ls+5cSbZrcagYaTpaA2PX?=
+ =?us-ascii?Q?MNJgwk/lNHJZAzXNWJ96J8lqwUuLcKL6eOrLsPNO6isF3qyVmcqD4kw9vikY?=
+ =?us-ascii?Q?jUMFqMB9sgy0FKayNuCSRst/C6ERdDZg/h/b/xd83n8XY3wagUXTMLQBkPtj?=
+ =?us-ascii?Q?k9iCS20Q2b3kerXsDn1VZHVQdweJPG+h/8+pwk3YhpngoeG216pyQVcYQXVP?=
+ =?us-ascii?Q?z0yK+Bweoot5y7vxC54h3ES8zhKIOlAPRiJ74d48Y0x+zsH5wbS1c1fg0YKN?=
+ =?us-ascii?Q?lfRrP4XjXcxyyGVY9IQuZEAlhEDNAbs+1s2Rcl3zgDm0o0cCSYSP+6GB4YK9?=
+ =?us-ascii?Q?70es3oG028sUmkg9q/715RFhW0TovD2fe7OjwVJbDdoWCCf6aXYf1A2Rwd+O?=
+ =?us-ascii?Q?fNS75SkqVieYFaVxB2v9uRdmWhw8kUbWDn/VPzwAZj/iRQhJPcrgVz0cBhlH?=
+ =?us-ascii?Q?WRBFYUW3z5fXemTfLbgZWsXxotAs5RK5+vVcmizcgED6HQBfXxAKsPDeeiCE?=
+ =?us-ascii?Q?Lu4Eb2RkOmkxij2M8fOp0gyTlLt7pp40aE2zDVIu9dRApVFB/DQ842+xfO/s?=
+ =?us-ascii?Q?tdE6pvue8XSDSJe9j5t9JMDn+btl?=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(1800799024)(376014)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?fWgw/y5eV4jeiR6Bnmev0xaM8U6/dV8IJfL8Dfbd21t1eptKONK1qdXO6m+s?=
- =?us-ascii?Q?HWunxwmlWVj2aWUrMcsuF6jFr9fNVKnup/vYF7NRRll3z46GXk0uc4A6zuFG?=
- =?us-ascii?Q?oGzldYneCFEAEGTqUbdL7n+dvD1ZEt2hbLoe23qUBofnmBv/VxjJ8kOT0Ye1?=
- =?us-ascii?Q?+n5mQ3TJM9NGySMYGTNlXAWdFMZ/GNDbeIzCPncBEe3fbSOv5Dteh6Yz2HrN?=
- =?us-ascii?Q?8JVcP7dalCzrzydFmZKRgDlaY2e0uMrbfW3DgAEDUFh+MMBI+9+BBPpQIU9y?=
- =?us-ascii?Q?Th4uO1by7CP/G+rE4gNYnsF0DqwBMX3acOmfle16a7aHyoSQyqsCgC1XGQSi?=
- =?us-ascii?Q?2D6fK5TdEX2ydSEIsP1tjzad7ggJO8ZkqvCpqnhK8bUAYk1OEvGMVZzEax00?=
- =?us-ascii?Q?qe5zkkjBGG2j8llSiT2azffv0ZKbMK7ySXlumR8l9Q+PKFpOEabHyQTyLtzq?=
- =?us-ascii?Q?q+0JiCUVRJVTsZazSQ2x8x2sD/0eZ5+p4sUmL6hceZyv3J3B2XQbgaxyvtTK?=
- =?us-ascii?Q?X9CGSLsRBHhacFrfaHmVy2bEF7DGdQ7XOfJga0iidpDbqUNWsN4ptb5Nz5XC?=
- =?us-ascii?Q?wPNJaA9YWfTAdyRcYL+ZqJOyOwlx2rSMmSCf2lciUvS3TXQ8e5OeuvrV2aod?=
- =?us-ascii?Q?dCKg6icq4HVjnIpSjTSFQZzm+XVfWIUVU5xMROr5olqcWIlTSBBATJRhvGVo?=
- =?us-ascii?Q?rTFi3Hoi045Voi9Q1yQEE+pUWbNNpVWgc0I2LJLtWM+XEYF/JRTBLoCRPP9C?=
- =?us-ascii?Q?8p6Bh8X18UVPFDYKv8bkaQ45NkNPvZ5Ump8qtloom1zOKGNti89Cf/kvacNJ?=
- =?us-ascii?Q?MYrL8J75reKed6NEJwlQtLLIO9dKrETCe/UGWEnt3mJaDvf2Q3OFMAZoe6H0?=
- =?us-ascii?Q?h+zNANoUazJjd6iHS6O+/ScxfOKlrlZq31DCzwqLL6yEfRHBTeWhxIvIfYw1?=
- =?us-ascii?Q?Owz2u26xaZ3VrzDdEY4y8+o82u9owKQIdsmIHfj2zh9JNsZpmeeYzsTuYUIm?=
- =?us-ascii?Q?gQl/q7/ka7Dg0M2eYTbWDYybMfdxOAxmaPGtbeQjDtnmF5MC3oShT7XkV59r?=
- =?us-ascii?Q?DFjQXW02IzD1F4lC76ywqiI/STXxhZPWMNR3Ry98QRv7lBlQHsJvEf2XvyV+?=
- =?us-ascii?Q?JaOT7KLdFot/OF2Yuc1Uz97IYj5M3XX4gPYfgBOsDG2gcDapSojdyQ9h3zUG?=
- =?us-ascii?Q?Wb8Cfqph3TTsd1tIUgi1oaHYZn3XKp8SXPGrpmIiUh9aszZL2rR4kjUAbWEW?=
- =?us-ascii?Q?2ltftxqYq22gcIE4ajdxyBunWuBdN0Y5Dybwc4swEqWxxJKeh5Vi+u5Yd4V6?=
- =?us-ascii?Q?n1V2g0iSjllHpfLm6tQP80jQ/S0LCT5JUjD2f1yaInkkvfq38h2f2vt2fEY/?=
- =?us-ascii?Q?bJqjc8MtWVMG9UqI17Rd3A7YXbcTeM5jkWkOKZ6HnCzkaHmsZFRauaxjBYs2?=
- =?us-ascii?Q?WElkRDj4eWhiVaxyII4J/7cg4ee8jbZqPr7A6G7ne5CW+neQrOiUKe7YEhQS?=
- =?us-ascii?Q?G0qMGiNdOXI39nIo7yr83D84XoFACLBNGWfaueo1NKURgwNmHMRA3vHgZFVD?=
- =?us-ascii?Q?HWIFdUCUmZJol+sDD23W1XyMavoydtYSUdvsvK3f2K0yj3V6sgtfhsqY1JSi?=
- =?us-ascii?Q?5Q=3D=3D?=
+	=?us-ascii?Q?c43t+4Dyc8R6Psw4EC3xjnXpdK+2QaY6kmw3vEmnldeOv0dtbtfxx907ZTOG?=
+ =?us-ascii?Q?ParllZh5FryCgrTTs7lxM2GdQrqBkcyY49OBgIuCOdAEWUhN9WymUZ0V7TJo?=
+ =?us-ascii?Q?5ta16+tZhqsVTPMKaysOJUtkigA9WqcH3uXslXipSPfJvLYxL8B1a4HWmEUj?=
+ =?us-ascii?Q?je6vqk4ckXuSJdh0l+sTqtGyYuUfNKx4OKSEUo65/+clMSW7rOPL8+LzGW84?=
+ =?us-ascii?Q?dP5ivV/TcjQO7DmbcOIzOPhgf+t3DdX5NmDSg8oUqcyks82R2y1fZb0lFYKY?=
+ =?us-ascii?Q?B92GpfYt5pYx6WJsoos/u0pDOYQqtHUXrZDc7ZtDXEeotlNWZVHq2RowmKul?=
+ =?us-ascii?Q?ldF40WGWvj+aWb3PZZQh8lChoJA+eh19QZMTCMQKBq9ng+zA0gcP39ZXr8CL?=
+ =?us-ascii?Q?sFYciyOcNNWtd9CUd+bdE3foPg+b0f9wsUt9M16M2Lh2uJTldkIS6XnKzJO7?=
+ =?us-ascii?Q?AI1MyJuYH+Vgi7srm9hWKJSY9KEaABoD2IKy22/HIizuCfw6jV90EKCbgpOz?=
+ =?us-ascii?Q?jwNSd9n7I4+ckgQcw9nOoUZ/taVDTbQZFCJjn6vFN+4zDpbHgU4GF98XRDBK?=
+ =?us-ascii?Q?zNjbRcO2YV1rNSf0bFNSK7JPimpTh/L7i7MSwhmhDhMvEkTNJwesbD3BIKnz?=
+ =?us-ascii?Q?apsA5HyuwdzkOo8ntpixI8GNQ0zlS2x+hTanWplFsy0POUXrCDKPpu32lmZC?=
+ =?us-ascii?Q?NXqBSBbXJjhRbjl3k2Asa+fmxvCapeNy5wb5hadM6zg4T+e+UB4FLXDZnnmX?=
+ =?us-ascii?Q?b3hbDCXPieZ/pFVQvzfE73+itj2At98tI1LR/YirXMtyKDnQPSHRAipoANS0?=
+ =?us-ascii?Q?abMrrRKW9+bMfHllqwzrH1/dQ01f9zd7sbljPAzv40KOhzXLjSfaZ/V/WZAQ?=
+ =?us-ascii?Q?4v3kfUG2Es2S9Mj7vD2lLyMrJ/s/4seRd2zMQ8pRY6mVL/vhUbYvsl4IH8p7?=
+ =?us-ascii?Q?OSQrl52m3VegJyUwAx7ulY8BomdfduMQPiZ3/pfqjXpNhU7D7NeqGFX1dmEJ?=
+ =?us-ascii?Q?O7Dg/GYBjenNBngB8oXMPeb1JoiYKwvHRr5oS+d/mSHbe4JVVCfEXxx728yN?=
+ =?us-ascii?Q?Iast3NXySgv5lUO4BSZLBtCevbE0ZYxkfhRvfv7fHXfhZqCDdRkDKOEsOGTV?=
+ =?us-ascii?Q?LjqGLPfAAJWAkw5JC/2CIuzOiyCnLUl/S1aH+Y7Db9vZXxmBKtZ8iGBswsqL?=
+ =?us-ascii?Q?2JjWPmXKTnkTuHFUx3SYXNA5Gyhh6rzjbigRc7YPExkA6A4Ct6bu7OveT9C1?=
+ =?us-ascii?Q?J28I9Bdsm0lSaRiPS4nfXrhD/O7lcq7ejRmbdqRw6tpv+S1hDZA/hEkhczTW?=
+ =?us-ascii?Q?FkUQKLQPYXkpOdMKbSqFFcDj0zjBiYv10u8zbSMQcC+dF96i/2T/IE+5n6rx?=
+ =?us-ascii?Q?qiArHXO1kveYnoJP4k9xOrOTBitoty/dTnsE4zotKjNELneSPe/yWW5VpmrY?=
+ =?us-ascii?Q?dPqJfcDHKSoMiLlFRyVcmwKmAYrrF9hiKbmoMqVMvzPtnu0CaKmn8EOcnaOB?=
+ =?us-ascii?Q?AOhxHGXjnnwtmQ9HODsBjnm+I0emgcCcNVzilB2LFtkphtrQT3y2Q5EfWyLp?=
+ =?us-ascii?Q?0ncGpOyt1E+8LGH5ynUBEaj6CjlCHMkSNqQIEA3bNIjm8W2XlnhVGMjhzPzv?=
+ =?us-ascii?Q?/g=3D=3D?=
 X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 238f62ed-c9e3-4a4c-964e-08dd20e92683
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6980f98e-ef14-4bda-7353-08dd20e92590
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR08MB6969.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2024 11:26:30.3116
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2024 11:26:28.7559
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: krhEqhsGFuOs0+3lJWYyXwodt/ohXCBxO2iOpQGkXALV9iRV1XROCq2M8Zjel3YO+AYBFzL2FHx/nN+XUj1CTA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR08MB5684
+X-MS-Exchange-CrossTenant-UserPrincipalName: V3sX4qq4q/+8u3BKT3+9HOZ1CoZYixplfqadoJnQ0/Jme4ONuxPnjrGJt815FLcbP8IU2ZAVeNj9ckqgjmatKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB8256
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 20 Dec 2024 11:26:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16939
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16938
 
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
+
+Add a dependency mixin classes and module. The mixin implements generic
+methods to fetch dependencies via a dependency specification file. The
+subclass must implement a resolve dependencies method. The method
+resolves the dependencies from a specification file into fetcher URLs.
+The module provides different fetcher subtypes:
+
+<type> (Local)
+    The fetcher uses a local specification file to fetch dependencies.
+
+    SRC_URI =3D "<type>://specification.txt"
+
+<type>+https (Wget)
+    The fetcher downloads a specification file or archive with a
+    specification file in the root folder and uses the specification
+    file to fetch dependencies.
+
+    SRC_URI =3D "<type>+http://example.com/specification.txt "
+    SRC_URI =3D "<type>+http://example.com/${BP}.tar.gz;striplevel=3D1;subd=
+ir=3D${BP}"
+
+<type>+git (Git)
+    The fetcher checkouts a git repository with a specification file to
+    fetch dependencies.
+
+    SRC_URI =3D "<type>+git://example.com/${BPN}.git;protocol=3Dhttps"
 
 Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.c=
 om>
 ---
 
- lib/bb/tests/fetch.py | 56 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+ lib/bb/fetch2/dependency.py | 175 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 175 insertions(+)
+ create mode 100644 lib/bb/fetch2/dependency.py
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 437571f1c..30c821a67 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -3439,3 +3439,59 @@ class DependencyTest(FetcherTest):
-         self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "dummy=
-/dummy.txt")))
-         self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "dummy=
-/bitbake-1.0")))
-         self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "dummy=
-/git")))
+diff --git a/lib/bb/fetch2/dependency.py b/lib/bb/fetch2/dependency.py
+new file mode 100644
+index 000000000..4acad8779
+--- /dev/null
++++ b/lib/bb/fetch2/dependency.py
+@@ -0,0 +1,175 @@
++# Copyright (C) 2024-2025 Weidmueller Interface GmbH & Co. KG
++# Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
++#
++# SPDX-License-Identifier: MIT
++#
++"""
++BitBake 'Fetch' mixin implementation for dependency specification files
++"""
 +
-+class GoSumTest(FetcherTest):
-+    def setUp(self):
-+        super().setUp()
-+        self.localsrcdir =3D os.path.join(self.tempdir, 'localsrc')
-+        os.makedirs(self.localsrcdir)
-+        self.d.setVar("FILESPATH", self.localsrcdir)
++import tempfile
++import bb
++from bb.fetch2 import Fetch
++from bb.fetch2.git import Git
++from bb.fetch2.local import Local
++from bb.fetch2.wget import Wget
++from bb.utils import lockfile, unlockfile
 +
-+    def create_go_sum_file(self, data):
-+        filename =3D "go.sum"
-+        with open(os.path.join(self.localsrcdir, filename), 'w') as f:
-+            for module_path, version, hash in data:
-+                f.write(f"{module_path} {version} {hash}\n")
-+        return filename
++class DependencyMixin:
++    """Class to fetch all dependencies resolved via foreign function"""
 +
-+    @skipIfNoNetwork()
-+    def test_gosum(self):
-+        filename =3D self.create_go_sum_file([
-+            (
-+                "github.com/Azure/azure-sdk-for-go/sdk/storage/azblob",
-+                "v1.0.0",
-+                "h1:u/LLAOFgsMv7HmNL4Qufg58y+qElGOt5qv0z1mURkRY=3D"
-+            ), (
-+                "gopkg.in/ini.v1",
-+                "v1.67.0/go.mod",
-+                "h1:pNLf8WUiyNEtQjuu5G5vTm06TEv9tsIgeAvK8hOrP4k=3D"
-+            )
-+        ])
-+        fetcher =3D bb.fetch.Fetch(["gosum://" + filename], self.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "github.co=
-m/!azure/azure-sdk-for-go/sdk/storage/azblob/@v/v1.0.0.zip")))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "github.co=
-m/!azure/azure-sdk-for-go/sdk/storage/azblob/@v/v1.0.0.zip.done")))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "gopkg.in/=
-ini.v1/@v/v1.67.0.mod")))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "gopkg.in/=
-ini.v1/@v/v1.67.0.mod.done")))
-+        fetcher.unpack(self.unpackdir)
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "go.su=
-m")))
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "pkg/m=
-od/cache/download/github.com/!azure/azure-sdk-for-go/sdk/storage/azblob/@v/=
-v1.0.0.zip")))
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "pkg/m=
-od/cache/download/github.com/!azure/azure-sdk-for-go/sdk/storage/azblob/@v/=
-v1.0.0.mod")))
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "pkg/m=
-od/cache/download/gopkg.in/ini.v1/@v/v1.67.0.mod")))
++    def urldata_init(self, ud, d):
++        ud.type =3D ud.type.split("+")[-1] if "+" in ud.type else "file"
++        ud.url =3D ":".join((ud.type, ud.url.split(":", 1)[-1]))
++        super().urldata_init(ud, d)
++        ud.proxy =3D None
 +
-+    @skipIfNoNetwork()
-+    def test_gosum_git(self):
-+        urls =3D [
-+            "gosum+git://github.com/Azure/azure-sdk-for-go.git;protocol=3D=
-https;"
-+            "nobranch=3D1;subpath=3Dsdk/storage/azblob;"
-+            "rev=3Dec928e0ed34db682b3f783d3739d1c538142e0c3"
-+        ]
-+        fetcher =3D bb.fetch.Fetch(urls, self.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "git2/gith=
-ub.com.Azure.azure-sdk-for-go.git")))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "golang.or=
-g/x/net/@v/v0.0.0-20220425223048-2871e0cb64e4.zip")))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "golang.or=
-g/x/net/@v/v0.0.0-20220425223048-2871e0cb64e4.zip.done")))
-+        fetcher.unpack(self.unpackdir)
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "azblo=
-b/go.sum")))
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "azblo=
-b/pkg/mod/cache/download/golang.org/x/net/@v/v0.0.0-20220425223048-2871e0cb=
-64e4.zip")))
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "azblo=
-b/pkg/mod/cache/download/golang.org/x/net/@v/v0.0.0-20220425223048-2871e0cb=
-64e4.mod")))
++    def _init_proxy(self, ud, d):
++        if ud.proxy:
++            return
++
++        urls =3D self.process_source(ud, d)
++        if urls:
++            ud.proxy =3D Fetch(urls, d)
++
++    @staticmethod
++    def _foreach_proxy_method(ud, handle, d):
++        """Call method for each dependency"""
++        returns =3D []
++        for proxy_url in ud.proxy.urls:
++            proxy_ud =3D ud.proxy.ud[proxy_url]
++            proxy_d =3D ud.proxy.d
++            proxy_ud.setup_localpath(proxy_d)
++            lf =3D lockfile(proxy_ud.lockfile)
++            returns.append(handle(proxy_ud.method, proxy_ud, proxy_d))
++            unlockfile(lf)
++        return returns
++
++    def verify_donestamp(self, ud, d):
++        """Verify the donestamp file"""
++        if not super().verify_donestamp(ud, d):
++            return False
++
++        self._init_proxy(ud, d)
++        def handle(m, ud, d):
++            return m.verify_donestamp(ud, d)
++        return all(self._foreach_proxy_method(ud, handle, d))
++
++    def update_donestamp(self, ud, d):
++        """Update the donestamp file"""
++        super().update_donestamp(ud, d)
++
++        self._init_proxy(ud, d)
++        def handle(m, ud, d):
++            m.update_donestamp(ud, d)
++        self._foreach_proxy_method(ud, handle, d)
++
++    def need_update(self, ud, d):
++        """Force a fetch, even if localpath exists ?"""
++        if super().need_update(ud, d):
++            return True
++
++        self._init_proxy(ud, d)
++        def handle(m, ud, d):
++            return m.need_update(ud, d)
++        return any(self._foreach_proxy_method(ud, handle, d))
++
++    def try_mirrors(self, fetch, ud, d, mirrors):
++        """Try to use a mirror"""
++        if not super().try_mirrors(fetch, ud, d, mirrors):
++            return False
++
++        self._init_proxy(ud, d)
++        def handle(m, ud, d):
++            return m.try_mirrors(fetch, ud, d, mirrors)
++        return all(self._foreach_proxy_method(ud, handle, d))
++
++    def download(self, ud, d):
++        """Fetch url"""
++        super().download(ud, d)
++        self._init_proxy(ud, d)
++        ud.proxy.download()
++
++    def unpack(self, ud, rootdir, d):
++        """Unpack the downloaded dependencies"""
++        super().unpack(ud, rootdir, d)
++        self._init_proxy(ud, d)
++        ud.proxy.unpack(ud.destdir)
++
++    def clean(self, ud, d):
++        """Clean any existing full or partial download"""
++        self._init_proxy(ud, d)
++        ud.proxy.clean()
++        super().clean(ud, d)
++
++    def done(self, ud, d):
++        """Is the download done ?"""
++        if not super().done(ud, d):
++            return False
++
++        self._init_proxy(ud, d)
++        def _handle(m, ud, d):
++            return m.done(ud, d)
++        return all(self._foreach_proxy_method(ud, _handle, d))
++
++class LocalDependency(DependencyMixin, Local):
++    """
++    Abstract class to fetch all dependencies from a local specification fi=
+le
++    """
++
++    def process_source(self, ud, d):
++        return self.resolve_dependencies(ud, ud.localpath, d)
++
++class WgetDependency(DependencyMixin, Wget):
++    """
++    Abstract class to fetch all dependencies from a specification file ins=
+ide an
++    archive
++    """
++
++    def process_source(self, ud, d):
++        with tempfile.TemporaryDirectory(dir=3Dd.getVar('DL_DIR')) as tmpd=
+ir:
++            Wget.unpack(self, ud, tmpdir, d)
++            return self.resolve_dependencies(ud, ud.destdir, d)
++
++class GitDependency(DependencyMixin, Git):
++    """
++    Abstract class to fetch all dependencies from a specification file ins=
+ide a
++    git repository
++    """
++
++    def process_source(self, ud, d):
++        with tempfile.TemporaryDirectory(dir=3Dd.getVar('DL_DIR')) as tmpd=
+ir:
++            Git.unpack(self, ud, tmpdir, d)
++            return self.resolve_dependencies(ud, ud.destdir, d)
++
++def create_methods(type, mixin):
++    class SpecificLocalDependency(mixin, LocalDependency):
++        """
++        Specific class to fetch all dependencies from a local specificatio=
+n file
++        """
++
++        def supports(self, ud, d):
++            return ud.type =3D=3D type
++
++    class SpecificWgetDependency(mixin, WgetDependency):
++        """
++        Specific class to fetch all dependencies from a specification file
++        inside an archive
++        """
++
++        def supports(self, ud, d):
++            return ud.type in [f"{type}+http", f"{type}+https"]
++
++    class SpecificGitDependency(mixin, GitDependency):
++        """
++        Specific class to fetch all dependencies from a specification file
++        inside a git repository
++        """
++
++        def supports(self, ud, d):
++            return ud.type =3D=3D f"{type}+git"
++
++    return [
++        SpecificLocalDependency(),
++        SpecificWgetDependency(),
++        SpecificGitDependency()]
 --=20
 2.39.5
 
