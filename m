@@ -2,47 +2,47 @@ Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67950E77193
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B416E77192
 	for <webhook@archiver.kernel.org>; Fri, 20 Dec 2024 11:26:41 +0000 (UTC)
 Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.118])
  by mx.groups.io with SMTP id smtpd.web11.149744.1734693993154756588
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 20 Dec 2024 03:26:36 -0800
+ Fri, 20 Dec 2024 03:26:33 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=LRjoLvN5;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=bXZJQXfT;
  spf=pass (domain: weidmueller.com, ip: 40.107.20.118, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RrM1i3C+Lb5DZZaZW+wDGjxNhc8rEgHvvfBzKkQ4EpYTT29ThZGQQU57ByfUasfKBAQm+boX9ROIw7U/9BdRv4sxJArwmiGQp85NZ9qGnQn6YLrBJg0HH2ZG9+sudoRq5aL5Jl6qifLsqK/Wp7fI8wgR/KaTGIxEbtw82/2/jow2Dgqlxq847VV+cXM2s34jElyatfu3Rd9NiHIvuxWx5omlYbY+BGD/LAeEjQ/ql9d7PqeZokyVKWnieSpNvYord5a666JgC5JrT121CJlGCUWyq3OqVKzD8uvcIQdxxEE6IOJWAh+tcGmkolWTHgMxlfxqpXP3VnZXT1RE7uV0ng==
+ b=k7gT83QPELUNx/jFHit73ks08XqB09WO8xqAeKN94oVp5a0BVVgidWkp76UOOTbml0u2NeyzUduuUbAplmokmdf8XAxxWh8GjsaAShVcNkCB6gTAa/IQCCHX424kK1SXIOMSJuVVr9Lpno1C9++Ck5n9gHjm/MicYLA7y1Kv7CcObk6INrjTbxaCsRWv8Kd9tQ55fdmBREPPVLfkBVH/+vlkYt8Ho34XvrNDfqjds5qU1cJUIvw535jMtpxGrrM7s2bBHgc3eFlTncOmwEXQe8HkVhtF0FUYehVdhDVn0Ar4O9wWUENIzIeTATTUdVBzsQOwVpqQu/X5RNUknSJzPg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rtxu4K68iSifp91eIigTtftCNZ8EYP0hKlTQRlFBAAQ=;
- b=w5uWz60RF1aBw43fJuaHaXeO7A/+AQf7IOa96dvDC0y9x0Wo85qUfQiUqlpZOtEP6bFOp/X6FEyZ+I3F3+4hM+j9U5zFU8sdR+eIIvM64SstOXCtkSKIm6uzTflzRjqaSEoh7T5IoI89KLblVMOgS9NlVSToO6K4p0TPqVp9TCHEdJxcAGkV7/shPOmiCzOsgT5UvekfGiyOd1PxSv+XUaFsyfzSsDd0t30xEyQC0wlTY3Mnw9yN5agd+ly6YxESBoFWd6iZWJ6B6r93sjEf1Vy1hNYACSwNrCPRq09Pk6B/dHlJVbmixo8nC8Ey//cIW2yQabSacM32mw5atY0fnA==
+ bh=tECYzinVbDQxMsSSm81qc/TD7t7q7X2mvyztaVAu010=;
+ b=Om8y1Md/q+l3Z152K5wULO47awSn6wAVAPSF5jTh+hSFalx+/yM9e3lMK4+ih3LbKlPVda8dTn6ZQ9o87AfGmJpiN6vmHM1/rpUPN90/y8q8QZOfmThjuaw0TKwmZf+I1oRdHa9FQsbdGIsU6+F70XR82T6MXf+JkgPpdg9hiKNPtRWj5wMPCBs4ovBZh6qFNnN6LOWXep08Aw9jRl/VqEAUETrr7pIfoGUe5oqRihMShQwJp6OpoZ7Nyaf7J5afm9YYbTHuqMucGKfDcphdQNemOnieCVRwTxN7jHJA0uFvHvZ2QVY+kKrHNGF/+j7TAsZKH2tpSklKWU9JQ68kFA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=weidmueller.com; dmarc=pass action=none
  header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rtxu4K68iSifp91eIigTtftCNZ8EYP0hKlTQRlFBAAQ=;
- b=LRjoLvN59UdSAgkNxZNd6HbwYsn1hjnB+aywgvp9vTEqQ7YPZt1iQ+roCGuKQVbnaB6DsXXKl25VKtDB9dh5JcANmeWgQzyVIB6PRExEz2q61CNQ4cYcTvcPremFhnfyJ9LqcwIyASBMzsavWz9KYJyX61+RJYca8+0SnLSzFsnxt21PHXp3uLj+LpIrh/0dj7oGlhXUb6P8HoQzAnX4X7EKYpNcbjZ2XFHOdQoQPUImUpbOkPYH+nKJd8DzCcbISFHHlKWjxp0SOx1XjvYrVrHl33xa/Br2hsu28wednsGJB7x3zoP2+uS68Ql3qj1EyTGkYoKAg/h4P63TZl5aTw==
+ bh=tECYzinVbDQxMsSSm81qc/TD7t7q7X2mvyztaVAu010=;
+ b=bXZJQXfTaJRPq3dzbOJxrfha5xezB62n6dTZYqEeW6iaTyC3L+sMOPmXER9S/eq47uGeWBbiIbhhQDXB9swAMYlV7NGcaD8IGbqVVmvNnY/3zXssEZK+bhZgwlkK/KF+2dqHH/bDyeJT4WsZ5ghSRLHgvhMztIljGCnKk1XLQPcqRgpFwCnWdMhuP1OD74T9Bu+MjfNXEXy5pu+An+R2t/I3qmGI0PuypATIdkkXrNL9irU2MvMC+xZ9F9WKvlEb47bWwgZmsoHCU3Z7B0AJcgZ/eQr6gYrpWGNij023Z8ir2niIdU8Mj3uEdXQPS05/DI7fT+/DrPZuwy75Ld1S8g==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=weidmueller.com;
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com (2603:10a6:102:1d8::23)
  by DU0PR08MB8256.eurprd08.prod.outlook.com (2603:10a6:10:410::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.14; Fri, 20 Dec
- 2024 11:26:29 +0000
+ 2024 11:26:25 +0000
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4]) by PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4%3]) with mapi id 15.20.8272.013; Fri, 20 Dec 2024
- 11:26:29 +0000
+ 11:26:25 +0000
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
 To: bitbake-devel@lists.openembedded.org
 CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Subject: [RFC PATCH 12/21] tests: fetch: move npmsw test cases into npmsw test class
-Date: Fri, 20 Dec 2024 12:26:03 +0100
-Message-ID: <20241220112613.22647-13-stefan.herbrechtsmeier-oss@weidmueller.com>
+Subject: [RFC PATCH 03/21] tests: fetch: replace [url] with urls for npm
+Date: Fri, 20 Dec 2024 12:25:54 +0100
+Message-ID: <20241220112613.22647-4-stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
 References: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
@@ -54,113 +54,319 @@ X-ClientProxiedBy: FR0P281CA0106.DEUP281.PROD.OUTLOOK.COM
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR08MB6969:EE_|DU0PR08MB8256:EE_
-X-MS-Office365-Filtering-Correlation-Id: b2ca5c72-67b4-494b-b5c4-08dd20e9252b
+X-MS-Office365-Filtering-Correlation-Id: 2ad32487-4c16-456a-8537-08dd20e92373
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
 	BCL:0;ARA:13230040|366016|52116014|1800799024|376014|38350700014;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?J69v0c547JXxFA/IEyXTFtHbN/siwYYyw2zPza8+y4YF0Z4FCMeYhvs1kE5u?=
- =?us-ascii?Q?bTLS8ShtalqQZ6LsJA93j0owf0IG67Yuq1HOZQy/W2/u+kDsbJGf/xF4pboj?=
- =?us-ascii?Q?JayD9eUHVxQ9e6Jfaft4Hwubb/yNsUoGDp/ygqNozjzkoXoq3HzKpsHcgEF0?=
- =?us-ascii?Q?BIgoVO+JEfDCiA6hlmDy1hopI5Ml9ZkJMCdtNk0iF4p27PuhbDqUY4TXR49N?=
- =?us-ascii?Q?qnoMMuQ5k6lR0WhiX46KiseaTWvFfobOBR7TL6JinY+na5OZ3ArTTPr0TG0Q?=
- =?us-ascii?Q?vKYNGP23+XKkVuMTjjFrFEHqdxskPe9EC6M1GBb9hSRBGafmrgD4RKT0t3eZ?=
- =?us-ascii?Q?gp/DCpE4cFmELSMuapOAMcGKIg3h1NLme9+JDB2kcueebwAT4bZRWVcui/fZ?=
- =?us-ascii?Q?qCqbq9E0HGXHxF73UuJCFn6TVoO3ATwu1lK1bXcDBnt71HGOmZQ2vx5uU+OT?=
- =?us-ascii?Q?h6mQ4fM7E08tKzg3wpvvbLR86Ut3/Bwf0pseZW/SlXD/mQYcbRtWgYSWspe/?=
- =?us-ascii?Q?vT6OBEmnnIReX+cKPjYwXWdqHnWwUnzV7YSTEWAn0CD+SmF8rU3kFb+Ide6Y?=
- =?us-ascii?Q?09KlaZuhTwny92drCG+1Jydl7WJaAipfALSpBEdtUkWlf4fJmG6ErbXu5c2Y?=
- =?us-ascii?Q?6BDNP/TLcnmieRdXVRw+N3datrC7H650TRvklRAShHPlmF9NKWjrUPusKvEL?=
- =?us-ascii?Q?Zfqrs8tIeqozzcZIs1nquK9USX0woB1eHLF2eFdJ6yogxith6ZbbMpXW3ZEW?=
- =?us-ascii?Q?6/oxLypyIEi93EM6i3a2vC4am2DSufV53N8iZCLWAH34qqjCpf5Dyjc+l4Zj?=
- =?us-ascii?Q?/0LtNTpC/A1Hmfje8PnDX1m6iPuenxlOmtbRY/6iIXhlBhbEOB/M2si993Nw?=
- =?us-ascii?Q?Obm2QcbzyjlX1yHhcf3ZiVgZQkOKAIarcOB31WZVtMqNuG82NobmH/Yz05h+?=
- =?us-ascii?Q?3VfiHTV+AMOp+Uy7EgzVLs/oBj4ZvpNfJaPMo/aq4BKQta74Sc+plThDF1Ia?=
- =?us-ascii?Q?fIChdK9aV89hhnynLsCnXxP88IX5BZL7NPcLCguxRPtqocJMvmz9olK5JX7r?=
- =?us-ascii?Q?i5+5tVMwqDGnZ6alOOUy+Uzc+eLnm/S2KdPpUyiIBAR+C0Ty566pBFlBAH8Y?=
- =?us-ascii?Q?sHS7GVxKL3c7gnguDwqxP5dKvqTATpBzj4tAPoeYEkF5J9imbPJQhIV+Vj13?=
- =?us-ascii?Q?bGFXOiATWNgbnAIIuyGeohqHXopena+lp054hj2myJndrBDkh+GW5NLUqPCy?=
- =?us-ascii?Q?0xgbhweE0/WOjvb23/lrIPVuHf8T+eMPJOyV6AH+Y6abHjzYI5NGYrO+sqIB?=
- =?us-ascii?Q?0l9D4bzUpwnjpAw10v+8oSoi6wgDNp98JTrT/S72Z7fqolnSfUC2pnZ+kkMT?=
- =?us-ascii?Q?+oxkOa99W8CiYbaQMbQzzfpdMX3LWucrIYQdcDEMyZBbEcHas0BwaYuO/yeK?=
- =?us-ascii?Q?ev8hQRcLF9MuGyaEnggjOz+3s7y+9hzR?=
+	=?us-ascii?Q?s3sQEqh8SEv4A8HRNdW5RBsHt5EZ0RgPRPiXkuuzYXoIncyvy2SjJwz7/2TB?=
+ =?us-ascii?Q?q1x+i/UoYiQUQrvEBRJkX6OQi8hOugftrhnBMA5HYdVYFjWqDlwV4qLbq8+9?=
+ =?us-ascii?Q?8y6JnTSf5rGuE6jMrw/iEfSedoEYLVRXeFTJGokNs8eTDU194ZOecUjxePSw?=
+ =?us-ascii?Q?tJSzWAqfe33WyzGVrMlvBxWXoocWdXM3DoxlZT/mJ1d3WLgkgIKqBHQ5tjBh?=
+ =?us-ascii?Q?mYXeXWUcFPcXgiQn4n6iqPIP0IHMnmh0FNL39HRhDeAxKbrua8nMwkqWHTrH?=
+ =?us-ascii?Q?A3XarorvH6Sk2wcEZiORfznJrYfhXzdjTArDEkW96+f+ndAN4zNMyG3yvoCH?=
+ =?us-ascii?Q?QJo14O7+HsIi9xIb59SbIPWLiMS005BzSCQ3FVTdgfv4pS7uFiZipEUUsGPt?=
+ =?us-ascii?Q?pJ/sjrJMzZyvsec+j2JysV3o+p9PvVKBnC/71xyjt/y9W1z+b76cxshUClkb?=
+ =?us-ascii?Q?GFpsIGvVbH2y8FpHgPTfnOOP58tAm+e/LsvlK1u4AugygZxnRqVHSsMWKq/Q?=
+ =?us-ascii?Q?nsnX4Un7f6MugjQN0gu937tqvxatNmZpTb0k2Eq6y3FtXMU7lDxo/uZSPnK3?=
+ =?us-ascii?Q?lQqEvWkzbVeteGHvY1hLLdfbkeKOkc8rDYfqS9NMwiJ42FlsKswZZdZEtcyB?=
+ =?us-ascii?Q?4pjzbzaXulvLYSNJK6ReMoW26Ul06haCwdQjiKdN8UCjH42tv5Opki8D1hru?=
+ =?us-ascii?Q?bwe8BIV6/gHcfE5ktM7u+NeukOYuZrZW2QzRVa1d9LeapunVR0Wk3vdrrqXW?=
+ =?us-ascii?Q?RnPpWVb7NGs2MPqaFq2pWKIuHCqm8Bp3SR7ENKCGCm90UJZAlc0aiLdRcwsw?=
+ =?us-ascii?Q?N9OUBPDQELGhNmZ2ijNSp9mqoexKYFoYF/Nf6kXdbbRTkD0mCl5s7EKLJfE5?=
+ =?us-ascii?Q?LcMpXdE6/wHi6wN+2iaWz3rQOOtD7JhEjT7n5RI26dPiI0dsHMHkFsCJ/RbF?=
+ =?us-ascii?Q?YaZTNUuqaVreE6iCiK16UhW/MKLcSn1bv677+VC3oxlyyXQ1UMsEwRD6ulJF?=
+ =?us-ascii?Q?uMTLUEZwzStHU+29AgW30+C1AOYSnbrCi8RT0sDkyCMEqCaZB4sWG9puZpK7?=
+ =?us-ascii?Q?nQ/xqgFD5cQBXgTis4mtZERs7TjlyDCILHO22ilJE7pt/JQRMeE9+JluoYkn?=
+ =?us-ascii?Q?JJfSX/CLaWjcdYvcUeXJrx1gp5C+JqVzQtUewC+Y7P2Ew1JwYjQPNcVv/YBk?=
+ =?us-ascii?Q?qNxfzqi/cblKLmHVdFmJvIdQx8FcZzVVnupzGGg4Rl3bPbeevmx77Z7tedq5?=
+ =?us-ascii?Q?BOgJEBfzHOv+owrd/p4rBFYfa8zJD9d6g/B7IY9bt/4HfYak48d3iMrh4eEK?=
+ =?us-ascii?Q?2bu7h6ashdCUc/Q9hWfpbjnv5Yuhna1CZV/VFRwkIhsFGfL8YuOZZb/kC5hZ?=
+ =?us-ascii?Q?YS4HMECORkZeR0IfYSi+HbSHRYRxPfkbSC7I2gI3hhHREsMhm73G6Bo2sxrJ?=
+ =?us-ascii?Q?cWkw3UPAReD9ZNiAz+Pse512nnmRCtr9?=
 X-Forefront-Antispam-Report: 
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(1800799024)(376014)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?weU/ggV+xQ4Z/Jc5mrWbp/+dtnPVy+mknutV+p6thiBGoAkx72LAq7HUKOBr?=
- =?us-ascii?Q?wVc4D1Fd710aqDg5QqtRkeDSEFvdZb7J1E0brMkUO+lvUFBEJwdHxHMAByRy?=
- =?us-ascii?Q?FY0GAWcxkzUlUZWYQKFIspZ2LhzXNmhYw5uMM1RCRB2PkHqQnWl3S4HCF9CK?=
- =?us-ascii?Q?GZqwOcMSgHxUfw05Ng5bz+tTIEo2N3qvml30yyLBHfdJLS5QH2/lYAUAOLyX?=
- =?us-ascii?Q?cwTSxnuCfNlIXdcPY0+8I4Dfxxrhp5NhieCubAhw385sf+zixZRJAbxVAVoY?=
- =?us-ascii?Q?4+cVXqbFJ2CL0V8CRI+ORpuIwtcgwxF0UxGqitBGLhtzNO9PO46IunIm2NrO?=
- =?us-ascii?Q?uEC7FBAz3/ciZITLmaF4+kbr/DOQAXFnDUUJdJX8+COvlzJ2nhfq1VLT22De?=
- =?us-ascii?Q?/iqMa5+qAhAy0VEvj0GDEh94eXxHalnQdZa51dRH4CLMw3zyHd+6LkROWbrJ?=
- =?us-ascii?Q?h7iLPBYSxbH9RyoiXbRRHO8YB3wnzsNXsQNEjteBxIV3LBtir8f7jIYGrbwV?=
- =?us-ascii?Q?pxEE7grl2ZHako+OqNGGt1cCh91EEyUU2HtD/ccN8GNpF1S+vtSDucYcdz+k?=
- =?us-ascii?Q?8RJ2FkETRD9qU4WNYApwkJEKE9T6VjjBUH2zHaBAtzrrUiECeqmF1k3NTrLj?=
- =?us-ascii?Q?4cX9Id3NnVhRMK09Bv3+upWKsfcr2uXMatzQwHz520Fz/gHfFCpEANEFm/Bg?=
- =?us-ascii?Q?aFlIt7YhSdjqFo45OPPWAw8XiOEnzvbCmd7rugTPC0hY3+OXj6VP9vA2IqxG?=
- =?us-ascii?Q?ZmoHhJhknwRa6L9gDqygT/QcGJ5bK0BgniDYey4vx8nui+xZ7U3kD4Z7p79K?=
- =?us-ascii?Q?Q/svCwsSk3hRkoLnldlovgGjCcvLnElyIMdzKZgUzRb530gAZu6Fy9t5R96m?=
- =?us-ascii?Q?digWvFNZKD0wWJu8Sf82bL5sVkkR8pmnP5zxLJUE07lVqtqf3msN5qmeq8ik?=
- =?us-ascii?Q?UU1mMdwTlyo8FxqWkPlDgbvKt+3exZmbefx/syWtgZMlmZy+/xwRgXfQgyrF?=
- =?us-ascii?Q?vXwBEF8DwzPx7gAgvqaj11t4Lk6bcVeX7CYE3DLt5RtkOzaHfDH95KgxXTk5?=
- =?us-ascii?Q?VjGuzZoOJeY0TYabbwiBq9eHunxbpeRv19U8WXSyfDJSX3Qs6tjOpaTLAZAR?=
- =?us-ascii?Q?g3v44s5CiGX+4kVHGMit4sSiM8Bw4bjK/O/i3wFoxKCo4jUuT+mmZumOTbaQ?=
- =?us-ascii?Q?a/q8QOqRO84SDPJBuJaVnAMP5oV24k53hZ7VZjxcA+3sfkvJwiHMnEmue+PJ?=
- =?us-ascii?Q?FxaFKG3JrfPf9RUwvQVwj4YZmJCUW59L2MoEpbljpnXBvvAToqHLCjwrHMnU?=
- =?us-ascii?Q?p1qN7IN5O089wmMHRblf4v1dJOpDYRP3Ud2Z0ztjXZP+e32SAjOUkxOX/w/t?=
- =?us-ascii?Q?FfhsEGBrXsgrNYzW8UQBxZR/5rklipWS1jy+BQsccXknmiTJRcKpgqYmafU0?=
- =?us-ascii?Q?FxW2psTTuOUrlCk0E2dDC8I/9ajm0WeerCPDm5lWIHpsE/+E28CVcIXvYpaI?=
- =?us-ascii?Q?q7XrxRtHsuhrG+f3GwAUOrvsHuHai8Nihm0qnjVxuRA4mffVdHkrhTZQAZ11?=
- =?us-ascii?Q?w5rYK/QHgJpZd7LosKY4PnVzUj8Fal6dq5M5u1QclSr+UYD327+WsIeLJdfb?=
- =?us-ascii?Q?ew=3D=3D?=
+	=?us-ascii?Q?E1sUap5oPuFP+LfqJy71/NVxeAdP0pHHLLPFpqwbHQUOgL3J4aKHZoHEfgqD?=
+ =?us-ascii?Q?SkylJb8daf62azJzqmqJ07WqmWui6isahjetFmzfV1L0ezx0wuNwEhaNg053?=
+ =?us-ascii?Q?fi9Fx7eUYMYRn2SMlCKu9oxKa2lTEXfnYLMYOL0zEjnRv3hirBsUlMgHE5Jl?=
+ =?us-ascii?Q?GEOi/vbxPIqEe+eGmsDyzflEGUVRIOHRjiMFY9GH8cHVllop24urrpu35eag?=
+ =?us-ascii?Q?cTmHEr/Mlj9VVQXfCSf2xE0v5YHZ2lY1Elqj0oNYS04mjZU6x77h7MXVojea?=
+ =?us-ascii?Q?XPT3Iy3Cg/cYmWNKZ/oCqozk60xDBcRM2jlkYOoZq9VSEuwlpI/5bPuxtMTH?=
+ =?us-ascii?Q?DebaN8YiHUFFLW/Rgmamg4IDSqkhPGL7RafcI/GricTaxt98jk/nKn2Ym5pc?=
+ =?us-ascii?Q?mTW2+oNXOX7uJTp6aVbjmVN1gByw3qlVMIQJp8ycGXHS3v63dJbeG9qn7OKA?=
+ =?us-ascii?Q?InuwU4GPtmB8y7TLa+L+rGogRgjNFflqoFcPWPBB6d31Lwc2gsKQN2UoKeK5?=
+ =?us-ascii?Q?LQxGSf3mQuZJlQ0863g9SvlwalbB84vJbPESGrmFEfF1+51FRGxlDIiyqWH1?=
+ =?us-ascii?Q?3SCspNSDI1pXkfb2LulXgcjj0BjayZsiJutqWinJnmpgucVOLqSoVA7SUePv?=
+ =?us-ascii?Q?v8YmO+VpDq+HtFBnuT7phslKzZF6iIgoq7hMyfPS3OLGsEOMKsJcmlnzT7Zh?=
+ =?us-ascii?Q?I6RGgGyInQxbArxTXE1ocyLdqoOuSsD7mxV/NPUCaAxkU13fLEgTwCmlPGLy?=
+ =?us-ascii?Q?bA8MOexa6ld/LjXp4k70fWs5Hu6anT/Drn3eNf025M9ZB5/V3OFimg0/XGY9?=
+ =?us-ascii?Q?bVQYLaaEcbeCQTaAvWr6VpLR3xtcXPRU8agVMHW1Zy8NkhfGr9pcf8ny3WFD?=
+ =?us-ascii?Q?BCy4EyeZ4H1NQjWwZOlGpO3hBMgsvuTjipi2sr2YUCCNJtJm6BdkboJYeB5d?=
+ =?us-ascii?Q?8MMi0Jc/u39M8xulIbun4k7YjgMGbMXeEaLC/1bioGFAoDenz21WrSy98I7w?=
+ =?us-ascii?Q?QAivN3lxzQKpgw1y6rFyuREj+/5yArm3XoHHX0uV3CWsFZL2bzfxNKGTblQd?=
+ =?us-ascii?Q?qxi3suhqaOZWRmyXqXODg4RMjYqJq8plGmiQpLkLTotOmy7LiXbdhDhOH8Ku?=
+ =?us-ascii?Q?jSLkisSfGB4p661Gkd+srU7rMOOrODng/EdmM1uSJe1tdUI9438SxNTu8bNZ?=
+ =?us-ascii?Q?d3JBxnrE9xtO/zZHP4xvxcs+kxYL4Hsx5/SwriUtkEHj4pNSknTLgou0rO4s?=
+ =?us-ascii?Q?EtrKoM7f6AQZslKJhrFnp4gicfkxp+dE1I91Rgk7Sv6LajnP2LFDQPxF3t7+?=
+ =?us-ascii?Q?5nZ1JpVjKm8h21SKiV6Wk56DSTU22uRcfd7yZMXstiwFoUAXyeM5NJi51qq7?=
+ =?us-ascii?Q?Nv2IZ3L484g3fuxL12zk4+HDKcWbiOIIO8srh9pDDKxjAdtQrv3c8Gxkr2h3?=
+ =?us-ascii?Q?r3bAligp+wZOOO+iQzoT/Imb2nCmvN1VL7Mj5CVRHBi1H+dbs0Pso3SjcPPw?=
+ =?us-ascii?Q?KnM6N9WzvqT6C0e/vifXjF1qGtKOx/i72biKvvvxwhYB7py/l1+CxyF+DNHo?=
+ =?us-ascii?Q?Du+P8gvwI8wWydFhC9t1BqeXfUMl5TlP3RauQuIArJ7MupDLuVaIJV2mliil?=
+ =?us-ascii?Q?TA=3D=3D?=
 X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2ca5c72-67b4-494b-b5c4-08dd20e9252b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ad32487-4c16-456a-8537-08dd20e92373
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR08MB6969.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2024 11:26:28.1064
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2024 11:26:25.1848
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BmMq+UwIPZYsAVrkl4WWGeEbD0xl52vsQnRZsSOs/tPBZZEhtDpxbT0tGNT9NqN6OriCwAduy7QQTw901drltw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: jID07k0939LSwM/W3bgsLddUAnh7IHzb1ntanmjaJaAntZGzWtp4+LvzaDANR2TwAkhizCroEijV/iIM9P7C1Q==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB8256
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 20 Dec 2024 11:26:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16934
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16923
 
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
+
+Replace [url] with urls to simplify future modifications.
 
 Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.c=
 om>
 ---
 
- lib/bb/tests/fetch.py | 7 +++++++
- 1 file changed, 7 insertions(+)
+ lib/bb/tests/fetch.py | 66 +++++++++++++++++++++----------------------
+ 1 file changed, 33 insertions(+), 33 deletions(-)
 
 diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 934b96cac..3fd4c82cd 100644
+index b89348236..c5ec84dc5 100644
 --- a/lib/bb/tests/fetch.py
 +++ b/lib/bb/tests/fetch.py
-@@ -2831,6 +2831,13 @@ class NPMTest(FetcherTest):
-         with self.assertRaises(bb.fetch2.MissingParameterError):
-             fetcher =3D bb.fetch.Fetch(urls, self.d)
+@@ -2627,8 +2627,8 @@ class NPMTest(FetcherTest):
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npm(self):
+-        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/node=
+-server-example;version=3D1.0.0'
+-        fetcher =3D bb.fetch.Fetch([url], self.d)
++        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
+de-server-example;version=3D1.0.0']
++        fetcher =3D bb.fetch.Fetch(urls, self.d)
+         ud =3D fetcher.ud[fetcher.urls[0]]
+         fetcher.download()
+         self.assertTrue(os.path.exists(ud.localpath))
+@@ -2641,9 +2641,9 @@ class NPMTest(FetcherTest):
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npm_bad_checksum(self):
+-        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/node=
+-server-example;version=3D1.0.0'
++        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
+de-server-example;version=3D1.0.0']
+         # Fetch once to get a tarball
+-        fetcher =3D bb.fetch.Fetch([url], self.d)
++        fetcher =3D bb.fetch.Fetch(urls, self.d)
+         ud =3D fetcher.ud[fetcher.urls[0]]
+         fetcher.download()
+         self.assertTrue(os.path.exists(ud.localpath))
+@@ -2660,9 +2660,9 @@ class NPMTest(FetcherTest):
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npm_premirrors(self):
+-        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/node=
+-server-example;version=3D1.0.0'
++        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
+de-server-example;version=3D1.0.0']
+         # Fetch once to get a tarball
+-        fetcher =3D bb.fetch.Fetch([url], self.d)
++        fetcher =3D bb.fetch.Fetch(urls, self.d)
+         ud =3D fetcher.ud[fetcher.urls[0]]
+         fetcher.download()
+         self.assertTrue(os.path.exists(ud.localpath))
+@@ -2682,7 +2682,7 @@ class NPMTest(FetcherTest):
+         # while the fetcher object exists, which it does when we rename th=
+e
+         # download directory to "mirror" above. Thus we need a new fetcher=
+ to go
+         # with the now empty download directory.
+-        fetcher =3D bb.fetch.Fetch([url], self.d)
++        fetcher =3D bb.fetch.Fetch(urls, self.d)
+         ud =3D fetcher.ud[fetcher.urls[0]]
+         fetcher.download()
+         self.assertTrue(os.path.exists(ud.localpath))
+@@ -2690,9 +2690,9 @@ class NPMTest(FetcherTest):
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npm_premirrors_with_specified_filename(self):
+-        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/node=
+-server-example;version=3D1.0.0'
++        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
+de-server-example;version=3D1.0.0']
+         # Fetch once to get a tarball
+-        fetcher =3D bb.fetch.Fetch([url], self.d)
++        fetcher =3D bb.fetch.Fetch(urls, self.d)
+         ud =3D fetcher.ud[fetcher.urls[0]]
+         fetcher.download()
+         self.assertTrue(os.path.exists(ud.localpath))
+@@ -2712,8 +2712,8 @@ class NPMTest(FetcherTest):
+     @skipIfNoNetwork()
+     def test_npm_mirrors(self):
+         # Fetch once to get a tarball
+-        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/node=
+-server-example;version=3D1.0.0'
+-        fetcher =3D bb.fetch.Fetch([url], self.d)
++        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
+de-server-example;version=3D1.0.0']
++        fetcher =3D bb.fetch.Fetch(urls, self.d)
+         ud =3D fetcher.ud[fetcher.urls[0]]
+         fetcher.download()
+         self.assertTrue(os.path.exists(ud.localpath))
+@@ -2737,8 +2737,8 @@ class NPMTest(FetcherTest):
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npm_destsuffix_downloadfilename(self):
+-        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/node=
+-server-example;version=3D1.0.0;destsuffix=3Dfoo/bar;downloadfilename=3Dfoo=
+-bar.tgz'
+-        fetcher =3D bb.fetch.Fetch([url], self.d)
++        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
+de-server-example;version=3D1.0.0;destsuffix=3Dfoo/bar;downloadfilename=3Df=
+oo-bar.tgz']
++        fetcher =3D bb.fetch.Fetch(urls, self.d)
+         fetcher.download()
+         self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', 'f=
+oo-bar.tgz')))
+         fetcher.unpack(self.unpackdir)
+@@ -2746,18 +2746,18 @@ class NPMTest(FetcherTest):
+         self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.js=
+on')))
 =20
-+class NPMSWTest(FetcherTest):
-+    def skipIfNoNpm():
-+        import shutil
-+        if not shutil.which("npm"):
-+            return unittest.skip("npm not installed")
-+        return lambda f: f
-+
+     def test_npm_no_network_no_tarball(self):
+-        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/node=
+-server-example;version=3D1.0.0'
++        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
+de-server-example;version=3D1.0.0']
+         self.d.setVar('BB_NO_NETWORK', '1')
+-        fetcher =3D bb.fetch.Fetch([url], self.d)
++        fetcher =3D bb.fetch.Fetch(urls, self.d)
+         with self.assertRaises(bb.fetch2.NetworkAccess):
+             fetcher.download()
+=20
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npm_no_network_with_tarball(self):
+-        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/node=
+-server-example;version=3D1.0.0'
++        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
+de-server-example;version=3D1.0.0']
+         # Fetch once to get a tarball
+-        fetcher =3D bb.fetch.Fetch([url], self.d)
++        fetcher =3D bb.fetch.Fetch(urls, self.d)
+         fetcher.download()
+         # Disable network access
+         self.d.setVar('BB_NO_NETWORK', '1')
+@@ -2770,8 +2770,8 @@ class NPMTest(FetcherTest):
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npm_registry_alternate(self):
+-        url =3D 'npm://skimdb.npmjs.com;package=3D@savoirfairelinux/node-s=
+erver-example;version=3D1.0.0'
+-        fetcher =3D bb.fetch.Fetch([url], self.d)
++        urls =3D ['npm://skimdb.npmjs.com;package=3D@savoirfairelinux/node=
+-server-example;version=3D1.0.0']
++        fetcher =3D bb.fetch.Fetch(urls, self.d)
+         fetcher.download()
+         fetcher.unpack(self.unpackdir)
+         unpackdir =3D os.path.join(self.unpackdir, 'npm')
+@@ -2780,8 +2780,8 @@ class NPMTest(FetcherTest):
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npm_version_latest(self):
+-        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/node=
+-server-example;version=3Dlatest'
+-        fetcher =3D bb.fetch.Fetch([url], self.d)
++        url =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/nod=
+e-server-example;version=3Dlatest']
++        fetcher =3D bb.fetch.Fetch(urls, self.d)
+         fetcher.download()
+         fetcher.unpack(self.unpackdir)
+         unpackdir =3D os.path.join(self.unpackdir, 'npm')
+@@ -2790,46 +2790,46 @@ class NPMTest(FetcherTest):
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npm_registry_invalid(self):
+-        url =3D 'npm://registry.invalid.org;package=3D@savoirfairelinux/no=
+de-server-example;version=3D1.0.0'
+-        fetcher =3D bb.fetch.Fetch([url], self.d)
++        urls =3D ['npm://registry.invalid.org;package=3D@savoirfairelinux/=
+node-server-example;version=3D1.0.0']
++        fetcher =3D bb.fetch.Fetch(urls, self.d)
+         with self.assertRaises(bb.fetch2.FetchError):
+             fetcher.download()
+=20
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npm_package_invalid(self):
+-        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/inva=
+lid;version=3D1.0.0'
+-        fetcher =3D bb.fetch.Fetch([url], self.d)
++        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/in=
+valid;version=3D1.0.0']
++        fetcher =3D bb.fetch.Fetch(urls, self.d)
+         with self.assertRaises(bb.fetch2.FetchError):
+             fetcher.download()
+=20
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npm_version_invalid(self):
+-        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/node=
+-server-example;version=3Dinvalid'
++        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
+de-server-example;version=3Dinvalid']
+         with self.assertRaises(bb.fetch2.ParameterError):
+-            fetcher =3D bb.fetch.Fetch([url], self.d)
++            fetcher =3D bb.fetch.Fetch(urls, self.d)
+=20
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npm_registry_none(self):
+-        url =3D 'npm://;package=3D@savoirfairelinux/node-server-example;ve=
+rsion=3D1.0.0'
++        urls =3D ['npm://;package=3D@savoirfairelinux/node-server-example;=
+version=3D1.0.0']
+         with self.assertRaises(bb.fetch2.MalformedUrl):
+-            fetcher =3D bb.fetch.Fetch([url], self.d)
++            fetcher =3D bb.fetch.Fetch(urls, self.d)
+=20
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npm_package_none(self):
+-        url =3D 'npm://registry.npmjs.org;version=3D1.0.0'
++        urls =3D ['npm://registry.npmjs.org;version=3D1.0.0']
+         with self.assertRaises(bb.fetch2.MissingParameterError):
+-            fetcher =3D bb.fetch.Fetch([url], self.d)
++            fetcher =3D bb.fetch.Fetch(urls, self.d)
+=20
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npm_version_none(self):
+-        url =3D 'npm://registry.npmjs.org;package=3D@savoirfairelinux/node=
+-server-example'
++        urls =3D ['npm://registry.npmjs.org;package=3D@savoirfairelinux/no=
+de-server-example']
+         with self.assertRaises(bb.fetch2.MissingParameterError):
+-            fetcher =3D bb.fetch.Fetch([url], self.d)
++            fetcher =3D bb.fetch.Fetch(urls, self.d)
+=20
      def create_shrinkwrap_file(self, data):
          import json
-         datadir =3D os.path.join(self.tempdir, "data")
 --=20
 2.39.5
 
