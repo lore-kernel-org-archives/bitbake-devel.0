@@ -1,260 +1,201 @@
-Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
+Return-Path: <jhofstee@victronenergy.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8C8E77188
-	for <webhook@archiver.kernel.org>; Fri, 20 Dec 2024 11:26:51 +0000 (UTC)
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.114])
- by mx.groups.io with SMTP id smtpd.web11.149745.1734693993938884026
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61498E7718B
+	for <webhook@archiver.kernel.org>; Mon, 23 Dec 2024 08:02:42 +0000 (UTC)
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (EUR02-DB5-obe.outbound.protection.outlook.com [40.107.249.90])
+ by mx.groups.io with SMTP id smtpd.web11.9829.1734940955460301369
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 20 Dec 2024 03:26:42 -0800
+ Mon, 23 Dec 2024 00:02:35 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=tlmbFOax;
- spf=pass (domain: weidmueller.com, ip: 40.107.22.114, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
+ dkim=pass header.i=@victronenergy.com header.s=selector2 header.b=qsA/ZSh6;
+ spf=pass (domain: victronenergy.com, ip: 40.107.249.90, mailfrom: jhofstee@victronenergy.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AKpWZ9S+RH8ffwbOpm+XLckqb54pcZttJB9bf+WzHWX5Td8+5YBxhhS5H6n9nXKUwpBanLhobIUW/GmoxSsYEU2cIDIEodmas+fjhRjCSYCCY6NHxyHmO6Ea1ZVbo9yCIZh9TAZ+Ij8ikzMYu0rFbpgN+9LdwVUcOTcyKKv0G0ndEZt3WvaYyIIkOrIP0Pm2ACC3lBizAqW0CB0TMkrH6sFCMPEnM8y9Ss5PgSeZubeargpDRZgTaLkMbI+0TBNYI6mjaMcuT/Na/l5spkivbPIcd/X2FEFL6j/w3RwVfInG+r/CT8r0Ww+IdF/QhYFKYUUFxpoZVrVgb8Z9TWZOAA==
+ b=LRlXI3YW60b/XBnGP8ixXiqNQzgcMc5GV5S/Bzlpqmy+6aSzvGN1+iVHJd7dBTB2/9wg1sAN3zKeuJh9rqkhEUkUb9Vrl8W3kkAEEHP8tar6Ju/RktLcb0pHEm1F5LRjAJKokfexkSUJkHtduDSHZ3BghzNUvObr79NlME35XHtfldL5eLOnyJdwItCk0ycUguyKjjZ+uwPBv5aLWWZrbBCBiPt8QmQkS5sJQ7A+etPGYCQYlpjI/nrOkNLttTNJZzAumYyUvFJcWFsWdlg9vXnFTNrAtgoaVpjnbk+EnejUTuneX6ei/jRHGy5yV4XSOkIALP//RQxIbCaYKx8aYg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jusmXzbEL2xi/yTDZ7sX+cOybecyn5mJcQGTzq32W1c=;
- b=aW1oX1mb5z27nfjOqp+fELd8U1tTe9MEVlmEm8knoR83r0g0X7S7T57yB0v+12j/KbS7FcZEn/BDmr3Y5CgcQgHoWbE+Oll+Vuj+lVnDHLaytuH6HRJ2dV76HOaoERrYSqHaTyRU1Q13tQUZs77yInK2CPsaFRpNeZ4b2o91OIhaKt7C84Cd9G71Mxui0JwWmspPfr9aOwE/Mi/MRsmpl+NE1vjaYcZp3wba2I7KX1rECgbM5TsAZsG0WStcXkW2DUvJAUVF3ysaqJWOcpDLuuPmKo7PfpSy/Xcc3iiCUmLHWhujY3PUShtB0HbT7Dy5FTOQgrXahe3D5s+tYfGyrA==
+ bh=wIz1fPqiNsOZYNiQ8b65VEsHAT1o/J5dsplw+Wt2Dns=;
+ b=kok0c7InTt2x5cAx0t88gFqrxTucK1lh3Ve0fS8uLMct84h4SsnpOfRGuxtdO7p41KUSgYERfmOXPeKiqsJbvPnqUt2SEeaB8zcjdAV4NlnkUsmdre/+0bqGys2W7jRSyZ7eNmUeiVuY+JCPQfHnIdrQQMP1E+MAzbYp+NwPqRf+MgDcJEK4kILOwysfZHD+2Y0EBgkZO8g9zl2s66eZ+P8uxXdn79iYa4ayqdJGtVugXlYOvNYfoTBQUzkOBE6MrX6W51cyEdeTvVKwgGJyzSQD4hElJdEb8lOQ1U8qURZJrfEUddq6xopm0+O6n6Mv5YxDCo2+nmzieB5eNuNLiA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=weidmueller.com; dmarc=pass action=none
- header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
+ smtp.mailfrom=victronenergy.com; dmarc=pass action=none
+ header.from=victronenergy.com; dkim=pass header.d=victronenergy.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=victronenergy.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jusmXzbEL2xi/yTDZ7sX+cOybecyn5mJcQGTzq32W1c=;
- b=tlmbFOaxqba8kc3XvyXtSTAk1dF3lJGCUtuuX/g5amNM2oZQOTnjFXS2AYKDfsxop+0hj7cw0/D2Uch2rY4jVjXLupriLanhv+BD1lVKZByAh4zU+/v/WGyHqrsnw00MppN3tJqLZhUH0W6Q1vmMP6kGi2/usMRP9oM/I9WpOZ7ssTB4bEUaMBm0Up6fExOrMoiS2SUuD4mJ8FiNz6o245ALcmJ62K7AgnfTR3sY3/8uO5T5m4xJYlRrD3MlMQqKFoLvAL+/aqr1URUQMh2/qRu4f7OSIL/sFxGI59d+x6AiYiO0KP1vhidAJMnhObYNMyyo2GyaxooJ/NzhkJrGeQ==
+ bh=wIz1fPqiNsOZYNiQ8b65VEsHAT1o/J5dsplw+Wt2Dns=;
+ b=qsA/ZSh6cWOGVw9knVbfJRFezUXUyVIQCzNdqQeaSOZvcP1xKuNWq0ZugqDBw4e6vMpi795vf9twZj8xZnngd9rcKgTJ/hh+9YHOzOnHprv4zQ/JGHvkr6aSslnxLcX+wyg7gZo7h9S2B7uDYqmU5GgDtVI+1fY3xEfM7do/CuA=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=weidmueller.com;
-Received: from PAXPR08MB6969.eurprd08.prod.outlook.com (2603:10a6:102:1d8::23)
- by AM8PR08MB5684.eurprd08.prod.outlook.com (2603:10a6:20b:1dc::20) with
+ header.d=none;dmarc=none action=none header.from=victronenergy.com;
+Received: from DB9PR07MB8679.eurprd07.prod.outlook.com (2603:10a6:10:30e::14)
+ by PA4PR07MB7342.eurprd07.prod.outlook.com (2603:10a6:102:f7::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.16; Fri, 20 Dec
- 2024 11:26:32 +0000
-Received: from PAXPR08MB6969.eurprd08.prod.outlook.com
- ([fe80::3b1:b329:1ed9:dad4]) by PAXPR08MB6969.eurprd08.prod.outlook.com
- ([fe80::3b1:b329:1ed9:dad4%3]) with mapi id 15.20.8272.013; Fri, 20 Dec 2024
- 11:26:32 +0000
-From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
-To: bitbake-devel@lists.openembedded.org
-CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Subject: [RFC PATCH 21/21] tests: fetch: add test cases for cargolock
-Date: Fri, 20 Dec 2024 12:26:12 +0100
-Message-ID: <20241220112613.22647-22-stefan.herbrechtsmeier-oss@weidmueller.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
-References: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: FR0P281CA0106.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a8::7) To PAXPR08MB6969.eurprd08.prod.outlook.com
- (2603:10a6:102:1d8::23)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.20; Mon, 23 Dec
+ 2024 08:02:28 +0000
+Received: from DB9PR07MB8679.eurprd07.prod.outlook.com
+ ([fe80::5b79:28d3:a16b:4fd6]) by DB9PR07MB8679.eurprd07.prod.outlook.com
+ ([fe80::5b79:28d3:a16b:4fd6%4]) with mapi id 15.20.8272.013; Mon, 23 Dec 2024
+ 08:02:27 +0000
+Message-ID: <3a71aa13-9b15-4d81-908e-73905deb2d1b@victronenergy.com>
+Date: Mon, 23 Dec 2024 09:02:26 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [bitbake][scarthgap][2.8][PATCH 1/3] runqueue: Fix performance of
+ multiconfigs with large overlap
+To: Steve Sakoman <steve@sakoman.com>, bitbake-devel@lists.openembedded.org
+References: <cover.1733344286.git.steve@sakoman.com>
+ <db083cfe9e33c9fd7ffeead7b8c6023a5d581976.1733344286.git.steve@sakoman.com>
+Content-Language: en-US
+From: Jeroen Hofstee <jhofstee@victronenergy.com>
+In-Reply-To: <db083cfe9e33c9fd7ffeead7b8c6023a5d581976.1733344286.git.steve@sakoman.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR06CA0131.eurprd06.prod.outlook.com
+ (2603:10a6:208:ab::36) To DB9PR07MB8679.eurprd07.prod.outlook.com
+ (2603:10a6:10:30e::14)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR08MB6969:EE_|AM8PR08MB5684:EE_
-X-MS-Office365-Filtering-Correlation-Id: f168832f-9c2a-478f-6295-08dd20e926de
+X-MS-TrafficTypeDiagnostic: DB9PR07MB8679:EE_|PA4PR07MB7342:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5e5ed21e-0e64-4c11-d5b7-08dd2328249b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|52116014|376014|1800799024|366016|38350700014;
+	BCL:0;ARA:13230040|10070799003|1800799024|376014|366016|7053199007;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?Z/k0wDjBgto+yCzQKdYxcFkbGEszZUGc5Gm9TZZC0pPdoKJoOXDhH9uDagA+?=
- =?us-ascii?Q?BwGqHiGRoha45RerDnjZaKROWkxjlax6L64nw37wPmv8xdt7d7xjOE2Vt8QZ?=
- =?us-ascii?Q?4zM8UECIBxzaHwnTtnBXepNVqsdSqBd6AAmWD9X0Gxs/nnSVhihu0cNpJ/ST?=
- =?us-ascii?Q?0Jmp67nEN1nOmvr92GmFtYjjr8xxy3JIsPi8P2N+0dk6juKOpeQmoEs/SG7b?=
- =?us-ascii?Q?ldp+roKD5kd71pCuG9FX2cmj/ZTEvbWRRMsXd3wKp0L085Hq6UzDJWSZN+mv?=
- =?us-ascii?Q?F+qGLz1RiTXlNEYIgnS2fNmf1TqC4LGgFtcNNpX3jLWqui89OM5lgKopfup/?=
- =?us-ascii?Q?qpRnyrLbuhRVdn6/66ULziPomG3MnYvSMy6TOl2WcOITdDXHzKONFdHa3BR9?=
- =?us-ascii?Q?gQjWayN33061coRl2+VJEA6psYGt5ovzkILjayvsRwKFTW5EhyS4MX5vz9qi?=
- =?us-ascii?Q?dJK6L0ydBW9OLZDuZ2biUbCE//zPdhMPGl6izgJgfD4Kd9iZAryBYL4i6Ota?=
- =?us-ascii?Q?FQB7ef/ryHGt6YB5ntIr7jwIZh8JJdDybiZ/5FYpKLLTi2q9fXEXC3id11Wo?=
- =?us-ascii?Q?15Xs3GyGUsYghG2cYHvVNyKZ1Yp8aqzLVQzjDYPhMpOmmQ19TTmw1HM74GKQ?=
- =?us-ascii?Q?UOMlkfnmNMZbhpGrSQ2Eqa9nCIuR4gWVZ5R2plT+VjxN2YQPuZ1znp+blWU3?=
- =?us-ascii?Q?S4nzz5zY7oEgcbqnkvuK7DsT+5I5WCcUXW42JznGUMJXf4lD28XLRI/56OpA?=
- =?us-ascii?Q?QOOCOSoGk8jDSC3am6t9aWPGpKADS512RlOX6rXokQCVvwNGtrH7fdwqL+p8?=
- =?us-ascii?Q?IbEBQ2DaQEoiWnqxXqYWIFdphFjFdpZ4/zsk7jeK4gIEfPD6KHJsvqkOSQKs?=
- =?us-ascii?Q?YHksr3a+mYRh+S1NHxJBz2MwNvqhE3KbO3vljmvnSZOgXPCS+0NrWi7OlD8i?=
- =?us-ascii?Q?Gepasabk0EnsueFdNr1K5Lv6Df18Uer8XfPScygfQlIkGzuzWx68MW9WUdfE?=
- =?us-ascii?Q?YT4m74kJAbxkPvear+sRzLL02LfnG/bwY6fuF6Te4HaYAhONCGdaPADj2qEb?=
- =?us-ascii?Q?PB3XtgIGZ1VSIpgLkv9/Tun/3JqXimHaljKnrH/cbakFnJvoIUV5sLufBdwe?=
- =?us-ascii?Q?kxB8VunLJU3GRK49VZ5ZJ5FoUGrnUTyjCV5ovRx51k5XcaK4HadKPm3mocVm?=
- =?us-ascii?Q?7HcPCa8PVDR0ohHhcHvLqxOgaM/TE+4p1UGrPcMc5j2fayVyLjLXnsB3d8/5?=
- =?us-ascii?Q?42yQu9drvPJ7ReNp7ABh10dwfY1UXQJtgWOkw1+niyjszVwZKr2qiWFlC98/?=
- =?us-ascii?Q?RszY5ceg1Dk76vwkJTd6MpqGFGbqC5lxBFZA0LaKx+HWTpejP50fBbLpwDgX?=
- =?us-ascii?Q?uNWb/op8RzgA8EPUZPVQv2q0/T3schLQz6D9WLTUPZAgwHV4Pw=3D=3D?=
+	=?utf-8?B?WlZRRlhVNW9aSFFBSmxvWVF1RDcxcWVLMGE3eHlraGZQTTRNMGtadXNkVkkr?=
+ =?utf-8?B?aXV4U0V4Nmt4Y1Jjc1J5aXF2b21ESm00ZTFuVFdrVUpSZUQydHNReWdTbmt3?=
+ =?utf-8?B?eWhBMHkwN01rbkdXWWx2N3BkTWZYd1FEWWo3UktsYXJ0ZUYyZXpnMlVScHlO?=
+ =?utf-8?B?aW1nSUUwTHpOd2owSGoyQUNTUWhNUjdpaGF5NVJvb2pydG1PRnRIMkN2ZWp5?=
+ =?utf-8?B?NnpKaGxheE5BZmF4cnlUd0RDL2l4Q2o4TldCMGppYXkzaGpRNTgrbU5mWUhU?=
+ =?utf-8?B?YjRadlpVcXR5MStMRUVYNlIwdWFDNFBURjBzSUlSWWFaaDBmaHBUK1JLN090?=
+ =?utf-8?B?UWcxVlJrRmx0cC9RVUFCMzZaM01sZ1lXSkZPdkNlK2U4TSs2V1NGak1wWFNR?=
+ =?utf-8?B?RFF0MldyZGlNL0RlWWxUUjc4QTlUUWl2dGZUcEVvNjIrUDhNbk5ZYUkzVDJI?=
+ =?utf-8?B?RnAxR3Nka3orY2tWUWNmWkhFa0pCUHZvSjVyZ3hFSkdMeVRyVis2bEVBaXV6?=
+ =?utf-8?B?WmpIZXNBLzlvNjZqdVAxaCtuWlQzN1FTUUwyb05teER6RVpxWElaRklLWmhk?=
+ =?utf-8?B?VWYrdDErUGRFK3JqTUlSWFIvWml1R21GWExxYkgzbS9lZTRUeVRtWGhWeTZY?=
+ =?utf-8?B?dERNWCs5WW1kTnRwNlpQdnEwNmQ5K2tSMVUyTThaek42V0VlbWNNY2k4RjhE?=
+ =?utf-8?B?V09UMWRXOE45T1hBU2RTMkFxa0xOT3JvV3FXcjJOWU1tU0pCdkZZZ0I2L0hL?=
+ =?utf-8?B?dVN0ZVEyM0pTQTVMR0VlMjgwZXJidzZJR3lBMXlqbUwzWlJyZTIwVTVKQlcx?=
+ =?utf-8?B?bmpsQ2RBUTVzYlB5MmVoSUhLOElMYUVSdEI3NmxmNlVVWjMwQ3E5b2R6Nm1z?=
+ =?utf-8?B?L1ZXVlF1Q2xUK3h5YzBZQ3RMYk9uRDJNei9hN2EyMlhRS01nYTcwc2JIMXRX?=
+ =?utf-8?B?UzZoelp1VldiZm9FcjcxMDFkaG4zYzc4QWk3T0JvdGdJeHRxY2ZYL1lNalNH?=
+ =?utf-8?B?OUdJUzFGekcxSkYyQkdjbzc4dmd6bVd6WWZoeExnL1pJb29jTHJiR2I1dkRU?=
+ =?utf-8?B?cnliVU9XMmw3clI4dkFHMjMzTHYwYjJxSVJRMm1qS3JLK3YvKzk2MDJuVUxo?=
+ =?utf-8?B?Q3hPZGNhaTByTXVLdUJvK05wMy82bExDdk9wRnBTRWMwWXdjVUFZamwvcGVU?=
+ =?utf-8?B?eER6T3padXBHNEE5ZERUR2F1SDV5U2tWZUtHL0xINlFSY1JjQXNyMU5hbjRa?=
+ =?utf-8?B?TlprdEQ4bk9tdExYUWFreldrTmI5cUJWQXBQUFZpYnVNcmg2SzF0NHhldC9o?=
+ =?utf-8?B?RnBES0FBL3l0ZlNYdHpWSThGdUhiY1Bva2N6dWRMdXhFbW5aTm9paXBxd1Y3?=
+ =?utf-8?B?akpNT3BDdFlSYjNjS3k4WUVjcnd0UWdjRDFDWXR0UWhNbmpFdnNFUFNOakRq?=
+ =?utf-8?B?M0lUTGhPM0c5b1VQbDJHNW1kR2hXTm80UDdCNnpvelZmUko3bVVieEdpNGpC?=
+ =?utf-8?B?RmZ6VjFpUW5Nb1hUQXUzMm1hT3lNYk9IeUN0eHJJQmxDUVd6UWR5NDBWSEQr?=
+ =?utf-8?B?SmphT3kvUkJDTmJxREpjbGdkRnNidWNFTzc4WmhkSUkreklIUFNReUw1Q3Rx?=
+ =?utf-8?B?QTN4WWZDZ3lTNmFJQTJmWG1IY3k0aldDa3NjUUd6dnZvU0tGOGRMTzduNFZ3?=
+ =?utf-8?B?UXZFbzRtMkhrOW9ZRFlxTEtHNFZ4dy9kZWhVODY2Y3lUS2hxYmJ4NW5RSWZT?=
+ =?utf-8?B?UjB1UUhyUGQ3YzIyYm1memtlWTZvbzZ3c1lGYzhNa2lXQ2Yvclc1ODBockFU?=
+ =?utf-8?B?NUl3a05iTTYwVG4vbFZuZHI2V0lETkxXbVVlRlZjSURQSytQaklSRW5wdTBP?=
+ =?utf-8?Q?kB4YeaWXQApUM?=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR07MB8679.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?ETcggvnqcTVs7/tP6MYXjhFTZyDYRIQBvSZ90GHrYFpK8kG6DXV06u2m9cNv?=
- =?us-ascii?Q?rhpNlPoH4xL4KcAW8I5QKtq4FHuQU4LquiTCIw4eVeuaDl9U9GXs0SlHdb82?=
- =?us-ascii?Q?9yP/srkTverNSBiz3j1SHreQ9p2Vxu7OZi3m3M/pXWtsVA0hxX1QgMLN8cVx?=
- =?us-ascii?Q?TJojrCVJH26cgSr9nSsr87yGsfoo0UXXWVSBECpeP8BPnMs4YTqRJC/Hr0ox?=
- =?us-ascii?Q?yBzLv5ezLrF8AC0le7NUPBOA3ejs4vZJGLGPngujt9X3I9gdH4Xap/sczTLc?=
- =?us-ascii?Q?jZqqwpUOtw57ir7Nvgpp4FvbsTpp9c3ZqEgrsuwc+QcSiUk0giBSmfeefaFk?=
- =?us-ascii?Q?WxmDX9c5vJKjMu5Vubxr986s2glg1dRVPnrpR62GNFzp3TsFDFAIcWIrH8Nr?=
- =?us-ascii?Q?4jD4kZOg+j2HPDC1frlV3T/cyfm31FwYXIo6pn7rvf3SSDSvZWjACYE6W43a?=
- =?us-ascii?Q?sUg0D8fPrBCtXadV1vdSGZmWmKrtqwgLnoRwPo5DM0O7urGbD+JiY8YhkEU0?=
- =?us-ascii?Q?EG0kVYmLb1kjjVSDOvMotuaONYp4WgyICF7LrvURJaGnqBk4CRrf+LtOiG51?=
- =?us-ascii?Q?8gcuW7G8f5w9azn8DI7aZ3LnhPMuHACzgxgvp+uoM0pbKRMs4e3VM4kb2/Lp?=
- =?us-ascii?Q?4BJK8iq4b3kmBrvr93FTdYlyc781EBdFYvzLPxkyYS0hXns0AUtGaZoTNCt5?=
- =?us-ascii?Q?FZWjpEqOVKwAwu6886l8bh4Y2SovIUZtEIjG0T2eIKF91wchNrPllMsgHhOP?=
- =?us-ascii?Q?zNPm34XE/yksDpouJWmS0pwRhS/Y8jRtJm196PPBlTvpl1mrmEkYSPwanqd/?=
- =?us-ascii?Q?Sn3urCnehnkZYzPNl1YcBBhyTMJw95Xr/kxKN2DaM/bns34Gv/ECWw3tljcU?=
- =?us-ascii?Q?kXzR7K5Tue0w+duEPVbZ4cZ1Ac+0A4YAlsQw2tT0U7CxAcJDaKWahee3yhiW?=
- =?us-ascii?Q?VQu9wD2YqNICnK23H7d+uBRUlusHmqgE1Vi/oxzjRP8136AHTPrgiz6uqxyC?=
- =?us-ascii?Q?cU0JDiZvVN4ShY+MTyRVAtOVG7bzvgYRKuD8/lYeHqfhJV+Ps7S1oP+XQA3S?=
- =?us-ascii?Q?q5GX27HjTK6iWOAAE7lRK43cC/xaQKCKwibSIMV9VQd43QVXeU1YuK0nZ7lQ?=
- =?us-ascii?Q?bh89gLt5h0V0yAeUG/gmoI7raIi2DBhyPwu27oCFRhl4ZsS59AabXbeZlkJT?=
- =?us-ascii?Q?j/XZNhT29bnTv4PPizXDUiNws9Yh3POdkcrhD6wI086efiJeBHViQ+X5T7mm?=
- =?us-ascii?Q?H/Y4kgTTwcNlpnOE5A8b3n86JjoYW7J98VjU+5QAIhVfRVQEnQzQDKKRuOZY?=
- =?us-ascii?Q?66ZX3hPY+mx1hL5QRpTNBU5JqAXRl76uYNBdmyAb3Ytn3mJV1o+1d98toDJU?=
- =?us-ascii?Q?rhf9uFj/cCkOJL3fF7mZ6UtrQgdLgnqzHgY+iqB9GByj1lFLasiPhD8BFMIN?=
- =?us-ascii?Q?lYWm6SvVYb/Xm79ZfP7VmDvzZ4nUSnvId30Wv9xZFJQx+/gKa2ui43bhxuqR?=
- =?us-ascii?Q?QSEu09vLfhLFNN/FrJ4OQpPljBiiGN1Q1/Xo6yJyNNj2sFX2RTHNds09nhAS?=
- =?us-ascii?Q?1h+6PCf6GPfZ9z3xwz/xSGEb7IxuhlG6gYFK0nWsRWDJgUaOUJkTQbp6s774?=
- =?us-ascii?Q?Kw=3D=3D?=
-X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f168832f-9c2a-478f-6295-08dd20e926de
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR08MB6969.eurprd08.prod.outlook.com
+	=?utf-8?B?VnE3a3dVVmozT0FSM05YRFBaanhqeTRQcmhuWWZFV1dPRDNvdWZrVDlyeU8z?=
+ =?utf-8?B?Y2t2bXAzU3BwYzRYOXZmVkM2VTlhTlExTVFEK1VVU2xsSzNURXJOS2ptTjZp?=
+ =?utf-8?B?Vk16djNVNXFZbkNDR3Rlc29iTHJjWmNFNFhZWWRWbjEzcHlURDNjUWUvRHlL?=
+ =?utf-8?B?by9rOTRUUDZEVk1BZ09DZ3lwQWdkcVJYMStGdzlyeFE5Mkx6ak5WdEd1dWo4?=
+ =?utf-8?B?WkdZYnFyWGZ2MnZ2MndqUmN4YjcwaWdLSW1ybXBTYkFKMHl3V3RHUHVWMW45?=
+ =?utf-8?B?Y00xTXNZdUkrY2d1YU90dHAxSW93OXJuU25ORi9VS2tVcDVGU2hWc1Zsc3d1?=
+ =?utf-8?B?dnh2SisvMithM2N4NjRuUG1oU0RBNmRUOGtlbXFPVG9SaTg4bXcreTBtbTZ5?=
+ =?utf-8?B?NmpHSkxiWEF6Z3NXTzVZRzZ5NkFTVVBoYUlOQmdYMHNVRVY5QVk1UTQ0d2Mv?=
+ =?utf-8?B?cnY0UE91Z3g2V0lWMks0YlRnQVc5VG5iS0ljNlUwa00zMTF4cm5GcTBwUzRR?=
+ =?utf-8?B?N1hFRlpvd0w1VHdKMXp2UXBPOGxCSzRndzErTkZlblJhcjk3aW5DZEx2WTgy?=
+ =?utf-8?B?NUZybnRGMWdJZ0Fpemx0d1YzZ0x6cVFtUDBaS3M4bDRlZ2s3QWc2WG9YVWRr?=
+ =?utf-8?B?NkJFR0NCY0ZCWXhOQ0J1R0lMSzlGY2QvWVYwV2dQNW94Zk1ySXJWVGRjd21J?=
+ =?utf-8?B?UkFEVS83ejV0eVpaQUNzQ2hxSnhEN3NiYlJyR3lMMk4zY1dtdnI4V2RCWW8y?=
+ =?utf-8?B?OHVvY0ZRTzBKSm5UZkIyRjU0cFNGQTJ5cUpPM3RXMUdOakJUZEFnVVAyU3RM?=
+ =?utf-8?B?OWhvamhJMWRnalpCMnlLUTdCK1NLOVgxcHpUT1BZd2kxbWxsWHU5UnlGV1Ns?=
+ =?utf-8?B?VjlNNHVNMllyRGhyY2QwMVJRUktVYng0V2o0S09nUkZQRks4bWlpK085SVNy?=
+ =?utf-8?B?eGVDUkcxSnVkQlFDLzE1c0ptQ0pwbmJhYkZzV0JHUjBRZFlxbEs1M0hpOWdM?=
+ =?utf-8?B?MkxwMldHUVJ0ckhLSE9Ea0N0MDdYNzR1b1o3MzlPZmhXb0RtVGYwVXVKQkE5?=
+ =?utf-8?B?MEVGSERuZzJvWlQza0FGNURVWDYyMXp3di8yU0ZvWktUSkNTOEYyeEVzTTBL?=
+ =?utf-8?B?QmtMNVFVTExEM3J6SVdxZU5QQnBYMVVxQk8zMEtvNk1rNTZRdjQ2QXJFb3ZK?=
+ =?utf-8?B?VzVWdytlMFMvbE1YOUFQL1FPSlVhdS9WSHRXbWdGQVhTSTN0NlovVmhlYk1v?=
+ =?utf-8?B?NlhlbTJCT1VlRkI2ODhFMHhiN2k2NEc4YXFrTkdQZnZ0VnNPdFg4NHJJbVpq?=
+ =?utf-8?B?eDNkVGdoWEFyVE1naFQwakZHdVNDWHF1TzE5MURSaE05Y2k4MVFlaElta28z?=
+ =?utf-8?B?bU5sem1Hd1Rkdyt3bTNiQlgzUEpudndiN2JYUDRzd0FuUE9WWFRBczg3UGlV?=
+ =?utf-8?B?MFRkeWxiTlBwcFBULzZxVjJyQmEzZ0RxMVRhR0ZkMVhsUDNVOTFQZ1M2Z2R3?=
+ =?utf-8?B?RURJV0FEOSs1L0M5TnA3RHo1MWVhNU1pNkttSHF5VEVFMkVRRFI4ZkExajlX?=
+ =?utf-8?B?cHBaci81V3FoSUxEYUpxdTFmTFRleVd5TWYycVowZmt0M3FKNVpkT05qdE5U?=
+ =?utf-8?B?dlZIcXNaT1dwQWIyUCtYSm11WUxuSGJtOTUvaURab3UzeDVmby95cDBONUNS?=
+ =?utf-8?B?S3MvUVZvMnk0UmVobkErTFVaanZFcTZxMjBwQ3d3MER6VWdhZ2ZrZGFLUm1v?=
+ =?utf-8?B?RUhpSUZUWDRBWHF1aWVjSXRPWW5DeXFaRE51SkxyNmdVemFyZi9xM3JiaExr?=
+ =?utf-8?B?dk5EUENKZS9UTUxBcWRkS00wcmwzek1MOGZrdnIwUWN4S3pWMUs5cjBjWlpR?=
+ =?utf-8?B?Y2FMSFB6RHh1RkdZMWRmOFA5ZDBneGZKU1QrbWl6bXBVUjlZdUJhUWpxUlFq?=
+ =?utf-8?B?aVhPUkhwSHpWMmxZdlNZbmYzWExNWVFJUlZEWFVJNW1MRlYrdUhqRytXSEFS?=
+ =?utf-8?B?ekkrd1FsUGIzR3pqTmxRZ0xrakJSVHNPeU4vdzRtNXl4VkR3RmN2Q2Z3UUNT?=
+ =?utf-8?B?RU1CbjJ6QTN0QmRPbmFoMWI1YlBrR01COEhxZ3hMWEZscFZLcjYxRkNGMGF5?=
+ =?utf-8?B?blBQR3lFMWE1UmFqY2crbTkrcWprZ1NwWFcwZ0NpM0doZFEzZTB3YnpwV2J4?=
+ =?utf-8?B?bjhpeVJ5ZElZUDlkd0pyVkpkNmcxY2pvSHdmdiswVFJ4N3l2dzIzS1UrZkZi?=
+ =?utf-8?B?UTFmc0s2UlRkbDgrMXZTZFpqdzd3PT0=?=
+X-OriginatorOrg: victronenergy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e5ed21e-0e64-4c11-d5b7-08dd2328249b
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR07MB8679.eurprd07.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2024 11:26:30.8972
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Dec 2024 08:02:27.7583
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
+X-MS-Exchange-CrossTenant-Id: 60b95f08-3558-4e94-b0f8-d690c498e225
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sQ+d3w/ACy0LdfLBBYxq0mjCdHgbnQ/5kfNC03MsUFi/vur6h+uzf3Itt3AyqafNhav1MRx2zW6tf0jUd8jS4w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR08MB5684
+X-MS-Exchange-CrossTenant-UserPrincipalName: 73FyKHeoBszZ38b4syxYBcZvJciyqJUJeHfBvKKsQQOHHkM6lerorVqhY8aaQ57r0/Fs7WBLFnBSvj7Eat6h7R0qR1i2o4aCuFRFdnHV8Uw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR07MB7342
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 20 Dec 2024 11:26:51 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16941
+ <bitbake-devel@lists.openembedded.org>; Mon, 23 Dec 2024 08:02:42 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16942
 
-From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
+Hi,
 
-Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.c=
-om>
+Op 04-12-2024 om 21:33 schreef Steve Sakoman:
+> From: Richard Purdie <richard.purdie@linuxfoundation.org>
+>
+> There have been complaints about the performance of large multiconfig builds
+> for a while. The key missing data point was that the builds needed to have large
+> overlaps in sstate objects. This can be simulated by building the same things with
+> just different TMPDIRs. In runqueue/bitbake terms this equates to large numbers of
+> deferred tasks.
+>
+[..]
+>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> (cherry picked from commit 9c6c506757f2b3e28c8b20513b45da6b4659c95f)
+> Signed-off-by: Steve Sakoman <steve@sakoman.com>
 
----
+Our CI build uses a multiconfig setup to build for 10 machines with 3
+different archs. On scarthgap with bitbake 2.8, that resulted in a
+really slow build:
 
- lib/bb/tests/fetch.py | 75 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
+NOTE: Executing Tasks
+Bitbake still alive (no events for 600s). Active tasks:
+Bitbake still alive (no events for 1200s). Active tasks:
+Bitbake still alive (no events for 1800s). Active tasks:
+Bitbake still alive (no events for 2400s). Active tasks:
+Bitbake still alive (no events for 3000s). Active tasks:
+Bitbake still alive (no events for 3600s). Active tasks:
+Bitbake still alive (no events for 4200s). Active tasks:
+NOTE: Running task 1 of 79788 ...
+[...]
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 30c821a67..37146c087 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -3495,3 +3495,78 @@ class GoSumTest(FetcherTest):
-         self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "azblo=
-b/go.sum")))
-         self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "azblo=
-b/pkg/mod/cache/download/golang.org/x/net/@v/v0.0.0-20220425223048-2871e0cb=
-64e4.zip")))
-         self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "azblo=
-b/pkg/mod/cache/download/golang.org/x/net/@v/v0.0.0-20220425223048-2871e0cb=
-64e4.mod")))
-+
-+class CargoLockTest(FetcherTest):
-+    def setUp(self):
-+        super().setUp()
-+        self.localsrcdir =3D os.path.join(self.tempdir, "localsrc")
-+        os.makedirs(self.localsrcdir)
-+        self.d.setVar("FILESPATH", self.localsrcdir)
-+
-+    def create_cargo_lock_file(self, data):
-+        import tomllib
-+        filename =3D "Cargo.lock"
-+        with open(os.path.join(self.localsrcdir, filename), "w") as f:
-+            for package in data.get("package", []):
-+                f.write("\n[[package]]\n")
-+                for key in package.keys():
-+                    f.write(f'{key} =3D "{package[key]}"\n')
-+        return filename
-+
-+    @skipIfNoNetwork()
-+    def test_cargolock(self):
-+        filename =3D self.create_cargo_lock_file({
-+            "package": [
-+                {
-+                    "name": "regex",
-+                    "version": "1.4.0",
-+                    "source": "registry+https://github.com/rust-lang/crate=
-s.io-index",
-+                    "checksum": "36f45b719a674bf4b828ff318906d6c133264c793=
-eff7a41e30074a45b5099e2"
-+                }, {
-+                    "name": "regex",
-+                    "version": "1.5.0",
-+                    "source": "git+https://github.com/rust-lang/regex.git#=
-9f9f693768c584971a4d53bc3c586c33ed3a6831"
-+                }
-+            ]
-+        })
-+        fetcher =3D bb.fetch.Fetch([f"cargolock://{filename}"], self.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "regex-1.4=
-.0.crate")))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "regex-1.4=
-.0.crate.done")))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "git2/gith=
-ub.com.rust-lang.regex.git")))
-+        fetcher.unpack(self.unpackdir)
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "Cargo=
-.lock")))
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "cargo=
-_home/bitbake/regex-1.4.0/Cargo.toml")))
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "cargo=
-_home/bitbake/regex-1.5.0/Cargo.toml")))
-+
-+    @skipIfNoNetwork()
-+    def test_cargolock_https(self):
-+        urls =3D [
-+            "cargolock+https://download.gnome.org/sources/librsvg/2.58/lib=
-rsvg-2.58.2.tar.xz;"
-+            "striplevel=3D1;subdir=3Dlibrsvg-2.58.2;"
-+            "sha256sum=3D18e9d70c08cf25f50d610d6d5af571561d67cf4179f962e04=
-266475df6e2e224"
-+        ]
-+        fetcher =3D bb.fetch.Fetch(urls, self.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "librsvg-2=
-.58.2.tar.xz")))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "librsvg-2=
-.58.2.tar.xz.done")))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "adler-1.0=
-.2.crate")))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "adler-1.0=
-.2.crate.done")))
-+        fetcher.unpack(self.unpackdir)
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "librs=
-vg-2.58.2/Cargo.toml")))
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "librs=
-vg-2.58.2/cargo_home/bitbake/adler-1.0.2/Cargo.toml")))
-+
-+    @skipIfNoNetwork()
-+    def test_cargolock_git(self):
-+        urls =3D [
-+            "cargolock+git://gitlab.gnome.org/GNOME/librsvg.git;protocol=
-=3Dhttps;"
-+            "nobranch=3D1;rev=3Def5c94d8362c35573d7eb651cf9a07c6df9df6da"
-+        ]
-+        fetcher =3D bb.fetch.Fetch(urls, self.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "git2/gitl=
-ab.gnome.org.GNOME.librsvg.git")))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "adler-1.0=
-.2.crate")))
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, "adler-1.0=
-.2.crate.done")))
-+        fetcher.unpack(self.unpackdir)
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "git/C=
-argo.toml")))
-+        self.assertTrue(os.path.exists(os.path.join(self.unpackdir, "git/c=
-argo_home/bitbake/adler-1.0.2/Cargo.toml")))
---=20
-2.39.5
+After almost 14 hours it was at 'Running task 8881 of 79788', and I
+canceled the job. The cooker was running at 100% cpu, but there were
+hardly any bakers running.
+
+With this patch cherry-picked it builds successfully in 3h and 20min.
+(I did add INHERIT:remove = "create-spdx", since it triggers an sstate
+error causing the build to fail)
+
+So this makes a huge difference, at least for a setup like ours.
+
+Regards,
+Jeroen
 
 
