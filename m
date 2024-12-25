@@ -2,81 +2,81 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A68DE7718D
-	for <webhook@archiver.kernel.org>; Mon, 23 Dec 2024 12:51:34 +0000 (UTC)
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
- by mx.groups.io with SMTP id smtpd.web11.12724.1734958286603257373
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF52E7718B
+	for <webhook@archiver.kernel.org>; Wed, 25 Dec 2024 15:17:45 +0000 (UTC)
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+ by mx.groups.io with SMTP id smtpd.web11.8422.1735139860436250952
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 23 Dec 2024 04:51:26 -0800
+ Wed, 25 Dec 2024 07:17:40 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=JW6rWMxx;
- spf=pass (domain: gmail.com, ip: 209.85.219.51, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6dcdd9a3e54so44675226d6.3;
-        Mon, 23 Dec 2024 04:51:26 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=g1/XQpEY;
+ spf=pass (domain: gmail.com, ip: 209.85.219.54, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6d896be3992so33018306d6.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 25 Dec 2024 07:17:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734958285; x=1735563085; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1735139859; x=1735744659; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FfHCUpZHzfWnJbzTrvQiW062OsiZcrjSt8Q9iYefA90=;
-        b=JW6rWMxx72Jb10zl2L5IRsa//N8T14ZxiUQDg5JcSDRrMKUK/mKzzUsZc4znLxJqg4
-         ixPhGvp07PCrPlWpTMpBPpTTzkCeCU40HvWcH/NpwIiNVJJdHn0BQv1+KFWzjGqLtH01
-         LVm8zkiy7od/myEntib7niGp0nNf36DbbG2Y3uPnwayNAyZi4nRrVOl9f9lod/2jhVcC
-         i2NoK5/W+e931N/Q2OPyajjMHoCCmSPD09aKiX2byWR2JvfcpClqewRI52LCzukhxajE
-         qit1J9VXxf1fTVpuYpk6gfZdYBKoipxZqDOQZ+sUxE6LoPAGrMkSzdHmX5S39UKrSMNZ
-         yDIg==
+        bh=wgv4EO2znCICRjDv/EMOjzgP3l0pVyq98o/V0uLikJA=;
+        b=g1/XQpEY64prCAmcyBHlNnS0DGAq+tBITKQuqu5f6LwPM1qUGWnR9lSflz2R9Y5g1Y
+         jKv3Q9laQOGMkmdqOCJYViX/xXpFMGqy1nIJ0R3eYCgcqRjWFZg5aR+P+vTE/7aK4r3w
+         ZaVYpXSGPBQevWIdu5MSx8qebWN4ZUvr4a9VZEBXSA58W+STyKUPF4tirCP39ij5YMgR
+         +DF/yU1466f49fmgGnp4F0UenBu13ad19+IN0+kpATmHAWjDKx+7qpn4bRGxGjKqx4YB
+         k3Hd/okpUtW3F1jB6ahUBtx2C/m5cUe2TjaKv0vRAGL5heCd9VlTygZNZbMVBTWDZe2G
+         9NKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734958285; x=1735563085;
+        d=1e100.net; s=20230601; t=1735139859; x=1735744659;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FfHCUpZHzfWnJbzTrvQiW062OsiZcrjSt8Q9iYefA90=;
-        b=JBqJbMcOxaKMavH2vuR/ndAfDS2COvzwFxDpOlOzPYmirbUFzVYApXcPsNnF2OZIqH
-         QVx+C5AdOY8lJsRsGlFFLm9SiHLVqMSQBa63bkHCrOgQHkyc2sDP5sx3RGMFiwYYyzUS
-         tkjKVG234PooilYWgahtbF2WLzoQqNqweOQZRc/j7J0RX8eKzLqRSh3iDOJFFQFoQ4Vr
-         LrTjvObMtddfoUK5fYqg0TsczDFzWYVebh6M32BmqMl9goDn6ouZnZLxqgEYtQkJtetv
-         U/nq7P3Ow9+U/FMzCNdUeFiXQA+cBvEyV2+H6XXXzxtzWWoVy3rqGxdKTCvhR0UP4tYY
-         1qWA==
-X-Forwarded-Encrypted: i=1; AJvYcCVpq0PrciITKkrJWnHynrK1PiICI+sX7eU6oph8EUZeLRtZCixrYo24ZZYTzmOnkAxm8/HUaR0x4tZZS5q95/txzk7Q71K/93W5@lists.openembedded.org
-X-Gm-Message-State: AOJu0YwDhdS0OpHw26HhZFXnSdg2QvWWBJFol8crE1jLhBgRKy06qTcq
-	tsXbIERSVx0KlQ5NxKYbu0beWU1bOcYXVIr53vxCefFlg3TRC5XcwEXftHwbKdjWqT/RyP66tXH
-	xpsUEEAUYPODxrGwaIO2+NoXRWVs=
-X-Gm-Gg: ASbGncvbU/6YH6QTvAn2rfTMeyJXLgY/O0yAIZcuM0IeDsrwMbyNH3dsdvHcdXBpEuI
-	2ocjOFvh6zMQN2NOLHEstVLRNtJ2HWPgWH059kYaH++yHAz8P2HHcmim3ppfv/NKtIhKvrdki
-X-Google-Smtp-Source: AGHT+IFnzre59fmuLh69LPth4+8o047wLsY5D8yejG/ajMsny1rPc+Bw+BjB1xYWPkcsF7oyroH/ex+6VFZPvE9VA2E=
-X-Received: by 2002:ad4:5d69:0:b0:6d8:81cd:a0ce with SMTP id
- 6a1803df08f44-6dd233aab3amr218037446d6.43.1734958285580; Mon, 23 Dec 2024
- 04:51:25 -0800 (PST)
+        bh=wgv4EO2znCICRjDv/EMOjzgP3l0pVyq98o/V0uLikJA=;
+        b=d/dvvk7l8V7FLuY7+lcVGHaYvhyELT0E3Hb9y6ViXOlx6JqaGI2OjoUQxhjmHAHAvk
+         Mz4Xb6X4fSNVsMlv0uhLKbIucUbmmk6UIN02jLx/3H/eainpRwqcf5j4ffyHS/vncuSw
+         Ku+DJKj4P10QPlOXIAEJmFJQCK+WewrHSDXYRS4ksBw/sqsYKUcetft6qmHLwmUCMMMM
+         4DQs4jEbPtKbn4kLi/z1M+LmOs8muhEqmIXicmoz7QUNLQ/gnqm4fntjPj5txE6XbO6g
+         bZCTKYpNd/o1BmyItXinzuxpwnaROG/tGOEIxfX9A7BwQ5WrgtVnMX2HFdWrHhPbLOs3
+         Basg==
+X-Forwarded-Encrypted: i=1; AJvYcCXqOscPMIoMBeOu3YZtIXNKId9LakZfg1eh62t5w+6SSAXpH8OQA7Lkg9CYFKMTDYJI1qL7kcpj8QHPL6Z8@lists.openembedded.org
+X-Gm-Message-State: AOJu0YzBpOoBjzl5ZXTcCjs6MivquRH7CDlsa77rZKJ8tN5ohMxVlTIM
+	B5Vt+VxWz3n4xwMM7QruZH412qlgJ1o7QgAhBgDX/1XKCJoWcmGtTj5RUlnFDTfV2IkOeoeMYjr
+	s/Z37TGc4B7DWJZi5tKkV4rBxNNw=
+X-Gm-Gg: ASbGnct2+m45v+19uOw6DLww6QQE5ot9jdVNlqf9XIIxOg3wd6fb28xISQX8ka1bK+F
+	OuYBrZu7BlYuHt/vOQGLVEE0Ze7WdF34RkR53bZ6UUv9DzrRuALN69oLNwjD7qzXuzeQ4Adty
+X-Google-Smtp-Source: AGHT+IHl219OudZvtkGSd4zLQLti+1LbXImhHRjHRzgMVMVcxXH6b4i1s6AmXMb9ydvDt7SrPTaNb8TqREzsFuJ7g/Q=
+X-Received: by 2002:a05:6214:202d:b0:6d8:ab7e:e552 with SMTP id
+ 6a1803df08f44-6dd23397311mr378924766d6.39.1735139859551; Wed, 25 Dec 2024
+ 07:17:39 -0800 (PST)
 MIME-Version: 1.0
-References: <20241218124722.2030523-1-alex.kanavin@gmail.com> <CAB=6tBTTn=C5xAqDwtUm9nyTnnxh2s+Lfwoe+sD3Ara3cCKtLw@mail.gmail.com>
-In-Reply-To: <CAB=6tBTTn=C5xAqDwtUm9nyTnnxh2s+Lfwoe+sD3Ara3cCKtLw@mail.gmail.com>
+References: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
+ <aeac8b24d43c57b7b426983ae50ec65680dafc24.camel@linuxfoundation.org>
+In-Reply-To: <aeac8b24d43c57b7b426983ae50ec65680dafc24.camel@linuxfoundation.org>
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Mon, 23 Dec 2024 13:51:14 +0100
-Message-ID: <CANNYZj-bimfikUijTUqB2avVC+h8a8zpEHSD7zLL511qDgXZxA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [RFC PATCH] bitbake-setup: add the proof of
- concept implementation
-To: Chuck Wolber <chuckwolber@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org, yocto@lists.yoctoproject.org, 
-	openembedded-architecture@lists.openembedded.org, 
-	Alexander Kanavin <alex@linutronix.de>
+Date: Wed, 25 Dec 2024 16:17:28 +0100
+Message-ID: <CANNYZj9q6+D6AppzUbuV_cdMszt_KA3kfsamOtcRFxoWWFjV+A@mail.gmail.com>
+Subject: Re: [bitbake-devel] [RFC PATCH 00/21] Concept for tightly coupled
+ package manager (Node.js, Go, Rust)
+To: richard.purdie@linuxfoundation.org
+Cc: stefan.herbrechtsmeier-oss@weidmueller.com, 
+	bitbake-devel@lists.openembedded.org, 
+	Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 23 Dec 2024 12:51:34 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16947
+ <bitbake-devel@lists.openembedded.org>; Wed, 25 Dec 2024 15:17:45 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16948
 
-On Thu, 19 Dec 2024 at 23:18, Chuck Wolber <chuckwolber@gmail.com> wrote:
-> Would it be possible to change that to just "build" rather than "build.sh"? For
-> an executable, there really is no need to telegraph the language it was written
-> in. It also makes things very difficult later on if a more sophisticated
-> implementation in a different language is warranted.
->
-> Related: https://google.github.io/styleguide/shellguide.html#file-extensions
+On Mon, 23 Dec 2024 at 11:03, Richard Purdie via
+lists.openembedded.org
+<richard.purdie=linuxfoundation.org@lists.openembedded.org> wrote:
+> Would you be able to check if this work meets the criteria set out
+> there and if not, what the differences are?
 
-Sure. I changed that to 'build-targets'. It might be good to consider
-if that should be even called 'build-default-targets' in case we might
-want to support 'other' kinds of targets as well, and how that should
-be reflected in the json structure.
+I'd also add that this would benefit from a demonstration with one of
+the real recipes go/rust recipes in oe-core: basically it would be
+good to push a branch of poky somewhere public, and provide
+instructions on how to see the new fetchers in action, and observe
+their benefits.
 
 Alex
 
