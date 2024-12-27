@@ -2,103 +2,124 @@ Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9677E77188
-	for <webhook@archiver.kernel.org>; Thu, 26 Dec 2024 16:12:12 +0000 (UTC)
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
- by mx.groups.io with SMTP id smtpd.web10.23536.1735229523281909964
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C652FE7718B
+	for <webhook@archiver.kernel.org>; Fri, 27 Dec 2024 09:06:49 +0000 (UTC)
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+ by mx.groups.io with SMTP id smtpd.web10.10135.1735290402807245015
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 26 Dec 2024 08:12:03 -0800
+ Fri, 27 Dec 2024 01:06:43 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=py2dFlV/;
- spf=pass (domain: bootlin.com, ip: 217.70.183.195, mailfrom: antonin.godard@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 21A4C60002;
-	Thu, 26 Dec 2024 16:12:01 +0000 (UTC)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=gfl4vHwH;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.197, mailfrom: antonin.godard@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D32BD1C0003;
+	Fri, 27 Dec 2024 09:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1735229521;
+	t=1735290401;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=F5IC+Oh7L1dvwioR1zsd1TUayJR+Ck4MaKFQbXmDWIs=;
-	b=py2dFlV/xM/5rtXYmjY2rqeUOhkY6OwqINepTHtFvRkgU+40DdIfi31S2vSFAnrNUOvX9R
-	gzhTXykZz6gNG49gWpT2wFlMTFFC+vxOJVC1BXSryDav5QZCqqmYYjZX/fTHh9fvFFiDIl
-	vdb0XW3AZB1oLo3403lhTw5IXwArae43Xr5GF7g2jAtw7Q5kbsKtPnqVKw3sEKjRHSnIvb
-	BGmzHHSSRJQi9NK1lOHVI356j9lFhoIT04OhJjX6RnXTvawSpE7n+3I/Usko/TJ+KdPyzs
-	9kc5bv07IQOGKM7/kb/XKl8zlp22iUUU+hneejCMQ+Y9+F+PVRpvvVeTYqFDgg==
+	bh=48j8GkvbMTDJDjaxwczNmZprLPTr+JbVDRzik52Hin0=;
+	b=gfl4vHwHGFeE/Bi6hW0WLoq7xPJDl70R4wgh08fyP8Wd1casHgCarQDXBYY6gq8ms3aIGR
+	tk7doMY4e1hRoCTFdUAT7juo5a+FsUy8FfcgOoFBMkoEybn4PMzPiGqtkfd2eqvodSKBo6
+	rh5MSsoCGKXXKj2ZC8L7M3J9wH/AWNj+zXmEyrj+sb5ShuAtaXXGYxE77OnQJkyvT+3i1H
+	eAlxlDcTda7HvHnkE9oBrxgXwOYFzFMDAwJ97CV1B6kBAgHBEEjGiKNPeig9tfVhhFdBXo
+	yJR/7yYDyZUpyOqwW9GdsZZX9eERzJLyt8oD8lZElnI/ArfTxqnc9Sev3KRHMQ==
 From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Thu, 26 Dec 2024 17:11:56 +0100
-Subject: [PATCH] doc/bitbake-user-manual-metadata: fix unindent warnings
+Date: Fri, 27 Dec 2024 10:06:21 +0100
+Subject: [PATCH] doc: update releases.rst
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241226-fix-unindent-warnings-v1-1-a43febf7714a@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAEuAbWcC/x2MSwqAMAwFryJZG9CgIl5FXFQbNZsorT+Q3t3gb
- gbmvRciB+EIXfZC4EuibGpS5hlMq9OFUbw5UEFVSdTgLA+eKupZD7xdMFwiTqNvuSqoqakF2+6
- BLfx/+yGlD6ovBTRnAAAA
-X-Change-ID: 20241226-fix-unindent-warnings-cbd8e4026528
+Message-Id: <20241227-update-releases-v1-1-1641a151991e@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAAxubmcC/x3M3QpAQBCG4VvRHNuy4y9uRQ42+2FKaAcpuXebw
+ +fgfR9SBIFSmzwUcInKtkbYNKFhdusEIz6aOOPCMtfm3L07YAIWOIUam1uu6mFsysxRrPaAUe7
+ /2PXv+wGTYITuYQAAAA==
+X-Change-ID: 20241227-update-releases-131267cf950a
 To: bitbake-devel@lists.openembedded.org
 Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
  Antonin Godard <antonin.godard@bootlin.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1800;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2069;
  i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=iUz+aVcv0jTUjhag+R8LnScuA+4bpKZb21CHaG+iBys=;
- b=owEBbQKS/ZANAwAIAdGAQUApo6g2AcsmYgBnbYBQE8V8IorE6h90JmLbh0PIfHE74y7QR4HyI
- Wv5IRyMd1yJAjMEAAEIAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCZ22AUAAKCRDRgEFAKaOo
- Nhb7D/9uGhvJtT/3K9ls5J9vSOgOYFW4hsSQNGxI9dn6YTTQ2DUJi5O7SpIMRgL4BrfYUMXqMyZ
- b90uRsOSKqB0+E+QaHclBUWUY9S+Gh/fbNC9TkNUqCca947JrXjAxj+zVk9RXcrp76eRLDHBeET
- 8ozEMDHGnv/oXRuBoLqa2h6VX2ZVs2hkJgCzdoEw0yC8s8QBhpuY0qF0XR8NPOvjCmOtRuhe8NY
- O+J+q2Mp6upWfl2hkhz2Aqkoqi+yn0S86J4/bNGSfRTFyej+67MDME8W04rlWAIgekGXzF9habo
- /hPh6zkucttRlorYYQ39v1tY9KQTeOqIIcKBIko/BTUUmnBMvtFi2dgNj4V9MRkaVa4T3T7g6F9
- 78GBtu8FQqJL7HiLUm3iWwVAlP9VndffE1lUujWT87hmumhLcymzgQPRFOVBfZ1vYXXGxq710Na
- cIrELCQU+KDM+EE4cQycJukYmEcwsOMF9K87lKtpcrLDzbRqSaCVIFnY7cdWWlr9d+TWL+KgZaQ
- bI9AmKQMCUp+/lrl1zQ9FTHW07mOk/u6H9gLw61seD2FSTK4QdZO5EfFKjZuA3LK5iyUCThXaz5
- sXC8zB5DapmIa+FM3+7o1CYneOFq+E3jki7r4C3YAsjUtv6YL4R5U1QlU5jgQ5V365WzPO0R6rG
- Zh4E4ios9/ysifA==
+ bh=4eCZcESmPXnwIiI7H1uJw1h07m8wEXZ1O1KOmcLRm7A=;
+ b=owEBbQKS/ZANAwAIAdGAQUApo6g2AcsmYgBnbm4gTjnGu6OpChf4aJSXR0RMJPICSmNnIQnUP
+ z+4xqWoq4uJAjMEAAEIAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCZ25uIAAKCRDRgEFAKaOo
+ Nh6hD/9OC7yOVzV4DZIBIyWYyiKDyI3WMiMgeaWuiyDl2IRJWNNQU6vnzJzer4/13JzJA4FPmd2
+ g8ot6FdYAYhIJXC/kOGp5GbYmVAND6DHO9kQlJKOlZNythe06agFAkqkus8GKkcebBgB1NKME1p
+ oyVtBq2S2LwEWP0BqCKBizrTyOtDQcclEDmylj/iYgfpRExsw3yWJ3PGnn5jC19P0NvMMR0WqZt
+ vt9w07hGaJFKq7w1bRb7H1z5U2l6FMofAmP7/ycb35ni5GUJQWLV4X6CONfB9MRisTJaJSX8/nu
+ cAm897txrwhWAuQtCsVS/KfrRus8RPkFoA6zdtLSBK+PBRNehRjBejUx96ompa2/59kbGfOBv6g
+ R64qjqiDebfVQTcpJ3eQtbB0lYGjF01Clxq6JAZM497uR4cR/e/hNZ2bromeDFQ33FIDxPLIGO1
+ jje1gCC6jba3ifoNl6tdQT+eNSoJ1n/oClOCAPjB2/45by0am0GG/WQ+PwTrgmwtmNVGYEwMB69
+ ucn5jEwfKrw46aIvcq3+9hiRGLZAJ5BIDZmcVlSwiD/RMLedUVLVtycvbQoevdlUrrvD9K+31zU
+ A9gRUnFJnlAKhyWxxh4+JmKzaN6JIWqVmCK4bHAsZGq303dDuKXjqZFNUQK9z1wt0BYVvmBihmM
+ OB7NYw+wm4YHMMA==
 X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
  fpr=8648725188DD401BB9A0D3FFD180414029A3A836
 X-GND-Sasl: antonin.godard@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 26 Dec 2024 16:12:12 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16949
+ <bitbake-devel@lists.openembedded.org>; Fri, 27 Dec 2024 09:06:49 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16950
 
-Fix Sphinx warnings (treated as errors on local builds):
-
-  bitbake-user-manual-metadata.rst:979: WARNING: Bullet list ends without a blank line; unexpected unindent.
-  bitbake-user-manual-metadata.rst:982: WARNING: Bullet list ends without a blank line; unexpected unindent.
-  bitbake-user-manual-metadata.rst:985: WARNING: Bullet list ends without a blank line; unexpected unindent.
+Add Styhead as a supported release manual, and move Dunfell to the
+outdated releases manuals.
 
 Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
 ---
- doc/bitbake-user-manual/bitbake-user-manual-metadata.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ doc/releases.rst | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-index 75930fef8294b21965d4b25dcb5837bfdca2b096..2680c6ac2c5686c7407329f762189c8ba1a9f33f 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-@@ -976,13 +976,13 @@ go into ``bitbake.conf``, for example::
- ``addfragments`` takes three parameters:
+diff --git a/doc/releases.rst b/doc/releases.rst
+index b271e2ad30a6d294f679aff3b270756f7e28e5af..3e8014074096c0f7c1a65a9820afbf74fe8cf657 100644
+--- a/doc/releases.rst
++++ b/doc/releases.rst
+@@ -4,6 +4,12 @@
+ BitBake Supported Release Manuals
+ =================================
  
- -  path prefix for fragment files inside the layer file tree that bitbake
--uses to construct full paths to the fragment files
-+   uses to construct full paths to the fragment files
++****************************
++Release Series 5.1 (styhead)
++****************************
++
++- :yocto_docs:`BitBake 2.10 User Manual </bitbake/2.10/>`
++
+ *******************************
+ Release Series 5.0 (scarthgap)
+ *******************************
+@@ -16,12 +22,6 @@ Release Series 4.0 (kirkstone)
  
- -  name of variable that holds the list of enabled fragments in an
--active build
-+   active build
+ - :yocto_docs:`BitBake 2.0 User Manual </bitbake/2.0/>`
  
- -  name of variable that contains a list of variable names containing
--fragment-specific metadata (such as descriptions)
-+   fragment-specific metadata (such as descriptions)
+-****************************
+-Release Series 3.1 (dunfell)
+-****************************
+-
+-- :yocto_docs:`BitBake 1.46 User Manual </bitbake/1.46/>`
+-
+ ================================
+ BitBake Outdated Release Manuals
+ ================================
+@@ -62,10 +62,11 @@ Release Series 3.2 (gatesgarth)
  
- This allows listing enabled configuration fragments in ``OE_FRAGMENTS``
- variable like this::
+ - :yocto_docs:`BitBake 1.48 User Manual </bitbake/1.48/>`
+ 
+-*******************************************
+-Release Series 3.1 (dunfell first versions)
+-*******************************************
++****************************
++Release Series 3.1 (dunfell)
++****************************
+ 
++- :yocto_docs:`BitBake 1.46 User Manual </bitbake/1.46/>`
+ - :yocto_docs:`3.1 BitBake User Manual </3.1/bitbake-user-manual/bitbake-user-manual.html>`
+ - :yocto_docs:`3.1.1 BitBake User Manual </3.1.1/bitbake-user-manual/bitbake-user-manual.html>`
+ - :yocto_docs:`3.1.2 BitBake User Manual </3.1.2/bitbake-user-manual/bitbake-user-manual.html>`
 
 ---
 base-commit: c9906bb289dcfd9ae41f10bd5399ccc17a4cc437
-change-id: 20241226-fix-unindent-warnings-cbd8e4026528
+change-id: 20241227-update-releases-131267cf950a
 
 Best regards,
 -- 
