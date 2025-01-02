@@ -2,67 +2,68 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CAAE77188
-	for <webhook@archiver.kernel.org>; Thu,  2 Jan 2025 13:59:39 +0000 (UTC)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web10.8504.1735826375003473485
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D41FE77188
+	for <webhook@archiver.kernel.org>; Thu,  2 Jan 2025 14:07:29 +0000 (UTC)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.web11.8340.1735826844071209374
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 02 Jan 2025 05:59:35 -0800
+ Thu, 02 Jan 2025 06:07:24 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=IJUBq3eP;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.44, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4361dc6322fso74848195e9.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 02 Jan 2025 05:59:34 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=WoFib9fX;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43690d4605dso41649685e9.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 02 Jan 2025 06:07:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1735826373; x=1736431173; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1735826842; x=1736431642; darn=lists.openembedded.org;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=ioNdWPFtOG3xhuF+ZxL5FVRefDK4j66BW+gZu9HeKQU=;
-        b=IJUBq3ePYGCi1JLJcB6Nh7qY6sG5jDLHXswhfpRyMgV9VEJKZjl75shCvCjKCcbvip
-         5QgwXXLV1CHw4UOdkfQjjmJGoUMzV8nhPn/CB10y06CcWuIsH75um0NGdFYNAE33OSFf
-         ZvE+VIpT74zH3fGZSoPi2LNZEaxJnajzaka1w=
+        bh=YlaqTokTyzHExNrJHPVj7WNn4sCQsetUc83A3YkcAZw=;
+        b=WoFib9fXtUpLsfwrOumgM/0g9NI1c5zjUfzkXjmw3Q7ywdJrd2WfzGcxaFWN6lsddA
+         1UYMrspiJiDhw06Z4sPs4CEV3RfrOvXBUJZYAMZldpd6+qqFwSaTM7bP8elJacSPnFuM
+         nqGN6+VnJbU7U2ABtLuNBErai2o+Iqg02AHug=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735826373; x=1736431173;
+        d=1e100.net; s=20230601; t=1735826842; x=1736431642;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ioNdWPFtOG3xhuF+ZxL5FVRefDK4j66BW+gZu9HeKQU=;
-        b=UKk9bSsJwnpmb1MoEzasSZcDS8wLjmDuqzMCaa1F45Os27Xvj5OnQx894shrTz0ns5
-         XgfH6Am4/g3Wr7V1TXf5Q/bzm/5uJlHG4dwZFEZd5OU0ZJPDTduK06cEjYk0Rq2ewbBK
-         rmuGSQDjfbhYsVWR1EuPyjmkywnfiXm3vaLN42UBdL25iR91CgqF8dRwdWhseMDayWex
-         +YBamIAdOdPICIa51y5jfREQVCpCcfS4dIOpCDfKxAv8h7YqAxB9EHcNRvrI0V85wXEb
-         HRLA6PBFMpjuZ1jYeJfQLnefXqkCxkAIsUSUKHB8ciMBdAU30o3fRHwzsM4gzlxLd0gO
-         ldjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVcFiigFkOY7Zbw9KrKd0dPZC16eXY+ZykCnHMweLIo6Vo7Ozy1X8XAbB76dZ8iAadZXMkSaVy4YYBeZpuA@lists.openembedded.org
-X-Gm-Message-State: AOJu0Ywx5Kvu4rZzK+qlo9zXOysvywrnhebk9yQl9ehX6S2NbGw/cYqj
-	VHETBAtbP4VOTBah1g4UCwnX8TlB26yUvb9iyRKIc0qP6B6fSqAyBVm70H0rg8A=
-X-Gm-Gg: ASbGnctPkn5CxA+lng6INJg6w3KbYoXCIMyP+AW27Oh6WUsYu+jVPxNCWDbrA+nwutU
-	9UcF/IaOjFqOgm+Pah46XHhfwM+/bFFyDlh2ofOLgBDMXdzojN88ct8Wb3KL1wqLIUMsmSui2LB
-	5hnFsfyf28yH1mvwkN5iJwoCtxmm/EgY+n9qZOMiy9bk5gHCr1y1JkxdHn7PTIiWnVBuclU9Yla
-	X+PV8WvwmlGGH2eSSRv+xdyUP0sVnWhRJYn4H3KrBtgxZnjtYkHlDdK6AWwOncs+z9XV72HLbHC
-	S5m50Yrs2WS25+siCYeuMHZU1Fy19Fo/B6EPLmObdgZcFg==
-X-Google-Smtp-Source: AGHT+IElKwLUwjfm7uqFyh/1PeaClHPzlGn0YMqU2Ufhr3NUfCAY2OzyTRzyYOLWMTqiSeYvBC3+bg==
-X-Received: by 2002:a05:600c:138d:b0:434:a4fe:cd71 with SMTP id 5b1f17b1804b1-436686439e6mr411868375e9.12.1735826373287;
-        Thu, 02 Jan 2025 05:59:33 -0800 (PST)
+        bh=YlaqTokTyzHExNrJHPVj7WNn4sCQsetUc83A3YkcAZw=;
+        b=YsR9NdEbSHIOk8rhKVXjMpDf6+fE6jJ4hT68x1HFaCPDH/xzXeNQyIjIeZ7ZdkPGjS
+         SzuIIIG7TjdIiZZXbXMf5VrmbejeEVD0Wx+e6QfaTS6+SYh3AGiDfkaOdyNWNGb+Kxyg
+         j5A4JKxjE6CZAhJksmUZwqdk+jSFtGlx8XlOU7GDcUCD+bHgLlxDzl85ZPP6BrnTBYlY
+         menN2Isu+db1Kd/InruD5LAI0q40zgA9sZarRYOoUm9O9aZ0PIF9QZTuubLrR9uqsChR
+         P7NaIaSEbOeh/HcaTGE/eN4FrWw5WTEKQaBfVi6liTyGEPOAbSuHnaUBHE5W6pKxdeeZ
+         JvBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVvWriIF8+K07IfxWjb/bP6GKZtvKlwt4+SfUxDflEdPk6mGoNvmfrf3ITIxeWu75uCKq5a3IPJpZ8JQs6s@lists.openembedded.org
+X-Gm-Message-State: AOJu0YxF1GTXgiZTLhi8HP9/ZlFA8I5s+a8mkZOPMSFMnyalLWQom4gw
+	OeESpVQnQF8iRZmokrA8JrwPpTuuTLS38PU75WtjaCnO+mPM9hK2dxUuBGJCwkA=
+X-Gm-Gg: ASbGnctAecOX/bYUertYxcUX41wna32VSd0S3QTWejBOHmHIOVj+hj6maKwgcXtnjU0
+	IYcM1IjqzW/orAmpWdS18Eh2IOkY2jNPlz/1zx/md3/1C9cpb+RKwPCh/bVllmLwQ51AJ+koHD3
+	XsoltP/BpGF4vjgUFbmnKRQ8Tozdh+6YnYQwBD1jfDI/UT1dIzt97BPAP5jSv6JmMe+jNIB3HHT
+	hboI9pPPwsfWneO0yDe5ney1WkNR9sfXjaoECV2VCFgQeasuBEJShzEKf/GfHEWqw9PPSpLiKCZ
+	6sDAgL7+LLTL8cQ/izuNv9fqoCYPXBNv+vECnBRAIdZEUA==
+X-Google-Smtp-Source: AGHT+IGbavxQmCd089GNrgNB76C7e+7Hk+MEHbvAE0pSGGADSZHSEYKCWWrdXDBnM9HIfMmwrmKyWA==
+X-Received: by 2002:a5d:584d:0:b0:385:e0d6:fb73 with SMTP id ffacd0b85a97d-38a221fa9cdmr36988244f8f.15.1735826842492;
+        Thu, 02 Jan 2025 06:07:22 -0800 (PST)
 Received: from ?IPv6:2001:8b0:aba:5f3c:ae2e:9f02:55c2:739d? ([2001:8b0:aba:5f3c:ae2e:9f02:55c2:739d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436611ea487sm451202215e9.8.2025.01.02.05.59.32
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a412f778esm23637874f8f.4.2025.01.02.06.07.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2025 05:59:32 -0800 (PST)
-Message-ID: <bd07e0878612dde78c083d888a3f9f7db0eba8e0.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [RFC PATCH 07/21] fetch2: add unpack support
- for npm archives
+        Thu, 02 Jan 2025 06:07:21 -0800 (PST)
+Message-ID: <2ef6ab29f58822233bd2599b00d7b444852e828c.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [RFC PATCH 00/21] Concept for tightly coupled
+ package manager (Node.js, Go, Rust)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>, 
 	bitbake-devel@lists.openembedded.org
 Cc: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Date: Thu, 02 Jan 2025 13:59:31 +0000
-In-Reply-To: <f30a04bf-96f2-458d-9ceb-94fc39895dc8@weidmueller.com>
+Date: Thu, 02 Jan 2025 14:07:20 +0000
+In-Reply-To: <f5aaf9dc-6c1e-44c1-afce-33c6beac0290@weidmueller.com>
 References: 
 	<20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
-	 <20241220112613.22647-8-stefan.herbrechtsmeier-oss@weidmueller.com>
-	 <f9b92d30b08d5177de4941bc31c17add5ee2f8f4.camel@linuxfoundation.org>
-	 <f30a04bf-96f2-458d-9ceb-94fc39895dc8@weidmueller.com>
+	 <aeac8b24d43c57b7b426983ae50ec65680dafc24.camel@linuxfoundation.org>
+	 <347682f4-d1ce-4f8b-9665-3a3490235d1e@weidmueller.com>
+	 <7fcc6a2d93e0535c8c79c60ae302ca92e322fd4a.camel@linuxfoundation.org>
+	 <f5aaf9dc-6c1e-44c1-afce-33c6beac0290@weidmueller.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.54.0-1 
@@ -70,69 +71,44 @@ MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 02 Jan 2025 13:59:39 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16960
+ <bitbake-devel@lists.openembedded.org>; Thu, 02 Jan 2025 14:07:29 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16961
 
-On Thu, 2025-01-02 at 13:39 +0100, Stefan Herbrechtsmeier wrote:
-> =C2=A0
-> Am 23.12.2024 um 12:56 schrieb Richard Purdie:
-> =C2=A0
-> =C2=A0
+On Thu, 2025-01-02 at 14:50 +0100, Stefan Herbrechtsmeier wrote:
+> >=20
+> > I'm trying to aid the review process by asking
+> > those questions, it will just take longer if I have to work this
+> > out
+> > myself.
 > > =C2=A0
-> > On Fri, 2024-12-20 at 12:25 +0100, Stefan Herbrechtsmeier via
-> > lists.openembedded.org wrote:
-> > =C2=A0
-> > > =C2=A0
-> > > From: Stefan Herbrechtsmeier
-> > > <stefan.herbrechtsmeier@weidmueller.com>
-> > >=20
-> > > Add unpack support for npm archives with unusual member ordering
-> > > and
-> > > disable warnings for unknown extended header keywords.
-> > >=20
-> > > Signed-off-by: Stefan Herbrechtsmeier
-> > > <stefan.herbrechtsmeier@weidmueller.com>
-> > > ---
-> > >=20
-> > > =C2=A0lib/bb/fetch2/__init__.py | 1 +
-> > > =C2=A01 file changed, 1 insertion(+)
-> > >=20
-> > > diff --git a/lib/bb/fetch2/__init__.py
-> > > b/lib/bb/fetch2/__init__.py
-> > > index 4b7c01d6a..7d8f71b20 100644
-> > > --- a/lib/bb/fetch2/__init__.py
-> > > +++ b/lib/bb/fetch2/__init__.py
-> > > @@ -1535,6 +1535,7 @@ class FetchMethod(object):
-> > > =C2=A0
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if unpack:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 tar_cmd =3D 'tar --extract --no-same-owner'
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 t=
-ar_cmd +=3D ' --delay-directory-restore --warning=3Dno-
-> > > unknown-keyword'
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 if 'striplevel' in urldata.parm:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 tar_cmd +=3D ' --strip-components=3D%s' %=C2=A0
-> > > urldata.parm['striplevel']
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 if file.endswith('.tar'):
-> > > =C2=A0
-> > =C2=A0
-> > I think I'd be happier if this option was only added for the npm
-> > fetcher...
+> Maybe we are able to discuss some design decision without code to
+> simplify the review:
 >=20
-> Can I check the ud.type to add the args or should I move the args to
-> an optional argument for the unpack method or an FetchMethod
-> variable?
+> =C2=A0The dependency fetcher need to know the path of the dependency
+> specification file. In case of the local fetcher the path is the uri.
+> In case of the git fetcher the path depends on the subdir and
+> destsuffix parameter. In case of the wget the path is unknown. This
+> series requires the parameters=C2=A0striplevel=3D1 and subdir=3D${BP} to =
+work.
+> Additionally it doesn't support specification files inside sub
+> directories. Therefore I plan to add a srcdir parameter. Should this
+> parameter be mandatory for the wget fetcher or should the fetcher use
+> the PN or S variable to determine a default value?
 
-I suspect a FetchMethod variable would be most in keeping with the rest
-of the code. We've tried very hard not to fill the code with "if
-ud.type" conditionals as we did that in fetch v1 and it became
-unreadable and unmaintainable. This way it forces us to have some kind
-of thought and methods/variables to document things.
+do_fetch never touches ${S}, it would only touch ${DL_DIR}. For that
+reason, ${S} is passed as a parameter to do_unpack and is only
+referenced at that time.=C2=A0
+
+wget shouldn't need more information to have a default it already has
+in the current code so something isn't adding up.
+
+I'm still not sure why you'd need both a subdir and srcdir but I think
+I need to think about this more deeply, FWIW I'm technically still on
+vacation.
 
 Cheers,
 
 Richard
+
+
 
