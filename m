@@ -2,255 +2,185 @@ Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A71F3E7718B
-	for <webhook@archiver.kernel.org>; Thu,  2 Jan 2025 08:04:56 +0000 (UTC)
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.92])
- by mx.groups.io with SMTP id smtpd.web10.4359.1735805088148648934
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAD4E77188
+	for <webhook@archiver.kernel.org>; Thu,  2 Jan 2025 08:28:06 +0000 (UTC)
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (EUR02-VI1-obe.outbound.protection.outlook.com [40.107.241.121])
+ by mx.groups.io with SMTP id smtpd.web10.4558.1735806478789164099
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 02 Jan 2025 00:04:49 -0800
+ Thu, 02 Jan 2025 00:27:59 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@weidmueller.com header.s=selector2 header.b=JAewWzG/;
- spf=pass (domain: weidmueller.com, ip: 40.107.20.92, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=2Qp7uOrA;
+ spf=pass (domain: weidmueller.com, ip: 40.107.241.121, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ou/wurfblgv0UsRoVWvQ6WfIT6Az5H4gGtaqvV+JSfb56UeDoaEl3hGUtcyI0FtEPRwDQq9OVcsIumfJNL5u3r/9jMX0ZJP8KRThQwZpiNlIZiEAbKWqFc8AkWlvaG9njyTcF8602mi7AQPI3XpSlyHxIQ+LFsnEX8uoZQfQl20vjRZiN3jMfoUzgT8QKhllcXy4AddnW6mZTF0bwMIk8SfUKrru3ZXTyhqNucxK7VS0QOwUKEsJBnmpnimEES4+KrDkygLvbzFpJy6SdKjCNIPT9QE2AGGF8/TLcDXL2pPDrfHn8PzvZ7hdRLSOE4Hmg83srb1ZM5xZq460TrtHbA==
+ b=RW3JozgF5M7wGzVSFp00NmK3cq6HyjxUZxvhXSl5PyIVleK5VGIz/oE2tTF+m7s/7P+UHExwx4bKHzcjxa/yu/SV2L7SIr2ql5mSqCdI5hcNwx9iZdfB+oALIDv/z33vKET94ceZStp8dUz242UoP/M0m9ope15wr5c4U0/MZ5SSjLcQlIyh0FWyWa3q4uejqipExBil8HkIhpKuOhU6QeBjFNw20pRXiUb+XeYW0cIyj84lcAwdkkc0F75PanxZ6GCFLMLUynGz8YphgA/1L/B7D0g8kD5JiKBODSuEL1302pNQJvNe92L4i1PmANtSv8UfImA8q69blq2EzD7TZQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ewpyouipH0kB/wjlRQ9jNVwPrxuZjTm2dUnREzP3UKE=;
- b=K5BrqXEmgg2AlwTA6b0fNEIPwP2tRR88foM0As/6z+F/ihXtP/csVkrWOPqfjH6xZeh6NEq6EDUoBf6U2VxvZ23Xx+gEHJN1N3NwYqcCqWHxMuRuQZuxTQY53mNHWZvT7uyLtFNzJXddXQY4FFCv+6EL40mpvCmdckWP3QNbZrGXQowsxpnKG+0+49+EmdHpzQ68h0zfRCsAHBgL7n76GJyvdwlZxwYgvYkEKzNpJB5V3hMlUa6lR4B3utUsnfs0Ti2UBfoYXdK2GhADhmOBeEpCG91ysuXaWkZRNP3oPbQZg3sWt9aA5n82pSPc2OIc5BMJhVR7UHGh/yppgXPaJw==
+ bh=xk5oaFIx1e4hpavQ+EHPPd5YNRvND00hqdOBrI989yk=;
+ b=hoWgQExjgxMFsQXztPe7jKKdarJpUP3W7Tut9afO7jw2IB7kgJHDugnCZu/LJu/FE3OARakD1yZ/XnKASIvvg5G9WZCc6+rcug+hm8R4gNHefIdavSS90smzaqh3r+jYLy1m9G7x3699CEAPlQ87Ju1zZRn/WEHk6GasQttwnvTEu7SvxkxTnjDMERSY7UPsw6+3gU9Fbftr/XNXkb2COyqxPfd3WZd1UQ3PTs6+1ZIy57Eh2qMLIbZRWXHmi2zc+kPZKIT2jTacQxeCECVL/ckM4uPT8cFIBUqhmUGx666tb2qPpalT2hTBg+ddS+n2t+Vtu9SLpu7tQ0eYMFPEqA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=weidmueller.com; dmarc=pass action=none
  header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ewpyouipH0kB/wjlRQ9jNVwPrxuZjTm2dUnREzP3UKE=;
- b=JAewWzG/Swnb6J/DvURJZD7l8Oen3oab5emag1ykSh954f7dI4dz83mkXRbCuDwJG8zx7603ksuBxzQNYi4e+LnRT3zpQBJi3LMcGCVdaIw4gK3DJ+QelRkLWg4wWxHhZNL5vFHfNewnLd6DGwel8sg0/2UQGveHPW8ls2no3jG85UAxLJniS/GNMTn6fYEZGCqxGmFJlvfqAxzS5ooYCfrVvZu0XK7gbfc0vafqHnXHLChwA/Fl+3felaZLUA02m2FO5qoWFkPxfOy5TYeOnVI2MLFkZe63UC6/uefAENdhCPA3/qmvEOcdi7PhoBPEtXqjJrypcm0YiZTX7ijJmg==
+ bh=xk5oaFIx1e4hpavQ+EHPPd5YNRvND00hqdOBrI989yk=;
+ b=2Qp7uOrA/94DpLo9nXceEvGWTe2z/SVzhnLqr0htHNpScuB7kbzpNDg55aRASXNfkF91yJueJ9KISqkxGV1byjfqTxbNrPCIIhPL/duZfm4kMZ73GSkdDrMVV4mYhVbGTW/K6vOG4dYepdGOsnFtc26NaeyHcerOKzzosgRrEVunDuC0Gc0FPc/kLQ7vht8qWKdihu504KmSj3wWWWmej4hlDiGoa1ypIvfM385tkMolIXYChAQ8SJgwiM2/t2ZasJSVF79Gz8JSBYPI0o1o+kT3O5Mb6y9XxD1zhz6J0ZFrjySIkZ54TzOZDZrD8dVfy8X/vts+lCvVwyOLtK/yzA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=weidmueller.com;
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com (2603:10a6:102:1d8::23)
- by AS8PR08MB10314.eurprd08.prod.outlook.com (2603:10a6:20b:5c0::12) with
+ by DU2PR08MB7357.eurprd08.prod.outlook.com (2603:10a6:10:2f0::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8314.12; Thu, 2 Jan
- 2025 08:04:41 +0000
+ 2025 08:27:49 +0000
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4]) by PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4%3]) with mapi id 15.20.8314.013; Thu, 2 Jan 2025
- 08:04:40 +0000
-Content-Type: multipart/alternative;
- boundary="------------cQz3HLC5klpxCk4SuDW3NQ6a"
-Message-ID: <2b8ab392-869c-410f-90dc-fbd0b67b010b@weidmueller.com>
-Date: Thu, 2 Jan 2025 09:04:39 +0100
+ 08:27:49 +0000
+Message-ID: <f22e3939-01d7-4d84-906f-b56c0f972fe5@weidmueller.com>
+Date: Thu, 2 Jan 2025 09:27:48 +0100
 User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel] [RFC PATCH 09/21] fetch2: add destdir to
- FetchData
+Subject: Re: [bitbake-devel] [RFC PATCH 08/21] utils: add Go mod h1 checksum
+ support
 To: Richard Purdie <richard.purdie@linuxfoundation.org>,
  bitbake-devel@lists.openembedded.org
-Cc: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
+CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 References: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
- <20241220112613.22647-10-stefan.herbrechtsmeier-oss@weidmueller.com>
- <c855bfdf35f81072ded4863673930dbc8aa622fc.camel@linuxfoundation.org>
+ <20241220112613.22647-9-stefan.herbrechtsmeier-oss@weidmueller.com>
+ <6e8dca0b11a0244465ae530cb698f6733cc17f10.camel@linuxfoundation.org>
 Content-Language: en-US
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
-In-Reply-To: <c855bfdf35f81072ded4863673930dbc8aa622fc.camel@linuxfoundation.org>
-X-ClientProxiedBy: FR0P281CA0256.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:b5::9) To PAXPR08MB6969.eurprd08.prod.outlook.com
+In-Reply-To: <6e8dca0b11a0244465ae530cb698f6733cc17f10.camel@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: FR3P281CA0047.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:4a::10) To PAXPR08MB6969.eurprd08.prod.outlook.com
  (2603:10a6:102:1d8::23)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR08MB6969:EE_|AS8PR08MB10314:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4ca2dfcd-a8ab-4471-6336-08dd2b041bf3
+X-MS-TrafficTypeDiagnostic: PAXPR08MB6969:EE_|DU2PR08MB7357:EE_
+X-MS-Office365-Filtering-Correlation-Id: afd8bcf6-cba1-4c7e-42df-08dd2b0757cc
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|8096899003;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
 X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?MlFVdjVLOWFHaGw5WGFBYTN1cGhwNTdwLzNCMlRJK0pOWHJsbXZPZ0FCb0dR?=
- =?utf-8?B?NGEzOHlLRCtWc2RzZU43OG15ZWVwMTJPUG9CandUc2pEbm56NXhIaC8zdXBa?=
- =?utf-8?B?OE96bVFneDIyV1FRWVNxM1dCZkFpL2JxaFRSeWlDMXZlaHZSbUhQMjB3UjV6?=
- =?utf-8?B?Tk4zSHhvc2hPNHBBdU5aaE5CMmFyTEpVN3pIQTYvTldzQXUxbWNScjFac3BZ?=
- =?utf-8?B?TEJ5OEFhbXdxZjh5YW1iQllVaUFPNWhtTWhibjJRMkEybVpNaDRJZXA4ckln?=
- =?utf-8?B?ZE03Tm1yUndHbW1JRDlBdXAvVS9uQWlrREFVZ1Y5ZW5DWnZyUThoUmh2R1RZ?=
- =?utf-8?B?dVJVODlKTWZPc3J4THZsdDBCSGdaQlZ1RkV0aWllVDFXM3RlcDkyVm9reC9G?=
- =?utf-8?B?cWNBT3YwQ1N3U1NvVkdQa2ozdkZrdlZZVjFTRzk1RUk1blhxM1IvM0FXM21s?=
- =?utf-8?B?b3FYd09IVUlmYmdjbkF4YTdIdXBIdnl1em1lZXo5a2dhaTUwWEFmVWk4S1dS?=
- =?utf-8?B?SnQvc25xcU5hL3htQzdaUUF1Z2RaL0Vwb2hmeVpGc2YrcTZ4Z1liTDBIQ1c5?=
- =?utf-8?B?djJ3R09CRkltRjIwV0h0S3B4WG9qMWpOeDJQUUh3c25RSzE3V0EzTnM2aUpO?=
- =?utf-8?B?UDRyYzJuMWRPcGhINEtVa0VwU1ZIOUVtVkVHNE1OMTc5N2FQNWIwVHpoclZN?=
- =?utf-8?B?WVRmMGZjQ2pHdWVXVUMzYjZaM1RvanhpZXkwdEVGQ3BicWZvWkJPc290Z1pl?=
- =?utf-8?B?MEl2NEpnSDF1cHNrQWQrbjZrNEFJNGJmdHM5aERmeU5JM3lHcWo2TjlQY3M0?=
- =?utf-8?B?eFJoaExmQkMxbnhoUUFVeGF1SklxbFpGOFd4SEg5QWNNMFVxaHpxQmVKVjdH?=
- =?utf-8?B?RUxBR1d3cmgxdXBlbDAyNzNrN2tNZFduaFNhMXBTWmoyNVZuckJ0MnJCOTc3?=
- =?utf-8?B?TCtZaUhkdlU3M1c4WVFiZ1liU0RLWVpVSGZHU0ZGVVNvZFNyamJ4VjVDSjZC?=
- =?utf-8?B?L0h0SDh5TFlSMkxWcW9FVy95UnZOaGcrNU8zVW9yVUdMWHd6NXJhVVhySEhi?=
- =?utf-8?B?bDBxd01VWW83RlpXeEZMRnlodmVwVit6dTJUb2V6c0hrQlVKUTl1Y3hULzdN?=
- =?utf-8?B?L095ZmlrYzBxUVVZVmlpSmlVendoRVZoQUxZbjM5OENDcktsa0hZT1dJZVFs?=
- =?utf-8?B?UllrTXZOTDRueHJ1S0lzUW1PUS9URVpXOUI1NzR0NHNQY1lTMzM0R1JJVFdK?=
- =?utf-8?B?QVlpa3pRT1EwQ0JDYTR3bGwxdWEvZjZsTnNpTVJSczUrdnRkN2ZlRWlRMW95?=
- =?utf-8?B?YmIzNjgxMHNDWGVsTDQxY1dRdTdpS2dOUk1ud0FDRFp6MjVSSDlZcHlNOE5m?=
- =?utf-8?B?eU1rSm1KanRLMmhxUVd3NTltVkpwTUtjR2VYdnNpQVB5RjFmazluVDdjS25I?=
- =?utf-8?B?bmNnY1NwT1Z0QzVhZVYvaXR3NFJybzcrSGZvR05YaEZXcUdzeTdRYWFpcGRo?=
- =?utf-8?B?REw2Qzl5ZnpqT3BQMW5VWTZNM0o4Z3AzeEhpSWFwYVYzYmtKajRPZytWUXNI?=
- =?utf-8?B?ZEJ3TFhvcUhabW4yYk82Q1lRS3o0U0tpUERUeGQ3d29HdmhsYUVOR0lYL2tj?=
- =?utf-8?B?NHBVS0xXbkFFQmc1Vy9CSTVCT3hkWUlJeEE3S2FEdW1hUE84a1NNMFhab3Vs?=
- =?utf-8?B?d3ZLNGlrWUI0VHpPb3pDVllpMUJPeUhuYTRaK1Jwb2p1QlpoODNxZk5nTHBu?=
- =?utf-8?B?cHByQjlJN29rZzQvWERxdFFpUncvalZxcjZhSms2aVIvdVNUTWxTaWhuRm0w?=
- =?utf-8?B?c1BUbkNGTHpZRnhGMVFhL3JoTEcvYWgwUUFNRWRwdHhOYzlmMUFZQ0lnbE9I?=
- =?utf-8?Q?iQ//G/8Y6OYfn?=
+	=?us-ascii?Q?rJiZav4PJV6p0VID+wm5buIGFvybs4pv59TyEvBgFGpo8Z+loyF6yspU6Ar2?=
+ =?us-ascii?Q?qJ5St4F1Cbt/W5keSdyEpY0gtR77HnwP1SYY2t2cHVvpKVfp3wl0Xz/uv/gY?=
+ =?us-ascii?Q?UAmJGVgm/MwMTZIjAPNx9e5wS2ef8BlIC7IJRWOEe7jAZc9EVmJi1UUCjNUE?=
+ =?us-ascii?Q?R42SDxZJwPfpQSS5oVl4lbgcUeORf02ExEmJi1MSVrIKrNkMZsGKFIto7MWi?=
+ =?us-ascii?Q?TbCi9ysh1j0lqSb/biVuc0jzVjI61Y9s9Drs4FJ/HkmHc51vLVDsNE43WlOg?=
+ =?us-ascii?Q?Gfrqh0g4Z9pUzdqDWcCdo5KgPEgFJRgExTaplvrWZYVs3mkBLeLGAgZ3CAvf?=
+ =?us-ascii?Q?49UquBTyGdafuLkqFPxO9mzScUzJH3Lgs7JwKbBZeFcWycJNHKJDSb53qvq6?=
+ =?us-ascii?Q?e269c9Mn5576Gb9rs0LpaixVpMExBLdwMZnBgZ1gx30iILP0Pj9ZZOEZ61He?=
+ =?us-ascii?Q?AjJJfZ7kpPzVadok6/Av0hrce9k6OgkTdW80IKCIYJMdxJOU1ftuVB3sfoEE?=
+ =?us-ascii?Q?1m2oGxqTfV3AyMTGq6VOop94Mj2UnrM1ply2kDRrvl8FEWQ7UFz5fdpym997?=
+ =?us-ascii?Q?C4yIvm09XlnXUt+yCUlobezx+Z9si5rDOMeEeUco6QAwpA2qdnCHXj+hC5yE?=
+ =?us-ascii?Q?sbYPEn+H4CvHwqzQan0Npxgc61FmvwZ9yqRxiaudB41qlJigjRXF5PfkiKuV?=
+ =?us-ascii?Q?TMuW5rTtSYaKjT/w1uHZxVxaFGKAE80pgPfnm1T2UQih9m9t3ybY0PTqEiD1?=
+ =?us-ascii?Q?pW+A3rHGqh/3dIvtsreeLWbiBNi3I2S93vsTj2efnfTSg6tH29sijM/y+nbF?=
+ =?us-ascii?Q?t3/cmNk056OjnRx0N8N7s6zIjwNGspjhBXnp/bd6VaW6C1dZJzbGHnT4BvWU?=
+ =?us-ascii?Q?FHdguuVcW5cKSAAqsL9Kv/E7YKvUsQkV5oKKlkdkp865TvB50PSi+H3vf+1p?=
+ =?us-ascii?Q?ngDqgfF7/WO7Tva1d42qsyB9BFG+qP/p2bLh73yV2LUbXu0SVJ1xNwhUbpjS?=
+ =?us-ascii?Q?Y+fzi55h3QLL0ocj7pvqqeXPv9PYVp4vNXhpfAXkvNPj/l0hJzXjxydqsOui?=
+ =?us-ascii?Q?yel1j33lGFY4EM+xrSKa8SR0J9cWWkvZtv7m0qSGcE/IBqjFcUwossigDb+t?=
+ =?us-ascii?Q?YVJQGcqkXIMR+RNICIBNt8LIQDPOeb6XDww3599wENQc28MS79ej83wXMOjO?=
+ =?us-ascii?Q?lWUd4/J24n0w6OOG6CoD4UmIt/VOZOrLFHsOeYi7niiV00rm5cR4kOqKMYzJ?=
+ =?us-ascii?Q?XExgQYpLO6yYvGCQU8juhEMdvYfbGAsW0vx+9Rv00ZtVOCXcOxrSq+OEAhGC?=
+ =?us-ascii?Q?JnZaq3TUXNy8v6SkV6j2WmWN1ryyIMhU2nFPvgR6U3Utww=3D=3D?=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(8096899003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?T2FLcXBVNDF0ajNvS0NsUm1oNDhEakppY21Nd1VubElxT1NjZVNJTENGWDMz?=
- =?utf-8?B?OStMQURCS3JOcFhaVDlNT1YvU2VodTNybjlUdll0R21hT1M4MHMvUlI2b2dx?=
- =?utf-8?B?eVI2N05WZEc5N0RhTHVlZVQ2RzZocGU3ZC8ranEwS1FXTlJybEt4cFNxR2cz?=
- =?utf-8?B?K3VsdTNmbHlpTU5HbGRRekR4WFZqWDRpeG5aTk0wWW53K0dOTjZyMWVrL3Az?=
- =?utf-8?B?MEpqNTVqTTdBcUdvVFJ5UU9ES3ljNytQR2pFeHJvQlNnTDZGMnhyeVo1TlY5?=
- =?utf-8?B?OU03czJBMXJjOVovSSs0MzZsUklFemE3cTNtdnhxVmxyeVhYbXFJRWhhaXBJ?=
- =?utf-8?B?N2g2WE80RzRJc3JMMDJiT3ozTmNxazRrWlFqNll6S05GNXpvRzdSaGNjMWJY?=
- =?utf-8?B?MW10ajRqZm5reGtEdkVYdzFKbkRNRjUyTmV0RE0yc1B4bUNORWJ5YXJCRHZu?=
- =?utf-8?B?Qkc2YVlSemRCVm9weUZ6ZFlwWEo2TjVBN1k5WlhUMXNwUnBDZDNNcWhBUXRW?=
- =?utf-8?B?UEJYRmFBMzVablBQSjIreWlhKzRndXRTRlp5NmZsSUJTMnorMFB1bzhZZnFT?=
- =?utf-8?B?K0Jvek1qemZKSkk3R1ZqWTNDNzdNckFad3QwVG5ETWxmTzFkenV1a1QzTmp1?=
- =?utf-8?B?UVlxbllhcjNUQ1oyZjdqMUhCQ3RqamxBcVRFUC9sRXNCR0RpTnJaWWEySXJB?=
- =?utf-8?B?eU1abHpXbENkQ1piUlkvWDRmT0hJT2Z5LzRhT2xQa1B3ZkFzZmswREdmTE1U?=
- =?utf-8?B?Q1BDZC9aOXRGM0xMTHp5c0JPSS9YSUI2MW83RHV3Q01LVysyWXhacEpkZzhX?=
- =?utf-8?B?ejU4RDViRHNkSUs0anp0WEtLa1N2NTRzQzlQejhwa1JvYm03bzUrSXdISXBP?=
- =?utf-8?B?K01Kc3F1ei9xaDhYejZpQlpOMGlxazcwWEM2a2l5RlZZNHVueGtEWTdVMXRY?=
- =?utf-8?B?K1BHL1BNUkQ4dHZ1UXk3R2tpSE9BMFJlMmg2SEprREZCZXA0cGNkQ3R5Vml6?=
- =?utf-8?B?c1lCMnhERDNNWmtBdm1PUERjZjE0RkdLNERXTWFCTnV3MkJuOXFIbmN3WU9C?=
- =?utf-8?B?MHNvYkJrNzJCMWN6YUxiZ1JqRzRRMStzTzVZeVNDYnBoNjRkV1Fya2pRTnZH?=
- =?utf-8?B?MVROZ3NGRWxFZmRGczhxUDZGR243ZkgwVW05dERNa3lrQURPR1lDMGVwNG1P?=
- =?utf-8?B?OW5lRzAweHJrRENQdUhyZzFjWUJ0RVJVSENkMTlRNmVjUXlJZDBrZUcwazVa?=
- =?utf-8?B?b1NPVUxZeTk2ZUYyZDdOTWREZng4WDdhQXE4ZndiemJFd2NlZHdQRmQ0WG01?=
- =?utf-8?B?UHphWHZhVUdLcFZ3S3hLTUE1UEtuaHpEMHYrbzZuaThNZU1UWFZWSDBVYlp1?=
- =?utf-8?B?VndhS2crQU1Xb0hrRk1TS09xbFZFWHJWNUpKM0hSbkdZREtqWDYzUWJhc0Vu?=
- =?utf-8?B?R2JvL3ovVmN4VkhYMlM3S0dHMWlnSUhrc0YzSUNkOGI3MnhZa2FUajhmcjhN?=
- =?utf-8?B?bWhOTlFwUUlVelU2blpYMG9YQzhRQWRES2JRR01wOW9VN2E3OGwwZkhKZ3Ix?=
- =?utf-8?B?YXV6VlBTZnZiTmRRYTJGdU4rQVkrTU0zLzVJUlJtTHRMd1dHZHlnRUJDQXdG?=
- =?utf-8?B?ZEk5OExmdU1jazZ5c1BxZ09xTFQ5R2ZhNXd0dE11d0o3N3Y4a0VpY241ZkVm?=
- =?utf-8?B?UDlDTkVGanB0YUYzWWwxbldGRGJZbElaWFdOOTV2ODZnMlBSK0NoL0pwa1dx?=
- =?utf-8?B?UlFjaXdoR0NqRkhpQkwzUXhlYTVpOXhKWjFHWmVGVzQ2NWphSTFrTTQ3WkNv?=
- =?utf-8?B?UFdwL1NkSnB1S1FLUTNEek16aUtNVnhpN05OWC9Wcm5SN2s5M0FRTy9jVmox?=
- =?utf-8?B?NkJncmQxZDdJQjFCUjc3b3IxbGUvcmlSbjdZL1V3TVpXK2ZYdW1teWN1TmxH?=
- =?utf-8?B?WFlsYWMxNlIwMXRjN3VhY09WYkREaGNLSER4VmhHeUhqUmhCOVZLY0l6Ynpj?=
- =?utf-8?B?SjArQzR4SS9TcFNSaHZ3ekdQK0I0djAvcytXZ3JEM3l2ZmYrVld3YmxrQ21O?=
- =?utf-8?B?a0JRdVRIQ0Q5TWVhVmZmSklqRmRrd0xLQkhqT3B5RGNXcnNIRHd2V1MvLytX?=
- =?utf-8?B?TjNEMmw2NldlanpFMllOVTM1VmJQOXZRaURIVjlFWUNxcDhYeS9yWlNDVTRU?=
- =?utf-8?B?bWc9PQ==?=
+	=?us-ascii?Q?dMdkrol/2BtT+GvkFkgNZazBsYj7etIuNNrFCpIhdEvRlGY7qqnh3YGUwo5w?=
+ =?us-ascii?Q?+FK652KtwzK+c+jXvCUp4QBQp1ozx2VTgTUCf6T6MGDR+dw8vWK1OxT9omTp?=
+ =?us-ascii?Q?w7QY0OABEE3+7fijqT6DYawOyEDGKBgeNp+O42lFVIWHll7AjtSdZuR8NrmU?=
+ =?us-ascii?Q?XDG+vLJgLskpKG2FVLwO45ezdURWAtsxsIr6315ecgGuE43BMYab0ZNMVecu?=
+ =?us-ascii?Q?SJD+jHrMTuISN9maNAPMSDo1XXTXTlkvvzGThTtF9KSxIRrL6abFqDZWai8H?=
+ =?us-ascii?Q?iMx8x7ZkDFEHV/Cgok/xlat9GGANiyFIG+Jh/y4A9XdK73cVtfvLnXYWTtUN?=
+ =?us-ascii?Q?XiJLNinsM39D5O5dcryNVSigTgbMK87v8L3OQ2z8i6SWGz+GvzSZkb/pZ6vR?=
+ =?us-ascii?Q?vGiJwKaeQWRN0sZTs1jdRYOGro48MtwhqEX300Q+oK55PJ59H659D+5BicWv?=
+ =?us-ascii?Q?c9WgnVHalWm0Ww0gplLkUXWnC63gSPjxF8P9pfQcyheCRQqdtNzL91WI5S4n?=
+ =?us-ascii?Q?zBgCClscBbJ0XsvFPzfW4Hi5TzALbtRq8PJx9n+UWmYIZpV53A+5pvoYAOqM?=
+ =?us-ascii?Q?Ym8rRcSau0mzPMxq6xerGznXaAf/AapASKtqyPR2KURL/xfsryoQGSAnOppE?=
+ =?us-ascii?Q?NOx2SFbxugMgRGHVjEvILYnFzg4D6RfkE+MWvKlghJTpf7bDn/r6EoGnSRVW?=
+ =?us-ascii?Q?H7ct2k5fapHhW8D0VmezLaIO57ifoNbcyoxqy57Rs0mV8RV/tc2ddIahSmWS?=
+ =?us-ascii?Q?uAcuiN8fb2HzANumMGUw7V0zKY91cl1styFkp0R1cCyHaPt3fHJo6sxpu51w?=
+ =?us-ascii?Q?4iEExnm8+gJdhZ2ox3Wu3D9xkcvfUjvHiysM/gUAsY/1OmXGBy4OBQAqWh50?=
+ =?us-ascii?Q?wnZ5tJT9YIld4pTGpqcDzAyWJuKzKXIeLWF6xEjhfB/HPzsdXWVgY8Wk9ygh?=
+ =?us-ascii?Q?RA74pzMFlH6O/FqOVKEjZH5iF4iLQ879RzYREapV/5OkGCWY6OrK3PQ5OFbq?=
+ =?us-ascii?Q?AFq3hFI1vvTBIQYsHBU6mnJn7hHWvC0u5nYEC22MZJGJVQF1rYsEq54wITzP?=
+ =?us-ascii?Q?vlsD0vLsELZFeGY6QfrQN1cyxOho3IlLXrFlbncn1tCKU1ctQl3ID40USU9F?=
+ =?us-ascii?Q?XgqTfJRhcN1CZ535ZXx+WBs7u1L3jPvZabwIjYoU45dC+BKgez+GqWsb4jrQ?=
+ =?us-ascii?Q?+Xn8YpcZ/TM/wbsYZCp3R9bQzUpW7pfIKrnhgdafyz/26QdUOKtGz0w4lDXb?=
+ =?us-ascii?Q?zHwZNZFwsg0c7pvNjd+KsAk1vOl7Wl3F4Q9xlMlURwFBDG/6h2emshb+GEdR?=
+ =?us-ascii?Q?VVs7/rw4qHOAbP/7yi6iA4OdyyEQaEbFGXuE/Mk27pgWdb/Bu8GqPghnVJO/?=
+ =?us-ascii?Q?5qxwAaS3xKrU7Rd93Rq3k2hnFt7EvaT+b1mb8HY0NgN3RAfcBiAEJXSgFUOg?=
+ =?us-ascii?Q?YwlnZ6hUeylwu5f1gAWgb0D05j5+pcZ/U0oewN6qJPjhKJYhXxJsqjvOjxuD?=
+ =?us-ascii?Q?HZ/dsVfhS8jsDsqVr42P0b261imvORS0JhDm/yJK9+iD0YCXIWsY8T//2CdV?=
+ =?us-ascii?Q?TH5S06TVH+uZxbJBSrtkaAxVYaS9f68t9RwzhtTjZu2vFYVb/TuiCSCsxXAW?=
+ =?us-ascii?Q?2A=3D=3D?=
 X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ca2dfcd-a8ab-4471-6336-08dd2b041bf3
+X-MS-Exchange-CrossTenant-Network-Message-Id: afd8bcf6-cba1-4c7e-42df-08dd2b0757cc
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR08MB6969.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jan 2025 08:04:40.7029
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jan 2025 08:27:49.5083
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gB5rYFWdEcTfck6yu7ap6Z5D9MrhDfzcAt5ycGJ0oIVt8LZiyhL2cs0/yZ/zdIUeZZg+SL1pVM+PO97PO4C3TA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB10314
+X-MS-Exchange-CrossTenant-UserPrincipalName: /iOa5P9ZG64z3H9On7qksz1uR+8U95qCHrgNk1P2ROi1Fkva1eQYbrTgYQunWsLanesicS5s4JpEbOQ8WQDq/w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR08MB7357
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 02 Jan 2025 08:04:56 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16953
+ <bitbake-devel@lists.openembedded.org>; Thu, 02 Jan 2025 08:28:06 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16954
 
---------------cQz3HLC5klpxCk4SuDW3NQ6a
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Am 23.12.2024 um 10:56 schrieb Richard Purdie:
-> On Fri, 2024-12-20 at 12:26 +0100, Stefan Herbrechtsmeier via lists.openembedded.org wrote:
->> From: Stefan Herbrechtsmeier<stefan.herbrechtsmeier@weidmueller.com>
+Am 23.12.2024 um 11:01 schrieb Richard Purdie:
+> On Fri, 2024-12-20 at 12:25 +0100, Stefan Herbrechtsmeier via lists.opene=
+mbedded.org wrote:
+>> From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 >>
->> Add a `destdir` variable to the `FetchData` class to record destination
->> directory of unpack method. Users of the `FetchData` class can use the
->> directory to unpack additional content into the directory. The git
->> fetcher class already records the destination directory in `destdir`
->> class variable of `FetchData`.
+>> Add support for the Go mod h1 hash. The hash is
+>> based on the Go dirhash package. The package
+>> defines hashes over directory trees and is uses
+>> for Go mod files and zip archives.
 >>
->> Signed-off-by: Stefan Herbrechtsmeier<stefan.herbrechtsmeier@weidmueller.com>
+>> Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmuelle=
+r.com>
 >> ---
 >>
->>   lib/bb/fetch2/__init__.py | 3 +++
->>   1 file changed, 3 insertions(+)
-> Where/how is this being used/needed?
+>>  =C2=A0lib/bb/fetch2/__init__.py |=C2=A0 2 +-
+>>  =C2=A0lib/bb/utils.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 | 25 +++++++++++++++++++++++++
+>>  =C2=A02 files changed, 26 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+>> index 7d8f71b20..0c2d6d73e 100644
+>> --- a/lib/bb/fetch2/__init__.py
+>> +++ b/lib/bb/fetch2/__init__.py
+>> @@ -34,7 +34,7 @@ _revisions_cache =3D bb.checksum.RevisionsCache()
+>>  =20
+>>  =C2=A0logger =3D logging.getLogger("BitBake.Fetcher")
+>>  =20
+>> -CHECKSUM_LIST =3D [ "md5", "sha256", "sha1", "sha384", "sha512" ]
+>> +CHECKSUM_LIST =3D [ "h1", "md5", "sha256", "sha1", "sha384", "sha512" ]
+>>  =C2=A0SHOWN_CHECKSUM_LIST =3D ["sha256"]
+>>  =20
+>>  =C2=A0class BBFetchException(Exception):
+>>
+> The others are all generic checksum formats so I'm wondering if we need
+> to indicate this one is go specific go-h1/goh1/go_h1?
 
-The git fetcher already set the variable. The variable is useful to know 
-the destination directory including subdir and destsuffix parameter. 
-Otherwise the user of unpack must handle the parameters manual (see S 
-variable). The dependency mixin unpack the main source to process the 
-dependency specification file and need to know the destination folder of 
-the content.
+It looks like the go dirhash (h1) [1] is different to the dirhash=20
+standard [2] and the name should be go specific. The SRC_URI parameters=20
+use composed words without separator (goh1sum). What do you prefer:
 
-> unpackdir is only used during the do_unpack task and we've deliberately
-> kept this out of FetchFata since in general it is meant to be
-> independent of the target location.
+SRC_URI[package_name-1.2.3.go-h1sum]
+SRC_URI[package_name-1.2.3.goh1sum]
+SRC_URI[package_name-1.2.3.go_h1sum]
 
-The unpackdir depends on the subdir and destsuffix parameter of the 
-FetchData and thereby the target location isn't independent of the 
-FetchData. Only the unpackdir root is independent of the FetchData. 
-Would it be acceptable to save the relative destination directory inside 
-the FetchData or to add a function to determine it? The function could 
-be used to eliminate code duplication inside generic and git specific 
-unpack.
+[1] https://pkg.go.dev/golang.org/x/mod/sumdb/dirhash
+[2] https://github.com/andhus/dirhash
 
---------------cQz3HLC5klpxCk4SuDW3NQ6a
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-<!DOCTYPE html><html><head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  </head>
-  <body>
-    <div class="moz-cite-prefix">Am 23.12.2024 um 10:56 schrieb Richard
-      Purdie:<br>
-    </div>
-    <blockquote type="cite" cite="mid:c855bfdf35f81072ded4863673930dbc8aa622fc.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">On Fri, 2024-12-20 at 12:26 +0100, Stefan Herbrechtsmeier via lists.openembedded.org wrote:
-</pre>
-      <blockquote type="cite">
-        <pre wrap="" class="moz-quote-pre">From: Stefan Herbrechtsmeier <a class="moz-txt-link-rfc2396E" href="mailto:stefan.herbrechtsmeier@weidmueller.com">&lt;stefan.herbrechtsmeier@weidmueller.com&gt;</a>
-
-Add a `destdir` variable to the `FetchData` class to record destination
-directory of unpack method. Users of the `FetchData` class can use the
-directory to unpack additional content into the directory. The git
-fetcher class already records the destination directory in `destdir`
-class variable of `FetchData`.
-
-Signed-off-by: Stefan Herbrechtsmeier <a class="moz-txt-link-rfc2396E" href="mailto:stefan.herbrechtsmeier@weidmueller.com">&lt;stefan.herbrechtsmeier@weidmueller.com&gt;</a>
----
-
-&nbsp;lib/bb/fetch2/__init__.py | 3 +++
-&nbsp;1 file changed, 3 insertions(+)
-</pre>
-      </blockquote>
-      <pre wrap="" class="moz-quote-pre">
-Where/how is this being used/needed?</pre>
-    </blockquote>
-    <p>The git fetcher already set the variable. The variable is useful
-      to know the destination directory including subdir and destsuffix
-      parameter. Otherwise the user of unpack must handle the parameters
-      manual (see S variable). The dependency mixin unpack the main
-      source to process the dependency specification file and need to
-      know the destination folder of the content.<br>
-      <br>
-    </p>
-    <blockquote type="cite" cite="mid:c855bfdf35f81072ded4863673930dbc8aa622fc.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">unpackdir is only used during the do_unpack task and we've deliberately
-kept this out of FetchFata since in general it is meant to be
-independent of the target location.</pre>
-    </blockquote>
-    <p>The unpackdir depends on the subdir and destsuffix parameter of
-      the FetchData and thereby the target location isn't independent of
-      the FetchData. Only the unpackdir root is independent of the
-      FetchData. Would it be acceptable to save the relative destination
-      directory inside the FetchData or to add a function to determine
-      it? The function could be used to eliminate code duplication
-      inside generic and git specific unpack.</p>
-    <p><span style="white-space: pre-wrap">
-</span></p>
-  </body>
-</html>
-
---------------cQz3HLC5klpxCk4SuDW3NQ6a--
 
