@@ -1,95 +1,114 @@
-Return-Path: <nick.owens@eero.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C23B5E77188
-	for <webhook@archiver.kernel.org>; Sun,  5 Jan 2025 02:19:30 +0000 (UTC)
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
- by mx.groups.io with SMTP id smtpd.web11.31754.1736043566015122410
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2865E7719A
+	for <webhook@archiver.kernel.org>; Mon,  6 Jan 2025 09:37:10 +0000 (UTC)
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+ by mx.groups.io with SMTP id smtpd.web10.56164.1736156223917783029
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 04 Jan 2025 18:19:26 -0800
+ Mon, 06 Jan 2025 01:37:04 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@eero.com header.s=google header.b=bTbEKidD;
- spf=pass (domain: eero.com, ip: 209.85.214.178, mailfrom: nick.owens@eero.com)
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21654fdd5daso175820935ad.1
-        for <bitbake-devel@lists.openembedded.org>; Sat, 04 Jan 2025 18:19:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eero.com; s=google; t=1736043565; x=1736648365; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OX/ma/XfpcFUFkTp/ZHsTWFbbIJcYuuOdiAUQTbXRxo=;
-        b=bTbEKidD48JcDQgx+dGt3VoDijx+WiBrymOXOK8LnhEM12P/86CQNzajmDyvOmU16B
-         lyuI1CG+YyxwMCG4bF2gB8S5Mp7S3x5yR/wje2wQYYUtwKrE6GNyhsSN4xUy5M1vvGYf
-         /SnngA6QmnL0R+ai8axKWM9wEjIPYcZod5Qt8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736043565; x=1736648365;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OX/ma/XfpcFUFkTp/ZHsTWFbbIJcYuuOdiAUQTbXRxo=;
-        b=IL8CtA8q/6Q11Kib3iTzLDI7Q2GfBeYF38FUQCswNYXyBAuGcGFk+b/RMXnVnUAEPd
-         UinHN7xOuREz9+P1Ztlpyv3mDF/8ihehkRF9axEQCZCsYghYxzpa0SioAEKcXLeI+Ew4
-         KNURm97RCDpAgFr/bd5WFFBWumLrABi88+OCoCdFuu84z45QELyo3NQaoYoe9+UT3B6K
-         wnb9jwFPX3XvwVmS7EmwO429Q/Xs61M+kycIKPaEIH6IKM0CB3g+L9wLpIDZx9uBqOeD
-         ZV9ejNRwigf4iCPmUxe8Wp8/dN3CDZrxTZU9NnMVeoYiQZrctsnUl3YPzsw4MNfadbaa
-         42Eg==
-X-Gm-Message-State: AOJu0YwxL4HSbOBxs+fPGy5d74vvFSslUmSuKpoAFDFeXEvNdiu2lTsa
-	FCxTV/1vvLfwLhbBRHDaSOux68rEWJ0xpOGHdo5DcpRxR+A0fInYcwsTLAg8fxHqqwhOTQ5DaSm
-	4
-X-Gm-Gg: ASbGncu8rjHfXlRqqAeInqPvGETKKkn6VdoUYS/QASy9vvDxl95zaV7AG1k/hrNxA/M
-	Gx8+v+EUf6mFjNv8uqed8yYJhW+j5pbJeHbBkl2/bHCmmWpgL+lQtFb/48qO7XVK/Sx3TAN5S/u
-	8DDcZB+onMMOorLHs5aCDLFR/IlM8lBPp6Kpo8bJwyq9PHShG5bTduaY7d5ILXrfVRa2quUkGuQ
-	iTjdKjipD/gqd65W7FDx71hpkOvqUSSAqq/9fWcIGVU3rXg8P/6dyGB1mldb/2K9qvxPl/F/IPZ
-	++O13bQ+fCw=
-X-Google-Smtp-Source: AGHT+IHDnF7CnRpW799tni15v+xasQVgwMUAkTmWgH0C8F1gcJG6ghbgIuPtEt+X3pKJMP/aatJOOg==
-X-Received: by 2002:a05:6a20:2d21:b0:1e0:bf98:42dc with SMTP id adf61e73a8af0-1e5e07f98d0mr84480803637.28.1736043564540;
-        Sat, 04 Jan 2025 18:19:24 -0800 (PST)
-Received: from ubc8fb08c436a5b.ant.amazon.com ([12.76.39.42])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-842e35d4becsm22313250a12.79.2025.01.04.18.19.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jan 2025 18:19:24 -0800 (PST)
-From: Nick Owens <nick.owens@eero.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Nick Owens <nick.owens@eero.com>
-Subject: [PATCH] git-make-shallow: use stdin mode
-Date: Sat,  4 Jan 2025 18:18:49 -0800
-Message-Id: <20250105021848.3048010-1-nick.owens@eero.com>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=J8u+aPsA;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.198, mailfrom: antonin.godard@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 35E68C000E;
+	Mon,  6 Jan 2025 09:37:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1736156221;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k8w/CkDYVLHAdlcpL+riks7fMskQ20s8/Ua3tyO1Pmw=;
+	b=J8u+aPsALji1oxGGuL54EufDB7SanGLeMp756r+iHPmIUT90nMcXBSEogluFey3AF9EfA0
+	X0Ez79G5ogXOJDx9sC/Ut2qYC0BDAblyPeksBPi4GdqPfzzYjdIOR/3dViswa1KrByYWe3
+	MnJ1gMuTnJec/pATFxMyOAuQE2mWO8x6LaCG88dK2mc1B/rUK7JPf9jl/cyRsqA4cdTVc8
+	BCc1aIBNK4H5MFNn5lqFlFcusVhh19U33UNkDxVx646Aw2R0j2K/itj0ZGAZZB+4MeDkBo
+	4bWZ14Z7cx1PdCnTocKwlS3jhlqXbXOOoRaTGhhflICf/EzuUHgpDwtwoSeqEQ==
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 06 Jan 2025 10:37:00 +0100
+Message-Id: <D6UW0L5UHG5P.1JGNQ7WKC2N6@bootlin.com>
+Subject: Re: [docs] [PATCH 1/2] doc/logging: small clean-up and name
+ environment
+From: "Antonin Godard" <antonin.godard@bootlin.com>
+To: <joerg.sommer@navimatix.de>, <bitbake-devel@lists.openembedded.org>,
+ <docs@lists.yoctoproject.org>
+X-Mailer: aerc 0.18.2-100-gc2048ef30452-dirty
+References: <2bf2a340cbf86391ae6722739f750f9d44f550b3.1735852948.git.joerg.sommer@navimatix.de>
+In-Reply-To: <2bf2a340cbf86391ae6722739f750f9d44f550b3.1735852948.git.joerg.sommer@navimatix.de>
+X-GND-Sasl: antonin.godard@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 05 Jan 2025 02:19:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16963
+ <bitbake-devel@lists.openembedded.org>; Mon, 06 Jan 2025 09:37:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16964
 
-when there are many refs to delete, using xargs to exec git can take a very long
-time. make this faster by only running git update-ref with stdin mode.
+Hi J=C3=B6rg,
 
-for a repo with over 34000 git tags this makes git-make-shallow finish
-in 2 seconds instead of 3 minutes for me.
+On Thu Jan 2, 2025 at 10:23 PM CET, J=C3=B6rg Sommer via lists.yoctoproject=
+.org wrote:
+> From: J=C3=B6rg Sommer <joerg.sommer@navimatix.de>
+>
+> The variable *BB_LOGCONFIG* is part of *BB_ENV_PASSTHROUGH_ADDITIONS* in
+> /scripts/oe-buildenv-internal and can therefore be passed as environment
+> variable.
+>
+> Signed-off-by: J=C3=B6rg Sommer <joerg.sommer@navimatix.de>
+> ---
+>  .../bitbake-user-manual-execution.rst                 | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+>
+> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-execution.rst b/=
+doc/bitbake-user-manual/bitbake-user-manual-execution.rst
+> index d58fbb32e..0e20d5933 100644
+> --- a/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
+> +++ b/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
+> @@ -671,7 +671,7 @@ logging configuration is merged using the following r=
+ules:
+> =20
+>  -  Any keys defined in the ``handlers``, ``formatters``, or ``filters``,
+>     will be merged into the same section in the default configuration,
+> -   with the user specified keys taking replacing a default one if there
+> +   with the user specified keys replacing a default one if there
+>     is a conflict. In practice, this means that if both the default
+>     configuration and user configuration specify a handler named
+>     ``myhandler``, the user defined one will replace the default. To
+> @@ -707,9 +707,9 @@ or higher priority to a file called ``hashequiv.log``=
+::
+>             }
+>         },
+>         "formatters": {
+> -               "logfileFormatter": {
+> -                   "format": "%(name)s: %(levelname)s: %(message)s"
+> -               }
+> +           "logfileFormatter": {
+> +               "format": "%(name)s: %(levelname)s: %(message)s"
+> +           }
+>         },
+>         "loggers": {
+>             "BitBake.SigGen.HashEquiv": {
+> @@ -723,7 +723,8 @@ or higher priority to a file called ``hashequiv.log``=
+::
+>         }
+>     }
+> =20
+> -Then set the :term:`BB_LOGCONFIG` variable in ``conf/local.conf``::
+> +Then set :term:`BB_LOGCONFIG` as an environment variable when running
+> +bitbake, or set it in ``conf/local.conf``::
 
-Signed-off-by: Nick Owens <nick.owens@eero.com>
----
- bin/git-make-shallow | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Like in the rest of the document: s/bitbake/BitBake/
 
-diff --git a/bin/git-make-shallow b/bin/git-make-shallow
-index 9de557c10..8ad704fae 100755
---- a/bin/git-make-shallow
-+++ b/bin/git-make-shallow
-@@ -115,8 +115,8 @@ def filter_refs(refs):
-     all_refs = get_all_refs()
-     to_remove = set(all_refs) - set(refs)
-     if to_remove:
--        check_output(['xargs', '-0', '-n', '1'] + git_cmd + ['update-ref', '-d', '--no-deref'],
--                     input=''.join(l + '\0' for l in to_remove))
-+        check_output(git_cmd + ['update-ref', '--no-deref', '--stdin', '-z'],
-+                     input=''.join('delete ' + l + '\0\0' for l in to_remove) + 'commit\0')
- 
- 
- def follow_history_intersections(revisions, refs):
--- 
-2.34.1
+>
+>     BB_LOGCONFIG =3D "hashequiv.json"
+> =20
 
+
+Antonin
+
+--=20
+Antonin Godard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
