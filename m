@@ -2,47 +2,47 @@ Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D67FCE7719B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B486EE77198
 	for <webhook@archiver.kernel.org>; Tue,  7 Jan 2025 09:18:26 +0000 (UTC)
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (EUR05-VI1-obe.outbound.protection.outlook.com [40.107.21.129])
- by mx.groups.io with SMTP id smtpd.web11.16587.1736241499941436827
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (EUR05-VI1-obe.outbound.protection.outlook.com [40.107.21.132])
+ by mx.groups.io with SMTP id smtpd.web10.16695.1736241496534764322
  for <bitbake-devel@lists.openembedded.org>;
  Tue, 07 Jan 2025 01:18:20 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=D6bn/0pD;
- spf=pass (domain: weidmueller.com, ip: 40.107.21.129, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=je3SrEpL;
+ spf=pass (domain: weidmueller.com, ip: 40.107.21.132, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MhtZ2nV1N8Sr6VvM5jq2YISHe5uoJHwiijqFsi+PJTr4g/4Q8babC5wAdHZ3JJ961emjDpaasRF/YWvilW6Ca68IMe/C5rm8Bjn7L08Dt40XzwJj6EvIuOu4dPPX96907CibCBoz/vzDaO60/2Mc0vOmzQsfML5SrQ0ilrJBBk69dS7OrcMvKsDsdnTzkcdTkykvq2alutdNXKlkUri9rPHVKXwq47Vr4iICcQflJlEfQneOWJd64aDSDCRP3DPk39x7LTvyASXJZ5LE8raOaIYUhLOLD989BKRLfJ6y4lxkL0WI3FP5HafR8HA/hG3NAy9Rv2TUyS7CiW+qotHkSg==
+ b=hpoAgpUhUNuEi+nZgxuJwl/vyWHmH426scs7QV8pt6nmsdXEKNh0e/egitwyFqlfZKCu2KxWrhZ2qnKVoi14FU/oSQz8dRImWW+Q2J6wLWh9bVlh4wrkUuGsT/mNpICGNVsgWhoVeBdOyyMo3P+wcpprrOEBHJmLqWqMQEfoU4LmIUc1QsA4grZOsaF9Ui6MAfc0VwP5tkVb3xMC/Me0AH7uYrsQgVgGEpMZtjmeJx3YwwXIjmQavyJnohxg68t+hBz90+O5d3nkxQnKT66S8jeif/+7JkxAqaN1UyRdIxHxvzylAxac5DEjbrLY2JluXzCg/m2EmSoCV9HyiJGW1w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eTPvKRjIRugd0DfnF+zHlcgXQw+aAS5AGA5VFuhyZQI=;
- b=sw473ajtTl0geQur+fDGeWkb4yfrC+uXHOvOJwHU8FSzSswNDiy+QRsga3RFKPWhA13wgNHxVzJnzvyI83L4ajtLzlu8upor25Yr30t7z464jskcyCeweFUXrxuT2XX/HKhEK0sDNqSSt9QfWMXRz18Kkt39pjezIZJMjICdicpLstbAwKMllC+8+rvY8wF7yIwGcSHk39p4jO77y6h1qjH4ttAHa8N/TGEs/3Lzh+OuB+CgU8Hd0huhc5ULzmZzvNBQfEN0RkT5m1Ukw8p1Z8JjeBHIpkGeDPqljGPYfM6k8ok/Qog2n+79PvDLnKjAy7v8SlzH2m4E7iPywzLcPw==
+ bh=YAH8aLxGBZMJvoHCM9F/eJsCXT6U6VjnD0ZS3FSViBI=;
+ b=MeR0tTj2KZ+tg8/HrFqcXyaD/26AhEN9In8d7NpkPAn3suH6iJ2AzEFpezOWxBcRpNlmjGVdVuPUbHtF06XowvFP0KZ7NXXniaUxPAT0q2lSeBfswEYRzp7wvLM+ObgdMAShFNbYxzsEH/TiXNOaOBTZz8eWhYhEFrTU3xTlxixo+jXpusPbgXfW28Fsol5X8oRY20eAWwYCc2KxuZ7GckeZtZrPeSGNMmkbxXyzvYAdPttBmlxZwgaBLGAWf46zuaa/LSDzGTQPlLLyPgAFQvNa2yvZjZi6qbPoJQqvDtJRmuqC3R+xEI4z6e4LZ5NhcFGz1iTqwYgwvOzjhWaePA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=weidmueller.com; dmarc=pass action=none
  header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eTPvKRjIRugd0DfnF+zHlcgXQw+aAS5AGA5VFuhyZQI=;
- b=D6bn/0pDy3XQgz7T6wBOP/TP2Fp0DlxXBd5lXxWxH0Et14BXBVsRxm2t+lQ0jFRWLVnt0i1ksJZhjVg/aCRzl2NVrw9U0akTvjAaCC25kBueml1dfT6Lpe7OaQAwBMQvvS4ZxS7v8MCOlmoWJXUz4CH7YsE+RktlQ+sTmqQ1c4Icae8fysd9HsEcTubB8dCwxq3lznGFSmEFXA55wo9VpQBygIdBoyWbnyn1iQmaea5sb1JDhSeqt+6uM2fbOficx3uQgDI+vakI1Y9qXR9JG31GEtq3QMF702HalvHWq4PSL7F4KtlqbLW0AR9UXM1YH5m5tHWcqq4AlbT5/0jmWg==
+ bh=YAH8aLxGBZMJvoHCM9F/eJsCXT6U6VjnD0ZS3FSViBI=;
+ b=je3SrEpLk3kmhKJ038/DRnvJVEkXpXbOu0NYzpzOqqtNAwfIENAof6IfJFq6/AiXXuaXf5U1QpZ0GNUF9EFKbTHQcNjJ1q+jEqBSbwU3EHbb4ToRhJH/IVVQctDt3D3BPLeljQ5bYfitldL3UCSfwG6zHfC7CelZQHVORXr4VQbl00vr9jjTfm76Sw9VOtA5ewNuskP5RFwv1IaMFFbzewmPWk7xR2LCTCGt7fr7KmyQkgNPYXXSJ/+mC/S4XbWg8FbY7092otea4RWSoHAEfMeDFSkC8JK4gJk+fV6aUPivjPZPvjX4AlgT1DnXg4KBtBTCHx1bLdaVItvHQS8PhQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=weidmueller.com;
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com (2603:10a6:102:1d8::23)
  by GV1PR08MB10607.eurprd08.prod.outlook.com (2603:10a6:150:16c::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8314.18; Tue, 7 Jan
- 2025 09:18:13 +0000
+ 2025 09:18:14 +0000
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4]) by PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4%3]) with mapi id 15.20.8314.015; Tue, 7 Jan 2025
- 09:18:13 +0000
+ 09:18:14 +0000
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
 To: bitbake-devel@lists.openembedded.org
 CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Subject: [PATCH 1/5] tests: fetch: update npmsw tests to new lockfile format
-Date: Tue,  7 Jan 2025 10:17:53 +0100
-Message-ID: <20250107091757.886-2-stefan.herbrechtsmeier-oss@weidmueller.com>
+Subject: [PATCH 4/5] fetch2: do not prefix embedded checksums
+Date: Tue,  7 Jan 2025 10:17:56 +0100
+Message-ID: <20250107091757.886-5-stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250107091757.886-1-stefan.herbrechtsmeier-oss@weidmueller.com>
 References: <20250107091757.886-1-stefan.herbrechtsmeier-oss@weidmueller.com>
@@ -54,373 +54,192 @@ X-ClientProxiedBy: FR4P281CA0015.DEUP281.PROD.OUTLOOK.COM
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR08MB6969:EE_|GV1PR08MB10607:EE_
-X-MS-Office365-Filtering-Correlation-Id: 96b9c76a-e3a2-4fed-b65d-08dd2efc35ad
+X-MS-Office365-Filtering-Correlation-Id: 75a35ef8-813e-4d6a-d1e9-08dd2efc369e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
 	BCL:0;ARA:13230040|1800799024|376014|52116014|366016|38350700014;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?0H8czt4HNA9/0FDE99AJ/pYFMdo3AG7mTNJK6fVy5Iqck4sCyHn6So6XjN6L?=
- =?us-ascii?Q?vfUEbfxPehoqyKjDpQ7ckX5AV8AeltIRFbqIhKXI6vbYyCla5dsQxK8INb7M?=
- =?us-ascii?Q?cjxa1zjDgTdIYcC4ev+FjWDq91H1WZxcRa8DqDNWiz919ehvh6+v0czVMYyC?=
- =?us-ascii?Q?Xbv/KBezCxPQVYmuhsw8Nyp2EnocbYXixy7lxX7GdyzjeSshFDgjVGMaqQbW?=
- =?us-ascii?Q?HEirWnY3XxVwvxXhquNOPpmRcVC8B9SRI2O7pBM4TGZLceZtXQbSfsGOd0Th?=
- =?us-ascii?Q?cIMSRmsM0pGFhq+SVPy8JtbK/eXf05S1KcgjA0krlH0pgMIjCUsqVgxANPWC?=
- =?us-ascii?Q?d2sOPMj6/w20O5pVwztGM3zuIVrnOIJw+O48tRRmw0Zf5vZSvwJJm5Jfir+4?=
- =?us-ascii?Q?MVE7TfU/3vQvzdjrIbwI5WdJ2viam8u1JNqgXfjUgJy2LUjX/HK3SGL3y/yQ?=
- =?us-ascii?Q?iom7AtT1kzuSaxPjpbOH0l5N4kruEBgshjiPbcfDNymLHfjG8xgtJHC+rlRm?=
- =?us-ascii?Q?Teaei79+x94krDjaQQ3fmoskUymffOyMmNT/P34dYvy6tS01X6ANOc9Nflv0?=
- =?us-ascii?Q?x3pcSyyXrWa7LlPhBbM8Yi7/aLsTAQ/Kp8kxPtblVf3nxI5RRxjnex1qhrmp?=
- =?us-ascii?Q?dgDUTXV9gP0QhwrDisSCmggJHZ1CplhrxnsxTf5TlsEhhcZZdldk58Ueo63v?=
- =?us-ascii?Q?9GJRbglvoSdDI+Q+j4ckBaa5oYiZU9z91xWpjb4n+pHUq78h/XSIqkufWyVz?=
- =?us-ascii?Q?Isqov6HfO4/jHT+pqJT68GNLUX82kToeyfe8rxmv4dGvB3q5xqWWcO1zQtrl?=
- =?us-ascii?Q?smnw9a/AIaRub9hK9HreAUg/xPaz6AYj7S4XhiKtbGa7WG1CtDXegqFqV75u?=
- =?us-ascii?Q?V9IHxU09nCxFIUTNG9TU6Zy90FslV8uStEXjFJiSRQ5qQeqQa4PFTNzk5w8d?=
- =?us-ascii?Q?uejzk7rO+0cXA9OyHYwFBGULiQ5HOMsmK5k9nJ4yoFSyvGwCqAs1u8fnAMyp?=
- =?us-ascii?Q?+C1nP2X8lAYIU9OpcTZ3K2HKhR3t1yycJGLxjGFG0F57RKJOi3HVWGljZt2B?=
- =?us-ascii?Q?ClX8Xer8mm2egTXb66AyX6AEbLi73do/KSKedEutakWpQ4+gpqTjNpE+jsTK?=
- =?us-ascii?Q?NIXtXDjTeIzRh59jXod3KAhSD2gadIzDOXwx+Cj7xA1/gSN+uoKVY7aZ8ZH4?=
- =?us-ascii?Q?isPwm0Mu8CqK8M1MRvpQInl0IK3bIGOzSfYqM63PxlwECleyuIwINy/BRoZO?=
- =?us-ascii?Q?6j+GfQ74pUp6fmCaMBdBNFhg/I8JerTAV/hbxs6WuIjmjzsNXM/zjrAnTigH?=
- =?us-ascii?Q?8g3aSrRheG/DWU4C9BfgWLP9PNsmu1fsVJb7MQpQL97d/0gPktpkH3WHvnpm?=
- =?us-ascii?Q?sCJHK1sSvVY2b4OLyfnV+KIekfNsF3MkulcRt5NLbau0kcq5PA=3D=3D?=
+	=?us-ascii?Q?eDpakb+ps2xEgjnScX0rzKFeCQEXkBLH0FThAc4nfeQ3qQvHhRBsHLablmkY?=
+ =?us-ascii?Q?C4Ourz68z6+h0DxdZpt5qPsxyy9U+9YlqUhHxfjAipHLSs5fFlCe5gORN7xv?=
+ =?us-ascii?Q?jM5kHPDabJUbEbtOWpKmUx7qQpnonbmfH9jZJy8IxKoLEfZC8K5SlfPqPW4k?=
+ =?us-ascii?Q?BZbY/iXiKK7+0OQnxfE6ELFuJiHBD8Ru65pVTrMqIM0q/QXCta0bh3D3D3hN?=
+ =?us-ascii?Q?q7U4b4I/9SiIuxy0A0yaoXPNRenF/5BRAXAj1xRzFamAv8MV1AP82qJJ5OWJ?=
+ =?us-ascii?Q?evbBzyz9/74042uJAO+ub3XJ67UiTey26uZvgjFvoXwSDknDolwrm41PQSAk?=
+ =?us-ascii?Q?I8xHsSGp6N/CgW1YRgyC8x3PvUckfXbIZB9p/H0nV0cktWIrnsBATzqxMdBt?=
+ =?us-ascii?Q?5GyQBC4bTfg60c3eMVfUOd44mYTNnP0G8QhSQ/aU6sGLRsQqTyh0xzPdCHd3?=
+ =?us-ascii?Q?xZpU5ugs3u1ZyMiB0sbdT2lJorv3YJV3SOKF5Pf9QY17q3IBWLK4Kgvai3uc?=
+ =?us-ascii?Q?hCpR3SZzIAMCjzK0ompkFbqKD8F5uAQ0lMRja0/JsGn6Z4gwmWrbLXC9uTgK?=
+ =?us-ascii?Q?4kqOJpF1k6k+cgRepnpSvZCglspZw3zxn4+E7M1vVkhp7iDaCpfpNALSU3VJ?=
+ =?us-ascii?Q?tHmeakK2bWL8wZBthN5uPjzpyV5Gt3zByLX0zsXZeLMNamX1ytLhIzPlYItY?=
+ =?us-ascii?Q?VPS1yHYUmGrrEOZKx6HouqISIQ4Mw+AIj7KpWyDCyvcbsXx3A5Rt50OTBSep?=
+ =?us-ascii?Q?6s8Wk0Yit21ZeM0M2SQQx3Wbdfg2bRr/9VRjc9b/yykINHYomFiqBqJcWOc/?=
+ =?us-ascii?Q?3+0RSAW5rL8+282W8fzOC8oev7vhOcaaZgU4hQGnbUHRS+CBVY0StfL2xed1?=
+ =?us-ascii?Q?d/KLFEkkzLq5hTpX5yElvbVOU5eejCxWy//q4oUZfbM6nJF3rYxZWR4MGmV+?=
+ =?us-ascii?Q?2U0Gx48vUc2tbWKeepFE7gTvBlozz8Sb+myLDVZQp564MOc3/pXDjm9tj4W0?=
+ =?us-ascii?Q?fiulJn7U4wDJTCobfg3mPU0HIf77NquN7a0jjBs3Xx8E7NGxB50IV+Eyaz41?=
+ =?us-ascii?Q?H8ECNAXzCCfyooljbMEHOaQjP4scTI3JRfFE9wVNXsF7XMujNWIJSmpmUC4/?=
+ =?us-ascii?Q?J+EXNzbhXdUT3CbVZC7iGWM8kGXbkVU3ez9+Y6p5LbapcqSqY4EO7+8eISzm?=
+ =?us-ascii?Q?z6jc4w01A3DU2f4n8v1v0mYnWIHReG/7bvijX7f9DAURRoe9V11t2kKYwfn+?=
+ =?us-ascii?Q?16iqNosJSxDZuKw4pNYBM6V9/dIvQQDlV7zelKtQ2+8fp8OpDTv/nAmvgBgF?=
+ =?us-ascii?Q?nRbVjIjGA9olgvaaHqH/OO+UPEj/7klIoh0IZrQzPNvlsWR77KXsb3q8HNOo?=
+ =?us-ascii?Q?b9BGL1whJzYQWTUAvKx6Imv9xx7UQMwTXVP2dHq/DivMnb97/Q=3D=3D?=
 X-Forefront-Antispam-Report: 
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(366016)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?AL2hn/CKuKNNZ9ilG3tMVibLevDGXvc/wZA9Xyp5pS2//6VNoyTtLAK+zM8e?=
- =?us-ascii?Q?n18SZ3w9f6elGyOtlNg6uAJl00fCNxsF9Vkt3o2KIiuKwr5fwmQ4nS/LwUNm?=
- =?us-ascii?Q?YpCecGetsRoyk7NRXruNrtm2+mTTHeUOfPjj+XDXFGTkWsN0jUBU8Va5RICw?=
- =?us-ascii?Q?2iZj9N/E/FbZWsV9B0rO2/MzRPNPhTxzi921R8Srz8few2I4QHwPGx+vHyqh?=
- =?us-ascii?Q?fLPp9TT3mBb5D4Xy0Q01t4d5Ont1Uwaf9cd4Utj5D6NfahsB7zGW070n815K?=
- =?us-ascii?Q?OWnURQ+yBqoW/xHTDKTwWopxV6fvVLiHO9uih20vCf305JQO42WU25rhWXIe?=
- =?us-ascii?Q?xqIqy/jq2hYkfSlff88w59IMzW1IkA1cxyPQICNnS4H3v5/X079y/DM20xoR?=
- =?us-ascii?Q?wJXR2VVn2czvhhSlSJwCplKs/o8Vj1TCyAFH8ZJOB46BbrfpN4CXhPklsFy3?=
- =?us-ascii?Q?OKnkSWDlBp5Xr2nGV9oBV1k7F76BoZYAh1chFKfvP43mp/FVjAVGW106YtSz?=
- =?us-ascii?Q?KkBXRmDp17PiSbCssi+aY4+qEf2t/zxhNl6hZHNhOy0LjS2KGeTe2kzW+Lt3?=
- =?us-ascii?Q?pyDZ1MD4uPlpBwS6ZfQN0QCGLqN7aTSUrS1tBTXTd0nfUC5T2V/YT47Ax3BQ?=
- =?us-ascii?Q?jl0HbB4Z6XplmLdD66Pyj/F5HBN7d8wqvCKhc6oXAbaxoZaOjHiKiEa6QMQw?=
- =?us-ascii?Q?2TpwsB+GTs4PUJwycLv4TKoImHjrmSxMQJB9W1nuBtUeTKD9Gs7FWE+Aa910?=
- =?us-ascii?Q?FzuJEb54GrKL5S+F7mwoCqHpuyP+cyvTl9xMFxMsarZgU8QmEDojCHnHEl5m?=
- =?us-ascii?Q?Ixen+/bUjG/P2A9XfnaocK9x9JahSe4oiuzCaURTp5+TL6fhl/D/mMurHSd3?=
- =?us-ascii?Q?Ge8Dz/51Fy/S/8q73wgr7+FcI5VOZiwRk9dVK63HxVFVMwEX/DWg3obAIOD2?=
- =?us-ascii?Q?G7ykWPljUezYWnqLm4FfL672H5iYBgYXDxovMo/gPapVResMGLC4TFkw+w3B?=
- =?us-ascii?Q?8AiVnp26UIcCe1KlEkdAfrZxOnL80DeYYnfRl0AWm9lvmJYUo3Uf9SWWcPEq?=
- =?us-ascii?Q?U7jMAwTDt6t64yscAb779bKzA5zaA5QEdjf2smxNOHo4nfo66i/JOLqEdS1C?=
- =?us-ascii?Q?VAoHDJ/yqDzmBMWgMUygEILSHz2iumcWF9pHwNWtE5UGZWtEgskSOucOS35l?=
- =?us-ascii?Q?9V66fm1GlCu0eLJNbsEFbc9a04VeNMt9B1c7rFziRGe2ebE7la+CtMTM140o?=
- =?us-ascii?Q?Ivu8kR5/7Zw4G/xnB0k2hTYngaXaqrT6rXh3wSoPwBVyhdIIis3Ab3CNPDDZ?=
- =?us-ascii?Q?8DnX5jW+lX84XMbuyQvS9yCNh+Jp634NO8gTCAGrCMTaEgmb35ID1a6J3GXb?=
- =?us-ascii?Q?afdOEtv5TsJraD5H+yRZSdoQWR99h7Cw7bg3JRucJQu4odzpNvjEdALi6FLx?=
- =?us-ascii?Q?ySNrW17kTJde+T8SIRQG41qF/OlooJbU9o3u5emSwcnpMx9ITGlA9rsrqk9S?=
- =?us-ascii?Q?QnYLjkKCvzbGybM5C2EXQ0VK+JTcc8wEYw6hyCS4jh0DNnNhFpIcFetzgqe4?=
- =?us-ascii?Q?VDiZaGSkJyQx5n+5naXVxRD/2M4qD6TVc4PmGnd4UqXw9zMcXiCkLVdo0edc?=
- =?us-ascii?Q?CA=3D=3D?=
+	=?us-ascii?Q?AuOX61G5vcA0UmVnRis3WMs6xMSXtZIrhMMtxogSlhUxk8/IXKkQzdjLK4CP?=
+ =?us-ascii?Q?pcVwbkBTSmUOU4VGdSvueNsRjioE7NpRp4fiu82CQNWE+flCee9ugNi3neUy?=
+ =?us-ascii?Q?t8gVGoBNSf7cS5IAFJGxB8SSq9jq+4eJ/xDLONP3fUREx/wZqFG9fOSL/v+b?=
+ =?us-ascii?Q?9JpD7Knxry3SVYJDYZadoExL3mg18TwbbHz5xrWlBb8QzW3fKlTS/m7HZlcZ?=
+ =?us-ascii?Q?GDw/x9xAhN5J4jLlFSPu+hoDSeuJT38PmQQ6nUMQwL0gdmayxG+0SBgAe/qr?=
+ =?us-ascii?Q?+mkaXAgglnD3BUjTA5h72oVWrSleyshQdcY4KmUeTfOXrRq4bpIdo5DL7xFw?=
+ =?us-ascii?Q?GBdL79qKjKL8ddHNuqMJQc6Ob7H7b2QM1NwgvXqForN5YruNQ6kLS75e3ZdD?=
+ =?us-ascii?Q?NaW81fvzvwZ2+raMCW90hcC79JblTh5p3Bf2aNj4MH/JUTjwAzXJDyRze3f5?=
+ =?us-ascii?Q?k6abRnmjqG/6NqKrLP6K0o4mSTj3Nf5QpuINZvStkfyNsLBt1Xa9VwvGZvzm?=
+ =?us-ascii?Q?74Yh/1GUSLBoFG7sNRS5OgQy3eciYxW8y7KgYZdEKdh65kP77cZ4KE8kYMaP?=
+ =?us-ascii?Q?XdLDoQSH5IhgY11kjoWrYfi7WSTa+ydQ/7Fg2Y+gmTX7hPFdOlkQEd5ljURW?=
+ =?us-ascii?Q?UaSse7RmbUXcM7icY7c2qrBLONS105CUREI/EgWV8kYRhJFfk/VC4pXWnG2l?=
+ =?us-ascii?Q?JHXoCTODRhsf8KUSkc1efS7i74gKViCKiufmGUKw16L12fj7ANoXhBUimS24?=
+ =?us-ascii?Q?Z6mgSIiiaBNlXjIcYo2XXfVVEzz5zBKMgALPYUYyHiXmN0jNett6BilXD+1W?=
+ =?us-ascii?Q?zTb15/gZ+FLGQtZq2+k946IhtLarQ4DxURlYMonQ2mGCCobx1Bt1Y2uP0KQt?=
+ =?us-ascii?Q?ZtKq3VycHB8YiACETQQ/9hkNM4V45ovyyA+vLj+8C8sRZP9VO7QKO3OHm/Rt?=
+ =?us-ascii?Q?/txJRKRbn+mE4vSx50qDYAhLwbj1f/VZb+jl0xlVXziH3q2raKsJO8bINfm7?=
+ =?us-ascii?Q?PtWIsRUIPLEINfOfqBRRf4vOBBZDIVZsLlpcUGACvHua0mm4rzczSQDQF7Bx?=
+ =?us-ascii?Q?NlEP8eqAFwz1DIHO/mvhPraxVVL2dCNnW8Cz4mr+lnj9+/348aM4ca5GGqFT?=
+ =?us-ascii?Q?mMeaZVcIplTArm++e069dkFizm7pDuJ6eB/p8/fCisCF2MkQoGugBC4xoHlb?=
+ =?us-ascii?Q?8exyVqF5sHB7zJ2jL+ixqEfyz6H4sRW+8RWHdWjOV172rrdem5Hv3Zo0LWyC?=
+ =?us-ascii?Q?m8vrb5eNbVd4wnqIo5hUYe6Aa5MiF1uZU9HsmCpBPKqwNEVPzLNbe1QuhrV/?=
+ =?us-ascii?Q?NHNOyVp46QXklVK5EnkhWQDhwIe+z5oDFDcRg+UFKOF28Sewns9XvYC6JgTF?=
+ =?us-ascii?Q?g5OTemT2SlaWZPkBotWymD7BGnYt+RUrhKMQNsh66WYpT0Cxzil6lxLMgjYA?=
+ =?us-ascii?Q?H/Xijrj/v3VyCtIQpfr60Nyp33CXhGahxW6j2RIj+OkfhAd+ZeOtIdizvBaa?=
+ =?us-ascii?Q?nWmA7w1/VZ9Jsq/Ttu9+hwvqFQBTeuk+zeqbu6f4GC3mFHQF091020UZLEMt?=
+ =?us-ascii?Q?AS5BkZ6YB22zl9aiYkHaGZgeoV+oj5p+SaxnC4M7pkOETGVr6vrxHNRE5Uxl?=
+ =?us-ascii?Q?CQ=3D=3D?=
 X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96b9c76a-e3a2-4fed-b65d-08dd2efc35ad
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75a35ef8-813e-4d6a-d1e9-08dd2efc369e
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR08MB6969.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2025 09:18:12.6582
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2025 09:18:14.0778
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YTqhlgzj0zsGkKrmixJZx/HMc6zeubT4axwbr7GgQvMFS3sRSfzxjxnk2a4vnDdOEiSZzC8Ptb+8CGDpm83VFA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: X4UirkoPVV67aqtDHQOTD9SfIrLBW7MbfvOyOT5ct3ep+KLXXBAbs0tUpyG3vCMIVMY3XVI1UlQsedr2W/yrTg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR08MB10607
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 07 Jan 2025 09:18:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16973
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16974
 
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 
-Update npmsw test cases to new lockfile format. The old lockfile format
-is required by npm 6 / Node.js 14 which is out of maintenance [2].
-
-[1] https://docs.npmjs.com/cli/v6/configuring-npm/package-lock-json
-[2] https://nodejs.org/en/about/previous-releases
+The fetcher support entries with an embedded checksum like 'sha256sum'
+in the SRC_URI. It adds the parameter 'name' as prefix to the checksums
+if the parameter is set. This behavior is unexpected and leads to hacks
+in fetchers. Fallback to the checksum without the useless prefix and
+set the parameter 'name' in the gomod fetcher unconditional.
 
 Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.c=
 om>
 ---
 
- lib/bb/tests/fetch.py | 135 +++++++++++++++++-------------------------
- 1 file changed, 54 insertions(+), 81 deletions(-)
+ lib/bb/fetch2/__init__.py | 9 ++++++---
+ lib/bb/fetch2/gomod.py    | 5 +----
+ lib/bb/tests/fetch.py     | 4 ----
+ 3 files changed, 7 insertions(+), 11 deletions(-)
 
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index f79e278b1..3d31a8d4a 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1316,20 +1316,23 @@ class FetchData(object):
+         self.setup =3D False
+=20
+         def configure_checksum(checksum_id):
++            checksum_plain_name =3D "%ssum" % checksum_id
+             if "name" in self.parm:
+                 checksum_name =3D "%s.%ssum" % (self.parm["name"], checksu=
+m_id)
+             else:
+-                checksum_name =3D "%ssum" % checksum_id
+-
+-            setattr(self, "%s_name" % checksum_id, checksum_name)
++                checksum_name =3D checksum_plain_name
+=20
+             if checksum_name in self.parm:
+                 checksum_expected =3D self.parm[checksum_name]
++            elif checksum_plain_name in self.parm:
++                checksum_expected =3D self.parm[checksum_plain_name]
++                checksum_name =3D checksum_plain_name
+             elif self.type not in ["http", "https", "ftp", "ftps", "sftp",=
+ "s3", "az", "crate", "gs", "gomod"]:
+                 checksum_expected =3D None
+             else:
+                 checksum_expected =3D d.getVarFlag("SRC_URI", checksum_nam=
+e)
+=20
++            setattr(self, "%s_name" % checksum_id, checksum_name)
+             setattr(self, "%s_expected" % checksum_id, checksum_expected)
+=20
+         self.names =3D self.parm.get("name",'default').split(',')
+diff --git a/lib/bb/fetch2/gomod.py b/lib/bb/fetch2/gomod.py
+index 21fbe80f5..6c999e8ba 100644
+--- a/lib/bb/fetch2/gomod.py
++++ b/lib/bb/fetch2/gomod.py
+@@ -119,10 +119,7 @@ class GoMod(Wget):
+             ('https', proxy, '/' + path, None, None, None))
+         ud.parm['downloadfilename'] =3D path
+=20
+-        # Set name parameter if sha256sum is set in recipe
+-        name =3D f"{module}@{ud.parm['version']}"
+-        if d.getVarFlag('SRC_URI', name + '.sha256sum'):
+-            ud.parm['name'] =3D name
++        ud.parm['name'] =3D f"{module}@{ud.parm['version']}"
+=20
+         # Set subdir for unpack
+         ud.parm['subdir'] =3D os.path.join(moddir, 'cache/download',
 diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 6dda0d381..b89348236 100644
+index c5ec84dc5..6b8e3e060 100644
 --- a/lib/bb/tests/fetch.py
 +++ b/lib/bb/tests/fetch.py
-@@ -2843,23 +2843,25 @@ class NPMTest(FetcherTest):
-     @skipIfNoNetwork()
-     def test_npmsw(self):
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D',
-                     'dependencies': {
--                        'content-type': {
--                            'version': 'https://registry.npmjs.org/content=
--type/-/content-type-1.0.4.tgz',
--                            'integrity': 'sha512-hIP3EEPs8tB9AT1L+NUqtwOAp=
-s4mk2Zob89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D',
--                            'dependencies': {
--                                'cookie': {
--                                    'version': 'git+https://github.com/jsh=
-ttp/cookie.git#aec1177c7da67e3b3273df96cf476824dbc9ae09',
--                                    'from': 'git+https://github.com/jshttp=
-/cookie.git'
--                                }
--                            }
--                        }
-+                        'content-type': "1.0.4"
-                     }
-+                },
-+                'node_modules/array-flatten/node_modules/content-type': {
-+                    'version': '1.0.4',
-+                    'resolved': 'https://registry.npmjs.org/content-type/-=
-/content-type-1.0.4.tgz',
-+                    'integrity': 'sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk2Zob=
-89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D',
-+                    'dependencies': {
-+                        'cookie': 'git+https://github.com/jshttp/cookie.gi=
-t#aec1177c7da67e3b3273df96cf476824dbc9ae09'
-+                    }
-+                },
-+                'node_modules/array-flatten/node_modules/content-type/node=
-_modules/cookie': {
-+                    'resolved': 'git+https://github.com/jshttp/cookie.git#=
-aec1177c7da67e3b3273df96cf476824dbc9ae09'
-                 }
-             }
-         })
-@@ -2877,10 +2879,9 @@ class NPMTest(FetcherTest):
-     @skipIfNoNetwork()
-     def test_npmsw_git(self):
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'cookie': {
--                    'version': 'github:jshttp/cookie.git#aec1177c7da67e3b3=
-273df96cf476824dbc9ae09',
--                    'from': 'github:jshttp/cookie.git'
-+            'packages': {
-+                'node_modules/cookie': {
-+                    'resolved': 'git+https://github.com/jshttp/cookie.git#=
-aec1177c7da67e3b3273df96cf476824dbc9ae09'
-                 }
-             }
-         })
-@@ -2888,40 +2889,16 @@ class NPMTest(FetcherTest):
+@@ -3391,7 +3391,6 @@ class GoModTest(FetcherTest):
+         fetcher =3D bb.fetch2.Fetch(urls, self.d)
+         ud =3D fetcher.ud[urls[0]]
+         self.assertEqual(ud.url, 'https://proxy.golang.org/github.com/%21a=
+zure/azure-sdk-for-go/sdk/storage/azblob/%40v/v1.0.0.zip')
+-        self.assertNotIn('name', ud.parm)
+=20
          fetcher.download()
-         self.assertTrue(os.path.exists(os.path.join(self.dldir, 'git2', 'g=
-ithub.com.jshttp.cookie.git')))
+         fetcher.unpack(self.unpackdir)
+@@ -3409,7 +3408,6 @@ class GoModTest(FetcherTest):
+         fetcher =3D bb.fetch2.Fetch(urls, self.d)
+         ud =3D fetcher.ud[urls[0]]
+         self.assertEqual(ud.url, 'https://proxy.golang.org/github.com/%21a=
+zure/azure-sdk-for-go/sdk/storage/azblob/%40v/v1.0.0.mod')
+-        self.assertNotIn('name', ud.parm)
 =20
--        swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'cookie': {
--                    'version': 'jshttp/cookie.git#aec1177c7da67e3b3273df96=
-cf476824dbc9ae09',
--                    'from': 'jshttp/cookie.git'
--                }
--            }
--        })
--        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
--        fetcher.download()
--        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'git2', 'g=
-ithub.com.jshttp.cookie.git')))
--
--        swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'nodejs': {
--                    'version': 'gitlab:gitlab-examples/nodejs.git#892a1f16=
-725e56cc3a2cb0d677be42935c8fc262',
--                    'from': 'gitlab:gitlab-examples/nodejs'
--                }
--            }
--        })
--        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
--        fetcher.download()
--        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'git2', 'g=
-itlab.com.gitlab-examples.nodejs.git')))
--
-     @skipIfNoNetwork()
-     def test_npmsw_dev(self):
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-                 },
--                'content-type': {
-+                'node_modules/content-type': {
-                     'version': '1.0.4',
-                     'resolved': 'https://registry.npmjs.org/content-type/-=
-/content-type-1.0.4.tgz',
-                     'integrity': 'sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk2Zob=
-89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D',
-@@ -2943,8 +2920,8 @@ class NPMTest(FetcherTest):
-     @skipIfNoNetwork()
-     def test_npmsw_destsuffix(self):
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-@@ -2958,8 +2935,8 @@ class NPMTest(FetcherTest):
+         fetcher.download()
+         fetcher.unpack(self.unpackdir)
+@@ -3442,7 +3440,6 @@ class GoModTest(FetcherTest):
+         fetcher =3D bb.fetch2.Fetch(urls, self.d)
+         ud =3D fetcher.ud[urls[0]]
+         self.assertEqual(ud.url, 'https://proxy.golang.org/gopkg.in/ini.v1=
+/%40v/v1.67.0.zip')
+-        self.assertNotIn('name', ud.parm)
 =20
-     def test_npmsw_no_network_no_tarball(self):
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-@@ -2981,8 +2958,8 @@ class NPMTest(FetcherTest):
-         self.d.setVar('BB_NO_NETWORK', '1')
-         # Fetch again
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-@@ -2998,8 +2975,8 @@ class NPMTest(FetcherTest):
-     def test_npmsw_npm_reusability(self):
-         # Fetch once with npmsw
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-@@ -3020,8 +2997,8 @@ class NPMTest(FetcherTest):
-     def test_npmsw_bad_checksum(self):
-         # Try to fetch with bad checksum
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-gfNEp2hqgLTFKT6P3AsBYMgsBqg=3D'
-@@ -3033,8 +3010,8 @@ class NPMTest(FetcherTest):
-             fetcher.download()
-         # Fetch correctly to get a tarball
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-@@ -3072,8 +3049,8 @@ class NPMTest(FetcherTest):
-         # Fetch again
-         self.assertFalse(os.path.exists(ud.localpath))
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-@@ -3100,8 +3077,8 @@ class NPMTest(FetcherTest):
-         # Fetch again with invalid url
-         self.assertFalse(os.path.exists(ud.localpath))
-         swfile =3D self.create_shrinkwrap_file({
--            'dependencies': {
--                'array-flatten': {
-+            'packages': {
-+                'node_modules/array-flatten': {
-                     'version': '1.1.1',
-                     'resolved': 'https://invalid',
-                     'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-@@ -3114,29 +3091,25 @@ class NPMTest(FetcherTest):
+         fetcher.download()
+         fetcher.unpack(self.unpackdir)
+@@ -3460,7 +3457,6 @@ class GoModTest(FetcherTest):
+         fetcher =3D bb.fetch2.Fetch(urls, self.d)
+         ud =3D fetcher.ud[urls[0]]
+         self.assertEqual(ud.url, 'https://proxy.golang.org/go.opencensus.i=
+o/%40v/v0.24.0.zip')
+-        self.assertNotIn('name', ud.parm)
 =20
-     @skipIfNoNetwork()
-     def test_npmsw_bundled(self):
--        for packages_key, package_prefix, bundled_key in [
--            ('dependencies', '', 'bundled'),
--            ('packages', 'node_modules/', 'inBundle')
--        ]:
--            swfile =3D self.create_shrinkwrap_file({
--                packages_key: {
--                    package_prefix + 'array-flatten': {
--                        'version': '1.1.1',
--                        'resolved': 'https://registry.npmjs.org/array-flat=
-ten/-/array-flatten-1.1.1.tgz',
--                        'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
--                    },
--                    package_prefix + 'content-type': {
--                        'version': '1.0.4',
--                        'resolved': 'https://registry.npmjs.org/content-ty=
-pe/-/content-type-1.0.4.tgz',
--                        'integrity': 'sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk=
-2Zob89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D',
--                        bundled_key: True
--                    }
-+        swfile =3D self.create_shrinkwrap_file({
-+            'packages': {
-+                'node_modules/array-flatten': {
-+                    'version': '1.1.1',
-+                    'resolved': 'https://registry.npmjs.org/array-flatten/=
--/array-flatten-1.1.1.tgz',
-+                    'integrity': 'sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=3D'
-+                },
-+                'node_modules/content-type': {
-+                    'version': '1.0.4',
-+                    'resolved': 'https://registry.npmjs.org/content-type/-=
-/content-type-1.0.4.tgz',
-+                    'integrity': 'sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk2Zob=
-89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA=3D=3D',
-+                    'inBundle': True
-                 }
--            })
--            fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
--            fetcher.download()
--            self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2'=
-, 'array-flatten-1.1.1.tgz')))
--            self.assertFalse(os.path.exists(os.path.join(self.dldir, 'npm2=
-', 'content-type-1.0.4.tgz')))
-+            }
-+        })
-+        fetcher =3D bb.fetch.Fetch(['npmsw://' + swfile], self.d)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(os.path.join(self.dldir, 'npm2', 'a=
-rray-flatten-1.1.1.tgz')))
-+        self.assertFalse(os.path.exists(os.path.join(self.dldir, 'npm2', '=
-content-type-1.0.4.tgz')))
-=20
- class GitSharedTest(FetcherTest):
-     def setUp(self):
+         fetcher.download()
+         fetcher.unpack(self.unpackdir)
 --=20
 2.39.5
 
