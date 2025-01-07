@@ -2,47 +2,47 @@ Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B486EE77198
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76A4E7719C
 	for <webhook@archiver.kernel.org>; Tue,  7 Jan 2025 09:18:26 +0000 (UTC)
 Received: from EUR05-VI1-obe.outbound.protection.outlook.com (EUR05-VI1-obe.outbound.protection.outlook.com [40.107.21.132])
  by mx.groups.io with SMTP id smtpd.web10.16695.1736241496534764322
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 07 Jan 2025 01:18:20 -0800
+ Tue, 07 Jan 2025 01:18:19 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=je3SrEpL;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=ncD7T5DF;
  spf=pass (domain: weidmueller.com, ip: 40.107.21.132, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hpoAgpUhUNuEi+nZgxuJwl/vyWHmH426scs7QV8pt6nmsdXEKNh0e/egitwyFqlfZKCu2KxWrhZ2qnKVoi14FU/oSQz8dRImWW+Q2J6wLWh9bVlh4wrkUuGsT/mNpICGNVsgWhoVeBdOyyMo3P+wcpprrOEBHJmLqWqMQEfoU4LmIUc1QsA4grZOsaF9Ui6MAfc0VwP5tkVb3xMC/Me0AH7uYrsQgVgGEpMZtjmeJx3YwwXIjmQavyJnohxg68t+hBz90+O5d3nkxQnKT66S8jeif/+7JkxAqaN1UyRdIxHxvzylAxac5DEjbrLY2JluXzCg/m2EmSoCV9HyiJGW1w==
+ b=gp7rIWXBnuPEj9uLQ3qaZquEPS3IJ5tJT8Fzzag8H4HbuKnYAKA8rpZezMIS39Xze4ScBN75WgTROUpm+SNKDZWEEbrAfUyyP6t6zbSxrPibpe8eNWhi9jiyWGWgEgweJRbc9GZfmJm5X6FMTubKYmRVDpiYmbJ1SpX8gd1Sekc7Gv5mpgqH7lIa4yWbmxA5IKD3XOQTnlsmeXzt5R8/3tIVb0FyPXtzrhcF4QR+TPMzeLq1Ky6MqcZBaWGemOJmnVeZ8C4EjYKS27e4/sPHBJgSFsd+XYPwXca6KPxJ5QcNmiaKLaBCcC49lsZmP9yRXRyVMD5YuUP/jc9mXodx8Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YAH8aLxGBZMJvoHCM9F/eJsCXT6U6VjnD0ZS3FSViBI=;
- b=MeR0tTj2KZ+tg8/HrFqcXyaD/26AhEN9In8d7NpkPAn3suH6iJ2AzEFpezOWxBcRpNlmjGVdVuPUbHtF06XowvFP0KZ7NXXniaUxPAT0q2lSeBfswEYRzp7wvLM+ObgdMAShFNbYxzsEH/TiXNOaOBTZz8eWhYhEFrTU3xTlxixo+jXpusPbgXfW28Fsol5X8oRY20eAWwYCc2KxuZ7GckeZtZrPeSGNMmkbxXyzvYAdPttBmlxZwgaBLGAWf46zuaa/LSDzGTQPlLLyPgAFQvNa2yvZjZi6qbPoJQqvDtJRmuqC3R+xEI4z6e4LZ5NhcFGz1iTqwYgwvOzjhWaePA==
+ bh=aTPZuyQ3aOrnIzP3GZtpG3WFcmfRMw3Q23kRVyZCQTM=;
+ b=pQOhC/emy1v5u2xx0vs+nGso1dQ9wQp1nxA/BVXoB7rOb9b8q9fOUE8zznZcalIq4QtDYyEb7HcLSkHEoq67FnN9BYJqcDuU6oQeKkuJfgTB/soc84IpmlQPheONo6rI7o4En6c36JhQuKsSQM+PXE4ZVgHQv1Kjt6j80jBf/et5HC1i7s8VpR4AvDzCFi9GlxN7BhMxj3mO1hDFUB0jICqgpSJ7ZHDMZ00vh7umIk/Fm/J328v7O1nKFtWeos4vpClwkX6yF+yZPUcKn0Tw60Y7q1P6092HZ/Vk9qiAdVCsYagck6f3zHsAIf6G/PZYkmo2p7Hl8ziQHFVKNMYmDw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=weidmueller.com; dmarc=pass action=none
  header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YAH8aLxGBZMJvoHCM9F/eJsCXT6U6VjnD0ZS3FSViBI=;
- b=je3SrEpLk3kmhKJ038/DRnvJVEkXpXbOu0NYzpzOqqtNAwfIENAof6IfJFq6/AiXXuaXf5U1QpZ0GNUF9EFKbTHQcNjJ1q+jEqBSbwU3EHbb4ToRhJH/IVVQctDt3D3BPLeljQ5bYfitldL3UCSfwG6zHfC7CelZQHVORXr4VQbl00vr9jjTfm76Sw9VOtA5ewNuskP5RFwv1IaMFFbzewmPWk7xR2LCTCGt7fr7KmyQkgNPYXXSJ/+mC/S4XbWg8FbY7092otea4RWSoHAEfMeDFSkC8JK4gJk+fV6aUPivjPZPvjX4AlgT1DnXg4KBtBTCHx1bLdaVItvHQS8PhQ==
+ bh=aTPZuyQ3aOrnIzP3GZtpG3WFcmfRMw3Q23kRVyZCQTM=;
+ b=ncD7T5DF7bredU/tmm0FtNfkHlgJity5vgAs7zPR77wcHxLdcBl7HRIFDEkF2xOFAGFw6bA+YfYp2vGVxLPLC2w0jSIYXPgJCCJrbyAcCXezaLjIiXxYbCsjxqBsBbr9xuiKwGCE51wxWN0UgT0bfK8qekggREMd1NdQ70fl4g/6yLPXt04X+Tm8bZufEqLGCNNLixIlYLMGmRyNRupnY5X/MRFAyYdvj5y6aFDXlHVps4GvmluphKQenro/ygFOU3GEycfo4J7SrTDGpA7Nw4y2O7kdSvzky+448011e8iEma89XjxayYKLxCbnAm9uewEVbMWLhjKwzxkiUDl8tg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=weidmueller.com;
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com (2603:10a6:102:1d8::23)
  by GV1PR08MB10607.eurprd08.prod.outlook.com (2603:10a6:150:16c::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8314.18; Tue, 7 Jan
- 2025 09:18:14 +0000
+ 2025 09:18:13 +0000
 Received: from PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4]) by PAXPR08MB6969.eurprd08.prod.outlook.com
  ([fe80::3b1:b329:1ed9:dad4%3]) with mapi id 15.20.8314.015; Tue, 7 Jan 2025
- 09:18:14 +0000
+ 09:18:13 +0000
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
 To: bitbake-devel@lists.openembedded.org
 CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Subject: [PATCH 4/5] fetch2: do not prefix embedded checksums
-Date: Tue,  7 Jan 2025 10:17:56 +0100
-Message-ID: <20250107091757.886-5-stefan.herbrechtsmeier-oss@weidmueller.com>
+Subject: [PATCH 2/5] fetch2: npmsw: remove old lockfile format support
+Date: Tue,  7 Jan 2025 10:17:54 +0100
+Message-ID: <20250107091757.886-3-stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250107091757.886-1-stefan.herbrechtsmeier-oss@weidmueller.com>
 References: <20250107091757.886-1-stefan.herbrechtsmeier-oss@weidmueller.com>
@@ -54,192 +54,255 @@ X-ClientProxiedBy: FR4P281CA0015.DEUP281.PROD.OUTLOOK.COM
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR08MB6969:EE_|GV1PR08MB10607:EE_
-X-MS-Office365-Filtering-Correlation-Id: 75a35ef8-813e-4d6a-d1e9-08dd2efc369e
+X-MS-Office365-Filtering-Correlation-Id: b9b0cd9d-d4ba-43d4-1b6a-08dd2efc35fa
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
 	BCL:0;ARA:13230040|1800799024|376014|52116014|366016|38350700014;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?eDpakb+ps2xEgjnScX0rzKFeCQEXkBLH0FThAc4nfeQ3qQvHhRBsHLablmkY?=
- =?us-ascii?Q?C4Ourz68z6+h0DxdZpt5qPsxyy9U+9YlqUhHxfjAipHLSs5fFlCe5gORN7xv?=
- =?us-ascii?Q?jM5kHPDabJUbEbtOWpKmUx7qQpnonbmfH9jZJy8IxKoLEfZC8K5SlfPqPW4k?=
- =?us-ascii?Q?BZbY/iXiKK7+0OQnxfE6ELFuJiHBD8Ru65pVTrMqIM0q/QXCta0bh3D3D3hN?=
- =?us-ascii?Q?q7U4b4I/9SiIuxy0A0yaoXPNRenF/5BRAXAj1xRzFamAv8MV1AP82qJJ5OWJ?=
- =?us-ascii?Q?evbBzyz9/74042uJAO+ub3XJ67UiTey26uZvgjFvoXwSDknDolwrm41PQSAk?=
- =?us-ascii?Q?I8xHsSGp6N/CgW1YRgyC8x3PvUckfXbIZB9p/H0nV0cktWIrnsBATzqxMdBt?=
- =?us-ascii?Q?5GyQBC4bTfg60c3eMVfUOd44mYTNnP0G8QhSQ/aU6sGLRsQqTyh0xzPdCHd3?=
- =?us-ascii?Q?xZpU5ugs3u1ZyMiB0sbdT2lJorv3YJV3SOKF5Pf9QY17q3IBWLK4Kgvai3uc?=
- =?us-ascii?Q?hCpR3SZzIAMCjzK0ompkFbqKD8F5uAQ0lMRja0/JsGn6Z4gwmWrbLXC9uTgK?=
- =?us-ascii?Q?4kqOJpF1k6k+cgRepnpSvZCglspZw3zxn4+E7M1vVkhp7iDaCpfpNALSU3VJ?=
- =?us-ascii?Q?tHmeakK2bWL8wZBthN5uPjzpyV5Gt3zByLX0zsXZeLMNamX1ytLhIzPlYItY?=
- =?us-ascii?Q?VPS1yHYUmGrrEOZKx6HouqISIQ4Mw+AIj7KpWyDCyvcbsXx3A5Rt50OTBSep?=
- =?us-ascii?Q?6s8Wk0Yit21ZeM0M2SQQx3Wbdfg2bRr/9VRjc9b/yykINHYomFiqBqJcWOc/?=
- =?us-ascii?Q?3+0RSAW5rL8+282W8fzOC8oev7vhOcaaZgU4hQGnbUHRS+CBVY0StfL2xed1?=
- =?us-ascii?Q?d/KLFEkkzLq5hTpX5yElvbVOU5eejCxWy//q4oUZfbM6nJF3rYxZWR4MGmV+?=
- =?us-ascii?Q?2U0Gx48vUc2tbWKeepFE7gTvBlozz8Sb+myLDVZQp564MOc3/pXDjm9tj4W0?=
- =?us-ascii?Q?fiulJn7U4wDJTCobfg3mPU0HIf77NquN7a0jjBs3Xx8E7NGxB50IV+Eyaz41?=
- =?us-ascii?Q?H8ECNAXzCCfyooljbMEHOaQjP4scTI3JRfFE9wVNXsF7XMujNWIJSmpmUC4/?=
- =?us-ascii?Q?J+EXNzbhXdUT3CbVZC7iGWM8kGXbkVU3ez9+Y6p5LbapcqSqY4EO7+8eISzm?=
- =?us-ascii?Q?z6jc4w01A3DU2f4n8v1v0mYnWIHReG/7bvijX7f9DAURRoe9V11t2kKYwfn+?=
- =?us-ascii?Q?16iqNosJSxDZuKw4pNYBM6V9/dIvQQDlV7zelKtQ2+8fp8OpDTv/nAmvgBgF?=
- =?us-ascii?Q?nRbVjIjGA9olgvaaHqH/OO+UPEj/7klIoh0IZrQzPNvlsWR77KXsb3q8HNOo?=
- =?us-ascii?Q?b9BGL1whJzYQWTUAvKx6Imv9xx7UQMwTXVP2dHq/DivMnb97/Q=3D=3D?=
+	=?us-ascii?Q?odFTDUcbZPAtAvfjmS/I5wBNVEiY8/xwvjHSBh+OVSni+0G4ax31btJyPTYo?=
+ =?us-ascii?Q?HH/v2W2CwKFodV+FbBxXLS9r8bIwi2sarHISHA/3qBvomjSoszjrn3OoHYFO?=
+ =?us-ascii?Q?CuFRHhWf0L46IgiPM7dBoEzrc2u/Ku3Qg4SRMAHnqFt0KoZ7ilHZoId8Q+wk?=
+ =?us-ascii?Q?cPUEDjGBfbEkEkz9URAZ9rwajKqo69dREnwqGsaTxIEnN1xN4ED+X7LkSDya?=
+ =?us-ascii?Q?SaKOqXDukhZaiH4ezddc10jD0H8EQRNJp5tgYC789ohccZlaJq4zYwTER5wC?=
+ =?us-ascii?Q?Xb9DEaL4k7VTv+TFMVCYmgdpt0hfjP2A72mzS1dgS3zGQv1MsIz52li2EaUk?=
+ =?us-ascii?Q?lxvOoKPaHsfEI3CnDrMiB/m9+Mc1VnjNbgVfXW/TB9Gwkd9KAs+TCULWwIpw?=
+ =?us-ascii?Q?arVcHHWr+g2fBkQRvvZfQC+30a5TiLkWFnGElWDRE+6l+0AL9uN6uIJa/Oio?=
+ =?us-ascii?Q?+EcbFUP4FOgJ+7SARoLdP9oyd4pRMaKfngBz+2Qns69xNka75QxIyhXashMh?=
+ =?us-ascii?Q?0oL13UkMucFmqWsjO0nYDJf1PNgL01K4NmL5pReci96toBOvHPDcfuhQvW1r?=
+ =?us-ascii?Q?5Rl9PfKl6neADTVuJ9qwhT1sY0xIt7/YcMMrRe69t6GQGyPLNSak2KQy1mOh?=
+ =?us-ascii?Q?n8mM5rzpeK55XEM+8VuMMRFUj5BgxuL3x0zTGIAXFE4+xPmaKFX1TSwPE8p2?=
+ =?us-ascii?Q?icn/xw2DLBC0P80uEPc1sy3wVx95hH/CxG8wwRD10xsYENiHCcCjqdgQOw4j?=
+ =?us-ascii?Q?2wNvPoyj+x0q1qP5+wyBLPqbUkWlS9HlleL9iOCeDWvAEfZEkkzUyHsJ5bpj?=
+ =?us-ascii?Q?zm5Fl3G+kEB/KZeaNth3NqBQkb7M4p7NHzVLserGSaBzD3GGlsmFeC4E4EGu?=
+ =?us-ascii?Q?qkpsN+4EEZp78Ini2LICpqcnmYmOICvyNxlarqNUwmXI7TPzg6t8lb+hKe53?=
+ =?us-ascii?Q?k+HpfURmtmPR6qlN1WlXmOohxOvKNz+yQA5vSSzBxsaQGzosFcwPxIlHEquB?=
+ =?us-ascii?Q?OGqlhDiw0bLgQ4to6RXggRiQbJNl9lNsyM8D6PASl062/3b/sLzRo/ZUkvAR?=
+ =?us-ascii?Q?VV8EOhmiYtCywiPhdTTm+qAJeAKDSlwf8BK6fM8PWV7Bt6VY3yGzd75BQ+WM?=
+ =?us-ascii?Q?0wuE1DoHCiKDUK4UsRG0b/OTP7CF/zjhVgzxgWSJyKjaJeJXegqHiXSEmZ7C?=
+ =?us-ascii?Q?3mdFqJQM3pw7cJQYr5Zn4wz+EantBI3YAIdozZm4Iwi4uEhFADxK7sAHngHM?=
+ =?us-ascii?Q?+qKLFaWqRyefF3x0fpV74PmGK+MfCasbVDu3m8AsbEj+dFINEfNx2PsV3lYq?=
+ =?us-ascii?Q?k4lyYVHlf9bSrSvVYjTOZdsBdzCmom06DNnfMLTNUDHtYMCrhPNQalvOutnP?=
+ =?us-ascii?Q?3Gb8BmZfWin7PIioH1grZxA4gg8W?=
 X-Forefront-Antispam-Report: 
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR08MB6969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(366016)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?AuOX61G5vcA0UmVnRis3WMs6xMSXtZIrhMMtxogSlhUxk8/IXKkQzdjLK4CP?=
- =?us-ascii?Q?pcVwbkBTSmUOU4VGdSvueNsRjioE7NpRp4fiu82CQNWE+flCee9ugNi3neUy?=
- =?us-ascii?Q?t8gVGoBNSf7cS5IAFJGxB8SSq9jq+4eJ/xDLONP3fUREx/wZqFG9fOSL/v+b?=
- =?us-ascii?Q?9JpD7Knxry3SVYJDYZadoExL3mg18TwbbHz5xrWlBb8QzW3fKlTS/m7HZlcZ?=
- =?us-ascii?Q?GDw/x9xAhN5J4jLlFSPu+hoDSeuJT38PmQQ6nUMQwL0gdmayxG+0SBgAe/qr?=
- =?us-ascii?Q?+mkaXAgglnD3BUjTA5h72oVWrSleyshQdcY4KmUeTfOXrRq4bpIdo5DL7xFw?=
- =?us-ascii?Q?GBdL79qKjKL8ddHNuqMJQc6Ob7H7b2QM1NwgvXqForN5YruNQ6kLS75e3ZdD?=
- =?us-ascii?Q?NaW81fvzvwZ2+raMCW90hcC79JblTh5p3Bf2aNj4MH/JUTjwAzXJDyRze3f5?=
- =?us-ascii?Q?k6abRnmjqG/6NqKrLP6K0o4mSTj3Nf5QpuINZvStkfyNsLBt1Xa9VwvGZvzm?=
- =?us-ascii?Q?74Yh/1GUSLBoFG7sNRS5OgQy3eciYxW8y7KgYZdEKdh65kP77cZ4KE8kYMaP?=
- =?us-ascii?Q?XdLDoQSH5IhgY11kjoWrYfi7WSTa+ydQ/7Fg2Y+gmTX7hPFdOlkQEd5ljURW?=
- =?us-ascii?Q?UaSse7RmbUXcM7icY7c2qrBLONS105CUREI/EgWV8kYRhJFfk/VC4pXWnG2l?=
- =?us-ascii?Q?JHXoCTODRhsf8KUSkc1efS7i74gKViCKiufmGUKw16L12fj7ANoXhBUimS24?=
- =?us-ascii?Q?Z6mgSIiiaBNlXjIcYo2XXfVVEzz5zBKMgALPYUYyHiXmN0jNett6BilXD+1W?=
- =?us-ascii?Q?zTb15/gZ+FLGQtZq2+k946IhtLarQ4DxURlYMonQ2mGCCobx1Bt1Y2uP0KQt?=
- =?us-ascii?Q?ZtKq3VycHB8YiACETQQ/9hkNM4V45ovyyA+vLj+8C8sRZP9VO7QKO3OHm/Rt?=
- =?us-ascii?Q?/txJRKRbn+mE4vSx50qDYAhLwbj1f/VZb+jl0xlVXziH3q2raKsJO8bINfm7?=
- =?us-ascii?Q?PtWIsRUIPLEINfOfqBRRf4vOBBZDIVZsLlpcUGACvHua0mm4rzczSQDQF7Bx?=
- =?us-ascii?Q?NlEP8eqAFwz1DIHO/mvhPraxVVL2dCNnW8Cz4mr+lnj9+/348aM4ca5GGqFT?=
- =?us-ascii?Q?mMeaZVcIplTArm++e069dkFizm7pDuJ6eB/p8/fCisCF2MkQoGugBC4xoHlb?=
- =?us-ascii?Q?8exyVqF5sHB7zJ2jL+ixqEfyz6H4sRW+8RWHdWjOV172rrdem5Hv3Zo0LWyC?=
- =?us-ascii?Q?m8vrb5eNbVd4wnqIo5hUYe6Aa5MiF1uZU9HsmCpBPKqwNEVPzLNbe1QuhrV/?=
- =?us-ascii?Q?NHNOyVp46QXklVK5EnkhWQDhwIe+z5oDFDcRg+UFKOF28Sewns9XvYC6JgTF?=
- =?us-ascii?Q?g5OTemT2SlaWZPkBotWymD7BGnYt+RUrhKMQNsh66WYpT0Cxzil6lxLMgjYA?=
- =?us-ascii?Q?H/Xijrj/v3VyCtIQpfr60Nyp33CXhGahxW6j2RIj+OkfhAd+ZeOtIdizvBaa?=
- =?us-ascii?Q?nWmA7w1/VZ9Jsq/Ttu9+hwvqFQBTeuk+zeqbu6f4GC3mFHQF091020UZLEMt?=
- =?us-ascii?Q?AS5BkZ6YB22zl9aiYkHaGZgeoV+oj5p+SaxnC4M7pkOETGVr6vrxHNRE5Uxl?=
- =?us-ascii?Q?CQ=3D=3D?=
+	=?us-ascii?Q?dyLR+cr53RCmbd1CkrHzSW95EtnTxG+TD1H+2Dl0UrebZMtBxjz3BCvKctel?=
+ =?us-ascii?Q?2BHA/D6e4cCcE0i5grdHQU8DzTbDd8D+xWmHgN63bqWKBNY05OQ56lIGncYT?=
+ =?us-ascii?Q?/JdL3Zc7K9IJoRShYsRENWrB8qQyVHDYM8QYxR51NcDgFijhM0JBnxSj9ZOj?=
+ =?us-ascii?Q?ArHgxWEzfzKVcMH0fsCRlW8GEy1ZydEUpQbvhYA9B6WVUbqvO2bz/n2rsRsd?=
+ =?us-ascii?Q?jEE1iyuUp2mvMLNgt6zEG+BDoKdZiGVa1qyXHqy84IHm3dI4fzRCE6KLNCf/?=
+ =?us-ascii?Q?Tx5mekwDxrqvk6OgyE2TVhH2m9Eh7Hd2W3BATWA0rAzhKWCDdkevKI+tGPg8?=
+ =?us-ascii?Q?1Tgy9RIT12htGkm9Jbtv7tjxfD2ksRDL5shorazKb4/7gmfdhVjwpm6EuKsX?=
+ =?us-ascii?Q?1eYPZDmOz8lVP8p2c61nLPtt4siNth8wiTP1MVfeXA3sYhgJ9ap8egwFy+1f?=
+ =?us-ascii?Q?G1Egw8yER2OQ8HPkVb/PuaPKoaW+0/JePMRMkuVJFOeBKXtnW4BfoQvVorNK?=
+ =?us-ascii?Q?uMTLs+fKhZ/gtx7qLhE3i0i15SsiqPSrvGRohQnvRIozxEKVsrKOGgRl+OuL?=
+ =?us-ascii?Q?4gvWdbWx7If9YxtePStw6HckxZ8RROC2PYibGLy7tv2+iCFUnRgry5+hoCKT?=
+ =?us-ascii?Q?v3fHPhteraUqtDiXrdFbxPpOftnYgN/NywOiMlsGQHaT4P9ckujyDYkWW9lx?=
+ =?us-ascii?Q?vEIAE9dLMld2rJVse9Ixo3DuKer0q1vwpVZbY6100OlqUYJ1aXltpYHYiyO4?=
+ =?us-ascii?Q?XKq1hWN4bNUcaGOc555/KzZijZvQVCj/e3b3afQkY8RlBifk67DMdClPGFdl?=
+ =?us-ascii?Q?NobGqEdCZBEOiIgVNsoggNpMGs3BTudlpnem6bFFXJqznkU7tIMFyTdCtE+s?=
+ =?us-ascii?Q?xWOUIpZJgwb1aREJghkNjyKUMnT8OuwrByLugtrX6lDbcGGUGCgDeajd4ttg?=
+ =?us-ascii?Q?TvkrxBy27V4xCFKydj/YYq1O71HdozFM/4T7jkG+miZAbwHCELKbUgVIGoP5?=
+ =?us-ascii?Q?Y1MAsvGP4pNoyJwVz6MxMqIZIhmIWTMbqQYxDQ08AV6Imrnw4y8VAtAs6Wsw?=
+ =?us-ascii?Q?ea4LDryunGEZ6EFVHaaFEi4WhDMOzT0S2sx1YZX/UFUO73UTSM9HY3OhcjoF?=
+ =?us-ascii?Q?EpS44iw+FXGi7rWmULN0VpljtboLhvV83A+NisqWQSek0GERG47PGCFSUlzZ?=
+ =?us-ascii?Q?i5i4qKkv07BL2b/pMx4RrTZ8Bb7Jrx6Bx7Kauh9UIvvujKkg8fdz8gNK5/k2?=
+ =?us-ascii?Q?ao3si/2yeMwJdoQL9WNZ4VgEHQfPWnLrPR/2L29vBjFpY1zvzxrsTVwikawY?=
+ =?us-ascii?Q?9QjY0VdVm14rnwLduYCH/hhTZZsSMtS/+n2OBjFDvRkZnSf9kVj2Y3CzA3AA?=
+ =?us-ascii?Q?rs/jBTelRypP56OncPkiLI3YVLInt3YFciKu/eg31MqJ0LYB9xvRv5GHVe4h?=
+ =?us-ascii?Q?/dMLwZasNIWY7kuukfNySxM4k3iQvDGNQQIpKNF3XXzuvVqBJL+o1oVNaHZ8?=
+ =?us-ascii?Q?pSxE3FM21LhoxGWApujx7vmQOC7SE9uLFiroFxUr0esEzNItNInIJ6uUDVyI?=
+ =?us-ascii?Q?Ct20ab2AEadY8K3aL+5S0X7xXE59hJ1VddSF3sqYiyQetJlvtLh8Wou8ggQf?=
+ =?us-ascii?Q?+A=3D=3D?=
 X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75a35ef8-813e-4d6a-d1e9-08dd2efc369e
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9b0cd9d-d4ba-43d4-1b6a-08dd2efc35fa
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR08MB6969.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2025 09:18:14.0778
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2025 09:18:13.1068
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: X4UirkoPVV67aqtDHQOTD9SfIrLBW7MbfvOyOT5ct3ep+KLXXBAbs0tUpyG3vCMIVMY3XVI1UlQsedr2W/yrTg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: HFKjLIUNxXK44PZBZj7svIwFV9rzfzt6ykusaDGhawAluRf/bAKLYM+qwaLdK08CnzDr2Aw7AjD5bQ1fx7u9tA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR08MB10607
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 07 Jan 2025 09:18:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16974
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16971
 
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 
-The fetcher support entries with an embedded checksum like 'sha256sum'
-in the SRC_URI. It adds the parameter 'name' as prefix to the checksums
-if the parameter is set. This behavior is unexpected and leads to hacks
-in fetchers. Fallback to the checksum without the useless prefix and
-set the parameter 'name' in the gomod fetcher unconditional.
+Remove support for the old lockfile format. The old lockfile format is
+required by npm 6 / Node.js 14 which is out of maintenance [2].
+
+[1] https://docs.npmjs.com/cli/v6/configuring-npm/package-lock-json
+[2] https://nodejs.org/en/about/previous-releases
 
 Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.c=
 om>
 ---
 
- lib/bb/fetch2/__init__.py | 9 ++++++---
- lib/bb/fetch2/gomod.py    | 5 +----
- lib/bb/tests/fetch.py     | 4 ----
- 3 files changed, 7 insertions(+), 11 deletions(-)
+ lib/bb/fetch2/npmsw.py | 97 ++++++++++++++++--------------------------
+ 1 file changed, 36 insertions(+), 61 deletions(-)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index f79e278b1..3d31a8d4a 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1316,20 +1316,23 @@ class FetchData(object):
-         self.setup =3D False
-=20
-         def configure_checksum(checksum_id):
-+            checksum_plain_name =3D "%ssum" % checksum_id
-             if "name" in self.parm:
-                 checksum_name =3D "%s.%ssum" % (self.parm["name"], checksu=
-m_id)
-             else:
--                checksum_name =3D "%ssum" % checksum_id
+diff --git a/lib/bb/fetch2/npmsw.py b/lib/bb/fetch2/npmsw.py
+index 558c9a2b0..2f9599ee9 100644
+--- a/lib/bb/fetch2/npmsw.py
++++ b/lib/bb/fetch2/npmsw.py
+@@ -37,40 +37,26 @@ def foreach_dependencies(shrinkwrap, callback=3DNone, d=
+ev=3DFalse):
+     """
+         Run a callback for each dependencies of a shrinkwrap file.
+         The callback is using the format:
+-            callback(name, params, deptree)
++            callback(name, data, location)
+         with:
+             name =3D the package name (string)
+-            params =3D the package parameters (dictionary)
+-            destdir =3D the destination of the package (string)
++            data =3D the package data (dictionary)
++            location =3D the location of the package (string)
+     """
+-    # For handling old style dependencies entries in shinkwrap files
+-    def _walk_deps(deps, deptree):
+-        for name in deps:
+-            subtree =3D [*deptree, name]
+-            _walk_deps(deps[name].get("dependencies", {}), subtree)
+-            if callback is not None:
+-                if deps[name].get("dev", False) and not dev:
+-                    continue
+-                elif deps[name].get("bundled", False):
+-                    continue
+-                destsubdirs =3D [os.path.join("node_modules", dep) for dep=
+ in subtree]
+-                destsuffix =3D os.path.join(*destsubdirs)
+-                callback(name, deps[name], destsuffix)
 -
--            setattr(self, "%s_name" % checksum_id, checksum_name)
-+                checksum_name =3D checksum_plain_name
+-    # packages entry means new style shrinkwrap file, else use dependencie=
+s
+-    packages =3D shrinkwrap.get("packages", None)
+-    if packages is not None:
+-        for package in packages:
+-            if package !=3D "":
+-                name =3D package.split('node_modules/')[-1]
+-                package_infos =3D packages.get(package, {})
+-                if dev =3D=3D False and package_infos.get("dev", False):
+-                    continue
+-                elif package_infos.get("inBundle", False):
+-                    continue
+-                callback(name, package_infos, package)
+-    else:
+-        _walk_deps(shrinkwrap.get("dependencies", {}), [])
++    packages =3D shrinkwrap.get("packages")
++    if not packages:
++        raise FetchError("Invalid shrinkwrap file format")
++
++    for location, data in packages.items():
++        # Skip empty main and local link target packages
++        if not location.startswith('node_modules/'):
++            continue
++        elif not dev and data.get("dev", False):
++            continue
++        elif data.get("inBundle", False):
++            continue
++        name =3D location.split('node_modules/')[-1]
++        callback(name, data, location)
 =20
-             if checksum_name in self.parm:
-                 checksum_expected =3D self.parm[checksum_name]
-+            elif checksum_plain_name in self.parm:
-+                checksum_expected =3D self.parm[checksum_plain_name]
-+                checksum_name =3D checksum_plain_name
-             elif self.type not in ["http", "https", "ftp", "ftps", "sftp",=
- "s3", "az", "crate", "gs", "gomod"]:
-                 checksum_expected =3D None
-             else:
-                 checksum_expected =3D d.getVarFlag("SRC_URI", checksum_nam=
-e)
+ class NpmShrinkWrap(FetchMethod):
+     """Class to fetch all package from a shrinkwrap file"""
+@@ -97,12 +83,18 @@ class NpmShrinkWrap(FetchMethod):
+             extrapaths =3D []
+             unpack =3D True
 =20
-+            setattr(self, "%s_name" % checksum_id, checksum_name)
-             setattr(self, "%s_expected" % checksum_id, checksum_expected)
+-            integrity =3D params.get("integrity", None)
+-            resolved =3D params.get("resolved", None)
+-            version =3D params.get("version", resolved)
++            integrity =3D params.get("integrity")
++            resolved =3D params.get("resolved")
++            version =3D params.get("version")
++            link =3D params.get("link", False)
++
++            # Handle link sources
++            if link:
++                localpath =3D resolved
++                unpack =3D False
 =20
-         self.names =3D self.parm.get("name",'default').split(',')
-diff --git a/lib/bb/fetch2/gomod.py b/lib/bb/fetch2/gomod.py
-index 21fbe80f5..6c999e8ba 100644
---- a/lib/bb/fetch2/gomod.py
-+++ b/lib/bb/fetch2/gomod.py
-@@ -119,10 +119,7 @@ class GoMod(Wget):
-             ('https', proxy, '/' + path, None, None, None))
-         ud.parm['downloadfilename'] =3D path
+             # Handle registry sources
+-            if is_semver(version) and integrity:
++            elif version and is_semver(version) and integrity:
+                 # Handle duplicate dependencies without url
+                 if not resolved:
+                     return
+@@ -130,10 +122,10 @@ class NpmShrinkWrap(FetchMethod):
+                 extrapaths.append(resolvefile)
 =20
--        # Set name parameter if sha256sum is set in recipe
--        name =3D f"{module}@{ud.parm['version']}"
--        if d.getVarFlag('SRC_URI', name + '.sha256sum'):
--            ud.parm['name'] =3D name
-+        ud.parm['name'] =3D f"{module}@{ud.parm['version']}"
+             # Handle http tarball sources
+-            elif version.startswith("http") and integrity:
+-                localfile =3D npm_localfile(os.path.basename(version))
++            elif resolved.startswith("http") and integrity:
++                localfile =3D npm_localfile(os.path.basename(resolved))
 =20
-         # Set subdir for unpack
-         ud.parm['subdir'] =3D os.path.join(moddir, 'cache/download',
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index c5ec84dc5..6b8e3e060 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -3391,7 +3391,6 @@ class GoModTest(FetcherTest):
-         fetcher =3D bb.fetch2.Fetch(urls, self.d)
-         ud =3D fetcher.ud[urls[0]]
-         self.assertEqual(ud.url, 'https://proxy.golang.org/github.com/%21a=
-zure/azure-sdk-for-go/sdk/storage/azblob/%40v/v1.0.0.zip')
--        self.assertNotIn('name', ud.parm)
+-                uri =3D URI(version)
++                uri =3D URI(resolved)
+                 uri.params["downloadfilename"] =3D localfile
 =20
-         fetcher.download()
-         fetcher.unpack(self.unpackdir)
-@@ -3409,7 +3408,6 @@ class GoModTest(FetcherTest):
-         fetcher =3D bb.fetch2.Fetch(urls, self.d)
-         ud =3D fetcher.ud[urls[0]]
-         self.assertEqual(ud.url, 'https://proxy.golang.org/github.com/%21a=
-zure/azure-sdk-for-go/sdk/storage/azblob/%40v/v1.0.0.mod')
--        self.assertNotIn('name', ud.parm)
+                 checksum_name, checksum_expected =3D npm_integrity(integri=
+ty)
+@@ -143,28 +135,12 @@ class NpmShrinkWrap(FetchMethod):
 =20
-         fetcher.download()
-         fetcher.unpack(self.unpackdir)
-@@ -3442,7 +3440,6 @@ class GoModTest(FetcherTest):
-         fetcher =3D bb.fetch2.Fetch(urls, self.d)
-         ud =3D fetcher.ud[urls[0]]
-         self.assertEqual(ud.url, 'https://proxy.golang.org/gopkg.in/ini.v1=
-/%40v/v1.67.0.zip')
--        self.assertNotIn('name', ud.parm)
+                 localpath =3D os.path.join(d.getVar("DL_DIR"), localfile)
 =20
-         fetcher.download()
-         fetcher.unpack(self.unpackdir)
-@@ -3460,7 +3457,6 @@ class GoModTest(FetcherTest):
-         fetcher =3D bb.fetch2.Fetch(urls, self.d)
-         ud =3D fetcher.ud[urls[0]]
-         self.assertEqual(ud.url, 'https://proxy.golang.org/go.opencensus.i=
-o/%40v/v0.24.0.zip')
--        self.assertNotIn('name', ud.parm)
+-            # Handle local tarball and link sources
+-            elif version.startswith("file"):
+-                localpath =3D version[5:]
+-                if not version.endswith(".tgz"):
+-                    unpack =3D False
++            # Handle local tarball sources
++            elif resolved.startswith("file"):
++                localpath =3D resolved[5:]
 =20
-         fetcher.download()
-         fetcher.unpack(self.unpackdir)
+             # Handle git sources
+-            elif version.startswith(("git", "bitbucket","gist")) or (
+-                not version.endswith((".tgz", ".tar", ".tar.gz"))
+-                and not version.startswith((".", "@", "/"))
+-                and "/" in version
+-            ):
+-                if version.startswith("github:"):
+-                    version =3D "git+https://github.com/" + version[len("g=
+ithub:"):]
+-                elif version.startswith("gist:"):
+-                    version =3D "git+https://gist.github.com/" + version[l=
+en("gist:"):]
+-                elif version.startswith("bitbucket:"):
+-                    version =3D "git+https://bitbucket.org/" + version[len=
+("bitbucket:"):]
+-                elif version.startswith("gitlab:"):
+-                    version =3D "git+https://gitlab.com/" + version[len("g=
+itlab:"):]
+-                elif not version.startswith(("git+","git:")):
+-                    version =3D "git+https://github.com/" + version
++            elif resolved.startswith("git"):
+                 regex =3D re.compile(r"""
+                     ^
+                     git\+
+@@ -176,10 +152,9 @@ class NpmShrinkWrap(FetchMethod):
+                     $
+                     """, re.VERBOSE)
+=20
+-                match =3D regex.match(version)
+-
++                match =3D regex.match(resolved)
+                 if not match:
+-                    raise ParameterError("Invalid git url: %s" % version, =
+ud.url)
++                    raise ParameterError("Invalid git url: %s" % resolved,=
+ ud.url)
+=20
+                 groups =3D match.groupdict()
+=20
 --=20
 2.39.5
 
