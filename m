@@ -1,370 +1,156 @@
-Return-Path: <chris.laplante@agilent.com>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68133E77199
-	for <webhook@archiver.kernel.org>; Tue,  7 Jan 2025 21:56:46 +0000 (UTC)
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (NAM02-BN1-obe.outbound.protection.outlook.com [40.107.212.45])
- by mx.groups.io with SMTP id smtpd.web11.4664.1736286999935278667
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45ABEE77199
+	for <webhook@archiver.kernel.org>; Wed,  8 Jan 2025 11:36:41 +0000 (UTC)
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (EUR02-DB5-obe.outbound.protection.outlook.com [40.107.249.43])
+ by mx.groups.io with SMTP id smtpd.web11.17511.1736336192544273302
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 07 Jan 2025 13:56:40 -0800
+ Wed, 08 Jan 2025 03:36:33 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@agilent.com header.s=selector1 header.b=LLAf3zq8;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.212.45, mailfrom: chris.laplante@agilent.com)
+ dkim=pass header.i=@arm.com header.s=selector1 header.b=IL19gVLl;
+ spf=pass (domain: arm.com, ip: 40.107.249.43, mailfrom: ross.burton@arm.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RXvL5z5LGsqIv7fGmjfNcAjbtjaCc/ACfDpB7sYWTyeBvTZWaekMCD2WD73bNIeR6n/eMuMMPfbsX45vtowlP8un14SJtrhfIKRg8V6yNemnkpGcaD7DTnM55c6sDd72oPx+lKZvxYVfor3WxiwCK1io0yJtGQYM/hNvjRSwF3kr7wPTJ/IzaNIQmwhjWlak1uGw8cP4wrrq9hW1c8FHKxshyPuaSB81IPuY2eMvD8xAeWDpAtDJ/FvMNfgsVHE1bUGiTu9nNsnWDaO/dYLaG20jWawxLj+xOdi34i5aL7fUIYJvfo99TMs+pnFJE105G+sMAJvTv2wEoyKj63mR7Q==
+ b=MFFDz1UkI36ZRa8OCqyouH9G0WsVVhY+rMxWM1u29MYNQRKxxT2howFtFIS266/G1Bkv7lyNiLfhJxKfIQ6S1zJaIejRqCjEnvV4leOlbimNF4GRIaRIiOlcPPAqzCUc95PyZPi5Qz+gLjrTPvCp81MaC4ZP4ksDW10+jMa4pfilPa2LpP6uToLTte5t+NyAbuwEJ4VEa6mRvOozHoF6w3JQs+UgkP4e2fcdhI2qOPkGJG8BBd42oZR4Io5Yh1up+0rKzUnwPD7hHhnt9hW+AqNU/5DPX6pJSl5ckOSpo+MHG8vGnTMfHTIlZIZjLzCo2bAmYpHLrTqMIDY8llPrZA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BDR0Y22Z5ZCIX9e1lmfzR7rbhGygFhHav9G7ca/BoIc=;
- b=g1od7H6DrIwCZmFRaDMUHN2ffm2dVmbTq+JW3+n4xgBF4x497SHHi7wnhtF14HsBg7lyJyITWfNxDD2uk9JsV2oWCCJ0lGpj8iwk/6xOr2z3kF6WvoNmzAi+TwjFJ+gUAIzAdxLs+qRKsKLfRWRtOjgVOdG1M+ekyLDmlMVzXd76HleIQJe7xNatbqaKizeoJDPt+b/Md4nAD8UGj9m0C7oCwtLax93rOc17SkLb7dRy1eDQYijYoH+dqEyy+8keEI7hp7mkq1p1peFysJ60Qw53QxCcZ4A6cdI2bNTuLrcKx9lofIYPdD4ce/UTr/At4qxABQnov/leh8tcFaKLvw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 192.25.218.34) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
- action=none header.from=agilent.com; dkim=none (message not signed); arc=none
- (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
- s=selector1;
+ bh=sJA3XqezPEa1hMZwBuY+aPudkt54Ndw/K10rLTEhMMI=;
+ b=Z77f7nYCiCHJPGhcI19i+j3eW21y4jTG15IGQrbn/wMgq2Zw4QBDsMs+UoQnw6Af4ZV8aG8S9w+xgh41bTikRH7ZUzQPyPhQMRGg8QDV4NDNrAgo/F0SQmEXHK8I5iaBtXn1RJh9AVGJvwYn0SNhIZLfChDv72fNRThC9fFRUGzgsn789aqt4ZC6s5VeocRV90jDwrNPCJOlh2xPNTU9KX8JOc9SKddG41ZeHvUhfyJsTkiopa5B9sATFaURDn8GQADR04KbVteweaYhNqMG8hoNsHXkNiKc1S480yP9GQ0xXuwEGCQjFFZUndtuFJqeGtq19WMa0GQwgLgu4ZEbFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BDR0Y22Z5ZCIX9e1lmfzR7rbhGygFhHav9G7ca/BoIc=;
- b=LLAf3zq8u+6zakOZdhSZUS0WHR0UVnFTrmADqa8aYc24XPHbq8wIrWKpSmHakdMYA/kN+k2v0x+wqYfB3PYcNMwOVP4pPCDhEADVPcjBVQT9owLe/THfRFDOVOzwAS4QSrZ/AgwyjgFtlXVdrU43JDaQIBFjjHnDLs0K+UtPjhOQ7+Cw6MEevjj+zfuuveJmlJiuiPvXVXCL0plCjTrPtENa+2EC8hrwt2DtjZTtwMM33IRfd9YNSqYRhOi3vIcrEMWRx12lvcrP8YNAxlNAHpKnX4Nm73orKwabx0ZULUer4NfYG3yBfzpC4uIAL0XCX74tuyef6ujL4xkMAjzitQ==
-Received: from SJ0PR03CA0255.namprd03.prod.outlook.com (2603:10b6:a03:3a0::20)
- by DM4PR12MB6325.namprd12.prod.outlook.com (2603:10b6:8:a4::16) with
+ bh=sJA3XqezPEa1hMZwBuY+aPudkt54Ndw/K10rLTEhMMI=;
+ b=IL19gVLla63kw2mkZLCvpbq0C68ESoycVSRJ4S4r8luh7xaDimFoExaACI9cuHAf5/ylREPgGVIsS5WhhhGEgKIpUnKA3j0q18bi+qk5ioFZ0OK3m/0mAIg5eCHPxY76iLwilgupgB5od84/6MVjKAD4zlMgEG6CHhd0+BinnHY=
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com (2603:10a6:102:2a3::12)
+ by AS2PR08MB8671.eurprd08.prod.outlook.com (2603:10a6:20b:55e::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8314.18; Tue, 7 Jan
- 2025 21:56:35 +0000
-Received: from MWH0EPF000989EC.namprd02.prod.outlook.com
- (2603:10b6:a03:3a0:cafe::18) by SJ0PR03CA0255.outlook.office365.com
- (2603:10b6:a03:3a0::20) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8335.10 via Frontend Transport; Tue,
- 7 Jan 2025 21:56:35 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.34)
- smtp.mailfrom=agilent.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=agilent.com;
-Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
- 192.25.218.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=192.25.218.34; helo=edgeappmail.agilent.com; pr=C
-Received: from edgeappmail.agilent.com (192.25.218.34) by
- MWH0EPF000989EC.mail.protection.outlook.com (10.167.241.139) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8335.7 via Frontend Transport; Tue, 7 Jan 2025 21:56:35 +0000
-Received: from laplante-B650.lfs.agilent.com (192.25.126.5) by
- edgeappmail.agilent.com (192.25.218.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 7 Jan 2025 14:56:30 -0700
-From: <chris.laplante@agilent.com>
-To: <bitbake-devel@lists.openembedded.org>
-CC: <steve@sakoman.com>, Chris Laplante <chris.laplante@agilent.com>, Richard
- Purdie <richard.purdie@linuxfoundation.org>
-Subject: [scarthgap][2.8][PATCH 3/3] cooker: Make cooker 'skiplist' per-multiconfig/mc
-Date: Tue, 7 Jan 2025 16:54:03 -0500
-Message-ID: <20250107215403.251838-3-chris.laplante@agilent.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250107215403.251838-1-chris.laplante@agilent.com>
-References: <20250107215403.251838-1-chris.laplante@agilent.com>
-MIME-Version: 1.0
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8314.17; Wed, 8 Jan
+ 2025 11:36:28 +0000
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::9206:40ba:ef7e:729e]) by PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::9206:40ba:ef7e:729e%6]) with mapi id 15.20.8314.015; Wed, 8 Jan 2025
+ 11:36:28 +0000
+From: Ross Burton <Ross.Burton@arm.com>
+To: "philip.lorenz@bmw.de" <philip.lorenz@bmw.de>
+CC: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH] asyncrpc: Handle websockets exceptions
+Thread-Topic: [bitbake-devel] [PATCH] asyncrpc: Handle websockets exceptions
+Thread-Index: AQHbWrgJ5DQKg+raN0enaQ8whAtxH7MMzZ+A
+Date: Wed, 8 Jan 2025 11:36:28 +0000
+Message-ID: <589E07F9-08E5-4997-B1FF-D11DEADDA500@arm.com>
+References: <20241230123547.2593913-1-philip.lorenz@bmw.de>
+In-Reply-To: <20241230123547.2593913-1-philip.lorenz@bmw.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3826.200.121)
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PA4PR08MB7411:EE_|AS2PR08MB8671:EE_
+x-ms-office365-filtering-correlation-id: 6f82e1a5-7c44-4a39-c8a8-08dd2fd8b0b9
+x-checkrecipientrouted: true
+nodisclaimer: true
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info: 
+ =?us-ascii?Q?WrcR+LzhRUEMKp6KEbycotVFGB5TlGs7FUSm61PMcBjjNa1LETWWLYWRX92G?=
+ =?us-ascii?Q?bifPver3Zndmt7E1G8vnTvHNekI3V77dN0AHyiDvHCE4HrCPakP129cpNu6H?=
+ =?us-ascii?Q?9ThMjhx3DYzO4gvvzCaJRB/dsahdBQJsqG3h3Ekcq3MvtTCR/6B0/Zz6kd6I?=
+ =?us-ascii?Q?7u/L+ODnUtOj7YZZDNvXE8mDDwJ21Ba2jOyjnR2zMnfeC0VYLNhJMip73JCQ?=
+ =?us-ascii?Q?JCCnFkc87YfeyRCvHfJmapmrCya2kYrVNUuZbhMpzxyK55cd6FONkxj78IqX?=
+ =?us-ascii?Q?plVb1lyZNpWvjs3+p3DBT1+gmreGnRR3Di60UTlyGUVz+t6vZ/C0AmiGlfsc?=
+ =?us-ascii?Q?k18rVvclT1/GWyox40iBE+mcnKrDSKYOaE8F9GONI5TFQeHw0DqdWPdcCese?=
+ =?us-ascii?Q?tVk0QouOpXEDZ0JAAvKFhC086vTmzPs15eD0jnFRYVNq/r7kNM4NIefFcQxU?=
+ =?us-ascii?Q?N4AuRBLegfPXC3I0b9QdvnE0Aowhpi0yI+0cgw18COjMWDg8s0J9J55Fm3hj?=
+ =?us-ascii?Q?apFEac9FPDxUp7UCDr+csQUHo8/rZO5P3k8/hcEQx7UYt+mvc4k8LgmPkKGj?=
+ =?us-ascii?Q?vM8cuu4gW6j3fABaPThArugXy2GYCAP23TxHPGnWkovle2C+jy6tDfUwpKSK?=
+ =?us-ascii?Q?NJOFYvnkAZJxK7MKmL3hfTbXWROMO0gZ7RdB+TjVNhVLMCPTVSTRpWxBZtXL?=
+ =?us-ascii?Q?6Dbf7hg2eqj09oVc52xNFAEbnbW5F5Yo8UtkC6o1b6jYB1eJXotmEEG8kp+g?=
+ =?us-ascii?Q?1WxQPTDPpcsIYUcz2epYlw1ixUntWtMtwo80gPYJT2wlf+tXHJcKVxvkq3mw?=
+ =?us-ascii?Q?ip68pbwBNKhfs9baLg4s89cmMl8UCLE7n/l8BIaZtC6ii+h3owix3J2FcLDp?=
+ =?us-ascii?Q?zynzdFTP7KMOWEzbSeCmdLy9khXDymtZuqe1dzer171QqbVxTRmts/ZymtJX?=
+ =?us-ascii?Q?eeajhzVDBQS2MffOa4xllUXcMiOFJw1wvAaQ9WIxbKUkZ/FqEYb6ZixdQQnC?=
+ =?us-ascii?Q?Yby75ax2nsaa/seBU6AJlspUF7f3nCHiwcOTT4vvHfBXJkiW66VuIfVgXi+A?=
+ =?us-ascii?Q?Gq+xgoGqYXKBrXHd335VpGbbDaVDJPJIq1gtkFj3P1Fb1pOtQ4JrNAiG0H8m?=
+ =?us-ascii?Q?wE5Ncr6FEQykL79rN79+YG8ABrH5RXOkl08XPyZdxWvwXOmeK5292OudeZcX?=
+ =?us-ascii?Q?WgB3DLvpRUkS7W6nPY7CJfBz8txyu9YIeVFpfM5meTiEhs280wWDiRBu0Rm5?=
+ =?us-ascii?Q?n8icKY2bPC+U+wNLTs3S1MxQawT9vLU0Yh2oU7BBP4XYYk2Aqs1Gj1hc6rTp?=
+ =?us-ascii?Q?gWjOADOpfRTfF6K9e1eDvPlsJ6iK9KsFbi7hgRktn+Sas2V9xIoLLFFuI5U4?=
+ =?us-ascii?Q?+UAOEIVaC1clTn/crfDf9fMGecoyyLlaUAzL3dpUKZM44OlEWpFHUodYPps/?=
+ =?us-ascii?Q?448XGP8PDA2jAVoiDKR3kINY64c+A9lB?=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR08MB7411.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?us-ascii?Q?ut2M3+zxXew24FVXL1eUY4Mxc4vBsKUEo4kGEvFmBZ0NW/TPT3nlncQqcDcP?=
+ =?us-ascii?Q?tY8CMKKNno67JV7VdMrJMUpNy6p64Dm3ApInl8gNMAR/TV8CnkDP6gpUH9rG?=
+ =?us-ascii?Q?xWKW6zwjOBVWWP/otzIfL/pEyxcAkb/cPU5oMhpt5al7m+9IcqTZvU8AlQKZ?=
+ =?us-ascii?Q?sUsUKTjAY2G7H94sAEJo+V9cTYAlne9bxih4xbjFkUwTRKnkBsFqE5bS5l6B?=
+ =?us-ascii?Q?UpbjnPj0pLWxm4pzWGXtJj+emzZZ5iy02tAMyzobu/7MdyXtw3ZoUAnuSZdp?=
+ =?us-ascii?Q?YiTyMYwMTWcuayHll/HEp0vGt6NdVbf5eNSSDsXJd8al7Zk4ewbgsdPdHhVt?=
+ =?us-ascii?Q?v5p1ELdIv1iv/LRMnLFEXc79JUXGk5oDSX3fDIy4RyNE/CfH8xjsl9cNC5uz?=
+ =?us-ascii?Q?IV7C1peQSDaXQCd/SMDD9tQ9RKmoJ8XSsft3LuNKzXCwTnJcHuKQLJAsEytP?=
+ =?us-ascii?Q?Iu6s4Ipz6nbciYETC/zf/cX9Cx+e9lpzKiY1CWZdwwNWwhrydtklVHG5kt0Q?=
+ =?us-ascii?Q?nYs4cx1MlpxLoH9a9wky2wqF53Yhzmsd6x2D75pk+WWfmRyDNyrzxxUvyvBp?=
+ =?us-ascii?Q?1c5uTBS2Xc7D/9VJ54kCccFyOCJP7+fD8hyF4x3ktCz6Gg2Bjx7+6Wc47P+6?=
+ =?us-ascii?Q?oPXqy6ZrmbvugntlGLo9E/HCcNLYI09rQrhp2wFEaUfW301zC7+cL8t5tuNT?=
+ =?us-ascii?Q?Rf3VvnDfq2Im/xlASDHL86ZWPos37WrzPZMCuJRowulZsQ0n4IRemkWnNKqA?=
+ =?us-ascii?Q?14GIEkFxd4Z7mzfLD7AxKC8+yw8GuqdpdmCUvG801DuUQlQaDAnBNOHaCTKu?=
+ =?us-ascii?Q?5OZ6sPXg6pRv496sBVM+4NZ4kpwjnWv3IicDGGocxYi8NVgKIBKZ7GOP0BxJ?=
+ =?us-ascii?Q?TV04ix1hTy+V0nI7LgfljKL0kHSBJINq4W/0S0w9ReF+I0n4pC6RZ7LPEdtD?=
+ =?us-ascii?Q?Pch2zPpu3pTSbFkYlZy3ULqbdbovy0lkrln/fNFrHb4h4ENIIFRAljm0Tiku?=
+ =?us-ascii?Q?VBVjX/ofOxRF7h0mOZ7i+sONvRkkPRnooGl+DmCJ6h2hJprYJ8CUjgO28Yt/?=
+ =?us-ascii?Q?rZhGPPi2LufvewgbrhuX/40oxE6cHu3T4SaJ3DSy/aOEtk2+O+RF7Pl1OMVT?=
+ =?us-ascii?Q?G6Ucs8WJvVXU+ayhNy8AxXIySO4ZEzBe1/CCi+OfqDXs1cXskXBOe+15twHS?=
+ =?us-ascii?Q?T5fZxA46c/X9UiwYHeg4hpR9eFJK87zP8rkqP0FiBy34t4BDFStoBVG2WPQT?=
+ =?us-ascii?Q?VrR2i7xo1qz6oG2xV0V/AZNGuEgPw19KV0hiyEHyNODWMAVg2wurVOyElpNY?=
+ =?us-ascii?Q?EQTHFC4hqIXy3INH9h+M9X7ziwnpaRW5Vmv/qCW6FK/ap2R73Ch5Tdv+pHGS?=
+ =?us-ascii?Q?RofrudcgZ0E9jxAmsSTHtaOVVXDb35UaPcfff1Eu8A2So6Om+fQejDdatvrw?=
+ =?us-ascii?Q?DMhtaAJyUDZ4W15GEQ4hLH2teAyxocPWLj1mhBcKBrh0pSS9xKoCHsyjLytY?=
+ =?us-ascii?Q?Nvaie6h7gqtxkjOrENf5Nj6ZUdRZrzpuZTw0Z03lpdBqMVlfiHdw7FJWH/z5?=
+ =?us-ascii?Q?b2t3b/Okh0MysSHY8Sj3CQd+eduOUcj/gUN+ax56?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9656158AEFA4BF4186FB9771E2F5ACC6@eurprd08.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000989EC:EE_|DM4PR12MB6325:EE_
-X-MS-Office365-Filtering-Correlation-Id: 157cb87c-2c50-414c-8a00-08dd2f66277d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?UBox++GxCnyaBf69jOBIaD6TF+w4jREQMT33V7wacdmc3/bAnh2F3Yu10dBF?=
- =?us-ascii?Q?HLNtsoXm7sM8CWgkf5i8eRVOtPEuUmcvTXdrTE8nYTpq2iFQXbAQ1Q554oXa?=
- =?us-ascii?Q?ozkBkjeFkZTDEoICDpQLVfZps21w5zX/W2XycUuZLgcQOKCsN4T1ibITHsIC?=
- =?us-ascii?Q?J7MdNI9E1nNkJ2NWnaJwU/RNsG5Cb28hC8rDWg5CcOrO3Lqh8qYuri8Dr7jh?=
- =?us-ascii?Q?pKPAG98tsfBQTSXnwpaFJg+0FCcg1lgZ/04Y6rmaM/KpJjKKctgXwpsVYOQp?=
- =?us-ascii?Q?11fSGoGAnrQWcxgXp8qPtLVe8WmI4nnJQbYO21s7/AZytzztFCft5ywYlg87?=
- =?us-ascii?Q?yKh/j72RdlSVQoWivOiSN9NxSgDPPdJWLdh1KLsDEVGbY6T2G+58sNVsKTji?=
- =?us-ascii?Q?9Ggth5Jv/5D1NVSwUI+N7GDpdfklLxN7WCRUMvgCkm108aYM/lJCS348ytRF?=
- =?us-ascii?Q?G6YvtdquQbT2fxE6F/F33Le6lfIIEyLbwhD+LN79mzBUnRJFt6Uub/4wyBUt?=
- =?us-ascii?Q?ROaR4eWZy3i9gYaYCN2X5EHmOFDsYq7ncAaf6tgQk9bnYoCo/WLLzGyka/gx?=
- =?us-ascii?Q?HZ+aoWRFn3wZUrYw62yphLLMUUEMaRr/U8SJKACiUKLIFV0T7Hz85Cn3fbSw?=
- =?us-ascii?Q?09h5lJldO/1WcEepmrZoxK9H3/MqXB5heZq0apyFC9Ya0XvImW8p/Xk73UBH?=
- =?us-ascii?Q?KKmVUdM+fkZyQqloI1967iwva+8SIflSZGrqwXdgy9h/FxM9vK8kzbodFhq3?=
- =?us-ascii?Q?ANYvUkcl0+u/R4O81PFvZNig3zbjJqy9QtYWK/Th1b65XDHREeY08lOI92C6?=
- =?us-ascii?Q?25PO3KLFDPCFIcVOJeJKUhMD4L9p5ZyIMdKKdCmyAw8ohC8KZ1iIsMEIZ7cb?=
- =?us-ascii?Q?k3j/kRFW645gs27SPk7SBRJKIbzGKeBeJPPKB328uVJu/Uhf13ZDEDg0l+a6?=
- =?us-ascii?Q?Egh9q5nfg52tNhsunlhNFqmeo6BUmbrXzOeat6IA1h6Rqcvdcd4EFzKuBBNS?=
- =?us-ascii?Q?hutCDx0J7mpUWdhuWmFxWRRU/ZHEkIbL53S8BhsODyaEkuUSE0mX+H6uveZ7?=
- =?us-ascii?Q?laUoxhU6T+9q3xHsLbdJxboH2uJzpho3ALE0iHnDRVhOhHOkaNmFTdrLKWwV?=
- =?us-ascii?Q?jMHiJu0hrICVEjQlUwJx3bbnhYfeAghIAb7K8ECnPJVd6Bhn5r267NAuNjAs?=
- =?us-ascii?Q?8/G4GtP/9S2kWbNX0SQf5Qz3eaiv30/7KEG1SGdmXgPJ1R3ebv+wP5fvleBr?=
- =?us-ascii?Q?h6iUFbC957G+bTvoFqDBxZJvrSpvf03TnGMBbRItOYncuNZcvoR8OoWQcumY?=
- =?us-ascii?Q?w9tHr6qFrlQf2d/bZ+291c2YY1yrowGYOC8kZQwi0J9mmpWcCZpTK4/GncKH?=
- =?us-ascii?Q?l2/dsGMhbTn/ba1G0loxwHtF4mapW3+ZldX08TSUDg9IPTIGrQ+LAI3Y45ww?=
- =?us-ascii?Q?d61vcxyoeY+MpKKGNmVyP+RNOwE3AOBvLauBfc9DZMPAqt7SWXj41eqZKGDR?=
- =?us-ascii?Q?gTTnWyPe3ud7GTo=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:192.25.218.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:wpcosapexchedg3.windmz.agilent.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2025 21:56:35.0468
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 157cb87c-2c50-414c-8a00-08dd2f66277d
-X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.34];Helo=[edgeappmail.agilent.com]
+MIME-Version: 1.0
+X-OriginatorOrg: arm.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-MWH0EPF000989EC.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6325
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR08MB7411.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f82e1a5-7c44-4a39-c8a8-08dd2fd8b0b9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2025 11:36:28.0405
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: je72pMTLmpsl1K3t0q6WQZa8lKsj6UlcCEUKU+UbzYd3EpPuCSKdheplC0hSmMGdxTNUlPbWt9JQMvkQ6gQfIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR08MB8671
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 07 Jan 2025 21:56:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16986
+ <bitbake-devel@lists.openembedded.org>; Wed, 08 Jan 2025 11:36:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/16987
 
-From: Chris Laplante <chris.laplante@agilent.com>
+On 30 Dec 2024, at 12:35, Philip Lorenz via lists.openembedded.org <philip.=
+lorenz=3Dbmw.de@lists.openembedded.org> wrote:
+> +            except asyncio.exceptions.TimeoutError:
+> +                raise ConnectionError("Timeout while connecting to webso=
+cket")
+> +            except (OSError, websockets.InvalidHandshake, websockets.Inv=
+alidURI) as exc:
+> +                raise ConnectionError(f"Could not connect to websocket: =
+{exc}") from exc
 
-Previously, the cooker skiplist was shared across multiconfigs
-(including default ''). If you had a recipe that was incompatible with
-several multiconfigs for different reasons, then the displayed reason
-(i.e. the "ERROR: Nothing PROVIDES" and "* was skipped" messages) might
-vary across invocations of bitbake. This was caused by the random order
-in which recipes are parsed under different multiconfig contexts, with
-each skip reason overwriting the previously assigned reason.
+Is there a reason to not use the original exception in the TimeoutError cas=
+e, but use it in the OSError case?
 
-I hit this specificially when using COMPATIBLE_MACHINE, but
-COMPATIBLE_HOST (or anything using bb.parse.SkipRecipe) would have done it =
-too.
-
-Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/command.py     | 21 ++++++++++++++++++---
- lib/bb/cooker.py      | 11 ++++++-----
- lib/bb/tinfoil.py     | 16 ++++++++++++----
- lib/bblayers/query.py | 14 +++++++-------
- 4 files changed, 43 insertions(+), 19 deletions(-)
-
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index 1fcb9bf14..5e166fe45 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -420,15 +420,30 @@ class CommandsSync:
-         return command.cooker.recipecaches[mc].pkg_dp
-     getDefaultPreference.readonly =3D True
-=20
-+
-     def getSkippedRecipes(self, command, params):
-+        """
-+        Get the map of skipped recipes for the specified multiconfig/mc na=
-me (`params[0]`).
-+
-+        Invoked by `bb.tinfoil.Tinfoil.get_skipped_recipes`
-+
-+        :param command: Internally used parameter.
-+        :param params: Parameter array. params[0] is multiconfig/mc name. =
-If not given, then default mc '' is assumed.
-+        :return: Dict whose keys are virtualfns and values are `bb.cooker.=
-SkippedPackage`
-+        """
-+        try:
-+            mc =3D params[0]
-+        except IndexError:
-+            mc =3D ''
-+
-         # Return list sorted by reverse priority order
-         import bb.cache
-         def sortkey(x):
-             vfn, _ =3D x
--            realfn, _, mc =3D bb.cache.virtualfn2realfn(vfn)
--            return (-command.cooker.collections[mc].calc_bbfile_priority(r=
-ealfn)[0], vfn)
-+            realfn, _, item_mc =3D bb.cache.virtualfn2realfn(vfn)
-+            return -command.cooker.collections[item_mc].calc_bbfile_priori=
-ty(realfn)[0], vfn
-=20
--        skipdict =3D OrderedDict(sorted(command.cooker.skiplist.items(), k=
-ey=3Dsortkey))
-+        skipdict =3D OrderedDict(sorted(command.cooker.skiplist_by_mc[mc].=
-items(), key=3Dsortkey))
-         return list(skipdict.items())
-     getSkippedRecipes.readonly =3D True
-=20
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 1cb3e189f..6fce19b46 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -134,7 +134,8 @@ class BBCooker:
-         self.baseconfig_valid =3D False
-         self.parsecache_valid =3D False
-         self.eventlog =3D None
--        self.skiplist =3D {}
-+        # The skiplists, one per multiconfig
-+        self.skiplist_by_mc =3D defaultdict(dict)
-         self.featureset =3D CookerFeatures()
-         if featureSet:
-             for f in featureSet:
-@@ -612,8 +613,8 @@ class BBCooker:
-         localdata =3D {}
-=20
-         for mc in self.multiconfigs:
--            taskdata[mc] =3D bb.taskdata.TaskData(halt, skiplist=3Dself.sk=
-iplist, allowincomplete=3Dallowincomplete)
--            localdata[mc] =3D data.createCopy(self.databuilder.mcdata[mc])
-+            taskdata[mc] =3D bb.taskdata.TaskData(halt, skiplist=3Dself.sk=
-iplist_by_mc[mc], allowincomplete=3Dallowincomplete)
-+            localdata[mc] =3D bb.data.createCopy(self.databuilder.mcdata[m=
-c])
-             bb.data.expandKeys(localdata[mc])
-=20
-         current =3D 0
-@@ -933,7 +934,7 @@ class BBCooker:
-         for mc in self.multiconfigs:
-             # First get list of recipes, including skipped
-             recipefns =3D list(self.recipecaches[mc].pkg_fn.keys())
--            recipefns.extend(self.skiplist.keys())
-+            recipefns.extend(self.skiplist_by_mc[mc].keys())
-=20
-             # Work out list of bbappends that have been applied
-             applied_appends =3D []
-@@ -2358,7 +2359,7 @@ class CookerParser(object):
-         for virtualfn, info_array in result:
-             if info_array[0].skipped:
-                 self.skipped +=3D 1
--                self.cooker.skiplist[virtualfn] =3D SkippedPackage(info_ar=
-ray[0])
-+                self.cooker.skiplist_by_mc[mc][virtualfn] =3D SkippedPacka=
-ge(info_array[0])
-             self.bb_caches[mc].add_info(virtualfn, info_array, self.cooker=
-.recipecaches[mc],
-                                         parsed=3Dparsed, watcher =3D self.=
-cooker.add_filewatch)
-         return True
-diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
-index dcd3910cc..4dc4590c3 100644
---- a/lib/bb/tinfoil.py
-+++ b/lib/bb/tinfoil.py
-@@ -188,11 +188,19 @@ class TinfoilCookerAdapter:
-             self._cache[name] =3D attrvalue
-             return attrvalue
-=20
-+    class TinfoilSkiplistByMcAdapter:
-+        def __init__(self, tinfoil):
-+            self.tinfoil =3D tinfoil
-+
-+        def __getitem__(self, mc):
-+            return self.tinfoil.get_skipped_recipes(mc)
-+
-     def __init__(self, tinfoil):
-         self.tinfoil =3D tinfoil
-         self.multiconfigs =3D [''] + (tinfoil.config_data.getVar('BBMULTIC=
-ONFIG') or '').split()
-         self.collections =3D {}
-         self.recipecaches =3D {}
-+        self.skiplist_by_mc =3D self.TinfoilSkiplistByMcAdapter(tinfoil)
-         for mc in self.multiconfigs:
-             self.collections[mc] =3D self.TinfoilCookerCollectionAdapter(t=
-infoil, mc)
-             self.recipecaches[mc] =3D self.TinfoilRecipeCacheAdapter(tinfo=
-il, mc)
-@@ -201,8 +209,6 @@ class TinfoilCookerAdapter:
-         # Grab these only when they are requested since they aren't always=
- used
-         if name in self._cache:
-             return self._cache[name]
--        elif name =3D=3D 'skiplist':
--            attrvalue =3D self.tinfoil.get_skipped_recipes()
-         elif name =3D=3D 'bbfile_config_priorities':
-             ret =3D self.tinfoil.run_command('getLayerPriorities')
-             bbfile_config_priorities =3D []
-@@ -514,12 +520,12 @@ class Tinfoil:
-         """
-         return defaultdict(list, self.run_command('getOverlayedRecipes', m=
-c))
-=20
--    def get_skipped_recipes(self):
-+    def get_skipped_recipes(self, mc=3D''):
-         """
-         Find recipes which were skipped (i.e. SkipRecipe was raised
-         during parsing).
-         """
--        return OrderedDict(self.run_command('getSkippedRecipes'))
-+        return OrderedDict(self.run_command('getSkippedRecipes', mc))
-=20
-     def get_all_providers(self, mc=3D''):
-         return defaultdict(list, self.run_command('allProviders', mc))
-@@ -533,6 +539,7 @@ class Tinfoil:
-     def get_runtime_providers(self, rdep):
-         return self.run_command('getRuntimeProviders', rdep)
-=20
-+    # TODO: teach this method about mc
-     def get_recipe_file(self, pn):
-         """
-         Get the file name for the specified recipe/target. Raises
-@@ -541,6 +548,7 @@ class Tinfoil:
-         """
-         best =3D self.find_best_provider(pn)
-         if not best or (len(best) > 3 and not best[3]):
-+            # TODO: pass down mc
-             skiplist =3D self.get_skipped_recipes()
-             taskdata =3D bb.taskdata.TaskData(None, skiplist=3Dskiplist)
-             skipreasons =3D taskdata.get_reasons(pn)
-diff --git a/lib/bblayers/query.py b/lib/bblayers/query.py
-index bfc18a759..eb7cb465b 100644
---- a/lib/bblayers/query.py
-+++ b/lib/bblayers/query.py
-@@ -142,10 +142,10 @@ skipped recipes will also be listed, with a " (skippe=
-d)" suffix.
-         # Ensure we list skipped recipes
-         # We are largely guessing about PN, PV and the preferred version h=
-ere,
-         # but we have no choice since skipped recipes are not fully parsed
--        skiplist =3D list(self.tinfoil.cooker.skiplist.keys())
--        mcspec =3D 'mc:%s:' % mc
-+        skiplist =3D list(self.tinfoil.cooker.skiplist_by_mc[mc].keys())
-+
-         if mc:
--            skiplist =3D [s[len(mcspec):] for s in skiplist if s.startswit=
-h(mcspec)]
-+            skiplist =3D [s.removeprefix(f'mc:{mc}:') for s in skiplist]
-=20
-         for fn in skiplist:
-             recipe_parts =3D os.path.splitext(os.path.basename(fn))[0].spl=
-it('_')
-@@ -162,7 +162,7 @@ skipped recipes will also be listed, with a " (skipped)=
-" suffix.
-         def print_item(f, pn, ver, layer, ispref):
-             if not selected_layer or layer =3D=3D selected_layer:
-                 if not bare and f in skiplist:
--                    skipped =3D ' (skipped: %s)' % self.tinfoil.cooker.ski=
-plist[f].skipreason
-+                    skipped =3D ' (skipped: %s)' % self.tinfoil.cooker.ski=
-plist_by_mc[mc][f].skipreason
-                 else:
-                     skipped =3D ''
-                 if show_filenames:
-@@ -301,7 +301,7 @@ Lists recipes with the bbappends that apply to them as =
-subitems.
-             if self.show_appends_for_pn(pn, cooker_data, args.mc):
-                 appends =3D True
-=20
--        if not args.pnspec and self.show_appends_for_skipped():
-+        if not args.pnspec and self.show_appends_for_skipped(args.mc):
-             appends =3D True
-=20
-         if not appends:
-@@ -317,9 +317,9 @@ Lists recipes with the bbappends that apply to them as =
-subitems.
-=20
-         return self.show_appends_output(filenames, best_filename)
-=20
--    def show_appends_for_skipped(self):
-+    def show_appends_for_skipped(self, mc):
-         filenames =3D [os.path.basename(f)
--                    for f in self.tinfoil.cooker.skiplist.keys()]
-+                    for f in self.tinfoil.cooker.skiplist_by_mc[mc].keys()=
-]
-         return self.show_appends_output(filenames, None, " (skipped)")
-=20
-     def show_appends_output(self, filenames, best_filename, name_suffix =
-=3D ''):
---=20
-2.43.0
+Ross
 
 
