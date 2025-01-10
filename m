@@ -1,109 +1,117 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0934E77188
-	for <webhook@archiver.kernel.org>; Fri, 10 Jan 2025 16:07:30 +0000 (UTC)
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
- by mx.groups.io with SMTP id smtpd.web10.22521.1736525246289512895
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5044E7719C
+	for <webhook@archiver.kernel.org>; Fri, 10 Jan 2025 19:09:20 +0000 (UTC)
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+ by mx.groups.io with SMTP id smtpd.web10.401.1736536150184654806
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 10 Jan 2025 08:07:26 -0800
+ Fri, 10 Jan 2025 11:09:10 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=I8CVImqT;
- spf=pass (domain: gmail.com, ip: 209.85.222.171, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7b6ed9ed5b9so293712685a.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Jan 2025 08:07:26 -0800 (PST)
+ dkim=pass header.i=@smile.fr header.s=google header.b=wxP5czbE;
+ spf=pass (domain: smile.fr, ip: 209.85.221.68, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wr1-f68.google.com with SMTP id ffacd0b85a97d-385deda28b3so1466235f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Jan 2025 11:09:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736525245; x=1737130045; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jAlru+87w4ns6CTTuvtd0kBYJvP/7O6lG7VfDvGZqxg=;
-        b=I8CVImqTA3J0BqaDtEhykgC62kUvxISY6E3IoAge68su4T4M8akkUhxD73B2oFgDWP
-         nNP9VRyXidX2spL+dl3HFW5gtYdmP4hFiuuBI5FC3ZONh1fxruoIJ3SZDKLlVD0RW/GE
-         aJmK4YALD4HibKWAyaSKRT7okzavo1CDv7ILhehc7zo0ZVIBitVy3l/1dANnDItCvaNd
-         EbAqKAzR1NUqVYAukE4azChJMIUrQv/11yymaR/KgMiLSd7KKWsLmlKmATZAFEoC9OmX
-         gLgdAvnH4008qu1qWLUe/w01E8aBqKJ5amDrovqcoXnkJg9OA2bFCz2qzlNNmpEedvSy
-         ZTaw==
+        d=smile.fr; s=google; t=1736536148; x=1737140948; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zzfLq1OwDcWoNZX/DVu+nqKPp3FCVH+hwIFUFd6c74s=;
+        b=wxP5czbESFqVniacu/OI7rZjQsSKD4bEe1UClzNnj1vu6RVpi7vYZtRAiv9K/h6tO0
+         luw6WP0fogp9T7SfjUbks6YDfL4j0/8oe+HsMrZIWMmPgIsOG6ZsM5/3if/6QtLR76OH
+         ueoURKn3/Lwat065nhW2FCGEfYElzLwbV52GY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736525245; x=1737130045;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1736536148; x=1737140948;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=jAlru+87w4ns6CTTuvtd0kBYJvP/7O6lG7VfDvGZqxg=;
-        b=ELoI8/h+oZCS4TToNDAfT/Q2/CDDl9IaqB542u5zdaSRA2zv1Em8d02AGuV1zQ4Z4V
-         6oFgG/qnpZ2YDXa71IQ5WAlab9NWIPSsx9fNEd3ps9A0AreJP27AxAZGWI5OO5Yycn9q
-         RpvEubr/xfDtHALyxPmYW8i01JxSvCwa98CMtYB3OfLowm0McnUDeB5fpKTPG//JBHP3
-         St7FIqpQX0y+s3EMKVQW0qFcM8orhM8qhxNLzHLn2hgD/+3fuv4YaWed5FLqKrb+4N6F
-         UTFb/XR0RvB6bQBTPr5Ot9FSRNmlmzQm60hLOpinTHUTVm1GUoilk7DF6aROHYK7PuOY
-         VdFw==
-X-Forwarded-Encrypted: i=1; AJvYcCVI9rYdbJ1x8nkrG1mw0rAB/PSB2qDZXIKD3s2CWDRayojNzSkloaCNAevWW4L4A1AxA0fV2ONpWq4aifU/@lists.openembedded.org
-X-Gm-Message-State: AOJu0YwMAruCowLj1LbJkgw6E847Ab0WSS23OesC8e87jRA9nfqqPJ+g
-	nGnmQHZBqnqTxuBF3PTl6MQviFVfYaiK3NClMNBoLnagN9PB7iUy3S1wUx3WzcKSn9b7rowOtrq
-	AUtEp8ZoFDCnAz2VM2pSF6b2qUR1d2A==
-X-Gm-Gg: ASbGnctd2hIZAD9pHqyYKSlNiEwdE1KgepdOwmTrXomV/xAmRSwemQPfahblWxZoy2b
-	FdnQcTniRLbGJ4R3axrmDH42nadt1HapzcT2ADE5J3cXpg5XdzXZiI3aSjdaS0OzG3418PLLt
-X-Google-Smtp-Source: AGHT+IGV99ByFA9Il1ZtqVwMgPTipdZZllDe0pYhKIfqqrYQhLBwBIf18a3Q+P2vO1r99RCbrxzLYTCMs9Er11Pvw/Q=
-X-Received: by 2002:a05:620a:4556:b0:7b6:dc74:82a8 with SMTP id
- af79cd13be357-7bcd9729af4mr1652855685a.9.1736525245267; Fri, 10 Jan 2025
- 08:07:25 -0800 (PST)
+        bh=zzfLq1OwDcWoNZX/DVu+nqKPp3FCVH+hwIFUFd6c74s=;
+        b=S9TbXFFb5Fgo8JaEPU/VXgtpeR3liRXiqVo/j6Apst5Us8WcPB2gM5Yt+/8hBFQq+d
+         ph6WViUTlcHN+HM8KNiGYJfCBKpuN1LpZfcqHtqWuKqbNiSITC8VoKPP5+wEP/+DbMch
+         LWBBrp7EIo44Rhemsy8nIjroeJfzSwWaLAqFd20THXPXNDOL+SoQeNmhi1RUuLjIzIIr
+         cn5PpTJuoKYxx/OSC3YUCu4mUsdMVgvuFeVeLSQrqU9J/MTR2AA30uOh071mJxzL/iFW
+         THQJlNWwyfNvlXwje70SmyZmZGRqBdhrPeXfQcUT0sOtFKa3GZvvLBqazmKmk0d2ntjB
+         F0tQ==
+X-Gm-Message-State: AOJu0YyiUNHBAweRBwePljhvsRKlMH/ntG1LOgRHeBHEGgm+Cy4p5phM
+	3n/VB4Vkdtk4pyZd1lpE79GlGPF1RVlnDJir7ZMks2W6EeON3SW99N8fhYZVlWPzqvXwD4iBa8z
+	QPdtkAQ==
+X-Gm-Gg: ASbGncvtYH6XSeBjdA4hL0Dx7wvT3VlEthsxjM2sKOMwqskYDNDEdGcmr2ggngZZ/dX
+	WeFhhAz0QOqrphBu8ml3k1dP2tdX33KH2G/EjWJvBUQvR7ExvMtY6T1n2idY/BkRNaVAqfqwFnf
+	KDxEC86ZBiM925jwKYSeoMceavKllk9W/Hsahf+biy2qXvrV3qSE9UeJWJiAO/yTopaHRhWlMOO
+	ifuwp/J1B3+dJRcjgdhEOyRjQipAcwCmqoQUIrkKQZXNAz+wHpZBl7q50rQYr0qFdbaaE3gfzck
+	nBe7vWiB82KQ2wg+IyNdax8dTXue/C5uHIsZ8j6SpJx91dDHbfyhHlBbAgggydY=
+X-Google-Smtp-Source: AGHT+IE1zqAmmvr/BtAzK4oMV0YZXqa/tfrSu5fBpSnQeQ3A21oydoDLqiPqp0KTSyJ8YNgXpzC3ZQ==
+X-Received: by 2002:a05:6000:1f81:b0:386:7fe:af8e with SMTP id ffacd0b85a97d-38a872fb17fmr9751272f8f.12.1736536147694;
+        Fri, 10 Jan 2025 11:09:07 -0800 (PST)
+Received: from P-ASN-ECS-830T8C3.home (2a01cb000deef000bdfc82d7e16362a9.ipv6.abo.wanadoo.fr. [2a01:cb00:dee:f000:bdfc:82d7:e163:62a9])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e4c1cf2sm5275443f8f.99.2025.01.10.11.09.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2025 11:09:07 -0800 (PST)
+From: Yoann Congal <yoann.congal@smile.fr>
+To: bitbake-devel@lists.openembedded.org
+Cc: Yoann Congal <yoann.congal@smile.fr>
+Subject: [PATCH 1/2] tests/parse: add test for ?= and ??= operators for variable flags
+Date: Fri, 10 Jan 2025 20:08:41 +0100
+Message-Id: <20250110190842.3861684-1-yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.39.5
 MIME-Version: 1.0
-References: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
- <aeac8b24d43c57b7b426983ae50ec65680dafc24.camel@linuxfoundation.org>
- <CANNYZj9q6+D6AppzUbuV_cdMszt_KA3kfsamOtcRFxoWWFjV+A@mail.gmail.com>
- <513bf8f4-fb14-42dd-89fb-275e4b468924@weidmueller.com> <CANNYZj_z49bpc7fnvKO737La2YHy7zCPsgzwhS-G+=OQfi6uUQ@mail.gmail.com>
- <c164bf03-b00c-421e-a41c-441fe911eac5@weidmueller.com> <CANNYZj_-+uq0HmLYWAU1kEBPdkiCfyjkAu8cdSjxt6PsCB=-9A@mail.gmail.com>
- <7121dc06-215a-4481-be8e-7094a45e43ad@weidmueller.com> <CANNYZj_Ddh0zWbE79G5TAwQrU805WrrzDbjJTopT7EgLALBgQg@mail.gmail.com>
- <4f1f10ac-4a71-4b2b-9ea7-63e1da5d3e94@weidmueller.com>
-In-Reply-To: <4f1f10ac-4a71-4b2b-9ea7-63e1da5d3e94@weidmueller.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Fri, 10 Jan 2025 17:07:13 +0100
-X-Gm-Features: AbW1kvYwVS9NXVXJyW4L__4MmQrGAb0hC_mghwJvcpNVE8kymKWCUoOLFv82mXg
-Message-ID: <CANNYZj9s4JpEYH60vjEBPFR6YtU-0Gv4tjt6aHejQ7osLOz1bQ@mail.gmail.com>
-Subject: Re: [bitbake-devel] [RFC PATCH 00/21] Concept for tightly coupled
- package manager (Node.js, Go, Rust)
-To: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
-Cc: richard.purdie@linuxfoundation.org, bitbake-devel@lists.openembedded.org, 
-	Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 10 Jan 2025 16:07:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17007
+ <bitbake-devel@lists.openembedded.org>; Fri, 10 Jan 2025 19:09:20 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17008
 
-On Fri, 10 Jan 2025 at 16:04, Stefan Herbrechtsmeier
-<stefan.herbrechtsmeier-oss@weidmueller.com> wrote:
-> What is your opinion regarding gitsm. Should we remove the bitbake fetcher and use a update task to generate a inc file with the source uris and source revisions?
->
-> That ship has sailed. We can't remove gitsm, it has users, and they
-> will be very angry.
->
-> This makes it impossible to fix wrong design decision or remove code with a low code quality.
+From: Yoann Congal <yoann.congal@smile.fr>
 
-It's still possible, you just can't be heavy-handed and dictatorial
-about 'removing' stuff you don't like. When the existing thing works
-very well for a lot of people (and gitsm does), then the new thing has
-to be obviously better, you need to do your best to convince as many
-people as possible of that, and it needs to co-exist with the old
-thing, so that users can migrate at their own pace. And some of the
-users may never do that, and they will get annoyed at or ignore
-deprecation warnings or similar attempts to push them.
+Run the test with:
+ $ bitbake-selftest bb.tests.parse.ParseTest.test_parse_defaulttest
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
 
-> Instead of an inc file the generated SRC_URIs could be saved inside the work directory of the recipe. This will eliminate the noise and avoid a manual run of an update task after a recipe changes.
+OK
 
-I would be very interested to see the proof of concept that does this.
+This is a test case for [YOCTO #15685]
 
-> Nevertheless I will move my implementation to oe-core and add a task to generate an inc file as starting point.
->
-> That would be much appreciated. The more I think about it the more I'm
-> convinced we should have it standardized in core.
->
-> What do you mean by standardized?
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+---
+ lib/bb/tests/parse.py | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-Standardized handling of embedded dependencies, lock files and various
-other aspects of language-specific package managers, so that adding
-support for a new thing would be writing a new
-extension/plugin/subclass for the existing framework.
-
-Alex
+diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
+index 56eb66be9..8e04458a0 100644
+--- a/lib/bb/tests/parse.py
++++ b/lib/bb/tests/parse.py
+@@ -75,6 +75,29 @@ unset B[flag]
+         self.assertEqual(d.getVarFlag("A","flag"), None)
+         self.assertEqual(d.getVar("B"), "2")
+ 
++    defaulttest = """
++A = "set value"
++A ??= "default value"
++
++A[flag_set_vs_question] = "set flag"
++A[flag_set_vs_question] ?= "question flag"
++
++A[flag_set_vs_default] = "set flag"
++A[flag_set_vs_default] ??= "default flag"
++
++A[flag_question] ?= "question flag"
++
++A[flag_default] ??= "default flag"
++"""
++    def test_parse_defaulttest(self):
++        f = self.parsehelper(self.defaulttest)
++        d = bb.parse.handle(f.name, self.d)['']
++        self.assertEqual(d.getVar("A"), "set value")
++        self.assertEqual(d.getVarFlag("A","flag_set_vs_question"), "set flag")
++        self.assertEqual(d.getVarFlag("A","flag_set_vs_default"), "set flag")
++        self.assertEqual(d.getVarFlag("A","flag_question"), "question flag")
++        self.assertEqual(d.getVarFlag("A","flag_default"), "default flag")
++
+     exporttest = """
+ A = "a"
+ export B = "b"
 
