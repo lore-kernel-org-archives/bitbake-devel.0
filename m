@@ -2,8 +2,8 @@ Return-Path: <egyszeregy@freemail.hu>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F4EC02180
-	for <webhook@archiver.kernel.org>; Wed, 15 Jan 2025 21:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDEAC02180
+	for <webhook@archiver.kernel.org>; Wed, 15 Jan 2025 21:26:26 +0000 (UTC)
 Subject: Re: [scarthgap] bitbake extremely slow down during "Initialising tasks" #bitbake #scarthgap
 To: bitbake-devel@lists.openembedded.org
 From: "Livius" <egyszeregy@freemail.hu>
@@ -11,16 +11,18 @@ X-Originating-Location: =?UTF-8?B?U3R1dHRnYXJ0LCBCYWRlbi1Xw7xydHRlbWJlcmcsIERF?=
 X-Originating-Platform: Windows Chrome 131
 User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Date: Wed, 15 Jan 2025 13:22:49 -0800
+Date: Wed, 15 Jan 2025 13:26:18 -0800
 References: <oFzD.1733010493142130647.Lr9X@lists.openembedded.org>
 In-Reply-To: <oFzD.1733010493142130647.Lr9X@lists.openembedded.org>
 Message-ID: <29326.1736976169205415623@lists.openembedded.org>
+X-Old-Date: Wed, 15 Jan 2025 13:22:49 -0800
 Content-Type: multipart/alternative; boundary="TeejHHrasQZJdvcZ22kD"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 15 Jan 2025 21:22:56 -0000
+ <bitbake-devel@lists.openembedded.org>; Wed, 15 Jan 2025 21:26:26 -0000
 X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17019
+Message-ID: <20250115212618.pKkt3_8j5GzqrSBM29R-995PDu_Dz9GIydJj1VXaKwg@z>
 
 --TeejHHrasQZJdvcZ22kD
 Content-Type: text/plain; charset="utf-8"; markup=markdown
@@ -33,6 +35,7 @@ In "self.rqdata.init_progress_reporter =3D bb.progress.MultiStageProcessPro=
 gressReporter( ... " i enabled the "debug =3D True" arg/flag for getting so=
 me info about the elapsed time of the "Initialising tasks" and i compared i=
 t in Ubuntu 22.04 and Ubuntu 20.04.
+
 https://github.com/yoctoproject/poky/blob/scarthgap/bitbake/lib/bb/runqueue=
 .py#L1565
 
@@ -47,8 +50,7 @@ ases/uninative/4.6/x86_64-nativesdk-libc-4.6.tar.xz;sha256sum=3D6bf00154c5a=
 S first)
 Sstate summary: Wanted 2738 Local 0 Mirrors 0 Missed 2738 Current 0 (0% mat=
 ch, 0% complete)###########################################################=
-###################################################                     | E=
-TA:  0:00:20
+#####################################                     | ETA:  0:00:20
 WARNING: Stage weights: [15, 16, 1, 4, 3, 4, 3, 4, 3, 3, 4, 3, 3, 221, 4, 6=
 , 5, 3, 3, 5, 3, 17331, 4, 2, 4, 3, 82]
 WARNING: Stage times:
@@ -81,8 +83,7 @@ WARNING: Stage times:
   Up to finish: 82
 Initialising tasks: 100% |#################################################=
 ###########################################################################=
-########################################################################| T=
-ime: 0:02:57
+#########################################################| Time: 0:02:57
 NOTE: Executing Tasks
 ```
 
@@ -94,8 +95,7 @@ ases/uninative/4.6/x86_64-nativesdk-libc-4.6.tar.xz;sha256sum=3D6bf00154c5a=
 S first)
 Sstate summary: Wanted 2738 Local 0 Mirrors 0 Missed 2738 Current 0 (0% mat=
 ch, 0% complete)###########################################################=
-###################################################                     | E=
-TA:  0:00:00
+####################################                     | ETA:  0:00:00
 WARNING: Stage weights: [10, 28, 2, 2, 1, 1, 1, 2, 3, 1, 1, 1, 1, 122, 7, 6=
 , 4, 2, 2, 3, 1, 37, 2, 1, 1, 1, 96]
 WARNING: Stage times:
@@ -129,8 +129,7 @@ WARNING: Stage times:
   Up to finish: 96
 Initialising tasks: 100% |#################################################=
 ###########################################################################=
-########################################################################| T=
-ime: 0:00:03
+#########################################################| Time: 0:00:03
 NOTE: Executing Tasks
 ```
 
@@ -139,8 +138,10 @@ py:3021` is much faster executed or reached in Ubuntu 20.04 then in 22.04?
 
 https://github.com/yoctoproject/poky/blame/scarthgap/bitbake/lib/bb/runqueu=
 e.py#L3021
+
 Before line 3021 `runqueue.py` code is really mature, there were no any cha=
 nge, except this in 2 years ago:
+
 https://github.com/yoctoproject/poky/commit/b6e49784eac40a13b894839d17e89ef=
 69a777a5d
 
@@ -148,7 +149,7 @@ Can it cause any speed issue in the complex while and for loop to seeking "=
 unskippable" tasks?
 
 --TeejHHrasQZJdvcZ22kD
-Content-Type: text/html; charset="utf-8"
+Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
 <p>I started to look for some info about where could happen this slowdown e=
@@ -157,10 +158,11 @@ ffect in the bitbake lib.</p>
 <p>In &quot;self.rqdata.init_progress_reporter =3D bb.progress.MultiStagePr=
 ocessProgressReporter( ... &quot; i enabled the &quot;debug =3D True&quot; =
 arg/flag for getting some info about the elapsed time of the &quot;Initiali=
-sing tasks&quot; and i compared it in Ubuntu 22.04 and Ubuntu 20.04.
-<a href=3D"https://github.com/yoctoproject/poky/blob/scarthgap/bitbake/lib/=
-bb/runqueue.py#L1565" target=3D"_blank">https://github.com/yoctoproject/pok=
-y/blob/scarthgap/bitbake/lib/bb/runqueue.py#L1565</a></p>
+sing tasks&quot; and i compared it in Ubuntu 22.04 and Ubuntu 20.04.</p>
+
+<p><a href=3D"https://github.com/yoctoproject/poky/blob/scarthgap/bitbake/l=
+ib/bb/runqueue.py#L1565" target=3D"_blank">https://github.com/yoctoproject/=
+poky/blob/scarthgap/bitbake/lib/bb/runqueue.py#L1565</a></p>
 
 <p>Result is the following, i used my same ZynqMP Yocto project which relea=
 sed from scarthgap.</p>
@@ -172,8 +174,7 @@ uninative binary shim http://downloads.yoctoproject.org/releases/uninative/=
 684bb87eb07f4814fbb482a3fbd817c1ccf4c5 (will check PREMIRRORS first)
 Sstate summary: Wanted 2738 Local 0 Mirrors 0 Missed 2738 Current 0 (0% mat=
 ch, 0% complete)###########################################################=
-###################################################                     | E=
-TA:  0:00:20
+#####################################                     | ETA:  0:00:20
 WARNING: Stage weights: [15, 16, 1, 4, 3, 4, 3, 4, 3, 3, 4, 3, 3, 221, 4, 6=
 , 5, 3, 3, 5, 3, 17331, 4, 2, 4, 3, 82]
 WARNING: Stage times:
@@ -206,8 +207,7 @@ WARNING: Stage times:
   Up to finish: 82
 Initialising tasks: 100% |#################################################=
 ###########################################################################=
-########################################################################| T=
-ime: 0:02:57
+#########################################################| Time: 0:02:57
 NOTE: Executing Tasks
 </code></pre>
 <p>Ubuntu 20.04 LTS:</p>
@@ -217,8 +217,7 @@ uninative binary shim http://downloads.yoctoproject.org/releases/uninative/=
 684bb87eb07f4814fbb482a3fbd817c1ccf4c5 (will check PREMIRRORS first)
 Sstate summary: Wanted 2738 Local 0 Mirrors 0 Missed 2738 Current 0 (0% mat=
 ch, 0% complete)###########################################################=
-###################################################                     | E=
-TA:  0:00:00
+####################################                     | ETA:  0:00:00
 WARNING: Stage weights: [10, 28, 2, 2, 1, 1, 1, 2, 3, 1, 1, 1, 1, 122, 7, 6=
 , 4, 2, 2, 3, 1, 37, 2, 1, 1, 1, 96]
 WARNING: Stage times:
@@ -252,8 +251,7 @@ WARNING: Stage times:
   Up to finish: 96
 Initialising tasks: 100% |#################################################=
 ###########################################################################=
-########################################################################| T=
-ime: 0:00:03
+#########################################################| Time: 0:00:03
 NOTE: Executing Tasks
 </code></pre>
 <p>Can somebody help and say more info about what does it mean that <code>r=
@@ -262,12 +260,14 @@ hen in 22.04?</p>
 
 <p><a href=3D"https://github.com/yoctoproject/poky/blame/scarthgap/bitbake/=
 lib/bb/runqueue.py#L3021" target=3D"_blank">https://github.com/yoctoproject=
-/poky/blame/scarthgap/bitbake/lib/bb/runqueue.py#L3021</a>
-Before line 3021 <code>runqueue.py</code> code is really mature, there were=
- no any change, except this in 2 years ago:
-<a href=3D"https://github.com/yoctoproject/poky/commit/b6e49784eac40a13b894=
-839d17e89ef69a777a5d" target=3D"_blank">https://github.com/yoctoproject/pok=
-y/commit/b6e49784eac40a13b894839d17e89ef69a777a5d</a></p>
+/poky/blame/scarthgap/bitbake/lib/bb/runqueue.py#L3021</a></p>
+
+<p>Before line 3021 <code>runqueue.py</code> code is really mature, there w=
+ere no any change, except this in 2 years ago:</p>
+
+<p><a href=3D"https://github.com/yoctoproject/poky/commit/b6e49784eac40a13b=
+894839d17e89ef69a777a5d" target=3D"_blank">https://github.com/yoctoproject/=
+poky/commit/b6e49784eac40a13b894839d17e89ef69a777a5d</a></p>
 
 <p>Can it cause any speed issue in the complex while and for loop to seekin=
 g &quot;unskippable&quot; tasks?</p>
