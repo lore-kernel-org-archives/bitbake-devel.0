@@ -2,8 +2,8 @@ Return-Path: <egyszeregy@freemail.hu>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDEAC02180
-	for <webhook@archiver.kernel.org>; Wed, 15 Jan 2025 21:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBABC02180
+	for <webhook@archiver.kernel.org>; Wed, 15 Jan 2025 21:30:26 +0000 (UTC)
 Subject: Re: [scarthgap] bitbake extremely slow down during "Initialising tasks" #bitbake #scarthgap
 To: bitbake-devel@lists.openembedded.org
 From: "Livius" <egyszeregy@freemail.hu>
@@ -11,18 +11,18 @@ X-Originating-Location: =?UTF-8?B?U3R1dHRnYXJ0LCBCYWRlbi1Xw7xydHRlbWJlcmcsIERF?=
 X-Originating-Platform: Windows Chrome 131
 User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Date: Wed, 15 Jan 2025 13:26:18 -0800
+Date: Wed, 15 Jan 2025 13:30:24 -0800
 References: <oFzD.1733010493142130647.Lr9X@lists.openembedded.org>
 In-Reply-To: <oFzD.1733010493142130647.Lr9X@lists.openembedded.org>
 Message-ID: <29326.1736976169205415623@lists.openembedded.org>
-X-Old-Date: Wed, 15 Jan 2025 13:22:49 -0800
+X-Old-Date: Wed, 15 Jan 2025 13:26:18 -0800
 Content-Type: multipart/alternative; boundary="TeejHHrasQZJdvcZ22kD"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 15 Jan 2025 21:26:26 -0000
+ <bitbake-devel@lists.openembedded.org>; Wed, 15 Jan 2025 21:30:26 -0000
 X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17019
-Message-ID: <20250115212618.pKkt3_8j5GzqrSBM29R-995PDu_Dz9GIydJj1VXaKwg@z>
+Message-ID: <20250115213024.GkYbJoNOJoWTJdlXyuVwtvw1ozycL2_thJi0BaXTRvw@z>
 
 --TeejHHrasQZJdvcZ22kD
 Content-Type: text/plain; charset="utf-8"; markup=markdown
@@ -31,10 +31,10 @@ Content-Transfer-Encoding: quoted-printable
 I started to look for some info about where could happen this slowdown effe=
 ct in the bitbake lib.
 
-In "self.rqdata.init_progress_reporter =3D bb.progress.MultiStageProcessPro=
-gressReporter( ... " i enabled the "debug =3D True" arg/flag for getting so=
-me info about the elapsed time of the "Initialising tasks" and i compared i=
-t in Ubuntu 22.04 and Ubuntu 20.04.
+In `self.rqdata.init_progress_reporter =3D bb.progress.MultiStageProcessPro=
+gressReporter( ...` i enabled the `debug=3DTrue` arg/flag for getting some =
+info about the elapsed time of the "Initialising tasks" and i compared it i=
+n Ubuntu 22.04 and Ubuntu 20.04.
 
 https://github.com/yoctoproject/poky/blob/scarthgap/bitbake/lib/bb/runqueue=
 .py#L1565
@@ -155,10 +155,10 @@ Content-Transfer-Encoding: quoted-printable
 <p>I started to look for some info about where could happen this slowdown e=
 ffect in the bitbake lib.</p>
 
-<p>In &quot;self.rqdata.init_progress_reporter =3D bb.progress.MultiStagePr=
-ocessProgressReporter( ... &quot; i enabled the &quot;debug =3D True&quot; =
-arg/flag for getting some info about the elapsed time of the &quot;Initiali=
-sing tasks&quot; and i compared it in Ubuntu 22.04 and Ubuntu 20.04.</p>
+<p>In <code>self.rqdata.init_progress_reporter =3D bb.progress.MultiStagePr=
+ocessProgressReporter( ...</code> i enabled the <code>debug=3DTrue</code> a=
+rg/flag for getting some info about the elapsed time of the &quot;Initialis=
+ing tasks&quot; and i compared it in Ubuntu 22.04 and Ubuntu 20.04.</p>
 
 <p><a href=3D"https://github.com/yoctoproject/poky/blob/scarthgap/bitbake/l=
 ib/bb/runqueue.py#L1565" target=3D"_blank">https://github.com/yoctoproject/=
