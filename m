@@ -1,582 +1,637 @@
-Return-Path: <bruce.ashfield@gmail.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4963DC02183
-	for <webhook@archiver.kernel.org>; Fri, 17 Jan 2025 14:09:19 +0000 (UTC)
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
- by mx.groups.io with SMTP id smtpd.web11.11309.1737122956148232643
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C388C02183
+	for <webhook@archiver.kernel.org>; Fri, 17 Jan 2025 14:11:39 +0000 (UTC)
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web10.11404.1737123097489893898
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 17 Jan 2025 06:09:16 -0800
+ Fri, 17 Jan 2025 06:11:37 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=TxHbfxHa;
- spf=pass (domain: gmail.com, ip: 209.85.216.48, mailfrom: bruce.ashfield@gmail.com)
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2ee786b3277so2913025a91.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 17 Jan 2025 06:09:16 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=KK9b7Vzu;
+ spf=pass (domain: gmail.com, ip: 209.85.221.52, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38634c35129so1751727f8f.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 17 Jan 2025 06:11:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737122955; x=1737727755; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=U3bkDQH2kvp9fWpPf/+I37oU5xCkckjUGdOyFyIQcvk=;
-        b=TxHbfxHaTQ3F9pHkB0W08U2AcFlkLOeQCghKvj9CNAHZD4Q6ukuOag5uNZSeZBv2uu
-         t8V05vmmdcxGXRmLE4VO2kX84sD1yPacqYVj04CnX5QCcsxS/uyQw+Vh8iH/v8J1vhZy
-         s0rzK0BsRg7IiIVaJOWXkP5vsDyOCyjUp5dqPFRVmPKXBv13uNh/K8ucgCW85H7XuZEH
-         3rGxMJm9YE++XJ5gZ5PRG0N5OPtf/E/w/sJbKONuEZPpjnh4RP725bnkcKaJUoir6Npj
-         x3zrhbY7Vl6dWJwBlk6LvTWiQ1V8wldl4dj8Cf6WkSP3mx9VSsjakvbYOVtpSu/h881J
-         LQZA==
+        d=gmail.com; s=20230601; t=1737123096; x=1737727896; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wmVH8lzH9fK7J9M3hGArLdm71upWOKqsei8I+tccFd0=;
+        b=KK9b7VzuZMb4AS0zDcAEJ09l0/edpLbR1gv6sCFk2+otle5KkbhISI4ois+vdLc3ZI
+         GRuZ7HxITwOHsG7wC9fuh3/ZZfP7+svG9F7yXvCN1EfNRnxkWX4WBA02PV3NfmTTeqMg
+         daHO/WzNrxvEHBS4muHFj+vCB/8ZwhYjrdibqys107B2EqN76XukLsbmNjwPzUOU0Kir
+         7vLDNSJadD8zxLaWC2HZYRZDNDwdxzuYVlGo35aA3wRvU0J8QqoCcC/wVHjQNk2dqGtX
+         EGW1GmOy85FlVCfahR7EzIf/JUpY70Ho+xZvyEIaNjV0i1mS9lHA8UXdhFyUVdBVhQvc
+         1fOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737122955; x=1737727755;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1737123096; x=1737727896;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=U3bkDQH2kvp9fWpPf/+I37oU5xCkckjUGdOyFyIQcvk=;
-        b=HHUSWgVmE9j5SbPUbFfTDcshXLylxyKWW3buXGa63s4qlH3GfG9FyVDLcv3kIxCVUW
-         GBNmhaY1bgVyORCP3n3IyKXvmKtBrFdUD41dt/7cNPTm2Qzi8w5SJkccMUhXj+mYP2EF
-         eBybFzGtMTS4AVTCS56hotHqKEpfdqtKLY4PUYF6JTJTC1HkW3zH4fLLTRHZuonJmVPB
-         fbolUpc4oYoRCyAQY+/c5NEJniJUjThNH1Rd8H8ybEgfyvPGn9qAhKBqfB4OQT6SxSQ3
-         QCPNE87q/JGvsoOx/NVU6ku242G6PS8+CQE2CIlGS7T9poscQdYebEP9Qp54uCbaNw4f
-         Zp+w==
-X-Gm-Message-State: AOJu0Yw/QLwmP5K9DrVQMwyAD/PINc2QBCzWnegyhZIHbg6Z7vVm8xDP
-	Inkq01QT0wY+eqtxE+cW0GWuY/ErnMwfyP9Q8CoQo99jDpKKXD3VUlIfXpV2wVIQH15uDdsAH/7
-	MAWQ231r8j1xTAVitP32NKUkTtk0=
-X-Gm-Gg: ASbGncv0psT6mMdt7ikrIExwOCqjU0ssawb1sWvxLPxB9TCHl4rnK2xzrQEePybIEfm
-	rC6/uZm9rkjRM0EYdhPJV1c83Xz96jaIulStjFQ==
-X-Google-Smtp-Source: AGHT+IGfD4Sd3vaCQ8JL36C8pjFav+lEFwqjQoqQoTgPFpUkLuScTL38ICQVI8vc5U/qv8ggHPvSweB9yUpKgor9klU=
-X-Received: by 2002:a17:90a:c888:b0:2f4:f7f8:fc8a with SMTP id
- 98e67ed59e1d1-2f782d8cd4emr4334747a91.33.1737122955325; Fri, 17 Jan 2025
- 06:09:15 -0800 (PST)
+        bh=wmVH8lzH9fK7J9M3hGArLdm71upWOKqsei8I+tccFd0=;
+        b=L/xrpNj0KgFW+0KCxXsWWUOgpQV/QsqrlisXIBqxuirABgbZwkVzfGQdh+l7e2hTVF
+         oYlAzti7u1zGxC8/Rr7ln8i3/ku1FG+Bn8ZgqoWTwxz/rc1HumCVESos5xwT7UkwIhuI
+         eRA2PuHdnalluYgnjvKKpKVr1hSoIV1s33VanaaSNGLr98Mj9NN87i8nesTNaAMMJq0k
+         OBi+MA2zoZ8qiMePXQKBd0M2zqusDBGCB52AgZ1/IAqmY12sN620p9alDyEEbfKex3Tn
+         dlU9glgHhwfy6zBvy+8PhoKgKmsnbSFcNSPqQoJfwGXjn7L4I12XEzLlYCREVTTqB/Kc
+         NeHA==
+X-Gm-Message-State: AOJu0Ywu6qo1qX29ETSwSTNumPwgGT4EM/4wOiUM1l8bcZ2GDpJmlQnK
+	HdVOCxiqwis2tVt6zI9gICtxc4HPFLdWdAoCLBXivEviHffS19PQWr3arA==
+X-Gm-Gg: ASbGncuR4wT/7Gue3n8w3G/hZWA+T+Up4GRCbhM+B/BG0WvX5CuWqwqq3YivMPFjN1Q
+	fMJzjmvXVRSknT9z5H/NBp1aC/Svk3YdKMPSqIs1hufgF6hZJET/LzpLA/JAjNlwhM3/bkLmfCA
+	8hfEJQ2xT4py1ZvvMFHjIvbLz1R7NzDNMgZeULgm+dlZ4rM0Gg6eaaEXqSdkJGa/IdXQZDFb2LX
+	zbV71iIr4hTDPmEstVjzSa1+y+hZSALIaEqIm2ROGKoecFTgU4sOXQkhvxMAxhhliNa7UQkvcQ2
+	dSk5bpJcRBWu0QcvOA==
+X-Google-Smtp-Source: AGHT+IHPeDVEo3zaRGlWlUkP3/a5IXfZXuubYQHDlbLHgJHaxDFzC8kizhC5Ryxs6I+ii6FHs1H+xQ==
+X-Received: by 2002:a5d:6dc5:0:b0:385:df5d:622c with SMTP id ffacd0b85a97d-38bf57a49a9mr1814063f8f.30.1737123095399;
+        Fri, 17 Jan 2025 06:11:35 -0800 (PST)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43890468c67sm35105845e9.34.2025.01.17.06.11.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2025 06:11:35 -0800 (PST)
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [RFC PATCH 1/2] bitbake-setup: add the proof of concept implementation
+Date: Fri, 17 Jan 2025 15:11:26 +0100
+Message-Id: <20250117141127.255295-1-alex.kanavin@gmail.com>
+X-Mailer: git-send-email 2.39.5
 MIME-Version: 1.0
-References: <20241220112613.22647-1-stefan.herbrechtsmeier-oss@weidmueller.com>
- <aeac8b24d43c57b7b426983ae50ec65680dafc24.camel@linuxfoundation.org>
- <CANNYZj9q6+D6AppzUbuV_cdMszt_KA3kfsamOtcRFxoWWFjV+A@mail.gmail.com>
- <513bf8f4-fb14-42dd-89fb-275e4b468924@weidmueller.com> <CANNYZj_z49bpc7fnvKO737La2YHy7zCPsgzwhS-G+=OQfi6uUQ@mail.gmail.com>
- <c164bf03-b00c-421e-a41c-441fe911eac5@weidmueller.com> <CANNYZj_-+uq0HmLYWAU1kEBPdkiCfyjkAu8cdSjxt6PsCB=-9A@mail.gmail.com>
- <7121dc06-215a-4481-be8e-7094a45e43ad@weidmueller.com> <CANNYZj_Ddh0zWbE79G5TAwQrU805WrrzDbjJTopT7EgLALBgQg@mail.gmail.com>
- <4f1f10ac-4a71-4b2b-9ea7-63e1da5d3e94@weidmueller.com> <CADkTA4MtLO90FW6YfeHDh7Lyo7=DRvxm6xf8Q0LkhC+u0U15iQ@mail.gmail.com>
- <1d86a392-db47-4fac-81fe-5262477bcd70@weidmueller.com> <CADkTA4PeRvBoR-F3pM-XOjWKEjsgLX+entDPv1uL+uTiFxjc=w@mail.gmail.com>
- <fbe116ef-f544-4d21-8b36-796fd6429811@weidmueller.com>
-In-Reply-To: <fbe116ef-f544-4d21-8b36-796fd6429811@weidmueller.com>
-From: Bruce Ashfield <bruce.ashfield@gmail.com>
-Date: Fri, 17 Jan 2025 09:09:03 -0500
-X-Gm-Features: AbW1kvavmp2LY12qRAh2l_Cs_GoPVlkcQBY4kb23opLho6rsndKMeVIHfzE-Vz4
-Message-ID: <CADkTA4MBDjSODNmFM-WYNspUzGGgOKBAZpHKdLAHgxPyrV=ciQ@mail.gmail.com>
-Subject: Re: [bitbake-devel] [RFC PATCH 00/21] Concept for tightly coupled
- package manager (Node.js, Go, Rust)
-To: stefan.herbrechtsmeier-oss@weidmueller.com
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000aef734062be77493"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 17 Jan 2025 14:09:19 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17032
+ <bitbake-devel@lists.openembedded.org>; Fri, 17 Jan 2025 14:11:39 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17033
 
---000000000000aef734062be77493
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Alexander Kanavin <alex@linutronix.de>
 
-On Fri, Jan 17, 2025 at 2:45=E2=80=AFAM Stefan Herbrechtsmeier via
-lists.openembedded.org <stefan.herbrechtsmeier-oss=3D
-weidmueller.com@lists.openembedded.org> wrote:
+For the rationale and design guidelines please see this message:
+https://lists.openembedded.org/g/openembedded-architecture/message/1913
 
-> Am 17.01.2025 um 05:19 schrieb Bruce Ashfield via lists.openembedded.org:
->
-> On Mon, Jan 13, 2025 at 2:11=E2=80=AFAM Stefan Herbrechtsmeier <
-> stefan.herbrechtsmeier-oss@weidmueller.com> wrote:
->
->> Am 10.01.2025 um 21:24 schrieb Bruce Ashfield:
->>
->> On Fri, Jan 10, 2025 at 10:04=E2=80=AFAM Stefan Herbrechtsmeier via
->> lists.openembedded.org <stefan.herbrechtsmeier-oss=3D
->> weidmueller.com@lists.openembedded.org> wrote:
->>
->>> Am 10.01.2025 um 14:26 schrieb Alexander Kanavin:
->>>
->>> On Fri, 10 Jan 2025 at 12:32, Stefan Herbrechtsmeier<stefan.herbrechtsm=
-eier-oss@weidmueller.com> <stefan.herbrechtsmeier-oss@weidmueller.com> wrot=
-e:
->>>
->>> What is your opinion regarding gitsm. Should we remove the bitbake fetc=
-her and use a update task to generate a inc file with the source uris and s=
-ource revisions?
->>>
->>> That ship has sailed. We can't remove gitsm, it has users, and they
->>> will be very angry.
->>>
->>> This makes it impossible to fix wrong design decision or remove code
->>> with a low code quality.
->>>
->>> Do you really review the changes of the inc file?
->>> I understand the points but I have the feeling that they are more theor=
-etically for package manager dependencies or could be solved in an other wa=
-y (ex. caching)
->>>
->>> But do you? I have to restate the point: a solution that can be placed
->>> inside a layer is much more scalable and maintainable than adding code
->>> to bitbake. That's why I'm leaning towards drawing the line at
->>> existing fetchers that are wget/git convenience wrappers, and shifting
->>> dependency/lockfile management to layers. It's ultimately RP's call,
->>> but he does seek feedback :)
->>>
->>> I'm working on it.
->>>
->>> I'm fine with large SRC_URI/sha256 diffs when recipes get updated to
->>> new versions. And since you asked, no, no one looks at them, they're
->>> auto-generated noise that we learned to block out, just as we learned
->>> to quickly skim over recipe patch changes that are just line number
->>> churn and similar non-functional changes.
->>>
->>> Instead of an inc file the generated SRC_URIs could be saved inside the
->>> work directory of the recipe. This will eliminate the noise and avoid a
->>> manual run of an update task after a recipe changes.
->>>
->>
->> Except for those that want the .inc file changes to be version controlle=
-d
->> (as well as SRC_URI changes), but maybe I'm misunderstanding what you
->> described above
->>
->> Why should somebody version control the generated SRC_URI?
->>
->>
->> Why wouldn't they ? I'm talking about when the SRC_URI is generated to
-> git fetches (or whatever), that is part of the recipe and version
-> controlled.
->
-> My point is that this is not throw away / transient information for many
-> use cases. It is something that can be tracked between updates to the
-> recipes.
->
->
->
->> A generated temporary/build file is definitely more visible than
->> something that is programmatically done and held internally during recip=
-e
->> processing and build.  It opens the door for extension and doing version
->> control on it.  So I don't object to the concept, I just don't think I h=
-ave
->> all the details straight in my head.
->>
->> A generated build file will be saved in the work directory of the recipe
->> like any other generated build file. It is impossible to add it to the
->> version control system. The update task create a version controlled
->> generated source file. I don't understand why the version control is nee=
-ded
->> because the source of the generator and the generator are version
->> controlled. Especially if the output is ignored during patch review. I
->> think it is much more straightforward to patch the source (lock file)
->> because it is complicated to handle manual changes during regeneration o=
-f a
->> generated file.
->>
-> *sigh*. I'm quite aware of what can and cannot be done. That's not what I
-> meant. I'm obviously not talking about something in WORKDIR. I'm just
-> saying that if something is written to disk, then depending on how things
-> are implemented it can be viewed, debugged and manipulated. If it is alwa=
-ys
-> generated, held internally to the classes and used, I have no options to =
-do
-> that sort of debug. Similarly, anything that is generated, it would be
-> ideal if there was a way to re-use a previously generated artifact and no=
-t
-> generate it on the fly .. that's the element that opens the door to versi=
-on
-> control and tracking.
->
-> Why do we need to track the generated file if the source is version
-> control and the generated file is cached like any other task output. I
-> working on a prototype with the following steps:
->
-> 1. Fetch the sources from the recipe (do_fetch)
-> 2. Unpack the sources from the recipe (do_unpack)
-> 2. Apply patches which are marked as early to patch the lock file
-> (do_patch_early)
-> 3. Resolve dependencies from the lock file and write it into a file
-> (do_vendor_resolve)
->
-4. Fetch dependencies (do_vendor_fetch)
-> 5. Unpack dependencies into a package manager cache (do_vendor_unpack)
-> 6. Create a vendor directory below the source folder (do_vendor)
-> 7. Apply patches (do_patch)
->
-I just track the vendor resolution over time. I've used it many times to
-figure out what has gone wrong with the go recipes that I maintain when the
-upstream repositories have done something odd with tags, etc, when I'm
-doing recipe upgrades.
+Left out for now but will be done later:
 
-I use that same file to bump SRCREVs on the vendor dependency fetches when
-picking upstream fixes, etc. because I'm typically working on dependencies
-that don't have upstream releases that contain what I need and rather than
-patch a vendor'd file, I just bump the individual dependency or point it
-somewhere else (typically local to my machine) to fix the problem.
-It's the workflow I've developed after needing to wade into very large go
-recipes that went to go mod fetched vendor directories quite early on and
-it ensured that I'm not relying on any proxies, infrastructure or much that
-is hidden, so I'm able to debug, archive and be relatively sure that I can
-keep things working over time. I'm not even remotely saying this workflow
-is for everyone, I'm just trying to see if I could use some of this to
-resolve those base fetches and be able to use the outputs of it (what I
-currently have in .inc files) as part of my recipes.
+- base bitbake configs (a way to declare the common parts between several bitbake build configurations just once, like a parent 'class')
+(this is inspired by a similar mechannism in yocto-autobuilder)
 
-The .inc files are the ones that have the fetches listed/resolved, and
-those are the ones that are part of my recipe, so they are version
-controlled along with the main recipe.
+- tighten the terminology: 'build' and 'configuration' are each used to refer to
+several distinct things, and should be replaced by specific, unambigous terms
 
-Cheers,
+- documentation
 
-Bruce
+- official configuration repository (this probably depends on oe-core being
+populated with a rich, useful set of fragments)
 
+1. If you don't know where to start, list available configurations, and pick one:
 
-> The go, rust and npm fetchers work. The go vendor folder works. I'm still
-> working on the vendor directory for crate, a solution for npm without
-> JavaScript and the integration of the dynamic sources into the SBOM,
-> archiver and so on.
->
-> Do you have a recommendation for an example project for the Rust, Go and
-> npm fetcher?
->
-> We'll agree to disagree on what is or isn't efficient or complicated.
-> Luckily, this is all opt-in, so I'll never really have to use it. I'm jus=
-t
-> sharing what it would take to get me to consider it based on what I've
-> learned/suffered in my time maintaining quite a few go recipes.
->
-> My problem is to understand the reasons or use cases behind the inc for
-> generated content and its version control. I understand that is must be
-> possible to manipulate the fetches dependencies, to cache the generated
-> fetcher URIs, to make the fetcher URIs viewable and to manipulate the
-> fetched dependency sources.
->
-> Regards
->   Stefan
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#17022):
-> https://lists.openembedded.org/g/bitbake-devel/message/17022
-> Mute This Topic: https://lists.openembedded.org/mt/110212697/1050810
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> bruce.ashfield@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
+===
+alex@Zen2:/srv/work/alex/bitbake$ bin/bitbake-setup list
+Default parameter values are in /home/alex/.bitbake-setup/config - adjust as needed.
 
---=20
-- Thou shalt not follow the NULL pointer, for chaos and madness await thee
-at its end
-- "Use the force Harry" - Gandalf, Star Trek II
+Fetching configuration repository git://github.com/kanavin/bitbake-setup-configurations.git;protocol=https;branch=main;rev=main into /home/alex/.bitbake-setup/configurations
 
---000000000000aef734062be77493
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Available configurations:
+poky-alex	Poky reference distribution, with alex fixes
+poky-kirkstone	Poky reference distribution, kirkstone long term support release (supported until April 2026)
+poky-ng	Poky-ng configuration: like poky but built from individual repositories
+===
 
-<div dir=3D"ltr"><div dir=3D"ltr"><div class=3D"gmail_default" style=3D"fon=
-t-size:small"><br></div></div><br><div class=3D"gmail_quote gmail_quote_con=
-tainer"><div dir=3D"ltr" class=3D"gmail_attr">On Fri, Jan 17, 2025 at 2:45=
-=E2=80=AFAM Stefan Herbrechtsmeier via <a href=3D"http://lists.openembedded=
-.org">lists.openembedded.org</a> &lt;stefan.herbrechtsmeier-oss=3D<a href=
-=3D"mailto:weidmueller.com@lists.openembedded.org">weidmueller.com@lists.op=
-enembedded.org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" st=
-yle=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padd=
-ing-left:1ex"><u></u>
+2. Then build is initialized this way:
+===
+alex@Zen2:/srv/work/alex/bitbake$ bin/bitbake-setup init poky-ng
+Default parameter values are in /home/alex/.bitbake-setup/config - adjust as needed.
 
- =20
-  <div>
-    <div>Am 17.01.2025 um 05:19 schrieb Bruce
-      Ashfield via <a href=3D"http://lists.openembedded.org" target=3D"_bla=
-nk">lists.openembedded.org</a>:<br>
-    </div>
-    <blockquote type=3D"cite">
-     =20
-      <div dir=3D"ltr">
-        <div class=3D"gmail_quote">
-          <div dir=3D"ltr" class=3D"gmail_attr">On Mon, Jan 13, 2025 at
-            2:11=E2=80=AFAM Stefan Herbrechtsmeier &lt;<a href=3D"mailto:st=
-efan.herbrechtsmeier-oss@weidmueller.com" target=3D"_blank">stefan.herbrech=
-tsmeier-oss@weidmueller.com</a>&gt;
-            wrote:<br>
-          </div>
-          <blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8=
-ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-            <div>
-              <div>Am 10.01.2025 um 21:24 schrieb Bruce Ashfield:<br>
-              </div>
-              <blockquote type=3D"cite">
-                <div dir=3D"ltr">
-                  <div class=3D"gmail_quote">
-                    <div dir=3D"ltr" class=3D"gmail_attr">On Fri, Jan 10,
-                      2025 at 10:04=E2=80=AFAM Stefan Herbrechtsmeier via <=
-a href=3D"http://lists.openembedded.org" target=3D"_blank">lists.openembedd=
-ed.org</a>
-                      &lt;stefan.herbrechtsmeier-oss=3D<a href=3D"mailto:we=
-idmueller.com@lists.openembedded.org" target=3D"_blank">weidmueller.com@lis=
-ts.openembedded.org</a>&gt;
-                      wrote:<br>
-                    </div>
-                    <blockquote class=3D"gmail_quote" style=3D"margin:0px 0=
-px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-                      <div>
-                        <div>Am 10.01.2025 um 14:26 schrieb Alexander
-                          Kanavin:<br>
-                        </div>
-                        <blockquote type=3D"cite">
-                          <pre>On Fri, 10 Jan 2025 at 12:32, Stefan Herbrec=
-htsmeier
-<a href=3D"mailto:stefan.herbrechtsmeier-oss@weidmueller.com" target=3D"_bl=
-ank">&lt;stefan.herbrechtsmeier-oss@weidmueller.com&gt;</a> wrote:
-</pre>
-                          <blockquote type=3D"cite">
-                            <pre>What is your opinion regarding gitsm. Shou=
-ld we remove the bitbake fetcher and use a update task to generate a inc fi=
-le with the source uris and source revisions?
-</pre>
-                          </blockquote>
-                          <pre>That ship has sailed. We can&#39;t remove gi=
-tsm, it has users, and they
-will be very angry.</pre>
-                        </blockquote>
-                        <p>This makes it impossible to fix wrong design
-                          decision or remove code with a low code
-                          quality.<br>
-                          <span style=3D"white-space:pre-wrap">
+Initializing a poky-ng build in /home/alex/builds/poky-ng
+Fetching configuration repository git://github.com/kanavin/bitbake-setup-configurations.git;protocol=https;branch=main;rev=main into /home/alex/.bitbake-setup/configurations
+Fetching layer/tool repository bitbake into /home/alex/builds/poky-ng/layers/bitbake
+Fetching layer/tool repository openembedded-core into /home/alex/builds/poky-ng/layers/openembedded-core
+Fetching layer/tool repository meta-yocto into /home/alex/builds/poky-ng/layers/meta-yocto
+Fetching layer/tool repository yocto-docs into /home/alex/builds/poky-ng/layers/yocto-docs
 
-</span></p>
-                        <blockquote type=3D"cite">
-                          <blockquote type=3D"cite">
-                            <pre>Do you really review the changes of the in=
-c file?
-I understand the points but I have the feeling that they are more theoretic=
-ally for package manager dependencies or could be solved in an other way (e=
-x. caching)
-</pre>
-                          </blockquote>
-                          <pre>But do you? I have to restate the point: a s=
-olution that can be placed
-inside a layer is much more scalable and maintainable than adding code
-to bitbake. That&#39;s why I&#39;m leaning towards drawing the line at
-existing fetchers that are wget/git convenience wrappers, and shifting
-dependency/lockfile management to layers. It&#39;s ultimately RP&#39;s call=
-,
-but he does seek feedback :)</pre>
-                        </blockquote>
-                        I&#39;m working on it.<br>
-                        <br>
-                        <blockquote type=3D"cite">
-                          <pre>I&#39;m fine with large SRC_URI/sha256 diffs=
- when recipes get updated to
-new versions. And since you asked, no, no one looks at them, they&#39;re
-auto-generated noise that we learned to block out, just as we learned
-to quickly skim over recipe patch changes that are just line number
-churn and similar non-functional changes.</pre>
-                        </blockquote>
-                        <p> Instead of an inc file the generated
-                          SRC_URIs could be saved inside the work
-                          directory of the recipe. This will eliminate
-                          the noise and avoid a manual run of an update
-                          task after a recipe changes.<br>
-                          <span style=3D"white-space:pre-wrap"></span></p>
-                      </div>
-                    </blockquote>
-                    <div><br>
-                    </div>
-                    <div>
-                      <div style=3D"font-size:small">Except for those that
-                        want the .inc file changes=C2=A0to be version
-                        controlled (as well as SRC_URI changes), but
-                        maybe I&#39;m misunderstanding what you described
-                        above</div>
-                    </div>
-                  </div>
-                </div>
-              </blockquote>
-              <p>Why should somebody version control the generated
-                SRC_URI?<br>
-              </p>
-              <p><br>
-              </p>
-            </div>
-          </blockquote>
-          <div><span class=3D"gmail_default" style=3D"font-size:small">Why
-              wouldn&#39;t they ? I&#39;m talking about when the SRC_URI is
-              generated to git fetches (or whatever), that is part of
-              the recipe and version controlled.<br>
-            </span></div>
-          <div><br>
-          </div>
-          <div>
-            <div style=3D"font-size:small">My point
-              is that this is not throw away / transient information for
-              many use cases. It is something that can be tracked
-              between updates to the recipes.</div>
-            <br>
-          </div>
-          <div>=C2=A0</div>
-          <blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8=
-ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-            <div>
-              <p> </p>
-              <blockquote type=3D"cite">
-                <div dir=3D"ltr">
-                  <div class=3D"gmail_quote">
-                    <div>
-                      <div style=3D"font-size:small">A generated
-                        temporary/build file is definitely more visible
-                        than something that is programmatically done and
-                        held internally during recipe processing and
-                        build.=C2=A0 It opens the door for extension and
-                        doing version control on it.=C2=A0 So I don&#39;t o=
-bject
-                        to the concept, I just don&#39;t think I have all
-                        the details straight in my head.<br>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </blockquote>
-              <p>A generated build file will be saved in the work
-                directory of the recipe like any other generated build
-                file. It is impossible to add it to the version control
-                system. The update task create a version controlled
-                generated source file. I don&#39;t understand why the
-                version control is needed because the source of the
-                generator and the generator are version controlled.
-                Especially if the output is ignored during patch review.
-                I think it is much more straightforward to patch the
-                source (lock file) because it is complicated to handle
-                manual changes during regeneration of a generated file.<br>
-              </p>
-            </div>
-          </blockquote>
-          <div><span class=3D"gmail_default" style=3D"font-size:small">*sig=
-h*.
-              I&#39;m quite aware of what can and cannot be done. That&#39;=
-s not
-              what I meant. I&#39;m obviously not talking about something i=
-n
-              WORKDIR. I&#39;m just saying that if something is written to
-              disk, then depending on how things are implemented it can
-              be viewed, debugged=C2=A0and manipulated. If it is always
-              generated, held internally to the classes and used, I have
-              no options to do that sort of debug. Similarly, anything
-              that is generated, it would be ideal if there was a way to
-              re-use=C2=A0a previously generated artifact and not generate =
-it
-              on the fly .. that&#39;s the element that opens the door to
-              version control and tracking.</span></div>
-        </div>
-      </div>
-    </blockquote>
-    <p>Why do we need to track the generated file if the source is
-      version control and the generated file is cached like any other
-      task output. I working on a prototype with the following steps:<br>
-    </p>
-    <p>1. Fetch the sources from the recipe (do_fetch)<br>
-      2. Unpack the sources from the recipe (do_unpack)<br>
-      2. Apply patches which are marked as early to patch the lock file
-      (do_patch_early)<br>
-      3. Resolve dependencies from the lock file and write it into a
-      file (do_vendor_resolve)=C2=A0</p></div></blockquote><blockquote clas=
-s=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid r=
-gb(204,204,204);padding-left:1ex"><div><p>
-      4. Fetch dependencies (do_vendor_fetch)<br>
-      5. Unpack dependencies into a package manager cache
-      (do_vendor_unpack)<br>
-      6. Create a vendor directory below the source folder (do_vendor)<br>
-      7. Apply patches (do_patch)<br></p></div></blockquote><div><div class=
-=3D"gmail_default" style=3D"font-size:small">I just track the vendor resolu=
-tion over time. I&#39;ve used it many times to figure out what has gone wro=
-ng with the go recipes that I maintain when the upstream repositories have =
-done something odd with tags, etc, when I&#39;m doing recipe upgrades.</div=
-><div class=3D"gmail_default" style=3D"font-size:small"><br></div><div clas=
-s=3D"gmail_default" style=3D"font-size:small">I use that same file to bump =
-SRCREVs on the vendor dependency fetches when picking upstream fixes, etc. =
-because I&#39;m typically working on dependencies that don&#39;t have upstr=
-eam releases that contain what I need and rather than patch a vendor&#39;d =
-file, I just bump the individual dependency or point it somewhere else (typ=
-ically local to my machine) to fix the problem.</div></div><div class=3D"gm=
-ail_default" style=3D"font-size:small"></div><div class=3D"gmail_quote gmai=
-l_quote_container"><div class=3D"gmail_default" style=3D"font-size:small">I=
-t&#39;s the workflow I&#39;ve developed after needing to wade into very lar=
-ge go recipes that went to go mod fetched vendor directories quite early on=
- and it ensured that I&#39;m not relying on any proxies, infrastructure or =
-much that is hidden, so I&#39;m able to debug, archive and be relatively su=
-re that I can keep things working over time. I&#39;m not even remotely sayi=
-ng this workflow is for everyone, I&#39;m just trying to see if I could use=
- some of this to resolve those base fetches and be able to use the outputs =
-of it (what I currently have in .inc files) as part of my recipes.=C2=A0</d=
-iv><div class=3D"gmail_default" style=3D"font-size:small"><br></div><div cl=
-ass=3D"gmail_default" style=3D"font-size:small">The .inc files are the ones=
- that have the fetches listed/resolved, and those are the ones that are par=
-t of my recipe, so they are version controlled along with the main recipe.<=
-/div><div class=3D"gmail_default" style=3D"font-size:small"><br></div><div =
-class=3D"gmail_default" style=3D"font-size:small">Cheers,</div><div class=
-=3D"gmail_default" style=3D"font-size:small"><br></div><div class=3D"gmail_=
-default" style=3D"font-size:small">Bruce</div></div><br><blockquote class=
-=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rg=
-b(204,204,204);padding-left:1ex"><div><p>
-      <br>
-      The go, rust and npm fetchers work. The go vendor folder works.
-      I&#39;m still working on the vendor directory for crate, a solution
-      for npm without JavaScript and the integration of the dynamic
-      sources into the SBOM, archiver and so on.</p>
-    <p>Do you have a recommendation for an example project for the Rust,
-      Go and npm fetcher?<br>
-      <br>
-    </p>
-    <blockquote type=3D"cite">
-      <div dir=3D"ltr">
-        <div class=3D"gmail_quote">
-          <div>
-            <div style=3D"font-size:small">We&#39;ll
-              agree to disagree on what is or isn&#39;t efficient or
-              complicated. Luckily, this is all opt-in, so I&#39;ll never
-              really have to use it. I&#39;m just sharing what it would tak=
-e
-              to get me to consider it based on what I&#39;ve
-              learned/suffered in my time maintaining=C2=A0quite a few go
-              recipes.<br>
-            </div>
-          </div>
-        </div>
-      </div>
-    </blockquote>
-    <p>My problem is to understand the reasons or use cases behind the
-      inc for generated content and its version control. I understand
-      that is must be possible to manipulate the fetches dependencies,
-      to cache the generated fetcher URIs, to make the fetcher URIs
-      viewable and to manipulate the fetched dependency sources.<br>
-      <br>
-      Regards<br>
-      =C2=A0 Stefan<br>
-      <br>
-      <span style=3D"white-space:pre-wrap">
-</span></p>
-  </div>
+Setting up configuration in /home/alex/builds/poky-ng/build-default
+Configuration summary:
+This is the default build configuration for the openembedded-core layer.
 
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#17022): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/17022" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/17022</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/110212697/105=
-0810" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/m=
-t/110212697/1050810</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:bruce.ashfield@gmail.com" target=
-=3D"_blank">bruce.ashfield@gmail.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div><div><br clear=3D"all"></div><div><br></div><span class=
-=3D"gmail_signature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_s=
-ignature">- Thou shalt not follow the NULL pointer, for chaos and madness a=
-wait thee at its end<br>- &quot;Use the force Harry&quot; - Gandalf, Star T=
-rek II<br><br></div></div>
+Additional information is in /home/alex/builds/poky-ng/build-default/conf/conf-notes.txt
 
---000000000000aef734062be77493--
+Run /home/alex/builds/poky-ng/build-default/build-targets to execute the default build targets for this configuration.
+Source the environment using '. /home/alex/builds/poky-ng/build-default/init-build-env' to run builds from the command line.
+The bitbake build configuration (local.conf, bblayers.conf and more) can be found in /home/alex/builds/poky-ng/build-default/conf
+===
+
+Note: 'init' sub-command can also take a path or a URL with a configuration file directly.
+You can see how those files look like here:
+https://github.com/kanavin/bitbake-setup-configurations
+
+3. The above message refers to a one-liner shell script that would build the targets
+specified in the chosen configuration:
+===
+alex@Zen2:/srv/work/alex/bitbake$ cat /home/alex/builds/poky-alex/build-gadget/build-targets
+. /home/alex/builds/poky-alex/build-gadget/init-build-env && bitbake core-image-minimal
+===
+
+4. You should also source the environment, and then subsequent status/update commands
+will not require a parameter telling bitbake-setup where the initialized build is.
+
+5. To check if the build configuration needs to be updated, run:
+===
+Default parameter values are in /home/alex/.bitbake-setup/config - adjust as needed.
+
+Fetching configuration repository git://github.com/kanavin/bitbake-setup-configurations.git;protocol=https;branch=main;rev=main into /home/alex/.bitbake-setup/configurations
+Configuration in /home/alex/builds/poky-ng/ has not changed.
+===
+
+If the configuration has changed, you will see the difference:
+===
+alex@Zen2:/srv/work/alex/bitbake$ bin/bitbake-setup status
+...
+Top level configuration in /home/alex/builds/poky-alex has changed:
+--- /home/alex/builds/poky-alex/config/poky-alex.conf.json	2024-12-16 11:43:24.077446096 +0100
++++ /home/alex/builds/poky-alex/config-tmp-asoubw5u/poky-alex.conf.json	2024-12-16 11:47:43.237104405 +0100
+@@ -7,7 +7,7 @@
+                         "uri": "git://git.yoctoproject.org/poky-contrib"
+                     }
+                 },
+-                "rev": "akanavin/sstate-for-all"
++                "rev": "akanavin/bitbake-setup-testing"
+             },
+             "path": "poky"
+         }
+===
+
+If the configuration has not changed, but layer revisions referred to it have (for example
+if the configuration specifies a tip of a branch), you will see that too:
+===
+alex@Zen2:/srv/work/alex/bitbake$ bin/bitbake-setup status
+...
+Layer repository git://git.yoctoproject.org/poky-contrib checked out into /home/alex/builds/poky-alex/layers/poky updated revision akanavin/sstate-for-all from 6b842ba55f996b27c900e3de78ceac8cb3b1c492 to aeb73e29379fe6007a8adc8d94c1ac18a93e68de
+===
+
+6. If the configuration has changed, you can bring it in sync with:
+===
+alex@Zen2:/srv/work/alex/bitbake$ bin/bitbake-setup update ~/builds/poky-alex/
+Default parameter values are in /home/alex/.bitbake-setup/config - adjust as needed.
+
+Fetching configuration repository git://github.com/kanavin/bitbake-setup-configurations.git;protocol=https;branch=main;rev=main into /home/alex/.bitbake-setup/configurations
+Layer repository git://git.yoctoproject.org/poky-contrib checked out into /home/alex/builds/poky-alex/layers/poky updated revision akanavin/bitbake-setup-testing from d174acad934f8ad1fe303abc5705733e15542859 to a3d2ee10045f8c1151d680ad97994c5d6cf51ece
+Fetching layer/tool repository poky into /home/alex/builds/poky-alex/layers/poky
+
+Setting up configuration in /home/alex/builds/poky-alex/build-gadget
+Existing bitbake congfiguration directory renamed to /home/alex/builds/poky-alex/build-gadget/conf-backup.20241216115007
+The bitbake configuration has changed:
+diff -uNr /home/alex/builds/poky-alex/build-gadget/conf-backup.20241216115007/local.conf /home/alex/builds/poky-alex/build-gadget/conf/local.conf
+--- /home/alex/builds/poky-alex/build-gadget/conf-backup.20241216115007/local.conf	2024-12-16 11:47:51.865043102 +0100
++++ /home/alex/builds/poky-alex/build-gadget/conf/local.conf	2024-12-16 11:50:07.811942847 +0100
+@@ -287,5 +287,3 @@
+ # track the version of this file when it was generated. This can safely be ignored if
+ # this doesn't mean anything to you.
+ CONF_VERSION = "2"
+-
+-TCLIBC = "musl"
+
+Configuration summary:
+This is the default build configuration for the Poky reference distribution.
+
+Additional information is in /home/alex/builds/poky-alex/build-gadget/conf/conf-notes.txt
+
+Run /home/alex/builds/poky-alex/build-gadget/build-targets to execute the default build targets for this configuration.
+Source the environment using '. /home/alex/builds/poky-alex/build-gadget/init-build-env' to run builds from the command line.
+The bitbake build configuration (local.conf, bblayers.conf and more) can be found in /home/alex/builds/poky-alex/build-gadget/conf
+===
+
+Note that it will also rename/preserve the existing build/conf directory, and print changes
+in bitbake configuration (diff of content of build/conf/) if that has changed. I can't
+at the moment think of anything more clever that is also not much more brittle or complex
+to implement, but open to suggestions.
+
+7. To make it easier to review the code, please also review the data it's operating on:
+===
+alex@Zen2:/srv/work/alex/bitbake$ ls ~/.bitbake-setup/
+cache  configurations  downloads
+alex@Zen2:/srv/work/alex/bitbake$ ls ~/builds/poky-alex/
+build  config  config-upstream.json  layers
+===
+
+This commit includes a fix by Ryan Eatmon <reatmon@ti.com>:
+https://github.com/kanavin/bitbake/pull/1
+
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ bin/bitbake-setup | 403 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 403 insertions(+)
+ create mode 100755 bin/bitbake-setup
+
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+new file mode 100755
+index 000000000..9a78963a6
+--- /dev/null
++++ b/bin/bitbake-setup
+@@ -0,0 +1,403 @@
++#!/usr/bin/env python3
++
++#
++# SPDX-License-Identifier: GPL-2.0-only
++#
++
++import logging
++import os
++import sys
++import argparse
++import warnings
++import json
++import shutil
++import time
++import stat
++import tempfile
++import configparser
++import datetime
++
++bindir = os.path.abspath(os.path.dirname(__file__))
++topdir = os.path.dirname(bindir)
++sys.path[0:0] = [os.path.join(topdir, 'lib')]
++
++import bb.msg
++import bb.process
++
++logger = bb.msg.logger_create('bitbake-setup', sys.stdout)
++
++def init_bb_cache(args):
++    dldir = os.path.join(args.cache_dir, 'downloads')
++    bb_cachedir = os.path.join(args.cache_dir, 'cache')
++
++    d = bb.data.init()
++    d.setVar("DL_DIR", dldir)
++    d.setVar("BB_CACHEDIR", bb_cachedir)
++    d.setVar("__BBSRCREV_SEEN", "1")
++    if args.no_network:
++        d.setVar("BB_SRCREV_POLICY", "cache")
++    bb.fetch.fetcher_init(d)
++    return d
++
++def get_config_name(config):
++    return os.path.basename(config).split('.')[0]
++
++def copy_and_commit_config(config_path, dest_config_dir):
++    shutil.copy(config_path, dest_config_dir)
++
++    bb.process.run("git -C {} add .".format(dest_config_dir))
++    bb.process.run("git -C {} commit -a -m 'Configuration at {}'".format(dest_config_dir, time.asctime()))
++
++def _write_layer_list(dest, repodirs):
++    layers = []
++    for r in repodirs:
++        for root, dirs, files in os.walk(os.path.join(dest,r)):
++            if os.path.basename(root) == 'conf' and 'layer.conf' in files:
++                layers.append(os.path.relpath(os.path.dirname(root), dest))
++    layers_f = os.path.join(dest, ".oe-layers.json")
++    with open(layers_f, 'w') as f:
++        json.dump({"version":"1.0","layers":layers}, f, sort_keys=True, indent=4)
++
++def checkout_layers(layers, layerdir, d):
++    repodirs = []
++    oesetupbuild = None
++    for r_name in layers:
++        r_data = layers[r_name]
++        repodir = r_data["path"]
++        repodirs.append(repodir)
++
++        r_remote = r_data['git-remote']
++        rev = r_remote['rev']
++        remotes = r_remote['remotes']
++
++        for remote in remotes:
++            type,host,path,user,pswd,params = bb.fetch.decodeurl(remotes[remote]["uri"])
++            fetchuri = bb.fetch.encodeurl(('git',host,path,user,pswd,params))
++            print("Fetching layer/tool repository {} into {}".format(r_name, os.path.join(layerdir,repodir)))
++            fetcher = bb.fetch.Fetch(["{};protocol={};rev={};nobranch=1;destsuffix={}".format(fetchuri,type,rev,repodir)], d)
++            do_fetch(fetcher, layerdir)
++
++        if os.path.exists(os.path.join(layerdir, repodir, 'scripts/oe-setup-build')):
++            oesetupbuild = os.path.join(layerdir, repodir, 'scripts/oe-setup-build')
++
++    _write_layer_list(layerdir, repodirs)
++
++    if oesetupbuild:
++        oesetupbuild_symlink = os.path.join(layerdir, 'setup-build')
++        if os.path.exists(oesetupbuild_symlink):
++            os.remove(oesetupbuild_symlink)
++        os.symlink(os.path.relpath(oesetupbuild,layerdir),oesetupbuild_symlink)
++
++def setup_build(name, config, layerdir, topbuilddir):
++    builddir = os.path.join(topbuilddir, "build-{}".format(name))
++    print("==============================")
++    print("Setting up configuration {} in {}".format(name, builddir))
++
++    template = config.get("oe-template")
++    if not template:
++        print("Configuration does not contain a reference to an OpenEmbedded build template via 'oe-template'; please use oe-setup-build, oe-init-build-env or another mechanism manually to complete the setup.")
++        return
++    oesetupbuild = os.path.join(layerdir, 'setup-build')
++    if not os.path.exists(oesetupbuild):
++        raise Exception("Cannot complete setting up a build directory from OpenEmbedded template '{}' as oe-setup-build was not found in any layers; please use oe-init-build-env manually.".format(template))
++
++    confdir = os.path.join(builddir, 'conf')
++    backup_confdir = confdir + "-backup.{}".format(time.strftime("%Y%m%d%H%M%S"))
++    if os.path.exists(confdir):
++        os.rename(confdir, backup_confdir)
++    bb.process.run("{} setup -c {} -b {} --no-shell".format(oesetupbuild, template, builddir))
++
++    build_script = os.path.join(builddir, "build-targets")
++    init_script = os.path.join(builddir, "init-build-env")
++    targets = " && ".join(config["targets"])
++    shell = os.path.basename(os.environ.get("SHELL","bash"))
++    with open(build_script,'w') as f:
++        f.write("#!/usr/bin/env {}\n. {} && {}\n".format(shell, init_script, targets))
++    st = os.stat(build_script)
++    os.chmod(build_script, st.st_mode | stat.S_IEXEC)
++
++    fragments = config.get("oe-fragments")
++    if fragments:
++        for f in fragments:
++            bb.process.run("{} -c '. {} && bitbake-config-build enable-fragment {}'".format(shell, init_script, f))
++
++    if os.path.exists(backup_confdir):
++        config_diff = get_diff(backup_confdir, confdir)
++        if config_diff:
++            print("Existing bitbake configuration directory renamed to {}".format(backup_confdir))
++            print("The bitbake configuration has changed:")
++            print(config_diff)
++        else:
++            shutil.rmtree(backup_confdir)
++
++    with open(os.path.join(builddir,'conf/conf-summary.txt')) as f:
++        print("Configuration summary:\n{}\nAdditional information is in {}\n".format(f.read(), os.path.join(builddir,'conf/conf-notes.txt')))
++    print("Run {} to execute the default build targets for this configuration.".format(build_script))
++    print("Source the environment using '. {}' to run builds from the command line.".format(init_script))
++    print("The bitbake build configuration (local.conf, bblayers.conf and more) can be found in {}/conf".format(builddir))
++
++def get_registry_config(registry_path, id, dest_dir):
++    for root, dirs, files in os.walk(registry_path):
++        for f in files:
++            if f.endswith('.conf.json') and id == get_config_name(f):
++                shutil.copy(os.path.join(root, f), dest_dir)
++                return f
++    raise Exception("Unable to find {} in available configurations; use 'list' sub-command to see what is available".format(id))
++
++def obtain_config(upstream_config, dest_dir, args, d):
++    if upstream_config["type"] == 'local':
++        shutil.copy(upstream_config['path'], dest_dir)
++        basename = os.path.basename(upstream_config['path'])
++    elif upstream_config["type"] == 'network':
++        bb.process.run("wget {}".format(upstream_config["uri"]), cwd=dest_dir)
++        basename = os.path.basename(upstream_config['uri'])
++    elif upstream_config["type"] == 'registry':
++        registry_path = update_registry(upstream_config["registry"], args.cache_dir, d)
++        basename = get_registry_config(registry_path, upstream_config["id"], dest_dir)
++    else:
++        raise Exception("Unknown configuration type: {}".format(upstream_config["type"]))
++    return os.path.join(dest_dir, basename)
++
++def update_build_config(config_path, confdir, topbuilddir, layerdir, d, update_layers_only=False):
++    build_configs = json.load(open(config_path))["configuration"]["bitbake-setup"]
++    layer_config = json.load(open(config_path))["sources"]
++    if not update_layers_only:
++        copy_and_commit_config(config_path, confdir)
++    checkout_layers(layer_config, layerdir, d)
++    for build_name, build_config in build_configs.items():
++        setup_build(build_name, build_config, layerdir, topbuilddir)
++
++def init_config(args, d):
++    stdout = sys.stdout
++    def handle_task_progress(event, d):
++        rate = event.rate if event.rate else ''
++        progress = event.progress if event.progress > 0 else 0
++        print("{}% {}                ".format(progress, rate), file=stdout, end='\r')
++
++    config_name = get_config_name(args.config)
++    topbuilddir = os.path.join(os.path.abspath(args.build_dir_prefix), config_name)
++    if os.path.exists(topbuilddir):
++        print("Build already initialized in {}\nUse 'bitbake-setup status' to check if it needs to be updated or 'bitbake-setup update' to perform the update.".format(topbuilddir))
++        return
++
++    print("Initializing a {} build in {}".format(config_name, topbuilddir))
++
++    if os.path.exists(args.config):
++        upstream_config = {'type':'local','path':os.path.abspath(args.config)}
++    elif args.config.startswith("http://") or args.config.startswith("https://"):
++        upstream_config = {'type':'network','uri':args.config}
++    else:
++        upstream_config = {'type':'registry','registry':args.registry,'id':args.config}
++
++    os.makedirs(topbuilddir)
++
++    with open(os.path.join(topbuilddir, "config-upstream.json"),'w') as s:
++        json.dump(upstream_config, s, sort_keys=True, indent=4)
++
++    confdir = os.path.join(topbuilddir, "config")
++    layerdir = os.path.join(topbuilddir, "layers")
++
++    os.makedirs(confdir)
++    os.makedirs(layerdir)
++
++    bb.process.run("git -C {} init -b main".format(confdir))
++    bb.process.run("git -C {} commit --allow-empty -m 'Initial commit'".format(confdir))
++
++    bb.event.register("bb.build.TaskProgress", handle_task_progress, data=d)
++
++    with tempfile.TemporaryDirectory(dir=topbuilddir, prefix='config-tmp-') as tmpdirname:
++        config_path = obtain_config(upstream_config, tmpdirname, args, d)
++        update_build_config(config_path, confdir, topbuilddir, layerdir, d)
++
++    bb.event.remove("bb.build.TaskProgress", None)
++
++def get_diff(file1, file2):
++    try:
++        bb.process.run('diff -uNr {} {}'.format(file1, file2))
++    except bb.process.ExecutionError as e:
++        if e.exitcode == 1:
++            return e.stdout
++        else:
++            raise e
++    return None
++
++def are_layers_changed(layers, layerdir, d):
++    changed = False
++    for r_name in layers:
++        r_data = layers[r_name]
++        repodir = r_data["path"]
++
++        r_remote = r_data['git-remote']
++        rev = r_remote['rev']
++        remotes = r_remote['remotes']
++
++        for remote in remotes:
++            type,host,path,user,pswd,params = bb.fetch.decodeurl(remotes[remote]["uri"])
++            fetchuri = bb.fetch.encodeurl(('git',host,path,user,pswd,params))
++            fetcher = bb.fetch.FetchData("{};protocol={};rev={};nobranch=1;destsuffix={}".format(fetchuri,type,rev,repodir), d)
++            upstream_revision = fetcher.method.latest_revision(fetcher, d, 'default')
++            rev_parse_result = bb.process.run('git -C {} rev-parse HEAD'.format(os.path.join(layerdir, repodir)))
++            local_revision = rev_parse_result[0].strip()
++            if upstream_revision != local_revision:
++                changed = True
++                print('Layer repository {} checked out into {} updated revision {} from {} to {}'.format(remotes[remote]["uri"], os.path.join(layerdir, repodir), rev, local_revision, upstream_revision))
++
++    return changed
++
++def build_status(args, d, update=False):
++    topbuilddir = args.build_dir
++
++    confdir = os.path.join(topbuilddir, "config")
++    layerdir = os.path.join(topbuilddir, "layers")
++
++    upstream_config = json.load(open(os.path.join(topbuilddir, "config-upstream.json")))
++
++    with tempfile.TemporaryDirectory(dir=topbuilddir, prefix='config-tmp-') as tmpdirname:
++        current_config_path = obtain_config(upstream_config, tmpdirname, args, d)
++
++        build_config_path = os.path.join(confdir, os.path.basename(current_config_path))
++        config_diff = get_diff(build_config_path, current_config_path)
++        if config_diff:
++            print('Top level configuration in {} has changed:\n{}'.format(topbuilddir, config_diff))
++            if update:
++                update_build_config(current_config_path, confdir, topbuilddir, layerdir, d)
++            return
++
++    if are_layers_changed(json.load(open(build_config_path))["sources"], layerdir, d):
++        if update:
++            update_build_config(build_config_path, confdir, topbuilddir, layerdir, d, update_layers_only=True)
++        return
++
++    print("Configuration in {} has not changed.".format(topbuilddir))
++
++def build_update(args, d):
++    build_status(args, d, update=True)
++
++def do_fetch(fetcher, dir):
++    # git fetcher simply dumps git output to stdout; in bitbake context that is redirected to temp/log.do_fetch
++    # and we need to set up smth similar here
++    fetchlogdir = os.path.join(dir, 'logs')
++    os.makedirs(fetchlogdir, exist_ok=True)
++    fetchlog = os.path.join(fetchlogdir, 'fetch_log.{}'.format(datetime.datetime.now().strftime("%Y%m%d%H%M%S")))
++    with open(fetchlog, 'a') as f:
++        oldstdout = sys.stdout
++        sys.stdout = f
++        fetcher.download()
++        fetcher.unpack(dir)
++        sys.stdout = oldstdout
++
++def update_registry(registry, cachedir, d):
++    registrydir = 'configurations'
++    full_registrydir = os.path.join(cachedir, registrydir)
++    print("Fetching configuration repository {} into {}".format(registry, full_registrydir))
++    fetcher = bb.fetch.Fetch(["{};destsuffix={}".format(registry, registrydir)], d)
++    do_fetch(fetcher, cachedir)
++    return full_registrydir
++
++def list_registry(registry_path):
++    print("\nAvailable configurations:")
++    for root, dirs, files in os.walk(registry_path):
++        for f in files:
++            if f.endswith('.conf.json'):
++                config_name = get_config_name(f)
++                config_desc = json.load(open(os.path.join(root, f)))["description"]
++                print("{}\t{}".format(config_name, config_desc))
++
++def list_configs(args, d):
++    registry_path = update_registry(args.registry, args.cache_dir, d)
++    list_registry(registry_path)
++
++def default_tool_config_path():
++    return os.environ.get('BITBAKE_SETUP_CONFIG') or os.path.join(os.path.expanduser('~'), '.bitbake-setup', 'config')
++
++def write_tool_config(force_overwrite):
++    config_path = default_tool_config_path()
++    if not os.path.exists(config_path) or force_overwrite:
++        config = configparser.ConfigParser()
++        config['default'] = {'registry':'git://github.com/kanavin/bitbake-setup-configurations.git;protocol=https;branch=main;rev=main',
++                             'cache-dir':os.path.join(os.path.expanduser('~'), '.bitbake-setup'),
++                             'build-dir-prefix':os.path.join(os.path.expanduser('~'), 'builds')}
++        os.makedirs(os.path.dirname(config_path), exist_ok=True)
++        with open(config_path, 'w') as configfile:
++            config.write(configfile)
++
++def load_tool_config():
++    # This creates a new config file if it does not yet exist
++    write_tool_config(force_overwrite=False)
++
++    config_path = default_tool_config_path()
++    config = configparser.ConfigParser()
++    print('Default parameter values are in {} - adjust as needed.\n'.format(config_path))
++    config.read([config_path])
++    return config
++
++def get_build_dir():
++    bbpath = os.environ.get('BBPATH')
++    if bbpath:
++        build_dir = os.path.dirname(bbpath.split(':')[0])
++        if os.path.exists(os.path.join(build_dir,'config-upstream.json')):
++            return build_dir
++    return None
++
++def main():
++    config = load_tool_config()
++
++    parser = argparse.ArgumentParser(
++        description="BitBake setup utility",
++        epilog="Use %(prog)s <subcommand> --help to get help on a specific command"
++        )
++    parser.add_argument('-d', '--debug', help='Enable debug output', action='store_true')
++    parser.add_argument('-q', '--quiet', help='Print only errors', action='store_true')
++    parser.add_argument('--color', choices=['auto', 'always', 'never'], default='auto', help='Colorize output (where %(metavar)s is %(choices)s)', metavar='COLOR')
++    parser.add_argument('--registry', default=config['default']['registry'], help='Git repository with configuration files (in bitbake SRC_URI format), default is %(default)s')
++    parser.add_argument('--cache-dir', default=config['default']['cache-dir'], help='Directory where downloaded configurations and layers are cached for reproducibility and offline builds, default is %(default)s')
++    parser.add_argument('--no-network', action='store_true', help='Do not check whether configuration repositories and layer repositories have been updated; use only the local cache.')
++
++    subparsers = parser.add_subparsers()
++
++    parser_init = subparsers.add_parser('init', help='Initialize a build from a configuration')
++    parser_init.add_argument('config', help="path/URL/id to a configuration file, use 'list' command to get available ids")
++    parser_init.add_argument('--build-dir-prefix', help="Directory prefix under which the build directory should be created and initialized, default is %(default)s", default=config['default']['build-dir-prefix'])
++    parser_init.set_defaults(func=init_config)
++
++    build_dir = get_build_dir()
++
++    parser_status = subparsers.add_parser('status', help='Check if the build needs to be synchronized with configuration')
++    if build_dir:
++        parser_status.add_argument('--build-dir', default=build_dir, help="Path to the build, default is %(default)s via BBPATH")
++    else:
++        parser_status.add_argument('--build-dir', required=True, help="Path to the build")
++    parser_status.set_defaults(func=build_status)
++
++    parser_update = subparsers.add_parser('update', help='Update a build to be in sync with configuration')
++    if build_dir:
++        parser_update.add_argument('--build-dir', default=build_dir, help="Path to the build, default is %(default)s via BBPATH")
++    else:
++        parser_update.add_argument('--build-dir', required=True, help="Path to the build")
++    parser_update.set_defaults(func=build_update)
++
++    parser_list = subparsers.add_parser('list', help='List available configurations')
++    parser_list.set_defaults(func=list_configs)
++
++    args = parser.parse_args()
++
++    logging.basicConfig(stream=sys.stdout)
++    if args.debug:
++        logger.setLevel(logging.DEBUG)
++    elif args.quiet:
++        logger.setLevel(logging.ERROR)
++
++    # Need to re-run logger_create with color argument
++    # (will be the same logger since it has the same name)
++    bb.msg.logger_create('bitbake-setup', output=sys.stdout,
++                         color=args.color,
++                         level=logger.getEffectiveLevel())
++
++    d = init_bb_cache(args)
++    if 'func' in args:
++        args.func(args, d)
++    else:
++        from argparse import Namespace
++        parser.print_help()
++
++main()
+-- 
+2.39.5
+
 
