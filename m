@@ -2,236 +2,271 @@ Return-Path: <quentin.schulz@cherry.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A73E2C02183
-	for <webhook@archiver.kernel.org>; Fri, 17 Jan 2025 12:12:28 +0000 (UTC)
-Received: from DUZPR83CU001.outbound.protection.outlook.com (DUZPR83CU001.outbound.protection.outlook.com [52.101.67.28])
- by mx.groups.io with SMTP id smtpd.web10.9436.1737115947682497213
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F39C02183
+	for <webhook@archiver.kernel.org>; Fri, 17 Jan 2025 12:39:28 +0000 (UTC)
+Received: from PA4PR04CU001.outbound.protection.outlook.com (PA4PR04CU001.outbound.protection.outlook.com [40.107.162.63])
+ by mx.groups.io with SMTP id smtpd.web11.9771.1737117565198535979
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 17 Jan 2025 04:12:28 -0800
+ Fri, 17 Jan 2025 04:39:25 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@cherry.de header.s=selector1 header.b=ibH3dxba;
- spf=pass (domain: cherry.de, ip: 52.101.67.28, mailfrom: quentin.schulz@cherry.de)
+ dkim=pass header.i=@cherry.de header.s=selector1 header.b=Un4dmLgQ;
+ spf=pass (domain: cherry.de, ip: 40.107.162.63, mailfrom: quentin.schulz@cherry.de)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u9DiZkFhssT0K9pniBuGnOT8VMdS7PiKpNlYvIMzo/LTXiEBjBh0pG8HxXMEnjEu1Mb5YWXmUWWz3SBHkhS2/SoFHQMxi70CmW8blGKL/u292mykoWGe9B4rMaVtRvrJwdu9p9vkRHIHS0gpU7z0py910VqKJ4fsms77qq4zKpQT+aVkkyluI2BgRyicTVPVE6AUcCh+DaUJXwMMYmwbzfc8Rp/gvBabMOs7iPcwR7qLeRI62Fxui57rn9/kY3DSsuolsVyUJuUvZ5Pqdqd2X7cDQsZSYFiLkPocNpgrFKwjngmcSF5gURKM899bE5UKMqvNQbyztCGkXYCuFPO+DQ==
+ b=Xs07sB35cDvO4DFyf+XgwuRthWhflYZFXWx5uCW8YiNmnofh0Si/LqLYmWJztN7Mc51DjcgRJuqEYmLSF8/+ke8iel0hdNbsH0rlFQ3bzWYNR8gNmH9ylj8J5IIaPy88h9IErtu+E4+0WDj9eQTgnIDYhX6R4qIK/1HrEkIc/pSLW0I1Loru2Wjm/1bFBrMeVxwgZEribzj+69ZVL7mg95kVMSQ+28eqsoYKmrML9MFDzqWzNIA9USFRTK18i5QXI1/JmUwFuhYzBvnGmKx08Vgp66T+wIo8kZNghh/nH+194ICConCkdLw0Pi36RYKJ3SWNN8iUm6M9rWlx59rUfA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=o2+Op+R7aLe3D6uTxTd41FAt7AQ+KVTmMshZmFi84Ak=;
- b=KKWoNPS72YE1BW1M70VxSWu82taaUo5n3IZKAx9YFlIO/qIHHj9oj3GWm6PMEIlwvoYjUGolvzJJby5mMFHYWvucLjtLr5z56eohpJUs92gA3/MvHr+yIlvWtPXUm5DrU+8nHZRhLTcz/JVmp7NYPWL39+eLLHJGYMaVwYSu1F0VaPc0OnmcVvy0lrKaMyYoCHhJBrQI6PW2Wamav4bv8UKmrarLEJ19ROuEK91K+WHPFDtoy7VtEmYbNjIOWvFmi/ZPyIQDPgzE9uZSTCrkDh461MjDjtHo9tkISMc2k9ZiAkncISW4dCgTYBeZ7aMjbb8QUIKNaWGoWko+fI6xtQ==
+ bh=3uuTVcle6me1l9pI7nPpzQ7q0rOKNegxP545BJ1NxVA=;
+ b=Q2p0qINRja9IUSwCAoopPDwCoEKx/MrZv8X9MoTUy9YCRyqdNeYlNpT5960uFDz38RkqwfMFDAqBoLByJ6qS3I8enk8BTqhwuiXcPxUBv7NjTaObluPakmdl4v3dKRi5t6SVYg6DRIRouPwyRpywmsrsb08xI4+V8oBw0v03DtEiXGHmRfQp3lQbw0L2NsQ0kfBi8SapnT83J6NKe7vDc5qkafuCeg6225PX9UIHW7ktPrEiIrL30KSHGGhCxhyuAyxf9dfmTKMPdYWSno6Ybxs08ZFJXNuKFSPVAJBWHg7Aq6Dhs4tGVAcOyg1z3sZ5ivcdjS4U98WJsBbr5fLxJA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
  dkim=pass header.d=cherry.de; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o2+Op+R7aLe3D6uTxTd41FAt7AQ+KVTmMshZmFi84Ak=;
- b=ibH3dxbadBqMZwSUOFgQdppLH6faguuDgO1OB/3ld5DjcYgCswSV5tuvVGx9TyBBUCPq/OrW8AquE86LxTkJK6nYuEnNxZr4l9BwZh++7zgJeqSqJmLJTiAj/XVDuQ9DDJ4CKl4W/W5UrgRdhn0wbRWrxHgY20OyepnXf1hudEk=
+ bh=3uuTVcle6me1l9pI7nPpzQ7q0rOKNegxP545BJ1NxVA=;
+ b=Un4dmLgQxJQIZHi3l9fYD3Nz6m7SXhoRyr0Ut01fD6GHQbae1YUthcII1DKUU++7nOk9D6ZkrH5PZnNVV6L906vk3qzlh2yUUs9/HYIRoFxJQz2xoXXVDoqdc79P3Ynz3QgsmXDdTXcBYNG5cGYCDyjWLrrTR1A1U5iBO5luYr0=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=cherry.de;
 Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
- by VI1PR04MB6845.eurprd04.prod.outlook.com (2603:10a6:803:138::11) with
+ by VI0PR04MB10782.eurprd04.prod.outlook.com (2603:10a6:800:25d::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.13; Fri, 17 Jan
- 2025 12:12:23 +0000
+ 2025 12:39:20 +0000
 Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
  ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
  ([fe80::35f6:bc7d:633:369a%3]) with mapi id 15.20.8335.015; Fri, 17 Jan 2025
- 12:12:23 +0000
-Message-ID: <42691b8d-f2d4-4219-9b96-800f8e34d201@cherry.de>
-Date: Fri, 17 Jan 2025 13:12:22 +0100
+ 12:39:20 +0000
+Message-ID: <dfb89130-58d7-4385-aa57-ec67795b8a3d@cherry.de>
+Date: Fri, 17 Jan 2025 13:39:19 +0100
 User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel] [PATCH v2] add basic support for b4 contribution
- workflow
-To: Antonin Godard <antonin.godard@bootlin.com>,
- Quentin Schulz <foss@0leil.net>, bitbake-devel@lists.openembedded.org,
- docs@lists.yoctoproject.org
+Subject: Re: [PATCH v2] add basic support for b4 contribution workflow
+To: Quentin Schulz <foss+yocto@0leil.net>,
+ bitbake-devel@lists.openembedded.org, docs@lists.yoctoproject.org
 References: <20250117-b4-support-v2-1-7178f61d49e4@cherry.de>
- <D74APENZ2FY4.2W3AXB39KKQ1D@bootlin.com>
- <48f94226-eb4b-4d7d-b007-d7b57975a59a@cherry.de>
- <D74C4BKUYJJM.3ACL3B4JKCQP0@bootlin.com>
 Content-Language: en-US
 From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <D74C4BKUYJJM.3ACL3B4JKCQP0@bootlin.com>
+In-Reply-To: <20250117-b4-support-v2-1-7178f61d49e4@cherry.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-X-ClientProxiedBy: FR0P281CA0220.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:ac::15) To AS8PR04MB8897.eurprd04.prod.outlook.com
+X-ClientProxiedBy: FR0P281CA0016.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:15::21) To AS8PR04MB8897.eurprd04.prod.outlook.com
  (2603:10a6:20b:42c::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|VI1PR04MB6845:EE_
-X-MS-Office365-Filtering-Correlation-Id: 12e42179-50ff-43fb-ebf9-08dd36f032cd
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|VI0PR04MB10782:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6a17a249-d70f-4d47-c2b6-08dd36f3f6d8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
 X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?cVB1eFcxOGM2SGRtS2JLaDdMbTdKTTdYYTJvZkY5UDlJSUI0SDFQa0UrSTBO?=
- =?utf-8?B?MjRacytyYjFNK2pQS2hGd1VtUlkwek5sUTZxSFd5ekt3Zlc0TFRzcUdHMTV3?=
- =?utf-8?B?TEpRbjF4WnQ4S3J0dGFxWHJDWXFnUmdTM3ZmVEc5blVINm12bm5BQWVEVjFG?=
- =?utf-8?B?Y0t5OFNjRmhuRnVSZFh4QlNFcVJVSitrVDZHQ1RMNG9MeExGaVo5T2lNTExM?=
- =?utf-8?B?NlYzbCtmelBzVW9rcUd2RVhSWnZ6cGFwK1BOMXFVcTY1RUVudVdDSC9hckRN?=
- =?utf-8?B?SlpSbk15WWZycm9aZ1hoK2NUQXV2dFh5dm1sK01WUzJ5NWZwVW5PaDkwdlBJ?=
- =?utf-8?B?aUROOWVOOCtYL1p1cWNQc0l4eGhlKzhjSkNlMVBjeEo1dWVTL1ZNd2xFOHN4?=
- =?utf-8?B?Tk90c1F4Znl1b2k1NnpCWXRHbkF1dGw2cC9NWlo2cEVSN1YwZEJCNStPOEhx?=
- =?utf-8?B?S2dWQXpBSmd4YnJEMnNGbE5nWEJXTk8wSi9KcnlqQk1wRU9FLzl6U2lZbjMv?=
- =?utf-8?B?ZWRtUFQ1ZzAwaFk1dkc4cFROK3FOd0pVT1Q5RXIwMU1HTS9KN0tDU0xRZEtR?=
- =?utf-8?B?cUJaMU1IMWNab2cxMFdSL1FNczFqRTd5OFBnS3N3cUUvREZjNFRqaEltay9F?=
- =?utf-8?B?T0N2NmlGV0lIdERxb2NZQU5iMzJiUXYzOHFEa1FjSXhtSTR6MnRRQTFpaTQv?=
- =?utf-8?B?ck03dm01RjE0TmFkcHdEOHc5Vm1wVzhjTTJzVncyVnp5SjVMLytCRDMrenBx?=
- =?utf-8?B?V0xXM3RYeG1kODBqWE1GSU5uSVRObHFqNEtBdFNpcXA0SkFFOTFVRXl6Qlky?=
- =?utf-8?B?L1hpNHFJZEQrVTJxdXprMFFOVmIxQkc3dHFsakdNc3lNYWF3VDlsRWNPTnNm?=
- =?utf-8?B?MkpBdnh1UWlPTFdYRWxsa3BTaXhVTFV3YlA0V0ZyU1FxVDhoYm5zZHE3NUcw?=
- =?utf-8?B?bHpGM2t3MmZvZXo0TVJoZlp4RjVPa0U1NnJ2TW5ld2RhSnYxOUQ1OC9rYXJ6?=
- =?utf-8?B?eTY3NzV3UnVpQktocE9VQWVMWStGcmNJVGg3dzkzekFRQkk0ZUpvUE92Zktx?=
- =?utf-8?B?R2VFczBOaGVFUDVtQ1NUK0NqTmlnM0Y2eWxyaXgzajJ4TXFzK3pLSmVObFhu?=
- =?utf-8?B?UGswakJkMTdDRll3NWRFZWhTRmxyUm5xdjRZUGZWSVVHejlIU01peG55SUpq?=
- =?utf-8?B?TWFHNmg1TlhKcmtHZzN1MGZtWTlValpidEN1ZFA3NHZYWjZZZEhzb0x1NXRh?=
- =?utf-8?B?VzNOYmVBZ0l1T2tYM1dYUHcxcmFtNDlodmxlZjJXSXJkbWxhRzlpK0pvdE5O?=
- =?utf-8?B?YnQ4VzZ3Y1h5ZWxOb2J6Q3Zud2NFTU5CRktwcG5pL2NzUjUyZ3lkTGw1N2lk?=
- =?utf-8?B?bkhVeFdidzQ5NWd3ZHV4T05LSWdCNzB3Tm1TWXh5cCtiL0pxV2V1OENYdkZs?=
- =?utf-8?B?SWtxbTFRdGs2RjBqTEtyOEdIZ1lsVzJQVGNPc05ZSGF2a2pvb09ENmhWcGdw?=
- =?utf-8?B?NEJHTmZsTzZGVXlvZWVsVURvL2Q1eXBVSWNML0tJWmFWWlJBV294NE41RHp1?=
- =?utf-8?B?QjJvZmZxaUQ5VmFLUCtMdlVkYm9wVnpwVG52V0FDL2IwSjczdHpTL3NWazVK?=
- =?utf-8?B?bDA3dWlGcEw4Y0xlOVdOekFWTGZJdEJNU2RPUStKSEhaLzlMSWNZbHFhU2FB?=
- =?utf-8?B?UnNMNk9mUWdkaGtudXBkK0dQMTU1WEFPSW10TVcvQTVOMFdwMlJFcGVsSm9B?=
- =?utf-8?Q?M5ec/J+0RRZeWVt/EFph/9wTAPm6idTScycChcF?=
+	=?utf-8?B?U1hlclNXcXJLSkJyZzJRdVZvT1g5YnV2Y2xzd0ZrbEMvbVdvRGZmNlAzR2Qw?=
+ =?utf-8?B?ZTJpY0h3WWpvbTVIdEN3aTBzTHFiSVZTdm5NWFg3Ty8wdE5MR1E3YjB6aVRS?=
+ =?utf-8?B?TFZWT2M0d0paZnhzQ3cxVjlZNVhTRlR5c0p1ZmxHVWh0VGNRdlpnUngxcnM5?=
+ =?utf-8?B?VytoYjhZMDd6MDNnUzdXa3NydU1VZ0FEa05wTUNLeWVKR3RBQVdiNzl3SFJ1?=
+ =?utf-8?B?NXlheFZsOGsyd1NVaURZUVVycWVLeHRSNHJYOFExZm93N1lRSWl3ZTllSlBH?=
+ =?utf-8?B?anpYMFg3U3RjcXlHVnVWYzAzd2FORlhhMmY2M3pnRERWcmtzQ1VscVlFTWx0?=
+ =?utf-8?B?S3JBYTgwcnI1bzVFcFNmUkFYVlF1UmlDUWlEbUxJcWZtYS9HdVVIZi9ORjN4?=
+ =?utf-8?B?aFgzdE1FUGZaVzBwN1BzZk5SQ0tMNWlsVkVqeFFhR2FGdkNEWFVPQ1UwRzZM?=
+ =?utf-8?B?TWh3ZU9KdW1HZG9FNEJiVVdGM3JRUXRtTEdyN1M5KzlDMDdQQ3VRdEdjNVVI?=
+ =?utf-8?B?MWMwZStmWTZTNENMd090MFBqZUNCWnZZeDk1WCtWaUhpRkRZOVI4QVFyakdF?=
+ =?utf-8?B?Z1BIa2NLS2ZkM3I4d1pwY1JXdXdCdUpvWGNiQ2UyQnp0eEc4RkdRTVIxSUtr?=
+ =?utf-8?B?M0llanJ6ajFJZUJ3ZlpwQTFUZ1dYdkk0MCtza3lWN0NsT2hyWlJBTDNkbm5S?=
+ =?utf-8?B?U3B0Njl3ZWl6ZVluUG9OTEM2OEZtNWhwUGJlenJIbzU0ZVZIOHpOL1IxaGVq?=
+ =?utf-8?B?K3JROU42Q3RwWUlvdFhGREtrMTBDTG5vaU1nQ0VGcDF4TnE2SzR2M29HQmlV?=
+ =?utf-8?B?a3IxeGxKRUdaRDk0a0VXSXQvVkdSUlFlemUzUHdlM2wzRkkxaFdQdDVlcEdt?=
+ =?utf-8?B?Wm5QVW1pcXhlbFIveXptUmlSSlo1dWlRTWFjdFpnZWxtVjNyRU5wekhXRGwy?=
+ =?utf-8?B?Yk1KbXI1NHN0RitlY0h1K01zclp3R2dKbldQWmdEWURDQWtIT1RHcjJaNk1W?=
+ =?utf-8?B?SjBxSFppNkg4T2VPNGZnRlRZcnJCakhXbFFrVVkwaGg5SXJaRnAyRmlNVitQ?=
+ =?utf-8?B?OUdBUDVncmNnMHBha2ZOT1JzdWJkVlJRQmsrOE9nM1BLR29GMkRjQzFPNW9X?=
+ =?utf-8?B?SkI3L2ZBelVWSStyLzdxNktUOFk5TGFUY2NPblAzZllVaDBGOHY0QlRGK3Bi?=
+ =?utf-8?B?MzhEaEthWlBYalNMcS9ZSDg1aitKMGpQRHBkOU1xWTRNdlpmU3VHRWtIU0ZM?=
+ =?utf-8?B?a0UySzM4TDJPcThYelNUWko4NjJJcG90Ym5PdEhNV0RYOGZMek1ZaFJIUjc1?=
+ =?utf-8?B?YUJoVGZsSU5ta2lyRWI3d24xUlk1am5XN1JBOGhRVTExaEhCaEEvTXh1STcw?=
+ =?utf-8?B?UVE3bmZLOEU0VmxZZXBjODNGWmFraDRZRWx0QjZxNmRIN2E0MFlNQk5NdWdQ?=
+ =?utf-8?B?bUFkSzNlSUVPQkZkNW41c2Q4M0VyYkE2MXhJQzdEQUFEdzF4R21rSDV3SDhU?=
+ =?utf-8?B?UnBDY3NKUXRqdXZXLzRQTXFyVDNia1k1c2xaNjlnNi83Y2lIWVVLcDZ5T3lZ?=
+ =?utf-8?B?SDZ3NE5HR1dtWUxJdkFkSE12a3UyM2RIVFNSTFhzc2Z6SkY3MEgyRGZvRktj?=
+ =?utf-8?B?a2NyYUdDekY3YVNVUWt0RCtkYVNvallTVUw5MGsrbnJGTTVVMU52Smk2Q0hG?=
+ =?utf-8?B?a2VZb2N5b2RLWWdZQkNCbDdsUFJOMGsrd2cyQXRBTS9tc08rQSsvRVkxbUVy?=
+ =?utf-8?B?N2tta1JvcmZYVnArYitrOEFCVWNrLzhDRG4zdnU1VmhzUmdvaDJnZHJpM3B6?=
+ =?utf-8?B?R0tSWDQybWZUeGtOaGFkdz09?=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?c21KczhjYnFJL3NpZEFWOUx4OTRibVF5VFk0SXo5V0huWkl2YnlkTWY0aUtr?=
- =?utf-8?B?K1kyRUIwK2x2cjdTenBXYSsweWE1b01TK2ZYc2FkTWI5MDNwNXQ2Z3RMaUlN?=
- =?utf-8?B?K25VcmsyRmhMZllseFBidXRtZzA2RHl3VW5uZkpUZGdmSXB3NjkyUjBpNUNw?=
- =?utf-8?B?RW1nY0FuWWJFdW1WRmZUdDFUNEE1aXBFYXpYQ1U1V1dxUEhVQUYybWxBSzhP?=
- =?utf-8?B?MnE3UlIvMExTdDRSaHdFWW90dmtIdnQrbjBFbmhidS9DM2cyUStJVVdmSXlG?=
- =?utf-8?B?NnBUV0xqMXcxWHdDL25YcVc1ckNvbU02bkRmenBDNGJ1eHEzTUR1ZTdjS0lF?=
- =?utf-8?B?VXcyd24yMnltaHVaNnJpNTRDWE41QzRVSGVGc3ExVm5IdXhMQ3M0aTJLZldm?=
- =?utf-8?B?cy9GN1FJWjZpWjJ2b3RnY0wrcjNKVmY5QjNYVXJMQmV5bkozRVBBbUI2R3Iy?=
- =?utf-8?B?YVA2VDlmV0ZwVk83VHplU2JEYnJQRE9oNnRYRkpUYzM5ZTJBZmFpM29oVkVn?=
- =?utf-8?B?aDl5OEorN093VjFlYW0wWE54dDRuYTNwTFBjYVNpVTVpMm9XSHBEZE1MN1U1?=
- =?utf-8?B?M1VpY0JCaDUvZ0JaSldrZUdqK2pnb0hWczJwZEVJdFkvZGRnNUd6azFISXJS?=
- =?utf-8?B?Ni9LQ2VJazBYQ2lMK3dkeWVZV255RTFEc1NSS1M5VURBSzRsWkVlZFRaRExw?=
- =?utf-8?B?Q2ozakJwVlpDcmc0QlIrMS9KWmlyVzN6WjlOd21ObUhVVmwrUTVDWDBWWXRJ?=
- =?utf-8?B?RGdndVFLcThKeFNod2xaSFdOMVdwTlFhVjJqRk1nU1BYWmVpR3hlN3ZhTXkr?=
- =?utf-8?B?VE8vdUlBa0hoU2VFc2EzMjJrTkxJQnRhWjNpTk9OR21CcjFtbG5TcWlWUmZQ?=
- =?utf-8?B?MnI4N2dYSWJmelZLa3JLdDlYQkVkZS9kU1IrR0oxR1M1WktqOVZ5QlFraUdk?=
- =?utf-8?B?dUpaWjVLWDJ1YS9zdFJoQUdBZE5qZUFMNWVCa09BMEZPajZIeEo4VUFGVTFJ?=
- =?utf-8?B?VGI3TGRxMndRU0Q2dUZNWm9DQVcrMWJBLzlidllvUGptUnRzME1RTEpvS1dr?=
- =?utf-8?B?MExXREhhK2w1WnlqZ0Y4MGNzY3pVT0xQSlF6TnhoT202eGlTTDQ5cWplaTBh?=
- =?utf-8?B?QlJoUTNFTmFHU0ZzRmVFcklKQjU2RGd6YnlCai9uZlZOMExOZDNGODVsdlhp?=
- =?utf-8?B?MENrUWErRXkyWDB5bzJIOHRzbnEraG1rU2FReXZyMWxuQURCNS80WEZ4aStn?=
- =?utf-8?B?YkQzTW1WUnpkYS90RkVZbHZZcmViVURPNGMyc21wcXNDUVRBeUJyRDBETk8z?=
- =?utf-8?B?UXhkWVRaODJ1TllNNE9ZNHY2eEJnRnRyUXpFWUFkbFNPVEJNQ2dsNGRabmJt?=
- =?utf-8?B?OFA5MXl3Zk9Sa2p5Y1I2N3Jub3NlRjA1Q241MDVZTWg3enlWTlZyUWZ5M2oy?=
- =?utf-8?B?c1hBWFAwQnpqSHZiQXVZajB1UTBjUHQ3TllxL2xHUFROY2xIQjIzcW04bWs0?=
- =?utf-8?B?MlhsMjdCY002UHRKUXVBb29FU0xzU1NRL1VuVVNkK2R3RDZkQ0FCaWU1QTRp?=
- =?utf-8?B?dks3L2VtQ2tkc2VpMGZiVTlsMkdmVzFpNmxNbzJReElOSGppRllDVjhhNXo1?=
- =?utf-8?B?R0xYRHZuRVk3MDNiK1l2SGlHWlpGTHhjcWx6dFVkNUtvZlZuK1lMaEhDMmhJ?=
- =?utf-8?B?dEJyOWNCd3V3MWhpMFdWeW9uODl0ME1ZbzJRdm5FZS9BZGtabURHcjdQT0Z1?=
- =?utf-8?B?RlNFdDY0RnVWNzBUMm1DV0NuRmhtMXRqMktqYnRXNHJkQXlxYTlSeThnM0VX?=
- =?utf-8?B?WUFJLys0TE5DLzYxL3E1ZWo5VUV2OXpqb241eWpxaFZkYnhkVWdodTdIanFR?=
- =?utf-8?B?M3YzeWZmbU01SzRuUFhDQXJqQkRqcGd4T1VjY3ZrS2JqRE84WlZZMmt6NlRB?=
- =?utf-8?B?S29CSTM4UUJUc2tQcDI0c1lteWltNjdLcWxQMFByckY4U0hsQlo5SG1mNm10?=
- =?utf-8?B?TEk1Y3ErNCtFRXo4WFpmWkVRSHJ4amh6R3ZGU0xSYUhPeEl6M20vMU5uYm4v?=
- =?utf-8?B?bUkvUWJXYVBSTUNJeVNTaC9zMWplMXZTejVaNW5yZnRldzRDTllXb1dEbDF0?=
- =?utf-8?B?R2xVYVVaT1Frak1GQTFMTHJGQW9QM25HcXIwa2JvMnlKaUkrVjRPU1NIVnVK?=
- =?utf-8?B?L3c9PQ==?=
+	=?utf-8?B?cWMvU0hiSFZwMDMraXhOTmtIeWNVK0lwRW5nTmxWMjNnd3BiWFI0VitSdHZI?=
+ =?utf-8?B?SzFPYXQ0VHAyUEZvUnAzdlRXVHA1djN0b09vQndEcVo2NW9hTFlvNnJXUFlH?=
+ =?utf-8?B?Y3cxdDR4a0kzL1dPRWo0ZC96eXVHblcrL1h0QkNmQkxIbVZITFN5TjhDM3dB?=
+ =?utf-8?B?UjhYU3VTa1FQSk4xYWVDL2dEcUFXd3krbFFNdnE4NmlQVFRKRWxReEpKTy82?=
+ =?utf-8?B?MnBFa1Qxa2ZTLzE4bFF1NkpHNmYwTGxiOWxlK2FwNjBkdjlERmlzL1J0ZHpF?=
+ =?utf-8?B?eHZDaVlmL010eG8wU1lsb1ozZGRWRDd1MzVncUgwUU5qcGRQeG5qNUp3cUVI?=
+ =?utf-8?B?Z1lhT1ZrRDNUTnFXMGt6M2NRZm1udHFhN1c0bkRJQTZZM0Iwa3JvbTZKd1ZK?=
+ =?utf-8?B?clBMelc0RStJNitHWWZNYjNhSWtva09tV2dDOFF6SGwvSHQ0TnJSdzJyME5X?=
+ =?utf-8?B?RVNIdFJJK1lDMVFTV0FWZ0JSNjJOZGtYc1JoK0dZaEtQeXJiT1kwdXJLOGo3?=
+ =?utf-8?B?dVVoWXNMbC9YcU1vWVZ3Z0lzZDhSMUNKUXhIY0h6TEhOZStKaEhlWGk2UFFs?=
+ =?utf-8?B?UnNFNVA0Ykc5Um44dHZGaVdhTFg3MmtuTUd0ZWJiWkNBY0JCb2lBWVBJMTBD?=
+ =?utf-8?B?eFQ1dGo5RWtIcTQxSWlINVlHSUc1bVNOUWV4emhoRU1WbUJVOEFWNWZZU096?=
+ =?utf-8?B?dmhVblVkV1JaUm05VFpZRVpZbmJSckphZEdxbzA2a2ZuUEF5WFVQelJNZTNl?=
+ =?utf-8?B?YzhaTDVRSEk2bHdZT1BYZzgzODl0a21nQW1aVENQamUvdjZhTTdsMmdyL2gx?=
+ =?utf-8?B?S1MwQk1uVFNMQjRheTZ6QXU1L2FsYVk5Qml2WkE1LzAyYWc2c0JGWk96NUFN?=
+ =?utf-8?B?eVgxQ01vNkFGVmo4M3RKK0lDWHd3enpiUG0wVXFXM2FGalNmQ1RWZHRkSHhn?=
+ =?utf-8?B?UHh4RkpDVDdJSGFFQzhaRlBhZUNDczBlTE52eVVXQzdVYTJlWGQzS1NFMEhB?=
+ =?utf-8?B?RmNiU1R0MFhsaVQwQ1FIOUJETml6eTZJT3pTVkh1cXNEL3FEaCt6bytZWkhD?=
+ =?utf-8?B?MnVTa3dzWFRBSHA3WGtRamtoeXM1cjJ6NzkraGtLdDc2ZHJJRHFDQ09WbU5j?=
+ =?utf-8?B?ejF5QkcweGhYWXExS2lyNDRKYW50L1lwRXlnRVkzL0F0VUhwTHpwZ1MvRGhI?=
+ =?utf-8?B?T1RGN2EweGY2MDM1ZS9RR2NTZTZndWlDRG5ySjJtaDFJSGloNVBiVTBaZjhJ?=
+ =?utf-8?B?dFZ5WU03Vk1aSHVIcEtSbENXdkdOUlZ6bDVsZ3lveVBuc2ZDTVpEcTJXNDZD?=
+ =?utf-8?B?Q0FkRTVhY2RjbHpNajNjdmhjMkRPWWc3akpicHR1eFFUc1R5cDhubmErNUNx?=
+ =?utf-8?B?czJ4Y2ZSUkpBWVZlRUJMMkxZamU4OWdsNTVZSnZ0ay9KUkI5NFpVdkNjYzho?=
+ =?utf-8?B?eEZrNElCZzlCU2ZISzhIZFk3M3lLazd1OUd5bWViRDNHS0ZRQ1M5WU8vQXdI?=
+ =?utf-8?B?NEhSY3F3dVhVSStxdkhzSDViTVhDR3FGdVhqS0diR1VHMWpaTmJNMVd1TG9a?=
+ =?utf-8?B?WjNjamMyRVIvejBua3Y1QkUwWnpoeE1MbEF4dTZsQlUwWXErUCswRndKS0xQ?=
+ =?utf-8?B?WjRnUGpwVVdHMUlTMlR3WmxiNkdjWFV5QkJjSTJmN3gzSEVLRG53SWlzVnBx?=
+ =?utf-8?B?YmpwREREVWo2dEF3K09vVGpOQWJLTVdOVDV1K01kc0JGcE9aYjVYMHJ2d1or?=
+ =?utf-8?B?bHZpTHBOVUtkTHdGVzNpalpXVklXakpScnRRMU5sT3E1OW9kNVI5M0VRNC9I?=
+ =?utf-8?B?K3VqdzBNVlZBak1OOXRWejJKN3lyV2tkSHNwcC9zV2tnMnVRdkpWNnBQY2Vk?=
+ =?utf-8?B?aFhZSyt6d1BobWZBUE5ZWEptbzRzVDRpcjhhcEIyS1QvZjVxYVViNnNzZDRq?=
+ =?utf-8?B?ZWZaM05JYjRMeGFoUTJyRjNFS1lsRXFmbWZ1UjZhNUVTVzl1bG9BSmNKU1I4?=
+ =?utf-8?B?UzR2bmswaFNtZXdXczVwaFNxRjAvMk1rWFdCMTNXU0xMUkxQaVF5cGk0ajZh?=
+ =?utf-8?B?Y3puU2NTTlJBRTBtdXBxTEtZbXZaRU53SWRuSHpIcWhTYmg3OGl2WGIzRExT?=
+ =?utf-8?B?alQxQ3o0TGw3Nk12c29ZaEJiVU5XaDBXeEwzYWZlMnRPM0ViaUIzVThpRTE4?=
+ =?utf-8?B?RkE9PQ==?=
 X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12e42179-50ff-43fb-ebf9-08dd36f032cd
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a17a249-d70f-4d47-c2b6-08dd36f3f6d8
 X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2025 12:12:22.9655
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2025 12:39:20.4619
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DHl/4R+3VncyvaUvrcbYhK947kWVPRL299zDqqMntzRDJWLJa1AwucZHEEENv/hhqp7051i0so7wcxTWAqqgyCEj4ke25CPRe2AEO1Sg4TY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6845
+X-MS-Exchange-CrossTenant-UserPrincipalName: nKOZuV/FqFQb+VFwh06+tXZ4O7T0B2wYKoeX9YSKVno+vhaC5qfP/IAorguiIOaY7hwGJBXwrkwOeBS9Smq803nu4TkpNGnHJnQM9EE8LEk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10782
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 17 Jan 2025 12:12:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17027
+ <bitbake-devel@lists.openembedded.org>; Fri, 17 Jan 2025 12:39:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17028
 
-Hi Antonin,
+On 1/17/25 11:44 AM, Quentin Schulz wrote:
+> From: Quentin Schulz <quentin.schulz@cherry.de>
+> 
+> b4[1] is a very nice tool for mail-based contribution. A config[2] file
+> exists to set up a few defaults. We can use it to set the Cc recipients
+> to always add, in our case the mailing list.
+> 
+> This also adds a wrapper script that is called by b4 to figure out which
+> addresses to put as Cc recipients. Considering that patches to the doc/
+> directory also need to be sent to the yocto-docs mailing list, this
+> wrapper handles that. A limitation of the script (lsdiff actually) is
+> that it doesn't know how to handle empty files, but those should be
+> of rather rare occurrences.
+> 
+> While the wrapper script should be enough by itself to add the bitbake
+> mailing list to the Cc recipients, one still needs to manually run b4
+> prep --auto-to-cc for that to happen. Therefore, let's add an explicit
+> send-series-cc so that at least that mailing list is always there.
+> 
+> Because we currently do not have anything to check for patch validity,
+> remove requirement for b4 prep --check to be run before sending a patch
+> series, via disable-needs-checking in prep-pre-flight-checks.
+> 
+> [1] https://pypi.org/project/b4/
+> [2] https://b4.docs.kernel.org/en/latest/config.html
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+> ---
+> This adds a basic config file for b4 to avoid to have to add the mailing
+> list by hand.
+> For documentation patches, the additional mailing list will be added
+> when running b4 prep --check, as is required for each new series managed
+> by b4.
+> 
+> Note that b4 supports patchwork, c.f.
+> https://b4.docs.kernel.org/en/latest/config.html#patchwork-integration-settings
+> though I have no clue what it does with it as I am no maintainer, but
+> maybe something worth having a look at if some maintainer of this repo
+> wants to use b4 to merge stuff?
+> ---
+> Changes in v2:
+> - add b4-wrapper for auto-detecting patches that are to be sent to the
+>    docs mailing list as well,
+> - disable forced b4 prep --check for each b4-managed series,
+> - Link to v1: https://lore.kernel.org/r/20240524-b4-support-v1-1-0c4334c36cc7@cherry.de
+> ---
+>   .b4-config    |  4 ++++
+>   b4-wrapper.py | 38 ++++++++++++++++++++++++++++++++++++++
+>   2 files changed, 42 insertions(+)
+> 
+> diff --git a/.b4-config b/.b4-config
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..0b699f204c414099f2118ffdbc9f7b24454e4a4e
+> --- /dev/null
+> +++ b/.b4-config
+> @@ -0,0 +1,4 @@
+> +[b4]
+> +  send-series-cc = bitbake-devel@lists.openembedded.org
+> +  send-auto-cc-cmd = ./b4-wrapper.py send-auto-cc-cmd
+> +  prep-pre-flight-checks = disable-needs-checking
+> diff --git a/b4-wrapper.py b/b4-wrapper.py
+> new file mode 100755
+> index 0000000000000000000000000000000000000000..ddc2597bc0374fa5124a83be94eeab52df6f38d3
+> --- /dev/null
+> +++ b/b4-wrapper.py
+> @@ -0,0 +1,38 @@
+> +#!/usr/bin/env python3
+> +#
 
-On 1/17/25 1:08 PM, Antonin Godard wrote:
-> Hi Quentin,
-> 
-> On Fri Jan 17, 2025 at 12:43 PM CET, Quentin Schulz wrote:
-> [...]
->>>> Note that b4 supports patchwork, c.f.
->>>> https://b4.docs.kernel.org/en/latest/config.html#patchwork-integration-settings
->>>> though I have no clue what it does with it as I am no maintainer, but
->>>> maybe something worth having a look at if some maintainer of this repo
->>>> wants to use b4 to merge stuff?
->>>
->>> I'll add my configuration here, maybe someone or myself can add some doc for it
->>> later, here or elsewhere.
->>>
->>> configuration I use:
->>>
->>> [b4]
->>>     pw-url = https://patchwork.yoctoproject.org/
->>>     pw-key = <redacted>
->>>     pw-project = docs
->>>     pw-review-state = under-review
->>>     pw-accept-state = accepted
->>>     pw-discard-state = rejected
->>>
->>> For `pw-project`, it comes from the project name on patchwork, e.g.:
->>>
->>>     https://patchwork.yoctoproject.org/project/docs/list
->>>                                                ^^^^
->>>
->>> The pw-key can be obtained from the user's personal settings.
->>>
->>> Then `b4 {am,shazam}` will automatically set the state to under-review.
->>>
->>> `b4 ty -d` will reject the patch. Sometimes I use `b4 ty --pw-set-state
->>> superseded -d ...` when I know another version of the patch/series was sent.
->>>
->>> Finally `b4 ty -a` will also set the accepted state along the generation of
->>> thank-you file.
->>>
->>> And overall it's much easier than clicking buttons on patchwork :)
->>>
->>
->> Thanks!
->>
->> How does this work if I don't have pw-key (which will be the case for
->> most/all contributors)? Does b4 fail or goes on like it would if we had
->> no pw-* settings?
-> 
-> I just checked and if a pw-key is not set, b4 just does nothing related to
-> patchwork (tested for shazam only).
-> 
-
-Thanks for testing!
-
->> Additionally, I'm pretty sure we do not want maintainers to mistakenly
->> push their pw-key to the mailing list. So I guess this should be stored
->> outside of the git repo and rather in .gitconfig, c.f.
->> https://b4.docs.kernel.org/en/latest/config.html#configuration-options
->> Should we add some documentation on how to do that for maintainers?
-> 
-> True, in fact all of this was configured from .git/config on a per-repo basis.
-> 
->> Considering I cannot test this right now (i don't have patchwork set up,
->> nor do I know if it makes sense to set it up if I'm not maintainer :) ),
->> I think it'd make more sense to have someone able to test it to send a
->> patch later to add support for that? What do you think?
-> 
-> I'm not sure where would be a good place for such documentation, as this is
-> personal tooling and personal taste in the end.
-> 
-
-I believe those settings (except pw-key) would be identical for 
-everybody, so having them in .b4-config within the repo makes sense to 
-me. What do you think?
-
-In a README/CONTRIBUTION file and/or as a comment in .b4-config we can 
-explain how to finish the maintainer setup for example.
+Forgot to add an SPDX-License-Identifier here, I can send a v3 for that 
+or simply pick between MIT and GPL-2.0-only and GPL-2.0-or-later which 
+seem to be the most common licenses for python scripts in our projects, 
+I don't have a personal preference :)
+For now, will wait for feedback first!
 
 Cheers,
 Quentin
+
+> +# This script is to be called by b4:
+> +# - through b4.send-auto-cc-cmd with "send-auto-cc-cmd" as first argument,
+> +#
+> +# When send-auto-cc-cmd is passed:
+> +#
+> +#  This returns the list of Cc recipients for a patch.
+> +#
+> +# This script takes as stdin a patch.
+> +
+> +import subprocess
+> +import sys
+> +
+> +cmd = sys.argv[1]
+> +if cmd != "send-auto-cc-cmd":
+> +    sys.exit(-1)
+> +
+> +patch = sys.stdin.read()
+> +
+> +if subprocess.call(["which", "lsdiff"], stdout=subprocess.DEVNULL) != 0:
+> +    print("lsdiff missing from host, please install patchutils")
+> +    sys.exit(-1)
+> +
+> +print("bitbake-devel@lists.openembedded.org")
+> +
+> +files = subprocess.check_output(["lsdiff", "--strip-match=1", "--strip=1", "--include=doc/*"],
+> +                                input=patch, text=True)
+> +if len(files):
+> +    print("docs@lists.yoctoproject.org")
+> +else:
+> +# Handle patches made with --no-prefix
+> +    files = subprocess.check_output(["lsdiff", "--include=doc/*"],
+> +                                    input=patch, text=True)
+> +    if len(files):
+> +        print("docs@lists.yoctoproject.org")
+> +
+> +sys.exit(0)
+> 
+> ---
+> base-commit: 0329a7e3ac694737f2d2c1861f65492551360663
+> change-id: 20240524-b4-support-e9855fc54d40
+> 
+> Best regards,
+
 
