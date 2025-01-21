@@ -2,8 +2,8 @@ Return-Path: <egyszeregy@freemail.hu>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F535C02182
-	for <webhook@archiver.kernel.org>; Tue, 21 Jan 2025 16:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E07BC02182
+	for <webhook@archiver.kernel.org>; Tue, 21 Jan 2025 16:28:34 +0000 (UTC)
 Subject: Re: [PATCH] bitbake: knotty/progressbar: Optimize footer update and prints
 To: bitbake-devel@lists.openembedded.org
 From: "Livius" <egyszeregy@freemail.hu>
@@ -11,18 +11,18 @@ X-Originating-Location: =?UTF-8?B?U3R1dHRnYXJ0LCBCYWRlbi1Xw7xydHRlbWJlcmcsIERF?=
 X-Originating-Platform: Windows Chrome 131
 User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Date: Tue, 21 Jan 2025 08:27:34 -0800
+Date: Tue, 21 Jan 2025 08:28:24 -0800
 References: <71994b37eb818538690cdd5a810cecacec887b8c.camel@linuxfoundation.org>
 In-Reply-To: <71994b37eb818538690cdd5a810cecacec887b8c.camel@linuxfoundation.org>
 Message-ID: <20973.1737476704621906904@lists.openembedded.org>
-X-Old-Date: Tue, 21 Jan 2025 08:25:04 -0800
+X-Old-Date: Tue, 21 Jan 2025 08:27:34 -0800
 Content-Type: multipart/alternative; boundary="q21uxEQjlUZGUucq0sgy"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 21 Jan 2025 16:27:44 -0000
+ <bitbake-devel@lists.openembedded.org>; Tue, 21 Jan 2025 16:28:34 -0000
 X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17043
-Message-ID: <20250121162734.EKglXylOuIdoGOoG8DdQWF7WKm2S1jq4pWorGl1Fy5o@z>
+Message-ID: <20250121162824.2EOqwH777-W8yDrH5r8fg_GY5leNyif48gVfp5zRx48@z>
 
 --q21uxEQjlUZGUucq0sgy
 Content-Type: text/plain; charset="utf-8"; markup=markdown
@@ -60,7 +60,8 @@ t perform any I/O operation for HWs
 - `print()` redirect to `StringIO`
 
     It is the same as write to `StringIO` directly as a i know, but i liked=
- to keep the old print() style to understand better.
+ to keep the old `print()` style to understand better.
+   =20
     `print(content, file=3Dself._footer_buf)` -> `self._footer_buf.write(f"=
 {content}\n")`
 
@@ -107,9 +108,11 @@ Ws</p>
 <li><p><code>print()</code> redirect to <code>StringIO</code></p>
 
 <p>It is the same as write to <code>StringIO</code> directly as a i know, b=
-ut i liked to keep the old print() style to understand better.
-<code>print(content, file=3Dself._footer_buf)</code> -&gt; <code>self._foot=
-er_buf.write(f&quot;{content}\n&quot;)</code></p></li>
+ut i liked to keep the old <code>print()</code> style to understand better.=
+</p>
+
+<p><code>print(content, file=3Dself._footer_buf)</code> -&gt; <code>self._f=
+ooter_buf.write(f&quot;{content}\n&quot;)</code></p></li>
 </ul>
 
 --q21uxEQjlUZGUucq0sgy--
