@@ -2,8 +2,8 @@ Return-Path: <egyszeregy@freemail.hu>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E07BC02182
-	for <webhook@archiver.kernel.org>; Tue, 21 Jan 2025 16:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41042C0218B
+	for <webhook@archiver.kernel.org>; Tue, 21 Jan 2025 16:35:54 +0000 (UTC)
 Subject: Re: [PATCH] bitbake: knotty/progressbar: Optimize footer update and prints
 To: bitbake-devel@lists.openembedded.org
 From: "Livius" <egyszeregy@freemail.hu>
@@ -11,18 +11,18 @@ X-Originating-Location: =?UTF-8?B?U3R1dHRnYXJ0LCBCYWRlbi1Xw7xydHRlbWJlcmcsIERF?=
 X-Originating-Platform: Windows Chrome 131
 User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Date: Tue, 21 Jan 2025 08:28:24 -0800
+Date: Tue, 21 Jan 2025 08:35:45 -0800
 References: <71994b37eb818538690cdd5a810cecacec887b8c.camel@linuxfoundation.org>
 In-Reply-To: <71994b37eb818538690cdd5a810cecacec887b8c.camel@linuxfoundation.org>
 Message-ID: <20973.1737476704621906904@lists.openembedded.org>
-X-Old-Date: Tue, 21 Jan 2025 08:27:34 -0800
+X-Old-Date: Tue, 21 Jan 2025 08:28:24 -0800
 Content-Type: multipart/alternative; boundary="q21uxEQjlUZGUucq0sgy"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 21 Jan 2025 16:28:34 -0000
+ <bitbake-devel@lists.openembedded.org>; Tue, 21 Jan 2025 16:35:54 -0000
 X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17043
-Message-ID: <20250121162824.2EOqwH777-W8yDrH5r8fg_GY5leNyif48gVfp5zRx48@z>
+Message-ID: <20250121163545.TWkIHbWEpyzrkpEV_1wX7yhIgavlQ6HYDMX5rGKbMfU@z>
 
 --q21uxEQjlUZGUucq0sgy
 Content-Type: text/plain; charset="utf-8"; markup=markdown
@@ -41,7 +41,7 @@ andard output channel (stdout) and the standard error channel (stderr). The=
 
     It seems to me they are always 1 and 2, but maybe it would better to us=
 e `sys.stdout.fileno()` and `sys.stderr.fileno()` for comparing. This is ne=
-ed to use for checking that is `fd` is resizable or not.
+ed to use for checking that is `fd` resizable or not.
 
     https://stackoverflow.com/questions/32199552/what-is-sys-stdin-fileno-i=
 n-python
@@ -62,8 +62,8 @@ t perform any I/O operation for HWs
     It is the same as write to `StringIO` directly as a i know, but i liked=
  to keep the old `print()` style to understand better.
    =20
-    `print(content, file=3Dself._footer_buf)` -> `self._footer_buf.write(f"=
-{content}\n")`
+    `print(content, file=3Dself._footer_buf)` very same -> `self._footer_bu=
+f.write(f"{content}\n")`
 
 --q21uxEQjlUZGUucq0sgy
 Content-Type: text/html; charset=UTF-8
@@ -84,8 +84,8 @@ to stdout and 2 to stderr.</em></p>
 
 <p>It seems to me they are always 1 and 2, but maybe it would better to use=
  <code>sys.stdout.fileno()</code> and <code>sys.stderr.fileno()</code> for =
-comparing. This is need to use for checking that is <code>fd</code> is resi=
-zable or not.</p>
+comparing. This is need to use for checking that is <code>fd</code> resizab=
+le or not.</p>
 
 <p><a href=3D"https://stackoverflow.com/questions/32199552/what-is-sys-stdi=
 n-fileno-in-python" target=3D"_blank">https://stackoverflow.com/questions/3=
@@ -111,8 +111,8 @@ Ws</p>
 ut i liked to keep the old <code>print()</code> style to understand better.=
 </p>
 
-<p><code>print(content, file=3Dself._footer_buf)</code> -&gt; <code>self._f=
-ooter_buf.write(f&quot;{content}\n&quot;)</code></p></li>
+<p><code>print(content, file=3Dself._footer_buf)</code> very same -&gt; <co=
+de>self._footer_buf.write(f&quot;{content}\n&quot;)</code></p></li>
 </ul>
 
 --q21uxEQjlUZGUucq0sgy--
