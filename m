@@ -1,355 +1,343 @@
-Return-Path: <egyszeregy@freemail.hu>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C02AC02181
-	for <webhook@archiver.kernel.org>; Tue, 21 Jan 2025 01:02:59 +0000 (UTC)
-Received: from smtp-out.freemail.hu (smtp-out.freemail.hu [46.107.16.207])
- by mx.groups.io with SMTP id smtpd.web11.6004.1737421372070702728
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E70DC02182
+	for <webhook@archiver.kernel.org>; Tue, 21 Jan 2025 10:40:12 +0000 (UTC)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+ by mx.groups.io with SMTP id smtpd.web11.13169.1737456004352792488
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 20 Jan 2025 17:02:53 -0800
+ Tue, 21 Jan 2025 02:40:05 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: message contains an insecure body length tag" header.i=@freemail.hu header.s=20181004 header.b=Izz9FClv;
- spf=pass (domain: freemail.hu, ip: 46.107.16.207, mailfrom: egyszeregy@freemail.hu)
-Received: from localhost.localdomain (catv-178-48-208-49.catv.fixed.vodafone.hu [178.48.208.49])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.freemail.hu (Postfix) with ESMTPSA id 4YcTTN6CtRz141r;
-	Tue, 21 Jan 2025 02:02:48 +0100 (CET)
-From: egyszeregy@freemail.hu
-To: bitbake-devel@lists.openembedded.org
-Cc: =?UTF-8?q?Benjamin=20Sz=C5=91ke?= <egyszeregy@freemail.hu>
-Subject: [PATCH] bitbake: knotty/progressbar: Optimize footer update and prints
-Date: Tue, 21 Jan 2025 02:01:56 +0100
-Message-ID: <20250121010156.470-1-egyszeregy@freemail.hu>
-X-Mailer: git-send-email 2.47.1.windows.2
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=KsQ5f/3m;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.50, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-436202dd730so39121515e9.2
+        for <bitbake-devel@lists.openembedded.org>; Tue, 21 Jan 2025 02:40:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1737456003; x=1738060803; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HdN1a5idqOC/o7JQIrD0r/giZa3Tx+qHlwYQV0sclKc=;
+        b=KsQ5f/3mZylKwVWo0HThj+wridtQB67Zj8Bz6Z4o1FCxemCh3ct2Rqy9CpgeAFzCr7
+         kHOMGV/cx9vl+89a3C1DDKbTSTpxi9NqW9HbaDP3KDVRXbCs7oBiJlWbkDEXmVXMq3HA
+         vVMoefwxL+OBH+285q4bXtbgEwvuD8SDJM6p0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737456003; x=1738060803;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=HdN1a5idqOC/o7JQIrD0r/giZa3Tx+qHlwYQV0sclKc=;
+        b=l/Vk31T6cdK6qWEZuCGc643IaE4JYlK5lxAgKSvqy/xoqOVj6gqEFutTKjfFoeGjYz
+         4UEd5qE8mRBidafa++K3FTEojVfAVzvu3pJUqAzKfvoytnK68a9sfEjbYaHbLHz4FSVk
+         07c+WcLaZfTdOn4REF3yxMLghuyCVpJ9ybK+yE60Br6iZCMn7UXZvGx50fKj30+j6I3G
+         6aJTmHD99c1vIgN3v1y+7ksYk9Ygqr8GouvraKJWO+EBy/ddo+DHo0ZzQpyl3f7JWOeW
+         Skp8s/Oxvx/f5zcYdkO5f6BSPv3c6u6LhTVJhFcB2dxVQI+tjXzv0l9FCmso46jpBRg6
+         6Vhg==
+X-Forwarded-Encrypted: i=1; AJvYcCVyX9PWkTOONh7keGQYH6nKKiraXIoHpUUoiz4gvMj36RMzXbm0EkYeNXy7gfg4zSDoLnfMR8D7T5hIbjx1@lists.openembedded.org
+X-Gm-Message-State: AOJu0YxLKKdM+bTOlmzc5iZYuPmeODNmNdMuKrVkhsKke+DejQuEscBr
+	fkiVaw8NmVWRtsrIkfN89+ifluVjzFouJ7pqdu6+RAz+JWXBg258fQV3Vz/ybwPGi+U3kElFpae
+	C90o=
+X-Gm-Gg: ASbGncv0fyjRIwbYr9EgEzAgPNrf1uO/JuEEIW/27NIHaVXgEdg/yiFzLtYxc4sAyf+
+	AWuwi8seRQkzGU2SOjIKgM/Bw/zL8+W0/jvXCbmks40jK0MHZsC2h787J0TnrtEUcCYuOg3Nruw
+	X5LXYwhuwv8Hx50BtKblpTGcDfLVksUDQpsQsiRDlFMSIBMEifWvcjFLADMuJbMo+Ylr2n0fj1a
+	fRwakYg7Yr0JrTrESpEq9Fp15EsO1D6iDB5nStf3Bc/5fFa5NF8UaQqzHDkkavyRKeD5hMXLIYd
+	JxMfMFki/C5qb/xFC/WI1ypiAUGdtDW0je229JJoF09g3n4yHiZ37zwiTNA=
+X-Google-Smtp-Source: AGHT+IHdSFmuWj4X/RxapQ9PP/STLhPLJIYvpMXFgUeKCQ6tcw5oJiLInSgUo99pfV2SiLz7Em48RA==
+X-Received: by 2002:a05:600c:4713:b0:434:fb65:ebbb with SMTP id 5b1f17b1804b1-438913f1654mr164075165e9.17.1737456002561;
+        Tue, 21 Jan 2025 02:40:02 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:e272:e8bb:f22e:9203? ([2001:8b0:aba:5f3c:e272:e8bb:f22e:9203])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43890468c67sm176492695e9.34.2025.01.21.02.40.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2025 02:40:01 -0800 (PST)
+Message-ID: <71994b37eb818538690cdd5a810cecacec887b8c.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] bitbake: knotty/progressbar: Optimize
+ footer update and prints
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: egyszeregy@freemail.hu, bitbake-devel@lists.openembedded.org
+Date: Tue, 21 Jan 2025 10:40:00 +0000
+In-Reply-To: <20250121010156.470-1-egyszeregy@freemail.hu>
+References: <20250121010156.470-1-egyszeregy@freemail.hu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.54.0-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/relaxed; t=1737421369;
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 21 Jan 2025 01:02:59 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17037
+ <bitbake-devel@lists.openembedded.org>; Tue, 21 Jan 2025 10:40:12 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17038
 
-	s=20181004; d=freemail.hu;
-
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-
-	l=8744; bh=f8btanmB0MHEbLinyuPnELB0DeDAojsfNYf5hbG1+T0=;
-
-	b=Izz9FClvWTQ6k1FQlm5qdHoLuJvJG5VMwU2MecNggx82mVWfug/qpacg2vCR3nTu
-
-	MkEgPhRpjWckEkKWd/I3jpprNKO5yxSvG+6gQ/Q1Tv5tF3qd/Fcf/ucqIfVz1v3YgQr
-
-	RNupHb4LPi5cTdjWAOetlJXJmPvApUEH6irKmXRcyRtPeI02Z4QwuX8ca5BJ7xetnNS
-
-	j5l2BOE/ZESyJAPjiS65W3EXObBKu5F00tb7PCX8sgvWBkTVIBxZ+5rfQenr87WQci5
-
-	yQaNbLwWhd+cLQRsRmKKC7gq+fwiuABg+xC0qxO43WYp1S3hte/sSudCl792hiAGnzS
-
-	EAU9dayLyQ==
-Content-Transfer-Encoding: quoted-printable
-
-From: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
-
-- Optimize printing in footer update with use a StringIO buffer.
-- Cleaning and refactoring prints in code, print() functions were elimina=
-ted from all loops for better performance.
-- Use max 10 Hz refresh rate (FPS) for footer update.
-- Check file descriptor in ProgressBar() class init to see if it's STDOUT=
- or STDERR and resizable.
-
-Signed-off-by: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
----
- lib/bb/ui/knotty.py            | 81 ++++++++++++++++++++++++----------
- lib/progressbar/progressbar.py | 23 ++++++----
- 2 files changed, 71 insertions(+), 33 deletions(-)
-
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 2fff1b366..cd40e76e0 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -10,6 +10,7 @@
-=20
- from __future__ import division
-=20
-+import io
- import os
- import sys
- import logging
-@@ -127,6 +128,10 @@ class InteractConsoleLogFilter(logging.Filter):
-         return True
-=20
- class TerminalFilter(object):
-+
-+    # 10 Hz (FPS) -> 0.100 secs
-+    _DEFAULT_PRINT_INTERVAL =3D 0.100
-+
-     rows =3D 25
-     columns =3D 80
-=20
-@@ -165,9 +170,12 @@ class TerminalFilter(object):
-         self.interactive =3D sys.stdout.isatty()
-         self.footer_present =3D False
-         self.lastpids =3D []
--        self.lasttime =3D None
-+        self.lasttime =3D time.time()
-         self.quiet =3D quiet
-=20
-+        self._footer_buf =3D io.StringIO()
-+        self._footer_lines =3D None
-+
-         if not self.interactive:
-             return
-=20
-@@ -215,11 +223,11 @@ class TerminalFilter(object):
-=20
-     def clearFooter(self):
-         if self.footer_present:
--            lines =3D self.footer_present
--            sys.stdout.buffer.write(self.curses.tparm(self.cuu, lines))
-+            sys.stdout.buffer.write(self.curses.tparm(self.cuu, self._fo=
-oter_lines))
-             sys.stdout.buffer.write(self.curses.tparm(self.ed))
-             sys.stdout.flush()
-         self.footer_present =3D False
-+        self._footer_lines =3D None
-=20
-     def elapsed(self, sec):
-         hrs =3D int(sec / 3600.0)
-@@ -235,28 +243,47 @@ class TerminalFilter(object):
-=20
-     def keepAlive(self, t):
-         if not self.cuu:
--            print("Bitbake still alive (no events for %ds). Active tasks=
-:" % t)
-+            msgbuf =3D ["Bitbake still alive (no events for %ds). Active=
- tasks:" % t]
-             for t in self.helper.running_tasks:
--                print(t)
-+                msgbuf.append(str(t))
-+            print("\n".join(msgbuf))
-             sys.stdout.flush()
-=20
-     def updateFooter(self):
-         if not self.cuu:
-             return
-+
-         activetasks =3D self.helper.running_tasks
-         failedtasks =3D self.helper.failed_tasks
-         runningpids =3D self.helper.running_pids
-         currenttime =3D time.time()
--        if not self.lasttime or (currenttime - self.lasttime > 5):
-+        deltatime =3D currenttime - self.lasttime
-+
-+        if (deltatime > 5.0):
-             self.helper.needUpdate =3D True
--            self.lasttime =3D currenttime
--        if self.footer_present and not self.helper.needUpdate:
-+            need_update =3D self.helper.needUpdate
-+        else:
-+            # Do not let to update faster then _DEFAULT_PRINT_INTERVAL
-+            # to avoid heavy print() flooding.
-+            need_update =3D self.helper.needUpdate and (deltatime > self=
-._DEFAULT_PRINT_INTERVAL)
-+
-+        if self.footer_present and (not need_update):
-+            # Footer update is not need.
-             return
-+        else:
-+            # Footer update is need and store its "lasttime" value.
-+            self.lasttime =3D currenttime
-+
-         self.helper.needUpdate =3D False
-         if self.footer_present:
-             self.clearFooter()
-         if (not self.helper.tasknumber_total or self.helper.tasknumber_c=
-urrent =3D=3D self.helper.tasknumber_total) and not len(activetasks):
-             return
-+
-+        # Clear footer buffer.
-+        self._footer_buf.truncate(0)
-+        self._footer_buf.seek(0)
-+
-         tasks =3D []
-         for t in runningpids:
-             start_time =3D activetasks[t].get("starttime", None)
-@@ -275,6 +302,7 @@ class TerminalFilter(object):
-                     else:
-                         pbar =3D BBProgress("0: %s" % msg, 100, widgets=3D=
-[' ', progressbar.Percentage(), ' ', progressbar.Bar(), ''], extrapos=3D5=
-, resize_handler=3Dself.sigwinch_handle)
-                         pbar.bouncing =3D False
-+                    pbar.fd =3D self._footer_buf
-                     activetasks[t]["progressbar"] =3D pbar
-                 tasks.append((pbar, msg, progress, rate, start_time))
-             else:
-@@ -284,17 +312,17 @@ class TerminalFilter(object):
-             content =3D pluralise("Waiting for %s running task to finish=
-",
-                                 "Waiting for %s running tasks to finish"=
-, len(activetasks))
-             if not self.quiet:
--                content +=3D ':'
--            print(content)
-+                content +=3D ":"
-+            print(content, file=3Dself._footer_buf)
-         else:
-             scene_tasks =3D "%s of %s" % (self.helper.setscene_current, =
-self.helper.setscene_total)
-             cur_tasks =3D "%s of %s" % (self.helper.tasknumber_current, =
-self.helper.tasknumber_total)
-=20
--            content =3D ''
-+            content =3D ""
-             if not self.quiet:
-                 msg =3D "Setscene tasks: %s" % scene_tasks
--                content +=3D msg + "\n"
--                print(msg)
-+                content +=3D (msg + "\n")
-+                print(msg, file=3Dself._footer_buf)
-=20
-             if self.quiet:
-                 msg =3D "Running tasks (%s, %s)" % (scene_tasks, cur_tas=
-ks)
-@@ -306,11 +334,12 @@ class TerminalFilter(object):
-             if not self.main_progress or self.main_progress.maxval !=3D =
-maxtask:
-                 widgets =3D [' ', progressbar.Percentage(), ' ', progres=
-sbar.Bar()]
-                 self.main_progress =3D BBProgress("Running tasks", maxta=
-sk, widgets=3Dwidgets, resize_handler=3Dself.sigwinch_handle)
-+                self.main_progress.fd =3D self._footer_buf
-                 self.main_progress.start(False)
-             self.main_progress.setmessage(msg)
-             progress =3D max(0, self.helper.tasknumber_current - 1)
-             content +=3D self.main_progress.update(progress)
--            print('')
-+            print("", file=3Dself._footer_buf)
-         lines =3D self.getlines(content)
-         if not self.quiet:
-             for tasknum, task in enumerate(tasks[:(self.rows - 1 - lines=
-)]):
-@@ -326,15 +355,19 @@ class TerminalFilter(object):
-                         content =3D pbar.update(progress)
-                     else:
-                         content =3D pbar.update(1)
--                    print('')
-+                    print("", file=3Dself._footer_buf)
-                 else:
-                     content =3D "%s: %s" % (tasknum, task)
--                    print(content)
-+                    print(content, file=3Dself._footer_buf)
-                 lines =3D lines + self.getlines(content)
--        self.footer_present =3D lines
-+        self._footer_lines =3D lines
-+        self.footer_present =3D True
-         self.lastpids =3D runningpids[:]
-         self.lastcount =3D self.helper.tasknumber_current
-=20
-+        # Print footer buffer.
-+        print(self._footer_buf.getvalue(), end=3D"")
-+
-     def getlines(self, content):
-         lines =3D 0
-         for line in content.split("\n"):
-@@ -342,35 +375,35 @@ class TerminalFilter(object):
-         return lines
-=20
-     def finish(self):
-+        self._footer_buf.close()
-         if self.stdinbackup:
-             fd =3D sys.stdin.fileno()
-             self.termios.tcsetattr(fd, self.termios.TCSADRAIN, self.stdi=
-nbackup)
-=20
- def print_event_log(event, includelogs, loglines, termfilter):
--    # FIXME refactor this out further
-     logfile =3D event.logfile
-     if logfile and os.path.exists(logfile):
-         termfilter.clearFooter()
-         bb.error("Logfile of failure stored in: %s" % logfile)
-         if includelogs and not event.errprinted:
--            print("Log data follows:")
-             f =3D open(logfile, "r")
-+            msgbuf =3D ["Log data follows:"]
-             lines =3D []
-             while True:
-                 l =3D f.readline()
--                if l =3D=3D '':
-+                if l =3D=3D "":
-                     break
-                 l =3D l.rstrip()
-                 if loglines:
--                    lines.append(' | %s' % l)
-+                    lines.append(" | %s" % l)
-                     if len(lines) > int(loglines):
-                         lines.pop(0)
-                 else:
--                    print('| %s' % l)
-+                    msgbuf.append("| %s" % l)
-             f.close()
-             if lines:
--                for line in lines:
--                    print(line)
-+                msgbuf.extend(lines)
-+            print("\n".join(msgbuf))
-=20
- def _log_settings_from_server(server, observe_only):
-     # Get values of variables which control our output
-diff --git a/lib/progressbar/progressbar.py b/lib/progressbar/progressbar=
-.py
-index d4da10ab7..2aa61c015 100644
---- a/lib/progressbar/progressbar.py
-+++ b/lib/progressbar/progressbar.py
-@@ -110,19 +110,24 @@ class ProgressBar(object):
-         self.widgets =3D widgets
-         self.fd =3D fd
-         self.left_justify =3D left_justify
-+        self._fd_console =3D None
-+
-+        fd_num =3D fd.fileno()
-=20
-         self.signal_set =3D False
-         if term_width is not None:
-             self.term_width =3D term_width
-+        elif (fd_num =3D=3D 1) or (fd_num =3D=3D 2):
-+            # STDOUT is the default writing descriptor with a value of 1=
-.
-+            # STDERR is the default error descriptor with a value of 2.
-+            # Sure, fd is a resizable file descriptor, let's allow to
-+            # use for self._handle_resize().
-+            self._fd_console =3D fd
-+            self._handle_resize(None, None)
-+            signal.signal(signal.SIGWINCH, self._handle_resize)
-+            self.signal_set =3D True
-         else:
--            try:
--                self._handle_resize(None, None)
--                signal.signal(signal.SIGWINCH, self._handle_resize)
--                self.signal_set =3D True
--            except (SystemExit, KeyboardInterrupt): raise
--            except Exception as e:
--                print("DEBUG 5 %s" % e)
--                self.term_width =3D self._env_size()
-+            self.term_width =3D self._env_size()
-=20
-         self.__iterable =3D None
-         self._update_widgets()
-@@ -182,7 +187,7 @@ class ProgressBar(object):
-     def _handle_resize(self, signum=3DNone, frame=3DNone):
-         """Tries to catch resize signals sent from the terminal."""
-=20
--        h, w =3D array('h', ioctl(self.fd, termios.TIOCGWINSZ, '\0' * 8)=
-)[:2]
-+        h, w =3D array('h', ioctl(self._fd_console, termios.TIOCGWINSZ, =
-'\0' * 8))[:2]
-         self.term_width =3D w
-=20
-=20
---=20
-2.47.1.windows.2
+T24gVHVlLCAyMDI1LTAxLTIxIGF0IDAyOjAxICswMTAwLCBMaXZpdXMgdmlhIGxpc3RzLm9wZW5l
+bWJlZGRlZC5vcmcgd3JvdGU6Cj4gRnJvbTogQmVuamFtaW4gU3rFkWtlIDxlZ3lzemVyZWd5QGZy
+ZWVtYWlsLmh1Pgo+IAo+IC0gT3B0aW1pemUgcHJpbnRpbmcgaW4gZm9vdGVyIHVwZGF0ZSB3aXRo
+IHVzZSBhIFN0cmluZ0lPIGJ1ZmZlci4KPiAtIENsZWFuaW5nIGFuZCByZWZhY3RvcmluZyBwcmlu
+dHMgaW4gY29kZSwgcHJpbnQoKSBmdW5jdGlvbnMgd2VyZSBlbGltaW5hdGVkIGZyb20gYWxsIGxv
+b3BzIGZvciBiZXR0ZXIgcGVyZm9ybWFuY2UuCj4gLSBVc2UgbWF4IDEwIEh6IHJlZnJlc2ggcmF0
+ZSAoRlBTKSBmb3IgZm9vdGVyIHVwZGF0ZS4KPiAtIENoZWNrIGZpbGUgZGVzY3JpcHRvciBpbiBQ
+cm9ncmVzc0JhcigpIGNsYXNzIGluaXQgdG8gc2VlIGlmIGl0J3MgU1RET1VUIG9yIFNUREVSUiBh
+bmQgcmVzaXphYmxlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEJlbmphbWluIFN6xZFrZSA8ZWd5c3pl
+cmVneUBmcmVlbWFpbC5odT4KClRoaXMgcGF0Y2ggbG9va3MgaW50ZXJlc3RpbmcgYW5kIEkgbGlr
+ZSB0aGUgaWRlYSBvZiBvcHRpbWlzaW5nIHRoaXMgYnV0CkkgZG8gaGF2ZSBzb21lIGNvbmNlcm5z
+IGFuZCBpdCBpcyBoYXJkIHRvIHJldmlldyBkdWUgdG8gdGhlIHdheSBpdCBoYXMKYmVlbiB3cml0
+dGVuLgoKSSdkIG5vdGUgdGhhdCBpdCBkb2Vzbid0IGVsaW1pbmF0ZSB0aGUgcHJpbnQoKSBjYWxs
+cywgaXQgcmVkaXJlY3RzIHRoZW0KdG8gdGhlIElPIGJ1ZmZlciBhbmQgdGhlIGNvbW1pdCBtZXNz
+YWdlIGlzIGEgbGl0dGxlIG1pc2xlYWRpbmcgYWJvdXQKdGhhdC4KCkZ1cnRoZXIgY29tbWVudHMg
+YmVsb3cuCgo+IC0tLQo+IMKgbGliL2JiL3VpL2tub3R0eS5wecKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgfCA4MSArKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tCj4gwqBsaWIvcHJvZ3Jl
+c3NiYXIvcHJvZ3Jlc3NiYXIucHkgfCAyMyArKysrKystLS0tCj4gwqAyIGZpbGVzIGNoYW5nZWQs
+IDcxIGluc2VydGlvbnMoKyksIDMzIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9saWIv
+YmIvdWkva25vdHR5LnB5IGIvbGliL2JiL3VpL2tub3R0eS5weQo+IGluZGV4IDJmZmYxYjM2Ni4u
+Y2Q0MGU3NmUwIDEwMDY0NAo+IC0tLSBhL2xpYi9iYi91aS9rbm90dHkucHkKPiArKysgYi9saWIv
+YmIvdWkva25vdHR5LnB5Cj4gQEAgLTEwLDYgKzEwLDcgQEAKPiDCoAo+IMKgZnJvbSBfX2Z1dHVy
+ZV9fIGltcG9ydCBkaXZpc2lvbgo+IMKgCj4gK2ltcG9ydCBpbwo+IMKgaW1wb3J0IG9zCj4gwqBp
+bXBvcnQgc3lzCj4gwqBpbXBvcnQgbG9nZ2luZwo+IEBAIC0xMjcsNiArMTI4LDEwIEBAIGNsYXNz
+IEludGVyYWN0Q29uc29sZUxvZ0ZpbHRlcihsb2dnaW5nLkZpbHRlcik6Cj4gwqDCoMKgwqDCoMKg
+wqDCoCByZXR1cm4gVHJ1ZQo+IMKgCj4gwqBjbGFzcyBUZXJtaW5hbEZpbHRlcihvYmplY3QpOgo+
+ICsKPiArwqDCoMKgICMgMTAgSHogKEZQUykgLT4gMC4xMDAgc2Vjcwo+ICvCoMKgwqAgX0RFRkFV
+TFRfUFJJTlRfSU5URVJWQUwgPSAwLjEwMAo+ICsKPiDCoMKgwqDCoCByb3dzID0gMjUKPiDCoMKg
+wqDCoCBjb2x1bW5zID0gODAKPiDCoAo+IEBAIC0xNjUsOSArMTcwLDEyIEBAIGNsYXNzIFRlcm1p
+bmFsRmlsdGVyKG9iamVjdCk6Cj4gwqDCoMKgwqDCoMKgwqDCoCBzZWxmLmludGVyYWN0aXZlID0g
+c3lzLnN0ZG91dC5pc2F0dHkoKQo+IMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5mb290ZXJfcHJlc2Vu
+dCA9IEZhbHNlCj4gwqDCoMKgwqDCoMKgwqDCoCBzZWxmLmxhc3RwaWRzID0gW10KPiAtwqDCoMKg
+wqDCoMKgwqAgc2VsZi5sYXN0dGltZSA9IE5vbmUKPiArwqDCoMKgwqDCoMKgwqAgc2VsZi5sYXN0
+dGltZSA9IHRpbWUudGltZSgpCj4gwqDCoMKgwqDCoMKgwqDCoCBzZWxmLnF1aWV0ID0gcXVpZXQK
+PiDCoAo+ICvCoMKgwqDCoMKgwqDCoCBzZWxmLl9mb290ZXJfYnVmID0gaW8uU3RyaW5nSU8oKQo+
+ICvCoMKgwqDCoMKgwqDCoCBzZWxmLl9mb290ZXJfbGluZXMgPSBOb25lCj4gKwo+IMKgwqDCoMKg
+wqDCoMKgwqAgaWYgbm90IHNlbGYuaW50ZXJhY3RpdmU6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIHJldHVybgo+IMKgCj4gQEAgLTIxNSwxMSArMjIzLDExIEBAIGNsYXNzIFRlcm1pbmFsRmls
+dGVyKG9iamVjdCk6Cj4gwqAKPiDCoMKgwqDCoCBkZWYgY2xlYXJGb290ZXIoc2VsZik6Cj4gwqDC
+oMKgwqDCoMKgwqDCoCBpZiBzZWxmLmZvb3Rlcl9wcmVzZW50Ogo+IC3CoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIGxpbmVzID0gc2VsZi5mb290ZXJfcHJlc2VudAo+IC3CoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIHN5cy5zdGRvdXQuYnVmZmVyLndyaXRlKHNlbGYuY3Vyc2VzLnRwYXJtKHNlbGYuY3V1LCBs
+aW5lcykpCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3lzLnN0ZG91dC5idWZmZXIud3JpdGUo
+c2VsZi5jdXJzZXMudHBhcm0oc2VsZi5jdXUsIHNlbGYuX2Zvb3Rlcl9saW5lcykpCj4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIHN5cy5zdGRvdXQuYnVmZmVyLndyaXRlKHNlbGYuY3Vyc2VzLnRw
+YXJtKHNlbGYuZWQpKQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzeXMuc3Rkb3V0LmZsdXNo
+KCkKPiDCoMKgwqDCoMKgwqDCoMKgIHNlbGYuZm9vdGVyX3ByZXNlbnQgPSBGYWxzZQo+ICvCoMKg
+wqDCoMKgwqDCoCBzZWxmLl9mb290ZXJfbGluZXMgPSBOb25lCj4gwqAKPiDCoMKgwqDCoCBkZWYg
+ZWxhcHNlZChzZWxmLCBzZWMpOgo+IMKgwqDCoMKgwqDCoMKgwqAgaHJzID0gaW50KHNlYyAvIDM2
+MDAuMCkKPiBAQCAtMjM1LDI4ICsyNDMsNDcgQEAgY2xhc3MgVGVybWluYWxGaWx0ZXIob2JqZWN0
+KToKPiDCoAo+IMKgwqDCoMKgIGRlZiBrZWVwQWxpdmUoc2VsZiwgdCk6Cj4gwqDCoMKgwqDCoMKg
+wqDCoCBpZiBub3Qgc2VsZi5jdXU6Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcHJpbnQoIkJp
+dGJha2Ugc3RpbGwgYWxpdmUgKG5vIGV2ZW50cyBmb3IgJWRzKS4gQWN0aXZlIHRhc2tzOiIgJSB0
+KQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG1zZ2J1ZiA9IFsiQml0YmFrZSBzdGlsbCBhbGl2
+ZSAobm8gZXZlbnRzIGZvciAlZHMpLiBBY3RpdmUgdGFza3M6IiAlIHRdCj4gwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIGZvciB0IGluIHNlbGYuaGVscGVyLnJ1bm5pbmdfdGFza3M6Cj4gLcKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwcmludCh0KQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgbXNnYnVmLmFwcGVuZChzdHIodCkpCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgcHJpbnQoIlxuIi5qb2luKG1zZ2J1ZikpCgpEb2VzIHRoaXMgYWN0dWFsbHkgZG8gYW55dGhp
+bmcgZGlmZmVyZW50PyBJIGd1ZXNzIHRoZSBpbnRlbnQgaXMgb25lCnByaW50IGNhbGwgaW5zdGVh
+ZCBvZiBzZXZlcmFsPyBEb2VzIHRoYXQgbWFrZSBhIG5vdGljYWJsZSBkaWZmZXJlbmNlIHRvCnBl
+cmZvcm1hbmNlPyBJdCBpc24ndCBnb2luZyB0byB0aGUgSU8gYnVmZmVyICh3aGljaCBpcyB3aGF0
+IHRoZSBjb21taXQKbWVzc2FnZSBpbXBsaWVzKT8KCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IHN5cy5zdGRvdXQuZmx1c2goKQo+IMKgCj4gwqDCoMKgwqAgZGVmIHVwZGF0ZUZvb3RlcihzZWxm
+KToKPiDCoMKgwqDCoMKgwqDCoMKgIGlmIG5vdCBzZWxmLmN1dToKPiDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgcmV0dXJuCj4gKwoKV2hpdGUgc3BhY2UgY2hhbmdlcyBtYWtlIHRoZSBwYXRjaCBo
+YXJkZXIgdG8gcmVhZC9yZXZpZXcvdHJ1c3QuCgo+IMKgwqDCoMKgwqDCoMKgwqAgYWN0aXZldGFz
+a3MgPSBzZWxmLmhlbHBlci5ydW5uaW5nX3Rhc2tzCj4gwqDCoMKgwqDCoMKgwqDCoCBmYWlsZWR0
+YXNrcyA9IHNlbGYuaGVscGVyLmZhaWxlZF90YXNrcwo+IMKgwqDCoMKgwqDCoMKgwqAgcnVubmlu
+Z3BpZHMgPSBzZWxmLmhlbHBlci5ydW5uaW5nX3BpZHMKPiDCoMKgwqDCoMKgwqDCoMKgIGN1cnJl
+bnR0aW1lID0gdGltZS50aW1lKCkKPiAtwqDCoMKgwqDCoMKgwqAgaWYgbm90IHNlbGYubGFzdHRp
+bWUgb3IgKGN1cnJlbnR0aW1lIC0gc2VsZi5sYXN0dGltZSA+IDUpOgo+ICvCoMKgwqDCoMKgwqDC
+oCBkZWx0YXRpbWUgPSBjdXJyZW50dGltZSAtIHNlbGYubGFzdHRpbWUKPiArCj4gK8KgwqDCoMKg
+wqDCoMKgIGlmIChkZWx0YXRpbWUgPiA1LjApOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBz
+ZWxmLmhlbHBlci5uZWVkVXBkYXRlID0gVHJ1ZQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNl
+bGYubGFzdHRpbWUgPSBjdXJyZW50dGltZQo+IC3CoMKgwqDCoMKgwqDCoCBpZiBzZWxmLmZvb3Rl
+cl9wcmVzZW50IGFuZCBub3Qgc2VsZi5oZWxwZXIubmVlZFVwZGF0ZToKPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCBuZWVkX3VwZGF0ZSA9IHNlbGYuaGVscGVyLm5lZWRVcGRhdGUKPiArwqDCoMKg
+wqDCoMKgwqAgZWxzZToKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjIERvIG5vdCBsZXQgdG8g
+dXBkYXRlIGZhc3RlciB0aGVuIF9ERUZBVUxUX1BSSU5UX0lOVEVSVkFMCj4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgIyB0byBhdm9pZCBoZWF2eSBwcmludCgpIGZsb29kaW5nLgo+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIG5lZWRfdXBkYXRlID0gc2VsZi5oZWxwZXIubmVlZFVwZGF0ZSBhbmQg
+KGRlbHRhdGltZSA+IHNlbGYuX0RFRkFVTFRfUFJJTlRfSU5URVJWQUwpCj4gKwo+ICvCoMKgwqDC
+oMKgwqDCoCBpZiBzZWxmLmZvb3Rlcl9wcmVzZW50IGFuZCAobm90IG5lZWRfdXBkYXRlKToKPiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjIEZvb3RlciB1cGRhdGUgaXMgbm90IG5lZWQuCj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybgo+ICvCoMKgwqDCoMKgwqDCoCBlbHNlOgo+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgICMgRm9vdGVyIHVwZGF0ZSBpcyBuZWVkIGFuZCBzdG9yZSBp
+dHMgImxhc3R0aW1lIiB2YWx1ZS4KPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzZWxmLmxhc3R0
+aW1lID0gY3VycmVudHRpbWUKPiArCj4gwqDCoMKgwqDCoMKgwqDCoCBzZWxmLmhlbHBlci5uZWVk
+VXBkYXRlID0gRmFsc2UKPiDCoMKgwqDCoMKgwqDCoMKgIGlmIHNlbGYuZm9vdGVyX3ByZXNlbnQ6
+Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNlbGYuY2xlYXJGb290ZXIoKQo+IMKgwqDCoMKg
+wqDCoMKgwqAgaWYgKG5vdCBzZWxmLmhlbHBlci50YXNrbnVtYmVyX3RvdGFsIG9yIHNlbGYuaGVs
+cGVyLnRhc2tudW1iZXJfY3VycmVudCA9PSBzZWxmLmhlbHBlci50YXNrbnVtYmVyX3RvdGFsKSBh
+bmQgbm90IGxlbihhY3RpdmV0YXNrcyk6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVy
+bgo+ICsKPiArwqDCoMKgwqDCoMKgwqAgIyBDbGVhciBmb290ZXIgYnVmZmVyLgo+ICvCoMKgwqDC
+oMKgwqDCoCBzZWxmLl9mb290ZXJfYnVmLnRydW5jYXRlKDApCj4gK8KgwqDCoMKgwqDCoMKgIHNl
+bGYuX2Zvb3Rlcl9idWYuc2VlaygwKQo+ICsKPiDCoMKgwqDCoMKgwqDCoMKgIHRhc2tzID0gW10K
+PiDCoMKgwqDCoMKgwqDCoMKgIGZvciB0IGluIHJ1bm5pbmdwaWRzOgo+IMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCBzdGFydF90aW1lID0gYWN0aXZldGFza3NbdF0uZ2V0KCJzdGFydHRpbWUiLCBO
+b25lKQo+IEBAIC0yNzUsNiArMzAyLDcgQEAgY2xhc3MgVGVybWluYWxGaWx0ZXIob2JqZWN0KToK
+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGVsc2U6Cj4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBiYXIgPSBCQlByb2dy
+ZXNzKCIwOiAlcyIgJSBtc2csIDEwMCwgd2lkZ2V0cz1bJyAnLCBwcm9ncmVzc2Jhci5QZXJjZW50
+YWdlKCksICcgJywgcHJvZ3Jlc3NiYXIuQmFyKCksICcnXSwgZXh0cmFwb3M9NSwgcmVzaXplX2hh
+bmRsZXI9c2VsZi5zaWd3aW5jaF9oYW5kbGUpCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBiYXIuYm91bmNpbmcgPSBGYWxzZQo+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwYmFyLmZkID0gc2VsZi5fZm9vdGVyX2J1Zgo+
+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYWN0aXZldGFza3NbdF1b
+InByb2dyZXNzYmFyIl0gPSBwYmFyCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+dGFza3MuYXBwZW5kKChwYmFyLCBtc2csIHByb2dyZXNzLCByYXRlLCBzdGFydF90aW1lKSkKPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZWxzZToKPiBAQCAtMjg0LDE3ICszMTIsMTcgQEAgY2xh
+c3MgVGVybWluYWxGaWx0ZXIob2JqZWN0KToKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29u
+dGVudCA9IHBsdXJhbGlzZSgiV2FpdGluZyBmb3IgJXMgcnVubmluZyB0YXNrIHRvIGZpbmlzaCIs
+Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCAiV2FpdGluZyBmb3IgJXMgcnVubmluZyB0YXNrcyB0byBmaW5pc2giLCBsZW4o
+YWN0aXZldGFza3MpKQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiBub3Qgc2VsZi5xdWll
+dDoKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbnRlbnQgKz0gJzonCj4gLcKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgcHJpbnQoY29udGVudCkKPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIGNvbnRlbnQgKz0gIjoiCgpUaGUgcXVvdGluZyBjaGFuZ2VzIGhlcmUgd2hp
+Y2ggaW50cm9kdWNlcyBub2lzZSBpbnRvIHRoZSBwYXRjaCBhbmQKbWFrZXMgcmV2aWV3IGhhcmRl
+ci4KCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcHJpbnQoY29udGVudCwgZmlsZT1zZWxmLl9m
+b290ZXJfYnVmKQo+IMKgwqDCoMKgwqDCoMKgwqAgZWxzZToKPiDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgc2NlbmVfdGFza3MgPSAiJXMgb2YgJXMiICUgKHNlbGYuaGVscGVyLnNldHNjZW5lX2N1
+cnJlbnQsIHNlbGYuaGVscGVyLnNldHNjZW5lX3RvdGFsKQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBjdXJfdGFza3MgPSAiJXMgb2YgJXMiICUgKHNlbGYuaGVscGVyLnRhc2tudW1iZXJfY3Vy
+cmVudCwgc2VsZi5oZWxwZXIudGFza251bWJlcl90b3RhbCkKPiDCoAo+IC3CoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIGNvbnRlbnQgPSAnJwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbnRlbnQg
+PSAiIgoKQWdhaW4sIHF1b3RpbmcgY2hhbmdlcy4KCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IGlmIG5vdCBzZWxmLnF1aWV0Ogo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG1z
+ZyA9ICJTZXRzY2VuZSB0YXNrczogJXMiICUgc2NlbmVfdGFza3MKPiAtwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIGNvbnRlbnQgKz0gbXNnICsgIlxuIgo+IC3CoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgcHJpbnQobXNnKQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgY29udGVudCArPSAobXNnICsgIlxuIikKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIHByaW50KG1zZywgZmlsZT1zZWxmLl9mb290ZXJfYnVmKQo+IMKgCj4gwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIGlmIHNlbGYucXVpZXQ6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgbXNnID0gIlJ1bm5pbmcgdGFza3MgKCVzLCAlcykiICUgKHNjZW5lX3Rhc2tzLCBjdXJf
+dGFza3MpCj4gQEAgLTMwNiwxMSArMzM0LDEyIEBAIGNsYXNzIFRlcm1pbmFsRmlsdGVyKG9iamVj
+dCk6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIG5vdCBzZWxmLm1haW5fcHJvZ3Jlc3Mg
+b3Igc2VsZi5tYWluX3Byb2dyZXNzLm1heHZhbCAhPSBtYXh0YXNrOgo+IMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIHdpZGdldHMgPSBbJyAnLCBwcm9ncmVzc2Jhci5QZXJjZW50YWdl
+KCksICcgJywgcHJvZ3Jlc3NiYXIuQmFyKCldCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgc2VsZi5tYWluX3Byb2dyZXNzID0gQkJQcm9ncmVzcygiUnVubmluZyB0YXNrcyIsIG1h
+eHRhc2ssIHdpZGdldHM9d2lkZ2V0cywgcmVzaXplX2hhbmRsZXI9c2VsZi5zaWd3aW5jaF9oYW5k
+bGUpCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzZWxmLm1haW5fcHJvZ3Jlc3Mu
+ZmQgPSBzZWxmLl9mb290ZXJfYnVmCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+c2VsZi5tYWluX3Byb2dyZXNzLnN0YXJ0KEZhbHNlKQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCBzZWxmLm1haW5fcHJvZ3Jlc3Muc2V0bWVzc2FnZShtc2cpCj4gwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIHByb2dyZXNzID0gbWF4KDAsIHNlbGYuaGVscGVyLnRhc2tudW1iZXJfY3VycmVudCAt
+IDEpCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbnRlbnQgKz0gc2VsZi5tYWluX3Byb2dy
+ZXNzLnVwZGF0ZShwcm9ncmVzcykKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwcmludCgnJykK
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwcmludCgiIiwgZmlsZT1zZWxmLl9mb290ZXJfYnVm
+KQo+IMKgwqDCoMKgwqDCoMKgwqAgbGluZXMgPSBzZWxmLmdldGxpbmVzKGNvbnRlbnQpCj4gwqDC
+oMKgwqDCoMKgwqDCoCBpZiBub3Qgc2VsZi5xdWlldDoKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgZm9yIHRhc2tudW0sIHRhc2sgaW4gZW51bWVyYXRlKHRhc2tzWzooc2VsZi5yb3dzIC0gMSAt
+IGxpbmVzKV0pOgo+IEBAIC0zMjYsMTUgKzM1NSwxOSBAQCBjbGFzcyBUZXJtaW5hbEZpbHRlcihv
+YmplY3QpOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCBjb250ZW50ID0gcGJhci51cGRhdGUocHJvZ3Jlc3MpCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCBlbHNlOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCBjb250ZW50ID0gcGJhci51cGRhdGUoMSkKPiAtwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcHJpbnQoJycpCj4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHByaW50KCIiLCBmaWxlPXNlbGYuX2Zvb3Rlcl9idWYp
+Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZWxzZToKPiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbnRlbnQgPSAiJXM6ICVzIiAlICh0YXNrbnVt
+LCB0YXNrKQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwcmludChj
+b250ZW50KQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwcmludChj
+b250ZW50LCBmaWxlPXNlbGYuX2Zvb3Rlcl9idWYpCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgbGluZXMgPSBsaW5lcyArIHNlbGYuZ2V0bGluZXMoY29udGVudCkKPiAtwqDCoMKg
+wqDCoMKgwqAgc2VsZi5mb290ZXJfcHJlc2VudCA9IGxpbmVzCj4gK8KgwqDCoMKgwqDCoMKgIHNl
+bGYuX2Zvb3Rlcl9saW5lcyA9IGxpbmVzCj4gK8KgwqDCoMKgwqDCoMKgIHNlbGYuZm9vdGVyX3By
+ZXNlbnQgPSBUcnVlCj4gwqDCoMKgwqDCoMKgwqDCoCBzZWxmLmxhc3RwaWRzID0gcnVubmluZ3Bp
+ZHNbOl0KPiDCoMKgwqDCoMKgwqDCoMKgIHNlbGYubGFzdGNvdW50ID0gc2VsZi5oZWxwZXIudGFz
+a251bWJlcl9jdXJyZW50Cj4gwqAKPiArwqDCoMKgwqDCoMKgwqAgIyBQcmludCBmb290ZXIgYnVm
+ZmVyLgo+ICvCoMKgwqDCoMKgwqDCoCBwcmludChzZWxmLl9mb290ZXJfYnVmLmdldHZhbHVlKCks
+IGVuZD0iIikKPiArCj4gwqDCoMKgwqAgZGVmIGdldGxpbmVzKHNlbGYsIGNvbnRlbnQpOgo+IMKg
+wqDCoMKgwqDCoMKgwqAgbGluZXMgPSAwCj4gwqDCoMKgwqDCoMKgwqDCoCBmb3IgbGluZSBpbiBj
+b250ZW50LnNwbGl0KCJcbiIpOgo+IEBAIC0zNDIsMzUgKzM3NSwzNSBAQCBjbGFzcyBUZXJtaW5h
+bEZpbHRlcihvYmplY3QpOgo+IMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIGxpbmVzCj4gwqAKPiDC
+oMKgwqDCoCBkZWYgZmluaXNoKHNlbGYpOgo+ICvCoMKgwqDCoMKgwqDCoCBzZWxmLl9mb290ZXJf
+YnVmLmNsb3NlKCkKPiDCoMKgwqDCoMKgwqDCoMKgIGlmIHNlbGYuc3RkaW5iYWNrdXA6Cj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGZkID0gc3lzLnN0ZGluLmZpbGVubygpCj4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIHNlbGYudGVybWlvcy50Y3NldGF0dHIoZmQsIHNlbGYudGVybWlvcy5U
+Q1NBRFJBSU4sIHNlbGYuc3RkaW5iYWNrdXApCj4gwqAKPiDCoGRlZiBwcmludF9ldmVudF9sb2co
+ZXZlbnQsIGluY2x1ZGVsb2dzLCBsb2dsaW5lcywgdGVybWZpbHRlcik6Cj4gLcKgwqDCoCAjIEZJ
+WE1FIHJlZmFjdG9yIHRoaXMgb3V0IGZ1cnRoZXIKPiDCoMKgwqDCoCBsb2dmaWxlID0gZXZlbnQu
+bG9nZmlsZQo+IMKgwqDCoMKgIGlmIGxvZ2ZpbGUgYW5kIG9zLnBhdGguZXhpc3RzKGxvZ2ZpbGUp
+Ogo+IMKgwqDCoMKgwqDCoMKgwqAgdGVybWZpbHRlci5jbGVhckZvb3RlcigpCj4gwqDCoMKgwqDC
+oMKgwqDCoCBiYi5lcnJvcigiTG9nZmlsZSBvZiBmYWlsdXJlIHN0b3JlZCBpbjogJXMiICUgbG9n
+ZmlsZSkKPiDCoMKgwqDCoMKgwqDCoMKgIGlmIGluY2x1ZGVsb2dzIGFuZCBub3QgZXZlbnQuZXJy
+cHJpbnRlZDoKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwcmludCgiTG9nIGRhdGEgZm9sbG93
+czoiKQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBmID0gb3Blbihsb2dmaWxlLCAiciIpCj4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbXNnYnVmID0gWyJMb2cgZGF0YSBmb2xsb3dzOiJdCj4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGxpbmVzID0gW10KPiDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgd2hpbGUgVHJ1ZToKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBsID0g
+Zi5yZWFkbGluZSgpCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiBsID09ICcn
+Ogo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgbCA9PSAiIjoKClF1b3Rpbmcu
+Li4KCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBicmVhawo+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGwgPSBsLnJzdHJpcCgpCj4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgbG9nbGluZXM6Cj4gLcKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGxpbmVzLmFwcGVuZCgnIHwgJXMnICUgbCkKPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbGluZXMuYXBwZW5kKCIgfCAlcyIgJSBs
+KQoKUXVvdGluZy4uLgoKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IGlmIGxlbihsaW5lcykgPiBpbnQobG9nbGluZXMpOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBsaW5lcy5wb3AoMCkKPiDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBlbHNlOgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCBwcmludCgnfCAlcycgJSBsKQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCBtc2didWYuYXBwZW5kKCJ8ICVzIiAlIGwpCj4gwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIGYuY2xvc2UoKQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiBsaW5lczoKPiAt
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGZvciBsaW5lIGluIGxpbmVzOgo+IC3CoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwcmludChsaW5lKQo+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbXNnYnVmLmV4dGVuZChsaW5lcykKPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBwcmludCgiXG4iLmpvaW4obXNnYnVmKSkKPiDCoAo+IMKgZGVmIF9sb2df
+c2V0dGluZ3NfZnJvbV9zZXJ2ZXIoc2VydmVyLCBvYnNlcnZlX29ubHkpOgo+IMKgwqDCoMKgICMg
+R2V0IHZhbHVlcyBvZiB2YXJpYWJsZXMgd2hpY2ggY29udHJvbCBvdXIgb3V0cHV0Cj4gZGlmZiAt
+LWdpdCBhL2xpYi9wcm9ncmVzc2Jhci9wcm9ncmVzc2Jhci5weSBiL2xpYi9wcm9ncmVzc2Jhci9w
+cm9ncmVzc2Jhci5weQo+IGluZGV4IGQ0ZGExMGFiNy4uMmFhNjFjMDE1IDEwMDY0NAo+IC0tLSBh
+L2xpYi9wcm9ncmVzc2Jhci9wcm9ncmVzc2Jhci5weQo+ICsrKyBiL2xpYi9wcm9ncmVzc2Jhci9w
+cm9ncmVzc2Jhci5weQo+IEBAIC0xMTAsMTkgKzExMCwyNCBAQCBjbGFzcyBQcm9ncmVzc0Jhcihv
+YmplY3QpOgo+IMKgwqDCoMKgwqDCoMKgwqAgc2VsZi53aWRnZXRzID0gd2lkZ2V0cwo+IMKgwqDC
+oMKgwqDCoMKgwqAgc2VsZi5mZCA9IGZkCj4gwqDCoMKgwqDCoMKgwqDCoCBzZWxmLmxlZnRfanVz
+dGlmeSA9IGxlZnRfanVzdGlmeQo+ICvCoMKgwqDCoMKgwqDCoCBzZWxmLl9mZF9jb25zb2xlID0g
+Tm9uZQo+ICsKPiArwqDCoMKgwqDCoMKgwqAgZmRfbnVtID0gZmQuZmlsZW5vKCkKPiDCoAo+IMKg
+wqDCoMKgwqDCoMKgwqAgc2VsZi5zaWduYWxfc2V0ID0gRmFsc2UKPiDCoMKgwqDCoMKgwqDCoMKg
+IGlmIHRlcm1fd2lkdGggaXMgbm90IE5vbmU6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNl
+bGYudGVybV93aWR0aCA9IHRlcm1fd2lkdGgKPiArwqDCoMKgwqDCoMKgwqAgZWxpZiAoZmRfbnVt
+ID09IDEpIG9yIChmZF9udW0gPT0gMik6Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgIyBTVERP
+VVQgaXMgdGhlIGRlZmF1bHQgd3JpdGluZyBkZXNjcmlwdG9yIHdpdGggYSB2YWx1ZSBvZiAxLgo+
+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICMgU1RERVJSIGlzIHRoZSBkZWZhdWx0IGVycm9yIGRl
+c2NyaXB0b3Igd2l0aCBhIHZhbHVlIG9mIDIuCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgIyBT
+dXJlLCBmZCBpcyBhIHJlc2l6YWJsZSBmaWxlIGRlc2NyaXB0b3IsIGxldCdzIGFsbG93IHRvCj4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgIyB1c2UgZm9yIHNlbGYuX2hhbmRsZV9yZXNpemUoKS4K
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzZWxmLl9mZF9jb25zb2xlID0gZmQKPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBzZWxmLl9oYW5kbGVfcmVzaXplKE5vbmUsIE5vbmUpCj4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgc2lnbmFsLnNpZ25hbChzaWduYWwuU0lHV0lOQ0gsIHNlbGYuX2hh
+bmRsZV9yZXNpemUpCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5zaWduYWxfc2V0ID0g
+VHJ1ZQo+IMKgwqDCoMKgwqDCoMKgwqAgZWxzZToKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB0
+cnk6Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzZWxmLl9oYW5kbGVfcmVzaXpl
+KE5vbmUsIE5vbmUpCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzaWduYWwuc2ln
+bmFsKHNpZ25hbC5TSUdXSU5DSCwgc2VsZi5faGFuZGxlX3Jlc2l6ZSkKPiAtwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIHNlbGYuc2lnbmFsX3NldCA9IFRydWUKPiAtwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCBleGNlcHQgKFN5c3RlbUV4aXQsIEtleWJvYXJkSW50ZXJydXB0KTogcmFpc2UK
+PiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBleGNlcHQgRXhjZXB0aW9uIGFzIGU6Cj4gLcKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwcmludCgiREVCVUcgNSAlcyIgJSBlKQo+IC3CoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2VsZi50ZXJtX3dpZHRoID0gc2VsZi5fZW52X3Np
+emUoKQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNlbGYudGVybV93aWR0aCA9IHNlbGYuX2Vu
+dl9zaXplKCkKClRoaXMgYml0IGNvbmNlcm5zIG1lIGFzIHdlJ3JlIG1ha2luZyBhc3N1bXB0aW9u
+cyBhYm91dCBmZCA9PSAxIGFuZCBmZAo9PSAyLiBDYW4gd2UgYWx3YXlzIGd1YXJhbnRlZSB0aGF0
+PyBOb3RoaW5nIHJlYWxseSBleHBsYWlucyB3aHkgd2UgbmVlZAp0byBkbyB0aGlzLgoKSSBzdXNw
+ZWN0IHlvdSdyZSB0cnlpbmcgdG8gYXZvaWQgb3ZlcmhlYWQgZWFjaCB0aW1lIHRoZSBwcm9ncmVz
+cyBiYXIgaXMKc2V0dXAgYnV0IEkgZG9uJ3Qga25vdyB0aGF0IGFuZCB5b3UgZG9uJ3Qgc2F5IHRo
+YXQuIElmIHRoYXQgaXMgdGhlCmNhc2UsIEkgdGhpbmsgd2UgbmVlZCB0byBmaW5kIGEgYmV0dGVy
+IHdheSB3aGVyZSB0aGUgcmVzdWx0IGlzIGNhY2hlZApyYXRoZXIgdGhhbiBhZGQgaW4gYXNzdW1w
+dGlvbnMgYWJvdWYgZmQgbnVtYmVyaW5nLgoKPiDCoAo+IMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5f
+X2l0ZXJhYmxlID0gTm9uZQo+IMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5fdXBkYXRlX3dpZGdldHMo
+KQo+IEBAIC0xODIsNyArMTg3LDcgQEAgY2xhc3MgUHJvZ3Jlc3NCYXIob2JqZWN0KToKPiDCoMKg
+wqDCoCBkZWYgX2hhbmRsZV9yZXNpemUoc2VsZiwgc2lnbnVtPU5vbmUsIGZyYW1lPU5vbmUpOgo+
+IMKgwqDCoMKgwqDCoMKgwqAgIiIiVHJpZXMgdG8gY2F0Y2ggcmVzaXplIHNpZ25hbHMgc2VudCBm
+cm9tIHRoZSB0ZXJtaW5hbC4iIiIKPiDCoAo+IC3CoMKgwqDCoMKgwqDCoCBoLCB3ID0gYXJyYXko
+J2gnLCBpb2N0bChzZWxmLmZkLCB0ZXJtaW9zLlRJT0NHV0lOU1osICdcMCcgKiA4KSlbOjJdCj4g
+K8KgwqDCoMKgwqDCoMKgIGgsIHcgPSBhcnJheSgnaCcsIGlvY3RsKHNlbGYuX2ZkX2NvbnNvbGUs
+IHRlcm1pb3MuVElPQ0dXSU5TWiwgJ1wwJyAqIDgpKVs6Ml0KPiDCoMKgwqDCoMKgwqDCoMKgIHNl
+bGYudGVybV93aWR0aCA9IHcKCkknZCBwcm9iYWJseSBzdWdnZXN0IHRoYXQgdGhlIHBhdGNoIGJl
+IHNwbGl0IHVwIGEgYml0LiBJZiB5b3Ugd2FudCB0bwpjb21iaW5lIHRoZSB3cml0ZXMgaW50byBh
+IHNpbmdsZSBwcmludCBjYWxsLCBmaW5lLCBidXQgdGhhdCBpcyBhIHNpbmdsZQpjaGFuZ2UgaW4g
+aXRzIG93biByaWdodC4gSSdkIGJlIGludGVyZXN0ZWQgdG8ga25vdyBhIGJpdCBhYm91dCB3aGF0
+CnBlcmZvcm1hbmNlIGlzc3VlIHlvdSdyZSBzZWVpbmcsIGhvdyBtdWNoIGVmZmVjdCBjb21iaW5p
+bmcgdGhlIHdyaXRlcwpoYXMgKGFsb25lKSBhbmQgaWYgdGhlIHN0cmluZ0lPIGJ1ZmZlciByZWFs
+bHkgZG9lcyBtYWtlIG11Y2ggZXh0cmEKZGlmZmVyZW5jZSBvciBub3QuCgpJJ3ZlIG5vIG9iamVj
+dGlvbiB0byBpbXByb3ZpbmcgdGhpcyBidXQgSSBkbyB3YW50IHRvIG1ha2Ugc3VyZSB3ZSBmaXgK
+dGhlIHJpZ2h0IHRoaW5ncyBhbmQgZG9uJ3QgYWRkIGFzc3VtcHRpb25zIGFib3V0IGZkIG51bWJl
+cmluZyB3aGljaCBtYXkKY2F1c2UgcHJvYmxlbXMgbGF0ZXIuCgpDaGVlcnMsCgpSaWNoYXJkCgoK
+Cgo=
 
 
