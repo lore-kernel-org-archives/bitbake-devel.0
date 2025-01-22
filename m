@@ -2,123 +2,198 @@ Return-Path: <egyszeregy@freemail.hu>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895E2C02182
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8895CC02181
 	for <webhook@archiver.kernel.org>; Wed, 22 Jan 2025 23:25:37 +0000 (UTC)
 Received: from smtp-out.freemail.hu (smtp-out.freemail.hu [46.107.16.211])
- by mx.groups.io with SMTP id smtpd.web11.8147.1737588331076405001
+ by mx.groups.io with SMTP id smtpd.web10.8089.1737588334543677120
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 22 Jan 2025 15:25:31 -0800
+ Wed, 22 Jan 2025 15:25:35 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: message contains an insecure body length tag" header.i=@freemail.hu header.s=20181004 header.b=GTkEGhTM;
+ dkim=fail reason="dkim: message contains an insecure body length tag" header.i=@freemail.hu header.s=20181004 header.b=twEWl1Du;
  spf=pass (domain: freemail.hu, ip: 46.107.16.211, mailfrom: egyszeregy@freemail.hu)
 Received: from localhost.localdomain (catv-178-48-208-49.catv.fixed.vodafone.hu [178.48.208.49])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.freemail.hu (Postfix) with ESMTPSA id 4YdgD86XLDzMf4;
-	Thu, 23 Jan 2025 00:25:28 +0100 (CET)
+	by smtp.freemail.hu (Postfix) with ESMTPSA id 4YdgDD58jdzLN0;
+	Thu, 23 Jan 2025 00:25:32 +0100 (CET)
 From: egyszeregy@freemail.hu
 To: bitbake-devel@lists.openembedded.org
 Cc: =?UTF-8?q?Benjamin=20Sz=C5=91ke?= <egyszeregy@freemail.hu>
-Subject: [PATCH v2 1/4] bitbake: progressbar: Check resizable file descriptor.
-Date: Thu, 23 Jan 2025 00:24:08 +0100
-Message-ID: <20250122232411.133-2-egyszeregy@freemail.hu>
+Subject: [PATCH v2 2/4] bitbake: knotty: Use a StringIO buffer for update footer.
+Date: Thu, 23 Jan 2025 00:24:09 +0100
+Message-ID: <20250122232411.133-3-egyszeregy@freemail.hu>
 X-Mailer: git-send-email 2.47.1.windows.2
 In-Reply-To: <20250122232411.133-1-egyszeregy@freemail.hu>
 References: <20250122232411.133-1-egyszeregy@freemail.hu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/relaxed; t=1737588329;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/relaxed; t=1737588332;
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 22 Jan 2025 23:25:37 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17059
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17060
 
 	s=20181004; d=freemail.hu;
 
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding;
 
-	l=2110; bh=FpTb7TZgCeBDZ6gBQVX9Oz9GJT0bDbIFEUtYaCztHxs=;
+	l=4274; bh=SjafIEl58zTmn6Ry+kbYbQ3e4/yFWWSVgI0HOiQG2po=;
 
-	b=GTkEGhTMvm6LL73h+Mrq96Z97vvy2b0TNGGFSdzDK05E7pJ9Lhh6tg4jvh8T8ipO
+	b=twEWl1DuFpZNW+V+lC01dU2289rkhKONFFBUlqaQJ9f8PH2JJYAq44R3YQG7uBQL
 
-	hGSnvhx2M2Ko10CnODHOn+VTAli/DTWk8egU3cnUXyUsXEOkRALLLHqvWY3f5snAKaH
+	dAVBLc13tCvLfiT3rfe7x3AGyGAAjdmo2qxPc4+IhwHYncC0cVqrQwm0as2N9El6K74
 
-	Dii0cxhBcGM+fkDKAHc8YxnF34AX3t6SiUYui4YVLU9KpU/bzl9yv9uYqvKI9oQYEmM
+	sZinhZGWzMzOANHjFfmjSp1iSFJmm3YZpxM5beR1+GFWxt5Xsr3sDuU9LrbzdwB3qII
 
-	Ri6hzbgAy72E0nCEEdns/M1MMCJFPX7/n82z64w9ILCdqXgwZCaRknpBh8uATziT+Dk
+	xmWWF6s7ORm55yxJNzytadBfATsNiIy9vrtk1s8bclBbDNyLOAy6Iv9d0y4rUntsqCs
 
-	idhhtzVulaLNI8kdML7GhFq2aFG6CSfdvVuCY2tjSdLNR8PSXYPCuWZQ2uojixtSINp
+	4JevPV49rJJZBpPnrZUTPFsl2i2Yqm4YnkMj6vz1yn0Av50MH5rr42lxQYS3vIo6cGm
 
-	vCngpnaa8Q==
+	H8NV7hVWTQ==
 Content-Transfer-Encoding: quoted-printable
 
 From: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
 
-- Check if given file descriptor is resizable.
-- Introduce self._fd_console as a dedicated attribute of self._handle_res=
-ize().
+Optimize printing in footer update with use a StringIO buffer and it
+prints content to terminal in a single call in every cycle.
 
 Signed-off-by: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
 ---
- lib/progressbar/progressbar.py | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ lib/bb/ui/knotty.py | 31 +++++++++++++++++++++++--------
+ 1 file changed, 23 insertions(+), 8 deletions(-)
 
-diff --git a/lib/progressbar/progressbar.py b/lib/progressbar/progressbar=
-.py
-index d4da10ab7..203ff804f 100644
---- a/lib/progressbar/progressbar.py
-+++ b/lib/progressbar/progressbar.py
-@@ -110,19 +110,26 @@ class ProgressBar(object):
-         self.widgets =3D widgets
-         self.fd =3D fd
-         self.left_justify =3D left_justify
-+        self._fd_console =3D None
+diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+index 2fff1b366..c30bd64c7 100644
+--- a/lib/bb/ui/knotty.py
++++ b/lib/bb/ui/knotty.py
+@@ -10,6 +10,7 @@
+=20
+ from __future__ import division
+=20
++import io
+ import os
+ import sys
+ import logging
+@@ -168,6 +169,9 @@ class TerminalFilter(object):
+         self.lasttime =3D None
+         self.quiet =3D quiet
+=20
++        self._footer_buf =3D io.StringIO()
++        self._footer_lines =3D None
 +
-+        fd_num =3D fd.fileno()
+         if not self.interactive:
+             return
 =20
-         self.signal_set =3D False
-         if term_width is not None:
-             self.term_width =3D term_width
-+        elif (fd_num =3D=3D sys.stdout.fileno()) or (fd_num =3D=3D sys.s=
-tderr.fileno()):
-+            # Check if given file descriptor is resizable for example be=
-long
-+            # to a terminal/console as STDOUT or STDERR. If file descrip=
-tor
-+            # is resizable, let's allow to use for self._handle_resize()
-+            # in a dedicated self._fd_console in order to be able to set
-+            # temporarily/permanently self.fd to any StringIO or other
-+            # file descriptor later.
-+            self._fd_console =3D fd
-+            self._handle_resize(None, None)
-+            signal.signal(signal.SIGWINCH, self._handle_resize)
-+            self.signal_set =3D True
+@@ -215,11 +219,11 @@ class TerminalFilter(object):
+=20
+     def clearFooter(self):
+         if self.footer_present:
+-            lines =3D self.footer_present
+-            sys.stdout.buffer.write(self.curses.tparm(self.cuu, lines))
++            sys.stdout.buffer.write(self.curses.tparm(self.cuu, self._fo=
+oter_lines))
+             sys.stdout.buffer.write(self.curses.tparm(self.ed))
+             sys.stdout.flush()
+         self.footer_present =3D False
++        self._footer_lines =3D None
+=20
+     def elapsed(self, sec):
+         hrs =3D int(sec / 3600.0)
+@@ -257,6 +261,11 @@ class TerminalFilter(object):
+             self.clearFooter()
+         if (not self.helper.tasknumber_total or self.helper.tasknumber_c=
+urrent =3D=3D self.helper.tasknumber_total) and not len(activetasks):
+             return
++
++        # Clear footer buffer.
++        self._footer_buf.truncate(0)
++        self._footer_buf.seek(0)
++
+         tasks =3D []
+         for t in runningpids:
+             start_time =3D activetasks[t].get("starttime", None)
+@@ -275,6 +284,7 @@ class TerminalFilter(object):
+                     else:
+                         pbar =3D BBProgress("0: %s" % msg, 100, widgets=3D=
+[' ', progressbar.Percentage(), ' ', progressbar.Bar(), ''], extrapos=3D5=
+, resize_handler=3Dself.sigwinch_handle)
+                         pbar.bouncing =3D False
++                    pbar.fd =3D self._footer_buf
+                     activetasks[t]["progressbar"] =3D pbar
+                 tasks.append((pbar, msg, progress, rate, start_time))
+             else:
+@@ -285,7 +295,7 @@ class TerminalFilter(object):
+                                 "Waiting for %s running tasks to finish"=
+, len(activetasks))
+             if not self.quiet:
+                 content +=3D ':'
+-            print(content)
++            print(content, file=3Dself._footer_buf)
          else:
--            try:
--                self._handle_resize(None, None)
--                signal.signal(signal.SIGWINCH, self._handle_resize)
--                self.signal_set =3D True
--            except (SystemExit, KeyboardInterrupt): raise
--            except Exception as e:
--                print("DEBUG 5 %s" % e)
--                self.term_width =3D self._env_size()
-+            self.term_width =3D self._env_size()
+             scene_tasks =3D "%s of %s" % (self.helper.setscene_current, =
+self.helper.setscene_total)
+             cur_tasks =3D "%s of %s" % (self.helper.tasknumber_current, =
+self.helper.tasknumber_total)
+@@ -294,7 +304,7 @@ class TerminalFilter(object):
+             if not self.quiet:
+                 msg =3D "Setscene tasks: %s" % scene_tasks
+                 content +=3D msg + "\n"
+-                print(msg)
++                print(msg, file=3Dself._footer_buf)
 =20
-         self.__iterable =3D None
-         self._update_widgets()
-@@ -182,7 +189,7 @@ class ProgressBar(object):
-     def _handle_resize(self, signum=3DNone, frame=3DNone):
-         """Tries to catch resize signals sent from the terminal."""
+             if self.quiet:
+                 msg =3D "Running tasks (%s, %s)" % (scene_tasks, cur_tas=
+ks)
+@@ -306,11 +316,12 @@ class TerminalFilter(object):
+             if not self.main_progress or self.main_progress.maxval !=3D =
+maxtask:
+                 widgets =3D [' ', progressbar.Percentage(), ' ', progres=
+sbar.Bar()]
+                 self.main_progress =3D BBProgress("Running tasks", maxta=
+sk, widgets=3Dwidgets, resize_handler=3Dself.sigwinch_handle)
++                self.main_progress.fd =3D self._footer_buf
+                 self.main_progress.start(False)
+             self.main_progress.setmessage(msg)
+             progress =3D max(0, self.helper.tasknumber_current - 1)
+             content +=3D self.main_progress.update(progress)
+-            print('')
++            print('', file=3Dself._footer_buf)
+         lines =3D self.getlines(content)
+         if not self.quiet:
+             for tasknum, task in enumerate(tasks[:(self.rows - 1 - lines=
+)]):
+@@ -326,14 +337,17 @@ class TerminalFilter(object):
+                         content =3D pbar.update(progress)
+                     else:
+                         content =3D pbar.update(1)
+-                    print('')
++                    print('', file=3Dself._footer_buf)
+                 else:
+                     content =3D "%s: %s" % (tasknum, task)
+-                    print(content)
++                    print(content, file=3Dself._footer_buf)
+                 lines =3D lines + self.getlines(content)
+-        self.footer_present =3D lines
++        self._footer_lines =3D lines
++        self.footer_present =3D True
+         self.lastpids =3D runningpids[:]
+         self.lastcount =3D self.helper.tasknumber_current
++        # Print footer buffer.
++        print(self._footer_buf.getvalue(), end=3D'')
 =20
--        h, w =3D array('h', ioctl(self.fd, termios.TIOCGWINSZ, '\0' * 8)=
-)[:2]
-+        h, w =3D array('h', ioctl(self._fd_console, termios.TIOCGWINSZ, =
-'\0' * 8))[:2]
-         self.term_width =3D w
+     def getlines(self, content):
+         lines =3D 0
+@@ -342,6 +356,7 @@ class TerminalFilter(object):
+         return lines
 =20
-=20
+     def finish(self):
++        self._footer_buf.close()
+         if self.stdinbackup:
+             fd =3D sys.stdin.fileno()
+             self.termios.tcsetattr(fd, self.termios.TCSADRAIN, self.stdi=
+nbackup)
 --=20
 2.47.1.windows.2
 
