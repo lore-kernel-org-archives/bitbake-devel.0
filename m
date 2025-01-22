@@ -1,94 +1,97 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4506C02181
-	for <webhook@archiver.kernel.org>; Wed, 22 Jan 2025 09:43:39 +0000 (UTC)
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
- by mx.groups.io with SMTP id smtpd.web11.39520.1737539013494966701
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2270C02181
+	for <webhook@archiver.kernel.org>; Wed, 22 Jan 2025 15:39:11 +0000 (UTC)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.web11.46400.1737560343912751523
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 22 Jan 2025 01:43:33 -0800
+ Wed, 22 Jan 2025 07:39:04 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=PLVfmvY1;
- spf=pass (domain: gmail.com, ip: 209.85.160.169, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4678cce3d60so14238081cf.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 22 Jan 2025 01:43:33 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=JWxmM/r1;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-38637614567so3465708f8f.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 22 Jan 2025 07:39:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737539012; x=1738143812; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=MMVIXZSF9G8Wu6ZprjjIjaBiY6usX+l/Ky1/lJ0CxCE=;
-        b=PLVfmvY1+rFMRLgNE0BpvfQiY3vGyc5X4/HkfWhFWgp+WHrPyZ5JnM1RWyeMi3Q8uM
-         2+gz/4z0s/EaJU25q484dkUB/Ruay02rTJqNQRHhYbGb/nCwpam9aP8OgFj0mS5fA9PO
-         BMYvIGSGHw9AT1e0ELBpLS3AB7fqArc9uvm4f00mh5OnYv77q6sVx4YS2DYid9h04Cqj
-         jCWFZfm1VtzUoaH3KVMT2rRax2USnXq+qVC/SSgkVWeMy8sjwJiOahlpb/FbrViFlC3G
-         DhJNJJ0p87CgKGPGSiyG8jSuVKBupJNiX9hjPmGrtjsH6FocIddHvPoArFHeCtW3gQE+
-         5cvA==
+        d=linuxfoundation.org; s=google; t=1737560342; x=1738165142; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gtqg3C/zlTHk87WxAK716YtmEj+YHCpnZUrP+XR9nJE=;
+        b=JWxmM/r1vk803yS/4qKEko0O363+9Pno80W/32DOUEE55fAt2aUedWrPDpw7c4Ubop
+         A15cXugW85V6v1hxNtnPIF+QDiSvmZOCvkuRycSyOGcDEsC8hQ4Jr8uyqcETHAkRARBJ
+         4Qa6tuJ5Iz/JkCeDE/km8bOGL+RsBGCnMi0dg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737539012; x=1738143812;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MMVIXZSF9G8Wu6ZprjjIjaBiY6usX+l/Ky1/lJ0CxCE=;
-        b=bIs9laeRpHtGyvj8FMiEwMkCcZagA/CUYqL42vLDh3Y4W0TS3vCv1gKxxnryiXyNIw
-         ZdwuP6cMv+yFClkyNjqnUh/bQjKO9fR5MhtYYvRuLnrFCHQnM1HRgZhTnDVEwHSpVREz
-         k1gbhx3McU/v9kOzGhl3+w/zAp72ukfae0Ckug/4TNvKUErHzk7eJ72dav4uho1vFWMa
-         6Erp04K0EKUqbyjZo6aApSKAvqh8S3g+6wMVgS46nyt2Y6n8Il178tCXeSyZi8Rw0oCE
-         7E3m9sp2k5e8/gjsd8l53TktBYM/7SU7feS2uYe5H2leo7mxffZle6/adbUMVUZJr0Tr
-         ApOQ==
-X-Gm-Message-State: AOJu0Yz35a6PxnUNLk3atqaobVjbDP72/2onMTLIOXwZMDMiT9krmZyR
-	VGDSl5ZG6/ij7G9mLCxsDFDyzgi4SWnl5GLUhagbSTDsTVf8FP6FW/0Qscktf9AlZT9wNuCJ1aE
-	ZvYH9qXb+5s1hB1mfTlarOy/Dosfimw==
-X-Gm-Gg: ASbGncuFuuOPLxUnVxXaZXNYFSj0C/WyBawdBSAQUy6ivf5wA4MwF2wVqIYtHcqRlUg
-	6aUVlSvv82q6BWt7o3Dg231HR4y+ShEc/yl0exul6E2c4a6uKVkAys32w7PZpNrT52A0Chhnfmp
-	tOCwFLWYp+qA==
-X-Google-Smtp-Source: AGHT+IHgthKWOvG0DKPXeiGRVX7L6ig295GpZYwrkMSBCToEtnwNnCqBbg7XyAZmoWpWBXMJ+fz2S5kAjrgjwAhz/Aw=
-X-Received: by 2002:ac8:59c1:0:b0:467:50d0:8869 with SMTP id
- d75a77b69052e-46e12a58407mr287845761cf.18.1737539012379; Wed, 22 Jan 2025
- 01:43:32 -0800 (PST)
-MIME-Version: 1.0
-References: <181B8041053EB73B.1562@lists.openembedded.org>
-In-Reply-To: <181B8041053EB73B.1562@lists.openembedded.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 22 Jan 2025 10:43:21 +0100
-X-Gm-Features: AbW1kvadeKNd-eBSmsihZT55ByDSJ89p2Vil9wLAMZoqL_ZLqBt8BvuQFtwAOkg
-Message-ID: <CANNYZj_7L03Tp9c=Ps1KAmvWW4=5_9LEVOCyh88FfUbs8GxfKA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [RFC PATCH 1/2] bitbake-setup: add the proof of
- concept implementation
+        d=1e100.net; s=20230601; t=1737560342; x=1738165142;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gtqg3C/zlTHk87WxAK716YtmEj+YHCpnZUrP+XR9nJE=;
+        b=r/u8D8UH8curBfrAhQmYdqsRhGC5IX0sMaEeCw+Nubf/3b20AYIwAW6h3m80f2gK7p
+         kA4YOd2WBqrNB8BT9OOB+zRWCzDzN47e3vHdImbOQ7h/XXqn/oMzpfWpsxXR/Er/dMAm
+         JJ44Dp+kYu1F4N3+h5x7q659baSov0CB8SwKysiv6xlylhxDXYfOhZcm6MIlvq4oVi2n
+         V7A7YRGycClpySRdmJdLH/me5LbrmRDtzXQFkp1JWTu+bQull+YsXt3D76TSVMxX7hZs
+         HmP88f3SW1I4IMOAzmOPxilRS2iJoczsZOSAQ6Tpfwbzp/6ANQlrToV9JjCffFy8H5C1
+         eGYA==
+X-Gm-Message-State: AOJu0YzRKExGIVca50MtFMZAlwfs9wTfWZSPoEFPI0I+mY+vdBO0LNQW
+	uHxgw5VL4yZ0pmqgLjhBPwarvxE/s8NqC0emzbpW1ZjV7uHaXWf9XLVgEFFnnn1c8o3FH3N9OLN
+	QwKs=
+X-Gm-Gg: ASbGnctwGBTC8QNTnXxzuhDU+RL0VVFaQ3wssKMdjNfyqZVyJXivL+YJVVWl8Kqablk
+	c5owDnMrbFUoXBV3nregGaDgwrFJHzx+FRpGcKDAJ8dwxmsJqo4NfbzvUmf+TVUkxs6jplbucd+
+	TOlZOQK6dTD6Z8PnC4by6xSbiiDWgQRuZ4VwdKB+Y7jYqy3kn8TSkKxJLBow/u7qwM4O8rGCMN6
+	Q91crKALhs64jISrVW1zU9dXNOHry3j2CifnSBNE4941B4HC+kjpCnP0QlHFJ/sido+GS5HI8Bc
+	B4AwW4URpwLjPNx1WpGu
+X-Google-Smtp-Source: AGHT+IEvFl1FbxFHB0CvP7W57l1B6GCEzJRrElDJcxwa+JRiBNOKY+ShXqEYiqUB7RkEITdRL7eESQ==
+X-Received: by 2002:adf:a1cd:0:b0:386:459e:655d with SMTP id ffacd0b85a97d-38bf5664814mr15384681f8f.20.1737560341516;
+        Wed, 22 Jan 2025 07:39:01 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:bd38:1d:73cc:d341])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf327df12sm16836421f8f.92.2025.01.22.07.39.00
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2025 07:39:00 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH] tests/fetch: Fix git shallow test failure with git >= 2.48
+Date: Wed, 22 Jan 2025 15:38:59 +0000
+Message-ID: <20250122153900.1992500-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 22 Jan 2025 09:43:39 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17056
+ <bitbake-devel@lists.openembedded.org>; Wed, 22 Jan 2025 15:39:11 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17057
 
-On Fri, 17 Jan 2025 at 15:11, Alexander Kanavin via
-lists.openembedded.org <alex.kanavin=gmail.com@lists.openembedded.org>
-wrote:
-> Default parameter values are in /home/alex/.bitbake-setup/config - adjust as needed.
->
-> Fetching configuration repository git://github.com/kanavin/bitbake-setup-configurations.git;protocol=https;branch=main;rev=main into /home/alex/.bitbake-setup/configurations
+From git 2.48 release notes:
 
-After some consideration I've concluded that placing the bitbake-setup
-tool configuration and caches into hardcoded ~/.bitbake-setup/ is not
-the best idea. Rather, the tool should write and read everything using
-a 'top level' directory, which can be set via command line switch,
-environment variable, or a default of ~/bitbake-builds/, in that
-priority order.
+"""
+When "git fetch $remote" notices that refs/remotes/$remote/HEAD is
+missing and discovers what branch the other side points with its
+HEAD, refs/remotes/$remote/HEAD is updated to point to it.
+"""
 
-There should also be an additional operation called
-'write-tool-config' or similar, which would do nothing except write
-out the standard tool config to the top level directory. That way it
-can be inspected and modified (for example to point to a different
-build config repo or dl_dir) prior to any actual build init or to
-listing available configurations (which would do fetches using that
-config etc.). One can still start directly with 'init' or 'list' but
-then a default config will be written out to the top level directory
-without asking.
+This means with git 2.48 onwards, there is a mystery "HEAD" revision
+appearing in some of our shallow clone tests. We can avoid this by
+using the same canonicalization as used for the reference revisions.
 
-Automated bootstrapping from nothing is tricky to get right :)
+This resolves autobuilder failures on the Fedora 40 workers.
 
-Alex
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/tests/fetch.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 6b8e3e060f..d647170112 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -1739,6 +1739,8 @@ class GitShallowTest(FetcherTest):
+         if cwd is None:
+             cwd = self.gitdir
+         actual_refs = self.git(['for-each-ref', '--format=%(refname)'], cwd=cwd).splitlines()
++        # Resolve references into the same format as the comparision (needed by git 2.48 onwards)
++        actual_refs = self.git(['rev-parse', '--symbolic-full-name'] + actual_refs, cwd=cwd).splitlines()
+         full_expected = self.git(['rev-parse', '--symbolic-full-name'] + expected_refs, cwd=cwd).splitlines()
+         self.assertEqual(sorted(set(full_expected)), sorted(set(actual_refs)))
+ 
 
