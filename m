@@ -2,71 +2,71 @@ Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84652C02181
-	for <webhook@archiver.kernel.org>; Fri, 24 Jan 2025 16:08:54 +0000 (UTC)
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
- by mx.groups.io with SMTP id smtpd.web11.15869.1737734932022589519
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8424BC02181
+	for <webhook@archiver.kernel.org>; Fri, 24 Jan 2025 16:12:24 +0000 (UTC)
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+ by mx.groups.io with SMTP id smtpd.web10.16170.1737735142239971411
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 24 Jan 2025 08:08:52 -0800
+ Fri, 24 Jan 2025 08:12:22 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=MeRWo9s9;
- spf=softfail (domain: sakoman.com, ip: 209.85.214.181, mailfrom: steve@sakoman.com)
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21644aca3a0so52788905ad.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Jan 2025 08:08:51 -0800 (PST)
+ dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=0RM9abta;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.173, mailfrom: steve@sakoman.com)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21631789fcdso46465485ad.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Jan 2025 08:12:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1737734931; x=1738339731; darn=lists.openembedded.org;
+        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1737735141; x=1738339941; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=U9Qv6LTa34Apd9kTdeWAry9/KCu/iK+TBSlS7PXZ5TI=;
-        b=MeRWo9s9SmcqR0kx8iuUkJ5tmLQZ9xhJZMnEItNr1kWH9Xb32ZbLSxuZgq8ZK2VHjE
-         /Gg4isIKoPBHCy+I95YPTde2PW18PX/u/J1Sk2D8C5RDZNMj2HB+gW+D2JTUaPo2Ld3w
-         Mui+/rA/v0cZF6j9NLCoaxNZAAu1UT3pFLKzZVRp8Sxr+FzE65ieQyIwG1r5MpXND2qn
-         UaZ/JAHZpcdMwSqakeF1e3q4iEZYu+BRnu8OLDo5qLMyztlGjKXJRpD3aEJ4ZrpcRnV0
-         EnFz/YdTRzjbyRtDCfcQ0ZRGsmSG7Z/koM/bKLdYzrNunAj+3ojpr1unURaK8+0mc1DK
-         yJnA==
+        bh=t6Ys2OLkxD4lmaORVYet1VTNLoxIXN5GL7K3AtmoI1Q=;
+        b=0RM9abta10RoV7CaDPf5LaM5yxN8YeimTz/u01O2M8QLAWGz0rUw9E9Xc+bejMzwxu
+         eCbWQEWwFixIJiEXwQproxPS6iBjMWNJ2r3flJXXxK62qHQePtNnS3iLx6yh3pYnYoro
+         EyAbJp3kLVgI0jk8f6H+5sd3LjDVeW9z7HxHtRh15To+evtDz2tnfCMTHrOpa9qcZi5q
+         4FgYCnubEVe/fslKLvonF4empBGfCGoVr5gHNkrqA+459ZefWwEIBjzKCfTcAtDDlOjn
+         GEMxHdI02YVIDeMjtPWDYGiImIfIU6JRe3mn2VhqkT7nLawdYn0U9AH1U+MSAabcSNL5
+         pC3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737734931; x=1738339731;
+        d=1e100.net; s=20230601; t=1737735141; x=1738339941;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=U9Qv6LTa34Apd9kTdeWAry9/KCu/iK+TBSlS7PXZ5TI=;
-        b=emymspMgt6qy3X6NJtAHZoaQx+bViz5lJRdvZnvk7+i4nAx+CZiqA14cgG6wksIqpu
-         bM3qrNrvpn1J4BiV5KId1iGOXR3TlOzQIgfRxty/AT4IEUZz6OP7nDO/pBHKiAN3KJLF
-         FdA/LJ4gcIl6yXk3sHEqD1TnufcAuNX+ruN2h11fiOB7MfOADQd6yNEeFtQH/LFE/U61
-         os/Sj+nIEJgJKUcbZTNOdv35a19VAIa36jQnQ0jh9AAg+m2mv+XXi6VEAezoRCb/unVR
-         MGP6c1hSji7l5Sl1JdLFRrbJxJi9ylv8swRR64yp/X+uYViwyzo/Dom24wZGUdb8SSBj
-         P8mg==
-X-Gm-Message-State: AOJu0YysO25+T+ceSJXbxEGVQTHt9Y2jKCVT7pSz2uEqxUHLMzgT3Kp4
-	sFgeugqD/dpZf75CknfHqPhw2mK/n9Te2qZPrJexuPnRfjDOHcKPBjWGr6uan+ndbJWR9u+vNV9
-	LX+M=
-X-Gm-Gg: ASbGncuP8zl9RPP3cE9uiHpSfbnA8/1XhKaDOQwIZpRWf9xSLYtdx3vudEZv4PossSc
-	QpkKjSfKSV9gopX62MawamEV9MTz53tpfkyVgIg17mFFGXsh/tebjzgjXu81uW53zAquwV6psN5
-	VImxaRQlDG1qgIGDXIFsI8SeUKeegnbx87XX/6g9rQtCMHHlTdQunzRf6BdibLHSkG4xCmBUIW7
-	zOnDw7fKm75oOyMlgpUr2/TYFvl7YQb4/TR7egvp2msyOVfmhmTNoPsDbm0hxLnbRL9OA==
-X-Google-Smtp-Source: AGHT+IEW4dwsf72PqxS6OjRGZb4XslAN0CFc7nhyiiuaLuqqWZPipqBx63rraFaxSVJPwjqjOzH0fw==
-X-Received: by 2002:a05:6a20:748f:b0:1e1:a06b:375a with SMTP id adf61e73a8af0-1eb2160f41fmr54647234637.35.1737734931262;
-        Fri, 24 Jan 2025 08:08:51 -0800 (PST)
+        bh=t6Ys2OLkxD4lmaORVYet1VTNLoxIXN5GL7K3AtmoI1Q=;
+        b=J1fgQNAhXmO2hmCRTY/pnMPdhMh4D1xhngIyuOiXgMP8X+65e9gf/X21uCm31E4+24
+         e+UhxaSGSc55USJJDYfx0YdkUyCU/n78DoU8zZVSaRY0uqCzOB8QtqBy/fQG32rT9nwv
+         a1k1arbcnaBFKLPmhtSpYzuz9oyIRIqIdLjdFRBmfsXVM9tu3oO75DBPzYw4xL/D/GXm
+         ubkvIBr5SBi5wVZkt2CJcWLbENA87FFKWCO4B02Kf0368mSoQiUy78LmrtI1EbsO119s
+         PzuoWMaqlQ1eB1Ojso3WOFV5oaabUgE3TfLZowy4qu1fBOdNqv1TPnIrFKO/kyFa2BRW
+         DZ9A==
+X-Gm-Message-State: AOJu0Ywits7F+IH5lagkmxbDDLtzbtEcho9M0npjh6Mty/MmWquQn5l/
+	piel7X0g0OlfTyIEFsbaseL6WBx6sHBQDgD/fWsEuVG+1fBPLPrJ57rFt7cMoqjtifiKccJIZLT
+	I8DY=
+X-Gm-Gg: ASbGncsdRu9XFSKk6k4ogNoh8xq4NPUKIFH1MCcsHAdrlnlDlGFSS0/elELN7OQkknC
+	NVqCmdl8mi9M1L+hc9tAKWBCI8kW/E9PxVmfYgCkCl/0N/d1oiqbdyt1HjIY9TKso772F493Rr2
+	uB5OJYV9Ub1zDJMOjCIMlsXIeYkMuoWtAow4nc6hmK+sXrb55057iwVDjau5otG2nFPjG3lALDn
+	SahcPOCq+Sq9ud8PC63dvNOvERylQAmsMsbcmkZEtkVs0R2ItTr1FVKZeD3wHWAnfOX5g==
+X-Google-Smtp-Source: AGHT+IHiGUPV4C4zYTYkmUDhyKNpq7+90xjlwdY0GLTWWpL8rTenMln9HbXYKMgMQ2Cz7AT7GHBMYA==
+X-Received: by 2002:a05:6a20:9f45:b0:1e1:bd9b:40cf with SMTP id adf61e73a8af0-1eb76c163dcmr6566189637.8.1737735141522;
+        Fri, 24 Jan 2025 08:12:21 -0800 (PST)
 Received: from hexa.. ([98.142.47.158])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ac48e569c5bsm1852088a12.9.2025.01.24.08.08.50
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ac495983698sm1831880a12.55.2025.01.24.08.12.20
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2025 08:08:50 -0800 (PST)
+        Fri, 24 Jan 2025 08:12:21 -0800 (PST)
 From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][scarthgap][2.8][PATCH 1/1] tests/fetch: Fix git shallow test failure with git >= 2.48
-Date: Fri, 24 Jan 2025 08:08:44 -0800
-Message-ID: <f72a90dca6a434a8d128d8486d1b3e7af8f7c5cd.1737734826.git.steve@sakoman.com>
+Subject: [bitbake][kirkstone][2.0][PATCH 1/1] tests/fetch: Fix git shallow test failure with git >= 2.48
+Date: Fri, 24 Jan 2025 08:12:13 -0800
+Message-ID: <a4d7e5d38d70a82e853ac29c833942d444c547cd.1737735057.git.steve@sakoman.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1737734826.git.steve@sakoman.com>
-References: <cover.1737734826.git.steve@sakoman.com>
+In-Reply-To: <cover.1737735057.git.steve@sakoman.com>
+References: <cover.1737735057.git.steve@sakoman.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 24 Jan 2025 16:08:54 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17076
+ <bitbake-devel@lists.openembedded.org>; Fri, 24 Jan 2025 16:12:24 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17077
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
@@ -92,10 +92,10 @@ Signed-off-by: Steve Sakoman <steve@sakoman.com>
  1 file changed, 2 insertions(+)
 
 diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 231da669e..afabaeba1 100644
+index 9f0f00fff..88f4ba041 100644
 --- a/lib/bb/tests/fetch.py
 +++ b/lib/bb/tests/fetch.py
-@@ -1715,6 +1715,8 @@ class GitShallowTest(FetcherTest):
+@@ -1621,6 +1621,8 @@ class GitShallowTest(FetcherTest):
          if cwd is None:
              cwd = self.gitdir
          actual_refs = self.git(['for-each-ref', '--format=%(refname)'], cwd=cwd).splitlines()
