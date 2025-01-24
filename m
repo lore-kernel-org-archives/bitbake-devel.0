@@ -1,92 +1,102 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <mark.hatle@kernel.crashing.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 622B2C02182
-	for <webhook@archiver.kernel.org>; Thu, 23 Jan 2025 20:15:13 +0000 (UTC)
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
- by mx.groups.io with SMTP id smtpd.web10.21107.1737663304148296795
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6179FC02182
+	for <webhook@archiver.kernel.org>; Fri, 24 Jan 2025 02:50:29 +0000 (UTC)
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+ by mx.groups.io with SMTP id smtpd.web10.3296.1737687021718061770
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 23 Jan 2025 12:15:04 -0800
+ Thu, 23 Jan 2025 18:50:22 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=GWTvDHto;
- spf=softfail (domain: sakoman.com, ip: 209.85.216.44, mailfrom: steve@sakoman.com)
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2eec9b3a1bbso2081313a91.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 23 Jan 2025 12:15:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1737663303; x=1738268103; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FsJdQ8zPzuyoiUa2chH+fxXCl0jhojNYBcalyMSBxsY=;
-        b=GWTvDHtoMWYjFL2zdTixhILBkUoflbjklzUVvVtkmXSCxRyEbwLgDTQPgtsvHtZISg
-         E4hpWMMl0b9snlruG9JKH9ulogBu9ylbMkZ26B1967FjM0ije8zKRKuw9StsGhKvYNgz
-         oYsigMLAuYshQAOvvn7cA/Jt6VVySz0PhfciNjfmrHFuPDifgLVc4+4+y0nlonqTuhZ3
-         up6v5p7nsRrWzjpsc7JuPONHazMJ1E/zrTLuTtVqMR6A+U/NCCyTFFUv3svfjIeKH5lT
-         q0+fiFvOas4nxfUsIytXyqAYL1tL6ypH7N4f2MFmhhXOwrV0cyyviWPlpHxfXW5joOt+
-         ENTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737663303; x=1738268103;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FsJdQ8zPzuyoiUa2chH+fxXCl0jhojNYBcalyMSBxsY=;
-        b=nn3MI0cS3LwBf8vsuvbaOXj7LtlubK/kxa4rEWEwUqZLEfCLUd/rPYXQ4LN0Cn3Ac6
-         VEZGM/kqBa3SiOw2Cj3jlH8jSwa7MrpQwUmQ4g0R5LZ1kPUDPw2kDKdtjIVj4RBuU3/9
-         rU6XXraxgGuuH406B/d2yaYUG9EzZ+S7/tsKETOM8XloRokqYOdm/A/RPd3xH4w/1q8F
-         8G/QrZy21YETcoHxemhbo7Y3BqqIz7KQKhn6Jlp8+gO5H3D38jpB+PLrR5dQ8t6Mg0vm
-         pYqFa9ATl4I1JOOCP3yVtF4zkMmmluMhbiEvT/jgnNNyRrHgTfGSaSYMHZ0yUkIsmrgI
-         cqTw==
-X-Gm-Message-State: AOJu0YxB5VDh7s3B+XqP9nFpX08QKRRVEwJ4IU6MBwkT2Ase/okYsBpu
-	0XPu7VtZdWvN8/yaasuKRUg3ROYn/9uJGI2Ei2gtLJ6dg64k/ufTKh6fgJSZqLJksw4y3N3kYuY
-	Hm6c=
-X-Gm-Gg: ASbGncv8lK5J/mnqTuT47G9bDrlod2rqgJY5v0vFkcVHJuPaeP6ELuNlrnnQryDdpua
-	WpkUEzPJHq8HsSljXrK6MNhKXdzkuACJq5CXjL2uwo1PUpcjUKhEozdjnrOLWJtLjYc/qXg2AyO
-	0oiq2S2xBI/vzHbz8k99w8klp4PJqtQAiSVWdpDeMwV8QpR0E0UlrJl4EJgEkWjoPvC3iWeDK3L
-	KBceAfzucLF3PdxFgPDcvOuk24XpQ3ou0UjxzCQGaLpFW2K1A3JBUWYRZL80Mf1JTu/lw==
-X-Google-Smtp-Source: AGHT+IHZWkxOLC+gV37mNavsfHqmZey/8Gee966ChOXLZcC5P148DVEd6DsctBEYtjofNrZW3uGXdw==
-X-Received: by 2002:a17:90a:d887:b0:2ea:3f34:f194 with SMTP id 98e67ed59e1d1-2f782c90219mr43066050a91.10.1737663303347;
-        Thu, 23 Jan 2025 12:15:03 -0800 (PST)
-Received: from hexa.. ([98.142.47.158])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f7ffa5662esm142386a91.14.2025.01.23.12.15.02
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2025 12:15:02 -0800 (PST)
-From: Steve Sakoman <steve@sakoman.com>
+ dkim=none (message not signed); spf=pass (domain: kernel.crashing.org, ip: 63.228.1.57, mailfrom: mark.hatle@kernel.crashing.org)
+Received: from kernel.crashing.org.net (70-99-78-136.nuveramail.net [70.99.78.136] (may be forged))
+	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 50O2oJDq014671
+	for <bitbake-devel@lists.openembedded.org>; Thu, 23 Jan 2025 20:50:20 -0600
+From: Mark Hatle <mark.hatle@kernel.crashing.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][scarthgap][2.8][PATCH 0/3] Pull request (cover letter only)
-Date: Thu, 23 Jan 2025 12:14:53 -0800
-Message-ID: <cover.1737663180.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.43.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH 1/2] runqueue: add 'default' mc translation to mcdepends
+Date: Thu, 23 Jan 2025 20:50:18 -0600
+Message-Id: <1737687019-22232-1-git-send-email-mark.hatle@kernel.crashing.org>
+X-Mailer: git-send-email 1.8.3.1
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 23 Jan 2025 20:15:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17072
+ <bitbake-devel@lists.openembedded.org>; Fri, 24 Jan 2025 02:50:29 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17073
 
-The following changes since commit f40a3a477d5241b697bf2fb030dd804c1ff5839f:
+From: Mark Hatle <mark.hatle@amd.com>
 
-  runqueue: Fix scenetask processing performance issue (2024-12-03 06:34:38 -0800)
+The default mc is '' (blank), however BB_CURRENT_MC returns 'default'.
+Allow a user to specify a mcdepend such as:
 
-are available in the Git repository at:
+  mc:${BB_CURRENT_MC}:m2:recipe:task
 
-  https://git.openembedded.org/bitbake-contrib stable/2.8-next
-  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.8-next
+Both '' (blank) and 'default' are now supported and have equivalent
+meaning.
 
-Chris Laplante (3):
-  ui/knotty: print log paths for failed tasks in summary
-  ui/knotty: respect NO_COLOR & check for tty; rename print_hyperlink =>
-    format_hyperlink
-  cooker: Make cooker 'skiplist' per-multiconfig/mc
+Signed-off-by: Mark Hatle <mark.hatle@amd.com>
+Signed-off-by: Mark Hatle <mark.hatle@kernel.crashing.org>
+---
+ bitbake/lib/bb/runqueue.py                        | 4 ++++
+ bitbake/lib/bb/tests/runqueue-tests/recipes/g1.bb | 2 ++
+ bitbake/lib/bb/tests/runqueue-tests/recipes/h1.bb | 0
+ bitbake/lib/bb/tests/runqueue-tests/recipes/i1.bb | 0
+ bitbake/lib/bb/tests/runqueue.py                  | 7 +++++++
+ 5 files changed, 13 insertions(+)
+ create mode 100644 bitbake/lib/bb/tests/runqueue-tests/recipes/g1.bb
+ create mode 100644 bitbake/lib/bb/tests/runqueue-tests/recipes/h1.bb
+ create mode 100644 bitbake/lib/bb/tests/runqueue-tests/recipes/i1.bb
 
- lib/bb/command.py     | 21 ++++++++++++++++++---
- lib/bb/cooker.py      | 11 ++++++-----
- lib/bb/tinfoil.py     | 16 ++++++++++++----
- lib/bb/ui/knotty.py   | 20 +++++++++++++++++---
- lib/bblayers/query.py | 14 +++++++-------
- 5 files changed, 60 insertions(+), 22 deletions(-)
-
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index ffb2d28494..f941749b0d 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -723,7 +723,11 @@ class RunQueueData:
+                 mcdependency = dep.split(':')
+                 pn = mcdependency[3]
+                 frommc = mcdependency[1]
++                if frommc == 'default':
++                    frommc = ''
+                 mcdep = mcdependency[2]
++                if mcdep == 'default':
++                    mcdep = ''
+                 deptask = mcdependency[4]
+                 if mcdep not in taskData:
+                     bb.fatal("Multiconfig '%s' is referenced in multiconfig dependency '%s' but not enabled in BBMULTICONFIG?" % (mcdep, dep))
+diff --git a/bitbake/lib/bb/tests/runqueue-tests/recipes/g1.bb b/bitbake/lib/bb/tests/runqueue-tests/recipes/g1.bb
+new file mode 100644
+index 0000000000..20ce8dd3ad
+--- /dev/null
++++ b/bitbake/lib/bb/tests/runqueue-tests/recipes/g1.bb
+@@ -0,0 +1,2 @@
++do_build[mcdepends] = "mc::mc-1:h1:do_build mc:default:mc_2:i1:do_build"
++
+diff --git a/bitbake/lib/bb/tests/runqueue-tests/recipes/h1.bb b/bitbake/lib/bb/tests/runqueue-tests/recipes/h1.bb
+new file mode 100644
+index 0000000000..e69de29bb2
+diff --git a/bitbake/lib/bb/tests/runqueue-tests/recipes/i1.bb b/bitbake/lib/bb/tests/runqueue-tests/recipes/i1.bb
+new file mode 100644
+index 0000000000..e69de29bb2
+diff --git a/bitbake/lib/bb/tests/runqueue.py b/bitbake/lib/bb/tests/runqueue.py
+index cc87e8d6a8..cea2ca13fe 100644
+--- a/bitbake/lib/bb/tests/runqueue.py
++++ b/bitbake/lib/bb/tests/runqueue.py
+@@ -314,6 +314,13 @@ class RunQueueTests(unittest.TestCase):
+                        ["mc_2:a1:%s" % t for t in rerun_tasks]
+             self.assertEqual(set(tasks), set(expected))
+ 
++            # Test that mc::... and mc:default:... both work
++            tasks = self.run_bitbakecmd(["bitbake", "g1"], tempdir, "", extraenv=extraenv, cleanup=True)
++            expected = ["g1:%s" % t for t in self.alltasks] + \
++                       ["mc-1:h1:%s" % t for t in self.alltasks] + \
++                       ["mc_2:i1:%s" % t for t in self.alltasks]
++            self.assertEqual(set(tasks), set(expected))
++
+             self.shutdown(tempdir)
+ 
+     def test_hashserv_single(self):
 -- 
-2.43.0
+2.34.1
 
 
