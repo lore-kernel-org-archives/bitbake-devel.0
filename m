@@ -2,196 +2,239 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AE6C0218D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C42CFC02181
 	for <webhook@archiver.kernel.org>; Sun, 26 Jan 2025 10:28:02 +0000 (UTC)
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (NAM11-DM6-obe.outbound.protection.outlook.com [40.107.223.45])
- by mx.groups.io with SMTP id smtpd.web11.3038.1737685550564615907
+Received: from OSPPR02CU001.outbound.protection.outlook.com (OSPPR02CU001.outbound.protection.outlook.com [40.107.159.89])
+ by mx.groups.io with SMTP id smtpd.web10.28078.1737887197255576308
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 23 Jan 2025 18:25:50 -0800
+ Sun, 26 Jan 2025 02:26:37 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@amd.com header.s=selector1 header.b=W7Q6ieLo;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: amd.com, ip: 40.107.223.45, mailfrom: mark.hatle@amd.com)
+ dkim=pass header.i=@navimatix.de header.s=selector1 header.b=YKapbGGa;
+ spf=pass (domain: navimatix.de, ip: 40.107.159.89, mailfrom: joerg.sommer@navimatix.de)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Fbm0helv9tIYIu1urk2uh2v+pIkEPYXVRGC/nVg6a9yQkipU8dc2BPv8sEqNE1IHxObIBLymZQZQoAV4Wxc2+heTD01QnOp/07p5OAAiR355RJLr2EtYSy8KJyDX7pnZRcsSgLgn3Lg81heMkldlJYGmaTBuvDL+sukUBKW9OK5Ww8erzayiT21lju/h//AHQeveWJnMnu01l/SmLw1XtmjDcxc6QWfKgCT0H9l/2J1cVMyO5dQOj4ChSJ2E97Ppa8TdZuWMzbbZxpEt0WpDuYGEErUp/W7ndmAWcHPPj/mvUWyMAz/7J5raz0Gp/du3ZYPsloeuiLTgTywaonojMQ==
+ b=LKdUXW7y/owo7BUpr/NTfUgE0nLSUlDKoJX5Ggj1KbgWKQp5IAW7tqL3PJtkd1UBdHc8q6Tcc1xRpKOj8G2huU6QP4UsX6cJi6hl+dYpBLjVIgkLDh6JfnChmgYeLtbk/e5VwHVAzcCuCGcPZ9eLr7rragxOP2kyP3+beEpnLEHEEDp5dM4WEqhaA46Kwv1+5m5e+yu1oqjZkHavkVFEtCEIgVu3lQKNeZ2nd4LdWQUp1qbUI090cEvlCEa6rawn4lDcKLVhdq3n6g9AfStBv0L7OPwe2Jrpe/+yV8rzMk5/6zWf6a1mKb48AfSyS4hA9xa7Tyc77GkUpaEvAq5b/Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j7/78ByHHuSnmQbknVqTNDY64MXzl/oAFtmiy/T9z2c=;
- b=XA6rkz0AyPXJ7w+LnelK9eriZyo7BsJvLK4LxeBP2BlBXtoacHTTibWuA7rcwXAEhHqOgzGy4Zt8O1gqjQSx1SDVL2ichG2i7mYdi43FQprkrw9A1zhi6qoCZZqAsfkFnPmbK692s+ujbhhTVR+FjbWqwyEiMN4cvDMlcxUydGhsICArobuf5bxc7h40qBrLD8OaXQKxon3Xx87zxA/iIVz+kFa/Tf+SzTOfa5nuuaL3PJucZdtAL2utleqjEF/6gqAcaIkazgop5tpudMCC46HHhPTqhxio6KVeCFGhribdxO3Av4AgUHdArQXhOXrU4Cuhn05CPGxGJrdem1w/JQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=amd.com; dmarc=pass (p=quarantine sp=quarantine pct=100)
- action=none header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=T47xuObxQ3g8pA0nj7WVU1sDWZZSK3/m+47Zn7oXB9U=;
+ b=FAxEPFfACXKdLkYwOF+W6QTGchID0uyp+etLd1uHX6JUGRvhmRt390WDXpMWRvw15eGR/tKuUpr5P10spjeTa35IcS3AYBWu37RLP4BASr79IMHA1Zlen4sWDyH0JqFsLYGjJy6P+NBGAiICeQCl/7gHMZy6I1BNTmZP7li6Oze9lILQfh0tW1ZlpTKCLzz2CcRVNEKTNdJM80kE+LVIaJ8viina+a7+1qNVQttaBmRFrBgn8DqRuVapWeSQwamTfN1rZNkoVrsSQHh2FvZtL593dDbkJfkd8FjuIjNdw+UtYP7+MIXA/mh+7z9NFMSayLGAg1kz5XOCQDGrDYkGAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=navimatix.de; dmarc=pass action=none header.from=navimatix.de;
+ dkim=pass header.d=navimatix.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=navimatix.de;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j7/78ByHHuSnmQbknVqTNDY64MXzl/oAFtmiy/T9z2c=;
- b=W7Q6ieLo/bL79byUCOWjUCZR1tOqr42QDlkJ6GMd4wwCAeOje3tuQ1MVUiarJHxVA+dTKvn9dQ4Q+SUEDFHi4YYsQ/nSERw+33OZgztaaYIl3w6x39BxTkLf4o+rpb5hUstlVUXvDFGgYZhYg1zPiuTmhagYnChuN9xFcyAy8Ww=
-Received: from BYAPR06CA0034.namprd06.prod.outlook.com (2603:10b6:a03:d4::47)
- by CYXPR12MB9427.namprd12.prod.outlook.com (2603:10b6:930:d6::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.17; Fri, 24 Jan
- 2025 02:25:47 +0000
-Received: from SJ5PEPF000001CF.namprd05.prod.outlook.com
- (2603:10b6:a03:d4:cafe::a3) by BYAPR06CA0034.outlook.office365.com
- (2603:10b6:a03:d4::47) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8377.14 via Frontend Transport; Fri,
- 24 Jan 2025 02:25:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- SJ5PEPF000001CF.mail.protection.outlook.com (10.167.242.43) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8377.8 via Frontend Transport; Fri, 24 Jan 2025 02:25:46 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 23 Jan
- 2025 20:25:44 -0600
-Received: from xcolc230100.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Thu, 23 Jan 2025 20:25:44 -0600
-From: "Mark Hatle" <mark.hatle@amd.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [bitbake-devel][PATCH] runqueue: add 'default' mc translation to mcdepends
-Date: Thu, 23 Jan 2025 19:25:39 -0700
-Message-ID: <20250124022539.1504699-1-mark.hatle@amd.com>
-X-Mailer: git-send-email 2.34.1
+ bh=T47xuObxQ3g8pA0nj7WVU1sDWZZSK3/m+47Zn7oXB9U=;
+ b=YKapbGGaWliRpabtLUnmVaBcVtYJDVKLqg6dnC0y5W9sEetcZa/qO26hRHSAQLhy3zmSKxdX6PBu1cv9/AHTy4wdelR5snGCrFdj8ZpJ/Cw1bZkyU51fUv/zSGbNUC+O+G/eecAnwf9EQnT5bYbVRO3M4y4SQHiLwGstpklc8xM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=navimatix.de;
+Received: from AM9PR01MB8297.eurprd01.prod.exchangelabs.com
+ (2603:10a6:20b:434::5) by VI1PR01MB6992.eurprd01.prod.exchangelabs.com
+ (2603:10a6:800:190::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.21; Sun, 26 Jan
+ 2025 10:26:31 +0000
+Received: from AM9PR01MB8297.eurprd01.prod.exchangelabs.com
+ ([fe80::ac1f:a3d4:7e5a:72a9]) by AM9PR01MB8297.eurprd01.prod.exchangelabs.com
+ ([fe80::ac1f:a3d4:7e5a:72a9%6]) with mapi id 15.20.8377.021; Sun, 26 Jan 2025
+ 10:26:31 +0000
+Date: Sun, 26 Jan 2025 11:26:29 +0100
+From: =?UTF-8?B?SsO2cmcgU29tbWVy?= <joerg.sommer@navimatix.de>
+To: Antonin Godard <antonin.godard@bootlin.com>
+Cc: bitbake-devel@lists.openembedded.org, docs@lists.yoctoproject.org
+Subject: Re: [docs] [PATCH 2/2] doc/logging: convert warn.json to YAML
+Message-ID: <f76mff47hmlhqwq6mgvhbu4xggf3sqiwvvs72n3v7xp2gsay5c@pjtfqzmzuao3>
+References: <2bf2a340cbf86391ae6722739f750f9d44f550b3.1735852948.git.joerg.sommer@navimatix.de>
+ <bcd0593418a1217f73f4a6946b13a5b603a58fb5.1735852948.git.joerg.sommer@navimatix.de>
+ <D6UW0M0VI79V.QRXZOO9V6BPW@bootlin.com>
+In-Reply-To: <D6UW0M0VI79V.QRXZOO9V6BPW@bootlin.com>
+X-ClientProxiedBy: BE1P281CA0156.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:67::9) To AM9PR01MB8297.eurprd01.prod.exchangelabs.com
+ (2603:10a6:20b:434::5)
 MIME-Version: 1.0
-Received-SPF: None (SATLEXMB03.amd.com: mark.hatle@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001CF:EE_|CYXPR12MB9427:EE_
-X-MS-Office365-Filtering-Correlation-Id: 46eee030-925c-47a5-a693-08dd3c1e6935
+X-MS-TrafficTypeDiagnostic: AM9PR01MB8297:EE_|VI1PR01MB6992:EE_
+X-MS-Office365-Filtering-Correlation-Id: dc2b6883-59e8-400f-c218-08dd3df3e6d2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|376014|36860700013|82310400026|1800799024;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?Edchh2pR3u4Jkg2+WD6K7rp9wD92DoFoEkpeyXzZ9sT1Zlos5AM0adiDc2QQ?=
- =?us-ascii?Q?GSR9nkqz/0Y3q7DhXyRkh99rQpVXUDdSbjK3f8BErf75IMKFXdJNA7XY89bf?=
- =?us-ascii?Q?67VSbaAfvZi9+V+r0p/LDcAXKxaqXaGRiwKjPn4uELT/B0w44eYHAtU93AwV?=
- =?us-ascii?Q?9aw5quo18BEIwZjQ+DYyHFipKRBTCQ6YSQ28GHyaK1jkWe3Iqjeh19+XtocG?=
- =?us-ascii?Q?BYzrcg/PS7+rqcuvg1iZDNaHkjw+eMu2gQBYWrxmUZz8fr0oxrzPR27IQeIv?=
- =?us-ascii?Q?mHQwwW8vReezND8LM4JAZQq+7hqODQUadVoHol9gvOhFgdElLSfv9og8YemU?=
- =?us-ascii?Q?xQtymGPLpIji6IuTaskmNxaoA6AjGk4ZFhkuRLl7WR7RNcA4JNecRIlOev4d?=
- =?us-ascii?Q?9bW58YWVIQ3g8QnSYe9QrgEssG9pkqdDJBn99UYzAEZVx7mXJ+zWZ1OPWo9O?=
- =?us-ascii?Q?Yuz001zPLAy1ln8VGFGPB03cqnnbGzc3tdtUWW0+k6yyul0wS6EHC8mkgFcj?=
- =?us-ascii?Q?5wk/bGzCeLsM4NRlqIxWegIVFcTViby5qFF8h3FeiI3PIwwrhrJEiuNSNoHN?=
- =?us-ascii?Q?4722JQnCAb6Nzk0RkgkNnldQpzzF4am72gvIRjhShgVUkIHi0BRXNllQNqEb?=
- =?us-ascii?Q?so6lqc/N2pbzoFj6bmZlv/y2EaZ/BsLlHqIwQDWi5tbBukitZcN8jjyZqgps?=
- =?us-ascii?Q?3v64v2hEPhc19eGZBz3Jbb0D29ZU5IeKzEzAlqEqfb4STbftEh6J7FMzot8k?=
- =?us-ascii?Q?sncSCYqApKiaIrBbzjnImBIAom0u3Xo8pdCg1ZZS8NNP/oFmh0LoWCSAGZTf?=
- =?us-ascii?Q?auWw3VApvMsoKsu7ijHqmwfQcywfBaUFWK8vosWM8HvS/qWsQFou+i9+/m9X?=
- =?us-ascii?Q?qVgcomzfFYZV7Tpgvngxcq7Ew5/gNd7BfW9nrRNoygm5243nrHQKKH9fao5a?=
- =?us-ascii?Q?B2yRmX7VWszyvFURJ9rHsgs5EHNuMO4se1elilSmv/wdf/pJaltobyCiIFyg?=
- =?us-ascii?Q?0wPQKrIOod6xBBLUcm2hjtr/YcFM3pWULig/RaXZv4fiB//R6tOTE2TRP1eH?=
- =?us-ascii?Q?GHWtN4t5a2ZkrmG9oHTrf3NfajN/pHM7jBK9gTHMUlIgG7lfOJfadVvIiEV9?=
- =?us-ascii?Q?sGCJltHPX5kiuwRiNUhWtLlXqe/y3p6XWxeoWx8CzW0XE+PM00eHNx+jXzfq?=
- =?us-ascii?Q?HIatHuyHf5cE+UWF/vyt8kl9vP2k3J47DzFwds0yxoCQTQdVyAnqCnLNAbRt?=
- =?us-ascii?Q?bPR+Tzbj3ZifHyYwMcUbJA4CNH4sbz/GWIgktbxHYQPqKj6YilvZ0avaWvnH?=
- =?us-ascii?Q?7m89AEr2uHz5VIcm8xAePNR5tBDMCA7PzdLdsfx7L3YQGSbI7OPk5etUPef3?=
- =?us-ascii?Q?JT4lZ/maBmtJF4tY89SKeOC4BoqBMN5UvKRnKXVDZNaUdNOGJJ81M3PmR+20?=
- =?us-ascii?Q?6/oH9i66HwoknPdhouC4OfKlO4r7gT0ieZ7ip74QvjKjol/TIqmuRQ=3D=3D?=
+	=?utf-8?B?clpNUVlXcFVNWDdGVW5lUzJvWGdYL0pNSThpSnlZTzJvb1FHQjUzeThOYXZJ?=
+ =?utf-8?B?K2dlRUpXR3k2WUYzdkhKTGh4Z1RCWjZqNlZEbzRMNHVmVURCWnZDdFdNQ1A1?=
+ =?utf-8?B?TXRTUlo5VmcvUWF6ajV0KzluK3NYb1dwZHZzbm5HbmR0YUJjVVZEY0UzaFJM?=
+ =?utf-8?B?b04wRnZKRy9JR1hLWUNEZXdTb1BudkRFNUlYWXpuMkJVdGhud2NYUkp5NTcw?=
+ =?utf-8?B?YVcyYzNjM3ZUSThDbGpmVm14TVJnemh1TUZESzFaclMydHM0OThDSURiR1c1?=
+ =?utf-8?B?dUVyNkpUY2VUUVBOemVUcWZPWHJhaVBYN0dQSS9nUk9jeGpJMlRjNXphMzVI?=
+ =?utf-8?B?cmRlSmVoM09HU1lXNGdyM3k4TXJXTlVITEZSUGZhRk1OdThITDRpaFdGZGhM?=
+ =?utf-8?B?WHFKRUU5aUhmbXhwVms2UUxGUjRJSkNaMEI0NjhoWDEwMjhFbEk0SXJ2QzVD?=
+ =?utf-8?B?M01ZcVFNWEN2d0FUaURmK1FTQks2NFZCMitYQ1ZZeWdaRUt3a0hqRmpIbTN0?=
+ =?utf-8?B?YkdkSFZrZnlOSGt1bXRzU0xnOEx0WWhTQ0ZUaS8wWHY5bmRCcXROZkxEQ3hz?=
+ =?utf-8?B?TEpiRFFIWXNPSEMyUkhreXJZVm8ySHc3cG1VMkFob0ZMaHY5T2FWaHlNTHNv?=
+ =?utf-8?B?L3JJc2F6UlNDUzN1dml2NXd1aVRmQnc5OGlOSVY4ZmRwKzY2YmFzUTdVSVhv?=
+ =?utf-8?B?TmZEa2xMbXhTNEpqczQ1NGRJY2NmLy8yRWMvTllTMkcvbXVWYzlpdkVVMGlh?=
+ =?utf-8?B?NVV0SjVKTndzWFRVTUhNRk55U29HZy9PVXhSVnM4YmhEeS8vVDF5S2tyRVQ0?=
+ =?utf-8?B?cjhCK0s2eDJ2OHR4Um1meE1UdmZQbFdFWkd0NmpFM1VnZ2tFNys5UkdkSStR?=
+ =?utf-8?B?dXJwRjNwK2VlRXd6elcrV0d4ZjdZd0ZnOFRUOVZFT010aXdNT3VsRkZFcXM1?=
+ =?utf-8?B?T0VnMk44dFh5dnM5YmNkNlEzNlZxM1lxVGVyRFBOT3FqMWVnWXdFSXlFSmJZ?=
+ =?utf-8?B?MnN5RWhJRk9CMDVIazBVUTZtem9NbUJtbFBQYmQ3RWR0U0l1QTJKUWh2UG5m?=
+ =?utf-8?B?K20xR0JPUm1NV04wMXNTYjZySlg4cXh1RW0yNFYrcmdZWnJ4eUQwZjVXTjNW?=
+ =?utf-8?B?RC82NnpkYlVwZm5XSEhNMmx2Q3UyNTFMRWlPTENlSkphMHNrSlV3SFJFUS91?=
+ =?utf-8?B?V2NYS1FySEE5Mm9TZU52N2t0Q20vZWJhOTlWQUV6ZHAwUlllVzdXYXpiZ3B0?=
+ =?utf-8?B?dHVYM3dTMlRNZGxUYWNkb0VzcVc1ejk0eEhPYjFJRS9mUWt6dG9idzZ3T2Ju?=
+ =?utf-8?B?ZDJ0amQ2T0c5c2VVakdoNTlrQmFMaGFvbEFPbFNPRlljNWF1b3V6Tm5vWm4x?=
+ =?utf-8?B?a0w0dTQ1NndPVnJjTlY5Wm0vZ0FpNVVmVXdTako5YmZEellWZ2h5Q0xaeHY0?=
+ =?utf-8?B?U1JRclJ4WFhBaG4zRzNDaVpTMlFDOUVIaUZJcG14amdXUHZJUzVIcC9QMzV3?=
+ =?utf-8?B?MGZVTG1acHlnRjZvSHk1UEJ4WVE1cklPNlVPTHZlTkU5amdlVDVaMXh5NU4v?=
+ =?utf-8?B?Z3NzZG9NKzEyb0JhdXVuK1NWSDFVNFlPelNvTmRVT2hoRUZKZDVORGQxTC94?=
+ =?utf-8?B?Smh1VU5qcURFMjEwTTBIbHFWRHNoMStwZnRMNEpmeWQ0UktORlNBSW00bnZG?=
+ =?utf-8?B?ZHN3Ymd4TnJFS2xaMnNYYVl2YzI2SEMxZGNiZlV6NjhFblpKQWhVNGFtQjhj?=
+ =?utf-8?Q?Hf5GuefT34766jZxg25n7Y0sNPLQDY0O5fXkowP?=
 X-Forefront-Antispam-Report: 
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2025 02:25:46.6725
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR01MB8297.eurprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?YUZhME14UXQvdzI1S0pvOWlPWDcrT0R4a0pJdFhaR2pNMUVHdkpqMm1HdHhX?=
+ =?utf-8?B?MWpYVEdjOXRzUWZxYkR5RXVoSlFpa0FacU1zZmgyeTJGbUJWYVF6UUFEUUMz?=
+ =?utf-8?B?eGFaN2JpNi9xUEp4V2dGZTB4V1JxUU1sU2RFYlc0ZWhCbXBnRFhwVkFoV1pj?=
+ =?utf-8?B?Mk9sTTMrMS82QmkyQVVJdFc1dkxtZ29WaDAvMkxKUnprYWM3cU0xQVlqQm93?=
+ =?utf-8?B?TzV0cXA1ak9IOHQ0enRoUExlaWs4ZHloYUZ2cERKNmFEVDBwUEZoVVBhYS9O?=
+ =?utf-8?B?YkNteEZweTNWS0NheHVWSEVPNXBBNXBWSEIvSlBQQS9aN21RS1MwWUsrWkVq?=
+ =?utf-8?B?Y0lQVVN3SGw2SHhmanR3YkhOVHlBSThuOWUxNnNMejFuQUFuUzFkTnVETXdX?=
+ =?utf-8?B?WmpFdUo3aFhMSG1Va25lRmo4RkpYR0ZyaTJwTFZGZytLZkZySzVtc205M3VN?=
+ =?utf-8?B?NGxwbGdOd2xRNVhzQkEyNEhyUWdsaDlpNWtGVllaNm9wazJRaUEwT0UxSGdh?=
+ =?utf-8?B?NkxwMEc2NUttZ3dYWjZrd0V4allVb0QyWjVndVVuTndaemhYcjRrU1owYWVW?=
+ =?utf-8?B?Q2JscjZqRURBbnh0eXk3S216WDI5aHRUdnJMaTY4TVhKVHNkeUtRR0RtUDNj?=
+ =?utf-8?B?WE1TWmEyNCtlVG0ySy9WOTNpQ0E1bVRqaHhBcGl5RU1qaEJYaGI5akR5bXBW?=
+ =?utf-8?B?VER6L2VDTTd6UEFoVFdyMENuRlA0ZUhMWStzNmtRbnc3UEhsSkkwZmRrWEN3?=
+ =?utf-8?B?K2lYWkUyUG5xZkx1ZUFCVjI3VU1PNWFFU2w0ak1Fb1dhSWJrbWdJYllURkpo?=
+ =?utf-8?B?UUIzdkE0dUZUdWhSdHVGSytTd1BJQjJ1Y1hDcHU3TE5ZanhSbGthZVVubFl2?=
+ =?utf-8?B?enBLaHExaDhSMSszS0ZuakxQVjRWKzFUd0dCMlZjWXduNEZ5blBwalV3NnVs?=
+ =?utf-8?B?bExMSlp5ZWNpZ09qcC9Ub0dHQzNqYWhQcEdRTmh0RzRlYUgvWDl3ZS94a2RP?=
+ =?utf-8?B?RkVVOWIzNmdFQmVJVkxINEttNklpeTNpWkhyVmt3TE5UVlpKNWwyWGxDZkpP?=
+ =?utf-8?B?MU1iU0lEWUM2dlNuV0o4VXB3bmFldGg4eEdZWUZKWnp6YjVtalhUeXIxKy9l?=
+ =?utf-8?B?VGRTcXRQaTNzM0tyWEF4bURGRXVZaWlYc1lXL3NXQjJsTmRTUjBYdUZHaHN5?=
+ =?utf-8?B?bFdQWjlyRFZ3cHUzaWJvTlMraWNsbnFIQVJhemNvSXFLamg3YWF5RXZZL2N2?=
+ =?utf-8?B?V3ZWSTNwTkdPOFFCbWFLcC8wNjRMWUpyUW5SOFZESldHc0MxYUUvNThPcTl4?=
+ =?utf-8?B?a1N6cHBuOXBDM29ray8vZXNPTnJIRk5xSXdiMWNuZEpJSGZ2RDEvTWhHTHZm?=
+ =?utf-8?B?NFBpNUpzeWo0Y0ZzUkQ0M2JiY0M0MXQ5RnFJSHhRMTFPRkJCMUNIV0JrRS82?=
+ =?utf-8?B?Lzh3cHZpWXJaMlZRNnd5QjRsSnBOYjNLV0YvcEgyR2NldVgrZ3pjZXVob2Rw?=
+ =?utf-8?B?eDRxVUJic0ZsTVVLeEdTTk9CWHdFUDEvS1pETTVvUzlJcFZrK3RHZFJkcGEx?=
+ =?utf-8?B?MFdPaDNnMGQwZXc2c0ZBOGhYdWNMOG15Mm82NS95citNbkJLZ1lvZXJPczF5?=
+ =?utf-8?B?REZzeHZNOG1YS25Hc1hiV1hXMFVJMkNlZFVFYU5zdDdtTWVqQmpIOEkvTzYy?=
+ =?utf-8?B?OU5pazdxZ05ZdGJONjkyamJMT2o0eVM0MHVyOFMyQjJJbzIvSVRVVnp4VUEz?=
+ =?utf-8?B?YVlKNXNaTVlRTW5mMHQySU5tUHAzMzl6Nkl5a3JSOUZucC82SHM1YzZTT2FC?=
+ =?utf-8?B?ZG1qNnN2b1o5Zm1rYUowSXd1R2VBSnptRHp6MlJhRnZBY0lQWnIwTElFb3Fl?=
+ =?utf-8?B?UDI3eHlmbmVwdysxd2dqR0FueWlMWW85RWUyQVc0TDhGQzBmT1Vib1E4aVNL?=
+ =?utf-8?B?Q1NxbGFuc0lmWGZpdm5BMXI0V3JFTytldm5KRXNaUHdhOTU3Q1pOUzdBVnVh?=
+ =?utf-8?B?WkRGSlFjYklkcGtEQUhUa1JYcmw3RTJRcm8vOCs1Zkx3NUpnVWJHTVhHU2Zs?=
+ =?utf-8?B?aDFCaVBYdlh5ZXNkMkhuY1Jlb0Fvb1BqclE4TW9HakdFOHduVWVLRk5ubHRT?=
+ =?utf-8?B?TEJQclVOMzlSeEJHR3IxU2tvQ1phZGxCaFRoZ3o1M2FyY3EwaW5BTzEzL0tk?=
+ =?utf-8?B?S1E9PQ==?=
+X-OriginatorOrg: navimatix.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc2b6883-59e8-400f-c218-08dd3df3e6d2
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR01MB8297.eurprd01.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2025 10:26:31.6986
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46eee030-925c-47a5-a693-08dd3c1e6935
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	SJ5PEPF000001CF.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9427
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: c87b4f54-b992-4813-8f3f-4a876324197f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: f3MHdgKLdYsIBo421ZyJ4hyZ31AoGwBbJyJnaJoLELx7Hw+VTpJjg5RHzXwC0jVmDtKry+ZqqsotY2RzegYcLVPeJFayQeKfJG+s2KnxxHc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR01MB6992
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Sun, 26 Jan 2025 10:28:02 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17091
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17090
 
-The default mc is '' (blank), however BB_CURRENT_MC returns 'default'.
-Allow a user to specify a mcdepend such as:
+Hi Antonin,
 
-  mc:${BB_CURRENT_MC}:m2:recipe:task
+Antonin Godard schrieb am Mo 06. Jan, 10:37 (+0100):
+> On Thu Jan 2, 2025 at 10:23 PM CET, J=C3=B6rg Sommer via lists.yoctoproje=
+ct.org wrote:
+> > From: J=C3=B6rg Sommer <joerg.sommer@navimatix.de>
+> >
+> > To give an example how the YAML format can be used, the example of the
+> > warnings logger should be converted to YAML.
+>=20
+> In https://docs.python.org/3/library/logging.config.html#logging.config.l=
+isten
+> the note says:
 
-Both '' (blank) and 'default' are now supported and have equivalent
-meaning.
+But does this apply here? As far as I understand the code the config gets
+loaded in
 
-Signed-off-by: Mark Hatle <mark.hatle@amd.com>
----
- bitbake/lib/bb/runqueue.py                        | 4 ++++
- bitbake/lib/bb/tests/runqueue-tests/recipes/g1.bb | 2 ++
- bitbake/lib/bb/tests/runqueue-tests/recipes/h1.bb | 0
- bitbake/lib/bb/tests/runqueue-tests/recipes/i1.bb | 0
- bitbake/lib/bb/tests/runqueue.py                  | 7 +++++++
- 5 files changed, 13 insertions(+)
- create mode 100644 bitbake/lib/bb/tests/runqueue-tests/recipes/g1.bb
- create mode 100644 bitbake/lib/bb/tests/runqueue-tests/recipes/h1.bb
- create mode 100644 bitbake/lib/bb/tests/runqueue-tests/recipes/i1.bb
+* lib/bb/ui/knotty.py:393: logconfigfile, error =3D server.runCommand([cmd,=
+ "BB_LOGCONFIG"])
+* lib/bb/ui/knotty.py:424:  =E2=80=A6, logconfigfile =3D _log_settings_from=
+_server(server, params.observe_only)
+* lib/bb/ui/knotty.py:590: conf =3D bb.msg.setLoggingConfig(logconfig, logc=
+onfigfile)
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index ffb2d28494..f941749b0d 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -723,7 +723,11 @@ class RunQueueData:
-                 mcdependency =3D dep.split(':')
-                 pn =3D mcdependency[3]
-                 frommc =3D mcdependency[1]
-+                if frommc =3D=3D 'default':
-+                    frommc =3D ''
-                 mcdep =3D mcdependency[2]
-+                if mcdep =3D=3D 'default':
-+                    mcdep =3D ''
-                 deptask =3D mcdependency[4]
-                 if mcdep not in taskData:
-                     bb.fatal("Multiconfig '%s' is referenced in multiconfi=
-g dependency '%s' but not enabled in BBMULTICONFIG?" % (mcdep, dep))
-diff --git a/bitbake/lib/bb/tests/runqueue-tests/recipes/g1.bb b/bitbake/li=
-b/bb/tests/runqueue-tests/recipes/g1.bb
-new file mode 100644
-index 0000000000..20ce8dd3ad
---- /dev/null
-+++ b/bitbake/lib/bb/tests/runqueue-tests/recipes/g1.bb
-@@ -0,0 +1,2 @@
-+do_build[mcdepends] =3D "mc::mc-1:h1:do_build mc:default:mc_2:i1:do_build"
-+
-diff --git a/bitbake/lib/bb/tests/runqueue-tests/recipes/h1.bb b/bitbake/li=
-b/bb/tests/runqueue-tests/recipes/h1.bb
-new file mode 100644
-index 0000000000..e69de29bb2
-diff --git a/bitbake/lib/bb/tests/runqueue-tests/recipes/i1.bb b/bitbake/li=
-b/bb/tests/runqueue-tests/recipes/i1.bb
-new file mode 100644
-index 0000000000..e69de29bb2
-diff --git a/bitbake/lib/bb/tests/runqueue.py b/bitbake/lib/bb/tests/runque=
-ue.py
-index cc87e8d6a8..cea2ca13fe 100644
---- a/bitbake/lib/bb/tests/runqueue.py
-+++ b/bitbake/lib/bb/tests/runqueue.py
-@@ -314,6 +314,13 @@ class RunQueueTests(unittest.TestCase):
-                        ["mc_2:a1:%s" % t for t in rerun_tasks]
-             self.assertEqual(set(tasks), set(expected))
-=20
-+            # Test that mc::... and mc:default:... both work
-+            tasks =3D self.run_bitbakecmd(["bitbake", "g1"], tempdir, "", =
-extraenv=3Dextraenv, cleanup=3DTrue)
-+            expected =3D ["g1:%s" % t for t in self.alltasks] + \
-+                       ["mc-1:h1:%s" % t for t in self.alltasks] + \
-+                       ["mc_2:i1:%s" % t for t in self.alltasks]
-+            self.assertEqual(set(tasks), set(expected))
-+
-             self.shutdown(tempdir)
-=20
-     def test_hashserv_single(self):
+And in setLoggingConfig is no difference between JSON and YAML:
+
+```
+def setLoggingConfig(defaultconfig, userconfigfile=3DNone):
+    logconfig =3D copy.deepcopy(defaultconfig)
+
+    if userconfigfile:
+        with open(os.path.normpath(userconfigfile), 'r') as f:
+            if userconfigfile.endswith('.yml') or userconfigfile.endswith('=
+.yaml'):
+                import yaml
+                userconfig =3D yaml.safe_load(f)
+            elif userconfigfile.endswith('.json') or userconfigfile.endswit=
+h('.cfg'):
+                import json
+                userconfig =3D json.load(f)
+            else:
+                raise BaseException("Unrecognized file format: %s" % userco=
+nfigfile)
+
+            if userconfig.get('bitbake_merge', True):
+                logconfig =3D mergeLoggingConfig(logconfig, userconfig)
+            else:
+                # Replace the entire default config
+                logconfig =3D userconfig
+```
+
+The BB_LOGCONFIG never goes to the python function
+logging.config.fileConfig() which has the behaviour you pointed to.
+
+>   If you want to send configurations to the listener which don=E2=80=99t =
+disable existing
+>   loggers, you will need to use a JSON format for the configuration, whic=
+h will
+>   use dictConfig() for configuration. This method allows you to specify
+>   disable_existing_loggers as False in the configuration you send.
+>=20
+> I believe this is the reason why JSON was used. So the disable_existing_l=
+oggers
+> usage in Yaml below is ineffective.
+
+> > + formatters: + warnlogFormatter: + '()': bb.msg.BBLogFormatter +
+> > format: '%(levelname)s: %(message)s'
+> > =20
+> > -      "@disable_existing_loggers": false
+>=20
+> This is strange, maybe a typo? We should probably remove the "@" here.
+
+Yes, I found nowhere in Python disable_existing_loggers with =E2=80=9C@=E2=
+=80=9D, and no
+special handling of it in BitBake.
+
+Regard, J=C3=B6rg
+
 --=20
-2.34.1
+Der Hase l=C3=A4uft schneller als der Fuchs,
+denn der Hase l=C3=A4uft um sein Leben.
 
+Navimatix GmbH           T: 03641 - 327 99 0
+Tatzendpromenade 2       F: 03641 - 526 306
+07745 Jena               www.navimatix.de
+
+Gesch=C3=A4ftsf=C3=BChrer: Steffen Sp=C3=A4the, Jan Rommeley
+Registergericht: Amtsgericht Jena, HRB 501480
 
