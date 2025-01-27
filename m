@@ -1,192 +1,349 @@
-Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000C2C02188
-	for <webhook@archiver.kernel.org>; Mon, 27 Jan 2025 14:43:40 +0000 (UTC)
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.102])
- by mx.groups.io with SMTP id smtpd.web10.53090.1737989013915826317
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07881C02188
+	for <webhook@archiver.kernel.org>; Mon, 27 Jan 2025 14:49:41 +0000 (UTC)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web11.53075.1737989378761392683
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 27 Jan 2025 06:43:35 -0800
+ Mon, 27 Jan 2025 06:49:39 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=UrKzzh5R;
- spf=pass (domain: weidmueller.com, ip: 40.107.20.102, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=C8ITSXlCAMmpXsBjYJmPomoFDP9M2oSbRgX4ufWw4XaPvO1j9FtRZ/FK9jKVgClkKLlq6RSA/CDHgJTofTVBNhIG6eCYsAfOBAV51fQ2WMVQabNBbW9oRumzToaGG5D024QtR0EP9FChVNiB88c7DUwXxPptYwtZeIzLCr9Xtko/sVsWr7eEi7TyLV9LbHDEL5+XkJwODlwFuIzsXJUTjaCai+VQ80UTC068bSdi7AezlJldqLIYIkl/mZc0KeLeZ1QYAeMHme7wwjton7gq/nHUXaPH3LkwR0DhxhBzaq6tH2d9Y7S2LWoEzKlYwEzKce91EA5pM7wMpOXTyg2Qrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lcdWMA5xib2arOUaJ4ooNdfl6KNkEGylN5S7ax751kg=;
- b=pRxNuhbDyilxA45ALhBbLsKRDhXivmxeE+6wzHJaEH4ermbFMo4KBldqGq70qT9QZDEdCVus+k/sV3CwKCNGD07eZFCa8YlS2VeQ5yN28zYz7mz3rW+ULMtBtLPdXn0F50xyNMT83jmnye07o7lSyLUIhO/q4m49ntPhhrGst68c7fygM7QSGWvGUaTtX8Dd50yzInc7syJtR8k4dc6faJLCV9dTrawpLmTTqAzxLT9LPcW59qL4pvfaXnYC2L6rUe5fijRgJuf8er4ewJh0fYwhb+ngjcDSWI4stMHMg0uNsZTIQBU2jbf7xXewi8Zmuo+mGDPM5yxu/4ZnBnk1zw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=weidmueller.com; dmarc=pass action=none
- header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lcdWMA5xib2arOUaJ4ooNdfl6KNkEGylN5S7ax751kg=;
- b=UrKzzh5RVxgTpzCOKy5VU9MlpixHiG2UKPldrfLY9LV0BKb+J68jRpJkSDw+hkNMeauZ1EzIOAkdRWwE/LUaodBevFZEZuQ9AtRTpdwWJeFmay3uZMJTdANsFiNqHWIlNd+n1swVYGeuuoxiAuI+f6YqIJZSMy8rAd22iqDEJna75XOzjWcEi7MKV2ibEKOCZgeo22BdS3QGyFNW8SQTNcGf+6MPzM3kuYEVT2uIfddDcy2w6sse7v75t61i+4zZf6UQxSH1hXpLakMKOUt+QqHmC0EKRnDZZg2kZtysTCDA47ViXVRt/GLWdt2XSvOqad5pTDn/vxO7TLbHE5Q0jQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=weidmueller.com;
-Received: from GV1PR08MB8426.eurprd08.prod.outlook.com (2603:10a6:150:8a::17)
- by GV2PR08MB8100.eurprd08.prod.outlook.com (2603:10a6:150:7a::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.19; Mon, 27 Jan
- 2025 14:43:28 +0000
-Received: from GV1PR08MB8426.eurprd08.prod.outlook.com
- ([fe80::f9f5:b4bd:9e01:9013]) by GV1PR08MB8426.eurprd08.prod.outlook.com
- ([fe80::f9f5:b4bd:9e01:9013%7]) with mapi id 15.20.8377.021; Mon, 27 Jan 2025
- 14:43:28 +0000
-From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Ga01SwLd;
+ spf=pass (domain: gmail.com, ip: 209.85.128.54, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4361dc6322fso30117575e9.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 27 Jan 2025 06:49:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737989377; x=1738594177; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LR0JbmQY3Pmk2fj2laAVWVHuivpId8NtefHzKyAz88o=;
+        b=Ga01SwLdKEZK2NjcfHuFW4542mM/kiuWHq92lCNvUSTpWnELAvRJWlKjvV7rbl76AG
+         qSCGJ0YY/7q6rvhRB9OeFyQoPZAcMF9ps5fYQxxu/8OrLLtyuWGx0Kv6YMBNwuck+6QP
+         K0i43fBvx+yGyQuBTFSBbyVME7zkQjgXz9m1NeklfH7+3WB80f4d5gTojRhtjUQ+NzM8
+         VjnItoiQKw98M0DVSpksV0YnMA+75GO/9QEy7ncPtGiDIFyW0C9bYuVLDrTKVOtMGsC5
+         5Ajc0R/1PZY+3OLtb7HybT321wAvyZPGH5IWmRcAjcadLvwvvaGpewetVoEZR4sTtcPA
+         hgIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737989377; x=1738594177;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LR0JbmQY3Pmk2fj2laAVWVHuivpId8NtefHzKyAz88o=;
+        b=BHmalBaD/tfgGaQoKJRrrK5pM6vaUIsoH3CX+0B04Bui19vMYgMfBbC6n8nDbSEFsZ
+         qEEObKjwZ62E28ihCJzK06J9GyNTmC8ks9NwygBX46vsAI5Ovat/6p2ZKcXX1NPA0zvw
+         uGb3hdS6Oxk6Z3BJ/hk8a7e0zS/aifU2qiUDRDISjPC80RASUjwmEqRK3Av40ASHlt4l
+         Vj7NRCVFMQaFfY0X3tn/jqDDJa6esk2J0kOrFQ+GiDfkgCRA9h6ep7mPPIQtBrkGrklN
+         PJdu/iWvoojkFlPRPYEBTBQXjTVX7zgUV4npPm9bF08uJevPm/rFqYIpBfhLVV+d7AuY
+         iiWw==
+X-Gm-Message-State: AOJu0YzV2DG1aMwOpnA09wgCOcxRZ9Mbmjh5z8SNyW7hm4BniqDk3du3
+	sOiXbUhmB54VTJ/uXnRnLMTPEazWaJkWGE8pOhQ4c1QLelOT3AifOgIciA==
+X-Gm-Gg: ASbGncvHaFSklKzmlLoy+mwh29v9UUJOFunMHAmzeD600haHr62kLyK2P72T1RWPHh/
+	bHiHmC+mNls9VyzIMjx/FNvVPzsDmu8x9pHxz1NJ/BxWIF3wVnTqXrVqXtJ6Os9me41A1gnfp0n
+	NOalut20L6LyDmYPkVRtO0Lvq+++0Cqq7opRgvHUuXOSoM7ULuBUxJEgZuPxUxsmEo2B2iFnLv1
+	hJcZiDtbGFdKNl1AFWjXDYxPs37OIBiyXLnJIwWiDBWf1qYPFV9d6ceGWVFGnj5yOfnldhpsPbz
+	2HVUdB0iJ2jrHPcpPCOlr8KJRx2zhd9P08Jtt8XP3g==
+X-Google-Smtp-Source: AGHT+IE6aYqBGYeHlAFUAQgIAwLtkyRATl2qCrZHWqWcz3kwCELJoYxSyQLZsBNjPyu9y+m9YT/ioQ==
+X-Received: by 2002:a05:600c:1e23:b0:434:f335:83b with SMTP id 5b1f17b1804b1-4389fa653e9mr359549145e9.5.1737989376808;
+        Mon, 27 Jan 2025 06:49:36 -0800 (PST)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438b1d904cbsm108793335e9.1.2025.01.27.06.49.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2025 06:49:36 -0800 (PST)
+From: Alexander Kanavin <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Subject: [PATCH] fetch2: use downloadfilename to fetch from mirrors
-Date: Mon, 27 Jan 2025 15:43:14 +0100
-Message-ID: <20250127144314.27990-1-stefan.herbrechtsmeier-oss@weidmueller.com>
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [RFC PATCH 2/2] bitbake-setup: add tests to bitbake-selftest
+Date: Mon, 27 Jan 2025 15:49:31 +0100
+Message-Id: <20250127144931.2524749-2-alex.kanavin@gmail.com>
 X-Mailer: git-send-email 2.39.5
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: FR0P281CA0221.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:ac::17) To GV1PR08MB8426.eurprd08.prod.outlook.com
- (2603:10a6:150:8a::17)
+In-Reply-To: <20250127144931.2524749-1-alex.kanavin@gmail.com>
+References: <20250127144931.2524749-1-alex.kanavin@gmail.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV1PR08MB8426:EE_|GV2PR08MB8100:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1ca74183-901d-423b-0ae5-08dd3ee0f613
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|1800799024|52116014|376014|366016|13003099007|38350700014;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?f6Ay9DbdrajyjIDSKYi9UNvU46PmKPtY/dBVunJen4OoA4QdCY5qMcvgWhJD?=
- =?us-ascii?Q?dpzgdhpbJDsVXK5FbrOdleFke61EUtolfPqkWH5V6/x9hs8DFqiEYm1QZsLy?=
- =?us-ascii?Q?ZQ0XMRQlWi+mKUbdJw4alda3vESW9sheilAvDsObyVCVMgqM8Vb7o78PsjJz?=
- =?us-ascii?Q?fRgNqFek3B2ehHhBQI6eOPnJjJCnIm7SywJrLyCxeaiOAcKjJCiO1wDDJd0v?=
- =?us-ascii?Q?fkh5dMVELxvatk8C7otBVbWldwxWJdvsIFM6mZHPrfcM4qXx+z4lHMVcgYUR?=
- =?us-ascii?Q?awsawSoitaiQfVtubANaCIdTk24gbusTS9b3OHQ2G2u15mfk+3879gnUqnYk?=
- =?us-ascii?Q?d5A5oh5oLsoADew1ZAXFZNaeDyU9cONGG2sUynIwHiPxePEcd8D5N3kyd6Lk?=
- =?us-ascii?Q?YLhIdBuTEar4fkoXp7DAhxMCVQwX6dI82KI0v3s8bFLJPlOy6KKWyYbMsb9F?=
- =?us-ascii?Q?ViYFDBAkxMVd6C2UKv9IJ8QFZ5+GcCgBLYFbceFeshrnJb/Gjo5LXw//1U4t?=
- =?us-ascii?Q?XyvKHIfZ2jkOKJM0N3aAavPtW7Ya0LLPFEfKv5ddx0GMJlNlcL5QyG9hNtLc?=
- =?us-ascii?Q?xmwHLXRlXf/bfgAeghxubj2HG4+r9v6i4QKOhhMZEOeqai2kYchKLHXMhHO1?=
- =?us-ascii?Q?BM7pwNQFYK5ZBRgW648gxR77j3Zr9D0DERiL9HkLVRUNWJjEDqI6MjU0LuiX?=
- =?us-ascii?Q?cgEnC4Xn5ADRPJMVKihpwrG2RsO+ZdWSM+9V9b8H9dC+vtjNgyIeqvosnWD0?=
- =?us-ascii?Q?kvDFWOKsXZKNWAChSRThwDkyBu+EMzp+bcH4GmiQJ2C3kwCK/NX1c9/OBT2G?=
- =?us-ascii?Q?uEv0P3wV0EtbfHEwed5oL3TDxSCTcZpsh0akpMAnBMGM7icqzNnW2leYvrbr?=
- =?us-ascii?Q?1FFpBrHsJn7BwUpwRZnK16XzS340z6eApzTKYbMNl49DAoowoF0K0KvmEquQ?=
- =?us-ascii?Q?xHmI8GccNnBbj4rDjGZHCRkJhN7Pd0R6euY9CYB1336Io3R2/pmGRWhYhFWW?=
- =?us-ascii?Q?cS0omViyHME1eMdT5JRbo/S+/la4jp+3usi35+btplEtL+zqP9hnjWuId+7N?=
- =?us-ascii?Q?KP+8CPR1qvLQwF60fkfUjIPDUEpAsng0pOwBaDFGQAXGqMMTu451JPra5Y1L?=
- =?us-ascii?Q?IC3mKSBxn0owcgc1RelECY64BrA4+4sys0qVNVXBunUy7kZzzaZ3x2qty2Yr?=
- =?us-ascii?Q?f3wFGsiiaW+NxbNSsIIOxbhRKLuwCnL0M+2dLhU2LRkyR38e2MJdiVCxmUKg?=
- =?us-ascii?Q?9WieDg0v9DDBtx2dKuNm0xT+EtFu2oGjzXb0yEV6NzdJEXFf67+EzI4+swg6?=
- =?us-ascii?Q?9SQ87lPcksXiNU/tuGr8MIDeO0D3m4UwWte6l067QY/zjZGBqD2GgXDIstV1?=
- =?us-ascii?Q?GdExZ/85lU6nkannwgJqgy6sDXoi?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB8426.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(376014)(366016)(13003099007)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?zj7FFWvC+/vXDqj95US11nVFA38bu6lk04P0gHM4za4uPmNcbsO8GWMHOcj3?=
- =?us-ascii?Q?6IMBk7XPHGDiQEK5kweEmGmXcnaMOmD5go1eRem+UzUAjhYjyOlgoXMhHmuo?=
- =?us-ascii?Q?1FR12FbPz+ExSmbDoHk5qv0GYm00/0GblnTBVOy9uDVK0gqH/UA23g4mfAjv?=
- =?us-ascii?Q?36JVYZlgiKo0jNnv3lJm8i5reDsLpo2A2GRD7tRfeCp5uQwZy7xrmUYQmwh+?=
- =?us-ascii?Q?C5S4cDctsfJOkH8KbUOyqrKxNGG6jkOUxdyMV7gGDhrGJ1JWrHUb9P1WjIA1?=
- =?us-ascii?Q?If7HQs8gk0TizqC4TWplErnAaUZBNoox1F7MFP84u4JB7HkUHryAmku9nYEB?=
- =?us-ascii?Q?YZZdrWkHWK6RcqYwQfvoBWCLbTeDKEOezhghiXGCCIO5xiOy+aGyWfM5tq4+?=
- =?us-ascii?Q?uXJ+Eg37vuYNgeb5EyuWn2D7vk1rKtc/QF/yN1Wrn2aDg0TQ9AU0XcrJEnPF?=
- =?us-ascii?Q?FwlBvIV+5HDSD9gx5FtNeNBKZVTaDp96seYOYp6XIcm2rdPcBIHZBWefiXf5?=
- =?us-ascii?Q?765R6X/E4LDDx3BT3ebxgqfBqzZLmgXSzDCvJHKqBI5/HHITQ+acz2pORgFK?=
- =?us-ascii?Q?5+Uk9st+GtssDKIsyGng7Qq9xXxXCNxglfywqX5KBiIUyH/OTyr4KyZwdNHA?=
- =?us-ascii?Q?pvJKqQBNMGrYLjf2EQlSu9rQOuNphkpqAg6lhADpbuqz0TnC7mmW3/U5T1Pp?=
- =?us-ascii?Q?aP/p2qvi4ms4DX5Nj6pA125bjTETRPsk0S4BYnocVssavPmpnJ/jTnM/ox7W?=
- =?us-ascii?Q?d+uDtDBuV2zTeRNVhhymS/KIUS1V8TVnM9FYBtg9pNorQlEsU2Y9oDHnPP6p?=
- =?us-ascii?Q?EQHmR3P2a8vZfvhlMQ3kKuT3ve5KP+LyuVNg7pgW+4paiSGa/TQIeWRsuhgW?=
- =?us-ascii?Q?yUr8k80N4/GXONdhG63yzosZEIpN0i7JWVeky8mK11mvlRkRfloTHet1RgdH?=
- =?us-ascii?Q?VSdvr6vnyMj8iIht73TCwNliROrvNCTUEyWPvlm7UTJMP/+vJVsqigTPugib?=
- =?us-ascii?Q?UYZR4qXw8JlR/3U74giutbnXyAAvAbeS7Y806B+KL0RFo4FOhDP12+ZhSe05?=
- =?us-ascii?Q?Oz8NxjH1CnlRy8qJDe4wb9GCLP3puIPLUK8azzGegTs+8kn+0bXMHJbcTchV?=
- =?us-ascii?Q?n3grCSDM2DpH7JfjIdFhTC7NdZ+nMuBCOAyCwY0oQ11+3tdRRmQ0dGzP/LFg?=
- =?us-ascii?Q?gsPlAw7Y2MQqFGq7uksw2UCZJhXD3O7FxVQ1Oy+K2xZQSmq+HFYF7bPtpiOO?=
- =?us-ascii?Q?ZguJ/wM51mcRalm86XHX08pcA9R/ErWK40QKIrCb1PaXdGYiN0YWNC3fMuv5?=
- =?us-ascii?Q?kCR78PUmD+Ww5WesPJMMbPtCnXg0BBerdvTONwR6qg6kkd4g9TOojf/Zj2mm?=
- =?us-ascii?Q?kb0GSvlAA6qn7C19zzVsPw1bCKJuknIMrZUdBKlLoI/yfdu+u/Ye2Hkhwl1/?=
- =?us-ascii?Q?xey4TRIG2V1wGq+Kr5+2tORuE3izkerIWnVOhi+ZshAsZ5ieAXSw3iuGMN51?=
- =?us-ascii?Q?3p0841z8hRu38y4KF8Swv//ZdyAmFEA3bJTLoLIko4cs6RKRaFhsdPiOfuca?=
- =?us-ascii?Q?9UCkxUeYrrxt29yjoYGz2d1dl8THamWotdZED8SPVgFfv3oDajJ2SnVfyMAp?=
- =?us-ascii?Q?Aw=3D=3D?=
-X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1ca74183-901d-423b-0ae5-08dd3ee0f613
-X-MS-Exchange-CrossTenant-AuthSource: GV1PR08MB8426.eurprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2025 14:43:28.0124
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +BPra+/dIe/iCANpAEWWr1zrHw1tmTuQJU9elDzO/oXfyod1HAhlp08sCJ4/TYdHfzJWvLu49xsdGNFZUnw3mQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR08MB8100
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 27 Jan 2025 14:43:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17101
+ <bitbake-devel@lists.openembedded.org>; Mon, 27 Jan 2025 14:49:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17103
 
-From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
+From: Alexander Kanavin <alex@linutronix.de>
 
-Use the downloadfilename to fetch from download mirrors. This allows
-fetchers to store downloaded files inside a subfolder.
+Run like this:
 
-Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.c=
-om>
+alex@Zen2:/srv/work/alex/bitbake$ bin/bitbake-selftest -v bb.tests.setup
+test_setup (bb.tests.setup.BitbakeSetupTest.test_setup) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 9.223s
+
+OK
+
+The test does a basic run-through of init, then status/update
+on an unchanged configuration, then status/update on a
+configuration changed via new commits to the test layer,
+then status/update on configuration changed via the top
+level json config file.
+
+Note that nothing whatsoever is fetched from the network;
+the test relies entirely on synthetic data contained inside
+itself, including minimal stubs for oe-setup-build and
+bitbake-config-build. This data is used to create temporary
+git repositories then clone them via local filesystem URIs.
+
+Later on this can be supplemented by an oe-selftest that
+tests bitbake-setup against real config files in the
+official configuration repository and real layers,
+templates and fragments.
+
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
-Alternative we should forbid folder inside the downloadfilename and we
-should add a check to the fetcher to ensure plain filenames.
+ bin/bitbake-selftest  |   1 +
+ lib/bb/tests/setup.py | 221 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 222 insertions(+)
+ create mode 100644 lib/bb/tests/setup.py
 
-
- lib/bb/fetch2/__init__.py | 4 +++-
- lib/bb/tests/fetch.py     | 2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index f79e278b1..c0b39ea5c 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -472,7 +472,9 @@ def uri_replace(ud, uri_find, uri_replace, replacements=
-, d, mirrortarball=3DNone):
-                     uri_decoded[5] =3D {}
-                     uri_find_decoded[5] =3D {}
-                 elif ud.localpath and ud.method.supports_checksum(ud):
--                    basename =3D os.path.basename(ud.localpath)
-+                    basename =3D uri_decoded[5].get("downloadfilename")
-+                    if not basename:
-+                        basename =3D os.path.basename(ud.localpath)
-                 if basename:
-                     uri_basename =3D os.path.basename(uri_decoded[loc])
-                     # Prefix with a slash as a sentinel in case
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 6dda0d381..50f047b4c 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -502,6 +502,8 @@ class MirrorUriTest(FetcherTest):
-             : "file:///mirror/example/1.0.0/some-example-1.0.0.tgz;downloa=
-dfilename=3Dsome-example-1.0.0.tgz",
-         ("https://somewhere.org/example-1.0.0.tgz;downloadfilename=3Dsome-=
-example-1.0.0.tgz", "https://.*/.*", "file:///mirror/some-example-1.0.0.tgz=
-")
-             : "file:///mirror/some-example-1.0.0.tgz;downloadfilename=3Dso=
-me-example-1.0.0.tgz",
-+        ("https://somewhere.org/scope/example/1.0.0/example-1.0.0.tgz;down=
-loadfilename=3Dsubdir/scope-example-1.0.0.tgz", "https://.*/.*", "http://so=
-mewhere2.org/somedir3")
-+            : "http://somewhere2.org/somedir3/subdir/scope-example-1.0.0.t=
-gz;downloadfilename=3Dsubdir/scope-example-1.0.0.tgz",
-=20
-         #Renaming files doesn't work
-         #("http://somewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://s=
-omewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://somewhere2.org/somedi=
-r3/somefile_2.3.4.tar.gz") : "http://somewhere2.org/somedir3/somefile_2.3.4=
-.tar.gz"
---=20
+diff --git a/bin/bitbake-selftest b/bin/bitbake-selftest
+index 1b7a783fd..8c1e6d3e7 100755
+--- a/bin/bitbake-selftest
++++ b/bin/bitbake-selftest
+@@ -29,6 +29,7 @@ tests = ["bb.tests.codeparser",
+          "bb.tests.fetch",
+          "bb.tests.parse",
+          "bb.tests.runqueue",
++         "bb.tests.setup",
+          "bb.tests.siggen",
+          "bb.tests.utils",
+          "bb.tests.compression",
+diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
+new file mode 100644
+index 000000000..f8a20399d
+--- /dev/null
++++ b/lib/bb/tests/setup.py
+@@ -0,0 +1,221 @@
++#
++# Copyright BitBake Contributors
++#
++# SPDX-License-Identifier: GPL-2.0-only
++#
++
++from bb.tests.fetch import FetcherTest
++
++class BitbakeSetupTest(FetcherTest):
++    def setUp(self):
++        super(BitbakeSetupTest, self).setUp()
++
++        self.topdir = os.path.join(self.tempdir, "bitbake-builds")
++
++        self.registrypath = os.path.join(self.tempdir, "bitbake-setup-configurations")
++
++        os.makedirs(self.registrypath)
++        self.git_init(cwd=self.registrypath)
++        self.git('commit --allow-empty -m "Initial commit"', cwd=self.registrypath)
++
++        self.testrepopath = os.path.join(self.tempdir, "test-repo")
++        os.makedirs(self.testrepopath)
++        self.git_init(cwd=self.testrepopath)
++        self.git('commit --allow-empty -m "Initial commit"', cwd=self.testrepopath)
++
++        oesetupbuild = """#!/usr/bin/env python3
++import getopt
++import sys
++import os
++import shutil
++opts, args = getopt.getopt(sys.argv[2:], "c:b:", "no-shell")
++for option, value in opts:
++    if option == '-c':
++        template = value
++    if option == '-b':
++        builddir = value
++confdir = os.path.join(builddir, 'conf')
++os.makedirs(confdir, exist_ok=True)
++with open(os.path.join(confdir, 'conf-summary.txt'), 'w') as f:
++    f.write(template)
++shutil.copy(os.path.join(os.path.dirname(__file__), 'test-repo/test-file'), confdir)
++with open(os.path.join(builddir, 'init-build-env'), 'w') as f:
++    f.write("BBPATH={}\\nexport BBPATH\\nPATH={}:$PATH".format(builddir, os.path.join(os.path.dirname(__file__), 'test-repo/scripts')))
++"""
++        self.add_file_to_testrepo('scripts/oe-setup-build', oesetupbuild, script=True)
++
++        bitbakeconfigbuild = """#!/usr/bin/env python3
++import os
++import sys
++confdir = os.path.join(os.environ['BBPATH'], 'conf')
++fragment = sys.argv[2]
++with open(os.path.join(confdir, fragment), 'w') as f:
++    f.write('')
++"""
++        self.add_file_to_testrepo('scripts/bitbake-config-build', bitbakeconfigbuild, script=True)
++
++        sometargetexecutable_template = """#!/usr/bin/env python3
++import os
++print("This is {}")
++print("BBPATH is {{}}".format(os.environ["BBPATH"]))
++"""
++        for e_name in ("some-target-executable-1", "some-target-executable-2"):
++            sometargetexecutable = sometargetexecutable_template.format(e_name)
++            self.add_file_to_testrepo('scripts/{}'.format(e_name), sometargetexecutable, script=True)
++
++    def runbbsetup(self, cmd):
++        bbsetup = os.path.abspath(os.path.dirname(__file__) +  "/../../../bin/bitbake-setup")
++        return bb.process.run("{} {}".format(bbsetup, cmd))
++
++    def add_json_config_to_registry(self, name, rev):
++        config = """
++{
++    "sources": {
++        "test-repo": {
++            "git-remote": {
++                "remotes": {
++                    "origin": {
++                        "uri": "file://%s"
++                    }
++                },
++                "rev": "%s"
++            },
++            "path": "test-repo"
++        }
++    },
++    "description": "Test configuration",
++    "configuration": {
++        "bitbake-setup": {
++            "gadget": {
++                "description": "Gadget build configuration",
++                "oe-template": "test-configuration-gadget",
++                "oe-fragments": ["test-fragment-1"],
++                "targets": ["some-target-executable-1"]
++            },
++            "gizmo": {
++                "description": "Gizmo build configuration",
++                "oe-template": "test-configuration-gizmo",
++                "oe-fragments": ["test-fragment-2"],
++                "targets": ["some-target-executable-2"]
++            }
++        }
++    },
++    "version": "1.0"
++}
++""" % (self.testrepopath, rev)
++        os.makedirs(os.path.join(self.registrypath, os.path.dirname(name)), exist_ok=True)
++        with open(os.path.join(self.registrypath, name), 'w') as f:
++            f.write(config)
++        self.git('add {}'.format(name), cwd=self.registrypath)
++        self.git('commit -m "Adding {}"'.format(name), cwd=self.registrypath)
++        import json
++        return json.loads(config)
++
++    def add_file_to_testrepo(self, name, content, script=False):
++        fullname = os.path.join(self.testrepopath, name)
++        os.makedirs(os.path.join(self.testrepopath, os.path.dirname(name)), exist_ok=True)
++        with open(fullname, 'w') as f:
++            f.write(content)
++        if script:
++            import stat
++            st = os.stat(fullname)
++            os.chmod(fullname, st.st_mode | stat.S_IEXEC)
++        self.git('add {}'.format(name), cwd=self.testrepopath)
++        self.git('commit -m "Adding {}"'.format(name), cwd=self.testrepopath)
++
++    def check_builddir_files(self, buildpath, test_file_content, json_config):
++        with open(os.path.join(buildpath, 'layers', 'test-repo', 'test-file')) as f:
++            self.assertEqual(f.read(), test_file_content)
++        for c,v in json_config["configuration"]["bitbake-setup"].items():
++            bb_build_path = os.path.join(buildpath, 'build-{}'.format(c))
++            bb_conf_path = os.path.join(bb_build_path, 'conf')
++            self.assertTrue(os.path.exists(os.path.join(bb_build_path, 'init-build-env')))
++
++            out = bb.process.run(os.path.join(bb_build_path, 'build-targets'))
++            for t in v["targets"]:
++                self.assertIn("This is {}".format(t), out[0])
++            self.assertIn("BBPATH is {}".format(bb_build_path), out[0])
++
++            with open(os.path.join(bb_conf_path, 'conf-summary.txt')) as f:
++                self.assertEqual(f.read(), v["oe-template"])
++
++            for f in v["oe-fragments"]:
++                self.assertTrue(os.path.exists(os.path.join(bb_conf_path, f)))
++
++            with open(os.path.join(bb_conf_path, 'test-file')) as f:
++                self.assertEqual(f.read(), test_file_content)
++
++    def test_setup(self):
++        # check that no arguments works
++        self.runbbsetup("")
++
++        # check that --help works
++        self.runbbsetup("--help")
++
++        # check that writing settings works and then adjust them to point to
++        # test registry repo
++        out = self.runbbsetup("reset-settings --top-dir {}".format(self.topdir))
++        settings_path = "{}/bitbake-setup.conf".format(self.topdir)
++        self.assertIn(settings_path, out[0])
++        out = self.runbbsetup("change-setting --top-dir {} default registry 'git://{};protocol=file;branch=master;rev=master'".format(self.topdir, self.registrypath))
++        self.assertIn("Setting 'registry' in section 'default' is changed to", out[0])
++        self.assertIn("New settings written to".format(settings_path), out[0])
++
++        # check that 'list' produces correct output with no configs, one config and two configs
++        out = self.runbbsetup("list --top-dir {}".format(self.topdir))
++        self.assertNotIn("test-config-1", out[0])
++        self.assertNotIn("test-config-2", out[0])
++
++        json_1 = self.add_json_config_to_registry('test-config-1.conf.json', 'master')
++        out = self.runbbsetup("list --top-dir {}".format(self.topdir))
++        self.assertIn("test-config-1", out[0])
++        self.assertNotIn("test-config-2", out[0])
++
++        json_2 = self.add_json_config_to_registry('config-2/test-config-2.conf.json', 'master')
++        out = self.runbbsetup("list --top-dir {}".format(self.topdir))
++        self.assertIn("test-config-1", out[0])
++        self.assertIn("test-config-2", out[0])
++
++        # check that init/status/update work
++        # (the latter two should do nothing and say that config hasn't changed)
++        test_file_content = 'initial\n'
++        self.add_file_to_testrepo('test-file', test_file_content)
++        out = self.runbbsetup("init test-config-1 --top-dir {}".format(self.topdir))
++        buildpath = os.path.join(self.topdir, 'test-config-1')
++        self.check_builddir_files(buildpath, test_file_content, json_1)
++        os.environ['BBPATH'] = os.path.join(buildpath, 'build')
++        out = self.runbbsetup("status")
++        self.assertIn("Configuration in {} has not changed".format(buildpath), out[0])
++        out = self.runbbsetup("update")
++        self.assertIn("Configuration in {} has not changed".format(buildpath), out[0])
++
++        # change a file in the test layer repo, make a new commit and
++        # test that status/update correctly report the change and update the config
++        prev_test_file_content = test_file_content
++        test_file_content = 'modified\n'
++        self.add_file_to_testrepo('test-file', test_file_content)
++        out = self.runbbsetup("status")
++        self.assertIn("Layer repository file://{} checked out into {}/layers/test-repo updated revision master from".format(self.testrepopath, buildpath), out[0])
++        out = self.runbbsetup("update")
++        self.assertIn("Existing bitbake configuration directory renamed to {}/build-gadget/conf-backup.".format(buildpath), out[0])
++        self.assertIn("Existing bitbake configuration directory renamed to {}/build-gizmo/conf-backup.".format(buildpath), out[0])
++        self.assertIn('-{}+{}'.format(prev_test_file_content, test_file_content), out[0])
++        self.check_builddir_files(buildpath, test_file_content, json_1)
++
++        # make a new branch in the test layer repo, change a file on that branch,
++        # make a new commit, update the top level json config to refer to that branch,
++        # and test that status/update correctly report the change and update the config
++        prev_test_file_content = test_file_content
++        test_file_content = 'modified-in-branch\n'
++        branch = "another-branch"
++        self.git('checkout -b {}'.format(branch), cwd=self.testrepopath)
++        self.add_file_to_testrepo('test-file', test_file_content)
++        json_1 = self.add_json_config_to_registry('test-config-1.conf.json', branch)
++        out = self.runbbsetup("status")
++        self.assertIn("Configuration in {} has changed:".format(buildpath), out[0])
++        self.assertIn('-                "rev": "master"\n+                "rev": "another-branch"', out[0])
++        out = self.runbbsetup("update")
++        self.assertIn("Existing bitbake configuration directory renamed to {}/build-gadget/conf-backup.".format(buildpath), out[0])
++        self.assertIn("Existing bitbake configuration directory renamed to {}/build-gizmo/conf-backup.".format(buildpath), out[0])
++        self.assertIn('-{}+{}'.format(prev_test_file_content, test_file_content), out[0])
++        self.check_builddir_files(buildpath, test_file_content, json_1)
+-- 
 2.39.5
 
 
