@@ -1,292 +1,133 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <n.merinov@inango-systems.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E726C0218D
-	for <webhook@archiver.kernel.org>; Wed, 29 Jan 2025 18:07:48 +0000 (UTC)
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
- by mx.groups.io with SMTP id smtpd.web11.19338.1738174066828264588
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EAFC0218D
+	for <webhook@archiver.kernel.org>; Wed, 29 Jan 2025 18:55:48 +0000 (UTC)
+Received: from ksserv.inango.com (ksserv.inango.com [31.154.135.10])
+ by mx.groups.io with SMTP id smtpd.web11.20481.1738176944382422493
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 29 Jan 2025 10:07:46 -0800
+ Wed, 29 Jan 2025 10:55:44 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=TM8E3HCE;
- spf=softfail (domain: sakoman.com, ip: 209.85.214.174, mailfrom: steve@sakoman.com)
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2161eb95317so129165385ad.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 29 Jan 2025 10:07:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1738174066; x=1738778866; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LVLs0rPjCVvdIqutpaWeJo4isqKM1vy2JtonP+wGbnw=;
-        b=TM8E3HCE9uk1+rQtNv+ID0vmAFDJymZoDFNAzt+rRmYXR8gRokJ6wIey0J5MLK+Tay
-         iOo73XOkEWQxmlnaFv5Z9/VDjhfiz+Bp01QjE851s824gyLQSAL4ciBqOYgJGpmDnQU7
-         mQyKJaLkEB1S6Tqt77Tu7Bnd4rZmqyQjyz0a4V6O+ksj+flS7hlhGnOfRkXMh7+0E5vq
-         54s8nMMdv66Vb71Ak680zbD71HsGOW0LSAGuOzzuhfmyrtbaCzDjO/nwwlOdeEe+Nmvx
-         4BGPYbVa7e7epXL//DqYsAgvGG3VJl4F1HHBTxTek69axQUix2b3XsqAcc9/xV2zyJEd
-         HpFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738174066; x=1738778866;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LVLs0rPjCVvdIqutpaWeJo4isqKM1vy2JtonP+wGbnw=;
-        b=AnPb0wp6u2hGyT5Dsj4vN/fm90OaGR6qM62TPs0kTG6So1zn8UOxKq5ef0EHADIOqw
-         7a294iD7OPPBmJPPqx+njfJtsnWzxFeBy7Xg9DTyw+2kHkL+6unOPE79fws02Yl/XOQA
-         G6b/a0LPuiA7zCjZvwVMQFKlI/r0BjyyRo7iRSCZUfwy0SZfqnjrca+fD1PU7QkZqtPu
-         CIVwYRzYVcZyEyxaeuEjnAioybfptvM65zTutbRB3hikNxNCuoGmHbrLVsJXkxLiKyl9
-         KhdTg8on+4ayraBRDmwXQewdBZnxl2mvGFUx6xaRQlrFPJyvRws3gJoTrPpr6UeZkNYU
-         1Wqg==
-X-Gm-Message-State: AOJu0Yw+oTT7phSo5iPnVOjHCDRLFeBPdyTncZ9Y5nN0YnfN5sRMChIp
-	fm3Nn9IppOhi+JKvtkpUKkobuD4ywwPpPYl1YuKuJ/PnPcjCP/nGORRwr2I/JuvlqoMjLS3+rTK
-	qmPs=
-X-Gm-Gg: ASbGncvJugTQPFjeZPH0xMikYDtveDn1YjjITX0vLSKGv1YmzmDZOVSbAX46/iZ3nxK
-	RPyiyvPGqWdyRd4abItNMTn8Tu05B4caeiTKO0UARdziIiQa40Y35Y01sDcq2SD+KxStVD7mrDp
-	rGU4qjaUQiR0HR0oYBDlZY1KsgoBEvQUHC1hu8Swd6KT2y2sqzcgTZsgnOJdanBdoFmtInhagpZ
-	/xCMyuUCIuO3oR187hnOgNm4x/72yipQLRYc2Oscs4V59Dmmf1FmUBgTzsNjivaUoYU5B1tP2dc
-	DQuj
-X-Google-Smtp-Source: AGHT+IGsLXgaUZEmkF5KuVZmen0QzR2ZWVsVO0VK2LrSdRk6OynjLV3tnYSMXFlU+uUNr8En6y7CSQ==
-X-Received: by 2002:a17:902:e541:b0:216:282d:c697 with SMTP id d9443c01a7336-21dd7da3eb0mr63575895ad.27.1738174065906;
-        Wed, 29 Jan 2025 10:07:45 -0800 (PST)
-Received: from hexa.. ([98.142.47.158])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21da3d9c626sm102497005ad.15.2025.01.29.10.07.45
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 10:07:45 -0800 (PST)
-From: Steve Sakoman <steve@sakoman.com>
+ dkim=pass header.i=@inango-systems.com header.s=45A440E0-D841-11E8-B985-5FCC721607E0 header.b=nsHj6/Z6;
+ spf=pass (domain: inango-systems.com, ip: 31.154.135.10, mailfrom: n.merinov@inango-systems.com)
+Received: from ksserv.inango.com (localhost [127.0.0.1])
+	by ksserv.inango.com (Proxmox) with ESMTP id 6CFC82AC06
+	for <bitbake-devel@lists.openembedded.org>; Wed, 29 Jan 2025 20:55:41 +0200 (IST)
+Received: from mail.inango-systems.com (unknown [172.31.254.134])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ksserv.inango.com (Proxmox) with ESMTPS id C6F872ABAC
+	for <bitbake-devel@lists.openembedded.org>; Wed, 29 Jan 2025 20:55:40 +0200 (IST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.inango-systems.com (Postfix) with ESMTP id 60195108055D;
+	Wed, 29 Jan 2025 20:55:39 +0200 (IST)
+Authentication-Results: mail.inango-systems.com (amavis);
+ dkim=pass (2048-bit key) header.d=inango-systems.com
+Received: from mail.inango-systems.com ([127.0.0.1])
+ by localhost (mail.inango-systems.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id 4HftdY7BeXNI; Wed, 29 Jan 2025 20:55:39 +0200 (IST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.inango-systems.com (Postfix) with ESMTP id 364DB1080565;
+	Wed, 29 Jan 2025 20:55:39 +0200 (IST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-systems.com 364DB1080565
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
+	s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1738176939;
+	bh=mQUDZ1olZiSjwLGtPalgj3itzSYEfMN93Vy+R4swAuU=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=nsHj6/Z6rTR00Z16gVauEDe6nNKhtIg9nIjK36yDgijQa3eK7VRxyyivnG3nM1AZ1
+	 EuDnM/A4TPyxQMNwGbHw70YpzGLW0VxnKPQ7ct7n6uWqJwi6LgVo4gD2dkSOg3Ibot
+	 WFaA7II608Sfnb4j1rk7j5C2KDzb83E0RMR+3mZKxiMqHr8Fyym8JADB4u1A1obl9g
+	 WTqEwm3blEXp5+tvJOxjLr9fPyYb3E3qvZtpgwPnPreWHUe6Mf8eqQVkN2O8O72vbC
+	 A9qs8HGiPx+hoIZlShys9bufyr7tkFie2enPeU7f5KIW7RH/AZ85O9j42lfGznA6jQ
+	 fpmQDjdDIyJpQ==
+X-Virus-Scanned: amavis at inango-systems.com
+Received: from mail.inango-systems.com ([127.0.0.1])
+ by localhost (mail.inango-systems.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id AFw3neN8epGQ; Wed, 29 Jan 2025 20:55:39 +0200 (IST)
+Received: from wksv-012.inango.loc (ksserv.inango.com [31.154.135.10])
+	by mail.inango-systems.com (Postfix) with ESMTPSA id C052D108055D;
+	Wed, 29 Jan 2025 20:55:38 +0200 (IST)
+From: Nikolai Merinov <n.merinov@inango-systems.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][styhead][2.10][PATCH 1/1] cooker: Make cooker 'skiplist' per-multiconfig/mc
-Date: Wed, 29 Jan 2025 10:07:33 -0800
-Message-ID: <a8578d12dfe5a3c92119bfee224595a392d6b0dd.1738173956.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1738173956.git.steve@sakoman.com>
-References: <cover.1738173956.git.steve@sakoman.com>
+Cc: Nikolai Merinov <n.merinov@inango-systems.com>
+Subject: [PATCH] parse: Forbid ambiguous assignments to ${.}, ${+}, and ${:} variables
+Date: Wed, 29 Jan 2025 20:55:31 +0200
+Message-Id: <20250129185531.3752682-1-n.merinov@inango-systems.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 29 Jan 2025 18:07:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17118
+ <bitbake-devel@lists.openembedded.org>; Wed, 29 Jan 2025 18:55:48 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17119
 
-From: Chris Laplante <chris.laplante@agilent.com>
+Old code that parse variable names in assignment commands behave differnt=
+ly for
+variables that ends with special symbol for single-character variable nam=
+es and
+multi-character variable names. For example:
 
-Previously, the cooker skiplist was shared across multiconfigs
-(including default ''). If you had a recipe that was incompatible with
-several multiconfigs for different reasons, then the displayed reason
-(i.e. the "ERROR: Nothing PROVIDES" and "* was skipped" messages) might
-vary across invocations of bitbake. This was caused by the random order
-in which recipes are parsed under different multiconfig contexts, with
-each skip reason overwriting the previously assigned reason.
+  A+=3D"1"   # Change variable ${A}, '+' glued to '=3D'
+  A+ =3D "1" # Change variable ${A+}
 
-I hit this specificially when using COMPATIBLE_MACHINE, but
-COMPATIBLE_HOST (or anything using bb.parse.SkipRecipe) would have done it too.
+  +=3D"1"    # Change variable ${+}, the '+' symbol not part of assignmen=
+t operator
+  + =3D "1"  # Change variable ${+}
 
-Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit c51f01a35ed9a928402eab0899598b5c59602eef)
-Signed-off-by: Steve Sakoman <steve@sakoman.com>
+New code would always assume that '.=3D', '+=3D', and ':=3D' is assignmen=
+t operator.
+As result code like the following would raise parsing error
+
+  +=3D"value"
+
+While code with extra spaces would work as before
+
+  + =3D "value" # Change variable ${+}
+
+This change allow to catch issues in code that generate bitbake configura=
+tion
+files in a manner like "echo ${VARNAME}+=3D${VALUE} >> conf/local.conf"
+
+Signed-off-by: Nikolai Merinov <n.merinov@inango-systems.com>
 ---
- lib/bb/command.py     | 21 ++++++++++++++++++---
- lib/bb/cooker.py      | 11 ++++++-----
- lib/bb/tinfoil.py     | 16 ++++++++++++----
- lib/bblayers/query.py | 14 +++++++-------
- 4 files changed, 43 insertions(+), 19 deletions(-)
+ lib/bb/parse/parse_py/ConfHandler.py                       | 2 +-
+ lib/toaster/toastermain/management/commands/buildimport.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index 1fcb9bf14..5e166fe45 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -420,15 +420,30 @@ class CommandsSync:
-         return command.cooker.recipecaches[mc].pkg_dp
-     getDefaultPreference.readonly = True
- 
-+
-     def getSkippedRecipes(self, command, params):
-+        """
-+        Get the map of skipped recipes for the specified multiconfig/mc name (`params[0]`).
-+
-+        Invoked by `bb.tinfoil.Tinfoil.get_skipped_recipes`
-+
-+        :param command: Internally used parameter.
-+        :param params: Parameter array. params[0] is multiconfig/mc name. If not given, then default mc '' is assumed.
-+        :return: Dict whose keys are virtualfns and values are `bb.cooker.SkippedPackage`
-+        """
-+        try:
-+            mc = params[0]
-+        except IndexError:
-+            mc = ''
-+
-         # Return list sorted by reverse priority order
-         import bb.cache
-         def sortkey(x):
-             vfn, _ = x
--            realfn, _, mc = bb.cache.virtualfn2realfn(vfn)
--            return (-command.cooker.collections[mc].calc_bbfile_priority(realfn)[0], vfn)
-+            realfn, _, item_mc = bb.cache.virtualfn2realfn(vfn)
-+            return -command.cooker.collections[item_mc].calc_bbfile_priority(realfn)[0], vfn
- 
--        skipdict = OrderedDict(sorted(command.cooker.skiplist.items(), key=sortkey))
-+        skipdict = OrderedDict(sorted(command.cooker.skiplist_by_mc[mc].items(), key=sortkey))
-         return list(skipdict.items())
-     getSkippedRecipes.readonly = True
- 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 582fc35f2..4aad408d4 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -134,7 +134,8 @@ class BBCooker:
-         self.baseconfig_valid = False
-         self.parsecache_valid = False
-         self.eventlog = None
--        self.skiplist = {}
-+        # The skiplists, one per multiconfig
-+        self.skiplist_by_mc = defaultdict(dict)
-         self.featureset = CookerFeatures()
-         if featureSet:
-             for f in featureSet:
-@@ -616,8 +617,8 @@ class BBCooker:
-         localdata = {}
- 
-         for mc in self.multiconfigs:
--            taskdata[mc] = bb.taskdata.TaskData(halt, skiplist=self.skiplist, allowincomplete=allowincomplete)
--            localdata[mc] = data.createCopy(self.databuilder.mcdata[mc])
-+            taskdata[mc] = bb.taskdata.TaskData(halt, skiplist=self.skiplist_by_mc[mc], allowincomplete=allowincomplete)
-+            localdata[mc] = bb.data.createCopy(self.databuilder.mcdata[mc])
-             bb.data.expandKeys(localdata[mc])
- 
-         current = 0
-@@ -937,7 +938,7 @@ class BBCooker:
-         for mc in self.multiconfigs:
-             # First get list of recipes, including skipped
-             recipefns = list(self.recipecaches[mc].pkg_fn.keys())
--            recipefns.extend(self.skiplist.keys())
-+            recipefns.extend(self.skiplist_by_mc[mc].keys())
- 
-             # Work out list of bbappends that have been applied
-             applied_appends = []
-@@ -2362,7 +2363,7 @@ class CookerParser(object):
-         for virtualfn, info_array in result:
-             if info_array[0].skipped:
-                 self.skipped += 1
--                self.cooker.skiplist[virtualfn] = SkippedPackage(info_array[0])
-+                self.cooker.skiplist_by_mc[mc][virtualfn] = SkippedPackage(info_array[0])
-             self.bb_caches[mc].add_info(virtualfn, info_array, self.cooker.recipecaches[mc],
-                                         parsed=parsed, watcher = self.cooker.add_filewatch)
-         return True
-diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
-index dcd3910cc..4dc4590c3 100644
---- a/lib/bb/tinfoil.py
-+++ b/lib/bb/tinfoil.py
-@@ -188,11 +188,19 @@ class TinfoilCookerAdapter:
-             self._cache[name] = attrvalue
-             return attrvalue
- 
-+    class TinfoilSkiplistByMcAdapter:
-+        def __init__(self, tinfoil):
-+            self.tinfoil = tinfoil
-+
-+        def __getitem__(self, mc):
-+            return self.tinfoil.get_skipped_recipes(mc)
-+
-     def __init__(self, tinfoil):
-         self.tinfoil = tinfoil
-         self.multiconfigs = [''] + (tinfoil.config_data.getVar('BBMULTICONFIG') or '').split()
-         self.collections = {}
-         self.recipecaches = {}
-+        self.skiplist_by_mc = self.TinfoilSkiplistByMcAdapter(tinfoil)
-         for mc in self.multiconfigs:
-             self.collections[mc] = self.TinfoilCookerCollectionAdapter(tinfoil, mc)
-             self.recipecaches[mc] = self.TinfoilRecipeCacheAdapter(tinfoil, mc)
-@@ -201,8 +209,6 @@ class TinfoilCookerAdapter:
-         # Grab these only when they are requested since they aren't always used
-         if name in self._cache:
-             return self._cache[name]
--        elif name == 'skiplist':
--            attrvalue = self.tinfoil.get_skipped_recipes()
-         elif name == 'bbfile_config_priorities':
-             ret = self.tinfoil.run_command('getLayerPriorities')
-             bbfile_config_priorities = []
-@@ -514,12 +520,12 @@ class Tinfoil:
-         """
-         return defaultdict(list, self.run_command('getOverlayedRecipes', mc))
- 
--    def get_skipped_recipes(self):
-+    def get_skipped_recipes(self, mc=''):
-         """
-         Find recipes which were skipped (i.e. SkipRecipe was raised
-         during parsing).
-         """
--        return OrderedDict(self.run_command('getSkippedRecipes'))
-+        return OrderedDict(self.run_command('getSkippedRecipes', mc))
- 
-     def get_all_providers(self, mc=''):
-         return defaultdict(list, self.run_command('allProviders', mc))
-@@ -533,6 +539,7 @@ class Tinfoil:
-     def get_runtime_providers(self, rdep):
-         return self.run_command('getRuntimeProviders', rdep)
- 
-+    # TODO: teach this method about mc
-     def get_recipe_file(self, pn):
-         """
-         Get the file name for the specified recipe/target. Raises
-@@ -541,6 +548,7 @@ class Tinfoil:
-         """
-         best = self.find_best_provider(pn)
-         if not best or (len(best) > 3 and not best[3]):
-+            # TODO: pass down mc
-             skiplist = self.get_skipped_recipes()
-             taskdata = bb.taskdata.TaskData(None, skiplist=skiplist)
-             skipreasons = taskdata.get_reasons(pn)
-diff --git a/lib/bblayers/query.py b/lib/bblayers/query.py
-index bfc18a759..eb7cb465b 100644
---- a/lib/bblayers/query.py
-+++ b/lib/bblayers/query.py
-@@ -142,10 +142,10 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
-         # Ensure we list skipped recipes
-         # We are largely guessing about PN, PV and the preferred version here,
-         # but we have no choice since skipped recipes are not fully parsed
--        skiplist = list(self.tinfoil.cooker.skiplist.keys())
--        mcspec = 'mc:%s:' % mc
-+        skiplist = list(self.tinfoil.cooker.skiplist_by_mc[mc].keys())
-+
-         if mc:
--            skiplist = [s[len(mcspec):] for s in skiplist if s.startswith(mcspec)]
-+            skiplist = [s.removeprefix(f'mc:{mc}:') for s in skiplist]
- 
-         for fn in skiplist:
-             recipe_parts = os.path.splitext(os.path.basename(fn))[0].split('_')
-@@ -162,7 +162,7 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
-         def print_item(f, pn, ver, layer, ispref):
-             if not selected_layer or layer == selected_layer:
-                 if not bare and f in skiplist:
--                    skipped = ' (skipped: %s)' % self.tinfoil.cooker.skiplist[f].skipreason
-+                    skipped = ' (skipped: %s)' % self.tinfoil.cooker.skiplist_by_mc[mc][f].skipreason
-                 else:
-                     skipped = ''
-                 if show_filenames:
-@@ -301,7 +301,7 @@ Lists recipes with the bbappends that apply to them as subitems.
-             if self.show_appends_for_pn(pn, cooker_data, args.mc):
-                 appends = True
- 
--        if not args.pnspec and self.show_appends_for_skipped():
-+        if not args.pnspec and self.show_appends_for_skipped(args.mc):
-             appends = True
- 
-         if not appends:
-@@ -317,9 +317,9 @@ Lists recipes with the bbappends that apply to them as subitems.
- 
-         return self.show_appends_output(filenames, best_filename)
- 
--    def show_appends_for_skipped(self):
-+    def show_appends_for_skipped(self, mc):
-         filenames = [os.path.basename(f)
--                    for f in self.tinfoil.cooker.skiplist.keys()]
-+                    for f in self.tinfoil.cooker.skiplist_by_mc[mc].keys()]
-         return self.show_appends_output(filenames, None, " (skipped)")
- 
-     def show_appends_output(self, filenames, best_filename, name_suffix = ''):
--- 
-2.43.0
+diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py=
+/ConfHandler.py
+index 24f81f7e9..bdac66004 100644
+--- a/lib/bb/parse/parse_py/ConfHandler.py
++++ b/lib/bb/parse/parse_py/ConfHandler.py
+@@ -20,7 +20,7 @@ from bb.parse import ParseError, resolve_file, ast, log=
+ger, handle
+ __config_regexp__  =3D re.compile( r"""
+     ^
+     (?P<exp>export\s+)?
+-    (?P<var>[a-zA-Z0-9\-_+.${}/~:]+?)
++    (?P<var>([a-zA-Z0-9\-_${}/~] | [+.:](?!=3D))+?)
+     (\[(?P<flag>[a-zA-Z0-9\-_+.][a-zA-Z0-9\-_+.@/]*)\])?
+=20
+     \s* (
+diff --git a/lib/toaster/toastermain/management/commands/buildimport.py b=
+/lib/toaster/toastermain/management/commands/buildimport.py
+index f7139aa04..37d27a445 100644
+--- a/lib/toaster/toastermain/management/commands/buildimport.py
++++ b/lib/toaster/toastermain/management/commands/buildimport.py
+@@ -60,7 +60,7 @@ def _log(msg):
+ __config_regexp__  =3D re.compile( r"""
+     ^
+     (?P<exp>export\s+)?
+-    (?P<var>[a-zA-Z0-9\-_+.${}/~]+?)
++    (?P<var>([a-zA-Z0-9\-_${}/~] | [.+](?!=3D))+?)
+     (\[(?P<flag>[a-zA-Z0-9\-_+.]+)\])?
+=20
+     \s* (
+--=20
+2.34.1
+
 
 
