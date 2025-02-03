@@ -1,154 +1,83 @@
-Return-Path: <eric.meyers15310@gmail.com>
+Return-Path: <n.merinov@inango-systems.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21EB2C02195
-	for <webhook@archiver.kernel.org>; Mon,  3 Feb 2025 15:33:20 +0000 (UTC)
-Received: from mail-qk1-f193.google.com (mail-qk1-f193.google.com [209.85.222.193])
- by mx.groups.io with SMTP id smtpd.web11.90355.1738596792850259172
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8497C02196
+	for <webhook@archiver.kernel.org>; Mon,  3 Feb 2025 16:43:11 +0000 (UTC)
+Received: from ksserv.inango.com (ksserv.inango.com [31.154.135.10])
+ by mx.groups.io with SMTP id smtpd.web11.92358.1738600983274454158
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 03 Feb 2025 07:33:13 -0800
+ Mon, 03 Feb 2025 08:43:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=l40zylB6;
- spf=pass (domain: gmail.com, ip: 209.85.222.193, mailfrom: eric.meyers15310@gmail.com)
-Received: by mail-qk1-f193.google.com with SMTP id af79cd13be357-7be3d681e74so403138285a.0
-        for <bitbake-devel@lists.openembedded.org>; Mon, 03 Feb 2025 07:33:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738596792; x=1739201592; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iukdKtxSGicJYq8FBavke8aIOhb0V3z3Zy5jquFzzPk=;
-        b=l40zylB6P2rorxaNdcri0gyJhm5g65RJE02lMRbCzVBW0hT7vKpQTPfKJ6KuG/8rJ3
-         E1X5uxtn3vw7a4WN67S7VTbYZ7dn7NytYYJM/tJKNvV2ERngINVahAADIDFNG0AJ9bXT
-         nW1aNcaATHtihMjEq5vf72tHKQgKrgdPlB9NnoHE2YOAVGtJQGOkWSjSQxBXCRycv3s7
-         hyvpQWrP2o1iv1tiaS/xtBdNRqiNC1k3N12zuVMVJEbAIOxVj1d4E8m5WqMgRUpgHezM
-         rcWpbbppOw/Z1l19RrLQB1bN/2wMxPdAjC7e49BN6VaUkQg4/Cf5AhyuBJzVYTL4FYWP
-         KABg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738596792; x=1739201592;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iukdKtxSGicJYq8FBavke8aIOhb0V3z3Zy5jquFzzPk=;
-        b=SowCzulEk1MwTjRjGBD5RoZz100mFrXatJVVoYRnxxZPUVPZh2P7K8C1wKtoBkLPUy
-         tEZ/G5XGOSofAKqB+R1F9UvfRg9S4E3NBty+TJWxrKvfIglsRLIABomgIDVhu7YjWpXK
-         SPWZIf733WrKPNC+MtAiVIbgRRzeuVST1tEcUp8C4sxG7Vjb/y2oWKU5EhKV3v5AQIOl
-         Qxb919E5L/BP60tT17ZmqbNfCeuspOGi9y0AJoYm3W8dIB61Y1mYkkfxwGbGGXslYon6
-         lzkrCivEnGeVX5DO4XJGKJARZ5nI4vXqqJeIbjaimucYq8Us0+dthukGW+H10fowANFF
-         rmFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXptRPjkBQz/H3/U8ldUe8F7886Mf3TMcX2DrEw8V8XUi7e+bHQiChgsE4zVt+Sc55+zDy+dyRP4qgGHAm7@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yx2tsRedBJUkJ2xb6tApeXomeMZfxUOrWR8Y1H3w3Ml3u1OilYQ
-	sd6HrTSaqc6TMDPpG/OCW1Rrr8i0qMH3WB3oeC1Bljxm75m5VXYdRCIrFh4yn/x9Z0+ZW8PbmKr
-	/W6xAJFimJxqsHjKqdBK/lOtmhlQ=
-X-Gm-Gg: ASbGncubbseXJsJ0SVFQY0VKNZYCpMcCzWcxKUW8iwak6MUD72dPFMmoZuwQhx/wXXm
-	oVTp+zAWgYLa3P55ou1OP/E8GorFq9BQyx+OaO6E+3Lg2qCHsCJym/3j2Uj8T7u3bVP/9XWYv
-X-Google-Smtp-Source: AGHT+IEHVr2Hy8d/lRRDACX1ZLe9OgYo7fJPS1MRkDiqBcO6pHDrNOy3KVj+25yStJC6pIHxgR4N2G0R5X/N6QPiNA0=
-X-Received: by 2002:a05:620a:191c:b0:7be:82e5:5693 with SMTP id
- af79cd13be357-7bffcce96bemr2912242485a.20.1738596791841; Mon, 03 Feb 2025
- 07:33:11 -0800 (PST)
+ dkim=pass header.i=@inango-systems.com header.s=45A440E0-D841-11E8-B985-5FCC721607E0 header.b=IskQcAAZ;
+ spf=pass (domain: inango-systems.com, ip: 31.154.135.10, mailfrom: n.merinov@inango-systems.com)
+Received: from ksserv.inango.com (localhost [127.0.0.1])
+	by ksserv.inango.com (Proxmox) with ESMTP id A427921FCB;
+	Mon,  3 Feb 2025 18:43:00 +0200 (IST)
+Received: from mail.inango-systems.com (unknown [172.31.254.134])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ksserv.inango.com (Proxmox) with ESMTPS id 7F06F21FC2;
+	Mon,  3 Feb 2025 18:43:00 +0200 (IST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.inango-systems.com (Postfix) with ESMTP id D42C41080575;
+	Mon,  3 Feb 2025 18:42:59 +0200 (IST)
+Authentication-Results: mail.inango-systems.com (amavis);
+ dkim=pass (2048-bit key) header.d=inango-systems.com
+Received: from mail.inango-systems.com ([127.0.0.1])
+ by localhost (mail.inango-systems.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id 8ecBFrCB9lbo; Mon,  3 Feb 2025 18:42:59 +0200 (IST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.inango-systems.com (Postfix) with ESMTP id B7DED108055D;
+	Mon,  3 Feb 2025 18:42:59 +0200 (IST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-systems.com B7DED108055D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
+	s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1738600979;
+	bh=HbyCTqBHO6afSft7ueB2rmKEfnFVvjzMQiKl/gFMnz0=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=IskQcAAZuRFkeFwLE2b0G/g9ozX/3V9yul/OQQQSLhkJNzPID6TLJagVWe2merI+F
+	 7Q0alrZGlKYYpYhUPR4kXseD/r8VYuye+G52YWs5+ALGT8nq9zGpGamoinNW0vgNWB
+	 /eayCdvdftpZHroNJCOp5T8ue5C7be1F9gO1tig8A+S+g4FSVtnbdZU31M1Ebfni3M
+	 8+eCJUdiNajqJH7SY9Z7YF6sk6CX/y322L7vP2avukZCuL6Z4e07HM2YaWuxrKcHpj
+	 oY0+ZSNDLyjiG0HA8XSl8kA7Uis2r2rmfvx/kew2hl+KbAXkIZOte8LbltFuPvY8WE
+	 sUqRJLy23VTmA==
+X-Virus-Scanned: amavis at inango-systems.com
+Received: from mail.inango-systems.com ([127.0.0.1])
+ by localhost (mail.inango-systems.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id lVJwF_d_-4Ga; Mon,  3 Feb 2025 18:42:59 +0200 (IST)
+Received: from wksv-012.inango.loc (ksserv.inango.com [31.154.135.10])
+	by mail.inango-systems.com (Postfix) with ESMTPSA id 381B510804E9;
+	Mon,  3 Feb 2025 18:42:59 +0200 (IST)
+From: Nikolai Merinov <n.merinov@inango-systems.com>
+To: bitbake-devel@lists.openembedded.org,
+	richard.purdie@linuxfoundation.org
+Cc: Nikolai Merinov <n.merinov@inango-systems.com>
+Subject: Re: [bitbake-devel] [PATCH] parse: Forbid ambiguous assignments to ${.}, ${+}, and ${:} variables
+Date: Mon,  3 Feb 2025 18:42:35 +0200
+Message-Id: <20250203164235.1503956-1-n.merinov@inango-systems.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <fc1891e201b3baaefb86c7c5f27202bc86ac171d.camel@linuxfoundation.org>
+References: <fc1891e201b3baaefb86c7c5f27202bc86ac171d.camel@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20250127142918.163-1-eric.meyers@arthrex.com> <CANNYZj-d4EXpM30v+DgY6p=3NjVZG7ThKTBTPSGX70CXh+rjPA@mail.gmail.com>
- <CA+cKJ+HEK9d-tvf-Srz=NwHCrkyikb-ws1u8Bn9kD--EiDF5zQ@mail.gmail.com>
- <CANNYZj8jjBpFrix4mwYG2SJ1JuvX6MHSmvcrO70WNmuEs=x0rQ@mail.gmail.com> <CAB=6tBR1y2Xzpy0MK1uW2TLV7O1opcW_UP_LGd-t=yYg+SAL2Q@mail.gmail.com>
-In-Reply-To: <CAB=6tBR1y2Xzpy0MK1uW2TLV7O1opcW_UP_LGd-t=yYg+SAL2Q@mail.gmail.com>
-From: Eric Meyers <eric.meyers15310@gmail.com>
-Date: Mon, 3 Feb 2025 09:33:02 -0600
-X-Gm-Features: AWEUYZmAhokFOkEPRjqfUbojQuZKaSVCTP27OKVuSuJfa8nHC7abVpJOs6iHgcY
-Message-ID: <CA+cKJ+HRxtWLSehYjUc6rLS18xxp2C_kvq8Tx_vJ_FvuxdTPXw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 0/3] NPM/NPM Shrinkwrap Basic
- Authentication Credential Support:
-To: Chuck Wolber <chuckwolber@gmail.com>
-Cc: alex.kanavin@gmail.com, bitbake-devel@lists.openembedded.org, 
-	"eric.meyers@arthrex.com" <eric.meyers@arthrex.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 03 Feb 2025 15:33:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17122
+ <bitbake-devel@lists.openembedded.org>; Mon, 03 Feb 2025 16:43:11 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17123
 
-On Mon, Jan 27, 2025 at 3:06=E2=80=AFPM Chuck Wolber <chuckwolber@gmail.com=
-> wrote:
->
->
->
-> On Mon, Jan 27, 2025 at 10:01=E2=80=AFAM Alexander Kanavin via lists.open=
-embedded.org <alex.kanavin=3Dgmail.com@lists.openembedded.org> wrote:
->>
->> On Mon, 27 Jan 2025 at 16:44, Eric Meyers <eric.meyers15310@gmail.com> w=
-rote:
->> > Are you suggesting that instead of username=3D and password=3D paramet=
-ers
->> > in the npm/npmsw SRC_URI, it should be an "npmrc" parameter that
->> > effectively the user can point to the location of their .npmrc file
->> > for authentication on an NPM registry? Then, within a user's
->> > associated recipe, they would need to create the npmrc file in a
->> > do_fetch:prepend() step that that corresponds to the path passed into
->> > the SRC_URI?
->>
->> The only acceptable solution would be one that takes passwords written
->> in plain text out of layers and local.conf altogether. And the way to
->> do it is to write these things into ~/.npmrc and ~/.netrc in a secure
->> manner (e.g. pass in to users via encrypted email with instructions
->> that the file must not be readable by anyone but the user), and ensure
->> that npm and wget are able to pick them up from those files (wget does
->> this already, npm I'm not sure).
->
->
-> Could this also be solved by letting the end user decide, sort of like th=
-e way FETCHCMD_*
-> works?
->
-> A CREDENTIALCMD_npm variable in local.conf could be saddled with exportin=
-g the
-> namespace, password, and username values into whatever environment needs =
-them in a
-> "Just in Time" fashion to lower (but not completely eliminate) exposure.
->
-> An identity agent, like the 1P or vault CLI would be an obvious choice he=
-re, but one could
-> just as easily tie it to a script that devolves down to looking in ~/.npm=
-rc if they wanted to.
->
-> ..Ch:W..
->
-> --
-> "Perfection must be reached by degrees; she requires the slow hand of tim=
-e." - Voltaire
+Hi Richard,
 
-Last week I had off, so I'm just getting around to addressing these
-comments this week. Chuck's suggestion is interesting and I will
-definitely consider it. So this amounts to two potential paths forward
-for this issue (1 by Alex and 1 by Chuck):
+> I'm worried that if we do what you patch does, we're complicating the
+> code and potentially setting ourselves up for other new interesting
+> future problems.
 
-1. Take a similar approach to how the wget fetcher uses default netrc
-credentials within the user's home directory and use default
-credentials populated by the user within an npmrc file in their home
-directory.
-    - Pros: Moves away from specifying username/password in recipe,
-using precedent set in wget fetcher, potentially less changes in
-fetcher (no parameter additions, no creation of npmrc file, etc)
-    - Cons: Currently, the wget fetcher relies on default behavior of
-"netrc" python library - there is no analogous "npmrc" python library
-and we would need to add logic to check this file manually (shouldn't
-be too difficult but still would need to rework current NPM
-environment behavior in the fetcher). Might pose challenges in CI/CD
-environments where these files need to now be created if using private
-registries (again should be easy enough).
+How about moving complicated part out of regular expression?
 
-2. Take a similar approach to how FETCHCMD_npm is used and specify
-another variable named "FETCHCREDENTIALCMD_npm" that allows the user
-to point to a specific npmrc file to use in their environment.
-    - Pros: Moves away from specifying username/password in recipe
-    - Cons: Adding another variable to bitbake, lowers (but doesn't
-completely eliminate) credential exposure, might require more support
-within recipetool within poky
+Please take a look to the second version of the patch.
 
-I am going to take a stab at reworking this patch to match approach #1
-outlined above, but if any hiccups come up, I'll post issues here and
-re-evaluate using another approach (potentially #2 above). #1 feels
-like it will be easier to implement and more straightforward than #2,
-but perhaps I'm missing something.
+Regards,
+Nikolai
+
 
