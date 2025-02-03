@@ -2,71 +2,66 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166EAC02192
-	for <webhook@archiver.kernel.org>; Mon,  3 Feb 2025 17:41:22 +0000 (UTC)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web10.94422.1738604478908544539
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33615C02192
+	for <webhook@archiver.kernel.org>; Mon,  3 Feb 2025 17:42:52 +0000 (UTC)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+ by mx.groups.io with SMTP id smtpd.web11.94140.1738604562379064569
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 03 Feb 2025 09:41:19 -0800
+ Mon, 03 Feb 2025 09:42:42 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=VGfILbAm;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.44, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4361c705434so34950325e9.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 03 Feb 2025 09:41:18 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=JjyYn5zl;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.50, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4361f664af5so55062235e9.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 03 Feb 2025 09:42:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1738604477; x=1739209277; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1738604561; x=1739209361; darn=lists.openembedded.org;
         h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0yN+nvs+Zpq7pQz274WDB1XlreCXEqijf9GKRCx5E34=;
-        b=VGfILbAmWXVmSG3Fvl9WmqvCRAN5FaUFKsQ7wjFdAFksKJTbuf8u2vqZ0j3zBYp+Qq
-         +CO4s1gzvZ9evdWMBX2n1eMXVZSDcja7Sm4DSxeg27NmYsIjVf6dFDEXRdGaYLgqA+Rx
-         Wh8CofcD5Kwoec2OVVUxprx8ijavA/JMtSzYk=
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Oyxz1IgrCFSujkpUE4vdkK2KvAo6+6RjKnBazYed/UI=;
+        b=JjyYn5zlFixea0ILdfq6C6SDeGlNwKg1vK5psJ2ASxFLNwGrvBjyLv9Limoz5ow0PG
+         tt/Cl92JFZTjPct6sx0Rly0lHKLxLpDO/STQbBRzFVRZix/G1uUv16zJ1VlavgZz8FFD
+         zZPYF+xPoJzulcx37cy+9Vm90GPz1Yu4PuX8U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738604477; x=1739209277;
+        d=1e100.net; s=20230601; t=1738604561; x=1739209361;
         h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0yN+nvs+Zpq7pQz274WDB1XlreCXEqijf9GKRCx5E34=;
-        b=PB13hOw2Um05QOcbpUA/TMwUvoZvRFJ4mvAeFWEQlGEZCf4mHeBXkrT5v4ktrA4mwa
-         WCzGYdKxBMudoHcSM3q0G55W6b9St3qpGb197kz6r7DwV2xHNc+LAiQM8N9vQyHPQEQP
-         SaGx5NaZPtRDsKenrbpWXxlZRUN5SGLDwymakOjMQTumdlhkSKPoaySGNutRmX5XJGM5
-         fQZTat9JfEYnjz5+fBNbbcp/ZwX+66uleWDiP0+Cy8RyLkg/mfcFoFKP380TpZEZilgb
-         Exy2Pc5mfydxjFRMqiJQH58E2O6THWKVV08CUDHbp6ZXdofGMb9lNhGy0/AbRKhQRwn+
-         lQuA==
-X-Forwarded-Encrypted: i=1; AJvYcCWMZ71YUSkR4YAUFVFWOZ1dcqRKWSi3+LMPQvdzUJfJlyXto/ScMg/2zcsZc6xr+atTXebMwTWTrfALD3ss@lists.openembedded.org
-X-Gm-Message-State: AOJu0YxgoI7uBZ/Xxvt6cBMc/VH0aqFm99BrbOg+me/ZzIHVofMW4o68
-	pZtWIFbgkAl68H1lGFOzAyDA1cYRzEB930O3qf00qkwkFN4JDjiVwVQh2CsyoEBShM7S5jWpOYY
-	J
-X-Gm-Gg: ASbGncvb9OiyQir01x+bosaXSRyfPIiOyPKx23cgSa19USmM07SuktOoseC5h1RVcu1
-	mef9dkMW6ry3siIiR49WtLFYNDvQ1iKZA5a84d4q9CzuF3WHtPS24qH5/iXrKfDUTmomj2cSp+A
-	K/RkqMPChUV//CimPzpYZ5s3cAg6ZGhixAW1C0lN8+kLTqGDNjcsRtrJdSeLpfVsQlpvw+lW+0F
-	KjYBWT1LIkbOHRqdD2g4L7wPJbmK0abGI7MpJXVOx5AAqpOvSbAG6cY8a2cLbaXe8klUl87Wt5d
-	BFadEARDmZFJ7w1LoLjwMrdqq1b6nBi1o6DVbQLuzL3eo21a/NXmHLpDTepvAJNdjxHRa2k0YiO
-	TuPNt
-X-Google-Smtp-Source: AGHT+IHXTaISQ7rwxFPJeXm4W85S9/UoaLjOhFMgNebjhRzotsZCJslYGHlX4JAhgt0GFoQ/8TCLCA==
-X-Received: by 2002:a05:600c:8712:b0:434:a1e7:27b0 with SMTP id 5b1f17b1804b1-438dc3c29f2mr257239185e9.11.1738604477315;
-        Mon, 03 Feb 2025 09:41:17 -0800 (PST)
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Oyxz1IgrCFSujkpUE4vdkK2KvAo6+6RjKnBazYed/UI=;
+        b=FhBYUZhpLLnQ6OR+hBu2uSpLXBShvQGBLRb9tNI1w9eTQ5omQz7CKUrmM8S9GUUuxo
+         lI3275m9vWKigVUPqAT6NazS2i1A2608D3gV0aYsKjv9WmUcctiFtmKhFZVpK4s4onSs
+         xSSWLtTxFmA3aTCOEhfJ9EaphhqwRdsuPe4IZko8BHHUMB4DMf81jyuCUkUHciUeeBX5
+         FEDyAVfJxnhtCcxw8Scxosc/3o+kYdwmJroSUWh+7bf+eaMMcGhy5RLrV83QMlbhhbYj
+         HCnczHbLZDD83Ht5ALeLXXDDtMy1laYO7DoUn/xxfTvdktiKkgRmMHHFtPJ2AjIjq3p7
+         cT5w==
+X-Forwarded-Encrypted: i=1; AJvYcCWgwPjQUdkNKhFD+peOahitdnpNCMgbwavh4ssEj2j+qnNp1VOHdy8X6O6NmGxCx0AqZgobK20npMGXlGyo@lists.openembedded.org
+X-Gm-Message-State: AOJu0YycSmT/lmzdZv6wZAU35zgI9n67P3HU0M/kRUrRtAa8qWR4ldsA
+	uqojnKIPyw6M+wzvGRRmFdmZbjqe/l2/8ND7+M3716Yb8sM5yPf5jr9vaQdG3sFrRrAzU3fbGFm
+	C
+X-Gm-Gg: ASbGncsW7IfI0UXs+NSVbZx4+tBy3JBNQSKSNdQha25rrWY33dAFdTvap6f6qEM6b47
+	WYugcwt0cG+F2bnSccBAlA2Y3HXQscMrFgAp+eMIBQ64zV0EXkBuuyY8DM1fsjFAPCMLY4qc1kt
+	owV4YFZaSUkn1KpsaqP1Y3wgN0V1X1EQVE+Yd671ZCaP6LIMTBEMoFQWylURT08s4L9PMd67WUT
+	PvZ8+GDDnFbbt+ezoItxWdW7QrpUrtgfSfj2Jlff5S77egsgCMJwd2GIu9EJvSHURRYhv4OPIQi
+	CZE1StsI7eaBg3B75bLdLv18/3BgOVDNqbV3kyysAlJEdQM99Oh/KcDL+j2K1I8JkzMRmtwnyAT
+	DZ6Y0
+X-Google-Smtp-Source: AGHT+IFrjC8uI9E70Jys/SiHiJCnh89S8QRd70+UaRqgKOuWwQToic5dMEFTjrMo/5LxenjhtovFjQ==
+X-Received: by 2002:a5d:6503:0:b0:38b:da34:5915 with SMTP id ffacd0b85a97d-38c5195fd72mr15401238f8f.23.1738604560719;
+        Mon, 03 Feb 2025 09:42:40 -0800 (PST)
 Received: from ?IPv6:2001:8b0:aba:5f3c:41c1:3919:865f:692c? ([2001:8b0:aba:5f3c:41c1:3919:865f:692c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23de772sm160874875e9.13.2025.02.03.09.41.16
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c11b58esm13104191f8f.42.2025.02.03.09.42.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 09:41:16 -0800 (PST)
-Message-ID: <9ee0c248fb20dd6b718e6a0059d7665bafc85c22.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 0/3] NPM/NPM Shrinkwrap Basic
- Authentication Credential Support:
+        Mon, 03 Feb 2025 09:42:40 -0800 (PST)
+Message-ID: <7b451077afdb98d825d060ae3e1c05654c82a731.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] parse: Forbid ambiguous assignments to
+ ${.}, ${+}, and ${:} variables
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: eric.meyers15310@gmail.com, Chuck Wolber <chuckwolber@gmail.com>
-Cc: alex.kanavin@gmail.com, bitbake-devel@lists.openembedded.org, 
- "eric.meyers@arthrex.com"
-	 <eric.meyers@arthrex.com>
-Date: Mon, 03 Feb 2025 17:41:16 +0000
-In-Reply-To: <CA+cKJ+HRxtWLSehYjUc6rLS18xxp2C_kvq8Tx_vJ_FvuxdTPXw@mail.gmail.com>
-References: <20250127142918.163-1-eric.meyers@arthrex.com>
-	 <CANNYZj-d4EXpM30v+DgY6p=3NjVZG7ThKTBTPSGX70CXh+rjPA@mail.gmail.com>
-	 <CA+cKJ+HEK9d-tvf-Srz=NwHCrkyikb-ws1u8Bn9kD--EiDF5zQ@mail.gmail.com>
-	 <CANNYZj8jjBpFrix4mwYG2SJ1JuvX6MHSmvcrO70WNmuEs=x0rQ@mail.gmail.com>
-	 <CAB=6tBR1y2Xzpy0MK1uW2TLV7O1opcW_UP_LGd-t=yYg+SAL2Q@mail.gmail.com>
-	 <CA+cKJ+HRxtWLSehYjUc6rLS18xxp2C_kvq8Tx_vJ_FvuxdTPXw@mail.gmail.com>
+To: peter.kjellerstedt@axis.com, "n.merinov@inango-systems.com"
+	 <n.merinov@inango-systems.com>, "bitbake-devel@lists.openembedded.org"
+	 <bitbake-devel@lists.openembedded.org>
+Date: Mon, 03 Feb 2025 17:42:39 +0000
+In-Reply-To: <DB5PR02MB10213AFB411A607B11EAB0B62EFE82@DB5PR02MB10213.eurprd02.prod.outlook.com>
+References: <20250129185531.3752682-1-n.merinov@inango-systems.com>
+	 <DB5PR02MB10213AFB411A607B11EAB0B62EFE82@DB5PR02MB10213.eurprd02.prod.outlook.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.54.0-1 
@@ -74,121 +69,126 @@ MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 03 Feb 2025 17:41:22 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17127
+ <bitbake-devel@lists.openembedded.org>; Mon, 03 Feb 2025 17:42:52 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17128
 
-On Mon, 2025-02-03 at 09:33 -0600, Eric Meyers via
-lists.openembedded.org wrote:
-> On Mon, Jan 27, 2025 at 3:06=E2=80=AFPM Chuck Wolber <chuckwolber@gmail.c=
-om>
-> wrote:
+On Fri, 2025-01-31 at 20:40 +0000, Peter Kjellerstedt via lists.openembedde=
+d.org wrote:
+> > -----Original Message-----
+> > From: bitbake-devel@lists.openembedded.org=C2=A0<bitbake-devel@lists.op=
+enembedded.org> On Behalf Of Nikolay Merinov via lists.openembedded.org
+> > Sent: den 29 januari 2025 19:56
+> > To: bitbake-devel@lists.openembedded.org
+> > Cc: Nikolai Merinov <n.merinov@inango-systems.com>
+> > Subject: [bitbake-devel] [PATCH] parse: Forbid ambiguous assignments to=
+ ${.}, ${+}, and ${:} variables
 > >=20
+> > Old code that parse variable names in assignment commands behave differ=
+ntly for
+>=20
+> differntly -> differently=20
+>=20
+> > variables that ends with special symbol for single-character variable n=
+ames and
+> > multi-character variable names. For example:
 > >=20
+> > =C2=A0 A+=3D"1"=C2=A0=C2=A0 # Change variable ${A}, '+' glued to '=3D'
+> > =C2=A0 A+ =3D "1" # Change variable ${A+}
 > >=20
-> > On Mon, Jan 27, 2025 at 10:01=E2=80=AFAM Alexander Kanavin via
-> > lists.openembedded.org
-> > <alex.kanavin=3Dgmail.com@lists.openembedded.org> wrote:
-> > >=20
-> > > On Mon, 27 Jan 2025 at 16:44, Eric Meyers
-> > > <eric.meyers15310@gmail.com> wrote:
-> > > > Are you suggesting that instead of username=3D and password=3D
-> > > > parameters
-> > > > in the npm/npmsw SRC_URI, it should be an "npmrc" parameter
-> > > > that
-> > > > effectively the user can point to the location of their .npmrc
-> > > > file
-> > > > for authentication on an NPM registry? Then, within a user's
-> > > > associated recipe, they would need to create the npmrc file in
-> > > > a
-> > > > do_fetch:prepend() step that that corresponds to the path
-> > > > passed into
-> > > > the SRC_URI?
-> > >=20
-> > > The only acceptable solution would be one that takes passwords
-> > > written
-> > > in plain text out of layers and local.conf altogether. And the
-> > > way to
-> > > do it is to write these things into ~/.npmrc and ~/.netrc in a
-> > > secure
-> > > manner (e.g. pass in to users via encrypted email with
-> > > instructions
-> > > that the file must not be readable by anyone but the user), and
-> > > ensure
-> > > that npm and wget are able to pick them up from those files (wget
-> > > does
-> > > this already, npm I'm not sure).
+> > =C2=A0 +=3D"1"=C2=A0=C2=A0=C2=A0 # Change variable ${+}, the '+' symbol=
+ not part of assignment operator
+> > =C2=A0 + =3D "1"=C2=A0 # Change variable ${+}
 > >=20
+> > New code would always assume that '.=3D', '+=3D', and ':=3D' is assignm=
+ent operator.
+> > As result code like the following would raise parsing error
 > >=20
-> > Could this also be solved by letting the end user decide, sort of
-> > like the way FETCHCMD_*
-> > works?
+> > =C2=A0 +=3D"value"
 > >=20
-> > A CREDENTIALCMD_npm variable in local.conf could be saddled with
-> > exporting the
-> > namespace, password, and username values into whatever environment
-> > needs them in a
-> > "Just in Time" fashion to lower (but not completely eliminate)
-> > exposure.
+> > While code with extra spaces would work as before
 > >=20
-> > An identity agent, like the 1P or vault CLI would be an obvious
-> > choice here, but one could
-> > just as easily tie it to a script that devolves down to looking in
-> > ~/.npmrc if they wanted to.
+> > =C2=A0 + =3D "value" # Change variable ${+}
 > >=20
-> > ..Ch:W..
+> > This change allow to catch issues in code that generate bitbake configu=
+ration
+> > files in a manner like "echo ${VARNAME}+=3D${VALUE} >> conf/local.conf"
 > >=20
+> > Signed-off-by: Nikolai Merinov <n.merinov@inango-systems.com>
+> > ---
+> > =C2=A0lib/bb/parse/parse_py/ConfHandler.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 +-
+> > =C2=A0lib/toaster/toastermain/management/commands/buildimport.py | 2 +-
+> > =C2=A02 files changed, 2 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_=
+py/ConfHandler.py
+> > index 24f81f7e9..bdac66004 100644
+> > --- a/lib/bb/parse/parse_py/ConfHandler.py
+> > +++ b/lib/bb/parse/parse_py/ConfHandler.py
+> > @@ -20,7 +20,7 @@ from bb.parse import ParseError, resolve_file, ast, l=
+ogger, handle
+> > =C2=A0__config_regexp__=C2=A0 =3D re.compile( r"""
+> > =C2=A0=C2=A0=C2=A0=C2=A0 ^
+> > =C2=A0=C2=A0=C2=A0=C2=A0 (?P<exp>export\s+)?
+> > -=C2=A0=C2=A0=C2=A0 (?P<var>[a-zA-Z0-9\-_+.${}/~:]+?)
+> > +=C2=A0=C2=A0=C2=A0 (?P<var>([a-zA-Z0-9\-_${}/~] | [+.:](?!=3D))+?)
+> > =C2=A0=C2=A0=C2=A0=C2=A0 (\[(?P<flag>[a-zA-Z0-9\-_+.][a-zA-Z0-9\-_+.@/]=
+*)\])?
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0 \s* (
+> > diff --git a/lib/toaster/toastermain/management/commands/buildimport.py=
+ b/lib/toaster/toastermain/management/commands/buildimport.py
+> > index f7139aa04..37d27a445 100644
+> > --- a/lib/toaster/toastermain/management/commands/buildimport.py
+> > +++ b/lib/toaster/toastermain/management/commands/buildimport.py
+> > @@ -60,7 +60,7 @@ def _log(msg):
+> > =C2=A0__config_regexp__=C2=A0 =3D re.compile( r"""
+> > =C2=A0=C2=A0=C2=A0=C2=A0 ^
+> > =C2=A0=C2=A0=C2=A0=C2=A0 (?P<exp>export\s+)?
+> > -=C2=A0=C2=A0=C2=A0 (?P<var>[a-zA-Z0-9\-_+.${}/~]+?)
+> > +=C2=A0=C2=A0=C2=A0 (?P<var>([a-zA-Z0-9\-_${}/~] | [.+](?!=3D))+?)
+> > =C2=A0=C2=A0=C2=A0=C2=A0 (\[(?P<flag>[a-zA-Z0-9\-_+.]+)\])?
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0 \s* (
 > > --
-> > "Perfection must be reached by degrees; she requires the slow hand
-> > of time." - Voltaire
+> > 2.34.1
+> >=20
 >=20
-> Last week I had off, so I'm just getting around to addressing these
-> comments this week. Chuck's suggestion is interesting and I will
-> definitely consider it. So this amounts to two potential paths
-> forward
-> for this issue (1 by Alex and 1 by Chuck):
+> The above made me ponder on the existence of $, { and } in the regular=
+=20
+> expression for the variable name and what that can be (ab)used for. I
+> realized that it allows you do define really odd variables such as:
 >=20
-> 1. Take a similar approach to how the wget fetcher uses default netrc
-> credentials within the user's home directory and use default
-> credentials populated by the user within an npmrc file in their home
-> directory.
-> =C2=A0=C2=A0=C2=A0 - Pros: Moves away from specifying username/password i=
-n recipe,
-> using precedent set in wget fetcher, potentially less changes in
-> fetcher (no parameter additions, no creation of npmrc file, etc)
-> =C2=A0=C2=A0=C2=A0 - Cons: Currently, the wget fetcher relies on default =
-behavior of
-> "netrc" python library - there is no analogous "npmrc" python library
-> and we would need to add logic to check this file manually (shouldn't
-> be too difficult but still would need to rework current NPM
-> environment behavior in the fetcher). Might pose challenges in CI/CD
-> environments where these files need to now be created if using
-> private
-> registries (again should be easy enough).
+> ${} =3D "foobar"
+> } =3D "foobar"
+> $ =3D "foobar"
 >=20
-> 2. Take a similar approach to how FETCHCMD_npm is used and specify
-> another variable named "FETCHCREDENTIALCMD_npm" that allows the user
-> to point to a specific npmrc file to use in their environment.
-> =C2=A0=C2=A0=C2=A0 - Pros: Moves away from specifying username/password i=
-n recipe
-> =C2=A0=C2=A0=C2=A0 - Cons: Adding another variable to bitbake, lowers (bu=
-t doesn't
-> completely eliminate) credential exposure, might require more support
-> within recipetool within poky
+> And while you cannot access them directly using, e.g., "${$}", you can=
+=20
+> access them using, e.g., "${@d.getVar('$')"...
 >=20
-> I am going to take a stab at reworking this patch to match approach
-> #1
-> outlined above, but if any hiccups come up, I'll post issues here and
-> re-evaluate using another approach (potentially #2 above). #1 feels
-> like it will be easier to implement and more straightforward than #2,
-> but perhaps I'm missing something.
+> This also allows defining variables that do not match the syntax at all,=
+=20
+> e.g.:
+>=20
+> EQUAL =3D "=3D"
+> ${EQUAL} =3D "bar"
+>=20
+> which will define the variable "=3D" and where "${@d.getVar('=3D')}" then
+> returns "bar" as expected...
+>=20
+> I am not sure this is a problem or working as intended, but it is a bit=
+=20
+> odd.
+>=20
 
-FWIW I think this is the right thing to do and #1 matches what we've
-done elsewhere.
-
-Having watched what happens in the real world with passwords in urls,
-we really don't want to support that.
+The set/getVar API doesn't really sanity check the variable names so it
+is behaving much as I'd have expected. Whether it should be a bit
+stricter about variable names is a good question...
 
 Cheers,
 
 Richard
+
 
