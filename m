@@ -2,245 +2,205 @@ Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D69E4C02194
-	for <webhook@archiver.kernel.org>; Tue,  4 Feb 2025 13:19:17 +0000 (UTC)
-Received: from EUR03-VI1-obe.outbound.protection.outlook.com (EUR03-VI1-obe.outbound.protection.outlook.com [40.107.103.126])
- by mx.groups.io with SMTP id smtpd.web11.115553.1738675149330189759
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C3FC02197
+	for <webhook@archiver.kernel.org>; Wed,  5 Feb 2025 07:15:56 +0000 (UTC)
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.96])
+ by mx.groups.io with SMTP id smtpd.web11.6852.1738739753081335773
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 04 Feb 2025 05:19:11 -0800
+ Tue, 04 Feb 2025 23:15:54 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=Oq+nz40C;
- spf=pass (domain: weidmueller.com, ip: 40.107.103.126, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=5JutMyxh;
+ spf=pass (domain: weidmueller.com, ip: 40.107.22.96, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LzxlJlpeKtxVtdXkDtRvhi2SjBGb0Rf3gr9qQyXCmOSi2TfACQAA0FfC0tEnxmDeQuiB+Ht5JdBo4f4eF/46ae6ep4dapywx/Yex0x9Hh6zZeBpu2enRVK+Hb3SR1oAwyFChrTKO6qgNr8/uJOxhyf+xOqVm5zUjR8C0sUbSBGhqgQdIntjHNeY9o74BYibEQfs6VU1CA6ICXu/DTBmBQUjN/56cjr/qaFGFmyPEqHsl9RedUa+ZhKFN2VrJcgbRmAydgAUSviVZolQgnjJRExyPHncpZvH8l6YbgOD07qyEVVNjYqFyUkPZCfjp1zEAQ/fyU1rJjpIIvc3eoIi8dQ==
+ b=EqBcVMItwGbgXUDOYJGnjhHkTjrnBkhb0kFt+Xl/HU1n/wkfSTbOUxUp3gXcBB05e7ydKBUV48gjlgGarS6lDuZ8Ll3ozKUsGXjclCzADwBlb8CMtF36D4m6481cQY/2YZAF7xxwnxl6sUGwmZ903LPNPtZtT+X9E570IOHtDjk/xdyXyA+R+zEj5C2/k9wignUhBOzj0EU/qNNDz5i+yGrZ4nfWfZV05AIYtId1caZL7QStnsZKslavvMgf5l1hSSpUmjV9DhKwYJ+5nnAF97of5Xtx1SeU2bmkSiZO4htViE0OzHn8fGjyOQtDJOWHFNGQDsYdLLPfiKWfpwNcxg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tb+wzBjnrxmKkMYBHs5RJO0+rnNzoNN596YCIjvCmI0=;
- b=EuKddtugPT2Ii0DZg7aaqzOvmU/fM9IxumDIgXweZs7xbjdrL3KYQjOcsR0XEIZdscCxYVhJyaVaUtIB7qPxHKJcIfJJkHcXlTTj1Q7hKoru6NXE/ojzN5fMlotfhHRv9c/BvucjEkREgYJhL3dQVUjDXjtv3LXpQsU6gZwkkB9b3xKJkPr6f3t5MOsV1pTgFAkcnzA/NLZ8zR8sClqD6tcH8ODvuLtorKdgaQv6lHB7t4Pbuuw5xb+MR9LVbdtVIMQtIaM3dZgy4FFcQtbnDeXaKY8EfcgoD1q1c8X3KAba9YNxEuKbsMmV+bmDWEwYN6Zm+2AnNIlQWjz4kVlpfA==
+ bh=QV7mZGoWzGJLCy0RYUq31esZRWHmC9EhNHe+NR1feII=;
+ b=vqMYizOyw+FY44kN+KmMY2mP8k5rUeu+rKjm25Ag/YEGSAjdl1rKDeTx1AW7d5unhwuOK7nik1+HMZ0RPU95AYGwz0zHxBAPcB1FaP/AcUOU1wZMxn0jS65FwICJKmFdrI7LLuVKbcjN90Yuw4W47Y5IeVHcgeDzmnjcwjxqGFa7OXM9C5nxdmdxNZFR+nT3UEFdecqDH0VuHwR1YJaUIP6KavfAie5uZpcdzI+rhBPSxKnwBZlb1LR/+tvPcADDu6DhjvVYFlOLjwSFVglBtVwyR2kMNMTOZuU2oHigDAMFbbVlLQOPb7tjOegVFq5kG7xRqAp5CyGv5/KOqAmwsQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=weidmueller.com; dmarc=pass action=none
  header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tb+wzBjnrxmKkMYBHs5RJO0+rnNzoNN596YCIjvCmI0=;
- b=Oq+nz40ClkkKbEq3jtRGJbWuBO7fJ8/5dn3ChXDhvLgLnMeIX7t27uEN1gjBB8/OOJSSTlmY9L+KO8IWv2HfJSWmHdm3IuqqE0V72vrF+e2odxNNhuZPqDaAN6Vtb05bPQSbLwRKMh9vVdrPewpwWmzufUOUd81waPglfIdOP7BYGPT9DhP8dsX8HZm5zIdrHn/YNJNKDKUsfQxOYue/t3jSZ9bC0Yy6YS+S2PBZ/6pjLxvSvwpINMJlszyAsJfggFBgY/bdfBmrAYi5bqFb3I2Ez0Uv4HF5zHF/B42z5kVVLgidyhMe3sc6kxDy9vXYSzeD54F76fIuBwa+kQYHCg==
+ bh=QV7mZGoWzGJLCy0RYUq31esZRWHmC9EhNHe+NR1feII=;
+ b=5JutMyxhaqPu0gDWWUO4OX82D/BWxSe3WdN7aR1FI2/QCRcymgGvIhVv/PFDHVerLaoiMeRkNL7DMBCiK6Rmti+XB1U34vSNamyYi5dw/1aRcDfNy6fea8V/OYLtyiNX9SyBnEGCQ/9PrsNmVvRPmy0WXqGi18agzXuYV+4vGWy3FpqJYwvRPdw6olAJp/acIuXe9Cwtr8iEcz4JZL/kLkcT9IWiewO1UyUKZ3Bhmxira7BZjucGeRUng9xVfm0EKUKVNOA21lcezMlgO1G6vaEBNUZQwGksB2YwleqY4wlzvszUgTeeloR4Uz7eLtPuBfaMUmqGG2jOvhGUsXupCg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=weidmueller.com;
 Received: from GV1PR08MB8426.eurprd08.prod.outlook.com (2603:10a6:150:8a::17)
- by GV1PR08MB8129.eurprd08.prod.outlook.com (2603:10a6:150:93::11) with
+ by PAXPR08MB7320.eurprd08.prod.outlook.com (2603:10a6:102:223::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Tue, 4 Feb
- 2025 13:19:01 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Wed, 5 Feb
+ 2025 07:15:50 +0000
 Received: from GV1PR08MB8426.eurprd08.prod.outlook.com
  ([fe80::f9f5:b4bd:9e01:9013]) by GV1PR08MB8426.eurprd08.prod.outlook.com
- ([fe80::f9f5:b4bd:9e01:9013%7]) with mapi id 15.20.8398.021; Tue, 4 Feb 2025
- 13:19:01 +0000
-Message-ID: <e02d51c4-12e6-4cec-8405-e1b9b1f714d9@weidmueller.com>
-Date: Tue, 4 Feb 2025 14:19:00 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel] [PATCH 0/3] NPM/NPM Shrinkwrap Basic
- Authentication Credential Support:
-To: eric.meyers15310@gmail.com, Chuck Wolber <chuckwolber@gmail.com>
-CC: alex.kanavin@gmail.com, bitbake-devel@lists.openembedded.org,
- "eric.meyers@arthrex.com" <eric.meyers@arthrex.com>
-References: <20250127142918.163-1-eric.meyers@arthrex.com>
- <CANNYZj-d4EXpM30v+DgY6p=3NjVZG7ThKTBTPSGX70CXh+rjPA@mail.gmail.com>
- <CA+cKJ+HEK9d-tvf-Srz=NwHCrkyikb-ws1u8Bn9kD--EiDF5zQ@mail.gmail.com>
- <CANNYZj8jjBpFrix4mwYG2SJ1JuvX6MHSmvcrO70WNmuEs=x0rQ@mail.gmail.com>
- <CAB=6tBR1y2Xzpy0MK1uW2TLV7O1opcW_UP_LGd-t=yYg+SAL2Q@mail.gmail.com>
- <CA+cKJ+HRxtWLSehYjUc6rLS18xxp2C_kvq8Tx_vJ_FvuxdTPXw@mail.gmail.com>
-Content-Language: en-US
+ ([fe80::f9f5:b4bd:9e01:9013%7]) with mapi id 15.20.8422.011; Wed, 5 Feb 2025
+ 07:15:49 +0000
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
-In-Reply-To: <CA+cKJ+HRxtWLSehYjUc6rLS18xxp2C_kvq8Tx_vJ_FvuxdTPXw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: bitbake-devel@lists.openembedded.org
+CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
+Subject: [RFC PATCH 00/15] Make mirror replacement syntax explicit
+Date: Wed,  5 Feb 2025 08:15:23 +0100
+Message-ID: <20250205071538.2681-1-stefan.herbrechtsmeier-oss@weidmueller.com>
+X-Mailer: git-send-email 2.39.5
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: FR2P281CA0122.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:9d::11) To GV1PR08MB8426.eurprd08.prod.outlook.com
+X-ClientProxiedBy: FR4P281CA0178.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:b7::6) To GV1PR08MB8426.eurprd08.prod.outlook.com
  (2603:10a6:150:8a::17)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV1PR08MB8426:EE_|GV1PR08MB8129:EE_
-X-MS-Office365-Filtering-Correlation-Id: c3031888-b09a-4f22-c16e-08dd451e7d64
+X-MS-TrafficTypeDiagnostic: GV1PR08MB8426:EE_|PAXPR08MB7320:EE_
+X-MS-Office365-Filtering-Correlation-Id: 77ff20ab-3ee9-487d-3b6c-08dd45b4eaff
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|1800799024|4022899009|376014|366016|7053199007;
+	BCL:0;ARA:13230040|376014|52116014|366016|1800799024|13003099007|38350700014;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?YYNCf4TyiH9U6Q3exQ+8FWIBIzP2rBAetQ/rWB1Y/qmkKFlElgNPLtVfiOvu?=
- =?us-ascii?Q?Hd/wLWmlEZlbIVmWyZBoVOe1lxnP3GaDTtuit0BGHdXAd25U36PVe6Rr+hUx?=
- =?us-ascii?Q?Bnq9SeIpJzv1OOZPFrMLvXLZHqQwhdaSN825EOiEz9Gxrt9uzaK36dJGqbNC?=
- =?us-ascii?Q?iNa0P7l7MjicLNU7yZ6Cb1k/hnQhbQTkMEa7r8rUXevdVTAU8mElBElnXI/E?=
- =?us-ascii?Q?X6o+5lqPmGkXffjYHXNGFxX+CDee+iC8zqZZ2d1p6GyVTI2RRNZU+SnLIHBt?=
- =?us-ascii?Q?0KARh3CZ68eNL/p6kd0rEi8cTHW2MBF+W34KE7nANGQOcfKhFPASNjgZwgIu?=
- =?us-ascii?Q?9IadQu+/gspOKGWS/adYHAhC1JLXNXpL6sdY/8vSmb5T4MiTOcWx+9qLLj/Y?=
- =?us-ascii?Q?IIPcKNkOiqkU2jAgAliBtSzQvkKBU+iyN8LnyEz8oZN7aG1bgQPYTMFU6nrL?=
- =?us-ascii?Q?PX9Wv+Q0XhTb/xixz9NKPwP37B183eI5WYGvRii+l36kv/+9+jTm7JyGfAtn?=
- =?us-ascii?Q?f1qPszvT9ll38Z6BBVGoUe8PGNNtqLBqLFSDuUDSoL7ckpg4hyfbs2E/N2aO?=
- =?us-ascii?Q?SZIFW6e15O8ly8qjk7dVX3QnKo445krMIBg3YoCRbvdWauBW6TAoiJ5cA4if?=
- =?us-ascii?Q?OOlRk5nrC/hIM6COc8uy9FfygjF13XMh0aXmxC/OnmpsZ+P0N18N/hOkihLN?=
- =?us-ascii?Q?8/gg2ETpD3maYMqmzEnQJ5FmtpEMn80wFt2c383uDKO+ERtVUcE7QiK6ixaE?=
- =?us-ascii?Q?YxT2G67o82MbT5eDJvenDzPl1b9hvgVRkmsjlnS54jWEFIiXbO/wqAsPsi6q?=
- =?us-ascii?Q?SYbHuk76UajY1sakTwDfdHTBGknnsO/Cm6/M9XMaqmI3Esr7WkXq8sM4b7bo?=
- =?us-ascii?Q?fsgli0KXoYD45wzxFtf+qSjFrtyCZjEZPONaBfFMRgeMuLDg636ii4GlhrEK?=
- =?us-ascii?Q?lCa2q3CGhmeA89PWACVVK0nSSqnr60cZYTP2qKgxIwBgWIyHcBrmE3sa1mAc?=
- =?us-ascii?Q?caloDlmnxzL9Ojln0Rg2iIef1QMqgU2sJmPqaEeVv/P0U9FccTtrEWSynAaf?=
- =?us-ascii?Q?ExfjfjlJZbp2agq2EOcPwcEKkl9eQ9ZOgnyiuswnDKbcBqkWyuucWqS9v7uw?=
- =?us-ascii?Q?qD91Sc6VhBGmf1viX//tTB/ghNf9clyBtrE8zejSMlCEuofcSyCf8BziNrmr?=
- =?us-ascii?Q?EMEVW3oc7x11buwfrw4C3hGmp96lSH3LmJA1AblHsmreRJy1zGlWNTVPNr7K?=
- =?us-ascii?Q?I3bYS0ANZMcNQR3dQPcmWuZrU8nCrHlWv+pP7hviRkAHs0KUzEJbdRbqZM+e?=
- =?us-ascii?Q?toBjYq2Pb+pFGloV3eRX8IkL8wjIS45QR8hlcGAiuC8YZA=3D=3D?=
+	=?us-ascii?Q?7y9+orVXMW9quh+hJ+P45kJ4LvzYAjv6Kq1szWY9lb5Rm0Cqlg5XmoIDYMFS?=
+ =?us-ascii?Q?hF4TLJcZIoCFlucbMhGBo0g+fL3XZzcNRk/x2J3BCOPBMI3eGYEmQJZUijQg?=
+ =?us-ascii?Q?2UDCnNAZdr2WkQY4DZ5vOxmElZC6PHDRtpfRNg4qJWQtOj4PsvBVxJ1A16R+?=
+ =?us-ascii?Q?gLLC2Ily5cRhfy7WziWcg6d+CxR/UarebAQaiXBDbR/x+cRiM0PxESwhLtwF?=
+ =?us-ascii?Q?cjb8t1Ah7i4W8Z2HgHqov0GUUJHyCgbRgTEPBbr71Aj86I8qCYVdslG7q8Zl?=
+ =?us-ascii?Q?a4k6p2TTH6+4N3AhypzplH/IChuRP6rxaLnj9PLCjXorqTRljGJwpQsyReNp?=
+ =?us-ascii?Q?t4N5sWwX4sz0UeHEN8oLDpFDQs19t+QsP4G6dCA/FSj2tH4QAA+P3rQVJZ8y?=
+ =?us-ascii?Q?40z1+OrBaBQfWZbPOP/LcLTrun0gk+qFF7bBUnuj859kYtwgal5tqctLcwWt?=
+ =?us-ascii?Q?ZDh61zyqHxU3aPBwYTRDTPNvYJamCWUrp6CwfFFdBc/hJsKy+wN7D7dkkRKG?=
+ =?us-ascii?Q?IPh4qTWgD3wb0+LetSa4ffTqyK6Lx+yHzhjTYXfJbT66E2TwUlH13cnpIIFi?=
+ =?us-ascii?Q?GKN9fvlTyTMnyKoMsWPD6UvFLOe+qjJxXnbHksImzFN/yqeyBdPLSE/37VJO?=
+ =?us-ascii?Q?xwE6sSN9JS/vpt8t2tStG68351TQw7COoAmyW+oTFUTknwBcO/0XDDTV1zGC?=
+ =?us-ascii?Q?vE10wIzIOe8KnwVvKMjpD+KFCecgdxJK3LJ6tx1KpSWjEc9MYNuc/SM+CLc8?=
+ =?us-ascii?Q?Kby0KwqgalYNVLAynKsy4VU4Ji0X4Cqvl7ewdut7hbwTzdwgrtLNJDtQ0tmL?=
+ =?us-ascii?Q?LDtB6yo8uYDTduV7bkXUgweVuomJmAQRtVfMkM1TfimAB7EyRwPH0NGqU/5P?=
+ =?us-ascii?Q?XEOK/9Qzr7aT/M5gGzm9Y90u002qv7dpBnym445sXtSWGLX3AvTCnqnWzo4a?=
+ =?us-ascii?Q?FI9MDgiSKwuv93DhWvUeeWXahRSkqjDimiMQjd/+eGgtgFCh3xV+3SVmWGm0?=
+ =?us-ascii?Q?zr0GETm0Ju8caE9KVzEa+6X7yi30E2WnD3nkz1cpl8l9vGvYz01/819Z+oXi?=
+ =?us-ascii?Q?D0xPMN/ko0HKkLc+DTbYOOtNuv8aCarvTyO5FFg41vjWnd4cbs4UOAdK3qyg?=
+ =?us-ascii?Q?asuroA5dEMoFCNksISyGvNj3fh1npCP8Zbz25l4E6ApxbTpmfqmxZjly0j4A?=
+ =?us-ascii?Q?Sto6NdiPituOyjV7J7+1AjdmKY2ZJZHL4xkzbLwKIyYrPAUiOWa0saN/exPG?=
+ =?us-ascii?Q?RLfhtmgCQsYQylshKmacIdRg6OQaYOgDRF78uxNkBrbyOBsozhYpDETvL4bs?=
+ =?us-ascii?Q?AorlynkZOKtptMyz0y/xHgFhWi0fT9jnzYqezirSJN95RwDe/LX61kq4id8n?=
+ =?us-ascii?Q?C68+TOfk8PKc1qKxP1jpV1SbKs00?=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB8426.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(4022899009)(376014)(366016)(7053199007);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB8426.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(366016)(1800799024)(13003099007)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?M/KRiZvhTcOtaz4Y5HlBL/kGb3I0PeSmwkKiIUm/xyvX50n6kH/U2Tkcjtf3?=
- =?us-ascii?Q?/yzMcGc0xOAiLi14L+pjPlfQYV+jx7BmFYFXrD0r0UHOhfWL+5UrihEYOjiJ?=
- =?us-ascii?Q?vAi9pnuCOOWXQTfby2mxMJHVuYbOLo/y09hgeTuQ7LuyM07XiAlek4V2pS6/?=
- =?us-ascii?Q?LZeIjf0nc1yoBC1Ea5Q5HjRxjmr9d4MTDbARYwNcrlY5Nu748utvQJrHMIeW?=
- =?us-ascii?Q?fjmIFz8FEgugS4JDrn0JHIg8kCTwDiiffAV3YtYyerpZpKgtUSm0L/2VcoTD?=
- =?us-ascii?Q?rKHfWWGLeHfsz4A9fjppkWudV+UOVzh4YHEM2zEG97Mijj0hIPTloD2Iieva?=
- =?us-ascii?Q?CZJiJk2DxxP6N6nXBxDfAS/m3SRLRlq0F6fFe9TBZ9BS/rhIbzqmr0sAiWr6?=
- =?us-ascii?Q?ql1QCoGiVsO8yIoeJnNWrQi/FoJR1+Qzg6+KHCY147ot0xM7U1MgcANBgfbO?=
- =?us-ascii?Q?mrzY5CLgVc3e2vThz40sxKDTPmGOFUNN9gPPcytkim74utPKYh88s8+m7kPc?=
- =?us-ascii?Q?qSQwU29evDysv9FKrl75YXEgpsGtU80G8r9XrUF4bixcTqQTrsOGmjvmWlHq?=
- =?us-ascii?Q?rnVVtbM3dF+kCSIy6afupG1cIx3BUiSo/5Lim2ifnpqhGiu3ThSM64+9erMX?=
- =?us-ascii?Q?KUOaQ0ZpszW6fB7CxDsMuHlksyJHncKygOOrW15B6HUF+Q4MVlGEK6LAs0tl?=
- =?us-ascii?Q?3zj9BBHE8x0YSPrYtSa0YJCcfELJ6+rMNmrgXPtc8v1ahStPTrgynAMjCBAE?=
- =?us-ascii?Q?r7YssC50/zuoeqtPpCII6uLJoKLTspJIGlnTEUaPehOiDujJhc7RM0HJ6XHn?=
- =?us-ascii?Q?xWFJElYsybyg5KoYtg8LQpZdi6CZ99urYNlFGrYhnVyDShQSOg/ebHiDfsK+?=
- =?us-ascii?Q?EspyvWPYFPznJph9YM+piZgllqidQ1Tq+43+f4b/1WYGegHpRnJKBdytBASK?=
- =?us-ascii?Q?WI0s7/bVjec9gKbhs1K/Jn0GyZi5qhkt84ccmsQbpJ0iIgV5P3ujs1S9P9Es?=
- =?us-ascii?Q?MmSJ2NqF0YlHJ/M0HotccHLvbpdeQRBW1EBPaaZdGFuEm/XZDyavEwvGN856?=
- =?us-ascii?Q?+cF7rz/hjlnCXw8yrwjA67BVzP8uNaV3m4rPjEA7htIYVSnfmXEHjBYgDmmV?=
- =?us-ascii?Q?owRbnjD4Ad4iSJIwzv44l64DEg3HDeebsBuSSAMKreMvYNbv+TDFxsKuiqcD?=
- =?us-ascii?Q?9gymr49VZhdJFnqiWi+yiIcOMNgtGYo7tNVcxv9vk68GlProTkMgxswFSo2B?=
- =?us-ascii?Q?ZO3t2GSxkAb9JTj4i/TVlUPY26qPFxPixlKScoZbWa1j0fJxNoAd+ncD56hZ?=
- =?us-ascii?Q?I+DtiNw3lHdsBpl/2XXVcKEPvBzpL+qwlExQvVvaJLizeWPlRQdJZ9i1zYKV?=
- =?us-ascii?Q?LUsKNB7dJgb1jBCity4Ktn82k4aIddpN1Ik2fO8ZNQ+QD45oqbKcFSqh+2Wd?=
- =?us-ascii?Q?XuX+MZeoNIfFfx/96RYDhRyyEH+Y9t571j3beD0bfMfHbOT/Ee5oea4yQU0W?=
- =?us-ascii?Q?9ORa49itCOhbVGLmLFA52LhKUumzkWtiIKspuvUcYH5Y9DqhmKxH8VjuhFTy?=
- =?us-ascii?Q?vdWY2UfG49rx2JFiic6vmXintIcdG0zXbfFcaDI3PSzxTLa4PWPBjhAGKMSq?=
- =?us-ascii?Q?/A=3D=3D?=
+	=?us-ascii?Q?EkCf6Jn5qTI8c+/89TD6Dt4SQfoCsVicu5QhgUrfOr8E5zxEcoMjnrGBu8/v?=
+ =?us-ascii?Q?WTHGDTGbxR6vQJsgawdzNZacKoxk7czSpj1tO4tNgsRwuZux3Wc32iTfDdE9?=
+ =?us-ascii?Q?GEeq7b7qX9IZRKlyTtuqD5JRuXqfdJxlZuVDe7GMuFnq25AgEgxt7nUYdonx?=
+ =?us-ascii?Q?iyZZCRLo+pQmm0fOVfzM16PTdvCF/FX71r8Nm79awAtBXem+yQvGct3rfNBf?=
+ =?us-ascii?Q?HeycM4bd95T4CvIo+QsIgaAQ8M57rjQiIcQXzpYm4Sf2obZ0pTf+FDNTA8Ki?=
+ =?us-ascii?Q?bJP0qoYp0Nlrni9LmpbF2LdF6na0hbWW/Po7VMQMHXqglCWdOObPqKhZ6R4v?=
+ =?us-ascii?Q?BeKEcXid8TYCbkbWjOWkjCTGxqRNLT1vC2H99q9/UNl5cwowbJm2BZIZ1uWY?=
+ =?us-ascii?Q?oq1wJwXGkwpdjDUfBsgJ/Yu9KD4WsI+7McD7ajeOvD/BCdIGHDSH3Jpmu8Vt?=
+ =?us-ascii?Q?U4RK2LbqQh5FMTdHxZNV1RlRa2LK4S/LrimBxjjr5XkKfRduXmMg+hq15cJa?=
+ =?us-ascii?Q?J+I3eT9CHKP50eS+8M7NDIkAHD2mra9DCki/LpSnQIgKQ67Kbt0+TkhXDAN+?=
+ =?us-ascii?Q?G0CdLBZNnI6/omDjS1anB4SL5BN6yRz3nQjmSGqo2f8q/BEvq6f/MUochre+?=
+ =?us-ascii?Q?Z8jOCCqW0U3QX9HLhGG1L+ds4zeb98JxGm4lQjcg1O7BjEBN9F1cFcEP1Fir?=
+ =?us-ascii?Q?2hKkuncXROZxG47cednA591Kj3aLU0fqJSkGK+ccgjLadRK/hKSIk1SKEim7?=
+ =?us-ascii?Q?5QnwpE4tUGxnob7fZk+Frrh7SEvtcaZe7qKFe5Tx996XAgzJzn0SVp04aqaY?=
+ =?us-ascii?Q?RsvO9zzk/TaUA4OgoyOBdqqVgYvs1rPVPVYXlvn+A9xcsbQ9WY9MEjL91XEx?=
+ =?us-ascii?Q?tH3lmK+k9D3ooGxsAJEz9FE+1fVkwzZ+0l2blnHwLphySamu+sOunnOAIG4g?=
+ =?us-ascii?Q?IzZtjCymhKZN5lvN85htSFYkMVBmlsp3Xs8jkmpJtBI6DkMUhgkBDrycmw8P?=
+ =?us-ascii?Q?W1o9KnxpccH3QbuLaGocdzSJFtQDhleE+SgpcAiS3H3l6Pw+vv7cGi+8+9mp?=
+ =?us-ascii?Q?HLCyphmmxLQHhMAui8ugQ0vIt5KGXtpskek/24OuwfP5d8wyaZzeincqfncb?=
+ =?us-ascii?Q?WW/JrFBa2ZbIRPvymqmDw8C176FIoUebunUWF0b5xhxaoDZN1nLUyCGGCiGn?=
+ =?us-ascii?Q?bMFzvRPFB5ApMKB6hknRTY/uolT1xYs+IVB7gRrVmp1joJmfYrkdHi2t/0YN?=
+ =?us-ascii?Q?jEVob+lagaRluOMce516uN2aXmzx7ZjdoOy4zXx1shoIecMj4DBhAxSH8Z5v?=
+ =?us-ascii?Q?YXhhcFsHbbF1uwEYGojLY6ZpAi4qin2j2sWkxR/k1+4SXr2tTYjHI8/c7j/L?=
+ =?us-ascii?Q?z4glbC3M8x1b0hio4NCuKfxTGEi5l4l5pGPmZW6Yeb+1E/kWc+buzaeNDNUf?=
+ =?us-ascii?Q?e6Vy7Nmtfcrs1NXhCw+MGjmyuNFLM1YhyIc0Fu/HgXR1djp6f7GnuehII6XU?=
+ =?us-ascii?Q?OEFgV4U/rFxc/7CTmQiCu1zU05p40J2Zdl2rBJ6FyXRNUCTnOnZNdEaGLFuH?=
+ =?us-ascii?Q?CO/DcAbeKjkoZBlqZWrm9m6oWTymsRqOVeYg8GLjyR5spcsGMnD/6nQ0Cqwn?=
+ =?us-ascii?Q?iw=3D=3D?=
 X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3031888-b09a-4f22-c16e-08dd451e7d64
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77ff20ab-3ee9-487d-3b6c-08dd45b4eaff
 X-MS-Exchange-CrossTenant-AuthSource: GV1PR08MB8426.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2025 13:19:01.3558
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 07:15:49.7096
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jB1e2ARoO8hWGpPTk1e0FMeh7zTsn8cLj9XY1jSYnfR2o2uvRQVN9VMsFQfEVrjvWtTMCrxyaFqYEnWC4tgYxQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR08MB8129
+X-MS-Exchange-CrossTenant-UserPrincipalName: DFTQuNT+NcPpmcKyKw/gn/BJFVAsGQs5yaK++flN5dnQ8BFiRwix3WQF/xOyIBvr30hDy1iTqyqWol4/7xr//A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR08MB7320
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 04 Feb 2025 13:19:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17132
+ <bitbake-devel@lists.openembedded.org>; Wed, 05 Feb 2025 07:15:56 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17133
 
-Hi Eric,
+From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 
-have you seen my RFC [1] to remove the npm dependency from the npm=20
-fetcher and use plain wget? I have a Work in Progress to parse the=20
-package-lock.json inside a task. This task generate plain https SRC_URIs=20
-and fetch everything with the wget fetcher. Furthermore I have eliminate=20
-the npm cache to speed up the build. I plan to post a first RFC with=20
-cargo, go mod and npm support in the next days.
 
-Regards
- =C2=A0 Stefan
+The mirror replacement syntax contains many implicit transformations.
+The path of the URI always contains the base name of the downloaded
+filename. This makes it impossible to rename or remove the base name of
+the original path. It prevents upstream mirror for SRC_URIS with a
+downloadfilename parameter. The base name of the downloaded filename
+makes it impossible to use the download mirror for SRC_URIs with
+subfolders in the downloadfilename parameter. Altogether the implicit
+transformation complicates the understanding of the replacements.
 
-[1] https://lists.openembedded.org/g/bitbake-devel/topic/110212697
+This series adds an additional replacement named DOWNLOADFILENAME. This
+replacement contains the relative filename of the downloaded file or
+mirror archive for git and hg. This allows the user to explicitly define
+the behavior. The usage is equivalent to the PATH replacement for the
+sstate mirror from file to https scheme.
 
-Am 03.02.2025 um 16:33 schrieb Eric Meyers via lists.openembedded.org:
-> On Mon, Jan 27, 2025 at 3:06=E2=80=AFPM Chuck Wolber <chuckwolber@gmail.c=
-om> wrote:
->>
->>
->> On Mon, Jan 27, 2025 at 10:01=E2=80=AFAM Alexander Kanavin via lists.ope=
-nembedded.org <alex.kanavin=3Dgmail.com@lists.openembedded.org> wrote:
->>> On Mon, 27 Jan 2025 at 16:44, Eric Meyers <eric.meyers15310@gmail.com> =
-wrote:
->>>> Are you suggesting that instead of username=3D and password=3D paramet=
-ers
->>>> in the npm/npmsw SRC_URI, it should be an "npmrc" parameter that
->>>> effectively the user can point to the location of their .npmrc file
->>>> for authentication on an NPM registry? Then, within a user's
->>>> associated recipe, they would need to create the npmrc file in a
->>>> do_fetch:prepend() step that that corresponds to the path passed into
->>>> the SRC_URI?
->>> The only acceptable solution would be one that takes passwords written
->>> in plain text out of layers and local.conf altogether. And the way to
->>> do it is to write these things into ~/.npmrc and ~/.netrc in a secure
->>> manner (e.g. pass in to users via encrypted email with instructions
->>> that the file must not be readable by anyone but the user), and ensure
->>> that npm and wget are able to pick them up from those files (wget does
->>> this already, npm I'm not sure).
->>
->> Could this also be solved by letting the end user decide, sort of like t=
-he way FETCHCMD_*
->> works?
->>
->> A CREDENTIALCMD_npm variable in local.conf could be saddled with exporti=
-ng the
->> namespace, password, and username values into whatever environment needs=
- them in a
->> "Just in Time" fashion to lower (but not completely eliminate) exposure.
->>
->> An identity agent, like the 1P or vault CLI would be an obvious choice h=
-ere, but one could
->> just as easily tie it to a script that devolves down to looking in ~/.np=
-mrc if they wanted to.
->>
->> ..Ch:W..
->>
->> --
->> "Perfection must be reached by degrees; she requires the slow hand of ti=
-me." - Voltaire
-> Last week I had off, so I'm just getting around to addressing these
-> comments this week. Chuck's suggestion is interesting and I will
-> definitely consider it. So this amounts to two potential paths forward
-> for this issue (1 by Alex and 1 by Chuck):
->
-> 1. Take a similar approach to how the wget fetcher uses default netrc
-> credentials within the user's home directory and use default
-> credentials populated by the user within an npmrc file in their home
-> directory.
->      - Pros: Moves away from specifying username/password in recipe,
-> using precedent set in wget fetcher, potentially less changes in
-> fetcher (no parameter additions, no creation of npmrc file, etc)
->      - Cons: Currently, the wget fetcher relies on default behavior of
-> "netrc" python library - there is no analogous "npmrc" python library
-> and we would need to add logic to check this file manually (shouldn't
-> be too difficult but still would need to rework current NPM
-> environment behavior in the fetcher). Might pose challenges in CI/CD
-> environments where these files need to now be created if using private
-> registries (again should be easy enough).
->
-> 2. Take a similar approach to how FETCHCMD_npm is used and specify
-> another variable named "FETCHCREDENTIALCMD_npm" that allows the user
-> to point to a specific npmrc file to use in their environment.
->      - Pros: Moves away from specifying username/password in recipe
->      - Cons: Adding another variable to bitbake, lowers (but doesn't
-> completely eliminate) credential exposure, might require more support
-> within recipetool within poky
->
-> I am going to take a stab at reworking this patch to match approach #1
-> outlined above, but if any hiccups come up, I'll post issues here and
-> re-evaluate using another approach (potentially #2 above). #1 feels
-> like it will be easier to implement and more straightforward than #2,
-> but perhaps I'm missing something.
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#17122): https://lists.openembedded.org/g/bitbake-deve=
-l/message/17122
-> Mute This Topic: https://lists.openembedded.org/mt/110839321/6374899
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [stefan=
-.herbrechtsmeier-oss@weidmueller.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
+git://.*/.*  http://downloads.yoctoproject.org/mirror/sources/DOWNLOADFILEN=
+AME
+https?://.*/.*  http://downloads.yoctoproject.org/mirror/sources/DOWNLOADFI=
+LENAME
+file://.*  https://sstate.yoctoproject.org/all/PATH;downloadfilename=3DPATH
+
+Without a replacement variable the mirror will use the same base name as
+the origin SRC_URI. This allows the usage of private package manager
+registry together with a downloadfilename parameter or the rename of the
+base name.
+
+https://registry.npmjs.org/  https://example.com/npm/registry/
+https://example.com/example/1.0.0.tgz  https://example.com/example/example-=
+1.0.0.tgz
+
+The series adds heuristics to keep a backward compatibility to common
+styles. Because of the ambiguity of the old style, it is advisable to
+remove this compatibility sooner or later to avoid unexpected behavior.
+
+
+Stefan Herbrechtsmeier (15):
+  fetch2: remove unnecessary expand function calls
+  fetch2: local: use path variable
+  fetch2: remove unnecessary unquote
+  fetch2: ssh: use common localpath handling
+  fetch2: clearcase: remove double DL_DIR from localfile
+  fetch2: remove basepath from FetchData
+  fetch2: remove basename from FetchData
+  fetch2: use localpath instead of localfile
+  fetch2: make DOWNLOADFILENAME and PATH explicit in mirrors
+  tests: fetch: unify style of replaceuris in MirrorUriTest
+  tests: fetch: fix nonsensical replaceuris in MirrorUriTest
+  tests: fetch: reenable replaceuris in MirrorUriTest
+  tests: fetch: comment and add replaceuris in MirrorUriTest
+  tests: fetch: add npm mirrors replaceuris in MirrorUriTest
+  tests: fetch: fix nonsensical mirror uris in FetcherNetworkTest
+
+ lib/bb/fetch2/__init__.py  | 62 ++++++++++++++++++++------------------
+ lib/bb/fetch2/az.py        |  8 ++---
+ lib/bb/fetch2/clearcase.py |  2 --
+ lib/bb/fetch2/gcp.py       |  8 -----
+ lib/bb/fetch2/local.py     |  8 ++---
+ lib/bb/fetch2/npm.py       |  2 +-
+ lib/bb/fetch2/repo.py      |  2 +-
+ lib/bb/fetch2/s3.py        |  7 -----
+ lib/bb/fetch2/sftp.py      | 10 +-----
+ lib/bb/fetch2/ssh.py       |  3 +-
+ lib/bb/fetch2/wget.py      | 11 +------
+ lib/bb/tests/fetch.py      | 62 ++++++++++++++++++++++++++++++++------
+ 12 files changed, 98 insertions(+), 87 deletions(-)
+
+--=20
+2.39.5
+
 
