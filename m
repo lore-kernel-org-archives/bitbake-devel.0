@@ -2,47 +2,47 @@ Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B99C0219E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27877C021A0
 	for <webhook@archiver.kernel.org>; Wed,  5 Feb 2025 07:16:06 +0000 (UTC)
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (DB3PR0202CU003.outbound.protection.outlook.com [52.101.65.84])
- by mx.groups.io with SMTP id smtpd.web10.6666.1738739758879250353
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.128])
+ by mx.groups.io with SMTP id smtpd.web10.6665.1738739756512032404
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 04 Feb 2025 23:15:59 -0800
+ Tue, 04 Feb 2025 23:15:57 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=V/tXJxyW;
- spf=pass (domain: weidmueller.com, ip: 52.101.65.84, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=Mu9RhAAx;
+ spf=pass (domain: weidmueller.com, ip: 40.107.20.128, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QnVvQ74JkI3rzQZcDsv/akcvTAmapXsjJYZjQUp8+wUFmxdg84LyWd0VyPvN1mM+sE6QS+cEXj8aSl3I6ZHhFoeS+O9/8AZtJXa5zPauxjrbV+KrbmarzjtQZceYwou1BT63RTfl5sOz5TfEcJQG5wusbWkyrS0LA3xhtqnoVjsqfI0tNMnPEg2mrAR1rW0s9hAs135AN9oFZM3MHxf+PLZQpK9ekYH+g3uV8FKv8lfLscTnJuIJhRK4e7qMUE+Le21ManbNOc7OtfFBR5AfZVa/1vRkPTcN11Nr7PC4e1Hnmw4wdvuuxNTDGhZrKu5bfXqydlMSWogpzMUxR+vFrg==
+ b=stApKPUZddN6gknD+oBcYkB7gGkg8mXnpudoTs5qGgwPfFP7k4XytZ2pjHi/aysvhM6MA0dWdiMHltxcBJMOxuLcCDQ3WbJpEykCJ5m0qb1W1yKZOmtWtJELLXeV8+Y+sD6HntJw+t+dt+zxiszxKncks6MQanGJQtIbJ0/rKHmSW3pbUBVEeUz1898gSo1aMcvRH2R1IMRKqF+q6/ARtTlKUIaauUbF1anznfsu7Fjm0nve8wflxYeoWIiZzUbpU08Sd4IZerudimi/u10OqWy8UAPY9FdB1kuXvdLguJTG58SRAbzF1Q3aVe+4CZgLE7nLa5JE3nqzqrD1FsFuSQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7cUZdyhde/Un1gzAnkn6OsIK2MnB8ctyVaYxHXwUNzc=;
- b=y4XcUYAMJ6O7XnFo3JPZx2WLSLhkvxxredRZrxKW9gN5zkYS02vtDmG7nYB9yeTqWbBWuLEKWwbuRv2J3UBD0LRo5k/UPOUteTsBQGEsJz1IwOx+sbJcpP2jVrn/4LecDIumx23jK5ykkFDnarr9X/Mn1BVYxfBOoUfAG7F9DLvtXv1UrjXXzNq6uFGoNlfMyw+tsEwsqzYvh/lMSphdRQqo2SLdcRL7AkPbCxQsfvlMtXlCSJjPsrvDFb12l+vHeIeWAh0r8JhENOKIQxpjWn750nVtGJKElJs+fXWeaZlTzinHwUgJSotd/43gZo/AJTPpYXdzCHSHHua2a8HR5g==
+ bh=L8etdPKbcLYyoAHOtdrw23JDPxnOh5bDZZRVDpfXUYk=;
+ b=GBKnxAeLtisiGzUNDPad1puggDcjVJndUaE8Nb8eejWyan5SLrxhq0uLehXU+SNzPtIKnRrEl7UpU3ihG9idYNgM36QD3Yyz1qCF3A0FF3sjA+Sqxru/E2AbOhr3k0C5lznu5KWlEESBRxvCmGeiGTJyiDw+ktuRwGrgDAirybMdNo3Sj1Y2h+OwpoUI9D2RdsrIjpocOCFLKc7eo2pqFHCdj2RP4196DwaxwY/7AfOX2TgDeWztySWjW3onaqsECYISAtjyGcGG4u9whylqLyz2SE2XrTUaA5owE7FQRKFkurANoEVoYtkJxcNPtcKNzLQVXR/ugYeaUTsOfixFiA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=weidmueller.com; dmarc=pass action=none
  header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7cUZdyhde/Un1gzAnkn6OsIK2MnB8ctyVaYxHXwUNzc=;
- b=V/tXJxyW630tx/5mU3VA/kd6uqSnQlTIAriR1SfIC7C5h8Y+8CYFnJCXzFItYxl7xBQ4mBKgJ740bB5r2lYV4cUQkIMOmgmZv4qUhgJD410skca8Q6NLgdByii68XznbT6Nv67SgPIhpihXt2/3JcupscwbJf/8G2faBLiUKkaTYrzCcw6djyBl3433S5WiGai0MpDYhzR+evhP/TeVXGShJzH/XtKRcA0Q7C07btC7r9IcaQcVmuo0nMXE+VUTakI0IH7xnz8j4Pp6U/OI0UHHnUseeTWxH6Xm6s7iDvEqMqbJDFL1H5+A6IDBKfOqdtBLnEoyYPmdvWVt7KbRFbg==
+ bh=L8etdPKbcLYyoAHOtdrw23JDPxnOh5bDZZRVDpfXUYk=;
+ b=Mu9RhAAxrkMLRQA2b9/luw93n69iYxBbocsA+YA93NOkcItrqpdaU3gVPxUS5kGj3k6G590u06OUKOHslXn0k3dohXCx/rApkZwQp4Fbx2TXDyLHBs5FbCNWZcrlCJ+GxUnjdpzdEzPomUxF0i8mTZZwqVfX+jdPuD59IpoL8mCo2gyD9kDIGVAZDGmk3tMoTWlU0sACgv6o2fjDhKps6zx3f8cwk1GkvZQReAFCcUJxkycEX+31X9jz1UGXYmWr8OJgVJzKpmnRb/e5XLwuVfrt8iKg2PsK1j0cuYvRy7NLWWl012dt2DCxAIheccYBc265ePaEtd6HAdzj/o/amg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=weidmueller.com;
 Received: from GV1PR08MB8426.eurprd08.prod.outlook.com (2603:10a6:150:8a::17)
- by GV1PR08MB8743.eurprd08.prod.outlook.com (2603:10a6:150:87::11) with
+ by PAXPR08MB7320.eurprd08.prod.outlook.com (2603:10a6:102:223::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.23; Wed, 5 Feb
- 2025 07:15:55 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Wed, 5 Feb
+ 2025 07:15:51 +0000
 Received: from GV1PR08MB8426.eurprd08.prod.outlook.com
  ([fe80::f9f5:b4bd:9e01:9013]) by GV1PR08MB8426.eurprd08.prod.outlook.com
  ([fe80::f9f5:b4bd:9e01:9013%7]) with mapi id 15.20.8422.011; Wed, 5 Feb 2025
- 07:15:55 +0000
+ 07:15:51 +0000
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
 To: bitbake-devel@lists.openembedded.org
 CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Subject: [RFC PATCH 13/15] tests: fetch: comment and add replaceuris in MirrorUriTest
-Date: Wed,  5 Feb 2025 08:15:36 +0100
-Message-ID: <20250205071538.2681-13-stefan.herbrechtsmeier-oss@weidmueller.com>
+Subject: [RFC PATCH 03/15] fetch2: remove unnecessary unquote
+Date: Wed,  5 Feb 2025 08:15:26 +0100
+Message-ID: <20250205071538.2681-4-stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250205071538.2681-1-stefan.herbrechtsmeier-oss@weidmueller.com>
 References: <20250205071538.2681-1-stefan.herbrechtsmeier-oss@weidmueller.com>
@@ -53,273 +53,159 @@ X-ClientProxiedBy: FR4P281CA0178.DEUP281.PROD.OUTLOOK.COM
  (2603:10a6:150:8a::17)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV1PR08MB8426:EE_|GV1PR08MB8743:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7a4eab19-e2a6-4f3c-e8cb-08dd45b4ee59
+X-MS-TrafficTypeDiagnostic: GV1PR08MB8426:EE_|PAXPR08MB7320:EE_
+X-MS-Office365-Filtering-Correlation-Id: 29f4f1c7-a5ba-478e-4ae8-08dd45b4ebca
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|1800799024|52116014|376014|366016|13003099007|38350700014;
+	BCL:0;ARA:13230040|376014|52116014|366016|1800799024|38350700014;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?Z4Ly6BeB7NW532ksOyc9pAFrrZl7O9WGGHFFsT7A4lGkDNZyWSM5sJLta5BN?=
- =?us-ascii?Q?Y7MXBkUWnH/jvoSZzjvfy3pHVOPmiUZCBrF6E9KGUM5VbiIuwjczCaT6/ttQ?=
- =?us-ascii?Q?GIj/1iFYKp8HHh6U9mfDn1ffd4+FamWsGNLNZo19vgZYBMwpTXtIqhjOJDpO?=
- =?us-ascii?Q?rua//uz5YqKfy427TJ97Yf48i/s5x73nrwung9xpY4Vd294ag1HWH2jkrZMK?=
- =?us-ascii?Q?bJQjdLBWKyP9M5raUzLSyD/WEZEM3tCyqQV+SEtvfoIVKQT/7mBuDroBdnPj?=
- =?us-ascii?Q?i5qqV0GUBos09co/1/A+WpQAif93vQlanCABhqnVmlexUmu1D7tx2AOWAo4u?=
- =?us-ascii?Q?hMJqubwYh94y2X18p6B2tnAdQrjdg1J8nRTvnOoBW4lyZ3p3wodyTj2cw/HA?=
- =?us-ascii?Q?SvHMUlzYY1HMYPOlBslQjx6K//nxGhqbk9/Ihcu7+85er6BPNovSo1Zn3h5d?=
- =?us-ascii?Q?gHpl+xpK2kCt0jrZG4AohC26U09tY30Q2jdz7I46EberZ85xwoEHp29Fe2Yl?=
- =?us-ascii?Q?kvc6PyggMxAIBhEyWAet0ZwPqQt2K76+o9rUANGSa0er4RfX2UfjtP1XhOi3?=
- =?us-ascii?Q?1EVgiJPKffM7JG7ZCYh1EgWY4uH+uBrEakW6mV7kzqFF+uQ/Z7a/i30luHOM?=
- =?us-ascii?Q?zyFWuOBgCCLg7Jtj4J2psCrJo0zcj3pwvHQEuvCy24ci/2LqoMBBAO327fDS?=
- =?us-ascii?Q?U/L3EB34OGyS+lZn/Vovpmkus8k4a5OpWDxk0btLN1rVRPHMVipmm/ey+7T3?=
- =?us-ascii?Q?cCzPQrRH4epXeSJgpSXZGbRcS8LhJus3QlEosMwqB+ye8HGLDTLGvo3v/m8j?=
- =?us-ascii?Q?Tlt3GNJLqig0mMYmYIdugy+OtX46lHgig0xlHR7GTqXdTQiP5ECpzQNlpO/Y?=
- =?us-ascii?Q?CaSEmLhP9XBXQCaeC24Z8LwiLKf3NLQZaW7R1YdEtT64bKcwpJcZVsbmE3Xr?=
- =?us-ascii?Q?wnjhCV8P7iJNUzM3MFLMS1aHRDBWBE1Nb2Y20kSmmQ2W8eju+QZeZv8sMbTM?=
- =?us-ascii?Q?RIXTg5sXsOYn/KiZMaUZGW/BmJHh9CUr9TT9WbkY+xj/oCrQDZ8PscHF3W/R?=
- =?us-ascii?Q?MZb66yRj2d143BtqWSwjO4IDs8x7pCE4cykfSYRmsViGy8N8UvXKob+lgXbZ?=
- =?us-ascii?Q?1ywMn5VF24m0GwvAoy5mnm7EhlNu5tFgDzQRZXL5dFE1lVAmXomS5/yPa2hr?=
- =?us-ascii?Q?JdHLbUNVDjnwSBJvK1/2EtycQMDYsHDyKbpkxHb8s66ye6J8UMrEaKF8n4AH?=
- =?us-ascii?Q?h3TF45MUuMV33Duarhsny4eCSueJgSTppzyFoSxW/arLpS4L2FvaB9ieQu/Z?=
- =?us-ascii?Q?Pd3Vmvl9ImMOH0ccbRiG6VhXUPPOhXZ2afeOxzfaUBh7GQUTvAo4JPymJiv6?=
- =?us-ascii?Q?wiRxib3dXZzs9kYTVHIv5Uxk/RV3?=
+	=?us-ascii?Q?LkVeTrXwnhL1c17C2PQ8jRHIvrR6tPEVSYtzainTc2jsDreObPMXlZFlNIT6?=
+ =?us-ascii?Q?l/b2GzVtGHjr3AkGskEOLvuUNKCsdleN/A1iXPoa3jgykm8lUCyqtrQ00jGj?=
+ =?us-ascii?Q?m1q11tLusfFWemq08b+ytPDPKXhC2gFB/iCUGPc9ZR71z+sIS9aZIQuK8qyC?=
+ =?us-ascii?Q?TCAk/mT2eKVaLFZXz4kyl+TOHrydWG51VfXKTVZd8MAObwY/oPlnSx2JTJOP?=
+ =?us-ascii?Q?gCGo00KBtOFSZyhG2kpdDTBrX14qfTCWniDHT7kc51p2Yi3ZWfTDUJTNpi9B?=
+ =?us-ascii?Q?NeAaplxUgYVVB0mGY/pn7WSyukEbdKaq0uX+u59v5ggiImwhDSbT9KAaQYbB?=
+ =?us-ascii?Q?wq24z0hUla424jKBWQ0WivYhiqMq6bJvQQj1PxO/Tdh3SCAaPNaXrt2VhbQ/?=
+ =?us-ascii?Q?F5tsPhD2/TrEPr4ZJMKl0+wF4HyTt7yFkoS+95c9NW0ZIT8pPuTP4d3emOkN?=
+ =?us-ascii?Q?8cl/xIB40QZCkWgA9108lKL6oObvXBPVGIm2vgUqbknHAAOfuOPJu+PTB2l9?=
+ =?us-ascii?Q?yPbtUXHqDHaB29+UDPSRK+4Eef1xALWnlII2ic/Web7qWGZnYe6bbz79pF+J?=
+ =?us-ascii?Q?3kwaCjWOpQ+YVyF5ItEK2gJ9LsSO/uuZXpzRoIrKWUfyWRCmf8/uAFmh+Yy4?=
+ =?us-ascii?Q?wp7RvPl5ZTdxMguXTxiJ2N+7ipzVRTCtfO2NpguI9eGeSx/Pqy+m4uPQkbac?=
+ =?us-ascii?Q?NT2XVsnJsJ7Nt1NKCSzwhSfNznJ1CHgMp5BMmKRB06swLQnlVSpH2yquXxmL?=
+ =?us-ascii?Q?sp0kRsQ6zz+V6I9bZisesAdu6p/FnfBpotd2ye5BpFyYFCNGfnzoe5XhoiQb?=
+ =?us-ascii?Q?fHRD/z39zcngSW/tyNEfBEFnrtfst3V3ygFWaV4e9fTUfpSBAIU5ApCZEdDh?=
+ =?us-ascii?Q?DriQ9V8Z+qP5k0MjhSqt4jf+FpQLzuifNtzJd0k4//27fOwSX5KeCn09/M5j?=
+ =?us-ascii?Q?GnwXzyNS67b/978jyVA+68RfcAPzDgMTGvGDQIBK9Ltkk8B59LB6CRrASRKS?=
+ =?us-ascii?Q?1yyFCwsaJlpTpABFHoxPDHsMtlDMhzuLAciap2ZfvlglejDYDYiEqTW2taXT?=
+ =?us-ascii?Q?lthbpiJ8lt/T0L3/xvtxRm8yO4xlHbwGWErhhfcHoiXVaKOQgwYk7TGB31dA?=
+ =?us-ascii?Q?xyWSwZy7gX6UVESuW5HpdvC+/D244w//JKmvtku0D2oWupTrqHA4zIsvsZ6s?=
+ =?us-ascii?Q?BqwBqO72uSLUV5Jao4qRZDB1ninccR49XYvvINpYB76K72RHBRBWjXMKdPv5?=
+ =?us-ascii?Q?H1iTVhz45iVgMjY+44Z8E36Nut/pTsVBsl8ec4fmGbrMNWCg4zoz/8vNEC7H?=
+ =?us-ascii?Q?SOGcvGifav8GFMGSPj/7pHwYIYqvPg1J4i3K9nAJkKfzNvKjWP3GJjBxzJT9?=
+ =?us-ascii?Q?u0Tpo+j7rL1ST2CRuP0WcR2tb12HZVEkKR8OgoIxtfnui0qiHvOfjd/pBNym?=
+ =?us-ascii?Q?+N73FI2rut3zgwZ+1dcfjGVgdrA4+gdl?=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB8426.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(376014)(366016)(13003099007)(38350700014);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:da;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB8426.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?5+TTD3EXGPlJ83ZfvphSZN4rsT3ZGMKR812iMucehmVemsJ9OYQTqWxOjQZ6?=
- =?us-ascii?Q?RDDrbQrAk72Ws+2lfP+T06JHsyN1nG6VvCV+Qyc8bUFt7mQPKPgW8cctXDMD?=
- =?us-ascii?Q?lby4s+yDpQgyHeaYDr5hi4/necTaEjySWgZtDhQ6NdKeLK/81X6V2IlSRvRz?=
- =?us-ascii?Q?T/hOXtA4Ecb4XwI6LA2nuoMqXikL/j9eaxgM5iTUqGoL4TasAs7T3TEobKMM?=
- =?us-ascii?Q?ZSGXzJHQbB6cc42IeJEw31TPNc6oNGK58JLb1VFotZWDMnP00WCAjAsxwG/g?=
- =?us-ascii?Q?sq/1kC6WPRZ2urXufl/xY1vCDj2s1yGhWvcbOdbftIbpftk6boYfMBuqz7pB?=
- =?us-ascii?Q?SY8r6c19JaMw9kxmDRpfo6Gqf322XMwLMiIlyHqkt7Gk1UOI23x8khVqrMVM?=
- =?us-ascii?Q?wUZbCZpGYhMazCPTWgZ/AsTXD5+2XhPNU59lXaUzmavDRltYHYQYq6vKE6/n?=
- =?us-ascii?Q?dkjoE8lpEBuVgpxNkEjSYNbzDuIEY7nlwiJOIY3DPUIboB6Ezkpzd2vgAb+d?=
- =?us-ascii?Q?sXSTWepaNV1O0xkRNUHGinEsPpuuop/krvZVme/g56ZJe4TYEV0w76b0wG9N?=
- =?us-ascii?Q?Of2QJA/fpqMdAXqjgk34Yyqu9aA3PI1nwjrC8e9+VFIcMoR5Cm/7fBZGvqta?=
- =?us-ascii?Q?scJYlZRb6g2wWVHAQEcNmtFO3NhFBxFkm+YHZQ7hRAXHpBblAcqaMH2AcBGn?=
- =?us-ascii?Q?E0ERFy5judDwA8wdfQa0++WDIJpmofMA4z5xzqReJs4F2g0OrmDcLdnc3PCn?=
- =?us-ascii?Q?pVuHswGyhzDx0rITeQBI7JPV/s7Egbfy4zb6Jwlmf3Gsm8I6VUDsFA9G6Uk4?=
- =?us-ascii?Q?g5scz0vN775GWw1CzmVe1KkZlvfCADOF02VT+AhQsL7FrsH86c4t3Gq4kV0K?=
- =?us-ascii?Q?U/Q8wYAq5r+POR+o6kJ3GwE9FOpY89UKhNyBYOTDEKe6aRK5u8dsJTTvu1bi?=
- =?us-ascii?Q?M2qPAk+OB82sgqfi4LNfJ9QU2TJNLY8hAWeaGIaRtOABLRAI4dJ5g4yzA672?=
- =?us-ascii?Q?uh8K1VQrJfnjwH0tHEFGyL9eHfveNgtdwayvq8Mc1COj8+1lNvrMACSRUfja?=
- =?us-ascii?Q?oN9zx7CtzQOkcLax0x706BDFohGtRXtMAf5WBMnyf/Q2dhMx0N//U7XX6nYm?=
- =?us-ascii?Q?40FCg1w6SD7ANAOFcVRcF49ms3QjaNm10W6ABlZqW+gEDrhDLmCC9QXwKMI/?=
- =?us-ascii?Q?QMKwhZznHGFRd13TdntkbbEh5govJdxDGvNIioMH/JnH6fhe0K0JFiKGvdJj?=
- =?us-ascii?Q?351oM6BRZvvqJOXF3hZfN1DJ2elNPWfj70q41OhR+U9ConQWgQBJRbLKvKyW?=
- =?us-ascii?Q?6cn/jxcdKnqObyuLwD1D9W9uxvlNe2l+udMwyQ6WN9n6fieYIXqQsyif/kND?=
- =?us-ascii?Q?8xzpZTlFT9NCm6Fsy63jWWERpBOexcMhWIhXRttH7RPFfsYCj6BT8e8RO7/o?=
- =?us-ascii?Q?PhGCr+EWn5U69GeuP8raJ2lcr1K+GgyxjPVVUZZ/Jx3/559IF4KaDpHExaad?=
- =?us-ascii?Q?td5/LVeRcMG5v7fj9joMxlIyQ0ZXFgpvna+nfo4EBV9EkteaKMW0W+7l7wJj?=
- =?us-ascii?Q?u4O+pcxfoFV8dhU9pJWhoVVfIydr2G6zlUQvXzpZz1CvGUD5L3T/Fxsn5Rq2?=
- =?us-ascii?Q?AQ=3D=3D?=
+	=?us-ascii?Q?R+aHlWkwgsJdyCtobdxr+ZITViXS8OY8StYgWgQT6EboL0TOVIweQ8YmeQrH?=
+ =?us-ascii?Q?DjDcEHq5LjVS08EfF0NaV6y07ZYZaEKaIZ31xDms+ZdFW1mS4Ax0pvfpSWYN?=
+ =?us-ascii?Q?xo7Dt3cUGEx8QQwqm6InMD+UK+TZaGAgBh6TvzNencMJznkf2Tc+vsd/Y6qv?=
+ =?us-ascii?Q?XGFynqLA4z8o+lYYeFvsPySQQE96sHDnNgDpbi0w6npI3SjqamTHu+a3DOoX?=
+ =?us-ascii?Q?GwO+Z9++MCXwr0FnqbWAZ5O5jMsAc6PYxIlezxlQCqhkN1KvnBYiI9QY0Pqz?=
+ =?us-ascii?Q?Euvuk7+CJP/R1e16gJtS0cCzWuGFaUuqfTxIDH4HmB8mltHwueQJ/WKzvEyx?=
+ =?us-ascii?Q?GgqRUeaq8Am3xdHmQ/k3KAj24PpS3OxpJouiscWeAV6W0CEOpp041IbxwbiI?=
+ =?us-ascii?Q?SYeeMwqfLS8ByjS9aNdFoRbBI0njUs884mXXrUKTwxu4CaARKC16qKWttKOH?=
+ =?us-ascii?Q?U77MwICKZwoRiLyfoiXkBhX4bKtA9pD1gYMVK55ITMtZ0wS3O20pXjZF3yCw?=
+ =?us-ascii?Q?F6FEYg9f65ojjPrNUFUcjg9QGeiqg0+dox2vExktCAeXsDQOCCljBOhbPm0x?=
+ =?us-ascii?Q?3Yv7TUvtkgu6JpTUmwRZ1WigEb+m6Axyzy6kiLW8vcK5fqtr6YD3mQzZR35Y?=
+ =?us-ascii?Q?+n+r6iLdvxw93l1v/Dbb90EFWynWWBTjB5hH0w58dtGbbYW2DohbUxDiuwsh?=
+ =?us-ascii?Q?lEjD4rshzA5uCNDVwCcCyrM8szxjStd/Uan9uRT9YElWQslawPA8clcXw1kT?=
+ =?us-ascii?Q?7XBnfyFKdKoaJUsHlvJbusbRxmPs/3rHbMewTLkydqWxULmcU0Zj+3ekg1JX?=
+ =?us-ascii?Q?o0Jvw15Il+kxqVaQZhqblnqr8iYA/sSSu4ZANN7YyHIrhq8/vEZWWSrlxdkg?=
+ =?us-ascii?Q?M214PSM+Nfpqr6b7bi8JGkHTrREvpfDgIpDMNd655952tHIzGoM/Sgz42OWJ?=
+ =?us-ascii?Q?4uXCApXfMYt0DRJN4t1rKH578XIVhBrpkKtiC8IpuCMFypslpajI2XimLibO?=
+ =?us-ascii?Q?eUzmn0pnUEcaGIgvm5y3ZyuB61mFTgFa9Ub0dpSjl5epbZaPfke0rsGK6YGN?=
+ =?us-ascii?Q?mz6nS8a4RCRETCoK/QEv3oxbqLpO6unmbUFANnBNfKkwl7VIM0dPeMQet2mW?=
+ =?us-ascii?Q?fWccQB16KNcERny0gCfA4U0lkeIiyBWl3M5i26fPaNA508oczdXoNELJooIG?=
+ =?us-ascii?Q?79prVhHG7xmsr9Ma2rI5i3z0W7a9r8+VzDDfy2N7jcHRg5ThEcAxAiJNuGT/?=
+ =?us-ascii?Q?H1GuN4Rz7fXt6fPa7MMCQCjE49yHXOC2wOhnpFpe18DOk2houW00il6T9OT5?=
+ =?us-ascii?Q?AbZm8G1rXayXU0Vm2LcanUf2G74Xw97YqBDeTf8JZSbFVmrAhdl/l3vh9lpw?=
+ =?us-ascii?Q?uhRrUx0wgQs+UhlzsPu/Oi6gT5+2JNORgjELwexi4LH0RQYbN/MDCAj4aftJ?=
+ =?us-ascii?Q?XunT0XnUaIMdhJAhNV6JVOfRvAnKblZcY0xY4+74o2d6rN+SDLWQEUPqQ+1J?=
+ =?us-ascii?Q?JjQCZVX8wrPhMd6QuegI7nKlRWLKPVx69hgKKfepImrzYkmoBw5h1Kj1h6I9?=
+ =?us-ascii?Q?lusCVcjj+bKDK14hPKSP7yEQ5EF+JHqgSHp3iMI5AWUjsR5JNGT3HkIKOePz?=
+ =?us-ascii?Q?9Q=3D=3D?=
 X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a4eab19-e2a6-4f3c-e8cb-08dd45b4ee59
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29f4f1c7-a5ba-478e-4ae8-08dd45b4ebca
 X-MS-Exchange-CrossTenant-AuthSource: GV1PR08MB8426.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 07:15:55.3444
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 07:15:51.0189
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0i3ktlVcboLPy/63MUIv1pADPMKPOa1qt+fGk0bnWeGnuCRRGfKCjGRxLjfttaIajeNFw/YPL/UxR9S8n0KYgQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR08MB8743
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0OsG3D7YLCOBytcTGRILnM4YnkDppXtGtaPuvxV6oxvrG+5k8PPxrdYqL3eBHsAUgSG0sfrWqceepbzfkIy1Lg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR08MB7320
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 05 Feb 2025 07:16:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17139
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17135
 
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 
-Comment the replaceuris in MirrorUriTest accordingly the test cases.
-
-Add additional tests:
-* Explicit PATH and DOWNLOADFILENAME replacement
-* Rename of server and path
-* Rename of downloaded filename
-* Subfolder in downloadfilename parameter
+The URI path is already unquoted. Remove the unnecessary unquote
+function calls for URI path values.
 
 Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.c=
 om>
 ---
 
- lib/bb/tests/fetch.py | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ lib/bb/fetch2/gcp.py  | 2 +-
+ lib/bb/fetch2/s3.py   | 2 +-
+ lib/bb/fetch2/sftp.py | 2 +-
+ lib/bb/fetch2/wget.py | 4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 29920bd9c..37de4d3e8 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -459,8 +459,12 @@ class FetcherTest(unittest.TestCase):
- class MirrorUriTest(FetcherTest):
+diff --git a/lib/bb/fetch2/gcp.py b/lib/bb/fetch2/gcp.py
+index 268267b7a..86546d40b 100644
+--- a/lib/bb/fetch2/gcp.py
++++ b/lib/bb/fetch2/gcp.py
+@@ -46,7 +46,7 @@ class GCP(FetchMethod):
+         else:
+             ud.basename =3D os.path.basename(ud.path)
 =20
-     replaceuris =3D {
-+        # remote download mirror for git
-         ("git://git.invalid.infradead.org/mtd-utils.git;tag=3D123456789012=
-3456789012345678901234567890", "git://.*/.*", "http://somewhere.org/somedir=
-/")
-             : "http://somewhere.org/somedir/git2_git.invalid.infradead.org=
-.mtd-utils.git.tar.gz",
-+        ("git://git.invalid.infradead.org/mtd-utils.git;tag=3D123456789012=
-3456789012345678901234567890", "git://.*/.*", "http://somewhere.org/somedir=
-/DOWNLOADFILENAME")
-+            : "http://somewhere.org/somedir/git2_git.invalid.infradead.org=
-.mtd-utils.git.tar.gz",
-+        # remote git upstream mirror
-         ("git://git.invalid.infradead.org/mtd-utils.git;tag=3D123456789012=
-3456789012345678901234567890", "git://.*/([^/]+/)*([^/]*)", "git://somewher=
-e.org/somedir/\\2;protocol=3Dhttp")
-             : "git://somewhere.org/somedir/mtd-utils.git;tag=3D12345678901=
-23456789012345678901234567890;protocol=3Dhttp",
-         ("git://git.invalid.infradead.org/foo/mtd-utils.git;tag=3D12345678=
-90123456789012345678901234567890", "git://.*/([^/]+/)*([^/]*)", "git://some=
-where.org/somedir/\\2;protocol=3Dhttp")
-@@ -469,44 +473,77 @@ class MirrorUriTest(FetcherTest):
-             : "git://somewhere.org/mtd-utils.git;tag=3D1234567890123456789=
-012345678901234567890;protocol=3Dhttp",
-         ("git://someserver.org/bitbake;tag=3D12345678901234567890123456789=
-01234567890", "git://someserver.org/bitbake", "git://git.openembedded.org/b=
-itbake")
-             : "git://git.openembedded.org/bitbake;tag=3D123456789012345678=
-9012345678901234567890",
-+        # local state mirror for file
-         ("file://sstate-xyz.tgz", "file://.*", "file:///somewhere/1234/sst=
-ate-cache")
-             : "file:///somewhere/1234/sstate-cache/sstate-xyz.tgz",
-         ("file://sstate-xyz.tgz", "file://.*", "file:///somewhere/1234/sst=
-ate-cache/")
-             : "file:///somewhere/1234/sstate-cache/sstate-xyz.tgz",
-+        ("file://sstate-xyz.tgz", "file://.*", "file:///somewhere/1234/sst=
-ate-cache/PATH")
-+            : "file:///somewhere/1234/sstate-cache/sstate-xyz.tgz",
-         ("file://somedir/sstate-xyz.tgz", "file://.*/.*", "file:///somewhe=
-re/1234/sstate-cache")
-             : "file:///somewhere/1234/sstate-cache/somedir/sstate-xyz.tgz"=
-,
-+        ("file://somedir/sstate-xyz.tgz", "file://.*/.*", "file:///somewhe=
-re/1234/sstate-cache/PATH")
-+            : "file:///somewhere/1234/sstate-cache/somedir/sstate-xyz.tgz"=
-,
-+        # remote download mirror for http
-         ("http://somewhere.org/somedir1/somedir2/somefile_1.2.3.tar.gz", "=
-http://.*/.*", "http://somewhere2.org/somedir3")
-             : "http://somewhere2.org/somedir3/somefile_1.2.3.tar.gz",
-+        ("http://somewhere.org/somedir1/somedir2/somefile_1.2.3.tar.gz", "=
-http://.*/.*", "http://somewhere2.org/somedir3/DOWNLOADFILENAME")
-+            : "http://somewhere2.org/somedir3/somefile_1.2.3.tar.gz",
-+        # remote upstream mirror for http with rename of server and path e=
-xpect basename
-         ("http://somewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://so=
-mewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://somewhere2.org/somedir=
-3/somefile_1.2.3.tar.gz")
-             : "http://somewhere2.org/somedir3/somefile_1.2.3.tar.gz",
-+        # remote upstream mirror for http with rename of server and path i=
-nclusive basename
-+        ("http://somewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://so=
-mewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://somewhere2.org/somedir=
-3/somefile4_1.2.3.tar.gz")
-+            : "http://somewhere2.org/somedir3/somefile4_1.2.3.tar.gz",
-+        # remote upstream mirror
-         ("http://www.apache.org/dist/subversion/subversion-1.7.1.tar.bz2",=
- "http://www.apache.org/dist", "http://archive.apache.org/dist")
-             : "http://archive.apache.org/dist/subversion/subversion-1.7.1.=
-tar.bz2",
-+        # local download mirror for http
-         ("http://www.apache.org/dist/subversion/subversion-1.7.1.tar.bz2",=
- "http://.*/.*", "file:///somepath/downloads/")
-             : "file:///somepath/downloads/subversion-1.7.1.tar.bz2",
-+        ("http://www.apache.org/dist/subversion/subversion-1.7.1.tar.bz2",=
- "http://.*/.*", "file:///somepath/downloads/DOWNLOADFILENAME")
-+            : "file:///somepath/downloads/subversion-1.7.1.tar.bz2",
-+        # remote upstream mirror for git with BASENAME
-         ("git://git.invalid.infradead.org/mtd-utils.git;tag=3D123456789012=
-3456789012345678901234567890", "git://.*/.*", "git://somewhere.org/somedir/=
-BASENAME;protocol=3Dhttp")
-             : "git://somewhere.org/somedir/mtd-utils.git;tag=3D12345678901=
-23456789012345678901234567890;protocol=3Dhttp",
-         ("git://git.invalid.infradead.org/foo/mtd-utils.git;tag=3D12345678=
-90123456789012345678901234567890", "git://.*/.*", "git://somewhere.org/some=
-dir/BASENAME;protocol=3Dhttp")
-             : "git://somewhere.org/somedir/mtd-utils.git;tag=3D12345678901=
-23456789012345678901234567890;protocol=3Dhttp",
-+        # remote upstream mirror for git with MIRRORNAME
-         ("git://git.invalid.infradead.org/foo/mtd-utils.git;tag=3D12345678=
-90123456789012345678901234567890", "git://.*/.*", "git://somewhere.org/some=
-dir/MIRRORNAME;protocol=3Dhttp")
-             : "git://somewhere.org/somedir/git.invalid.infradead.org.foo.m=
-td-utils.git;tag=3D1234567890123456789012345678901234567890;protocol=3Dhttp=
-",
-+        # remote download mirror for http
-         ("http://somewhere.org/somedir1/somedir2/somefile_1.2.3.tar.gz", "=
-http://.*/.*", "http://somewhere2.org")
-             : "http://somewhere2.org/somefile_1.2.3.tar.gz",
-         ("http://somewhere.org/somedir1/somedir2/somefile_1.2.3.tar.gz", "=
-http://.*/.*", "http://somewhere2.org/")
-             : "http://somewhere2.org/somefile_1.2.3.tar.gz",
-+        ("http://somewhere.org/somedir1/somedir2/somefile_1.2.3.tar.gz", "=
-http://.*/.*", "http://somewhere2.org/DOWNLOADFILENAME")
-+            : "http://somewhere2.org/somefile_1.2.3.tar.gz",
-+        # remote upstream mirror with rename of server and path inclusive =
-basename
-         ("http://somewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://so=
-mewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://somewhere2.org/somedir=
-3/somefile_2.3.4.tar.gz")
-             : "http://somewhere2.org/somedir3/somefile_2.3.4.tar.gz",
-+        # remote upstream mirror for git with other protocol
-         ("git://someserver.org/bitbake;tag=3D12345678901234567890123456789=
-01234567890;branch=3Dmaster", "git://someserver.org/bitbake;branch=3Dmaster=
-", "git://git.openembedded.org/bitbake;protocol=3Dhttp")
-             : "git://git.openembedded.org/bitbake;tag=3D123456789012345678=
-9012345678901234567890;branch=3Dmaster;protocol=3Dhttp",
-         ("git://user1@someserver.org/bitbake;tag=3D12345678901234567890123=
-45678901234567890;branch=3Dmaster", "git://someserver.org/bitbake;branch=3D=
-master", "git://user2@git.openembedded.org/bitbake;protocol=3Dhttp")
-             : "git://user2@git.openembedded.org/bitbake;tag=3D123456789012=
-3456789012345678901234567890;branch=3Dmaster;protocol=3Dhttp",
-         ("git://someserver.org/bitbake;tag=3D12345678901234567890123456789=
-01234567890;protocol=3Dgit;branch=3Dmaster", "git://someserver.org/bitbake"=
-, "git://someotherserver.org/bitbake;protocol=3Dhttps")
-             : "git://someotherserver.org/bitbake;tag=3D1234567890123456789=
-012345678901234567890;protocol=3Dhttps;branch=3Dmaster",
-+        # remote download mirror for gitsm
-         ("gitsm://git.qemu.org/git/seabios.git/;protocol=3Dhttps;name=3Dro=
-ms/seabios;subpath=3Droms/seabios;bareclone=3D1;nobranch=3D1;rev=3D12345678=
-90123456789012345678901234567890", "gitsm://.*/.*", "http://petalinux.xilin=
-x.com/sswreleases/rel-v${XILINX_VER_MAIN}/downloads")
-             : "http://petalinux.xilinx.com/sswreleases/rel-v%24%7BXILINX_V=
-ER_MAIN%7D/downloads/git2_git.qemu.org.git.seabios.git..tar.gz",
-+        ("gitsm://git.qemu.org/git/seabios.git/;protocol=3Dhttps;name=3Dro=
-ms/seabios;subpath=3Droms/seabios;bareclone=3D1;nobranch=3D1;rev=3D12345678=
-90123456789012345678901234567890", "gitsm://.*/.*", "http://petalinux.xilin=
-x.com/sswreleases/rel-v${XILINX_VER_MAIN}/downloads/DOWNLOADFILENAME")
-+            : "http://petalinux.xilinx.com/sswreleases/rel-v%24%7BXILINX_V=
-ER_MAIN%7D/downloads/git2_git.qemu.org.git.seabios.git..tar.gz",
-+        # local download mirror for https
-         ("https://somewhere.org/example/1.0.0/example;downloadfilename=3Ds=
-ome-example-1.0.0.tgz", "https://.*/.*", "file:///mirror/PATH")
-             : "file:///mirror/example/1.0.0/example;downloadfilename=3Dsom=
-e-example-1.0.0.tgz",
-         ("https://somewhere.org/example-1.0.0.tgz;downloadfilename=3Dsome-=
-example-1.0.0.tgz", "https://.*/.*", "file:///mirror/")
-             : "file:///mirror/some-example-1.0.0.tgz;downloadfilename=3Dso=
-me-example-1.0.0.tgz",
-+        # local mirror for https with rename of download filename
-+        ("https://somewhere.org/example-1.0.0.tgz;downloadfilename=3Dsome-=
-example-1.0.0.tgz", "https://.*/.*", "file:///mirror/DOWNLOADFILENAME")
-+            : "file:///mirror/some-example-1.0.0.tgz;downloadfilename=3Dso=
-me-example-1.0.0.tgz",
-+        # local mirror for https with subfolder in downloadfilename
-+        ("https://somewhere.org/example-1.0.0.tgz;downloadfilename=3Dsubdi=
-r/some-example-1.0.0.tgz", "https://.*/.*", "file:///mirror/sub")
-+            : "file:///mirror/sub/subdir/some-example-1.0.0.tgz;downloadfi=
-lename=3Dsubdir/some-example-1.0.0.tgz",
-     }
+-        ud.localfile =3D urllib.parse.unquote(ud.basename)
++        ud.localfile =3D ud.basename
 =20
-     mirrorvar =3D "http://.*/.* file:///somepath/downloads/ " \
+     def get_gcp_client(self):
+         from google.cloud import storage
+diff --git a/lib/bb/fetch2/s3.py b/lib/bb/fetch2/s3.py
+index fa5292dfd..22c053813 100644
+--- a/lib/bb/fetch2/s3.py
++++ b/lib/bb/fetch2/s3.py
+@@ -77,7 +77,7 @@ class S3(FetchMethod):
+         else:
+             ud.basename =3D os.path.basename(ud.path)
+=20
+-        ud.localfile =3D urllib.parse.unquote(ud.basename)
++        ud.localfile =3D ud.basename
+=20
+         ud.basecmd =3D d.getVar("FETCHCMD_s3") or "/usr/bin/env aws s3"
+=20
+diff --git a/lib/bb/fetch2/sftp.py b/lib/bb/fetch2/sftp.py
+index 45b6afb4a..bee71a0d0 100644
+--- a/lib/bb/fetch2/sftp.py
++++ b/lib/bb/fetch2/sftp.py
+@@ -77,7 +77,7 @@ class SFTP(FetchMethod):
+         else:
+             ud.basename =3D os.path.basename(ud.path)
+=20
+-        ud.localfile =3D urllib.parse.unquote(ud.basename)
++        ud.localfile =3D ud.basename
+=20
+     def download(self, ud, d):
+         """Fetch urls"""
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index 7066d5e2c..6cb728ab4 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -78,9 +78,9 @@ class Wget(FetchMethod):
+         else:
+             ud.basename =3D os.path.basename(ud.path)
+=20
+-        ud.localfile =3D urllib.parse.unquote(ud.basename)
++        ud.localfile =3D ud.basename
+         if not ud.localfile:
+-            ud.localfile =3D urllib.parse.unquote(ud.host + ud.path).repla=
+ce("/", ".")
++            ud.localfile =3D ud.host + ud.path.replace("/", ".")
+=20
+         self.basecmd =3D d.getVar("FETCHCMD_wget") or "/usr/bin/env wget -=
+t 2 -T 100"
+=20
 --=20
 2.39.5
 
