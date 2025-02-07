@@ -1,245 +1,110 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3EDC02192
-	for <webhook@archiver.kernel.org>; Fri,  7 Feb 2025 08:10:10 +0000 (UTC)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
- by mx.groups.io with SMTP id smtpd.web11.64792.1738915803870017250
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79189C02196
+	for <webhook@archiver.kernel.org>; Fri,  7 Feb 2025 10:26:31 +0000 (UTC)
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+ by mx.groups.io with SMTP id smtpd.web11.66590.1738923989708003632
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 07 Feb 2025 00:10:04 -0800
+ Fri, 07 Feb 2025 02:26:29 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=M50+xujO;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-38dc8b5bb0bso258038f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 07 Feb 2025 00:10:03 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=PpUkBZVc;
+ spf=pass (domain: gmail.com, ip: 209.85.219.44, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6e43557fd94so17071816d6.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 07 Feb 2025 02:26:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1738915802; x=1739520602; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=hbPxI7XtfkAWnZwA8T0Tw1Djr00e46sGV3aetP6efOA=;
-        b=M50+xujO4CxFKyo9t4x9CXWezqcrIUVu9P4Zz1s1PgYx1Nmlrto7gfxYHqf6irCCoi
-         XsHVQhNkox5Sbf5XT8u9fdhRWYfdPI3qJT4n/HkjD8LXksy6j4XlfRbQdl4F43pCRZvA
-         xlVqGfeUkejwWORPKJYtsefBDm/hhMj+31JZU=
+        d=gmail.com; s=20230601; t=1738923989; x=1739528789; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=q1i9k9bRsWQ17drCg+X814pdQ4XClaAiNv69JTqN0/o=;
+        b=PpUkBZVcBKLadeMAmQpyFjbdxwR7BC2ErdorelQd5dXJy9Q0mB6X6VPCL+qmahozNE
+         SFudcR7ok5iP0nYoKoEouzBQHw1JILl8nygE65pL4YXwTlsE0RIC4lR91P9srLgSFKrD
+         z8Jv1k9hAEnpPHn4H176tCcFmgjWPBLP8k2+EzrgEbB0CqcCsJ+rw2XcEHAC+zsjufOO
+         k1Ja7QXyelGkeDdKcrJqB/wX/AzL7jTiRZOCiyzHP1nfYmIpC/ncMmx4tlNZql3JQwlN
+         oH7BfXvr22kvtlhZWrQQq5W6JqYAhr6Oe2fooRqZ12QeHuM6kMblHy2A88OuAAPMoRP7
+         LH5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738915802; x=1739520602;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hbPxI7XtfkAWnZwA8T0Tw1Djr00e46sGV3aetP6efOA=;
-        b=kfoSml23MifkOcaGIW0tdXxacN1WiUq3NIrfyDy17m4O4ss4Ze0YoVq3pVdpX0ozyu
-         0l4sFG55qjsQt79REEmh9dYaW+p1lCcMOvQJXSFdbO0/lgTBV2XREUacMMu4YddXT4i4
-         LVW+4T0EyZxcTdBQYouTcgZ5Mb+ap4JvzdddL7u+4UPWpYSyZyBwJz9YftUnFUq/ErT9
-         iPbFPwiL53fjBeHkNBbu5K9N1/ry9MZIwkay5YjxtGZ7SuDE4eEZHfglmiXNVUyrw6Jc
-         OeIeSulEZaVE/s2AQs6wQHFpYXMbB6oKcl7AQU8RqCINV+oxogRMl+UV8c+kjpVKHOYP
-         pPVw==
-X-Forwarded-Encrypted: i=1; AJvYcCUZDjfDQiK0kUQpM8IAQwep+3Fz7FoitHF+fkYhaZ1fdXcB6LCAY3yN7+ZK1REqNoi6G9ar6oC7nrAnG/HB@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yx3rnhGbzbWIDKfNrwF/ourLjp8JQK/8I7mHvtuDkCGazMyU7bi
-	jb9EZm0yzDrK/4jGNhlighCPw/8ftBMwXWLUfE3KaX/WxrKPG66UtTZsVekO2VQ=
-X-Gm-Gg: ASbGncsLzWD2x0CMRiRhvfEHjVDaQ1ahf+U7zV9OdgCYtLY7QEu0EowFmc3TQ0pH5wr
-	kU+57U/h6ZwNhZ57yyU0ElvfrOT5rDWtNZuEM2JaGB5hqv02TNswVJ1f53T4NTuWH6QcS4NJBiJ
-	pChe6sySnOdVbdf+yk/sCSPhxSAFF+gqBWN8Fdd6k702wXNp/DJ2jrUFxipKhvSZjnoYcvyWxad
-	T1AZIPig68+ElH6cd0lFSbXQsZVWjfknFMwkcI3hC/BoMZCwUYDlqhsiTXIM92KIjyfzVaPywkV
-	eRiLorkFmdS9hxi7AAVxiRWJDjmp9GhDZ3kaijTi9HFNLSzq1TY3xst7FZeFHMqsfB01HSNInX4
-	go4Qi
-X-Google-Smtp-Source: AGHT+IECTOy18TNbQML7js6Pa40jLmeCgSKf7oc7LZN09zUZYyjBrSwYlmkzLfGcLD0mZe1cV8wflw==
-X-Received: by 2002:a5d:47ca:0:b0:38d:c557:1146 with SMTP id ffacd0b85a97d-38dc912339amr1175620f8f.20.1738915801988;
-        Fri, 07 Feb 2025 00:10:01 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:dcae:28d1:c97a:4196? ([2001:8b0:aba:5f3c:dcae:28d1:c97a:4196])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcb22f737sm964469f8f.24.2025.02.07.00.10.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 00:10:01 -0800 (PST)
-Message-ID: <3b99c11f71e6f5761807bc707c215caae9643ff9.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [RFC PATCH 08/15] fetch2: use localpath instead
- of localfile
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>, 
-	bitbake-devel@lists.openembedded.org
-Cc: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Date: Fri, 07 Feb 2025 08:10:00 +0000
-In-Reply-To: <e839c25a-e4d5-4a93-8c82-915336367400@weidmueller.com>
-References: 
-	<20250205071538.2681-1-stefan.herbrechtsmeier-oss@weidmueller.com>
-	 <20250205071538.2681-9-stefan.herbrechtsmeier-oss@weidmueller.com>
-	 <7314b5c9248b9c1b73de6133dc34cf31bf41d43f.camel@linuxfoundation.org>
-	 <1821AAFAC9C0AAD1.752@lists.openembedded.org>
-	 <e839c25a-e4d5-4a93-8c82-915336367400@weidmueller.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.0-1 
+        d=1e100.net; s=20230601; t=1738923989; x=1739528789;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q1i9k9bRsWQ17drCg+X814pdQ4XClaAiNv69JTqN0/o=;
+        b=LbKQ36r44+F5Npo2lAzbtyAwylf39uIirBnzWLpc+cnfYwv2XydLJDQt/y5UAvsphV
+         pTBu/PNsroV+GuoHI8CAL8f9f+y8LcJ7xsdfxC/yKw1XhQXth8xvQqt8f6nLV2S/xkyv
+         fqaSG0XZGJYgQN42BwDvSXg0Rhji+JwQ/LJdEcna9NuGO4psF0zsQUhV7sAubMgbgtJP
+         RAzIvi/54qdjYRYCbvqE3MMQIGSeMeVqwthVTK8PxMknuAX4gDqBgECa8VnTXnM21OGA
+         Qw2YK8ypBaQn55ZWIUC31TFnbUw0cf1pJcUxQ84xM2qXvxf6/bPE1woYncvV7AmT3h9j
+         cO0A==
+X-Forwarded-Encrypted: i=1; AJvYcCU8d7sZohU3Oivny0qr+SCf/COHYZAVsH3TXAQeTw/Tj5lLJ2TJYzsbaJMcndHRV4aW45mKcu10oMnoGv+Z@lists.openembedded.org
+X-Gm-Message-State: AOJu0YzpCxCYCn6m5xmfGD9OlwLWfKnN3s8IfrFFThInwOe53JKK4y9+
+	NfvixtKFPv7gaIkIlkwxQZHetF9OV4vtnNay4mZm2exXCrrYyaThQ3P2MT7YO5E3z3dxhy+gZC2
+	32svf83Q1yPMn1EPqfFWQTiLFOAA=
+X-Gm-Gg: ASbGncsY4FUHgJ5KxQBOzFhWQzAC8qNLGBh/yln2j6UB0GZHF8a5HwJ8295LJ27GguM
+	OfUZ8IuEMauvqXiNIOk9ny4Q6Km3G1sbPDDM05qxWFEer4izIOO7fqcPzUzKWTp15mbhTV7QEcy
+	LLEnIs+plczSu3MzyH2n07ybB9exrWfJg=
+X-Google-Smtp-Source: AGHT+IGqI/QG0WjSB+u7Uybi0caQChMnw2NUJQtf2gzvpfx//5ajS+GwDro7m2OnOxja1fAxh7oPyeExTSX0YhPjRV8=
+X-Received: by 2002:a05:6214:5016:b0:6e4:242b:934 with SMTP id
+ 6a1803df08f44-6e4455eda09mr36520476d6.17.1738923988704; Fri, 07 Feb 2025
+ 02:26:28 -0800 (PST)
 MIME-Version: 1.0
+References: <20250129112406.1660522-1-stefan-koch@siemens.com>
+ <20250129112406.1660522-3-stefan-koch@siemens.com> <CANNYZj_sd3O_=dYGPuC1NKQDzbMSsjHPPLGi+qb2=3L174rUMg@mail.gmail.com>
+ <87f5216654f92c2b0a9790cf336023ec1b788eb1.camel@siemens.com>
+In-Reply-To: <87f5216654f92c2b0a9790cf336023ec1b788eb1.camel@siemens.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Fri, 7 Feb 2025 11:26:17 +0100
+X-Gm-Features: AWEUYZmPLzNQH3HWgO5R0Y51fgg5hJxKxaFmCxIRzuKAgEY2aVUg7tdDOrXhB4Q
+Message-ID: <CANNYZj8GVPrZCvcwjZxG2c9869XpXwsO5aiHGgQ=6GtYG6g36w@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 2/3] fetch2/git: Add offline build support
+ for tags
+To: "Koch, Stefan" <stefan-koch@siemens.com>
+Cc: "Sudler, Simon" <simon.sudler@siemens.com>, 
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>, 
+	"Kiszka, Jan" <jan.kiszka@siemens.com>, 
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 07 Feb 2025 08:10:10 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17164
+ <bitbake-devel@lists.openembedded.org>; Fri, 07 Feb 2025 10:26:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17165
 
-On Fri, 2025-02-07 at 09:05 +0100, Stefan Herbrechtsmeier wrote:
-> =C2=A0
->=20
-> =C2=A0
-> =C2=A0
-> Am 06.02.2025 um 17:21 schrieb Stefan Herbrechtsmeier via
-> lists.openembedded.org:
-> =C2=A0
-> =C2=A0
-> > Am 06.02.2025 um 16:26 schrieb Richard Purdie:=20
-> > =C2=A0
-> > > On Wed, 2025-02-05 at 08:15 +0100, Stefan Herbrechtsmeier via
-> > > lists.openembedded.org wrote:=20
-> > > =C2=A0
-> > > > From: Stefan Herbrechtsmeier
-> > > > <stefan.herbrechtsmeier@weidmueller.com>=20
-> > > > =C2=A0
-> > > > =C2=A0Use localpath variable instead of localfile and DL_DIR
-> > > > variable.=20
-> > > > =C2=A0
-> > > > =C2=A0Signed-off-by: Stefan Herbrechtsmeier
-> > > > <stefan.herbrechtsmeier@weidmueller.com>=20
-> > > > =C2=A0---=20
-> > > > =C2=A0
-> > > > =C2=A0=C2=A0=C2=A0lib/bb/fetch2/az.py=C2=A0=C2=A0 | 3 +--=20
-> > > > =C2=A0=C2=A0=C2=A0lib/bb/fetch2/repo.py | 2 +-=20
-> > > > =C2=A0=C2=A0=C2=A0lib/bb/fetch2/sftp.py=C2=A0| 3 +--=20
-> > > > =C2=A0=C2=A0=C2=A0lib/bb/fetch2/wget.py | 2 +-=20
-> > > > =C2=A0=C2=A0=C2=A04 files changed, 4 insertions(+), 6 deletions(-)=
-=20
-> > > > =C2=A0
-> > > > =C2=A0diff --git a/lib/bb/fetch2/az.py b/lib/bb/fetch2/az.py=20
-> > > > =C2=A0index 346124a8b..1f0f1337a 100644=20
-> > > > =C2=A0--- a/lib/bb/fetch2/az.py=20
-> > > > =C2=A0+++ b/lib/bb/fetch2/az.py=20
-> > > > =C2=A0@@ -49,8 +49,7 @@ class Az(Wget):=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fetchc=
-md =3D self.basecmd + ' --retry-connrefused --
-> > > > waitretry=3D5'=20
-> > > > =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- # We need to provide a localpath to avoid wget
-> > > > using the SAS=20
-> > > > =C2=A0-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # ud.localfile ei=
-ther has the downloadfilename or
-> > > > ud.path=20
-> > > > =C2=A0-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 localpath =3D os.=
-path.join(d.getVar("DL_DIR"),
-> > > > ud.localfile)=20
-> > > > =C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 localpath =3D ud.=
-localpath=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bb.uti=
-ls.mkdirhier(os.path.dirname(localpath))=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fetchc=
-md +=3D " -O %s" % shlex.quote(localpath)=20
-> > > > =C2=A0=C2=A0 diff --git a/lib/bb/fetch2/repo.py b/lib/bb/fetch2/rep=
-o.py=20
-> > > > =C2=A0index fa4cb8149..5c0edf1f2 100644=20
-> > > > =C2=A0--- a/lib/bb/fetch2/repo.py=20
-> > > > =C2=A0+++ b/lib/bb/fetch2/repo.py=20
-> > > > =C2=A0@@ -46,7 +46,7 @@ class Repo(FetchMethod):=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 def download(self, ud, d):=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 """Fet=
-ch url"""=20
-> > > > =C2=A0=C2=A0 -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if os.acce=
-ss(os.path.join(d.getVar("DL_DIR"),
-> > > > ud.localfile), os.R_OK):=20
-> > > > =C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if os.access(ud.l=
-ocalpath, os.R_OK):=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 logger.debug("%s already exists (or was
-> > > > stashed). Skipping repo init / sync.", ud.localpath)=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 return=20
-> > > > =C2=A0=C2=A0 diff --git a/lib/bb/fetch2/sftp.py=C2=A0b/lib/bb/fetch=
-2/sftp.py=20
-> > > > =C2=A0index 2a2a70a1b..b88dc5a28 100644=20
-> > > > =C2=A0--- a/lib/bb/fetch2/sftp.py=20
-> > > > =C2=A0+++ b/lib/bb/fetch2/sftp.py=20
-> > > > =C2=A0@@ -82,8 +82,7 @@ class SFTP(FetchMethod):=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 port =3D '-P %d' % urlo.port=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 urlo.port =3D None=20
-> > > > =C2=A0=C2=A0 -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dldir =3D =
-d.getVar('DL_DIR')=20
-> > > > =C2=A0-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 lpath =3D os.path=
-.join(dldir, ud.localfile)=20
-> > > > =C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 lpath =3D ud.loca=
-lpath=20
-> > > > =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- user =3D ''=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if url=
-o.userinfo:=20
-> > > > =C2=A0diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py=
-=20
-> > > > =C2=A0index 161c66bea..1194f0e7a 100644=20
-> > > > =C2=A0--- a/lib/bb/fetch2/wget.py=20
-> > > > =C2=A0+++ b/lib/bb/fetch2/wget.py=20
-> > > > =C2=A0@@ -95,7 +95,7 @@ class Wget(FetchMethod):=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fetchc=
-md =3D self.basecmd=20
-> > > > =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- dldir =3D os.path.realpath(d.getVar("DL_DIR"))=20
-> > > > =C2=A0-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 localpath =3D os.=
-path.join(dldir, ud.localfile) +
-> > > > ".tmp"=20
-> > > > =C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 localpath =3D ud.=
-localpath + ".tmp"=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bb.uti=
-ls.mkdirhier(os.path.dirname(localpath))=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fetchc=
-md +=3D " -O %s" % shlex.quote(localpath)=20
-> > > > =C2=A0=C2=A0=20
-> > > > =C2=A0
-> > > =C2=A0
-> > > =C2=A0I put the first 8 patches of this series into a test branch and
-> > > ran it=20
-> > > =C2=A0against the autobuilder. It fails to parse, unable to find file=
-s
-> > > :(.=20
-> > > =C2=A0
-> > =C2=A0
-> > =C2=A0Thanks for the test.=20
-> > =C2=A0
-> > =C2=A0
-> > > https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/96=
-0/steps/13/logs/stdio
-> > > https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/96=
-0/steps/13/logs/errors
-> > > =C2=A0
-> > > =C2=A0That suggests there is some breaking change in here
-> > > unfortunately.=20
-> > > =C2=A0
-> > =C2=A0
-> > =C2=A0I assume the @ in the filename is interpreter as username
-> > separator . I will look into it and add a test to the selftest.
-> =C2=A0
-> We have two solutions to decode an URI with different behavior:
-> =C2=A0class URI - urllib.parse.urlparse(uri)
-> =C2=A0def decodeurl - re.compile(...).match(uri)
+On Thu, 6 Feb 2025 at 13:46, Koch, Stefan <stefan-koch@siemens.com> wrote:
+>  File "/work/isar/bitbake/lib/bb/fetch2/__init__.py", line 1670, in
+> Git.latest_revision(ud=<bb.fetch2.FetchData object at 0x7f873f06eb90>,
+> d=<bb.data_smart.DataSmart object at 0x7f873fce9590>, name='default'):
+>  except KeyError:
+>  > revs[key] = rev = self._latest_revision(ud, d, name)
+>  return rev
 
+This is the function:
 
-decodeurl is older and predates urllib existing. People have tried to
-switch things over and use urllib where possible but as you say, the
-behaviour is different. I don't remember what the differences are.
+    def latest_revision(self, ud, d, name):
+        """
+        Look in the cache for the latest revision, if not present ask the SCM.
+        """
+        if not hasattr(self, "_latest_revision"):
+            raise ParameterError("The fetcher for this URL does not
+support _latest_revision", ud.url)
 
-> =C2=A0=C2=A0Additionally the encode of an URI object and the encodeuri fu=
-nction
-> have different behavior. The class use the unquoted and the function
-> the quoted path. Is this behavior intended or could we use one
-> implementation?
+        revs = bb.persist_data.persist('BB_URI_HEADREVS', d)
+        key = self.generate_revision_key(ud, d, name)
+        try:
+            return revs[key]
+        except KeyError:
+            revs[key] = rev = self._latest_revision(ud, d, name)
+            return rev
 
+Something doesn't compute properly here: the cached revision should've
+been successfully looked up via BB_URI_HEADREVS, and a call to
+_latest_revision (triggering network access) avoided altogether.
 
-I suspect we've been preserving the old behaviour so it was intended if
-a bit strange. It is hard to comment on what we could do without an
-idea of what it would break and what the differences are.
+Please look into why it isn't happening, or explain what your fix does
+that addresses the problem. There's moving code around (changing the
+condition for what is considered a revision on the way, which should
+be in a separate commit), and adding a BB_NO_NETWORK check, and I
+struggle to understand what these changes do :(
 
-Cheers,
-
-Richard
-
-
-
-
-
-
-
+Alex
 
