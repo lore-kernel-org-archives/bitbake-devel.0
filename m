@@ -1,88 +1,104 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0144C0219C
-	for <webhook@archiver.kernel.org>; Fri,  7 Feb 2025 12:59:52 +0000 (UTC)
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
- by mx.groups.io with SMTP id smtpd.web10.68653.1738933190234007785
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93663C02199
+	for <webhook@archiver.kernel.org>; Fri,  7 Feb 2025 15:28:33 +0000 (UTC)
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+ by mx.groups.io with SMTP id smtpd.web10.72002.1738942111826659646
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 07 Feb 2025 04:59:50 -0800
+ Fri, 07 Feb 2025 07:28:32 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=Ce3Uzpca;
- spf=pass (domain: gmail.com, ip: 209.85.219.50, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6e1a36b3684so21236336d6.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 07 Feb 2025 04:59:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738933189; x=1739537989; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0trl9caZTKPWOSYIdjUV7JdyjoPNd4HumQEV5QfxMp8=;
-        b=Ce3UzpcalyjfHFqdWu0eADuNDMj/7/idVQ++7+Z7nEcrn0cPhbOjffToUK44UVrAJA
-         8H1waXH6B6tWtNREUH+i5XyhsiR9KKJ4G1S/1ie17dkedwrhZjNe22k51Qj1mgqKqLEI
-         BmvrKCty3Bo+XKBDha/qG5VWXn7VbOgomZy/SkDOsQDjvakgYnPEdSKFQKnnQLLlPW5/
-         /90+fpJs6Bb0QN1Xm5fjCKwvJFYJifeaVrhF7+tfBCUc/GYyzN49fwTQJbVG4X+tA8AY
-         CG4j5+zR+LUWhZexI4/SuTlroqm7GPecoU30ca9sVtsthWFEN/Zyh+rSSwWuhid6ZUV/
-         AlsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738933189; x=1739537989;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0trl9caZTKPWOSYIdjUV7JdyjoPNd4HumQEV5QfxMp8=;
-        b=L4onsobFvyh+MQJ0wnuxHSxEiHKn51BuB7o/UTdPWwbrXNQAWj7Jklc6tX7OfYlYqv
-         y3lzBdAhFL4vLYk73AstKQe5X9+p/V047N2wD1bNFjrArEw0b105ZcqvYNeSueU5wF7y
-         vvtCmJVMmZMMttuBIZX2csdvvkaDo4NKo45wO7E43yodDgzIb1Xu9frALtCQTCqdnmzQ
-         A/o+n5SQa+Vu9V0Z9J48QuyvxM1xTfw9r/5V7McH7nlrJUulD75tnuAkk8V3h5kpqpg0
-         JHa694F0c/9uNLy0CehPoUlh5BpOp04eztV9HHSOWC1HEv0d1mYFlgSK2EIOpvNgCgYv
-         wpMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbxR+MxKCZMrpur5t3LPoVGl7RHxXPeyvzSuvj3D+H3PwktrcF1rhIpx2cYsw7Hlw/jHECuVri6jRUVSbC@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yy8RwFvisPGpyHlBFsL3ILSvDeRFAywk6nOiRz0NUBgUoZbXycw
-	0l1H10MryfPG8DHWOaBPXiI+y+tDozID8H35FQXWPxghNmHJL3Kde52E2lDbiIUpdwqAB3s4GlB
-	iz9Lg8dcpytrdCN6WmvdxVnSPcta4Mg==
-X-Gm-Gg: ASbGncsQc+xh593GucVpCTQ+Hm4jQrE00zRA4eoQrLBL8vtTeHPNMrtD8aBV3n+4CXc
-	ISuc+Tmq1xS7VICZWENcwrPZDTCZu7/ywJ4rWSTEtwvYCQ0yxItSC0fFajP56nm3l7nEAbCzUaD
-	9LcCdJFNTTG05vK4q8fIojmLCOm34ehvE=
-X-Google-Smtp-Source: AGHT+IHPgLMGb0urY0jtZ1Il/yfxaM3mf+4DaCIafDrg6buz4GmzPtt7lI/+807tdL1A0r/D1etrb3vihhUbEsfTedM=
-X-Received: by 2002:ad4:5d6c:0:b0:6d8:d79c:1cbd with SMTP id
- 6a1803df08f44-6e4455fa8bdmr40773016d6.15.1738933189308; Fri, 07 Feb 2025
- 04:59:49 -0800 (PST)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=jrQLSEaY;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.195, mailfrom: antonin.godard@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0586C204CC;
+	Fri,  7 Feb 2025 15:28:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738942110;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=j1/qlujQTXJ4PqKdzOkRa7Hv0qmS7rAJ9LpidVcxYDY=;
+	b=jrQLSEaYbiEdESvJrIRQdljH4xQ6YzkD9uVLx2/g4aWzPXpD3/G7tWmlEzylaHLZjocOt5
+	iipKNFByvW9bsIcv6oRm9IvIxbk5dgzVQe+3hiVoBPC8Dw5FtmrWuh/iN+sWsxIba8CmYD
+	cTxtUCrhNM4hpFwR3B6ejYgNEFcwQd7DR4rEq05KYqMFwh1QipEghXNysPSmKx+M7Kjl1/
+	nBk2v7BLT1tp6g3UWj6RwycTFKInEHbw/+qzMjSZrFibO5o8tquLan4CKaenJyNDtgSOcP
+	EbuPzzQDdKc0fhktjtMrHrazPLy3ahdLV+ImY48tUdn80/MV8iLza72Gq5fK4Q==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Date: Fri, 07 Feb 2025 16:28:26 +0100
+Subject: [PATCH] doc: bitbake-user-manual-ref-variables: document
+ BB_CURRENT_MC
 MIME-Version: 1.0
-References: <20250129112406.1660522-1-stefan-koch@siemens.com>
- <20250129112406.1660522-3-stefan-koch@siemens.com> <CANNYZj_sd3O_=dYGPuC1NKQDzbMSsjHPPLGi+qb2=3L174rUMg@mail.gmail.com>
- <87f5216654f92c2b0a9790cf336023ec1b788eb1.camel@siemens.com>
- <1821E627D6FBF186.752@lists.openembedded.org> <1821E75CA5CDE51A.18160@lists.openembedded.org>
- <1821E95A02BB5E12.752@lists.openembedded.org> <CANNYZj8QH7QfxpDMdi_oEfiZp4qT6pNSRR9QO2MbvEUJaFg7iQ@mail.gmail.com>
- <07ed332ad4733a7a4d5160b390124eb3053266e6.camel@siemens.com>
-In-Reply-To: <07ed332ad4733a7a4d5160b390124eb3053266e6.camel@siemens.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Fri, 7 Feb 2025 13:59:37 +0100
-X-Gm-Features: AWEUYZnb2VilJR6__vmgqSZh7dvQQ0Qk-e_klyEq6qKamNtuVwsTIGQpb59oZfE
-Message-ID: <CANNYZj-aKm-A14gv3eAjbPUj0UpbqBecvb+o_xmFhW3DfoCtdQ@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 2/3] fetch2/git: Add offline build support
- for tags
-To: "Koch, Stefan" <stefan-koch@siemens.com>
-Cc: "Sudler, Simon" <simon.sudler@siemens.com>, 
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>, 
-	"Kiszka, Jan" <jan.kiszka@siemens.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250207-doc-bbcurrentmc-v1-1-a95c50bf350a@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAJkmpmcC/x3MQQqAIBBG4avErBNUCqGrRIvSv5pFGmNFEN09a
+ fkt3nsoQxiZuuohwcWZUywwdUV+HeMCxaGYrLatttqpkLyaJn+KIB6bV4BzBk1rXdBUql0w8/0
+ f++F9P8vSL99hAAAA
+X-Change-ID: 20250207-doc-bbcurrentmc-ee771e4527d0
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1398;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=Z7sVlstnjlMLLQ2hFzW5JawLg8NrZm2xBOMKHIyeCmA=;
+ b=owEBbQKS/ZANAwAIAdGAQUApo6g2AcsmYgBnpiadVz7+WauEwEzTOOlMjxvd6NGMX/hN/d/7t
+ lDjruZ6ZEeJAjMEAAEIAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCZ6YmnQAKCRDRgEFAKaOo
+ NlMtD/9A06b+BPTfMFkdOf7tp5dFo29VqzZ7MNjLjweQSXJVMIOtLiEVUn7PNyiCudurwUwbJb1
+ 8w2dNwHZRHrY6+rObrmcIRg/7hWvFGz+1ejTg8V5W8Q0m44oZ5emT9oEbO+5kCNDkCPY1ood1FU
+ 7gjeU4JmLQAysEhQ43kYZFxLQE07t0J0HAG5B7MlAZG1YfMD8/CqiYd/tyKeIJZ/ihIkppTalKW
+ O1eEF++M9bANLPWeyqVXgFffs12D9py07/MYVON+cinmaFC2/qrKsAXFV4G99VOc/tdKYonmjTP
+ LChywKdgguVRmWYygwjtRP1GWjop+96Xd/sopQcBYX1jbvXpUEPEz21/fbtWPXPIh8bkiupXSPF
+ cwOBFMQpDZBelyjswUZmu5pJhbJbRlnSPR4oxMzYqiRXtGQV5H7tQNA0CB3bCryRUHf22/3P4HD
+ qs9DvnaP+wl6ydq0vqTOm3DffiU/bwOIfeHiyqrB4/R5LfIYXlCQaV7774WpijyCGO4wVF0Rdf9
+ pfXiIf55pTLMTQS014b61CbEPCBLvD5pEn/W55wcr0VwZm1biUfAbu2DRlXpzjrBTzpiV9VsqYi
+ nr5SUt4/sgGkpaRJq1/xdfzlNeVTfn/kRT0xEhRE6g61vCeGd1Z0i9iHDESC0OxNUfKfPwOnke2
+ 8xRyUdsgxjl6jHg==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvleeigecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtjeertdertdejnecuhfhrohhmpeetnhhtohhnihhnucfiohgurghrugcuoegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudeijeeltdeiueetffevteelueffiedvffejgfethefgheelieetheeiueeikeeunecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemjegthegtmeeirgguvgemjeelgeekmeegtdehleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemjegthegtmeeirgguvgemjeelgeekmeegtdehledphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomheprghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegpdhrtghpthhtohepsghithgsrghkvgdquggvvhgvlheslhhishhtshdrohhpvghnvghmsggvugguvggurdhorhhgpdhrtghpthhtohepughotghssehlihhsthhsrdihohgtthhophhrohhjvggtthdrohhrghdprhgtphhtthhopegrnhhtohhnihhnrdhgohgur
+ ghrugessghoohhtlhhinhdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
+X-GND-Sasl: antonin.godard@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 07 Feb 2025 12:59:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17184
+ <bitbake-devel@lists.openembedded.org>; Fri, 07 Feb 2025 15:28:33 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17185
 
-On Fri, 7 Feb 2025 at 13:41, Koch, Stefan <stefan-koch@siemens.com> wrote:
-> I have made the test with BitBake 2.8.
->
-> So the commit
-> fdc55bb649cb77456d0ac48a9600ef289a52af18: checksum/fetch2: Switch from
-> persist_data to a standard cache file
->
-> is not present, there...
+Document the BB_CURRENT_MC variable, which holds the name of the current
+multiconfig build a task is being run under.
 
-Then you could check what the sqlite database file in cache/ contains,
-and if the needed revision is recorded there.
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+---
+ doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Alex
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index ad219b531..858de6347 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -127,6 +127,11 @@ overview of their function and contents.
+       Contains the name of the currently running task. The name does not
+       include the ``do_`` prefix.
+ 
++   :term:`BB_CURRENT_MC`
++      Contains the name of the current multiconfig a task is being run under.
++      The name is taken from the multiconfig configuration file (a file
++      ``mc1.conf`` would make this variable equal to ``mc1``).
++
+    :term:`BB_DEFAULT_TASK`
+       The default task to use when none is specified (e.g. with the ``-c``
+       command line option). The task name specified should not include the
+
+---
+base-commit: 8843860010c97cc10ff69205d209634639b6c5cd
+change-id: 20250207-doc-bbcurrentmc-ee771e4527d0
+
+Best regards,
+-- 
+Antonin Godard <antonin.godard@bootlin.com>
+
 
