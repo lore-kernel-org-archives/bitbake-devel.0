@@ -2,246 +2,442 @@ Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41056C02198
-	for <webhook@archiver.kernel.org>; Thu,  6 Feb 2025 16:22:06 +0000 (UTC)
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (EUR02-AM0-obe.outbound.protection.outlook.com [40.107.247.139])
- by mx.groups.io with SMTP id smtpd.web11.45754.1738858923176783680
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C872EC02192
+	for <webhook@archiver.kernel.org>; Fri,  7 Feb 2025 08:05:50 +0000 (UTC)
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (EUR02-AM0-obe.outbound.protection.outlook.com [40.107.247.91])
+ by mx.groups.io with SMTP id smtpd.web10.64491.1738915544361562177
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 06 Feb 2025 08:22:04 -0800
+ Fri, 07 Feb 2025 00:05:45 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=qtYu7P8u;
- spf=pass (domain: weidmueller.com, ip: 40.107.247.139, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
+ dkim=pass header.i=@weidmueller.com header.s=selector2 header.b=URxJcMOT;
+ spf=pass (domain: weidmueller.com, ip: 40.107.247.91, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WrevVBzt/VN3cy2CxI6W0p4DA1q1LqQPAc+7pXESvp1HXT2N5L6rQ/jfoE0N8ltjJ35xkn1qpAO/wX5r8jKCCmTMg8jtUkihC0SqfTxrb/F4qG2qHKC1f6mFYNELwf7crbFfwhZozFS96LR8d/IEK1KUBtTHFQLSB/X/PQReQPItl/3d4/JJrj3piyjetmIL8bQE3kukm94TnxV6LaDbF6W8kI+XzG0TDqdWGMixG94KeFOrG4QCVQDMsIWkrFB/fFJjpLONbEa6N4f80iAwMmY0U4i49J3FwwzLn/tSKAnbhZqmeAL3rgTGPjeB98jWg1C770o7gnCVQ6LOOhVOXg==
+ b=TY4wYxJpTPGHsBFvZpkxZG+t4wTrkOxxPsV+Et8CZhIRtVbuj+UWYcpYtoy70iJdQfff3nEQz5xakxJRp9NpAFZZTB1NH0iZgJE5C8W2qyvV13/pOisTI6iiqL+oUs7VF3a8F0FynL1GHotrnc714tpgUbC0g5vPRxnTv2mCdJqXZxKyTqiypyEPiUQNhR92VIM1R4r1rMN6MzoXlBmIeBeMq3HGU7GZItwL2L75ULf4fITxWHHEatOt9MABOdAnPAUHChaYKi12nlyQ7GMC+PWyCsc1VL/ZxdNs37eNq+tsPzEKMLyi/2EwJ7U15nz0hKsanKqVI8McXWYpCzY1Og==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=H0S0EHZvlJSUOYnHJgcodxP2TbO6PjY+3s/MBd48p00=;
- b=gR2PbPb6CBvY/jOv6wh/3Jq1o7ZNWsuA2kxGJ02L6C9lnKg/M62jwX6vdB4fOqMCC89hRbegyES4XclnjXDGYG/4siY3bFhHedOm+jgkMPG4+dq18Hyucr+nr1Y92c5vegpUg9TkKHd0GLwEvPvWL2d0rXCeLZkH2Ppih7Vgi6zkyAtnZxv8KcP00PZDTVgrKqU0H7+HdmoKTa2w8kDEI4dI7pB73GVpPHv7KzRHpXNMpfxL3TPoZJARekZKHuC6k99m20uHTsDJsYLJCMhSJfx3moNw+xVfDueb14dHj0oBPAYfMLR506itM9sq/j39UkPPHS0fJuaToU4l/tpxww==
+ bh=Bhdo+u/B2bT2oCQuZzgPfpO1KLeA/Y1d7pCVYigzzpg=;
+ b=y7m8sJPjdWQq76cm6PslaZBckeZ6Gle5fLmrxLHe4GxToat1sSaiByqAQvtybDZgRka/IptY6OQ6bgvXu6D6R8fDcKKsD4XHhvYrHGghSurSsHcE4kouBpdsZ6tCK1I6+Li/Ozqc2K0MxZ41Or2XJJ3dgjDYsBlC/kwYGmmVOZnivk0F/NyiKdbl6bzI4JbxyoqrB6AuL/iyX6cbDKg8UweeoOFsBcBGXkzWuEQi0vNpFuSjVmUj0lXWtKKS1m30gAhLeD0ZJaCiElAwxWH+xr23Zfkt5+GkoXeJ6CQCCXeUbOKLqUu4vOXsBW69bjzOtEO1ainatjds00sQeOl2IQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=weidmueller.com; dmarc=pass action=none
  header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H0S0EHZvlJSUOYnHJgcodxP2TbO6PjY+3s/MBd48p00=;
- b=qtYu7P8uW/DXHzWN/ohR8D6dkFURZtRgfDiUBINlFzx8YMl77q/Quxa527Bhg+8zFmsYypjzo94Rnp8zGDSZr8P9cak9V9T6ihvkeJiujat/G8ivFus9tD7pl96ntaqYdqvJlZvIHk9rgYo6bVen1uzETrrCy8hkCm5ipNZ1EnOExDbzfY7yPUoWspik4vrz+9oKpK3jk0KiVLSZOQ+QygVdIvlfLAvV4Q0k6F4KCOeOmPZCOfaSdOCori7Rra8JYgc5Z8uEdoBTzvczbueDGnY5flegqwgu34xr+AD1srbt+/9K+urAgJXhmLbUoUfMDMALDWKG9nTFyOKMY7/pvg==
+ bh=Bhdo+u/B2bT2oCQuZzgPfpO1KLeA/Y1d7pCVYigzzpg=;
+ b=URxJcMOTsvEjjWS+9JcfluoXzWqD6R9mElM2WDNkRic89eOKZGi+Jecmpjyv6R13AAmcZlkQAPv77xavndsmfCu/DQwvDdr62QKl6p/3eD44jp+hQb7QD+MLXeZRFdU5MOasZ9dG7a84ReehaQU7lq2BsArncS+MtygeXUvejaLLc5hvRMQQeWQhkUqEF1pvH1REK87/JR8bm3ZtFU0aoSvHrK9KSfOrgihVpx5Evtq47TeV+za6rw4S0J4L0RkMYsXk99A+ZObzgVI+VSJeltbMOW6NTTn9ZOo5qbFj3Qh9IkvCOQAF9f6j6F9qxQebY4zLABNPM01F0Hjgk4vysg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=weidmueller.com;
 Received: from GV1PR08MB8426.eurprd08.prod.outlook.com (2603:10a6:150:8a::17)
- by DU0PR08MB8882.eurprd08.prod.outlook.com (2603:10a6:10:47d::8) with
+ by AS8PR08MB7369.eurprd08.prod.outlook.com (2603:10a6:20b:445::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.13; Thu, 6 Feb
- 2025 16:21:59 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.12; Fri, 7 Feb
+ 2025 08:05:40 +0000
 Received: from GV1PR08MB8426.eurprd08.prod.outlook.com
  ([fe80::f9f5:b4bd:9e01:9013]) by GV1PR08MB8426.eurprd08.prod.outlook.com
- ([fe80::f9f5:b4bd:9e01:9013%7]) with mapi id 15.20.8422.011; Thu, 6 Feb 2025
- 16:21:58 +0000
-Message-ID: <65b6db34-277e-4405-bd0e-50e4ef1910b9@weidmueller.com>
-Date: Thu, 6 Feb 2025 17:21:57 +0100
+ ([fe80::f9f5:b4bd:9e01:9013%7]) with mapi id 15.20.8422.011; Fri, 7 Feb 2025
+ 08:05:40 +0000
+Content-Type: multipart/alternative;
+ boundary="------------a4Xi80h4j0MsEyT00WNakQAG"
+Message-ID: <e839c25a-e4d5-4a93-8c82-915336367400@weidmueller.com>
+Date: Fri, 7 Feb 2025 09:05:38 +0100
 User-Agent: Mozilla Thunderbird
 Subject: Re: [bitbake-devel] [RFC PATCH 08/15] fetch2: use localpath instead
  of localfile
 To: Richard Purdie <richard.purdie@linuxfoundation.org>,
  bitbake-devel@lists.openembedded.org
-CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
+Cc: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 References: <20250205071538.2681-1-stefan.herbrechtsmeier-oss@weidmueller.com>
  <20250205071538.2681-9-stefan.herbrechtsmeier-oss@weidmueller.com>
  <7314b5c9248b9c1b73de6133dc34cf31bf41d43f.camel@linuxfoundation.org>
+ <1821AAFAC9C0AAD1.752@lists.openembedded.org>
 Content-Language: en-US
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
-In-Reply-To: <7314b5c9248b9c1b73de6133dc34cf31bf41d43f.camel@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: FR4P281CA0356.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:f4::20) To GV1PR08MB8426.eurprd08.prod.outlook.com
+In-Reply-To: <1821AAFAC9C0AAD1.752@lists.openembedded.org>
+X-ClientProxiedBy: FR0P281CA0263.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:b5::6) To GV1PR08MB8426.eurprd08.prod.outlook.com
  (2603:10a6:150:8a::17)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV1PR08MB8426:EE_|DU0PR08MB8882:EE_
-X-MS-Office365-Filtering-Correlation-Id: 02261aac-1f71-4ae7-c0b5-08dd46ca6130
+X-MS-TrafficTypeDiagnostic: GV1PR08MB8426:EE_|AS8PR08MB7369:EE_
+X-MS-Office365-Filtering-Correlation-Id: 15654654-8792-4092-c3d6-08dd474e362c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|376014|366016|1800799024|13003099007|8096899003;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?yJ/vIo35GFlzpQBu5YWHiVuipkn1P2lPSL1yPk/ekbV9OKHfLAZzwIKgDlMp?=
- =?us-ascii?Q?uec1AMOvDTWHbeFKPLHyn4s1phytBAWDrBqLOXb4Z+YAYLpNYBAG4WP2JKwq?=
- =?us-ascii?Q?DKPnkMizp4awVTJeUuIPOJbvWpoWQ3cd2mffKZMLm15ZyXgVl3vP2bDEZS2m?=
- =?us-ascii?Q?S02EB43xQ9lIChMXOTVlwFdZLVEEznBBotM7qd4//UShxcxqzXiazHk2RHB9?=
- =?us-ascii?Q?I4pABYQBTVCw2pB0JKFL3JyxAfQyMOjn1diL/7e/oJczONkIm+VSWz1pPToa?=
- =?us-ascii?Q?2I+T+LGvbyBdkleN0Pys0XB7vo8Fe2TOicBRmDgZEkU9b8od24lAu5FRUDJw?=
- =?us-ascii?Q?FfIcKF8PGbHiSL02NO3eDG8O86E+3s/nft8LyERIHM7nFLLDPSHii2KF+8Gb?=
- =?us-ascii?Q?la7e4HUsoMpNHek3Y7PaWMsdgGGphk7dEIwFDKgoDRrL82nxkMGnNf+mdkg5?=
- =?us-ascii?Q?WLWK0UjZnEo/lKT7K8YKoAgwfGzLAVC9CAAbm3FiTv7a77IzqE+wxo/UFu32?=
- =?us-ascii?Q?7FPw5Vqw90XUk3RWl/Jo/o5/JG128oFZaWvEtGHbK/GhPw34Ebl600CRqAJs?=
- =?us-ascii?Q?zYv0v4bRJYpayx2kfzq8X6/mfnAsSmwx/11EV0JA0CA52MgMAw6sK9d7ERcg?=
- =?us-ascii?Q?yovUr9qJ6ScWYT8+AX8IMVcjYahuYGqGutY+bUbsOm6VbOuK50pa7Jb0terQ?=
- =?us-ascii?Q?13P+DXDkquSUVPhcLeQRv9UnnSDY8Gl015VvaQBNZ6wM4xHqVWPjnMTvJMc6?=
- =?us-ascii?Q?u8nh9dKyok0ECfPuE/vey+WGwAjl2A8kB3nYpAmhF7uc/2bazwrPIQyWNRnM?=
- =?us-ascii?Q?yta6AqqopIVj25SrEN+RRVIf5jeI++GWiVS056LHW4h3Z85J7w4lK6XV4f0u?=
- =?us-ascii?Q?JiZA+ibFcPGYMMN/MM2bplMiRe4Tm+RD39Hi0+rJDjky+PIc/W/JBcdOWk2S?=
- =?us-ascii?Q?rsho2Ao8I5VWNyILlmoBDjKQZElYkmet2UZGMSWrGwSp8a/MQPlZkNfXNDgQ?=
- =?us-ascii?Q?5YfYPgQ8qAZhmvvLnx+Ys/Ui0oaXAeF9DjYPCJuUd7BNOO2fYyrwZ6ItWiUx?=
- =?us-ascii?Q?8Q7+Z96NjxweTxxdMlxoKZXlidfGLBRdx89CukqCLSGRdV3Apna2r7+JNJGW?=
- =?us-ascii?Q?E6aBuEyQrU9vzW30/VcnQ74TQ7UueojuHjxtoGSm9zaZOH7IEpEucDV/wSVa?=
- =?us-ascii?Q?7c5Iq2xKbdrKwxFB2wTzEMOQbJw5olyG0mW/u4jfWP2Ktm3ud4hibeejbLeO?=
- =?us-ascii?Q?Ro3K34PpVdQ3KAUTGO+VV/9ms1BkjIkI4BFuRbJsyt4t+WSNjfhrEW3FlUui?=
- =?us-ascii?Q?GyJzn0cJ9NU8HsnpyGw704iqYIh0CKes71r81VUewJHhfw=3D=3D?=
+	=?utf-8?B?WlA0YVFUQWdsS0tjRi8zSXNYanhNV3dyYjNVdWdSMzNCUmwzMGJ6eUJ2QXZV?=
+ =?utf-8?B?SllCUTFUMU1US1ROWVR1RjBsc0VNV2dDNEpGWG5VWGRxeTV3RlNHTVNWNlE0?=
+ =?utf-8?B?bmV2OC9KQktYZUc4VWd2b0FmcjV1WVdGcUY0TlUvRTZOa2sxbCtIWGhabE4z?=
+ =?utf-8?B?SDNiVjR6UnhvazVOUEs5NU8xNFkvMnl6VjV3Qm91d0c1MUlaRWwxdGErRVJ4?=
+ =?utf-8?B?SW9vSzZNSGYrNEdVcC95Kys1T1JhalBDMkk4NkV3dzlnaElwejF6U2ZzUFhy?=
+ =?utf-8?B?MlhIZGNhYkdaanB5QWFrOGxjTHVhYVcrOERyOFFkMlRYdlFVMDQ1cnBrQU1i?=
+ =?utf-8?B?RFV2d1NlKzQ1M3E0UTBvUkd3aFFNZjErcDR6QVdWRWhjb2tEL2NPT290dms4?=
+ =?utf-8?B?RHRXZlIvTkVKSWZoZTJKUDVEeUw5aE1xVzdidjhkakp4WXJJcktqTXp6OXBj?=
+ =?utf-8?B?S3pHTzF6cVQ0QmV6OVhSem0rN0NTelN0Slh3UGl3RFZpME5YQkpBdko4WnVU?=
+ =?utf-8?B?N25KbS9UNVMrOVVLWWNUbGVnZmdJcTZjY0JlWmUvVjJBNWdlWFpFMGpuK0VJ?=
+ =?utf-8?B?YmtjclFOUjcyZ2phKzRxczZkQnJYaWhwSkVKVGp3dk5iWDZZS2YyOEdLT1lL?=
+ =?utf-8?B?Qm4yTkQyZVcxb3NqbUVBOFdMUzFROGVkRFN0TmFaWEZJMElmckRld3NlSS9t?=
+ =?utf-8?B?Q0QxRjBCK2RNTDBkOHZYNWVwQm15ZzZOUy91L1p0SysvK0dpQ2xWNlJyRHRv?=
+ =?utf-8?B?SWNuOG9PWklaQjdYRFByQlQ5b1F3MHFBU3FjdFBmQ0V6eFVpczNiYTJTNU9L?=
+ =?utf-8?B?NmtYbEZ6WjBNRjdyb3JIRzNicXdqOWpteUZDaWFVdHQvYUhoSjhXUW5oL0tj?=
+ =?utf-8?B?T1h3V2Naa3BhK2VlaFR2bnkxU0lOM1JpamhGSXVwU0hLNFRvc0NkSmtwdGMw?=
+ =?utf-8?B?d0ZvVFcyTk1aZnhZdjhqbjRsbEdTbXh1RWJyMEN2TG9Qd1VRWkZiNnJmYnJO?=
+ =?utf-8?B?M1dCZGNYeWZDT1haWGNZOWF5UUpoZTdmTUs5UFI3OHYwakVqTkhia2RtYTAz?=
+ =?utf-8?B?UTJPdW9iS25pdi9jbFpFNVRKdWdvU0dZeklIWXUwazVtNElESCtlc3d1ajdy?=
+ =?utf-8?B?WHA2aUpzS2M0bitEN0VlRDY5WmxoNHRqZlNUMENDZE4rNUNkeTA4dGJvSFJm?=
+ =?utf-8?B?RFlUbTVLZldzVlRTS01MUHFpTUVnMmVHZzhSRkFtZzBsQnU1RWR3aStMSkNx?=
+ =?utf-8?B?aTFrRG16S2haK1RrWUdNUGpodTBoZ2NkbDlFVzhsYXBCZ0VrRDJweis1UUJV?=
+ =?utf-8?B?N3lIUHkrbmdHUW82RlN0eUZQWExoU05pc2JOdWJRQ3N2QXJudngwOTFyRFpM?=
+ =?utf-8?B?NG9IeVJDVFpSUTlFVlNBdUtObkJZZEdDT3lmQnBvUFBQTlRWa2VqU21TY1d5?=
+ =?utf-8?B?YnBieWV4WGo5NWgrb0F6QjAvQzFPNG1nZjVJU0ZqQWZWYVRNbFhFRG1ZUXNl?=
+ =?utf-8?B?N05LMTZ1eTU2WGd3VUszWUhsRFNST09FMlVydllhM2pFUm9qRkpBT1padG5X?=
+ =?utf-8?B?cVpMV3JLc2Fkd1hkbTBDb01pUEQybzFLM2JKVVd0NjBEMDVZd1I1dHo3c1dU?=
+ =?utf-8?B?dThTWVh4ZEt1VERad25kejc1MENUalkrZW14WVk5TTNhVjNmSFQvVmpCWEZN?=
+ =?utf-8?B?VHkyR1U4S0lXRUE2aEZEb1daaVdZSXhUeXplb3E2Q1B3cHNxd0dvYzJDdWhF?=
+ =?utf-8?B?bWM1Y2p2eUFlSHBnM3Iycy94RnhZankzQjBsNGYxbmh3TXRTNkJuRTU4VmlH?=
+ =?utf-8?B?T29rb3FRNlVFd0xpelUrQT09?=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB8426.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB8426.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(13003099007)(8096899003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?YZS2S/yFIXChKzKPXNyAw1V+AMtXlhUgP+jv78BnfwDCsR1Dd+LJZsz67Igl?=
- =?us-ascii?Q?/CfpdMD6Lj9OZvb5rl7nBZneXUoIN2CDVBigQYtqPpJof6+392VmH3WXMJoH?=
- =?us-ascii?Q?1Vf6ddLg8HUd+x2wm8dC3qOunbS9ZxTnDf6VX1NeM6gcTTNTH1TysS5gGNPO?=
- =?us-ascii?Q?FvMa8McV8MccmGtOl9OEWYta4Qyf8XORePci19faOSNAK8L4OS3nVqwW5xFX?=
- =?us-ascii?Q?jcphCF9GXQ8z972WtvY60pLQX2eC/ORz6Ko+gbO32W9ixNLexQbz3CiMGsCN?=
- =?us-ascii?Q?91kZSDvUqsuh0wjuzZCXeO64l3iCwg1s6N81FFUhQtpC9AmT8vnhTkS44mJW?=
- =?us-ascii?Q?c7aDN/kOZSd9+vzeFCOPTbTmj3KD70zDkNNR2LETvORyjKfDntUAaHVoGYkG?=
- =?us-ascii?Q?kPvB8qcuACB8f8I6LoRhLYkoEfPkTRCWW8GIwZVomFPqV6xi3+IGvAS1Ypfd?=
- =?us-ascii?Q?nof/CvJBNbiOvyoMxwnP9J7tHIc/Ky5L6snqaFXPSurkXlEE3gjjuAO+whd1?=
- =?us-ascii?Q?S/HzpA7k6/EClLZpeiQBHM0DF3KUe+eTbd4Z8aQ8KNWpm1m2Ny8LbBn+XxIM?=
- =?us-ascii?Q?pnf4wCDQOPe7/KZPpbmUaFHwV/YS+D+5Pv1+MBI+hnn+oMgX40hRk5ZLb0zl?=
- =?us-ascii?Q?MZ9EhxK3BIn2Q/MCUJ0YIzu5QEfizkPP9t7vFZAfX8/cwdS412adPj1yASV0?=
- =?us-ascii?Q?spOcUXKrhYKG1ZHvtXFlwGApvFcjq15n+1pXt6DPPLBA4Wu9QcXD6xIQHNWB?=
- =?us-ascii?Q?Uw4WZ8RsPjEYNhK+iH6YZiNAyp4CtRPMwpy9bwxOpn2pMMIFS2mJVGTTQ09J?=
- =?us-ascii?Q?TzxKfNDDfnWHvB0XhpQfNTiZAgFACzrO1VwpD9L3y2IYi/BGJfqAnIcyX1KP?=
- =?us-ascii?Q?W5ChvEeQTY0lAlxP50eYJQ/m7+A5B7VS3RT08PIif+mVyil9VXgMx2bWeq3l?=
- =?us-ascii?Q?3VpHMVeLcAxLZw+Laa9cHbiacRltwD13F684ZRPcWyA1L+krSvuYHYaGaIs1?=
- =?us-ascii?Q?kT7oBg5NLFv3aSJj2sgx7EBEjM5Nke5MB/vU43+14QHygRRoRdtsKPPsXKgV?=
- =?us-ascii?Q?syFiS55IqSF5z6pYF2QsPn3uUb52RuNWFKJqUGYI/ryHogNd9uSLdVWn9dk7?=
- =?us-ascii?Q?XmwOXym7Vs2zhZdDptMLa3nkd70phNoJdh3aMFJPFBjPB2RNEL0lUbLptYcv?=
- =?us-ascii?Q?iaj18rqH0RSByTanVWHn8psSJs6WUETnA2TXG06SQH+fGZ2NHO5Ob+T7p1tE?=
- =?us-ascii?Q?PKhLdL3sk9ewg+OY+nvX05FXPMHPNbVfU2f6K4YLbvZ1dN/EfpCRps5GSAjL?=
- =?us-ascii?Q?gJWIYZFKL4jesT7H0pc0ObyDqqFtjElC7nYiBJPyS5c4AotJogsAc9lJqbh5?=
- =?us-ascii?Q?HS9afejhGw3vyW7kH7xpR3eeJZgu+KVG9/bSg+FzcpOG7mqMJJcridH6D4WL?=
- =?us-ascii?Q?GFH8Up6wF7+OWLCR8MokxwPtAYx5xpoOlSDVDKkAthHHPOceorgwzV3NFH06?=
- =?us-ascii?Q?FcwGfmZ1pr+hPOX6Z1NOYBBmaoy6geb+2582iwEM2YhiJ4KpOdrUhg2P8Umw?=
- =?us-ascii?Q?+Mca3TCjqXulqUvLABR9K8nxbReooW5L23RzJlDUnudKW8etMhQTzJwB7lFc?=
- =?us-ascii?Q?Pg=3D=3D?=
+	=?utf-8?B?dUpkMHJVMlJBQXNUbjBBcC9JMkpmMkFpdGNxWUpPSnZnd0FqUUdjUGlOb1lv?=
+ =?utf-8?B?VER0czhmZFFlUndla0J3Wk1PYVkrMm4zQk1DRzZpeW0wY3lrVWEyTEc2Uk9L?=
+ =?utf-8?B?c0k2TVNlb1M2Q2drNXpCOTh1ekpmelJSTmMrK1dNaHN1ODR4bEI1WmQxWXBh?=
+ =?utf-8?B?Znl0dG1ZL0ZBUGdzdzlucGpiK3N1RkdDWit6MGg0MmtOWUFNRnZYclYzRjNK?=
+ =?utf-8?B?U1pQekljQktjY3VQeHdHdUZUdGFOTll6YmxaT3doSTA1aVhtb1hsNGNaOHc0?=
+ =?utf-8?B?WUhlOHBXSXQzM2lISUVxTW5lL2Q0QkRkZ2NIRmdJQlJGc29sQ1FBcVhveS9H?=
+ =?utf-8?B?MCtnK3htZWdjV3BBeS9qTnFKQjFHRGlQWUFzTUYvWW1qNFdSQTBqVkJ1dlZ0?=
+ =?utf-8?B?MGxoR3JpWmFKUVdQbW10S25zd0FuVWxBMFlHTG1qQVVXajBTZ2lGQUc5T1NW?=
+ =?utf-8?B?MjcvMVNIaUYzbld1OVVBSVArL056WTNvN3NlMWRKeDVSU0JOMVVoMjRlVEwy?=
+ =?utf-8?B?dFhGaXpFWVZ3ekt2cy90WGM5VkRKKzUvNm5Da0hKRlJsM05RRHczak1tbUlj?=
+ =?utf-8?B?ZWMwRmFTSXIweE5MdDIvekJZOFJNZ3RBTlNDazRhcTRGOUx0NUJ6RFdJN2hx?=
+ =?utf-8?B?dFNPYkdBbVVpcDNFT00xV0hBNjdNd3o0Wnc5blhPdGpQV05Zb0F5ejQ4dUNi?=
+ =?utf-8?B?ODZnbkJUcGhzTXhYSVFkK3NtTVJWMzJaTGoycUgzN0JFYytoMUJLSG5VcUts?=
+ =?utf-8?B?aXYwcHpISW9pKzN5cDA3ZCtwSXBmV2VzeEY1R25NUkFqaExTV1V4T0Jpb3pj?=
+ =?utf-8?B?dUxnQ2tJcTBWNEhTcTh2V1VXTG91TEtwOGdIMytzVEYzNklrZkdiZ0Jra3dF?=
+ =?utf-8?B?ekpNWGEydG5tWC9pOWJnNzNXaE00TENrOEVLUnM1NzNVdlVQQU9NWG1wTFlG?=
+ =?utf-8?B?bTZMOG9DS1lYdDdpR1lvQ2w5TDN0UEcvTWRqMkRqc3Y1bUFwYzdNdXVFNk14?=
+ =?utf-8?B?WGkxL3JtOTB4SnZneklYRVRqWnUxdllYejRScXhBUUQ2YzJOUHZKSEkvN1pB?=
+ =?utf-8?B?QnZVcEpQVE9SeUZYKytUZzA2SzFiQzlmWHN4c0ErWWc4aXN0NnBzMVd3VzFD?=
+ =?utf-8?B?QzF6dHFzZGhGVmh4ZjBpQm5oYUw4Qm4yUWR4UE9QQ3BNdSs3cVozRGZqSWFU?=
+ =?utf-8?B?M3JVc3lLZ1BSR0puUE5iL1NyOWgxbGNoTUc5SVF4U1FkOTVpYkZxM0hSRnZx?=
+ =?utf-8?B?ZjUvQkhET1FBYUhnYkkreHAzaTFmMUxWZk9FRFp3TS9ZY3N1enFVdWF4U0hu?=
+ =?utf-8?B?SkVGTlYwYXUyTTBLTUt6SWo4Q2Yrb2xUWjc2bUF4MG5oMkU5Q3U5VUxnOVVx?=
+ =?utf-8?B?TStQTlFOZXlSQitlV3doaU0xeDI0cGw4cTdzVHFmUHRobTFzSWZ1UGh6YUtZ?=
+ =?utf-8?B?MzRIQ0JBOGFIb0tOVFZnOURjTHh5V05oak1JOXhqTUw5SlhUYlVOaVJqMERE?=
+ =?utf-8?B?N3d4THZBV3JsM2haNUE3UzhIVG1ReHMwM3lSWkZ6ME4xTkg5TFk2b2pxZTQ4?=
+ =?utf-8?B?VUloRXdRdWtFWWU3cjJGMGgwM08xdk54bzZWeFo0YlhqT2hUMzVDRzlkeXVm?=
+ =?utf-8?B?cTdoangxLzRRQS8rWXY1MUx0bHZHM1JqQm1EZ3hmbTBZTUgvaG9jSUF4ek5X?=
+ =?utf-8?B?TFU3c0QxMWhXNG82VE8wandLT1VTS2d5ckJ6cEtVWDhJcDhWck04dnJKTXZ3?=
+ =?utf-8?B?djlPcGw4RFFSbTdXa1RaWUpkNDVreWswclBZRlc4UTdLTWp6b1lkNFJUSGVF?=
+ =?utf-8?B?TWM0bDZKRTloM0h5QllBdFJ4MitLNkwybDkxemJDM0J4azJkdnliVnY0OXY1?=
+ =?utf-8?B?VnRyKzFlOWYrcjZyclVhU0ZJRzJOaHNWeUkyYWtKVUJBMmRCdG1oWm4wR2RX?=
+ =?utf-8?B?cE9pVTNocFgvNlU1VkR2UFJ1OGNxVEpqaE5WckF2eUYyYVR0MlBOcUxrNHVN?=
+ =?utf-8?B?SC9SSEpLNHNiL0xFcU9KSnEzZGxjcHAwS2Q3Qk5pUmNtUnduVERYSmgzZmNV?=
+ =?utf-8?B?R1I5R1E3WFYvSjBNc2MxRSttejA0Z2JzYUNzbjAyajRyYU9CWDJWU3VCOSsw?=
+ =?utf-8?B?OExtaGYvbjNlNFc0RldRM0M5RVJRNXdsVlVNSi8rSE45N2V4QVJXd1RtN0d1?=
+ =?utf-8?B?VFE9PQ==?=
 X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02261aac-1f71-4ae7-c0b5-08dd46ca6130
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15654654-8792-4092-c3d6-08dd474e362c
 X-MS-Exchange-CrossTenant-AuthSource: GV1PR08MB8426.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 16:21:58.6743
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 08:05:40.0665
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BH+GQPD4fRCnAvgogV3pN9YNwnyR1wXrfn6+De6VTYSOh4q9LNUZ2M+bmpOV7W+qe2hNfwaBI4+X8J695R99Ww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB8882
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4oqIvuP4idao+KTwx3bTsG5uXkKz1idYWBDEmZdsxvR4cPFNYHANnpJ1ZBiMpyiqvYLHpUi9G7CNoEIZjyPhgQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB7369
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 06 Feb 2025 16:22:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17162
+ <bitbake-devel@lists.openembedded.org>; Fri, 07 Feb 2025 08:05:50 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17163
 
-Am 06.02.2025 um 16:26 schrieb Richard Purdie:
-> On Wed, 2025-02-05 at 08:15 +0100, Stefan Herbrechtsmeier via lists.opene=
-mbedded.org wrote:
->> From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
+--------------a4Xi80h4j0MsEyT00WNakQAG
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+
+Am 06.02.2025 um 17:21 schrieb Stefan Herbrechtsmeier via 
+lists.openembedded.org:
+> Am 06.02.2025 um 16:26 schrieb Richard Purdie:
+>> On Wed, 2025-02-05 at 08:15 +0100, Stefan Herbrechtsmeier via 
+>> lists.openembedded.org wrote:
+>>> From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
+>>>
+>>> Use localpath variable instead of localfile and DL_DIR variable.
+>>>
+>>> Signed-off-by: Stefan Herbrechtsmeier 
+>>> <stefan.herbrechtsmeier@weidmueller.com>
+>>> ---
+>>>
+>>>   lib/bb/fetch2/az.py   | 3 +--
+>>>   lib/bb/fetch2/repo.py | 2 +-
+>>>   lib/bb/fetch2/sftp.py | 3 +--
+>>>   lib/bb/fetch2/wget.py | 2 +-
+>>>   4 files changed, 4 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/lib/bb/fetch2/az.py b/lib/bb/fetch2/az.py
+>>> index 346124a8b..1f0f1337a 100644
+>>> --- a/lib/bb/fetch2/az.py
+>>> +++ b/lib/bb/fetch2/az.py
+>>> @@ -49,8 +49,7 @@ class Az(Wget):
+>>>           fetchcmd = self.basecmd + ' --retry-connrefused 
+>>> --waitretry=5'
+>>>             # We need to provide a localpath to avoid wget using the 
+>>> SAS
+>>> -        # ud.localfile either has the downloadfilename or ud.path
+>>> -        localpath = os.path.join(d.getVar("DL_DIR"), ud.localfile)
+>>> +        localpath = ud.localpath
+>>>           bb.utils.mkdirhier(os.path.dirname(localpath))
+>>>           fetchcmd += " -O %s" % shlex.quote(localpath)
+>>>   diff --git a/lib/bb/fetch2/repo.py b/lib/bb/fetch2/repo.py
+>>> index fa4cb8149..5c0edf1f2 100644
+>>> --- a/lib/bb/fetch2/repo.py
+>>> +++ b/lib/bb/fetch2/repo.py
+>>> @@ -46,7 +46,7 @@ class Repo(FetchMethod):
+>>>       def download(self, ud, d):
+>>>           """Fetch url"""
+>>>   -        if os.access(os.path.join(d.getVar("DL_DIR"), 
+>>> ud.localfile), os.R_OK):
+>>> +        if os.access(ud.localpath, os.R_OK):
+>>>               logger.debug("%s already exists (or was stashed). 
+>>> Skipping repo init / sync.", ud.localpath)
+>>>               return
+>>>   diff --git a/lib/bb/fetch2/sftp.py b/lib/bb/fetch2/sftp.py
+>>> index 2a2a70a1b..b88dc5a28 100644
+>>> --- a/lib/bb/fetch2/sftp.py
+>>> +++ b/lib/bb/fetch2/sftp.py
+>>> @@ -82,8 +82,7 @@ class SFTP(FetchMethod):
+>>>               port = '-P %d' % urlo.port
+>>>               urlo.port = None
+>>>   -        dldir = d.getVar('DL_DIR')
+>>> -        lpath = os.path.join(dldir, ud.localfile)
+>>> +        lpath = ud.localpath
+>>>             user = ''
+>>>           if urlo.userinfo:
+>>> diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+>>> index 161c66bea..1194f0e7a 100644
+>>> --- a/lib/bb/fetch2/wget.py
+>>> +++ b/lib/bb/fetch2/wget.py
+>>> @@ -95,7 +95,7 @@ class Wget(FetchMethod):
+>>>           fetchcmd = self.basecmd
+>>>             dldir = os.path.realpath(d.getVar("DL_DIR"))
+>>> -        localpath = os.path.join(dldir, ud.localfile) + ".tmp"
+>>> +        localpath = ud.localpath + ".tmp"
+>>>           bb.utils.mkdirhier(os.path.dirname(localpath))
+>>>           fetchcmd += " -O %s" % shlex.quote(localpath)
+>>>
 >>
->> Use localpath variable instead of localfile and DL_DIR variable.
->>
->> Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmuelle=
-r.com>
->> ---
->>
->>  =C2=A0lib/bb/fetch2/az.py=C2=A0=C2=A0 | 3 +--
->>  =C2=A0lib/bb/fetch2/repo.py | 2 +-
->>  =C2=A0lib/bb/fetch2/sftp.py=C2=A0| 3 +--
->>  =C2=A0lib/bb/fetch2/wget.py | 2 +-
->>  =C2=A04 files changed, 4 insertions(+), 6 deletions(-)
->>
->> diff --git a/lib/bb/fetch2/az.py b/lib/bb/fetch2/az.py
->> index 346124a8b..1f0f1337a 100644
->> --- a/lib/bb/fetch2/az.py
->> +++ b/lib/bb/fetch2/az.py
->> @@ -49,8 +49,7 @@ class Az(Wget):
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fetchcmd =3D self.base=
-cmd + ' --retry-connrefused --waitretry=3D5'
->>  =20
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # We need to provide a=
- localpath to avoid wget using the SAS
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # ud.localfile either has th=
-e downloadfilename or ud.path
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 localpath =3D os.path.join(d=
-.getVar("DL_DIR"), ud.localfile)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 localpath =3D ud.localpath
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bb.utils.mkdirhier(os.=
-path.dirname(localpath))
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fetchcmd +=3D " -O %s"=
- % shlex.quote(localpath)
->>  =20
->> diff --git a/lib/bb/fetch2/repo.py b/lib/bb/fetch2/repo.py
->> index fa4cb8149..5c0edf1f2 100644
->> --- a/lib/bb/fetch2/repo.py
->> +++ b/lib/bb/fetch2/repo.py
->> @@ -46,7 +46,7 @@ class Repo(FetchMethod):
->>  =C2=A0=C2=A0=C2=A0=C2=A0 def download(self, ud, d):
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 """Fetch url"""
->>  =20
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if os.access(os.path.join(d.=
-getVar("DL_DIR"), ud.localfile), os.R_OK):
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if os.access(ud.localpath, o=
-s.R_OK):
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 logger.debug("%s already exists (or was stashed). Skipping repo init / =
-sync.", ud.localpath)
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 return
->>  =20
->> diff --git a/lib/bb/fetch2/sftp.py=C2=A0b/lib/bb/fetch2/sftp.py
->> index 2a2a70a1b..b88dc5a28 100644
->> --- a/lib/bb/fetch2/sftp.py
->> +++ b/lib/bb/fetch2/sftp.py
->> @@ -82,8 +82,7 @@ class SFTP(FetchMethod):
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 port =3D '-P %d' % urlo.port
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 urlo.port =3D None
->>  =20
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dldir =3D d.getVar('DL_DIR')
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 lpath =3D os.path.join(dldir=
-, ud.localfile)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 lpath =3D ud.localpath
->>  =20
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 user =3D ''
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if urlo.userinfo:
->> diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
->> index 161c66bea..1194f0e7a 100644
->> --- a/lib/bb/fetch2/wget.py
->> +++ b/lib/bb/fetch2/wget.py
->> @@ -95,7 +95,7 @@ class Wget(FetchMethod):
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fetchcmd =3D self.base=
-cmd
->>  =20
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dldir =3D os.path.real=
-path(d.getVar("DL_DIR"))
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 localpath =3D os.path.join(d=
-ldir, ud.localfile) + ".tmp"
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 localpath =3D ud.localpath +=
- ".tmp"
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bb.utils.mkdirhier(os.=
-path.dirname(localpath))
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fetchcmd +=3D " -O %s"=
- % shlex.quote(localpath)
->>  =20
->>
+>> I put the first 8 patches of this series into a test branch and ran it
+>> against the autobuilder. It fails to parse, unable to find files :(.
 >
-> I put the first 8 patches of this series into a test branch and ran it
-> against the autobuilder. It fails to parse, unable to find files :(.
-
-Thanks for the test.
-
-> https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/960/st=
-eps/13/logs/stdio
-> https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/960/st=
-eps/13/logs/errors
+> Thanks for the test.
 >
-> That suggests there is some breaking change in here unfortunately.
+>> https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/960/steps/13/logs/stdio 
+>>
+>> https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/960/steps/13/logs/errors 
+>>
+>>
+>> That suggests there is some breaking change in here unfortunately.
+>
+> I assume the @ in the filename is interpreter as username separator . 
+> I will look into it and add a test to the selftest.
 
-I assume the @ in the filename is interpreter as username separator . I=20
-will look into it and add a test to the selftest.
+We have two solutions to decode an URI with different behavior:
+class URI - urllib.parse.urlparse(uri)
+def decodeurl - re.compile(...).match(uri)
 
+Additionally the encode of an URI object and the encodeuri function have 
+different behavior. The class use the unquoted and the function the 
+quoted path. Is this behavior intended or could we use one implementation?
+
+--------------a4Xi80h4j0MsEyT00WNakQAG
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body>
+    <p><br>
+    </p>
+    <div class="moz-cite-prefix">Am 06.02.2025 um 17:21 schrieb Stefan
+      Herbrechtsmeier via lists.openembedded.org:<br>
+    </div>
+    <blockquote type="cite" cite="mid:1821AAFAC9C0AAD1.752@lists.openembedded.org">Am
+      06.02.2025 um 16:26 schrieb Richard Purdie:
+      <br>
+      <blockquote type="cite">On Wed, 2025-02-05 at 08:15 +0100, Stefan
+        Herbrechtsmeier via lists.openembedded.org wrote:
+        <br>
+        <blockquote type="cite">From: Stefan Herbrechtsmeier
+          <a class="moz-txt-link-rfc2396E" href="mailto:stefan.herbrechtsmeier@weidmueller.com">&lt;stefan.herbrechtsmeier@weidmueller.com&gt;</a>
+          <br>
+          <br>
+          Use localpath variable instead of localfile and DL_DIR
+          variable.
+          <br>
+          <br>
+          Signed-off-by: Stefan Herbrechtsmeier
+          <a class="moz-txt-link-rfc2396E" href="mailto:stefan.herbrechtsmeier@weidmueller.com">&lt;stefan.herbrechtsmeier@weidmueller.com&gt;</a>
+          <br>
+          ---
+          <br>
+          <br>
+          &nbsp;&nbsp;lib/bb/fetch2/az.py&nbsp;&nbsp; | 3 +--
+          <br>
+          &nbsp;&nbsp;lib/bb/fetch2/repo.py | 2 +-
+          <br>
+          &nbsp;&nbsp;lib/bb/fetch2/sftp.py&nbsp;| 3 +--
+          <br>
+          &nbsp;&nbsp;lib/bb/fetch2/wget.py | 2 +-
+          <br>
+          &nbsp;&nbsp;4 files changed, 4 insertions(+), 6 deletions(-)
+          <br>
+          <br>
+          diff --git a/lib/bb/fetch2/az.py b/lib/bb/fetch2/az.py
+          <br>
+          index 346124a8b..1f0f1337a 100644
+          <br>
+          --- a/lib/bb/fetch2/az.py
+          <br>
+          +++ b/lib/bb/fetch2/az.py
+          <br>
+          @@ -49,8 +49,7 @@ class Az(Wget):
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fetchcmd = self.basecmd + ' --retry-connrefused
+          --waitretry=5'
+          <br>
+          &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # We need to provide a localpath to avoid wget
+          using the SAS
+          <br>
+          -&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # ud.localfile either has the downloadfilename or
+          ud.path
+          <br>
+          -&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; localpath = os.path.join(d.getVar(&quot;DL_DIR&quot;),
+          ud.localfile)
+          <br>
+          +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; localpath = ud.localpath
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bb.utils.mkdirhier(os.path.dirname(localpath))
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fetchcmd += &quot; -O %s&quot; % shlex.quote(localpath)
+          <br>
+          &nbsp; diff --git a/lib/bb/fetch2/repo.py b/lib/bb/fetch2/repo.py
+          <br>
+          index fa4cb8149..5c0edf1f2 100644
+          <br>
+          --- a/lib/bb/fetch2/repo.py
+          <br>
+          +++ b/lib/bb/fetch2/repo.py
+          <br>
+          @@ -46,7 +46,7 @@ class Repo(FetchMethod):
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; def download(self, ud, d):
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;&quot;&quot;Fetch url&quot;&quot;&quot;
+          <br>
+          &nbsp; -&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if os.access(os.path.join(d.getVar(&quot;DL_DIR&quot;),
+          ud.localfile), os.R_OK):
+          <br>
+          +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if os.access(ud.localpath, os.R_OK):
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; logger.debug(&quot;%s already exists (or was
+          stashed). Skipping repo init / sync.&quot;, ud.localpath)
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return
+          <br>
+          &nbsp; diff --git a/lib/bb/fetch2/sftp.py&nbsp;b/lib/bb/fetch2/sftp.py
+          <br>
+          index 2a2a70a1b..b88dc5a28 100644
+          <br>
+          --- a/lib/bb/fetch2/sftp.py
+          <br>
+          +++ b/lib/bb/fetch2/sftp.py
+          <br>
+          @@ -82,8 +82,7 @@ class SFTP(FetchMethod):
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; port = '-P %d' % urlo.port
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; urlo.port = None
+          <br>
+          &nbsp; -&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dldir = d.getVar('DL_DIR')
+          <br>
+          -&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lpath = os.path.join(dldir, ud.localfile)
+          <br>
+          +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lpath = ud.localpath
+          <br>
+          &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; user = ''
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if urlo.userinfo:
+          <br>
+          diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+          <br>
+          index 161c66bea..1194f0e7a 100644
+          <br>
+          --- a/lib/bb/fetch2/wget.py
+          <br>
+          +++ b/lib/bb/fetch2/wget.py
+          <br>
+          @@ -95,7 +95,7 @@ class Wget(FetchMethod):
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fetchcmd = self.basecmd
+          <br>
+          &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dldir = os.path.realpath(d.getVar(&quot;DL_DIR&quot;))
+          <br>
+          -&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; localpath = os.path.join(dldir, ud.localfile) +
+          &quot;.tmp&quot;
+          <br>
+          +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; localpath = ud.localpath + &quot;.tmp&quot;
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bb.utils.mkdirhier(os.path.dirname(localpath))
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fetchcmd += &quot; -O %s&quot; % shlex.quote(localpath)
+          <br>
+          &nbsp; <br>
+        </blockquote>
+        <br>
+        I put the first 8 patches of this series into a test branch and
+        ran it
+        <br>
+        against the autobuilder. It fails to parse, unable to find files
+        :(.
+        <br>
+      </blockquote>
+      <br>
+      Thanks for the test.
+      <br>
+      <br>
+      <blockquote type="cite"><a class="moz-txt-link-freetext" href="https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/960/steps/13/logs/stdio">https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/960/steps/13/logs/stdio</a>
+        <br>
+<a class="moz-txt-link-freetext" href="https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/960/steps/13/logs/errors">https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/960/steps/13/logs/errors</a>
+        <br>
+        <br>
+        That suggests there is some breaking change in here
+        unfortunately.
+        <br>
+      </blockquote>
+      <br>
+      I assume the @ in the filename is interpreter as username
+      separator . I will look into it and add a test to the selftest.</blockquote>
+    <p>We have two solutions to decode an URI with different behavior:<br>
+      class URI - urllib.parse.urlparse(uri)<br>
+      def decodeurl - re.compile(...).match(uri)<br>
+      <br>
+      Additionally the encode of an URI object and the encodeuri
+      function have different behavior. The class use the unquoted and
+      the function the quoted path. Is this behavior intended or could
+      we use one implementation?<br>
+      <br>
+    </p>
+    <blockquote type="cite" cite="mid:1821AAFAC9C0AAD1.752@lists.openembedded.org">
+      <span style="white-space: pre-wrap">
+</span></blockquote>
+  </body>
+</html>
+
+--------------a4Xi80h4j0MsEyT00WNakQAG--
 
