@@ -1,314 +1,248 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <bruce.ashfield@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88453C0219B
-	for <webhook@archiver.kernel.org>; Tue, 11 Feb 2025 17:20:06 +0000 (UTC)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.web10.5091.1739294401805214646
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C2DC021A1
+	for <webhook@archiver.kernel.org>; Tue, 11 Feb 2025 23:15:02 +0000 (UTC)
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+ by mx.groups.io with SMTP id smtpd.web10.2437.1739315701557528618
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 11 Feb 2025 09:20:02 -0800
+ Tue, 11 Feb 2025 15:15:01 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=O4Qtnm+v;
- spf=pass (domain: smile.fr, ip: 209.85.128.49, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43957634473so2234105e9.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 11 Feb 2025 09:20:01 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Y6yhR6Pl;
+ spf=pass (domain: gmail.com, ip: 209.85.160.173, mailfrom: bruce.ashfield@gmail.com)
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4717bb7e7deso2550411cf.1;
+        Tue, 11 Feb 2025 15:15:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1739294400; x=1739899200; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GU5VVRgE3V9GYadMgfT9kDppPJC6MQlq3yRHoz9P80c=;
-        b=O4Qtnm+vqr09yY1z/SJ1AuDZU+ayojOTX6XiZyLkBmmoYu4N7QzB5rHb1LhHcwgPpN
-         U0MZb+umOokN9tko5TWdhV+kQGJYeaMWK2lUZvAR8KDdxsGDadIcNQSET91KHys8aUjX
-         HkbYL4bJuiVQ/AwgQrkt/ah8s/jkEaQfIcPuQ=
+        d=gmail.com; s=20230601; t=1739315700; x=1739920500; darn=lists.openembedded.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cx0BEsz5eImsdUehP+dAvkCV8RpdpohQCbWeLuM1pm8=;
+        b=Y6yhR6PliBtyxqIqDiAct7VMz7odnbQmgJ4rwM2KgTewvyG3qVfxRktNcVaAG0VHRJ
+         Rwe+7K+67cbZPfJVoyMKkXv+FmWwsuhGiBOIW+XrRga8dvVYpYPJxZxoVrFOhR3eKXTm
+         grsjxnT9OvEsAX6y1KrNRa0ihvKc+ZLG862EQBbL6P4ko7j7p9oYs8+0sG38ahBx6I4D
+         mZM0XplTr564ZUKW3gVqgPtJmaBpIJJyv/HKAeW1G3Mag06G6OIQa5w9B6ZIrEp63zC8
+         yx1O0bV5MLg6tdzU36+xQKyPnIgH9TZN4AA/GVwQlLWeSn9oMTBYihhFoc1gj7OGm/Ku
+         8TLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739294400; x=1739899200;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GU5VVRgE3V9GYadMgfT9kDppPJC6MQlq3yRHoz9P80c=;
-        b=Hlx/sPaqZ790fjYit3zBblhCpIFYAMs+jhxcmNGOaww+Hy7NAlpjE/hMO3RfVHDndv
-         eBst3DH0oCNnNsEO/eDt5SZxZ9fF0PxwD23npaiZytCOJUg7VICt2FuLaoH7EV2j158r
-         qxbp8Umt6z+l7IGClMxAr3CjSyLm7dtnee/nRl7D72UJkxGXvx50E0vqtesPEFXKCWSl
-         TUlRtqVeVEYJ0daP2XEmVq5EOEY+QoDTI7XH2z6JtR5W95cvYrYbYcEn6OOKxNTUc7lk
-         49IZpql0jYlwR6Ie7qXlPEFJOJAqaluiOpqUp3TD1E/5cDvfgbbt0C1Yqnr4aNVCJvY+
-         q4Ow==
-X-Forwarded-Encrypted: i=1; AJvYcCV9y1S2Ymh2CFeO1zRNI8sUPi9SV791y16yfWflyG1M9w9WXtrZGECvM0SeIDOp/C97MdgQUdTbnILcSYam@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yx8eV9XUxZVHLQWRw2UJAMLCKUFYPahXEDDZWrZnJ+R95bbTocG
-	nZT0mD1Zkk/fGsDcdjdLBfan7J/OgbMkOKxPM8UFdbTzptoaAlFEetGVBdEucJTK4JdBxhUuTZz
-	smffcTdyQwKP3KhJ88H5V8fEaKrKfWGZgQ095Mw==
-X-Gm-Gg: ASbGncs6DIhAltWr1zdKV6cMZgyTUIYPmbfHnJmL3uPSKnF+AzmC95rcc19BmZJmasq
-	6E/hYqiUZ4z09KVG83OfOt5j2OZ5lT13kkfmaAGKjHXJWoad6rqbp2J1/zwsqJSXnTDYmNOCZ
-X-Google-Smtp-Source: AGHT+IFy1cN1PD6kRs/qU3R0nUpfEIqZz8mZymWp73kEhJaQVaaJcy33fa1BiF0ulStqOVpypvqJTlp+3PczHGsRjPs=
-X-Received: by 2002:a05:6000:1448:b0:38d:b2e4:6d97 with SMTP id
- ffacd0b85a97d-38dc9343d93mr16820630f8f.41.1739294399991; Tue, 11 Feb 2025
- 09:19:59 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739315700; x=1739920500;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Cx0BEsz5eImsdUehP+dAvkCV8RpdpohQCbWeLuM1pm8=;
+        b=FG/Puxf5wEOoqrcRZXuIQu7RrOZpgpo69Xnzyu1N5xcY+2fGhgHrJ8a5w6ZcMflBFP
+         tAFDih9R1MSLneXoX+Aob1+MMhH9xQPUeuswMN0k1uGuzxgauE9hJ7fNS4hyZqTSZ5da
+         ue9/3kZdXsj4jIo1EwSAHL3vu+PQZrX32R3lIPCvPCa7CmSGdthFGl1QGrIt2TAb5BC8
+         8wYM/DDt3ODO6MYHhxLu3Lqxp33UmvIcRN3atY82MbOZAKxiOqZStwyR5r/sAd5+zTS7
+         Z/sBSNEJmob/v/1W0CjF8HbWP3iL5GbdLOH0LU8K2an8wVqtRhK8cDKPuuMpf3Z9PrLV
+         HDwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpPJk/ywe1Ma9P7W+XBgpw865gD9xsgjIBg2d5Z1dTT+G6HTa7cjxmAZ7KymCFrwywveZzgCpxzPJaWa/2@lists.openembedded.org
+X-Gm-Message-State: AOJu0YzMp6AniLqdtAdOvaxIe76OyiDQxy30cxEyuILWAjeju4oeVXYM
+	L3kqOpwAef71yJCOes1++iREzDM5hMePYuTMnab8NgXunI/bwXjSH9YQWldItCs=
+X-Gm-Gg: ASbGnctalAelgY4dUh2iuDFBaqB7bPRlZUesfKJQEHpBhTujzQi0/vUAgV78i8+9tI/
+	aP5eOxb/QLzOx3mZHBPvwfPJuY309+BVWcRl2Hs/tS4S6SqlDUsYNp5PzD2wDtIR2dgPqlLEVmG
+	MxyV+zW3jQFuFofN9eKiuXSH7S2M6o8VEMizAGIPmwucSRdsVnL02zA+CXzryD7Zwv4k+0KrlU7
+	ZeYE589JXV+53RJ7bizb7h/ArB8qEbuX5m8MTcEkhGWes9jwToiCFOUb4Np14Rf8MoGzyBbYEpL
+	9rmMXyEd0YGoQMBBWr7nRStboOGENRAGbswyXAbPinrgeQMeSmD4PssXrcrwznre2t/jMg==
+X-Google-Smtp-Source: AGHT+IH66TFGqUExvWALFI3i4vpftCcrzZ9oC/roLQenPgCzWswyrjEfG1afTCtCk7xz7iiBsJhqTA==
+X-Received: by 2002:a05:622a:19a6:b0:471:89c1:618a with SMTP id d75a77b69052e-471aff2df66mr15537801cf.15.1739315700473;
+        Tue, 11 Feb 2025 15:15:00 -0800 (PST)
+Received: from gmail.com (pool-174-112-62-108.cpe.net.cable.rogers.com. [174.112.62.108])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4719e591a62sm21066071cf.73.2025.02.11.15.14.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 15:14:59 -0800 (PST)
+Date: Tue, 11 Feb 2025 18:14:58 -0500
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+To: stefan.herbrechtsmeier-oss@weidmueller.com
+Cc: openembedded-core@lists.openembedded.org,
+	Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>,
+	bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] [RFC PATCH 00/30] Add vendor support for go, npm
+ and rust
+Message-ID: <Z6vZ8m8zZLgQKyVg@gmail.com>
+References: <20250211150034.18696-1-stefan.herbrechtsmeier-oss@weidmueller.com>
 MIME-Version: 1.0
-References: <c0723d2e-7742-4746-bc78-b0aee82fb8ed@syslinbit.com>
- <CAMSfU+4cpu9nqUuAS18+1MTBpOnJPd52Yt1jK3XKH66ywJ09+Q@mail.gmail.com> <AS4PR04MB9316434BAC675FF7E4B83781A9FD2@AS4PR04MB9316.eurprd04.prod.outlook.com>
-In-Reply-To: <AS4PR04MB9316434BAC675FF7E4B83781A9FD2@AS4PR04MB9316.eurprd04.prod.outlook.com>
-From: Yoann Congal <yoann.congal@smile.fr>
-Date: Tue, 11 Feb 2025 18:19:34 +0100
-X-Gm-Features: AWEUYZlwxMfgzFxA0R5s-tw-zs03VHnS_dIG68tgHuT9aTpCXj6aTwZEjaBhKLs
-Message-ID: <CAMSfU+6NiWiQfGQE1kt1XSSOB6=vFTuC=e1=z2Tub7NDZNtvmQ@mail.gmail.com>
-Subject: Re: [bitbake-devel] [scarthgap] backport request for ??= operator for
- variable flags fix
-To: Louis Rannou <louis.rannou@non.se.com>
-Cc: "louis.rannou@syslinbit.com" <louis.rannou@syslinbit.com>, 
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>, Steve Sakoman <steve@sakoman.com>, 
-	Pascal EBERHARD <pascal.eberhard@se.com>
-Content-Type: multipart/alternative; boundary="000000000000df2be7062de108f9"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211150034.18696-1-stefan.herbrechtsmeier-oss@weidmueller.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 11 Feb 2025 17:20:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17195
-
---000000000000df2be7062de108f9
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Le mar. 11 f=C3=A9vr. 2025 =C3=A0 16:33, Louis Rannou <louis.rannou@non.se.=
-com> a
-=C3=A9crit :
-
-> Hello,
->
-
-Hello,
+ <bitbake-devel@lists.openembedded.org>; Tue, 11 Feb 2025 23:15:02 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17196
 
 
-> Please abort the request as I found some issue in relation. The attached
-> patch should confirm the issue.
->
-> Weak values are now omitted in getVarFlags (while they were incorrect but
-> present before 052746da9a7e96b43ec45a04322e8576a6cbaab7.
->
 
-Hello,
+In message: [bitbake-devel] [RFC PATCH 00/30] Add vendor support for go, npm and rust
+on 11/02/2025 Stefan Herbrechtsmeier via lists.openembedded.org wrote:
 
-I've reoppened https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D15685 wi=
-th
-your infomations, thanks!
+> From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
+> 
+> The series adds on-the-fly support for package manager specific
+> dependencies and vendor directories. It contains the following changes:
+> 1. Adds an early fetch, unpack and patch task to unpack and patch source
+>    code with an embedded lock file for dependencies.
+> 2. Parse the go.sum, Cargo.lock and package-lock.json lock files and
+>    resolve the dependencies to SRC_URIs.
+> 3. Save the SRC_URIs in a file and adapt all SRC_URIs users to handle
+>    the SRC_URI files beside the SRC_URIs in the recipe.
 
-Weirdly, not all your emails appear in the archive :
-https://lists.openembedded.org/g/bitbake-devel/topics
-... which means, only CC'd people received it.
-You may want to check that both your mail addresses are subscribed to the
-list.
+I made a few comments, and will have another / better look at the
+series tomorrow. There's a lot here, and it is hard to wrap my head
+around everything that is changing.
 
-Do you plan to work on it? If yes, don't hesitate to take the bug or add
-more info :)
+I have one specific question below (from the point of view of go).
 
-Louis Rannou
-> Schneider Electric
->
->
-> General
-> ________________________________________
-> De : Yoann Congal <yoann.congal@smile.fr>
-> Envoy=C3=A9 : mardi 11 f=C3=A9vrier 2025 11:07
-> =C3=80 : louis.rannou@syslinbit.com
-> Cc : bitbake-devel@lists.openembedded.org; Steve Sakoman; Pascal
-> EBERHARD; Louis Rannou
-> Objet : Re: [bitbake-devel] [scarthgap] backport request for ??=3D operat=
-or
-> for variable flags fix
->
-> [External email: Use caution with links and attachments]
->
-> ________________________________
->
->
->
-> Hello,
->
-> Le mar. 11 f=C3=A9vr. 2025 =C3=A0 10:31, Louis Rannou via lists.openembed=
-ded.org<
-> http://lists.openembedded.org/> <louis.rannou=3D
-> syslinbit.com@lists.openembedded.org<mailto:
-> syslinbit.com@lists.openembedded.org>> a =C3=A9crit :
-> Hello,
->
-> May we apply the commit following commit to scarthgap as the issue also
-> exist:
->
-> commit 0329a7e3ac694737f2d2c1861f65492551360663
-> Author: Yoann Congal <yoann.congal@smile.fr<mailto:yoann.congal@smile.fr>=
->
-> Date:   Sat Jan 11 15:13:51 2025 +0100
->
->      data_smart: fix ??=3D operator for variable flags
->
-> I suppose the other commit that came along for tests is also fine:
->
-> commit e3536b3c67ad1a4195fcbd5485d2dc8308014fff (HEAD -> 2.8)
-> Author: Yoann Congal <yoann.congal@smile.fr<mailto:yoann.congal@smile.fr>=
->
-> Date:   Sat Jan 11 15:13:50 2025 +0100
->
->      tests/parse: add test for ?=3D and ??=3D operators for variable flag=
-s
->
-> Here is the path link for details
->
-> https://lore.kernel.org/bitbake-devel/20250111141351.3993834-1-yoann.cong=
-al@smile.fr/#t
-> <
-> https://lore.kernel.org/bitbake-devel/20250111141351.3993834-1-yoann.cong=
-al@smile.fr/#t
-> >
->
-> Thanks,
-> Louis Rannou
->
-> To clarify, you target the "2.8" bitbake branch (the one Scarthgap poky
-> uses)
-> I could not find the doc for this but we usually have "[2.8]" in mail
-> title for bitbake backport requests (for example:
-> https://lists.openembedded.org/g/bitbake-devel/message/16872<
-> https://lists.openembedded.org/g/bitbake-devel/message/16872>)
->
-> You may also want to state explicitly that this is related to the bug
-> https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D15685<
-> https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D15685>
->
-> Thanks (always nice to see my patches getting used :) )!
-> --
-> Yoann Congal
-> Smile ECS - Tech expert
->
+I've been looking through the series, and can't pick out where #3 is
+done. I see patch 14 using SRC_URI_FILES, but where are those files
+written ? Is that in patch 18 (vendor_go_do_vendor_resolve ?)  What is
+written to those files ?
 
+The concept that I'm not understanding (and that's just me not being
+familiar with things, I'll continue reading the series) is that when
+we suggested we'd like to have a mode where the dependencies could
+clearly be listed in the SRC_URI, at least I was just thinking about a
+way run the fetch/module elements that you were adding, write them to
+a file and then have the recipe include it.
 
---=20
-Yoann Congal
-Smile ECS - Tech expert
+I can't tell if in the series those files are written each time, and
+that there would be no way to edit those SRC_URI_FILES .. but I'll
+look again tomorrow.
 
---000000000000df2be7062de108f9
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+That file would manipulate the standard SRC_URI. In other words still
+support a mode that is like the .inc files with crate://. So someone
+could either have the lockfile parsed and fetched, or have a way to
+run the parsing and fetching via a task, write a file and include the
+file in their recipe to short circuit the processing of the lockfile.
+(meaning the expanded and end fetches that are done once you've
+processed the file are simply listed as a series of fetches that are
+carried out without extra processing .. and "unrolled" dependency
+file pointing at the "sources" git, crate, mod, whatever)
 
-<div dir=3D"ltr"><div class=3D"gmail_quote gmail_quote_container"><div dir=
-=3D"ltr" class=3D"gmail_attr">Le=C2=A0mar. 11 f=C3=A9vr. 2025 =C3=A0=C2=A01=
-6:33, Louis Rannou &lt;<a href=3D"mailto:louis.rannou@non.se.com">louis.ran=
-nou@non.se.com</a>&gt; a =C3=A9crit=C2=A0:<br></div><blockquote class=3D"gm=
-ail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,=
-204,204);padding-left:1ex">Hello,<br></blockquote><div><br></div><div>Hello=
-,<br></div><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"marg=
-in:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1e=
-x">
-Please abort the request as I found some issue in relation. The attached pa=
-tch should confirm the issue.<br>
-<br>
-Weak values are now omitted in getVarFlags (while they were incorrect but p=
-resent before 052746da9a7e96b43ec45a04322e8576a6cbaab7.<br></blockquote><di=
-v><br></div><div>Hello,</div><div><br></div><div>I&#39;ve reoppened <a href=
-=3D"https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D15685">https://bugz=
-illa.yoctoproject.org/show_bug.cgi?id=3D15685</a> with your infomations, th=
-anks!</div><div><br></div><div>Weirdly, not all your emails appear in the a=
-rchive : <a href=3D"https://lists.openembedded.org/g/bitbake-devel/topics">=
-https://lists.openembedded.org/g/bitbake-devel/topics</a></div><div>... whi=
-ch means, only CC&#39;d people received it.</div><div>You may want to check=
- that both your mail addresses are subscribed to the list.</div><div><br></=
-div><div>Do you plan to work on it? If yes, don&#39;t hesitate to take the =
-bug or add more info :)<br></div><div><br></div><blockquote class=3D"gmail_=
-quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,=
-204);padding-left:1ex">
-Louis Rannou<br>
-Schneider Electric<br>
-<br>
-<br>
-General<br>
-________________________________________<br>
-De : Yoann Congal &lt;<a href=3D"mailto:yoann.congal@smile.fr" target=3D"_b=
-lank">yoann.congal@smile.fr</a>&gt;<br>
-Envoy=C3=A9 : mardi 11 f=C3=A9vrier 2025 11:07<br>
-=C3=80 : <a href=3D"mailto:louis.rannou@syslinbit.com" target=3D"_blank">lo=
-uis.rannou@syslinbit.com</a><br>
-Cc : <a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"_bla=
-nk">bitbake-devel@lists.openembedded.org</a>; Steve Sakoman; Pascal EBERHAR=
-D; Louis Rannou<br>
-Objet : Re: [bitbake-devel] [scarthgap] backport request for ??=3D operator=
- for variable flags fix<br>
-<br>
-[External email: Use caution with links and attachments]<br>
-<br>
-________________________________<br>
-<br>
-<br>
-<br>
-Hello,<br>
-<br>
-Le mar. 11 f=C3=A9vr. 2025 =C3=A0 10:31, Louis Rannou via <a href=3D"http:/=
-/lists.openembedded.org" rel=3D"noreferrer" target=3D"_blank">lists.openemb=
-edded.org</a>&lt;<a href=3D"http://lists.openembedded.org/" rel=3D"noreferr=
-er" target=3D"_blank">http://lists.openembedded.org/</a>&gt; &lt;louis.rann=
-ou=3D<a href=3D"mailto:syslinbit.com@lists.openembedded.org" target=3D"_bla=
-nk">syslinbit.com@lists.openembedded.org</a>&lt;mailto:<a href=3D"mailto:sy=
-slinbit.com@lists.openembedded.org" target=3D"_blank">syslinbit.com@lists.o=
-penembedded.org</a>&gt;&gt; a =C3=A9crit :<br>
-Hello,<br>
-<br>
-May we apply the commit following commit to scarthgap as the issue also<br>
-exist:<br>
-<br>
-commit 0329a7e3ac694737f2d2c1861f65492551360663<br>
-Author: Yoann Congal &lt;<a href=3D"mailto:yoann.congal@smile.fr" target=3D=
-"_blank">yoann.congal@smile.fr</a>&lt;mailto:<a href=3D"mailto:yoann.congal=
-@smile.fr" target=3D"_blank">yoann.congal@smile.fr</a>&gt;&gt;<br>
-Date:=C2=A0 =C2=A0Sat Jan 11 15:13:51 2025 +0100<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0data_smart: fix ??=3D operator for variable flags<br>
-<br>
-I suppose the other commit that came along for tests is also fine:<br>
-<br>
-commit e3536b3c67ad1a4195fcbd5485d2dc8308014fff (HEAD -&gt; 2.8)<br>
-Author: Yoann Congal &lt;<a href=3D"mailto:yoann.congal@smile.fr" target=3D=
-"_blank">yoann.congal@smile.fr</a>&lt;mailto:<a href=3D"mailto:yoann.congal=
-@smile.fr" target=3D"_blank">yoann.congal@smile.fr</a>&gt;&gt;<br>
-Date:=C2=A0 =C2=A0Sat Jan 11 15:13:50 2025 +0100<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0tests/parse: add test for ?=3D and ??=3D operators for =
-variable flags<br>
-<br>
-Here is the path link for details<br>
-<a href=3D"https://lore.kernel.org/bitbake-devel/20250111141351.3993834-1-y=
-oann.congal@smile.fr/#t" rel=3D"noreferrer" target=3D"_blank">https://lore.=
-kernel.org/bitbake-devel/20250111141351.3993834-1-yoann.congal@smile.fr/#t<=
-/a>&lt;<a href=3D"https://lore.kernel.org/bitbake-devel/20250111141351.3993=
-834-1-yoann.congal@smile.fr/#t" rel=3D"noreferrer" target=3D"_blank">https:=
-//lore.kernel.org/bitbake-devel/20250111141351.3993834-1-yoann.congal@smile=
-.fr/#t</a>&gt;<br>
-<br>
-Thanks,<br>
-Louis Rannou<br>
-<br>
-To clarify, you target the &quot;2.8&quot; bitbake branch (the one Scarthga=
-p poky uses)<br>
-I could not find the doc for this but we usually have &quot;[2.8]&quot; in =
-mail title for bitbake backport requests (for example: <a href=3D"https://l=
-ists.openembedded.org/g/bitbake-devel/message/16872" rel=3D"noreferrer" tar=
-get=3D"_blank">https://lists.openembedded.org/g/bitbake-devel/message/16872=
-</a>&lt;<a href=3D"https://lists.openembedded.org/g/bitbake-devel/message/1=
-6872" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g=
-/bitbake-devel/message/16872</a>&gt;)<br>
-<br>
-You may also want to state explicitly that this is related to the bug <a hr=
-ef=3D"https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D15685" rel=3D"nor=
-eferrer" target=3D"_blank">https://bugzilla.yoctoproject.org/show_bug.cgi?i=
-d=3D15685</a>&lt;<a href=3D"https://bugzilla.yoctoproject.org/show_bug.cgi?=
-id=3D15685" rel=3D"noreferrer" target=3D"_blank">https://bugzilla.yoctoproj=
-ect.org/show_bug.cgi?id=3D15685</a>&gt;<br>
-<br>
-Thanks (always nice to see my patches getting used :) )!<br>
---<br>
-Yoann Congal<br>
-Smile ECS - Tech expert<br>
-</blockquote></div><div><br clear=3D"all"></div><br><span class=3D"gmail_si=
-gnature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_signature"><d=
-iv dir=3D"ltr"><font face=3D"Raleway, regular">Yoann Congal</font><div><fon=
-t face=3D"Raleway, regular">Smile ECS - Tech expert<br></font></div></div><=
-/div></div>
+If that just doesn't make sense, then if there was a way to copy
+the lockfile out of the recipe and have it overlayed onto the fetched
+one .. maybe breaking out the individual fetch lines isn't required,
+since they could be individually manipulated in that lockfile.
 
---000000000000df2be7062de108f9--
+Bruce
+
+> 4. Create a package manager specific vendor directory during unpack to
+>    support additional patching of the dependencies.
+> 5. Add the dependency name and version to the SBOM.
+> 6. Simplify the npm support
+> 
+> 
+> Stefan Herbrechtsmeier (30):
+>   classes: create-spdx-2.2: use expanded FetchData for downloaded
+>     packages
+>   lib: spdx30_tasks: use expanded FetchData for download files
+>   classes: create-spdx-2.2: use name and version for download
+>     dependencies
+>   lib: bb: fetch2: add support to unpack .crate files
+>   lib: oe: add vendor module
+>   lib: oe: vendor: add cargo support
+>   lib: oe: vendor: add go support
+>   lib: oe: vendor: add npm support
+>   oeqa: oelib: add vendor tests
+>   conf: bitbake: add SRC_URI_FILES variable
+>   classes: go: make source directory configurable
+>   classes: go-mod: make class customizable
+>   classes: add nodejs-arch class
+>   classes: base: add get_src_uris and unpack_src_uris functions
+>   classes: add early fetch, unpack and patch support
+>   classes: add vendor class
+>   classes: add vendor class for cargo
+>   classes: add vendor class for go
+>   classes: add vendor class for npm
+>   classes: add vendor_npm_build class
+>   python3-bcrypt: mirgrate to vendor cargo class
+>   python3-cryptography: mirgrate to vendor cargo class
+>   python3-maturin: mirgrate to vendor cargo class
+>   python3-rpds-py: mirgrate to vendor cargo class
+>   librsvg: mirgrate to vendor cargo class
+>   librsvg: update dependecies to fix RUSTSEC-2024-0421
+>   [DO NOT MERGE] recipes: add crucible go demo
+>   [DO NOT MERGE] recipes: add node-red npm demo
+>   [DO NOT MERGE] recipes: add nucleoidai npm demo
+>   [DO NOT MERGE] classes: spdx: use version 2.2
+> 
+>  bitbake/lib/bb/fetch2/__init__.py             |    2 +-
+>  .../crucible/crucible2_2023.11.02.bb          |   18 +
+>  .../node-red/node-red/package-lock.json       | 6096 +++++++++++++++++
+>  .../node-red/node-red_4.0.8.bb                |   14 +
+>  .../nucleoidai/nucleoidai_0.7.10.bb           |   11 +
+>  meta/classes-global/base.bbclass              |   47 +-
+>  meta/classes-global/patch.bbclass             |   17 +-
+>  meta/classes-recipe/early.bbclass             |   61 +
+>  meta/classes-recipe/go-mod.bbclass            |   10 +-
+>  meta/classes-recipe/go.bbclass                |   22 +-
+>  meta/classes-recipe/nodejs-arch.bbclass       |   15 +
+>  meta/classes-recipe/vendor.bbclass            |   28 +
+>  meta/classes-recipe/vendor_cargo.bbclass      |   46 +
+>  meta/classes-recipe/vendor_go.bbclass         |   59 +
+>  meta/classes-recipe/vendor_npm.bbclass        |  115 +
+>  meta/classes-recipe/vendor_npm_build.bbclass  |   50 +
+>  meta/classes/archiver.bbclass                 |    4 +-
+>  meta/classes/buildhistory.bbclass             |    4 +-
+>  meta/classes/copyleft_compliance.bbclass      |    2 +-
+>  meta/classes/create-spdx-2.2.bbclass          |   14 +-
+>  meta/classes/create-spdx.bbclass              |    2 +-
+>  meta/classes/externalsrc.bbclass              |    2 +-
+>  meta/conf/bitbake.conf                        |    1 +
+>  meta/lib/oe/patch.py                          |   10 +-
+>  meta/lib/oe/spdx30_tasks.py                   |    5 +-
+>  meta/lib/oe/vendor/__init__.py                |   28 +
+>  meta/lib/oe/vendor/cargo.py                   |  121 +
+>  meta/lib/oe/vendor/go.py                      |   96 +
+>  meta/lib/oe/vendor/npm.py                     |  141 +
+>  meta/lib/oeqa/selftest/cases/oelib/vendor.py  |  237 +
+>  .../python/python3-bcrypt-crates.inc          |   84 -
+>  .../python/python3-bcrypt_4.2.1.bb            |    4 +-
+>  .../python/python3-cryptography-crates.inc    |   76 -
+>  .../python/python3-cryptography.bb            |    4 +-
+>  .../python/python3-maturin-crates.inc         |  712 --
+>  .../python/python3-maturin_1.8.1.bb           |    4 +-
+>  .../python/python3-rpds-py-crates.inc         |   54 -
+>  .../python/python3-rpds-py_0.22.3.bb          |    4 +-
+>  meta/recipes-gnome/librsvg/librsvg-crates.inc |  590 --
+>  ...-to-get-an-updated-idna-rustsec-2024.patch |  398 ++
+>  meta/recipes-gnome/librsvg/librsvg_2.59.2.bb  |    7 +-
+>  41 files changed, 7633 insertions(+), 1582 deletions(-)
+>  create mode 100644 meta-selftest/recipes-support/crucible/crucible2_2023.11.02.bb
+>  create mode 100644 meta-selftest/recipes-support/node-red/node-red/package-lock.json
+>  create mode 100644 meta-selftest/recipes-support/node-red/node-red_4.0.8.bb
+>  create mode 100644 meta-selftest/recipes-support/nucleoidai/nucleoidai_0.7.10.bb
+>  create mode 100644 meta/classes-recipe/early.bbclass
+>  create mode 100644 meta/classes-recipe/nodejs-arch.bbclass
+>  create mode 100644 meta/classes-recipe/vendor.bbclass
+>  create mode 100644 meta/classes-recipe/vendor_cargo.bbclass
+>  create mode 100644 meta/classes-recipe/vendor_go.bbclass
+>  create mode 100644 meta/classes-recipe/vendor_npm.bbclass
+>  create mode 100644 meta/classes-recipe/vendor_npm_build.bbclass
+>  create mode 100644 meta/lib/oe/vendor/__init__.py
+>  create mode 100644 meta/lib/oe/vendor/cargo.py
+>  create mode 100644 meta/lib/oe/vendor/go.py
+>  create mode 100644 meta/lib/oe/vendor/npm.py
+>  create mode 100644 meta/lib/oeqa/selftest/cases/oelib/vendor.py
+>  delete mode 100644 meta/recipes-devtools/python/python3-bcrypt-crates.inc
+>  delete mode 100644 meta/recipes-devtools/python/python3-cryptography-crates.inc
+>  delete mode 100644 meta/recipes-devtools/python/python3-maturin-crates.inc
+>  delete mode 100644 meta/recipes-devtools/python/python3-rpds-py-crates.inc
+>  delete mode 100644 meta/recipes-gnome/librsvg/librsvg-crates.inc
+>  create mode 100644 meta/recipes-gnome/librsvg/librsvg/0001-update-url-crate-to-get-an-updated-idna-rustsec-2024.patch
+> 
+> -- 
+> 2.39.5
+> 
+
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#17192): https://lists.openembedded.org/g/bitbake-devel/message/17192
+> Mute This Topic: https://lists.openembedded.org/mt/111123517/1050810
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [bruce.ashfield@gmail.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
+
 
