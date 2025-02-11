@@ -1,193 +1,314 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39301C0219E
-	for <webhook@archiver.kernel.org>; Tue, 11 Feb 2025 16:22:46 +0000 (UTC)
-Received: from DUZPR83CU001.outbound.protection.outlook.com (DUZPR83CU001.outbound.protection.outlook.com [52.101.67.55])
- by mx.groups.io with SMTP id smtpd.web11.3397.1739290956405040499
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88453C0219B
+	for <webhook@archiver.kernel.org>; Tue, 11 Feb 2025 17:20:06 +0000 (UTC)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web10.5091.1739294401805214646
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 11 Feb 2025 08:22:36 -0800
+ Tue, 11 Feb 2025 09:20:02 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=selector1 header.b=B5R6evLP;
- spf=pass (domain: axis.com, ip: 52.101.67.55, mailfrom: peter.kjellerstedt@axis.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KNN79slP8Rgk1t3aXAGeC4g0nFGlEdMDYPABil+jftoLSu7Y6OTqD6erBr2Rx7RQST0LQ0WJSq7eHD8miYXGiblbpTuNgpCd9N/lTxQufiYNQaRxxVBWo7q3JDs6SDrRTqfLKtYyl7dKDNXS14RFaMZ3rm/GH8rErWzYc9VINltU2iJf+m9E90t2jr2D5x1+dNZsKkxI4pm4Y834jpeUKNRXP202XaX2DZhSEwtpufJR2r9qVuZjouZ+qQ5K1nmhDdotEJOPhoR8/doJsz4vh+4PFMb7iBAXG2zP+3btUQdBa/5udERq+IL1Mxdi2rKZmd4RI2Tabxv/JK0irOPt9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0CFI8yf+DikDfj97NHhtuzFJgBh3Hf9Hu+ubuIjOq+k=;
- b=FV7raMfzKNjdWy+7LZa9m5DSlpqrFuCS9jQlm7MimaQ0ud4RtCehxpe/nmZNocsFZeX5UyKbcGX0pz6SxkjrbnZvRdJu4VDTmJPZcgwQHd0lSD2GfPSQHRFoTR+i2K3FB6N9Y9QcDvqd1GjhImzEQ/Sv4s947xXz05NksZXuPjPq/qmPDCjV6z/aNZV7XkhAt4a4orSHTmRekOI7NHpU9DVQyUlPbnIorA8hmhvXhipe1pRkrUnHdr6cTOiMIcvMGnAiJrViGaIkekGcpHf1eVdlecmZU0wbRzP6tneNMr5Irta7xCwQOrICZ3bSRaOysClMF8ibQDaPEe1lQztTgQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
- dkim=pass header.d=axis.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0CFI8yf+DikDfj97NHhtuzFJgBh3Hf9Hu+ubuIjOq+k=;
- b=B5R6evLPl/ifvF+tMFoWVD9zaviU8spTP6RLxYWGvk/xt8NRdSuD/bBoHE3w2Y9Z/gCR87mIGlvjvAVqQPifMbdOZyYuuCnRAJG1pu24JsuKTchYHuqAzrQ4Q1xzr8KfmmqJQDAIjKfJ1LQsIgjkzueZ7kAe3raOjH8Q1hvRYbE=
-Received: from DB5PR02MB10213.eurprd02.prod.outlook.com (2603:10a6:10:4a8::17)
- by AM9PR02MB6884.eurprd02.prod.outlook.com (2603:10a6:20b:2cf::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Tue, 11 Feb
- 2025 16:22:32 +0000
-Received: from DB5PR02MB10213.eurprd02.prod.outlook.com
- ([fe80::1bee:3174:a078:5af9]) by DB5PR02MB10213.eurprd02.prod.outlook.com
- ([fe80::1bee:3174:a078:5af9%6]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
- 16:22:32 +0000
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: "stefan.herbrechtsmeier-oss@weidmueller.com"
-	<stefan.herbrechtsmeier-oss@weidmueller.com>,
-	"openembedded-core@lists.openembedded.org"
-	<openembedded-core@lists.openembedded.org>
-CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: RE: [bitbake-devel] [RFC PATCH 10/30] conf: bitbake: add
- SRC_URI_FILES variable
-Thread-Topic: [bitbake-devel] [RFC PATCH 10/30] conf: bitbake: add
- SRC_URI_FILES variable
-Thread-Index: AQHbfJX+IYJ6OQ0qukCyKxHklPFNXbNCR7PA
-Date: Tue, 11 Feb 2025 16:22:32 +0000
-Message-ID: 
- <DB5PR02MB10213E77A6A5281EE044BA688EFFD2@DB5PR02MB10213.eurprd02.prod.outlook.com>
-References: 
- <20250211150034.18696-1-stefan.herbrechtsmeier-oss@weidmueller.com>
- <20250211150034.18696-11-stefan.herbrechtsmeier-oss@weidmueller.com>
-In-Reply-To: 
- <20250211150034.18696-11-stefan.herbrechtsmeier-oss@weidmueller.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axis.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DB5PR02MB10213:EE_|AM9PR02MB6884:EE_
-x-ms-office365-filtering-correlation-id: 3d04de8a-fe12-45f3-51b0-08dd4ab84963
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
-x-microsoft-antispam-message-info: 
- =?us-ascii?Q?jho1dpiP6bz2n/YZaqTIYOTHycYc8BkAq63mx9FHwGdNN7ltmamSmtIDI+AE?=
- =?us-ascii?Q?02RoL8O4fGF3AAJbEUjE7vZVylmX4j8m8cO6W+7s3wYzldwq6C87qn4pw8vN?=
- =?us-ascii?Q?txnSKy9e38BVnDJvDQBGaianspGFCLDYEm3Gm8Sa2SlqzYmGN6VbBLukU2NB?=
- =?us-ascii?Q?3zxQqrkJ0cBTd4GC1fLx0z0KXoHYuXfAfPazwBLVqfkvYLgqaeKxK8OzVSkB?=
- =?us-ascii?Q?f7Y8QoJJrLnKB0y+r5pMLClHoUzoQzBjnymUwyL1jWWnR4JmShxtnd4h+5nm?=
- =?us-ascii?Q?uiOsY0o7ZSeB478P5J9TtUtQhG7mg6cN9Ak8HcFuPClGo5nJg2W8qUxBCmfr?=
- =?us-ascii?Q?mBtLHX0V50VuLhegfygLi+NNsIl7DJcCP8uGYoelVXOHyN9iM2ZTzQ9gr+yI?=
- =?us-ascii?Q?63DDkiMclzPUc/i/ivPdkUVs476RclGVG26eUntN/Jwve+q5H0ypeLONF37w?=
- =?us-ascii?Q?MO8BozQYXbxN1NS6LAABJE9F5A25XD6SU6oxm0X5jtXqDIuIjGDY62QjxeHR?=
- =?us-ascii?Q?m5MABwlX9F7tUmP2HPxvwH/qliycss+c//ehtCJ4wEjIbpbr4ODGjfEo/Exk?=
- =?us-ascii?Q?+EtpvUoysVpmX4Qxsb/uZkUJhn5kVZqMWSEgPHmT4GnUDe06eewb5BRLGHMZ?=
- =?us-ascii?Q?PWSRl6rF5T/5l9OP2Z8VEQ2jPT8wAYnfosxenV+MKbY7cCPsQJ+MrSIgeMPR?=
- =?us-ascii?Q?oNeGzm32A9j7IZbi03c80ATjPlEAR+YMYdM3iXk5YL9H0VS9rwlsB4Zcnr6i?=
- =?us-ascii?Q?xLXppzWaX/aPpWJJY4dwYiBY5RQmE9Nqbnk8Hzgw1LrnvQUSRa7Hs3qi1B10?=
- =?us-ascii?Q?tq0zk31gZw29Xhru2DruoI662I1Qy0Cbk/sz9LlgtojRltSiVGXirGgfGc/w?=
- =?us-ascii?Q?H4LCtzMxMHGACLU1R54RzAo5ln0LeHZJ6jBEr2SdD+SktWi78qibGFHNZF1o?=
- =?us-ascii?Q?MXNrJDzPuiudDTi0QsjQJhNelPM2s1iTLgEQ/yMYEY4yDBBxBUHdDcF7MPK4?=
- =?us-ascii?Q?T57/C8kw0E6cjoEtIVPnGC/hbMpriIChj7nH8nHVEOGVHII7sV6DN+sxmo3J?=
- =?us-ascii?Q?ieDum1FKKinEFI9+tVSP98Y2uWuDxfp5AiI+2wuBHNjXtGoFlV8QjgLXccrI?=
- =?us-ascii?Q?gum8scLshRmSyPYxyPrdEwstUYZTFX0h39OAhkqct3FopHh+K8otyYBfN92l?=
- =?us-ascii?Q?3oFf5pWtmYRuaOvufqjedJ5UObHb31rwSZehrDFwtIZ9ND7JtSPZ1Fjf1Txt?=
- =?us-ascii?Q?V0rBtdmjKZw1H41b5KjINGlB3CxCmBZ45OSEAYluAYT4CnypUyj3hlpzXSj8?=
- =?us-ascii?Q?bTEorgBViEGcfIZtJoNxEt+j2E6GRKwxJ0/SbSHrRlw+hTW57VaNeYByX9ds?=
- =?us-ascii?Q?IyoCV/a0CgY+ZBfAQQFUokt6Idd8Q0Q88nnn6hkoJxR6vX1p5lEY6tFOAOfT?=
- =?us-ascii?Q?x2aFThL5aTI=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB5PR02MB10213.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?dQDjZxMRIGH7Z5sdu1JkPJesQqX8PIXH/iXLuVY2ux+EFGif6uce9NfGJNK8?=
- =?us-ascii?Q?Fb4iHCWkdimKiKAvdzJdpMI9GDbbP1hf8id+aLWoB/MYvnwpitRNom7Z421X?=
- =?us-ascii?Q?7k1tqsGIU8YETByVPrwU3E3y2YEvksgv3Q2O3GHGAi9kFR0Klatf9of0Xtti?=
- =?us-ascii?Q?qKvtzCspuFKiSCW+rySEpuqEbAljVt+moyQBBBAtcXzAm6Sfo9EArwonHPwq?=
- =?us-ascii?Q?7OxW6vW7hg258ImKPLe10z7zVHtKm6UzDFWeB6/+VNmLtxnc57MfV7nEO019?=
- =?us-ascii?Q?TZj0UWBpG4mZaw402ACwPAc1aDXo6yQXPODFBMHZIk7AB4WDgvDb8KXGlMFO?=
- =?us-ascii?Q?7MnolqhgGnluZuZ+DhpWQWi4xiqXnbgYmezDVhsXJGuYWSV24h6jq+vJ5oa5?=
- =?us-ascii?Q?yvOcKlvRtlNAkmzBHeHqKubVkA6tALmOBrwJYFR5AEXhBBP4GQRuCkn0Tt0B?=
- =?us-ascii?Q?solMD7++vbBFdaKX+NRUBH7LpbKpTu15W89e8kgtLB94hqVF83mTaK9vKAND?=
- =?us-ascii?Q?urHDGCJtFWpcIXVYTAsOfYjiET2LJEi0BgRwKiY9vS1G+S+o+DZTn1PlyuQI?=
- =?us-ascii?Q?tF/0gTD2S6srCPcav/g6CqL91xMoug3neOhxvy/YTlieLsnXgIB9KEo9SIyh?=
- =?us-ascii?Q?G4aPRZyEzyFYbROdJv2s+oKvbaCJPLkddgMBci++kRUxLWYbIGNPaTjHc9eo?=
- =?us-ascii?Q?S1qU2PKl7jCsfF8cyt/zwnHzJanL+tPal+wIZZ/isqIIRJl63f52hb7Hi/Xh?=
- =?us-ascii?Q?ky5N+Z0xDzrfr31T1y6jbNpQKKKG+J5cXNylrCnBp8wvOqlg0K1DfjXNEaT+?=
- =?us-ascii?Q?cf077Om7A6nuAv9JTJfV6lGDC+ZYO0mzxAYSkEa7CtRjhFDxFVfHH2g5YMxT?=
- =?us-ascii?Q?gwmRhCIfqAlQegT/ewNN8KsI3Hjaf9DM8ViGYoB/AKK9EqSyDaOdp8EXVC/A?=
- =?us-ascii?Q?TwZpzrk9GLczTFObcT9q5HmTRFcDj3kSTaYgAc8IqA+dKQU5+g/pGALdRZyt?=
- =?us-ascii?Q?N7MrbafElGAuxp4rKFTFBM0qPeMpHRUlRcF7jN3/0N5W0xZaZNrldJoxBlCk?=
- =?us-ascii?Q?TbZB6TwJprZSFDf2AMsnAtPJ3RGTgAUDc3SQGsoPFVkNdUbVzeCTeI+ks3fa?=
- =?us-ascii?Q?onNVW+jNUpdIXhlDh58qB8UO9Xil5NujXMVgJ38xFFLzfw2rM4vIlsFYYyZx?=
- =?us-ascii?Q?5I81LdVaBxNvI9000YkRo+wKzLPJy2ASkS1l/KNAukBYKRI3zWg+nqL4Tvks?=
- =?us-ascii?Q?UOEocYGPXfHgp6Kxf7p9VUfShdCWwj8v8hOoqsqcwvAFQtqndW2aCliRSrgn?=
- =?us-ascii?Q?pJF6Stb5gFay32YgZOKtDlLyRh4e9JqUPg1RBxJ10sHK5/DJqxEVPPyk7C1B?=
- =?us-ascii?Q?WxDKW9AYsgDBn0JeFvWg8fSx1qSS39HVbaXReWdJ+Tp6IzlBn8DCZ8zT+ryo?=
- =?us-ascii?Q?O2g8TH63BMY9rD6WC7VfR850ZdZENZgsolllmMCX9kNRABh4suyXsMTb9bhp?=
- =?us-ascii?Q?q5jpBTlzWCjXABhoblQE1Wn6jYjopUwfGKaIkzweceqx1vSWWt/dSf1bXI8u?=
- =?us-ascii?Q?uZQ0AFHMRlgsfLQfB5w=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ dkim=pass header.i=@smile.fr header.s=google header.b=O4Qtnm+v;
+ spf=pass (domain: smile.fr, ip: 209.85.128.49, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43957634473so2234105e9.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 11 Feb 2025 09:20:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smile.fr; s=google; t=1739294400; x=1739899200; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GU5VVRgE3V9GYadMgfT9kDppPJC6MQlq3yRHoz9P80c=;
+        b=O4Qtnm+vqr09yY1z/SJ1AuDZU+ayojOTX6XiZyLkBmmoYu4N7QzB5rHb1LhHcwgPpN
+         U0MZb+umOokN9tko5TWdhV+kQGJYeaMWK2lUZvAR8KDdxsGDadIcNQSET91KHys8aUjX
+         HkbYL4bJuiVQ/AwgQrkt/ah8s/jkEaQfIcPuQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739294400; x=1739899200;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GU5VVRgE3V9GYadMgfT9kDppPJC6MQlq3yRHoz9P80c=;
+        b=Hlx/sPaqZ790fjYit3zBblhCpIFYAMs+jhxcmNGOaww+Hy7NAlpjE/hMO3RfVHDndv
+         eBst3DH0oCNnNsEO/eDt5SZxZ9fF0PxwD23npaiZytCOJUg7VICt2FuLaoH7EV2j158r
+         qxbp8Umt6z+l7IGClMxAr3CjSyLm7dtnee/nRl7D72UJkxGXvx50E0vqtesPEFXKCWSl
+         TUlRtqVeVEYJ0daP2XEmVq5EOEY+QoDTI7XH2z6JtR5W95cvYrYbYcEn6OOKxNTUc7lk
+         49IZpql0jYlwR6Ie7qXlPEFJOJAqaluiOpqUp3TD1E/5cDvfgbbt0C1Yqnr4aNVCJvY+
+         q4Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCV9y1S2Ymh2CFeO1zRNI8sUPi9SV791y16yfWflyG1M9w9WXtrZGECvM0SeIDOp/C97MdgQUdTbnILcSYam@lists.openembedded.org
+X-Gm-Message-State: AOJu0Yx8eV9XUxZVHLQWRw2UJAMLCKUFYPahXEDDZWrZnJ+R95bbTocG
+	nZT0mD1Zkk/fGsDcdjdLBfan7J/OgbMkOKxPM8UFdbTzptoaAlFEetGVBdEucJTK4JdBxhUuTZz
+	smffcTdyQwKP3KhJ88H5V8fEaKrKfWGZgQ095Mw==
+X-Gm-Gg: ASbGncs6DIhAltWr1zdKV6cMZgyTUIYPmbfHnJmL3uPSKnF+AzmC95rcc19BmZJmasq
+	6E/hYqiUZ4z09KVG83OfOt5j2OZ5lT13kkfmaAGKjHXJWoad6rqbp2J1/zwsqJSXnTDYmNOCZ
+X-Google-Smtp-Source: AGHT+IFy1cN1PD6kRs/qU3R0nUpfEIqZz8mZymWp73kEhJaQVaaJcy33fa1BiF0ulStqOVpypvqJTlp+3PczHGsRjPs=
+X-Received: by 2002:a05:6000:1448:b0:38d:b2e4:6d97 with SMTP id
+ ffacd0b85a97d-38dc9343d93mr16820630f8f.41.1739294399991; Tue, 11 Feb 2025
+ 09:19:59 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB5PR02MB10213.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d04de8a-fe12-45f3-51b0-08dd4ab84963
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2025 16:22:32.1684
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yegfgLRTLuoenqC85FRw/gAEA2S9pWfLxAqERSdTm0kScXxKn+QfDecj65IsUA/j
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR02MB6884
+References: <c0723d2e-7742-4746-bc78-b0aee82fb8ed@syslinbit.com>
+ <CAMSfU+4cpu9nqUuAS18+1MTBpOnJPd52Yt1jK3XKH66ywJ09+Q@mail.gmail.com> <AS4PR04MB9316434BAC675FF7E4B83781A9FD2@AS4PR04MB9316.eurprd04.prod.outlook.com>
+In-Reply-To: <AS4PR04MB9316434BAC675FF7E4B83781A9FD2@AS4PR04MB9316.eurprd04.prod.outlook.com>
+From: Yoann Congal <yoann.congal@smile.fr>
+Date: Tue, 11 Feb 2025 18:19:34 +0100
+X-Gm-Features: AWEUYZlwxMfgzFxA0R5s-tw-zs03VHnS_dIG68tgHuT9aTpCXj6aTwZEjaBhKLs
+Message-ID: <CAMSfU+6NiWiQfGQE1kt1XSSOB6=vFTuC=e1=z2Tub7NDZNtvmQ@mail.gmail.com>
+Subject: Re: [bitbake-devel] [scarthgap] backport request for ??= operator for
+ variable flags fix
+To: Louis Rannou <louis.rannou@non.se.com>
+Cc: "louis.rannou@syslinbit.com" <louis.rannou@syslinbit.com>, 
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>, Steve Sakoman <steve@sakoman.com>, 
+	Pascal EBERHARD <pascal.eberhard@se.com>
+Content-Type: multipart/alternative; boundary="000000000000df2be7062de108f9"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 11 Feb 2025 16:22:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17194
+ <bitbake-devel@lists.openembedded.org>; Tue, 11 Feb 2025 17:20:06 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17195
 
-> -----Original Message-----
-> From: bitbake-devel@lists.openembedded.org <bitbake-devel@lists.openembed=
-ded.org> On Behalf Of Stefan Herbrechtsmeier via lists.openembedded.org
-> Sent: den 11 februari 2025 16:00
-> To: openembedded-core@lists.openembedded.org
-> Cc: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>; bitb=
-ake-devel@lists.openembedded.org
-> Subject: [bitbake-devel] [RFC PATCH 10/30] conf: bitbake: add SRC_URI_FIL=
-ES variable
->=20
-> From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
->=20
-> Add the variable SRC_URI_FILES to collect files whichs contains
-> additional SRC_URI lines.
->=20
-> Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller=
-.com>
-> ---
->=20
->  meta/conf/bitbake.conf | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/meta/conf/bitbake.conf b/meta/conf/bitbake.conf
-> index 8b607088c6..ed67500ba7 100644
-> --- a/meta/conf/bitbake.conf
-> +++ b/meta/conf/bitbake.conf
-> @@ -745,6 +745,7 @@ AUTOREV =3D "${@bb.fetch2.get_autorev(d)}"
->  SRCPV =3D ""
->=20
->  SRC_URI =3D ""
-> +SRC_URI_FILES =3D ""
+--000000000000df2be7062de108f9
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Do we really need a new variable for this? Can't you add some parameter=20
-instead to the URIs that should be handled separately?
+Le mar. 11 f=C3=A9vr. 2025 =C3=A0 16:33, Louis Rannou <louis.rannou@non.se.=
+com> a
+=C3=A9crit :
 
-If a parameter is not appropriate, then the name of the variable should=20
-be reconsidered. Based on the name it is unclear what is expected to go=20
-in SRC_URI and what should go in SRC_URI_FILES.
+> Hello,
+>
 
->=20
->  # Use pseudo as the fakeroot implementation
->  PSEUDO_LOCALSTATEDIR ?=3D "${WORKDIR}/pseudo/"
+Hello,
+
+
+> Please abort the request as I found some issue in relation. The attached
+> patch should confirm the issue.
+>
+> Weak values are now omitted in getVarFlags (while they were incorrect but
+> present before 052746da9a7e96b43ec45a04322e8576a6cbaab7.
+>
+
+Hello,
+
+I've reoppened https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D15685 wi=
+th
+your infomations, thanks!
+
+Weirdly, not all your emails appear in the archive :
+https://lists.openembedded.org/g/bitbake-devel/topics
+... which means, only CC'd people received it.
+You may want to check that both your mail addresses are subscribed to the
+list.
+
+Do you plan to work on it? If yes, don't hesitate to take the bug or add
+more info :)
+
+Louis Rannou
+> Schneider Electric
+>
+>
+> General
+> ________________________________________
+> De : Yoann Congal <yoann.congal@smile.fr>
+> Envoy=C3=A9 : mardi 11 f=C3=A9vrier 2025 11:07
+> =C3=80 : louis.rannou@syslinbit.com
+> Cc : bitbake-devel@lists.openembedded.org; Steve Sakoman; Pascal
+> EBERHARD; Louis Rannou
+> Objet : Re: [bitbake-devel] [scarthgap] backport request for ??=3D operat=
+or
+> for variable flags fix
+>
+> [External email: Use caution with links and attachments]
+>
+> ________________________________
+>
+>
+>
+> Hello,
+>
+> Le mar. 11 f=C3=A9vr. 2025 =C3=A0 10:31, Louis Rannou via lists.openembed=
+ded.org<
+> http://lists.openembedded.org/> <louis.rannou=3D
+> syslinbit.com@lists.openembedded.org<mailto:
+> syslinbit.com@lists.openembedded.org>> a =C3=A9crit :
+> Hello,
+>
+> May we apply the commit following commit to scarthgap as the issue also
+> exist:
+>
+> commit 0329a7e3ac694737f2d2c1861f65492551360663
+> Author: Yoann Congal <yoann.congal@smile.fr<mailto:yoann.congal@smile.fr>=
+>
+> Date:   Sat Jan 11 15:13:51 2025 +0100
+>
+>      data_smart: fix ??=3D operator for variable flags
+>
+> I suppose the other commit that came along for tests is also fine:
+>
+> commit e3536b3c67ad1a4195fcbd5485d2dc8308014fff (HEAD -> 2.8)
+> Author: Yoann Congal <yoann.congal@smile.fr<mailto:yoann.congal@smile.fr>=
+>
+> Date:   Sat Jan 11 15:13:50 2025 +0100
+>
+>      tests/parse: add test for ?=3D and ??=3D operators for variable flag=
+s
+>
+> Here is the path link for details
+>
+> https://lore.kernel.org/bitbake-devel/20250111141351.3993834-1-yoann.cong=
+al@smile.fr/#t
+> <
+> https://lore.kernel.org/bitbake-devel/20250111141351.3993834-1-yoann.cong=
+al@smile.fr/#t
+> >
+>
+> Thanks,
+> Louis Rannou
+>
+> To clarify, you target the "2.8" bitbake branch (the one Scarthgap poky
+> uses)
+> I could not find the doc for this but we usually have "[2.8]" in mail
+> title for bitbake backport requests (for example:
+> https://lists.openembedded.org/g/bitbake-devel/message/16872<
+> https://lists.openembedded.org/g/bitbake-devel/message/16872>)
+>
+> You may also want to state explicitly that this is related to the bug
+> https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D15685<
+> https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D15685>
+>
+> Thanks (always nice to see my patches getting used :) )!
 > --
-> 2.39.5
+> Yoann Congal
+> Smile ECS - Tech expert
+>
 
-//Peter
 
+--=20
+Yoann Congal
+Smile ECS - Tech expert
+
+--000000000000df2be7062de108f9
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_quote gmail_quote_container"><div dir=
+=3D"ltr" class=3D"gmail_attr">Le=C2=A0mar. 11 f=C3=A9vr. 2025 =C3=A0=C2=A01=
+6:33, Louis Rannou &lt;<a href=3D"mailto:louis.rannou@non.se.com">louis.ran=
+nou@non.se.com</a>&gt; a =C3=A9crit=C2=A0:<br></div><blockquote class=3D"gm=
+ail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,=
+204,204);padding-left:1ex">Hello,<br></blockquote><div><br></div><div>Hello=
+,<br></div><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"marg=
+in:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1e=
+x">
+Please abort the request as I found some issue in relation. The attached pa=
+tch should confirm the issue.<br>
+<br>
+Weak values are now omitted in getVarFlags (while they were incorrect but p=
+resent before 052746da9a7e96b43ec45a04322e8576a6cbaab7.<br></blockquote><di=
+v><br></div><div>Hello,</div><div><br></div><div>I&#39;ve reoppened <a href=
+=3D"https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D15685">https://bugz=
+illa.yoctoproject.org/show_bug.cgi?id=3D15685</a> with your infomations, th=
+anks!</div><div><br></div><div>Weirdly, not all your emails appear in the a=
+rchive : <a href=3D"https://lists.openembedded.org/g/bitbake-devel/topics">=
+https://lists.openembedded.org/g/bitbake-devel/topics</a></div><div>... whi=
+ch means, only CC&#39;d people received it.</div><div>You may want to check=
+ that both your mail addresses are subscribed to the list.</div><div><br></=
+div><div>Do you plan to work on it? If yes, don&#39;t hesitate to take the =
+bug or add more info :)<br></div><div><br></div><blockquote class=3D"gmail_=
+quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,=
+204);padding-left:1ex">
+Louis Rannou<br>
+Schneider Electric<br>
+<br>
+<br>
+General<br>
+________________________________________<br>
+De : Yoann Congal &lt;<a href=3D"mailto:yoann.congal@smile.fr" target=3D"_b=
+lank">yoann.congal@smile.fr</a>&gt;<br>
+Envoy=C3=A9 : mardi 11 f=C3=A9vrier 2025 11:07<br>
+=C3=80 : <a href=3D"mailto:louis.rannou@syslinbit.com" target=3D"_blank">lo=
+uis.rannou@syslinbit.com</a><br>
+Cc : <a href=3D"mailto:bitbake-devel@lists.openembedded.org" target=3D"_bla=
+nk">bitbake-devel@lists.openembedded.org</a>; Steve Sakoman; Pascal EBERHAR=
+D; Louis Rannou<br>
+Objet : Re: [bitbake-devel] [scarthgap] backport request for ??=3D operator=
+ for variable flags fix<br>
+<br>
+[External email: Use caution with links and attachments]<br>
+<br>
+________________________________<br>
+<br>
+<br>
+<br>
+Hello,<br>
+<br>
+Le mar. 11 f=C3=A9vr. 2025 =C3=A0 10:31, Louis Rannou via <a href=3D"http:/=
+/lists.openembedded.org" rel=3D"noreferrer" target=3D"_blank">lists.openemb=
+edded.org</a>&lt;<a href=3D"http://lists.openembedded.org/" rel=3D"noreferr=
+er" target=3D"_blank">http://lists.openembedded.org/</a>&gt; &lt;louis.rann=
+ou=3D<a href=3D"mailto:syslinbit.com@lists.openembedded.org" target=3D"_bla=
+nk">syslinbit.com@lists.openembedded.org</a>&lt;mailto:<a href=3D"mailto:sy=
+slinbit.com@lists.openembedded.org" target=3D"_blank">syslinbit.com@lists.o=
+penembedded.org</a>&gt;&gt; a =C3=A9crit :<br>
+Hello,<br>
+<br>
+May we apply the commit following commit to scarthgap as the issue also<br>
+exist:<br>
+<br>
+commit 0329a7e3ac694737f2d2c1861f65492551360663<br>
+Author: Yoann Congal &lt;<a href=3D"mailto:yoann.congal@smile.fr" target=3D=
+"_blank">yoann.congal@smile.fr</a>&lt;mailto:<a href=3D"mailto:yoann.congal=
+@smile.fr" target=3D"_blank">yoann.congal@smile.fr</a>&gt;&gt;<br>
+Date:=C2=A0 =C2=A0Sat Jan 11 15:13:51 2025 +0100<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0data_smart: fix ??=3D operator for variable flags<br>
+<br>
+I suppose the other commit that came along for tests is also fine:<br>
+<br>
+commit e3536b3c67ad1a4195fcbd5485d2dc8308014fff (HEAD -&gt; 2.8)<br>
+Author: Yoann Congal &lt;<a href=3D"mailto:yoann.congal@smile.fr" target=3D=
+"_blank">yoann.congal@smile.fr</a>&lt;mailto:<a href=3D"mailto:yoann.congal=
+@smile.fr" target=3D"_blank">yoann.congal@smile.fr</a>&gt;&gt;<br>
+Date:=C2=A0 =C2=A0Sat Jan 11 15:13:50 2025 +0100<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0tests/parse: add test for ?=3D and ??=3D operators for =
+variable flags<br>
+<br>
+Here is the path link for details<br>
+<a href=3D"https://lore.kernel.org/bitbake-devel/20250111141351.3993834-1-y=
+oann.congal@smile.fr/#t" rel=3D"noreferrer" target=3D"_blank">https://lore.=
+kernel.org/bitbake-devel/20250111141351.3993834-1-yoann.congal@smile.fr/#t<=
+/a>&lt;<a href=3D"https://lore.kernel.org/bitbake-devel/20250111141351.3993=
+834-1-yoann.congal@smile.fr/#t" rel=3D"noreferrer" target=3D"_blank">https:=
+//lore.kernel.org/bitbake-devel/20250111141351.3993834-1-yoann.congal@smile=
+.fr/#t</a>&gt;<br>
+<br>
+Thanks,<br>
+Louis Rannou<br>
+<br>
+To clarify, you target the &quot;2.8&quot; bitbake branch (the one Scarthga=
+p poky uses)<br>
+I could not find the doc for this but we usually have &quot;[2.8]&quot; in =
+mail title for bitbake backport requests (for example: <a href=3D"https://l=
+ists.openembedded.org/g/bitbake-devel/message/16872" rel=3D"noreferrer" tar=
+get=3D"_blank">https://lists.openembedded.org/g/bitbake-devel/message/16872=
+</a>&lt;<a href=3D"https://lists.openembedded.org/g/bitbake-devel/message/1=
+6872" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g=
+/bitbake-devel/message/16872</a>&gt;)<br>
+<br>
+You may also want to state explicitly that this is related to the bug <a hr=
+ef=3D"https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D15685" rel=3D"nor=
+eferrer" target=3D"_blank">https://bugzilla.yoctoproject.org/show_bug.cgi?i=
+d=3D15685</a>&lt;<a href=3D"https://bugzilla.yoctoproject.org/show_bug.cgi?=
+id=3D15685" rel=3D"noreferrer" target=3D"_blank">https://bugzilla.yoctoproj=
+ect.org/show_bug.cgi?id=3D15685</a>&gt;<br>
+<br>
+Thanks (always nice to see my patches getting used :) )!<br>
+--<br>
+Yoann Congal<br>
+Smile ECS - Tech expert<br>
+</blockquote></div><div><br clear=3D"all"></div><br><span class=3D"gmail_si=
+gnature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_signature"><d=
+iv dir=3D"ltr"><font face=3D"Raleway, regular">Yoann Congal</font><div><fon=
+t face=3D"Raleway, regular">Smile ECS - Tech expert<br></font></div></div><=
+/div></div>
+
+--000000000000df2be7062de108f9--
 
