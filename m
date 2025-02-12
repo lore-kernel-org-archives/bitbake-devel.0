@@ -1,114 +1,120 @@
-Return-Path: <louis.rannou@syslinbit.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8C5C021A0
-	for <webhook@archiver.kernel.org>; Wed, 12 Feb 2025 12:17:16 +0000 (UTC)
-Received: from 12.mo583.mail-out.ovh.net (12.mo583.mail-out.ovh.net [46.105.39.65])
- by mx.groups.io with SMTP id smtpd.web11.14393.1739362629927005475
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2B2C02198
+	for <webhook@archiver.kernel.org>; Wed, 12 Feb 2025 14:00:57 +0000 (UTC)
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.web11.16357.1739368850309513043
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 12 Feb 2025 04:17:10 -0800
+ Wed, 12 Feb 2025 06:00:51 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@syslinbit.com header.s=ovhmo4479509-selector1 header.b=rE44IUBv;
- spf=softfail (domain: syslinbit.com, ip: 46.105.39.65, mailfrom: louis.rannou@syslinbit.com)
-Received: from director8.ghost.mail-out.ovh.net (unknown [10.108.25.16])
-	by mo583.mail-out.ovh.net (Postfix) with ESMTP id 4YtHP90BgRz1Wfn
-	for <bitbake-devel@lists.openembedded.org>; Wed, 12 Feb 2025 12:17:01 +0000 (UTC)
-Received: from ghost-submission-5b5ff79f4f-fb9gf (unknown [10.110.96.146])
-	by director8.ghost.mail-out.ovh.net (Postfix) with ESMTPS id CE7221FD7D;
-	Wed, 12 Feb 2025 12:16:59 +0000 (UTC)
-Received: from syslinbit.com ([37.59.142.113])
-	by ghost-submission-5b5ff79f4f-fb9gf with ESMTPSA
-	id n0MkBzqRrGfDjQAAM+UVKg:T3
-	(envelope-from <louis.rannou@syslinbit.com>); Wed, 12 Feb 2025 12:16:59 +0000
-Authentication-Results: garm.ovh; auth=pass (GARM-113S007ef6c2a76-d374-49f3-9e19-b369aad1a2dc,
-                    74B36F6499D71BB1255966C6406869B815799905) smtp.auth=louis.rannou@syslinbit.com
-X-OVh-ClientIp: 45.81.62.9
-From: Louis Rannou <louis.rannou@syslinbit.com>
-Date: Wed, 12 Feb 2025 13:16:19 +0100
-Subject: [PATCH 2/2] bitbake: tests/parse: add test for getVarFlags
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250212-varflags-v1-2-3a756c7aa95c@syslinbit.com>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=adIHpf7L;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-38dcac27bcbso548965f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 12 Feb 2025 06:00:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1739368849; x=1739973649; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QxfEa2xucVamCuD/DEkJC055XHezpdfcmYOgZW2o7p8=;
+        b=adIHpf7LPgODe95qiogur4MzZxQDD7tYq7sDJzffq/myieR2vuvK60hcug8NZ1gKvf
+         ZQuChYA0Ru1i9n3sF6tib1nxVLKzfRu6UNxScKMgq2v8+Qd8+fraNEowEa3w/fQWv185
+         NBePTp2+XK5pEjjBQGf5JriqzzTIR2hN0Tr0A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739368849; x=1739973649;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QxfEa2xucVamCuD/DEkJC055XHezpdfcmYOgZW2o7p8=;
+        b=N4pFw+FbGrF2kt1oucW4g/bJiIDdgwnsPKKBvnq7yFfDgMtK0/t0UKZGWxlbJ81I1W
+         yMXuEXc1tOaiKPuXSImfcFWiLrWTYzEUblvQRJzxfrE3+BdWSS0pbwVxDrsphQt/qNGX
+         2YL9/XNeB7HK6RwCkpgO9nuTCg+IDbABy9SqW2b/u7reg0Qtnjzs1Hy9imPoCxfUYeZ+
+         Oh9cCFk0uoXm3uF+ktD7HrncZmaoHJj06x5ZauYYu/HdjuFcfhyjCryI7yQC2tqs1akg
+         7bTAzYfDGUCIvih6Xa2AmlyDPlLmG75avjh1k+QIHCwTdXyC+GBaC0+TRBQM7PS8o/fi
+         Ay3g==
+X-Forwarded-Encrypted: i=1; AJvYcCWCymoG1vAH/wX0cGboLy/chdPAn8Z3djYWL1NQ0UBQi2k1VcSOGEZdVTbb2k1Av9LEw6F9DCnwtD+1opps@lists.openembedded.org
+X-Gm-Message-State: AOJu0YzyijdxSaT98e4l64rhjLZWlKowyd8NTFdJdqCAsmWz9zZFVu8t
+	0xofENU11BSL00X+z6RwTzvTXPCMfAzCHkwSxlofyMf09VFO+DZlM0NbRfYBIN8=
+X-Gm-Gg: ASbGncvA/HrVEBF7Mh51jx0dfUHqVLOnzveXdWOYCndU7Eymi77yb5Guuvvf2jfwVi4
+	Wxg9mt5QcBxdR5f/J+wGpPy5Hgcf3WEPu6746d/I/+iwsPJIelxtB57hcpUxTTPIF2NjWP5Zbwe
+	UwyjL6uznnKW9/9AsigbUsSny412Du7P4OwonGZzWDo1mngA/Joyg0gqLITZq8/6NRFfJj03KWl
+	lv1rN6aLDeH+DgzZONbgCwI/v7lS974kOGjqDBsIgWRxNXKCC1pf1gGAmhPlBidqZ5ww0rT/fIj
+	a/AjlLpXUV9ijc7nccPWOc6veqqWL25W1FEVM55DQOQr7yfCwd07XS5+Y6VBw6lawJ3lexztORV
+	RKQ==
+X-Google-Smtp-Source: AGHT+IEUeccin/45nGmwOzy8LodBNGBCtWGfx9nx1hwY/QlgMeqwdbmFNjHCqM0ol4UVAvyaEL0ohw==
+X-Received: by 2002:a5d:5985:0:b0:38d:ae4e:2267 with SMTP id ffacd0b85a97d-38dea1e1de5mr2694538f8f.11.1739368848094;
+        Wed, 12 Feb 2025 06:00:48 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:af16:73ba:601:d9ae? ([2001:8b0:aba:5f3c:af16:73ba:601:d9ae])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcb4410e6sm14536409f8f.8.2025.02.12.06.00.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 06:00:47 -0800 (PST)
+Message-ID: <07afa496c6e85a015e3f046275d1a6d42e5883e3.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH 1/2] bitbake: data_smart: fix ??=
+ operator for getVarFlags
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: louis.rannou@syslinbit.com, bitbake-devel@lists.openembedded.org
+Cc: louis.rannou@non.se.com, pascal.eberhard@se.com, yoann.congal@smile.fr
+Date: Wed, 12 Feb 2025 14:00:46 +0000
+In-Reply-To: <20250212-varflags-v1-1-3a756c7aa95c@syslinbit.com>
 References: <20250212-varflags-v1-0-3a756c7aa95c@syslinbit.com>
-In-Reply-To: <20250212-varflags-v1-0-3a756c7aa95c@syslinbit.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Louis Rannou <louis.rannou@syslinbit.com>, louis.rannou@non.se.com, 
- pascal.eberhard@se.com, yoann.congal@smile.fr
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739362618; l=1822;
- i=louis.rannou@syslinbit.com; s=20230614; h=from:subject:message-id;
- bh=fbpcn8AZFJy9XXkeGOy2u/XAzdpVFD/Xo8IiC5BwF+w=;
- b=6M0f5IYpJ1AewTo5sc1Bl9RH6X91TcbSe94BOGHtRO7HNDkALTrRjx0Di3S8DqI/dGUsF6S2D
- ieXSxoPzNUjCnV1g+jMypU0HtGV1NjHnyJif7PYcv3J3AY9xHIU4wqx
-X-Developer-Key: i=louis.rannou@syslinbit.com; a=ed25519;
- pk=QLSK64UNeqThVe2CiH917a68zTpexYuA7iXw6WQ0bbI=
-X-Ovh-Tracer-Id: 10465239637872336193
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegfeekiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefnohhuihhsucftrghnnhhouhcuoehlohhuihhsrdhrrghnnhhouhesshihshhlihhnsghithdrtghomheqnecuggftrfgrthhtvghrnhepudfhueeutdehffdvhfejleffudekieduffffteefiedutdeuhfehkeffueehfeevnecukfhppeduvdejrddtrddtrddupdeghedrkedurdeivddrledpfeejrdehledrudegvddruddufeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomheplhhouhhishdrrhgrnhhnohhusehshihslhhinhgsihhtrdgtohhmpdhnsggprhgtphhtthhopedupdhrtghpthhtohepsghithgsrghkvgdquggvvhgvlheslhhishhtshdrohhpvghnvghmsggvugguvggurdhorhhgpdfovfetjfhoshhtpehmohehkeefmgdpmhhouggvpehsmhhtphhouhht
-DKIM-Signature: a=rsa-sha256; bh=nrUk0Ar9H68BoKPcA9PE0qv1jd/DnLxKu/zROGW8ioo=;
- c=relaxed/relaxed; d=syslinbit.com; h=From; s=ovhmo4479509-selector1;
- t=1739362621; v=1;
- b=rE44IUBv49VCvpYBYPN1108V2RE5yAsaNaUIWYLZiRyNok4xOy64iHZlzC00c5ZSATtFttxp
- n2bqInzAD1pSQlhZ2JrYsWlwApWeVMwKoMyflXs4J11l+jTZCZ+t3OeZeKRZvNl41HHnBwmInij
- XPOYas/aI6JuiLtyeLEKbOV2HU5kyGKmi0SF8U1rmLZD5urWF8SB9v2OEDB+dYqNB55dPuNU7wK
- eXmXNtkBQo/Y3kNw2htlZaBJRwetS7K69byGtIqiXPca1QtPEXdMkj5NE1Dt/sEOgVjssnHNDua
- gIM5oXAfhuTEDyYjo1jpxh4wqx9f8L2eHU1UnAGXEF0pQ==
+	 <20250212-varflags-v1-1-3a756c7aa95c@syslinbit.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.54.0-1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 12 Feb 2025 12:17:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17204
+ <bitbake-devel@lists.openembedded.org>; Wed, 12 Feb 2025 14:00:57 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17205
 
-From: Louis Rannou <louis.rannou@non.se.com>
-
-Run the test with:
-    $ bitbake-selftest bb.tests.parse.ParseTest.test_parse_defaulttest
-    test_parse_defaulttest (bb.tests.parse.ParseTest.test_parse_defaulttest) ... ok
-
-    ----------------------------------------------------------------------
-    Ran 1 test in 0.001s
-
-    OK
-
-This is a test case for [YOCTO #15685]
-
-Signed-off-by: Louis Rannou <louis.rannou@non.se.com>
----
- lib/bb/tests/parse.py | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
-index e3cba67ad448a491ee9c094e6725eb68eba14b32..74a6c54ad1908357b65c37c37c8b8c299fd5f3bc 100644
---- a/lib/bb/tests/parse.py
-+++ b/lib/bb/tests/parse.py
-@@ -127,6 +127,22 @@ A[flag_default_twice] ??= "default flag second"
-         self.assertEqual(d.getVarFlag("A","flag_set_twice"), "set flag second")
-         self.assertEqual(d.getVarFlag("A","flag_question_twice"), "question flag first")
-         self.assertEqual(d.getVarFlag("A","flag_default_twice"), "default flag second")
-+        self.assertDictEqual(
-+            d.getVarFlags("A"),
-+            {
-+                "flag_set_vs_question": "set flag",
-+                "flag_set_vs_default": "set flag",
-+                "flag_question": "question flag",
-+                "flag_default": "default flag",
-+                "flag_question_vs_default": "question flag",
-+                "flag_default_vs_question": "question flag",
-+                "flag_set_question_default": "set flag",
-+                "flag_set_default_question": "set flag",
-+                "flag_set_twice": "set flag second",
-+                "flag_question_twice": "question flag first",
-+                "flag_default_twice": "default flag second",
-+            }
-+        )
- 
-     exporttest = """
- A = "a"
-
--- 
-2.48.1
+T24gV2VkLCAyMDI1LTAyLTEyIGF0IDEzOjE2ICswMTAwLCBMb3VpcyBSYW5ub3UgdmlhIGxpc3Rz
+Lm9wZW5lbWJlZGRlZC5vcmcgd3JvdGU6Cj4gRnJvbTogTG91aXMgUmFubm91IDxsb3Vpcy5yYW5u
+b3VAbm9uLnNlLmNvbT4KPiAKPiBWYXJpYWJsZSBmbGFncyBoYXZlIGJlZW4gZml4ZWQgaW4gY29t
+bWl0Cj4gMDMyOWE3ZTNhYzY5NDczN2YyZDJjMTg2MWY2NTQ5MjU1MTM2MDY2MyB3aGljaCBpbnRy
+b2R1Y2VzIHRoZQo+ICJfZGVmYXVsdHZhbF9mbGFnXyIgcHJlZml4IGZvciBkZWZhdWx0IHZhbHVl
+cy4gVGhpcyBtdXN0IG5vdCBiZSBpZ25vcmVkIGFzCj4gb3RoZXJzICJfIi1wcmVmaXhlZCBmbGFn
+cyBuYW1lcy4KPiAKPiBTcGxpdCB0aGUgcHJvY2Vzc2luZyBvZiBkZWZhdWx0IHZhbHVlcyB0byBi
+ZSBzdXJlIHRoZXkgYXJlIG92ZXJ3cml0dGVkIGJ5IHRoZQo+IG90aGVycyBvcGVyYXRvcnMgZGlz
+cmVnYXJkaW5nIG9mIHRoZWlyIG9yZGVyLgo+IAo+IEZpeGVzIFtZT0NUTyAjMTU2ODVdCj4gCj4g
+U2lnbmVkLW9mZi1ieTogTG91aXMgUmFubm91IDxsb3Vpcy5yYW5ub3VAbm9uLnNlLmNvbT4KPiAt
+LS0KPiDCoGxpYi9iYi9kYXRhX3NtYXJ0LnB5IHwgMTYgKysrKysrKysrKysrKy0tLQo+IMKgMSBm
+aWxlIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAt
+LWdpdCBhL2xpYi9iYi9kYXRhX3NtYXJ0LnB5IGIvbGliL2JiL2RhdGFfc21hcnQucHkKPiBpbmRl
+eCA4OTdjZWViMzJjN2NlMGFjYjhlZDQ0YzI1ZTFiZjJmMmYyOGFhOWRjLi43NjYzZjI4YzUwNzFh
+NzdjODQ1MmMxMDE2ZTVlZTBkOTY5Yzg0YmVjIDEwMDY0NAo+IC0tLSBhL2xpYi9iYi9kYXRhX3Nt
+YXJ0LnB5Cj4gKysrIGIvbGliL2JiL2RhdGFfc21hcnQucHkKPiBAQCAtOTUyLDEyICs5NTIsMjIg
+QEAgY2xhc3MgRGF0YVNtYXJ0KE11dGFibGVNYXBwaW5nKToKPiDCoMKgwqDCoCBkZWYgZ2V0VmFy
+RmxhZ3Moc2VsZiwgdmFyLCBleHBhbmQgPSBGYWxzZSwgaW50ZXJuYWxmbGFncz1GYWxzZSk6Cj4g
+wqDCoMKgwqDCoMKgwqDCoCBsb2NhbF92YXIgPSBzZWxmLl9maW5kVmFyKHZhcikKPiDCoMKgwqDC
+oMKgwqDCoMKgIGZsYWdzID0ge30KPiArwqDCoMKgwqDCoMKgwqAgZmxhZ3Nfc2V0ID0ge30KPiDC
+oAo+IMKgwqDCoMKgwqDCoMKgwqAgaWYgbG9jYWxfdmFyOgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIGZvciBpIGluIGxvY2FsX3ZhcjoKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IGlmIGkuc3RhcnRzd2l0aCgoIl8iLCAiOiIpKSBhbmQgbm90IGludGVybmFsZmxhZ3M6Cj4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgZm9yIGksIHZhbCBpbiBsb2NhbF92YXIuaXRlbXMoKToKPiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIGkuc3RhcnRzd2l0aCgiX2RlZmF1bHR2
+YWxfZmxhZ18iKToKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaSA9
+IGlbbGVuKCJfZGVmYXVsdHZhbF9mbGFnXyIpOl0KPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgZmxhZ3NbaV0gPSB2YWwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIGVsaWYgaS5zdGFydHN3aXRoKCgiXyIsICI6IikpIGFuZCBub3QgaW50ZXJuYWxmbGFn
+czoKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbnRpbnVlCj4g
+LcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBmbGFnc1tpXSA9IGxvY2FsX3ZhcltpXQo+
+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZWxzZToKPiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZmxhZ3Nfc2V0W2ldID0gdmFsCj4gKwo+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgICMgRmxhZ3Mgc2V0cyB0YWtlIG92ZXIgZGVmYXVsdHMKPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBmbGFncy51cGRhdGUoZmxhZ3Nfc2V0KQo+ICsKPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBmb3IgaSBpbiBmbGFnczoKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCBpZiBleHBhbmQgYW5kIGkgaW4gZXhwYW5kOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgZmxhZ3NbaV0gPSBzZWxmLmV4cGFuZChmbGFnc1tpXSwgdmFy
+ICsgIlsiICsgaSArICJdIikKPiDCoMKgwqDCoMKgwqDCoMKgIGlmIGxlbihmbGFncykgPT0gMDoK
+PiAKCkkndmUgbm90IGdvbmUgaW50byB0aGUgZGV0YWlscyBidXQgdGhpcyBkb2Vzbid0IGxvb2sg
+cmlnaHQgYXQgYWxsCnVuZm9ydHVuYXRlbHkuIEl0IGxvb2tzIG92ZXIgY29tcGxpY2F0ZWQsIGl0
+IGlzIHNwZWNpYWwgY2FzaW5nIG1hZ2ljCnZhbHVlcyB3aGljaCB3ZSB0cnkgdmVyeSB2ZXJ5IGhh
+cmQgbm90IHRvIGRvIGFuZCBJIGRvbid0IHRoaW5rIHRoaXMgaXMKZ29pbmcgdG8gYmUgbWFpbnRh
+aW5hYmxlIGNvZGUuIFdlJ3JlIG5lZWQgdG8gZmluZCBhIGJldHRlciBzb2x1dGlvbi4KV2l0aG91
+dCBkaXZpbmcgaW50byB0aGUgY29kZSBJJ20gZ29pbmcgdG8gc3RydWdnbGUgdG8gcHJvdmlkZSBi
+ZXR0ZXIKYWR2aWNlIHRob3VnaC4KCkNoZWVycywKClJpY2hhcmQKCg==
 
 
