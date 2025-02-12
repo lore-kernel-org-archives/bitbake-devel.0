@@ -1,127 +1,174 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <louis.rannou@syslinbit.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54436C02198
-	for <webhook@archiver.kernel.org>; Wed, 12 Feb 2025 14:13:17 +0000 (UTC)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
- by mx.groups.io with SMTP id smtpd.web10.16607.1739369588961347375
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7910BC021A0
+	for <webhook@archiver.kernel.org>; Wed, 12 Feb 2025 17:02:08 +0000 (UTC)
+Received: from 13.mo550.mail-out.ovh.net (13.mo550.mail-out.ovh.net [178.33.253.128])
+ by mx.groups.io with SMTP id smtpd.web10.21273.1739379722543696081
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 12 Feb 2025 06:13:09 -0800
+ Wed, 12 Feb 2025 09:02:04 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=UZZPZN46;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.218.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ab7c501bbecso525783066b.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 12 Feb 2025 06:13:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1739369587; x=1739974387; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=AQU+288weypstltfC4tTto6CNwLvru50wMV2X7BRw7I=;
-        b=UZZPZN46hwkXpKRTB/i+oCvHMNVKsIf3hh7FzB3vjJiQWTk8PluKwwBGfraOOKvcPZ
-         +WUv4k9cjGVw0a6wygu00/trOFtWmHW5bKFFhXsx3uJo+lR0ZbGU5QGWL/9MgI3Z77Mn
-         IsOaCIKEXV6C+k6y+P0a8W9Sa9mh1TRsWayM0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739369587; x=1739974387;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AQU+288weypstltfC4tTto6CNwLvru50wMV2X7BRw7I=;
-        b=BUTgSL2Q0s4K/Zk+PdT0953GbS5JdCWTrVmWMr3+VpBLy6DUc08fXFQKetyeM/ZRx+
-         9kGinQ7eVKu2LY2hqfYzfxDa4Vw/MMLmVJIweFi0KUIFuGn2xkhVRuHcssuhhUX6OLqZ
-         Hsl4XX1vNv8l9sTHU1qWqXNZ1tj9TrUawk4eA4XKKFRq6jBQ8OH8RrsQCw5cYyw20BNx
-         aP+/x4opa4VN1tDjVwTQsY6A2j4+3Iy/oZYMw7Ccy5NZ3LgngIdQiXUxBvt45bMw8PUo
-         E0epYuZuApA1XGCz2vK6Moo4DpkPd1D3bITT4FW3LHekV3L1re7hLXlXYB+oGH+J2TPo
-         MGeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPfbCtG13s3CnZLKVVsmIsmlbF78sAzAobqY052+6YBBD+2g1N3IQOU7OOpLhLDQj9o+Te7BH/3qiNgFqv@lists.openembedded.org
-X-Gm-Message-State: AOJu0YwYrJ3g9ZYr3T8VX3Rqs+j4XUthVUJb74gIwSog93Xv8O4Y5ftf
-	zxoS/pa5OFhKHjcbi3xHYoNESz5Z+Xwcpap3qiH9RxCDJp0gjywXrwDts+qhRnU=
-X-Gm-Gg: ASbGncuc0/QxMs78bNS6/VNomvL6uKnzsb79axNlqGBSXcg7q9nsdB64VZcuVQPgdt8
-	9tSPLu45KDQ0nqsVQF1LzognKRsVPjEblCIwmtFdoPB3MpwH/P6wN+W8m2ItHj2Tlr9+2McypjJ
-	J0jbjPeNNg0xEnAnTZgoK9zKxVtKta/b2s+x7aXiGOOJdcdfpp9UxwtW2sAToLSDvwBxd1emzsE
-	AWft6TVQRb5+UZ0i9qOg14clADFTtF1GZmYdtqziaddmRmuf5Qi/E6kuY5cL+Jyzic9M/gSq3h1
-	XB3vXwNgfGvR9RYgCsi+vg1nYpRj9pu5smwUlgIbR3ymEW2fB9/0U7wN1kepOqZQX2wlAx311aw
-	bZw==
-X-Google-Smtp-Source: AGHT+IFlc32hVjRmu6wZNZufy8wft78kGzbmiXjZHIVtlJoi4+5g2Xjw1rbM58AGOZ6UCeHeiHp2Pw==
-X-Received: by 2002:a17:907:d8c:b0:ab7:d735:18c5 with SMTP id a640c23a62f3a-ab7f3344fecmr309985366b.4.1739369587189;
-        Wed, 12 Feb 2025 06:13:07 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:af16:73ba:601:d9ae? ([2001:8b0:aba:5f3c:af16:73ba:601:d9ae])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7ca66cc36sm534816066b.155.2025.02.12.06.13.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 06:13:06 -0800 (PST)
-Message-ID: <1f5455e336cd35e8ffadcad1abd1b0daf782764e.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 1/2] bitbake: data_smart: fix ??=
- operator for getVarFlags
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: louis.rannou@syslinbit.com, bitbake-devel@lists.openembedded.org
-Cc: louis.rannou@non.se.com, pascal.eberhard@se.com, yoann.congal@smile.fr
-Date: Wed, 12 Feb 2025 14:13:05 +0000
-In-Reply-To: <20250212-varflags-v1-1-3a756c7aa95c@syslinbit.com>
-References: <20250212-varflags-v1-0-3a756c7aa95c@syslinbit.com>
-	 <20250212-varflags-v1-1-3a756c7aa95c@syslinbit.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.54.0-1 
+ dkim=fail reason="dkim: body hash did not verify" header.i=@syslinbit.com header.s=ovhmo4479509-selector1 header.b=VNEtq57B;
+ spf=softfail (domain: syslinbit.com, ip: 178.33.253.128, mailfrom: louis.rannou@syslinbit.com)
+Received: from director10.ghost.mail-out.ovh.net (unknown [10.108.17.245])
+	by mo550.mail-out.ovh.net (Postfix) with ESMTP id 4YtPk05ZFCz1R8W
+	for <bitbake-devel@lists.openembedded.org>; Wed, 12 Feb 2025 17:02:00 +0000 (UTC)
+Received: from ghost-submission-5b5ff79f4f-4grr2 (unknown [10.110.164.243])
+	by director10.ghost.mail-out.ovh.net (Postfix) with ESMTPS id F35711FD3D;
+	Wed, 12 Feb 2025 17:01:59 +0000 (UTC)
+Received: from syslinbit.com ([37.59.142.103])
+	by ghost-submission-5b5ff79f4f-4grr2 with ESMTPSA
+	id jA7kMwfUrGdEKwUAiaPQ3A
+	(envelope-from <louis.rannou@syslinbit.com>); Wed, 12 Feb 2025 17:01:59 +0000
+Authentication-Results: garm.ovh; auth=pass (GARM-103G00564706cb8-f017-4f56-b36f-83fc7dab2c21,
+                    74B36F6499D71BB1255966C6406869B815799905) smtp.auth=louis.rannou@syslinbit.com
+X-OVh-ClientIp: 45.81.62.9
+Message-ID: <2e44bc41-77e8-4c8f-bf2d-bcec9dcda49d@syslinbit.com>
+Date: Wed, 12 Feb 2025 18:01:59 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [bitbake-devel] [PATCH 1/2] bitbake: data_smart: fix ??= operator
+ for getVarFlags
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+ bitbake-devel@lists.openembedded.org
+Cc: louis.rannou@non.se.com, pascal.eberhard@se.com, yoann.congal@smile.fr
+References: <20250212-varflags-v1-0-3a756c7aa95c@syslinbit.com>
+ <20250212-varflags-v1-1-3a756c7aa95c@syslinbit.com>
+ <1f5455e336cd35e8ffadcad1abd1b0daf782764e.camel@linuxfoundation.org>
+Content-Language: en-US
+From: Louis Rannou <louis.rannou@syslinbit.com>
+In-Reply-To: <1f5455e336cd35e8ffadcad1abd1b0daf782764e.camel@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-Ovh-Tracer-Id: 15278461736453070260
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeggeegvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepnfhouhhishcutfgrnhhnohhuuceolhhouhhishdrrhgrnhhnohhusehshihslhhinhgsihhtrdgtohhmqeenucggtffrrghtthgvrhhnpeevhefffeehkeehveekvdefhedvjefhgeeuheehuedviedviedtieegtdejteekvdenucffohhmrghinhepohhpvghnvghmsggvugguvggurdhorhhgnecukfhppeduvdejrddtrddtrddupdeghedrkedurdeivddrledpfeejrdehledrudegvddruddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomheplhhouhhishdrrhgrnhhnohhusehshihslhhinhgsihhtrdgtohhmpdhnsggprhgtphhtthhopedupdhrtghpthhtohepsghithgsrghkvgdquggvvhgvlheslhhishhtshdrohhpvghnvghmsggvugguvggurdhorhhgpdfovfetjfhoshhtpehmohehhedtmgdpmhhouggvpehsmhhtphhouhht
+DKIM-Signature: a=rsa-sha256; bh=jPxA6pvWofEW0DuVGemTVmz82dyijUcnXn9SM7hHGcY=;
+ c=relaxed/relaxed; d=syslinbit.com; h=From; s=ovhmo4479509-selector1;
+ t=1739379720; v=1;
+ b=VNEtq57BrPKwfMhERNK8mVJcQ6VkkXIaOkCDeHQ7ZH5lyMSLPnnR3hZtXHf/CUUCQ1v4Fyr9
+ lbMEYdS2TwVXFqhuyUvT3iqdtDb7Ka7T0Ewrq6FurMxcHY0e2NU1LVLcxtIks+ZWLUVjv6SyL3U
+ 4+0fjiy/38Qs6t17yzbNrFhWeggIsA6GBleLB+yb4/RoPptZYaUbFuBtNJcIWfi1x55upXyTfxR
+ gYY2ECXB9sX+AR2HLDfYzvIH9R88atxGWfXxSD4/QxO6amU0QnIvKxU29Z/iNQhsKkHwOhqgCwZ
+ pRy0DBy7AEKHExGgQEYT+g4ue/av909w0j/tl8K9bUTNA==
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 12 Feb 2025 14:13:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17207
+ <bitbake-devel@lists.openembedded.org>; Wed, 12 Feb 2025 17:02:08 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17208
 
-T24gV2VkLCAyMDI1LTAyLTEyIGF0IDEzOjE2ICswMTAwLCBMb3VpcyBSYW5ub3UgdmlhIGxpc3Rz
-Lm9wZW5lbWJlZGRlZC5vcmcgd3JvdGU6Cj4gRnJvbTogTG91aXMgUmFubm91IDxsb3Vpcy5yYW5u
-b3VAbm9uLnNlLmNvbT4KPiAKPiBWYXJpYWJsZSBmbGFncyBoYXZlIGJlZW4gZml4ZWQgaW4gY29t
-bWl0Cj4gMDMyOWE3ZTNhYzY5NDczN2YyZDJjMTg2MWY2NTQ5MjU1MTM2MDY2MyB3aGljaCBpbnRy
-b2R1Y2VzIHRoZQo+ICJfZGVmYXVsdHZhbF9mbGFnXyIgcHJlZml4IGZvciBkZWZhdWx0IHZhbHVl
-cy4gVGhpcyBtdXN0IG5vdCBiZSBpZ25vcmVkIGFzCj4gb3RoZXJzICJfIi1wcmVmaXhlZCBmbGFn
-cyBuYW1lcy4KPiAKPiBTcGxpdCB0aGUgcHJvY2Vzc2luZyBvZiBkZWZhdWx0IHZhbHVlcyB0byBi
-ZSBzdXJlIHRoZXkgYXJlIG92ZXJ3cml0dGVkIGJ5IHRoZQo+IG90aGVycyBvcGVyYXRvcnMgZGlz
-cmVnYXJkaW5nIG9mIHRoZWlyIG9yZGVyLgo+IAo+IEZpeGVzIFtZT0NUTyAjMTU2ODVdCj4gCj4g
-U2lnbmVkLW9mZi1ieTogTG91aXMgUmFubm91IDxsb3Vpcy5yYW5ub3VAbm9uLnNlLmNvbT4KPiAt
-LS0KPiDCoGxpYi9iYi9kYXRhX3NtYXJ0LnB5IHwgMTYgKysrKysrKysrKysrKy0tLQo+IMKgMSBm
-aWxlIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAt
-LWdpdCBhL2xpYi9iYi9kYXRhX3NtYXJ0LnB5IGIvbGliL2JiL2RhdGFfc21hcnQucHkKPiBpbmRl
-eCA4OTdjZWViMzJjN2NlMGFjYjhlZDQ0YzI1ZTFiZjJmMmYyOGFhOWRjLi43NjYzZjI4YzUwNzFh
-NzdjODQ1MmMxMDE2ZTVlZTBkOTY5Yzg0YmVjIDEwMDY0NAo+IC0tLSBhL2xpYi9iYi9kYXRhX3Nt
-YXJ0LnB5Cj4gKysrIGIvbGliL2JiL2RhdGFfc21hcnQucHkKPiBAQCAtOTUyLDEyICs5NTIsMjIg
-QEAgY2xhc3MgRGF0YVNtYXJ0KE11dGFibGVNYXBwaW5nKToKPiDCoMKgwqDCoCBkZWYgZ2V0VmFy
-RmxhZ3Moc2VsZiwgdmFyLCBleHBhbmQgPSBGYWxzZSwgaW50ZXJuYWxmbGFncz1GYWxzZSk6Cj4g
-wqDCoMKgwqDCoMKgwqDCoCBsb2NhbF92YXIgPSBzZWxmLl9maW5kVmFyKHZhcikKPiDCoMKgwqDC
-oMKgwqDCoMKgIGZsYWdzID0ge30KPiArwqDCoMKgwqDCoMKgwqAgZmxhZ3Nfc2V0ID0ge30KPiDC
-oAo+IMKgwqDCoMKgwqDCoMKgwqAgaWYgbG9jYWxfdmFyOgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIGZvciBpIGluIGxvY2FsX3ZhcjoKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IGlmIGkuc3RhcnRzd2l0aCgoIl8iLCAiOiIpKSBhbmQgbm90IGludGVybmFsZmxhZ3M6Cj4gK8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgZm9yIGksIHZhbCBpbiBsb2NhbF92YXIuaXRlbXMoKToKPiAr
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIGkuc3RhcnRzd2l0aCgiX2RlZmF1bHR2
-YWxfZmxhZ18iKToKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaSA9
-IGlbbGVuKCJfZGVmYXVsdHZhbF9mbGFnXyIpOl0KPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgZmxhZ3NbaV0gPSB2YWwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIGVsaWYgaS5zdGFydHN3aXRoKCgiXyIsICI6IikpIGFuZCBub3QgaW50ZXJuYWxmbGFn
-czoKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbnRpbnVlCj4g
-LcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBmbGFnc1tpXSA9IGxvY2FsX3ZhcltpXQo+
-ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZWxzZToKPiArwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZmxhZ3Nfc2V0W2ldID0gdmFsCj4gKwo+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgICMgRmxhZ3Mgc2V0cyB0YWtlIG92ZXIgZGVmYXVsdHMKPiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCBmbGFncy51cGRhdGUoZmxhZ3Nfc2V0KQo+ICsKPiArwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBmb3IgaSBpbiBmbGFnczoKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCBpZiBleHBhbmQgYW5kIGkgaW4gZXhwYW5kOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgZmxhZ3NbaV0gPSBzZWxmLmV4cGFuZChmbGFnc1tpXSwgdmFy
-ICsgIlsiICsgaSArICJdIikKPiDCoMKgwqDCoMKgwqDCoMKgIGlmIGxlbihmbGFncykgPT0gMDoK
-CkkgZGlkIHNwZW5kIG1vcmUgdGltZSBsb29raW5nIGF0IHRoaXMgYW5kIEkgaGFkIG1pc3VuZGVy
-c3Rvb2QgdGhlCnByb2JsZW0uIEkgdGhpbmsgdGhpcyBjYW4gc3RpbGwgYmUgc2ltcGxpZmllZCB0
-aG91Z2ggYW5kIEkgYWxzbyBzdXNwZWN0CnRoZSBpbnRlcm5hbGZsYWdzIGhhbmRsaW5nIGFib3Zl
-IGlzbid0IGNvcnJlY3QuIElmIGludGVybmFsZmxhZ3MgaXMKc2V0LCBJIHRoaW5rIGl0IHByb2Jh
-Ymx5IHNob3VsZCByZXR1cm4gX2RlZmF1bHR2YWxfZmxhZ18gdmFsdWVzCnVuY2hhbmdlZC4gVGhl
-IGNvZGUgd291bGQgdGhlcmVmb3JlIGxvb2sgbW9yZSBsaWtlOgoKCmZvciBpLCB2YWwgaW4gbG9j
-YWxfdmFyLml0ZW1zKCk6CiAgICBpZiBpLnN0YXJ0c3dpdGgoIl9kZWZhdWx0dmFsX2ZsYWdfIikg
-YW5kIG5vdCBpbnRlcm5hbGZsYWdzOgogICAgICAgIGkgPSBpW2xlbigiX2RlZmF1bHR2YWxfZmxh
-Z18iKTpdCiAgICAgICAgaWYgaSBub3QgaW4gbG9jYWxfdmFyOgogICAgICAgICAgICBmbGFnc1tp
-XSA9IHZhbAogICAgZWxpZiBpLnN0YXJ0c3dpdGgoKCJfIiwgIjoiKSkgYW5kIG5vdCBpbnRlcm5h
-bGZsYWdzOgogICAgICAgIGNvbnRpbnVlCiAgICBlbHNlOgogICAgICAgIGZsYWdzX3NldFtpXSA9
-IHZhbAoKSSdkIGFsc28gYWRkIGEgY29tbWVudCB0byB0aGUgdGVzdCBjYXNlIGV4cGxhaW5pbmcg
-dGhhdCB3ZSdyZSB0ZXN0aW5nCndlYWsgZGVmYXVsdCBtYWtlIGl0IHRvIHRoZSBnZXRWYXJGbGFn
-cyBvdXRwdXQuCgpDaGVlcnMsCgpSaWNoYXJkCg==
+Hello,
+
+Ok for the solution which is indeed prettier. I'll add a test with=20
+internalflags.
+
+I also agree the test is not exactly at the right place as it does not=20
+test parsing but the result of getVarFlags. Perhaps it would fit better=20
+in tests/data.py ? (if that's ok to make a call to bb.parse there)
+
+Thanks,
+Louis
+
+On 12/02/2025 15:13, Richard Purdie wrote:
+> On Wed, 2025-02-12 at 13:16 +0100, Louis Rannou via lists.openembedded.=
+org wrote:
+>> From: Louis Rannou <louis.rannou@non.se.com>
+>>
+>> Variable flags have been fixed in commit
+>> 0329a7e3ac694737f2d2c1861f65492551360663 which introduces the
+>> "_defaultval_flag_" prefix for default values. This must not be ignore=
+d as
+>> others "_"-prefixed flags names.
+>>
+>> Split the processing of default values to be sure they are overwritted=
+ by the
+>> others operators disregarding of their order.
+>>
+>> Fixes [YOCTO #15685]
+>>
+>> Signed-off-by: Louis Rannou <louis.rannou@non.se.com>
+>> ---
+>>  =C2=A0lib/bb/data_smart.py | 16 +++++++++++++---
+>>  =C2=A01 file changed, 13 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+>> index 897ceeb32c7ce0acb8ed44c25e1bf2f2f28aa9dc..7663f28c5071a77c8452c1=
+016e5ee0d969c84bec 100644
+>> --- a/lib/bb/data_smart.py
+>> +++ b/lib/bb/data_smart.py
+>> @@ -952,12 +952,22 @@ class DataSmart(MutableMapping):
+>>  =C2=A0=C2=A0=C2=A0=C2=A0 def getVarFlags(self, var, expand =3D False,=
+ internalflags=3DFalse):
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 local_var =3D self._=
+findVar(var)
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 flags =3D {}
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 flags_set =3D {}
+>>  =20
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if local_var:
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fo=
+r i in local_var:
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 if i.startswith(("_", ":")) and not internalflags:
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fo=
+r i, val in local_var.items():
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 if i.startswith("_defaultval_flag_"):
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i =3D i[len("_defaultval_fl=
+ag_"):]
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 flags[i] =3D val
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 elif i.startswith(("_", ":")) and not internalflags=
+:
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 continue
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 flags[i] =3D local_var[i]
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 else:
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 flags_set[i] =3D val
+>> +
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # =
+Flags sets take over defaults
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fl=
+ags.update(flags_set)
+>> +
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fo=
+r i in flags:
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 if expand and i in expand:
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 flags[i] =3D self.exp=
+and(flags[i], var + "[" + i + "]")
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if len(flags) =3D=3D=
+ 0:
+>=20
+> I did spend more time looking at this and I had misunderstood the
+> problem. I think this can still be simplified though and I also suspect
+> the internalflags handling above isn't correct. If internalflags is
+> set, I think it probably should return _defaultval_flag_ values
+> unchanged. The code would therefore look more like:
+>=20
+>=20
+> for i, val in local_var.items():
+>      if i.startswith("_defaultval_flag_") and not internalflags:
+>          i =3D i[len("_defaultval_flag_"):]
+>          if i not in local_var:
+>              flags[i] =3D val
+>      elif i.startswith(("_", ":")) and not internalflags:
+>          continue
+>      else:
+>          flags_set[i] =3D val
+>=20
+> I'd also add a comment to the test case explaining that we're testing
+> weak default make it to the getVarFlags output.
+>=20
+> Cheers,
+>=20
+> Richard
 
 
