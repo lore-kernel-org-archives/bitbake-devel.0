@@ -1,423 +1,825 @@
-Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
+Return-Path: <bruce.ashfield@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3BBC021A0
-	for <webhook@archiver.kernel.org>; Thu, 13 Feb 2025 16:33:25 +0000 (UTC)
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.93])
- by mx.groups.io with SMTP id smtpd.web10.531.1739464398129167171
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0DCC021A4
+	for <webhook@archiver.kernel.org>; Thu, 13 Feb 2025 17:01:26 +0000 (UTC)
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+ by mx.groups.io with SMTP id smtpd.web10.1275.1739466079435263791
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 13 Feb 2025 08:33:19 -0800
+ Thu, 13 Feb 2025 09:01:19 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@weidmueller.com header.s=selector2 header.b=TX1ynO0H;
- spf=pass (domain: weidmueller.com, ip: 40.107.22.93, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tHfyj700DmBYeKsvikc7D3nBryNJu7JLLluXhO7/jpNywUmY9VxobuO7LZyBfv/nx8KBPtW993m9icgdFGZ51jv55GNqkwjmEKvR6Oh0m9jVqb+CoWC0Wh+OKimUgM6jrJYwnWWU0XX8U0JNLreWtw6XrjF7qs9trO2mIIdujJ+uD/mOSxHkzQNP4hc5QFW2SWobXihITeniZJ5hpfyrfBNerVQrr6H7LTZ/nrMlrTcV35avfb2GrMYeCk46KCwSoOt1OZYiFcMyCIGTkv8L32o6a3KC6nqfk5Iu4lKH4WsJbA557LNVeKg93e91TwuwgxdTdCgn6TFL+yoxyzcQ4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PoY+d3Ap9KuCiMj5X/IaOCr9DsbVWv31RGh+BJP4zok=;
- b=M9nJEiFQNO19fsXhau0K0M8wGRn24596RlMw541JH+P0wC3x81YXxg0dOD8rFE7SmHGqDb3FFszQPzNVSLTpLUHGIh2+ugI0PYaRWacPUB8xSo0MxJZwbHa7ajOOEaB5rMfcHimXO9kYCx1p1XVIvd5YmUGNB9gzQCqjp5ADKy/Bz9TNxI+uKTSrHUCrE6lY9d+DybAtKYC2vsOCINoOmWy7GCrHhmib4zZTtnGK9fBzBoW1CTrobVB92CY9Z0jAiikzLCoMNQY9Fj6gYzO+wctsj5C4c3zY6sNEpVewUmnsXF4Bxcz7SKozXdDSmsI9+qYzgnJJkORGkqp17DQfQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=weidmueller.com; dmarc=pass action=none
- header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PoY+d3Ap9KuCiMj5X/IaOCr9DsbVWv31RGh+BJP4zok=;
- b=TX1ynO0Ht6EqJMeBR2fk+mJh8KkMKS6zHe7ZrYLDsMwaPM7BQcacd7jdrxJbfNWMdMiEUrRy8GkguljkBTueyHmjEHuI+J6vavLmj+RpmLgW9COis8csruBjwoLEOkTT4jZnHWBgl3c9k6NII3IeR99XtxYI4npNyTOWqfQ0mAu60IuwY+0qDOeT5LbzKzlyaFC+X5k3VEzxX0gmeKzy8FCpzHvMw7ZJYO0fwuh50TsxxCABf1sK09ZEcZBhTx8yUJ1+wPXd+footndljzRRDgj/xWveckgFgv8/kMlHw3L3+PJIbFvh3J0VnfzrKYJjFvCpIPDxYk3GsqFvweSeoQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=weidmueller.com;
-Received: from DU0PR08MB8422.eurprd08.prod.outlook.com (2603:10a6:10:406::6)
- by VI0PR08MB10630.eurprd08.prod.outlook.com (2603:10a6:800:209::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.13; Thu, 13 Feb
- 2025 16:33:12 +0000
-Received: from DU0PR08MB8422.eurprd08.prod.outlook.com
- ([fe80::abe2:5846:76b8:9087]) by DU0PR08MB8422.eurprd08.prod.outlook.com
- ([fe80::abe2:5846:76b8:9087%5]) with mapi id 15.20.8445.013; Thu, 13 Feb 2025
- 16:33:12 +0000
-Content-Type: multipart/alternative;
- boundary="------------eGhfzkYW1FA0F4SUcQkrOxx5"
-Message-ID: <f0f37aa4-8a69-4340-87ad-18f39bb4f43d@weidmueller.com>
-Date: Thu, 13 Feb 2025 17:33:10 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel] 'vendor' fetching discussion cont.
-To: richard.purdie@linuxfoundation.org,
- openembedded-core@lists.openembedded.org,
- Bruce Ashfield <bruce.ashfield@gmail.com>,
- bitbake-devel <bitbake-devel@lists.openembedded.org>
-References: <4cea4488ef3181471373f3dca26ac390203a90cb.camel@linuxfoundation.org>
-Content-Language: en-US
-From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
-In-Reply-To: <4cea4488ef3181471373f3dca26ac390203a90cb.camel@linuxfoundation.org>
-X-ClientProxiedBy: FR0P281CA0149.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:96::16) To DU0PR08MB8422.eurprd08.prod.outlook.com
- (2603:10a6:10:406::6)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=PVzVlhQv;
+ spf=pass (domain: gmail.com, ip: 209.85.216.50, mailfrom: bruce.ashfield@gmail.com)
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2fc0bd358ccso2329119a91.2;
+        Thu, 13 Feb 2025 09:01:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739466079; x=1740070879; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=oBwJdwr+/FJdt1yn6rbrxtwYHYDiScSK17nLxAnODsc=;
+        b=PVzVlhQvCNsFXWNPZu+wBs9IMTAi7gTJT1nKiHJBcFKI4tRlTKHvjf+4hBTu77yKeF
+         UqPKsm9K9HUzMP5S6xM9HcynN8BTEItXqdfO2jq6S9WuNrRuWBbSSXwhXUedSJBaFxZd
+         wPFIP0COKqjm33HpQtgqJZ0n/sUuQ4hh3kp3EewOYGI4cskLOz1kjRCvwPZwm5vbA3cB
+         4WwMbMgZH78Zd/eKiNgAvH2QY8MZMx/uwsTw9AqakrHKQARoddUYs+2gaHgnnSahw8aN
+         61ZSWdkMV/3ckuIsT90Vv/T17JNTzKNaiB+VlWE5R7lRdoj5PaFwJDrgQxrw51KCi853
+         R62g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739466079; x=1740070879;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oBwJdwr+/FJdt1yn6rbrxtwYHYDiScSK17nLxAnODsc=;
+        b=nxodFsN1ICo0CR5GySEaiuGAUr/E0z2+NtwmWvXGeuhKzWNMyPmp8gcq+pqGN2/vg3
+         PnJY7kR3gv8g5pwNKVqxy0Gj18XnqNjulmOyJCOk8bQt6ce0NR6ypCk1KoezO2NI7mUR
+         9uROQgMgChinlkTbyEct0mELJeh0irhf1ZBhfVYvJoPLQ3om7exyzdPG2luD8Wm/Vqxg
+         vmDBsn40odzy0xiwpnUbaiULh8PKajXfpwRpj+tWGx4236l9kiT+OdGjbS6YNxCEEsDr
+         ptmMmGYuQRTTKSH9Q5HIsWcmuwDMBrNrROkUtQ6/sxbQpqa659D3xmCPzJ9duETT3vIi
+         Feqw==
+X-Forwarded-Encrypted: i=1; AJvYcCXmbX/Njh8+5njJ8rgp13B9bYxhBx8jqaljDmaejm3yLYj1yxXoQT96b9f2DV8g9kCT/GBKbRu8Bd1vzIOk@lists.openembedded.org
+X-Gm-Message-State: AOJu0YzPWrodEyeVciR9+mgZCBIQWa21BwYxYzRpBydN446QxwA2E+xH
+	MwZCmIfQy952CbPB15N+KJTQW/IACjLFuVnW7VjOFxwmKHA4kFxtBTQul1qGsKvr1z7MjEI1rxx
+	a9jgIOCew2WDRN0veBkIx01F5qaU=
+X-Gm-Gg: ASbGncurtKiLWLKDRxrsD44j7RQjoxdvw+BomFp0kaTr4vvpARxe0OAE3/5t86Xq2TR
+	SiGeW85Lq6hYuJ5A0Tptaq/YM4rITRNoKZp75sr/Qn6eYF8XIUEWBiklC1XvLp8DIerquEXYB
+X-Google-Smtp-Source: AGHT+IGPODpuGCbm0W1/M9BVDhKQxPXUnMWj1gT8apkr4U4YrPVlh2/pusPzGUZIutruKyUQ72M4laYyiOsqv2ebAFQ=
+X-Received: by 2002:a17:90b:3c48:b0:2fa:2252:f43c with SMTP id
+ 98e67ed59e1d1-2fc0f0f37bemr4765573a91.34.1739466078459; Thu, 13 Feb 2025
+ 09:01:18 -0800 (PST)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU0PR08MB8422:EE_|VI0PR08MB10630:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1d58d1c3-1257-49d3-7862-08dd4c4c1b3c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|8096899003;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?WStIRXFadkE3OUVjWXh6ZTFKVFJOSzc1cjF3a0FBRW9aNnY0Q3R2WnZCbitS?=
- =?utf-8?B?dW0wbHUvQlJrQXhQMTA1S2RZSjFnbWVpbTlRWVRQZkYzMnNlVFJQTzNSRkdY?=
- =?utf-8?B?aDB0SW5UeEo4K2swRU4vMlNKa2hCVFpETFdHaEU0ZkVZN3A0aWpGQXVEQkFj?=
- =?utf-8?B?dHhuNU9xaFBiV2t0b0JOc1RoRWp3Tk9vVk5UY1grQk1DZVh4WG1BZGNwcjgy?=
- =?utf-8?B?Wi9JNTd6TGt0UmloUzdsUHZSSlhxQlBtVm43YmtkUVYyL2lzNDNMU1Z1dWhW?=
- =?utf-8?B?NlZDL2E3MFJpNVkxeEQ3Y0hUM0cyL0pDR0I2blMraWxtM09pZlF4Y3dwTFF5?=
- =?utf-8?B?b0w1QmplaHJ4Z0krRG5QcHFLN0VoK0hpVVFlTEZqSERCQnJ4TEF2amVycXpu?=
- =?utf-8?B?ZldxSHlkem1mdzVQTmtoY3hKZnJmU01LK3RQaDlOTk4xVUQrOHBDbE5qL2Q5?=
- =?utf-8?B?TmcrYTNMNm1YTjZTVWM5bjF2c0tadFFtYm1kZlVYcnBKVStXcnRnSms0am1v?=
- =?utf-8?B?VlhhSjU2b3pvZlp2TVNRYWVXTFFMRzdQWmJKVVZYQ1BTaUlzOGkvZE0zejZO?=
- =?utf-8?B?RmlmakVrK3p1UnR4aGNiSGRRRFYzelF0ZGRvbWladFZpRmQwUTQzRTc2OEJU?=
- =?utf-8?B?N3dNTnRWZTc1NFJZdU9uTWJsRHdldEFoTkQ0QzJHMXNoOHFwTDVNWFFMVU91?=
- =?utf-8?B?NUN3SERjN2VwMnd0ZWswaUUyU2tXU3hRYU52Uk5kNVpRb0RidU5jbnczU2Nt?=
- =?utf-8?B?SmNmVlhqTUxpU1BFVm5HUXcvVGd2RzBTbEZEeHJVT0VMbHNHajdGTGlpbGtQ?=
- =?utf-8?B?ZW02TzZ5OURuSmdSeWJUbVZoa0UzZFZKUk5WM3lUODBxZkR2SkFFODZYa2xk?=
- =?utf-8?B?eUREOUI2bWs4VUx2SHZ5ZVh0THZGOGxzSjZsWVJ6MUZsR0RIbG9QNlJ4KzNE?=
- =?utf-8?B?RjZWdHNNRHNSWlF2enlXYkZVR3lGa2NIai9QZGVPMjJ2TGlzbnRhK21yVWt3?=
- =?utf-8?B?Zi83b0lDeTBuK0UvYjZzN3ovdkdudFZsa0hQd2lPWnA2QUtmTXBmYjNsdEg2?=
- =?utf-8?B?Z1cxTFlXTmZ2ZFRER05NU3d5R0J3TzJhRHU3YjJwRGtnMjNMSmM2azlDWGpR?=
- =?utf-8?B?OVhhbjV0Z2pNb1EvTlkxaWc1N1dFVjdwVENZRGhoVWRNSUhtQ0lIR3BQQkdj?=
- =?utf-8?B?eU9oQ3N5NE1KR3o5THZoVm1USWRrUlRZYklXL3MxYXI4K3BCUVlHR09icGJ4?=
- =?utf-8?B?T1ozY2k0VXVtMEFteitZa2p0UDF3c0IwZUNKeHFnOFlKcDI1MjNyR2pPVzUw?=
- =?utf-8?B?SVZONkNTem03WEF3Z0tFaTNueldKOUZYazlTZHhRYVRVcU5lYlJIVGlucEk3?=
- =?utf-8?B?RjNOT01namY1c0tTanFDd3pOMjd5QWQ0Z2FvanczeDkvMjNKOHQ0NU1PRTl5?=
- =?utf-8?B?b2xrN0lQbGRNU3JaWG81cmVSdCt1M0dzN0YwTlRMbEhndkFFUFR0bSs2SzhQ?=
- =?utf-8?B?UVIwY3lPTmZGb0F6Z3gyUExmVVgrWTgvWlFwUHJRU0drYm95eW1zM1lUOVNw?=
- =?utf-8?B?SVI5N1pFUnB6WmRRMGl5S1B2WUpnVHVmYkFnZjhsQ1VrSjZKNkJwVVpyWUl0?=
- =?utf-8?B?U2dXK1owODFUcENNYk1Sd1JHRjM0VjhOQmdkQ004b0xlR25DZUJhQk56Vy8z?=
- =?utf-8?B?UWtJOXRGM1NJY0hKd1VFcDRWRXhNZkNKTW9hUng2QmVWN3NjRDdhbFkvK0lw?=
- =?utf-8?B?MVhZMEcrQnB4SlBjU2o3UE5NZ1ZaZW51WGFGeHJwa3pTZFNKdTdIM0QxM0lQ?=
- =?utf-8?B?Q254Y2phYTVKSmVJU0pONCtMc0JSbDhSV09GcXBLa2dyMWxOMmZyR01yWGhv?=
- =?utf-8?Q?qrdZgAULnFShj?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR08MB8422.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(8096899003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?Z0ZtK0djVkRGOCs2L2svcFlodjBrbkViWUVkSmhiS3JXWVBxUVpMNVJORmVS?=
- =?utf-8?B?Y2psV0FFMGlMbk56WXdqS21vUi9kOUtYeHJSYXA4emhMTG1GRHlQVE04QkN5?=
- =?utf-8?B?bzVZa1pUSFU1bHA2YXNrQzEyL2g5MGo5Q1RwaXpEdFVlcVBKbVI3NkYrN0dy?=
- =?utf-8?B?ZHJuRjJqZlRHcWYwbVU3RGdaUHE3bVlLVFk3aGxkSkVvano5UWtDMVRxeTZo?=
- =?utf-8?B?OFVZdGQ5Y2FrMytsdWF2dEtUSnBUZXUzKzBBaVZpdzF4ZUJHWVFzSU42eGJi?=
- =?utf-8?B?NkNWZUZvZ3Nsam5vWHI2ZTkvRnlDN2F6TjQ5ZUpJV29xZlMzSDV3OWhEa1Vz?=
- =?utf-8?B?aDAxN05zSm1LUlpjeEFaNUVJUS9NcUFnZm1zaWRxV2M2TnVVVDZVUUxkbVdK?=
- =?utf-8?B?WU1sdmZ5VVZiT3ZWRDN4OERXc3BBd3dTZW54WkRpOFZVcW0yRG1wR3pHL3Ev?=
- =?utf-8?B?VFdMSUxRSW9YSWtseWxzTVc3dVBpNE4vYzlzR2hDMStSRy9XcVJsQmtHVmFh?=
- =?utf-8?B?UjdvT2RHdnlwQzVVdXp5ZFhETDdrR0tuV1V5RHcrbFdXZEtPcEU0eUdZZkxK?=
- =?utf-8?B?TXFrNWlRVGxjU2pkcFRDVXJYTzVacjdyalUyVTNqbnhNQS91VEo0ODc1OGs3?=
- =?utf-8?B?OGJ1UkQ3YmhsYWNGQ295dHFxUVZtN0Q2aWplbTZuTkswa29jSTZaNlExWGFz?=
- =?utf-8?B?WjRTZTVlY1E4SFpFNjVsY2NONDlXNjZxbTNPN1pzekFlWlhvcnN4Vi9oOGNN?=
- =?utf-8?B?MnJ2WGcvSlJzRkhJUVJRMnlNMnBmKzcxSmpsTXdEVW53V2tKTmZua2pxa2px?=
- =?utf-8?B?bTRBeW82OE9UeWxDZnlHWWxKazNSQmVVNVYwU0NPZHRqSmRScFo4V1ZnTDhu?=
- =?utf-8?B?VVAvdTlnbVVnbXNYRitGUWRpL2g5Q2xVTW50WjVzNzdTMXNIalZSc3lyWGti?=
- =?utf-8?B?RUkrdWNsaFkvTHowRHlsU2k4WmR5cnBqZkhBVjlFdjFMVCt3VmxON2FGK1VF?=
- =?utf-8?B?ZGJSQWNpeVgxZkNzRCtHNm9Yc1ZhUFUzRDhJa1U3KzRCK2JrTlkwRStKVDJq?=
- =?utf-8?B?T0lrcXE3T1NDNDdWZmFSeEdtNFp2TzhNcnlCRWZqY1ZmVnZsdGNFaHZESHVs?=
- =?utf-8?B?cUtvYXRmVFMvUzZIZ2pleEIyTGdTY2hWUGMyYXZON1hnSWdGTVdwQSt0TEhN?=
- =?utf-8?B?dWRUbjB4dER6dHJRaFBpcHVmaVYwZCtIUkxSbWo2M1dXUU0rZER2YVJBamti?=
- =?utf-8?B?d3VjVHpvTno4Mzd2ZmFuS00zWklYdDNlVnlHdjB2RERNSlFINGwrQzcyRHJQ?=
- =?utf-8?B?bHJGU2RUWDFZNHZ1UDlwN3pHenphUFd1VVVZdzkvK1hsbWw5b3luNysxSWJl?=
- =?utf-8?B?aFlRaTlsQjNVOVhSUTIvZWNraE9rNmlzbk9td3lmaWR4dXBwQXNYVnlReld4?=
- =?utf-8?B?ek1BM3VXSlMxa0ExOENkS2Z0aUlnQ0FNSUVYUjBjRmh6Rnc1QXpucFh3eEdI?=
- =?utf-8?B?QUFXVnJFUHpjbXpycUtDeHp6eXNPNnNNTHZSYXR1MEtpTVhtOFBJTENPQi9G?=
- =?utf-8?B?bi9pcVF4RmNucnFBazc4bW1ST21oN3NYc0llaGxhT0FXSUhYYmFwTnNNQ2pV?=
- =?utf-8?B?OUxGaVZtMlJzM2tsNEZqRWxJTkd4T2pyNXAxWjUzTmFIMUFZcHJBRWZKOTN6?=
- =?utf-8?B?eUtocW5VZGhCdWlMdXRIS2NFYVplM2p4SzRnNDdpODVEU2FjWlhLc2lyRzJt?=
- =?utf-8?B?TWZ5Tkg3bDI1M0pYMW51ckRCQjlqN2ZXbDVtUkJGeVdUSzNibmxJV015Q3lq?=
- =?utf-8?B?R1crR0JZNktUYmdnK3FUUHlvODlteW52a2FzUE83cU9Bd3VRQitQYWxsanZR?=
- =?utf-8?B?V1VNcUttZ0RISVMvSFYxNjlLelFoOG9Dekp1S1ZoMGJCZkNsRlF0ZXNDdFlC?=
- =?utf-8?B?TDFTKzMrN01KR3dDTUUrR29RNkRLcytrb2hUbk1mUjVEbW9ES1hqYitGQU1G?=
- =?utf-8?B?ZWVJZWk3OVpLMGU2NVRQV01xNWhKRzd3NzlOdHBYcEd4VGt4K09INEVEcENm?=
- =?utf-8?B?NDVvM1MyWTU1YXUvTzNDdllrVXJsNXkzb3RCSWFOb1oyaDVhVXE4VlVKN2t0?=
- =?utf-8?B?dW5aa3BqT25FdlpzLzRDM3dvRHlkSkNETnhwTlFNUDQ5ZDZ1amJNRFpuK1hI?=
- =?utf-8?B?UXc9PQ==?=
-X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1d58d1c3-1257-49d3-7862-08dd4c4c1b3c
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR08MB8422.eurprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2025 16:33:12.5788
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: q+/wvkA5S/TtWczMV9F5rjv4qTqvbfLwEZj5z1hFirUmSPm3AIB6ppJRQppZ7ATN+K23T573Pqs2szzGwLJnlQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR08MB10630
+References: <20250211150034.18696-1-stefan.herbrechtsmeier-oss@weidmueller.com>
+ <Z6vZ8m8zZLgQKyVg@gmail.com> <40f8d1d9-5bd3-4ac6-a107-32482d06d17b@weidmueller.com>
+ <CADkTA4OA8VkQk=FVD=hMDaH+TU2567zLduVfYHSqkR_C4fpjOw@mail.gmail.com> <dc6263e6-e359-49b8-82be-9ca48627c37a@weidmueller.com>
+In-Reply-To: <dc6263e6-e359-49b8-82be-9ca48627c37a@weidmueller.com>
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Thu, 13 Feb 2025 12:01:06 -0500
+X-Gm-Features: AWEUYZmmbqY_QJJp-Tdh9UF7RVY2MLmEh45ixRYWKBSVLZu4n1Exk8HaUTu73bE
+Message-ID: <CADkTA4P+yHsWjRS7zDtBggbe_TXX0NTV0abtTPiLtTDHZeCh7g@mail.gmail.com>
+Subject: Re: [bitbake-devel] [RFC PATCH 00/30] Add vendor support for go, npm
+ and rust
+To: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
+Cc: openembedded-core@lists.openembedded.org, 
+	Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>, 
+	bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="000000000000b49f83062e090143"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 13 Feb 2025 16:33:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17216
+ <bitbake-devel@lists.openembedded.org>; Thu, 13 Feb 2025 17:01:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17217
 
---------------eGhfzkYW1FA0F4SUcQkrOxx5
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+--000000000000b49f83062e090143
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Am 13.02.2025 um 11:43 schrieb Richard Purdie via lists.openembedded.org:
-> I've pulled this to a separate email/thread since I'd like to take a
-> slight step back and put some different ideas into the mix as well as
-> explain where my own thoughts are right now. I'm also doing this so
-> that we can focus the discussion and give others a place to catch up
-> from. For that reason I may restate some information below.
-Thanks for the restate.
+On Thu, Feb 13, 2025 at 3:36=E2=80=AFAM Stefan Herbrechtsmeier <
+stefan.herbrechtsmeier-oss@weidmueller.com> wrote:
 
-> We have two fundamentally different approaches:
->
-> a) a single entry in SRC_URI with magic behind the scenes expanding
-> this into a list of dependencies
->
-> b) multiple entries in SRC_URI generated with tooling
->
-> gitsm is similar to a), partly because it can contain recursive
-> references to other submodules so the second approach wouldn't work.
-The second approach works. The only difference is that a lock file of a 
-package manager already resolves the recursive references / inter 
-dependencies. In case of gitsm you have to handle the dependencies 
-inside the tool and fetch a dependency to resolve it dependencies. In 
-both cases a change of a single dependency could influence the other 
-dependencies.
-
-> crates are handled with the b) approach today.
->
-> Developers in general are more comfortable with b) since they can more
-> easily see what is going on but it is also the harder one since it
-> deviates most from the underlying tools and has two sets of data that
-> require to be in sync.
->
-> Some feel the .inc files enabling b) are effectively machine generated
-> and could be removed with the work happening transparently instead,
-> simplifying the recipes and commits. This allows easier use of the
-> underlying tooling too.
->
-> I think firstly, we need to document some key principles. Behind the
-> scenes, any given url should expand to a defined list of components and
-> that list has to be deterministic and not "floating", i.e. always the
-> same regardless of changes in any registry or other upstream. If there
-> are changes, they need to be detected and there needs to be a hard
-> error. Also, if the code sees things declared in a way they could vary,
-> that also needs to be a hard error.
-The purpose of the lock file is to lock the source of a package to be 
-reproducible.
-
->
-> Most of the concerns I've seen are about how easy it is to understand
-> what is going on behind the scenes. The move of code to OE and
-> splitting everything into multiple tasks/stages does do that to some
-> extent but it does it in a way which I think is going to create a new
-> and different set of problems.
-Okay, but please keep in mind that some of my oe patches are reasonable 
-independent of the native bitbake fetcher and it is possible to 
-integrate the steps from the early class into the fetch task.
-
-> I'm therefore wondering if there is a different way. The changes I'm
-> wondering about would be to:
->
-> a) embrace the single SRC_URI entry
->
-> b) require a checksum of the internal "URL list" that is included
-> in SRC_URI, much in the same way that we have checksums of tarballs.
-The list isn't fix because it depends on the configured package manager 
-proxy or registry. We have to remove this feature. But the user could 
-use a PREMIRROR to redirect the upstream proxy to its private proxy.
-
-> For better or worse, we have low trust in the underlying tools to get
-> this right (they are getting better).
-
-We don't need to trust the tools. We parse the lock file and enrich it 
-with fix values. The resolve is deterministic. The output only depends 
-on the resolve function, variable values and lock file content.
-
-> c) if the checksum doesn't match, we know something went wrong and
-> error
-
-Can you please elaborate this point. We already check the integrity of 
-the lock file and we have deterministically resolve the SRC_URIs.
-
-> d) require the new modules to write the URL list into a known location
-> as part of unpack
-Why is this needed? The generated SRC_URIs could be resolved via 
-fetcher.expanded_urldata().
-
-> e) add the ability to add custom hooks in the fetch process to handle
-> the cases of needing to alter the flow for patching the components list
-I'm afraid this will be complicated since PATCH is applied in S and not 
-in UNPACKDIR.
-
-> f) create new tools that allow the fetcher to be stepped through and
-> for example partially run, or run with clear debug output showing what
-> was happening at each stage (show the list of components?). This may be
-> standalone tools, maybe a devtool module, I don't know. We may want to
-> make the fetch/unpack logs more useful in general as right now you
-> don't get much useful data about what it is doing.
+> Am 12.02.2025 um 15:11 schrieb Bruce Ashfield:
 >
 >
-> If we do those things, where does that get us? How much buy in do our
-> different stakeholders have?
 >
-> FWIW I am leaning towards having this code in the bitbake fetcher as a
-> first class citizen as to do otherwise is going to create layers of
-> abstraction and we probably have enough of those already.
+> On Wed, Feb 12, 2025 at 3:41=E2=80=AFAM Stefan Herbrechtsmeier <
+> stefan.herbrechtsmeier-oss@weidmueller.com> wrote:
+>
+>> Am 12.02.2025 um 00:14 schrieb Bruce Ashfield via lists.openembedded.org=
+:
+>>
+>> In message: [bitbake-devel] [RFC PATCH 00/30] Add vendor support for go,=
+ npm and rust
+>> on 11/02/2025 Stefan Herbrechtsmeier via lists.openembedded.org wrote:
+>>
+>>
+>> From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com> <s=
+tefan.herbrechtsmeier@weidmueller.com>
+>>
+>> The series adds on-the-fly support for package manager specific
+>> dependencies and vendor directories. It contains the following changes:
+>> 1. Adds an early fetch, unpack and patch task to unpack and patch source
+>>    code with an embedded lock file for dependencies.
+>> 2. Parse the go.sum, Cargo.lock and package-lock.json lock files and
+>>    resolve the dependencies to SRC_URIs.
+>> 3. Save the SRC_URIs in a file and adapt all SRC_URIs users to handle
+>>    the SRC_URI files beside the SRC_URIs in the recipe.
+>>
+>> I made a few comments, and will have another / better look at the
+>> series tomorrow. There's a lot here, and it is hard to wrap my head
+>> around everything that is changing.
+>>
+>> I have one specific question below (from the point of view of go).
+>>
+>> I've been looking through the series, and can't pick out where #3 is
+>> done.
+>>
+>> The files are created in the package manager specific vendor classes (17
+>> - 19) in the do_vendor_resolve task. The parsing is implemented in the
+>> package manager specific modules in the vendor package (6-8).
+>>
+>>
+> aha. I'll have a closer look in a bit!
+>
+>
+>
+>>  I see patch 14 using SRC_URI_FILES, but where are those files
+>> written ? Is that in patch 18 (vendor_go_do_vendor_resolve ?)  What is
+>> written to those files ?
+>>
+>> The file is written into the vendor directory below WORKDIR. The approac=
+h
+>> is similar to other classes which need to share data between tasks.
+>>
+>> The files contain individual SRC_URIs per line.
+>>
+> I may have missed that in the patches, but if that isn't described in the
+> commit logs, then
+> that description would be a nice addition. Along with a high level
+> description for each
+> supported language package manager about what is in the files and what
+> uses it to
+> resolve the dependencies.
+>
+> I will extend the commit messages.
+>
+>
+>> The concept that I'm not understanding (and that's just me not being
+>> familiar with things, I'll continue reading the series) is that when
+>> we suggested we'd like to have a mode where the dependencies could
+>> clearly be listed in the SRC_URI, at least I was just thinking about a
+>> way run the fetch/module elements that you were adding, write them to
+>> a file and then have the recipe include it.
+>>
+>> The additional SRC_URIs are dynamically added to the recipe without the
+>> indirection over an include file. The generated SRC_URIs could be inspec=
+ted
+>> via the SRC_URI_FILES and manipulated via patches for the lock files or =
+an
+>> separated lock file.
+>>
+> The issue with patching those dynamic files .. is just that, they are
+> dynamic and
+> they could be regenerated (but hopefully without a SRCREV change they are
+> identically
+> generated each time, so maybe it isn't a big deal) and patching could
+> fail. Much like we
+> don't patch generated automake files, we patch the .am and .in files that
+> generate the
+> outputs.
+>
+> You can't compare lock files with automake files. The lock files is
+> generated but it contains additional information. The only difference is
+> that a program and not a human write the file. If an update creates too
+> much noise in the file we should discuss with upstream how to minimize it=
+.
+> The lock file is designed to be under revision control and shouldn't chan=
+ge
+> without reason. Dependabot automatically creates updates and pull request=
+s
+> for dependency updates. This will not work if the lock file isn't
+> deterministic.
+>
 
-The advantage is that the SRC_URI still contains the dependencies if you 
-expand the urldata. On the other side the integration of the patches in 
-the fetcher sounds complicated.
+I may be using different terminology, but I do know what the lock files are
+(I interchange the dependency and lock files at times though), patching
+*anything* that is generated is a bad idea, that's my point (so the
+comparison is valid).
 
---------------eGhfzkYW1FA0F4SUcQkrOxx5
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-<!DOCTYPE html><html><head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  </head>
-  <body>
-    <div class="moz-cite-prefix">Am 13.02.2025 um 11:43 schrieb Richard
-      Purdie via lists.openembedded.org:<br>
+>
+>> I can't tell if in the series those files are written each time, and
+>> that there would be no way to edit those SRC_URI_FILES .. but I'll
+>> look again tomorrow.
+>>
+>> The files are written if the do_vendor_resolve task need to be rerun. It
+>> isn't possible to edit the generated SRC_URIs. Instead the lock file cou=
+ld
+>> be patched.
+>>
+>
+> ok. So they are really just a way to dump what is being built to disk and
+> out of "memory",
+> it really isn't what I was looking for, but at least I understand what yo=
+u
+> were trying to
+> do with the writing and later use of the files now.
+>
+> I was hoping for something that I could include "statically" (for lack of
+> a better term) in my
+> recipes, and then have the handlers for the protocols do the fetching ..
+> again, much like
+> the crate:// fetches in the .inc files.
+>
+> I don't use the fetcher because of its drawbacks and limitations. I use
+> the same wget URL without the indirection over the package manager specif=
+ic
+> fetchers. I can follow the pypi approach to generate SRC_URIs which call =
+a
+> python function:
+>
+Can you elaborate on the limitations ?
+
+ Although from your description, I'm fine calling wget a "fetcher". I'm
+just talking about something that pulls in the dependency source code,
+whether it be git, wget, or some other protocol, it's the concept that is
+the same.
+
+> ${@crate_src_uri(d, 'xyz', '1.2.3')}
+>
+> But why you need this? In any case the manipulation of a dependency could
+> lead to interdependence between dependencies.\
+>
+
+Because I need to redirect and update them manually. Anything that runs in
+python to determine the fetch is also hard to debug, since I'd be
+interested in the output of that processing if there's an issue.
+
+I'm describing something like (and I'm describing it badly .. but I'll try
+anyway:
+
+ <language file that describes the dependencies>
+ <process that file into a specific source  revision and fetch/download
+location>
+ <have a language / protocol specific fetcher get the modules / source code
+iteratively from a list of expanded dependencies>
+ <put them into place for the build>
+ <arrange for the build to use those fetched depdendencies>
+
+wget would fall into that "language specific fetcher", as would git or "go
+vendor" (Although I don't really like that, since it isn't transparent
+where the source code is being pulled from).  Copying the files into
+vendor, or again "go mod vendor" (doing both the fetch and placement) would
+be the "put them in place for the build".
+
+I realize that is what your series is doing.
+
+The processing, fetching, placement  stages could run fully behind the
+scenes from a dependency/lock file, or be skipped if broken out into the
+list of fetches (from the SCR_URI (via .inc file or whatever)). Those are
+the two modes I'm describing, where the "processing the file into a
+specific source revision / fetch steps" can be avoided.
+
+
+
+>
+>
+> To be clear, I'm not suggesting that mode would be the only mode, just
+> that the way the
+> generation of the fetches -> actual fetching was constructed such that I
+> could avoid
+> "short circuit" the handling of the lock file and simply list the
+> dependencies for fetching
+> (much like how I can go get all of the SRCREVS for a gitsm:// fetch, and
+> put them into
+> my recipes as pure git:// fetches if I'm having issues with the git
+> submodles).
+>
+> Add a function to create this file isn't a problem, but I can't ensure
+> that this will work in any case and doesn't create problems because of th=
+e
+> discrepancy between the manifest / lock file and the available sources.
+>
+
+Right, and that is fine. If someone bumps a revision to the point where the
+dependency now has different dependencies that are not in the lock file,
+then they've taken things fully into their control and need to deal with
+any issues.  That obviously isn't the default, but does allow an advanced
+user/developer the possibility to have fine grained control and debug.
+
+
+>
+> That file would manipulate the standard SRC_URI. In other words still
+>> support a mode that is like the .inc files with crate://. So someone
+>> could either have the lockfile parsed and fetched, or have a way to
+>> run the parsing and fetching via a task, write a file and include the
+>> file in their recipe to short circuit the processing of the lockfile.
+>> (meaning the expanded and end fetches that are done once you've
+>> processed the file are simply listed as a series of fetches that are
+>> carried out without extra processing .. and "unrolled" dependency
+>> file pointing at the "sources" git, crate, mod, whatever)
+>>
+>> What is the motivation "to short circuit the processing of the lockfile"=
+?
+>> Like any task the processing and its output are cached via the sstate ca=
+che.
+>>
+>
+> See above. It isn't about re-running it a later time and re-using the
+> artifacts, it is about
+> having a way to make sure nothing is dynamically resolved when bitbake
+> <foo> is called,
+> just fetch and the rest of the standard tasks.
+>
+> The resolve always create the same URL like the crate fetcher. It only
+> changes if you change the resolve function or the crate fetcher. Every
+> needed information is defined inside the lock file.
+>
+That's good, and if the lock file is present (versus just a dependency
+file), would the processing and creation of the lock file be skipped ?
+
+
+
+>
+>
+>> It is possible to use the vendor package to create a include file but we
+>> should have good reasons to support two solutions for the same problem.
+>>
+>> If that just doesn't make sense, then if there was a way to copy
+>> the lockfile out of the recipe and have it overlayed onto the fetched
+>> one .. maybe breaking out the individual fetch lines isn't required,
+>> since they could be individually manipulated in that lockfile.
+>>
+>> I haven't test it but this should be possible. You can place a lock file
+>> beside the recipe, add it to the SRC_URI and change the XXX_LOCK_PATH.
+>>
+>
+> Something like that is a big step towards having that finer grained
+> control in a recipe that
+> I'm looking for. I'd still like some sort of line by line "dumped
+> dependency list" if there's a
+> lower level protocol at play (but the lock file really also is just that
+> line by line list for many
+> of the languages).
+>
+> Why you need this finer grained control in the recipe? You have the finer
+> grained control in the lock file and additional tools to manage the file
+> and all its interdependence. The resolve is deterministic and the .inc is
+> only another representation. Manipulation of the representation could lea=
+d
+> to problems and complicate the process. It's like you translate the .am a=
+nd
+> .in files into a .inc file to influence the generated automake files.
+>
+The tools that I'm talking about are a text editor, not anything language
+specific.  I don't want or need tools to manipulate those files, I want to
+see the base fetches of the dependencies, it is those that I'm manipulating=
+.
+
+I'm simply describing what I've done in the past to fix issues with the
+builds and pull in fixes, so yes, it is something that I need.
+
+
+> Would it help if we have a devtool shell so that you can run "cargo
+> update" inside the folder created by "devtool modify" to update
+> dependencies via the common tools and create a patch?
+>
+
+Maybe, but I don't use devtool at all for my recipe maintenance, and I
+would push back against it being a requirement to do so.
+
+Bruce
+
+--000000000000b49f83062e090143
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><div class=3D"gmail_default" style=3D"fon=
+t-size:small"><br></div></div><br><div class=3D"gmail_quote gmail_quote_con=
+tainer"><div dir=3D"ltr" class=3D"gmail_attr">On Thu, Feb 13, 2025 at 3:36=
+=E2=80=AFAM Stefan Herbrechtsmeier &lt;<a href=3D"mailto:stefan.herbrechtsm=
+eier-oss@weidmueller.com">stefan.herbrechtsmeier-oss@weidmueller.com</a>&gt=
+; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px=
+ 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><u></u>
+
+ =20
+  <div>
+    <div>Am 12.02.2025 um 15:11 schrieb Bruce
+      Ashfield:<br>
     </div>
-    <blockquote type="cite" cite="mid:4cea4488ef3181471373f3dca26ac390203a90cb.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">I've pulled this to a separate email/thread since I'd like to take a
-slight step back and put some different ideas into the mix as well as
-explain where my own thoughts are right now. I'm also doing this so
-that we can focus the discussion and give others a place to catch up
-from. For that reason I may restate some information below.</pre>
-    </blockquote>
-    Thanks for the restate.<br>
-    <br>
-    <blockquote type="cite" cite="mid:4cea4488ef3181471373f3dca26ac390203a90cb.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">We have two fundamentally different approaches:
+    <blockquote type=3D"cite">
+     =20
+      <div dir=3D"ltr">
+        <div dir=3D"ltr">
+          <div style=3D"font-size:small"><br>
+          </div>
+        </div>
+        <br>
+        <div class=3D"gmail_quote">
+          <div dir=3D"ltr" class=3D"gmail_attr">On Wed, Feb 12, 2025 at
+            3:41=E2=80=AFAM Stefan Herbrechtsmeier &lt;<a href=3D"mailto:st=
+efan.herbrechtsmeier-oss@weidmueller.com" target=3D"_blank">stefan.herbrech=
+tsmeier-oss@weidmueller.com</a>&gt;
+            wrote:<br>
+          </div>
+          <blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8=
+ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+            <div>
+              <div>Am 12.02.2025 um 00:14 schrieb Bruce Ashfield via <a hre=
+f=3D"http://lists.openembedded.org" target=3D"_blank">lists.openembedded.or=
+g</a>:<br>
+              </div>
+              <blockquote type=3D"cite">
+                <pre>In message: [bitbake-devel] [RFC PATCH 00/30] Add vend=
+or support for go, npm and rust
+on 11/02/2025 Stefan Herbrechtsmeier via <a href=3D"http://lists.openembedd=
+ed.org" target=3D"_blank">lists.openembedded.org</a> wrote:
 
-a) a single entry in SRC_URI with magic behind the scenes expanding
-this into a list of dependencies
-
-b) multiple entries in SRC_URI generated with tooling
-
-gitsm is similar to a), partly because it can contain recursive
-references to other submodules so the second approach wouldn't work.
 </pre>
-    </blockquote>
-    The second approach works. The only difference is that a lock file
-    of a package manager already resolves the recursive references /
-    inter dependencies. In case of gitsm you have to handle the
-    dependencies inside the tool and fetch a dependency to resolve it
-    dependencies. In both cases a change of a single dependency could
-    influence the other dependencies.<br>
-    <br>
-    <blockquote type="cite" cite="mid:4cea4488ef3181471373f3dca26ac390203a90cb.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">crates are handled with the b) approach today.
+                <blockquote type=3D"cite">
+                  <pre>From: Stefan Herbrechtsmeier <a href=3D"mailto:stefa=
+n.herbrechtsmeier@weidmueller.com" target=3D"_blank">&lt;stefan.herbrechtsm=
+eier@weidmueller.com&gt;</a>
 
-Developers in general are more comfortable with b) since they can more
-easily see what is going on but it is also the harder one since it
-deviates most from the underlying tools and has two sets of data that
-require to be in sync.
-
-Some feel the .inc files enabling b) are effectively machine generated
-and could be removed with the work happening transparently instead,
-simplifying the recipes and commits. This allows easier use of the
-underlying tooling too.
-
-I think firstly, we need to document some key principles. Behind the
-scenes, any given url should expand to a defined list of components and
-that list has to be deterministic and not &quot;floating&quot;, i.e. always the
-same regardless of changes in any registry or other upstream. If there
-are changes, they need to be detected and there needs to be a hard
-error. Also, if the code sees things declared in a way they could vary,
-that also needs to be a hard error.</pre>
-    </blockquote>
-    The purpose of the lock file is to lock the source of a package to
-    be reproducible.<br>
-    <br>
-    <blockquote type="cite" cite="mid:4cea4488ef3181471373f3dca26ac390203a90cb.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">
-
-Most of the concerns I've seen are about how easy it is to understand
-what is going on behind the scenes. The move of code to OE and
-splitting everything into multiple tasks/stages does do that to some
-extent but it does it in a way which I think is going to create a new
-and different set of problems.
+The series adds on-the-fly support for package manager specific
+dependencies and vendor directories. It contains the following changes:
+1. Adds an early fetch, unpack and patch task to unpack and patch source
+   code with an embedded lock file for dependencies.
+2. Parse the go.sum, Cargo.lock and package-lock.json lock files and
+   resolve the dependencies to SRC_URIs.
+3. Save the SRC_URIs in a file and adapt all SRC_URIs users to handle
+   the SRC_URI files beside the SRC_URIs in the recipe.
 </pre>
+                </blockquote>
+                <pre>I made a few comments, and will have another / better =
+look at the
+series tomorrow. There&#39;s a lot here, and it is hard to wrap my head
+around everything that is changing.
+
+I have one specific question below (from the point of view of go).
+
+I&#39;ve been looking through the series, and can&#39;t pick out where #3 i=
+s
+done.</pre>
+              </blockquote>
+              <p>The files are created in the package manager specific
+                vendor classes (17 - 19) in the do_vendor_resolve task.
+                The parsing is implemented in the package manager
+                specific modules in the vendor package (6-8).<br>
+                <br>
+              </p>
+            </div>
+          </blockquote>
+          <div><br>
+          </div>
+          <div>
+            <div style=3D"font-size:small">aha. I&#39;ll
+              have a closer look in a bit!</div>
+            <br>
+          </div>
+          <div>=C2=A0</div>
+          <blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8=
+ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+            <p> </p>
+            <blockquote type=3D"cite">
+              <pre> I see patch 14 using SRC_URI_FILES, but where are those=
+ files
+written ? Is that in patch 18 (vendor_go_do_vendor_resolve ?)  What is
+written to those files ?</pre>
+            </blockquote>
+            <p>The file is written into the vendor directory below
+              WORKDIR. The approach is similar to other classes which
+              need to share data between tasks.<br>
+              <br>
+              The files contain individual SRC_URIs per line.<br>
+            </p>
+          </blockquote>
+          <div>
+            <div style=3D"font-size:small">I may
+              have missed that in the patches, but if that isn&#39;t
+              described in the commit logs, then</div>
+            <div style=3D"font-size:small">that
+              description would be a nice addition. Along with a high
+              level description for each</div>
+            <div style=3D"font-size:small">supported
+              language package manager about what is in the files and
+              what uses it to</div>
+            <div style=3D"font-size:small">resolve
+              the dependencies.</div>
+          </div>
+        </div>
+      </div>
     </blockquote>
-    Okay, but please keep in mind that some of my oe patches are
-    reasonable independent of the native bitbake fetcher and it is
-    possible to integrate the steps from the early class into the fetch
-    task.<br>
+    <p>I will extend the commit messages.<br>
+      <br>
+    </p>
+    <blockquote type=3D"cite">
+      <div dir=3D"ltr">
+        <div class=3D"gmail_quote">
+          <blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8=
+ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+            <div>
+              <p> <br>
+              </p>
+              <blockquote type=3D"cite">
+                <pre>The concept that I&#39;m not understanding (and that&#=
+39;s just me not being
+familiar with things, I&#39;ll continue reading the series) is that when
+we suggested we&#39;d like to have a mode where the dependencies could
+clearly be listed in the SRC_URI, at least I was just thinking about a
+way run the fetch/module elements that you were adding, write them to
+a file and then have the recipe include it.</pre>
+              </blockquote>
+              <p>The additional SRC_URIs are dynamically added to the
+                recipe without the indirection over an include file. The
+                generated SRC_URIs could be inspected via the
+                SRC_URI_FILES and manipulated via patches for the lock
+                files or an separated lock file.=C2=A0</p>
+            </div>
+          </blockquote>
+          <div><span class=3D"gmail_default" style=3D"font-size:small">The
+              issue with patching those dynamic files .. is just that,
+              they are dynamic and</span></div>
+          <div style=3D"font-size:small">they could
+            be regenerated (but hopefully without a SRCREV change they
+            are identically</div>
+          <div style=3D"font-size:small">generated
+            each time, so maybe it isn&#39;t a big deal) and patching could
+            fail. Much like we</div>
+          <div style=3D"font-size:small">don&#39;t patch
+            generated automake files, we patch the .am and .in files
+            that generate the</div>
+          <div style=3D"font-size:small">outputs.<br>
+          </div>
+        </div>
+      </div>
+    </blockquote>
+    <p>You can&#39;t compare lock files with automake files. The lock files
+      is generated but it contains additional information. The only
+      difference is that a program and not a human write the file. If an
+      update creates too much noise in the file we should discuss with
+      upstream how to minimize it.=C2=A0 The lock file is designed to be
+      under revision control and shouldn&#39;t change without reason.
+      Dependabot automatically creates updates and pull requests for
+      dependency updates. This will not work if the lock file isn&#39;t
+      deterministic.<br></p></div></blockquote><div><br></div><div><div cla=
+ss=3D"gmail_default" style=3D"font-size:small">I may be using different ter=
+minology, but I do know what the lock files are (I interchange the dependen=
+cy and lock files at times though), patching *anything* that is generated i=
+s a bad idea, that&#39;s my point (so the comparison is valid).</div></div>=
+<div><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0p=
+x 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><div><p>
+      <br>
+    </p>
+    <blockquote type=3D"cite">
+      <div dir=3D"ltr">
+        <div class=3D"gmail_quote">
+          <blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8=
+ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+            <div>
+              <p> <br>
+                <span style=3D"white-space:pre-wrap">
+</span></p>
+              <blockquote type=3D"cite">
+                <pre>I can&#39;t tell if in the series those files are writ=
+ten each time, and
+that there would be no way to edit those SRC_URI_FILES .. but I&#39;ll
+look again tomorrow.</pre>
+              </blockquote>
+              <p>The files are written if the do_vendor_resolve task
+                need to be rerun. It isn&#39;t possible to edit the
+                generated SRC_URIs. Instead the lock file could be
+                patched.<br>
+                <span style=3D"white-space:pre-wrap"></span></p>
+            </div>
+          </blockquote>
+          <div><br>
+          </div>
+          <div>
+            <div style=3D"font-size:small">ok. So
+              they are really just a way to dump what is being built to
+              disk and out of &quot;memory&quot;,</div>
+            <div style=3D"font-size:small">it really
+              isn&#39;t what I was looking for, but at least I understand
+              what you were trying to</div>
+            <div style=3D"font-size:small">do with
+              the writing and later use of the files now.</div>
+          </div>
+          <div><br>
+          </div>
+          <div>
+            <div style=3D"font-size:small">I was
+              hoping for something that I could include &quot;statically&qu=
+ot;
+              (for lack of a better term) in my</div>
+            <div style=3D"font-size:small">recipes,
+              and then have the handlers for the protocols do the
+              fetching .. again, much like</div>
+            <div style=3D"font-size:small">the
+              crate:// fetches in the .inc files.</div>
+          </div>
+        </div>
+      </div>
+    </blockquote>
+    <p>I don&#39;t use the fetcher because of its drawbacks and limitations=
+.
+      I use the same wget URL without the indirection over the package
+      manager specific fetchers. I can follow the pypi approach to
+      generate SRC_URIs which call a python function:</p></div></blockquote=
+><div><span class=3D"gmail_default" style=3D"font-size:small"></span></div>=
+<div class=3D"gmail_default" style=3D"font-size:small">Can you elaborate on=
+ the limitations ?</div><div class=3D"gmail_default" style=3D"font-size:sma=
+ll"><br></div><div class=3D"gmail_default" style=3D"font-size:small">=C2=A0=
+Although from your description, I&#39;m fine calling wget a &quot;fetcher&q=
+uot;. I&#39;m just talking about something that pulls in the dependency sou=
+rce code, whether it be git, wget, or some other protocol, it&#39;s the con=
+cept that is the same.</div><blockquote class=3D"gmail_quote" style=3D"marg=
+in:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1e=
+x"><div>
+    <p>${@crate_src_uri(d, &#39;xyz&#39;, &#39;1.2.3&#39;)}<br>
+      <br>
+      But why you need this? In any case the manipulation of a
+      dependency could lead to interdependence between dependencies.<span c=
+lass=3D"gmail_default" style=3D"font-size:small">\</span></p></div></blockq=
+uote><div><br></div><div><div class=3D"gmail_default" style=3D"font-size:sm=
+all">Because I need to redirect and update them manually. Anything that run=
+s in python to determine the fetch is also hard to debug, since I&#39;d be =
+interested in the output of that processing if there&#39;s an issue.</div><=
+div class=3D"gmail_default" style=3D"font-size:small"><br></div><div class=
+=3D"gmail_default" style=3D"font-size:small">I&#39;m describing something l=
+ike (and I&#39;m describing it badly .. but I&#39;ll try anyway:</div><div =
+class=3D"gmail_default" style=3D"font-size:small"><br></div><div class=3D"g=
+mail_default" style=3D"font-size:small">=C2=A0&lt;language file that descri=
+bes the dependencies&gt;</div><div class=3D"gmail_default" style=3D"font-si=
+ze:small">=C2=A0&lt;process that file into a specific source=C2=A0 revision=
+ and fetch/download location&gt;</div><div class=3D"gmail_default" style=3D=
+"font-size:small">=C2=A0&lt;have a language / protocol specific fetcher get=
+ the modules / source code iteratively from a list of expanded dependencies=
+&gt;</div><div class=3D"gmail_default" style=3D"font-size:small">=C2=A0&lt;=
+put them into place for the build&gt;</div><div class=3D"gmail_default" sty=
+le=3D"font-size:small">=C2=A0&lt;arrange for the build to use those fetched=
+ depdendencies&gt;</div><div class=3D"gmail_default" style=3D"font-size:sma=
+ll"><br></div><div class=3D"gmail_default" style=3D"font-size:small">wget w=
+ould fall into that &quot;language specific fetcher&quot;, as would git or=
+=C2=A0&quot;go vendor&quot; (Although I don&#39;t really like that, since i=
+t isn&#39;t transparent where the source code is being pulled from).=C2=A0 =
+Copying the files into vendor, or again &quot;go mod vendor&quot; (doing bo=
+th the fetch and placement) would be the &quot;put them in place for the bu=
+ild&quot;.</div><div class=3D"gmail_default" style=3D"font-size:small"><br>=
+</div><div class=3D"gmail_default" style=3D"font-size:small">I realize that=
+ is what your series is doing.</div><div class=3D"gmail_default" style=3D"f=
+ont-size:small"><br></div><div class=3D"gmail_default" style=3D"font-size:s=
+mall">The processing, fetching,=C2=A0placement=C2=A0 stages could run fully=
+ behind the scenes from a dependency/lock file, or be skipped if broken out=
+ into the list of fetches (from the SCR_URI (via .inc file or whatever)). T=
+hose are the two modes I&#39;m describing, where the &quot;processing the f=
+ile into a specific source revision / fetch steps&quot; can be avoided.</di=
+v><br></div><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"mar=
+gin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1=
+ex"><div><p><br>
+      <br>
+    </p>
+    <blockquote type=3D"cite">
+      <div dir=3D"ltr">
+        <div class=3D"gmail_quote">
+          <div>
+            <div style=3D"font-size:small">To be
+              clear, I&#39;m not suggesting that mode would be the only
+              mode, just that the way the</div>
+            <div style=3D"font-size:small">generation
+              of the fetches -&gt; actual fetching was constructed such
+              that I could avoid</div>
+            <div style=3D"font-size:small">&quot;short
+              circuit&quot; the handling of the lock file and simply list t=
+he
+              dependencies for fetching</div>
+            <div style=3D"font-size:small">(much
+              like how I can go get all of the SRCREVS for a gitsm://
+              fetch, and put them into</div>
+            <div style=3D"font-size:small">my
+              recipes as pure git:// fetches if I&#39;m having issues with
+              the git submodles).<br>
+            </div>
+          </div>
+        </div>
+      </div>
+    </blockquote>
+    Add a function to create this file isn&#39;t a problem, but I can&#39;t
+    ensure that this will work in any case and doesn&#39;t create problems
+    because of the discrepancy between the manifest / lock file and the
+    available sources.<br></div></blockquote><div><br></div><div><div class=
+=3D"gmail_default" style=3D"font-size:small">Right, and that is fine. If so=
+meone bumps a revision to the point where the dependency now has different =
+dependencies that are not in the lock file, then they&#39;ve taken things f=
+ully into their control and need to deal with any issues.=C2=A0 That obviou=
+sly isn&#39;t the default, but does allow an advanced user/developer the po=
+ssibility to have fine grained control and debug.</div></div><div>=C2=A0</d=
+iv><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;bord=
+er-left:1px solid rgb(204,204,204);padding-left:1ex"><div>
     <br>
-    <blockquote type="cite" cite="mid:4cea4488ef3181471373f3dca26ac390203a90cb.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">I'm therefore wondering if there is a different way. The changes I'm
-wondering about would be to:
-
-a) embrace the single SRC_URI entry
-
-b) require a checksum of the internal &quot;URL list&quot; that is included
-in&nbsp;SRC_URI, much in the same way that we have checksums of tarballs.</pre>
-    </blockquote>
-    The list isn't fix because it depends on the configured package
-    manager proxy or registry. We have to remove this feature. But the
-    user could use a PREMIRROR to redirect the upstream proxy to its
-    private proxy.<br>
-    <br>
-    <blockquote type="cite" cite="mid:4cea4488ef3181471373f3dca26ac390203a90cb.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">For better or worse, we have low trust in the underlying tools to get
-this right (they are getting better).
-</pre>
-    </blockquote>
-    <p>We don't need to trust the tools. We parse the lock file and
-      enrich it with fix values. The resolve is deterministic. The
-      output only depends on the resolve function, variable values and
-      lock file content.<br>
-      <br style="white-space: pre-wrap;"></p>
-    <blockquote type="cite" cite="mid:4cea4488ef3181471373f3dca26ac390203a90cb.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">c) if the checksum doesn't match, we know something went wrong and
-error
-</pre>
-    </blockquote>
-    <p>Can you please elaborate this point. We already check the
-      integrity of the lock file and we have deterministically resolve
-      the SRC_URIs.<br>
-      <br style="white-space: pre-wrap;"></p>
-    <blockquote type="cite" cite="mid:4cea4488ef3181471373f3dca26ac390203a90cb.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">d) require the new modules to write the URL list into a known location
-as part of unpack
-</pre>
-    </blockquote>
-    Why is this needed? The generated SRC_URIs could be resolved via
-    fetcher.expanded_urldata().<br>
-    <br>
-    <blockquote type="cite" cite="mid:4cea4488ef3181471373f3dca26ac390203a90cb.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">e) add the ability to add custom hooks in the fetch process to handle
-the cases of needing to alter the flow for patching the components list</pre>
-    </blockquote>
-    I'm afraid this will be complicated since PATCH is applied in S and
-    not in UNPACKDIR.<br>
-    <br>
-    <blockquote type="cite" cite="mid:4cea4488ef3181471373f3dca26ac390203a90cb.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">f) create new tools that allow the fetcher to be stepped through and
-for example partially run, or run with clear debug output showing what
-was happening at each stage (show the list of components?). This may be
-standalone tools, maybe a devtool module, I don't know. We may want to
-make the fetch/unpack logs more useful in general as right now you
-don't get much useful data about what it is doing.
-
-
-If we do those things, where does that get us? How much buy in do our
-different stakeholders have?
-
-FWIW I am leaning towards having this code in the bitbake fetcher as a
-first class citizen as to do otherwise is going to create layers of
-abstraction and we probably have enough of those already.
-</pre>
-    </blockquote>
-    <p>The advantage is that the SRC_URI still contains the dependencies
-      <span style="white-space: pre-wrap">if you expand the urldata. On the other side the integration of the patches in the fetcher sounds complicated.
+    <blockquote type=3D"cite">
+      <div dir=3D"ltr">
+        <div class=3D"gmail_quote">
+          <blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8=
+ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+            <div>
+              <p><span style=3D"white-space:pre-wrap">
 
 </span></p>
-    <p><span style="white-space: pre-wrap">
-</span></p>
-    <span style="white-space: pre-wrap">
-</span>
-  </body>
-</html>
+              <blockquote type=3D"cite">
+                <pre>That file would manipulate the standard SRC_URI. In ot=
+her words still
+support a mode that is like the .inc files with crate://. So someone
+could either have the lockfile parsed and fetched, or have a way to
+run the parsing and fetching via a task, write a file and include the
+file in their recipe to short circuit the processing of the lockfile.
+(meaning the expanded and end fetches that are done once you&#39;ve
+processed the file are simply listed as a series of fetches that are
+carried out without extra processing .. and &quot;unrolled&quot; dependency
+file pointing at the &quot;sources&quot; git, crate, mod, whatever)
+</pre>
+              </blockquote>
+              <p>What is the motivation &quot;to short circuit the processi=
+ng
+                of the lockfile&quot;? Like any task the processing and its
+                output are cached via the sstate cache.<br>
+              </p>
+            </div>
+          </blockquote>
+          <div><br>
+          </div>
+          <div style=3D"font-size:small">See above.
+            It isn&#39;t about re-running it a later time and re-using the
+            artifacts, it is about</div>
+          <div style=3D"font-size:small">having a
+            way to make sure nothing is dynamically=C2=A0resolved when
+            bitbake &lt;foo&gt; is called,</div>
+          <div style=3D"font-size:small">just fetch
+            and the rest of the standard tasks.<br>
+          </div>
+        </div>
+      </div>
+    </blockquote>
+    <p>The resolve always create the same URL like the crate fetcher. It
+      only changes if you change the resolve function or the crate
+      fetcher. Every needed information is defined inside the lock file.<br=
+></p></div></blockquote><div><div class=3D"gmail_default" style=3D"font-siz=
+e:small">That&#39;s good, and if the lock file is present (versus just a de=
+pendency file), would the processing and creation of the lock file be skipp=
+ed ?</div><br></div><div>=C2=A0</div><blockquote class=3D"gmail_quote" styl=
+e=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);paddin=
+g-left:1ex"><div><p>
+      <br>
+    </p>
+    <blockquote type=3D"cite">
+      <div dir=3D"ltr">
+        <div class=3D"gmail_quote">
+          <blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8=
+ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+            <div>
+              <p> <br>
+                It is possible to use the vendor package to create a
+                include file but we should have good reasons to support
+                two solutions for the same problem.<br>
+                <br>
+              </p>
+              <blockquote type=3D"cite">
+                <pre>If that just doesn&#39;t make sense, then if there was=
+ a way to copy
+the lockfile out of the recipe and have it overlayed onto the fetched
+one .. maybe breaking out the individual fetch lines isn&#39;t required,
+since they could be individually manipulated in that lockfile.</pre>
+              </blockquote>
+              <p>I haven&#39;t test it but this should be possible. You can
+                place a lock file beside the recipe, add it to the
+                SRC_URI and change the XXX_LOCK_PATH.<br>
+              </p>
+            </div>
+          </blockquote>
+          <div><br>
+          </div>
+          <div style=3D"font-size:small">Something
+            like that is a big step towards having that finer grained
+            control in a recipe that</div>
+          <div style=3D"font-size:small">I&#39;m looking
+            for. I&#39;d still like some sort of line by line &quot;dumped
+            dependency list&quot; if there&#39;s a</div>
+          <div style=3D"font-size:small">lower level
+            protocol at play (but the lock file really also is just that
+            line by line list for many</div>
+          <div style=3D"font-size:small">of the
+            languages).<br>
+          </div>
+        </div>
+      </div>
+    </blockquote>
+    <p>Why you need this finer grained control in the recipe? You have
+      the finer grained control in the lock file and additional tools to
+      manage the file and all its interdependence. The resolve is
+      deterministic and the .inc is only another representation.
+      Manipulation of the representation could lead to problems and
+      complicate the process. It&#39;s like you translate the .am and .in
+      files into a .inc file to influence the generated automake files.<br>=
+</p></div></blockquote><div><div class=3D"gmail_default" style=3D"font-size=
+:small">The tools that I&#39;m talking about are a text editor, not anythin=
+g language specific.=C2=A0 I don&#39;t want or need tools to manipulate tho=
+se files, I want to see the base fetches of the dependencies, it is those t=
+hat I&#39;m manipulating.</div><div class=3D"gmail_default" style=3D"font-s=
+ize:small"><br></div><div class=3D"gmail_default" style=3D"font-size:small"=
+>I&#39;m simply describing what I&#39;ve done in the past to fix issues wit=
+h the builds and pull in fixes, so yes, it is something that I need.</div><=
+/div><div><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0=
+px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><div>=
+<p>
+      <br>
+      Would it help if we have a devtool shell so that you can run
+      &quot;cargo update&quot; inside the folder created by &quot;devtool m=
+odify&quot; to
+      update dependencies via the common tools and create a patch?<br></p><=
+/div></blockquote><div><br></div><div><div class=3D"gmail_default" style=3D=
+"font-size:small">Maybe, but I don&#39;t use devtool at all for my recipe m=
+aintenance, and I would push back against it being a requirement to do so.=
+=C2=A0</div><div class=3D"gmail_default" style=3D"font-size:small"><br></di=
+v><div class=3D"gmail_default" style=3D"font-size:small">Bruce</div></div><=
+div class=3D"gmail_default" style=3D"font-size:small"><br></div></div></div=
+>
 
---------------eGhfzkYW1FA0F4SUcQkrOxx5--
+--000000000000b49f83062e090143--
 
