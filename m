@@ -1,401 +1,207 @@
-Return-Path: <bruce.ashfield@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E2FC021A4
-	for <webhook@archiver.kernel.org>; Thu, 13 Feb 2025 17:34:36 +0000 (UTC)
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
- by mx.groups.io with SMTP id smtpd.web11.2100.1739468069052265978
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5269AC021A4
+	for <webhook@archiver.kernel.org>; Thu, 13 Feb 2025 20:32:34 +0000 (UTC)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.web10.4459.1739478746676709381
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 13 Feb 2025 09:34:29 -0800
+ Thu, 13 Feb 2025 12:32:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=YAhezO5O;
- spf=pass (domain: gmail.com, ip: 209.85.214.176, mailfrom: bruce.ashfield@gmail.com)
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f7f1e1194so29086645ad.2;
-        Thu, 13 Feb 2025 09:34:29 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=c1nFT3gP;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43967004304so1001495e9.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 13 Feb 2025 12:32:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739468068; x=1740072868; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zl6fTYQ0TXtw3HxH05Df1cd9nYm0XUzHpVznz5N5umU=;
-        b=YAhezO5OUhJs7Q9SdjRXA7Rx57tB0GBnCmPrgMnZJL/0104Qckh84qtdvQ7jRj/3CM
-         EahyrgNZcOf+KMf7dYqf5kuHpJsMLTfDcJb5c5rxz6grB9um+YgtGXyUnzHpaL0ZJ47P
-         3I15UNEV96KVA14ZDcqyZIRRjFN56LI047pRPMfU1R9cPWFonZQS5AfXq6j0DMOk1mYI
-         FpVwPBfiSNriYSLTcIImBDK9a+6Phkh4A3BV2N+a8ckfnrtcComgk28WgEuo6+qRpu5h
-         ZePX27XAKJ0bDf5Qgek1wC/wzX4CCvyok+GISAwK/RtNTawIPuEax9Z/eAMCUcqpp3Hz
-         9K8Q==
+        d=linuxfoundation.org; s=google; t=1739478745; x=1740083545; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YcHl2lyGdeuULGqfAcuuF9yRJOWMBR7rFwJnJAt+xyI=;
+        b=c1nFT3gP1Z4osLBS01J3FgEoZKJMrKPfkq3uLFFhwvJKUpGKDk7AJXbmu3zyAJwyI5
+         lujK6IQsgAdMJwJ2NDab/dcO6Etxq4rr3ZcMARBKM9df9wCWzh5TvtvGpsFAl9bOZkL2
+         CNg9bmVmJp9T1sax73HaMbxPQXUZftl2rRP2A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739468068; x=1740072868;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Zl6fTYQ0TXtw3HxH05Df1cd9nYm0XUzHpVznz5N5umU=;
-        b=s7exwIkVutENO0DF8m7E9QxdwwtTV1tDir7fJFjHmlU5NwcukrRkeZBOQkW1BN58W0
-         fDyoDj87eyKGBNfruSh7ADUsiTOFNrhGFUx5J3B1H7Bdluh2O3pvJpROJOWDSCWYJ6m7
-         xwbeaIYWh0QZbId1ePucJIda8h5ehvrzs+Ykl5ZfXHkVEwsflnPy+7rcQHDm70K2l61z
-         SS1LwjBfbc9g2HCLafBHxSv04ceN5gZaTCD0qCsXDMjBFSEhwhSMTMz1NEbJrb48elCi
-         TOQjnzRJ9/Ear8QATJcs4GjSQILBdjzZ0IconDNWOiR+9yK30pxPxV8PlB6bsV+XXQFB
-         fThQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVnuKdGJxGEGFPZ9XYFdNzg0orUAo6mUPPafmQI7IyOobLz5O3tWlBtvpbqN6nGjBLEx2IKy6pfmwjwIpmP@lists.openembedded.org
-X-Gm-Message-State: AOJu0YxzgPYHIR93gO2EjDAoPh3TwTjRI0YwE+Z/71LsdtlYv9ZuL2Ba
-	copNUAt4mB9o6/82nRPARMeDWpPQZ3eLAJHBi1cjAhYOZKO9LDj0MGRleMQ75jnpxNMUBtB3Fq0
-	ouRFP2mnEYIC103+98aSrhZnJg2o=
-X-Gm-Gg: ASbGnctNc3ljMKtz03zBuJr1uix3LmOdyQb+0rIxr1wykVqWWgk0GPOHRj8O9WSUdcX
-	MNHTsVxtawZ+tGzE5ka0FcuOyavg1KFrSZj3QI1FiSEzWE3xC+w9slQ2ti3/KFcPAMgdU1X+e
-X-Google-Smtp-Source: AGHT+IHZQLZHygs78NcpwjSWHwNcaoPR9AGpv3BrnBk0DHNfCIz9In8GV5f6Nk9ChR0Se+xjPjOPuhtdLdbP1JtKVGs=
-X-Received: by 2002:a17:90a:e183:b0:2ee:d63f:d71 with SMTP id
- 98e67ed59e1d1-2fbf5bec92bmr14259396a91.14.1739468068174; Thu, 13 Feb 2025
- 09:34:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739478745; x=1740083545;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=YcHl2lyGdeuULGqfAcuuF9yRJOWMBR7rFwJnJAt+xyI=;
+        b=agYDCV1OHGSyeaa7Tm43NSUOl3jWfTUh3SIBe7T4/UzH3djW3HybaZIvxMDLFyYSsj
+         LYr43Z6/yG2SBSQzquFec5tkNaxzMfHfCnnI6/RN9SxCcrHEU5LAZ0rxcqWx1r1z1VgZ
+         oGVkn6rHGHOdXKaaJmxG8qiOm7FwGu8GC2zzWXZ6KAny4QMqMnOaF7RyiD5m2bRziw4O
+         N3oLmYaAxE3vyfnlWWBRN/jXOK0SgGu94ZQ+T7D12TNaPdmpqZiRGQ/IgyiE8iipbsHJ
+         TdX1Bj9AcMiDYfAVzTXu9VOvL1/7e7JejO7KAnqz5xR7qW9+FjEXm+cmjhj5AJRSxTCe
+         IqBA==
+X-Forwarded-Encrypted: i=1; AJvYcCWJj/AzAuGrExwDT1FMuMuK0XKx0SqqSBLz9y6hSJNtizfiGXJQ3qmqNfJvCl5Hk6oNAMBg0paPtyNsDCly@lists.openembedded.org
+X-Gm-Message-State: AOJu0YzTV61DeN75G40Oso4sBbzqHyuOtB0fVIBLR/tLQHWiUSvpjRSP
+	CWsYhAp9Uetlj7Pk52uvFk3a/M/80IXbv1mZ/Gc9DQPAoXXA5iEhwDPCoRWJhko=
+X-Gm-Gg: ASbGncv0Vp4648oLzDE9mcrfTaOc694Clcqkjgx0n1u1DNeEirSduJfiwRti4ZzN5bo
+	7XBxbYd4+mooK+Bo46xRCbgMIw29ZxY5AG0Iw7H+XuCWgOsO4tZs8APvgBVRq7hzdGyuoDmDEqC
+	UEwZtle9DwBoOdP0f9zOGcyF4v8IDoxxAAdnGfmTdD65sR8saGwCQSaqJcigtVQYbuBvUhi7mqZ
+	qe7wh2bATHTv0vsBnY9Mo5SlyzvI6hZwRqJ5/6ZcwBsjd12s+AZi2cWkmJbM70gtXD34cNCobS1
+	dktphtzCH5FTc3gbPMZMY2YOyJJmOrG781LAIBTEAnT+66pyNbT8nWEZKhaJJFGiecJebIuI2/F
+	NDt22
+X-Google-Smtp-Source: AGHT+IGx7MQ3/RRWew/QLaMDBPEuVSAvTkrTwVtEvQeZagg1X2n88RQITr/7RntOAIokxunwvPeAuQ==
+X-Received: by 2002:a05:600c:a4a:b0:439:57b5:f8a0 with SMTP id 5b1f17b1804b1-439601ab838mr59792765e9.24.1739478744945;
+        Thu, 13 Feb 2025 12:32:24 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:4bd7:b79c:cc4d:93dd? ([2001:8b0:aba:5f3c:4bd7:b79c:cc4d:93dd])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43961884f88sm26446955e9.28.2025.02.13.12.32.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 12:32:23 -0800 (PST)
+Message-ID: <977d6eb4f27c47c19a7a9852fe61bea9e5af0968.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] 'vendor' fetching discussion cont.
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>, 
+	openembedded-core@lists.openembedded.org, Bruce Ashfield	
+ <bruce.ashfield@gmail.com>, bitbake-devel
+ <bitbake-devel@lists.openembedded.org>
+Date: Thu, 13 Feb 2025 20:32:21 +0000
+In-Reply-To: <f0f37aa4-8a69-4340-87ad-18f39bb4f43d@weidmueller.com>
+References: 
+	<4cea4488ef3181471373f3dca26ac390203a90cb.camel@linuxfoundation.org>
+	 <f0f37aa4-8a69-4340-87ad-18f39bb4f43d@weidmueller.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.0-1 
 MIME-Version: 1.0
-References: <4cea4488ef3181471373f3dca26ac390203a90cb.camel@linuxfoundation.org>
-In-Reply-To: <4cea4488ef3181471373f3dca26ac390203a90cb.camel@linuxfoundation.org>
-From: Bruce Ashfield <bruce.ashfield@gmail.com>
-Date: Thu, 13 Feb 2025 12:34:17 -0500
-X-Gm-Features: AWEUYZmz4Verndxkk8c-R-_52UtBLqSfr_my3KcD63htkZDbl6BqIuIx-iQ1Enc
-Message-ID: <CADkTA4Ovcd=xtdKDSkLtWvDThuLWk+XvubqJm0-2UHvVyUXnBg@mail.gmail.com>
-Subject: Re: 'vendor' fetching discussion cont.
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: openembedded-core@lists.openembedded.org, 
-	Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>, 
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="0000000000004d43e8062e097813"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 13 Feb 2025 17:34:36 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17218
+ <bitbake-devel@lists.openembedded.org>; Thu, 13 Feb 2025 20:32:34 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17219
 
---0000000000004d43e8062e097813
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Thu, 2025-02-13 at 17:33 +0100, Stefan Herbrechtsmeier wrote:
+> =C2=A0Am 13.02.2025 um 11:43 schrieb Richard Purdie via lists.openembedde=
+d.org:
+>=20
+> > Most of the concerns I've seen are about how easy it is to understand
+> > what is going on behind the scenes. The move of code to OE and
+> > splitting everything into multiple tasks/stages does do that to some
+> > extent but it does it in a way which I think is going to create a new
+> > and different set of problems.
+> > =C2=A0
+> >=20
+> >=20
+> >=20
+> =C2=A0Okay, but please keep in mind that some of my oe patches are
+> reasonable independent of the native bitbake fetcher and it is
+> possible to integrate the steps from the early class into the fetch
+> task.
 
-I did some replies to the other threads before seeing this, we can feel
-free to let those other threads go unanswered, to unify things here.
+I appreciate that and I appreciate the desire to push things into OE as
+it appears easier. It can lead to much looser APIs and less structured
+code and I'm wary of it here as we create a two layered system which I
+think will be harder to understand (and hence harder to debug and use).
 
-On Thu, Feb 13, 2025 at 5:43=E2=80=AFAM Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
+=C2=A0=C2=A0
+> > I'm therefore wondering if there is a different way. The changes
+> > I'm
+> > wondering about would be to:
+> >=20
+> > a) embrace the single SRC_URI entry
+> >=20
+> > b) require a checksum of the internal "URL list" that is included
+> > in=C2=A0SRC_URI, much in the same way that we have checksums of
+> > tarballs.
+> > =C2=A0
+> =C2=A0The list isn't fix because it depends on the configured package
+> manager proxy or registry. We have to remove this feature. But the
+> user could use a PREMIRROR to redirect the upstream proxy to its
+> private proxy.
 
-> I've pulled this to a separate email/thread since I'd like to take a
-> slight step back and put some different ideas into the mix as well as
-> explain where my own thoughts are right now. I'm also doing this so
-> that we can focus the discussion and give others a place to catch up
-> from. For that reason I may restate some information below.
->
-> We have two fundamentally different approaches:
->
-> a) a single entry in SRC_URI with magic behind the scenes expanding
-> this into a list of dependencies
->
-> b) multiple entries in SRC_URI generated with tooling
->
-> gitsm is similar to a), partly because it can contain recursive
-> references to other submodules so the second approach wouldn't work.
-> crates are handled with the b) approach today.
->
-> Developers in general are more comfortable with b) since they can more
-> easily see what is going on but it is also the harder one since it
-> deviates most from the underlying tools and has two sets of data that
-> require to be in sync.
->
-> Some feel the .inc files enabling b) are effectively machine generated
-> and could be removed with the work happening transparently instead,
-> simplifying the recipes and commits. This allows easier use of the
-> underlying tooling too.
->
-> I think firstly, we need to document some key principles. Behind the
-> scenes, any given url should expand to a defined list of components and
-> that list has to be deterministic and not "floating", i.e. always the
-> same regardless of changes in any registry or other upstream. If there
-> are changes, they need to be detected and there needs to be a hard
-> error. Also, if the code sees things declared in a way they could vary,
-> that also needs to be a hard error.
->
+If that is true we have a huge problem.
 
-And of course be expanded into something that is compatible
-with our mirroring, but that was implied, I just wanted to say it :)
+By list I mean a list of something like (component, version) pairs
+where component uniquely identifies the component and version is a
+specific verifiable version of that component. If we can create that
+list, we can checksum it and use it as above. If we can't create that
+list, we have no idea what is in our builds and we may as well give up
+as it isn't reproducible.
 
+> > For better or worse, we have low trust in the underlying tools to
+> > get this right (they are getting better).
+> > =C2=A0
+> =C2=A0
+> We don't need to trust the tools. We parse the lock file and enrich
+> it with fix values. The resolve is deterministic. The output only
+> depends on the resolve function, variable values and lock file
+> content.
 
-> Most of the concerns I've seen are about how easy it is to understand
-> what is going on behind the scenes. The move of code to OE and
-> splitting everything into multiple tasks/stages does do that to some
-> extent but it does it in a way which I think is going to create a new
-> and different set of problems.
->
-> I'm therefore wondering if there is a different way. The changes I'm
-> wondering about would be to:
->
-> a) embrace the single SRC_URI entry
->
+This assumes the "resolve" always does the same thing. I'm afraid
+experience shows these can have issues. I'd much rather we have some
+kind of backup in the system which tells whether we did get the same
+resolution which is what this checksum represents.
 
-I still wonder how we'd be able to debug and/or override parts of
-the single SRC_URI entry.  Do you consider a lock file or a language
-dependency file that could be overwritten from recipe space as
-a single SRC_URI entry ? If so, I can get on board with that.
+> > c) if the checksum doesn't match, we know something went wrong and
+> > error
+> > =C2=A0
+> Can you please elaborate this point. We already check the integrity
+> of the lock file and we have deterministically resolve the SRC_URIs.
 
-I still prefer the expanded dependencies into some sort of base /
-simple fetch format, but a single file that describes all the dependencies
-is close enough. As long as there's a way to inspect what the file
-was processed into for fetching, then there is some visibility in times
-of need.
+See above. I'd like to know that the list of components and versions we
+resolve everything to matches what we expect it to look like.
 
-The remaining question for me is .. how recursive are the dependencies
-in the file described on the SRC_URI ? If each line in the single file
-is being expanded into multiple different dependencies, then the
-visibility into the final list is low, the reproducibility and mirroring of
-what
-eventually gets fetched need to be guaranteed as well. That of course
-isn't different from the issues which could arise with gitsm.
+> > d) require the new modules to write the URL list into a known
+> > location as part of unpack
+> >=20
+> =C2=A0Why is this needed? The generated SRC_URIs could be resolved via
+> fetcher.expanded_urldata().
 
+If someone is trying to debug what the code did or resolved things too,
+suggesting they run python functions to work it out will be a poor user
+experience. If on the other hand they know the result is always stored
+in WORKDIR/xyz/ABC, the know where and what to look at.
 
-> b) require a checksum of the internal "URL list" that is included
-> in SRC_URI, much in the same way that we have checksums of tarballs.
-> For better or worse, we have low trust in the underlying tools to get
-> this right (they are getting better).
->
+The user experience of using this code will make or break it's
+adoption.
 
-This would be a checksum of the fully expanded dependencies of
-the SRC_URI entry ?
+> > e) add the ability to add custom hooks in the fetch process to
+> > handle
+> > the cases of needing to alter the flow for patching the components
+> > list
+> > =C2=A0
+> =C2=A0I'm afraid this will be complicated since PATCH is applied in S and
+> not in UNPACKDIR.
 
-
->
-> c) if the checksum doesn't match, we know something went wrong and
-> error
->
-> d) require the new modules to write the URL list into a known location
-> as part of unpack
->
-
-Aha. That answers the question that I had above.
+Then we should work out how to handle that. We could allow the recipes
+to specify the top level dir to apply patches from for example?
 
 
-> e) add the ability to add custom hooks in the fetch process to handle
-> the cases of needing to alter the flow for patching the components list
->
+> > f) create new tools that allow the fetcher to be stepped through
+> > and
+> > for example partially run, or run with clear debug output showing
+> > what
+> > was happening at each stage (show the list of components?). This
+> > may be
+> > standalone tools, maybe a devtool module, I don't know. We may want
+> > to
+> > make the fetch/unpack logs more useful in general as right now you
+> > don't get much useful data about what it is doing.
+> >=20
+> >=20
+> > If we do those things, where does that get us? How much buy in do
+> > our
+> > different stakeholders have?
+> >=20
+> > FWIW I am leaning towards having this code in the bitbake fetcher
+> > as a
+> > first class citizen as to do otherwise is going to create layers of
+> > abstraction and we probably have enough of those already.
+> > =C2=A0
+> =C2=A0
+> The advantage is that the SRC_URI still contains the dependencies if
+> you expand the urldata. On the other side the integration of the
+> patches in the fetcher sounds complicated.
 
-Or potentially detect the output of d) being somehow supplied and not
-do the dependency resolution ?
+Patches would stay where they are in the system in do_patch and use the
+code in OE-Core. I'm just thinking we could add some hooks in the fetch
+process to allow adjustment of things like the resolved component list.
+It doesn't have to be a patch, it could be a function passed data.
 
+Cheers,
 
-> f) create new tools that allow the fetcher to be stepped through and
-> for example partially run, or run with clear debug output showing what
-> was happening at each stage (show the list of components?). This may be
-> standalone tools, maybe a devtool module, I don't know. We may want to
-> make the fetch/unpack logs more useful in general as right now you
-> don't get much useful data about what it is doing.
->
->
-> If we do those things, where does that get us? How much buy in do our
-> different stakeholders have?
->
+Richard
 
-I think it is getting closer!
-
-If there's a way to see all of the individual fetches, and change those
-fetches,
-then it solves most of the issues that I've been using git:// fetches for
-in my
-go recipes.
-
-Bruce
-
-
-
->
-> FWIW I am leaning towards having this code in the bitbake fetcher as a
-> first class citizen as to do otherwise is going to create layers of
-> abstraction and we probably have enough of those already.
->
-> Cheers,
->
-> Richard
->
->
->
->
->
->
->
->
->
-
---=20
-- Thou shalt not follow the NULL pointer, for chaos and madness await thee
-at its end
-- "Use the force Harry" - Gandalf, Star Trek II
-
---0000000000004d43e8062e097813
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><div class=3D"gmail_default" style=3D"fon=
-t-size:small">I did some replies to the other threads before seeing this, w=
-e can feel</div><div class=3D"gmail_default" style=3D"font-size:small">free=
- to let those other threads go unanswered, to unify things here.</div></div=
-><br><div class=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" clas=
-s=3D"gmail_attr">On Thu, Feb 13, 2025 at 5:43=E2=80=AFAM Richard Purdie &lt=
-;<a href=3D"mailto:richard.purdie@linuxfoundation.org">richard.purdie@linux=
-foundation.org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" st=
-yle=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padd=
-ing-left:1ex">I&#39;ve pulled this to a separate email/thread since I&#39;d=
- like to take a<br>
-slight step back and put some different ideas into the mix as well as<br>
-explain where my own thoughts are right now. I&#39;m also doing this so<br>
-that we can focus the discussion and give others a place to catch up<br>
-from. For that reason I may restate some information below.<br>
-<br>
-We have two fundamentally different approaches:<br>
-<br>
-a) a single entry in SRC_URI with magic behind the scenes expanding<br>
-this into a list of dependencies<br>
-<br>
-b) multiple entries in SRC_URI generated with tooling<br>
-<br>
-gitsm is similar to a), partly because it can contain recursive<br>
-references to other submodules so the second approach wouldn&#39;t work.<br=
->
-crates are handled with the b) approach today.<br>
-<br>
-Developers in general are more comfortable with b) since they can more<br>
-easily see what is going on but it is also the harder one since it<br>
-deviates most from the underlying tools and has two sets of data that<br>
-require to be in sync.<br>
-<br>
-Some feel the .inc files enabling b) are effectively machine generated<br>
-and could be removed with the work happening transparently instead,<br>
-simplifying the recipes and commits. This allows easier use of the<br>
-underlying tooling too.<br>
-<br>
-I think firstly, we need to document some key principles. Behind the<br>
-scenes, any given url should expand to a defined list of components and<br>
-that list has to be deterministic and not &quot;floating&quot;, i.e. always=
- the<br>
-same regardless of changes in any registry or other upstream. If there<br>
-are changes, they need to be detected and there needs to be a hard<br>
-error. Also, if the code sees things declared in a way they could vary,<br>
-that also needs to be a hard error.<br></blockquote><div><br></div><div><di=
-v class=3D"gmail_default" style=3D"font-size:small">And of course be expand=
-ed into something that is compatible</div><div class=3D"gmail_default" styl=
-e=3D"font-size:small">with our mirroring, but that was implied, I just want=
-ed to say it :)</div></div><div><br></div><blockquote class=3D"gmail_quote"=
- style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);p=
-adding-left:1ex">
-<br>
-Most of the concerns I&#39;ve seen are about how easy it is to understand<b=
-r>
-what is going on behind the scenes. The move of code to OE and<br>
-splitting everything into multiple tasks/stages does do that to some<br>
-extent but it does it in a way which I think is going to create a new<br>
-and different set of problems.<br>
-<br>
-I&#39;m therefore wondering if there is a different way. The changes I&#39;=
-m<br>
-wondering about would be to:<br>
-<br>
-a) embrace the single SRC_URI entry<br></blockquote><div><br></div><div><di=
-v class=3D"gmail_default" style=3D"font-size:small">I still wonder how we&#=
-39;d be able to debug and/or override parts of</div><div class=3D"gmail_def=
-ault" style=3D"font-size:small">the single SRC_URI entry.=C2=A0 Do you cons=
-ider a lock file or a language</div><div class=3D"gmail_default" style=3D"f=
-ont-size:small">dependency file that could be overwritten from recipe space=
- as</div><div class=3D"gmail_default" style=3D"font-size:small">a single SR=
-C_URI entry ? If so, I can get on board with that.</div><div class=3D"gmail=
-_default" style=3D"font-size:small"><br></div><div class=3D"gmail_default" =
-style=3D"font-size:small">I still prefer the expanded dependencies into som=
-e sort of base /</div><div class=3D"gmail_default" style=3D"font-size:small=
-">simple fetch format, but a single file that describes all the dependencie=
-s</div><div class=3D"gmail_default" style=3D"font-size:small">is close enou=
-gh. As long as there&#39;s a way to inspect what the file</div><div class=
-=3D"gmail_default" style=3D"font-size:small">was processed into for fetchin=
-g, then there is some visibility in times</div><div class=3D"gmail_default"=
- style=3D"font-size:small">of need.</div><div class=3D"gmail_default" style=
-=3D"font-size:small"><br></div><div class=3D"gmail_default" style=3D"font-s=
-ize:small">The remaining question for me is .. how recursive are the depend=
-encies</div><div class=3D"gmail_default" style=3D"font-size:small">in the f=
-ile described on the SRC_URI ? If each line in the single file</div><div cl=
-ass=3D"gmail_default" style=3D"font-size:small">is being expanded into mult=
-iple different dependencies, then the</div><div class=3D"gmail_default" sty=
-le=3D"font-size:small">visibility into the final list is low, the reproduci=
-bility and mirroring of what</div><div class=3D"gmail_default" style=3D"fon=
-t-size:small">eventually gets fetched need to be guaranteed as well. That o=
-f course</div><div class=3D"gmail_default" style=3D"font-size:small">isn&#3=
-9;t different from the issues which could arise with gitsm.</div></div><div=
-><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.=
-8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-<br>
-b) require a checksum of the internal &quot;URL list&quot; that is included=
-<br>
-in=C2=A0SRC_URI, much in the same way that we have checksums of tarballs.<b=
-r>
-For better or worse, we have low trust in the underlying tools to get<br>
-this right (they are getting better).<br></blockquote><div><br></div><div><=
-div class=3D"gmail_default" style=3D"font-size:small">This would be a check=
-sum of the fully expanded dependencies of</div><div class=3D"gmail_default"=
- style=3D"font-size:small">the SRC_URI entry ?</div></div><div>=C2=A0</div>=
-<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
-left:1px solid rgb(204,204,204);padding-left:1ex">
-<br>
-c) if the checksum doesn&#39;t match, we know something went wrong and<br>
-error<br>
-<br>
-d) require the new modules to write the URL list into a known location<br>
-as part of unpack<br></blockquote><div><br></div><div><div class=3D"gmail_d=
-efault" style=3D"font-size:small">Aha. That answers the question that I had=
- above.</div></div><div><br></div><blockquote class=3D"gmail_quote" style=
-=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
--left:1ex">
-<br>
-e) add the ability to add custom hooks in the fetch process to handle<br>
-the cases of needing to alter the flow for patching the components list<br>=
-</blockquote><div><br></div><div><div class=3D"gmail_default" style=3D"font=
--size:small">Or potentially detect the output of d) being somehow supplied =
-and not</div><div class=3D"gmail_default" style=3D"font-size:small">do the =
-dependency resolution ?</div></div><div><br></div><blockquote class=3D"gmai=
-l_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,20=
-4,204);padding-left:1ex">
-<br>
-f) create new tools that allow the fetcher to be stepped through and<br>
-for example partially run, or run with clear debug output showing what<br>
-was happening at each stage (show the list of components?). This may be<br>
-standalone tools, maybe a devtool module, I don&#39;t know. We may want to<=
-br>
-make the fetch/unpack logs more useful in general as right now you<br>
-don&#39;t get much useful data about what it is doing.<br>
-<br>
-<br>
-If we do those things, where does that get us? How much buy in do our<br>
-different stakeholders have?<br></blockquote><div><br></div><div><div class=
-=3D"gmail_default" style=3D"font-size:small">I think it is getting closer!<=
-/div><div class=3D"gmail_default" style=3D"font-size:small"><br></div><div =
-class=3D"gmail_default" style=3D"font-size:small">If there&#39;s a way to s=
-ee all of the individual fetches, and change those fetches,</div><div class=
-=3D"gmail_default" style=3D"font-size:small">then it solves most of the iss=
-ues that I&#39;ve been using git:// fetches for in my</div><div class=3D"gm=
-ail_default" style=3D"font-size:small">go recipes.</div><div class=3D"gmail=
-_default" style=3D"font-size:small"><br></div><div class=3D"gmail_default" =
-style=3D"font-size:small">Bruce</div><br></div><div>=C2=A0</div><blockquote=
- class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px so=
-lid rgb(204,204,204);padding-left:1ex">
-<br>
-FWIW I am leaning towards having this code in the bitbake fetcher as a<br>
-first class citizen as to do otherwise is going to create layers of<br>
-abstraction and we probably have enough of those already.<br>
-<br>
-Cheers,<br>
-<br>
-Richard<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-</blockquote></div><div><br clear=3D"all"></div><div><br></div><span class=
-=3D"gmail_signature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_s=
-ignature">- Thou shalt not follow the NULL pointer, for chaos and madness a=
-wait thee at its end<br>- &quot;Use the force Harry&quot; - Gandalf, Star T=
-rek II<br><br></div></div>
-
---0000000000004d43e8062e097813--
 
