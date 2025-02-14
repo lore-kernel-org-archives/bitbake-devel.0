@@ -1,717 +1,424 @@
-Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
+Return-Path: <stefan-koch@siemens.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFFBC021A6
-	for <webhook@archiver.kernel.org>; Fri, 14 Feb 2025 12:46:19 +0000 (UTC)
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (EUR03-AM7-obe.outbound.protection.outlook.com [40.107.105.105])
- by mx.groups.io with SMTP id smtpd.web10.20223.1739537168057516288
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C087C02198
+	for <webhook@archiver.kernel.org>; Fri, 14 Feb 2025 15:25:50 +0000 (UTC)
+Received: from DUZPR83CU001.outbound.protection.outlook.com (DUZPR83CU001.outbound.protection.outlook.com [52.101.67.70])
+ by mx.groups.io with SMTP id smtpd.web10.23502.1739546742885186310
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 14 Feb 2025 04:46:09 -0800
+ Fri, 14 Feb 2025 07:25:43 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@weidmueller.com header.s=selector2 header.b=XEsktmK5;
- spf=pass (domain: weidmueller.com, ip: 40.107.105.105, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
+ dkim=pass header.i=@siemens.com header.s=selector2 header.b=euz0a6pj;
+ spf=pass (domain: siemens.com, ip: 52.101.67.70, mailfrom: stefan-koch@siemens.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sGBCtTs9MKCUh2afpVlpkaT8+IzG3PbGSHqqfDOf2oiYmASGM0Gob1Qnbicu2FeBi2kIIQQQYBTAqWgfSYjXIwQA8z9rJgFOwkqHuYe3X4hFmo35EC6WfxGszT+xe/s5oZLzVKPUvVQA5yKh8GUz8n3UA8UcSThoeMc4gYPVBWRhk8C4Y3vIO8UYuVyLCgelV+syF1ye23kfNfJKh5pl3T2n4PsriQ2SM8PUvNUJhrnsRhDESHalN1MqQOZAKBNOFtpRpTfCHwqRatiI6LS/7WmyQt3HZSMuU5aaQQsahMrsmpSBjR9i1mLGGadxnJdC4ZdyfFiZvLhNvy3yk66YKQ==
+ b=gwHGtUiah33CimeI7Bn2GwP06yEU2DYw0Xvr0ecHTccKAkebgfz58VhyKZiUi0hR9G0srM8sG5hWXdvXhnlpItpC5H8V2kDM9CKBdJ8jbgEf7+ZsCY2hBGHcpjpk/BaA42qSTHE402flxVzLGo/af9ot6+6h2oukxMW7caIihm+A9a/BNHycCh0as6MbAQhxY3p/NwIeQQDTq3FrpgHS9zB58uhV2S+ng8dJn32IZAh13y+O9AyRaxg7bPZZn9HggSV+nV/37w2ha+37rP+v/TzHRZJFqfBRIZtZaxEH9YTvWVaiGaA0WhdNCnc9zjr+7X3eqRmZUn4nmZQxGhiZMQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pbi4HJRCyYDdyTaOC74pB2fO5kccwpOzh6tm1q36ND4=;
- b=ywZcgh7XnqZ3u7dcnRBcmpYvQdjc0F/WWG1HAR9zX1w7CRWHQaAwPJl94/6ITz9Mfi07G3S6BBbHjs7TQJEsdjK+lOVUD56dmVKCfvHCs1WD9sLcoeeSQ3rzKJPuMYi/rE3p1cxv7By58mSMYZqzyVmnO1bNnmb2gF+T2eIsM7fTgs2P1tYIfvTg8JzzNMr2UrI0KulcUMRJnOQMggTxbZ6As3QJQAl4ikit2oUAamzNG/SJzCB9ZiDA7lBWHhJZkr1fiWk5wyEzRZmftPW/r+QQsSJyJkUbCBjvQc6ze7GS2JLgURDVXQgddg1AyfGySbGFxdYNlXmtfmuhFP7lwQ==
+ bh=4V7uagumWprYTKVAKnyldpVQ4MhgPmbCIGMWz4bWArA=;
+ b=d8qrukAJEuSWt5xXVMoQkP34oegcuL2VXAqYDZ/DDEZyLLhDLRVS/ZjaC4q6DjF7pDWxOId753bI7oqCLSR4S1z9/nqzMg+eit05HeSkTPqNtVGGfjzRb57Q7IVScffsinZOrUYdaJddDrMvdpjWF4K8IApMNlQg5lzLdDOG0grtCsmU8aGFxk7iODJBuvU2skQe7GhEqnYpPug/n+eZrCsG0DUgshA9AIAMwyo4g0gucUWX19F9EVO6sB6WyfQV8qh6sFadxy1i1mtvwOjTI/JNaqcBPSPdWCV1bw16EErxvVVo3QyiiUCl1P4sub28l+Hj9QFZdbGVVeYbWA0x2g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=weidmueller.com; dmarc=pass action=none
- header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pbi4HJRCyYDdyTaOC74pB2fO5kccwpOzh6tm1q36ND4=;
- b=XEsktmK5mVHt32HjAR6/EWEtM0mlcv6qhCta1eY9At5OMP6gzN9YPDxLvDHI5fymlOHo8bqaheVM8ws7wHDHNdrRLzTzsv7rEA3BNcT+iOM1jvYr3vNdzubaiWYmPIGcJbtenWPgAipbDp2OmtSfLLL45HnXejQOUYQWmm90E3JrlwtpgXt6DG8E2xroGj02MsvHCzQWXwkLCdJKV9atnv9jOA3no9Y2SQqiwRsrF+BCkJ0vbXjPFeliABLq1FjE4iV0AIgLdZJMPfhl5CS/6dWtjv2Ml7txmkYeNInILtzTbGkLomPHRYQJydpHfh1p4JvthJZU1+rL5sDBFhekOg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=weidmueller.com;
-Received: from GV1PR08MB8426.eurprd08.prod.outlook.com (2603:10a6:150:8a::17)
- by AS8PR08MB6662.eurprd08.prod.outlook.com (2603:10a6:20b:397::19) with
+ bh=4V7uagumWprYTKVAKnyldpVQ4MhgPmbCIGMWz4bWArA=;
+ b=euz0a6pjQJhk0hq1YIHNfQWa5m4zFNhkuQvtGMMwyIH7/glriP+pnSffuVCqBaOelpC6H52K6Hajk0XYitzTldaJWGRyBhagy14nffLgPOHjvJnpHCPhOAWwWdlXeoB1b6LmsIPD/o0GkEuLor0OfPUKBT5LPXXnQAL0JZO/db5DEM0yh6m6I+rEBMVvB7kfXE97ZFntIIYhdZQxkJzEog2PJnlsIE0+ZnfYscaNsFi3XnB1H6nKW7DoiWMCzRn2DVdtByP9phVfxuQS4NugXNWZdY+X6FigDmSVDYqX6Y/enX6fVgJvYqMd4baJWjpPTgIjYDQii5VU2V/blfH3Jg==
+Received: from AM9PR10MB4959.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:41e::11)
+ by GV1PR10MB6051.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:150:9d::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.13; Fri, 14 Feb
- 2025 12:46:04 +0000
-Received: from GV1PR08MB8426.eurprd08.prod.outlook.com
- ([fe80::f9f5:b4bd:9e01:9013]) by GV1PR08MB8426.eurprd08.prod.outlook.com
- ([fe80::f9f5:b4bd:9e01:9013%7]) with mapi id 15.20.8445.013; Fri, 14 Feb 2025
- 12:46:03 +0000
-Content-Type: multipart/alternative;
- boundary="------------1eM0NbsmtZUlHtdBfskn2Cb0"
-Message-ID: <9174f6c9-eb19-402d-8ba5-8beacf701d2e@weidmueller.com>
-Date: Fri, 14 Feb 2025 13:46:02 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: 'vendor' fetching discussion cont.
-To: Bruce Ashfield <bruce.ashfield@gmail.com>,
- Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: openembedded-core@lists.openembedded.org,
- bitbake-devel <bitbake-devel@lists.openembedded.org>
-References: <4cea4488ef3181471373f3dca26ac390203a90cb.camel@linuxfoundation.org>
- <CADkTA4Ovcd=xtdKDSkLtWvDThuLWk+XvubqJm0-2UHvVyUXnBg@mail.gmail.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.9; Fri, 14 Feb
+ 2025 15:25:39 +0000
+Received: from AM9PR10MB4959.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::71d7:e998:3abf:a1ec]) by AM9PR10MB4959.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::71d7:e998:3abf:a1ec%6]) with mapi id 15.20.8466.009; Fri, 14 Feb 2025
+ 15:25:37 +0000
+From: "Koch, Stefan" <stefan-koch@siemens.com>
+To: "alex.kanavin@gmail.com" <alex.kanavin@gmail.com>
+CC: "Sudler, Simon" <simon.sudler@siemens.com>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>, "Kiszka, Jan"
+	<jan.kiszka@siemens.com>
+Subject: Re: [bitbake-devel] [PATCH 1/3] fetch2/git: Add support for fast
+ initial shallow fetch
+Thread-Topic: [bitbake-devel] [PATCH 1/3] fetch2/git: Add support for fast
+ initial shallow fetch
+Thread-Index: AQHbckBbUrJl7ZDjuEO5eKt8ubFbZbMtn1aAgAymQwCADL9KAA==
+Date: Fri, 14 Feb 2025 15:25:37 +0000
+Message-ID: <73c18ebbf4bdd867a5cf94bafaf40f72b9103d08.camel@siemens.com>
+References: <20250129112406.1660522-1-stefan-koch@siemens.com>
+	 <20250129112406.1660522-2-stefan-koch@siemens.com>
+	 <CANNYZj9K1cCOmT=ZwXu85GYEpD_Z4RKDarJUwTVfZuH-psy1Mw@mail.gmail.com>
+	 <05b40bf4dfb337547c2d0a380787e26c2ab4f829.camel@siemens.com>
+In-Reply-To: <05b40bf4dfb337547c2d0a380787e26c2ab4f829.camel@siemens.com>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
-In-Reply-To: <CADkTA4Ovcd=xtdKDSkLtWvDThuLWk+XvubqJm0-2UHvVyUXnBg@mail.gmail.com>
-X-ClientProxiedBy: FR0P281CA0142.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:96::15) To GV1PR08MB8426.eurprd08.prod.outlook.com
- (2603:10a6:150:8a::17)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AM9PR10MB4959:EE_|GV1PR10MB6051:EE_
+x-ms-office365-filtering-correlation-id: 07a2ecbd-d455-4a85-2296-08dd4d0bd56c
+x-ms-exchange-atpmessageproperties: SA
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: 
+ BCL:0;ARA:13230040|366016|4022899009|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info: 
+ =?utf-8?B?ODF3WE1yZEFUV2M2Vmk2Vjc5UXprNWt3YWJsc1RCYWo1TDlveTFOa1Bhd2JD?=
+ =?utf-8?B?OCtnWEdsMDcwWjVpaEtFRUw2YzdkeXVKcVpRcmxNSjd4MCsvbis0SXR1S3JS?=
+ =?utf-8?B?dUtVNy9UcFcxdGNGYjZaS3U5LzVCQkc5YWlEZjRENVhoMDV1UkFhalF5N0R3?=
+ =?utf-8?B?WXQzNFJWd0wvSjhEd0tTOVhHRXdlMXNkZlBqQnYvcXRicnNYZlBvRDRSMWtz?=
+ =?utf-8?B?K0NiUjRkOGZiMWpQdDVaSVl0cjdFYkFyVnoxRnlkQmFmSEpuQnZ4Y3Vja1ZQ?=
+ =?utf-8?B?OG4xeFZoeFlSQkduZ1pIemp4dVIweEpaaG9nVmVEVFFvMnZBK095eFpYaFVX?=
+ =?utf-8?B?bTVjOWJEeXJ5b0RzRm5RVjVGK0RVSmt3b1ZjdUZsZE83d2tXZ3M5NHQvcXd2?=
+ =?utf-8?B?ZUtrcGU0NW5laFJmMk9UNDZiazRkV3JrREFjT0ZoUm12aVFjdzRHK1ZxK1k1?=
+ =?utf-8?B?eWFtVGt2a0Z4V1NDSFNybVlnUE42Z2hjQzNSVG5KZm9oK2ZRaXllU1RFeHBB?=
+ =?utf-8?B?eVRTVDcyZUpReVJFNlpXZkZ4WWhoejV3K1Fwd0RGRUd6aWx3aElyV1V5dnZ6?=
+ =?utf-8?B?YzZOWHVWUHcyYTdpc0lOMWNjY0ZXbEVSUlV2ZUhlUENrTnV0c2ZkVjNvcjVm?=
+ =?utf-8?B?c0VoenFlUVFEdGREeVJoVEUvcmUzTnVjaURtM2NjNEFqeHhuYWk4cXlUYmlB?=
+ =?utf-8?B?TlhHVkcrNG4vSTNtaHVrdVREaWJGMjdwQk1BVmJNelAvcDdtaXltZEVGOUw2?=
+ =?utf-8?B?OWUwRlhQS1d4bDd6aEQyL1BtYVBobXQ0Nys1RFBldDZHbWczYUVCK0lJZzkr?=
+ =?utf-8?B?eENnNzkwT2lKamloRHFOVmxCWSticWFLU2paSjNaRVpiN0g4NXpsNnh0OTlF?=
+ =?utf-8?B?N0d5anF6Vy9sQmNUK1MxTVJVdnZiTHZZWnRQLzg3MDFSbDNQU1dkaEdiOWt5?=
+ =?utf-8?B?NzM5WkJLSm9VTmlSbnRTOERtbEhpbDVoYkRkYkVGWWN5eEF4ZExMaW5CT0R2?=
+ =?utf-8?B?L0t6UEM5dzl0SFNwUEpodWpQTzF4Y09KZWFHWlppQTN2UzkwcWFsQldZa1k0?=
+ =?utf-8?B?cERIeUJxdDRSTjhsTHBUdEthaGpwUmRFcmZFaWNBamo4UkhVTVIrQVdHU3dI?=
+ =?utf-8?B?UjZTTlJlUU9rRU5BOXIwbXo3QWVjZTBpWUpvNnV3eUlHVjgzNmlHWkQ0V1ow?=
+ =?utf-8?B?NUZRV0V0Y1BmZnRuTGNsN2RtZm54WVpodW92SVdZZHhQWjY2Z2lnTUcrZU91?=
+ =?utf-8?B?d2dFa29HV1M5OHBKa0lMb0pKWVczcDlOelA3U1IraFFKcEx6bnd1SHpsWVVZ?=
+ =?utf-8?B?eWo5NVFEbURQT2ZVOFZzTDhrVGhER0syNFdnRWMyUm9iaDVvaDk5S2p3dllm?=
+ =?utf-8?B?c1RNUklueXZ2UFVwajhXalp2K1JTRHdTbk5wcnRhZkZaYWtNM3Z2NEtQMGhu?=
+ =?utf-8?B?QW1QNjFyWG5ka1F0Y0RZR05RUnRQWk9hR0hTcFViTnYyNVZUdW91dGhGQTgv?=
+ =?utf-8?B?Nno2KzFtM2JkTUdDc1F0dWpVcStnMERCQVlYRFN6cVNIQVl6STcxVkxZT1RC?=
+ =?utf-8?B?VkJzMzhGSFVDdExYbmlQd05IRXZaVEtWYnlCT0VjejlrclZxQTNlSGpkb3Jo?=
+ =?utf-8?B?bVNNeHE3NWZlcVhpVHFOR0V5eVJRdDJSeVhxVmVqVHF6eGVRZnAxekNROWc3?=
+ =?utf-8?B?aTRtWjM0RFZmTHVDRy9yUHJERWFnclBZUXJuZjdPMEZGQlRMQnl5NkRINXJS?=
+ =?utf-8?B?RjZ0aXVxMmlCTWF1MXpZUmZQUEZnUTNKYmtRVWwwYlV5NHhyWmw1R0xFRlpR?=
+ =?utf-8?B?RXZwSzkwSUhLVnFUT1h0aHJSVllZM3g3WFBQQVh2ekxOcHByREV3ajVackRQ?=
+ =?utf-8?Q?drxmku0abzjSM?=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR10MB4959.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(4022899009)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?utf-8?B?YVFJbmV0KzBHanZXT0M3UjZWT0hjUFQ4NHlIdjZUSit0NFRFclgrLzU4TDVv?=
+ =?utf-8?B?TGR2T0U1aEhDTkh0eURVRE45b0hyVHdidDRFU29iRGVmNXhTM2lLcFdHdXVI?=
+ =?utf-8?B?Y0twOHhyemk1NUU3QXlkNG9xVnJQaTV5UzB1dnpmd2lSSUtwZzI5eWtjZ1F1?=
+ =?utf-8?B?bTltY0EzVGJWVEdjK1p5KzhmTVlSRE1kYmhVdmJJdzhGOHIvZHB1N3hTVTdN?=
+ =?utf-8?B?MElSRjVSUUhPQVo2NUxMR2pCV2VvWmxmY2xsSzNHa3lkWk1UaG4yNkg3NUR3?=
+ =?utf-8?B?M3FzMFQ0YkV2OVdodlFCUGNiYk91ckVBbzZZVzlZRXRDbng0SElnU05vRTQ4?=
+ =?utf-8?B?VnpNMTcyTk1PWDRkRG1VVE1KYkN0K3FYRXZUejVPeGhFQkZlQ3pFYlBiZGpH?=
+ =?utf-8?B?MlRpYlQ3VTdGNnFIZ0N4c01KRXhYaW5RdVY4TktPYS9OL0U4VDR6MUxzcis0?=
+ =?utf-8?B?TGpBdWVjVVM0YVZvU0h2aG16ZHNVQTl1MXBsMy9VcjVMNTAxZjExUVlkNU5z?=
+ =?utf-8?B?QnZWUW5pVXp4cjArYmRlL1FjTGRTRU1lMUZhRzI4cGZyNnRRMGRvMG5nV3cw?=
+ =?utf-8?B?WHdDSmhJR1J1U2EvTEErQmpwSExXKzBzYUdtUENoRWhDNTVXOGJLVTJ6MHYz?=
+ =?utf-8?B?K3pZd2tsTGVZdXpuRlRaTUQzMmlBTndSVzdxRHh4dEhHK2tnTGhUSjRpQjFp?=
+ =?utf-8?B?VlJNOWcyUlNKM3RFVm5TRkZEaWFzamYxbWd5Y29yREZpYnlBQThjRlpJTjNY?=
+ =?utf-8?B?eGdwc2pJV0JONE9zeTFUYmR0Y0p2L01ZNnp6Q21PZUZFL3FoY1A3a25VVDEy?=
+ =?utf-8?B?VlJyYVdHbVBDY2JmeENNMHptUDdzalJsUEpkMWVTaU1PamhQUkNCTnBMN2Z1?=
+ =?utf-8?B?RzhJSkg5SWVPL2dpMXhxWFJZbjdhdjdmL2g5clhnUTkrWm1BSzBhdlNpVzc0?=
+ =?utf-8?B?UUkvajdiL1J3OElOUlA2VkxsSmZIMUtNMWxkVVN6L2pIZEh2WmlZL2hqU1Ns?=
+ =?utf-8?B?NXQyKzFDYk4xb1FnYUZiTHJudDNpa2s0RC9pRy84UEZOdTJzSy9FeTl4NzIx?=
+ =?utf-8?B?MGZZVHBIZmdWeTFVWDBPNkZobFhyaU4wckJ0aXlzOEFyblFYK2xnVW5zUUx2?=
+ =?utf-8?B?SU9IeXArYTNvYXhpWWdGQWxHVEJ4L09mTm14b1kvZmtxVmUzdFZWdWRXS2xD?=
+ =?utf-8?B?enRoSStTUHdpYW5oZC8weU85eFVpYm10RzJJcExySEZOV0FJc2NsTVQ3SE95?=
+ =?utf-8?B?VmpCOVRvUVVqTFIzVVdER3BYcjBIMnRsTWxHaTZwYWx4R2RHWjc5eFVvbUlB?=
+ =?utf-8?B?TzRweFlyMkk0TFo1eWRGQ1R6YnFYRFVPa2pYaVh3T082akdzWWlEOTFSeGIr?=
+ =?utf-8?B?c1NUb2ZyUXdlVjBvUzJFQ0tHenpzQzRISmNjRkt0NFFPYXRHb2NxcTBkazUz?=
+ =?utf-8?B?UzBFSUxWTFlENk1PS0EwbWd1Q0N4RGE1VHVTYzRXS1RoZFZTMnpWWlBvQUVY?=
+ =?utf-8?B?VkVTUTNSWkVuYzE2MlRUaTdZUExhYW43WU56NDdFNFpkdk10eE1NK3YzZGNO?=
+ =?utf-8?B?VDJJOFhUQjgzNGEzTTIzMmFJai85enp6U3lhaW5iK0NvRGpVdjdMdENpbndy?=
+ =?utf-8?B?Sk1qd3JhcVd2WTlUYmVqU0xXM00rcTlXOUFzK3U4dTRkQmZrZ295WUNWUjVu?=
+ =?utf-8?B?Zk5tclN6ZXdETVkyc205M2xRTGV1YkVOU0VUYmpCcGErRFdWdG1jZ1FOQXlu?=
+ =?utf-8?B?aUFrOVdoK2J1NFVmVElQUWpKUmtVYm9KdUZ3Y0tGSG5lMXBhd3U0b1pJSDg0?=
+ =?utf-8?B?K0NQR21VOW4zLzE0MVJVcU9QVUV4b3h1Vm1HNThubjNSU0p1R0J5R1VRbVBC?=
+ =?utf-8?B?NmZyVHdwSDZ0THlRMEFPT1lQelgvb2IySnNqd0s0RWlocFhTRXlURUJxazF6?=
+ =?utf-8?B?SnRvZCt2ekttak9jNFFwaUl2NDZuZDFnOFd3OE5BNjFYOWg1VlAvVmh5czU0?=
+ =?utf-8?B?K3BrbmhockI4M0x2TGkra2RuOVhjNnlPak5vNk9DMzNrRlVvK2VPRk1sWVM3?=
+ =?utf-8?B?MmNzYk5TSjZweXZCNEdRWkFYNk1BQzNLd1doaW5ac2Q2OGc5UHFYbDgvd2tK?=
+ =?utf-8?B?WkxFVlcvd1B2eU8zL3NWL055UlJ0RVNMSEJ0bnNrYnVORFVlV0JYRTJTL05m?=
+ =?utf-8?B?a3c9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7681C6E73D21A442B03B6CC48721A172@EURPRD10.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV1PR08MB8426:EE_|AS8PR08MB6662:EE_
-X-MS-Office365-Filtering-Correlation-Id: dea17285-f365-45dd-fa12-08dd4cf58aa6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|8096899003;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?SEh5Tmpja3NzTWg2dFZRRitIMEx6SWQwa3BZdjBnd1FsMy9zbDRnUHIzeTZi?=
- =?utf-8?B?Y20xdFd2aTJ6dDNMQTVxTHJaQlR6bitLTEhwNjFQRnRjYmxERlpqcFZlU2NH?=
- =?utf-8?B?b0lrMDBxTHNURTZ5U2xKQ2FhVnVkVUZJd0NhMHJpUFdJNmU4UlBUYlZMSlQ0?=
- =?utf-8?B?ajUveHo0dmVEU0NWeWhQbjFWKzNoNVZJT2dPMkh6Zi9acStHR2lQT2ZSUHRt?=
- =?utf-8?B?blAvYUFPYVZDcWJJQlNWRXF0MS9hK013ODhXUzJ1dzhYZjBHUTFHMERYY1Nx?=
- =?utf-8?B?RnJDNU9RNTNVNXY0Q3hxQldnQ2NKVkxJUi9heGVjUW1EU1FkU3NMc1k1YjNU?=
- =?utf-8?B?WE9ZMDNDand4cVVoR3ZPK1g2eXBrdEd4ZWJtT3BnZHhTNFZaOHIyT2tPTVM2?=
- =?utf-8?B?UlFOQXB2WnFKelUvZFNPUm1yYzRqY05yaUtmUDdZYVBmdURlY0NrZWRtaG03?=
- =?utf-8?B?UEJPR01IQk5mdXFsTkd6bExOZkl0cE9QdnlyZU5maTg1dXFPWURTcXRrQVFC?=
- =?utf-8?B?V3BWK2V4b2k4NVhPYWdvcTY2eFBRR2tmd21yVXVJTkNtczltYzhyTFEweFN5?=
- =?utf-8?B?SGNFYlVRQ1ppM0ZoK2h5TDVVMjdPUEZnYVdHaGVwSEhpWXFTV1gxdHZ0Qk93?=
- =?utf-8?B?Q25jVFFPQmlTNzJIaittYXRMSHdCUkY0OFl3Rlg2NGtmK3dsZXFUenhnaW1v?=
- =?utf-8?B?dzlxU2dWTGxlOXBJb2YrbC82S012RlZhcGVDRXhDM0tiWitpK2oyejRndDZa?=
- =?utf-8?B?dEYzRDNrTnZGZnJ2NThsWFBRY3VoZk1mcXVUYm5PM0U4WEtGUVpDc0V2bW16?=
- =?utf-8?B?am93d0JNODQzbXFsVmtVUUgxTkhwVVpSa1JDYjZ4emtyU0R2blNRWU9oU1BB?=
- =?utf-8?B?U0w0Y2RKR29MSU5UZnBNazZNUFk4TDNwT1IvNjhDZEdzdDR5cjdMQWxtYjRH?=
- =?utf-8?B?UE10b1RvU1E0dW1zMVcvOUlGMnZRVUV5WFNCQ09icFJLZEJneUIydFhkM2hM?=
- =?utf-8?B?dEhWTE1xaDVFaE5VcE4vNlN1cU4vYTdZN29Sc0tpZGRhaTlENk1lSURCQzdk?=
- =?utf-8?B?SjV6K2VjTUdabmR5WE9FeVNaeFF2S1lRQkFBc2wwdUEyeGtBUTQrbFhQUld1?=
- =?utf-8?B?SDcrWUo3OWZWcytRZDI3UWNHSTJYNERTMWhEd2Q4RlJtQ3N3eTJoRGVVblJL?=
- =?utf-8?B?SmNZTW1IQVMzUEM1U0d3R213bklXQTZpRmF6UGE5SEpHck43NUJ2dWJRUFp1?=
- =?utf-8?B?dUZrb1RtaCtnOG0wQ2pxaFRYY2I5aHlGeXlFOGhHQ2lQYXlYakh4R0owbjFS?=
- =?utf-8?B?Q0JzTzIvMXlhUGJKNzRiTTZveEpqcGkwa0g1VkdNb3JFa2U1eTFzd01EdExU?=
- =?utf-8?B?cG4vcnFXUVJzWFc1c1VvK2JqdjJvVlVKeW1YZFd6RWQrcUZHSFpBM0Yya0V6?=
- =?utf-8?B?eElveXh3d3NxZFBHWjBlR0ZxMHBmeCswQTVUUm5jc3hyYkNtRldRQ3NneTJu?=
- =?utf-8?B?WnhKN3BIZXliRkR6S2p5bHQ3UE96WkpkVEV2MU0zV3JHOWIvc3QvMXIxNGVH?=
- =?utf-8?B?RjBaZXBwNDRWVkRIMHpJSGlFclQ0bFkxVmhwb3dLV0t2TTQrZjZHL1FsZUZD?=
- =?utf-8?B?c0M5M0N6QVl1OUFYRk5XWGFrMC9IeC9zME03Z2FHQTJaQWt1bndUOHZrMHNk?=
- =?utf-8?B?aVQ0ZFY3SjVLekdxOGlETDI2NDJydW5XajQ3dm4remYvY1lQdTIrN0RwNkxz?=
- =?utf-8?B?bEFRQTQ0WGhJVmxkN2tyNW51WkJ3Mk84LzZBaUx4T2dlVDFhK21oakF1TlRG?=
- =?utf-8?B?Q1JLVFJxNTVYNHJRVXdHamRBOUpEZHd2bFhtUnZpWVpKMklLNmt2Q0pKZGFQ?=
- =?utf-8?Q?vlqRMspFkMh9S?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB8426.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(8096899003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?RmxIWS8wUkhhbUV0WFhzT25lNUVabGx4cG4wZEZlT3dFMTU5MnRYdjhTQUZK?=
- =?utf-8?B?OWJEU3FWRDhHelVYYm1KR01iMHB1eFdobVM3OWJuRE9tdVh4UUhQcXhOMUUy?=
- =?utf-8?B?YXdGNUE1dzAvNmpsZGRLdUFNK1U3akUxQzJkcDZkbWFibzNVbSt0aGttcVNR?=
- =?utf-8?B?aHZVc3BXTk44SzlLT3l4dXkrMEdHWHIzdnN5dEtMZUUvT24wZkczTlJ2Q0x6?=
- =?utf-8?B?TUtnMkxnbkRadEdaQURZdXZJM3ZsWTRPWXljR01jTld5ZklPSXBKV0tNek5X?=
- =?utf-8?B?eDZkZkFiV3hsdkdKdTB1SmlmNEZQY29HZVU5azVzZ1Bac2FNVGxpYmFncHRl?=
- =?utf-8?B?bTVNYlh3ek1QVkI4K0NLTGlTajRtOHhYc3FHWEhNcmFyY1dHSW9rY0ZCbnR2?=
- =?utf-8?B?bEJDWjFRZ2s3M2hHVXVXQ0tqV0RxTWdTdDFGWHFJRWJ3Uk5wRldtbHladXBk?=
- =?utf-8?B?TEJUU2t0TGlvem5kMVRjMjVTVWEwQ05URS9UNFRsZE9YajUvRVk3VUdZK0hK?=
- =?utf-8?B?bGdpM0MweHptYTVUNkxaTDZ0R2ZCTUtwTit1Y3hMcDBsdjJoNVZsRlpaWHVI?=
- =?utf-8?B?OVNHM3RucWo5UURtSm1URi9neHllZ0g0NjlUdmp5dlRTNGJ0Um8zZFpDdEFT?=
- =?utf-8?B?MHpHR1czSVdsUkg5OGxTY0hpT1lEakxMUVBBZHBUS0c2NytVQUJ6VEtFZmFm?=
- =?utf-8?B?dTB5eExDeXh0ZDZsY3QwOVMvTU9pYUZnYnIyYnpwSUNrSTFlK2dzUnNyY3pi?=
- =?utf-8?B?L3R1TG1JbmV3ODNNU0RnR1lyQ09hN0VKMlVzZ0gvY3NRbzlIZGtmSTIwYVlW?=
- =?utf-8?B?ZWZDcU10ME5KdW9OUnhkcmxLSGxIN0dCTUhvcys4QWNrajBVVkwwVms2OWlC?=
- =?utf-8?B?b3ZLL3VaU2c0R3NUcm9vdG9oeVc5anAzQmpIOEZCUi9YV0s2NUhSTzFtUm10?=
- =?utf-8?B?ZnBXd25CSUtxN3dLUFE2bmtoeXEwWlFscmZuZUhDY1ZhRHpSNVlkOEtmRzVS?=
- =?utf-8?B?ZXFkQnRoUjVpdGRXTjZCV0dwZUZsK1FRcFVPaFl5eTJKOW9ES1kwQUp0bXJK?=
- =?utf-8?B?dnZmdWdIUDBVc1RkZzEzbU8wc0hMdXZyOTZWcTRHV0Q2RllzNGpYZ0JuQ24r?=
- =?utf-8?B?UVBqWjBRdW9LN1BJZFgrZDBleGJmaTY0QmRhZHBKbU5ZY1RpVFd4OXd1a0s2?=
- =?utf-8?B?TzNMY3drTVNrZ3VQMWl6UlV2elp3TjdxUGczSUFNcHM3Y3ZkSkIySHFpdktH?=
- =?utf-8?B?YVAxb21NcGprc1l3UE5pSlZYVjRvUEROeHlNMUpDU2M4UEJ3SlZCWG5EVE14?=
- =?utf-8?B?eFZZQ1lEcXpENlVuSUhKU3NlMXlkVlJtK3B0NDluYXluM0JXcTNZbDN5alVF?=
- =?utf-8?B?Rlh1ZnVMaXpBVHF2QXcwWEs4anBOOFVKU0t6MVl1bFBOY1pwbHZtKzU1K2Ny?=
- =?utf-8?B?aXVNTkplMStjZDVMRUFOYmVoTUtEcVQyQWJxb2E1K3lhbDA0WVppenpDTDRN?=
- =?utf-8?B?ZmNlQkdFTEJiTkNpSWJjTUR3VlR3U1JPRi9RUERNa0s0REc4cHpLQm9JV2F1?=
- =?utf-8?B?R3NOVzF2NHJsSkNzREM2dEswdmNpZmFsdCszTUxBYnZMbjA0U3FpNlVnby9J?=
- =?utf-8?B?cmxaREhiT0toekd5a0NBcktKTnloTWsyZ284U0k2ZFB0S1pjdWlPTXZRWFNE?=
- =?utf-8?B?R0ZyZ0tlWWNsbUVrbTFSVXpSYnlybEF5UVgwTkxOazJlSElVeHlURVRXeFA1?=
- =?utf-8?B?eTJEc0pVVy8zMC83NkhWZ1lLL0hKVTRiSHRWY1FRVzNwa2laR0paZnZJaFFS?=
- =?utf-8?B?L1ZZblZSeEJCM2J2OGtDUW5WdDV1ZjdsTVV0eE5FVU5GWnN6eFBMYzJQYmNw?=
- =?utf-8?B?VTJXdyt6dUd6NDdsNGtpbjZZWTZ1VjdJVGJMN0tpc0szYXVNY1ZHRWVRdGYr?=
- =?utf-8?B?bSsyaDB6RFdZaVRkYTRtT0Q2ZEcyOXh1TXZray9RaTVFZ0paamNNRlhCYWFB?=
- =?utf-8?B?YitWMFpqVEdwWDU4a1hibUFJUEZ0cmhOeGlQRTVKd1ZrbzJUR1hqUVhoTlB3?=
- =?utf-8?B?aDFQbHpOY3UvcGtOMTQ1ajBlNXZna3VWME83bHVtcEx4OHN4NiszSWdBd1Ey?=
- =?utf-8?B?c1FNNy9rWDAzWENlSlhvd1Z4QUFjT0VWWlUxb2RobjIvcXg0b1FnUnZWSHhE?=
- =?utf-8?B?Ymc9PQ==?=
-X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dea17285-f365-45dd-fa12-08dd4cf58aa6
-X-MS-Exchange-CrossTenant-AuthSource: GV1PR08MB8426.eurprd08.prod.outlook.com
+X-OriginatorOrg: siemens.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 12:46:03.5389
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR10MB4959.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07a2ecbd-d455-4a85-2296-08dd4d0bd56c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Feb 2025 15:25:37.6596
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aXmXJbJR2e70EK9mP9n7D4qWI8MP8nSvOIWMV8A5gyXSaLkdktbEzb5i4STvRKOaMUA25OuKuq6FO+m9gpbMvg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB6662
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6OM2Tbx3tdfPqEhDjUh7R1jaUPS2NNNHyuJ2g+ARQEZAXUQ8nb0LZbPPsnsn3976no8G25ZCkbScHw6IjHotyA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR10MB6051
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 14 Feb 2025 12:46:19 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17220
+ <bitbake-devel@lists.openembedded.org>; Fri, 14 Feb 2025 15:25:50 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17221
 
---------------1eM0NbsmtZUlHtdBfskn2Cb0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Am 13.02.2025 um 18:34 schrieb Bruce Ashfield:
-> I did some replies to the other threads before seeing this, we can feel
-> free to let those other threads go unanswered, to unify things here.
-Okay
-
-> On Thu, Feb 13, 2025 at 5:43 AM Richard Purdie 
-> <richard.purdie@linuxfoundation.org> wrote:
->
->     I've pulled this to a separate email/thread since I'd like to take a
->     slight step back and put some different ideas into the mix as well as
->     explain where my own thoughts are right now. I'm also doing this so
->     that we can focus the discussion and give others a place to catch up
->     from. For that reason I may restate some information below.
->
->     We have two fundamentally different approaches:
->
->     a) a single entry in SRC_URI with magic behind the scenes expanding
->     this into a list of dependencies
->
->     b) multiple entries in SRC_URI generated with tooling
->
->     gitsm is similar to a), partly because it can contain recursive
->     references to other submodules so the second approach wouldn't work.
->     crates are handled with the b) approach today.
->
->     Developers in general are more comfortable with b) since they can more
->     easily see what is going on but it is also the harder one since it
->     deviates most from the underlying tools and has two sets of data that
->     require to be in sync.
->
->     Some feel the .inc files enabling b) are effectively machine generated
->     and could be removed with the work happening transparently instead,
->     simplifying the recipes and commits. This allows easier use of the
->     underlying tooling too.
->
->     I think firstly, we need to document some key principles. Behind the
->     scenes, any given url should expand to a defined list of
->     components and
->     that list has to be deterministic and not "floating", i.e. always the
->     same regardless of changes in any registry or other upstream. If there
->     are changes, they need to be detected and there needs to be a hard
->     error. Also, if the code sees things declared in a way they could
->     vary,
->     that also needs to be a hard error.
->
->
-> And of course be expanded into something that is compatible
-> with our mirroring, but that was implied, I just wanted to say it :)
-Therefore we need to fix the mirror regex. Otherwise we have to mimic 
-the upstream layout in the download directory.
-
->
->     Most of the concerns I've seen are about how easy it is to understand
->     what is going on behind the scenes. The move of code to OE and
->     splitting everything into multiple tasks/stages does do that to some
->     extent but it does it in a way which I think is going to create a new
->     and different set of problems.
->
->     I'm therefore wondering if there is a different way. The changes I'm
->     wondering about would be to:
->
->     a) embrace the single SRC_URI entry
->
->
-> I still wonder how we'd be able to debug and/or override parts of
-> the single SRC_URI entry.  Do you consider a lock file or a language
-> dependency file that could be overwritten from recipe space as
-> a single SRC_URI entry ? If so, I can get on board with that.
->
-> I still prefer the expanded dependencies into some sort of base /
-> simple fetch format, but a single file that describes all the dependencies
-> is close enough. As long as there's a way to inspect what the file
-> was processed into for fetching, then there is some visibility in times
-> of need.
-Do you mean a Cargo.lock, go.sum and package-lock.json file or a 
-proprietary file?
-
-We could save the generated SRC_URIs and a hash of the lock file in a 
-file in the download directory. The file could be used for inspection 
-and as cache to avoid a regeneration.
-
-> The remaining question for me is .. how recursive are the dependencies
-> in the file described on the SRC_URI ?
-Go, Rust and NPM already resolve the recursive dependencies in its lock 
-file. Only gitsm need to resolve the recursive dependencies.
-
-> If each line in the single file
-> is being expanded into multiple different dependencies, then the
-> visibility into the final list is low,
-
-We have the fetcher.expanded_urldata function to receive the expanded 
-SRC_URI list. Maybe we could make it easy accessible.
-
-> the reproducibility
-The generated SRC_URIs only depends on the lock file and some variables. 
-We could reduce the variables if we depend on the PREMIRROR to configure 
-a local proxy or registry.
-
-> and mirroring of what
-> eventually gets fetched need to be guaranteed as well. That of course
-> isn't different from the issues which could arise with gitsm.
-My last implementation are based on the wget and git fetcher. The 
-mirroring will work as soon as we fix it.
-
->     b) require a checksum of the internal "URL list" that is included
->     in SRC_URI, much in the same way that we have checksums of tarballs.
->     For better or worse, we have low trust in the underlying tools to get
->     this right (they are getting better).
->
->
-> This would be a checksum of the fully expanded dependencies of
-> the SRC_URI entry ?
->
->
->     c) if the checksum doesn't match, we know something went wrong and
->     error
->
->     d) require the new modules to write the URL list into a known location
->     as part of unpack
->
->
-> Aha. That answers the question that I had above.
->
->
->     e) add the ability to add custom hooks in the fetch process to handle
->     the cases of needing to alter the flow for patching the components
->     list
->
->
-> Or potentially detect the output of d) being somehow supplied and not
-> do the dependency resolution ?
-I would focus on patch files for the lock file. It is always possible to 
-remove the SRC_URI line and replace it with the desired dependency list. 
-The list could be extracted from the cache file in the download 
-directory or could be received via the expanded_urldata function. The 
-function already returns the git
-
->     f) create new tools that allow the fetcher to be stepped through and
->     for example partially run, or run with clear debug output showing what
->     was happening at each stage (show the list of components?). This
->     may be
->     standalone tools, maybe a devtool module, I don't know. We may want to
->     make the fetch/unpack logs more useful in general as right now you
->     don't get much useful data about what it is doing.
->
->
->     If we do those things, where does that get us? How much buy in do our
->     different stakeholders have?
->
->
-> I think it is getting closer!
->
-> If there's a way to see all of the individual fetches, and change 
-> those fetches,
-> then it solves most of the issues that I've been using git:// fetches 
-> for in my
-> go recipes.
->
-> Bruce
->
->
->     FWIW I am leaning towards having this code in the bitbake fetcher as a
->     first class citizen as to do otherwise is going to create layers of
->     abstraction and we probably have enough of those already.
->
->     Cheers,
->
->     Richard
->
->
->
->
->
->
->
->
->
->
-> -- 
-> - Thou shalt not follow the NULL pointer, for chaos and madness await 
-> thee at its end
-> - "Use the force Harry" - Gandalf, Star Trek II
->
---------------1eM0NbsmtZUlHtdBfskn2Cb0
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-<!DOCTYPE html><html><head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  </head>
-  <body>
-    <div class="moz-cite-prefix">Am 13.02.2025 um 18:34 schrieb Bruce
-      Ashfield:<br>
-    </div>
-    <blockquote type="cite" cite="mid:CADkTA4Ovcd=xtdKDSkLtWvDThuLWk+XvubqJm0-2UHvVyUXnBg@mail.gmail.com">
-      
-      <div dir="ltr">
-        <div dir="ltr">
-          <div class="gmail_default" style="font-size:small">I did some
-            replies to the other threads before seeing this, we can feel</div>
-          <div class="gmail_default" style="font-size:small">free to let
-            those other threads go unanswered, to unify things here.</div>
-        </div>
-      </div>
-    </blockquote>
-    Okay<br>
-    <br>
-    <blockquote type="cite" cite="mid:CADkTA4Ovcd=xtdKDSkLtWvDThuLWk+XvubqJm0-2UHvVyUXnBg@mail.gmail.com">
-      <div dir="ltr">
-        <div class="gmail_quote gmail_quote_container">
-          <div dir="ltr" class="gmail_attr">On Thu, Feb 13, 2025 at
-            5:43 AM Richard Purdie &lt;<a href="mailto:richard.purdie@linuxfoundation.org" moz-do-not-send="true" class="moz-txt-link-freetext">richard.purdie@linuxfoundation.org</a>&gt;
-            wrote:<br>
-          </div>
-          <blockquote class="gmail_quote" style="margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">I've
-            pulled this to a separate email/thread since I'd like to
-            take a<br>
-            slight step back and put some different ideas into the mix
-            as well as<br>
-            explain where my own thoughts are right now. I'm also doing
-            this so<br>
-            that we can focus the discussion and give others a place to
-            catch up<br>
-            from. For that reason I may restate some information below.<br>
-            <br>
-            We have two fundamentally different approaches:<br>
-            <br>
-            a) a single entry in SRC_URI with magic behind the scenes
-            expanding<br>
-            this into a list of dependencies<br>
-            <br>
-            b) multiple entries in SRC_URI generated with tooling<br>
-            <br>
-            gitsm is similar to a), partly because it can contain
-            recursive<br>
-            references to other submodules so the second approach
-            wouldn't work.<br>
-            crates are handled with the b) approach today.<br>
-            <br>
-            Developers in general are more comfortable with b) since
-            they can more<br>
-            easily see what is going on but it is also the harder one
-            since it<br>
-            deviates most from the underlying tools and has two sets of
-            data that<br>
-            require to be in sync.<br>
-            <br>
-            Some feel the .inc files enabling b) are effectively machine
-            generated<br>
-            and could be removed with the work happening transparently
-            instead,<br>
-            simplifying the recipes and commits. This allows easier use
-            of the<br>
-            underlying tooling too.<br>
-            <br>
-            I think firstly, we need to document some key principles.
-            Behind the<br>
-            scenes, any given url should expand to a defined list of
-            components and<br>
-            that list has to be deterministic and not &quot;floating&quot;, i.e.
-            always the<br>
-            same regardless of changes in any registry or other
-            upstream. If there<br>
-            are changes, they need to be detected and there needs to be
-            a hard<br>
-            error. Also, if the code sees things declared in a way they
-            could vary,<br>
-            that also needs to be a hard error.<br>
-          </blockquote>
-          <div><br>
-          </div>
-          <div>
-            <div class="gmail_default" style="font-size:small">And of
-              course be expanded into something that is compatible</div>
-            <div class="gmail_default" style="font-size:small">with our
-              mirroring, but that was implied, I just wanted to say it
-              :)<br>
-            </div>
-          </div>
-        </div>
-      </div>
-    </blockquote>
-    Therefore we need to fix the mirror regex. Otherwise we have to
-    mimic the upstream layout in the download directory.<br>
-    <br>
-    <blockquote type="cite" cite="mid:CADkTA4Ovcd=xtdKDSkLtWvDThuLWk+XvubqJm0-2UHvVyUXnBg@mail.gmail.com">
-      <div dir="ltr">
-        <div class="gmail_quote gmail_quote_container">
-          <blockquote class="gmail_quote" style="margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-            <br>
-            Most of the concerns I've seen are about how easy it is to
-            understand<br>
-            what is going on behind the scenes. The move of code to OE
-            and<br>
-            splitting everything into multiple tasks/stages does do that
-            to some<br>
-            extent but it does it in a way which I think is going to
-            create a new<br>
-            and different set of problems.<br>
-            <br>
-            I'm therefore wondering if there is a different way. The
-            changes I'm<br>
-            wondering about would be to:<br>
-            <br>
-            a) embrace the single SRC_URI entry<br>
-          </blockquote>
-          <div><br>
-          </div>
-          <div>
-            <div class="gmail_default" style="font-size:small">I still
-              wonder how we'd be able to debug and/or override parts of</div>
-            <div class="gmail_default" style="font-size:small">the
-              single SRC_URI entry.&nbsp; Do you consider a lock file or a
-              language</div>
-            <div class="gmail_default" style="font-size:small">dependency
-              file that could be overwritten from recipe space as</div>
-            <div class="gmail_default" style="font-size:small">a single
-              SRC_URI entry ? If so, I can get on board with that.</div>
-            <div class="gmail_default" style="font-size:small"><br>
-            </div>
-            <div class="gmail_default" style="font-size:small">I still
-              prefer the expanded dependencies into some sort of base /</div>
-            <div class="gmail_default" style="font-size:small">simple
-              fetch format, but a single file that describes all the
-              dependencies</div>
-            <div class="gmail_default" style="font-size:small">is close
-              enough. As long as there's a way to inspect what the file</div>
-            <div class="gmail_default" style="font-size:small">was
-              processed into for fetching, then there is some visibility
-              in times</div>
-            <div class="gmail_default" style="font-size:small">of need.<br>
-            </div>
-          </div>
-        </div>
-      </div>
-    </blockquote>
-    Do you mean a Cargo.lock, go.sum and package-lock.json file or a
-    proprietary file?<br>
-    <br>
-    We could save the generated SRC_URIs and a hash of the lock file in
-    a file in the download directory. The file could be used for
-    inspection and as cache to avoid a regeneration.<br>
-    <br>
-    <blockquote type="cite" cite="mid:CADkTA4Ovcd=xtdKDSkLtWvDThuLWk+XvubqJm0-2UHvVyUXnBg@mail.gmail.com">
-      <div dir="ltr">
-        <div class="gmail_quote gmail_quote_container">
-          <div>
-            <div class="gmail_default" style="font-size:small">The
-              remaining question for me is .. how recursive are the
-              dependencies</div>
-            <div class="gmail_default" style="font-size:small">in the
-              file described on the SRC_URI ?<br>
-            </div>
-          </div>
-        </div>
-      </div>
-    </blockquote>
-    Go, Rust and NPM already resolve the recursive dependencies in its
-    lock file. Only gitsm need to resolve the&nbsp;recursive dependencies.<br>
-    <br>
-    <blockquote type="cite" cite="mid:CADkTA4Ovcd=xtdKDSkLtWvDThuLWk+XvubqJm0-2UHvVyUXnBg@mail.gmail.com">
-      <div dir="ltr">
-        <div class="gmail_quote gmail_quote_container">
-          <div>
-            <div class="gmail_default" style="font-size:small">If each
-              line in the single file</div>
-            <div class="gmail_default" style="font-size:small">is being
-              expanded into multiple different dependencies, then the</div>
-            <div class="gmail_default" style="font-size:small">visibility
-              into the final list is low,<br>
-            </div>
-          </div>
-        </div>
-      </div>
-    </blockquote>
-    <p>We have the fetcher.expanded_urldata function to receive the
-      expanded SRC_URI list. Maybe we could make it easy accessible.<br>
-      <br>
-    </p>
-    <blockquote type="cite" cite="mid:CADkTA4Ovcd=xtdKDSkLtWvDThuLWk+XvubqJm0-2UHvVyUXnBg@mail.gmail.com">
-      <div dir="ltr">
-        <div class="gmail_quote gmail_quote_container">
-          <div>
-            <div class="gmail_default" style="font-size:small">the
-              reproducibility</div>
-          </div>
-        </div>
-      </div>
-    </blockquote>
-    The generated SRC_URIs only depends on the lock file and some
-    variables. We could reduce the variables if we depend on the
-    PREMIRROR to configure a local proxy or registry.<br>
-    <br>
-    <blockquote type="cite" cite="mid:CADkTA4Ovcd=xtdKDSkLtWvDThuLWk+XvubqJm0-2UHvVyUXnBg@mail.gmail.com">
-      <div dir="ltr">
-        <div class="gmail_quote gmail_quote_container">
-          <div>
-            <div class="gmail_default" style="font-size:small"> and
-              mirroring of what</div>
-            <div class="gmail_default" style="font-size:small">eventually
-              gets fetched need to be guaranteed as well. That of course</div>
-            <div class="gmail_default" style="font-size:small">isn't
-              different from the issues which could arise with gitsm.<br>
-            </div>
-          </div>
-        </div>
-      </div>
-    </blockquote>
-    My last implementation are based on the wget and git fetcher. The
-    mirroring will work as soon as we fix it.<br>
-    <br>
-    <blockquote type="cite" cite="mid:CADkTA4Ovcd=xtdKDSkLtWvDThuLWk+XvubqJm0-2UHvVyUXnBg@mail.gmail.com">
-      <div dir="ltr">
-        <div class="gmail_quote gmail_quote_container">
-          <blockquote class="gmail_quote" style="margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-            b) require a checksum of the internal &quot;URL list&quot; that is
-            included<br>
-            in&nbsp;SRC_URI, much in the same way that we have checksums of
-            tarballs.<br>
-            For better or worse, we have low trust in the underlying
-            tools to get<br>
-            this right (they are getting better).<br>
-          </blockquote>
-          <div><br>
-          </div>
-          <div>
-            <div class="gmail_default" style="font-size:small">This
-              would be a checksum of the fully expanded dependencies of</div>
-            <div class="gmail_default" style="font-size:small">the
-              SRC_URI entry ?<br>
-              <br>
-            </div>
-          </div>
-          <div>&nbsp;</div>
-          <blockquote class="gmail_quote" style="margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-            <br>
-            c) if the checksum doesn't match, we know something went
-            wrong and<br>
-            error<br>
-            <br>
-            d) require the new modules to write the URL list into a
-            known location<br>
-            as part of unpack<br>
-          </blockquote>
-          <div><br>
-          </div>
-          <div>
-            <div class="gmail_default" style="font-size:small">Aha. That
-              answers the question that I had above.</div>
-          </div>
-          <div><br>
-          </div>
-          <blockquote class="gmail_quote" style="margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-            <br>
-            e) add the ability to add custom hooks in the fetch process
-            to handle<br>
-            the cases of needing to alter the flow for patching the
-            components list<br>
-          </blockquote>
-          <div><br>
-          </div>
-          <div>
-            <div class="gmail_default" style="font-size:small">Or
-              potentially detect the output of d) being somehow supplied
-              and not</div>
-            <div class="gmail_default" style="font-size:small">do the
-              dependency resolution ?<br>
-            </div>
-          </div>
-        </div>
-      </div>
-    </blockquote>
-    I would focus on patch files for the lock file. It is always
-    possible to remove the SRC_URI line and replace it with the desired
-    dependency list. The list could be extracted from the cache file in
-    the download directory or could be received via the expanded_urldata
-    function. The function already returns the git <br>
-    <br>
-    <blockquote type="cite" cite="mid:CADkTA4Ovcd=xtdKDSkLtWvDThuLWk+XvubqJm0-2UHvVyUXnBg@mail.gmail.com">
-      <div dir="ltr">
-        <div class="gmail_quote gmail_quote_container">
-          <blockquote class="gmail_quote" style="margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">f)
-            create new tools that allow the fetcher to be stepped
-            through and<br>
-            for example partially run, or run with clear debug output
-            showing what<br>
-            was happening at each stage (show the list of components?).
-            This may be<br>
-            standalone tools, maybe a devtool module, I don't know. We
-            may want to<br>
-            make the fetch/unpack logs more useful in general as right
-            now you<br>
-            don't get much useful data about what it is doing.<br>
-            <br>
-            <br>
-            If we do those things, where does that get us? How much buy
-            in do our<br>
-            different stakeholders have?<br>
-          </blockquote>
-          <div><br>
-          </div>
-          <div>
-            <div class="gmail_default" style="font-size:small">I think
-              it is getting closer!</div>
-            <div class="gmail_default" style="font-size:small"><br>
-            </div>
-            <div class="gmail_default" style="font-size:small">If
-              there's a way to see all of the individual fetches, and
-              change those fetches,</div>
-            <div class="gmail_default" style="font-size:small">then it
-              solves most of the issues that I've been using git://
-              fetches for in my</div>
-            <div class="gmail_default" style="font-size:small">go
-              recipes.</div>
-            <div class="gmail_default" style="font-size:small"><br>
-            </div>
-            <div class="gmail_default" style="font-size:small">Bruce</div>
-            <br>
-          </div>
-          <div>&nbsp;</div>
-          <blockquote class="gmail_quote" style="margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-            <br>
-            FWIW I am leaning towards having this code in the bitbake
-            fetcher as a<br>
-            first class citizen as to do otherwise is going to create
-            layers of<br>
-            abstraction and we probably have enough of those already.<br>
-            <br>
-            Cheers,<br>
-            <br>
-            Richard<br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-          </blockquote>
-        </div>
-        <div><br clear="all">
-        </div>
-        <div><br>
-        </div>
-        <span class="gmail_signature_prefix">-- </span><br>
-        <div dir="ltr" class="gmail_signature">- Thou shalt not follow
-          the NULL pointer, for chaos and madness await thee at its end<br>
-          - &quot;Use the force Harry&quot; - Gandalf, Star Trek II<br>
-          <br>
-        </div>
-      </div>
-    </blockquote>
-  </body>
-</html>
-
---------------1eM0NbsmtZUlHtdBfskn2Cb0--
+T24gVGh1LCAyMDI1LTAyLTA2IGF0IDEzOjQ1ICswMTAwLCBTdGVmYW4gS29jaCB3cm90ZToNCj4g
+SGF2ZSBtYWRlIHNvbWUgdGVzdCBjYXNlIGV4cGVyaW1lbnRzIGFuZCBhZGRlZCBhIGZ1bmN0aW9u
+YWxpdHkgdG8NCj4gZm9yY2UNCj4gY2hhbmdpbmcgdWQuc2hhbGxvdyBieSB1c2luZyBmb3JjZXNo
+YWxsb3c9VHJ1ZS4NCj4gT3RoZXJ3aXNlLCB0aGUgdGVzdCBjYXNlcyBoYXZlIGFsd2F5cyBzZXQg
+dWQuc2hhbGxvdyBieSBkZWZhdWx0IHRvIDEuDQo+DQo+IENvbW1lbnRlZCBleGFtcGxlIGZyb20g
+bGliL2JiL3Rlc3RzL2ZldGNoLnB5Og0KPg0KPiAgZGVmIHRlc3Rfc2hhbGxvd19jbG9uZV9wcmVm
+ZXJyZWRfb3Zlcl9zaGFsbG93KHNlbGYpOg0KPiAgc2VsZi5hZGRfZW1wdHlfZmlsZSgnYScpDQo+
+ICBzZWxmLmFkZF9lbXB0eV9maWxlKCdiJykNCj4gICMgRmV0Y2ggb25jZSB0byBnZW5lcmF0ZSB0
+aGUgc2hhbGxvdyB0YXJiYWxsDQo+IC0gZmV0Y2hlciwgdWQgPSBzZWxmLmZldGNoKCkNCj4gKyBm
+ZXRjaGVyLCB1ZCA9IHNlbGYuZmV0Y2goZm9yY2VzaGFsbG93PVRydWUpICMgc2FtZSBhcyBkZWZh
+dWx0DQo+IGJlaGF2aW91cg0KPiAgYXNzZXJ0IG9zLnBhdGguZXhpc3RzKG9zLnBhdGguam9pbihz
+ZWxmLmRsZGlyLA0KPiB1ZC5taXJyb3J0YXJiYWxsc1swXSkpDQo+ICsgZmV0Y2hlciwgdWQgPSBz
+ZWxmLmZldGNoKGZvcmNlc2hhbGxvdz1GYWxzZSkgIyBuZWVkZWQgZm9yIHRlc3QgY2FzZQ0KPiAo
+d2l0aCB1ZC5zaGFsbG93PTEpIHRoZXJlIGlzIG5vIGZpcnN0IGNsb25lIGJlY2F1c2Ugb2YgZmFz
+dCBzaGFsbG93DQo+IGNsb25pbmcgKHByb3ZpZGVkIGJ5IHRoZSBwYXRjaCkNCj4gICMgRmV0Y2gg
+YW5kIHVucGFjayB3aXRoIGJvdGggdGhlIGNsb25lZGlyIGFuZCBzaGFsbG93IHRhcmJhbGwNCj4g
+YXZhaWxhYmxlDQo+IC0gZmV0Y2hlciwgdWQgPSBzZWxmLmZldGNoX2FuZF91bnBhY2soKQ0KPiAr
+IGZldGNoZXIsIHVkID0gc2VsZi5mZXRjaF9hbmRfdW5wYWNrKGZvcmNlc2hhbGxvdz1UcnVlKSAj
+IHNhbWUgYXMNCj4gZGVmYXVsdCBiZWhhdmlvdXINCj4gICMgVGhlIHVucGFja2VkIHRyZWUgc2hv
+dWxkICpub3QqIGJlIHNoYWxsb3cNCj4gIHNlbGYuYXNzZXJ0UmV2Q291bnQoMikNCj4gIGFzc2Vy
+dCBub3Qgb3MucGF0aC5leGlzdHMob3MucGF0aC5qb2luKHNlbGYuZ2l0ZGlyLCAnLmdpdCcsDQo+
+ICdzaGFsbG93JykpDQo+DQo+IEFzIGRlc2NyaWJlZCB3aXRoaW4gUEFUQ0ggMC8zLCB0aGlzIGlz
+IGEgcHJvb2Ytb2YtY29uY2VwdCBwYXRjaC4NCj4NCj4gU28gb25lIGltcG9ydGFudCBxdWVzdGlv
+biBpczoNCj4gKiBTaG91bGQgYmUgdGhlIHVkLnNoYWxsb3c9MSBzd2l0Y2ggdXNlZCBmb3IgdGhh
+dD8gVGhlbiBtYW55IHRlc3QNCj4gY2FzZXMNCj4gbmVlZHMgYSByZXdvcmsuDQpTZXBhcmF0ZWQg
+dGVzdCBjbGFzc2VzIGZvciBkZWZhdWx0IHNoYWxsb3cgYW5kIGZhc3Qgc2hhbGxvdyBtb2RlcywN
+CmluY2x1ZGluZyBjb21tb24gYmFzZSB0ZXN0IGNhc2VzDQo+ICogT3Igc2hvdWxkIGFub3RoZXIg
+c3dpdGNoIGJlIGludHJvZHVjZWQgZm9yIHRoYXQgKG9yIHVzZQ0KPiB1ZC5zaGFsbG93PTIsDQo+
+IGlmIHBvc3NpYmxlKT8NCkFkZGVkIGBCQl9HSVRfU0hBTExPV19GQVNUYC4gV2hlbiBzZXQgdG8g
+IjEiIGZvciBhIGZhc3QgaW5pdGlhbCBzaGFsbG93DQpmZXRjaCwgYEJCX0dJVF9TSEFMTE9XYCB3
+aWxsIGFsc28gYmUgc2V0IGF1dG9tYXRpY2FsbHkgdG8gIjEiLg0KPg0KPiBTdGVmYW4NCj4NCj4g
+T24gV2VkLCAyMDI1LTAxLTI5IGF0IDEyOjM1ICswMTAwLCBBbGV4YW5kZXIgS2FuYXZpbiB3cm90
+ZToNCj4gPiA+IFRoaXMsIGFuZCB0aGUgb3RoZXIgcGF0Y2hlcyBoYXZlIG5vIHRlc3RzIHZpYSBi
+aXRiYWtlLXNlbGZ0ZXN0Lg0KPiA+ID4gQ2FuDQo+ID4gPiB5b3UgbG9vayBpbnRvIGFkZGluZyBz
+b21lPw0KSSdsbCBzZW5kIGFuIG5ldyBwYXRjaHNldDoNCg0KYSkNCi0gQWRkcyBhIG5ldyBgQkJf
+R0lUX1NIQUxMT1dfRkFTVGAgc3dpdGNoOyB3aGVuIHNldCwgaXQgd2lsbCBhbHNvDQphdXRvbWF0
+aWNhbGx5IHNldCBgQkJfR0lUX1NIQUxMT1dgDQotIFdpdGhvdXQgYEJCX0dJVF9TSEFMTE9XX0ZB
+U1RgIHN3aXRjaDsgb2xkIGJlaGF2aW91cjogZmlyc3QgbGFyZ2UgYmFyZQ0KbWlycm9yIGNsb25l
+IGZyb20gcmVtb3RlICsgc2Vjb25kIHNtYWxsIHNoYWxsb3cgY2xvbmUgZnJvbSBsb2NhbCBtaXJy
+b3INCi0gV2l0aCBgQkJfR0lUX1NIQUxMT1dfRkFTVGAgc3dpdGNoOyBuZXcgYmVoYXZpb3VyOiBm
+aXJzdCBzbWFsbCBzaGFsbG93DQpjbG9uZSBmcm9tIHJlbW90ZQ0KDQpiKQ0KLSBTcGxpdCBleGlz
+dGluZyB0ZXN0IGNhc2VzIGludG86DQoxLiBjb21tb24gc2hhbGxvdy1zcGVjaWZpYyBiYXNlIHRl
+c3QgY2FzZXMNCjIuIGRlZmF1bHQgKG5vIGBCQl9HSVRfU0hBTExPV19GQVNUYCBtb2RlKSBzaGFs
+bG93LXNwZWNpZmljIHRlc3QgY2FzZXMNCjMuIGZhc3Qgc2hhbGxvdy1zcGVjaWZpYyB0ZXN0IGNh
+c2VzDQoNCj0+IGNvbW1vbiB0ZXN0IGNhc2VzIHdpbGwgZXhlY3V0ZWQgdHdpY2Ugd2l0aCBhbmQg
+d2l0aG91dA0KYEJCX0dJVF9TSEFMTE9XX0ZBU1RgIG1vZGUuDQo9PiBzcGVjaWZpYyB0ZXN0IGNh
+c2VzIHdpbGwgb25seSBleGVjdXRlZCBmb3IgZWl0aGVyIGRlZmF1bHQgb3IgZmFzdA0Kc2hhbGxv
+dyBtb2RlDQoNClRoYW5rcywgU3RlZmFuDQoNCj4gPiA+DQo+ID4gPiBBbGV4DQo+ID4gPg0KPiA+
+ID4gT24gV2VkLCAyOSBKYW4gMjAyNSBhdCAxMjoyNCwgS29jaCwgU3RlZmFuIHZpYQ0KPiA+ID4g
+bGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KPiA+ID4gPHN0ZWZhbi1rb2NoPXNpZW1lbnMuY29tQGxp
+c3RzLm9wZW5lbWJlZGRlZC5vcmc+IHdyb3RlOg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gV2hlbiBg
+dWQuc2hhbGxvdyA9PSAxYDoNCj4gPiA+ID4gPiAtIFByZWZlciBhbiBpbml0aWFsIHNoYWxsb3cg
+Y2xvbmUgb3ZlciBhbiBpbml0aWFsIGJhcmUgY2xvbmUsDQo+ID4gPiA+ID4gICB3aGlsZSBzdGls
+bCB1dGlsaXppbmcgYW55IGFscmVhZHkgZXhpc3RpbmcgYmFyZSBjbG9uZXMuDQo+ID4gPiA+ID4N
+Cj4gPiA+ID4gPiBUaGlzIGltcHJvdmVzOg0KPiA+ID4gPiA+IC0gU29sdmVzIHRpbWVvdXQgaXNz
+dWVzIGR1cmluZyBpbml0aWFsIGNsb25lcyBvbiBzbG93DQo+ID4gPiA+ID4gaW50ZXJuZXQNCj4g
+PiA+ID4gPiBjb25uZWN0aW9ucw0KPiA+ID4gPiA+ICAgYnkgcmVkdWNpbmcgdGhlIGFtb3VudCBv
+ZiBkYXRhIHRyYW5zZmVycmVkLg0KPiA+ID4gPiA+IC0gRWxpbWluYXRlcyB0aGUgbmVlZCB0byB1
+c2UgYSBIVFRQUyB0YXJiYWxsIFNSQ19VUkkNCj4gPiA+ID4gPiAgIHRvIHJlZHVjZSBkYXRhIHRy
+YW5zZmVyLg0KPiA+ID4gPiA+IC0gQWxsb3dzIFNTSC1iYXNlZCBhdXRoZW50aWNhdGlvbiAoZS5n
+LiBjZXJ0IGFuZCBhZ2VudC1iYXNlZCkNCj4gPiA+ID4gPiB3aGVuDQo+ID4gPiA+ID4gICB1c2lu
+ZyBub24tcHVibGljIHJlcG9zLCBzbyBhZGRpdGlvbmFsIEhUVFBTIHRva2VucyBtYXkgbm90DQo+
+ID4gPiA+ID4gYmUNCj4gPiA+ID4gPiByZXF1aXJlZC4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFNp
+Z25lZC1vZmYtYnk6IFN0ZWZhbiBLb2NoIDxzdGVmYW4ta29jaEBzaWVtZW5zLmNvbT4NCj4gPiA+
+ID4gPiAtLS0NCj4gPiA+ID4gPiAgbGliL2JiL2ZldGNoMi9naXQucHkgfCA5Mg0KPiA+ID4gPiA+
+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tDQo+ID4gPiA+ID4g
+IDEgZmlsZSBjaGFuZ2VkLCA3MSBpbnNlcnRpb25zKCspLCAyMSBkZWxldGlvbnMoLSkNCj4gPiA+
+ID4gPg0KPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9saWIvYmIvZmV0Y2gyL2dpdC5weSBiL2xpYi9i
+Yi9mZXRjaDIvZ2l0LnB5DQo+ID4gPiA+ID4gaW5kZXggNmJhZGRhNTk3Li42ZDg3YzJmMTggMTAw
+NjQ0DQo+ID4gPiA+ID4gLS0tIGEvbGliL2JiL2ZldGNoMi9naXQucHkNCj4gPiA+ID4gPiArKysg
+Yi9saWIvYmIvZmV0Y2gyL2dpdC5weQ0KPiA+ID4gPiA+IEBAIC0zNjYsNiArMzY2LDMzIEBAIGNs
+YXNzIEdpdChGZXRjaE1ldGhvZCk6DQo+ID4gPiA+ID4gICAgICBkZWYgdGFyYmFsbF9uZWVkX3Vw
+ZGF0ZShzZWxmLCB1ZCk6DQo+ID4gPiA+ID4gICAgICAgICAgcmV0dXJuIHVkLndyaXRlX3RhcmJh
+bGxzIGFuZCBub3QNCj4gPiA+ID4gPiBvcy5wYXRoLmV4aXN0cyh1ZC5mdWxsbWlycm9yKQ0KPiA+
+ID4gPiA+DQo+ID4gPiA+ID4gKyAgICAjIEhlbHBlciBtZXRob2QgZm9yIGZldGNoaW5nIEdpdCBM
+RlMgZGF0YQ0KPiA+ID4gPiA+ICsgICAgZGVmIGxmc19mZXRjaChzZWxmLCB1ZCwgZCwgY2xvbmVk
+aXIsIHJldmlzaW9uLA0KPiA+ID4gPiA+IHByb2dyZXNzaGFuZGxlciwgZmV0Y2hhbGw9RmFsc2Up
+Og0KPiA+ID4gPiA+ICsgICAgICAgIHRyeToNCj4gPiA+ID4gPiArICAgICAgICAgICAgaWYgc2Vs
+Zi5fbmVlZF9sZnModWQpIGFuZCBzZWxmLl9jb250YWluc19sZnModWQsDQo+ID4gPiA+ID4gZCwN
+Cj4gPiA+ID4gPiBjbG9uZWRpcikgYW5kIHNlbGYuX2ZpbmRfZ2l0X2xmcyhkKSBhbmQgbGVuKHJl
+dmlzaW9uKToNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICMgVXNpbmcgd29ya3RyZWUgd2l0
+aCB0aGUgcmV2aXNpb24gYmVjYXVzZQ0KPiA+ID4gPiA+IC5sZnNjb25maWcgbWF5IGV4aXN0cw0K
+PiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgd29ya3RyZWVfYWRkX2NtZCA9ICIlcyB3b3JrdHJl
+ZSBhZGQgd3QgJXMiICUNCj4gPiA+ID4gPiAodWQuYmFzZWNtZCwgcmV2aXNpb24pDQo+ID4gPiA+
+ID4gKyAgICAgICAgICAgICAgICBydW5mZXRjaGNtZCh3b3JrdHJlZV9hZGRfY21kLCBkLA0KPiA+
+ID4gPiA+IGxvZz1wcm9ncmVzc2hhbmRsZXIsIHdvcmtkaXI9Y2xvbmVkaXIpDQo+ID4gPiA+ID4g
+KyAgICAgICAgICAgICAgICBsZnNfZmV0Y2hfY21kID0gIiVzIGxmcyBmZXRjaCAlcyIgJQ0KPiA+
+ID4gPiA+ICh1ZC5iYXNlY21kLA0KPiA+ID4gPiA+ICItLWFsbCIgaWYgZmV0Y2hhbGwgZWxzZSAi
+IikNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgIHJ1bmZldGNoY21kKGxmc19mZXRjaF9jbWQs
+IGQsDQo+ID4gPiA+ID4gbG9nPXByb2dyZXNzaGFuZGxlciwNCj4gPiA+ID4gPiB3b3JrZGlyPShj
+bG9uZWRpciArICIvd3QiKSkNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgIHdvcmt0cmVlX3Jl
+bV9jbWQgPSAiJXMgd29ya3RyZWUgcmVtb3ZlIC1mDQo+ID4gPiA+ID4gd3QiDQo+ID4gPiA+ID4g
+JQ0KPiA+ID4gPiA+IHVkLmJhc2VjbWQNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgIHJ1bmZl
+dGNoY21kKHdvcmt0cmVlX3JlbV9jbWQsIGQsDQo+ID4gPiA+ID4gbG9nPXByb2dyZXNzaGFuZGxl
+ciwgd29ya2Rpcj1jbG9uZWRpcikNCj4gPiA+ID4gPiArICAgICAgICBleGNlcHQ6DQo+ID4gPiA+
+ID4gKyAgICAgICAgICAgIGxvZ2dlci53YXJuaW5nKCJGZXRjaGluZyBMRlMgZGlkIG5vdCBzdWNj
+ZWVkLiIpDQo+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICsgICAgIyBDcmVhdGUgYXMgYSB0ZW1wIGZp
+bGUgYW5kIG1vdmUgYXRvbWljYWxseSBpbnRvDQo+ID4gPiA+ID4gcG9zaXRpb24NCj4gPiA+ID4g
+PiB0bw0KPiA+ID4gPiA+IGF2b2lkIHJhY2VzDQo+ID4gPiA+ID4gKyAgICBAY29udGV4dG1hbmFn
+ZXINCj4gPiA+ID4gPiArICAgIGRlZiBjcmVhdGVfYXRvbWljKHNlbGYsIGZpbGVuYW1lKToNCj4g
+PiA+ID4gPiArICAgICAgICBmZCwgdGZpbGUgPQ0KPiA+ID4gPiA+IHRlbXBmaWxlLm1rc3RlbXAo
+ZGlyPW9zLnBhdGguZGlybmFtZShmaWxlbmFtZSkpDQo+ID4gPiA+ID4gKyAgICAgICAgdHJ5Og0K
+PiA+ID4gPiA+ICsgICAgICAgICAgICB5aWVsZCB0ZmlsZQ0KPiA+ID4gPiA+ICsgICAgICAgICAg
+ICB1bWFzayA9IG9zLnVtYXNrKDBvNjY2KQ0KPiA+ID4gPiA+ICsgICAgICAgICAgICBvcy51bWFz
+ayh1bWFzaykNCj4gPiA+ID4gPiArICAgICAgICAgICAgb3MuY2htb2QodGZpbGUsICgwbzY2NiAm
+IH51bWFzaykpDQo+ID4gPiA+ID4gKyAgICAgICAgICAgIG9zLnJlbmFtZSh0ZmlsZSwgZmlsZW5h
+bWUpDQo+ID4gPiA+ID4gKyAgICAgICAgZmluYWxseToNCj4gPiA+ID4gPiArICAgICAgICAgICAg
+b3MuY2xvc2UoZmQpDQo+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICAgICAgZGVmIHRyeV9wcmVtaXJy
+b3Ioc2VsZiwgdWQsIGQpOg0KPiA+ID4gPiA+ICAgICAgICAgICMgSWYgd2UgZG9uJ3QgZG8gdGhp
+cywgdXBkYXRpbmcgYW4gZXhpc3RpbmcgY2hlY2tvdXQNCj4gPiA+ID4gPiB3aXRoDQo+ID4gPiA+
+ID4gb25seSBwcmVtaXJyb3JzDQo+ID4gPiA+ID4gICAgICAgICAgIyBpcyBub3QgcG9zc2libGUN
+Cj4gPiA+ID4gPiBAQCAtNDQ2LDcgKzQ3Myw0MCBAQCBjbGFzcyBHaXQoRmV0Y2hNZXRob2QpOg0K
+PiA+ID4gPiA+ICAgICAgICAgICAgICBpZiB1ZC5wcm90by5sb3dlcigpICE9ICdmaWxlJzoNCj4g
+PiA+ID4gPiAgICAgICAgICAgICAgICAgIGJiLmZldGNoMi5jaGVja19uZXR3b3JrX2FjY2Vzcyhk
+LCBjbG9uZV9jbWQsDQo+ID4gPiA+ID4gdWQudXJsKQ0KPiA+ID4gPiA+ICAgICAgICAgICAgICBw
+cm9ncmVzc2hhbmRsZXIgPSBHaXRQcm9ncmVzc0hhbmRsZXIoZCkNCj4gPiA+ID4gPiAtICAgICAg
+ICAgICAgcnVuZmV0Y2hjbWQoY2xvbmVfY21kLCBkLCBsb2c9cHJvZ3Jlc3NoYW5kbGVyKQ0KPiA+
+ID4gPiA+ICsNCj4gPiA+ID4gPiArICAgICAgICAgICAgIyBXaGVuIHVkLnNoYWxsb3cgaXMgZW5h
+YmxlZDoNCj4gPiA+ID4gPiArICAgICAgICAgICAgIyBUcnkgY3JlYXRpbmcgYW4gaW5pdGlhbCBz
+aGFsbG93IGNsb25lDQo+ID4gPiA+ID4gKyAgICAgICAgICAgIHNoYWxsb3dzdGF0ZSA9IEZhbHNl
+DQo+ID4gPiA+ID4gKyAgICAgICAgICAgIGlmIHVkLnNoYWxsb3c6DQo+ID4gPiA+ID4gKyAgICAg
+ICAgICAgICAgICB0ZW1wZGlyID0NCj4gPiA+ID4gPiB0ZW1wZmlsZS5ta2R0ZW1wKGRpcj1kLmdl
+dFZhcignRExfRElSJykpDQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICBzaGFsbG93Y2xvbmUg
+PSBvcy5wYXRoLmpvaW4odGVtcGRpciwgJ2dpdCcpDQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAg
+ICB0cnk6DQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgc2VsZi5jbG9uZV9zaGFsbG93
+X2xvY2FsKHVkLA0KPiA+ID4gPiA+IHNoYWxsb3djbG9uZSwNCj4gPiA+ID4gPiBkKQ0KPiA+ID4g
+PiA+ICsgICAgICAgICAgICAgICAgICAgIHNoYWxsb3dzdGF0ZSA9IFRydWUNCj4gPiA+ID4gPiAr
+ICAgICAgICAgICAgICAgIGV4Y2VwdDoNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICBs
+b2dnZXIud2FybmluZygiQ3JlYXRpbmcgaW5pdGlhbCBzaGFsbG93DQo+ID4gPiA+ID4gY2xvbmUN
+Cj4gPiA+ID4gPiBmYWlsZWQsIHRyeSByZWd1bGFyIGNsb25lIG5vdy4iKQ0KPiA+ID4gPiA+ICsN
+Cj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICMgV2hlbiB0aGUgc2hhbGxvdyBjbG9uZSBoYXMg
+c3VjY2VlZGVkOg0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgIyBDcmVhdGUgc2hhbGxvdyB0
+YXJiYWxsDQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICBpZiBzaGFsbG93c3RhdGU6DQo+ID4g
+PiA+ID4gKyAgICAgICAgICAgICAgICAgICAgbG9nZ2VyLmluZm8oIkNyZWF0aW5nIHRhcmJhbGwg
+b2YgZ2l0DQo+ID4gPiA+ID4gcmVwb3NpdG9yeSIpDQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgd2l0aCBzZWxmLmNyZWF0ZV9hdG9taWModWQuZnVsbHNoYWxsb3cpDQo+ID4gPiA+ID4g
+YXMNCj4gPiA+ID4gPiB0ZmlsZToNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
+cnVuZmV0Y2hjbWQoInRhciAtY3pmICVzIC4iICUgdGZpbGUsDQo+ID4gPiA+ID4gZCwNCj4gPiA+
+ID4gPiB3b3JrZGlyPXNoYWxsb3djbG9uZSkNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAg
+ICBydW5mZXRjaGNtZCgidG91Y2ggJXMuZG9uZSIgJQ0KPiA+ID4gPiA+IHVkLmZ1bGxzaGFsbG93
+LA0KPiA+ID4gPiA+IGQpDQo+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAg
+IyBBbHdheXMgY2xlYW51cCB0ZW1wZGlyDQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICBiYi51
+dGlscy5yZW1vdmUodGVtcGRpciwgcmVjdXJzZT1UcnVlKQ0KPiA+ID4gPiA+ICsNCj4gPiA+ID4g
+PiArICAgICAgICAgICAgICAgICMgV2hlbiB0aGUgc2hhbGxvdyBjbG9uZSBoYXMgc3VjY2VlZGVk
+Og0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgIyBVc2Ugc2hhbGxvdyB0YXJiYWxsDQo+ID4g
+PiA+ID4gKyAgICAgICAgICAgICAgICBpZiBzaGFsbG93c3RhdGU6DQo+ID4gPiA+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgdWQubG9jYWxwYXRoID0gdWQuZnVsbHNoYWxsb3cNCj4gPiA+ID4gPiAr
+ICAgICAgICAgICAgICAgICAgICByZXR1cm4NCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKyAgICAg
+ICAgICAgICMgV2hlbiB1ZC5zaGFsbG93IGlzIGRpc2FibGVkIG9yIHRoZSBzaGFsbG93DQo+ID4g
+PiA+ID4gY2xvbmUNCj4gPiA+ID4gPiBmYWlsZWQ6DQo+ID4gPiA+ID4gKyAgICAgICAgICAgICMg
+Q3JlYXRlIGFuIGluaXRpYWwgcmVndWxhciBjbG9uZQ0KPiA+ID4gPiA+ICsgICAgICAgICAgICBp
+ZiBub3Qgc2hhbGxvd3N0YXRlOg0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgcnVuZmV0Y2hj
+bWQoY2xvbmVfY21kLCBkLA0KPiA+ID4gPiA+IGxvZz1wcm9ncmVzc2hhbmRsZXIpDQo+ID4gPiA+
+ID4NCj4gPiA+ID4gPiAgICAgICAgICAjIFVwZGF0ZSB0aGUgY2hlY2tvdXQgaWYgbmVlZGVkDQo+
+ID4gPiA+ID4gICAgICAgICAgaWYgc2VsZi5jbG9uZWRpcl9uZWVkX3VwZGF0ZSh1ZCwgZCk6DQo+
+ID4gPiA+ID4gQEAgLTUwOSwyMCArNTY5LDYgQEAgY2xhc3MgR2l0KEZldGNoTWV0aG9kKToNCj4g
+PiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICBydW5mZXRjaGNtZCgidGFyIC1jZiAtIGxmcyB8
+IHRhciAteGYgLSAtDQo+ID4gPiA+ID4gQw0KPiA+ID4gPiA+ICVzIg0KPiA+ID4gPiA+ICUgdWQu
+Y2xvbmVkaXIsIGQsIHdvcmtkaXI9IiVzLy5naXQiICUgdWQuZGVzdGRpcikNCj4gPiA+ID4gPg0K
+PiA+ID4gPiA+ICAgICAgZGVmIGJ1aWxkX21pcnJvcl9kYXRhKHNlbGYsIHVkLCBkKToNCj4gPiA+
+ID4gPiAtDQo+ID4gPiA+ID4gLSAgICAgICAgIyBDcmVhdGUgYXMgYSB0ZW1wIGZpbGUgYW5kIG1v
+dmUgYXRvbWljYWxseSBpbnRvDQo+ID4gPiA+ID4gcG9zaXRpb24NCj4gPiA+ID4gPiB0byBhdm9p
+ZCByYWNlcw0KPiA+ID4gPiA+IC0gICAgICAgIEBjb250ZXh0bWFuYWdlcg0KPiA+ID4gPiA+IC0g
+ICAgICAgIGRlZiBjcmVhdGVfYXRvbWljKGZpbGVuYW1lKToNCj4gPiA+ID4gPiAtICAgICAgICAg
+ICAgZmQsIHRmaWxlID0NCj4gPiA+ID4gPiB0ZW1wZmlsZS5ta3N0ZW1wKGRpcj1vcy5wYXRoLmRp
+cm5hbWUoZmlsZW5hbWUpKQ0KPiA+ID4gPiA+IC0gICAgICAgICAgICB0cnk6DQo+ID4gPiA+ID4g
+LSAgICAgICAgICAgICAgICB5aWVsZCB0ZmlsZQ0KPiA+ID4gPiA+IC0gICAgICAgICAgICAgICAg
+dW1hc2sgPSBvcy51bWFzaygwbzY2NikNCj4gPiA+ID4gPiAtICAgICAgICAgICAgICAgIG9zLnVt
+YXNrKHVtYXNrKQ0KPiA+ID4gPiA+IC0gICAgICAgICAgICAgICAgb3MuY2htb2QodGZpbGUsICgw
+bzY2NiAmIH51bWFzaykpDQo+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICBvcy5yZW5hbWUodGZp
+bGUsIGZpbGVuYW1lKQ0KPiA+ID4gPiA+IC0gICAgICAgICAgICBmaW5hbGx5Og0KPiA+ID4gPiA+
+IC0gICAgICAgICAgICAgICAgb3MuY2xvc2UoZmQpDQo+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ICAg
+ICAgICAgIGlmIHVkLnNoYWxsb3cgYW5kIHVkLndyaXRlX3NoYWxsb3dfdGFyYmFsbHM6DQo+ID4g
+PiA+ID4gICAgICAgICAgICAgIGlmIG5vdCBvcy5wYXRoLmV4aXN0cyh1ZC5mdWxsc2hhbGxvdyk6
+DQo+ID4gPiA+ID4gICAgICAgICAgICAgICAgICBpZiBvcy5wYXRoLmlzbGluayh1ZC5mdWxsc2hh
+bGxvdyk6DQo+ID4gPiA+ID4gQEAgLTUzMyw3ICs1NzksNyBAQCBjbGFzcyBHaXQoRmV0Y2hNZXRo
+b2QpOg0KPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgIHNlbGYuY2xvbmVfc2hhbGxvd19s
+b2NhbCh1ZCwNCj4gPiA+ID4gPiBzaGFsbG93Y2xvbmUsDQo+ID4gPiA+ID4gZCkNCj4gPiA+ID4g
+Pg0KPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgIGxvZ2dlci5pbmZvKCJDcmVhdGluZyB0
+YXJiYWxsIG9mIGdpdA0KPiA+ID4gPiA+IHJlcG9zaXRvcnkiKQ0KPiA+ID4gPiA+IC0gICAgICAg
+ICAgICAgICAgICAgIHdpdGggY3JlYXRlX2F0b21pYyh1ZC5mdWxsc2hhbGxvdykgYXMNCj4gPiA+
+ID4gPiB0ZmlsZToNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICB3aXRoIHNlbGYuY3Jl
+YXRlX2F0b21pYyh1ZC5mdWxsc2hhbGxvdykNCj4gPiA+ID4gPiBhcw0KPiA+ID4gPiA+IHRmaWxl
+Og0KPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICBydW5mZXRjaGNtZCgidGFyIC1j
+emYgJXMgLiIgJSB0ZmlsZSwNCj4gPiA+ID4gPiBkLA0KPiA+ID4gPiA+IHdvcmtkaXI9c2hhbGxv
+d2Nsb25lKQ0KPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgIHJ1bmZldGNoY21kKCJ0b3Vj
+aCAlcy5kb25lIiAlDQo+ID4gPiA+ID4gdWQuZnVsbHNoYWxsb3csDQo+ID4gPiA+ID4gZCkNCj4g
+PiA+ID4gPiAgICAgICAgICAgICAgICAgIGZpbmFsbHk6DQo+ID4gPiA+ID4gQEAgLTU0Myw3ICs1
+ODksNyBAQCBjbGFzcyBHaXQoRmV0Y2hNZXRob2QpOg0KPiA+ID4gPiA+ICAgICAgICAgICAgICAg
+ICAgb3MudW5saW5rKHVkLmZ1bGxtaXJyb3IpDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiAgICAgICAg
+ICAgICAgbG9nZ2VyLmluZm8oIkNyZWF0aW5nIHRhcmJhbGwgb2YgZ2l0DQo+ID4gPiA+ID4gcmVw
+b3NpdG9yeSIpDQo+ID4gPiA+ID4gLSAgICAgICAgICAgIHdpdGggY3JlYXRlX2F0b21pYyh1ZC5m
+dWxsbWlycm9yKSBhcyB0ZmlsZToNCj4gPiA+ID4gPiArICAgICAgICAgICAgd2l0aCBzZWxmLmNy
+ZWF0ZV9hdG9taWModWQuZnVsbG1pcnJvcikgYXMgdGZpbGU6DQo+ID4gPiA+ID4gICAgICAgICAg
+ICAgICAgICBtdGltZSA9IHJ1bmZldGNoY21kKCJ7fSBsb2cgLS1hbGwgLTENCj4gPiA+ID4gPiAt
+LWZvcm1hdD0lY0QiLmZvcm1hdCh1ZC5iYXNlY21kKSwgZCwNCj4gPiA+ID4gPiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgcXVpZXQ9VHJ1ZSwgd29ya2Rpcj11ZC5jbG9uZWRpcikNCj4gPiA+ID4g
+PiAgICAgICAgICAgICAgICAgIHJ1bmZldGNoY21kKCJ0YXIgLWN6ZiAlcyAtLW93bmVyIG9lOjAg
+LS0NCj4gPiA+ID4gPiBncm91cA0KPiA+ID4gPiA+IG9lOjANCj4gPiA+ID4gPiAtLW10aW1lIFwi
+JXNcIiAuIg0KPiA+ID4gPiA+IEBAIC01NTcsMTIgKzYwMywxNSBAQCBjbGFzcyBHaXQoRmV0Y2hN
+ZXRob2QpOg0KPiA+ID4gPiA+ICAgICAgICAgIC0gRm9yIEJCX0dJVF9TSEFMTE9XX1JFVlM6IGdp
+dCBmZXRjaA0KPiA+ID4gPiA+IC0tc2hhbGxvdy1leGNsdWRlPTxyZXZzPiByZXYNCj4gPiA+ID4g
+PiAgICAgICAgICAiIiINCj4gPiA+ID4gPg0KPiA+ID4gPiA+ICsgICAgICAgIHByb2dyZXNzaGFu
+ZGxlciA9IEdpdFByb2dyZXNzSGFuZGxlcihkKQ0KPiA+ID4gPiA+ICsgICAgICAgIHJlcG91cmwg
+PSBzZWxmLl9nZXRfcmVwb191cmwodWQpDQo+ID4gPiA+ID4gICAgICAgICAgYmIudXRpbHMubWtk
+aXJoaWVyKGRlc3QpDQo+ID4gPiA+ID4gICAgICAgICAgaW5pdF9jbWQgPSAiJXMgaW5pdCAtcSIg
+JSB1ZC5iYXNlY21kDQo+ID4gPiA+ID4gICAgICAgICAgaWYgdWQuYmFyZWNsb25lOg0KPiA+ID4g
+PiA+ICAgICAgICAgICAgICBpbml0X2NtZCArPSAiIC0tYmFyZSINCj4gPiA+ID4gPiAgICAgICAg
+ICBydW5mZXRjaGNtZChpbml0X2NtZCwgZCwgd29ya2Rpcj1kZXN0KQ0KPiA+ID4gPiA+IC0gICAg
+ICAgIHJ1bmZldGNoY21kKCIlcyByZW1vdGUgYWRkIG9yaWdpbiAlcyIgJSAodWQuYmFzZWNtZCwN
+Cj4gPiA+ID4gPiB1ZC5jbG9uZWRpciksIGQsIHdvcmtkaXI9ZGVzdCkNCj4gPiA+ID4gPiArICAg
+ICAgICAjIFVzZSByZXBvdXJsIHdoZW4gY3JlYXRpbmcgdGhlIGluaXRpYWwgc2hhbGxvdw0KPiA+
+ID4gPiA+IGNsb25lDQo+ID4gPiA+ID4gKyAgICAgICAgcnVuZmV0Y2hjbWQoIiVzIHJlbW90ZSBh
+ZGQgb3JpZ2luICVzIiAlICh1ZC5iYXNlY21kLA0KPiA+ID4gPiA+IHNobGV4LnF1b3RlKHJlcG91
+cmwpIGlmIHVkLnNoYWxsb3cgYW5kIG5vdA0KPiA+ID4gPiA+IG9zLnBhdGguZXhpc3RzKHVkLmNs
+b25lZGlyKSBlbHNlIHVkLmNsb25lZGlyKSwgZCwNCj4gPiA+ID4gPiB3b3JrZGlyPWRlc3QpDQo+
+ID4gPiA+ID4NCj4gPiA+ID4gPiAgICAgICAgICAjIENoZWNrIHRoZSBoaXN0b3JpZXMgd2hpY2gg
+c2hvdWxkIGJlIGV4Y2x1ZGVkDQo+ID4gPiA+ID4gICAgICAgICAgc2hhbGxvd19leGNsdWRlID0g
+JycNCj4gPiA+ID4gPiBAQCAtNjAwLDEwICs2NDksMTIgQEAgY2xhc3MgR2l0KEZldGNoTWV0aG9k
+KToNCj4gPiA+ID4gPiAgICAgICAgICAgICAgIyBUaGUgdWQuY2xvbmVkaXIgaXMgYSBsb2NhbCB0
+ZW1wb3JhcnkgZGlyLCB3aWxsDQo+ID4gPiA+ID4gYmUNCj4gPiA+ID4gPiByZW1vdmVkIHdoZW4N
+Cj4gPiA+ID4gPiAgICAgICAgICAgICAgIyBmZXRjaCBpcyBkb25lLCBzbyB3ZSBjYW4gZG8gYW55
+dGhpbmcgb24gaXQuDQo+ID4gPiA+ID4gICAgICAgICAgICAgIGFkdl9jbWQgPSAnZ2l0IGJyYW5j
+aCAtZiBhZHZlcnRpc2UtJXMgJXMnICUNCj4gPiA+ID4gPiAocmV2aXNpb24sDQo+ID4gPiA+ID4g
+cmV2aXNpb24pDQo+ID4gPiA+ID4gLSAgICAgICAgICAgIHJ1bmZldGNoY21kKGFkdl9jbWQsIGQs
+IHdvcmtkaXI9dWQuY2xvbmVkaXIpDQo+ID4gPiA+ID4gKyAgICAgICAgICAgIGlmIG5vdCB1ZC5z
+aGFsbG93Og0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgcnVuZmV0Y2hjbWQoYWR2X2NtZCwg
+ZCwgd29ya2Rpcj11ZC5jbG9uZWRpcikNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IC0gICAgICAgICAg
+ICBydW5mZXRjaGNtZChmZXRjaF9jbWQsIGQsIHdvcmtkaXI9ZGVzdCkNCj4gPiA+ID4gPiArICAg
+ICAgICAgICAgcnVuZmV0Y2hjbWQoZmV0Y2hfY21kLCBkLCBsb2c9cHJvZ3Jlc3NoYW5kbGVyLA0K
+PiA+ID4gPiA+IHdvcmtkaXI9ZGVzdCkNCj4gPiA+ID4gPiAgICAgICAgICAgICAgcnVuZmV0Y2hj
+bWQoIiVzIHVwZGF0ZS1yZWYgJXMgJXMiICUgKHVkLmJhc2VjbWQsDQo+ID4gPiA+ID4gcmVmLA0K
+PiA+ID4gPiA+IHJldmlzaW9uKSwgZCwgd29ya2Rpcj1kZXN0KQ0KPiA+ID4gPiA+ICsgICAgICAg
+ICAgICBzZWxmLmxmc19mZXRjaCh1ZCwgZCwgZGVzdCwNCj4gPiA+ID4gPiB1ZC5yZXZpc2lvbnNb
+dWQubmFtZXNbMF1dLA0KPiA+ID4gPiA+IHByb2dyZXNzaGFuZGxlcikNCj4gPiA+ID4gPg0KPiA+
+ID4gPiA+ICAgICAgICAgICMgQXBwbHkgZXh0cmEgcmVmIHdpbGRjYXJkcw0KPiA+ID4gPiA+ICAg
+ICAgICAgIGFsbF9yZWZzX3JlbW90ZSA9IHJ1bmZldGNoY21kKCIlcyBscy1yZW1vdGUgb3JpZ2lu
+DQo+ID4gPiA+ID4gJ3JlZnMvKiciICUgdWQuYmFzZWNtZCwgXA0KPiA+ID4gPiA+IEBAIC02Mjks
+NyArNjgwLDYgQEAgY2xhc3MgR2l0KEZldGNoTWV0aG9kKToNCj4gPiA+ID4gPiAgICAgICAgICAg
+ICAgcnVuZmV0Y2hjbWQoIiVzIHVwZGF0ZS1yZWYgJXMgJXMiICUgKHVkLmJhc2VjbWQsDQo+ID4g
+PiA+ID4gcmVmLA0KPiA+ID4gPiA+IHJldmlzaW9uKSwgZCwgd29ya2Rpcj1kZXN0KQ0KPiA+ID4g
+PiA+DQo+ID4gPiA+ID4gICAgICAgICAgIyBUaGUgdXJsIGlzIGxvY2FsIHVkLmNsb25lZGlyLCBz
+ZXQgaXQgdG8gdXBzdHJlYW0NCj4gPiA+ID4gPiBvbmUNCj4gPiA+ID4gPiAtICAgICAgICByZXBv
+dXJsID0gc2VsZi5fZ2V0X3JlcG9fdXJsKHVkKQ0KPiA+ID4gPiA+ICAgICAgICAgIHJ1bmZldGNo
+Y21kKCIlcyByZW1vdGUgc2V0LXVybCBvcmlnaW4gJXMiICUNCj4gPiA+ID4gPiAodWQuYmFzZWNt
+ZCwNCj4gPiA+ID4gPiBzaGxleC5xdW90ZShyZXBvdXJsKSksIGQsIHdvcmtkaXI9ZGVzdCkNCj4g
+PiA+ID4gPg0KPiA+ID4gPiA+ICAgICAgZGVmIHVucGFjayhzZWxmLCB1ZCwgZGVzdGRpciwgZCk6
+DQo+ID4gPiA+ID4gLS0NCj4gPiA+ID4gPiAyLjM5LjUNCj4gPiA+ID4gPg0KPiA+ID4gPiA+DQo+
+ID4gPiA+ID4gLT0tPS09LT0tPS09LT0tPS09LT0tPS0NCj4gPiA+ID4gPiBMaW5rczogWW91IHJl
+Y2VpdmUgYWxsIG1lc3NhZ2VzIHNlbnQgdG8gdGhpcyBncm91cC4NCj4gPiA+ID4gPiBWaWV3L1Jl
+cGx5IE9ubGluZSAoIzE3MTA5KToNCj4gPiA+ID4gPiBodHRwczovL2xpc3RzLm9wZW5lbWJlZGRl
+ZC5vcmcvZy9iaXRiYWtlLWRldmVsL21lc3NhZ2UvMTcxMDkNCj4gPiA+ID4gPiBNdXRlIFRoaXMg
+VG9waWM6DQo+ID4gPiA+ID4gaHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL210LzExMDg3
+NjIyMS8xNjg2NDg5DQo+ID4gPiA+ID4gR3JvdXAgT3duZXI6IGJpdGJha2UtZGV2ZWwrb3duZXJA
+bGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KPiA+ID4gPiA+IFVuc3Vic2NyaWJlOg0KPiA+ID4gPiA+
+IGh0dHBzOi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9nL2JpdGJha2UtZGV2ZWwvdW5zdWINCj4g
+PiA+ID4gPiAgW2FsZXgua2FuYXZpbkBnbWFpbC5jb21dDQo+ID4gPiA+ID4gLT0tPS09LT0tPS09
+LT0tPS09LT0tPS0NCj4gPiA+ID4gPg0KPg0KDQotLQ0KU3RlZmFuIEtvY2gNClNpZW1lbnMgQUcN
+Cmh0dHA6Ly93d3cuc2llbWVucy5jb20vDQo=
 
