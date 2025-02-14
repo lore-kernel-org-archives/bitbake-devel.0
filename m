@@ -2,371 +2,167 @@ Return-Path: <stefan-koch@siemens.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4C2C02198
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 249ACC021A7
 	for <webhook@archiver.kernel.org>; Fri, 14 Feb 2025 15:51:10 +0000 (UTC)
 Received: from AS8PR04CU009.outbound.protection.outlook.com (AS8PR04CU009.outbound.protection.outlook.com [52.101.70.23])
  by mx.groups.io with SMTP id smtpd.web11.24156.1739548268282327099
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 14 Feb 2025 07:51:08 -0800
+ Fri, 14 Feb 2025 07:51:09 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@siemens.com header.s=selector2 header.b=kKt0IjAu;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@siemens.com header.s=selector2 header.b=y/lyZYEb;
  spf=pass (domain: siemens.com, ip: 52.101.70.23, mailfrom: stefan-koch@siemens.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TvpE90aG+dKd8zHhUF+6UhaHuB7WFK0TmoEkX1GGxrUAIIEFATC0vcDl+xrH1wMys7n6KKaaIgyb7nSgHcRoV0b1kADFCWQOn0jfoK6lVbRCsRJ15oeBGnldXoCjrGkG882kjrkwRhOINYEGmc+SssajUHhrB8i1N/PB3KectN7X1ArotC6T1uHvzrgz/MawhFqzk1m0B6C2sBfB8YZ//a0N8UPrN+KD2f9JcBLA5DKi/+K+gghuKDhcFwfRD8NyQvKW8kw5moZ6NIOFOy2E9Xr7oDXcGub+WFSNtTMFQ5w5/ibKFANdlic/4e+yhSWnR+FPwLs6lG00aUeD9yFUhA==
+ b=ujeHvtXuDsg97TXWmPqZGb0UO+/E9fKI5TrqSCzfMO8TQSjTfQJEyJ+wVhhTZ7ZUAk+ULNmQwDObyyrGOZCgUmGDfFgFzRf3C8LlklVl49j22Spr7iRke8tKGQK7K2FX5XZXI1dOaS3OqYnr6zBqqvfOHXmVta4/3Pjct2vxs4EE7FUDfI6bbEZIZiriDexazMPMfvx7Rn0eoQN2YOzHCALdJuCcMRr/VagCHipyPi6N0seubPMdQTrODabEKe2wc6u5mOyrnRJt90hnkNdLNbuv1kA+uvGZydNEH6qtQhCGx8YYofzI0rVLt4q+5auEaVmR0mNiRFPdylqBh1wf4A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yiyXOuX20uy+LH207lz6VlG7K2RapUL0oeXFrYdf9AM=;
- b=UD+HcD2spSZO3l2UfpPjPtjgtkMP8BNBCfaectS3qfVXH+QJe9/wdo4BmW7yfVWIxTVNkqN3dR4xF+u/WRRQz5VsuHCyrPZXydQA6vXWmdEqOlJ5AahQUT4addlsMySI+i3MuoRKzlAth/UNmGhzfxdgFvZyzJ/2X7V2PDOm6oCXk7x8KTNHJi18vIeugi4yA6qLc7oATSOW5SbEgjoLCd+pHGT5f6a5wUWwbOUnjEw8yPVrsFqgP7HlLRum2cstKcvUyNUXujduqgLRHVr4luJqkhyQj734hur1MtuwhBPwcErna9WUAHW/tbSLtKdI3dTs2qbKjITBdrPXZWAIhw==
+ bh=NGjVzQ3yPj/sI2xP3igcwiTRMFzFxuDFmYPGu62AyG8=;
+ b=PmFG0WRprr/2H+JyIc2l7R7eG69DIoDgLUgV0nk8xQIW3F4c7u6KiWL5TNtK5xKexvEJIj/n2yVAP7SJaRqnvBxX2LRGmrDdWywGcCOMLdV3gDfpjxjVJnHC7Uctw7Q6rRyqZRiQ1uAT+yhE7PIC1TppBlolZP029TYzbjvkHwQU1ia2kl4jzDZIRNYOEI6OUnC0nFxSkicroaI6djkMvhiKhIzGTJUuauHs68RZCn64fh+B4DjBPIFnfmIQNZq97TvXYExafcFZmqGNpT5TT7YspI+IlfDlIKXwWOlmCFfg9wEQvMwkp2N/F0nX33g5tnpwk9cMml+IqXeKPUWpDw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
  dkim=pass header.d=siemens.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yiyXOuX20uy+LH207lz6VlG7K2RapUL0oeXFrYdf9AM=;
- b=kKt0IjAuZUCsMU5tRhuhAV1rrgfjqbkvTlb+nW8oeYmGCNL/WrAmiljcyQuPYPlLa6WC5fQ+8/ybAs19bX4mbJNUeXM4nDB0F3s1us+qc1gmwYkIk4J1+rNO3oR6t7I/DzCc+9LgDwXoDiGPgngZEBXL1LD7Bv5OZXSUjk/bM++WviFIIeD42eYpO3gwreIirG8k8D4r/YopTE/BPeidaJTSCk/ST3ltH7jIh2/tbqmryVk5S1DtwakNUbFcJyoYNziM9S8zw0o7Y7Zde2BtHR4rO23GBmqXKnpxaGK3z8ajt3jdOfmjpMj8g01QWX9TS+YAp2llv+tDWqVAF6+uSA==
+ bh=NGjVzQ3yPj/sI2xP3igcwiTRMFzFxuDFmYPGu62AyG8=;
+ b=y/lyZYEbSoBSUi+3r51Rcg0JM+Urf65FnDmw1nQPXrCP9uGwoOLgvrvDjFYdQOO/Gglp17VdZGh7jK5xkkiv2Yljolit+0CP/+SMU4G25WsRmfvVcVjQqnIp0oqA/qTT6gStimWUQM2+nZg4jWhtYfs+gMFhjd6IKvuLgSyWJSXI/mL+4gaB7W87x/v+WKo5jKssIB3A9H490YMg8ZdwpjdYxW27Obv90gJj33qW3mKpRm4z/lDLR+ms3wAp6OECVfzKvlGTIjn+xMMTl7/hrf3HJoN+Na5mm3CAbbGyew0POo7Nz0tDPhOLSWq/ESG7h8YMJRXLGWST9WG1ALjFAA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=siemens.com;
 Received: from AM9PR10MB4959.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:41e::11)
  by AM8PR10MB4081.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:1ca::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.5; Fri, 14 Feb
- 2025 15:51:03 +0000
+ 2025 15:51:05 +0000
 Received: from AM9PR10MB4959.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::71d7:e998:3abf:a1ec]) by AM9PR10MB4959.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::71d7:e998:3abf:a1ec%6]) with mapi id 15.20.8466.009; Fri, 14 Feb 2025
- 15:51:03 +0000
+ 15:51:04 +0000
 From: Stefan Koch <stefan-koch@siemens.com>
 To: bitbake-devel@lists.openembedded.org
 CC: stefan-koch@siemens.com,
 	simon.sudler@siemens.com,
 	jan.kiszka@siemens.com,
 	alex.kanavin@gmail.com
-Subject: [PATCH v2 3/4] tests/fetch: Separate test classes for default shallow and fast shallow modes
-Date: Fri, 14 Feb 2025 16:50:56 +0100
-Message-ID: <20250214155057.1748020-3-stefan-koch@siemens.com>
+Subject: [PATCH v2 4/4] tests/fetch: Add additional test cases to check whether the fast fetch is shallow
+Date: Fri, 14 Feb 2025 16:50:57 +0100
+Message-ID: <20250214155057.1748020-4-stefan-koch@siemens.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250214155057.1748020-1-stefan-koch@siemens.com>
 References: <20250214155057.1748020-1-stefan-koch@siemens.com>
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
-X-ClientProxiedBy: FR2P281CA0158.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:99::11) To AM9PR10MB4959.EURPRD10.PROD.OUTLOOK.COM
+X-ClientProxiedBy: FR4P281CA0222.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:e4::8) To AM9PR10MB4959.EURPRD10.PROD.OUTLOOK.COM
  (2603:10a6:20b:41e::11)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: AM9PR10MB4959:EE_|AM8PR10MB4081:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4df7f69f-5ac3-42fe-82b0-08dd4d0f62bd
+X-MS-Office365-Filtering-Correlation-Id: 65af83ad-b163-41ab-0bb7-08dd4d0f6351
 X-MS-Exchange-AtpMessageProperties: SA
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?nK4V+vxPly9LEKUSzfwOguCIagQ6WwbX6aeTYTsYJhHt15Nt8cvWriYHYEQg?=
- =?us-ascii?Q?feAV/WadNp+qI98xdsvnewojBZ0/+/C6nth6ROkV6+teFDdomV+nagTw/xyy?=
- =?us-ascii?Q?yqGT5dMeRjpGrUD1xVAgrUh73z1mrdUzaXbOMw9v82B/jtMK8WEE1F+3qRul?=
- =?us-ascii?Q?hhwoKIhxyGg6z2lrJ7glTXrViEk1m/1WStNjfLw96IZMBlKnILY23bHwQbw0?=
- =?us-ascii?Q?UABU22f7HMom2P08/iXbykdV9+HLthd4pgbFaUN5dTUB/O9HhbGlpYwDLdNk?=
- =?us-ascii?Q?kBzAtYF4+uSnKroVn3IvPIUi9k/oUg6av+JC02nAqoUcI1eVlvlwr+9B0gY1?=
- =?us-ascii?Q?xQ7cN1JOZNM5XE+c5fxGGB1lAOEbDqMrTUx6zxjOwCQSqVfN4a6GqE48iyOC?=
- =?us-ascii?Q?Tohxy3h9ZhjDBozpsXUuMsDYsLU7tQyqpiLP5iy6CGL0HMGmdX2n0ilvW+24?=
- =?us-ascii?Q?HejGLvlIXn4TpvHiwsZmtqqu1o3Z3h6NB23zxicEyll9RnAKLAbu7rV75WPt?=
- =?us-ascii?Q?Jl0YaNyekUw2WzwBSLM1VY+2eRoJtWOegq/QlObqclAeyLdpnlwKdVTjjHhp?=
- =?us-ascii?Q?Srnt3a2+B0GDf1U+ZWDm9oB4CeTPRqz7C0YIVpxC71oDrmom9tHTOJPA1Hwo?=
- =?us-ascii?Q?vaIKNiV5jLOb+IUZ0q986jDrQPU26g1AeV9iQki6XV2k9cavKMeJHTtnqwqt?=
- =?us-ascii?Q?fW997tS7+gIXZnIVUVsYFuFrWBVfq+CGEeaz9nMTd9JRGgynxvfPDPsE2B7+?=
- =?us-ascii?Q?/m8uyy0qu4KDO49s/G+aZSb602EgqtBo+hInxBIxhO11jdyVhdxZ+6ruuMw2?=
- =?us-ascii?Q?Rz8puqJ4CUinj2arZRqPIzCn3F0EPzR7ChkLzTDDLRDp8rhkwcA0vMavbGk9?=
- =?us-ascii?Q?3Shu+25FkOKdUpn6zGZ4oUF0Z6IKkIi6qQizdewc9Xfc+wcuBFmrHZaUdjNa?=
- =?us-ascii?Q?t71/PxslPn8qCiK0WSmZxg/cTZkikIagBAggTWme9BR344r8Qkgnnc5D4HK7?=
- =?us-ascii?Q?pJHF3qk4igztrCY4tWpIpy5m7YvDIGmt/He8YvWnbN7vXM4nG3lkY9kRT37Z?=
- =?us-ascii?Q?oCWAtqXY3qm4qKAEsdEyo8zXr/u3kt+2KUCCdeRExRDR9gqMx0lpCQLjC/qZ?=
- =?us-ascii?Q?mTLHgBnNmEKwYi/LgUl5M3Hs+OgKD0+4C9h3TU5smEdFsFBx+ATimTy41m36?=
- =?us-ascii?Q?5cM899NNj/j4hWa+ePKRgwi7/DrlNmSNUk6V3eoSfhsDCV6DoVKY2yNj03fa?=
- =?us-ascii?Q?h47l5bueMt7nVtANSL/W3SabT7dvc/Qso1+sk2Cglo5F00ciNM49N95FjgoQ?=
- =?us-ascii?Q?i87HpWR+j52rYzsUXtx4xC4DkFilu5O8rWTexKoMQgEgN57d5ABD0xgR75bI?=
- =?us-ascii?Q?NkbwmpEdcQIPNTQPIsUpV8m+XGzI?=
+	=?us-ascii?Q?Lifm2CjY6MW/z+Z2MmYzc23djG1HncgVIknTVikfckX16uyj54fjzFw0b0WY?=
+ =?us-ascii?Q?MQsHJbNWL/YWFh4Wc7ekhutA4gbJ5/OCtTGQcHJRq+f4grDfZQKUDTwcKQvw?=
+ =?us-ascii?Q?RznGJ98EkUI9I5pYaVy2FAFmj5x1db9IgaxOXu+AEXFr5z5PUr35fXZcpUi8?=
+ =?us-ascii?Q?FqXeX4RQMVzIzslJI9hcwty+b4LDd1LXD89wDXgWHgnpkRswEEszVnp2uHNy?=
+ =?us-ascii?Q?43Rtn0beaMZUpc6Gc6E38sk6dC93hM1ABn2zSDK8E9YBVrpGRSOh+FtInWlu?=
+ =?us-ascii?Q?CdBD8lbKTjvFYL5uiU8b5UDRQoL8BWZTxFvP2M+y0QWS3gYOJ//0vf7ywx4Y?=
+ =?us-ascii?Q?dnSgPM9MMgRIVXuAWhaM1IKR2iIuz+WHsPUfJCWT86zHSZh98pddpo8W++AF?=
+ =?us-ascii?Q?RuII2GvkCKbXDFkY0TQhW0W5sLTvilklMVlY7AFKAhuzypAadGBylmYHXwsC?=
+ =?us-ascii?Q?wn0H2Gvj3eGdrOoEwcwkkksQaaTRoxXU1Ov4ekND40RdRaT2fQwqvMg+R6T9?=
+ =?us-ascii?Q?zhkH/3VNzUT5JweXkppxiGJlDPt4tFkM5JnfAgF5xDzTZ7+NUlqxPcpNCtce?=
+ =?us-ascii?Q?f+5nZWxtC0TS7NOquqraRbBc7ybbbeXbZD4Xj7pnpenE7W/aoB1EvbknFHWa?=
+ =?us-ascii?Q?Sxcq6f94nWGPMXfqNp5yeMi1H2wE2L46PPk/lrhA6VLucwLGLVXeADhyYaI1?=
+ =?us-ascii?Q?E2TfY0MuCZM7ve2R8a8Fda3iRmbnSfbGmvgWuR2pFvokQ++x10sOTcr4BT3N?=
+ =?us-ascii?Q?peiWYnJ/Ehsk/IKMuc2fnl8n34FpMmBPY9an6QJiDKRJxc6wcPIWULu/pXT0?=
+ =?us-ascii?Q?pdjTAsWjyQEohy7wO4HwXc677WyJJRSDYnDqszDKWq0TQRXSEKeVE1VhHbtC?=
+ =?us-ascii?Q?kwrsoTJt1mKA/mFGCHcdHBY+LzsszV8BxtO2oU5WFPZdhu7Nd3tisfGeRFWY?=
+ =?us-ascii?Q?JI+6zzN5tYcNWumD4ywYnhiuNle+kcVaWr3GM4QCaU4DNW91Yo1Nm/GV+KQ/?=
+ =?us-ascii?Q?kY7ZaO2+STLAE/xCaJ+gtuQzx76Ga3fltaJ23zDzsr/3ZI8ug5T7Iy3j7WJP?=
+ =?us-ascii?Q?L7BaGktjVigmjdF3IhMyiyt3L8xsvoonrsW1oRGmCsys9OmjytywtxNgKWBM?=
+ =?us-ascii?Q?ZlgHljNdi7noVs3MYOq87+zb6mKrsqw+Arz7O6jxDSS/u75ZLrAkTf2G3mOd?=
+ =?us-ascii?Q?imfBb9f30K0QMOmo1AgAPqj8SrZIg35jUEv0ezD/ZEREoSNlBB5SPIK28ZCi?=
+ =?us-ascii?Q?z1pUDY6wwHc6IBekZzuJpxmw9h9JtudHofn1Ae5X1g3pdZiir/EvlY9nc1oV?=
+ =?us-ascii?Q?NjryiTmLLVhDu9mJJeWtuyKprpTSONA6pxa7ZgJc9GBeDmqaLmpdf/t1HXTN?=
+ =?us-ascii?Q?5+Pc6QVul4pDNsFMzlmSofrGEndQ?=
 X-Forefront-Antispam-Report: 
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR10MB4959.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?D+GJlfkYmt+14kqhewEIhFTpoxdexzFEOZZyn0J1TUk27jpIIIVZO4cUfLqz?=
- =?us-ascii?Q?a29jWJZLY87WwGxBJfaqpi6bBcwQeuFNdtYP2b2bjMzpSw/PyAifPuZKGAoH?=
- =?us-ascii?Q?apE7FymVBdljncCL0V29rDNrkGLE59g24BUsdOVfo5PihdMuHi2jabgJz4DB?=
- =?us-ascii?Q?YOlWmyfs4Rm8t3hhKcw3ES+IsNXCjMkC7Zqtg8QwQZjBf6/l5iYIRj6XiZr9?=
- =?us-ascii?Q?r8YIJkzdcoggFC461LxM2hJx4Aw/edjaowdBTN3o+Wt+edtDu8oC8ojnjL5m?=
- =?us-ascii?Q?y88ZoiZ6sos7AhqXOgqD8U7jU7DPuncmlE5ywkcG9gYZ3zEFXDNBRkacbNk2?=
- =?us-ascii?Q?Ii7dRsBPo/vBjJYOhrJZEaAWH45yyVzryo1glJHeWhZOAIoEpVwGssUOPLPv?=
- =?us-ascii?Q?vi3V7CSceaBSXTMNa5OeruVeBW5yfRqfvnHTujeOFU/w1+qs6FbL/fPunWfF?=
- =?us-ascii?Q?EK/SeCdHRnMu7y1tL1bn1My8Emzp83DgSkEHAmCvTGK+SYsHA58HqgPClwgo?=
- =?us-ascii?Q?461CLbzfDdEh2EJ4ZzawTgUeo7liV/KAYceo7Pea9gYERznBkDS7doe6o6nX?=
- =?us-ascii?Q?d454S1m03Pp1xPMont7Kk+AgYJBCPuafybNkyAdbfqv2/sPRsnmF5sJXHu+l?=
- =?us-ascii?Q?5D/YmN8vTa5mq1FqVZqBir7vsvSTgT8QWP8EN0CmPbWE6KipLfcpbFD7b3sh?=
- =?us-ascii?Q?weD3y1tqaXdgXHzAKRljfvCrdMfZh7CvpH1E/qKXKK3SKFfmYbcTHFHW//J+?=
- =?us-ascii?Q?BzmJmC10/ByYthC62Gos3p57Q+EmZaJXTHWNWjGl63tgx7G9DDgRXpgKVUbs?=
- =?us-ascii?Q?9isqmX6Vn3gz+e3hLrdOQqgXXdzO67CB4jbM+ITb0MSrLA02qb9LqgczypJT?=
- =?us-ascii?Q?1ZbNzSp2PTXuvqRmVr2UNF68PEjYDrOoahoiATovz9Tu8EXm3jc5nX/LSw9d?=
- =?us-ascii?Q?0rOm1mBBzl12DFaUMO9gZA6fftMLdQh+itt0VE5mh6syL51yzvKLxUVyjJEg?=
- =?us-ascii?Q?yAJe23Qu+ZVWVuum0E0irxxlEM/oifdrvjB/nV8WXtFQsi1kpF9lKGfQS1G0?=
- =?us-ascii?Q?/OWGGFLPFlKiXhB7wz/R8O05LGM3eG8knl1/QJB+B/xpqOkxtTTgNdtPGKfT?=
- =?us-ascii?Q?fxabh+2LTjYUdCR7yiy/oh+g1uNhx1bNAnkFByg6DakrZmCzyc2nIU2k42Ix?=
- =?us-ascii?Q?GB0MqoyBTFpkC7in10HwN7+PtIjDjlDtSdRxXYE4SJdp5UXHHi0UWRXR0Yhu?=
- =?us-ascii?Q?U5qPCZhF8n5DRMR3HXBw/FFcqbZW7eHA7PnzAvvF8yRBh59EUUSffFSEsw8y?=
- =?us-ascii?Q?qczrszEjwGEJS2jiL22BnZ/dTheCz8Twg1qvE26qsL8X3VX2L3sDHrpQbmtP?=
- =?us-ascii?Q?x8nqE8ubM8VqTMk3viD+VhRNGulYq7Z9LXCj7qB26Lm7gLmGRsXa8+OcXeWm?=
- =?us-ascii?Q?wJQkMLsP0OJlOoirP4Z3JjCeaPF9ZcgYleav1Snr9kTADuBbokjBcy7fMO8h?=
- =?us-ascii?Q?mvZ2qs4g+wCZ7oe4/ghUrcL7w5HOucrKyQn9RE4x6pYzsUHHVA+kwUo7/fWR?=
- =?us-ascii?Q?1DBUeeaEvQeQ60pf+3kGvAO67i+KzuM6m7OEIyFR8upXsoSFKIdg1Ld2WALe?=
- =?us-ascii?Q?hQ=3D=3D?=
+	=?us-ascii?Q?d5fM7eixHSaDoEkdbgDHg1gvsrSGp99KoOWooU/cUfM51z9QGFMEeEdXEjPT?=
+ =?us-ascii?Q?xj0rLgcDrtLW+i1OUN2cHnvJnw9QC7eHcCXPwDYMA1QOE3kt6ztW3r1KeWDN?=
+ =?us-ascii?Q?RN/R8A6B2WmurI+nRJzp+azaY/PfuNgAhjGMFJH2QOfbG0wohRo4l2J+kTr6?=
+ =?us-ascii?Q?sOn8XKOoVzWOvjK2z6PdSCdF9ZgVvW/q3jdS4X8LMJLMC0D63/ANF+wTwc2O?=
+ =?us-ascii?Q?TKZAGlVyD74YhqgiLRkRtp7thnYDdxvZpzmAUJliAZLGjOWNZ2djvmwXSStK?=
+ =?us-ascii?Q?WM4zcZNo6yMRbb82hOWe4gwr2hunjOJozNOcswKgkXpQ+4nB+ZO0CB2QRz86?=
+ =?us-ascii?Q?nO41LppXdLZ0wRM1r8++rQtTRbnffzD6zunhrTgEHcuCBsYPKIFRu1KNt9AK?=
+ =?us-ascii?Q?vEs0HZ0/OjkiAclob9gLW36p384w7adxidAmQaAcSB7o8uAqKAkXbK1ZpSCR?=
+ =?us-ascii?Q?CuuIPQQ80c0YZ7NFaPd7D6wpjGiP91WKHS73SiDYqkhugVHb+PkgDH+qOGRe?=
+ =?us-ascii?Q?GB4D5xc6+y/SUUtWQTqWCuxQKoFhxLeqP9gG7e4laBNiQ8ik9OnICiIsB4RB?=
+ =?us-ascii?Q?HEqE84vLFxPl0zzqYXoFEZVH8xjsl6QEImrFbTgZZRbGYs7b+p0RH99/WCVb?=
+ =?us-ascii?Q?PED7O9WWlF3q8wu/MPnN5ELGuMgggSL/juSbHt4qUGoyFSpyPi/GZ4zAL4oD?=
+ =?us-ascii?Q?daV5k8vtzKkDDNFrcz5NtrKlBvNybIbL3+Z6O+l3fHv3DHLwnZJYL7rNJdRC?=
+ =?us-ascii?Q?Pc16lQB85fuXks/jlMICn2gKjZWIj7xbmHKPZX9r7GPdYj3aTV1m8a40GAxA?=
+ =?us-ascii?Q?pn6IQdahuvQvBx96AhZQMf8KsmmT+vPIgrGGAXkKccpjpgAp/0Jrqlt6h2jV?=
+ =?us-ascii?Q?wEzGIuFd4wYdBWQKIA0pk/ligkyUWO57fC6d5DhjiuPzXVAW5hXZ05E6KyZW?=
+ =?us-ascii?Q?D5gL7zws752eSOw0olzjtRiTLa8TsXmUvNfwJadMol69oZL0qBrPpDYIilob?=
+ =?us-ascii?Q?zDJNmozm2UTNptkNtvZLQpCkDSOKgMTUjykfjueoQKGoH3TVGqz0n3ghGTrj?=
+ =?us-ascii?Q?oRh0j9x6FPy7zDX2OmsWQdQx8fJsxrRiD68JWwoHNwuXaclUBSNQRYMrSlS5?=
+ =?us-ascii?Q?cuCzlGSmme3eojeJlGZS3VjvWKtXUy31e1nJFMx7MzCQFdQuHzQaernwkywj?=
+ =?us-ascii?Q?tkC6IR9BW+KwtEbIwDkyDU2L0MxvSN3RnAuu6cBNWhyN1W8Zo233yAgCTWPm?=
+ =?us-ascii?Q?fqoFzJGOuQc3aWMJOpWUVTzFCCWScVKywAFXymXMr77Jy5lHPu9xJidbFyQJ?=
+ =?us-ascii?Q?DAaP/BiVjyN2Azu7rtV0EuPiAAZ73bZQHSmPIDDSE8tRpv5FQvvO5q+eaDnL?=
+ =?us-ascii?Q?F7yZTQxyFJwZLGCuIcIJiAHz63a3ORrh+/p2rxlPQqG0kfGFIzig8aXRH9WB?=
+ =?us-ascii?Q?84WL6HxK1U1uSvTCsprJzkq1mlZ0Ss69kP9YJj2cedRa4r6CMOHQ2ga0nGSP?=
+ =?us-ascii?Q?W4AXq4EYVirfCFB/KJChN8JXggQe+z9UwdPE9Irr/TT4tGwfMdk5HG5Ygraw?=
+ =?us-ascii?Q?trStLq/81HhVYHOTCbG5N4W53D8gzSV25wRAzjh9Z4CE+FQVhndQ3C3eV9li?=
+ =?us-ascii?Q?3Q=3D=3D?=
 X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4df7f69f-5ac3-42fe-82b0-08dd4d0f62bd
+X-MS-Exchange-CrossTenant-Network-Message-Id: 65af83ad-b163-41ab-0bb7-08dd4d0f6351
 X-MS-Exchange-CrossTenant-AuthSource: AM9PR10MB4959.EURPRD10.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 15:51:03.3694
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 15:51:04.4004
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SXC5O8HfQoUms6J/TYUT8IBdYeFftsiGXLOIv+3KG6VqbP4ayg+NbyQOvCg/EHKsEHd2rtNUFEWMoBNlsfXF0A==
+X-MS-Exchange-CrossTenant-UserPrincipalName: oRzkKl60MPZM63xCMVWLwveo+2CkuO5fcPbo5VKvHJeCSLIIBrpv43PzaMBMV78tFDAwE/2Ml9vXDXZxIREt0w==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR10MB4081
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 14 Feb 2025 15:51:10 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17224
-
-- The class GitShallowTest contains all test cases used with `ud.shallow_fa=
-st =3D=3D 0` (disabled)
-- The class GitShallowFastTest contains all test cases used with `ud.shallo=
-w_fast =3D=3D 1` (enabled)
-- The base class GitShallowBaseTest contains all test cases that are used w=
-ith both default shallow and fast shallow modes
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17225
 
 Signed-off-by: Stefan Koch <stefan-koch@siemens.com>
 ---
- lib/bb/tests/fetch.py | 119 ++++++++++++++++++++++++++++--------------
- 1 file changed, 80 insertions(+), 39 deletions(-)
+ lib/bb/tests/fetch.py | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 48b9e4af1..2891cf9e5 100644
+index 2891cf9e5..a1d9f4e61 100644
 --- a/lib/bb/tests/fetch.py
 +++ b/lib/bb/tests/fetch.py
-@@ -1739,9 +1739,15 @@ class GitMakeShallowTest(FetcherTest):
-         self.make_shallow(['refs/tags/1.10.0'])
-         self.assertRevCount(orig_revs - 1746, ['--all'])
+@@ -2350,6 +2350,18 @@ class GitShallowFastTest(GitShallowBaseTest, Fetcher=
+Test):
+     def test_shallow_clone_preferred_over_shallow(self):
+         super().test_shallow_clone_preferred_over_shallow(fast=3DTrue)
 =20
--class GitShallowTest(FetcherTest):
-+class GitShallowBaseTest():
-+    """
-+    Test cases for use with default shallow and fast shallow modes.
-+    Test cases must succeed with `ud.shallow_fast` set to either `0` (disa=
-bled) or `1` (enabled).
-+    The class GitShallowTest contains all test cases used with `ud.shallow=
-_fast =3D=3D 0` (disabled).
-+    The class GitShallowFastTest contains all test cases used with `ud.sha=
-llow_fast =3D=3D 1` (enabled).
-+    """
-+
-     def setUp(self):
--        FetcherTest.setUp(self)
-         self.gitdir =3D os.path.join(self.tempdir, 'git')
-         self.srcdir =3D os.path.join(self.tempdir, 'gitsource')
-=20
-@@ -1814,7 +1820,8 @@ class GitShallowTest(FetcherTest):
-     def fetch_shallow(self, uri=3DNone, disabled=3DFalse, keepclone=3DFals=
-e):
-         """Fetch a uri, generating a shallow tarball, then unpack using it=
-"""
-         fetcher, ud =3D self.fetch_and_unpack(uri)
--        assert os.path.exists(ud.clonedir), 'Git clone in DLDIR (%s) does =
-not exist for uri %s' % (ud.clonedir, uri)
-+        if not ud.shallow_fast:
-+            assert os.path.exists(ud.clonedir), 'Git clone in DLDIR (%s) d=
-oes not exist for uri %s' % (ud.clonedir, uri)
-=20
-         # Confirm that the unpacked repo is unshallow
-         if not disabled:
-@@ -1822,9 +1829,10 @@ class GitShallowTest(FetcherTest):
-=20
-         # fetch and unpack, from the shallow tarball
-         bb.utils.remove(self.gitdir, recurse=3DTrue)
--        bb.process.run('chmod u+w -R "%s"' % ud.clonedir)
--        bb.utils.remove(ud.clonedir, recurse=3DTrue)
--        bb.utils.remove(ud.clonedir.replace('gitsource', 'gitsubmodule'), =
-recurse=3DTrue)
-+        if not ud.shallow_fast:
-+            bb.process.run('chmod u+w -R "%s"' % ud.clonedir)
-+            bb.utils.remove(ud.clonedir, recurse=3DTrue)
-+            bb.utils.remove(ud.clonedir.replace('gitsource', 'gitsubmodule=
-'), recurse=3DTrue)
-=20
-         # confirm that the unpacked repo is used when no git clone or git
-         # mirror tarball is available
-@@ -1841,6 +1849,7 @@ class GitShallowTest(FetcherTest):
-         self.assertRevCount(2, cwd=3Dself.srcdir)
-=20
-         self.d.setVar('BB_GIT_SHALLOW', '0')
-+        self.d.setVar('BB_GIT_SHALLOW_FAST', '0')
-         self.fetch_shallow(disabled=3DTrue)
-         self.assertRevCount(2)
-=20
-@@ -1900,26 +1909,6 @@ class GitShallowTest(FetcherTest):
-         self.fetch_shallow()
-         self.assertRevCount(2)
-=20
--    def test_current_shallow_out_of_date_clone(self):
--        # Create initial git repo
--        self.add_empty_file('a')
--        self.add_empty_file('b')
--        self.add_empty_file('c')
--        self.assertRevCount(3, cwd=3Dself.srcdir)
--
--        # Clone and generate mirror tarball
--        fetcher, ud =3D self.fetch()
--
--        # Ensure we have a current mirror tarball, but an out of date clon=
-e
--        self.git('update-ref refs/heads/master refs/heads/master~1', cwd=
-=3Dud.clonedir)
--        self.assertRevCount(2, cwd=3Dud.clonedir)
--
--        # Fetch and unpack, from the current tarball, not the out of date =
-clone
--        bb.utils.remove(self.gitdir, recurse=3DTrue)
--        fetcher, ud =3D self.fetch()
--        fetcher.unpack(self.d.getVar('WORKDIR'))
--        self.assertRevCount(1)
--
-     def test_shallow_single_branch_no_merge(self):
-         self.add_empty_file('a')
-         self.add_empty_file('b')
-@@ -2111,16 +2100,20 @@ class GitShallowTest(FetcherTest):
-         self.assertRevCount(4, ['--all'])
-         self.assertRefs(['master', 'origin/master', 'origin/a_branch'])
-=20
--    def test_shallow_clone_preferred_over_shallow(self):
-+    def test_shallow_clone_preferred_over_shallow(self, fast):
-         self.add_empty_file('a')
-         self.add_empty_file('b')
-=20
-         # Fetch once to generate the shallow tarball
-+        if fast:
-+            self.d.setVar('BB_GIT_SHALLOW_FAST', '0')
-         fetcher, ud =3D self.fetch()
-         assert os.path.exists(os.path.join(self.dldir, ud.mirrortarballs[0=
-]))
-=20
-         # Fetch and unpack with both the clonedir and shallow tarball avai=
-lable
-         bb.utils.remove(self.gitdir, recurse=3DTrue)
-+        if fast:
-+            self.d.setVar('BB_GIT_SHALLOW_FAST', '1')
-         fetcher, ud =3D self.fetch_and_unpack()
-=20
-         # The unpacked tree should *not* be shallow
-@@ -2240,18 +2233,6 @@ class GitShallowTest(FetcherTest):
-         with self.assertRaises(bb.fetch2.FetchError):
-             self.fetch()
-=20
--    def test_shallow_fetch_missing_revs(self):
--        self.add_empty_file('a')
--        self.add_empty_file('b')
--        fetcher, ud =3D self.fetch(self.d.getVar('SRC_URI'))
--        self.git('tag v0.0 master', cwd=3Dself.srcdir)
--        self.d.setVar('BB_GIT_SHALLOW_DEPTH', '0')
--        self.d.setVar('BB_GIT_SHALLOW_REVS', 'v0.0')
--
--        with self.assertRaises(bb.fetch2.FetchError), self.assertLogs("Bit=
-Bake.Fetcher", level=3D"ERROR") as cm:
--            self.fetch_shallow()
--        self.assertIn("fatal: no commits selected for shallow requests", c=
-m.output[0])
--
-     def test_shallow_fetch_missing_revs_fails(self):
-         self.add_empty_file('a')
-         self.add_empty_file('b')
-@@ -2295,6 +2276,51 @@ class GitShallowTest(FetcherTest):
-         self.assertIn("No up to date source found", context.exception.msg)
-         self.assertIn("clone directory not available or not up to date", c=
-ontext.exception.msg)
-=20
-+class GitShallowTest(GitShallowBaseTest, FetcherTest):
-+    """
-+    Test cases for use with default shallow mode.
-+    The class contains all test cases used with disabled `ud.shallow_fast =
-=3D=3D 0` only.
-+    """
-+
-+    def setUp(self):
-+        FetcherTest.setUp(self)
-+        GitShallowBaseTest.setUp(self)
-+
-+    def test_shallow_clone_preferred_over_shallow(self):
-+        super().test_shallow_clone_preferred_over_shallow(fast=3DFalse)
-+
-+    def test_current_shallow_out_of_date_clone(self):
-+        # Create initial git repo
++    def test_shallow_fast_check_is_shallow(self):
 +        self.add_empty_file('a')
 +        self.add_empty_file('b')
-+        self.add_empty_file('c')
-+        self.assertRevCount(3, cwd=3Dself.srcdir)
 +
-+        # Clone and generate mirror tarball
-+        fetcher, ud =3D self.fetch()
-+
-+        # Ensure we have a current mirror tarball, but an out of date clon=
-e
-+        self.git('update-ref refs/heads/master refs/heads/master~1', cwd=
-=3Dud.clonedir)
-+        self.assertRevCount(2, cwd=3Dud.clonedir)
-+
-+        # Fetch and unpack, from the current tarball, not the out of date =
-clone
++        # Fetch and unpack without the clonedir and *only* shallow tarball=
+ available
 +        bb.utils.remove(self.gitdir, recurse=3DTrue)
-+        fetcher, ud =3D self.fetch()
-+        fetcher.unpack(self.d.getVar('WORKDIR'))
++        fetcher, ud =3D self.fetch_and_unpack()
++
++        # The unpacked tree *should* be shallow
 +        self.assertRevCount(1)
-+
-+    def test_shallow_fetch_missing_revs(self):
-+        self.add_empty_file('a')
-+        self.add_empty_file('b')
-+        fetcher, ud =3D self.fetch(self.d.getVar('SRC_URI'))
-+        self.git('tag v0.0 master', cwd=3Dself.srcdir)
-+        self.d.setVar('BB_GIT_SHALLOW_DEPTH', '0')
-+        self.d.setVar('BB_GIT_SHALLOW_REVS', 'v0.0')
-+
-+        with self.assertRaises(bb.fetch2.FetchError), self.assertLogs("Bit=
-Bake.Fetcher", level=3D"ERROR") as cm:
-+            self.fetch_shallow()
-+        self.assertIn("fatal: no commits selected for shallow requests", c=
-m.output[0])
-+
-     @skipIfNoNetwork()
-     def test_that_unpack_does_work_when_using_git_shallow_tarball_but_tarb=
-all_is_not_available(self):
-         self.d.setVar('SRCREV', 'e5939ff608b95cdd4d0ab0e1935781ab9a276ac0'=
++        assert os.path.exists(os.path.join(self.gitdir, '.git', 'shallow')=
 )
-@@ -2309,6 +2335,21 @@ class GitShallowTest(FetcherTest):
-         dir =3D os.listdir(self.unpackdir + "/git/")
-         self.assertIn("fstests.doap", dir)
-=20
-+class GitShallowFastTest(GitShallowBaseTest, FetcherTest):
-+    """
-+    Test cases for use with fast shallow mode.
-+    Test cases must succeed with `ud.shallow_fast` set to either `0` (disa=
-bled) or `1` (enabled).
-+    The class contains all test cases used with `ud.shallow_fast =3D=3D 1`=
- (enabled) only.
-+    """
-+
-+    def setUp(self):
-+        FetcherTest.setUp(self)
-+        GitShallowBaseTest.setUp(self)
-+        self.d.setVar('BB_GIT_SHALLOW_FAST', '1')
-+
-+    def test_shallow_clone_preferred_over_shallow(self):
-+        super().test_shallow_clone_preferred_over_shallow(fast=3DTrue)
 +
  class GitLfsTest(FetcherTest):
      def skipIfNoGitLFS():
