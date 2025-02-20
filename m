@@ -1,433 +1,365 @@
-Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E211C021B1
-	for <webhook@archiver.kernel.org>; Thu, 20 Feb 2025 11:45:42 +0000 (UTC)
-Received: from AS8PR03CU001.outbound.protection.outlook.com (AS8PR03CU001.outbound.protection.outlook.com [52.101.71.140])
- by mx.groups.io with SMTP id smtpd.web10.47290.1740051940168005135
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45266C021B2
+	for <webhook@archiver.kernel.org>; Thu, 20 Feb 2025 12:21:52 +0000 (UTC)
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.web10.47845.1740054110531377644
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 20 Feb 2025 03:45:41 -0800
+ Thu, 20 Feb 2025 04:21:50 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@weidmueller.com header.s=selector2 header.b=xxt/Lous;
- spf=pass (domain: weidmueller.com, ip: 52.101.71.140, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hHfSgDiWRwxneD44UNUWnFX72ihTo3X0TWRcawF8nmDRXj92ultO63DVwWVpeSeY7oAKWEJB5iv/cbp17FTvszYK2buSxM9LkdrDfCqh6QR7IRzK13JuQ6snwlJmLtj9K2C2rGHcHzrzMC1SvKVfwxWlk4AV7SwD9hC/Kyjw3zb+c6IV9MPy+5enSxjjr6LE71vhqqyuJx3NwZ/Ai2Xt6HJSGVXFHMp+DmolQqb07cFFhc66ovw5/o66DtZ0CQCcSNB0DD0Fe41pRaWcgVd4jKPO1G9TH2oyJqzh6gNSe3zvGd2aPHk7Jv/CtFrj/huKEs+D241MalvXjJRw1SDXRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Bjr2ILw9EhAwdhZNpodbO6Y7IgQ1vcOlDmHVKstUEv8=;
- b=m06pT8zLqvSBRuTFG7LS1peARZJLRLJgxvoikmKKU7Zp9oj9W+CfvW1wuo4oEQqy6IjVK1/9niHcn1FPwOyjalbkMLi9tMnXEru18JT+JlWH9QOuHIhCNDrroQ69gJhs7QcKzQf6poww2Ul1kd0La3z7AO+7SDLXYH4oCdd4ExdgfWCDqnPxsg4wVVNX81DTFZhJdjkckRdmkkppn9bw+XGgYdna7AKRz8xawPAOzn16q7YB6RGtTwy0eJuDbE4i9kmTm/BVNH9d9cFrxknHepXQIza4GWIGcg5jSfOjA70jzPelqYk8VqF2esLanp+W4grrzPfk5zGj3Vep+RJn9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=weidmueller.com; dmarc=pass action=none
- header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bjr2ILw9EhAwdhZNpodbO6Y7IgQ1vcOlDmHVKstUEv8=;
- b=xxt/Lousz4MvmYOoXokpJJe/x4QrFcYLWojM6c07Gf7BNnqiHUeyabgCVKgWsN2LMYhDs/mTPibmkoRlBMQFa3gIMf+27wcwCSotTORrYIQLBMAhVVQ8kKZrA3mzrzoV4KRua3Cm3wZF/20SY90Zxp4wvtDSZd+mmF8S9bzQIw+tBwUuoAwDQO9VhbXXrXSsFCdSMsTqGHxnIWpDAmNo7+4OlQHjn6rEwb6F1EPborK2bhOIvVyyHx/LoWXTx4lkEBmJHKEPC5C1YH/TJ84SpvEzS2mh6U/hlKfFca7TBQuYcJA5rNmlQCPV6WnPOw8PhI/Gmno3ITPQOl++dnmZgQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=weidmueller.com;
-Received: from GV1PR08MB8426.eurprd08.prod.outlook.com (2603:10a6:150:8a::17)
- by DB8PR08MB5324.eurprd08.prod.outlook.com (2603:10a6:10:11e::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.15; Thu, 20 Feb
- 2025 11:45:37 +0000
-Received: from GV1PR08MB8426.eurprd08.prod.outlook.com
- ([fe80::f9f5:b4bd:9e01:9013]) by GV1PR08MB8426.eurprd08.prod.outlook.com
- ([fe80::f9f5:b4bd:9e01:9013%7]) with mapi id 15.20.8445.017; Thu, 20 Feb 2025
- 11:45:34 +0000
-Content-Type: multipart/alternative;
- boundary="------------xgNJVaab11WuIGirSsqOBznz"
-Message-ID: <6d445c40-5f24-47d1-a71a-1060e9b9da16@weidmueller.com>
-Date: Thu, 20 Feb 2025 12:45:32 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel] [RFC PATCH 00/15] Make mirror replacement syntax
- explicit
-To: bitbake-devel@lists.openembedded.org
-References: <20250205071538.2681-1-stefan.herbrechtsmeier-oss@weidmueller.com>
- <f4533bb6d41d4011219cae737907015018a08ca9.camel@linuxfoundation.org>
- <027ed1ac-02ae-420b-a65f-d4e48bc86136@weidmueller.com>
- <d971d67321a2d43666885004f7ff9a479f4d1855.camel@linuxfoundation.org>
-Content-Language: en-US
-From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
-In-Reply-To: <d971d67321a2d43666885004f7ff9a479f4d1855.camel@linuxfoundation.org>
-X-ClientProxiedBy: FR3P281CA0066.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:4b::17) To GV1PR08MB8426.eurprd08.prod.outlook.com
- (2603:10a6:150:8a::17)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=OlvB+OFs;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.41, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38f2b7ce2e5so475613f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 20 Feb 2025 04:21:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1740054108; x=1740658908; darn=lists.openembedded.org;
+        h=mime-version:user-agent:references:in-reply-to:date:to:from:subject
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=o7+THAysiL3eSldwiT1nfB1keCEMb6F4Hh6o+0QWtVw=;
+        b=OlvB+OFs6Z5VRe5fgosRuVP1aWZRHtGcGQgs+CpdEHinYyNS+EOlItSx9zkEHpKx0Y
+         uA7Cq47j6CW9DRU/swZ+9KKMn+MOtc7pc1jrbcgPTnJen+4bDaCMR5t825wsjoPRUzMx
+         c5cW375tsdc8iiwCX55HLAizKuAkO3//Wu6/8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740054108; x=1740658908;
+        h=mime-version:user-agent:references:in-reply-to:date:to:from:subject
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o7+THAysiL3eSldwiT1nfB1keCEMb6F4Hh6o+0QWtVw=;
+        b=ZSXTp4FG4CefcWF8New5I9opn6hXu5Yp5NvQUin+FzEDxkXdPatdzTvbnrKt5reFDQ
+         Oqf8MHsS56w0xRlpfB2fiD1jdZ0ujgwLC9HDsDECa3GwHP8FAQ7F39kENOeUHKYQAzFa
+         figanZXCddPgUvkHS1iRTVZDATTjlZKeWSDnKeJviwfBb2j3yBl9I6w+kDhfxDl34pxO
+         aQ8UpWG/5+7Ef+s604qV34JRUqckpuQ/InfjQSbSirCZM0iR5QMR/cF/pk3gpvja91I5
+         QFU0Lc0Uigr2suwididAAA0ZGHt6oqNwPs7w15HnhcDR4kZmyzWeuwMXusXv9/97PrnN
+         ZODg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEUkkAbyHFNlvbbglo2W4GRdLtFhTYJhnNL9EfWrduQ7qEA2mGZAGwyzfwEJFF8W/jPX/CxxeNPiN2TURa@lists.openembedded.org
+X-Gm-Message-State: AOJu0Yw9o9g8Hg39C7ft9fDL4YKYuJBmyX39TLS7sMPs/71mSVI5QL0F
+	s0+RvdcUUC/euzp+yTvyslBEKm/DovP1uavVt6jwlE9zhkMo+4mIhyu7gMwkUHc=
+X-Gm-Gg: ASbGncsmih3817Fb7fAggAj0lWpgWq9cHwjK74n57APj1yNHPXYkDMuK6IidoeEX0FK
+	k78GLK6YZtwVvrCf+nBuLEluYysarEn7Y3gI5xoeHBdht3nW0gW2WWGh6WVsXSAp7yb3/Mrv28T
+	GlouK9RkFbh3gBDpcWjOo1QHFm7zIVHQsZMmPc5oqXPgAQasD0yU+Avby8x19Emam5+hcRPw0WB
+	t4Oo41J/UYbNBEy1nykzFMqzLVQ0rNADoZHLXZBHMKZxUBZdvnSbVXdKtiwFwqFmB2ftgos20qU
+	AwogQYrrQG0imD+J6mBWD+k6y8chxNvs07acFHWT3Hvq/iZ6pvUxlia/nOd5usnEMe4ohL3KMbg
+	VR1PQ
+X-Google-Smtp-Source: AGHT+IF+1Pq6anWPrxHDqqr21RnzSCiA9tL7PDGRlb7iwmTBJ/nsbhgCd5tFmCUmnZttGu8jKNgDGA==
+X-Received: by 2002:a5d:5cc4:0:b0:38d:daf3:be60 with SMTP id ffacd0b85a97d-38f34171493mr19102608f8f.48.1740054108331;
+        Thu, 20 Feb 2025 04:21:48 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:9d6e:bfd3:acd1:cbdb? ([2001:8b0:aba:5f3c:9d6e:bfd3:acd1:cbdb])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5655sm20482530f8f.77.2025.02.20.04.21.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 04:21:47 -0800 (PST)
+Message-ID: <9ecb0289143f35037902a569de8a7f048262f779.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [RFC PATCH 00/15] Make mirror replacement
+ syntax explicit
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: stefan.herbrechtsmeier-oss@weidmueller.com, 
+	bitbake-devel@lists.openembedded.org
+Date: Thu, 20 Feb 2025 12:21:46 +0000
+In-Reply-To: <6d445c40-5f24-47d1-a71a-1060e9b9da16@weidmueller.com>
+References: 
+	<20250205071538.2681-1-stefan.herbrechtsmeier-oss@weidmueller.com>
+	 <f4533bb6d41d4011219cae737907015018a08ca9.camel@linuxfoundation.org>
+	 <027ed1ac-02ae-420b-a65f-d4e48bc86136@weidmueller.com>
+	 <d971d67321a2d43666885004f7ff9a479f4d1855.camel@linuxfoundation.org>
+	 <6d445c40-5f24-47d1-a71a-1060e9b9da16@weidmueller.com>
+Content-Type: multipart/alternative; boundary="=-Hkym/imNWDlCJqCPmWqw"
+User-Agent: Evolution 3.54.0-1 
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV1PR08MB8426:EE_|DB8PR08MB5324:EE_
-X-MS-Office365-Filtering-Correlation-Id: e647c761-0a08-4972-c50b-08dd51a41593
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|366016|1800799024|376014|13003099007|8096899003;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?Q0tXems2dlhkQ3VGSGVCRHhIaisxOE1HRU9EcCsxOEtsbCt4L096NUxzajZk?=
- =?utf-8?B?OTJYa29Kc3NPSDV3b0RWMFE3UG1iaWduOFZodFoxeUdHUThTV0hZaWRMcVlR?=
- =?utf-8?B?emh3c2poVWJHVzk1UitoUWlObVNSTFJZZWtWcG00aERNVnQ5bEZMT1VpVzVJ?=
- =?utf-8?B?VXphMzRkRkRyZzJEVFp6WERqYTBPWkc3Y25LcnNUcnBKQ0xUTGxvZVQycmFv?=
- =?utf-8?B?a01ITlpZU2o2Umh0a2k2c1NETUlDM1lSNndjSTdDcjI1eWU5SWRMeU5kdm9G?=
- =?utf-8?B?aVd1TmsrV2Q5M0prSldPckErL0JGbmY4dzU2VFNreTVGVGxmS3htZ2lnTlNT?=
- =?utf-8?B?UnJXS3k3V21qVkZhcy9tS3RCZ3hhUjFJNHBvbENwNkRmQVdxbTdYR2JrQlVr?=
- =?utf-8?B?ME1HbGFmY3pSeE1rb0NTcU5TTys0aWcyODczSElMeWQ5MUh6Uk8vVjlPaHlF?=
- =?utf-8?B?eFZBWHdrc0ZJRTMyVFpRWEwrWVpmMEdDRFZBWDI1Tzh1U3FQLzlJc0h4SmlW?=
- =?utf-8?B?bnpkZDh4SUpMWWxDbm94dmdXUW9OY2VybnNLNWxRZExwSWNYMS85Qi9Ra3lh?=
- =?utf-8?B?VjJSbnpPM00yRXlLaElCczQrU2J5VDJoNEtjOWxkTHhrdXpUTE1JaEc3TE5D?=
- =?utf-8?B?SVBOUXZxVC9HUkJ4SGIzK0dpeG9sdkhDNFZyRHdUcGZVQzJZTTA3THVhY1Rm?=
- =?utf-8?B?aHdpSzBJNDJRR29LTDNpSjFaKzZhRDcwVEFZeVYrMVdyV1RDUlNTRVBuTXJP?=
- =?utf-8?B?R21GS1Q5MWJwVXp3RzltNTkwUnNCaER5THBXaXZMQ1FKcG9QdE15dWh1cUJB?=
- =?utf-8?B?ZEd3bFdOblpSd3o5SVMzMkxOTWZrbEMwS2dLRTNIeld5MG00OFlWTEJEb0Fl?=
- =?utf-8?B?Qmh6R3BRNXNKRGxIRnErTmlqU0xwR0hEZzhXMVFiODVDWitpNWlCSE83UEIr?=
- =?utf-8?B?T3hmTS9vRVZyQU9UQ2VXaVNycGluQzRQUkVDNFJKLzg1ellOTHdDOENFWnE5?=
- =?utf-8?B?WTRRQ1pjaExxTThRQkI0elVhZDh3c21YSUU0Zzl4S09GbDlEZmU2d3BrM3Nq?=
- =?utf-8?B?YWV3cll3ZjZWL1BGdFdockFuaVJMU3d6UGlydWJLQXBONUYvL1YvTHEwQVJs?=
- =?utf-8?B?VXdCTloramV1YytrN0g4M2gybDRaU0lrNzk4V3BQWXVNdGNLWXpyTUJ2TzFy?=
- =?utf-8?B?ZVNzTXlSZ0wrZS8zd29tbmo2NVpJSDZDY0c5eWJBSjMrbE0yN1plZE9lQ29t?=
- =?utf-8?B?NFplOEdNcjV0MXhZVFZPZUFPVGJMZktEbWZNT1Joc1ZWWVFuWGg0T0I4WGlK?=
- =?utf-8?B?d2RNeWRJSmZVVVBpNmJNT2ZxbkphVUM0UGM1bG04dzJYZ0cvYlFyWUVkWkcv?=
- =?utf-8?B?cVBHWlJaRXdBSWdvaXA2dVpWVW81Q20vaFFLS3IwTnhFUlZuUENQVnFrUFZP?=
- =?utf-8?B?RjVpMG1FN3FqUFNNSml5UFNSRTBpT1NmM2d5MFE2VDlpNy9XNW9ON1NESTg0?=
- =?utf-8?B?eUVsMStvbmxkTUZGZ0d3Y0gvNmtJRG4zTHlCNWkwb0tmVEdSS1RpWTd5Z2dV?=
- =?utf-8?B?bXlvMndXbEZUVmlwY2MwWmdmTVpiMDJGWE9UNFI3TzM5ekJWVTBGOFBHRXZs?=
- =?utf-8?B?N1FWZFhHdWRsUm43M0c0Vjg4RmpKTy9CQUxOWk5SL3VhdFdZdlNvWEJFVEVG?=
- =?utf-8?B?QVgzZVFBWnlXTm16RWJNUjlES0kvTHdKaU1EaWxGV1AwWSs3MTl4VGUwNXBu?=
- =?utf-8?Q?EgGr0SZ/E0Yt0VkdeAT0u7vpv7AlRwqVkozMBmV?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB8426.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(13003099007)(8096899003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?eWJGS0hsSkFzYnVxZXVNZXJsZzR3UjVjZ0o4ZFhsdm9jdjdkY2VFSWVKOVBY?=
- =?utf-8?B?Rk1UYk00bkdoaGhxMFNvL3djKzRuYVM2NEFRamhwZmM5U1U3VS8rbnhRZFhh?=
- =?utf-8?B?dnZtL3AweWZTM0dhbkk4N2g2TklnVERrNUlveXdXM2R4RThwb3VqS3ZKbVll?=
- =?utf-8?B?R29xeVh6ZVJBeDlvVEdPQ3l4Tk5KQWxhN01qbTJ1blF3MnJkSzR3bXF5NjVm?=
- =?utf-8?B?Nlp3a1pRUUVlU1pORXZQbXNMSE0rK2YyaHlQbWdYbEdFYnMvMEF5NkwvcnJx?=
- =?utf-8?B?dkZLaEFaVHRKVEdLRXNJMG5kaDh2NkFuYUw3aDRPWFZHSjhKV01OMk1aTUhP?=
- =?utf-8?B?Sm5PMkVrTE1pOThzaENLeEdLVjBGaHUyM1pJaEJsVmI3czRnS2dEUDNWeE9z?=
- =?utf-8?B?aU16Q25HT1NCWW9FTHM1a21uc3ZBQUhBWVdRYzNzM0V1Nm5aL213cXZ2VGFT?=
- =?utf-8?B?K2dFUElwaFNKSHRuOTZNU2FsMkc3d0ZHN3hhaFlGZ2hIN0pyZHF0ZFM3cWxl?=
- =?utf-8?B?T1piR1JaRDA3SmdDRkVMYnloM2l4MjhHU3lxQU5qR2lJeUcvMndUY3AxSkdP?=
- =?utf-8?B?VFVKZWo4OFZydzk5azFiVHFkMCtZa0svS3hKMEo2YnpiRkMyM2xZQ1NBNkF5?=
- =?utf-8?B?ZWliVVVyRng5WTl2ZE91NGxSLzVZbXI0NlhMZ3E2QkhTQ2d3bkNBQUdXaTB6?=
- =?utf-8?B?ZVprdWRKSUlNV3hXRUF3RXJTWXltTDU2dmNKNkRDdmdrZnAvdm9hcWwzYzk1?=
- =?utf-8?B?am4rVHRQUkwzdUd4bzUyQzU3WHRPelgxU3Jid2dqR1JMYzNYcldQK3k4SXFo?=
- =?utf-8?B?SmdSRHoyV0cvMEx2cHllUkVFNXVUemxIc0hsUmZFdFJCa2NxVVdsVzhvOGdm?=
- =?utf-8?B?eUZ2eVk0R0pWbU45YWhzb1lsU24wNWpaSHVYR2hqY3FWUEsrTm5vWlFDV3E1?=
- =?utf-8?B?VVVCUjRzZU55b1pmRzFpZ0JDQzgvTndNajF0citsOXVJOHc1dGh1WjJNTlVy?=
- =?utf-8?B?L0JNSFlsVVluaThZZHNTUlRBd1VVWWFsWU1hTm81bWtrOXBPZlFaL2VjSEdV?=
- =?utf-8?B?NFh4WUpEbzBVc2d4dkF2TXNRb1NHTWxnZVpIaUtEY09mcWc4dVFYM0JRMmlV?=
- =?utf-8?B?Q0E2N2ZMQiswRE1xMlB5bjI5UU1tYS9BU3JoUlQyeTlkUW9mcEV3WXdFOGlT?=
- =?utf-8?B?UGptdWswN2VWS1ViQ1d3QmY3ZkwwSmpJQlNVRFMzNHkzZzl3QzU4N0pKQmhX?=
- =?utf-8?B?YWJFMjR4NnNFSm5oVkNWYzdoczhyYlVpWGxWTERWZVNaYjRseHo3UlE1Q0Jo?=
- =?utf-8?B?bVJWOXozc3Ywclp4TUJmQ1JOYWFpY0M5R0N3U3NzT0xCdnRKSUp4bTJyRlVa?=
- =?utf-8?B?MTVpb3Q0bG5ZeW44dFEvelo2SGROdVRtMVhvVEhLS0xaNVArVFdhdHJybUJ5?=
- =?utf-8?B?MEJjOWpnMzFwZ3Y2SCt2L0hWWjZMKy9HcU1vbG1lL2QwMkNmQ2UxZ2xkU002?=
- =?utf-8?B?cXZOcHJCa0o5OG5nUHBQWFl1VXZTVHlRWXYrUmp2L1NNS3pRNWU3U2h0eFZT?=
- =?utf-8?B?QmlKeHRqTEx5bVVkQ3AvMTF2NmMzQ2NJU3BTdmVodE9mQXdrOHpaSW56UGVJ?=
- =?utf-8?B?ZW1SaVFuUjFpai9KU0p1K0l4Z3NOS2l2ZU9uR1ZtekkzRnRKMVppV0xETjFs?=
- =?utf-8?B?U084enJHSGY4eFYvRzdwOWhKMytjWlZnUk1vd3p2QUtuaWg4ci81RXU3cDFw?=
- =?utf-8?B?OEQwcmRDeVp0Q0J4YmcrRGxWcmpuVFUyYVhiYjhVbFJoNFFsZGwzZExONXVF?=
- =?utf-8?B?VmJDWS8yemNPMGNCVnhDSmpoazlVeDFieTl2UEZ2WEtSTGliQ0tLTnBGZ3BH?=
- =?utf-8?B?USt4aEZ1T3FrR0tRbUZzSFYwZVFQZC9JcW84VTdQM2NISURmekJhQjZwRVNr?=
- =?utf-8?B?OXZNTDhDcEl0WjJUazRDcWl3d3FpaGxrWHdlNTFMTWhVMDE4UTU4OStWQmlk?=
- =?utf-8?B?WG0veGhrQ0QzSmVVZUE3Y094Slo1elVxOS9LNW5ENlVYUDVXUVk2VWJFUUVN?=
- =?utf-8?B?eHZVd2wvaFhOVkFaaWNkUytvWEhEekxINXZySUUvZFRUa09zeFF0MXNqZnN2?=
- =?utf-8?B?bURxN3NXYmNxM1NmazkrUEp6Z05KMFJZQ0I4M01vT0NieTh6cDZvL2FvYUVv?=
- =?utf-8?B?UEE9PQ==?=
-X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e647c761-0a08-4972-c50b-08dd51a41593
-X-MS-Exchange-CrossTenant-AuthSource: GV1PR08MB8426.eurprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 11:45:33.6786
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9VgvtiZjjccTV75DMweusgDxFT9Ar208+9t0bxg0Dp3UjhJWemYpzel4hr+Q6I7ohaghl6zkMNZuGYiTqAi2rA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR08MB5324
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 20 Feb 2025 11:45:42 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17253
+ <bitbake-devel@lists.openembedded.org>; Thu, 20 Feb 2025 12:21:52 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17254
 
---------------xgNJVaab11WuIGirSsqOBznz
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+--=-Hkym/imNWDlCJqCPmWqw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Am 20.02.2025 um 11:22 schrieb Richard Purdie via lists.openembedded.org:
-> On Wed, 2025-02-05 at 13:12 +0100, Stefan Herbrechtsmeier wrote:
->>   Am 05.02.2025 um 11:34 schrieb Richard Purdie:
->>   On Wed, 2025-02-05 at 08:15 +0100, Stefan Herbrechtsmeier via lists.openembedded.org wrote:
->>>> The mirror replacement syntax contains many implicit transformations.
->>>> The path of the URI always contains the base name of the downloaded
->>>> filename. This makes it impossible to rename or remove the base name of
->>>> the original path. It prevents upstream mirror for SRC_URIS with a
->>>> downloadfilename parameter. The base name of the downloaded filename
->>>> makes it impossible to use the download mirror for SRC_URIs with
->>>> subfolders in the downloadfilename parameter. Altogether the implicit
->>>> transformation complicates the understanding of the replacements.
->>>>
->>>> This series adds an additional replacement named DOWNLOADFILENAME. This
->>>> replacement contains the relative filename of the downloaded file or
->>>> mirror archive for git and hg. This allows the user to explicitly define
->>>> the behavior. The usage is equivalent to the PATH replacement for the
->>>> sstate mirror from file to https scheme.
->>>>
->>>> git://.*/.*http://downloads.yoctoproject.org/mirror/sources/DOWNLOADFILENAME
->>>> https?://.*/.*http://downloads.yoctoproject.org/mirror/sources/DOWNLOADFILENAME
->>>> file://.*  https://sstate.yoctoproject.org/all/PATH;downloadfilename=PATH
->>>>
->>>> Without a replacement variable the mirror will use the same base name as
->>>> the origin SRC_URI. This allows the usage of private package manager
->>>> registry together with a downloadfilename parameter or the rename of the
->>>> base name.
->>>>
->>>> https://registry.npmjs.org/  https://example.com/npm/registry/
->>>> https://example.com/example/1.0.0.tgz  https://example.com/example/example-1.0.0.tgz
->>>>
->>>> The series adds heuristics to keep a backward compatibility to common
->>>> styles. Because of the ambiguity of the old style, it is advisable to
->>>> remove this compatibility sooner or later to avoid unexpected behavior.
->>>>   
->>> Thanks for the patches, these look interesting with some good
->>> improvements in there. A lot of the series looks like cleanups and
->>> those look like good fixes to have. It may make sense to split this
->>> series into two, the cleanups/fixes and the behaviour changes.
->>>
->>> I'm not entirely "sold" on the naming of DOWNLOADFILENAME. You have to
->>> think about this from the perspective of someone writing a MIRROR or
->>> PREMIRROR entry - would they understand what that means vs some of the
->>> other names?
->>>   
->> I’m open for suggestions. Even ARCHIVE or TARBALL are hard to
->> understand because it is only a relative path on the download mirror.
->> Alternative we can mark the lines as upstream or download mirror and
->> give the replacement different meanings. The path could be the
->> original PATH for an upstream mirror or the relative path of the
->> downloaded file for the download mirror.
-> I've been giving this topic some thought. One idea I wondered about was
-> to instead markup the mirror urls with how they're expected to work
-> with a new parameter. For example:
->
-> git://.*/.*http://downloads.yoctoproject.org/mirror/sources/?mirrorformat=mirrortarball
-The ? could be problematic because it is the separator for the query. It 
-is unlikely that the user really use this query parameter but it could 
-complicate the code because we have to handle additional query parameters.
-What does the "?mirrorformat=mirrortarball" mean? Will it work like a 
-MIRRORTARBALL replacement?
+On Thu, 2025-02-20 at 12:45 +0100, Stefan Herbrechtsmeier via
+lists.openembedded.org wrote:
+> =20
+> Am 20.02.2025 um 11:22 schrieb Richard Purdie via
+> lists.openembedded.org:
+> > On Wed, 2025-02-05 at 13:12 +0100, Stefan Herbrechtsmeier wrote:
+> > > =C2=A0Am 05.02.2025 um 11:34 schrieb Richard Purdie:
+> > > =C2=A0On Wed, 2025-02-05 at 08:15 +0100, Stefan Herbrechtsmeier via l=
+ists.openembedded.org wrote:
+> > > I=E2=80=99m open for suggestions. Even ARCHIVE or TARBALL are hard to
+> > > understand because it is only a relative path on the download mirror.
+> > > Alternative we can mark the lines as upstream or download mirror and
+> > > give the replacement different meanings. The path could be the
+> > > original PATH for an upstream mirror or the relative path of the
+> > > downloaded file for the download mirror.
+> > > =20
+> > =20
+> > I've been giving this topic some thought. One idea I wondered about was
+> > to instead markup the mirror urls with how they're expected to work
+> > with a new parameter. For example:
+> >=20
+> > git://.*/.*  http://downloads.yoctoproject.org/mirror/sources/?mirrorfo=
+rmat=3Dmirrortarball
+> > =20
+> The ? could be problematic because it is the separator for the query.
+> It is unlikely that the user really use this query parameter but it
+> could complicate the code because we have to handle additional query
+> parameters.
+> What does the "?mirrorformat=3Dmirrortarball" mean? Will it work like a
+> MIRRORTARBALL replacement?
 
-How does a simple replacement should look like?
+The mirrorformat parameter would be used by the mirroring code itself
+to understand how to handle the url. It would be dropped from the
+modified url so is only therefore our code's use. If there are
+additional parameters they would be passed through as they are now.
 
-http://  https://
+> How does a simple replacement should look like?
+>=20
+> http://=C2=A0 https://
+>=20
+> Because of the backward compatible this will replace the basename of
+> the path.
 
-Because of the backward compatible this will replace the basename of the 
-path.
+It would depend how the mirror is laid out. Some mirrors flatten the
+urls like DL_DIR is laid out, some potentially don't. The standard
+usage would likely have a mirrorformat=3Ddldir parameter added.
 
-> The possible options would be something like:
->
-> mirrortarball - mirror tarballs taken from DL_DIR
-> flattened - copy of DL_DIR so DL_DIR layout (maybe call it dldir?)
-> upstream - layout is the same as the upstream directory structure so a direct url replacement
-Do you think we have to handle the mirror tarball explicit? The mirror 
-tarball is required for a scheme change.
 
-> If using a mirrortarball mirror url, we'd know to use the values from
-> urldata.mirrortarballs. We could add parameters to the fetcher to have
-> two parameters, one will be the DL_DIR path and the other would be the
-> upstream url path.
-I don't understand where this is needed, because the mirror tarball and 
-downloadfilename are used by different fetchers.
+> > The possible options would be something like:
+> >=20
+> > mirrortarball - mirror tarballs taken from DL_DIR
+> > flattened - copy of DL_DIR so DL_DIR layout (maybe call it dldir?)
+> > upstream - layout is the same as the upstream directory structure so a =
+direct url replacement
+> > =20
+> Do you think we have to handle the mirror tarball explicit? The
+> mirror tarball is required for a scheme change.
 
-> One key question I have is how we might need to
-> shorted the url path for some mirror urls to add/remove a path prefix
-> in the mirroring.
-What do you mean by this? The downloadfilename could contain a path 
-without any problem after my change.
+If we do that, we can avoid having to guess at too many urls to test to
+figure out a mirror format so I think it would be an improvement on
+where we are today.
 
-> I think that would cover most of our scenarios and make the mirror urls
-> much more useful/explicit.
->
-> It also would give us a migration path as the code can simply error if
-> it sees a mirror url without a mirrorformat parameter. This may mean we
-> could have a clean slate for the mirror urls and switch to one clear
-> format. I think we can make a case for such a breaking architecture
-> change.
-Does this means we doesn't need a backward compatibility?
+> > If using a mirrortarball mirror url, we'd know to use the values from
+> > urldata.mirrortarballs. We could add parameters to the fetcher to have
+> > two parameters, one will be the DL_DIR path and the other would be the
+> > upstream url path.
+> > =20
+> I don't understand where this is needed, because the mirror tarball
+> and downloadfilename are used by different fetchers.
 
-Alternative we could make some replacement mandatory if a wildcard is 
-used to detect obsolete entries.
+Please keep in mind that downloadfilename is pretty much a misfeature.
+It was added as we couldn't control collisions inside dl_dir but it
+creates all kind of other problems. I think we do need to handle that
+problem case but it does then mean we have to indicate whether any
+given mirror uses "dldir" or "upstream" names and paths.
 
-> To move it forward we'd need to work out which pieces of mirror syntax
-> we should drop, which mirror replacement strings we need (I'm not
-> convinced the current ones are right/useful). We'd probably need a some
-> proof of concept patches showing it in action and a proposal to the oe-
-> arch list explaining why the change was needed and what the change
-> would do/look like.
->
-> I think this can be done independently of the other fetcher/vendor
-> changing but should be able to work for the vendoring issues too.
-Sure. I can rework my patch as soon as we have an agreement.
+> > One key question I have is how we might need to
+> > shorted the url path for some mirror urls to add/remove a path prefix
+> > in the mirroring.
+> > =20
+> What do you mean by this? The downloadfilename could contain a path
+> without any problem after my change.
 
---------------xgNJVaab11WuIGirSsqOBznz
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+See above, downloadfilename is not something I'm keen to promote and is
+creating several of the problems we have by badly trying to hack extra
+functionality onto the fetcher without thinking through all the issues
+like mirroring.
 
-<!DOCTYPE html><html><head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  </head>
-  <body>
-    <div class="moz-cite-prefix">Am 20.02.2025 um 11:22 schrieb Richard
-      Purdie via lists.openembedded.org:<br>
-    </div>
-    <blockquote type="cite" cite="mid:d971d67321a2d43666885004f7ff9a479f4d1855.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">On Wed, 2025-02-05 at 13:12 +0100, Stefan Herbrechtsmeier wrote:
-</pre>
-      <blockquote type="cite">
-        <pre wrap="" class="moz-quote-pre">&nbsp;Am 05.02.2025 um 11:34 schrieb Richard Purdie:
-&nbsp;On Wed, 2025-02-05 at 08:15 +0100, Stefan Herbrechtsmeier via lists.openembedded.org wrote:
-</pre>
-        <blockquote type="cite">
-          <blockquote type="cite">
-            <pre wrap="" class="moz-quote-pre">The mirror replacement syntax contains many implicit transformations.
-The path of the URI always contains the base name of the downloaded
-filename. This makes it impossible to rename or remove the base name of
-the original path. It prevents upstream mirror for SRC_URIS with a
-downloadfilename parameter. The base name of the downloaded filename
-makes it impossible to use the download mirror for SRC_URIs with
-subfolders in the downloadfilename parameter. Altogether the implicit
-transformation complicates the understanding of the replacements.
+This is about the fact that you could have:
 
-This series adds an additional replacement named DOWNLOADFILENAME. This
-replacement contains the relative filename of the downloaded file or
-mirror archive for git and hg. This allows the user to explicitly define
-the behavior. The usage is equivalent to the PATH replacement for the
-sstate mirror from file to https scheme.
+htttps://some.server/some/deep/multi/level/path/
 
-git://.*/.*&nbsp; <a class="moz-txt-link-freetext" href="http://downloads.yoctoproject.org/mirror/sources/DOWNLOADFILENAME">http://downloads.yoctoproject.org/mirror/sources/DOWNLOADFILENAME</a>
-https?://.*/.*&nbsp; <a class="moz-txt-link-freetext" href="http://downloads.yoctoproject.org/mirror/sources/DOWNLOADFILENAME">http://downloads.yoctoproject.org/mirror/sources/DOWNLOADFILENAME</a>
-<a class="moz-txt-link-freetext" href="file://.*">file://.*</a>&nbsp; <a class="moz-txt-link-freetext" href="https://sstate.yoctoproject.org/all/PATH;downloadfilename=PATH">https://sstate.yoctoproject.org/all/PATH;downloadfilename=PATH</a>
+and a mirror of things there at:
 
-Without a replacement variable the mirror will use the same base name as
-the origin SRC_URI. This allows the usage of private package manager
-registry together with a downloadfilename parameter or the rename of the
-base name.
+htttps://some.server/shortpath/path/
 
-<a class="moz-txt-link-freetext" href="https://registry.npmjs.org/">https://registry.npmjs.org/</a>&nbsp; <a class="moz-txt-link-freetext" href="https://example.com/npm/registry/">https://example.com/npm/registry/</a>
-<a class="moz-txt-link-freetext" href="https://example.com/example/1.0.0.tgz">https://example.com/example/1.0.0.tgz</a>&nbsp; <a class="moz-txt-link-freetext" href="https://example.com/example/example-1.0.0.tgz">https://example.com/example/example-1.0.0.tgz</a>
+so the mirror urls need to be able to map
 
-The series adds heuristics to keep a backward compatibility to common
-styles. Because of the ambiguity of the old style, it is advisable to
-remove this compatibility sooner or later to avoid unexpected behavior.
-&nbsp;
-</pre>
-          </blockquote>
-          <pre wrap="" class="moz-quote-pre">Thanks for the patches, these look interesting with some good
-improvements in there. A lot of the series looks like cleanups and
-those look like good fixes to have. It may make sense to split this
-series into two, the cleanups/fixes and the behaviour changes.
+htttps://some.server/some/deep/multi/level/path/a/b/c.tgz
 
-I'm not entirely &quot;sold&quot; on the naming of DOWNLOADFILENAME. You have to
-think about this from the perspective of someone writing a MIRROR or
-PREMIRROR entry - would they understand what that means vs some of the
-other names?
-&nbsp;
-</pre>
-        </blockquote>
-        <pre wrap="" class="moz-quote-pre">I’m open for suggestions. Even ARCHIVE or TARBALL are hard to
-understand because it is only a relative path on the download mirror.
-Alternative we can mark the lines as upstream or download mirror and
-give the replacement different meanings. The path could be the
-original PATH for an upstream mirror or the relative path of the
-downloaded file for the download mirror.
-</pre>
-      </blockquote>
-      <pre wrap="" class="moz-quote-pre">
-I've been giving this topic some thought. One idea I wondered about was
-to instead markup the mirror urls with how they're expected to work
-with a new parameter. For example:
+to
 
-git://.*/.*  <a class="moz-txt-link-freetext" href="http://downloads.yoctoproject.org/mirror/sources/?mirrorformat=mirrortarball">http://downloads.yoctoproject.org/mirror/sources/?mirrorformat=mirrortarball</a>
-</pre>
-    </blockquote>
-    The ? could be problematic because it is the separator for the
-    query. It is unlikely that the user really use this query parameter
-    but it could complicate the code because we have to handle
-    additional query parameters.<br>
-    What does the &quot;?mirrorformat=mirrortarball&quot; mean? Will it work like
-    a MIRRORTARBALL replacement?<br>
-    <br>
-    How does a simple replacement should look like?<br>
-    <br>
-    http://&nbsp; https://<br>
-    <br>
-    Because of the backward compatible this will replace the basename of
-    the path.<br>
-    <br>
-    <blockquote type="cite" cite="mid:d971d67321a2d43666885004f7ff9a479f4d1855.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">The possible options would be something like:
+htttps://some.server/shortpath/path/a/b/c.tgz
 
-mirrortarball - mirror tarballs taken from DL_DIR
-flattened - copy of DL_DIR so DL_DIR layout (maybe call it dldir?)
-upstream - layout is the same as the upstream directory structure so a direct url replacement
-</pre>
-    </blockquote>
-    Do you think we have to handle the mirror tarball explicit? The
-    mirror tarball is required for a scheme change.<br>
-    <br>
-    <blockquote type="cite" cite="mid:d971d67321a2d43666885004f7ff9a479f4d1855.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">If using a mirrortarball mirror url, we'd know to use the values from
-urldata.mirrortarballs. We could add parameters to the fetcher to have
-two parameters, one will be the DL_DIR path and the other would be the
-upstream url path.
-</pre>
-    </blockquote>
-    I don't understand where this is needed, because the mirror tarball
-    and downloadfilename are used by different fetchers.<br>
-    <br>
-    <blockquote type="cite" cite="mid:d971d67321a2d43666885004f7ff9a479f4d1855.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">One key question I have is how we might need to
-shorted the url path for some mirror urls to add/remove a path prefix
-in the mirroring.
-</pre>
-    </blockquote>
-    What do you mean by this? The downloadfilename could contain a path
-    without any problem after my change.<br>
-    <br>
-    <blockquote type="cite" cite="mid:d971d67321a2d43666885004f7ff9a479f4d1855.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">I think that would cover most of our scenarios and make the mirror urls
-much more useful/explicit.
+but also:
 
-It also would give us a migration path as the code can simply error if
-it sees a mirror url without a mirrorformat parameter. This may mean we
-could have a clean slate for the mirror urls and switch to one clear
-format. I think we can make a case for such a breaking architecture
-change.
-</pre>
-    </blockquote>
-    Does this means we doesn't need a backward compatibility?<br>
-    <br>
-    Alternative we could make some replacement mandatory if a wildcard
-    is used to detect obsolete entries.<br>
-    <br>
-    <blockquote type="cite" cite="mid:d971d67321a2d43666885004f7ff9a479f4d1855.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">To move it forward we'd need to work out which pieces of mirror syntax
-we should drop, which mirror replacement strings we need (I'm not
-convinced the current ones are right/useful). We'd probably need a some
-proof of concept patches showing it in action and a proposal to the oe-
-arch list explaining why the change was needed and what the change
-would do/look like.
+htttps://some.server/shortpath/path/c.tgz
 
-I think this can be done independently of the other fetcher/vendor
-changing but should be able to work for the vendoring issues too.</pre>
-    </blockquote>
-    Sure. I can rework my patch as soon as we have an agreement.<br>
-    <br>
-    <span style="white-space: pre-wrap">
-</span>
-  </body>
-</html>
+or possibly
 
---------------xgNJVaab11WuIGirSsqOBznz--
+htttps://some.server/shortpath/path.d.tgz
+
+if downloadfilename is in action.
+
+> > =20
+> > I think that would cover most of our scenarios and make the mirror urls
+> > much more useful/explicit.
+> >=20
+> > It also would give us a migration path as the code can simply error if
+> > it sees a mirror url without a mirrorformat parameter. This may mean we
+> > could have a clean slate for the mirror urls and switch to one clear
+> > format. I think we can make a case for such a breaking architecture
+> > change.
+> > =20
+> Does this means we doesn't need a backward compatibility?
+
+If we can come up with sufficient justification to break things and can
+detect and error correctly for old usage and get this signed off by the
+TSC/community, potentially, yes.
+
+> Alternative we could make some replacement mandatory if a wildcard is
+> used to detect obsolete entries.
+
+I don't understand that.=C2=A0
+
+I do think we have too many problems in the existing mirroring url
+mapping and we probably need to rework this rather than try and pile
+more patches into it and complicate it further.
+
+The question is whether the proposal fixes the issues it needs to and
+has enough simplification and benefit to justify making the change.
+
+Cheers,
+
+Richard
+
+--=-Hkym/imNWDlCJqCPmWqw
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html><head>
+
+  <style>pre,code,address {
+  margin: 0px;
+}
+h1,h2,h3,h4,h5,h6 {
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+ol,ul {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+blockquote {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+</style></head>
+  <body><div>On Thu, 2025-02-20 at 12:45 +0100, Stefan Herbrechtsmeier via =
+lists.openembedded.org wrote:</div><blockquote type=3D"cite" style=3D"margi=
+n:0 0 0 .8ex; border-left:2px #729fcf solid;padding-left:1ex"><div> </div><=
+div class=3D"moz-cite-prefix">Am 20.02.2025 um 11:22 schrieb Richard Purdie=
+ via lists.openembedded.org:<br> </div><blockquote type=3D"cite" cite=3D"mi=
+d:d971d67321a2d43666885004f7ff9a479f4d1855.camel@linuxfoundation.org" style=
+=3D"margin:0 0 0 .8ex; border-left:2px #729fcf solid;padding-left:1ex"><pre=
+>On Wed, 2025-02-05 at 13:12 +0100, Stefan Herbrechtsmeier wrote:</pre><blo=
+ckquote type=3D"cite" style=3D"margin:0 0 0 .8ex; border-left:2px #729fcf s=
+olid;padding-left:1ex"><pre>&nbsp;Am 05.02.2025 um 11:34 schrieb Richard Pu=
+rdie:</pre><pre>&nbsp;On Wed, 2025-02-05 at 08:15 +0100, Stefan Herbrechtsm=
+eier via lists.openembedded.org wrote:</pre><div>I=E2=80=99m open for sugge=
+stions. Even ARCHIVE or TARBALL are hard to</div><pre>understand because it=
+ is only a relative path on the download mirror.</pre><pre>Alternative we c=
+an mark the lines as upstream or download mirror and</pre><pre>give the rep=
+lacement different meanings. The path could be the</pre><pre>original PATH =
+for an upstream mirror or the relative path of the</pre><pre>downloaded fil=
+e for the download mirror.</pre><div> </div></blockquote><div> </div><pre>I=
+'ve been giving this topic some thought. One idea I wondered about was</pre=
+><pre>to instead markup the mirror urls with how they're expected to work</=
+pre><pre>with a new parameter. For example:</pre><pre><br></pre><pre>git://=
+.*/.*  <a class=3D"moz-txt-link-freetext" href=3D"http://downloads.yoctopro=
+ject.org/mirror/sources/?mirrorformat=3Dmirrortarball">http://downloads.yoc=
+toproject.org/mirror/sources/?mirrorformat=3Dmirrortarball</a></pre><div> <=
+/div></blockquote><div> The ? could be problematic because it is the separa=
+tor for the query. It is unlikely that the user really use this query param=
+eter but it could complicate the code because we have to handle additional =
+query parameters.<br> What does the "?mirrorformat=3Dmirrortarball" mean? W=
+ill it work like a MIRRORTARBALL replacement?</div></blockquote><div><br></=
+div><div>The mirrorformat parameter would be used by the mirroring code its=
+elf to understand how to handle the url. It would be dropped from the modif=
+ied url so is only therefore our code's use. If there are additional parame=
+ters they would be passed through as they are now.</div><div><br></div><blo=
+ckquote type=3D"cite" style=3D"margin:0 0 0 .8ex; border-left:2px #729fcf s=
+olid;padding-left:1ex"><div>How does a simple replacement should look like?=
+<br> <br> http://&nbsp; https://<br> <br> Because of the backward compatibl=
+e this will replace the basename of the path.</div></blockquote><div><br></=
+div><div>It would depend how the mirror is laid out. Some mirrors flatten t=
+he urls like DL_DIR is laid out, some potentially don't. The standard usage=
+ would likely have a mirrorformat=3Ddldir parameter added.</div><div><br></=
+div><div><br></div><blockquote type=3D"cite" style=3D"margin:0 0 0 .8ex; bo=
+rder-left:2px #729fcf solid;padding-left:1ex"><blockquote type=3D"cite" cit=
+e=3D"mid:d971d67321a2d43666885004f7ff9a479f4d1855.camel@linuxfoundation.org=
+" style=3D"margin:0 0 0 .8ex; border-left:2px #729fcf solid;padding-left:1e=
+x"><pre>The possible options would be something like:</pre><pre><br></pre><=
+pre>mirrortarball - mirror tarballs taken from DL_DIR</pre><pre>flattened -=
+ copy of DL_DIR so DL_DIR layout (maybe call it dldir?)</pre><pre>upstream =
+- layout is the same as the upstream directory structure so a direct url re=
+placement</pre><div> </div></blockquote><div> Do you think we have to handl=
+e the mirror tarball explicit? The mirror tarball is required for a scheme =
+change.</div></blockquote><div><br></div><div>If we do that, we can avoid h=
+aving to guess at too many urls to test to figure out a mirror format so I =
+think it would be an improvement on where we are today.</div><div><br></div=
+><blockquote type=3D"cite" style=3D"margin:0 0 0 .8ex; border-left:2px #729=
+fcf solid;padding-left:1ex"><blockquote type=3D"cite" cite=3D"mid:d971d6732=
+1a2d43666885004f7ff9a479f4d1855.camel@linuxfoundation.org" style=3D"margin:=
+0 0 0 .8ex; border-left:2px #729fcf solid;padding-left:1ex"><pre>If using a=
+ mirrortarball mirror url, we'd know to use the values from</pre><pre>urlda=
+ta.mirrortarballs. We could add parameters to the fetcher to have</pre><pre=
+>two parameters, one will be the DL_DIR path and the other would be the</pr=
+e><pre>upstream url path.</pre><div> </div></blockquote><div> I don't under=
+stand where this is needed, because the mirror tarball and downloadfilename=
+ are used by different fetchers.</div></blockquote><div><br></div><div>Plea=
+se keep in mind that downloadfilename is pretty much a misfeature. It was a=
+dded as we couldn't control collisions inside dl_dir but it creates all kin=
+d of other problems. I think we do need to handle that problem case but it =
+does then mean we have to indicate whether any given mirror uses "dldir" or=
+ "upstream" names and paths.</div><div><br></div><blockquote type=3D"cite" =
+style=3D"margin:0 0 0 .8ex; border-left:2px #729fcf solid;padding-left:1ex"=
+><blockquote type=3D"cite" cite=3D"mid:d971d67321a2d43666885004f7ff9a479f4d=
+1855.camel@linuxfoundation.org" style=3D"margin:0 0 0 .8ex; border-left:2px=
+ #729fcf solid;padding-left:1ex"><pre>One key question I have is how we mig=
+ht need to</pre><pre>shorted the url path for some mirror urls to add/remov=
+e a path prefix</pre><pre>in the mirroring.</pre><div> </div></blockquote><=
+div> What do you mean by this? The downloadfilename could contain a path wi=
+thout any problem after my change.</div></blockquote><div><br></div><div>Se=
+e above, downloadfilename is not something I'm keen to promote and is creat=
+ing several of the problems we have by badly trying to hack extra functiona=
+lity onto the fetcher without thinking through all the issues like mirrorin=
+g.</div><div><br></div><div>This is about the fact that you could have:</di=
+v><div><br></div><div>htttps://some.server/some/deep/multi/level/path/</div=
+><div><br></div><div>and a mirror of things there at:</div><div><br></div><=
+div><div>htttps://some.server/shortpath/path/</div></div><div><br></div><di=
+v>so the mirror urls need to be able to map</div><div><br></div><div><div>h=
+tttps://some.server/some/deep/multi/level/path/a/b/c.tgz</div></div><div><b=
+r></div><div>to</div><div><br></div><div><div>htttps://some.server/shortpat=
+h/path/a/b/c.tgz</div></div><div><br></div><div>but also:</div><div><br></d=
+iv><div><div>htttps://some.server/shortpath/path/c.tgz</div></div><div><br>=
+</div><div>or possibly</div><div><br></div><div><div>htttps://some.server/s=
+hortpath/path.d.tgz</div></div><div><br></div><div>if downloadfilename is i=
+n action.</div><div><br></div><blockquote type=3D"cite" style=3D"margin:0 0=
+ 0 .8ex; border-left:2px #729fcf solid;padding-left:1ex"><blockquote type=
+=3D"cite" cite=3D"mid:d971d67321a2d43666885004f7ff9a479f4d1855.camel@linuxf=
+oundation.org" style=3D"margin:0 0 0 .8ex; border-left:2px #729fcf solid;pa=
+dding-left:1ex"><div> </div><pre>I think that would cover most of our scena=
+rios and make the mirror urls</pre><pre>much more useful/explicit.</pre><pr=
+e><br></pre><pre>It also would give us a migration path as the code can sim=
+ply error if</pre><pre>it sees a mirror url without a mirrorformat paramete=
+r. This may mean we</pre><pre>could have a clean slate for the mirror urls =
+and switch to one clear</pre><pre>format. I think we can make a case for su=
+ch a breaking architecture</pre><pre>change.</pre><div> </div></blockquote>=
+<div> Does this means we doesn't need a backward compatibility?</div></bloc=
+kquote><div><br></div><div>If we can come up with sufficient justification =
+to break things and can detect and error correctly for old usage and get th=
+is signed off by the TSC/community, potentially, yes.</div><div><br></div><=
+blockquote type=3D"cite" style=3D"margin:0 0 0 .8ex; border-left:2px #729fc=
+f solid;padding-left:1ex"><div>Alternative we could make some replacement m=
+andatory if a wildcard is used to detect obsolete entries.</div></blockquot=
+e><div><br></div><div>I don't understand that.&nbsp;</div><div><br></div><d=
+iv>I do think we have too many problems in the existing mirroring url mappi=
+ng and we probably need to rework this rather than try and pile more patche=
+s into it and complicate it further.</div><div><br></div><div>The question =
+is whether the proposal fixes the issues it needs to and has enough simplif=
+ication and benefit to justify making the change.</div><div><br></div><div>=
+Cheers,</div><div><br></div><div>Richard</div><div><span></span></div></bod=
+y></html>
+
+--=-Hkym/imNWDlCJqCPmWqw--
 
