@@ -1,111 +1,156 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <eric.meyers15310@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A98C021B1
-	for <webhook@archiver.kernel.org>; Thu, 20 Feb 2025 16:05:57 +0000 (UTC)
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
- by mx.groups.io with SMTP id smtpd.web11.38.1740067556521189198
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C415C021B1
+	for <webhook@archiver.kernel.org>; Thu, 20 Feb 2025 16:33:07 +0000 (UTC)
+Received: from mail-qt1-f194.google.com (mail-qt1-f194.google.com [209.85.160.194])
+ by mx.groups.io with SMTP id smtpd.web10.1180.1740069181395557612
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 20 Feb 2025 08:05:56 -0800
+ Thu, 20 Feb 2025 08:33:01 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=VUe8KfB/;
- spf=pass (domain: gmail.com, ip: 209.85.219.48, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6dd049b5428so11097526d6.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 20 Feb 2025 08:05:56 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=bhofmYTU;
+ spf=pass (domain: gmail.com, ip: 209.85.160.194, mailfrom: eric.meyers15310@gmail.com)
+Received: by mail-qt1-f194.google.com with SMTP id d75a77b69052e-471f2e1bea9so10655331cf.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 20 Feb 2025 08:33:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740067555; x=1740672355; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1740069180; x=1740673980; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SXxD0/PITOqhZq45KGfghy7PF6dvfxZHQcg0ACvXfJI=;
-        b=VUe8KfB/Eb2bcYQARjylzrlH0zjXbBiYKZ1OfwP7gJepf4ZgzX3VLBwuwrGjyuU3fi
-         /SWbKLzlcoLzX1L6m0aSeQHm7o7gdFF+5+KgOYJr78ykQBME8FAtgS+pv1sKFSBtVMv2
-         QWCkkO9GjQvGuQflk+Wf4AqzEPKk8x7H+TuSDHFUXTexxJQLh7p6AI6A9TJO5RqlfP5j
-         e9a24Vy1UxqyFcROQl+lmj7Bb7yM7SlDJfwNifRhm8i4bgkHMQ0rpn7GvPP8XXDRt1G1
-         +9+tnVOBz2w+gwvcESba5MKhMmp3QfQ/gr5nAXnddwC3xXYXmc+zSSfzJkXZHv2RUft4
-         s2PQ==
+        bh=evMQtR5VXskd2KaoxSlryM1deRxkpsPzv+JZazjCKTA=;
+        b=bhofmYTUg0OYzr8hNxK5doHBNpWmxTrryRp+mXVBm+hQ/RsjmNsjbeelXvGzZ/DH0n
+         UYFdMdPtqY282OZoDJXf0G2AlTK3CNg0Y4yEoENuc+G9z3V/dI++NzOPIcOYucOJNyOj
+         ZVkt/+Nradj4Eh0q2zNK/VJUtQoFcanx+VITvLZXlTMJGPjWPiVT5OLrQGfiKtJTqnMD
+         TsDA5SIZldRuDIlmY9o5/eyR5P/MNBlFifXQomcWLXVrWxSbyg1yCIP3YFqZ/S2O+/iN
+         sMkFmzPP9ee+fVrstM1ynFXfAPy7erzcanyNPKlAmCGhHV/vpRqrCKMTsg1+csT3xJP1
+         9VJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740067555; x=1740672355;
+        d=1e100.net; s=20230601; t=1740069180; x=1740673980;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=SXxD0/PITOqhZq45KGfghy7PF6dvfxZHQcg0ACvXfJI=;
-        b=UZ4M/2AbAIhTNrd2a28eXUEJ58Xi1gTjT/8kKX10COL9uMbuZ0Hpv58yIw99W+Ruz6
-         nIAQWcIt4bpLjWu1hGkx9IWHE1Zb7bQEXNX/cTG+aXJucpvpRdsBjZwLSmCSFSCc3M+2
-         OGssQ05G7EkYeFKH2zc6Vz0M9FNc8Fm42dU6VJWhkI4LUSbvAcEc5hKsifOvWlrKW7W2
-         Dkz8nxPOJpz3bEtRHFFqXaWoYktM91B9nO6k8kdej2l3BH739/1jXh6SvPCcbsM1YLBj
-         dUK/9EO8zqoDEshUHi4AQ6TRu3PccoUr2plvvydOHVoaHDd13/RSWHuXKpjo9GgKFTEl
-         jSXA==
-X-Gm-Message-State: AOJu0YwL04W+vTA7p2T44aayLVs+b3gjmGgwyJw+o+FQaNIFA8exumI5
-	mlciCDYgTCYYBarJwxgT08/E/2vaQpm5UYKptED5CHFS+FVlV8AZ9j7R5MVlLz7UDOUkUtrpPVr
-	FYFpSozKGTpHR55qHjc0h40L+rapKNa/J
-X-Gm-Gg: ASbGnctx6vExoFn+lUQlRgf0hFh/3bK4JXS7GJ+HnGI3zLMt3MvuMnrUxO0xf7/DciW
-	X7T5zE02x032lYy8LMlnAXXIZyPvxMHVzdFdqTPbm/gYFsem47vxLtExlVJ+DOZ1xOgHVfmZ39U
-	rzu0P7epbswPs9uBodPDNGvSKEVzsSeLc=
-X-Google-Smtp-Source: AGHT+IHmd2djxpA7zbYD7zdsvEwtPwFQElBG8bJcAjIGir28TdI896FmEdSXBqTGmayTZmM2Xw6xsp9x/wEqA0oSnro=
-X-Received: by 2002:a05:6214:501e:b0:6e6:5a42:8560 with SMTP id
- 6a1803df08f44-6e697502434mr114780096d6.23.1740067555414; Thu, 20 Feb 2025
- 08:05:55 -0800 (PST)
+        bh=evMQtR5VXskd2KaoxSlryM1deRxkpsPzv+JZazjCKTA=;
+        b=VI49KH9e2MPfctBpI3mHatJJTf90jJ4irzjcelEXHJxqrB5F1Qgry/iLWp5rxUeUwi
+         dQQXlGXXYYrwdDpJuQLwImUktVXb0BPSBfUw4sK4LNLJjZvA/acFptW4tQPaDfh5u5t7
+         LufZEJKvx27sQySRZyWPG6pbSgceAt//vpm42hJtpXLJ6Zyq/YdZMerRGie1Y6OrVdf0
+         vGkjS/uXjrfQI1Cj6Y4DCslni0+seray0FF429QIXaWnJ7CDJOrcYtzHcs3rSni9faBK
+         vYtO7G9r5jVakiMssXVnTbI1zxo+nnUJ4clb7WNWK4Ji3//xTXHWoKZioS7Yk0S4EGEg
+         n61g==
+X-Gm-Message-State: AOJu0Yy7jd8M4+lvlm4bwvdV5VdVp1cVg29+uPr8Pf5lds1q3SWOHMNT
+	OCWwMuTWcfoSKUNkOABVWChIe+K+jRvB9t0k1sgsPRp6mmXBl3X6qd1o6E7ysu0cNAU0RdTS5ys
+	3rhNcYmg3mlnK/q9a9KGBiUsDj1E=
+X-Gm-Gg: ASbGncso/fbmigy7AlMduyB5bxzjryxBOLn0HPvKPBZyOrIPkqz7s0z3z55QBoKDI1b
+	Cl4f4vFgMb5E4/EKLEyz0F1hsW/ldLS57fsDyPSLvmEerFQ5UCjMrNsJd4YQkUXW+iCBuxQQ+
+X-Google-Smtp-Source: AGHT+IG3aMv6XDKpa96scKPn5DGa+LfNR8zaDtsfG7UeBJnKM1u470gmaLYDDlypgx36/kOoYWQqhkwMwWEhFhaJr8M=
+X-Received: by 2002:a05:6214:518f:b0:6e6:6240:afb with SMTP id
+ 6a1803df08f44-6e69749d5c9mr123658846d6.3.1740069180325; Thu, 20 Feb 2025
+ 08:33:00 -0800 (PST)
 MIME-Version: 1.0
-References: <20240502183501.1216856-1-JPEWhacker@gmail.com>
-In-Reply-To: <20240502183501.1216856-1-JPEWhacker@gmail.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Thu, 20 Feb 2025 17:05:44 +0100
-X-Gm-Features: AWEUYZnXE5eCo0vgEf0fXJn-B6tjJZ2s0Yup8tiQneA9MqFFRKBNRTwD0Rrk7hY
-Message-ID: <CANNYZj8aM+mydGDSpMhrvbt8XxKDLzMywVyfKOdxdxrAPgSs2w@mail.gmail.com>
-Subject: Re: [bitbake-devel][PATCH] cooker: Handle ImportError for websockets
-To: JPEWhacker@gmail.com
+References: <20250220143030.12982-1-eric.meyers@arthrex.com>
+ <20250220143030.12982-2-eric.meyers@arthrex.com> <CANNYZj_d1vuPc9M6+6WBnrQ-RRDRArngsDxSi_8ghjeK=pDO4A@mail.gmail.com>
+In-Reply-To: <CANNYZj_d1vuPc9M6+6WBnrQ-RRDRArngsDxSi_8ghjeK=pDO4A@mail.gmail.com>
+From: Eric Meyers <eric.meyers15310@gmail.com>
+Date: Thu, 20 Feb 2025 10:32:52 -0600
+X-Gm-Features: AWEUYZlxPF8EcUIFb4oHK8Kb2szwex64iBssS2BC4EK5MzNHelqmXx6-xqC1E6g
+Message-ID: <CA+cKJ+Gvb8FjFwTnjT4EFDhU-c-gQYA8G34-wAEmcYMYSyBQMA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] fetch2/npm: Adding npmrc support for private
+ registry authentication
+To: Alexander Kanavin <alex.kanavin@gmail.com>
 Cc: bitbake-devel@lists.openembedded.org, 
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+	Eric Meyers <eric.meyers@arthrex.com>, Geoff Parker <geoffrey.parker@arthrex.com>, 
+	Chuck Wolber <chuckwolber@gmail.com>, 
+	Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
+Content-Type: multipart/alternative; boundary="00000000000060d031062e956dbb"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 20 Feb 2025 16:05:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17260
+ <bitbake-devel@lists.openembedded.org>; Thu, 20 Feb 2025 16:33:07 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17261
 
-On Thu, 2 May 2024 at 20:35, Joshua Watt via lists.openembedded.org
-<JPEWhacker=gmail.com@lists.openembedded.org> wrote:
-> -                    except ConnectionError as e:
-> +                    except (ConnectionError, ImportError) as e:
->                          bb.warn("BB_HASHSERVE_UPSTREAM is not valid, unable to connect hash equivalence server at '%s': %s"
->                                   % (upstream, repr(e)))
-> +                        upstream = None
+--00000000000060d031062e956dbb
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I'm setting up a bitbake-setup configuration that uses
-BB_HASHSERVE_UPSTREAM and the official yocto sstate cache on the cdn,
-and I think we have a usability issue here.
+On Thu, Feb 20, 2025 at 9:48=E2=80=AFAM Alexander Kanavin <alex.kanavin@gma=
+il.com>
+wrote:
+>
+> I'm broadly ok with this (except the question below), but it needs to
+> be lgtm'd by real npm fetcher users.
+>
+> Does npmrc contain secrets? Would copying it to some tmpdir put the
+> secrets at risk?
+>
+> Alex
+>
 
-Specifically, if the user does not have websockets python module
-installed, then they will only get a warning:
+It *could* have authentication credentials in plaintext, but ultimately
+this is up to the user if they provide them in their .npmrc file within
+their home directory. See:
 
-WARNING: BB_HASHSERVE_UPSTREAM is not valid, unable to connect hash
-equivalence server at 'wss://hashserv.yoctoproject.org/ws':
-ModuleNotFoundError("No module named 'websockets'")
 
-without a suggestion about how to resolve it. Worse yet, the build
-will proceed, but fail to use any sstate, resulting in rebuilds from
-source, and a bad first experience for yocto newcomers.
+https://docs.npmjs.com/cli/v9/configuring-npm/npmrc#auth-related-configurat=
+ion
 
-I would rather turn both of these into two separate hard fails
-(bb.fatal), and be more specific about why bitbake can't proceed for
-each of them.
+The way I'm using it now requires me to create a base64 encrypted string
+based on the input string of "<username>:<API_KEY>" and insert this as the
+"_auth" value in the .npmrc file, but there are multiple ways to provide
+credentials.
 
-Then there's the question of how to handle absent websockets:
+The only reason I copied the .npmrc file into the tmp directory was to
+avoid losing any user-provided configs passed into the environment (I could
+have taken the opposite approach and modified the user's .npmrc file
+instead, but didn't think that was desirable) - an example of this is
+within the create_npm.py function upstream in the poky repo:
 
-- we can ask the user to install them on the system, which is not
-always straightforward
 
-- we can somehow detect before running bitbake for the first time that
-buildtools-tarball is needed (not sure how to do that tbh)
+https://github.com/yoctoproject/poky/blob/ca289e5d853c5ef980ad070eab0d20f97=
+3fcdb7c/scripts/lib/recipetool/create_npm.py#L98
 
-- we can extend bitbake-setup configurations with 'install-buildtoos:
-true' parameter, and then use it in all official configurations that
-need functional websockets to access pre-built sstate to always
-install buildtools, even on systems where it's not actually necessary.
+FWIW, the wget fetcher relies on a netrc file in a user's home directory in
+a similar fashion, which uses username/password in plaintext to insert a
+basic auth header to a URL:
 
-None of these are great, but I'm leaning towards the last. Looking for
-better ideas!
 
-Alex
+https://github.com/yoctoproject/poky/blob/ca289e5d853c5ef980ad070eab0d20f97=
+3fcdb7c/bitbake/lib/bb/fetch2/wget.py#L399
+
+--00000000000060d031062e956dbb
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr">On Thu,=
+ Feb 20, 2025 at 9:48=E2=80=AFAM Alexander Kanavin &lt;<a href=3D"mailto:al=
+ex.kanavin@gmail.com">alex.kanavin@gmail.com</a>&gt; wrote:<br>&gt;<br>&gt;=
+ I&#39;m broadly ok with this (except the question below), but it needs to<=
+br>&gt; be lgtm&#39;d by real npm fetcher users.<br>&gt;<br>&gt; Does npmrc=
+ contain secrets? Would copying it to some tmpdir put the<br>&gt; secrets a=
+t risk?<br>&gt;<br>&gt; Alex<br>&gt;<br><br>It <i>could</i>=C2=A0have authe=
+ntication credentials in plaintext, but ultimately this is up to the user i=
+f they provide them in their .npmrc file within their home directory. See:<=
+br><br>=C2=A0 =C2=A0 <a href=3D"https://docs.npmjs.com/cli/v9/configuring-n=
+pm/npmrc#auth-related-configuration">https://docs.npmjs.com/cli/v9/configur=
+ing-npm/npmrc#auth-related-configuration</a><br><br>The way I&#39;m using i=
+t now requires me to create a base64 encrypted string based on the input st=
+ring of &quot;&lt;username&gt;:&lt;API_KEY&gt;&quot; and insert this as the=
+ &quot;_auth&quot; value in the .npmrc file, but there are multiple ways to=
+ provide credentials.<br><br>The only reason I copied the .npmrc file into =
+the tmp directory was to avoid losing any user-provided configs passed into=
+ the environment (I could have taken the opposite approach and modified the=
+ user&#39;s .npmrc file instead, but didn&#39;t think that was desirable) -=
+ an example of this is within the create_npm.py function upstream in the po=
+ky repo:=C2=A0</div><div dir=3D"ltr"><br></div><div dir=3D"ltr">=C2=A0 =C2=
+=A0 <a href=3D"https://github.com/yoctoproject/poky/blob/ca289e5d853c5ef980=
+ad070eab0d20f973fcdb7c/scripts/lib/recipetool/create_npm.py#L98">https://gi=
+thub.com/yoctoproject/poky/blob/ca289e5d853c5ef980ad070eab0d20f973fcdb7c/sc=
+ripts/lib/recipetool/create_npm.py#L98</a><br><br>FWIW, the wget fetcher re=
+lies on a netrc file in a user&#39;s home directory in a similar fashion, w=
+hich uses username/password in plaintext to insert a basic auth header to a=
+ URL:<br><br>=C2=A0 =C2=A0 <a href=3D"https://github.com/yoctoproject/poky/=
+blob/ca289e5d853c5ef980ad070eab0d20f973fcdb7c/bitbake/lib/bb/fetch2/wget.py=
+#L399">https://github.com/yoctoproject/poky/blob/ca289e5d853c5ef980ad070eab=
+0d20f973fcdb7c/bitbake/lib/bb/fetch2/wget.py#L399</a><div><br></div><div><b=
+r></div></div></div></div></div>
+
+--00000000000060d031062e956dbb--
 
