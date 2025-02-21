@@ -1,105 +1,85 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79094C021AA
-	for <webhook@archiver.kernel.org>; Fri, 21 Feb 2025 08:09:22 +0000 (UTC)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.web11.18730.1740125361000362492
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B93C021AA
+	for <webhook@archiver.kernel.org>; Fri, 21 Feb 2025 09:12:02 +0000 (UTC)
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+ by mx.groups.io with SMTP id smtpd.web10.19436.1740129116466569941
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 21 Feb 2025 00:09:21 -0800
+ Fri, 21 Feb 2025 01:11:56 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=XJXquC9B;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.49, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4399deda38cso10667295e9.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 21 Feb 2025 00:09:20 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=kjWZL2aG;
+ spf=pass (domain: gmail.com, ip: 209.85.219.51, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6dcd4f1aaccso26428716d6.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 21 Feb 2025 01:11:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1740125359; x=1740730159; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Ve+1Hnfi9ocvTmDZ6ir1/2JtpHCf0FYYdetGvjNtb0Y=;
-        b=XJXquC9BKGlnRHiRGkFM+TnopeujmmweCeckD/GFzZXOmjRjLS2C6AFwQrt8HU/dQ4
-         V5TAajI8LCPuUQ2zFq5nCxFFLPd/kTKAi4Do0xmIDa9YpjLyNTVsg68taNni08UaOt2m
-         fdBETIDfWw1Cyy2/YYwpKPpsFH80OksTrZWhQ=
+        d=gmail.com; s=20230601; t=1740129115; x=1740733915; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GnONWKxmpHe87S2s0PueGy57d1tBaG25UGCs8lWUQZ0=;
+        b=kjWZL2aG1bke8Yyz/cOJBSu5GcR+vn6k73oeu/vn3aT0GqIU98PQI1kSzTbLLj2J9c
+         3aCSciE5mRoDTwjHSsHKNk/MXqNGoM3fV3fe6/WzVWDzHy4m9JaYKs61ACyrUBTjcHj+
+         0kCLU0Lnf6dzB+omf/9ftZYowypvCHnAa4dhqE+Ko/eTNvVHojojsDQoEfTP+Kh39zoY
+         VKSfNaO0WLVHKCGeEzhJdc/DKRkPmo2QCMhPFtLdy2JF8shrkvnVTSC3M7rH8rMkNDow
+         fm03in376Vkbd9iQcmzTV7QoEYmWv5OTVe1WotJa99G72z3Zym1oSiUa4qJdbP3nh62P
+         iRqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740125359; x=1740730159;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ve+1Hnfi9ocvTmDZ6ir1/2JtpHCf0FYYdetGvjNtb0Y=;
-        b=RUIL6SqbLACkyXVv4TyJUvEQ6DaGMq4m0Tef/0Hey5BM91crNXs5ewEdlsH+AGSPvu
-         6BAq/f8am+K59uqCihbzgZvjOwt32+f/KCSBcXzKbZpUrO538KKW23iFZjVdJEwXuvDA
-         po5REX+vGIywp6mFOp8RvacWdYIVZvnyatXhvlgc08JE9mpn3DUHH2sAj4P3f80yqG1c
-         438VidSOim9hXlO/q1Klo4/Qrr56TEInDcXbbsRr7aQgTmsjMtS/SzOa1tzQ+ygmVamM
-         rWnBe4RSlVFz2g0gtA+GyjICqPYL3MYGnk9FUAR83Ldg8Afwbel3c2CRnG12IPUgwb9H
-         PhaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbViEksx/M8E/EFCvAjpYlH3nSAjM+Qp7m6jOTVHOgmagcmV+Dp964tiFRJY83o3p1Wq3xp3zPmJ1UNryU@lists.openembedded.org
-X-Gm-Message-State: AOJu0YxnqYppkuVCStr+KpMdjYVTq2Y3LEXVzdq+P6O8q95oELLMQs8e
-	Ef6oajTonwLA04mSRR8XPEFQvpZAXJDfsAj+2Iv7dY4LPhyahAdciv4azfg70Nk=
-X-Gm-Gg: ASbGncuaEK3BBkK0AV4TBbx0iJLsgUO4pgZoGdvzigAbDKFLuNCNbx0Xrhqnubd1TrI
-	3LHtESBM21R10TPGWjbVt6njoa8M2rQ/okiUunIkgSMXRfMLq9XdflTKIyZKvOTWKSG/zFAiY0O
-	aOwbGGCTnDh9XNHLyxc3hTOwzvKbSUHlg8lo03+SlMeXte3r0Vht0b/0B5K5cmItPKLKDF+uzXU
-	MdG9wlzQVrDHaGSgW/uwk2xK1CzubtGHhAtqf7DwkN3ufGw8ACHz0WrPAOMDSd71U4vJAEDcbWv
-	F4y0jBwAYoeTYV3VWzCTajxKm7ovUBFwP/CZjkiOV1OFIDrHcnMzsaXkXsbzGRAwDxkgcEOjhP/
-	OrJDPirZ8E3Zf
-X-Google-Smtp-Source: AGHT+IF5OgQ5mvAh9wpi77J/Zz9RVzfOix8GdF1rRRWedhWpWXtA2k8xkkf9S5CSj6qrPjejY2qnpw==
-X-Received: by 2002:a05:600c:3b91:b0:439:56f3:d40f with SMTP id 5b1f17b1804b1-439ae21286cmr14839835e9.21.1740125359191;
-        Fri, 21 Feb 2025 00:09:19 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:16ed:8c7:cc1f:ea46? ([2001:8b0:aba:5f3c:16ed:8c7:cc1f:ea46])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b0371b7bsm9489425e9.33.2025.02.21.00.09.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 00:09:18 -0800 (PST)
-Message-ID: <4b9fe64e0fd32de42dfa605be5e3e76b8dd01a58.camel@linuxfoundation.org>
-Subject: Re: [PATCH v3 1/4] fetch2/git: Add support for fast initial shallow
- fetch
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Stefan Koch <stefan-koch@siemens.com>, 
-	bitbake-devel@lists.openembedded.org
-Cc: simon.sudler@siemens.com, jan.kiszka@siemens.com, alex.kanavin@gmail.com
-Date: Fri, 21 Feb 2025 08:09:17 +0000
-In-Reply-To: <20250220172706.3850722-1-stefan-koch@siemens.com>
-References: <20250220172706.3850722-1-stefan-koch@siemens.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.0-1 
+        d=1e100.net; s=20230601; t=1740129115; x=1740733915;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GnONWKxmpHe87S2s0PueGy57d1tBaG25UGCs8lWUQZ0=;
+        b=mejmvpLGNxg0CMK/+M4pfnwp+WLkT3sppojgtrr7q3mi7Oq7InMUtAoSo0j6KYrLzU
+         Pov24lU1ZJL25WsJMK6v9Dj2XUi0p00R22x3Zo537SL2TqRme99cGdN9+8VzMx4oDbI+
+         fruIUl9J24QwrxtkXHH25IhTIYjizLzm0ph3rDjZj6Obzshaz/tM9jukf1vnLxuIEAD+
+         Q8llgYgGuwGJvEfXYs5jaTHUtp/J+rHqfK+Z7r2Qpe94RPBprE3+MsHHUYDYH0Rr15IC
+         jedBKFNOVY3t4frMPpdsVYMoR54Xs8/KJ3hsUeQ27J6Y6HMYVn95MhiMFYuVhxHkilAx
+         EdwQ==
+X-Gm-Message-State: AOJu0YzfQcAl70g7tCQl7ChVNMCgoGHkj2jn+NAz1QnrkN9qZuyUP+uc
+	x7zIkIGmAGJIGgQ/wJcNtCJoIkDTPQK66pnNfwIWhHZvWLG9EG0IOrE9JETAWiw1HZcmUMfxpGI
+	zuvx7HKEq9e5dqPF2Sd1h7VVQKMvIgA==
+X-Gm-Gg: ASbGncvQ6MBycwacpK8rUjZEWqVwHziRntX5y2Bz7wuHOlb09wSeMlQVO3pST0DuwHk
+	pRaxIsanjjQ76KHx0M1tJE6MZ0ZTzONaOPgSNg3gluOnKB50a/Niut6f4RydlyjdMOD/6w6JBUv
+	Q3VPNWoi1RaffHgfxZTxc8GClmKdrnKGv95FUX6PfDPQ==
+X-Google-Smtp-Source: AGHT+IHE4BW6l4qY1flzSvElut2dsb7trwdvl+chDIhiqrsa6SDdKav4ZXT1b/HWBKC3GIJUNiAlg8fsZ7742EtZRro=
+X-Received: by 2002:a05:6214:2507:b0:6e4:442c:2888 with SMTP id
+ 6a1803df08f44-6e6ae9e0d10mr30615916d6.39.1740129115533; Fri, 21 Feb 2025
+ 01:11:55 -0800 (PST)
 MIME-Version: 1.0
+References: <20240502183501.1216856-1-JPEWhacker@gmail.com> <1825F6393BB749ED.25123@lists.openembedded.org>
+In-Reply-To: <1825F6393BB749ED.25123@lists.openembedded.org>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Fri, 21 Feb 2025 10:11:44 +0100
+X-Gm-Features: AWEUYZkLGfwd5BhcQj0BYQ3k6-JunIQ3doQZcQH6ve4BfczJzo0zseO4POtv_Vw
+Message-ID: <CANNYZj8LynhGChryLLHYFSz3=G70nO1938FwbfHN58rucuQ2sw@mail.gmail.com>
+Subject: Re: [bitbake-devel][PATCH] cooker: Handle ImportError for websockets
+To: bitbake-devel@lists.openembedded.org
+Cc: JPEWhacker@gmail.com, Richard Purdie <richard.purdie@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 21 Feb 2025 08:09:22 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17270
+ <bitbake-devel@lists.openembedded.org>; Fri, 21 Feb 2025 09:12:02 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17271
 
-On Thu, 2025-02-20 at 18:27 +0100, Stefan Koch wrote:
-> When `ud.shallow =3D=3D 1`:
-> - Prefer an initial shallow clone over an initial full bare clone,
-> =C2=A0 while still utilizing any already existing full bare clones.
->=20
-> This improves:
-> - Resolve timeout issues during initial clones on slow internet connectio=
-ns
-> =C2=A0 by reducing the amount of data transferred.
-> - Eliminate the need to use an HTTPS tarball `SRC_URI`
-> =C2=A0 to reduce data transfer.
-> - Allow SSH-based authentication (e.g. cert and agent-based) when
-> =C2=A0 using non-public repos, so additional HTTPS tokens may not be requ=
-ired.
->=20
-> Signed-off-by: Stefan Koch <stefan-koch@siemens.com>
-> ---
-> =C2=A0lib/bb/fetch2/git.py | 100 ++++++++++++++++++++++++++++++++--------=
----
-> =C2=A01 file changed, 74 insertions(+), 26 deletions(-)
+On Thu, 20 Feb 2025 at 17:05, Alexander Kanavin via
+lists.openembedded.org <alex.kanavin=gmail.com@lists.openembedded.org>
+wrote:
 
-In testing it looks like this series has some issue on Ubuntu 20.04 systems=
- (both x86_64 and arm):
+> - we can extend bitbake-setup configurations with 'install-buildtoos:
+> true' parameter, and then use it in all official configurations that
+> need functional websockets to access pre-built sstate to always
+> install buildtools, even on systems where it's not actually necessary.
+>
+> None of these are great, but I'm leaning towards the last. Looking for
+> better ideas!
 
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/23/builds/1097
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/54/builds/1016
+Ok, I've slept on it, and concluded that bitbake-setup should simply
+always install buildtools by default. It's a front line tool for new
+users, and it can't afford to fail in mysterious ways. There will be a
+setting to turn it off, for those who know what they're doing and know
+they don't need buildtools.
 
-This is probably due to the version of git there...
-
-Cheers,
-
-Richard
+Alex
 
