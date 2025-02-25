@@ -2,10 +2,10 @@ Return-Path: <l.goehrs@pengutronix.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD743C021BF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A15B9C021BC
 	for <webhook@archiver.kernel.org>; Tue, 25 Feb 2025 07:06:49 +0000 (UTC)
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
- by mx.groups.io with SMTP id smtpd.web10.2974.1740467202914625603
+ by mx.groups.io with SMTP id smtpd.web10.2978.1740467203378145531
  for <bitbake-devel@lists.openembedded.org>;
  Mon, 24 Feb 2025 23:06:43 -0800
 Authentication-Results: mx.groups.io;
@@ -14,24 +14,24 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <lgo@pengutronix.de>)
-	id 1tmp1d-0006LZ-49; Tue, 25 Feb 2025 08:06:41 +0100
+	id 1tmp1d-0006LY-48; Tue, 25 Feb 2025 08:06:41 +0100
 Received: from dude03.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::39])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <lgo@pengutronix.de>)
-	id 1tmp1c-002jLc-2r;
+	id 1tmp1c-002jLa-2n;
 	Tue, 25 Feb 2025 08:06:40 +0100
 Received: from lgo by dude03.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <lgo@pengutronix.de>)
-	id 1tmp1c-009cNe-2d;
+	id 1tmp1c-009cIg-0d;
 	Tue, 25 Feb 2025 08:06:40 +0100
 From: =?UTF-8?q?Leonard=20G=C3=B6hrs?= <l.goehrs@pengutronix.de>
 To: bitbake-devel@lists.openembedded.org
 Cc: docs@lists.yoctoproject.org,
 	=?UTF-8?q?Leonard=20G=C3=B6hrs?= <l.goehrs@pengutronix.de>
-Subject: [PATCH v1 3/5] tests: fetch: add download test for the GitHub release artifact fetcher
-Date: Tue, 25 Feb 2025 08:06:28 +0100
-Message-Id: <20250225070631.2262115-3-l.goehrs@pengutronix.de>
+Subject: [PATCH v1 2/5] fetch2/github_release_artifact: fetcher for (private) release artifacts
+Date: Tue, 25 Feb 2025 08:06:27 +0100
+Message-Id: <20250225070631.2262115-2-l.goehrs@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250225070631.2262115-1-l.goehrs@pengutronix.de>
 References: <20250225070631.2262115-1-l.goehrs@pengutronix.de>
@@ -46,49 +46,157 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 25 Feb 2025 07:06:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17302
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17306
 
-The fetcher is mostly intended to work with release artifacts for
-_private_ GitHub repositories, which require authentication in the form
-of a token.
+This fetcher enables downloading artifacts attached to GitHub releases
+in _private repositories_ (public repositories can just use download URLs
+like `https://github.com/rauc/rauc/releases/download/v1.13/rauc-1.13.tar.xz`
+which work without authentication).
 
-Release artifacts for public repositories can simply be downloaded using
-the normal wget fetcher using a public and stable URL.
+Authentication is provided using tokens. In the simplest form a personal
+access token hardcoded in a recipe file:
 
-The tests use a public repository anyways because it would otherwise have
-to contain a GitHub token that is supposed to be kept secret.
+  GH_TOKEN = "github_pat_...
+  SRC_URI = "ghra://github.com/rauc/rauc/v1.13/rauc-1.13.tar.xz"
+  SRC_URI[sha256sum] = "1ddb218a5d713c8dbd6e04d5501d96629f1c8e252157...
 
-The `tslib` release referenced in the test is used because it is already
-used by another test.
+Or as part of the URI:
+
+  SRC_URI = "ghra://github.com/rauc/rauc/v1.13/rauc-1.13.tar.xz;token=g...
+  SRC_URI[sha256sum] = "1ddb218a5d713c8dbd6e04d5501d96629f1c8e252157...
 
 Signed-off-by: Leonard Göhrs <l.goehrs@pengutronix.de>
 ---
- lib/bb/tests/fetch.py | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ lib/bb/fetch2/__init__.py                |  4 +-
+ lib/bb/fetch2/github_release_artifact.py | 93 ++++++++++++++++++++++++
+ 2 files changed, 96 insertions(+), 1 deletion(-)
+ create mode 100644 lib/bb/fetch2/github_release_artifact.py
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 48b9e4af1..6b23bae5b 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -1276,6 +1276,18 @@ class FetcherNetworkTest(FetcherTest):
-             with self.assertRaises(bb.fetch2.FetchError):
-                 fetcher.download()
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 64f87b3ec..70ae6a9e5 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1293,7 +1293,7 @@ class FetchData(object):
+             elif checksum_plain_name in self.parm:
+                 checksum_expected = self.parm[checksum_plain_name]
+                 checksum_name = checksum_plain_name
+-            elif self.type not in ["http", "https", "ftp", "ftps", "sftp", "s3", "az", "crate", "gs", "gomod", "npm"]:
++            elif self.type not in ["http", "https", "ftp", "ftps", "sftp", "s3", "az", "crate", "gs", "gomod", "npm", "ghra"]:
+                 checksum_expected = None
+             else:
+                 checksum_expected = d.getVarFlag("SRC_URI", checksum_name)
+@@ -2066,6 +2066,7 @@ from . import az
+ from . import crate
+ from . import gcp
+ from . import gomod
++from . import github_release_artifact
  
-+    @skipIfNoNetwork()
-+    def test_github_release_artifact(self):
-+        fetcher = bb.fetch.Fetch(["ghra://github.com/kergoth/tslib/1.1/tslib-1.1.tar.xz;sha256sum=fe35e5f710ea933b118f710e2ce4403ac076fe69926b570333867d4de082a51c"], self.d)
-+        fetcher.download()
-+        self.assertEqual(os.path.getsize(self.dldir + "/tslib-1.1.tar.xz"), 238184)
-+        self.d.setVar("BB_NO_NETWORK", "1")
-+        fetcher = bb.fetch.Fetch(["ghra://github.com/kergoth/tslib/1.1/tslib-1.1.tar.xz;sha256sum=fe35e5f710ea933b118f710e2ce4403ac076fe69926b570333867d4de082a51c"], self.d)
-+        fetcher.download()
-+        fetcher.unpack(self.unpackdir)
-+        self.assertEqual(len(os.listdir(self.unpackdir + "/tslib-1.1/")), 29)
+ methods.append(local.Local())
+ methods.append(wget.Wget())
+@@ -2090,3 +2091,4 @@ methods.append(crate.Crate())
+ methods.append(gcp.GCP())
+ methods.append(gomod.GoMod())
+ methods.append(gomod.GoModGit())
++methods.append(github_release_artifact.GitHubReleaseArtifact())
+diff --git a/lib/bb/fetch2/github_release_artifact.py b/lib/bb/fetch2/github_release_artifact.py
+new file mode 100644
+index 000000000..d5a2646ce
+--- /dev/null
++++ b/lib/bb/fetch2/github_release_artifact.py
+@@ -0,0 +1,93 @@
++"""
++BitBake 'Fetch' GitHub release artifacts implementation
++
++"""
++
++# Copyright (C) 2025 Leonard Göhrs
++#
++# Based on bb.fetch2.wget:
++# Copyright (C) 2003, 2004  Chris Larson
++#
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# Based on functions from the base bb module, Copyright 2003 Holger Schurig
++
++import json
++
++from urllib.request import urlopen, Request
++
++from bb.fetch2 import FetchError
++from bb.fetch2.wget import Wget
 +
 +
- class SVNTest(FetcherTest):
-     def skipIfNoSvn():
-         import shutil
++class GitHubReleaseArtifact(Wget):
++    API_HEADERS = {
++        "Accept": "application/vnd.github+json",
++        "X-GitHub-Api-Version": "2022-11-28",
++    }
++
++    DOWNLOAD_HEADERS = {
++        "Accept": "application/octet-stream"
++    }
++
++    def supports(self, ud, d):
++        return ud.type in ["ghra"]
++
++    def _resolve_artifact_url(self, ud, d):
++        """Resolve `ghra://` pseudo URLs to `https://` URLs and set auth header.
++
++        This method resolved URLs like `ghra://github.com/rauc/rauc/v1.13/rauc-1.13.tar.xz`
++        to a backing URL like `https://api.github.com/repos/rauc/rauc/releases/assets/222455085`
++        while optionally setting the required authentication headers to download from
++        private repositories.
++        """
++
++        try:
++            user, repo, tag, asset_name = ud.path.strip("/").split("/")
++        except ValueError as e:
++            raise FetchError(
++                f"Expected path like '/<user>/<repo>/<tag>/<asset_name>', got: '{ud.path}'"
++            ) from e
++
++        # The GitHub authentication token may be provided as URL parameter
++        # (to enable using different tokens for different URLs in the same recipe)
++        # or via a variable for cleaner URLs.
++        token = ud.parm.get("token") or d.getVar("GH_TOKEN")
++
++        meta_url = f"https://api.{ud.host}/repos/{user}/{repo}/releases/tags/{tag}"
++
++        auth_headers = {}
++
++        if token is not None:
++            auth_headers["Authorization"] = f"Bearer {token}"
++
++        try:
++            req = Request(url=meta_url, headers=(auth_headers | self.API_HEADERS))
++            with urlopen(req) as resp:
++                result = json.load(resp)
++
++        except Exception as e:
++            raise FetchError(f"Error downloading artifact list: {e}") from e
++
++        asset_urls = dict((asset["name"], asset["url"]) for asset in result["assets"])
++
++        if asset_name not in asset_urls:
++            asset_list = ", ".join(asset_urls.keys())
++            raise FetchError(
++                f"Did not find asset '{asset_name}' in release asset list: {asset_list}"
++            )
++
++        # Override the `url` and `headers` in the FetchData object,
++        # enabling the Wget class to perform the actual downloading.
++        ud.url = asset_urls[asset_name]
++        ud.headers = auth_headers | self.DOWNLOAD_HEADERS
++
++    def checkstatus(self, fetch, ud, d):
++        self._resolve_artifact_url(ud, d)
++
++        return super().checkstatus(fetch, ud, d)
++
++    def download(self, ud, d):
++        self._resolve_artifact_url(ud, d)
++
++        return super().download(ud, d)
 -- 
 2.39.5
 
