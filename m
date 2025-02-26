@@ -2,110 +2,85 @@ Return-Path: <eric.meyers15310@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5943C021BF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C90C021B8
 	for <webhook@archiver.kernel.org>; Wed, 26 Feb 2025 12:47:20 +0000 (UTC)
-Received: from mail-qk1-f194.google.com (mail-qk1-f194.google.com [209.85.222.194])
- by mx.groups.io with SMTP id smtpd.web10.4929.1740574039916977242
+Received: from mail-qk1-f193.google.com (mail-qk1-f193.google.com [209.85.222.193])
+ by mx.groups.io with SMTP id smtpd.web10.4928.1740574039052807354
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 26 Feb 2025 04:47:20 -0800
+ Wed, 26 Feb 2025 04:47:19 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=efd69IPV;
- spf=pass (domain: gmail.com, ip: 209.85.222.194, mailfrom: eric.meyers15310@gmail.com)
-Received: by mail-qk1-f194.google.com with SMTP id af79cd13be357-7c2303a56d6so336937385a.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 26 Feb 2025 04:47:19 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=KCB+9ufo;
+ spf=pass (domain: gmail.com, ip: 209.85.222.193, mailfrom: eric.meyers15310@gmail.com)
+Received: by mail-qk1-f193.google.com with SMTP id af79cd13be357-7c0848d475cso917670885a.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 26 Feb 2025 04:47:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740574039; x=1741178839; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=82qdebcOINOuRFC+O6Q6VFG5ncpKspfN6SwXI+Zy8Js=;
-        b=efd69IPV7TGTHaVKeB1KBlqLBWYlJJk9RrwoRn2elVkJDdMatZVDtTI32JPSWxMbKj
-         DMkVwGvGn8HFu5rlpax+MGN/a6lM0i3CAjIO2y4LKUGy7jCrQlG/3uEELb6Tz6Nr7lFb
-         jj2yGV6gAfOXCur0NtZLLqm+Ay1ROpcLYIl4i9V5gE+vTE1lL1SUytZxW257Ei9ZHc57
-         kAOt5u6T3iZSf+ti0ghb3U6Zmw12UUrDN+NC9BRpXWsYm95YjBTf8XaHr178m3c5Mkda
-         gKuO2Gm4qS8YYNJJYqlAvyd5EwmfEimEMH2HAcXwz3uTHx7tKOCGjfxZSH5BVk/F6n2B
-         y3lg==
+        d=gmail.com; s=20230601; t=1740574038; x=1741178838; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TzVRc5h3oVrGGcP1BdM/2camwFuYzClT3WdW845ow1E=;
+        b=KCB+9ufoLwqgZhs5mdBIr6mzgMrNrRbegD73+jnHduvYzhU2185lXDTp7zFvSUv++p
+         Zp9PrE7A06cdU6v+ehUw/+tch+U5fXv23+lUi5GWv3UIBRxfvZ/DclxPKGGn5rkVEfT+
+         jNsQupkT6qm+QXrm/KcaOVyzL7g1WPW0WyXiyILEaLMDVNGlTTZlSl5gnGMlwzl0NaZi
+         Sa5b8zGw2fphlCquP//p405nET36EBX7FVQlY2JFGFWUcn8xBaK3DMPf/QEjh/RQcfXN
+         recXW8dEx6lrSlwoFyd5dHjMvPlQPNZVGp7i6ePzmV6a8MWdXz47fs8ddzC/cH+R6ptB
+         GD4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740574039; x=1741178839;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=82qdebcOINOuRFC+O6Q6VFG5ncpKspfN6SwXI+Zy8Js=;
-        b=JqkcHoKlu431MifNXgkNjKnDl2dWFRrnMKNyTxm0dZ8c0L93gAFPZaJpWKUA5UThZs
-         r3q4qQ1oXsMeJxNhneR99hJ/6vcBZswiifTph0wrq80J4teNLWJBJ2/qOiz8bVrBg/I5
-         Q9tHMxQAHsRBAEHlXmAZuaoXdbKjT2l5XBmSdaqram1REIBAbVWAGISsSAmYNwRGrHxN
-         2lnu0kJ+cKTahqrPHGKx+1tRXJUW1QabifFEOjdwzxZkFZabJVc3BOCEp2uoGj7ulDzR
-         2HuZYXsoMHBYNF8b9Jk22m+uuIPgtZI4+HwLc4uZR7A6B/5QD1bQ+fUP8sy9SEGAo+l7
-         R75g==
-X-Gm-Message-State: AOJu0YzmSUaBurXjxRZTqP4nSBJqDfA2ebGHysbtJhMi7TNXybpH0/xY
-	hR+ENPOsMWsX8ELLEmXL0KccUlzrbuUWYoqALvHtrDs384RqQJIKQ0EmFVIX
-X-Gm-Gg: ASbGncvSDF7J0TG9vFLd4hKRq8rPoIugmkB5ZiFwreFwwKeFUWShjCy1M1khJedov0p
-	N2BB2tZKHBFDaiEyHDKLl70P2QrQ7C065ZjuIudPB+TE/XvAsqiV707ZS9MKbNtB4Il3VCpghYK
-	YEb9EfmyAeD1o752m2DejvzetuRPc5KSnx7adujzcBMDtaMBkHvWTg6pq6vM/47WmnZouQmLc24
-	h0ZtdiCCWvMGjMtveSl7nL3k6Lm0EMTMJJRKUsrAN8QgPuLD7nFVfHvrx6vU5b+nwpYKY8EgsWK
-	i0Q5EzJQTh1rdi2n3Mz3H11jx0hd7QIBDQsd5LmoaOb6kpMHfSRnvDLWMlwSLkukZfpO3QaFDR2
-	R6jcXopKsDYYpDg4FsknOW3Y=
-X-Google-Smtp-Source: AGHT+IFJnVNxQVa45ssRNqN7/feHRPvs3mwcHFKNlDIXkKHRk4UX3y6seFzhyyGewUTX71zUxmQOTA==
-X-Received: by 2002:a05:620a:260b:b0:7c0:b1aa:ba49 with SMTP id af79cd13be357-7c0cf8eb137mr2993471085a.30.1740574038710;
-        Wed, 26 Feb 2025 04:47:18 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740574038; x=1741178838;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TzVRc5h3oVrGGcP1BdM/2camwFuYzClT3WdW845ow1E=;
+        b=Y/X5J7DzTyxnTYrzOrxGjaZ2MjIZvn2tyxVBv8PnRgrc+5dcBwRNWU+hKk87s+qD4e
+         YioD/DFUAq9DQ88DnR8KGy8GRk1RuvqxnmGzODZ+O0cPvu/zHk33HJE7TtD+IL2OATb9
+         21g/FuPFsKhcU20qIhThIBzSdmfPjxAvyEoEPjD+Ct+eiSR4RF/kqQUJNe2EIDTTvs9f
+         QVYTv1VVtfAEG3ThwZ1BWAdbPpZ3XJU9teWbQfTEcVhmfmuMACLxlJqkoMlsiOHRrLLp
+         UPzOUbPXXc923PN69DnGlbBGfvsMProRDMXnTSST/A0SE1olK3VjyVuZnrtQLxcBmAOC
+         FLrA==
+X-Gm-Message-State: AOJu0YxPS/Ohd/jsN2Vwd/K6dwR/tJn+H0a8qVDnpKBkRapsLlw7CLP8
+	fcbZEImbNaSELBUX+n8xad1MAIXFUZQoQDbg8h2i/sM1N6Kt1lvoOIvBwXg8
+X-Gm-Gg: ASbGncu1jz9m642TvUq6YENUdsNTeMp8D8htlkRu2Bp+SKUM8JHljyfQF425+SU6Hdd
+	Ku3XeoLfvrBzMNyietayD54sfJyRNvPozZJe4QDxxtWzOpMagQO15PqtYX5FEwSSeTc4Lg7rXr5
+	eJFHLWVf6rE4VN1TFrASDrXORn9rsNkNsvBhT6/DNOFAeBNuw0bRsdlaTp5ZPXilkFwqUUYtKH7
+	2FSpqUPjWx77cWIlELrFnHV1aIWePHQKShzt95wkBcl+qjTqtpXCsLUx7LxD4UURc+s4auwSwH0
+	Vq1an1sfZF0Res3TL0Gtq0CQ9aaGdJDGwpjHT5OV/oaBXJ47mij+/WhYUDJZwBdfXU/TF4Ky21o
+	vgd0E9fYhP32wULhNkR4xwxE=
+X-Google-Smtp-Source: AGHT+IG5nL+mtVyjoQE1EkAEeEeRYGjJGAlwtyEvwtr8LQhXWBCu6actbJ4H+AOE/O+tVSGTQ3pfSg==
+X-Received: by 2002:a05:620a:9370:b0:7c2:40e3:546a with SMTP id af79cd13be357-7c240e35490mr687810585a.9.1740574037938;
+        Wed, 26 Feb 2025 04:47:17 -0800 (PST)
 Received: from d6f1eae97500.yourbase.domain.local (c-73-168-239-54.hsd1.il.comcast.net. [73.168.239.54])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c23c29a8eesm236960585a.21.2025.02.26.04.47.18
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c23c29a8eesm236960585a.21.2025.02.26.04.47.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 04:47:18 -0800 (PST)
+        Wed, 26 Feb 2025 04:47:17 -0800 (PST)
 From: Eric Meyers <eric.meyers15310@gmail.com>
 X-Google-Original-From: Eric Meyers <eric.meyers@arthrex.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Eric Meyers <eric.meyers@arthrex.com>,
-	Geoff Parker <geoffrey.parker@arthrex.com>,
-	Alexander Kanavin <alex.kanavin@gmail.com>,
-	Chuck Wolber <chuckwolber@gmail.com>
-Subject: [PATCH v3 1/1] fetch2/npm: Adding npmrc support for private registry authentication
-Date: Wed, 26 Feb 2025 12:47:20 +0000
-Message-Id: <20250226124720.6462-2-eric.meyers@arthrex.com>
+Cc: Eric Meyers <eric.meyers@arthrex.com>
+Subject: [PATCH v3 0/1] NPM Fetcher Private Registry Authentication Support:
+Date: Wed, 26 Feb 2025 12:47:19 +0000
+Message-Id: <20250226124720.6462-1-eric.meyers@arthrex.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250226124720.6462-1-eric.meyers@arthrex.com>
-References: <20250226124720.6462-1-eric.meyers@arthrex.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 26 Feb 2025 12:47:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17329
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17328
 
-Signed-off-by: Eric Meyers <eric.meyers@arthrex.com>
-Cc: Geoff Parker <geoffrey.parker@arthrex.com>
-Cc: Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: Chuck Wolber <chuckwolber@gmail.com>
----
+Changes in this commit include:
+- npm fetcher changes:
+    - Adding support to detect .npmrc file within user's home directory, copy it over
+      to the tmp npm environment, then append on any user configs passed in. This models
+      similar behavior within the wget fetcher (which uses a netrc file for authi).
+    - The above is ONLY done when BB_USE_HOME_NPMRC_FILE is set to 1
+- This is the third revision at adding npmrc support, with the following two threads being below:
+   - v1: https://lists.openembedded.org/g/bitbake-devel/topic/110839321
+   - v2: https://lists.openembedded.org/g/bitbake-devel/topic/111289667
+
+Eric Meyers (1):
+  fetch2/npm: Adding npmrc support for private registry authentication
+
  lib/bb/fetch2/npm.py | 16 ++++++++++++++++
  1 file changed, 16 insertions(+)
 
-diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-index c09f05044..7486049b8 100644
---- a/lib/bb/fetch2/npm.py
-+++ b/lib/bb/fetch2/npm.py
-@@ -107,6 +107,22 @@ class NpmEnvironment(object):
-         """Run npm command in a controlled environment"""
-         with tempfile.TemporaryDirectory() as tmpdir:
-             d = bb.data.createCopy(self.d)
-+
-+            # If the user opts to use their own NPMRC file, then use it within the NPM environment
-+            # (along with the user provided configs). Otherwise, leave it blank.
-+            if d.getVar("BB_USE_HOME_NPMRC_FILE") == "1":
-+                home_npmrc_file = os.path.join(os.environ.get("HOME"), ".npmrc")
-+                tmp_npmrc_file = os.path.join(tmpdir, ".npmrc")
-+                bb.warn("BB_USE_HOME_NPMRC_FILE flag is set - NPM fetcher will now use the .npmrc file in the HOME directory.")
-+                if os.path.exists(home_npmrc_file):
-+                    bb.utils.copyfile(home_npmrc_file, tmp_npmrc_file)
-+                    # Still need to append the contents of the user config created in __init__
-+                    with open(tmp_npmrc_file, 'a') as t:
-+                        with open(self.user_config.name, 'r') as u:
-+                            t.write(u.read())
-+                            t.flush()
-+                    self.user_config.name = tmp_npmrc_file
-+
-             d.setVar("PATH", d.getVar("PATH"))  # PATH might contain $HOME - evaluate it before patching
-             d.setVar("HOME", tmpdir)
- 
 
