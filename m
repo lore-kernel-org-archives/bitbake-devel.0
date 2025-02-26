@@ -1,86 +1,113 @@
-Return-Path: <eric.meyers15310@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C90C021B8
-	for <webhook@archiver.kernel.org>; Wed, 26 Feb 2025 12:47:20 +0000 (UTC)
-Received: from mail-qk1-f193.google.com (mail-qk1-f193.google.com [209.85.222.193])
- by mx.groups.io with SMTP id smtpd.web10.4928.1740574039052807354
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04A2C021B8
+	for <webhook@archiver.kernel.org>; Wed, 26 Feb 2025 15:06:51 +0000 (UTC)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web10.7882.1740582403371705633
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 26 Feb 2025 04:47:19 -0800
+ Wed, 26 Feb 2025 07:06:43 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=KCB+9ufo;
- spf=pass (domain: gmail.com, ip: 209.85.222.193, mailfrom: eric.meyers15310@gmail.com)
-Received: by mail-qk1-f193.google.com with SMTP id af79cd13be357-7c0848d475cso917670885a.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 26 Feb 2025 04:47:18 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=N0TwfieJ;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.49, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43994ef3872so43397255e9.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 26 Feb 2025 07:06:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740574038; x=1741178838; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TzVRc5h3oVrGGcP1BdM/2camwFuYzClT3WdW845ow1E=;
-        b=KCB+9ufoLwqgZhs5mdBIr6mzgMrNrRbegD73+jnHduvYzhU2185lXDTp7zFvSUv++p
-         Zp9PrE7A06cdU6v+ehUw/+tch+U5fXv23+lUi5GWv3UIBRxfvZ/DclxPKGGn5rkVEfT+
-         jNsQupkT6qm+QXrm/KcaOVyzL7g1WPW0WyXiyILEaLMDVNGlTTZlSl5gnGMlwzl0NaZi
-         Sa5b8zGw2fphlCquP//p405nET36EBX7FVQlY2JFGFWUcn8xBaK3DMPf/QEjh/RQcfXN
-         recXW8dEx6lrSlwoFyd5dHjMvPlQPNZVGp7i6ePzmV6a8MWdXz47fs8ddzC/cH+R6ptB
-         GD4g==
+        d=linuxfoundation.org; s=google; t=1740582402; x=1741187202; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1c0rTSY2aj0xMNUd7KK65o6sXKpcNCd5+EwHfyEFKD0=;
+        b=N0TwfieJMAfx9awix5nBi2XjfptmRvc4egrM6jUYvaFMEWuTmZbg1yULizi5SiLMrq
+         nSlQfvVFVXEQGJFOa0+xevJwz6pM1H3E0KjfJuN+rh7XsFZIk8p7xESmL+WnWMnQ1pmY
+         tTXrjFzhvvFwD/59XUMjLSwHnQ8aZPOpvYzHs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740574038; x=1741178838;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TzVRc5h3oVrGGcP1BdM/2camwFuYzClT3WdW845ow1E=;
-        b=Y/X5J7DzTyxnTYrzOrxGjaZ2MjIZvn2tyxVBv8PnRgrc+5dcBwRNWU+hKk87s+qD4e
-         YioD/DFUAq9DQ88DnR8KGy8GRk1RuvqxnmGzODZ+O0cPvu/zHk33HJE7TtD+IL2OATb9
-         21g/FuPFsKhcU20qIhThIBzSdmfPjxAvyEoEPjD+Ct+eiSR4RF/kqQUJNe2EIDTTvs9f
-         QVYTv1VVtfAEG3ThwZ1BWAdbPpZ3XJU9teWbQfTEcVhmfmuMACLxlJqkoMlsiOHRrLLp
-         UPzOUbPXXc923PN69DnGlbBGfvsMProRDMXnTSST/A0SE1olK3VjyVuZnrtQLxcBmAOC
-         FLrA==
-X-Gm-Message-State: AOJu0YxPS/Ohd/jsN2Vwd/K6dwR/tJn+H0a8qVDnpKBkRapsLlw7CLP8
-	fcbZEImbNaSELBUX+n8xad1MAIXFUZQoQDbg8h2i/sM1N6Kt1lvoOIvBwXg8
-X-Gm-Gg: ASbGncu1jz9m642TvUq6YENUdsNTeMp8D8htlkRu2Bp+SKUM8JHljyfQF425+SU6Hdd
-	Ku3XeoLfvrBzMNyietayD54sfJyRNvPozZJe4QDxxtWzOpMagQO15PqtYX5FEwSSeTc4Lg7rXr5
-	eJFHLWVf6rE4VN1TFrASDrXORn9rsNkNsvBhT6/DNOFAeBNuw0bRsdlaTp5ZPXilkFwqUUYtKH7
-	2FSpqUPjWx77cWIlELrFnHV1aIWePHQKShzt95wkBcl+qjTqtpXCsLUx7LxD4UURc+s4auwSwH0
-	Vq1an1sfZF0Res3TL0Gtq0CQ9aaGdJDGwpjHT5OV/oaBXJ47mij+/WhYUDJZwBdfXU/TF4Ky21o
-	vgd0E9fYhP32wULhNkR4xwxE=
-X-Google-Smtp-Source: AGHT+IG5nL+mtVyjoQE1EkAEeEeRYGjJGAlwtyEvwtr8LQhXWBCu6actbJ4H+AOE/O+tVSGTQ3pfSg==
-X-Received: by 2002:a05:620a:9370:b0:7c2:40e3:546a with SMTP id af79cd13be357-7c240e35490mr687810585a.9.1740574037938;
-        Wed, 26 Feb 2025 04:47:17 -0800 (PST)
-Received: from d6f1eae97500.yourbase.domain.local (c-73-168-239-54.hsd1.il.comcast.net. [73.168.239.54])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c23c29a8eesm236960585a.21.2025.02.26.04.47.17
+        d=1e100.net; s=20230601; t=1740582402; x=1741187202;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1c0rTSY2aj0xMNUd7KK65o6sXKpcNCd5+EwHfyEFKD0=;
+        b=TptBhyA5eUBZRjwjgYtMEoIkHu1g3Rx2m5d8LlN/ihe6buRXF8T9l1pC+FwQ3RAPxF
+         i3IaX0H5q/GQzbcvgd05xIFKts18w4/2KM7dV9MBDhxhEEKcCdsZHwUnQJ7oDEix8GIH
+         yT1tPjAwa1jpUag1lJUBjXx6TYVdoMPcz8fJhtIuYlK+ZuSMd3WRmHZxBGXLu3PhG5cr
+         kgYw2iMNCl4KUe6Aips7SBU2y6sBhoHzjZC0LPYFE2hR9Ks5I44Jdp/C3HlWkD0XjLxS
+         ookWWFlrw09hhvUIGrJKkV4pksye5ot201mXGNND+XNFENFrAX+6Xrb+Aju8BE/z8ieJ
+         O4Og==
+X-Gm-Message-State: AOJu0YztxgGIYvbRXyT5m+GwK2QEBgK6e/b+MtLlNkQ+9jrQ9p2ujlnv
+	o0zqkMOL8ayffOpFBPlG8YeyyWDgi9joG6gxtyaTilJz0VLnyuGvzPDr0xoXp9YTjDutxH91Wr8
+	w
+X-Gm-Gg: ASbGncu3F+tT+ly6aK6xURrGEBcl701jBfbw/MXCPCEkcdsD1VgM9epMUTpbGLPlMRd
+	v9Dlyz1FCNoIVy6jS26UUmRAMbM3FNHQXlQoYxjbFgjbh/qD+3LIGYFBy0q+9xx1RiMO6LRFdLY
+	NRVoyDMQevREhv9xL0DJMyFK1vL9LWKd8OSAzPmB08rZa3OG/Pu5bsVPuvWNB8myV8Dkog1cSxK
+	eKQHqIjQDtbowRznh1HXaBtMSM5bfOlAD/TDpKJHkCc8d+roxABdAwtnJWULSYaBZpKs3cJmOn1
+	UIp35rFiJhBYtOuNBZsiHjNrK3zGViKx6dPZqW1YxtpMM8rE3SV769AoiOA5BkAlfn6w4mNC3RK
+	P7zCn1HmPwNwA8fs=
+X-Google-Smtp-Source: AGHT+IFij5ohX5DDmZy01voRk6HvQncoYthqETJ3ECNMR1aORhMeN2jxQw5gUQuzCRRpirxsmESxVQ==
+X-Received: by 2002:a05:600c:5124:b0:439:89e9:4eff with SMTP id 5b1f17b1804b1-43ab0f30d66mr75359155e9.10.1740582401171;
+        Wed, 26 Feb 2025 07:06:41 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:5bde:6c25:9c05:f012? ([2001:8b0:aba:5f3c:5bde:6c25:9c05:f012])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba52b9d1sm25151995e9.8.2025.02.26.07.06.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 04:47:17 -0800 (PST)
-From: Eric Meyers <eric.meyers15310@gmail.com>
-X-Google-Original-From: Eric Meyers <eric.meyers@arthrex.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Eric Meyers <eric.meyers@arthrex.com>
-Subject: [PATCH v3 0/1] NPM Fetcher Private Registry Authentication Support:
-Date: Wed, 26 Feb 2025 12:47:19 +0000
-Message-Id: <20250226124720.6462-1-eric.meyers@arthrex.com>
-X-Mailer: git-send-email 2.39.5
+        Wed, 26 Feb 2025 07:06:40 -0800 (PST)
+Message-ID: <e9c8adcbe4d8f324755df1107eac6a3bc7f7bcaf.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] lib/bb/cooker.py: make
+ BB_HASHSERVE_UPSTREAM issues fatal, write specific error messages
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alexander Kanavin <alex.kanavin@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org, Alexander Kanavin
+ <alex@linutronix.de>
+Date: Wed, 26 Feb 2025 15:06:39 +0000
+In-Reply-To: <CANNYZj-CJyEwaVQtowyo7ynk=mP1D6461NZACS73wcx9xKX4cQ@mail.gmail.com>
+References: <20250225120947.172025-1-alex.kanavin@gmail.com>
+	 <b4e76037f4fff35822a2f80888587fe6cb124953.camel@linuxfoundation.org>
+	 <CANNYZj-CJyEwaVQtowyo7ynk=mP1D6461NZACS73wcx9xKX4cQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 26 Feb 2025 12:47:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17328
+ <bitbake-devel@lists.openembedded.org>; Wed, 26 Feb 2025 15:06:51 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17330
 
-Changes in this commit include:
-- npm fetcher changes:
-    - Adding support to detect .npmrc file within user's home directory, copy it over
-      to the tmp npm environment, then append on any user configs passed in. This models
-      similar behavior within the wget fetcher (which uses a netrc file for authi).
-    - The above is ONLY done when BB_USE_HOME_NPMRC_FILE is set to 1
-- This is the third revision at adding npmrc support, with the following two threads being below:
-   - v1: https://lists.openembedded.org/g/bitbake-devel/topic/110839321
-   - v2: https://lists.openembedded.org/g/bitbake-devel/topic/111289667
+On Tue, 2025-02-25 at 16:51 +0100, Alexander Kanavin wrote:
+> On Tue, 25 Feb 2025 at 14:46, Richard Purdie
+> <richard.purdie@linuxfoundation.org> wrote:
+>=20
+> > I agree we should split the messages and I'm ok with making ImportError
+> > fatal but I'm not sure we should change ConnectionError as it means a
+> > single connection failure to an overloaded server will abort the build.
+> > We've seen this problem before which is why it is a warning.
+>=20
+> Sure, I can tweak this.
+>=20
+> > We can't really reference oe-core from bitbake unfortunately either.
+> > We'd probably need to link to docs at that point.
+>=20
+> Here I'm not sure how to rephrase. We can't mention oe-core at all? Or
+> is it okay to say smth like
+>=20
+> "Install the missing module on the build host. If you are using
+> bitbake with oe-core, you can also use buildtools" etc.
+>=20
+> If you can give me a canned error message that I can copy paste,
+> that'd be best :D
 
-Eric Meyers (1):
-  fetch2/npm: Adding npmrc support for private registry authentication
+How about:
 
- lib/bb/fetch2/npm.py | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+"""
+Unable to use hash equivalence server at '%s' due to missing or
+incorrect python module: %s.=C2=A0
 
+Please install the needed module on the build host, or use an
+environment containing it (e.g a pip venv or OE's buildtools tarball)
+or disable the BB_HASHSERVE_UPSTREAM setting.
+"""
+
+
+Cheers,
+
+Richard
 
