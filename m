@@ -1,171 +1,227 @@
-Return-Path: <mark.hatle@kernel.crashing.org>
+Return-Path: <eric.meyers15310@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6004EC19F32
-	for <webhook@archiver.kernel.org>; Thu, 27 Feb 2025 17:04:41 +0000 (UTC)
-Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
- by mx.groups.io with SMTP id smtpd.web10.16069.1740675875203724434
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79456C282C1
+	for <webhook@archiver.kernel.org>; Thu, 27 Feb 2025 17:20:31 +0000 (UTC)
+Received: from mail-ua1-f68.google.com (mail-ua1-f68.google.com [209.85.222.68])
+ by mx.groups.io with SMTP id smtpd.web10.16553.1740676821676612284
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 27 Feb 2025 09:04:35 -0800
+ Thu, 27 Feb 2025 09:20:21 -0800
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: kernel.crashing.org, ip: 63.228.1.57, mailfrom: mark.hatle@kernel.crashing.org)
-Received: from kernel.crashing.org (70-99-78-136.nuveramail.net [70.99.78.136] (may be forged))
-	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 51RH4YhU006125
-	for <bitbake-devel@lists.openembedded.org>; Thu, 27 Feb 2025 11:04:34 -0600
-Received: from [192.168.2.30] ([192.168.2.30])
-	by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 51RH4XQi009884
-	for <bitbake-devel@lists.openembedded.org>; Thu, 27 Feb 2025 11:04:33 -0600
-Message-ID: <f5768c4b-a1b5-407c-81b6-d243a9f00660@kernel.crashing.org>
-Date: Thu, 27 Feb 2025 11:04:33 -0600
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=VBF+4eus;
+ spf=pass (domain: gmail.com, ip: 209.85.222.68, mailfrom: eric.meyers15310@gmail.com)
+Received: by mail-ua1-f68.google.com with SMTP id a1e0cc1a2514c-8692998b124so953781241.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 27 Feb 2025 09:20:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740676820; x=1741281620; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=KcXBV3DpBQchCD0owggZN5teESrggtv3w4yPHHCxpW0=;
+        b=VBF+4eusttPliYgQteaH90uClfGSrBCTbPtAdwtxPb7thne6qaFqBT8q7cORhtGkMk
+         ityH8i4l8X6A3e1PKvGCdux2Y34uYwW8c17seQvUK0WsF6W83+l8IdwZuN7oHyE1C4y/
+         deykNauRRh5gNHBrfihlZkJA5NvXErfEhBHfyKqYX3CjIap8D3nFWiYLhiyZ8EYK08/p
+         MXe27d72KtMyBgPccnPdfHw5uj0H6RuouBVeSKFRHNTTk5XonoqyRWHKc1I1YUXxOpex
+         yb11xC/C8cSvHn83SkpMyyPLRzoKFe/FOVXmErPp0ur/QKLof9qVJoBkaghu3AwuCtOt
+         wD4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740676820; x=1741281620;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KcXBV3DpBQchCD0owggZN5teESrggtv3w4yPHHCxpW0=;
+        b=Lmday7zB2hMuNgIojOSS7UyUEx51LgGMJ8TBxw6D5BKaKKzeuzzlz/LB96y67DQjJy
+         00zbxIkWyXSjpLAJzB+yJmE4JymPEHDYn0KlKQzf/vydnf7bxFT3ZduI5ZJRORiLW+96
+         G4+8tgx6pr1D4llhSatuXdYdY/Kb+lqc2NLbBAzdq4F+6iotdCVXhK10EgkmHNYFCRDn
+         IZ611EA1aBDxU7iukkMH6iBiVquk66m/AsW3TX4lxcT9xMdOt0bARx/pdegx1FbU8kXg
+         yCDG/5TzfYh4oX5V0AWW9cD3Y9SbCZ+EZvC3ncq1kJGSmVp09/QDeJdl+do8Z0Q5hzju
+         krOg==
+X-Forwarded-Encrypted: i=1; AJvYcCX0UNeQ4skMhHU89qiSLvaBw1GNn045yPmQSPRX6tDflS6AIiowwfFMfHoiJpqaQ9gsakjBc7mrZc/r28dQ@lists.openembedded.org
+X-Gm-Message-State: AOJu0YwYUqU9SD68XsZ2WxCvTfE/KKNEhkCpaiygYb96Tk/YX5c2CWKl
+	4FQ718BFcKBQbAgqZttIkekDxLuogajysiOjLPdZxHmntUJrAJ6z0kFqMA0wsnenRHoxwEdrzjk
+	vNlXnKZjbG3jqsU0a+KzIZgbd61Q=
+X-Gm-Gg: ASbGncvlDmG7PVBbXIgmWB2UGXSeaOYt+QDhwDnLq8R/Wy+fgn/NusaZlXWEtChqsQH
+	zYPKx2ax/44PU5Eplc6LPKCDUsYO6gGYFAd5XKoLtOz1WLh04pBnyS/0ooT8yXp4tNX0nm3kk8f
+	t4ZdypqA==
+X-Google-Smtp-Source: AGHT+IHq1ycQO2XrFZkHJnyO3uDzmDEw2Azp3YKYLRr2qJAglRyhkJ3zxjhsqtjWi0qWRC/GpdTu+ZO/zF48D5Z+TW0=
+X-Received: by 2002:a05:6102:5246:b0:4bb:623:e1f7 with SMTP id
+ ada2fe7eead31-4c044dad1bcmr188925137.16.1740676820682; Thu, 27 Feb 2025
+ 09:20:20 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel] [PATCH v2] bitbake: runqueue: Verify mcdepends
- are valid
-Content-Language: en-US
-To: bitbake-devel@lists.openembedded.org
-References: <1740508733-4989-1-git-send-email-mark.hatle@kernel.crashing.org>
- <f05d2e28a7b234ed74c6780f62800bdfb4f0c8a4.camel@linuxfoundation.org>
-From: Mark Hatle <mark.hatle@kernel.crashing.org>
-In-Reply-To: <f05d2e28a7b234ed74c6780f62800bdfb4f0c8a4.camel@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-X-MIME-Autoconverted: from 8bit to base64 by gate.crashing.org id 51RH4YhU006125
+References: <20250226124720.6462-1-eric.meyers@arthrex.com>
+ <20250226124720.6462-2-eric.meyers@arthrex.com> <CAB=6tBS6MwA_rwuttiwcfmr+QfWuvtt7FGihTVAFO0qQ2vMmZA@mail.gmail.com>
+ <CAB=6tBQr2=oEhk3VB0r9qe0s5tYPyyhDPkGYMOYut6n=ExE7vQ@mail.gmail.com>
+In-Reply-To: <CAB=6tBQr2=oEhk3VB0r9qe0s5tYPyyhDPkGYMOYut6n=ExE7vQ@mail.gmail.com>
+From: Eric Meyers <eric.meyers15310@gmail.com>
+Date: Thu, 27 Feb 2025 11:20:15 -0600
+X-Gm-Features: AQ5f1JpyGNpSihPAA6cjghHfFqx9toN9N_DFuj2Rh6aIRa_ukRUxv5xOjnMURUY
+Message-ID: <CA+cKJ+EDUoNFZCHmSuW0R1WrEzWUsnMMHi52Q3VaF+=YgQtt8g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] fetch2/npm: Adding npmrc support for private
+ registry authentication
+To: Chuck Wolber <chuckwolber@gmail.com>
+Cc: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>, 
+	bitbake-devel@lists.openembedded.org, Eric Meyers <eric.meyers@arthrex.com>, 
+	Geoff Parker <geoffrey.parker@arthrex.com>, Alexander Kanavin <alex.kanavin@gmail.com>
+Content-Type: multipart/alternative; boundary="00000000000090d137062f22e7c2"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 27 Feb 2025 17:04:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17349
+ <bitbake-devel@lists.openembedded.org>; Thu, 27 Feb 2025 17:20:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17350
 
-DQoNCk9uIDIvMjcvMjUgNjoyOSBBTSwgUmljaGFyZCBQdXJkaWUgdmlhIGxpc3RzLm9wZW5l
-bWJlZGRlZC5vcmcgd3JvdGU6DQo+IE9uIFR1ZSwgMjAyNS0wMi0yNSBhdCAxMjozOCAtMDYw
-MCwgTWFyayBIYXRsZSB2aWEgbGlzdHMub3BlbmVtYmVkZGVkLm9yZyB3cm90ZToNCj4+IEZy
-b206IE1hcmsgSGF0bGUgPG1hcmsuaGF0bGVAYW1kLmNvbT4NCj4+DQo+PiBJbiBvcmRlciB0
-byBhdm9pZCBhIHBvdGVudGlhbGx5IGNvbmZ1c2luZyBiYWNrdHJhY2UsIGNoZWNrIHRoYXQg
-dGhlIG1jZGVwZW5kDQo+PiBpcyB2YWxpZCB3aGVuIHdlIGFkZCBpdC4NCj4+DQo+PiBBZGQg
-YSB0ZXN0IGNhc2UgdG8gZW5zdXJlIGludmFsaWQgY29uZmlndXJhdGlvbnMgYXJlIGNhdWdo
-dCBhbmQgdHJpZ2dlciBhbg0KPj4gZXJyb3IuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogTWFy
-ayBIYXRsZSA8bWFyay5oYXRsZUBhbWQuY29tPg0KPj4gU2lnbmVkLW9mZi1ieTogTWFyayBI
-YXRsZSA8bWFyay5oYXRsZUBrZXJuZWwuY3Jhc2hpbmcub3JnPg0KPj4gLS0tDQo+PiAgwqBs
-aWIvYmIvcnVucXVldWUucHnCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIHzCoCAyICsrDQo+PiAgwqBsaWIvYmIvdGVzdHMvcnVucXVldWUtdGVzdHMv
-cmVjaXBlcy9nMS5iYiB8wqAgMiArKw0KPj4gIMKgbGliL2JiL3Rlc3RzL3J1bnF1ZXVlLXRl
-c3RzL3JlY2lwZXMvaDEuYmIgfMKgIDANCj4+ICDCoGxpYi9iYi90ZXN0cy9ydW5xdWV1ZS5w
-ecKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCAxOCArKysrKysrKysrKysr
-KysrKysNCj4+ICDCoDQgZmlsZXMgY2hhbmdlZCwgMjIgaW5zZXJ0aW9ucygrKQ0KPj4gIMKg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGxpYi9iYi90ZXN0cy9ydW5xdWV1ZS10ZXN0cy9yZWNpcGVz
-L2cxLmJiDQo+PiAgwqBjcmVhdGUgbW9kZSAxMDA2NDQgbGliL2JiL3Rlc3RzL3J1bnF1ZXVl
-LXRlc3RzL3JlY2lwZXMvaDEuYmINCj4+DQo+PiBkaWZmIC0tZ2l0IGEvbGliL2JiL3J1bnF1
-ZXVlLnB5IGIvbGliL2JiL3J1bnF1ZXVlLnB5DQo+PiBpbmRleCBmZmIyZDI4NDkuLjUzOWE2
-MDY1ZiAxMDA2NDQNCj4+IC0tLSBhL2xpYi9iYi9ydW5xdWV1ZS5weQ0KPj4gKysrIGIvbGli
-L2JiL3J1bnF1ZXVlLnB5DQo+PiBAQCAtNzMwLDYgKzczMCw4IEBAIGNsYXNzIFJ1blF1ZXVl
-RGF0YToNCj4+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiBtYyA9PSBm
-cm9tbWM6DQo+PiAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBm
-biA9IHRhc2tEYXRhW21jZGVwXS5idWlsZF90YXJnZXRzW3BuXVswXQ0KPj4gIMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbmV3ZGVwID0gJyVzOiVzJyAlIChm
-bixkZXB0YXNrKQ0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IGlmIG5ld2RlcCBub3QgaW4gdGFza0RhdGFbbWNkZXBdLnRhc2tlbnRyaWVzOg0KPj4gK8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYmIuZmF0YWwo
-IlRhc2sgbWNkZXBlbmRzIG9uIG5vbi1leGlzdGVudCB0YXNrICVzIiAlIChuZXdkZXApKQ0K
-Pj4gIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdGFza0RhdGFb
-bWNdLnRhc2tlbnRyaWVzW3RpZF0udGRlcGVuZHMuYXBwZW5kKG5ld2RlcCkNCj4+ICAgDQo+
-PiAgwqDCoMKgwqDCoMKgwqDCoCBmb3IgbWMgaW4gdGFza0RhdGE6DQo+PiBkaWZmIC0tZ2l0
-IGEvbGliL2JiL3Rlc3RzL3J1bnF1ZXVlLXRlc3RzL3JlY2lwZXMvZzEuYmIgYi9saWIvYmIv
-dGVzdHMvcnVucXVldWUtdGVzdHMvcmVjaXBlcy9nMS5iYg0KPj4gbmV3IGZpbGUgbW9kZSAx
-MDA2NDQNCj4+IGluZGV4IDAwMDAwMDAwMC4uM2M3ZGNhMDI1DQo+PiAtLS0gL2Rldi9udWxs
-DQo+PiArKysgYi9saWIvYmIvdGVzdHMvcnVucXVldWUtdGVzdHMvcmVjaXBlcy9nMS5iYg0K
-Pj4gQEAgLTAsMCArMSwyIEBADQo+PiArZG9fYnVpbGRbbWNkZXBlbmRzXSA9ICJtYzo6bWMt
-MTpoMTpkb19pbnZhbGlkIg0KPj4gKw0KPj4gZGlmZiAtLWdpdCBhL2xpYi9iYi90ZXN0cy9y
-dW5xdWV1ZS10ZXN0cy9yZWNpcGVzL2gxLmJiIGIvbGliL2JiL3Rlc3RzL3J1bnF1ZXVlLXRl
-c3RzL3JlY2lwZXMvaDEuYmINCj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+PiBpbmRleCAw
-MDAwMDAwMDAuLmU2OWRlMjliYg0KPj4gZGlmZiAtLWdpdCBhL2xpYi9iYi90ZXN0cy9ydW5x
-dWV1ZS5weSBiL2xpYi9iYi90ZXN0cy9ydW5xdWV1ZS5weQ0KPj4gaW5kZXggY2M4N2U4ZDZh
-Li5lMTVmZGMzMzAgMTAwNjQ0DQo+PiAtLS0gYS9saWIvYmIvdGVzdHMvcnVucXVldWUucHkN
-Cj4+ICsrKyBiL2xpYi9iYi90ZXN0cy9ydW5xdWV1ZS5weQ0KPj4gQEAgLTMxNCw2ICszMTQs
-MjQgQEAgY2xhc3MgUnVuUXVldWVUZXN0cyh1bml0dGVzdC5UZXN0Q2FzZSk6DQo+PiAgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBbIm1jXzI6YTE6
-JXMiICUgdCBmb3IgdCBpbiByZXJ1bl90YXNrc10NCj4+ICDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgc2VsZi5hc3NlcnRFcXVhbChzZXQodGFza3MpLCBzZXQoZXhwZWN0ZWQpKQ0KPj4g
-ICANCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICMgQXNzZXJ0aW9uRXJyb3IgaXMgcmFp
-c2VkIGJ5IHNlbGYucnVuX2JpdGJha2VjbWQgaW4gdGhlIGV2ZW50IG9mIGEgZmFpbHVyZQ0K
-Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgIyBpbiB0aGlzZSBjYXNlIGEgZmFpbHVyZSBp
-cyByZXF1aXJlZCwgYnV0IHdlIG5lZWQgdG8gZG8gZnVydGhlciBwcm9jZXNzaW5nDQo+PiAr
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjIHRvIHRlbGwgaWYgaXQncyB0aGUgUklHSFQga2lu
-ZCBvZiBmYWlsdXJlLg0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgd2l0aCBzZWxmLmFz
-c2VydFJhaXNlcyhBc3NlcnRpb25FcnJvcik6DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIHRyeToNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCBzZWxmLnJ1bl9iaXRiYWtlY21kKFsiYml0YmFrZSIsICJnMSJdLCB0ZW1wZGlyLCAi
-IiwgZXh0cmFlbnY9ZXh0cmFlbnYsIGNsZWFudXA9VHJ1ZSkNCj4+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgZXhjZXB0IEFzc2VydGlvbkVycm9yIGFzIGU6DQo+PiArwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgIyBJZiB0aGUgd29yZCAnVHJh
-Y2ViYWNrJyBvciAnS2V5RXJyb3InIGlzIGluIHRoZSBleGNlcHRpb24gdGV4dCwNCj4+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjIHdlJ3ZlIHJlZ3Jlc3Nl
-ZC7CoCBTbyB2ZXJpZnkgaXQncyBOT1QgcHJlc2VudCwgYW5kIHBhc3MgdGhlDQo+PiArwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgIyBleGNlcHRpb24gdG8gaW5k
-aWNhdGUgYSAncGFzcycuDQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgaWYgbm90ICgnVHJhY2ViYWNrJyBpbiBzdHIoZSkgb3IgJ0tleUVycm9yJyBpbiBz
-dHIoZSkpOg0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgIyBSYWlzaW5nICdBc3NlcnRpb25FcnJvcicgaXMgYSB0ZXN0IHBhc3MNCj4+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJhaXNlIGUN
-Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBlbHNlOg0KPj4g
-K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgIyBEdW1w
-IHRoZSBvdXRwdXQgZm9yIHRyaWFnZSwgYnV0IGRvbid0IHJhaXNlIGFuDQo+PiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjIGV4Y2VwdGlvbiwg
-dGhpcyBpbmRpY2F0ZXMgYSB0ZXN0IGZhaWx1cmUuDQo+PiArwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwcmludCgiJXM6ICVzIiAlICh0eXBlKGUp
-LCBlKSkNCj4+ICsNCj4+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5zaHV0ZG93
-bih0ZW1wZGlyKQ0KPj4gICANCj4+ICDCoMKgwqDCoCBkZWYgdGVzdF9oYXNoc2Vydl9zaW5n
-bGUoc2VsZik6DQo+Pg0KPiANCj4gU29ycnkgdG8gYXNrIHRoaXMgYnV0IGR1cmluZyByZXZp
-ZXcgUm9zcyBwb2ludGVkIG91dCB0aGF0DQo+IGFzc2VydFJhaXNlc1JlZ2V4IGNhbiB0YWtl
-IGEgcmVnZXggYW5kIHRoZW4geW91IGNhbiByZWFsbHkgc2ltcGxpZnkNCj4gdGhpcyBmdXJ0
-aGVyLiBXb3VsZCB5b3UgYmUgYWJsZSB0byB0d2VhayB0aGlzIGZ1cnRoZXIgdG8gdXNlIHRo
-YXQ/DQoNCkkndmUgbm90IGJlZW4gYWJsZSB0byBnZXQgdGhpcyB0byB3b3JrIHdpdGggYXNz
-ZXJ0UmFpc2VzUmVnZXguICBXaGF0IEkgdHJpZWQgd2FzOg0KDQp3aXRoIHNlbGYuYXNzZXJ0
-UmFpc2VzUmVnZXgoQXNzZXJ0aW9uRXJyb3IsICIoPyEoVHJhY2ViYWNrfEtleUVycm9yKSkn
-KToNCiAgICAgc2VsZi5ydW5fYml0YmFrZWNtZChbImJpdGJha2UiLCAiZzEiXSwgdGVtcGRp
-ciwgIiIsIGV4dHJhZW52PWV4dHJhZW52LCANCmNsZWFudXA9VHJ1ZSkNCg0KV2l0aCB0aGUg
-Zmlyc3QgaHVuayBvZiB0aGUgY2hhbmdlIGRpc2FibGVkLCBpdCBkb2Vzbid0IGZhaWwsIGV2
-ZW4gdGhvdWdoIHRoZSANCmV4Y2VwdGlvbiB0ZXh0IERPRVMgaW5jbHVkZSBib3RoICdUcmFj
-ZWJhY2snIGFuZCAnS2V5RXJyb3InLiAgIEknbSB3b25kZXJpbmcgaWYgDQp0aGlzIGNvdWxk
-IGJlIGEgJ211bHRpbGluZScgaXNzdWVzLCBhcyB0aGUgdHJhY2ViYWNrIGxvb2tzIGxpa2UN
-Cg0KQ29tbWFuZCBbJ2JpdGJha2UnLCAnZzEnXSBmYWlsZWQgd2l0aCBOT1RFOiBSZWNvbm5l
-Y3RpbmcgdG8gYml0YmFrZSBzZXJ2ZXIuLi4NCk5vdGU6UmV0cnlpbmcgc2VydmVyIGNvbm5l
-Y3Rpb24gKCMxKS4uLiAoMDk6NTQ6NDUuMjQ2MjAwKQ0KTG9hZGluZyBjYWNoZS4uLmRvbmUu
-DQpMb2FkZWQgMjggZW50cmllcyBmcm9tIGRlcGVuZGVuY3kgY2FjaGUuDQpOT1RFOiBSZXNv
-bHZpbmcgYW55IG1pc3NpbmcgdGFzayBxdWV1ZSBkZXBlbmRlbmNpZXMNCk5PVEU6IFJlc29s
-dmluZyBhbnkgbWlzc2luZyB0YXNrIHF1ZXVlIGRlcGVuZGVuY2llcw0KTk9URTogUmVzb2x2
-aW5nIGFueSBtaXNzaW5nIHRhc2sgcXVldWUgZGVwZW5kZW5jaWVzDQpOT1RFOiBSZXNvbHZp
-bmcgYW55IG1pc3NpbmcgdGFzayBxdWV1ZSBkZXBlbmRlbmNpZXMNCk5PVEU6IFJlc29sdmlu
-ZyBhbnkgbWlzc2luZyB0YXNrIHF1ZXVlIGRlcGVuZGVuY2llcw0KTk9URTogUmVzb2x2aW5n
-IGFueSBtaXNzaW5nIHRhc2sgcXVldWUgZGVwZW5kZW5jaWVzDQpOT1RFOiBSZXNvbHZpbmcg
-YW55IG1pc3NpbmcgdGFzayBxdWV1ZSBkZXBlbmRlbmNpZXMNCk5PVEU6IFJlc29sdmluZyBh
-bnkgbWlzc2luZyB0YXNrIHF1ZXVlIGRlcGVuZGVuY2llcw0KTk9URTogUmVzb2x2aW5nIGFu
-eSBtaXNzaW5nIHRhc2sgcXVldWUgZGVwZW5kZW5jaWVzDQpJbml0aWFsaXNpbmcgdGFza3Mu
-Li5FUlJPUjogQW4gdW5jYXVnaHQgZXhjZXB0aW9uIG9jY3VycmVkIGluIHJ1bnF1ZXVlDQpU
-cmFjZWJhY2sgKG1vc3QgcmVjZW50IGNhbGwgbGFzdCk6DQogICBGaWxlICI8cGF0aD4vYml0
-YmFrZS9saWIvYmIvcnVucXVldWUucHkiLCBsaW5lIDE2NTksIGluIGV4ZWN1dGVfcnVucXVl
-dWUNCiAgICAgcmV0dXJuIHNlbGYuX2V4ZWN1dGVfcnVucXVldWUoKQ0KICAgRmlsZSAiPHBh
-dGg+L2JpdGJha2UvbGliL2JiL3J1bnF1ZXVlLnB5IiwgbGluZSAxNTcwLCBpbiBfZXhlY3V0
-ZV9ydW5xdWV1ZQ0KICAgICBpZiBzZWxmLnJxZGF0YS5wcmVwYXJlKCkgPT0gMDoNCiAgIEZp
-bGUgIjxwYXRoPi9iaXRiYWtlL2xpYi9iYi9ydW5xdWV1ZS5weSIsIGxpbmUgODU4LCBpbiBw
-cmVwYXJlDQogICAgIHJldmRlcHNbZGVwXS5hZGQodGlkKQ0KS2V5RXJyb3I6IA0KJ21jOm1j
-LTE6PHBhdGg+L2JpdGJha2UvbGliL2JiL3Rlc3RzL3J1bnF1ZXVlLXRlc3RzL3JlY2lwZXMv
-aDEuYmI6ZG9faW52YWxpZCcNCg0KKGFuZCBzb21lIG1vcmUgdGV4dCBiZWxvdykuLi4NCg0K
-QW55IHN1Z2dlc3Rpb25zIG9uIGEgcmVnZXggZnJvbSBhbnlvbmUgdGhhdCBjYW4gd29yayB3
-aXRoIHRoZSBhYm92ZSB3b3VsZCBiZSANCnVzZWZ1bCwgb3RoZXJ3aXNlIHdlIG1heSBoYXZl
-IGhpdCBhIGxpbWl0YXRpb24gaWYgdGhlIHJlLnNlYXJjaCAod2hpY2ggSSBhc3N1bWUpIA0K
-dGhhdCBhc3NlcnRSYWlzZXNSZWdleCBpcyB1c2luZy4NCg0KLS1NYXJrDQoNCj4gQXMgSSd2
-ZSBtZW50aW9uZWQgZWxzZXdoZXJlLCBoYXZpbmcgd2VsbCB3cml0dGVuIHRlc3RzIGhlbHBz
-IGZvc3Rlcg0KPiBmdXJ0aGVyIHdlbGwgd3JpdHRlbiB0ZXN0cyBpbiB0aGUgZnV0dXJlLiBH
-aXZlbiBob3cgbG9uZyB3ZSBlbmQgdXANCj4gbWFpbnRhaW5pbmcgdGhlc2UgZm9yLCBpdCBp
-cyB3b3J0aCBnZXR0aW5nIHRoZW0gcmlnaHQhDQo+IA0KPiBDaGVlcnMsDQo+IA0KPiBSaWNo
-YXJkDQo+IA0KPiANCj4gDQo+IC09LT0tPS09LT0tPS09LT0tPS09LT0tDQo+IExpbmtzOiBZ
-b3UgcmVjZWl2ZSBhbGwgbWVzc2FnZXMgc2VudCB0byB0aGlzIGdyb3VwLg0KPiBWaWV3L1Jl
-cGx5IE9ubGluZSAoIzE3MzQ1KTogaHR0cHM6Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL2cv
-Yml0YmFrZS1kZXZlbC9tZXNzYWdlLzE3MzQ1DQo+IE11dGUgVGhpcyBUb3BpYzogaHR0cHM6
-Ly9saXN0cy5vcGVuZW1iZWRkZWQub3JnL210LzExMTM4MjUzMS8zNjE2OTQ4DQo+IEdyb3Vw
-IE93bmVyOiBiaXRiYWtlLWRldmVsK293bmVyQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcNCj4g
-VW5zdWJzY3JpYmU6IGh0dHBzOi8vbGlzdHMub3BlbmVtYmVkZGVkLm9yZy9nL2JpdGJha2Ut
-ZGV2ZWwvdW5zdWIgW21hcmsuaGF0bGVAa2VybmVsLmNyYXNoaW5nLm9yZ10NCj4gLT0tPS09
-LT0tPS09LT0tPS09LT0tPS0NCj4gDQo=
+--00000000000090d137062f22e7c2
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Feb 26, 2025 at 10:49=E2=80=AFPM Chuck Wolber <chuckwolber@gmail.co=
+m> wrote:
+
+>
+> On Wed, Feb 26, 2025 at 11:14=E2=80=AFAM Chuck Wolber <chuckwolber@gmail.=
+com>
+> wrote:
+>
+>>
+>> Thank you for the patch! I see a few nits.
+>>
+>> Recommendations further down in this message somewhat obviate this first
+>> one, but I am including it anyway for completeness. I think you should
+>> combine the two if statements. There does not seem to be any point in
+>> printing the bb.warn if there is no ${HOME}/.nmprc file.
+>>
+>> I like the use of the BB_USE_ prefix, because it vests the policy
+>> decision to
+>> allow outside influence with bitbake, where it belongs. However I
+>> recommend
+>> shortening it a bit to BB_USE_HOME_NPMRC. The addition of _FILE seems a
+>> little
+>> redundant, and it narrows the future options a bit more than necessary.
+>>
+>> And, given that you are adding a new variable, I think you should includ=
+e
+>> a
+>> patch to add that variable to the bitbake manual.
+>>
+>> Rather than clutter things up in the run() method, you can simplify your
+>> change greatly by creating a separate instance method (e.g.
+>> __home_npmrc(..))
+>> in the NpmEnvironment class which only returns a file path, or None. It
+>> is in
+>> that method that you would check for the ${HOME}/.npmrc file, the
+>> BB_HOME_NPMRC
+>> flag, and do the bb.warn. Then you would return the string that is the
+>> file
+>> path to the user's .npmrc. No need for any file copy, or renaming.
+>>
+>> Then in NpmEnvironment __init__ you would do something like this:
+>>
+>> self.user_config =3D self.home_npmrc(self, d)
+>> if self.user_config is None:
+>>     self.user_config =3D tempfile.NamedTemporaryFile(mode=3D"w", bufferi=
+ng=3D1)
+>> for key, value in configs:
+>>     self.user_config.write("%s=3D%s\n" % (key, value))
+>>
+>
+>
+> Apologies for not proof-reading my code. That example code is obviously n=
+ot
+> what you would want to do. Hopefully the actual meaning bled through
+> somehow.
+>
+> I meant something closer to this:
+>
+> self.user_config =3D tempfile.NamedTemporaryFile(mode=3D"w", buffering=3D=
+1)
+> hn =3D self.home_npmrc(self, d)
+> if hn is not None:
+>    with open(hn, 'r') as hnf:
+>       self.user_config.write(hnf.read())
+> for key, value in configs:
+>    self.user_config.write("%s=3D%s\n" % (key, value))
+>
+>
+> ..Ch:W..
+>
+
+Chuck,
+
+Thanks a ton for the feedback - much appreciated. I will take some time to
+digest this, do the rework, and eventually submit a v4 patch. Probably
+sometime early next week.
+
+Thanks!,
+-Eric
+
+--00000000000090d137062f22e7c2
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr">On Wed, Feb 26, 2025 at =
+10:49=E2=80=AFPM Chuck Wolber &lt;<a href=3D"mailto:chuckwolber@gmail.com">=
+chuckwolber@gmail.com</a>&gt; wrote:</div><div class=3D"gmail_quote gmail_q=
+uote_container"><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0=
+px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><div dir=
+=3D"ltr"><div dir=3D"ltr"><div style=3D"font-family:monospace"><br></div></=
+div><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Wed=
+, Feb 26, 2025 at 11:14=E2=80=AFAM Chuck Wolber &lt;<a href=3D"mailto:chuck=
+wolber@gmail.com" target=3D"_blank">chuckwolber@gmail.com</a>&gt; wrote:<br=
+></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;=
+border-left:1px solid rgb(204,204,204);padding-left:1ex"><div dir=3D"ltr"><=
+div dir=3D"ltr"><div style=3D"font-family:monospace"><br></div></div><div><=
+div style=3D"font-family:monospace">Thank you for the patch! I see a few ni=
+ts.<br><br>Recommendations further down in this message somewhat obviate th=
+is first</div><div style=3D"font-family:monospace">one, but I am including =
+it anyway for completeness. I think you should</div><div style=3D"font-fami=
+ly:monospace">combine the two if statements. There does not seem to be any =
+point in</div><div style=3D"font-family:monospace">printing the bb.warn if =
+there is no ${HOME}/.nmprc file.</div><br></div><div><div style=3D"font-fam=
+ily:monospace">I like the use of the BB_USE_ prefix, because it vests the p=
+olicy decision to</div><div style=3D"font-family:monospace">allow outside i=
+nfluence with bitbake, where it belongs. However I recommend</div><div styl=
+e=3D"font-family:monospace">shortening it a bit to BB_USE_HOME_NPMRC. The a=
+ddition of _FILE seems a little<br>redundant, and it narrows the future opt=
+ions a bit more than necessary.<br><br></div><div style=3D"font-family:mono=
+space">And, given that you are adding a new variable, I think you should in=
+clude a</div><div style=3D"font-family:monospace">patch to add that variabl=
+e to the bitbake manual.</div><div style=3D"font-family:monospace"><br></di=
+v><div style=3D"font-family:monospace">Rather than clutter things up in the=
+ run() method, you can simplify your</div><div style=3D"font-family:monospa=
+ce">change greatly by creating a separate instance method (e.g. __home_npmr=
+c(..))</div><div style=3D"font-family:monospace">in the NpmEnvironment clas=
+s which only returns a file path, or None. It is in</div><div style=3D"font=
+-family:monospace">that method that you would check for the ${HOME}/.npmrc =
+file, the BB_HOME_NPMRC</div><div style=3D"font-family:monospace">flag, and=
+ do the bb.warn. Then you would return the string that is the file</div><di=
+v style=3D"font-family:monospace">path to the user&#39;s .npmrc. No need fo=
+r any file copy, or renaming.</div><div style=3D"font-family:monospace"><br=
+></div><div style=3D"font-family:monospace">Then in NpmEnvironment __init__=
+ you would do something like this:</div><div style=3D"font-family:monospace=
+"><br>self.user_config =3D self.home_npmrc(self, d)<br>if self.user_config =
+is None:<br>=C2=A0=C2=A0=C2=A0 self.user_config =3D tempfile.NamedTemporary=
+File(mode=3D&quot;w&quot;, buffering=3D1)<br></div><div style=3D"font-famil=
+y:monospace">for key, value in configs:<br>=C2=A0=C2=A0=C2=A0 self.user_con=
+fig.write(&quot;%s=3D%s\n&quot; % (key, value))</div></div></div></blockquo=
+te><div><br></div><div><div style=3D"font-family:monospace"><br></div><div =
+style=3D"font-family:monospace">Apologies for not proof-reading my code. Th=
+at example code is obviously not</div><div style=3D"font-family:monospace">=
+what you would want to do. Hopefully the actual meaning bled through someho=
+w.</div><div style=3D"font-family:monospace"><br></div><div style=3D"font-f=
+amily:monospace">I meant something closer to this:<br><br></div><div style=
+=3D"font-family:monospace">self.user_config =3D tempfile.NamedTemporaryFile=
+(mode=3D&quot;w&quot;, buffering=3D1)</div><div style=3D"font-family:monosp=
+ace">hn =3D self.home_npmrc(self, d)</div><div style=3D"font-family:monospa=
+ce">if hn is not None:</div><div style=3D"font-family:monospace">=C2=A0=C2=
+=A0 with open(hn, &#39;r&#39;) as hnf:</div><div style=3D"font-family:monos=
+pace">=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.user_config.write(hnf.read())</di=
+v><div style=3D"font-family:monospace">for key, value in configs:</div><div=
+ style=3D"font-family:monospace">=C2=A0=C2=A0 self.user_config.write(&quot;=
+%s=3D%s\n&quot; % (key, value))</div></div><div><br></div><div><br><div sty=
+le=3D"font-family:monospace">..Ch:W..</div></div></div></div></blockquote><=
+div><br></div>Chuck,<div><br></div><div>Thanks a ton for the feedback - muc=
+h appreciated. I will take some time to digest this, do the rework, and eve=
+ntually submit a v4 patch. Probably sometime early next week.=C2=A0</div><d=
+iv><br></div><div>Thanks!,</div><div>-Eric=C2=A0</div></div></div></div>
+
+--00000000000090d137062f22e7c2--
 
