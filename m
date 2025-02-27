@@ -2,10 +2,10 @@ Return-Path: <l.goehrs@pengutronix.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3690C282C6
-	for <webhook@archiver.kernel.org>; Thu, 27 Feb 2025 09:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EB0C282C7
+	for <webhook@archiver.kernel.org>; Thu, 27 Feb 2025 09:09:08 +0000 (UTC)
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
- by mx.groups.io with SMTP id smtpd.web10.6937.1740647343971580965
+ by mx.groups.io with SMTP id smtpd.web10.6936.1740647343956619164
  for <bitbake-devel@lists.openembedded.org>;
  Thu, 27 Feb 2025 01:09:04 -0800
 Authentication-Results: mx.groups.io;
@@ -14,25 +14,28 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <lgo@pengutronix.de>)
-	id 1tnZt8-0002I8-28; Thu, 27 Feb 2025 10:09:02 +0100
+	id 1tnZt8-0002IU-28; Thu, 27 Feb 2025 10:09:02 +0100
 Received: from dude03.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::39])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <lgo@pengutronix.de>)
-	id 1tnZt7-0036DD-1Q;
+	id 1tnZt7-0036DJ-1o;
 	Thu, 27 Feb 2025 10:09:01 +0100
 Received: from lgo by dude03.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <lgo@pengutronix.de>)
-	id 1tnZt7-006qeW-0x;
+	id 1tnZt7-006qep-1Y;
 	Thu, 27 Feb 2025 10:09:01 +0100
 From: =?UTF-8?q?Leonard=20G=C3=B6hrs?= <l.goehrs@pengutronix.de>
 To: bitbake-devel@lists.openembedded.org
 Cc: docs@lists.yoctoproject.org,
-	yocto@pengutronix.de
-Subject: [PATCH v2 0/5] fetch2/github_release_artifact: fetcher for (private) release artifacts
-Date: Thu, 27 Feb 2025 10:08:48 +0100
-Message-Id: <20250227090853.1632280-1-l.goehrs@pengutronix.de>
+	yocto@pengutronix.de,
+	=?UTF-8?q?Leonard=20G=C3=B6hrs?= <l.goehrs@pengutronix.de>
+Subject: [PATCH v2 5/5] doc: document the GitHub Release Artifact fetcher and GH_TOKEN
+Date: Thu, 27 Feb 2025 10:08:53 +0100
+Message-Id: <20250227090853.1632280-6-l.goehrs@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250227090853.1632280-1-l.goehrs@pengutronix.de>
+References: <20250227090853.1632280-1-l.goehrs@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -43,27 +46,59 @@ X-PTX-Original-Recipient: bitbake-devel@lists.openembedded.org
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 27 Feb 2025 09:09:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17338
+ <bitbake-devel@lists.openembedded.org>; Thu, 27 Feb 2025 09:09:08 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17339
 
-This fetcher enables downloading artifacts attached to GitHub releases
-in private repositories.
+The fetcher is quite niche, as it is only required when working with
+private GitHub repositories (public releases have a stable public download
+URL and do not need any authentication).
 
-Authentication is provided using tokens via the `GH_TOKEN` variable
-or a `token=` URI parameter.
+Hence it is only documented like a niche feature.
 
-Changes from v1:
+Signed-off-by: Leonard Göhrs <l.goehrs@pengutronix.de>
+---
+ .../bitbake-user-manual-fetching.rst                |  2 ++
+ .../bitbake-user-manual-ref-variables.rst           | 13 +++++++++++++
+ 2 files changed, 15 insertions(+)
 
-  - Provide examples on how to provide the `GH_TOKEN` more securely than
-    just hardcoding it in the recipe in the commit message.
-    E.g. via the `local.conf` or environment variables.
-  - Indent the code example in the documentation `.rst` using three
-    spaces instead of two.
-  - Document the `token=` URI parameter along with the `GH_TOKEN`
-    variable.
-
-Thanks to Alexander Kanavin and Antonin Godard for their review feedback
-so far.
-
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+index fb4f0a23d..2f5224482 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+@@ -842,6 +842,8 @@ Fetch submodules also exist for the following:
+ 
+ -  Trees using Git Annex (``gitannex://``)
+ 
++-  Private GitHub Release Artifacts (``ghra://``)
++
+ No documentation currently exists for these lesser used fetcher
+ submodules. However, you might find the code helpful and readable.
+ 
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index 858de6347..228443e0b 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -1083,6 +1083,19 @@ overview of their function and contents.
+       layer containing the recipe file. Code can use this to identify which
+       layer a recipe is from.
+ 
++   :term:`GH_TOKEN`
++      GitHub Access Token. When using the
++      :ref:`GitHub Release Artifact fetcher <bitbake-user-manual/bitbake-user-manual-fetching:fetchers>`
++      This variable can be defined to be used by the fetcher to authenticate
++      and gain access to non-public release artifacts::
++
++         GH_TOKEN = "github_pat_..."
++
++      Alternatively, the token can be specified in :term:`SRC_URI` with the ``token``
++      parameter::
++
++         SRC_URI = "ghra://github.com...;token=github_pat_..."
++
+    :term:`GITDIR`
+       The directory in which a local copy of a Git repository is stored
+       when it is cloned.
+-- 
+2.39.5
 
 
