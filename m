@@ -1,117 +1,202 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <stefan-koch@siemens.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D4DC19F2E
-	for <webhook@archiver.kernel.org>; Thu, 27 Feb 2025 16:33:41 +0000 (UTC)
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
- by mx.groups.io with SMTP id smtpd.web10.15158.1740674012011336671
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39604C19F2E
+	for <webhook@archiver.kernel.org>; Thu, 27 Feb 2025 16:52:11 +0000 (UTC)
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.40])
+ by mx.groups.io with SMTP id smtpd.web11.15692.1740675123984228284
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 27 Feb 2025 08:33:32 -0800
+ Thu, 27 Feb 2025 08:52:04 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=IvHDF1k2;
- spf=pass (domain: gmail.com, ip: 209.85.222.172, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c081915cf3so148582885a.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 27 Feb 2025 08:33:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740674011; x=1741278811; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QE28vjjgYjL/+MmbXoLSoUdnR2YkulslPNxMaDhrwk8=;
-        b=IvHDF1k2USq+pasqdwJjPzenAoZvvEJbxFcdU0LofWto2cnlcp5RK7vgnB+UI/K/ZF
-         8hHFzMfOzoJ9fnsDFVjNwBOcnMxRP2YQItXFSg9L/kOlRQTXDT1ksNKhyefcC18m93RS
-         bjDQohWTTqRptjGZxhRu7M1h+iVUfx+F6uY9DxSC5uc2Kx47OrkHVdqe+0LKzEURx7Zj
-         +HzHwvWwrRk8gwH93Ii2oW8WnBnkKM4AhB3qOqk4ugeiuGscnvTQeayqN3zCQbtwIvwF
-         wKynrznp0wV/hwFGY+b7utwWbISwrlLku5WhWlC+8JNEp2yo60vTry3hkvsk4a+ACD7p
-         FswA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740674011; x=1741278811;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QE28vjjgYjL/+MmbXoLSoUdnR2YkulslPNxMaDhrwk8=;
-        b=FkAfZzwMljkv/jOaTzlRniz6jLuT5RNEDvihYgkypnIQHr9ZOSZ8RZ4BGtq6egpBGB
-         G3v09jl0G2Kjh/EqX7viE5XuV5U3Ry5EBQxQ1HKCJstvKSC3rZu1qO6+kaG8Pz42tD8A
-         UwP/CYhq/60mtvVrB52LYqw/Zlbg+zKqRzJIOSarafK6bSVN86qHL8DH3DFM0fo/6zrC
-         ezcsIvydwNjNb/0bjjBa9EFXMbeMfIhC3tI974GTG1tMqC9Nxg40VzSr641vk141e5Iq
-         L2U/a8Aa9/Y0X63nvzBYXcw++3D4BggNZMY2OwtC5nXsBU1p1ntkswcgQzWGnHz0T8Az
-         68Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCX+O0FymWip4QXNk09CfTULk3gf7RCHF1Er5Ob4qnNOzga2N0L4attvVtM1FLWgTCs8EGhsDUDFFd4PRcse@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yzwd11uFmkisW2oaTqCnU0pxw+PiSciE17MrFsouGaAiQSr9zOR
-	OIY01cf0QRfcyBWuxLXHzGgcv2xAvXPdKLCjZV+AtD2KKjMF0/uIwQu/LtxufAFpM8PeuN+VZPS
-	Gepc7FqYZxZTIhQvQv2oU8taJwKo=
-X-Gm-Gg: ASbGncsC/60CgtDvB/6oziJzbuEb8UHIctn0YUjOg2Bjsq6G/NTTCpUA4N/Id+55vh6
-	YnQ9V58Z8khTzCmQon3CKfeDX3nAUWj95M9KKwmQO3iclE8bmq9jFbs4jVqPMbo2sLbOuiLSo2D
-	WF4CXRV9o=
-X-Google-Smtp-Source: AGHT+IEIQy//btD372hpqfVILd/aIU5NVFxn/Zh0qVYHFZqMVD6CAAYyp9Umz32EgRsGCRWCpIaWht5x+/04o16HP4M=
-X-Received: by 2002:a05:620a:2991:b0:7c0:b3cd:9bc6 with SMTP id
- af79cd13be357-7c23be1186dmr1656554385a.18.1740674010430; Thu, 27 Feb 2025
- 08:33:30 -0800 (PST)
+ dkim=pass header.i=@siemens.com header.s=selector2 header.b=ZVTA2QIB;
+ spf=pass (domain: siemens.com, ip: 40.107.22.40, mailfrom: stefan-koch@siemens.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GmO+mBZUocvpiia4YGs74fYh9BFdW8Aj4Rob8HwclmCob6xyWWbnt5PAylo6cMO4P3VwlR27NgZ0wzRTencrJbIIMtN0oSR04bcp0QlCMqjS+YZPe7L7vTGWRHi1PuaaAZSqoMvnvCm8hmdYRdn01oGpaRpru/hwHnjS2sPYy8MBsAIBNyB+g2ORBxWHaT5tgHv+xzVy/GV4c6KBO3pniKlTFQ823NgCIoy6NxKM6ZwQjcQh8GiG26TAhgB1V5ZWE9VebEyz0gymy7BePmE+4zJpvLJBNRh1UHFZesxDIWcqtkYLgKlboMnsSzjiyorGs9qVjFfX78AR1JAOfGOG1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yYG7jS+5G6/RlLnTvr8IzcuarpTWSnXWfVwiJGoR8Vg=;
+ b=Kw7c2dNYFArQaB/2zqgLxpuEMDYib9ywbNfIlv5klOk6qE6U8MXCXRIwZMM87TGVuNzpsNyJ6UxrhCHEE8rOw3BC54nhDB4O4DdNcGagmXl2z6YxMjbq0oS/ImAzUlLIBAQjNqEY3qdeeBe/SAGAmkx23D/ejpESTax2DmN8IZsmP7tfoyXJerpCTgCenLwkh+o3pCSCJeGVVuOuo8IK6Qdb5stufxq/wlhXmNGkbnRKKETZ7/W+iK38F8HgBCUyK/eWKa30Lr8AlEPpLCvdd9+G+jzY/3JGnt+DFjqiew1E6A4KOemhWl89EBNtD9oTgricO9CIRZSZVShXvAMwwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yYG7jS+5G6/RlLnTvr8IzcuarpTWSnXWfVwiJGoR8Vg=;
+ b=ZVTA2QIBg5DdeW0msUaAX/ho3YMRk9v7angUMPiVhxQREQD18/ma2e5LgwBlaAZA/pYEZqyDKEAN+GBgrZhEnsG+5nZjcQGpRHKb5XssSfeITrWSAPumh+L4ckz/zuNiwXSHYtD8rOBjveRyt+WiGyniX9cOtzvN0zo64tM9VlEbhMjPrx9yVvWRcwuSh1lxSJoJ9slJI+iJXl9sDLxomKirU9bc/lUaAwvxxo1pTpgXm/OzfcGy5Gou+BBZRC+vSDw8JMcli0vlCFCIsQEyh9ZTUTiSOqX/6QaB+Kp5sKKrkTyIoCx8l10CGHhKOa7GXX8C9IIc+ZG+SiLH1as29A==
+Received: from AM9PR10MB4959.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:41e::11)
+ by AM0PR10MB3620.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:151::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Thu, 27 Feb
+ 2025 16:52:01 +0000
+Received: from AM9PR10MB4959.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::71d7:e998:3abf:a1ec]) by AM9PR10MB4959.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::71d7:e998:3abf:a1ec%6]) with mapi id 15.20.8489.018; Thu, 27 Feb 2025
+ 16:52:01 +0000
+From: "Koch, Stefan" <stefan-koch@siemens.com>
+To: "richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>, "mathieu.dubois-briand@bootlin.com"
+	<mathieu.dubois-briand@bootlin.com>
+CC: "Sudler, Simon" <simon.sudler@siemens.com>, "Kiszka, Jan"
+	<jan.kiszka@siemens.com>, "alex.kanavin@gmail.com" <alex.kanavin@gmail.com>
+Subject: Re: [bitbake-devel] [PATCH v3 1/4] fetch2/git: Add support for fast
+ initial shallow fetch
+Thread-Topic: [bitbake-devel] [PATCH v3 1/4] fetch2/git: Add support for fast
+ initial shallow fetch
+Thread-Index: 
+ AQHbg7ywZJqt9JvQhESFPikUXBi+bLNWX0eAgAAQGoCAAARbAIAAQsQAgAGQ0gCAAQUEAIAABYUAgAIWggA=
+Date: Thu, 27 Feb 2025 16:52:01 +0000
+Message-ID: <58893f3ee1cdfd9d9769f4c0d3b5eaa19adad1d6.camel@siemens.com>
+References: <20250220172706.3850722-1-stefan-koch@siemens.com>
+	 <D80NPDG5BAOJ.21VFGTXZZIRP5@bootlin.com>
+	 <e041fd346c069847c11899777503721d0dfaf952.camel@siemens.com>
+	 <4961407c133c3579acf66ca5deefa6f680c4f391.camel@siemens.com>
+	 <D80UCEFULALJ.1FXZODPDU20BJ@bootlin.com>
+	 <06ab9baa1ee1d5e22403f63b6074789412f7d501.camel@siemens.com>
+	 <D828Q3C1GEJQ.22EIS7ZR8OKI3@bootlin.com>
+	 <71d9ba0fa4b44a27f3e221b69039b816a882f522.camel@linuxfoundation.org>
+In-Reply-To: 
+ <71d9ba0fa4b44a27f3e221b69039b816a882f522.camel@linuxfoundation.org>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AM9PR10MB4959:EE_|AM0PR10MB3620:EE_
+x-ms-office365-filtering-correlation-id: 9e8190b5-5ec1-43f3-a53a-08dd574f0e72
+x-ms-exchange-atpmessageproperties: SA
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: 
+ BCL:0;ARA:13230040|1800799024|366016|376014|13003099007|38070700018;
+x-microsoft-antispam-message-info: 
+ =?utf-8?B?cURNK0R0blYvMVhiUWRGTFQ3Y3FLblR0WkhQanl6L2NxWVFEU0tQTDI4UmlT?=
+ =?utf-8?B?djlvdDRtUkZRZmxNSE1BMlB5VlBXS3JNR3VMcE0yK0NhTlU3dGZOdkRwQStz?=
+ =?utf-8?B?bGNEVVhHN3BXYXlTYko4ZHZCeElZdENIOFJ4SEpPQmlDeXZZdE5yR2dJRHR6?=
+ =?utf-8?B?NDdhS2F3SmVnZ1RPZkcwVWVuWFkvWUVDSUhzekR1RmVoMFF4MmdBT0JrMC9X?=
+ =?utf-8?B?U2FmZk0zQmJGcUhXNGpzMjRPd1dzMC82c25nK3psdjlmTXUzb3VMNXREME41?=
+ =?utf-8?B?OVpxUklqcVlqT1NRR0dnZk14K0FGT0V5UGw3dnJyLy9Jd0VTMjNicmtpeXlk?=
+ =?utf-8?B?aVFTeDNwYURYdHN4N3lxd3FOMEduakJnQlF3dVRkbjZpS3ZLYkdGSSs3bHdw?=
+ =?utf-8?B?ci9VNnhXS3UyZ1R0d2xMaklxSUhiTXRFUmZOUUpsNlYwckdQZzVMelJXaWNz?=
+ =?utf-8?B?a1g1T2VEdmlqWnNqZXBYOVB5dXUwRzdOdHRPeVBKOHJkK21DY3pnWHAxU3Va?=
+ =?utf-8?B?YytyemdUVlVZZHpmNDMwMlJ4Szd3L0RNeXdhYmx0cVd0TFdCYlF3MjA4S211?=
+ =?utf-8?B?ZStTRnpqMjRVdERlZzhWRHNBNHpEQ1lDK2lOd3BZcVk3UlhlQ2loYWpGZ2xV?=
+ =?utf-8?B?b0pHVC9lc3pxOHZ2SWNUTlBidFpMK29tcU9aNUFlVFNmNUlabEl0UzFzWW1Q?=
+ =?utf-8?B?RzZHYmNKRHFxdVl0Y0IrTk5xQW9iRnd5OFo3SHAwamhwSHJsb3dPcVBOSDhR?=
+ =?utf-8?B?UHZJTUpabHpOSzZ1UVlIR1ZuMEZuZldvYnRZRkx4ZjM3OFJlajV5NGlxNFJH?=
+ =?utf-8?B?VnA4TzRBQkd4V3JNK2dMdTQ1NTFKWFpSNFZ6ekp6SXdnVWFUS3JQQklUOU93?=
+ =?utf-8?B?WVl1U0tiNlZUTDZETU8wbkpZWXR6M2dnczFvb1p4cDJ1SzRMTXZZMGJFT2Rn?=
+ =?utf-8?B?RE5Fa3dSdklKMFI5TXZWMUM5UXRvN1ArMExxd1NQNGpQeXZYYzFxUjlPV2lM?=
+ =?utf-8?B?MWdMeVlDcW9HVnF2WGI3T3hZaXNVSlUvZ2R2WDhxU1lZQzZkZ3ZvZzZBRjRx?=
+ =?utf-8?B?MWp0YXZvcEd4YjI1RFlLelpaeXVHVWZxNGN6NjEwZEZSbTZQZ2x6dGpBbmN2?=
+ =?utf-8?B?K1dzMzlKZVlGNHNudldtMWNmaWZMV09PeURUR2V1NUJ2bGdBZnI4bU1lM1dU?=
+ =?utf-8?B?OGlDZEsxSGVQOG5ZbVA0OTdrVElHR1lVR1EyMkJYWnBNajVEV3dTY0RUK251?=
+ =?utf-8?B?YitSVDJEK2VyZElTZjNNMWRTY2gvK2FXOERDR0VhRWF0NGtSNjNlKzhWaW9p?=
+ =?utf-8?B?V2pIWUlHZkowMGRHM054bXdxMnluckpETXpsSmMzaklOVGYxZHc3Rk0zS1d2?=
+ =?utf-8?B?K1llWTlpem1hUzcxRVFubEc2UUJCM29CODdhMlRpSnViSHpqZE1qZk1ycU5j?=
+ =?utf-8?B?L2FKTnUzNEx6YW5wd1A5czMwT0RZdlN4N05MSWdFMVJ2blJjYWdCWU52aDVn?=
+ =?utf-8?B?Ny8zZ0xDQmRoeGEvMzhaZ0t3QVdoNXVDNHhSazNjZ1BEeGVzeCthQkplSHRm?=
+ =?utf-8?B?aDY2NEtiVXJ3MG5tYXdJeEVxRmZib0ZjM1QvdCtLK2czNG1yejNhTTc0bFJI?=
+ =?utf-8?B?d3BpUU1zQ0wxMW10dSttSmk5NlRGSXB4aFdQcmxZUldWcWVNWVhoMS95TmJC?=
+ =?utf-8?B?ZE5wa1gzbno5anc4NXA3RmNkMHlGSXYrNTgyTWE4TU9lZVVEREZPZzkydjFr?=
+ =?utf-8?B?ZUcybGR1a09COVV3ZHJvK29kd2VRN0RDZXdsWCtCOGVNZHpDZTYzUGZPNUZh?=
+ =?utf-8?B?ZW1JcitTWFJhLzhnYjA2NEt0dGJZbjI1WHpzZG5mOFJwTC9tZDRzQTBxWk43?=
+ =?utf-8?Q?0nOn2vmF/5xoW?=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR10MB4959.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(13003099007)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?utf-8?B?UzF0WmNCbm1rQ0ZmQ1VPMmdnbG52UmVwY1BQL0tLd3VuVnhxNkxMQi9KeDJX?=
+ =?utf-8?B?NkJXTTVCcW1KUm56Q1ZmUHFqYzNrQnhXTHl5eXdERG13Z2VtT0ZLdjFiRGFS?=
+ =?utf-8?B?cCtnQmdqdndwaElyYVZmOUt6eXBkbjZFbkh6a21GUmxlRW04aFRnY2FZdzRy?=
+ =?utf-8?B?V3F1V21XUjBreldVZjNKNWxOVW5SdjlWMURkYVlCUHZsNDJtbmdUZ3lJcW5n?=
+ =?utf-8?B?RjdUcU5QVDNJa3NPZlM5RmFpZzd6SlMrMk42VkQ5ZnVYM204TDhvRHUwVWl6?=
+ =?utf-8?B?cUZrQVJTNUZEd0NYc2FhQmdHMll4dVB0MXFYamtYenc3S0VxNGxubS9RbTVC?=
+ =?utf-8?B?c1NTVDVlMzVKTGY4c0NnVGlXbTF5ZnROZkhkeGhpVXFwSVRnUEtmV25GcjFr?=
+ =?utf-8?B?b3V3NDE4bEdKaDdXaTZJK09ObXZvL3p5dzZQZ3lJRDUxWW9CQm5QdktSS1g3?=
+ =?utf-8?B?NzV2UksrNkxHZGhoR1ZNSXFVU0J0bER5L0xlSFVHdzFDaGJDYmJjSEpFV2VC?=
+ =?utf-8?B?ZlA3di9mWG5tTjVhYWRpVjRQODhZVXBxL3NnNDJFR1BZeUs4MVE1VnFuSDlD?=
+ =?utf-8?B?UW9ObzBodEpMY2VlTnFkbTRJVWFoWlRoR2JqUWxCcXRDZmNtMllKNnoreWdW?=
+ =?utf-8?B?MEJTR2hIbW85MzdJQ0trSFVWYW5GL2lSSnFJaWN1SFNhenVoZmloc3FLQW1I?=
+ =?utf-8?B?TjVQTEpFYnF1QmpKWDVJZTU4MWQ5a00wTkFJdGtKUEM1S01jMW00SnVSYXJV?=
+ =?utf-8?B?UmxTbDZ2cmFveG1reHc4S0FrM0NuaVVHWFRUeWNJT2JuNHVoUWs4TjFtS2xU?=
+ =?utf-8?B?NHNzL3dpS1BpYzJoNG5vbkRzMWhYbjRXRlUvYlh5RnRhd2tHa24wTzMxN2Jt?=
+ =?utf-8?B?aER6N05CZjBVMjE1ci9oVTJXL0RNMlVlYVR2Ni9DUzNFVmxlVU81NUJ2cjJh?=
+ =?utf-8?B?VEV5T1VQakhQM3BjdjFZWWxVd2M1QU91b0JoR1RrMXg4S3NwODZSRFQyQ09U?=
+ =?utf-8?B?RjNMS3RFOXdDMGx3N2tFdDJDOFAzVnN1Z0NxLysrYVRHRGo5NnlHM2VTejRN?=
+ =?utf-8?B?TUI2VXpmNmNOMFo5S1BPSEhqSDRFeUpYR1BkVzhjTHpRV0w2Qm1CQXFRL3NT?=
+ =?utf-8?B?Wm83V2JqVURWRjZSMTZPUnY1NDlYeENHdVBpdTd4bzNpa2xGNnAxQmJmcmRV?=
+ =?utf-8?B?Q3Q3cGpwTGFmL2JBQ3NtVGhHN3RqUXZiOG1KWVVMNGcxM0lOWHhqdS9raXF4?=
+ =?utf-8?B?VW5ZbHAwQUZ6b2xSZ1lNeGFLWW9haFNuL1NNUFhTa2JoUnRpVHFDNEVXVFhx?=
+ =?utf-8?B?K2VzNitacy9BSDcyOHJhS0pWUkVPcnowSVpwSEJlQzdkZHdlZmJPQlcrSTJB?=
+ =?utf-8?B?K3VWMkxIMFZyalRaTG5BU1ZCc2hQL3d2RGJTQ3FVSG5sZjBZckRvSEVveHZ1?=
+ =?utf-8?B?RkNCWTFRaExCTXF1SXNvditqdjdSWmxrcklNSy8rVFZZL0MrOGE5QnFtbXFm?=
+ =?utf-8?B?ckJycmhYM0tuSXVTNG5OUkEzRGJhd24yWjFTN01SSUdWSzJXbnA2MHNnanBZ?=
+ =?utf-8?B?cGloUjB0blVNdmJwMzdRV2UxdFljMFdxemx1QVp3TUFWT3QvMnI4NU1FRi9D?=
+ =?utf-8?B?ZnBuNjdSOVZJWndFczJXMFl2R0R5ZTZMTytVdzFHNVlDbFJxQWZDZDR5U0Q0?=
+ =?utf-8?B?dWtwRHd3OHZLZnF6eHIyMlJZOUFIS1QydzVLblVnaHRiSTh2Yk4xQmpwNTVL?=
+ =?utf-8?B?TXFsTytEbDFpV1RYS3l3Yzlpb25pVG52andYSU5vK0JFZUlINVAweDhvTkVm?=
+ =?utf-8?B?SUF2clR4U3NUZHFTajVEWlFpUmpCOFllQ25FY09yVERiZ0Jwc3gyK2F4RnVi?=
+ =?utf-8?B?SVE3TkE4ZXhHSFJhc0JUQTkyN0lkTHBMbkpld3h4WXQ1NUhncVdQZEJQRHFC?=
+ =?utf-8?B?cnYzU2xDRHA1VFhsUWZ6cFNETzlWK2FvalNxRFZRUlovU3VqekYyWVdMTXZu?=
+ =?utf-8?B?V1lwVEFHSW1VamlHQXlhTWM2RUliSk1LUWRCMDloV3NnRVd6ZVJSVXZCVElM?=
+ =?utf-8?B?aWdmbGUzdHlkN1NXSWQ0VldtNUtZd0wycjlIWVZKNCtJT0FGVzhBdDJSYmNn?=
+ =?utf-8?B?VWlDcXJneWwwb3VCdkdGNFVYYXVTZmRnaDBER09QRzhMVnNLTlFOZGp3TUlH?=
+ =?utf-8?B?WlE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5ECE7C4BE33AEE49BD5563F95F67F5C9@EURPRD10.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20250227090853.1632280-1-l.goehrs@pengutronix.de>
- <20250227090853.1632280-3-l.goehrs@pengutronix.de> <CANNYZj_8DU=8eFrbjEBPhupuu13KG7a19V9z_zcj+WPhWAQ_ig@mail.gmail.com>
- <c800a81e-d6cd-414b-a0bb-e011ca257bf9@pengutronix.de>
-In-Reply-To: <c800a81e-d6cd-414b-a0bb-e011ca257bf9@pengutronix.de>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Thu, 27 Feb 2025 17:33:19 +0100
-X-Gm-Features: AQ5f1Jpn6mLGBWbZ-cmb3CB4d1-hLXdZn5E-0gip7JBrTpaPd4jPWsWLv-sPaOI
-Message-ID: <CANNYZj-2zn4LxP_4Bco4hWGVBG_3=waEAsvxPnWSC35-E6fSWA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [docs] [PATCH v2 2/5] fetch2/github_release_artifact:
- fetcher for (private) release artifacts
-To: =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>
-Cc: lgo@pengutronix.de, bitbake-devel@lists.openembedded.org, 
-	docs@lists.yoctoproject.org, yocto@pengutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR10MB4959.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e8190b5-5ec1-43f3-a53a-08dd574f0e72
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2025 16:52:01.2490
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MgPoZxu9NXqlg29TFvcb/HlrvDlGo5cn0LkuW8z/nCTkxJM8YA1ix4cCg0Y2aRLc6hlWk6UKFXuBwjgOQKk8dA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB3620
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 27 Feb 2025 16:33:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17347
+ <bitbake-devel@lists.openembedded.org>; Thu, 27 Feb 2025 16:52:11 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17348
 
-On Thu, 27 Feb 2025 at 11:37, Leonard G=C3=B6hrs <l.goehrs@pengutronix.de> =
-wrote:
-> I've had a look at the `.netrc` / `.wgetrc` documentation and it looks
-> like it possible to provide custom headers in the `.wgetrc`, but it do no=
-t
-> see a way to specify which hosts they should be sent to.
->
-> We could add a mechanism to `wget.py` that searches for a per-host
-> `.wgetrc` and maybe allow overrides via a `SRC_URI`-Parameter.
-> But I don't really like the idea. One misconfiguration would mean silentl=
-y
-> sending the GitHub token Authentication header on _every_ request to any =
-host.
-
-You can't make the argument that attacker gaining access to protected
-artifacts is not a big deal; if it isn't then why are they protected?
-Just publish them openly, without those pesky tokens.
-
-You similarly can't make assumption that people will handle those
-personal tokens with care; they won't. They'll put them into layers or
-otherwise share them, against everything documentation says, because
-it's convenient.
-
-AZ_SAS and username/password support in https fetchers are both bad
-precedents, and should be removed. The correct precedent is set in the
-git fetcher, and with the recent changes to npm fetcher: bitbake is
-not allowed to see secrets, period. Bitbake was never designed to
-handle sensitive data, and it can easily leak into for example logs,
-which are then published in CI for everyone to see.
-
-What could help is wget picking up additional settings from a
-wgetrc-like file specified with a command line parameter. Can you
-check wget source code to see if /etc/wgetrc and ~/.wgetrc are both
-hardcoded, or is there additional parametrization possible? Raising
-this with upstream would be also appreciated, perhaps you can propose
-a patch. Then we can think of how to provide those custom settings
-from a fetcher.
-
-Please also see the discussion around npm authentication we've
-recently had, as it has many of the same arguments and approaches
-discussed, and we were able to arrive at something that satisfies all
-sides.
-
-Alex
+T24gV2VkLCAyMDI1LTAyLTI2IGF0IDA4OjU4ICswMDAwLCBSaWNoYXJkIFB1cmRpZSB3cm90ZToN
+Cj4gT24gV2VkLCAyMDI1LTAyLTI2IGF0IDA5OjM5ICswMTAwLCBNYXRoaWV1IER1Ym9pcy1Ccmlh
+bmQgd3JvdGU6DQo+ID4gT24gVHVlIEZlYiAyNSwgMjAyNSBhdCA2OjA0IFBNIENFVCwgU3RlZmFu
+IEtvY2ggd3JvdGU6DQo+ID4gPiBTbyBmYXIsIEkgY2FuJ3QgcmVwcm9kdWNlIHRoZSBpc3N1ZSB1
+c2luZyBhIHVidW50dSAyMC4wNA0KPiA+ID4gY29udGFpbmVyLg0KPiA+ID4gZ2l0IGNsb25lIGdp
+dDovL2dpdC55b2N0b3Byb2plY3Qub3JnL3Bva3kNCj4gPiA+IFBhdGNoaW5nIHN1YmRpciBiaXRi
+YWtlLw0KPiA+ID4gb2Utc2VsZnRlc3QgLXINCj4gPiA+IGRldnRvb2wuRGV2dG9vbFVwZGF0ZVRl
+c3RzLnRlc3RfZGV2dG9vbF9naXRfc3VibW9kdWxlcw0KPiA+ID4gYml0YmFrZSBnaXQtc3VibW9k
+dWxlLXRlc3QNCj4gPiA+DQo+ID4gPiBUaGUgY3VycmVudCBtYXN0ZXItbmV4dCBicmFuY2ggZnJv
+bSBiaXRiYWtlIGNvbnRhaW5zIHRoZSB2NA0KPiA+ID4gcGF0Y2hlcywNCj4gPiA+IG5vdy4gRG8g
+eW91IHN0aWxsIGhhdmUgdGhlIGlzc3VlPw0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+IC0tDQo+ID4g
+PiBTdGVmYW4gS29jaA0KPiA+ID4gU2llbWVucyBBRw0KPiA+ID4gaHR0cDovL3d3dy5zaWVtZW5z
+LmNvbS8NCj4gPg0KPiA+DQo+ID4gSGkgU3RlZmFuLA0KPiA+DQo+ID4gWWVzLCBpdCBkb2VzIGxv
+b2sgbGlrZSBSaWNoYXJkIGhhZCB0aGUgc2FtZSBpc3N1ZSBvbiBoaXMgYnJhbmNoOg0KPiA+IGh0
+dHBzOi8vYXV0b2J1aWxkZXIueW9jdG9wcm9qZWN0Lm9yZy92YWxreXJpZS8jL2J1aWxkZXJzLzU0
+L2J1aWxkcy8xMDQ1L3N0ZXBzLzE0L2xvZ3Mvc3RkaW8NCj4gPg0KPiA+IEkgd2lsbCB0cnkgdG8g
+cHJvdmlkZSB5b3Ugd2l0aCBhbiBlYXN5IHdheSB0byByZXByb2R1Y2UgdGhpcw0KPiA+IGZhaWx1
+cmUuDQo+DQo+IFRoZSBwcm9ibGVtIGhhcyBub3cgbW92ZWQgaW50byBhbiBpc3N1ZSB3aXRoIHRo
+ZSBnaXRzbSBmZXRjaGVyIHdoaWNoDQo+IHdyYXBzIHRoZSBnaXQgZmV0Y2hlci4NCj4NCj4gb2Ut
+c2VsdGVzdCAtcg0KPiBhcmNoaXZlci5BcmNoaXZlci50ZXN0X2FyY2hpdmVyX21vZGVfbWlycm9y
+X2dpdHNtX3NoYWxsb3cNClRoYW5rcywgY2FuIHJlcHJvZHVjZSBpdCB3aXRoIHRoYXQgY21kLg0K
+Pg0KPiB3b3VsZCBiZSB0aGUgY29tbWFuZCB0byBydW4gdGhhdCBzcGVjaWZpYyB0ZXN0LiBJIHN1
+c3BlY3QgdGhlIHJldHJ5DQo+IG9uDQo+IGZhaWx1cmUgbG9naWMgaXNuJ3Qgd29ya2luZyBpbiBn
+aXRzbS4NCj4NCj4gSSdtIGFsc28gc3RpbGwgdGhpbmtpbmcgd2Ugc2hvdWxkbid0IGV4cG9zZSB0
+aGF0IHNraXAgdmFyaWFibGUgdG8NCj4gdXNlcnMNCj4gYXMgd2UncmUgY3JlYXRpbmcgcHJvYmxl
+bWF0aWMgQVBJIHdlJ2xsIHRoZW4ganVzdCBoYXZlIHRvIG1haW50YWluLiBJDQo+IGFncmVlIHdl
+IHByb2JhYmx5IG5lZWQgdGhlIGZhbGxiYWNrIGxvZ2ljIGp1c3QgaW4gY2FzZSB0aGVyZSBhcmUN
+Cj4gb2xkZXINCj4gc2VydmVycyBvdXQgdGhlcmUuDQo+DQo+IENoZWVycywNCj4NCj4gUmljaGFy
+ZA0KDQotLQ0KU3RlZmFuIEtvY2gNClNpZW1lbnMgQUcNCmh0dHA6Ly93d3cuc2llbWVucy5jb20v
+DQo=
 
