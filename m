@@ -1,265 +1,305 @@
-Return-Path: <chuckwolber@gmail.com>
+Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92FEC19776
-	for <webhook@archiver.kernel.org>; Fri, 28 Feb 2025 05:38:46 +0000 (UTC)
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
- by mx.groups.io with SMTP id smtpd.web11.9524.1740721124628251118
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390ECC282C1
+	for <webhook@archiver.kernel.org>; Fri, 28 Feb 2025 07:12:37 +0000 (UTC)
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (EUR03-AM7-obe.outbound.protection.outlook.com [40.107.105.92])
+ by mx.groups.io with SMTP id smtpd.web11.10468.1740726750517213993
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 27 Feb 2025 21:38:44 -0800
+ Thu, 27 Feb 2025 23:12:32 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=PrTWZOTZ;
- spf=pass (domain: gmail.com, ip: 209.85.166.179, mailfrom: chuckwolber@gmail.com)
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3cfc8772469so7159495ab.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 27 Feb 2025 21:38:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740721124; x=1741325924; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zi14lsJJtwJgpuEhN51heKl64mbGHZWTwh/CmxD8DpI=;
-        b=PrTWZOTZfZFxK5Ip9rGv/3NxCxBaEL/jio329wsvBADoaqp0PA1lSxWNYWt6tz/lxl
-         0bHS0o+OaDjzD2w/za9hhn56US2gRgKpV9TkDxAtgU21ZdiLENrnQi4j+rV2TX70ZKpj
-         VFKgEi+wcYLpJvBQmG6PsZwNIWfWQ4mZbf0JHnNXBFa8Nfmqz0yoJjH/Kk48VG5sgIvW
-         w3OODSJWzj/5ggvI3+8iQhMcbk+BQa8mjzRRDwQUAtnCPUWSc8qE8pcE4DHsckSJJloN
-         AhPbhcRwGmOx+66SAnYFKEUcZ9+CLUsh71xk0+95SObFh3Kfgh4TWstf1vtF1IbNHdq8
-         ImJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740721124; x=1741325924;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zi14lsJJtwJgpuEhN51heKl64mbGHZWTwh/CmxD8DpI=;
-        b=uh7sBWqZ/4Pi8tYehscpjQEtH+rFx9OkGT+2iOpbhAna+T1cddLx5rRc63houKXCho
-         D4M+yi1YALJt7wvEJ6Sm3Y0Oef92NTwx1exzFVxrG4a1e0Fl7v+qSsYZ2m8bl/pjY8ri
-         /QfY4zvl2uYK5ot5Md5JlaLG/rWNnt1f6S6AaJvXCAHy3QOfR7/cKtgmYceG2FUpzc6E
-         QAfSWmNoIt+3aBd555OdW5ROpHCmNiZUBqJ0f6jNckKFaZbnsE7knv43h4TpJK+GXXxm
-         dVmC1lPYlmHXK7tS3bsHYke94oOwQgJtrEy0lIbFivzH20fOP8MioEq26wrZGmhH0JAB
-         5KqQ==
-X-Gm-Message-State: AOJu0YyM5tEY3iV0WZdBpfQ3YCnUma7gMq1PcdhbBpWClguROtjNXiFY
-	k+szI5nRHF1XvRYN+9mv8cETSwqU37aGIlgbLZX9nyle0nfSEQlv1FZobN1v7quE2XJpQShGDgB
-	Uhvv/9okhwxNPjhjM1nmXZc3VkYA=
-X-Gm-Gg: ASbGncumP1uIz+sUPRfLDy9PMsJ969TElqvwlo/OTvuRySvGvzHhvsh4Bo6b9MbgwXQ
-	UaeqdGqyfu4mXmkVGFpoLmPYpa1wnHp1jlthmA8g0gZ0PCtHh1G1QGl7KZT3DuvvfJcyNTuTeXM
-	k783ciiMWCsS2DMS/WCl+ZV9slKaNb5hU/ugyOvoA=
-X-Google-Smtp-Source: AGHT+IGhrW0NeGO0dWLKujaSyobIQ+kmWOZweAx7I+/ekiSoAaHRM8EmlbbqlAa9dOZ5Z2TCflUSXo5cZMkyuNCO4eM=
-X-Received: by 2002:a05:6e02:216c:b0:3cf:bc71:94f5 with SMTP id
- e9e14a558f8ab-3d3e6f4aaecmr19051255ab.22.1740721123748; Thu, 27 Feb 2025
- 21:38:43 -0800 (PST)
+ dkim=pass header.i=@weidmueller.com header.s=selector2 header.b=XJl3V2o5;
+ spf=pass (domain: weidmueller.com, ip: 40.107.105.92, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PgOYEqgAiBOe/XqkzK+tCybpaiEDgA5mlbaOujoZoMXx7iLF3C5tNX1KyRJADNt/jmectYdtBGyF4Y8LAb316qdGPWjinvcSHbC1VzxGbBLwWpkd/l66CP73zKvj+crvMsWHUQCrXWFKXyM4psvyAP9gdJRvqEGtSCgeuH4kVvieF3hmuygac+YAIzbJqASr/C/WOyZuv9/rhp5gHU0ObmbLob1AbB1GdrL+QZ7FgfAdGlt1HRquviYfyd+98tXkgxTU8ihuL/5p5dkVQJ9xn27vdvO5hlCIMq0DiUqhfA1xjTkijk2R/NK6H5ek3cuMhu60TZPD95fjlLabFe1ZMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IRP0iXbFrM6hXNymC6TBqxcX7LwkdY90+oPx9LbePSA=;
+ b=kp7DYBnY7c+IP/mGcPwoDr+T40PUgiCve1gKhJC6kxTuvBhCJsM95EZ0dNMn4sZtvH8sw/MjSS+UrQ/8mheTzpi43iPI3CfRNIX1RAW6aYDJ0eRFuCvAA2pP4yXbmkYXkANTXp32UvVwyAwSf529y15hotZo+WPX+Kgg0/qcF6OjMPnvQh2l6IIg/Zjtte3b0ZgJbaqvU8yIJ2rbjxm2HyEGWbs0QAvhVBXx8NVedq652XMu7UCCprYRK2tI/iFqGZXer7jRI21Agvi+l9dEg7C46kmgECKj74cpib06YULvmJjaGcJ+czTFFxBPs8G1piJ7iolppaxpi+MG/rQtrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=weidmueller.com; dmarc=pass action=none
+ header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IRP0iXbFrM6hXNymC6TBqxcX7LwkdY90+oPx9LbePSA=;
+ b=XJl3V2o5AG8MXhsEPgnpcbduKotjEViWenpxKqMt9IbjNeTgRYPIW0WK4QomIdqWDcaA0C4BrV+2grrxHaF9X3UVaerBFp5DLL45WUD7J/ncoxtxAXWlv1pshDVKClvDnsJQFRMaj/KYFiv8VhNvGjakA6yVHHRNU9zazLFYvFiSCXB/et9y8MvLfL3DLedLnB0ShiQoiU4QN2rJ0cZSNH190RtRB7l1Og2JkqK24CCKUso798C8XYRGyapuQr+4je9xfCy98qw6VVaCXas7TEgSMFExEYXiIQwgbAGKTKy2SxAiFmfFySVNo2GmMIdSzQ0H24O3HSbkvuF7w5v8tA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=weidmueller.com;
+Received: from GV1PR08MB8426.eurprd08.prod.outlook.com (2603:10a6:150:8a::17)
+ by PAXPR08MB7621.eurprd08.prod.outlook.com (2603:10a6:102:23f::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.21; Fri, 28 Feb
+ 2025 07:12:26 +0000
+Received: from GV1PR08MB8426.eurprd08.prod.outlook.com
+ ([fe80::f9f5:b4bd:9e01:9013]) by GV1PR08MB8426.eurprd08.prod.outlook.com
+ ([fe80::f9f5:b4bd:9e01:9013%4]) with mapi id 15.20.8489.021; Fri, 28 Feb 2025
+ 07:12:26 +0000
+Message-ID: <9b99dcbc-8918-4858-9dd6-6c54fb577b39@weidmueller.com>
+Date: Fri, 28 Feb 2025 08:12:25 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [bitbake-devel] [PATCH 05/13] fetch2: remove duplicated code in
+ url decode and encode
+To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>,
+ "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Cc: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
+References: <20250207124701.14787-1-stefan.herbrechtsmeier-oss@weidmueller.com>
+ <20250207124701.14787-5-stefan.herbrechtsmeier-oss@weidmueller.com>
+ <AS8PR02MB10201794A0F8A9E55844F4430EFCD2@AS8PR02MB10201.eurprd02.prod.outlook.com>
+Content-Language: en-US
+From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
+In-Reply-To: <AS8PR02MB10201794A0F8A9E55844F4430EFCD2@AS8PR02MB10201.eurprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR0P281CA0004.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:15::9) To GV1PR08MB8426.eurprd08.prod.outlook.com
+ (2603:10a6:150:8a::17)
 MIME-Version: 1.0
-References: <20250227223436.28224-1-eric.meyers@arthrex.com> <20250227223436.28224-2-eric.meyers@arthrex.com>
-In-Reply-To: <20250227223436.28224-2-eric.meyers@arthrex.com>
-From: Chuck Wolber <chuckwolber@gmail.com>
-Date: Thu, 27 Feb 2025 21:38:26 -0800
-X-Gm-Features: AQ5f1Jo60Cgf0Iks2sVyqyIoSuoy6AZ0SuLt-HNPyh1Lyxh8kgkRIavZKdiHjYU
-Message-ID: <CAB=6tBTRXOH1MHWgbtewbZBMj1Mp3Hmne3_28nM8=7p=FJYQzQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] fetch2/npm: Adding npmrc support for private
- registry authentication
-To: Eric Meyers <eric.meyers15310@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org, 
-	Eric Meyers <eric.meyers@arthrex.com>, Geoff Parker <geoffrey.parker@arthrex.com>
-Content-Type: multipart/alternative; boundary="0000000000003bf64a062f2d389b"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: GV1PR08MB8426:EE_|PAXPR08MB7621:EE_
+X-MS-Office365-Filtering-Correlation-Id: d16f656b-2ea0-4314-ecc6-08dd57c7413f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: 
+	=?utf-8?B?aGplcUU5a0VSSnkxK0Q3MHViNzJ6bVNqSlR0OWtoNmRoaXVJMm5zakxreGRx?=
+ =?utf-8?B?S3VGWUhSYit3cGozUTRTR2lGakxFaTFuNS93d1NFYldVL1V1cjJ5UW9EYjVV?=
+ =?utf-8?B?ZDlCRlF1cVloSG0vbGtyTmlVTVpwSHNmd2szcjkyOVpDNTZUT211Mm8vS1ln?=
+ =?utf-8?B?ZEtuTVcwNTNWWDFtTHYyQ0xONXRxQmNxc1JEb0NRVjNoR1ZFRTVQMDRDOHNQ?=
+ =?utf-8?B?ZlhhZndaYUtXYnJnNjNMRFkrVzZoZEsxSlJjTWlDZVNpUDEvZUNLN0dDK2VF?=
+ =?utf-8?B?M2NxVlhIYmxGUnRRSnZ6UG04eUI2U1U0MVN0NHRkNXNDVWpFT0xLVGlQcnlV?=
+ =?utf-8?B?VGFvTmMvSllDTTQxcFRiamh6QUNMV2xaNXBiNmFQRzBFbXFhanJOZHYyenpI?=
+ =?utf-8?B?V2NVMkNiSU9lU1hBWWFPOXBWVWZ3eVhFWnMwQWlZSUtUMXpJSVdwcXljU0xF?=
+ =?utf-8?B?dHBrV2FuR1YxdFI1STg5WlBKNWZkRTlUb2pEdlV6UXU4c2dFZStqWVpqVm9o?=
+ =?utf-8?B?TEZGMVJvVExjak44b3pFL2hJdG1MNXlwcFRvQ0cySWFOSFhVWS8zU2xCeUlG?=
+ =?utf-8?B?ZzBnUEx0QStXK2pKUzI4eEdBeEZHWHBmL3JzeldmbEJYYURMTlZpL200dUxU?=
+ =?utf-8?B?QUpsdmxpbmNKeStsN1NWTVdHbzR2SE1vcWVKWW1QZUswejVTamh1WXdGTE1t?=
+ =?utf-8?B?SjJrWmtJUWw3UE1VUE9jM2UrK0lBYythVzhBM3dBRzN2dWhJWFJVa3RzMFdq?=
+ =?utf-8?B?SHhtK2o2NyswcnN0Z1grQ3h3R2xWZElBZHZZMDd0dmtlTG9TbmZZQTBEUnNt?=
+ =?utf-8?B?NkI0SDY4SXZKYlFZYmJyWTNDangwcXNiOCt0dkxVbi9QWkhNMjlKMVRGOVpJ?=
+ =?utf-8?B?RVJ4MnhpeTRzVC9DQ2tyMkxiMGpKZWRJSGZJSUIzRmIrbGhqK29uYUIzbUl0?=
+ =?utf-8?B?dytMbkdhVDlrN0JhYUhyUG1YQlR6ZG53ZVlNNlRKSUlmYzZRYnZiSWorNHZ1?=
+ =?utf-8?B?VjNSTkhzblZxRWF5bFViM3VZS3AvazlRcVRZRlU1ZUtWLzBtQ3QxbWRsSFVM?=
+ =?utf-8?B?M1ZMazhNWlUyMUx1enlJNTZBVGJYbDY3aWthdFN5bEt1NXRTZ0U4Zk83ckNI?=
+ =?utf-8?B?V0NHbHpWMHIyVVZmbTF6aE5UM0trSEZ2dW5TUzNETTI1RmZ6ZFFvc3ExbjY2?=
+ =?utf-8?B?MXd5dDR4cDRxZTk2YTZadzUrM3g1TUlwY25LdzZaalJKSWljVWxmQTk0ZVd4?=
+ =?utf-8?B?cUlqb1FDMHBHRVF1cUtQY2tqSGlYbGxGZjNFcFozVWRKMHFRTWZQSmE4azBV?=
+ =?utf-8?B?bmZQeXNXb1dueEpmd3hoclRCQitPRnIyTUNrMmw3VndDSTFxQ2xpZEN1Y2xG?=
+ =?utf-8?B?UFB4L056TGRWdWgxKzFzRG40YTZJMjBIWWVVd25MeFpGZGZUZEZSQmpLb29X?=
+ =?utf-8?B?dXhuMzl4c09KL3JDekUwUjF4Z1cvWnhlZy9PUWg5ZnpjLzdPemZxYzVXd3M4?=
+ =?utf-8?B?YVpOR3Y2VkJ1ZkJ0WFJjbmQxejZYK2Z6M09uWExtSG9pR0xGa0hMclh4MTVE?=
+ =?utf-8?B?TWhHaEt2UjNKZnRZbWJoQktSMUphZEt0QkVFcTljczIyLzdCT1BMSnZFQXZI?=
+ =?utf-8?B?eUxyMEdod2lreFFGUUF5djU2bVc3R0VDcFBYWXlwVWNreHgxekhYMzhWeHU2?=
+ =?utf-8?B?WmxnakhJM0ZtOThrMTNWWkh1NHo5YlBZaHg4RzdGMDBkWmp2U0JwQlJSMTAx?=
+ =?utf-8?B?SEJ2YnVpYjl4OStZdUhmeFdnSDF6YkhhYzBwR0ZwYWZhWUVOQ1JjdDUvZ3lQ?=
+ =?utf-8?B?T0tlbVNNaEZXUklZdWQ3Zz09?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB8426.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?cTQ1T2FzNTRLWjAxYWR2WElyWVVXZVI0S0J0NXBIZjNsN08zODVmWG9oRTJR?=
+ =?utf-8?B?MmNmVjh1blBvZnNPNVF0U0F3TlJwOVByWmFKWVBqMVJpL2F4d0hGS0t4ZHd5?=
+ =?utf-8?B?YWlhS3lXekMxQUJjYi9mdzM4NStQRXB4eE1vd0VOWHZTRWovUHpQZFJ5bE1l?=
+ =?utf-8?B?NW16WVQ3dmljQW9XZmk2dTFHTmhjemdIZGUyVUQ2VjRwMU5Va0lPN1NIc0Mz?=
+ =?utf-8?B?NzFiR24yZ2FGYmFoK1lacXpQRWp5bks3Q3k1UE9nZ3ZpeGlOZ2ZwdCszbGlj?=
+ =?utf-8?B?TGN1cGxTbFF1b1pmMXA4OHR5VUJsVzBIM0RuTHN2d0FOUy9JR01iOUhSSWZN?=
+ =?utf-8?B?TTVyakJCclJ0amk1SGJ0bldJd1pqZWhUeVFRSlo2emRrUnV1aTRSL1JXcWth?=
+ =?utf-8?B?MDh4cFgvVWZnWFhqVU1ycFpzUFR1dzlaY0J5bWJuOWp3N1RxamUyUTh4NU44?=
+ =?utf-8?B?emtCdkF5dGdrVXdZd29nNTAzd0U0RGhuNkdMVnFNckt0UkJ4Nm5MVVpxV09J?=
+ =?utf-8?B?eDdsekZoeHFyMGZYdjdIV0VpMzQxbGJjZUQwaTVMTnZhS1F3a0RHdWNQU1ZE?=
+ =?utf-8?B?VEFZREpmMEdTbzExSnFmODlnMFliRDZQYkFOelF6WnBTSkQ1ZTdMb29wY0N3?=
+ =?utf-8?B?YlJHL01XNHRuSGRaelppYTZDNmVrdW1tMlBTaXpqTGFON3d5dDhWb0tzQ1Jq?=
+ =?utf-8?B?YUdtbWI5T3pUZE5hWmNzcHhPUlZNRDJqSEgzYzdGY0pTNnA1UWdKTkg0cWZI?=
+ =?utf-8?B?YTcxZC90TTE5ZWFOVTloczJiV0VlKzRBaVF2MTBaYWh4VTZCZEtrZ1E1ZUx3?=
+ =?utf-8?B?Yyt3cVVEOG0xSGpFT3cybmlLOUhLaFdUZUxLakVTaHE3QzhuditncnBlNTFM?=
+ =?utf-8?B?cDlJZ0hzTHFKZ1JqZEZyb3hrK29GR3p5cUxwc1p1VTF5TTFHdVpJdU5iNzVo?=
+ =?utf-8?B?VlEwNUt2bkJBMUhTc0dPVXRRTXVla1ByRmdjUks3WEgrWWR3YzBUVzJsYUxW?=
+ =?utf-8?B?VE5IQ1p3YVNnaWZMVnNLZzlQa211ZytaNnZVcXFYTnFXUWVUaDdSZmRnOGg1?=
+ =?utf-8?B?dzE3STBKYktHZ3VFVmNCMlVxQTFwV2ZMZ0lDMG5jRTVjaU82MlBiMk8yaFY0?=
+ =?utf-8?B?TVNPYTdYTjZrbWhjK3hFWUhjSXdCTzJUbWg1RERJNC9iOFo3R0twdFhWK1pV?=
+ =?utf-8?B?OUVQeFdoVkQzS2UwMm9YZENhK093dFhiK0VhelJCOUZtMFMvR0pGQkQ3ZEVs?=
+ =?utf-8?B?WGdDTXVuc2NiMVZzdU9ZZnpyWnVFWUV5UTh6MFl6anEwNUtBSzA2TnZ4d2dR?=
+ =?utf-8?B?L2I4MTVLV3NIRjArd1JsY3ZaZk1sdWx0bkNuM1VZb1llVmRpU2srUk9ZVENw?=
+ =?utf-8?B?ZkpoWWhBekVFbUg0d1p0V2JIZTFjN2JObmZ4cGQ0eXhnWVN1Q0pqTkk2T0RC?=
+ =?utf-8?B?ZWlTTzZvSkY5bUs2UHRlVWdPcUdvRVcrbU5HZ2kvR3NWVVIwT0pOcDVidWxw?=
+ =?utf-8?B?VDZaRnptZW1GRzVHVjRKczdzQkYvWXZSYzZRTk5VYXRGNmFOZ1d0c2Uvd0Nq?=
+ =?utf-8?B?UlpXSDZTaXAwNmE1bzV5VXBjUFNsdnVvMHBtQ28yTkRaTUZDak1WR3FtVFc2?=
+ =?utf-8?B?dmpPWnBTNmZLN2R3RFdITWNBNG9SN0s1WklTV21lUFE4RnhveWZ5YU96MGsx?=
+ =?utf-8?B?NEJCZ2FRRDNDRE5sdHljUytFSkU4Tkk0bmkvUUh5RDlRdFpnSjBiRE12bFdt?=
+ =?utf-8?B?d2FPVnc5K0M4cHRFcEtxOC9vclIxWjF0cjlEZnRNY0VqMGErVWFwQ1RtUzRs?=
+ =?utf-8?B?VU1uaHNHb0ZUUC9TcW0zZjRTMW5NcERVYWtZYUhkK0dJWkZLbUJyUy94UmJZ?=
+ =?utf-8?B?VUtlSUU1SVE1UUMzMk5XNTkrcEFLUytxblRLUWhkclRXU1hLK21PcW1WVEhK?=
+ =?utf-8?B?YXV4Y2MyK1B3QUpndXpRcGU1eTVMcTNLck84MGMyTm1mazcrODh6dk9pZkdZ?=
+ =?utf-8?B?Sk55OHZVd0RPN2VUMFFNWnA4YlhSbTVJTkw5L1lxRVR6eWhCNDBwb1A2eWw2?=
+ =?utf-8?B?a1NnN08wQ0VxcVA3Snk4NlRvcHRrWEI2d0M5alJJZFZGUDcvZ25WeTVLOXZC?=
+ =?utf-8?B?L0dTZkJZUlpjZnFsWVllbmczT2VYTUNncjBUZDVhVzJ1WGtURWNFV1BCcjg5?=
+ =?utf-8?B?bVE9PQ==?=
+X-OriginatorOrg: weidmueller.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d16f656b-2ea0-4314-ecc6-08dd57c7413f
+X-MS-Exchange-CrossTenant-AuthSource: GV1PR08MB8426.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 07:12:26.3368
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /8ymxS9T/+b57CRHwLaZjCY4FyY3Hqx4021T402gWorhSIEv6Em1Jb75ifaoez7tg7MEqqYbeLyr996eT6cyyw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR08MB7621
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 28 Feb 2025 05:38:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17355
+ <bitbake-devel@lists.openembedded.org>; Fri, 28 Feb 2025 07:12:37 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17356
 
---0000000000003bf64a062f2d389b
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Feb 27, 2025 at 2:34=E2=80=AFPM Eric Meyers <eric.meyers15310@gmail=
-.com>
-wrote:
-
-> Signed-off-by: Eric Meyers <eric.meyers@arthrex.com>
-> Cc: Geoff Parker <geoffrey.parker@arthrex.com>
-> Cc: Chuck Wolber <chuckwolber@gmail.com>
-> ---
->  lib/bb/fetch2/npm.py | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+Am 27.02.2025 um 03:58 schrieb Peter Kjellerstedt:
+>> -----Original Message-----
+>> From: bitbake-devel@lists.openembedded.org <bitbake-devel@lists.openembedded.org> On Behalf Of Stefan Herbrechtsmeier via lists.openembedded.org
+>> Sent: den 7 februari 2025 13:47
+>> To: bitbake-devel@lists.openembedded.org
+>> Cc: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
+>> Subject: [bitbake-devel] [PATCH 05/13] fetch2: remove duplicated code in url decode and encode
+>>
+>> From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
+>>
+>> Use the URI class to decode and encode an URL. Remove duplicate code and
+>> unify the behavior.
+>>
+>> Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
+>> ---
+>>
+>>   lib/bb/fetch2/__init__.py | 66 +++++++++------------------------------
+>>   1 file changed, 14 insertions(+), 52 deletions(-)
+>>
+>> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+>> index ab992b7ea..2a60e94ed 100644
+>> --- a/lib/bb/fetch2/__init__.py
+>> +++ b/lib/bb/fetch2/__init__.py
+>> @@ -353,49 +353,9 @@ def decodeurl(url):
+>>       user, password, parameters).
+>>       """
+>>
+>> -    m = re.compile('(?P<type>[^:]*)://((?P<user>[^/;]+)@)?(?P<location>[^;]+)(;(?P<parm>.*))?').match(url)
+>> -    if not m:
+>> -        raise MalformedUrl(url)
+>> -
+>> -    type = m.group('type')
+>> -    location = m.group('location')
+>> -    if not location:
+>> -        raise MalformedUrl(url)
+>> -    user = m.group('user')
+>> -    parm = m.group('parm')
+>> -
+>> -    locidx = location.find('/')
+>> -    if locidx != -1 and type.lower() != 'file':
+>> -        host = location[:locidx]
+>> -        path = location[locidx:]
+>> -    elif type.lower() == 'file':
+>> -        host = ""
+>> -        path = location
+>> -        if user:
+>> -            path = user + '@' + path
+>> -            user = ""
+>> -    else:
+>> -        host = location
+>> -        path = "/"
+>> -    if user:
+>> -        m = re.compile('(?P<user>[^:]+)(:?(?P<pswd>.*))').match(user)
+>> -        if m:
+>> -            user = m.group('user')
+>> -            pswd = m.group('pswd')
+>> -    else:
+>> -        user = ''
+>> -        pswd = ''
+>> -
+>> -    p = collections.OrderedDict()
+>> -    if parm:
+>> -        for s in parm.split(';'):
+>> -            if s:
+>> -                if not '=' in s:
+>> -                    raise MalformedUrl(url, "The URL: '%s' is invalid: parameter %s does not specify a value (missing '=')" % (url, s))
+>> -                s1, s2 = s.split('=', 1)
+>> -                p[s1] = s2
+>> -
+>> -    return type, host, urllib.parse.unquote(path), user, pswd, p
+>> +    uri = URI(url)
+>> +    path = uri.path if uri.path else "/"
+>> +    return uri.scheme, uri.hostport, path, uri.username, uri.password, uri.params
+> Unfortunately this does not work if you have a MIRRORS/PREMIRRORS with a
+> regular expression that contains a negative lookahead, which we do. We
+> have the following in our PREMIRRORS:
 >
-> diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-> index c09f05044..2c7ed5340 100644
-> --- a/lib/bb/fetch2/npm.py
-> +++ b/lib/bb/fetch2/npm.py
-> @@ -91,6 +91,12 @@ class NpmEnvironment(object):
->          self.d =3D d
+> git://(?!our\.internal\.git\.server).*/.*    http://downloads.yoctoproject.org/mirror/sources/ \n \
 >
->          self.user_config =3D tempfile.NamedTemporaryFile(mode=3D"w",
-> buffering=3D1)
-> +
-> +        hn =3D self._home_npmrc(d)
-> +        if hn is not None:
-> +            with open(hn, 'r') as hnf:
-> +                self.user_config.write(hnf.read())
-> +
->          for key, value in configs:
->              self.user_config.write("%s=3D%s\n" % (key, value))
+> since there is never any point in trying to fetch our internal repositories
+> from Yocto's server.
 >
-> @@ -103,6 +109,21 @@ class NpmEnvironment(object):
->          if self.user_config:
->              self.user_config.close()
+> After the above change this now fails with:
 >
-> +    def _home_npmrc(self, d):
-> +        """Function to return user's HOME .npmrc file (or None if it
-> doesn't exist)"""
-> +        home_npmrc_file =3D None
-> +        if d.getVar("BB_USE_HOME_NPMRC") =3D=3D "1":
-> +            home_npmrc_file =3D os.path.join(os.environ.get("HOME"),
-> ".npmrc")
-> +            if not os.path.exists(home_npmrc_file):
-> +                home_npmrc_file =3D None
-> +                bb.warn("BB_USE_HOME_NPMRC flag is set, but NO valid
-> .npmrc was detected - "\
-> +                        "check that a valid .npmrc file exists in your
-> HOME directory.")
-> +            else:
-> +                bb.warn("BB_USE_HOME_NPMRC flag is set and valid .npmrc
-> detected - "\
-> +                        "npm fetcher will now use the .npmrc file in the
-> HOME directory.")
-> +
-> +        return home_npmrc_file
-> +
->      def run(self, cmd, args=3DNone, configs=3DNone, workdir=3DNone):
->          """Run npm command in a controlled environment"""
->          with tempfile.TemporaryDirectory() as tmpdir:
+>    Exception: re.error: missing ), unterminated subpattern at position 0
 >
-
-
-Nice work! Only one remaining issue that I can see. I do not think you need
-to
-warn when there is no .npmrc present. That should enable you to simplify
-your
-logic a bit to something like this:
-
-home_npmrc_file =3D os.path.join(os.environ.get("HOME"), ".npmrc")
-if d.getVar("BB_USE_HOME_NPMRC") =3D=3D "1" and os.path.exists(home_npmrc_f=
-ile):
-   bb.warn(f"BB_USE_HOME_NPMRC flag set and valid .npmrc detected - "\
-        "npm fetcher will use {home_npmrc_file}")
-   return home_npmrc_file
-return None
-
-..Ch:W..
-
-
---=20
-
-
-
-*  Opinions expressed are my own. | --------------------------------|------
-"Perfection must be reached by degrees              she requires the slow
-hand of time."                                 |       -Voltaire*
-
---0000000000003bf64a062f2d389b
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><div class=3D"gmail_default" style=3D"fon=
-t-family:monospace">On Thu, Feb 27, 2025 at 2:34=E2=80=AFPM Eric Meyers &lt=
-;<a href=3D"mailto:eric.meyers15310@gmail.com">eric.meyers15310@gmail.com</=
-a>&gt; wrote:</div></div><div class=3D"gmail_quote gmail_quote_container"><=
-blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-l=
-eft:1px solid rgb(204,204,204);padding-left:1ex">Signed-off-by: Eric Meyers=
- &lt;<a href=3D"mailto:eric.meyers@arthrex.com" target=3D"_blank">eric.meye=
-rs@arthrex.com</a>&gt;<br>
-Cc: Geoff Parker &lt;<a href=3D"mailto:geoffrey.parker@arthrex.com" target=
-=3D"_blank">geoffrey.parker@arthrex.com</a>&gt;<br>
-Cc: Chuck Wolber &lt;<a href=3D"mailto:chuckwolber@gmail.com" target=3D"_bl=
-ank">chuckwolber@gmail.com</a>&gt;<br>
----<br>
-=C2=A0lib/bb/fetch2/npm.py | 21 +++++++++++++++++++++<br>
-=C2=A01 file changed, 21 insertions(+)<br>
-<br>
-diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py<br>
-index c09f05044..2c7ed5340 100644<br>
---- a/lib/bb/fetch2/npm.py<br>
-+++ b/lib/bb/fetch2/npm.py<br>
-@@ -91,6 +91,12 @@ class NpmEnvironment(object):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.d =3D d<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.user_config =3D tempfile.NamedTempor=
-aryFile(mode=3D&quot;w&quot;, buffering=3D1)<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 hn =3D self._home_npmrc(d)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if hn is not None:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 with open(hn, &#39;r&#39;) as hn=
-f:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.user_config.w=
-rite(hnf.read())<br>
-+<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0for key, value in configs:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.user_config.write(&quo=
-t;%s=3D%s\n&quot; % (key, value))<br>
-<br>
-@@ -103,6 +109,21 @@ class NpmEnvironment(object):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if self.user_config:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.user_config.close()<br=
+> since decodeurl() has stopped parsing the host part once it sees the "?",
+> which the old code did not do.
 >
-<br>
-+=C2=A0 =C2=A0 def _home_npmrc(self, d):<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;&quot;&quot;Function to return user&#39;=
-s HOME .npmrc file (or None if it doesn&#39;t exist)&quot;&quot;&quot;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 home_npmrc_file =3D None<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if d.getVar(&quot;BB_USE_HOME_NPMRC&quot;) =3D=
-=3D &quot;1&quot;:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 home_npmrc_file =3D os.path.join=
-(os.environ.get(&quot;HOME&quot;), &quot;.npmrc&quot;)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if not os.path.exists(home_npmrc=
-_file):<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 home_npmrc_file =
-=3D None<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.warn(&quot;BB_U=
-SE_HOME_NPMRC flag is set, but NO valid .npmrc was detected - &quot;\<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 &quot;check that a valid .npmrc file exists in your HOME directo=
-ry.&quot;)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 else:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.warn(&quot;BB_U=
-SE_HOME_NPMRC flag is set and valid .npmrc detected - &quot;\<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 &quot;npm fetcher will now use the .npmrc file in the HOME direc=
-tory.&quot;)<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 return home_npmrc_file<br>
-+<br>
-=C2=A0 =C2=A0 =C2=A0def run(self, cmd, args=3DNone, configs=3DNone, workdir=
-=3DNone):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;&quot;&quot;Run npm command in a co=
-ntrolled environment&quot;&quot;&quot;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0with tempfile.TemporaryDirectory() as tmp=
-dir:<br>
-</blockquote></div><div><br></div><div><br></div><div><div style=3D"font-fa=
-mily:monospace" class=3D"gmail_default">Nice work! Only one remaining issue=
- that I can see. I do not think you need to</div><div style=3D"font-family:=
-monospace" class=3D"gmail_default">warn when there is no .npmrc present. Th=
-at should enable you to simplify your</div><div style=3D"font-family:monosp=
-ace" class=3D"gmail_default">logic a bit to something like this:<br><br>hom=
-e_npmrc_file =3D os.path.join(os.environ.get(&quot;HOME&quot;), &quot;.npmr=
-c&quot;)</div><div style=3D"font-family:monospace" class=3D"gmail_default">=
-if d.getVar(&quot;BB_USE_HOME_NPMRC&quot;) =3D=3D &quot;1&quot; and os.path=
-.exists(home_npmrc_file):</div><div style=3D"font-family:monospace" class=
-=3D"gmail_default">=C2=A0=C2=A0 bb.warn(f&quot;BB_USE_HOME_NPMRC flag set a=
-nd valid .npmrc detected - &quot;\</div><div style=3D"font-family:monospace=
-" class=3D"gmail_default">=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &quot;=
-npm fetcher will use {home_npmrc_file}&quot;)</div><div style=3D"font-famil=
-y:monospace" class=3D"gmail_default">=C2=A0=C2=A0 return home_npmrc_file</d=
-iv><div style=3D"font-family:monospace" class=3D"gmail_default">return None=
-</div></div><div><br></div><div><div style=3D"font-family:monospace" class=
-=3D"gmail_default">..Ch:W..</div><br clear=3D"all"></div><br><span class=3D=
-"gmail_signature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_sign=
-ature"><div dir=3D"ltr"><div><b><span style=3D"font-family:monospace">=C2=
-=A0 Opinions expressed are my own. |<br>=C2=A0-----------------------------=
----|------ &quot;Perfection must be reached by degrees<br>=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 she require=
-s the slow hand of time.&quot;<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -Voltaire</span></b></div></div><=
-/div></div>
+> And while regular expressions with negative lookups may be a little
+> esoteric, this change also silently breaks all the mirrors in the
+> default MIRRORS that use npm://.*/?.* and https?://...
+>
+> My recommendation is to revert the change to decodeurl() because the way
+> the regular expression "URLs" in MIRRORS and PREMIRRORS are written do
+> not match the expectations in urllib.parse.urlparse().
 
---0000000000003bf64a062f2d389b--
+Please revert. The decodeurl, encodeurl and mirror code doesn't support 
+query parameters. We have to rework the mirror code. It shouldn't 
+interpret the regex as an url. Afterwards we could reapply the patch and 
+add query support to the url function.
+
+Can you please add the missing use cases to the MirrorUriTest to detect 
+the breakage earlier.
+
+>>   def encodeurl(decoded):
+>>       """Encodes a URL from tokens (scheme, network location, path,
+>> @@ -406,24 +366,26 @@ def encodeurl(decoded):
+>>
+>>       if not type:
+>>           raise MissingParameterError('type', "encoded from the data %s" % str(decoded))
+>> -    url = ['%s://' % type]
+>> +    uri = URI()
+>> +    uri.scheme = type
+>>       if user and type != "file":
+>> -        url.append("%s" % user)
+>> +        uri.username = user
+>>           if pswd:
+>> -            url.append(":%s" % pswd)
+>> -        url.append("@")
+>> +            uri.password = pswd
+>>       if host and type != "file":
+>> -        url.append("%s" % host)
+>> +        uri.hostname = host
+>>       if path:
+>>           # Standardise path to ensure comparisons work
+>>           while '//' in path:
+>>               path = path.replace("//", "/")
+>> -        url.append("%s" % urllib.parse.quote(path))
+>> +        uri.path = path
+>> +        if type == "file":
+>> +            # Use old not IETF compliant style
+>> +            uri.relative = False
+>>       if p:
+>> -        for parm in p:
+>> -            url.append(";%s=%s" % (parm, p[parm]))
+>> +        uri.params = p
+>>
+>> -    return "".join(url)
+>> +    return str(uri)
+> I believe using the URI class for encodeurl() is fine so this part
+> of the change should be ok to keep.
+>
+>>   def uri_replace(ud, uri_find, uri_replace, replacements, d, mirrortarball=None):
+>>       if not ud.url or not uri_find or not uri_replace:
+>> --
+>> 2.39.5
+> //Peter
+>
 
