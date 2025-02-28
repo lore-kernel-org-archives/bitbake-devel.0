@@ -1,187 +1,210 @@
-Return-Path: <chuckwolber@gmail.com>
+Return-Path: <peter.kjellerstedt@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281ADC282C6
-	for <webhook@archiver.kernel.org>; Fri, 28 Feb 2025 18:09:35 +0000 (UTC)
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
- by mx.groups.io with SMTP id smtpd.web11.950.1740766170965400993
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B060C282C5
+	for <webhook@archiver.kernel.org>; Fri, 28 Feb 2025 23:15:09 +0000 (UTC)
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (EUR03-AM7-obe.outbound.protection.outlook.com [40.107.105.67])
+ by mx.groups.io with SMTP id smtpd.web11.191.1740784507640288031
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 28 Feb 2025 10:09:31 -0800
+ Fri, 28 Feb 2025 15:15:07 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=ZV8fTc4d;
- spf=pass (domain: gmail.com, ip: 209.85.166.176, mailfrom: chuckwolber@gmail.com)
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3d1a428471fso18705155ab.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 28 Feb 2025 10:09:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740766170; x=1741370970; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xp0b17MkV2f0ZEylbPwfQDgbhsXVwc2YAO/0ka1oSNo=;
-        b=ZV8fTc4dNhW0n0iRuQGLWIAwFaBZV9rRk90VbjNawSAAiIGZkt7vClIJPhLIK86i7M
-         bsWidjN/Xjn54pgU1AAvpfaCoIuUpclcWHeYpAEzSSgKzS38ozJprp/ksjr/G2IJUfaR
-         U/Pt1BU7PoMUX3KyR3G0PaOedSfVW6ZOcqTYsSIXl1dC9cZLnQGoclWz1pE8J7sI9MTs
-         pljdzS7PCBQzHP+rz5RqXznl5Ut2SAq6mrv49SlvclYwrOKTHasBy26qLNbxlqzifZKP
-         5G9wg/kn0oILkaOrTGY/C14MSzNTWisIhbBoj4N8AfqvxDQWpsppEHL17vW74r3fW5Ky
-         DKzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740766170; x=1741370970;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xp0b17MkV2f0ZEylbPwfQDgbhsXVwc2YAO/0ka1oSNo=;
-        b=ksoFyse0KdEcbcZd/pRd+NumSt/2UF7Tl9STqXlLTQmzf7kKRksKawhJyhWwZjBYI7
-         NwB+0xVZ7nZKNM2L3jtMECcgNmC1pbc0IOGJ+T3PmicNFIHfd2Wq0HXR+K8hHV1oopHk
-         J4J39DyEgdbFKOapeOAINWXBBqqvJ03iJxQOEolw82eJmT98ReiT8fmN/w2MvThDWwVa
-         JV3OIOv9IggwsC9H0cNWxsQHCGN5Tk5OIBla9mi5IJ3fPvTZSdKXMnxWJjzT14HeAkIq
-         x5QhyXds+rtT6PmrQBqHTCeMxI9Fxe/4u5mzXLYE5n1Y56GkJYfdWvzvVSi2uVFwqBHu
-         iKFg==
-X-Gm-Message-State: AOJu0YyD7hJcJEmgzflcs+ijpAkBXPbEdHVtHnCW63vr26u1TmG7/RSq
-	kY7al0HS9/x2nCvD22Gvvus8yhWAddSHm3Ao+Y+mjyIKF5C9r0hUzeWHToQhmqZbtVKhvXX9K4B
-	BVZ4df2jf8Lhg8wpwgjpARw7U3aQ=
-X-Gm-Gg: ASbGncvcotACrocFk2hy4Wo/DmOZd45roo/dSDbyvP7Ux6B/2lj0TZt++KxeXgL7kAq
-	lI6NRYBRniH10fR1TCf/2jtQE1A3dOiKjVUvv/E49XrsfKlpu+95riVjH7cwSxGvF/ZIIZP1TDk
-	zEkY6tQ82bt86qpdhlWrcOBFTk75foYxbp5cvFvHE=
-X-Google-Smtp-Source: AGHT+IFsL0gKlcId26UKaKjhz9ZFDyJ6pF9hgDJeHdLRfs1Ni06l340x39BLRiqoEdemPibAothV1BG6f4quMLnnmP4=
-X-Received: by 2002:a05:6e02:138d:b0:3d3:dd60:bc37 with SMTP id
- e9e14a558f8ab-3d3e6fadcb1mr43772825ab.22.1740766170154; Fri, 28 Feb 2025
- 10:09:30 -0800 (PST)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@axis.com header.s=selector1 header.b=gZN3xjxh;
+ spf=pass (domain: axis.com, ip: 40.107.105.67, mailfrom: peter.kjellerstedt@axis.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CgurqI4E5il+SioygygtdTN1v/EqyWSa8xDm7wTeLW2c9/6Gox6WI4uEzq0L0B47sPHSuAeZtY0zwT0wguOgNmpNXZL0P0uY5+/wCv77bblYYxmNvhE+HwZMkf5dNCXMT6u+L3etXEaYeGConoNrJAIuQBsr88WHu+t/2Kh6gA154I/b3SZ3s9gGvv7p/J1wny65ub1rYetc8jJ5dYuKuWL1cmWxnggUpGoYELOOiXAJI+eBsXSaoRDxCj5hS3FvdnJxgHRxTZFSkWsMIgLNMfBVGOULZlPgwY71SR7jWOymYAK0FeVaPz0gWkAGDvM/p62tllOYaM29yFrqS8u+sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SoUB7DZWMjt0D5CR6k12keV3fayAF65J8wIjWlikRaQ=;
+ b=y8IHDasw7mFJmYHRD/G+akd42eopG+Wb3rh1gCOpa6QhXlubY/V33mwlG6tDk6NtooxrxmhD59qhMRMb6AKhbyjkh74MEsNll/c3CgJf5Ja/Y/bLK5I3X7JYjrof90aS/JaokzfMLVsBJtZ6UfAG0WaOVrGBbrk1CnISYLNbNTPrbGSzJwsjDUAC9yxOSPUGl3Q07ZqCOB1+6hnvlAsUQFXKTJocFhdVde6gAArxXQbDapiJfoBKOcqWYxpsEsbsZKEEwrJ0cX90MflQBENplhGBOXwKwqjpk+Nlhhwkc1Fq7aUrLP3l7Rnm1xwyV72TwIopLc9z6jVctCieKLK8Cg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=axis.com; dmarc=pass (p=none sp=none pct=100) action=none
+ header.from=axis.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SoUB7DZWMjt0D5CR6k12keV3fayAF65J8wIjWlikRaQ=;
+ b=gZN3xjxhO/cBFive4aNsiR193UqHlRbR9MJY4FRGpjb3nsVw7gES8I/b2dMRg7UOE2FBxhfRQOvbfWZfN2PMKXtaDIwmgZz2AHctVoN6N6zwHTlU+vQolUYb7NnDuVFc1oFnxcamoeMY0Xma+preAKYyyUQQ0SyW8pBcZ1V+yYI=
+Received: from PR1P264CA0017.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:19e::22)
+ by PAVPR02MB9063.eurprd02.prod.outlook.com (2603:10a6:102:2fd::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.23; Fri, 28 Feb
+ 2025 23:15:04 +0000
+Received: from AMS0EPF000001AF.eurprd05.prod.outlook.com
+ (2603:10a6:102:19e:cafe::58) by PR1P264CA0017.outlook.office365.com
+ (2603:10a6:102:19e::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.22 via Frontend Transport; Fri,
+ 28 Feb 2025 23:15:04 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ AMS0EPF000001AF.mail.protection.outlook.com (10.167.16.155) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8489.16 via Frontend Transport; Fri, 28 Feb 2025 23:15:03 +0000
+Received: from se-mail01w.axis.com (10.20.40.7) by se-mail01w.axis.com
+ (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Sat, 1 Mar
+ 2025 00:15:03 +0100
+Received: from se-intmail01x.se.axis.com (10.4.0.28) by se-mail01w.axis.com
+ (10.20.40.7) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Sat, 1 Mar 2025 00:15:03 +0100
+Received: from saur (saur.se.axis.com [10.92.3.10])
+	by se-intmail01x.se.axis.com (Postfix) with ESMTP id 3391C28D
+	for <bitbake-devel@lists.openembedded.org>; Sat,  1 Mar 2025 00:15:03 +0100 (CET)
+Received: from saur.se.axis.com (localhost [127.0.0.1])
+	by saur (8.17.1/8.15.2) with ESMTPS id 51SNF3J33905104
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Sat, 1 Mar 2025 00:15:03 +0100
+Received: (from pkj@localhost)
+	by saur.se.axis.com (8.17.1/8.17.1/Submit) id 51SNF2PY3905103
+	for bitbake-devel@lists.openembedded.org; Sat, 1 Mar 2025 00:15:02 +0100
+From: Peter Kjellerstedt <pkj@axis.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH 1/2] fetch2: Revert decodeurl() to not use the URI class
+Date: Sat, 1 Mar 2025 00:15:00 +0100
+Message-ID: <20250228231501.3905069-1-pkj@axis.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-References: <20250228130137.400-1-eric.meyers@arthrex.com> <20250228130137.400-3-eric.meyers@arthrex.com>
-In-Reply-To: <20250228130137.400-3-eric.meyers@arthrex.com>
-From: Chuck Wolber <chuckwolber@gmail.com>
-Date: Fri, 28 Feb 2025 10:09:09 -0800
-X-Gm-Features: AQ5f1JoSQt5xENVRNTcAEmztybI26IU_Rc_87MoYlPj-DDKmwLyypZPUQhR_Vhg
-Message-ID: <CAB=6tBRU3+bKeNsbNpiHChBpeXbjR7Or3rOVT66-5K81OgZK2Q@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] doc: bitbake-user-manual-ref-variables: document BB_USE_HOME_NPMRC
-To: Eric Meyers <eric.meyers15310@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org, 
-	Eric Meyers <eric.meyers@arthrex.com>, Geoff Parker <geoffrey.parker@arthrex.com>
-Content-Type: multipart/alternative; boundary="00000000000035929f062f37b569"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS0EPF000001AF:EE_|PAVPR02MB9063:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3cb61b74-d357-40a1-d1ab-08dd584dbb60
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?wp7QhjJ79L1ITxMu5ycGH52O9BhNefwloM3Zky9G67UZenidhYKKj4rhEien?=
+ =?us-ascii?Q?7D3pNqXFjXU3UtzShapzzc2c5aIE31d0UGZPrMrwt1vpkKTv4Zu+TDk38OC0?=
+ =?us-ascii?Q?K+FoHZFHVHEg6S2x/m/eSA0GspcaBvEi9z2qqxB57R6cJLDHvOid5ddFoxI+?=
+ =?us-ascii?Q?175kMNbcQqOkYsM1FwQnEE/BxJhIsvo6eiGEXPpjGbEPnEEKpquXK+SBTXO+?=
+ =?us-ascii?Q?qGf2I3T7oAzAGl0rsAlnsa0kGxYzDpXGc4TECtSY4Kl6e/1JO5ZWXh7MfZqe?=
+ =?us-ascii?Q?OL/LF9b1AD1OKv4txhFNY2Zh7uVCoRBzZ5mMS3baPmv7GzyKToOCULWkOlvW?=
+ =?us-ascii?Q?8nag2WR4Yx9PVgpOust/glkPll8fmY8vwuLw8OUfswg4rIauUUhpKnOxzC67?=
+ =?us-ascii?Q?Fco3IqHibkIXWzRXogNE/jsHY3420WZkHO82ZK1RBgaxcuheW+07rFZv4CWD?=
+ =?us-ascii?Q?zgzoSfsJVFa4zcrsYfrxGvkR/+6asZDCyvrRPmQYckLZYmgAs5H6csj3mKyP?=
+ =?us-ascii?Q?lJzKEay7atRWNdQRXubLStAq70tCDd/I0qQd/VonhfknY+F96hVhO8xcT1sK?=
+ =?us-ascii?Q?olyWYG263qbB8Z34z4lVkA11hzUKfwmlWtj6rRB3nD3OnhxIGrctE/APrJLR?=
+ =?us-ascii?Q?Vn1Dcnuxll7SSgLWbRQE/t4LnPKgRTSkmuyRQIFB+nXbw3+lfH44O+OAUuj0?=
+ =?us-ascii?Q?ovZefJT6pOmuwdTm76e2CymO4bQK+miah4Q9MbAX/uE2GQo5noZLuuoE/h/2?=
+ =?us-ascii?Q?OJX/PR/OSQCQORhMp42WZCnlxo0j6aRb++6VFqyU+YvEoP84n0KgA3osHC4f?=
+ =?us-ascii?Q?8U1ig3THov+eKnQfsuwLHe15BF9ojagfuc8SHtp3WBzY78+J1lKQWzzg6tn+?=
+ =?us-ascii?Q?wbfIQCelABPxCIBMfkM4vW5mXhW4X2+4STM8mDFzuYw6otLMlNtvNMm0KQG7?=
+ =?us-ascii?Q?99+dM10MEdZMuu7ZdnCzrTbkaBNLA4JmjsS1XsBdJJiDF7ITbqg63TloOGpr?=
+ =?us-ascii?Q?xzHz751g+zb1pfpJtUMfgKnR/IFIndaxJ9QdFq6XfUxfonucbBPiLbc7ZEfH?=
+ =?us-ascii?Q?gUuyLAkCmWduODnZ9k+CMuQ9Zk11fDQGj3AP1oqa4FtE7jK5gj/kvZRdCYmo?=
+ =?us-ascii?Q?xOLWhTV8APu2T1V23WcLS+9n/0BwyQDrSl5QTC/Apgs4Qswi6K65CZ6eDiQ1?=
+ =?us-ascii?Q?MaD7W8jTHh6otQdjitqWeLMPkvLuBKtBKwEQsZ4eFTQGfMTxoVZm6Ym4r2dc?=
+ =?us-ascii?Q?ZqZQS7o9dF7rt4qHIjpBZtAgh7MUUTaPXXIhBVlcMoiHgdmpLtH++VJ2WZCB?=
+ =?us-ascii?Q?kpgH066G+BcP1YE9gqtGrPf3fLKVON3bujJKdcXHh8pWqUOYSpVz4LTItHLr?=
+ =?us-ascii?Q?TKbu1toXaJYP7gQem3ktImypcURgrJUU7GXzX1b4gCPXoDKafoVx+6Jw18Y/?=
+ =?us-ascii?Q?hBf1+KbRYuPX/GWjkG3VXF7FYi+MUt7c2e5hPSBGoFcKAWb6tijxzfzDUgu9?=
+ =?us-ascii?Q?Rkr8tjxQk4bn0aQ=3D?=
+X-Forefront-Antispam-Report: 
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 23:15:03.5420
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3cb61b74-d357-40a1-d1ab-08dd584dbb60
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	AMS0EPF000001AF.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR02MB9063
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 28 Feb 2025 18:09:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17363
+ <bitbake-devel@lists.openembedded.org>; Fri, 28 Feb 2025 23:15:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17364
 
---00000000000035929f062f37b569
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This reverts the recent change of decodeurl() to use the URI class to
+parse the URL instead of doing it itself. While reusing code is
+generally a good idea, using urllib.parse.urlparse() (which the URI
+class does) to parse the regular expression "URLs" that are used in
+PREMIRRORS and MIRRORS does not work. A regular expression URL
+containing https?://... would be silently ignored, while a URL using a
+negative lookahead such as git://(?!internal\.git\.server).*/.* would
+result in a cryptic error:
 
-On Fri, Feb 28, 2025 at 5:01=E2=80=AFAM Eric Meyers <eric.meyers15310@gmail=
-.com>
-wrote:
+  Exception: re.error: missing ), unterminated subpattern at position 0
 
-> Signed-off-by: Eric Meyers <eric.meyers@arthrex.com>
-> Cc: Geoff Parker <geoffrey.parker@arthrex.com>
-> Cc: Chuck Wolber <chuckwolber@gmail.com>
-> ---
->  .../bitbake-user-manual-ref-variables.rst                   | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rs=
-t
-> b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> index 858de6347..00300d0d8 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> @@ -692,6 +692,12 @@ overview of their function and contents.
->        Within an executing task, this variable holds the hash of the task
-> as
->        returned by the currently enabled signature generator.
->
-> +   :term:`BB_USE_HOME_NPMRC`
-> +      Controls whether or not BitBake uses the user's .npmrc file within
-> their
-> +      home directory within the npm fetcher. This can be used for
-> authentication
-> +      of private NPM registries, among other uses. This is turned off by
-> default
-> +      and requires the user to explicitly set it to "1" to enable.
-> +
->     :term:`BB_VERBOSE_LOGS`
->        Controls how verbose BitBake is during builds. If set, shell scrip=
-ts
->        echo commands and shell script output appears on standard out
->
+The problem is that urllib.parse.urlparse() treats the ? as the start of
+URL parameters and thus stops parsing whatever part of the URL it was
+parsing.
 
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+---
+ bitbake/lib/bb/fetch2/__init__.py | 46 +++++++++++++++++++++++++++++--
+ 1 file changed, 43 insertions(+), 3 deletions(-)
 
-Signed-off-by: Chuck Wolber <chuckwolber@gmail.com>
-
-..Ch:W..
-
-
---=20
-
-
-
-*  Opinions expressed are my own. | --------------------------------|------
-"Perfection must be reached by degrees              she requires the slow
-hand of time."                                 |       -Voltaire*
-
---00000000000035929f062f37b569
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><div class=3D"gmail_default" style=3D"fon=
-t-family:monospace">On Fri, Feb 28, 2025 at 5:01=E2=80=AFAM Eric Meyers &lt=
-;<a href=3D"mailto:eric.meyers15310@gmail.com">eric.meyers15310@gmail.com</=
-a>&gt; wrote:</div></div><div class=3D"gmail_quote gmail_quote_container"><=
-blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-l=
-eft:1px solid rgb(204,204,204);padding-left:1ex">Signed-off-by: Eric Meyers=
- &lt;<a href=3D"mailto:eric.meyers@arthrex.com" target=3D"_blank">eric.meye=
-rs@arthrex.com</a>&gt;<br>
-Cc: Geoff Parker &lt;<a href=3D"mailto:geoffrey.parker@arthrex.com" target=
-=3D"_blank">geoffrey.parker@arthrex.com</a>&gt;<br>
-Cc: Chuck Wolber &lt;<a href=3D"mailto:chuckwolber@gmail.com" target=3D"_bl=
-ank">chuckwolber@gmail.com</a>&gt;<br>
----<br>
-=C2=A0.../bitbake-user-manual-ref-variables.rst=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| 6 ++++++<br>
-=C2=A01 file changed, 6 insertions(+)<br>
-<br>
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst =
-b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst<br>
-index 858de6347..00300d0d8 100644<br>
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst<br>
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst<br>
-@@ -692,6 +692,12 @@ overview of their function and contents.<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0Within an executing task, this variable holds th=
-e hash of the task as<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0returned by the currently enabled signature gene=
-rator.<br>
-<br>
-+=C2=A0 =C2=A0:term:`BB_USE_HOME_NPMRC`<br>
-+=C2=A0 =C2=A0 =C2=A0 Controls whether or not BitBake uses the user&#39;s .=
-npmrc file within their<br>
-+=C2=A0 =C2=A0 =C2=A0 home directory within the npm fetcher. This can be us=
-ed for authentication<br>
-+=C2=A0 =C2=A0 =C2=A0 of private NPM registries, among other uses. This is =
-turned off by default<br>
-+=C2=A0 =C2=A0 =C2=A0 and requires the user to explicitly set it to &quot;1=
-&quot; to enable.<br>
-+<br>
-=C2=A0 =C2=A0 :term:`BB_VERBOSE_LOGS`<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0Controls how verbose BitBake is during builds. I=
-f set, shell scripts<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0echo commands and shell script output appears on=
- standard out<br>
-</blockquote></div><div><br clear=3D"all"></div><br><div><span class=3D"gma=
-il_default" style=3D"font-family:monospace">Signed-off-by: </span><span cla=
-ss=3D"gmail_default" style=3D"font-family:monospace">Chuck Wolber &lt;<a hr=
-ef=3D"mailto:chuckwolber@gmail.com">chuckwolber@gmail.com</a>&gt;<br></span=
-></div><div><span class=3D"gmail_default" style=3D"font-family:monospace"><=
-br></span></div><div><span class=3D"gmail_default" style=3D"font-family:mon=
-ospace">..Ch:W..</span></div><br><br><span class=3D"gmail_signature_prefix"=
->-- </span><br><div dir=3D"ltr" class=3D"gmail_signature"><div dir=3D"ltr">=
-<div><b><span style=3D"font-family:monospace">=C2=A0 Opinions expressed are=
- my own. |<br>=C2=A0--------------------------------|------ &quot;Perfectio=
-n must be reached by degrees<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 she requires the slow hand of time.&qu=
-ot;<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 -Voltaire</span></b></div></div></div></div>
-
---00000000000035929f062f37b569--
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__in=
+it__.py
+index 93fe012ec3..464b9ee4c3 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -353,9 +353,49 @@ def decodeurl(url):
+     user, password, parameters).
+     """
+=20
+-    uri =3D URI(url)
+-    path =3D uri.path if uri.path else "/"
+-    return uri.scheme, uri.hostport, path, uri.username, uri.password, uri=
+.params
++    m =3D re.compile('(?P<type>[^:]*)://((?P<user>[^/;]+)@)?(?P<location>[=
+^;]+)(;(?P<parm>.*))?').match(url)
++    if not m:
++        raise MalformedUrl(url)
++
++    type =3D m.group('type')
++    location =3D m.group('location')
++    if not location:
++        raise MalformedUrl(url)
++    user =3D m.group('user')
++    parm =3D m.group('parm')
++
++    locidx =3D location.find('/')
++    if locidx !=3D -1 and type.lower() !=3D 'file':
++        host =3D location[:locidx]
++        path =3D location[locidx:]
++    elif type.lower() =3D=3D 'file':
++        host =3D ""
++        path =3D location
++        if user:
++            path =3D user + '@' + path
++            user =3D ""
++    else:
++        host =3D location
++        path =3D "/"
++    if user:
++        m =3D re.compile('(?P<user>[^:]+)(:?(?P<pswd>.*))').match(user)
++        if m:
++            user =3D m.group('user')
++            pswd =3D m.group('pswd')
++    else:
++        user =3D ''
++        pswd =3D ''
++
++    p =3D collections.OrderedDict()
++    if parm:
++        for s in parm.split(';'):
++            if s:
++                if not '=3D' in s:
++                    raise MalformedUrl(url, "The URL: '%s' is invalid: par=
+ameter %s does not specify a value (missing '=3D')" % (url, s))
++                s1, s2 =3D s.split('=3D', 1)
++                p[s1] =3D s2
++
++    return type, host, urllib.parse.unquote(path), user, pswd, p
+=20
+ def encodeurl(decoded):
+     """Encodes a URL from tokens (scheme, network location, path,
 
