@@ -1,96 +1,116 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0FBC19F32
-	for <webhook@archiver.kernel.org>; Wed,  5 Mar 2025 22:09:56 +0000 (UTC)
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
- by mx.groups.io with SMTP id smtpd.web11.6379.1741212587818363669
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45996C282EC
+	for <webhook@archiver.kernel.org>; Thu,  6 Mar 2025 11:11:52 +0000 (UTC)
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+ by mx.groups.io with SMTP id smtpd.web11.10467.1741259504023485826
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 05 Mar 2025 14:09:47 -0800
+ Thu, 06 Mar 2025 03:11:44 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=s8uvVmPR;
- spf=softfail (domain: sakoman.com, ip: 209.85.214.181, mailfrom: steve@sakoman.com)
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-224019ad9edso21532125ad.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 05 Mar 2025 14:09:47 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fvOroFTE;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.50, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-390eebcc371so358715f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 06 Mar 2025 03:11:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1741212587; x=1741817387; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1PYdLohszhNbI+iRiz8oj88WoX5DPTVskhsI5Ioe/UQ=;
-        b=s8uvVmPR9R+GdxUeUxQv2i/1fTfeM4ffkUf/ULAEwj0+CSCd0CQ65O9yquQkvaLdKn
-         uAzWMR2LLrPD5nfa65nuTAtCvxRCiYPZpjUES8wCch2xmOLFppZlgOCAWr8PlF67nShz
-         ycn2DgnuIk5h97jDAIj1m52rhziWxTo/8TJNAjFfBB7vEHcoqALdcNInn9gbxiKCij0a
-         NgDCQK9yuY90rasxKonlrhqh9pvzzNTFjMkDc+SsrHq77x58beJ+7a9USTLNP/fzImi6
-         cy4O3+/bLewiqXnSgp3Xm7apcxTtGFP8S6Z9EAqX8NV/tG9GcJSTwxdvDSHX4yDJWHi6
-         ig7Q==
+        d=linuxfoundation.org; s=google; t=1741259502; x=1741864302; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UjsvzOZUNjx1E4QknaLeHz++p50xmtteXdMqw9FgxNo=;
+        b=fvOroFTESE2yB5DrCXmRbpOii21B3yD+7l8TfKb+TzYEjsU3YOtzWlHZ86u5ky/fHM
+         bspFgy52B1zwNAV9lYqweMigDVC+IbJl0yo23ZgJj7eeCmmleg+CTMq7hApQMhOTPFoZ
+         y0zpivI/UxShhg3JJHtH2qVzQIQIiil7dnmKg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741212587; x=1741817387;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1PYdLohszhNbI+iRiz8oj88WoX5DPTVskhsI5Ioe/UQ=;
-        b=XoDXog4IYv4W5YADqrDu3bzihQLn6cJJPM0UHnAbbYLqm3hV5S50tBe6nPFXCth0kn
-         tG1sMsV3jSJd7nfAzRFNTq2JTqlz+vjpLK6teqnBkWDKTy9cSbXJD21ywVbVnfP/WZ+t
-         NYjBRt//d0J8b82k38nNpnjuGhw+8Bs7hO7Im2Eb8w7htm6qb3aVmNm8BpawPPGwHGnE
-         ZTN/k6bL2Ol48jg95+Uzq0ZOJBs2WVlUwMmr5W+2KnrzGFsrPrN5aQo2pfnvxj1UsHxm
-         WPYHZSOq4xbOpenE8DXkQrygccxtYD+HmNxhQUmm+k68yU6+aayrrYJs+yckRnrdnrwQ
-         FpEQ==
-X-Gm-Message-State: AOJu0YyoXimptqdeocjyKd11qwNX66OP9Iiz8SV3hcUYTBiN1edbyO5+
-	2tBrwXAmalBq0IiozT9aqCJRsvHgvzMn2rWx52X3IiFjtNMjk3D3nTByPepIaedDGheVjNVTMBq
-	F
-X-Gm-Gg: ASbGnct6stJcH6RUZTCouGJp3j+ME2GS3AjEsCGyajGqBGfwCPwmhzihmQB/G57iHB0
-	AaUB+rLnA4eX7bGG3YiEfTSBCL2z7wKIuin9vkPxD9yI96Z99nZDA/UUh2Co0cZ2QYQcVcaJXYQ
-	NXtb6f5p8Yq8ESqm2/QcgeVUC7el/KKxXccN1qtowGFX4/lnOjnza147FxlHrx+XoMjj3Rl04W+
-	PtYTX68GEA9VEhNMMIhkfgWMGxTbuWY60EBIu92jp14nLXl1taPUnWZ+4/8kdBsrFY6z0TDevjE
-	rzzJVmoiCq5DPOeoG3BvETxst9HmWp8yuhM=
-X-Google-Smtp-Source: AGHT+IGoz708QgEh8NwktG/2axF473f7Z4Lc9cMZ21xgLcdtUHnMcfQrA0KDS4UfFIEp5ja1+wy99Q==
-X-Received: by 2002:a17:902:d4c5:b0:220:ea90:1925 with SMTP id d9443c01a7336-223f1d20313mr82730475ad.35.1741212587025;
-        Wed, 05 Mar 2025 14:09:47 -0800 (PST)
-Received: from hexa.. ([2602:feb4:3b:2100:2308:d28:2350:a5eb])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223501d35a4sm118602405ad.35.2025.03.05.14.09.45
-        for <bitbake-devel@lists.openembedded.org>
+        d=1e100.net; s=20230601; t=1741259502; x=1741864302;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UjsvzOZUNjx1E4QknaLeHz++p50xmtteXdMqw9FgxNo=;
+        b=rCe/D9tvMA+MYYAEhol67OUFRWscmCns6fM72kWQiJCzMtFRsLE9SfmOcOE/kB3yHJ
+         3BuIqhmOnZNCg7EEWX0tflgq5FZXhhoals0NcSNxlRwFy1S/s716e1SLZ/Co/rzWwpUi
+         sfZ5D54Cwb2Al2RrWHREHF0aAUchUA+egfH5U0l5u7trN7eyJUD6U0RvgPrSt3c6Zeny
+         USYWDKl2jzFMhLJxgcYpf8L0SFuef6xsEaPGuXBipyKFOFZI9af/+ExXago9ms+L1ail
+         AyVCvAeu5FOMXxNHq7gkEwzHdo4m5Werh1ouVnyYKExvdMG0h1YqE1iwOJbx2Xd/ChTo
+         Mb0A==
+X-Forwarded-Encrypted: i=1; AJvYcCV8+Y/pT19QTkr6k969oWuHnbIm9iNi7T/R6oz0OyE/uM2uYEC3Qm+pc+eb5jSEt0G9RfpM0Rn5oRABC/y/@lists.openembedded.org
+X-Gm-Message-State: AOJu0YxsrQUHHrgT1LKm7F3w8hOtwf8OpnLn4WRuFtizYjPa3Devbg/5
+	FI2/Pft5DWLGvuCKt+V9D3w94NP6zBaCLmGvqDiANW8IP8j0Ea1blJAZqFY4THc=
+X-Gm-Gg: ASbGncvRxg5+cD0GruMo4YdFCkTzMs6q5yTTktak6cYTFFhLatXauKVsRxlpi1QZgJw
+	svRPkL+gKCN6gppawZyR32kIbPECFuSx5qIYC/Z6bblcUTTnu1F5rVyOPfBlXymRwURM0Xl2TGl
+	8ka7oRPRufSgdd/fc2PIpHVloIF+uyfzygZTmvTgmm1NoIu4W5Ml0bTjWHLlsgsTb6N+NbQ45l+
+	u9ezRLia90FsWjiqanYwkSu1iW5i4IxyLAwu4rHpy5R3dMFS2bsTxW1P/DHjo7O11e4FHue6hvc
+	2xt4REkB9nFv3B2qILVbisNWjsANOvX3n2KmVsxJz3nHioFUpgDJnIeWVWH8w9hpC6rxSRHEmJG
+	bpJJzI8Bu3Q/pXdinSRpzAHWKwNgcz8gWkA==
+X-Google-Smtp-Source: AGHT+IFLEj8BUBJdOYs204gt3pC6D2qlnCWbQJywM6pngNUlcsMTEwzkk227/gQ07JLe/ysNUlg6sA==
+X-Received: by 2002:a05:6000:2108:b0:391:2ab1:d4c2 with SMTP id ffacd0b85a97d-3912ab1d7cemr1354686f8f.37.1741259502439;
+        Thu, 06 Mar 2025 03:11:42 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:e869:4c46:3bba:1ea9? ([2001:8b0:aba:5f3c:e869:4c46:3bba:1ea9])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c1037bfsm1718499f8f.96.2025.03.06.03.11.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 14:09:46 -0800 (PST)
-From: Steve Sakoman <steve@sakoman.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][scarthgap][2.8][PATCH 1/4] utils: Print information about lock issue before exiting
-Date: Wed,  5 Mar 2025 14:09:26 -0800
-Message-ID: <8d40d8cc319674e77dcf4560243feeeccf53bc51.1741206585.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1741206585.git.steve@sakoman.com>
-References: <cover.1741206585.git.steve@sakoman.com>
+        Thu, 06 Mar 2025 03:11:41 -0800 (PST)
+Message-ID: <a147420295a67f1db7be369e6ad45b2fb2bb086c.camel@linuxfoundation.org>
+Subject: Re: [docs] [PATCH v2 0/5] fetch2/github_release_artifact: fetcher
+ for (private) release artifacts
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: lgo@pengutronix.de, bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org, yocto@pengutronix.de
+Date: Thu, 06 Mar 2025 11:11:40 +0000
+In-Reply-To: <20250227090853.1632280-1-l.goehrs@pengutronix.de>
+References: <20250227090853.1632280-1-l.goehrs@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 05 Mar 2025 22:09:56 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17388
+ <bitbake-devel@lists.openembedded.org>; Thu, 06 Mar 2025 11:11:52 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17392
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+On Thu, 2025-02-27 at 10:08 +0100, Leonard G=C3=B6hrs via lists.yoctoprojec=
+t.org wrote:
+> This fetcher enables downloading artifacts attached to GitHub releases
+> in private repositories.
+>=20
+> Authentication is provided using tokens via the `GH_TOKEN` variable
+> or a `token=3D` URI parameter.
+>=20
+> Changes from v1:
+>=20
+> =C2=A0 - Provide examples on how to provide the `GH_TOKEN` more securely =
+than
+> =C2=A0=C2=A0=C2=A0 just hardcoding it in the recipe in the commit message=
+.
+> =C2=A0=C2=A0=C2=A0 E.g. via the `local.conf` or environment variables.
+> =C2=A0 - Indent the code example in the documentation `.rst` using three
+> =C2=A0=C2=A0=C2=A0 spaces instead of two.
+> =C2=A0 - Document the `token=3D` URI parameter along with the `GH_TOKEN`
+> =C2=A0=C2=A0=C2=A0 variable.
+>=20
+> Thanks to Alexander Kanavin and Antonin Godard for their review feedback
+> so far.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit cdf6c51a064f8f335c3262b7f102618996f1a229)
-Signed-off-by: Steve Sakoman <steve@sakoman.com>
----
- lib/bb/utils.py | 1 +
- 1 file changed, 1 insertion(+)
+I'm torn on this. I am leaning towards merging it however I realised
+there are a few issues. Firstly, it is failing during testing on=20
+Ubuntu 20.04 workers:
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index ebee65d3d..0dfe47dc5 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -1862,6 +1862,7 @@ def lock_timeout(lock):
-     held = lock.acquire(timeout=5*60)
-     try:
-         if not held:
-+            bb.server.process.serverlog("Couldn't get the lock for 5 mins, timed out, exiting.\n%s" % traceback.format_stack())
-             os._exit(1)
-         yield held
-     finally:
--- 
-2.43.0
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/54/builds/1129
+
+Secondly, it adds support for putting the tokens in SRC_URI urls. I'm
+not in favour of this since it encourages people to write them in
+recipes where it is all too easy to unintentionally share them. I do
+not think we should enable this.
+
+Finally, the naming of the variable, GH_TOKEN is not in keeping with
+the rest of the codebase. It needs to be prefixed so something like
+BB_FETCH_GHRA_TOKEN which makes it clear it is bitbake, the fetcher and
+the GHRA fetcher.
+
+Cheers,
+
+Richard
+
 
 
