@@ -2,10 +2,10 @@ Return-Path: <l.goehrs@pengutronix.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C125DC282DE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEB9C19F32
 	for <webhook@archiver.kernel.org>; Fri,  7 Mar 2025 12:01:08 +0000 (UTC)
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
- by mx.groups.io with SMTP id smtpd.web10.9453.1741348863520494091
+ by mx.groups.io with SMTP id smtpd.web10.9450.1741348863500254614
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 07 Mar 2025 04:01:04 -0800
 Authentication-Results: mx.groups.io;
@@ -14,25 +14,25 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <lgo@pengutronix.de>)
-	id 1tqWNx-0006hM-R1; Fri, 07 Mar 2025 13:01:01 +0100
+	id 1tqWNx-0006hJ-R2; Fri, 07 Mar 2025 13:01:01 +0100
 Received: from dude03.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::39])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <lgo@pengutronix.de>)
-	id 1tqWNw-004Tkx-2s;
+	id 1tqWNw-004Tku-2g;
 	Fri, 07 Mar 2025 13:01:00 +0100
 Received: from lgo by dude03.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <lgo@pengutronix.de>)
-	id 1tqWNw-0088ry-2e;
+	id 1tqWNw-0088rj-2T;
 	Fri, 07 Mar 2025 13:01:00 +0100
 From: =?UTF-8?q?Leonard=20G=C3=B6hrs?= <l.goehrs@pengutronix.de>
 To: bitbake-devel@lists.openembedded.org
 Cc: docs@lists.yoctoproject.org,
 	yocto@pengutronix.de,
 	=?UTF-8?q?Leonard=20G=C3=B6hrs?= <l.goehrs@pengutronix.de>
-Subject: [PATCH v3 4/5] tests: fetch: add status test for the GitHub release artifact fetcher
-Date: Fri,  7 Mar 2025 13:00:54 +0100
-Message-Id: <20250307120055.1816436-5-l.goehrs@pengutronix.de>
+Subject: [PATCH v3 1/5] fetch2/wget: enable classes derived from Wget to set custom http headers
+Date: Fri,  7 Mar 2025 13:00:51 +0100
+Message-Id: <20250307120055.1816436-2-l.goehrs@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250307120055.1816436-1-l.goehrs@pengutronix.de>
 References: <20250307120055.1816436-1-l.goehrs@pengutronix.de>
@@ -47,30 +47,41 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 07 Mar 2025 12:01:08 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17405
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17406
 
-This re-uses the same URL that is already used by the download test of the
-same fetcher.
+This allows derived fetchers to e.g. set a `Authorization: Bearer ...`
+header for token based authentication, or `Accept:` headers to restrict
+which file type the fetcher expects.
 
 Signed-off-by: Leonard Göhrs <l.goehrs@pengutronix.de>
 ---
- lib/bb/tests/fetch.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ lib/bb/fetch2/wget.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 517894881..cf5ce2ebd 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -1606,7 +1606,8 @@ class FetchCheckStatusTest(FetcherTest):
-                       "https://downloads.yoctoproject.org/releases/opkg/opkg-0.3.0.tar.gz",
-                       "ftp://sourceware.org/pub/libffi/libffi-1.20.tar.gz",
-                       # GitHub releases are hosted on Amazon S3, which doesn't support HEAD
--                      "https://github.com/kergoth/tslib/releases/download/1.1/tslib-1.1.tar.xz"
-+                      "https://github.com/kergoth/tslib/releases/download/1.1/tslib-1.1.tar.xz",
-+                      "ghra://github.com/kergoth/tslib/1.1/tslib-1.1.tar.xz"
-                       ]
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index 6cb728ab4..e13730b48 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -121,6 +121,9 @@ class Wget(FetchMethod):
+                 # Authorization header.
+                 fetchcmd += " --user=%s --password=%s" % (ud.user, ud.pswd)
  
-     @skipIfNoNetwork()
++        for key, value in getattr(ud, "http_headers", {}).items():
++            fetchcmd += " --header='%s: %s'" % (key, value)
++
+         uri = ud.url.split(";")[0]
+         if os.path.exists(ud.localpath):
+             # file exists, but we didnt complete it.. trying again..
+@@ -394,6 +397,9 @@ class Wget(FetchMethod):
+                 if ud.user and ud.pswd:
+                     add_basic_auth(ud.user + ':' + ud.pswd, r)
+ 
++                for key, value in getattr(ud, "http_headers", {}).items():
++                    r.add_header(key, value)
++
+                 try:
+                     import netrc
+                     auth_data = netrc.netrc().authenticators(urllib.parse.urlparse(uri).hostname)
 -- 
 2.39.5
 
