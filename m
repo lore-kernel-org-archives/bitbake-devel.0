@@ -1,128 +1,100 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <c137.marques@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54A2C282DE
-	for <webhook@archiver.kernel.org>; Mon, 10 Mar 2025 11:21:46 +0000 (UTC)
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
- by mx.groups.io with SMTP id smtpd.web11.34955.1741605698384535501
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B026EC282EC
+	for <webhook@archiver.kernel.org>; Mon, 10 Mar 2025 14:02:37 +0000 (UTC)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.web10.38667.1741615350572658040
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 10 Mar 2025 04:21:38 -0700
+ Mon, 10 Mar 2025 07:02:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=ImkyaRPk;
- spf=pass (domain: bootlin.com, ip: 217.70.183.199, mailfrom: antonin.godard@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 40B1D44219;
-	Mon, 10 Mar 2025 11:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741605696;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=0f5Q58Osn+OcFIcGzdkjPo26yDJ0tKWkMjGoc6qjCuA=;
-	b=ImkyaRPk8GS9RALv49/SeS3LTvTP8kOff6KCpyI0yyH1fKa8NtWWxoOky71AEY3Ax8BS/9
-	g4IXUByYf+546yLJaiUEp8Rkj5XKqm6IaEBfRBzmx+0Lm4ql5qEo39Wj/NQ8hVUwtmQEGL
-	md2teMQ3yuRPzeFamrSNiXWMvdtpugPQiw0bv4y88Ig6T4diHOl6HupayVJQL7twcz47oN
-	as+3ubO6rK9Mg2rn6utSV/6zLA9zmsQLL6xYI8jLFDF9sZRZ11dt8uGJy/ISoj9VykF+y3
-	5J36P72U0KHLH50jUF6Kp28iii7O12M3RxWkd7pLN6cSpp4awnsyp2TxHrzZ0A==
-From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Mon, 10 Mar 2025 12:21:17 +0100
-Subject: [PATCH] doc: bitbake-user-manual-metadata: document the
- include_all directive
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250310-include-all-v1-1-76843785384d@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIACzLzmcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDY0MD3cy85JzSlFTdxJwc3VRDMyOzRLOUJBNjMyWgjoKi1LTMCrBp0bG
- 1tQByywVPXQAAAA==
-X-Change-ID: 20250310-include-all-e1626a6db436
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=A8gkBY9F;
+ spf=pass (domain: gmail.com, ip: 209.85.221.53, mailfrom: c137.marques@gmail.com)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-38a25d4b9d4so2269075f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 10 Mar 2025 07:02:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741615349; x=1742220149; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ljIO/XCRVEjbB8WYloTCUC69pQR+n7YNLuZLcuehoiU=;
+        b=A8gkBY9Fc2QVx0LoDyCwisUdxLt6p7fqT/jN9cOPoXnOspDSSRUGF70BQimcvAm/XV
+         BHh2z8BYnQ+IlAVI7CAI4TfGj+/aDs8NN+fQ4rTJpfIoUSA4N9t8pe+m5QtNwO1ujKJ4
+         6pjZIrhf5abCwrxvqtDfXq+kTW60INqlhKabkwoXekHxifQhDSAU3Km2CV5zNtesSpQ2
+         GAqw5eNxt5WFXAUAntHJmAFlM/VwSasp7HXR1MFVCSnKdcaQhn5JTt7ivr2yjuMZWd8B
+         +SfC40/bD4rO3S21Dwb1TVJPWjn6SGwJhpBzBZeOP5E6uceH08p9K3i6j2P1JOPGurHe
+         /IGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741615349; x=1742220149;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ljIO/XCRVEjbB8WYloTCUC69pQR+n7YNLuZLcuehoiU=;
+        b=Vl0rgv1SZ/PjIGnEcpsFXvINBDmLTofJNjAiRy8efU61yFzhlDKzfIcLbW4Lm8aEWZ
+         dqSlM0s9Y1zDYhFTIkmdpQmPgW4y8eWb4T1KadZayWReHrq5as7bWg4j2Q0azampodUv
+         j7TXF45zbcG3hbmXeQsf3CGfLRFrhlGHv7BLFkXQpB9YoiXORjK5YG7e2aF8m1LpjUT5
+         t3LrMNKrRjWt5wMVHhXUYNVielBd9SigJ98BacQpcH/hAtRkKq5oS2Df+fTitAdWf4XS
+         YEKaYqKCCgxXFeH93LcDAAvGTMn+5ij0OcMcVVdyspe83drZ/O1lmo4YWMvYyvKTembQ
+         RhYw==
+X-Gm-Message-State: AOJu0Yy00qZPQPzkRpJclP6nMtcGMO9O10N4kf6JEqcJnmmDYQhe23IG
+	kuy9S4DLwBFJgBLzCT15JZJZxBCdtY4Fpbn13YuGr2ykfYs7O/WSiC/erA==
+X-Gm-Gg: ASbGncuBxunqA6YWdka0U/iRE6LVV9JCAgliFqVQeDzo07Ke+44HquU6eW+cvDbBKuo
+	+wQB7abh3ltyD+1flgciPgQKjuCNTNurePGYypDce/coi7cRwyfGfApWXCE8hcBHjiYNQT+6wYm
+	EbT6j3DJTPQH32dBrRl6GsuzS6ZcFvRF++sEM91mBlPC31iD52JZsJUj1scUMCrZ86Z8P9fDkcU
+	pCeFT1cGMbu77pmEtg8ThlKksiXNq9j4mfuydf/uCCbShJ+7/1wHr/s2RTA+3TgkQeCiSQ5+T4d
+	zOsJYJGH+tiLbNnJfehghoQ/ZB2+wEcehIv6ctaDx+icYFW37HJV1xrnxjr2W+Z49FnJky6Iimb
+	2fTSf05AWZVdasv7LyfEubzY=
+X-Google-Smtp-Source: AGHT+IFJ20xHaGAmxaAzKeFbJ+LvNy+gBTJn/s3WBrK1lajMaBVGV36xFg7uNUT8Kq9m7xpe1uTk7Q==
+X-Received: by 2002:a05:6000:188c:b0:391:2f71:bbb3 with SMTP id ffacd0b85a97d-39132db782cmr8831555f8f.46.1741615346808;
+        Mon, 10 Mar 2025 07:02:26 -0700 (PDT)
+Received: from ctw-bre-003.bmw.criticaltechworks.com ([213.205.68.220])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c0e2f10sm15138668f8f.65.2025.03.10.07.02.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 07:02:26 -0700 (PDT)
+From: Alexandre Marques <c137.marques@gmail.com>
+X-Google-Original-From: Alexandre Marques <alexandre.marques@ctw.bmwgroup.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2270;
- i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=tOH+YsXWs0VLo7SPzg+B23ppchKO3+Oy7KQGkLf7Yts=;
- b=owEBbQKS/ZANAwAIAdGAQUApo6g2AcsmYgBnzss/qkpe2RdWbRF9jZlWbRBoI26jBfZmOjHti
- gvnOXv1LMyJAjMEAAEIAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCZ87LPwAKCRDRgEFAKaOo
- NvgcEACi/0XWgb1wTSMPGQqvRSEIjIsxPClu6E/Dbn53sWTvLdYI2veEC5QmsaoUn2DCQw4PPmS
- uSquNBSLJhShvXoaN66OxQ1SBXOo7A4Z2OJA9CC7wgFATEnpcttpXRWf0zkJbm6r5XabIsAALww
- T0A+uZiTzEQJ15wUqDSprZEXmEiHA1ysOO46FnjZQJosm3GPc01XZRcNx3BIv3Avx4yg3HHht2q
- P5IH3iH+urFA6vhc7mO+QN2K2z6LlP1E3oxVBmR5kJddTAZ9SXvwd6IK3EzgQq04fJI6weF1MYt
- OX/InPmI9IGY5XKrQvcPYVrwT0yPPMQv+FeebljcyNbolMrz24oSSRdqGHBLxhyac+TQG5dVLoC
- 2/UbnIVh+a0yHtHId0eb6hHxMyt4+XaiLgg10aQDKX1CX/hmDHcDdTmaxgVaRp+FUJ7acoAar1/
- NrUj2aw4RkTEylhe1FvsiScVIpph4wFXWuVHBPhXraVvvP7Q7ztohqZPYj2rqbxw4M1DKxFLEsP
- EMVP2AOagZe0roGEo+RUfv7xZproq4TzXRYhxWRgNOg9B5dq9Ek+N4Gp/h4cLXyytFx4WD9otjj
- 6JFoK4X10M8FOQZC3Fs9ORa+frUMYC3pxllAqaMBYMbos35XjZgCXzoMJhcJNqQBunQ5ngPRnRg
- 2v7FMgBaGP2Omxw==
-X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
- fpr=8648725188DD401BB9A0D3FFD180414029A3A836
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudelvdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthejredtredtjeenucfhrhhomheptehnthhonhhinhcuifhouggrrhguuceorghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeduieejledtieeuteffveetleeuffeivdffjefgteehgfehleeiteehieeuieekueenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeejtgehtgemiegruggvmeejleegkeemgedtheelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeejtgehtgemiegruggvmeejleegkeemgedtheelpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdprhgtphhtthhopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsr
- dhophgvnhgvmhgsvgguuggvugdrohhrghdprhgtphhtthhopeguohgtsheslhhishhtshdrhihotghtohhprhhojhgvtghtrdhorhhg
-X-GND-Sasl: antonin.godard@bootlin.com
+Cc: Alexandre Marques <alexandre.marques@ctw.bmwgroup.com>
+Subject: [PATCH 0/1] hashserv: Add `gc-mark-stream` command for batch hash marking
+Date: Mon, 10 Mar 2025 14:01:18 +0000
+Message-Id: <20250310140118.2649050-1-alexandre.marques@ctw.bmwgroup.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 10 Mar 2025 11:21:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17418
+ <bitbake-devel@lists.openembedded.org>; Mon, 10 Mar 2025 14:02:37 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17420
 
-From: Antonin Godard <antonin.godard@bootlin.com>
+This comes in the sequence of [1]. And it proposes a new garbage collection
+command to improve the efficiency of marking several hash equivalence database
+entries.
 
-Document the include_all directive, which can be used to include
-multiple files present in the same location in different layers.
+A new poky/script using this command will also be added, so that
+developers can use it and to server as a reference on how this new
+command is meant to be used.
 
-Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
----
- .../bitbake-user-manual-metadata.rst          | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Since the hash equivalence server API is also changed, and as of now there
+isn't a convenient way to check the API version or which commands are
+available.
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-index 2680c6ac2..415fbf6d6 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-@@ -900,6 +900,33 @@ definitions::
-    of include . Doing so makes sure that an error is produced if the file cannot
-    be found.
- 
-+``include_all`` Directive
-+-------------------------
-+
-+The ``include_all`` directive works like the :ref:`include
-+<bitbake-user-manual/bitbake-user-manual-metadata:\`\`include\`\` directive>`
-+directive but will include all of the files that match the specified path in
-+the enabled layers (layers part of :term:`BBLAYERS`).
-+
-+For example, let's say a ``maintainers.inc`` file is present in different layers
-+and is conventionally placed in the ``conf/distro/include`` directory of each
-+layer. In that case the ``include_all`` directive can be used to include
-+the ``maintainers.inc`` file for all of these layers::
-+
-+   include_all conf/distro/include/maintainers.inc
-+
-+In other words, the ``maintainers.inc`` file for each layer is included through
-+the :ref:`include <bitbake-user-manual/bitbake-user-manual-metadata:\`\`include\`\` directive>`
-+directive.
-+
-+BitBake will iterate through the colon-separated :term:`BBPATH` list to look for
-+matching files to include, from left to right. As a consequence, matching files
-+are included in that order.
-+
-+As the ``include_all`` directive uses the :ref:`include
-+<bitbake-user-manual/bitbake-user-manual-metadata:\`\`include\`\` directive>`
-+directive in the background, no error is produced if no files are matched.
-+
- .. _require-inclusion:
- 
- ``require`` Directive
+The new client command assumes a connection error to the server means
+the server does not support "bulk" marking in stream mode, and falls back
+to sequentially marking each input its given.
 
----
-base-commit: d5562e007c7c64e8613a118ab9a6c73ed2063263
-change-id: 20250310-include-all-e1626a6db436
+1 - https://lists.openembedded.org/g/bitbake-devel/topic/clarification_on_cleaning_up/111382632a
 
-Best regards,
+Alexandre Marques (1):
+  hashserv: Add `gc-mark-stream` command for batch hash marking
+
+ bin/bitbake-hashclient | 30 ++++++++++++++++++++++++++++++
+ lib/hashserv/client.py | 22 ++++++++++++++++++++++
+ lib/hashserv/server.py | 29 +++++++++++++++++++++++++++++
+ lib/hashserv/tests.py  | 42 ++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 123 insertions(+)
+
 -- 
-Antonin Godard <antonin.godard@bootlin.com>
+2.25.1
 
 
