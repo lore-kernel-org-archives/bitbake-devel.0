@@ -2,101 +2,86 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0E7C282EC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F160EC28B2E
 	for <webhook@archiver.kernel.org>; Mon, 10 Mar 2025 14:58:27 +0000 (UTC)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web11.39914.1741618703809673174
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web10.40363.1741618702750347978
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 10 Mar 2025 07:58:24 -0700
+ Mon, 10 Mar 2025 07:58:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=gqpmFp+L;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf257158fso8214965e9.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 10 Mar 2025 07:58:23 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=TmN4BWo2;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43bc48ff815so25462495e9.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 10 Mar 2025 07:58:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1741618702; x=1742223502; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zcibEHsFNibk8JunDYYzH612jbSR82k3YbJRW4OOFI0=;
-        b=gqpmFp+LeZjo3wJCIhFU5PjwAoD6MiNHqMSKclyQloKH+Re0mzdbeu2eXKT3DVpLly
-         1BTJ1ZEklV4F8Uhqc9Gdnri8WMCY26ZsltlsMjkEwXMCEEDrsuphI4xg7QjVdcWSL4ZT
-         HzsULk9/sgICt+W4qpLBMS/vj9GUJLLuVfNls=
+        d=linuxfoundation.org; s=google; t=1741618701; x=1742223501; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fCuGIlL42XllXTw7Q1y/jXVE6iSCef70UY3No3VpvBk=;
+        b=TmN4BWo2i8DPShqHM7/liabQc3Yw2V3iun3wKX8VT+08i0DcFZFkT5yplLBY9uEcNz
+         QBnX7ge+nVWcg90K7xCp7VHo8LQ7QFPh6pmPJL8QO10MPR8Nmodrljk3Ix+pyNIU3DcV
+         TEpb862a/K199LSIvkb/95aUM6vM2yV1tk/Zc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741618702; x=1742223502;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zcibEHsFNibk8JunDYYzH612jbSR82k3YbJRW4OOFI0=;
-        b=f2ljIlzl5KrpB/hovDYyI4qhoeux1aALSf2yfvfWfwaTR77//I42hbMilWJETr+wlM
-         dI1+wffa7NSnhWHT/zx+LYOnd+lwzY8Z3IjOy4EnN2BulWXewQFfO4FGhYA15CLNabqH
-         P+xS+QLTRwwq7mdCXhzq5vZB5RX9R73RVoxSS2kn3F7KhxuofpW3enCdunkjCYt+zBcr
-         kGOzRCXE8vdHmRKajDnuCX9rSEGen4FvlJx7xOkOHHpzLjPtSA4k2yDicL2UTVTYdKPo
-         A2eUaA0fQ57TwtHhojj1LNwCtW0qukEOmeeeZY2dc5eCT98IocjB4lYAc6E6FF3vJ3fO
-         dLKg==
-X-Gm-Message-State: AOJu0Yw8An8XflEhiUjkjI3qcG5qdhCSsnjMpbCRC9jEmHGfHdjg98Nl
-	+crSdX+eR7ImKR0Io1hOMYJFe+ulM//+9g9NtgyV9VgIGR7wjdFbjr2iJwQfL/mcLsA87jXyOxL
-	A
-X-Gm-Gg: ASbGncugW9p6aZBxd5qva64qibYZCBrL5PqUABTn9JdYM0/7tlTNIflQN2RGJQ87Neo
-	U3mxvEpXG1dEiRr2I9C/eYlWshfD9H5X4E+WDlkoNFvcvvgWg38My2vL7Gjo3//ES4bfof2bp7y
-	GpgI3YMpDl9+/83CUJpk1ZrH7HW6kclM6chOgHr1/vDIwYZq4uSS3dKg5qmZwlMiMgxlZk3AB3B
-	/LL65rA9+i3OU6cQEX+iWAy1v+VthUv4c+SOA6ZnxbKpim2+YgF02FTYKsOUCbwQmFjRyPMkpmE
-	7YlpTsqevA/1d35nD2WB5ZhEx0+/hqBuckjxzeY2oUrONKYhJ/SyvvFyhHfEdFGuicfMESX0Nw=
-	=
-X-Google-Smtp-Source: AGHT+IFgRtKFywZNC+M24xbu3VWRPQpr/q51717jc9AAhYf87wd4ZXzyuI9PvVzdD+L9AIznsOqcBA==
-X-Received: by 2002:a05:600c:4ec6:b0:43b:c0fa:f9c5 with SMTP id 5b1f17b1804b1-43c6024bf6bmr80413375e9.21.1741618701800;
-        Mon, 10 Mar 2025 07:58:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741618701; x=1742223501;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fCuGIlL42XllXTw7Q1y/jXVE6iSCef70UY3No3VpvBk=;
+        b=JcYPn6SdkBpIgcovfW6FaxtGkSmp5jucSFDj57zNd5L4EvKBFCR1UMdKAeeXSUQ24k
+         o0yLErcL4aOylYYRJkDq1OdgVCz9NHBTyDa3IHM4ub3Fk6odwolqgwrjGv7ctJ1YW+BI
+         QOoygK+eRjmYIdXHTRejUigsO1d7XBHpj8yWV4zk+ESsxiL3hNgRUemQw5ssUSvIuoQM
+         jO8EUh1vjRm6WAv9iDrYOC2w/WLiBD5WjLWIs1nS3sIRr0MlW63FlJ67U8BeGwkwPvQh
+         s5Pe/jbT0OuqDxOwIRO25i6mf+mp1XOgMeAPKk4+NddWGFrxTukz7/75qeq6dulCYHw6
+         lAdg==
+X-Gm-Message-State: AOJu0YzGqR+s424FBt6pzaHfz4a8+C/HDNCcNXDvLjVGDzDawp/asZGo
+	Svy4xWd4jk5IdsRf7fdjiONJ2jj/bl35XdBOlq6pg0GJjvIdJEcRj62lCvG0cmjN1Ir0cQ46aU3
+	Q
+X-Gm-Gg: ASbGnctJRWY5VW0N7UVY/z9J1ZN7AsE8D1QaYWHzlMjMEVheuPls5YjzeaiSREPfQK3
+	TJz9gbD3YhProJVVXFD/qlb1tUggoVHEYfgW6V3G6hgDDcM1Z7xhcAc37yG0XSMBeW6DRRdGBqE
+	KOX9pmuNCYTBiHqffETlAMIKyrumj1SH3+8H0S/ep/kJ55aGyIuHlMRSFv29vXDIIJrXT1K2t2P
+	+dAfrbQwAm9SRnaFEsOG8nQFu7VA6aCZNej743ZbK3H972dkxXujizzUnNd3lrcTkD56XLODUm3
+	pP9NjzAiygl0PhK7YrxJbYyWqyIm7iL1cdS72K9+M1skb0NAtEY++KUtd/8Qi9vTncwKxssKeLs
+	xqIiuXrL3
+X-Google-Smtp-Source: AGHT+IFSpeG8IqEqqyqN+hsKGJwe7XRNWINU/9FIR9dySdmYSvdAVaNyPjcfPiQGLnsjkABA4MDMMQ==
+X-Received: by 2002:a05:600c:354b:b0:439:4b23:9e8e with SMTP id 5b1f17b1804b1-43ce4ab02eamr65458415e9.3.1741618700695;
+        Mon, 10 Mar 2025 07:58:20 -0700 (PDT)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:3d30:def0:6e8d:cbc8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43cea4619e9sm62353735e9.1.2025.03.10.07.58.20
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43cea4619e9sm62353735e9.1.2025.03.10.07.58.19
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 07:58:21 -0700 (PDT)
+        Mon, 10 Mar 2025 07:58:20 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/2] command: Fix command complete event ordering
-Date: Mon, 10 Mar 2025 14:58:19 +0000
-Message-ID: <20250310145819.2869616-2-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 1/2] cooker: Add debug for parsing being complete
+Date: Mon, 10 Mar 2025 14:58:18 +0000
+Message-ID: <20250310145819.2869616-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250310145819.2869616-1-richard.purdie@linuxfoundation.org>
-References: <20250310145819.2869616-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Mon, 10 Mar 2025 14:58:27 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17424
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17423
 
-The command complete event triggers the UI to start new commands.
-We should send this once we've cleaned up existing commands since
-on very slow systems, this could otherwise cause failures. There
-is a 30s timeout on incomming commands but slow systems have been
-known to hit this on poorly configured I setups.
+We have a "parsing started" event in the cooker deamon log but we don't
+currently log the corresponding "parsing complete" event which is
+confusing. Add this so that the logs are more logical.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/command.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/bb/cooker.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index baa7cbade1..59a979ee90 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -143,14 +143,14 @@ class Command:
-                 return bb.server.process.idleFinish(traceback.format_exc())
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index e21815daad..1810bcc604 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1636,6 +1636,7 @@ You can also remove the BB_HASHSERVE_UPSTREAM setting, but this may result in si
+         self.state = State.PARSING
  
-     def finishAsyncCommand(self, msg=None, code=None):
-+        self.cooker.finishcommand()
-+        self.process_server.clear_async_cmd()
-         if msg or msg == "":
-             bb.event.fire(CommandFailed(msg), self.cooker.data)
-         elif code:
-             bb.event.fire(CommandExit(code), self.cooker.data)
-         else:
-             bb.event.fire(CommandCompleted(), self.cooker.data)
--        self.cooker.finishcommand()
--        self.process_server.clear_async_cmd()
- 
-     def reset(self):
-         if self.remotedatastores:
+         if not self.parser.parse_next():
++            bb.server.process.serverlog("Parsing completed")
+             collectlog.debug("parsing complete")
+             if self.parser.error:
+                 raise bb.BBHandledException()
 
