@@ -2,67 +2,67 @@ Return-Path: <c137.marques@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0EBC282EC
-	for <webhook@archiver.kernel.org>; Tue, 11 Mar 2025 16:30:12 +0000 (UTC)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web11.14284.1741710606447153512
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B15C28B2F
+	for <webhook@archiver.kernel.org>; Tue, 11 Mar 2025 16:32:42 +0000 (UTC)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.web11.14375.1741710758437049971
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 11 Mar 2025 09:30:06 -0700
+ Tue, 11 Mar 2025 09:32:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=c5xnvAOD;
- spf=pass (domain: gmail.com, ip: 209.85.221.54, mailfrom: c137.marques@gmail.com)
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39133f709f5so2268648f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 11 Mar 2025 09:30:06 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=g74lJMpb;
+ spf=pass (domain: gmail.com, ip: 209.85.221.53, mailfrom: c137.marques@gmail.com)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3913fdd0120so1838476f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 11 Mar 2025 09:32:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741710604; x=1742315404; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1741710756; x=1742315556; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
         bh=4JtLNXaWKauwYNe4H/ilqnkL6bmoFC/bc45bUuNMbOM=;
-        b=c5xnvAOD8bfYBvVh7LzIwbryyz/51qCG+TTzKyfSXwztwd39pIJTMrXBt1i9wGQA03
-         NE4WzYSzp0lNTCCL3FrzHKYaCLTfWb5373lm/VWGYgw7dUsCJWVBpYojyOXQh4VnV6m7
-         72A9fvoWt7GDvuIS+/cZq5L2kNKiyljF2uaiwjVJetxkjNQZ3m71WzCZYF3HjNpPw1jg
-         mMR8e1vqA5kDLMN/swpcZueCYkkqjhID0FiXfLYvgfJANslbBFodxk7McagEjLZRd8Rr
-         viJjM0iHhNVlLHlK1PDouPFuNCvtjytQfLIAHzHZo8LDspXG+x+dRTg2tSz1iXA1IKr0
-         cqTg==
+        b=g74lJMpbeIWh/fD9b/dJpjOVlgjZgtT6aHRibYryv2vOWvzjAKbEF1rpN+y1Kj+gmL
+         BhQZ1d5g3hHBnmS8cxbPDY4EXrGbIAl9rIwPbMvBNpLezqTb6HYvMHqUAXVu8kfuwMyS
+         bb2CbVX3wEBXdOdRlG1MZK6QylK+OoWIoGW3zZ3se/ebdPKazgAB0kGMVacaOHzUhWBZ
+         9Q7v1OoEUgpvr6Cbdq0QRMsZlr+EcTR2Le80GI/j1x+7z+v5xbqUzVETFkFzP9cYyM9M
+         be2DOnqfJ4ru0AlX1OdmybKh2MgVIVGHadY9oF+C9iVUHcV0gHMKPm39s4LmRTQBqDMj
+         W6kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741710604; x=1742315404;
+        d=1e100.net; s=20230601; t=1741710756; x=1742315556;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
         bh=4JtLNXaWKauwYNe4H/ilqnkL6bmoFC/bc45bUuNMbOM=;
-        b=eR3HDgvwcYreXdZxQS+wUd/tbs6eW+4JwGr+Ix5Gaan8+u3llF2oXKxjEVc0T6uqFf
-         1gRDydGX/4+Sz1VgY0/Ib078KBM2BPWdwmnwH6YcA0d7n4TKiIHaR51r+p5FUtrHxvZ/
-         Qyobc/K7DlHBuDPcSwmQ9db1pS4Y+UffkMENSRz/aVj1cVrEMe5h4tWxGiQcmwn3+UBB
-         dizmdgW5EDxFkOH8CEYsPV/YXjHI44UEC9M4/nkR4zwbQW+2U57BhFmBlfnOeFJd73dX
-         uWhv+wvQpGKENhZLPlPZh8WEpa52xaxO5ySynzyIugQtUWKQqaerEfQw4ej1D38ACo2G
-         Uw3w==
-X-Gm-Message-State: AOJu0YxobWARy/69AhqkbfOKN53Aj0sMRoij7NCRAx1LCfxaQ/lyDTti
-	UitieY7fSVraBQ5PJruDYp4dysW9DSdjh9nCSyUIwVbHDbR3BYhl/dOTdA==
-X-Gm-Gg: ASbGncuom2Ozn/QwXYfKl4XnQugotCCOuRDP/8/kEkWrKkVcYvh/A5NiCb7XdIIhDgr
-	CnfoYNL/wkbMem/1ca2Rn7UdU/sdBpKfdEQnmyJS+NWrLotZwmjG5nRqClkPY7arbBQ79iT9TD3
-	kiAYLcmUEcWsuuDIRCs1KY697xIRCrpeBpOLbOeJRfNDV8HcpuySucbmjERYlLrPsTBB95FRkKM
-	H/U6ila8IjDEWYK9IuZlVvQgbhG01nEsAMv9KNglsM4McPCgbugn1wld527piVAWCXQMo7O7Yma
-	9FL+1IiVkJMHH2Xs1ljiPsIKTwxr2aPzwMR5Sjs=
-X-Google-Smtp-Source: AGHT+IGA+fJS6AP9fRhPOmminQ26UUjf3dDDsMgTbloWCjVB301rOeBlVwVLblQIUd7r+hXLacS2Ug==
-X-Received: by 2002:adf:a397:0:b0:391:3f4f:a169 with SMTP id ffacd0b85a97d-3913f4fa2d3mr7872284f8f.32.1741710604125;
-        Tue, 11 Mar 2025 09:30:04 -0700 (PDT)
+        b=TEaIuJFk3ARPrnQP79FNNoFXMyKOvy9W1Ue+kcaLDYJim84VTnlF5MWMv3SXbJ1ngW
+         t9VXbpcV1ountycRGKxvOIMKuMdnd1sPMztl95uWEqDV0+2x2VtLu1pWUgDk1Ggc3OIs
+         IhPLcjlriqo9ieyHafaFO7tmOL39f7mqDeeMOKxFnamR7+1RJQA3EngxDg2HS3ivUQ6O
+         1LjhGFC5QJsm8s7JeHJVUT6DermjvKvwKT1ZqRQXK0OCUsCgeIl2b3nu3sulc14+C7Mc
+         DoWotEY1D9g0vqxcjVJyh++TX/VVfoMCOyZdT71vTn+uh/Anll1U1LOhxfPdEMRto/qM
+         tDoQ==
+X-Gm-Message-State: AOJu0Yz7J186Mc77pV1ECfXCjk9eL1hRfgPKgwMiXVFTCVHL3AGbGN4/
+	cYwGJ7RF7/3G9ru9p2lOD3+Hod/GHE+745J+/76WuH2z/JLhAknOp19KKg==
+X-Gm-Gg: ASbGncse1Msv8Yf0AOP2L4d6K+HipQ1d/+SmZnfDTbhiMxRKU2viIiLJN7fZvObJuR/
+	jfcmcm6S7d5jbsqPGGqzUz6loNXBx8Lyd4WkkkAbDwQPxEOa0xQpg/f6YRDjQJ5PBtOoPXzWHlF
+	ZLR9N+wgQfKxICENm1ruhLdr9OxWDEoRUkVER6Ybf78Mj2jDOZEm++ojcYBOour2TVCdESZfVJL
+	A7k8i1X3C4mVTYBy2ZBW4Ioxhui+hGTgFzXepgL2eyqGh8sOb1TPd49C07E5FSzzLg+ZpZCnMXo
+	9beDayltPXhxq9tbfpFzwZ8Dn3K0tZPLwJFJjmXivIsPb41AWA==
+X-Google-Smtp-Source: AGHT+IEv/GXt0KHYpp06vCnnOfZiUZTP/cjt/E8xUhht61JIh0u9YTI/kRJS+rSH1NiCojHKwUermQ==
+X-Received: by 2002:a5d:6482:0:b0:390:f88c:a6a2 with SMTP id ffacd0b85a97d-39132d986f8mr18409007f8f.39.1741710756297;
+        Tue, 11 Mar 2025 09:32:36 -0700 (PDT)
 Received: from pc.. ([213.205.68.220])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfb79b9sm18299914f8f.3.2025.03.11.09.30.03
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c01d2cdsm18861412f8f.57.2025.03.11.09.32.35
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 09:30:03 -0700 (PDT)
+        Tue, 11 Mar 2025 09:32:35 -0700 (PDT)
 From: Alexander Marques <c137.marques@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH v3] hashserv: Add `gc-mark-stream` command for batch hash marking
-Date: Tue, 11 Mar 2025 16:30:01 +0000
-Message-Id: <20250311163001.450214-1-c137.marques@gmail.com>
+Subject: [PATCH v3 1/1] hashserv: Add `gc-mark-stream` command for batch hash marking
+Date: Tue, 11 Mar 2025 16:32:33 +0000
+Message-Id: <20250311163233.452668-1-c137.marques@gmail.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 11 Mar 2025 16:30:12 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17432
+ <bitbake-devel@lists.openembedded.org>; Tue, 11 Mar 2025 16:32:42 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17433
 
 From: Alexandre Marques <c137.marques@gmail.com>
 
