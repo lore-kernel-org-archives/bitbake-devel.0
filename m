@@ -2,67 +2,67 @@ Return-Path: <c137.marques@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B15C28B2F
-	for <webhook@archiver.kernel.org>; Tue, 11 Mar 2025 16:32:42 +0000 (UTC)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
- by mx.groups.io with SMTP id smtpd.web11.14375.1741710758437049971
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFB8C28B28
+	for <webhook@archiver.kernel.org>; Wed, 12 Mar 2025 11:22:18 +0000 (UTC)
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.web11.34767.1741778529974141180
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 11 Mar 2025 09:32:38 -0700
+ Wed, 12 Mar 2025 04:22:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=g74lJMpb;
- spf=pass (domain: gmail.com, ip: 209.85.221.53, mailfrom: c137.marques@gmail.com)
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3913fdd0120so1838476f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 11 Mar 2025 09:32:38 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=CtGj952h;
+ spf=pass (domain: gmail.com, ip: 209.85.221.49, mailfrom: c137.marques@gmail.com)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39133f709f5so2668782f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 12 Mar 2025 04:22:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741710756; x=1742315556; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1741778528; x=1742383328; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4JtLNXaWKauwYNe4H/ilqnkL6bmoFC/bc45bUuNMbOM=;
-        b=g74lJMpbeIWh/fD9b/dJpjOVlgjZgtT6aHRibYryv2vOWvzjAKbEF1rpN+y1Kj+gmL
-         BhQZ1d5g3hHBnmS8cxbPDY4EXrGbIAl9rIwPbMvBNpLezqTb6HYvMHqUAXVu8kfuwMyS
-         bb2CbVX3wEBXdOdRlG1MZK6QylK+OoWIoGW3zZ3se/ebdPKazgAB0kGMVacaOHzUhWBZ
-         9Q7v1OoEUgpvr6Cbdq0QRMsZlr+EcTR2Le80GI/j1x+7z+v5xbqUzVETFkFzP9cYyM9M
-         be2DOnqfJ4ru0AlX1OdmybKh2MgVIVGHadY9oF+C9iVUHcV0gHMKPm39s4LmRTQBqDMj
-         W6kg==
+        bh=reCMR2i7wVJZUYD2gyC04maPR4AL+9TZ7qn9AIyijIQ=;
+        b=CtGj952h2qqwLiCAUlV7bP/hDftdQ5bowfLzx0JPNGvGDyfP5keNkJJSpgauHWmIas
+         kqg8fqJnxa2fTt4P/r3t0ouor4xZ4J1qF2NGKrvXmktQBiWP1G9cvY41vkZCQ1buD12X
+         ZscWNvHQOjMKHKQIMcqJG5IVwIQzWPqJwEr4zjyYy+QJRSNqwm1tQsjnt7Oh7k4rP3iy
+         ScyivFgOqQqHXbOrzksQ5xE3B2kJteDx9H3NFvbSadR7sxwVSFqzdoo70WyMwNhm0s0+
+         93tkPJ45fgqcX58l5JoFHehrEAaRXfzdCoPJgvJqNgO0KpNtZDWmfMgW7WzhMoTixBQ1
+         zINQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741710756; x=1742315556;
+        d=1e100.net; s=20230601; t=1741778528; x=1742383328;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4JtLNXaWKauwYNe4H/ilqnkL6bmoFC/bc45bUuNMbOM=;
-        b=TEaIuJFk3ARPrnQP79FNNoFXMyKOvy9W1Ue+kcaLDYJim84VTnlF5MWMv3SXbJ1ngW
-         t9VXbpcV1ountycRGKxvOIMKuMdnd1sPMztl95uWEqDV0+2x2VtLu1pWUgDk1Ggc3OIs
-         IhPLcjlriqo9ieyHafaFO7tmOL39f7mqDeeMOKxFnamR7+1RJQA3EngxDg2HS3ivUQ6O
-         1LjhGFC5QJsm8s7JeHJVUT6DermjvKvwKT1ZqRQXK0OCUsCgeIl2b3nu3sulc14+C7Mc
-         DoWotEY1D9g0vqxcjVJyh++TX/VVfoMCOyZdT71vTn+uh/Anll1U1LOhxfPdEMRto/qM
-         tDoQ==
-X-Gm-Message-State: AOJu0Yz7J186Mc77pV1ECfXCjk9eL1hRfgPKgwMiXVFTCVHL3AGbGN4/
-	cYwGJ7RF7/3G9ru9p2lOD3+Hod/GHE+745J+/76WuH2z/JLhAknOp19KKg==
-X-Gm-Gg: ASbGncse1Msv8Yf0AOP2L4d6K+HipQ1d/+SmZnfDTbhiMxRKU2viIiLJN7fZvObJuR/
-	jfcmcm6S7d5jbsqPGGqzUz6loNXBx8Lyd4WkkkAbDwQPxEOa0xQpg/f6YRDjQJ5PBtOoPXzWHlF
-	ZLR9N+wgQfKxICENm1ruhLdr9OxWDEoRUkVER6Ybf78Mj2jDOZEm++ojcYBOour2TVCdESZfVJL
-	A7k8i1X3C4mVTYBy2ZBW4Ioxhui+hGTgFzXepgL2eyqGh8sOb1TPd49C07E5FSzzLg+ZpZCnMXo
-	9beDayltPXhxq9tbfpFzwZ8Dn3K0tZPLwJFJjmXivIsPb41AWA==
-X-Google-Smtp-Source: AGHT+IEv/GXt0KHYpp06vCnnOfZiUZTP/cjt/E8xUhht61JIh0u9YTI/kRJS+rSH1NiCojHKwUermQ==
-X-Received: by 2002:a5d:6482:0:b0:390:f88c:a6a2 with SMTP id ffacd0b85a97d-39132d986f8mr18409007f8f.39.1741710756297;
-        Tue, 11 Mar 2025 09:32:36 -0700 (PDT)
+        bh=reCMR2i7wVJZUYD2gyC04maPR4AL+9TZ7qn9AIyijIQ=;
+        b=PuEjTY00xlD01ylbi5+OWyn75XRTkBhXr7oeL9DAopU6XpBRdyzOXCQjdTTivlDoKc
+         UetQlK9lN7Lkah1n9HMEDDwtSnFnfAcj3IjufSe9YTUV9exo3oU7/qgdAjKLRt6L+jP1
+         urH+yFk6/i6UnzkQH6NBAbZSVRzRqa3SPnld73wyMoysvTwxfD3Dvp0AxB1t83gtTL3e
+         tFb+RWy7PFAXnPmEDO1ghdSxh/1R9nZ1K1+w1Li0AG6r7jscF28ccSjR5NzGfuWD0qG6
+         +HTCIZU14TIe1C+mPEf9ckHBx/lsIo0wFkLKGNxIENqMvcilLukQtQucpMSzlB3gAgbC
+         SM2g==
+X-Gm-Message-State: AOJu0YxeqjBtLbcJr5U2EjN7EAfeD5v9sBuz7Tc7EwvxXHCawZnpZ8gc
+	lrdlkGhHRnDMm10yToR0tr1WPl5/0X4LIMycW2Uzs6vuJdz0rXoY2saoAQ==
+X-Gm-Gg: ASbGncvNYWaDIIwK9IxXKCURjzbwtXSmn6SEzZrsbcC9YDyc3YDWsgVt8QBJCfeHlpy
+	dE/UiSIrq9fq/J0hGTNeAolrDYf1Q6EflozwUH0nNlW5YKuQj/CsG7PPYr928ukJypixZwzkCve
+	o3lhYjRUc+uTlnB05qnpuMyJahxR4K9DKv8ydN1/UY5Qyo1fq6s6y4xTq2hfA+D7CIpVMmLqmLc
+	Q+CWrzfUMQat+Hf9s6jiU+/OirjXMjY8aOw45sXDi06mH7vVEKKZX2gvS/kwVmqxrVeFu07gg/p
+	VDTTD2843RkkNTeQ7Oa8YhmZLVfmv3QXZtHtgGhJvKSYh8KaZA==
+X-Google-Smtp-Source: AGHT+IGneQNZeMSY8nWXF0kRlXBPZG8L6pAsv1DMg7RHIwJbuDYhLgu0Xj/ccrjpLjuEK79z/845jw==
+X-Received: by 2002:a05:6000:1867:b0:390:fbcf:56be with SMTP id ffacd0b85a97d-39132b63fb8mr17155350f8f.0.1741778527727;
+        Wed, 12 Mar 2025 04:22:07 -0700 (PDT)
 Received: from pc.. ([213.205.68.220])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c01d2cdsm18861412f8f.57.2025.03.11.09.32.35
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfba66esm21067651f8f.18.2025.03.12.04.22.06
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 09:32:35 -0700 (PDT)
+        Wed, 12 Mar 2025 04:22:07 -0700 (PDT)
 From: Alexander Marques <c137.marques@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH v3 1/1] hashserv: Add `gc-mark-stream` command for batch hash marking
-Date: Tue, 11 Mar 2025 16:32:33 +0000
-Message-Id: <20250311163233.452668-1-c137.marques@gmail.com>
+Subject: [PATCH v4 1/1] hashserv: Add `gc-mark-stream` command for batch hash marking
+Date: Wed, 12 Mar 2025 11:22:04 +0000
+Message-Id: <20250312112204.778528-1-c137.marques@gmail.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 11 Mar 2025 16:32:42 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17433
+ <bitbake-devel@lists.openembedded.org>; Wed, 12 Mar 2025 11:22:18 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17434
 
 From: Alexandre Marques <c137.marques@gmail.com>
 
@@ -89,9 +89,7 @@ Signed-off-by: Alexander Marques <c137.marques@gmail.com>
  lib/hashserv/client.py | 22 ++++++++++++++++++++++
  lib/hashserv/server.py | 29 +++++++++++++++++++++++++++++
  lib/hashserv/tests.py  | 42 ++++++++++++++++++++++++++++++++++++++++++
- tmp                    |  0
- 5 files changed, 124 insertions(+)
- create mode 100644 tmp
+ 4 files changed, 124 insertions(+)
 
 diff --git a/bin/bitbake-hashclient b/bin/bitbake-hashclient
 index a50701a88..b8755c579 100755
@@ -303,9 +301,6 @@ index 13ccb20eb..da3f8e088 100644
      def test_gc_switch_mark(self):
          taskhash = '53b8dce672cb6d0c73170be43f540460bfc347b4'
          outhash = '5a9cb1649625f0bf41fc7791b635cd9c2d7118c7f021ba87dcd03f72b67ce7a8'
-diff --git a/tmp b/tmp
-new file mode 100644
-index 000000000..e69de29bb
 -- 
 2.34.1
 
