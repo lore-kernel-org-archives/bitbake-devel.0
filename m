@@ -1,139 +1,215 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <eric.meyers15310@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 090C9C28B30
-	for <webhook@archiver.kernel.org>; Fri, 14 Mar 2025 23:52:35 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web10.718.1741996348691572491
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6EAC35FF8
+	for <webhook@archiver.kernel.org>; Mon, 17 Mar 2025 18:56:42 +0000 (UTC)
+Received: from mail-ua1-f67.google.com (mail-ua1-f67.google.com [209.85.222.67])
+ by mx.groups.io with SMTP id smtpd.web10.61205.1742237795997766304
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 14 Mar 2025 16:52:29 -0700
+ Mon, 17 Mar 2025 11:56:36 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=lORxXOhd;
- spf=pass (domain: smile.fr, ip: 209.85.128.54, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43d0a5cfd7dso1774015e9.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 14 Mar 2025 16:52:28 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=V+HdxNoU;
+ spf=pass (domain: gmail.com, ip: 209.85.222.67, mailfrom: eric.meyers15310@gmail.com)
+Received: by mail-ua1-f67.google.com with SMTP id a1e0cc1a2514c-8670fd79990so1885389241.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 17 Mar 2025 11:56:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1741996346; x=1742601146; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=COhIAVntSARlYH3SHIiYMClCbmdll3TfXtCs1sRU9NQ=;
-        b=lORxXOhdFmL0RAf22EIXWsnv0t9iid4fACiMIecaZNjdOJdk7CJHa4GKbkeZ8TwSR3
-         N7XftGkL9xsIGlxjHJt023g0GPf614oeb0O2y9SGGY7yovs9p6tk5DwapVD7/gwiiC/1
-         3O2+yYRDxqHpvWxiuPXK7uqaL1J13S/Cw5ZKA=
+        d=gmail.com; s=20230601; t=1742237795; x=1742842595; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=09GNzuzPdwGB5BTsNYjcU5gU9KvwOYgFUrDHijh9VLI=;
+        b=V+HdxNoUfpyezX7nHgtShMJm/xiJlATN38Emrfn3Poq0bvKme/ae+KwZ6ZUPLK38nP
+         xnEaNIxRcPg6I7ozP75KWdWtqs2c3+EfzLyK4mqoI7vrrJfEAL+hnoGXcvozBXQCX00K
+         wGrO1NCJqHVEVHWsDis3jzMW/wL+pD5iVanlv8VSIiBf6voKTdkC1UqGQD5Jd/444EF8
+         0CCShg30JxH9/EdNd0Q1nkxzFMvdab1HFBgmbgn4itL2OGAIh4oVI1EYR2X/mUbFjFz2
+         g2iPgvpO96fZAJLJbq0S42vdxw8xldPRo5KfPjzqWN0LhbTJda+k9NPXkIPBLJEpzD+q
+         cHTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741996346; x=1742601146;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1742237795; x=1742842595;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=COhIAVntSARlYH3SHIiYMClCbmdll3TfXtCs1sRU9NQ=;
-        b=Cn6FscTYuM0pMJKfbcUsDMPaYFAw7947ikmgr/8Ba7z4Vu8ay+vUkwDD2t7vQv3HYG
-         XT6RfGJvGvJgx2uInaq4HPyQHAbuw7ttB2VGS5BvKcg3cKaAwrxwQdXVS20EhwZq9XBO
-         aKIGD6Mqmo8qvCW7E0bx4m/ypn+BblHHrBZbLLt1hBXuShbWi02YwGFG+nD3m0XlAXKY
-         rhzQpnlwDBbEsiaMc94emk0mKrphcDnL/hHfBM/wKyiK9rdHS2AhVF7okvkJvimDYMai
-         dFDNvxu/6cYVXbjHCAwBiVKI9ulTv/oDHx/693aqr9mYV0WpTxCpaSaO4P91De8OAlw1
-         e/YA==
-X-Gm-Message-State: AOJu0Yx3t4jLbwZFI0UGJwWh7Dg9WJknSwBd3XuL/2IddrQI0115Fozk
-	B7b3ghvpFnQ2TviiVwIOrTccaLKdN5gxMbgw1hkV806G3HPssgXtzUrFrNoWC1NORL6eWoyPK/a
-	1
-X-Gm-Gg: ASbGncsSJ/y9fiTrrQIyjnZZgTHrCw7FNmRr1eTH9wvqtJNX4s+T/uuQUJ2ZaQo/aps
-	ut8Iz4Rn+TJO30buP79soHlK7CAfdKjBeI4EOiVqWmlrgL00wtg8SvjEFadYN5mqeKDbMTy4qSG
-	zjmtkrxv+zrwI099G2WycEHpyRd2lYvvTMMc3WRkL0HP/KxSu57OlqBP4Nm8oCjD+JaX6mMRLPy
-	R+DjDzqVq/ru5xNIosr/4vC8HtgbfLtH5awhqxEMSt5ZFhxepRATyIUItAt7clT9rtab0gTqayf
-	AV00st2+DmlZ/bfMgNrlHMO6y8PqWuiB20wrBqdFYRlsSM252MoXW4/awM0xnFgJ9WZIfsjeqmo
-	TVgm7mxXCwBnuJ/beRai5GpbVmCKc1pQdlfYVD+aA+AhT/jhKV5iYRJHkP8mIkQ==
-X-Google-Smtp-Source: AGHT+IHeFGYkOjUlwu9h3lcr/DNWE1aFNnRP6Z79rCoZDjV+LCilAqFTjV5G4sj1HrBGXZcoYc0yjQ==
-X-Received: by 2002:a05:600c:4e94:b0:43b:c5a3:2e1a with SMTP id 5b1f17b1804b1-43d1ec62272mr58273335e9.2.1741996346110;
-        Fri, 14 Mar 2025 16:52:26 -0700 (PDT)
-Received: from P-ASN-ECS-830T8C3.home (2a01cb000deef0002cff7470e58ff5dc.ipv6.abo.wanadoo.fr. [2a01:cb00:dee:f000:2cff:7470:e58f:f5dc])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d20e29a38sm28036935e9.37.2025.03.14.16.52.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 16:52:25 -0700 (PDT)
-From: Yoann Congal <yoann.congal@smile.fr>
-To: bitbake-devel@lists.openembedded.org
-Cc: Yoann Congal <yoann.congal@smile.fr>
-Subject: [PATCH 1/2] tinfoil: Refactor temporary data tracking in a context manager
-Date: Sat, 15 Mar 2025 00:52:13 +0100
-Message-Id: <20250314235214.1540-1-yoann.congal@smile.fr>
-X-Mailer: git-send-email 2.39.5
+        bh=09GNzuzPdwGB5BTsNYjcU5gU9KvwOYgFUrDHijh9VLI=;
+        b=foJ/JH9xL4LIbWBebcjmeZkkdq4ahaKZ5fYMTcuEIh3TBvrWGOgdF/CYJWzYyXkLGB
+         BQ2ptuEtJNVZagEJ4p8Jr3a24S2dWZvWe1tP1w5G4DNK0BWTVHYpX8bTgeq9WdDE+0AX
+         oOmFfTolI0osztQ+Gr5qGO8UbEobRVA9Dg63oKpvsqLsEdgwN/q3c3C0no019CCexu7s
+         uztWv/KSoqUbVNmfUdQN2pygdPb3zJutEEHfjfHm+yop+r/Xmqb86vyhqKoZ76w6TWaX
+         mLXxixUN0ZIuZl2hdz4kf8l3imJExXKMuSGPDsYkbphmc5W0DP09aTf9JmkbVQVPPiBz
+         YhOw==
+X-Gm-Message-State: AOJu0YzPSLXbS3SKb0asmLSH1LZim2c8j9z9Ey0fYg4I8KDEZV7GIjMa
+	WJhKqJeaL5oR8NfCoOsLWCvuTKnrtBP1QppIdq2GVdBHdn0CQZ4iqWpd6m7hXIxDSEl1GRHXXW3
+	kmoVaugVq02LJP/s+d2i29+Vq64bLtz4/kKY=
+X-Gm-Gg: ASbGncuuHJhIR8OD8Lc3sZTP/RKTO8NUhV+GPwnGJ0/6s4dgU7SFyj421cx/yGxC4LU
+	+qwR4ttLhitPXBttEW8dHNEivlYy0OC2SRdLV4u388yOp4DmichyHz/9ETBvShotuEvpP9Kk7g2
+	IrSUwYqcyptYAn0HeqzBv7RFMCkA==
+X-Google-Smtp-Source: AGHT+IGvsdaFigegZlBsrWCZgGuxDXw/z9l5xyH/1WyackBaNX+x+QfHVHX3FQiLVcI+bNseiVgQufuNYIPl1XSUiEM=
+X-Received: by 2002:a05:6102:f8d:b0:4c3:6393:8448 with SMTP id
+ ada2fe7eead31-4c38310cd8fmr10886456137.1.1742237794992; Mon, 17 Mar 2025
+ 11:56:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250311122901.13820-1-eric.meyers@arthrex.com> <20250311122901.13820-2-eric.meyers@arthrex.com>
+In-Reply-To: <20250311122901.13820-2-eric.meyers@arthrex.com>
+From: Eric Meyers <eric.meyers15310@gmail.com>
+Date: Mon, 17 Mar 2025 13:56:36 -0500
+X-Gm-Features: AQ5f1JraPln5-phNzHuvtPA6Vy_RhnlnyFIVlU20Hq23zgibdV8PpVH_XynX-Ns
+Message-ID: <CA+cKJ+E9FAaZS+0QfUnAK5JnRXgkQpyR4H2B-mBEnUbK7KoM+A@mail.gmail.com>
+Subject: Re: [bitbake][styhead][2.10][PATCH v1 1/2] fetch2/npm: Adding npmrc
+ support for private registry authentication
+To: bitbake-devel@lists.openembedded.org
+Cc: Eric Meyers <eric.meyers@arthrex.com>, Geoff Parker <geoffrey.parker@arthrex.com>
+Content-Type: multipart/alternative; boundary="000000000000e28dbb06308e5883"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 14 Mar 2025 23:52:34 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17447
+ <bitbake-devel@lists.openembedded.org>; Mon, 17 Mar 2025 18:56:42 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17449
 
-From: Yoann Congal <yoann.congal@smile.fr>
+--000000000000e28dbb06308e5883
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-A new context manager Tinfoil._data_tracked_if_enabled() is introduced to
-replace the following structure:
-  if self.tracking:
-      self.run_command('enableDataTracking')
-  # Code that need data tracking
-  if self.tracking:
-      self.run_command('disableDataTracking')
+On Tue, Mar 11, 2025 at 7:28=E2=80=AFAM Eric Meyers <eric.meyers15310@gmail=
+.com>
+wrote:
 
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
----
- lib/bb/tinfoil.py | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+> From: Eric Meyers <eric.meyers15310@gmail.com>
+>
+> Signed-off-by: Eric Meyers <eric.meyers@arthrex.com>
+> Cc: Geoff Parker <geoffrey.parker@arthrex.com>
+> ---
+>  lib/bb/fetch2/npm.py | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
+> index ac76d64cd..38f460e5b 100644
+> --- a/lib/bb/fetch2/npm.py
+> +++ b/lib/bb/fetch2/npm.py
+> @@ -91,6 +91,12 @@ class NpmEnvironment(object):
+>          self.d =3D d
+>
+>          self.user_config =3D tempfile.NamedTemporaryFile(mode=3D"w",
+> buffering=3D1)
+> +
+> +        hn =3D self._home_npmrc(d)
+> +        if hn is not None:
+> +            with open(hn, 'r') as hnf:
+> +                self.user_config.write(hnf.read())
+> +
+>          for key, value in configs:
+>              self.user_config.write("%s=3D%s\n" % (key, value))
+>
+> @@ -103,6 +109,15 @@ class NpmEnvironment(object):
+>          if self.user_config:
+>              self.user_config.close()
+>
+> +    def _home_npmrc(self, d):
+> +        """Function to return user's HOME .npmrc file (or None if it
+> doesn't exist)"""
+> +        home_npmrc_file =3D os.path.join(os.environ.get("HOME"), ".npmrc=
+")
+> +        if d.getVar("BB_USE_HOME_NPMRC") =3D=3D "1" and
+> os.path.exists(home_npmrc_file):
+> +            bb.warn(f"BB_USE_HOME_NPMRC flag set and valid .npmrc
+> detected - "\
+> +                    f"npm fetcher will use {home_npmrc_file}")
+> +            return home_npmrc_file
+> +        return None
+> +
+>      def run(self, cmd, args=3DNone, configs=3DNone, workdir=3DNone):
+>          """Run npm command in a controlled environment"""
+>          with tempfile.TemporaryDirectory() as tmpdir:
+>
 
-diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
-index 13b05cec..60359a1a 100644
---- a/lib/bb/tinfoil.py
-+++ b/lib/bb/tinfoil.py
-@@ -15,6 +15,7 @@ import atexit
- import re
- from collections import OrderedDict, defaultdict
- from functools import partial
-+from contextlib import contextmanager
- 
- import bb.cache
- import bb.cooker
-@@ -641,6 +642,22 @@ class Tinfoil:
-         fn = self.get_recipe_file(pn)
-         return self.parse_recipe_file(fn)
- 
-+    @contextmanager
-+    def _data_tracked_if_enabled(self):
-+        """
-+        A context manager to enable data tracking for a code segment if data
-+        tracking was enabled for this tinfoil instance.
-+        """
-+        if self.tracking:
-+            # Enable history tracking just for the operation
-+            self.run_command('enableDataTracking')
-+
-+        # Here goes the operation with the optional data tracking
-+        yield
-+
-+        if self.tracking:
-+            self.run_command('disableDataTracking')
-+
-     def finalizeData(self):
-         """
-         Run anonymous functions and expand keys
-@@ -659,10 +676,7 @@ class Tinfoil:
-             appendlist: optional list of bbappend files to apply, if you
-                         want to filter them
-         """
--        if self.tracking:
--            # Enable history tracking just for the parse operation
--            self.run_command('enableDataTracking')
--        try:
-+        with self._data_tracked_if_enabled():
-             if appends and appendlist == []:
-                 appends = False
-             if config_data:
-@@ -674,9 +688,6 @@ class Tinfoil:
-                 return self._reconvert_type(dscon, 'DataStoreConnectionHandle')
-             else:
-                 return None
--        finally:
--            if self.tracking:
--                self.run_command('disableDataTracking')
- 
-     def build_file(self, buildfile, task, internal=True):
-         """
+
+Just poking this patch submission since I haven't heard anything since
+initially submitting it a week ago/haven't seen anything merge yet.
+
+I know @rpurdie said it was borderline new functionality on a previous
+thread and might not be accepted into styhead (2.10) and scarthgap (2.8),
+but just wanted to have closure if that's the case.
+
+Would be really nice/make our lives easier if this could make it all the
+way into scarthgap, but understand if there is hesitation from the
+maintainers.
+
+Thanks,
+-Eric
+
+--000000000000e28dbb06308e5883
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr">On Tue, Mar 11, 2025 at =
+7:28=E2=80=AFAM Eric Meyers &lt;<a href=3D"mailto:eric.meyers15310@gmail.co=
+m">eric.meyers15310@gmail.com</a>&gt; wrote:</div><div class=3D"gmail_quote=
+ gmail_quote_container"><blockquote class=3D"gmail_quote" style=3D"margin:0=
+px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">F=
+rom: Eric Meyers &lt;<a href=3D"mailto:eric.meyers15310@gmail.com" target=
+=3D"_blank">eric.meyers15310@gmail.com</a>&gt;<br>
+<br>
+Signed-off-by: Eric Meyers &lt;<a href=3D"mailto:eric.meyers@arthrex.com" t=
+arget=3D"_blank">eric.meyers@arthrex.com</a>&gt;<br>
+Cc: Geoff Parker &lt;<a href=3D"mailto:geoffrey.parker@arthrex.com" target=
+=3D"_blank">geoffrey.parker@arthrex.com</a>&gt;<br>
+---<br>
+=C2=A0lib/bb/fetch2/npm.py | 15 +++++++++++++++<br>
+=C2=A01 file changed, 15 insertions(+)<br>
+<br>
+diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py<br>
+index ac76d64cd..38f460e5b 100644<br>
+--- a/lib/bb/fetch2/npm.py<br>
++++ b/lib/bb/fetch2/npm.py<br>
+@@ -91,6 +91,12 @@ class NpmEnvironment(object):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.d =3D d<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.user_config =3D tempfile.NamedTempor=
+aryFile(mode=3D&quot;w&quot;, buffering=3D1)<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 hn =3D self._home_npmrc(d)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 if hn is not None:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 with open(hn, &#39;r&#39;) as hn=
+f:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.user_config.w=
+rite(hnf.read())<br>
++<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0for key, value in configs:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.user_config.write(&quo=
+t;%s=3D%s\n&quot; % (key, value))<br>
+<br>
+@@ -103,6 +109,15 @@ class NpmEnvironment(object):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if self.user_config:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.user_config.close()<br=
+>
+<br>
++=C2=A0 =C2=A0 def _home_npmrc(self, d):<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;&quot;&quot;Function to return user&#39;=
+s HOME .npmrc file (or None if it doesn&#39;t exist)&quot;&quot;&quot;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 home_npmrc_file =3D os.path.join(os.environ.ge=
+t(&quot;HOME&quot;), &quot;.npmrc&quot;)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 if d.getVar(&quot;BB_USE_HOME_NPMRC&quot;) =3D=
+=3D &quot;1&quot; and os.path.exists(home_npmrc_file):<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.warn(f&quot;BB_USE_HOME_NPMRC=
+ flag set and valid .npmrc detected - &quot;\<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 f&qu=
+ot;npm fetcher will use {home_npmrc_file}&quot;)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return home_npmrc_file<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 return None<br>
++<br>
+=C2=A0 =C2=A0 =C2=A0def run(self, cmd, args=3DNone, configs=3DNone, workdir=
+=3DNone):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;&quot;&quot;Run npm command in a co=
+ntrolled environment&quot;&quot;&quot;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0with tempfile.TemporaryDirectory() as tmp=
+dir:<br></blockquote><div><br></div><div><br></div>Just poking this patch s=
+ubmission since I haven&#39;t heard anything since initially submitting it =
+a week ago/haven&#39;t seen anything merge yet.=C2=A0<div><br></div><div>I =
+know=C2=A0@rpurdie said it was borderline new functionality on a previous t=
+hread and might not be accepted into styhead (2.10) and scarthgap (2.8), bu=
+t just wanted to have closure if that&#39;s the case.=C2=A0</div><div><br><=
+/div><div>Would be really nice/make our lives easier if this could make it =
+all the way into scarthgap, but understand if there is hesitation from the =
+maintainers.</div><div><br></div><div>Thanks,</div><div>-Eric</div></div></=
+div></div>
+
+--000000000000e28dbb06308e5883--
 
