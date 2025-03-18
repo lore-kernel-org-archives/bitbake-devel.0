@@ -1,162 +1,144 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A33C282EC
-	for <webhook@archiver.kernel.org>; Mon, 17 Mar 2025 19:39:35 +0000 (UTC)
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
- by mx.groups.io with SMTP id smtpd.web11.248.1742240371764951698
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7CAC282EC
+	for <webhook@archiver.kernel.org>; Tue, 18 Mar 2025 11:07:54 +0000 (UTC)
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+ by mx.groups.io with SMTP id smtpd.web11.9161.1742296067572189033
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 17 Mar 2025 12:39:32 -0700
+ Tue, 18 Mar 2025 04:07:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=tt80mHQ9;
- spf=softfail (domain: sakoman.com, ip: 209.85.128.170, mailfrom: steve@sakoman.com)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6f679788fd1so36076717b3.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 17 Mar 2025 12:39:31 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=E81pfvFQ;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.50, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-390f5f48eafso3452391f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 18 Mar 2025 04:07:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1742240371; x=1742845171; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EV1ZtUWmbIEXiSEoMOWRZqk7X+B7yY+ee6gFgVqQWlI=;
-        b=tt80mHQ9HbxUOQHlfdECvfXrlPALDmoaFD+X6J0cDwjrcVz3uAEsJO5dnJ/gsspKDe
-         /F4OFsyLL7Kv8wLqRqi6ugJBu4pQmdppsU5yHZPGxL6aH7djk2DvamNH0t0CP0emKwhL
-         zW/HNpxyaMUq6/p2tRge/r6gBOEUv66z8GwjQczxiRxLbW06BdeqlGcDhcmy1CkdXzws
-         wPp0U4O8UY4Xcg9A9DspDd/BUWpSnmVrEApohojqiZJcxvN17oV1aKX8HRj5ZK/33OKX
-         e4MxgJgqiSTdL9kCalKYxNPyWYgYCuY0ccLYhYgYl4WV+AXKLAUDXVr3h9Awp/T/XMBV
-         jMkg==
+        d=linuxfoundation.org; s=google; t=1742296065; x=1742900865; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tG9hC+gDnXm4SIyWQi6bNG6+PzvzfRyqQTnUDTU5u+A=;
+        b=E81pfvFQPWcZNmjP60GsV6t+cUoebHnekvpfikacPWAxdCIomOtTkKTtRG2ZFz7ggD
+         Syis8SIeyRovjPI6cUf8W/r9cEruWfxfskDmxovbQxma5Yt0hWdpr3/ZzbtutyaOcsT+
+         Xz7lCZ7H7CrAmUK0rkMSqPQPcPXY1GpROm/X4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742240371; x=1742845171;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EV1ZtUWmbIEXiSEoMOWRZqk7X+B7yY+ee6gFgVqQWlI=;
-        b=RygWGfydQwv12VbBmQdljg9JBazm5MjjDh9YupVROczzD+2p3jBLGV3gW0/yQj1X6t
-         kp7Ros/j0KF3RYmlqhSablQajjmLjzr9OvEK2VJvQ67xH9aelTil3t4NrFqridsIejW0
-         mkvX2AJ9XNsl5uHf1oy0HqxDWt+fNs91Rf9n0SxavSl87sRwLm/iWec1FtO3RSUUY3O8
-         505koGHcl3CoTwsTPks20c2yhKIrxgZnNW0IeNrlVXOaWNpM+bM8scKDjaW+CDWIcyTm
-         PNDwHwGpiRXeBuQ3uRIEkEpBveR8pfbTPe626k0KSiFnjSEV4rUsR4KVGhbZU36j+smj
-         lpDw==
-X-Gm-Message-State: AOJu0YwZNtVa9za8XCGdRJ74hi2DaTsC0LfMGhSM1kXPbQ+NJ4LpsVS5
-	wtxj2U7Vh5hsQulVSG2RSjt8xkmzI+85dlhicCJFHX+ima8a9xE5pkixseP/Vce+sltqEwOlUmt
-	+37ArCijjz3Vjq/NsgkbWw7imzcxgmdzwa9KmTQ==
-X-Gm-Gg: ASbGncufo4P9KRBrRfU6lD644pa9VmHsbVGQLrmQnRqVOnf/dChBxPSCGsQ7z7/lcb/
-	WGiDRZofr+8Dk7MinUawVBziUN80dLk4urQFNfvp1PNJG23aZtBSVj5INqcbQsAIcG508wt10xL
-	w6XTuIgJksqNgSDN1wpBqGyfQ0u7v/DT9EAtmfrB4oRjZ3uSSp2kgQucgsOma41cmzE+k=
-X-Google-Smtp-Source: AGHT+IGXGEtzmgnReez4INCXDJSqH7/wPxK9N+Bv6/VPWg5dcXF0f4vL3Saw3ofAmMXeElCZalaIHQF7t3XRVcO6lZg=
-X-Received: by 2002:a05:690c:3613:b0:6f9:a8e7:430 with SMTP id
- 00721157ae682-6ff45e687aemr157327557b3.4.1742240370849; Mon, 17 Mar 2025
- 12:39:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742296065; x=1742900865;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tG9hC+gDnXm4SIyWQi6bNG6+PzvzfRyqQTnUDTU5u+A=;
+        b=F+itnn4IqSXM5EYkmAR0HtQuQ/Iq5Jgp4AnJ7l6+Pfd0/B1binONd9V5zCYDz6G2py
+         ZjnozRZDjzS8HX+nPrYF8PM67jUisybytR5jViRe75W1/u14ty0hrSsbMrYpGgAkcXHk
+         aLpAw62krBpkQgOFK+zhcdfeSq1cAoGrrOh7XdWgrLjn9xQEk+HLrFLFDAyHcF85anqk
+         WIrWX8C6SvWwZB1PA4NjvnfDoviYait8zdFwxVaQaXBoX8NHxFmGsPbCNER+dqfDdo0L
+         oUA1UZCjuEGVcm1UYQgr99w7K3SkVfVDhBbBy/enFlWiwVOMmcKpcSbwMjpfxI+hdx4F
+         Ydbw==
+X-Gm-Message-State: AOJu0YzWNsqUxWBi7en5IXSJugfXIHkVf8qNPbU9T1I5EQVZbhuU4F2P
+	2l6jifEXW92ernKIxF06VNK8JFZVid4RqHcE3uzJ21veEc7TS5u46c/qbtoFv8FD5Zx32m9s+g3
+	P
+X-Gm-Gg: ASbGncuxd4uk7jq3LCntWv4Yb98/mxW5SGXdGcUmAYoSffsz5Me3y667/xl4t0T6VHS
+	/JvLaIVGLdB61TctbrhrePF1Pmc4Ibzq2sCqv0ZkUd6FC4+ejVZeK+SPXaM7mAbJN6Q5I4kq8DO
+	fhuvER7CfJNH/DxAFPOQ9F84eaZSYcqJWQoUL8iSuM+CjRzZSlLa+kvfMoIZKJVZem1bPiMoSK5
+	iRiOC3NkIy4Pz7NIDL8VTzFmBR8QFnG52B4RfEmfzqcYl94EAzXo7MIDW+ebghf7qtnKfiGxVk2
+	WOvK5XL76B9SmtU6eCtaz7S9sjB7CRHpy+jtkLHUWDgdfvT0PSxIbqAP5sznn4JHYjgUM3ENWw=
+	=
+X-Google-Smtp-Source: AGHT+IG9Ycyk1zkQ8HW6R/I1KF9+TVgd/Va568dyIFjCcfSXJ1rUOV1Z+bGiQFLUTlRAYi9uSRTzaQ==
+X-Received: by 2002:adf:9b9d:0:b0:391:492a:c9c2 with SMTP id ffacd0b85a97d-3996b46895bmr2481766f8f.33.1742296065267;
+        Tue, 18 Mar 2025 04:07:45 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:791f:f4e7:28a8:7096])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c8975f33sm18210945f8f.58.2025.03.18.04.07.44
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 04:07:44 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] fetch/get: Rework tag parameter handling
+Date: Tue, 18 Mar 2025 11:07:43 +0000
+Message-ID: <20250318110743.3936601-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.2
 MIME-Version: 1.0
-References: <20250311122901.13820-1-eric.meyers@arthrex.com>
- <20250311122901.13820-2-eric.meyers@arthrex.com> <CA+cKJ+E9FAaZS+0QfUnAK5JnRXgkQpyR4H2B-mBEnUbK7KoM+A@mail.gmail.com>
-In-Reply-To: <CA+cKJ+E9FAaZS+0QfUnAK5JnRXgkQpyR4H2B-mBEnUbK7KoM+A@mail.gmail.com>
-From: Steve Sakoman <steve@sakoman.com>
-Date: Mon, 17 Mar 2025 12:39:19 -0700
-X-Gm-Features: AQ5f1JpMN4dwd_nsorCkiwsTZbPqUPLXqR5GjiAOxZIinve_Ra-9CiE9tm6vxG0
-Message-ID: <CAOSpxdYgwqoN+jrow0qAs+kfYzJkCN+-E9ab-z9hjeURkhSXkQ@mail.gmail.com>
-Subject: Re: [bitbake-devel] [bitbake][styhead][2.10][PATCH v1 1/2]
- fetch2/npm: Adding npmrc support for private registry authentication
-To: eric.meyers15310@gmail.com
-Cc: bitbake-devel@lists.openembedded.org, 
-	Eric Meyers <eric.meyers@arthrex.com>, Geoff Parker <geoffrey.parker@arthrex.com>, 
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 17 Mar 2025 19:39:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17450
+ <bitbake-devel@lists.openembedded.org>; Tue, 18 Mar 2025 11:07:54 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17451
 
-On Mon, Mar 17, 2025 at 11:56=E2=80=AFAM Eric Meyers via
-lists.openembedded.org
-<eric.meyers15310=3Dgmail.com@lists.openembedded.org> wrote:
->
-> On Tue, Mar 11, 2025 at 7:28=E2=80=AFAM Eric Meyers <eric.meyers15310@gma=
-il.com> wrote:
->>
->> From: Eric Meyers <eric.meyers15310@gmail.com>
->>
->> Signed-off-by: Eric Meyers <eric.meyers@arthrex.com>
->> Cc: Geoff Parker <geoffrey.parker@arthrex.com>
->> ---
->>  lib/bb/fetch2/npm.py | 15 +++++++++++++++
->>  1 file changed, 15 insertions(+)
->>
->> diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
->> index ac76d64cd..38f460e5b 100644
->> --- a/lib/bb/fetch2/npm.py
->> +++ b/lib/bb/fetch2/npm.py
->> @@ -91,6 +91,12 @@ class NpmEnvironment(object):
->>          self.d =3D d
->>
->>          self.user_config =3D tempfile.NamedTemporaryFile(mode=3D"w", bu=
-ffering=3D1)
->> +
->> +        hn =3D self._home_npmrc(d)
->> +        if hn is not None:
->> +            with open(hn, 'r') as hnf:
->> +                self.user_config.write(hnf.read())
->> +
->>          for key, value in configs:
->>              self.user_config.write("%s=3D%s\n" % (key, value))
->>
->> @@ -103,6 +109,15 @@ class NpmEnvironment(object):
->>          if self.user_config:
->>              self.user_config.close()
->>
->> +    def _home_npmrc(self, d):
->> +        """Function to return user's HOME .npmrc file (or None if it do=
-esn't exist)"""
->> +        home_npmrc_file =3D os.path.join(os.environ.get("HOME"), ".npmr=
-c")
->> +        if d.getVar("BB_USE_HOME_NPMRC") =3D=3D "1" and os.path.exists(=
-home_npmrc_file):
->> +            bb.warn(f"BB_USE_HOME_NPMRC flag set and valid .npmrc detec=
-ted - "\
->> +                    f"npm fetcher will use {home_npmrc_file}")
->> +            return home_npmrc_file
->> +        return None
->> +
->>      def run(self, cmd, args=3DNone, configs=3DNone, workdir=3DNone):
->>          """Run npm command in a controlled environment"""
->>          with tempfile.TemporaryDirectory() as tmpdir:
->
->
->
-> Just poking this patch submission since I haven't heard anything since in=
-itially submitting it a week ago/haven't seen anything merge yet.
->
-> I know @rpurdie said it was borderline new functionality on a previous th=
-read and might not be accepted into styhead (2.10) and scarthgap (2.8), but=
- just wanted to have closure if that's the case.
+Currently bitbake disallows tag parameters along with revision parameters.
+This isn't great since quite often, we'd like to verify that a given revision
+does match some tag. At the same time we don't want to or need to access
+the network to verify this, which normally a tag would require.
 
-This does cross the line of adding new functionality, so I'm not
-inclined to take it unless Richard (as bitbake maintainer) feels that
-an exception should be made.
+Rework the code so that tag and revisions can both be specified together.
+Verify that any tag specified matches the revision in use at unpack time.
 
-In any event though, this was only accepted into master a week ago.  I
-typically let patches "age" a bit there to see if problems crop up
-before backporting.
+This means we can start requiring people to put tags in git SRC_URIs
+when revisions are used, making review a little easier that it isn't
+some random revision.
 
-Steve
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/fetch2/__init__.py | 13 +++++--------
+ lib/bb/fetch2/git.py      | 12 ++++++++++++
+ 2 files changed, 17 insertions(+), 8 deletions(-)
 
-> Would be really nice/make our lives easier if this could make it all the =
-way into scarthgap, but understand if there is hesitation from the maintain=
-ers.
->
-> Thanks,
-> -Eric
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#17449): https://lists.openembedded.org/g/bitbake-deve=
-l/message/17449
-> Mute This Topic: https://lists.openembedded.org/mt/111638710/3620601
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [steve@=
-sakoman.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 5aa67accc3..cfbbce5288 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1248,20 +1248,17 @@ def srcrev_internal_helper(ud, d, name):
+         if srcrev and srcrev != "INVALID":
+             break
+ 
+-    if 'rev' in ud.parm and 'tag' in ud.parm:
+-        raise FetchError("Please specify a ;rev= parameter or a ;tag= parameter in the url %s but not both." % (ud.url))
+-
+-    if 'rev' in ud.parm or 'tag' in ud.parm:
+-        if 'rev' in ud.parm:
+-            parmrev = ud.parm['rev']
+-        else:
+-            parmrev = ud.parm['tag']
++    if 'rev' in ud.parm:
++        parmrev = ud.parm['rev']
+         if srcrev == "INVALID" or not srcrev:
+             return parmrev
+         if srcrev != parmrev:
+             raise FetchError("Conflicting revisions (%s from SRCREV and %s from the url) found, please specify one valid value" % (srcrev, parmrev))
+         return parmrev
+ 
++    if 'tag' in ud.parm and (srcrev == "INVALID" or not srcrev):
++        return ud.parm['tag']
++
+     if srcrev == "INVALID" or not srcrev:
+         raise FetchError("Please set a valid SRCREV for url %s (possible key names are %s, or use a ;rev=X URL parameter)" % (str(attempts), ud.url), ud.url)
+     if srcrev == "AUTOINC":
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index a73fb79ac8..53fdc4c3df 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -279,6 +279,10 @@ class Git(FetchMethod):
+                     ud.unresolvedrev[name] = ud.revisions[name]
+                 ud.revisions[name] = self.latest_revision(ud, d, name)
+ 
++        if 'tag' in ud.parm:
++            if len(ud.revisions) != 1:
++                raise bb.fetch2.ParameterError("Git fetcher support for multiple tagged revisions not implemented", ud.url)
++
+         gitsrcname = '%s%s' % (ud.host.replace(':', '.'), ud.path.replace('/', '.').replace('*', '.').replace(' ','_').replace('(', '_').replace(')', '_'))
+         if gitsrcname.startswith('.'):
+             gitsrcname = gitsrcname[1:]
+@@ -747,6 +751,14 @@ class Git(FetchMethod):
+         if not source_found:
+             raise bb.fetch2.UnpackError("No up to date source found: " + "; ".join(source_error), ud.url)
+ 
++        # If there is a tag parameter in the url and we also have a fixed srcrev, check the tag
++        # matches the revision
++        if 'tag' in ud.parm and sha1_re.match(ud.revision):
++            output = runfetchcmd("%s rev-list -n 1 %s" % (ud.basecmd, ud.parm['tag']), d, workdir=destdir)
++            output = output.strip()
++            if output != ud.revision:
++                raise bb.fetch2.FetchError("The revision the git tag '%s' resolved to didn't match the SRCREV in use (%s vs %s)" % (ud.parm['tag'], output, ud.revision), ud.url)
++
+         repourl = self._get_repo_url(ud)
+         runfetchcmd("%s remote set-url origin %s" % (ud.basecmd, shlex.quote(repourl)), d, workdir=destdir)
+ 
 
