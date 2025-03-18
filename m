@@ -2,102 +2,87 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FEBC282EC
-	for <webhook@archiver.kernel.org>; Tue, 18 Mar 2025 23:35:27 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web11.910.1742340926030204626
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BF2C282EC
+	for <webhook@archiver.kernel.org>; Tue, 18 Mar 2025 23:35:57 +0000 (UTC)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.web10.915.1742340951214485251
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 18 Mar 2025 16:35:26 -0700
+ Tue, 18 Mar 2025 16:35:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=LzaS8P1n;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43bb6b0b898so38974905e9.1
-        for <bitbake-devel@lists.openembedded.org>; Tue, 18 Mar 2025 16:35:25 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=WBelOIJF;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso28500305e9.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 18 Mar 2025 16:35:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1742340924; x=1742945724; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9RfwrfU6VsHDPDSJOcYKQPaHxHh6ArEyX7tyitv3zIE=;
-        b=LzaS8P1nxlHN8RXjabC5cXBAICP4aG+RDUxM7A/lxh4SlKC1xOp4k01XuVvsk7ZU6j
-         TA+QkSx7aychFjncL+UHXlHrSeDDi8y3rTlvHhO3e4agFa9Zzi8TbWU5lcwvMUo1zTaK
-         nruTAgq0lDI05UsSV0I0pYSLsXO1Lfec21CuI=
+        d=linuxfoundation.org; s=google; t=1742340949; x=1742945749; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3G633G6uqKeQblayK+1/HRVP9peqAjTt734Spsz53Js=;
+        b=WBelOIJFtECiBgGhYBkfTTFGOqR3D7rLD9K3LBk3TwZd6zWFDUbNOi5EXX/p999xbO
+         9ochKh23ExqEWL/AhtNuvUU7HzbbnU2QoY5X4R9qoRZOV09jgKB0xOOFl9ao/Sw1t7AB
+         GJqU2YsLPxGIdohFgZwoBsIcPZuKTvkKaNqn8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742340924; x=1742945724;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=9RfwrfU6VsHDPDSJOcYKQPaHxHh6ArEyX7tyitv3zIE=;
-        b=t8XdBJqrXIn+82dlAUgjR9HX/b/pzKErzljgXucpPy/DFyyyiCVTE/mDiSZ291CRx/
-         Eh1xbpylWi2H60RrGft+49ama2/0fE8HNXg1Pd2l7k3B09IXTqOdsK6PjvVHJeXR/LxD
-         /qUsTQ1NXM9q50IBtuKE/nABh16zixw5FSvizTNW6o/AuJNUwz3rVJi5W8WLppi6C9hT
-         Hdmc775Q7eJMsLwgeooA5Or8HXbuM2tJ14AL6ffzxWvdI0uSXHd20+2BzvEuqKIsywSj
-         5uOluMXxoXvjDgo3zf64K2x2nUAef9mRT1yajCxe72fzP/GmP9NqZhs5qUYqZLj/8SUk
-         IO9Q==
-X-Gm-Message-State: AOJu0Yzx80BfLwKcPGZRG0SmwXGv1hUvBMXH7mclWaW2dBfS76e+LQk2
-	bK2GawPEoMqeH2PqlC2HBP65/RITRbHCA4OOx6XDceMaXqWbMVYD1LN8qrK+yximDwhSoXtxZ6o
-	s
-X-Gm-Gg: ASbGncv+JfdCb8mmgFSkVaNBsTgISabHFVrCPVqpf0YWiCSEJzIupYz0mjtoEsOxcki
-	FsOaxTxQ1FjQ5CEAelTzU+U71/P9j+z8MmnYBiU953ZeqOSogdclBoUkHp3bDg/Impt6er/ih2U
-	2hatARghYFnZcIf1RJLSsHA4jzo/IP4S3acjWq+F/hi8xs56W5YH5NfOdegP7oFY/iYYxK1OUTs
-	UTcCUNxgaImUDzpBwGNqLJDyQ+32IaOYILOcY4sLEfva4uLZkpFVwF9P9rgMsFRlfrY6d7ebusI
-	x67SC3lOv/Ds85y+K2cpG77bxD0bM5FCqjCS03IJp/UQ0KG8JdcgHrdxKmXEXvUhdg0r/GJXcEn
-	+Mw3kOVIKFzya8gALMXihPNrvZpiPNHyvSw==
-X-Google-Smtp-Source: AGHT+IHq955zmClaJW81sLOBamBVZDydgvIbv+zJ8yYb+80DTMveYaXuEsii4h0Aoqgix2nFMPXhfQ==
-X-Received: by 2002:a05:600c:5250:b0:43c:ec0a:ddfd with SMTP id 5b1f17b1804b1-43d437820a0mr3150025e9.6.1742340923667;
-        Tue, 18 Mar 2025 16:35:23 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:686c:8c32:99b8:c349? ([2001:8b0:aba:5f3c:686c:8c32:99b8:c349])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4453227dsm1150345e9.40.2025.03.18.16.35.22
+        d=1e100.net; s=20230601; t=1742340949; x=1742945749;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3G633G6uqKeQblayK+1/HRVP9peqAjTt734Spsz53Js=;
+        b=dBZB0QdwSrKOZGA8Hb1kX3EYnvXNQUCMLnaEzWlAuRvYuI7+2qWFAMBfM1yadzjDn4
+         I//+jAIWEoiWDashQ6ZyPviCWXpbcS0SftPZfpGOXsRNRQ93bnrsgzZLnQBkcyZMCvfE
+         Z03FEtUamrwGx+lIV6WLuqWYvHLu+FrZmHpRicx6WVxXmdk6l2L4dkFTqKmgRwirVzos
+         aYQHym6+HZPbEWp2jKlr5aOtVoLD790IoJoNu6sAD+dSoKbDAk7UwDaJlustOqPAPyiz
+         /nf61Ua76BuWv2Lh0CGhS40fN56xbMiNJ/omNGciDq3vPgmM925SyRbqG/2AbS5mQYsr
+         1qew==
+X-Gm-Message-State: AOJu0YyPW1jOp/Ke1K6MI9MmsiNRVx6VVnNWkjsItkTeMd/PjJ4Xz/ML
+	cw2Qgz1PDTlj8t7ys55NQ5we0Ge4mQ19YLWBuDK0hiCX4XPa0KoxGopvfXWQea4fEL/ZHqOLmLY
+	N
+X-Gm-Gg: ASbGnctmIZZdDUsL1pW4aRwKbDsYWW6hV7ymJY8Dlwg+C/NybVuvzeQRdAUbbHye0qw
+	B1LLA0Gq+veMK6ssLauR7sPAI4TT9l83iUJoPEVzt3e4fxEgSF8N0paT6h0bP9BBHdex084z9xl
+	E6CJ/ohy8psWU9zA1ehmneMIuWMTxcABWfJSjMRxh8oSvLHBX5qWNgikvEAjky2RBjHRMJRS6N1
+	D4PORSgUcoW31i87nmxyjG3U6fVaL3WU6JcyfVdRsQzIldIJ1hMld1itJx0cfVsYNX73UEl3f9I
+	HPEVlWHa717lZ4UBYv6dIJzQ6CAHD1pgAfmrA6vMAIb/rCm14M8W2bByDRhYQ/X3QJyNjQEP3Q=
+	=
+X-Google-Smtp-Source: AGHT+IEI5KCqf72X59e3WPehx1IscRxqgpnOQ1+lTuUWaPFvB9MA/4gKJZnHaGmTOLQ4f5NAgR6tdQ==
+X-Received: by 2002:a05:600c:4503:b0:43c:f6c6:578c with SMTP id 5b1f17b1804b1-43d437c330fmr3818775e9.15.1742340949267;
+        Tue, 18 Mar 2025 16:35:49 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:686c:8c32:99b8:c349])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c82c258bsm18969677f8f.24.2025.03.18.16.35.48
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 16:35:22 -0700 (PDT)
-Message-ID: <b784d1e68780ab96339ecd5483da8129f01b5743.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] fetch: Drop multiple branch/revision
- support for single git urls
+        Tue, 18 Mar 2025 16:35:48 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 18 Mar 2025 23:35:22 +0000
-In-Reply-To: <182E09B4ED028568.23745@lists.openembedded.org>
-References: <182E09B4ED028568.23745@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2-0ubuntu1 
+Subject: [PATCH 2/2] tests/fetch: Fix typo in npm test
+Date: Tue, 18 Mar 2025 23:35:46 +0000
+Message-ID: <20250318233546.574124-2-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250318233546.574124-1-richard.purdie@linuxfoundation.org>
+References: <20250318233546.574124-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 18 Mar 2025 23:35:27 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17461
+ <bitbake-devel@lists.openembedded.org>; Tue, 18 Mar 2025 23:35:57 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17463
 
-On Tue, 2025-03-18 at 23:32 +0000, Richard Purdie via lists.openembedded.or=
-g wrote:
-> We used to use this for bare clones where a single git url could
-> handle multiple
-> revisions (which implied multiple branches).
->=20
-> We don't use this any more and I doubt we'd want to go back to it. If
-> we
-> remove it, we can simplfy the looping in the code which seems
-> desireable.
->=20
-> This patch does change the warning for missing branch parameters to a
-> error. The message has hinted about that for long enough.
->=20
-> Some test cases are removed since they are no longer needed.
->=20
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/tests/fetch.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This patch does break buildhistory.bbclass and some spdx code in OE-
-Core. It also breaks gitpkgver in meta-openembedded.
-
-It would be possible to put a fallback in place which would probably
-work around those issues.
-
-Whether this is the right time in the release cycle to do this and
-whether we should just update the above code instead and have a flag
-day, I'm not sure. I did at least want to share the patch for feedback.
-
-Cheers,
-
-Richard
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 77c0b99eea..305789167c 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -2821,7 +2821,7 @@ class NPMTest(FetcherTest):
+     @skipIfNoNetwork()
+     def test_npm_version_latest(self):
+         url = ['npm://registry.npmjs.org;package=@savoirfairelinux/node-server-example;version=latest']
+-        fetcher = bb.fetch.Fetch(urls, self.d)
++        fetcher = bb.fetch.Fetch(url, self.d)
+         fetcher.download()
+         fetcher.unpack(self.unpackdir)
+         unpackdir = os.path.join(self.unpackdir, 'npm')
 
