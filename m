@@ -2,89 +2,87 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A774C282EC
-	for <webhook@archiver.kernel.org>; Tue, 18 Mar 2025 12:01:54 +0000 (UTC)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web10.10019.1742299314024101508
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8BDC282EC
+	for <webhook@archiver.kernel.org>; Tue, 18 Mar 2025 12:15:44 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web10.10262.1742300144054445848
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 18 Mar 2025 05:01:54 -0700
+ Tue, 18 Mar 2025 05:15:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ApMQtDQb;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39129fc51f8so4865215f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 18 Mar 2025 05:01:53 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=HFhX1x8U;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so19023285e9.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 18 Mar 2025 05:15:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1742299312; x=1742904112; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=erfBFKXZxD1FwHeaZarwx428UX5UNosNvA9PHe6A3ho=;
-        b=ApMQtDQbj3dyFXPp35cCbuAIJAm87gtepcHi+Oa30H4ycoRXwhOS/Ur56DlWYGiX+2
-         rpNxulfSMWkmW0oWQTEFKJs+VBO4bbLzomL5nx8TvcK0RNo73HHoYTbAF+6BpjbW4K+Q
-         JSwcMBcqSLlRdbFsXTXBfDuDAnqVxgAWbO2I4=
+        d=linuxfoundation.org; s=google; t=1742300142; x=1742904942; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5C5kMeNDU1pTYeNaC43NSKHM4V8/7Jk7BoFYqVKGGoU=;
+        b=HFhX1x8USMGmStVt80V2ygPqiklefztABLwcBNPyLHeGfG4ctkCteGfiPl04O/CEDr
+         +tGnKAGWxUkyPxW1yzIGuDbtZJciJwOqh43koPP5iaAADDv0YqhE4ujqpLSLj89Z7gVe
+         KVHMpEcmqtpZFBLAeumstQ2uPVx8/rYU4BHdA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742299312; x=1742904112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=erfBFKXZxD1FwHeaZarwx428UX5UNosNvA9PHe6A3ho=;
-        b=R1nlGZ98fkPsV1NRw+mBuSiVdEXmPCwG+b3GTIrPOXxKNQnzKQl5WBXGsvTWI/JxTM
-         PxstGpbFNRZbhcGeAg7YhFmM79jbxEvCCJxusrBudmS6/kp7MXEtz0ft+SxmsMAPZFx4
-         k6M4g7trpnq/mpgWC0S9OU6qpzn7N9Q/sy2IeYjA5t4FU7sGF8HPnv4jeu4pG/buzxE+
-         o9kJOEIFdqyboainmVECyyloGhjHawugeaUZ9Rj+i/E1WmJP1IWNQm7hxXg9FkVUzwVN
-         aCYBsRp4eEWl8e4jXO9ko3wMzKqmgYjY9I1HVyuLToHRLhHmsP+powKntUdhS5tITAe9
-         pLgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVknMolX2kmbNEHPxMTuFkVGgUicA97BtQF2gQEVIlebzWJJL78z4bTjw1j36aU0Y/lxf6fsQ7EGUH0SBOu@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yxj2ISqs/kAiJMb1ed3EUrCDhHuMfTf2dDpbftDKC/7ePWHzgRm
-	49s/qhxOcxtfTeeFq+W7Ek06unm1KIyKu6B30TYckftHFrjKKOoSHciH8+Q22vrB+JED53TxA38
-	T
-X-Gm-Gg: ASbGncvQixVVxPZYNvd+kdYgMuRa413Q3lp0pRq6HVS2+yv0KKOP7cWcv3wMOxAZ6aQ
-	rJz9WrLpNk/hBCCjezk9NZLkiHyhgqmxNyMdsnToQCuZ0r3Jpu8OFv85FGoT1am59DNQa0YNlLz
-	Gqr1GsZ4pVeTW5HKoYkQArn7MK5+i9ojHKwLapMoTWRsowfTF4OGpqBM4Ok6IDfCII5WktegQ1x
-	Yak7EajKtK51r2OwA/UTqv99t6IpGipAhU64cZlb/nypLRCA16o8rLKBnqM/++lfz5BL0xNebRN
-	wcaPn4VrbR2QWoClp/aGZu9o2SAbQUtIvsdatwmop4plNEN8dUS+FnPOnFdYj3geIgGP0S/Nae7
-	PPFX+0B1Jlyy4Gv1yDi1vKQ1bqitn6T6CiXpQcLzEri07
-X-Google-Smtp-Source: AGHT+IFmTUi9gfZZSIP/NJiyXkk+6w00bxA1Uv9ql0ILvxwAEA65S4S6fnAKTJk2TIDQzED40tcd+w==
-X-Received: by 2002:adf:a35e:0:b0:38d:d0ea:b04c with SMTP id ffacd0b85a97d-3971ee43fa0mr16882529f8f.38.1742299310739;
-        Tue, 18 Mar 2025 05:01:50 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:791f:f4e7:28a8:7096? ([2001:8b0:aba:5f3c:791f:f4e7:28a8:7096])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c7df34eesm18183906f8f.18.2025.03.18.05.01.49
+        d=1e100.net; s=20230601; t=1742300142; x=1742904942;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5C5kMeNDU1pTYeNaC43NSKHM4V8/7Jk7BoFYqVKGGoU=;
+        b=O7Dt7RoJ8/4VQTFL07cxedxxNjtkXoNcHDCryAz7Jd2NsbNbJSrqPYqjqvMCzYNUng
+         vi83yA7mcc+gSLEIC5uJXnyrX/E1EO8zX3kc1+jpaMuFy40x9uFX7oHcx3fFsX+IzOCn
+         vCrbO5qpkMZ0QYReDWI0EVVuV4IQKTb0jPiU/JxfFdwSmbx0sy+Dbf0ydX4BsOktRPRt
+         uG86CPythA4UW0bl2Ca++Fl0fvDchvZk4ptQdGigH1IgES1d5v09ycYe+hZromWVZX6k
+         F52UdIwC2YvCaY/HQWbrvaE00ielPzPh/+DwnBQjMBqhq0HRV8z/HI+0MAvuBsxVbQva
+         Vn3Q==
+X-Gm-Message-State: AOJu0Yw8YT/XFzM/NPGi5QE8l/Zqftl4zDf87GR/ZejjOTnfpoiVjYQ+
+	Bz3aXmIHGp9eXjFwXFisKhHBlhPxxpdx0XtUIQPC/iBnJA4qO44IaBXvBJlr5EcGBYh/pLnUm8s
+	G
+X-Gm-Gg: ASbGnctL/jBTeAgn1RYbEaKk+X3fAFzB4Oe0MKNZbUEEs6Yx55fG+OjO83uojAjt04l
+	7X8pwPxBQbhZMMVgJoAjvTvMQfJj9vnx9n5gNZZ8y3wK21cIIbEXO/uMPyefNak34WloCe6xWgp
+	XKCdrESYfPFnjkUFP2Ug6azw00hkqL+3BEteKQRQEZBkxHjFUjmhC8tomVrA1S6mo7G4zxqE+ZL
+	GTQ1l6PTkf9z9z5FNadsBmO2r4F7Og/XMVpmOAT499SyznC5QxlnorPOm0/N35q2Gda/oIO4yoI
+	0b2Fw16jEU90CXKeddHL1pf0V1TpRkDVy5T+rsoqkYIzdqz7ywzPQbnJeiesFBJ/GZ4V4icorQ=
+	=
+X-Google-Smtp-Source: AGHT+IEFBjb7x63QKLwz+bVsfyLOqgfcv6Jk5d01bWtguCsGLNc8oRfQKXkw272n03hTZ8vUKc9IGg==
+X-Received: by 2002:a05:600c:354d:b0:43c:ea40:ae4a with SMTP id 5b1f17b1804b1-43d3ba14c74mr16905385e9.31.1742300141736;
+        Tue, 18 Mar 2025 05:15:41 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:791f:f4e7:28a8:7096])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3978ef9a23bsm13703154f8f.15.2025.03.18.05.15.40
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 05:01:50 -0700 (PDT)
-Message-ID: <4ee434130c0e49628fa176daa033cdf0a2988cf0.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] fetch/get: Rework tag parameter handling
+        Tue, 18 Mar 2025 05:15:41 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Marko, Peter" <Peter.Marko@siemens.com>, 
- "bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Date: Tue, 18 Mar 2025 12:01:49 +0000
-In-Reply-To: <AS1PR10MB5697EA94CD905C93AF76CD38FDDE2@AS1PR10MB5697.EURPRD10.PROD.OUTLOOK.COM>
-References: <20250318110743.3936601-1-richard.purdie@linuxfoundation.org>
-	 <AS1PR10MB5697EA94CD905C93AF76CD38FDDE2@AS1PR10MB5697.EURPRD10.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2-0ubuntu1 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] fetch/git: Ensure tags work with shallow clones
+Date: Tue, 18 Mar 2025 12:15:40 +0000
+Message-ID: <20250318121540.4123354-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.2
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 18 Mar 2025 12:01:54 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17454
+ <bitbake-devel@lists.openembedded.org>; Tue, 18 Mar 2025 12:15:44 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17455
 
-On Tue, 2025-03-18 at 11:52 +0000, Marko, Peter wrote:
-> Hello Richard,
->=20
-> I think this will break git shallow tarballs.
-> Those (at least in scarthgap) don't contain tags so the check will fail d=
-uring unpack.
+If we want to validate a tag when using shallow clones, we need to ensure
+the tag is imported to the clone. Adding to extra_refs allows this to happen
+ensuring tag validation in shallow clones works.
 
-In that case we may need to add something to ensure that any tags for
-the commits in the shallow clone are present.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/fetch2/git.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The other possibility would be to skip the test for shallow clones but
-I'd prefer not to do that.
-
-Cheers,
-
-Richard
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 53fdc4c3df..7fda9d2753 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -674,6 +674,8 @@ class Git(FetchMethod):
+         for line in all_refs_remote:
+             all_refs.append(line.split()[-1])
+         extra_refs = []
++        if 'tag' in ud.parm:
++            extra_refs.append(ud.parm['tag'])
+         for r in ud.shallow_extra_refs:
+             if not ud.bareclone:
+                 r = r.replace('refs/heads/', 'refs/remotes/origin/')
 
