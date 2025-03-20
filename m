@@ -2,163 +2,271 @@ Return-Path: <christian.lindeberg@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF464C28B30
-	for <webhook@archiver.kernel.org>; Thu, 20 Mar 2025 09:55:17 +0000 (UTC)
-Received: from DU2PR03CU002.outbound.protection.outlook.com (DU2PR03CU002.outbound.protection.outlook.com [52.101.66.52])
- by mx.groups.io with SMTP id smtpd.web11.3703.1742464508128583237
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D89A6C36000
+	for <webhook@archiver.kernel.org>; Thu, 20 Mar 2025 10:19:57 +0000 (UTC)
+Received: from PA4PR04CU001.outbound.protection.outlook.com (PA4PR04CU001.outbound.protection.outlook.com [40.107.162.8])
+ by mx.groups.io with SMTP id smtpd.web10.3920.1742465997040012999
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 20 Mar 2025 02:55:08 -0700
+ Thu, 20 Mar 2025 03:19:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@axis.com header.s=selector1 header.b=VM/LpSNw;
- spf=pass (domain: axis.com, ip: 52.101.66.52, mailfrom: christian.lindeberg@axis.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@axis.com header.s=selector1 header.b=XN5pm/g0;
+ spf=pass (domain: axis.com, ip: 40.107.162.8, mailfrom: christian.lindeberg@axis.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=coWwJ95jNhCy5JLkS9GBLmWRcBcUyJz1FlIC48e9EFovrhKTOynX9I/or3oHB91hYN12ls2ghJN40PDhMPGYVn6quRJ6gTNdMiSeW9bY6Px70wBSw6YO1Hf88t4PWN7j4j7xR0LjClb5T/J1SA5/a+QG3Jcco+JlRIYl+n67xLYmNsM5um9R19rlicGUc9h/Qe940ggde+3hZ4VQ0DyxpQ3Ylc7ZNpRYJnB7svwiFA3bQKt45vml0oHGe2kIXD5T8QaFMAaBm9ToK90BQ45Zobm7I3J/MMmrglfd3tvnR38j3ZvRhi3XOM9oLNY4SCDT3gqgeAQ9Qp2RdljmcgDlZg==
+ b=p9/kX8pYwm/cBCRfm9UiYaaVnMi8uTSe4zgrKciDZTeEEP6ni+rWYo6WjBLOs3KoebudsMwJRbPOnVgBTI+c+IRsKsPd6Gnej3GI/dBtg2M05pKEWQkyLBhRc33ZBV0WiQ2qDQtI763tsvs4rmSVwkoQX2pc5qwh2d21R1M8L1ByMIh2F/XNWAxDdMTBv6UXsH/ellXEU04vLHiW2qUdzbSyUwPi9QgOgibrLEhP5svmH84tDvSB5Q7zkiP4gyDtOsYk7RoFeZMdJxCVoZDDEE9iTqRZr5V46d2gABgys9WENWFlwYTCKrpLM4hOmmOZXh2NjiEw7HuX3iCjD0DmwA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+XuRRvoS6OKGG1jiHM8nVRTjwljGaguRbyBKcMHe5ts=;
- b=tLZSrWhUvOXzil1o0OZVO+CUa5ORnp4GQ7bkq6x+saH02tLVa3Dv9fY7DlkVqinBam8aKgugkTT7mO5mu+iQCDXD+L0JFhktaK0/iKirGUqXosKV2jGntBYxwRHILld6cM+DqeTPlumpdDMHrSOI2CWw9eMyLbuqXxU263FdjWcW57XWKpfz0rwJbyfXiIGtCREVKGp3jpmWuMcGVZRWCdXfp3Tv5g1s/Ovfg3Q22StLJEvEXcRFSqfkE83TzE4DK/1BSBRFL71gJr6Sjqb/N83NIktiwtz+yRbWziXrIxmTmsz5ngW9wSgOK4RJDGTn3XtY7P2w0skmRcuq15Dxag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
- dkim=pass header.d=axis.com; arc=none
+ bh=shQaoul6vyfqn6rvt6n345FFYToHxlUgtHlH4eq7yy8=;
+ b=IouAeEoPAcVqJAS1KL1KKlNiwU5Liyv/5Ox4qdj101/7X8WNFTRm/TJzr+wEcOTRhNijSWRFj+s51gxa66eFSRdzKXwil1l/OAXyCaT4rpuy1f819awIFiOaBuyqO/h1URtPuYquDgQMO7w4EKTByans5FRYGGWlblsPLT740BjBPGZ6BeWwxqtE+WIPrZrCm+0RHD9T1SRiE8bD1/dIVyc5tna0legzjPD5L6Mp859JyfC0BI82hzNvttqxukr/WxVDiyoJp3fJT5VzXcAdm0MTZMeuDXSH+O66ItAxJUnjERQwtJdtO0UoegSWYJvLrNkBnqpipa5DBnMOezqtEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=axis.com; dmarc=pass (p=none sp=none pct=100) action=none
+ header.from=axis.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+XuRRvoS6OKGG1jiHM8nVRTjwljGaguRbyBKcMHe5ts=;
- b=VM/LpSNwEW3phlmdmUcx4DwBE6xZovhkzaYdACv8j+BXd5RSCfcq2RIQROTgVAH7at7MvqteJTaD+Ilx9oPnH58hIawG8kZRxdZ2pwP3FGq2wTSdWE3kbmlgXbVE4ZDwD63lohde5WizjnpvV3YYltxWIjs4wzQ6Xzum8fU4EgQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axis.com;
-Received: from DU0PR02MB9894.eurprd02.prod.outlook.com (2603:10a6:10:44a::6)
- by GV2PR02MB8627.eurprd02.prod.outlook.com (2603:10a6:150:7a::8) with
+ bh=shQaoul6vyfqn6rvt6n345FFYToHxlUgtHlH4eq7yy8=;
+ b=XN5pm/g0mN4Yjxo2C//W+za3jzSnSjP+VghC/VdZz01MsypwHfAJITh1uWTIz4qQ8eiZEq4wfwTGKZnSCy0wzuXSK8hJZrC0PnutW0fUW0LpCti3MbjNYiZLiPOOTOIe9JJQmDCVcGo9mkrrZn4ppr0kSboPSlPgbdtwrs6ES3s=
+Received: from DU6P191CA0054.EURP191.PROD.OUTLOOK.COM (2603:10a6:10:53e::21)
+ by GV2PR02MB8652.eurprd02.prod.outlook.com (2603:10a6:150:7c::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Thu, 20 Mar
- 2025 09:55:04 +0000
-Received: from DU0PR02MB9894.eurprd02.prod.outlook.com
- ([fe80::74bd:5b24:5e73:94e0]) by DU0PR02MB9894.eurprd02.prod.outlook.com
- ([fe80::74bd:5b24:5e73:94e0%6]) with mapi id 15.20.8534.034; Thu, 20 Mar 2025
- 09:55:04 +0000
-Message-ID: <66f4b7f5-0696-4605-8822-745caacef5a0@axis.com>
-Date: Thu, 20 Mar 2025 10:55:03 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel] [PATCH] fetch2/gomod: Fix mirroring problem
-To: stefan.herbrechtsmeier-oss@weidmueller.com,
- bitbake-devel@lists.openembedded.org
-References: <20250320065011.1560156-1-christli@axis.com>
- <9a1ea09e-9449-4449-ad30-a175df2c8207@weidmueller.com>
-Content-Language: en-US
-From: Christian Lindeberg <christian.lindeberg@axis.com>
-In-Reply-To: <9a1ea09e-9449-4449-ad30-a175df2c8207@weidmueller.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: MM0P280CA0010.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:190:a::21) To DU0PR02MB9894.eurprd02.prod.outlook.com
- (2603:10a6:10:44a::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.35; Thu, 20 Mar
+ 2025 10:19:51 +0000
+Received: from DB1PEPF000509F9.eurprd02.prod.outlook.com
+ (2603:10a6:10:53e:cafe::5) by DU6P191CA0054.outlook.office365.com
+ (2603:10a6:10:53e::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.34 via Frontend Transport; Thu,
+ 20 Mar 2025 10:19:51 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ DB1PEPF000509F9.mail.protection.outlook.com (10.167.242.155) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8534.20 via Frontend Transport; Thu, 20 Mar 2025 10:19:50 +0000
+Received: from se-mail02w.axis.com (10.20.40.8) by se-mail01w.axis.com
+ (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Thu, 20 Mar
+ 2025 11:19:49 +0100
+Received: from se-intmail02x.se.axis.com (10.4.0.28) by se-mail02w.axis.com
+ (10.20.40.8) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Thu, 20 Mar 2025 11:19:49 +0100
+Received: from pc50740-2234.se.axis.com (pc50740-2234.se.axis.com [10.94.131.4])
+	by se-intmail02x.se.axis.com (Postfix) with ESMTP id 8D59A294
+	for <bitbake-devel@lists.openembedded.org>; Thu, 20 Mar 2025 11:19:49 +0100 (CET)
+Received: by pc50740-2234.se.axis.com (Postfix, from userid 21184)
+	id 8960A26B9749; Thu, 20 Mar 2025 11:19:49 +0100 (CET)
+From: Christian Lindeberg <christli@axis.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH v2] fetch2/gomod: Fix mirroring problem
+Date: Thu, 20 Mar 2025 11:19:49 +0100
+Message-ID: <20250320101949.1680184-1-christli@axis.com>
+X-Mailer: git-send-email 2.39.5
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU0PR02MB9894:EE_|GV2PR02MB8627:EE_
-X-MS-Office365-Filtering-Correlation-Id: 87fb76ae-6d52-4291-42c8-08dd679549ea
+X-MS-TrafficTypeDiagnostic: DB1PEPF000509F9:EE_|GV2PR02MB8652:EE_
+X-MS-Office365-Filtering-Correlation-Id: a9524a4d-0a3a-4962-3c08-08dd6798bfea
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014|13003099007;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?yLx1n0e0f7oECjUi26+Jc7R+n3RXYnYGuH/h5zkQPgwy/Vcrv0SATWqyyQDi?=
- =?us-ascii?Q?ORHKN++hfJzQ0kh1N1bNqh5RX7C1QufJPWletNZpYhniRuP8DsKdMVxw2ENf?=
- =?us-ascii?Q?xYLCa4UDumymS29MIOueDk6zjbPmmAuB3IMsHlmcisYW3jiqqRq/lMxKcP/Z?=
- =?us-ascii?Q?nry0S9ccxhqJ9sIsA9WZgVhVC9Et2wS6zlrt+kTqf6YlxDnIetj6890uF19E?=
- =?us-ascii?Q?a+7DqrgpDmO/TJlF2SeyGaeqsFDOX5T9qcacMyM33HGNB/69kzrk5R6ZcC0X?=
- =?us-ascii?Q?AiVyhovOKRo95NURCMwtJh+m485qxJHUFvpFoRdvb5ZinWfdZQJ9SEIYKUg0?=
- =?us-ascii?Q?CJBuW5nBSkZhPQaeIjdNBahUs8QCu61V2lH+6yt24xk52szniiYjZigRJAX2?=
- =?us-ascii?Q?zCmesGGNzan5hHK27FBWZDeb9qHp0f6wVPFcxYWOUYqyNX5n+3vmVW8MP72y?=
- =?us-ascii?Q?iQW8cmjedjwVdLpDtjIBzkdQE5bB7VqikJ/S8sHb57ktfLaS8sMPVa0S8+Ys?=
- =?us-ascii?Q?bSlq/SLyG+sw5IULRjHOsJAZUkfhC3OTCTy9NRatTghDjs+4WdY3cXGvhpC6?=
- =?us-ascii?Q?ZosBV86xKMKtUv24ZCQP82RFwG3ISqVhwFnBni5MBJHFO68oxK0Rhkdi7P/P?=
- =?us-ascii?Q?lfO3hcR54TAWS1cmuczEZ6D99UW9FYGysCr1e1hbN8s69+kgJh3+i+uqbLzO?=
- =?us-ascii?Q?NJ8K9oEz9kQB6uX37IFLdjo35VYKjm/gEaZ//ZoVAXI2sADHSPMzaTc2ORdw?=
- =?us-ascii?Q?Ii09S530eNKfsjUFeId9sAzRO0zSnqSplvboII9vhFp9GzaWLnvuP7psPgLF?=
- =?us-ascii?Q?mTWHp/IuBkSLseNFoAY37Q53qD4U7K+SbRAXRQRftk0DyA9N5oGyBBm2ha7b?=
- =?us-ascii?Q?40PugIag+s9j1i9RFlO1suxzNDRXvVV7V4e8dWaw+sGCAdoy9AU88xOFrqfC?=
- =?us-ascii?Q?xliwfYhzQR+hwPAhm+HpfADzMUbTFIN2N3A69gxjYJHg6rHEdNh/2+dOGi5o?=
- =?us-ascii?Q?sO+G4zKd4ZTIyiMWlOgTouYNFXt7IEFv2r1mdL4UKzMp09CpVsj0QO/8zI2W?=
- =?us-ascii?Q?bI6n6QfAg7tD+5FYHVclrlHbJVxcdjIpkxjR7sfpDoZE2usr6w+DzH6W5KQK?=
- =?us-ascii?Q?EJZTJ0dZ81UIh7N3KZc2rl11PPJ211znBKlXL/xyPoKKW6OnBjOMNCwCe0Q4?=
- =?us-ascii?Q?O1TvwE2HGeeaVl+uiVLBTkjwbAr+CtKbDL1NcsNbL7necb9EZAirDlm6dH6h?=
- =?us-ascii?Q?l8j5r5BGQ7PtVylBNlfS4FyJGgT8EIxbmJfX8AFHxyHfBaiFTZwYcSr7TjL3?=
- =?us-ascii?Q?G3PBu95jC33jHLih5Qs6+JOuOAHMktPW4ukhkGN1mWFCB6jLrxFSczAgJ1GH?=
- =?us-ascii?Q?R+Os/EalXSq8ithLtK2kvQdkPFvc?=
+	=?us-ascii?Q?k14300LMy8vVWU66kP/MX4UaGbZ6Uu9LyGU4RhdtX8WlvHyinU32UgGMr8Kw?=
+ =?us-ascii?Q?LdRDIhoUBrMYM4w7wQyWQyEJbDS0l8simYbrAv/jENDsBI2SRYgpcPH7P/j2?=
+ =?us-ascii?Q?mVJGyBzo79w2Erh0cEBrU0NsjuErHfFAN+IWFCGbHd8tJnC6a3EnFGm+Hn5m?=
+ =?us-ascii?Q?tOtiIuFPwJev2yl8pBz5BEAXbRCgNjdCGsUM4dBNUHq6diVP+Dlg3/7ysqVh?=
+ =?us-ascii?Q?10oI+Ev5Cmj67qkThQV9XX8DVS0eefKTagCV2l9nLimqKTa7FAua4nn7SGYy?=
+ =?us-ascii?Q?5ttjRHVx2E9CiCXEYtwzB+I3EUW4U8HxF8fGEKihbFmwRHGTJjpaKh3z3SID?=
+ =?us-ascii?Q?F5HTF8dnTKVw2isc5+lz72P3Lsfc7Wgi0qoE3xCXPnMDdCuIMlpvOHSzWewj?=
+ =?us-ascii?Q?3nzHGnRBWzrUxAF8om2996SgR/Ds15+EXWcnN5AJns+ZAvCk0Ry7Ok7TuLRX?=
+ =?us-ascii?Q?tW3gs8MRRVP5KmN6XOHq0Cr5POgoKugAEFTKOWo2bDdiN3+8v3YY/Hw6jVsv?=
+ =?us-ascii?Q?LhXtN4L/3EViiyX+jwV1GrVOpDmW3dW16TpC0hIR3duwGyiIemCZ0wj+K/Cn?=
+ =?us-ascii?Q?A3gpXLTOzpqJQ5dd5GNEtNWehJjIOuQ7Xn7+wqEVtpO17lR6I2WQTUERE5Kg?=
+ =?us-ascii?Q?A7bV4GiogloG0EM5hh/vSRjR4QF1z1bAbx8mQDC5A4JiQIrbZxXYCeOkeQNM?=
+ =?us-ascii?Q?+bT0+I+ARdFWjDg2Jr4oD0yDNhrZmTJVWUipaA4SFsRHcdra1TRwgM6UWSt4?=
+ =?us-ascii?Q?EWsXS2EhaHL2qArqVMFCRqLTPgjY/A2dNY0TCOj4gOQ397aDvZhc10hfTtC5?=
+ =?us-ascii?Q?vyUiTn2Zx3rX/Wcu1hWYOpLCuth8PunwI0u0OwxGM4eQ9qhyIzcz+1KjwAJT?=
+ =?us-ascii?Q?VoHoCxmp24A+4IPjQxDydGpCv7skqbP09rzjOHP3b1HkW0CoqbU9D5/zISwH?=
+ =?us-ascii?Q?mHxVZ+VsLbaBqmXVQrDeGyYPBFkheKf7Qc6at/kDVb1OPYAwWV+YJA+K66sZ?=
+ =?us-ascii?Q?yWLy2AeJJshext8IMuEsLsoIdXFXRzUJhw3Os9DokUwO0yYXhFKX8eJJg0dI?=
+ =?us-ascii?Q?XCc76+vWY2utecPQhTbI1SCIeMbmJj8MoAOtiBYcH2yA+Zbozj/dgVP7djOl?=
+ =?us-ascii?Q?rk5XWnYKyRxnMe0Mpczo/Sc3zxLibEv4OSEeaoxrxV+14esNgrt3qffa/gI4?=
+ =?us-ascii?Q?UwgNmp6SCmAxwbq7wfJDylnBLCs74MdN51vURQx28DosPMp7sT3pQ6/hHdm0?=
+ =?us-ascii?Q?u+VQYGRz0QHBQ6EKHIGJckFKBpRP0A+zdpn9QLGGA86PFogKAy4yuWXDIQGD?=
+ =?us-ascii?Q?tfcA/2JnU5OGSjlQnl/u2JByXRLmVnt9aeHxOPo+k3o2g9+AH/JTR4ClM963?=
+ =?us-ascii?Q?YYFMvQ7H3y0LDoDMavZHKdScxh0rlZ8TTc3DolDG+B7JgqCvSFsaw+tvgcx3?=
+ =?us-ascii?Q?PcQZUrZ1WF8=3D?=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR02MB9894.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?zSg5XBXM0B66aXgo3VD7KAcu7cLHXh52ApMs7PotK19n3Irn2DS6gI2B39JP?=
- =?us-ascii?Q?lcPUZBFMktwpGiRxarF4bsDnJSOueLuW0mGKpjuwiBIBJdxG40OYKEw+SBju?=
- =?us-ascii?Q?Xf4zi2O9t3GCNrc2MY7rLKuHQwGHG4fGk9EJGuojHuRHsrIkfps4UWZsXTEC?=
- =?us-ascii?Q?Cdk7NZkgN55f9VkOeg2+eIhT7OtIMekG8AYM4a1bWtFTWFqjDeTXiZVzV1oj?=
- =?us-ascii?Q?xUKEzKklpDD0LKH6w8rC07BXmlknPOJPTkIj4I32hvR6zXCo5cxowec7RRvz?=
- =?us-ascii?Q?5UkiaBdpTxvGs2Kj2I9aMbNmVf6//3YAjX0TTwckDEXfHqcCXx9OmOO5irkf?=
- =?us-ascii?Q?IjVHgl3CriQk2AwNri8U4Nm7cTnUfZO8l98ZYj2uDZvfqBOaQMa+EhTRUo59?=
- =?us-ascii?Q?wy6Yg0IMNzFEMa3fCrJm5nhkKiUfiw4b6FVpsM7rEpBsMNO1RuiyOJNSZQ2c?=
- =?us-ascii?Q?O5Nfk9wY5SeakmApMAlkEk91+Ez7jox2uDMQAduN4aYXdG9ZZ7gR37DnEBGU?=
- =?us-ascii?Q?0rOUsySioCfkFrfVFR+yZTQZKMOHvQZUZOLr5qsca76DflJNg+Zf16VzyzUV?=
- =?us-ascii?Q?/3P2DSfAYwgOkZPX8M2/YaY0HgRfwMpK0vZCzJXbkpIUh0yzf1IPanLnOclx?=
- =?us-ascii?Q?eaqEfkKQQwywOI0djHKwsS9Ar5ohVfZufAA9U0K1CVazsPZ0PdR5hQtv/YK7?=
- =?us-ascii?Q?/LgsHUiGg8XH8J3LVl58eY1NQYg3XzfFAY6zrgzaV3iYZspOuvY3FeIRDLZu?=
- =?us-ascii?Q?wNLrn/z/jZZFtTgz+liJcpNwT9sGDfdLgPJzeGIwYgXGa2NV/dCa/RlTPxE4?=
- =?us-ascii?Q?WV5h3phOY+hVlcSJNif1nOyqgfROMKXbXsgKiKWg6LX2/SK5PMt+oknOlS5W?=
- =?us-ascii?Q?tuW9jFZJIzWswOTlZD6sJrp/fu7KQIFYEtUNviziaiW/s1CRJrWs+NQFth4g?=
- =?us-ascii?Q?sWLTfL7gKZJo0+hwP24Xiyu8cfiW1p7hSFiuXqnRNt7jf9d30+2C8pj2Fair?=
- =?us-ascii?Q?+r4lxGW9Tv8wFrn0PP+Zaku9dyF0bSmZkcKvzYrEdqMz2yFOuEn8w6lhGTpw?=
- =?us-ascii?Q?OYfJRq4rpKfAymsUN2/XtA8EzxInvSCnHLUa9RLYIftk2ysftkYtmUDN0pu5?=
- =?us-ascii?Q?EV88DD7ojPSUexfI1e4aYsU6sQ8pFbcA2w1DbCUk+mz64EtbqjxLUCdSgw0d?=
- =?us-ascii?Q?uezURnSNmCL5Fgmh37xJ340uemnmLPlWsg/PIP+m1bo33yq8HP2Fq+UQFszT?=
- =?us-ascii?Q?xW4AVimYPyEnInHw+l4eccBAlP1AzVu2pJeMzw00EP5IKlShpoJ2UrL2HlCU?=
- =?us-ascii?Q?sG4FX6QnGsLS5qVybrOWMMaOcN4z1vvh4/Hgl0GipQwV3Nf3o8poXKZKS/PL?=
- =?us-ascii?Q?LNiFNGdrZhNw/WA7eNpo6b9hRJGt86bew4Yi5Zw+eEkdxai5yqJTh3nBgSfL?=
- =?us-ascii?Q?i6XrGfxuhSmobrLE8VRmGUX8Kw60sdIfbKZcfQhAuQJsgZZadxjvp54KllsY?=
- =?us-ascii?Q?zgoqITgffrowjxtg4lEL79ZyWUDU04kvRk8pNXDUFLf7sJ1EsJDkYLhxo1kd?=
- =?us-ascii?Q?XMDCPWASgY5bGuzG9iXA9L+E594wLTYKlsc0sx1R?=
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014)(13003099007);DIR:OUT;SFP:1101;
 X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87fb76ae-6d52-4291-42c8-08dd679549ea
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR02MB9894.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2025 09:55:04.6602
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2025 10:19:50.8342
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9524a4d-0a3a-4962-3c08-08dd6798bfea
 X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ffZmohzHEL1ik4f1OrvNVSSH3+jll6gCbdCUaCC3NX0AlxeYE7hGGrDETCbsU7a7eoQA6s2A2/TY8YsJlzqxCA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR02MB8627
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	DB1PEPF000509F9.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR02MB8652
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 20 Mar 2025 09:55:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17479
+ <bitbake-devel@lists.openembedded.org>; Thu, 20 Mar 2025 10:19:57 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17480
 
+From: Christian Lindeberg <christian.lindeberg@axis.com>
 
-On 20/03/2025 10:17, Stefan Herbrechtsmeier via lists.openembedded.org=20
-wrote:
-> Am 20.03.2025 um 07:50 schrieb Christian Lindeberg via=20
-> lists.openembedded.org:
->> From: Christian Lindeberg <christian.lindeberg@axis.com>
->>
->> Build the 'downloadfilename' parameter by replacing path separators in
->> the module path like the git fetcher builds the mirror tar ball name.
->> Copy the downloaded file in the fetcher's unpack method like the crate
->> fetcher instead of calling the base fetcher's unpack method.
->
-> What is the reason for the change?
->
-> Do we really prefer to duplicate the code from the unpack function?
->
-One could argue that it is not true duplication as it is a special case=20
-not supported by the base fetcher. The attempts at fixing this in the=20
-base fetcher seemed to have broken other things from what I read in the=20
-threads related to this and in the git history. So I am suggesting this=20
-patch as a step to get the fetcher working with respect to mirroring.=20
-But longer term, some refactoring might be preferred.
+Build the 'downloadfilename' parameter by replacing path separators in
+the module path like the git fetcher builds the mirror tar ball name.
+Copy the downloaded file in the fetcher's unpack method like the crate
+fetcher instead of calling the base fetcher's unpack method.
 
-Regards,
-Christian
+Signed-off-by: Christian Lindeberg <christian.lindeberg@axis.com>
 
-> Regards
-> =C2=A0 Stefan
->
+Changes in V2:
+- Add the lost unpack tracer call.
+
+---
+ lib/bb/fetch2/gomod.py | 35 ++++++++++++++++++++++-------------
+ lib/bb/tests/fetch.py  |  9 +++++++++
+ 2 files changed, 31 insertions(+), 13 deletions(-)
+
+diff --git a/lib/bb/fetch2/gomod.py b/lib/bb/fetch2/gomod.py
+index 6c999e8ba..56c2b1c42 100644
+--- a/lib/bb/fetch2/gomod.py
++++ b/lib/bb/fetch2/gomod.py
+@@ -107,23 +107,23 @@ class GoMod(Wget):
+         if ud.path !=3D '/':
+             module +=3D ud.path
+         ud.parm['module'] =3D module
++        version =3D ud.parm['version']
+=20
+         # Set URL and filename for wget download
+-        path =3D escape(module + '/@v/' + ud.parm['version'])
+         if ud.parm.get('mod', '0') =3D=3D '1':
+-            path +=3D '.mod'
++            ext =3D '.mod'
+         else:
+-            path +=3D '.zip'
+-            ud.parm['unpack'] =3D '0'
++            ext =3D '.zip'
++        path =3D escape(f"{module}/@v/{version}{ext}")
+         ud.url =3D bb.fetch2.encodeurl(
+             ('https', proxy, '/' + path, None, None, None))
+-        ud.parm['downloadfilename'] =3D path
++        ud.parm['downloadfilename'] =3D  f"{module.replace('/', '.')}@{ver=
+sion}{ext}"
+=20
+-        ud.parm['name'] =3D f"{module}@{ud.parm['version']}"
++        # Set name for checksum verification
++        ud.parm['name'] =3D f"{module}@{version}"
+=20
+-        # Set subdir for unpack
+-        ud.parm['subdir'] =3D os.path.join(moddir, 'cache/download',
+-                                         os.path.dirname(path))
++        # Set path for unpack
++        ud.parm['unpackpath'] =3D os.path.join(moddir, 'cache/download', p=
+ath)
+=20
+         super().urldata_init(ud, d)
+=20
+@@ -131,13 +131,22 @@ class GoMod(Wget):
+         """Unpack the module in the module cache."""
+=20
+         # Unpack the module zip file or go.mod file
+-        super().unpack(ud, rootdir, d)
++        unpackpath =3D os.path.join(rootdir, ud.parm['unpackpath'])
++        unpackdir =3D os.path.dirname(unpackpath)
++        bb.utils.mkdirhier(unpackdir)
++        ud.unpack_tracer.unpack("file-copy", unpackdir)
++        cmd =3D f"cp {ud.localpath} {unpackpath}"
++        path =3D d.getVar('PATH')
++        if path:
++            cmd =3D f"PATH=3D{path} {cmd}"
++        name =3D os.path.basename(unpackpath)
++        bb.note(f"Unpacking {name} to {unpackdir}/")
++        subprocess.check_call(cmd, shell=3DTrue, preexec_fn=3Dsubprocess_s=
+etup)
+=20
+-        if ud.localpath.endswith('.zip'):
++        if name.endswith('.zip'):
+             # Unpack the go.mod file from the zip file
+             module =3D ud.parm['module']
+-            unpackdir =3D os.path.join(rootdir, ud.parm['subdir'])
+-            name =3D os.path.basename(ud.localpath).rsplit('.', 1)[0] + '.=
+mod'
++            name =3D name.rsplit('.', 1)[0] + '.mod'
+             bb.note(f"Unpacking {name} to {unpackdir}/")
+             with zipfile.ZipFile(ud.localpath) as zf:
+                 with open(os.path.join(unpackdir, name), mode=3D'wb') as m=
+f:
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 0c87730c5..40c8448d2 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -3431,6 +3431,8 @@ class GoModTest(FetcherTest):
+         fetcher =3D bb.fetch2.Fetch(urls, self.d)
+         ud =3D fetcher.ud[urls[0]]
+         self.assertEqual(ud.url, 'https://proxy.golang.org/github.com/%21a=
+zure/azure-sdk-for-go/sdk/storage/azblob/%40v/v1.0.0.zip')
++        self.assertEqual(ud.parm['downloadfilename'], 'github.com.Azure.az=
+ure-sdk-for-go.sdk.storage.azblob@v1.0.0.zip')
++        self.assertEqual(ud.parm['name'], 'github.com/Azure/azure-sdk-for-=
+go/sdk/storage/azblob@v1.0.0')
+=20
+         fetcher.download()
+         fetcher.unpack(self.unpackdir)
+@@ -3448,6 +3450,8 @@ class GoModTest(FetcherTest):
+         fetcher =3D bb.fetch2.Fetch(urls, self.d)
+         ud =3D fetcher.ud[urls[0]]
+         self.assertEqual(ud.url, 'https://proxy.golang.org/github.com/%21a=
+zure/azure-sdk-for-go/sdk/storage/azblob/%40v/v1.0.0.mod')
++        self.assertEqual(ud.parm['downloadfilename'], 'github.com.Azure.az=
+ure-sdk-for-go.sdk.storage.azblob@v1.0.0.mod')
++        self.assertEqual(ud.parm['name'], 'github.com/Azure/azure-sdk-for-=
+go/sdk/storage/azblob@v1.0.0')
+=20
+         fetcher.download()
+         fetcher.unpack(self.unpackdir)
+@@ -3462,6 +3466,7 @@ class GoModTest(FetcherTest):
+         fetcher =3D bb.fetch2.Fetch(urls, self.d)
+         ud =3D fetcher.ud[urls[0]]
+         self.assertEqual(ud.url, 'https://proxy.golang.org/gopkg.in/ini.v1=
+/%40v/v1.67.0.zip')
++        self.assertEqual(ud.parm['downloadfilename'], 'gopkg.in.ini.v1@v1.=
+67.0.zip')
+         self.assertEqual(ud.parm['name'], 'gopkg.in/ini.v1@v1.67.0')
+=20
+         fetcher.download()
+@@ -3480,6 +3485,8 @@ class GoModTest(FetcherTest):
+         fetcher =3D bb.fetch2.Fetch(urls, self.d)
+         ud =3D fetcher.ud[urls[0]]
+         self.assertEqual(ud.url, 'https://proxy.golang.org/gopkg.in/ini.v1=
+/%40v/v1.67.0.zip')
++        self.assertEqual(ud.parm['downloadfilename'], 'gopkg.in.ini.v1@v1.=
+67.0.zip')
++        self.assertEqual(ud.parm['name'], 'gopkg.in/ini.v1@v1.67.0')
+=20
+         fetcher.download()
+         fetcher.unpack(self.unpackdir)
+@@ -3497,6 +3504,8 @@ class GoModTest(FetcherTest):
+         fetcher =3D bb.fetch2.Fetch(urls, self.d)
+         ud =3D fetcher.ud[urls[0]]
+         self.assertEqual(ud.url, 'https://proxy.golang.org/go.opencensus.i=
+o/%40v/v0.24.0.zip')
++        self.assertEqual(ud.parm['downloadfilename'], 'go.opencensus.io@v0=
+.24.0.zip')
++        self.assertEqual(ud.parm['name'], 'go.opencensus.io@v0.24.0')
+=20
+         fetcher.download()
+         fetcher.unpack(self.unpackdir)
+--=20
+2.39.5
+
 
