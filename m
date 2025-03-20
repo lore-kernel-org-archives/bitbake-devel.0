@@ -1,93 +1,96 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <javier.tia@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEBFC36000
-	for <webhook@archiver.kernel.org>; Wed, 19 Mar 2025 19:55:39 +0000 (UTC)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web11.4058.1742414132019817574
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41983C35FFC
+	for <webhook@archiver.kernel.org>; Thu, 20 Mar 2025 00:34:36 +0000 (UTC)
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
+ by mx.groups.io with SMTP id smtpd.web10.1999.1742430850171115025
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 19 Mar 2025 12:55:32 -0700
+ Wed, 19 Mar 2025 17:34:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=h7LfnMCQ;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso140065e9.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 19 Mar 2025 12:55:31 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=deFnVVz9;
+ spf=pass (domain: linaro.org, ip: 209.85.222.44, mailfrom: javier.tia@linaro.org)
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-86dde90e7a3so90854241.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 19 Mar 2025 17:34:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1742414130; x=1743018930; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=w25zwi4wWlGplUqdCymEEpF/STBS8TmAZ0ndjsPy0js=;
-        b=h7LfnMCQjoGC12EBPno08YptdT3DrubGke5SpMCMa9V3QiFxtu+XBtk4vokWwi9vzx
-         GM24Iri3oxy+MhmNqYowvKlFIzIr6xtfvjCTcqLIdJ52kBCnMD6S3aavMtrYx7rB8rk2
-         VAxSXyYoV8ys2bH5BS83dgVMajlwt6fGDVZxI=
+        d=linaro.org; s=google; t=1742430849; x=1743035649; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=y59giNKtwyBUQBtmmF9ISweqvTgmhAj61z+4ZJqKxaA=;
+        b=deFnVVz9U8+9hUgc5dgdqFN/TQsO6e4iVTZUWVp5M+2Rd0RxrRNMAOwH33HO2KT3cj
+         OO39y1+x7+3AYo2uMEwXHwHfUnkz5qiOAhWlR6d0QkmDAdKcFtyDZGr0BBgzZgJDTJcB
+         NuN0f3h3IClHdw+vZq4j/0NJMHQCjQneWWDU1HtunOQ91bGROq7JSEj9/0ESM4WHu19K
+         USwmln1DMdFdvWmHUzj8FwJIbAZBeOOdiOwcP4kyv86fKJCfU/VamZ6YVDr5jT6mgyjL
+         qnw8L1oDOLI6up+HibHg9apguoEPF9VsGtn1ow1swNdQpI8H1d292F3ydo+9Ap8lMpd8
+         MjVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742414130; x=1743018930;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w25zwi4wWlGplUqdCymEEpF/STBS8TmAZ0ndjsPy0js=;
-        b=NditM+jf9TeYH2dJQrLtkl1SA/Me481bf6VkAox4wpUTnH+/L2zWpT9dI2by8VM7q0
-         cDZqJV/pw+WL+KkIkgf0tSb0HjKLdo9GKRr3fux/GQriP2R6DDaYGRHchZYGT3QJP308
-         DWE3kHdpfc3uM5DJBrDXedCcyx7bs7saBblu0+RpGDrM44QKjrqefgqBeTUwa4AB1Z1q
-         gVlpCkYBLGu67MKIRxAfkc/MZ47PWH16H0O43JrkaVjYwzwCOc0G/bSGx5mD4pzmT85E
-         cGiqSXKBLXpIIFcaW9VTjGJehkZQAyxF0HPi5jS+rZptH1rUfV35NJ1kQ8PSpw5hq4oH
-         jNCg==
-X-Gm-Message-State: AOJu0YxhAt0jN/Ub/tWyPqnj8Z4+nci3Dpl98jqNBjlAhKSRz1xfbE+z
-	lG2HQMeOukQNEvmQ6Y6jpbS+x+ixikWaP1bfk0LFYq/mXPTDKoNNEImKPNKQVeGHsoPb2oGAWwe
-	7
-X-Gm-Gg: ASbGnctbEaGt5X6mF9ccFo3FeVYSwUNUmevhtn9VAyVNswDcF6mLCWxFNyjF3WJQrnD
-	YHyjT+AbOezwBABd+xgDf2WwZVBx393Y7+HqPVeJBPNw+cpji8kHX7tkJ4oQBAeCZOUS61LCgc7
-	hFr6mpGaRU6rRm5IjXEusc4Yn6eckoLPzOUEMHnAjPExEr/uBqe6W/EeH856I1RwGy8I4T9sTAQ
-	XOOPxqN5+KAA7VRFwc6OhpOLTYKCSbawI733llET5lsbBcYCUDCquz0J+0wt/TDoZ0k0CFVy5LT
-	iMTTOVPoJbfjauI8t3x5Zf1pNSjqglexxj+646LnKOnEn3iGWjrg2iOk1v2d/9+mLwO6hMhT7Dp
-	WjHsQo6I=
-X-Google-Smtp-Source: AGHT+IH3Iaf7aXwn44Es4ojYW4jxwzfz7Mnzj+7NAxAKbMsPrP6A1WQrYWDGOd0gV+kT3F65aMHfHQ==
-X-Received: by 2002:a05:600c:2057:b0:43d:4686:5cfb with SMTP id 5b1f17b1804b1-43d46865f9dmr19793725e9.27.1742414129530;
-        Wed, 19 Mar 2025 12:55:29 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:dad:b471:9c34:4577])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395cb7e9f8asm21678421f8f.81.2025.03.19.12.55.28
-        for <bitbake-devel@lists.openembedded.org>
+        d=1e100.net; s=20230601; t=1742430849; x=1743035649;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y59giNKtwyBUQBtmmF9ISweqvTgmhAj61z+4ZJqKxaA=;
+        b=rj8ghlYzee0xAxCSd21SUCocvYFdF32jCs5YLblSJXyyjJJMEmJqWu7ZiHYShtsvqd
+         3Em9wFo7I7oxiRBWuCiAMITwALq8tCfr0iVDXZfM0Rcu1nkA366VOFCLDs5o+n1GoZq5
+         e84aVlHEdpmcUN+BNwTveD4v3e1132Dh30XXAtYPrP0Opc/ycBwRfzCKi/SaGTzrDk1E
+         mVbqRoC5P3k6t6mRauDcuYn2OuDA8VIMv8T7T+iQerOx8NQ7M7b6W/p+a7fsGmTHGbT/
+         h6Wxcnn6d6MPBRMakuxAMvXzZEsqwAE6ST2TDEhEsDKDMJaxxfOOUVxsq9YdOGdk5Bkw
+         7aeg==
+X-Gm-Message-State: AOJu0YxgMvxpJTv7ECuU+Pp9scxv1GkwTNdLJg5B28hlBc2Sb05DG38a
+	WzzXVP1m38nUg4Zpt/2VRCBYXlrxH5GT8ZAANddz5EaGaAOaRkf81fS4L2JZ0HSxecIc5mZBGTH
+	QsFw=
+X-Gm-Gg: ASbGnctbGoQQ+N4SO68QKeVferKk2lsxX2SNqh2GdXWykPwEsNcvLpWlgopM6/kAATI
+	eDS7gC5sydhC2plQql1HKbT4X5S1Zwb/IGmjk/ViNWac7meGH8ZYhFeFo0IqbLCGGdM5VLo7iQt
+	55m1oQNjCAzlAGGenZYxi7ERfJbd88+CYCynmzg2ijVyu89EdGeUda3HnjfNOqhFf02SyGgSEq6
+	g2ecEG8sQqTS+byQtm47AWIE4bTFf4oPZeWsHap640rpFpdyQfQneaQEtm9ewRJueiyS6l9fADI
+	7yunhUAEQNXaL30q7TSiDeDZfRnZ/GwzCygcQinXmodLUqFpf8lOXFRtB9o5cmuqJng0yinC
+X-Google-Smtp-Source: AGHT+IFX3e5zE4cUr99LyZRS8dRiK35Vea/WOVKXYczCyLRcA/DmP0sJ+cRW8kb4EO+SlV3wHxXebw==
+X-Received: by 2002:a05:6102:161f:b0:4bb:eb4a:f9ec with SMTP id ada2fe7eead31-4c4ec8111d0mr3491502137.16.1742430848888;
+        Wed, 19 Mar 2025 17:34:08 -0700 (PDT)
+Received: from localhost.localdomain ([170.246.157.153])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-86d90d68da8sm2676704241.6.2025.03.19.17.34.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 12:55:28 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Wed, 19 Mar 2025 17:34:08 -0700 (PDT)
+From: Javier Tia <javier.tia@linaro.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] lib/bb: Bump minimum version requirement to 3.9
-Date: Wed, 19 Mar 2025 19:55:27 +0000
-Message-ID: <20250319195527.860295-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.45.2
+Cc: docs@lists.yoctoproject.org,
+	Mikko Rapeli <mikko.rapeli@linaro.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Subject: [PATCH] doc: Mention `if [[ somecondition ]]` is not supported
+Date: Wed, 19 Mar 2025 18:33:58 -0600
+Message-ID: <20250320003358.977774-1-javier.tia@linaro.org>
+X-Mailer: git-send-email 2.49.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 19 Mar 2025 19:55:39 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17473
+ <bitbake-devel@lists.openembedded.org>; Thu, 20 Mar 2025 00:34:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17474
 
-Since Ubuntu 20.04 is heading to EoL and that we're having other issues
-on that platform needing buildtools anyway, we're about to lose the
-last python 3.8 platform we were supporting.
+I keep forgetting using `if [[ somecondition ]]` is not supported.
 
-Bump the minimum version to 3.9 since there are many developers wanting
-access to newer python features.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Javier Tia <javier.tia@linaro.org>
 ---
- lib/bb/__init__.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ doc/bitbake-user-manual/bitbake-user-manual-metadata.rst | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
-index 876f7e3976..d3e90d03be 100644
---- a/lib/bb/__init__.py
-+++ b/lib/bb/__init__.py
-@@ -12,8 +12,8 @@
- __version__ = "2.9.1"
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+index 415fbf6d6..5474e154f 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+@@ -1381,6 +1381,10 @@ To make use of this technique, you need the following things in place:
+    To call your modified version of the function as defined in your recipe,
+    call it as ``do_foo``.
  
- import sys
--if sys.version_info < (3, 8, 0):
--    raise RuntimeError("Sorry, python 3.8.0 or later is required for this version of bitbake")
-+if sys.version_info < (3, 9, 0):
-+    raise RuntimeError("Sorry, python 3.9.0 or later is required for this version of bitbake")
- 
- if sys.version_info < (3, 10, 0):
-     # With python 3.8 and 3.9, we see errors of "libgcc_s.so.1 must be installed for pthread_cancel to work"
++   .. note::
++
++      Conditional expression using ``[[ somecondition ]]`` is not supported.
++
+ With these conditions met, your single recipe can freely choose between
+ the original function as defined in the class file and the modified
+ function in your recipe. If you do not set up these conditions, you are
+-- 
+2.49.0
+
 
