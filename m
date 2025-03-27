@@ -1,96 +1,108 @@
-Return-Path: <mathieu.dubois-briand@bootlin.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81910C36010
-	for <webhook@archiver.kernel.org>; Thu, 27 Mar 2025 13:17:29 +0000 (UTC)
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
- by mx.groups.io with SMTP id smtpd.web11.49580.1743081440013333337
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7258C36010
+	for <webhook@archiver.kernel.org>; Thu, 27 Mar 2025 13:44:09 +0000 (UTC)
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+ by mx.groups.io with SMTP id smtpd.web11.50129.1743083046837420218
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 27 Mar 2025 06:17:20 -0700
+ Thu, 27 Mar 2025 06:44:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=EyFGlO11;
- spf=pass (domain: bootlin.com, ip: 217.70.183.198, mailfrom: mathieu.dubois-briand@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id AE7F844208;
-	Thu, 27 Mar 2025 13:17:17 +0000 (UTC)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=OKkeidml;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.194, mailfrom: antonin.godard@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C9CFB43195;
+	Thu, 27 Mar 2025 13:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743081438;
+	t=1743083045;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EVbAFXW8s33yrj6v6GZKIaJzQf/kQKNWbhN3VdhKHtg=;
-	b=EyFGlO1136+gn98bRW6K4pniM9RernfkMHqQy0g4Ml9jKz75lDfpsipyKn1WPZUm4YNGjy
-	7asXiKrmT4Gd3bf0Eu71IZZNZ3CopsOrHNx0Dq79xaEp0yGyh1DIxymM7UHgxebDCtIQOX
-	9SQMtCVWRPbCywh3fC3OMPdC6kUxwdcDYVBqTEL6ifzPzLs8qJVl2LyZ9YOE7X+mHxb0Vw
-	xIGmrIv4tqIhdKbvzZvLcblcpNiU1Nujm2oVNLScndNxDNZxDVx5H2h8+84Z+G1/zqBlab
-	yT0aa5Ls9tt5vCXnIwb4dyULNhzF2Y538ZZn9rIq+89F9Zc0YdN00dymLYLkZA==
+	bh=oXFaDQC1tZR1bA58feO3IKI8zsaTk4akZ2rB5bHWphU=;
+	b=OKkeidmlNGVRNUW98SdB6iZJtcos0A7a5pY8ouCdeoWb81ckXNxtzEM9B+05BO2iDnYvFZ
+	U3wc46un6Fq0H6N9hp++ECFDg7Rtl1R+k2Qm4oyxVT6H+FJscoIQmvo5tJCOfoT+tZHrZn
+	nfIbju3I3t3haw7XXun8VsRJZCrmYDk56iGKI/RVqTpGtZ8W5JGzhk3TBov/V3jUrVwxqH
+	QZArtPsk9xU9O0vqOqJ/blwZWyJYuz8bmy/NRI1Dfji0Edk8VjgeuHVLEzPeXuE6d8JFB3
+	hfGKyghyWsfmBP1yCRiIKrkdC+7rc8EXkno6xxqi3PqX00F9jkFJA/tmQNJ4qg==
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 27 Mar 2025 14:17:17 +0100
-Message-Id: <D8R2STOUQTXK.5NH29V054MLY@bootlin.com>
-Subject: Re: [bitbake-devel] [PATCH v3 1/7] fetch2/wget: consider
- downloadfilename when checking for upstream
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: <ross.burton@arm.com>, <bitbake-devel@lists.openembedded.org>
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250326122523.293551-1-ross.burton@arm.com>
-In-Reply-To: <20250326122523.293551-1-ross.burton@arm.com>
+Date: Thu, 27 Mar 2025 14:44:03 +0100
+Message-Id: <D8R3DBLE3C5T.12J03WL0YNGID@bootlin.com>
+From: "Antonin Godard" <antonin.godard@bootlin.com>
+To: "Javier Tia" <javier.tia@linaro.org>,
+ <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] doc: Mention `if [[ somecondition ]]` is not supported
+Cc: <docs@lists.yoctoproject.org>, "Mikko Rapeli" <mikko.rapeli@linaro.org>,
+ "Ilias Apalodimas" <ilias.apalodimas@linaro.org>
+X-Mailer: aerc 0.20.1-42-g7f7db0373f6c
+References: <20250320003358.977774-1-javier.tia@linaro.org>
+In-Reply-To: <20250320003358.977774-1-javier.tia@linaro.org>
 X-GND-State: clean
-X-GND-Score: 0
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieekhedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecunecujfgurhepggfgtgffkffuhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiuddvkeevvdejgefgieetfffhtefggeeuleeufedvheefgfeviefhkeekleekgeenucffohhmrghinhepohhpvghnvghmsggvugguvggurdhorhhgpdhtuhigfhgrmhhilhihrdhorhhgpdihohgtthhophhrohhjvggtthdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepledtrdeifedrvddtvddrgedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdeifedrvddtvddrgedtpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvpdhrtghpthhtoheprhhoshhsrdgsuhhrthhonhesrghrmhdrtghomhdprhgtphhtthhopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmhgsvgguuggvugdrohhrgh
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieekheeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkhffvufevofhfjgesthhqredtredtjeenucfhrhhomhepfdetnhhtohhnihhnucfiohgurghrugdfuceorghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekueekgeeggeeltedvjeduuedvveffvddtteeuteekudfhgeelteevledthfdvteenucffohhmrghinhepohhpvghnghhrohhuphdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeejtgehtgemiegruggvmeejleegkeemgedtheelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeejtgehtgemiegruggvmeejleegkeemgedtheelpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohephedprhgtphhtthhopehjrghvihgvrhdrthhirgeslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghithgsrghkvgdquggvvhgvlheslhhishhtshdrohhpvghnv
+ ghmsggvugguvggurdhorhhgpdhrtghpthhtohepughotghssehlihhsthhsrdihohgtthhophhrohhjvggtthdrohhrghdprhgtphhtthhopehmihhkkhhordhrrghpvghliheslhhinhgrrhhordhorhhgpdhrtghpthhtohepihhlihgrshdrrghprghlohguihhmrghssehlihhnrghrohdrohhrgh
+X-GND-Sasl: antonin.godard@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 27 Mar 2025 13:17:29 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17502
+ <bitbake-devel@lists.openembedded.org>; Thu, 27 Mar 2025 13:44:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17503
 
-On Wed Mar 26, 2025 at 1:25 PM CET, Ross Burton via lists.openembedded.org =
-wrote:
-> latest_versionstring() currently looks at just the end of the URI when
-> guessing what the filename to look for is, but this doesn't work if the
-> URL filename is not simple.
+Hi Javier,
+
+On Thu Mar 20, 2025 at 1:33 AM CET, Javier Tia wrote:
+> I keep forgetting using `if [[ somecondition ]]` is not supported.
 >
-> For example, miniupnpd has a SRC_URI of:
->
->   http://miniupnp.tuxfamily.org/files/download.php?file=3D${BP}.tar.gz;do=
-wnloadfilename=3D${BP}.tar.gz
->
-> The filename component of this is "download.php", which causes the
-> heuristics in latest_versionstring() to exit early.
->
-> Instead, if the downloadfilename is set then use that, as it's often the
-> actual filename that we're after.
->
-> Signed-off-by: Ross Burton <ross.burton@arm.com>
+> Signed-off-by: Javier Tia <javier.tia@linaro.org>
 > ---
+>  doc/bitbake-user-manual/bitbake-user-manual-metadata.rst | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/d=
+oc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+> index 415fbf6d6..5474e154f 100644
+> --- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+> +++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+> @@ -1381,6 +1381,10 @@ To make use of this technique, you need the follow=
+ing things in place:
+>     To call your modified version of the function as defined in your reci=
+pe,
+>     call it as ``do_foo``.
+> =20
+> +   .. note::
+> +
+> +      Conditional expression using ``[[ somecondition ]]`` is not suppor=
+ted.
+> +
+>  With these conditions met, your single recipe can freely choose between
+>  the original function as defined in the class file and the modified
+>  function in your recipe. If you do not set up these conditions, you are
 
-Hi Ross,
+The documentation already says the following:
 
-I've been trying to apply this series on my branch, but I get some error
-on the autobuilder:
+  The scripts are executed by ``/bin/sh``, which may not be a bash
+  shell but might be something such as ``dash``. You should not use
+  Bash-specific script (bashisms).
 
-FAIL: test_wget_latest_versionstring (bb.tests.fetch.FetchLatestVersionTest=
-.test_wget_latest_versionstring) (pn=3D'miniupnpd')
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/srv/pokybuild/yocto-worker/oe-selftest-fedora/build/bitbake/lib/bb=
-/tests/fetch.py", line 1578, in test_wget_latest_versionstring
-    self.assertTrue(verstring, msg=3D"Could not find upstream version for %=
-s" % data.pn)
-    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^=
-^^^^^^^^^^^
-AssertionError: '' is not true : Could not find upstream version for miniup=
-npd
+I think [[ ]] is a bashism, or at least the POSIX shell spec clearly state =
+to
+not use it[1]. I'm not sure the BitBake documentation should list all the s=
+hell
+syntax it does not support, as I expect there are quite a few.
 
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/48/builds/1193
+The codeparser, however, could be modified to try and detect the usage of [=
+[ ]]
+and give a warning on such occurrences?
 
+[1]: https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.h=
+tml#tag_18_04
+
+Antonin
 
 --=20
-Mathieu Dubois-Briand, Bootlin
+Antonin Godard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
-
 
