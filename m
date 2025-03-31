@@ -2,22 +2,22 @@ Return-Path: <jhaller.oss@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BF6C36014
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A4CC36010
 	for <webhook@archiver.kernel.org>; Mon, 31 Mar 2025 10:27:41 +0000 (UTC)
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.46])
- by mx.groups.io with SMTP id smtpd.web11.48569.1743416851550469689
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (EUR02-VI1-obe.outbound.protection.outlook.com [40.107.241.43])
+ by mx.groups.io with SMTP id smtpd.web10.48820.1743416851595199391
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 31 Mar 2025 03:27:32 -0700
+ Mon, 31 Mar 2025 03:27:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@Philips.onmicrosoft.com header.s=selector2-Philips-onmicrosoft-com header.b=N/gXVAan;
- spf=pass (domain: bbl.ms.philips.com, ip: 40.107.20.46, mailfrom: jhaller@bbl.ms.philips.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@Philips.onmicrosoft.com header.s=selector2-Philips-onmicrosoft-com header.b=B+5MVOcP;
+ spf=pass (domain: bbl.ms.philips.com, ip: 40.107.241.43, mailfrom: jhaller@bbl.ms.philips.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iX3MeUYm52U8mjzo9vEHXJMbrAsHYrv5n0FBw4K/H4xTYKPydW30Niwp4xfll4VxLY5KoYBPb62xjo1cKnVEG3SPaOSfem/aU6B+eeWH8iSg1v14vFkjolDHYPAoNhNAeJ7JbNxHegskudHIYrbSjs+3ZaG5RpalPEXJTYE8zogFY2lIa5FlFsKxzfhQATKU0KSzbLUx8L/xnXpvIdh2Y8whF3P5+rAUoiQBoJCnzWLjuQxLXh3t1sbv4Y9gYdVDo/xUF62TM6sCYhCejOB19ocDhRIcqlmvTqdY9I9CeWqDoeZEhggBmtsfN7HV6Qaz+ram/BEQC2lj0BdNYEWUPQ==
+ b=UYCunBgD3pas86y/2YmP0Sp6ZLqUwcqftDrNYqsxhGrCuEGBGCYGL0T5GZUZSzMg0w1lyU5HfoAYg6ZDK8bKJLg9LrY62haShQi/VprRzqPDcsFHdeITCdp/R1TeiBEITAn5Bt/PJlwPu+nFHrYrkSscYs8SS3vOPknvDOluvNQv+TFugwfInjhkBCBJznRnf8+UVjql/a0p0fVymUhWvZ943u2ovGk2Nz5aZFq4NY5FplRbBY4QipQ9PdrwAtqB/42bKOxRT90E9q7H+J7JoBIPaMxblsX/N7KeNNdszmA6v6mU9shOe8Z5T4UMMUCA6LnMwGqk1Av7eENj+nLTsw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nQFk/U94eOhuP+uyhooSYwXQbkBxtRb1R8k31MDjREc=;
- b=c8rqGjlolxw0BqS1xABW4XWPdYPwQFBnX9Ioq2MazaUJXrvCNesYvtuTsi4R8gFRhIkbcdfe+OPN/v/e7vWxu+H/MiAWwI/vafWdBqElRUWcrJ1kVkWMNGkGx1poiQ7gNVMk/KGurljxc4mJbmKNSLGHM0TDHxLz7y1qvmHG66SFh8NgF3303MeOuPUfXdG4ovvU3cLHv2J2WUN5kBSwVbMwG8gma1NiOu7D8rJUgdPY4bv3ct7opbppbbvBfKfbcYh64QcNf4+vPB/KfhLBo6buifvVlOfQ0kbK2GIsYT97owtGI+pek2E1DihnHOjebJuoNShgRawQz7fBtJNPUw==
+ bh=k/M51N5ll21XrHf6JM0Vm+nlmRJ01LWbywvbHI4zeHY=;
+ b=iixlkeaLP9+HeIJLxJR6NO4pdYz/rbCwEBNa/VA+9Vlr9gz77pU8XNRd4p3a0+1OG5epIJri7N+7DOdpxL/kx+tl1OBu1idlXCmLgkTnjK+AC/EV35hxtOlNsUu8fQmoQIFUqQ0HdZ/9Z62PXlcHvfxY41WWP9bsWhNlP+EN5QIZDrDaMSYG9o8P4GCdcCRmY81RKyGEd9E1W25HwB5hLatQm5ufXcA0ohm632iKZ4YwocldhPiNb0Ra2moAwlRQnflqNuyEKN6wKGlLY1aWE2JPwnvzyW62I6Q2dVjTKWXeI+gOr3bCLuNIKPV9eUTIYAnUPWRE6xYRPptg1HCSfQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  3.248.88.141) smtp.rcpttodomain=lists.openembedded.org
  smtp.mailfrom=bbl.ms.philips.com; dmarc=fail (p=none sp=quarantine pct=100)
@@ -26,16 +26,16 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=Philips.onmicrosoft.com; s=selector2-Philips-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nQFk/U94eOhuP+uyhooSYwXQbkBxtRb1R8k31MDjREc=;
- b=N/gXVAan1qkB7z+cDMdJZcLqDxCd51Dpe20XwvXwoGl5NmeM4VNGsczOtFDu1503Q9UAD3UNRkQO2BEz6eQdXoCHfC1RS+FP+VYIfx2wXYjFS3gmfqjmsxhC8G4rlDa5Tm2UvvJTDWTwNNBxMmcDRg4VnU8L6YR3UKi53jncCSs=
-Received: from CWLP123CA0257.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:19e::17)
- by VI1P122MB0205.EURP122.PROD.OUTLOOK.COM (2603:10a6:800:176::11) with
+ bh=k/M51N5ll21XrHf6JM0Vm+nlmRJ01LWbywvbHI4zeHY=;
+ b=B+5MVOcPZHd0nAbXezFQnblAoY39tCC4jJpyC5+c6FpOSRar3T3hDg1ZmBcL6H3mLF7S6Lfce1MwNVP3ZVFgXjYVFTXhVJGDQqMv7vWjq8sNjBXE7TiFNAEFaD5kOZRTfNghaxioNng+u2mD2tuOcPqO8fgql339CbSNq6H3xXw=
+Received: from AM0PR02CA0025.eurprd02.prod.outlook.com (2603:10a6:208:3e::38)
+ by AM8P122MB0262.EURP122.PROD.OUTLOOK.COM (2603:10a6:20b:229::23) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.37; Mon, 31 Mar
  2025 10:27:27 +0000
-Received: from AM3PEPF0000A79B.eurprd04.prod.outlook.com
- (2603:10a6:400:19e:cafe::e0) by CWLP123CA0257.outlook.office365.com
- (2603:10a6:400:19e::17) with Microsoft SMTP Server (version=TLS1_3,
+Received: from AMS0EPF000001A5.eurprd05.prod.outlook.com
+ (2603:10a6:208:3e:cafe::d1) by AM0PR02CA0025.outlook.office365.com
+ (2603:10a6:208:3e::38) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.54 via Frontend Transport; Mon,
  31 Mar 2025 10:27:27 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 3.248.88.141)
@@ -45,121 +45,141 @@ Received-SPF: Pass (protection.outlook.com: domain of bbl.ms.philips.com
  designates 3.248.88.141 as permitted sender) receiver=protection.outlook.com;
  client-ip=3.248.88.141; helo=ext-eur1.smtp.philips.com; pr=C
 Received: from ext-eur1.smtp.philips.com (3.248.88.141) by
- AM3PEPF0000A79B.mail.protection.outlook.com (10.167.16.106) with Microsoft
+ AMS0EPF000001A5.mail.protection.outlook.com (10.167.16.232) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.20.8606.22 via Frontend Transport; Mon, 31 Mar 2025 10:27:26 +0000
 Received: from smtprelay-eur1.philips.com ([130.138.84.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 256/256 bits)
 	(Client did not present a certificate)
 	by ext-eur1.smtp.philips.com with ESMTPS
-	id z6ZXt5CEqQb50zCMYtHXFF; Mon, 31 Mar 2025 12:27:26 +0200
+	id z4Rnt58UvQb50zCMYtHXFG; Mon, 31 Mar 2025 12:27:26 +0200
 Received: from mail.bbl.ms.philips.com ([130.143.87.230])
 	by smtprelay-eur1.philips.com with ESMTP
-	id zCMYtLk9qFWGrzCMYtUszT; Mon, 31 Mar 2025 12:27:26 +0200
+	id zCMYtLk9rFWGrzCMYtUszU; Mon, 31 Mar 2025 12:27:26 +0200
 X-CLAM-Verdict: legit
 X-CLAM-Score: ??
 X-CLAM-Description: ??
 Received: from bbl2xr12.bbl.ms.philips.com (bbl2xr12.bbl.ms.philips.com [130.143.223.70])
-	by mail.bbl.ms.philips.com (Postfix) with ESMTP id 391EC182F48
+	by mail.bbl.ms.philips.com (Postfix) with ESMTP id 3A5CE184836
 	for <bitbake-devel@lists.openembedded.org>; Mon, 31 Mar 2025 12:27:26 +0200 (CEST)
 Received: by bbl2xr12.bbl.ms.philips.com (Postfix, from userid 1876)
-	id 2BD9F7C022B; Mon, 31 Mar 2025 12:27:26 +0200 (CEST)
+	id 2DF617C01F9; Mon, 31 Mar 2025 12:27:26 +0200 (CEST)
 From: jhaller.oss@gmail.com
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 1/2] bitbake: fetch: Fix BB_FETCH_PREMIRRORONLY for git mirror tarballs
-Date: Mon, 31 Mar 2025 12:27:25 +0200
-Message-ID: <20250331102726.1965866-1-jhaller.oss@gmail.com>
+Subject: [PATCH 2/2] bitbake: tests/fetch: Fix git PREMIRRORONLY test
+Date: Mon, 31 Mar 2025 12:27:26 +0200
+Message-ID: <20250331102726.1965866-2-jhaller.oss@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250331102726.1965866-1-jhaller.oss@gmail.com>
+References: <20250331102726.1965866-1-jhaller.oss@gmail.com>
 Reply-To: Julian Haller <julian.haller@philips.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM3PEPF0000A79B:EE_|VI1P122MB0205:EE_
+X-MS-TrafficTypeDiagnostic: AMS0EPF000001A5:EE_|AM8P122MB0262:EE_
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 96d6a62e-c2f7-4586-b36d-08dd703ea221
+X-MS-Office365-Filtering-Correlation-Id: f256368b-4e54-44c2-1bd6-08dd703ea220
 X-MS-Exchange-SenderADCheck: 0
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|7093399015|82310400026|36860700013|48200799018|376014|61400799027|35450700002;
+	BCL:0;ARA:13230040|82310400026|36860700013|376014|48200799018|61400799027|7093399015|35450700002;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?jOPx2iU1YPtY13q3y+WVJaIBPSWbplik6xRr9DyHCgyN5gWwGzdjmMmfxulF?=
- =?us-ascii?Q?NfK4OnsCONWs8eHJ/EoRCKQ3ZYEVyrKKTMNGOI0vuViSR+hokQ7uDgitNwXP?=
- =?us-ascii?Q?SCPX1dIn+nLks3uq/K5THd5EaDNtcVUG53uEfkYNCRL9XMalE45/FcWAg60c?=
- =?us-ascii?Q?uisKYgYpSadNZbXlDTdTGTm5x/b/241zgJbpW7DjPxDp0DOjgmuxPs711kik?=
- =?us-ascii?Q?DFtzOwb/DuShPE1NBqUhr09lbiS9/XiOmGRz1P4+nzI1RQlAp0KSFWUMiM7e?=
- =?us-ascii?Q?itpi+AC8RQkMNNCSwMRlwylJEeasnt8j5VWqD5KzS7GtPEhvITwrNYH0+krV?=
- =?us-ascii?Q?HiaZFyJZX0SGB+3AwO5fvY9LbxaVjlpKzw8FVAG4qfafY2Aj57xL72tAMz0/?=
- =?us-ascii?Q?0ws+DEKJIx4cjG3izKerFDsRYQvEXz0rLNAOExKbP476MxEJdzIh0uD/4R/7?=
- =?us-ascii?Q?bZPj+UAhVMLCg72xb6MhYAwxFs9bpwE1w8PCynC/H99yg+VwXQs8tMHXAdPN?=
- =?us-ascii?Q?hFjT+3Xh2a9kQLHXZVn3ZrW9bEDsT8XIb5dgVrZt2D+ly8IMpKSvxKS0PnLa?=
- =?us-ascii?Q?TywRpkevoZAydEfeTgeDu0Ijz8bl86TJe0ZuCNo3PpALeNZgeUOQSBaB9vRZ?=
- =?us-ascii?Q?hDkUZ9OwA9fmq1X2DUDkLxPxo3jDix+E4Iq2DRQe2/GMppi7QBwDa3IEnVkA?=
- =?us-ascii?Q?XyCQ+mm1G/GROu8TYxZuyCzHTtPNJFPxiZZ+wDudLQN7ilQ7r4KDzEG1RZtQ?=
- =?us-ascii?Q?+3gCzDEsIGGWzL1V4Jg9ZSj9H/M2Ty3S7CzOS0D85DfXtYbVCg489z2TRxld?=
- =?us-ascii?Q?/os+BIwqD5eM2/brPav48saZp6ex2jb/EDwOMGBTOosZLWjDc3y2yDXxhYOF?=
- =?us-ascii?Q?tQzAFoNOWaNG9Tr0IbRKQ3JvuCuB5qfASuJ3+YYpcIJjLj23hI0T9BcZ3yib?=
- =?us-ascii?Q?kC2Z3kN8V2nYIK7R+ncvj8L1JQ2E7f4SN+Yh0/FMk/YMWr10+V9TBoJObYK7?=
- =?us-ascii?Q?oDReMleaKriCl5A+Es6qRbmOOZMY5DNNLyzF3q8mOn9pgV7Po1zQxBjB/wnR?=
- =?us-ascii?Q?ZyYQn0+OodzZZTeJsAfVu09/jfaV+jCyVsFjIN9WijbiXWCmwBUagJMKXdHR?=
- =?us-ascii?Q?/o2OBscJ9Y/CYEXUBpZ0P5jeDBlzbFRKAybzaaiwa3/YcFsoNXkFTrC2y1rP?=
- =?us-ascii?Q?BIp8QYrMEv3Hv4HQ8KsPQ9PJ8GuxhQgcFOMhQii4p+fzYODlbBjgNG0ny1lD?=
- =?us-ascii?Q?SR1+GjYb7f0tzjSIK5UNEQbYKIC2h8/KiOLxDdtT4hw7MYaf1lSd7k6Kqm72?=
- =?us-ascii?Q?rXzP57+L5WUlILEQlT6PFGz0I04ELrPybMkQa/h4bVBiTL1YoHXAgbfPT63O?=
- =?us-ascii?Q?ig3/KeC70eSYavwTQoqIjYN9P8PpI5DGFPzBLutnY/jmXTy6eG5G05V089kF?=
- =?us-ascii?Q?edls+ONBAuX4r1kX1tYC3YkKb74UDemO/oQHOoBJLSZI4tfJ7vytLi1X/7YG?=
- =?us-ascii?Q?3D+92frV8yccERbLwcKY7oL+mR/T4bJmMdW9?=
+	=?us-ascii?Q?oNt7DN5CX6aV/mB3ScjFak0Y5d0mRyv5AGWNyhEE4cyPXclAYuzf4Vfwss7e?=
+ =?us-ascii?Q?fFyEroOWmKTKCaKaL/qcGQb8oK+e+w7FzkvEXvGURf/DsWRKm3toFMz3I2sV?=
+ =?us-ascii?Q?GaTb7fKpLPhge7NewUulAxE60zW6tSn5y014FjTeP5+W17+URExVBgX60BlM?=
+ =?us-ascii?Q?wp12BPfS6sHGxAjHIe3sGwTzaCgwYvnbOKysKaNkisRsKGchjUhypByBI0oK?=
+ =?us-ascii?Q?RPOT6QkYN86k3weELU1Kf2+fO+e/NRIsXCDPGSwjZU1ipZriXa8DtjoTxZWv?=
+ =?us-ascii?Q?ay9tT7iNQ4QiKcghVyJit4OB81Kz/v+v8+mg9TFAquaMw2gcSYJyG+lpzbUY?=
+ =?us-ascii?Q?gQIUpiutiGgcJ4bPQGNT3PWvVjnFvTT7w/W+wo5l6D4nwA/WlP1haKyJsn4R?=
+ =?us-ascii?Q?oWWaPsex62zqW9YItaSPMtHyRn+M1UQ08C81Ai7H4JFGq/G13lBB+cTiACu0?=
+ =?us-ascii?Q?WJMDHKHy5XivsXl9+mZ7Gev13FbxQEm/04mWwM2uWiV6IMCnNY5mP386d9XU?=
+ =?us-ascii?Q?d4gVUUiAmnvfLeUIyK7q76N/cnVfYwld59L7X/AYLB20Urtc7uFa4sE30f5G?=
+ =?us-ascii?Q?YzW4tG32z5DZE/NZhxqeG1fRZzEkLATe6w2kHl9hc14TeXRatlXFNGec+Tev?=
+ =?us-ascii?Q?fFtHuuOZYmnjERuQQGI2cOzu/HhE9XuwpXcXjRsQ31tS4yLDDWKqRg3O431R?=
+ =?us-ascii?Q?MokBZO+mFGlesqAMoF1Ybv4Y77p2M5MI1iJFSUhbYMYzMM2AnNplr/NmE2tE?=
+ =?us-ascii?Q?5qgxw13Cdw8EqxZkeB/2KlANfdz3BbBxF19apU+bi246VAbBOOZ70Wo7uAj5?=
+ =?us-ascii?Q?BUJUyBeBM4qmfGbou44WvyiyaFygGItBD9sHreQUMNzFwDWjS227n1XZ15E/?=
+ =?us-ascii?Q?MRESkVjnk8iXlo5/0BKgVnyGOpV83ySpGJcJy/B6LQGE6mjZ7Fw7Tc95kGxQ?=
+ =?us-ascii?Q?Q08JoS+wyXIxDQ/GMOaMqvyB8VpCLM1argBQbW8j4dKVaiDkirSYy1MajLDw?=
+ =?us-ascii?Q?8sPcoQ6E/3QwBJ64kkU39BLDwrBPhgRJRP5A+bPli7lpvp9y6VqcYt0rc/a9?=
+ =?us-ascii?Q?5p/Fi5CaNjq5ZZGNbn79wjDbhEB/0UxzW5SkrWYcw1o5Wb99p6EGjXf1XbdG?=
+ =?us-ascii?Q?8RsPmm+x70zaa6QWJ1cLB9Sahhvk1DNd3Y8arNIVEuOUSJULLEz1/MfSpjCP?=
+ =?us-ascii?Q?Wk0oK5otZn1WdGzjGB5FkFv1ZwAACYJblJ3kuiAyEDWNCmYRzWGxiMC9oHyM?=
+ =?us-ascii?Q?aP569VpZxAi8X5XTs2AhYkFcRjRxNGCDaX74sNnQy1IYbYwS6T2bfzmNdWYu?=
+ =?us-ascii?Q?Y9w/j3i0FMd7eBuuXb7tzkQ3Y6/v7wWZfZcaswAcI+Cidq7cDwEmCVklyOnK?=
+ =?us-ascii?Q?zHZr134efIyPfNNusHK0T5EaH3dHOmtvNfDADggbgAWsqVcHH9gRWA+u7Zkw?=
+ =?us-ascii?Q?rEXhcxU59TTuXJ82yWfErBPXWNoU/8AqmA831QOTRXUsRTrPi7QWkX9WyvFq?=
+ =?us-ascii?Q?QLNOB6cEuROR5L4bsR+xqRHle00navDhowOD?=
 X-Forefront-Antispam-Report: 
-	CIP:3.248.88.141;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ext-eur1.smtp.philips.com;PTR:ext-eur1.smtp.philips.com;CAT:NONE;SFS:(13230040)(7093399015)(82310400026)(36860700013)(48200799018)(376014)(61400799027)(35450700002);DIR:OUT;SFP:1101;
+	CIP:3.248.88.141;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ext-eur1.smtp.philips.com;PTR:ext-eur1.smtp.philips.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(48200799018)(61400799027)(7093399015)(35450700002);DIR:OUT;SFP:1101;
 X-OriginatorOrg: ms.philips.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 10:27:26.6254
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 10:27:26.6306
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96d6a62e-c2f7-4586-b36d-08dd703ea221
+X-MS-Exchange-CrossTenant-Network-Message-Id: f256368b-4e54-44c2-1bd6-08dd703ea220
 X-MS-Exchange-CrossTenant-Id: 1a407a2d-7675-4d17-8692-b3ac285306e4
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1a407a2d-7675-4d17-8692-b3ac285306e4;Ip=[3.248.88.141];Helo=[ext-eur1.smtp.philips.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	AM3PEPF0000A79B.eurprd04.prod.outlook.com
+	AMS0EPF000001A5.eurprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P122MB0205
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8P122MB0262
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Mon, 31 Mar 2025 10:27:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17506
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17505
 
 From: Julian Haller <julian.haller@philips.com>
 
-When invoking the original git fetcher after downloading a mirror
-tarball, BB_FETCH_PREMIRRORONLY is ignored. This leads to git fetch
-commands targeting the upstream source being executed silently. Ensure
-setting BB_NO_NETWORK before invoking the original fetcher. While this
-was only observed for git, setting this in general for all fetcher
-types makes sense at this location.
+Using a shallow clone to simluate an outdated git mirror tarball does
+not work in the intended way. A shallow clone already contains the
+latest commit which can hide certain fetcher behavior. Simulate an
+outdated mirror tarball, as the test titles indicate, by removing the
+newer commits from the mirror.
 ---
- bitbake/lib/bb/fetch2/__init__.py | 3 +++
- 1 file changed, 3 insertions(+)
+ bitbake/lib/bb/tests/fetch.py | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__in=
-it__.py
-index fed296097f..76f1440026 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -1092,6 +1092,9 @@ def try_mirror_url(fetch, origud, ud, ld, check =3D F=
-alse):
-         # If that tarball is a local file:// we need to provide a symlink =
-to it
-         dldir =3D ld.getVar("DL_DIR")
+diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
+index 65339d1bb1..8de6862482 100644
+--- a/bitbake/lib/bb/tests/fetch.py
++++ b/bitbake/lib/bb/tests/fetch.py
+@@ -3290,7 +3290,8 @@ class FetchPremirroronlyNetworkTest(FetcherTest):
+         import shutil
+         self.mirrorname =3D "git2_git.yoctoproject.org.fstests.tar.gz"
+         os.makedirs(self.clonedir)
+-        self.git("clone --bare --shallow-since=3D\"01.01.2013\" {}".format=
+(self.recipe_url), self.clonedir)
++        self.git("clone --bare {}".format(self.recipe_url), self.clonedir)
++        self.git("update-ref HEAD 15413486df1f5a5b5af699b6f3ba5f0984e52a9f=
+", self.gitdir)
+         bb.process.run('tar -czvf {} .'.format(os.path.join(self.mirrordir=
+, self.mirrorname)), cwd =3D  self.gitdir)
+         shutil.rmtree(self.clonedir)
 =20
-+        if bb.utils.to_boolean(ld.getVar("BB_FETCH_PREMIRRORONLY")):
-+            ld.setVar("BB_NO_NETWORK", "1")
-+
-         if origud.mirrortarballs and os.path.basename(ud.localpath) in ori=
-gud.mirrortarballs and os.path.basename(ud.localpath) !=3D os.path.basename=
-(origud.localpath):
-             # Create donestamp in old format to avoid triggering a re-down=
-load
-             if ud.donestamp:
+@@ -3298,7 +3299,7 @@ class FetchPremirroronlyNetworkTest(FetcherTest):
+     def test_mirror_tarball_updated(self):
+         self.make_git_repo()
+         ## Upstream commit is in the mirror
+-        self.d.setVar("SRCREV", "49d65d53c2bf558ae6e9185af0f3af7b79d255ec"=
+)
++        self.d.setVar("SRCREV", "15413486df1f5a5b5af699b6f3ba5f0984e52a9f"=
+)
+         fetcher =3D bb.fetch.Fetch([self.recipe_url], self.d)
+         fetcher.download()
+=20
+@@ -3306,7 +3307,7 @@ class FetchPremirroronlyNetworkTest(FetcherTest):
+     def test_mirror_tarball_outdated(self):
+         self.make_git_repo()
+         ## Upstream commit not in the mirror
+-        self.d.setVar("SRCREV", "15413486df1f5a5b5af699b6f3ba5f0984e52a9f"=
+)
++        self.d.setVar("SRCREV", "49d65d53c2bf558ae6e9185af0f3af7b79d255ec"=
+)
+         fetcher =3D bb.fetch.Fetch([self.recipe_url], self.d)
+         with self.assertRaises(bb.fetch2.NetworkAccess):
+             fetcher.download()
 --=20
 2.43.0
 
