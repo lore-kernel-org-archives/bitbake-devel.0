@@ -1,274 +1,166 @@
-Return-Path: <sam@liddicott.com>
+Return-Path: <jhaller.oss@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 345A0C28B20
-	for <webhook@archiver.kernel.org>; Fri, 28 Mar 2025 11:41:46 +0000 (UTC)
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
- by mx.groups.io with SMTP id smtpd.web10.9021.1743162087859486550
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BF6C36014
+	for <webhook@archiver.kernel.org>; Mon, 31 Mar 2025 10:27:41 +0000 (UTC)
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.46])
+ by mx.groups.io with SMTP id smtpd.web11.48569.1743416851550469689
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 28 Mar 2025 04:41:28 -0700
+ Mon, 31 Mar 2025 03:27:32 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@liddicott-com.20230601.gappssmtp.com header.s=20230601 header.b=pv/6j7mH;
- spf=none, err=SPF record not found (domain: liddicott.com, ip: 209.85.208.42, mailfrom: sam@liddicott.com)
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e614da8615so3853322a12.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 28 Mar 2025 04:41:27 -0700 (PDT)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@Philips.onmicrosoft.com header.s=selector2-Philips-onmicrosoft-com header.b=N/gXVAan;
+ spf=pass (domain: bbl.ms.philips.com, ip: 40.107.20.46, mailfrom: jhaller@bbl.ms.philips.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iX3MeUYm52U8mjzo9vEHXJMbrAsHYrv5n0FBw4K/H4xTYKPydW30Niwp4xfll4VxLY5KoYBPb62xjo1cKnVEG3SPaOSfem/aU6B+eeWH8iSg1v14vFkjolDHYPAoNhNAeJ7JbNxHegskudHIYrbSjs+3ZaG5RpalPEXJTYE8zogFY2lIa5FlFsKxzfhQATKU0KSzbLUx8L/xnXpvIdh2Y8whF3P5+rAUoiQBoJCnzWLjuQxLXh3t1sbv4Y9gYdVDo/xUF62TM6sCYhCejOB19ocDhRIcqlmvTqdY9I9CeWqDoeZEhggBmtsfN7HV6Qaz+ram/BEQC2lj0BdNYEWUPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nQFk/U94eOhuP+uyhooSYwXQbkBxtRb1R8k31MDjREc=;
+ b=c8rqGjlolxw0BqS1xABW4XWPdYPwQFBnX9Ioq2MazaUJXrvCNesYvtuTsi4R8gFRhIkbcdfe+OPN/v/e7vWxu+H/MiAWwI/vafWdBqElRUWcrJ1kVkWMNGkGx1poiQ7gNVMk/KGurljxc4mJbmKNSLGHM0TDHxLz7y1qvmHG66SFh8NgF3303MeOuPUfXdG4ovvU3cLHv2J2WUN5kBSwVbMwG8gma1NiOu7D8rJUgdPY4bv3ct7opbppbbvBfKfbcYh64QcNf4+vPB/KfhLBo6buifvVlOfQ0kbK2GIsYT97owtGI+pek2E1DihnHOjebJuoNShgRawQz7fBtJNPUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 3.248.88.141) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=bbl.ms.philips.com; dmarc=fail (p=none sp=quarantine pct=100)
+ action=none header.from=gmail.com; dkim=none (message not signed); arc=none
+ (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=liddicott-com.20230601.gappssmtp.com; s=20230601; t=1743162086; x=1743766886; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zCq/JN+cXZZM/qY86dKahXv5i2SEQ/945tT8zGdNBkA=;
-        b=pv/6j7mHoVYmE8A3KdXpXv3UknbBiAGpTHOHqJzcaDpjAjd0VStRWISLEWGvSFkMet
-         VYpaGMh+uPTkKSu3pofzx/0L+gpMn1cpgLLOaXi30pGcNWnXnM4hRq5UjGsVwYwbaO5P
-         qLP++MEe/ElETKypJ8G14aHX1/LHjD+sILeNG1N79OH8t93biJTqfTVnQKXQkOgqHMtb
-         8tpBxQIRX8J57w6yhy6+agjC7n+mYMh8gFqkwLF4Md1S6IL5V3vRzoPbuWRtZdQdzfda
-         rN+uCzmSKXEZ3zrQQeJAg5EPTI6frwOw/GWitgZzvCGEwWVGyFiH3jmkjIGjFsw8nzki
-         syYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743162086; x=1743766886;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zCq/JN+cXZZM/qY86dKahXv5i2SEQ/945tT8zGdNBkA=;
-        b=EZ6TP/jw5Hla0KxF6qRL4V4Se/IoSDI/D4AeuliZO+u522Gvw1LB6Lo2ojFnloN01s
-         NEBip6/coywh56qBzn+mxagBu+aIeZ6yGW+mYLcMsOWZTmcj+lgAqAnzBxrxl4TJiaas
-         EqN6NZK4cFqOD4mPW3D2a8iwgYNgbHt4IHWT/o5VvfpzULAFIJQvO6z5USvGuu/yq8G0
-         tyUe9dtxOG8tyB0RpQRe9kcCt99MFIi/1cvCSQpyMyag2kQIfjuJQw9bSv5pWZQOAQ3x
-         Tg2q+iEtUBtyWaG3l+f4M5111LVu4rX95XG6oqLkaZLD+PjxMO3t+7acu2Kul0f3RIR8
-         6M1Q==
-X-Gm-Message-State: AOJu0YwU4VnzLXG0A2+oacF0aUFTT0erl7qTohXLm00WAr4/w1nFR2b4
-	Gvcvvu8EKs0TmvPFSBSnaO0zoW3gzUIRAc7/jGgCWTT1nHo4/63jXkZLO2thCwjIQ2j6aqBn1kL
-	gE9tbzlqheYehCaEUOgFti4nkDgqVNouBRNO9
-X-Gm-Gg: ASbGncsE2wvAhCmi3CIrRf2aJl+SEZKkty5H3Tqd5w4yjEdy381A433mEQ1VwZGcAl1
-	potz3g0nDdL1gUXs/hiMsmvZ0QyK1Ze2VRzW8YOcmdhRe1Xu1PKVw4E2SthBqPEY+5ybddFaXOk
-	PfAHv2ynmA2ZticONUeHbmgwcV90c=
-X-Google-Smtp-Source: AGHT+IGfiyERy/XG9SLxrclInigj2+WfbvCjXSsUzT3YRq2qmOQBngFnud3NOUCRq6nq93smcuQzOhN2gbGL80KnmeA=
-X-Received: by 2002:a05:6402:50d4:b0:5e7:87cd:2479 with SMTP id
- 4fb4d7f45d1cf-5edc4c07421mr2043668a12.8.1743162085696; Fri, 28 Mar 2025
- 04:41:25 -0700 (PDT)
+ d=Philips.onmicrosoft.com; s=selector2-Philips-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nQFk/U94eOhuP+uyhooSYwXQbkBxtRb1R8k31MDjREc=;
+ b=N/gXVAan1qkB7z+cDMdJZcLqDxCd51Dpe20XwvXwoGl5NmeM4VNGsczOtFDu1503Q9UAD3UNRkQO2BEz6eQdXoCHfC1RS+FP+VYIfx2wXYjFS3gmfqjmsxhC8G4rlDa5Tm2UvvJTDWTwNNBxMmcDRg4VnU8L6YR3UKi53jncCSs=
+Received: from CWLP123CA0257.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:19e::17)
+ by VI1P122MB0205.EURP122.PROD.OUTLOOK.COM (2603:10a6:800:176::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.37; Mon, 31 Mar
+ 2025 10:27:27 +0000
+Received: from AM3PEPF0000A79B.eurprd04.prod.outlook.com
+ (2603:10a6:400:19e:cafe::e0) by CWLP123CA0257.outlook.office365.com
+ (2603:10a6:400:19e::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.54 via Frontend Transport; Mon,
+ 31 Mar 2025 10:27:27 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 3.248.88.141)
+ smtp.mailfrom=bbl.ms.philips.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=gmail.com;
+Received-SPF: Pass (protection.outlook.com: domain of bbl.ms.philips.com
+ designates 3.248.88.141 as permitted sender) receiver=protection.outlook.com;
+ client-ip=3.248.88.141; helo=ext-eur1.smtp.philips.com; pr=C
+Received: from ext-eur1.smtp.philips.com (3.248.88.141) by
+ AM3PEPF0000A79B.mail.protection.outlook.com (10.167.16.106) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8606.22 via Frontend Transport; Mon, 31 Mar 2025 10:27:26 +0000
+Received: from smtprelay-eur1.philips.com ([130.138.84.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 256/256 bits)
+	(Client did not present a certificate)
+	by ext-eur1.smtp.philips.com with ESMTPS
+	id z6ZXt5CEqQb50zCMYtHXFF; Mon, 31 Mar 2025 12:27:26 +0200
+Received: from mail.bbl.ms.philips.com ([130.143.87.230])
+	by smtprelay-eur1.philips.com with ESMTP
+	id zCMYtLk9qFWGrzCMYtUszT; Mon, 31 Mar 2025 12:27:26 +0200
+X-CLAM-Verdict: legit
+X-CLAM-Score: ??
+X-CLAM-Description: ??
+Received: from bbl2xr12.bbl.ms.philips.com (bbl2xr12.bbl.ms.philips.com [130.143.223.70])
+	by mail.bbl.ms.philips.com (Postfix) with ESMTP id 391EC182F48
+	for <bitbake-devel@lists.openembedded.org>; Mon, 31 Mar 2025 12:27:26 +0200 (CEST)
+Received: by bbl2xr12.bbl.ms.philips.com (Postfix, from userid 1876)
+	id 2BD9F7C022B; Mon, 31 Mar 2025 12:27:26 +0200 (CEST)
+From: jhaller.oss@gmail.com
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 1/2] bitbake: fetch: Fix BB_FETCH_PREMIRRORONLY for git mirror tarballs
+Date: Mon, 31 Mar 2025 12:27:25 +0200
+Message-ID: <20250331102726.1965866-1-jhaller.oss@gmail.com>
+X-Mailer: git-send-email 2.43.0
+Reply-To: Julian Haller <julian.haller@philips.com>
 MIME-Version: 1.0
-References: <17B810A24531435C.23432@lists.openembedded.org>
- <CAOj-5WAohNpyHRFFWbBkm2CWnFnfzAit4Kxm2=9WsbKcSPeb+Q@mail.gmail.com>
- <fc3346c4a626f8a5cdb5805c2ea8b666065fc86f.camel@linuxfoundation.org>
- <17B85E3B078DFE63.18468@lists.openembedded.org> <CAOj-5WCj04cnjeNrkfF2igx6a5nxERTFhKhd02q_NTd97AzYwA@mail.gmail.com>
- <9ce5ba6c0ea52f2c636874c88051d216fd2f2c9f.camel@linuxfoundation.org>
-In-Reply-To: <9ce5ba6c0ea52f2c636874c88051d216fd2f2c9f.camel@linuxfoundation.org>
-From: Sam Liddicott <sam@liddicott.com>
-Date: Fri, 28 Mar 2025 11:40:48 +0000
-X-Gm-Features: AQ5f1JpTa-OYw1GDVhUwDP6rl-Twxe4Pv7ffqMpHaIIRp1qkBKXxOFLv5zXQT3w
-Message-ID: <CAOj-5WDWoY_gqnu8P6ySSHogADS4yT3OyzYsqUQhMU46knijgA@mail.gmail.com>
-Subject: Re: [bitbake-devel] pseudo abort with req '/proc/self/fd/3'
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org, matt.cowell@nokia.com
-Content-Type: multipart/alternative; boundary="000000000000e7992d0631658c36"
+Content-Transfer-Encoding: quoted-printable
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM3PEPF0000A79B:EE_|VI1P122MB0205:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 96d6a62e-c2f7-4586-b36d-08dd703ea221
+X-MS-Exchange-SenderADCheck: 0
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|7093399015|82310400026|36860700013|48200799018|376014|61400799027|35450700002;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?jOPx2iU1YPtY13q3y+WVJaIBPSWbplik6xRr9DyHCgyN5gWwGzdjmMmfxulF?=
+ =?us-ascii?Q?NfK4OnsCONWs8eHJ/EoRCKQ3ZYEVyrKKTMNGOI0vuViSR+hokQ7uDgitNwXP?=
+ =?us-ascii?Q?SCPX1dIn+nLks3uq/K5THd5EaDNtcVUG53uEfkYNCRL9XMalE45/FcWAg60c?=
+ =?us-ascii?Q?uisKYgYpSadNZbXlDTdTGTm5x/b/241zgJbpW7DjPxDp0DOjgmuxPs711kik?=
+ =?us-ascii?Q?DFtzOwb/DuShPE1NBqUhr09lbiS9/XiOmGRz1P4+nzI1RQlAp0KSFWUMiM7e?=
+ =?us-ascii?Q?itpi+AC8RQkMNNCSwMRlwylJEeasnt8j5VWqD5KzS7GtPEhvITwrNYH0+krV?=
+ =?us-ascii?Q?HiaZFyJZX0SGB+3AwO5fvY9LbxaVjlpKzw8FVAG4qfafY2Aj57xL72tAMz0/?=
+ =?us-ascii?Q?0ws+DEKJIx4cjG3izKerFDsRYQvEXz0rLNAOExKbP476MxEJdzIh0uD/4R/7?=
+ =?us-ascii?Q?bZPj+UAhVMLCg72xb6MhYAwxFs9bpwE1w8PCynC/H99yg+VwXQs8tMHXAdPN?=
+ =?us-ascii?Q?hFjT+3Xh2a9kQLHXZVn3ZrW9bEDsT8XIb5dgVrZt2D+ly8IMpKSvxKS0PnLa?=
+ =?us-ascii?Q?TywRpkevoZAydEfeTgeDu0Ijz8bl86TJe0ZuCNo3PpALeNZgeUOQSBaB9vRZ?=
+ =?us-ascii?Q?hDkUZ9OwA9fmq1X2DUDkLxPxo3jDix+E4Iq2DRQe2/GMppi7QBwDa3IEnVkA?=
+ =?us-ascii?Q?XyCQ+mm1G/GROu8TYxZuyCzHTtPNJFPxiZZ+wDudLQN7ilQ7r4KDzEG1RZtQ?=
+ =?us-ascii?Q?+3gCzDEsIGGWzL1V4Jg9ZSj9H/M2Ty3S7CzOS0D85DfXtYbVCg489z2TRxld?=
+ =?us-ascii?Q?/os+BIwqD5eM2/brPav48saZp6ex2jb/EDwOMGBTOosZLWjDc3y2yDXxhYOF?=
+ =?us-ascii?Q?tQzAFoNOWaNG9Tr0IbRKQ3JvuCuB5qfASuJ3+YYpcIJjLj23hI0T9BcZ3yib?=
+ =?us-ascii?Q?kC2Z3kN8V2nYIK7R+ncvj8L1JQ2E7f4SN+Yh0/FMk/YMWr10+V9TBoJObYK7?=
+ =?us-ascii?Q?oDReMleaKriCl5A+Es6qRbmOOZMY5DNNLyzF3q8mOn9pgV7Po1zQxBjB/wnR?=
+ =?us-ascii?Q?ZyYQn0+OodzZZTeJsAfVu09/jfaV+jCyVsFjIN9WijbiXWCmwBUagJMKXdHR?=
+ =?us-ascii?Q?/o2OBscJ9Y/CYEXUBpZ0P5jeDBlzbFRKAybzaaiwa3/YcFsoNXkFTrC2y1rP?=
+ =?us-ascii?Q?BIp8QYrMEv3Hv4HQ8KsPQ9PJ8GuxhQgcFOMhQii4p+fzYODlbBjgNG0ny1lD?=
+ =?us-ascii?Q?SR1+GjYb7f0tzjSIK5UNEQbYKIC2h8/KiOLxDdtT4hw7MYaf1lSd7k6Kqm72?=
+ =?us-ascii?Q?rXzP57+L5WUlILEQlT6PFGz0I04ELrPybMkQa/h4bVBiTL1YoHXAgbfPT63O?=
+ =?us-ascii?Q?ig3/KeC70eSYavwTQoqIjYN9P8PpI5DGFPzBLutnY/jmXTy6eG5G05V089kF?=
+ =?us-ascii?Q?edls+ONBAuX4r1kX1tYC3YkKb74UDemO/oQHOoBJLSZI4tfJ7vytLi1X/7YG?=
+ =?us-ascii?Q?3D+92frV8yccERbLwcKY7oL+mR/T4bJmMdW9?=
+X-Forefront-Antispam-Report: 
+	CIP:3.248.88.141;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ext-eur1.smtp.philips.com;PTR:ext-eur1.smtp.philips.com;CAT:NONE;SFS:(13230040)(7093399015)(82310400026)(36860700013)(48200799018)(376014)(61400799027)(35450700002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: ms.philips.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 10:27:26.6254
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 96d6a62e-c2f7-4586-b36d-08dd703ea221
+X-MS-Exchange-CrossTenant-Id: 1a407a2d-7675-4d17-8692-b3ac285306e4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1a407a2d-7675-4d17-8692-b3ac285306e4;Ip=[3.248.88.141];Helo=[ext-eur1.smtp.philips.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	AM3PEPF0000A79B.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P122MB0205
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 28 Mar 2025 11:41:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17504
+ <bitbake-devel@lists.openembedded.org>; Mon, 31 Mar 2025 10:27:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17506
 
---000000000000e7992d0631658c36
-Content-Type: text/plain; charset="UTF-8"
+From: Julian Haller <julian.haller@philips.com>
 
-An interesting update from me, with my (now out-of-date) pseudo version:
+When invoking the original git fetcher after downloading a mirror
+tarball, BB_FETCH_PREMIRRORONLY is ignored. This leads to git fetch
+commands targeting the upstream source being executed silently. Ensure
+setting BB_NO_NETWORK before invoking the original fetcher. While this
+was only observed for git, setting this in general for all fetcher
+types makes sense at this location.
+---
+ bitbake/lib/bb/fetch2/__init__.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Without excluding /proc via PSEUDO_IGNORE_PATHS the chown executed by the
-yocto build-tools tar command causes this pseudo abort:
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__in=
+it__.py
+index fed296097f..76f1440026 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -1092,6 +1092,9 @@ def try_mirror_url(fetch, origud, ud, ld, check =3D F=
+alse):
+         # If that tarball is a local file:// we need to provide a symlink =
+to it
+         dldir =3D ld.getVar("DL_DIR")
+=20
++        if bb.utils.to_boolean(ld.getVar("BB_FETCH_PREMIRRORONLY")):
++            ld.setVar("BB_NO_NETWORK", "1")
++
+         if origud.mirrortarballs and os.path.basename(ud.localpath) in ori=
+gud.mirrortarballs and os.path.basename(ud.localpath) !=3D os.path.basename=
+(origud.localpath):
+             # Create donestamp in old format to avoid triggering a re-down=
+load
+             if ud.donestamp:
+--=20
+2.43.0
 
-path mismatch [1 link]: ino 3117695 db
-'/.../build/build_output/work/all-distro-linux/autoconf-archive/2022.02.11-r0/package/usr/share/info'
-req '/proc/self/fd/5/./usr/share/info'.
-
-I was expecting that the /proc/self and /proc/self/fd/5 symlinks would be
-resolved back into the file system and the chown would complete (I should
-look and see why that didn't happen)
-
-But this becomes is a very re-producible example of my recent problem for
-which I excluded /proc
-but sadly, by excluding /proc, I get:
-
-4132110: chown ignored path, calling real syscall.
-/.../x86_64-buildtools-extended-nativesdk-standalone-3.4/sysroots/x86_64-pokysdk-linux/usr/bin/tar:
-./usr/share: Cannot change ownership to uid 0, gid 0: Invalid argument
-
-Fortunately, the native tar uses a different chown method so for now I can
-drop the build-tools tar
-I think I'm going to have to revisit the problem that this languishing
-patch was addressing in the context of the most current source, however I'm
-aware the possible the yocto build-tools (3.4 in this case) are just
-incompatible with pseudo in the same way that /dev/fd/3 also was, and I
-just didn't properly understand the failure mechanism at the time.
-
-Sam
-
-On Sun, 7 Apr 2024 at 11:04, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
-
-> On Sat, 2024-04-06 at 12:03 +0100, Sam Liddicott wrote:
-> > This is becoming a problem for quite a few of our developers who are
-> > able to proceed with PSEUDO_IGNORE_PATHS:append=",/proc,/dev,/sys"
-> >
-> > I understand that PSEUDO_IGNORE_PATHS refers to the host file system
-> > paths, not the pseudo file system paths so how does excluding these
-> > cause a problem?
-> >
-> > I should add that we are also using the patch from Matt Cowell in
-> > 2019:
-> >
-> > > From cb69146d18382f272e347338cfc5a8930f693ed6 Mon Sep 17 00:00:00
-> > > 2001
-> > > From: Matt Cowell <matt.cowell@nokia.com>
-> > > Date: Wed, 17 Apr 2019 15:51:07 -0500
-> > > Subject: [PATCH] pseudo_fix_path: do not expand symlinks in /proc
-> >
-> > otherwise our recipes fail on access to /dev/fd/3 and /dev/stdout and
-> > "files" of that nature, due to pseudo failing to properly resolve
-> > symlinks, as discussed
-> > here: https://bugzilla.yoctoproject.org/show_bug.cgi?id=13288#c14
-> >
-> > In any case, the general problem exists of how to deal with clashing
-> > inodes. Perhaps we are more prone to this issue because we are using
-> > user namespaces and mount namespaces to bind mount the build output
-> > dir so that it always appears at the same path, so that we get better
-> > SSTATE caching, maybe this makes inode clashing more likely.
->
-> This get a bit tricky as you're using a patch we weren't able to merge
-> because of issues, then you're running into issues and needing to add
-> other changes on top. Your workflow sounds to be one the project isn't
-> actively using right now. I can't tell if the original patch required
-> the change, whether it's specific to your workflow or exactly which
-> behaviour we're really trying to fix, or if it is really broken.
->
-> I still suspect that some code may open via /proc/self/fd/X and then do
-> chown() or similar on it and we'd then miss data we need. /sys and /dev
-> are arguable and likely less of an issue.
->
-> I haven't really used user namespaces/mounts so I don't know what the
-> inode situation is there. Do they persist consistently between
-> executions of bitbake or between processes? I suspect you're right and
-> this is related to that, however since we don't use that and we don't
-> have any examples of that code, it is hard to say.
->
-> If the problem is different filesystems clashing, we may need to be
-> more careful about storing filesystem/inode pairs. The hard part is
-> finding an ID for the filesystem that will be consistent as some IDs we
-> could use would change at reboot. That obviously will have a
-> performance impact.
->
-> Cheers,
->
-> Richard
->
-
---000000000000e7992d0631658c36
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div>An interesting update from me, with my (now out-of-da=
-te) pseudo version:</div><div><br></div><div>Without excluding /proc via PS=
-EUDO_IGNORE_PATHS the chown executed by the yocto build-tools tar command c=
-auses this pseudo abort: <br><p><span class=3D"gmail-code">path mismatch [1=
- link]: ino 3117695 db &#39;/.../build/build_output/work/all-distro-linux/a=
-utoconf-archive/2022.02.11-r0/package/usr/share/info&#39; req &#39;/proc/se=
-lf/fd/5/./usr/share/info&#39;.</span></p><p><span class=3D"gmail-code">I wa=
-s expecting that the /proc/self and /proc/self/fd/5 symlinks would be resol=
-ved back into the file system and the chown would complete (I should look a=
-nd see why that didn&#39;t happen)</span></p><p><span class=3D"gmail-code">=
-But this becomes is a very re-producible example of my recent problem for w=
-hich I excluded /proc<br>but sadly, by excluding /proc, I get:</span></p><p=
->4132110: chown ignored path, calling real syscall.<br>/.../x86_64-buildtoo=
-ls-extended-nativesdk-standalone-3.4/sysroots/x86_64-pokysdk-linux/usr/bin/=
-tar: ./usr/share: Cannot change ownership to uid 0, gid 0: Invalid argument=
-</p><p>Fortunately, the native tar uses a different chown method so for now=
- I can drop the build-tools tar</p>I think I&#39;m going to have to revisit=
- the problem that this languishing patch was addressing in the context of t=
-he most current source, however I&#39;m aware the possible the yocto build-=
-tools (3.4 in this case) are just incompatible with pseudo in the same way =
-that /dev/fd/3 also was, and I just didn&#39;t properly understand the fail=
-ure mechanism at the time.</div><div><br></div><div>Sam</div></div><br><div=
- class=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" class=3D"gmai=
-l_attr">On Sun, 7 Apr 2024 at 11:04, Richard Purdie &lt;<a href=3D"mailto:r=
-ichard.purdie@linuxfoundation.org">richard.purdie@linuxfoundation.org</a>&g=
-t; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0p=
-x 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">On Sat=
-, 2024-04-06 at 12:03 +0100, Sam Liddicott wrote:<br>
-&gt; This is becoming a problem for quite a few of our developers who are<b=
-r>
-&gt; able to proceed with PSEUDO_IGNORE_PATHS:append=3D&quot;,/proc,/dev,/s=
-ys&quot;<br>
-&gt; <br>
-&gt; I understand that PSEUDO_IGNORE_PATHS refers to the host file system<b=
-r>
-&gt; paths, not the pseudo file system paths so how does excluding these<br=
->
-&gt; cause a problem?<br>
-&gt; <br>
-&gt; I should add that we are also using the patch from Matt Cowell in<br>
-&gt; 2019:<br>
-&gt; <br>
-&gt; &gt; From cb69146d18382f272e347338cfc5a8930f693ed6 Mon Sep 17 00:00:00=
-<br>
-&gt; &gt; 2001<br>
-&gt; &gt; From: Matt Cowell &lt;<a href=3D"mailto:matt.cowell@nokia.com" ta=
-rget=3D"_blank">matt.cowell@nokia.com</a>&gt;<br>
-&gt; &gt; Date: Wed, 17 Apr 2019 15:51:07 -0500<br>
-&gt; &gt; Subject: [PATCH] pseudo_fix_path: do not expand symlinks in /proc=
-<br>
-&gt; <br>
-&gt; otherwise our recipes fail on access to /dev/fd/3 and /dev/stdout and<=
-br>
-&gt; &quot;files&quot; of that nature, due to pseudo failing to properly re=
-solve<br>
-&gt; symlinks, as discussed<br>
-&gt; here:=C2=A0<a href=3D"https://bugzilla.yoctoproject.org/show_bug.cgi?i=
-d=3D13288#c14" rel=3D"noreferrer" target=3D"_blank">https://bugzilla.yoctop=
-roject.org/show_bug.cgi?id=3D13288#c14</a><br>
-&gt; <br>
-&gt; In any case, the general problem exists of how to deal with clashing<b=
-r>
-&gt; inodes. Perhaps we are more prone to this issue because we are using<b=
-r>
-&gt; user namespaces and mount namespaces to bind mount the build output<br=
->
-&gt; dir so that it always appears at the same path, so that we get better<=
-br>
-&gt; SSTATE caching, maybe this makes inode clashing more likely.<br>
-<br>
-This get a bit tricky as you&#39;re using a patch we weren&#39;t able to me=
-rge<br>
-because of issues, then you&#39;re running into issues and needing to add<b=
-r>
-other changes on top. Your workflow sounds to be one the project isn&#39;t<=
-br>
-actively using right now. I can&#39;t tell if the original patch required<b=
-r>
-the change, whether it&#39;s specific to your workflow or exactly which<br>
-behaviour we&#39;re really trying to fix, or if it is really broken.<br>
-<br>
-I still suspect that some code may open via /proc/self/fd/X and then do<br>
-chown() or similar on it and we&#39;d then miss data we need. /sys and /dev=
-<br>
-are arguable and likely less of an issue.<br>
-<br>
-I haven&#39;t really used user namespaces/mounts so I don&#39;t know what t=
-he<br>
-inode situation is there. Do they persist consistently between<br>
-executions of bitbake or between processes?=C2=A0I suspect you&#39;re right=
- and<br>
-this is related to that, however since we don&#39;t use that and we don&#39=
-;t<br>
-have any examples of that code, it is hard to say.<br>
-<br>
-If the problem is different filesystems clashing, we may need to be<br>
-more careful about storing filesystem/inode pairs. The hard part is<br>
-finding an ID for the filesystem that will be consistent as some IDs we<br>
-could use would change at reboot. That obviously will have a<br>
-performance impact. <br>
-<br>
-Cheers,<br>
-<br>
-Richard<br>
-</blockquote></div>
-
---000000000000e7992d0631658c36--
 
