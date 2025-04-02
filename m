@@ -2,110 +2,115 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284ADC3601A
-	for <webhook@archiver.kernel.org>; Wed,  2 Apr 2025 09:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3F8C3601A
+	for <webhook@archiver.kernel.org>; Wed,  2 Apr 2025 14:01:11 +0000 (UTC)
 Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web10.3931.1743585186610125947
+ by mx.groups.io with SMTP id smtpd.web11.9196.1743602466495275341
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 02 Apr 2025 02:13:07 -0700
+ Wed, 02 Apr 2025 07:01:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=YxGCfGpd;
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=VOeSuz61;
  spf=pass (domain: linuxfoundation.org, ip: 209.85.128.47, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43690d4605dso44205925e9.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 02 Apr 2025 02:13:06 -0700 (PDT)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso64391135e9.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 02 Apr 2025 07:01:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1743585184; x=1744189984; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1743602464; x=1744207264; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=thV26S2xUB85eahWK2IYxw7/M/ZB2TYgC+ZW7JdCEso=;
-        b=YxGCfGpdhUhlfpy3evpLMeILZ0CFIPheBXgncu+ItOylijKGmNfoyXhX8mVbUGoUpm
-         w0VRC0IgIL3iNkMnGTWNoiunMyJVibR5mxTADZkouf9gNCVfUXcK57rviJLZIF85eaBX
-         2ZXx897zScNqdqR7heGuFyatl4aXUd/ZdGz+M=
+        bh=DJp/7Z9Sdz4xJhlWh6JPh38aSpZv5Fkp1w2Me1IS1gs=;
+        b=VOeSuz61vDYUk0881T4iePpNrEeY+TpBNshuNGruIGdYaPTWphJFPJ21SUjIeENDfV
+         7zTdPFo2skAM55E3CxA2Sd8Fgu+U7DzlqBRZmu/6r52ngUH5JyneESZUa5KBpRdj0ppo
+         MNSlkqFoMQpf3QjFnKrZTgpF+AHmTHlBTe2nI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743585184; x=1744189984;
+        d=1e100.net; s=20230601; t=1743602464; x=1744207264;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=thV26S2xUB85eahWK2IYxw7/M/ZB2TYgC+ZW7JdCEso=;
-        b=uEj+1/28dzsR3mwU6/fh2rl2dnyud3eUoSoxJB7enkFzSy9Hp5kW1khCgpFRDYc2gK
-         FfcBqSyzTxd/MWlmp4DMGMhG9YLsikkSLXilt4cMn0ndYFNKJvths6adivI5uRCEBRpG
-         zQx1D2zJvMyJWD4VH7gVJveSgSZpgK42JJ0yGkN6rudQXwPf8Bo5F/Wyw+HoYZ7XXfaB
-         xAbOC6/rRwr+UIfEPjrWwCggsi38GNBGlqW0uFDgyApBBx594hh9Ox7+vN03ZxIHkNur
-         yMXh7h+ETZorhpv32IxfjZRxfEZ243lREaSEbc2ukMAXfsivAoh3HitiDjE1htLMEFm3
-         PCJw==
-X-Gm-Message-State: AOJu0Yy548dnfRP7XEPOiXikQO7Cf0XyuezEFjeWxf7prkKxAoCe5kJd
-	66H+4WdGpAwVgrrd7mgUDQaTYlzEAuIJEjd+FFlzGXCQ8BmHu2vuUEEPp+/+iC5d6QRanz/qq/E
-	6
-X-Gm-Gg: ASbGncutB2P6KmUZJLvrBlEqLwmDyFKR6cRw1r8agGxrQ8tTIhAbRFlrkcyKp+jbXht
-	ttO41RjiIGQs7OSCsYUZeJbd91T9sXksmT4vRLT4MEe9xOLnXUKJatxCO3nwqbeQAALDjgcFmDY
-	h3Dzu+p9doE2fv8VM3UrnJ4vGWpZGsk1NohCcesR0pLh1mjARg5kbygQtekXsjXBWwvERk5fD1C
-	q0AssNCHVl2qDf/HR0Lm4oUFNYBtBfRHUMZB0Owt0nIxiRcygDjDagTMwS96A5IqO0XI5CVJBRw
-	vPlx7nca6ruEXmHk+TECrWxz2CvudOSUgelOQxYI/oSTizw9dYZA9Xh9yDbEd9k4J6ab6SKtDlq
-	YZfr8TqLW
-X-Google-Smtp-Source: AGHT+IGHEwHdJVWuZeBm8IdCbUeMpCbRgZt4naDkN/DcDl3hnehtNCpzmxFsOEuTkmg1dN54RR9oXQ==
-X-Received: by 2002:a05:600c:83c3:b0:43c:ef13:7e5e with SMTP id 5b1f17b1804b1-43db62bd98bmr131471375e9.26.1743585184525;
-        Wed, 02 Apr 2025 02:13:04 -0700 (PDT)
+        bh=DJp/7Z9Sdz4xJhlWh6JPh38aSpZv5Fkp1w2Me1IS1gs=;
+        b=vqgfQZi8ZGh6L9QTvLs+tjAavDrAFXbSeznBQqpnUF2hd/L95+nfbPEGVAhnUBwr8F
+         Lb+T5e59lZQcS3sVwr91LzEvTM04wH2fHch3nJQiA/8EwCLrwBOUOqAp0Jt2VyDYi5D4
+         3oAHvZbHmK7W28kER9/vJvZP25b37YcYXZviWPr+Pgn00mjrcka1DLmyhvqJzaWP/6xE
+         uvirpcM7erjAgvDY7V05WY/cavBQ7zuEHzqw60hxMB+/ZeJbdBYnCDOYfbZuRaBiiNBq
+         YMVPo1lPoWbgi7fGmQOOU/xtEeWl3DN1gwq+MijoMsy2r9V1mjlg7X3PXIi6/Nr78rae
+         PeoQ==
+X-Gm-Message-State: AOJu0YyMxqBAPnVtRLfO2g9t1L1SsxVqmdUNl2nXkO90NlIq+fmJfBgX
+	1ta+GscyPJ73lyIWhXG1tdESJHr/Z4rvk6XkkYOv5sasWTnzSQoNgPDqMOTxmcxuS3B5X+rBVeU
+	N
+X-Gm-Gg: ASbGncv2oB6l6/W3eF41aNrbjU3pD2WPzJGtAu/LXOvfYS3ogxzuuG4IOYD17wW9B2J
+	vL9Jw9Bt70NsB/OcOk0/QhEQvrkdYbB3YDysrVyToY0mvnSaOW44SuLCNvM0YJ0jGuQb7J9cUTa
+	Rebx0I7efIAKVLvBOq9wu4mWE9PnFywiS7i+Fb/oa8zo/NUaH9FTLcoAeQvHmIznvi4GHEsgvXp
+	w5bxNKF92yagXa677iJb/FRTq/ooFfoj4JVCvgVgahTHzkcVLyXFcEuLrOxWZ7uslpr5Euuzb+2
+	tOq4KIgBZyAuUDls55CjTB7UqhtlsAFlptdorVjU4P1rJzbsKDPtIupPXRY3TDFMWAtfLKC18A=
+	=
+X-Google-Smtp-Source: AGHT+IE+OeqQcMD0k47z6cU0Jop3z3/Q7r2BEqLejXupibZaYuMf3ZqDaNMqMcoMFrLGFEaaNmalRA==
+X-Received: by 2002:a05:600c:34c1:b0:43d:b85:1831 with SMTP id 5b1f17b1804b1-43dabe240cemr186643875e9.0.1743602462557;
+        Wed, 02 Apr 2025 07:01:02 -0700 (PDT)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:24b8:b374:749c:8558])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b7a42a3sm16616257f8f.91.2025.04.02.02.13.03
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b663617sm17211387f8f.34.2025.04.02.07.01.01
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 02:13:03 -0700 (PDT)
+        Wed, 02 Apr 2025 07:01:01 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] parse/ConfHandler: Add warning for deprecated whitespace usage
-Date: Wed,  2 Apr 2025 10:13:02 +0100
-Message-ID: <20250402091303.2346229-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH] fetch2/git: Handle srcrevs for annotated tags in tag check
+Date: Wed,  2 Apr 2025 15:01:00 +0100
+Message-ID: <20250402140100.2407773-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.48.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 02 Apr 2025 09:13:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17508
+ <bitbake-devel@lists.openembedded.org>; Wed, 02 Apr 2025 14:01:11 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17509
 
-A lack of whitespace around variable assignment operators makes the
-files harder to read.
+If SRCREV points at an annotated tag, the comparision code can fail
+as the resolved tag might not be the same sha.
 
-There is a deeper issue in that a "+" character can sometimes be confused
-between the variable name and the assignment operator.
+Handle this by also resolving the SRCREV. We only need to do this if
+they don't match in the first place for a minor performance win.
 
-Start showing warnings for such usage so we encourage people to use
-consistent whitespace which helps with file readability in general.
+Also add a test for this.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/parse/parse_py/ConfHandler.py | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ lib/bb/fetch2/git.py  | 7 ++++++-
+ lib/bb/tests/fetch.py | 7 +++++++
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
-index 1bde597254..675838d845 100644
---- a/lib/bb/parse/parse_py/ConfHandler.py
-+++ b/lib/bb/parse/parse_py/ConfHandler.py
-@@ -23,7 +23,7 @@ __config_regexp__  = re.compile( r"""
-     (?P<var>[a-zA-Z0-9\-_+.${}/~:]*?)
-     (\[(?P<flag>[a-zA-Z0-9\-_+.][a-zA-Z0-9\-_+.@/]*)\])?
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 3a4ae6df45..5f4ec6128c 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -730,7 +730,12 @@ class Git(FetchMethod):
+             output = runfetchcmd("%s rev-list -n 1 %s" % (ud.basecmd, ud.parm['tag']), d, workdir=destdir)
+             output = output.strip()
+             if output != ud.revision:
+-                raise bb.fetch2.FetchError("The revision the git tag '%s' resolved to didn't match the SRCREV in use (%s vs %s)" % (ud.parm['tag'], output, ud.revision), ud.url)
++                # It is possible ud.revision is the revision on an annotated tag which won't match the output of rev-list
++                # If it resolves to the same thing there isn't a problem.
++                output2 = runfetchcmd("%s rev-list -n 1 %s" % (ud.basecmd, ud.revision), d, workdir=destdir)
++                output2 = output2.strip()
++                if output != output2:
++                    raise bb.fetch2.FetchError("The revision the git tag '%s' resolved to didn't match the SRCREV in use (%s vs %s)" % (ud.parm['tag'], output, ud.revision), ud.url)
  
--    \s* (
-+    (?P<whitespace>\s*) (
-         (?P<colon>:=) |
-         (?P<lazyques>\?\?=) |
-         (?P<ques>\?=) |
-@@ -32,7 +32,7 @@ __config_regexp__  = re.compile( r"""
-         (?P<predot>=\.) |
-         (?P<postdot>\.=) |
-         =
--    ) \s*
-+    ) (?P<whitespace2>\s*)
+         repourl = self._get_repo_url(ud)
+         runfetchcmd("%s remote set-url origin %s" % (ud.basecmd, shlex.quote(repourl)), d, workdir=destdir)
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 8de6862482..196d93c414 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -3139,6 +3139,13 @@ class GitTagVerificationTests(FetcherTest):
+         fetcher.download()
+         fetcher.unpack(self.unpackdir)
  
-     (?!'[^']*'[^']*'$)
-     (?!\"[^\"]*\"[^\"]*\"$)
-@@ -168,6 +168,8 @@ def feeder(lineno, s, fn, statements, baseconfig=False, conffile=True):
-         groupd = m.groupdict()
-         if groupd['var'] == "":
-             raise ParseError("Empty variable name in assignment: '%s'" % s, fn, lineno);
-+        if not groupd['whitespace'] or not groupd['whitespace2']:
-+            logger.warning("%s:%s has a lack of whitespace around the assignment: '%s'" % (fn, lineno, s))
-         ast.handleData(statements, fn, lineno, groupd)
-         return
- 
++    def test_annotated_tag_rev_match(self):
++        # Test a url with rev= and tag= set works
++        # rev is the annotated tag revision in this case
++        fetcher = bb.fetch.Fetch(["git://git.openembedded.org/bitbake;branch=2.8;protocol=https;rev=6d363159e4b7dc566fc40d069b2615e61774a7d8;tag=2.8.7"], self.d)
++        fetcher.download()
++        fetcher.unpack(self.unpackdir)
++
+     @skipIfNoNetwork()
+     def test_tag_rev_match2(self):
+         # Test a url with SRCREV and tag= set works
 
