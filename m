@@ -1,186 +1,241 @@
-Return-Path: <jhaller.oss@gmail.com>
+Return-Path: <martin.jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93960C3601E
-	for <webhook@archiver.kernel.org>; Fri,  4 Apr 2025 12:10:53 +0000 (UTC)
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.44])
- by mx.groups.io with SMTP id smtpd.web10.10094.1743768649405982401
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC25C36010
+	for <webhook@archiver.kernel.org>; Fri,  4 Apr 2025 15:12:44 +0000 (UTC)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+ by mx.groups.io with SMTP id smtpd.web10.13984.1743779562211419344
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 04 Apr 2025 05:10:50 -0700
+ Fri, 04 Apr 2025 08:12:42 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@Philips.onmicrosoft.com header.s=selector2-Philips-onmicrosoft-com header.b=Cyzd8b9L;
- spf=pass (domain: bbl.ms.philips.com, ip: 40.107.20.44, mailfrom: jhaller@bbl.ms.philips.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CWL3MdCKdk1PPLJpiM+lJF7bD6MufosX7WUG3B9JlUmJEn6wpU7hnyKb8c/I+R8b1apOyGm8iNpz/EU12I77T5bFVomjRIske+IYj7IgUiMG0ykkSXw3IUtN8MIIORRAChHHEmFyDnPaTSzPJ+yD5f/oPOyirIFmI8G3tBjF6NkcbSeHIs1TQ9uQz5bAcNl2lfsYWvjTRWdWNrHg+iRUlXhrmDjE+poBSG/xrPLbfSut2JrX/rhr4ID9bcJ6v8/gTB6msRjYFZIay4UACNAp18TtIvUNfFhhs3WZXbFpwAnLwdarmY0TJ0tOBboUz+7rjR/3GmDPkY9/tFuEeBbQ0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SA5U0lTxPv4XZo1YxjWiiq91A+7rLi5zP3SK3sqzK78=;
- b=uSeG2nelG0eaSebK4agtzA5IfVcZzzypATV+g87bGgdMFZmYhHYBFY2k2QVCl3TlROn38ETx3MtYKQiQykDUuteM46m2CuJk89zqFcUflvRwjHnTau2Fz/J4t4Vwhr5rc6CzbAOrYc2bLQu2DhoNw8Z/jt7FoIM7qjEOdk2Hpc3iUvLuUANcbJLe5h8XBZ28crbhgIjiI0ijTPtR3rnANyowU5lqH305GSkceGcNbf8QxBftL25ZQlsUDNXPGKAo+aTn5CoecomU7nlcyZvpMXAsIxqQeXK3HYOfzssRvITpxjLrc4UClsOM1SeuT7SnCVfoMBIebCMSVm+4oJI19w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 3.248.88.141) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=bbl.ms.philips.com; dmarc=fail (p=none sp=quarantine pct=100)
- action=none header.from=gmail.com; dkim=none (message not signed); arc=none
- (0)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=k+z9PRvP;
+ spf=pass (domain: gmail.com, ip: 209.85.167.47, mailfrom: martin.jansa@gmail.com)
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5499d2134e8so2572911e87.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 04 Apr 2025 08:12:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Philips.onmicrosoft.com; s=selector2-Philips-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SA5U0lTxPv4XZo1YxjWiiq91A+7rLi5zP3SK3sqzK78=;
- b=Cyzd8b9Lgw2z0P5E8DcrMA5O5YNdoUWBKCpBNIVI9HtnSq0xWynlvNlDHVe4LtuoeuZg4NOLmpnUZd3kyrYgVVITDFg56tvHCHlgZ1SIMkD2GOhq0slDZW4UBsMsJxn3WsPrUyq05JeldnbguANSwzC/6Vvzw6yGszk4cnFJ7X8=
-Received: from DB6PR0301CA0076.eurprd03.prod.outlook.com (2603:10a6:6:30::23)
- by GV1P122MB0302.EURP122.PROD.OUTLOOK.COM (2603:10a6:150:e8::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.42; Fri, 4 Apr
- 2025 12:10:46 +0000
-Received: from DB1PEPF00039231.eurprd03.prod.outlook.com
- (2603:10a6:6:30:cafe::8a) by DB6PR0301CA0076.outlook.office365.com
- (2603:10a6:6:30::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.26 via Frontend Transport; Fri,
- 4 Apr 2025 12:10:46 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 3.248.88.141)
- smtp.mailfrom=bbl.ms.philips.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=gmail.com;
-Received-SPF: Pass (protection.outlook.com: domain of bbl.ms.philips.com
- designates 3.248.88.141 as permitted sender) receiver=protection.outlook.com;
- client-ip=3.248.88.141; helo=ext-eur1.smtp.philips.com; pr=C
-Received: from ext-eur1.smtp.philips.com (3.248.88.141) by
- DB1PEPF00039231.mail.protection.outlook.com (10.167.8.104) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8606.22 via Frontend Transport; Fri, 4 Apr 2025 12:10:45 +0000
-Received: from smtprelay-eur1.philips.com ([130.138.84.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 256/256 bits)
-	(Client did not present a certificate)
-	by ext-eur1.smtp.philips.com with ESMTPS
-	id 0Seeu8kyNQb500fsjuUHRI; Fri, 04 Apr 2025 14:10:45 +0200
-Received: from mail.bbl.ms.philips.com ([130.143.87.230])
-	by smtprelay-eur1.philips.com with ESMTP
-	id 0fsjuQx3tFWGr0fsjuiJa2; Fri, 04 Apr 2025 14:10:45 +0200
-X-CLAM-Verdict: legit
-X-CLAM-Score: ??
-X-CLAM-Description: ??
-Received: from bbl2xr12.bbl.ms.philips.com (bbl2xr12.bbl.ms.philips.com [130.143.223.70])
-	by mail.bbl.ms.philips.com (Postfix) with ESMTP id 7E508184869
-	for <bitbake-devel@lists.openembedded.org>; Fri,  4 Apr 2025 14:10:45 +0200 (CEST)
-Received: by bbl2xr12.bbl.ms.philips.com (Postfix, from userid 1876)
-	id 793E87C0086; Fri,  4 Apr 2025 14:10:45 +0200 (CEST)
-From: jhaller.oss@gmail.com
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH v2 2/2] bitbake: tests/fetch: Fix git PREMIRRORONLY test
-Date: Fri,  4 Apr 2025 14:10:45 +0200
-Message-ID: <20250404121045.1133722-2-jhaller.oss@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250404121045.1133722-1-jhaller.oss@gmail.com>
-References: <20250404121045.1133722-1-jhaller.oss@gmail.com>
-Reply-To: Julian Haller <julian.haller@philips.com>
+        d=gmail.com; s=20230601; t=1743779560; x=1744384360; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kzywEQVCKPMG2bk9LwjXKl09xx2yEZs4mNcV9PvoHu8=;
+        b=k+z9PRvPmbzQjUFUb3uVuAPcf49R35lbuHOyZrDJ33JbLt5zckPbvmcBcysQTHYkWO
+         kGh495RDQg9AVNVXIcVeO/goKc3K5SCtpXE6N5QVA+zBhGiiR66wexWka9ZpnFCnBedW
+         KOQMugprmqDZSK2hWmnNk4U+n58zud1XYjTnps5atM/gz3fwJ+LEiNpxE0NXecGh1AHD
+         k4hc3aUJH/P4Yt06S2EiM+qKwcIWF7LkGQYLIv6UuXGYQQ0pgV70gjZ2otJLEzIkg8dV
+         bvnWGLN8OSyK19slp81VajmhxJH6JnTpaGmjxnCEhfCpxWvbIhIZ0uUIryzMbgP7qbu8
+         CnXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743779560; x=1744384360;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kzywEQVCKPMG2bk9LwjXKl09xx2yEZs4mNcV9PvoHu8=;
+        b=h4lkE3SZHULbUzB9DsbU+wC9px00cSHvzzJMGIEpxkC0pS4Ha4C2nmSdCywLTChBRV
+         l1fEX+30yOno+M6cYUrchYdf+AqSCmh0ov5QFA5AXiS8Va1ySBJcDBcSUkHspqeCypEy
+         0/nccsw4utQX3IHel7V/kQL7FEkkxX7gI+9t/A+Wkd+G8nALO2477b9ssV0AW8tGmHKe
+         boCoV/kfxTV4Pfp/noQPCbL4P2fC8kNHdFDApSLBd0Wd2BD0zYf7onwGGIH1Gysf+nUC
+         6m6H2qkGrpWpOiTDJ9iskQw1y0BoSn+3QrpfiweEdZvdxTjIZFj5UtTF6zCSci1v6EgM
+         /doQ==
+X-Gm-Message-State: AOJu0YykeQnjolHXOqBcmAlD1/FwZ8elk3QqVIGKZSbOpj7ySH5JLbfG
+	9U10pTUa4BljqVvkz1cWHEyowtoeb+CNOzISn6zVwDKwQ03tlo+UeYkbEJrTFwBsnVNqTcUHpy9
+	FBoJqA7zuUOlM+qK3DACqTOiuMEA=
+X-Gm-Gg: ASbGncsUVfYgYL1m0ty4+hbeNNnMAtZxG3oV2JqJeH1myBAwkqCqHtyxGU8jzrua6Ei
+	uVsPYHIldqY1Bm/BDdIoU317X6k8i9RwL+jbhl4dEjFVHaSVf5iMpsr0GxDlDw+aHDCHDEitqD8
+	f3M7W+AfhagBH8kWuHisPfdXnDmkog
+X-Google-Smtp-Source: AGHT+IGOGscJzNxjFymBkQPX6KbStYyRa5bYmeG1op0xcGmsAA7K12e+lTgZA1SO9DLmX7uaad/2M3QCzvyLnNBmRys=
+X-Received: by 2002:a05:6512:3f2a:b0:545:1d96:d702 with SMTP id
+ 2adb3069b0e04-54c22845b20mr1122590e87.48.1743779559895; Fri, 04 Apr 2025
+ 08:12:39 -0700 (PDT)
 MIME-Version: 1.0
+References: <20250402091303.2346229-1-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20250402091303.2346229-1-richard.purdie@linuxfoundation.org>
+From: Martin Jansa <martin.jansa@gmail.com>
+Date: Fri, 4 Apr 2025 17:12:27 +0200
+X-Gm-Features: ATxdqUGs_UiUQhNR0g0PNdLH1ki_2IK3ft4jJmvF0X08s7odxc15BixIhdAiVMA
+Message-ID: <CA+chaQc38CF0yZTDE5XifNE5DCyP1sNOBv+1NvAt1Cg9339c+A@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] parse/ConfHandler: Add warning for
+ deprecated whitespace usage
+To: richard.purdie@linuxfoundation.org
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB1PEPF00039231:EE_|GV1P122MB0302:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: c3f60357-5f7b-4955-b085-08dd7371babc
-X-MS-Exchange-SenderADCheck: 0
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|36860700013|82310400026|48200799018|7093399015|376014|61400799027|35450700002;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?rT2Sl3/mALNphw2wTsuimrXwqojn1NWPP6liVfnqKGOtG/HvjN2/UDOMgbPx?=
- =?us-ascii?Q?Xrl41MoLe+zndu7imjaqhNMkkrl+XwRCraaV+d8QKBBPc4uH4/Q3071gu7Hb?=
- =?us-ascii?Q?0TRfddKovM2PBDhA6EC62oCWLK7NuMvrlr9aLX55rrmfHga1C7oP+UsPTP+u?=
- =?us-ascii?Q?7L7SkcLdnUjjpMUhyBn2nSyEWdBJW8RzvT5VuGW5LZ3qcKSVSAdKcnNEaE8y?=
- =?us-ascii?Q?3GcKgwawWnQ5Y83Nx/+RiZeRP5yqXasRMYPiVVbU5UUomDGz29mullwC1IKY?=
- =?us-ascii?Q?djwiOBSUrjTfb/bTQflKAgfGnf+ew2UiuDpEaMp1RK9vSgcjz4ujf8gjxfdy?=
- =?us-ascii?Q?pD4zX3QuUNaALEA2eTEzGH4N3JS4P/2kl9O6mjB/YZSM3XkltQ1R0vHjd8Hh?=
- =?us-ascii?Q?x1IYIucIh9H+hFyoHon7VEI8vOfQuIeJiyRUHnGpgvMMW7GALKuRhA2TWLdd?=
- =?us-ascii?Q?BI2E/VTcBfj+jRdvAwxc2SfVdDg4teK2QD62mR/Nebed4RppOkMFQUOq6dIu?=
- =?us-ascii?Q?sVOOZPuCFAAL3RZWiq1mb2cMYG6zmZxL4HK8ymbEELIGAZH87h8FRiQBN5na?=
- =?us-ascii?Q?mwnfOCibRZ4zpmpdsyiqhEIkGq8kVw+XCUf13JJze9JLWyD/CTHuxEe/45f3?=
- =?us-ascii?Q?7Aesp9GSU66WNbCWpYdaGTBw3Cn9dnnGGLqpJBIqvudk3FwSUgiQrfWFrpGU?=
- =?us-ascii?Q?l9VElQQLyajds1EW3bZL2LHb2kXPjDHASLG9QC+FMmeLiOrngevvbRMr/gAm?=
- =?us-ascii?Q?rYOugoSR8ytCGBqT+lQRqU88NB3Dj9rsrPHbYimZ2VpfZhpZ8eYayEeVZsGK?=
- =?us-ascii?Q?FJLbTZW9KrzZTHXo6Ci6fN5FHcLKw+iksCDdLupq93Ro58/3wdVtVDiSa2m2?=
- =?us-ascii?Q?N7AMEDPqT9n0HpLTUxhakjXdEQxKVfS2OCxXD4yYj6RFlpm6dpXcBRAhMRLt?=
- =?us-ascii?Q?Vg8Y13nxdCJ93lsM/Ogo2Dd3Ayf6xCs5ZqJdY2hT0+h+HQ+SnP51rBu2TaYu?=
- =?us-ascii?Q?S724ubBNYsgvvvByvoKMA/da3ny5pwQxDxQTZp2O/aDwiRzG9YKiIhwzOlG1?=
- =?us-ascii?Q?SoCL4PO25Gf3gF1auEusHr7QWzp8FfzYrFvp4+fqMQo/xmo8gvnBdvZOs6yv?=
- =?us-ascii?Q?sstdNxfqwXjOqJpq9GtZg0KJ5pvWYiMVdnL0i9eltu0kzGv3dhKtoKn63WBf?=
- =?us-ascii?Q?cCEde+jXq6L5vKf9WQHKwLcqKBJ2+5gS0Juo6fOY9Ps+PbJTkhINcRHQPKDl?=
- =?us-ascii?Q?1jbuJqrumoUgp46NrKJmbxaQ4DZiewEgq0mC89B4mQGjG4DbiwwWYWrILkJ7?=
- =?us-ascii?Q?mrTs2j798I68BBGhrIqWq5j3T5nSm0Dxf0SoTLFGZYoZJJVnzG2hXqpDQpXZ?=
- =?us-ascii?Q?gMgUWP4IN8oTyeUxeZWilppgzEGn8dTG4BuzzhGVnMAJUEsIEHXEeEbavTm1?=
- =?us-ascii?Q?8Gn2HAlOfN9V4XPfdGAx8/eKlinfnBS+6XKdUuZ4iahQ1qavYieJ5Qn+y01C?=
- =?us-ascii?Q?6559TnIChWspKC0KcwCRQc55v7ZYZf7Bpqwu?=
-X-Forefront-Antispam-Report: 
-	CIP:3.248.88.141;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ext-eur1.smtp.philips.com;PTR:ext-eur1.smtp.philips.com;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(48200799018)(7093399015)(376014)(61400799027)(35450700002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: ms.philips.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2025 12:10:45.7905
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3f60357-5f7b-4955-b085-08dd7371babc
-X-MS-Exchange-CrossTenant-Id: 1a407a2d-7675-4d17-8692-b3ac285306e4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1a407a2d-7675-4d17-8692-b3ac285306e4;Ip=[3.248.88.141];Helo=[ext-eur1.smtp.philips.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	DB1PEPF00039231.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1P122MB0302
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 04 Apr 2025 12:10:53 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17515
+ <bitbake-devel@lists.openembedded.org>; Fri, 04 Apr 2025 15:12:44 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17516
 
-From: Julian Haller <julian.haller@philips.com>
+Acked-by: Martin Jansa <martin.jansa@gmail.com>
 
-Using a shallow clone to simulate an outdated git mirror tarball does
-not work in the intended way. A shallow clone already contains the
-latest commit which can hide certain fetcher behavior. Simulate an
-outdated mirror tarball, as the test titles indicate, by removing the
-newer commits from the mirror.
----
- bitbake/lib/bb/tests/fetch.py | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+I've sent an update to avoid warnings for few more layers which are
+included in some of my builds (meta-filesystems, meta-arm,
+meta-virtualization, meta-webos-ports, meta-webosose, meta-qt5,
+meta-qt6, meta-raspberrypi and internal LGE layers).
 
-diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
-index afabaeba18..d682b7fbe5 100644
---- a/bitbake/lib/bb/tests/fetch.py
-+++ b/bitbake/lib/bb/tests/fetch.py
-@@ -3276,7 +3276,8 @@ class FetchPremirroronlyNetworkTest(FetcherTest):
-         import shutil
-         self.mirrorname =3D "git2_git.yoctoproject.org.fstests.tar.gz"
-         os.makedirs(self.clonedir)
--        self.git("clone --bare --shallow-since=3D\"01.01.2013\" {}".format=
-(self.recipe_url), self.clonedir)
-+        self.git("clone --bare {}".format(self.recipe_url), self.clonedir)
-+        self.git("update-ref HEAD 15413486df1f5a5b5af699b6f3ba5f0984e52a9f=
-", self.gitdir)
-         bb.process.run('tar -czvf {} .'.format(os.path.join(self.mirrordir=
-, self.mirrorname)), cwd =3D  self.gitdir)
-         shutil.rmtree(self.clonedir)
-=20
-@@ -3284,7 +3285,7 @@ class FetchPremirroronlyNetworkTest(FetcherTest):
-     def test_mirror_tarball_updated(self):
-         self.make_git_repo()
-         ## Upstream commit is in the mirror
--        self.d.setVar("SRCREV", "49d65d53c2bf558ae6e9185af0f3af7b79d255ec"=
-)
-+        self.d.setVar("SRCREV", "15413486df1f5a5b5af699b6f3ba5f0984e52a9f"=
-)
-         fetcher =3D bb.fetch.Fetch([self.recipe_url], self.d)
-         fetcher.download()
-=20
-@@ -3292,7 +3293,7 @@ class FetchPremirroronlyNetworkTest(FetcherTest):
-     def test_mirror_tarball_outdated(self):
-         self.make_git_repo()
-         ## Upstream commit not in the mirror
--        self.d.setVar("SRCREV", "15413486df1f5a5b5af699b6f3ba5f0984e52a9f"=
-)
-+        self.d.setVar("SRCREV", "49d65d53c2bf558ae6e9185af0f3af7b79d255ec"=
-)
-         fetcher =3D bb.fetch.Fetch([self.recipe_url], self.d)
-         with self.assertRaises(bb.fetch2.NetworkAccess):
-             fetcher.download()
---=20
-2.43.0
+I wrote a silly script which quickly proved that writing regexp with
+sed which works correctly across all various shell/python/bitbake
+syntaxes supported by bitbake is more difficult than initially
+expected (as it can contain shell variables, bitbake variables, $, ',
+", [], $@, ...).
 
+That's why there are multiple versions (which might help in some cases
+if you layer has many similar cases) and the comments documenting the
+limitations and false-positives are longer than the original one-liner
+I was using for the migration. Last couple cases where the script
+didn't work I've usually adjusted manually. It was still useful for me
+when doing the migrations and feel free to use it at your own risk.
+"bitbake -nk world 2>&1 | tee world.log" and then pass the world.log
+to the script.
+
+#!/bin/bash
+
+# https://lists.openembedded.org/g/bitbake-devel/message/17508
+
+LOG=3D$1
+
+# it's a bit silly and simple but resolved 99% of the issues in layers I'm =
+using
+grep WARNING:.*whitespace.around.the.assignment $LOG | sort -u | while
+read LINE; do
+    # there could be 2 paths as in:
+    # WARNING: meta-webos/recipes-core/packagegroups/packagegroup-core-tool=
+s-profile.bbappend:10
+has a lack of whitespace around the assignment: 'LTTNGTOOLS:no-lttng=3D
+""'
+    # WARNING: oe-core/meta/recipes-core/packagegroups/packagegroup-core-to=
+ols-profile.bb:
+meta-webos/recipes-core/packagegroups/packagegroup-core-tools-profile.bbapp=
+end:10
+has a lack of whitespace around the assignment: 'LTTNGTOOLS:no-lt
+tng=3D ""'
+    # but some global files will be shown only once e.g.:
+    # WARNING: meta-foo/conf/layer.conf:10 has a lack of whitespace
+around the assignment: 'BBFILE_PATTERN_meta-foo:=3D "^${LAYERDIR}/"'
+    # the paths are full, I've just stripped the TOPDIR prefix
+    # always take the one with lineno which is what we want to change
+
+    f=3D`echo $LINE | sed "s/^WARNING: \([^:]*:
+\)*\([^:]\+\):\([0-9]\+\) has a lack of whitespace around the
+assignment: '\(.*\)'$/\2/g"`
+    #l=3D`echo $LINE | sed "s/^WARNING: \([^:]*:
+\)*\([^:]\+\):\([0-9]\+\) has a lack of whitespace around the
+assignment: '\(.*\)'$/\3/g"`
+    p=3D`echo $LINE | sed "s/^WARNING: \([^:]*:
+\)*\([^:]\+\):\([0-9]\+\) has a lack of whitespace around the
+assignment: '\(.*\)'$/\4/g"`
+
+    if [ ! -f "$f" ] ; then
+        echo "ERROR: failed to parse filename from $LINE"
+        continue
+    fi
+
+    for o in ??=3D ?=3D +=3D =3D+ :=3D \\\\.=3D =3D\\\\. =3D; do
+        # replace only first one found to avoid adding space in ??=3D
+(when doing ?=3D) or +=3D (when doing =3D)
+        if echo $p | grep -qG "[^ ]$o" || echo $p | grep -qG "$o[^ ]"; then
+            pp=3D$(echo $p | sed "s/ *$o */ $o /g; s/^'//g; s/'$//g")
+            echo "sed -i 's@$p@$pp@g' $f"
+            # some cases might have ^ like in "^${LAYERDIR}/", so use
+e.g. @ to convert them,
+            # but @ is often used in ${@..} so pick a character not
+used in the WARNINGs you got.
+
+            # there are some other limitations as well as some
+patterns might have ' or " in them
+            # or both typically with ${@..}, e.g. one of mine:
+            # 'WEBOS_SUBMISSION_NUMBER=3D"${@
+'${WEBOS_SUBMISSION}'.split('.')[-1] }"'
+            # either fix those manually or with manual sed matching
+just a part of it.
+
+            # another case where this won't work are variables with
+line breaks e.g.:
+            # 'CXXFLAGS +=3D"
+-I${STAGING_INCDIR}/media-resource-calculator-clang
+-I${STAGING_INCDIR}/cbe "'
+            # is triggered on recipe which has:
+            # CXXFLAGS +=3D" \
+            #    -I${STAGING_INCDIR}/media-resource-calculator-clang \
+            #    -I${STAGING_INCDIR}/cbe \
+            # "
+            # and the regexp again doesn't work
+
+            # it also doesn't work well on cases like:
+            # 'EXTRA_OEMAKE=3D"BUILDTAGS=3D''"'
+            # often used in meta-virtualization where only first =3D
+should have spaces around
+
+            # sed -i 's^'"$p"'^'"$pp"'^g' $f
+            # sed -i 's@'"$p"'@'"$pp"'@g' $f
+            sed -i 's&'"$p"'&'"$pp"'&g' $f
+            break;
+        fi
+    done
+done
+
+On Wed, Apr 2, 2025 at 11:13=E2=80=AFAM Richard Purdie via
+lists.openembedded.org
+<richard.purdie=3Dlinuxfoundation.org@lists.openembedded.org> wrote:
+>
+> A lack of whitespace around variable assignment operators makes the
+> files harder to read.
+>
+> There is a deeper issue in that a "+" character can sometimes be confused
+> between the variable name and the assignment operator.
+>
+> Start showing warnings for such usage so we encourage people to use
+> consistent whitespace which helps with file readability in general.
+>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/bb/parse/parse_py/ConfHandler.py | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py=
+/ConfHandler.py
+> index 1bde597254..675838d845 100644
+> --- a/lib/bb/parse/parse_py/ConfHandler.py
+> +++ b/lib/bb/parse/parse_py/ConfHandler.py
+> @@ -23,7 +23,7 @@ __config_regexp__  =3D re.compile( r"""
+>      (?P<var>[a-zA-Z0-9\-_+.${}/~:]*?)
+>      (\[(?P<flag>[a-zA-Z0-9\-_+.][a-zA-Z0-9\-_+.@/]*)\])?
+>
+> -    \s* (
+> +    (?P<whitespace>\s*) (
+>          (?P<colon>:=3D) |
+>          (?P<lazyques>\?\?=3D) |
+>          (?P<ques>\?=3D) |
+> @@ -32,7 +32,7 @@ __config_regexp__  =3D re.compile( r"""
+>          (?P<predot>=3D\.) |
+>          (?P<postdot>\.=3D) |
+>          =3D
+> -    ) \s*
+> +    ) (?P<whitespace2>\s*)
+>
+>      (?!'[^']*'[^']*'$)
+>      (?!\"[^\"]*\"[^\"]*\"$)
+> @@ -168,6 +168,8 @@ def feeder(lineno, s, fn, statements, baseconfig=3DFa=
+lse, conffile=3DTrue):
+>          groupd =3D m.groupdict()
+>          if groupd['var'] =3D=3D "":
+>              raise ParseError("Empty variable name in assignment: '%s'" %=
+ s, fn, lineno);
+> +        if not groupd['whitespace'] or not groupd['whitespace2']:
+> +            logger.warning("%s:%s has a lack of whitespace around the as=
+signment: '%s'" % (fn, lineno, s))
+>          ast.handleData(statements, fn, lineno, groupd)
+>          return
+>
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#17508): https://lists.openembedded.org/g/bitbake-deve=
+l/message/17508
+> Mute This Topic: https://lists.openembedded.org/mt/112043500/3617156
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [martin=
+.jansa@gmail.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
 
