@@ -1,175 +1,195 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <martin.jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A512BC36002
-	for <webhook@archiver.kernel.org>; Wed,  9 Apr 2025 17:03:24 +0000 (UTC)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
- by mx.groups.io with SMTP id smtpd.web11.14148.1744218198174942584
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA14EC3601E
+	for <webhook@archiver.kernel.org>; Thu, 10 Apr 2025 06:37:18 +0000 (UTC)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+ by mx.groups.io with SMTP id smtpd.web10.28070.1744267028412161240
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 09 Apr 2025 10:03:18 -0700
+ Wed, 09 Apr 2025 23:37:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fbZ91Jfh;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.167.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54ac9b3ddf6so6391394e87.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 09 Apr 2025 10:03:17 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=kd+Oyl0c;
+ spf=pass (domain: gmail.com, ip: 209.85.208.180, mailfrom: martin.jansa@gmail.com)
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30db1bc464dso4004911fa.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 09 Apr 2025 23:37:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1744218196; x=1744822996; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744267026; x=1744871826; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pWaIuVIIA21ZPbG59as1S/qVAYY3VUl3sntkpePXfeg=;
-        b=fbZ91JfhposYVjmQAJd2DgrcniF3xFD1B+usSkICpLbyfynb2MussmXTpRsxErSSpz
-         PxpNDIN9qf10SDJGj/9NGBhqAuFZ81TfmzIKfCUc4Eqyy7yZ1DDaUxF4tUnPRiTGR7Wl
-         DjFZQCcw33On467efLrKgWw5di0qjAIGCkwv0=
+        bh=hWpg4cDvrgml2Nat8ezmH+PGOOqNeyOL2uQjlmJyw9s=;
+        b=kd+Oyl0c5i6cZR3g1wKAyQA+6hg88q0/dm/FL4MK3/mJ8XnHCDrK5ZG1S2DXV/RHIF
+         FmRnsk1USos1FcOuw7RnMdmr9kvINdxfPXrN/7nQLITcZeaozhnnhrtaN8ZRzF4VGsIE
+         ZFP5+s1NqChefLagvirFyyrM35xh3AjAHLrUZsPiDfxuovOyMP0eDNcD4Zhfj9P3A7si
+         M62jZc9v+TS4vU6unn0R7Txv64eLfX9Yc4MS0WMZrbC+xK8lkx3MtOyQPhHWYI+jpDmu
+         WDS6729jw4xWXIYCFih4JaljROtkXKrZGmWfvxp8/voiUympFKnv8EyhH/KEOfCJDLUT
+         ERHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744218196; x=1744822996;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=pWaIuVIIA21ZPbG59as1S/qVAYY3VUl3sntkpePXfeg=;
-        b=UST6vtusKx61Lqsi2h4ZKUi4Pq95zrmjfxr30Jlou+DDNghLI3CB/5ODdn5Y1NdAM7
-         IantfBpQ3d5xQTsPJAon9oyO14aqxGWNGzJV1QaF2ZMaJPBb0zII3Nne1QfbQGh5yydA
-         YvSRF4F4EvKKZzuCwiI1BmHLIOjn+zsNVnsMpubEhrQLLcNRkXIP90HkQ0rY6VOXvTTe
-         wuc15jItXPh22dkLDvgci79/drVx/606vNWIXJq0Fct6dvMwIs6jLZJ8ANYhiHFwdiJp
-         FQ+Prnu70zk6R1wig8Pv6O6+MK11oOA8j7CGeRzG8fUYEWuvYQAcn72qSQollP5vdM4K
-         6jew==
-X-Forwarded-Encrypted: i=1; AJvYcCWOXne68ksKFB0zcxjmUzjkJEl8kVG34dMkPR9O23VFZ5GQ7y9uwk0Fc/7LYRR7ZK3wAQDfmwbbuejHNPMv@lists.openembedded.org
-X-Gm-Message-State: AOJu0YyA740e6OOgCf72Oj8FNYiSTQyh0eFCEAv0HKgLSOm9lFu+40BD
-	dqQhziL7XQcVKT/8oUQz59i6fJmOGhL9+1cQRgYl/yi0snCII/NmH4Kr2YdrK8Q=
-X-Gm-Gg: ASbGncu9/mslsMfotcGaGSS014MaZ+0WlL7FnH1AfG3WSy1fuYmZl2Tvh5YgK3PVrte
-	bSmQ8VzYPNfgw1EuCRivK67fQZhnAx2RO70io1rdASa6whI/11LkrV2exQ0MfWTSJ18ivmdfbQE
-	lvGAJ1WTBEt6LBUzxrO0yYuqjH09BSQasDK07cp4yzZMJ940E9LaP11tgIdbRd+nlJEAjr+2/0m
-	Osbiu+pHDGenYfXcK/XfCQJUKqKsjRmM4xdig+V5xijaR4aqWciDvw65CQJuGGIab0bFnJ8rXuV
-	aXgJ1fr9Ghn2W2AARerNDyvXc6YOEBov70tRulA2qucvhhZQdoaAVij+zATstADxH+3dSJ7zjmq
-	UqkSzu3EuNIBk+kI7fzAeWqWsGBoNDg==
-X-Google-Smtp-Source: AGHT+IF9Mkpwqp7Y6zln7gcHiwwwqiRW257xgSur2peesbWtp6QkDZ4vCT4ZV4qt7iK7Dc3gQL/q2g==
-X-Received: by 2002:a05:6512:15a0:b0:54a:f6e9:2c04 with SMTP id 2adb3069b0e04-54c437222cemr852678e87.26.1744218196097;
-        Wed, 09 Apr 2025 10:03:16 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:9a69:164f:78e9:9779? ([2001:8b0:aba:5f3c:9a69:164f:78e9:9779])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c455f8ad7sm182067e87.106.2025.04.09.10.03.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 10:03:13 -0700 (PDT)
-Message-ID: <a987d7d748264a3444af9410f946539f100af5cc.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 1/2] fetch2/git: Add verbose logging
- support
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Viswanath Kraleti <quic_vkraleti@quicinc.com>, 
-	bitbake-devel@lists.openembedded.org
-Date: Wed, 09 Apr 2025 18:03:11 +0100
-In-Reply-To: <20240308133332.2213250-1-quic_vkraleti@quicinc.com>
-References: <20240308133332.2213250-1-quic_vkraleti@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.56.0-1 
+        d=1e100.net; s=20230601; t=1744267026; x=1744871826;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hWpg4cDvrgml2Nat8ezmH+PGOOqNeyOL2uQjlmJyw9s=;
+        b=DCVGB/e6FQFbzuxYZEY//3Iu5ZDGFyHSf2NrkGJR5iRsioEHANyIfBkVnn/ihOxsCZ
+         P7OVpk45llE5xGPLxtpwyaJiOFJfNYfdzsUiyL3jrl/pprEL3oHljIijWH6u2oWqGdiJ
+         sZhUw/J0EZKqxk1Bdt2jbcjOgS8Yos6YNGxpNK32iNfGhzm8sadQTzT4Al2zRHuWKQIH
+         COCNz+u9x35jPJlwKBtJ+MYnS/HYDquCjRzUzdaj+as634l05LrksSx30rD/6/jKm3hh
+         /wsdBKT2x6JurCkaUPckEvFyjkfSCdiLeG4l3qwLZV1vWD0NMgcaQNFUJ8R93WR8qNX+
+         FpLg==
+X-Forwarded-Encrypted: i=1; AJvYcCUNMu7z65mR/BDm7gnmSfm9JAk4rrMwVLzFuoTUf7jUE3vqGzq27cRDJD/mk/TY1imIi1k55+BhtrXyoriP@lists.openembedded.org
+X-Gm-Message-State: AOJu0YzO19FTu+xlYKuq2yPV2dRSGtOzVyoDR36GQG9JV7Khjj8YqhRK
+	8IgLvOTFiVE79Gzlalf4At17J1A27mMDgkjvleuDxyPmytkqGWl76dCtLmfz1hQiecxAPrATR5o
+	s1woXzPIswBtXQo2c0qz4Qn85IGg=
+X-Gm-Gg: ASbGncvy4IPGpaHCrvWr/6LRzPouowJlLWYNaf/R8nCbtyjlpy/U8/EL39FGjGD3QYN
+	YlckP/03pvFelEF88E8Db/pWLAJnWpg8uRSm/NgZKGwGGuA0V9u2hV10GHq/Stst1xtBikgMpKG
+	aTFQ9x15J0Hym5ZpvbzjzFb54660W7H0v6k6s=
+X-Google-Smtp-Source: AGHT+IFqwHptH79MRm5GjuMEFNgEFN2JTAaT73H6Mp5Z0DRkfa1hP+1vra3H/6sbwmS+euIhGks7fzq3VIDJYK8FxNs=
+X-Received: by 2002:a05:651c:2118:b0:30b:cb10:3a20 with SMTP id
+ 38308e7fff4ca-30faccb2938mr6131831fa.32.1744267026242; Wed, 09 Apr 2025
+ 23:37:06 -0700 (PDT)
 MIME-Version: 1.0
+References: <20250402091303.2346229-1-richard.purdie@linuxfoundation.org> <18332645F6CADDA9.4816@lists.openembedded.org>
+In-Reply-To: <18332645F6CADDA9.4816@lists.openembedded.org>
+From: Martin Jansa <martin.jansa@gmail.com>
+Date: Thu, 10 Apr 2025 08:36:55 +0200
+X-Gm-Features: ATxdqUFjhsJWddKFTt5YglbMZD95nx34p0qY5GpAfXZmz_omrGvoIKlsSJdctZU
+Message-ID: <CA+chaQfjYPV9Lg-jgMPFcFduWszCBer4_-Nj7a=QvRqD8w-d0w@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] parse/ConfHandler: Add warning for
+ deprecated whitespace usage
+To: martin.jansa@gmail.com
+Cc: richard.purdie@linuxfoundation.org, bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 09 Apr 2025 17:03:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17523
+ <bitbake-devel@lists.openembedded.org>; Thu, 10 Apr 2025 06:37:18 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17524
 
-T24gRnJpLCAyMDI0LTAzLTA4IGF0IDA1OjMzIC0wODAwLCBWaXN3YW5hdGggS3JhbGV0aSB3cm90
-ZToKPiBDdXJyZW50bHkgd2hlbiBnaXQgZmV0Y2hlcyBmYWlsLCBoYXJkbHkgYW55IGxvZyBpcyBn
-ZW5lcmF0ZWQgdGhhdAo+IGZpZ3VyZXMgb3V0IHdoYXQgd2VudCB3cm9uZy4gVG8gZWFzZSBkZWJ1
-Z2dpbmcgaW50cm9kdWNlZCBhIGZsYWcsCj4gQkJfR0lUX1ZFUkJPU0VfRkVUQ0gsIHdoZW4gZW5h
-YmxlZCBnaXQgZmV0Y2ggaGFwcGVucyB3aXRoIHZlcmJvc2UKPiBsb2dnaW5nIHN1cHBvcnQsIHRo
-dXMgdXNlciBjYW4gc2hhcmUgcmVxdWlyZWQgbG9ncyBhdCBvbmUgc2hvdC4KPiAKPiBTaWduZWQt
-b2ZmLWJ5OiBWaXN3YW5hdGggS3JhbGV0aSA8cXVpY192a3JhbGV0aUBxdWljaW5jLmNvbT4KPiAt
-LS0KPiDCoGxpYi9iYi9mZXRjaDIvZ2l0LnB5IHwgMjEgKysrKysrKysrKysrKysrKysrKy0tCj4g
-wqAxIGZpbGUgY2hhbmdlZCwgMTkgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPiAKPiBk
-aWZmIC0tZ2l0IGEvbGliL2JiL2ZldGNoMi9naXQucHkgYi9saWIvYmIvZmV0Y2gyL2dpdC5weQo+
-IGluZGV4IGI5ZGM1NzZkLi44MTkzY2UwYyAxMDA2NDQKPiAtLS0gYS9saWIvYmIvZmV0Y2gyL2dp
-dC5weQo+ICsrKyBiL2xpYi9iYi9mZXRjaDIvZ2l0LnB5Cj4gQEAgLTIwMSwxMSArMjAxLDE1IEBA
-IGNsYXNzIEdpdChGZXRjaE1ldGhvZCk6Cj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgIHVkLm5vc2hh
-cmVkID0gZC5nZXRWYXIoIkJCX0dJVF9OT1NIQVJFRCIpID09ICIxIgo+IMKgCj4gK8KgwqDCoMKg
-wqDCoMKgIHZlcmJvc2UgPSBkLmdldFZhcigiQkJfR0lUX1ZFUkJPU0VfRkVUQ0giKSA9PSAiMSIK
-PiArCj4gwqDCoMKgwqDCoMKgwqDCoCB1ZC5jbG9uZWZsYWdzID0gIi1uIgo+IMKgwqDCoMKgwqDC
-oMKgwqAgaWYgbm90IHVkLm5vc2hhcmVkOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1ZC5j
-bG9uZWZsYWdzICs9ICIgLXMiCj4gwqDCoMKgwqDCoMKgwqDCoCBpZiB1ZC5iYXJlY2xvbmU6Cj4g
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHVkLmNsb25lZmxhZ3MgKz0gIiAtLW1pcnJvciIKPiAr
-wqDCoMKgwqDCoMKgwqAgaWYgdmVyYm9zZToKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1ZC5j
-bG9uZWZsYWdzICs9ICIgLS12ZXJib3NlIgo+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoCB1ZC5zaGFs
-bG93ID0gZC5nZXRWYXIoIkJCX0dJVF9TSEFMTE9XIikgPT0gIjEiCj4gwqDCoMKgwqDCoMKgwqDC
-oCB1ZC5zaGFsbG93X2V4dHJhX3JlZnMgPSAoZC5nZXRWYXIoIkJCX0dJVF9TSEFMTE9XX0VYVFJB
-X1JFRlMiKSBvciAiIikuc3BsaXQoKQo+IEBAIC00MzMsNiArNDM3LDcgQEAgY2xhc3MgR2l0KEZl
-dGNoTWV0aG9kKToKPiDCoMKgwqDCoMKgwqDCoMKgIGVsc2U6Cj4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIG5lZWRzX2Nsb25lID0gVHJ1ZQo+IMKgCj4gK8KgwqDCoMKgwqDCoMKgIHZlcmJvc2Ug
-PSBkLmdldFZhcigiQkJfR0lUX1ZFUkJPU0VfRkVUQ0giKSA9PSAiMSIKPiDCoMKgwqDCoMKgwqDC
-oMKgICMgSWYgdGhlIHJlcG8gc3RpbGwgZG9lc24ndCBleGlzdCwgZmFsbGJhY2sgdG8gY2xvbmlu
-ZyBpdAo+IMKgwqDCoMKgwqDCoMKgwqAgaWYgbmVlZHNfY2xvbmU6Cj4gwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgICMgV2UgZG8gdGhpcyBzaW5jZSBnaXQgd2lsbCB1c2UgYSAiLWwiIG9wdGlvbiBh
-dXRvbWF0aWNhbGx5IGZvciBsb2NhbCB1cmxzIHdoZXJlIHBvc3NpYmxlLAo+IEBAIC00NDMsNiAr
-NDQ4LDggQEAgY2xhc3MgR2l0KEZldGNoTWV0aG9kKToKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBpZiBvcy5wYXRoLmlzZGlyKG9iamVjdHMpIGFuZCBub3Qgb3MucGF0aC5pc2xp
-bmsob2JqZWN0cyk6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBy
-ZXBvdXJsID0gcmVwb3VybF9wYXRoCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNsb25lX2Nt
-ZCA9ICJMQU5HPUMgJXMgY2xvbmUgLS1iYXJlIC0tbWlycm9yICVzICVzIC0tcHJvZ3Jlc3MiICUg
-KHVkLmJhc2VjbWQsIHNobGV4LnF1b3RlKHJlcG91cmwpLCB1ZC5jbG9uZWRpcikKPiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCBpZiB2ZXJib3NlOgo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgY2xvbmVfY21kID0gIkdJVF9UUkFDRV9QQUNLRVQ9MSBHSVRfVFJBQ0U9MiBHSVRfQ1VS
-TF9WRVJCT1NFPTEgIiArIGNsb25lX2NtZCArICIgLS12ZXJib3NlIgo+IMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBpZiB1ZC5wcm90by5sb3dlcigpICE9ICdmaWxlJzoKPiDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCBiYi5mZXRjaDIuY2hlY2tfbmV0d29ya19hY2Nlc3MoZCwgY2xv
-bmVfY21kLCB1ZC51cmwpCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHByb2dyZXNzaGFuZGxl
-ciA9IEdpdFByb2dyZXNzSGFuZGxlcihkKQo+IEBAIC00NjAsNiArNDY3LDggQEAgY2xhc3MgR2l0
-KEZldGNoTWV0aG9kKToKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBmZXRjaF9j
-bWQgPSAiTEFORz1DICVzIGZldGNoIC1mIC0tcHJvZ3Jlc3MgJXMgcmVmcy8qOnJlZnMvKiIgJSAo
-dWQuYmFzZWNtZCwgc2hsZXgucXVvdGUocmVwb3VybCkpCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIGVsc2U6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZmV0Y2hfY21kID0g
-IkxBTkc9QyAlcyBmZXRjaCAtZiAtLXByb2dyZXNzICVzIHJlZnMvaGVhZHMvKjpyZWZzL2hlYWRz
-LyogcmVmcy90YWdzLyo6cmVmcy90YWdzLyoiICUgKHVkLmJhc2VjbWQsIHNobGV4LnF1b3RlKHJl
-cG91cmwpKQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIHZlcmJvc2U6Cj4gK8KgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBmZXRjaF9jbWQgPSAiR0lUX1RSQUNFX1BBQ0tFVD0xIEdJ
-VF9UUkFDRT0yIEdJVF9DVVJMX1ZFUkJPU0U9MSAiICsgZmV0Y2hfY21kICsgIiAtLXZlcmJvc2Ui
-Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIHVkLnByb3RvLmxvd2VyKCkgIT0gJ2ZpbGUn
-Ogo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJiLmZldGNoMi5jaGVja19uZXR3
-b3JrX2FjY2VzcyhkLCBmZXRjaF9jbWQsIHVkLnVybCkKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgcHJvZ3Jlc3NoYW5kbGVyID0gR2l0UHJvZ3Jlc3NIYW5kbGVyKGQpCj4gQEAgLTU1NSw3ICs1
-NjQsMTEgQEAgY2xhc3MgR2l0KEZldGNoTWV0aG9kKToKPiDCoAo+IMKgwqDCoMKgwqDCoMKgwqAg
-VGhlIHVwc3RyZWFtIHVybCBvZiB0aGUgbmV3IGNsb25lIGlzbid0IHNldCBhdCB0aGlzIHRpbWUs
-IGFzIGl0J2xsIGJlCj4gwqDCoMKgwqDCoMKgwqDCoCBzZXQgY29ycmVjdGx5IHdoZW4gdW5wYWNr
-ZWQuIiIiCj4gLcKgwqDCoMKgwqDCoMKgIHJ1bmZldGNoY21kKCIlcyBjbG9uZSAlcyAlcyAlcyIg
-JSAodWQuYmFzZWNtZCwgdWQuY2xvbmVmbGFncywgdWQuY2xvbmVkaXIsIGRlc3QpLCBkKQo+ICvC
-oMKgwqDCoMKgwqDCoCB2ZXJib3NlID0gZC5nZXRWYXIoIkJCX0dJVF9WRVJCT1NFX0ZFVENIIikg
-PT0gIjEiCj4gK8KgwqDCoMKgwqDCoMKgIHZlcmJvc2VfZW52X3ZhcnMgPSAiIgo+ICvCoMKgwqDC
-oMKgwqDCoCBpZiB2ZXJib3NlOgo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHZlcmJvc2VfZW52
-X3ZhcnMgPSAiIEdJVF9UUkFDRV9QQUNLRVQ9MSBHSVRfVFJBQ0U9MiBHSVRfQ1VSTF9WRVJCT1NF
-PTEiCj4gK8KgwqDCoMKgwqDCoMKgIHJ1bmZldGNoY21kKCIlcyVzIGNsb25lICVzICVzICVzIiAl
-ICh2ZXJib3NlX2Vudl92YXJzLCB1ZC5iYXNlY21kLCB1ZC5jbG9uZWZsYWdzLCB1ZC5jbG9uZWRp
-ciwgZGVzdCksIGQpCj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgIHRvX3BhcnNlLCBzaGFsbG93X2Jy
-YW5jaGVzID0gW10sIFtdCj4gwqDCoMKgwqDCoMKgwqDCoCBmb3IgbmFtZSBpbiB1ZC5uYW1lczoK
-PiBAQCAtNjQ1LDcgKzY1OCwxMSBAQCBjbGFzcyBHaXQoRmV0Y2hNZXRob2QpOgo+IMKgCj4gwqDC
-oMKgwqDCoMKgwqDCoCBjbG9uZWRpcl9pc191cF90b19kYXRlID0gbm90IHNlbGYuY2xvbmVkaXJf
-bmVlZF91cGRhdGUodWQsIGQpCj4gwqDCoMKgwqDCoMKgwqDCoCBpZiBjbG9uZWRpcl9pc191cF90
-b19kYXRlOgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJ1bmZldGNoY21kKCIlcyBjbG9uZSAl
-cyAlcy8gJXMiICUgKHVkLmJhc2VjbWQsIHVkLmNsb25lZmxhZ3MsIHVkLmNsb25lZGlyLCBkZXN0
-ZGlyKSwgZCkKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB2ZXJib3NlX2Vudl92YXJzID0gIiIK
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB2ZXJib3NlID0gZC5nZXRWYXIoIkJCX0dJVF9WRVJC
-T1NFX0ZFVENIIikgPT0gIjEiCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgdmVyYm9zZToK
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHZlcmJvc2VfZW52X3ZhcnMgPSAiIEdJ
-VF9UUkFDRV9QQUNLRVQ9MSBHSVRfVFJBQ0U9MiBHSVRfQ1VSTF9WRVJCT1NFPTEiCj4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgcnVuZmV0Y2hjbWQoIiVzJXMgY2xvbmUgJXMgJXMvICVzIiAlICh2
-ZXJib3NlX2Vudl92YXJzLCB1ZC5iYXNlY21kLCB1ZC5jbG9uZWZsYWdzLCB1ZC5jbG9uZWRpciwg
-ZGVzdGRpciksIGQpCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNvdXJjZV9mb3VuZCA9IFRy
-dWUKPiDCoMKgwqDCoMKgwqDCoMKgIGVsc2U6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNv
-dXJjZV9lcnJvci5hcHBlbmQoImNsb25lIGRpcmVjdG9yeSBub3QgYXZhaWxhYmxlIG9yIG5vdCB1
-cCB0byBkYXRlOiAiICsgdWQuY2xvbmVkaXIpCgpJIHdhcyBhc2tlZCBhYm91dCB0aGlzIHBhdGNo
-LiBBcG9sb2dpZXMgaXQgZGlkbid0IGdldCBhIHJlcGx5IGF0IHRoZSB0aW1lLgoKSSB0ZW5kIHRv
-IGdldCBuZXJ2b3VzIGFib3V0IGFkZGluZyBuZXcgb3B0aW9ucywgaXQgYWx3YXlzIHJhaXNlcyB0
-aGUKcXVlc3Rpb24gb2Ygd2h5IHdlIGRvbid0IGhhdmUgZ29vZCBkZWZhdWx0cyBpbiB0aGUgZmly
-c3QgcGxhY2UgYXMgSSdkCnByZWZlciBsb2dzIHdlcmUgZ2VuZXJhbGx5IHVzZWZ1bC4gSXQgbWFr
-ZXMgaXQgaGFyZCB0byBwZW9wbGUgdG8gZmluZAp0aGVtLCB0aGVuIHdoZW4gdGhleSBkbywgdGhl
-eSdsbCBzZXQgdGhlbSBpbiB0aGVpciBjb25maWcgZm9yIGV2ZXJtb3JlLgoKSSB0aGVuIHdvcnJ5
-IHRoYXQgdGhpcyBwYXRjaCB3YXMgc29tZXRoaW5nIHdoYXQgd2FzIHVzZWZ1bCB0byBkZWJ1ZyBh
-CnNwZWNpZmljIGlzc3VlIG9uY2UgYnV0IGluIGdlbmVyYWwgbWlnaHQgbm90IGJlIG5lZWRlZCBh
-bmQgaXQgbWlnaHQgbm90CmJlIGdlbmVyYWxseSB1c2VmdWwuCgpTbyBJIGd1ZXNzIG15IHF1ZXN0
-aW9uIGlzIGhvdyBvZnRlbiB5b3UncmUgaGl0dGluZyBpc3N1ZXMgd2hpY2ggdGhpcwpuZWVkcyBh
-bmQgd2hldGhlciB3ZSBjb3VsZCB1c2UgdGhlIC0tdmVib3NlIG9wdGlvbnMgdG8gZ2l0IGluIGdl
-bmVyYWwKb3Igbm90PyBEaWQgeW91IHJlYWxseSBuZWVkIGFsbCB0aGUgZW52aXJvbm1lbnQgdmFy
-aWFibGVzIGFuZCB0aGUKdmVyYm9zZSBvcHRpb25zIG9yIGFyZSBzb21lIG9mIHRoZW0gbW9yZSB1
-c2VmdWwgdGhhbiBvdGhlcnM/CgpJIGRvbid0IGhhdmUgYSBnb29kIGZlZWwgZm9yIGhvdyBtdWNo
-IGxvZyBvdXRwdXQgdGhpcyBnZW5lcmF0ZXMgZWl0aGVyCnNvIGEgYml0IG1vcmUgaW5mb3JtYXRp
-b24vYW4gZXhhbXBsZSBtaWdodCBoZWxwIHdpdGggdGhhdC4KCkNoZWVycywKClJpY2hhcmQKCg==
+On Fri, Apr 4, 2025 at 5:12=E2=80=AFPM Martin Jansa via lists.openembedded.=
+org
+<martin.jansa=3Dgmail.com@lists.openembedded.org> wrote:
+>
+> Acked-by: Martin Jansa <martin.jansa@gmail.com>
+>
+> I've sent an update to avoid warnings for few more layers which are
+> included in some of my builds (meta-filesystems, meta-arm,
+> meta-virtualization, meta-webos-ports, meta-webosose, meta-qt5,
+> meta-qt6, meta-raspberrypi and internal LGE layers).
+>
+> I wrote a silly script which quickly proved that writing regexp with
+> sed which works correctly across all various shell/python/bitbake
+> syntaxes supported by bitbake is more difficult than initially
+> expected (as it can contain shell variables, bitbake variables, $, ',
+> ", [], $@, ...).
+>
+> That's why there are multiple versions (which might help in some cases
+> if you layer has many similar cases) and the comments documenting the
+> limitations and false-positives are longer than the original one-liner
+> I was using for the migration. Last couple cases where the script
+> didn't work I've usually adjusted manually. It was still useful for me
+> when doing the migrations and feel free to use it at your own risk.
+> "bitbake -nk world 2>&1 | tee world.log" and then pass the world.log
+> to the script.
+>
+> #!/bin/bash
+>
+> # https://lists.openembedded.org/g/bitbake-devel/message/17508
+>
+> LOG=3D$1
+>
+> # it's a bit silly and simple but resolved 99% of the issues in layers I'=
+m using
+> grep WARNING:.*whitespace.around.the.assignment $LOG | sort -u | while
+> read LINE; do
+>     # there could be 2 paths as in:
+>     # WARNING: meta-webos/recipes-core/packagegroups/packagegroup-core-to=
+ols-profile.bbappend:10
+> has a lack of whitespace around the assignment: 'LTTNGTOOLS:no-lttng=3D
+> ""'
+>     # WARNING: oe-core/meta/recipes-core/packagegroups/packagegroup-core-=
+tools-profile.bb:
+> meta-webos/recipes-core/packagegroups/packagegroup-core-tools-profile.bba=
+ppend:10
+> has a lack of whitespace around the assignment: 'LTTNGTOOLS:no-lt
+> tng=3D ""'
+>     # but some global files will be shown only once e.g.:
+>     # WARNING: meta-foo/conf/layer.conf:10 has a lack of whitespace
+> around the assignment: 'BBFILE_PATTERN_meta-foo:=3D "^${LAYERDIR}/"'
+>     # the paths are full, I've just stripped the TOPDIR prefix
+>     # always take the one with lineno which is what we want to change
+>
+>     f=3D`echo $LINE | sed "s/^WARNING: \([^:]*:
+> \)*\([^:]\+\):\([0-9]\+\) has a lack of whitespace around the
+> assignment: '\(.*\)'$/\2/g"`
+>     #l=3D`echo $LINE | sed "s/^WARNING: \([^:]*:
+> \)*\([^:]\+\):\([0-9]\+\) has a lack of whitespace around the
+> assignment: '\(.*\)'$/\3/g"`
+>     p=3D`echo $LINE | sed "s/^WARNING: \([^:]*:
+> \)*\([^:]\+\):\([0-9]\+\) has a lack of whitespace around the
+> assignment: '\(.*\)'$/\4/g"`
+>
+>     if [ ! -f "$f" ] ; then
+>         echo "ERROR: failed to parse filename from $LINE"
+>         continue
+>     fi
+>
+>     for o in ??=3D ?=3D +=3D =3D+ :=3D \\\\.=3D =3D\\\\. =3D; do
+>         # replace only first one found to avoid adding space in ??=3D
+> (when doing ?=3D) or +=3D (when doing =3D)
+>         if echo $p | grep -qG "[^ ]$o" || echo $p | grep -qG "$o[^ ]"; th=
+en
+>             pp=3D$(echo $p | sed "s/ *$o */ $o /g; s/^'//g; s/'$//g")
+>             echo "sed -i 's@$p@$pp@g' $f"
+>             # some cases might have ^ like in "^${LAYERDIR}/", so use
+> e.g. @ to convert them,
+>             # but @ is often used in ${@..} so pick a character not
+> used in the WARNINGs you got.
+>
+>             # there are some other limitations as well as some
+> patterns might have ' or " in them
+>             # or both typically with ${@..}, e.g. one of mine:
+>             # 'WEBOS_SUBMISSION_NUMBER=3D"${@
+> '${WEBOS_SUBMISSION}'.split('.')[-1] }"'
+>             # either fix those manually or with manual sed matching
+> just a part of it.
+>
+>             # another case where this won't work are variables with
+> line breaks e.g.:
+>             # 'CXXFLAGS +=3D"
+> -I${STAGING_INCDIR}/media-resource-calculator-clang
+> -I${STAGING_INCDIR}/cbe "'
+>             # is triggered on recipe which has:
+>             # CXXFLAGS +=3D" \
+>             #    -I${STAGING_INCDIR}/media-resource-calculator-clang \
+>             #    -I${STAGING_INCDIR}/cbe \
+>             # "
+>             # and the regexp again doesn't work
+>
+>             # it also doesn't work well on cases like:
+>             # 'EXTRA_OEMAKE=3D"BUILDTAGS=3D''"'
+>             # often used in meta-virtualization where only first =3D
+> should have spaces around
+>
+>             # sed -i 's^'"$p"'^'"$pp"'^g' $f
+>             # sed -i 's@'"$p"'@'"$pp"'@g' $f
+>             sed -i 's&'"$p"'&'"$pp"'&g' $f
+>             break;
+>         fi
+>     done
+> done
 
+Bruce was brave enough trying to use this yesterday and mentioned that
+the long lines were wrapped in e-mail (as I haven't send it with git
+send-email), here is it as a file:
+
+https://github.com/shr-project/meta-webosose/blob/jansa/master/meta-webos/s=
+cripts/add-whitespace-around-assignment.sh
+
+I also forgot to mention that the warnings are shown only when it's
+not parsed in cache, so if you want to re-run it after initial pass
+then remove the parser cache before calling bitbake again.
+
+Cheers,
 
