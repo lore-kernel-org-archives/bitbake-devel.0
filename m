@@ -2,103 +2,96 @@ Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 740D3C369AE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7266AC36010
 	for <webhook@archiver.kernel.org>; Fri, 11 Apr 2025 14:46:31 +0000 (UTC)
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
- by mx.groups.io with SMTP id smtpd.web10.28161.1744382786934445978
+ by mx.groups.io with SMTP id smtpd.web10.28160.1744382786898855176
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 11 Apr 2025 07:46:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=VWF31Jbz;
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=OhD2x7CR;
  spf=pass (domain: bootlin.com, ip: 217.70.183.196, mailfrom: antonin.godard@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DD92B43ACA;
-	Fri, 11 Apr 2025 14:46:24 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3DAF943AD8;
+	Fri, 11 Apr 2025 14:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
 	t=1744382785;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Xmwo8IWbAg1DJKF79MwXV/+QKW/6nezSczTiSNtMu8Y=;
-	b=VWF31JbzXDpr9i8l0vMhD7QMJITStgs8swx/JZYuaFtva8NCU5AZa6MiRlpG2iAZOPvzJz
-	eFOqwkNcsWscmWr8D7ucLvBrArTrS/+MmU0dG/BDf5HJfMejQXvUJmApcPZkde2fT/DUcE
-	UIr0JnSXNln1VjJcK0qXCyFyiQFWY2DqV5g+4zgSyTbapiai16Mgot2wj70AmXUO0zxOKo
-	beuDuqr7C/FRI1OZzkO9EjlAfUVKq+e0v9McaXAacrKtgK/yvaSFEY9ANgS/7yEYsHdnLj
-	1E7kqcC8c5z6y+m2AA04QtevGw0lw8+ZuCYu/BxMMFbm+VWTjVGbpMgsJ5jz1A==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7HgWkrwlh2QCUVhJmIOOKjK7AOyN1p3yrnV+FqgKpBw=;
+	b=OhD2x7CR6xeNGFOcNwbEwjN1g+O0jSuK+N8hGDepNfqPo+g9zExeJokHGYJ7gZM8gtdSjd
+	4SkcmZ9xjEb6jFxo23YmuOABgz2WrUQh3FULoSLW4wsdMMvkMDBmG4Ef4lhKrgGrlbp0uz
+	zMlRAUjIer1+eeix0CVLNZpbspsSs7+/zEf/wzgjoCJvLGpQCPa8pTntO6ExX79Zai/dvC
+	0vMUjmORp9rdrzqkYYMt/+38mLmF6DWz0plmHeiIbdMsIyDzHS7ZQBWtYMEVX1j0X6t/ec
+	Kjpn1Z1wHShITF4dlPUDpFiIiUd4TUGyhGlkh7sXiBNxxsqJi5WplQM6r4V0aw==
 From: Antonin Godard <antonin.godard@bootlin.com>
-Subject: [PATCH 0/2] Improvements around BB_PRESSURE_* variables
-Date: Fri, 11 Apr 2025 16:46:08 +0200
-Message-Id: <20250411-bb-pressure-improvements-v1-0-7d9e3593167f@bootlin.com>
+Date: Fri, 11 Apr 2025 16:46:09 +0200
+Subject: [PATCH 1/2] runqueue: decrease the verbosity of pressure messages
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADAr+WcC/x2MQQ5AQAxFryJdm0TFJLiKWJhRdGFIi0jE3TWWL
- //994CSMCm02QNCFytvyQDzDOIypJkcj8ZQFqUvKkQXgtuFVE+xad1lu2ildKjzODbR1zVOEcH
- uZk18/+muf98PwyAtEmoAAAA=
-X-Change-ID: 20250411-bb-pressure-improvements-51d9c5881fc1
+Message-Id: <20250411-bb-pressure-improvements-v1-1-7d9e3593167f@bootlin.com>
+References: <20250411-bb-pressure-improvements-v1-0-7d9e3593167f@bootlin.com>
+In-Reply-To: <20250411-bb-pressure-improvements-v1-0-7d9e3593167f@bootlin.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: docs@lists.yoctoproject.org, 
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
  Antonin Godard <antonin.godard@bootlin.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1379;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1675;
  i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=C1znro2PGmbWRfH1GQG7XAQ2XjoyZFr+ikUj3tvdMZY=;
- b=owEBbQKS/ZANAwAIAdGAQUApo6g2AcsmYgBn+StARz+SYcAbm9SKQOdnNGVSm+EwYGWyxvPRG
- TCXe1C5HLiJAjMEAAEIAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCZ/krQAAKCRDRgEFAKaOo
- Nlw3D/0fyNJCCh7ynwLU2PQURq2NroBAT+c51RR0nVg01wA/CLdE028R1DDu8EBhg6NN0SI7nxS
- qOEv9mxCl1V1DlJnb1wMZ97DzE7eBw+oQFW6hrK/Zr8519FRSu6+/U9IlMGzgF6X9jUmrCU/yrx
- ZRa3LQf4x7sSfzq+kDi2fUjqHZxye5h7PH3fTL5b2W8e5ds6Mrw8cTCjbvf6xKiKU91PvTiOEnd
- ESljZ6rOivZt4Qj04P4meezN0eftILD/O1bIyNYf4lvRpXo8hQuuE8Y/JT+RRX5n5R3GOmrQGHd
- vmaUqO2DLgVpsnHNGtV5vaNJf2oG6qFHxSBiLGGhlKVhybLhLemPT/k21ehdAz8nKC5ygRcchfm
- 5Fnfs1rW+xPDoSNE4CMHp4a3vliVIafc3o/Y3KMEUfzDjkOEw75xcV6Es50l+coXlN1vVt57Yos
- UK5oc53kamBWQ4l9LvW4HVQvlQJBNa+eYK27Mjip/DCmPFLdtz6rjQAO4InnjFmw0U4PcAyKCgh
- Npxlt9BZ6j/nL8kUxk/9MIXUk/y/ckKZ22kuIZPTpKKg30QIzUskZuJsH997+L/0QM5deAfFTcq
- pOm8hca5VovSWmDUoN5Monw6dyTYW8NLtgq8jhTSPJYAuGPRCqV2KbT3M8NjSITOby/S+osB9tx
- BzEp3EFGUXyPlmA==
+ bh=MbhiDgyrFjcyzeQUDmOpy7/oUOXQTxiteJW1UVjYNiU=;
+ b=owEBbQKS/ZANAwAIAdGAQUApo6g2AcsmYgBn+StAN537DGPUPE1maH1Zth1dAaBbGypjj3JJN
+ EQZDWlL+8eJAjMEAAEIAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCZ/krQAAKCRDRgEFAKaOo
+ NmCsD/9j4nKYfkcrbZToZPjdBuxumSvq7Y6oFhBUPX/51p0LjyfRTLJ1sH1SV+wMjdkwu0KAzkH
+ LwOLxRlfmp9OeekdRAdZIDXY6ddrrgSskIoZvWtTfJMyeLgKKOZAWce/AKkraAbmPvH03o2/8YQ
+ kLmaNPi0v+RsEJOZglEiG9U/xmJnQ8GhqXog1dyMyUK4e+IoBqLyybLRQ+z6DdVJS/LDEhk/JCH
+ lzXxLqITDblrcUOuuZTnxvgljXBtWkMww25kfaWsy9D4nso+wNVU4W4xFmfUJfx2dK8ANQRsxub
+ XwVKFME3AhLRL92TKNjB7oPzVDeZUXDpN3fmrpbx1OP0Mk5/Arez7udbWBbjL4nV10wSjEitGOz
+ 5TJDsGZ3DYkkYufc+4wVmN8o8loEtS4r0SHKljGJodEAhiVmzSUVmTJKgzr7wnDpNLqHYdnpjks
+ O0T00SuKAdyug9s9L4dNlOajtq7Mej0XOVV68oLYfTaZ2PwqXk6EPb2781QnVbmD4COQI/GCe7W
+ S2LXgmKeNYOJITUVkhV+AzNKcSNWwvc1KUr34FR+LLfgrfBKiim5/gNcDFV1uL2oTfC82UkFfq2
+ Mj8Q1rK0F/LF/+OL8/v9Mt/hQ/0472z+494XTd8u106zFdczQOcI8r3A0gtpiuUaM7GpivdopG6
+ in3eA1vFzzcXO8w==
 X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
  fpr=8648725188DD401BB9A0D3FFD180414029A3A836
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvuddvtdekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomheptehnthhonhhinhcuifhouggrrhguuceorghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeduvdefkeffteeluedvgffhjeegffduveegfffghfejteejkedvgfeuvedtudejkeenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeisgelleemvghfheegmedvtdgrfeemiehfgedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeisgelleemvghfheegmedvtdgrfeemiehfgedvpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedprhgtphhtthhopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmhgsvgguuggvugdrohhrghdprhgtphhtthhopeguohgtsheslhhishhtshdrhihotghtohhprhhojhgvtghtrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtr
- giiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhm
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvuddvtdekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomheptehnthhonhhinhcuifhouggrrhguuceorghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehieeguefhfeegheffgfeuieetheeileefheejkeetgfekueehueeluddvlefghfenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeisgelleemvghfheegmedvtdgrfeemiehfgedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeisgelleemvghfheegmedvtdgrfeemiehfgedvpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedprhgtphhtthhopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmhgsvgguuggvugdrohhrghdprhgtphhtthhopeguohgtsheslhhishhtshdrhihotghtohhprhhojhgvtghtrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpv
+ ghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhm
 X-GND-Sasl: antonin.godard@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 11 Apr 2025 14:46:31 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17526
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17525
 
-First patch makes the BB_PRESSURE_* variables not spam the log with
-messages by default, unless -D is passed on the command line.
-
-Second patch improves the documentation for these variables. The current
-default value is really low and 15000 seems like a better default, at
-least from my tests, it prevents too many tasks from being executed in
-parallel.
-
-Mention that these variables should be tweaked depending on the need.
-
-This is a first step to providing better information on how to control
-the resources used by bitbake. Later, this information could be reused
-in a more general guide on how to do so - in fact, setting BB_PRESSURE_*
-variables only do not impact how many threads a single task can use
-(that would be done with PARALLEL_MAKE, probably).
+By default all the pressure changes are printed on the console and
+generate a lot of spam to users using the BB_PRESSURE_* variables.
+Decrease the default verbosity to bb.debug (level 1, so can be seen with
+-D).
 
 Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
 ---
-Antonin Godard (2):
-      runqueue: decrease the verbosity of pressure messages
-      doc: bitbake-user-manual-ref-variables: improve BB_PRESSURE_* doc
+ lib/bb/runqueue.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- .../bitbake-user-manual-ref-variables.rst          | 37 +++++++++++++++++++---
- lib/bb/runqueue.py                                 |  2 +-
- 2 files changed, 33 insertions(+), 6 deletions(-)
----
-base-commit: 874c607f475f3d60677d2720b80a28d0c2e963c6
-change-id: 20250411-bb-pressure-improvements-51d9c5881fc1
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 8fadc8338..adfe3c7a1 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -219,7 +219,7 @@ class RunQueueScheduler(object):
+             pressure_state = (exceeds_cpu_pressure, exceeds_io_pressure, exceeds_memory_pressure)
+             pressure_values = (round(cpu_pressure,1), self.rq.max_cpu_pressure, round(io_pressure,1), self.rq.max_io_pressure, round(memory_pressure,1), self.rq.max_memory_pressure)
+             if hasattr(self, "pressure_state") and pressure_state != self.pressure_state:
+-                bb.note("Pressure status changed to CPU: %s, IO: %s, Mem: %s (CPU: %s/%s, IO: %s/%s, Mem: %s/%s) - using %s/%s bitbake threads" % (pressure_state + pressure_values + (len(self.rq.runq_running.difference(self.rq.runq_complete)), self.rq.number_tasks)))
++                bb.debug(1, "Pressure status changed to CPU: %s, IO: %s, Mem: %s (CPU: %s/%s, IO: %s/%s, Mem: %s/%s) - using %s/%s bitbake threads" % (pressure_state + pressure_values + (len(self.rq.runq_running.difference(self.rq.runq_complete)), self.rq.number_tasks)))
+             self.pressure_state = pressure_state
+             return (exceeds_cpu_pressure or exceeds_io_pressure or exceeds_memory_pressure)
+         elif self.rq.max_loadfactor:
 
-Best regards,
---
-Antonin Godard <antonin.godard@bootlin.com>
+-- 
+2.47.0
 
 
