@@ -1,131 +1,81 @@
-Return-Path: <martin.jansa@gmail.com>
+Return-Path: <mark.asselstine@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4252CC369A2
-	for <webhook@archiver.kernel.org>; Fri, 11 Apr 2025 19:09:23 +0000 (UTC)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
- by mx.groups.io with SMTP id smtpd.web10.34934.1744398557566047657
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA272C369AB
+	for <webhook@archiver.kernel.org>; Fri, 11 Apr 2025 21:01:53 +0000 (UTC)
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+ by mx.groups.io with SMTP id smtpd.web11.37228.1744405308977968236
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 11 Apr 2025 12:09:17 -0700
+ Fri, 11 Apr 2025 14:01:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=nfOPL96u;
- spf=pass (domain: gmail.com, ip: 209.85.167.54, mailfrom: martin.jansa@gmail.com)
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54b166fa41bso2763115e87.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 11 Apr 2025 12:09:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744398555; x=1745003355; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FaOIEtGeYICBAKLWoiwTYPeFySUSKCJN12B3UE8QBrQ=;
-        b=nfOPL96u/FfvzSU0c9qXLO5XwMv6ALOKI2QDTaBQIMfdwgUmWNm1CheKULHlTDpXQ5
-         3z3a6DQz2gJjx1w7+4LiKYdqtPy5+tqdyFzxDTZ4kLlPgT5nPD6oOLFhjDdyIKH4HMp3
-         RGspbRAp43EIIaaSBzFWt5n3Xn/WPGXcDnmlhSqOHtCbkHbdOiiKXqIjJuoveXzdZI2x
-         SDF+K7/yYhuafS8/vAlSA8T/NA6JYaU++GMIrhyzn/7R2sCLFm3/EIiHPFZpuzOSJaAz
-         j8OBrEu3wB6ffWN55PtzONQfzpnr1xszDeJxAWcu4ACso5JVmmKxvUJeQxurJ4igA7el
-         hXLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744398555; x=1745003355;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FaOIEtGeYICBAKLWoiwTYPeFySUSKCJN12B3UE8QBrQ=;
-        b=XmWUx7uDbI9ChM/9HrBfSHI2IkwkEnJW4eUDbD4vu5yzpEvcw/Ern9oD9svs5mg/vc
-         EWq4MSx0w9Ui8Mx+o0CIP9SnLeeScc41eDIpCuqUhRQlhHSZzWgqi2QNKT5WXynqwrNW
-         ETMSUSk5KWK90VEWc3b9rY1ZmlntUaUjCP2d2G6EBntRxkRqdMNvk1bf7tvyglzgZR3I
-         WgrBBXAVHNRzrek/6agrZe1+w+cfISd/P2dVOCOpW7g8XTYroDFYzQfB6qnxjqyW6Y1o
-         TLcs72ijam7jW7zoltIbMn8NUzqa6IBTDaKqtiPxDB5bFlc6S5luXyE37l1QSDozDzqX
-         OBGg==
-X-Gm-Message-State: AOJu0YzvhgLkxBJYL0jV7DcCGcj4UlPsO/IaoBvRd/PAVwkTCDsgxtgm
-	NoqVirdYXQkV6UAclgZUaQle0PecOSuRUjA3UCPYfccHppUcpsPtGGcwRV/ZUKsUHxD3GLIx+s7
-	nLZh7fIY42zdpdFaGLUkl/x9O8ls=
-X-Gm-Gg: ASbGncvjoBBRCYbLxILTwQsJrPP7cEUF7cDFZG4P78irBfmP7Q7E78hvO5ejGZPckXm
-	ZFl8oKcRdlaE1UzlRjdYED2/09SE9X7GYNGN7EBd+4MMQdgRinKMGH1QWUX9JExR5pseMaFuM1y
-	2JkNQc8DzALxJGp1LULdxlIenMfYfS7Ft8uBY=
-X-Google-Smtp-Source: AGHT+IEhNg0Sg6/7o4ZCw68ZIeqO4Ch9LoEu84ojrr4ZmHNl2Bv+g8ZnmTp9Z5iLeDMYzuOg/NDUapnLM9rcEEj9EkM=
-X-Received: by 2002:a05:6512:3f07:b0:545:2a96:34f7 with SMTP id
- 2adb3069b0e04-54d4529f454mr1151331e87.31.1744398555107; Fri, 11 Apr 2025
- 12:09:15 -0700 (PDT)
+ dkim=none (message not signed); spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=6196f37709=mark.asselstine@windriver.com)
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BIGwRl028658
+	for <bitbake-devel@lists.openembedded.org>; Fri, 11 Apr 2025 14:01:48 -0700
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45u41m88sn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Fri, 11 Apr 2025 14:01:48 -0700 (PDT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Fri, 11 Apr 2025 14:01:47 -0700
+Received: from YOW-MASSELST-L1.corp.ad.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Fri, 11 Apr 2025 14:01:47 -0700
+From: Mark Asselstine <mark.asselstine@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH] utils: lock_timeout_nocheck() ensure `l` is initialized
+Date: Fri, 11 Apr 2025 17:01:46 -0400
+Message-ID: <20250411210146.6741-1-mark.asselstine@windriver.com>
+X-Mailer: git-send-email 2.39.5
 MIME-Version: 1.0
-References: <20250411-bb-pressure-improvements-v1-0-7d9e3593167f@bootlin.com> <20250411-bb-pressure-improvements-v1-1-7d9e3593167f@bootlin.com>
-In-Reply-To: <20250411-bb-pressure-improvements-v1-1-7d9e3593167f@bootlin.com>
-From: Martin Jansa <martin.jansa@gmail.com>
-Date: Fri, 11 Apr 2025 21:09:03 +0200
-X-Gm-Features: ATxdqUGgQENltaV00VCZ9gYiITy_iUO38noMhoZXirLaMqqGPcdIyKxefNORZSE
-Message-ID: <CA+chaQeXK2pbaNWaYvDVzMhu=eZLpFLB9zeeaGDA7oLDJnaG3A@mail.gmail.com>
-Subject: Re: [docs] [PATCH 1/2] runqueue: decrease the verbosity of pressure messages
-To: antonin.godard@bootlin.com
-Cc: bitbake-devel@lists.openembedded.org, docs@lists.yoctoproject.org, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: H857Eq9xX4kpnqhnp_tM9ck3uH6PvF_U
+X-Proofpoint-ORIG-GUID: H857Eq9xX4kpnqhnp_tM9ck3uH6PvF_U
+X-Authority-Analysis: v=2.4 cv=QOZoRhLL c=1 sm=1 tr=0 ts=67f9833c cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=XR8D0OoHHMoA:10 a=t7CeM3EgAAAA:8 a=3jmanMmXoJMmyqvRNCgA:9 a=ZXulRonScM0A:10 a=zZCYzV9kfG8A:10
+ a=FdTzh2GWekK77mhwV6Dw:22
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_08,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=785 bulkscore=0 phishscore=0 impostorscore=0
+ priorityscore=1501 clxscore=1011 lowpriorityscore=0 spamscore=0 mlxscore=0
+ malwarescore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2504110135
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 11 Apr 2025 19:09:23 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17528
+ <bitbake-devel@lists.openembedded.org>; Fri, 11 Apr 2025 21:01:53 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17529
 
-On Fri, Apr 11, 2025 at 4:46=E2=80=AFPM Antonin Godard via
-lists.yoctoproject.org
-<antonin.godard=3Dbootlin.com@lists.yoctoproject.org> wrote:
->
-> By default all the pressure changes are printed on the console and
-> generate a lot of spam to users using the BB_PRESSURE_* variables.
-> Decrease the default verbosity to bb.debug (level 1, so can be seen with
-> -D).
+lock_timeout_nocheck() can be interrupted immediately after enterring
+the try-block and prior to initializing 'l', for example with a
+ctrl-C, the code in finally will still be run and the 'if l' will
+fail. Initialize 'l' as False to avoid this possiblity.
 
-Isn't "a lot of these messages" a proof that the BB_PRESSURE_*
-variables aren't set correctly?
+Signed-off-by: Mark Asselstine <mark.asselstine@windriver.com>
+---
+ lib/bb/utils.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-I find them quite useful and using -D by default in my builds would
-bring even "more spam". But in worse case I'll just revert this for my
-builds.
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 5486f9599..a1e093925 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -1898,6 +1898,7 @@ def lock_timeout(lock):
+ # A version of lock_timeout without the check that the lock was locked and a shorter timeout
+ @contextmanager
+ def lock_timeout_nocheck(lock):
++    l = False
+     try:
+         s = signal.pthread_sigmask(signal.SIG_BLOCK, signal.valid_signals())
+         l = lock.acquire(timeout=10)
+-- 
+2.39.5
 
-Cheers,
-
-> Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
-> ---
->  lib/bb/runqueue.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-> index 8fadc8338..adfe3c7a1 100644
-> --- a/lib/bb/runqueue.py
-> +++ b/lib/bb/runqueue.py
-> @@ -219,7 +219,7 @@ class RunQueueScheduler(object):
->              pressure_state =3D (exceeds_cpu_pressure, exceeds_io_pressur=
-e, exceeds_memory_pressure)
->              pressure_values =3D (round(cpu_pressure,1), self.rq.max_cpu_=
-pressure, round(io_pressure,1), self.rq.max_io_pressure, round(memory_press=
-ure,1), self.rq.max_memory_pressure)
->              if hasattr(self, "pressure_state") and pressure_state !=3D s=
-elf.pressure_state:
-> -                bb.note("Pressure status changed to CPU: %s, IO: %s, Mem=
-: %s (CPU: %s/%s, IO: %s/%s, Mem: %s/%s) - using %s/%s bitbake threads" % (=
-pressure_state + pressure_values + (len(self.rq.runq_running.difference(sel=
-f.rq.runq_complete)), self.rq.number_tasks)))
-> +                bb.debug(1, "Pressure status changed to CPU: %s, IO: %s,=
- Mem: %s (CPU: %s/%s, IO: %s/%s, Mem: %s/%s) - using %s/%s bitbake threads"=
- % (pressure_state + pressure_values + (len(self.rq.runq_running.difference=
-(self.rq.runq_complete)), self.rq.number_tasks)))
->              self.pressure_state =3D pressure_state
->              return (exceeds_cpu_pressure or exceeds_io_pressure or excee=
-ds_memory_pressure)
->          elif self.rq.max_loadfactor:
->
-> --
-> 2.47.0
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#6736): https://lists.yoctoproject.org/g/docs/message/=
-6736
-> Mute This Topic: https://lists.yoctoproject.org/mt/112211584/3617156
-> Group Owner: docs+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/docs/unsub [martin.jansa@gm=
-ail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
 
