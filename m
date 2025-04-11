@@ -1,195 +1,164 @@
-Return-Path: <martin.jansa@gmail.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA14EC3601E
-	for <webhook@archiver.kernel.org>; Thu, 10 Apr 2025 06:37:18 +0000 (UTC)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
- by mx.groups.io with SMTP id smtpd.web10.28070.1744267028412161240
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A8FC369B1
+	for <webhook@archiver.kernel.org>; Fri, 11 Apr 2025 14:46:31 +0000 (UTC)
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+ by mx.groups.io with SMTP id smtpd.web10.28162.1744382786939879213
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 09 Apr 2025 23:37:08 -0700
+ Fri, 11 Apr 2025 07:46:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=kd+Oyl0c;
- spf=pass (domain: gmail.com, ip: 209.85.208.180, mailfrom: martin.jansa@gmail.com)
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30db1bc464dso4004911fa.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 09 Apr 2025 23:37:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744267026; x=1744871826; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hWpg4cDvrgml2Nat8ezmH+PGOOqNeyOL2uQjlmJyw9s=;
-        b=kd+Oyl0c5i6cZR3g1wKAyQA+6hg88q0/dm/FL4MK3/mJ8XnHCDrK5ZG1S2DXV/RHIF
-         FmRnsk1USos1FcOuw7RnMdmr9kvINdxfPXrN/7nQLITcZeaozhnnhrtaN8ZRzF4VGsIE
-         ZFP5+s1NqChefLagvirFyyrM35xh3AjAHLrUZsPiDfxuovOyMP0eDNcD4Zhfj9P3A7si
-         M62jZc9v+TS4vU6unn0R7Txv64eLfX9Yc4MS0WMZrbC+xK8lkx3MtOyQPhHWYI+jpDmu
-         WDS6729jw4xWXIYCFih4JaljROtkXKrZGmWfvxp8/voiUympFKnv8EyhH/KEOfCJDLUT
-         ERHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744267026; x=1744871826;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hWpg4cDvrgml2Nat8ezmH+PGOOqNeyOL2uQjlmJyw9s=;
-        b=DCVGB/e6FQFbzuxYZEY//3Iu5ZDGFyHSf2NrkGJR5iRsioEHANyIfBkVnn/ihOxsCZ
-         P7OVpk45llE5xGPLxtpwyaJiOFJfNYfdzsUiyL3jrl/pprEL3oHljIijWH6u2oWqGdiJ
-         sZhUw/J0EZKqxk1Bdt2jbcjOgS8Yos6YNGxpNK32iNfGhzm8sadQTzT4Al2zRHuWKQIH
-         COCNz+u9x35jPJlwKBtJ+MYnS/HYDquCjRzUzdaj+as634l05LrksSx30rD/6/jKm3hh
-         /wsdBKT2x6JurCkaUPckEvFyjkfSCdiLeG4l3qwLZV1vWD0NMgcaQNFUJ8R93WR8qNX+
-         FpLg==
-X-Forwarded-Encrypted: i=1; AJvYcCUNMu7z65mR/BDm7gnmSfm9JAk4rrMwVLzFuoTUf7jUE3vqGzq27cRDJD/mk/TY1imIi1k55+BhtrXyoriP@lists.openembedded.org
-X-Gm-Message-State: AOJu0YzO19FTu+xlYKuq2yPV2dRSGtOzVyoDR36GQG9JV7Khjj8YqhRK
-	8IgLvOTFiVE79Gzlalf4At17J1A27mMDgkjvleuDxyPmytkqGWl76dCtLmfz1hQiecxAPrATR5o
-	s1woXzPIswBtXQo2c0qz4Qn85IGg=
-X-Gm-Gg: ASbGncvy4IPGpaHCrvWr/6LRzPouowJlLWYNaf/R8nCbtyjlpy/U8/EL39FGjGD3QYN
-	YlckP/03pvFelEF88E8Db/pWLAJnWpg8uRSm/NgZKGwGGuA0V9u2hV10GHq/Stst1xtBikgMpKG
-	aTFQ9x15J0Hym5ZpvbzjzFb54660W7H0v6k6s=
-X-Google-Smtp-Source: AGHT+IFqwHptH79MRm5GjuMEFNgEFN2JTAaT73H6Mp5Z0DRkfa1hP+1vra3H/6sbwmS+euIhGks7fzq3VIDJYK8FxNs=
-X-Received: by 2002:a05:651c:2118:b0:30b:cb10:3a20 with SMTP id
- 38308e7fff4ca-30faccb2938mr6131831fa.32.1744267026242; Wed, 09 Apr 2025
- 23:37:06 -0700 (PDT)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=nCRY03bY;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.196, mailfrom: antonin.godard@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7E1EB43AE3;
+	Fri, 11 Apr 2025 14:46:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744382785;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=stGLYBQOncJCwK8p30Ugeaub3H185haJsTzpGl4uv3M=;
+	b=nCRY03bY+nOFoTHg1eBw0eyUj2qJ4TtDcqS2nXi7JsFHNtQWIHUSAtgqlG6qON0guwYnW0
+	56F2EERkCHwt/++3KEa4t1dkAEWRkoKdmS7lqrKFOhCou6gp6RLLjWOrZA+iVp+cBpi9qg
+	ZddG0I6VT33H96Z0zmcVdAHJZgX2koWJvBnV0vzqfd8RdnvcSTH1ELDu6S7oK4oDkMRDaw
+	TCiyR6vxBFMNb5ihk5BjY1mBvtrV7jvoImC/0VafQ3k5ka2x6CQoD9NdnoSzFNSI+tzKTC
+	ISW142MdP99AyzByBfj11pKKnaGN/ovEaSRsipXlCSxE9sXn769bqgBSWejFDQ==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Date: Fri, 11 Apr 2025 16:46:10 +0200
+Subject: [PATCH 2/2] doc: bitbake-user-manual-ref-variables: improve
+ BB_PRESSURE_* doc
 MIME-Version: 1.0
-References: <20250402091303.2346229-1-richard.purdie@linuxfoundation.org> <18332645F6CADDA9.4816@lists.openembedded.org>
-In-Reply-To: <18332645F6CADDA9.4816@lists.openembedded.org>
-From: Martin Jansa <martin.jansa@gmail.com>
-Date: Thu, 10 Apr 2025 08:36:55 +0200
-X-Gm-Features: ATxdqUFjhsJWddKFTt5YglbMZD95nx34p0qY5GpAfXZmz_omrGvoIKlsSJdctZU
-Message-ID: <CA+chaQfjYPV9Lg-jgMPFcFduWszCBer4_-Nj7a=QvRqD8w-d0w@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] parse/ConfHandler: Add warning for
- deprecated whitespace usage
-To: martin.jansa@gmail.com
-Cc: richard.purdie@linuxfoundation.org, bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250411-bb-pressure-improvements-v1-2-7d9e3593167f@bootlin.com>
+References: <20250411-bb-pressure-improvements-v1-0-7d9e3593167f@bootlin.com>
+In-Reply-To: <20250411-bb-pressure-improvements-v1-0-7d9e3593167f@bootlin.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4336;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=yYHTERhxMrOc4ddXV7n5nDtMuMy5thO0duT7XafwEFs=;
+ b=owEBbQKS/ZANAwAIAdGAQUApo6g2AcsmYgBn+StAtk/Y5uSixr1DEGz2WVLs6Q5/fr7/bKfsd
+ uO2tR7o33CJAjMEAAEIAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCZ/krQAAKCRDRgEFAKaOo
+ NkEpD/4pkycbQ/DzhLNUYBXimt6+PYYMeG1CRSn2b2AjIKQTPAEj8pGpwiWV77QJjrAALNaaCn3
+ OAAMeiJBfiI4zKBR3zI96yyI3v3gb2zkcetruCU8nHNTEbahqnJJghkaOCIEd1yxlBm/GO8T1dA
+ onEHeCg6OYA9QbR9WTioehS2yOIq8JU8JNDZrL7PPANrS5C6zttKKFW7Pv6B0MkC9cpxlsRMW/2
+ 9ZuoDoHPJ7UfY8EgXhSHypOGaGR74pukM/zDpenYeCHayoXQ/DBRi86E3K7l4fAvel+J63+rhEz
+ m9Rk5Oj1xrlnjube+49f1VQ/WTZGYrbkMwb1d0qHntIbDVgkuJ2z4amvnE15wReH5eCPT6piGBX
+ xpueaGnrH71+qOygxMYL3XDXHC/fiPcxK7UwDOSsPRNL7sgHWyx9BgCjaCINv+PL5WT1/vW5d8u
+ Um3eKNElhm7KnUKNsmZSNlPq0iVDgRq/5r41LwSghA2qoK0oA/4wKq3V+H2RS8OQ53EOjihpcz1
+ vzawru+j16PdyBcrVvnaULLmq9vz4rWfiBmTiyz2XJh5+5/NK9bBWzmsyoKNZ1rJOG0PFBB/IHy
+ 1AaunT0U1FrfMPJo11xy3U6h0lAZCThqWpaTOhQ9HvpYkFB/9ujYyx2lYCmIdhkTQru0TfJ73KS
+ sb0HNrPDaqghH7w==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvuddvtdekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomheptehnthhonhhinhcuifhouggrrhguuceorghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeigeetleehkeeggefhiedvveetfeetjedvledvffelgeehgeellefhiedutdefvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemiegsleelmegvfhehgeemvddtrgefmeeifhegvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemiegsleelmegvfhehgeemvddtrgefmeeifhegvddphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomheprghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegpdhrtghpthhtohepsghithgsrghkvgdquggvvhgvlheslhhishhtshdrohhpvghnvghmsggvugguvggurdhorhhgpdhrtghpthhtohepughotghssehlihhsthhsrdihohgtthhophhrohhjvggtthdro
+ hhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomh
+X-GND-Sasl: antonin.godard@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 10 Apr 2025 06:37:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17524
+ <bitbake-devel@lists.openembedded.org>; Fri, 11 Apr 2025 14:46:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17527
 
-On Fri, Apr 4, 2025 at 5:12=E2=80=AFPM Martin Jansa via lists.openembedded.=
-org
-<martin.jansa=3Dgmail.com@lists.openembedded.org> wrote:
->
-> Acked-by: Martin Jansa <martin.jansa@gmail.com>
->
-> I've sent an update to avoid warnings for few more layers which are
-> included in some of my builds (meta-filesystems, meta-arm,
-> meta-virtualization, meta-webos-ports, meta-webosose, meta-qt5,
-> meta-qt6, meta-raspberrypi and internal LGE layers).
->
-> I wrote a silly script which quickly proved that writing regexp with
-> sed which works correctly across all various shell/python/bitbake
-> syntaxes supported by bitbake is more difficult than initially
-> expected (as it can contain shell variables, bitbake variables, $, ',
-> ", [], $@, ...).
->
-> That's why there are multiple versions (which might help in some cases
-> if you layer has many similar cases) and the comments documenting the
-> limitations and false-positives are longer than the original one-liner
-> I was using for the migration. Last couple cases where the script
-> didn't work I've usually adjusted manually. It was still useful for me
-> when doing the migrations and feel free to use it at your own risk.
-> "bitbake -nk world 2>&1 | tee world.log" and then pass the world.log
-> to the script.
->
-> #!/bin/bash
->
-> # https://lists.openembedded.org/g/bitbake-devel/message/17508
->
-> LOG=3D$1
->
-> # it's a bit silly and simple but resolved 99% of the issues in layers I'=
-m using
-> grep WARNING:.*whitespace.around.the.assignment $LOG | sort -u | while
-> read LINE; do
->     # there could be 2 paths as in:
->     # WARNING: meta-webos/recipes-core/packagegroups/packagegroup-core-to=
-ols-profile.bbappend:10
-> has a lack of whitespace around the assignment: 'LTTNGTOOLS:no-lttng=3D
-> ""'
->     # WARNING: oe-core/meta/recipes-core/packagegroups/packagegroup-core-=
-tools-profile.bb:
-> meta-webos/recipes-core/packagegroups/packagegroup-core-tools-profile.bba=
-ppend:10
-> has a lack of whitespace around the assignment: 'LTTNGTOOLS:no-lt
-> tng=3D ""'
->     # but some global files will be shown only once e.g.:
->     # WARNING: meta-foo/conf/layer.conf:10 has a lack of whitespace
-> around the assignment: 'BBFILE_PATTERN_meta-foo:=3D "^${LAYERDIR}/"'
->     # the paths are full, I've just stripped the TOPDIR prefix
->     # always take the one with lineno which is what we want to change
->
->     f=3D`echo $LINE | sed "s/^WARNING: \([^:]*:
-> \)*\([^:]\+\):\([0-9]\+\) has a lack of whitespace around the
-> assignment: '\(.*\)'$/\2/g"`
->     #l=3D`echo $LINE | sed "s/^WARNING: \([^:]*:
-> \)*\([^:]\+\):\([0-9]\+\) has a lack of whitespace around the
-> assignment: '\(.*\)'$/\3/g"`
->     p=3D`echo $LINE | sed "s/^WARNING: \([^:]*:
-> \)*\([^:]\+\):\([0-9]\+\) has a lack of whitespace around the
-> assignment: '\(.*\)'$/\4/g"`
->
->     if [ ! -f "$f" ] ; then
->         echo "ERROR: failed to parse filename from $LINE"
->         continue
->     fi
->
->     for o in ??=3D ?=3D +=3D =3D+ :=3D \\\\.=3D =3D\\\\. =3D; do
->         # replace only first one found to avoid adding space in ??=3D
-> (when doing ?=3D) or +=3D (when doing =3D)
->         if echo $p | grep -qG "[^ ]$o" || echo $p | grep -qG "$o[^ ]"; th=
-en
->             pp=3D$(echo $p | sed "s/ *$o */ $o /g; s/^'//g; s/'$//g")
->             echo "sed -i 's@$p@$pp@g' $f"
->             # some cases might have ^ like in "^${LAYERDIR}/", so use
-> e.g. @ to convert them,
->             # but @ is often used in ${@..} so pick a character not
-> used in the WARNINGs you got.
->
->             # there are some other limitations as well as some
-> patterns might have ' or " in them
->             # or both typically with ${@..}, e.g. one of mine:
->             # 'WEBOS_SUBMISSION_NUMBER=3D"${@
-> '${WEBOS_SUBMISSION}'.split('.')[-1] }"'
->             # either fix those manually or with manual sed matching
-> just a part of it.
->
->             # another case where this won't work are variables with
-> line breaks e.g.:
->             # 'CXXFLAGS +=3D"
-> -I${STAGING_INCDIR}/media-resource-calculator-clang
-> -I${STAGING_INCDIR}/cbe "'
->             # is triggered on recipe which has:
->             # CXXFLAGS +=3D" \
->             #    -I${STAGING_INCDIR}/media-resource-calculator-clang \
->             #    -I${STAGING_INCDIR}/cbe \
->             # "
->             # and the regexp again doesn't work
->
->             # it also doesn't work well on cases like:
->             # 'EXTRA_OEMAKE=3D"BUILDTAGS=3D''"'
->             # often used in meta-virtualization where only first =3D
-> should have spaces around
->
->             # sed -i 's^'"$p"'^'"$pp"'^g' $f
->             # sed -i 's@'"$p"'@'"$pp"'@g' $f
->             sed -i 's&'"$p"'&'"$pp"'&g' $f
->             break;
->         fi
->     done
-> done
+The current default value for BB_PRESSURE_MAX_CPU is 500, which is
+really low. Provide a value of 15000 which limits the load average
+without being extremely slow either.
 
-Bruce was brave enough trying to use this yesterday and mentioned that
-the long lines were wrapped in e-mail (as I haven't send it with git
-send-email), here is it as a file:
+Provide similar values for BB_PRESSURE_MAX_IO and
+BB_PRESSURE_MAX_MEMORY. Mention that these should be adjusted depending
+on the need.
 
-https://github.com/shr-project/meta-webosose/blob/jansa/master/meta-webos/s=
-cripts/add-whitespace-around-assignment.sh
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+---
+ .../bitbake-user-manual-ref-variables.rst          | 37 +++++++++++++++++++---
+ 1 file changed, 32 insertions(+), 5 deletions(-)
 
-I also forgot to mention that the warnings are shown only when it's
-not parsed in cache, so if you want to re-run it after initial pass
-then remove the parser cache before calling bitbake again.
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index 477443e22..3364e57a8 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -533,11 +533,18 @@ overview of their function and contents.
+       version 4.20 expose under ``/proc/pressure``. The threshold represents
+       the difference in "total" pressure from the previous second. The
+       minimum value is 1.0 (extremely slow builds) and the maximum is
+-      1000000 (a pressure value unlikely to ever be reached).
++      1000000 (a pressure value unlikely to ever be reached). See
++      https://docs.kernel.org/accounting/psi.html for more information.
+ 
+-      This threshold can be set in ``conf/local.conf`` as::
++      A default value to limit the CPU pressure to be set in ``conf/local.conf``
++      could be::
++
++         BB_PRESSURE_MAX_CPU = "15000"
++
++      Multiple values should be tested on the build host to determine what suits
++      best, depending on the need for performances versus load average during
++      the build.
+ 
+-         BB_PRESSURE_MAX_CPU = "500"
+ 
+    :term:`BB_PRESSURE_MAX_IO`
+       Specifies a maximum I/O pressure threshold, above which BitBake's
+@@ -549,12 +556,22 @@ overview of their function and contents.
+       version 4.20 expose under ``/proc/pressure``. The threshold represents
+       the difference in "total" pressure from the previous second. The
+       minimum value is 1.0 (extremely slow builds) and the maximum is
+-      1000000 (a pressure value unlikely to ever be reached).
++      1000000 (a pressure value unlikely to ever be reached). See
++      https://docs.kernel.org/accounting/psi.html for more information.
+ 
+       At this point in time, experiments show that IO pressure tends to
+       be short-lived and regulating just the CPU with
+       :term:`BB_PRESSURE_MAX_CPU` can help to reduce it.
+ 
++      A default value to limit the I/O pressure to be set in ``conf/local.conf``
++      could be::
++
++         BB_PRESSURE_MAX_IO = "15000"
++
++      Multiple values should be tested on the build host to determine what suits
++      best, depending on the need for performances versus I/O usage during the
++      build.
++
+    :term:`BB_PRESSURE_MAX_MEMORY`
+ 
+       Specifies a maximum memory pressure threshold, above which BitBake's
+@@ -566,7 +583,8 @@ overview of their function and contents.
+       version 4.20 expose under ``/proc/pressure``. The threshold represents
+       the difference in "total" pressure from the previous second. The
+       minimum value is 1.0 (extremely slow builds) and the maximum is
+-      1000000 (a pressure value unlikely to ever be reached).
++      1000000 (a pressure value unlikely to ever be reached). See
++      https://docs.kernel.org/accounting/psi.html for more information.
+ 
+       Memory pressure is experienced when time is spent swapping,
+       refaulting pages from the page cache or performing direct reclaim.
+@@ -574,6 +592,15 @@ overview of their function and contents.
+       might be useful as a last resort to prevent OOM errors if they are
+       occurring during builds.
+ 
++      A default value to limit the memory pressure to be set in
++      ``conf/local.conf`` could be::
++
++         BB_PRESSURE_MAX_MEMORY = "15000"
++
++      Multiple values should be tested on the build host to determine what suits
++      best, depending on the need for performances versus memory consumption
++      during the build.
++
+    :term:`BB_RUNFMT`
+       Specifies the name of the executable script files (i.e. run files)
+       saved into ``${``\ :term:`T`\ ``}``. By default, the
 
-Cheers,
+-- 
+2.47.0
+
 
