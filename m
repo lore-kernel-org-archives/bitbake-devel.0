@@ -2,46 +2,46 @@ Return-Path: <philip.lorenz@bmw.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FACC369D1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F5BC369D9
 	for <webhook@archiver.kernel.org>; Wed, 23 Apr 2025 15:25:47 +0000 (UTC)
-Received: from esa5.hc324-48.eu.iphmx.com (esa5.hc324-48.eu.iphmx.com [207.54.71.60])
- by mx.groups.io with SMTP id smtpd.web10.11459.1745421943504997724
+Received: from esa6.hc324-48.eu.iphmx.com (esa6.hc324-48.eu.iphmx.com [207.54.71.69])
+ by mx.groups.io with SMTP id smtpd.web11.11597.1745421943467318387
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 23 Apr 2025 08:25:44 -0700
+ Wed, 23 Apr 2025 08:25:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bmw.de header.s=mailing1 header.b=RKP81/gJ;
- spf=pass (domain: bmw.de, ip: 207.54.71.60, mailfrom: prvs=201e634cf=philip.lorenz@bmw.de)
+ dkim=pass header.i=@bmw.de header.s=mailing1 header.b=oKpqD46K;
+ spf=pass (domain: bmw.de, ip: 207.54.71.69, mailfrom: prvs=201e634cf=philip.lorenz@bmw.de)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
-  t=1745421943; x=1776957943;
+  t=1745421945; x=1776957945;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=vg2+lyh2R2Sueo4iIR3js+irAiQxe4PHeUw6uhRoWMM=;
-  b=RKP81/gJgnR444SRTD7h2uKIi8FoR9O5skH/ambUE1Q21siv8WEO6zYr
-   3HXTnI/nKQKyX4OeBsVjOBMN4vtwO/UJv4XQLPQuFYYm5y/TOjw442IN5
-   hzIw5+n2F56Ew7hpcxS1ivaSjPgGZYU/2llKpoXUBtWzz7O0R+sygolNa
-   c=;
-X-CSE-ConnectionGUID: tvtxv4NWT1aTGgBiEdteVw==
-X-CSE-MsgGUID: tK3kFD07TESvACCEqApEMg==
-Received: from esagw4.bmwgroup.com (HELO esagw4.muc) ([160.46.252.39]) by
- esa5.hc324-48.eu.iphmx.com with ESMTP/TLS; 23 Apr 2025 17:25:40 +0200
-Received: from esabb3.muc ([160.50.100.30])  by esagw4.muc with ESMTP/TLS;
+  bh=oFUs339dldr+AL+nMX5mR8UYsSCYNtjbSwumyxZ306Q=;
+  b=oKpqD46KuNxAS4PxcjYu6nX5PHHM0qGe24uiVVaq2bKeMVN+LMGNw+X8
+   6gH+rgen8dwDQGbWHAQeGBkbyh9edesIloqBpnk2GrFVopdugvQJ0Nxtm
+   qYr3+Kvr1Xfy5O6PkCV82XFqxsmbDBsVMjSGDgXSf8cJUX8wp0t7ryleo
+   E=;
+X-CSE-ConnectionGUID: d3wDcS8PTgSeZ8vlVV+KMw==
+X-CSE-MsgGUID: VSeZU+s2SrW/NexGSFyLfQ==
+Received: from esagw5.bmwgroup.com (HELO esagw5.muc) ([160.46.252.46]) by
+ esa6.hc324-48.eu.iphmx.com with ESMTP/TLS; 23 Apr 2025 17:25:40 +0200
+Received: from esabb2.muc ([160.50.100.34])  by esagw5.muc with ESMTP/TLS;
  23 Apr 2025 17:25:41 +0200
 Received: from smucmp19d.bmwgroup.net (HELO smucmp19d.europe.bmw.corp)
- ([10.30.13.170]) by esabb3.muc with ESMTP/TLS; 23 Apr 2025 17:25:41 +0200
+ ([10.30.13.170]) by esabb2.muc with ESMTP/TLS; 23 Apr 2025 17:25:42 +0200
 Received: from localhost.localdomain (10.30.85.210) by smucmp19d.europe.bmw.corp
  (2a03:1e80:a15:58f::205d) with Microsoft SMTP Server (version=TLS;
  Wed, 23 Apr 2025 17:25:40 +0200
-X-CSE-ConnectionGUID: Xf88iss4Sb6/lFpOEaThkw==
-X-CSE-MsgGUID: RPExn3kFQ8SRDcOg22YEtg==
-X-CSE-ConnectionGUID: lln3+7hpTkypyTpufyTUdg==
-X-CSE-MsgGUID: 1+C2swWbTcqheU1Yi3dw2w==
+X-CSE-ConnectionGUID: D+MikGGKQJ2zsLlY0h51QA==
+X-CSE-MsgGUID: AxahelUrSDy0uRVwgnj8jw==
+X-CSE-ConnectionGUID: 3sYz//wwSxaNsuKyUDOZiA==
+X-CSE-MsgGUID: ZcogzT2ZRfelvC6LOcYeww==
 From: Philip Lorenz <philip.lorenz@bmw.de>
 To: <bitbake-devel@lists.openembedded.org>
 CC: Philip Lorenz <philip.lorenz@bmw.de>
-Subject: [PATCH 1/8] fetch2: Clean up no longer used name parameter
-Date: Wed, 23 Apr 2025 17:18:54 +0200
-Message-ID: <20250423151901.1300944-2-philip.lorenz@bmw.de>
+Subject: [PATCH 2/8] tests/fetch: Move commonly used imports to top
+Date: Wed, 23 Apr 2025 17:18:55 +0200
+Message-ID: <20250423151901.1300944-3-philip.lorenz@bmw.de>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250423151901.1300944-1-philip.lorenz@bmw.de>
 References: <20250423151901.1300944-1-philip.lorenz@bmw.de>
@@ -54,53 +54,129 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 23 Apr 2025 15:25:47 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17543
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17545
 
-There's no need to pass `name` when it is no longer used.
+Avoid multiple import statements for anything that is used more than
+once. Additionally, drop no longer used imports.
 
 Signed-off-by: Philip Lorenz <philip.lorenz@bmw.de>
 ---
- lib/bb/fetch2/git.py | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ lib/bb/tests/fetch.py | 19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index b47a53e3b..39c183927 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -327,7 +327,7 @@ class Git(FetchMethod):
-         if self.clonedir_need_update(ud, d):
-             return True
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 196d93c41..f0c628524 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -7,7 +7,9 @@
+ #
  
--        if not self._lfs_objects_downloaded(ud, d, ud.name, ud.clonedir):
-+        if not self._lfs_objects_downloaded(ud, d, ud.clonedir):
-             return True
-         return False
+ import contextlib
++import shutil
+ import unittest
++import urllib.parse
+ import hashlib
+ import tempfile
+ import collections
+@@ -1275,7 +1277,6 @@ class FetcherNetworkTest(FetcherTest):
  
-@@ -802,7 +802,7 @@ class Git(FetchMethod):
-             raise bb.fetch2.FetchError("The command '%s' gave output with more then 1 line unexpectedly, output: '%s'" % (cmd, output))
-         return output.split()[0] != "0"
+ class SVNTest(FetcherTest):
+     def skipIfNoSvn():
+-        import shutil
+         if not shutil.which("svn"):
+             return unittest.skip("svn not installed,  tests being skipped")
  
--    def _lfs_objects_downloaded(self, ud, d, name, wd):
-+    def _lfs_objects_downloaded(self, ud, d, wd):
-         """
-         Verifies whether the LFS objects for requested revisions have already been downloaded
-         """
-@@ -841,7 +841,7 @@ class Git(FetchMethod):
+@@ -1398,8 +1399,6 @@ class TrustedNetworksTest(FetcherTest):
+         self.assertFalse(bb.fetch.trusted_network(self.d, url))
  
-         if ud.nobranch:
-             # If no branch is specified, use the current git commit
--            refname = self._build_revision(ud, d, ud.name)
-+            refname = ud.revision
-         elif wd == ud.clonedir:
-             # The bare clonedir doesn't use the remote names; it has the branch immediately.
-             refname = ud.branch
-@@ -995,7 +995,7 @@ class Git(FetchMethod):
-         Return a sortable revision number by counting commits in the history
-         Based on gitpkgv.bblass in meta-openembedded
-         """
--        rev = self._build_revision(ud, d, name)
-+        rev = ud.revision
-         localpath = ud.localpath
-         rev_file = os.path.join(localpath, "oe-gitpkgv_" + rev)
-         if not os.path.exists(localpath):
+ class URLHandle(unittest.TestCase):
+-    import urllib.parse
+-
+     # Quote password as per RFC3986
+     password = urllib.parse.quote(r"!#$%^&*()-_={}[]\|:?,.<>~`", r"!$&'/()*+,;=")
+     datatable = {
+@@ -1426,7 +1425,6 @@ class URLHandle(unittest.TestCase):
+             self.assertEqual(result, v)
+ 
+     def test_encodeurl(self):
+-        import urllib.parse
+         for k, v in self.datatable.items():
+             result = bb.fetch.encodeurl(v)
+             if result.startswith("file:"):
+@@ -2271,7 +2269,6 @@ class GitShallowTest(FetcherTest):
+ 
+ class GitLfsTest(FetcherTest):
+     def skipIfNoGitLFS():
+-        import shutil
+         if not shutil.which('git-lfs'):
+             return unittest.skip('git-lfs not installed')
+         return lambda f: f
+@@ -2391,8 +2388,6 @@ class GitLfsTest(FetcherTest):
+ 
+     @skipIfNoGitLFS()
+     def test_lfs_enabled(self):
+-        import shutil
+-
+         uri = 'git://%s;protocol=file;lfs=1;branch=master' % self.srcdir
+         self.d.setVar('SRC_URI', uri)
+ 
+@@ -2403,8 +2398,6 @@ class GitLfsTest(FetcherTest):
+ 
+     @skipIfNoGitLFS()
+     def test_lfs_disabled(self):
+-        import shutil
+-
+         uri = 'git://%s;protocol=file;lfs=0;branch=master' % self.srcdir
+         self.d.setVar('SRC_URI', uri)
+ 
+@@ -2414,8 +2407,6 @@ class GitLfsTest(FetcherTest):
+         fetcher.unpack(self.d.getVar('WORKDIR'))
+ 
+     def test_lfs_enabled_not_installed(self):
+-        import shutil
+-
+         uri = 'git://%s;protocol=file;lfs=1;branch=master' % self.srcdir
+         self.d.setVar('SRC_URI', uri)
+ 
+@@ -2436,8 +2427,6 @@ class GitLfsTest(FetcherTest):
+             ud.method._find_git_lfs = old_find_git_lfs
+ 
+     def test_lfs_disabled_not_installed(self):
+-        import shutil
+-
+         uri = 'git://%s;protocol=file;lfs=0;branch=master' % self.srcdir
+         self.d.setVar('SRC_URI', uri)
+ 
+@@ -2611,7 +2600,6 @@ class CrateTest(FetcherTest):
+ 
+ class NPMTest(FetcherTest):
+     def skipIfNoNpm():
+-        import shutil
+         if not shutil.which('npm'):
+             return unittest.skip('npm not installed')
+         return lambda f: f
+@@ -3294,7 +3282,6 @@ class FetchPremirroronlyNetworkTest(FetcherTest):
+         self.d.setVar("PREMIRRORS", self.recipe_url + " " + "file://{}".format(self.mirrordir) + " \n")
+ 
+     def make_git_repo(self):
+-        import shutil
+         self.mirrorname = "git2_git.yoctoproject.org.fstests.tar.gz"
+         os.makedirs(self.clonedir)
+         self.git("clone --bare {}".format(self.recipe_url), self.clonedir)
+@@ -3324,7 +3311,6 @@ class FetchPremirroronlyMercurialTest(FetcherTest):
+         the test covers also basic hg:// clone (see fetch_and_create_tarball
+     """
+     def skipIfNoHg():
+-        import shutil
+         if not shutil.which('hg'):
+             return unittest.skip('Mercurial not installed')
+         return lambda f: f
+@@ -3380,7 +3366,6 @@ class FetchPremirroronlyBrokenTarball(FetcherTest):
+             targz.write("This is not tar.gz file!")
+ 
+     def test_mirror_broken_download(self):
+-        import sys
+         self.d.setVar("SRCREV", "0"*40)
+         fetcher = bb.fetch.Fetch([self.recipe_url], self.d)
+         with self.assertRaises(bb.fetch2.FetchError), self.assertLogs() as logs:
 
