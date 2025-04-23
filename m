@@ -2,47 +2,49 @@ Return-Path: <philip.lorenz@bmw.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C900DC369CB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8702C369DC
 	for <webhook@archiver.kernel.org>; Wed, 23 Apr 2025 15:25:47 +0000 (UTC)
-Received: from esa6.hc324-48.eu.iphmx.com (esa6.hc324-48.eu.iphmx.com [207.54.71.69])
- by mx.groups.io with SMTP id smtpd.web11.11597.1745421943467318387
+Received: from esa2.hc324-48.eu.iphmx.com (esa2.hc324-48.eu.iphmx.com [207.54.68.120])
+ by mx.groups.io with SMTP id smtpd.web10.11460.1745421943932277681
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 23 Apr 2025 08:25:44 -0700
+ Wed, 23 Apr 2025 08:25:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bmw.de header.s=mailing1 header.b=j6RLyUCF;
- spf=pass (domain: bmw.de, ip: 207.54.71.69, mailfrom: prvs=201e634cf=philip.lorenz@bmw.de)
+ dkim=pass header.i=@bmw.de header.s=mailing1 header.b=LPQ0P2pF;
+ spf=pass (domain: bmw.de, ip: 207.54.68.120, mailfrom: prvs=201e634cf=philip.lorenz@bmw.de)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
-  t=1745421943; x=1776957943;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=G8Gx4pLqvyVQbcrWfsA70Ivhk5lUo+aPB547Q77ptoc=;
-  b=j6RLyUCFZg006dFU5DkXVXgDLDsGYeglNXb+QdHh/GDaIW+n21+we+Vk
-   duxkyPPkB4tNFx04BshGVWGIqc5jbgE878YgHj0DwssSC1n3MfvXn96S2
-   p9YEXaH0vnyjxJkNZWMlr/11bqMDo7XGSd6JNI4VVszFxaWN+GcX2q9+0
-   M=;
-X-CSE-ConnectionGUID: d3wDcS8PTgSeZ8vlVV+KMw==
-X-CSE-MsgGUID: qriAqdOdRcKwN/LL4Z4krA==
-Received: from esagw5.bmwgroup.com (HELO esagw5.muc) ([160.46.252.46]) by
- esa6.hc324-48.eu.iphmx.com with ESMTP/TLS; 23 Apr 2025 17:25:40 +0200
-Received: from esabb2.muc ([160.50.100.34])  by esagw5.muc with ESMTP/TLS;
- 23 Apr 2025 17:25:40 +0200
+  t=1745421945; x=1776957945;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=3SrZN+Xcty/R80wSBSubQUbETvapjbIkKeuuhVJgG7Y=;
+  b=LPQ0P2pF6V0zBPsbDe+9IwcPaiPUAOy6/jQokCSbdnjuXg66DBzOGyKh
+   a/FXHUuUgPfPizuTn5uwj72iKoT+o2zm5QnQdvNUMjDFfmoqd+uY+I5qe
+   ALHOvwj5eU8Fobk11k0aRYpPEAarDKZIx/rHlM5j8+oqU48Ul6GGP+0Af
+   4=;
+X-CSE-ConnectionGUID: SrCR4j03S/O6p/qXuIVE+w==
+X-CSE-MsgGUID: 7GyiC1jiSc6d4wt0aaCeNQ==
+Received: from esagw2.bmwgroup.com (HELO esagw2.muc) ([160.46.252.38]) by
+ esa2.hc324-48.eu.iphmx.com with ESMTP/TLS; 23 Apr 2025 17:25:41 +0200
+Received: from esabb4.muc ([160.50.100.33])  by esagw2.muc with ESMTP/TLS;
+ 23 Apr 2025 17:25:41 +0200
 Received: from smucmp19d.bmwgroup.net (HELO smucmp19d.europe.bmw.corp)
- ([10.30.13.170]) by esabb2.muc with ESMTP/TLS; 23 Apr 2025 17:25:41 +0200
+ ([10.30.13.170]) by esabb4.muc with ESMTP/TLS; 23 Apr 2025 17:25:42 +0200
 Received: from localhost.localdomain (10.30.85.210) by smucmp19d.europe.bmw.corp
  (2a03:1e80:a15:58f::205d) with Microsoft SMTP Server (version=TLS;
- Wed, 23 Apr 2025 17:25:40 +0200
-X-CSE-ConnectionGUID: Wuva3diHTj2hwWxCARB3tw==
-X-CSE-MsgGUID: AUPao0YUQbKf0puQ1tvj8g==
-X-CSE-ConnectionGUID: DqA8gHeZQaKplTPhwYxi/A==
-X-CSE-MsgGUID: ARNwizuwRHGJYpNUkzoVWQ==
+ Wed, 23 Apr 2025 17:25:41 +0200
+X-CSE-ConnectionGUID: GY7FDfCOT2m7+BMJ5CTKxQ==
+X-CSE-MsgGUID: KmUr3Yb0Ri6MIwAHttScWA==
+X-CSE-ConnectionGUID: hglSMqi+S1SJM14NZ2O+9A==
+X-CSE-MsgGUID: KYv/to7WRU2a+A/DKxpu+g==
 From: Philip Lorenz <philip.lorenz@bmw.de>
 To: <bitbake-devel@lists.openembedded.org>
 CC: Philip Lorenz <philip.lorenz@bmw.de>
-Subject: [PATCH 0/8] Fix gitsm LFS support
-Date: Wed, 23 Apr 2025 17:18:53 +0200
-Message-ID: <20250423151901.1300944-1-philip.lorenz@bmw.de>
+Subject: [PATCH 5/8] fetch2: Use git-lfs fetch to download objects
+Date: Wed, 23 Apr 2025 17:18:58 +0200
+Message-ID: <20250423151901.1300944-6-philip.lorenz@bmw.de>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250423151901.1300944-1-philip.lorenz@bmw.de>
+References: <20250423151901.1300944-1-philip.lorenz@bmw.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -52,37 +54,59 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 23 Apr 2025 15:25:47 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17542
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17546
 
-This patch series fixes a number of issues we observed when using the
-gitsm fetcher in conjunction with git-lfs.
+Its not clear which exact git-lfs versions failed to work with bare
+repositories, however git-lfs 2.13.2 which is shipped by Debian 10 (i.e.
+the oldest supported distribution by scarthgap) shows no issue when
+fetching into a bare repository. Switch to git-lfs fetch which in turn
+eliminates issues seen when using the gitsm fetcher with submodules
+utilizing lfs.
 
-I'd like to highlight two patches in this series:
-* 0004-fetch2-Simplify-git-LFS-detection: I could not come up with a
-  good reason on why the code so far preferred the content of
- `.gitattributes` on the repository's branch instead of always
-  considering the state of the target revision. Please let me know
-  if there's something I didn't take into account.
-* 0005-fetch2-Use-git-lfs-fetch-to-download-objects.patch: I could not
-  replicate the `git-lfs fetch` behaviour in versions going back to
-  2.13.2 released in 2021. This leads me to believe that the issue
-  leading to this workaround is no longer in place. However, if anyone
-  remembers the actual issue / versions involved I can also retest to
-  confirm that there are no regression.
+In these scenarios, fetching of LFS objects did not actually happen as
+the gitsm fetcher parametrizes the to be fetched repositories with
+`bareclone=1` which in turn means that the target revision was never
+checked out (and therefore no LFS objects were fetched).
 
-Philip Lorenz (8):
-  fetch2: Clean up no longer used name parameter
-  tests/fetch: Move commonly used imports to top
-  fetch2: Check for git-lfs existence before using it
-  fetch2: Simplify git LFS detection
-  fetch2: Use git-lfs fetch to download objects
-  fetch2: Fix incorrect lfs parametrization for submodules
-  fetch2: Fix LFS object checkout in submodules
-  tests/fetch: Test gitsm with LFS
+Signed-off-by: Philip Lorenz <philip.lorenz@bmw.de>
+---
+ lib/bb/fetch2/git.py | 25 +------------------------
+ 1 file changed, 1 insertion(+), 24 deletions(-)
 
- lib/bb/fetch2/git.py   |  69 +++++++-------------
- lib/bb/fetch2/gitsm.py |   9 +--
- lib/bb/tests/fetch.py  | 139 ++++++++++++++++++++++++++---------------
- 3 files changed, 115 insertions(+), 102 deletions(-)
-
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index a1dd12bf7..341bbf0ed 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -484,30 +484,7 @@ class Git(FetchMethod):
+                 raise bb.fetch2.FetchError("Unable to find revision %s even from upstream" % missing_rev)
+ 
+         if self.lfs_need_update(ud, d):
+-            # Unpack temporary working copy, use it to run 'git checkout' to force pre-fetching
+-            # of all LFS blobs needed at the srcrev.
+-            #
+-            # It would be nice to just do this inline here by running 'git-lfs fetch'
+-            # on the bare clonedir, but that operation requires a working copy on some
+-            # releases of Git LFS.
+-            with tempfile.TemporaryDirectory(dir=d.getVar('DL_DIR')) as tmpdir:
+-                # Do the checkout. This implicitly involves a Git LFS fetch.
+-                Git.unpack(self, ud, tmpdir, d)
+-
+-                # Scoop up a copy of any stuff that Git LFS downloaded. Merge them into
+-                # the bare clonedir.
+-                #
+-                # As this procedure is invoked repeatedly on incremental fetches as
+-                # a recipe's SRCREV is bumped throughout its lifetime, this will
+-                # result in a gradual accumulation of LFS blobs in <ud.clonedir>/lfs
+-                # corresponding to all the blobs reachable from the different revs
+-                # fetched across time.
+-                #
+-                # Only do this if the unpack resulted in a .git/lfs directory being
+-                # created; this only happens if at least one blob needed to be
+-                # downloaded.
+-                if os.path.exists(os.path.join(ud.destdir, ".git", "lfs")):
+-                    runfetchcmd("tar -cf - lfs | tar -xf - -C %s" % ud.clonedir, d, workdir="%s/.git" % ud.destdir)
++            self.lfs_fetch(ud, d, ud.clonedir, ud.revision)
+ 
+     def lfs_fetch(self, ud, d, clonedir, revision, fetchall=False, progresshandler=None):
+         """Helper method for fetching Git LFS data"""
 
