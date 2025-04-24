@@ -1,159 +1,93 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4B6C369AB
-	for <webhook@archiver.kernel.org>; Thu, 24 Apr 2025 11:22:03 +0000 (UTC)
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
- by mx.groups.io with SMTP id smtpd.web10.12576.1745493715749356537
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB719C369AB
+	for <webhook@archiver.kernel.org>; Thu, 24 Apr 2025 14:29:34 +0000 (UTC)
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.web11.16666.1745504965632640222
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 24 Apr 2025 04:21:55 -0700
+ Thu, 24 Apr 2025 07:29:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=max1LHBW;
- spf=pass (domain: gmail.com, ip: 209.85.219.53, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6eeb7589db4so14024526d6.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 24 Apr 2025 04:21:55 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=e4DtjTNQ;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39149bccb69so1022755f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 24 Apr 2025 07:29:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745493715; x=1746098515; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zgTj8gA7L8e55cIKXG9MjIC6X4R64ZlxlgHbB2fPMAQ=;
-        b=max1LHBW13Z79XeERWdAxqHFGH+QgqfrkjRrC+yWNXmfE7fvL5GOByZFXVnc3deU7o
-         dWVpeS0GXuE+zIg4H1G8EcbIQGNdHiVoL+AFohNKOORoH+WM85X+yhdju50V/gg3fRDa
-         9609fS0LMuxZ29KaMxWmVxytOvo027i6kMsBMmckyQKEu2+g3pN7HxqXm0OdIhypdPzw
-         9uGK0oERwy05uu+vK01gVLqktmrwlc1faG7XydVnt/TzUvXFmANqkoIYC/REIrEAlGfZ
-         zlMRjWu/OtA0F4U8GPOLhMAk22/2ySHhKy8grccbrKFQe6iW4F7ZAKvGgZ5uWG2LJUUf
-         14rA==
+        d=linuxfoundation.org; s=google; t=1745504964; x=1746109764; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Ke5JYq1F26/aT98jTSkRXizt/kwVF2BfJZfA6V5G+2o=;
+        b=e4DtjTNQJ+07QyK3xdS/2DjRWnEv+qIFm5Nkc8vi4lTrKVvIUnZMm1YtoV0/u4kAzS
+         6RvEfkDjCXVBSkaZ/x+ia4AfYZAqwlt2thHeneC7kh04FWFjf016t71WHzNhpU5R/Be9
+         Mau4qFVT9uJ0OWt56KQoORWeNStdWgkbzsNbo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745493715; x=1746098515;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zgTj8gA7L8e55cIKXG9MjIC6X4R64ZlxlgHbB2fPMAQ=;
-        b=K1awt+mMZTg87F35NQ9/7/6Kicw1pXL+vWnZdiJuSWAmzw9lRg/nhpDVM7k3wlkMVX
-         7IP5inwYzwEwXpWpQNLaSC07S+qyV1taPIFVYiZnLzostOdl+8/wBHs7XRM/NJb7kdlb
-         MYh36x+actdWNPyHnD1cLmI94YDbaJIu5z9Xg5Wa0Jrqzs9B/mblQEaOgtAm4zap+rA7
-         hApEUeQiw/iBFC1yVdNXlV3e7dG0PWNEkAjHPbi40smtrbD6/I2NBIv4EKG6yl2UXa4b
-         fH4EK7WinQA91vJEpi5lWWeerYnfrnrLLO/JpaZyR9Lj8D0lRo9wl/DYGM2BhrEfExFB
-         nCdg==
-X-Forwarded-Encrypted: i=1; AJvYcCUWCbCtDigxt4BHXlJs7HRxuVIlQhcIPA5nCo5itPxGeTKnP8bbdLijd/Sw0rA7NiClvBAUxwTXnBmnTMtF@lists.openembedded.org
-X-Gm-Message-State: AOJu0YyU5eXcb8FOlDKHjKCJday6LdNsjS40XHiDfSi/TavBdTPgLXYl
-	64Xpfbw8zM8KrYjmzH1w34yrV/paIX0+GX4n59yXzwIwDRSxVQHZwHlidNixj7YPDnlZ0zcpTfg
-	49btY0MVdl7VS0JdHmy4LmcpZC1RXwQ==
-X-Gm-Gg: ASbGncuwy10waNhDDhoBTlLswOhyiA9JVRMD3YYwrsFHrgLuVp9ScCtoZnedCB+Iitp
-	mDVECb9RMSO66QPNjF8akJY+R4YGJf1LcDewuGtIm5PGHhAx54AAahFqtbagk+yhG2GZ93JeXL2
-	PfOhVYsk418/dUKGGYto/QkJjq1kGB2k8704UK4hFw+mJOdEKP7ZWQ03BJ
-X-Google-Smtp-Source: AGHT+IHa5uFHOl9iQ7iJRjCNbFCOiDUbCZhslQHlOXs/vX6+hmKNKT/rhwLB8m0J/J0QWeHkgFuVqacwPrgHk2zGeAY=
-X-Received: by 2002:ad4:5749:0:b0:6e5:a0fc:f663 with SMTP id
- 6a1803df08f44-6f4bfa6aa47mr42760676d6.0.1745493714729; Thu, 24 Apr 2025
- 04:21:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20250423151901.1300944-1-philip.lorenz@bmw.de>
- <20250423151901.1300944-4-philip.lorenz@bmw.de> <D9EOJ22QSMAC.3LNDP3MSMSGCG@bootlin.com>
- <404982c1-3b75-48e9-9182-1b66aa3d3b43@bmw.de>
-In-Reply-To: <404982c1-3b75-48e9-9182-1b66aa3d3b43@bmw.de>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Thu, 24 Apr 2025 13:21:43 +0200
-X-Gm-Features: ATxdqUH98tneGkR7KWhjaDo5puKCcwh-boldLLt2pysUw40f0sOMJDBuZAxMpFM
-Message-ID: <CANNYZj8Sq3KGhrGc=zUzF8Ccp2F-W=v0LQmJsXrFQH5ZA1eJMA@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1745504964; x=1746109764;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ke5JYq1F26/aT98jTSkRXizt/kwVF2BfJZfA6V5G+2o=;
+        b=axAHafnZlXTxD8PtB6mRzAJNddqKYZKJ1EMRgoNqLW3jYzOLW9xGLVGq19ACaQoU9Q
+         cTTdQ9rP9a8w7pES+iWij9O7xKGSWQy9tKe1xyp0GJu5BnDnyJBcjQR/xBVY7XS5Cak6
+         /7ObrYwpTOiRKlsWMHAxCGtctyRyJgyMw4iPMV7ajy8efRVhxZ7994JuakzgrqE9b9Wa
+         VZsSU+/XPSctp9IaUSxdv4A2RW5o1GRRiQBOBuT9QOEgXpZVvcIzZmfO5Je+qXGIOQcN
+         z+frJCKY5yEzSqh093iYfWX1fMZbwVdGyUHn9eJvT4lZ5pXS3trf9JR3ckKdvnbfnbMV
+         A24w==
+X-Forwarded-Encrypted: i=1; AJvYcCVwC1JCG29W31nD/9GbnxBu+L8lsTdr2vIdVEpi93iLzi5Blr32hSZz70qZchwIl23q+p+vPDZNMeUdc5Bv@lists.openembedded.org
+X-Gm-Message-State: AOJu0YxIJpBc50gpNU3tkOaHwNev0D+uu1LaYgfdTRH63OT3wv19RJHe
+	HWvfsLajbhCoMfCv1Bc1/5+duGsW6YHwlKgcow7WUysu1ujumfo4ij8gIEG0nlE=
+X-Gm-Gg: ASbGncuRo3EfOEUmxHDHkHhjP1G7ivFzsxEJje/iTFkPNges7FCTp9D9tCgCUp9MgL5
+	gK5uV1hDXEHG5Orr04G2F9FQHF4SLZJMYffF/Gb9ls468zMmxVUnNERkCR/NZTv4bvp3uxpdtb6
+	NV9+PzRdHpur3HQdLvBF5q9lkAGqJlLuDhVizfa5j7dFIWfSwXXa25ItRJ2pKqmJ8dvsF4uMDGJ
+	NcwEXcMgcjyZt+txCTC0p8n+N1KyqVPV2cb6X5HiIqEVgOKoLbFTEGs7GesUlGV+cFfhnbTrGNM
+	f/uYctrlyoRynvyZEEpkrJaPxTBSPxd/J6qcGsnjYBmhtzgQKBOQYc/D01o48nUUcPmAP8e3XeT
+	nSXEwln7nJZWT5Fo306Z4CKgjaosNIg==
+X-Google-Smtp-Source: AGHT+IFrVEIqlQKsNsgLh7OwmgNWAC9jD+ADkg0ZNniipMx770L4Ouwz3UBp71W9TRxorfGKffhk7g==
+X-Received: by 2002:a05:6000:22ca:b0:39f:91:4444 with SMTP id ffacd0b85a97d-3a06cf595a1mr2483872f8f.16.1745504963936;
+        Thu, 24 Apr 2025 07:29:23 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:94cb:8780:19ce:62be? ([2001:8b0:aba:5f3c:94cb:8780:19ce:62be])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4a8120sm2338605f8f.16.2025.04.24.07.29.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 07:29:23 -0700 (PDT)
+Message-ID: <6ad89426cc5c2762ea26abc94e56f4464dfaffa9.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel] [PATCH 3/8] fetch2: Check for git-lfs existence
  before using it
-To: philip.lorenz@bmw.de
-Cc: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, bitbake-devel@lists.openembedded.org
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: alex.kanavin@gmail.com, philip.lorenz@bmw.de
+Cc: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, 
+	bitbake-devel@lists.openembedded.org
+Date: Thu, 24 Apr 2025 15:29:22 +0100
+In-Reply-To: <CANNYZj8Sq3KGhrGc=zUzF8Ccp2F-W=v0LQmJsXrFQH5ZA1eJMA@mail.gmail.com>
+References: <20250423151901.1300944-1-philip.lorenz@bmw.de>
+	 <20250423151901.1300944-4-philip.lorenz@bmw.de>
+	 <D9EOJ22QSMAC.3LNDP3MSMSGCG@bootlin.com>
+	 <404982c1-3b75-48e9-9182-1b66aa3d3b43@bmw.de>
+	 <CANNYZj8Sq3KGhrGc=zUzF8Ccp2F-W=v0LQmJsXrFQH5ZA1eJMA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0-1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 24 Apr 2025 11:22:03 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17554
+ <bitbake-devel@lists.openembedded.org>; Thu, 24 Apr 2025 14:29:34 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17555
 
-We probably should install git-lfs on the autobuilder workers to
-prevent this from regressing, but keep it as a 'soft' host tool
-dependency otherwise?
+On Thu, 2025-04-24 at 13:21 +0200, Alexander Kanavin via
+lists.openembedded.org wrote:
+> We probably should install git-lfs on the autobuilder workers to
+> prevent this from regressing, but keep it as a 'soft' host tool
+> dependency otherwise?
 
-Alex
+I'm a little reluctant. We try to keep the autobuilders "lean" so that
+we test our minimal requirements work. Adding this in makes it all too
+easy to then have lfs dependencies creep in.
 
-On Thu, 24 Apr 2025 at 09:48, Philip Lorenz via lists.openembedded.org
-<philip.lorenz=3Dbmw.de@lists.openembedded.org> wrote:
->
-> Hi Mathieu,
->
-> On 24.04.25 09:10, Mathieu Dubois-Briand wrote:
-> > Sent from outside the BMW organization  - be CAUTIOUS, particularly wit=
-h links and attachments.
-> > Absender au=C3=9Ferhalb der BMW Organisation - Bitte VORSICHT beim =C3=
-=96ffnen von Links und Anh=C3=A4ngen.
-> > -----------------------------------------------------------------------=
-------------------------
-> >
-> > On Wed Apr 23, 2025 at 5:18 PM CEST, Philip Lorenz via lists.openembedd=
-ed.org wrote:
-> >> So far, existence of `git-lfs` was only checked during unpacking. As t=
-he
-> >> binary is also used in earlier steps also check for its existence ther=
-e.
-> >>
-> >> Additionally, factor out the LFS existence check into a dedicated
-> >> function and call it wherever git-lfs is used for the first time.
-> >>
-> >> Signed-off-by: Philip Lorenz <philip.lorenz@bmw.de>
-> >> ---
-> >
-> >
-> > I was not able to test this series on the autobuilder so far, as I
-> > believe git-lfs is not installed in there. Now maybe this has to be a
-> > new requirement on the host and maybe this is fine. Just two points:
-> > - Is that really a new requirement and is it needed?
->
-> The requirement isn't new but simply was never checked before (so users
-> would've seen a git-lfs not found error rather than the helpful error
-> message that is raised during unpacking). Support for LFS can be
-> explicitly disabled for per URI by adding lfs=3D0 to its parameter list.
-> git-lfs is already needed during downloading as this is the point in
-> time at which the large file objects need to be retrieved. During unpack
-> pointers in the repository (this process is called smudging) are
-> replaced by those downloaded objects.
->
-> However I just noticed that I was missing parentheses in patch 6 (it
-> should have been `url +=3D ";lfs=3D%s" % ("1" if self._need_lfs(ud) else
-> "0")`) which would explain any possible failures (for example in
-> vulkan-samples). If there are no further comments on this series I'll
-> push a revised series in the next couple of days.
->
-> > - We probably need to update a bit of documentation about that.
->
-> I would've hoped that this is already documented since the LFS feature
-> has been around for quite a while (but have to admit that I couldn't
-> find anything on it inside the bitbake documentation). This patch series
-> merely ensures that it also works correctly when used via the "gitsm"
-> fetcher (and while at it improves some of the existing implementation).
-> I'm happy to write up something for the documentation but I'd suggest to
-> send this in via a dedicated patch series.
->
-> Philip
->
->
-> --
-> Philip Lorenz
-> BMW Car IT GmbH, Software-Plattform, -Integration Connected Company, Lise=
--Meitner-Stra=C3=9Fe 14, 89081 Ulm
-> -------------------------------------------------------------------------
-> BMW Car IT GmbH
-> Management: Chris Brandt, Michael B=C3=B6ttrich, Christian Salzmann
-> Domicile and Court of Registry: M=C3=BCnchen HRB 134810
-> -------------------------------------------------------------------------
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#17552): https://lists.openembedded.org/g/bitbake-deve=
-l/message/17552
-> Mute This Topic: https://lists.openembedded.org/mt/112416098/1686489
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alex.k=
-anavin@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
+The autobuilders install should in theory match our minimum
+requirements as documented in our docs.
+
+Cheers,
+
+Richard
 
