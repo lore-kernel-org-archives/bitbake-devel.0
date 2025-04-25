@@ -2,47 +2,49 @@ Return-Path: <philip.lorenz@bmw.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8351C369D1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D73FDC369C2
 	for <webhook@archiver.kernel.org>; Fri, 25 Apr 2025 10:18:37 +0000 (UTC)
-Received: from esa13.hc324-48.eu.iphmx.com (esa13.hc324-48.eu.iphmx.com [207.54.72.35])
- by mx.groups.io with SMTP id smtpd.web11.3609.1745576309351521975
+Received: from esa12.hc324-48.eu.iphmx.com (esa12.hc324-48.eu.iphmx.com [207.54.72.34])
+ by mx.groups.io with SMTP id smtpd.web10.3558.1745576309384851503
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 25 Apr 2025 03:18:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bmw.de header.s=mailing1 header.b=DXWKkIPy;
- spf=pass (domain: bmw.de, ip: 207.54.72.35, mailfrom: prvs=2034cd71c=philip.lorenz@bmw.de)
+ dkim=pass header.i=@bmw.de header.s=mailing1 header.b=M3fo3iI4;
+ spf=pass (domain: bmw.de, ip: 207.54.72.34, mailfrom: prvs=2034cd71c=philip.lorenz@bmw.de)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
   t=1745576309; x=1777112309;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=MLTPduxdVizXKdDa0yA+DtX5gNp7nCxsDy2goumG2W0=;
-  b=DXWKkIPylhcGn5dyvT3yi+cmZoBdtXVQbSgSQKQDw2OINxl8fwdCUDaq
-   TW4PmsiqEUAsyQSDNjb3Q3xlP43cgTkSxU+S0IO+t8XiQgmLfAz19v1Pz
-   /XGsb0fU0Ng0YDf6flvef2XU5v0N9rqENChK6Nj/KZeujwn7zHhli0JQG
-   8=;
-X-CSE-ConnectionGUID: my4INOooTXmGXLLUsXLdag==
-X-CSE-MsgGUID: i5qp8cu9Rl2I/Cgdma3EFg==
-Received: from 160.46.252.46.spf.bmwgroup.com (HELO esagw5.muc) ([160.46.252.46]) by
- esa13.hc324-48.eu.iphmx.com with ESMTP/TLS; 25 Apr 2025 12:18:27 +0200
-Received: from esabb3.muc ([160.50.100.30])  by esagw5.muc with ESMTP/TLS;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=vg2+lyh2R2Sueo4iIR3js+irAiQxe4PHeUw6uhRoWMM=;
+  b=M3fo3iI45j1vfZDXOJ56j7vSdzLE2nfq6ZWswPNOOfJd7K+lR3CIYz6W
+   OIpOiV9C8Bqk8gFJ47WdioLV/qRq0ZqOrWkNhbtYdFUAU2TQnkIfb6oJy
+   aPMJS4UU+h47hLduLv4JTZQccBRcKMIi7YBLwQ5ODBffle/dQvVe+TvZ3
+   0=;
+X-CSE-ConnectionGUID: ICO8T9sbTnuSafu32a+3xA==
+X-CSE-MsgGUID: H37+iIhCT2aZ5HnMHu3CmA==
+Received: from 160.46.252.39.spf.bmwgroup.com (HELO esagw4.muc) ([160.46.252.39]) by
+ esa12.hc324-48.eu.iphmx.com with ESMTP/TLS; 25 Apr 2025 12:18:26 +0200
+Received: from esabb1.muc ([160.50.100.31])  by esagw4.muc with ESMTP/TLS;
  25 Apr 2025 12:18:27 +0200
 Received: from smucmp19d.bmwgroup.net (HELO smucmp19d.europe.bmw.corp)
- ([10.30.13.170]) by esabb3.muc with ESMTP/TLS; 25 Apr 2025 12:18:26 +0200
+ ([10.30.13.170]) by esabb1.muc with ESMTP/TLS; 25 Apr 2025 12:18:27 +0200
 Received: from localhost.localdomain (10.30.85.206) by smucmp19d.europe.bmw.corp
  (2a03:1e80:a15:58f::205d) with Microsoft SMTP Server (version=TLS;
  Fri, 25 Apr 2025 12:18:26 +0200
-X-CSE-ConnectionGUID: rwecRzt1SUaYnNGcHyBrPA==
-X-CSE-MsgGUID: Lo/Mv9oxRfaRkMgWZ4+qEA==
-X-CSE-ConnectionGUID: lLExDJzdQz2lJ+Jw0EQV3Q==
-X-CSE-MsgGUID: n06Jl7iqQR6RLR+TKA4p1A==
+X-CSE-ConnectionGUID: KTXJEtiGTpau4b8b2aGI5Q==
+X-CSE-MsgGUID: kCn3+UMuQCuhp7TaamV6Fg==
+X-CSE-ConnectionGUID: ItTIouiBSEe/ZmPqoyJuIw==
+X-CSE-MsgGUID: QLzYuvhzSPqfMU3Qat+YVg==
 From: Philip Lorenz <philip.lorenz@bmw.de>
 To: <bitbake-devel@lists.openembedded.org>
 CC: Philip Lorenz <philip.lorenz@bmw.de>, <mathieu.dubois-briand@bootlin.com>
-Subject: [PATCH v2 0/8] Fix gitsm LFS support
-Date: Fri, 25 Apr 2025 12:11:47 +0200
-Message-ID: <20250425101155.2905972-1-philip.lorenz@bmw.de>
+Subject: [PATCH v2 1/8] fetch2: Clean up no longer used name parameter
+Date: Fri, 25 Apr 2025 12:11:48 +0200
+Message-ID: <20250425101155.2905972-2-philip.lorenz@bmw.de>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250425101155.2905972-1-philip.lorenz@bmw.de>
+References: <20250425101155.2905972-1-philip.lorenz@bmw.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -52,48 +54,53 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 25 Apr 2025 10:18:37 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17558
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17556
 
-This patch series fixes a number of issues we observed when using the
-gitsm fetcher in conjunction with git-lfs.
+There's no need to pass `name` when it is no longer used.
 
-I'd like to highlight two patches in this series:
-* 0004-fetch2-Simplify-git-LFS-detection: I could not come up with a
-  good reason on why the code so far preferred the content of
- `.gitattributes` on the repository's branch instead of always
-  considering the state of the target revision. Please let me know
-  if there's something I didn't take into account.
-* 0005-fetch2-Use-git-lfs-fetch-to-download-objects.patch: I could not
-  replicate the `git-lfs fetch` behaviour in versions going back to
-  2.13.2 released in 2021. This leads me to believe that the issue
-  leading to this workaround is no longer in place. However, if anyone
-  remembers the actual issue / versions involved I can also retest to
-  confirm that there are no regression.
-
+Signed-off-by: Philip Lorenz <philip.lorenz@bmw.de>
 ---
-V1 -> V2:
-* The correct parameter is now passed for each submodule URL when LFS is
-  explicitly disabled
-* Smudging for submodules is now skipped when LFS is explcitly disabled.
-  This ensures consistent behaviour in setups where git-lfs is installed
-  but should not be used.
-* Test cases are extended to test the LFS disabled state.
-* Explicitly install git lfs into submodule in the test cases to make
-  sure that git-lfs is actually used for storing the files.
+ lib/bb/fetch2/git.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Philip Lorenz (8):
-  fetch2: Clean up no longer used name parameter
-  tests/fetch: Move commonly used imports to top
-  fetch2: Check for git-lfs existence before using it
-  fetch2: Simplify git LFS detection
-  fetch2: Use git-lfs fetch to download objects
-  fetch2: Fix incorrect lfs parametrization for submodules
-  fetch2: Fix LFS object checkout in submodules
-  tests/fetch: Test gitsm with LFS
-
- lib/bb/fetch2/git.py   |  69 ++++++----------
- lib/bb/fetch2/gitsm.py |  13 ++-
- lib/bb/tests/fetch.py  | 183 ++++++++++++++++++++++++++++++-----------
- 3 files changed, 163 insertions(+), 102 deletions(-)
-
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index b47a53e3b..39c183927 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -327,7 +327,7 @@ class Git(FetchMethod):
+         if self.clonedir_need_update(ud, d):
+             return True
+ 
+-        if not self._lfs_objects_downloaded(ud, d, ud.name, ud.clonedir):
++        if not self._lfs_objects_downloaded(ud, d, ud.clonedir):
+             return True
+         return False
+ 
+@@ -802,7 +802,7 @@ class Git(FetchMethod):
+             raise bb.fetch2.FetchError("The command '%s' gave output with more then 1 line unexpectedly, output: '%s'" % (cmd, output))
+         return output.split()[0] != "0"
+ 
+-    def _lfs_objects_downloaded(self, ud, d, name, wd):
++    def _lfs_objects_downloaded(self, ud, d, wd):
+         """
+         Verifies whether the LFS objects for requested revisions have already been downloaded
+         """
+@@ -841,7 +841,7 @@ class Git(FetchMethod):
+ 
+         if ud.nobranch:
+             # If no branch is specified, use the current git commit
+-            refname = self._build_revision(ud, d, ud.name)
++            refname = ud.revision
+         elif wd == ud.clonedir:
+             # The bare clonedir doesn't use the remote names; it has the branch immediately.
+             refname = ud.branch
+@@ -995,7 +995,7 @@ class Git(FetchMethod):
+         Return a sortable revision number by counting commits in the history
+         Based on gitpkgv.bblass in meta-openembedded
+         """
+-        rev = self._build_revision(ud, d, name)
++        rev = ud.revision
+         localpath = ud.localpath
+         rev_file = os.path.join(localpath, "oe-gitpkgv_" + rev)
+         if not os.path.exists(localpath):
 
