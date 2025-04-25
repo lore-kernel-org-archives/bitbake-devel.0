@@ -1,1408 +1,222 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <peter.marko@siemens.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECCAC369D5
-	for <webhook@archiver.kernel.org>; Fri, 25 Apr 2025 12:35:49 +0000 (UTC)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web10.5535.1745584544852296882
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1F5C369C2
+	for <webhook@archiver.kernel.org>; Fri, 25 Apr 2025 12:45:59 +0000 (UTC)
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.69])
+ by mx.groups.io with SMTP id smtpd.web10.5683.1745585158584954241
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 25 Apr 2025 05:35:45 -0700
+ Fri, 25 Apr 2025 05:45:59 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=B7ez7UPR;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c0e0bc733so1996317f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 25 Apr 2025 05:35:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1745584543; x=1746189343; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VSUSByd/KNUODBLW1ziA0v6UZ1z+apiPF2hcwmI+ki4=;
-        b=B7ez7UPRFkCKu+yI/ecv6RlsNYAKF6w/ooo70jlzegOQn+OnzR11Y8TcbI+SwQI0bK
-         npUr/oTf7PxImBhKE8NNT5WXlixjBA7oCrElnodwKUa7qfvdgKJCPbsjd1bKjm4TaYWY
-         4Ma/HWY1tDRTzxXnA0HLgkff/SP7dAwX3jDow=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745584543; x=1746189343;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VSUSByd/KNUODBLW1ziA0v6UZ1z+apiPF2hcwmI+ki4=;
-        b=CFJ6AwcpBmjypvtKfof979n+UR4crFaPGvDux8DQ9Srh9I/sHMeHMSI1piamlXCVHQ
-         n4cmvifiDH01LioxsK3/EejQAxxQXSGogUbQlQhwFcNZoaA+nqmrKOhrotEHbtDOci9D
-         J5gXJbXyZccxVdO7OdrxlL5f+hHekjU/VT0qi07Au0CEYFuVzUc2G5aWvgq1RQmXaE9E
-         wV2wU1UDru7SQdjM5YlennzSbm+Q124V5HDxrs0+39QR2SF8rFxfFvuli9yBOSGV5Ilm
-         oYfGxW3ppTZuzg8sXwyvyiirWnuIzi5Ati2irZz0iAsLKpxJS5GbV+GO8PCy0dM+Q7ke
-         l0Dg==
-X-Forwarded-Encrypted: i=1; AJvYcCXoSb1GYmObUcJBH8NpJdUyJ6AM6NZ5fppI51GQmB9Z0VYlsBwWDTkqIrDnzPHcXbJ/EA1LoS+kMjtopJ8V@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yxv85DJLXQDz4tvXalJ3uT+p2CaF3rzuyVJLjRx9R/XH+A0Y86t
-	RHdPwyoBmM151ZoaohkZNxewycVKeYPCcEYcbzK02tMvHaVf4cn4u7qrcQhVw8c=
-X-Gm-Gg: ASbGncvDttz046MXDdN6qDluP5xSvzzz8xze1YslZ2+n2faLbVUccXoHoTSFpwWwakr
-	/ksyhQOty+vs58Uf8aZTAo1lrCqhkJ9TF+1IZosei19pTuA92V1XbSZBB5AgApyknwDIzwecX3J
-	7T8MSzmMJI2ly51qX59/xqjCliZIVrIaBwJ92iloeqdjXNxCdXMvGIFojYWY6JRLmu0NqOk7Hrf
-	s48G+6oj0Drvan/nPOV2KDu/U9CFgg0bkopobWZpgpgk6oX7bn+aITadIbV0EteIfOTf0drOQsn
-	lYSF/DJpHtJvBjXLA7EosslVin7NEkOBlG0lQWYX6I/PAUOpsdp+fx9phJS8aIYBI8dLJLLVdoF
-	GvtpwA9lPItZoe/3k19kx2EOnCfxpZg==
-X-Google-Smtp-Source: AGHT+IHyp8eh2V+c+pulN4bHNXRy7FhjAT3rjpn/F5j9S7rlRY6JHNcS/zIS94sAjD2XcL03qDdxhg==
-X-Received: by 2002:a05:6000:18a8:b0:39c:2678:302e with SMTP id ffacd0b85a97d-3a074f1089bmr1746963f8f.45.1745584542832;
-        Fri, 25 Apr 2025 05:35:42 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:4b43:cc8c:5e78:12c1? ([2001:8b0:aba:5f3c:4b43:cc8c:5e78:12c1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073cbdb78sm2219945f8f.41.2025.04.25.05.35.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 05:35:41 -0700 (PDT)
-Message-ID: <522a15ccc1ed1597a5a6b92803536484a3f008a4.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH v2 0/8] Fix gitsm LFS support
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: philip.lorenz@bmw.de, bitbake-devel@lists.openembedded.org
-Cc: mathieu.dubois-briand@bootlin.com
-Date: Fri, 25 Apr 2025 13:35:41 +0100
-In-Reply-To: <20250425101155.2905972-1-philip.lorenz@bmw.de>
+ dkim=pass header.i=@siemens.com header.s=selector2 header.b=xUTOGmZ3;
+ spf=pass (domain: siemens.com, ip: 40.107.20.69, mailfrom: peter.marko@siemens.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=c8ahYzGuzfCcbaXQM6t518mLlA6UES2Yjc31uHGMPhVHVZNNaSaUWLSjKGusQqx13l2T/V9FBDdWwQ+kRnyqx2gJb9qXZlM06lPXLmROgdKaerq+3jrBnpY2SYq8BrcPqCeMMjsgg9Jzwt8LzwzPeZNsxQtgNFVHHbJQhiXt9BjWbK7+sMH8h63zqaLBhfUw4NlJYyIkx15wFmNQVZzkWiiC/vNAn3DG2YhKbb6dLeoCT7VpRztwUIt59CAfGOOXfA0a7mL/quWe3UzenfY6A/D9OCrZKO/DnSHknMQZocRNfUfzM7PoRsp602TzRAW+sLYGKSC6vlqCDr65h9KRiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GzGi3MxD4GSZ28+KAlr2+oDsnaz5+4LQH8KY98Ctn5o=;
+ b=q1/3iujIWiUsWYizmA+to8SChKSYQeuEIrZ7/Gs6E1f6JRB721b1h7iKxmcmNsH7A4ZdFtRT+TiOQkaXEW9xlUSF/2elmkgwdK3Su2FZxdJ3SB/iNgnNrlzChstT2nDSnBwN2pxmLQYn7iNyi/u8oPY/t9rLZgXuDAuAS5f8SmvnZLkkUIok0vlG9C8o57CEFq5RDcbV40zWnW0cx3dHGRNkK4/oLqiKYYbFdn+N7hiZ6k/8tAhiTi6aSS86gsXy6eLI65Zz+4v/D15CnjJxzBqtrK6sE/fLm2u4ir/hsNRSoXr/73WuPM8XJCrwgcJgKlLYtnw4R1Fn2sKhEAxgNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GzGi3MxD4GSZ28+KAlr2+oDsnaz5+4LQH8KY98Ctn5o=;
+ b=xUTOGmZ373F0Kvktp65gc8xL+JW9l1sSzlTozNwAmGbL1wuxd7wt5wTkKixjd2GnLr4dGTZZIFLFUph6+EmDk2N5VfbJGQqaFQgG6ZULDsAKFUw5qB/lkOl1UWjRxwPNK4VOmtVOLnXBTm5B5O06DkgN+OnqRkgoqRCdy7eLXAIjougt0yeUkF3DvgV4vIE4qSnQH0rdihm35aRmtPMPFUUe6uIXo6viHv12Eu/CpDn8s29svMf2+O5UTiwfAXLimgtl5Bsi1xnx/9mKieKnAmiDDQVnOUcmCQqbFtEV2lSGeLak2PYdTizeYwCelRUUu4pShrQnbxv3BwSPkppnsQ==
+Received: from AS1PR10MB5697.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:479::20)
+ by PAVPR10MB7403.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:31f::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.38; Fri, 25 Apr
+ 2025 12:45:54 +0000
+Received: from AS1PR10MB5697.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::6c68:267b:6fd1:d3f2]) by AS1PR10MB5697.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::6c68:267b:6fd1:d3f2%4]) with mapi id 15.20.8678.025; Fri, 25 Apr 2025
+ 12:45:53 +0000
+From: "Marko, Peter" <Peter.Marko@siemens.com>
+To: "richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>,
+	"philip.lorenz@bmw.de" <philip.lorenz@bmw.de>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+CC: "mathieu.dubois-briand@bootlin.com" <mathieu.dubois-briand@bootlin.com>
+Subject: RE: [bitbake-devel] [PATCH v2 0/8] Fix gitsm LFS support
+Thread-Topic: [bitbake-devel] [PATCH v2 0/8] Fix gitsm LFS support
+Thread-Index: AQHbtctuMhFsyO8yp0m9lOBZj5XR67O0UYWAgAABaeA=
+Date: Fri, 25 Apr 2025 12:45:53 +0000
+Message-ID: 
+ <AS1PR10MB569750ACF9183A75F2389811FD842@AS1PR10MB5697.EURPRD10.PROD.OUTLOOK.COM>
 References: <20250425101155.2905972-1-philip.lorenz@bmw.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0-1 
+ <522a15ccc1ed1597a5a6b92803536484a3f008a4.camel@linuxfoundation.org>
+In-Reply-To: 
+ <522a15ccc1ed1597a5a6b92803536484a3f008a4.camel@linuxfoundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: 
+ MSIP_Label_9d258917-277f-42cd-a3cd-14c4e9ee58bc_ActionId=7c92b518-dba2-44a6-b00f-088c8bf1bb60;MSIP_Label_9d258917-277f-42cd-a3cd-14c4e9ee58bc_ContentBits=0;MSIP_Label_9d258917-277f-42cd-a3cd-14c4e9ee58bc_Enabled=true;MSIP_Label_9d258917-277f-42cd-a3cd-14c4e9ee58bc_Method=Standard;MSIP_Label_9d258917-277f-42cd-a3cd-14c4e9ee58bc_Name=restricted;MSIP_Label_9d258917-277f-42cd-a3cd-14c4e9ee58bc_SetDate=2025-04-25T12:40:43Z;MSIP_Label_9d258917-277f-42cd-a3cd-14c4e9ee58bc_SiteId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;MSIP_Label_9d258917-277f-42cd-a3cd-14c4e9ee58bc_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS1PR10MB5697:EE_|PAVPR10MB7403:EE_
+x-ms-office365-filtering-correlation-id: 9cfb4a73-9c74-4304-f023-08dd83f71df8
+x-ms-exchange-atpmessageproperties: SA
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info: 
+ =?utf-8?B?STJsWXczNkdyVzNneWFUMkJMSHgxZksydkc5U015ZWoydlFsZWduWStTcDRN?=
+ =?utf-8?B?ck9OWlRXNTFsNkhPQTdRSS93TmphcmdURENKYlhvN0d2eG16bnQxcEczRTUx?=
+ =?utf-8?B?Z21aaFh1TXN1Q0ZpTWF3WjBvVHBXZG5mQnBNb3h4OTJPS2dzbHBoU2pMQTB0?=
+ =?utf-8?B?RnRYeWRjVmp6UzJORll1N1VDQUZ3bTlTbHdrczdIdUxkVUtXbVdlMXJFVXU2?=
+ =?utf-8?B?VVlzRlQrVEZSblZKQ2FYSzVVVXU3Q1JQNTNQdGVwOGZVZGxlODUwcTN0Sm42?=
+ =?utf-8?B?c0IzS09paVlvTDV2SkhUdmppVlVFNVZTeURZQ0QwQlpleVpySDZWM2ZOdHQr?=
+ =?utf-8?B?N1M0VldRYzhTdEUzbWtSNmhhUFdnSVJYeVZQRm5zYWVGWjA3dEhkNndRVjlp?=
+ =?utf-8?B?a2FpaW8rNlUvMExGSjZONkdKZnhhWkZZYktzVlV4ZXgzdWZwdUhiUDNKZFpW?=
+ =?utf-8?B?d3l1c29SeWNGc2VkemplWGhRR203SWs5VFVhdFQyR0hLTzNnVStGR0ZEdU54?=
+ =?utf-8?B?eVM3TVljdEFjWC9VcytMYVIzWnpUWUhKK1ZRZjljbXhHYVIrQ29yQ1ZyMVhF?=
+ =?utf-8?B?T21IdDF6NnBsL25sUjhXOWtyaFl0OWlmWU0reVVKbGswZHMrcEQ2UU9CZVN4?=
+ =?utf-8?B?dFo0K3dqRm4vU3pkbTVhbzdSN3JVQlNwNTE2Si9sTGd6Q2U5dC9BV1JSOFVm?=
+ =?utf-8?B?QUVJdkNYZzdwdHR5UkpOeXhJNms5Q2VJWXFuUkl3WVo4OUt1OWFmSnZMWERn?=
+ =?utf-8?B?UkRRaXdnUkcwT0Z3VmMrWnl4dUl6Y2dqU0hPT2ltUmpGR2JCWGhOODRvVFFn?=
+ =?utf-8?B?L3UwdmpQam1RZGZXY0lLQ1hobkdkRUc4WGdTNUt3SUxTa29WTE9nVTVGUFA3?=
+ =?utf-8?B?Z1NDVkkzQWhPVm1XUzJpSzY1NTBDeVNBd2xOQUNlQ1lUemx0RnkydTBPdVBG?=
+ =?utf-8?B?UnRySDVXT0IraGlnYTcrdzhTNHJRcWFDaXFmWDNxelZ3dHJaUEY5UmprN21T?=
+ =?utf-8?B?c3Q5RkEyV3FaOFlHalNjNHMyTStYblFMelI5VlpGRTkvanZJSzFObGFneEo5?=
+ =?utf-8?B?ZlFCdU9keVBXUW9DcStoa2hHbzhXdUwyc3p2N2NWZlh0Uks1V1c2ZWpCYnNW?=
+ =?utf-8?B?M00vNEgxSzN4TWZVd2laemQ4aXJlOWovT0FibDI3VERBbWdGYUE2UHVQUjJi?=
+ =?utf-8?B?WDZ0eTcrd1VXK3MrNTcrdUdsL2RrTEowRTVxUmV0VG1IN2dmQUlhZlQ0cGI4?=
+ =?utf-8?B?OTJrd2FIcGprVVhId3orM1Jic2V6NmJnRXNtQlNmeVljZjhjVHkzUXMwOUx3?=
+ =?utf-8?B?TmtiMWxlSHk5Y0pTM1FKSFpPY3I1bHJpQkRXME0zb0hoUEtvY1ZGcmNEaUlY?=
+ =?utf-8?B?blJTUXJkWGxGR3dyVzBDUWprdUUxeXNxSTBLN1l6MkJWdWh4MzMwTURHeDhS?=
+ =?utf-8?B?Q3d5RFE1UlNrVFRSRkthenNsdFA2ZnA2N3RqVmhTeTBESVdIN3QySzUvcURv?=
+ =?utf-8?B?cGxJQnpzcVQ4MUdaWTUrRkkzT0FGZ1F4Ry8xdVVBcG1kdnQ2clRQWmxudWhj?=
+ =?utf-8?B?NVpKRk50dVYxY2hYb3JMRGxLbVlNTXBCcFdiOUJLVWsxVlZ1L0YvVVlJSGdL?=
+ =?utf-8?B?eE9XTXlDUW92akxzQkNJb01KUGZJTzJORjhtL3BOeWRKcWs1ajZTVytjZzQr?=
+ =?utf-8?B?c0NyWkhyaXd4MG9PRWx3WHdCSk9XWnI0VXBScnFWbzdEOGRpVGFDYmxDSE4r?=
+ =?utf-8?B?VEZheEN2MUlqS2hLZ0M2Y242NnRpV1RtUEVUbTVldjk0THV0UWgralE4Skl1?=
+ =?utf-8?B?NjhPZGFqaCszTmNtNk5ueEJBaktHUVRBYjFrWDRKM0d4QTNiZW00K0VmdXFB?=
+ =?utf-8?B?eWxzbm81RGpaRnEwRXA3TmdNMnVpNXpBOFZsRVVLMXhlTGNRdCtQZ20ybzZV?=
+ =?utf-8?Q?/4lebQwec0w=3D?=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS1PR10MB5697.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?utf-8?B?enQ3VnVxblJXMWpQNUI0MFBOekdjbkJGZU9pV2xEYjJWWWp5OHB1Q3YyRnJD?=
+ =?utf-8?B?czJCQzNYL25ZRFpnUU5KTWpBSkNEUmFPM2R4czdDUzRtQlJMUDdtQktHa2VB?=
+ =?utf-8?B?T2dTbjJBSm5TVUdqOXhTZEFnbTZ5Wkh3ZDYvZGczcVRWVTkvMkIvK01wYWww?=
+ =?utf-8?B?TXVLZjVXUEpJRjA0Wk5oTGQwZ0NIWW13Wm9IeXNXbW5ONTBlM3NkMUhXY1p4?=
+ =?utf-8?B?dmxGRGZJZ0N1d3R5T284L25PVzRKRDBBbmoreGRKNVFZWjQ4VXhiZGltSmFS?=
+ =?utf-8?B?MDk3TkZCQjdjSlo2STZSK1k5WVpmNElQdGFEenk4N09YSFhCa2lrV1lDd2Jt?=
+ =?utf-8?B?My85aFpMOWR2UzFOeTMwblJZT0QwNXJZNDVIL1kzM1ZwbFdGMEhlZkI0b2lr?=
+ =?utf-8?B?V0hRMGRQRVlMdmwxOXZ4RXM2YURXSTg2NUxpUlBsN3drZVltSzEzSm5XSGk5?=
+ =?utf-8?B?aHVoZ0tQTHlmZTUzak1QZTZ0OFpaT3RzQkZDVEl1S3Mxak1PYjlMNDR1SmNU?=
+ =?utf-8?B?aEE0Z0RQTXExVGtkMmhZajBHaFVmYS9ITTUxUXI0cC9qVEpVVWI5alFwWGY5?=
+ =?utf-8?B?WDB1YndPZCtteDd4UjZUanVXZ09JZXBLOWZZaVdaVnd5T2pzM1VrR2RSU1Js?=
+ =?utf-8?B?MytwbjF1aGJVMTVSNzh4c0Y0QnloMnNPRCtKbjNxSzFWbWVtZ3BvMHVDZEhC?=
+ =?utf-8?B?SHNCaUNpYnB3c00vb2lsVjR3QjJXdXoyblpzajNzaFdyMWxoelZqY3FDZ1Fp?=
+ =?utf-8?B?eEdHMENTS1U4SndtVjlyK0NYckd1akdsdUZzSC9mYzRqTHlZS3ZSdDBxQ2Zl?=
+ =?utf-8?B?dUVWc09sT3FacnBTT1NkZ0RkeUU4b25JcG14cTFBWFgyQkczQkU5SU1rTmJB?=
+ =?utf-8?B?ZDR3cGRVb0FvYVl2NVN0NHpFa2k1d1lmYTM0Nk9PUHBIdmg2ci9iMitKZTF4?=
+ =?utf-8?B?N3I3UWRpbU1PQndwNnM5NDJqZ0RZL3lTNTNzNG8wQnJUK2xHRWg0enN1MkFF?=
+ =?utf-8?B?enB3UU1yZHBtaE5YMmtaNHJLcStETDVZazhCS0liT254Vyt6aXMvU2pPWU0z?=
+ =?utf-8?B?WnNMbk12aVRvY3IzaFdrV2lQL3dHNE9GVmp5SXBNSWJpdzRpcGhsL0ZDT2tJ?=
+ =?utf-8?B?RWE0azlnQ0szcjJFa3BXN0FyZGJpMEltaWpseXlwUFBiWFRyc0xTZGpqOGN2?=
+ =?utf-8?B?aTk4bmtSRnk1TnIvcmlWZ1dkVlo5d2c2ZzMvaTNJRGpleVFpbWdPYm1xRm1F?=
+ =?utf-8?B?TVYxOHY5VVoxWXVKcjdrbktmdk1VamcwSEt1SVoydDRQZGtWWVcxOUx4QXln?=
+ =?utf-8?B?RmRCM0lLT0pnb1EwanZFWWl4amhPdUNxTUppQ0h6WWZMa1pYM2JIdDRaU3NP?=
+ =?utf-8?B?OVpPWTlDTkhBRUsvdmQ4ZWRJQnMwdHNiTUJxckZRUFY2KzJlT2xMVFBqK2Iv?=
+ =?utf-8?B?LytKTHMveTdldTMvRlQ5dFF1S2lPMEVQOGhocDJUdnBOKzVQaXVIYTdoSHpO?=
+ =?utf-8?B?OXZiTTB2cDZrRnRLTlFDRSttSmd4NTFmSEwwQlFsY1lkSTA0QnNRbDV0Q1JM?=
+ =?utf-8?B?Vit0eEw4dDVsVzhQOUdvdXgzQTdPa1lYQzRwVGgyVElYdXRMYklHTTZVcHBT?=
+ =?utf-8?B?T25hODV6aDBNclJiekdMK0gxK3VHVDVDSGFjalIwTFl4RWl4N3AwbHN6dSta?=
+ =?utf-8?B?TWgvdUFqalUvdXpQYm5JeFNkb01ZOG5kMTc2RlF4bHVNeTdvNjMySk1LYjNE?=
+ =?utf-8?B?UnI1ZDExcllyOTlsZzdmQy9kWlM1UTh3UnZFc1FCRDEzamxXYzk5VFlkdnJO?=
+ =?utf-8?B?Z2ovRmRCNGg1Umo2ZzNxdEZHeVRSbzZjL2R2aE5BNktVZ1JvbExwelp4QXd3?=
+ =?utf-8?B?aFlabXpNMmpRQjhiTFJRWEtyYW94b0k4cEdkOTJpVVlhUDZSZkl2UGxVb090?=
+ =?utf-8?B?c0Y3YWRSV1BzUm9qam5taXBVOVdDK3ZqV1ZOemthUllRN01Sa0hrUGFhcUY1?=
+ =?utf-8?B?Yk9PM2dnbWJFWGFHSEhXZStobmZBUmJOdnRaeGJzVmdzWW9BOGREMTl4c3VK?=
+ =?utf-8?B?clJNR2VxbGJVY3FRRmZSZit3OXpRaXVkRlJUdnlQOVZueUtDYXhTNGsvaEVC?=
+ =?utf-8?Q?iAfcOtRrXYHiBLJ7Eayv1mid8?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS1PR10MB5697.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9cfb4a73-9c74-4304-f023-08dd83f71df8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2025 12:45:53.9376
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DdnhV85BloGfIoCi4fGuMcd9WY+jLrlOczBlo3HmOgJBCgsjbVqEbi7lUzbP9Xxh4ADOv3yWHbY/6I6V4ExRPg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR10MB7403
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 25 Apr 2025 12:35:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17565
+ <bitbake-devel@lists.openembedded.org>; Fri, 25 Apr 2025 12:45:59 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17566
 
-On Fri, 2025-04-25 at 12:11 +0200, Philip Lorenz via lists.openembedded.org=
- wrote:
-> This patch series fixes a number of issues we observed when using the
-> gitsm fetcher in conjunction with git-lfs.
->=20
-> I'd like to highlight two patches in this series:
-> * 0004-fetch2-Simplify-git-LFS-detection: I could not come up with a
-> =C2=A0 good reason on why the code so far preferred the content of
-> =C2=A0`.gitattributes` on the repository's branch instead of always
-> =C2=A0 considering the state of the target revision. Please let me know
-> =C2=A0 if there's something I didn't take into account.
-> * 0005-fetch2-Use-git-lfs-fetch-to-download-objects.patch: I could not
-> =C2=A0 replicate the `git-lfs fetch` behaviour in versions going back to
-> =C2=A0 2.13.2 released in 2021. This leads me to believe that the issue
-> =C2=A0 leading to this workaround is no longer in place. However, if anyo=
-ne
-> =C2=A0 remembers the actual issue / versions involved I can also retest t=
-o
-> =C2=A0 confirm that there are no regression.
->=20
-> ---
-> V1 -> V2:
-> * The correct parameter is now passed for each submodule URL when LFS is
-> =C2=A0 explicitly disabled
-> * Smudging for submodules is now skipped when LFS is explcitly disabled.
-> =C2=A0 This ensures consistent behaviour in setups where git-lfs is insta=
-lled
-> =C2=A0 but should not be used.
-> * Test cases are extended to test the LFS disabled state.
-> * Explicitly install git lfs into submodule in the test cases to make
-> =C2=A0 sure that git-lfs is actually used for storing the files.
->=20
-> Philip Lorenz (8):
-> =C2=A0 fetch2: Clean up no longer used name parameter
-> =C2=A0 tests/fetch: Move commonly used imports to top
-> =C2=A0 fetch2: Check for git-lfs existence before using it
-> =C2=A0 fetch2: Simplify git LFS detection
-> =C2=A0 fetch2: Use git-lfs fetch to download objects
-> =C2=A0 fetch2: Fix incorrect lfs parametrization for submodules
-> =C2=A0 fetch2: Fix LFS object checkout in submodules
-> =C2=A0 tests/fetch: Test gitsm with LFS
->=20
-> =C2=A0lib/bb/fetch2/git.py=C2=A0=C2=A0 |=C2=A0 69 ++++++----------
-> =C2=A0lib/bb/fetch2/gitsm.py |=C2=A0 13 ++-
-> =C2=A0lib/bb/tests/fetch.py=C2=A0 | 183 ++++++++++++++++++++++++++++++---=
---------
-> =C2=A03 files changed, 163 insertions(+), 102 deletions(-)
-
-With this series applied, OE-Core throws a lot of errors, see below.
-I'm not convinced we have that much LFS use so something seems wrong...
-
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/1465/ste=
-ps/13/logs/stdio
-
-Cheers,
-
-Richard
-
-stdio: ERROR: acpica-20240827-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://github.com/acpica/acpica has LFS content, install git=
--lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: acpica-native-20240827-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/acpica/acpica has LFS content, inst=
-all git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: argp-standalone-1.4.1-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://github.com/ericonr/argp-standalone has LFS cont=
-ent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', No=
-ne)
-stdio: ERROR: asciidoc-10.2.1-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://github.com/asciidoc/asciidoc-py has LFS content, inst=
-all git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: asciidoc-native-10.2.1-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/asciidoc/asciidoc-py has LFS conten=
-t, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None=
-)
-stdio: ERROR: avahi-libnss-mdns-0.15.1-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://github.com/lathiat/nss-mdns has LFS content,=
- install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: babeltrace-1.5.11-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://git.efficios.com/babeltrace.git has LFS content, in=
-stall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: babeltrace2-2.1.0-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://git.efficios.com/babeltrace.git has LFS content, in=
-stall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: baremetal-helloworld-0.1+git-r0 do_fetch: Bitbake Fetcher Err=
-or: FetchError('Repository https://github.com/ahcbb6/baremetal-helloqemu.gi=
-t has LFS content, install git-lfs on host to download (or set lfs=3D0 to i=
-gnore it)', None)
-stdio: ERROR: bindgen-cli-0.71.1-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Repository https://github.com/rust-lang/rust-bindgen.git has LFS cont=
-ent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', No=
-ne)
-stdio: ERROR: bindgen-cli-native-0.71.1-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://github.com/rust-lang/rust-bindgen.git has L=
-FS content, install git-lfs on host to download (or set lfs=3D0 to ignore i=
-t)', None)
-stdio: ERROR: binutils-2.44-r0 do_fetch: Bitbake Fetcher Error: FetchError(=
-'Repository https://sourceware.org/git/binutils-gdb.git has LFS content, in=
-stall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: binutils-cross-canadian-x86-64-2.44-r0 do_fetch: Bitbake Fetc=
-her Error: FetchError('Repository https://sourceware.org/git/binutils-gdb.g=
-it has LFS content, install git-lfs on host to download (or set lfs=3D0 to =
-ignore it)', None)
-stdio: ERROR: binutils-crosssdk-x86_64-pokysdk-linux-2.44-r0 do_fetch: Bitb=
-ake Fetcher Error: FetchError('Repository https://sourceware.org/git/binuti=
-ls-gdb.git has LFS content, install git-lfs on host to download (or set lfs=
-=3D0 to ignore it)', None)
-stdio: ERROR: binutils-cross-x86_64-2.44-r0 do_fetch: Bitbake Fetcher Error=
-: FetchError('Repository https://sourceware.org/git/binutils-gdb.git has LF=
-S content, install git-lfs on host to download (or set lfs=3D0 to ignore it=
-)', None)
-stdio: ERROR: binutils-native-2.44-r0 do_fetch: Bitbake Fetcher Error: Fetc=
-hError('Repository https://sourceware.org/git/binutils-gdb.git has LFS cont=
-ent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', No=
-ne)
-stdio: ERROR: binutils-testsuite-2.44-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://sourceware.org/git/binutils-gdb.git has LFS c=
-ontent, install git-lfs on host to download (or set lfs=3D0 to ignore it)',=
- None)
-stdio: ERROR: blktrace-1.3.0+git-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Repository https://git.kernel.dk/blktrace.git has LFS content, instal=
-l git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: bmaptool-3.9.0+git-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Repository https://github.com/yoctoproject/bmaptool has LFS content, =
-install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: bmaptool-native-3.9.0+git-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://github.com/yoctoproject/bmaptool has LFS co=
-ntent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', =
-None)
-stdio: ERROR: boost-build-native-1_1.87.0-r0 do_fetch: Bitbake Fetcher Erro=
-r: FetchError('Repository https://github.com/boostorg/build has LFS content=
-, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: bootchart2-0.14.9-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://github.com/xrmx/bootchart.git has LFS content, inst=
-all git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: bootchart2-native-0.14.9-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://github.com/xrmx/bootchart.git has LFS conten=
-t, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None=
-)
-stdio: ERROR: btrfs-tools-6.14-r0 do_fetch: Bitbake Fetcher Error: FetchErr=
-or('Repository https://github.com/kdave/btrfs-progs.git has LFS content, in=
-stall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: btrfs-tools-native-6.14-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://github.com/kdave/btrfs-progs.git has LFS cont=
-ent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', No=
-ne)
-stdio: ERROR: build-appliance-image-15.0.0-r0 do_fetch: Bitbake Fetcher Err=
-or: FetchError('Repository git://git.yoctoproject.org/poky has LFS content,=
- install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: bzip2-1.0.8-r0 do_fetch: Bitbake Fetcher Error: FetchError('R=
-epository https://sourceware.org/git/bzip2-tests.git has LFS content, insta=
-ll git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: connman-gnome-0.7-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://github.com/connectivity/connman-gnome.git has LFS c=
-ontent, install git-lfs on host to download (or set lfs=3D0 to ignore it)',=
- None)
-stdio: ERROR: cracklib-2.10.3-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://github.com/cracklib/cracklib has LFS content, install=
- git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: cracklib-native-2.10.3-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/cracklib/cracklib has LFS content, =
-install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: createrepo-c-1.2.1-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Repository https://github.com/rpm-software-management/createrepo_c ha=
-s LFS content, install git-lfs on host to download (or set lfs=3D0 to ignor=
-e it)', None)
-stdio: ERROR: createrepo-c-native-1.2.1-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://github.com/rpm-software-management/createre=
-po_c has LFS content, install git-lfs on host to download (or set lfs=3D0 t=
-o ignore it)', None)
-stdio: ERROR: cross-localedef-native-2.41+git-r0 do_fetch: Bitbake Fetcher =
-Error: FetchError('Repository https://sourceware.org/git/glibc.git has LFS =
-content, install git-lfs on host to download (or set lfs=3D0 to ignore it)'=
-, None)
-stdio: ERROR: cryptodev-linux-1.14-r0 do_fetch: Bitbake Fetcher Error: Fetc=
-hError('Repository https://github.com/cryptodev-linux/cryptodev-linux has L=
-FS content, install git-lfs on host to download (or set lfs=3D0 to ignore i=
-t)', None)
-stdio: ERROR: cryptodev-linux-native-1.14-r0 do_fetch: Bitbake Fetcher Erro=
-r: FetchError('Repository https://github.com/cryptodev-linux/cryptodev-linu=
-x has LFS content, install git-lfs on host to download (or set lfs=3D0 to i=
-gnore it)', None)
-stdio: ERROR: cryptodev-module-1.14-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://github.com/cryptodev-linux/cryptodev-linux has =
-LFS content, install git-lfs on host to download (or set lfs=3D0 to ignore =
-it)', None)
-stdio: ERROR: cryptodev-tests-1.14-r0 do_fetch: Bitbake Fetcher Error: Fetc=
-hError('Repository https://github.com/cryptodev-linux/cryptodev-linux has L=
-FS content, install git-lfs on host to download (or set lfs=3D0 to ignore i=
-t)', None)
-stdio: ERROR: dbus-wait-0.1+git-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://git.yoctoproject.org/dbus-wait has LFS content, ins=
-tall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: debianutils-5.21-r0 do_fetch: Bitbake Fetcher Error: FetchErr=
-or('Repository https://salsa.debian.org/debian/debianutils.git has LFS cont=
-ent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', No=
-ne)
-stdio: ERROR: debianutils-native-5.21-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://salsa.debian.org/debian/debianutils.git has L=
-FS content, install git-lfs on host to download (or set lfs=3D0 to ignore i=
-t)', None)
-stdio: ERROR: devtool-upgrade-test2-0.1+git-r2 do_fetch: Bitbake Fetcher Er=
-ror: FetchError('Repository git://git.yoctoproject.org/dbus-wait has LFS co=
-ntent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', =
-None)
-stdio: ERROR: dhcpcd-10.2.2-r0 do_fetch: Bitbake Fetcher Error: FetchError(=
-'Repository https://github.com/NetworkConfiguration/dhcpcd has LFS content,=
- install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: distcc-3.4-r0 do_fetch: Bitbake Fetcher Error: FetchError('Re=
-pository https://github.com/distcc/distcc.git has LFS content, install git-=
-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: dnf-4.22.0-r0 do_fetch: Bitbake Fetcher Error: FetchError('Re=
-pository https://github.com/rpm-software-management/dnf.git has LFS content=
-, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: dnf-native-4.22.0-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://github.com/rpm-software-management/dnf.git has LFS =
-content, install git-lfs on host to download (or set lfs=3D0 to ignore it)'=
-, None)
-stdio: ERROR: dos2unix-7.5.2-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://git.code.sf.net/p/dos2unix/dos2unix has LFS content, i=
-nstall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: dos2unix-native-7.5.2-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://git.code.sf.net/p/dos2unix/dos2unix has LFS con=
-tent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', N=
-one)
-stdio: ERROR: dpkg-1.22.11-r0 do_fetch: Bitbake Fetcher Error: FetchError('=
-Repository https://salsa.debian.org/dpkg-team/dpkg.git has LFS content, ins=
-tall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: dpkg-native-1.22.11-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://salsa.debian.org/dpkg-team/dpkg.git has LFS conte=
-nt, install git-lfs on host to download (or set lfs=3D0 to ignore it)', Non=
-e)
-stdio: ERROR: dtc-1.7.2-r0 do_fetch: Bitbake Fetcher Error: FetchError('Rep=
-ository https://git.kernel.org/pub/scm/utils/dtc/dtc.git has LFS content, i=
-nstall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: dtc-native-1.7.2-r0 do_fetch: Bitbake Fetcher Error: FetchErr=
-or('Repository https://git.kernel.org/pub/scm/utils/dtc/dtc.git has LFS con=
-tent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', N=
-one)
-stdio: ERROR: e2fsprogs-1.47.1-r0 do_fetch: Bitbake Fetcher Error: FetchErr=
-or('Repository https://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git has LFS=
- content, install git-lfs on host to download (or set lfs=3D0 to ignore it)=
-', None)
-stdio: ERROR: e2fsprogs-native-1.47.1-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git =
-has LFS content, install git-lfs on host to download (or set lfs=3D0 to ign=
-ore it)', None)
-stdio: ERROR: efibootmgr-18-r0 do_fetch: Bitbake Fetcher Error: FetchError(=
-'Repository https://github.com/rhinstaller/efibootmgr.git has LFS content, =
-install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: efivar-39-r0 do_fetch: Bitbake Fetcher Error: FetchError('Rep=
-ository https://github.com/rhinstaller/efivar.git has LFS content, install =
-git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: efivar-native-39-r0 do_fetch: Bitbake Fetcher Error: FetchErr=
-or('Repository https://github.com/rhinstaller/efivar.git has LFS content, i=
-nstall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: erofs-utils-1.8.5-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs=
--utils.git has LFS content, install git-lfs on host to download (or set lfs=
-=3D0 to ignore it)', None)
-stdio: ERROR: erofs-utils-native-1.8.5-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://git.kernel.org/pub/scm/linux/kernel/git/xian=
-g/erofs-utils.git has LFS content, install git-lfs on host to download (or =
-set lfs=3D0 to ignore it)', None)
-stdio: ERROR: fastfloat-8.0.2-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://github.com/fastfloat/fast_float.git has LFS content, =
-install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: file-5.46-r0 do_fetch: Bitbake Fetcher Error: FetchError('Rep=
-ository https://github.com/file/file.git has LFS content, install git-lfs o=
-n host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: fmt-11.1.4-r0 do_fetch: Bitbake Fetcher Error: FetchError('Re=
-pository https://github.com/fmtlib/fmt has LFS content, install git-lfs on =
-host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: fmt-native-11.1.4-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://github.com/fmtlib/fmt has LFS content, install git-=
-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: fts-1.2.7-r0 do_fetch: Bitbake Fetcher Error: FetchError('Rep=
-ository https://github.com/pullmoll/musl-fts.git has LFS content, install g=
-it-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: gcompat-1.1.0-r0 do_fetch: Bitbake Fetcher Error: FetchError(=
-'Repository https://git.adelielinux.org/adelie/gcompat.git has LFS content,=
- install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: gi-docgen-2025.3-r0 do_fetch: Bitbake Fetcher Error: FetchErr=
-or('Repository https://gitlab.gnome.org/GNOME/gi-docgen.git has LFS content=
-, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: gi-docgen-native-2025.3-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://gitlab.gnome.org/GNOME/gi-docgen.git has LFS =
-content, install git-lfs on host to download (or set lfs=3D0 to ignore it)'=
-, None)
-stdio: ERROR: gitrepotest-1.0-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://git.yoctoproject.org/git/matchbox-panel-2 has LFS con=
-tent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', N=
-one)
-stdio: ERROR: git-submodule-test-1.0-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository git://git.yoctoproject.org/git-submodule-test has LFS =
-content, install git-lfs on host to download (or set lfs=3D0 to ignore it)'=
-, None)
-stdio: ERROR: gitunpackoffline-0.0+git-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://git.yoctoproject.org/git/matchbox-panel-2 ha=
-s LFS content, install git-lfs on host to download (or set lfs=3D0 to ignor=
-e it)', None)
-stdio: ERROR: gitunpackoffline-fail-1.0-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://git.yoctoproject.org/git/matchbox-panel-2 h=
-as LFS content, install git-lfs on host to download (or set lfs=3D0 to igno=
-re it)', None)
-stdio: ERROR: glibc-2.41+git-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://sourceware.org/git/glibc.git has LFS content, install =
-git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: glibc-testsuite-2.41+git-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://sourceware.org/git/glibc.git has LFS content=
-, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: glibc-y2038-tests-2.41+git-r0 do_fetch: Bitbake Fetcher Error=
-: FetchError('Repository https://sourceware.org/git/glibc.git has LFS conte=
-nt, install git-lfs on host to download (or set lfs=3D0 to ignore it)', Non=
-e)
-stdio: ERROR: glslang-1_1.4.309.0-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://github.com/KhronosGroup/glslang.git has LFS conte=
-nt, install git-lfs on host to download (or set lfs=3D0 to ignore it)', Non=
-e)
-stdio: ERROR: glslang-native-1_1.4.309.0-r0 do_fetch: Bitbake Fetcher Error=
-: FetchError('Repository https://github.com/KhronosGroup/glslang.git has LF=
-S content, install git-lfs on host to download (or set lfs=3D0 to ignore it=
-)', None)
-stdio: ERROR: gnome-desktop-testing-2021.1-r0 do_fetch: Bitbake Fetcher Err=
-or: FetchError('Repository https://gitlab.gnome.org/GNOME/gnome-desktop-tes=
-ting.git has LFS content, install git-lfs on host to download (or set lfs=
-=3D0 to ignore it)', None)
-stdio: ERROR: gnu-config-20240823+git-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://git.savannah.gnu.org/git/config.git has LFS c=
-ontent, install git-lfs on host to download (or set lfs=3D0 to ignore it)',=
- None)
-stdio: ERROR: gnu-config-native-20240823+git-r0 do_fetch: Bitbake Fetcher E=
-rror: FetchError('Repository https://git.savannah.gnu.org/git/config.git ha=
-s LFS content, install git-lfs on host to download (or set lfs=3D0 to ignor=
-e it)', None)
-stdio: ERROR: gnu-efi-4.0.0-r0 do_fetch: Bitbake Fetcher Error: FetchError(=
-'Repository https://github.com/ncroxon/gnu-efi has LFS content, install git=
--lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: gnu-efi-native-4.0.0-r0 do_fetch: Bitbake Fetcher Error: Fetc=
-hError('Repository https://github.com/ncroxon/gnu-efi has LFS content, inst=
-all git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: go-helloworld-0.1-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://go.googlesource.com/example has LFS content, instal=
-l git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: gst-examples-1.18.6-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://gitlab.freedesktop.org/gstreamer/gst-examples.git=
- has LFS content, install git-lfs on host to download (or set lfs=3D0 to ig=
-nore it)', None)
-stdio: ERROR: hello-rs-0.1.0-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://github.com/akiernan/hello-bin.git has LFS content, ins=
-tall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: hwdata-0.394-r0 do_fetch: Bitbake Fetcher Error: FetchError('=
-Repository https://github.com/vcrhonek/hwdata.git has LFS content, install =
-git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: hwdata-native-0.394-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://github.com/vcrhonek/hwdata.git has LFS content, i=
-nstall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: hwlatdetect-1_2.8-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git =
-has LFS content, install git-lfs on host to download (or set lfs=3D0 to ign=
-ore it)', None)
-stdio: ERROR: ifupdown-0.8.44-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://salsa.debian.org/debian/ifupdown.git has LFS content,=
- install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: igt-gpu-tools-1.30-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Repository https://gitlab.freedesktop.org/drm/igt-gpu-tools.git has L=
-FS content, install git-lfs on host to download (or set lfs=3D0 to ignore i=
-t)', None)
-stdio: ERROR: init-system-helpers-1.68-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://salsa.debian.org/debian/init-system-helpers.=
-git has LFS content, install git-lfs on host to download (or set lfs=3D0 to=
- ignore it)', None)
-stdio: ERROR: iputils-20240905-r0 do_fetch: Bitbake Fetcher Error: FetchErr=
-or('Repository https://github.com/iputils/iputils has LFS content, install =
-git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: iso-codes-4.17.0-r0 do_fetch: Bitbake Fetcher Error: FetchErr=
-or('Repository https://salsa.debian.org/iso-codes-team/iso-codes.git has LF=
-S content, install git-lfs on host to download (or set lfs=3D0 to ignore it=
-)', None)
-stdio: ERROR: iso-codes-native-4.17.0-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://salsa.debian.org/iso-codes-team/iso-codes.git=
- has LFS content, install git-lfs on host to download (or set lfs=3D0 to ig=
-nore it)', None)
-stdio: ERROR: kern-tools-native-0.3+git-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://git.yoctoproject.org/yocto-kernel-tools.git=
- has LFS content, install git-lfs on host to download (or set lfs=3D0 to ig=
-nore it)', None)
-stdio: ERROR: kmscube-0.0.1+git-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://gitlab.freedesktop.org/mesa/kmscube has LFS content=
-, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: l3afpad-0.8.18.1.11+git-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://github.com/stevenhoneyman/l3afpad.git has LFS=
- content, install git-lfs on host to download (or set lfs=3D0 to ignore it)=
-', None)
-stdio: ERROR: libaio-0.3.113-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://pagure.io/libaio.git has LFS content, install git-lfs =
-on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libaio-native-0.3.113-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://pagure.io/libaio.git has LFS content, install g=
-it-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libcap-ng-0.8.5-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://github.com/stevegrubb/libcap-ng.git has LFS content, =
-install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libcap-ng-native-0.8.5-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/stevegrubb/libcap-ng.git has LFS co=
-ntent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', =
-None)
-stdio: ERROR: libcap-ng-python-0.8.5-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/stevegrubb/libcap-ng.git has LFS co=
-ntent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', =
-None)
-stdio: ERROR: libcap-ng-python-native-0.8.5-r0 do_fetch: Bitbake Fetcher Er=
-ror: FetchError('Repository https://github.com/stevegrubb/libcap-ng.git has=
- LFS content, install git-lfs on host to download (or set lfs=3D0 to ignore=
- it)', None)
-stdio: ERROR: libcomps-0.1.21-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://github.com/rpm-software-management/libcomps.git has L=
-FS content, install git-lfs on host to download (or set lfs=3D0 to ignore i=
-t)', None)
-stdio: ERROR: libcomps-native-0.1.21-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/rpm-software-management/libcomps.gi=
-t has LFS content, install git-lfs on host to download (or set lfs=3D0 to i=
-gnore it)', None)
-stdio: ERROR: libc-test-0+git-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://repo.or.cz/libc-test has LFS content, install git-lfs=
- on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libdisplay-info-0.2.0-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://gitlab.freedesktop.org/emersion/libdisplay-info=
-.git has LFS content, install git-lfs on host to download (or set lfs=3D0 t=
-o ignore it)', None)
-stdio: ERROR: libdnf-0.74.0-r0 do_fetch: Bitbake Fetcher Error: FetchError(=
-'Repository https://github.com/rpm-software-management/libdnf has LFS conte=
-nt, install git-lfs on host to download (or set lfs=3D0 to ignore it)', Non=
-e)
-stdio: ERROR: libdnf-native-0.74.0-r0 do_fetch: Bitbake Fetcher Error: Fetc=
-hError('Repository https://github.com/rpm-software-management/libdnf has LF=
-S content, install git-lfs on host to download (or set lfs=3D0 to ignore it=
-)', None)
-stdio: ERROR: libepoxy-1.5.10-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://github.com/anholt/libepoxy has LFS content, install g=
-it-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libepoxy-native-1.5.10-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/anholt/libepoxy has LFS content, in=
-stall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libfakekey-0.3+git-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Repository https://git.yoctoproject.org/libfakekey has LFS content, i=
-nstall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libgit2-1.9.0-r0 do_fetch: Bitbake Fetcher Error: FetchError(=
-'Repository https://github.com/libgit2/libgit2.git has LFS content, install=
- git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libgit2-native-1.9.0-r0 do_fetch: Bitbake Fetcher Error: Fetc=
-hError('Repository https://github.com/libgit2/libgit2.git has LFS content, =
-install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libgloss-4.4.0+git-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Repository https://sourceware.org/git/newlib-cygwin.git has LFS conte=
-nt, install git-lfs on host to download (or set lfs=3D0 to ignore it)', Non=
-e)
-stdio: ERROR: libhandy-1.8.3-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://gitlab.gnome.org/GNOME/libhandy.git has LFS content, i=
-nstall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libinput-1.28.1-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://gitlab.freedesktop.org/libinput/libinput.git has LFS =
-content, install git-lfs on host to download (or set lfs=3D0 to ignore it)'=
-, None)
-stdio: ERROR: libjitterentropy-3.6.2-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/smuellerDD/jitterentropy-library.gi=
-t has LFS content, install git-lfs on host to download (or set lfs=3D0 to i=
-gnore it)', None)
-stdio: ERROR: libmatchbox-1.13-r0 do_fetch: Bitbake Fetcher Error: FetchErr=
-or('Repository https://git.yoctoproject.org/libmatchbox has LFS content, in=
-stall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libmodulemd-2.15.0-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Repository https://github.com/fedora-modularity/libmodulemd has LFS c=
-ontent, install git-lfs on host to download (or set lfs=3D0 to ignore it)',=
- None)
-stdio: ERROR: libmodulemd-native-2.15.0-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://github.com/fedora-modularity/libmodulemd ha=
-s LFS content, install git-lfs on host to download (or set lfs=3D0 to ignor=
-e it)', None)
-stdio: ERROR: libnsl2-2.0.1-r0 do_fetch: Bitbake Fetcher Error: FetchError(=
-'Repository https://github.com/thkukuk/libnsl has LFS content, install git-=
-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libnsl2-native-2.0.1-r0 do_fetch: Bitbake Fetcher Error: Fetc=
-hError('Repository https://github.com/thkukuk/libnsl has LFS content, insta=
-ll git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libnss-nis-3.2-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://github.com/thkukuk/libnss_nis has LFS content, install=
- git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libnss-nis-native-3.2-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://github.com/thkukuk/libnss_nis has LFS content, =
-install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libportal-0.9.1-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://github.com/flatpak/libportal.git has LFS content, ins=
-tall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libproxy-0.5.9-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://github.com/libproxy/libproxy has LFS content, install =
-git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: librepo-1.19.0-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://github.com/rpm-software-management/librepo.git has LFS=
- content, install git-lfs on host to download (or set lfs=3D0 to ignore it)=
-', None)
-stdio: ERROR: librepo-native-1.19.0-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://github.com/rpm-software-management/librepo.git =
-has LFS content, install git-lfs on host to download (or set lfs=3D0 to ign=
-ore it)', None)
-stdio: ERROR: libsass-3.6.6-r0 do_fetch: Bitbake Fetcher Error: FetchError(=
-'Repository https://github.com/sass/libsass.git has LFS content, install gi=
-t-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libsass-native-3.6.6-r0 do_fetch: Bitbake Fetcher Error: Fetc=
-hError('Repository https://github.com/sass/libsass.git has LFS content, ins=
-tall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libseccomp-2.6.0-r0 do_fetch: Bitbake Fetcher Error: FetchErr=
-or('Repository https://github.com/seccomp/libseccomp.git has LFS content, i=
-nstall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libslirp-4.9.0-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://gitlab.freedesktop.org/slirp/libslirp.git has LFS cont=
-ent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', No=
-ne)
-stdio: ERROR: libslirp-native-4.9.0-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://gitlab.freedesktop.org/slirp/libslirp.git has L=
-FS content, install git-lfs on host to download (or set lfs=3D0 to ignore i=
-t)', None)
-stdio: ERROR: libsolv-0.7.31-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://github.com/openSUSE/libsolv.git has LFS content, insta=
-ll git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libsolv-native-0.7.31-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://github.com/openSUSE/libsolv.git has LFS content=
-, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libtraceevent-1.8.4-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://git.kernel.org/pub/scm/libs/libtrace/libtraceeven=
-t.git has LFS content, install git-lfs on host to download (or set lfs=3D0 =
-to ignore it)', None)
-stdio: ERROR: libubootenv-0.3.6-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://github.com/sbabic/libubootenv has LFS content, inst=
-all git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libubootenv-native-0.3.6-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://github.com/sbabic/libubootenv has LFS conten=
-t, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None=
-)
-stdio: ERROR: libucontext-1.2-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://github.com/kaniini/libucontext has LFS content, insta=
-ll git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libuv-1.50.0-r0 do_fetch: Bitbake Fetcher Error: FetchError('=
-Repository https://github.com/libuv/libuv.git has LFS content, install git-=
-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libuv-native-1.50.0-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://github.com/libuv/libuv.git has LFS content, insta=
-ll git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libva-utils-2.22.0-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Repository https://github.com/intel/libva-utils.git has LFS content, =
-install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libxcrypt-4.4.38-r0 do_fetch: Bitbake Fetcher Error: FetchErr=
-or('Repository https://github.com/besser82/libxcrypt.git has LFS content, i=
-nstall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libxcrypt-compat-4.4.38-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://github.com/besser82/libxcrypt.git has LFS con=
-tent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', N=
-one)
-stdio: ERROR: libxcrypt-compat-native-4.4.38-r0 do_fetch: Bitbake Fetcher E=
-rror: FetchError('Repository https://github.com/besser82/libxcrypt.git has =
-LFS content, install git-lfs on host to download (or set lfs=3D0 to ignore =
-it)', None)
-stdio: ERROR: libxcrypt-native-4.4.38-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://github.com/besser82/libxcrypt.git has LFS con=
-tent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', N=
-one)
-stdio: ERROR: libxcvt-0.1.3-r0 do_fetch: Bitbake Fetcher Error: FetchError(=
-'Repository https://gitlab.freedesktop.org/xorg/lib/libxcvt.git has LFS con=
-tent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', N=
-one)
-stdio: ERROR: libxkbcommon-1.8.1-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Repository https://github.com/xkbcommon/libxkbcommon has LFS content,=
- install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libxkbcommon-native-1.8.1-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://github.com/xkbcommon/libxkbcommon has LFS c=
-ontent, install git-lfs on host to download (or set lfs=3D0 to ignore it)',=
- None)
-stdio: ERROR: libxmlb-0.3.22-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://github.com/hughsie/libxmlb.git has LFS content, instal=
-l git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: libxmlb-native-0.3.22-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://github.com/hughsie/libxmlb.git has LFS content,=
- install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: linux-yocto-6.12.23+git-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://git.yoctoproject.org/linux-yocto.git has LFS =
-content, install git-lfs on host to download (or set lfs=3D0 to ignore it)'=
-, None)
-stdio: ERROR: llvm-20.1.2-r0 do_fetch: Bitbake Fetcher Error: FetchError('R=
-epository https://github.com/KhronosGroup/SPIRV-LLVM-Translator has LFS con=
-tent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', N=
-one)
-stdio: ERROR: llvm-native-20.1.2-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Repository https://github.com/KhronosGroup/SPIRV-LLVM-Translator has =
-LFS content, install git-lfs on host to download (or set lfs=3D0 to ignore =
-it)', None)
-stdio: ERROR: lsof-4.99.4-r0 do_fetch: Bitbake Fetcher Error: FetchError('R=
-epository https://github.com/lsof-org/lsof has LFS content, install git-lfs=
- on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: ltp-20250130-r0 do_fetch: Bitbake Fetcher Error: FetchError('=
-Repository https://github.com/linux-test-project/ltp.git has LFS content, i=
-nstall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: lz4-1_1.10.0-r0 do_fetch: Bitbake Fetcher Error: FetchError('=
-Repository https://github.com/lz4/lz4.git has LFS content, install git-lfs =
-on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: lz4-native-1_1.10.0-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://github.com/lz4/lz4.git has LFS content, install g=
-it-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: makedumpfile-1.7.6-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Repository https://github.com/makedumpfile/makedumpfile has LFS conte=
-nt, install git-lfs on host to download (or set lfs=3D0 to ignore it)', Non=
-e)
-stdio: ERROR: matchbox-config-gtk-0.2+git-r0 do_fetch: Bitbake Fetcher Erro=
-r: FetchError('Repository https://git.yoctoproject.org/matchbox-config-gtk =
-has LFS content, install git-lfs on host to download (or set lfs=3D0 to ign=
-ore it)', None)
-stdio: ERROR: matchbox-desktop-2.3-r0 do_fetch: Bitbake Fetcher Error: Fetc=
-hError('Repository https://git.yoctoproject.org/matchbox-desktop-2 has LFS =
-content, install git-lfs on host to download (or set lfs=3D0 to ignore it)'=
-, None)
-stdio: ERROR: matchbox-keyboard-0.1.1-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://git.yoctoproject.org/matchbox-keyboard has LF=
-S content, install git-lfs on host to download (or set lfs=3D0 to ignore it=
-)', None)
-stdio: ERROR: matchbox-panel-2-2.12-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://git.yoctoproject.org/matchbox-panel-2 has LFS c=
-ontent, install git-lfs on host to download (or set lfs=3D0 to ignore it)',=
- None)
-stdio: ERROR: matchbox-terminal-0.2+git-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://git.yoctoproject.org/matchbox-terminal has =
-LFS content, install git-lfs on host to download (or set lfs=3D0 to ignore =
-it)', None)
-stdio: ERROR: matchbox-theme-sato-0.2-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://git.yoctoproject.org/matchbox-sato has LFS co=
-ntent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', =
-None)
-stdio: ERROR: matchbox-wm-1.2.3-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://git.yoctoproject.org/matchbox-window-manager has LF=
-S content, install git-lfs on host to download (or set lfs=3D0 to ignore it=
-)', None)
-stdio: ERROR: mdadm-4.4-r0 do_fetch: Bitbake Fetcher Error: FetchError('Rep=
-ository https://git.kernel.org/pub/scm/utils/mdadm/mdadm.git has LFS conten=
-t, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None=
-)
-stdio: ERROR: mmc-utils-0.1+git-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://git.kernel.org/pub/scm/utils/mmc/mmc-utils.git has =
-LFS content, install git-lfs on host to download (or set lfs=3D0 to ignore =
-it)', None)
-stdio: ERROR: mobile-broadband-provider-info-1_20240407-r0 do_fetch: Bitbak=
-e Fetcher Error: FetchError('Repository https://gitlab.gnome.org/GNOME/mobi=
-le-broadband-provider-info.git has LFS content, install git-lfs on host to =
-download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: mtd-utils-2.3.0-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository git://git.infradead.org/mtd-utils.git has LFS content, instal=
-l git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: mtd-utils-native-2.3.0-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository git://git.infradead.org/mtd-utils.git has LFS content,=
- install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: mtd-utils-selftest-2.1.4-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository git://git.infradead.org/mtd-utils.git has LFS conten=
-t, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None=
-)
-stdio: ERROR: mtd-utils-selftest-native-2.1.4-r0 do_fetch: Bitbake Fetcher =
-Error: FetchError('Repository git://git.infradead.org/mtd-utils.git has LFS=
- content, install git-lfs on host to download (or set lfs=3D0 to ignore it)=
-', None)
-stdio: ERROR: musl-1.2.5+git-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository git://git.musl-libc.org/musl has LFS content, install git-lfs =
-on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: musl-obstack-1.2.3-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Repository https://github.com/void-linux/musl-obstack has LFS content=
-, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: musl-utils-20170421-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://github.com/boltlinux/musl-utils has LFS content, =
-install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-acpica-20240827-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://github.com/acpica/acpica has LFS content, i=
-nstall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-asciidoc-10.2.1-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://github.com/asciidoc/asciidoc-py has LFS con=
-tent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', N=
-one)
-stdio: ERROR: nativesdk-babeltrace-1.5.11-r0 do_fetch: Bitbake Fetcher Erro=
-r: FetchError('Repository https://git.efficios.com/babeltrace.git has LFS c=
-ontent, install git-lfs on host to download (or set lfs=3D0 to ignore it)',=
- None)
-stdio: ERROR: nativesdk-babeltrace2-2.1.0-r0 do_fetch: Bitbake Fetcher Erro=
-r: FetchError('Repository https://git.efficios.com/babeltrace.git has LFS c=
-ontent, install git-lfs on host to download (or set lfs=3D0 to ignore it)',=
- None)
-stdio: ERROR: nativesdk-binutils-2.44-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://sourceware.org/git/binutils-gdb.git has LFS c=
-ontent, install git-lfs on host to download (or set lfs=3D0 to ignore it)',=
- None)
-stdio: ERROR: nativesdk-bmaptool-3.9.0+git-r0 do_fetch: Bitbake Fetcher Err=
-or: FetchError('Repository https://github.com/yoctoproject/bmaptool has LFS=
- content, install git-lfs on host to download (or set lfs=3D0 to ignore it)=
-', None)
-stdio: ERROR: nativesdk-btrfs-tools-6.14-r0 do_fetch: Bitbake Fetcher Error=
-: FetchError('Repository https://github.com/kdave/btrfs-progs.git has LFS c=
-ontent, install git-lfs on host to download (or set lfs=3D0 to ignore it)',=
- None)
-stdio: ERROR: nativesdk-bzip2-1.0.8-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://sourceware.org/git/bzip2-tests.git has LFS cont=
-ent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', No=
-ne)
-stdio: ERROR: nativesdk-cracklib-2.10.3-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://github.com/cracklib/cracklib has LFS conten=
-t, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None=
-)
-stdio: ERROR: nativesdk-createrepo-c-1.2.1-r0 do_fetch: Bitbake Fetcher Err=
-or: FetchError('Repository https://github.com/rpm-software-management/creat=
-erepo_c has LFS content, install git-lfs on host to download (or set lfs=3D=
-0 to ignore it)', None)
-stdio: ERROR: nativesdk-cryptodev-linux-1.14-r0 do_fetch: Bitbake Fetcher E=
-rror: FetchError('Repository https://github.com/cryptodev-linux/cryptodev-l=
-inux has LFS content, install git-lfs on host to download (or set lfs=3D0 t=
-o ignore it)', None)
-stdio: ERROR: nativesdk-dnf-4.22.0-r0 do_fetch: Bitbake Fetcher Error: Fetc=
-hError('Repository https://github.com/rpm-software-management/dnf.git has L=
-FS content, install git-lfs on host to download (or set lfs=3D0 to ignore i=
-t)', None)
-stdio: ERROR: nativesdk-dos2unix-7.5.2-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://git.code.sf.net/p/dos2unix/dos2unix has LFS =
-content, install git-lfs on host to download (or set lfs=3D0 to ignore it)'=
-, None)
-stdio: ERROR: nativesdk-dpkg-1.22.11-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://salsa.debian.org/dpkg-team/dpkg.git has LFS co=
-ntent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', =
-None)
-stdio: ERROR: nativesdk-dtc-1.7.2-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://git.kernel.org/pub/scm/utils/dtc/dtc.git has LFS =
-content, install git-lfs on host to download (or set lfs=3D0 to ignore it)'=
-, None)
-stdio: ERROR: nativesdk-e2fsprogs-1.47.1-r0 do_fetch: Bitbake Fetcher Error=
-: FetchError('Repository https://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.g=
-it has LFS content, install git-lfs on host to download (or set lfs=3D0 to =
-ignore it)', None)
-stdio: ERROR: nativesdk-erofs-utils-1.8.5-r0 do_fetch: Bitbake Fetcher Erro=
-r: FetchError('Repository https://git.kernel.org/pub/scm/linux/kernel/git/x=
-iang/erofs-utils.git has LFS content, install git-lfs on host to download (=
-or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-file-5.46-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://github.com/file/file.git has LFS content, install=
- git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-fmt-11.1.4-r0 do_fetch: Bitbake Fetcher Error: Fetc=
-hError('Repository https://github.com/fmtlib/fmt has LFS content, install g=
-it-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-gi-docgen-2025.3-r0 do_fetch: Bitbake Fetcher Error=
-: FetchError('Repository https://gitlab.gnome.org/GNOME/gi-docgen.git has L=
-FS content, install git-lfs on host to download (or set lfs=3D0 to ignore i=
-t)', None)
-stdio: ERROR: nativesdk-glibc-2.41+git-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://sourceware.org/git/glibc.git has LFS content=
-, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-glibc-testsuite-2.41+git-r0 do_fetch: Bitbake Fetch=
-er Error: FetchError('Repository https://sourceware.org/git/glibc.git has L=
-FS content, install git-lfs on host to download (or set lfs=3D0 to ignore i=
-t)', None)
-stdio: ERROR: nativesdk-glslang-1_1.4.309.0-r0 do_fetch: Bitbake Fetcher Er=
-ror: FetchError('Repository https://github.com/KhronosGroup/glslang.git has=
- LFS content, install git-lfs on host to download (or set lfs=3D0 to ignore=
- it)', None)
-stdio: ERROR: nativesdk-gnu-config-20240823+git-r0 do_fetch: Bitbake Fetche=
-r Error: FetchError('Repository https://git.savannah.gnu.org/git/config.git=
- has LFS content, install git-lfs on host to download (or set lfs=3D0 to ig=
-nore it)', None)
-stdio: ERROR: nativesdk-libaio-0.3.113-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://pagure.io/libaio.git has LFS content, instal=
-l git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-libcap-ng-0.8.5-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://github.com/stevegrubb/libcap-ng.git has LFS=
- content, install git-lfs on host to download (or set lfs=3D0 to ignore it)=
-', None)
-stdio: ERROR: nativesdk-libcap-ng-python-0.8.5-r0 do_fetch: Bitbake Fetcher=
- Error: FetchError('Repository https://github.com/stevegrubb/libcap-ng.git =
-has LFS content, install git-lfs on host to download (or set lfs=3D0 to ign=
-ore it)', None)
-stdio: ERROR: nativesdk-libcomps-0.1.21-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://github.com/rpm-software-management/libcomps=
-.git has LFS content, install git-lfs on host to download (or set lfs=3D0 t=
-o ignore it)', None)
-stdio: ERROR: nativesdk-libdnf-0.74.0-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://github.com/rpm-software-management/libdnf has=
- LFS content, install git-lfs on host to download (or set lfs=3D0 to ignore=
- it)', None)
-stdio: ERROR: nativesdk-libepoxy-1.5.10-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://github.com/anholt/libepoxy has LFS content,=
- install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-libmodulemd-2.15.0-r0 do_fetch: Bitbake Fetcher Err=
-or: FetchError('Repository https://github.com/fedora-modularity/libmodulemd=
- has LFS content, install git-lfs on host to download (or set lfs=3D0 to ig=
-nore it)', None)
-stdio: ERROR: nativesdk-libnsl2-2.0.1-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://github.com/thkukuk/libnsl has LFS content, in=
-stall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-libnss-nis-3.2-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://github.com/thkukuk/libnss_nis has LFS conten=
-t, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None=
-)
-stdio: ERROR: nativesdk-librepo-1.19.0-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://github.com/rpm-software-management/librepo.g=
-it has LFS content, install git-lfs on host to download (or set lfs=3D0 to =
-ignore it)', None)
-stdio: ERROR: nativesdk-libslirp-4.9.0-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://gitlab.freedesktop.org/slirp/libslirp.git ha=
-s LFS content, install git-lfs on host to download (or set lfs=3D0 to ignor=
-e it)', None)
-stdio: ERROR: nativesdk-libsolv-0.7.31-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://github.com/openSUSE/libsolv.git has LFS cont=
-ent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', No=
-ne)
-stdio: ERROR: nativesdk-libxcrypt-4.4.38-r0 do_fetch: Bitbake Fetcher Error=
-: FetchError('Repository https://github.com/besser82/libxcrypt.git has LFS =
-content, install git-lfs on host to download (or set lfs=3D0 to ignore it)'=
-, None)
-stdio: ERROR: nativesdk-libxcrypt-compat-4.4.38-r0 do_fetch: Bitbake Fetche=
-r Error: FetchError('Repository https://github.com/besser82/libxcrypt.git h=
-as LFS content, install git-lfs on host to download (or set lfs=3D0 to igno=
-re it)', None)
-stdio: ERROR: nativesdk-llvm-20.1.2-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://github.com/KhronosGroup/SPIRV-LLVM-Translator h=
-as LFS content, install git-lfs on host to download (or set lfs=3D0 to igno=
-re it)', None)
-stdio: ERROR: nativesdk-lz4-1_1.10.0-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/lz4/lz4.git has LFS content, instal=
-l git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-mtd-utils-2.3.0-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository git://git.infradead.org/mtd-utils.git has LFS conte=
-nt, install git-lfs on host to download (or set lfs=3D0 to ignore it)', Non=
-e)
-stdio: ERROR: nativesdk-mtd-utils-selftest-2.1.4-r0 do_fetch: Bitbake Fetch=
-er Error: FetchError('Repository git://git.infradead.org/mtd-utils.git has =
-LFS content, install git-lfs on host to download (or set lfs=3D0 to ignore =
-it)', None)
-stdio: ERROR: nativesdk-ncurses-6.5-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://github.com/ThomasDickey/ncurses-snapshots.git h=
-as LFS content, install git-lfs on host to download (or set lfs=3D0 to igno=
-re it)', None)
-stdio: ERROR: nativesdk-net-tools-2.10-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://git.code.sf.net/p/net-tools/code has LFS con=
-tent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', N=
-one)
-stdio: ERROR: nativesdk-ninja-1.12.1-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/ninja-build/ninja.git has LFS conte=
-nt, install git-lfs on host to download (or set lfs=3D0 to ignore it)', Non=
-e)
-stdio: ERROR: nativesdk-opkg-utils-0.7.0-r0 do_fetch: Bitbake Fetcher Error=
-: FetchError('Repository https://git.yoctoproject.org/opkg-utils has LFS co=
-ntent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', =
-None)
-stdio: ERROR: nativesdk-p11-kit-0.25.5-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://github.com/p11-glue/p11-kit has LFS content,=
- install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-patchelf-0.18.0-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://github.com/NixOS/patchelf has LFS content, =
-install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-pkgconfig-0.29.2+git-r0 do_fetch: Bitbake Fetcher E=
-rror: FetchError('Repository https://gitlab.freedesktop.org/pkg-config/pkg-=
-config.git has LFS content, install git-lfs on host to download (or set lfs=
-=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-pseudo-1.9.0+git-r0 do_fetch: Bitbake Fetcher Error=
-: FetchError('Repository https://git.yoctoproject.org/pseudo has LFS conten=
-t, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None=
-)
-stdio: ERROR: nativesdk-python3-calver-2025.04.02-r0 do_fetch: Bitbake Fetc=
-her Error: FetchError('Repository https://github.com/di/calver has LFS cont=
-ent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', No=
-ne)
-stdio: ERROR: nativesdk-python3-dtc-1.7.2-r0 do_fetch: Bitbake Fetcher Erro=
-r: FetchError('Repository git://git.kernel.org/pub/scm/utils/dtc/dtc.git ha=
-s LFS content, install git-lfs on host to download (or set lfs=3D0 to ignor=
-e it)', None)
-stdio: ERROR: nativesdk-python3-pefile-2024.8.26-r0 do_fetch: Bitbake Fetch=
-er Error: FetchError('Repository https://github.com/erocarrera/pefile has L=
-FS content, install git-lfs on host to download (or set lfs=3D0 to ignore i=
-t)', None)
-stdio: ERROR: nativesdk-python3-unittest-automake-output-0.2-r0 do_fetch: B=
-itbake Fetcher Error: FetchError('Repository https://gitlab.com/rossburton/=
-python-unittest-automake-output has LFS content, install git-lfs on host to=
- download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-repo-2.53-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://gerrit.googlesource.com/git-repo.git has LFS cont=
-ent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', No=
-ne)
-stdio: ERROR: nativesdk-rpcsvc-proto-1.4.4-r0 do_fetch: Bitbake Fetcher Err=
-or: FetchError('Repository https://github.com/thkukuk/rpcsvc-proto has LFS =
-content, install git-lfs on host to download (or set lfs=3D0 to ignore it)'=
-, None)
-stdio: ERROR: nativesdk-rpm-1_4.20.0-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/rpm-software-management/rpm has LFS=
- content, install git-lfs on host to download (or set lfs=3D0 to ignore it)=
-', None)
-stdio: ERROR: nativesdk-shaderc-2025.1-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://github.com/google/shaderc.git has LFS conten=
-t, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None=
-)
-stdio: ERROR: nativesdk-shared-mime-info-2.4-r0 do_fetch: Bitbake Fetcher E=
-rror: FetchError('Repository https://gitlab.freedesktop.org/xdg/shared-mime=
--info.git has LFS content, install git-lfs on host to download (or set lfs=
-=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-spirv-headers-1_1.4.309.0-r0 do_fetch: Bitbake Fetc=
-her Error: FetchError('Repository https://github.com/KhronosGroup/SPIRV-Hea=
-ders has LFS content, install git-lfs on host to download (or set lfs=3D0 t=
-o ignore it)', None)
-stdio: ERROR: nativesdk-spirv-tools-1_1.4.309.0-r0 do_fetch: Bitbake Fetche=
-r Error: FetchError('Repository https://github.com/KhronosGroup/SPIRV-Tools=
-.git has LFS content, install git-lfs on host to download (or set lfs=3D0 t=
-o ignore it)', None)
-stdio: ERROR: nativesdk-squashfs-tools-4.6.1-r0 do_fetch: Bitbake Fetcher E=
-rror: FetchError('Repository https://github.com/plougher/squashfs-tools.git=
- has LFS content, install git-lfs on host to download (or set lfs=3D0 to ig=
-nore it)', None)
-stdio: ERROR: nativesdk-systemtap-5.2-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://sourceware.org/git/systemtap.git has LFS cont=
-ent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', No=
-ne)
-stdio: ERROR: nativesdk-systemtap-native-5.2-r0 do_fetch: Bitbake Fetcher E=
-rror: FetchError('Repository https://sourceware.org/git/systemtap.git has L=
-FS content, install git-lfs on host to download (or set lfs=3D0 to ignore i=
-t)', None)
-stdio: ERROR: nativesdk-u-boot-tools-1_2025.04-r0 do_fetch: Bitbake Fetcher=
- Error: FetchError('Repository https://source.denx.de/u-boot/u-boot.git has=
- LFS content, install git-lfs on host to download (or set lfs=3D0 to ignore=
- it)', None)
-stdio: ERROR: nativesdk-unfs3-0.10.0-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/unfs3/unfs3.git has LFS content, in=
-stall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-update-rc.d-0.8+git-r0 do_fetch: Bitbake Fetcher Er=
-ror: FetchError('Repository https://git.yoctoproject.org/update-rc.d has LF=
-S content, install git-lfs on host to download (or set lfs=3D0 to ignore it=
-)', None)
-stdio: ERROR: nativesdk-vim-9.1.1198-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/vim/vim.git has LFS content, instal=
-l git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-virglrenderer-1.1.0-r0 do_fetch: Bitbake Fetcher Er=
-ror: FetchError('Repository https://gitlab.freedesktop.org/virgl/virglrende=
-rer.git has LFS content, install git-lfs on host to download (or set lfs=3D=
-0 to ignore it)', None)
-stdio: ERROR: nativesdk-xxhash-0.8.3-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/Cyan4973/xxHash.git has LFS content=
-, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: nativesdk-zstd-1.5.7-r0 do_fetch: Bitbake Fetcher Error: Fetc=
-hError('Repository https://github.com/facebook/zstd.git has LFS content, in=
-stall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: ncurses-6.5-r0 do_fetch: Bitbake Fetcher Error: FetchError('R=
-epository https://github.com/ThomasDickey/ncurses-snapshots.git has LFS con=
-tent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', N=
-one)
-stdio: ERROR: ncurses-native-6.5-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Repository https://github.com/ThomasDickey/ncurses-snapshots.git has =
-LFS content, install git-lfs on host to download (or set lfs=3D0 to ignore =
-it)', None)
-stdio: ERROR: neard-0.19-r0 do_fetch: Bitbake Fetcher Error: FetchError('Re=
-pository https://git.kernel.org/pub/scm/network/nfc/neard.git has LFS conte=
-nt, install git-lfs on host to download (or set lfs=3D0 to ignore it)', Non=
-e)
-stdio: ERROR: net-tools-2.10-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://git.code.sf.net/p/net-tools/code has LFS content, inst=
-all git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: net-tools-native-2.10-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://git.code.sf.net/p/net-tools/code has LFS conten=
-t, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None=
-)
-stdio: ERROR: newlib-4.4.0+git-r0 do_fetch: Bitbake Fetcher Error: FetchErr=
-or('Repository https://sourceware.org/git/newlib-cygwin.git has LFS content=
-, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: ninja-1.12.1-r0 do_fetch: Bitbake Fetcher Error: FetchError('=
-Repository https://github.com/ninja-build/ninja.git has LFS content, instal=
-l git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: ninja-native-1.12.1-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://github.com/ninja-build/ninja.git has LFS content,=
- install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: numactl-2.0.19-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://github.com/numactl/numactl has LFS content, install gi=
-t-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: opensbi-1.6-r0 do_fetch: Bitbake Fetcher Error: FetchError('R=
-epository https://github.com/riscv/opensbi.git has LFS content, install git=
--lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: opkg-utils-0.7.0-r0 do_fetch: Bitbake Fetcher Error: FetchErr=
-or('Repository https://git.yoctoproject.org/opkg-utils has LFS content, ins=
-tall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: opkg-utils-native-0.7.0-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://git.yoctoproject.org/opkg-utils has LFS conte=
-nt, install git-lfs on host to download (or set lfs=3D0 to ignore it)', Non=
-e)
-stdio: ERROR: ovmf-edk2-stable202411-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/tianocore/edk2.git has LFS content,=
- install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: ovmf-native-edk2-stable202411-r0 do_fetch: Bitbake Fetcher Er=
-ror: FetchError('Repository https://github.com/tianocore/edk2.git has LFS c=
-ontent, install git-lfs on host to download (or set lfs=3D0 to ignore it)',=
- None)
-stdio: ERROR: p11-kit-0.25.5-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://github.com/p11-glue/p11-kit has LFS content, install g=
-it-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: p11-kit-native-0.25.5-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://github.com/p11-glue/p11-kit has LFS content, in=
-stall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: patchelf-0.18.0-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://github.com/NixOS/patchelf has LFS content, install gi=
-t-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: patchelf-native-0.18.0-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/NixOS/patchelf has LFS content, ins=
-tall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: piglit-1.0+gitr-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://gitlab.freedesktop.org/mesa/piglit.git has LFS conten=
-t, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None=
-)
-stdio: ERROR: pkgconfig-0.29.2+git-r0 do_fetch: Bitbake Fetcher Error: Fetc=
-hError('Repository https://gitlab.freedesktop.org/pkg-config/pkg-config.git=
- has LFS content, install git-lfs on host to download (or set lfs=3D0 to ig=
-nore it)', None)
-stdio: ERROR: pkgconfig-native-0.29.2+git-r0 do_fetch: Bitbake Fetcher Erro=
-r: FetchError('Repository https://gitlab.freedesktop.org/pkg-config/pkg-con=
-fig.git has LFS content, install git-lfs on host to download (or set lfs=3D=
-0 to ignore it)', None)
-stdio: ERROR: powertop-2.15-r0 do_fetch: Bitbake Fetcher Error: FetchError(=
-'Repository https://github.com/fenrus75/powertop has LFS content, install g=
-it-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: procps-4.0.5-r0 do_fetch: Bitbake Fetcher Error: FetchError('=
-Repository https://gitlab.com/procps-ng/procps.git has LFS content, install=
- git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: pseudo-1.9.0+git-r0 do_fetch: Bitbake Fetcher Error: FetchErr=
-or('Repository https://git.yoctoproject.org/pseudo has LFS content, install=
- git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: pseudo-native-1.9.0+git-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://git.yoctoproject.org/pseudo has LFS content, =
-install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: psmisc-23.7-r0 do_fetch: Bitbake Fetcher Error: FetchError('R=
-epository https://gitlab.com/psmisc/psmisc.git has LFS content, install git=
--lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: psplash-0.1+git-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://git.yoctoproject.org/psplash has LFS content, install=
- git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: ptest-runner-2.4.5.1-r0 do_fetch: Bitbake Fetcher Error: Fetc=
-hError('Repository https://git.yoctoproject.org/ptest-runner2 has LFS conte=
-nt, install git-lfs on host to download (or set lfs=3D0 to ignore it)', Non=
-e)
-stdio: ERROR: puzzles-2_0.0+git-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://git.tartarus.org/simon/puzzles.git has LFS content,=
- install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: python3-calver-2025.04.02-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://github.com/di/calver has LFS content, insta=
-ll git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: python3-calver-native-2025.04.02-r0 do_fetch: Bitbake Fetcher=
- Error: FetchError('Repository https://github.com/di/calver has LFS content=
-, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: python3-dtc-1.7.2-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository git://git.kernel.org/pub/scm/utils/dtc/dtc.git has LFS cont=
-ent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', No=
-ne)
-stdio: ERROR: python3-dtc-native-1.7.2-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository git://git.kernel.org/pub/scm/utils/dtc/dtc.git has L=
-FS content, install git-lfs on host to download (or set lfs=3D0 to ignore i=
-t)', None)
-stdio: ERROR: python3-guessing-game-0.1.0-r0 do_fetch: Bitbake Fetcher Erro=
-r: FetchError('Repository https://git.yoctoproject.org/guessing-game.git ha=
-s LFS content, install git-lfs on host to download (or set lfs=3D0 to ignor=
-e it)', None)
-stdio: ERROR: python3-pefile-2024.8.26-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://github.com/erocarrera/pefile has LFS content=
-, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: python3-pefile-native-2024.8.26-r0 do_fetch: Bitbake Fetcher =
-Error: FetchError('Repository https://github.com/erocarrera/pefile has LFS =
-content, install git-lfs on host to download (or set lfs=3D0 to ignore it)'=
-, None)
-stdio: ERROR: python3-unittest-automake-output-0.2-r0 do_fetch: Bitbake Fet=
-cher Error: FetchError('Repository https://gitlab.com/rossburton/python-uni=
-ttest-automake-output has LFS content, install git-lfs on host to download =
-(or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: python3-unittest-automake-output-native-0.2-r0 do_fetch: Bitb=
-ake Fetcher Error: FetchError('Repository https://gitlab.com/rossburton/pyt=
-hon-unittest-automake-output has LFS content, install git-lfs on host to do=
-wnload (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: repo-2.53-r0 do_fetch: Bitbake Fetcher Error: FetchError('Rep=
-ository https://gerrit.googlesource.com/git-repo.git has LFS content, insta=
-ll git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: repo-native-2.53-r0 do_fetch: Bitbake Fetcher Error: FetchErr=
-or('Repository https://gerrit.googlesource.com/git-repo.git has LFS content=
-, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: resolvconf-1.92-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://salsa.debian.org/debian/resolvconf.git has LFS conten=
-t, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None=
-)
-stdio: ERROR: rng-tools-6.17-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://github.com/nhorman/rng-tools.git has LFS content, inst=
-all git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: rpcsvc-proto-1.4.4-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Repository https://github.com/thkukuk/rpcsvc-proto has LFS content, i=
-nstall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: rpcsvc-proto-native-1.4.4-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://github.com/thkukuk/rpcsvc-proto has LFS con=
-tent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', N=
-one)
-stdio: ERROR: rpm-1_4.20.0-r0 do_fetch: Bitbake Fetcher Error: FetchError('=
-Repository https://github.com/rpm-software-management/rpm has LFS content, =
-install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: rpm-native-1_4.20.0-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://github.com/rpm-software-management/rpm has LFS co=
-ntent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', =
-None)
-stdio: ERROR: rpm-sequoia-1.7.0-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://github.com/rpm-software-management/rpm-sequoia.git =
-has LFS content, install git-lfs on host to download (or set lfs=3D0 to ign=
-ore it)', None)
-stdio: ERROR: rpm-sequoia-crypto-policy-git-r0 do_fetch: Bitbake Fetcher Er=
-ror: FetchError('Repository https://gitlab.com/redhat-crypto/fedora-crypto-=
-policies.git has LFS content, install git-lfs on host to download (or set l=
-fs=3D0 to ignore it)', None)
-stdio: ERROR: rpm-sequoia-crypto-policy-native-git-r0 do_fetch: Bitbake Fet=
-cher Error: FetchError('Repository https://gitlab.com/redhat-crypto/fedora-=
-crypto-policies.git has LFS content, install git-lfs on host to download (o=
-r set lfs=3D0 to ignore it)', None)
-stdio: ERROR: rpm-sequoia-native-1.7.0-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://github.com/rpm-software-management/rpm-sequo=
-ia.git has LFS content, install git-lfs on host to download (or set lfs=3D0=
- to ignore it)', None)
-stdio: ERROR: rt-tests-1_2.8-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git has=
- LFS content, install git-lfs on host to download (or set lfs=3D0 to ignore=
- it)', None)
-stdio: ERROR: rust-c-lib-example-bin-git-r0 do_fetch: Bitbake Fetcher Error=
-: FetchError('Repository https://gitlab.com/fmartinsonsHome/rust-c-lib-exam=
-ple.git has LFS content, install git-lfs on host to download (or set lfs=3D=
-0 to ignore it)', None)
-stdio: ERROR: rust-c-lib-example-git-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://gitlab.com/fmartinsonsHome/rust-c-lib-example.=
-git has LFS content, install git-lfs on host to download (or set lfs=3D0 to=
- ignore it)', None)
-stdio: ERROR: sassc-3.6.2-r0 do_fetch: Bitbake Fetcher Error: FetchError('R=
-epository https://github.com/sass/sassc.git has LFS content, install git-lf=
-s on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: sassc-native-3.6.2-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Repository https://github.com/sass/sassc.git has LFS content, install=
- git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: sato-icon-theme-git-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://git.yoctoproject.org/sato-icon-theme.git has LFS =
-content, install git-lfs on host to download (or set lfs=3D0 to ignore it)'=
-, None)
-stdio: ERROR: sato-screenshot-0.3-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://git.yoctoproject.org/screenshot has LFS content, =
-install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: scdoc-1.11.3-r0 do_fetch: Bitbake Fetcher Error: FetchError('=
-Repository https://git.sr.ht/~sircmpwn/scdoc has LFS content, install git-l=
-fs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: scdoc-native-1.11.3-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://git.sr.ht/~sircmpwn/scdoc has LFS content, instal=
-l git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: seatd-0.9.1-r0 do_fetch: Bitbake Fetcher Error: FetchError('R=
-epository https://git.sr.ht/~kennylevinsen/seatd has LFS content, install g=
-it-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: settings-daemon-0.0.2+git-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://git.yoctoproject.org/xsettings-daemon has L=
-FS content, install git-lfs on host to download (or set lfs=3D0 to ignore i=
-t)', None)
-stdio: ERROR: shaderc-2025.1-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://github.com/google/shaderc.git has LFS content, install=
- git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: shaderc-native-2025.1-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://github.com/google/shaderc.git has LFS content, =
-install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: shared-mime-info-2.4-r0 do_fetch: Bitbake Fetcher Error: Fetc=
-hError('Repository https://gitlab.freedesktop.org/xdg/shared-mime-info.git =
-has LFS content, install git-lfs on host to download (or set lfs=3D0 to ign=
-ore it)', None)
-stdio: ERROR: shared-mime-info-native-2.4-r0 do_fetch: Bitbake Fetcher Erro=
-r: FetchError('Repository https://gitlab.freedesktop.org/xdg/shared-mime-in=
-fo.git has LFS content, install git-lfs on host to download (or set lfs=3D0=
- to ignore it)', None)
-stdio: ERROR: spirv-headers-1_1.4.309.0-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://github.com/KhronosGroup/SPIRV-Headers has L=
-FS content, install git-lfs on host to download (or set lfs=3D0 to ignore i=
-t)', None)
-stdio: ERROR: spirv-headers-native-1_1.4.309.0-r0 do_fetch: Bitbake Fetcher=
- Error: FetchError('Repository https://github.com/KhronosGroup/SPIRV-Header=
-s has LFS content, install git-lfs on host to download (or set lfs=3D0 to i=
-gnore it)', None)
-stdio: ERROR: spirv-tools-1_1.4.309.0-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://github.com/KhronosGroup/SPIRV-Tools.git has L=
-FS content, install git-lfs on host to download (or set lfs=3D0 to ignore i=
-t)', None)
-stdio: ERROR: spirv-tools-native-1_1.4.309.0-r0 do_fetch: Bitbake Fetcher E=
-rror: FetchError('Repository https://github.com/KhronosGroup/SPIRV-Tools.gi=
-t has LFS content, install git-lfs on host to download (or set lfs=3D0 to i=
-gnore it)', None)
-stdio: ERROR: squashfs-tools-4.6.1-r0 do_fetch: Bitbake Fetcher Error: Fetc=
-hError('Repository https://github.com/plougher/squashfs-tools.git has LFS c=
-ontent, install git-lfs on host to download (or set lfs=3D0 to ignore it)',=
- None)
-stdio: ERROR: squashfs-tools-native-4.6.1-r0 do_fetch: Bitbake Fetcher Erro=
-r: FetchError('Repository https://github.com/plougher/squashfs-tools.git ha=
-s LFS content, install git-lfs on host to download (or set lfs=3D0 to ignor=
-e it)', None)
-stdio: ERROR: stress-ng-0.18.12-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://github.com/ColinIanKing/stress-ng.git has LFS conte=
-nt, install git-lfs on host to download (or set lfs=3D0 to ignore it)', Non=
-e)
-stdio: ERROR: sysdig-selftest-0.28.0-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/draios/sysdig.git has LFS content, =
-install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: sysfsutils-2.1.1-r0 do_fetch: Bitbake Fetcher Error: FetchErr=
-or('Repository https://github.com/linux-ras/sysfsutils.git has LFS content,=
- install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: sysklogd-2.7.2-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://github.com/troglobit/sysklogd.git has LFS content, ins=
-tall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: sysstat-12.7.7-r0 do_fetch: Bitbake Fetcher Error: FetchError=
-('Repository https://github.com/sysstat/sysstat.git has LFS content, instal=
-l git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: systemd-boot-257.5-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Repository https://github.com/systemd/systemd.git has LFS content, in=
-stall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: systemd-boot-native-257.5-r0 do_fetch: Bitbake Fetcher Error:=
- FetchError('Repository https://github.com/systemd/systemd.git has LFS cont=
-ent, install git-lfs on host to download (or set lfs=3D0 to ignore it)', No=
-ne)
-stdio: ERROR: systemd-systemctl-native-257.5-r0 do_fetch: Bitbake Fetcher E=
-rror: FetchError('Repository https://github.com/systemd/systemd.git has LFS=
- content, install git-lfs on host to download (or set lfs=3D0 to ignore it)=
-', None)
-stdio: ERROR: systemtap-5.2-r0 do_fetch: Bitbake Fetcher Error: FetchError(=
-'Repository https://sourceware.org/git/systemtap.git has LFS content, insta=
-ll git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: systemtap-native-5.2-r0 do_fetch: Bitbake Fetcher Error: Fetc=
-hError('Repository https://sourceware.org/git/systemtap.git has LFS content=
-, install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: tcf-agent-1.8.0+git-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://gitlab.eclipse.org/eclipse/tcf/tcf.agent.git has =
-LFS content, install git-lfs on host to download (or set lfs=3D0 to ignore =
-it)', None)
-stdio: ERROR: ttyrun-2.37.0-r0 do_fetch: Bitbake Fetcher Error: FetchError(=
-'Repository https://github.com/ibm-s390-linux/s390-tools has LFS content, i=
-nstall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: u-boot-1_2025.04-r0 do_fetch: Bitbake Fetcher Error: FetchErr=
-or('Repository https://source.denx.de/u-boot/u-boot.git has LFS content, in=
-stall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: u-boot-tools-1_2025.04-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://source.denx.de/u-boot/u-boot.git has LFS conte=
-nt, install git-lfs on host to download (or set lfs=3D0 to ignore it)', Non=
-e)
-stdio: ERROR: u-boot-tools-native-1_2025.04-r0 do_fetch: Bitbake Fetcher Er=
-ror: FetchError('Repository https://source.denx.de/u-boot/u-boot.git has LF=
-S content, install git-lfs on host to download (or set lfs=3D0 to ignore it=
-)', None)
-stdio: ERROR: unfs3-0.10.0-r0 do_fetch: Bitbake Fetcher Error: FetchError('=
-Repository https://github.com/unfs3/unfs3.git has LFS content, install git-=
-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: unfs3-native-0.10.0-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://github.com/unfs3/unfs3.git has LFS content, insta=
-ll git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: update-rc.d-0.8+git-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://git.yoctoproject.org/update-rc.d has LFS content,=
- install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: update-rc.d-native-0.8+git-r0 do_fetch: Bitbake Fetcher Error=
-: FetchError('Repository https://git.yoctoproject.org/update-rc.d has LFS c=
-ontent, install git-lfs on host to download (or set lfs=3D0 to ignore it)',=
- None)
-stdio: ERROR: utfcpp-4.0.6-r0 do_fetch: Bitbake Fetcher Error: FetchError('=
-Repository https://github.com/nemtrif/utfcpp has LFS content, install git-l=
-fs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: vim-9.1.1198-r0 do_fetch: Bitbake Fetcher Error: FetchError('=
-Repository https://github.com/vim/vim.git has LFS content, install git-lfs =
-on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: vim-native-9.1.1198-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://github.com/vim/vim.git has LFS content, install g=
-it-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: vim-tiny-9.1.1198-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://github.com/vim/vim.git has LFS content, install git=
--lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: virglrenderer-1.1.0-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://gitlab.freedesktop.org/virgl/virglrenderer.git ha=
-s LFS content, install git-lfs on host to download (or set lfs=3D0 to ignor=
-e it)', None)
-stdio: ERROR: virglrenderer-native-1.1.0-r0 do_fetch: Bitbake Fetcher Error=
-: FetchError('Repository https://gitlab.freedesktop.org/virgl/virglrenderer=
-.git has LFS content, install git-lfs on host to download (or set lfs=3D0 t=
-o ignore it)', None)
-stdio: ERROR: vulkan-headers-1.4.309.0-r0 do_fetch: Bitbake Fetcher Error: =
-FetchError('Repository https://github.com/KhronosGroup/Vulkan-Headers.git h=
-as LFS content, install git-lfs on host to download (or set lfs=3D0 to igno=
-re it)', None)
-stdio: ERROR: vulkan-loader-1.4.309.0-r0 do_fetch: Bitbake Fetcher Error: F=
-etchError('Repository https://github.com/KhronosGroup/Vulkan-Loader.git has=
- LFS content, install git-lfs on host to download (or set lfs=3D0 to ignore=
- it)', None)
-stdio: ERROR: vulkan-tools-1.4.309.0-r0 do_fetch: Bitbake Fetcher Error: Fe=
-tchError('Repository https://github.com/KhronosGroup/Vulkan-Tools.git has L=
-FS content, install git-lfs on host to download (or set lfs=3D0 to ignore i=
-t)', None)
-stdio: ERROR: vulkan-utility-libraries-1.4.309.0-r0 do_fetch: Bitbake Fetch=
-er Error: FetchError('Repository https://github.com/KhronosGroup/Vulkan-Uti=
-lity-Libraries.git has LFS content, install git-lfs on host to download (or=
- set lfs=3D0 to ignore it)', None)
-stdio: ERROR: vulkan-validation-layers-1.4.309.0-r0 do_fetch: Bitbake Fetch=
-er Error: FetchError('Repository https://github.com/KhronosGroup/Vulkan-Val=
-idationLayers.git has LFS content, install git-lfs on host to download (or =
-set lfs=3D0 to ignore it)', None)
-stdio: ERROR: vulkan-volk-1.4.309.0-r0 do_fetch: Bitbake Fetcher Error: Fet=
-chError('Repository https://github.com/zeux/volk.git has LFS content, insta=
-ll git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: waffle-1.8.1-r0 do_fetch: Bitbake Fetcher Error: FetchError('=
-Repository https://gitlab.freedesktop.org/mesa/waffle.git has LFS content, =
-install git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: xcursor-transparent-theme-0.1.1+git-r0 do_fetch: Bitbake Fetc=
-her Error: FetchError('Repository https://git.yoctoproject.org/xcursor-tran=
-sparent-theme has LFS content, install git-lfs on host to download (or set =
-lfs=3D0 to ignore it)', None)
-stdio: ERROR: xf86-video-intel-2_2.99.917+git-r0 do_fetch: Bitbake Fetcher =
-Error: FetchError('Repository https://gitlab.freedesktop.org/xorg/driver/xf=
-86-video-intel.git has LFS content, install git-lfs on host to download (or=
- set lfs=3D0 to ignore it)', None)
-stdio: ERROR: xinetd-2.3.15.4-r0 do_fetch: Bitbake Fetcher Error: FetchErro=
-r('Repository https://github.com/openSUSE/xinetd.git has LFS content, insta=
-ll git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: xinput-calibrator-0.7.5+git-r0 do_fetch: Bitbake Fetcher Erro=
-r: FetchError('Repository https://github.com/kreijack/xinput_calibrator.git=
- has LFS content, install git-lfs on host to download (or set lfs=3D0 to ig=
-nore it)', None)
-stdio: ERROR: xmlto-0.0.29-r0 do_fetch: Bitbake Fetcher Error: FetchError('=
-Repository https://pagure.io/xmlto.git has LFS content, install git-lfs on =
-host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: xmlto-native-0.0.29-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://pagure.io/xmlto.git has LFS content, install git-=
-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: xxhash-0.8.3-r0 do_fetch: Bitbake Fetcher Error: FetchError('=
-Repository https://github.com/Cyan4973/xxHash.git has LFS content, install =
-git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: xxhash-native-0.8.3-r0 do_fetch: Bitbake Fetcher Error: Fetch=
-Error('Repository https://github.com/Cyan4973/xxHash.git has LFS content, i=
-nstall git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: zstd-1.5.7-r0 do_fetch: Bitbake Fetcher Error: FetchError('Re=
-pository https://github.com/facebook/zstd.git has LFS content, install git-=
-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-stdio: ERROR: zstd-native-1.5.7-r0 do_fetch: Bitbake Fetcher Error: FetchEr=
-ror('Repository https://github.com/facebook/zstd.git has LFS content, insta=
-ll git-lfs on host to download (or set lfs=3D0 to ignore it)', None)
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogYml0YmFrZS1kZXZlbEBs
+aXN0cy5vcGVuZW1iZWRkZWQub3JnIDxiaXRiYWtlLQ0KPiBkZXZlbEBsaXN0cy5vcGVuZW1iZWRk
+ZWQub3JnPiBPbiBCZWhhbGYgT2YgUmljaGFyZCBQdXJkaWUgdmlhDQo+IGxpc3RzLm9wZW5lbWJl
+ZGRlZC5vcmcNCj4gU2VudDogRnJpZGF5LCBBcHJpbCAyNSwgMjAyNSAxNDozNg0KPiBUbzogcGhp
+bGlwLmxvcmVuekBibXcuZGU7IGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0K
+PiBDYzogbWF0aGlldS5kdWJvaXMtYnJpYW5kQGJvb3RsaW4uY29tDQo+IFN1YmplY3Q6IFJlOiBb
+Yml0YmFrZS1kZXZlbF0gW1BBVENIIHYyIDAvOF0gRml4IGdpdHNtIExGUyBzdXBwb3J0DQo+IA0K
+PiBPbiBGcmksIDIwMjUtMDQtMjUgYXQgMTI6MTEgKzAyMDAsIFBoaWxpcCBMb3JlbnogdmlhIGxp
+c3RzLm9wZW5lbWJlZGRlZC5vcmcNCj4gd3JvdGU6DQo+ID4gVGhpcyBwYXRjaCBzZXJpZXMgZml4
+ZXMgYSBudW1iZXIgb2YgaXNzdWVzIHdlIG9ic2VydmVkIHdoZW4gdXNpbmcgdGhlDQo+ID4gZ2l0
+c20gZmV0Y2hlciBpbiBjb25qdW5jdGlvbiB3aXRoIGdpdC1sZnMuDQo+ID4NCj4gPiBJJ2QgbGlr
+ZSB0byBoaWdobGlnaHQgdHdvIHBhdGNoZXMgaW4gdGhpcyBzZXJpZXM6DQo+ID4gKiAwMDA0LWZl
+dGNoMi1TaW1wbGlmeS1naXQtTEZTLWRldGVjdGlvbjogSSBjb3VsZCBub3QgY29tZSB1cCB3aXRo
+IGENCj4gPiDCoCBnb29kIHJlYXNvbiBvbiB3aHkgdGhlIGNvZGUgc28gZmFyIHByZWZlcnJlZCB0
+aGUgY29udGVudCBvZg0KPiA+IMKgYC5naXRhdHRyaWJ1dGVzYCBvbiB0aGUgcmVwb3NpdG9yeSdz
+IGJyYW5jaCBpbnN0ZWFkIG9mIGFsd2F5cw0KPiA+IMKgIGNvbnNpZGVyaW5nIHRoZSBzdGF0ZSBv
+ZiB0aGUgdGFyZ2V0IHJldmlzaW9uLiBQbGVhc2UgbGV0IG1lIGtub3cNCj4gPiDCoCBpZiB0aGVy
+ZSdzIHNvbWV0aGluZyBJIGRpZG4ndCB0YWtlIGludG8gYWNjb3VudC4NCj4gPiAqIDAwMDUtZmV0
+Y2gyLVVzZS1naXQtbGZzLWZldGNoLXRvLWRvd25sb2FkLW9iamVjdHMucGF0Y2g6IEkgY291bGQg
+bm90DQo+ID4gwqAgcmVwbGljYXRlIHRoZSBgZ2l0LWxmcyBmZXRjaGAgYmVoYXZpb3VyIGluIHZl
+cnNpb25zIGdvaW5nIGJhY2sgdG8NCj4gPiDCoCAyLjEzLjIgcmVsZWFzZWQgaW4gMjAyMS4gVGhp
+cyBsZWFkcyBtZSB0byBiZWxpZXZlIHRoYXQgdGhlIGlzc3VlDQo+ID4gwqAgbGVhZGluZyB0byB0
+aGlzIHdvcmthcm91bmQgaXMgbm8gbG9uZ2VyIGluIHBsYWNlLiBIb3dldmVyLCBpZiBhbnlvbmUN
+Cj4gPiDCoCByZW1lbWJlcnMgdGhlIGFjdHVhbCBpc3N1ZSAvIHZlcnNpb25zIGludm9sdmVkIEkg
+Y2FuIGFsc28gcmV0ZXN0IHRvDQo+ID4gwqAgY29uZmlybSB0aGF0IHRoZXJlIGFyZSBubyByZWdy
+ZXNzaW9uLg0KPiA+DQo+ID4gLS0tDQo+ID4gVjEgLT4gVjI6DQo+ID4gKiBUaGUgY29ycmVjdCBw
+YXJhbWV0ZXIgaXMgbm93IHBhc3NlZCBmb3IgZWFjaCBzdWJtb2R1bGUgVVJMIHdoZW4gTEZTIGlz
+DQo+ID4gwqAgZXhwbGljaXRseSBkaXNhYmxlZA0KPiA+ICogU211ZGdpbmcgZm9yIHN1Ym1vZHVs
+ZXMgaXMgbm93IHNraXBwZWQgd2hlbiBMRlMgaXMgZXhwbGNpdGx5IGRpc2FibGVkLg0KPiA+IMKg
+IFRoaXMgZW5zdXJlcyBjb25zaXN0ZW50IGJlaGF2aW91ciBpbiBzZXR1cHMgd2hlcmUgZ2l0LWxm
+cyBpcyBpbnN0YWxsZWQNCj4gPiDCoCBidXQgc2hvdWxkIG5vdCBiZSB1c2VkLg0KPiA+ICogVGVz
+dCBjYXNlcyBhcmUgZXh0ZW5kZWQgdG8gdGVzdCB0aGUgTEZTIGRpc2FibGVkIHN0YXRlLg0KPiA+
+ICogRXhwbGljaXRseSBpbnN0YWxsIGdpdCBsZnMgaW50byBzdWJtb2R1bGUgaW4gdGhlIHRlc3Qg
+Y2FzZXMgdG8gbWFrZQ0KPiA+IMKgIHN1cmUgdGhhdCBnaXQtbGZzIGlzIGFjdHVhbGx5IHVzZWQg
+Zm9yIHN0b3JpbmcgdGhlIGZpbGVzLg0KPiA+DQo+ID4gUGhpbGlwIExvcmVueiAoOCk6DQo+ID4g
+wqAgZmV0Y2gyOiBDbGVhbiB1cCBubyBsb25nZXIgdXNlZCBuYW1lIHBhcmFtZXRlcg0KPiA+IMKg
+IHRlc3RzL2ZldGNoOiBNb3ZlIGNvbW1vbmx5IHVzZWQgaW1wb3J0cyB0byB0b3ANCj4gPiDCoCBm
+ZXRjaDI6IENoZWNrIGZvciBnaXQtbGZzIGV4aXN0ZW5jZSBiZWZvcmUgdXNpbmcgaXQNCj4gPiDC
+oCBmZXRjaDI6IFNpbXBsaWZ5IGdpdCBMRlMgZGV0ZWN0aW9uDQo+ID4gwqAgZmV0Y2gyOiBVc2Ug
+Z2l0LWxmcyBmZXRjaCB0byBkb3dubG9hZCBvYmplY3RzDQo+ID4gwqAgZmV0Y2gyOiBGaXggaW5j
+b3JyZWN0IGxmcyBwYXJhbWV0cml6YXRpb24gZm9yIHN1Ym1vZHVsZXMNCj4gPiDCoCBmZXRjaDI6
+IEZpeCBMRlMgb2JqZWN0IGNoZWNrb3V0IGluIHN1Ym1vZHVsZXMNCj4gPiDCoCB0ZXN0cy9mZXRj
+aDogVGVzdCBnaXRzbSB3aXRoIExGUw0KPiA+DQo+ID4gwqBsaWIvYmIvZmV0Y2gyL2dpdC5wecKg
+wqAgfMKgIDY5ICsrKysrKy0tLS0tLS0tLS0NCj4gPiDCoGxpYi9iYi9mZXRjaDIvZ2l0c20ucHkg
+fMKgIDEzICsrLQ0KPiA+IMKgbGliL2JiL3Rlc3RzL2ZldGNoLnB5wqAgfCAxODMgKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0NCj4gPiDCoDMgZmlsZXMgY2hhbmdlZCwg
+MTYzIGluc2VydGlvbnMoKyksIDEwMiBkZWxldGlvbnMoLSkNCj4gDQo+IFdpdGggdGhpcyBzZXJp
+ZXMgYXBwbGllZCwgT0UtQ29yZSB0aHJvd3MgYSBsb3Qgb2YgZXJyb3JzLCBzZWUgYmVsb3cuDQo+
+IEknbSBub3QgY29udmluY2VkIHdlIGhhdmUgdGhhdCBtdWNoIExGUyB1c2Ugc28gc29tZXRoaW5n
+IHNlZW1zIHdyb25nLi4uDQo+IA0KPiBodHRwczovL2F1dG9idWlsZGVyLnlvY3RvcHJvamVjdC5v
+cmcvdmFsa3lyaWUvIy9idWlsZGVycy8yOS9idWlsZHMvMTQ2NS9zdGVwcy8xMy9sb2cNCj4gcy9z
+dGRpbw0KDQpJIHRoaW5rIHdoYXQgaXMgd3JvbmcgaXMgdGhlIGRlZmF1bHQgZm9yIGxmcyAoZW5h
+YmxlZCkuDQpJdCBiYWRseSBjaG9zZW4gZGVmYXVsdCBpZiBsZnMgaXMgbm90IGEgcmVxdWlyZW1l
+bnQgYW5kIHdob2xlIGNvcmUgYnVpbGRzIHdpdGhvdXQgaXQuDQoNCkFkZGluZyBhZGRpdGlvbmFs
+IGNvbW1pdCB0byBzd2l0Y2ggbGZzIGRlZmF1bHQgdG8gZGlzYWJsZWQgc2hvdWxkIHNvbHZlIGl0
+Lg0KSSB0aGluayBpdCB3aWxsIG5vdCBicmVhayB0aGUgY29yZSBpdHNlbGYgYXMgdW50aWwgbm93
+IGl0IGJ1aWx0IHN1Y2Nlc3NmdWxseSB3aXRob3V0IGdpdC1sZnMgaW5zdGFsbGVkLCBidXQgbWln
+cmF0aW9uIG5vdGUgd2lsbCBiZSBuZWVkZWQgZm9yIHRoZSBjdXN0b20gbGF5ZXJzLg0KDQpQZXRl
+cg0K
 
