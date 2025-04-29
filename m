@@ -1,169 +1,268 @@
-Return-Path: <philip.lorenz@bmw.de>
+Return-Path: <peter.kjellerstedt@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2B9C369DC
-	for <webhook@archiver.kernel.org>; Tue, 29 Apr 2025 08:35:45 +0000 (UTC)
-Received: from esa7.hc324-48.eu.iphmx.com (esa7.hc324-48.eu.iphmx.com [207.54.71.126])
- by mx.groups.io with SMTP id smtpd.web11.13471.1745915735803375230
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45765C3ABA9
+	for <webhook@archiver.kernel.org>; Tue, 29 Apr 2025 09:40:16 +0000 (UTC)
+Received: from MRWPR03CU001.outbound.protection.outlook.com (MRWPR03CU001.outbound.protection.outlook.com [40.107.130.41])
+ by mx.groups.io with SMTP id smtpd.web10.15296.1745919615166248615
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 29 Apr 2025 01:35:36 -0700
+ Tue, 29 Apr 2025 02:40:15 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bmw.de header.s=mailing1 header.b=a2mbgAb+;
- spf=pass (domain: bmw.de, ip: 207.54.71.126, mailfrom: prvs=207d80f5d=philip.lorenz@bmw.de)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
-  t=1745915735; x=1777451735;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=KQvz7LDjNvZk2tkkL9KVWtQDuYWE61hHUo8U0gUD5uY=;
-  b=a2mbgAb+c6LBARaPahBqz2hwAmxtBzQhsZQYmZKAPRnciEq4MK5KIrZz
-   rfG0x7ABgJaG8TjHAsYHz155E1Os5n+Eut+WfPvLoV4maAkQdAgQFDCJr
-   GpnY7U/l2giYIg+Oi49m2zPqOQQqLOLSGaWs/2K75snk9500531JgEtAB
-   4=;
-X-CSE-ConnectionGUID: tBAS5+sfSuGFnHwQkf7+Ow==
-X-CSE-MsgGUID: g8Tj7q1fTiGRddIMPlWIgw==
-Received: from 160.46.252.39.spf.bmwgroup.com (HELO esagw4.muc) ([160.46.252.39]) by
- esa7.hc324-48.eu.iphmx.com with ESMTP/TLS; 29 Apr 2025 10:35:34 +0200
-Received: from esabb4.muc ([160.50.100.33])  by esagw4.muc with ESMTP/TLS;
- 29 Apr 2025 10:35:34 +0200
-Received: from smucmp19d.bmwgroup.net (HELO smucmp19d.europe.bmw.corp)
- ([10.30.13.170]) by esabb4.muc with ESMTP/TLS; 29 Apr 2025 10:35:34 +0200
-Received: from [10.242.8.29] (10.30.85.202) by smucmp19d.europe.bmw.corp
- (2a03:1e80:a15:58f::205d) with Microsoft SMTP Server (version=TLS;
- Tue, 29 Apr 2025 10:35:33 +0200
-X-CSE-ConnectionGUID: vtIM+czoS7COA/VzLUBqsg==
-X-CSE-MsgGUID: vMLAvofsRuG76I2494ZgJQ==
-X-CSE-ConnectionGUID: m3IX/485Sf6qaITz5Impvg==
-X-CSE-MsgGUID: pXxyloCHRf6v/b84eUCBZQ==
-Message-ID: <e344292c-b500-4fcb-8e98-e7cd455c1bf1@bmw.de>
-Date: Tue, 29 Apr 2025 10:35:32 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel] [PATCH v2 0/8] Fix gitsm LFS support
-To: "Marko, Peter" <Peter.Marko@siemens.com>,
-	"richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>
+ dkim=pass header.i=@axis.com header.s=selector1 header.b=ah+TPNfU;
+ spf=pass (domain: axis.com, ip: 40.107.130.41, mailfrom: peter.kjellerstedt@axis.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Tt0ucTcwRbv1OpMUSbOzJhP0zj+XpQFvosfAnSaOt/gr+0MjHLYH7x5xdFzpixblAc97kx8cnHSQeliZ5zIPkVcsPDpOMyPmkehD+y4xbkqxGoqU3ZYCMiTu2kmLA1HJ9s74zSHqN4Y6nkUjCfq9f7eYFqBbe/YVUgbdYiMIgheQmUoyKaJ2VEw8roME4KrZAaWqF8y8aZG44S1+769Jy3XiWoAzRkJ0P1ZDLdWWFEO6pZ+BhTafKodtRf+YTX2HoSVyl2Y1Ao7GApq4jldGliRij0H53ojBQlVriMEto+wVnZFAaS59WMHau1e4tLZAKrZHVPtibgkdQt2KiaFOIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OebSjnPZ1B/ECSJE6/ACgmRCQ8U9Y6WmEt2/ErPM+fs=;
+ b=seeo11wT5UHvFxjfB/FHcBQp8A4QJElznfcjZH6fKq93XadhcHT/kaN5WoXrn9ltPXTdts48IovGsZaNouiLmNldfB3/CHdd8n8ubctPoKlDiPEDmzKg4THR2oV9S4dA3/dATG83499rlJRtMHYC9onSLLsh4XFyZ7D2E/BqfBAP+SWFKg6H/9QU+hmkddN2fdJimzczrt2ct4dAGob9FM0GvuSyzI/M/hm/kof9W3FQC3WGCY4Buz9u7pwge+cPkwSaxVol8cTf248sKol7JqGhcrpGSQgK/rtn5bSAmeHaZvhxfCM2GD+IGh5hV4hjfzEHKGD5DHqUolrBPYOU6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
+ dkim=pass header.d=axis.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OebSjnPZ1B/ECSJE6/ACgmRCQ8U9Y6WmEt2/ErPM+fs=;
+ b=ah+TPNfUUtqf59K6s/7ECfn2yLlGqZpGV9ik+A8e3/Yg1DoJ/xo0U2AaX1twf7EzYZeZuWnDYrEFjGCziNsnTRoVycJf/kGHj43hFkmYwcpXaERVUpQZnSmpTO1KE0eP1Tyyds22jC2YDI/8h+wjuYoNaAhX2ovzmJcj5v2ICUo=
+Received: from AS8PR02MB10201.eurprd02.prod.outlook.com (2603:10a6:20b:63d::6)
+ by AS8PR02MB9337.eurprd02.prod.outlook.com (2603:10a6:20b:57c::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.17; Tue, 29 Apr
+ 2025 09:40:10 +0000
+Received: from AS8PR02MB10201.eurprd02.prod.outlook.com
+ ([fe80::90d0:ca74:2479:bbdb]) by AS8PR02MB10201.eurprd02.prod.outlook.com
+ ([fe80::90d0:ca74:2479:bbdb%5]) with mapi id 15.20.8699.008; Tue, 29 Apr 2025
+ 09:40:10 +0000
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: "philip.lorenz@bmw.de" <philip.lorenz@bmw.de>, "Marko, Peter"
+	<Peter.Marko@siemens.com>, "richard.purdie@linuxfoundation.org"
+	<richard.purdie@linuxfoundation.org>
 CC: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
+Subject: RE: [bitbake-devel] [PATCH v2 0/8] Fix gitsm LFS support
+Thread-Topic: [bitbake-devel] [PATCH v2 0/8] Fix gitsm LFS support
+Thread-Index: AQHbtcuA9030TT/RTE2dEGGXMEc9zbO0UYWAgAAC2YCABgNhAIAADk4Q
+Date: Tue, 29 Apr 2025 09:40:10 +0000
+Message-ID: 
+ <AS8PR02MB10201F9E262FA81438AD04DEAEF802@AS8PR02MB10201.eurprd02.prod.outlook.com>
 References: <20250425101155.2905972-1-philip.lorenz@bmw.de>
  <522a15ccc1ed1597a5a6b92803536484a3f008a4.camel@linuxfoundation.org>
  <AS1PR10MB569750ACF9183A75F2389811FD842@AS1PR10MB5697.EURPRD10.PROD.OUTLOOK.COM>
-From: Philip Lorenz <philip.lorenz@bmw.de>
-In-Reply-To: <AS1PR10MB569750ACF9183A75F2389811FD842@AS1PR10MB5697.EURPRD10.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: smucmp18e.europe.bmw.corp (2a03:1e80:a15:58f::1:75) To
- smucmp19d.europe.bmw.corp (2a03:1e80:a15:58f::205d)
+ <e344292c-b500-4fcb-8e98-e7cd455c1bf1@bmw.de>
+In-Reply-To: <e344292c-b500-4fcb-8e98-e7cd455c1bf1@bmw.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=axis.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS8PR02MB10201:EE_|AS8PR02MB9337:EE_
+x-ms-office365-filtering-correlation-id: bbc6f18c-ccbb-444f-bf30-08dd8701d5bf
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: 
+ BCL:0;ARA:13230040|1800799024|376014|366016|38070700018|7053199007;
+x-microsoft-antispam-message-info: 
+ =?utf-8?B?MTB0NTIrMkgyNC9MUzBReVhwMlprUktyUVd6T1NyUlplaWhiSlBISXhreEpH?=
+ =?utf-8?B?czBoa2xIV244Rk9wOC80RUhZWGF2TGdlVjd4UGlKaDlWL3N2RzFTb1RGNjhB?=
+ =?utf-8?B?WDNEMFVpY2dSZERLYnU3WEFvMlpKdW1jeUZuMXI2QzhsZEZLSnJLUmw5OW9U?=
+ =?utf-8?B?MjRsL05SUU0vUFNhcEhqVFI3bm5zME94S2JsTDh0VFpnR3lSVENQaEEyNExv?=
+ =?utf-8?B?ME5NeVVkRmZRRG1oQk9CSUNqN28xQXc3cE9UeFU4a3d5YVhhNllZczh2blQ2?=
+ =?utf-8?B?MkNJZUJpcnBrbFcwYTR2VHUvTHZxUDl6eDJSU051NVlZNjZiYStKcWtUaTBV?=
+ =?utf-8?B?WXhaVWF4UlBPOGJjQWltK2JZNjBWZ2lYMFBLT2ZsOGtHRUdSd2pDQ2tpNTB1?=
+ =?utf-8?B?SlVrSm5FTDRLYy9oYnFlN3k1Q3lydm9BdmZXQk13SUYxT0VET3RhbzVSdERQ?=
+ =?utf-8?B?YmgrT1FtQlBJeG1xbFNxNVZGNXBhRGNua0dsQ0hLTmhWNWt3MEFwREFqdlJL?=
+ =?utf-8?B?UStUWTVDazduYnVZODFPZUd0ZTQ4VlMwS25RWm1tdjFpRHFKZEZ2dDFWVmpB?=
+ =?utf-8?B?a0grL05CY0t3MjVXekNOM3dFN0MrQmpCVFpmMVN1L2hvN01OTksxdUNFcUhP?=
+ =?utf-8?B?OXd6TlVoUjJMWW9hdkpkUkhld1JpMlhpTDE3ZGVxWEsydEM2ellvMUg2cCto?=
+ =?utf-8?B?N3V0Q2R6ZnBQOVhRdmo4Mm1NMS92RHArSnAwTUlkWlZSOFlMNGNQRHlYQm1y?=
+ =?utf-8?B?ZXRIMWJjd2dDZDZSNU5OUzNrZjI5VkJ6Syt0MlRPWlBKS2hpcGZEVnFVSFd2?=
+ =?utf-8?B?L1UyaVA1RmRZNzNYSHV1dXdyT1NhK0hPQld5TjR4YlZlajR4b3E0QUxMQVJ5?=
+ =?utf-8?B?VzUrc08zNUc1NW1HaVNGUE44b0syaGVFY3RNTHNNRU1kWHkrbG9acTk5RW9i?=
+ =?utf-8?B?Y2h1aU5sVkVQenRVM2lTM1h3ZFZlOFo0cVlPdUQ0VWR4ZndaVjF1MmNHSjds?=
+ =?utf-8?B?U2ZEbm1oWVJGMU1uWk8xRnFiZ3NPaWpMQ1Ridm0zZURtN1M4TGxMQjVKcjcz?=
+ =?utf-8?B?Q3E3OHBCRjBLOWxWZ3JpQW5HSDdFeVFNRHE2SWFJYjNOQnJNM2R4cXdwVTAw?=
+ =?utf-8?B?alQ1dFBRNVMrSkV5ZjJpc0Rqd29Tdms1aXVSVmYvNkhRQzNWeFZLY1M3N3dG?=
+ =?utf-8?B?NWtqUXljQVNrN2UvcklPS0ZIVVlhNUhpTG5QdWZGYXZJTVNCbTlmL2hVdjM4?=
+ =?utf-8?B?NXlLb3RxbSszbmFwZEFDNFg2U0luZ0wrWkRwRlNZc3lEQ090R2kyRVZJSUpl?=
+ =?utf-8?B?L2V5eDdwMXhNTlUzNWlQN3pUZlNMS3hjY1ArT3plcXl1enZhVHFTaWRyYy9O?=
+ =?utf-8?B?ZitYZDNZc2FCd0xYY3lJcVMyZUpTT1ozMTZhQUY4VWlxZWZCM1pEZUJiYU93?=
+ =?utf-8?B?dmZLR0F3cHNHWUUyZmpCSDY4SXE4N1Q4b0FZVmtCc21QdEFORkR5ZXlqT0xi?=
+ =?utf-8?B?enlKY2hMWGtza3FJbStVQXRaak94WUtUbjhXVlc3OHdud0NEVDc0SUhCcXZl?=
+ =?utf-8?B?dTdTVCtCbForRmNPd0N4RSthMXdmMXU4UGhJcEZWWlhEUS9CMGw1eTI3RGR5?=
+ =?utf-8?B?c0xYcU5xcTdCYitUOC9uNTFLT3hHUk5KWWdlKzd4Tkp3MUd2dEY0d3dpVHRL?=
+ =?utf-8?B?MUtISVl2cWRMUUFNaktoVHJmOFVic3lLZlV4T1FiNHpiMisraWQwc1JvUTlU?=
+ =?utf-8?B?VTlTbWdYWk1UcTBwVkFpdGx1TFo2c0hCN1hDRUlJTXV0eG9qNWRqczcvMll1?=
+ =?utf-8?B?ZlFCTkZaRENDdHlwbVNmNm5GbGhYVUR1TXRJR2RSeTIxcXUrRjlTMkpoaWJR?=
+ =?utf-8?B?RnY0bG1GM0F1RDNDUk5na3pWK2FydWhmM0w0TmpvVkU5RjNKQm9uRVNaRk0z?=
+ =?utf-8?Q?ZWuqZ4ZsI3w=3D?=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR02MB10201.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018)(7053199007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?utf-8?B?bmpxTVNIMVlJVjlKN1ZqNDVIRWwyYnZQU2JTT0psamE2OW9hK1pYOE1rWlps?=
+ =?utf-8?B?Y1llZnpranUyc1dsUm84VUlvSkliRnUyWGJ1WUprY1ZjMGw4VWpYNXQ1bTIr?=
+ =?utf-8?B?MFlFdVdVWVBZVzBWVmJiQVdGUi9STFE0MVY3ZG83V0swMnQ4Z2FrWEdyY2xn?=
+ =?utf-8?B?NFZGa0kybXpEbWxOclJrVUNGK0dIcnhQaEx0bVV0ZXBka2VqS3BLR1JxRWZn?=
+ =?utf-8?B?MDNuL2VTU1RMU20vNm5ZdGpoTnZBNnEzeXROY0xaQ0pxNnBua243RDVPb0gx?=
+ =?utf-8?B?RERCcHNZSEE4OUFqNGpObExiem5yL1ZXdG1CTHVBVlpIS0U4OEg5NXphMzRK?=
+ =?utf-8?B?RW9LK2hNUE9MbEN5MWk1WkViWG00N0hUZFc1b2lydGwyZ3hFQUNxUG0vZkdt?=
+ =?utf-8?B?cVNscDFqM2ZienBzOFdMdnFPbjBDdHpIWkI1SDU0aU1RNkdNN3hmM20rQWxl?=
+ =?utf-8?B?ZXFBaG5JbHphR1JtdTlzQTFRakhKTHhwSmQ5clBhSEN3Z3g0R1ZEMGt3dW01?=
+ =?utf-8?B?TkRJNXFjYWUrU0p0czFQL1RzSkw1N0k4TW5JeWluNjQ0RHdqeEpjUzZIUFcv?=
+ =?utf-8?B?Mkc4a0hsODlvVWFqVmlHaXJYMC9jaEpYQjFMVndRYmlsSDExR3VTMEZBT24z?=
+ =?utf-8?B?OVk3VXV0MElvZ2oxZERsZzBKUCtLeVNlY29sT1FSZVIwSTJTMFFBTk8xOFlq?=
+ =?utf-8?B?bnd3Nmx3azVSVlJDUlBHc2p2d093M2dIYUpKbkRmODM0Q2Z2U0RGemNLajdr?=
+ =?utf-8?B?TndHSDVJSXY5VEhheDJYSE5IOVYxUGo5MVh3cGtqYW1NblpmRkpPVzR6OURK?=
+ =?utf-8?B?U1hSdUJ2Zk1JVlRGcHBzTHR6bG0xUWEra0NZSGpWRXhwcHhCN290bk5FQWRJ?=
+ =?utf-8?B?OWExeE8raTgzMkxOTXpRWEY1WGlYY1BXWTQ3TXVGamxnNy9zK3YvbEVUMDFx?=
+ =?utf-8?B?aE1mbkZtb0hxMzdlcE12Q2pzMUd6cXl2MDN1MUlFNnRseU51ZnZjUXZmSW1v?=
+ =?utf-8?B?ZzlUdEJXUlpiWkhPODJzSXpkY3BnR1grN0NJUFBpQU9wTm5mSDFzYVZYaUJy?=
+ =?utf-8?B?REN2bXBadjA4UER1S3JxZlZMM1dvVWpMNngyd08zSFhnU2hrd00vRFd1eHox?=
+ =?utf-8?B?YVR2K0tka2JVREF4ZFdjcHFQelg1K0h3WEtCOG14SE4vd1hzRUxJenh2SHIw?=
+ =?utf-8?B?QytjYTZwdGxaZ0tCeW5hTmo4M3V3c0QxSS9rUmxKc2l2aHNVMitYWEJaMjRV?=
+ =?utf-8?B?YWlLenhXVnFNN1JZU0NNZEd6QmdYTUt1Rjg1Y1M3Uk42OHgxRFRiT2dwRC9Z?=
+ =?utf-8?B?SEpTaWNRa0czam1aWGFKanA5TEdiTCtFRUZ3Y3BiVDlueWd2bHZjelF2Ni9R?=
+ =?utf-8?B?NHlUNGRobHN1bTVSYkIzT3FoR3Q5VjRtOTlVaU9DcU1XWkQyMkZkTk00ZE9G?=
+ =?utf-8?B?Y0NSdHNCcUFCbWVaNzlxemRJSHZCbXFZNnF3NkkybkZKOTRVZUJVZnRzUlI3?=
+ =?utf-8?B?c1UzaGo2b3RoRUZSVkt1MGFWeUd4U0VUQmhYZHNmQ09vcXhteFJjWS9TMXpz?=
+ =?utf-8?B?WVl4V2FIZzIrSkVEUHRINlZlYk84bUVJckVDbHpaVjRmV2RyWDFnNzd6cmxE?=
+ =?utf-8?B?bFJtTTRHZmg2RHc2QkhGVDhPWk5LMUpIa2h4UlB2YllvaURlNUExbzhiMG1a?=
+ =?utf-8?B?THpubzN3elM3Yzk0Y09pTFBQWUhKUk5HYW04MWJCWXl6amc1enBYNGtYcTlk?=
+ =?utf-8?B?QkpOVG9LMitOT2h5bWdwU3hWZmxSOFJ2N1dxc3ZCL1JRN0ZaK3V4a0toR3Jl?=
+ =?utf-8?B?VlZyZ1RodDNZWmV3WjFPZ2NmRnA5YXpTU1hFWGU3azgyTURmODU4ZVFrdkRN?=
+ =?utf-8?B?MUdNK1A3TlluVWc5Q0ExeGJGMm5zckNicklQUmxMeWlFLzRVN1dHNzJHRkpQ?=
+ =?utf-8?B?aldjVTZFMGw0ZlRDOWU0OTlyS1NBUjkzV3hTak1xVXBoclZxRHZPUW5Ma1Rx?=
+ =?utf-8?B?RzZOSEp1UmtLSHZQd1NwYUxxVTQ3WENoZjRaVmp2VWJSWXlXaHVUTVpZaGtr?=
+ =?utf-8?B?Z21HbWwrMnlXMXdGT3NUV0wzd29keWVZY0hYUEd6b3dvNWVFaERkNkp6d0pa?=
+ =?utf-8?Q?8afE=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB10201.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bbc6f18c-ccbb-444f-bf30-08dd8701d5bf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2025 09:40:10.6941
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xLMu7daqWf9NNWWM4/VR+HtkxndUoUaHpg/pV1fTaRsQM8Vd3KkeaNFCdJDaumbP
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR02MB9337
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 29 Apr 2025 08:35:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17591
+ <bitbake-devel@lists.openembedded.org>; Tue, 29 Apr 2025 09:40:16 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17592
 
-Hi Peter, hi Richard,
-
-On 25.04.25 14:45, Marko, Peter wrote:
->> -----Original Message-----
->> From: bitbake-devel@lists.openembedded.org <bitbake-
->> devel@lists.openembedded.org> On Behalf Of Richard Purdie via
->> lists.openembedded.org
->> Sent: Friday, April 25, 2025 14:36
->> To: philip.lorenz@bmw.de; bitbake-devel@lists.openembedded.org
->> Cc: mathieu.dubois-briand@bootlin.com
->> Subject: Re: [bitbake-devel] [PATCH v2 0/8] Fix gitsm LFS support
->>
->> On Fri, 2025-04-25 at 12:11 +0200, Philip Lorenz via lists.openembedded.org
->> wrote:
->>> This patch series fixes a number of issues we observed when using the
->>> gitsm fetcher in conjunction with git-lfs.
->>>
->>> I'd like to highlight two patches in this series:
->>> * 0004-fetch2-Simplify-git-LFS-detection: I could not come up with a
->>>    good reason on why the code so far preferred the content of
->>>   `.gitattributes` on the repository's branch instead of always
->>>    considering the state of the target revision. Please let me know
->>>    if there's something I didn't take into account.
->>> * 0005-fetch2-Use-git-lfs-fetch-to-download-objects.patch: I could not
->>>    replicate the `git-lfs fetch` behaviour in versions going back to
->>>    2.13.2 released in 2021. This leads me to believe that the issue
->>>    leading to this workaround is no longer in place. However, if anyone
->>>    remembers the actual issue / versions involved I can also retest to
->>>    confirm that there are no regression.
->>>
->>> ---
->>> V1 -> V2:
->>> * The correct parameter is now passed for each submodule URL when LFS is
->>>    explicitly disabled
->>> * Smudging for submodules is now skipped when LFS is explcitly disabled.
->>>    This ensures consistent behaviour in setups where git-lfs is installed
->>>    but should not be used.
->>> * Test cases are extended to test the LFS disabled state.
->>> * Explicitly install git lfs into submodule in the test cases to make
->>>    sure that git-lfs is actually used for storing the files.
->>>
->>> Philip Lorenz (8):
->>>    fetch2: Clean up no longer used name parameter
->>>    tests/fetch: Move commonly used imports to top
->>>    fetch2: Check for git-lfs existence before using it
->>>    fetch2: Simplify git LFS detection
->>>    fetch2: Use git-lfs fetch to download objects
->>>    fetch2: Fix incorrect lfs parametrization for submodules
->>>    fetch2: Fix LFS object checkout in submodules
->>>    tests/fetch: Test gitsm with LFS
->>>
->>>   lib/bb/fetch2/git.py   |  69 ++++++----------
->>>   lib/bb/fetch2/gitsm.py |  13 ++-
->>>   lib/bb/tests/fetch.py  | 183 ++++++++++++++++++++++++++++++-----------
->>>   3 files changed, 163 insertions(+), 102 deletions(-)
->> With this series applied, OE-Core throws a lot of errors, see below.
->> I'm not convinced we have that much LFS use so something seems wrong...
->>
->> https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/1465/steps/13/log
->> s/stdio
-> I think what is wrong is the default for lfs (enabled).
-> It badly chosen default if lfs is not a requirement and whole core builds without it.
->
-> Adding additional commit to switch lfs default to disabled should solve it.
-> I think it will not break the core itself as until now it built successfully without git-lfs installed, but migration note will be needed for the custom layers.
-
-I'd actually like to come back to this suggestion as I noticed some 
-conceptual issues with the existing implementation of LFS support. As of 
-now, the implementation assumes that the presence of a lfs filter in 
-.gitattributes means that the repository uses LFS. However, this 
-assumption does not necessarily hold as the filters are *not* required 
-for a repository to contain LFS objects (it is merely a convenience 
-method to ensure that files matching a certain pattern automatically get 
-handled by LFS).
-
-One example of this is the Vulkan-Samples-Assets repository [1] (fetched 
-via vulkan-samples.bb) which does not have a .gitattributes file but 
-does contain files (e.g. [2]) managed by LFS. This is not an issue as 
-the vulkan-samples recipe explicitly disables LFS but may affect other 
-recipes referencing repositories with a similar setup.
-
-As such I actually believe that changing the lfs parameter default value 
-to off would be the sensible thing to do. Recipes dealing with LFS 
-content can  then explicitly opt in and opting in implies that git-lfs 
-must be available and the .gitattributes check is no longer needed and 
-can be dropped.
-
-Does that sound sensible? If so I can fix things up in a future patch 
-series (together with a migration note).
-
-Philip
-
-[1] 
-https://github.com/KhronosGroup/Vulkan-Samples-Assets/tree/8db8ce9c528330f0b1261b07531b009732b08731
-[2] 
-https://github.com/KhronosGroup/Vulkan-Samples-Assets/blob/8db8ce9c528330f0b1261b07531b009732b08731/scenes/morpheus_team/lego_ball_phone/shape0.obj
-
--- 
-Philip Lorenz
-BMW Car IT GmbH, Software-Plattform, -Integration Connected Company, Lise-Meitner-Straße 14, 89081 Ulm
--------------------------------------------------------------------------
-BMW Car IT GmbH
-Management: Michael Böttrich ,Chris Brandt, Christian Salzmann
-Domicile and Court of Registry: München HRB 134810
--------------------------------------------------------------------------
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBiaXRiYWtlLWRldmVsQGxpc3Rz
+Lm9wZW5lbWJlZGRlZC5vcmcgPGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZz4g
+T24gQmVoYWxmIE9mIFBoaWxpcCBMb3JlbnogdmlhIGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcNCj4g
+U2VudDogZGVuIDI5IGFwcmlsIDIwMjUgMTA6MzYNCj4gVG86IE1hcmtvLCBQZXRlciA8UGV0ZXIu
+TWFya29Ac2llbWVucy5jb20+OyByaWNoYXJkLnB1cmRpZUBsaW51eGZvdW5kYXRpb24ub3JnDQo+
+IENjOiBiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcNCj4gU3ViamVjdDogUmU6
+IFtiaXRiYWtlLWRldmVsXSBbUEFUQ0ggdjIgMC84XSBGaXggZ2l0c20gTEZTIHN1cHBvcnQNCj4g
+DQo+IEhpIFBldGVyLCBoaSBSaWNoYXJkLA0KPiANCj4gT24gMjUuMDQuMjUgMTQ6NDUsIE1hcmtv
+LCBQZXRlciB3cm90ZToNCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJv
+bTogYml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnIDxiaXRiYWtlLQ0KPiA+PiBk
+ZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPiBPbiBCZWhhbGYgT2YgUmljaGFyZCBQdXJkaWUg
+dmlhDQo+ID4+IGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcNCj4gPj4gU2VudDogRnJpZGF5LCBBcHJp
+bCAyNSwgMjAyNSAxNDozNg0KPiA+PiBUbzogcGhpbGlwLmxvcmVuekBibXcuZGU7IGJpdGJha2Ut
+ZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KPiA+PiBDYzogbWF0aGlldS5kdWJvaXMtYnJp
+YW5kQGJvb3RsaW4uY29tDQo+ID4+IFN1YmplY3Q6IFJlOiBbYml0YmFrZS1kZXZlbF0gW1BBVENI
+IHYyIDAvOF0gRml4IGdpdHNtIExGUyBzdXBwb3J0DQo+ID4+DQo+ID4+IE9uIEZyaSwgMjAyNS0w
+NC0yNSBhdCAxMjoxMSArMDIwMCwgUGhpbGlwIExvcmVueiB2aWEgbGlzdHMub3BlbmVtYmVkZGVk
+Lm9yZw0KPiA+PiB3cm90ZToNCj4gPj4+IFRoaXMgcGF0Y2ggc2VyaWVzIGZpeGVzIGEgbnVtYmVy
+IG9mIGlzc3VlcyB3ZSBvYnNlcnZlZCB3aGVuIHVzaW5nIHRoZQ0KPiA+Pj4gZ2l0c20gZmV0Y2hl
+ciBpbiBjb25qdW5jdGlvbiB3aXRoIGdpdC1sZnMuDQo+ID4+Pg0KPiA+Pj4gSSdkIGxpa2UgdG8g
+aGlnaGxpZ2h0IHR3byBwYXRjaGVzIGluIHRoaXMgc2VyaWVzOg0KPiA+Pj4gKiAwMDA0LWZldGNo
+Mi1TaW1wbGlmeS1naXQtTEZTLWRldGVjdGlvbjogSSBjb3VsZCBub3QgY29tZSB1cCB3aXRoIGEN
+Cj4gPj4+ICDCoCBnb29kIHJlYXNvbiBvbiB3aHkgdGhlIGNvZGUgc28gZmFyIHByZWZlcnJlZCB0
+aGUgY29udGVudCBvZg0KPiA+Pj4gIMKgYC5naXRhdHRyaWJ1dGVzYCBvbiB0aGUgcmVwb3NpdG9y
+eSdzIGJyYW5jaCBpbnN0ZWFkIG9mIGFsd2F5cw0KPiA+Pj4gIMKgIGNvbnNpZGVyaW5nIHRoZSBz
+dGF0ZSBvZiB0aGUgdGFyZ2V0IHJldmlzaW9uLiBQbGVhc2UgbGV0IG1lIGtub3cNCj4gPj4+ICDC
+oCBpZiB0aGVyZSdzIHNvbWV0aGluZyBJIGRpZG4ndCB0YWtlIGludG8gYWNjb3VudC4NCj4gPj4+
+ICogMDAwNS1mZXRjaDItVXNlLWdpdC1sZnMtZmV0Y2gtdG8tZG93bmxvYWQtb2JqZWN0cy5wYXRj
+aDogSSBjb3VsZCBub3QNCj4gPj4+ICDCoCByZXBsaWNhdGUgdGhlIGBnaXQtbGZzIGZldGNoYCBi
+ZWhhdmlvdXIgaW4gdmVyc2lvbnMgZ29pbmcgYmFjayB0bw0KPiA+Pj4gIMKgIDIuMTMuMiByZWxl
+YXNlZCBpbiAyMDIxLiBUaGlzIGxlYWRzIG1lIHRvIGJlbGlldmUgdGhhdCB0aGUgaXNzdWUNCj4g
+Pj4+ICDCoCBsZWFkaW5nIHRvIHRoaXMgd29ya2Fyb3VuZCBpcyBubyBsb25nZXIgaW4gcGxhY2Uu
+IEhvd2V2ZXIsIGlmIGFueW9uZQ0KPiA+Pj4gIMKgIHJlbWVtYmVycyB0aGUgYWN0dWFsIGlzc3Vl
+IC8gdmVyc2lvbnMgaW52b2x2ZWQgSSBjYW4gYWxzbyByZXRlc3QgdG8NCj4gPj4+ICDCoCBjb25m
+aXJtIHRoYXQgdGhlcmUgYXJlIG5vIHJlZ3Jlc3Npb24uDQo+ID4+Pg0KPiA+Pj4gLS0tDQo+ID4+
+PiBWMSAtPiBWMjoNCj4gPj4+ICogVGhlIGNvcnJlY3QgcGFyYW1ldGVyIGlzIG5vdyBwYXNzZWQg
+Zm9yIGVhY2ggc3VibW9kdWxlIFVSTCB3aGVuIExGUyBpcw0KPiA+Pj4gIMKgIGV4cGxpY2l0bHkg
+ZGlzYWJsZWQNCj4gPj4+ICogU211ZGdpbmcgZm9yIHN1Ym1vZHVsZXMgaXMgbm93IHNraXBwZWQg
+d2hlbiBMRlMgaXMgZXhwbGNpdGx5IGRpc2FibGVkLg0KPiA+Pj4gIMKgIFRoaXMgZW5zdXJlcyBj
+b25zaXN0ZW50IGJlaGF2aW91ciBpbiBzZXR1cHMgd2hlcmUgZ2l0LWxmcyBpcyBpbnN0YWxsZWQN
+Cj4gPj4+ICDCoCBidXQgc2hvdWxkIG5vdCBiZSB1c2VkLg0KPiA+Pj4gKiBUZXN0IGNhc2VzIGFy
+ZSBleHRlbmRlZCB0byB0ZXN0IHRoZSBMRlMgZGlzYWJsZWQgc3RhdGUuDQo+ID4+PiAqIEV4cGxp
+Y2l0bHkgaW5zdGFsbCBnaXQgbGZzIGludG8gc3VibW9kdWxlIGluIHRoZSB0ZXN0IGNhc2VzIHRv
+IG1ha2UNCj4gPj4+ICDCoCBzdXJlIHRoYXQgZ2l0LWxmcyBpcyBhY3R1YWxseSB1c2VkIGZvciBz
+dG9yaW5nIHRoZSBmaWxlcy4NCj4gPj4+DQo+ID4+PiBQaGlsaXAgTG9yZW56ICg4KToNCj4gPj4+
+ICDCoCBmZXRjaDI6IENsZWFuIHVwIG5vIGxvbmdlciB1c2VkIG5hbWUgcGFyYW1ldGVyDQo+ID4+
+PiAgwqAgdGVzdHMvZmV0Y2g6IE1vdmUgY29tbW9ubHkgdXNlZCBpbXBvcnRzIHRvIHRvcA0KPiA+
+Pj4gIMKgIGZldGNoMjogQ2hlY2sgZm9yIGdpdC1sZnMgZXhpc3RlbmNlIGJlZm9yZSB1c2luZyBp
+dA0KPiA+Pj4gIMKgIGZldGNoMjogU2ltcGxpZnkgZ2l0IExGUyBkZXRlY3Rpb24NCj4gPj4+ICDC
+oCBmZXRjaDI6IFVzZSBnaXQtbGZzIGZldGNoIHRvIGRvd25sb2FkIG9iamVjdHMNCj4gPj4+ICDC
+oCBmZXRjaDI6IEZpeCBpbmNvcnJlY3QgbGZzIHBhcmFtZXRyaXphdGlvbiBmb3Igc3VibW9kdWxl
+cw0KPiA+Pj4gIMKgIGZldGNoMjogRml4IExGUyBvYmplY3QgY2hlY2tvdXQgaW4gc3VibW9kdWxl
+cw0KPiA+Pj4gIMKgIHRlc3RzL2ZldGNoOiBUZXN0IGdpdHNtIHdpdGggTEZTDQo+ID4+Pg0KPiA+
+Pj4gIMKgbGliL2JiL2ZldGNoMi9naXQucHnCoMKgIHzCoCA2OSArKysrKystLS0tLS0tLS0tDQo+
+ID4+PiAgwqBsaWIvYmIvZmV0Y2gyL2dpdHNtLnB5IHzCoCAxMyArKy0NCj4gPj4+ICDCoGxpYi9i
+Yi90ZXN0cy9mZXRjaC5wecKgIHwgMTgzICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0t
+LS0tLS0tLS0tDQo+ID4+PiAgwqAzIGZpbGVzIGNoYW5nZWQsIDE2MyBpbnNlcnRpb25zKCspLCAx
+MDIgZGVsZXRpb25zKC0pDQo+ID4+DQo+ID4+IFdpdGggdGhpcyBzZXJpZXMgYXBwbGllZCwgT0Ut
+Q29yZSB0aHJvd3MgYSBsb3Qgb2YgZXJyb3JzLCBzZWUgYmVsb3cuDQo+ID4+IEknbSBub3QgY29u
+dmluY2VkIHdlIGhhdmUgdGhhdCBtdWNoIExGUyB1c2Ugc28gc29tZXRoaW5nIHNlZW1zIHdyb25n
+Li4uDQo+ID4+DQo+ID4+IGh0dHBzOi8vYXV0b2J1aWxkZXIueW9jdG9wcm9qZWN0Lm9yZy92YWxr
+eXJpZS8jL2J1aWxkZXJzLzI5L2J1aWxkcy8xNDY1L3N0ZXBzLzEzL2xvZ3Mvc3RkaW8NCj4gPiAN
+Cj4gPiBJIHRoaW5rIHdoYXQgaXMgd3JvbmcgaXMgdGhlIGRlZmF1bHQgZm9yIGxmcyAoZW5hYmxl
+ZCkuDQo+ID4gSXQgYmFkbHkgY2hvc2VuIGRlZmF1bHQgaWYgbGZzIGlzIG5vdCBhIHJlcXVpcmVt
+ZW50IGFuZCB3aG9sZSBjb3JlIGJ1aWxkcyB3aXRob3V0IGl0Lg0KPiA+DQo+ID4gQWRkaW5nIGFk
+ZGl0aW9uYWwgY29tbWl0IHRvIHN3aXRjaCBsZnMgZGVmYXVsdCB0byBkaXNhYmxlZCBzaG91bGQg
+c29sdmUgaXQuDQo+ID4gSSB0aGluayBpdCB3aWxsIG5vdCBicmVhayB0aGUgY29yZSBpdHNlbGYg
+YXMgdW50aWwgbm93IGl0IGJ1aWx0DQo+ID4gc3VjY2Vzc2Z1bGx5IHdpdGhvdXQgZ2l0LWxmcyBp
+bnN0YWxsZWQsIGJ1dCBtaWdyYXRpb24gbm90ZSB3aWxsIGJlIG5lZWRlZA0KPiA+IGZvciB0aGUg
+Y3VzdG9tIGxheWVycy4NCj4gDQo+IEknZCBhY3R1YWxseSBsaWtlIHRvIGNvbWUgYmFjayB0byB0
+aGlzIHN1Z2dlc3Rpb24gYXMgSSBub3RpY2VkIHNvbWUNCj4gY29uY2VwdHVhbCBpc3N1ZXMgd2l0
+aCB0aGUgZXhpc3RpbmcgaW1wbGVtZW50YXRpb24gb2YgTEZTIHN1cHBvcnQuIEFzIG9mDQo+IG5v
+dywgdGhlIGltcGxlbWVudGF0aW9uIGFzc3VtZXMgdGhhdCB0aGUgcHJlc2VuY2Ugb2YgYSBsZnMg
+ZmlsdGVyIGluDQo+IC5naXRhdHRyaWJ1dGVzIG1lYW5zIHRoYXQgdGhlIHJlcG9zaXRvcnkgdXNl
+cyBMRlMuIEhvd2V2ZXIsIHRoaXMNCj4gYXNzdW1wdGlvbiBkb2VzIG5vdCBuZWNlc3NhcmlseSBo
+b2xkIGFzIHRoZSBmaWx0ZXJzIGFyZSAqbm90KiByZXF1aXJlZA0KPiBmb3IgYSByZXBvc2l0b3J5
+IHRvIGNvbnRhaW4gTEZTIG9iamVjdHMgKGl0IGlzIG1lcmVseSBhIGNvbnZlbmllbmNlDQo+IG1l
+dGhvZCB0byBlbnN1cmUgdGhhdCBmaWxlcyBtYXRjaGluZyBhIGNlcnRhaW4gcGF0dGVybiBhdXRv
+bWF0aWNhbGx5IGdldA0KPiBoYW5kbGVkIGJ5IExGUykuDQo+IA0KPiBPbmUgZXhhbXBsZSBvZiB0
+aGlzIGlzIHRoZSBWdWxrYW4tU2FtcGxlcy1Bc3NldHMgcmVwb3NpdG9yeSBbMV0gKGZldGNoZWQN
+Cj4gdmlhIHZ1bGthbi1zYW1wbGVzLmJiKSB3aGljaCBkb2VzIG5vdCBoYXZlIGEgLmdpdGF0dHJp
+YnV0ZXMgZmlsZSBidXQNCj4gZG9lcyBjb250YWluIGZpbGVzIChlLmcuIFsyXSkgbWFuYWdlZCBi
+eSBMRlMuIFRoaXMgaXMgbm90IGFuIGlzc3VlIGFzDQo+IHRoZSB2dWxrYW4tc2FtcGxlcyByZWNp
+cGUgZXhwbGljaXRseSBkaXNhYmxlcyBMRlMgYnV0IG1heSBhZmZlY3Qgb3RoZXINCj4gcmVjaXBl
+cyByZWZlcmVuY2luZyByZXBvc2l0b3JpZXMgd2l0aCBhIHNpbWlsYXIgc2V0dXAuDQo+IA0KPiBB
+cyBzdWNoIEkgYWN0dWFsbHkgYmVsaWV2ZSB0aGF0IGNoYW5naW5nIHRoZSBsZnMgcGFyYW1ldGVy
+IGRlZmF1bHQgdmFsdWUNCj4gdG8gb2ZmIHdvdWxkIGJlIHRoZSBzZW5zaWJsZSB0aGluZyB0byBk
+by4gUmVjaXBlcyBkZWFsaW5nIHdpdGggTEZTDQo+IGNvbnRlbnQgY2FuwqAgdGhlbiBleHBsaWNp
+dGx5IG9wdCBpbiBhbmQgb3B0aW5nIGluIGltcGxpZXMgdGhhdCBnaXQtbGZzDQo+IG11c3QgYmUg
+YXZhaWxhYmxlIGFuZCB0aGUgLmdpdGF0dHJpYnV0ZXMgY2hlY2sgaXMgbm8gbG9uZ2VyIG5lZWRl
+ZCBhbmQNCj4gY2FuIGJlIGRyb3BwZWQuDQo+IA0KPiBEb2VzIHRoYXQgc291bmQgc2Vuc2libGU/
+IElmIHNvIEkgY2FuIGZpeCB0aGluZ3MgdXAgaW4gYSBmdXR1cmUgcGF0Y2gNCj4gc2VyaWVzICh0
+b2dldGhlciB3aXRoIGEgbWlncmF0aW9uIG5vdGUpLg0KPiANCj4gUGhpbGlwDQo+IA0KPiBbMV0g
+aHR0cHM6Ly9naXRodWIuY29tL0tocm9ub3NHcm91cC9WdWxrYW4tU2FtcGxlcy1Bc3NldHMvdHJl
+ZS84ZGI4Y2U5YzUyODMzMGYwYjEyNjFiMDc1MzFiMDA5NzMyYjA4NzMxDQoNCj4gWzJdIGh0dHBz
+Oi8vZ2l0aHViLmNvbS9LaHJvbm9zR3JvdXAvVnVsa2FuLVNhbXBsZXMtQXNzZXRzL2Jsb2IvOGRi
+OGNlOWM1MjgzMzBmMGIxMjYxYjA3NTMxYjAwOTczMmIwODczMS9zY2VuZXMvbW9ycGhldXNfdGVh
+bS9sZWdvX2JhbGxfcGhvbmUvc2hhcGUwLm9iag0KDQoNClRvIG1lLCB0aGlzIHNvdW5kcyBsaWtl
+IGEgZ29vZCBwbGFuLiBPbmUgdGhpbmcgeW91IGNvdWxkIGRvLCB0byBlYXNlIHRoZSANCnRyYW5z
+aXRpb24sIHdvdWxkIGJlIHRvIG5vdCByZW1vdmUgdGhlIGNoZWNrIGZvciAuZ2l0YXR0cmlidXRl
+cyBhdCB0aGlzIA0Kc3RhZ2UuIEluc3RlYWQsIHR1cm4gaXQgaW50byBhbiBlcnJvciBpZiBpdCBl
+eGlzdHMsIGJ1dCB0aGUgU1JDX1VSSSBkb2VzIA0Kbm90IHNwZWNpZnkgYW4gbGZzPSBwYXJhbWV0
+ZXIuIEFzIHlvdSBub3RlZCwgYWxtb3N0IGFsbCByZXBvc2l0b3JpZXMgDQp0aGF0IHVzZSBMRlMg
+aGF2ZSBhIC5naXRhdHRyaWJ1dGVzIGZpbGUsIHNvIHRoaXMgc2hvdWxkIHByZXZlbnQgYW55b25l
+IA0KZnJvbSBtaXNzaW5nIHRvIGFkZCB0aGUgbGZzPTEgcGFyYW1ldGVyIHRvIHJlY2lwZXMgdGhh
+dCB0b2RheSByZWx5IG9uIA0KTEZTIHN1cHBvcnQgd2l0aG91dCBzcGVjaWZ5aW5nIGl0Lg0KDQov
+L1BldGVyDQoNCg==
 
