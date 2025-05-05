@@ -1,268 +1,400 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <setairidis@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45765C3ABA9
-	for <webhook@archiver.kernel.org>; Tue, 29 Apr 2025 09:40:16 +0000 (UTC)
-Received: from MRWPR03CU001.outbound.protection.outlook.com (MRWPR03CU001.outbound.protection.outlook.com [40.107.130.41])
- by mx.groups.io with SMTP id smtpd.web10.15296.1745919615166248615
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A13FDC3ABBC
+	for <webhook@archiver.kernel.org>; Mon,  5 May 2025 18:58:19 +0000 (UTC)
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+ by mx.groups.io with SMTP id smtpd.web11.58956.1746471498175999816
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 29 Apr 2025 02:40:15 -0700
+ Mon, 05 May 2025 11:58:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=selector1 header.b=ah+TPNfU;
- spf=pass (domain: axis.com, ip: 40.107.130.41, mailfrom: peter.kjellerstedt@axis.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Tt0ucTcwRbv1OpMUSbOzJhP0zj+XpQFvosfAnSaOt/gr+0MjHLYH7x5xdFzpixblAc97kx8cnHSQeliZ5zIPkVcsPDpOMyPmkehD+y4xbkqxGoqU3ZYCMiTu2kmLA1HJ9s74zSHqN4Y6nkUjCfq9f7eYFqBbe/YVUgbdYiMIgheQmUoyKaJ2VEw8roME4KrZAaWqF8y8aZG44S1+769Jy3XiWoAzRkJ0P1ZDLdWWFEO6pZ+BhTafKodtRf+YTX2HoSVyl2Y1Ao7GApq4jldGliRij0H53ojBQlVriMEto+wVnZFAaS59WMHau1e4tLZAKrZHVPtibgkdQt2KiaFOIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OebSjnPZ1B/ECSJE6/ACgmRCQ8U9Y6WmEt2/ErPM+fs=;
- b=seeo11wT5UHvFxjfB/FHcBQp8A4QJElznfcjZH6fKq93XadhcHT/kaN5WoXrn9ltPXTdts48IovGsZaNouiLmNldfB3/CHdd8n8ubctPoKlDiPEDmzKg4THR2oV9S4dA3/dATG83499rlJRtMHYC9onSLLsh4XFyZ7D2E/BqfBAP+SWFKg6H/9QU+hmkddN2fdJimzczrt2ct4dAGob9FM0GvuSyzI/M/hm/kof9W3FQC3WGCY4Buz9u7pwge+cPkwSaxVol8cTf248sKol7JqGhcrpGSQgK/rtn5bSAmeHaZvhxfCM2GD+IGh5hV4hjfzEHKGD5DHqUolrBPYOU6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
- dkim=pass header.d=axis.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OebSjnPZ1B/ECSJE6/ACgmRCQ8U9Y6WmEt2/ErPM+fs=;
- b=ah+TPNfUUtqf59K6s/7ECfn2yLlGqZpGV9ik+A8e3/Yg1DoJ/xo0U2AaX1twf7EzYZeZuWnDYrEFjGCziNsnTRoVycJf/kGHj43hFkmYwcpXaERVUpQZnSmpTO1KE0eP1Tyyds22jC2YDI/8h+wjuYoNaAhX2ovzmJcj5v2ICUo=
-Received: from AS8PR02MB10201.eurprd02.prod.outlook.com (2603:10a6:20b:63d::6)
- by AS8PR02MB9337.eurprd02.prod.outlook.com (2603:10a6:20b:57c::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.17; Tue, 29 Apr
- 2025 09:40:10 +0000
-Received: from AS8PR02MB10201.eurprd02.prod.outlook.com
- ([fe80::90d0:ca74:2479:bbdb]) by AS8PR02MB10201.eurprd02.prod.outlook.com
- ([fe80::90d0:ca74:2479:bbdb%5]) with mapi id 15.20.8699.008; Tue, 29 Apr 2025
- 09:40:10 +0000
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: "philip.lorenz@bmw.de" <philip.lorenz@bmw.de>, "Marko, Peter"
-	<Peter.Marko@siemens.com>, "richard.purdie@linuxfoundation.org"
-	<richard.purdie@linuxfoundation.org>
-CC: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: RE: [bitbake-devel] [PATCH v2 0/8] Fix gitsm LFS support
-Thread-Topic: [bitbake-devel] [PATCH v2 0/8] Fix gitsm LFS support
-Thread-Index: AQHbtcuA9030TT/RTE2dEGGXMEc9zbO0UYWAgAAC2YCABgNhAIAADk4Q
-Date: Tue, 29 Apr 2025 09:40:10 +0000
-Message-ID: 
- <AS8PR02MB10201F9E262FA81438AD04DEAEF802@AS8PR02MB10201.eurprd02.prod.outlook.com>
-References: <20250425101155.2905972-1-philip.lorenz@bmw.de>
- <522a15ccc1ed1597a5a6b92803536484a3f008a4.camel@linuxfoundation.org>
- <AS1PR10MB569750ACF9183A75F2389811FD842@AS1PR10MB5697.EURPRD10.PROD.OUTLOOK.COM>
- <e344292c-b500-4fcb-8e98-e7cd455c1bf1@bmw.de>
-In-Reply-To: <e344292c-b500-4fcb-8e98-e7cd455c1bf1@bmw.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axis.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AS8PR02MB10201:EE_|AS8PR02MB9337:EE_
-x-ms-office365-filtering-correlation-id: bbc6f18c-ccbb-444f-bf30-08dd8701d5bf
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230040|1800799024|376014|366016|38070700018|7053199007;
-x-microsoft-antispam-message-info: 
- =?utf-8?B?MTB0NTIrMkgyNC9MUzBReVhwMlprUktyUVd6T1NyUlplaWhiSlBISXhreEpH?=
- =?utf-8?B?czBoa2xIV244Rk9wOC80RUhZWGF2TGdlVjd4UGlKaDlWL3N2RzFTb1RGNjhB?=
- =?utf-8?B?WDNEMFVpY2dSZERLYnU3WEFvMlpKdW1jeUZuMXI2QzhsZEZLSnJLUmw5OW9U?=
- =?utf-8?B?MjRsL05SUU0vUFNhcEhqVFI3bm5zME94S2JsTDh0VFpnR3lSVENQaEEyNExv?=
- =?utf-8?B?ME5NeVVkRmZRRG1oQk9CSUNqN28xQXc3cE9UeFU4a3d5YVhhNllZczh2blQ2?=
- =?utf-8?B?MkNJZUJpcnBrbFcwYTR2VHUvTHZxUDl6eDJSU051NVlZNjZiYStKcWtUaTBV?=
- =?utf-8?B?WXhaVWF4UlBPOGJjQWltK2JZNjBWZ2lYMFBLT2ZsOGtHRUdSd2pDQ2tpNTB1?=
- =?utf-8?B?SlVrSm5FTDRLYy9oYnFlN3k1Q3lydm9BdmZXQk13SUYxT0VET3RhbzVSdERQ?=
- =?utf-8?B?YmgrT1FtQlBJeG1xbFNxNVZGNXBhRGNua0dsQ0hLTmhWNWt3MEFwREFqdlJL?=
- =?utf-8?B?UStUWTVDazduYnVZODFPZUd0ZTQ4VlMwS25RWm1tdjFpRHFKZEZ2dDFWVmpB?=
- =?utf-8?B?a0grL05CY0t3MjVXekNOM3dFN0MrQmpCVFpmMVN1L2hvN01OTksxdUNFcUhP?=
- =?utf-8?B?OXd6TlVoUjJMWW9hdkpkUkhld1JpMlhpTDE3ZGVxWEsydEM2ellvMUg2cCto?=
- =?utf-8?B?N3V0Q2R6ZnBQOVhRdmo4Mm1NMS92RHArSnAwTUlkWlZSOFlMNGNQRHlYQm1y?=
- =?utf-8?B?ZXRIMWJjd2dDZDZSNU5OUzNrZjI5VkJ6Syt0MlRPWlBKS2hpcGZEVnFVSFd2?=
- =?utf-8?B?L1UyaVA1RmRZNzNYSHV1dXdyT1NhK0hPQld5TjR4YlZlajR4b3E0QUxMQVJ5?=
- =?utf-8?B?VzUrc08zNUc1NW1HaVNGUE44b0syaGVFY3RNTHNNRU1kWHkrbG9acTk5RW9i?=
- =?utf-8?B?Y2h1aU5sVkVQenRVM2lTM1h3ZFZlOFo0cVlPdUQ0VWR4ZndaVjF1MmNHSjds?=
- =?utf-8?B?U2ZEbm1oWVJGMU1uWk8xRnFiZ3NPaWpMQ1Ridm0zZURtN1M4TGxMQjVKcjcz?=
- =?utf-8?B?Q3E3OHBCRjBLOWxWZ3JpQW5HSDdFeVFNRHE2SWFJYjNOQnJNM2R4cXdwVTAw?=
- =?utf-8?B?alQ1dFBRNVMrSkV5ZjJpc0Rqd29Tdms1aXVSVmYvNkhRQzNWeFZLY1M3N3dG?=
- =?utf-8?B?NWtqUXljQVNrN2UvcklPS0ZIVVlhNUhpTG5QdWZGYXZJTVNCbTlmL2hVdjM4?=
- =?utf-8?B?NXlLb3RxbSszbmFwZEFDNFg2U0luZ0wrWkRwRlNZc3lEQ090R2kyRVZJSUpl?=
- =?utf-8?B?L2V5eDdwMXhNTlUzNWlQN3pUZlNMS3hjY1ArT3plcXl1enZhVHFTaWRyYy9O?=
- =?utf-8?B?ZitYZDNZc2FCd0xYY3lJcVMyZUpTT1ozMTZhQUY4VWlxZWZCM1pEZUJiYU93?=
- =?utf-8?B?dmZLR0F3cHNHWUUyZmpCSDY4SXE4N1Q4b0FZVmtCc21QdEFORkR5ZXlqT0xi?=
- =?utf-8?B?enlKY2hMWGtza3FJbStVQXRaak94WUtUbjhXVlc3OHdud0NEVDc0SUhCcXZl?=
- =?utf-8?B?dTdTVCtCbForRmNPd0N4RSthMXdmMXU4UGhJcEZWWlhEUS9CMGw1eTI3RGR5?=
- =?utf-8?B?c0xYcU5xcTdCYitUOC9uNTFLT3hHUk5KWWdlKzd4Tkp3MUd2dEY0d3dpVHRL?=
- =?utf-8?B?MUtISVl2cWRMUUFNaktoVHJmOFVic3lLZlV4T1FiNHpiMisraWQwc1JvUTlU?=
- =?utf-8?B?VTlTbWdYWk1UcTBwVkFpdGx1TFo2c0hCN1hDRUlJTXV0eG9qNWRqczcvMll1?=
- =?utf-8?B?ZlFCTkZaRENDdHlwbVNmNm5GbGhYVUR1TXRJR2RSeTIxcXUrRjlTMkpoaWJR?=
- =?utf-8?B?RnY0bG1GM0F1RDNDUk5na3pWK2FydWhmM0w0TmpvVkU5RjNKQm9uRVNaRk0z?=
- =?utf-8?Q?ZWuqZ4ZsI3w=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR02MB10201.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018)(7053199007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?utf-8?B?bmpxTVNIMVlJVjlKN1ZqNDVIRWwyYnZQU2JTT0psamE2OW9hK1pYOE1rWlps?=
- =?utf-8?B?Y1llZnpranUyc1dsUm84VUlvSkliRnUyWGJ1WUprY1ZjMGw4VWpYNXQ1bTIr?=
- =?utf-8?B?MFlFdVdVWVBZVzBWVmJiQVdGUi9STFE0MVY3ZG83V0swMnQ4Z2FrWEdyY2xn?=
- =?utf-8?B?NFZGa0kybXpEbWxOclJrVUNGK0dIcnhQaEx0bVV0ZXBka2VqS3BLR1JxRWZn?=
- =?utf-8?B?MDNuL2VTU1RMU20vNm5ZdGpoTnZBNnEzeXROY0xaQ0pxNnBua243RDVPb0gx?=
- =?utf-8?B?RERCcHNZSEE4OUFqNGpObExiem5yL1ZXdG1CTHVBVlpIS0U4OEg5NXphMzRK?=
- =?utf-8?B?RW9LK2hNUE9MbEN5MWk1WkViWG00N0hUZFc1b2lydGwyZ3hFQUNxUG0vZkdt?=
- =?utf-8?B?cVNscDFqM2ZienBzOFdMdnFPbjBDdHpIWkI1SDU0aU1RNkdNN3hmM20rQWxl?=
- =?utf-8?B?ZXFBaG5JbHphR1JtdTlzQTFRakhKTHhwSmQ5clBhSEN3Z3g0R1ZEMGt3dW01?=
- =?utf-8?B?TkRJNXFjYWUrU0p0czFQL1RzSkw1N0k4TW5JeWluNjQ0RHdqeEpjUzZIUFcv?=
- =?utf-8?B?Mkc4a0hsODlvVWFqVmlHaXJYMC9jaEpYQjFMVndRYmlsSDExR3VTMEZBT24z?=
- =?utf-8?B?OVk3VXV0MElvZ2oxZERsZzBKUCtLeVNlY29sT1FSZVIwSTJTMFFBTk8xOFlq?=
- =?utf-8?B?bnd3Nmx3azVSVlJDUlBHc2p2d093M2dIYUpKbkRmODM0Q2Z2U0RGemNLajdr?=
- =?utf-8?B?TndHSDVJSXY5VEhheDJYSE5IOVYxUGo5MVh3cGtqYW1NblpmRkpPVzR6OURK?=
- =?utf-8?B?U1hSdUJ2Zk1JVlRGcHBzTHR6bG0xUWEra0NZSGpWRXhwcHhCN290bk5FQWRJ?=
- =?utf-8?B?OWExeE8raTgzMkxOTXpRWEY1WGlYY1BXWTQ3TXVGamxnNy9zK3YvbEVUMDFx?=
- =?utf-8?B?aE1mbkZtb0hxMzdlcE12Q2pzMUd6cXl2MDN1MUlFNnRseU51ZnZjUXZmSW1v?=
- =?utf-8?B?ZzlUdEJXUlpiWkhPODJzSXpkY3BnR1grN0NJUFBpQU9wTm5mSDFzYVZYaUJy?=
- =?utf-8?B?REN2bXBadjA4UER1S3JxZlZMM1dvVWpMNngyd08zSFhnU2hrd00vRFd1eHox?=
- =?utf-8?B?YVR2K0tka2JVREF4ZFdjcHFQelg1K0h3WEtCOG14SE4vd1hzRUxJenh2SHIw?=
- =?utf-8?B?QytjYTZwdGxaZ0tCeW5hTmo4M3V3c0QxSS9rUmxKc2l2aHNVMitYWEJaMjRV?=
- =?utf-8?B?YWlLenhXVnFNN1JZU0NNZEd6QmdYTUt1Rjg1Y1M3Uk42OHgxRFRiT2dwRC9Z?=
- =?utf-8?B?SEpTaWNRa0czam1aWGFKanA5TEdiTCtFRUZ3Y3BiVDlueWd2bHZjelF2Ni9R?=
- =?utf-8?B?NHlUNGRobHN1bTVSYkIzT3FoR3Q5VjRtOTlVaU9DcU1XWkQyMkZkTk00ZE9G?=
- =?utf-8?B?Y0NSdHNCcUFCbWVaNzlxemRJSHZCbXFZNnF3NkkybkZKOTRVZUJVZnRzUlI3?=
- =?utf-8?B?c1UzaGo2b3RoRUZSVkt1MGFWeUd4U0VUQmhYZHNmQ09vcXhteFJjWS9TMXpz?=
- =?utf-8?B?WVl4V2FIZzIrSkVEUHRINlZlYk84bUVJckVDbHpaVjRmV2RyWDFnNzd6cmxE?=
- =?utf-8?B?bFJtTTRHZmg2RHc2QkhGVDhPWk5LMUpIa2h4UlB2YllvaURlNUExbzhiMG1a?=
- =?utf-8?B?THpubzN3elM3Yzk0Y09pTFBQWUhKUk5HYW04MWJCWXl6amc1enBYNGtYcTlk?=
- =?utf-8?B?QkpOVG9LMitOT2h5bWdwU3hWZmxSOFJ2N1dxc3ZCL1JRN0ZaK3V4a0toR3Jl?=
- =?utf-8?B?VlZyZ1RodDNZWmV3WjFPZ2NmRnA5YXpTU1hFWGU3azgyTURmODU4ZVFrdkRN?=
- =?utf-8?B?MUdNK1A3TlluVWc5Q0ExeGJGMm5zckNicklQUmxMeWlFLzRVN1dHNzJHRkpQ?=
- =?utf-8?B?aldjVTZFMGw0ZlRDOWU0OTlyS1NBUjkzV3hTak1xVXBoclZxRHZPUW5Ma1Rx?=
- =?utf-8?B?RzZOSEp1UmtLSHZQd1NwYUxxVTQ3WENoZjRaVmp2VWJSWXlXaHVUTVpZaGtr?=
- =?utf-8?B?Z21HbWwrMnlXMXdGT3NUV0wzd29keWVZY0hYUEd6b3dvNWVFaERkNkp6d0pa?=
- =?utf-8?Q?8afE=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=GL3wvK/g;
+ spf=pass (domain: gmail.com, ip: 209.85.208.54, mailfrom: setairidis@gmail.com)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so8377136a12.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 05 May 2025 11:58:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746471496; x=1747076296; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=D2nEV7ikPlCmdecGrfQNtzC6ffDfC9uQtkSsioEJAGY=;
+        b=GL3wvK/gFIZ0hFBDX9eJY/4MjxwPyjtKCsRc8VeEywPlp51pqgxWOZ+1PfjZqfapX1
+         9HkaO+kN60hVfSdjbslMP68IDICnTcC22YIZN1yKblSq25UQIuANOEyMyzRw2ODns9df
+         /Cae1kBcJc/LYsuHh0G6RJUDLYUA1PKeDuabWGpnubVpKxkOi+vQcihXNANrlNiM68zv
+         LT3WehFD1XvwLrerSR8BFz8O/K6ZQx6bfK+lVIZWVNMzKMhPoM8riXL+ae6FtQdx6gIw
+         5EqBU65ePGr6+EP5Xf5Ia0k1MuWRBoNsGogzU7ksm3WzJlKyLVASRV8OiwT7kRb5uB0G
+         eMsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746471496; x=1747076296;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D2nEV7ikPlCmdecGrfQNtzC6ffDfC9uQtkSsioEJAGY=;
+        b=FIS9W8f6KG9ERVwjRjd+C8tHRfg5w1QaxhQxXIz60nV2TsdOC+1mPE1n4OQSGGzq7O
+         wmY9WIixhkPFOQInBA0iOcnDYehdrLz2qtlc0+gRJk2Yx+NPyOzZhaI2T1e+0PoaI8QX
+         QrHqMGPQk0nbl258PqOyci0pplkGDYn6KT9414r+xhhE3eSoDVkMIkSCBE9C/bP4T0l6
+         JohRTRaoq8GJQEQ83FqL0mjFQR4OtzjgnLoetXb84FJXa9KA9+Nf6A0LXMR/9SJwL9z+
+         xQC8ksdsLa2y9xTiQYF6qfWiSUAbrZhkvLvIUGeIeHiZUyaWlppLmwzX68ipjmBtFvda
+         2dkQ==
+X-Gm-Message-State: AOJu0YygbQ4LcMOQi+6i0706XDqUGGb/vQG+/8VpcdQoAMgRg27aBHFx
+	TTpWKvg/x8pOO8s4v46uHiMk0wxpdN4noflI4s6kkK+nCwpBs6scw6QKABqwlAk=
+X-Gm-Gg: ASbGncviQN2UN8YAlD/f30bTC7sBTYaoGJ48GKZWC+yaJ1DzKeooCip46NS7vuzFbyb
+	yVdsld8qvqTZQrWwQlVjG4cAoNZ/rM/D2Z0e+AJOGT6i/oz3i4wA8TfKnmfu2ekcRJukLLO3VY3
+	oKWA3nwgsNsEhrVfNs021/Nykym5W/rsdQnGIbaHdSwSqDC3Ej3AeO/O5yAT02rF3h3krbXttGw
+	w//cypjuwOKAhatOshswjb3K5iJk8uTec6hoscn+tXDQvn8LVB7dhkfioYTZ2ySVY7FpvySi9yS
+	amz+JD7qMbNwwQl9QQsfDV5aSPAgcq9nLYLL0aZWEV3ZdkK64YaTeyE7ezNrexVNSLUh06F6EDR
+	xHdrSnQvSn2Tn7jXiqBT1VdpZU3ea2xz+Tewnh08=
+X-Google-Smtp-Source: AGHT+IHrTEzhw8k6BzhiIgi0z4172VQzV6zie1ljXe4VAdGnUGPcKpVgcblPZoGKuzQ2ggFTp47BTg==
+X-Received: by 2002:a05:6402:2801:b0:5fa:a42f:70ee with SMTP id 4fb4d7f45d1cf-5fab04bbe66mr6369629a12.0.1746471496017;
+        Mon, 05 May 2025 11:58:16 -0700 (PDT)
+Received: from localhost.localdomain (ip-095-223-184-181.um35.pools.vodafone-ip.de. [95.223.184.181])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa77bf289esm5939862a12.69.2025.05.05.11.58.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 11:58:15 -0700 (PDT)
+From: Savvas Etairidis <setairidis@gmail.com>
+X-Google-Original-From: Savvas Etairidis <falital@hotmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org,
+	Savvas Etairidis <setairidis@gmail.com>,
+	Savvas Etairidis <falital@hotmail.com>
+Subject: [PATCH] bitbake: fetch: Add support for remapping URL's
+Date: Mon,  5 May 2025 20:57:55 +0200
+Message-Id: <20250505185755.1952-1-falital@hotmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB10201.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbc6f18c-ccbb-444f-bf30-08dd8701d5bf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2025 09:40:10.6941
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xLMu7daqWf9NNWWM4/VR+HtkxndUoUaHpg/pV1fTaRsQM8Vd3KkeaNFCdJDaumbP
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR02MB9337
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 29 Apr 2025 09:40:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17592
+ <bitbake-devel@lists.openembedded.org>; Mon, 05 May 2025 18:58:19 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17593
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBiaXRiYWtlLWRldmVsQGxpc3Rz
-Lm9wZW5lbWJlZGRlZC5vcmcgPGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZz4g
-T24gQmVoYWxmIE9mIFBoaWxpcCBMb3JlbnogdmlhIGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcNCj4g
-U2VudDogZGVuIDI5IGFwcmlsIDIwMjUgMTA6MzYNCj4gVG86IE1hcmtvLCBQZXRlciA8UGV0ZXIu
-TWFya29Ac2llbWVucy5jb20+OyByaWNoYXJkLnB1cmRpZUBsaW51eGZvdW5kYXRpb24ub3JnDQo+
-IENjOiBiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcNCj4gU3ViamVjdDogUmU6
-IFtiaXRiYWtlLWRldmVsXSBbUEFUQ0ggdjIgMC84XSBGaXggZ2l0c20gTEZTIHN1cHBvcnQNCj4g
-DQo+IEhpIFBldGVyLCBoaSBSaWNoYXJkLA0KPiANCj4gT24gMjUuMDQuMjUgMTQ6NDUsIE1hcmtv
-LCBQZXRlciB3cm90ZToNCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJv
-bTogYml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnIDxiaXRiYWtlLQ0KPiA+PiBk
-ZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPiBPbiBCZWhhbGYgT2YgUmljaGFyZCBQdXJkaWUg
-dmlhDQo+ID4+IGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcNCj4gPj4gU2VudDogRnJpZGF5LCBBcHJp
-bCAyNSwgMjAyNSAxNDozNg0KPiA+PiBUbzogcGhpbGlwLmxvcmVuekBibXcuZGU7IGJpdGJha2Ut
-ZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KPiA+PiBDYzogbWF0aGlldS5kdWJvaXMtYnJp
-YW5kQGJvb3RsaW4uY29tDQo+ID4+IFN1YmplY3Q6IFJlOiBbYml0YmFrZS1kZXZlbF0gW1BBVENI
-IHYyIDAvOF0gRml4IGdpdHNtIExGUyBzdXBwb3J0DQo+ID4+DQo+ID4+IE9uIEZyaSwgMjAyNS0w
-NC0yNSBhdCAxMjoxMSArMDIwMCwgUGhpbGlwIExvcmVueiB2aWEgbGlzdHMub3BlbmVtYmVkZGVk
-Lm9yZw0KPiA+PiB3cm90ZToNCj4gPj4+IFRoaXMgcGF0Y2ggc2VyaWVzIGZpeGVzIGEgbnVtYmVy
-IG9mIGlzc3VlcyB3ZSBvYnNlcnZlZCB3aGVuIHVzaW5nIHRoZQ0KPiA+Pj4gZ2l0c20gZmV0Y2hl
-ciBpbiBjb25qdW5jdGlvbiB3aXRoIGdpdC1sZnMuDQo+ID4+Pg0KPiA+Pj4gSSdkIGxpa2UgdG8g
-aGlnaGxpZ2h0IHR3byBwYXRjaGVzIGluIHRoaXMgc2VyaWVzOg0KPiA+Pj4gKiAwMDA0LWZldGNo
-Mi1TaW1wbGlmeS1naXQtTEZTLWRldGVjdGlvbjogSSBjb3VsZCBub3QgY29tZSB1cCB3aXRoIGEN
-Cj4gPj4+ICDCoCBnb29kIHJlYXNvbiBvbiB3aHkgdGhlIGNvZGUgc28gZmFyIHByZWZlcnJlZCB0
-aGUgY29udGVudCBvZg0KPiA+Pj4gIMKgYC5naXRhdHRyaWJ1dGVzYCBvbiB0aGUgcmVwb3NpdG9y
-eSdzIGJyYW5jaCBpbnN0ZWFkIG9mIGFsd2F5cw0KPiA+Pj4gIMKgIGNvbnNpZGVyaW5nIHRoZSBz
-dGF0ZSBvZiB0aGUgdGFyZ2V0IHJldmlzaW9uLiBQbGVhc2UgbGV0IG1lIGtub3cNCj4gPj4+ICDC
-oCBpZiB0aGVyZSdzIHNvbWV0aGluZyBJIGRpZG4ndCB0YWtlIGludG8gYWNjb3VudC4NCj4gPj4+
-ICogMDAwNS1mZXRjaDItVXNlLWdpdC1sZnMtZmV0Y2gtdG8tZG93bmxvYWQtb2JqZWN0cy5wYXRj
-aDogSSBjb3VsZCBub3QNCj4gPj4+ICDCoCByZXBsaWNhdGUgdGhlIGBnaXQtbGZzIGZldGNoYCBi
-ZWhhdmlvdXIgaW4gdmVyc2lvbnMgZ29pbmcgYmFjayB0bw0KPiA+Pj4gIMKgIDIuMTMuMiByZWxl
-YXNlZCBpbiAyMDIxLiBUaGlzIGxlYWRzIG1lIHRvIGJlbGlldmUgdGhhdCB0aGUgaXNzdWUNCj4g
-Pj4+ICDCoCBsZWFkaW5nIHRvIHRoaXMgd29ya2Fyb3VuZCBpcyBubyBsb25nZXIgaW4gcGxhY2Uu
-IEhvd2V2ZXIsIGlmIGFueW9uZQ0KPiA+Pj4gIMKgIHJlbWVtYmVycyB0aGUgYWN0dWFsIGlzc3Vl
-IC8gdmVyc2lvbnMgaW52b2x2ZWQgSSBjYW4gYWxzbyByZXRlc3QgdG8NCj4gPj4+ICDCoCBjb25m
-aXJtIHRoYXQgdGhlcmUgYXJlIG5vIHJlZ3Jlc3Npb24uDQo+ID4+Pg0KPiA+Pj4gLS0tDQo+ID4+
-PiBWMSAtPiBWMjoNCj4gPj4+ICogVGhlIGNvcnJlY3QgcGFyYW1ldGVyIGlzIG5vdyBwYXNzZWQg
-Zm9yIGVhY2ggc3VibW9kdWxlIFVSTCB3aGVuIExGUyBpcw0KPiA+Pj4gIMKgIGV4cGxpY2l0bHkg
-ZGlzYWJsZWQNCj4gPj4+ICogU211ZGdpbmcgZm9yIHN1Ym1vZHVsZXMgaXMgbm93IHNraXBwZWQg
-d2hlbiBMRlMgaXMgZXhwbGNpdGx5IGRpc2FibGVkLg0KPiA+Pj4gIMKgIFRoaXMgZW5zdXJlcyBj
-b25zaXN0ZW50IGJlaGF2aW91ciBpbiBzZXR1cHMgd2hlcmUgZ2l0LWxmcyBpcyBpbnN0YWxsZWQN
-Cj4gPj4+ICDCoCBidXQgc2hvdWxkIG5vdCBiZSB1c2VkLg0KPiA+Pj4gKiBUZXN0IGNhc2VzIGFy
-ZSBleHRlbmRlZCB0byB0ZXN0IHRoZSBMRlMgZGlzYWJsZWQgc3RhdGUuDQo+ID4+PiAqIEV4cGxp
-Y2l0bHkgaW5zdGFsbCBnaXQgbGZzIGludG8gc3VibW9kdWxlIGluIHRoZSB0ZXN0IGNhc2VzIHRv
-IG1ha2UNCj4gPj4+ICDCoCBzdXJlIHRoYXQgZ2l0LWxmcyBpcyBhY3R1YWxseSB1c2VkIGZvciBz
-dG9yaW5nIHRoZSBmaWxlcy4NCj4gPj4+DQo+ID4+PiBQaGlsaXAgTG9yZW56ICg4KToNCj4gPj4+
-ICDCoCBmZXRjaDI6IENsZWFuIHVwIG5vIGxvbmdlciB1c2VkIG5hbWUgcGFyYW1ldGVyDQo+ID4+
-PiAgwqAgdGVzdHMvZmV0Y2g6IE1vdmUgY29tbW9ubHkgdXNlZCBpbXBvcnRzIHRvIHRvcA0KPiA+
-Pj4gIMKgIGZldGNoMjogQ2hlY2sgZm9yIGdpdC1sZnMgZXhpc3RlbmNlIGJlZm9yZSB1c2luZyBp
-dA0KPiA+Pj4gIMKgIGZldGNoMjogU2ltcGxpZnkgZ2l0IExGUyBkZXRlY3Rpb24NCj4gPj4+ICDC
-oCBmZXRjaDI6IFVzZSBnaXQtbGZzIGZldGNoIHRvIGRvd25sb2FkIG9iamVjdHMNCj4gPj4+ICDC
-oCBmZXRjaDI6IEZpeCBpbmNvcnJlY3QgbGZzIHBhcmFtZXRyaXphdGlvbiBmb3Igc3VibW9kdWxl
-cw0KPiA+Pj4gIMKgIGZldGNoMjogRml4IExGUyBvYmplY3QgY2hlY2tvdXQgaW4gc3VibW9kdWxl
-cw0KPiA+Pj4gIMKgIHRlc3RzL2ZldGNoOiBUZXN0IGdpdHNtIHdpdGggTEZTDQo+ID4+Pg0KPiA+
-Pj4gIMKgbGliL2JiL2ZldGNoMi9naXQucHnCoMKgIHzCoCA2OSArKysrKystLS0tLS0tLS0tDQo+
-ID4+PiAgwqBsaWIvYmIvZmV0Y2gyL2dpdHNtLnB5IHzCoCAxMyArKy0NCj4gPj4+ICDCoGxpYi9i
-Yi90ZXN0cy9mZXRjaC5wecKgIHwgMTgzICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0t
-LS0tLS0tLS0tDQo+ID4+PiAgwqAzIGZpbGVzIGNoYW5nZWQsIDE2MyBpbnNlcnRpb25zKCspLCAx
-MDIgZGVsZXRpb25zKC0pDQo+ID4+DQo+ID4+IFdpdGggdGhpcyBzZXJpZXMgYXBwbGllZCwgT0Ut
-Q29yZSB0aHJvd3MgYSBsb3Qgb2YgZXJyb3JzLCBzZWUgYmVsb3cuDQo+ID4+IEknbSBub3QgY29u
-dmluY2VkIHdlIGhhdmUgdGhhdCBtdWNoIExGUyB1c2Ugc28gc29tZXRoaW5nIHNlZW1zIHdyb25n
-Li4uDQo+ID4+DQo+ID4+IGh0dHBzOi8vYXV0b2J1aWxkZXIueW9jdG9wcm9qZWN0Lm9yZy92YWxr
-eXJpZS8jL2J1aWxkZXJzLzI5L2J1aWxkcy8xNDY1L3N0ZXBzLzEzL2xvZ3Mvc3RkaW8NCj4gPiAN
-Cj4gPiBJIHRoaW5rIHdoYXQgaXMgd3JvbmcgaXMgdGhlIGRlZmF1bHQgZm9yIGxmcyAoZW5hYmxl
-ZCkuDQo+ID4gSXQgYmFkbHkgY2hvc2VuIGRlZmF1bHQgaWYgbGZzIGlzIG5vdCBhIHJlcXVpcmVt
-ZW50IGFuZCB3aG9sZSBjb3JlIGJ1aWxkcyB3aXRob3V0IGl0Lg0KPiA+DQo+ID4gQWRkaW5nIGFk
-ZGl0aW9uYWwgY29tbWl0IHRvIHN3aXRjaCBsZnMgZGVmYXVsdCB0byBkaXNhYmxlZCBzaG91bGQg
-c29sdmUgaXQuDQo+ID4gSSB0aGluayBpdCB3aWxsIG5vdCBicmVhayB0aGUgY29yZSBpdHNlbGYg
-YXMgdW50aWwgbm93IGl0IGJ1aWx0DQo+ID4gc3VjY2Vzc2Z1bGx5IHdpdGhvdXQgZ2l0LWxmcyBp
-bnN0YWxsZWQsIGJ1dCBtaWdyYXRpb24gbm90ZSB3aWxsIGJlIG5lZWRlZA0KPiA+IGZvciB0aGUg
-Y3VzdG9tIGxheWVycy4NCj4gDQo+IEknZCBhY3R1YWxseSBsaWtlIHRvIGNvbWUgYmFjayB0byB0
-aGlzIHN1Z2dlc3Rpb24gYXMgSSBub3RpY2VkIHNvbWUNCj4gY29uY2VwdHVhbCBpc3N1ZXMgd2l0
-aCB0aGUgZXhpc3RpbmcgaW1wbGVtZW50YXRpb24gb2YgTEZTIHN1cHBvcnQuIEFzIG9mDQo+IG5v
-dywgdGhlIGltcGxlbWVudGF0aW9uIGFzc3VtZXMgdGhhdCB0aGUgcHJlc2VuY2Ugb2YgYSBsZnMg
-ZmlsdGVyIGluDQo+IC5naXRhdHRyaWJ1dGVzIG1lYW5zIHRoYXQgdGhlIHJlcG9zaXRvcnkgdXNl
-cyBMRlMuIEhvd2V2ZXIsIHRoaXMNCj4gYXNzdW1wdGlvbiBkb2VzIG5vdCBuZWNlc3NhcmlseSBo
-b2xkIGFzIHRoZSBmaWx0ZXJzIGFyZSAqbm90KiByZXF1aXJlZA0KPiBmb3IgYSByZXBvc2l0b3J5
-IHRvIGNvbnRhaW4gTEZTIG9iamVjdHMgKGl0IGlzIG1lcmVseSBhIGNvbnZlbmllbmNlDQo+IG1l
-dGhvZCB0byBlbnN1cmUgdGhhdCBmaWxlcyBtYXRjaGluZyBhIGNlcnRhaW4gcGF0dGVybiBhdXRv
-bWF0aWNhbGx5IGdldA0KPiBoYW5kbGVkIGJ5IExGUykuDQo+IA0KPiBPbmUgZXhhbXBsZSBvZiB0
-aGlzIGlzIHRoZSBWdWxrYW4tU2FtcGxlcy1Bc3NldHMgcmVwb3NpdG9yeSBbMV0gKGZldGNoZWQN
-Cj4gdmlhIHZ1bGthbi1zYW1wbGVzLmJiKSB3aGljaCBkb2VzIG5vdCBoYXZlIGEgLmdpdGF0dHJp
-YnV0ZXMgZmlsZSBidXQNCj4gZG9lcyBjb250YWluIGZpbGVzIChlLmcuIFsyXSkgbWFuYWdlZCBi
-eSBMRlMuIFRoaXMgaXMgbm90IGFuIGlzc3VlIGFzDQo+IHRoZSB2dWxrYW4tc2FtcGxlcyByZWNp
-cGUgZXhwbGljaXRseSBkaXNhYmxlcyBMRlMgYnV0IG1heSBhZmZlY3Qgb3RoZXINCj4gcmVjaXBl
-cyByZWZlcmVuY2luZyByZXBvc2l0b3JpZXMgd2l0aCBhIHNpbWlsYXIgc2V0dXAuDQo+IA0KPiBB
-cyBzdWNoIEkgYWN0dWFsbHkgYmVsaWV2ZSB0aGF0IGNoYW5naW5nIHRoZSBsZnMgcGFyYW1ldGVy
-IGRlZmF1bHQgdmFsdWUNCj4gdG8gb2ZmIHdvdWxkIGJlIHRoZSBzZW5zaWJsZSB0aGluZyB0byBk
-by4gUmVjaXBlcyBkZWFsaW5nIHdpdGggTEZTDQo+IGNvbnRlbnQgY2FuwqAgdGhlbiBleHBsaWNp
-dGx5IG9wdCBpbiBhbmQgb3B0aW5nIGluIGltcGxpZXMgdGhhdCBnaXQtbGZzDQo+IG11c3QgYmUg
-YXZhaWxhYmxlIGFuZCB0aGUgLmdpdGF0dHJpYnV0ZXMgY2hlY2sgaXMgbm8gbG9uZ2VyIG5lZWRl
-ZCBhbmQNCj4gY2FuIGJlIGRyb3BwZWQuDQo+IA0KPiBEb2VzIHRoYXQgc291bmQgc2Vuc2libGU/
-IElmIHNvIEkgY2FuIGZpeCB0aGluZ3MgdXAgaW4gYSBmdXR1cmUgcGF0Y2gNCj4gc2VyaWVzICh0
-b2dldGhlciB3aXRoIGEgbWlncmF0aW9uIG5vdGUpLg0KPiANCj4gUGhpbGlwDQo+IA0KPiBbMV0g
-aHR0cHM6Ly9naXRodWIuY29tL0tocm9ub3NHcm91cC9WdWxrYW4tU2FtcGxlcy1Bc3NldHMvdHJl
-ZS84ZGI4Y2U5YzUyODMzMGYwYjEyNjFiMDc1MzFiMDA5NzMyYjA4NzMxDQoNCj4gWzJdIGh0dHBz
-Oi8vZ2l0aHViLmNvbS9LaHJvbm9zR3JvdXAvVnVsa2FuLVNhbXBsZXMtQXNzZXRzL2Jsb2IvOGRi
-OGNlOWM1MjgzMzBmMGIxMjYxYjA3NTMxYjAwOTczMmIwODczMS9zY2VuZXMvbW9ycGhldXNfdGVh
-bS9sZWdvX2JhbGxfcGhvbmUvc2hhcGUwLm9iag0KDQoNClRvIG1lLCB0aGlzIHNvdW5kcyBsaWtl
-IGEgZ29vZCBwbGFuLiBPbmUgdGhpbmcgeW91IGNvdWxkIGRvLCB0byBlYXNlIHRoZSANCnRyYW5z
-aXRpb24sIHdvdWxkIGJlIHRvIG5vdCByZW1vdmUgdGhlIGNoZWNrIGZvciAuZ2l0YXR0cmlidXRl
-cyBhdCB0aGlzIA0Kc3RhZ2UuIEluc3RlYWQsIHR1cm4gaXQgaW50byBhbiBlcnJvciBpZiBpdCBl
-eGlzdHMsIGJ1dCB0aGUgU1JDX1VSSSBkb2VzIA0Kbm90IHNwZWNpZnkgYW4gbGZzPSBwYXJhbWV0
-ZXIuIEFzIHlvdSBub3RlZCwgYWxtb3N0IGFsbCByZXBvc2l0b3JpZXMgDQp0aGF0IHVzZSBMRlMg
-aGF2ZSBhIC5naXRhdHRyaWJ1dGVzIGZpbGUsIHNvIHRoaXMgc2hvdWxkIHByZXZlbnQgYW55b25l
-IA0KZnJvbSBtaXNzaW5nIHRvIGFkZCB0aGUgbGZzPTEgcGFyYW1ldGVyIHRvIHJlY2lwZXMgdGhh
-dCB0b2RheSByZWx5IG9uIA0KTEZTIHN1cHBvcnQgd2l0aG91dCBzcGVjaWZ5aW5nIGl0Lg0KDQov
-L1BldGVyDQoNCg==
+From: Savvas Etairidis <setairidis@gmail.com>
+
+This commit adds support for remapping URL's in the fetcher.
+This is useful for cases where the same server is access with
+different protocols or different URL's. The remapping is done by
+adding a remap entry to the global configuration or the recipe file.
+
+Fixed #10699
+
+Signed-off-by: Savvas Etairidis <falital@hotmail.com>
+---
+ .../bitbake-user-manual-fetching.rst          |  10 ++
+ .../bitbake-user-manual-ref-variables.rst     |   9 ++
+ bitbake/lib/bb/fetch2/__init__.py             |  68 +++++++++++-
+ bitbake/lib/bb/tests/fetch.py                 | 104 +++++++++++++++++-
+ 4 files changed, 187 insertions(+), 4 deletions(-)
+
+diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+index fb4f0a23d7..e932fc12e0 100644
+--- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
++++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+@@ -148,6 +148,16 @@ If :term:`BB_CHECK_SSL_CERTS` is set to ``0`` then SSL certificate checking will
+ be disabled. This variable defaults to ``1`` so SSL certificates are normally
+ checked.
+ 
++If :term:`BB_ALLOW_URL_REMAP` is set to ``1`` then URL's will be remapped
++based on the rules defined in :term:`BB_URL_REMAP` the varriable can be set
++in the global configuration or in the recipe.
++
++Here is a examples of how to set the variable::
++
++   BB_URL_REMAP = "\
++       git://example.com/ https://example.com/ \
++       http://example.com/ https://example.com/"
++
+ .. _bb-the-unpack:
+ 
+ The Unpack
+diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index 477443e228..1695a9e980 100644
+--- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -494,6 +494,15 @@ overview of their function and contents.
+       running builds when not connected to the Internet, and when operating
+       in certain kinds of firewall environments.
+ 
++   :term:`BB_ALLOW_URL_REMAP`
++      Allows the use of the :term:`BB_URL_REMAP` variable to remap URL's.
++
++   :term:`BB_URL_REMAP`
++      A table of remappings. This variable is used to remap URLs to
++      different locations. The remapping is done by the fetcher module
++      before the fetcher attempts to access the URL. The remapping is
++      performed by replacing the string with the remapped string.
++
+    :term:`BB_NUMBER_PARSE_THREADS`
+       Sets the number of threads BitBake uses when parsing. By default, the
+       number of threads is equal to the number of cores on the system.
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 2de4f4f8c0..24918887fc 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -222,7 +222,7 @@ class URI(object):
+ 
+         # We hijack the URL parameters, since the way bitbake uses
+         # them are not quite RFC compliant.
+-        uri, param_str = (uri.split(";", 1) + [None])[:2]
++        uri, param_str = self.split_uri_and_parameters(uri)
+ 
+         urlp = urllib.parse.urlparse(uri)
+         self.scheme = urlp.scheme
+@@ -298,6 +298,13 @@ class URI(object):
+     def _param_str_join(self, dict_, elmdelim, kvdelim="="):
+         return elmdelim.join([kvdelim.join([k, v]) if v else k for k, v in dict_.items()])
+ 
++    @staticmethod
++    def split_uri_and_parameters(uri):
++        """
++        Splits the URI into the URI and the parameters.
++        """
++        return (uri.split(";", 1) + [None])[:2]
++
+     @property
+     def hostport(self):
+         if not self.port:
+@@ -1319,9 +1326,9 @@ class FetchData(object):
+         self.mirrortarballs = []
+         self.basename = None
+         self.basepath = None
+-        (self.type, self.host, self.path, self.user, self.pswd, self.parm) = decodeurl(d.expand(url))
++        self.url = self.remap_url_if_needed(d.expand(url), self.load_url_remap_data(d))
++        (self.type, self.host, self.path, self.user, self.pswd, self.parm) = decodeurl(self.url)
+         self.date = self.getSRCDate(d)
+-        self.url = url
+         if not self.user and "user" in self.parm:
+             self.user = self.parm["user"]
+         if not self.pswd and "pswd" in self.parm:
+@@ -1424,6 +1431,61 @@ class FetchData(object):
+ 
+         return d.getVar("SRCDATE") or d.getVar("DATE")
+ 
++    def parse_url_remap_entries(self, pkgname, url_remap_entries, entries_as_str):
++        """
++        Parse the URL remap entries from the given dictionary.
++        """
++        if not entries_as_str:
++            return url_remap_entries
++
++        for entry in entries_as_str.split('\n'):
++            try:
++                from_url, to_url = entry.split()
++                url_remap_entries[from_url] = to_url
++            except ValueError:
++                logger.warning("Package %s contains invalid URL remap entry: %s", entry, pkgname)
++                continue
++
++        return url_remap_entries
++
++    def load_url_remap_data(self, d):
++        """
++        Load URL remap data from the package-specific and global variables.
++        """
++        url_remap_entries = {}
++
++        allow_url_remap = d.getVar('BB_ALLOW_URL_REMAP')
++        if not allow_url_remap or not bb.utils.to_boolean(allow_url_remap):
++            logger.debug("URL remapping is disabled")
++            return url_remap_entries
++
++        pkgname = d.getVar('PN')
++        if pkgname:
++            # Check for URL remap entries in the package-specific variable
++            url_remap_entries = self.parse_url_remap_entries(pkgname,
++                                                             url_remap_entries,
++                                                             d.getVarFlag('BB_URL_REMAP', pkgname, False))
++
++        # Check for URL remap entries in the global variable
++        url_remap_entries = self.parse_url_remap_entries(pkgname,
++                                                         url_remap_entries,
++                                                         d.getVar('BB_URL_REMAP'))
++
++        return url_remap_entries
++
++    def remap_url_if_needed(self, base_url, url_remap_entries):
++        """
++        Remap the URL if needed based on the URL remap data.
++        """
++        uri, paramters = URI.split_uri_and_parameters(base_url)
++        for from_url, to_url in url_remap_entries.items():
++            if uri.startswith(from_url):
++                uri = uri.replace(from_url, to_url, 1) + ';' + paramters
++                logger.debug("Remapped URL %s to %s", base_url, uri)
++                print("Remapped URL %s to %s" % (base_url, uri))
++                return uri
++        return base_url
++
+ class FetchMethod(object):
+     """Base class for 'fetch'ing data"""
+ 
+diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
+index f0c628524c..670781ad93 100644
+--- a/bitbake/lib/bb/tests/fetch.py
++++ b/bitbake/lib/bb/tests/fetch.py
+@@ -602,13 +602,19 @@ class GitDownloadDirectoryNamingTest(FetcherTest):
+ 
+     @skipIfNoNetwork()
+     def test_that_directory_is_named_after_recipe_url_when_no_mirroring_is_used(self):
+-        self.setup_mirror_rewrite()
+         fetcher = bb.fetch.Fetch([self.recipe_url], self.d)
+ 
+         fetcher.download()
+ 
+         dir = os.listdir(self.dldir + "/git2")
+         self.assertIn(self.recipe_dir, dir)
++        self.assertIn(self.recipe_dir + '.done', dir)
++        self.assertNotIn(self.mirror_dir, dir)
++        self.assertNotIn(self.mirror_dir + '.done', dir)
++        self.assertEqual(len(dir), len([
++            self.recipe_dir,
++            self.recipe_dir + '.done'
++        ]))
+ 
+     @skipIfNoNetwork()
+     def test_that_directory_exists_for_mirrored_url_and_recipe_url_when_mirroring_is_used(self):
+@@ -620,6 +626,12 @@ class GitDownloadDirectoryNamingTest(FetcherTest):
+         dir = os.listdir(self.dldir + "/git2")
+         self.assertIn(self.mirror_dir, dir)
+         self.assertIn(self.recipe_dir, dir)
++        self.assertIn(self.recipe_dir + '.done', dir)
++        self.assertEqual(len(dir), len([
++            self.recipe_dir,
++            self.recipe_dir + '.done',
++            self.mirror_dir
++        ]))
+ 
+     @skipIfNoNetwork()
+     def test_that_recipe_directory_and_mirrored_directory_exists_when_mirroring_is_used_and_the_mirrored_directory_already_exists(self):
+@@ -632,7 +644,15 @@ class GitDownloadDirectoryNamingTest(FetcherTest):
+ 
+         dir = os.listdir(self.dldir + "/git2")
+         self.assertIn(self.mirror_dir, dir)
++        self.assertIn(self.mirror_dir + '.done', dir)
+         self.assertIn(self.recipe_dir, dir)
++        self.assertIn(self.recipe_dir + '.done', dir)
++        self.assertEqual(len(dir), len([
++            self.recipe_dir,
++            self.recipe_dir + '.done',
++            self.mirror_dir,
++            self.mirror_dir + '.done'
++        ]))
+ 
+ 
+ class TarballNamingTest(FetcherTest):
+@@ -657,6 +677,15 @@ class TarballNamingTest(FetcherTest):
+ 
+         dir = os.listdir(self.dldir)
+         self.assertIn(self.recipe_tarball, dir)
++        self.assertIn(self.recipe_tarball + '.done', dir)
++        self.assertIn('git2', dir)
++        self.assertNotIn(self.mirror_tarball, dir)
++        self.assertNotIn(self.mirror_tarball + '.done', dir)
++        self.assertEqual(len(dir), len([
++            self.recipe_tarball,
++            self.recipe_tarball + '.done',
++            'git2'
++        ]))
+ 
+     @skipIfNoNetwork()
+     def test_that_the_mirror_tarball_is_created_when_mirroring_is_used(self):
+@@ -666,7 +695,16 @@ class TarballNamingTest(FetcherTest):
+         fetcher.download()
+ 
+         dir = os.listdir(self.dldir)
++        self.assertNotIn(self.recipe_tarball, dir)
++        self.assertNotIn(self.recipe_tarball + '.done', dir)
++        self.assertIn('git2', dir)
+         self.assertIn(self.mirror_tarball, dir)
++        self.assertIn(self.mirror_tarball + '.done', dir)
++        self.assertEqual(len(dir), len([
++            self.mirror_tarball,
++            self.mirror_tarball + '.done',
++            'git2'
++        ]))
+ 
+ 
+ class GitShallowTarballNamingTest(FetcherTest):
+@@ -692,6 +730,15 @@ class GitShallowTarballNamingTest(FetcherTest):
+ 
+         dir = os.listdir(self.dldir)
+         self.assertIn(self.recipe_tarball, dir)
++        self.assertIn(self.recipe_tarball + '.done', dir)
++        self.assertIn('git2', dir)
++        self.assertNotIn(self.mirror_tarball, dir)
++        self.assertNotIn(self.mirror_tarball + '.done', dir)
++        self.assertEqual(len(dir), len([
++            self.recipe_tarball,
++            self.recipe_tarball + '.done',
++            'git2'
++        ]))
+ 
+     @skipIfNoNetwork()
+     def test_that_the_mirror_tarball_is_created_when_mirroring_is_used(self):
+@@ -701,7 +748,62 @@ class GitShallowTarballNamingTest(FetcherTest):
+         fetcher.download()
+ 
+         dir = os.listdir(self.dldir)
++        self.assertNotIn(self.recipe_tarball, dir)
++        self.assertNotIn(self.recipe_tarball + '.done', dir)
+         self.assertIn(self.mirror_tarball, dir)
++        self.assertIn(self.mirror_tarball + '.done', dir)
++        self.assertIn('git2', dir)
++        self.assertEqual(len(dir), len([
++            self.mirror_tarball,
++            self.mirror_tarball + '.done',
++            'git2'
++        ]))
++
++
++class GitSameUrl(FetcherTest):
++    def setUp(self):
++        super(GitSameUrl, self).setUp()
++        self.recipe_url = "git://git.openembedded.org/bitbake;branch=master;protocol=https"
++        self.recipe_tarball = "git.openembedded.org.bitbake"
++        self.recipe_url_two = "git://github.com/openembedded/bitbake.git;protocol=https;branch=master"
++        self.recipe_tarball_two = "github.com.openembedded.bitbake.git"
++
++        self.d.setVar('SRCREV', '82ea737a0b42a8b53e11c9cde141e9e9c0bd8c40')
++        self.d.setVar('BB_URL_REMAP', 'git://github.com/openembedded/bitbake.git git://git.openembedded.org/bitbake')
++
++    @skipIfNoNetwork()
++    def test_url_remap_allowed(self):
++        self.d.setVar('BB_ALLOW_URL_REMAP', '1')
++        fetcher = bb.fetch.Fetch([self.recipe_url, self.recipe_url_two], self.d)
++        fetcher.download()
++
++        dir = os.listdir(self.dldir + "/git2")
++        self.assertIn(self.recipe_tarball, dir)
++        self.assertIn(self.recipe_tarball + '.done', dir)
++        self.assertNotIn(self.recipe_tarball_two, dir)
++        self.assertNotIn(self.recipe_tarball_two + '.done', dir)
++        self.assertEqual(len(dir), len([
++            self.recipe_tarball,
++            self.recipe_tarball + '.done'
++        ]))
++
++    @skipIfNoNetwork()
++    def test_url_remap_not_allowed(self):
++        self.d.setVar('BB_ALLOW_URL_REMAP', '0')
++        fetcher = bb.fetch.Fetch([self.recipe_url, self.recipe_url_two], self.d)
++        fetcher.download()
++
++        dir = os.listdir(self.dldir + "/git2")
++        self.assertIn(self.recipe_tarball, dir)
++        self.assertIn(self.recipe_tarball + '.done', dir)
++        self.assertIn(self.recipe_tarball_two, dir)
++        self.assertIn(self.recipe_tarball_two + '.done', dir)
++        self.assertEqual(len(dir), len([
++            self.recipe_tarball,
++            self.recipe_tarball + '.done',
++            self.recipe_tarball_two,
++            self.recipe_tarball_two + '.done'
++        ]))
+ 
+ 
+ class CleanTarballTest(FetcherTest):
+-- 
+2.34.1
+
 
