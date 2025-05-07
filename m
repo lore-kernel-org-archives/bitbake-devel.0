@@ -1,150 +1,105 @@
-Return-Path: <setairidis@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC99C3ABB6
-	for <webhook@archiver.kernel.org>; Wed,  7 May 2025 07:28:31 +0000 (UTC)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
- by mx.groups.io with SMTP id smtpd.web11.2913.1746602910509402063
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B77B9C3ABC0
+	for <webhook@archiver.kernel.org>; Wed,  7 May 2025 08:05:31 +0000 (UTC)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web11.3540.1746605129900713866
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 07 May 2025 00:28:30 -0700
+ Wed, 07 May 2025 01:05:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=MPikYoSo;
- spf=pass (domain: gmail.com, ip: 209.85.167.54, mailfrom: setairidis@gmail.com)
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54998f865b8so7008794e87.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 07 May 2025 00:28:30 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Lpz5iUom;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a0b308856fso699363f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 07 May 2025 01:05:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746602909; x=1747207709; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rqdpPTnHb/L5FIMWhn1x9y9hssuzQ10cofIJFfWGUis=;
-        b=MPikYoSocVhsM1jtLUX7fJwQpq3bGMdJULKKXw0tJXzkk0Nj6D58yZ25zQqWE6ixY9
-         aNc1Es+C7LoSp0UVNLK5S3A8jlpnyw3fkk+aQswBVJxhKNZzMl4vciLPfFJm0om4E0mp
-         Ind5pOEMXKnc1CmQDRURG163YSmv4ad2XJ2aq+1nQU0B70xv4T6M9by+OlRDZuu4F8Ak
-         cPribk27B2ABZFG8AaHUQ4ixA4jgro4KWXps0QufqG/UhI+GwUKerd1DVa0qa6j8qsTZ
-         orEOEZmn/EPoX7pCw4e4+2Lz2uI4/tGg/v8G9qXD7xfSYtK1ZmlsJeVNxEFnUR/BikG0
-         9EDA==
+        d=linuxfoundation.org; s=google; t=1746605128; x=1747209928; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Day+EK2xEDEhSzQ81X2qNA2flrsfzHM2rDpR7hSvd9s=;
+        b=Lpz5iUom3E4ZX0bdQMdB9z+PdpWMc8kqnFYob63BpzrKw2sV0k0EzINuhbNaGroB4p
+         WuRtrVrqBXD0cRfnyxgn+4CGBS1o8yKUQJfBzJQQH05GUvgfYbUbbY0UhhUtRIdzs92N
+         z/bQY3iGnCaX233bnPNqXiJUFsuetjNT1Qhvw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746602909; x=1747207709;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rqdpPTnHb/L5FIMWhn1x9y9hssuzQ10cofIJFfWGUis=;
-        b=B1O/ZUB3LtoM/HjM8XTEBz9YOslZr7kbHggrvvDesmtJRY+q//4pu9Jrsn5QSQvngS
-         2tLGsmgCVcVwMXsl+QJD9zjs7qxE72d6QT2sCMIvxW4sj7NfusxCYOvR2Sk54bO/Yowv
-         pZpiZghwKXdEePTM0m+mLLX/NbaZwoeGKx2S1Pb/e1aaVOlrmrACl43YLQBFBFdknrTU
-         vMK2FsBfbZ9Qa+NOXkMUqdOkLjekxYjIqeseQHMUPK9q7tfqGKPFnvt6UjxjHQh+mojR
-         h54X169wlK/5j8aFqYWkV3NcGWpXik2CG1H3GomrXnOd8MQaerNNUa3NcxJIIkTrykyf
-         52cA==
-X-Gm-Message-State: AOJu0YxkGBOnPIHBM7c8tOen/5duUJQX/9yl1U888Tr0TQmBdtCJ+wUH
-	JpdjHlkhpF9HnZEVrVWFP0mjTLTkZCKMVWb+WZEvrB21WeN7CKwl7TjoQIfD1o4P13H6zjf7a1K
-	WUhTCwMTUdpRJqMnaHGIUAoV1AzY=
-X-Gm-Gg: ASbGncspNkWy5AcEqTqQbR8v3EJzoqA46mK9L8GRsqplmThwTTQiP4p8He570QV3jeU
-	EpWlN9rzg9d8c6BZHAYGBxJGNvYQepNNGn4CsrJO/6956A7Ci11rfYtm5JJ0fuX1k1L7TotTB8G
-	EswXysEgmuXtTJ4NrjIXsN8UNm
-X-Google-Smtp-Source: AGHT+IFJ8V65RlTCNdxkCE3LNHhZlYjqi9hqhPM96iek+llcxnjRwZjg/MxiEgr975szYBZ2UC1zSATRAZTG5IKCnUU=
-X-Received: by 2002:a05:6512:a88:b0:54e:81ec:2c83 with SMTP id
- 2adb3069b0e04-54fb92936f1mr775680e87.18.1746602908395; Wed, 07 May 2025
- 00:28:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20250505185755.1952-1-falital@hotmail.com> <292ee69d270d71860a7ebada65e4f6aeeca01d13.camel@linuxfoundation.org>
-In-Reply-To: <292ee69d270d71860a7ebada65e4f6aeeca01d13.camel@linuxfoundation.org>
-From: Sawas Etairidis <setairidis@gmail.com>
-Date: Wed, 7 May 2025 09:28:17 +0200
-X-Gm-Features: ATxdqUGWa-cs9BGpCcGIBX5niNN4h7uIZxhiJ0EfYIaZ3G6hTk4azRx7YG-pTsc
-Message-ID: <CAKJXz6d061e5h-_7vV6iWVj90gFvKqnKC=yRQqWaobqjvzfLgg@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] bitbake: fetch: Add support for remapping URL's
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
+        d=1e100.net; s=20230601; t=1746605128; x=1747209928;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Day+EK2xEDEhSzQ81X2qNA2flrsfzHM2rDpR7hSvd9s=;
+        b=uALv+XgjBDpSSM2aydQLJpgZf2lpVrNoAyJIv4PHEZovRRFJwbC7ajoZjDGrrFaxnt
+         ct49iqiS1QajgJn2xER7BCR8uK8JXn9n4q29QS+hEKk1F5NFpqpBmID333SnP/U05AQO
+         Q7J2tkTKu0ZcF2jBGyqBjHD65RIVCKv/QIL1CAh8n27m0XYlFh8wqtvHbM7Mcj0B7jS6
+         lDOGLSrpe5/vZ+06AhK48lYQ39Ez+Ql7s9MN3HFWWb6TIQYFGyrai+22kmqRosQbHewQ
+         8wXU6e2LvYymzfFe+NyManlWRs3KYpgpUU2QhIKJ4aMXwK7RgnqNHST7q65oAk6/T6P8
+         XGWw==
+X-Gm-Message-State: AOJu0Yw9I0Yr7ZjJ7IRZOcWVCqA6WwizsrYwv1eMiamxFwp61VVmwXb5
+	DCY6tc4O5mAhWGboAfB1vCDrkVwbzPueuebSfVm0ReVTw8qUZw+IZXGDdEVC1fE=
+X-Gm-Gg: ASbGncuKtpGdshR5aMhP0gh7dP3A094cZnlQIbKfZdOZzNC9ukGZTbRQuyEd9VxEURD
+	Rk9Hl4gPOQAHufmZ+O8rlWi+AI/9Gfi8F1WSWeVl7l4/oqXdaExXqc116/ifBIFo6N1hWz7pukk
+	NFP6HhWktsaiEW2T6j6l3nQPJSWwASgQWv7HftJtTBuZuMZSylmn+5X4Bq7ERSvL9lTgM2Tj/un
+	GkNl8/LTlZQ7rUhYCNyWGlYiwL8N0UxM0dVv5qVNkiJiiiYf8Stfa8ep1OiZmsKvLcjBobqyrry
+	9OlntpsdlIVsGVZ+2k/k31+heww+TdM62HDtzUBD7ZcLImnEdCLwORaV3nHGcgKpZak5BuTCqLi
+	+VzfSPo1idgWEXV3bGrausb574Q+o5HFz6bIFGw==
+X-Google-Smtp-Source: AGHT+IFE72pwQieGQRgLZdRNuYF1DuXO0AcvLeF+NBHTqy0VF5euV+m1ozYJA2zIbDd/LKpSsH3bEg==
+X-Received: by 2002:a5d:64e8:0:b0:39c:1257:ccae with SMTP id ffacd0b85a97d-3a0b4a1c722mr1756042f8f.57.1746605127753;
+        Wed, 07 May 2025 01:05:27 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:12c3:1543:c9e5:5d2? ([2001:8b0:aba:5f3c:12c3:1543:c9e5:5d2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b0ffb1sm16026375f8f.73.2025.05.07.01.05.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 01:05:26 -0700 (PDT)
+Message-ID: <4ea9b9dcda4e5482050f472b03b69bdaf062d532.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] bitbake: fetch: Add support for
+ remapping URL's
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Sawas Etairidis <setairidis@gmail.com>
 Cc: bitbake-devel@lists.openembedded.org, docs@lists.yoctoproject.org, 
-	Savvas Etairidis <falital@hotmail.com>
-Content-Type: multipart/alternative; boundary="000000000000eb2c72063486ada1"
+ Savvas Etairidis <falital@hotmail.com>
+Date: Wed, 07 May 2025 09:05:26 +0100
+In-Reply-To: <CAKJXz6d061e5h-_7vV6iWVj90gFvKqnKC=yRQqWaobqjvzfLgg@mail.gmail.com>
+References: <20250505185755.1952-1-falital@hotmail.com>
+	 <292ee69d270d71860a7ebada65e4f6aeeca01d13.camel@linuxfoundation.org>
+	 <CAKJXz6d061e5h-_7vV6iWVj90gFvKqnKC=yRQqWaobqjvzfLgg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0-1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 07 May 2025 07:28:31 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17597
+ <bitbake-devel@lists.openembedded.org>; Wed, 07 May 2025 08:05:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17598
 
---000000000000eb2c72063486ada1
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Savvas,
 
-Hi Richard,
+On Wed, 2025-05-07 at 09:28 +0200, Sawas Etairidis wrote:
+> I think it would be better to not modify how PREMIRRORS and MIRRORS
+> work since users already depend on them and expect them to work on
+> specific way.
+> Like this you can add extra rules to rewrite the source code url and
+> then use=C2=A0 PREMIRRORS and MIRRORS if they exists.
+> I could instead provide an example how someone could have the same
+> result using PREMIRRORS if you think it is not worth having this as
+> standalone feature.
 
-I think it would be better to not modify how PREMIRRORS and MIRRORS work
-since users already depend on them and expect them to work on specific way.
-Like this you can add extra rules to rewrite the source code url and then
-use  PREMIRRORS and MIRRORS if they exists.
-I could instead provide an example how someone could have the same result
-using PREMIRRORS if you think it is not worth having this as standalone
-feature.
+Looking at the bug in question
+(https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D10699), the issue is
+filed against the layer index and the issue in question was more about
+allowing layers to list their mirror urls so that we could canonicalise
+different urls.
 
-Regards,
-Savvas
+Your patch is against bitbake itself and it is unclear if we need that
+support in bitbake itself to solve that bug which was targetting a
+layer index change if I understand correctly.
 
-=CE=A3=CF=84=CE=B9=CF=82 =CE=A4=CF=81=CE=AF 6 =CE=9C=CE=B1=CE=90 2025 =CF=
-=83=CF=84=CE=B9=CF=82 12:46=E2=80=AF=CF=80.=CE=BC., =CE=BF/=CE=B7 Richard P=
-urdie <
-richard.purdie@linuxfoundation.org> =CE=AD=CE=B3=CF=81=CE=B1=CF=88=CE=B5:
+There is already some discussion about changing the way
+PREMIRRORS/MIRRORS work for other issues and given that, I'm reluctant
+to add new code paths that add complexity and do things in a different
+way. I've been hoping rather than adding complexity, we could try and
+simplify whilst still maintaining the different use cases we need.
 
-> On Mon, 2025-05-05 at 20:57 +0200, Savvas Etairidis via
-> lists.openembedded.org wrote:
-> > From: Savvas Etairidis <setairidis@gmail.com>
-> >
-> > This commit adds support for remapping URL's in the fetcher.
-> > This is useful for cases where the same server is access with
-> > different protocols or different URL's. The remapping is done by
-> > adding a remap entry to the global configuration or the recipe file.
-> >
-> > Fixed #10699
->
-> I'm curious why you didn't use the PREMIRRORS and MIRRORS support that
-> already exists?
->
-> Cheers,
->
-> Richard
->
+Cheers,
 
---000000000000eb2c72063486ada1
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hi Richard,<div><br></div><div>I think it would be better =
-to not modify how PREMIRRORS and MIRRORS work since users already depend on=
- them and expect them to work on specific way.</div><div>Like this you can =
-add extra rules to rewrite the source code url and then use=C2=A0 PREMIRROR=
-S and MIRRORS if they exists.</div><div>I could instead provide an example =
-how someone could have the same result using PREMIRRORS if you think it is =
-not worth having this as standalone feature.</div><div><br></div><div>Regar=
-ds,</div><div>Savvas</div></div><br><div class=3D"gmail_quote gmail_quote_c=
-ontainer"><div dir=3D"ltr" class=3D"gmail_attr">=CE=A3=CF=84=CE=B9=CF=82 =
-=CE=A4=CF=81=CE=AF 6 =CE=9C=CE=B1=CE=90 2025 =CF=83=CF=84=CE=B9=CF=82 12:46=
-=E2=80=AF=CF=80.=CE=BC., =CE=BF/=CE=B7 Richard Purdie &lt;<a href=3D"mailto=
-:richard.purdie@linuxfoundation.org">richard.purdie@linuxfoundation.org</a>=
-&gt; =CE=AD=CE=B3=CF=81=CE=B1=CF=88=CE=B5:<br></div><blockquote class=3D"gm=
-ail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,=
-204,204);padding-left:1ex">On Mon, 2025-05-05 at 20:57 +0200, Savvas Etairi=
-dis via <a href=3D"http://lists.openembedded.org" rel=3D"noreferrer" target=
-=3D"_blank">lists.openembedded.org</a> wrote:<br>
-&gt; From: Savvas Etairidis &lt;<a href=3D"mailto:setairidis@gmail.com" tar=
-get=3D"_blank">setairidis@gmail.com</a>&gt;<br>
-&gt; <br>
-&gt; This commit adds support for remapping URL&#39;s in the fetcher.<br>
-&gt; This is useful for cases where the same server is access with<br>
-&gt; different protocols or different URL&#39;s. The remapping is done by<b=
-r>
-&gt; adding a remap entry to the global configuration or the recipe file.<b=
-r>
-&gt; <br>
-&gt; Fixed #10699<br>
-<br>
-I&#39;m curious why you didn&#39;t use the PREMIRRORS and MIRRORS support t=
-hat already exists?<br>
-<br>
-Cheers,<br>
-<br>
-Richard<br>
-</blockquote></div>
-
---000000000000eb2c72063486ada1--
+Richard
 
