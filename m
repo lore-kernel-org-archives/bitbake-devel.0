@@ -1,152 +1,107 @@
-Return-Path: <raj.khem@gmail.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2092C3ABDD
-	for <webhook@archiver.kernel.org>; Wed, 14 May 2025 16:55:41 +0000 (UTC)
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
- by mx.groups.io with SMTP id smtpd.web11.107747.1747241735581797595
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0C8C3ABDA
+	for <webhook@archiver.kernel.org>; Wed, 14 May 2025 21:30:04 +0000 (UTC)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+ by mx.groups.io with SMTP id smtpd.web10.113459.1747258197900950622
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 14 May 2025 09:55:35 -0700
+ Wed, 14 May 2025 14:29:58 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=DHTE0U1M;
- spf=pass (domain: gmail.com, ip: 209.85.167.180, mailfrom: raj.khem@gmail.com)
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-40356cb3352so53515b6e.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 14 May 2025 09:55:35 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=i5duXiZI;
+ spf=pass (domain: smile.fr, ip: 209.85.128.50, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-442f4a3a4d6so2023375e9.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 14 May 2025 14:29:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747241735; x=1747846535; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5VTlbXbtsJkJcgRE3gcdc87/XtaRs6HMJE4i2wCCC+o=;
-        b=DHTE0U1Mdik1RoveoN4ztao8n8N8xAvNspU20k2juUKzzJMi2+pa3bnKnaapE25mdm
-         FKFUR8kAqsI0vZdHQ4eKVonQ2JJo/QjyaBvT7cK4K5m/vho1igxZNwXwxZsT+atOBNCu
-         VVStDXqbCJxevi/PZzZDHVEipz+GMF9oQodyA3HzrBOiVzeSFv+211gMpjAbM8d85xZf
-         AP/sNdrvnijXOV5Ec8CTLNgPFcyHZ7prLoartjbtIBxulZyq05z9hgg5d0u7su3APp32
-         XgN3CgbZTSESklO+BDuMVr3UnzGWW97WtMcNowMbu1EgQvzFMUhRg396AZke4eok0WF/
-         l3mg==
+        d=smile.fr; s=google; t=1747258196; x=1747862996; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=t9oW0UZ/QCsIARU0oLyBwe62V1l3WqA9b3yTbquNokA=;
+        b=i5duXiZIRyhdV/1T7MjIv4vm8Yaxa9xiohltPYREDACTxQZH4EcFDfZ9B/8sBT935m
+         hFaF+iBxRdfk3P4D342Mq3Q1y4HXkZgjkyme/bZGFQdjYMTYhcCq0c6+FwBeTqHciL8A
+         Bgx0oAccB373aTB3IydHpsVfpCoxHEzO8wzvM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747241735; x=1747846535;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5VTlbXbtsJkJcgRE3gcdc87/XtaRs6HMJE4i2wCCC+o=;
-        b=VLo31ZlEeRzf7De5FWtgvvX9Ltvmh8sqRHbXQjEHXHfXw6yBp5q+KETCCG+aCovpHt
-         mOI29iVm9bXAQD5orTL4DaRNKrP9c9Wdh9ajAHxBq8b/niCMJMKiLv9mgZ+x4NlN8CAR
-         BotG5Wfi3eM/brHn4ZTimHjkgnrUA2DVdTW/GHSzn9s/M1ie/MidcTdBnaQClWYm4gwg
-         5fHYwOPEWp/4ApCHAQVABnR7y+jKUBvhHtswtUKTj/z75/jmqDuRUk0e+wau/bxd5P06
-         /e8H325exy5bh89i1yjoUzeesvqAGLao9KnGp1LtuwQ7R8xWzfD45xcMjfot4PomH0LX
-         DCsw==
-X-Forwarded-Encrypted: i=1; AJvYcCUKsOfTTNN0wkHzzVEPumRVSKWx29TwgUpJJ5cMhiJA0SFPHlCzdHLcmwyeGm8TGSUieKpk7XrlsTWgIAEt@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yw9nFBY4Mm5LmjN2Fp/HVadpyYAGAu7VWdrS5b9b6mibh4LuQ3B
-	pLTR96YQTqGfVeobwkI6uNZMNTd/5aO+KTLUI9uCbuq27XpD9PsIKxJdI50Gc7RkEvJnAB0SQas
-	veW23plhSw0qUT9piEO26xrHnz0U=
-X-Gm-Gg: ASbGncsuJp4qoC50sdswDrRHkQ1hWZfPDWA7IzDJTF3Gu6/wW+p8achX+ApZB2bjCO9
-	NsusQ1Y703S/SOA4DeGChiInSZOlZ2LkX90mefpBCaf5NCJSnpfbOyNFH1a7w+E1npuRtgCivoL
-	kg8mHHXaSEDyXbw4n7OelL9zM0CLWzBNvn
-X-Google-Smtp-Source: AGHT+IEnihUxUEvNqoxBtpz8AnsRUBbF5bD/FxoeDAOQll7rBGxidPlu4/C7U2OLfGGTOtE+69cqQX9bjTUd/oBO8vA=
-X-Received: by 2002:a05:6808:2287:b0:3fe:aebe:dde7 with SMTP id
- 5614622812f47-404cd5f0d1fmr202161b6e.2.1747241734698; Wed, 14 May 2025
- 09:55:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747258196; x=1747862996;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t9oW0UZ/QCsIARU0oLyBwe62V1l3WqA9b3yTbquNokA=;
+        b=oXDWDam4yvGtssaOUK0BwtY6QRna8rqgjrV6nXpmxazFfnEiA1WE4TJT2uG8/Up1ZQ
+         RgzLO9bjX610y6A9d/dFHob38BOwkZ9n02EFE2TTJtM+yO8ueHafhN1E8prTCpJtevuq
+         eXji2BM6ulyu1Os9CUJt4BSz1CY8hPyQEWzQaws7Vt4mnHDk/fvKe/jnZrcgD+oIhgej
+         9Ou7D6g6wVz3zbEObLPjxXhIRdHk3CxkQWDHdQdSRKFIiKy9+Hk0kIf/u2AE4aTFJ24w
+         IMda7nmJaaDm69eTKJibOE5hDVOx30PdAhpujoMR2Yb4MoxCyl50QsZo0dsrf47Rqjus
+         znFg==
+X-Gm-Message-State: AOJu0YwZ1YNar2V5eYAo4ftzD4OPgCyHRIrIlVTweJMP0H2yvmBmG5e4
+	++YbXZuThlipSVfLd/WQ8AhuZbwSwmyqkNj86Gr9o7kIw4zoAQZdw+9Iu529RaXKr9fWKYcOkwx
+	N
+X-Gm-Gg: ASbGnct+P8xkEd7doTQbPPjfDl1d/9B+RyUGebXO3Ss5LliN7xyvUI5JgJ5ySqqQ/GK
+	QNrFe3Ti2XmN/u2K/K9czH6WTXwjYAYH5T6wZARjnWNYdQ0IR8r6q5lTDigb4btpQ1EfQXUD2Lb
+	vaTz5NjCUf5Lt4bWYThegmfVo0pkzCCtyeAk8RAWp1QWvHC7ekD1joWxR6O1YaTaFxBrk/Hicad
+	nbR6CsukI1RtOCgAeejrG01aEkUSkLIhqRXzUoqIOMT8vfgthARuXyBz7Te9D+4QcwFlLl4Isnz
+	DkKpMmqvkpV2rOsLvu3IZzgMqVsF6sDXsgsgHcDvuT18LQ7BnvN1l522xl33S23yNN8MV6HqeiP
+	g1xLJpFvkhqxB3hmP2qBcJgYpuGtpWpcVLdCRWtv7IMuizzRmsAsaLMZZtfU=
+X-Google-Smtp-Source: AGHT+IEgn2QbWDsVtwJxQafgcsET01VKZLEc1A616WOzKWAgWEDYpJH/X4QC4ZVjXDpWJOldndneJg==
+X-Received: by 2002:a05:600c:3e08:b0:43d:b33:679c with SMTP id 5b1f17b1804b1-442f850c54amr9226795e9.14.1747258196103;
+        Wed, 14 May 2025 14:29:56 -0700 (PDT)
+Received: from P-ASN-ECS-830T8C3.home (2a01cb001331aa0017b58d8bf04048c3.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:17b5:8d8b:f040:48c3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f337db47sm42883815e9.12.2025.05.14.14.29.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 14:29:55 -0700 (PDT)
+From: Yoann Congal <yoann.congal@smile.fr>
+To: bitbake-devel@lists.openembedded.org
+Cc: Yoann Congal <yoann.congal@smile.fr>
+Subject: [PATCH] knotty: pass failed task logs through the log infrastructure
+Date: Wed, 14 May 2025 23:28:52 +0200
+Message-Id: <20250514212851.837656-1-yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.39.5
 MIME-Version: 1.0
-References: <20250514050900.2096691-1-Qi.Chen@windriver.com>
- <49e877afefd86763dc916c0f5f6445026986c752.camel@linuxfoundation.org> <b680eae5-c7c5-4fdc-8934-d4f8acdfe7fe@windriver.com>
-In-Reply-To: <b680eae5-c7c5-4fdc-8934-d4f8acdfe7fe@windriver.com>
-From: Khem Raj <raj.khem@gmail.com>
-Date: Wed, 14 May 2025 09:55:08 -0700
-X-Gm-Features: AX0GCFtxjtA9LdK1iUC51p_UJW9fC9T6FB-ggPxiMHPc93famKqXh65uavtBh30
-Message-ID: <CAMKF1sria5rq-i_d=MKcqNgfH0t2azWyYR380AeXgviXeT+9mg@mail.gmail.com>
-Subject: Re: [bitbake-devel][PATCH] fetch2/git: fix shallow clone for tag
- containing slash
-To: Qi.Chen@windriver.com
-Cc: richard.purdie@linuxfoundation.org, bitbake-devel@lists.openembedded.org, 
-	liezhi.yang@windriver.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 14 May 2025 16:55:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17610
+ <bitbake-devel@lists.openembedded.org>; Wed, 14 May 2025 21:30:04 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17611
 
-there is a bug as well - this should help with
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D15862
-so referring to that would be good
+From: Yoann Congal <yoann.congal@smile.fr>
 
-On Tue, May 13, 2025 at 11:33=E2=80=AFPM Chen Qi via lists.openembedded.org
-<Qi.Chen=3Dwindriver.com@lists.openembedded.org> wrote:
->
-> On 5/14/25 14:28, Richard Purdie via lists.openembedded.org wrote:
-> > On Wed, 2025-05-14 at 13:09 +0800, Chen Qi via lists.openembedded.org w=
-rote:
-> >> From: Chen Qi <Qi.Chen@windriver.com>
-> >>
-> >> If a tag contains slash, e.g., debian/5.22, then shallow clone
-> >> fails because it's using a wrong ref.
-> >>
-> >> To reproduce the issue, add the following lines in local.conf:
-> >>
-> >>    BB_GIT_SHALLOW =3D "1"
-> >>    BB_GENERATE_SHALLOW_TARBALLS =3D "1"
-> >>
-> >> And then run 'bitbake debianutils -c fetch'.
-> >>
-> >> What the original os.path.basename(ref) wanted to do is to remove
-> >> the strings such as refs/heads/. So we do it explitly to fix this
-> >> issue.
-> >>
-> >> Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
-> >> ---
-> >>   bitbake/lib/bb/fetch2/git.py | 2 +-
-> >>   1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.=
-py
-> >> index 11cda2007d..784a45bda2 100644
-> >> --- a/bitbake/lib/bb/fetch2/git.py
-> >> +++ b/bitbake/lib/bb/fetch2/git.py
-> >> @@ -639,7 +639,7 @@ class Git(FetchMethod):
-> >>                   extra_refs.append(r)
-> >>
-> >>           for ref in extra_refs:
-> >> -            ref_fetch =3D os.path.basename(ref)
-> >> +            ref_fetch =3D ref.replace('refs/heads/', '').replace('ref=
-s/remotes/origin/', '').replace('refs/tags/', '')
-> >>               runfetchcmd("%s fetch origin --depth 1 %s" % (ud.basecmd=
-, ref_fetch), d, workdir=3Ddest)
-> >>               revision =3D runfetchcmd("%s rev-parse FETCH_HEAD" % ud.=
-basecmd, d, workdir=3Ddest)
-> >>               runfetchcmd("%s update-ref %s %s" % (ud.basecmd, ref, re=
-vision), d, workdir=3Ddest)
-> >>
-> > Thanks, I just saw a few people reporting this.
-> >
-> > Would it be possible to add a test case to bitbake-selftest so we can
-> > esure this doesn't regress in future?
->
-> Got it. I'll add a testcase and send out a new patch.
->
-> Regards,
-> Qi
->
-> >
-> > Cheers,
-> >
-> > Richard
-> >
-> >
-> >
-> >
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#17607): https://lists.openembedded.org/g/bitbake-deve=
-l/message/17607
-> Mute This Topic: https://lists.openembedded.org/mt/113103962/1997914
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [raj.kh=
-em@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
+By switching from print() to bb.plain() to print failing task logs, we
+allow them to be saved in BB_CONSOLELOG.
+
+Fixes [YOCTO #15798]: This allows AB reproducibility test to save the
+full log of the failing tasks and helps debugging.
+
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+---
+ lib/bb/ui/knotty.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+index 2fff1b36..9a589a5c 100644
+--- a/lib/bb/ui/knotty.py
++++ b/lib/bb/ui/knotty.py
+@@ -353,7 +353,7 @@ def print_event_log(event, includelogs, loglines, termfilter):
+         termfilter.clearFooter()
+         bb.error("Logfile of failure stored in: %s" % logfile)
+         if includelogs and not event.errprinted:
+-            print("Log data follows:")
++            bb.plain("Log data follows:")
+             f = open(logfile, "r")
+             lines = []
+             while True:
+@@ -366,11 +366,11 @@ def print_event_log(event, includelogs, loglines, termfilter):
+                     if len(lines) > int(loglines):
+                         lines.pop(0)
+                 else:
+-                    print('| %s' % l)
++                    bb.plain('| %s' % l)
+             f.close()
+             if lines:
+                 for line in lines:
+-                    print(line)
++                    bb.plain(line)
+ 
+ def _log_settings_from_server(server, observe_only):
+     # Get values of variables which control our output
 
