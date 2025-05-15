@@ -1,255 +1,117 @@
-Return-Path: <philip.lorenz@bmw.de>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4634AC2D0CD
-	for <webhook@archiver.kernel.org>; Thu, 15 May 2025 14:54:15 +0000 (UTC)
-Received: from esa1.hc324-48.eu.iphmx.com (esa1.hc324-48.eu.iphmx.com [207.54.68.119])
- by mx.groups.io with SMTP id smtpd.web11.14678.1747320848482638361
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CB5C2D0CD
+	for <webhook@archiver.kernel.org>; Thu, 15 May 2025 15:27:55 +0000 (UTC)
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+ by mx.groups.io with SMTP id smtpd.web11.15552.1747322866797799620
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 15 May 2025 07:54:09 -0700
+ Thu, 15 May 2025 08:27:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bmw.de header.s=mailing1 header.b=f7N1lvbE;
- spf=pass (domain: bmw.de, ip: 207.54.68.119, mailfrom: prvs=22331e167=philip.lorenz@bmw.de)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=AvcPv+dr;
+ spf=pass (domain: gmail.com, ip: 209.85.167.181, mailfrom: jpewhacker@gmail.com)
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-4033c89f2aaso951662b6e.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 15 May 2025 08:27:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
-  t=1747320848; x=1778856848;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=wQlyOE1/GLtW0PcJa3wdbBoWsU1mhpZ03jYtcEXIIe4=;
-  b=f7N1lvbEVJdFUi3y45BIVnBR6cUA/8bJCP19Bqmy8MkPbvM5sEDAF/CO
-   sZ+Em7kZbaGnCRF3/x1wAzypHSyY1Yb9Dtt7pQZXiIECYKi1bIKF4U3e1
-   AH0tLKHy2pCWuIR8dzfdZNOAgsoiAA1fZdS0a2LsXocFbaoTjnWkbdwu5
-   U=;
-X-CSE-ConnectionGUID: 8yT+kmwrQ3OuvYNiuIskig==
-X-CSE-MsgGUID: w5j/Fs34RYyPSIUPteOETw==
-Received: from esagw4.bmwgroup.com (HELO esagw4.muc) ([160.46.252.39]) by
- esa1.hc324-48.eu.iphmx.com with ESMTP/TLS; 15 May 2025 16:54:05 +0200
-Received: from esabb3.muc ([160.50.100.30])  by esagw4.muc with ESMTP/TLS;
- 15 May 2025 16:54:05 +0200
-Received: from smucmp19d.bmwgroup.net (HELO smucmp19d.europe.bmw.corp)
- ([10.30.13.170]) by esabb3.muc with ESMTP/TLS; 15 May 2025 16:54:05 +0200
-Received: from localhost.localdomain (10.30.85.209) by smucmp19d.europe.bmw.corp
- (2a03:1e80:a15:58f::205d) with Microsoft SMTP Server (version=TLS;
- Thu, 15 May 2025 16:54:05 +0200
-X-CSE-ConnectionGUID: ruW8N5USRgKbCqo3AHdTdQ==
-X-CSE-MsgGUID: fZs1Z9FmQE2VwjHebFjc5g==
-X-CSE-ConnectionGUID: zUBDsWOiRPGpq2e8SM5iOw==
-X-CSE-MsgGUID: Uuge5Oa7SPi24BZsjHkByQ==
-From: Philip Lorenz <philip.lorenz@bmw.de>
-To: <bitbake-devel@lists.openembedded.org>
-CC: Philip Lorenz <philip.lorenz@bmw.de>
-Subject: [RFC PATCH 1/1] siggen: Support non-compressed sigdata files
-Date: Thu, 15 May 2025 16:44:55 +0200
-Message-ID: <20250515144455.2799533-2-philip.lorenz@bmw.de>
+        d=gmail.com; s=20230601; t=1747322865; x=1747927665; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=t8Be5/yHm43XB2MnTlIAImysUhOr42OE3Fg79UNup10=;
+        b=AvcPv+drGOdrL6E3HXZgZ0e1R6SUd9mCaHEXnm9MOprohRx7SND9FbGefjz8dQXfJs
+         N8xKBhT2ftP/9Y+qUZHI6tZVjz1IzX9Ed8n2ud2loRD2SOedGVenDN2S+RVNz5f3ipau
+         DPZ0SvomPIPGDzbX0W7lCzB5rCqL+kcERTgrnDfof0oCd+IqHoauZSAyynYWYl6K3tjB
+         DP/2H5+PpnwAF5CU1RUavQCmarS/g2v0Y67PaUCR0JNKUgXYVtapd+pz8roYvpjDQbhK
+         RVc71k7B3VUXPJZ2MY43ll50JGh/pFdNYOqmsnK/i/aktZSY4gyTgWZeJBBaLK1R4ej1
+         77hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747322865; x=1747927665;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t8Be5/yHm43XB2MnTlIAImysUhOr42OE3Fg79UNup10=;
+        b=fAofXD8Hy2j1ieqNGFuWC8/O80fzMZZxkClS48nOw9tkO5cuF4D4rNVMqJknSiBOgh
+         ewK4thTch0x4oXXFOYsqJCFIRstnTGM79EpLpgliAuIr2BwM0MxKILnk3+1vkwC0MUpb
+         6xHCMssYkbkeIQPi6RsdUHRju8lPg4Ej+d6vTxOflqDjAjO41HXZ/GK4RXCWdTBtcAeQ
+         LT5Id3jnPVFbWCSNi9sLcM+5383pHKdsCS+775pOjH6XQc6fqSi1qNNHQ90GDg57tWC2
+         wpdyeDxd0MoE0Khqq0vQg+v+BRjUCGo/xc3KAGDYmRPob67cDLZ58GxIoRUk22Khac+2
+         rVmA==
+X-Gm-Message-State: AOJu0Yw/00BuSqW9KHXzNpLLFODEaYmF3HrBwUmkvDcmao6qRz4cSdPK
+	vg9xmU/fCR63KtGQrSqTcGzxYnyMxe3fM40QW30YFySDoLMM7wL8s3kFpeW8cA==
+X-Gm-Gg: ASbGncsafkv2eDQ7ryD74jquoumn0POqWz1dzrugzh7jj8FFW8qqtpKjQnYDsWdPVlt
+	ZwmnnCuAKJG9x1X5LE/zHMeTnpId/I29PkROn5a91JrQ9BO9YFSFWdfnuWKJirb172b+3GyfQRa
+	HRKoDxkeIDOmL6U5yYWK1r3JOvnL1FmvsTfPE3+c36biIOtLWjPjubVFGzIuVVgiUFExNJaqG//
+	DjysJa9+Y313Iz1mK1eX6xOiEPYnYotLwP74/EFXFYt9mjlLuWIa5M1vCRxJRsCNRoComWojkpm
+	S5wYWhytHzisr5oiJEfQLRHb6wztXNLf3wl6tnmzinMu4HV9Nw==
+X-Google-Smtp-Source: AGHT+IG+0TCfEMZXjN8kTxoJbD3AKJ4Wm8UVxWUpNy211GfnJhClXnCW7zKQSiGl60SU+JzA5A6NCw==
+X-Received: by 2002:a05:6808:338b:b0:3f6:729c:810 with SMTP id 5614622812f47-404d864ddb7mr194956b6e.4.1747322865315;
+        Thu, 15 May 2025 08:27:45 -0700 (PDT)
+Received: from localhost.localdomain ([2601:282:4300:19e0::6342])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-609f3000cfasm10760eaf.25.2025.05.15.08.27.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 08:27:43 -0700 (PDT)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH] hashserv: Fix deprecation warning about sqlite adapter
+Date: Thu, 15 May 2025 09:27:40 -0600
+Message-ID: <20250515152740.3715261-1-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250515144455.2799533-1-philip.lorenz@bmw.de>
-References: <20250515144455.2799533-1-philip.lorenz@bmw.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: smucmp09d.europe.bmw.corp (2a03:1e80:a15:58f::2040) To
- smucmp19d.europe.bmw.corp (2a03:1e80:a15:58f::205d)
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 15 May 2025 14:54:15 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17618
+ <bitbake-devel@lists.openembedded.org>; Thu, 15 May 2025 15:27:55 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17619
 
-Compression utilities such as `zstd` can achieve significant compression
-ratio improvements even when the low entropy data is spread over a
-larger input window. As a result compressing a tarball containing
-uncompressed sigdata files with zstd can reduce the amount by a factor
-of 6-16.
+The default adapters for sqlite datetime are deprecated as of Python
+3.12, so implement our own.
 
-Support this by introducing the `BB_SIGDATA_COMPRESSION` variable which
-can be used to control compression of sigdata files. Setting the
-variable to "none" disables compression, setting it to "zstd" (its
-default value) retains the current behaviour.
+[YOCTO #15333]
 
-All functions used to consume sigdata files are extended to
-automatically detect whether input files are compressed and
-transparently select the correct behaviour depending on that.
-
-Additionally, expose the compression paramater in all functions to
-enable overriding the global setting in some scenarios (e.g. for
-.siginfo files created by sstate.bbclass).
-
-Compression results for core-image-sato sigdata files produced using
-`bitbake -S none core-image-sato` on poky
-122e9a49614b2ddedaae1d90c06004a7a4c43998.
-
-Tarball containing compressed sigdata files: 98 MB
-Compressed tarball (zstd -3) containing compressed sigdata files: 76 MB
-Compressed tarball (zstd -17) containing compressed sigdata files: 65 MB
-Tarball containing uncompressed sigdata files: 310 MB
-Compressed tarball (zstd -3) containing uncompressed sigdata files: 12 MB
-Compressed tarball (zstd -17) containing uncompressed sigdata files: 4 MB
-
-Signed-off-by: Philip Lorenz <philip.lorenz@bmw.de>
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/bb/siggen.py | 84 +++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 76 insertions(+), 8 deletions(-)
+ bitbake/lib/hashserv/sqlite.py | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index a6163b55e..5c954228f 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -4,7 +4,10 @@
+diff --git a/bitbake/lib/hashserv/sqlite.py b/bitbake/lib/hashserv/sqlite.py
+index da2e844a031..976504d7f44 100644
+--- a/bitbake/lib/hashserv/sqlite.py
++++ b/bitbake/lib/hashserv/sqlite.py
+@@ -4,6 +4,7 @@
+ #
  # SPDX-License-Identifier: GPL-2.0-only
  #
- 
-+import contextlib
-+import enum
- import hashlib
-+import io
++from datetime import datetime, timezone
+ import sqlite3
  import logging
- import os
- import re
-@@ -68,6 +71,67 @@ def init(d):
-                      ', '.join(obj.name for obj in siggens))
-         return SignatureGenerator(d)
+ from contextlib import closing
+@@ -53,6 +54,22 @@ CONFIG_TABLE_DEFINITION = (
+ CONFIG_TABLE_COLUMNS = tuple(name for name, _, _ in CONFIG_TABLE_DEFINITION)
  
-+class SigdataCompression(enum.Enum):
-+    """Enumeration of sigdata compression / decompression schemes"""
-+
-+    AUTO = "auto"
-+    """
-+    Compression mode is automatically determined by file content (when reading files) or based
-+    on the value of BB_SIGDATA_COMPRESSION (when writing files). BB_SIGDATA_COMPRESSION may be
-+    set to any of the other constants defined in the enumeration converted to lower case (e.g. none
-+    or zstd).
-+    """
-+
-+    NONE = "none"
-+    """
-+    Sigdata files are stored uncompressed.
-+    """
-+
-+    ZSTD = "zstd"
-+    """
-+    Sigdata files are stored using zstd compression.
-+    """
-+
-+@contextlib.contextmanager
-+def open_sigdata(path, mode, compression=SigdataCompression.AUTO):
-+    """Open the given sigdata file at path with the given mode.
-+
-+    The compression parameter shall be used to specify which compression mode should be applied to
-+    the sigdata file. See SigdataCompressionMode for a list of available modes.
-+
-+    The special compression mode `auto` may be used to automatically determine the compression mode
-+    depending on existing sigdata content. As such `auto` is only supported when opening sigdata
-+    files for reading.
-+    """
-+    ZSTD_MAGIC_BYTES = b"\x28\xb5\x2f\xfd"
-+
-+    # The underlying file is always opened in binary mode as we may need to pass the file descriptor
-+    # to a subprocess for description. In case text decoding is required (e.g. for uncompressed
-+    # files) a TextIOWrapper will be used.
-+    file_mode = mode.replace("t", "")
-+    if "b" not in file_mode:
-+        file_mode += "b"
-+
-+    # The fileobj will be passed to Popen which then continues to operate on the raw file
-+    # descriptor. Turn off buffering as this interferes with this assumption and operations such as
-+    # peek() or seek() no longer move the file descriptor to the expected position.
-+    with open(path, file_mode, buffering=0) as f:
-+        if "r" in mode and compression == SigdataCompression.AUTO:
-+            compression = SigdataCompression.ZSTD if f.read(4) == ZSTD_MAGIC_BYTES else SigdataCompression.NONE
-+            f.seek(0)
-+
-+        if compression == SigdataCompression.NONE:
-+            if "t" in mode:
-+                f = io.TextIOWrapper(
-+                    f, encoding="utf-8", write_through=True
-+                )
-+
-+            yield f
-+            return
-+
-+        with bb.compress.zstd.open(f, mode=mode, encoding="utf-8", num_threads=1) as zf:
-+            yield zf
-+
- class SignatureGenerator(object):
-     """
-     """
-@@ -172,7 +236,7 @@ class SignatureGenerator(object):
-     def stampcleanmask(self, stampbase, file_name, taskname, extrainfo):
-         return ("%s.%s.%s" % (stampbase, taskname, extrainfo)).rstrip('.')
  
--    def dump_sigtask(self, mcfn, task, stampbase, runtime):
-+    def dump_sigtask(self, mcfn, task, stampbase, runtime, compression=None):
-         return
- 
-     def invalidate_task(self, task, mcfn):
-@@ -239,6 +303,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         self.unitaskhashes = self.unihash_cache.init_cache(data, "bb_unihashes.dat", {})
-         self.localdirsexclude = (data.getVar("BB_SIGNATURE_LOCAL_DIRS_EXCLUDE") or "CVS .bzr .git .hg .osc .p4 .repo .svn").split()
-         self.tidtopn = {}
-+        self.sigdata_compression = SigdataCompression(data.getVar("BB_SIGDATA_COMPRESSION") or SigdataCompression.ZSTD)
- 
-     def init_rundepcheck(self, data):
-         self.taskhash_ignore_tasks = data.getVar("BB_TASKHASH_IGNORE_TASKS") or None
-@@ -415,7 +480,9 @@ class SignatureGeneratorBasic(SignatureGenerator):
-     def save_unitaskhashes(self):
-         self.unihash_cache.save(self.unitaskhashes)
- 
--    def dump_sigtask(self, mcfn, task, stampbase, runtime):
-+    def dump_sigtask(self, mcfn, task, stampbase, runtime, compression=SigdataCompression.AUTO):
-+        compression = compression if compression != SigdataCompression.AUTO \
-+            else self.sigdata_compression
-         tid = mcfn + ":" + task
-         mc = bb.runqueue.mc_from_tid(mcfn)
-         referencestamp = stampbase
-@@ -478,7 +545,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
- 
-         fd, tmpfile = bb.utils.mkstemp(dir=os.path.dirname(sigfile), prefix="sigtask.")
-         try:
--            with bb.compress.zstd.open(fd, "wt", encoding="utf-8", num_threads=1) as f:
-+            with open_sigdata(fd, "wt", compression) as f:
-                 json.dump(data, f, sort_keys=True, separators=(",", ":"), cls=SetEncoder)
-                 f.flush()
-             os.chmod(tmpfile, 0o664)
-@@ -880,12 +947,13 @@ def clean_checksum_file_path(file_checksum_tuple):
-         return "./" + f.split("/./")[1]
-     return os.path.basename(f)
- 
--def dump_this_task(outfile, d):
-+def dump_this_task(outfile, d, compression=SigdataCompression.AUTO):
-     import bb.parse
-     mcfn = d.getVar("BB_FILENAME")
-     task = "do_" + d.getVar("BB_CURRENTTASK")
-     referencestamp = bb.parse.siggen.stampfile_base(mcfn)
--    bb.parse.siggen.dump_sigtask(mcfn, task, outfile, "customfile:" + referencestamp)
-+    bb.parse.siggen.dump_sigtask(mcfn, task, outfile, "customfile:" + referencestamp,
-+                                 compression=compression)
- 
- def init_colors(enable_color):
-     """Initialise colour dict for passing to compare_sigfiles()"""
-@@ -969,13 +1037,13 @@ def compare_sigfiles(a, b, recursecb=None, color=False, collapsed=False):
-         return formatstr.format(**formatparams)
- 
-     try:
--        with bb.compress.zstd.open(a, "rt", encoding="utf-8", num_threads=1) as f:
-+        with open_sigdata(a, "rt") as f:
-             a_data = json.load(f, object_hook=SetDecoder)
-     except (TypeError, OSError) as err:
-         bb.error("Failed to open sigdata file '%s': %s" % (a, str(err)))
-         raise err
-     try:
--        with bb.compress.zstd.open(b, "rt", encoding="utf-8", num_threads=1) as f:
-+        with open_sigdata(b, "rt") as f:
-             b_data = json.load(f, object_hook=SetDecoder)
-     except (TypeError, OSError) as err:
-         bb.error("Failed to open sigdata file '%s': %s" % (b, str(err)))
-@@ -1218,7 +1286,7 @@ def dump_sigfile(a):
-     output = []
- 
-     try:
--        with bb.compress.zstd.open(a, "rt", encoding="utf-8", num_threads=1) as f:
-+        with open_sigdata(a, "rt") as f:
-             a_data = json.load(f, object_hook=SetDecoder)
-     except (TypeError, OSError) as err:
-         bb.error("Failed to open sigdata file '%s': %s" % (a, str(err)))
++def adapt_datetime_iso(val):
++    """Adapt datetime.datetime to UTC ISO 8601 date."""
++    return val.astimezone(timezone.utc).isoformat()
++
++
++sqlite3.register_adapter(datetime, adapt_datetime_iso)
++
++
++def convert_datetime(val):
++    """Convert ISO 8601 datetime to datetime.datetime object."""
++    return datetime.fromisoformat(val.decode())
++
++
++sqlite3.register_converter("DATETIME", convert_datetime)
++
++
+ def _make_table(cursor, name, definition):
+     cursor.execute(
+         """
+-- 
+2.49.0
+
 
