@@ -1,133 +1,144 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <philip.lorenz@bmw.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC0BC3ABDD
-	for <webhook@archiver.kernel.org>; Fri, 16 May 2025 06:40:03 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web11.7365.1747377596556211228
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D0AC3ABC9
+	for <webhook@archiver.kernel.org>; Fri, 16 May 2025 17:29:26 +0000 (UTC)
+Received: from esa4.hc324-48.eu.iphmx.com (esa4.hc324-48.eu.iphmx.com [207.54.71.48])
+ by mx.groups.io with SMTP id smtpd.web11.19025.1747416556282833090
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 15 May 2025 23:39:56 -0700
+ Fri, 16 May 2025 10:29:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=bxxKRAOX;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-442f5b3c710so13369895e9.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 15 May 2025 23:39:56 -0700 (PDT)
+ dkim=pass header.i=@bmw.de header.s=mailing1 header.b=nl75WkoC;
+ spf=pass (domain: bmw.de, ip: 207.54.71.48, mailfrom: prvs=2247c1a3e=philip.lorenz@bmw.de)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1747377594; x=1747982394; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VYVwZ+q3CxrRhtGDgJG67GIWDYkxyFFAcb+S+rlZrsE=;
-        b=bxxKRAOXHajACjkvQzsnuXt62ZL4hw5cAnSoofStbhggcFq+0sGG76Q8hG8o9RRVhm
-         h2uW9ltxg4mL4W1OyFzbJjxsWomFVAYv/DQNGN83xGjav+7yTQ2xBcqyNujtrxfl/n7J
-         PghaGtZs/QGU5axjv/zNnDhqMu77Z173s7xIQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747377594; x=1747982394;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=VYVwZ+q3CxrRhtGDgJG67GIWDYkxyFFAcb+S+rlZrsE=;
-        b=FEnX5zcHAyotYCjZZa9PmrhIKt/yzEqNfhJVwomRpEd91hcwmH/VvHcgMAr71xYZim
-         tQtDtZNgBE27K5pcQ5lwpZGYolV2Le+IgPFc4iSl37GUrOKRK59xFOH438FsUoFQBL4y
-         mF+AnWCNh9IFDrYsoZwU1gHm4oKQcdeEZXpPaiAxBfz6m8NGIEal4CbVNdREA5kEQHhr
-         V+eZ/Bm0m1cpm97SZGJuM1ta+f6UXGDrwB9S14Pm8D0nsjO+RM+6XQBCb2uJeuCmCa7V
-         EV9PXVgUt6TFlf9KeDf0KT+UCvlEv5WyFSwkkOLeIVWIROKoFZ2kMLpAsB1bRLgjAFbl
-         uDaw==
-X-Forwarded-Encrypted: i=1; AJvYcCUrYHJbZMdrL4KIuwj8Yy+EriRFiFX0pD0gu7ndPWvuG1GSA0jweNEk2FQK8obhG//DLHZVyoitUEh/OVar@lists.openembedded.org
-X-Gm-Message-State: AOJu0YzFLi1kQvUTcW2/qL3SPsBuoZleaiOn5RrTjdyevpM9BRe3hFtU
-	s8QiSwlJQ1UdsRjOR/xtILQSlXQfCK/GekNkQ8F5p8e401072B6uKgN0+B8r1SQgASs=
-X-Gm-Gg: ASbGnctjekxwbSSnPHsxgvFBbqwfyAXnOvuS9qax2XTsNPkhC774RAa7r+YzSZMXHIU
-	hy9CfOmgdmD27t3ivCyzJxVj3+x7aegu35FzmbmcjO/nsOIOWHhszSnQrcqlmhg6VkhAPuztPyq
-	6fTXLoxdYil3D5ZmJIbcjFQtQG1LiEpAAHY3FDdsPxesyz7fEj5qyQVWPh+axzaJlPYz46NiPEl
-	BSOWzHAv7HNWW8lLd7ksPJD4B3BKWaAg1BVhDX3pjBveTwVVI9JyD86Hj+qNbbKLMrECOD4K00m
-	Yf/FtjFqPbwBJHnQHFBC8hdMtf8JBmQ9tnF6/qxwjeHGltUNXS53TKFnGv1zynMd5p7aUVl7usR
-	Ti8Q70dQCiWN8vUcsDxcuqRMGpI/Mdp0czeGrGOzcMw8stfnA67w=
-X-Google-Smtp-Source: AGHT+IHlyUVSKiM2qZTFx/+juIuaLjs8x5IyfgYD3FkINp0G951awUZhDXUdu2G4NpIq0gvk8bhtSQ==
-X-Received: by 2002:a05:600c:154a:b0:43c:fcbc:9680 with SMTP id 5b1f17b1804b1-442fd664848mr16311615e9.25.1747377594508;
-        Thu, 15 May 2025 23:39:54 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:fa4b:a3c2:43a9:a562? ([2001:8b0:aba:5f3c:fa4b:a3c2:43a9:a562])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f482f1d6sm87907015e9.14.2025.05.15.23.39.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 23:39:53 -0700 (PDT)
-Message-ID: <9433a345bc4be0d854ed651e67ab03ac2e69104e.camel@linuxfoundation.org>
+  d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
+  t=1747416555; x=1778952555;
+  h=message-id:date:mime-version:subject:to:references:cc:
+   from:in-reply-to:content-transfer-encoding;
+  bh=kvSi1mW9tGU+lBH3/wnlgF9ZqsSsFekbbuxhaYrlQXo=;
+  b=nl75WkoCJYiik0thTbkXiDUj458GfwLFyWWFy0rhgxtJsUqPLhCZinRG
+   onD+UuF5Mv2r+RG6RXSW6JiZDtteLMLWgG9Wv02GcLF6MAMFcBBw+LkSl
+   msg2MsA9uQooU6BIBvQHRuMUFwdRC93abs952gWewXxhMKCWAe0k5FEmO
+   w=;
+X-CSE-ConnectionGUID: QpA9oKpdTzuc3Kb3A+Peqg==
+X-CSE-MsgGUID: E/GoLgebQO6BzysYfceuog==
+Received: from 160.46.252.49.spf.bmwgroup.com (HELO esagw6.muc) ([160.46.252.49]) by
+ esa4.hc324-48.eu.iphmx.com with ESMTP/TLS; 16 May 2025 19:29:13 +0200
+Received: from esabb2.muc ([160.50.100.34])  by esagw6.muc with ESMTP/TLS;
+ 16 May 2025 19:29:13 +0200
+Received: from smucmp19d.bmwgroup.net (HELO smucmp19d.europe.bmw.corp)
+ ([10.30.13.170]) by esabb2.muc with ESMTP/TLS; 16 May 2025 19:29:14 +0200
+Received: from [10.242.8.12] (10.30.85.210) by smucmp19d.europe.bmw.corp
+ (2a03:1e80:a15:58f::205d) with Microsoft SMTP Server (version=TLS;
+ Fri, 16 May 2025 19:29:13 +0200
+X-CSE-ConnectionGUID: SflgWhenTuSobWMVAHbdCg==
+X-CSE-MsgGUID: nvuOadl6R/KCshKyqZN3FQ==
+X-CSE-ConnectionGUID: pkCeKA5RToe/upcxMCfRkg==
+X-CSE-MsgGUID: EfVaVFZ8RN6P8Qv4VDJWTg==
+Message-ID: <91dd9a83-5139-4f5d-ad51-e3840271f258@bmw.de>
+Date: Fri, 16 May 2025 19:29:07 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: [bitbake-devel] [RFC PATCH 1/1] siggen: Support non-compressed
  sigdata files
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: philip.lorenz@bmw.de, bitbake-devel@lists.openembedded.org
-Date: Fri, 16 May 2025 07:39:52 +0100
-In-Reply-To: <20250515144455.2799533-2-philip.lorenz@bmw.de>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
 References: <20250515144455.2799533-1-philip.lorenz@bmw.de>
-	 <20250515144455.2799533-2-philip.lorenz@bmw.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0-1 
-MIME-Version: 1.0
+ <20250515144455.2799533-2-philip.lorenz@bmw.de>
+ <9433a345bc4be0d854ed651e67ab03ac2e69104e.camel@linuxfoundation.org>
+CC: <bitbake-devel@lists.openembedded.org>
+From: Philip Lorenz <philip.lorenz@bmw.de>
+In-Reply-To: <9433a345bc4be0d854ed651e67ab03ac2e69104e.camel@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SMUCMP12B.europe.bmw.corp (2a03:1e80:a15:58f::1:28) To
+ smucmp19d.europe.bmw.corp (2a03:1e80:a15:58f::205d)
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 16 May 2025 06:40:03 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17620
+ <bitbake-devel@lists.openembedded.org>; Fri, 16 May 2025 17:29:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17621
 
-On Thu, 2025-05-15 at 16:44 +0200, Philip Lorenz via lists.openembedded.org=
- wrote:
-> Compression utilities such as `zstd` can achieve significant compression
-> ratio improvements even when the low entropy data is spread over a
-> larger input window. As a result compressing a tarball containing
-> uncompressed sigdata files with zstd can reduce the amount by a factor
-> of 6-16.
->=20
-> Support this by introducing the `BB_SIGDATA_COMPRESSION` variable which
-> can be used to control compression of sigdata files. Setting the
-> variable to "none" disables compression, setting it to "zstd" (its
-> default value) retains the current behaviour.
->=20
-> All functions used to consume sigdata files are extended to
-> automatically detect whether input files are compressed and
-> transparently select the correct behaviour depending on that.
->=20
-> Additionally, expose the compression paramater in all functions to
-> enable overriding the global setting in some scenarios (e.g. for
-> .siginfo files created by sstate.bbclass).
->=20
-> Compression results for core-image-sato sigdata files produced using
-> `bitbake -S none core-image-sato` on poky
-> 122e9a49614b2ddedaae1d90c06004a7a4c43998.
->=20
-> Tarball containing compressed sigdata files: 98 MB
-> Compressed tarball (zstd -3) containing compressed sigdata files: 76 MB
-> Compressed tarball (zstd -17) containing compressed sigdata files: 65 MB
-> Tarball containing uncompressed sigdata files: 310 MB
-> Compressed tarball (zstd -3) containing uncompressed sigdata files: 12 MB
-> Compressed tarball (zstd -17) containing uncompressed sigdata files: 4 MB
->=20
-> Signed-off-by: Philip Lorenz <philip.lorenz@bmw.de>
-> ---
-> =C2=A0lib/bb/siggen.py | 84 +++++++++++++++++++++++++++++++++++++++++++--=
----
-> =C2=A01 file changed, 76 insertions(+), 8 deletions(-)
+Hi Richard,
 
-Whilst this improves the "tarball up a stamps directory" workflow, it
-comes at the expense of a significant amount more IO and disk usage of
-the build tree during the build itself. For that reason, I'd not
-recommend anyone to be running with this set by default or in general.
+On 16.05.25 08:39, Richard Purdie wrote:
+> On Thu, 2025-05-15 at 16:44 +0200, Philip Lorenz via lists.openembedded.org wrote:
+>> Compression utilities such as `zstd` can achieve significant compression
+>> ratio improvements even when the low entropy data is spread over a
+>> larger input window. As a result compressing a tarball containing
+>> uncompressed sigdata files with zstd can reduce the amount by a factor
+>> of 6-16.
+>>
+>> Support this by introducing the `BB_SIGDATA_COMPRESSION` variable which
+>> can be used to control compression of sigdata files. Setting the
+>> variable to "none" disables compression, setting it to "zstd" (its
+>> default value) retains the current behaviour.
+>>
+>> All functions used to consume sigdata files are extended to
+>> automatically detect whether input files are compressed and
+>> transparently select the correct behaviour depending on that.
+>>
+>> Additionally, expose the compression paramater in all functions to
+>> enable overriding the global setting in some scenarios (e.g. for
+>> .siginfo files created by sstate.bbclass).
+>>
+>> Compression results for core-image-sato sigdata files produced using
+>> `bitbake -S none core-image-sato` on poky
+>> 122e9a49614b2ddedaae1d90c06004a7a4c43998.
+>>
+>> Tarball containing compressed sigdata files: 98 MB
+>> Compressed tarball (zstd -3) containing compressed sigdata files: 76 MB
+>> Compressed tarball (zstd -17) containing compressed sigdata files: 65 MB
+>> Tarball containing uncompressed sigdata files: 310 MB
+>> Compressed tarball (zstd -3) containing uncompressed sigdata files: 12 MB
+>> Compressed tarball (zstd -17) containing uncompressed sigdata files: 4 MB
+>>
+>> Signed-off-by: Philip Lorenz <philip.lorenz@bmw.de>
+>> ---
+>>   lib/bb/siggen.py | 84 +++++++++++++++++++++++++++++++++++++++++++-----
+>>   1 file changed, 76 insertions(+), 8 deletions(-)
+> Whilst this improves the "tarball up a stamps directory" workflow, it
+> comes at the expense of a significant amount more IO and disk usage of
+> the build tree during the build itself. For that reason, I'd not
+> recommend anyone to be running with this set by default or in general.
 
-I'm not a big fan of adding config options which add non-default
-workflows, mainly due to the doubling of the test matrix and the fact
-that one of the code paths ends up stale/broken.
+I benchmarked these changes and couldn't find a significant difference 
+in both IO (my test core-image-sato-minimal build causes 80GB disk 
+writes) and build time with uncompressed files. Disk usage of the 
+.sigdata files increases by a factor of 3 (in our typical builds this 
+boils down to 400 MB added) which is a trade off that we're willing to 
+accept in the CI context. Are there any code paths that I'm missing 
+where this would cause significant slow downs / disadvantages?
 
-Further, once you expose this to the siginfo files, you then have to
-either add multiple queries for sstate objects, or have extra
-configuration to setup sstate feeds. I'm not sure either is a good
-outcome. This would also imply there would be a further patch to adapt
-the code in oe-core to use this new option for the siginfo files and
-again, this is complexity I'd really prefer simply not to have.
+> I'm not a big fan of adding config options which add non-default
+> workflows, mainly due to the doubling of the test matrix and the fact
+> that one of the code paths ends up stale/broken.
+I fully understand that (in particular because this change is mainly 
+beneficial in one particular context). I wanted to share to see if there 
+is interest from others, if there isn't its completely understandable to 
+reduce complexity.
+> Further, once you expose this to the siginfo files, you then have to
+> either add multiple queries for sstate objects, or have extra
+> configuration to setup sstate feeds. I'm not sure either is a good
+> outcome. This would also imply there would be a further patch to adapt
+> the code in oe-core to use this new option for the siginfo files and
+> again, this is complexity I'd really prefer simply not to have.
 
-How many users are regularly taring up sstate feeds or stamps
-directories?
+For feeds nothing would change. I didn't include the patch to oe-core 
+(which would use the exposed compression parameter) before the 
+applicability of the main patch was discussed.
 
-Cheers,
+Thanks,
 
-Richard
+Philip
+
+-- 
+Philip Lorenz
+BMW Car IT GmbH, Software-Plattform, -Integration Connected Company, Lise-Meitner-Straße 14, 89081 Ulm
+-------------------------------------------------------------------------
+BMW Car IT GmbH
+Management: Michael Böttrich, Chris Brandt, Christian Salzmann
+Domicile and Court of Registry: München HRB 134810
+-------------------------------------------------------------------------
 
 
