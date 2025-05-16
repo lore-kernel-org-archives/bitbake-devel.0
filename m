@@ -1,117 +1,133 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CB5C2D0CD
-	for <webhook@archiver.kernel.org>; Thu, 15 May 2025 15:27:55 +0000 (UTC)
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
- by mx.groups.io with SMTP id smtpd.web11.15552.1747322866797799620
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC0BC3ABDD
+	for <webhook@archiver.kernel.org>; Fri, 16 May 2025 06:40:03 +0000 (UTC)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web11.7365.1747377596556211228
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 15 May 2025 08:27:46 -0700
+ Thu, 15 May 2025 23:39:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=AvcPv+dr;
- spf=pass (domain: gmail.com, ip: 209.85.167.181, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-4033c89f2aaso951662b6e.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 15 May 2025 08:27:46 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=bxxKRAOX;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-442f5b3c710so13369895e9.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 15 May 2025 23:39:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747322865; x=1747927665; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=t8Be5/yHm43XB2MnTlIAImysUhOr42OE3Fg79UNup10=;
-        b=AvcPv+drGOdrL6E3HXZgZ0e1R6SUd9mCaHEXnm9MOprohRx7SND9FbGefjz8dQXfJs
-         N8xKBhT2ftP/9Y+qUZHI6tZVjz1IzX9Ed8n2ud2loRD2SOedGVenDN2S+RVNz5f3ipau
-         DPZ0SvomPIPGDzbX0W7lCzB5rCqL+kcERTgrnDfof0oCd+IqHoauZSAyynYWYl6K3tjB
-         DP/2H5+PpnwAF5CU1RUavQCmarS/g2v0Y67PaUCR0JNKUgXYVtapd+pz8roYvpjDQbhK
-         RVc71k7B3VUXPJZ2MY43ll50JGh/pFdNYOqmsnK/i/aktZSY4gyTgWZeJBBaLK1R4ej1
-         77hw==
+        d=linuxfoundation.org; s=google; t=1747377594; x=1747982394; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VYVwZ+q3CxrRhtGDgJG67GIWDYkxyFFAcb+S+rlZrsE=;
+        b=bxxKRAOXHajACjkvQzsnuXt62ZL4hw5cAnSoofStbhggcFq+0sGG76Q8hG8o9RRVhm
+         h2uW9ltxg4mL4W1OyFzbJjxsWomFVAYv/DQNGN83xGjav+7yTQ2xBcqyNujtrxfl/n7J
+         PghaGtZs/QGU5axjv/zNnDhqMu77Z173s7xIQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747322865; x=1747927665;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=t8Be5/yHm43XB2MnTlIAImysUhOr42OE3Fg79UNup10=;
-        b=fAofXD8Hy2j1ieqNGFuWC8/O80fzMZZxkClS48nOw9tkO5cuF4D4rNVMqJknSiBOgh
-         ewK4thTch0x4oXXFOYsqJCFIRstnTGM79EpLpgliAuIr2BwM0MxKILnk3+1vkwC0MUpb
-         6xHCMssYkbkeIQPi6RsdUHRju8lPg4Ej+d6vTxOflqDjAjO41HXZ/GK4RXCWdTBtcAeQ
-         LT5Id3jnPVFbWCSNi9sLcM+5383pHKdsCS+775pOjH6XQc6fqSi1qNNHQ90GDg57tWC2
-         wpdyeDxd0MoE0Khqq0vQg+v+BRjUCGo/xc3KAGDYmRPob67cDLZ58GxIoRUk22Khac+2
-         rVmA==
-X-Gm-Message-State: AOJu0Yw/00BuSqW9KHXzNpLLFODEaYmF3HrBwUmkvDcmao6qRz4cSdPK
-	vg9xmU/fCR63KtGQrSqTcGzxYnyMxe3fM40QW30YFySDoLMM7wL8s3kFpeW8cA==
-X-Gm-Gg: ASbGncsafkv2eDQ7ryD74jquoumn0POqWz1dzrugzh7jj8FFW8qqtpKjQnYDsWdPVlt
-	ZwmnnCuAKJG9x1X5LE/zHMeTnpId/I29PkROn5a91JrQ9BO9YFSFWdfnuWKJirb172b+3GyfQRa
-	HRKoDxkeIDOmL6U5yYWK1r3JOvnL1FmvsTfPE3+c36biIOtLWjPjubVFGzIuVVgiUFExNJaqG//
-	DjysJa9+Y313Iz1mK1eX6xOiEPYnYotLwP74/EFXFYt9mjlLuWIa5M1vCRxJRsCNRoComWojkpm
-	S5wYWhytHzisr5oiJEfQLRHb6wztXNLf3wl6tnmzinMu4HV9Nw==
-X-Google-Smtp-Source: AGHT+IG+0TCfEMZXjN8kTxoJbD3AKJ4Wm8UVxWUpNy211GfnJhClXnCW7zKQSiGl60SU+JzA5A6NCw==
-X-Received: by 2002:a05:6808:338b:b0:3f6:729c:810 with SMTP id 5614622812f47-404d864ddb7mr194956b6e.4.1747322865315;
-        Thu, 15 May 2025 08:27:45 -0700 (PDT)
-Received: from localhost.localdomain ([2601:282:4300:19e0::6342])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-609f3000cfasm10760eaf.25.2025.05.15.08.27.43
+        d=1e100.net; s=20230601; t=1747377594; x=1747982394;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=VYVwZ+q3CxrRhtGDgJG67GIWDYkxyFFAcb+S+rlZrsE=;
+        b=FEnX5zcHAyotYCjZZa9PmrhIKt/yzEqNfhJVwomRpEd91hcwmH/VvHcgMAr71xYZim
+         tQtDtZNgBE27K5pcQ5lwpZGYolV2Le+IgPFc4iSl37GUrOKRK59xFOH438FsUoFQBL4y
+         mF+AnWCNh9IFDrYsoZwU1gHm4oKQcdeEZXpPaiAxBfz6m8NGIEal4CbVNdREA5kEQHhr
+         V+eZ/Bm0m1cpm97SZGJuM1ta+f6UXGDrwB9S14Pm8D0nsjO+RM+6XQBCb2uJeuCmCa7V
+         EV9PXVgUt6TFlf9KeDf0KT+UCvlEv5WyFSwkkOLeIVWIROKoFZ2kMLpAsB1bRLgjAFbl
+         uDaw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrYHJbZMdrL4KIuwj8Yy+EriRFiFX0pD0gu7ndPWvuG1GSA0jweNEk2FQK8obhG//DLHZVyoitUEh/OVar@lists.openembedded.org
+X-Gm-Message-State: AOJu0YzFLi1kQvUTcW2/qL3SPsBuoZleaiOn5RrTjdyevpM9BRe3hFtU
+	s8QiSwlJQ1UdsRjOR/xtILQSlXQfCK/GekNkQ8F5p8e401072B6uKgN0+B8r1SQgASs=
+X-Gm-Gg: ASbGnctjekxwbSSnPHsxgvFBbqwfyAXnOvuS9qax2XTsNPkhC774RAa7r+YzSZMXHIU
+	hy9CfOmgdmD27t3ivCyzJxVj3+x7aegu35FzmbmcjO/nsOIOWHhszSnQrcqlmhg6VkhAPuztPyq
+	6fTXLoxdYil3D5ZmJIbcjFQtQG1LiEpAAHY3FDdsPxesyz7fEj5qyQVWPh+axzaJlPYz46NiPEl
+	BSOWzHAv7HNWW8lLd7ksPJD4B3BKWaAg1BVhDX3pjBveTwVVI9JyD86Hj+qNbbKLMrECOD4K00m
+	Yf/FtjFqPbwBJHnQHFBC8hdMtf8JBmQ9tnF6/qxwjeHGltUNXS53TKFnGv1zynMd5p7aUVl7usR
+	Ti8Q70dQCiWN8vUcsDxcuqRMGpI/Mdp0czeGrGOzcMw8stfnA67w=
+X-Google-Smtp-Source: AGHT+IHlyUVSKiM2qZTFx/+juIuaLjs8x5IyfgYD3FkINp0G951awUZhDXUdu2G4NpIq0gvk8bhtSQ==
+X-Received: by 2002:a05:600c:154a:b0:43c:fcbc:9680 with SMTP id 5b1f17b1804b1-442fd664848mr16311615e9.25.1747377594508;
+        Thu, 15 May 2025 23:39:54 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:fa4b:a3c2:43a9:a562? ([2001:8b0:aba:5f3c:fa4b:a3c2:43a9:a562])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f482f1d6sm87907015e9.14.2025.05.15.23.39.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 08:27:43 -0700 (PDT)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] hashserv: Fix deprecation warning about sqlite adapter
-Date: Thu, 15 May 2025 09:27:40 -0600
-Message-ID: <20250515152740.3715261-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        Thu, 15 May 2025 23:39:53 -0700 (PDT)
+Message-ID: <9433a345bc4be0d854ed651e67ab03ac2e69104e.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [RFC PATCH 1/1] siggen: Support non-compressed
+ sigdata files
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: philip.lorenz@bmw.de, bitbake-devel@lists.openembedded.org
+Date: Fri, 16 May 2025 07:39:52 +0100
+In-Reply-To: <20250515144455.2799533-2-philip.lorenz@bmw.de>
+References: <20250515144455.2799533-1-philip.lorenz@bmw.de>
+	 <20250515144455.2799533-2-philip.lorenz@bmw.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0-1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 15 May 2025 15:27:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17619
+ <bitbake-devel@lists.openembedded.org>; Fri, 16 May 2025 06:40:03 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17620
 
-The default adapters for sqlite datetime are deprecated as of Python
-3.12, so implement our own.
-
-[YOCTO #15333]
-
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+On Thu, 2025-05-15 at 16:44 +0200, Philip Lorenz via lists.openembedded.org=
+ wrote:
+> Compression utilities such as `zstd` can achieve significant compression
+> ratio improvements even when the low entropy data is spread over a
+> larger input window. As a result compressing a tarball containing
+> uncompressed sigdata files with zstd can reduce the amount by a factor
+> of 6-16.
+>=20
+> Support this by introducing the `BB_SIGDATA_COMPRESSION` variable which
+> can be used to control compression of sigdata files. Setting the
+> variable to "none" disables compression, setting it to "zstd" (its
+> default value) retains the current behaviour.
+>=20
+> All functions used to consume sigdata files are extended to
+> automatically detect whether input files are compressed and
+> transparently select the correct behaviour depending on that.
+>=20
+> Additionally, expose the compression paramater in all functions to
+> enable overriding the global setting in some scenarios (e.g. for
+> .siginfo files created by sstate.bbclass).
+>=20
+> Compression results for core-image-sato sigdata files produced using
+> `bitbake -S none core-image-sato` on poky
+> 122e9a49614b2ddedaae1d90c06004a7a4c43998.
+>=20
+> Tarball containing compressed sigdata files: 98 MB
+> Compressed tarball (zstd -3) containing compressed sigdata files: 76 MB
+> Compressed tarball (zstd -17) containing compressed sigdata files: 65 MB
+> Tarball containing uncompressed sigdata files: 310 MB
+> Compressed tarball (zstd -3) containing uncompressed sigdata files: 12 MB
+> Compressed tarball (zstd -17) containing uncompressed sigdata files: 4 MB
+>=20
+> Signed-off-by: Philip Lorenz <philip.lorenz@bmw.de>
+> ---
+> =C2=A0lib/bb/siggen.py | 84 +++++++++++++++++++++++++++++++++++++++++++--=
 ---
- bitbake/lib/hashserv/sqlite.py | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+> =C2=A01 file changed, 76 insertions(+), 8 deletions(-)
 
-diff --git a/bitbake/lib/hashserv/sqlite.py b/bitbake/lib/hashserv/sqlite.py
-index da2e844a031..976504d7f44 100644
---- a/bitbake/lib/hashserv/sqlite.py
-+++ b/bitbake/lib/hashserv/sqlite.py
-@@ -4,6 +4,7 @@
- #
- # SPDX-License-Identifier: GPL-2.0-only
- #
-+from datetime import datetime, timezone
- import sqlite3
- import logging
- from contextlib import closing
-@@ -53,6 +54,22 @@ CONFIG_TABLE_DEFINITION = (
- CONFIG_TABLE_COLUMNS = tuple(name for name, _, _ in CONFIG_TABLE_DEFINITION)
- 
- 
-+def adapt_datetime_iso(val):
-+    """Adapt datetime.datetime to UTC ISO 8601 date."""
-+    return val.astimezone(timezone.utc).isoformat()
-+
-+
-+sqlite3.register_adapter(datetime, adapt_datetime_iso)
-+
-+
-+def convert_datetime(val):
-+    """Convert ISO 8601 datetime to datetime.datetime object."""
-+    return datetime.fromisoformat(val.decode())
-+
-+
-+sqlite3.register_converter("DATETIME", convert_datetime)
-+
-+
- def _make_table(cursor, name, definition):
-     cursor.execute(
-         """
--- 
-2.49.0
+Whilst this improves the "tarball up a stamps directory" workflow, it
+comes at the expense of a significant amount more IO and disk usage of
+the build tree during the build itself. For that reason, I'd not
+recommend anyone to be running with this set by default or in general.
+
+I'm not a big fan of adding config options which add non-default
+workflows, mainly due to the doubling of the test matrix and the fact
+that one of the code paths ends up stale/broken.
+
+Further, once you expose this to the siginfo files, you then have to
+either add multiple queries for sstate objects, or have extra
+configuration to setup sstate feeds. I'm not sure either is a good
+outcome. This would also imply there would be a further patch to adapt
+the code in oe-core to use this new option for the siginfo files and
+again, this is complexity I'd really prefer simply not to have.
+
+How many users are regularly taring up sstate feeds or stamps
+directories?
+
+Cheers,
+
+Richard
 
 
