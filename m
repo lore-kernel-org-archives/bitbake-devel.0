@@ -2,118 +2,94 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13561C54ED0
-	for <webhook@archiver.kernel.org>; Sun, 25 May 2025 07:48:33 +0000 (UTC)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.web11.5433.1748159305587962525
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F38E7C54F30
+	for <webhook@archiver.kernel.org>; Sun, 25 May 2025 10:26:53 +0000 (UTC)
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.web11.7149.1748168806805453414
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 25 May 2025 00:48:26 -0700
+ Sun, 25 May 2025 03:26:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=U+ZcSV4Y;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.49, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cfe574976so8923265e9.1
-        for <bitbake-devel@lists.openembedded.org>; Sun, 25 May 2025 00:48:25 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=NokrNar8;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a37d24e607so1310508f8f.1
+        for <bitbake-devel@lists.openembedded.org>; Sun, 25 May 2025 03:26:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1748159304; x=1748764104; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1748168805; x=1748773605; darn=lists.openembedded.org;
         h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cCjm4VFMDCtUaxU7IJ0e3/iMuiCrvO/Xiq5jxUo8dY8=;
-        b=U+ZcSV4Y/7PBcmt0DRcOF+tC8KaSDcflqARYzDA2Yu6D3CP3rNm3n7fET4eNlYj+7F
-         p4M7NDZJrpU3url0dBrVMoJ/KENeeCTNAWx7D8C1C1LgL4hF4+8t26SQvmKtlD160Y7B
-         WfpbfEXd8BOTDDWmwDbAzWR/mp7CHK2HRKRhA=
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Y+2AId3CQLD6b8NQQQBt67ljfJCFVvvuyH7UQ4cGPX4=;
+        b=NokrNar83YZPWejNqY2av2N0ckP4Jthwx/6fZiepGm7F4j/p2/AvlS156su4F7N8Gc
+         2t8ahWa4i65X3Khs9zaD7wvONvYZOaytBHmz2TYaeaAv3NihcGtYyQ/op8nv/gpSUqTb
+         2bZgxr2/9zCMztP/qMMGfjxG8wLLcKolq40uk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748159304; x=1748764104;
+        d=1e100.net; s=20230601; t=1748168805; x=1748773605;
         h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=cCjm4VFMDCtUaxU7IJ0e3/iMuiCrvO/Xiq5jxUo8dY8=;
-        b=wUVxWHq1NbQveoLU9wlIK7W02x8aP22oxUMxFCTytiaC2Z7z0Tx0F3TfQXj9aHZs9w
-         J0uTGRK7wldoMhxJv9rQqJ1qqP0R6n33KWyB5zUfSwyC07XHFASX4pyLOyn2VItxYPg9
-         spMtxOatDoSd63f1U/vzkQt0cusRNKl2sLs5hsR+7SYEBtDbgpH22U7J9xvQtWjYkAd9
-         Wkikq/yt2AHAVwJfjeKvlVvcvXyqTNZH8Gc9YMh9ZKWkDJjvWmPT0H0XoL11G53DnJGE
-         G3IJ5jA4uBipY0JjIsRedr3vLWrycZseOqkkvBr9QyM3BepYjF9qB8VhuWgY+NE5G7WQ
-         ZM5g==
-X-Forwarded-Encrypted: i=1; AJvYcCXBCVP6c4pCCVbffPL0Z04ZZnLiKfUnzKr+XbKIA4C4315KZUeioWQ+7fXFNsbEmX3+IvLiVJ93GgcJMaKX@lists.openembedded.org
-X-Gm-Message-State: AOJu0YwMrbHFmlll/c4/Obm/bK/TNPPQb6/rFeM6g0vZu75tXuTOwaNA
-	bSOQwMPgAH/+y7wAsQWoaKCMvrhUlUcMf5auiFYfkEQQQlJAW79sRE1+pyUh0y58ewU=
-X-Gm-Gg: ASbGncu1c5GJhb8X/GVN5XXfUGBT5jrrJq/52jQDuNXlSCZ/62oi7WRndji3Ei13IqH
-	lkX39iU64v7JXf6jBO/9qFkvOZuK5n/R+sSoOBpYIUE6veYsJoEKvbR44vnJSPNfU4NfOyC51eH
-	boBzxI8pVfDx5hRBZ04Qfg4ZtOhxhlMT9Zvd45PyaimYWvBYiyrCZxUMJt8d8iYxhJPbDInAqpn
-	Zum/U6u8pDEIh7IOeUmPQ59OZmvZ1MyNmtaDnfUfE3b0B0VgvkZaEzBJ3cbx/nbZv6WrQPW9nCe
-	mW9l4cYtxpvLfOk9nUNk7xuCBNqvfF2ilQzBEkjwLg8TD3zDVXBrSOi0hAVAWLSR22zvnU7L1Ry
-	87YJSKj9dmmUdf0hClZB4YKaKU3YJ/SLYicsG9dKejjaw20wJStI=
-X-Google-Smtp-Source: AGHT+IEjGMWXSyWXNWVg1xQuVNrgslAl3h3w+fbDo5zeRqtCJyTmtyvuHr8eh9UHj+ZGE0gGE2Ghew==
-X-Received: by 2002:a05:600c:348c:b0:43c:e478:889 with SMTP id 5b1f17b1804b1-44c8ee86f59mr45388835e9.0.1748159303723;
-        Sun, 25 May 2025 00:48:23 -0700 (PDT)
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Y+2AId3CQLD6b8NQQQBt67ljfJCFVvvuyH7UQ4cGPX4=;
+        b=j/7Pq9l+2cRDXWhUDuWDM1BL/DsIqYGU7yFIPC8xuxV57QO1niW2IELLl584u+2eFY
+         KABcQV9pfhf5F3yUZEGxPXkIR0BLrvYMQDZjWtSx12MOY5iR245Pp1C/719is/IAqLwq
+         WTQ2ZVen38hinZ9pYUWlu5IaYsapos/CelI4krBlx/kHc7ICSUyrUa2Nt/tROE8ssk6u
+         lUXRs1BkS9FJUakVSgZLXyo9od+VXeSRJz8fP0fbccBZy8kSR5VvJ+BIc93tBez6DHrm
+         dsT1W9ncRpxPcKliR9lz+3JHaF+sN32C6RMs3N4JLVscFfWlPNEgp1GQCmkNeGhBZVZ/
+         O7kA==
+X-Forwarded-Encrypted: i=1; AJvYcCVQSOaIteOydpObb6GcrqKxqWPmbOQup9LKRWqTbDNS0pc3ai5Jxm3AZBqXcV0MZaVQDCoHnwTSNM6JU/t3@lists.openembedded.org
+X-Gm-Message-State: AOJu0YzRsFy6CR8HbjD1B47CbOCXyOXGuaS1MqqP+9njNmi2hqTATJHW
+	v00cSoxhK0HYrRgX5ciQaKBXfLHwqAYxH1GYPZbDPTnp4H4qPfyyepfUE+wzCfUn8cs=
+X-Gm-Gg: ASbGncuhG1MxYzghjBAuAP3IHQde+P1ZSuPsRCj9N1S7AEyQJz/8y94ygqmNEO8B8Ij
+	UK+IyZ8A53+rn0ZeIkD4lBCO29rcYsKOwpCCQeJM+kMfKqwu41Z3btqZQ2Go/Mo3J1TWO0XkZ5k
+	ez12IL096Nj9E9MUcvYuVstDTTXX65cDzSsdqJsdiKXWf1prs4l9Czb7wzSOyM6q+IoYY1bC6R+
+	skXLM1eWF7J3S+UKZRkDaDunw0h1zk6MEHkxl1qm8diSG9G1eyKBOWpxN6/Vtuuaq1lJCRhDQ/O
+	Sqt2wyOpm5RX5kcRN/rruPMWu1AfDhVTtjo2IYb4ZzlQgNgWNDR23M+/XFC5FIIQsNsCnmH6/ym
+	fm2FiMF7HEurh8aKsLH44fgfqc0jiwuDmkB5aiDF/
+X-Google-Smtp-Source: AGHT+IHH0Gxje1YP8phjB29jglmlol4ueAlGd38lrtelarWcqwJAKC0EXb89e3fxJQ3Gwa0gwHLc+Q==
+X-Received: by 2002:a05:6000:4023:b0:3a2:3c51:7c1c with SMTP id ffacd0b85a97d-3a4cb49e27bmr3888914f8f.50.1748168804756;
+        Sun, 25 May 2025 03:26:44 -0700 (PDT)
 Received: from ?IPv6:2001:8b0:aba:5f3c:eeed:a623:5d92:7ad3? ([2001:8b0:aba:5f3c:eeed:a623:5d92:7ad3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44ab793a7d5sm110893495e9.1.2025.05.25.00.48.22
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4d437f961sm1618485f8f.17.2025.05.25.03.26.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 May 2025 00:48:22 -0700 (PDT)
-Message-ID: <4dbdecf888d3d81cb0bc81d172c45f410e8b5667.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] Why doesn't BB_WORKERCONTEXT cause task hash
- mismatches?
+        Sun, 25 May 2025 03:26:44 -0700 (PDT)
+Message-ID: <9ceb0807bc83d4782c588a823adc822d19e0ab3b.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] Add ? to mark the start of the AZ_SAS
+ query parameters
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: chris.laplante@agilent.com, "bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Date: Sun, 25 May 2025 08:48:21 +0100
-In-Reply-To: <DM8PR12MB543079199282BB54BBB054B68B98A@DM8PR12MB5430.namprd12.prod.outlook.com>
-References: 
-	<DM8PR12MB543079199282BB54BBB054B68B98A@DM8PR12MB5430.namprd12.prod.outlook.com>
+To: robbinvandamme@gmail.com, bitbake-devel@lists.openembedded.org
+Cc: Robbin Van Damme <robbin.vandamme@renson.be>
+Date: Sun, 25 May 2025 11:26:43 +0100
+In-Reply-To: <20250523114923.2206133-1-robbin.vandamme@renson.be>
+References: <20250523114923.2206133-1-robbin.vandamme@renson.be>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
 User-Agent: Evolution 3.56.0-1 
 MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 25 May 2025 07:48:33 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17636
+ <bitbake-devel@lists.openembedded.org>; Sun, 25 May 2025 10:26:53 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17637
 
-On Fri, 2025-05-23 at 13:26 +0000, Chris Laplante via lists.openembedded.or=
-g wrote:
-> I=E2=80=99m trying to wrap my head around how BB_WORKERCONTEXT doesn=E2=
-=80=99t cause task hash mismatches. For example:
-> =C2=A0
-> # Recipe which depends on something that deploys .bin files in DEPLOY_DIR=
-_IMAGE
-> =C2=A0
-> def get_deployed_bin_files(d):
-> =C2=A0=C2=A0=C2=A0 if d.getVar("BB_WORKERCONTEXT") !=3D "1":
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ""
-> =C2=A0=C2=A0=C2=A0 f =3D d.expand("${DEPLOY_DIR_IMAGE}/*.bin")
-> =C2=A0=C2=A0=C2=A0 return " ".join(f)
-> =C2=A0
-> BIN_FILES =3D "${@get_deployed_bin_files(d)}"
-> =C2=A0
-> do_handle_bin_files() {
-> =C2=A0=C2=A0=C2=A0 # do something with ${BIN_FILES}
-> =C2=A0=C2=A0=C2=A0ls ${BIN_FILES}
-> }
-> =C2=A0
-> (Yes, this is a contrived example, and in practice I=E2=80=99d just expan=
-d the glob in the do_handle_bin_files task.)
-> =C2=A0
-> =C2=A0
-> Why doesn=E2=80=99t BitBake flag this as a hash mismatch? Especially sinc=
-e BB_WORKERCONTEXT is in BB_HASHEXCLUDE_COMMON. To be clear =E2=80=93 I=E2=
-=80=99m grateful that it works :), I just don=E2=80=99t really understand w=
-hy.
+T24gRnJpLCAyMDI1LTA1LTIzIGF0IDEzOjQ5ICswMjAwLCByb2JiaW4gdmFuIGRhbW1lIHZpYSBs
+aXN0cy5vcGVuZW1iZWRkZWQub3JnIHdyb3RlOgo+IC0tLQo+IMKgbGliL2JiL2ZldGNoMi9hei5w
+eSB8IDQgKystLQo+IMKgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlv
+bnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvbGliL2JiL2ZldGNoMi9hei5weSBiL2xpYi9iYi9mZXRj
+aDIvYXoucHkKPiBpbmRleCAzNDYxMjRhOGIuLjMyNzI3MzM3OSAxMDA2NDQKPiAtLS0gYS9saWIv
+YmIvZmV0Y2gyL2F6LnB5Cj4gKysrIGIvbGliL2JiL2ZldGNoMi9hei5weQo+IEBAIC0zNiw3ICsz
+Niw3IEBAIGNsYXNzIEF6KFdnZXQpOgo+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoCBhel9zYXMgPSBk
+LmdldFZhcignQVpfU0FTJykKPiDCoMKgwqDCoMKgwqDCoMKgIGlmIGF6X3NhcyBhbmQgYXpfc2Fz
+IG5vdCBpbiB1ZC51cmw6Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdWQudXJsICs9IGF6X3Nh
+cwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHVkLnVybCArPSBmJz97YXpfc2FzfScKPiDCoAo+
+IMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIFdnZXQuY2hlY2tzdGF0dXMoc2VsZiwgZmV0Y2gsIHVk
+LCBkLCB0cnlfYWdhaW4pCj4gwqAKPiBAQCAtNjIsNyArNjIsNyBAQCBjbGFzcyBBeihXZ2V0KToK
+PiDCoMKgwqDCoMKgwqDCoMKgIGF6X3NhcyA9IGQuZ2V0VmFyKCdBWl9TQVMnKQo+IMKgCj4gwqDC
+oMKgwqDCoMKgwqDCoCBpZiBhel9zYXM6Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYXp1cmkg
+PSAnJXMlcyVzJXMnICUgKCdodHRwczovLycsIHVkLmhvc3QsIHVkLnBhdGgsIGF6X3NhcykKPiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBhenVyaSA9ICclcyVzJXM/JXMnICUgKCdodHRwczovLycs
+IHVkLmhvc3QsIHVkLnBhdGgsIGF6X3NhcykKPiDCoMKgwqDCoMKgwqDCoMKgIGVsc2U6Cj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGF6dXJpID0gJyVzJXMlcycgJSAoJ2h0dHBzOi8vJywgdWQu
+aG9zdCwgdWQucGF0aCkKClRoaXMgZGVmaW5pdGVseSBuZWVkcyBhbiBleHBsYWluYXRpb24gaW4g
+dGhlIGNvbW1pdCBtZXNzYWdlIGFib3V0IHdoYXQKaXMgYnJlYWtpbmcsIHdoeSBhbmQgaG93IHRo
+aXMgZml4ZXMgaXQuIFRoZXJlIGFsc28gaXNuJ3QgYSBTaWduZWQtb2ZmLQpieSBsaW5lLgoKQ2hl
+ZXJzLAoKUmljaGFyZAo=
 
-BB_HASHEXCLUDE_COMMON passes it into BB_BASEHASH_IGNORE_VARS and BB_HASHCON=
-FIG_IGNORE_VARS:
-
-BB_BASEHASH_IGNORE_VARS ?=3D "${BB_HASHEXCLUDE_COMMON} PSEUDO_INCLUDE_PATHS=
- BUILDHISTORY_DIR ...
-BB_HASHCONFIG_IGNORE_VARS ?=3D "${BB_HASHEXCLUDE_COMMON} DATE TIME SSH_AGEN=
-T_PID ...
-
-which means bitbake will ignore it when calculating the hashes, both
-for tasks and for the base configuration. Since it isn't included in
-either worker or non-worker contexts, the hashes match and you don't
-see any warning?
-
-Cheers,
-
-Richard
 
