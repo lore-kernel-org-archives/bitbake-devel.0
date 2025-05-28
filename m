@@ -1,89 +1,120 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0491CC3ABB2
-	for <webhook@archiver.kernel.org>; Wed, 28 May 2025 13:22:38 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.web10.15522.1748438549753953549
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96237C5AD49
+	for <webhook@archiver.kernel.org>; Wed, 28 May 2025 17:45:30 +0000 (UTC)
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+ by mx.groups.io with SMTP id smtpd.web10.1852.1748454327583514765
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 28 May 2025 06:22:30 -0700
+ Wed, 28 May 2025 10:45:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=L56G4qEU;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-442d146a1aaso51573405e9.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 28 May 2025 06:22:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1748438548; x=1749043348; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=dW7buL2g4ZNiE1k7B9EKcvYyjJgx8/D5hI1vSixDwkw=;
-        b=L56G4qEUXmuU7AV8fCiLy0lsdHMBSAUvZj2cEAAwxHQsAfXXTh4aPYrweSh0KHhYAZ
-         xubxh6hMHc0PjDZh7Hd6Z+XApvPPASaJPJv3+egNPLoD0b1g1ZtL82ix8qPwnBOP0+hb
-         pJjr8ELFip7XrfizOTdeiq6SSKrJw7JqtRHTM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748438548; x=1749043348;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dW7buL2g4ZNiE1k7B9EKcvYyjJgx8/D5hI1vSixDwkw=;
-        b=K373m+nuMhf8qA+WB1kWXE2YBI3gSHKOGHF+S/zyyJm2S30lyGs/qyNE4IaccpaGLh
-         MMje1eTtn32IjVtTikZsnmQDNXPKuKu+qNgUEdeMVNrpJ4F443525o+6GTf9gzBt27FU
-         ct1FjrkBC2mVkY5DKiCf0ZA/rFhWyjXeyR1iaBjE4azgiCQ190b6JGuPx5I9TYbAsQTu
-         ALQUHbdDbb3OP9mhM7TDB6Q8dvPCDE5RXK192/27fPa4UFs7Ppk4vz3Zr1GUciFe/QLm
-         6lfckMbWddz2Lb/YwGT+vPVdzgjAMPVL47dIRqRRdFUThcUETXpPDzyzS9eFnC3sAJ7H
-         o0Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCWs+K86tlI9tYmDglC/6/BvVUzR3WpQsjq8SvVISH5Y1X8aH/9cPhRLKonBeob1LsHawqlz1Yt9L2Uk9WhX@lists.openembedded.org
-X-Gm-Message-State: AOJu0YzipVPn8TYgcL1hJFbPiA/ulasP2Yw+ysokML4cXCtKl9XAHOfv
-	6ERzr8X100ftRkD/BBTI0YA7sRxpFSg5marFCMaMcsDTvNpOmBiyj65EoavCWeKZmnU=
-X-Gm-Gg: ASbGnctfiVRzeTKAJpNBU0CKHqgdgeGXLXIK6fHZkRERBbIvSvaJuyb5EQ7sH+W2GY5
-	+omdODNDEoJLVMY+iD5i+ALFzZb/fPNbzvoXv/VJKf47x4v7M86+4KExGgY8NEQ1uMJxw9fqkpn
-	zXGUXnvPmQsYSNlWqZVU6ANU8fYbgayfErVEKDRJrZrmyZRimCWnmaHB0C6BuWdUxyJ+m/tC7ag
-	Yu/ZHfi368LH3ZKEUvHYVeSiJj7LjzqoQ03Op+eSI26f55pQcNfyl/UEDm1qG4AGGeTgLVe2Eh5
-	f27AFpHKkkmpjc1Zy4MaUzpOPUoIjo0zL75JwjUWidlwwA4zb/vqKU3N/Hm4ssj3UYp0tjGaTfb
-	sVV9B3+wEr9Cu/Yr73N+MAYVHWd4fHcGFEXbyF2nS
-X-Google-Smtp-Source: AGHT+IFVlpLbuQOO6awmDbjnEcMW5kmtWdG5AV1jE5ibsxm+vQkWcEay1RYLeYPJIQFFMLMmYdp+Jw==
-X-Received: by 2002:a05:600c:4fc5:b0:43c:fffc:7855 with SMTP id 5b1f17b1804b1-44c9465bfe3mr187880025e9.15.1748438548147;
-        Wed, 28 May 2025 06:22:28 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:ebb4:3a70:7323:f416? ([2001:8b0:aba:5f3c:ebb4:3a70:7323:f416])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450064ae786sm21527505e9.23.2025.05.28.06.22.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 06:22:27 -0700 (PDT)
-Message-ID: <3cdc7c12efbedfda3a705d34d87ce78462010268.camel@linuxfoundation.org>
-Subject: Re: [docs] [PATCH v3 3/3] tests/fetch: Add test case to check
- shallow cloning using `PREMIRRORS`
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: stefan-koch@siemens.com, bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org, liezhi.yang@windriver.com, 
-	niqingliang2003@gmail.com, alex.kanavin@gmail.com,
- quentin.schulz@cherry.de, 	jan.kiszka@siemens.com
-Date: Wed, 28 May 2025 14:22:26 +0100
-In-Reply-To: <20250527095903.2300556-3-stefan-koch@siemens.com>
-References: <20250527095903.2300556-1-stefan-koch@siemens.com>
-	 <20250527095903.2300556-3-stefan-koch@siemens.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0-1 
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=iYqkl9BJ;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.194, mailfrom: antonin.godard@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 77C9643192;
+	Wed, 28 May 2025 17:45:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748454325;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=X+80+qOkrouwzHd5Lhl6Gicpq4a/yZHPBbSDB7pmxnU=;
+	b=iYqkl9BJgpxhy4oOrkCOsKK0jq6Mve74D3N5qPJh6e3APRGgNB0o25wHF8P7ZMZYeQqawT
+	2dcGTQhNCcaJT7SANAk5dF0SsM3RNpuTb6FdkZzDuEw+3pvnjx42La31WC5RRRSNFYxLlb
+	R6CGwvFxfGYqj+58A9dJCXarhKKckSS9iaul6fBxDwwVK/GQ4sEMvwvGbhHFrBhNS93qRa
+	1HAhnCr670zksJh2TcOagoCjUrMrARzglpdKcHHQRGrSPmxj3jPIxDqUNPnprC7pGEvYzM
+	U477euXXEuVSbO1nUKy2ZS5QBc2CbsvKnZM7iXdId2dJKUJe68QK5ogqJCENMQ==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Date: Wed, 28 May 2025 19:45:05 +0200
+Subject: [PATCH] doc: update releases.rst
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250528-walnascar-update-v1-1-9c6750e87e65@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAKBLN2gC/x3MTQqAIBBA4avErBNKFKqrRItJpxoIi7E/CO+et
+ PwW770QSZgidMULQhdH3kJGXRbgFgwzKfbZoCttK6sbdeMaMDoUde4eD1Kmdjj61mDTTpCzXWj
+ i51/2Q0ofg96BKGIAAAA=
+X-Change-ID: 20250528-walnascar-update-41cabd94a89f
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1431;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=6maFlQjOdUVwD08iXUdGNuJZu/MilDTbgfz/SWm/Saw=;
+ b=owEBbQKS/ZANAwAIAdGAQUApo6g2AcsmYgBoN0u1usAQJAY/Nwpz0MYzDqJKgGPnUh7VyZn4a
+ EUrZvHTlYmJAjMEAAEIAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaDdLtQAKCRDRgEFAKaOo
+ Nrk9D/0ayP8G1yzP7MyaA7heznY7psGPCJRtGKkOy4beNw9i2Kdsque1BmZ1SifjvQSbtPeVffO
+ tLUh7/br7evmM3wr3tEEr9oAN7eR25zCaxHoCDTJf5FyQkFHLrjfpH8iLFD6Dx01Xl9F8o1R5Mu
+ eUspXdm3zJnxieV31XhyFZ7hfFP/kcPdXmleVc0+eWbDfLjdmbvH5VX1F4bH7Mgsti9Sp54Yl5n
+ h1aXiXYNN97KH/0aeoYtDXr89jv2iVJnmbzyn4em6wKiBJpIfbkyRYCuMW2gixQG9muMX/tDed3
+ NIb8Elhds/uWvUC+OHUVtWNgOkpFRaYLVhFdeo4WdOUPXLbUHzXGt7YbRvf+Uw6owmf42QanWWL
+ slZvfNMe8zlZtm8nxp6u5LOBdiQBVKgchmoeP3AstpxhixNUKRkSDXida9mJyM4vqp0o3ah82Qn
+ BrugLQN9loY6HGCwwNQk87TMpWoV3DE76c8UXSSp/B0HaSWQM7xvmCYOL95OWy70qOa0WuJ7mJt
+ OGiiZvBRGyw2h6KEdMNnByFgWaMppHM+TwQ7j/EDsrkA7EEayujJGnGVPSxvhGxGuFmbFawFaaC
+ VLGGSoW1j9vjS5N3i/rworA2OhUOFjN5UrOv3MhDT7VULAHon/SYihY6jbdGs384uCzt7qDvK8u
+ OnDs93cGHX4kzMw==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvfeekleculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtjeertdertdejnecuhfhrohhmpeetnhhtohhnihhnucfiohgurghrugcuoegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudeijeeltdeiueetffevteelueffiedvffejgfethefgheelieetheeiueeikeeunecukfhppedvrgdtvdemkeegvdelmeekudejrgemgedttddumegttdgsvgemugehkegrmeegvdeltdemlegvrgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeekgedvleemkedujegrmeegtddtudemtgdtsggvmeguheekrgemgedvledtmeelvggrjedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomheprghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegpdhrtghpthhtohepsghithgsrghkvgdquggvvhgvlheslhhishhtshdrohhpvghnvghmsggvugguvggurdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpt
+ hhtohepughotghssehlihhsthhsrdihohgtthhophhrohhjvggtthdrohhrghdprhgtphhtthhopegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomh
+X-GND-Sasl: antonin.godard@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 28 May 2025 13:22:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17652
+ <bitbake-devel@lists.openembedded.org>; Wed, 28 May 2025 17:45:30 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17653
 
-On Tue, 2025-05-27 at 11:59 +0200, Koch, Stefan via lists.yoctoproject.org =
-wrote:
-> Signed-off-by: Stefan Koch <stefan-koch@siemens.com>
-> ---
-> =C2=A0lib/bb/tests/fetch.py | 27 +++++++++++++++++++++++++++
-> =C2=A01 file changed, 27 insertions(+)
+Add Walnascar as a supported release manual, and move Styhead to the
+outdated release manuals.
 
-I've merged this series, I just wanted to say thanks for getting to the
-bottom of it, getting to a good fix and ensuring the issue doesn't come
-back (hopefully!).
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+---
+ doc/releases.rst | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-Cheers,
+diff --git a/doc/releases.rst b/doc/releases.rst
+index 3e8014074..676db66ec 100644
+--- a/doc/releases.rst
++++ b/doc/releases.rst
+@@ -4,11 +4,11 @@
+ BitBake Supported Release Manuals
+ =================================
+ 
+-****************************
+-Release Series 5.1 (styhead)
+-****************************
++******************************
++Release Series 5.2 (walnascar)
++******************************
+ 
+-- :yocto_docs:`BitBake 2.10 User Manual </bitbake/2.10/>`
++- :yocto_docs:`BitBake 2.12 User Manual </bitbake/2.12/>`
+ 
+ *******************************
+ Release Series 5.0 (scarthgap)
+@@ -26,6 +26,12 @@ Release Series 4.0 (kirkstone)
+ BitBake Outdated Release Manuals
+ ================================
+ 
++****************************
++Release Series 5.1 (styhead)
++****************************
++
++- :yocto_docs:`BitBake 2.10 User Manual </bitbake/2.10/>`
++
+ *******************************
+ Release Series 4.3 (nanbield)
+ *******************************
 
-Richard
+---
+base-commit: 6e1434d93d489aa4bab07777a7a9dc58ba0ca5a7
+change-id: 20250528-walnascar-update-41cabd94a89f
+
+Best regards,
+-- 
+Antonin Godard <antonin.godard@bootlin.com>
+
 
