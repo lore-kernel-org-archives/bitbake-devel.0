@@ -1,92 +1,138 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <mac@mcrowe.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 359A6C5B549
-	for <webhook@archiver.kernel.org>; Fri, 30 May 2025 07:50:44 +0000 (UTC)
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
- by mx.groups.io with SMTP id smtpd.web11.1645.1748591437484487451
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CBFC5AD49
+	for <webhook@archiver.kernel.org>; Fri, 30 May 2025 17:17:49 +0000 (UTC)
+Received: from smarthost01b.sbp.mail.zen.net.uk (smarthost01b.sbp.mail.zen.net.uk [212.23.1.3])
+ by mx.groups.io with SMTP id smtpd.web11.886.1748625463254097980
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 30 May 2025 00:50:37 -0700
+ Fri, 30 May 2025 10:17:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Nr1ZsA/H;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.52, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so19738695e9.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 30 May 2025 00:50:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1748591436; x=1749196236; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=k47bBjho7vMf39u2fmGFqUEnXjj2zj5xvE7GqWWFt9Y=;
-        b=Nr1ZsA/HCzaFweYKKzFta/iLSynOiAI51405ZF00/0iyduzeLuWcfWFpE8dZp/ybGk
-         sjOMfnmyIPH/r0wdbZhtW3gX2tEt/DXZ1Pq0OT7WxZUcBdMb4VVB97EeynWOFHYN6TrL
-         cKdha28QIO9lYa+WECzWNfmFpEEqryvAx3eaQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748591436; x=1749196236;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=k47bBjho7vMf39u2fmGFqUEnXjj2zj5xvE7GqWWFt9Y=;
-        b=fOPXGmJnUi9xu1i7Znpc4HuUIHL2PF/7C9TXe3mJgIE355ztlkvkE7C+HcxDmIlzhJ
-         KFGO7tBjpl4OMato333FepAFM2yy6Gk2Vv8DhiEr/UsYxdGZTCImqk2X7nubNnAsqWAZ
-         TLwZ16TSCvNWMoeqA9jLbr4CHT6+gRwf07yPV9JXxlpyGKWJN4IlMekL/lqvES9hPQbk
-         7fKZd8m8IytFjjINw65HrPHTzg2pi41Gzlm1JkDmqc9VQEkfU8sU9Oh53Nft1UckDHko
-         TsOkQiSA/S5ODc6aHpbW9Nv/sCQMC+0hDadJqEgcF0ZEkuUiE4UyMWwRkbv50+IaQzV9
-         9fmQ==
-X-Gm-Message-State: AOJu0Yx7ZfUPnXymJcnmqqgHj4h8ONzjuRKzPTgDYRW6K0U/ZIned9gi
-	yUtA5A41rkrpy+8ThMHsjbtcDYmYHpJj+xb1crGm3YqXP+owlGq1i5lwk4yNyMMYvg0=
-X-Gm-Gg: ASbGncvRvMxMxc/naQiMLnWpj7fIL5ImbaCz739P92PtIyYqWxkEwm7nHVyqL3l/NAU
-	TJZdcM6Db1cFuaJ91jbeW97s2gSb4dtTyKp81JpAewcmM5PLWpuR156A9e0kMIPQlntLVX5Mjb2
-	AqvX11OYaO0DvfBssq7EgPNf3PNwZ+Wk1iEXDTp8qxiLp9Ii8s+dSGjC2EH73DV5tgSmYmWzR/4
-	/Z9wTHUYAoMKp2sghgUIj3KoJ0Ntcf2oNS0R9J/avwWh3PW3FLmM6Dsu5iSB6xPc/N3kkvomemJ
-	q3LUfL+96lZLYtsyCN/hMHAc2csDlkR6fcDjP57ad+l8Bqy/VXwKLVUKM2BSOaK1ozCfyZ+NtIy
-	EV/8KpM7qjXtbG9g+ahlgJDeuftwGqQj4vIsgLhcuVdtbD2xy
-X-Google-Smtp-Source: AGHT+IHnSdbvR3vESxOz6ORYdtx9eJ1Xt3YkVEKnSuRrWsmJtklI1IvQTiG1qG0QVgvBZbElKOm1DA==
-X-Received: by 2002:a05:6000:26d0:b0:3a1:fcd6:1e6b with SMTP id ffacd0b85a97d-3a4f7ab15cemr1557744f8f.57.1748591435764;
-        Fri, 30 May 2025 00:50:35 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:5d72:4093:f55c:1c6? ([2001:8b0:aba:5f3c:5d72:4093:f55c:1c6])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fa21e4sm10570085e9.11.2025.05.30.00.50.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 00:50:34 -0700 (PDT)
-Message-ID: <f35ed32c0c6842346b30b4afc32e78ca770c06f6.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH v2] [YOCTO #15882] Add question mark to
- mark the start of the AZ_SAS query parameters.
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: robbinvandamme@gmail.com, Gyorgy Sarvari <skandigraun@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org, Robbin Van Damme
-	 <robbin.vandamme@renson.be>
-Date: Fri, 30 May 2025 08:50:34 +0100
-In-Reply-To: <CAPon-EbnAEjXL0AWSthzvdrXrazG0P07ov=6GG70pVdmsC+hmA@mail.gmail.com>
-References: <20250529141418.1939172-1-robbin.vandamme@renson.be>
-	 <9ae97e78-1fdb-45dd-8746-122f6e5a919f@gmail.com>
-	 <CAPon-EbnAEjXL0AWSthzvdrXrazG0P07ov=6GG70pVdmsC+hmA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0-1 
+ dkim=pass header.i=@mcrowe.com header.s=20191005 header.b=OrLUDAno;
+ spf=pass (domain: mcrowe.com, ip: 212.23.1.3, mailfrom: mac@mcrowe.com)
+Received: from [88.97.37.36] (helo=deneb.mcrowe.com)
+	by smarthost01b.sbp.mail.zen.net.uk with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <mac@mcrowe.com>)
+	id 1uL3MG-005Rba-Q9
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 30 May 2025 17:17:41 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mcrowe.com;
+	s=20191005; h=Content-Type:MIME-Version:Message-ID:Subject:To:From:Date:
+	Sender:Reply-To:CC:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=oaE4mvVkyJpORmM1P1TMW4OaNd/NVuCrNnatCCOj+7Y=; b=Or
+	LUDAnoJNNOBQDOHkYbluiULN69dNmM6ckyfggbBDeDoiBUqguFs7PULwNkVWsl9nGJI0TP0V7b7Zs
+	l744/BJcbB7zkC3w2u4twERE4zW/JHw9VGpfU8xNU/PVecAlc3PsRu5bii/5LQ12xiKcCMd5cWAfi
+	OF/nnZMwLOUo+trNZlS4CdP197FM7h9KtfCVSuEnjrJSpWTsyDsmqbRSl5K6FacoQ5V9vpukZogNZ
+	6+SnxxyNOjfJaMTQX/falyqXCqEbOdXbn4+4J8Mv40vQRTFZ+VMukp8yJuuw+BOUjoBL1mbwgjlSH
+	3ZuP4hqs4wcLeePR5AVI+3tST+pLixYg==;
+Received: from mac by deneb.mcrowe.com with local (Exim 4.96)
+	(envelope-from <mac@mcrowe.com>)
+	id 1uL3MS-00Fo1p-1c
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 30 May 2025 18:17:40 +0100
+Date: Fri, 30 May 2025 18:17:40 +0100
+From: Mike Crowe <mac@mcrowe.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: Should stamp files for different versions of a recipe exist at the
+ same time?
+Message-ID: <aDnoNJFkC535qqiI@mcrowe.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Originating-smarthost01b-IP: [88.97.37.36]
+Feedback-ID: 88.97.37.36
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 30 May 2025 07:50:44 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17659
+ <bitbake-devel@lists.openembedded.org>; Fri, 30 May 2025 17:17:49 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17660
 
-On Fri, 2025-05-30 at 09:21 +0200, robbin van damme via
-lists.openembedded.org wrote:
-> Hi,
->=20
-> Ok thats fine.
-> Lets forget this patch then.
-> I submitted other one with update of the docs on how to use the
-> AZ_SAS.
+I seem to be running into a problem in Scarthgap that relates to outdated
+stamp files not being removed. I think this results in tasks not running
+when they should in later builds. I don't believe that this problem happens
+with Dunfell[1], though it does still happen with current master (both
+Bitbake and openembedded-core) too[2].
 
-What might also help is adding a sanity check to the fetcher to ensure
-the variable does start with "?".
+In case my description below isn't clear, the files required are available
+in
+https://github.com/mikecrowe/openembedded-core/tree/stamps-not-removed-repro
+though
+https://github.com/mikecrowe/openembedded-core/commit/8fd8055ab3e1d2d429c6076481952bace251750c
+is probably the most interesting to look at.
 
-If it does not, we could raise an error so the user knows what is
-wrong.
+My reproduction requires a package to have two different recipes with
+different COMPATIBLE_MACHINEs and swapping between building for those two
+different MACHINEs. I'm using dummy recipes called lictest_one.bb and
+lictest_two.bb because I'm able to reproduce this problem with licence
+files, though I suspect that it is not limited to them. I have two machines
+named qemuarm64 and qemuarm64b.
 
-Cheers,
+# PREPARATION
 
-Richard
+I first start by running the cleansstate task for the recipe for both
+MACHINEs in order to ensure we're starting from a sensible state:
+
+ MACHINE=qemuarm64 bitbake -c cleansstate lictest
+ MACHINE=qemuarm64b bitbake -c cleansstate lictest
+
+# FIRST MACHINE BUILD 1
+
+I build for the first machine:
+
+ MACHINE=qemuarm64 bitbake core-image-minimal
+
+At this point tmp-glibc/deploy/licenses/cortexa57/lictest contains the
+licence files and tmp-glibc/stamps/cortexa57-oe-linux/lictest/ contains
+stamp files only from lictest_one.bb as expected.
+
+# SECOND MACHINE BUILD 1
+
+I build for the second machine:
+
+ MACHINE=qemuarm64b bitbake lictest
+
+At this point tmp-glibc/deploy/licenses/cortexa57/lictest contains the
+licence files from lictest_two.bb as expected.
+tmp-glibc/stamps/cortexa57-oe-linux/lictest/ contains stamp files from both
+recipes. This is unexpected to me as I would have expected the stamps from
+lictest_one.bb to be removed due to them being unreachable.
+
+# FIRST MACHINE BUILD 2
+
+I go back to build for the first machine again with some debug output:
+
+ MACHINE=qemuarm64 bitbake -DDD lictest
+
+In that debug output I found:
+
+ DEBUG: Stampfile /fast/mac/git/oe-core/build/tmp-glibc/stamps/cortexa57-oe-linux/lictest/1.do_populate_lic_setscene.eba2f40dbe8904031c070aeff35abee46485bfa827e27731e02e8c5a84ef3a46 not available
+ DEBUG: Normal stamp current for task /fast/mac/git/oe-core/meta/recipes-core/lictest/lictest_one.bb:do_populate_lic
+ DEBUG: Found task /fast/mac/git/oe-core/meta/recipes-core/lictest/lictest_one.bb:do_populate_lic which could be accelerated
+ DEBUG: /fast/mac/git/oe-core/meta/recipes-core/lictest/lictest_one.bb:do_populate_lic has a valid stamp, skipping
+/fast/mac/git/oe-core/meta/recipes-core/lictest/lictest_one.bb:do_populate_lic
+ DEBUG: Marking task /fast/mac/git/oe-core/meta/recipes-core/lictest/lictest_one.bb:do_populate_lic as buildable
+ DEBUG: Setscene covered task /fast/mac/git/oe-core/meta/recipes-core/lictest/lictest_one.bb:do_populate_lic
+
+and tmp-glibc/deploy/licenses/cortexa57/lictest is either empty or it
+contains the licence files from lictest_two! The stamps from lictest_two.bb
+have been removed from tmp-glibc/stamps/cortexa57-oe-linux/lictest/, but
+the ones from lictest_one.bb remain.
+
+My guess is that the problem here is that the stamps from the first machine
+build weren't removed during the "SECOND MACHINE BUILD 1" step above. If I
+remove them myself then the problem goes away. Is that theory correct? If
+so, then I can start trying to work out why and any advice would be
+welcome. If that theory is not correct then does anyone have any idea where
+I should start investigating?
+
+Thanks.
+
+Mike.
+
+[1] But with the fix for
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=14123 cherry-picked.
+
+[2] If the reproduction script is tweaked to replace tmp-glibc with tmp.
 
