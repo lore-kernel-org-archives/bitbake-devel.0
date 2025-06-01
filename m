@@ -1,106 +1,119 @@
-Return-Path: <shen_jiamin@comp.nus.edu.sg>
+Return-Path: <robbinvandamme@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F20D8C5B549
-	for <webhook@archiver.kernel.org>; Sun,  1 Jun 2025 09:36:01 +0000 (UTC)
-Received: from smtpgw-1-2.nogo.comp.nus.edu.sg (smtpgw-1-2.nogo.comp.nus.edu.sg [137.132.84.20])
- by mx.groups.io with SMTP id smtpd.web10.23999.1748770561531714111
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A6EC54FB3
+	for <webhook@archiver.kernel.org>; Sun,  1 Jun 2025 20:14:30 +0000 (UTC)
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+ by mx.groups.io with SMTP id smtpd.web11.34764.1748808861829858605
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 01 Jun 2025 02:36:01 -0700
+ Sun, 01 Jun 2025 13:14:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: comp.nus.edu.sg, ip: 137.132.84.20, mailfrom: shen_jiamin@comp.nus.edu.sg)
-Received: from localhost (localhost [127.0.0.1])
-	by smtpgw-1-2.nogo.comp.nus.edu.sg (Postfix) with ESMTP id D03D5160746;
-	Sun,  1 Jun 2025 17:35:59 +0800 (+08)
-X-Virus-Scanned: Debian amavisd-new at smtpgw-1-2.comp.nus.edu.sg
-Received: from smtpgw-1-2.nogo.comp.nus.edu.sg ([127.0.0.1])
-	by localhost (smtpgw-1-2.comp.nus.edu.sg [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id uGvN_VDpqo1d; Sun,  1 Jun 2025 17:35:59 +0800 (+08)
-Received: from smtpauth-2-1.comp.nus.edu.sg (smtpauth-2-1.comp.nus.edu.sg [192.168.21.30])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtpgw-1-2.nogo.comp.nus.edu.sg (Postfix) with ESMTPS;
-	Sun,  1 Jun 2025 17:35:59 +0800 (+08)
-Received: from localhost.localdomain (unknown [202.73.41.222])
-	(using TLSv1.3 with cipher TLS_CHACHA20_POLY1305_SHA256 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA512)
-	(No client certificate requested)
-	(Authenticated sender: e0446373)
-	by smtpauth-2-1.comp.nus.edu.sg (Postfix) with ESMTPSA id 5743812026A;
-	Sun,  1 Jun 2025 17:35:59 +0800 (+08)
-From: Shen Jiamin <shen_jiamin@comp.nus.edu.sg>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Cc: Shen Jiamin <shen_jiamin@comp.nus.edu.sg>,
-	Shen Jiamin <shen_jiamin@u.nus.edu>
-Subject: [PATCH] bitbake-layers: allow adding layers as relative paths
-Date: Sun,  1 Jun 2025 17:35:55 +0800
-Message-Id: <20250601093555.40432-1-shen_jiamin@comp.nus.edu.sg>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=dVos9w+m;
+ spf=pass (domain: gmail.com, ip: 209.85.221.44, mailfrom: robbinvandamme@gmail.com)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a365a6804eso2813861f8f.3
+        for <bitbake-devel@lists.openembedded.org>; Sun, 01 Jun 2025 13:14:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748808860; x=1749413660; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ceQxH+cU+xJmdMBbwxVILSX1g/zF67j04RKwT/0LB/4=;
+        b=dVos9w+mVqM4vuROh/bv9akOp7biqq9b4WqDUrpj+Qg21dcocS9C+V++E18WdPOHvy
+         ylcM5+ZF4afaN6egFeCZGL0diQy22YNP6rE+nyiP55kMiln6i86CpUrIaZCmIRnxb8He
+         kCyIFYqeUMoRWhlXQJQcMQYdw00fn0EDwUNR3ub1FanwM2t+DEY556y+x6OmTAc9f7Tw
+         pF+Uq8Rc1arOH4wCny9Row1Y6snDef0mUsoPjO2vjztCpYCoGc63lvbpfi3Qghbr3jXF
+         Lz+jXgoPFrbMAcqj6VVxP3UMffNPQ3BLMfmHIR96TehxdOL609eLeYHQrpzga5AFmZsJ
+         iqdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748808860; x=1749413660;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ceQxH+cU+xJmdMBbwxVILSX1g/zF67j04RKwT/0LB/4=;
+        b=TqzZBOmarMzN7xRvlI7LRG9TyLAFXDbNCQjzhyHqj0PFIy47jdLv6tiYEzPj1rIh0e
+         gpgGLhx0lE0/nI/UMWIMqenjKtDLviy2Qn9RDSxUXgD3b9xMfe+z2FOaVOF9WENYInVn
+         C+fhwM5Rg8wq4HrhhbLOWNCglK5tP7k4PX8fH1ZcFk83fO0Llm9Sr+VcwaWzGo081RGn
+         qRkTUSHbv6zylix5pyRBv8Q+qLFvwrwzfuL0KebMTJStMLIFHI+0dL4Dbgqzdm7Qg5oU
+         1fZNlZn7P6wrzZCLKvJ1SI5NN+7axCVTuw+4p8fxUidyr+hQacStGfEaTnMVNq3JhrMj
+         i6Rw==
+X-Gm-Message-State: AOJu0Yz1ySwZv7Nss7+/CX0T7DmROg3UBZOXv3JEKKZUXxhNjfth4vvn
+	7J3FzQzEO8An3U8RiXGn6mGxqPdWSAphDYmKg1U3jl46dm9WSlsOtbobpbcG1Q==
+X-Gm-Gg: ASbGnct5WqcOW15NoItZw3tQrEWjOFvd2DyK99cYL7jWvfjb5cwRxzkAx42R9xLPQKH
+	f8nbJT9Fs8VxFnGydCmOD3bhyE25tL1I0dUoGRrmd1RASTysgb/EWcttXZHGdcAJscP6BwYG8Jf
+	IBQ2saU8c7bo9kxY1lCS027Wl2B1wYWvHUmAHz6geXL6srTQYDy6M40KbadbH/gy9N+cpbknS9R
+	HxDD6o8423Opf1RWevDOORsTu67l/pbV0f0hB8OnplmeoB0/zEKQTFNeXZFNNwQaIht6OfnPy9z
+	Xgzlu0lf2GDvEL7Gyd1ShbXW5hw8HduFm2YphPC9E4R25GONgcR2F19ch3eUCysNyef/RK53DDF
+	aW7Rc1DU7f7XjkiY2gsQk9Xitnac=
+X-Google-Smtp-Source: AGHT+IFRfS7BpLZe7kh6kTG3iR/xWxoZWU/TzuvSkBaDSAvHOvhSz7KFTiXtnMAHYocm+C282GGJwA==
+X-Received: by 2002:a5d:4110:0:b0:3a4:fc08:8faf with SMTP id ffacd0b85a97d-3a4fc0890c1mr4471509f8f.28.1748808859947;
+        Sun, 01 Jun 2025 13:14:19 -0700 (PDT)
+Received: from PC-G502T14.localdomain (78-20-31-164.access.telenet.be. [78.20.31.164])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f0097205sm12498842f8f.79.2025.06.01.13.14.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jun 2025 13:14:18 -0700 (PDT)
+From: Robbin Van Damme <robbinvandamme@gmail.com>
+X-Google-Original-From: Robbin Van Damme <robbin.vandamme@renson.be>
+To: bitbake-devel@lists.openembedded.org
+Cc: Robbin Van Damme <robbinvandamme@gmail.be>
+Subject: [PATCH v2] Update documentation and add extra check for az fetcher. AZ_SAS token should be prefixed with a question mark.
+Date: Sun,  1 Jun 2025 22:14:15 +0200
+Message-ID: <20250601201415.176479-1-robbin.vandamme@renson.be>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 01 Jun 2025 09:36:01 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17663
+ <bitbake-devel@lists.openembedded.org>; Sun, 01 Jun 2025 20:14:30 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17664
 
-Modify the add-layer command to accept a new --relative (-r) option
-that adds specified layer directories as paths relative to TOPDIR
-instead of absolute paths.
+From: Robbin Van Damme <robbinvandamme@gmail.be>
 
-This change updates the handling of bblayers.conf to store layer
-paths in the form ${TOPDIR}/relative/path, improving portability
-and flexibility when managing layers.
-
-Signed-off-by: Shen Jiamin <shen_jiamin@comp.nus.edu.sg>
+Signed-off-by: Robbin Van Damme <robbinvandamme@gmail.be>
 ---
- lib/bblayers/action.py | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ doc/bitbake-user-manual/bitbake-user-manual-fetching.rst | 4 ++--
+ lib/bb/fetch2/az.py                                      | 4 ++++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bblayers/action.py b/lib/bblayers/action.py
-index a14f19948..bd3b6bb04 100644
---- a/lib/bblayers/action.py
-+++ b/lib/bblayers/action.py
-@@ -38,7 +38,8 @@ class ActionPlugin(LayerPlugin):
-                 sys.stderr.write("Specified layer directory %s doesn't c=
-ontain a conf/layer.conf file\n" % layerdir)
-                 return 1
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+index fb4f0a23d..eac3cbdfb 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+@@ -686,9 +686,9 @@ Such functionality is set by the variable:
+    delegate access to resources, if this variable is set, the Az Fetcher will
+    use it when fetching artifacts from the cloud.
+ 
+-You can specify the AZ_SAS variable as shown below::
++You can specify the AZ_SAS variable prefixed with a ? as shown below::
+ 
+-   AZ_SAS = "se=2021-01-01&sp=r&sv=2018-11-09&sr=c&skoid=<skoid>&sig=<signature>"
++   AZ_SAS = "?se=2021-01-01&sp=r&sv=2018-11-09&sr=c&skoid=<skoid>&sig=<signature>"
+ 
+ Here is an example URL::
+ 
+diff --git a/lib/bb/fetch2/az.py b/lib/bb/fetch2/az.py
+index 346124a8b..1d3664f21 100644
+--- a/lib/bb/fetch2/az.py
++++ b/lib/bb/fetch2/az.py
+@@ -36,6 +36,8 @@ class Az(Wget):
+ 
+         az_sas = d.getVar('AZ_SAS')
+         if az_sas and az_sas not in ud.url:
++            if not az_sas.startswith('?'):
++                raise FetchError("When using AZ_SAS, it must start with a '?' character to mark the start of the query-parameters.")
+             ud.url += az_sas
+ 
+         return Wget.checkstatus(self, fetch, ud, d, try_again)
+@@ -62,6 +64,8 @@ class Az(Wget):
+         az_sas = d.getVar('AZ_SAS')
+ 
+         if az_sas:
++            if not az_sas.startswith('?'):
++                raise FetchError("When using AZ_SAS, it must start with a '?' character to mark the start of the query-parameters.")
+             azuri = '%s%s%s%s' % ('https://', ud.host, ud.path, az_sas)
+         else:
+             azuri = '%s%s%s' % ('https://', ud.host, ud.path)
+-- 
+2.43.0
 
--        bblayers_conf =3D os.path.join(findTopdir(),'conf', 'bblayers.co=
-nf')
-+        topdir =3D findTopdir()
-+        bblayers_conf =3D os.path.join(topdir, 'conf', 'bblayers.conf')
-         if not os.path.exists(bblayers_conf):
-             sys.stderr.write("Unable to find bblayers.conf\n")
-             return 1
-@@ -48,6 +49,12 @@ class ActionPlugin(LayerPlugin):
-         backup =3D tempdir + "/bblayers.conf.bak"
-         shutil.copy2(bblayers_conf, backup)
-
-+        if args.relative:
-+            layerdirs =3D [
-+                os.path.join("${TOPDIR}", os.path.relpath(ldir, topdir))
-+                for ldir in layerdirs
-+            ]
-+
-         try:
-             notadded, _ =3D bb.utils.edit_bblayers_conf(bblayers_conf, l=
-ayerdirs, None)
-             if not (args.force or notadded):
-@@ -268,6 +275,7 @@ build results (as the layer priority order has effect=
-ively changed).
-
-     def register_commands(self, sp):
-         parser_add_layer =3D self.add_command(sp, 'add-layer', self.do_a=
-dd_layer, parserecipes=3DFalse)
-+        parser_add_layer.add_argument('-r', '--relative', action=3D'stor=
-e_true', help=3D'Add layer directories relative to TOPDIR (default is abs=
-olute paths)')
-         parser_add_layer.add_argument('layerdir', nargs=3D'+', help=3D'L=
-ayer directory/directories to add')
-
-         parser_remove_layer =3D self.add_command(sp, 'remove-layer', sel=
-f.do_remove_layer, parserecipes=3DFalse)
 
