@@ -1,363 +1,578 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <sider123456789101112131415@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2750AC5AE59
-	for <webhook@archiver.kernel.org>; Tue,  3 Jun 2025 10:18:18 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web11.7877.1748945890518464163
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C810C5B543
+	for <webhook@archiver.kernel.org>; Wed,  4 Jun 2025 10:24:31 +0000 (UTC)
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+ by mx.groups.io with SMTP id smtpd.web10.13319.1749032666166325446
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 03 Jun 2025 03:18:10 -0700
+ Wed, 04 Jun 2025 03:24:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=IH0MABr+;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-451d41e1ad1so20979875e9.1
-        for <bitbake-devel@lists.openembedded.org>; Tue, 03 Jun 2025 03:18:10 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=MBiIjjIr;
+ spf=pass (domain: gmail.com, ip: 209.85.214.179, mailfrom: sider123456789101112131415@gmail.com)
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-235d6de331fso15642095ad.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 04 Jun 2025 03:24:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1748945888; x=1749550688; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0W9ibNOMQsZZDFQxA9tmq8hcOrRwqtgf+3h9cis0Nok=;
-        b=IH0MABr+cTHDQ6VHrfM6MtP6np109SfIdp5glAghSjBliKSw94A53uaMvt6Ra9Aonp
-         tD/PmrkG8AHN364eV8gb2d9T9PLtcfWx8ykJyIIvntNMPml3+9cKOxNfflqKxz8Qejel
-         8TmH8+0aQhdrtij4m3KIPvK/DdIJ2B7kawpKA=
+        d=gmail.com; s=20230601; t=1749032665; x=1749637465; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4yOTaIq3xyl5WhTjUJnNCwacasoqhUwTajvF8iP1hrI=;
+        b=MBiIjjIraKOPLDVtXDsJAynuaxxvEFJVSTVskALQG7wVRRTvDcZlRTMni7/M9eJHwP
+         btlZ0taXUtZssHqA6mdHFtv3r+hhpF8L9NIezZgDsGtjWE4TPyTF3j4vudgwr9jSD2Yi
+         xVedeSYPbARNqXU99++UAGDarNmkICGcnSkwO7Kgw/4Aoi2BJVLDAcW5WfnbWkAXqJ82
+         GCP9O4WkMaIK8wYiIpvILHX8MHNih+OPofx5lGvBqokyNq76Fu/KBMHVT+P/LOrqluRZ
+         mopapHeicanwSVuRu5UCYg+5hbiSbgrNCshoJ9spNmS+blKTMJX0yr1hgOTMzQqqveUD
+         XPEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748945888; x=1749550688;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=0W9ibNOMQsZZDFQxA9tmq8hcOrRwqtgf+3h9cis0Nok=;
-        b=xQn+AHJVNC2MuUxI5OaEsG6NvF7/Zkm9X3kDpeS9CMMx5yTMWkRGCdmhnwW0CzKA3u
-         vChVRlb98NX0k6LoP3k9fXe0d0tcwpWc4OIHvla7CNkokyklLuo2JqYC66jGVzyjtYNM
-         Wb9II1mhZtQf0Uou55XwGlh04SeLyddZ/iIxlsgDXMis9zpFC+CWYp4uzndNSCf2zq1I
-         iw6oMq1lIVIhypuLWOcXLnKa27FFFEfeW8p3jF16FkvhPo9iUQnNUqSanwjJZjQuE6Tg
-         Ht3VHXwPTmR8FhcnOJmkxeUGYhVn9QAfPF69ZwLUvceSPWpVTPfxdBYd/nIL+MpA0GnN
-         o0PA==
-X-Forwarded-Encrypted: i=1; AJvYcCUxFyAQqA7hpsz9BdkfwUySH5fgkq78oyQRRLJYzq1STj5EL+wkXUIws+9CEfqaOaxcwUR0PjJ31gaHxj9O@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yx3b1sefgDkXzVFVwnbeP3ca0zXGooH8uYpD5yE7W+1UdvaYyah
-	vv70uUHQJNeAk9tqUOGeqz4NFlaVxYCScSOnI39rvpER+xsJfEGeL3nN/helSbQhL1PjJcGBEo9
-	4KCfTE2g=
-X-Gm-Gg: ASbGnctYjlsQcIslzEPcIJWo5D4cxiAUiTAbVMRbMcVx8FPECGEYTuK26+jC4yP3LDQ
-	qwDXoHEtlWO2cof2DFXWwo4KJG7xpt5pazVfLNyLtNoDlFqoEbJY3C7mV1G7OhASATP6P5NfbQi
-	lwujXMfyKpC6gN3wovz8EkyZ6fdU+vROPe8DmM3y6R48E9ZzTQFGzEJkQMiZ50q+n94cSJpnKws
-	u8FLBM11c3gyKULrjzUzyGwQjgAMomyJjWsPOAMwZHVdd3RVfURpouiGZcQbRhWR8vnCUvh3+we
-	WWxkVO/cgYllZpfQQ5ES9A1b3WlWyM1O3lYuY0wl/THtiNY8SCjL6ptlsrr/b42R6bUPkuKV300
-	WnUsXVKNSo3gJRf+BYOEvkkv/+zlR7aI6XJodZaAL
-X-Google-Smtp-Source: AGHT+IFsYYzBBUauWaTqYIkaaoa0Ed4/m3R41co5Xt5fXyhvs9QLX3CTL5CPsrQ5AGffXD2xkYrSug==
-X-Received: by 2002:a05:6000:25ca:b0:3a4:df80:7284 with SMTP id ffacd0b85a97d-3a4f7a0234fmr13723976f8f.1.1748945888385;
-        Tue, 03 Jun 2025 03:18:08 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:3864:8101:3606:8242? ([2001:8b0:aba:5f3c:3864:8101:3606:8242])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f8ed27sm162487405e9.2.2025.06.03.03.18.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 03:18:07 -0700 (PDT)
-Message-ID: <088d727e59e370375ea4695fe59c21d7b6e38b7a.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] Should stamp files for different versions of a
- recipe exist at the same time?
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Mike Crowe <mac@mcrowe.com>, bitbake-devel@lists.openembedded.org
-Date: Tue, 03 Jun 2025 11:18:06 +0100
-In-Reply-To: <aD7JUkYhjqg70RAR@mcrowe.com>
-References: <aDnoNJFkC535qqiI@mcrowe.com>
-	 <18dd4e56-87a5-4de3-a148-bd42f67ba57a@cherry.de>
-	 <aD2ByO73juj7zy7I@mcrowe.com>
-	 <418eea7bdcd9b528623498a6139ae42389ef192d.camel@linuxfoundation.org>
-	 <aD3TP6hIE9vvFaAo@mcrowe.com>
-	 <a9296bd359abc522a135cbaa37995d5b5633046e.camel@linuxfoundation.org>
-	 <aD7JUkYhjqg70RAR@mcrowe.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0-1 
+        d=1e100.net; s=20230601; t=1749032665; x=1749637465;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4yOTaIq3xyl5WhTjUJnNCwacasoqhUwTajvF8iP1hrI=;
+        b=HhdA3q1ivfsGDobeFrvODBwtjdbIsh7VCUJQySkM31wVsBFSar+zCvYsgATXEpzwbX
+         ijZZnw8o6Db6cqMVNpHpOqUYkQ2RkxGhvfUFR6QHJT6nmTwjYFxADp8PAMofy/ysSFhl
+         USFn0osm+OWx62+nhDI2XL1NsZrI78xFvDK4OFDfrC4sJ5I61doruWKOlLrtsiXc+s0c
+         VHTPd4yWRl6zQFgHlRkIZP3n75vtShkoKjmowsTAXYKVtYwO1tQYL+q2fGMwMY1JTyuI
+         yK3iQE8mWXwc34IDzouC3KjcWTPaOl0q9e3gux5okASOWy/6Z53wOHDZw4QV6ZuFOLsi
+         0mew==
+X-Gm-Message-State: AOJu0YwmxNF5IxfcpHCVduW4bXlHkhcUYegMneYqzuFLE+E5YA/mzaJr
+	sSxSLF2JQ5LVveHBaitIjIc5QzpCTPPOthFllnwgmhqmICl6RVW/prDhmbj9jvIVMi0Kfm3FJYj
+	lrAPXx/kHib8EUiUAJSmRt1d0W4MNpbZ6+oqivyc=
+X-Gm-Gg: ASbGnctuciv9knhBx7yNdnhvzwk04Z1PDevQaush2eAmVkPU98vJgBjdxCJSjcaNInn
+	2H4sXZMXleQnjSj1s9HcNVe2LDMGyt6k3BQBsbgRSq9B3w/x2ZHw8EyIGoKjTHu7PG6N6Dj2QV1
+	HDSODl38jEhkQDdaHfVZR2duxeYubXMZS+
+X-Google-Smtp-Source: AGHT+IFES88iAgLCJcUdY6/wgPkTQE8hD/1Jj4g89FKOs1CxQM8nUrzOg7HvfAxUV18ladShYjdkn8n7VcR7Upq159A=
+X-Received: by 2002:a17:903:1245:b0:235:f70:fd39 with SMTP id
+ d9443c01a7336-235e11291f9mr35797165ad.10.1749032665039; Wed, 04 Jun 2025
+ 03:24:25 -0700 (PDT)
 MIME-Version: 1.0
+References: <20250506131751.93175-1-sider123456789101112131415@gmail.com> <183CF2ED7AD8242A.22941@lists.openembedded.org>
+In-Reply-To: <183CF2ED7AD8242A.22941@lists.openembedded.org>
+From: =?UTF-8?B?0JrQvtC90YHRgtCw0L3RgtC40L0=?= <sider123456789101112131415@gmail.com>
+Date: Wed, 4 Jun 2025 13:24:14 +0300
+X-Gm-Features: AX0GCFtwMddVqxQFdpAxQFtYwuuD_N7KKKB-2CIId9i3aJkapFwzbmvZoeMEbaw
+Message-ID: <CAGCYn1QOFvB=KOUHv9TrxeSRo3LCr-Li7O5LoGOv=_oc9_3S+w@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] Speeding up Checking sstate mirror object
+ availability : Add async filtering SSTATE_MIRRORS
+To: bitbake-devel@lists.openembedded.org
+Cc: sider123456789101112131415@gmail.com, gavrilov.andrew1999@yandex.ru, 
+	tinyakovx@gmail.com, denisova.olga.k@yandex.ru
+Content-Type: multipart/alternative; boundary="000000000000b34a540636bc66c4"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 03 Jun 2025 10:18:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17677
+ <bitbake-devel@lists.openembedded.org>; Wed, 04 Jun 2025 10:24:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17678
 
-On Tue, 2025-06-03 at 11:07 +0100, Mike Crowe wrote:
-> On Monday 02 June 2025 at 22:04:39 +0100, Richard Purdie wrote:
-> > On Mon, 2025-06-02 at 17:37 +0100, Mike Crowe wrote:
-> > > On Monday 02 June 2025 at 15:17:44 +0100, Richard Purdie wrote:
-> > > > On Mon, 2025-06-02 at 11:49 +0100, Mike Crowe via lists.openembedde=
-d.org wrote:
-> > > > > On Monday 02 June 2025 at 12:15:57 +0200, Quentin Schulz wrote:
-> > > > > > Hi Mike,
-> > > > > >=20
-> > > > > > On 5/30/25 7:17 PM, Mike Crowe via lists.openembedded.org wrote=
-:
-> > > > > > > I seem to be running into a problem in Scarthgap that relates=
- to outdated
-> > > > > > > stamp files not being removed. I think this results in tasks =
-not running
-> > > > > > > when they should in later builds. I don't believe that this p=
-roblem happens
-> > > > > > > with Dunfell[1], though it does still happen with current mas=
-ter (both
-> > > > > > > Bitbake and openembedded-core) too[2].
-> > > > > > >=20
-> > > > > > > In case my description below isn't clear, the files required =
-are available
-> > > > > > > in
-> > > > > > > https://github.com/mikecrowe/openembedded-core/tree/stamps-no=
-t-removed-repro
-> > > > > > > though
-> > > > > > > https://github.com/mikecrowe/openembedded-core/commit/8fd8055=
-ab3e1d2d429c6076481952bace251750c
-> > > > > > > is probably the most interesting to look at.
-> > > > > > >=20
-> > > > > > > My reproduction requires a package to have two different reci=
-pes with
-> > > > > > > different COMPATIBLE_MACHINEs and swapping between building f=
-or those two
-> > > > > > > different MACHINEs. I'm using dummy recipes called lictest_on=
-e.bb and
-> > > > > > > lictest_two.bb because I'm able to reproduce this problem wit=
-h licence
-> > > > > > > files, though I suspect that it is not limited to them. I hav=
-e two machines
-> > > > > > > named qemuarm64 and qemuarm64b.
-> > > > > > >=20
-> > > > > > > # PREPARATION
-> > > > > > >=20
-> > > > > > > I first start by running the cleansstate task for the recipe =
-for both
-> > > > > > > MACHINEs in order to ensure we're starting from a sensible st=
-ate:
-> > > > > > >=20
-> > > > > > > =C2=A0 MACHINE=3Dqemuarm64 bitbake -c cleansstate lictest
-> > > > > > > =C2=A0 MACHINE=3Dqemuarm64b bitbake -c cleansstate lictest
-> > > > > > >=20
-> > > > > > > # FIRST MACHINE BUILD 1
-> > > > > > >=20
-> > > > > > > I build for the first machine:
-> > > > > > >=20
-> > > > > > > =C2=A0 MACHINE=3Dqemuarm64 bitbake core-image-minimal
-> > > > > > >=20
-> > > > > > > At this point tmp-glibc/deploy/licenses/cortexa57/lictest con=
-tains the
-> > > > > > > licence files and tmp-glibc/stamps/cortexa57-oe-linux/lictest=
-/ contains
-> > > > > >=20
-> > > > > > Intuitively I would say that your recipes also need to have PAC=
-KAGE_ARCH =3D
-> > > > > > "${MACHINE_ARCH}" set and then this wouldn't be an issue at all=
- I believe
-> > > > > > (because different directories for each recipe). I'm not entire=
-ly sure what
-> > > > > > is the recommendation for when to start using PACKAGE_ARCH =3D
-> > > > > > "${MACHINE_ARCH}", like what's the thing that should trigger th=
-is addition
-> > > > > > in the recipe?
-> > > > >=20
-> > > > > Hi Quentin,
-> > > > >=20
-> > > > > Thanks. I had been holding that back as a somewhat-hacky solution=
- to the
-> > > > > problem. It would reduce the amount setscene tasks running when s=
-witching
-> > > > > though.
-> > > > >=20
-> > > > > In reality the situation is more complex than the one I described=
- above. We
-> > > > > actually have multiple machines and two sets of recipes. Some mac=
-hines use
-> > > > > one set of recipes and some use the other set. Using PACKAGE_ARCH=
- =3D
-> > > > > "${MACHINE_ARCH}" might work, but it would result in more builds =
-than
-> > > > > necessary. I had considered changing setting PACKAGE_ARCH =3D
-> > > > > "${TUNE_PKGARCH}-suffix" or PACKAGE_ARCH:append =3D "-suffix" or =
-similar
-> > > > > would work, but I haven't tested that.
-> > > > >=20
-> > > > > It's also not been clear to me where the divide between PACKAGE_A=
-RCH =3D
-> > > > > "${TUNE_PKGARCH}" and PACKAGE_ARCH =3D "${MACHINE_ARCH}" is. Ther=
-e are lots
-> > > > > of ways (e.g. setting PACKAGECONFIG:pn-package) that could cause =
+--000000000000b34a540636bc66c4
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Good afternoon!
+Raising the discussion above because I didn't get a response to a previous
+email. Let me know if you are still considering the patch or need to change
+anything about it.
+
+Best regards,
+Konstantin E. *Kondratenko*
+
+=D0=B2=D1=82, 6 =D0=BC=D0=B0=D1=8F 2025=E2=80=AF=D0=B3. =D0=B2 16:24, =D0=
+=9A=D0=BE=D0=BD=D1=81=D1=82=D0=B0=D0=BD=D1=82=D0=B8=D0=BD via lists.openemb=
+edded.org
+<sider123456789101112131415=3Dgmail.com@lists.openembedded.org>:
+
+> Hello dear colleagues!
+>
+> Following the patch letter, I am attaching information about the problem
+> we found, how we investigated it, how we fixed it and the results of the
+> fix.
+>
+>
+> As the number of addresses specified in the SSTATE_MIRRORS variable
+> increases, the duration of the "Checking sstate mirror object availabilit=
+y"
+> process also increases. This is logical, as the number of addresses to
+> probe grows. However, it was observed that the "Checking sstate mirror
+> object availability" process time increases even when SSTATE_MIRRORS
+> contains one valid address and multiple unreachable addresses.
+> To validate this observation, a testing system was developed. Two
+> computers were connected in a local network: one performs the build, whil=
+e
+> the second shares the sstate-cache. On the second computer, the
+> sstate-cache is hosted on a single port. Iterative builds were performed =
+on
+> Computer 1, with SSTATE_MIRRORS configured to include one valid port and =
 a
-> > > > > PACKAGE_ARCH =3D "${TUNE_PKGARCH}"-specific recipe to vary betwee=
-n MACHINEs.
-> > > > >=20
-> > > > > > I'm also not saying that this isn't a bug or a bigger issue, ev=
-en if my
-> > > > > > suggestion may work around the issue.
-> > > > >=20
-> > > > > Thanks for the suggestion. If Dunfell had behaved as Scarthgap or=
- master
-> > > > > currently do then we probably would have just considered that to =
-be the
-> > > > > expected behaviour.
-> > > >=20
-> > > > I have a feeling there were some changes in this area to fix bugs b=
-ut
-> > > > I'm not remembering specifics. It sounds like some issue could have
-> > > > crept in.
-> > > >=20
-> > > > What you're supposed to be able to do is define your own package
-> > > > architectures so that you could have two here, one for each of your
-> > > > configs. You could then switch between them and the appropriate
-> > > > packages would be used.
-> > >=20
-> > > The trouble with this is it requires everything that depends on these
-> > > packages to also use those package architectures otherwise the proble=
-m just
-> > > moves up a level. Recipes changing for the same PACKAGE_ARCH is also =
-not
-> > > very discoverable in the general case (though in this one it is quite
-> > > obvious).
-> >=20
-> > You've changed the configuration for them so it is only right they
-> > should have a different PACKAGE_ARCH. This kind of thing does ripple
-> > badly but that is the implication of a change like this.
->=20
-> I agree. I just worry that if nothing breaks most of the time when we fai=
-l
-> to set the different PACKAGE_ARCH on a reverse dependency then we'll not
-> notice the mistake. Maybe that doesn't matter until it breaks though?
->=20
-> The recipes involved in our case are gstreamer ones, which are depended
-> upon by many other random recipes in other layers. We _can_ add a .bbappe=
-nd
-> for each of them that we use, but there's always a risk that we'll not
-> notice when someone adds a new dependency. Maybe we could come up with so=
-me
-> tooling to detect the situation?
+> varying number (from 1 to 48) of "non-working" servers =E2=80=94 addresse=
+s pointing
+> to Computer 2 but with closed ports. Below is an example configuration:
+> SSTATE_MIRRORS ?=3D " \
+> file://.* http://10.138.70.7:8150/sstate-cache/PATH;downloadfilename=3DPA=
+TH
+> \
+> file://.* http://10.138.70.7:8151/sstate-cache/PATH;downloadfilename=3DPA=
+TH
+> \
+> file://.* http://10.138.70.7:8152/sstate-cache/PATH;downloadfilename=3DPA=
+TH
+> \
+> file://.* http://10.138.70.7:9999/sstate-cache/PATH;downloadfilename=3DPA=
+TH"
+> Here, http://10.138.70.7:9999 hosts a valid sstate-cache server, while
+> http://10.138.70.7:8150, http://10.138.70.7:8151, and
+> http://10.138.70.7:8152 are closed ports. The time from the start of the
+> build to the completion of the "Checking sstate mirror object availabilit=
+y"
+> process was measured, and the results are visualized in the figure:
+> https://drive.google.com/file/d/1uFwzDSnD0I_WGAeUyvNXTRb9qIxQBXqN/view?us=
+p=3Dsharing
+>
+> Thus, it can be concluded that increasing the number of addresses in
+> SSTATE_MIRRORS leads to longer "Checking sstate mirror object availabilit=
+y"
+> process times, even when those addresses are unreachable.
+> It is also worth noting that servers can be unavailable for various
+> reasons, ranging from internal errors to network problems or DDoS attacks=
+ -
+> regardless of the reason, having unavailable servers specified in
+> local.cong leads to longer build times.
+>
+> A patch has been implemented that, during the parsing of the local.conf
+> configuration file, immediately after reading the SSTATE_MIRRORS variable=
+,
+> attempts to asynchronously establish TCP connections for each address
+> listed in SSTATE_MIRRORS. If a connection is successfully established, th=
+e
+> address remains in SSTATE_MIRRORS; if the connection attempt fails, the
+> address is removed from the variable. This ensures that any addresses
+> unreachable at the TCP level are excluded from subsequent processing.
+> These modifications are activated only if the FILTER_SSTATE_MIRRORS
+> variable is set to 1 in local.conf.
+>
+> The experiment described above was conducted after applying the patch. Th=
+e
+> results were recorded and visualized in:
+> https://drive.google.com/file/d/1vlkjbK20iCVLpYTWhZb08gNbDpXm2_ur/view?us=
+p=3Dsharing
+> As shown in the graph, the address filtering works successfully, and
+> increasing the number of non-working servers does not lead to longer
+> Checking sstate mirror object availability process times.
+> For clarity, the data before and after applying the patch are also
+> visualized in a logarithmic scale:
+> https://drive.google.com/file/d/1BKgWtMAlI-39VnTImI8NjNOpE6rIhG-7/view?us=
+p=3Dsharing
+> .
+>
+>
+>
+> Best regards,
+> Konstantin E. *Kondratenko*
+>
+> =D0=B2=D1=82, 6 =D0=BC=D0=B0=D1=8F 2025=E2=80=AF=D0=B3. =D0=B2 16:17, Kon=
+stantinKondratenko <
+> sider123456789101112131415@gmail.com>:
+>
+>> As the number of addresses specified in the SSTATE_MIRRORS variable
+>> increases, the duration of the "Checking sstate mirror object availabili=
+ty"
+>> process also increases.
+>> This is logical, as the number of addresses to probe grows. However, it
+>> was observed that the "Checking sstate mirror object availability" proce=
+ss
+>> time increases even when SSTATE_MIRRORS contains one valid address and
+>> multiple unreachable addresses.
+>>
+>> A patch has been implemented that, during the parsing of the local.conf
+>> configuration file, immediately after reading the SSTATE_MIRRORS variabl=
+e,
+>> attempts to asynchronously establish TCP connections for each address
+>> listed in SSTATE_MIRRORS. If a connection is successfully established, t=
+he
+>> address remains in SSTATE_MIRRORS; if the connection attempt fails, the
+>> address is removed from the variable. This ensures that any addresses
+>> unreachable at the TCP level are excluded from subsequent processing.
+>> These modifications are activated only if the FILTER_SSTATE_MIRRORS
+>> variable is set to 1 in local.conf.
+>>
+>> Signed-off-by: KonstantinKondratenko <
+>> sider123456789101112131415@gmail.com>
+>> ---
+>>  lib/bb/cookerdata.py | 67 ++++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 67 insertions(+)
+>>
+>> diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+>> index 1f447d30c2..8b642bdd90 100644
+>> --- a/lib/bb/cookerdata.py
+>> +++ b/lib/bb/cookerdata.py
+>> @@ -305,6 +305,73 @@ class CookerDataBuilder(object):
+>>
+>>          bb.codeparser.update_module_dependencies(self.data)
+>>
+>> +        if self.data.getVar('FILTER_SSTATE_MIRRORS') =3D=3D '1':
+>> +            try:
+>> +                import asyncio
+>> +                from urllib.parse import urlparse
+>> +
+>> +                mirrors =3D self.data.getVar('SSTATE_MIRRORS') or None
+>> +                if mirrors:
+>> +                    parts =3D mirrors.split()
+>> +                    mirrors_list =3D [' '.join(parts[i:i+2]) for i in
+>> range(0, len(parts), 2)]
+>> +
+>> +                def get_default_port(scheme):
+>> +                    if scheme =3D=3D 'http':
+>> +                        return 80
+>> +                    elif scheme =3D=3D 'https':
+>> +                        return 443
+>> +                    elif scheme =3D=3D 'ftp':
+>> +                        return 21
+>> +                    elif scheme =3D=3D 'ftps':
+>> +                        return 990
+>> +                    else:
+>> +                        return 8888  # Default value for unknown scheme=
+s
+>> +
+>> +                async def is_port_open(address, port, timeout=3D5):
+>> +                    try:
+>> +                        reader, writer =3D await
+>> asyncio.wait_for(asyncio.open_connection(address, port), timeout)
+>> +                        writer.close()
+>> +                        await writer.wait_closed()
+>> +                        return True
+>> +                    except (asyncio.TimeoutError, OSError):
+>> +                        return False
+>> +
+>> +                def extract_address_and_port(url):
+>> +                    parsed_url =3D urlparse(url)
+>> +                    address =3D parsed_url.hostname
+>> +                    port =3D parsed_url.port if parsed_url.port else
+>> get_default_port(parsed_url.scheme)
+>> +                    return address, port
+>> +
+>> +
+>> +                async def async_mirrors_filter(mirrors_list, data):
+>> +                    tasks =3D []
+>> +
+>> +                    for item in mirrors_list:
+>> +                        url =3D item.split()[1]
+>> +                        address, port =3D extract_address_and_port(url)
+>> +                        if address and port:
+>> +                            tasks.append(is_port_open(address, port))
+>> +
+>> +                    results =3D await asyncio.gather(*tasks)
+>> +
+>> +                    if False in results:
+>> +                        output_string =3D " ".join(
+>> +                            mirror
+>> +                            for mirror, result in zip(mirrors_list,
+>> results)
+>> +                            if result
+>> +                            )
+>> +                        if not output_string:
+>> +                            logger.warning("All SSTATE_MIRRORS are not
+>> available")
+>> +                        else:
+>> +                            logger.warning(f'Several SSTATE_MIRRORS are
+>> not available, using: {str(output_string)}!')
+>> +                        data.setVar('SSTATE_MIRRORS', output_string)
+>> +
+>> +                if mirrors:
+>> +                    asyncio.run(async_mirrors_filter(mirrors_list,
+>> self.data))
+>> +
+>> +            except Exception as e:
+>> +                logger.error(f"Error checking SSTATE_MIRRORS
+>> availability: {e}")
+>> +
+>>          # Handle obsolete variable names
+>>          d =3D self.data
+>>          renamedvars =3D d.getVarFlags('BB_RENAMED_VARIABLES') or {}
+>>
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#17596):
+> https://lists.openembedded.org/g/bitbake-devel/message/17596
+> Mute This Topic: https://lists.openembedded.org/mt/112648550/9785696
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
+> sider123456789101112131415@gmail.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
+>
 
-We have tests in core for some of these kinds of scenarios, see the
-sstate tests in meta/lib/oeqa/selftest/cases/sstatetests.py (run with
-oe-selftest -r sstatetests -j X).
+--000000000000b34a540636bc66c4
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The basic idea is to run two "bitbake XXX -S none" commands on the
-different configs and then analyse the stamps directories.
+<div dir=3D"ltr"><div dir=3D"ltr">Good afternoon! <br>Raising the discussio=
+n above because I didn&#39;t get a response to a previous email. Let me kno=
+w if you are still considering the patch or need to change anything about i=
+t.</div><div><br clear=3D"all"></div><div><div dir=3D"ltr" class=3D"gmail_s=
+ignature" data-smartmail=3D"gmail_signature"><div dir=3D"ltr"><div style=3D=
+"color:rgb(136,136,136)">Best regards,</div><div style=3D"color:rgb(136,136=
+,136)">Konstantin E.=C2=A0<b>Kondratenko</b></div></div></div></div></div><=
+br><div class=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" class=
+=3D"gmail_attr">=D0=B2=D1=82, 6 =D0=BC=D0=B0=D1=8F 2025=E2=80=AF=D0=B3. =D0=
+=B2 16:24, =D0=9A=D0=BE=D0=BD=D1=81=D1=82=D0=B0=D0=BD=D1=82=D0=B8=D0=BD via=
+ <a href=3D"http://lists.openembedded.org">lists.openembedded.org</a> &lt;s=
+ider123456789101112131415=3D<a href=3D"mailto:gmail.com@lists.openembedded.=
+org">gmail.com@lists.openembedded.org</a>&gt;:<br></div><blockquote class=
+=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rg=
+b(204,204,204);padding-left:1ex"><div dir=3D"ltr"><div dir=3D"ltr">Hello de=
+ar colleagues!<br><br>Following the patch letter, I am attaching informatio=
+n about the problem we found, how we investigated it, how we fixed it and t=
+he results of the fix.<br><br><br>As the number of addresses specified in t=
+he SSTATE_MIRRORS variable increases, the duration of the &quot;Checking ss=
+tate mirror object availability&quot; process also increases. This is logic=
+al, as the number of addresses to probe grows. However, it was observed tha=
+t the &quot;Checking sstate mirror object availability&quot; process time i=
+ncreases even when SSTATE_MIRRORS contains one valid address and multiple u=
+nreachable addresses.<br>To validate this observation, a testing system was=
+ developed. Two computers were connected in a local network: one performs t=
+he build, while the second shares the sstate-cache. On the second computer,=
+ the sstate-cache is hosted on a single port. Iterative builds were perform=
+ed on Computer 1, with SSTATE_MIRRORS configured to include one valid port =
+and a varying number (from 1 to 48) of &quot;non-working&quot; servers =E2=
+=80=94 addresses pointing to Computer 2 but with closed ports. Below is an =
+example configuration:<br>SSTATE_MIRRORS ?=3D &quot; \<br>file://.* <a href=
+=3D"http://10.138.70.7:8150/sstate-cache/PATH;downloadfilename=3DPATH" targ=
+et=3D"_blank">http://10.138.70.7:8150/sstate-cache/PATH;downloadfilename=3D=
+PATH</a> \<br>file://.* <a href=3D"http://10.138.70.7:8151/sstate-cache/PAT=
+H;downloadfilename=3DPATH" target=3D"_blank">http://10.138.70.7:8151/sstate=
+-cache/PATH;downloadfilename=3DPATH</a> \<br>file://.* <a href=3D"http://10=
+.138.70.7:8152/sstate-cache/PATH;downloadfilename=3DPATH" target=3D"_blank"=
+>http://10.138.70.7:8152/sstate-cache/PATH;downloadfilename=3DPATH</a> \<br=
+>file://.* <a href=3D"http://10.138.70.7:9999/sstate-cache/PATH;downloadfil=
+ename=3DPATH" target=3D"_blank">http://10.138.70.7:9999/sstate-cache/PATH;d=
+ownloadfilename=3DPATH</a>&quot;<br>Here, <a href=3D"http://10.138.70.7:999=
+9" target=3D"_blank">http://10.138.70.7:9999</a> hosts a valid sstate-cache=
+ server, while <a href=3D"http://10.138.70.7:8150" target=3D"_blank">http:/=
+/10.138.70.7:8150</a>, <a href=3D"http://10.138.70.7:8151" target=3D"_blank=
+">http://10.138.70.7:8151</a>, and <a href=3D"http://10.138.70.7:8152" targ=
+et=3D"_blank">http://10.138.70.7:8152</a> are closed ports. The time from t=
+he start of the build to the completion of the &quot;Checking sstate mirror=
+ object availability&quot; process was measured, and the results are visual=
+ized in the figure:=C2=A0<a href=3D"https://drive.google.com/file/d/1uFwzDS=
+nD0I_WGAeUyvNXTRb9qIxQBXqN/view?usp=3Dsharing" target=3D"_blank">https://dr=
+ive.google.com/file/d/1uFwzDSnD0I_WGAeUyvNXTRb9qIxQBXqN/view?usp=3Dsharing<=
+/a>=C2=A0<br>Thus, it can be concluded that increasing the number of addres=
+ses in SSTATE_MIRRORS leads to longer &quot;Checking sstate mirror object a=
+vailability&quot; process times, even when those addresses are unreachable.=
+<br>It is also worth noting that servers can be unavailable for various rea=
+sons, ranging from internal errors to network problems or DDoS attacks - re=
+gardless of the reason, having unavailable servers specified in local.cong =
+leads to longer build times.<br><br>A patch has been implemented that, duri=
+ng the parsing of the local.conf configuration file, immediately after read=
+ing the SSTATE_MIRRORS variable, attempts to asynchronously establish TCP c=
+onnections for each address listed in SSTATE_MIRRORS. If a connection is su=
+ccessfully established, the address remains in SSTATE_MIRRORS; if the conne=
+ction attempt fails, the address is removed from the variable. This ensures=
+ that any addresses unreachable at the TCP level are excluded from subseque=
+nt processing.<br>These modifications are activated only if the FILTER_SSTA=
+TE_MIRRORS variable is set to 1 in local.conf.<br><br>The experiment descri=
+bed above was conducted after applying the patch. The results were recorded=
+ and visualized in:=C2=A0<a href=3D"https://drive.google.com/file/d/1vlkjbK=
+20iCVLpYTWhZb08gNbDpXm2_ur/view?usp=3Dsharing" target=3D"_blank">https://dr=
+ive.google.com/file/d/1vlkjbK20iCVLpYTWhZb08gNbDpXm2_ur/view?usp=3Dsharing<=
+/a><br>As shown in the graph, the address filtering works successfully, and=
+ increasing the number of non-working servers does not lead to longer Check=
+ing sstate mirror object availability process times.<br>For clarity, the da=
+ta before and after applying the patch are also visualized in a logarithmic=
+ scale: <a href=3D"https://drive.google.com/file/d/1BKgWtMAlI-39VnTImI8NjNO=
+pE6rIhG-7/view?usp=3Dsharing" target=3D"_blank">https://drive.google.com/fi=
+le/d/1BKgWtMAlI-39VnTImI8NjNOpE6rIhG-7/view?usp=3Dsharing</a> .<br><br><br>=
+</div><div><br clear=3D"all"></div><div><div dir=3D"ltr" class=3D"gmail_sig=
+nature"><div dir=3D"ltr"><div style=3D"color:rgb(136,136,136)">Best regards=
+,</div><div style=3D"color:rgb(136,136,136)">Konstantin E.=C2=A0<b>Kondrate=
+nko</b></div></div></div></div></div><br><div class=3D"gmail_quote"><div di=
+r=3D"ltr" class=3D"gmail_attr">=D0=B2=D1=82, 6 =D0=BC=D0=B0=D1=8F 2025=E2=
+=80=AF=D0=B3. =D0=B2 16:17, KonstantinKondratenko &lt;<a href=3D"mailto:sid=
+er123456789101112131415@gmail.com" target=3D"_blank">sider12345678910111213=
+1415@gmail.com</a>&gt;:<br></div><blockquote class=3D"gmail_quote" style=3D=
+"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-le=
+ft:1ex">As the number of addresses specified in the SSTATE_MIRRORS variable=
+ increases, the duration of the &quot;Checking sstate mirror object availab=
+ility&quot; process also increases.<br>
+This is logical, as the number of addresses to probe grows. However, it was=
+ observed that the &quot;Checking sstate mirror object availability&quot; p=
+rocess time increases even when SSTATE_MIRRORS contains one valid address a=
+nd multiple unreachable addresses.<br>
+<br>
+A patch has been implemented that, during the parsing of the local.conf con=
+figuration file, immediately after reading the SSTATE_MIRRORS variable, att=
+empts to asynchronously establish TCP connections for each address listed i=
+n SSTATE_MIRRORS. If a connection is successfully established, the address =
+remains in SSTATE_MIRRORS; if the connection attempt fails, the address is =
+removed from the variable. This ensures that any addresses unreachable at t=
+he TCP level are excluded from subsequent processing.<br>
+These modifications are activated only if the FILTER_SSTATE_MIRRORS variabl=
+e is set to 1 in local.conf.<br>
+<br>
+Signed-off-by: KonstantinKondratenko &lt;<a href=3D"mailto:sider12345678910=
+1112131415@gmail.com" target=3D"_blank">sider123456789101112131415@gmail.co=
+m</a>&gt;<br>
+---<br>
+=C2=A0lib/bb/cookerdata.py | 67 +++++++++++++++++++++++++++++++++++++++++++=
++<br>
+=C2=A01 file changed, 67 insertions(+)<br>
+<br>
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py<br>
+index 1f447d30c2..8b642bdd90 100644<br>
+--- a/lib/bb/cookerdata.py<br>
++++ b/lib/bb/cookerdata.py<br>
+@@ -305,6 +305,73 @@ class CookerDataBuilder(object):<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.codeparser.update_module_dependencies(=
+self.data)<br>
+<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 if self.data.getVar(&#39;FILTER_SSTATE_MIRRORS=
+&#39;) =3D=3D &#39;1&#39;:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 try:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 import asyncio<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 from urllib.parse =
+import urlparse<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 mirrors =3D self.d=
+ata.getVar(&#39;SSTATE_MIRRORS&#39;) or None<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if mirrors:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 part=
+s =3D mirrors.split()<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 mirr=
+ors_list =3D [&#39; &#39;.join(parts[i:i+2]) for i in range(0, len(parts), =
+2)]<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 def get_default_po=
+rt(scheme):<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if s=
+cheme =3D=3D &#39;http&#39;:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 return 80<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 elif=
+ scheme =3D=3D &#39;https&#39;:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 return 443<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 elif=
+ scheme =3D=3D &#39;ftp&#39;:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 return 21<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 elif=
+ scheme =3D=3D &#39;ftps&#39;:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 return 990<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 else=
+:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 return 8888=C2=A0 # Default value for unknown schemes<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 async def is_port_=
+open(address, port, timeout=3D5):<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 try:=
+<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 reader, writer =3D await asyncio.wait_for(asyncio.open_connectio=
+n(address, port), timeout)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 writer.close()<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 await writer.wait_closed()<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 return True<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 exce=
+pt (asyncio.TimeoutError, OSError):<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 return False<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 def extract_addres=
+s_and_port(url):<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pars=
+ed_url =3D urlparse(url)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 addr=
+ess =3D parsed_url.hostname<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 port=
+ =3D parsed_url.port if parsed_url.port else get_default_port(parsed_url.sc=
+heme)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 retu=
+rn address, port<br>
++<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 async def async_mi=
+rrors_filter(mirrors_list, data):<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 task=
+s =3D []<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 for =
+item in mirrors_list:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 url =3D item.split()[1]<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 address, port =3D extract_address_and_port(url)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 if address and port:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 tasks.append(is_port_open(address, port))<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 resu=
+lts =3D await asyncio.gather(*tasks)<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if F=
+alse in results:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 output_string =3D &quot; &quot;.join(<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 mirror<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 for mirror, result in zip(mirrors_list, results)<b=
+r>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 if result<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 )<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 if not output_string:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 logger.warning(&quot;All SSTATE_MIRRORS are not av=
+ailable&quot;)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 else:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 logger.warning(f&#39;Several SSTATE_MIRRORS are no=
+t available, using: {str(output_string)}!&#39;)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 data.setVar(&#39;SSTATE_MIRRORS&#39;, output_string)<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if mirrors:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 asyn=
+cio.run(async_mirrors_filter(mirrors_list, self.data))<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 except Exception as e:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 logger.error(f&quo=
+t;Error checking SSTATE_MIRRORS availability: {e}&quot;)<br>
++<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# Handle obsolete variable names<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0d =3D self.data<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0renamedvars =3D d.getVarFlags(&#39;BB_REN=
+AMED_VARIABLES&#39;) or {}<br>
+</blockquote></div>
+<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+Links: You receive all messages sent to this group.<br>
+View/Reply Online (#17596): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/17596" rel=3D"noreferrer" target=3D"_blank">https://list=
+s.openembedded.org/g/bitbake-devel/message/17596</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/112648550/978=
+5696" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/m=
+t/112648550/9785696</a><br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
+b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
+tbake-devel/unsub</a> [<a href=3D"mailto:sider123456789101112131415@gmail.c=
+om" target=3D"_blank">sider123456789101112131415@gmail.com</a>]<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+<br>
+</blockquote></div>
 
-> > Let me explain this slightly differently. We once decided that it was
-> > ok to change MACHINE and build in the same TMPDIR (multimachine
-> > support). It was decided that changing DISTRO still meant a new TMPDIR
-> > though. The implication of this is that if you change the
-> > configuration/policy of a package (which is effectively distro policy),
-> > it should be in a different TMPDIR.
-> >=20
-> > Over time, our error correction handling got better, to the point that
-> > if you don't change TMPDIR but change DISTRO, it does mostly work. The
-> > key bit is mostly. Ideally we'd catch all cases and we don't do badly
-> > but it sounds like we're missing something here.
->=20
-> At least in Dunfell, and probably for a while before that, I think that y=
-ou
-> did such a good job that my expectations had been that this worked.
-
-We try to make it work but there are so many ways you could in theory
-break it...
-
-> > The way to officially handle what you describe is through PACKAGE_ARCH,
-> > even if that is a bit painful (or separate TMPDIR).
-> >=20
-> > > > As it stands, you're relying on the sstate code to swap things out,
-> > > > which is meant to be a fallback, not a default way of operating. Fa=
-r
-> > > > too many people rely on that doing the right thing now though.
-> > >=20
-> > > Our situation is actually even worse than I described above. One set =
-of
-> > > machines has multilib enabled and one doesn't, yet they share a
-> > > TUNE_PKGARCH so the sstate shuffling happens for every package! Given=
- your
-> > > response it sounds like we should stop doing this.
->=20
-> I shouldn't have said 'every package' there. I should have said 'every
-> package where PACKAGE_ARCH =3D "${TUNE_PKGARCH}"'. In particular
-> ${MACHINE_ARCH}, native and allarch packages don't need shuffling.
->=20
-> > > How would you recommend defining our own package architecture in this=
- case?
-> > >=20
-> > > 1. TUNE_PKGARCH:append =3D "-oursuffix"? (Which would also affect
-> > > =C2=A0=C2=A0 SSTATE_ARCHS_TUNEPKG.)
-> >=20
-> > You want sstate arch to be different so this is probably fine.
->=20
-> OK. I did run into some problems when I tried it. I think that option 2
-> will probably be better anyway.
->=20
-> > > 2. Set the default PACKAGE_ARCH ?=3D "${TUNE_PKGARCH}-oursuffix" over=
-riding
-> > > =C2=A0=C2=A0 the ??=3D default in bitbake.conf unless someone else ov=
-errides it?
-> >=20
-> > That would change all recipes and you should only change the recipes
-> > affected and their dependencies.
-> >=20
-> > If it is all recipes, you want a separate TMPDIR and it is really a
-> > different distro (or sub-distro).
-
-Personally, I think you want a separate TMPDIR for ease.
-
-> All recipes that currently have PACKAGE_ARCH set to "${TUNE_PKGARCH}" are
-> affected. Not allarch ones, not "${MACHINE_ARCH}" ones and, most
-> importantly for saving time and space, not native ones, so using a
-> separate TMPDIR would be less than ideal.
-
-Remember that if you share SSTATE_DIR between the two builds (and
-probably a hashequiv server), it will reuse all the pieces that match
-between the builds. This therefore isn't as expensive as you'd think,
-it should reuse everything you mention.
-
-> > > 3. Something else?
-> > >=20
-> > > (I had a look through the docs but couldn't find any advice and the
-> > > multilib examples don't appear to do this.)
-> >=20
-> > FWIW multilib changes PACKAGE_ARCH.
->=20
-> I'm sorry but I realise now that I've been extremely unclear here. When I
-> said multilib, I didn't mean that side of multilib that has the
-> ${MLPREFIX}, I meant the side that doesn't. You'd think that enabling
-> multilib wouldn't have an effect on the non-multilib recipes, but it does
-> for aarch64 because doing so changes (at least) libdir. :(
-
-Right, it is assumed that if you want multilib, you always enable it in
-your distro and use it in your different configs on at least a per arch
-basis. We haven't tried to make the task signatures match with and
-without mutlilib turned on as that would be hard and not that useful in
-reality.
-
-> For the MACHINE that enables multilib, we have in our machine
-> configuration:
->=20
-> =C2=A0DEFAULTTUNE =3D "cortexa72-cortexa53-crypto"
-> =C2=A0require conf/machine/include/tune-cortexa72-cortexa53.inc
-> =C2=A0MULTILIBS =3D "multilib:lib32"
-> =C2=A0DEFAULTTUNE:virtclass-multilib-lib32 =3D "armv7at-neon"
->=20
-> tune-cortexa72-cortexa53.inc contains:
->=20
-> =C2=A0BASE_LIB:tune-cortexa72-cortexa53-crypto=3D"lib64"
->=20
-> which means that multilib.conf sets libdir based on that to "/usr/lib64".
->=20
-> For the MACHINE that doesn't enable multilib, we have none of that so
-> bitbake.conf just uses BASELIB to set libdir to "/usr/lib".
-
-You could try changing that to match with /usr/lib64 but I don't know
-if that would allow sstate object reuse or not. Probably not as it
-isn't something we've chosen to invest time in.
-
-> I'm not sure if this change is intentional, but it does mean that merely
-> enabling multilib and not using it changes behaviour.
->=20
-> For our use, we'd have been much happier with libdir always being
-> "/usr/lib" but we unfortunately got baked into the default behaviour earl=
-y
-> on.
-
-You could have chosen /usr/lib for the multlib. I get a lot of
-complaints that we don't follow some of the other distro defaults which
-is why multilib defaults to them as that was "new" at the time and we
-could change them. OE has defaulted to /usr/lib since forever.
-
-Cheers,
-
-Richard
+--000000000000b34a540636bc66c4--
 
