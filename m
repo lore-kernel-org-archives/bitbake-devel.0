@@ -1,127 +1,86 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19124C5B549
-	for <webhook@archiver.kernel.org>; Wed,  4 Jun 2025 13:22:23 +0000 (UTC)
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
- by mx.groups.io with SMTP id smtpd.web11.16340.1749043340810219575
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495E1C5B543
+	for <webhook@archiver.kernel.org>; Wed,  4 Jun 2025 15:35:14 +0000 (UTC)
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+ by mx.groups.io with SMTP id smtpd.web11.19756.1749051307752912413
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 04 Jun 2025 06:22:21 -0700
+ Wed, 04 Jun 2025 08:35:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=aDaS5BX4;
- spf=pass (domain: bootlin.com, ip: 217.70.183.198, mailfrom: antonin.godard@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 06C034398F;
-	Wed,  4 Jun 2025 13:22:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749043339;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XZxRHwf66DEd2qvGuoIkdfw74VGRZ4mzb26jvov7n0U=;
-	b=aDaS5BX4acu37YYbvzwrzNRkEfyiKjJOkMQz+TSjMq1kkdGTthS/T3dxIZbSXiigQUVX0k
-	zpTscNWgrOxWWqsqVEPR/Z+l/oR4QYHJDVx1LGNiWYtI5Qzf04dfyzcjBF6bMTcTTILBID
-	u63SbkuDrCIcg/NFdKoAlaRgSY10gF2UuL8q2z5ERi7CL9WKsL1uq/GRSHPa0uCnnVM20T
-	lARKeKgSGgmz6hayTw85RixN4lFczF7yuxiMWLhSKsWyS155Qt6jdQMCBbU7VfID5tiuoK
-	JAXqLG6v7TcbPHE4pyvIv0R62FGF8TYSXX5tp9y4ARbLAEGs3xJ6PgZ3KmlYiw==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 04 Jun 2025 15:22:18 +0200
-Message-Id: <DADS498BWPCJ.MOJL7B6014R7@bootlin.com>
-Subject: Re: [bitbake-devel] [PATCH] doc: update releases.rst
-Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
- <docs@lists.yoctoproject.org>
-From: "Antonin Godard" <antonin.godard@bootlin.com>
-To: "Quentin Schulz" <quentin.schulz@cherry.de>,
- <bitbake-devel@lists.openembedded.org>
-References: <20250528-walnascar-update-v1-1-9c6750e87e65@bootlin.com>
- <1951797c-49e0-418b-9907-fa94647f9b6d@cherry.de>
-In-Reply-To: <1951797c-49e0-418b-9907-fa94647f9b6d@cherry.de>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvvddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvfhgjsehtqhertddttdejnecuhfhrohhmpedftehnthhonhhinhcuifhouggrrhgufdcuoegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffekhedtfedvueevgeeffffhvdegveeguefggeduhffhfeekvdehkeefueejveelnecuffhomhgrihhnpehophgvnhgvmhgsvgguuggvugdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdduvddruddthedrudehtddrvdehvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvuddvrddutdehrdduhedtrddvhedvpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedprhgtphhtthhopehquhgvnhhtihhnrdhstghhuhhliiestghhvghrrhihrdguvgdprhgtphhtthhopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmhgsvgguuggvugdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhin
- hdrtghomhdprhgtphhtthhopeguohgtsheslhhishhtshdrhihotghtohhprhhojhgvtghtrdhorhhg
-X-GND-Sasl: antonin.godard@bootlin.com
+ dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=AGX4htdT;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.181, mailfrom: steve@sakoman.com)
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235e1d710d8so10564845ad.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 04 Jun 2025 08:35:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1749051307; x=1749656107; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=igj6fLZLD75z1QMgS70ojjYPF4T4rfO9DtpEXhh7Q5c=;
+        b=AGX4htdTdvCbzhS0C4+m3R2O49ZapyyrOXukIvdCQWC057PToYQ+AiPv5/f3E1eo+c
+         Cg4XgFnH8kj6GI0ATn/ZGM2YltrUccd66zDi0T5nLROUDCEJSLf/dtFntMNTo+9koYzv
+         vOJX05zqbI4xGUH/+4o59n6FmQGNS9LytPnQJFylwjiOXP7pS15PZP5WeOrU2r5II1V1
+         RGAOmFqU3S9Vg4EyDMe/R8Q5WhqhAwi1hydQs6m+WnthWpmYibRFs7D+KAhWo+arXam8
+         QRmOk5/4vJL9QEfH3AjnNJWSbswqQoxV2vh1BqA4RHVt2ZzWnhPPhpLyy02jQZ37i3HW
+         uv+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749051307; x=1749656107;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=igj6fLZLD75z1QMgS70ojjYPF4T4rfO9DtpEXhh7Q5c=;
+        b=NTn0AlgWMKxuQu20VnNTGNlEUvnQk5iR+3o9DsQ6TdQhXojl9yMGvotadAqN8aVkEX
+         wt4Byn1zs4EqwTzpXSNQpX0GpyD9esvwCwDKLvRey7h+TSRcjj2JRmC/dqCUI88mfAzP
+         DqBDb16bxF6DTvQnKbCB16JBY4opV9jJv+wjaKe25tp9wxXAxbQafjwxPuythTTDx34K
+         0YALSKqJuDTAz9rihPUWDcz6tIAkv47eFzSKdl6/WAUHGzBjdE2yuqjM5tJB5McrzdUQ
+         pXcxfie3BV4hZJDKr3Ub/y91GvYohchEiQVL95Ycj4SKXmXnNHCS0Z2CJdVHW9SMURu3
+         lHWA==
+X-Gm-Message-State: AOJu0YyCNX1MVwRfDWUu8B4lZrSTrgmspGygGU3MqTB1neDCFBOb5qQe
+	FyjEzjat9VueJInFlFXUv/o1LDOfrfqdBHMVl1DXi3bsE+ZXlWAk3JaAfLenYB4vaSfHRIup9M5
+	EsoaV
+X-Gm-Gg: ASbGncuhjMOrTuQqqSzb7j7FzfWFFS4ue8mPoIviMN4gueD/pREOOtd6k8+S6jXW9Hn
+	+UfTBxrmOyq0Dc/BKl17a9BBzMUB32/MifRQBrKvcaWQP0ll2I7/71uQm/mUjFgXEAqZfIklpjQ
+	dtEUtLIuD7NkBCO87FWkgQRrFA0lKVrYjysbTCwGoY4go96RpKuk15PL9NgiA7jsoj235/ElgCI
+	6pjME/Iy9Mz5yBss6CQbdIkmz/fTmPLLNxEGfKdG3zOshWOZFbokw84VXaJAL137R3RWJSXUH8m
+	CTd8zjUR96IwsHugqczlbMpkhjBk4SyX0wnKGpClzMk=
+X-Google-Smtp-Source: AGHT+IGQtdmJ+rZWNphWW3Fc/ndjdRbtlAWfRZg+eInQ7J8Qq4qMOqBTKFvm9BBRGyjiYVApjepQUQ==
+X-Received: by 2002:a17:903:2291:b0:235:779:edec with SMTP id d9443c01a7336-235e1255656mr44431325ad.42.1749051306829;
+        Wed, 04 Jun 2025 08:35:06 -0700 (PDT)
+Received: from hexa.. ([2602:feb4:3b:2100:e528:5fba:6ca8:ee3c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cd3407sm105590385ad.141.2025.06.04.08.35.06
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 08:35:06 -0700 (PDT)
+From: Steve Sakoman <steve@sakoman.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake][walnascar][2.12][PATCH 0/1] Pull request (cover letter only)
+Date: Wed,  4 Jun 2025 08:35:01 -0700
+Message-ID: <cover.1749051242.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.43.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 04 Jun 2025 13:22:23 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17679
+ <bitbake-devel@lists.openembedded.org>; Wed, 04 Jun 2025 15:35:14 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17680
 
-On Mon Jun 2, 2025 at 11:06 AM CEST, Quentin Schulz wrote:
-> Hi Antonin,
->
-> On 5/28/25 7:45 PM, Antonin Godard via lists.openembedded.org wrote:
->> Add Walnascar as a supported release manual, and move Styhead to the
->> outdated release manuals.
->>=20
->> Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
->> ---
->>   doc/releases.rst | 14 ++++++++++----
->>   1 file changed, 10 insertions(+), 4 deletions(-)
->>=20
->> diff --git a/doc/releases.rst b/doc/releases.rst
->> index 3e8014074..676db66ec 100644
->> --- a/doc/releases.rst
->> +++ b/doc/releases.rst
->> @@ -4,11 +4,11 @@
->>   BitBake Supported Release Manuals
->>   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>  =20
->> -****************************
->> -Release Series 5.1 (styhead)
->> -****************************
->> +******************************
->> +Release Series 5.2 (walnascar)
->> +******************************
->>  =20
->> -- :yocto_docs:`BitBake 2.10 User Manual </bitbake/2.10/>`
->> +- :yocto_docs:`BitBake 2.12 User Manual </bitbake/2.12/>`
->>  =20
->>   *******************************
->>   Release Series 5.0 (scarthgap)
->> @@ -26,6 +26,12 @@ Release Series 4.0 (kirkstone)
->>   BitBake Outdated Release Manuals
->>   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>  =20
->> +****************************
->> +Release Series 5.1 (styhead)
->> +****************************
->> +
->> +- :yocto_docs:`BitBake 2.10 User Manual </bitbake/2.10/>`
->> +
->>   *******************************
->>   Release Series 4.3 (nanbield)
->>   *******************************
->>=20
->
-> I believe this is handled by the set_versions.py script in yocto-docs?=20
-> Should we have something similar in bitbake docs as well?
+The following changes since commit 5b4e20377eea8d428edf1aeb2187c18f82ca6757:
 
-Actually no, this file is not covered by the script (see the website that i=
-s
-currently out-of-date). I started working on a set_versions.py for BitBake =
-some
-time ago, I'll keep that in mind and automatically generate this document h=
-ere
-as well.
+  bitbake: Update version to 2.12.0 for release (2025-03-29 15:28:49 +0000)
 
-> This seems like a decent idea considering that it also handles updating=
-=20
-> switchers.js and that last time we updated it was almost 5 years ago :)
+are available in the Git repository at:
 
-And that is also something I've reworked but not finished yet!
+  https://git.openembedded.org/bitbake-contrib stable/2.12-next
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.12-next
 
-Thanks,
-Antonin
+Richard Purdie (1):
+  toaster/tests/buildtest: Switch to new CDN
 
---=20
-Antonin Godard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+ lib/toaster/tests/builds/buildtest.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+-- 
+2.43.0
 
 
