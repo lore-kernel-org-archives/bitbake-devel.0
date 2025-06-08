@@ -1,183 +1,218 @@
-Return-Path: <mac@mcrowe.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D9BC5B552
-	for <webhook@archiver.kernel.org>; Sun,  8 Jun 2025 19:20:30 +0000 (UTC)
-Received: from smarthost01a.ixn.mail.zen.net.uk (smarthost01a.ixn.mail.zen.net.uk [212.23.1.20])
- by mx.groups.io with SMTP id smtpd.web10.43425.1749410429104368599
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BCAC5AD49
+	for <webhook@archiver.kernel.org>; Sun,  8 Jun 2025 21:35:51 +0000 (UTC)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+ by mx.groups.io with SMTP id smtpd.web10.45803.1749418543778629645
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 08 Jun 2025 12:20:30 -0700
+ Sun, 08 Jun 2025 14:35:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@mcrowe.com header.s=20191005 header.b=qws0Yvnw;
- spf=pass (domain: mcrowe.com, ip: 212.23.1.20, mailfrom: mac@mcrowe.com)
-Received: from [88.97.37.36] (helo=deneb.mcrowe.com)
-	by smarthost01a.ixn.mail.zen.net.uk with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <mac@mcrowe.com>)
-	id 1uOLZD-00G2Iw-3C;
-	Sun, 08 Jun 2025 19:20:26 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mcrowe.com;
-	s=20191005; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description; bh=J5esCfNfcUUExZvRNFBj1Ovg1y8JV1qM1I5Eia736i4=; b=qws0Y
-	vnwlagQt/ZbJqOZ9QH1y/bKIR2VgkLYb+S9i/LN1hAlDadMSGao+LDdtlysfNWpUbIOxlGDXOMgsM
-	ECjMJf01FTmfnAo6vuKCRNkTLwM/mvs24ollU731f6XYhRczD7IgWLVIyJz0rYUBDZkAFU44ZvSJe
-	qng3NatJ2Idt807j7DDJUs6MI1RJ8QpHvVRLMsk018ZB1xqmg998mm4kK4vp3uvNPMnVAawtKUQjI
-	/2AVF6VoNi9vNPq542lOi4Pa7BYlTKKXXzAYYVnzLERRMR8voD5/3oAzyeXgPZ39DAz6jG64UYcEP
-	+PKWODAWCnuSSPshSVoKgwEBPPNgw==;
-Received: from mac by deneb.mcrowe.com with local (Exim 4.96)
-	(envelope-from <mac@mcrowe.com>)
-	id 1uOLZC-005x8u-2J;
-	Sun, 08 Jun 2025 20:20:26 +0100
-Date: Sun, 8 Jun 2025 20:20:26 +0100
-From: Mike Crowe <mac@mcrowe.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Z+Id/ZfK;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.50, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so43218155e9.2
+        for <bitbake-devel@lists.openembedded.org>; Sun, 08 Jun 2025 14:35:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1749418542; x=1750023342; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ny2AQXCZ2h1J/8BCN5Fapc14dJux0RiYR7p69jIE6Sc=;
+        b=Z+Id/ZfK+yhQhbqViRabgAEaj9iyC1LZ39GMe7NH+YLZEDDguOPtZLJ8sINvyzWfmH
+         sFJPlQ2FslOLtuJj+YDy45vfcZvoDLyfp2orGsq0WklxdVMPNM4HjOuCwEW4tnZaWhYy
+         CQfipl8Yqz/VTnq4HZchxO5w0JDkc1bORh/Bc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749418542; x=1750023342;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ny2AQXCZ2h1J/8BCN5Fapc14dJux0RiYR7p69jIE6Sc=;
+        b=BaCmVkTGfhGWB1GUe+O6pUJYBuAu6ySc+sPSHCqF9Al75C2BQJgIf74PPDE/Zb3ZsC
+         QrKmtjBTA+QB4RVUh8qCFlTkOe1jryK4plzPTWOy6B4WhAZWq1MacU9dyJvzIOx1Y5JL
+         O0+goXOqqGD0YcvY5PbOxZUy3xvm1hOhlhxzg6FXhM2iEbox5gGtAH349TpvSxJePDP2
+         fVvDtJ30cDuuwK4nfvEAHIgFFKNJxofkHiFxq1/B4j9xrm4S4oBNGkcOILioRC8IEImx
+         b3QVhvhIRxLZG9XWLT1rU5Ee9koUzZIMKu1/1rHeBEZdJedxMSJwjm2WLdjhECvwMx/G
+         ArGw==
+X-Gm-Message-State: AOJu0Yzxiy18bi1gxn0G+fyOtqYxTvlnSNrj9H8bbyQtS4nTXH0U4aGG
+	sx52JTEl+OobXU6r8pJgGJd34clDMaixggvTSdzjT5A1H1c+5rFLCeLl0BcgUJLrXvI=
+X-Gm-Gg: ASbGncuDa4dOhKEZbOYPX5zyVg840oInMswJ2OYT4Lyc5jjrn2BRZVkZNPtoL8HeuDc
+	d8TuhS+p+xUtI2Yx2SFLj6DCMqct/XrQzFIvffftp9uTOMjSks4HtEI8PhgJ0nhu5eHlosAx9Ln
+	gQRRZZSQcR3W02Np09RVIW0j0qxNuYzsZgBsfOCYEp2QCUNOaHEmtejo1ZpSOL0OmbB5/uXHcV4
+	t3rtsAUHqGvzBS0V7LeJ6DwqKIo56A+SmNd/B84YbjuqXUKGPBeypqpnDGFKsMOR+dXFO46Dnzh
+	XU8438IZMI+9/Juqoc8+fCH4WeO4PHlT6fGriGspsQHLViwBbkcXjYnT3od7BzfAhIBdK3KwnXk
+	XSwjYdlcpQMHZVzJvCfbbraDhkG5JgPNNls8YuP/kSqr6Li3C
+X-Google-Smtp-Source: AGHT+IF7a68r1zXM/IY8n3EQyUfK/J6HlxkHwxh4ICzmsIKvW63qiUl4emu9RXh16JGvQUjuvDNkMw==
+X-Received: by 2002:a05:600c:3d94:b0:43d:fa59:a685 with SMTP id 5b1f17b1804b1-4520141bbe1mr86191735e9.33.1749418542126;
+        Sun, 08 Jun 2025 14:35:42 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:d119:abb1:116:3de6? ([2001:8b0:aba:5f3c:d119:abb1:116:3de6])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45209bc6c6csm94128335e9.2.2025.06.08.14.35.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Jun 2025 14:35:41 -0700 (PDT)
+Message-ID: <518ee0f0eef4e155c93ccba344a5ea1e6102b37b.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel] Should stamp files for different versions of a
  recipe exist at the same time?
-Message-ID: <aEXier1YxgCzOv1F@mcrowe.com>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Mike Crowe <mac@mcrowe.com>
+Cc: bitbake-devel@lists.openembedded.org
+Date: Sun, 08 Jun 2025 22:35:40 +0100
+In-Reply-To: <aEXier1YxgCzOv1F@mcrowe.com>
 References: <aDnoNJFkC535qqiI@mcrowe.com>
- <18dd4e56-87a5-4de3-a148-bd42f67ba57a@cherry.de>
- <aD2ByO73juj7zy7I@mcrowe.com>
- <418eea7bdcd9b528623498a6139ae42389ef192d.camel@linuxfoundation.org>
- <aD3TP6hIE9vvFaAo@mcrowe.com>
- <a9296bd359abc522a135cbaa37995d5b5633046e.camel@linuxfoundation.org>
+	 <18dd4e56-87a5-4de3-a148-bd42f67ba57a@cherry.de>
+	 <aD2ByO73juj7zy7I@mcrowe.com>
+	 <418eea7bdcd9b528623498a6139ae42389ef192d.camel@linuxfoundation.org>
+	 <aD3TP6hIE9vvFaAo@mcrowe.com>
+	 <a9296bd359abc522a135cbaa37995d5b5633046e.camel@linuxfoundation.org>
+	 <aEXier1YxgCzOv1F@mcrowe.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a9296bd359abc522a135cbaa37995d5b5633046e.camel@linuxfoundation.org>
-X-Originating-smarthost01a-IP: [88.97.37.36]
-Feedback-ID: 88.97.37.36
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 08 Jun 2025 19:20:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17687
+ <bitbake-devel@lists.openembedded.org>; Sun, 08 Jun 2025 21:35:51 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17688
 
-[
- Snip explanation of building first for MACHINE1, then MACHINE2, then back
- to MACHINE1 again with the same PACKAGE_ARCH and relying only on the task
- hashes being different to ensure that the right files end up being used.
-]
+On Sun, 2025-06-08 at 20:20 +0100, Mike Crowe wrote:
+> [
+> =C2=A0Snip explanation of building first for MACHINE1, then MACHINE2, the=
+n back
+> =C2=A0to MACHINE1 again with the same PACKAGE_ARCH and relying only on th=
+e task
+> =C2=A0hashes being different to ensure that the right files end up being =
+used.
+> ]
+>=20
+> On 5/30/25 7:17 PM, Mike Crowe via lists.openembedded.org wrote:
+> > > > > > My guess is that the problem here is that the stamps from the f=
+irst
+> > > > > > machine build weren't removed during the "SECOND MACHINE BUILD =
+1" step
+> > > > > > above. If I remove them myself then the problem goes away. Is t=
+hat
+> > > > > > theory correct? If so, then I can start trying to work out why =
+and any
+> > > > > > advice would be welcome. If that theory is not correct then doe=
+s anyone
+> > > > > > have any idea where I should start investigating?
+>=20
+> On Mon, 2025-06-02 at 17:37 +0100, Mike Crowe wrote:
+> > > I was hoping that someone would just know the answer to my first ques=
+tion
+> > > above off the top of their head. If so then I'm willing to try diggin=
+g into
+> > > this myself to see what I can discover. I just need to make sure that=
+ I'm
+> > > chasing the right part of the problem.
+>=20
+> On Monday 02 June 2025 at 22:04:39 +0100, Richard Purdie wrote:
+> > I've avoided answering this as I think you're right but I'm not 100%
+> > sure and I don't want to send you off in the wrong direction. There are
+> > reasons it might not wipe out stamps and those reasons may be
+> > intentional but without looking at what is going on I couldn't be
+> > completely sure. So I think you're right and I'd chase that way but...
+>=20
+> It turns out that you were right to be hesitant.
+>=20
+> Stamps are only removed if they were generated by the current MACHINE due
+> to oe-core#5634f2fb1740732056d2c1a22717184ef94405bf from 2018:
+>=20
+> > sstate: Ensure a given machine only removes things which it created
+> >=20
+> > Currently if you build qemux86 and then generic86, the latter will
+> > remove all of the former from deploy and workdir. This is because
+> > qemux86 is i586, genericx86 is i686 and the architctures are compatible
+> > therefore the sstate 'cleaup' code kicks in.
+> >=20
+> > There was a valid reason for this to ensure i586 packages didn't get in=
+to
+> > an i686 rootfs for example. With the rootfs creation being filtered now=
+, this
+> > is no longer necessary.
+> >=20
+> > Instead, save out a list of stamps which a give machine has ever seen i=
+n
+> > a given build and only clean up these things if they're no longer
+> > "reachable".
+> >=20
+> > In particular this means the autobuilder should no longer spend a load =
+of time
+> > deleting files when switching MACHINE, improving build times.
 
-On 5/30/25 7:17 PM, Mike Crowe via lists.openembedded.org wrote:
->>>>> My guess is that the problem here is that the stamps from the first
->>>>> machine build weren't removed during the "SECOND MACHINE BUILD 1" step
->>>>> above. If I remove them myself then the problem goes away. Is that
->>>>> theory correct? If so, then I can start trying to work out why and any
->>>>> advice would be welcome. If that theory is not correct then does anyone
->>>>> have any idea where I should start investigating?
+Well, that makes sense and I think that change still makes sense. It
+does raise the question of whether/how we could detect your scenario
+and give better information to the user (and/or error?).
 
-On Mon, 2025-06-02 at 17:37 +0100, Mike Crowe wrote:
->> I was hoping that someone would just know the answer to my first question
->> above off the top of their head. If so then I'm willing to try digging into
->> this myself to see what I can discover. I just need to make sure that I'm
->> chasing the right part of the problem.
+> I'm not sure if the situation the change describes can still occur.
+> genericx86 (which is presumably what was meant by generic86) no longer
+> seems to exist and TUNE_PKGARCH should be either i586 and i686, so the
+> stamps and work directories won't overlap with each other.
 
-On Monday 02 June 2025 at 22:04:39 +0100, Richard Purdie wrote:
-> I've avoided answering this as I think you're right but I'm not 100%
-> sure and I don't want to send you off in the wrong direction. There are
-> reasons it might not wipe out stamps and those reasons may be
-> intentional but without looking at what is going on I couldn't be
-> completely sure. So I think you're right and I'd chase that way but...
+genericx86 definitely still exists:
 
-It turns out that you were right to be hesitant.
+https://git.yoctoproject.org/poky/tree/meta-yocto-bsp/conf/machine/genericx=
+86.conf
 
-Stamps are only removed if they were generated by the current MACHINE due
-to oe-core#5634f2fb1740732056d2c1a22717184ef94405bf from 2018:
+however it is now core2-32.
 
-| sstate: Ensure a given machine only removes things which it created
-|
-| Currently if you build qemux86 and then generic86, the latter will
-| remove all of the former from deploy and workdir. This is because
-| qemux86 is i586, genericx86 is i686 and the architctures are compatible
-| therefore the sstate 'cleaup' code kicks in.
-|
-| There was a valid reason for this to ensure i586 packages didn't get into
-| an i686 rootfs for example. With the rootfs creation being filtered now, this
-| is no longer necessary.
-|
-| Instead, save out a list of stamps which a give machine has ever seen in
-| a given build and only clean up these things if they're no longer
-| "reachable".
-|
-| In particular this means the autobuilder should no longer spend a load of time
-| deleting files when switching MACHINE, improving build times.
+That doesn't mean the architecture issue can't exist but the default
+tunes have changed. genericx86 and qemux86 still probably share
+architecture compatibility and one would try and remove the other.
 
-I'm not sure if the situation the change describes can still occur.
-genericx86 (which is presumably what was meant by generic86) no longer
-seems to exist and TUNE_PKGARCH should be either i586 and i686, so the
-stamps and work directories won't overlap with each other.
+> This commit was also in Dunfell though, so the next question is why doesn=
+'t
+> Dunfell suffer from the same problem? The answer surprised me: Dunfell
+> appears to have been looking for mismatched stamp file names (for me at
+> least).
+>=20
+> In Dunfell, the build for MACHINE1 creates a stamp named:
+>=20
+> =C2=A01-r0.do_populate_lic.sigdata.14708a9f021d264f7c0a9c5c33a93417c6cb20=
+ba936c5805ff96083a9cb05ee9
 
-This commit was also in Dunfell though, so the next question is why doesn't
-Dunfell suffer from the same problem? The answer surprised me: Dunfell
-appears to have been looking for mismatched stamp file names (for me at
-least).
+"sigdata" files are information only files and not actual stamps. This
+file contains stamp information but is not the actual stamp itself.
 
-In Dunfell, the build for MACHINE1 creates a stamp named:
+There are two possible versions of the stamp, either setscene or non-
+setscene. On my local build, for linux-libc-headers I see:
 
- 1-r0.do_populate_lic.sigdata.14708a9f021d264f7c0a9c5c33a93417c6cb20ba936c5805ff96083a9cb05ee9
+./core2-64-poky-linux-musl/linux-libc-headers/6.12.do_populate_lic.73e166a4=
+f76ae90f2785472dac9e88264c920aaf98ac2b43b71e0e4b9bec8469
+./core2-64-poky-linux-musl/linux-libc-headers/6.12.do_populate_lic.sigdata.=
+73e166a4f76ae90f2785472dac9e88264c920aaf98ac2b43b71e0e4b9bec8469
 
-The first build for MACHINE2 creates a stamp named:
+but I could also see:
 
- 2-r0.do_populate_lic.sigdata.23cae22087dda59b5d9aad048411200dd4a3abb3308a241f9a89be65b7071d01
+./core2-64-poky-linux-musl/linux-libc-headers/6.12.do_populate_lic_setscene=
+.73e166a4f76ae90f2785472dac9e88264c920aaf98ac2b43b71e0e4b9bec8469
 
-Yet the debug log for the second build for MACHINE1 contains:
+The sigdata file provides information on the 73e166a4f7 stamp hash.
+Stamps will have zero file size.
 
- DEBUG: Stampfile /.../build/tmp-glibc/stamps/aarch64-oe-linux/lictest/1-r0.do_populate_lic.14708a9f021d264f7c0a9c5c33a93417c6cb20ba936c5805ff96083a9cb05ee9 not available
+> The first build for MACHINE2 creates a stamp named:
+>=20
+> =C2=A02-r0.do_populate_lic.sigdata.23cae22087dda59b5d9aad048411200dd4a3ab=
+b3308a241f9a89be65b7071d01
+>=20
+> Yet the debug log for the second build for MACHINE1 contains:
+>=20
+> =C2=A0DEBUG: Stampfile /.../build/tmp-glibc/stamps/aarch64-oe-linux/licte=
+st/1-r0.do_populate_lic.14708a9f021d264f7c0a9c5c33a93417c6cb20ba936c5805ff9=
+6083a9cb05ee9 not available
+>=20
+> It's looking for the stamp file without the ".sigdata" in the middle and
+> doesn't find one.
 
-It's looking for the stamp file without the ".sigdata" in the middle and
-doesn't find one.
+It wouldn't ever look for something with sigdata in it. The code
+doesn't really use sigdata files, they're there for debugging.
 
-In Scarthgap, the stamp files are always created without the ".sigdata" in
-the filename for me. This means that the stamp file _is_ found during the
-second build for MACHINE1, which stops the do_populate_lic (or
-do_populate_lic_setscene) task from running.
+I suspect in dunfell these files are created somewhere else in stamps.
+I have some vague recollection the do_populate_lic files were somehow
+shared between arches and we dropped that idea but I don't really
+remember...
 
-If I hack sstate.bbclass's sstate_eventhandler2's line:
+Cheers,
 
- if stamp not in stamps and stamp not in preservestamps and stamp in machineindex:
-
-to remove the "and stamp in machineindex", to effectively make
-oe-core#5634f2fb17 have no effect, then my problem goes away in Scarthgap:
-the do_populate_lic or do_populate_lic_setscene tasks run as expected when
-switching MACHINEs. This of course would reintroduce the original problem
-that commit was trying to fix though.
-
-The ".sigdata" part is not present in Dunfell stamp filenames for
-do_populate_lic_setscene tasks. This means that the stamp check would match
-and I would have expected the problem to occur on a third pair of builds
-(the first pair don't find anything in sstate, the second ones do and run
-do_populate_lic_setscene, the third pair should have the
-do_populate_lic_setscene stamps left over from the second pair). It does
-not. The do_populate_lic_setscene stamps are being removed by
-sstate_installpkg calling sstate_clean where the pattern for removal is
-tmp-glibc/stamps/aarch64-oe-linux/lictest/*-*.do_populate_lic*. As far as I
-can see, this pattern matches the stamps from all builds that share the
-same PACKAGE_ARCH. This step only runs for _setscene tasks, so it doesn't
-happen for the real do_populate_lic task in the first build for MACHINE2.
-
-I think that all that suggests three potential solutions:
-
-1. Revert the optimisation in oe-core#5634f2fb17 because it isn't safe in
-   the general case.
-
-2. Ensure that running a real task removes any other stamps for that task
-   with different hashes (perhaps by calling sstate_clean in the same way
-   that sstate_installpkg does?)
-
-3. Create a tool that runs "bitbake -S none world" for each MACHINE and
-   then looks for stamp directories with multiple hashes for the same task.
-   Assuming the `name.rsplit(".", 3)` trick to extract the task name and
-   hash from the stamp filename for arbitrary PV in
-   meta/lib/oeqa/selftest/cases/sstatetests.py is correct this doesn't look
-   particularly difficult to do.
-
-I shall continue to dig, but if anyone has any more ideas then they'd be
-gratefully recieved.
-
-Thanks.
-
-Mike.
+Richard
 
