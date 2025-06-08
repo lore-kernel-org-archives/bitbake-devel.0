@@ -1,142 +1,183 @@
-Return-Path: <ecordonnier@snap.com>
+Return-Path: <mac@mcrowe.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F72C5B543
-	for <webhook@archiver.kernel.org>; Thu,  5 Jun 2025 14:58:20 +0000 (UTC)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.web10.9773.1749135495636252958
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D9BC5B552
+	for <webhook@archiver.kernel.org>; Sun,  8 Jun 2025 19:20:30 +0000 (UTC)
+Received: from smarthost01a.ixn.mail.zen.net.uk (smarthost01a.ixn.mail.zen.net.uk [212.23.1.20])
+ by mx.groups.io with SMTP id smtpd.web10.43425.1749410429104368599
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 05 Jun 2025 07:58:16 -0700
+ Sun, 08 Jun 2025 12:20:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@snap.com header.s=google header.b=et3xxub0;
- spf=pass (domain: snapchat.com, ip: 209.85.128.51, mailfrom: ecordonnier@snapchat.com)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-450cf2291bbso4167545e9.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 05 Jun 2025 07:58:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=snap.com; s=google; t=1749135493; x=1749740293; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vAuquE6pZDEvXzFO9Lqi5aFJfbCYwCpgWa25bA2+h9A=;
-        b=et3xxub03nkLvQ3N16DiXl+ZveVjydVCx8/6o3vrrDn7QPmdbxTskp9LiRghTMvWCG
-         T3H7dshs/c69oWLi5OzcCntRFZynLBPjCMpT5EVa/zkbe+iVHXdyPzs24ZcIsqJPVhEB
-         Wu6friB6HZ46xcpFIJhY16qMCI9TpGE6ZibHM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749135493; x=1749740293;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vAuquE6pZDEvXzFO9Lqi5aFJfbCYwCpgWa25bA2+h9A=;
-        b=GFmxEphhZG9P0bhstODCO3GgKoF358lBkelC0rlk5mtlk4yAr2LbA2y+pMQ0mx63Jo
-         gBc+sTibEx0cqEIe64ZOMqha24YsuTM4i2yCBzcCKSJ+0zDQulJpmRCzt5XJRWU4eIF7
-         nXDHjIvgA9CBM/Ynt8ukfAupn7bpBM8hAdT4D3Ad5W/4u5EeaiTypea7TD9RZsjbxuwS
-         y3MVK/1ICkwMDmRgwv4rRyHvhzmEt0+EXnXVlMiJOb0Ryp8yeDfN7poon4RgaicMElsE
-         B8aRJul1dFWt5Qvqd7ox1+29nwJPFVcs2BRUWGPSHmFQiJYxqdv5AX7ctE10IzVKWAGy
-         8ZpA==
-X-Gm-Message-State: AOJu0YwSbEBNUBZgoqJ6770WyEohe7N9lbje4BROAncJZmckUuv5IJkC
-	6oVPsmu78WvwCn1f4cbuGoFTxRCnaGqtGtvOd6KhiltpXmmQrBEbEIONEL0dllxh8WfujqrWrjG
-	KXbxz3Mc=
-X-Gm-Gg: ASbGncu51tb7qo0KtD0bBvGTs6PsnYDvvGInuQMGcw3kDSUXxzQgTSvIAwdkNqctQrP
-	AD6Z9wQ8R0UYL4pNTDVqvxLuhqwPyEO4Uu6wtNBLB8ufCipKZ0kWx9IUMUUKarHI/3qXCDL6pMF
-	1cbXbecZqt4dJnBAFJpIIUyCVyn6lKDVdlIZZpZslfzEKbyvSDUgNC6kUMJmsw1h4yeC4giOjDQ
-	7Yv2PoHcxRPbXOV/xrdtfEK9mOyAlK6AKd08stiSzXCWw6HEr3BcAesp48i9irl3iTUBEQyLsJM
-	FEq8aT4eAR8vfIBI1c8587gijgg9HZRSCDZUeUODXfZ1Z40T2Gc5cj7bcdmTOgE=
-X-Google-Smtp-Source: AGHT+IGC6OLHyqmIrJuPqSzHuGwHJgq2/9WtcSMw8YCD8zzgnucQjuL81u5KfUAuM3O3TV/aC0+Q4w==
-X-Received: by 2002:a05:6000:1a8e:b0:3a5:2ec5:35ba with SMTP id ffacd0b85a97d-3a52ec539e3mr1303753f8f.30.1749135493466;
-        Thu, 05 Jun 2025 07:58:13 -0700 (PDT)
-Received: from lj8k2dq3.sc-core.net ([85.237.126.22])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a522ab67dbsm4304054f8f.62.2025.06.05.07.58.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 07:58:13 -0700 (PDT)
-From: ecordonnier@snap.com
-To: bitbake-devel@lists.openembedded.org
-Cc: Etienne Cordonnier <ecordonnier@snap.com>,
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [bitbake-devel][scarthgap] bitbake: gcp.py: remove slow calls to gsutil stat
-Date: Thu,  5 Jun 2025 16:57:36 +0200
-Message-ID: <20250605145736.2782365-1-ecordonnier@snap.com>
-X-Mailer: git-send-email 2.43.0
+ dkim=pass header.i=@mcrowe.com header.s=20191005 header.b=qws0Yvnw;
+ spf=pass (domain: mcrowe.com, ip: 212.23.1.20, mailfrom: mac@mcrowe.com)
+Received: from [88.97.37.36] (helo=deneb.mcrowe.com)
+	by smarthost01a.ixn.mail.zen.net.uk with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <mac@mcrowe.com>)
+	id 1uOLZD-00G2Iw-3C;
+	Sun, 08 Jun 2025 19:20:26 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mcrowe.com;
+	s=20191005; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description; bh=J5esCfNfcUUExZvRNFBj1Ovg1y8JV1qM1I5Eia736i4=; b=qws0Y
+	vnwlagQt/ZbJqOZ9QH1y/bKIR2VgkLYb+S9i/LN1hAlDadMSGao+LDdtlysfNWpUbIOxlGDXOMgsM
+	ECjMJf01FTmfnAo6vuKCRNkTLwM/mvs24ollU731f6XYhRczD7IgWLVIyJz0rYUBDZkAFU44ZvSJe
+	qng3NatJ2Idt807j7DDJUs6MI1RJ8QpHvVRLMsk018ZB1xqmg998mm4kK4vp3uvNPMnVAawtKUQjI
+	/2AVF6VoNi9vNPq542lOi4Pa7BYlTKKXXzAYYVnzLERRMR8voD5/3oAzyeXgPZ39DAz6jG64UYcEP
+	+PKWODAWCnuSSPshSVoKgwEBPPNgw==;
+Received: from mac by deneb.mcrowe.com with local (Exim 4.96)
+	(envelope-from <mac@mcrowe.com>)
+	id 1uOLZC-005x8u-2J;
+	Sun, 08 Jun 2025 20:20:26 +0100
+Date: Sun, 8 Jun 2025 20:20:26 +0100
+From: Mike Crowe <mac@mcrowe.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] Should stamp files for different versions of a
+ recipe exist at the same time?
+Message-ID: <aEXier1YxgCzOv1F@mcrowe.com>
+References: <aDnoNJFkC535qqiI@mcrowe.com>
+ <18dd4e56-87a5-4de3-a148-bd42f67ba57a@cherry.de>
+ <aD2ByO73juj7zy7I@mcrowe.com>
+ <418eea7bdcd9b528623498a6139ae42389ef192d.camel@linuxfoundation.org>
+ <aD3TP6hIE9vvFaAo@mcrowe.com>
+ <a9296bd359abc522a135cbaa37995d5b5633046e.camel@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a9296bd359abc522a135cbaa37995d5b5633046e.camel@linuxfoundation.org>
+X-Originating-smarthost01a-IP: [88.97.37.36]
+Feedback-ID: 88.97.37.36
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 05 Jun 2025 14:58:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17686
+ <bitbake-devel@lists.openembedded.org>; Sun, 08 Jun 2025 19:20:30 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17687
 
-From: Etienne Cordonnier <ecordonnier@snap.com>
+[
+ Snip explanation of building first for MACHINE1, then MACHINE2, then back
+ to MACHINE1 again with the same PACKAGE_ARCH and relying only on the task
+ hashes being different to ensure that the right files end up being used.
+]
 
-The changes of 1ab1d36c0af6fc58a974106b61ff4d37da6cb229 added calls to "gsutil stat" to avoid unhandled exceptions, however:
-- in the case of checkstatus() this is redundant with the call to self.gcp_client.bucket(ud.host).blob(path).exists() which already returns True/False
- and does not throw an exception in case the file does not exist.
-- Also the call to gsutil stat is much slower than using the python client to call exists() so we should not replace the call to exists() with a call to gsutil stat.
-- I think the intent of calling check_network_access in checkstatus() was to error-out in case the error is disabled. We can rather change the string "gsutil stat" to something else to make the code more readable.
-- add a try/except block in download() instead of the extra call to gsutil
+On 5/30/25 7:17 PM, Mike Crowe via lists.openembedded.org wrote:
+>>>>> My guess is that the problem here is that the stamps from the first
+>>>>> machine build weren't removed during the "SECOND MACHINE BUILD 1" step
+>>>>> above. If I remove them myself then the problem goes away. Is that
+>>>>> theory correct? If so, then I can start trying to work out why and any
+>>>>> advice would be welcome. If that theory is not correct then does anyone
+>>>>> have any idea where I should start investigating?
 
-[RP: Tweak to avoid import until needed so google module isn't required for everyone]
-(Bitbake rev: dd120f630e9ddadad95fe83728418335a14d3c3b)
+On Mon, 2025-06-02 at 17:37 +0100, Mike Crowe wrote:
+>> I was hoping that someone would just know the answer to my first question
+>> above off the top of their head. If so then I'm willing to try digging into
+>> this myself to see what I can discover. I just need to make sure that I'm
+>> chasing the right part of the problem.
 
-Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- bitbake/lib/bb/fetch2/gcp.py | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+On Monday 02 June 2025 at 22:04:39 +0100, Richard Purdie wrote:
+> I've avoided answering this as I think you're right but I'm not 100%
+> sure and I don't want to send you off in the wrong direction. There are
+> reasons it might not wipe out stamps and those reasons may be
+> intentional but without looking at what is going on I couldn't be
+> completely sure. So I think you're right and I'd chase that way but...
 
-diff --git a/bitbake/lib/bb/fetch2/gcp.py b/bitbake/lib/bb/fetch2/gcp.py
-index eb3e0c6a6bb..2ee9ed21948 100644
---- a/bitbake/lib/bb/fetch2/gcp.py
-+++ b/bitbake/lib/bb/fetch2/gcp.py
-@@ -23,7 +23,6 @@ import urllib.parse, urllib.error
- from bb.fetch2 import FetchMethod
- from bb.fetch2 import FetchError
- from bb.fetch2 import logger
--from bb.fetch2 import runfetchcmd
- 
- class GCP(FetchMethod):
-     """
-@@ -48,7 +47,6 @@ class GCP(FetchMethod):
-             ud.basename = os.path.basename(ud.path)
- 
-         ud.localfile = d.expand(urllib.parse.unquote(ud.basename))
--        ud.basecmd = "gsutil stat"
- 
-     def get_gcp_client(self):
-         from google.cloud import storage
-@@ -59,17 +57,20 @@ class GCP(FetchMethod):
-         Fetch urls using the GCP API.
-         Assumes localpath was called first.
-         """
-+        from google.api_core.exceptions import NotFound
-         logger.debug2(f"Trying to download gs://{ud.host}{ud.path} to {ud.localpath}")
-         if self.gcp_client is None:
-             self.get_gcp_client()
- 
--        bb.fetch2.check_network_access(d, ud.basecmd, f"gs://{ud.host}{ud.path}")
--        runfetchcmd("%s %s" % (ud.basecmd, f"gs://{ud.host}{ud.path}"), d)
-+        bb.fetch2.check_network_access(d, "blob.download_to_filename", f"gs://{ud.host}{ud.path}")
- 
-         # Path sometimes has leading slash, so strip it
-         path = ud.path.lstrip("/")
-         blob = self.gcp_client.bucket(ud.host).blob(path)
--        blob.download_to_filename(ud.localpath)
-+        try:
-+            blob.download_to_filename(ud.localpath)
-+        except NotFound:
-+            raise FetchError("The GCP API threw a NotFound exception")
- 
-         # Additional sanity checks copied from the wget class (although there
-         # are no known issues which mean these are required, treat the GCP API
-@@ -91,8 +92,7 @@ class GCP(FetchMethod):
-         if self.gcp_client is None:
-             self.get_gcp_client()
- 
--        bb.fetch2.check_network_access(d, ud.basecmd, f"gs://{ud.host}{ud.path}")
--        runfetchcmd("%s %s" % (ud.basecmd, f"gs://{ud.host}{ud.path}"), d)
-+        bb.fetch2.check_network_access(d, "gcp_client.bucket(ud.host).blob(path).exists()", f"gs://{ud.host}{ud.path}")
- 
-         # Path sometimes has leading slash, so strip it
-         path = ud.path.lstrip("/")
--- 
-2.43.0
+It turns out that you were right to be hesitant.
 
+Stamps are only removed if they were generated by the current MACHINE due
+to oe-core#5634f2fb1740732056d2c1a22717184ef94405bf from 2018:
+
+| sstate: Ensure a given machine only removes things which it created
+|
+| Currently if you build qemux86 and then generic86, the latter will
+| remove all of the former from deploy and workdir. This is because
+| qemux86 is i586, genericx86 is i686 and the architctures are compatible
+| therefore the sstate 'cleaup' code kicks in.
+|
+| There was a valid reason for this to ensure i586 packages didn't get into
+| an i686 rootfs for example. With the rootfs creation being filtered now, this
+| is no longer necessary.
+|
+| Instead, save out a list of stamps which a give machine has ever seen in
+| a given build and only clean up these things if they're no longer
+| "reachable".
+|
+| In particular this means the autobuilder should no longer spend a load of time
+| deleting files when switching MACHINE, improving build times.
+
+I'm not sure if the situation the change describes can still occur.
+genericx86 (which is presumably what was meant by generic86) no longer
+seems to exist and TUNE_PKGARCH should be either i586 and i686, so the
+stamps and work directories won't overlap with each other.
+
+This commit was also in Dunfell though, so the next question is why doesn't
+Dunfell suffer from the same problem? The answer surprised me: Dunfell
+appears to have been looking for mismatched stamp file names (for me at
+least).
+
+In Dunfell, the build for MACHINE1 creates a stamp named:
+
+ 1-r0.do_populate_lic.sigdata.14708a9f021d264f7c0a9c5c33a93417c6cb20ba936c5805ff96083a9cb05ee9
+
+The first build for MACHINE2 creates a stamp named:
+
+ 2-r0.do_populate_lic.sigdata.23cae22087dda59b5d9aad048411200dd4a3abb3308a241f9a89be65b7071d01
+
+Yet the debug log for the second build for MACHINE1 contains:
+
+ DEBUG: Stampfile /.../build/tmp-glibc/stamps/aarch64-oe-linux/lictest/1-r0.do_populate_lic.14708a9f021d264f7c0a9c5c33a93417c6cb20ba936c5805ff96083a9cb05ee9 not available
+
+It's looking for the stamp file without the ".sigdata" in the middle and
+doesn't find one.
+
+In Scarthgap, the stamp files are always created without the ".sigdata" in
+the filename for me. This means that the stamp file _is_ found during the
+second build for MACHINE1, which stops the do_populate_lic (or
+do_populate_lic_setscene) task from running.
+
+If I hack sstate.bbclass's sstate_eventhandler2's line:
+
+ if stamp not in stamps and stamp not in preservestamps and stamp in machineindex:
+
+to remove the "and stamp in machineindex", to effectively make
+oe-core#5634f2fb17 have no effect, then my problem goes away in Scarthgap:
+the do_populate_lic or do_populate_lic_setscene tasks run as expected when
+switching MACHINEs. This of course would reintroduce the original problem
+that commit was trying to fix though.
+
+The ".sigdata" part is not present in Dunfell stamp filenames for
+do_populate_lic_setscene tasks. This means that the stamp check would match
+and I would have expected the problem to occur on a third pair of builds
+(the first pair don't find anything in sstate, the second ones do and run
+do_populate_lic_setscene, the third pair should have the
+do_populate_lic_setscene stamps left over from the second pair). It does
+not. The do_populate_lic_setscene stamps are being removed by
+sstate_installpkg calling sstate_clean where the pattern for removal is
+tmp-glibc/stamps/aarch64-oe-linux/lictest/*-*.do_populate_lic*. As far as I
+can see, this pattern matches the stamps from all builds that share the
+same PACKAGE_ARCH. This step only runs for _setscene tasks, so it doesn't
+happen for the real do_populate_lic task in the first build for MACHINE2.
+
+I think that all that suggests three potential solutions:
+
+1. Revert the optimisation in oe-core#5634f2fb17 because it isn't safe in
+   the general case.
+
+2. Ensure that running a real task removes any other stamps for that task
+   with different hashes (perhaps by calling sstate_clean in the same way
+   that sstate_installpkg does?)
+
+3. Create a tool that runs "bitbake -S none world" for each MACHINE and
+   then looks for stamp directories with multiple hashes for the same task.
+   Assuming the `name.rsplit(".", 3)` trick to extract the task name and
+   hash from the stamp filename for arbitrary PV in
+   meta/lib/oeqa/selftest/cases/sstatetests.py is correct this doesn't look
+   particularly difficult to do.
+
+I shall continue to dig, but if anyone has any more ideas then they'd be
+gratefully recieved.
+
+Thanks.
+
+Mike.
 
