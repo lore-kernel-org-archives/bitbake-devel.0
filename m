@@ -1,134 +1,307 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <mac@mcrowe.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECAEC677C4
-	for <webhook@archiver.kernel.org>; Mon,  9 Jun 2025 09:56:35 +0000 (UTC)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.web11.55632.1749462984485000124
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D33C61CE8
+	for <webhook@archiver.kernel.org>; Mon,  9 Jun 2025 14:45:27 +0000 (UTC)
+Received: from smarthost01c.ixn.mail.zen.net.uk (smarthost01c.ixn.mail.zen.net.uk [212.23.1.22])
+ by mx.groups.io with SMTP id smtpd.web11.61047.1749480323356024262
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 09 Jun 2025 02:56:24 -0700
+ Mon, 09 Jun 2025 07:45:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=M8OgYlh+;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a531fcaa05so1434423f8f.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 09 Jun 2025 02:56:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1749462982; x=1750067782; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pzTACMX/iZ1OQhYoyItMxq0mbZStFqW9BD/w/MCWMCk=;
-        b=M8OgYlh+8QzRlMqYN6per9SLwhjl0qj+nBSWAy+pTk47yBRNsc30WnZrI6KnnaH9/l
-         HJaHu1AQBXs8YWh2JRcj9OpQAZx3+hhfNmT5fLUFDeI1FZ74qyHWZzIfrlM60DD5D2I0
-         64JoGAyIEhYb6PK2np90M+ICupsqzg4u8vfQc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749462982; x=1750067782;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pzTACMX/iZ1OQhYoyItMxq0mbZStFqW9BD/w/MCWMCk=;
-        b=Hpg4EgdnZYgj4hT6BC2wD+pbKaPleA7ttRouo9XzKImz/5fxzmssh+ebny1av0uUMj
-         2QJb0xFLZubMtdd1QSmgSSKuUOPAZWzKo3ADkIH55+giesaA+5R1CzvmXimu+JBvkv20
-         d993Cf2Hy6yIvtdXnxamthBMJEZQl2zJIDr8tNcj5CLBcafRkWvWP/Mg7XNjhpmym66r
-         ay0zunUz6LkcXUEJqhdqQTdfh96GKR+lhsm4BcM6z/Cvk7i1ge6hwV6Ouyp4nk7gvqHX
-         jOvt+kUlVaTOzaKmNxk/L+igiqM0/VE7qz1bD23qO+42h1HxIi+Q0s6og+ef72U/AUn8
-         dkmQ==
-X-Gm-Message-State: AOJu0YxYgOA9uVQV8iLU5NTVnaQfgGKCG/VhLkCO2q++1sfp6ZBbTiwt
-	gVRYcdvI+hZzpE0Q0KqDTx3vRBNie93A8In0dn+abNKgiXKtQI46gY36saREEbvc6tc3mEa2QId
-	WeJGeovg=
-X-Gm-Gg: ASbGncv/TZlx7LuMMiZk/XPGmfrQeMS3GaWRd/6fbOR3Ydnnr0Fwacmeft+/ZkiMSRI
-	0Eyu6e5oVvdHGLv4bdGRufVV+qy2BQvPbwJQBNNRkSflY09BlybzHsO62WfXbvp3nOHPGGkBFEV
-	tpWZ4QUJfsDFXKTCR1mIPWXZWnW+/mkLsdtTVKXb4E+QxT7BWAgB2N1XxsBC5Wl4JXR7HtBHXnR
-	sczPDf81fcmDupMn309tVNl3gSy03OWNefYvczlaZlubr8NrUTVpi4jXMy0j0ucn3IUcetcwT6S
-	KIioKcPKZ1GEohnhVcE4/UlyA5sPKWp1hLwjG6GoafVB8FkwnQaVx5yXspEwEfMfM3P3I9bEfEK
-	6sFMQtdvVbjn1W2E=
-X-Google-Smtp-Source: AGHT+IGE9bXN0W8+NbzEDqm2eaEInH5XXKt7k5z4jQ3jdLzGHp+BdB02LNRtHZ2DZD356y5VtyaZAA==
-X-Received: by 2002:a05:6000:1acc:b0:3a5:27ba:47a8 with SMTP id ffacd0b85a97d-3a531ceb9a9mr10792039f8f.52.1749462982453;
-        Mon, 09 Jun 2025 02:56:22 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:fa9f:168d:c475:ba8f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532435fbfsm9229759f8f.64.2025.06.09.02.56.21
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 02:56:21 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 1/3] ast: Change deferred inherits to happen per recipe
-Date: Mon,  9 Jun 2025 10:56:19 +0100
-Message-ID: <20250609095621.937299-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.48.1
+ dkim=pass header.i=@mcrowe.com header.s=20191005 header.b=SqCXRu4z;
+ spf=pass (domain: mcrowe.com, ip: 212.23.1.22, mailfrom: mac@mcrowe.com)
+Received: from [88.97.37.36] (helo=deneb.mcrowe.com)
+	by smarthost01c.ixn.mail.zen.net.uk with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <mac@mcrowe.com>)
+	id 1uOdkX-00Ed5X-H3;
+	Mon, 09 Jun 2025 14:45:21 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mcrowe.com;
+	s=20191005; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+	Content-Description; bh=UIytCArK1mV59JOp2a3Xmn9SkdN41KHGCkKkwzyFhck=; b=SqCXR
+	u4z3TPzuoYnp7fMGkVWMEp9mv4rO6NorieijbWTmpmo4PCt/53WkO4G0YiRcNZaKlptB6v2+AVnZh
+	Uqa1X7SV8twKXFbQEdVByHo2M4f4ZmmstcizTX7Q8B9XLpcbCJylsrqdFGxMa0Hc6CBq1hoOTkbF7
+	gDGntdaXEAdTSnLJg+0gtmEmAsUtqdiq+XaeU7uDD/eQLdqs2QIJpJDbyv0J0vagiss+7LbNlpheH
+	ZkK13bsv1vdoux1NyfWu6KWdHrh5XdoPdv7a2LNR+fhP9326WX4pkNFOgCjqvO/NaRjaa4+Q4n+a/
+	Vu2VTaJL6QxGVsko+2stBJqNBe5Wg==;
+Received: from mac by deneb.mcrowe.com with local (Exim 4.96)
+	(envelope-from <mac@mcrowe.com>)
+	id 1uOdkX-008xBy-11;
+	Mon, 09 Jun 2025 15:45:21 +0100
+Date: Mon, 9 Jun 2025 15:45:21 +0100
+From: Mike Crowe <mac@mcrowe.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [bitbake-devel] Should stamp files for different versions of a
+ recipe exist at the same time?
+Message-ID: <aEbzgV0vynTD8ukH@mcrowe.com>
+References: <aDnoNJFkC535qqiI@mcrowe.com>
+ <18dd4e56-87a5-4de3-a148-bd42f67ba57a@cherry.de>
+ <aD2ByO73juj7zy7I@mcrowe.com>
+ <418eea7bdcd9b528623498a6139ae42389ef192d.camel@linuxfoundation.org>
+ <aD3TP6hIE9vvFaAo@mcrowe.com>
+ <a9296bd359abc522a135cbaa37995d5b5633046e.camel@linuxfoundation.org>
+ <aEXier1YxgCzOv1F@mcrowe.com>
+ <518ee0f0eef4e155c93ccba344a5ea1e6102b37b.camel@linuxfoundation.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <518ee0f0eef4e155c93ccba344a5ea1e6102b37b.camel@linuxfoundation.org>
+X-Originating-smarthost01c-IP: [88.97.37.36]
+Feedback-ID: 88.97.37.36
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 09 Jun 2025 09:56:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17689
+ <bitbake-devel@lists.openembedded.org>; Mon, 09 Jun 2025 14:45:27 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17692
 
-Currently deferred inherits get processed once for all class extensions
-as a minor speed optimisation. Unfortunately this limits our options for
-being able to report deferred classes to our code.
+On Sunday 08 June 2025 at 22:35:40 +0100, Richard Purdie wrote:
+> On Sun, 2025-06-08 at 20:20 +0100, Mike Crowe wrote:
+> > [
+> > �Snip explanation of building first for MACHINE1, then MACHINE2, then back
+> > �to MACHINE1 again with the same PACKAGE_ARCH and relying only on the task
+> > �hashes being different to ensure that the right files end up being used.
+> > ]
+> > 
+> > On 5/30/25 7:17 PM, Mike Crowe via lists.openembedded.org wrote:
+> > > > > > > My guess is that the problem here is that the stamps from the first
+> > > > > > > machine build weren't removed during the "SECOND MACHINE BUILD 1" step
+> > > > > > > above. If I remove them myself then the problem goes away. Is that
+> > > > > > > theory correct? If so, then I can start trying to work out why and any
+> > > > > > > advice would be welcome. If that theory is not correct then does anyone
+> > > > > > > have any idea where I should start investigating?
+> > 
+> > On Mon, 2025-06-02 at 17:37 +0100, Mike Crowe wrote:
+> > > > I was hoping that someone would just know the answer to my first question
+> > > > above off the top of their head. If so then I'm willing to try digging into
+> > > > this myself to see what I can discover. I just need to make sure that I'm
+> > > > chasing the right part of the problem.
+> > 
+> > On Monday 02 June 2025 at 22:04:39 +0100, Richard Purdie wrote:
+> > > I've avoided answering this as I think you're right but I'm not 100%
+> > > sure and I don't want to send you off in the wrong direction. There are
+> > > reasons it might not wipe out stamps and those reasons may be
+> > > intentional but without looking at what is going on I couldn't be
+> > > completely sure. So I think you're right and I'd chase that way but...
+> > 
+> > It turns out that you were right to be hesitant.
+> > 
+> > Stamps are only removed if they were generated by the current MACHINE due
+> > to oe-core#5634f2fb1740732056d2c1a22717184ef94405bf from 2018:
+> > 
+> > > sstate: Ensure a given machine only removes things which it created
+> > > 
+> > > Currently if you build qemux86 and then generic86, the latter will
+> > > remove all of the former from deploy and workdir. This is because
+> > > qemux86 is i586, genericx86 is i686 and the architctures are compatible
+> > > therefore the sstate 'cleaup' code kicks in.
+> > > 
+> > > There was a valid reason for this to ensure i586 packages didn't get into
+> > > an i686 rootfs for example. With the rootfs creation being filtered now, this
+> > > is no longer necessary.
+> > > 
+> > > Instead, save out a list of stamps which a give machine has ever seen in
+> > > a given build and only clean up these things if they're no longer
+> > > "reachable".
+> > > 
+> > > In particular this means the autobuilder should no longer spend a load of time
+> > > deleting files when switching MACHINE, improving build times.
+> 
+> Well, that makes sense and I think that change still makes sense. It
+> does raise the question of whether/how we could detect your scenario
+> and give better information to the user (and/or error?).
+> 
+> > I'm not sure if the situation the change describes can still occur.
+> > genericx86 (which is presumably what was meant by generic86) no longer
+> > seems to exist and TUNE_PKGARCH should be either i586 and i686, so the
+> > stamps and work directories won't overlap with each other.
+> 
+> genericx86 definitely still exists:
+> 
+> https://git.yoctoproject.org/poky/tree/meta-yocto-bsp/conf/machine/genericx86.conf
+> 
+> however it is now core2-32.
 
-There are two challenges with using our deferred classes in OE at present.
-One is that PACKAGECONFIG values don't work well with class overrides like
-class-native if there are deferred classes based on PACKAGECONFIG, such
-as python support. The second is that toolchain selection is proving
-problematic to implement due to interactions between the toolchain deferred
-inherit, the class extensions and class overrides being very late.
+Ah, I was only looking in oe-core. :(
 
-By changing deferred inherits to be recipe extension specific, we open
-the way to generate events and "peek" at where things will end up,
-allowing the class overrides to be set earlier.
+> That doesn't mean the architecture issue can't exist but the default
+> tunes have changed. genericx86 and qemux86 still probably share
+> architecture compatibility and one would try and remove the other.
 
-The class extension code is updated to use a deferred inherit for the
-class extension inheriting so that it is still inherited last.
+AFAICS both set DEFAULTTUNE ?= "core2-32", so they both have the same
+PACKAGE_ARCH = "core2-32". This means that they ought to be identical and
+there should be no stamps that need to be removed.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+I think that the only time that change has any effect is if a recipe has a
+single PACKAGE_ARCH but has different hashes for different MACHINEs. That's
+exactly the situation that we think is bad and ought to be reported rather
+than supported. But, I must be wrong. Perhaps I'm wrong because stamps for
+compatible SSTATE_ARCHs would be removed without this fix too?
+
+This part probably doesn't matter though if we're aiming to just detect
+this situation.
+
+> > This commit was also in Dunfell though, so the next question is why doesn't
+> > Dunfell suffer from the same problem? The answer surprised me: Dunfell
+> > appears to have been looking for mismatched stamp file names (for me at
+> > least).
+> > 
+> > In Dunfell, the build for MACHINE1 creates a stamp named:
+> > 
+> > �1-r0.do_populate_lic.sigdata.14708a9f021d264f7c0a9c5c33a93417c6cb20ba936c5805ff96083a9cb05ee9
+> 
+> "sigdata" files are information only files and not actual stamps. This
+> file contains stamp information but is not the actual stamp itself.
+> 
+> There are two possible versions of the stamp, either setscene or non-
+> setscene. On my local build, for linux-libc-headers I see:
+> 
+> ./core2-64-poky-linux-musl/linux-libc-headers/6.12.do_populate_lic.73e166a4f76ae90f2785472dac9e88264c920aaf98ac2b43b71e0e4b9bec8469
+> ./core2-64-poky-linux-musl/linux-libc-headers/6.12.do_populate_lic.sigdata.73e166a4f76ae90f2785472dac9e88264c920aaf98ac2b43b71e0e4b9bec8469
+> 
+> but I could also see:
+> 
+> ./core2-64-poky-linux-musl/linux-libc-headers/6.12.do_populate_lic_setscene.73e166a4f76ae90f2785472dac9e88264c920aaf98ac2b43b71e0e4b9bec8469
+> 
+> The sigdata file provides information on the 73e166a4f7 stamp hash.
+> Stamps will have zero file size.
+
+Understood. I have no zero-sized do_populate_lic stamp files for the recipe
+in my tmp-glibc/stamps directory on Dunfell. This could be a
+consequence of us backporting the fix for
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=14123 without some other
+necessary prerequisite changes.
+
+Anyway, I think I've got far enough to determine that the fact that this
+problem didn't occur for us in Dunfell is a distraction so I won't pursue
+that line of investigation any further and will try to work out how to
+detect recipes that change task hashes between MACHINEs for the same
+PACKAGE_ARCH instead.
+
+It would be straightforward to look for other stamp files with different
+hashes in the TUNE_PKGARCH directory, but that situation could arise
+completely legitimately when recipes are being changed but haven't yet been
+built for all MACHINEs. Attempting to process the stamp files after
+building for all MACHINEs would only work from a clean TMPDIR for a similar
+reason.
+
+Instead I hacked together a Python script that reads the locked-sigs.inc
+files, that are already conveniently arranged by PACKAGE_ARCH. It seems to
+detect problematic recipes for me. At the very least it might help work out
+whether this problem is common enough that more work would be worthwhile.
+
+Thanks for all your advice.
+
+Mike.
+
+From 2662100c2d25ccc42ce9a6eafd46b36b0b87b176 Mon Sep 17 00:00:00 2001
+From: Mike Crowe <mac@mcrowe.com>
+Date: Mon, 9 Jun 2025 15:29:30 +0100
+Subject: [PATCH] scripts/contrib: Add check-recipe-pkgarchs script
+
+This script looks for recipes that modify their behaviour (usually,
+though not necessarily for different MACHINEs) but don't use a unique
+PACKAGE_ARCH when they do. This can lead to Bitbake thinking that tasks
+don't need to be run when they should be.
 ---
- lib/bb/parse/ast.py | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ scripts/contrib/check-recipe-pkgarchs | 85 +++++++++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
+ create mode 100755 scripts/contrib/check-recipe-pkgarchs
 
-diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-index 290ed45048..f9998798d8 100644
---- a/lib/bb/parse/ast.py
-+++ b/lib/bb/parse/ast.py
-@@ -471,6 +471,14 @@ def finalize(fn, d, variant = None):
-         if d.getVar("_FAILPARSINGERRORHANDLED", False) == True:
-             raise bb.BBHandledException()
- 
-+        while True:
-+            inherits = d.getVar('__BBDEFINHERITS', False) or []
-+            if not inherits:
-+                break
-+            inherit, filename, lineno = inherits.pop(0)
-+            d.setVar('__BBDEFINHERITS', inherits)
-+            bb.parse.BBHandler.inherit(inherit, filename, lineno, d, deferred=True)
+diff --git a/scripts/contrib/check-recipe-pkgarchs b/scripts/contrib/check-recipe-pkgarchs
+new file mode 100755
+index 0000000000..c232a69739
+--- /dev/null
++++ b/scripts/contrib/check-recipe-pkgarchs
+@@ -0,0 +1,85 @@
++#!/usr/bin/env python3
++#
++# Read a number of locked-sigs.inc files passed on the command line
++# looking for tasks for a given PACKAGE_ARCH that have distinct
++# hashes. This indicates that the recipes probably ought to be using
++# PACKAGE_ARCH = "${MACHINE_ARCH}" or otherwise ensuring that
++# PACKAGE_ARCH changes when any of their task hashes change.
++#
++# The output format is:
++#
++# pkgarch:recipe:task
++#   machines-with-hash-1...
++#   machines-with-hash-2...
++#   ...
++#
++# Example output:
++#
++# cortexa57:lictest:do_compile
++#   qemuarm64
++#   qemuarm64b qemuarm64c
++#
++# If each machine is on a line on its own then PACKAGE_ARCH =
++# "${MACHINE_ARCH}" is most likely to be the solution. If lines show
++# multiple machines then that would work, but it's possible that
++# another PACKAGE_ARCH might be more efficient.
++#
++# If no problems are found then there is no output and the script will
++# exit successfully. A non-zero exit status indicates that problems
++# were found.
++#
++# Usage:
++#
++# For each MACHINE run:
++#   bitbake -S lockedsigs target && mv locked-sigs.inc locked-sigs.${MACHINE}
++#
++# then:
++#   check-recipe-pkgarchs locked-sigs.*
++#
++import re, sys
 +
-         for var in d.getVar('__BBHANDLERS', False) or []:
-             # try to add the handler
-             handlerfn = d.getVarFlag(var, "filename", False)
-@@ -525,14 +533,6 @@ def multi_finalize(fn, d):
-         logger.debug("Appending .bbappend file %s to %s", append, fn)
-         bb.parse.BBHandler.handle(append, d, True)
- 
--    while True:
--        inherits = d.getVar('__BBDEFINHERITS', False) or []
--        if not inherits:
--            break
--        inherit, filename, lineno = inherits.pop(0)
--        d.setVar('__BBDEFINHERITS', inherits)
--        bb.parse.BBHandler.inherit(inherit, filename, lineno, d, deferred=True)
--
-     onlyfinalise = d.getVar("__ONLYFINALISE", False)
- 
-     safe_d = d
-@@ -568,7 +568,9 @@ def multi_finalize(fn, d):
-                 d.setVar("BBEXTENDVARIANT", variantmap[name])
-             else:
-                 d.setVar("PN", "%s-%s" % (pn, name))
--            bb.parse.BBHandler.inherit(extendedmap[name], fn, 0, d)
-+            inherits = d.getVar('__BBDEFINHERITS', False) or []
-+            inherits.append((extendedmap[name], fn, 0))
-+            d.setVar('__BBDEFINHERITS', inherits)
- 
-         safe_d.setVar("BBCLASSEXTEND", extended)
-         _create_variants(datastores, extendedmap.keys(), extendfunc, onlyfinalise)
++def parse_arch_package_tasks(file_path):
++    result = {}
++    with open(file_path, 'r') as file:
++        content = file.read()
++
++    pattern = re.compile(r'(SIGGEN_LOCKEDSIGS_t-[\w-]+)\s*=\s*"(.*?)"', re.DOTALL)
++    matches = pattern.findall(content)
++
++    for var_name, value in matches:
++        arch = var_name.split('SIGGEN_LOCKEDSIGS_t-')[-1]
++        lines = [line.strip().rstrip('\\\\') for line in value.strip().splitlines() if line.strip()]
++        for line in lines:
++            parts = line.split(':')
++            if len(parts) == 3:
++                package, task, hash = parts
++                key = f"{arch}:{package}:{task}"
++                result[key] = hash.strip()
++
++    return result
++
++sigmap = {}
++for file in sys.argv[1:]:
++    sigs = parse_arch_package_tasks(file)
++    build = file.removeprefix("locked-sigs.")
++    for task, hash in sigs.items():
++        if not task in sigmap:
++            # A new task
++            sigmap[task] = { hash : [build] }
++        elif hash in sigmap[task]:
++            # The same hash in a different build, may be good
++            sigmap[task][hash].append(build)
++        else:
++            # A different hash in a different file, bad
++            sigmap[task][hash] = [build]
++
++result=0
++for task, hashes in sigmap.items():
++    if len(hashes) > 1:
++        print(task)
++        for hash_val, files in hashes.items():
++            files = " ".join(files)
++            print(f"  {files}")
++            result=1
++
++sys.exit(result)
+--
+2.39.5
 
