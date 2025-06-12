@@ -1,63 +1,109 @@
-Return-Path: <rpjday@crashcourse.ca>
+Return-Path: <hongxu.jia@eng.windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94410C61CE8
-	for <webhook@archiver.kernel.org>; Thu, 12 Jun 2025 09:29:33 +0000 (UTC)
-Received: from cpanel10.indieserve.net (cpanel10.indieserve.net [199.212.143.9])
- by mx.groups.io with SMTP id smtpd.web10.8628.1749720571758452606
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A907DC61CE8
+	for <webhook@archiver.kernel.org>; Thu, 12 Jun 2025 09:32:23 +0000 (UTC)
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+ by mx.groups.io with SMTP id smtpd.web10.8668.1749720733836569792
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 12 Jun 2025 02:29:32 -0700
+ Thu, 12 Jun 2025 02:32:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@crashcourse.ca header.s=default header.b=ZVtZr1tc;
- spf=pass (domain: crashcourse.ca, ip: 199.212.143.9, mailfrom: rpjday@crashcourse.ca)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=crashcourse.ca; s=default; h=Content-Type:MIME-Version:References:
-	Message-ID:In-Reply-To:Subject:cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=GPmk3Sncd1QHecV1ELzuJzNsSsJ7Y270XNjwG6yCrC0=; b=ZVtZr1tcHf7IPbL0h9yfqlPHrW
-	TLR0piR+2J+MBzbcK00JZmKv3tJ2Yhf8/UgwtW7llE/yPtNZI6H79J4ubKF2sPpjjzKFmw2Z/Yc5m
-	WwJq2bFOykaEBdwa/OVyIwROXFZoAvMYBAXTBkGMXjeh1UNKyYKBFkdWlXFDm5XGUAT1MsCwBjhp1
-	Rv6A160yuunNv1z8pFk27mr+u2s8ShMqVT2OC5YA5eGgJSItcj9xTxbqb9ZO1NqxHgvxHPtc97C+a
-	d4nDeo6todmgkwho5bQuW6TRH8gB8ADQZqdA2E5sw+ot8MDhH2sgsapSm+Cc73FEITbNbRVc/zjoQ
-	s+wdMi8w==;
-Received: from pool-174-114-102-5.cpe.net.cable.rogers.com ([174.114.102.5]:34722 helo=asus)
-	by cpanel10.indieserve.net with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <rpjday@crashcourse.ca>)
-	id 1uPeFW-000000000v7-07JJ;
-	Thu, 12 Jun 2025 05:29:30 -0400
-Date: Thu, 12 Jun 2025 05:29:21 -0400 (EDT)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-To: hongxu.jia@eng.windriver.com
-cc: bitbake-devel@lists.openembedded.org, alex@linutronix.de
-Subject: Re: [bitbake-devel] [PATCH V2] bitbake-getvary: skip info output of
- bitbake for quiet
-In-Reply-To: <20250612092631.161687-1-hongxu.jia@windriver.com>
-Message-ID: <8c2ca340-682c-a50e-7287-59e7d6738874@crashcourse.ca>
-References: <20250612092631.161687-1-hongxu.jia@windriver.com>
+ dkim=none (message not signed); spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=825815661b=hongxu.jia@windriver.com)
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C6ZhO9002962;
+	Thu, 12 Jun 2025 02:32:11 -0700
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 474gq45a1w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 12 Jun 2025 02:32:11 -0700 (PDT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Thu, 12 Jun 2025 02:32:06 -0700
+Received: from ala-lpggp7.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Thu, 12 Jun 2025 02:32:06 -0700
+From: Hongxu Jia <hongxu.jia@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+CC: <alex@linutronix.de>
+Subject: [PATCH v3] bitbake-getvar: skip info output of bitbake for quiet
+Date: Thu, 12 Jun 2025 02:32:06 -0700
+Message-ID: <20250612093206.168888-1-hongxu.jia@windriver.com>
+X-Mailer: git-send-email 2.49.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel10.indieserve.net
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Get-Message-Sender-Via: cpanel10.indieserve.net: authenticated_id: rpjday+crashcourse.ca/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: cpanel10.indieserve.net: rpjday@crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=Qrde3Uyd c=1 sm=1 tr=0 ts=684a9e9b cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=6IFa9wvqVegA:10 a=t7CeM3EgAAAA:8 a=YSxngP-ukz8ntoBYxa0A:9 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: qiHFuViSJx6BqXoFcdacX7q8JzPvHFsf
+X-Proofpoint-ORIG-GUID: qiHFuViSJx6BqXoFcdacX7q8JzPvHFsf
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDA3MyBTYWx0ZWRfX/GHtgsts82sT oTsnzFLzsIIGauIR691pMdUuXuGwJr4ombCezjtWT9hDPmtOm0DJmtlI4DZPeTeKkBsHYmfZgIu bFKJfCk9sanBWukoRPGEqpwd1AYKbImLttywqwgRg+hKjZ2alhBZNCjZZr0z9/u6N0DNhnjJZFv
+ sdjP3GmlbKK9NKLQPH+jUN0CKkgYYzzf+B6NHLhhnDQfKlx+URqCMbpNh+zDO4tzICbXzrOjeXq Kkcf5U0tDqqKezn+3oFxQRZ9cq8+qwBKOX18C2UGTSNcqNzIO1IfRXCmQum/Nyvjc10zauSR25W xs1qtX/myA5wl8RcjVAHKT8fV4OBsCbGZn2brQplJMHGcj+rXpUVEKtH5wkV5YcDNzUJZE09HVp
+ 3CUxZrv45qiLcyxYm2mhVtcuu0nSQeywb2RZd0nstEyYjKEDmIugUG4xroJ9tfetCUpq+qFt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_07,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1015
+ suspectscore=0 impostorscore=0 bulkscore=0 mlxscore=0 mlxlogscore=999
+ spamscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2505280000
+ definitions=main-2506120073
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 12 Jun 2025 09:29:33 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17697
+ <bitbake-devel@lists.openembedded.org>; Thu, 12 Jun 2025 09:32:23 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17698
 
+Calling oe-debuginfod in a build failed:
+...
+$ oe-debuginfod
+|Getting sysroot...
+|Error: NOTE: Reconnecting to bitbake server...
+|NOTE: Retrying server connection (#1)... (18:55:53.009687)
+|path-to-build/tmp/work/x86_64-linux/elfutils-native/0.192/recipe-sysroot-native doesn't exist.
+|Have you run 'bitbake elfutils-native -caddto_recipe_sysroot'?
+...
 
-  subject line contains typo "bitbake-getvary"
+The script oe-debuginfod calls bitbake-getvar to get sysroot, the
+output of bitbake-getvar was mixed with info output of bitbake
+...
+NOTE: Reconnecting to bitbake server...
+NOTE: Retrying server connection (#1)... (18:55:53.009687)
+...
 
-rday
+Set logger level to logging.WARNING to skip info output
+for quiet
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ bin/bitbake-getvar | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/bin/bitbake-getvar b/bin/bitbake-getvar
+index 1719824d9..378fb1357 100755
+--- a/bin/bitbake-getvar
++++ b/bin/bitbake-getvar
+@@ -10,6 +10,7 @@ import io
+ import os
+ import sys
+ import warnings
++import logging
+ warnings.simplefilter("default")
+ 
+ bindir = os.path.dirname(__file__)
+@@ -38,6 +39,10 @@ if __name__ == "__main__":
+             sys.exit("--flag only makes sense with --value")
+ 
+     quiet = args.quiet or args.value
++    if quiet:
++        logger = logging.getLogger("BitBake")
++        logger.setLevel(logging.WARNING)
++
+     with bb.tinfoil.Tinfoil(tracking=True, setup_logging=not quiet) as tinfoil:
+         if args.recipe:
+             tinfoil.prepare(quiet=3 if quiet else 2)
+-- 
+2.49.0
+
 
