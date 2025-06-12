@@ -1,96 +1,114 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <hongxu.jia@eng.windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31326C5B543
-	for <webhook@archiver.kernel.org>; Tue, 10 Jun 2025 09:44:05 +0000 (UTC)
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
- by mx.groups.io with SMTP id smtpd.web10.83217.1749548634686899091
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4621FC71136
+	for <webhook@archiver.kernel.org>; Thu, 12 Jun 2025 05:07:12 +0000 (UTC)
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+ by mx.groups.io with SMTP id smtpd.web11.5645.1749704830573470408
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 10 Jun 2025 02:43:54 -0700
+ Wed, 11 Jun 2025 22:07:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=gP7+s1lR;
- spf=pass (domain: gmail.com, ip: 209.85.128.50, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so31574685e9.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 10 Jun 2025 02:43:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749548633; x=1750153433; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MpUVzKEz9LIFxZfQILDHp29aWYfPwF/K+7Fq8Hw972s=;
-        b=gP7+s1lR/TVSsmWZ7dmZnWJwLbk8g6aEwtgK/Hn32Rrr8XbJWfJf08EhZvfLOiHG8a
-         OJozqezq6T7CBr8HXgf/wFVqRdNZQ8Qtq1SgnffVNUZdeZkcLoy2RUlBToYQ8ZNI2xF6
-         +vIf30/2nFrzV0fp8a57Y1hX6CzGk1MAWTF5aCVLP5nOR2gW3b2e1TomakOFrRM2ZaWC
-         ElV8820PjuJeVk8HQchX3IxYo6L3AszZaRa1feiZ3Cs5Y0cRhGfBWZ0Q42TWIJRVssr+
-         VsLCS8vwhxnIAC5o9UBTvMduc6RnoodjUUG9fabndTIqQqqP5P0uBziVLvKYMG0O8oEp
-         D0NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749548633; x=1750153433;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MpUVzKEz9LIFxZfQILDHp29aWYfPwF/K+7Fq8Hw972s=;
-        b=Tg8TsVTO0PkopP3hPr5wfg4v05/xT6cqJ5S9Bj8gTqhtazoxgmKKx4Bcgk5REM/EGg
-         G48b0GrPqiuMowh5S+Uoh7GdbsB9M12/ZJ5fipf3VMoZDBm+i6jB8Onzyzs6p/kMcA54
-         zcc82AzuSoJlIhs9fyAoOMR0VMCqXz4x23WBiFjS46631fHtcdtsODVaVYkBVKUyfCbb
-         aFnc4hthlbpQWyCCrH7ykJXzEmpifV6SpUmHR61VPvb1TxudfjV8UN6r+UAgryrrqljc
-         Qe3pzW9ZkCIlWvp9z9ZYv2aASL32wNZizlMRExk43mu/oR5BeXKB+IOiDoFfBi/ATRyD
-         VXVg==
-X-Gm-Message-State: AOJu0Yw/6QmXq31k3jOxvMJAKt6av40Lt4KBLmH9CXsXUSyDab6runvi
-	i4nTEF0ID0J/6wklezy2CDMWyWBlsRhFHj8Dapz5sAkXYb+iR6VAviVSsbkBbA==
-X-Gm-Gg: ASbGncsRrUu5BZZJMRTWkikVMLNJMp2HYtrgI+HqOVbllfzK4reDslrsqMHSYzIDSAg
-	NoHUQE666BD4gQ5etxquDh2h6nQXitHBuQlfKJiCYU53imAEVjs6uLMbLki9GUmQsQffkLXsQhO
-	GvVVzZjx9/ziECDDvZXgnoufonQDFuA+FlDPcWIfDJJWjAho209K50ls7Fx4PaoEZs512199OZd
-	QLkn4tbMS75z/R6eSjHugf5ohjsxgPIHX4G3k6PJm2qFiKhtjUELef01XjpgQBO7gKlClHVdLo3
-	iQzYNcdJwZDWReoTtYLHCrQHDu9c4ozKsafN9oqmAwDBqXQLnDFFd4NwM6p24qFCrr1LLoKZgbe
-	xUkSBAu2sEbN8EqgWJ/Pn/6+5Ty0/ZaPCkA==
-X-Google-Smtp-Source: AGHT+IGw0LID24Et24N66CMw49VnyPP5azkEgZkXXD3HPeMQ9BrofhYR1eiu4oYpQdwS5qTQDYiLKQ==
-X-Received: by 2002:a05:6000:25c7:b0:3a5:1f2:68f3 with SMTP id ffacd0b85a97d-3a5522bf87amr1529983f8f.46.1749548632778;
-        Tue, 10 Jun 2025 02:43:52 -0700 (PDT)
-Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45307b9d827sm87998445e9.22.2025.06.10.02.43.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 02:43:52 -0700 (PDT)
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Alexander Kanavin <alex@linutronix.de>
-Subject: [RFC PATCH] fetch2/git: allow overriding default unpack directory with a variable
-Date: Tue, 10 Jun 2025 11:43:34 +0200
-Message-Id: <20250610094334.1653567-1-alex.kanavin@gmail.com>
-X-Mailer: git-send-email 2.39.5
+ dkim=none (message not signed); spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=825815661b=hongxu.jia@windriver.com)
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C4GFdB018053
+	for <bitbake-devel@lists.openembedded.org>; Wed, 11 Jun 2025 22:07:10 -0700
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 474mxm4x4c-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Wed, 11 Jun 2025 22:07:09 -0700 (PDT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.57; Wed, 11 Jun 2025 22:07:09 -0700
+Received: from ala-lpggp7.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Wed, 11 Jun 2025 22:07:09 -0700
+From: Hongxu Jia <hongxu.jia@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH] bb/main.py: skip noisy output for bitbake-getvar
+Date: Wed, 11 Jun 2025 22:07:09 -0700
+Message-ID: <20250612050709.3588563-1-hongxu.jia@windriver.com>
+X-Mailer: git-send-email 2.49.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: zbI0TqDuOHQPm1rN8V3KyonHQEOavWsK
+X-Authority-Analysis: v=2.4 cv=L74dQ/T8 c=1 sm=1 tr=0 ts=684a607d cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=6IFa9wvqVegA:10 a=t7CeM3EgAAAA:8 a=2V6DY6BgAAAA:8 a=Fw7Cb76GGXH5t5FYty0A:9 a=FdTzh2GWekK77mhwV6Dw:22
+ a=ldqKKs2zR4t-S6fqr-1n:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDAzNiBTYWx0ZWRfX4AAkmJx51Ofd /AO0plhEk1I3L3KN0tJdGZ3d0f8sZd2yVUfubs4w+RRZPhewHBaFx0ZQefNUQ7klBFBNpBZA1Bj zgnXdRrZ53c1bP40cbTENkKcUCgFrSVXiwE9Bh97aFZqlstHf1QZSYYIKshcm3UYT4epZwkVnZa
+ PQ0dSMzk6waoUdtRSI/adV5T3MPYhFUqtua143y2x6W2lIYFgrL5BT0v0mcXeDHswIpuQYvNkZ4 Ly7x3F1HWFIJ0iQHKWIGaLlF/gYYAq0Y5n1DEna2FRmHYeV/TKXicycQ1cIl8QCwjKTOxOQ86G3 KyCDIxeDPV0hfMxxo4bzUZjlEKZ18GbMkhxadcyYoCFc8lgEcheJZG3MAYG/KgPNpdsNEHvG3yr
+ RDtkBV0e8x9HKkC9nAi3wmC0NQ/DdHuBJTMYaKnEZmyzML0gmTzGE9fip03VTBZROJ79azsh
+X-Proofpoint-ORIG-GUID: zbI0TqDuOHQPm1rN8V3KyonHQEOavWsK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_02,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 mlxlogscore=999 adultscore=0 spamscore=0 suspectscore=0
+ mlxscore=0 lowpriorityscore=0 clxscore=1011 malwarescore=0 phishscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.21.0-2505280000
+ definitions=main-2506120036
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 10 Jun 2025 09:44:05 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17693
+ <bitbake-devel@lists.openembedded.org>; Thu, 12 Jun 2025 05:07:12 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17694
 
-From: Alexander Kanavin <alex@linutronix.de>
+Calling oe-debuginfod in a build failed:
+...
+$ oe-debuginfod
+|Getting sysroot...
+|Error: NOTE: Reconnecting to bitbake server...
+|NOTE: Retrying server connection (#1)... (18:55:53.009687)
+|path-to-build/tmp/work/x86_64-linux/elfutils-native/0.192/recipe-sysroot-native doesn't exist.
+|Have you run 'bitbake elfutils-native -caddto_recipe_sysroot'?
+...
 
-This will allow setting the variable in oe-core such that it matches
-S, which in turn will allow dropping S from almost all git:// fetching recipes,
-and not having to set it in newly written ones.
+The script oe-debuginfod calls bitbake-getvar to get sysroot, the
+output of bitbake-getvar was mixed with output of bitbake
+...
+NOTE: Reconnecting to bitbake server...
+NOTE: Retrying server connection (#1)... (18:55:53.009687)
+...
 
-Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+Because script bitbake-getvar sets 2 or 3 to quiet level, improve
+the output of bitbake, skip reconnect output if quiet < 2
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
- bitbake/lib/bb/fetch2/git.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/main.py | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 55dd084abce..0af8070080b 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -660,7 +660,7 @@ class Git(FetchMethod):
-         subdir = ud.parm.get("subdir")
-         subpath = ud.parm.get("subpath")
-         readpathspec = ""
--        def_destsuffix = "git/"
-+        def_destsuffix = (d.getVar("BB_GIT_DEFAULT_DESTSUFFIX") or "git") + "/"
+diff --git a/lib/bb/main.py b/lib/bb/main.py
+index bca8ebfa0..a2285e507 100755
+--- a/lib/bb/main.py
++++ b/lib/bb/main.py
+@@ -468,7 +468,8 @@ def setup_bitbake(configParams, extrafeatures=None):
+                     server = bb.server.process.BitBakeServer(lock, sockname, featureset, configParams.server_timeout, configParams.xmlrpcinterface, configParams.profile)
  
-         if subpath:
-             readpathspec = ":%s" % subpath
+                 else:
+-                    logger.info("Reconnecting to bitbake server...")
++                    if configParams.quiet < 2:
++                        logger.info("Reconnecting to bitbake server...")
+                     if not os.path.exists(sockname):
+                         logger.info("Previous bitbake instance shutting down?, waiting to retry... (%s)" % timestamp())
+                         procs = bb.server.process.get_lockfile_process_msg(lockfile)
+@@ -499,9 +500,11 @@ def setup_bitbake(configParams, extrafeatures=None):
+                 retries -= 1
+                 tryno = 8 - retries
+                 if isinstance(e, (bb.server.process.ProcessTimeout, BrokenPipeError, EOFError, SystemExit)):
+-                    logger.info("Retrying server connection (#%d)... (%s)" % (tryno, timestamp()))
++                    if configParams.quiet < 2:
++                        logger.info("Retrying server connection (#%d)... (%s)" % (tryno, timestamp()))
+                 else:
+-                    logger.info("Retrying server connection (#%d)... (%s, %s)" % (tryno, traceback.format_exc(), timestamp()))
++                    if configParams.quiet < 2:
++                        logger.info("Retrying server connection (#%d)... (%s, %s)" % (tryno, traceback.format_exc(), timestamp()))
+ 
+             if not retries:
+                 bb.fatal("Unable to connect to bitbake server, or start one (server startup failures would be in bitbake-cookerdaemon.log).")
 -- 
-2.39.5
+2.49.0
 
 
