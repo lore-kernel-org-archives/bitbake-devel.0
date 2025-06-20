@@ -1,216 +1,220 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B77C71157
-	for <webhook@archiver.kernel.org>; Wed, 18 Jun 2025 09:21:05 +0000 (UTC)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web11.3085.1750238459083267917
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724FAC7115C
+	for <webhook@archiver.kernel.org>; Fri, 20 Jun 2025 15:55:21 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.197.1750434914610038344
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 18 Jun 2025 02:20:59 -0700
+ Fri, 20 Jun 2025 08:55:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=fqI1cu9f;
- spf=pass (domain: gmail.com, ip: 209.85.128.47, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-441ab63a415so75911375e9.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 18 Jun 2025 02:20:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750238457; x=1750843257; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ApuA0eGHRHOHjFavgXImAB98GqAEe1nPg5t2fPOYKPY=;
-        b=fqI1cu9f+NgIyUzi3uyU1q3cAgOqHAZrEC7xjffD+9jFYUKb9PVr0yi+q6fZcdybed
-         SNgBafn1w+22Xb1nvAWEhrgILaos5rEgjUuQirBnAwaN/DMP5ybw1ha1/yHI86fT70x7
-         0CtPWkpA5rSqKEFu+RrQKD1YFZz8U8Ii6ZgdO/k48pBq4Q3REsMQ7+4vnfNz7OeClasQ
-         eBh+K6TpZX0nt7HRBWK8bO0+O9Kak3cU4Czbu8JX9rA3qkgr56qRi1OGqc8ycQgaki26
-         9uqBwWQ7XjRHCmcwO0w843rIRso5ESbT86PN+X8vCRAJpZi7P1YMjxjnM1DbeijUMJ06
-         heFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750238457; x=1750843257;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ApuA0eGHRHOHjFavgXImAB98GqAEe1nPg5t2fPOYKPY=;
-        b=gozIVvSFw+b9sXYfbAR/JWWNDbSyCVUK+HmjF9BDVNSaikdKyGPYyOtwvXHpTwGEdg
-         niRDZDc92OI7FubDOP6CB8wuhsukMFlxNQY4bPCzpCvD+Tzm9g/jTSHqVtbBRtdEpAAZ
-         esbe2fTpMT+NVYG/nim0MiwTIkSLl6IgKHo7dImnxhVZwFWyq3Ivnb3pBooDddqGMIVJ
-         qAw8YPdrXa6He2iwT4vNzG31Lmrz2HH03LtGhy2/6qbYYrYwy/n/YLZDOB5X1RvvMjtK
-         7Uc/2+bZy27WhMC14N31dTKBkZviKdRtC8tjWVaMwpp7c77IkVcp49wikqeCiCLWP9Zc
-         o8Mw==
-X-Gm-Message-State: AOJu0YwPiEs77rFwn07P3E4qYxk0lECbCyiTnVykfRjXPZfjAXW86rVq
-	p/WxtATfjWxyaNIdjXhZQkHhMMIOKuUfU1gM2p3Jn/v2e2fhGLWed2PqenA8bg==
-X-Gm-Gg: ASbGncsoFgxyzSGHZCP6XVAKZAzWCtnYoGP57Lath1kEmlmSvffuxyvDcgGr30TtWqc
-	0dDZTr23MNwPGcU63rybLOEWiLFO8LfLr4vliBmM9MSmTdzNO+nVu+HKuk8ltihN2zUzjXL17Ws
-	01WTS92I1ef2DX1RSr5KgLYbTH5cNZT3AaYvR4o9yl+WL/LxXrfX4Jhmdi+yIxK/QMt2Uq2QSWU
-	dDS7BvPcWLZAwE3hUYRIgDbiKrDyxNM5OD/NZox3SzQiMNQzHWKw8aL8Wo2eqPljE3SF3+UGtqg
-	kGvXi6GEBfCxO7X+Vt+rjl4Mx6XvxfA/68/lVaZf3a1dsqSeIqwpsgY30Tyt8MCtHH3Py86DP4b
-	LdjELvUlNKbnu8+6P8XP+7xLXP9AX6dol0Q==
-X-Google-Smtp-Source: AGHT+IGiZJOY7cPwvN2MgDNrJAUaFi6eB46NKJLK7IZ7a5+INNhfb8TUzZRPcIwQGjidTncr9ZNC3Q==
-X-Received: by 2002:a05:600c:1c12:b0:43c:fc04:6d35 with SMTP id 5b1f17b1804b1-4533ca46428mr171089165e9.4.1750238457119;
-        Wed, 18 Jun 2025 02:20:57 -0700 (PDT)
-Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b79817sm16629136f8f.99.2025.06.18.02.20.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 02:20:56 -0700 (PDT)
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-To: bitbake-devel@lists.openembedded.org,
-	docs@lists.yoctoproject.org
-Cc: Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH] parse/ast: add support for 'built-in' fragments
-Date: Wed, 18 Jun 2025 11:20:53 +0200
-Message-Id: <20250618092053.4141972-1-alex.kanavin@gmail.com>
-X-Mailer: git-send-email 2.39.5
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 80A9C16F2
+	for <bitbake-devel@lists.openembedded.org>; Fri, 20 Jun 2025 08:54:54 -0700 (PDT)
+Received: from cesw-amp-gbt-1s-m12830-04.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A648E3F58B
+	for <bitbake-devel@lists.openembedded.org>; Fri, 20 Jun 2025 08:55:13 -0700 (PDT)
+From: Ross Burton <ross.burton@arm.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] tinfoil: add wait_for decorator and build_file_sync() helper
+Date: Fri, 20 Jun 2025 16:55:11 +0100
+Message-ID: <20250620155512.3838976-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 18 Jun 2025 09:21:05 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17706
+ <bitbake-devel@lists.openembedded.org>; Fri, 20 Jun 2025 15:55:21 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17707
 
-From: Alexander Kanavin <alex@linutronix.de>
+The bitbake worker/server IPC is asynchronous, but tinfoil only has
+functionality to wait for a response on the build_targets() call.
 
-When reviewing proposed fragments to add settings for DISTRO and MACHINE,
-RP noted that such fragments only add clutter and overhead, and there's
-no need to maintain them as separate files.
+Extract the bulk of the "wait for events and handle errors" logic to a
+standalone wait_for wrapper, which is the build_targets code without the
+extra_events or event_callback arguments (for now).
 
-Rather when bitbake sees 'fragmentvar/fragmentvalue' it can expand that into
-FRAGMENTVAR = "fragmentvalue".
+Then use this to create a build_file_sync() helper that just wraps the
+existing build_file() with @wait_for.
 
-To achieve that, 'addfragments' directive is extended with a parameter
-that sets the name of the variable that holds definitions of such
-built-in fragments, for example like this:
-
-"machine:MACHINE distro:DISTRO"
-
-Then each enabled fragment name is matched against these definitions and the
-respective variable is set, e.g. 'machine/qemuarm' would match
-'machine:MACHINE' and result in MACHINE set to 'qemuarm'.
-
-This happens before any fragment files are looked up on disk,
-and no such lookup happens if there was a match, which should prevent
-possible misuse of the feature. So the builtin fragment definition
-is also an allowlist for them.
-
-Please also see the patches for oe-core that show an application of the feature.
-
-Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .../bitbake-user-manual-metadata.rst          | 19 +++++++++++++++++--
- bitbake/lib/bb/parse/ast.py                   | 16 ++++++++++++++--
- bitbake/lib/bb/parse/parse_py/ConfHandler.py  |  2 +-
- 3 files changed, 32 insertions(+), 5 deletions(-)
+ bitbake/lib/bb/tinfoil.py | 125 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 124 insertions(+), 1 deletion(-)
 
-diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-index a27b7758d97..f60a9d83123 100644
---- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-+++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-@@ -998,9 +998,9 @@ This directive allows fine-tuning local configurations with configuration
- snippets contained in layers in a structured, controlled way. Typically it would
- go into ``bitbake.conf``, for example::
- 
--   addfragments conf/fragments OE_FRAGMENTS OE_FRAGMENTS_METADATA_VARS
-+   addfragments conf/fragments OE_FRAGMENTS OE_FRAGMENTS_METADATA_VARS OE_BUILTIN_FRAGMENTS
- 
--``addfragments`` takes three parameters:
-+``addfragments`` takes four parameters:
- 
- -  path prefix for fragment files inside the layer file tree that bitbake
-    uses to construct full paths to the fragment files
-@@ -1011,6 +1011,8 @@ go into ``bitbake.conf``, for example::
- -  name of variable that contains a list of variable names containing
-    fragment-specific metadata (such as descriptions)
- 
-+-  name of variable that contains definitions for built-in fragments
+diff --git a/bitbake/lib/bb/tinfoil.py b/bitbake/lib/bb/tinfoil.py
+index f48baeb3342..71c299689cb 100644
+--- a/bitbake/lib/bb/tinfoil.py
++++ b/bitbake/lib/bb/tinfoil.py
+@@ -14,7 +14,7 @@ import time
+ import atexit
+ import re
+ from collections import OrderedDict, defaultdict
+-from functools import partial
++from functools import partial, wraps
+ from contextlib import contextmanager
+=20
+ import bb.cache
+@@ -27,6 +27,125 @@ import bb.remotedata
+ from bb.main import setup_bitbake, BitBakeConfigParameters
+ import bb.fetch2
+=20
++def wait_for(f):
++    @wraps(f)
++    def wrapper(self, *args, **kwds):
++        # A reasonable set of default events matching up with those we h=
+andle below
++        eventmask =3D [
++                    'bb.event.BuildStarted',
++                    'bb.event.BuildCompleted',
++                    'logging.LogRecord',
++                    'bb.event.NoProvider',
++                    'bb.command.CommandCompleted',
++                    'bb.command.CommandFailed',
++                    'bb.build.TaskStarted',
++                    'bb.build.TaskFailed',
++                    'bb.build.TaskSucceeded',
++                    'bb.build.TaskFailedSilent',
++                    'bb.build.TaskProgress',
++                    'bb.runqueue.runQueueTaskStarted',
++                    'bb.runqueue.sceneQueueTaskStarted',
++                    'bb.event.ProcessStarted',
++                    'bb.event.ProcessProgress',
++                    'bb.event.ProcessFinished',
++                    ]
++        #if extra_events:
++        #    eventmask.extend(extra_events)
++        ret =3D self.set_event_mask(eventmask)
 +
- This allows listing enabled configuration fragments in ``OE_FRAGMENTS``
- variable like this::
- 
-@@ -1035,6 +1037,19 @@ The implementation will add a flag containing the fragment name to each of those
- when parsing fragments, so that the variables are namespaced by fragment name, and do not override
- each other when several fragments are enabled.
- 
-+The variable containing a built-in fragment definitions could look like this::
++        # Call actual function
++        ret =3D f(self, *args, **kwds)
 +
-+   OE_BUILTIN_FRAGMENTS = "someprefix:SOMEVARIABLE anotherprefix:ANOTHERVARIABLE"
++        includelogs =3D self.config_data.getVar('BBINCLUDELOGS')
++        loglines =3D self.config_data.getVar('BBINCLUDELOGS_LINES')
++        lastevent =3D time.time()
++        result =3D False
++        # Borrowed from knotty, instead somewhat hackily we use the help=
+er
++        # as the object to store "shutdown" on
++        helper =3D bb.ui.uihelper.BBUIHelper()
++        helper.shutdown =3D 0
++        parseprogress =3D None
++        termfilter =3D bb.ui.knotty.TerminalFilter(helper, helper, self.=
+logger.handlers, quiet=3Dself.quiet)
++        try:
++            while True:
++                try:
++                    event =3D self.wait_event(0.25)
++                    if event:
++                        lastevent =3D time.time()
++                        #if event_callback and event_callback(event):
++                        #    continue
++                        if helper.eventHandler(event):
++                            if isinstance(event, bb.build.TaskFailedSile=
+nt):
++                                self.logger.warning("Logfile for failed =
+setscene task is %s" % event.logfile)
++                            elif isinstance(event, bb.build.TaskFailed):
++                                bb.ui.knotty.print_event_log(event, incl=
+udelogs, loglines, termfilter)
++                            continue
++                        if isinstance(event, bb.event.ProcessStarted):
++                            if self.quiet > 1:
++                                continue
++                            parseprogress =3D bb.ui.knotty.new_progress(=
+event.processname, event.total)
++                            parseprogress.start(False)
++                            continue
++                        if isinstance(event, bb.event.ProcessProgress):
++                            if self.quiet > 1:
++                                continue
++                            if parseprogress:
++                                parseprogress.update(event.progress)
++                            else:
++                                bb.warn("Got ProcessProgress event for s=
+omething that never started?")
++                            continue
++                        if isinstance(event, bb.event.ProcessFinished):
++                            if self.quiet > 1:
++                                continue
++                            if parseprogress:
++                                parseprogress.finish()
++                            parseprogress =3D None
++                            continue
++                        if isinstance(event, bb.command.CommandCompleted=
+):
++                            result =3D True
++                            break
++                        if isinstance(event, (bb.command.CommandFailed, =
+bb.command.CommandExit)):
++                            self.logger.error(str(event))
++                            result =3D False
++                            break
++                        if isinstance(event, logging.LogRecord):
++                            if event.taskpid =3D=3D 0 or event.levelno >=
+ logging.INFO:
++                                self.logger.handle(event)
++                            continue
++                        if isinstance(event, bb.event.NoProvider):
++                            self.logger.error(str(event))
++                            result =3D False
++                            break
++                    elif helper.shutdown > 1:
++                        break
++                    termfilter.updateFooter()
++                    if time.time() > (lastevent + (3*60)):
++                        if not self.run_command('ping', handle_events=3D=
+False):
++                            print("\nUnable to ping server and no events=
+, closing down...\n")
++                            return False
++                except KeyboardInterrupt:
++                    termfilter.clearFooter()
++                    if helper.shutdown =3D=3D 1:
++                        print("\nSecond Keyboard Interrupt, stopping...\=
+n")
++                        ret =3D self.run_command("stateForceShutdown")
++                        if ret and ret[2]:
++                            self.logger.error("Unable to cleanly stop: %=
+s" % ret[2])
++                    elif helper.shutdown =3D=3D 0:
++                        print("\nKeyboard Interrupt, closing down...\n")
++                        interrupted =3D True
++                        ret =3D self.run_command("stateShutdown")
++                        if ret and ret[2]:
++                            self.logger.error("Unable to cleanly shutdow=
+n: %s" % ret[2])
++                    helper.shutdown =3D helper.shutdown + 1
++            termfilter.clearFooter()
++        finally:
++            termfilter.finish()
++        if helper.failed_tasks:
++            result =3D False
++        return result
 +
-+and then if 'someprefix/somevalue' is added to the variable that holds the list
-+of enabled fragments:
++    return wrapper
 +
-+  OE_FRAGMENTS = "... someprefix/somevalue"
+=20
+ # We need this in order to shut down the connection to the bitbake serve=
+r,
+ # otherwise the process will never properly exit
+@@ -700,6 +819,10 @@ class Tinfoil:
+         """
+         return self.run_command('buildFile', buildfile, task, internal)
+=20
++    @wait_for
++    def build_file_sync(self, *args):
++        self.build_file(*args)
 +
-+bitbake will treat that as direct value assignment in its configuration::
-+
-+  SOMEVARIABLE = "somevalue"
-+
- Functions
- =========
- 
-diff --git a/bitbake/lib/bb/parse/ast.py b/bitbake/lib/bb/parse/ast.py
-index ea1096f2de7..49a07880388 100644
---- a/bitbake/lib/bb/parse/ast.py
-+++ b/bitbake/lib/bb/parse/ast.py
-@@ -343,11 +343,12 @@ class InheritDeferredNode(AstNode):
-         bb.parse.BBHandler.inherit_defer(*self.inherit, data)
- 
- class AddFragmentsNode(AstNode):
--    def __init__(self, filename, lineno, fragments_path_prefix, fragments_variable, flagged_variables_list_variable):
-+    def __init__(self, filename, lineno, fragments_path_prefix, fragments_variable, flagged_variables_list_variable, builtin_fragments_variable):
-         AstNode.__init__(self, filename, lineno)
-         self.fragments_path_prefix = fragments_path_prefix
-         self.fragments_variable = fragments_variable
-         self.flagged_variables_list_variable = flagged_variables_list_variable
-+        self.builtin_fragments_variable = builtin_fragments_variable
- 
-     def eval(self, data):
-         # No need to use mark_dependency since we would only match a fragment
-@@ -360,13 +361,23 @@ class AddFragmentsNode(AstNode):
-                    return candidate_fragment_path
-            return None
- 
-+        def check_and_set_builtin_fragment(fragment, data, builtin_fragments):
-+            prefix, value = fragment.split('/', 1)
-+            if prefix in builtin_fragments.keys():
-+                data.setVar(builtin_fragments[prefix], value)
-+                return True
-+            return False
-+
-         fragments = data.getVar(self.fragments_variable)
-         layers = data.getVar('BBLAYERS')
-         flagged_variables = data.getVar(self.flagged_variables_list_variable).split()
-+        builtin_fragments = {f[0]:f[1] for f in [f.split(':') for f in data.getVar(self.builtin_fragments_variable).split()] }
- 
-         if not fragments:
-             return
-         for f in fragments.split():
-+            if check_and_set_builtin_fragment(f, data, builtin_fragments):
-+                continue
-             layerid, fragment_name = f.split('/', 1)
-             full_fragment_name = data.expand("{}/{}.conf".format(self.fragments_path_prefix, fragment_name))
-             fragment_path = find_fragment(layers, layerid, full_fragment_name)
-@@ -430,7 +441,8 @@ def handleAddFragments(statements, filename, lineno, m):
-     fragments_path_prefix = m.group(1)
-     fragments_variable = m.group(2)
-     flagged_variables_list_variable = m.group(3)
--    statements.append(AddFragmentsNode(filename, lineno, fragments_path_prefix, fragments_variable, flagged_variables_list_variable))
-+    builtin_fragments_variable = m.group(4)
-+    statements.append(AddFragmentsNode(filename, lineno, fragments_path_prefix, fragments_variable, flagged_variables_list_variable, builtin_fragments_variable))
- 
- def runAnonFuncs(d):
-     code = []
-diff --git a/bitbake/lib/bb/parse/parse_py/ConfHandler.py b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-index 675838d8452..9ddbae123dc 100644
---- a/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-+++ b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-@@ -48,7 +48,7 @@ __export_regexp__ = re.compile( r"export\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
- __unset_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)$" )
- __unset_flag_regexp__ = re.compile( r"unset\s+([a-zA-Z0-9\-_+.${}/~]+)\[([a-zA-Z0-9\-_+.][a-zA-Z0-9\-_+.@]+)\]$" )
- __addpylib_regexp__      = re.compile(r"addpylib\s+(.+)\s+(.+)" )
--__addfragments_regexp__  = re.compile(r"addfragments\s+(.+)\s+(.+)\s+(.+)" )
-+__addfragments_regexp__  = re.compile(r"addfragments\s+(.+)\s+(.+)\s+(.+)\s+(.+)" )
- 
- def init(data):
-     return
--- 
-2.39.5
+     def build_targets(self, targets, task=3DNone, handle_events=3DTrue, =
+extra_events=3DNone, event_callback=3DNone):
+         """
+         Builds the specified targets. This is equivalent to a normal inv=
+ocation
+--=20
+2.43.0
 
 
