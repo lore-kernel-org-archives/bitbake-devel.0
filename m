@@ -1,115 +1,149 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 594C2C71157
-	for <webhook@archiver.kernel.org>; Sat, 21 Jun 2025 14:35:44 +0000 (UTC)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.web10.8442.1750516538269655680
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA381C7115B
+	for <webhook@archiver.kernel.org>; Mon, 23 Jun 2025 12:45:09 +0000 (UTC)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web10.18683.1750682706815331660
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 21 Jun 2025 07:35:38 -0700
+ Mon, 23 Jun 2025 05:45:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=hDEWnngm;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a6cdc27438so2348089f8f.2
-        for <bitbake-devel@lists.openembedded.org>; Sat, 21 Jun 2025 07:35:37 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=h3hiJn8O;
+ spf=pass (domain: gmail.com, ip: 209.85.128.49, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-45310223677so31322265e9.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 23 Jun 2025 05:45:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1750516536; x=1751121336; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1VOgRNa1Tln8hUbMrYHKl8/y1OU6c8pBAXU4W+ECTs4=;
-        b=hDEWnngmWJwUApV5Yzlc5QHWWMHZijO6NASqTEaoU9FqR35IEVzihqLixmNQFdB00j
-         BEqZenOXf/eX6RGLO1bq0XPeTljJ67IVsCW9I1BcBcKe2PUxDn/qdAIszwDE4OPPxn8K
-         vBx7Ngzvf8mz2p0Aup8otfQMxh2fAX+SfGunY=
+        d=gmail.com; s=20230601; t=1750682705; x=1751287505; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Og2dFLay9wmO9V2nMeozqN4YZhYgoNYHVdrfecZnWjo=;
+        b=h3hiJn8O8F/QyUNWb8ejdhDmOZDAxoh2Exn3z8B8PWT8icqbNwMdITxwR7iMVmYQ+D
+         b6IIMz2s6VNa3XZFt+nesjyzki/2JetfQTHZgYL3T4kz3KK/6KZm+UKIi6nBBuBCSC1c
+         EpJZp5eajnDDbr43vfUze0mTGembMHXCYULBqP/EmQyylFWfHGiAtILkvatlAN90mNgh
+         eHG0MgiscQYz664h/XgJm+geG1FkCFQjVSTx+jBSHPv++UQ0qgm8E870yggx5NIvoIYB
+         3GeebWEfLA8qVrXPhvOKnaLxb3Kw2fj3tU1SBigVr7gVzlkjOHXwRcND0t6epJQF/jJL
+         ISuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750516536; x=1751121336;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1VOgRNa1Tln8hUbMrYHKl8/y1OU6c8pBAXU4W+ECTs4=;
-        b=vEvVOGmAU5mJCDo8NFMozlzFl4CC2HpxbfNGb2peqtDbdb9iBuJpVSLGYdb4R+BKt7
-         ashAIFfzW1waESuyVO330zubK8wKqnc4xCYFT3kHyT3XZ8ZZUeUDIAmOFpC4s2xQdT74
-         xhXiVY+uXjvr6dc2HAH5cLz617cDFPsATKLGR2ShuFGBGntF0iMAQlu5UleeatjjQlTf
-         F65P+whfxvWHokjuChIp2hYNTa8SWIhi5OUI7VX6t4xVyNVe7PRjID6lP1csAHK4TNPp
-         er3wE8Txdaz0mVTsLx1hANI1F/UPlWcwyPk0WAVuf+uD7F5GKBPT7b239rA4u1PmR5TM
-         JdKQ==
-X-Gm-Message-State: AOJu0YxgvjBO1bqoQg8a7vBv5cIRMpn3cyLV8NnT5oYPreOS8kFZgiPY
-	uycjECzYtRpYtZGcnJ7uhd/B1hOkYzY4+HLdeZ9uo+V1F3q6BgPEgLVVSc/4ht0COgI2X4neQkK
-	o3voWC/o=
-X-Gm-Gg: ASbGncsbks7gSf4yhLE9fQLoKCNBNuwm3iHmqSqg9G4419sG1AX0d24CugkMKhUJ9W3
-	DsZk8IrNwADqGk6vviCWWYau+sgjMO0WJmbmgD5L4sn+1wRBvrZKTS2WYsaq/4Fd0KreE0pHHUI
-	PHzVY82iEYqzZqVLUBxjlxFEDn8dcArwxuRav3NZPjF4CFcFLFTMwHhlSQ5fgK+NoT90pY4keNt
-	q350aEygEbJ1rIze+S7186w2PcXOcc7buo1ma37IK2CN9XjspLZ4tUTs+uijuXGNNBlrvKqCM8f
-	v7IHJLNlbPsVNRnv3Q1aTOf0ZZLxkfz3s44C3kWv0M+oveb2XTK7ug+WYGw+VPkOBvyAdQLrqQv
-	oWz+VGYTx5vZarw==
-X-Google-Smtp-Source: AGHT+IEW8SUskxmJtT4XALkCHuWQRZLNYM++Nd/5tuA46JveepgLIczkAeyunkSRKlxXxtsx7frJWA==
-X-Received: by 2002:a05:6000:2013:b0:3a5:4b67:5a70 with SMTP id ffacd0b85a97d-3a6d12e8d1amr5671892f8f.18.1750516535860;
-        Sat, 21 Jun 2025 07:35:35 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:3287:1ee:865a:f13c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f10502sm4982444f8f.18.2025.06.21.07.35.34
-        for <bitbake-devel@lists.openembedded.org>
+        d=1e100.net; s=20230601; t=1750682705; x=1751287505;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Og2dFLay9wmO9V2nMeozqN4YZhYgoNYHVdrfecZnWjo=;
+        b=vN2OJi61Ds5NpWiTjlEdwCfxRGQYXod6pIKOQEjPTrquKzjeQKwzjT99MqKgwEI3fA
+         WwCVnfuCgmQTf4HYMkmC+bB5JBkba7nMVVP3HiG4AdZxpRkt2bgZUzzjLXwluNcYexUO
+         v87f7kkT1YAOCcRzxLAiFDJvr3N8Xn3zN2/hIoUPzbOsuNazUSMsrcGVjgMt9Z+M6Kiz
+         4gj65WtWZqTnxfKcBJbR0xNOffE5otVtx6pN6XTzKaDnY39H+KMUjY/KUiIAvujR/7qA
+         bAGxRZ01hYhxr/dn81HyaCZh1WdkS/JfXnXermrGZPC9yUU5uMX5HRfFF/SGK7z1ijGx
+         QQ1g==
+X-Gm-Message-State: AOJu0YyX6DG5SSi76ZjxX0Q8f4StzFOyYkQrPFVxz2Nw3Dv5fraMQG0z
+	I4G5FhVSe1mRkdcBuBuSlHbW/r8pOm21dTYgqQadoEZJtRxdtS1icaKcuoJAMg==
+X-Gm-Gg: ASbGncvEvqXbtqd5As7H83SdHkNVUK42MXEci+ko+fKIxFKHU1jqkVFSI95doaiOQJ6
+	IepigmvYrRjnfWdmQEsDV74c+2JhU6MjIrPUj1MWjbn6XngyHes0sHQEJLCfNJ6i+y2GfHlb7/i
+	jMT4hf/gZfKZtgULg1oDL9x/ct4Lp576JWvMz1I4Tcp6rwXrdLlKpdIptl9Q4sZSNNlPZPY84Ie
+	qt+Nz8bIFtnP85TnbA6NzFseSdLomOtGr9chcm53L0HRKOf23fU1+FbiBcBeBXG3fxwQ54QK9DM
+	VxmqE/gMSfvob0VAVhCKHTyZx+YL2g0yr74jfSzboIx22H3y5zNI9W73jKsE3UMwtdJsREVgIkj
+	vHBMIbDIKgo19KQSj+ZaT7LK3X08d1LgqDQ==
+X-Google-Smtp-Source: AGHT+IEyyYIC1UTQqZ1lbTJ+SEpHs9Xc/+etAbP1xUfNBKJ4yzGWhlhUlZXAoMS04TUP4bHLRJSV+g==
+X-Received: by 2002:a05:600c:a08b:b0:453:8f6:6383 with SMTP id 5b1f17b1804b1-453698fea31mr104784865e9.15.1750682704790;
+        Mon, 23 Jun 2025 05:45:04 -0700 (PDT)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646d156esm111181225e9.11.2025.06.23.05.45.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Jun 2025 07:35:35 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Mon, 23 Jun 2025 05:45:04 -0700 (PDT)
+From: Alexander Kanavin <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] toaster/tests: Fix automated testing failures
-Date: Sat, 21 Jun 2025 15:35:34 +0100
-Message-ID: <20250621143534.2664773-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.48.1
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH] bitbake-user-manual: correctly reference UNPACKDIR when describing unpacking
+Date: Mon, 23 Jun 2025 14:45:01 +0200
+Message-Id: <20250623124501.1545325-1-alex.kanavin@gmail.com>
+X-Mailer: git-send-email 2.39.5
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 21 Jun 2025 14:35:44 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17708
+ <bitbake-devel@lists.openembedded.org>; Mon, 23 Jun 2025 12:45:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17709
 
-The display window scrolling mechanism we were using was failing in one case
-and needed in another. After trying various approaches, this one with
-window.scrollTo seems to work and fixes the test failures.
+From: Alexander Kanavin <alex@linutronix.de>
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Also, drop an obsolete S = WORKDIR/git note.
+
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- lib/toaster/tests/browser/test_layerdetails_page.py | 2 ++
- lib/toaster/tests/functional/test_project_page.py   | 8 ++++----
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ .../bitbake-user-manual-fetching.rst          | 21 +++++++------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/lib/toaster/tests/browser/test_layerdetails_page.py b/lib/toaster/tests/browser/test_layerdetails_page.py
-index 69493833f4..6abfdef699 100644
---- a/lib/toaster/tests/browser/test_layerdetails_page.py
-+++ b/lib/toaster/tests/browser/test_layerdetails_page.py
-@@ -108,6 +108,8 @@ class TestLayerDetailsPage(SeleniumTestCase):
-             save_btn.click()
+diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+index eac3cbdfb59..a2c2432db1f 100644
+--- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
++++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+@@ -39,10 +39,10 @@ variable and then calls the ``download`` method to download the files.
  
-         self.wait_until_visible("#save-changes-for-switch")
-+        # Ensure scrolled into view
-+        self.driver.execute_script('window.scrollTo({behavior: "instant", top: 0, left: 0})')
-         btn_save_chg_for_switch = self.wait_until_clickable(
-             "#save-changes-for-switch")
-         btn_save_chg_for_switch.click()
-diff --git a/lib/toaster/tests/functional/test_project_page.py b/lib/toaster/tests/functional/test_project_page.py
-index c6dad0eb5d..429d86feba 100644
---- a/lib/toaster/tests/functional/test_project_page.py
-+++ b/lib/toaster/tests/functional/test_project_page.py
-@@ -685,17 +685,17 @@ class TestProjectPage(TestProjectPageBase):
-             'active', str(self.find('#information').get_attribute('class'))
-         )
-         # Check second tab (recipes)
--        # Ensure page is scrolled to the top
--        self.driver.find_element(By.XPATH, '//body').send_keys(Keys.CONTROL + Keys.HOME)
-         self.wait_until_visible('.nav-tabs')
-+        # Ensure page is scrolled to the top
-+        self.driver.execute_script('window.scrollTo({behavior: "instant", top: 0, left: 0})')
-         tabs[1].click()
-         self.assertIn(
-             'active', str(self.find('#recipes').get_attribute('class'))
-         )
-         # Check third tab (machines)
--        # Ensure page is scrolled to the top
--        self.driver.find_element(By.XPATH, '//body').send_keys(Keys.CONTROL + Keys.HOME)
-         self.wait_until_visible('.nav-tabs')
-+        # Ensure page is scrolled to the top
-+        self.driver.execute_script('window.scrollTo({behavior: "instant", top: 0, left: 0})')
-         tabs[2].click()
-         self.assertIn(
-             'active', str(self.find('#machines').get_attribute('class'))
+ The instantiation of the fetch class is usually followed by::
+ 
+-   rootdir = l.getVar('WORKDIR')
++   rootdir = l.getVar('UNPACKDIR')
+    fetcher.unpack(rootdir)
+ 
+-This code unpacks the downloaded files to the specified by ``WORKDIR``.
++This code unpacks the downloaded files to the specified by ``UNPACKDIR``.
+ 
+ .. note::
+ 
+@@ -51,7 +51,7 @@ This code unpacks the downloaded files to the specified by ``WORKDIR``.
+    examine the OpenEmbedded class file ``base.bbclass``
+    .
+ 
+-The :term:`SRC_URI` and ``WORKDIR`` variables are not hardcoded into the
++The :term:`SRC_URI` and ``UNPACKDIR`` variables are not hardcoded into the
+ fetcher, since those fetcher methods can be (and are) called with
+ different variable names. In OpenEmbedded for example, the shared state
+ (sstate) code uses the fetch module to fetch the sstate files.
+@@ -461,13 +461,6 @@ Here are some example URLs::
+    SRC_URI = "git://github.com/asciidoc/asciidoc-py;protocol=https;branch=main"
+    SRC_URI = "git://git@gitlab.freedesktop.org/mesa/mesa.git;branch=main;protocol=ssh;..."
+ 
+-.. note::
+-
+-   When using ``git`` as the fetcher of the main source code of your software,
+-   ``S`` should be set accordingly::
+-
+-       S = "${WORKDIR}/git"
+-
+ .. note::
+ 
+    Specifying passwords directly in ``git://`` urls is not supported.
+@@ -598,7 +591,7 @@ and port, username, and password, and fetches the Head Revision::
+    SRC_URI = "p4://example-depot/main/source/..."
+    SRCREV = "${AUTOREV}"
+    PV = "p4-${SRCPV}"
+-   S = "${WORKDIR}/p4"
++   S = "${UNPACKDIR}/p4"
+ 
+ Here is an example that specifies the server URL and port, username, and
+ password, and fetches a Revision based on a Label::
+@@ -607,15 +600,15 @@ password, and fetches a Revision based on a Label::
+    SRC_URI = "p4://user:passwd@example-depot/main/source/..."
+    SRCREV = "release-1.0"
+    PV = "p4-${SRCPV}"
+-   S = "${WORKDIR}/p4"
++   S = "${UNPACKDIR}/p4"
+ 
+ .. note::
+ 
+-   You should always set S to "${WORKDIR}/p4" in your recipe.
++   You should always set S to "${UNPACKDIR}/p4" in your recipe.
+ 
+ By default, the fetcher strips the depot location from the local file paths. In
+ the above example, the content of ``example-depot/main/source/`` will be placed
+-in ``${WORKDIR}/p4``.  For situations where preserving parts of the remote depot
++in ``${UNPACKDIR}/p4``.  For situations where preserving parts of the remote depot
+ paths locally is desirable, the fetcher supports two parameters:
+ 
+ - *"module":*
+-- 
+2.39.5
+
 
