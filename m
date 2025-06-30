@@ -1,93 +1,161 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C28AC7EE39
-	for <webhook@archiver.kernel.org>; Mon, 30 Jun 2025 10:21:19 +0000 (UTC)
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
- by mx.groups.io with SMTP id smtpd.web10.36208.1751278873911655300
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB3FC8302D
+	for <webhook@archiver.kernel.org>; Mon, 30 Jun 2025 12:45:19 +0000 (UTC)
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+ by mx.groups.io with SMTP id smtpd.web11.39191.1751287510139102709
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 30 Jun 2025 03:21:14 -0700
+ Mon, 30 Jun 2025 05:45:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=PrcT6Vyh;
- spf=pass (domain: gmail.com, ip: 209.85.219.48, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6f8aa9e6ffdso49088146d6.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Jun 2025 03:21:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751278873; x=1751883673; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uvV2wTjllD7H8DRJELrqoxQvBLHDn2yq0tWZINXh2gc=;
-        b=PrcT6Vyh/02c2fc6UbU+MCrwFeVT8kKLEFbkbKkIDi6NT0yCQwaG8Lat7Is+G9KBU/
-         jXLgAMXBK1Z1VmKomxABDxXLPOVJaMDsal2V+EZ5JW8dM1p2F7t9EHaTG/9k5jDzIXhH
-         Unc8EKBsSwNyhO4IB4TebLcQhPqgYzF0o+26ZMV8hNoA5RJyVeN5nJwUNvbYOjtx0zri
-         lfZSyxA/TFjF5ErZ3lqcDSpL0C7wpvaGJ+sXoE/y9rFR4ACbAzOCPwrdwl0fW4n7+OKT
-         thzRnpBTIJ7geYzyrrhkuVaDTUQLybpWimonYZEMMDdlpb1mazZULA109V/E8Z0fWJGP
-         jy2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751278873; x=1751883673;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uvV2wTjllD7H8DRJELrqoxQvBLHDn2yq0tWZINXh2gc=;
-        b=JCt982RcmONju1VFCO+ZwWFMV5Y1Ke9R/mMam5ijvFbA+HNXrLWMz6XwUCQvhj0wKd
-         4tYIkRmMs4dB74fL/Cf0/6pI4pjCYT4OpPLTHeUI+bO/sA855qPvTwW0IX/pSj0n50u9
-         xB3Q96ldVr+y7mXZYckPfL5uqxmLla58YnlEioyejlujg4E2pFV2G83EVhBGUe5ZbDLf
-         C7I34fimCOuGHe7OeMnIRmPd+G2J85iU447muWvP86/vMvaBTsRXQNQYBhr/Ehlvs2zE
-         DGcPCpvSLfzT0yHjuQnlg5VW9fJst0ddhrLW/dUwrvDojSkBhaIPpsq9y0m8Gv7XBqWc
-         5rsw==
-X-Forwarded-Encrypted: i=1; AJvYcCWdPPYY0/VUDDZakSrZuFyTD49O9fgl/MehxmY/ZdORKQRbNAYaMAxDjD6bnSwu/BkHmdCO9vrFtYauwEpN@lists.openembedded.org
-X-Gm-Message-State: AOJu0YyhhFz8a87qo426iAsZs8X2fDEbM+tIryPDhEJvsZnJv44ZkJog
-	mjlfHKpn+ex56F3rPxdQVa39XwcAwuNJ1lL60iNBbjkdKHlFD3WwjfUnbMQGNirIeGFj9plfex8
-	ZtfpaQ5BjF5VCzNwmuRkI86IcBRq5xz4=
-X-Gm-Gg: ASbGncskwSGNhXgDwMujJuwLVMHuxSLjVdvrjWmyo1s7YYH+lEXrXk+WjBxMocjfvjX
-	8wXOpA7Y7dfAQqOqoz1mOiLwDywXVbs83D/d1lyQdee9oRcC4v2gUqDMsTm2gmuT35MGV8zsA5S
-	mZ/1Fk8xqSsCCM4zQp4TDd40FTnPDwcKosQVNcu/icKZg9+1EuIab1R0yj7U4l4xPB6lkM3606b
-	K009p3AWpek1095
-X-Google-Smtp-Source: AGHT+IEprcyh/LbjqP1yo6jG080TLUZ8w6AxcBKpaMXIDJWzMvKFk48BfjqLjkdZkFuMzZ8C0NT8LXJeu65QX2W3syY=
-X-Received: by 2002:a05:6214:f2b:b0:6fa:acc1:f077 with SMTP id
- 6a1803df08f44-700134a8bb8mr178282166d6.35.1751278872827; Mon, 30 Jun 2025
- 03:21:12 -0700 (PDT)
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=PXnmmiWq;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.194, mailfrom: antonin.godard@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B70D34384C;
+	Mon, 30 Jun 2025 12:45:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751287507;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=zalhPfJUJQVPJmFzg2p+YWqZtX2o7kY4g3f71uoEZzU=;
+	b=PXnmmiWqTXJIeN+D95jcYG6EUwZNmUxGHRw61o0J11iBxnxUB1rNEVeacnxDK9foEFo1ee
+	afID7QPSstEm1OsPca5Vo9Bsx5SbyMgr1z/GkKOyEnFEfJo+595InQ4Vrorbc5dWDwxf5u
+	42c9CW2IFaXjFxLQMIRf6+A726sOZtjPHH0WuAlYo2shCjkPytr1OWAyv02gEneqMFLBHH
+	2Jox9NAMPjDQcheI6P2nvxepB3CUcTBWoYs0lTN3MZBaVCTnZg8MSInyqpn9vmOuxKA2ZT
+	IqqLB9nC9KuLtKwANTLY3l7a6B/PZxG7gwFGqz9mXYWV4OJYIsOWD3BaFgszpw==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Date: Mon, 30 Jun 2025 14:44:59 +0200
+Subject: [PATCH] doc: bitbake-user-manual-ref-variables: fixups
 MIME-Version: 1.0
-References: <20250623165507.1633860-1-alex.kanavin@gmail.com>
- <6fb30604dfb196088f07c6b59f437eeb0f1df788.camel@linuxfoundation.org>
- <CANNYZj8bcMto=-OHPNEZs_aEM4vr9K1ujVOZ77EDBT-9xC5sRw@mail.gmail.com>
- <749dde0c3ed74dc938085cd15316245eeaa15cc4.camel@linuxfoundation.org>
- <184C05EBFBF7A622.2779@lists.yoctoproject.org> <184C4DB835DB2097.24592@lists.yoctoproject.org>
-In-Reply-To: <184C4DB835DB2097.24592@lists.yoctoproject.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Mon, 30 Jun 2025 12:21:01 +0200
-X-Gm-Features: Ac12FXwdf9RYPG8XpXf9gX7qnn_Ww2-m3EDOA7v3zUlUH_RxhIyhZl0zacIxfw8
-Message-ID: <CANNYZj9JJXimG23QPDJ7kBZu1Q+ps9iS3dkf-HJqvWK+2q9VoQ@mail.gmail.com>
-Subject: Re: [yocto] [poky] [PATCH 1/2] meta-poky/conf/templates/default/bblayers.conf.sample:
- do not assume integrated poky repo
-To: yocto@lists.yoctoproject.org, alex.kanavin@gmail.com
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>, poky@lists.yoctoproject.org, 
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250630-bb-pressure-doc-fixups-v1-1-d5463a3cff2f@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAMuGYmgC/yWMQQqDQAxFryJZNzCdoqJXKV3MxKhxoTLpSEG8u
+ 7EuH/+/t4NyElZoix0Sb6KyzAbPRwE0hnlglM4YvPOlq14OY8Q1sWpOjN1C2Msvr4q+Dj4SNaF
+ uAphsH1v+4ffnZs1xYvpeNTiOE2vn9aR6AAAA
+X-Change-ID: 20250630-bb-pressure-doc-fixups-27a2bcc9a79a
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ docs@lists.yoctoproject.org, Quentin Schulz <quentin.schulz@cherry.de>, 
+ Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4337;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=lZh/hYV8KXjxD9gDxUFlHbiO9oEZUDoOcL2SZLyH+sY=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBoYobSQnVtP8FqM2A4jRJYM8AztQzZx6tmSTyN/
+ UgArgtEYhGJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaGKG0gAKCRDRgEFAKaOo
+ Nnv6EACx8Ks0xqUijB/uKoyXjod+lkoNoUM/YhenDnQ0W2aDfHwINVl71uR/Vx8bWoQKRZUU2Tg
+ ch/MFdFVsBCzvo5S/e9vrHzKAzQdQuZ3ths05+/3/gs9ERqKdN3CpQMDqDrs8yNd5dB45u/RXXz
+ ugUb/EykOP3X3HbPeQ100s/rHeYw465hBKNnMfLFuBmZwV/HYRbgAmMyOYa5zzS/m/a3ow6Rbq9
+ h+kPLN9t2ipFgfVJlEoYCt4ck5BLae5DM1ksTuDASzwKgdrpyL424j9HxokCjX1xB0t13PgPXIw
+ kAncQeczm2g4lfl9iU/+sQYCucdNNMBNJkrlcCh/4G2Vi4Uk1TaJ7eLK55DcdKJMSl7tJZKhJan
+ EU7kgv+G7trHOtIWP7RkfuYMYEDYCuxqDgi23pAld7hVHI5cZbJPldM34xM5wbFtFnmmakCRoNQ
+ IGlkLHIFliQxqWwr7fF9k0yD5W4k5ME8y9DnkG+nn4rLBu9voogJwWafTyBj7247JdgC5JnZCC5
+ EmpQT2OA90n9kx4QhfiUIYrIDHd58GcancTCHVDFXOUQ2CM8sBTruCTBOTxbiN6XW8qXZ+BUV/c
+ GMpLYV7IC/ZUBNzLGhkqTxnTOOQbYeY56Y1OD+ahx5wGNgXm6pRl0DTz9vGCKhDxUmlSzRU1pgk
+ jQ9YZg1ko0KuW4g==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduudejfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtjeertdertdejnecuhfhrohhmpeetnhhtohhnihhnucfiohgurghrugcuoegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdegteehlefgheegvddufeevheehveeijedvfeduvdefvdekueduuedvjeelteehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeftgekudemvggsrgejmedusgeksgemrgehtgelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeftgekudemvggsrgejmedusgeksgemrgehtgelpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohephedprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmhgsvgguuggvugdrohhrg
+ hdprhgtphhtthhopeguohgtsheslhhishhtshdrhihotghtohhprhhojhgvtghtrdhorhhgpdhrtghpthhtoheprghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtohepqhhuvghnthhinhdrshgthhhulhiisegthhgvrhhrhidruggv
+X-GND-Sasl: antonin.godard@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 30 Jun 2025 10:21:19 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17729
+ <bitbake-devel@lists.openembedded.org>; Mon, 30 Jun 2025 12:45:19 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17730
 
-On Wed, 25 Jun 2025 at 15:56, Alexander Kanavin via
-lists.yoctoproject.org <alex.kanavin=gmail.com@lists.yoctoproject.org>
-wrote:
+Fix typos reported by Quentin here:
+https://lore.kernel.org/r/cee995db-4c3d-4bf0-813d-ce3f5f8f92e3@cherry.de
+https://lore.kernel.org/r/73497b5e-721e-4e5f-beb4-c56ab9178c9f@cherry.de
 
-> Bitbake-setup would write out bblayers.conf with BBLAYERS entry
-> ('bitbake-layers add-layer' can't be used at that point yet), and then
-> enable fragments via bitbake-config-build (this is already
-> implemented). This should result in a functional build directory, with
-> a blank (or absent) local.conf.
->
-> Then this patch, and the ones adding 'blank' templates become unnecessary.
+Cc: Quentin Schulz <quentin.schulz@cherry.de>
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+---
+ .../bitbake-user-manual-ref-variables.rst          | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-I've now implemented this and resent the bitbake-setup patches. The
-sample 'poky-ng' config that doesn't need templates and specifies
-layers directly is here:
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index 6be8dbbf63..4ff95ea7ac 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -311,9 +311,9 @@ overview of their function and contents.
+       For example usage, see :term:`BB_GIT_SHALLOW`.
+ 
+    :term:`BB_GIT_DEFAULT_DESTSUFFIX`
+-      The default destination directory where the Git fetcher unpacks the
+-      source code. If this variable is not set, the source code is unpacked in a
+-      directory named "git".
++      The default destination directory where the :ref:`Git fetcher
++      <git-fetcher>` unpacks the source code. If this variable is not set, the
++      source code is unpacked in a directory named "git".
+ 
+    :term:`BB_GIT_SHALLOW`
+       Setting this variable to "1" enables the support for fetching, using and
+@@ -547,19 +547,19 @@ overview of their function and contents.
+          BB_PRESSURE_MAX_CPU = "15000"
+ 
+       Multiple values should be tested on the build host to determine what suits
+-      best, depending on the need for performances versus load average during
++      best, depending on the need for performance versus load average during
+       the build.
+ 
+       .. note::
+ 
+-         You may see numerous messages printed by BitBake in the case the
+-         :term:`BB_PRESSURE_MAX_CPU` is too low:
++         You may see numerous messages printed by BitBake in case the
++         :term:`BB_PRESSURE_MAX_CPU` is too low::
+ 
+             Pressure status changed to CPU: True, IO: False, Mem: False (CPU: 1105.9/2.0, IO: 0.0/2.0, Mem: 0.0/2.0) - using 1/64 bitbake threads
+ 
+          This means that the :term:`BB_PRESSURE_MAX_CPU` should be increased to
+          a reasonable value for limiting the CPU pressure on the system.
+-         Monitor the varying value after ``IO:`` above to set a sensible value.
++         Monitor the varying value after ``CPU:`` above to set a sensible value.
+ 
+    :term:`BB_PRESSURE_MAX_IO`
+       Specifies a maximum I/O pressure threshold, above which BitBake's
+@@ -584,12 +584,12 @@ overview of their function and contents.
+          BB_PRESSURE_MAX_IO = "15000"
+ 
+       Multiple values should be tested on the build host to determine what suits
+-      best, depending on the need for performances versus I/O usage during the
++      best, depending on the need for performance versus I/O usage during the
+       build.
+ 
+       .. note::
+ 
+-         You may see numerous messages printed by BitBake in the case the
++         You may see numerous messages printed by BitBake in case the
+          :term:`BB_PRESSURE_MAX_IO` is too low::
+ 
+             Pressure status changed to CPU: None, IO: True, Mem: False (CPU: 2236.0/None, IO: 153.6/2.0, Mem: 0.0/2.0) - using 19/64 bitbake threads
+@@ -623,12 +623,12 @@ overview of their function and contents.
+          BB_PRESSURE_MAX_MEMORY = "15000"
+ 
+       Multiple values should be tested on the build host to determine what suits
+-      best, depending on the need for performances versus memory consumption
++      best, depending on the need for performance versus memory consumption
+       during the build.
+ 
+       .. note::
+ 
+-         You may see numerous messages printed by BitBake in the case the
++         You may see numerous messages printed by BitBake in case the
+          :term:`BB_PRESSURE_MAX_MEMORY` is too low::
+ 
+             Pressure status changed to CPU: None, IO: False, Mem: True (CPU: 29.5/None, IO: 0.0/2.0, Mem: 2553.3/2.0) - using 17/64 bitbake threads
 
-https://github.com/kanavin/bitbake-setup-configurations/blob/main/yocto-master.conf.json
+---
+base-commit: 09baa527dafca4bdf56a9189f6b3f7512886cbfb
+change-id: 20250630-bb-pressure-doc-fixups-27a2bcc9a79a
 
-Alex
+Best regards,
+--  
+Antonin Godard <antonin.godard@bootlin.com>
+
 
