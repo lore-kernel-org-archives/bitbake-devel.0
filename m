@@ -2,157 +2,102 @@ Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB3FC8302D
-	for <webhook@archiver.kernel.org>; Mon, 30 Jun 2025 12:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F82CC7EE30
+	for <webhook@archiver.kernel.org>; Tue,  1 Jul 2025 09:54:02 +0000 (UTC)
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
- by mx.groups.io with SMTP id smtpd.web11.39191.1751287510139102709
+ by mx.groups.io with SMTP id smtpd.web10.6465.1751363632703397357
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 30 Jun 2025 05:45:10 -0700
+ Tue, 01 Jul 2025 02:53:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=PXnmmiWq;
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=pQIwnM0f;
  spf=pass (domain: bootlin.com, ip: 217.70.183.194, mailfrom: antonin.godard@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B70D34384C;
-	Mon, 30 Jun 2025 12:45:06 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7157D43123;
+	Tue,  1 Jul 2025 09:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751287507;
+	t=1751363630;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=zalhPfJUJQVPJmFzg2p+YWqZtX2o7kY4g3f71uoEZzU=;
-	b=PXnmmiWqTXJIeN+D95jcYG6EUwZNmUxGHRw61o0J11iBxnxUB1rNEVeacnxDK9foEFo1ee
-	afID7QPSstEm1OsPca5Vo9Bsx5SbyMgr1z/GkKOyEnFEfJo+595InQ4Vrorbc5dWDwxf5u
-	42c9CW2IFaXjFxLQMIRf6+A726sOZtjPHH0WuAlYo2shCjkPytr1OWAyv02gEneqMFLBHH
-	2Jox9NAMPjDQcheI6P2nvxepB3CUcTBWoYs0lTN3MZBaVCTnZg8MSInyqpn9vmOuxKA2ZT
-	IqqLB9nC9KuLtKwANTLY3l7a6B/PZxG7gwFGqz9mXYWV4OJYIsOWD3BaFgszpw==
+	bh=8MgbW5GJcGIg6ONyslmu8AvkjMiHH4TpnJIXXTzBNTE=;
+	b=pQIwnM0fNQcaMZy71bGmnDGOiScBYYnaWoW/rni6SDbrhyKTMYdBSym2GUIO0xCuqKgZgp
+	s++PVzBk9OZ50cTkn5y2kyxyzD5ZYT7hn5YgM5ENoSZK9MeOMg6eX2IRqWiPE8jhHTt1d+
+	/Kbvzb7JiMprPtyH9pOKd4Es+gz1UPtuwlmn2uAC56sIhhpmVY9jfjswFVWFf2g84jEFNt
+	P/VhYw3mCkLZ4Trlv5e52zUGAfS6fo2OBoSq5fAOe+n0/xfXeyIQZvE7cMORV3O3BBvKQZ
+	SnOCBV8psaRuEgmMFgACdk0AVNfrMw2OFoTdVvvbZXABhmRipPnSZGg0N0bg7w==
 From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Mon, 30 Jun 2025 14:44:59 +0200
-Subject: [PATCH] doc: bitbake-user-manual-ref-variables: fixups
+Date: Tue, 01 Jul 2025 11:53:41 +0200
+Subject: [PATCH] runqueue: show the current pressure as debug messages
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250630-bb-pressure-doc-fixups-v1-1-d5463a3cff2f@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAMuGYmgC/yWMQQqDQAxFryJZNzCdoqJXKV3MxKhxoTLpSEG8u
- 7EuH/+/t4NyElZoix0Sb6KyzAbPRwE0hnlglM4YvPOlq14OY8Q1sWpOjN1C2Msvr4q+Dj4SNaF
- uAphsH1v+4ffnZs1xYvpeNTiOE2vn9aR6AAAA
-X-Change-ID: 20250630-bb-pressure-doc-fixups-27a2bcc9a79a
+Message-Id: <20250701-pressure-messages-v1-1-bebffe123676@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIACSwY2gC/yWMSwqAMAwFryJZW6hFUbyKuGhr1Ah+aKwI4t2Nu
+ noMvJkLGAMhQ51cEPAgpnURyNIE/GiXARV1wmC0KXSpM7UFZI4B1SxrB2Tl8tJXlXHe5hbEk0d
+ P59ds2p85ugn9/obgvh9E2c3YdQAAAA==
+X-Change-ID: 20250701-pressure-messages-b47c882bca4a
 To: bitbake-devel@lists.openembedded.org
 Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- docs@lists.yoctoproject.org, Quentin Schulz <quentin.schulz@cherry.de>, 
  Antonin Godard <antonin.godard@bootlin.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4337;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1777;
  i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=lZh/hYV8KXjxD9gDxUFlHbiO9oEZUDoOcL2SZLyH+sY=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBoYobSQnVtP8FqM2A4jRJYM8AztQzZx6tmSTyN/
- UgArgtEYhGJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaGKG0gAKCRDRgEFAKaOo
- Nnv6EACx8Ks0xqUijB/uKoyXjod+lkoNoUM/YhenDnQ0W2aDfHwINVl71uR/Vx8bWoQKRZUU2Tg
- ch/MFdFVsBCzvo5S/e9vrHzKAzQdQuZ3ths05+/3/gs9ERqKdN3CpQMDqDrs8yNd5dB45u/RXXz
- ugUb/EykOP3X3HbPeQ100s/rHeYw465hBKNnMfLFuBmZwV/HYRbgAmMyOYa5zzS/m/a3ow6Rbq9
- h+kPLN9t2ipFgfVJlEoYCt4ck5BLae5DM1ksTuDASzwKgdrpyL424j9HxokCjX1xB0t13PgPXIw
- kAncQeczm2g4lfl9iU/+sQYCucdNNMBNJkrlcCh/4G2Vi4Uk1TaJ7eLK55DcdKJMSl7tJZKhJan
- EU7kgv+G7trHOtIWP7RkfuYMYEDYCuxqDgi23pAld7hVHI5cZbJPldM34xM5wbFtFnmmakCRoNQ
- IGlkLHIFliQxqWwr7fF9k0yD5W4k5ME8y9DnkG+nn4rLBu9voogJwWafTyBj7247JdgC5JnZCC5
- EmpQT2OA90n9kx4QhfiUIYrIDHd58GcancTCHVDFXOUQ2CM8sBTruCTBOTxbiN6XW8qXZ+BUV/c
- GMpLYV7IC/ZUBNzLGhkqTxnTOOQbYeY56Y1OD+ahx5wGNgXm6pRl0DTz9vGCKhDxUmlSzRU1pgk
- jQ9YZg1ko0KuW4g==
+ bh=MhE/RJpZ8g05d7q/x0yXprOij5I4DAop9uL1YELNRyw=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBoY7AtyoT7Zg256x5R/xoub1aa7kxkNBKzJtxgJ
+ ZUOz8EsB8CJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaGOwLQAKCRDRgEFAKaOo
+ Ng72EACVI4z+fZVylO04ea56wvTiz3WY6YqDRbWDBlkEXarkLqfnZpC8XAhgEMHYcyzCAWdodCk
+ hmjR9Jt/zj7jt+i8BYIOFO+5i9cV9ThpLIAjdIzHxyGe13jXq3fGVN46j7glTPQVfSmwwOtlWcE
+ 8ov4fgDKOZuuxPjvbJZDwAy5TT4E3k0u9JwE0+HxdTm15rZMAhjakaI5XPn1hXRa9bCA3Ef/FDQ
+ LcuDd3mMopIf9PQUlaWnRoOUUaUt5tUnqbETUZ73BJd2seCvmjTcl+OY/4IOFhW36+tTlQa7eBv
+ RJSheXXaRtgO1Vu61MmiXuP9BvB4UWergk8q+L7lyxjaXh7Fs63tFmDa7edlEzChY6y2eDQ3maZ
+ NMiGMCTQFAL5oFRs024aqQkVx+RGBIQ6HZoHYCJWPHS+8BTTUkL5mua8cdvPYsooQjd9z02gzZk
+ 91F/v/cFlv4e9DsdGumvBqUitMMd2CKnZwoR1KdUD/3nle2zUx9HEXizsEcsg0Z1W3bS+giT2/y
+ ScY3emu9xi+sWGc9BJ437Uhp7Iq7Oq914IPzytRvReczuxND32m+Qt5ZsoVregD2sBMFO/fzXWp
+ riuT22TeLbAyN9bDfrJUuZN5gBjd7tfJDfYAAbIDHx09x64MjwN9dFl6lFSg+/sIjF8rlZtnTRO
+ HNqtfVRdWzt104w==
 X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
  fpr=8648725188DD401BB9A0D3FFD180414029A3A836
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduudejfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtjeertdertdejnecuhfhrohhmpeetnhhtohhnihhnucfiohgurghrugcuoegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdegteehlefgheegvddufeevheehveeijedvfeduvdefvdekueduuedvjeelteehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeftgekudemvggsrgejmedusgeksgemrgehtgelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeftgekudemvggsrgejmedusgeksgemrgehtgelpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohephedprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmhgsvgguuggvugdrohhrg
- hdprhgtphhtthhopeguohgtsheslhhishhtshdrhihotghtohhprhhojhgvtghtrdhorhhgpdhrtghpthhtoheprghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtohepqhhuvghnthhinhdrshgthhhulhiisegthhgvrhhrhidruggv
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddugedvfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtjeertdertdejnecuhfhrohhmpeetnhhtohhnihhnucfiohgurghrugcuoegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudeijeeltdeiueetffevteelueffiedvffejgfethefgheelieetheeiueeikeeunecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfegtkedumegvsggrjeemudgskegsmegrhegtleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfegtkedumegvsggrjeemudgskegsmegrhegtledphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomheprghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefpdhrtghpthhtohepsghithgsrghkvgdquggvvhgvlheslhhishhtshdrohhpvghnvghmsggvugguvggurdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnthhonhhinhdrghhou
+ ggrrhgusegsohhothhlihhnrdgtohhm
 X-GND-Sasl: antonin.godard@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 30 Jun 2025 12:45:19 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17730
+ <bitbake-devel@lists.openembedded.org>; Tue, 01 Jul 2025 09:54:02 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17731
 
-Fix typos reported by Quentin here:
-https://lore.kernel.org/r/cee995db-4c3d-4bf0-813d-ce3f5f8f92e3@cherry.de
-https://lore.kernel.org/r/73497b5e-721e-4e5f-beb4-c56ab9178c9f@cherry.de
+The current pressure logic only prints pressure information when the
+limits set by BB_PRESSURE_* variables are exceeded. But in order to
+determine the best pressure limits for a given host, it can be useful to
+monitor pressure information after setting BB_PRESSURE_* to the maximum
+(1000000) and get a sense of how high the pressure can be.
 
-Cc: Quentin Schulz <quentin.schulz@cherry.de>
+Add three bb.debug() calls showing that information.
+
 Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
 ---
- .../bitbake-user-manual-ref-variables.rst          | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ lib/bb/runqueue.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index 6be8dbbf63..4ff95ea7ac 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -311,9 +311,9 @@ overview of their function and contents.
-       For example usage, see :term:`BB_GIT_SHALLOW`.
- 
-    :term:`BB_GIT_DEFAULT_DESTSUFFIX`
--      The default destination directory where the Git fetcher unpacks the
--      source code. If this variable is not set, the source code is unpacked in a
--      directory named "git".
-+      The default destination directory where the :ref:`Git fetcher
-+      <git-fetcher>` unpacks the source code. If this variable is not set, the
-+      source code is unpacked in a directory named "git".
- 
-    :term:`BB_GIT_SHALLOW`
-       Setting this variable to "1" enables the support for fetching, using and
-@@ -547,19 +547,19 @@ overview of their function and contents.
-          BB_PRESSURE_MAX_CPU = "15000"
- 
-       Multiple values should be tested on the build host to determine what suits
--      best, depending on the need for performances versus load average during
-+      best, depending on the need for performance versus load average during
-       the build.
- 
-       .. note::
- 
--         You may see numerous messages printed by BitBake in the case the
--         :term:`BB_PRESSURE_MAX_CPU` is too low:
-+         You may see numerous messages printed by BitBake in case the
-+         :term:`BB_PRESSURE_MAX_CPU` is too low::
- 
-             Pressure status changed to CPU: True, IO: False, Mem: False (CPU: 1105.9/2.0, IO: 0.0/2.0, Mem: 0.0/2.0) - using 1/64 bitbake threads
- 
-          This means that the :term:`BB_PRESSURE_MAX_CPU` should be increased to
-          a reasonable value for limiting the CPU pressure on the system.
--         Monitor the varying value after ``IO:`` above to set a sensible value.
-+         Monitor the varying value after ``CPU:`` above to set a sensible value.
- 
-    :term:`BB_PRESSURE_MAX_IO`
-       Specifies a maximum I/O pressure threshold, above which BitBake's
-@@ -584,12 +584,12 @@ overview of their function and contents.
-          BB_PRESSURE_MAX_IO = "15000"
- 
-       Multiple values should be tested on the build host to determine what suits
--      best, depending on the need for performances versus I/O usage during the
-+      best, depending on the need for performance versus I/O usage during the
-       build.
- 
-       .. note::
- 
--         You may see numerous messages printed by BitBake in the case the
-+         You may see numerous messages printed by BitBake in case the
-          :term:`BB_PRESSURE_MAX_IO` is too low::
- 
-             Pressure status changed to CPU: None, IO: True, Mem: False (CPU: 2236.0/None, IO: 153.6/2.0, Mem: 0.0/2.0) - using 19/64 bitbake threads
-@@ -623,12 +623,12 @@ overview of their function and contents.
-          BB_PRESSURE_MAX_MEMORY = "15000"
- 
-       Multiple values should be tested on the build host to determine what suits
--      best, depending on the need for performances versus memory consumption
-+      best, depending on the need for performance versus memory consumption
-       during the build.
- 
-       .. note::
- 
--         You may see numerous messages printed by BitBake in the case the
-+         You may see numerous messages printed by BitBake in case the
-          :term:`BB_PRESSURE_MAX_MEMORY` is too low::
- 
-             Pressure status changed to CPU: None, IO: False, Mem: True (CPU: 29.5/None, IO: 0.0/2.0, Mem: 2553.3/2.0) - using 17/64 bitbake threads
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 80f3d3282f..cae4bfa3e5 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -206,6 +206,9 @@ class RunQueueScheduler(object):
+                 cpu_pressure = (float(curr_cpu_pressure) - float(self.prev_cpu_pressure)) / tdiff
+                 io_pressure = (float(curr_io_pressure) - float(self.prev_io_pressure)) / tdiff
+                 memory_pressure = (float(curr_memory_pressure) - float(self.prev_memory_pressure)) / tdiff
++                bb.debug(3, f"Current CPU pressure: {cpu_pressure}")
++                bb.debug(3, f"Current IO pressure: {io_pressure}")
++                bb.debug(3, f"Current Memory pressure: {memory_pressure}")
+                 exceeds_cpu_pressure =  self.rq.max_cpu_pressure and cpu_pressure > self.rq.max_cpu_pressure
+                 exceeds_io_pressure =  self.rq.max_io_pressure and io_pressure > self.rq.max_io_pressure
+                 exceeds_memory_pressure =  self.rq.max_memory_pressure and memory_pressure > self.rq.max_memory_pressure
 
 ---
-base-commit: 09baa527dafca4bdf56a9189f6b3f7512886cbfb
-change-id: 20250630-bb-pressure-doc-fixups-27a2bcc9a79a
+base-commit: f68b513c38fa33c89236efbaab2674a25983d5e1
+change-id: 20250701-pressure-messages-b47c882bca4a
 
 Best regards,
 --  
