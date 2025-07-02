@@ -1,117 +1,107 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <ecordonnier@snap.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7DEC83013
-	for <webhook@archiver.kernel.org>; Wed,  2 Jul 2025 06:22:02 +0000 (UTC)
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
- by mx.groups.io with SMTP id smtpd.web11.17241.1751437316942983509
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3877EC83F03
+	for <webhook@archiver.kernel.org>; Wed,  2 Jul 2025 20:48:31 +0000 (UTC)
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+ by mx.groups.io with SMTP id smtpd.web11.7133.1751489303505870311
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 01 Jul 2025 23:21:57 -0700
+ Wed, 02 Jul 2025 13:48:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=jtMzDkNw;
- spf=pass (domain: bootlin.com, ip: 217.70.183.199, mailfrom: antonin.godard@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 74F55443D0;
-	Wed,  2 Jul 2025 06:21:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751437314;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+FHqX3oGRwQ5/f9YD1hZXYu/I0wQurdRVw0dMyxcHA8=;
-	b=jtMzDkNwa5PKcfeEg+zaMkiwjtElc+fODhUwhG2pzUOowKO7mI8Vy7ao9tw355Gzkzdlfp
-	gVWUBjPcayU4qos6usBk7wW/C+uFiQgXqQZ5H1xc7bzG7O7BwXCiqxDaryflaKme5iw61t
-	kgOD3Mkh/LCo/3jj/C2WkykTdSazIr9AcO4q80xPXIRcNj73HCsbG+5Vt9yllI/Z4eGGDW
-	9EyI54VXF9MgM2NGz5NXiecSeW195gJATKZmcE4YycPuGXxAksXC2p0MGoE5SL6LHSrBCW
-	SUVJ0IeGidq43OQ+Q/LQpYd2gVGNySQOrNn92wPw+FIDfPaiZ8b8mLeFXyDMXw==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 02 Jul 2025 08:21:54 +0200
-Message-Id: <DB1CPMFTBKOK.1B0C9LPTCQK1B@bootlin.com>
-To: "Richard Purdie" <richard.purdie@linuxfoundation.org>,
- <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH] runqueue: show the current pressure as
- debug messages
-Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>
-From: "Antonin Godard" <antonin.godard@bootlin.com>
-References: <20250701-pressure-messages-v1-1-bebffe123676@bootlin.com>
- <e0ec39370f30659958447e6a5def8d88d3dc4649.camel@linuxfoundation.org>
-In-Reply-To: <e0ec39370f30659958447e6a5def8d88d3dc4649.camel@linuxfoundation.org>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduieeijecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffvufevhfhfjgesthhqredttddtjeenucfhrhhomhepfdetnhhtohhnihhnucfiohgurghrugdfuceorghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevhffgjeejleetfeehgefhvddvfedvuddtjeegudeuhfdtvdffleejvdfhtdehieenucffohhmrghinhepohhpvghnvghmsggvugguvggurdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemkeegvdelmeekudejrgemgedttddumegttdgsvgemugehkegrmeegvdeltdemlegvrgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeekgedvleemkedujegrmeegtddtudemtgdtsggvmeguheekrgemgedvledtmeelvggrjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefpdhrtghpthhtoheprhhitghhrghrugdrphhurhguihgvsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepsghithgsrghkvgdqu
- ggvvhgvlheslhhishhtshdrohhpvghnvghmsggvugguvggurdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: antonin.godard@bootlin.com
+ dkim=pass header.i=@snap.com header.s=google header.b=a/MaI8OD;
+ spf=pass (domain: snapchat.com, ip: 209.85.218.47, mailfrom: ecordonnier@snapchat.com)
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ae35f36da9dso982603566b.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 02 Jul 2025 13:48:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=snap.com; s=google; t=1751489302; x=1752094102; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eOFgpB9S6rNQwk5jLBUBM11ebIbOFEvQSQtLPJCdmZw=;
+        b=a/MaI8ODiamFFWpatOIaZnrK02lYbUzxfRwsh5pf/faGuwXB5Ckx+aB4efa1fBHMdz
+         PPOP3xaoYP1iJLjyqBupJQRca2ZdlgI3XJ2foYQy+62C7fjO6v4AiRRJr1yzWbPmp5jg
+         6gx2MdqErkNSB4wHlOKdzsot6Zxwksp4C5hQ8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751489302; x=1752094102;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eOFgpB9S6rNQwk5jLBUBM11ebIbOFEvQSQtLPJCdmZw=;
+        b=SLCJRbxW41YCNgFXf2tmVp7Krpj0QJfrBYEnGgc6dKnx2eoY2XxALWsxtnEljT6Pha
+         FMOfMqoD10s84SnHkU0sWmwJUeBLsEJ9l1XQ0u1aU6T1HjbVLsgZp5tUs0fJ8TbCN7j9
+         ZcvKiYvGA2HEDSSl59KXkrhrcLTMtkVGBPZ/D0VSbVowQrSRf6A3hDfYMHv/v2TQVrnR
+         80keECqng/CK/svYiIePiHm+GoGusr5r8BIcjFfkJGUvXgi5o3VsdM80XS3bjiSbHXr6
+         h/Ua8Jt11tHlfZbKqZyew1yAvPtW0tve7rBE7yXYPGwlPEDa8ARJ5TJOx3vHnxOe6XvY
+         jThg==
+X-Gm-Message-State: AOJu0YyIW6yDxsHDbMrjqbU2Or43pmfIJhebVy2HoplpzZnR7D0WmX0l
+	0P51p7oWgGZqYSZkR9wToM7ADpzoax8o7eDhH0U2tYtkn+XmgBjtYtrt9D//5zwgJUONkVfpkeG
+	mCJNILZQ=
+X-Gm-Gg: ASbGncsdeQivaEcWKibSdpmwuUVn4j/jSNRQtUiv2V1QJF85CW0Jy2cpXu0BBj+wFBH
+	ly3de98vjOZATTlXZMLaBEpOFw50RTkWzjEpaEGJkyu1+DqsswoG8FHoOdKgdsjJWB4sc6J04fP
+	V/hvyEDAjkn4b5bwcUBSayLAdc+vCiCpeYoVDRyv6Jnc0IO8pja6ltmogc6k7AEGaDOjeA1Orqt
+	IeV3r0yOwGNRcrdSIwfovtOE387S77M8HCIoWAq/fizfHX9VOyw42hh//NmNPzkF5axLK/eaQvb
+	CMwQlK/4M/goDN4VDDFBdO39UvY4okgZTwPpkSTFe3u/1Xjs6hddX8PIP77xVJF4f8sJbFdeEYa
+	T12f6TQ++yQ==
+X-Google-Smtp-Source: AGHT+IEB1n/YQ9fiHB7wMh+RBxfNYguNHgt8uBZyCmEGe0YSR8UJ1eNLA2ThagzgPieAMclM1s/7Mg==
+X-Received: by 2002:a17:907:6d21:b0:ad8:a41a:3cd2 with SMTP id a640c23a62f3a-ae3d8397340mr67056966b.16.1751489301490;
+        Wed, 02 Jul 2025 13:48:21 -0700 (PDT)
+Received: from lj8k2dq3.sc-core.net ([213.249.125.50])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c831a0e27sm9604644a12.37.2025.07.02.13.48.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 13:48:20 -0700 (PDT)
+From: ecordonnier@snap.com
+To: bitbake-devel@lists.openembedded.org
+Cc: Etienne Cordonnier <ecordonnier@snap.com>
+Subject: [PATCH] uihelper: Fix KeyError race condition in pidmap access
+Date: Wed,  2 Jul 2025 22:47:58 +0200
+Message-ID: <20250702204758.2773339-1-ecordonnier@snap.com>
+X-Mailer: git-send-email 2.43.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 02 Jul 2025 06:22:02 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17735
+ <bitbake-devel@lists.openembedded.org>; Wed, 02 Jul 2025 20:48:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17736
 
-On Tue Jul 1, 2025 at 11:23 PM CEST, Richard Purdie wrote:
-> On Tue, 2025-07-01 at 11:53 +0200, Antonin Godard via lists.openembedded.=
-org wrote:
->> The current pressure logic only prints pressure information when the
->> limits set by BB_PRESSURE_* variables are exceeded. But in order to
->> determine the best pressure limits for a given host, it can be useful to
->> monitor pressure information after setting BB_PRESSURE_* to the maximum
->> (1000000) and get a sense of how high the pressure can be.
->>=20
->> Add three bb.debug() calls showing that information.
->>=20
->> Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
->> ---
->> =C2=A0lib/bb/runqueue.py | 3 +++
->> =C2=A01 file changed, 3 insertions(+)
->>=20
->> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
->> index 80f3d3282f..cae4bfa3e5 100644
->> --- a/lib/bb/runqueue.py
->> +++ b/lib/bb/runqueue.py
->> @@ -206,6 +206,9 @@ class RunQueueScheduler(object):
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 cpu_pressure =3D (float(curr_cpu_pressure) - float=
-(self.prev_cpu_pressure)) / tdiff
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 io_pressure =3D (float(curr_io_pressure) - float(s=
-elf.prev_io_pressure)) / tdiff
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 memory_pressure =3D (float(curr_memory_pressure) -=
- float(self.prev_memory_pressure)) / tdiff
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 bb.debug(3, f"Current CPU pressure: {cpu_pressure}")
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 bb.debug(3, f"Current IO pressure: {io_pressure}")
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 bb.debug(3, f"Current Memory pressure: {memory_pressu=
-re}")
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 exceeds_cpu_pressure =3D=C2=A0 self.rq.max_cpu_pre=
-ssure and cpu_pressure > self.rq.max_cpu_pressure
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 exceeds_io_pressure =3D=C2=A0 self.rq.max_io_press=
-ure and io_pressure > self.rq.max_io_pressure
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 exceeds_memory_pressure =3D=C2=A0 self.rq.max_memo=
-ry_pressure and memory_pressure > self.rq.max_memory_pressure
->>=20
->
-> I'm torn on this, debug messages aren't without their overhead even if
-> not printed. How often do these end up outputted? If nothing else there
-> should be one bb.debug call and not 3...
+From: Etienne Cordonnier <ecordonnier@snap.com>
 
-Actually, quite a lot, so I should reduce this to one call, or find out a w=
-ay to
-reduce the amount of messages printed.
+I'm seeing random build errors on scarthgap 5.0.10 because the pid is not contained in pidmap.
+Fix the error by ensure the PID exists in pidmap before accessing it.
 
-Thanks,
-Antonin
+Call-stack of the error:
 
---=20
-Antonin Godard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+```
+Traceback (most recent call last):
+  File "poky/bitbake/lib/bb/ui/knotty.py", line 681, in main
+    helper.eventHandler(event)
+  File "poky/bitbake/lib/bb/ui/uihelper.py", line 43, in eventHandler
+    removetid(event.pid, tid)
+  File "poky/bitbake/lib/bb/ui/uihelper.py", line 28, in removetid
+    if self.pidmap[pid] == tid:
+KeyError: 21041
+WARNING: Exiting due to interrupt.
+```
+
+Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
+---
+ lib/bb/ui/uihelper.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/bb/ui/uihelper.py b/lib/bb/ui/uihelper.py
+index e6983bd55..0bc526ca1 100644
+--- a/lib/bb/ui/uihelper.py
++++ b/lib/bb/ui/uihelper.py
+@@ -25,7 +25,7 @@ class BBUIHelper:
+         def removetid(pid, tid):
+             self.running_pids.remove(tid)
+             del self.running_tasks[tid]
+-            if self.pidmap[pid] == tid:
++            if pid in self.pidmap and self.pidmap[pid] == tid:
+                 del self.pidmap[pid]
+             self.needUpdate = True
+ 
+-- 
+2.43.0
 
 
