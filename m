@@ -1,142 +1,211 @@
-Return-Path: <ecordonnier@snap.com>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA187C83F03
-	for <webhook@archiver.kernel.org>; Thu,  3 Jul 2025 14:25:36 +0000 (UTC)
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
- by mx.groups.io with SMTP id smtpd.web10.24044.1751552732951659666
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E77C83F03
+	for <webhook@archiver.kernel.org>; Thu,  3 Jul 2025 14:28:06 +0000 (UTC)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+ by mx.groups.io with SMTP id smtpd.web11.23944.1751552883083007931
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 03 Jul 2025 07:25:33 -0700
+ Thu, 03 Jul 2025 07:28:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@snap.com header.s=google header.b=WgsN48M0;
- spf=pass (domain: snapchat.com, ip: 209.85.208.43, mailfrom: ecordonnier@snapchat.com)
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-608acb0a27fso8785689a12.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 03 Jul 2025 07:25:32 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Tj3k02ys;
+ spf=pass (domain: gmail.com, ip: 209.85.167.45, mailfrom: jpewhacker@gmail.com)
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5561ab55c4dso4899740e87.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 03 Jul 2025 07:28:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=snap.com; s=google; t=1751552731; x=1752157531; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WyAxNqyQ9aUSPjUMZh7GEUwwHRL0PJ2wynxK0GtDH8Y=;
-        b=WgsN48M0EZVPMUy6BgmxwHCOPaZr0NBXI6y3f2iHzt7gwmcqP57ujBbLpUTXl9CGbq
-         V4kBKqZcgmbeNKKfZ31KxOngRX7TFP6guR3C8LPZ4L+ehfrn9RjoxsX9T5I2nUXpGTii
-         KtVPfgJ43O+3fgzXBvoDgiuXpm8Zf4MnpPeIM=
+        d=gmail.com; s=20230601; t=1751552881; x=1752157681; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VhE3chwZMHDMoVrv6wZe8YOESwy5vhSPhWFIjLugl4c=;
+        b=Tj3k02ysM6yk/y8jcj/AbwU1M+2kXpSJ2wV3KLnrod2sTXXpTtRzCxzi9hHKuc3gGy
+         G9YW0gg76P5CrYyUTLrq90KYzDYAQC200T6TYoQiDgJtUNsDcqR2Qy4HFqa9a6ntpElb
+         PW6r+NLwKEbud+gIbDnu2Zjvsr8NDcyWoeU7IsvkC2Ru5RjjyOX0E4p8Ytg+9G9nHLjT
+         mBDqMDbox35z29kna3ZexmMA/bLsbFBzZCsw7O/shcRseOWVvSZHXHVx8BnQD1umsLFd
+         L/IlSOs+BFh4D6PEexpaJ8rRUAxc3gOasxSlUMFoCU5vKLKls0CB7Ha2gZ1DVaELlWIh
+         oJ7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751552731; x=1752157531;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WyAxNqyQ9aUSPjUMZh7GEUwwHRL0PJ2wynxK0GtDH8Y=;
-        b=tQmBSkyK9sLS7kAOqA/aob2rj+XRgjpEiv9bofmIXkidOtRyZw65HB93xUmS1FUIAx
-         G4QrzDFIfTwmbrNv89IvIV1RnY0iWrmC4y0ncqWLbjBdpLHOSTRiRaqVmP0PqUP1+HvH
-         3kU0x7pOtup9SPI0qfGhOQ9Bmcc4wfCWlcZiHxrTB1gpzvAc7lgbZyX2t4uuaxCHj2Ae
-         9wifnZNfwecqvmqWA4pr5qXFfrc1PdsSDPP1J7gdljc/ge7U/M6qAdXHxEF2W/wFwyVe
-         xlFvJf5h0qklm5NSjOZ2ygcrBcwRgaqIOMdsvBqY0jV6CSR20/dPfebbAn1rCicKirfw
-         UMtg==
-X-Gm-Message-State: AOJu0YzBxb3tCNlbDR+x1R9jp0t00ctATDECRG0nS0hx/P4kddyqZFLy
-	nEvoEMHEMOMtEgEHL0YIVdYkVg2QkvNxGgCnt0ToyXlLDSQUzzHsae+71se+jFeY3gsUMgJzTvN
-	zLjRGvm4YepwrXDGSTECtdkNN58yaekRh0oSOUPtbgg==
-X-Gm-Gg: ASbGncscocWX6hTSrP5jiYMJ1o2VwsQBGop5FsmYrZIzdJvnEqrbkeh+j6iTrN1HSHz
-	kNl1++qTuSc0Kmi+6mTD3r0BrkA0vgrdkJaCXQ1pusOQgFdwL13p5ZcwcWLqW5qh7P0FlURFCjD
-	5zOxVNVVzoE+16WtpsNzh35qraPJhdnLtyybk1d/FajG6i
-X-Google-Smtp-Source: AGHT+IEBfZhTpdQbo9c5dEyurKWLVdCiu3WkPRewSTI4qsynLWge+oezfCeM/ssMPgeKgUeXRKQm30S8h4LX2p+3SR4=
-X-Received: by 2002:a17:906:12d3:b0:ade:40cb:2515 with SMTP id
- a640c23a62f3a-ae3c2c7f6f0mr605312366b.59.1751552730928; Thu, 03 Jul 2025
- 07:25:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751552881; x=1752157681;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VhE3chwZMHDMoVrv6wZe8YOESwy5vhSPhWFIjLugl4c=;
+        b=l5COkPhGzJEJ/sGrChgZW0MLzd+w8YuUXQIYiGyRrjLqzvlS3Sv+qFSglHSKtvce4e
+         bkWdZJ+wissi5lcyQT6Y1DAh9y16kjT6IRG33p2kKXnOilBS/nXTEpiCAb/mVK/D5I5R
+         712Htx4U+6JJ4exsMKDjVeXlXphCyqxE8r+PYInsblOCFtJD8bTAZJe5HC7CGN5wTYbA
+         86N4YtRdW29QtRoon+flJ/X/HWSjk1a/hNBz1Jj3/zSNMfr/hnnD+BA9N2cgB3xHbhsT
+         XHapL3DI5wZO+N72DfG/OGW/X12cM8HGsHdKna7b8BUkXgCDeqHQH/4TMH7DNTXKMhGM
+         LzHA==
+X-Gm-Message-State: AOJu0Yx7/zVwtzYEvjbO+khjJiPjKIiEArDji2/1K2IbVxL0cYEBW4xU
+	Z9iNh0mfuT0NhmG0xxpnCgcr/R0vNRA2v0pkCHiSwRvGhY62z3wy+FuYT5vKnCBP94pi7wSJniM
+	KwmW1zwxKm1dQ8NEvtS0p6bT8HrZ3m7E=
+X-Gm-Gg: ASbGncvfqMB7uj8y/YLtkaG5p5wn6NuLBlsootgRVQxYjL4NFdu46W0hL3cjykgWSHH
+	mtgev66LLQ1dHqxVmMNcMRrTbpNA9/yF9Q0NU07AbSlPZx4U0BTRarYebmxYh6zoPXVkl5EJsA3
+	CeCskln9CVevSSrltEzKobvfYR4NQStCy8NiREOAdrGz9f3ghkvjQQi9/45g==
+X-Google-Smtp-Source: AGHT+IG5E0lNyF0YPN+ztwG9/z2ykpqkbRJEpWwBVluIsZA1vslh3Znv3RkF0zp26uQ4zGZIl03QNF1/CO0rN2iR1KQ=
+X-Received: by 2002:a05:6512:3b89:b0:553:252f:adf8 with SMTP id
+ 2adb3069b0e04-5562ee21626mr1194954e87.9.1751552880715; Thu, 03 Jul 2025
+ 07:28:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20250702204758.2773339-1-ecordonnier@snap.com>
- <1350a18ac7b6985471ac15e89321c559dbabab62.camel@linuxfoundation.org>
- <CAHUKmYb=-rkSodEzWrcBNPG9k=7-x2EDr9ovuU8iUkLVAa6d-g@mail.gmail.com> <979ed4823e11b76bb362dfeb83470959f53581a3.camel@linuxfoundation.org>
-In-Reply-To: <979ed4823e11b76bb362dfeb83470959f53581a3.camel@linuxfoundation.org>
-From: Etienne Cordonnier <ecordonnier@snap.com>
-Date: Thu, 3 Jul 2025 16:25:19 +0200
-X-Gm-Features: Ac12FXw88Y3BEh3IvTDuY9EdygiRwWB86hKJWf2ObB6EZRVL_YdXQiVJ6IpYVdo
-Message-ID: <CAHUKmYZo+BCLDN6Nefqpx6gZ2nn1z1M+a4VXVqx2KoByUFsN6A@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] uihelper: Fix KeyError race condition in
- pidmap access
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <20250702222437.3733042-1-richard.purdie@linuxfoundation.org> <20250702222437.3733042-2-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20250702222437.3733042-2-richard.purdie@linuxfoundation.org>
+From: Joshua Watt <jpewhacker@gmail.com>
+Date: Thu, 3 Jul 2025 08:27:47 -0600
+X-Gm-Features: Ac12FXz5x2-psA16m6uvk4FwpRh0TtkuljvGV5yO5Xy7doFlB8TbXYcC3ATKWqE
+Message-ID: <CAJdd5GaLejWT50QFYGazeh2zDnBOALWVsgEiRcfGw2-J=RWKXw@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 2/2] cooker: Use a queue to feed parsing jobs
+To: richard.purdie@linuxfoundation.org
 Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000555778063907266c"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 03 Jul 2025 14:25:36 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17743
+ <bitbake-devel@lists.openembedded.org>; Thu, 03 Jul 2025 14:28:06 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17744
 
---000000000000555778063907266c
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-There is no obvious pattern. The two builds with failure are successful
-until this error is shown in the logs. There is no Ctrl+C interruption,
-since those are build-servers without human interaction. There is also no
-obvious reason why a SIGINT would be sent. I'll try to find the root-cause,
-or at least some way to reproduce.
-
-=C3=89tienne
-
-On Thu, Jul 3, 2025 at 10:52=E2=80=AFAM Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
-
-> On Thu, 2025-07-03 at 10:03 +0200, Etienne Cordonnier wrote:
-> > Hi Richard,
-> >
-> > I have not yet found a way to reproduce the issue. I'm seeing the
-> > issue in 2 from 50 builds after updating from 5.0.9 to 5.0.10, on a
-> > build server with 60 cores, so that's about 4% failure rate. I've
-> > never seen the error before the update. There are no other patches
-> > applied to bitbake, however there are many other layers used so it
-> > may not be reproducible on stand-alone poky. I'll monitor and try to
-> > find a way to reproduce.
+On Wed, Jul 2, 2025 at 4:24=E2=80=AFPM Richard Purdie via
+lists.openembedded.org
+<richard.purdie=3Dlinuxfoundation.org@lists.openembedded.org> wrote:
 >
-> Is there any pattern such as only interrupted builds (Ctrl+C?) or build
-> with failing tasks? Any particular kinds of failures? Just trying to
-> narrow down the possible causes and give ideas...
+> Curerntly, recipes to parse are split into equal groups and passed to
+> each parse thread at the start of parsing. We can replace this with
+> a queue and collect a new job as each parsing process becomes idle
+> to better spread load in the case of slow parsing jobs.
 >
-> Cheers,
+> Some of the data we need has to be passed in at fork time since it
+> can't be pickled, so the job to parse is only referenced as an index
+> in that list.
 >
-> Richard
+> This should better spread load for slow to parse recipes such as those
+> with many class extensions.
 >
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>  lib/bb/cooker.py | 29 ++++++++++++++++++-----------
+>  1 file changed, 18 insertions(+), 11 deletions(-)
 >
+> diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+> index 91e3ee025ea..e88ad24cf61 100644
+> --- a/lib/bb/cooker.py
+> +++ b/lib/bb/cooker.py
+> @@ -1998,8 +1998,9 @@ class ParsingFailure(Exception):
+>          Exception.__init__(self, realexception, recipe)
+>
+>  class Parser(multiprocessing.Process):
+> -    def __init__(self, jobs, results, quit, profile):
+> +    def __init__(self, jobs, jobid_queue, results, quit, profile):
+>          self.jobs =3D jobs
+> +        self.jobid_queue =3D jobid_queue
+>          self.results =3D results
+>          self.quit =3D quit
+>          multiprocessing.Process.__init__(self)
+> @@ -2064,12 +2065,14 @@ class Parser(multiprocessing.Process):
+>                  if self.quit.is_set():
+>                      break
+>
+> -                job =3D None
+> +                jobid =3D None
+>                  try:
+> -                    job =3D self.jobs.pop()
+> -                except IndexError:
+> +                    jobid =3D self.jobid_queue.get(True, 0.5)
+> +                except (ValueError, OSError):
+>                      havejobs =3D False
+> -                if job:
+> +
+> +                if jobid is not None:
+> +                    job =3D self.jobs[jobid]
+>                      result =3D self.parse(*job)
+>                      # Clear the siggen cache after parsing to control me=
+mory usage, its huge
+>                      bb.parse.siggen.postparsing_clean_cache()
+> @@ -2082,6 +2085,7 @@ class Parser(multiprocessing.Process):
+>                      except queue.Full:
+>                          pending.append(result)
+>          finally:
+> +            self.jobs.close()
+>              self.results.close()
+>              self.results.join_thread()
+>
+> @@ -2134,13 +2138,13 @@ class CookerParser(object):
+>
+>          self.bb_caches =3D bb.cache.MulticonfigCache(self.cfgbuilder, se=
+lf.cfghash, cooker.caches_array)
+>          self.fromcache =3D set()
+> -        self.willparse =3D set()
+> +        self.willparse =3D []
+>          for mc in self.cooker.multiconfigs:
+>              for filename in self.mcfilelist[mc]:
+>                  appends =3D self.cooker.collections[mc].get_file_appends=
+(filename)
+>                  layername =3D self.cooker.collections[mc].calc_bbfile_pr=
+iority(filename)[2]
+>                  if not self.bb_caches[mc].cacheValid(filename, appends):
+> -                    self.willparse.add((mc, self.bb_caches[mc], filename=
+, appends, layername))
+> +                    self.willparse.append((mc, self.bb_caches[mc], filen=
+ame, appends, layername))
+>                  else:
+>                      self.fromcache.add((mc, self.bb_caches[mc], filename=
+, appends, layername))
+>
+> @@ -2159,22 +2163,25 @@ class CookerParser(object):
+>      def start(self):
+>          self.results =3D self.load_cached()
+>          self.processes =3D []
+> +
+>          if self.toparse:
+>              bb.event.fire(bb.event.ParseStarted(self.toparse), self.cfgd=
+ata)
+>
+> +            self.toparse_queue =3D multiprocessing.Queue(len(self.willpa=
+rse))
+>              self.parser_quit =3D multiprocessing.Event()
+>              self.result_queue =3D multiprocessing.Queue()
+>
+> -            def chunkify(lst,n):
+> -                return [lst[i::n] for i in range(n)]
+> -            self.jobs =3D chunkify(list(self.willparse), self.num_proces=
+ses)
+> +            for jobid in range(len(self.willparse)):
+> +                self.toparse_queue.put(jobid)
 
---000000000000555778063907266c
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+It's generally not a good idea to assume you can push all the items on
+the queue before there are any consumers; if the queue fills, this
+will deadlock. It would be better to push the items to the queue after
+creating the processes. If you do that, I also don't see any reason to
+push the indexes instead of the jobs directly; basically instead of
+"chunkifying" and pre-determining the assignment of jobs to processes,
+have them all pull from one queue of jobs.
 
-<div dir=3D"ltr">There is no obvious pattern. The two builds with failure a=
-re successful until this error is shown in the logs. There is no Ctrl+C int=
-erruption, since those are build-servers without human interaction. There i=
-s also no obvious reason why a SIGINT would be sent. I&#39;ll try to find t=
-he root-cause, or at least some way to reproduce.<br><br>=C3=89tienne</div>=
-<br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Thu=
-, Jul 3, 2025 at 10:52=E2=80=AFAM Richard Purdie &lt;<a href=3D"mailto:rich=
-ard.purdie@linuxfoundation.org" target=3D"_blank">richard.purdie@linuxfound=
-ation.org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=
-=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
--left:1ex">On Thu, 2025-07-03 at 10:03 +0200, Etienne Cordonnier wrote:<br>
-&gt; Hi Richard,<br>
-&gt; <br>
-&gt; I have not yet found a way to reproduce the issue. I&#39;m seeing the<=
-br>
-&gt; issue in 2 from 50 builds after updating from 5.0.9 to 5.0.10, on a<br=
 >
-&gt; build server with 60 cores, so that&#39;s about 4% failure rate. I&#39=
-;ve<br>
-&gt; never seen the error before the update. There are no other patches<br>
-&gt; applied to bitbake, however there are many other layers used so it<br>
-&gt; may not be reproducible on stand-alone poky. I&#39;ll monitor and try =
-to<br>
-&gt; find a way to reproduce.<br>
-<br>
-Is there any pattern such as only interrupted builds (Ctrl+C?) or build<br>
-with failing tasks? Any particular kinds of failures? Just trying to<br>
-narrow down the possible causes and give ideas...<br>
-<br>
-Cheers,<br>
-<br>
-Richard<br>
-<br>
-</blockquote></div>
-
---000000000000555778063907266c--
+>              for i in range(0, self.num_processes):
+> -                parser =3D Parser(self.jobs[i], self.result_queue, self.=
+parser_quit, self.cooker.configuration.profile)
+> +                parser =3D Parser(self.willparse, self.toparse_queue, se=
+lf.result_queue, self.parser_quit, self.cooker.configuration.profile)
+>                  parser.start()
+>                  self.process_names.append(parser.name)
+>                  self.processes.append(parser)
+>
+> +            self.toparse_queue.close()
+> +
+>              self.results =3D itertools.chain(self.results, self.parse_ge=
+nerator())
+>
+>      def shutdown(self, clean=3DTrue, eventmsg=3D"Parsing halted due to e=
+rrors"):
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#17738): https://lists.openembedded.org/g/bitbake-deve=
+l/message/17738
+> Mute This Topic: https://lists.openembedded.org/mt/113957083/3616693
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [JPEWha=
+cker@gmail.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
 
