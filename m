@@ -1,182 +1,215 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFEDC77B7C
-	for <webhook@archiver.kernel.org>; Thu,  3 Jul 2025 14:30:56 +0000 (UTC)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
- by mx.groups.io with SMTP id smtpd.web10.24162.1751553049283338519
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E10C7C83F03
+	for <webhook@archiver.kernel.org>; Thu,  3 Jul 2025 14:50:46 +0000 (UTC)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+ by mx.groups.io with SMTP id smtpd.web11.24511.1751554246281476034
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 03 Jul 2025 07:30:49 -0700
+ Thu, 03 Jul 2025 07:50:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=GX3bbfL1;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a6cdc27438so4833631f8f.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 03 Jul 2025 07:30:48 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=axFMuxsg;
+ spf=pass (domain: gmail.com, ip: 209.85.167.53, mailfrom: jpewhacker@gmail.com)
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-553b60de463so6506551e87.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 03 Jul 2025 07:50:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1751553047; x=1752157847; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8O8hsvLJUHRcvvzQ+V+jWuZZA9qTZ0dZWyUpb77tzeY=;
-        b=GX3bbfL1/RShdxYYqaL/nRJVUvc7LeTogd+uovmAminPXf877xwe1KsA+hIps9xVW1
-         Am1g8xju8H+A6PJfyCzw6Qp5YvGAEdWWT1K1fie4WIS4dOdfSD16/xo6ac7IXThVkIUf
-         ycHlHvKtRTuyl/MqRZZUnINRR/H0rCZMPajRQ=
+        d=gmail.com; s=20230601; t=1751554244; x=1752159044; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xmhFjQqC9p9Ci7w6q9SSUcGEYsBHanK/oUqOsJ0PHmQ=;
+        b=axFMuxsgd7g5SRwvOcsTjN13MoxVppnI9wGCxl/chvvHyzotX0/loCuSPQ0zgflhZF
+         37oQheqncal1jAx8wT7AI5dqTdRFzG2KVaoBTGHKM8AVne9X1/7IjJQp4Ut5DEcxddp8
+         /JMCEch9TDIZkk3OceqGZ9neBCUWzl4Kh301AsQHNp7dWjHfg4122FA4wqw0bGRE7jLh
+         DHXjNOdOLjlz4G3XvnNY6hayRwsuWkrqHh42NOQconpkVuYgv+i/BCSljs571df8T3eB
+         m0rS/0jbL+roZ6LixXGCgWBlSt3ZGMSWmqDbun4Affs20uaiQ1+GQBZ4C+zlK42r4lYc
+         xpUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751553047; x=1752157847;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8O8hsvLJUHRcvvzQ+V+jWuZZA9qTZ0dZWyUpb77tzeY=;
-        b=eCwMfrWCT4jks10fPoGHp+sXJr9YeEW0PAme6cT4SrUw/siWsjO+Nq2BqMoovw4Xxm
-         oZbA3t7SoGLhI9M499ZfhfiV05tjv+tdglmJ0W4ETTB790VvMCuHK9l7Gw+teuhh0PrJ
-         srjNBbF7A9G/DVXKk7Vc+uiw3sCTNcgnxX4+TFEYcsk3JFgMPzPPs92AAHrx7FfZ9HDs
-         zN1QinJcQnptUCktTLYpG1EIx6ooAuEPd3I3AXkS9mR44nlf6XrxGhac+NmbWBWW465C
-         EepFzXk7Pl1zIsiYlNQbOm2ylePgB3r9n6DQ8YvsRUa+6TnnBdOjGE4HeIma5UGz+HSm
-         rN7w==
-X-Gm-Message-State: AOJu0YweGZwnOxFX/ragbfglCEGf+8AG20zo1y9dxqB/E5j+I3wFAmOM
-	kSz7o57onu24N4dzv3hGSJcNE4U8r1Fe61zE/tZnHLN0l5AT6Bcc0K4KjVTUp1Vcncg=
-X-Gm-Gg: ASbGncta9HEW8LHReIExlk64JVzHwfKiDjbyjP7H3feLqhiv1gKmq6Gyhsj8b9Aa91+
-	OXzqJpDGwDi0xTjiQolbWreo4FWq2I8OpydWSXWraYU3KT5VnTgcfEjSZIVsaev3rYouerdPmuF
-	YyrYZeMlHxpMbGNvSMJe1fe2/SYPGeSlLGao9c9BuZpYYTGm2uYaw2EzKUOH6EEKI/9tYxYwt9z
-	tkh2/4TrMj4S5qZgnI3UllbwmTh4aUW9l3q4qFBr16Rcp+zQvBWnhNGE7dSCBIrUmbtN020Gl6t
-	PGvvqPRiePjDWuIjRfwSycSGbbcWcRwZoM3AYnxli/65GRZ5whBnUTiDAKfG1sixgV4Oi/K2kDJ
-	QNPuCi5kP/m6P5CzTardFcfqlVj7V60bW1GfOhTN/Y4GwU3p6sks=
-X-Google-Smtp-Source: AGHT+IEGFzG7v2xD5nXARUFhPk2XXBA3TA22PGmYCfFo4Tl/dRKzxuz1FMU5CRqtDRlh6YiLkiDttg==
-X-Received: by 2002:a5d:5c02:0:b0:3a4:e6e6:a026 with SMTP id ffacd0b85a97d-3b200865af0mr6221588f8f.28.1751553047419;
-        Thu, 03 Jul 2025 07:30:47 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:e9f6:56ec:1d33:85c3? ([2001:8b0:aba:5f3c:e9f6:56ec:1d33:85c3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a99b6d6bsm27817755e9.31.2025.07.03.07.30.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 07:30:46 -0700 (PDT)
-Message-ID: <56c5d0bae69179225664f2bff11fb38b7094f2ed.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 2/2] cooker: Use a queue to feed parsing
- jobs
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Joshua Watt <jpewhacker@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Date: Thu, 03 Jul 2025 15:30:45 +0100
-In-Reply-To: <CAJdd5GaLejWT50QFYGazeh2zDnBOALWVsgEiRcfGw2-J=RWKXw@mail.gmail.com>
-References: <20250702222437.3733042-1-richard.purdie@linuxfoundation.org>
-	 <20250702222437.3733042-2-richard.purdie@linuxfoundation.org>
-	 <CAJdd5GaLejWT50QFYGazeh2zDnBOALWVsgEiRcfGw2-J=RWKXw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.56.0-1 
+        d=1e100.net; s=20230601; t=1751554244; x=1752159044;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xmhFjQqC9p9Ci7w6q9SSUcGEYsBHanK/oUqOsJ0PHmQ=;
+        b=NvM+qUzacQ2iQDP7KdYLl0Lr+7rtOpqkKurqHTxErtXdBI9We4SG4knhuvOIdMg/3c
+         FlyfEuNAGbFSQO7RNSl274FFcCvUeSJdDayMFlTfFV6yvKs16wJ/bVtIlM3Ir+7+Kgqx
+         S1jV95lRUqInJkvrkDeXaBmrKpNgSjbY0lJzMc+LpJ1ERWDh2AjlSIx5Jm/2BYK10sDD
+         Awr5UPcBHyk013Es7AFTKiHKuFMroifv90wNAwTxJndRXNead+7ALsvIBCX5Wczuih7M
+         03Rhy2SxVDX3v4h9u2JXq3YZ69UAVup2hkJKqdxgnYATDtl9ie++LFu7vDfDzdnDcH7l
+         Y4Kw==
+X-Gm-Message-State: AOJu0YzgZokJVrde2rM8R0QyToe/xUFlJXQqu/QLaxUsO/msW0j8gGa2
+	j+i/lGhareVJNixmvIMuM7gOLPc2XAAYgy7/ke2YLCiax9kmEPYAc+WWJfQJsiRcJKt6QBNwC0k
+	JerG3+q6GlAjwHt6pHxubHHP8a9BNqgQ=
+X-Gm-Gg: ASbGncvZKRz4TEIZUbolAADVE82o95akadafJ6LM9wO+QMN/y575RH3zt+ZqZpHgyxg
+	g1LIZhzQklOePLmlsAe/qE2QMqDv5JSm6hA5JFSF6aOwwnM8wslWnWzQr4gojqfuZ2UDnd8jVuW
+	QW6Nq9q6tzUCgTW0xx7uQXI17VcaKBRR2kBBAy3CJ0IZPtgMdhLgNoX+DCNg==
+X-Google-Smtp-Source: AGHT+IGqCDvIVp4xKYf/AaTFJwpuUgHM+GsV+z7NDq9jhl90zGoVYHHVcf6JmdYiOFHEGMQd7OXkjQXOUfLuNR4QH6A=
+X-Received: by 2002:ac2:4f13:0:b0:553:268e:5019 with SMTP id
+ 2adb3069b0e04-5562ee20e2dmr1404706e87.11.1751554244172; Thu, 03 Jul 2025
+ 07:50:44 -0700 (PDT)
 MIME-Version: 1.0
+References: <20250702222437.3733042-1-richard.purdie@linuxfoundation.org>
+ <20250702222437.3733042-2-richard.purdie@linuxfoundation.org>
+ <CAJdd5GaLejWT50QFYGazeh2zDnBOALWVsgEiRcfGw2-J=RWKXw@mail.gmail.com> <56c5d0bae69179225664f2bff11fb38b7094f2ed.camel@linuxfoundation.org>
+In-Reply-To: <56c5d0bae69179225664f2bff11fb38b7094f2ed.camel@linuxfoundation.org>
+From: Joshua Watt <jpewhacker@gmail.com>
+Date: Thu, 3 Jul 2025 08:50:31 -0600
+X-Gm-Features: Ac12FXyP63pKkUYRA8RvytPeKLiwsoA5M0EedssHA4VibAiOSzZgD8UIE_XM7JE
+Message-ID: <CAJdd5GZWuSCVCNOc5mFH08_Og3SbNrvbBvPpHPFcmaM1uMYJ5w@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 2/2] cooker: Use a queue to feed parsing jobs
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 03 Jul 2025 14:30:56 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17745
+ <bitbake-devel@lists.openembedded.org>; Thu, 03 Jul 2025 14:50:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17746
 
-T24gVGh1LCAyMDI1LTA3LTAzIGF0IDA4OjI3IC0wNjAwLCBKb3NodWEgV2F0dCB3cm90ZToKPiBP
-biBXZWQsIEp1bCAyLCAyMDI1IGF0IDQ6MjTigK9QTSBSaWNoYXJkIFB1cmRpZSB2aWEKPiBsaXN0
-cy5vcGVuZW1iZWRkZWQub3JnCj4gPHJpY2hhcmQucHVyZGllPWxpbnV4Zm91bmRhdGlvbi5vcmdA
-bGlzdHMub3BlbmVtYmVkZGVkLm9yZz4gd3JvdGU6Cj4gPiAKPiA+IEN1cmVybnRseSwgcmVjaXBl
-cyB0byBwYXJzZSBhcmUgc3BsaXQgaW50byBlcXVhbCBncm91cHMgYW5kIHBhc3NlZCB0bwo+ID4g
-ZWFjaCBwYXJzZSB0aHJlYWQgYXQgdGhlIHN0YXJ0IG9mIHBhcnNpbmcuIFdlIGNhbiByZXBsYWNl
-IHRoaXMgd2l0aAo+ID4gYSBxdWV1ZSBhbmQgY29sbGVjdCBhIG5ldyBqb2IgYXMgZWFjaCBwYXJz
-aW5nIHByb2Nlc3MgYmVjb21lcyBpZGxlCj4gPiB0byBiZXR0ZXIgc3ByZWFkIGxvYWQgaW4gdGhl
-IGNhc2Ugb2Ygc2xvdyBwYXJzaW5nIGpvYnMuCj4gPiAKPiA+IFNvbWUgb2YgdGhlIGRhdGEgd2Ug
-bmVlZCBoYXMgdG8gYmUgcGFzc2VkIGluIGF0IGZvcmsgdGltZSBzaW5jZSBpdAo+ID4gY2FuJ3Qg
-YmUgcGlja2xlZCwgc28gdGhlIGpvYiB0byBwYXJzZSBpcyBvbmx5IHJlZmVyZW5jZWQgYXMgYW4g
-aW5kZXgKPiA+IGluIHRoYXQgbGlzdC4KPiA+IAo+ID4gVGhpcyBzaG91bGQgYmV0dGVyIHNwcmVh
-ZCBsb2FkIGZvciBzbG93IHRvIHBhcnNlIHJlY2lwZXMgc3VjaCBhcyB0aG9zZQo+ID4gd2l0aCBt
-YW55IGNsYXNzIGV4dGVuc2lvbnMuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IFJpY2hhcmQgUHVy
-ZGllIDxyaWNoYXJkLnB1cmRpZUBsaW51eGZvdW5kYXRpb24ub3JnPgo+ID4gLS0tCj4gPiDCoGxp
-Yi9iYi9jb29rZXIucHkgfCAyOSArKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLQo+ID4gwqAx
-IGZpbGUgY2hhbmdlZCwgMTggaW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25zKC0pCj4gPiAKPiA+
-IGRpZmYgLS1naXQgYS9saWIvYmIvY29va2VyLnB5IGIvbGliL2JiL2Nvb2tlci5weQo+ID4gaW5k
-ZXggOTFlM2VlMDI1ZWEuLmU4OGFkMjRjZjYxIDEwMDY0NAo+ID4gLS0tIGEvbGliL2JiL2Nvb2tl
-ci5weQo+ID4gKysrIGIvbGliL2JiL2Nvb2tlci5weQo+ID4gQEAgLTE5OTgsOCArMTk5OCw5IEBA
-IGNsYXNzIFBhcnNpbmdGYWlsdXJlKEV4Y2VwdGlvbik6Cj4gPiDCoMKgwqDCoMKgwqDCoMKgIEV4
-Y2VwdGlvbi5fX2luaXRfXyhzZWxmLCByZWFsZXhjZXB0aW9uLCByZWNpcGUpCj4gPiAKPiA+IMKg
-Y2xhc3MgUGFyc2VyKG11bHRpcHJvY2Vzc2luZy5Qcm9jZXNzKToKPiA+IC3CoMKgwqAgZGVmIF9f
-aW5pdF9fKHNlbGYsIGpvYnMsIHJlc3VsdHMsIHF1aXQsIHByb2ZpbGUpOgo+ID4gK8KgwqDCoCBk
-ZWYgX19pbml0X18oc2VsZiwgam9icywgam9iaWRfcXVldWUsIHJlc3VsdHMsIHF1aXQsIHByb2Zp
-bGUpOgo+ID4gwqDCoMKgwqDCoMKgwqDCoCBzZWxmLmpvYnMgPSBqb2JzCj4gPiArwqDCoMKgwqDC
-oMKgwqAgc2VsZi5qb2JpZF9xdWV1ZSA9IGpvYmlkX3F1ZXVlCj4gPiDCoMKgwqDCoMKgwqDCoMKg
-IHNlbGYucmVzdWx0cyA9IHJlc3VsdHMKPiA+IMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5xdWl0ID0g
-cXVpdAo+ID4gwqDCoMKgwqDCoMKgwqDCoCBtdWx0aXByb2Nlc3NpbmcuUHJvY2Vzcy5fX2luaXRf
-XyhzZWxmKQo+ID4gQEAgLTIwNjQsMTIgKzIwNjUsMTQgQEAgY2xhc3MgUGFyc2VyKG11bHRpcHJv
-Y2Vzc2luZy5Qcm9jZXNzKToKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlm
-IHNlbGYucXVpdC5pc19zZXQoKToKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgYnJlYWsKPiA+IAo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBq
-b2IgPSBOb25lCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGpvYmlkID0gTm9u
-ZQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdHJ5Ogo+ID4gLcKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGpvYiA9IHNlbGYuam9icy5wb3AoKQo+ID4g
-LcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBleGNlcHQgSW5kZXhFcnJvcjoKPiA+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBqb2JpZCA9IHNlbGYuam9iaWRf
-cXVldWUuZ2V0KFRydWUsIDAuNSkKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-ZXhjZXB0IChWYWx1ZUVycm9yLCBPU0Vycm9yKToKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgaGF2ZWpvYnMgPSBGYWxzZQo+ID4gLcKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBpZiBqb2I6Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIGlmIGpvYmlkIGlzIG5vdCBOb25lOgo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIGpvYiA9IHNlbGYuam9ic1tqb2JpZF0KPiA+IMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVzdWx0ID0gc2VsZi5wYXJzZSgqam9iKQo+ID4g
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjIENsZWFyIHRoZSBzaWdn
-ZW4gY2FjaGUgYWZ0ZXIgcGFyc2luZyB0byBjb250cm9sIG1lbW9yeSB1c2FnZSwgaXRzIGh1Z2UK
-PiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYmIucGFyc2Uuc2ln
-Z2VuLnBvc3RwYXJzaW5nX2NsZWFuX2NhY2hlKCkKPiA+IEBAIC0yMDgyLDYgKzIwODUsNyBAQCBj
-bGFzcyBQYXJzZXIobXVsdGlwcm9jZXNzaW5nLlByb2Nlc3MpOgo+ID4gwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBleGNlcHQgcXVldWUuRnVsbDoKPiA+IMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwZW5kaW5nLmFwcGVuZChy
-ZXN1bHQpCj4gPiDCoMKgwqDCoMKgwqDCoMKgIGZpbmFsbHk6Cj4gPiArwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCBzZWxmLmpvYnMuY2xvc2UoKQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNl
-bGYucmVzdWx0cy5jbG9zZSgpCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5yZXN1
-bHRzLmpvaW5fdGhyZWFkKCkKPiA+IAo+ID4gQEAgLTIxMzQsMTMgKzIxMzgsMTMgQEAgY2xhc3Mg
-Q29va2VyUGFyc2VyKG9iamVjdCk6Cj4gPiAKPiA+IMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5iYl9j
-YWNoZXMgPSBiYi5jYWNoZS5NdWx0aWNvbmZpZ0NhY2hlKHNlbGYuY2ZnYnVpbGRlciwgc2VsZi5j
-ZmdoYXNoLCBjb29rZXIuY2FjaGVzX2FycmF5KQo+ID4gwqDCoMKgwqDCoMKgwqDCoCBzZWxmLmZy
-b21jYWNoZSA9IHNldCgpCj4gPiAtwqDCoMKgwqDCoMKgwqAgc2VsZi53aWxscGFyc2UgPSBzZXQo
-KQo+ID4gK8KgwqDCoMKgwqDCoMKgIHNlbGYud2lsbHBhcnNlID0gW10KPiA+IMKgwqDCoMKgwqDC
-oMKgwqAgZm9yIG1jIGluIHNlbGYuY29va2VyLm11bHRpY29uZmlnczoKPiA+IMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBmb3IgZmlsZW5hbWUgaW4gc2VsZi5tY2ZpbGVsaXN0W21jXToKPiA+IMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGFwcGVuZHMgPSBzZWxmLmNvb2tlci5jb2xs
-ZWN0aW9uc1ttY10uZ2V0X2ZpbGVfYXBwZW5kcyhmaWxlbmFtZSkKPiA+IMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIGxheWVybmFtZSA9IHNlbGYuY29va2VyLmNvbGxlY3Rpb25zW21j
-XS5jYWxjX2JiZmlsZV9wcmlvcml0eShmaWxlbmFtZSlbMl0KPiA+IMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIGlmIG5vdCBzZWxmLmJiX2NhY2hlc1ttY10uY2FjaGVWYWxpZChmaWxl
-bmFtZSwgYXBwZW5kcyk6Cj4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgc2VsZi53aWxscGFyc2UuYWRkKChtYywgc2VsZi5iYl9jYWNoZXNbbWNdLCBmaWxlbmFtZSwg
-YXBwZW5kcywgbGF5ZXJuYW1lKSkKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCBzZWxmLndpbGxwYXJzZS5hcHBlbmQoKG1jLCBzZWxmLmJiX2NhY2hlc1ttY10sIGZp
-bGVuYW1lLCBhcHBlbmRzLCBsYXllcm5hbWUpKQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgZWxzZToKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgc2VsZi5mcm9tY2FjaGUuYWRkKChtYywgc2VsZi5iYl9jYWNoZXNbbWNdLCBmaWxlbmFtZSwg
-YXBwZW5kcywgbGF5ZXJuYW1lKSkKPiA+IAo+ID4gQEAgLTIxNTksMjIgKzIxNjMsMjUgQEAgY2xh
-c3MgQ29va2VyUGFyc2VyKG9iamVjdCk6Cj4gPiDCoMKgwqDCoCBkZWYgc3RhcnQoc2VsZik6Cj4g
-PiDCoMKgwqDCoMKgwqDCoMKgIHNlbGYucmVzdWx0cyA9IHNlbGYubG9hZF9jYWNoZWQoKQo+ID4g
-wqDCoMKgwqDCoMKgwqDCoCBzZWxmLnByb2Nlc3NlcyA9IFtdCj4gPiArCj4gPiDCoMKgwqDCoMKg
-wqDCoMKgIGlmIHNlbGYudG9wYXJzZToKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBiYi5l
-dmVudC5maXJlKGJiLmV2ZW50LlBhcnNlU3RhcnRlZChzZWxmLnRvcGFyc2UpLCBzZWxmLmNmZ2Rh
-dGEpCj4gPiAKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNlbGYudG9wYXJzZV9xdWV1ZSA9
-IG11bHRpcHJvY2Vzc2luZy5RdWV1ZShsZW4oc2VsZi53aWxscGFyc2UpKQo+ID4gwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIHNlbGYucGFyc2VyX3F1aXQgPSBtdWx0aXByb2Nlc3NpbmcuRXZlbnQo
-KQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNlbGYucmVzdWx0X3F1ZXVlID0gbXVsdGlw
-cm9jZXNzaW5nLlF1ZXVlKCkKPiA+IAo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZGVmIGNo
-dW5raWZ5KGxzdCxuKToKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJu
-IFtsc3RbaTo6bl0gZm9yIGkgaW4gcmFuZ2UobildCj4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCBzZWxmLmpvYnMgPSBjaHVua2lmeShsaXN0KHNlbGYud2lsbHBhcnNlKSwgc2VsZi5udW1fcHJv
-Y2Vzc2VzKQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZm9yIGpvYmlkIGluIHJhbmdlKGxl
-bihzZWxmLndpbGxwYXJzZSkpOgo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBz
-ZWxmLnRvcGFyc2VfcXVldWUucHV0KGpvYmlkKQo+IAo+IEl0J3MgZ2VuZXJhbGx5IG5vdCBhIGdv
-b2QgaWRlYSB0byBhc3N1bWUgeW91IGNhbiBwdXNoIGFsbCB0aGUgaXRlbXMgb24KPiB0aGUgcXVl
-dWUgYmVmb3JlIHRoZXJlIGFyZSBhbnkgY29uc3VtZXJzOyBpZiB0aGUgcXVldWUgZmlsbHMsIHRo
-aXMKPiB3aWxsIGRlYWRsb2NrLiBJdCB3b3VsZCBiZSBiZXR0ZXIgdG8gcHVzaCB0aGUgaXRlbXMg
-dG8gdGhlIHF1ZXVlIGFmdGVyCj4gY3JlYXRpbmcgdGhlIHByb2Nlc3Nlcy4KClRydWUuIEkgZGlk
-IG1ha2Ugc3VyZSB0aGUgcXVldWUgd2FzIGxhcmdlIGVub3VnaCBhYm92ZSBob3dldmVyIGl0IHdv
-dWxkCmRlcGVuZCBvbiB0aGUgc2l6ZSBvZiB0aGUgam9iIGVudHJpZXMuCgo+ICBJZiB5b3UgZG8g
-dGhhdCwgSSBhbHNvIGRvbid0IHNlZSBhbnkgcmVhc29uIHRvCj4gcHVzaCB0aGUgaW5kZXhlcyBp
-bnN0ZWFkIG9mIHRoZSBqb2JzIGRpcmVjdGx5OyBiYXNpY2FsbHkgaW5zdGVhZCBvZgo+ICJjaHVu
-a2lmeWluZyIgYW5kIHByZS1kZXRlcm1pbmluZyB0aGUgYXNzaWdubWVudCBvZiBqb2JzIHRvIHBy
-b2Nlc3NlcywKPiBoYXZlIHRoZW0gYWxsIHB1bGwgZnJvbSBvbmUgcXVldWUgb2Ygam9icy4KCkkg
-YWRkZWQgdGhpcyBjb21tZW50IHRvIHRoZSBwYXRjaCBpbiBtYXN0ZXIgbmV4dDoKIAojIEhhdmUg
-dG8gcGFzcyBpbiB3aWxscGFyc2UgYXQgZm9yayB0aW1lIHNvIGFsbCBwYXJzaW5nIHByb2Nlc3Nl
-cyBoYXZlIHRoZSB1bnBpY2tsZWFibGUgZGF0YQojIHRoZW4gYWNjZXNzIGl0IGJ5IGluZGV4IGZy
-b20gdGhlIHBhcnNlIHF1ZXVlLgoKCkFzIGlmIHlvdSBkb24ndCBkbyB0aGF0LCBpdCBjYW4ndCBy
-ZWJ1aWxkIHRoZSBkYXRhIGFzIHRoZSBjYWNoZSBvYmplY3RzCmFyZW4ndCBwaWNrbGVhYmxlIDoo
-CgpDaGVlcnMsCgpSaWNoYXJkCg==
+On Thu, Jul 3, 2025 at 8:30=E2=80=AFAM Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+>
+> On Thu, 2025-07-03 at 08:27 -0600, Joshua Watt wrote:
+> > On Wed, Jul 2, 2025 at 4:24=E2=80=AFPM Richard Purdie via
+> > lists.openembedded.org
+> > <richard.purdie=3Dlinuxfoundation.org@lists.openembedded.org> wrote:
+> > >
+> > > Curerntly, recipes to parse are split into equal groups and passed to
+> > > each parse thread at the start of parsing. We can replace this with
+> > > a queue and collect a new job as each parsing process becomes idle
+> > > to better spread load in the case of slow parsing jobs.
+> > >
+> > > Some of the data we need has to be passed in at fork time since it
+> > > can't be pickled, so the job to parse is only referenced as an index
+> > > in that list.
+> > >
+> > > This should better spread load for slow to parse recipes such as thos=
+e
+> > > with many class extensions.
+> > >
+> > > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> > > ---
+> > >  lib/bb/cooker.py | 29 ++++++++++++++++++-----------
+> > >  1 file changed, 18 insertions(+), 11 deletions(-)
+> > >
+> > > diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+> > > index 91e3ee025ea..e88ad24cf61 100644
+> > > --- a/lib/bb/cooker.py
+> > > +++ b/lib/bb/cooker.py
+> > > @@ -1998,8 +1998,9 @@ class ParsingFailure(Exception):
+> > >          Exception.__init__(self, realexception, recipe)
+> > >
+> > >  class Parser(multiprocessing.Process):
+> > > -    def __init__(self, jobs, results, quit, profile):
+> > > +    def __init__(self, jobs, jobid_queue, results, quit, profile):
+> > >          self.jobs =3D jobs
+> > > +        self.jobid_queue =3D jobid_queue
+> > >          self.results =3D results
+> > >          self.quit =3D quit
+> > >          multiprocessing.Process.__init__(self)
+> > > @@ -2064,12 +2065,14 @@ class Parser(multiprocessing.Process):
+> > >                  if self.quit.is_set():
+> > >                      break
+> > >
+> > > -                job =3D None
+> > > +                jobid =3D None
+> > >                  try:
+> > > -                    job =3D self.jobs.pop()
+> > > -                except IndexError:
+> > > +                    jobid =3D self.jobid_queue.get(True, 0.5)
+> > > +                except (ValueError, OSError):
+> > >                      havejobs =3D False
+> > > -                if job:
+> > > +
+> > > +                if jobid is not None:
+> > > +                    job =3D self.jobs[jobid]
+> > >                      result =3D self.parse(*job)
+> > >                      # Clear the siggen cache after parsing to contro=
+l memory usage, its huge
+> > >                      bb.parse.siggen.postparsing_clean_cache()
+> > > @@ -2082,6 +2085,7 @@ class Parser(multiprocessing.Process):
+> > >                      except queue.Full:
+> > >                          pending.append(result)
+> > >          finally:
+> > > +            self.jobs.close()
+> > >              self.results.close()
+> > >              self.results.join_thread()
+> > >
+> > > @@ -2134,13 +2138,13 @@ class CookerParser(object):
+> > >
+> > >          self.bb_caches =3D bb.cache.MulticonfigCache(self.cfgbuilder=
+, self.cfghash, cooker.caches_array)
+> > >          self.fromcache =3D set()
+> > > -        self.willparse =3D set()
+> > > +        self.willparse =3D []
+> > >          for mc in self.cooker.multiconfigs:
+> > >              for filename in self.mcfilelist[mc]:
+> > >                  appends =3D self.cooker.collections[mc].get_file_app=
+ends(filename)
+> > >                  layername =3D self.cooker.collections[mc].calc_bbfil=
+e_priority(filename)[2]
+> > >                  if not self.bb_caches[mc].cacheValid(filename, appen=
+ds):
+> > > -                    self.willparse.add((mc, self.bb_caches[mc], file=
+name, appends, layername))
+> > > +                    self.willparse.append((mc, self.bb_caches[mc], f=
+ilename, appends, layername))
+> > >                  else:
+> > >                      self.fromcache.add((mc, self.bb_caches[mc], file=
+name, appends, layername))
+> > >
+> > > @@ -2159,22 +2163,25 @@ class CookerParser(object):
+> > >      def start(self):
+> > >          self.results =3D self.load_cached()
+> > >          self.processes =3D []
+> > > +
+> > >          if self.toparse:
+> > >              bb.event.fire(bb.event.ParseStarted(self.toparse), self.=
+cfgdata)
+> > >
+> > > +            self.toparse_queue =3D multiprocessing.Queue(len(self.wi=
+llparse))
+> > >              self.parser_quit =3D multiprocessing.Event()
+> > >              self.result_queue =3D multiprocessing.Queue()
+> > >
+> > > -            def chunkify(lst,n):
+> > > -                return [lst[i::n] for i in range(n)]
+> > > -            self.jobs =3D chunkify(list(self.willparse), self.num_pr=
+ocesses)
+> > > +            for jobid in range(len(self.willparse)):
+> > > +                self.toparse_queue.put(jobid)
+> >
+> > It's generally not a good idea to assume you can push all the items on
+> > the queue before there are any consumers; if the queue fills, this
+> > will deadlock. It would be better to push the items to the queue after
+> > creating the processes.
+>
+> True. I did make sure the queue was large enough above however it would
+> depend on the size of the job entries.
+>
+> >  If you do that, I also don't see any reason to
+> > push the indexes instead of the jobs directly; basically instead of
+> > "chunkifying" and pre-determining the assignment of jobs to processes,
+> > have them all pull from one queue of jobs.
+>
+> I added this comment to the patch in master next:
+>
+> # Have to pass in willparse at fork time so all parsing processes have th=
+e unpickleable data
+> # then access it by index from the parse queue.
+>
+>
+> As if you don't do that, it can't rebuild the data as the cache objects
+> aren't pickleable :(
 
+Ah, OK. We must be relying on the multiprocess being implemented with
+fork() then to pass the data. That's reasonable and the indexes make
+sense (but we should still push them after creating the process to
+avoid the possibility of deadlock)
+
+>
+> Cheers,
+>
+> Richard
 
