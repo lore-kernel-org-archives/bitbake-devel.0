@@ -1,183 +1,142 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <ecordonnier@snap.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC515C77B7C
-	for <webhook@archiver.kernel.org>; Thu,  3 Jul 2025 14:07:36 +0000 (UTC)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
- by mx.groups.io with SMTP id smtpd.web10.23627.1751551645182819918
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA187C83F03
+	for <webhook@archiver.kernel.org>; Thu,  3 Jul 2025 14:25:36 +0000 (UTC)
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+ by mx.groups.io with SMTP id smtpd.web10.24044.1751552732951659666
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 03 Jul 2025 07:07:25 -0700
+ Thu, 03 Jul 2025 07:25:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=jwlUSs58;
- spf=pass (domain: gmail.com, ip: 209.85.167.48, mailfrom: jpewhacker@gmail.com)
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-553b60de463so6452565e87.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 03 Jul 2025 07:07:24 -0700 (PDT)
+ dkim=pass header.i=@snap.com header.s=google header.b=WgsN48M0;
+ spf=pass (domain: snapchat.com, ip: 209.85.208.43, mailfrom: ecordonnier@snapchat.com)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-608acb0a27fso8785689a12.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 03 Jul 2025 07:25:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751551643; x=1752156443; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VTBaQvExxf2JDUPXJW5hbJRdpnHD0ZCX886d2CnR1NE=;
-        b=jwlUSs58ZLdjz3QXO4NI1TvAfpk0EOQE6cNHITY6oFLM4LLvC/sUZz7+n6FxP/mxAK
-         vIf8oTnAlczb1ifu5PJxLLfBhWLdT5V33AXTNEc9wQ7uMA61k4w8yKoZgMe3cwkPQH6+
-         u/f3ZrZWM3pzjGhw7uDk0YNSt5g0JXh/qJHulr84wmIQX0fpf3VH9q9kE58EgmhTk5YG
-         XQP9x79LkMGI93DG9IYaU+9S3BdzvtZVdE98bqHVonRL5o2DW8yxqkoz4P7G6EBpI52G
-         Twa+sgWORFv+zi8mPfVrAaO4rKyonY8ZjubQlnQUQw4sMd3ZWfx5x5G5GdjNK8tRcW6M
-         z/YA==
+        d=snap.com; s=google; t=1751552731; x=1752157531; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=WyAxNqyQ9aUSPjUMZh7GEUwwHRL0PJ2wynxK0GtDH8Y=;
+        b=WgsN48M0EZVPMUy6BgmxwHCOPaZr0NBXI6y3f2iHzt7gwmcqP57ujBbLpUTXl9CGbq
+         V4kBKqZcgmbeNKKfZ31KxOngRX7TFP6guR3C8LPZ4L+ehfrn9RjoxsX9T5I2nUXpGTii
+         KtVPfgJ43O+3fgzXBvoDgiuXpm8Zf4MnpPeIM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751551643; x=1752156443;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VTBaQvExxf2JDUPXJW5hbJRdpnHD0ZCX886d2CnR1NE=;
-        b=B6PgQ1gHxUeZRNX7pJ3UPJ+LMvAlIaEqvf8OCxpA72v8qGI20fkBxIqUbfoB2JI/vh
-         x/neAQOaSpbeFXrpoIMBOJR5OFehn0DUZlpcxGx98UWdfxigtPp2h0Mv1j/d7F8KlrrV
-         rh6YlXDn5YjYCwJPipI7jqoiChIGki8yuW3DghZhd1ljW9w97GnVmZ31bWHIp66mwk+L
-         k642Qt15F54C3xcX5CGOtimQSVd2zrQo2WR0z8dD7iy8QR5T6QYGoJM5TdKlU9oIBIcn
-         PZm8C30KE8U51ZszJ+YeH9d/rX74EA7Lbnw9rWZXrOqNQZb7JL3K6gTGCfX8Icx8RU8u
-         cxwA==
-X-Gm-Message-State: AOJu0Ywx3sJdUjbyZy5wLhca0gNmdRktUW7p1vWEm1f+5s4bwvDk8HZH
-	WWFs2nBE+ors0MoMobsHwGQbYbWqZKhbVdCH020HbzZb3gALmxkXPgiIvFgHaDNHYbJuhCAGp50
-	j7WOxbJGFBLlO+hsHKhv3zDIv7DD1cgY=
-X-Gm-Gg: ASbGnctaIS5IjAZvhFJy0MYpH3GKI8VE4UdxW4/1nulLNt2evnuMSC64wgcbCKTtonS
-	0N1mlo8MVp9akkMEn9uF1L5cW3KsW5r/E6epEeKqjBJ7IYmREjP5/MMNID+xaTXHe7oBc6KlqUK
-	3EMN7W/RPMalNIKyeUUvBAbVbWxBnw0veT8af2DuB0VVdmkhxNNhqJAceshw==
-X-Google-Smtp-Source: AGHT+IGmOYQzn4ZokKxp0j4GRBmhU12HWw18Yn8UELirSJkNNn3JIuqnEXrAjyE8oI2wIpVDCr9PqzLCAgii7LaVU78=
-X-Received: by 2002:a05:6512:15a7:b0:553:241d:4e77 with SMTP id
- 2adb3069b0e04-5562ee4f22amr1256685e87.22.1751551641267; Thu, 03 Jul 2025
- 07:07:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751552731; x=1752157531;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WyAxNqyQ9aUSPjUMZh7GEUwwHRL0PJ2wynxK0GtDH8Y=;
+        b=tQmBSkyK9sLS7kAOqA/aob2rj+XRgjpEiv9bofmIXkidOtRyZw65HB93xUmS1FUIAx
+         G4QrzDFIfTwmbrNv89IvIV1RnY0iWrmC4y0ncqWLbjBdpLHOSTRiRaqVmP0PqUP1+HvH
+         3kU0x7pOtup9SPI0qfGhOQ9Bmcc4wfCWlcZiHxrTB1gpzvAc7lgbZyX2t4uuaxCHj2Ae
+         9wifnZNfwecqvmqWA4pr5qXFfrc1PdsSDPP1J7gdljc/ge7U/M6qAdXHxEF2W/wFwyVe
+         xlFvJf5h0qklm5NSjOZ2ygcrBcwRgaqIOMdsvBqY0jV6CSR20/dPfebbAn1rCicKirfw
+         UMtg==
+X-Gm-Message-State: AOJu0YzBxb3tCNlbDR+x1R9jp0t00ctATDECRG0nS0hx/P4kddyqZFLy
+	nEvoEMHEMOMtEgEHL0YIVdYkVg2QkvNxGgCnt0ToyXlLDSQUzzHsae+71se+jFeY3gsUMgJzTvN
+	zLjRGvm4YepwrXDGSTECtdkNN58yaekRh0oSOUPtbgg==
+X-Gm-Gg: ASbGncscocWX6hTSrP5jiYMJ1o2VwsQBGop5FsmYrZIzdJvnEqrbkeh+j6iTrN1HSHz
+	kNl1++qTuSc0Kmi+6mTD3r0BrkA0vgrdkJaCXQ1pusOQgFdwL13p5ZcwcWLqW5qh7P0FlURFCjD
+	5zOxVNVVzoE+16WtpsNzh35qraPJhdnLtyybk1d/FajG6i
+X-Google-Smtp-Source: AGHT+IEBfZhTpdQbo9c5dEyurKWLVdCiu3WkPRewSTI4qsynLWge+oezfCeM/ssMPgeKgUeXRKQm30S8h4LX2p+3SR4=
+X-Received: by 2002:a17:906:12d3:b0:ade:40cb:2515 with SMTP id
+ a640c23a62f3a-ae3c2c7f6f0mr605312366b.59.1751552730928; Thu, 03 Jul 2025
+ 07:25:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20250702222437.3733042-1-richard.purdie@linuxfoundation.org>
-In-Reply-To: <20250702222437.3733042-1-richard.purdie@linuxfoundation.org>
-From: Joshua Watt <jpewhacker@gmail.com>
-Date: Thu, 3 Jul 2025 08:07:07 -0600
-X-Gm-Features: Ac12FXw8cQlvGILZR5iqIAdfMXj4kMtkRnFKwOsNgaQtzd05rlexPZHQFr7VNCA
-Message-ID: <CAJdd5GY+t-1+g_XgCCy4eEGF7_1z5tAB767TmnwaqPE2xhreWA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 1/2] cooker: Try and avoid parseing hangs
-To: richard.purdie@linuxfoundation.org
+References: <20250702204758.2773339-1-ecordonnier@snap.com>
+ <1350a18ac7b6985471ac15e89321c559dbabab62.camel@linuxfoundation.org>
+ <CAHUKmYb=-rkSodEzWrcBNPG9k=7-x2EDr9ovuU8iUkLVAa6d-g@mail.gmail.com> <979ed4823e11b76bb362dfeb83470959f53581a3.camel@linuxfoundation.org>
+In-Reply-To: <979ed4823e11b76bb362dfeb83470959f53581a3.camel@linuxfoundation.org>
+From: Etienne Cordonnier <ecordonnier@snap.com>
+Date: Thu, 3 Jul 2025 16:25:19 +0200
+X-Gm-Features: Ac12FXw88Y3BEh3IvTDuY9EdygiRwWB86hKJWf2ObB6EZRVL_YdXQiVJ6IpYVdo
+Message-ID: <CAHUKmYZo+BCLDN6Nefqpx6gZ2nn1z1M+a4VXVqx2KoByUFsN6A@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] uihelper: Fix KeyError race condition in
+ pidmap access
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
 Cc: bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/alternative; boundary="000000000000555778063907266c"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 03 Jul 2025 14:07:36 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17742
+ <bitbake-devel@lists.openembedded.org>; Thu, 03 Jul 2025 14:25:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17743
 
-LGTM
+--000000000000555778063907266c
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Joshua Watt <JPEWhacker@gmail.com>
+There is no obvious pattern. The two builds with failure are successful
+until this error is shown in the logs. There is no Ctrl+C interruption,
+since those are build-servers without human interaction. There is also no
+obvious reason why a SIGINT would be sent. I'll try to find the root-cause,
+or at least some way to reproduce.
 
-On Wed, Jul 2, 2025 at 4:24=E2=80=AFPM Richard Purdie via
-lists.openembedded.org
-<richard.purdie=3Dlinuxfoundation.org@lists.openembedded.org> wrote:
+=C3=89tienne
+
+On Thu, Jul 3, 2025 at 10:52=E2=80=AFAM Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
+
+> On Thu, 2025-07-03 at 10:03 +0200, Etienne Cordonnier wrote:
+> > Hi Richard,
+> >
+> > I have not yet found a way to reproduce the issue. I'm seeing the
+> > issue in 2 from 50 builds after updating from 5.0.9 to 5.0.10, on a
+> > build server with 60 cores, so that's about 4% failure rate. I've
+> > never seen the error before the update. There are no other patches
+> > applied to bitbake, however there are many other layers used so it
+> > may not be reproducible on stand-alone poky. I'll monitor and try to
+> > find a way to reproduce.
 >
-> We sometimes see hangs in parsing during automated testing. It appears th=
-at
-> SIGINT was sent to the underlying processes which see KeyboardInterrupt b=
-ut
-> they're stuck trying to write into the results pipe. The SIGINT was proba=
-bly
-> from some kind of parsing failure which doens't happen often, hence the h=
-ang
-> being rare (in the incompatible license selftests from OE).
+> Is there any pattern such as only interrupted builds (Ctrl+C?) or build
+> with failing tasks? Any particular kinds of failures? Just trying to
+> narrow down the possible causes and give ideas...
 >
-> This patch:
->   * sets a flag to indicate exit upon SIGINT so the exit is more graceful
->     and a defined exit path
->   * empties the results queue after we send the quit event
->   * empties the results queue after the SIGINT for good measure
->   * increases the 0.5s timeout to 2s since we now have some very slow to
->     parse recipes due to class extensions (ptests)
+> Cheers,
 >
-> This should hopefully make the parsing failure codepaths more robust.
+> Richard
 >
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
->  lib/bb/cooker.py | 24 +++++++++++++++---------
->  1 file changed, 15 insertions(+), 9 deletions(-)
 >
-> diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-> index 1810bcc6049..91e3ee025ea 100644
-> --- a/lib/bb/cooker.py
-> +++ b/lib/bb/cooker.py
-> @@ -2009,6 +2009,7 @@ class Parser(multiprocessing.Process):
->          self.queue_signals =3D False
->          self.signal_received =3D []
->          self.signal_threadlock =3D threading.Lock()
-> +        self.exit =3D False
+
+--000000000000555778063907266c
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">There is no obvious pattern. The two builds with failure a=
+re successful until this error is shown in the logs. There is no Ctrl+C int=
+erruption, since those are build-servers without human interaction. There i=
+s also no obvious reason why a SIGINT would be sent. I&#39;ll try to find t=
+he root-cause, or at least some way to reproduce.<br><br>=C3=89tienne</div>=
+<br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Thu=
+, Jul 3, 2025 at 10:52=E2=80=AFAM Richard Purdie &lt;<a href=3D"mailto:rich=
+ard.purdie@linuxfoundation.org" target=3D"_blank">richard.purdie@linuxfound=
+ation.org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=
+=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
+-left:1ex">On Thu, 2025-07-03 at 10:03 +0200, Etienne Cordonnier wrote:<br>
+&gt; Hi Richard,<br>
+&gt; <br>
+&gt; I have not yet found a way to reproduce the issue. I&#39;m seeing the<=
+br>
+&gt; issue in 2 from 50 builds after updating from 5.0.9 to 5.0.10, on a<br=
 >
->      def catch_sig(self, signum, frame):
->          if self.queue_signals:
-> @@ -2021,7 +2022,7 @@ class Parser(multiprocessing.Process):
->              signal.signal(signal.SIGTERM, signal.SIG_DFL)
->              os.kill(os.getpid(), signal.SIGTERM)
->          elif signum =3D=3D signal.SIGINT:
-> -            signal.default_int_handler(signum, frame)
-> +            self.exit =3D True
->
->      def run(self):
->
-> @@ -2059,7 +2060,7 @@ class Parser(multiprocessing.Process):
->          pending =3D []
->          havejobs =3D True
->          try:
-> -            while havejobs or pending:
-> +            while (havejobs or pending) and not self.exit:
->                  if self.quit.is_set():
->                      break
->
-> @@ -2196,11 +2197,12 @@ class CookerParser(object):
->
->          # Cleanup the queue before call process.join(), otherwise there =
-might be
->          # deadlocks.
-> -        while True:
-> -            try:
-> -               self.result_queue.get(timeout=3D0.25)
-> -            except queue.Empty:
-> -                break
-> +        def read_results():
-> +            while True:
-> +                try:
-> +                   self.result_queue.get(timeout=3D0.25)
-> +                except queue.Empty:
-> +                    break
->
->          def sync_caches():
->              for c in self.bb_caches.values():
-> @@ -2212,15 +2214,19 @@ class CookerParser(object):
->
->          self.parser_quit.set()
->
-> +        read_results()
-> +
->          for process in self.processes:
-> -            process.join(0.5)
-> +            process.join(2)
->
->          for process in self.processes:
->              if process.exitcode is None:
->                  os.kill(process.pid, signal.SIGINT)
->
-> +        read_results()
-> +
->          for process in self.processes:
-> -            process.join(0.5)
-> +            process.join(2)
->
->          for process in self.processes:
->              if process.exitcode is None:
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#17737): https://lists.openembedded.org/g/bitbake-deve=
-l/message/17737
-> Mute This Topic: https://lists.openembedded.org/mt/113957082/3616693
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [JPEWha=
-cker@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
+&gt; build server with 60 cores, so that&#39;s about 4% failure rate. I&#39=
+;ve<br>
+&gt; never seen the error before the update. There are no other patches<br>
+&gt; applied to bitbake, however there are many other layers used so it<br>
+&gt; may not be reproducible on stand-alone poky. I&#39;ll monitor and try =
+to<br>
+&gt; find a way to reproduce.<br>
+<br>
+Is there any pattern such as only interrupted builds (Ctrl+C?) or build<br>
+with failing tasks? Any particular kinds of failures? Just trying to<br>
+narrow down the possible causes and give ideas...<br>
+<br>
+Cheers,<br>
+<br>
+Richard<br>
+<br>
+</blockquote></div>
+
+--000000000000555778063907266c--
 
