@@ -2,206 +2,172 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC0BC83F03
-	for <webhook@archiver.kernel.org>; Fri,  4 Jul 2025 21:42:39 +0000 (UTC)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web11.6192.1751665350260209692
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E451C8303D
+	for <webhook@archiver.kernel.org>; Sat,  5 Jul 2025 06:26:12 +0000 (UTC)
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web11.12850.1751696765473395450
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 04 Jul 2025 14:42:30 -0700
+ Fri, 04 Jul 2025 23:26:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=TDlBnZaW;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.51, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a536ecbf6fso712718f8f.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 04 Jul 2025 14:42:29 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=cjBOIa1q;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a528243636so831044f8f.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 04 Jul 2025 23:26:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1751665348; x=1752270148; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=gJHg8HCZ8q31eOMRRJ8ucMKBsjF8xoPBzOvYbpq7LDM=;
-        b=TDlBnZaWZQnCXCGU2EPdxGo6Rt5UcIckRHYRcPRU+9pUPh4kNp593kyypTK3y0DGZM
-         BHqlKL3jwFEo2YjKgKtdgUpWPVuHRicawp0GM4ARebKUKtLZexHQ/pAbB4ONOsgj7Fre
-         hzF7X8MNJfq5wYsTH00KJ8M0cMZCfwA+pUpMQ=
+        d=linuxfoundation.org; s=google; t=1751696763; x=1752301563; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dTTXNaVSmzEVF3mhaNgW9DupMsE4GMus2QraxwTdC+s=;
+        b=cjBOIa1qwNRU4mlkTtFxHgReXHFBg0Ei4Hy2G0nMe/lVz/NGnjWVRqn5+1MqNU3kOy
+         BKcrhHdoMPwSESrDjFeJHLRw0AoHNCv0GW/l8Zi4Z0NUEOYC/MItUsH2aM9hxirPDpmC
+         mI/S09NPBhg8vEELBdmFFI9/zJNuoe827C+NM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751665348; x=1752270148;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gJHg8HCZ8q31eOMRRJ8ucMKBsjF8xoPBzOvYbpq7LDM=;
-        b=QZ36PqpXqh/GJjJvUVcHdBJ2fXBNCxH/EDkMQ7trROqrDxjrCggY/Nyey38oU9ulv2
-         SUqBCLCccZnyJM46QUmWGhclz3MdsjP61RNC98MCa2XHyqyLRE2hSOS4BGCsD+cYbT86
-         JdOZpgGzJTqzXDGNDJyaG/09xl3HYuJj0wbj9mE3E2W8IQ4ywhHusAoS+1eMBIlQtDhB
-         3TlZbs+iHRITmOCZ7l7+oUbeiYNGSJVyzIIYRiZQQ3rPmuGqv7Xvf37xgNb2uAdqfxfM
-         Pk5CkHXsV+Gln+udzIlUmjUh3eNLa8aVDqdwutqubyBygLznsa30R21fZeqFwu0MS0DA
-         Od+g==
-X-Gm-Message-State: AOJu0YxjEOFBjLiDod7o2qkNn5WkjUIVk3IlMrP27AcC9gHYqmNYYj9i
-	mSReOH8fHGX5NX1gK1cknDm52Hm9iA4/XKbGwYsKxbvftxM/oLMIxaHbQ2U62Q/i49Y=
-X-Gm-Gg: ASbGnctroKELXUBJOFZfe9o0R8A4N4hZpf80mSVO8Liy8R9yqh+eYZcjIhwpSU8Fwm2
-	oYZhMB6ntv46F8e6FYj3gqZtD3P0wl6t19DucMLqEGUrblxCBVrQXfpoov0GyghbAGU48P7RspN
-	HmTq4f9H9e8WYnrDEfyWdZRkfqYKFL8ug8S9jQYlIEnOw2xuWzEP9b/nbaHwHh+BKX4o9C7gLBn
-	4rEtswTl/vPEpkh4rn809H7UE3L3El/gx7OPXajpfnxXjQfUiDVdOuKdsw37Gd6PXWfWqZ7J+A4
-	Mx/+mN5CF+ITm3zSsL3Y4cCbYRj8yfoIWgHJjOCWjwmmYV0IKvYhz8Ay0Qu7KT0Yso1v5rXXnFP
-	RzhNEsgJFhglsRRo6YiRmKSw+9TMi9O5I+bNDHsCG/94yHH/4
-X-Google-Smtp-Source: AGHT+IGP9TdHtqR6WvhvrMOT+nxsVDncd9yVs+7UwuIwteR6w66W2JTaP13/3xXF66ZwHof65+xOGA==
-X-Received: by 2002:a05:6000:2585:b0:3a3:7ba5:93a5 with SMTP id ffacd0b85a97d-3b49aa750aamr119969f8f.26.1751665348129;
-        Fri, 04 Jul 2025 14:42:28 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:f173:67fa:504:5b9b? ([2001:8b0:aba:5f3c:f173:67fa:504:5b9b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9bde954sm65232055e9.33.2025.07.04.14.42.27
+        d=1e100.net; s=20230601; t=1751696763; x=1752301563;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dTTXNaVSmzEVF3mhaNgW9DupMsE4GMus2QraxwTdC+s=;
+        b=tJmXay+ZEe8W8lx7Me6dv2Sa20wm2Zjt75khrd/gNI84pTVHSrqMHrSP5LtZ8ghym3
+         xEBUp9HVCz7X6o6XOfGFldPHZshj1YeI8v9h1tZx4rkoSI3eW7Cl3w5GHV9zi1WyTaIC
+         tW17S9fVK+euHj0qv/dym719hluzXR7M1m6QCKi8kFIo/CRCWi6ud7vShGIaXkbVT1A4
+         Hkw+x3djvmrmrJuBOF8c/Bkp9XYj2FSrOZ8qyeLc3TajSGBJi7TSRLFzsPnA0T+ck77j
+         kCyhHwaF9grk8ZWYz7rpMvZqiucIRxkfCgljMX3YFnRXVlDDUBI85flfObXRdWcJ+l3U
+         peng==
+X-Gm-Message-State: AOJu0YxCQlVYa7nJW8c5b8athGNyQ6d0sPxyQ2lIleZp0ZpKixHehJQ/
+	5OYsN2GVLfIMAXSQPNqmddDotWBV1OuymlrshE0rd8cHLpf2z7IlwUjmZaEGYb5neh+FtQRotXm
+	54B98
+X-Gm-Gg: ASbGnctg4NGdzFndLNzuhX23CgC41retYGjAoCXEITF77umrlJ6k5UfxfhHTAWyQYXS
+	JxAHv26lCak+6WqJiNy3yFbEmmARG6ZVEsjXd9Isrr6WT78Y921c6EhUGBNll9gL2DfLx9xD3v9
+	FlHQMjRxQup4YFs93UgxhvHdUie8CG1J65ocazL60z1+RKjBIzmZem2pL9fq/p/GknoBE0Dn7h5
+	8U8oTJc2AzmtTH0myTVXRN3vKnk/dz9A8aXFvgXL5ps46PP7cZnL4AaOdaK0h4z6jWbUfvl1GzN
+	6XRXM9rq2FVHVVwSG0CE4EZB1N5hoxy5j44vj9RfjBOSWFvNezZGBa1bwjpw1eGJ69eJ1rfNLBV
+	jQBQvRNpR5k7kOg==
+X-Google-Smtp-Source: AGHT+IHlTAo5Vd/SvGobJvxXVOFlMNw+KBPX5TmcIkbjgEkbeboOnIRQ+XwiVBQ/scw52az2p9BfGw==
+X-Received: by 2002:a05:6000:481c:b0:3a4:f663:acb9 with SMTP id ffacd0b85a97d-3b49a9fe75amr926289f8f.9.1751696763076;
+        Fri, 04 Jul 2025 23:26:03 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:af5:483d:7f18:d9ce])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9bde35dsm73873815e9.30.2025.07.04.23.26.02
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 14:42:27 -0700 (PDT)
-Message-ID: <b2976f47da6cd2cbcc3473db3d3828692bbe0331.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 2/2] cooker: Use a queue to feed parsing
- jobs
+        Fri, 04 Jul 2025 23:26:02 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Joshua Watt <jpewhacker@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Date: Fri, 04 Jul 2025 22:42:25 +0100
-In-Reply-To: <CAJdd5GZWuSCVCNOc5mFH08_Og3SbNrvbBvPpHPFcmaM1uMYJ5w@mail.gmail.com>
-References: <20250702222437.3733042-1-richard.purdie@linuxfoundation.org>
-	 <20250702222437.3733042-2-richard.purdie@linuxfoundation.org>
-	 <CAJdd5GaLejWT50QFYGazeh2zDnBOALWVsgEiRcfGw2-J=RWKXw@mail.gmail.com>
-	 <56c5d0bae69179225664f2bff11fb38b7094f2ed.camel@linuxfoundation.org>
-	 <CAJdd5GZWuSCVCNOc5mFH08_Og3SbNrvbBvPpHPFcmaM1uMYJ5w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.56.0-1 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH v2] cooker: Use a queue to feed parsing jobs
+Date: Sat,  5 Jul 2025 07:26:01 +0100
+Message-ID: <20250705062601.3875763-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.48.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 04 Jul 2025 21:42:39 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17747
+ <bitbake-devel@lists.openembedded.org>; Sat, 05 Jul 2025 06:26:12 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17748
 
-T24gVGh1LCAyMDI1LTA3LTAzIGF0IDA4OjUwIC0wNjAwLCBKb3NodWEgV2F0dCB3cm90ZToKPiBP
-biBUaHUsIEp1bCAzLCAyMDI1IGF0IDg6MzDigK9BTSBSaWNoYXJkIFB1cmRpZQo+IDxyaWNoYXJk
-LnB1cmRpZUBsaW51eGZvdW5kYXRpb24ub3JnPiB3cm90ZToKPiA+IAo+ID4gT24gVGh1LCAyMDI1
-LTA3LTAzIGF0IDA4OjI3IC0wNjAwLCBKb3NodWEgV2F0dCB3cm90ZToKPiA+ID4gT24gV2VkLCBK
-dWwgMiwgMjAyNSBhdCA0OjI04oCvUE0gUmljaGFyZCBQdXJkaWUgdmlhCj4gPiA+IGxpc3RzLm9w
-ZW5lbWJlZGRlZC5vcmcKPiA+ID4gPHJpY2hhcmQucHVyZGllPWxpbnV4Zm91bmRhdGlvbi5vcmdA
-bGlzdHMub3BlbmVtYmVkZGVkLm9yZz4KPiA+ID4gd3JvdGU6Cj4gPiA+ID4gCj4gPiA+ID4gQ3Vy
-ZXJudGx5LCByZWNpcGVzIHRvIHBhcnNlIGFyZSBzcGxpdCBpbnRvIGVxdWFsIGdyb3VwcyBhbmQK
-PiA+ID4gPiBwYXNzZWQgdG8KPiA+ID4gPiBlYWNoIHBhcnNlIHRocmVhZCBhdCB0aGUgc3RhcnQg
-b2YgcGFyc2luZy4gV2UgY2FuIHJlcGxhY2UgdGhpcwo+ID4gPiA+IHdpdGgKPiA+ID4gPiBhIHF1
-ZXVlIGFuZCBjb2xsZWN0IGEgbmV3IGpvYiBhcyBlYWNoIHBhcnNpbmcgcHJvY2VzcyBiZWNvbWVz
-Cj4gPiA+ID4gaWRsZQo+ID4gPiA+IHRvIGJldHRlciBzcHJlYWQgbG9hZCBpbiB0aGUgY2FzZSBv
-ZiBzbG93IHBhcnNpbmcgam9icy4KPiA+ID4gPiAKPiA+ID4gPiBTb21lIG9mIHRoZSBkYXRhIHdl
-IG5lZWQgaGFzIHRvIGJlIHBhc3NlZCBpbiBhdCBmb3JrIHRpbWUgc2luY2UKPiA+ID4gPiBpdAo+
-ID4gPiA+IGNhbid0IGJlIHBpY2tsZWQsIHNvIHRoZSBqb2IgdG8gcGFyc2UgaXMgb25seSByZWZl
-cmVuY2VkIGFzIGFuCj4gPiA+ID4gaW5kZXgKPiA+ID4gPiBpbiB0aGF0IGxpc3QuCj4gPiA+ID4g
-Cj4gPiA+ID4gVGhpcyBzaG91bGQgYmV0dGVyIHNwcmVhZCBsb2FkIGZvciBzbG93IHRvIHBhcnNl
-IHJlY2lwZXMgc3VjaAo+ID4gPiA+IGFzIHRob3NlCj4gPiA+ID4gd2l0aCBtYW55IGNsYXNzIGV4
-dGVuc2lvbnMuCj4gPiA+ID4gCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogUmljaGFyZCBQdXJkaWUK
-PiA+ID4gPiA8cmljaGFyZC5wdXJkaWVAbGludXhmb3VuZGF0aW9uLm9yZz4KPiA+ID4gPiAtLS0K
-PiA+ID4gPiDCoGxpYi9iYi9jb29rZXIucHkgfCAyOSArKysrKysrKysrKysrKysrKystLS0tLS0t
-LS0tLQo+ID4gPiA+IMKgMSBmaWxlIGNoYW5nZWQsIDE4IGluc2VydGlvbnMoKyksIDExIGRlbGV0
-aW9ucygtKQo+ID4gPiA+IAo+ID4gPiA+IGRpZmYgLS1naXQgYS9saWIvYmIvY29va2VyLnB5IGIv
-bGliL2JiL2Nvb2tlci5weQo+ID4gPiA+IGluZGV4IDkxZTNlZTAyNWVhLi5lODhhZDI0Y2Y2MSAx
-MDA2NDQKPiA+ID4gPiAtLS0gYS9saWIvYmIvY29va2VyLnB5Cj4gPiA+ID4gKysrIGIvbGliL2Ji
-L2Nvb2tlci5weQo+ID4gPiA+IEBAIC0xOTk4LDggKzE5OTgsOSBAQCBjbGFzcyBQYXJzaW5nRmFp
-bHVyZShFeGNlcHRpb24pOgo+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqAgRXhjZXB0aW9uLl9faW5p
-dF9fKHNlbGYsIHJlYWxleGNlcHRpb24sIHJlY2lwZSkKPiA+ID4gPiAKPiA+ID4gPiDCoGNsYXNz
-IFBhcnNlcihtdWx0aXByb2Nlc3NpbmcuUHJvY2Vzcyk6Cj4gPiA+ID4gLcKgwqDCoCBkZWYgX19p
-bml0X18oc2VsZiwgam9icywgcmVzdWx0cywgcXVpdCwgcHJvZmlsZSk6Cj4gPiA+ID4gK8KgwqDC
-oCBkZWYgX19pbml0X18oc2VsZiwgam9icywgam9iaWRfcXVldWUsIHJlc3VsdHMsIHF1aXQsCj4g
-PiA+ID4gcHJvZmlsZSk6Cj4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoCBzZWxmLmpvYnMgPSBqb2Jz
-Cj4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgIHNlbGYuam9iaWRfcXVldWUgPSBqb2JpZF9xdWV1ZQo+
-ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5yZXN1bHRzID0gcmVzdWx0cwo+ID4gPiA+IMKg
-wqDCoMKgwqDCoMKgwqAgc2VsZi5xdWl0ID0gcXVpdAo+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqAg
-bXVsdGlwcm9jZXNzaW5nLlByb2Nlc3MuX19pbml0X18oc2VsZikKPiA+ID4gPiBAQCAtMjA2NCwx
-MiArMjA2NSwxNCBAQCBjbGFzcyBQYXJzZXIobXVsdGlwcm9jZXNzaW5nLlByb2Nlc3MpOgo+ID4g
-PiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIHNlbGYucXVpdC5pc19zZXQo
-KToKPiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJyZWFr
-Cj4gPiA+ID4gCj4gPiA+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBqb2IgPSBO
-b25lCj4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBqb2JpZCA9IE5vbmUK
-PiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB0cnk6Cj4gPiA+ID4gLcKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGpvYiA9IHNlbGYuam9icy5wb3Ao
-KQo+ID4gPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZXhjZXB0IEluZGV4RXJy
-b3I6Cj4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGpvYmlk
-ID0gc2VsZi5qb2JpZF9xdWV1ZS5nZXQoVHJ1ZSwgMC41KQo+ID4gPiA+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgZXhjZXB0IChWYWx1ZUVycm9yLCBPU0Vycm9yKToKPiA+ID4gPiDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGhhdmVqb2JzID0gRmFsc2UK
-PiA+ID4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIGpvYjoKPiA+ID4gPiAr
-Cj4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiBqb2JpZCBpcyBub3Qg
-Tm9uZToKPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgam9i
-ID0gc2VsZi5qb2JzW2pvYmlkXQo+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgcmVzdWx0ID0gc2VsZi5wYXJzZSgqam9iKQo+ID4gPiA+IMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgIyBDbGVhciB0aGUgc2lnZ2VuIGNhY2hlIGFm
-dGVyIHBhcnNpbmcgdG8KPiA+ID4gPiBjb250cm9sIG1lbW9yeSB1c2FnZSwgaXRzIGh1Z2UKPiA+
-ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJiLnBhcnNlLnNp
-Z2dlbi5wb3N0cGFyc2luZ19jbGVhbl9jYWNoZSgpCj4gPiA+ID4gQEAgLTIwODIsNiArMjA4NSw3
-IEBAIGNsYXNzIFBhcnNlcihtdWx0aXByb2Nlc3NpbmcuUHJvY2Vzcyk6Cj4gPiA+ID4gwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBleGNlcHQgcXVldWUuRnVsbDoKPiA+
-ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGVu
-ZGluZy5hcHBlbmQocmVzdWx0KQo+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqAgZmluYWxseToKPiA+
-ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzZWxmLmpvYnMuY2xvc2UoKQo+ID4gPiA+IMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzZWxmLnJlc3VsdHMuY2xvc2UoKQo+ID4gPiA+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCBzZWxmLnJlc3VsdHMuam9pbl90aHJlYWQoKQo+ID4gPiA+IAo+
-ID4gPiA+IEBAIC0yMTM0LDEzICsyMTM4LDEzIEBAIGNsYXNzIENvb2tlclBhcnNlcihvYmplY3Qp
-Ogo+ID4gPiA+IAo+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5iYl9jYWNoZXMgPQo+ID4g
-PiA+IGJiLmNhY2hlLk11bHRpY29uZmlnQ2FjaGUoc2VsZi5jZmdidWlsZGVyLCBzZWxmLmNmZ2hh
-c2gsCj4gPiA+ID4gY29va2VyLmNhY2hlc19hcnJheSkKPiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKg
-IHNlbGYuZnJvbWNhY2hlID0gc2V0KCkKPiA+ID4gPiAtwqDCoMKgwqDCoMKgwqAgc2VsZi53aWxs
-cGFyc2UgPSBzZXQoKQo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoCBzZWxmLndpbGxwYXJzZSA9IFtd
-Cj4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoCBmb3IgbWMgaW4gc2VsZi5jb29rZXIubXVsdGljb25m
-aWdzOgo+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBmb3IgZmlsZW5hbWUgaW4gc2Vs
-Zi5tY2ZpbGVsaXN0W21jXToKPiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCBhcHBlbmRzID0KPiA+ID4gPiBzZWxmLmNvb2tlci5jb2xsZWN0aW9uc1ttY10uZ2V0X2ZpbGVf
-YXBwZW5kcyhmaWxlbmFtZSkKPiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCBsYXllcm5hbWUgPQo+ID4gPiA+IHNlbGYuY29va2VyLmNvbGxlY3Rpb25zW21jXS5jYWxjX2Ji
-ZmlsZV9wcmlvcml0eShmaWxlbmFtZSlbMl0KPiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBpZiBub3Qgc2VsZi5iYl9jYWNoZXNbbWNdLmNhY2hlVmFsaWQoZmlsZW5hbWUs
-Cj4gPiA+ID4gYXBwZW5kcyk6Cj4gPiA+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIHNlbGYud2lsbHBhcnNlLmFkZCgobWMsCj4gPiA+ID4gc2VsZi5iYl9jYWNoZXNb
-bWNdLCBmaWxlbmFtZSwgYXBwZW5kcywgbGF5ZXJuYW1lKSkKPiA+ID4gPiArwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2VsZi53aWxscGFyc2UuYXBwZW5kKChtYywKPiA+
-ID4gPiBzZWxmLmJiX2NhY2hlc1ttY10sIGZpbGVuYW1lLCBhcHBlbmRzLCBsYXllcm5hbWUpKQo+
-ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGVsc2U6Cj4gPiA+ID4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzZWxmLmZyb21jYWNoZS5hZGQo
-KG1jLAo+ID4gPiA+IHNlbGYuYmJfY2FjaGVzW21jXSwgZmlsZW5hbWUsIGFwcGVuZHMsIGxheWVy
-bmFtZSkpCj4gPiA+ID4gCj4gPiA+ID4gQEAgLTIxNTksMjIgKzIxNjMsMjUgQEAgY2xhc3MgQ29v
-a2VyUGFyc2VyKG9iamVjdCk6Cj4gPiA+ID4gwqDCoMKgwqAgZGVmIHN0YXJ0KHNlbGYpOgo+ID4g
-PiA+IMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5yZXN1bHRzID0gc2VsZi5sb2FkX2NhY2hlZCgpCj4g
-PiA+ID4gwqDCoMKgwqDCoMKgwqDCoCBzZWxmLnByb2Nlc3NlcyA9IFtdCj4gPiA+ID4gKwo+ID4g
-PiA+IMKgwqDCoMKgwqDCoMKgwqAgaWYgc2VsZi50b3BhcnNlOgo+ID4gPiA+IMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBiYi5ldmVudC5maXJlKGJiLmV2ZW50LlBhcnNlU3RhcnRlZChzZWxmLnRv
-cGFyc2UpLAo+ID4gPiA+IHNlbGYuY2ZnZGF0YSkKPiA+ID4gPiAKPiA+ID4gPiArwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBzZWxmLnRvcGFyc2VfcXVldWUgPQo+ID4gPiA+IG11bHRpcHJvY2Vzc2lu
-Zy5RdWV1ZShsZW4oc2VsZi53aWxscGFyc2UpKQo+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCBzZWxmLnBhcnNlcl9xdWl0ID0gbXVsdGlwcm9jZXNzaW5nLkV2ZW50KCkKPiA+ID4gPiDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5yZXN1bHRfcXVldWUgPSBtdWx0aXByb2Nlc3Np
-bmcuUXVldWUoKQo+ID4gPiA+IAo+ID4gPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRlZiBj
-aHVua2lmeShsc3Qsbik6Cj4gPiA+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBy
-ZXR1cm4gW2xzdFtpOjpuXSBmb3IgaSBpbiByYW5nZShuKV0KPiA+ID4gPiAtwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBzZWxmLmpvYnMgPSBjaHVua2lmeShsaXN0KHNlbGYud2lsbHBhcnNlKSwKPiA+
-ID4gPiBzZWxmLm51bV9wcm9jZXNzZXMpCj4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-Zm9yIGpvYmlkIGluIHJhbmdlKGxlbihzZWxmLndpbGxwYXJzZSkpOgo+ID4gPiA+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2VsZi50b3BhcnNlX3F1ZXVlLnB1dChqb2JpZCkKPiA+
-ID4gCj4gPiA+IEl0J3MgZ2VuZXJhbGx5IG5vdCBhIGdvb2QgaWRlYSB0byBhc3N1bWUgeW91IGNh
-biBwdXNoIGFsbCB0aGUKPiA+ID4gaXRlbXMgb24KPiA+ID4gdGhlIHF1ZXVlIGJlZm9yZSB0aGVy
-ZSBhcmUgYW55IGNvbnN1bWVyczsgaWYgdGhlIHF1ZXVlIGZpbGxzLAo+ID4gPiB0aGlzCj4gPiA+
-IHdpbGwgZGVhZGxvY2suIEl0IHdvdWxkIGJlIGJldHRlciB0byBwdXNoIHRoZSBpdGVtcyB0byB0
-aGUgcXVldWUKPiA+ID4gYWZ0ZXIKPiA+ID4gY3JlYXRpbmcgdGhlIHByb2Nlc3Nlcy4KPiA+IAo+
-ID4gVHJ1ZS4gSSBkaWQgbWFrZSBzdXJlIHRoZSBxdWV1ZSB3YXMgbGFyZ2UgZW5vdWdoIGFib3Zl
-IGhvd2V2ZXIgaXQKPiA+IHdvdWxkCj4gPiBkZXBlbmQgb24gdGhlIHNpemUgb2YgdGhlIGpvYiBl
-bnRyaWVzLgo+ID4gCj4gPiA+IMKgSWYgeW91IGRvIHRoYXQsIEkgYWxzbyBkb24ndCBzZWUgYW55
-IHJlYXNvbiB0bwo+ID4gPiBwdXNoIHRoZSBpbmRleGVzIGluc3RlYWQgb2YgdGhlIGpvYnMgZGly
-ZWN0bHk7IGJhc2ljYWxseSBpbnN0ZWFkCj4gPiA+IG9mCj4gPiA+ICJjaHVua2lmeWluZyIgYW5k
-IHByZS1kZXRlcm1pbmluZyB0aGUgYXNzaWdubWVudCBvZiBqb2JzIHRvCj4gPiA+IHByb2Nlc3Nl
-cywKPiA+ID4gaGF2ZSB0aGVtIGFsbCBwdWxsIGZyb20gb25lIHF1ZXVlIG9mIGpvYnMuCj4gPiAK
-PiA+IEkgYWRkZWQgdGhpcyBjb21tZW50IHRvIHRoZSBwYXRjaCBpbiBtYXN0ZXIgbmV4dDoKPiA+
-IAo+ID4gIyBIYXZlIHRvIHBhc3MgaW4gd2lsbHBhcnNlIGF0IGZvcmsgdGltZSBzbyBhbGwgcGFy
-c2luZyBwcm9jZXNzZXMKPiA+IGhhdmUgdGhlIHVucGlja2xlYWJsZSBkYXRhCj4gPiAjIHRoZW4g
-YWNjZXNzIGl0IGJ5IGluZGV4IGZyb20gdGhlIHBhcnNlIHF1ZXVlLgo+ID4gCj4gPiAKPiA+IEFz
-IGlmIHlvdSBkb24ndCBkbyB0aGF0LCBpdCBjYW4ndCByZWJ1aWxkIHRoZSBkYXRhIGFzIHRoZSBj
-YWNoZQo+ID4gb2JqZWN0cwo+ID4gYXJlbid0IHBpY2tsZWFibGUgOigKPiAKPiBBaCwgT0suIFdl
-IG11c3QgYmUgcmVseWluZyBvbiB0aGUgbXVsdGlwcm9jZXNzIGJlaW5nIGltcGxlbWVudGVkIHdp
-dGgKPiBmb3JrKCkgdGhlbiB0byBwYXNzIHRoZSBkYXRhLiBUaGF0J3MgcmVhc29uYWJsZSBhbmQg
-dGhlIGluZGV4ZXMgbWFrZQo+IHNlbnNlIChidXQgd2Ugc2hvdWxkIHN0aWxsIHB1c2ggdGhlbSBh
-ZnRlciBjcmVhdGluZyB0aGUgcHJvY2VzcyB0bwo+IGF2b2lkIHRoZSBwb3NzaWJpbGl0eSBvZiBk
-ZWFkbG9jaykKCkkgY2hhbmdlZCBpdCB0byBxdWV1ZSBhZnRlciBzdGFydGluZyB0aGUgcGFyc2Vy
-IHByb2Nlc3NlcyBob3dldmVyIEkKdGhpbmsgdGhleSBleGl0IGVhcmx5IGR1ZSB0byBubyB3b3Jr
-IGFuZCBpdCBjYXVzZXMgb2NjYXNpb25hbCBidWlsZApmYWlsdXJlcyB0aGF0IHdheSBhcm91bmQg
-c28gdGhlIGNvZGUgaXMgZ29pbmcgdG8gbmVlZCBtb3JlIGV4dGVuc2l2ZQpjaGFuZ2VzLgoKQ2hl
-ZXJzLAoKUmljaGFyZAo=
+Curerntly, recipes to parse are split into equal groups and passed to
+each parse thread at the start of parsing. We can replace this with
+a queue and collect a new job as each parsing process becomes idle
+to better spread load in the case of slow parsing jobs.
 
+Some of the data we need has to be passed in at fork time since it
+can't be pickled, so the job to parse is only referenced as an index
+in that list.
+
+This should better spread load for slow to parse recipes such as those
+with many class extensions.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/cooker.py | 32 ++++++++++++++++++++------------
+ 1 file changed, 20 insertions(+), 12 deletions(-)
+
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 91e3ee025ea..8b959cc942e 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1998,8 +1998,9 @@ class ParsingFailure(Exception):
+         Exception.__init__(self, realexception, recipe)
+ 
+ class Parser(multiprocessing.Process):
+-    def __init__(self, jobs, results, quit, profile):
++    def __init__(self, jobs, jobid_queue, results, quit, profile):
+         self.jobs = jobs
++        self.jobid_queue = jobid_queue
+         self.results = results
+         self.quit = quit
+         multiprocessing.Process.__init__(self)
+@@ -2064,12 +2065,14 @@ class Parser(multiprocessing.Process):
+                 if self.quit.is_set():
+                     break
+ 
+-                job = None
++                jobid = None
+                 try:
+-                    job = self.jobs.pop()
+-                except IndexError:
++                    jobid = self.jobid_queue.get(True, 0.5)
++                except (ValueError, OSError, queue.Empty) as e:
+                     havejobs = False
+-                if job:
++
++                if jobid is not None:
++                    job = self.jobs[jobid]
+                     result = self.parse(*job)
+                     # Clear the siggen cache after parsing to control memory usage, its huge
+                     bb.parse.siggen.postparsing_clean_cache()
+@@ -2082,6 +2085,7 @@ class Parser(multiprocessing.Process):
+                     except queue.Full:
+                         pending.append(result)
+         finally:
++            self.jobs.close()
+             self.results.close()
+             self.results.join_thread()
+ 
+@@ -2134,13 +2138,13 @@ class CookerParser(object):
+ 
+         self.bb_caches = bb.cache.MulticonfigCache(self.cfgbuilder, self.cfghash, cooker.caches_array)
+         self.fromcache = set()
+-        self.willparse = set()
++        self.willparse = []
+         for mc in self.cooker.multiconfigs:
+             for filename in self.mcfilelist[mc]:
+                 appends = self.cooker.collections[mc].get_file_appends(filename)
+                 layername = self.cooker.collections[mc].calc_bbfile_priority(filename)[2]
+                 if not self.bb_caches[mc].cacheValid(filename, appends):
+-                    self.willparse.add((mc, self.bb_caches[mc], filename, appends, layername))
++                    self.willparse.append((mc, self.bb_caches[mc], filename, appends, layername))
+                 else:
+                     self.fromcache.add((mc, self.bb_caches[mc], filename, appends, layername))
+ 
+@@ -2159,22 +2163,26 @@ class CookerParser(object):
+     def start(self):
+         self.results = self.load_cached()
+         self.processes = []
++
+         if self.toparse:
+             bb.event.fire(bb.event.ParseStarted(self.toparse), self.cfgdata)
+ 
++            self.toparse_queue = multiprocessing.Queue(len(self.willparse))
+             self.parser_quit = multiprocessing.Event()
+             self.result_queue = multiprocessing.Queue()
+ 
+-            def chunkify(lst,n):
+-                return [lst[i::n] for i in range(n)]
+-            self.jobs = chunkify(list(self.willparse), self.num_processes)
+-
++            # Have to pass in willparse at fork time so all parsing processes have the unpickleable data
++            # then access it by index from the parse queue.
+             for i in range(0, self.num_processes):
+-                parser = Parser(self.jobs[i], self.result_queue, self.parser_quit, self.cooker.configuration.profile)
++                parser = Parser(self.willparse, self.toparse_queue, self.result_queue, self.parser_quit, self.cooker.configuration.profile)
+                 parser.start()
+                 self.process_names.append(parser.name)
+                 self.processes.append(parser)
+ 
++            for jobid in range(len(self.willparse)):
++                self.toparse_queue.put(jobid)
++            self.toparse_queue.close()
++
+             self.results = itertools.chain(self.results, self.parse_generator())
+ 
+     def shutdown(self, clean=True, eventmsg="Parsing halted due to errors"):
 
