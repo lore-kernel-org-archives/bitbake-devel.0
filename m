@@ -1,81 +1,68 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <rpjday@crashcourse.ca>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEE5C83F1B
-	for <webhook@archiver.kernel.org>; Fri, 11 Jul 2025 17:00:49 +0000 (UTC)
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
- by mx.groups.io with SMTP id smtpd.web11.18890.1752253243818671091
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D303C83F1A
+	for <webhook@archiver.kernel.org>; Fri, 11 Jul 2025 18:32:00 +0000 (UTC)
+Received: from cpanel10.indieserve.net (cpanel10.indieserve.net [199.212.143.9])
+ by mx.groups.io with SMTP id smtpd.web10.20957.1752258716675405020
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 11 Jul 2025 10:00:43 -0700
+ Fri, 11 Jul 2025 11:31:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=ezZTOnyf;
- spf=pass (domain: gmail.com, ip: 209.85.166.172, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3e05bb6efe0so20127715ab.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 11 Jul 2025 10:00:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752253243; x=1752858043; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UBH3pWJ3mv2tDrhagCJWKnwfnb0qOkWGhmLpyn3woRc=;
-        b=ezZTOnyfXjpvWrQ4EtJyAFpggD5daK8DF5UKIcyZ6xh4WMJP1NDsY3dVcCblrzr5oH
-         1G+gmiLJByMCjCB4d09sTkb7vr1q74HYI72DT9CJm9ALY5JHzdYU90kqTpDyY7z8n1UU
-         LkdLew8b7Q3zrKkCAb5XA5JgYGX8bIuihmi2ynzHb9KOJNJGfIwvRdlOb3NRp1mXtBsA
-         Kv3RgZGCw5NjXtV3nDqbZgJPMJDcdG8vRyuZofI9MEjhA+5LlH4DKri0uxhP8nm/brD1
-         m7598V3UVCCwzzQTevP97XoVkQFm/0m8KolzpL1EVn4nHRYUw4aoyhisNpzxqNt3b72E
-         YnKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752253243; x=1752858043;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UBH3pWJ3mv2tDrhagCJWKnwfnb0qOkWGhmLpyn3woRc=;
-        b=gVJyRAzWL01XRdgn60rdLhJ9xDvzlZTgg0yn4DGT3Nrr+dy+qsfiyon6lMDpP2Y4XI
-         3lFBssljW3KTayr/fg0Anf0F+FV2goectS9fZ/NkWklM2kMvIO+tu+DDpGWQedGNm0y6
-         5eoqw1Z1VqSHO2ClRKtZGPS4hye7Hwo9vCzsSCgfh61K0oTmrZ5GcwyakGjR8H0yZaTH
-         VbZ3oDkCtbQCZaGGaVG3XZLCfIYRCEUW5DDLoOs7STJilV+OMB1eKkqEqwnUp9bFdnK+
-         7PjsNFdZf7rxGr4zgyz753uX2/HlwVxdQu/SzR4JKK36NQX6aG0oE2O+r93uN4WK4ISb
-         j3qw==
-X-Forwarded-Encrypted: i=1; AJvYcCXi25h68coWI2s9jKUtkIguJQXU0mF4ZN1kAwhHjofdpoEsj9vkW1Z9GOXz/QzCxCsw3TKCDUc6ZtSBbSsU@lists.openembedded.org
-X-Gm-Message-State: AOJu0YyYxWj+wLMFysdgIO0J0SqBABUaGfa8nJFuyk05Exff+DnXrMfL
-	aKoWZzQa6m4VDum37W2Kmvm9Z+ZD1hNaYeijOXqu7rCaDl2oUTXx6FP3yWmSb0oJ8qdYcAERwqe
-	Z798cieeG+WA5xQomUCFrLfxkQV5dwJvjbg==
-X-Gm-Gg: ASbGncuPrRIwty7ozpOoxL2fdSnUFcb5T3W4fZhiu3LYkSc+5S+Surmxrx3OA5ZvGIS
-	I6gbQqhUtQYFLIZrfRFVqygJzjCeVL6xzEI77MFxelemXkIL2bHGulDNVWycE1El33ZqCAwcyzR
-	8/pJxbakTVn3/kLIb3ejOBjvZqRYzCGaV10L9hapb4p0+RkvjDI+fRJm+pnRxFOjWAVNCukSOWe
-	uIPQKZIfhVAHQ6yMJ5dQRm0yKIBIwE7h/1u16uLdmFO0EcP8g==
-X-Google-Smtp-Source: AGHT+IG6WFAkF1zPzzTsdQU8Kp5k7AmgCVlSOCCona5+mhtBRJKIXUsCA9yFEVijS89eRieUAB27b4mcZYe+cZEbaVg=
-X-Received: by 2002:ad4:5945:0:b0:704:9618:51d with SMTP id
- 6a1803df08f44-704a7065aacmr51927246d6.39.1752253228528; Fri, 11 Jul 2025
- 10:00:28 -0700 (PDT)
+ dkim=pass header.i=@crashcourse.ca header.s=default header.b=HvMZcv3x;
+ spf=pass (domain: crashcourse.ca, ip: 199.212.143.9, mailfrom: rpjday@crashcourse.ca)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=crashcourse.ca; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+	To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=9TyYoKArfBmLqVMx4cDPo/jiGONHHdjdSc65+XVo+ZI=; b=HvMZcv3xPPY151JHdfHqWf36JM
+	oY0Zys40yquPUh+PX9GhAu70iOcMkG7+e+Vmpc7JxmsM88QMT6LAeQ78WVm1ayyffvgGARffEtowL
+	K8NRp8Say+KrE4Jw1C9ChevxkCqR1LP7YZLRsj/kKoMSsEmob9MX9jBwGmSXhDNFkzasJ5hJRKgFL
+	xyVLONj6JxT4zSTu5eC06tHdBpm9MiNpPclsBMKBfQpwKbTMvksr35jFibZA9SKdqAvsDt+z9Y0b4
+	qqwNjEYEQ2Lp1EXvHFvpZ1A2x3pBShgbvU32YaVLOxmwJ0+AlT4UbtrWdCZJ64M/LtK/+arfc/uTm
+	4MRnKiAw==;
+Received: from pool-174-115-41-146.cpe.net.cable.rogers.com ([174.115.41.146]:58410 helo=asus)
+	by cpanel10.indieserve.net with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <rpjday@crashcourse.ca>)
+	id 1uaIXH-00000001emb-2dYG
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 11 Jul 2025 14:31:54 -0400
+Date: Fri, 11 Jul 2025 14:31:50 -0400 (EDT)
+From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+To: BitBake developer list <bitbake-devel@lists.openembedded.org>
+Subject: is there a short form of "What provides this functionality?"
+Message-ID: <a977af08-881d-badb-527c-c8c17ddc2845@crashcourse.ca>
 MIME-Version: 1.0
-References: <20250612093206.168888-1-hongxu.jia@windriver.com>
- <CANNYZj9rw2nb4wVrESvMn+txhfpZk9SOwC3FXyvv49x2CziQEQ@mail.gmail.com> <7c99cad786c37dc3da9cbd73d671ff61eb03171d.camel@pengutronix.de>
-In-Reply-To: <7c99cad786c37dc3da9cbd73d671ff61eb03171d.camel@pengutronix.de>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Fri, 11 Jul 2025 19:00:17 +0200
-X-Gm-Features: Ac12FXzZWT8Lvs0OO-ocshQE5aSDJTH4HsSeraIdZxrEenQb9qyP_HI_sRsQCwc
-Message-ID: <CANNYZj9gOWpYGjAp2wOCTaLvw5OfJNwqqorjZKBgihZz0C3_xw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH v3] bitbake-getvar: skip info output of
- bitbake for quiet
-To: =?UTF-8?Q?Enrico_J=C3=B6rns?= <ejo@pengutronix.de>
-Cc: hongxu.jia@eng.windriver.com, bitbake-devel@lists.openembedded.org, 
-	alex@linutronix.de, PTX-Internal Yocto List <yocto@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel10.indieserve.net
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Get-Message-Sender-Via: cpanel10.indieserve.net: authenticated_id: rpjday+crashcourse.ca/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: cpanel10.indieserve.net: rpjday@crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 11 Jul 2025 17:00:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17768
+ <bitbake-devel@lists.openembedded.org>; Fri, 11 Jul 2025 18:32:00 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17769
 
-On Wed, 9 Jul 2025 at 14:11, Enrico J=C3=B6rns <ejo@pengutronix.de> wrote:
-> So my findings in the bug report https://bugzilla.yoctoproject.org/show_b=
-ug.cgi?id=3D15881 are
-> obsolete by this fix/workaround and we should close it?
 
-Probably. Can you verify that?
+  Not sure if there's a BB helper script where I can query:
 
-Alex
+"Which recipes PROVIDE this functionality?"
+
+Like:
+
+  $ bitbake-what-provides udev
+
+that sort of thing. Does such a thing exist?
+
+rday
 
