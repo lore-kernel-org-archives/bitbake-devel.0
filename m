@@ -1,100 +1,90 @@
-Return-Path: <martin.jansa@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9346C83F27
-	for <webhook@archiver.kernel.org>; Wed, 16 Jul 2025 08:48:24 +0000 (UTC)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
- by mx.groups.io with SMTP id smtpd.web10.17653.1752655700184304762
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE853C83F1B
+	for <webhook@archiver.kernel.org>; Wed, 16 Jul 2025 15:22:56 +0000 (UTC)
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+ by mx.groups.io with SMTP id smtpd.web11.25141.1752679373053446695
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 16 Jul 2025 01:48:20 -0700
+ Wed, 16 Jul 2025 08:22:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=TNjS57AJ;
- spf=pass (domain: gmail.com, ip: 209.85.167.51, mailfrom: martin.jansa@gmail.com)
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553b3316160so6763550e87.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 16 Jul 2025 01:48:19 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=C3yKbyQe;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.50, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a507e88b0aso5036882f8f.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 16 Jul 2025 08:22:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752655698; x=1753260498; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JX3qUuWxRZxLYmMf1l+f6taAAhos8XVGc3Xdc4/tEy0=;
-        b=TNjS57AJR5YpgM/ZR9y3U4culX5fCmBnyTo4Mw7klQQL7u4bF7TYERXUZoVPtLtsgD
-         4x7HK+CjXs1WMVqz0v7wTFRWMhhND2ZV+Ict4OwH26zPn4o/ESTA9KQsj+SP3sfqQJ9H
-         KtJvvJhfQ36/yS7jkVBrW8jUw3uF5RTC3CbrgWP9rP5FIEfuuvAh+VSwjvOlEICBWp3r
-         Bd9hB/SAvFlzudheZWkDy9rx/tY/bJtVUXA1i00WBLAGeaB5FZjI1cup+RBEAhB+8jT5
-         a7IlnPo3BuVi1aWijLR7VKWaB4Q9QjCLDwkbatMDg5Y+n5LZ9JCxJy4ueBjjxh9JfQak
-         h6mw==
+        d=linuxfoundation.org; s=google; t=1752679371; x=1753284171; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uD5hyyLm5eid0GU+7/tUcpRXpde53WAclPTtYt/Bdow=;
+        b=C3yKbyQeAcPNC5qGWoqsvvXinVToD0J07bIMWcj4P7my0VOz0D5MQZJSVt2csLxdE3
+         7hIGUL7wxIAtsxQpe8b/wyOwV2ib4tj6yc2BHLYEZWX0d5njfJj2myrbhlrWDsrl+sZb
+         rbfdlYDFBVuORAJKVpPXvDq2Q0niZn2GXqFms=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752655698; x=1753260498;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JX3qUuWxRZxLYmMf1l+f6taAAhos8XVGc3Xdc4/tEy0=;
-        b=VMqhLVu/K8wF5QFK87yIk8au30kP2ngsP7RiIlmPrB7pUubSotCUF5YNfKbCiAmLwr
-         9PHzdQ4po9ksZa5q6T7KoECmYwI/R7CYww6OzMkrA7j7J6bYYOcWvTcekSTTv6Fee3fP
-         dq+zCiKL0RzU0czudsn0pjSWU2uTF5e8vNqDBXCAgqQGOh8y/sDmXYE1TJziaqv7gUsH
-         Jts7XeQf03DVnjS79vCOL41cMdKwECPJurvqzpWwTebnCLAHCQrsLw4GK9Ulv6vPKAno
-         NZMvYZA8I9ckvAn2DLH/N3yvr3LmjdjvnYr7EXZs1ZLNHUQD3b3Ma21C2DOvKm2Z/MsG
-         mMBg==
-X-Gm-Message-State: AOJu0YyS5GQSuV+InM7/FaNLBgm6wiuQgZAbIKZA4j6BFhe9l/guiQyI
-	dVJYKYorhz91WIioZWD/yNMbQwQiRmX3QGBhHCfbm1AAyDsHw7op/aDL93pylGkFJS0P9267CXz
-	6IHDTHRrxZjqA2pn9FKop24OdQgMLNGk=
-X-Gm-Gg: ASbGncvcB9Fg5NT+AkrnoLQCE2lGIDUEB/6FM8mY3OeBCxYNV3fVqp4p5QehG1Un5V4
-	TSgV5MtMpVLHw8FxGv5M9FXeDGpZe8fnqkuC9GiQJyW7C0dH4lCpskB7x7ue9jX3RN8V7clQ7qE
-	+7k648DJkyoqf7y7AsNq5l6hpX6ATKqMVQcL9nvzBaydiHm3sAn8GCVs2SGpHJ+OR+K2Nvw1dFJ
-	fmNd+43WA==
-X-Google-Smtp-Source: AGHT+IGfgjj0ltaRAZDEBnmj99F94YwDmY3wa0l4HcQbdCVnEpH90trDEgCVXw8dOP5SYK3bQmRYro9gul+FU9uH0/k=
-X-Received: by 2002:a05:6512:3406:b0:553:241d:4e7d with SMTP id
- 2adb3069b0e04-55a23f6dd82mr522319e87.42.1752655697594; Wed, 16 Jul 2025
- 01:48:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1752679371; x=1753284171;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uD5hyyLm5eid0GU+7/tUcpRXpde53WAclPTtYt/Bdow=;
+        b=lO6w4kIyyCsbI9ggz47DBFsy780O15kNVDZJfPyqvGiHho7VR3F2rLg8YC794l8WJ/
+         r5GAC+5W4LeH9t8v3ScQ0kXL/t0ZHjBbogi9KxggFJV+Z+33y/RrkAGp67HS98DDBTw2
+         JqzumKIQcfilVFuZar/csBgxKD8bnjLyRNOUiUg3wdfKQTVeIvKMHO8/oM2BdRi46Z7S
+         wJNpFFZN6VSdHdSKwBiiSzM5r8oDLuWRfO5XpDU8kEWxYNDFrhDis4tUOgw2zehNpue0
+         yev6ihH2kvXLAVVxEQQa+pbd/ZO/Uvp3FbMP1LV5JWjgWDdnXInbPSdy7qJp/5SMJLxM
+         PrHw==
+X-Gm-Message-State: AOJu0Yyx4Ysw3LVfwJL61xcO4swp6/CLA6Cqtqkdo1G0XIc6FKM2PQOE
+	Fu1KBEqyhHKgeMpn3FD+LcWpmPuHb1usXRSXEqyNrMQU/NSufv5ZnbuuVTU7dRAR98bc/ZpgCsu
+	xID5P
+X-Gm-Gg: ASbGnctVVxpetgE+fnL8hz9B1dv8+zuS1WIZnccnwUxos7KqF/NQ8lFjIyP+iwwebNb
+	8UzMNmXEgkKTaWgrdmrKZr/nawZH1T+NCPFelgcdk6SirIuIRwdG4p9a5TeK9WFS4YpAGM9zj7P
+	i3TtL0NqvDkoMKtvTetjvQ5824G9XwTghQqYyzEyU82MqACxCA68DLpATJ25GRMUBqiF8JJD+qC
+	oevfChIYcqKwgCzl74dho+o6r3oWXXv5jesr1DIdrgBsOkzTxCVAAP1++HbjGk7GYJTaJSADbLQ
+	fzxyzkcv9jgYeEibxYT573tLw4DsLOTRbV9fnSaIQtpt5bW5g7ZE0FJuhD1p2ltfOMd+CliWPBp
+	gsZH953ZEL15npqGVCgtl2xaaC+puCIhkR+NDpQFbSps6lzBO2sU=
+X-Google-Smtp-Source: AGHT+IHc00KUVB/kxPe8sfKR0OtVeS/vkOIejPZg0ij1m1BkyIrS7/s1CE90RdgELsCpKiIweM6jwA==
+X-Received: by 2002:a05:6000:144b:b0:3a5:2599:4178 with SMTP id ffacd0b85a97d-3b60e4c8f5fmr2355418f8f.19.1752679370977;
+        Wed, 16 Jul 2025 08:22:50 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:22ad:92e1:8848:8bb0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8e0d872sm18362725f8f.60.2025.07.16.08.22.49
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Jul 2025 08:22:50 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 1/4] asyncrpc: Avoid file not found traceback in logs
+Date: Wed, 16 Jul 2025 16:22:46 +0100
+Message-ID: <20250716152249.96126-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.48.1
 MIME-Version: 1.0
-References: <20250708124711.3541367-1-martin.jansa@gmail.com>
- <CANNYZj8zpTF-hs2inMOcJ0mJnYKCijgD0VopeP4-_F0NM6rG1g@mail.gmail.com>
- <CA+chaQfrXL8dcSMvprRGUC-X5BGsTBCQyoYQKdoD1q0-K5EGVw@mail.gmail.com> <CANNYZj82mZdmfi839jKZdd3dibPGvdEao0wj0BoYQ4HHYWaVoA@mail.gmail.com>
-In-Reply-To: <CANNYZj82mZdmfi839jKZdd3dibPGvdEao0wj0BoYQ4HHYWaVoA@mail.gmail.com>
-From: Martin Jansa <martin.jansa@gmail.com>
-Date: Wed, 16 Jul 2025 10:48:04 +0200
-X-Gm-Features: Ac12FXxKXLFtku394m5LEN7ZDUeda_SVohKrImw0pK4_2pPH16POTN7OdeHjUrs
-Message-ID: <CA+chaQfyXsd54aMWU7udvdBC9-EmMr+nXuriCCkQK4rj-tW5Yg@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] fetch2: zstd: use --force to allow
- decompressing symlinks
-To: Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 16 Jul 2025 08:48:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17778
+ <bitbake-devel@lists.openembedded.org>; Wed, 16 Jul 2025 15:22:56 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17779
 
-On Wed, Jul 16, 2025 at 10:37=E2=80=AFAM Alexander Kanavin
-<alex.kanavin@gmail.com> wrote:
->
-> On Wed, 16 Jul 2025 at 10:16, Martin Jansa <martin.jansa@gmail.com> wrote=
-:
-> > So we're not going to fix the known issue, because there could be
-> > unknown potential issues?
->
-> That's not what I said. I said we should seek a better solution than this=
-.
->
-> A patch to add --follow-symlinks, submitted upstream to zstd, would be
-> much better received. Or some way to avoid having symlinks in the
-> first place.
+If the server is quickly stopped, we see tracebacks in the locks
+due to the file not existing. Hide these as they're not errors.
 
---force works perfectly fine and I'm not too afraid of "overwriting
-existing files (as we're using --stdout anyway), input from console
-(as bitbake -s passing a file from SRC_URI), output to stdout (that's
-what we need), operating on links (that's what we need), block devices
-(if there is a recipe with block device ending with .zst in SRC_URI?),
-etc."
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/asyncrpc/serv.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-I'm not going to spend my time adding --follow-symlinks in zstd-native
-unless you've an example where --force might make it worse than it
-currently is, because I won't be able to persuade upstream to accept
-that patch when I don't agree it's needed.
-
-Cheers,
+diff --git a/lib/bb/asyncrpc/serv.py b/lib/bb/asyncrpc/serv.py
+index 667217c5c1b..35e93f7c969 100644
+--- a/lib/bb/asyncrpc/serv.py
++++ b/lib/bb/asyncrpc/serv.py
+@@ -211,7 +211,10 @@ class UnixStreamServer(StreamServer):
+         self.server.close()
+ 
+     def cleanup(self):
+-        os.unlink(self.path)
++        try:
++            os.unlink(self.path)
++        except FileNotFoundError:
++            pass
+ 
+ 
+ class WebsocketsServer(object):
 
