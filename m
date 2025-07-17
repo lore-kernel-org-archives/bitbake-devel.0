@@ -1,164 +1,108 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B72C83F1B
-	for <webhook@archiver.kernel.org>; Wed, 16 Jul 2025 15:23:06 +0000 (UTC)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.web11.25146.1752679377200204447
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05E7C83F1A
+	for <webhook@archiver.kernel.org>; Thu, 17 Jul 2025 12:24:04 +0000 (UTC)
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+ by mx.groups.io with SMTP id smtpd.web10.47218.1752755037720049870
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 16 Jul 2025 08:22:57 -0700
+ Thu, 17 Jul 2025 05:23:58 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=U9gSsznc;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.49, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-451d6ade159so49588225e9.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 16 Jul 2025 08:22:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1752679375; x=1753284175; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tVQLt1CUON5KJWr6SzIIaRU2HUAEfuMIimTjk6DBmMI=;
-        b=U9gSszncQnR8A3XYkHDbeoCFfUrQ386YT9feWQqEhGaoxzIJdpcsGepn8OKo5Tp4KI
-         gVcCnINijtak14WSr+xreS0Xwxj2Hd1K0Vog2lv8A9ewkUvh1RJDHgqfGNPBFOUza1qb
-         /ZxOGQ1uNUigvrNImPgqXOGQP5n8l9PjRM6vk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752679375; x=1753284175;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tVQLt1CUON5KJWr6SzIIaRU2HUAEfuMIimTjk6DBmMI=;
-        b=E6mV0xOU6qxgib1iFnwFtjrT0L9fIS6y6qX86LjBU0NVSUKj1gdoyyVnIaBlsb489+
-         zxxzS+FTCcNPRvfCUutYlmb0TuDCZB8l3EaSK/F1AGU3DeCpw0esPjjusX3plPCaBf9R
-         RFNZdWNUIoIUV7JGb6BK65a7B1wVKu6CA4CryZYy6MfxsYlQPMDZASzMGIQ2YlIC/59L
-         WYmoRozOY/mEXB6tuTzih+5tBfm+frySWzcCjgJ/Noz4zgRk/Je7w0NyApPGFhjhxJTZ
-         rDSMjdsryzKM9HwIMWjTMGZHXl5iGyN7GrxjOxO/tZ5BxG+YhIdXK8co6SNHjc3astXf
-         9Ipw==
-X-Gm-Message-State: AOJu0YxBlu1ZiMW6MWMhVuU97kQAuDP+jrZZmCIQnXo+uTaN4ZnSKfkg
-	Isp/7N1uP15AtQWl52EGh5+9yjpNohnwKnJ8vjxm5iQ622k7y37mvBKveE3wVnWAx+DV73CywHB
-	ZNrvg
-X-Gm-Gg: ASbGncubiLMw0CxHbRD8Wbr6xa6kMgbML6p/ls99Ap0OQCGnGtXBHKgorgheh10EXmD
-	cmcl3XIcUJ09OAhY+pFLsQGYUkF03aRXUy/h2P1ziPIlP9f8PPNMP8ryLboNAOHk7tzoEcE/Amf
-	GvHh6obzbHKMrZVsZHCXVy+iRTh5Y29OYWuCZUk4nUKw7JqRsSSJTg2c8+3wSDRfXVck41/iWk5
-	wePr0fta8xlBBWYUom43p1joVPzmjlVPgLycEWvCY7CJnPYieKZAuvxKFcyL0Gs4pHTTfk93Ejy
-	cxud0xr3/f/Jlznp4V/YPKWjPPKJYGX31cJZBEn5WThdpViexIckLYKkwKBpJu6pCjQ7m3piMPQ
-	Y9gTB8sNqqg0C10zBUBpMsDT8xjMetq6koqam/Yf2Ox3KvJTreBY=
-X-Google-Smtp-Source: AGHT+IEiGgNNKh7h0wg+9BDGZirJhZR56VI9DGnqYOpqQ7lynJonf4IMqBgaLQZ9Vv+jcQFsTlw4lQ==
-X-Received: by 2002:a05:6000:26d3:b0:3a4:febd:39f2 with SMTP id ffacd0b85a97d-3b60e523ce1mr2510006f8f.37.1752679374978;
-        Wed, 16 Jul 2025 08:22:54 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:22ad:92e1:8848:8bb0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8e0d872sm18362725f8f.60.2025.07.16.08.22.53
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jul 2025 08:22:53 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 4/4] main: Add an option to specify what to profile
-Date: Wed, 16 Jul 2025 16:22:49 +0100
-Message-ID: <20250716152249.96126-4-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250716152249.96126-1-richard.purdie@linuxfoundation.org>
-References: <20250716152249.96126-1-richard.purdie@linuxfoundation.org>
+ dkim=pass header.i=@bootlin.com header.s=gm1 header.b=fwSyzlVo;
+ spf=pass (domain: bootlin.com, ip: 217.70.183.200, mailfrom: antonin.godard@bootlin.com)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E037843945;
+	Thu, 17 Jul 2025 12:23:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1752755036;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=GQYnbp+qeRBKLHtSi84qU+41lGvL2MszWqyZP0RlFPE=;
+	b=fwSyzlVo9OeQmhOSIgE0CQWUQ6P+xLMBXY265GOa9OxL/loc98aQJ86CnNNzq1cFpPhEQV
+	Jt25NM9KMH+FwJJ5h111tzlb472EnHX7TNlbQMphd+5s//P971aHdnWX5aZR5cS+10sGj7
+	z+fGg8hwDWJlBCrO5aXwLMjmkbYxRL+3Uz4RbEITL9RhSf7Yv3eeSzN24DmtLvpUsN2fJN
+	vnlthw+FFTJ2C0IcB/AreeZxiVf1XQcfeR/Naw5mQbRMuc0Wm6m+/RLwpZUr4eIhE3Bbc2
+	tOuYninodY83zCZiIwYzIxFQm7eDeAHp6BEjO9vnZjQdRwi2/LII5LWWEtqsUQ==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Date: Thu, 17 Jul 2025 14:23:43 +0200
+Subject: [PATCH] doc/bitbake-user-manual-fetching: update the Git fetcher
+ tag description
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250717-new-tag-git-fetcher-v1-1-77e46929103b@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAE7reGgC/x3MQQqAIBBA0avErBvQiTK6SrQoG202FioVRHdPW
+ r7F/w8kjsIJhuqByKck2UOBriuw2xw8o6zFQIpaZbTBwBfm2aOXjI6z3ThiR72hhpxVi4ZSHpG
+ d3P91nN73AzpgeRJlAAAA
+X-Change-ID: 20250717-new-tag-git-fetcher-6287232fc0b1
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1710;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=0696C29f0RMq2GxJR9OfdYZsbZXgWy4BUqB411AO6p4=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBoeOtb6g/uFCnQDE8fO9/gPaI7D5ZkYfxb2OZTj
+ l2/TIfmHOiJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaHjrWwAKCRDRgEFAKaOo
+ NgGaEAC+9Ry+uASHlJhABgKdGw7v2f7EWs+nCcMn6Z5kF7+gXUMHrAhKbGAw4g0sleTwIqfklNT
+ 31Ntq9UnckzXOFg9EwZWs17gzd765QrJ/uTRMHhjdgj1NG5Ab/4VNUiXvhfnKwQzZlX27QUtaAI
+ 6qhHlM/1QTMBBrtZ35XOKYUsPucpiTZeQAZMy2SHdtCav0mYNl0b04b9GOiYgBn0XgAIxlAdw18
+ AoB1fh1eYGyHYFx8lD3p2QfGys9dgNEbFEs3Pk2Zd6d2lNDqpFLBLNiRCtFmFIUGooqiW9eyAkt
+ K03UiWJRU94dRmsF79tdNm64MS4tclcoZaxVAacZ19e7I3vdmsbBRM3sMV26WJb9JljBqL87Jnx
+ bWty+zsVMafbh5R4Ohptsi3zMVSGVBKVJXHDTNRJg1sR3JRu0gfsA/mMsHiu/+5DamivEwPobQy
+ +xIFcx0Trunx8c0ZFINRtDBH+FD/MFZop5dgdaF4ARPldh22DgTfD4GE9/An+ZfWKbECclktMPj
+ SAwKhnYjMgVZwXa66UvFBtO3i6WLSD2BgzN1bNBjCQfT7ldCcxfHzxl9CG8aH37F50Tib0n/v5M
+ POIK/IFIgKDH2cGhBa+o1/PsCMFh5rVAb23IOP0/d9fzIrHxGgoza4KhUxJUljlAoZF+5uEBqnJ
+ jcfzs77B7CtaSCA==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdeitdehiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtjeertdertdejnecuhfhrohhmpeetnhhtohhnihhnucfiohgurghrugcuoegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudeijeeltdeiueetffevteelueffiedvffejgfethefgheelieetheeiueeikeeunecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfegtkedumegvsggrjeemudgskegsmegrhegtleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfegtkedumegvsggrjeemudgskegsmegrhegtledphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomheprghnthhonhhinhdrghhouggrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegpdhrtghpthhtohepughotghssehlihhsthhsrdihohgtthhophhrohhjvggtthdrohhrghdprhgtphhtthhopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmhgsvgguuggvugdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgri
+ iiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomh
+X-GND-Sasl: antonin.godard@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 16 Jul 2025 15:23:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17782
+ <bitbake-devel@lists.openembedded.org>; Thu, 17 Jul 2025 12:24:04 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17783
 
-Starting with python 3.12, profiling now stays enabled over threads yet
-you can't extract the profile data in the threads themselves, which makes it
-difficult to use for our use case.
+After commit d591d7633fe8 ("fetch/git: Rework tag parameter handling"),
+update the description of the tag= parameter for the Git fetcher.
 
-Our main loop starts the idle loop which starts the parsing threads and this
-means we can't profile in the main loop and the parsing threads or the idle
-loop at the same time due to this.
-
-Add options to the commandline so you can specify which piece of bitbake
-you want to enable profiling for. This allows some profiling with python 3.12
-onwards rather than crashing.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
 ---
- bin/bitbake-server       | 2 +-
- lib/bb/cooker.py         | 2 +-
- lib/bb/main.py           | 6 ++++--
- lib/bb/server/process.py | 6 +++---
- 4 files changed, 9 insertions(+), 7 deletions(-)
+ doc/bitbake-user-manual/bitbake-user-manual-fetching.rst | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/bin/bitbake-server b/bin/bitbake-server
-index a559109e3f5..7a13de60de6 100755
---- a/bin/bitbake-server
-+++ b/bin/bitbake-server
-@@ -30,7 +30,7 @@ logfile = sys.argv[4]
- lockname = sys.argv[5]
- sockname = sys.argv[6]
- timeout = float(sys.argv[7])
--profile = bool(int(sys.argv[8]))
-+profile = list(sys.argv[8])
- xmlrpcinterface = (sys.argv[9], int(sys.argv[10]))
- if xmlrpcinterface[0] == "None":
-     xmlrpcinterface = (None, xmlrpcinterface[1])
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 74b2d075d00..260cba1e212 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -2027,7 +2027,7 @@ class Parser(multiprocessing.Process):
-             self.exit = True
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+index a2c2432db1..b3fc3ce72c 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+@@ -439,10 +439,11 @@ This fetcher supports the following parameters:
+ -  *"rev":* The revision to use for the checkout. The default is
+    "master".
  
-     def run(self):
--        bb.utils.profle_function(self.profile, self.realrun, "profile-parse-%s.log" % multiprocessing.current_process().name, process=False)
-+        bb.utils.profle_function("parsing" in self.profile, self.realrun, "profile-parse-%s.log" % multiprocessing.current_process().name, process=False)
+--  *"tag":* Specifies a tag to use for the checkout. To correctly
+-   resolve tags, BitBake must access the network. For that reason, tags
+-   are often not used. As far as Git is concerned, the "tag" parameter
+-   behaves effectively the same as the "rev" parameter.
++-  *"tag":* Specifies a tag to match against the supplied revision (``rev=``).
++   This does not replace the ``rev`` parameter: the ``tag`` parameter should
++   only be specified if you want to verify that the tag commit SHA matches the
++   supplied ``rev`` SHA. The ``tag`` parameter is not mandatory to use, but
++   strongly recommended.
  
-     def realrun(self):
-         # Signal handling here is hard. We must not terminate any process or thread holding the write
-diff --git a/lib/bb/main.py b/lib/bb/main.py
-index bca8ebfa090..597cb278464 100755
---- a/lib/bb/main.py
-+++ b/lib/bb/main.py
-@@ -208,8 +208,10 @@ def create_bitbake_parser():
-                              "failed and anything depending on it cannot be built, as much as "
-                              "possible will be built before stopping.")
- 
--    exec_group.add_argument("-P", "--profile", action="store_true",
--                        help="Profile the command and save reports.")
-+    exec_group.add_argument("-P", "--profile", action="append",
-+                        default=[],
-+                        help="Profile the command and save reports. Specify 'main', 'idle' or 'parsing' "
-+                             "to indicate which bitbake code to profile.")
- 
-     exec_group.add_argument("-S", "--dump-signatures", action="append",
-                         default=[], metavar="SIGNATURE_HANDLER",
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index 78d0a606e23..da3f833f1d5 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -140,7 +140,7 @@ class ProcessServer():
-             serverlog("Error writing to lock file: %s" % str(e))
-             pass
- 
--        return bb.utils.profle_function(self.cooker.configuration.profile, self.main, "profile.log")
-+        return bb.utils.profle_function("main" in self.cooker.configuration.profile, self.main, "profile.log")
- 
-     def _idle_check(self):
-         return len(self._idlefuns) == 0 and self.cooker.command.currentAsyncCommand is None
-@@ -401,7 +401,7 @@ class ProcessServer():
-                 serverlog("".join(msg))
- 
-     def idle_thread(self):
--        bb.utils.profle_function(self.cooker.configuration.profile, self.idle_thread_internal, "profile-idleloop.log")
-+        bb.utils.profle_function("idle" in self.cooker.configuration.profile, self.idle_thread_internal, "profile-idleloop.log")
- 
-     def idle_thread_internal(self):
-         def remove_idle_func(function):
-@@ -603,7 +603,7 @@ class BitBakeServer(object):
-         os.set_inheritable(self.bitbake_lock.fileno(), True)
-         os.set_inheritable(self.readypipein, True)
-         serverscript = os.path.realpath(os.path.dirname(__file__) + "/../../../bin/bitbake-server")
--        os.execl(sys.executable, sys.executable, serverscript, "decafbad", str(self.bitbake_lock.fileno()), str(self.readypipein), self.logfile, self.bitbake_lock.name, self.sockname,  str(self.server_timeout or 0), str(int(self.profile)), str(self.xmlrpcinterface[0]), str(self.xmlrpcinterface[1]))
-+        os.execl(sys.executable, sys.executable, serverscript, "decafbad", str(self.bitbake_lock.fileno()), str(self.readypipein), self.logfile, self.bitbake_lock.name, self.sockname,  str(self.server_timeout or 0), str(list(self.profile)), str(self.xmlrpcinterface[0]), str(self.xmlrpcinterface[1]))
- 
- def execServer(lockfd, readypipeinfd, lockname, sockname, server_timeout, xmlrpcinterface, profile):
- 
+ -  *"subpath":* Limits the checkout to a specific subpath of the tree.
+    By default, the whole tree is checked out.
+
+---
+base-commit: 09f29a4968841ee5070f70277ba8c253bb14f017
+change-id: 20250717-new-tag-git-fetcher-6287232fc0b1
+
+Best regards,
+--  
+Antonin Godard <antonin.godard@bootlin.com>
+
 
