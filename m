@@ -1,132 +1,157 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0DAC83F1A
-	for <webhook@archiver.kernel.org>; Fri, 18 Jul 2025 14:55:53 +0000 (UTC)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.web10.22877.1752850543608908912
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C747C83F17
+	for <webhook@archiver.kernel.org>; Fri, 18 Jul 2025 15:42:04 +0000 (UTC)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+ by mx.groups.io with SMTP id smtpd.web10.23945.1752853313899903170
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 18 Jul 2025 07:55:44 -0700
+ Fri, 18 Jul 2025 08:41:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=O6TCbLIL;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.51, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-455b00339c8so16706285e9.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 18 Jul 2025 07:55:43 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=DlzrjPWS;
+ spf=pass (domain: gmail.com, ip: 209.85.208.175, mailfrom: jpewhacker@gmail.com)
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32cd0dfbdb8so19376481fa.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 18 Jul 2025 08:41:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1752850542; x=1753455342; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qY7mRPpsu4sMsY97RgInl3XwoEU0QjyZJ2dn3zYn8Po=;
-        b=O6TCbLIL3bx1gxNMEw4ICPg8L4Ytsjeq6O5z70+Sq24Ep0wApdaWyh7AbeqUsnr8hT
-         qrRcLDRrow4h3XASKl0m0q3CPtY+uVKrCfeO/rbRrIz9vGZt7QxoFpbLhpdO8jFJFwt4
-         PD/7AyzpiPV7eAZuS9324iwNP+Rf00Go64YM8=
+        d=gmail.com; s=20230601; t=1752853312; x=1753458112; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xDP85TgND+zpX4XDMWclhc/Ov7JEgjJWDILUMrfFE04=;
+        b=DlzrjPWStnpqoFwDgRQ8qa4YspIKJUVXxK4fWuz76P2mzLsDQMYuYXWo1xXjX7cqBG
+         8DFLchBaEYkByjWsivhsxb294gCQRwiY8viiwHBBFokTevCGb65b0LeI/dO0IPotx3D/
+         cVr1QThVuBeT3D1EQssLErWRN2EqV6ImZIbI28EoG/yvn8q66RPG2jlmkYylWdMO/VPO
+         Kx73kMaP8vdRRpqi5irPB1gJdsB/WzhU2HxOcxQ1v/2kCbibawR6qnLx8SUUHL7FH2II
+         P27DFAyV8JckvJpvCgRur9xkpgLFDhgWCmuoJD7fTDFh98sH81X3TjUBYB5KvPkwqSIG
+         7laA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752850542; x=1753455342;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qY7mRPpsu4sMsY97RgInl3XwoEU0QjyZJ2dn3zYn8Po=;
-        b=qx191f6KksvEIhFxZhMcQCmeHpqoxZWXPCDeXup4wK2dJZEkix19CgoiqbhF5D8Zm0
-         rt7w0R9XykHZQ+ONfzuTB6Tg5pLmmwQF3HRRZe9ydauu/wlIuFMt+7mfjApyANuqX3ih
-         udT05HWIiK2Ia+pMEFQt0wiB2JGicRbfwf/CM8i2MS75hdEm7b4Qc/C4kbh+iBiWPQEL
-         vxQ+H3BOMVik+8j95oBjBe1ISovfuma3qMaGTotT8m/c5nW2lCoo0nAqqVBBr/75YmXQ
-         aMzzClGgWfuen2uEqAGseK4qAz1l3A04jVzTV1miHD+gvQeoiXlMIj7gFZzpulEn/sBh
-         EmSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVsGSvAx6/PxmcjXjQKo0DEk8piDXhoT6PcbTU6rp3Ftdbypf0pcElksBNwgKXRrcVi5VWgrd8Qmkkdc3va@lists.openembedded.org
-X-Gm-Message-State: AOJu0YwQoVyLWB6qMTZf7hHWg17qSdefWCeOtzQE5THn6WyZwUDU3MVi
-	Al/L4pQqrUsHKT7uEY+KYXdYOcJ5sxHDlIhM1BTBUHdP5rdQl+wzNQMDBrhJDFc2NTLoetIK1JT
-	zO/CG
-X-Gm-Gg: ASbGncsl4YP7Ugr1O4Gc+pVidii0VTLIK/J2um6EaRZJ0rKf8Z1j7Ob2zDalXGI8qEv
-	TBRX6vqc3DPeClsUm0cYHfvKUefbYbgVSVQguA4kvnxZao9cUjXJ6eLATLcOhUoLmwGPCybhEAG
-	7hL0G80DNKONCsvS3sJWse1RbnoTctInIgUhGYOAglc1EEHrN5bpXXmOO0W9wonrhh2vYFrDlU9
-	FtFDi+WOK++uG60GI9ta852b/haLRTO3lNQoeHHuhtJ8YUmErfhJ7gujOP7GdQyUFIR5/c2PZqV
-	i4bWk8EwQA9FzaCxdl9QxwQ2Fnyujoqns1WMiMV9vIZnCWUo2q9/syjUX29Gco9Xe8zinBgXK5K
-	dzb7GIrYdOqk0hmPN6sSBlGmun26szOjIYXBxX3NW8v6UsQKQaY0jIwoF5j0HE/iLQTQ+uBX5RA
-	9vAWM6sA==
-X-Google-Smtp-Source: AGHT+IGMy7ecaC8Fb4hrUSVmBGZJO909CPAVYJBL+NxSMSq4Q3pGyuHX8Xx0qO4ew2+OrPFjm88IwA==
-X-Received: by 2002:a05:600c:621b:b0:43c:ea1a:720a with SMTP id 5b1f17b1804b1-4562ec0f9b0mr101639395e9.1.1752850541885;
-        Fri, 18 Jul 2025 07:55:41 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:b19:5c6:27ed:a530? ([2001:8b0:aba:5f3c:b19:5c6:27ed:a530])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4563b74029bsm21960655e9.22.2025.07.18.07.55.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Jul 2025 07:55:41 -0700 (PDT)
-Message-ID: <8a6c6953149101703e160e7cbffb237698fef98b.camel@linuxfoundation.org>
-Subject: Re: [docs] [PATCH v2 1/2] doc/bitbake-user-manual-fetching: update
- the Git fetcher tag description
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: antonin.godard@bootlin.com, bitbake-devel@lists.openembedded.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	docs@lists.yoctoproject.org
-Date: Fri, 18 Jul 2025 15:55:40 +0100
-In-Reply-To: <20250718-new-tag-git-fetcher-v2-1-11240d481a05@bootlin.com>
-References: <20250718-new-tag-git-fetcher-v2-0-11240d481a05@bootlin.com>
-	 <20250718-new-tag-git-fetcher-v2-1-11240d481a05@bootlin.com>
+        d=1e100.net; s=20230601; t=1752853312; x=1753458112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xDP85TgND+zpX4XDMWclhc/Ov7JEgjJWDILUMrfFE04=;
+        b=qxYHZyklxiMMXd2vnPJiPF4EorLB1nc8eUyMEdd3W2KV5DXCyAgvnZ8s2IbgqCz3t8
+         GA00g0M7a5tcclKOH/nfZFnwXSE6AYoDxMqjOLJESi4jUSTd5gTfG89HAjAzQw2DpLTt
+         0n85VvVZi+C1vbu0j1pWZ0/pDhTrC3ABXoU9ZvvVkrxmZt+Q3LrS+Htbw/652XyYgG6X
+         3BpIvySS9shQRVCDyhBIyPleZBaQMcqiqyLc9wbHQBlXIHZmdh1jOApZSTXw215zMlrg
+         W7w8bPhn3EUi7UuaYv+uYU3GGoP7nGkEJDZ/9YGvIAIbsWQXeerSDYbHACH7OQf9QKO6
+         jTOg==
+X-Gm-Message-State: AOJu0Yz0dPCzuahbH2shg9UIp2E86s3nNkV9hdkANH1iazc5hq1AlcYN
+	8UCDAkgZRCpEM89jJ0p9ZE70MQ3AEq2JUfbGP45SnLJs/v5rRDxiHb1U9CDqqcdL1t4KKuMSdXh
+	pHbQJcGHnrjMsV9+OTNEj2WuFB1NwPqM=
+X-Gm-Gg: ASbGncsWouIXXacqYqZrc9dVXt4Tdia1S+BDWewLg7xOIuDgLxKuMtUd1LAmZ2KEavc
+	ImW698DKoqz1AKNT2cFt4S6U8SHM9YnW6oj6/+47UDCYMKLLTtnwtQu1PJ3x1Y3czeJOytNGoUo
+	hJJqyHkX4u7QCZv2QUbl2Y17SlitCcxZuivKSlbyFeZ1fMweoq9MhWqUjogJuI5TK1saFkBo2YX
+	SujP3F7IbQqDwlR8WntIg==
+X-Google-Smtp-Source: AGHT+IHFMWvR1qgsHLUK/8P+rHfRrRjsVxEkPBE9ES+9mWKFpcsq1drJaJebKgJSmWrbgAOAgdWw9LfG6490l7U3NEU=
+X-Received: by 2002:a2e:8a8e:0:b0:32b:3104:f89c with SMTP id
+ 38308e7fff4ca-3308f5e73f7mr31418511fa.29.1752853311686; Fri, 18 Jul 2025
+ 08:41:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <20250718135437.247096-1-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20250718135437.247096-1-richard.purdie@linuxfoundation.org>
+From: Joshua Watt <jpewhacker@gmail.com>
+Date: Fri, 18 Jul 2025 09:41:39 -0600
+X-Gm-Features: Ac12FXyyyl8FgwVBSJdKcKi9Mgeln7l9AO7NfNP3HPkw7pd7LFdDLQIroTg2Fzc
+Message-ID: <CAJdd5GYWWJFhii0ZZF9iZUQ9kKQaawrvYfkNa3m28KoTDGqR+Q@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 1/2] utils: Optimise signal/sigmask performance
+To: richard.purdie@linuxfoundation.org
+Cc: bitbake-devel@lists.openembedded.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0-1 
-MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 18 Jul 2025 14:55:53 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17798
+ <bitbake-devel@lists.openembedded.org>; Fri, 18 Jul 2025 15:42:04 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17799
 
-On Fri, 2025-07-18 at 11:06 +0200, Antonin Godard via lists.yoctoproject.or=
-g wrote:
-> After commit d591d7633fe8 ("fetch/git: Rework tag parameter handling"),
-> update the description of the tag=3D parameter for the Git fetcher.
->=20
-> Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+LGTM
+
+Reviewed-by: Joshua Watt <JPEWhacker@gmail.com>
+
+On Fri, Jul 18, 2025 at 7:54=E2=80=AFAM Richard Purdie via
+lists.openembedded.org
+<richard.purdie=3Dlinuxfoundation.org@lists.openembedded.org> wrote:
+>
+> Running "time bitbake -pP idle" with a valid cache shows around 800,000
+> calls to enum creation from python's signal.py. We don't care about this
+> overhead and it adversely affects cache load time quite badly.
+>
+> Try and use _signal directly, falling back to signal, which avoids
+> this overhead we don't need and makes cache loading much faster.
+>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 > ---
-> =C2=A0doc/bitbake-user-manual/bitbake-user-manual-fetching.rst | 9 +++++-=
----
-> =C2=A01 file changed, 5 insertions(+), 4 deletions(-)
->=20
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/d=
-oc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-> index a2c2432db1..51c9a81e03 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-> @@ -439,10 +439,11 @@ This fetcher supports the following parameters:
-> =C2=A0-=C2=A0 *"rev":* The revision to use for the checkout. The default =
-is
-> =C2=A0=C2=A0=C2=A0 "master".
-> =C2=A0
-> --=C2=A0 *"tag":* Specifies a tag to use for the checkout. To correctly
-> -=C2=A0=C2=A0 resolve tags, BitBake must access the network. For that rea=
-son, tags
-> -=C2=A0=C2=A0 are often not used. As far as Git is concerned, the "tag" p=
-arameter
-> -=C2=A0=C2=A0 behaves effectively the same as the "rev" parameter.
-> +-=C2=A0 *"tag":* Specifies a tag to match against the supplied revision =
-(``rev=3D``).
-> +=C2=A0=C2=A0 This does not replace the ``rev`` parameter: the ``tag`` pa=
-rameter should
-> +=C2=A0=C2=A0 only be specified if you want to verify that the tag commit=
- SHA matches the
-> +=C2=A0=C2=A0 supplied ``rev`` SHA. The ``tag`` parameter is optional, bu=
-t strongly
-> +=C2=A0=C2=A0 recommended if the checked out revision is a tag.
-
-This isn't quite right since the behaviour of "tag" alone didn't
-change, we just altered the behaviour allowing it to be specified with
-rev, which makes it much more useful.
-
-It should probably say:
-
-'''
-*"tag":* Specifies a tag to use when fetching. To correctly resolve
-tags, BitBake must access the network. If a ``rev`` parameter or SRCREV
-is also specified, network access is not necessary to resolve the tag
-and instead, it is verified that they both resolve to the same commit
-SHA at unpack time.  The ``tag`` parameter is optional, but strongly
-recommended if the checked out revision is a tag.
-'''
-
-Cheers,
-
-Richard
-
+>  lib/bb/utils.py | 17 +++++++++++++----
+>  1 file changed, 13 insertions(+), 4 deletions(-)
+>
+> diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+> index f688f7dd687..016036dbce4 100644
+> --- a/lib/bb/utils.py
+> +++ b/lib/bb/utils.py
+> @@ -2226,6 +2226,15 @@ def path_is_descendant(descendant, ancestor):
+>
+>      return False
+>
+> +# Recomputing the sets in signal.py is expensive (bitbake -pP idle)
+> +# so try and use _signal directly to avoid it
+> +valid_signals =3D signal.valid_signals()
+> +try:
+> +    import _signal
+> +    sigmask =3D _signal.pthread_sigmask
+> +except ImportError:
+> +    sigmask =3D signal.pthread_sigmask
+> +
+>  # If we don't have a timeout of some kind and a process/thread exits bad=
+ly (for example
+>  # OOM killed) and held a lock, we'd just hang in the lock futex forever.=
+ It is better
+>  # we exit at some point than hang. 5 minutes with no progress means we'r=
+e probably deadlocked.
+> @@ -2235,7 +2244,7 @@ def path_is_descendant(descendant, ancestor):
+>  @contextmanager
+>  def lock_timeout(lock):
+>      try:
+> -        s =3D signal.pthread_sigmask(signal.SIG_BLOCK, signal.valid_sign=
+als())
+> +        s =3D sigmask(signal.SIG_BLOCK, valid_signals)
+>          held =3D lock.acquire(timeout=3D5*60)
+>          if not held:
+>              bb.server.process.serverlog("Couldn't get the lock for 5 min=
+s, timed out, exiting.\n%s" % traceback.format_stack())
+> @@ -2243,17 +2252,17 @@ def lock_timeout(lock):
+>          yield held
+>      finally:
+>          lock.release()
+> -        signal.pthread_sigmask(signal.SIG_SETMASK, s)
+> +        sigmask(signal.SIG_SETMASK, s)
+>
+>  # A version of lock_timeout without the check that the lock was locked a=
+nd a shorter timeout
+>  @contextmanager
+>  def lock_timeout_nocheck(lock):
+>      l =3D False
+>      try:
+> -        s =3D signal.pthread_sigmask(signal.SIG_BLOCK, signal.valid_sign=
+als())
+> +        s =3D sigmask(signal.SIG_BLOCK, valid_signals)
+>          l =3D lock.acquire(timeout=3D10)
+>          yield l
+>      finally:
+>          if l:
+>              lock.release()
+> -        signal.pthread_sigmask(signal.SIG_SETMASK, s)
+> +        sigmask(signal.SIG_SETMASK, s)
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#17794): https://lists.openembedded.org/g/bitbake-deve=
+l/message/17794
+> Mute This Topic: https://lists.openembedded.org/mt/114221231/3616693
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [JPEWha=
+cker@gmail.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
 
