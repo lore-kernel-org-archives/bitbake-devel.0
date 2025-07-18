@@ -2,135 +2,127 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD53C83F34
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A692C83F1A
 	for <webhook@archiver.kernel.org>; Fri, 18 Jul 2025 13:54:43 +0000 (UTC)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web10.21424.1752846881704540197
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.web10.21423.1752846880892874595
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 18 Jul 2025 06:54:42 -0700
+ Fri, 18 Jul 2025 06:54:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=hciDbPTv;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4555f89b236so19333655e9.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 18 Jul 2025 06:54:41 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=e7S33lC8;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a51481a598so1109363f8f.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 18 Jul 2025 06:54:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google; t=1752846879; x=1753451679; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4Ud1ef023jbW/+1Rc9R2SqT4B2JjCC4eEWvU6drYbRE=;
-        b=hciDbPTvGVep0gAA4b1NYRlPYMG/wh8lDe4ynIcvQYTbMEvEyWLCUrrs7cODZGXjZX
-         wgrYRzd5J/h1AzC+LB+erBgkBbI94lJWtqiHU3MPUR2YNF/q30dNHVrcIYimMs3hSEvN
-         o0kLczzd7NmDMODlvszDMuTkH7jSs5coMIvdk=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rwrHoYXSIt2LcPvhsFwBzZK+TAdX6L/PpAtIxOXzUE4=;
+        b=e7S33lC8hZ+OWpxamOJUew2GjDx5HlBFADLtBVvDP2dP+brM1NEZKL8ZL6fKnk4VUY
+         wOD9ob3QhuRHzIGKTquNRhp0pQ+RAt6PujMczd54PvhuuHNNLztfFq8OAGnW6jbjca80
+         c7p6WrBm7YB3SWsJNYfgRFn+6AVLxxc+YEnZ4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1752846879; x=1753451679;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4Ud1ef023jbW/+1Rc9R2SqT4B2JjCC4eEWvU6drYbRE=;
-        b=NXpjXnxW3yQNdDTxTvPPT0YKdAQjad7SsK3kw5rt2wQ1x1EdfiwGXUqfUpyMfi+/wR
-         R+Nf1E+8SGLnMtCQl9cFkcVkmsX7VcptkRgrVif0IEzi28XbP7+cCT5KtXlLEZhekQTW
-         +xO/NmX08n+Zzq4/lZFaE3WgQphbQ/8LOLU5oJDoLJbhU7mXrv7DmblAxcYYrwBwwIN7
-         dPqCNEyFVyr+La6MOJ4PAJtYTW5Re2jrBx9nkMxYmjbXePcAIt6qCnqEo/6pbpnWdVIj
-         M2i5E+c7M7Wa1HnJi2IF5cd5dh+TTyXSFY8xB54S3Qrs0cxsDFjAUmHBSU/C4fJF2dul
-         h3SQ==
-X-Gm-Message-State: AOJu0YyGNnxMBRrr3rGcPDAinFDGluFa6z7wG/8djr+UdE/aNYTw4kTO
-	Tgf/kBofNYas5fLPeoxl+0MhwVzOBIiZpanBYUpf5bMijEjrIGqPSVI6iBN/YJxtyR0WhPDJKX8
-	RH0Qu
-X-Gm-Gg: ASbGnctNWH1qaykNZDhoI/OHYEOJubvtGGpA4U+cQqa48qkr6jYteXIRGAE+MeGksYx
-	XqD1gVUme8ze52Zjk2aMAAJjYmi4PHUFRUv/mW465lE0Zv/gQG2PZLy2vHf3KKRgVmuxxyb3Krn
-	mZ2RyDajkC+Tq3v5RsiO6oPP0BdgVNMeg7RkeVg2FcFFWto5kGXLdsvBLnLvDQPYUIsss1q+zcQ
-	Qa85Pjn3dugT8Sc4x9FjSxY7KLXndi6wVK9BNJCV2AlOo/KtNDJQP0D6LjuksHusGDeTQQDLJIJ
-	Sjad+/Z7vFVRy3I/tOjmIOiK36NHvW7WPg3HBUrscgK9EqoumS3wEn1YoARl2zZjLjFvpk3ibtL
-	XI4EX0R3yc/M39OYWTbpw4HKyosVzvtI/9RzA+Qo5mW9+clc7
-X-Google-Smtp-Source: AGHT+IFS5kTXw33K8zt224+Zl6+CWF1F3/1n3mJ/2AVL/+G3tUOkca1iMFdRbDGIvZMDgZQunQMoew==
-X-Received: by 2002:a05:6000:1a85:b0:3a5:2ec5:35a9 with SMTP id ffacd0b85a97d-3b60e4be76amr9758566f8f.3.1752846879341;
-        Fri, 18 Jul 2025 06:54:39 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rwrHoYXSIt2LcPvhsFwBzZK+TAdX6L/PpAtIxOXzUE4=;
+        b=wdQMv8mAUPwNlnv+CEFPaU70PPoj7e8q8FYquOonp4oUXKvHykKHTcbiDA7+ryFAuJ
+         82BU7Rekv5JmfM2YVpo/xJr+ay7H3+/X1zRk8M/jm2hgTUxNCSRnl5KQ7l88tKlg1yJ1
+         vV45+lHfQaNSEI0kNaqb5kSMyT5EOAjS9PBDyt6JZAQ7lIsrW4xkUDrUNnlQ3vgXf6C1
+         PLNiOK3zmN8xa08t7gKQDEpteMv/GKWe6JrWbipcmWvXTYb+ooohkh/DQdxVQdk+mNLO
+         7eyMDMT/GOEA1+B7H+m8YA+l3iK0k1HzfOuZU9RT6hRPjW37JUOJvyGOuGDlDlljVGfa
+         5Fvg==
+X-Gm-Message-State: AOJu0YztmAU79cjMvqNcWA1HWjJpq71Vb7dwHcRUT66kQSA2QNGTKal9
+	DPGZDma/6ubGIENQ9vXfaLC1zDNBOJz7iH2OWspl4bxs+2bXIIAHZdhUuDfov5S8RAajSIJakIg
+	1BZ13
+X-Gm-Gg: ASbGncsp6CJniEO/Hdciz/foPY5Z9Da+Qn7MeQe00W/O8HSgMtDKt1oXOJIXi0cqINX
+	o0RVkbGCMHrqLIz7DbWGoBr2oSsLr58cO5F4iWUpI+yfj545AVI9vN4tLQoPH/MFgbGKijbt6CL
+	XV28He7jiXlQUXQgfJ9RChZdKE+om3/ZwDIWpi5ENGERezLmjDKrhJcCazgE4WAHGv6ljrcU+Yg
+	qDUj5wpgMnwpKVAWboWXXO2TzEm9R4f6WhBJPhXAX6Fl2xlcR8wG0P2Q0wLehNxho68M7Se+8s/
+	wn26g2hcf9zaDRMe2qSHV6LM5KdRfknDzjaWW8CHgVC+cwuFJRY1Vimiam/yNAs1LHNyDbc7Nz9
+	YhSNXOAAV/r4NSOXm2MOXehvV9BIvac3NWQ/WPYtW5cjdB43E
+X-Google-Smtp-Source: AGHT+IFAjLe6lklnBUXu54wNGOVJ9KmAfSqxotzbRYegmatySci9I6Ir/0NV4I2IQ4pR5tWO2NoMgQ==
+X-Received: by 2002:a05:6000:4006:b0:3a4:f975:30f7 with SMTP id ffacd0b85a97d-3b60e55040fmr9614860f8f.56.1752846878501;
+        Fri, 18 Jul 2025 06:54:38 -0700 (PDT)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:b19:5c6:27ed:a530])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45635fe6a9dsm31275825e9.2.2025.07.18.06.54.38
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45635fe6a9dsm31275825e9.2.2025.07.18.06.54.37
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Jul 2025 06:54:38 -0700 (PDT)
+        Fri, 18 Jul 2025 06:54:37 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/2] utils: Split profile reports into separate files
-Date: Fri, 18 Jul 2025 14:54:37 +0100
-Message-ID: <20250718135437.247096-2-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 1/2] utils: Optimise signal/sigmask performance
+Date: Fri, 18 Jul 2025 14:54:36 +0100
+Message-ID: <20250718135437.247096-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250718135437.247096-1-richard.purdie@linuxfoundation.org>
-References: <20250718135437.247096-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 18 Jul 2025 13:54:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17795
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17794
 
-Use a more logical name for the profile reports and put each report
-into a separate file since people struggle to discover them currently.
+Running "time bitbake -pP idle" with a valid cache shows around 800,000
+calls to enum creation from python's signal.py. We don't care about this
+overhead and it adversely affects cache load time quite badly.
+
+Try and use _signal directly, falling back to signal, which avoids
+this overhead we don't need and makes cache loading much faster.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/utils.py | 34 ++++++++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 10 deletions(-)
+ lib/bb/utils.py | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
 diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 016036dbce4..c288c826c09 100644
+index f688f7dd687..016036dbce4 100644
 --- a/lib/bb/utils.py
 +++ b/lib/bb/utils.py
-@@ -1441,29 +1441,43 @@ def profile_function(profile, function, output_fn, process=True):
-         prof.dump_stats(output_fn)
-         if process:
-             process_profilelog(output_fn)
--            serverlog("Raw profiling information saved to %s and processed statistics to %s.processed" % (output_fn, output_fn))
-+            serverlog("Raw profiling information saved to %s and processed statistics to %s.report*" % (output_fn, output_fn))
-         return ret
-     else:
-         return function()
+@@ -2226,6 +2226,15 @@ def path_is_descendant(descendant, ancestor):
  
--def process_profilelog(fn, pout = None):
-+def process_profilelog(fn, fn_out = None):
-     # Either call with a list of filenames and set pout or a filename and optionally pout.
--    if not pout:
--        pout = fn + '.processed'
-+    import pstats
+     return False
  
--    with open(pout, 'w') as pout:
--        import pstats
-+    if not fn_out:
-+        fn_out = fn + '.report'
++# Recomputing the sets in signal.py is expensive (bitbake -pP idle)
++# so try and use _signal directly to avoid it
++valid_signals = signal.valid_signals()
++try:
++    import _signal
++    sigmask = _signal.pthread_sigmask
++except ImportError:
++    sigmask = signal.pthread_sigmask
 +
-+    def pstatopen():
-         if isinstance(fn, list):
--            p = pstats.Stats(*fn, stream=pout)
--        else:
--            p = pstats.Stats(fn, stream=pout)
-+            return pstats.Stats(*fn, stream=pout)
-+        return pstats.Stats(fn, stream=pout)
-+
-+    with open(fn_out + '.time', 'w') as pout:
-+        p = pstatopen()
-         p.sort_stats('time')
-         p.print_stats()
-+
-+    with open(fn_out + '.time-callers', 'w') as pout:
-+        p = pstatopen()
-+        p.sort_stats('time')
-         p.print_callers()
-+
-+    with open(fn_out + '.cumulative', 'w') as pout:
-+        p = pstatopen()
-         p.sort_stats('cumulative')
-         p.print_stats()
+ # If we don't have a timeout of some kind and a process/thread exits badly (for example
+ # OOM killed) and held a lock, we'd just hang in the lock futex forever. It is better
+ # we exit at some point than hang. 5 minutes with no progress means we're probably deadlocked.
+@@ -2235,7 +2244,7 @@ def path_is_descendant(descendant, ancestor):
+ @contextmanager
+ def lock_timeout(lock):
+     try:
+-        s = signal.pthread_sigmask(signal.SIG_BLOCK, signal.valid_signals())
++        s = sigmask(signal.SIG_BLOCK, valid_signals)
+         held = lock.acquire(timeout=5*60)
+         if not held:
+             bb.server.process.serverlog("Couldn't get the lock for 5 mins, timed out, exiting.\n%s" % traceback.format_stack())
+@@ -2243,17 +2252,17 @@ def lock_timeout(lock):
+         yield held
+     finally:
+         lock.release()
+-        signal.pthread_sigmask(signal.SIG_SETMASK, s)
++        sigmask(signal.SIG_SETMASK, s)
  
--        pout.flush()
-+    with open(fn_out + '.cumulative-callers', 'w') as pout:
-+        p = pstatopen()
-+        p.sort_stats('cumulative')
-+        p.print_callers()
-+
- 
- #
- # Was present to work around multiprocessing pool bugs in python < 2.7.3
+ # A version of lock_timeout without the check that the lock was locked and a shorter timeout
+ @contextmanager
+ def lock_timeout_nocheck(lock):
+     l = False
+     try:
+-        s = signal.pthread_sigmask(signal.SIG_BLOCK, signal.valid_signals())
++        s = sigmask(signal.SIG_BLOCK, valid_signals)
+         l = lock.acquire(timeout=10)
+         yield l
+     finally:
+         if l:
+             lock.release()
+-        signal.pthread_sigmask(signal.SIG_SETMASK, s)
++        sigmask(signal.SIG_SETMASK, s)
 
