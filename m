@@ -1,249 +1,87 @@
-Return-Path: <pmi183@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B54C83F27
-	for <webhook@archiver.kernel.org>; Tue, 22 Jul 2025 08:27:52 +0000 (UTC)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web10.7483.1753172862110460860
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C76DCC83F34
+	for <webhook@archiver.kernel.org>; Tue, 22 Jul 2025 10:14:22 +0000 (UTC)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.web10.8873.1753179256780068419
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 22 Jul 2025 01:27:42 -0700
+ Tue, 22 Jul 2025 03:14:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=EkLnNfcw;
- spf=pass (domain: gmail.com, ip: 209.85.128.42, mailfrom: pmi183@gmail.com)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-455b00283a5so31340925e9.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 22 Jul 2025 01:27:41 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=QfWn9B/T;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4563cfac19cso43046875e9.2
+        for <bitbake-devel@lists.openembedded.org>; Tue, 22 Jul 2025 03:14:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753172860; x=1753777660; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZWoFcf3k8d243YfzdQL1qhDHyp3SlfkT8fnSQNUAIy0=;
-        b=EkLnNfcw/qWA3hyjfjWYsCcFo9XYT4BsedGzBnfJxbAbN/BUli2AKbX8CY6TXhJSqD
-         63BzcNIQlU6xHFdt7oxFPBKTCzM2bWhihb6e4VR5143NkUe8EXCJwxgjMJXyxBbO1mH0
-         xk2i6ntBIsLkC3qHs0wWJaUihR+KGbuE5GNi4U4MJ53nhMT4ftgRkPmwYqq9s08/kVL1
-         vvC5/z8XcmeHI00M1hJ4NX+KWGpOkCYOZ0WTs9lKyk88Yiooe98me5yI/Qpp0AbXljny
-         wv5PXmxqaI2bbkUrsqky6zS0jkIBwtGSHimlmkOGnONY/yDEgMkuvUv8dlvOMahtJMIH
-         Mkzw==
+        d=linuxfoundation.org; s=google; t=1753179255; x=1753784055; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=767/a5AAMowm5/iMpO5jN7h14lUKD8+c5Mqge8P4xVs=;
+        b=QfWn9B/TzUKj8OBykypCTyLhQhV5oWzCybAEQcjZNG3mCrxFlBDW+VZKWTFMTXf4fM
+         70o3JZ13N9skUwxTXWg9DMfZW+RCt9J8rjt7zmnX3eivRUqlf18Z26onGmClookLcu3W
+         27ietH+Pu1mhHZemA/gc0BP64GonWlefcpexk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753172860; x=1753777660;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZWoFcf3k8d243YfzdQL1qhDHyp3SlfkT8fnSQNUAIy0=;
-        b=ZTUA1OrNOPP0kLQ20OYwT6PP8Qkatj4Qn6qWLcbJWgqcjWVy98O7QMZKLf4Mqpt+BD
-         RCgV/7ZAJJc7qrpWE2ySrhUSSsOr66bjzUSSKkI3b39nLnnaUtxK5mr5UC7z0jWT7dQF
-         0BeVK1As35LQkl0PhhjkTu5LpJ5ts1m+oHieAE5L3DD3aTUAw2FCAX3wgkaS+x8vp1Gh
-         7f9Zs7brzp5VkrPdSn9rQk3zSvupc7xaus5cG6Tt1Hm56WRQIC5afeN3gAmy1n4dGmZx
-         jg8EWXF3MjbwiEuwq6m5SyRyl+LxpDfU3BTtH61gdWeOx5XorT4VyiOozZjpTrbWWoT0
-         cwOw==
-X-Gm-Message-State: AOJu0YzefYGVZmUTKKMhBWMOiUVHpeKc3aKXsZowqP8QYB1qUaiXtxwP
-	5UcdZ30yviN+0CuWRY6eY7CPqYU55IJ5Gb9p2Auf6NDwkaUQjztAfclPlyrPBA==
-X-Gm-Gg: ASbGncugQ31G7VKgN+kUpJXWb+HHDvW2SijgO/W7rMeZP8PgsTCyQ9KSmtBLkJP5IpY
-	BUf7fyxeLlKFYavOWzwQwhpV20AGC+NaK5ORG9079BaAxXET5mMXWTshb4VIXbExW3HVWuAvEQ2
-	tBd0lkazm33zi7m2xGjuBsdyKYBtcI/q3znD0x+JjLfC9ywwaJcc7zRG28Rhui9uxrnZYF0+ImL
-	8JnyHHa6M33pMvCYwhkHUO69O3vq5ROySbzMqWj4GuaMQWGSLSgyB7/w7/q1E8xgrj6BTiANOh6
-	1iceDudKtirfqvOCNTsvVQWjpomYC27gzeE8AGCXjsmcrOcEiNtN17ZqjJUwASqrwUwxpLyoFAZ
-	BzSntQ4Vzt9OXVo+s7wKclZ50LcCCp73UAdL0ygorKVy/fcgZUIQ0
-X-Google-Smtp-Source: AGHT+IECpcOhiKoUOKOZyEi95cSpdt1fYtPExqJOaXS1aSddXSInfH+RgTmNNDp5Z5tVcFJnX+tEQg==
-X-Received: by 2002:a05:600c:4510:b0:453:7713:546a with SMTP id 5b1f17b1804b1-4563d4adbe7mr137371725e9.14.1753172860075;
-        Tue, 22 Jul 2025 01:27:40 -0700 (PDT)
-Received: from LAPTOP-0FHSM1V0.criticaltechworks.com ([213.205.68.220])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b61ca48970sm13034474f8f.57.2025.07.22.01.27.39
+        d=1e100.net; s=20230601; t=1753179255; x=1753784055;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=767/a5AAMowm5/iMpO5jN7h14lUKD8+c5Mqge8P4xVs=;
+        b=rDQJIbI/DO14LPmLi0NxWH8YsSEsOPjeI3HX4PK3Q3S+9oYmhMMopd4liOvLwHjDRu
+         DVqlcWrhFuStIQe4Q+picDeDkbenFg2dwF8w/VEDykHiA9Mtn2PBFmI47bIS89kP4n4D
+         PpS87EdWGnebz3dMxtCd0D1RARJQlOTd40mlGh5PR2X7XExqFh040KUEC9qSH0gFNaVv
+         aLHWUomry8YmdfhgxaR8qZJTVgjq8/JcNNVspcuiXu0VoNEi3eaDNuy9eHMbO7aifyCM
+         prY0gg8WxJSJQACxKwo8Y3Pz9cJylbyGCb/+vBqMXjG1TFBPkbL1cBTzEqt3qeAEmwHb
+         z94A==
+X-Gm-Message-State: AOJu0YzSwZTu9v4dIULVP6wQh+l2VSCUp8cTUggUwH5RuPK8GpKxGRoi
+	mMetlw6TpXg0/w4SftKr30WrbnmdCKvMGTPJlkMfYjDOTiHNesClmYHgPoSHET6ipI97HjBQNfS
+	J4Tt5
+X-Gm-Gg: ASbGncvdhiKIEoS7UZWDQZZ0qoRGj+LCnjx/WJQXebqn/uGf5gGor/dBOMsOTR32bgX
+	ldyc3sk8uFCueqV7RkyVSbCTOb70uTqsMG4kTele9VXp8Kn5FoEDxXSw4jEGrxREZjaoC2OIgmx
+	IVcza0cSKUyCD+o5bfQdTRRJx0ds4W96Om7YdDbyApMw+zW2/X2Cv6lP9r3ZsMdVAdXVwaeAGwy
+	nbS1wj2ZXRKRHOgMW7LWYQXSkpzy0AqpXGzdLxIL7oM+oTcJrz6P5XGeDP+fSseXYcax39mOPIL
+	Gj4jUktX8GBGKBGMRATIA64FHA4+xkNsGOiA/y6GF7ygB/knsMaK0LtfqZEMK0Ud8UuuvOCHota
+	705xWv7GGxqveCJzgsJaj9PqqwvH1rO3oJuRTb6G/ml3fxs0ufQ==
+X-Google-Smtp-Source: AGHT+IHQ55JS/rS+3fpIrOTeaoauxmnGl7qZMIDl9g3NfWlTU7fMFqgzIvX/z/Pe0sBkF/ytR8qzEw==
+X-Received: by 2002:a05:600c:1ca9:b0:456:1ab0:d56d with SMTP id 5b1f17b1804b1-4562e039c45mr186680015e9.7.1753179254469;
+        Tue, 22 Jul 2025 03:14:14 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:7d90:ed57:78f:a937])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4562e818525sm185360575e9.16.2025.07.22.03.14.13
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Jul 2025 01:27:39 -0700 (PDT)
-From: Pedro Ferreira <pmi183@gmail.com>
+        Tue, 22 Jul 2025 03:14:13 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: Pedro Ferreira <Pedro.Silva.Ferreira@criticaltechworks.com>
-Subject: [PATCH] bitbake: siggen: bitbake aborts with EOFerror from an incomplete communication
-Date: Tue, 22 Jul 2025 09:27:35 +0100
-Message-Id: <20250722082735.19504-1-pmi183@gmail.com>
-X-Mailer: git-send-email 2.34.1
+Subject: [PATCH] test/fetch: Switch u-boot based test to use our own mirror
+Date: Tue, 22 Jul 2025 11:14:12 +0100
+Message-ID: <20250722101412.22905-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.48.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 22 Jul 2025 08:27:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17802
+ <bitbake-devel@lists.openembedded.org>; Tue, 22 Jul 2025 10:14:22 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17803
 
-From: Pedro Ferreira <Pedro.Silva.Ferreira@criticaltechworks.com>
+The upstream servers are having issues so switch to our own shadow copy
+of the repo.
 
-The issue itself is sporadic but aborts the build with an uncaught exception.
-
-The stack trace of python calls that resulted in this exception/failure was:
-File: 'exec_func_python() autogenerated', lineno: 2, function: <module>
-     0001:
- *** 0002:sstate_report_unihash(d)
-     0003:
-File: '(...)/poky/meta/classes/sstate.bbclass', lineno: 882, function: sstate_report_unihash
-     0878:    report_unihash = getattr(bb.parse.siggen, 'report_unihash', None)
-     0879:
-     0880:    if report_unihash:
-     0881:        ss = sstate_state_fromvars(d)
- *** 0882:        report_unihash(os.getcwd(), ss['task'], d)
-     0883:}
-     0884:
-     0885:#
-     0886:# Shell function to decompress and prepare a package for installation
-File: '(...)/poky/bitbake/lib/bb/siggen.py', lineno: 651, function: report_unihash
-     0647:                method = self.method
-     0648:                if tid in self.extramethod:
-     0649:                    method = method + self.extramethod[tid]
-     0650:
- *** 0651:                data = self.client().report_unihash(taskhash, method, outhash, unihash, extra_data)
-     0652:                new_unihash = data['unihash']
-     0653:
-     0654:                if new_unihash != unihash:
-     0655:                    hashequiv_logger.debug('Task %s unihash changed %s -> %s by server %s' % (taskhash, unihash, new_unihash, self.server))
-File: '(...)/poky/bitbake/lib/bb/asyncrpc/client.py', lineno: 139, function: wrapper
-     0135:        pass
-     0136:
-     0137:    def _get_downcall_wrapper(self, downcall):
-     0138:        def wrapper(*args, **kwargs):
- *** 0139:            return self.loop.run_until_complete(downcall(*args, **kwargs))
-     0140:
-     0141:        return wrapper
-     0142:
-     0143:    def _add_methods(self, *methods):
-File: '/usr/lib/python3.9/asyncio/base_events.py', lineno: 642, function: run_until_complete
-     0638:            future.remove_done_callback(_run_until_complete_cb)
-     0639:        if not future.done():
-     0640:            raise RuntimeError('Event loop stopped before Future completed.')
-     0641:
- *** 0642:        return future.result()
-     0643:
-     0644:    def stop(self):
-     0645:        """Stop running the event loop.
-     0646:
-File: '(...)/poky/bitbake/lib/hashserv/client.py', lineno: 70, function: report_unihash
-     0066:        m["taskhash"] = taskhash
-     0067:        m["method"] = method
-     0068:        m["outhash"] = outhash
-     0069:        m["unihash"] = unihash
- *** 0070:        return await self.invoke({"report": m})
-     0071:
-     0072:    async def report_unihash_equiv(self, taskhash, method, unihash, extra={}):
-     0073:        await self._set_mode(self.MODE_NORMAL)
-     0074:        m = extra.copy()
-File: '(...)/poky/bitbake/lib/bb/asyncrpc/client.py', lineno: 104, function: invoke
-     0100:        async def proc():
-     0101:            await self.socket.send_message(msg)
-     0102:            return await self.socket.recv_message()
-     0103:
- *** 0104:        return await self._send_wrapper(proc)
-     0105:
-     0106:    async def ping(self):
-     0107:        return await self.invoke({"ping": {}})
-     0108:
-File: '(...)/poky/bitbake/lib/bb/asyncrpc/client.py', lineno: 82, function: _send_wrapper
-     0078:    async def _send_wrapper(self, proc):
-     0079:        count = 0
-     0080:        while True:
-     0081:            try:
- *** 0082:                await self.connect()
-     0083:                return await proc()
-     0084:            except (
-     0085:                OSError,
-     0086:                ConnectionError,
-File: '(...)/poky/bitbake/lib/bb/asyncrpc/client.py', lineno: 70, function: connect
-     0066:        await self.socket.send("")
-     0067:
-     0068:    async def connect(self):
-     0069:        if self.socket is None:
- *** 0070:            self.socket = await self._connect_sock()
-     0071:            await self.setup_connection()
-     0072:
-     0073:    async def close(self):
-     0074:        if self.socket is not None:
-File: '(...)/poky/bitbake/lib/bb/asyncrpc/client.py', lineno: 55, function: connect_sock
-     0051:        import websockets
-     0052:
-     0053:        async def connect_sock():
-     0054:            try:
- *** 0055:                websocket = await websockets.connect(uri, ping_interval=None)
-     0056:            except (OSError, asyncio.exceptions.TimeoutError, websockets.InvalidHandshake, websockets.InvalidURI) as exc:
-     0057:                raise ConnectionError("Could not connect to websocket: %s" % exc) from exc
-     0058:            return WebsocketConnection(websocket, self.timeout)
-     0059:
-File: '/usr/local/lib/python3.9/dist-packages/websockets/asyncio/client.py', lineno: 444, function: __await_impl__
-     0440:            async with asyncio_timeout(self.open_timeout):
-     0441:                for _ in range(MAX_REDIRECTS):
-     0442:                    self.connection = await self.create_connection()
-     0443:                    try:
- *** 0444:                        await self.connection.handshake(*self.handshake_args)
-     0445:                    except asyncio.CancelledError:
-     0446:                        self.connection.close_transport()
-     0447:                        raise
-     0448:                    except Exception as exc:
-File: '/usr/local/lib/python3.9/dist-packages/websockets/asyncio/client.py', lineno: 104, function: handshake
-     0100:        # receiving a response, when the response cannot be parsed, or when the
-     0101:        # response fails the handshake.
-     0102:
-     0103:        if self.protocol.handshake_exc is not None:
- *** 0104:            raise self.protocol.handshake_exc
-     0105:
-     0106:    def process_event(self, event: Event) -> None:
-     0107:        """
-     0108:        Process one incoming event.
-File: '/usr/local/lib/python3.9/dist-packages/websockets/client.py', lineno: 315, function: parse
-     0311:
-     0312:    def parse(self) -> Generator[None]:
-     0313:        if self.state is CONNECTING:
-     0314:            try:
- *** 0315:                response = yield from Response.parse(
-     0316:                    self.reader.read_line,
-     0317:                    self.reader.read_exact,
-     0318:                    self.reader.read_to_eof,
-     0319:                )
-File: '/usr/local/lib/python3.9/dist-packages/websockets/http11.py', lineno: 238, function: parse
-     0234:
-     0235:        try:
-     0236:            status_line = yield from parse_line(read_line)
-     0237:        except EOFError as exc:
- *** 0238:            raise EOFError("connection closed while reading HTTP status line") from exc
-     0239:
-     0240:        try:
-     0241:            protocol, raw_status_code, raw_reason = status_line.split(b" ", 2)
-     0242:        except ValueError:  # not enough values to unpack (expected 3, got 1-2)
-Exception: EOFError: connection closed while reading HTTP status line
-
-Signed-off-by: Pedro Ferreira <Pedro.Silva.Ferreira@criticaltechworks.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/siggen.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ lib/bb/tests/fetch.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
-index a6163b55ea..41eb643012 100644
---- a/bitbake/lib/bb/siggen.py
-+++ b/bitbake/lib/bb/siggen.py
-@@ -708,7 +708,7 @@ class SignatureGeneratorUniHashMixIn(object):
-             try:
-                 with self.client() as client:
-                     unihashes = client.get_unihash_batch((self._get_method(tid), self.taskhash[tid]) for tid in query_tids)
--            except (ConnectionError, FileNotFoundError) as e:
-+            except (ConnectionError, FileNotFoundError, EOFError) as e:
-                 bb.warn('Error contacting Hash Equivalence Server %s: %s' % (self.server, str(e)))
- 
-         for idx, tid in enumerate(query_tids):
-@@ -817,7 +817,7 @@ class SignatureGeneratorUniHashMixIn(object):
-                     d.setVar('BB_UNIHASH', new_unihash)
-                 else:
-                     hashequiv_logger.debug('Reported task %s as unihash %s to %s' % (taskhash, unihash, self.server))
--            except (ConnectionError, FileNotFoundError) as e:
-+            except (ConnectionError, FileNotFoundError, EOFError) as e:
-                 bb.warn('Error contacting Hash Equivalence Server %s: %s' % (self.server, str(e)))
-         finally:
-             if sigfile:
-@@ -859,7 +859,7 @@ class SignatureGeneratorUniHashMixIn(object):
-                 # TODO: What to do here?
-                 hashequiv_logger.verbose('Task %s unihash reported as unwanted hash %s' % (tid, finalunihash))
- 
--        except (ConnectionError, FileNotFoundError) as e:
-+        except (ConnectionError, FileNotFoundError, EOFError) as e:
-             bb.warn('Error contacting Hash Equivalence Server %s: %s' % (self.server, str(e)))
- 
-         return False
--- 
-2.34.1
-
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 077472b8b3a..cde1bf33906 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -1465,7 +1465,7 @@ class FetchLatestVersionTest(FetcherTest):
+         # combination version pattern
+         ("sysprof", "git://git.yoctoproject.org/sysprof.git;protocol=https;branch=master", "cd44ee6644c3641507fb53b8a2a69137f2971219", "", "")
+             : "1.2.0",
+-        ("u-boot-mkimage", "git://source.denx.de/u-boot/u-boot.git;branch=master;protocol=https", "62c175fbb8a0f9a926c88294ea9f7e88eb898f6c", "", "")
++        ("u-boot-mkimage", "git://git.yoctoproject.org/bbfetchtests-u-boot.git;branch=master;protocol=https", "62c175fbb8a0f9a926c88294ea9f7e88eb898f6c", "", "")
+             : "2014.01",
+         # version pattern "yyyymmdd"
+         ("mobile-broadband-provider-info", "git://git.yoctoproject.org/mobile-broadband-provider-info.git;protocol=https;branch=master", "4ed19e11c2975105b71b956440acdb25d46a347d", "", "")
 
