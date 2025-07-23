@@ -1,121 +1,133 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCB7C83F34
-	for <webhook@archiver.kernel.org>; Tue, 22 Jul 2025 11:41:53 +0000 (UTC)
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
- by mx.groups.io with SMTP id smtpd.web11.10611.1753184505539818480
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26682C83F17
+	for <webhook@archiver.kernel.org>; Wed, 23 Jul 2025 10:45:36 +0000 (UTC)
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+ by mx.groups.io with SMTP id smtpd.web11.11041.1753267535026444124
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 22 Jul 2025 04:41:45 -0700
+ Wed, 23 Jul 2025 03:45:35 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=gm1 header.b=Kt7u7cYV;
- spf=pass (domain: bootlin.com, ip: 217.70.183.196, mailfrom: antonin.godard@bootlin.com)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8AF5843B12;
-	Tue, 22 Jul 2025 11:41:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1753184503;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Tf7ou49mV2AaQB5rPAvKzpzjpNCqrnZrgGO3Ath4fic=;
-	b=Kt7u7cYV+v6mSli70ib+bFOembJuVMqagYC0Gydj6Ul1iQdG45mylKX2m/QtbrTWP8RBD1
-	COkejpMDlKCpsQVyKpA68bDgLMvM5aFfpm5r0kKzXgtqm938YiSNTkPO/sKLUJY8gCmFn5
-	UPfw5o4cHGobBQHj92cP4jM4GbIWOWTdUwh5r3OUkeblnq0FuCl5cLv8o5CKBol0VoyfeU
-	xqBq4JwF9/+1v2/TsCL5K3HwAh8LXswkASj1sFOpDSIZUwD3mLW4qM6H7Cb14pEXSKzx0A
-	0QklJ2yv0t6s0De2nCKfZH70YT6uODAqk0CYWotVOuoEZ6Ayjazxptij1y8ODw==
-From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Tue, 22 Jul 2025 13:41:27 +0200
-Subject: [PATCH v3] doc/bitbake-user-manual-fetching: update the Git
- fetcher tag description
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Hz1jtS+m;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.44, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4550709f2c1so50270115e9.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 23 Jul 2025 03:45:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1753267533; x=1753872333; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tRLjoHBYWBA8aR79EoRe3ZiOlbgLCCHK1suXGFm8eNg=;
+        b=Hz1jtS+mmZcaZJVpMhZBqow4dydty+K+1OAY+aqlkiJN5FBgY2ouYpmPm2WoXyBME+
+         xfiGvNcVkr6lTXaxpN7928KmVJ9TQk4ynzANuIw2LBbPEM4hgYR0fKO5fdRD+GVxFd+c
+         OIzBrU5TYwkK+tgcGvyxcjnUGyrtE0bTYmmq0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753267533; x=1753872333;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tRLjoHBYWBA8aR79EoRe3ZiOlbgLCCHK1suXGFm8eNg=;
+        b=XDrKHx07H99euxtntHOOK7U0WLWbn8uGuOOmL5yNJLy5DDD+eJQNGL1ADc7njxaETr
+         8WZLWhwQDMNX2scFGZp6NDUotXStq6sMOWgwCZCloI0ZqMXzw98kZcJPOFNbha1kUvIY
+         lHbL0N9i60EF5qEAptLNIWcvgYGnJmQ5SMJK8DaKXqLO5t2VGrGBBCimNhWkCr9AEAZM
+         BdxOkqG18feLZFxdclGszuWed74XaKVMye9a8hHsIsjoW2brfsP/mvrDWYHYZ/4/IPsq
+         h/W5t/4GB5wdfGmDX4jsD3dgTWmHYUaSe3gns7+k10sXqwyrclcUp7ehChgNe2J/hBXB
+         M7Tg==
+X-Forwarded-Encrypted: i=1; AJvYcCVC25d6XwcjLms/CirvCY5qdVR/SxgqXg1RPq2zwCBdmxCaubrZ3iH0cxIFVzOyj33G0FdPlCfBZA3CJdTB@lists.openembedded.org
+X-Gm-Message-State: AOJu0Yw3wZC/tEHjIAKiF2Z6uANa0zWabO8hWDY14bh4b89Io9PCZf3Z
+	lGmiXhQaSnCZ46bS7IXI+uUw3hBbh9AjaZgJkWpLIcqx0FZ4fvjw+MmiW2gmhP9GJVA=
+X-Gm-Gg: ASbGncuBeT0TTcTL6RDiePrHqLspM32QXu0kKAEpACYgEAu/4y/bkt8FVnPpDlFXAcM
+	n4ybnCURZjEnjTA6HbyfnaA8ShwRAs+DnbY8Io+/LuGXcVwMf33HACqrRnjQIBPuRzUelulPhXs
+	qCkAmxqe4JA3UB9VCBSPCBVpSIwC3x0vczZqdp3SILb/f1tYcy66U8DaRiS4YwPJffgTaDwH1E5
+	eqE4+NjUCvOmwJarAn8y4uHODSSharjnqrPD3YdftHcdvj30KthOkZTaImVPo6ZW3jfmfRRdKjR
+	sV+Enj0WgA6bhWc6kPzqqu3hYqC6t1JFAxiotqHTkwPAjjMN082mii4jfFgpsttkpv21pa0ZQkc
+	g5Z66txbB7UYudFu+T4X0pum4Z6848l7W52ZdnB9XXZ4ASPNBHOAq8drunNHCHYPK+vp/vDf5zO
+	ssYwbgbj5O2Sw=
+X-Google-Smtp-Source: AGHT+IE5rVAWokmT8UI4xI9jkViGw6Sdqw/TBm2EH0qOApsHQ+R+KXUxXcnloEdgSyK5TQrJQ+GyzA==
+X-Received: by 2002:a05:600c:6208:b0:456:191b:9e8d with SMTP id 5b1f17b1804b1-45868c9cccfmr18285035e9.11.1753267533250;
+        Wed, 23 Jul 2025 03:45:33 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:8e54:5d9e:fc41:f168? ([2001:8b0:aba:5f3c:8e54:5d9e:fc41:f168])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45869182e99sm19607525e9.4.2025.07.23.03.45.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Jul 2025 03:45:31 -0700 (PDT)
+Message-ID: <965923cb6979f8066b596810e5c5344d7739b8a6.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] uihelper: Fix KeyError race condition
+ in pidmap access
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: ecordonnier@snap.com, bitbake-devel@lists.openembedded.org
+Cc: Steve Sakoman <steve@sakoman.com>
+Date: Wed, 23 Jul 2025 11:45:31 +0100
+In-Reply-To: <20250702204758.2773339-1-ecordonnier@snap.com>
+References: <20250702204758.2773339-1-ecordonnier@snap.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250722-new-tag-git-fetcher-v3-1-3753ad481b96@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAOZ4f2gC/33NTQ6CMBCG4auQrh3TGX6KrryHcQFlgCZKTdtUD
- eHuFlaaGJfvl8wzs/DsDHtxzGbhOBpv7JQi32VCj800MJgutSBJpVSoYOIHhGaAwQToOeiRHVR
- UK8qp17JFkS7vjnvz3NTzJfVofLDutT2JuK7/vYiAoBQX1YEOKPP21Fobrmbaa3sTqxjpU6l/K
- wQSEKmQXVFjI8tvZVmWN7A7Xoz+AAAA
-X-Change-ID: 20250717-new-tag-git-fetcher-6287232fc0b1
-To: bitbake-devel@lists.openembedded.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2285;
- i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=yW/xAPogfdcq/YFC6pwiq45N0i3QuL8Qc4/1Pj5HGvA=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBof3j2vie8UrjREMF82bLCJDUhdljvnoWlTAXOB
- ksAQJVuw8GJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaH949gAKCRDRgEFAKaOo
- NkTXD/0RzBMb7ZFNKx7No9HOOWkKpUH0Xdy9pxxQQeLuudAN6tnB/O8XqzPahNLtgSQQChwlJ8O
- rFn0NMMcaHg9FV2bKc6FCLKQmUc+0a2BPQIbYpofqV/mTiHSPNaPZN5qKGbbTzlVTdLSm48jOKQ
- TsPvRXf52edHfU+Zz3ScRqq2Bzg4kgGaTbp80QfRsbA+5GHCDvvvwYuAWBFCC/4VEXlAKMmFian
- JChjC0+OQ3y1a+0hQTXS+7HhDFBCCsyTlwigNHcx2DJSoTjRUjJvYhFEFy2tRea0KbYiRQsZm9P
- YozpBq0ZkWRMdRztngfE69hHzPwhwJv3E1WK3YGgh58scQYOknmBfNcqSEIN6hV1cAnHq8cPdM2
- r7jqTYbx9/mTg5lMyIdNdkPtN3BBZvQiw419DGct8xHnFrSKnKd4JZg8RBIUqnjdsrimnCEb8nv
- XY66ufzlx5izdEFZ7Xi/sFzpa77kMEONpzp9BSZrojmRDkTIIpBXCYDpW4uQPuvSsLOuh5gcyZS
- kywg92dX6W93kZhXPWJ+X8OuJlfrluA6Jk8V1JYhHwCQ8zp2ZuJHQPqgQ6uqAjE8miiFRq6cyOZ
- oXS/4uIXbT9fuoUmZGOPnSUNyK/xniTQIbRihXOgVyQFSesaS9nhjIxRGGVv0wMCM4NI2B7589Y
- PiM+4hQvG8x+sJA==
-X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
- fpr=8648725188DD401BB9A0D3FFD180414029A3A836
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdejgeektdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtjeertdertdejnecuhfhrohhmpeetnhhtohhnihhnucfiohgurghrugcuoegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdegteehlefgheegvddufeevheehveeijedvfeduvdefvdekueduuedvjeelteehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeftgekudemvggsrgejmedusgeksgemrgehtgelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeftgekudemvggsrgejmedusgeksgemrgehtgelpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedprhgtphhtthhopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmhgsvgguuggvugdrohhrghdprhgtphhtthhopegrnhhtohhnihhnrdhgohgurghrugessghoohhtlhhinhdrtghomhdpr
- hgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopeguohgtsheslhhishhtshdrhihotghtohhprhhojhgvtghtrdhorhhg
-X-GND-Sasl: antonin.godard@bootlin.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 22 Jul 2025 11:41:53 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17804
+ <bitbake-devel@lists.openembedded.org>; Wed, 23 Jul 2025 10:45:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17805
 
-After commit d591d7633fe8 ("fetch/git: Rework tag parameter handling"),
-update the description of the tag= parameter for the Git fetcher.
+On Wed, 2025-07-02 at 22:47 +0200, Etienne Cordonnier via lists.openembedde=
+d.org wrote:
+> From: Etienne Cordonnier <ecordonnier@snap.com>
+>=20
+> I'm seeing random build errors on scarthgap 5.0.10 because the pid is not=
+ contained in pidmap.
+> Fix the error by ensure the PID exists in pidmap before accessing it.
+>=20
+> Call-stack of the error:
+>=20
+> ```
+> Traceback (most recent call last):
+> =C2=A0 File "poky/bitbake/lib/bb/ui/knotty.py", line 681, in main
+> =C2=A0=C2=A0=C2=A0 helper.eventHandler(event)
+> =C2=A0 File "poky/bitbake/lib/bb/ui/uihelper.py", line 43, in eventHandle=
+r
+> =C2=A0=C2=A0=C2=A0 removetid(event.pid, tid)
+> =C2=A0 File "poky/bitbake/lib/bb/ui/uihelper.py", line 28, in removetid
+> =C2=A0=C2=A0=C2=A0 if self.pidmap[pid] =3D=3D tid:
+> KeyError: 21041
+> WARNING: Exiting due to interrupt.
+> ```
+>=20
+> Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
+> ---
+> =C2=A0lib/bb/ui/uihelper.py | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/lib/bb/ui/uihelper.py b/lib/bb/ui/uihelper.py
+> index e6983bd55..0bc526ca1 100644
+> --- a/lib/bb/ui/uihelper.py
+> +++ b/lib/bb/ui/uihelper.py
+> @@ -25,7 +25,7 @@ class BBUIHelper:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 def removetid(pid, tid):
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+self.running_pids.remove(tid)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+del self.running_tasks[tid]
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if se=
+lf.pidmap[pid] =3D=3D tid:
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if pi=
+d in self.pidmap and self.pidmap[pid] =3D=3D tid:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 del self.pidmap[pid]
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+self.needUpdate =3D True
+> =C2=A0
 
-Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
----
-Changes in v3:
-- Rework tag description as suggested by Richard in v2 (thanks!)
-- Rebase on master
-- Link to v2: https://lore.kernel.org/r/20250718-new-tag-git-fetcher-v2-0-11240d481a05@bootlin.com
+FWIW I did discover a bug recently:
 
-Changes in v2:
-- Suggestions by Quentin (thanks!):
-  - not mandatory to -> optional
-  - correct the rev parameter description
-- Link to v1: https://lore.kernel.org/r/20250717-new-tag-git-fetcher-v1-1-77e46929103b@bootlin.com
----
- doc/bitbake-user-manual/bitbake-user-manual-fetching.rst | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+https://git.yoctoproject.org/poky/commit/?id=3Db7173ca2254421c45f01243a77be=
+611fe4b9d1c5
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-index 4762d2637a..f357765b77 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-@@ -439,10 +439,12 @@ This fetcher supports the following parameters:
- -  *"rev":* The revision to use for the checkout. If :term:`SRCREV` is also set,
-    this parameter must match its value.
- 
---  *"tag":* Specifies a tag to use for the checkout. To correctly
--   resolve tags, BitBake must access the network. For that reason, tags
--   are often not used. As far as Git is concerned, the "tag" parameter
--   behaves effectively the same as the "rev" parameter.
-+-  *"tag":* Specifies a tag to use when fetching. To correctly resolve
-+   tags, BitBake must access the network. If a ``rev`` parameter or
-+   :term:`SRCREV` is also specified, network access is not necessary to resolve
-+   the tag and instead, it is verified that they both resolve to the same commit
-+   SHA at unpack time.  The ``tag`` parameter is optional, but strongly
-+   recommended if the checked out revision is a tag.
- 
- -  *"subpath":* Limits the checkout to a specific subpath of the tree.
-    By default, the whole tree is checked out.
+which could potentially have caused the issue you saw.
 
----
-base-commit: a8145c84e0899285a5e6a809f1515118b002b106
-change-id: 20250717-new-tag-git-fetcher-6287232fc0b1
+Copying Steve as this fix could potentially be stable branch material.
 
-Best regards,
---  
-Antonin Godard <antonin.godard@bootlin.com>
+Cheers,
 
+Richard
 
