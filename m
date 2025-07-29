@@ -2,121 +2,119 @@ Return-Path: <chris.laplante@agilent.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0901CC87FCA
-	for <webhook@archiver.kernel.org>; Tue, 29 Jul 2025 18:44:34 +0000 (UTC)
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (NAM10-DM6-obe.outbound.protection.outlook.com [40.107.93.50])
- by mx.groups.io with SMTP id smtpd.web11.16155.1753814665539400228
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE438C87FCA
+	for <webhook@archiver.kernel.org>; Tue, 29 Jul 2025 20:42:54 +0000 (UTC)
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (NAM02-SN1-obe.outbound.protection.outlook.com [40.107.96.58])
+ by mx.groups.io with SMTP id smtpd.web10.18987.1753821767051154788
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 29 Jul 2025 11:44:25 -0700
+ Tue, 29 Jul 2025 13:42:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@agilent.com header.s=selector1 header.b=zJtScJt8;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.93.50, mailfrom: chris.laplante@agilent.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@agilent.com header.s=selector1 header.b=eo1EK11j;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.96.58, mailfrom: chris.laplante@agilent.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gvYK7jdRj+LSd8CGT1v2D3hWxnl1gHzTw0PTThD1lPlweM9xtA5LdjbZiYd0dMLGmSAsni4dhPG/HJxjDXJbJvHHh00kKaEP4BqBfLkHywMTPsaKRZvUez9vJnfUCuSWTy50wHj/I8SQiPMw/36wcUB7Y0535PiA9LTJ0biY1YcBa/pGtGGh2+hso8XmKUwUAA6kMomuf4ZCX7n1gGxlaRPtz8bAc21B1CaMbFYdg9MOJQ3gcDPkaRj6t/IxpAiu11zZc6/8FYV39peYNjHHVI/0jB+NKZeK23s6Q7pXxXH5y+aHdK742JIaSn9mJ6YoJt1GdHJzvd2RW1076UmNGA==
+ b=BqL74QNtoMTUn4JU4OGV+ZhB8rrSDudhh0VKqWjA9SjqVT4oP/YIcYmUF/eM4TM+7g1TJuy4mmrBZIrHEj1x57vU4DCKNjqIlNJ6Gxkm64dypqFIU1J254Obzbke/p5EuPJqEETDqsSSGGPpo9l+1LTPc0OBNvQvdLJlw8qEcpU6syY5VKNCzJ+X5jWtZqyo7VEku87IuNMThcfiCFd8Mgva5X/IDbRx/rublWzXWkzQ0ndb5/dkoewdzJMGSnGPsP+TcV5pvV7NDVK6c1Y1rFKo3EJErY+N07HhJqe51b5sOHaS5hILjzh8wGb0Dfs2KGWb+Vq7EA4fxZem3bE67A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=A+bOAzAcLWDHK/Bpr3CribahW89dXvM62Nu7nUCYgXw=;
- b=WpoBAfcCqhJO3xE7iMa0JRQQ0mMHNhLHwx1DP2cdJ7MwDsd0O+dM87p5kXqmEKZ29RKDXIkQ+M7pPr1ej8ESZ5RW1pYI1mCzWsr147u8tCGaeByuDHXuCMsaBnbSArbE3Hmzg44S2jXHR0I6Pffkse/2Ncm3p7dSvmruDyIfeuV+ZjH+kEG/tb5Fyys/xaGwf7dckHVvXYkX2uFPw465lr/G6Uv4TOIwV9FyL7fgSuAZmHDjzy6w6WImIQ5DPe0SaQPnY1ABouf/JVairznSmLqDUjU7dpjp+wtGsuqDq/+Vx6djapUlCm/iPPEJc1jrBzYp7tgAGkSakFn7HLJxrQ==
+ bh=uuXW87HAOTf0O37yPdOiOxvcH+EhvTkMZQwDoKcG5Kg=;
+ b=EPi3dZt2pG+A3dswqPBIJJkMQu2z3U3L46V4O/AX1/fY7aFuUmxrz7udWSsG7ErJjyJFv0mDnugcvjRivoTYVnyrumnrhMKEtnQufbPy5H319pWhDqoeYmPdeGknKxvjZp9kreUiWee9VMXkIM530U965wfs5brhwdPdv5DSsgSfqMxgcnV6hVLfLP4izjEX9JvM9t6eARxBLmrJ4GyzQ1QBHryWApxxQ8myIfqG3kt9wtuURkd9RZ8yIwbOHAh8Zvh0s+nSWxHGb0dxGsqvMWjI0DSK4oihZ36vZKm2a3Fc7zBT4UVY1uXtpRkf1gmK0ppJz7D+d3TF2115GwkbGQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 192.25.218.34) smtp.rcpttodomain=lists.openembedded.org
+ 192.25.218.41) smtp.rcpttodomain=lists.openembedded.org
  smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
  action=none header.from=agilent.com; dkim=none (message not signed); arc=none
  (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A+bOAzAcLWDHK/Bpr3CribahW89dXvM62Nu7nUCYgXw=;
- b=zJtScJt8wsz/LJriee+W4W699cunvLA5fYdosqhAntO0xahrXbxlnZ6z9Uxb9KLecNUzZQbspJ3uf0YDzJfNPxmUSpaerZCYlN6Zvd5vef/XpcUlfzAtoXiyWOCNb+SObHsqHluFLRd0Z1TBV+Zk10xQEIYTVRIeJDMOk4SwARcRjeGfw0uEsHP/AwGGTWuOvrJigFh9mWB2PQ6sT4U+OR84EklSbddqOYWVdZU854FwzqNJvroevwYPA3D6ockZuQlieNYQFGbE3ADXxhl6tNYL1TbaBOLh0MWho7DUw5e3irJkfCLegA7HC3RyLQ50kLTLYWi9TGYteChivDnUEw==
-Received: from BL1P223CA0019.NAMP223.PROD.OUTLOOK.COM (2603:10b6:208:2c4::24)
- by SA0PR12MB7478.namprd12.prod.outlook.com (2603:10b6:806:24b::15) with
+ bh=uuXW87HAOTf0O37yPdOiOxvcH+EhvTkMZQwDoKcG5Kg=;
+ b=eo1EK11jgy8kPvptvTIcB/WnrDzEQVbircHvnCWQVr1qedrqdiaKy57dcoxkSIb44cDaNOMjAwkAUBjmyCg0Sqco2lb3jCg5jyT9nlwZzu06ePEiMPl/l2MC0yfNhkeSeUBT+dD2p+w0bgfmPdnpjHDt0a6q8654pPE/Xdx7UP9gTjbn7RO9zOWSvcaV+1mGBF9hHuq8UIIJQPW4MrpNA+Y2n0xqJc+wZ2VtOzPqQo8Og/8RswkZLNdW248E9Uoz/exwN6vXrbT1jzCisZ+5WBK+EjV88IStJ9WRlVE4hfIqeN8bT48R16XHtkufQ/p1dNU6vjXyGhftxyIqZlBjfA==
+Received: from MN2PR16CA0020.namprd16.prod.outlook.com (2603:10b6:208:134::33)
+ by BL1PR12MB5705.namprd12.prod.outlook.com (2603:10b6:208:384::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8989.11; Tue, 29 Jul
- 2025 18:44:21 +0000
-Received: from BN3PEPF0000B374.namprd21.prod.outlook.com
- (2603:10b6:208:2c4:cafe::85) by BL1P223CA0019.outlook.office365.com
- (2603:10b6:208:2c4::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.26; Tue, 29 Jul
+ 2025 20:42:41 +0000
+Received: from BL02EPF0001A104.namprd05.prod.outlook.com
+ (2603:10b6:208:134:cafe::b7) by MN2PR16CA0020.outlook.office365.com
+ (2603:10b6:208:134::33) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8964.27 via Frontend Transport; Tue,
- 29 Jul 2025 18:44:21 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.34)
+ 29 Jul 2025 20:42:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.41)
  smtp.mailfrom=agilent.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=agilent.com;
 Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
- 192.25.218.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=192.25.218.34; helo=edgeappmail.agilent.com; pr=C
-Received: from edgeappmail.agilent.com (192.25.218.34) by
- BN3PEPF0000B374.mail.protection.outlook.com (10.167.243.171) with Microsoft
+ 192.25.218.41 as permitted sender) receiver=protection.outlook.com;
+ client-ip=192.25.218.41; helo=edgeappmail.agilent.com; pr=C
+Received: from edgeappmail.agilent.com (192.25.218.41) by
+ BL02EPF0001A104.mail.protection.outlook.com (10.167.241.135) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9009.0 via Frontend Transport; Tue, 29 Jul 2025 18:44:20 +0000
-Received: from laplante-B650.lfs.agilent.com (192.25.126.4) by
- edgeappmail.agilent.com (192.25.218.34) with Microsoft SMTP Server
+ 15.20.8989.10 via Frontend Transport; Tue, 29 Jul 2025 20:42:41 +0000
+Received: from laplante-B650.lfs.agilent.com (192.25.126.5) by
+ edgeappmail.agilent.com (192.25.218.41) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.57; Tue, 29 Jul 2025 12:43:45 -0600
+ 15.1.2507.57; Tue, 29 Jul 2025 14:42:33 -0600
 From: <chris.laplante@agilent.com>
 To: <bitbake-devel@lists.openembedded.org>
 CC: <steve@sakoman.com>, Richard Purdie <richard.purdie@linuxfoundation.org>,
 	Chris Laplante <chris.laplante@agilent.com>
-Subject: [2.8][PATCH 2/2] utils: Optimise signal/sigmask performance
-Date: Tue, 29 Jul 2025 14:43:09 -0400
-Message-ID: <20250729184309.292510-2-chris.laplante@agilent.com>
+Subject: [2.12][PATCH] utils: Optimise signal/sigmask performance
+Date: Tue, 29 Jul 2025 16:42:25 -0400
+Message-ID: <20250729204225.815110-1-chris.laplante@agilent.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250729184309.292510-1-chris.laplante@agilent.com>
-References: <20250729184309.292510-1-chris.laplante@agilent.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B374:EE_|SA0PR12MB7478:EE_
-X-MS-Office365-Filtering-Correlation-Id: 58c1e805-16c3-457b-d72e-08ddcecfee5e
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A104:EE_|BL1PR12MB5705:EE_
+X-MS-Office365-Filtering-Correlation-Id: b690baa4-efb2-4272-c90c-08ddcee0768d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013;
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?p+zqrOQuQT0NprE6SHGehzO8dTyUxLGn2J7HTBYMTYxqQ8jzY8N1RhZu5zCz?=
- =?us-ascii?Q?8qMA6lVypwJTC0ut8hFqCDxZt430b6THOk68YLyr0twObqBD5Q7IBH0RQnPj?=
- =?us-ascii?Q?1CfhiwXAdpD9NS0uHKa96iHvPXDRRxEhwH7aWtVZ28oZfzTof6zs54oJPev6?=
- =?us-ascii?Q?EJzfGGPntq95p1L2IdLKThmRjvqgCfFPfnwIuk5Op59N4eFUErRdFpG71tp9?=
- =?us-ascii?Q?d5fUx6Wl+zwveNkpTD9w3i0pCEQd38cJYNcI8c7KBsLqGAscops3KjVnLT6w?=
- =?us-ascii?Q?GLpGBUZrL+EdFP1cfQS2a/xiaoxWLix2B4dhB/cKAJAfi2XyAPCENh8uFbGT?=
- =?us-ascii?Q?voGP61NKJKMnlCHSp5/FZKhfgB8NuswRvb/d3vTHy7M/8CP/6sTFxf7yr7Op?=
- =?us-ascii?Q?CmungjMv/ZfxouIZbs3bbeHRbOCH4RUtFpYvNVwep+UVnC8lMISOyK743jeK?=
- =?us-ascii?Q?ie3v9VqWam8GdI/Cl3mfVgG7AwVA+BBNnmH9ugbBDJOh37967a6jqtDh7Osw?=
- =?us-ascii?Q?TwRzqLjKwKE7tax+n6IeWBPpDSDvj4wuH3ya8j9kpytQF212iLFcNtKznlZ3?=
- =?us-ascii?Q?/bYXbLgB2fcgdTzyJ/9Bz7gu5GHuKxZgURsq78UGCtRwPo5Ucbpi+alJEhbJ?=
- =?us-ascii?Q?3ZdOuDxT7GvTOnQpRdXCRUU7FEEXmS8T8Sgq+jxayeV/74p56kRatni69NzG?=
- =?us-ascii?Q?zHQ9fYsejoAM7y8TYi6Uiqfj/mRaYLOrQ3W9zUyy8j1wffJqnM46OB+QwvaT?=
- =?us-ascii?Q?YOBRwGV15+mae+nuOWaF2unill7eh2bR+b4srrXnFQemfdvvzi2X1PeIY7hO?=
- =?us-ascii?Q?0FaZcX3tInGFU5UrqFfsJzPZzIk2VIRK5KkE/bQR4iP1ZjyCXSZUHRe3PC3l?=
- =?us-ascii?Q?OJAaH8iR0kNfJmW59SeTeTm0pU2RSzzyQ1BuKSX+lgOA/pBl/20S35H89xoD?=
- =?us-ascii?Q?Bv6EeZlD8Fisdg0VTQndb9ZQmWgpymuVs/Ag9/xmOoxs39EwwtKMaPYHs8Pa?=
- =?us-ascii?Q?WLzIwvXBFM1nVjoqHlkGOsF4HdlPDEiHIHAgAhP8QDg7upoABY3Q4QhFS1wc?=
- =?us-ascii?Q?215Tenk6U7TmyNHuhU37zl4/ZC0OkSdUGAqoilVY2X+ELxT/msErTjsBAbAR?=
- =?us-ascii?Q?lk/3zpBGYNShJljd8HwBjYnfgZ4hDIyXEdypW00mckCG93jDaOtmfHm+sD4E?=
- =?us-ascii?Q?wr8LJr+dyHPeShQIbJO0I0i3XJiiVloJOTcV2EKZoaxmlTXlLC2g9TitluCC?=
- =?us-ascii?Q?u7x7sfSOEIb42AkR78fr//OqTqXIiEXvOvdbn5rlnYlWA3OnRagqKhyYt2F2?=
- =?us-ascii?Q?5ywM/vovFc/cg0uJOoqfgr8gZAA2M7e4R96SCrgi+qOUJ5SDhtmdkPh9UcA0?=
- =?us-ascii?Q?Penv2HJlE1ik3PBMkCJs2DqlF9PXDTtZw9SoFFm0xcY1Ou5oOSUaU4N1HTb7?=
- =?us-ascii?Q?xjqJAXFL76mpKcwmHfrjP3eC6VKLqtfRRdGsy5jdk0wAcTIVqBryZS+p/AjW?=
- =?us-ascii?Q?9GboKAYxtq34Iz2LmX2WNS+7dascA9EOcdTO?=
+	=?us-ascii?Q?XhLL2RGmd9fSvIEMaoo75dOy5N3QTy70M8q/dqURuVmM6DKabG8bbcbbz095?=
+ =?us-ascii?Q?Y4RKwesblGRuO/KOgotR5g7fQdXlx6Deyn0SxQmtXpBvSXUKy5dxs7lf3RcJ?=
+ =?us-ascii?Q?vpb53Cg+ZhIK7zeO/kuGuSyVVdJ6OcTiU+wNFGCV7zgPZEblYG3BDdoJBmzk?=
+ =?us-ascii?Q?OrD+nWjuslBCUMlr+kEZcf7c1LN7aAT6/y1BZ38Vp4MHP/SFl2NbQdSmbekf?=
+ =?us-ascii?Q?ROpS3Eazd5Vi08nR7sTHL0K6IR10KTh3eMIcuKcaNxr+XrfVZ4UpH4FS5LIW?=
+ =?us-ascii?Q?Lvid5TK8MOGlboSS8QIxVep5P1KATpwyGzk3PcHT5gkY4WSOlmDo5efD5/fv?=
+ =?us-ascii?Q?ch+bB0cyY1ryBW2rFXOgcUsEYs9Uqnlt0Xm95f7eFy/SwQdVB26Af4CSB3IM?=
+ =?us-ascii?Q?5ewyLo1VjDF4js++PLluuAaNSrhcFS/NEmJ/GfVOjOImFl5MI4uu40ZTUgF/?=
+ =?us-ascii?Q?lWsMIPhEW7dGkfRVc8RJ/fGideG+3eUwmNqwg15klST+VMoc1NTnnw2sR+hq?=
+ =?us-ascii?Q?0A/ukqJqUM8Yg6fIvcMRk/jzVr0PaaD4cBV6Ew0GpXv+3Vn6SR8ciwGjscwh?=
+ =?us-ascii?Q?Rap2QIi/mrdVewhJXLRY1mJlvtFIowf8df0ZeE0ClRutF9bdjDZfu84ItM2q?=
+ =?us-ascii?Q?qHdzIYUASXaIUHpbKcIg7FR1RJcAYp1cDa7mMnjBme9ecSCzBaImbmYRXq6a?=
+ =?us-ascii?Q?XKhTDX5MeUlwwewB/Uj8+PaVztgcQZQxvngndKALISuxvBpVxNQGZbd9Ijt2?=
+ =?us-ascii?Q?tTu/Ckk+s/fSZzFZ3MWekcdWWf6aSo7X7l4QJfI2mLFLRHvOgSOQM+XF8VzQ?=
+ =?us-ascii?Q?1HadPX33uhaF80Tg4IKaYQa79GXStZAZjS3gwGgXPNtzGrh473fiHNucc797?=
+ =?us-ascii?Q?p8nMObqnylDbu3c2NMLNjrjyfsSiYHlMZSKIpIhY2NS56bUXzCiXW1cesg9n?=
+ =?us-ascii?Q?zxBjCFqlb49rcUFtkWeBkx/zQV+OtCq03ucYmcUAtHcT+hG96iW0XWJbYFjj?=
+ =?us-ascii?Q?YVaxnxO6KSMWFIvCDmWFek9rzqhaxQs6vo/bMFHjWHCegXaNn9Sr8bTwZWxy?=
+ =?us-ascii?Q?TDYT4r4Oj+FW3tLaCWPjjnH8fhrhPkyIoU7pMbnYZkSLbH/PksZIMbjmB4W8?=
+ =?us-ascii?Q?P/ZZeNqIQC+63/05qcU0T+eqB+a1vq6cJTpKDGUAE8MPVeHQWb9XSZDxQHE1?=
+ =?us-ascii?Q?aUV/krRf6WPt0oD3ck0b1XJyGJjnvdi/KBD2fGCAQsJ0eyEima5natjWDeBA?=
+ =?us-ascii?Q?uHVc1tcJ8TTAt9l7u0+/aR0woX2nTSBywfmwwtvWCbDMsGUQOhhLWw+Konis?=
+ =?us-ascii?Q?fRWtAcLGIAZDWt0gdtmQVJnD6mjY2NWJw/gCilK52NO4EtV3sqebJcFzk2FC?=
+ =?us-ascii?Q?gqOS0QnVnVxaQ79jisdxRLtP9Jx19LoJdusPY9/+S21hKHd5eUj40+zNSCMD?=
+ =?us-ascii?Q?08LMQdca1HqAuWZfg2xB5c6oC+VHryrrm+24fphq2g1W41khrRd8ITZJ11oO?=
+ =?us-ascii?Q?a++w5+xsWUJDMpJd0fTo20JqJyJOqtbiJXo6?=
 X-Forefront-Antispam-Report: 
-	CIP:192.25.218.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:wpcosapexchedg3.windmz.agilent.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+	CIP:192.25.218.41;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:exch.smtp.agilent.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2025 18:44:20.7957
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2025 20:42:41.2166
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 58c1e805-16c3-457b-d72e-08ddcecfee5e
+X-MS-Exchange-CrossTenant-Network-Message-Id: b690baa4-efb2-4272-c90c-08ddcee0768d
 X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.34];Helo=[edgeappmail.agilent.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.41];Helo=[edgeappmail.agilent.com]
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-BN3PEPF0000B374.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-BL02EPF0001A104.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB7478
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5705
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 29 Jul 2025 18:44:34 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17825
+ <bitbake-devel@lists.openembedded.org>; Tue, 29 Jul 2025 20:42:54 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17826
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
@@ -135,10 +133,10 @@ Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
  1 file changed, 13 insertions(+), 4 deletions(-)
 
 diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 67e22f438..d2f11e437 100644
+index 5486f9599..083242268 100644
 --- a/lib/bb/utils.py
 +++ b/lib/bb/utils.py
-@@ -1854,6 +1854,15 @@ def path_is_descendant(descendant, ancestor):
+@@ -1876,6 +1876,15 @@ def path_is_descendant(descendant, ancestor):
 =20
      return False
 =20
@@ -157,7 +155,7 @@ index 67e22f438..d2f11e437 100644
 t is better
  # we exit at some point than hang. 5 minutes with no progress means we're =
 probably deadlocked.
-@@ -1863,7 +1872,7 @@ def path_is_descendant(descendant, ancestor):
+@@ -1885,7 +1894,7 @@ def path_is_descendant(descendant, ancestor):
  @contextmanager
  def lock_timeout(lock):
      try:
@@ -168,7 +166,7 @@ s())
          if not held:
              bb.server.process.serverlog("Couldn't get the lock for 5 mins,=
  timed out, exiting.\n%s" % traceback.format_stack())
-@@ -1871,16 +1880,16 @@ def lock_timeout(lock):
+@@ -1893,16 +1902,16 @@ def lock_timeout(lock):
          yield held
      finally:
          lock.release()
