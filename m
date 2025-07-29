@@ -2,22 +2,22 @@ Return-Path: <chris.laplante@agilent.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22068C87FC9
-	for <webhook@archiver.kernel.org>; Tue, 29 Jul 2025 18:44:04 +0000 (UTC)
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (NAM11-BN8-obe.outbound.protection.outlook.com [40.107.236.80])
- by mx.groups.io with SMTP id smtpd.web10.16036.1753814641133369978
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0901CC87FCA
+	for <webhook@archiver.kernel.org>; Tue, 29 Jul 2025 18:44:34 +0000 (UTC)
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (NAM10-DM6-obe.outbound.protection.outlook.com [40.107.93.50])
+ by mx.groups.io with SMTP id smtpd.web11.16155.1753814665539400228
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 29 Jul 2025 11:44:01 -0700
+ Tue, 29 Jul 2025 11:44:25 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@agilent.com header.s=selector1 header.b=WbF995bh;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.236.80, mailfrom: chris.laplante@agilent.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@agilent.com header.s=selector1 header.b=zJtScJt8;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.93.50, mailfrom: chris.laplante@agilent.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vo9SCJr7Qf3ejrw+jPrLIm7v2GIHTgxSFwJYaf/8cVvr7sz0UemDpYqyrU9NUmI5Hn3Jy1OghWOHEHfMSIngrkGu+5muM4d1V4H8wnWvshnJ8BnpVkt2qNLrOclbAhPJpOL4kFQB0F12x8zsOkB1saieg8EpvkSLpsIxy8RrAcNTHoc+CMkeZt5urIc/qLN3fmNZtrQC8uKMZwjxdWAvAqN1HuTW90lY1CoryGJbiUS8qrInPgsnccTr0FPzwL9fPBAdOcdfI9sWzwk2eqbdVpfGyx2Wp08wJElIOJfX9TL4EqzUpcjHYURTddS9s3Xz9p/6aENDFxKFMLrQRlTIfg==
+ b=gvYK7jdRj+LSd8CGT1v2D3hWxnl1gHzTw0PTThD1lPlweM9xtA5LdjbZiYd0dMLGmSAsni4dhPG/HJxjDXJbJvHHh00kKaEP4BqBfLkHywMTPsaKRZvUez9vJnfUCuSWTy50wHj/I8SQiPMw/36wcUB7Y0535PiA9LTJ0biY1YcBa/pGtGGh2+hso8XmKUwUAA6kMomuf4ZCX7n1gGxlaRPtz8bAc21B1CaMbFYdg9MOJQ3gcDPkaRj6t/IxpAiu11zZc6/8FYV39peYNjHHVI/0jB+NKZeK23s6Q7pXxXH5y+aHdK742JIaSn9mJ6YoJt1GdHJzvd2RW1076UmNGA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6+AmKSU6bf620DbKyZWy0UKO2lQ1wYOFWQliFCmcCKg=;
- b=UFVXv85gZTsRa6DCpNr5p1/dbk4pJNXCrwpqposSM+ejPmstsfen1Z3uyKikjU52dTgbfz3d0iVeUsY/bcsNAmdo5JI+FQ0abRusauW8434/wBJD+yx4r/F7JkFN3AvoRzhlmFP1jQxjY5fYserakWjSLYeaqF3MqZXiD7ZOmmsCVgU1FEiE0T+9VfccIJeTnKmIvv4L3InI46TVFZGyxKnu8grG6nyo8NfcIWvy0LpR47FuOKK4aqi7CUlCagk0PRylqywJU4NhyyjuktJvWTanu5GZx8r3wXfcvKl1IcaZrRaAae+rOuXBPCq+Y45lRuBFoldgwvsADsMadRtsxQ==
+ bh=A+bOAzAcLWDHK/Bpr3CribahW89dXvM62Nu7nUCYgXw=;
+ b=WpoBAfcCqhJO3xE7iMa0JRQQ0mMHNhLHwx1DP2cdJ7MwDsd0O+dM87p5kXqmEKZ29RKDXIkQ+M7pPr1ej8ESZ5RW1pYI1mCzWsr147u8tCGaeByuDHXuCMsaBnbSArbE3Hmzg44S2jXHR0I6Pffkse/2Ncm3p7dSvmruDyIfeuV+ZjH+kEG/tb5Fyys/xaGwf7dckHVvXYkX2uFPw465lr/G6Uv4TOIwV9FyL7fgSuAZmHDjzy6w6WImIQ5DPe0SaQPnY1ABouf/JVairznSmLqDUjU7dpjp+wtGsuqDq/+Vx6djapUlCm/iPPEJc1jrBzYp7tgAGkSakFn7HLJxrQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  192.25.218.34) smtp.rcpttodomain=lists.openembedded.org
  smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
@@ -26,18 +26,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6+AmKSU6bf620DbKyZWy0UKO2lQ1wYOFWQliFCmcCKg=;
- b=WbF995bhAhXUt0lab/VzO3ZPxajnv33pef3pFhk2g00StZtKbjJxmA9Dvs8IJBl5qUabhdAjA50KcICGk8GAn+8PXg9R0q7kWVnybL8Kmo2xWAvy15+hIHDlq/4U1I89FtfN0vUZscARoVQNvsPmKkk21P4Xa2FqjNNfUTCw6SCUzc8db8VR3cESxSNpYhd5gT3agHALRV2O6TJedXalGEi3CQY+vpYqSkvkYYRitmT/b1xMa+b9WZUkoluHXpEqvT1DZsA016w0n2TzfmnoqPgyMhwwvAHPkgN7985s/d/KhIVlI+uC+0IAHIDmR2PAloF72sHfkep1IxJtN/L3Xw==
-Received: from CH0PR04CA0056.namprd04.prod.outlook.com (2603:10b6:610:77::31)
- by DS7PR12MB9044.namprd12.prod.outlook.com (2603:10b6:8:e3::22) with
+ bh=A+bOAzAcLWDHK/Bpr3CribahW89dXvM62Nu7nUCYgXw=;
+ b=zJtScJt8wsz/LJriee+W4W699cunvLA5fYdosqhAntO0xahrXbxlnZ6z9Uxb9KLecNUzZQbspJ3uf0YDzJfNPxmUSpaerZCYlN6Zvd5vef/XpcUlfzAtoXiyWOCNb+SObHsqHluFLRd0Z1TBV+Zk10xQEIYTVRIeJDMOk4SwARcRjeGfw0uEsHP/AwGGTWuOvrJigFh9mWB2PQ6sT4U+OR84EklSbddqOYWVdZU854FwzqNJvroevwYPA3D6ockZuQlieNYQFGbE3ADXxhl6tNYL1TbaBOLh0MWho7DUw5e3irJkfCLegA7HC3RyLQ50kLTLYWi9TGYteChivDnUEw==
+Received: from BL1P223CA0019.NAMP223.PROD.OUTLOOK.COM (2603:10b6:208:2c4::24)
+ by SA0PR12MB7478.namprd12.prod.outlook.com (2603:10b6:806:24b::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.26; Tue, 29 Jul
- 2025 18:43:57 +0000
-Received: from CH1PEPF0000AD83.namprd04.prod.outlook.com
- (2603:10b6:610:77:cafe::90) by CH0PR04CA0056.outlook.office365.com
- (2603:10b6:610:77::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8989.11; Tue, 29 Jul
+ 2025 18:44:21 +0000
+Received: from BN3PEPF0000B374.namprd21.prod.outlook.com
+ (2603:10b6:208:2c4:cafe::85) by BL1P223CA0019.outlook.office365.com
+ (2603:10b6:208:2c4::24) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8964.27 via Frontend Transport; Tue,
- 29 Jul 2025 18:43:57 +0000
+ 29 Jul 2025 18:44:21 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.34)
  smtp.mailfrom=agilent.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=agilent.com;
@@ -45,177 +45,151 @@ Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
  192.25.218.34 as permitted sender) receiver=protection.outlook.com;
  client-ip=192.25.218.34; helo=edgeappmail.agilent.com; pr=C
 Received: from edgeappmail.agilent.com (192.25.218.34) by
- CH1PEPF0000AD83.mail.protection.outlook.com (10.167.244.85) with Microsoft
+ BN3PEPF0000B374.mail.protection.outlook.com (10.167.243.171) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8989.10 via Frontend Transport; Tue, 29 Jul 2025 18:43:56 +0000
+ 15.20.9009.0 via Frontend Transport; Tue, 29 Jul 2025 18:44:20 +0000
 Received: from laplante-B650.lfs.agilent.com (192.25.126.4) by
  edgeappmail.agilent.com (192.25.218.34) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.57; Tue, 29 Jul 2025 12:43:31 -0600
+ 15.1.2507.57; Tue, 29 Jul 2025 12:43:45 -0600
 From: <chris.laplante@agilent.com>
 To: <bitbake-devel@lists.openembedded.org>
-CC: <steve@sakoman.com>, Mark Hatle <mark.hatle@amd.com>, Mark Hatle
-	<mark.hatle@kernel.crashing.org>, Richard Purdie
-	<richard.purdie@linuxfoundation.org>, Chris Laplante
-	<chris.laplante@agilent.com>
-Subject: [2.8][PATCH 1/2] bitbake: runqueue: Verify mcdepends are valid
-Date: Tue, 29 Jul 2025 14:43:08 -0400
-Message-ID: <20250729184309.292510-1-chris.laplante@agilent.com>
+CC: <steve@sakoman.com>, Richard Purdie <richard.purdie@linuxfoundation.org>,
+	Chris Laplante <chris.laplante@agilent.com>
+Subject: [2.8][PATCH 2/2] utils: Optimise signal/sigmask performance
+Date: Tue, 29 Jul 2025 14:43:09 -0400
+Message-ID: <20250729184309.292510-2-chris.laplante@agilent.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250729184309.292510-1-chris.laplante@agilent.com>
+References: <20250729184309.292510-1-chris.laplante@agilent.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD83:EE_|DS7PR12MB9044:EE_
-X-MS-Office365-Filtering-Correlation-Id: fe674d40-8e68-410d-290b-08ddcecfe004
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B374:EE_|SA0PR12MB7478:EE_
+X-MS-Office365-Filtering-Correlation-Id: 58c1e805-16c3-457b-d72e-08ddcecfee5e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026;
+	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?yjBxrJjgL+tF+PKlTeXZAYVu0IBe9AiKU6Nz9EXPJtOl+2R+AHt5TC2HCHrb?=
- =?us-ascii?Q?VUC+NtoJQY4Z1sZLgZCQ3kc8kEOnySEk4HbDFOF4LeBGEZKzNQp17LpwVrNL?=
- =?us-ascii?Q?+imxkfXwiDChmtBsVW0IoaRZjme61qCfS05hA2lydZrZVRHEQ4bacECML4Bq?=
- =?us-ascii?Q?B1lSLwosJkc1MgyiGBoXX5Y0DvcDVtjT+g77ZBX5kNPmlZJzauvZSCHy7RHc?=
- =?us-ascii?Q?3dz4vz6VZzPFTepoSf9kMK953ib9r3TNdj4nqjAlu4tNDLJ1GclX8WHkqQ8Z?=
- =?us-ascii?Q?X18L3xs7p52Anut13c/0J5KEV/BBRi2OOIoe+i0UyzPX3hBFyHecqDBSkDRA?=
- =?us-ascii?Q?nde+zyj8U9cYf6I9fhUpGpADkV9QZGSqb55XnrO/6WWtZGNejZINh3kbONap?=
- =?us-ascii?Q?F0PLQBGCsIbmCiMvibK9eAz0tLyNgQtoQxWICt9Hka7Eg8R2oQtUr6HnjBqF?=
- =?us-ascii?Q?W6ybgcBqO8wXHx3LRcUSLUfv3j9K4YB/XBUNfa12w7/hx35nh9Lsls6Z7UMT?=
- =?us-ascii?Q?MVa+NR1pWzmmBI7Kb7TTIe6uRoiCgl5kyYLEbZS96hN4GWnpecp2xPOfgjjM?=
- =?us-ascii?Q?b9Lw6v0laEhouZuuCsVjzanS/ELBGnj4GZonDKmxpqZxq2sFv0/uYyLfIsIt?=
- =?us-ascii?Q?JEJ8cUF6kSIGUjofAIVTNejdKj3VkkUbJul6+UOHDkzPxz8ApikaqvCcoI6h?=
- =?us-ascii?Q?H+2hBBWTG54dnIaSag5HfJZb7/S4Xt0optdKPGB8gNsdWEKg//zlJTuuqYTY?=
- =?us-ascii?Q?WSfNcV9DTeKDDbmOxChTPGwvDelRWrKBQJwwD11/VDjiqOvyNEWAEfvdjwwE?=
- =?us-ascii?Q?us5iwxGUD3akYF/Td5EvzhFkMWWjls4kDyAD+YP/2jUzwvNW95XkDKxfhpXV?=
- =?us-ascii?Q?EgF3GWQKeLi2zBCi2PNytc8afsOp0h0HiLT0l2rNqMlr07SyKWiVEVGugZM/?=
- =?us-ascii?Q?0iH/8z8z+6AiddFSO7HaEzpk7jY/ZtdQVhQjQzaN7jrG0XfDOTemV7EpqNXO?=
- =?us-ascii?Q?4m8PCp0DD6GEEPd8SLxDOD1jSG1qy2jXN8IFi9ZDmmcBAJA+2tpBWMcWh9h0?=
- =?us-ascii?Q?IqP3Jk0GZUgWrqqcYu6uzh6QBj8V5na7n84iehvv0pF/ZGIEFSIUgZfC8J02?=
- =?us-ascii?Q?HZ+S3NVYnMRoEKOa/Ha85UMJU1B1AQPwTVTzL7hIWIFkpFzT85MSLq1Me6ta?=
- =?us-ascii?Q?jWzmu7tZsjELmoZG84XnJaXeTcLYTGI5Gv3ERUqZeHdh255isYlK75mhIdiF?=
- =?us-ascii?Q?LqLe5kTO7GmKVbFpdFQ12/3zOgsEDKTM8c3RwWhUzNCNgrDmc3HANB7QqCtz?=
- =?us-ascii?Q?LEN68sdiZ+zl1Ah+W23rI5Aw4Dn8jsN2tSXmKhmlCd5lluk2eTsuMsp8hwUL?=
- =?us-ascii?Q?7Savuc3vN8qRh7WQwcy1IdcNw5Pg62F15QhpYjFVvlIcecwD+mVd5CgE3tgP?=
- =?us-ascii?Q?xBWHXbBG/ylqgV9RPJ2B6KV2U6RSl8d+Lv+xW5JmKB/IPb2UN7rG9tZhujSa?=
- =?us-ascii?Q?bGkd7FGAQ4Ro1aGiHu4iZq/Ee6CO2KWZ2JwY?=
+	=?us-ascii?Q?p+zqrOQuQT0NprE6SHGehzO8dTyUxLGn2J7HTBYMTYxqQ8jzY8N1RhZu5zCz?=
+ =?us-ascii?Q?8qMA6lVypwJTC0ut8hFqCDxZt430b6THOk68YLyr0twObqBD5Q7IBH0RQnPj?=
+ =?us-ascii?Q?1CfhiwXAdpD9NS0uHKa96iHvPXDRRxEhwH7aWtVZ28oZfzTof6zs54oJPev6?=
+ =?us-ascii?Q?EJzfGGPntq95p1L2IdLKThmRjvqgCfFPfnwIuk5Op59N4eFUErRdFpG71tp9?=
+ =?us-ascii?Q?d5fUx6Wl+zwveNkpTD9w3i0pCEQd38cJYNcI8c7KBsLqGAscops3KjVnLT6w?=
+ =?us-ascii?Q?GLpGBUZrL+EdFP1cfQS2a/xiaoxWLix2B4dhB/cKAJAfi2XyAPCENh8uFbGT?=
+ =?us-ascii?Q?voGP61NKJKMnlCHSp5/FZKhfgB8NuswRvb/d3vTHy7M/8CP/6sTFxf7yr7Op?=
+ =?us-ascii?Q?CmungjMv/ZfxouIZbs3bbeHRbOCH4RUtFpYvNVwep+UVnC8lMISOyK743jeK?=
+ =?us-ascii?Q?ie3v9VqWam8GdI/Cl3mfVgG7AwVA+BBNnmH9ugbBDJOh37967a6jqtDh7Osw?=
+ =?us-ascii?Q?TwRzqLjKwKE7tax+n6IeWBPpDSDvj4wuH3ya8j9kpytQF212iLFcNtKznlZ3?=
+ =?us-ascii?Q?/bYXbLgB2fcgdTzyJ/9Bz7gu5GHuKxZgURsq78UGCtRwPo5Ucbpi+alJEhbJ?=
+ =?us-ascii?Q?3ZdOuDxT7GvTOnQpRdXCRUU7FEEXmS8T8Sgq+jxayeV/74p56kRatni69NzG?=
+ =?us-ascii?Q?zHQ9fYsejoAM7y8TYi6Uiqfj/mRaYLOrQ3W9zUyy8j1wffJqnM46OB+QwvaT?=
+ =?us-ascii?Q?YOBRwGV15+mae+nuOWaF2unill7eh2bR+b4srrXnFQemfdvvzi2X1PeIY7hO?=
+ =?us-ascii?Q?0FaZcX3tInGFU5UrqFfsJzPZzIk2VIRK5KkE/bQR4iP1ZjyCXSZUHRe3PC3l?=
+ =?us-ascii?Q?OJAaH8iR0kNfJmW59SeTeTm0pU2RSzzyQ1BuKSX+lgOA/pBl/20S35H89xoD?=
+ =?us-ascii?Q?Bv6EeZlD8Fisdg0VTQndb9ZQmWgpymuVs/Ag9/xmOoxs39EwwtKMaPYHs8Pa?=
+ =?us-ascii?Q?WLzIwvXBFM1nVjoqHlkGOsF4HdlPDEiHIHAgAhP8QDg7upoABY3Q4QhFS1wc?=
+ =?us-ascii?Q?215Tenk6U7TmyNHuhU37zl4/ZC0OkSdUGAqoilVY2X+ELxT/msErTjsBAbAR?=
+ =?us-ascii?Q?lk/3zpBGYNShJljd8HwBjYnfgZ4hDIyXEdypW00mckCG93jDaOtmfHm+sD4E?=
+ =?us-ascii?Q?wr8LJr+dyHPeShQIbJO0I0i3XJiiVloJOTcV2EKZoaxmlTXlLC2g9TitluCC?=
+ =?us-ascii?Q?u7x7sfSOEIb42AkR78fr//OqTqXIiEXvOvdbn5rlnYlWA3OnRagqKhyYt2F2?=
+ =?us-ascii?Q?5ywM/vovFc/cg0uJOoqfgr8gZAA2M7e4R96SCrgi+qOUJ5SDhtmdkPh9UcA0?=
+ =?us-ascii?Q?Penv2HJlE1ik3PBMkCJs2DqlF9PXDTtZw9SoFFm0xcY1Ou5oOSUaU4N1HTb7?=
+ =?us-ascii?Q?xjqJAXFL76mpKcwmHfrjP3eC6VKLqtfRRdGsy5jdk0wAcTIVqBryZS+p/AjW?=
+ =?us-ascii?Q?9GboKAYxtq34Iz2LmX2WNS+7dascA9EOcdTO?=
 X-Forefront-Antispam-Report: 
-	CIP:192.25.218.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:wpcosapexchedg3.windmz.agilent.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+	CIP:192.25.218.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:wpcosapexchedg3.windmz.agilent.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2025 18:43:56.7296
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2025 18:44:20.7957
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe674d40-8e68-410d-290b-08ddcecfe004
+X-MS-Exchange-CrossTenant-Network-Message-Id: 58c1e805-16c3-457b-d72e-08ddcecfee5e
 X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.34];Helo=[edgeappmail.agilent.com]
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-CH1PEPF0000AD83.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-BN3PEPF0000B374.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9044
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB7478
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 29 Jul 2025 18:44:04 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17824
+ <bitbake-devel@lists.openembedded.org>; Tue, 29 Jul 2025 18:44:34 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17825
 
-From: Mark Hatle <mark.hatle@amd.com>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-In order to avoid a potentially confusing backtrace, check that the mcdepen=
-d
-is valid when we add it.
+Running "time bitbake -pP idle" with a valid cache shows around 800,000
+calls to enum creation from python's signal.py. We don't care about this
+overhead and it adversely affects cache load time quite badly.
 
-Add a test case to ensure invalid configurations are caught and trigger an
-error.
+Try and use _signal directly, falling back to signal, which avoids
+this overhead we don't need and makes cache loading much faster.
 
-[RP: Reworked test case to simplify and improve code]
-Signed-off-by: Mark Hatle <mark.hatle@amd.com>
-Signed-off-by: Mark Hatle <mark.hatle@kernel.crashing.org>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit ee5fce67ce35b025c68aa61e2e758903269ee346)
 Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
 ---
- lib/bb/runqueue.py                        |  2 ++
- lib/bb/tests/runqueue-tests/recipes/g1.bb |  2 ++
- lib/bb/tests/runqueue-tests/recipes/h1.bb |  0
- lib/bb/tests/runqueue.py                  | 11 ++++++++++-
- 4 files changed, 14 insertions(+), 1 deletion(-)
- create mode 100644 lib/bb/tests/runqueue-tests/recipes/g1.bb
- create mode 100644 lib/bb/tests/runqueue-tests/recipes/h1.bb
+ lib/bb/utils.py | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 439da2bb4..db68f97e6 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -729,6 +729,8 @@ class RunQueueData:
-                 if mc =3D=3D frommc:
-                     fn =3D taskData[mcdep].build_targets[pn][0]
-                     newdep =3D '%s:%s' % (fn,deptask)
-+                    if newdep not in taskData[mcdep].taskentries:
-+                        bb.fatal("Task mcdepends on non-existent task %s" =
-% (newdep))
-                     taskData[mc].taskentries[tid].tdepends.append(newdep)
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 67e22f438..d2f11e437 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -1854,6 +1854,15 @@ def path_is_descendant(descendant, ancestor):
 =20
-         for mc in taskData:
-diff --git a/lib/bb/tests/runqueue-tests/recipes/g1.bb b/lib/bb/tests/runqu=
-eue-tests/recipes/g1.bb
-new file mode 100644
-index 000000000..3c7dca025
---- /dev/null
-+++ b/lib/bb/tests/runqueue-tests/recipes/g1.bb
-@@ -0,0 +1,2 @@
-+do_build[mcdepends] =3D "mc::mc-1:h1:do_invalid"
+     return False
+=20
++# Recomputing the sets in signal.py is expensive (bitbake -pP idle)
++# so try and use _signal directly to avoid it
++valid_signals =3D signal.valid_signals()
++try:
++    import _signal
++    sigmask =3D _signal.pthread_sigmask
++except ImportError:
++    sigmask =3D signal.pthread_sigmask
 +
-diff --git a/lib/bb/tests/runqueue-tests/recipes/h1.bb b/lib/bb/tests/runqu=
-eue-tests/recipes/h1.bb
-new file mode 100644
-index 000000000..e69de29bb
-diff --git a/lib/bb/tests/runqueue.py b/lib/bb/tests/runqueue.py
-index cc87e8d6a..74f5ded2e 100644
---- a/lib/bb/tests/runqueue.py
-+++ b/lib/bb/tests/runqueue.py
-@@ -26,7 +26,7 @@ class RunQueueTests(unittest.TestCase):
-     a1_sstatevalid =3D "a1:do_package a1:do_package_qa a1:do_packagedata a=
-1:do_package_write_ipk a1:do_package_write_rpm a1:do_populate_lic a1:do_pop=
-ulate_sysroot"
-     b1_sstatevalid =3D "b1:do_package b1:do_package_qa b1:do_packagedata b=
-1:do_package_write_ipk b1:do_package_write_rpm b1:do_populate_lic b1:do_pop=
-ulate_sysroot"
+ # If we don't have a timeout of some kind and a process/thread exits badly=
+ (for example
+ # OOM killed) and held a lock, we'd just hang in the lock futex forever. I=
+t is better
+ # we exit at some point than hang. 5 minutes with no progress means we're =
+probably deadlocked.
+@@ -1863,7 +1872,7 @@ def path_is_descendant(descendant, ancestor):
+ @contextmanager
+ def lock_timeout(lock):
+     try:
+-        s =3D signal.pthread_sigmask(signal.SIG_BLOCK, signal.valid_signal=
+s())
++        s =3D sigmask(signal.SIG_BLOCK, valid_signals)
+         held =3D lock.acquire(timeout=3D5*60)
+         if not held:
+             bb.server.process.serverlog("Couldn't get the lock for 5 mins,=
+ timed out, exiting.\n%s" % traceback.format_stack())
+@@ -1871,16 +1880,16 @@ def lock_timeout(lock):
+         yield held
+     finally:
+         lock.release()
+-        signal.pthread_sigmask(signal.SIG_SETMASK, s)
++        sigmask(signal.SIG_SETMASK, s)
 =20
--    def run_bitbakecmd(self, cmd, builddir, sstatevalid=3D"", slowtasks=3D=
-"", extraenv=3DNone, cleanup=3DFalse):
-+    def run_bitbakecmd(self, cmd, builddir, sstatevalid=3D"", slowtasks=3D=
-"", extraenv=3DNone, cleanup=3DFalse, allowfailure=3DFalse):
-         env =3D os.environ.copy()
-         env["BBPATH"] =3D os.path.realpath(os.path.join(os.path.dirname(__=
-file__), "runqueue-tests"))
-         env["BB_ENV_PASSTHROUGH_ADDITIONS"] =3D "SSTATEVALID SLOWTASKS TOP=
-DIR"
-@@ -41,6 +41,8 @@ class RunQueueTests(unittest.TestCase):
-             output =3D subprocess.check_output(cmd, env=3Denv, stderr=3Dsu=
-bprocess.STDOUT,universal_newlines=3DTrue, cwd=3Dbuilddir)
-             print(output)
-         except subprocess.CalledProcessError as e:
-+            if allowfailure:
-+                return e.output
-             self.fail("Command %s failed with %s" % (cmd, e.output))
-         tasks =3D []
-         tasklog =3D builddir + "/task.log"
-@@ -314,6 +316,13 @@ class RunQueueTests(unittest.TestCase):
-                        ["mc_2:a1:%s" % t for t in rerun_tasks]
-             self.assertEqual(set(tasks), set(expected))
-=20
-+            # Check that a multiconfig that doesn't exist rasies a correct=
- error message
-+            error_output =3D self.run_bitbakecmd(["bitbake", "g1"], tempdi=
-r, "", extraenv=3Dextraenv, cleanup=3DTrue, allowfailure=3DTrue)
-+            self.assertIn("non-existent task", error_output)
-+            # If the word 'Traceback' or 'KeyError' is in the output we've=
- regressed
-+            self.assertNotIn("Traceback", error_output)
-+            self.assertNotIn("KeyError", error_output)
-+
-             self.shutdown(tempdir)
-=20
-     def test_hashserv_single(self):
+ # A version of lock_timeout without the check that the lock was locked and=
+ a shorter timeout
+ @contextmanager
+ def lock_timeout_nocheck(lock):
+     try:
+-        s =3D signal.pthread_sigmask(signal.SIG_BLOCK, signal.valid_signal=
+s())
++        s =3D sigmask(signal.SIG_BLOCK, valid_signals)
+         l =3D lock.acquire(timeout=3D10)
+         yield l
+     finally:
+         if l:
+             lock.release()
+-        signal.pthread_sigmask(signal.SIG_SETMASK, s)
++        sigmask(signal.SIG_SETMASK, s)
 --=20
 2.43.0
 
