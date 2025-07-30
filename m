@@ -1,88 +1,96 @@
-Return-Path: <pamathieu@poum.ca>
+Return-Path: <zach@mandolincreek.net>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4463AC87FCC
-	for <webhook@archiver.kernel.org>; Wed, 30 Jul 2025 17:44:53 +0000 (UTC)
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
- by mx.groups.io with SMTP id smtpd.web10.41894.1753897487607281046
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE9CC87FCB
+	for <webhook@archiver.kernel.org>; Wed, 30 Jul 2025 23:12:25 +0000 (UTC)
+Received: from abbott.mandolincreekfarm.com (abbott.mandolincreekfarm.com [192.173.156.27])
+ by mx.groups.io with SMTP id smtpd.web11.48998.1753917141976382762
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 30 Jul 2025 10:44:47 -0700
+ Wed, 30 Jul 2025 16:12:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=pamathieu@poum.ca header.s=zmail header.b=PDi5fURl;
- spf=pass (domain: poum.ca, ip: 136.143.188.15, mailfrom: pamathieu@poum.ca)
-ARC-Seal: i=1; a=rsa-sha256; t=1753897482; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=n+3mwiUmhXl0rGXoMV8BzJN8wWyW2gyHfAmayzKBhM2TpynrUVBMZBZBXKIm/pHApA6IAdnrsXtGd5M7LXDuJDd/foan28kcU/pKMH2qAimw77gyDo5zC6JzCyOTwK3VioP5im1wE/xGBBmJ2bmgWFNMYpCSChnHIl72fHpoIGI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1753897482; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=j+uwJhPslhDinXx9Ug+mYDqTdhgrhpB2AnxW0V7A/A8=; 
-	b=MYziPnbxwMOnOEtMW5ijcbR5UQLRpl80SA9MbQAbXYHDD1gekEd4R/4nvpO2U7dQakueHU3q3Blv8s7RdTjn9NCPV/63EiKdObR91bG9YxRdfJe1k2BT8649XK3XGB83hv570xN+e67Dr5nXqWDpmhytbCgi8wI6jr0WzoFXLl8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=poum.ca;
-	spf=pass  smtp.mailfrom=pamathieu@poum.ca;
-	dmarc=pass header.from=<pamathieu@poum.ca>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1753897482;
-	s=zmail; d=poum.ca; i=pamathieu@poum.ca;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=j+uwJhPslhDinXx9Ug+mYDqTdhgrhpB2AnxW0V7A/A8=;
-	b=PDi5fURlVGyLXbCvtke4gXOEA/bDaK/uZkpUPo/LB5q6CQ8o2BaflJIG+9Lbsj+R
-	vXgHSkKoL+f9Mjma5M0L/0leglCiSSFoL8EbDDufMzh+HAvPzUr//kNYYZXoz0Ub0IX
-	s7B12XOiawxuqxJQBhYHMIQXk9izBwKTfysghJy8=
-Received: by mx.zohomail.com with SMTPS id 1753897481293478.3007935165558;
-	Wed, 30 Jul 2025 10:44:41 -0700 (PDT)
-From: Philippe-Alexandre Mathieu <pamathieu@poum.ca>
-To: bitbake-devel@lists.openembedded.org
-Cc: Philippe-Alexandre Mathieu <pamathieu@poum.ca>,
-	Steve Sakoman <steve@sakoman.com>
-Subject: [scarthgap][PATCH] fetch2/wget: Keep query parameters in URL during checkstatus
-Date: Wed, 30 Jul 2025 13:44:15 -0400
-Message-Id: <20250730174415.35703-1-pamathieu@poum.ca>
-X-Mailer: git-send-email 2.39.5
+ dkim=none (message not signed); spf=pass (domain: mandolincreek.net, ip: 192.173.156.27, mailfrom: zach@mandolincreek.net)
+Received: from [10.0.0.246] (fluffy.mandolincreekfarm.com [192.173.156.26])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+	(No client certificate requested)
+	by abbott.mandolincreekfarm.com (Postfix) with ESMTPSA id 6DAAAE230C0;
+	Wed, 30 Jul 2025 16:12:20 -0700 (PDT)
+Message-ID: <c39d2766-2e7d-4061-9e59-70ceec022b01@mandolincreek.net>
+Date: Wed, 30 Jul 2025 16:12:19 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [bitbake-devel][PATCH] cooker: Add layer-specific ignore for
+ dangling appends
+To: JPEWhacker@gmail.com, Alexander Kanavin <alex.kanavin@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+References: <20250729144906.1665908-1-JPEWhacker@gmail.com>
+ <CANNYZj-TMk4ktaPqC2EbS-k636cJfr3hyeZXp5rrEESi-ovZjw@mail.gmail.com>
+ <CAJdd5GaNH=gP+ypmV31MLwYgF-xdT+e-E9rfW1JCgQis2PJtyA@mail.gmail.com>
+Content-Language: en-US
+From: Zach Welch <zach@mandolincreek.net>
+Organization: Mandolin Creek Systems
+In-Reply-To: <CAJdd5GaNH=gP+ypmV31MLwYgF-xdT+e-E9rfW1JCgQis2PJtyA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 30 Jul 2025 17:44:53 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17828
+ <bitbake-devel@lists.openembedded.org>; Wed, 30 Jul 2025 23:12:25 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17829
 
-When recreating the uri in wget's checkstatus method, we only use the
-scheme, host and path. This completely strips the query parameters from
-the final URI and potentially breaks the checking functionality for
-URLs that require query parameters (such as the AZ fetcher with SAS
-token).
+On 7/29/25 07:59, Joshua Watt via lists.openembedded.org wrote:
+>=20
+>=20
+> On Tue, Jul 29, 2025 at 8:57=E2=80=AFAM Alexander Kanavin=20
+> <alex.kanavin@gmail.com <mailto:alex.kanavin@gmail.com>> wrote:
+>=20
+>     On Tue, 29 Jul 2025 at 16:49, Joshua Watt via lists.openembedded.or=
+g
+>     <http://lists.openembedded.org>
+>     <JPEWhacker=3Dgmail.com@lists.openembedded.org
+>     <mailto:gmail.com@lists.openembedded.org>> wrote:
+>      > Our setup is that we have a "disto" layer that we need to mainta=
+in
+>      > against several version of Yocto at once. In this disto layer, w=
+e
+>     make
+>      > policy choices that sometimes are tied to a specific version of =
+a
+>     recipe
+>      > found in a specific version of Yocto using a bbappend; and often=
+ that
+>      > version is only in one or two Yocto versions, which means that t=
+he
+>      > bbappend will be dangling in the others.
+>=20
+>     This is where the weak point of the argument is. Yocto does not mak=
+e
+>     concessions to layers that attempt to be compatible across yocto
+>     releases, patches that help such layers had been previously rejecte=
+d,
+>     and this would create a precedent to the contrary.
+>=20
+>     It's always possible to make a branch.
+>=20
+>=20
+> Branching isn't an option for us; we are unwilling to add the=20
+> maintenance overhead of dealing with that.
 
-This bug was resolved on master in
-`096301250455e2a83bdd818a56317c62436c9981`.
-This patch is adapted to the scarthgap branch.
+I have resorted to some dirty tricks to solve problems like this in the=20
+past with great success.
 
-CC: Steve Sakoman <steve@sakoman.com>
-Signed-off-by: Philippe-Alexandre Mathieu <pamathieu@poum.ca>
----
- bitbake/lib/bb/fetch2/wget.py | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+If you move the incompatible bbappends into their own '$branch'=20
+directories in your distro layer, then you can add lines like this to=20
+your `layer.conf`:
 
-diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index 5bb3b2f361..2345ba6b49 100644
---- a/bitbake/lib/bb/fetch2/wget.py
-+++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -344,8 +344,11 @@ class Wget(FetchMethod):
-             opener = urllib.request.build_opener(*handlers)
- 
-             try:
--                uri_base = ud.url.split(";")[0]
--                uri = "{}://{}{}".format(urllib.parse.urlparse(uri_base).scheme, ud.host, ud.path)
-+                parts = urllib.parse.urlparse(ud.url.split(";")[0])
-+                if parts.query:
-+                    uri = "{}://{}{}?{}".format(parts.scheme, parts.netloc, parts.path, parts.query)
-+                else:
-+                    uri = "{}://{}{}".format(parts.scheme, parts.netloc, parts.path)
-                 r = urllib.request.Request(uri)
-                 r.get_method = lambda: "HEAD"
-                 # Some servers (FusionForge, as used on Alioth) require that the
--- 
-2.39.5
+   BBFILES +=3D "${@ "${LAYERDIR}/$branch/recipes-*/*/*.bbappend" if=20
+d.getVar("DISTRO_CODENAME") =3D=3D "$branch" else "" }"
 
+I just tested that this trick does appear to work.  But as no one has=20
+jumped in to offer this solution before now, I suspect that this=20
+actually might be a bad idea for... reasons?
+
+Cheers,
+Zach
 
