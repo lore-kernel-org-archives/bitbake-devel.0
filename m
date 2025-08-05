@@ -1,96 +1,98 @@
-Return-Path: <philip.lorenz@bmw.de>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD72BC87FCB
-	for <webhook@archiver.kernel.org>; Tue,  5 Aug 2025 09:58:54 +0000 (UTC)
-Received: from esa5.hc324-48.eu.iphmx.com (esa5.hc324-48.eu.iphmx.com [207.54.71.60])
- by mx.groups.io with SMTP id smtpd.web10.18344.1754387925892299486
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDF3C87FCB
+	for <webhook@archiver.kernel.org>; Tue,  5 Aug 2025 10:17:35 +0000 (UTC)
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+ by mx.groups.io with SMTP id smtpd.web11.18197.1754389053143393087
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 05 Aug 2025 02:58:47 -0700
+ Tue, 05 Aug 2025 03:17:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bmw.de header.s=mailing1 header.b=Kmzcq4bb;
- spf=pass (domain: bmw.de, ip: 207.54.71.60, mailfrom: prvs=3058a794e=philip.lorenz@bmw.de)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=iL0tUdUr;
+ spf=pass (domain: gmail.com, ip: 209.85.219.46, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-70749d4c598so48360526d6.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 05 Aug 2025 03:17:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
-  t=1754387925; x=1785923925;
-  h=message-id:date:mime-version:to:from:subject:
-   content-transfer-encoding;
-  bh=yw9+rlk8EmC7SzU5qcxPUrwsR5BjO5giNmlGAC6/ysM=;
-  b=Kmzcq4bbP3dphRiLlBMkmKeDjuYHgtUrQNiddEwAsbM/VtWeIOZZEJow
-   fzNXBn52eq7l5oPgVXHTWC0sVvsO/fYwdOc5djOsPaGM1k867xutS/oUD
-   kAFWls9nMGR4EodtiPgyvgVYKF3v4tZQ4j7sl9rf575b9GjTTOyboPoKj
-   A=;
-X-CSE-ConnectionGUID: R7OEae6qS0yv7ob592qMuw==
-X-CSE-MsgGUID: MPLoDMkHT2a/WaGYFt0geA==
-Received: from esagw6.bmwgroup.com (HELO esagw6.muc) ([160.46.252.49]) by
- esa5.hc324-48.eu.iphmx.com with ESMTP/TLS; 05 Aug 2025 11:58:21 +0200
-Received: from unknown (HELO esabb4.muc) ([10.31.187.135]) by esagw6.muc with
- ESMTP/TLS; 05 Aug 2025 11:58:21 +0200
-Received: from smucmp19d.bmwgroup.net (HELO smucmp19d.europe.bmw.corp)
- ([10.30.13.170]) by esabb4.muc with ESMTP/TLS; 05 Aug 2025 11:58:20 +0200
-Received: from [10.242.8.41] (10.30.85.200) by smucmp19d.europe.bmw.corp
- (2a03:1e80:a15:58f::205d) with Microsoft SMTP Server (version=TLS;
- Tue, 5 Aug 2025 11:58:20 +0200
-X-CSE-ConnectionGUID: w+QDMVsBRf6rouDBiVRz+Q==
-X-CSE-MsgGUID: u9vH/BTNRzeqzkNSdhDnBQ==
-X-CSE-ConnectionGUID: WEzUiongRCiUtzm403f2BQ==
-X-CSE-MsgGUID: kj0OzVETSZCA/YkAIhQRNw==
-Message-ID: <74e41b81-6c18-46cf-a808-b28e955a5fe2@bmw.de>
-Date: Tue, 5 Aug 2025 11:58:19 +0200
+        d=gmail.com; s=20230601; t=1754389052; x=1754993852; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4xc3OxScTl5AbidUxrk3auh8ZYw2vl/I+Ys0XHK9zfk=;
+        b=iL0tUdUrbQ6Nf9e/Ul+YOUtkfIX05l3LcxDIEeXJqEXIRLWrPqMzr5YUI2K9GJc5AL
+         B52dDa4L4HtPuoQL9LBG9FhSnWl1jLyI8Dw66I7ebThv8LJXtooAOjo3o7bvLvmKCMUV
+         UFy/cFqQBeku5xxVSlHhKYjVb+0lc9k9WWR0kJ7iRQsuR8p0w9uQGfP6vD2B38yqJvaP
+         8q60fqxRja4n4ATUtIENTwJMRMa35DjMxq8LFovkon1hTi5vnz3BX66iDEhAfCNw3ZFv
+         Wri1hDD2fzPSxTa9mfKamLTyPtCGtdPQ95gX3J3Ch8q/eurWJAmZExzIHewFb8zi32ow
+         V7ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754389052; x=1754993852;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4xc3OxScTl5AbidUxrk3auh8ZYw2vl/I+Ys0XHK9zfk=;
+        b=UFDk4lA9jpxDbe3tSj9dnjtX/ZoLD3CfqGPUAZ5zsQyDGGojA/k/p1crwGFZ1/eDOZ
+         KwLZQQ3w0yJJPRvh4ey4sWljYeZNpzVJ2vRPSxpM298ZesCGaipjUYiL6yg7m3YCAOOw
+         Y3IuwidRgL+8FvHKzW6ZSBuRTcUiadpLup3MnuyqYawktdv/Y8RwER5IAs3xAT3XiDOD
+         cyN0Hu6MG4JnhozPXCn9W0+s1Q09DtQEHtd2sZUxgtF7u2Dbrmr6ELdCJqFC/VB446p5
+         ZkpaVXL1a32Eiz/KrMUHPc1Q2J8OGtVmL7z+uEyZZM4k/nLsuoK1ZfSfXPIC82/sIc3/
+         LFOQ==
+X-Gm-Message-State: AOJu0YxkC67dZabU1wT0FnZgKEu5YHGGjmB41XUie/crNTyUgVnUVN8b
+	UYznPBviBkYnw9LjG7SG2XX2/lEDcDSsMZOElmK6DFwqywSrfHIGthe51UQXKIJ+RqnFJaIaQGR
+	ld/U7hHUbrj131/07oLCCv8aRG/CX1o0=
+X-Gm-Gg: ASbGncsUnUAabHOddl9tC3cCxFqzs5fP0uKwG235U/OhI6M02eM/RC5vkXUzN3nsJ1Z
+	VkVGQGRNsjZjym9Hq5xHqExOjeEnA6gofJg+3WBZxkzBR+144LHYNuYq6uczL9tpoF1+2HORjQ7
+	D9tM0FOY2qIuPy7wnyq8KAxn1+cCTnbQw4/4+cVmXS+kf+l8lPdjKcGOzIcH/W/yQop29FoliJS
+	l8iS61GrwjEcr8lLju/rtuwOb1w7b2ZnnrsHIpVgM/ohSyFvC1U
+X-Google-Smtp-Source: AGHT+IECpVMUYLN1wj2029jnPlWz7rlMsmjAMQTN1UJfjoN64BZcWDOWCHJ/0GJFuf2ap+G9Jfi8YGBu7Qg3e6gOots=
+X-Received: by 2002:ad4:5fc5:0:b0:707:60ca:7ee1 with SMTP id
+ 6a1803df08f44-7093626d249mr197171466d6.25.1754389052019; Tue, 05 Aug 2025
+ 03:17:32 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: <bitbake-devel@lists.openembedded.org>
-From: Philip Lorenz <philip.lorenz@bmw.de>
-Subject: Hash equivalence server garbage collection and *_qa tasks
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: smucmp18a.europe.bmw.corp (2a03:1e80:a15:58f::1:50) To
- smucmp19d.europe.bmw.corp (2a03:1e80:a15:58f::205d)
+References: <74e41b81-6c18-46cf-a808-b28e955a5fe2@bmw.de>
+In-Reply-To: <74e41b81-6c18-46cf-a808-b28e955a5fe2@bmw.de>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Tue, 5 Aug 2025 12:17:21 +0200
+X-Gm-Features: Ac12FXygV5jLbG3q36QbJvbD7TQG3f27eeUfMF72ihtu06SQLfqPfxlI_xJ_ILE
+Message-ID: <CANNYZj-XMgeaF3GyTWoXFcg+dPYSmZg09MKd4NKh2R9ZK56Q5g@mail.gmail.com>
+Subject: Re: [bitbake-devel] Hash equivalence server garbage collection and
+ *_qa tasks
+To: philip.lorenz@bmw.de
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 05 Aug 2025 09:58:54 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17836
+ <bitbake-devel@lists.openembedded.org>; Tue, 05 Aug 2025 10:17:35 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17837
 
-Hi all,
+On Tue, 5 Aug 2025 at 11:58, Philip Lorenz via lists.openembedded.org
+<philip.lorenz=bmw.de@lists.openembedded.org> wrote:
+> we have deployed the clean up strategy proposed on IRC (mark all
+> unihashes with a corresponding central sstate entry as alive, then
+> sweep) for a couple of months and are observing that the *_qa tasks
+> (e.g. do_package_qa) contribute a significant amount of "stale" hash
+> equivalence entries to our database.
 
-we have deployed the clean up strategy proposed on IRC (mark all 
-unihashes with a corresponding central sstate entry as alive, then 
-sweep) for a couple of months and are observing that the *_qa tasks 
-(e.g. do_package_qa) contribute a significant amount of "stale" hash 
-equivalence entries to our database.
+I wonder if you can simply remove all package_qa entries once their
+amount exceeds a certain threshold. Such tasks with empty output are
+generally cheap to re-run.
 
-Technically this is expected as the tasks always produce the same 
-outhash (and are thus mapped to the same unihash every time they are 
-rebuilt) however the database schema currently does not seem to carry 
-enough metadata (e.g. a creation timestamp) to identify those unihash 
-entries and to mark them for removal.
+Also, if you are using multiple hosts with distinct uids/gids for the
+users running the build, then pre-walnascar there was a bug that
+prevented sstate reuse and multiplied unnecessary package_qa entries,
+so taking this fix may help:
 
-Are there any known strategies to address this?
+Author: Alexander Kanavin <alex@linutronix.de>
+Date:   Tue Feb 25 13:09:22 2025 +0100
 
-If not I see some possibilities to deal with this but I'd like to 
-collect some feedback before proposing an actual change:
+    classes/insane: do not leak host uid/gid into package_qa sstate signatures
 
-* Add a created column to the unihashes_v3 table and parametrize marking 
-to omit entries older than a certain timestamp.
-* Add a access time column to unihashes_v3. I do realize that this code 
-path is performance critical so this would involve some mechanism to 
-only update the access time of an entry once per day (similar to what 
-relatime does for file systems). The advantage of this would be more 
-sophisticated clean up strategies which keep all entries that have 
-actually been used in the past x days.
+    This prevented package_qa sstate from being reusable unless host uid/gid
+    values would  match exactly (and they unfortunately do on the
+yocto autobuilder
+    worker machines which all share a 'pokybuild' user).
 
-Philip
+    I noticed this when testing CDN sstate reuse, which otherwise works well.
 
--- 
-Philip Lorenz
-BMW Car IT GmbH, Software-Plattform, -Integration Connected Company, Lise-Meitner-Straße 14, 89081 Ulm
--------------------------------------------------------------------------
-BMW Car IT GmbH
-Management: Michael Böttrich, Chris Brandt, Christian Salzmann
-Domicile and Court of Registry: München HRB 134810
--------------------------------------------------------------------------
-
+Alex
 
