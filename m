@@ -1,359 +1,228 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <liezhi.yang@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C46CA0EC4
-	for <webhook@archiver.kernel.org>; Mon, 11 Aug 2025 15:49:27 +0000 (UTC)
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
- by mx.groups.io with SMTP id smtpd.web10.51723.1754927360381181129
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E47EFC87FCB
+	for <webhook@archiver.kernel.org>; Tue, 12 Aug 2025 03:50:31 +0000 (UTC)
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+ by mx.groups.io with SMTP id smtpd.web10.66632.1754970622206224312
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 11 Aug 2025 08:49:20 -0700
+ Mon, 11 Aug 2025 20:50:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=aDz6Lb58;
- spf=pass (domain: gmail.com, ip: 209.85.219.172, mailfrom: jpewhacker@gmail.com)
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e902849978bso3466409276.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 11 Aug 2025 08:49:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754927359; x=1755532159; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=F8uf5Xmo8wLt/eYLJaf1jCKQ+3RhWujE7GNasbcYGXs=;
-        b=aDz6Lb58aMzcHaqU+F8QnBnY2xUewzaQiU0keHjJbG9fhoZ4HTC3AJ/PhEuOU30I9Z
-         81Dzdl0Yg53hBzdIVy7+Us//h6sa10UI1mjTlzUMiQb61Hll5rsZEcHvPO54CadRs+lU
-         bFA95lfMZrM5I90e92rjjB1LQEIIVVgZa674oRqUWZ4hz+5+r9+YBtW1/xTn5GFRN52F
-         +YPRs34+a40rmP+RCtKnTTQRs4FnY5Dojo8MEEiqDHER7ZKbyIa2SFjsDOsYlu38wiNH
-         ddlA5mieS4uVQhjVFzmdofyJq7tlno/IK+n6WqcAT2iE7qeyfCdg8bjepZRT640kRhyp
-         BUVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754927359; x=1755532159;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F8uf5Xmo8wLt/eYLJaf1jCKQ+3RhWujE7GNasbcYGXs=;
-        b=i1w6Y33ijV/VRilMxLrFQNlXN7uE2KRsXHpp9IcEgKF1hsKtZfMToc30Av7vUOfVHp
-         AlzckWEh8miqDZdybZxEzcC4JVVmOpSKjumcSdR48J4OLREBs8KPpFZvWtG9oxmUlxU6
-         WkuctXNiq1iCeHMcdmxKTqtIHaEr5Zbp/dVbeaxqlnnCum/DBOTKLIUXGnky+NZOglrv
-         QMd7bqmZQO3bOUXJvoHjE9BHzZ4uibt2dUCcYIa/QMFAGeOeSvxW18fI0FKlcBT+OK9P
-         L2+J3l0zisfEgDcu93pdBaKB9ih1LlRaZi8z6c/zBGvlLZ9SD1Gfo3Un7ldeC3CXBhsv
-         lgfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZbF1f7Ak6lFblxNCXH2WTcq9JI1G9BUS7Gxy+OahaBo6eZBH0yVn8u4n9wCX+HaCbydFzcocffMAN2fSI@lists.openembedded.org
-X-Gm-Message-State: AOJu0YwZ0nFQhmz+MrkLnOLJ9pLGlME58x0aT2Zq/LQwVN41j3jqNCi8
-	5g9VG29GosXuFuWWFYcRpUJ0hvZ+b2t45s9LLBvJdiDpRUYPhQqMw4ik4I8/IAxvmrxI5JtGHxZ
-	jKfd5DCk/Z4WufM0Xi1G8uUlcc9I6G2Q=
-X-Gm-Gg: ASbGncupWi0R1I1Bm8BNmnZL6Gk248V0zCXJHAf8qk1oRyj3WDKcX44qTsrzxQcOb8P
-	3jX2EoQWPS/RI3khj0FNu6bX9sy7G8Jfeyg0jHyRA0Kf6oY3thVRQSVIRMPJC4FKFIGuKXWqFH5
-	H8UzP+IJ3fOkRAOM7eSGMoxodVfJPhrO+U+odhVLKoKeOCnqD/DdiWfJrdkDAjHYBpImGvFoP9U
-	GXgMsrsjf1Bm6pN8hS6IQ==
-X-Google-Smtp-Source: AGHT+IGGYqZoRPlW6WN0uwPSEmLen3dYWYxagDQ0/VgoZm4YagsD2v2HHCqiEdvvVCLFmRpOYAvcQl/6nZd4t9B53w4=
-X-Received: by 2002:a05:6902:6d11:b0:e8f:d7ca:d1be with SMTP id
- 3f1490d57ef6-e917a199decmr463289276.5.1754927359158; Mon, 11 Aug 2025
- 08:49:19 -0700 (PDT)
+ dkim=none (message not signed); spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=0319aaa3f0=liezhi.yang@windriver.com)
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 57C2WI18072133
+	for <bitbake-devel@lists.openembedded.org>; Mon, 11 Aug 2025 20:50:21 -0700
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02on2069.outbound.protection.outlook.com [40.107.95.69])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 48fvchg2d8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Aug 2025 20:50:21 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tD865CmEoydUuPILfJCH5EFzvfKC49O/NFTVbRdh1vyJCIdofqujiOVmvlVEuSwYMM5AWoXtq4toh35uN2rh+VjOE5SUhUk3z37rR7fifLmZXYNSzuN0Fq1nFwbm9t55wObT1r9WZA7RmSnj4yCphwYYijG45emnq8L6VIYcBw0zTE3geWUUJfQ5/5neAehOnoFXRrmx3iImClsUcisSxKfL5PKxTVzto6Vr9f3FT18NA46Inz8eT4ZO+jtFrKRYhg3BTOTdGuNouTq0GBblFfDw+3Lljre+sadTrNE1ZA5zV2zpExq2qB226U7P1/WbFfY5cz4hfs6VRnvVn3/8ag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9DExOytQdRi6gk+PLwwCASldd1buPIZJcpMUOO/s2/c=;
+ b=WoBxKxczkCNzSxkrkuYphiP7FjrwhZvsme1CUihvfN90CI1pHtKBIvmSiKLLVRS9UBwmGHzUv7CwRewgdJcWHFr0OnqASdxGqIafl372Og3yFvWtrGoY0r5P7VfaBKKdQ9YcwmfsLnNwujBv1N+GVEMzK8ZXygIxo7V/YEQCyohT+R5bze4tINgXcHUmTXjfesOf4MBfHjy8PSHY+s/T+QDvsPHrNb9YWbbFHyjxVnbOej1+g32wUDmFFYjVzOB4WJ67GnIr+JlzsOwk0Ewn1Ya7CXwWYlKhL5dxRjR1y/2q4mTDIpL2DsSB74mZRtMsLKNP5uWv61S/Tg3M73Ev2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from LV3PR11MB8531.namprd11.prod.outlook.com (2603:10b6:408:1b6::15)
+ by SN7PR11MB6557.namprd11.prod.outlook.com (2603:10b6:806:26f::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9009.21; Tue, 12 Aug
+ 2025 03:50:18 +0000
+Received: from LV3PR11MB8531.namprd11.prod.outlook.com
+ ([fe80::d341:6ff5:fce1:c6d]) by LV3PR11MB8531.namprd11.prod.outlook.com
+ ([fe80::d341:6ff5:fce1:c6d%5]) with mapi id 15.20.9009.021; Tue, 12 Aug 2025
+ 03:50:17 +0000
+Message-ID: <d749943b-dc5f-4ac8-9d31-01a8b99be2f0@windriver.com>
+Date: Tue, 12 Aug 2025 11:50:14 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [bitbake-devel] [PATCH v2 1/1] fetch2: try_mirror_url(): Skip
+ invalid local url
+To: bitbake-devel@lists.openembedded.org, alex.kanavin@gmail.com
+References: <cover.1754925741.git.liezhi.yang@windriver.com>
+ <e56a4f7e3c7bff7b86cecc32c2fcd43a63db0620.1754925741.git.liezhi.yang@windriver.com>
+Content-Language: en-US
+From: Robert Yang <liezhi.yang@windriver.com>
+In-Reply-To: <e56a4f7e3c7bff7b86cecc32c2fcd43a63db0620.1754925741.git.liezhi.yang@windriver.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2PR01CA0033.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::23) To LV3PR11MB8531.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::15)
 MIME-Version: 1.0
-References: <20250729144906.1665908-1-JPEWhacker@gmail.com>
- <CANNYZj-TMk4ktaPqC2EbS-k636cJfr3hyeZXp5rrEESi-ovZjw@mail.gmail.com>
- <CAJdd5GaNH=gP+ypmV31MLwYgF-xdT+e-E9rfW1JCgQis2PJtyA@mail.gmail.com>
- <DBY5WKIGG9UG.3DFOCYWME1YVA@wolber.net> <CANNYZj_7MebKw3iKvgRdKkpQvBW4a+4kdP8QZX_yWoY3DxN6TA@mail.gmail.com>
-In-Reply-To: <CANNYZj_7MebKw3iKvgRdKkpQvBW4a+4kdP8QZX_yWoY3DxN6TA@mail.gmail.com>
-From: Joshua Watt <jpewhacker@gmail.com>
-Date: Mon, 11 Aug 2025 09:49:07 -0600
-X-Gm-Features: Ac12FXzIv7GiTOMqjlRruwHbFCa2r1LCQdPCPmfFkYUS9nEsN9KIoBS6dgLd3gM
-Message-ID: <CAJdd5GZXsmby-n5XRX+U1-Hg66xricNt_oyAz0CG9mY89U+3Xg@mail.gmail.com>
-Subject: Re: [bitbake-devel][PATCH] cooker: Add layer-specific ignore for
- dangling appends
-To: Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: Chuck Wolber <chuck@wolber.net>, bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000d96f0b063c18dd90"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8531:EE_|SN7PR11MB6557:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2c561cf0-7304-4384-01ab-08ddd9535a2d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|4022899009|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info: 
+	=?utf-8?B?b29tVENJaUhqa21iMmtoeVJhZzMxK3o1SWpGYnpOZHRxdHRPRHp2NWZITkdF?=
+ =?utf-8?B?SlZWTnJSU3F5M1UxelBEOW1vN1J4eG5EUWswL1pKK1h0bDNHUFJFZGdrSDh2?=
+ =?utf-8?B?cEdaQVFreGRTOEZVMTkzWnpaLzNURWJBVmNGemFyaXptTmxnN0o3bXlMK3po?=
+ =?utf-8?B?SjB6aEY2dWxneCtKd3p4U0F3eTZWd0dDOEVZU0JsUHJVREV3cmRLUjNqclQ2?=
+ =?utf-8?B?eU1aV3pnbncyS2V5K2lvc21CSGxUek1HNEpsbnZhOVF1Ly9jV1hLSHIrU2Ry?=
+ =?utf-8?B?ZGtyeU5UMnhWd1hDTkpZMmFWcXFTc055d2xjaUprQm1jUXRFU1hlRWt2VjZM?=
+ =?utf-8?B?T2lDaUNUM1AxTDFFaHpNM0EzVzlmaHFKQkpvVWFmTXRGTit1RFhCR0JzSWc4?=
+ =?utf-8?B?aHZIMGRDT3hBOUFiODgxWjJaVm9rak5IL1JOSk05VktZQjVPNmpQNHpiMDc1?=
+ =?utf-8?B?QlpzQ0ZiQkpIMXdhWDVhazJpRjVHNjlsQjkyYUtENnNWZFJTVGZvUFhPbFhP?=
+ =?utf-8?B?ZFVvUTArTlVJdVdLR3FNT2NGbGJLUEZmSDBFblhvL3ZneE5CTVovRi9yZlky?=
+ =?utf-8?B?LzNObzFLOERFU0hyWmhIUFh2amZmYmJFUWZ5Uy9hTEl1a1cwOXpERFhPZFU3?=
+ =?utf-8?B?Kyt3bVhZd2tSRG9DUkpHK21HOGFDUUJiQlAzdGJlQW8xSm53R1N3djA2WWFQ?=
+ =?utf-8?B?TTBMSVlJMTNZSEt6aVpSNE1yK3VYSDI0aDJCVTJ4OXhiaXpta01tUG1NK01k?=
+ =?utf-8?B?SVh5TjV3Ri9LajdYaVRGZFdIcmtRazQ5WENPTzU0am9aQzhJdVVzNWl6VFVh?=
+ =?utf-8?B?bmJCNFJVWDU5Y3ZKNWxQdEk4Y3lHWmFqbWRKditjVWd3cWlCMWt6eHAxTjFz?=
+ =?utf-8?B?Mm4wMVhDZDRYekNUL2VNc2JpZHdDbzZPbUhRMUl2MEp3NjJXQVZCWFFOOXpG?=
+ =?utf-8?B?bEZ0U2RDZDk5dVN0WGgxSTN5RmpCY2RRM01OQkdwcTBZc0R5R2VJSUFQb3Zi?=
+ =?utf-8?B?RDhsN0V3SHh0Qm9ScXRGY1JqQVI5YVVjSEZvakkrNjZ0Y3ZUSWI3Q0g2c0lC?=
+ =?utf-8?B?bXdwVmtnOUlHTWZIOEhrUFpPVm1pOGNQRFlWWEdDWkd1RmJ5c1ByWWJ2ME4v?=
+ =?utf-8?B?SUlITmVlOGRLc0pDL0cvS1BNL0d1cDBETzBvem94eU5YQkpVVkRVSklhU09K?=
+ =?utf-8?B?aFpTUGdSenhrZXR4UDBiSnlaaFFQajh0UmpsUHJrWGhOTExTN2ZJeGJBZkwz?=
+ =?utf-8?B?TXV2TjhVZFJNRURrSGdxUXluU2RUSkdVU2cyNm1UbHUrYzlUQS8yTmNCeng5?=
+ =?utf-8?B?dkRscGkwSThJdW1VWkdKakdYU0xvSmZrK3c5elM2OUNWMFNKM0h2MHF1R0Nr?=
+ =?utf-8?B?U05hZVZNNHFNdExZeWhZU21obUNHcHZqYitDL1UzdUNDNW8vODZVd0w1a3dV?=
+ =?utf-8?B?ejFCSS9nUVlIMU5XRDAwbk9aQ0JjU0ttdmdsSUtkN29ZcVQyemFYU0R4V1Fy?=
+ =?utf-8?B?YU5uWWQvaDBDdjc3aHpyRjNBL1JJeGdJcklnN1BGZXNCT09CS1ZmaWFndkVF?=
+ =?utf-8?B?dHNUQjZJcUJ5Qks1elZZL3pYNmpkZUZkOHk5eXNrL1FxelVBTnpoTnp2Zmhp?=
+ =?utf-8?B?aGhaK2IraVpCWThPZGxscmI3c1hlSU5vZGc3MUxiM1h3TE1KUW9MZnRCSFMx?=
+ =?utf-8?B?aG9ydHpOakdZQ0Q1U1BxZlF5ekNXcTZhNmN4NzlRVGlzQk9nSFZReEU5dzJD?=
+ =?utf-8?B?UmFkZ1ZTVDRnODNHSGUveTRadTlHVlg3OUt0dXVaeU1FUjVCTmNDTS9yYTE0?=
+ =?utf-8?B?ZHF6bFloNlpuNlBlQnhaVjQ5dFhvUDBDNStMeTBvTDY3dmJBY1V5VE9reGpt?=
+ =?utf-8?Q?M8F+I+iFO2y4D?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8531.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(4022899009)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?K2l4U3JiRlhkaFBFbzQ2ZDBzZkdXY2ZrVEFoSFZGKzZlWk8rNHNNQjBrSTFw?=
+ =?utf-8?B?bEtoRGVGZ1dqR0xud05TZndJdzFaUUVvUVNOWWtvY216YlhIWGhxVVMxUmc2?=
+ =?utf-8?B?VGR2MW1kaVFOQzNidVYyVlhseUptRGVackFDUG5zVmVPMGprMGEwZkhnRzRL?=
+ =?utf-8?B?Y2Q1dkd1OFBKclJkZE1CTVdobzlObUY4ekRzY2o3cmJFbUFWUnNqT2tpbGJn?=
+ =?utf-8?B?LzlFYmhwcDE1MHJ3UzhBbGd0SWNyS0ZGNmQvSWpJeWRid3F4RndrdXY4WElE?=
+ =?utf-8?B?TldVbGpUVSt0YVhzWHhZY0M5QmNXdGVDR3JQMldlazZQVXFmQjhQMm1iRms0?=
+ =?utf-8?B?T0RabjA5enZ1NGd1blVGb2lwQXd0T0xHazBjRXpDVWN2R296UVBxbG1NUU4v?=
+ =?utf-8?B?RDJ3Y3FSaTBnRXE5ZTJwb2lJNk9YalU5NkhZclBZTUtCMDRianhLRDI0QW01?=
+ =?utf-8?B?M0U3N1ZtNUMxa0Q3Q3B5WFc5SmRMNzNYdXlpekU3R1E0Zkd5YkZVVFJZdUdF?=
+ =?utf-8?B?UmJZaXJWZjdiUkNIbE12TUdFRnlhOWxERWpOSzJ4T2xHU0xpRHpsb3NDanZu?=
+ =?utf-8?B?M0EvQW83SXp2OFRsQVlKZ2x2bm9EWWhjcy80L0N2TFFzU2N0NmtlbVdVY1RU?=
+ =?utf-8?B?aStjZjVXN1FrRllwMVhOT2grQXlRaXhKY09vWEdxaVlEOTZ5MFpZTzhydGpZ?=
+ =?utf-8?B?cjlVMkh1M1p0SDQxVFRhQ092NXRPdzNEWlNmWVExSHQ1Ymw0OTZvNVBXQ3JD?=
+ =?utf-8?B?QzNkQkNwVk1zU0hnQ213cFNJTjkxMU9DOWIvdGhSRDJkYkcxNlVPQnIybEZj?=
+ =?utf-8?B?Sm56TkJCN0w2cmR3YjJVM0xSdWU5eHpLOWFUeFZQZytZUXFydWx3VTdBNDAv?=
+ =?utf-8?B?Um0zNytreGladmgweHB4UHprbUpUb3BidzJhc283bndTZ3VoY28vWm5CamxJ?=
+ =?utf-8?B?dFlxdzFGa1NQd3RnTEhhaklHeTdxMm1LMUxKUmRYaWJQRkx2UVhuNVZmNDA3?=
+ =?utf-8?B?ZFZubDU5M3g0ZHM0cGNpZDIrNllRZDNBWmFLQXk1SElmS2xzd29SUFVXNXNl?=
+ =?utf-8?B?a1JDaWVFUWZaYzRQSnNWN2ZnVnBOQ2xuM0paNUZ3c3N6ZEUzeVJFMHFwZldR?=
+ =?utf-8?B?MFlCamRyR1BQTm5YV3dESG91dlROZU15b2FUb2lHYmN6K0p4WDR4c01BdnVp?=
+ =?utf-8?B?SDVpbkgxLy9oUXRKZUppK2xNbmdHcjRjZE10OWNXN2JxaVJhQVAyTjJTNlN2?=
+ =?utf-8?B?ZWc1YVBlK3FlVjViMDBMdlVjZEdWR2JrRUszMkNBQ1VvMVAwZjRPRkVtSTV0?=
+ =?utf-8?B?R1hoK29UeHB5amV3a3hzNG11TE5FYjFLYUtERTBDS3d6MDExUDFZUm9TbDhI?=
+ =?utf-8?B?NzBqYUNTYWpoNGgwVTgzMURrN2lBeXNMakcva2FyaXBHejZyUUNJck9jcGxV?=
+ =?utf-8?B?SVdCZmhIeEtMcDBhS0RpMkhCUTFxYk9KK0tVQ25XeTRDZzg4SG1hWTdsaEp2?=
+ =?utf-8?B?cnVKVCtZcUwxWXp5L1UvaE9xSnN6QUx4eVVINkttMWo2WWVUSVFHdkNGTGRl?=
+ =?utf-8?B?ZWhXN3RuZTFaSlZJbTQ4MkF6eVpLeWpTaWwzOUF1by9sNHpnVFkrcm9EZ0Ri?=
+ =?utf-8?B?NUNDU2xpODJoMWFJQ3BxM1J4YnI2dVpMRzdTTHN5UlpIdGRVMlpCaVRmYnlj?=
+ =?utf-8?B?dC9RQk5PZWJxYnF2bWpLU01vYWlvV1dpcW4vL0FqblNDLzVWKzRsRTYrZDND?=
+ =?utf-8?B?QW4xNWNZRVNmSFFhVzBwSmNXWHNyRVFoQ01TaVdpa0taUjgzeEpyYXJwQW05?=
+ =?utf-8?B?SWZIaVVVaDBMVWl3T1BiYThhcW85b04zbzBMY28xTFJCOCt1VnZOeHZEOUdG?=
+ =?utf-8?B?dThmSFVFMTd2elpyZ2dIODExWitkNFJMeVVsVUkvcWJkUVNMVWp6YkF0QVNP?=
+ =?utf-8?B?OGtGQUhCY1dLb0V6ZXVOeWFySnNpYWVhN21KWmk4RUt0U0lrNjNtTUl4VGtH?=
+ =?utf-8?B?WDhyalpjTTlmYlYyWWhMUmlOY3Q3SDhkOWwzdDAzM21xajVFQ081ZGNkMlhm?=
+ =?utf-8?B?bFRCVmpaOWJNd2NUUWdUVFN5ZEI5VVhNdzYrbGZyRFdXbGZzNVlCVWo0a0hs?=
+ =?utf-8?B?TGNsbjRvRFBhT2xHYVhsOU5ENGxUaUs1L05aUmpLTmVQTWNpRUEyaFVzNWNY?=
+ =?utf-8?B?YWc9PQ==?=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c561cf0-7304-4384-01ab-08ddd9535a2d
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8531.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2025 03:50:17.7801
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pN0tSEAXZKU3rT5d26sKdeDZ0NggZO6xoJe6AH7+EfTh1PHYreCiRxOq1kjNGujNa4WUPFxjAGSIG38ezCDIBS3isiy60k6ZP8VmEZ7cDq0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6557
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-GUID: A2BdI3hLaFuS94lhwoWLjqHhhWln5_B1
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEyMDAzMiBTYWx0ZWRfX8S7+vuNNCDmj
+ TRF64VKaWoQnVGNdMo3erNNpE3VPvpWGyuhtz9ZYg1OH58OGMZQfQWtgyKcJU8FrMpe3M+0cTXf
+ ChwqypUJpdGVOYk9+GP0YnKbKwGyrgOp9YNKh4ObzTZ2CIgqvNgmdK52nF151Aik13KtMCeA8Ms
+ eyNhDR/PjdxJ++Mz1r7QRnBUCps6fhCAmC1lagZAPI+SNIUTwkKdyB1tvyZf4wfmdzeA+aEg5bh
+ NEWD3cYI1X9S9Bf8b0Iu9wiGz8JLF0Dfxc7OrpXnaD0Q/kJv5geXlxI+qKm7v5ELD3+SIZ0f7vN
+ ZCQNOYeaJXilUPtnWw+PSRkFj1KvhxsGMgZyjxz3KKRhkj1bBh6EOyjxswIUT4=
+X-Proofpoint-ORIG-GUID: pxDbkxg41s7cMLFR5Pehc1bejChBwdI-
+X-Authority-Analysis: v=2.4 cv=RPGzH5i+ c=1 sm=1 tr=0 ts=689ab9fd cx=c_pps
+ a=QUtXFPAb5mKcHpv79NJyxA==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
+ a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
+ a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=Q4-j1AaZAAAA:8
+ a=t7CeM3EgAAAA:8 a=zUmbyakpW4_9nEET40kA:9 a=QEXdDO2ut3YA:10
+ a=9H3Qd4_ONW2Ztcrla5EB:22 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-12_01,2025-08-11_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 phishscore=0 malwarescore=0 adultscore=0 impostorscore=0
+ suspectscore=0 priorityscore=1501 clxscore=1015 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2507300000 definitions=firstrun
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 11 Aug 2025 15:49:27 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17863
+ <bitbake-devel@lists.openembedded.org>; Tue, 12 Aug 2025 03:50:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17864
 
---000000000000d96f0b063c18dd90
-Content-Type: text/plain; charset="UTF-8"
 
-> I am totally listening, but you (and Joshua) aren't actually saying much.
->
-> You do need to explain with sincerity and clarity and full details
-> what is this 'maintenance overhead' that is so burdensome that
-> branching becomes impossible. Pretty much every community layer
-> manages this, so why not your product layer?
->
->
-Ok.
 
-THE BACKGROUND:
+On 8/11/25 23:41, Robert Yang via lists.openembedded.org wrote:
+> From: Robert Yang <liezhi.yang@windriver.com>
+> 
+> There can be multiple PREMIRRORs each PREMIRROR contains specifics sources for
+> each layer, each recipe will try the PREMIRRORs one by one until succeed, but
+> the trying would be failed if the PREMIRROR doesn't contain the required
+> sources, so return it immediately to make log.do_fetch clean, and tt also can
+> fix a warning when BB_GIT_SHALLOW and is enabled and failed to fetch the source
+> from the PREMIRROR:
+> 
+> Fast shallow clone failed, try to skip fast mode now.
+> 
+> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+> ---
+>   bitbake/lib/bb/fetch2/__init__.py | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+> index 0ad987c596..1bab8f7f57 100644
+> --- a/bitbake/lib/bb/fetch2/__init__.py
+> +++ b/bitbake/lib/bb/fetch2/__init__.py
+> @@ -1067,6 +1067,10 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
+>       # Return of None or a value means we're finished
+>       # False means try another url
+>   
+> +    # Skip fetching it when the local url's path doesn't exist
+> +    if ud.parm.get('protocol', '') == 'file' and not os.path.exists(ud.path):
 
-We don't produce just one product, we produce many products simultaneously
-(north of 60), and we do so at scale. One of the things we highly value is
-the efficiency with which we can develop so many products at the same time.
-Developer efficiency is one of the primary reasons that we chose to use
-Yocto in the first place; while the first product we did had a bit of a
-steep learning curve, it was very clear that we could efficiently scale it
-out much better than competitors. Looking back, I think the project has
-actually exceeded my expectations for just how well we've been able to
-scale.
+Sorry, this patch is incorrect, I need check repo and repo.git because git works 
+with or without .git suffix. Will send a V3 for it.
 
-Highly valuing efficient with our development has a few side effects:
+// Robert
 
- 1) We do (more or less) trunk development on all our products at once.
-This means there is a single branch where we do all development work on all
-our products simultaneously, regardless of what version of upstream Yocto
-they are using, which BSP they are using etc. This not only means its easy
-for developers to find all products, but our CI also tests any change made
-against all products to make sure it doesn't break anything. We aren't
-willing to give up this development style and trade away the efficiencies
-this provides, which is why we can't simply branch our internal repos.
+> +        return False
+ > +>       if ud.lockfile and ud.lockfile != origud.lockfile:
+>           lf = bb.utils.lockfile(ud.lockfile)
+>   
+> 
+> 
+> 
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#17861): https://lists.openembedded.org/g/bitbake-devel/message/17861
+> Mute This Topic: https://lists.openembedded.org/mt/114649737/7304958
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [liezhi.yang@eng.windriver.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+> 
 
- 2) We like all our products to behave consistently, at least in userspace
-if not sooner. This means that as much as possible we configure our distro
-to act the same, regardless of Yocto release, BSP, etc. Similarly, if the
-BSP allows it, we like to use the same boot flow across all products, etc.
-Consistency allows our userspace developers to be more efficient because
-they know that the code they write should work the same regardless of which
-platform it's running on, the development and debugging experience is
-pretty much the same across all products, etc. It (mostly) eliminates the
-need for a developer to have to learn 60+ different ways of doing
-development. However, we still need to customize the behavior of many
-things (think distro policy settings, etc.), so we need a way to make sure
-we get as similar behavior in these customization as possible, even across
-multiple Yocto releases.
-
- 3) We don't diverge from master of upstream OE (or any other layer). We
-have internal mirrors of all the layers we use, and we have a branch for
-each Yocto version in those mirrors that we maintain. I will apply changes
-to these internal mirror branches for a given release (effectively forking
-it), but I *never* fork master (e.g. master always exactly matches upstream
-master). Any change that is made to a release branch in the mirror I
-require to exist on the master branch first (this is occasionally
-unpopular). The reason for this is so that as we move to newer releases, we
-aren't carrying along patches that are not upstreamed. Another way to think
-about this is that I'll more or less backport anything to a release branch,
-as long as the behavior matches master. I wouldn't say this is entirely
-ideal, but it does IMHO strike the proper balance between allowing us to do
-trunk development and not diverging from upstream in the long run.
-
-THE PROBLEM:
-
-Hopefully, that sets the stage for *why* we do things the way that we do,
-and now we can look a concrete example of why we'd prefer to allow dangling
-bbappends. Here is the list of bbappend we use in our disto layer for
-wpa-supplicant:
-
-  wpa-supplicant_2.%.bbappend
-  wpa-supplicant_2.10.bbappend
-  wpa-supplicant_2.11.bbappend
-  wpa-supplicant_2.5.bbappend
-  wpa-supplicant_2.6.bbappend
-  wpa-supplicant_2.7.bbappend
-  wpa-supplicant_2.9.bbappend
-  wpa-supplicant-CHIP.bbappend
-
-The primary purpose here is to configure wpa-supplicant based on our
-product requirements, and remember that we want consistent behavior of
-wpa-supplicant across all products. As such, we put as much of the
-configuration as we can into wpa-supplication_2.%.bbappend so that it
-applies to all wpa-supplicants. However, it's simply not possible to use
-the same configuration across all wpa-supplicant versions; new options are
-added, old one removed etc. so some configuration changes can only be
-applied to specific version, or some versions need a patch to behave like
-the latest version, etc. Finally, some BSPs choose to provide their own
-wpa-supplicant recipe, and those have to be configured also, which is what
-the wpa-supplicant-CHIP.bbappend stands for.
-
-From the perspective of dangling bbappends, this is awful. However, from
-the perspective of our developers, this is pretty efficient. Our developers
-can go to a single directory and see *all* the distro changes for all
-versions of wpa-supplicant. If multiple versions need to share a config
-file (this happens frequently), they can easily do that since they all live
-in the same directory. It's much easier for our developers to make correct
-changes, and understand the implication of changes made in this directory.
-Overall, we've been happy to trade off dangling bbappends for this.
-
-A POSSIBLE SOLUTION:
-
-For completeness, since it has appeared that upstream is unwilling to
-accommodate this, we have tried to work around this. The approach is to
-make our conf/layer.conf look like this:
-
-BBFILES += " \
-     ${LAYERDIR}/recipes-*/*/*.bb \
-     ${LAYERDIR}/recipes-*/*/*.bbappend \
-     ${LAYERDIR}/yocto-${LAYERSERIES_CORENAMES}/recipes-*/*/*.bbappend \
-     "
-
-Effectively placing the Yocto version specific bbappends into their own
-directory. However, this alone is insufficient because we also have to
-account for dangling bbappends in layers that might not be present in a
-given product (e.g. because it doesn't use a specific BSP). This
-effectively means using dynamic layers is forced in order to prevent
-dangling bbappends, however it gets worse when you have dynamic layers that
-have version specific bbappends, because then we end up with something like
-this:
-
-BBFILES_DYNAMIC += " \
-    raspberrypi:${LAYERDIR}/dynamic-layers/raspberrypi/*/*/*.bb \
-    raspberrypi:${LAYERDIR}/dynamic-layers/raspberrypi/*/*/*.bbappend \
-
-raspberrypi:${LAYERDIR}/dynamic-layers/yocto-${LAYERSERIES_CORENAMES}/raspberrypi/*/*/*.bbappend
-\
-    "
-
-This approach (or other similar to it) are certainly better than branching
-since we can still do trunk development, but what this effectively doing is
-placing each bbappend in it's own directory, so instead of looking in a
-single place to understand how we are configuring wpa-supplicant, we now
-must look in no less than 8 places, and probably more since we'd have to
-look in all the places a bbappend _might_ be instead of all the places that
-_actually_ have one. Also, doing this makes it much more difficult to share
-a common config file across multiple versions, since the bbappends are all
-in separate directories.
-
-This might be what we'll do if upstream refuses to allow the dangling
-bbappends.... but we'd still just prefer to have the dangling bbappends as
-the lesser of two evils.
-
-FINAL THOUGHTS:
-
-Looking behind the curtain a little, my struggle with this is that there is
-some pressure to fork master (and break rule #3) so that we can continue to
-have the developer efficiency we are accustom to, so I'm probably going to
-have some hard conversions about where we go from here. That's not really
-upstreams problem, but I wanted to shed some light on the ramifications of
-these types of changes.
-
-Hopefully that accurately outlines our struggle here and why we would like
-this feature.
-
-Thanks
-Joshua Watt
-
---000000000000d96f0b063c18dd90
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><br></div><div class=3D"gmail_quote gmail=
-_quote_container"><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px=
- 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-I am totally listening, but you (and Joshua) aren&#39;t actually saying muc=
-h.<br>
-<br>
-You do need to explain with sincerity and clarity and full details<br>
-what is this &#39;maintenance overhead&#39; that is so burdensome that<br>
-branching becomes impossible. Pretty much every community layer<br>
-manages this, so why not your product layer?<br><br></blockquote><div><br><=
-/div><div>Ok.</div><div><br></div><div>THE BACKGROUND:</div><div><br></div>=
-<div>We don&#39;t produce just one product, we produce many products simult=
-aneously (north of 60), and we do so at scale. One of the things we highly =
-value is the efficiency with which we can develop so many products at the s=
-ame time. Developer efficiency is one of the primary reasons that we chose =
-to use Yocto in the first place; while the first product we did had a bit o=
-f a steep learning curve, it was very clear that we could efficiently scale=
- it out much better than competitors. Looking back, I think the project has=
- actually exceeded my expectations for just how well we&#39;ve been able to=
- scale. <br></div><div><br></div><div>Highly valuing efficient with our dev=
-elopment has a few side effects:</div><div><br></div><div>=C2=A01) We do (m=
-ore or less) trunk development on all our products at once. This means ther=
-e is a single branch where we do all development work on all our products s=
-imultaneously, regardless of what version of upstream Yocto they are using,=
- which BSP they are using etc. This not only means its easy for developers =
-to find all products, but our CI also tests any change made against all pro=
-ducts to make sure it doesn&#39;t break anything. We aren&#39;t willing to =
-give up this development style and trade away the efficiencies this provide=
-s, which is why we can&#39;t simply branch our internal repos.</div><div><b=
-r></div><div>=C2=A02) We like all our products to behave consistently, at l=
-east in userspace if not sooner. This means that as much as possible we con=
-figure our distro to act the same, regardless of Yocto release, BSP, etc. S=
-imilarly, if the BSP allows it, we like to use the same boot flow across al=
-l products, etc. Consistency allows our userspace developers to be more eff=
-icient because they know that the code they write should work the same rega=
-rdless of which platform it&#39;s running on, the development and debugging=
- experience is pretty much the same across all products, etc. It (mostly) e=
-liminates the need for a developer to have to learn 60+ different ways of d=
-oing development. However, we still need to customize the behavior of many =
-things (think distro policy settings, etc.), so we need a way to make sure =
-we get as similar behavior in these customization as possible, even across =
-multiple Yocto releases.</div><div><br></div><div>=C2=A03) We don&#39;t div=
-erge from master of upstream OE (or any other layer). We have internal mirr=
-ors of all the layers we use, and we have a branch for each Yocto version i=
-n those mirrors that we maintain. I will apply changes to these internal mi=
-rror branches for a given release (effectively forking it), but I *never* f=
-ork master (e.g. master always exactly matches upstream master). Any change=
- that is made to a release branch in the mirror I require to exist on the m=
-aster branch first (this is occasionally unpopular). The reason for this is=
- so that as we move to newer releases, we aren&#39;t carrying along patches=
- that are not upstreamed. Another way to think about this is that I&#39;ll =
-more or less backport anything to a release branch, as long as the behavior=
- matches master. I wouldn&#39;t say this is entirely ideal, but it does IMH=
-O strike the proper balance between allowing us to do trunk development and=
- not diverging from upstream in the long run.</div><div><br></div><div>THE =
-PROBLEM:</div><div><br></div><div> Hopefully, that sets the stage for *why*=
- we do things the way that we do, and now we can look a concrete example of=
- why we&#39;d prefer to allow dangling bbappends. Here is the list of bbapp=
-end we use in our disto layer for wpa-supplicant:</div><div></div><div><br>=
-</div><div>=C2=A0 wpa-supplicant_2.%.bbappend</div><div></div><div>=C2=A0 w=
-pa-supplicant_2.10.bbappend<br>=C2=A0 wpa-supplicant_2.11.bbappend<br>=C2=
-=A0 wpa-supplicant_2.5.bbappend<br>=C2=A0 wpa-supplicant_2.6.bbappend<br>=
-=C2=A0 wpa-supplicant_2.7.bbappend<br>=C2=A0 wpa-supplicant_2.9.bbappend<br=
->=C2=A0 wpa-supplicant-CHIP.bbappend<br></div><div><br></div><div>The prima=
-ry purpose here is to configure wpa-supplicant based on our product require=
-ments, and remember that we want consistent behavior of wpa-supplicant acro=
-ss all products. As such, we put as much of the configuration as we can int=
-o wpa-supplication_2.%.bbappend so that it applies to all wpa-supplicants. =
-However, it&#39;s simply not possible to use the same configuration across =
-all wpa-supplicant versions; new options are added, old one removed etc. so=
- some configuration changes can only be applied to specific version, or som=
-e versions need a patch to behave like the latest version, etc. Finally, so=
-me BSPs choose to provide their own wpa-supplicant recipe, and those have t=
-o be configured also, which is what the wpa-supplicant-CHIP.bbappend stands=
- for.</div><div><br></div><div>From the perspective of dangling bbappends, =
-this is awful. However, from the perspective of our developers, this is pre=
-tty efficient. Our developers can go to a single directory and see *all* th=
-e distro changes for all versions of wpa-supplicant. If multiple versions n=
-eed to share a config file (this happens frequently), they can easily do th=
-at since they all live in the same directory. It&#39;s much easier for our =
-developers to make correct changes, and understand the implication of chang=
-es made in this directory. Overall, we&#39;ve been happy to trade off dangl=
-ing bbappends for this.</div><div><br></div><div></div><div>A POSSIBLE SOLU=
-TION:</div><div><br></div><div>For completeness, since it has appeared that=
- upstream is unwilling to accommodate this, we have tried to work around th=
-is. The approach is to make our conf/layer.conf look like this:<br><br>BBFI=
-LES +=3D &quot; \</div><div>=C2=A0=C2=A0=C2=A0=C2=A0 ${LAYERDIR}/recipes-*/=
-*/*.bb \<br>=C2=A0 =C2=A0=C2=A0 ${LAYERDIR}/recipes-*/*/*.bbappend \<br>=C2=
-=A0 =C2=A0=C2=A0 ${LAYERDIR}/yocto-${LAYERSERIES_CORENAMES}/recipes-*/*/*.b=
-bappend \<br>=C2=A0 =C2=A0=C2=A0 &quot;<br></div><div><br></div><div>Effect=
-ively placing the Yocto version specific bbappends into their own directory=
-. However, this alone is insufficient because we also have to account for d=
-angling bbappends in layers that might not be present in a given product (e=
-.g. because it doesn&#39;t use a specific BSP). This effectively means usin=
-g dynamic layers is forced in order to prevent dangling bbappends, however =
-it gets worse when you have dynamic layers that have version specific bbapp=
-ends, because then we end up with something like this:<br><br>BBFILES_DYNAM=
-IC +=3D &quot; \<br>=C2=A0 =C2=A0 raspberrypi:${LAYERDIR}/dynamic-layers/ra=
-spberrypi/*/*/*.bb \<br>=C2=A0 =C2=A0 raspberrypi:${LAYERDIR}/dynamic-layer=
-s/raspberrypi/*/*/*.bbappend \<br>=C2=A0 =C2=A0 raspberrypi:${LAYERDIR}/dyn=
-amic-layers/yocto-${LAYERSERIES_CORENAMES}/raspberrypi/*/*/*.bbappend \<br>=
-=C2=A0=C2=A0=C2=A0 &quot;</div><div><br></div><div>This approach (or other =
-similar to it) are certainly better than branching since we can still do tr=
-unk development, but what this effectively doing is placing each bbappend i=
-n it&#39;s own directory, so instead of looking in a single place to unders=
-tand how we are configuring wpa-supplicant, we now must look in no less tha=
-n 8 places, and probably more since we&#39;d have to look in all the places=
- a bbappend _might_ be instead of all the places that _actually_ have one. =
-Also, doing this makes it much more difficult to share a common config file=
- across multiple versions, since the bbappends are all in separate director=
-ies.</div><div><br></div><div></div><div>This might be what we&#39;ll do if=
- upstream refuses to allow the dangling bbappends.... but we&#39;d still ju=
-st prefer to have the dangling bbappends as the lesser of two evils.</div><=
-div><br></div><div>FINAL THOUGHTS:</div><div><br></div><div>Looking behind =
-the curtain a little, my struggle with this is that there is some pressure =
-to fork master (and break rule #3) so that we can continue to have the deve=
-loper efficiency we are accustom to, so I&#39;m probably going to have some=
- hard conversions about where we go from here. That&#39;s not really upstre=
-ams problem, but I wanted to shed some light on the ramifications of these =
-types of changes.</div><div><br></div><div>Hopefully that accurately outlin=
-es our struggle here and why we would like this feature.<br><br></div><div>=
-Thanks<br></div><div>Joshua Watt</div><div><br></div></div></div>
-
---000000000000d96f0b063c18dd90--
 
