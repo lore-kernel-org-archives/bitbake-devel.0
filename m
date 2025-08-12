@@ -2,65 +2,67 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E50CC87FCB
-	for <webhook@archiver.kernel.org>; Tue, 12 Aug 2025 09:12:53 +0000 (UTC)
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
- by mx.groups.io with SMTP id smtpd.web11.69585.1754989967366294338
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9A9C87FCB
+	for <webhook@archiver.kernel.org>; Tue, 12 Aug 2025 09:29:23 +0000 (UTC)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web10.70378.1754990956711848717
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 12 Aug 2025 02:12:47 -0700
+ Tue, 12 Aug 2025 02:29:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=C9pxegNH;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3b7834f2e72so2549998f8f.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 12 Aug 2025 02:12:46 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=SnEV8sP8;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3b8db5e9b35so3127710f8f.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 12 Aug 2025 02:29:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1754989965; x=1755594765; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1754990955; x=1755595755; darn=lists.openembedded.org;
         h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i+AaPC0km9jJAzd+gK1aZvy0UPILW4Mt0vGGQfRecIE=;
-        b=C9pxegNHtjdovhw3zGP9cxC++QaDmoTm0jH8ZUXm9YXKp+nyOY24tOzaPTs4trlYzO
-         e82yidzFunA5+FhXowjFJbEJocnG6AV3J3NvPUAo6G0MuKRs4satAKc7cKVsavIfnU1c
-         EwObcHtbpIr/7Mg0Mkal3DHxRS6QC6WA7IIpQ=
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=TwPBw9UF4jaI2Lktl1LCp9eBIJ9j6z4842Lluni3VPs=;
+        b=SnEV8sP8hJzt41aqbj9mQ435ieeS705AwQBNvLKym9jEL13rVF7FvgyRx1DpONJbv0
+         qPyCrWu9fdD/ElBbO/UNgGyb9nzmntJfXggukkTOQVcn0Efgw8iTZKbBDxxAI9i4Dvda
+         55DhK31WgSQtYRQDlPvA3CyfyOenYAvIev+hw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754989965; x=1755594765;
+        d=1e100.net; s=20230601; t=1754990955; x=1755595755;
         h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=i+AaPC0km9jJAzd+gK1aZvy0UPILW4Mt0vGGQfRecIE=;
-        b=pDSovcZJVnGWlqJb4tBTzK5vuJkzl/I4IsabPBnU82M2VDGiBVA3Xz9vzfbWdGIh6/
-         6HbOYtMHfMGWvVVNZzz93Jt1OpbXhhQA4UOrSpD30Le+IIb84mzcUkH981BmHWX8QuGb
-         J99zQn2kkzw5nRXQPFJnn7JXXULpxkGJs+GgT9SYMPv5eMGi92vj63e818AlErfneLlk
-         WMsO/MAHa3FaQWv3b2hOBqlqYHBYKHY2CGGWbTqYx3gk+9mUMyIYJL6bxVNcEuRu9d47
-         AspwWuqijk4m/OK6cGdhQ2NYZB9vLfmfuxrKAReGmKa5y8B8mcvunI1BcUBqWZiSwC3O
-         DzyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVtY2Ez/UGr1PkrF3hUWLRpXZuuNgqKUht+NCMT7a6Ixxn/QYTBzEv/kVE7YCSBuOUDib08XxomJNy+jUNs@lists.openembedded.org
-X-Gm-Message-State: AOJu0YyleyIkFWt+PWjv6iTfQgMhhFx0qoUs/aRa//FFq/xn+qcZy6VT
-	46eV4iPykPZb3KaFaQPupiwctKIBeDxfEGGEi+9qnXuC1t2nOOpniM5MNP7yvg+YA5bbJJqYx0R
-	O460P
-X-Gm-Gg: ASbGncuZcxPjNU2CI9bJZ563o6opNO8q4VO8tst2kfIacjjc3fcEv71X2rOPUeWjJUQ
-	CcWJhYtSTQAuRzZ8QxAhqycTb8+ZOvBVY+p93x0bF/o6zolTK5GAS1Qa9CESkXdmFmvfkRb5B60
-	ZOuxQkN4NgB2D5Uf0/gd81QmAwNszLaiJBOb508nv31Nh3CLStP1J4vAq1KW+A16lUHgICB4BAt
-	OOi1Gzc8UYws021oJWiI20TirIC5Lvo7rJjk4PbYZ2nUkaeEaTEZ5l7s2O/ZYtZcMNrgZgX4bCw
-	FksNbqlm31db+XIW28WgZ9F2GN4wCZ5sVLaMPnPDjaHCVqwldceNmlg60E6PzyNkN7At6Hsz0Q2
-	RDjPDCgIep68jN22x2dMBXDHPdpXu2Lw81xmGvIICMVc8oAwidPXHY9k0YpHxsTpiG7/2f4VHYr
-	VOknvnTHN0AD4=
-X-Google-Smtp-Source: AGHT+IH8r25rTwKEXbYMWDY/gs6ZHmdsIZkWxUlTzp6EqjqO1E32dW7CYkb38Qa94b0TZFdlBkT3TQ==
-X-Received: by 2002:a5d:5849:0:b0:3b8:f8e7:7fea with SMTP id ffacd0b85a97d-3b910fceceemr2101601f8f.7.1754989965207;
-        Tue, 12 Aug 2025 02:12:45 -0700 (PDT)
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TwPBw9UF4jaI2Lktl1LCp9eBIJ9j6z4842Lluni3VPs=;
+        b=G9sIFBkukrznB0XyAacHHPQBnsQParDU1yFF0a2bm+XL77z4TK7CEv/sLhI5HaZDJg
+         VrUxt9T+FSPcVB4ooFhxj5Z17MV/3iUeGfMwhWCcEwG3d0vTEby3RtMyAFrifGirG/TC
+         SI/TvG/phrTaQPIdA+L6FhbmoKNyWu/wlPn+bfwxB0vmIY82brVndlqR1aSnSYiQzjwt
+         gvF9jh3EC+6lK9+dwxr9wYvS+fI3R/jPaLP/mjbdr8bo88tlvIyjvUZDKiKYUhDZpf0L
+         mWklbDyJVjx+3LAo2FqUqopHW0Npkrnn/T8MGBgHK0z9U3xk8kfK646oJ2Czeh/jNGgz
+         RvRQ==
+X-Gm-Message-State: AOJu0Yx27RQIjPhN68OArM6LYTq3swVx4cDRwgbtSeSaFv2P8tyqm+Ny
+	EZaxKdEQ9dg0uE4UharVURJX2uR5+RigQ8oNL/poM0R9G6bdApvHIhqfn8ivUGrmaIs=
+X-Gm-Gg: ASbGncspM+FyURr0yeb5evUug0cHpXvDYeISwwVCW3D5TQv76OwpzImHZvmNRXoWojI
+	OuGUB7DH1OTgO+r7PKcSQ1T+aHgklHsomWZscnrfFW2fjRp8zUZmac0PhYtjgBHSKozxkona2nK
+	m7sTk2j30dLYJl1cEuov2atzv71ujiyRfBHhpoizBhfF0qSq0uya0cz15070/VtqliyeCS9vK4L
+	pKlBQW0RPKe6Z2/6PDaeZtQMjaUxvW9whs/IurFLrT7ZtILkalxktcgGkcA4K9YyS05oEIiYh4f
+	VBY0W4605bcQM8J/q1fFeh7JsoudOuAabdkcdVhfOVjNmkuG+troXeW+nyH1dmfKKKtpZsEWHNY
+	HT5xq+/29rrf3s5IQNUe2Vo0j6TZsuBWlZLhj8VOKZ3tTuKoIizKXh7Gb6K5vmFBBfFihHixcjO
+	RJcVJRGvCIlbI=
+X-Google-Smtp-Source: AGHT+IH2kxIdbhJj2qfV6MkshrMpxmgomd7PhAhLk5GE17ND7eMTZ33cSrtG5wkYuR8L9c0YT/Rs+A==
+X-Received: by 2002:a05:6000:310d:b0:3a5:3b03:3bc6 with SMTP id ffacd0b85a97d-3b911007a82mr2417202f8f.28.1754990955028;
+        Tue, 12 Aug 2025 02:29:15 -0700 (PDT)
 Received: from ?IPv6:2001:8b0:aba:5f3c:89f2:883f:9153:ef6b? ([2001:8b0:aba:5f3c:89f2:883f:9153:ef6b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-459de0d4cf1sm352299835e9.13.2025.08.12.02.12.44
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-459e583f9fcsm283029335e9.4.2025.08.12.02.29.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Aug 2025 02:12:44 -0700 (PDT)
-Message-ID: <2f5167e9cbc03b7235db9268d4a3a9292c773f8a.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH v3 1/1] fetch2: try_mirror_url(): Skip
- invalid local url
+        Tue, 12 Aug 2025 02:29:14 -0700 (PDT)
+Message-ID: <7783e54b446045c53f0583ffbf5275bea6a4b88e.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel][PATCH] cooker: Add layer-specific ignore for
+ dangling appends
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: liezhi.yang@windriver.com, bitbake-devel@lists.openembedded.org
-Date: Tue, 12 Aug 2025 10:12:43 +0100
-In-Reply-To: <fc732bac7b8fc7535e9cbacac05d8b6e118d8e73.1754985648.git.liezhi.yang@windriver.com>
-References: <cover.1754985648.git.liezhi.yang@windriver.com>
-	 <fc732bac7b8fc7535e9cbacac05d8b6e118d8e73.1754985648.git.liezhi.yang@windriver.com>
+To: chuck@wolber.net, JPEWhacker@gmail.com, Alexander Kanavin
+	 <alex.kanavin@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+Date: Tue, 12 Aug 2025 10:29:13 +0100
+In-Reply-To: <DBY5WKIGG9UG.3DFOCYWME1YVA@wolber.net>
+References: <20250729144906.1665908-1-JPEWhacker@gmail.com>
+	 <CANNYZj-TMk4ktaPqC2EbS-k636cJfr3hyeZXp5rrEESi-ovZjw@mail.gmail.com>
+	 <CAJdd5GaNH=gP+ypmV31MLwYgF-xdT+e-E9rfW1JCgQis2PJtyA@mail.gmail.com>
+	 <DBY5WKIGG9UG.3DFOCYWME1YVA@wolber.net>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.0-1 
@@ -68,78 +70,94 @@ MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 12 Aug 2025 09:12:53 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17868
+ <bitbake-devel@lists.openembedded.org>; Tue, 12 Aug 2025 09:29:23 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17869
 
-On Tue, 2025-08-12 at 01:04 -0700, Robert Yang via
-lists.openembedded.org wrote:
-> From: Robert Yang <liezhi.yang@windriver.com>
+On Sat, 2025-08-09 at 12:59 -0700, Chuck Wolber via lists.openembedded.org =
+wrote:
+> On Tue Jul 29, 2025 at 7:59 AM PDT, Joshua Watt via lists.openembedded.or=
+g
+> wrote:
+> > On Tue, Jul 29, 2025 at 8:57=E2=80=AFAM Alexander Kanavin <alex.kanavin=
+@gmail.com>
+> > wrote:
+> >=20
+> > > On Tue, 29 Jul 2025 at 16:49, Joshua Watt via lists.openembedded.org
+> > > <JPEWhacker=3Dgmail.com@lists.openembedded.org> wrote:
+> > > >=20
+> > > > Our setup is that we have a "disto" layer that we need to maintain =
+against
+> > > > several version of Yocto at once. In this disto layer, we make poli=
+cy
+> > > > choices that sometimes are tied to a specific version of a recipe f=
+ound in
+> > > > a specific version of Yocto using a bbappend; and often that versio=
+n is
+> > > > only in one or two Yocto versions, which means that the bbappend wi=
+ll be
+> > > > dangling in the others.
+> > >=20
+> > > This is where the weak point of the argument is. Yocto does not make
+> > > concessions to layers that attempt to be compatible across yocto rele=
+ases,
+> > > patches that help such layers had been previously rejected, and this =
+would
+> > > create a precedent to the contrary.
 >=20
-> There can be multiple PREMIRRORs each PREMIRROR contains specifics source=
-s for
-> each layer, each recipe will try the PREMIRRORs one by one until succeed,=
- but
-> the trying would be failed if the PREMIRROR doesn't contain the required
-> sources, so return it immediately to make log.do_fetch clean, and tt also=
- can
-> fix a warning when BB_GIT_SHALLOW and is enabled and failed to fetch the =
-source
-> from the PREMIRROR:
+> Yes, but perhaps some consideration is merited? This is a perennial probl=
+em for
+> OEMs with long lived products.
 >=20
-> WARNING: Fast shallow clone failed, try to skip fast mode now.
 >=20
-> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> ---
-> =C2=A0bitbake/lib/bb/fetch2/__init__.py | 16 ++++++++++++++++
-> =C2=A01 file changed, 16 insertions(+)
+> > > It's always possible to make a branch.
 >=20
-> diff --git a/bitbake/lib/bb/fetch2/__init__.py
-> b/bitbake/lib/bb/fetch2/__init__.py
-> index 0ad987c596..6149b1726a 100644
-> --- a/bitbake/lib/bb/fetch2/__init__.py
-> +++ b/bitbake/lib/bb/fetch2/__init__.py
-> @@ -1067,6 +1067,22 @@ def try_mirror_url(fetch, origud, ud, ld,
-> check =3D False):
-> =C2=A0=C2=A0=C2=A0=C2=A0 # Return of None or a value means we're finished
-> =C2=A0=C2=A0=C2=A0=C2=A0 # False means try another url
-> =C2=A0
-> +=C2=A0=C2=A0=C2=A0 # Skip fetching it when the local url's path doesn't =
-exist
-> +=C2=A0=C2=A0=C2=A0 if ud.parm.get('protocol', '') =3D=3D 'file':
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 found =3D False
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 check_paths =3D [ud.path]
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # Git works with or without '=
-.git' suffix
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ud.path.endswith('.git'):
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 check=
-_paths.append(ud.path[:-4])
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 check=
-_paths.append('%s.git' % ud.path)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for check_path in check_paths=
-:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if os=
-.path.exists(check_path):
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 found =3D True
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 break
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if not found:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retur=
-n False
-> +
-> =C2=A0=C2=A0=C2=A0=C2=A0 if ud.lockfile and ud.lockfile !=3D origud.lockf=
-ile:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 lf =3D bb.utils.lockfile=
-(ud.lockfile)
+> While this is logically correct, it is also an unreasonable response.
+>=20
+> The argument is being made with sincerity, clarity, and consistency. I th=
+ink it
+> there is a lot to be gained by taking more time to understand it.
+>=20
+>=20
+> > Branching isn't an option for us; we are unwilling to add the maintenan=
+ce
+> > overhead of dealing with that.
+>=20
+> You are not alone in this respect. Perhaps we need to find a better way t=
+o
+> explain this to the YP community? I believe adequate consideration of the
+> problem will improve more than just the plight of OEMs with long lived
+> products.
 
-Absolutely not.
+We took a decision to drop dangling bbappend support. We did that for
+very specific reasons after discussion at the time. It wasn't a
+universally popular decision but the issues that they caused and the=20
+improvements dropping them allowed seemed attractive. The decision was
+made and acted upon.
 
-This is adding git specific code into the main fetcher functions and
-the whole idea is this kind of thing is meant to be abstracted.
+Now, we're being asked to effectively reverse that decision (with a
+slightly different implementation we could have switched to at the time
+but chose not to).
 
-The fetcher logging is a mess and we should probably be improving that
-up rather than trying to add special cases to the code.
+It is clear that the usecase this is being asked for is not something
+we've officially supported, ever, and that has been really clear.
+
+The precedent here is problematic if I do take this, since whether we
+officially say so or not, we're effectively unofficially supporting
+that use case.
+
+We have two YP platinum members saying "we really want this".
+Ironically we also have the wider YP membership telling me to say "no"
+more often and more forcefully.
+
+To me, this isn't an issue of discussing the pros/cons as personally,
+I'm well aware of the trade offs on both sides of this.
+
+Rather than the technical merits, the main concern for me is that I do
+want to encourage project adoption and use and to push back against
+this will hurt that and also potentially hurt some of our key
+developers standing within their companies. As such, I don't feel like
+I may have a lot of choice but to take this, but perhaps not for the
+reasons people expect.
 
 Cheers,
 
