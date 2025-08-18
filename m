@@ -2,73 +2,70 @@ Return-Path: <mohamedaymanworkspace2@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FEFCA0EE4
-	for <webhook@archiver.kernel.org>; Mon, 18 Aug 2025 16:09:18 +0000 (UTC)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.web10.79615.1755533348580399895
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A23CA0ED1
+	for <webhook@archiver.kernel.org>; Mon, 18 Aug 2025 16:33:48 +0000 (UTC)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web11.80198.1755534823316459946
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 18 Aug 2025 09:09:08 -0700
+ Mon, 18 Aug 2025 09:33:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=c0MYk41R;
- spf=pass (domain: gmail.com, ip: 209.85.128.53, mailfrom: mohamedaymanworkspace2@gmail.com)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-45a1b05d252so29822455e9.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 18 Aug 2025 09:09:08 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=R55AFjrt;
+ spf=pass (domain: gmail.com, ip: 209.85.128.49, mailfrom: mohamedaymanworkspace2@gmail.com)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-45a1b00f187so19200905e9.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 18 Aug 2025 09:33:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755533346; x=1756138146; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
+        d=gmail.com; s=20230601; t=1755534821; x=1756139621; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
         bh=h7ognQEhZIU8WDaS1JsI8k88HwHKFIxWxtu/HxsCgAw=;
-        b=c0MYk41RVpUJVK1Gl46KtAovtnyKPb3myhSkGNsH8G4cEm7nVcx3/UKyXNq0+z4HqA
-         u0pS12GCkdc76qBcikH4t3KERmS59ILlqOonIXQbd7u1esxeE2TInsMvR6j5L32wnuF/
-         tmTF2T2nStZPLSSnY5YmaN66qNtQKUBX9/VBWQGTd2Nu8FAgBTzZgXkIa2VLJt3fRXWl
-         VpU/cIAWOim0SxMZF0m5niFLoOGEl81EBCR8luMvWpEjdpbQFCsC+uSvyCJhLb2kvuep
-         Ud7PLjo4IHGMWLpxH7ur7JoChdDLmA9p3TpROA+YQa0LC6pgL/TYjDmAVXdigsCi+ib5
-         W7xA==
+        b=R55AFjrtc3L8Uyx4NOjqhHHG/QdD9C5stQ+K3DgEYjSvoG+IvKBvOf12MK6+M/lG11
+         RC5W879eVKg9EbZOMcQ7w5RhHSRtiGJ+P+TGjbtA18UBl06k4+M46PmZrMPK0P9X43ph
+         zsTN94mUPQUj+pEMEarPehGJX9i86E4juAL1+V0t8SeuvI+L7jRG7jV6mn7Lko9HwSVC
+         sRiWxRcnTcWoQxl3I8zeA45ihoP45kyUYPAWXe4d4lKK1sjjyn46i6WCElQYrBWxRfuv
+         NwdFJk2lQ/GchTugtlxIkQC3+pMtYugGKwX8IfHG5tD0P8fKYeTaRNmadKPwTXxTKUOD
+         Sn/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755533346; x=1756138146;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
+        d=1e100.net; s=20230601; t=1755534821; x=1756139621;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
         bh=h7ognQEhZIU8WDaS1JsI8k88HwHKFIxWxtu/HxsCgAw=;
-        b=jeRMK9NEIyvhf2OFcVOFADCs/+Gp9c5zCg4tx5AQZ1u1KhmeV0ifJz19fQinq8h76e
-         RDjYoj9q3c+jrMd9ubC3Zmx5/W0aOih5F1skhLzCiacs6lRNVVwpQO+SA7+8xpRWl807
-         JavnoFahB+0YHUwB1Ytr8+CZ5VZ3uU6zzrYZVDkpQlh1gfq7NTrlxfSYwGs4xARZ42Ry
-         a9X5UjB9R3QaGob2TNBmYXbBZP4p6Meci6rHzs4Lw1mNq1Dz8/w05ev+KFFCq1VMQMDP
-         jy/y8lg/9o0YbGiuwJwMjfyzdTKSeEKskUuEOy04bdooFbWytmb1SNSjcRQCE0TvtaAT
-         ++rA==
-X-Gm-Message-State: AOJu0YyIVsjg4U0Fo5NLKs4PLKm+f5vMLqjDgpuIwF/Dpne46RkCh7vY
-	jN1IjRQ6cnFM7vClEJYhYoRHK6L5ErhaIs9hYWtYiBk8Mdlh6JEI/UmDeRrc2Osz
-X-Gm-Gg: ASbGncuwCJKFf3oP+W3Ia7T3skQkRwlFliCT83heN/HqmLPZy2qWigyUF6H1GZhWCT3
-	xIX31ZM0mY0aR4dgRaekwTDnlrw9ahNGt5nJU5S7SCMU84bWjhI3rY/tnVIxSeyqM5SxV7+NAxR
-	EFHvvkpxMCc5K1u0ShkbzKxyj75uHCV83e9OY/BtHxkD7YL530Cn2JsZbjQn1Cfa8crUxc6KTTK
-	viS+yHhR3fr0nLxeNIUSfBgyC+RyTi3JZaEirJLajZySk1XZV2tz/Ws7WjRVh6x97W41xRA10Fi
-	ijnh6QluJBSAG1e4ivijIQzdbdtKDJyx1ODRIbh2H+JRcfJnoIW13XLCqCt2Ee+4zA19oOwTwgn
-	VRtKwQwFPDVnaZ7m3ih82Cbu0yI0CPSfUyXBSLXW+NECXq6W+7n0=
-X-Google-Smtp-Source: AGHT+IGcyq76k/siIOXmEvuJ8eAGTzzeGObS7QqyQD4mZUTkuhTHHKzSSnIq87KnNOVtKLOEvdyegA==
-X-Received: by 2002:a05:600c:1c81:b0:459:d3ce:2cbd with SMTP id 5b1f17b1804b1-45a21803fb3mr95190395e9.13.1755533346402;
-        Mon, 18 Aug 2025 09:09:06 -0700 (PDT)
+        b=SPCzf4174jF1OuyOOzFuBTY7YdZ13stAyMHZJIA5ez9fPRNHYrPswDwj+NdxiCC6cx
+         02CgbxljBRhzgT3p5tddwdsfGZ/c/lRcMyrJAfnGfxFpQ68OkkyG/C6EBdIB3KB6WyZ/
+         CTscF4pApj3d5x8h2BYiYevueLnwbdnc9CiMmWJ6K4lHeQK9oNBuxNJbbwOT+z9yOf44
+         NY9x7ERGX5dgC33MrO2LZz6VRnyZ9+a6weO4cmcvWbjBZS0GWbQMEIVAkRUvifXHdETL
+         HrvIVNDvQWcZhT4Ird87UVegszkMuoZO6ebmwruvu38BbyGOD4z+mfOI5k1G7BVM8dMw
+         ebGg==
+X-Gm-Message-State: AOJu0YxbVXb1Uu5LDBPg9Jaa89LRRpj+TyglvE15qggFdc9BEqjwCc/k
+	NNN8bCGlJGVcLD3FPFb7SmImvjpCKteqeeRCJxBQN3o9TQZjOmnGIVJjxSFRYS6R
+X-Gm-Gg: ASbGncusnfIib8I7ToZUsvrn0nqaqqvwaHkxwzZvSdT0x6DEvSevZn6mmRKWdo4H0Lw
+	83/lZGs1PbtdzKCCenpnp1ldn1WeK7RssLcK9W/eIqUvVVOvCPu7zE5XfvMtOXaTnPiqe/AMRqv
+	G79JpyYNetme/vhLsn1Dv4R+HkhvOMSFxv9QX1HUCfSKNgRMwgHWpVOiSO1yzV4c+EPEiyIxmmv
+	PWxcXsSbwiByRl9bLEowmBA3JvE4jyxLSTSW0dhIVgFaWUZCUmkG8FmhaU7b8dCnwnxpVJU1AqN
+	xbJaht6xCMWYR+guCvfKndqCtQ/77lICkgU/DyIU8oTRkbl6aLBU/CYRonZdwAoaKLwLWGm/QkB
+	k+FiRehH9DFxCMlKCfmsNVSw65SrG2L616Ub/eS2sxGfnXofCOsc=
+X-Google-Smtp-Source: AGHT+IFydVjBQltEWO0/fhvLJiBy1VWH7S1FDX1o6ZsH18tMPus9KD9llMILvd80YcIbszZl2Jpp7w==
+X-Received: by 2002:a05:600c:b90:b0:459:eeaf:d6c7 with SMTP id 5b1f17b1804b1-45a218578fbmr94516605e9.26.1755534821414;
+        Mon, 18 Aug 2025 09:33:41 -0700 (PDT)
 Received: from ST.. ([196.221.32.188])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a1c76e9basm185571505e9.21.2025.08.18.09.09.05
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a1c773e57sm190286305e9.23.2025.08.18.09.33.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Aug 2025 09:09:06 -0700 (PDT)
+        Mon, 18 Aug 2025 09:33:41 -0700 (PDT)
 From: Mohamed Ayman <mohamedaymanworkspace2@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: docs@lists.yoctoproject.org,
 	Mohamed Ayman <mohamedaymanworkspace2@gmail.com>
 Subject: [PATCH] doc: improve BitBake README testing instructions
-Date: Mon, 18 Aug 2025 19:08:36 +0300
-Message-Id: <20250818160836.3102-2-mohamedaymanworkspace2@gmail.com>
+Date: Mon, 18 Aug 2025 19:33:36 +0300
+Message-Id: <20250818163337.3440-1-mohamedaymanworkspace2@gmail.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250818160836.3102-1-mohamedaymanworkspace2@gmail.com>
-References: <20250818160836.3102-1-mohamedaymanworkspace2@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 18 Aug 2025 16:09:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17880
+ <bitbake-devel@lists.openembedded.org>; Mon, 18 Aug 2025 16:33:48 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17881
 
 Clarified the testing section by:
 - Adding context on setting PATH before running selftests
