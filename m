@@ -1,111 +1,69 @@
-Return-Path: <mohamedaymanworkspace2@gmail.com>
+Return-Path: <william.martin@muxen.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4B4CA0EE4
-	for <webhook@archiver.kernel.org>; Mon, 18 Aug 2025 16:33:53 +0000 (UTC)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web11.80199.1755534829591310168
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAADCA0EF5
+	for <webhook@archiver.kernel.org>; Tue, 19 Aug 2025 09:56:52 +0000 (UTC)
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+ by mx.groups.io with SMTP id smtpd.web11.10320.1755597406083601159
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 18 Aug 2025 09:33:49 -0700
+ Tue, 19 Aug 2025 02:56:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=Zesk/H1V;
- spf=pass (domain: gmail.com, ip: 209.85.128.42, mailfrom: mohamedaymanworkspace2@gmail.com)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-45a1b04f8b5so21431835e9.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 18 Aug 2025 09:33:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755534828; x=1756139628; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h7ognQEhZIU8WDaS1JsI8k88HwHKFIxWxtu/HxsCgAw=;
-        b=Zesk/H1V7fY6e4FOXhCbqsjaf+ZzLom7oLRL2Z+i2B9wp1Fj9ClSZD4tLGtnbVCAVi
-         J8SVHkHn4kml88HSPN41UL0RYJvAIdrXE0vHREMLvpLINi7yE9aHei9SPwQO7AJVILDl
-         HsbOMilUBqS7UEgqVuYU3iPviY7UFeEm5pOPkRUSJjC8W1GmTyAkHDYeN9azxW9h5zAi
-         f0Vma7V5Ru25TOIBR4PeD4mCodl8wLb1WL42IoCVlzeUIunZ+YAiK4lmdvdJrmHuHnQK
-         nTqSVo7eRjtLwqa1VpcwHwrVRq1074ZHGUD4z0dVkDhH9onZbSTdq88m28DnCXWwhmJH
-         wCKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755534828; x=1756139628;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h7ognQEhZIU8WDaS1JsI8k88HwHKFIxWxtu/HxsCgAw=;
-        b=XUH5cqAtGeZxiJ5ZL03kAqxaH0si4Jau802bOJSJp91GqTtFqm1gOk0I25PsuQdQyg
-         T5FSF0Sc8KnEIhgSv9fKBeyZWFJAcTMTMfB+YAzyEV5dDrmqNMEl4LTbJwe/pl+GZRlY
-         hKwJc2SXj8Mh84b63+LlZ0TuO2Ol8ZII316Ld/E3xbJSxgznakK2rujCZ4FF34t3JXyC
-         HZ6CFWO+TqFgcIFQqeS7Z729v+0XK0W3Lm6DCT7JOOQOEAOXbM1IafBpfGLWl/mEIBUy
-         beAZbaCvm/o+tOYkxrTlR5tN7V+aoERB+c+wVW5TOtUgybokeSuKJv/zacUelPUPJYQy
-         X8qg==
-X-Gm-Message-State: AOJu0YyGdRnKX2Slm76skKO2X0bFxO5ABq5bUrRbXp0hf5+fC9HGQqXv
-	zX/WU0iN8YBXMqs3ZXxM/tLt3Hx9HgjIGauAnWnDGgJK0hhtCHqLFTVFNSHcfIt7
-X-Gm-Gg: ASbGnct/wIQnMB8Ya499ONpOeCt2uaiIkpnGL0mkxPbqkP4BW5BubJ+abQdfbREA8G5
-	9VNB6fxOERdtuZdW9kay8YtuzxGwCo4xsCZGYQbsk34ToatVI6rAn2FvMX0wXANnKRcQDO3xMUj
-	f2Hg4bMpvm6Tnp4LxdG/iyvqnj/p8vmX2SBCSXBXOhAC1wtQTqQmJ8AxqRLh/uFWbK+17mTjS4Z
-	N8HyQ7w21OQbaLKuSGT4NdIMdrzxfeI1KmNHqCt6/keZ4Ux5avRG5o/ZfWgu0zTvPm9DrDRxHGC
-	MAE37YCx+SgtuSyXR8DaJBDgNbby3CLEHvPeHK23zskIj0tJ6CV3PVH+geJPu1jrZ/5F5QmS/Gb
-	RtH1clloXU504Bf4hl5AsdvCJpZ+qURFA83+EwQmSA3zk8Hw+E5E=
-X-Google-Smtp-Source: AGHT+IGMMTRM1OqsRIkH7PejEgqe5RKN0nV77tillTu04pUHK8T75eZVfoc5TMPmrACrbRzTqPkmUg==
-X-Received: by 2002:a05:600c:4f52:b0:459:df07:6db7 with SMTP id 5b1f17b1804b1-45a27b6f0c6mr60831175e9.6.1755534827571;
-        Mon, 18 Aug 2025 09:33:47 -0700 (PDT)
-Received: from ST.. ([196.221.32.188])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a1c773e57sm190286305e9.23.2025.08.18.09.33.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Aug 2025 09:33:47 -0700 (PDT)
-From: Mohamed Ayman <mohamedaymanworkspace2@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org,
-	Mohamed Ayman <mohamedaymanworkspace2@gmail.com>
-Subject: [PATCH] doc: improve BitBake README testing instructions
-Date: Mon, 18 Aug 2025 19:33:37 +0300
-Message-Id: <20250818163337.3440-2-mohamedaymanworkspace2@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250818163337.3440-1-mohamedaymanworkspace2@gmail.com>
-References: <20250818163337.3440-1-mohamedaymanworkspace2@gmail.com>
+ dkim=pass header.i=@muxen.fr header.s=gm1 header.b=Mcd48i58;
+ spf=pass (domain: muxen.fr, ip: 217.70.183.195, mailfrom: william.martin@muxen.fr)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 22DBB205AB
+	for <bitbake-devel@lists.openembedded.org>; Tue, 19 Aug 2025 09:56:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=muxen.fr; s=gm1;
+	t=1755597404;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Ud+nPJLpSXrAg8Ur0k1HE2nKbzbs4qt85NiXdg4rU58=;
+	b=Mcd48i58NlMj/nMhYyhbJ0wcq+Kl/rnxtcKBXWToL+YYGeJVrq/66MDDlpECdm5nfaNuSI
+	3ItUeqV1dEAAY8dWCqHfAprWaiuVkxN7ASho5UAYOqjyTbEWWA9kwpk+GPaWSV5g/GLcsL
+	Jl4Z19NyzlvjeoQuDFnM0QXY2gP3HruZaEuVNE6ZLV5K4hVV1ZSVoxVtF8CcdoDkzgzPiG
+	HN87uOSvsn0EJnecdoR+5k4FsEEcKcowmNqy/oBhvPGX/Wx8+WyL6nCTYBKpf0Q0l+yAe6
+	4nRGdVSOUnm8Mwh+jTqXPDry7yXUrcwU1JevfepjRAP8YkcH1nbKtjtdF9iq9A==
+Message-ID: <b937fbb5-f398-414a-a440-7020004d91f8@muxen.fr>
+Date: Tue, 19 Aug 2025 11:56:43 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: William MARTIN <william.martin@muxen.fr>
+Subject: Bitbake and epileptic seizures
+To: bitbake-devel@lists.openembedded.org
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: 0
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduheehudelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecunecujfgurhepkfffgggfhffuvfgtgfesthejredttddvjeenucfhrhhomhephghilhhlihgrmhcuofettffvkffpuceofihilhhlihgrmhdrmhgrrhhtihhnsehmuhigvghnrdhfrheqnecuggftrfgrthhtvghrnhepjefhuedugeefhfehudeikeevffetiedvjedvleffgeekkeevgfejiefgkefhhfejnecukfhppeektddruddurdeivddrudefheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeektddruddurdeivddrudefhedphhgvlhhopegludelvddrudeikedruddrudeingdpmhgrihhlfhhrohhmpeifihhllhhirghmrdhmrghrthhinhesmhhugigvnhdrfhhrpdhnsggprhgtphhtthhopedupdhrtghpthhtohepsghithgsrghkvgdquggvvhgvlheslhhishhtshdrohhpvghnvghmsggvugguvggurdhorhhg
+X-GND-Sasl: william.martin@muxen.fr
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 18 Aug 2025 16:33:53 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17882
+ <bitbake-devel@lists.openembedded.org>; Tue, 19 Aug 2025 09:56:52 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17883
 
-Clarified the testing section by:
-- Adding context on setting PATH before running selftests
-- Documenting how to install pytest using pip
-- Providing an example command for running pytest on lib/bb/tests
+Dear developers,
 
-These additions make it easier for new contributors to run the
-testsuite and ensure consistent testing practices.
+I send you this message today to talk about technical choices that can 
+have serious health problems.
 
-Signed-off-by: Mohamed Ayman <mohamedaymanworkspace2@gmail.com>
----
- bitbake/README | 7 +++++++
- 1 file changed, 7 insertions(+)
+Some days ago, we have an external person at our office who have see a 
+bitbake terminal building an image.
+We discover that he is sensible to epileptic seizures (he is ban from 
+traveling by plane for that).
+The story finish pretty well for him, but we have to ensure no bitbake 
+terminal is open when he is here.
 
-diff --git a/bitbake/README b/bitbake/README
-index e9f4c858ee..938eec47ce 100644
---- a/bitbake/README
-+++ b/bitbake/README
-@@ -54,10 +54,17 @@ The assumption is made that this testsuite is run from an initialized OpenEmbedd
- environment (i.e. `source oe-init-build-env` is used). If this is not the case, run the
- testsuite as follows:
- 
-+# ensure local tools are on PATH and run the selftest script
-     export PATH=$(pwd)/bin:$PATH
-     bin/bitbake-selftest
- 
- The testsuite can alternatively be executed using pytest, e.g. obtained from PyPI (in this
- case, the PATH is configured automatically):
- 
-+# install pytest into a virtualenv or pipx (recommended)
-+python -m pip install --user pytest
-+
-+# run tests (example)
-+python -m pytest lib/bb/tests -q
-+
-     pytest
--- 
-2.34.1
+I am not sure that refreshing the task list at very high speed have any 
+interest for anyone.
+Maybe an update at 1Hz max is enough to ensure the build is working.
+
+Take care,
+
+William
+
+
 
 
