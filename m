@@ -2,64 +2,63 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063B0CA0EF5
-	for <webhook@archiver.kernel.org>; Tue, 19 Aug 2025 10:44:03 +0000 (UTC)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web11.11030.1755600237937617079
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088EECA0EED
+	for <webhook@archiver.kernel.org>; Tue, 19 Aug 2025 10:47:23 +0000 (UTC)
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web11.11073.1755600438594701117
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 19 Aug 2025 03:43:58 -0700
+ Tue, 19 Aug 2025 03:47:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=dUiZ7a+k;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-45a1b00f23eso28489795e9.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 19 Aug 2025 03:43:57 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=B2d6mq+q;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3b9d41bea3cso5460036f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 19 Aug 2025 03:47:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1755600236; x=1756205036; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1755600437; x=1756205237; darn=lists.openembedded.org;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kIWrsoVpV47qnhONXV2zbGFbo40zQKPFTuhSQ4nuBI0=;
-        b=dUiZ7a+kXzFbdeJZ9QWtutznDymoG16v/lvOVCc2WViQ61ramp/RGQUPiazXUINlKw
-         c1UhpDSr0znURXI9LZ4WnvyBwZKxdv4vSb0cVkzGPJva9S/zoHSvX+V5gThehVpbJC9H
-         Qw7EQB6Kw9Cz1hpPbvpdXDDJ3TF1alR8cmJGA=
+        bh=LRHcu2e08YtsRo9vQadFKszo1iwvH3Ig2dy4iMFn+Ik=;
+        b=B2d6mq+qltVVwT9YF1/BRhzoZmuZ3wSyTeAxGYayyZ1n44ENadtyFPNsb/pR0FuW2o
+         tHHxHiWmJQl+ZHutdXfBUHmjaR05a8wpgDRtVCf5qCArUZITyhPGYdfZBhavrPN14mpD
+         FeVtowi4w/mrSN7jrv64aYlPZp++YMeLGILcQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755600236; x=1756205036;
+        d=1e100.net; s=20230601; t=1755600437; x=1756205237;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=kIWrsoVpV47qnhONXV2zbGFbo40zQKPFTuhSQ4nuBI0=;
-        b=AsFGTDlstslBsT1m4wQDltYQjUlHxgyRZwJLl+rOmVdDnW51K8iaDIZdeNdlnXTLU5
-         n8L+WKdOJuLQPwSBmMQ70O3QecIhbgW34bj3xVEsA/n6ZdJc5K03kV7mSVyR96eBPkNf
-         lSObg7d9ZBt892fhUdsGZIZGE+QSGJXwqP/rbQUDpJK8WjlhlCZUvKE2fcPX4ovEDS2q
-         bKtn6Twyi+y+zXMSbSx0Bs09+E+MD1DF2RK9lgOI3ejIMiLb4gdLoWq/yYcHtMPtJ6Wp
-         dD2A0BvmhTVnD+ITgqU1aOUUt9KOcc4H0sXCtoPazdB9uYZ5k8/tD5ulh/rZW886Xsr+
-         pEsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3XUgEww7rhUjl+9KrZ1CEPaHPrK+CxTtmLiTOvcJwLLCC/EyeMdtAFzvXzzQnwzODs2BSHYm1N+dEKKUT@lists.openembedded.org
-X-Gm-Message-State: AOJu0YzwU1ipCE2ptsX6CgPLyL7h7Tm4wI5nRUYsdWr1PEj9oyMPeOJe
-	5G/qROdvSgFhUqTRYPzMvOe8Gwa5zG583+xyMIMvIQU1x/FLrp3TIGF1D4/b6BHGPzReQ21cbFN
-	sAorp
-X-Gm-Gg: ASbGnct1Kf2iH3Zym8LohpLZLjoxbF54ySLcWa86pZl2UzKlu3aOxpedQJemzFXNgu5
-	Z5he0J5ruaYzKl91NAl6AtNbs42uuytB7N7NDunMDpzwVa4M2ZO2NA03pCc4+ROuGmvGbUJZPqR
-	T78RrG/Hu0I13lvsXXWhixlEExxiU9+GFsG8P9oaah9q8Hjdd7AIP2aqW0X4ozzDkDA+KJ6sEZO
-	+SmvQa83VzNQjiaEMi0794maj1BeEG/4CS81k9nTS3JAbQeoeLftVWN19Qhtfp4v5o6zpWqsRw0
-	VihRkBrOtIVBYt5XuuR82ecCrLCLObEPXoBrtRdC/43hSDBar/r+XtERCzRsqzBgR+fYz4BeDJ2
-	eao6jyjTPji5OLecGHRtEp8UWfTkHmTFO5fsq4Vrwc8vT4BPvklo+knyOahvNeRjvakDFvuJkt5
-	nwJoLECHKXKMnYqYCdFaoGVQ==
-X-Google-Smtp-Source: AGHT+IF2WnBiiZfp6S9Mt/gAGOmL3qlGS0gM7vVmXqQMgI7u1dHRgf0A82hZGqpu2YGsAhUk9EjOig==
-X-Received: by 2002:a05:600c:3514:b0:456:1824:4808 with SMTP id 5b1f17b1804b1-45b43e178demr15411805e9.32.1755600236239;
-        Tue, 19 Aug 2025 03:43:56 -0700 (PDT)
+        bh=LRHcu2e08YtsRo9vQadFKszo1iwvH3Ig2dy4iMFn+Ik=;
+        b=k/mGC7mTHiM9yZ5SDrngyMM5Rbwazyp/VLNx3qHYp/4sU4OnDXlSKI+bXHYeY1aDUg
+         aw0u2XZM9SC9aob9URB7ShFrEk3LODPrpmG2SZ47kBSozbBnkgX4DbJ4Q8mLm92qHlNs
+         6kMRyoX8lakvNUFTsoiaOSrJ8G1WiHdhAC8RFHu9biic4Lm8vC+2LkdMGG9ci/HJ21RN
+         86cZwTMQknJuxCHCs8wFQBltsqCYNJlOSZTPCup8mBtHD82Yqs+qVVdOefkcZ7e6hRYO
+         3i7zAtTSlfQsjz6NvV0slP8IXBj9mE8FiHiVP0wfacuh93b99agjijWqSBmR4ppkIxtU
+         p7SA==
+X-Forwarded-Encrypted: i=1; AJvYcCX3KiQWU17DdJTjpddNCTjcU3K6fV4A0TtTsdVJQZXYsP7S0u9dxdODUky2iWy2zcq96/MfrjEuAkE9K/lV@lists.openembedded.org
+X-Gm-Message-State: AOJu0YwgMDXc8vht5mI7gbqd4Ywn2pf19IeYe1nxBJlCRfaorzF6VCkP
+	bHIrvsqv7LycWy4+LSi/BqJkHWNuKULwD5JqYXpKq7FdrCBJ3Odww7Yj4X3VEaRKd3A=
+X-Gm-Gg: ASbGnctJqZz1dhuVV0HjTEGXe6/0ANjoHcDypfeP7/cROMtPoYKo7HHmhX3LV0V691A
+	vwcn6C7vGpLxU6TX+24TMsUOYBZjSc0KRfTD5PJ3J+Nn8ERo+9UKuawK84FFHLkjBOeXIA7SQHC
+	Mq3JXzkgUosuDmhyqDeo4FR2iLkMcfVA5ttTNI1BWurvPYp282yXdWdF4eCmrnghGA8Nsq8sYi+
+	nrTBBLYQPYG/SmThM7cMgmupzB7HzzHuYpn5mytppmxGkR56WZNLxmIMmHDxIGmI0xGS/ifMecY
+	boeWId5SDp0UGi1VOcOV+72UqgA328afqs83Z7FgPY1FJpN23Ym+gF4V0zSv7Yl3kt55RWXSmhP
+	Eb0LtnXT9kuGZJ84jmbmXJpwvBBX1Ff4E0sa90vsbizsPjCvXTmBHUfVPIgW5uH3xIZWL0SXPXi
+	Vtj4et688TDig=
+X-Google-Smtp-Source: AGHT+IHk78Qul7oI2QpySK4cdvE0jl3iTbaXEwwap0zzk+Rk6J04W6qPZDo2mN97scdVG5BpjykKXw==
+X-Received: by 2002:a5d:5d0c:0:b0:3b7:9d83:5104 with SMTP id ffacd0b85a97d-3c0ed6c4b11mr1571891f8f.51.1755600436874;
+        Tue, 19 Aug 2025 03:47:16 -0700 (PDT)
 Received: from ?IPv6:2001:8b0:aba:5f3c:3d5c:7b3b:65dd:ef80? ([2001:8b0:aba:5f3c:3d5c:7b3b:65dd:ef80])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a1c74876csm208754145e9.14.2025.08.19.03.43.55
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3c077789d1dsm3179088f8f.49.2025.08.19.03.47.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Aug 2025 03:43:55 -0700 (PDT)
-Message-ID: <548d93e5583ca1c1808f51a69901e168263e0917.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] Bitbake and epileptic seizures
+        Tue, 19 Aug 2025 03:47:16 -0700 (PDT)
+Message-ID: <5e0ca348553df238270f5abcca27a39aaddfc07e.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] fetch2/git: verify if local clone
+ contains tag
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: william.martin@muxen.fr, bitbake-devel@lists.openembedded.org
-Date: Tue, 19 Aug 2025 11:43:54 +0100
-In-Reply-To: <185D2421C5FD6ED8.4571@lists.openembedded.org>
-References: <b937fbb5-f398-414a-a440-7020004d91f8@muxen.fr>
-	 <185D2421C5FD6ED8.4571@lists.openembedded.org>
+To: skandigraun@gmail.com, bitbake-devel@lists.openembedded.org
+Date: Tue, 19 Aug 2025 11:47:15 +0100
+In-Reply-To: <20250815194401.2866251-1-skandigraun@gmail.com>
+References: <20250815194401.2866251-1-skandigraun@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.0-1 
@@ -67,56 +66,38 @@ MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 19 Aug 2025 10:44:03 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17886
+ <bitbake-devel@lists.openembedded.org>; Tue, 19 Aug 2025 10:47:23 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17887
 
-On Tue, 2025-08-19 at 11:25 +0100, Richard Purdie via lists.openembedded.or=
+On Fri, 2025-08-15 at 21:44 +0200, Gyorgy Sarvari via lists.openembedded.or=
 g wrote:
-> Hi,
+> In case a recipe specifies a git SRC_URI along with revision and tag, but=
+ only the
+> revision is present in the local clone without the tag (because it was ta=
+gged after
+> it was cloned), then unpacking fails with the following error:
 >=20
-> On Tue, 2025-08-19 at 11:56 +0200, William MARTIN via lists.openembedded.=
-org wrote:
-> > I send you this message today to talk about technical choices that can=
-=20
-> > have serious health problems.
-> >=20
-> > Some days ago, we have an external person at our office who have see a=
-=20
-> > bitbake terminal building an image.
-> > We discover that he is sensible to epileptic seizures (he is ban from
-> > traveling by plane for that).
-> > The story finish pretty well for him, but we have to ensure no bitbake=
-=20
-> > terminal is open when he is here.
-> >=20
-> > I am not sure that refreshing the task list at very high speed have any=
-=20
-> > interest for anyone.
-> > Maybe an update at 1Hz max is enough to ensure the build is working.
+> ... rev-list -n 1 1.0 failed with exit code 128, output:\nfatal: ambiguou=
+s argument \'1.0\': unknown revision or path not in the working tree
 >=20
-> Firstly, I'm sorry to hear about that person. Nobody likes to think
-> something they've worked on causes an issues like that :(.=C2=A0I hope th=
-ey
-> are ok.
+> This happens because the during the download step only the revision's pre=
+sence is
+> verified to decide if the repository needs to be updated.
 >=20
-> The fast refresh rate isn't an intentional design decision but the
-> result of a number of changes over the past decade coming together and
-> interacting badly. Those include CPUs with higher core counts, addition
-> of progress bars to many tasks and time output on the console view, all
-> of which were developed semi-independently.
+> To avoid this, check also if the tag is present in the local repository, =
+when the "tag"
+> tag is specified.
 >=20
-> There are some patches that were submitted a while back but there were
-> issues in the implementation and we've never got to providing feedback
-> and sorting them out. Sadly that is a common theme for many different
-> things.
->=20
-> I am going to try and get this one resolved though given this report.
->=20
-> Thanks for bringing it to our attention.
+> Signed-off-by: Gyorgy Sarvari <skandigraun@gmail.com>
+> ---
+> =C2=A0bitbake/lib/bb/fetch2/git.py=C2=A0 | 10 +++++---
+> =C2=A0bitbake/lib/bb/tests/fetch.py | 44 ++++++++++++++++++++++++++++++++=
++++
+> =C2=A02 files changed, 51 insertions(+), 3 deletions(-)
 
-I've merged some patches. They have a 40hz refresh rate right now but
-at least add all the code needed to make it configurable and we can
-experiment to find a reasonable value.
+Thanks for this. I suspected there was this problem and your patch
+confirms what I suspected. I really appreciate adding a test case too,
+thanks!
 
 Cheers,
 
