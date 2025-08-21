@@ -1,162 +1,197 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 187D4CA0EEB
-	for <webhook@archiver.kernel.org>; Thu, 21 Aug 2025 08:33:30 +0000 (UTC)
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
- by mx.groups.io with SMTP id smtpd.web11.4416.1755765203621585613
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFF6CA0EF8
+	for <webhook@archiver.kernel.org>; Thu, 21 Aug 2025 13:07:32 +0000 (UTC)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.web10.8910.1755781647552352047
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 21 Aug 2025 01:33:23 -0700
+ Thu, 21 Aug 2025 06:07:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fycUfaDL;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.50, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3c380aa1ad0so415682f8f.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 21 Aug 2025 01:33:23 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=ZuBmU6yI;
+ spf=pass (domain: gmail.com, ip: 209.85.128.53, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-45a1b0d231eso5485975e9.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 21 Aug 2025 06:07:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1755765202; x=1756370002; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=EIyvsZ+ksBPtwh93vbMPxyFB3M3aJw2b491zLxXbSaU=;
-        b=fycUfaDLRxH9quKpLoIkiCB/2v2VFrvHiFLYgmgH3/Ip+oHT6ZcdbI9n852qF6kBKC
-         leqXNkL8C3mvQVWfDJvXsTL/c3fqouy9nM9iBC7CNA/WWz4SG0Ic3++47ACg5nvjULCk
-         Z4sTLu41iPaC8Rl8m1qkcx2YYweLjpMdmZ//Y=
+        d=gmail.com; s=20230601; t=1755781646; x=1756386446; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s+ZnrXJF6+k7F5TENY/yTbtIRHQyZzBFbxoX/AcwhC0=;
+        b=ZuBmU6yIEkqiFJzwk/LGHM9jjrZO4EZ74/s7eGPoDq3uCf442g8ohkhZHshX94Pu38
+         ykTWmxE02JFknlh4t8YpauIhE63sZ9rPiXWPO3CNQbZsx/c1Foem4t7QVAeef9/JCkvF
+         2g1RLSZq0CDLouhB1CKFhZ0kIAy4nmbzfrPcP9f+XVlom087QU766US9kEJScG2QfLhk
+         +tOvqrbYhgbf57weVDfzK382am8siEb7NeY/tJijsIFkbta/ZOY3aHbH2eUSll5b8i0o
+         62cYCYXt6tflGVNIF4vGgygc3S1zJwHXbOw+e7eKPkaA91SSaa8kzQwj63B78i4VCUf9
+         ZD7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755765202; x=1756370002;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EIyvsZ+ksBPtwh93vbMPxyFB3M3aJw2b491zLxXbSaU=;
-        b=ukgRRG69fl/DpC0tZchMkvGaRMoE4Q9rVavJ1pNg3GFQTsYGN8vmt6A/QQDenYYYkS
-         OcFOuP95nLIdQohLTcXrq52oBqY+Tit73tvihrkBkF+K6tlXPa+0H8vJVhHdu3jGSip/
-         RLQHykAdtPJOFXMTLjPaVOyPfxleuqq6Ip8oOOA+T0pzS8OLwvBqnAwtYnA6mZqnuX63
-         jOeizPzQ8Se7zfn9dWIYLK+hSaId9lfQ/0julZFWJw8BQ4w7U/tSVsXE12Qt7TyrnvOB
-         t/PKgdzbsbUnvBejlSaqi/Nfcvmn4+DGfPsd53wFri2XLRYcPndJ4ymXaVusDJCOcWEv
-         KfnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXZ2Td0KWqhlgw2eHnzvhWeowOhO+hn6zrOo2JIJf1bLJ8qkrVhi0q+13QIvHElDRHWDHvu8fpJYPVvg74L@lists.openembedded.org
-X-Gm-Message-State: AOJu0YzuFiMctxgUlR8j+B6Gf0uv0hg871gKyNlMPitH52Xd3T+nI/hK
-	AwL7fYwOfxSl9+seWu9tcHa4dfm5Gu7iJSPGdPAKvxpFqmhgAC7dmXz7Da1nXNonUZo=
-X-Gm-Gg: ASbGnctB34zpz2hU4ltXjCpGSS1MFcXO8XJ3hrrd1uE4/PTIS5lhitU6/92AJjvTZ+2
-	rEZZfLpTgtjQJkpZw5qvVbumhjxpn9R+sefxnn9UwYxHt9DMGo3LV6tchIz7sWWi34m0DRO8hFF
-	k64hjIO8KGejgXfj04lnBYVJ3devYhzmy978unNxFMCH3ir8mcul9q+57QWQ4yTW2NW4BT7JpM9
-	qxzB5ButiZ68FWNni1HJeNrtToVA4JpQoBYkdDvD/3lpLnC1HZDuTr7Riq9mxZCwAkUBjvaDNh6
-	bXX0jasiUOvkjnm7ayy7rF8gE7TqJ5YaN75yOIcAhyZdMcAf0QiRseF64n52lM2C31298RWXPjt
-	UCMhu048cs8Py0tfYErtA5cMFFCB1L77MVRTIVw4uKL862+bFDgugnJoK/8tJvpxnQNYFdoMVys
-	3y0DbI6YcZuz+w3FbAxOKu8LKeBQQ4tb3d
-X-Google-Smtp-Source: AGHT+IFhAQfmLCdUu1b86nqOAgMFbgMK7nUZp9OUU5r8iCrOBORIeVrsMKpjtTS2HYIOKyLXWSu+bA==
-X-Received: by 2002:a05:6000:2c07:b0:3b7:886b:fb76 with SMTP id ffacd0b85a97d-3c49433e9fbmr1327098f8f.12.1755765201894;
-        Thu, 21 Aug 2025 01:33:21 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:5327:b358:4159:41f6? ([2001:8b0:aba:5f3c:5327:b358:4159:41f6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3c4e6d4d439sm1222024f8f.6.2025.08.21.01.33.20
+        d=1e100.net; s=20230601; t=1755781646; x=1756386446;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s+ZnrXJF6+k7F5TENY/yTbtIRHQyZzBFbxoX/AcwhC0=;
+        b=VNybCj6YUIsIh6vLOjj4eKID2/gdNF4f6ke89ZKA943txawEwxuyKQ2Dv4u+cL7cS8
+         0SyLHNvpAdUB4+I5LuQTRpkX2VcKFy7c+M2uKvJzngz/KbRYUK3J3tBkXKg4bQ4QjG8Y
+         kXKu4MN9rvSQRv9CyiAW89zzOQU3qhqHC84ItD2i+DQdI5VsQ2n0CjP42TGI7F1BgY/Z
+         BnQ3tJJELUPg1o0hfhP2K1hVWdqqCjCTPIKPUknHDlN5Mf1pnjJNRvQSTz965WMSml/A
+         RPmzQ4yE2FUjfqL1O3Nwu5V2SUEjCQoQlzzbKLYg58Hh267E034h7WdcXBRujCaqws6R
+         9BNQ==
+X-Gm-Message-State: AOJu0Yw3cfLif36UMW+/gbtCXudMCNc7rkJXhygkVoEQoSIe7skyKVYm
+	EU8nG/Hiz1oABOW/013o57W2mzhNhultjjBKkh6qTfc8VJW2v4YDjGmlgQIXSQ==
+X-Gm-Gg: ASbGnctbnnvV+z35/IQz9olBjH/LolVilMxxBgCmokcwpWHqOTaXyzp12oa1LT2cmJf
+	tNxyx8O+MTRBgiB9EJiSlorp/ggEW/WUxn6N1prd2ZTGlDS7RjmdIorYYtKq2wp3LQLhI5wBFMC
+	TlaQbOR9Yk7CoS6rsP7cZxfR4ZpWvmU5qvrvcK3iqkJS779VHjm0caedmjwnYy7jWkLN2sr5V7e
+	UJW4tdRR00fw8fFZ51rdOtPPH+nIMswaCv45gX94PiDuqK0FQgKj+IGoX3KwBTD1BlD7HY03K+Q
+	uJBJVU/vln0J5EnAFaCYDtVEe0UL9Rt6JhKGE7xgZ1uV5qCR5wF5UjORjrj5BsTiJikEjgJU/Kl
+	C/h+WZz3OS1x5+VrwCZU19WbHtz/oxbPqRica6aLkVOchm6EooA+5jLlUIZu3FVwHnmp+TWKxvM
+	S9vMzI
+X-Google-Smtp-Source: AGHT+IHYQnI45jN4BbXb4DhccWbYbNlffoU02V96Vb1p5IQlmkpUnSTf/6d/GuhJBwjHVJR+Z+Axqw==
+X-Received: by 2002:a05:600c:630d:b0:456:1a69:94fa with SMTP id 5b1f17b1804b1-45b4d7f59d9mr18858275e9.13.1755781645714;
+        Thu, 21 Aug 2025 06:07:25 -0700 (PDT)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b4db2aa09sm27832815e9.9.2025.08.21.06.07.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Aug 2025 01:33:21 -0700 (PDT)
-Message-ID: <37ebf6a3dea7e6e975762888a381329d0da936d6.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 1/3] bitbake-setup: add the initial
- implementation
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Scott Murray <scott.murray@konsulko.com>
-Cc: Alexander Kanavin <alex.kanavin@gmail.com>, 
-	bitbake-devel@lists.openembedded.org, Tim Orling <tim.orling@konsulko.com>
-Date: Thu, 21 Aug 2025 09:33:20 +0100
-In-Reply-To: <4f3b985b-4b54-7e5d-a21f-887f8587a495@konsulko.com>
-References: <20250813151523.1855287-1-alex.kanavin@gmail.com>
-	 <9b00442e9c0eed12c491b98704bc34fd9f78c48b.camel@linuxfoundation.org>
-	 <CANNYZj_1k7_pzh3wkn53aVGM1+ioDsqmAGTYgr7AwswYv2pQMw@mail.gmail.com>
-	 <0a06fda681c8b5d94cbccc000e661451c1c49251.camel@linuxfoundation.org>
-	 <6e562ea3-ea7e-7e27-54ef-5fabc05888b5@konsulko.com>
-	 <CANNYZj8y-VCKnzUD2OLihbt4KtYPqdBK4zE3-5mQE84844fYjw@mail.gmail.com>
-	 <647b238c-cf12-eb7b-d243-038854180192@konsulko.com>
-	 <CANNYZj_RWrJxXx6+WZ_px_EWOd9+Wr1TgUEHgGg3rspY5wEECw@mail.gmail.com>
-	 <8db52408-8867-0b10-bc23-114ea02bdd66@konsulko.com>
-	 <3216445584018ee9b8f2b49ff5554624a69c604b.camel@linuxfoundation.org>
-	 <4f3b985b-4b54-7e5d-a21f-887f8587a495@konsulko.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0-1 
+        Thu, 21 Aug 2025 06:07:24 -0700 (PDT)
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH 3/3] bitbake-setup: add 'install-buildtools' command
+Date: Thu, 21 Aug 2025 15:07:15 +0200
+Message-Id: <20250821130715.1904574-3-alex.kanavin@gmail.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250821130715.1904574-1-alex.kanavin@gmail.com>
+References: <20250821130715.1904574-1-alex.kanavin@gmail.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 21 Aug 2025 08:33:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17902
+ <bitbake-devel@lists.openembedded.org>; Thu, 21 Aug 2025 13:07:32 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17905
 
-On Wed, 2025-08-20 at 19:58 -0400, Scott Murray wrote:
-> On Wed, 20 Aug 2025, Richard Purdie wrote:
->=20
-> > On Wed, 2025-08-20 at 16:49 -0400, Scott Murray wrote:
-> > > On Wed, 20 Aug 2025, Alexander Kanavin wrote:
-> > >=20
-> > > > On Wed, 20 Aug 2025 at 22:15, Scott Murray <scott.murray@konsulko.c=
-om> wrote:
-> > > > > Sure, but my point is that's what I'll be doing every time I set =
-up
-> > > > > any project (and maybe reconfiguring it?), so effectively for me =
-the
-> > > > > default behavior is not useful.=C2=A0 I doubt I am alone in doing=
- all my
-> > > > > development work on a different disk than where /home is on my de=
-v
-> > > > > and build machines.
-> > > >=20
-> > > > Then there's the option of setting BITBAKE_SETUP_TOP_DIR in environ=
-ment.
-> > >=20
-> > > I'll not bother pressing this further since you seem set on the curre=
-nt
-> > > design, but my original concern that I pointed out was that I'll alwa=
-ys
-> > > having to configure that, and likely document doing the need to do so=
- for
-> > > users of any project I may want to use bitbake-setup for.=C2=A0 The d=
-efault
-> > > behaviors of other tools in this space do not require that.
-> >=20
-> > You'd always have to configure it because you want no external
-> > interference in builds even if that was limited to sstate/sstate
-> > mirrors/dl_dir? Or you don't believe dl_dir/sstate can be shared
-> > between builds/projects?
->=20
-> I will always have to configure it because I don't want those in some
-> default directory in $HOME, and there's going to be times I don't want
-> them shared at all.
+From: Alexander Kanavin <alex@linutronix.de>
 
-Keep in mind there are two levels to the config. One level is the basic
-site.conf, the second is the use of defaults in .cache.
+This basically calls install-buildtools from oe-core/poky, but
+it ensures via command line parameters that the installation
+location is stable and the downloads are preserved for reproducibility:
 
-Personally, I think we should put DL_DIR/SSTATE_DIR where the user
-asks, defaulting to $HOME/.cache. Like you, I have dedicated specific
-spaces for these but that is fine and I can just set those in my
-site.conf and be happy, I won't need to specify it on the command every
-time.
+$ bin/bitbake-setup install-buildtools
+Loading settings from /home/alex/bitbake-builds/bitbake-setup.conf
 
-> =C2=A0 With respect to sharing, IMO it depends on the
-> project.=C2=A0 I tend to keep downloads and sstate split by branch, as
-> master branch has so much churn that it complicates pruning (which is to
-> some degree an unsolved problem that everyone has their own ad hoc
-> approach for).=C2=A0 I also tend to not share sstate across significantly
-> different customer projects that use less common layers, again because
-> it makes pruning easier.
+======
+Buildtools archive is downloaded into /home/alex/bitbake-builds/yocto-master-testing/buildtools-downloads/20250319141333 and its content installed into /home/alex/bitbake-builds/yocto-master-testing/buildtools
 
-state pruning is a valid concern and I do tend to do that myself with
-older releases but we should really work to improve the cleanup tools
-too. I'm not sure that issue should change the base design.
+... (output from install-buildtools script)
+======
 
-> > I do understand your point but I also suspect there is some level of
-> > common user setting we should start trying to take account of. If that
-> > means adding some sanity check mechanism to only allow certain
-> > variables from site.conf, that is something we can look at.
->=20
-> I'm not sure I follow your train of thought here?=C2=A0 If you mean not
-> allowing overriding DL_DIR or SSTATE_DIR from site.conf, I'd be strongly
-> against that idea.
+It also detects when buildtools are already installed, and will direct
+users what to do:
+======
+alex@Zen2:/srv/work/alex/bitbake$ bin/bitbake-setup install-buildtools
+Loading settings from /home/alex/bitbake-builds/bitbake-setup.conf
 
-I'm meaning only allowing setting certain variables from site.conf such
-as DL_DIR and SSTATE_DIR.
+Buildtools are already installed in /home/alex/bitbake-builds/yocto-master-testing/buildtools.
+If you wish to use them, you need to source the the environment setup script e.g.
+$ . /home/alex/bitbake-builds/yocto-master-testing/buildtools/environment-setup-x86_64-pokysdk-linux
+You can also re-run bitbake-setup install-buildtools with --force option to force a reinstallation
+======
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ bin/bitbake-setup     | 26 ++++++++++++++++++++++++++
+ lib/bb/tests/setup.py | 20 ++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
 
-Cheers,
-
-Richard
-
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index a05433206..596c9885a 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -16,6 +16,8 @@ import stat
+ import tempfile
+ import configparser
+ import datetime
++import glob
++import subprocess
+ 
+ default_registry = 'git://github.com/kanavin/bitbake-setup-configurations.git;protocol=https;branch=main;rev=main'
+ 
+@@ -530,6 +532,25 @@ def list_configs(settings, args, d):
+             json.dump(json_data, f, sort_keys=True, indent=4)
+         print("Available configurations written into {}".format(args.write_json))
+ 
++def install_buildtools(settings, args, d):
++    buildtools_install_dir = os.path.join(args.build_dir, 'buildtools')
++    if os.path.exists(buildtools_install_dir):
++        if not args.force:
++            print("Buildtools are already installed in {}.".format(buildtools_install_dir))
++            env_scripts = glob.glob(os.path.join(buildtools_install_dir, 'environment-setup-*'))
++            if env_scripts:
++                print("If you wish to use them, you need to source the the environment setup script e.g.")
++                for s in env_scripts:
++                    print("$ . {}".format(s))
++            print("You can also re-run bitbake-setup install-buildtools with --force option to force a reinstallation.")
++            return
++        shutil.rmtree(buildtools_install_dir)
++
++    install_buildtools = os.path.join(args.build_dir, 'layers/oe-scripts/install-buildtools')
++    buildtools_download_dir = os.path.join(args.build_dir, 'buildtools-downloads/{}'.format(time.strftime("%Y%m%d%H%M%S")))
++    print("Buildtools archive is downloaded into {} and its content installed into {}".format(buildtools_download_dir, buildtools_install_dir))
++    subprocess.check_call("{} -d {} --downloads-directory {}".format(install_buildtools, buildtools_install_dir, buildtools_download_dir), shell=True)
++
+ def default_settings_path(top_dir):
+     return os.path.join(top_dir, 'bitbake-setup.conf')
+ 
+@@ -656,6 +677,11 @@ def main():
+     add_build_dir_arg(parser_update)
+     parser_update.set_defaults(func=build_update)
+ 
++    parser_install_buildtools = subparsers.add_parser('install-buildtools', help='Install buildtools which can help fulfil missing or incorrect dependencies on the host machine')
++    add_build_dir_arg(parser_install_buildtools)
++    parser_install_buildtools.add_argument('--force', action='store_true', help='Force a reinstall of buildtools over the previous installation.')
++    parser_install_buildtools.set_defaults(func=install_buildtools)
++
+     parser_install_settings = subparsers.add_parser('install-settings', help='Write a settings file with default values into the top level directory (contains the location of build configuration registry, downloads directory and other global settings)')
+     add_top_dir_arg(parser_install_settings)
+     parser_install_settings.set_defaults(func=write_settings)
+diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
+index 370a1badb..f360efaca 100644
+--- a/lib/bb/tests/setup.py
++++ b/lib/bb/tests/setup.py
+@@ -51,6 +51,21 @@ with open(os.path.join(builddir, 'init-build-env'), 'w') as f:
+ """
+         self.add_file_to_testrepo('scripts/oe-setup-build', oesetupbuild, script=True)
+ 
++        installbuildtools = """#!/usr/bin/env python3
++import getopt
++import sys
++import os
++
++opts, args = getopt.getopt(sys.argv[1:], "d:", ["downloads-directory="])
++for option, value in opts:
++    if option == '-d':
++        installdir = value
++
++print("Buildtools installed into {}".format(installdir))
++os.makedirs(installdir)
++"""
++        self.add_file_to_testrepo('scripts/install-buildtools', installbuildtools, script=True)
++
+         bitbakeconfigbuild = """#!/usr/bin/env python3
+ import os
+ import sys
+@@ -217,6 +232,11 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+             out = self.runbbsetup("update")
+             self.assertIn("Configuration in {} has not changed".format(buildpath), out[0])
+ 
++        # install buildtools
++        out = self.runbbsetup("install-buildtools")
++        self.assertIn("Buildtools installed into", out[0])
++        self.assertTrue(os.path.exists(os.path.join(buildpath, 'buildtools')))
++
+         # change a file in the test layer repo, make a new commit and
+         # test that status/update correctly report the change and update the config
+         prev_test_file_content = test_file_content
+-- 
+2.39.5
 
 
