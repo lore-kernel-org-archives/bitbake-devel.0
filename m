@@ -2,63 +2,63 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71857CA1000
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 909B6CA1009
 	for <webhook@archiver.kernel.org>; Mon,  1 Sep 2025 13:58:50 +0000 (UTC)
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
- by mx.groups.io with SMTP id smtpd.web11.52235.1756735127802716406
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+ by mx.groups.io with SMTP id smtpd.web11.52234.1756735126996156748
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 01 Sep 2025 06:58:48 -0700
+ Mon, 01 Sep 2025 06:58:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=F0uXLb9h;
- spf=pass (domain: gmail.com, ip: 209.85.218.50, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b042cc3953cso119943966b.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 01 Sep 2025 06:58:47 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=ah0iZRes;
+ spf=pass (domain: gmail.com, ip: 209.85.218.42, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b043da5a55fso74596966b.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 01 Sep 2025 06:58:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756735126; x=1757339926; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1756735125; x=1757339925; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1VsXliYwYcT3sgAjyKE0heVKtRXmDppGmlM6vylsstw=;
-        b=F0uXLb9hJhcqCROTTslulpXsROh2p/xLrSyWe6F/FWaQ+tDa5NnWHoh4Rd9w2oyvNt
-         MT23mIrgRT/2vUGnmVjbeOy5oNZ8CLptTJZptu/546SJNhNMKvRpTpdRowF3McEOkEE/
-         gzCEV8kPCS9LfQcW7HsIgaZG+BLIbc9FYMZqty/o91gnsp4GLAgG/tnJxaYUBPp75Iz9
-         h8tnU+jCxKpUZ5bR2TXJQhR7GR1resyETrUSAQbZ+N/bVBesS2pXe2Arp/iF24GkWR3s
-         e0o+9b96GFcLjcQhTSsGBGAUr95Oj+0/q/Bb/PVDAksT3QQXEinyVnKh4zZud8vsHSVk
-         zEqQ==
+        bh=x2yuXcYicNsLfmVmTvV6iIFzMrQnvqDQBWylQv3X+Z4=;
+        b=ah0iZResWUAv1sMe2PC3T4wW4kXXEirJJMMtd+kGX7f5yxjWadTOxDp6Q6/rv1wvLa
+         st0JwOM0x301GgZ5QpsV5hoUc03hUtMyvh9cl9vxsiMUcxO8Am5+SFeKI4YuczQrtLPk
+         1KLbKiYozybJNljCT5Fwh0PsihOiIk6zjyq7i4ao49a24afv4Wqu1d8XfOqdjPf4afIC
+         TLLwS8kgk8Gt9uNG8Ca5E8AX6XjxmtVuvhe+9/d9omFvcmhTVJunaIT/gud7GYB1fJNQ
+         8C8lLPFvD/plznuaxzxyrNAjEx3N2CVDNV6YTl8yeUxT0KvNbKRch0wPpXhN49kXp0sD
+         cYrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756735126; x=1757339926;
+        d=1e100.net; s=20230601; t=1756735125; x=1757339925;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1VsXliYwYcT3sgAjyKE0heVKtRXmDppGmlM6vylsstw=;
-        b=MMwMtM2jB6Vd4s8g5pjcsTxpD6Qczf9FqQZ2IawO1Ozirjv+fImkkDnUK3asVGumue
-         JBnSL4041fHRkTIYl/8HQWm+l+LyOKK1vlBcCFEgN6VX7eL6HSD+bs0j4mqwinwejwvq
-         dwXf/l43IHI2oR30PepCigYJg9ILjc2i29PAhXjqYVWVpN0Yaek1aHg8zN9iW05HPnwh
-         HMN/H/ZKvZdU2EzJOf4MeObmZ8QTSRyCf2N8LbYRXNmfuBU3jY6qPXpjQOWcu09JoLui
-         pG1xBMwc2K9nJfQH81b+qTZdTBeydgGx5kHm8KOaAZFLZJGOPozNPvq86WzqeUkB6Cae
-         6ZmQ==
-X-Gm-Message-State: AOJu0YxQEooMu2CRZAUCvLvWds+1VCiVMRtUm5HDamoQOqw/ZSuM/OeS
-	F/FBhhURpha7PJZL4ObiwI4GWYm5KOnbgQHIfi6QtrSU80mHxATVjWnufiUf0A==
-X-Gm-Gg: ASbGnct7HW0bSGGPgFvla5yRt6AlWs6iTIjaDRrZ0OUospX05ICcfovzazDgg7XmlRX
-	qXfTv5dKqlbY8ex7hj1Y7uhAs34m48z8u6vIEj8W2J+3K5OpsNobphaXiOMhU0fszUDkSyBgy4Y
-	skOBPqfCsAvPjnt6V3zZK1NEONq70vAbMgqzH/jZKt/c6T+9SQWeIMFiUnqgWWTijg5fVhknEO2
-	+qGlLmgV0TteoH8ZDQiWqLkjRqIRXFXmG5adsStmgH+G48ktrXGOvLopJHbkefwR/cVxhZ+b3Zt
-	73AGTVKXLFRuqwuW3R+j1dGuUfRv6R90WjvoYwSKtZubkmuIuPIYRZbG8DOgLVvTWnXNd8jUcIB
-	gcfCadlvZ0KZTfs/xb+TPaM0/SKxCuPackcVre0InZzAtZZzkGu9PBKsktieRWxN84NQJYrKnl6
-	atzt7yRN29Cvy3NwTPT1FM641+YfczPTyLESROS9fYw9SO7DIl1KQHrtw6CGPGprtrujHv
-X-Google-Smtp-Source: AGHT+IHEJkbP/nAs2VP1jn74NBYP03nfT2BKtTqqQrktxH5/YP2o7RWVUwvrFxEipKOpWiz8i4cncw==
-X-Received: by 2002:a17:907:3f12:b0:afe:7027:56f9 with SMTP id a640c23a62f3a-b01d8a708d7mr852544566b.17.1756735126145;
-        Mon, 01 Sep 2025 06:58:46 -0700 (PDT)
-Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afefcc1c6fdsm873503166b.75.2025.09.01.06.58.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=x2yuXcYicNsLfmVmTvV6iIFzMrQnvqDQBWylQv3X+Z4=;
+        b=GLAZR+cgYSgZLZIkfbsI2mwbidZ/RuQM5im6FzqjjphzbXtRtgGzguxaECui2NnGQL
+         dRpeDVY1Y4EFnB0an5BpoSaNYzWgiVeWM4EB+qPrhActTGixIfnKaXyxqUnquwrTQcAi
+         3htJCci6WKYOfj2anPP6J0EdFi27VAUtR8iIrsQKYEzJTvPEZDjXSMKnrbSEO4QD7XP1
+         NY2yAVDlLWOpYUOKe+Gs7I6G7CQu5aKAy/sSunghpyLWEHHuASp1aM251gNECc99HXfZ
+         pFiIncwsobTO1LDC8dnFUYTV4cEp9iwgtzDdROOoJqtb1IbeBFVdXxqRaW0YCFANCgP/
+         qb0Q==
+X-Gm-Message-State: AOJu0YwGdtK7t02XsBoWz957U40iwNMDeI9iqjdHh86uXdKEueCKIn/9
+	GfvgNMkoS06a9ODRD15FGU4h4KA6wjVb/HbwRAcB8iCPwSIa1gl2GaAKrRUGFA==
+X-Gm-Gg: ASbGncuaDwQVKPD/H7XpwvT6g2bktxc60LD1CJY4sGltuEgZFiArXuGUG5WYyLxZ7Hp
+	hn11M4VrMuLLhHwabgSew7Fj4uYvtosfPIE5KzV6U0V4CSOWSCmqNLBsr49BAlqqw/NOP0nRHWV
+	a0TsPKNzLpFX4UNl1TXCwo2s5TOvgiwbgHocgNwxVnD9QetePPJ7L/9gesRUgLF1asuCT58xFlU
+	WS5BtZGd7RXyqAYbdaQSL7ToSVWUVz5L7mdLD24T4DVUbfgRVsjdfbWO1J84gIqdI9pN86NOH1K
+	jtygFi7SRLtUuIhssVXJKIrjkwtJ2MOb/Ry+HL3HuhMDNMzTnB8+QNd6DUFcldQCUeh7Q3/DqJP
+	pYyFFXUV+dgITSYEIsrbP3eNeS0pJlTVVWjuksHa01izvBuAzNJaA9Cl+duDvA1LPclhd+9j34B
+	3hBabcc6qlGgDFnLQ0LW8xQK2LkuH8Yk+Fs5sc5NNMxDb8faPzB+5K8EC5NRTx+O8NfwT7
+X-Google-Smtp-Source: AGHT+IEmPzvNdbCjf8gfkZFwcLcw2CeYEE/LU7N4FqIy6lBKMdU4MgPAj2fMNXwOvacdcKPkgtq/xw==
+X-Received: by 2002:a17:907:1b10:b0:afe:c099:aeb3 with SMTP id a640c23a62f3a-b01d8c90624mr897008366b.25.1756735125304;
         Mon, 01 Sep 2025 06:58:45 -0700 (PDT)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afefcc1c6fdsm873503166b.75.2025.09.01.06.58.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Sep 2025 06:58:44 -0700 (PDT)
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Gyorgy Sarvari <skandigraun@gmail.com>
-Subject: [PATCH 5/6] bitbake-setup: fix non-interactive init instructions
-Date: Mon,  1 Sep 2025 15:58:35 +0200
-Message-Id: <20250901135836.2927686-5-alex.kanavin@gmail.com>
+Subject: [PATCH 4/6] bitbake-setup: fix typo
+Date: Mon,  1 Sep 2025 15:58:34 +0200
+Message-Id: <20250901135836.2927686-4-alex.kanavin@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250901135836.2927686-1-alex.kanavin@gmail.com>
 References: <20250901135836.2927686-1-alex.kanavin@gmail.com>
@@ -68,14 +68,9 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Mon, 01 Sep 2025 13:58:50 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17917
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17916
 
 From: Gyorgy Sarvari <skandigraun@gmail.com>
-
-The --non-interactive option is position-sensitive, it needs to stand
-after the "init" command, otherwise argparser complains:
-
-bitbake-setup: error: unrecognized arguments: --non-interactive
 
 Signed-off-by: Gyorgy Sarvari <skandigraun@gmail.com>
 ---
@@ -83,18 +78,18 @@ Signed-off-by: Gyorgy Sarvari <skandigraun@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index 9c2922b59..7382dc8d2 100755
+index 596c9885a..9c2922b59 100755
 --- a/bin/bitbake-setup
 +++ b/bin/bitbake-setup
-@@ -368,7 +368,7 @@ def init_config(settings, args, d):
- 
-     source_overrides = json.load(open(args.source_overrides)) if args.source_overrides else {'sources':{}}
-     upstream_config = obtain_config(settings, args, source_overrides, d)
--    print("\nRun 'bitbake-setup --non-interactive init {}' to select this configuration non-interactively.\n".format(upstream_config['non-interactive-cmdline-options']))
-+    print("\nRun 'bitbake-setup init --non-interactive {}' to select this configuration non-interactively.\n".format(upstream_config['non-interactive-cmdline-options']))
- 
-     builddir = os.path.join(os.path.abspath(args.top_dir), upstream_config['non-interactive-cmdline-options'].replace(" ","-").replace("/","_"))
-     if os.path.exists(builddir):
+@@ -539,7 +539,7 @@ def install_buildtools(settings, args, d):
+             print("Buildtools are already installed in {}.".format(buildtools_install_dir))
+             env_scripts = glob.glob(os.path.join(buildtools_install_dir, 'environment-setup-*'))
+             if env_scripts:
+-                print("If you wish to use them, you need to source the the environment setup script e.g.")
++                print("If you wish to use them, you need to source the environment setup script e.g.")
+                 for s in env_scripts:
+                     print("$ . {}".format(s))
+             print("You can also re-run bitbake-setup install-buildtools with --force option to force a reinstallation.")
 -- 
 2.39.5
 
