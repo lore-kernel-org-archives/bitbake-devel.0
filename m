@@ -2,48 +2,50 @@ Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B84CA100B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E717CA1005
 	for <webhook@archiver.kernel.org>; Tue,  2 Sep 2025 07:23:16 +0000 (UTC)
 Received: from DU2PR03CU002.outbound.protection.outlook.com (DU2PR03CU002.outbound.protection.outlook.com [52.101.65.110])
  by mx.groups.io with SMTP id smtpd.web10.71614.1756797794202570130
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 02 Sep 2025 00:23:15 -0700
+ Tue, 02 Sep 2025 00:23:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=PY8Pykz2;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=MHghlYxC;
  spf=pass (domain: weidmueller.com, ip: 52.101.65.110, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fvH8Y+77ucxkGewkNtlH41DlHld4YkCvFCsy9X54xjXv1d0Unv/1+3R5mR4HjWDDhrSrpw4U/j+obJaKsC+xqwX9ZIzd2Bpp4RRouoE+OETo84d1o0z80N5w7OZ+5icjBfuV3+YjYRrazRfh6N/0NQp40NcC+QsOyz9lqIHKJFGgVCvOJJBgavGXr+6zIUfAqeuFWCEXG5EXRE2xqGqjM3oJINzLfzWAaTZ8CEqiE7MtseffbcYtSch9ZJNTR8v1q9p8J8eIKBLA0hD+qFzmqRmuoa/bD5jbNPxBKq1mml88v6jAAs5aoRGOqnSn+WU6HlHBnOBoXpoOCtyJcHaODg==
+ b=oJjUGt6DCcMnqAcuYyc1lENrcLLw85EVf0dTgp9eEglK2hnstxeWydVPb7E5zgGGjTJyJu4lvTQ0s5elG7SiHeaFqAujCB3ni6tSnZszH24N+gp2SIyo3hxpcMxhnpdbisGHfibKFxjgrg+rOeVRYROlUdcDoHUpuayJ3yY1TQ1N3Z9W767PVFcrGxNCOGbu+RI+dOwXpCp89j2+wNroHqBfhhalqRtS31+Pozj7KAeduFAKDqrsFZjqU3DPLCS9KrD+frcLN/EEolSKqOskyxQsLbLRBTldnL2GSAUiVrAKnHmzQo4QfyVEu/A0qMxGSeO4sQxPWNLmNNRxnVQTag==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+2IF9fEwEnUnMtk5pF4IUJ6EDh2/R98M6c6h/wdEOvU=;
- b=vSk+JY3HWOiQt5t8Vr2TDyn/YQyGddaVFWi1+EYwmjz6tODRv8cx7E34lQczO8lfUfgG+nEKUKnNvAdtAS85Wb7a44kPh7D40jbRx9G3bbaI8xamvra3KvBapdC8OA5Np8H4F4tjUJ43vqH3/byHLgOkdhq7C8m6Oojp0Zgx6/V9MxO1t+82XpvuaxK9jockqxHe0TTD2YmtkcRCGV9AkGtVjrrq2BogLgtQ9wqv8vTdSaWSNl9GEEOBWjpIfE4ksygIV7waWH1WSS8XcqGbGRn8v8LePQlLkpm/sU9xCJ8/w9Nprg8lrsu9dsvfejGyeavL1Ezzhw7w6guiv8DTtA==
+ bh=Bi9BGBSKl9qQyc3mrCBRxEu5LFf1qGOp6oGJWigkmug=;
+ b=rDcGVlu6lOmrB5Hnvr8oOMmmpdoZn9ipdxxGq+U2GY8aF/ck0gkYWAvqWAboeYq6qCJo8hVr74r/DxxKAdlucj2eTCjBCGhQX88cp2K+Bb8qcjgtIp89Ab/+u+gQ6B3zL4P62n8yfdp6COduUes3FtaIas9hD/7DUPMo+ElUbkwlCg/AjfMwFEK/ZVBVtVDvwpqC0SrpSvLaOCAqamfYPKGG1bkl/Nh44O2L3dD7QedJTrBUoOx7IQGLej+RDBs+KaTsOnnJm3RrP0C26pgkBvIJK5mfgfzmi9bxvD+VkNw+oDVvhVkIhe44nyfMvP0eUzibPoTIP4mQ0vxboDz6Ng==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=weidmueller.com; dmarc=pass action=none
  header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+2IF9fEwEnUnMtk5pF4IUJ6EDh2/R98M6c6h/wdEOvU=;
- b=PY8Pykz2jZ+aF3zFaP4XAUgDbxHQB+XE+HjzW9QpKlAlmH8sKk/D69stpDUylf9IDjlyGMxJOcjAHniNg2iy5Rre5mep7m0G5DJfN389SIZhhPhFx0HONsVmvUfguoxNh29WpHj2cO4KWlCat2irTjIU7/w2LaKxHXi+c0vGy0U9weN+U/doLNFghHgj4h+A7ktsTFOl9ltKSQPvV3iw93wizUTH8XvXWgv2DCiaaAJ7Wr14lcmFWbwARUHM8xXcAi3fu3SU3XeVXOOCE96jwaLs+YROXzPawMlCWI7fyB42qB2WYDIEFEE0m8BYQ+by9CYRa3eNJp2cyVeEPbhgrg==
+ bh=Bi9BGBSKl9qQyc3mrCBRxEu5LFf1qGOp6oGJWigkmug=;
+ b=MHghlYxCovSn0uuW7TRwY5uhN+00WNIfi3P3y5QGhEWcu7dF5lJErT7t23TSw5B3ixeScJteHCVOt72lDY3yy/sejKBKviZBFXH5S1afnoqC8t/xHgyZiEuAhMXZ/Usqy3eipnCJF7jMqK1TGPTqFmijoeHZhj+ajXzQlgyH6LU+n8UAkLEP755CTaiMZkfKxxZKM8zHzjeYKNjuj+3e1BTjqw5xEtgwg6mkeTVmey1dGGV4tV4FnuI1/3tvz5uoMQg57SjaWljTpBSWHBBEXIPylO5ukt/Z2Y5zqILjzYXbz51OOJ6I9mrPpb64IXDSGIkOlxRx6b5/h3xRXwwnYg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=weidmueller.com;
 Received: from GV1PR08MB8426.eurprd08.prod.outlook.com (2603:10a6:150:8a::17)
  by GVXPR08MB7678.eurprd08.prod.outlook.com (2603:10a6:150:3e::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.27; Tue, 2 Sep
- 2025 07:23:07 +0000
+ 2025 07:23:08 +0000
 Received: from GV1PR08MB8426.eurprd08.prod.outlook.com
  ([fe80::f9f5:b4bd:9e01:9013]) by GV1PR08MB8426.eurprd08.prod.outlook.com
  ([fe80::f9f5:b4bd:9e01:9013%4]) with mapi id 15.20.9073.026; Tue, 2 Sep 2025
- 07:23:07 +0000
+ 07:23:08 +0000
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
 To: bitbake-devel@lists.openembedded.org
 CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Subject: [RFC PATCH 0/6] fetch2: add support for implicit urls
-Date: Tue,  2 Sep 2025 08:55:01 +0200
-Message-ID: <20250902065507.35737-1-stefan.herbrechtsmeier-oss@weidmueller.com>
+Subject: [RFC PATCH 1/6] fetch2: rename u to url in Fetch class
+Date: Tue,  2 Sep 2025 08:55:02 +0200
+Message-ID: <20250902065507.35737-2-stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250902065507.35737-1-stefan.herbrechtsmeier-oss@weidmueller.com>
+References: <20250902065507.35737-1-stefan.herbrechtsmeier-oss@weidmueller.com>
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 X-ClientProxiedBy: FR5P281CA0012.DEUP281.PROD.OUTLOOK.COM
@@ -52,116 +54,240 @@ X-ClientProxiedBy: FR5P281CA0012.DEUP281.PROD.OUTLOOK.COM
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: GV1PR08MB8426:EE_|GVXPR08MB7678:EE_
-X-MS-Office365-Filtering-Correlation-Id: e972e06b-9740-4ce0-c1f2-08dde9f1902b
+X-MS-Office365-Filtering-Correlation-Id: c4e8777e-180c-4a1b-379c-08dde9f19098
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
 	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|38350700014;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?HQjt57VPM9AmCC08AjqCWh8REVrHvaXcY+Avc3pshehhUji0NGAiaLfwPe18?=
- =?us-ascii?Q?sa/xh8Xrw101SYpLwXMjBy4U5TKhBozYll0Ras0dD2wGsf6WRy5eSBSaaj6k?=
- =?us-ascii?Q?05ZWYFRlm1MNC+wOFPlQlGgiOiS1gNO3cEa8FEnuMXjxCT04H7Dzu1gR9b0K?=
- =?us-ascii?Q?6rD+0Le34FyTb1Zv0PJzjz6TM7zrdfaMuLDFVLV7tZm4HAfBu9XXAHH6EpjG?=
- =?us-ascii?Q?IfbttJyiG224sNzHGmpqMtyyVCtybT6gKj3o5soNvw+Yhzo/L2JAAL0oYYl0?=
- =?us-ascii?Q?G40U4ORFuE6uHbx7Oi3EjWVmNb32MWgx66p/wn3TePtJolB+HYXFp1PRbNta?=
- =?us-ascii?Q?2niq31qRr2a9z+fOsdIX5GHPUogM51LB/KhprielKKEcMHtmg2QErGo1FYF8?=
- =?us-ascii?Q?LSrwkl/6Lollv89egCu0pnZcz7Q5Q97XiirywQNPvDK3XWZdINrjf5lSL4RQ?=
- =?us-ascii?Q?YSjZRJs7DPhe1gXmEAR19u/MC84GOIGHH6w3LADCIlDZKjnTAT5oNmnSdP+U?=
- =?us-ascii?Q?kctOnfpWGpxHqfvfHI9r1hRI/Umr27VZ3nJXfPgcovF8nLOmPlMVXXSSX9x2?=
- =?us-ascii?Q?YSG0MdkQo8yd92KtRtclT1eOIbmu+NPmte0zoXTeXlRJX1frUZsqhniU8B6m?=
- =?us-ascii?Q?5TpfgNLs+W3h+2rubEYhHopnOTS7sfbA9H3H8LCHOk1ED/PtR0Tz86ZePEDj?=
- =?us-ascii?Q?zImD3/OgefkR4HrgPLTYPC9Bd+SGDbhWP9Vo1I30z7pSQ3O39UZoZ4GxjUPo?=
- =?us-ascii?Q?A1RTsabVMZvgCFpIOM7pa5Veo+xYCUqhNpux7eS19p1vPog4xZx1wAZeqqOD?=
- =?us-ascii?Q?HGWR6x1cjJTWWV1ogBYvXzaEiI+sm0p2QnzeV6M6x7NaSR8+c7QI5BLCQecp?=
- =?us-ascii?Q?fg/FZtZJdJkIX+vBAofeNYnqgF5dBrddEmynDR1B4ADSWoIQMyHPz/30vr4C?=
- =?us-ascii?Q?PqQ42Dy8+b3kyiDGlxXIJwY/tYAZp1iCDn4ATh9MCLQ8NCFJy+ET0qM8nR1b?=
- =?us-ascii?Q?BFUWAPwg/ddo8G+PQJQobfSf9wTonNYJm/p04wQtRzaPsX293PJeFM5oyP6Y?=
- =?us-ascii?Q?lJp/ZWl8araCpti/q2EJvc5MYyupFreLhz2TSZlZBaKOI4K+D5gfTnSfCWw7?=
- =?us-ascii?Q?5+SOVOQf1O1JDAbb4VTxbSuNJ6PtcNRsc/1K1/TR+pb6VRYVUOmO8licMNN0?=
- =?us-ascii?Q?4qLoij1F2SVWOvMvZoBkE8dWXnlfkKaJwpRLRxVeuVQJgjM4Ab/O9Q1cZe+A?=
- =?us-ascii?Q?z5OOI5/13PrFf5oToplrFDh/fIMKMuEchX6xAT0fuJYGuVbPyB96ykLvHpIB?=
- =?us-ascii?Q?TidXnOkRm3heeIyUj9UUfCjNRmGh+8bFojO55qwhjGJnO3R56t9jJ13YQMCn?=
- =?us-ascii?Q?DdPSUDycqx0cj34woqgwfCauOerS/6Boychiq0Ivs4z1VePYRnLpuvFSZ+IB?=
- =?us-ascii?Q?BqR6lbQDamnIOngPTirQLtjXmXXsOBpuy7TM3wBsTm3E37EGSOOFvw=3D=3D?=
+	=?us-ascii?Q?PqLB67jIMBHdyYuTC9eEcqy12J81O68MGxRrFqNUuoUxIhiUXbNw/sfubr//?=
+ =?us-ascii?Q?zaNW20r1bG8t/AqlhG+rPdHbTTqTMxhIwPBxDIdhVWPvMryZNFQFHma8GIVP?=
+ =?us-ascii?Q?wYWDv2sSmLmlfV8hzGG12b9gw8MGul8UsF9B3REMwWTrUoSs3l17qSlTyy8+?=
+ =?us-ascii?Q?/khH+uyvThq19vyE8xHILXLhS83rliTmIGFYHzAOEXgfjYdP3DC0aEEJ3Ifu?=
+ =?us-ascii?Q?J6uFNmomrY4mK5kQXlHAnQksH5xR613Sct2RNVHYuIgYfEOxlPAwaRW62l/+?=
+ =?us-ascii?Q?qgekFbNj3eo07L8VwgBwz5vUWx6wXYoBuvkGjkeVUCjEaomgvNznmRWmS+3B?=
+ =?us-ascii?Q?oyWPUZ3DETYvs4Tfgxmz4EF9DenJcNSavOgx1NkmdjU5bDOt9PDoRBTgETy3?=
+ =?us-ascii?Q?whJYNmOaXg7+ssGd6ca+03Qinyb3jR7tZU5rTRmhu7Da0WQ4lXYAlMGCSvw1?=
+ =?us-ascii?Q?mTfWosb24E/lxreOsnA/cVRFoAprEpl2tkWXYl0Xlkx5aXwU9p+sLCwEJs2S?=
+ =?us-ascii?Q?jguhCeji8YFQM2sNqSzuoKkkK3h7JV+XFjLUcgzYm73dXcUQlsxtqjq5TWRH?=
+ =?us-ascii?Q?KRjphEhe/JkIf7fwk6TcuqJ9wGCUmtQXtYPhySS87Bhsa/71FWhQEFwgWiRT?=
+ =?us-ascii?Q?Zgd0k7ya+9UjeVkoeWeKzNwQKGOYqqGwL0gdi0+HkSAGf5bCmi4+fez2RMOF?=
+ =?us-ascii?Q?iZ41E1NCCdIcogMzApCjC7c91IJGbLL39QJXCW5+Xkv47jl09aUHYwyqnhSQ?=
+ =?us-ascii?Q?9jcpPFNgL1I6Fr2huJdeCnQt2Et4U+Dp1kEODtHDPT/luaptp2o57C9D8Myv?=
+ =?us-ascii?Q?aIMMFvKNWqWeNqc0C2HH7ghk/k3l/IIAO0azPy6js1ul2L+Z4wnKXXgk+2kW?=
+ =?us-ascii?Q?YXaUlsEch9KZl2IVTzizQrhQEw2JEmtBAGxK/gSve9Nw3B7D4wzX71vsAj1F?=
+ =?us-ascii?Q?K0Lu5RhY2yulS2JFYPGz2SPhUJ6TU/N6FCvIFPFWBpOxmfi4XEAmT7fYYHK8?=
+ =?us-ascii?Q?Mo7AVpGZ3jENu6YpsrhX/OHW2Zbj4+7BVqPixUQ1hfzJvmdBXmHN/vBQozpW?=
+ =?us-ascii?Q?o3trbVL5oLdUuWSVoGAkecHeHcJ8+ji/U8vbqbtJaWPBj5A7FNZ43ESJvwnm?=
+ =?us-ascii?Q?unEUicHX16GvKm4CUlv4mBdJFFGw/CAhfeeB4gVkPX/Mj9cdvS6gNy+qrx/d?=
+ =?us-ascii?Q?UWnfGJgCmzA691JquRULiUQrhqcJJMiTsMrbLPuH5UTOVsnTVlL96q8qrxH1?=
+ =?us-ascii?Q?cnKIVUJevF5IqBp+OL+eIqMw7bsWLmlz+UJyyFW0rWU4lk+/q0DumNjSmRZk?=
+ =?us-ascii?Q?UwQDJbeYrne3yFL4634s6Gz4IYEaMwwAnqES2brUqVf11NhR3/C8K58jViCX?=
+ =?us-ascii?Q?bLSbRxaeKKqhXRpUX0XHoQq2JBeY3McbP0wOMNUF5xUXdZtF7pUKPAzE+0N1?=
+ =?us-ascii?Q?aFvgNG9P5BTS9mnw2OZ5sQ4PWH02mIjFlGFz0S4LD5bJ86WmrUy1wA=3D=3D?=
 X-Forefront-Antispam-Report: 
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB8426.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?SYjJdMDgjO3LJOwEjwpt9zGNhM9rupOje9RCkU1RwTgjbTCy4DNFtxiBQJ85?=
- =?us-ascii?Q?kfQDWS+K4JcERNpAmDGh8JYe5Ece17yCXv9J2PA9QWSfxSyi0QrmqKbDgZSX?=
- =?us-ascii?Q?Cp5JNh4w6TcaxIOVlPBxxhk/xtNS19tjojjj/zDZdMlUhsU6AmrJaWNdy6XL?=
- =?us-ascii?Q?6B4/g1Vj9ZX3ftKD7WnjnrqepDM1RwjwpKQCClN7PxSYk2GbMnls51ZkDxwK?=
- =?us-ascii?Q?Ak9SqfC9FeBzgCCVLRUssIT5FWtclP8uCYBPLtLjnL/7iH1RTHqJaE9QVO3g?=
- =?us-ascii?Q?0cei3eCw9L4u9I3rZntnzq8u5KZLGPt8xryvVagkgdDHbXl0U1khnyTk7kqc?=
- =?us-ascii?Q?ynrCezefGulVldiGvUwJXOz+vzhbwaZ0XgiAF2R4VDO53Xh4ukWEK/YXr9Kj?=
- =?us-ascii?Q?DTYIN/GX3Df9Ayo82Xb6kTg8w7Py/XDoKVJwh1lDiyTTcOSBbLXcqaOMtqHD?=
- =?us-ascii?Q?1WSVfMKPQVtLrLfEsHGqLQ74vX5QnUsEj5efVdtboybm5IuEzv6Co+vilSXZ?=
- =?us-ascii?Q?KRGknKNihrsqR8sZgm+y7zJSl5EjBIQEM5jYVUNADeLTKrMcJ+ZmX9QJoHmB?=
- =?us-ascii?Q?u/N9+Z5sYSKLHbGdUR5Wn42A0C++sYpMOlFu54iWGU+In/E4iDRS5fxq/ZaZ?=
- =?us-ascii?Q?nO0qmJrZK+SU85R6JNsex0PbZfUkpk2oGV2jRFymCFYqIdSYUzlDVKTJQLtu?=
- =?us-ascii?Q?NBwE2h3xyD3Zbt2HCSqGtw78/FTJoDDN27JSZW1YWbD6Hhaj2vAoSAd/8gqu?=
- =?us-ascii?Q?z4vgwwz/4fwKA2uxOugtZLvCfiVJGjF5WSqmsJiSqQ8fwWeO6ItzcV0ciy93?=
- =?us-ascii?Q?12B4uGbG9bDY9MKJPPtyUiHo1UZbvN7CVaqOctvdDj91bgZ/Z+oMTJMRMszo?=
- =?us-ascii?Q?UoeYB/dC9gyFV0woI1mIr2sW8DMdJln53/pHbRAcQD2kCtVwpq1jeG0zOHOs?=
- =?us-ascii?Q?86pjNm+rrXLTa/WkKi56C+/vQm5BQs/Db7xxgtqCAMQWm9Y9L0uGFDrE/t/I?=
- =?us-ascii?Q?F+rlGyhzqx4fnrs9v2ghLyqKwyW4O/xr02j9GkFPpUFr9mgQM90ZuudI0yDW?=
- =?us-ascii?Q?gWH1/bSfsj9q89alnvGFZQpqrQNQgo6u1ulagxQaZBXfxVfhwSlT4jF3sMxo?=
- =?us-ascii?Q?dV2kYLxpOqheWFOUS5y7GNB2Q5yCTKlGeVSUQ7eq+lZboLVkd/C03HKa6biX?=
- =?us-ascii?Q?PcXpRI4prFg/SvGNVAoxGaIYE2gaG8oQv/knnEO0VbrXfZ2kDPaXtxcDyUro?=
- =?us-ascii?Q?lmzH6gJZ0lZpc+VqHrPMyOKVhLphTDf+43wzeM3DWW8k8F5OMlQduZSbxWZ1?=
- =?us-ascii?Q?RuqcFZOEJiNYjGCcB0X2+bU5h2qxb7H2KZJVQc2dkRytwpHJL/rZvgjp9x9K?=
- =?us-ascii?Q?JovXqGl+V+65jsjia8FNRD36agiHf+3v0VndOnc1Elqas1X3P9FM+5sAcX6T?=
- =?us-ascii?Q?wIbjLMSRFZePWyke+uFV0+arQDfwBN/7caHFkXN1hQlQ/TwHziL88q9vpgi6?=
- =?us-ascii?Q?A9I25uKc2vI+Z4BUb6aY+AjIy7oGgHk4YY6KXDda3Elt3E+AlvOzXRMOKs14?=
- =?us-ascii?Q?6jRWY7JIRgCdP20hT2qHQ6Ha0boa14kF/XS8TaBZybkEn06PNujlwFvDE7/h?=
- =?us-ascii?Q?QQ=3D=3D?=
+	=?us-ascii?Q?Yfcos0+Ip41yW5uV0uykzI+MzZU/lz6t1pj7WzmW0JmYnxOMwn5w5Nl+s4ss?=
+ =?us-ascii?Q?PKZ25tuNNplu9sjxtjyx4QInc/pXR+FFq1UQyBR4jsZwcPOAtSOkgwVk5rTh?=
+ =?us-ascii?Q?lpNPP7KS5VWrdyrVGruAieOuDEbDRUNcwvFopjHBLPk84b0eeizt2jcpQMNn?=
+ =?us-ascii?Q?w4fWDTijnlwFJWJxvZvAsBoYVXSd9EKzpIJcCaBwWS2BYtLNXFuRy8tdXBaW?=
+ =?us-ascii?Q?b648N2vDo+cqcwb2ZYMnvnJv/NxNYajttVDtOQ156DA5vuo6wr6pUbD2xnQC?=
+ =?us-ascii?Q?Tyua7ZbalGGo+Fkny5XQ/OOzCS0CfHz9JsqnurG7Oe4c7JrZONPqsvNUF81L?=
+ =?us-ascii?Q?xN+HVt1S1BAQPxRID+C4CXukIlNNCKDAmDHtAJK58/GcYDkfa/TrIlJrtk0+?=
+ =?us-ascii?Q?9U/ddIIN5IwS4UF9mx80OOvFSYO2BV/LYauWZnYuCfUfl+KnsQ29jMkZo1Mt?=
+ =?us-ascii?Q?+3PN8oLU1Mt8l5d1mB/mEDCf/CX8YSlPOqDFrvhirYeO6YvN/vofa5PVo+qB?=
+ =?us-ascii?Q?sYJbLRM3vIysBCVMcol5MmwH/dk6ZUHDatPnVRY19TxpRHFKKsQ40THhw48f?=
+ =?us-ascii?Q?HCS+VJsAdnKE9DXhaiTxoiXovNo51KjUlEpemGs+TUS/DRxM8mIUtzkFoMwt?=
+ =?us-ascii?Q?j8/s/aqD0taz9SdclGHKMHNKIbVOmWCKLj69hTNFwDrl2SENMlv/m0dMQrAo?=
+ =?us-ascii?Q?Z7tzql1xSWxFTpl1uDQ16nQZMWkWtGHyIqv6dJdmQZFkHOF1RDdyRP667UPy?=
+ =?us-ascii?Q?BX0d6fr0Ag0F/H8ZEaBv93uerBfMzhIgH7mPtu1RfhjGrifoE9C/1wzzfIyr?=
+ =?us-ascii?Q?3HJyUlJLMHUxbVnC47P1A28lzaBC4ItXRugfPTUGCD0Kobwe5cb3EFGM5EOo?=
+ =?us-ascii?Q?U9icv9i6fsOEX/6bwkfhW1uTSI64kJu7AXEIgqhwkjlnLi6GdroC8cbavvJK?=
+ =?us-ascii?Q?Co1VCnnMszouui2jFepGlN+I0znOkJ/yivj5a1Wz/7W7EZ+tXAEcvZIraArv?=
+ =?us-ascii?Q?rHlBGXsCmCQPX2CJfxcZXbGGeLi2h5jce4LdL1CXHMmCeIJFppD5gDIxxBYO?=
+ =?us-ascii?Q?029edK2dcnjkVuixHTu7EDEG7kpGp38sKQ3jWRM9cRnrXjSqFm2Luefwf/3g?=
+ =?us-ascii?Q?wWy14noEai9lV7DFlAwGM5UBBMZlR2qk3ZlUxoFZ6JpDlyqvUs9V+B/Y5rs1?=
+ =?us-ascii?Q?sy3Dflbm4AiU7vdUoI+OKKVVQNCBbPi5tHG3m4a2LOCnsj1FxxoIt0BjVGrD?=
+ =?us-ascii?Q?XFxWQ504Nmzt9M2xnslfVfurOqvnX99iuNxsL9QHkPOi19HR4xvmdSDqm5ix?=
+ =?us-ascii?Q?ZVTItJTEu7vLyA09CxUrFR/Yz7Iqcp11a1E9pACHl+dupIHgszVj8/4py9eU?=
+ =?us-ascii?Q?3u6aTFv4tVTjMmx+Bl0I9DlIBw7JEu/FgHqrzvmMoNRg9Dm7OJ0GMRvc9Ej5?=
+ =?us-ascii?Q?TZTmrxPuQ0zkwwvNBP1mflV8AHmIm34Y36RHNGQtmNa1zdO5MeOVdYdb/LHH?=
+ =?us-ascii?Q?3Vpbm8B9C86eVjz7871ffawJl9ersp2h9/YsDykSbvCDQnCNoEPflcD4ArGt?=
+ =?us-ascii?Q?50fNH9syOk4wwp5MwHjzoPnrRtY0+OYEbSWA61HCaUoet4FihRp5W5X8riMg?=
+ =?us-ascii?Q?Kw=3D=3D?=
 X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e972e06b-9740-4ce0-c1f2-08dde9f1902b
+X-MS-Exchange-CrossTenant-Network-Message-Id: c4e8777e-180c-4a1b-379c-08dde9f19098
 X-MS-Exchange-CrossTenant-AuthSource: GV1PR08MB8426.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2025 07:23:07.5254
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2025 07:23:08.0425
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SMZCiqr7VsULpkjvvwFEsOp2LtSLptmO7v/wZM3/ape0BWZ/1etTq7xFhFAXLvU+sjpJeijNKI0TeCHgDTR3Ug==
+X-MS-Exchange-CrossTenant-UserPrincipalName: TzBXVCAN7AMO8AkL/EtroPNWDVW9+G/iPSgBOPO1jLJkHAFx2LbHaIvD3nO1oprjm66zPrU21gNAeaRD/jPhcQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR08MB7678
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 02 Sep 2025 07:23:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17936
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17935
 
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 
-The patch series add support for implicit URLs inside the fetcher. The
-implicit URLs could be defined inside a source like a version control
-system (git submodule) or a lock file (package-lock.json, cargo.lock or
-go.sum). The integration of implicit URLs beside explicit URLs
-simplifies the fetcher classes and avoid bugs because of iterations
-between the Fetch and FetchMethod classes.
+Rename the varialbe u to url in the Fetch class to clarify its meaning.
+Avoid using short variable names over long ranges and simplify
+subsequent changes.
 
-The series remove most methods inside the gitsm fetcher and only leaves
-the parsing of the git submodules and the unpack functionality. It
-allows the gitsm fetcher to use the premirror only feature. The current
-implementation leads to problems because the download of the git
-submodules is triggered via the download method which is called deeply
-inside the fetcher code.
+Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.c=
+om>
+---
 
+ lib/bb/fetch2/__init__.py | 42 +++++++++++++++++++--------------------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
-Stefan Herbrechtsmeier (6):
-  fetch2: rename u to url in Fetch class
-  fetch2: call functions within loops of Fetch class
-  fetch2: add helper to get urldata in Fetch class
-  fetch2: add support for implicit urls
-  fetch2: gitsm: use implicit urls feature
-  tests: fetch: add test case for gitsm implicit local paths
-
- lib/bb/fetch2/__init__.py | 128 +++++++++++++++++++++++++++-----------
- lib/bb/fetch2/gitsm.py    |  46 ++------------
- lib/bb/tests/fetch.py     |  12 ++++
- 3 files changed, 109 insertions(+), 77 deletions(-)
-
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index de301543a..bc9808da1 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1841,8 +1841,8 @@ class Fetch(object):
+         """
+         local =3D []
+=20
+-        for u in self.urls:
+-            ud =3D self.ud[u]
++        for url in self.urls:
++            ud =3D self.ud[url]
+             ud.setup_localpath(self.d)
+             local.append(ud.localpath)
+=20
+@@ -1859,8 +1859,8 @@ class Fetch(object):
+         premirroronly =3D bb.utils.to_boolean(self.d.getVar("BB_FETCH_PREM=
+IRRORONLY"))
+=20
+         checksum_missing_messages =3D []
+-        for u in urls:
+-            ud =3D self.ud[u]
++        for url in urls:
++            ud =3D self.ud[url]
+             ud.setup_localpath(self.d)
+             m =3D ud.method
+             done =3D False
+@@ -1882,7 +1882,7 @@ class Fetch(object):
+                             # contents mismatch the fetcher can still try =
+upstream and mirrors
+                             m.update_donestamp(ud, self.d)
+                         except ChecksumError as e:
+-                            logger.warning("Checksum failure encountered w=
+ith premirror download of %s - will attempt other sources." % u)
++                            logger.warning("Checksum failure encountered w=
+ith premirror download of %s - will attempt other sources." % url)
+                             logger.debug(str(e))
+                             done =3D False
+=20
+@@ -1914,14 +1914,14 @@ class Fetch(object):
+=20
+                     except BBFetchException as e:
+                         if isinstance(e, ChecksumError):
+-                            logger.warning("Checksum failure encountered w=
+ith download of %s - will attempt other sources if available" % u)
++                            logger.warning("Checksum failure encountered w=
+ith download of %s - will attempt other sources if available" % url)
+                             logger.debug(str(e))
+                             if os.path.exists(ud.localpath):
+                                 rename_bad_checksum(ud, e.checksum)
+                         elif isinstance(e, NoChecksumError):
+                             raise
+                         else:
+-                            logger.warning('Failed to fetch URL %s, attemp=
+ting MIRRORS if available' % u)
++                            logger.warning('Failed to fetch URL %s, attemp=
+ting MIRRORS if available' % url)
+                             logger.debug(str(e))
+                         firsterr =3D e
+                         # Remove any incomplete fetch
+@@ -1934,13 +1934,13 @@ class Fetch(object):
+                 if not done or not m.done(ud, d):
+                     if firsterr:
+                         logger.error(str(firsterr))
+-                    raise FetchError("Unable to fetch URL from any source.=
+", u)
++                    raise FetchError("Unable to fetch URL from any source.=
+", url)
+=20
+                 m.update_donestamp(ud, d)
+=20
+             except IOError as e:
+                 if e.errno in [errno.ESTALE]:
+-                    logger.error("Stale Error Observed %s." % u)
++                    logger.error("Stale Error Observed %s." % url)
+                     raise ChecksumError("Stale Error Detected")
+=20
+             except BBFetchException as e:
+@@ -1949,7 +1949,7 @@ class Fetch(object):
+                     checksum_missing_messages.append(message)
+                     continue
+                 elif isinstance(e, ChecksumError):
+-                    logger.error("Checksum failure fetching %s" % u)
++                    logger.error("Checksum failure fetching %s" % url)
+                 raise
+=20
+             finally:
+@@ -1971,24 +1971,24 @@ class Fetch(object):
+         if not urls:
+             urls =3D self.urls
+=20
+-        for u in urls:
+-            ud =3D self.ud[u]
++        for url in urls:
++            ud =3D self.ud[url]
+             ud.setup_localpath(self.d)
+             m =3D ud.method
+-            logger.debug("Testing URL %s", u)
+-            # First try checking uri, u, from PREMIRRORS
++            logger.debug("Testing URL %s", url)
++            # First try checking uri, url, from PREMIRRORS
+             mirrors =3D mirror_from_string(self.d.getVar('PREMIRRORS'))
+             ret =3D m.try_mirrors(self, ud, self.d, mirrors, True)
+             if not ret:
+-                # Next try checking from the original uri, u
++                # Next try checking from the original uri, url
+                 ret =3D m.checkstatus(self, ud, self.d)
+                 if not ret:
+-                    # Finally, try checking uri, u, from MIRRORS
++                    # Finally, try checking uri, url, from MIRRORS
+                     mirrors =3D mirror_from_string(self.d.getVar('MIRRORS'=
+))
+                     ret =3D m.try_mirrors(self, ud, self.d, mirrors, True)
+=20
+             if not ret:
+-                raise FetchError("URL doesn't work", u)
++                raise FetchError("URL doesn't work", url)
+=20
+     def unpack(self, root, urls=3DNone):
+         """
+@@ -2000,16 +2000,16 @@ class Fetch(object):
+=20
+         unpack_tracer.start(root, self.ud, self.d)
+=20
+-        for u in urls:
+-            ud =3D self.ud[u]
++        for url in urls:
++            ud =3D self.ud[url]
+             ud.setup_localpath(self.d)
+=20
+             if ud.lockfile:
+                 lf =3D bb.utils.lockfile(ud.lockfile)
+=20
+-            unpack_tracer.start_url(u)
++            unpack_tracer.start_url(url)
+             ud.method.unpack(ud, root, self.d)
+-            unpack_tracer.finish_url(u)
++            unpack_tracer.finish_url(url)
+=20
+             if ud.lockfile:
+                 bb.utils.unlockfile(lf)
 --=20
 2.39.5
 
