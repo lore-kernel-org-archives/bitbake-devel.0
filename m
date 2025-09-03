@@ -1,84 +1,86 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <skandigraun@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58760CA1009
-	for <webhook@archiver.kernel.org>; Wed,  3 Sep 2025 12:15:12 +0000 (UTC)
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
- by mx.groups.io with SMTP id smtpd.web11.10765.1756901707288663966
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92538CA0FF2
+	for <webhook@archiver.kernel.org>; Wed,  3 Sep 2025 13:05:32 +0000 (UTC)
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.web11.11854.1756904724023958393
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 03 Sep 2025 05:15:07 -0700
+ Wed, 03 Sep 2025 06:05:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=RFYX/GjZ;
- spf=pass (domain: gmail.com, ip: 209.85.219.43, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-721504645aaso9459136d6.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 03 Sep 2025 05:15:07 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=XyvOzIuB;
+ spf=pass (domain: gmail.com, ip: 209.85.128.41, mailfrom: skandigraun@gmail.com)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-45b8b1a104cso31785795e9.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 03 Sep 2025 06:05:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756901706; x=1757506506; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0DxXiQCwY0+P4FN2UPkcuWsg0F9GlPEQl3CQQ2h8a8c=;
-        b=RFYX/GjZzZbdZn5nCrkS9XIDDdJs6zDG9wR6h2q+6ZT1nJfkbhugCgcf7yFK4CjBul
-         mD+Au5k/VtQ9ooG/L+EU2x8ziAxdixlL8yhcGxqs+V5diahDGF5odFCXuO2jVbja0qVM
-         233tV7JmeE2z/OE1KZGGJeuatbpJhCCtgQUb1Atpo8/4vXwYvraok5qjPkEk/PW4eIxU
-         fu25j3YyhqeNHIcPxaax9C0rDr1Tn5JrvnMnwh3naW33bl+RR+IxbfaYfO0AJb9IQjJY
-         2KYWEcyeIFT+fxW6ahPKF1jpgBaxuZE96YI6Zc1rnhmsiNvurEwh5cK2nd7FCNdcyyAv
-         oCNQ==
+        d=gmail.com; s=20230601; t=1756904722; x=1757509522; darn=lists.openembedded.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=HlHEQ0cfWzjmJmGijCeNyaBCMN1AiQnqlp+p6tssZfQ=;
+        b=XyvOzIuBEFySFy99KzP6dTAct5U7lbZk9/UWTKFk8Pzg/1YU1tWT1UKnzl0itJ8iv9
+         /RiFpW96HO4BOsEE68qHq96ilTwWfNTYCCC57JHRogQDbuiyGydkN39FRjYuLmmJ0CDY
+         5zLD9ZBQhMiXjF5gdY43PuCTZ+L+AEN5MNxQKi1kehNGLhuKhf7diLP+obNk/TqkqUFP
+         rVpVyQDE+nOovMbbFKfVKBmjcPMJblwUzWM9chafKF1o2NUc2zs8jeAE9GJQcaw8eM2M
+         woG9igyZCV2j0t1X/UqS1XVLAC2wgp9I+hPv2ZCUINIUDZIlvrAQ3zLO3fVat6TO+bBi
+         w+mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756901706; x=1757506506;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0DxXiQCwY0+P4FN2UPkcuWsg0F9GlPEQl3CQQ2h8a8c=;
-        b=qF3X+qup3/rOurE1Et6DEUG7yDOuSMOKWs9L5z9j8aaPAKyfEpReVzEmlkVPUnL/cB
-         B7cZpC5NtYYDvefNlHO/fyyk5KR+83NmrNWXdRF5YqnemjNO0pTctRT2yfd6FNLDlQjv
-         TyyAJbgGhkMYdFBQ5fexTw8aRM62gzkSJMQm0qUBrrr7PQmE2e5KvToOzQcmRirIe87B
-         cvjISV5HqtUYxjqZFjXoKS8Q0d7Z1OqeNNgOC0KCtdui71ZLB/AgApvA9pzd+0y3Wagw
-         QFNI0p1B5Y3pWuHcz75v7wM0FDxyGMCwm0Ue4l22P4lENw7Q96z7L2yyuJVPbME6KtGt
-         WI9g==
-X-Gm-Message-State: AOJu0YwB0pdS7Y6WvV189aM7X1b+aOr+VoU4ZANvVRbR+bFf0kXf+DhN
-	kCKHNPNKUB96xu36r26Zl9h4b4B+Pe23uN6Fu+YKFqmYkHSlvbtABIY7z6/fBiHTo5Q9JaumJum
-	BjJ8hrM6R1ll5UXEmRmZfQmNBy0VczvU=
-X-Gm-Gg: ASbGnctOHj7cBXY0YSjkQ8SZT3aEYdBPRL8jzsyGoOjmewhEKQHY4puZ6at1H03HMkP
-	RYQroEJyZQcqoOvtCTJ6tSxtAgrZ7adPEXdOlMYDzzZ2HMwc6in5KSYSZxYw2qws+g/yBLlVp5E
-	lQISabn6Lpf5GFdysvJ27z/mjrqIP+uZt3w+Pz3aMpUeVgEhB8GLEx5R8jli1xTah4RZc1y4/tQ
-	uNaVr4Kh+q1VfVN4/xK64XZciYds1IPUPyEG90PaVK90MdvyyvIqS5gdpXg6GmYSN7bbUPrKtTQ
-	WOI0iPQx2uu2iipY8GYAsq3qOOo41O7Bs5HVKgx7
-X-Google-Smtp-Source: AGHT+IHBWGmuj+UFly10MtyNhP9u1Peo2+x7g5DNJdOkvjQyL5rc9Pv+FTOvslbZ2oNM/Bcz3GqakDMbXCf67OMXNW4=
-X-Received: by 2002:a05:6214:76b:b0:70f:a874:9838 with SMTP id
- 6a1803df08f44-70fac544bc6mr148505886d6.0.1756901706128; Wed, 03 Sep 2025
- 05:15:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756904722; x=1757509522;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HlHEQ0cfWzjmJmGijCeNyaBCMN1AiQnqlp+p6tssZfQ=;
+        b=JQNzix+pU9FQXWpgGbDrP1R7Kps5rRq3NmEzT6MewPr4KiLowXnUCa4UCxQ3acBRQ2
+         lzCelTAvS26YsYso3h7gqZZ40StSszV92J2jIs4tcMfFaUyK17QNVeocyoFCicpS4aFO
+         pm8/br/6CFTvTlI1Icv4GcbJDqATwiFymPhe2o3fzlO37TPLT69eJ+L1gtOdD9PQWTgf
+         GP6tg3dtrYSvKX/CWqxs05MX8avV/a9+fXHgSXCtJItELmZWVQmYRPoR85XraTK2kCEk
+         B+uRfH0SUgq1TM9ZtQZOHpi/+0eZKI0THdVasKk3IBzMh1WrcRZYp7qNQf0qzU6Jy4VC
+         r7+g==
+X-Forwarded-Encrypted: i=1; AJvYcCVvTMZ3mKeMdDjcXgIX7H+zwp3qKuwLTlSxmsxH5PZ05Fsy5pjcBw94DNnK+UfYIxhjBLIJq4p9TKk7ThgR@lists.openembedded.org
+X-Gm-Message-State: AOJu0Yz3G0rKKUUTiQPWzy60Zk2753Z5zPGh72Qy95TRiN57RnLXSiAF
+	IoFtrzYhp1cdF0Onc57Fmj1OvY1Y/0tp1RXgDg82XIDpGd+TDTrfU6q5
+X-Gm-Gg: ASbGnctXqtdUdQLvUzgB/+5tMi9T92mq8oRLOPq2B4JXY5Ytw5rVKwyQnBh1LMnF24Z
+	n5Gv4Eq0kcjHArlFdbr4EpVoVQMsMIcjTllHN5hLeDDAn5KJt68eWjuhZLMQcMEKxY5u2K8RlaF
+	JqoxOzR1BTQ+wO7nSeFffrhDfSDvFzJ7TrH/n5EYiFIJ8ot0XAZymuf5JipWY6pDm8wBQ4NMZmc
+	XS44Y10Ug6MEkHpMKl17tePxvIuekvALBnKDIErLOhWoZAm+rCn8oxZ6t+sDQLw4hQedqXRUgGa
+	rnsMd+/BpQvrhvgWt+OBdL3N0QSqyYaOjeLSgLtmNnai46e2VhlrLprcwYMuFXMNWe24G6PcBQk
+	68JLtMXC0+qHpleRsdRmZelHcxXVvpbfQsCrO+I9Oxg==
+X-Google-Smtp-Source: AGHT+IGz7PZz/gopC6oV1j6HF78dys8hGFjULKwTwbyrxM+bgGi4Oe4unkfF4z2fm6F6cwtzeYVlNg==
+X-Received: by 2002:a05:600c:8b41:b0:45b:7be1:be1f with SMTP id 5b1f17b1804b1-45b8557d72amr114393345e9.32.1756904722128;
+        Wed, 03 Sep 2025 06:05:22 -0700 (PDT)
+Received: from [192.168.1.106] ([51.154.145.205])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b8a980011sm88917975e9.0.2025.09.03.06.05.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Sep 2025 06:05:21 -0700 (PDT)
+Message-ID: <a8b57517-343e-4284-856d-108835d20302@gmail.com>
+Date: Wed, 3 Sep 2025 15:05:21 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/6] bitbake-setup: make sure git user is always
+ configured
+To: Alexander Kanavin <alex.kanavin@gmail.com>,
+ bitbake-devel@lists.openembedded.org
 References: <20250901135836.2927686-1-alex.kanavin@gmail.com>
- <20250901135836.2927686-6-alex.kanavin@gmail.com> <DB5PR02MB1021363CFCC9D5EDC1217D085EF06A@DB5PR02MB10213.eurprd02.prod.outlook.com>
- <CANNYZj_drPD8qO_7JfYLc7Px77OdOM3Mp1MUhtd+nU7h8mnFBQ@mail.gmail.com> <DB5PR02MB102139E511197B10DA2348737EF06A@DB5PR02MB10213.eurprd02.prod.outlook.com>
-In-Reply-To: <DB5PR02MB102139E511197B10DA2348737EF06A@DB5PR02MB10213.eurprd02.prod.outlook.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 3 Sep 2025 14:14:55 +0200
-X-Gm-Features: Ac12FXyfr4x2UcYCf5M2apOA9259fR0Jos11qyuOljd7IX0J5pVunYG1gGrkSSI
-Message-ID: <CANNYZj_z1++QHks=dd_GJ9nyRWdVpCOekm7A1Hk+UW3C9NrYew@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 6/6] bitbake-setup: make sure git user is
- always configured
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-Cc: "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>, 
-	Gyorgy Sarvari <skandigraun@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+ <20250901135836.2927686-6-alex.kanavin@gmail.com>
+Content-Language: en-US
+From: Gyorgy Sarvari <skandigraun@gmail.com>
+In-Reply-To: <20250901135836.2927686-6-alex.kanavin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 03 Sep 2025 12:15:12 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17950
+ <bitbake-devel@lists.openembedded.org>; Wed, 03 Sep 2025 13:05:32 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17951
 
-On Wed, 3 Sept 2025 at 00:32, Peter Kjellerstedt
-<peter.kjellerstedt@axis.com> wrote:
-> There is no allowlist as the intent is that the Git configuration
-> must be valid (which we define as the configured Git name and email
-> must match what is in our LDAP database). Users typically use
-> the --no-verify option if they have to override the hook for some
-> reason. Which I guess would be an alternative here too...
+On 9/1/25 15:58, Alexander Kanavin wrote:
+> Signed-off-by: Gyorgy Sarvari <skandigraun@gmail.com>
+> ---
+>
 
-This I've now added locally. I haven't pushed the changes yet, as I
-also need to implement the top-dir-prefix idea.
-
-Alex
+As an more or less unrelated comment: you are free to squash my patches
+into your ones. It will help readability and I don't insist on having my
+name there (not because I disown the patches, rather they are just not
+as significant to warrant my name plastered on half of the patches).
 
