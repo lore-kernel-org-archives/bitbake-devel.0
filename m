@@ -1,109 +1,107 @@
-Return-Path: <martin.jansa@gmail.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB34DCA100C
-	for <webhook@archiver.kernel.org>; Wed,  3 Sep 2025 09:55:11 +0000 (UTC)
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
- by mx.groups.io with SMTP id smtpd.web11.8591.1756893303246048190
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAABCA1009
+	for <webhook@archiver.kernel.org>; Wed,  3 Sep 2025 09:57:21 +0000 (UTC)
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+ by mx.groups.io with SMTP id smtpd.web11.8626.1756893435746975641
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 03 Sep 2025 02:55:03 -0700
+ Wed, 03 Sep 2025 02:57:15 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=F7nXxn/U;
- spf=pass (domain: gmail.com, ip: 209.85.218.54, mailfrom: martin.jansa@gmail.com)
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b04679375f6so84742466b.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 03 Sep 2025 02:55:03 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=JKC+HI5I;
+ spf=pass (domain: gmail.com, ip: 209.85.219.45, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-70fa0e37bc5so24886206d6.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 03 Sep 2025 02:57:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756893301; x=1757498101; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZTB9DzqPEY1Uv6wBA12ADcUMWM1b6VN24fqTPPgYQsk=;
-        b=F7nXxn/UitKQIl589bkVHBlbHeUQTUAg7IHT8OUXupfT6uhnGOJyFlpUe2Bj07X/MJ
-         dbUei51PjhvhI6CEIWGQErTn8UXiM/gBVRxgbFuouDqt11Y9IeEDVe7K3aYI9wiMS1x2
-         c1hPu94g98GJBkcd6ku5SBmTEHImM+ofxenRFgxLMRswghR1NnFezwbAqwSQANMbgfnG
-         Pb5NEQKy+ibMnlk4j9Qgw0QJkQBLhwJRME3tJHY+s13vXBmJIWRovr2MjFS2zbONlhpH
-         Qs+GbYfMkRg/2bEek52unZLPFGB1z67jHrh9cKTj2BKeEelB8rK6U6ey1E+N4jVulsmp
-         FpbA==
+        d=gmail.com; s=20230601; t=1756893435; x=1757498235; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=iwBBTQktH17rb8Mlsr0UdHMo+QvrfdjE1P4rutF4os4=;
+        b=JKC+HI5INTJA2jOonp4UHUY49ZnpTjFxX3NsbK2DDHdyB57z6PQHyP5/sc6gv3G9et
+         QuUs2OEQEaCf80NKkO2wouwgZYOXz48jLahOOP7BK8i+bX6y8tpyPQMK/UE84hmn7vUn
+         qi7nJIahjevtyJL7D2rwXjIoE2pfvy3kfqGKgGDMOQKDw2fGHlHsODfD0xTyPYo03ddm
+         9XQMWexFArsfbJrD37wq8aknB1YA2bfnEocajj0tDJfxLALLXgvR5d8abFnlPYE6XYDA
+         H+ZJrsAsaNVo4+Rj2wuscZfGduMO8eC0g5adygAdDS/PLp1xDpQ2sEKiOqzpTVIvIXNI
+         r1Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756893301; x=1757498101;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1756893435; x=1757498235;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZTB9DzqPEY1Uv6wBA12ADcUMWM1b6VN24fqTPPgYQsk=;
-        b=imQjwzHtUe33DWz32RDCNx3jIQxj1Ttknj4lifLAyxlwIeI0KXW1Osh0Lzz2dQFkCV
-         +hA+du6f30YmB6w2g1Ypy0Qz8fVPSXZK4EH+02J2KdtJfFtIR+/gb0jcRM1yG6qltCnG
-         Wp132zYo1Nhr/QEaaZu5fHshrZUcOXCac6vFjd4JolH8xuwnD0cabrrABvxuQw1+pSQ0
-         anlyioaJskNy6VhqX8QiNnkx8J22GtefZtPVqFOLDPNifrMGxd6fzjJi2Q6FGuiugll8
-         B4NuiHzyA5wRddghLQCzBx2JlJvFs/VpyKgH9bgT1qky3tDCVvi+IvQ4yH3fdBgIEjrX
-         l74w==
-X-Gm-Message-State: AOJu0YwI7DdxyIL6mOdTRcO16QDZIfzaFy4zA/YcegsAV7zLm482P3rG
-	ASb1GuwJhe0ixtR+pkIfWgkqdvVX5h2ehAOzC1HWz2EGBLObFvO7hWP73mr77A==
-X-Gm-Gg: ASbGncsIaJGkTJoSZ2TNMrpJix/gS33Gns2aGO1AwdQOy8xnRQUPWw3ICOOXL7mnMw+
-	wxXHMuVlaA+P291kbKZGpw1UEqhzr0vE6BQSwASIgrwP0lPScyuA6PRZTFynDO2nLpMiB9TRFsg
-	mT1+yEokI9vzz9/kfZrHPj829LRMkR3TxBIiLjG1qUpM9w5KhdmdxMZTXl9M1WT2mNy90vNUEoY
-	cPX2LhviKHWV/pXV3Gxb1sn2XFwqnQ6J6q8uxgP6xCudWxVpXyRMZRTSB+4HROjKO2zrOijOi0O
-	TPrO0iqjXOWIN4/sOvLb9ULdy2XKn3uceWeZ1dM0t+YY6CLCcbk//wDu3F68ujtt0CJ0A7t9DPN
-	DG1arSa49KUl/FvjrzkMClUvd/DTHC/PruxCN6x9dxIJWvVJA0Hk1LQi7J+BgU2+T3fd4BvLzXq
-	RLYQ==
-X-Google-Smtp-Source: AGHT+IGQ6kHxWQtq5qfL487PIPiuqZ+xp7wN3X01yd3rU3wUlTYitM03/QVVBGO2EsWXSYv/zbQnWg==
-X-Received: by 2002:a17:907:7248:b0:ae6:f087:953 with SMTP id a640c23a62f3a-b01d8a30d4emr1592930466b.12.1756893301160;
-        Wed, 03 Sep 2025 02:55:01 -0700 (PDT)
-Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b0307435422sm1038782966b.78.2025.09.03.02.55.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Sep 2025 02:55:00 -0700 (PDT)
-From: martin.jansa@gmail.com
-To: bitbake-devel@lists.openembedded.org
-Cc: steve@sakoman.com,
-	Martin Jansa <martin.jansa@gmail.com>
-Subject: [2.8][PATCH] bitbake: Bump version to 2.8.1
-Date: Wed,  3 Sep 2025 11:54:55 +0200
-Message-ID: <20250903095455.2691-1-martin.jansa@gmail.com>
-X-Mailer: git-send-email 2.51.0
+        bh=iwBBTQktH17rb8Mlsr0UdHMo+QvrfdjE1P4rutF4os4=;
+        b=GxUQyIVBv5v1+ksP4mJysx5D83Cd86GYCr7ateOmYYxtvPGTgFuaDaJPfDDV8RRYjZ
+         rppijX7T5PJY0VDQ6zo2KqWDrVBJja9UbACCXOgxttr7TxIDL1hAxm1lwPZIQmJrQCZj
+         KQkyBg9Ov/nPJoYjq1FhmpylIHqXRA/Te4yLabEgQyrz2zw2vFLBduJcVzaYGqdry6nL
+         FBrKN/SE9Qdpri90tb9RnpwAL3umEXG40BRQk0s3VLS3xXzEDdTtcXmd4WBbN9dcn/l8
+         XEC6LUg3r5bYPZPyxhM2CukNz4ZUhcb8iuc0q839woxFK//s6hw3JTBZFS3D8/z0Tu3X
+         BHHA==
+X-Gm-Message-State: AOJu0Yzaiv0sLpMKl5KTywmz5iBz5IBvce8YZFBnBLbn0a8gUNqs1maK
+	xxtWQo1Dj78a2josZNEhVW9uLe7B4PaKaOryGQk2HQe8nh+1dcke/xz9eQ0Xc/v5g0wNwFYHFI/
+	eUjmQbijOmpSbsnLE3g9T7Bfm4AKu+gU=
+X-Gm-Gg: ASbGncv79KQv0IKdD4RnDIguUlpKTikRK0JEnRLYN/0onBRm7tE7Q/qzRKbgkLAy+DP
+	CzrbJtqp0vay5P/RvNG6fkHzPLMJmFm92Zw3skv6hrxfZ04pI78c9PiR86A0UpgzES1TJow75fJ
+	Z8HOKbN/v0U+mX9SyBNPyRg9JqLIvEhatuoG6B6LLYAFBeH+kDbc9dRkJEeG5qkDUVZ1BCtA6UQ
+	LvpTMCB23QUIVqjusXDdcxb46I1gO23PC7syN2Kzfl4kHW4Yq6xt03VoEYFtfVbOOYDqhQjrstd
+	J2R4D00neF/d5ot4560wlxGYYtd92G3myndE7Tz6
+X-Google-Smtp-Source: AGHT+IFaS30aBzdWp8igzBBqaheNz8aLyT7dl00+Mxk+sTVhmS48cTIKlBcGYhdxn7Q2ag+Ge1ecGakcC47Q7atVfKg=
+X-Received: by 2002:ad4:574b:0:b0:70d:e83a:4b86 with SMTP id
+ 6a1803df08f44-70fac74b0ecmr159647856d6.17.1756893434659; Wed, 03 Sep 2025
+ 02:57:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250901135836.2927686-1-alex.kanavin@gmail.com>
+ <20250901135836.2927686-6-alex.kanavin@gmail.com> <DB5PR02MB1021363CFCC9D5EDC1217D085EF06A@DB5PR02MB10213.eurprd02.prod.outlook.com>
+ <CANNYZj_drPD8qO_7JfYLc7Px77OdOM3Mp1MUhtd+nU7h8mnFBQ@mail.gmail.com> <DB5PR02MB102139E511197B10DA2348737EF06A@DB5PR02MB10213.eurprd02.prod.outlook.com>
+In-Reply-To: <DB5PR02MB102139E511197B10DA2348737EF06A@DB5PR02MB10213.eurprd02.prod.outlook.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Wed, 3 Sep 2025 11:57:02 +0200
+X-Gm-Features: Ac12FXxAkO4I7m7b2tDN017Mh6OrF1n5njZu6yROs4F1kYFMD4vSWKa7cJekZr4
+Message-ID: <CANNYZj8YF_yNojh-RmMydByomyXZOB9pfjFx7ZfMhUwTr09P2g@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 6/6] bitbake-setup: make sure git user is
+ always configured
+To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+Cc: "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>, 
+	Gyorgy Sarvari <skandigraun@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 03 Sep 2025 09:55:11 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17948
+ <bitbake-devel@lists.openembedded.org>; Wed, 03 Sep 2025 09:57:21 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17949
 
-From: Martin Jansa <martin.jansa@gmail.com>
+On Wed, 3 Sept 2025 at 00:32, Peter Kjellerstedt
+<peter.kjellerstedt@axis.com> wrote:
+> > I'm not fully comfortable with doing that. The commits in this repo
+> > are created by a program, and so the author should be the program, not
+> > the user running it (who did not give consent to use their name and
+> > email, regardless of how harmless the content is).
+>
+> I must admit I have never thought that way. In my opinion, I'm
+> creating the commit regardless of that it is some tool I am
+> using that is creating it for me.
 
-To indicate compatibility with python 3.14
+I would agree to have me as author of the commit only if I wrote the
+tool myself (not true for users of bitbake-setup), or the tool stops
+and gives me a chance to look at the changes before making them (also
+not true for bitbake-setup).
 
-[YOCTO #15858]
+It's not any different from sending automated emails, if they come
+from a bot, then that should be made clear. I don't sign AUH emails
+with my own name, even though I maintain the periodic autobuilder job
+and the tools that produce them.
 
-Signed-off-by: Martin Jansa <martin.jansa@gmail.com>
----
- bin/bitbake        | 2 +-
- lib/bb/__init__.py | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> > Can you fix the hook to run on pushes, and not commits? Or add
+> > bitbake-setup to allowlist?
+>
+> The whole point of that hook is to catch misconfigurations before
+> they make it into any repository, i.e., at the time a commit is
+> created/updated.
 
-diff --git a/bin/bitbake b/bin/bitbake
-index f494eaa13..a2a42a3f6 100755
---- a/bin/bitbake
-+++ b/bin/bitbake
-@@ -27,7 +27,7 @@ from bb.main import bitbake_main, BitBakeConfigParameters, BBMainException
- 
- bb.utils.check_system_locale()
- 
--__version__ = "2.8.0"
-+__version__ = "2.8.1"
- 
- if __name__ == "__main__":
-     if __version__ != bb.__version__:
-diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
-index f59c2515b..3fb2ec5d1 100644
---- a/lib/bb/__init__.py
-+++ b/lib/bb/__init__.py
-@@ -9,7 +9,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- #
- 
--__version__ = "2.8.0"
-+__version__ = "2.8.1"
- 
- import sys
- if sys.version_info < (3, 8, 0):
+But you can also perform that check when users run 'git push', and
+reject the push. It's a far more common way of enforcing rules.
+Restricting their commits is a step too far imo, and once again puts
+you into the situation of having to ask the yocto project to handle
+your organization's 'special needs'.
+
+Alex
 
