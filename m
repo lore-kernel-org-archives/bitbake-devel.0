@@ -1,125 +1,109 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <martin.jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E61CA1009
-	for <webhook@archiver.kernel.org>; Wed,  3 Sep 2025 09:03:09 +0000 (UTC)
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
- by mx.groups.io with SMTP id smtpd.web10.8046.1756890185782843080
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB34DCA100C
+	for <webhook@archiver.kernel.org>; Wed,  3 Sep 2025 09:55:11 +0000 (UTC)
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+ by mx.groups.io with SMTP id smtpd.web11.8591.1756893303246048190
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 03 Sep 2025 02:03:07 -0700
+ Wed, 03 Sep 2025 02:55:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=P3RDk56w;
- spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id E1CEBC6B39D;
-	Wed,  3 Sep 2025 09:02:48 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id EDAF4606C3;
-	Wed,  3 Sep 2025 09:03:03 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id BB9121C22D0C9;
-	Wed,  3 Sep 2025 11:03:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1756890183; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=ch+zPSro2YxBEhX4GVmCd0cJfHsFQUj4gmgymxh1NwA=;
-	b=P3RDk56whUH3VxejF2XCRysSEqazZZdDCucEurwRRi+V4OXvBgroEg4y0gqDNfCAlWbTyk
-	1MtRhq0T8jwp52XvevdQusAvCrc1SRuWCDApBhAqqejrAG0VHHuY7atjS/ev93U8c//pNM
-	iNImO39HGQSLjREOHkQRZT+zV21qiRjZQeoHUyY+9vvLbZcEpwla4zhEvEFAwtvtJ51Tr9
-	EMCfn2j/IsmemIV/tAVzBFX1tjAEJ/XliS04i1LPbnO1Ldx0QdtiPNL796sVGVvi3HflBs
-	eInDUKPO1bUPILH0RKmq6qh5kOzL7T0t//10MUSMw+B1Z3YMzn+isAei0zaq8Q==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 03 Sep 2025 11:03:01 +0200
-Message-Id: <DCJ1LB07T040.172FGJP1QUJ1E@bootlin.com>
-From: "Antonin Godard" <antonin.godard@bootlin.com>
-To: "Alexander Kanavin" <alex.kanavin@gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 1/6] bitbake-setup: add the initial
- implementation
-Cc: <bitbake-devel@lists.openembedded.org>, "Alexander Kanavin"
- <alex@linutronix.de>
-References: <20250901135836.2927686-1-alex.kanavin@gmail.com>
- <DCIDMIQZKLXV.2ZM8YXZTV1MM8@bootlin.com>
- <CANNYZj982UwaX97yiyN-9gXkRJb1qmQCnrGKri9mMkK1CL8LDg@mail.gmail.com>
-In-Reply-To: <CANNYZj982UwaX97yiyN-9gXkRJb1qmQCnrGKri9mMkK1CL8LDg@mail.gmail.com>
-X-Last-TLS-Session-Version: TLSv1.3
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=F7nXxn/U;
+ spf=pass (domain: gmail.com, ip: 209.85.218.54, mailfrom: martin.jansa@gmail.com)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b04679375f6so84742466b.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 03 Sep 2025 02:55:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756893301; x=1757498101; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZTB9DzqPEY1Uv6wBA12ADcUMWM1b6VN24fqTPPgYQsk=;
+        b=F7nXxn/UitKQIl589bkVHBlbHeUQTUAg7IHT8OUXupfT6uhnGOJyFlpUe2Bj07X/MJ
+         dbUei51PjhvhI6CEIWGQErTn8UXiM/gBVRxgbFuouDqt11Y9IeEDVe7K3aYI9wiMS1x2
+         c1hPu94g98GJBkcd6ku5SBmTEHImM+ofxenRFgxLMRswghR1NnFezwbAqwSQANMbgfnG
+         Pb5NEQKy+ibMnlk4j9Qgw0QJkQBLhwJRME3tJHY+s13vXBmJIWRovr2MjFS2zbONlhpH
+         Qs+GbYfMkRg/2bEek52unZLPFGB1z67jHrh9cKTj2BKeEelB8rK6U6ey1E+N4jVulsmp
+         FpbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756893301; x=1757498101;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZTB9DzqPEY1Uv6wBA12ADcUMWM1b6VN24fqTPPgYQsk=;
+        b=imQjwzHtUe33DWz32RDCNx3jIQxj1Ttknj4lifLAyxlwIeI0KXW1Osh0Lzz2dQFkCV
+         +hA+du6f30YmB6w2g1Ypy0Qz8fVPSXZK4EH+02J2KdtJfFtIR+/gb0jcRM1yG6qltCnG
+         Wp132zYo1Nhr/QEaaZu5fHshrZUcOXCac6vFjd4JolH8xuwnD0cabrrABvxuQw1+pSQ0
+         anlyioaJskNy6VhqX8QiNnkx8J22GtefZtPVqFOLDPNifrMGxd6fzjJi2Q6FGuiugll8
+         B4NuiHzyA5wRddghLQCzBx2JlJvFs/VpyKgH9bgT1qky3tDCVvi+IvQ4yH3fdBgIEjrX
+         l74w==
+X-Gm-Message-State: AOJu0YwI7DdxyIL6mOdTRcO16QDZIfzaFy4zA/YcegsAV7zLm482P3rG
+	ASb1GuwJhe0ixtR+pkIfWgkqdvVX5h2ehAOzC1HWz2EGBLObFvO7hWP73mr77A==
+X-Gm-Gg: ASbGncsIaJGkTJoSZ2TNMrpJix/gS33Gns2aGO1AwdQOy8xnRQUPWw3ICOOXL7mnMw+
+	wxXHMuVlaA+P291kbKZGpw1UEqhzr0vE6BQSwASIgrwP0lPScyuA6PRZTFynDO2nLpMiB9TRFsg
+	mT1+yEokI9vzz9/kfZrHPj829LRMkR3TxBIiLjG1qUpM9w5KhdmdxMZTXl9M1WT2mNy90vNUEoY
+	cPX2LhviKHWV/pXV3Gxb1sn2XFwqnQ6J6q8uxgP6xCudWxVpXyRMZRTSB+4HROjKO2zrOijOi0O
+	TPrO0iqjXOWIN4/sOvLb9ULdy2XKn3uceWeZ1dM0t+YY6CLCcbk//wDu3F68ujtt0CJ0A7t9DPN
+	DG1arSa49KUl/FvjrzkMClUvd/DTHC/PruxCN6x9dxIJWvVJA0Hk1LQi7J+BgU2+T3fd4BvLzXq
+	RLYQ==
+X-Google-Smtp-Source: AGHT+IGQ6kHxWQtq5qfL487PIPiuqZ+xp7wN3X01yd3rU3wUlTYitM03/QVVBGO2EsWXSYv/zbQnWg==
+X-Received: by 2002:a17:907:7248:b0:ae6:f087:953 with SMTP id a640c23a62f3a-b01d8a30d4emr1592930466b.12.1756893301160;
+        Wed, 03 Sep 2025 02:55:01 -0700 (PDT)
+Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b0307435422sm1038782966b.78.2025.09.03.02.55.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Sep 2025 02:55:00 -0700 (PDT)
+From: martin.jansa@gmail.com
+To: bitbake-devel@lists.openembedded.org
+Cc: steve@sakoman.com,
+	Martin Jansa <martin.jansa@gmail.com>
+Subject: [2.8][PATCH] bitbake: Bump version to 2.8.1
+Date: Wed,  3 Sep 2025 11:54:55 +0200
+Message-ID: <20250903095455.2691-1-martin.jansa@gmail.com>
+X-Mailer: git-send-email 2.51.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 03 Sep 2025 09:03:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17947
+ <bitbake-devel@lists.openembedded.org>; Wed, 03 Sep 2025 09:55:11 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17948
 
-On Tue Sep 2, 2025 at 9:41 PM CEST, Alexander Kanavin wrote:
->> Could we add the shorter form `-b`? I feel like this is going to get typ=
-ed a
->> lot. Same for --top-dir/-t, although the BITBAKE_SETUP_TOP_DIR variable =
-makes it
->> less necessary.
->
-> You only need to add --build-dir if you have not sourced the bitbake
-> environment, but if you did, then bitbake-setup will deduce the
-> build-dir from that by default.
+From: Martin Jansa <martin.jansa@gmail.com>
 
-> As for --top-dir, the awkwardness of setting it to something else than
-> $HOME has been bothering me too, I've given it a bit of thought, and I
-> think it needs to be split into two parts:
->
-> - top-dir-prefix, which defaults to $HOME but can be set to cwd
-> (someone requested that) or some custom local directory intended
-> specifically for yocto builds (this is also common).
-> - top-dir-name which is appended to that when a build is initialized,
-> and defaults to 'bitbake-builds'.
->
-> Defaults for both items are taken from ~/.config/bitbake-setup, but
-> can be overriden with command line options. Then the environment
-> variable is not needed. What you think?
+To indicate compatibility with python 3.14
 
-I like the idea of a config file in ~/.config (~/.config/bitbake-setup/conf=
-ig?)
-rather than an env variable, if I had to choose.
+[YOCTO #15858]
 
-Personally I would prefer having both, with this order of precedence:
+Signed-off-by: Martin Jansa <martin.jansa@gmail.com>
+---
+ bin/bitbake        | 2 +-
+ lib/bb/__init__.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-1. --top-dir-prefix
-2. BITBAKE_SETUP_TOP_DIR_PREFIX env variable
-3. top-dir-prefix =3D ... in ~/.config/bitbake-setup/config
-
-I think this would cover all use-cases and satisfy everyone? :)
-
-The fact that bitbake-setup prints "Bitbake-setup is using <...> as top
-directory" when it starts is great and should be kept IMO, this makes it ea=
-sy to
-verify what the current top-dir is.
-
->> Do we really need --build-dir for the status command?
->>
->> "bitbake-setup status" alone returns:
->>
->>   usage: bitbake-setup status [-h] --build-dir BUILD_DIR
->>   bitbake-setup status: error: the following arguments are required: --b=
-uild-dir
->>
->> Maybe BUILD_DIR should be the only positional argument instead of an opt=
-ional
->> one:
->>
->>   bitbake-setup status <build_dir>
->
-> See above: source the bitbake environment, and 'bitbake-setup status'
-> without arguments will work. I'm not fond of positional arguments,
-> because they make the command line less readable, especially if there
-> are several unrelated ones one after another.
-
-Indeed I did not know that, I agree it makes more sense to run after sourci=
-ng
-the environment file.
-
-Antonin
-
---=20
-Antonin Godard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+diff --git a/bin/bitbake b/bin/bitbake
+index f494eaa13..a2a42a3f6 100755
+--- a/bin/bitbake
++++ b/bin/bitbake
+@@ -27,7 +27,7 @@ from bb.main import bitbake_main, BitBakeConfigParameters, BBMainException
+ 
+ bb.utils.check_system_locale()
+ 
+-__version__ = "2.8.0"
++__version__ = "2.8.1"
+ 
+ if __name__ == "__main__":
+     if __version__ != bb.__version__:
+diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
+index f59c2515b..3fb2ec5d1 100644
+--- a/lib/bb/__init__.py
++++ b/lib/bb/__init__.py
+@@ -9,7 +9,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-__version__ = "2.8.0"
++__version__ = "2.8.1"
+ 
+ import sys
+ if sys.version_info < (3, 8, 0):
 
