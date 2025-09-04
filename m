@@ -1,122 +1,84 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E872CA1002
-	for <webhook@archiver.kernel.org>; Thu,  4 Sep 2025 09:59:39 +0000 (UTC)
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
- by mx.groups.io with SMTP id smtpd.web10.35467.1756979973826458681
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EB4CA1012
+	for <webhook@archiver.kernel.org>; Thu,  4 Sep 2025 10:52:39 +0000 (UTC)
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+ by mx.groups.io with SMTP id smtpd.web10.36257.1756983157887669901
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 04 Sep 2025 02:59:34 -0700
+ Thu, 04 Sep 2025 03:52:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=SYgwad+2;
- spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 36EE04E40C75
-	for <bitbake-devel@lists.openembedded.org>; Thu,  4 Sep 2025 09:59:32 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 111A5606BB;
-	Thu,  4 Sep 2025 09:59:32 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 92D651C22DD68;
-	Thu,  4 Sep 2025 11:59:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1756979971; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=PdEgWX0AewzMTuYi/Vt2S1J2Yk5JqtAO0Z6ZPh/rYXQ=;
-	b=SYgwad+2Na+PsnpHR02n9jNoYQ9YU4hpwee9r4qdyx2+InJMz1QVxlG3PmhFbZQ4ZPy/QC
-	pA1NxRrSWl5NBxMeTZzcjrvhbH3w/GJu2UZq4zZMdu7bBe7h8bgCoO0TWjmXpeB2eAN8e8
-	zJd1ykM05aJc6cxpeO1KYTSKSbwa+RqQbiNwzIFo8uXfGQT1wo9VbNSH6W7M3neVWCJnkI
-	Y/2rG30vd84fG07MMhLKLcpVM+HJi8wURpTju5LptzzyypSKvellOu/sQ1K21snAUkykXe
-	6OdzNzxdReWQQ8ukekCuv9QN1z+hrWWXSU1nMAgnEuWK2ObnShw6Ox6DW7Owcw==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 04 Sep 2025 11:59:30 +0200
-Message-Id: <DCJXF3HI42NB.34PICRHH011PC@bootlin.com>
-Subject: Re: [bitbake-devel] [PATCH] doc: improve BitBake README testing
- instructions
-Cc: <docs@lists.yoctoproject.org>
-From: "Antonin Godard" <antonin.godard@bootlin.com>
-To: <mohamedaymanworkspace2@gmail.com>,
- <bitbake-devel@lists.openembedded.org>
-References: <20250818163337.3440-1-mohamedaymanworkspace2@gmail.com>
-In-Reply-To: <20250818163337.3440-1-mohamedaymanworkspace2@gmail.com>
-X-Last-TLS-Session-Version: TLSv1.3
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=f8ChZpkG;
+ spf=pass (domain: gmail.com, ip: 209.85.219.41, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-7220d7dea27so6712856d6.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 04 Sep 2025 03:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756983157; x=1757587957; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ffGk/yA5Hch0skHRwYR8grfBgc/Ml8jFXEWIoMQq0no=;
+        b=f8ChZpkGmZ/tn1F8k95Br6dhbqrTMPEysili7CRtMqUkvwzghQ9As6z2CMSvn5Tx3B
+         hOglCzp3Q4lgYJGcCA0n/4MWsV2N9Uwaz6jPP/APOWiyJhw+JGcnyfL6VpZpo7a3rjSQ
+         ffSOZr7Ojo8KksxfP/s6XBwon88S8NhEOTIjO2tzIpyQsKTqCuiWcaWlasLHBhZ66Bnz
+         0+eVzr1ElnvcrGFPwP0G0dJn8upVFW8pwTZg3E/twtUvyczeg+jwYZk0blMu2r6xGb2F
+         0D+i2hxfpP7gR7terW2Kr8e7CoKGmItMgBtE6o+9AK6zG1XOQIJAhwFRWC7/CVpdg8ka
+         MyQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756983157; x=1757587957;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ffGk/yA5Hch0skHRwYR8grfBgc/Ml8jFXEWIoMQq0no=;
+        b=GxKwv85hUCMVTi2K9kDyPpxLeD7SsLz73KdPqYHUXNiD/suVenfS2bTqntDyv7UaE3
+         xTlstQQ1pBh7L5KvqXUT9u70XPy6v99TnsdK+e29qv2OYF/vP0VEGsIeaq92JtR1JtiK
+         5We+nVyveg1HataahQExxiJwxwmkUZ+QmBQLFtTypwJbUn2rpVvLFBqWXKaYJLGcLK/N
+         XgkxtfJk2yRBs8Xz4hCEn5enZOqlck+quYBWeQ8gXyJGFBeuNLy1Z4VH7hxuuuJDXRHs
+         uP5KorLBQAiDJfk/xeEiFUL2jiYj218N8r2oq0VSQcq0ZEp7b+1w+G9tZYEx57k71wk3
+         rDJw==
+X-Gm-Message-State: AOJu0YzspC4KY0wyVErPJCoHXKt+27ksk7duPXOaEgpgk0D+piCjqwLd
+	XX5o1j9CFzPHA/TL/7Y1rYBYa20LEaCjMgYGTwQQiYWLbFx3MZXac/BQ9loTmLzdMH8JOdYHlLS
+	4Q2m87DWEzWzU84E7I0xx/tHiwK1It40=
+X-Gm-Gg: ASbGncsQSP0YnWMOEF8H4s87q1OuMvWkAI6DIZNIf12qP9IjYkq7fBJs8CxCnlDGEkb
+	CSuta+eHK9KMZ8VXu3uzF7lTraE7CeYa47iwnq/2n0Dqcvq6TO4T8+rtONHWpFRD+7NgqWTSyTj
+	U0uM7EYmVV+ZA86KmjDNrO/31aNMBhYpLpmzkEEQLz2Yn5pB0EsQ0p+fy6or8XPr0V0lNnmbmS7
+	bxQ6ryCxjyNeJE9Okzwjf/pLYLPrKwgnRecqyxWIVMZxktry/xc0tCioiUXo3ddxVffKBgfQqp3
+	FMp7bBwHRi2kBL4KP3E0um61sy5VcU7zDx5otNbtEN9tyzGQMri5teszcgUrug==
+X-Google-Smtp-Source: AGHT+IG3vnc9IJ/KUXQlfnntyJt0yB0zTZQQf+eNN6ZM7vDXxXWNRhbux6iH1oHw4Q1cySlxDe+F2oAUNCEcxWP8b3Q=
+X-Received: by 2002:a05:6214:529b:b0:71c:53c0:569e with SMTP id
+ 6a1803df08f44-71c53c05b4emr130923296d6.51.1756983156950; Thu, 04 Sep 2025
+ 03:52:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <20250901135836.2927686-1-alex.kanavin@gmail.com>
+ <20250901135836.2927686-6-alex.kanavin@gmail.com> <a8b57517-343e-4284-856d-108835d20302@gmail.com>
+In-Reply-To: <a8b57517-343e-4284-856d-108835d20302@gmail.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Thu, 4 Sep 2025 12:52:26 +0200
+X-Gm-Features: Ac12FXwM_rhswlALuaBZFjfPzIioeFMRv75XezaM8CEz0pok2vCCEbsPcg_mWjQ
+Message-ID: <CANNYZj8N-72hZ12zwPGLJbOMBG7jOwCeCsxjSu2o09tZoRM0xQ@mail.gmail.com>
+Subject: Re: [PATCH 6/6] bitbake-setup: make sure git user is always configured
+To: Gyorgy Sarvari <skandigraun@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 04 Sep 2025 09:59:39 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17955
+ <bitbake-devel@lists.openembedded.org>; Thu, 04 Sep 2025 10:52:39 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17956
 
-Hi,
+On Wed, 3 Sept 2025 at 15:05, Gyorgy Sarvari <skandigraun@gmail.com> wrote:
+> As an more or less unrelated comment: you are free to squash my patches
+> into your ones. It will help readability and I don't insist on having my
+> name there (not because I disown the patches, rather they are just not
+> as significant to warrant my name plastered on half of the patches).
 
-On Mon Aug 18, 2025 at 6:33 PM CEST, Mohamed Ayman via lists.openembedded.o=
-rg wrote:
-> Clarified the testing section by:
-> - Adding context on setting PATH before running selftests
-> - Documenting how to install pytest using pip
-> - Providing an example command for running pytest on lib/bb/tests
->
-> These additions make it easier for new contributors to run the
-> testsuite and ensure consistent testing practices.
->
-> Signed-off-by: Mohamed Ayman <mohamedaymanworkspace2@gmail.com>
-> ---
->  bitbake/README | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/bitbake/README b/bitbake/README
-> index e9f4c858ee..938eec47ce 100644
-> --- a/bitbake/README
-> +++ b/bitbake/README
-> @@ -54,10 +54,17 @@ The assumption is made that this testsuite is run fro=
-m an initialized OpenEmbedd
->  environment (i.e. `source oe-init-build-env` is used). If this is not th=
-e case, run the
->  testsuite as follows:
->
-> +# ensure local tools are on PATH and run the selftest script
+No problem. I squashed them in but mentioned you in the commit message:
 
-This should probably be aligned to "export PATH=3D$(pwd)/bin:$PATH" below?
+This commits includes fixes by Gyorgy Sarvari <skandigraun@gmail.com>
+https://github.com/kanavin/bitbake/pull/2
 
-    # ensure local tools are on PATH and run the selftest script
-    export PATH=3D$(pwd)/bin:$PATH
-    bin/bitbake-selftest
+Other reported small fixes are also added and pushed, top-dir-prefix
+is still to be implemented.
 
->      export PATH=3D$(pwd)/bin:$PATH
->      bin/bitbake-selftest
->
->  The testsuite can alternatively be executed using pytest, e.g. obtained =
-from PyPI (in this
->  case, the PATH is configured automatically):
->
-> +# install pytest into a virtualenv or pipx (recommended)
-> +python -m pip install --user pytest
-> +
-> +# run tests (example)
-> +python -m pytest lib/bb/tests -q
-
-Same comment as the one above.
-
-Otherwise, how does this differ from simply running "pytest"?
-
-I tried this and it gave:
-
-   $ python -m pytest lib/bb/tests -q
-
-   no tests ran in 0.10s
-
-I'm not sure this does anything?
-
-Instead running for example "python -m pytest lib/bb/tests/color.py" works,=
- so
-if the intent was to showcase how to run tests separately, I would rather
-showcase an example like this.
-
-Antonin
-
---
-Antonin Godard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Alex
 
