@@ -1,145 +1,113 @@
-Return-Path: <chris.laplante@agilent.com>
+Return-Path: <mathieu.dubois-briand@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66977CA1009
-	for <webhook@archiver.kernel.org>; Wed,  3 Sep 2025 15:45:53 +0000 (UTC)
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (NAM11-BN8-obe.outbound.protection.outlook.com [40.107.236.81])
- by mx.groups.io with SMTP id smtpd.web10.16241.1756914348552190559
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092D8CA1015
+	for <webhook@archiver.kernel.org>; Thu,  4 Sep 2025 06:00:58 +0000 (UTC)
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+ by mx.groups.io with SMTP id smtpd.web11.32630.1756965656599882341
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 03 Sep 2025 08:45:48 -0700
+ Wed, 03 Sep 2025 23:00:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@agilent.com header.s=selector1 header.b=GrENfFlI;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.236.81, mailfrom: chris.laplante@agilent.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IM8jqNIFuk5xSngj4O8qDUB1u8NyAj+q6T56OSfPZvIutTS0OOQK4gx6UJrS93EWLl6y185iJUrTA+MdX1N7zZTSUZDVW2CNJWoBzUOrbvJOLtIOGspf8NIOt8LvKHn+NgMpUpISFvJrngrFA//+CA1TBzg1ipfU6vySOumwmjtx251fvArcHRX4xdXL/xUBv9jAQz1CfQymkwEMSPUS2/TWe77qQmZAGJx2tB/xl8R9g/7UFoCn4eE5h8QkQb5H8ZvbaivtLzAjl8FYL6EJxjdUYWCiZnxy5NT7dwywToRR3RQoRRPQHTuNabTiOHyMc1Hty6pqyfZzgjJW19qbtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=auxzOmfCKUm6J82SXqdqpZNZdsEi8wHZH34nt0ZI888=;
- b=N7cUO7Q7e7Ve2vOYP8B1FVsya8FJ8yjGFTOIEKCvt9wXzsrcsYFOqPFbkQRbsVPZLWaE2+ttD52I1uLSRlIpg+hwQEkofYAt/PQxGxO6pnW+JQ5cFnh+O7X+en1ErmjKANAchmTujNr0zfIlT0nZSAhwQYBiD8tznqPy7pqR7Z8wa3QXTKhCbHw7uiDY42rx8g9KKXrELIoFMxi7n44YODMZnk+gMbYx6nlb7PREzne6AM3y3l09hOCbUgQ+piZhv5WwsnWdozm9gjJo8FMX3DlqCIB6+mJHuwfUdxETQmz/iI+Zm5TLzt5PqahBKHKRhv7w08SAFKABaEQAGRI4wA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 192.25.218.41) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
- action=none header.from=agilent.com; dkim=none (message not signed); arc=none
- (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=auxzOmfCKUm6J82SXqdqpZNZdsEi8wHZH34nt0ZI888=;
- b=GrENfFlI04n43GOGmJN6H3sBxQunUvRH0gnOGmy8sN7xXsa4NP7HMLBGykVkfFoi8PLU1/gsntCSAaoWLX21Sv7Tvt/4nf4iVqrhYaiyQ+oBgZCrJmrDIflJBeOxZg+3sWHj3PQB72oaSCn46nUL4MunShcS4kDDNx7KsUvg0EdoRrhcYbru0zqLEWdXehEbYstekohB9Cr9Qa20FGwKIZ4bfOU5Qrw4WkayfwNSzsNIeU+y0rzsdXoeS49IMbCeXU5+u37yTJL9338yAhUfgacKZbfTDzPcjNUw+QyOdavBcK8c9uRzab+HQ/Ld8HsI5sofZT7oCZXYj2V6kVIP2Q==
-Received: from SN1PR12CA0105.namprd12.prod.outlook.com (2603:10b6:802:21::40)
- by CH0PR12MB8462.namprd12.prod.outlook.com (2603:10b6:610:190::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.27; Wed, 3 Sep
- 2025 15:45:39 +0000
-Received: from SA2PEPF00001506.namprd04.prod.outlook.com
- (2603:10b6:802:21:cafe::7d) by SN1PR12CA0105.outlook.office365.com
- (2603:10b6:802:21::40) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9094.17 via Frontend Transport; Wed,
- 3 Sep 2025 15:45:39 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.41)
- smtp.mailfrom=agilent.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=agilent.com;
-Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
- 192.25.218.41 as permitted sender) receiver=protection.outlook.com;
- client-ip=192.25.218.41; helo=edgeappmail.agilent.com; pr=C
-Received: from edgeappmail.agilent.com (192.25.218.41) by
- SA2PEPF00001506.mail.protection.outlook.com (10.167.242.38) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9094.14 via Frontend Transport; Wed, 3 Sep 2025 15:45:38 +0000
-Received: from laplante-B650.lfs.agilent.com (192.25.126.4) by
- edgeappmail.agilent.com (192.25.218.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.58; Wed, 3 Sep 2025 09:45:31 -0600
-From: <chris.laplante@agilent.com>
-To: <bitbake-devel@lists.openembedded.org>
-CC: Chris Laplante <chris.laplante@agilent.com>
-Subject: [PATCH] fetch2/git: when raising ParameterError for an invalid proto, include the proto in the message
-Date: Wed, 3 Sep 2025 11:45:03 -0400
-Message-ID: <20250903154503.3288644-1-chris.laplante@agilent.com>
-X-Mailer: git-send-email 2.43.0
-MIME-Version: 1.0
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=P9tp5BSJ;
+ spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: mathieu.dubois-briand@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 51DA94E40C66
+	for <bitbake-devel@lists.openembedded.org>; Thu,  4 Sep 2025 06:00:55 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 0FDA2606C4;
+	Thu,  4 Sep 2025 06:00:55 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 729AA1C22A097;
+	Thu,  4 Sep 2025 08:00:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1756965652; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=0iJwHfdRutu1JyEaCvqG2+nOXRYybY1niLfYy6W2fpo=;
+	b=P9tp5BSJzbqVmzDlyzwYi8IjjXVyUyhTQI5sJQwJcugbNx+g2tURmA6dE4jkCgkkyaHqmJ
+	ONo+Z3cIj3NMR7WvYp04RjazlmlI3nyxvljoRCJYLJ8SbHR2bjmvy3r1av7GrAxYjrvpm6
+	f/t9ZtHH3PRsO1xu675WhljhS+ZqqCRFEO/TKwgbkT5w7lzn3TGXZIGiP2k7c/Be982HsN
+	AIldHqlhKu7cz6Pp9T65+MTTGt26l50u4yvMaj/Cp4WMJFVSf5/fvMd1TnfyI4ypkZK5tp
+	JLIXOAj+5l0h3LSUjj2Dgp1FYCSTwWSbUl/X0VcLqoSmcrv9E2lPoPOihu66DA==
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00001506:EE_|CH0PR12MB8462:EE_
-X-MS-Office365-Filtering-Correlation-Id: 49918550-0c0f-4f3f-b94a-08ddeb00ee7d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?1Lyya3Px4mgUXlcG5Ie41fSe22inxtUTMEOdkgIjH1qpTgbQoGAfqAv5hM1m?=
- =?us-ascii?Q?5SLcozQx8feBs9ocwhevTnzLA/wE5/yCHVGLMyvHpGdLdu/O9IQkJmBSSWqx?=
- =?us-ascii?Q?yVM3A2EeXAReYVmY6kOeMIX1xc1fGPF5WpB+o3nF8KfSwClMCql6Va5rVl+c?=
- =?us-ascii?Q?bqfgSCsMZqMWhJjefT+JFNwSEd7U2LtxsXII5P/geIB4ATvo8JyR4BTWhOvS?=
- =?us-ascii?Q?jGvjoJ8FkehtV4qI5CnZioNTRmWL5VR/enX9VfSARMEfWRUgzeqKDqn9vypd?=
- =?us-ascii?Q?1wa6HWY/03CVkTBHiPSlAuxH1hITsmd+NklgHw4vuMy87vTmLxSBmdcb0UGb?=
- =?us-ascii?Q?Sir1OZCcIKmrhn/Ath5TpQG4TiG4KA3FMuYFGmvQNJr7TgiQTmyNB1MiYZPl?=
- =?us-ascii?Q?dGbVTJcbUkhleJVYTczbnWxKuvess7twAvpJooVZ8uaaxKvOawUIjZc5NyY4?=
- =?us-ascii?Q?lckrlunjDxYxWf+A32v3kOddPPxKk+D+e1F3iildyhiwUANDrlqOAfAaM3hD?=
- =?us-ascii?Q?E/YzZSEiB1A6gXXRH6W1ntioEdaDsX/2NsJAzGEiQ+jZptZUT6xF5RNHCBc8?=
- =?us-ascii?Q?36GAKH/o0/LQwRNYEUo866xD+aKUDPAYFHP5phob5oEuuhwhhJZCyDLpsACB?=
- =?us-ascii?Q?SkvzbnUe0+6wAJaEXp0FG2TQe6qlHPc5pHmHH3Bh7tfrcgtoVH+cXtQShv+V?=
- =?us-ascii?Q?VAoGLg2uXjWePIKbjkj1bgqW9lwNJRcZX9+SpqWDxB/P7ypW81LGOuCRJynX?=
- =?us-ascii?Q?URjouDHNguM/FE4oGJrGnnasSji3O1VwS//bZorpnA98CaiDJ6jXquq79YJt?=
- =?us-ascii?Q?Mp25lPDqt0tBLCin6F7ob5jQz9BjJtp6MdB4NakwQVeq6/0BAYCe2KeM6dtC?=
- =?us-ascii?Q?m19Jye/ujt8XBZbBzFUnLA3u7wDgCfcTF5/iyLSU56t0x7BVlp5SfCSv125b?=
- =?us-ascii?Q?ypy/toQsg9tHNSAvffmKq44z83LZQ3ithWwG7ZhY45yx8seBTZPXLvIvZ/1S?=
- =?us-ascii?Q?0qypfduztway7cCJV8tcsX0qRE0v884F47ThAS4Gw8twPAK03iUp+7yFOhGj?=
- =?us-ascii?Q?YBS48LMeslzKc5S1eMYIFgHgzhJUuhfyO1oXiIvbycLfDGgdpNtRidJimrBq?=
- =?us-ascii?Q?AvvX1t14MaHWoungpET0Q8rMGn9AM3kRimD6G+pyyZN3sSqYJxWYPWNBYq+i?=
- =?us-ascii?Q?leHEDXnv+aXmiKXr4hGgqQupedLSZlxk4GHzWrSjNhQzdfb6poctdvZF1Z2U?=
- =?us-ascii?Q?JRWToVsGluLgzmHZleb7a3ibbJc4Ku68nnm6dp4H7GDd7v9twibxq28EpJJO?=
- =?us-ascii?Q?gxuG1aiNuw3NApDx+0h5266lITE7dgPcXEYGwxnDsyD392xj/d9tx67puQzZ?=
- =?us-ascii?Q?1vKh9sEGoq3iPR14kxD5VqYjJ7AGxfcN5Ek7h3IXFZP8NE0MbS1dV4gxUyW0?=
- =?us-ascii?Q?meTgybuYJKouVHAZ+eZ1CtmmK5Ww0iCTHwlxK5W8u4ijCbmXiCoGbXaN0Gok?=
- =?us-ascii?Q?M05huyGvtyH6T/2FQkKCjlMwzdPMbw02y6K0?=
-X-Forefront-Antispam-Report: 
-	CIP:192.25.218.41;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edgeappmail.agilent.com;PTR:exch.smtp.agilent.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2025 15:45:38.9426
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49918550-0c0f-4f3f-b94a-08ddeb00ee7d
-X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.41];Helo=[edgeappmail.agilent.com]
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-SA2PEPF00001506.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8462
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 04 Sep 2025 08:00:48 +0200
+Message-Id: <DCJSCC879XGB.27MF8X0RDL3@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: <stefan.herbrechtsmeier-oss@weidmueller.com>,
+ <bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [RFC PATCH 0/6] fetch2: add support for
+ implicit urls
+Cc: "Stefan Herbrechtsmeier" <stefan.herbrechtsmeier@weidmueller.com>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250902065507.35737-1-stefan.herbrechtsmeier-oss@weidmueller.com>
+In-Reply-To: <20250902065507.35737-1-stefan.herbrechtsmeier-oss@weidmueller.com>
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 03 Sep 2025 15:45:53 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17952
+ <bitbake-devel@lists.openembedded.org>; Thu, 04 Sep 2025 06:00:58 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17953
 
-From: Chris Laplante <chris.laplante@agilent.com>
+On Tue Sep 2, 2025 at 8:55 AM CEST, Stefan Herbrechtsmeier via lists.openem=
+bedded.org wrote:
+> From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
+>
+> The patch series add support for implicit URLs inside the fetcher. The
+> implicit URLs could be defined inside a source like a version control
+> system (git submodule) or a lock file (package-lock.json, cargo.lock or
+> go.sum). The integration of implicit URLs beside explicit URLs
+> simplifies the fetcher classes and avoid bugs because of iterations
+> between the Fetch and FetchMethod classes.
+>
+> The series remove most methods inside the gitsm fetcher and only leaves
+> the parsing of the git submodules and the unpack functionality. It
+> allows the gitsm fetcher to use the premirror only feature. The current
+> implementation leads to problems because the download of the git
+> submodules is triggered via the download method which is called deeply
+> inside the fetcher code.
+>
+>
+> Stefan Herbrechtsmeier (6):
+>   fetch2: rename u to url in Fetch class
+>   fetch2: call functions within loops of Fetch class
+>   fetch2: add helper to get urldata in Fetch class
+>   fetch2: add support for implicit urls
+>   fetch2: gitsm: use implicit urls feature
+>   tests: fetch: add test case for gitsm implicit local paths
+>
+>  lib/bb/fetch2/__init__.py | 128 +++++++++++++++++++++++++++-----------
+>  lib/bb/fetch2/gitsm.py    |  46 ++------------
+>  lib/bb/tests/fetch.py     |  12 ++++
+>  3 files changed, 109 insertions(+), 77 deletions(-)
 
-Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
----
- lib/bb/fetch2/git.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Stefan,
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 52fffe21d..0fcdb19df 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -163,7 +163,7 @@ class Git(FetchMethod):
-             bb.warn("URL: %s uses git protocol which is no longer supporte=
-d by github. Please change to ;protocol=3Dhttps in the url." % ud.url)
-=20
-         if not ud.proto in ('git', 'file', 'ssh', 'http', 'https', 'rsync'=
-):
--            raise bb.fetch2.ParameterError("Invalid protocol type", ud.url=
-)
-+            raise bb.fetch2.ParameterError(f"Invalid protocol type: '{ud.p=
-roto}'", ud.url)
-=20
-         ud.nocheckout =3D ud.parm.get("nocheckout","0") =3D=3D "1"
-=20
+I know it is just an RFC so far, but I did launch a build on the
+autobuilder. It was mostly correct but fails a selftest:
+
+ERROR: git-submodule-test-1.0-r0 do_ar_mirror: Error executing a python fun=
+ction in exec_func_python() autogenerated:
+...
+File: '/srv/pokybuild/yocto-worker/oe-selftest-debian/build/bitbake/lib/bb/=
+fetch2/__init__.py', lineno: 2102, function: expand_urldata
+...
+Exception: UnboundLocalError: cannot access local variable 'urldata' where =
+it is not associated with a value
+...
+2025-09-03 06:21:46,098 - oe-selftest - INFO - archiver.Archiver.test_archi=
+ver_mode_mirror_gitsm (subunit.RemotedTestCase)
+2025-09-03 06:21:46,099 - oe-selftest - INFO -  ... FAIL
+
+And a similar error with
+archiver.Archiver.test_archiver_mode_mirror_gitsm_shallow.
+
+Thanks,
+Mathieu
+
 --=20
-2.43.0
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
