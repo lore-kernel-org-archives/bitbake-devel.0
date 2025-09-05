@@ -2,47 +2,47 @@ Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10012CAC581
-	for <webhook@archiver.kernel.org>; Fri,  5 Sep 2025 06:44:45 +0000 (UTC)
-Received: from AM0PR02CU008.outbound.protection.outlook.com (AM0PR02CU008.outbound.protection.outlook.com [52.101.72.127])
- by mx.groups.io with SMTP id smtpd.web10.15209.1757054681032438910
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B059CA0FED
+	for <webhook@archiver.kernel.org>; Fri,  5 Sep 2025 06:44:55 +0000 (UTC)
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (DB3PR0202CU003.outbound.protection.outlook.com [52.101.84.128])
+ by mx.groups.io with SMTP id smtpd.web10.15210.1757054683279460090
  for <bitbake-devel@lists.openembedded.org>;
  Thu, 04 Sep 2025 23:44:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=3miRvD+R;
- spf=pass (domain: weidmueller.com, ip: 52.101.72.127, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=UJbwgXmJ;
+ spf=pass (domain: weidmueller.com, ip: 52.101.84.128, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=I873Odgq9wgzk0X2UYkqwYSWLUtRs79Dq4LvgyRvtgHv5UYSmvWTFwj3LSCti1sXWcDySzK5aur6mN2ACw1vtSeS8OUyPBAxwcoAgf176jrnlWPMYBPvothiVS4Lj4X2ytm52aVYco92k1obg7Hj6VYuhXtwHmG0thZc/ybkn28yQd+H++EoInRvGwhMb+kPMS1rgFaUlsxSL/Pii8KTwUoUfcm6bpE8MKA6EnSzYImAPhD2TjqOgrk9VcfzOPLOfm2ZMdtBi1LfmIhAnKg/05L0Llsgs94l2klxzEyTiIbFliSGhReDchDO4MoUuVK3BpfLukLX4ssWv1+2JjWJCQ==
+ b=R9EIigSbw8vBmMYJ07aT7iIYre2vTAh/BNFs9dOKU6AYDMVWsf7WNthVdOO8KcpLMpvGGnoOj0qhpVaFWcBMllVX3gUQZ+2tqaMh1nKrjsgYzcdjQgi9KkL01cg1IVnW/krCg/Tz9/dKJGAJTIKvJO6B90Lz/ElBU++VsxArL2vgrQmynkJ8CF1mqak8xot7X1VwNZAcMCOpd3EqjdJP9G14t2MiExILuLi20Tr9bfR4WeFu+Rlwct9txgdF09Uqak48OxHOcPHIVQS6NnWjltFp0FRS/B+7eU9fWCQui3Gf5zp5fB3F1WikPcz0Hlmtf5ofc3RJ76aM3h8VHEH/Ag==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JFXi9A25+K3N7kQ1ZNUVXkVLVkrxcrgM8fX2aYGEdiI=;
- b=zC50cnmoQYLy75PudEgbugXD9uXptmNAVwMVOwDZ4Cv3/oa0mMsbtesuAMEj+hgGzlxFbh9OYyll8YGPTGwxMQOSRW2SwMDiJois6i7ZAAJ4rTpvbwTjLAQzIn1ELFxCSjRVjH80/K07uZI0XPgn8AE8z2Cea8ottW7ULbI1OrQEt/OEscn/jaBN9ymtR/g45YffHsVa+1/eloUhHQ1NuVXd/3zw7Wr3B05uAKmYvRtIumnywY165XTSGqFehLkS8dPGWeJ8K9mugiGnm17V7IH5C5FjNDV+iPY+c9Im3U/75JwHmXqUotAn3Xgt8IWQQdhgJVX/XZfupfDURJNDsg==
+ bh=lVlBTp4MzhBKPvGJEY2xKsihXciryfiPeij69616WvY=;
+ b=RvTvxWgtdQAYZJltqZr4hqxLZGXJ8L1h0OdFkn5j1PDW/hmtvLJ/iOXR7SQ62l1FEw/kXdpn4TDZ0EbPfH1bfENF7SwNFxI/yFTBAX6KzP8m85QrzyLWkg2HCAZelDXfgbc1/wuAVMdVdT9YCxvramoPCHdzPMGagPtykd1J5/4w3M9VHrI9O1DXdnd3tDQ3R3SGtkeR13b6MozM46gpUTFk9Up/3vQxIs08g71n+8j7KN33sEb8IbblxURX0jU7pNj23wbqTr9JQrHjnRUFYPzL1nKUHxfU4J2KFqZcRUbdu2qwOGLZ1Ugrdyi5BQvTvGFFUrwICNCSWiwNvlXczw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=weidmueller.com; dmarc=pass action=none
  header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JFXi9A25+K3N7kQ1ZNUVXkVLVkrxcrgM8fX2aYGEdiI=;
- b=3miRvD+RZFeBTSFrsrY75Tzwo+967oiN8xgxW1jMbobkBA7h0FvxdpuwmQ1fszLcGICwbNdxrNaARudsNSnd7Z8a7L3DUsGJB943G/thlTHOH7RVJKnTifVQbXYVVz0G63K9Y+pmBBoQxyCk7kWEXapSx1e2qKNvZPDE4XcOWqEc9TfdSp3cRgbMsf0+pdBYaG5mzRZjArHUFxCAUgS7uxyNOurRvKO0dBU0zBuXJVYqrRW3NuvqGn/JMzI5ctmReuvKcHWPk3D7LPuHaXeGOshOs4oL9QJa5xy8LBa+XpMcJX0kMCk4wEesYDm9M/5A4GE0JSYgOBKgjJq7mWF28A==
+ bh=lVlBTp4MzhBKPvGJEY2xKsihXciryfiPeij69616WvY=;
+ b=UJbwgXmJG0E6rLnfEA73TZeaYDJdYbRVevYTmwZiXX1Z/6W0tpKpLHvVIbMXIcItruUSAruu4+Y8UgPC1aKUlLFkPUxKYsN+LwXObDY7HjoKzop+H2fj/976QLkAFnENgwMDmllZYeinVs8USV81zReNbUcwZVTDyGFYXFR10/U2yGi9a1G13mB7mh1YhfG0ah5YGEdTSTZoXQfChlhoGTIIzSSyrUJdQEp9njvN/x+HLmngvhXmWnwCoDi5zMeM1zW9XXMvd2wS2VcDUgn2CpcScFrezM++p4qpFjEa5GYYZApUk24613okHWxdthw10nU/GROGAO7EkYbPQSQbNA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=weidmueller.com;
 Received: from GV1PR08MB8426.eurprd08.prod.outlook.com (2603:10a6:150:8a::17)
  by PAWPR08MB9688.eurprd08.prod.outlook.com (2603:10a6:102:2ea::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.27; Fri, 5 Sep
- 2025 06:44:39 +0000
+ 2025 06:44:40 +0000
 Received: from GV1PR08MB8426.eurprd08.prod.outlook.com
  ([fe80::f9f5:b4bd:9e01:9013]) by GV1PR08MB8426.eurprd08.prod.outlook.com
  ([fe80::f9f5:b4bd:9e01:9013%4]) with mapi id 15.20.9073.026; Fri, 5 Sep 2025
- 06:44:39 +0000
+ 06:44:40 +0000
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
 To: bitbake-devel@lists.openembedded.org
 CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Subject: [RFC PATCH v2 6/7] fetch2: add support for implicit urls
-Date: Fri,  5 Sep 2025 08:44:18 +0200
-Message-ID: <20250905064419.2589111-7-stefan.herbrechtsmeier-oss@weidmueller.com>
+Subject: [RFC PATCH v2 7/7] fetch2: gitsm: use implicit urls feature
+Date: Fri,  5 Sep 2025 08:44:19 +0200
+Message-ID: <20250905064419.2589111-8-stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250905064419.2589111-1-stefan.herbrechtsmeier-oss@weidmueller.com>
 References: <20250905064419.2589111-1-stefan.herbrechtsmeier-oss@weidmueller.com>
@@ -54,194 +54,185 @@ X-ClientProxiedBy: FR4P281CA0167.DEUP281.PROD.OUTLOOK.COM
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: GV1PR08MB8426:EE_|PAWPR08MB9688:EE_
-X-MS-Office365-Filtering-Correlation-Id: 04217bee-8594-417f-6556-08ddec47aeea
+X-MS-Office365-Filtering-Correlation-Id: 758c6093-1540-4634-e0ed-08ddec47af31
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
 	BCL:0;ARA:13230040|1800799024|366016|376014|52116014|38350700014;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?aeNo8qrEBW3wSVcJLfTYT9KNwg9yurG5mOMZPg9EYsVm/wZrNISBnqhY5+8O?=
- =?us-ascii?Q?DmyrFLVibORiB4ryID5rMwTjqDuPSn/+nlAByeQrn/W0DUs1S8Det9j39SOL?=
- =?us-ascii?Q?rcpAGgUxoWxYbg05VmtGlBOh6bobiDmMzF6oIrdWQbH/+4Rf8s4mNG+CujI9?=
- =?us-ascii?Q?r8wtAGqrccKrJ1WsDv5Z0kQgYviF+pjsWJNGGtgQ+d186K8ZgEV34LXYl4/t?=
- =?us-ascii?Q?97rD6Rf//1gUi9vs63EL4nn1atO5l4xTjKYpMyMBF8UhzQCj6Mjdgtdcb5Po?=
- =?us-ascii?Q?rQa2AvAHg38cN9WMZwS3P95gfTEV41ba+WMvu7ITI2/lwNpQ9yPH7qihVDPt?=
- =?us-ascii?Q?TN5JWBRuDO4DprjXQzl2Je/CecNjVo+fuIaOyOQGu214cZ5cBmMimC5TYEof?=
- =?us-ascii?Q?4aXHsDvOH0+AfNLYSXBlm+4cWrJEzsGo6kL7ekGnaLliAdToYLsiWY5lmePh?=
- =?us-ascii?Q?cbvEk8LAWeppxwWxBuIFJyeFlnrTEXnq4Zq6RpJyzbtG3Tsk6LdY6wgMsefq?=
- =?us-ascii?Q?4XVaZJLkOPhaH1/tN02/yOKbhvu9LxrGY5C5yyGPTrLK6bpLPYjvFA4mVqMf?=
- =?us-ascii?Q?yPpQg0x1zsYuU1vOJ85WUrIL5Cn9GaKyG5tSmKRXV6hFeGhrcIXYBO4YpbAj?=
- =?us-ascii?Q?LPDLpY0UACoAapDQGhy19D7hjPJsb3A9l1EGqOvPICpUc7j0vlThcVXMZYMi?=
- =?us-ascii?Q?07rpj/ZPc/l7q5VKPHHzhciGL69q9EpPAt0Vg9mQtYBWjD0fj0WWooafIi6L?=
- =?us-ascii?Q?K6Jw9ZbyTeC48u4vWOD/M42yM7k407v/7I4MtEANsM+jCbWMBf+6lwZecHxb?=
- =?us-ascii?Q?0jXwCNrPmJy9HG79x/H4sSZfK254nj0gt5qEzce2+xs8xMWpVeXf5th6scKU?=
- =?us-ascii?Q?wtkcjV94jL0iCMFRfcVl6288QZppjD7RCcMN8n6blRTRyR3cAeuc+gb+QeK/?=
- =?us-ascii?Q?HZbBs91bOvrrVouZZqmS1wWJacnDHjAwFJS/k4dwhzxbYpHHBjo+C6rOI8dY?=
- =?us-ascii?Q?oLmjKSZm3zdJRAoQ71dhZcpoho/FL3P86VXAeugiIIVNHLWARfDx5R9kIK6s?=
- =?us-ascii?Q?4dNH3TLV4NyLWg7ui2AQrm5FzWYkzxxtosfkfrwm9T2qxU8qnRQckW/fkqFI?=
- =?us-ascii?Q?xlM81cv/S6ECcdQmeFi6GP8rIFjv3EAb/+oodOcBZIpER8PYfMM89YgGZeMO?=
- =?us-ascii?Q?llfkZxYTFIjFxkolYllb3EZzQb/qdG37XhFE6nIuHf+o6c8BDYUqWOZKWQpn?=
- =?us-ascii?Q?Et2bco/lXN0F2xpKvoKAhRYpCdPNn31/hNXY+BU/31mKObAGHYy8U3JGN37g?=
- =?us-ascii?Q?Q8TGh7inaKZdLGSBTBCXtwnGxQ5adUq1bl9UeywYADyt3S9AyY3Pz0oeDN/o?=
- =?us-ascii?Q?Fnje1bbU5MGYKJAsxOwsJixSXmTYRLs7Yvfc/xKUfWxvflj7YeD0lSv+jzSs?=
- =?us-ascii?Q?d5qheqkgWp2/7mpewByS9VMTBwKhPJc9cBGpCHXmJLT3iiEphOYC8w=3D=3D?=
+	=?us-ascii?Q?sQMINel4rhx9m2xqWT1FQPkI1jD3RvRCHuYs8/wgxYhxzFGEDSOonXz3mu8L?=
+ =?us-ascii?Q?K3zzOhh+J2tYy0eqnL7Bq5MI++J2of/dsl+f56LO/sQmhqh5F7mwbU+qGBdZ?=
+ =?us-ascii?Q?DgiOU8I0027CVXMRvZSHRliv56vj9gyjGCvGqDLpK5owbkTtegOmWPSJOyFL?=
+ =?us-ascii?Q?92Ql3N1DTz+eX/XoyBe7qjn6QPNdw2XMRjW/EcwMQT3j0ngLftIyHSv/dlPm?=
+ =?us-ascii?Q?LiNvfYlMpd9RlfhC57nPlxt6cCYvJkd3kFFVysmGb1gAd/EwFmAKUgRbeBbi?=
+ =?us-ascii?Q?iRLYB1SneAvhiQjXKwotJKzBC7L+p/xhrIso4weesD/v2TbT1hJ3vXnoqrz5?=
+ =?us-ascii?Q?79d+6ys9RSnDp5MC8Dlk6RY6SXBEI98NZvReEVr9pmxsWD79zrV8un1AhYZY?=
+ =?us-ascii?Q?EHVILMpz2XD8IbkM4Llg/1gbPJ8ZpG1WRls5oU8u8wORczsDlar8qFqcxPJZ?=
+ =?us-ascii?Q?erQ+3Ix69DmAcS6jdh5Lu+yzNfeFyZCkFexSx5+YrJv3W6G/7wz9gDkOCMVr?=
+ =?us-ascii?Q?IkRBANgCIqSey+tygJodCFcOQ3v7nhyCpnrNTShMEyshIIRCjRpFwEMcrSOx?=
+ =?us-ascii?Q?RPXQG9nCXBLdesxxxivUiEA5SqNACgaODdDFvSz/JFCtZP39KOjOdYTO8TcO?=
+ =?us-ascii?Q?u7meKYI/r2VLpL+PVclq8sct1YucmqZC6obcn30yciXzA1hgvhVs0PhSvkZC?=
+ =?us-ascii?Q?Wx7fvPKvuGUsTVEX/OuLsFmpAeTlLhdchSMZJGmSO76Jd5Kb/QaAZIDzaIpR?=
+ =?us-ascii?Q?huTCjtp9Pm9wdrGjKX4uGfDf0rGVGHsPFiugMuyYGMMpeKeuy+f7TGBT5iVY?=
+ =?us-ascii?Q?8wTkRnI7BasgBI2sSIRZ3csFKhN/g1XJssRQ367cYcjuQZFZy/QE6DGIMe0c?=
+ =?us-ascii?Q?CrYZVfzr6DW0ioAirAPYaVn0/MOqJf/CpoQQcJkNtpmCQv/ji3SUS/stED0Z?=
+ =?us-ascii?Q?fIr47HE6qBlzw/l/8SuQmtK/dfladPaGWuTOy9O7VT9sJBU3b0aNDnCiqEzW?=
+ =?us-ascii?Q?v2UIKi94SyOTPgEzYVKkkgy4yiNIO+2vlcsHF6u50bkp/T3P2nBVGSNOmitJ?=
+ =?us-ascii?Q?Tr32QQxsQjQQQ+z3BN1Si35DQ++iCGycsftfJK+fjqWCxB6YULv35tSxs7I8?=
+ =?us-ascii?Q?7ni+4QYnUeVC3eyq4oE6lVD/VzjMbjKdKtE31ItfhzfhszP9N0XielLiVwgX?=
+ =?us-ascii?Q?s4+LSKfvUZFeS0+MIXzeVooV8MOOvGvRI1XEVzhmh9hlTvDN9cExyT+eWtmr?=
+ =?us-ascii?Q?q6Oq7RhEgqKh86XqAiPyYi9loYa6opokrteEuM9bxobTnMQPZakQPJN7fejb?=
+ =?us-ascii?Q?L2/m4cfa+LxvKRYeuTwwK9R0Qb9WXr8PmL6ScHm61rK9cei7ZbL4kvXSrsgm?=
+ =?us-ascii?Q?jvt1rLo5xasQPZcDP/JXnb+9af48wK7W9GM9qfw/F2u5RLe7cuQSEpUuuRlc?=
+ =?us-ascii?Q?SNqcBKl93M61wZoCVx6d8zLmv69IeRz1dv87LhqaxGTwsRxxKhGq4A=3D=3D?=
 X-Forefront-Antispam-Report: 
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB8426.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(52116014)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?W69NwaJpp7ej6QuHUryhS4Ep3kVNHxuKz+P5OpgMlKIOYYSihzTBsm54qobw?=
- =?us-ascii?Q?LwsL4FbB2tmAUHTwgdBbC6ZbUOTKa3P/cPISmfZ+UZAyKvtsZ1ndCJKmeah4?=
- =?us-ascii?Q?Po4jc245TF5CDuMoIn0n5ynuZyjrO/UP6CX+ZCJagpIh6AF9iAYQDum6uKaa?=
- =?us-ascii?Q?TdjqKcYZu770+jmJHQm7xNOo8JynPff2gkZAat8AULzQeroMZPfKBZGAamTy?=
- =?us-ascii?Q?7ZcdTC50pzYscxgoU/g2peGN8CPLjnJ1cMgKh4vTo+p1IY6hIhIqfPrKUPmB?=
- =?us-ascii?Q?J+t2mpSOxvv25aIGsNA+9KKojwb3n8dSUPLoooxq7TgUJ/iAVUWD3PaLWPmJ?=
- =?us-ascii?Q?OgPLFAzovz5E8r62uSk49yfr0cwTaCv2//pDg+Ck3JE59kN/Aooq0CIhqOme?=
- =?us-ascii?Q?NvhJsudiHOZz9wL9bvA2BZFi+67a1dHxOA11yIR8LSnjAYuxxbVJLo2mm2O8?=
- =?us-ascii?Q?OdqJrr90ai7JBDnCTe4u5O7fnQKpqp/whHx1iKmB7wCInw+06jduRMuhH5eD?=
- =?us-ascii?Q?Xi4oMA3ovchOILGXIr8Fk4I9d5QSCkWCwsH98KKEKh5fqcSBU/ypYbOOWq3j?=
- =?us-ascii?Q?eVjrVLbiYi3Jthb3hsy4qCqoJAQTVhnQmEuy4bsLo6Dhce3/0mG3D5iujsmd?=
- =?us-ascii?Q?taSlrAtlpxlMUEHRsDojOWMpEdsHlf3QspFFWKvcPWSlB/sOcuBpg9C9kOZ/?=
- =?us-ascii?Q?AYpp+TzXn8tvB4UjUAH56xjaHjKxXQdUXJEFLkGczJI8t+8CQOqt1U0Hq3PF?=
- =?us-ascii?Q?xrwAmvD6zfi6SHWxcK6/3KBGtgfYNlSTZ+Q96UNalpway3usVK2SAdf3EBcx?=
- =?us-ascii?Q?tVsW54/1yYV0w5dYyV4bkqXe2w6h8ASOXVq7u1KDIgztcA1Ri3T8dZVoYFfG?=
- =?us-ascii?Q?1E1//Z1yGn1TxMikdHAhiLmBym3XxERUBGgVR5tMGevvCeyNYY9yYHtcU8Nx?=
- =?us-ascii?Q?XSt5R/QdkwhYyXa08oVcNUsfYV9EuYMS2576w4GC0FqqOyW6u8c1jypX044R?=
- =?us-ascii?Q?7jxJJl1EervTQNR6E7S/c+UH/RVg50KVrNAemXCJJ9MFWS6N/4tpc8ILQTfG?=
- =?us-ascii?Q?nhA/0gPZXqe8RP8KsJchHiUPLz/V39U4ldYK+313VRy4Bfnav/JK96W/QnTp?=
- =?us-ascii?Q?lKAE5QxnyAHHwqW1l/7F3DBCJb1eV5Uje2F9I0HImbvr69EmyxxaoDAUo9Nh?=
- =?us-ascii?Q?ASDo33AWHKhO2pbDqVV7IYbIA2f/7MRAjkblVAm3soB3TjafEgrRPtvg2EbP?=
- =?us-ascii?Q?W8t7XbMKQrd79EuYmonDgfSwp+RGqlt9jCbRW3ofvTfVv/+jzvR+8RMwl8Jv?=
- =?us-ascii?Q?6DqvB3G/MIkn5nGHI1ceFZvAGt4n/Y+HDeDyhwCbyfEn/V/j3lyg4Eeyy5Oz?=
- =?us-ascii?Q?vcI6TBS5A1RhSMIwf8uGt/CLtnmCKkKd/wyZfj7GhMBRl8tcJJrSlPrVuxSw?=
- =?us-ascii?Q?QRnXYafmflUUxJcG1KuV2Y8eyp3zeoVj7wZocu7diGAU8q+LN36K+zscjYS0?=
- =?us-ascii?Q?pHQLEBzYHTAv4AGXKzIT9HRZTd8zig1D4EP1A4AI7W3+kvbGXUzlZaq0MwyJ?=
- =?us-ascii?Q?eG0QIgOJd6K9Fk9IAUmz8NKMlWfEe6n3S+ISaDXpzuxoo+yzYTrdPvelmGY+?=
- =?us-ascii?Q?Wg=3D=3D?=
+	=?us-ascii?Q?a+spreyhtTM+OM2kP37WF6+96rlc8XlU2Br1v/H6VAnO79h4U+xpGCW6ABsW?=
+ =?us-ascii?Q?LK48AX4iLLs/Brw7VPNUq7dxIeOqOMad7pSJX7jYvRiFwvT1fm2KwWxVnaqm?=
+ =?us-ascii?Q?XhxxWTLtt8s94Ty2FO8oRvHrxVb93HzNa70aSssQ9Seb4E2HbutSPdipYXPI?=
+ =?us-ascii?Q?I1nLxm2SdodBYGuGHSEY+z1uovLZAeFhVeE+Jrmq4cpu4hukn2yysUx4L962?=
+ =?us-ascii?Q?fLqbdVexDDZZ0uz97YKbkp1P4irkCeX0kEyQMHPtKkUz2Hp50PnSFwdZ0qwa?=
+ =?us-ascii?Q?FDn/IMCApO/Jz956xNSbbw45ASpnjSeHCtvhc0hdY98IJuAzn2i+M4H5e3ca?=
+ =?us-ascii?Q?y58L6cWIprmVBUu/6Kf5OIPANQ2xI+iWfhHH893pl0MOwbzNo90IH9SHlHKJ?=
+ =?us-ascii?Q?o/bEBZVsU72rZd6Zg53cRwbCU80CVa099qryy1jDXtsGxyeSv4ZtVmayl5d3?=
+ =?us-ascii?Q?rV6el/x8YNKY3f/Cad5bNEatUR/rccEjHRMJy2qoMRjJuJzqSif6RP+3ihry?=
+ =?us-ascii?Q?gfQILKGTOxmMUA89iNCiHFiSDbQzmvNpfDH3NmoFZZQkqBQLggr3g7whpvCq?=
+ =?us-ascii?Q?IznqX+wiEwuiv2sHAKRmyBFVBnd6XLY/hNMdz9J9Ao52lWKyb5e5BuB8MMK1?=
+ =?us-ascii?Q?pXRJdzSKx1Gy4Bib9sRJE00FKivZ1p1IT5LOt8Akpv7+0E7Q6Ybry093zX49?=
+ =?us-ascii?Q?NM//Izqq5jl9OrTmrjJhND20VWqsSflmKipGboG9t4PnjIlgWdD878Ol+fxj?=
+ =?us-ascii?Q?57v8tDq7g0YDu1D8nIxbIwDrK5G+NNb7EHNoL1XuBtMHm/dT+lomquCwtl9L?=
+ =?us-ascii?Q?UEXWIQ38ML6YqvnYE/JTPakmLPWUiaWEdCCrFMJWQTJ13QHEeUBpZ9jhnWOu?=
+ =?us-ascii?Q?37QGHVy6eblwISMO5Be7DDZj46SVqnIAf81/dQESUjmPlWcQxR3kvAh3V90h?=
+ =?us-ascii?Q?iDb2KmQ7c0VqyBZAKni8YCmtvVpBA5USaJ3i4XEjqC7NN7CS60+E0hYSygpN?=
+ =?us-ascii?Q?dWRzEZLWlyMjeFCmI0AOPh9S55cyIR5FAox8nXKcwjJHmu5OIAxMd1q/weYS?=
+ =?us-ascii?Q?oSZ5hJlaO3T1WxpzTNb8hXQLvQqR6gRGO+cfu89s6gjfwz9ZGZdGOX/88X6R?=
+ =?us-ascii?Q?tGiO4tSUXtV+TtsdZcUX++0QCHnkrMpfceamIdrbTGyd4d2ym8dih3UI1xWe?=
+ =?us-ascii?Q?mvozakTyLwtVD2En0/7AQ2/6qEMPxpn3JVL9RpGADcd9Ye261lN5bnpsr8fl?=
+ =?us-ascii?Q?ygziDj+M86q4LJFwtEd0Fdja8lmUljFbBQ17pKPXQeGxO8swYgCSmN1ILFa/?=
+ =?us-ascii?Q?Jt6QKMF59PjfmZTXgtRZuNnVm6yqluQIjEDF59LAW1Z04nCumXiJ+iC6Xez9?=
+ =?us-ascii?Q?xV2TD5cVraQ1/ex9KL4u4B93RU4uLfURLWIkpRDawz16i+UKKolKx72snMTB?=
+ =?us-ascii?Q?hTmW3YgNVR1982s7XX3LaByJ8z+b5v5q0ffgsdzPRbpww2/a4JZBKqazY9uH?=
+ =?us-ascii?Q?hIKcdGe1uGE671AX/bCW3zVc7d8zL0vh7y09Ab1z940ORnJJ4r/sd45Gr2kk?=
+ =?us-ascii?Q?WD2wIUZ/BRYGFvoEa/2xKqRrEcmzK4zD60KWQJeq1ovxi9x+sHZxV2E4OPjg?=
+ =?us-ascii?Q?NQ=3D=3D?=
 X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04217bee-8594-417f-6556-08ddec47aeea
+X-MS-Exchange-CrossTenant-Network-Message-Id: 758c6093-1540-4634-e0ed-08ddec47af31
 X-MS-Exchange-CrossTenant-AuthSource: GV1PR08MB8426.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2025 06:44:37.9924
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2025 06:44:38.4347
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ELPI2b2gz7b2ECb05BtBxeWcm4HBtYdYiC2S+1fcmzyXPZlEg3k/KNK/3hDIm7uaEVv4BjVA6Nib5tpds36WdA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: zmc/R+7ODnkKwZPIoSFuNNuZms8zGjqda+GCBzHiqv52ZCU6HNU8UK7N81/4a2xkiLeHkkL1dxWqjricgd7Usw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR08MB9688
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 05 Sep 2025 06:44:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17979
+ <bitbake-devel@lists.openembedded.org>; Fri, 05 Sep 2025 06:44:55 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17980
 
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 
-Add support for implicit URLs which are defined inside another source
-like a version control system (git submodule) or an embedded lock file
-(package-lock.json, cargo.lock or go.sum). The implicit URLs are
-extracted from the source and thereby only available after the download
-of the explicit source. The integration of implicit URLs beside explicit
-URLs simplifies the fetcher classes and avoid bugs because of iterations
-between the Fetch and FetchMethod classes.
+Return the submodule URLs via implicit_urls function and remove the
+manual handling of the submodule urls.
 
 Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.c=
 om>
 
 ---
 
-Changes in v2:
-- Remove implicit URLs from localpaths for backward compatibility
+(no changes since v1)
 
- lib/bb/fetch2/__init__.py | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ lib/bb/fetch2/gitsm.py | 46 +++++-------------------------------------
+ 1 file changed, 5 insertions(+), 41 deletions(-)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index c4d7cc033..1bf16b7e6 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1312,6 +1312,7 @@ class FetchData(object):
-         if not self.pswd and "pswd" in self.parm:
-             self.pswd =3D self.parm["pswd"]
-         self.setup =3D False
-+        self.implicit_urls =3D None
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index 5ddc81f86..90fe92f74 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -24,7 +24,6 @@ import tempfile
+ from   bb.fetch2.git import Git
+ from   bb.fetch2 import runfetchcmd
+ from   bb.fetch2 import logger
+-from   bb.fetch2 import Fetch
 =20
-         def configure_checksum(checksum_id):
-             checksum_plain_name =3D "%ssum" % checksum_id
-@@ -1409,6 +1410,11 @@ class FetchData(object):
+ class GitSM(Git):
+     def supports(self, ud, d):
+@@ -141,9 +140,9 @@ class GitSM(Git):
 =20
-         return d.getVar("SRCDATE") or d.getVar("DATE")
+             urls.append(url)
 =20
-+    def setup_implicit_urls(self, d):
-+        if self.implicit_urls is None:
-+            self.setup_localpath(d)
-+            self.implicit_urls =3D self.method.implicit_urls(self, d)
-+
- class FetchMethod(object):
-     """Base class for 'fetch'ing data"""
+-        return Fetch(urls, d, cache=3DFalse) if urls else None
++        return urls
 =20
-@@ -1727,6 +1733,9 @@ class FetchMethod(object):
-         """
-         return []
-=20
+-    def call_process_submodules(self, ud, d):
 +    def implicit_urls(self, ud, d):
-+        return []
-+
+         # If we're using a shallow mirror tarball it needs to be
+         # unpacked temporarily so that we can examine the .gitmodules file
+         # Unpack even when ud.clonedir is not available,
+@@ -157,27 +156,6 @@ class GitSM(Git):
+         else:
+             raise bb.fetch2.FetchError("Submodule source not available.")
 =20
- class DummyUnpackTracer(object):
-     """
-@@ -1960,6 +1969,16 @@ class Fetch(object):
-         for url in urls:
-             download(url)
+-    def need_update(self, ud, d):
+-        if Git.need_update(self, ud, d):
+-            return True
+-
+-        need_update =3D False
+-        fetch =3D self.call_process_submodules(ud, d)
+-        if fetch:
+-            for url in fetch.urls:
+-                urldata =3D fetch.ud[url]
+-                if urldata.method.need_update(urldata, d):
+-                    need_update =3D True
+-
+-        return need_update
+-
+-    def download(self, ud, d):
+-        Git.download(self, ud, d)
+-
+-        fetch =3D self.call_process_submodules(ud, d)
+-        if fetch:
+-            fetch.download()
+-
+     def unpack(self, ud, destdir, d):
+         fulldestdir =3D self.destdir(ud, destdir, d)
 =20
-+        def download_implicit(url):
-+            ud =3D self._get_urldata(url)
-+            ud.setup_implicit_urls(self.d)
-+            for u in ud.implicit_urls:
-+                download(u)
-+                download_implicit(u)
-+
-+        for url in urls:
-+            download_implicit(url)
-+
-         if checksum_missing_messages:
-             logger.error("Missing SRC_URI checksum, please add those to th=
-e recipe: \n%s", "\n".join(checksum_missing_messages))
-             raise BBFetchException("There was some missing checksums in th=
-e recipe")
-@@ -2022,6 +2041,12 @@ class Fetch(object):
-             if ud.lockfile:
-                 bb.utils.unlockfile(lf)
+@@ -204,25 +182,11 @@ class GitSM(Git):
+                 logger.error("Unable to set git config core.bare to false =
+for %s" % fulldestdir)
+                 raise
 =20
-+            ud.setup_implicit_urls(self.d)
-+            for u in ud.implicit_urls:
-+                unpack(u)
-+            if hasattr(ud.method, "postunpack"):
-+                ud.method.postunpack(ud, root, self.d)
-+
-         for url in urls:
-             unpack(url)
-=20
-@@ -2038,6 +2063,10 @@ class Fetch(object):
-         def clean(url):
-             ud =3D self._get_urldata(url)
-             ud.setup_localpath(self.d)
-+            if os.path.exists(ud.localpath):
-+                ud.setup_implicit_urls(self.d)
-+                for u in ud.implicit_urls:
-+                    clean(u)
-=20
-             if not ud.localfile and ud.localpath is None:
-                 return
-@@ -2070,6 +2099,9 @@ class Fetch(object):
-             ud =3D self._get_urldata(url)
-             urldata.append(ud)
-             urldata.extend(ud.method.implicit_urldata(ud, self.d))
-+            ud.setup_implicit_urls(self.d)
-+            for u in ud.implicit_urls:
-+                expand_urldata(u)
-=20
-         for url in urls:
-             expand_urldata(url)
+-        fetch =3D self.process_submodules(ud, fulldestdir, d)
+-        if fetch:
+-            fetch.unpack(destdir)
+-
+-        if not ud.bareclone and fetch:
++    def postunpack(self, ud, destdir, d):
++        fulldestdir =3D self.destdir(ud, destdir, d)
++        if not ud.bareclone:
+             cmdprefix =3D ""
+             # Avoid LFS smudging (replacing the LFS pointers with the actu=
+al content) when LFS shouldn't be used but git-lfs is installed.
+             if not self._need_lfs(ud):
+                 cmdprefix =3D "GIT_LFS_SKIP_SMUDGE=3D1 "
+             runfetchcmd("%s%s submodule update --recursive --no-fetch" % (=
+cmdprefix, ud.basecmd), d, quiet=3DTrue, workdir=3Dfulldestdir)
+-    def clean(self, ud, d):
+-        fetch =3D self.call_process_submodules(ud, d)
+-        if fetch:
+-            fetch.clean()
+-        Git.clean(self, ud, d)
+-
+-    def implicit_urldata(self, ud, d):
+-        fetch =3D self.call_process_submodules(ud, d)
+-        if fetch:
+-            return fetch.expanded_urldata()
+-
+-        return []
 --=20
 2.39.5
 
