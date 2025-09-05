@@ -2,30 +2,30 @@ Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7A0CAC580
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10012CAC581
 	for <webhook@archiver.kernel.org>; Fri,  5 Sep 2025 06:44:45 +0000 (UTC)
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (DB3PR0202CU003.outbound.protection.outlook.com [52.101.84.128])
- by mx.groups.io with SMTP id smtpd.web10.15210.1757054683279460090
+Received: from AM0PR02CU008.outbound.protection.outlook.com (AM0PR02CU008.outbound.protection.outlook.com [52.101.72.127])
+ by mx.groups.io with SMTP id smtpd.web10.15209.1757054681032438910
  for <bitbake-devel@lists.openembedded.org>;
  Thu, 04 Sep 2025 23:44:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=yw0Tzs00;
- spf=pass (domain: weidmueller.com, ip: 52.101.84.128, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=3miRvD+R;
+ spf=pass (domain: weidmueller.com, ip: 52.101.72.127, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jL05VjUhY34erKh7V/TV4OhZsvQauP7EDF1hR8zUPv2wKSGqoGoHV5Bps+6ASE2nxwhjPqjwt5kf/KOvqDdaZUgkDPFC52B2sGeX/+4D5SgXTINGUD9ZwBU3x7lANs7+ebkm1YMSXOgqptIylCcy9TqHN/3nJjq8MA0IUicyT6N7VZHgT/PuFQBN/83Iw6d33dLS4XHqUAqN0uCIOgQ/RYAmylnO0J9Y6Gqr0OsktbXrq+5MqGbu2IqC0fkCfp11olcm+/714/dYZd1vafQIMQ05k1uEuH+SjGEqmTv/sIELADN5/LxEULQMgRiBqQOz2Xj279c5WDzl/QgqGk5w+Q==
+ b=I873Odgq9wgzk0X2UYkqwYSWLUtRs79Dq4LvgyRvtgHv5UYSmvWTFwj3LSCti1sXWcDySzK5aur6mN2ACw1vtSeS8OUyPBAxwcoAgf176jrnlWPMYBPvothiVS4Lj4X2ytm52aVYco92k1obg7Hj6VYuhXtwHmG0thZc/ybkn28yQd+H++EoInRvGwhMb+kPMS1rgFaUlsxSL/Pii8KTwUoUfcm6bpE8MKA6EnSzYImAPhD2TjqOgrk9VcfzOPLOfm2ZMdtBi1LfmIhAnKg/05L0Llsgs94l2klxzEyTiIbFliSGhReDchDO4MoUuVK3BpfLukLX4ssWv1+2JjWJCQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZJ3ZRvNfeqJ2KurW15t+l4Q/7a243ILJWk6vHWJxYgg=;
- b=QA9XC2OnMO5IhzYGA76llr8hshJHZsaLvi7mr1AiFNeOBhaAShXTGrAw6O36p6HV/BMHOUrFQ4nI6mRm3cZHfYrQBejOB5l3IvQhy+ULbXr4CNCWmDzb4JcpGH8khGjuG8GRDMwsaX/SvO01r7t8DQfPGouY48kVVZWSIwOlTtnRwTUx+ef8i1IdOrB66pgNUKDjdHPSE62DeRhABVXDWWupjbPTwnDrMZWU3j4PNqHwZRESDeFiWCoxUenbD+zrlWAdyeG03P7m0w8StHQQnNYgC3aTwajaK9ydMlgXFhy408ys9s6I3KQuDeNrttPG2t9IgpcMlNdl0xM8gd9iWQ==
+ bh=JFXi9A25+K3N7kQ1ZNUVXkVLVkrxcrgM8fX2aYGEdiI=;
+ b=zC50cnmoQYLy75PudEgbugXD9uXptmNAVwMVOwDZ4Cv3/oa0mMsbtesuAMEj+hgGzlxFbh9OYyll8YGPTGwxMQOSRW2SwMDiJois6i7ZAAJ4rTpvbwTjLAQzIn1ELFxCSjRVjH80/K07uZI0XPgn8AE8z2Cea8ottW7ULbI1OrQEt/OEscn/jaBN9ymtR/g45YffHsVa+1/eloUhHQ1NuVXd/3zw7Wr3B05uAKmYvRtIumnywY165XTSGqFehLkS8dPGWeJ8K9mugiGnm17V7IH5C5FjNDV+iPY+c9Im3U/75JwHmXqUotAn3Xgt8IWQQdhgJVX/XZfupfDURJNDsg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=weidmueller.com; dmarc=pass action=none
  header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZJ3ZRvNfeqJ2KurW15t+l4Q/7a243ILJWk6vHWJxYgg=;
- b=yw0Tzs00a8Tyy0Z3NJ1L66aCVPkFAIXMRUnGqNbi4wK4OCMsWfJMYtuTMBHry8Bm2RSehQrGz5ygJBBmk4urWWhwBjRUEQmVeyV0anNY1zEplYL80ODtp9rljcZAbTuRquwZU1ualOdSYYtr1eaujS9kQbVFA0zcrJ5vp3UgKFB0aQWD5Zaf1yLDdk9THMepNu+fTpy6NDfArSk3tQroDvaV6Ro5ToGd8VTJsv983BXeLtYJoViG2fStZYqWNUoSmyMK+TOCwgaa08Kq966Vkv3YjQPZE/9O2F8p5E1+Zf/17zmjK3X4z3pYIXSIOygu7bZNBGlGu9efHh7FC2cI7A==
+ bh=JFXi9A25+K3N7kQ1ZNUVXkVLVkrxcrgM8fX2aYGEdiI=;
+ b=3miRvD+RZFeBTSFrsrY75Tzwo+967oiN8xgxW1jMbobkBA7h0FvxdpuwmQ1fszLcGICwbNdxrNaARudsNSnd7Z8a7L3DUsGJB943G/thlTHOH7RVJKnTifVQbXYVVz0G63K9Y+pmBBoQxyCk7kWEXapSx1e2qKNvZPDE4XcOWqEc9TfdSp3cRgbMsf0+pdBYaG5mzRZjArHUFxCAUgS7uxyNOurRvKO0dBU0zBuXJVYqrRW3NuvqGn/JMzI5ctmReuvKcHWPk3D7LPuHaXeGOshOs4oL9QJa5xy8LBa+XpMcJX0kMCk4wEesYDm9M/5A4GE0JSYgOBKgjJq7mWF28A==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=weidmueller.com;
 Received: from GV1PR08MB8426.eurprd08.prod.outlook.com (2603:10a6:150:8a::17)
@@ -40,9 +40,9 @@ Received: from GV1PR08MB8426.eurprd08.prod.outlook.com
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
 To: bitbake-devel@lists.openembedded.org
 CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Subject: [RFC PATCH v2 5/7] fetch2: add helper to get urldata in Fetch class
-Date: Fri,  5 Sep 2025 08:44:17 +0200
-Message-ID: <20250905064419.2589111-6-stefan.herbrechtsmeier-oss@weidmueller.com>
+Subject: [RFC PATCH v2 6/7] fetch2: add support for implicit urls
+Date: Fri,  5 Sep 2025 08:44:18 +0200
+Message-ID: <20250905064419.2589111-7-stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250905064419.2589111-1-stefan.herbrechtsmeier-oss@weidmueller.com>
 References: <20250905064419.2589111-1-stefan.herbrechtsmeier-oss@weidmueller.com>
@@ -54,189 +54,194 @@ X-ClientProxiedBy: FR4P281CA0167.DEUP281.PROD.OUTLOOK.COM
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: GV1PR08MB8426:EE_|PAWPR08MB9688:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2c91eaca-8308-44d0-7ad7-08ddec47ae97
+X-MS-Office365-Filtering-Correlation-Id: 04217bee-8594-417f-6556-08ddec47aeea
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
 	BCL:0;ARA:13230040|1800799024|366016|376014|52116014|38350700014;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?w60X6NxMazFvHDs8lGMhC7GVgEPIrgUprMEcQPLh+02kdnaI6ovfEVP2q2ue?=
- =?us-ascii?Q?z88LjAgfbxv42p6ZBcCoG9AK/MEtvrZlLWQewDvjavvOzkCQF0vy1UGn0qno?=
- =?us-ascii?Q?Emb8yXgZIMSMFFM1m/nt1gmEvkjzzM8TdiINjbzE/s+jlWMdC+Ak1DAFm2Rk?=
- =?us-ascii?Q?LXHTsOBUOd4F6OV3hEed5Hob07V6j3F/sVeu1ubUfm/Q/3zfounxJV+3CUQ/?=
- =?us-ascii?Q?8THsRo7jjc+YUEyA9VoARf9pA4iISnWsyjtaDxq486YL6Z7Jp7hdh6lfEUx+?=
- =?us-ascii?Q?rSMuqpSVpO5KwqOMFxHhGAbMxAU8P6ocoLXId7sLK5gKcq5fn6aj2QoaoSTJ?=
- =?us-ascii?Q?28u5DwHyKNmf6APwG2R5KO7FodsRQOa5vO1nlGhUhfJ5UEn2w0V93bOHBftP?=
- =?us-ascii?Q?L/2swHkB9o/eVjQUVGeEmMPVdLV1WRUrxWEFHyDFUO97dEEQWEmbgkm9EYY6?=
- =?us-ascii?Q?8/ykS/RnO30CDWOqVW150MQ/gj+hqy9umTo2KHAU2lW9esCOyk1dX2AgWNtx?=
- =?us-ascii?Q?Mw/JCicnUepsc7Vsy8IBM6yODy13NNQ3rkuv0TE6kFm84UYiodOjIrmHhLVJ?=
- =?us-ascii?Q?wk7KviSUvpR7oYVuRZz97buq3LVPzL8Jh+aPo0CDyKOhtI59rBvqU/hO3GTD?=
- =?us-ascii?Q?wx8uZrUUHngmXGLP/ejf1Hei4LFk2FxpJfjGr2ux6o2L5xe2DzOYppK1A7mq?=
- =?us-ascii?Q?H2Zih9+8qmqmRRm6nkZCoMO3C1Fk/0YWjRjywMyPF8xSC5MlLt9rIg/aDbeF?=
- =?us-ascii?Q?ZNE1vmimyMOFG0CLwIqIMQQ1JU8odX9SQ3E1UpplF5wX6VzHwIy8wPOnWQPR?=
- =?us-ascii?Q?JSKGqbltuUPa1CdHKHez/NlfIsmdKyZxNLdt/nge5X5bFF9uS20Q7IN68OMY?=
- =?us-ascii?Q?TQDUFljuPSG1piRTtLqla75/YnjEXJLObPkjVIsGf3uk7eQGFim6tHXe1ail?=
- =?us-ascii?Q?ZiHy+yLBUx0oP60mAajzFBO8EhWh3rDIdkVcXIzKOIgnmHP4IcQObKiXkglJ?=
- =?us-ascii?Q?Q4H12Cp5TS/InpRADVZdtwK6WkR4GeFm6TJo7KAD3F1Ls4Ct0N0r+EkZGJms?=
- =?us-ascii?Q?cWtEl+ucJ/DS7l1HJybA+URq/nG15038kmic9yuIaXoY1aIF1G9tVxUtYmRW?=
- =?us-ascii?Q?pow6byW5NMryfPf05S4PzdV0JLCJebn19ofWpOk4goeb1yBwiFjtFyJAMnUW?=
- =?us-ascii?Q?VPyd6niBmN9sqqnYU6D+k6MmTuCj9v8kHmf7b5OgBIn/VyKM/4a6Q6nxQAt8?=
- =?us-ascii?Q?sKXtSPxpFnu/n6lIQeXKcOVn7nIeNU5wtGwqOcdG/qDKzndN1ri4P94IpJ8g?=
- =?us-ascii?Q?6wVX0ZxBosTo3xJDnGuLZsESJilYy+odip8dXy5ZDOERHe5pHG5Pi+9IT7/Q?=
- =?us-ascii?Q?Erm+zunpo/WKkjbwiK9E8Pq0rj9MXn9pmhQjUH7RoOOaBu0a7ywgIzZQ59tX?=
- =?us-ascii?Q?dqPYWU1Mtkm1qrhfDzxaVUMPzEriMzTK5Wk4ERGvqfp+ZBDdHxT2Dg=3D=3D?=
+	=?us-ascii?Q?aeNo8qrEBW3wSVcJLfTYT9KNwg9yurG5mOMZPg9EYsVm/wZrNISBnqhY5+8O?=
+ =?us-ascii?Q?DmyrFLVibORiB4ryID5rMwTjqDuPSn/+nlAByeQrn/W0DUs1S8Det9j39SOL?=
+ =?us-ascii?Q?rcpAGgUxoWxYbg05VmtGlBOh6bobiDmMzF6oIrdWQbH/+4Rf8s4mNG+CujI9?=
+ =?us-ascii?Q?r8wtAGqrccKrJ1WsDv5Z0kQgYviF+pjsWJNGGtgQ+d186K8ZgEV34LXYl4/t?=
+ =?us-ascii?Q?97rD6Rf//1gUi9vs63EL4nn1atO5l4xTjKYpMyMBF8UhzQCj6Mjdgtdcb5Po?=
+ =?us-ascii?Q?rQa2AvAHg38cN9WMZwS3P95gfTEV41ba+WMvu7ITI2/lwNpQ9yPH7qihVDPt?=
+ =?us-ascii?Q?TN5JWBRuDO4DprjXQzl2Je/CecNjVo+fuIaOyOQGu214cZ5cBmMimC5TYEof?=
+ =?us-ascii?Q?4aXHsDvOH0+AfNLYSXBlm+4cWrJEzsGo6kL7ekGnaLliAdToYLsiWY5lmePh?=
+ =?us-ascii?Q?cbvEk8LAWeppxwWxBuIFJyeFlnrTEXnq4Zq6RpJyzbtG3Tsk6LdY6wgMsefq?=
+ =?us-ascii?Q?4XVaZJLkOPhaH1/tN02/yOKbhvu9LxrGY5C5yyGPTrLK6bpLPYjvFA4mVqMf?=
+ =?us-ascii?Q?yPpQg0x1zsYuU1vOJ85WUrIL5Cn9GaKyG5tSmKRXV6hFeGhrcIXYBO4YpbAj?=
+ =?us-ascii?Q?LPDLpY0UACoAapDQGhy19D7hjPJsb3A9l1EGqOvPICpUc7j0vlThcVXMZYMi?=
+ =?us-ascii?Q?07rpj/ZPc/l7q5VKPHHzhciGL69q9EpPAt0Vg9mQtYBWjD0fj0WWooafIi6L?=
+ =?us-ascii?Q?K6Jw9ZbyTeC48u4vWOD/M42yM7k407v/7I4MtEANsM+jCbWMBf+6lwZecHxb?=
+ =?us-ascii?Q?0jXwCNrPmJy9HG79x/H4sSZfK254nj0gt5qEzce2+xs8xMWpVeXf5th6scKU?=
+ =?us-ascii?Q?wtkcjV94jL0iCMFRfcVl6288QZppjD7RCcMN8n6blRTRyR3cAeuc+gb+QeK/?=
+ =?us-ascii?Q?HZbBs91bOvrrVouZZqmS1wWJacnDHjAwFJS/k4dwhzxbYpHHBjo+C6rOI8dY?=
+ =?us-ascii?Q?oLmjKSZm3zdJRAoQ71dhZcpoho/FL3P86VXAeugiIIVNHLWARfDx5R9kIK6s?=
+ =?us-ascii?Q?4dNH3TLV4NyLWg7ui2AQrm5FzWYkzxxtosfkfrwm9T2qxU8qnRQckW/fkqFI?=
+ =?us-ascii?Q?xlM81cv/S6ECcdQmeFi6GP8rIFjv3EAb/+oodOcBZIpER8PYfMM89YgGZeMO?=
+ =?us-ascii?Q?llfkZxYTFIjFxkolYllb3EZzQb/qdG37XhFE6nIuHf+o6c8BDYUqWOZKWQpn?=
+ =?us-ascii?Q?Et2bco/lXN0F2xpKvoKAhRYpCdPNn31/hNXY+BU/31mKObAGHYy8U3JGN37g?=
+ =?us-ascii?Q?Q8TGh7inaKZdLGSBTBCXtwnGxQ5adUq1bl9UeywYADyt3S9AyY3Pz0oeDN/o?=
+ =?us-ascii?Q?Fnje1bbU5MGYKJAsxOwsJixSXmTYRLs7Yvfc/xKUfWxvflj7YeD0lSv+jzSs?=
+ =?us-ascii?Q?d5qheqkgWp2/7mpewByS9VMTBwKhPJc9cBGpCHXmJLT3iiEphOYC8w=3D=3D?=
 X-Forefront-Antispam-Report: 
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB8426.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(52116014)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?uhCilHqfpAaquEXR9n98rn3SD7tCCNfCfNxvIcvqO8rJkJCNT++bfoZp2cAf?=
- =?us-ascii?Q?nMEkydCMnf1C843Zc1LiUIrNq7J0KXAzUCNlN4E6h9IkqDaHyfF3nYANhH7o?=
- =?us-ascii?Q?/3yYz1hPtxtFb1pOFxE4Mh4nFrYE2wXMFCRzsiWSudM2DLygXlJ11Qy4edAt?=
- =?us-ascii?Q?bBRbJFNi2jsWEd/aJRNpvjJB13AIJYk7o/hfBoFwKCNOpK/8IBnmZVvAc6er?=
- =?us-ascii?Q?/abDox4yTojdOlkph+Kk/UtXSQE+J4QhzYmCmzwaXy998RgSq+lRu1nnCY41?=
- =?us-ascii?Q?SEoFYSHGNGm2TmwOlXNkKWIBkKr0lFZNTyTMngqUmoopCTvQLBI1tx2cYqOJ?=
- =?us-ascii?Q?7ODuowT6fYX1zMYOpW264eeoicy0xhyNrFMjIhXKLgusBGvu58MZ72GOSAm9?=
- =?us-ascii?Q?AOYeUpqy8zCJF69LvnXc2hGo5BtkEZzh9iCcKXb25Hn2z3xYxJZvv1yelYJW?=
- =?us-ascii?Q?B7FTqTd/R3MvCxRmRCDcplFkyjozFKL5LdS9w+lZQO2PnKFQ5uJgX9TD+TVQ?=
- =?us-ascii?Q?ys9RHUHjk1Awrc05sq/ivqDZe6Ig4tu2/ldq5EM66VDoLx2tMAlTmeJkWpb7?=
- =?us-ascii?Q?SKaNJcta/LRnbLysz7yisLNUiLVOXFU0Iv/GzW7PRTEYz0DmA+JxyjWI9LKG?=
- =?us-ascii?Q?JYV0fWps9kqQSI1TlVjiFTvDrZXFtv0Z8o3QKkeqQXDT68LGOsbAkeb69j9k?=
- =?us-ascii?Q?tPl7VzetXO+qQDts1iMYj3M8W4kOnSOaZvg0e1hOn0ORgIfa3k7L+W9juc13?=
- =?us-ascii?Q?MjRDSKGv4wVUyKm0IwFR1+CeYgSETk3YWVfqIunxEq2LVuMsW9/aR/EVhR7x?=
- =?us-ascii?Q?EDH1MHAl7p7Hxjnx96Ib/jnbUyntPt83AOt4FyS7uknBSd4RJC+1CgNoci8Y?=
- =?us-ascii?Q?A5ipU2mZTt7H+LayPelndOa5xMmj8Y9LQO8cYKB+QKRJdwf1VTG0KFPXwOZC?=
- =?us-ascii?Q?FiSFQfuwYwvHc5/pFwEBqyBpzQMq8/vCdNijZJj24YCNK0HEhzYjuPphSh55?=
- =?us-ascii?Q?3UxwCf+B45BI5vevp4qjTEaWKVlRHZ5y4VqeUke2ypjVK8hxNX0Ypyc7Aq5s?=
- =?us-ascii?Q?8qUmQcf5FU3ik9YzPSmLjmEakDaljxsGciyqQpPc4/rRw4WCOAawTxdAegAA?=
- =?us-ascii?Q?raHvAWCQJHqY6SctPO2pjjXrN26jRNNSbN1N9zFvOKGdavcEvimVEGEQASyy?=
- =?us-ascii?Q?3UzC2JSE6HL2NVHNIj72Sk1KSRjCEH02chi9yojUU7sfHuqRxDX+TMHUDtHm?=
- =?us-ascii?Q?c5+VZOrJ37t5P0NDapSoZqisi8y6H9XbITp3VCx2pekyXcdrOVyqMJbB1ay6?=
- =?us-ascii?Q?IXPNSTBbcslMkEGCEy7h/QJCGlYRtC86w/nYMEipqizrwOim2yqbHdWPSc/t?=
- =?us-ascii?Q?CAg85AXqrZWpnP+YndbHNhrQU2XXrxXZBCGftMsJ9gHtRipaWFXfwbdyNgM9?=
- =?us-ascii?Q?EPd6K+N/VB2hsx1koCP9/NlyaY+w3Zi+E3zq+tMBHKz13r2zLrrTphNfc+8U?=
- =?us-ascii?Q?HAvZcsxoJ3EeeaNQ5mKXBtiZaGIYW0jvx4wAHLpj9JyBw6HpqlHaiirzeMZw?=
- =?us-ascii?Q?qqcI5J2i+VAf82dMiReNEQnW49ZA4t++k+rAU5Jk+IiArk40w4Rqpv0s8LK6?=
- =?us-ascii?Q?6A=3D=3D?=
+	=?us-ascii?Q?W69NwaJpp7ej6QuHUryhS4Ep3kVNHxuKz+P5OpgMlKIOYYSihzTBsm54qobw?=
+ =?us-ascii?Q?LwsL4FbB2tmAUHTwgdBbC6ZbUOTKa3P/cPISmfZ+UZAyKvtsZ1ndCJKmeah4?=
+ =?us-ascii?Q?Po4jc245TF5CDuMoIn0n5ynuZyjrO/UP6CX+ZCJagpIh6AF9iAYQDum6uKaa?=
+ =?us-ascii?Q?TdjqKcYZu770+jmJHQm7xNOo8JynPff2gkZAat8AULzQeroMZPfKBZGAamTy?=
+ =?us-ascii?Q?7ZcdTC50pzYscxgoU/g2peGN8CPLjnJ1cMgKh4vTo+p1IY6hIhIqfPrKUPmB?=
+ =?us-ascii?Q?J+t2mpSOxvv25aIGsNA+9KKojwb3n8dSUPLoooxq7TgUJ/iAVUWD3PaLWPmJ?=
+ =?us-ascii?Q?OgPLFAzovz5E8r62uSk49yfr0cwTaCv2//pDg+Ck3JE59kN/Aooq0CIhqOme?=
+ =?us-ascii?Q?NvhJsudiHOZz9wL9bvA2BZFi+67a1dHxOA11yIR8LSnjAYuxxbVJLo2mm2O8?=
+ =?us-ascii?Q?OdqJrr90ai7JBDnCTe4u5O7fnQKpqp/whHx1iKmB7wCInw+06jduRMuhH5eD?=
+ =?us-ascii?Q?Xi4oMA3ovchOILGXIr8Fk4I9d5QSCkWCwsH98KKEKh5fqcSBU/ypYbOOWq3j?=
+ =?us-ascii?Q?eVjrVLbiYi3Jthb3hsy4qCqoJAQTVhnQmEuy4bsLo6Dhce3/0mG3D5iujsmd?=
+ =?us-ascii?Q?taSlrAtlpxlMUEHRsDojOWMpEdsHlf3QspFFWKvcPWSlB/sOcuBpg9C9kOZ/?=
+ =?us-ascii?Q?AYpp+TzXn8tvB4UjUAH56xjaHjKxXQdUXJEFLkGczJI8t+8CQOqt1U0Hq3PF?=
+ =?us-ascii?Q?xrwAmvD6zfi6SHWxcK6/3KBGtgfYNlSTZ+Q96UNalpway3usVK2SAdf3EBcx?=
+ =?us-ascii?Q?tVsW54/1yYV0w5dYyV4bkqXe2w6h8ASOXVq7u1KDIgztcA1Ri3T8dZVoYFfG?=
+ =?us-ascii?Q?1E1//Z1yGn1TxMikdHAhiLmBym3XxERUBGgVR5tMGevvCeyNYY9yYHtcU8Nx?=
+ =?us-ascii?Q?XSt5R/QdkwhYyXa08oVcNUsfYV9EuYMS2576w4GC0FqqOyW6u8c1jypX044R?=
+ =?us-ascii?Q?7jxJJl1EervTQNR6E7S/c+UH/RVg50KVrNAemXCJJ9MFWS6N/4tpc8ILQTfG?=
+ =?us-ascii?Q?nhA/0gPZXqe8RP8KsJchHiUPLz/V39U4ldYK+313VRy4Bfnav/JK96W/QnTp?=
+ =?us-ascii?Q?lKAE5QxnyAHHwqW1l/7F3DBCJb1eV5Uje2F9I0HImbvr69EmyxxaoDAUo9Nh?=
+ =?us-ascii?Q?ASDo33AWHKhO2pbDqVV7IYbIA2f/7MRAjkblVAm3soB3TjafEgrRPtvg2EbP?=
+ =?us-ascii?Q?W8t7XbMKQrd79EuYmonDgfSwp+RGqlt9jCbRW3ofvTfVv/+jzvR+8RMwl8Jv?=
+ =?us-ascii?Q?6DqvB3G/MIkn5nGHI1ceFZvAGt4n/Y+HDeDyhwCbyfEn/V/j3lyg4Eeyy5Oz?=
+ =?us-ascii?Q?vcI6TBS5A1RhSMIwf8uGt/CLtnmCKkKd/wyZfj7GhMBRl8tcJJrSlPrVuxSw?=
+ =?us-ascii?Q?QRnXYafmflUUxJcG1KuV2Y8eyp3zeoVj7wZocu7diGAU8q+LN36K+zscjYS0?=
+ =?us-ascii?Q?pHQLEBzYHTAv4AGXKzIT9HRZTd8zig1D4EP1A4AI7W3+kvbGXUzlZaq0MwyJ?=
+ =?us-ascii?Q?eG0QIgOJd6K9Fk9IAUmz8NKMlWfEe6n3S+ISaDXpzuxoo+yzYTrdPvelmGY+?=
+ =?us-ascii?Q?Wg=3D=3D?=
 X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c91eaca-8308-44d0-7ad7-08ddec47ae97
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04217bee-8594-417f-6556-08ddec47aeea
 X-MS-Exchange-CrossTenant-AuthSource: GV1PR08MB8426.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2025 06:44:37.5170
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2025 06:44:37.9924
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: r+Gpfc0BsJjLHvQ7a/tRKKfxWJXAFK+6ngxRNcD3SHMav4eICxMMqnkd3muP3aJdQrbQiGADzpj+ZztqzzkPEA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: ELPI2b2gz7b2ECb05BtBxeWcm4HBtYdYiC2S+1fcmzyXPZlEg3k/KNK/3hDIm7uaEVv4BjVA6Nib5tpds36WdA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR08MB9688
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 05 Sep 2025 06:44:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17978
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17979
 
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 
-Add a private helper function to get the urldata object of a given URL.
-Create the urldate object if it doesn't exist inside the urldata object
-list of the fetch object.
+Add support for implicit URLs which are defined inside another source
+like a version control system (git submodule) or an embedded lock file
+(package-lock.json, cargo.lock or go.sum). The implicit URLs are
+extracted from the source and thereby only available after the download
+of the explicit source. The integration of implicit URLs beside explicit
+URLs simplifies the fetcher classes and avoid bugs because of iterations
+between the Fetch and FetchMethod classes.
 
 Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.c=
 om>
+
 ---
 
-(no changes since v1)
+Changes in v2:
+- Remove implicit URLs from localpaths for backward compatibility
 
- lib/bb/fetch2/__init__.py | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ lib/bb/fetch2/__init__.py | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
 diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 3ff08f817..c4d7cc033 100644
+index c4d7cc033..1bf16b7e6 100644
 --- a/lib/bb/fetch2/__init__.py
 +++ b/lib/bb/fetch2/__init__.py
-@@ -1829,11 +1829,9 @@ class Fetch(object):
-             urldata_cache[key] =3D self.ud
+@@ -1312,6 +1312,7 @@ class FetchData(object):
+         if not self.pswd and "pswd" in self.parm:
+             self.pswd =3D self.parm["pswd"]
+         self.setup =3D False
++        self.implicit_urls =3D None
 =20
-     def localpath(self, url):
--        if url not in self.urls:
--            self.ud[url] =3D FetchData(url, self.d)
--
--        self.ud[url].setup_localpath(self.d)
--        return self.ud[url].localpath
-+        ud =3D self._get_urldata(url)
-+        ud.setup_localpath(self.d)
-+        return ud.localpath
+         def configure_checksum(checksum_id):
+             checksum_plain_name =3D "%ssum" % checksum_id
+@@ -1409,6 +1410,11 @@ class FetchData(object):
 =20
-     def localpaths(self):
+         return d.getVar("SRCDATE") or d.getVar("DATE")
+=20
++    def setup_implicit_urls(self, d):
++        if self.implicit_urls is None:
++            self.setup_localpath(d)
++            self.implicit_urls =3D self.method.implicit_urls(self, d)
++
+ class FetchMethod(object):
+     """Base class for 'fetch'ing data"""
+=20
+@@ -1727,6 +1733,9 @@ class FetchMethod(object):
          """
-@@ -1842,7 +1840,7 @@ class Fetch(object):
-         local =3D []
+         return []
 =20
-         def localpath(url):
--            ud =3D self.ud[url]
++    def implicit_urls(self, ud, d):
++        return []
++
+=20
+ class DummyUnpackTracer(object):
+     """
+@@ -1960,6 +1969,16 @@ class Fetch(object):
+         for url in urls:
+             download(url)
+=20
++        def download_implicit(url):
 +            ud =3D self._get_urldata(url)
-             ud.setup_localpath(self.d)
-             local.append(ud.localpath)
-=20
-@@ -1863,7 +1861,7 @@ class Fetch(object):
-=20
-         checksum_missing_messages =3D []
-         def download(url):
--            ud =3D self.ud[url]
-+            ud =3D self._get_urldata(url)
-             ud.setup_localpath(self.d)
-             m =3D ud.method
-             done =3D False
-@@ -1979,7 +1977,7 @@ class Fetch(object):
-             urls =3D self.urls
-=20
-         def checkstatus(url):
--            ud =3D self.ud[url]
-+            ud =3D self._get_urldata(url)
-             ud.setup_localpath(self.d)
-             m =3D ud.method
-             logger.debug("Testing URL %s", url)
-@@ -2011,7 +2009,7 @@ class Fetch(object):
-         unpack_tracer.start(root, self.ud, self.d)
-=20
-         def unpack(url):
--            ud =3D self.ud[url]
-+            ud =3D self._get_urldata(url)
-             ud.setup_localpath(self.d)
-=20
++            ud.setup_implicit_urls(self.d)
++            for u in ud.implicit_urls:
++                download(u)
++                download_implicit(u)
++
++        for url in urls:
++            download_implicit(url)
++
+         if checksum_missing_messages:
+             logger.error("Missing SRC_URI checksum, please add those to th=
+e recipe: \n%s", "\n".join(checksum_missing_messages))
+             raise BBFetchException("There was some missing checksums in th=
+e recipe")
+@@ -2022,6 +2041,12 @@ class Fetch(object):
              if ud.lockfile:
-@@ -2038,9 +2036,7 @@ class Fetch(object):
-             urls =3D self.urls
+                 bb.utils.unlockfile(lf)
 =20
++            ud.setup_implicit_urls(self.d)
++            for u in ud.implicit_urls:
++                unpack(u)
++            if hasattr(ud.method, "postunpack"):
++                ud.method.postunpack(ud, root, self.d)
++
+         for url in urls:
+             unpack(url)
+=20
+@@ -2038,6 +2063,10 @@ class Fetch(object):
          def clean(url):
--            if url not in self.ud:
--                self.ud[url] =3D FetchData(url, self.d)
--            ud =3D self.ud[url]
-+            ud =3D self._get_urldata(url)
+             ud =3D self._get_urldata(url)
              ud.setup_localpath(self.d)
++            if os.path.exists(ud.localpath):
++                ud.setup_implicit_urls(self.d)
++                for u in ud.implicit_urls:
++                    clean(u)
 =20
              if not ud.localfile and ud.localpath is None:
-@@ -2071,7 +2067,7 @@ class Fetch(object):
-=20
-         urldata =3D []
-         def expand_urldata(url):
--            ud =3D self.ud[url]
-+            ud =3D self._get_urldata(url)
+                 return
+@@ -2070,6 +2099,9 @@ class Fetch(object):
+             ud =3D self._get_urldata(url)
              urldata.append(ud)
              urldata.extend(ud.method.implicit_urldata(ud, self.d))
++            ud.setup_implicit_urls(self.d)
++            for u in ud.implicit_urls:
++                expand_urldata(u)
 =20
-@@ -2080,6 +2076,12 @@ class Fetch(object):
-=20
-         return urldata
-=20
-+    def _get_urldata(self, url):
-+        if url not in self.ud:
-+            self.ud[url] =3D FetchData(url, self.d)
-+            self.ud[url].unpack_tracer =3D unpack_tracer
-+        return self.ud[url]
-+
- class FetchConnectionCache(object):
-     """
-         A class which represents an container for socket connections.
+         for url in urls:
+             expand_urldata(url)
 --=20
 2.39.5
 
