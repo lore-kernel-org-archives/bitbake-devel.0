@@ -2,47 +2,47 @@ Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3E2CA1010
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E21CAC581
 	for <webhook@archiver.kernel.org>; Fri,  5 Sep 2025 06:21:24 +0000 (UTC)
 Received: from OSPPR02CU001.outbound.protection.outlook.com (OSPPR02CU001.outbound.protection.outlook.com [40.107.159.75])
  by mx.groups.io with SMTP id smtpd.web11.14988.1757053273963266587
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 04 Sep 2025 23:21:14 -0700
+ Thu, 04 Sep 2025 23:21:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=iT6c51Sr;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@weidmueller.com header.s=selector2 header.b=3Q2g7E1Y;
  spf=pass (domain: weidmueller.com, ip: 40.107.159.75, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YhJKfazTaVZ5akWdNuyMXfmTDNEUmAX8+rIXC3AXfRmDAGOh2JZe6av+rZEcAVGgMdxMtGAz5owbntvlrGtNqok2E5JwI/IRGIXDJntzrHSAgWqu/x58YTF91fYQu//fF6xgk1t7WAkMGsc8adb5nqJV0tCf98O6cXv2v8x0tSozZ6tdwJjXziiLTJwCRP/2fR1IKgShCIVFWxcbgbdNOPOsAatt3b+7i4ikyTrwvvzzCZXxJAa8HVpSYGlsllJrApBweHci1ubkFZnsUskYR0TtYl9izy2ZmpQ3iA0RnOJEcNlUcJqrH1+ctBNjtzLvgrOCKx3pOKqbttHg+xiy+w==
+ b=NxDZoTAyIH5sOliHv+2BoWdBsgMPLlniJ+Wa4xe/QkwHR2vnjpa/oCWM1VHzQSJu1lHaOdA9RBMbx+EBNQMhx7NMkZCIL2jAfNjld7F9MLtHvlC9/CrA8kIxKT+lZSnPM49cCORaiAi08PvMR8UxaCKTlVyo/bEC0jaB9itU+4+0Gzc2JpLehuZG4A38z98tYsWAjwnEuaCoQXw3yND2y83C2vLdVwRzl0XcCafbMFOc2vdZAMpFeqKTQbI+SXSQvm6d/dKIYAqXKwR9sv7kHMSyKJLPlryWziYNTHifypWTgUMpyEeuxzZ5N9gVMZOy+EAPVcnLrmPAIOKRVv5Vyg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=klRo2YCYs8fid/Pde4qdC6lyMz4x3raNKqBO50lqmuI=;
- b=yuuC/F9YxrPzWiVj8ygLxsGF5Mup+wu5K4TTvTvmheVRy/7TkcbyrcrWa8uqUhlfk98fRfzVfvzEGxhzICzylsJKeO6it8PXY+GtyjVYpg27aVvTcF9cjh9V8kuWEvGzTdrDl8erpgzNENnlaaUaJVbMsKiWOx3P4e5SSVfDmKCFpHldr84hsQ1mk8N8zHMWXCHjJRt0SS1QJF1kaPSBN4NgoqZoRDKqeAcxEQqyBKVRVEyiK7ioSpXG5rGvPCBtNhdp3B6K4I33dyrNJjt81mG9Ea4zarNtmWXvHIRs7NAuRvEOPvQyUzQkpty3FwPqh5cEjvUeGovW81w7+lfdPw==
+ bh=QQkcsUX9CPiPzNI1scA+4zaZE8DQCOBjsm9VdvvLz9M=;
+ b=gS2VdI7afjplTAyiUIq+/TenjN60iOCVEpt8V22MBvaa7IHdwWuUuyQFD9RXN4l2BsIXcv/SUCME93lRI4/mp7JA4etpQidCGK4ulOqkO1Zr0hvHmB0pB/3fN8rQwEdbf86wV0f+pJGKPYHNdDC5PkRHWcFvHwCTxQ+eHU5rWti8LEjRkpz7CMc2kL5t+fRWgzBv71AIt8gvBfLWlR93AnqeDKAN74yjwtpMwJ/yigu3R5U4KTN/vCd24C9S8pA/oZit1/5nQhPG9OUNUayuNMtweGhhb3Oqn2w694LJ1Fv2gp4CsW3wPYdbG3pxwONGszWH3Ad+TWNjAfn3Jx9GYg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=weidmueller.com; dmarc=pass action=none
  header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=klRo2YCYs8fid/Pde4qdC6lyMz4x3raNKqBO50lqmuI=;
- b=iT6c51SrwiZY1nS6Z39OxjUe+GFY79l+7O6iVcBseSLlgZC0FFjT5Pwpy6Y89NcR1W98vE8JWGqOBniyIIhBsOaveHpL0vlhOk1FC6YFiaV4itUjlUYPKgLiU5v0YZRSnfaV76woIRcC3vFmnjpLSS7H1kFjZqR2HW4EzCohhFBEVTorOGmvrxjsv5Jeh+30yg5OnBabwIr/KCMA58XAZTiI8ldzLFJuMTKy+WmvT4nFQe/qAyMGHa6lmhX2c2pmqsRTIKXjaZKd1sMArSUAQ0fFq7xE7KEL2y4KVTXsa47o6bQ5ONocDoZJkkltdsRc80LeEjOZdb1Z3E8bs6ZYAg==
+ bh=QQkcsUX9CPiPzNI1scA+4zaZE8DQCOBjsm9VdvvLz9M=;
+ b=3Q2g7E1YnDto/qwCEiLxhHLc3zhNTGMWtlUwUFoY3MHTyh2IotUHNBV1jNjoVkTx9pyp1UHz+orO1Ae3qequacFy0SzAXcQY6WWBtqHXRRyH/dQFA49k+8PJVliKT3zyOcZGfKIpI75/GWFKt6/GKKkISoPXnsI6trk239AiJ9wiivwRBfKWgxloEFK7ViGxlLGKIeatT8KR1qzDYlFLadKezYK9jNND9kmp+qXvdY4Tnzt1dPYIcxT8TkH14NymWm0NnGh1AcnxYFeuhd8dj8mUC18AWIZTToBDOGlr08c5bSC4VSu7BjYtc7Ayi1kC4qReE+Yre2f2cKYuZ7lpQQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=weidmueller.com;
 Received: from DU0PR08MB8422.eurprd08.prod.outlook.com (2603:10a6:10:406::6)
  by DU0PR08MB9632.eurprd08.prod.outlook.com (2603:10a6:10:447::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.17; Fri, 5 Sep
- 2025 06:21:10 +0000
+ 2025 06:21:14 +0000
 Received: from DU0PR08MB8422.eurprd08.prod.outlook.com
  ([fe80::4ac7:a794:5e4b:fc25]) by DU0PR08MB8422.eurprd08.prod.outlook.com
  ([fe80::4ac7:a794:5e4b:fc25%4]) with mapi id 15.20.9094.017; Fri, 5 Sep 2025
- 06:21:10 +0000
+ 06:21:14 +0000
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
 To: bitbake-devel@lists.openembedded.org
 CC: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Subject: [PATCH v2 01/15] tests: fetch: add test case for local paths
-Date: Fri,  5 Sep 2025 08:20:44 +0200
-Message-ID: <20250905062058.2563806-2-stefan.herbrechtsmeier-oss@weidmueller.com>
+Subject: [PATCH v2 10/15] fetch2: gitsm: add parentdir parameter
+Date: Fri,  5 Sep 2025 08:20:53 +0200
+Message-ID: <20250905062058.2563806-11-stefan.herbrechtsmeier-oss@weidmueller.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250905062058.2563806-1-stefan.herbrechtsmeier-oss@weidmueller.com>
 References: <20250905062058.2563806-1-stefan.herbrechtsmeier-oss@weidmueller.com>
@@ -54,125 +54,145 @@ X-ClientProxiedBy: FR0P281CA0130.DEUP281.PROD.OUTLOOK.COM
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DU0PR08MB8422:EE_|DU0PR08MB9632:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2f9b964b-3890-4f23-2f52-08ddec44679c
+X-MS-Office365-Filtering-Correlation-Id: 4176d1cb-97a1-4048-c9c5-08ddec446a02
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
 	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|38350700014;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?f4b88xLkWBciob3ME1YoZeBpiGUrzAkSCEAf76R9/XnSd6XF0gj1kzwyB25z?=
- =?us-ascii?Q?xicUmGOywyJNLzPLy3k4/KODXvkWeUaCseLzEyRCWQAeb5GIeuW3FVCHsY2N?=
- =?us-ascii?Q?Hygrbmp8CLh9HkfC8vLwJZM3O3zHC3xnD5Y+ktmeovHhEyKaHXJV+0O9f0+8?=
- =?us-ascii?Q?48Q0BckXdGZdGOHNGmuA/AuOy0nNleBCa6SGSt6MYSH7Sq4zcPfB//jacm/Z?=
- =?us-ascii?Q?SCyTl6t3mFJqKFkVuIEpV1UoKrQ5qt7zKaDn2w5m9fvH6w4MHvZrCzqR5rys?=
- =?us-ascii?Q?j3pkraVx8R3QkLMBVYKsFVM6E5bJeZCkKFk8NYaMcPC5+l5ztH7KetRqUvoa?=
- =?us-ascii?Q?WGLo/oy6tl2BzXyrppo/4JFYi/qd5FadAMhWD3dEPNBzCLMmSYks8hUompqn?=
- =?us-ascii?Q?BFU3eQiAIVO9Ni8wT25O8xxnnfxL+uO2/4IWJ3YCv1D4MRSNHYtx6/L+i0bJ?=
- =?us-ascii?Q?12op6yx8dFjabcWcU2S1jAbdGKdNaYwdvY0PnU6T0dEYNTqaVEEa81Ym5B71?=
- =?us-ascii?Q?Emeuk2UeWEMRjnIe75l171KIJ59x9AFZnGmMNWPUTrWic4slItqr3Ek5tsXy?=
- =?us-ascii?Q?JcDXMgK23g6Em9eXJVQxk+XcHeRYmZRzXSWaiT/WZGv7S/HMfHKCHDk7R5Y/?=
- =?us-ascii?Q?xYvIoedZJyXgAnpZDotqStVmbCb4oL2Jm7+VCjQjtYpsQz36jXD5tCQmJ9Kt?=
- =?us-ascii?Q?2SyC0MkAa6/rDrhX/tW157lPJMkVUlP9Q9wYTRv9Zx/3LYzNFLO08GJO56m6?=
- =?us-ascii?Q?fWsTvHcoYIOLdlqcYDLOjrwdmxs+jPOTQLSFZQVft2UwVooXDaOwKtogpm/R?=
- =?us-ascii?Q?MKP2zS0fEoMcLoEgwaHaukEzCMAN9tqwyQB1pjlk8Nav8/VmhfPf5bgyedug?=
- =?us-ascii?Q?aQUmmQ9F94ZAHNAo1YrotdbD2HRJd85ZUw0m2enlMPGHvbBbhkZVvb5zTk8/?=
- =?us-ascii?Q?eyNHiw6dylxumRiXc69+pZ5eQuYVS2bnrRWhnplGuVH/QvEFzXUd3Eeo2CAE?=
- =?us-ascii?Q?snKbv+vwxJGd4xzJvOQz6w/ukx5lH5TCK+vBjimVtgB/L/9LkUCp0oxBQOqS?=
- =?us-ascii?Q?XBlamS/elbSWFDIYnAu3wFlLdI6cFyvy9Wr+LQaDu0Dey5FS8ZD24rf1x4aw?=
- =?us-ascii?Q?O5QM0J1FY/8ji63NyDBq3BNNhmZEqf9NlB33K1siJ4NeoczoHa8E/2vniW23?=
- =?us-ascii?Q?MfUmX074QVI6SNGGLCJQbFChgWQqCV8YZy2AIGaDEHOXbTF75cknTgcqquy2?=
- =?us-ascii?Q?DbBAewb/iXwvDuA4CJg4VN4vHZ9MNQp+Lsn7cWOarLIC9voD+wBJukrxZvNj?=
- =?us-ascii?Q?hjqODTMFsIwdXk90TYpeUpqKZEUHwv7OhnJj1GkmKhtTX+XdYlyPV9ULQ3qe?=
- =?us-ascii?Q?jjHAHePpBLLwycaNT1atHDsthBs0PAAPr/VZeZFg+iL2L8Y/wYWwJcfwiFSr?=
- =?us-ascii?Q?wlzybU2LGd0=3D?=
+	=?us-ascii?Q?yZKOjKCudYTKD5TGMp4/a4iD30M955VMwFzjJVSFz2ipJmNLUxeRWSJNgER1?=
+ =?us-ascii?Q?YTux7Dm4d7FvhzqvipLoxhm5PLEFWlWaJCR5jCVFTi+A22cE92/r8klkjrJq?=
+ =?us-ascii?Q?nvWjIHG4Ha6U82MIvWNY+FZ1KDAPYvjtRokN12CSNaGq6Be4F+sRgmUMm7iR?=
+ =?us-ascii?Q?3GP03fOWOvcq0otPTJIQgd+MY0I+DAjvEP4k/ltZ4DRirFNFf679A6YTiXcs?=
+ =?us-ascii?Q?/7xVkwBtgM1hNrIVDdO/HCj26nOHzrSQV1uEOzgmx7CYbkAks4803cwE+38Q?=
+ =?us-ascii?Q?vzGbGBYGf7Ung2XQhZNDtrukldbBuIUgKjfC446JGYeydTYFU3GMZ+OAPkdl?=
+ =?us-ascii?Q?BsikyeHE9F2zko0IkFiuSpPO7ZCDQdA7BBgqtheImCd8FsXaM6t0jOV9Lctq?=
+ =?us-ascii?Q?8qYXd08rT6t64MjLyfw8AN9B5x7AKGm3F/zdRkklZsYNpbAv4AxrC0ITUPvH?=
+ =?us-ascii?Q?lEVzoGwBzVWjqxxFlWmkc/Ndlyf14COVolU6f8aXZ0lYyB3fC5ciemMoGcnY?=
+ =?us-ascii?Q?/i5RNHBDD/x+bRX0OtX5smp402YuccVZe7R5yQ4b/ufgjlAR7KGAr73N7DUY?=
+ =?us-ascii?Q?OTOX8D+5MJX+fNQLXrAdxCPLRfJBEDCoYgMM0OrtMCALyS6/M4LRDePw8HgW?=
+ =?us-ascii?Q?cER7bkBcQ5atP4sS8eOigOyig6HOqMeyvMtJk6AqeCOpho0q325DL2QEH/ro?=
+ =?us-ascii?Q?QUfFSkU4eTLb7Uukzvy1XrziCd1lqL/p329KpaXZq65N20lx8y0qEaNQWL8r?=
+ =?us-ascii?Q?2lNkMw6eYOtGsMnribpUqJG+SR9GW1oFuVauFLeMy4SD+gmiSNUMiWFri4YS?=
+ =?us-ascii?Q?SXeGbShOdxWKU59+Ohr3FnDi/9QZLy9OJ5uH1egxDABPg16Fce1oUFIj/Wup?=
+ =?us-ascii?Q?9oxzIZN3EF9hzbAQ1MNdrXRoLCuHul+LK4DknWQs2zZQofhiuM1a0sQ8PVMV?=
+ =?us-ascii?Q?pfeRySMPcpd0PbuyXg5KKPFJi4FjIzt5Bzs++yYuNGvD7KEW76PwC3MCGl1E?=
+ =?us-ascii?Q?awti5aIX05umPjkMSlOfoi34KIuwXtBjiIPFz7T1SXzHFE9Xsw47uie7G+fP?=
+ =?us-ascii?Q?2cFr1vbOJQZQjjfkVAuAuHdF9J76Rj2VdF/vImpoVlTlWl4JTbsBryZtpxqB?=
+ =?us-ascii?Q?FetV6tyJzQ12geGaX0/fpsiaXVeyCb0m45U+ajexGLq/o+oVz6hmLwMMMZMD?=
+ =?us-ascii?Q?mx21eWqm9R1I+9eiv6uRwDWaA3R1c2lVO8lPCtVhPVXWVaYsSuJqYwuzF8yC?=
+ =?us-ascii?Q?F4ffislPxaNd7auQfLauMaOtV/OEKkPvHeZxb9vYo/5YEAzyw7//ME1wfb0Y?=
+ =?us-ascii?Q?LO72lDyFU1Dw45ZW+eod1mxiZ+xSqIs2uno5xnTERkh30kOR6KU2gcaSQ8ah?=
+ =?us-ascii?Q?i3H1f/RCRT+IAmxu5WSP+sIPTNljf2oV9mRGV8VfHzPgJoJlm/YUoqtAX9xg?=
+ =?us-ascii?Q?hnACDrYQjdYCm5qZeSBWfG3cip1fuKOWMuyIL/Vt1R81iF9/5msAig=3D=3D?=
 X-Forefront-Antispam-Report: 
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR08MB8422.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?GUtPO9EsxzJEeaNCqouLqlXpVi5Dy7f2zMuNL8HbNKS6Ht39R7doLYjW90Zn?=
- =?us-ascii?Q?jSduDiaN9x1NJcznPJFx5/TiflmudMlgwdoz0UAmNAsopP0lrDEpIbfjrkNo?=
- =?us-ascii?Q?1BZh2OjY4QbwVb1Xwfl+s3eoj5+XVO94URpPPc++gOTQbE/tO3xC1lI811f6?=
- =?us-ascii?Q?B08sN+tO4HAkhuUNaaXbdIshxLOX23geIzjjZZLozXGeq9UQO3og2b0YeSzG?=
- =?us-ascii?Q?PSuiNRRi5v65878OAD2XydbcaCcCGoMQUwraKSclivjC39kmmW9ZQgw3SakP?=
- =?us-ascii?Q?m0uspKsvpj22bCejZj7+UPoa3TKD2BXKlBOgd4Sx9ampUACSuCKLlB2fSdGL?=
- =?us-ascii?Q?MkKarom6UGmWEDJIJbYNpRpVEXLTD9X0bRuCyrNVfxHcpnN6fdU56xH0I1wa?=
- =?us-ascii?Q?v0p20M+Wl/DK3kJcN+TLGt+U5KiDkgR6+wowxH0HyXLVXVR+TB44BWgHQPMf?=
- =?us-ascii?Q?N8N7bEkR6KfpdAllFVRy+5Hkv/OWEXeK6uiDvLVVrq7Ty3bMr8vhOzKqOzM8?=
- =?us-ascii?Q?/Um0gbF+p1xM24Di58qd2TrGgttIU3MWQf8O8IqyOaLiAe5jTwe01oGKHYU7?=
- =?us-ascii?Q?yyhcGh/m1KsX+jkwOfMLFrsQiNritxOhivvYCgOeeIodjiQVaUbpJTp/6C+S?=
- =?us-ascii?Q?EnsW58v7nJ0MhAwoS+U5FVV1ygOfdfcpN0JBOTrQ15FtVegbIFSRXb0AyMwo?=
- =?us-ascii?Q?3JNW381asvoFhpWlFssYFpHAuulBzDPc2m/ad111YSCB0fozifglO3aB//OD?=
- =?us-ascii?Q?laEqSJKiWmx4I98KGpY8yZZpfklwUhDXHV/CSNiSJi8/A/ad4yH9E+VxzcDu?=
- =?us-ascii?Q?ZHsg/2jL2CmRqsmDHd35bvj1qfCH2GpiO6cQ//TmDhivu0qG43+xYe0YXRi3?=
- =?us-ascii?Q?mnZuIHg0+IkvqLsOaVMIzsgaTIs1iAlJbz98LxWX92ZSXSBxqdVQRWOy/Ekx?=
- =?us-ascii?Q?68UOqTyKGG1Dt275A6C8tqEvkp+ZK9KYVo/arwF66vW8hoUNrt9fy3XNIx7P?=
- =?us-ascii?Q?Q4MiPJOwzkFqalpF/aTrBBre8UwXc7YVVuUUcIXJe4qTp39pYy7qZ0sn5QMB?=
- =?us-ascii?Q?+aYJ93N8b0f9BNoyQkXIf4kxgCorwLnUokQimP/lF/UFHOQmarNGZhJL3C4l?=
- =?us-ascii?Q?3BbEH+P7+YD5NmWxFY/TVUaNCUEciMIckyMpPlqPdvDtKrVonizDodf4fRnp?=
- =?us-ascii?Q?EzuD6SkvYg/vsVgVv8/p+7HRr7bDxdapYO50pjQSpDjYXebjaUXuS/7Thw8h?=
- =?us-ascii?Q?lkfHKpHtMAsoeM++r26Y26pXucdpHRBcyLhqxnYTwPiQnjH1ukEffjmtmvmk?=
- =?us-ascii?Q?06wkjRWfKuEVn3Di+Jw238I/W2Xp0CSbGF1tkBCjEtk+V+GPxUnTOWRHi1C6?=
- =?us-ascii?Q?5WDFVyEFZX2Zt2frSNEdC3hTIZpTraAtTGMVOYDjGT1zSzVT1g2YqzA8AQm2?=
- =?us-ascii?Q?QvFNzbc9TiUzbXdO8nfuR3Ni5Tve/LgclDq/X0d7FK+AFfYYIFauxzrUdH2U?=
- =?us-ascii?Q?52hBJLw4zEO0Btu3/5cQYI2+HMCtVHD/b/EOVHdgGR86kFChbbuuR9rINx0Y?=
- =?us-ascii?Q?DS7SI+0YssJ/dMtOJBXJkLlQ194LVSRaOGnFF9iWi/VSrlv8WWQGrgk0w9aj?=
- =?us-ascii?Q?Zw=3D=3D?=
+	=?us-ascii?Q?Zt27+o9+jBOetn4xZwnXHN0rRvhl3PJYJlzbGhZysAy2GlmPqFL6IKZGL+QM?=
+ =?us-ascii?Q?XDfff2ZISQU+Kr48i8f5kxV6fHLVw6itYbhfzzedaJBDPm8fciU4pTwR35XD?=
+ =?us-ascii?Q?ftTPqyPOu6Om+f85qHJHLjKW9MbR1GZ2VkAlQLbkSMbrmhcfJeBBu+h+8BuQ?=
+ =?us-ascii?Q?xHw9lWZYm2kMX8xefn8OuYNkGlP3GOcZoScQytaq7Upe8cmFp3ftxp1z2qx6?=
+ =?us-ascii?Q?uyvUdliP6tDNlf4G/O4dO2OWSlv/1fGcPG/rBOe62XB5YeXJ9gpNP9/5fx/A?=
+ =?us-ascii?Q?juz8QnQOgruLb4RszMMJMHueSMOKl2cPeTWH1Oikqqps85gjS3ilmoQX8zpt?=
+ =?us-ascii?Q?KTI9Dbxtt/Of2l4GBG+y/gfmbN6RMJNAxGRo/ZA2+2pEZIPT5NtwATi4zF1r?=
+ =?us-ascii?Q?b1rQgV7DBMZhduSsu5L/nOQJOLoJIKDz9RHyS2vstsQnZQNCFxR1FwljAvuL?=
+ =?us-ascii?Q?J17igDQgg5/QjkP2i+JueatOyL6K44WJGjHstoiVpLIz0p4N3qClQwrHviEu?=
+ =?us-ascii?Q?i3WPFg4sv+ZOd7KPAVTDfXI2sstluCQfejpz8VLD7F71o/4hkTVL+Ii0gJ0S?=
+ =?us-ascii?Q?JOnh8ageyXdRBKe4/NdkV2ydKcywaSASaL6rzmb/f4qX7gvL0ujeShAlPk9C?=
+ =?us-ascii?Q?hHZi50t1DucVE9XZs7ZwWaClegms9b4OlHbfDtzuRc7Evlxwa8m+OySnxarN?=
+ =?us-ascii?Q?K5OxPG2GYJKFlr9dlq9mV6pIu9gJ4I51YdSTOw2mpDDX0+7oTxJc7mVQCbo5?=
+ =?us-ascii?Q?kT86G9HIsHA8e1f8M7ZzVvWt90Q2zVs4go3LdSTeCkabgeWx4QYpjipzN7st?=
+ =?us-ascii?Q?WnutcQEpW0Ve8+t+2TcXmBnNx7dXXqHfXby70SHkhnTLrMiUQnihOiu2JH8c?=
+ =?us-ascii?Q?7HLLQpd9hTtTUpbXvH53aAsvXmwSObKYnyc0MiQeAcAawkkErxMJxQHtV38r?=
+ =?us-ascii?Q?3vM8kvhDWlTam0DoNBxgwbBVFfUd55AVVMF/IkdMLOMIqT/0FlP2Be7ivkSw?=
+ =?us-ascii?Q?x1foB2WbhtfHCh5YQPJcfAMHybMzJrZ4f9zCNEA+XZ/d6Pjpb4cTNZgP0ElT?=
+ =?us-ascii?Q?9SXp4s5SEaesci/AVjSJEP6ijxcIQUnVb2L1xLx6UQq/eCcfz07hzpOT0KUw?=
+ =?us-ascii?Q?2/Rw6PQ5rJ4k8P/ukPip2GzqnUnhW3EzRV2tYlExalgCkgZhdyNAWWzHKJ12?=
+ =?us-ascii?Q?V8qBTfsYvFe6nPjVDuuGpJLkESB4UG4hU3Bf8XaeOWcuzL5c0tll/0YLDO+n?=
+ =?us-ascii?Q?rcLG2HHl2QBFJBNir0XCqNRrCCg0WvuHoNG+auZwCeFOsHkOKzj8++Ku03S4?=
+ =?us-ascii?Q?tVOeU8vOvacimhuzVb/Rkfso3rvgZHdgTd2r5IEQuKS7CnVQwO98uo9GK/L/?=
+ =?us-ascii?Q?pk0i6zko84yWQ2AxU9DbxpKE4aKN1eGn/EMK1d5K1P7YPrMeBJLjl3v6Gbr1?=
+ =?us-ascii?Q?1QjsfjFGM49Rz84piR3yp87SXN+Sc8S7+KXWUQ6j1gsBZ0bQ0JH/uael66+O?=
+ =?us-ascii?Q?cPsvO2pGkNLnMmnSNGoLYdeUBjoqrhuX1ai2pce1174kclQVtJHodvKHh2QF?=
+ =?us-ascii?Q?knBtZbb5ga5MXWO44Pai+r7ayhI/yAW/z6GSpR8iwIqA6tb+jJcoq68hzjyP?=
+ =?us-ascii?Q?zg=3D=3D?=
 X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f9b964b-3890-4f23-2f52-08ddec44679c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4176d1cb-97a1-4048-c9c5-08ddec446a02
 X-MS-Exchange-CrossTenant-AuthSource: DU0PR08MB8422.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2025 06:21:09.8673
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2025 06:21:13.8030
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dNnTZyTR4jkV3eKe9unP6hpPAc8V6WfKVFWpJ2h8aiwohzI3rFtWkxiVhWrtIkN0MMqzTc5ni9dQ3gV2qoU/xg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: R5Je5BxpgEwsoUCMAEhGxHPCWL0XI2S0aw0RXorPHQkoMP6ClhnKmEti3iPG4iFFYClubFSoEZ7U7qBCgnHz8Q==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB9632
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 05 Sep 2025 06:21:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17958
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17967
 
 From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
 
+Add a parentdir parameter to pass the destination directory of the
+submodule parent to the submodule.
+
 Signed-off-by: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.c=
 om>
-
 ---
 
-Changes in v2:
-- Move test cases for local paths into FetcherLocalTest class
+(no changes since v1)
 
- lib/bb/tests/fetch.py | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ lib/bb/fetch2/gitsm.py | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index d216eac2a..dcbe60783 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -888,6 +888,18 @@ class FetcherLocalTest(FetcherTest):
-         alt =3D os.path.join(self.unpackdir, 'git/.git/objects/info/altern=
-ates')
-         self.assertFalse(os.path.exists(alt))
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index d013a09d6..c3e7189a0 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -127,6 +127,7 @@ class GitSM(Git):
+             url +=3D ";bareclone=3D1"
 =20
-+    def test_localpaths(self):
-+        localpaths =3D {
-+            "file://archive.tar.gz":
-+                f"{self.localsrcdir}/archive.tar.gz",
-+            "https://downloads.yoctoproject.org/releases/bitbake/bitbake-1=
-.0.tar.gz":
-+                f"{self.dldir}/bitbake-1.0.tar.gz",
-+            "git://git.openembedded.org/bitbake;branch=3Dmaster;protocol=
-=3Dhttps;rev=3D270a05b0b4ba0959fe0624d2a4885d7b70426da5":
-+                f"{self.dldir}/git2/git.openembedded.org.bitbake",
-+        }
-+        fetcher =3D bb.fetch2.Fetch(localpaths.keys(), self.d)
-+        self.assertEqual(fetcher.localpaths(), list(localpaths.values()))
-+
- class FetcherNoNetworkTest(FetcherTest):
-     def setUp(self):
-         super().setUp()
+             parentdir =3D self.destdir(ud, '', d)
++            url +=3D ";parentdir=3D%s" % parentdir
+             gitdir =3D '' if ud.bareclone else '.git'
+             subdir =3D os.path.join(parentdir, gitdir, 'modules', module)
+             url +=3D ";subdir=3D%s" % subdir
+@@ -203,6 +204,9 @@ class GitSM(Git):
+             try:
+                 newfetch =3D Fetch([url], d, cache=3DFalse)
+                 new_ud =3D newfetch.ud[url]
++                parentdir =3D new_ud.parm['parentdir']
++                if not os.path.isabs(parentdir):
++                    parentdir =3D os.path.join(destdir, parentdir)
+                 fulldestdir =3D self.destdir(new_ud, destdir, d)
+                 newfetch.unpack(root=3Ddestdir)
+             except Exception as e:
+@@ -212,10 +216,10 @@ class GitSM(Git):
+             local_path =3D newfetch.localpath(url)
+=20
+             # Correct the submodule references to the local download versi=
+on...
+-            runfetchcmd("%(basecmd)s config submodule.%(module)s.url %(url=
+)s" % {'basecmd': ud.basecmd, 'module': module, 'url' : local_path}, d, wor=
+kdir=3Dsubdestdir)
++            runfetchcmd("%(basecmd)s config submodule.%(module)s.url %(url=
+)s" % {'basecmd': ud.basecmd, 'module': module, 'url' : local_path}, d, wor=
+kdir=3Dparentdir)
+=20
+             if ud.shallow:
+-                runfetchcmd("%(basecmd)s config submodule.%(module)s.shall=
+ow true" % {'basecmd': ud.basecmd, 'module': module}, d, workdir=3Dsubdestd=
+ir)
++                runfetchcmd("%(basecmd)s config submodule.%(module)s.shall=
+ow true" % {'basecmd': ud.basecmd, 'module': module}, d, workdir=3Dparentdi=
+r)
+=20
+             # Ensure the submodule repository is NOT set to bare, since we=
+'re checking it out...
+             try:
 --=20
 2.39.5
 
