@@ -1,211 +1,218 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA36BCAC581
-	for <webhook@archiver.kernel.org>; Mon,  8 Sep 2025 10:26:13 +0000 (UTC)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.web10.9842.1757327167750597782
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8411CAC586
+	for <webhook@archiver.kernel.org>; Mon,  8 Sep 2025 11:16:43 +0000 (UTC)
+Received: from AM0PR02CU008.outbound.protection.outlook.com (AM0PR02CU008.outbound.protection.outlook.com [52.101.72.8])
+ by mx.groups.io with SMTP id smtpd.web11.10694.1757330200881398437
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 08 Sep 2025 03:26:08 -0700
+ Mon, 08 Sep 2025 04:16:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Yca/S79Z;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.47, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3e34dbc38easo1610196f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 08 Sep 2025 03:26:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1757327166; x=1757931966; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UDmf1f1cvZbh5et1zySPSr6rU7YWd15nl6fMupqcBBQ=;
-        b=Yca/S79ZXf9NheVd1zgGISV9fM0n90T0iPe/u7EIzd+/BqbxyQ0eJJhh2BWafq5TPD
-         OtGDf26o+oQSkEi/0/hSLGT2eTXOgAoXnx8SPoZ4xjS35FUmpgm/Qta2YR3U6Nc2gsFF
-         7AA8GTcAHF6aE9xetBarTSHXJA3JbNfkoDWhY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757327166; x=1757931966;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UDmf1f1cvZbh5et1zySPSr6rU7YWd15nl6fMupqcBBQ=;
-        b=Ck42fJbgZps7CyDW/L7eRH2tkWs8btMrQZEs5k1FGtoagd1TT6UmL7n0tdRPg3RI9m
-         T0HQO8SiHdAi6pnOTBkK9ne580ZxPT3vqlZv42B7KDiv4s6b+JlEA/Fc8dYxx6jsrT8B
-         /agebRiRQHVe471JQr1GfPOheTizjOFnXnCX7qPvV7KmFgcQT7W2HbGG1WXZksxiql7R
-         irT911zXuLS//InuCt9gmET8D9w99uSRzO/UTGmRTO2yetdw3sb/mknVG72GbH5/+sO8
-         qvgzzjfHtnR4PfLeiP0M6Ix6jFo8Dk6A+GPR01dl4wBUOPKmSMYTP7fAPg9tDZQhlmdh
-         BKrA==
-X-Forwarded-Encrypted: i=1; AJvYcCUsC0rxNKZkM95sLMq4yBppN976AYhsutEKww1qhqF4nrGkRyc8bT7pa8zorbWs8fW26Nwv3+jqhwkQiB0p@lists.openembedded.org
-X-Gm-Message-State: AOJu0YzIESbEJueK4Zbb9mX7Zi08PmaJk7gRIl2txM5RGT+U9+0n3uHi
-	IloIReKDw9xXsCFgKWtAOH9z1DyynUx2hKDIeo57nkOYzcdW+sqCy98lXDpVovb/66M=
-X-Gm-Gg: ASbGnctBQBvs/Dl+gaDKpW3AfDweJhaMV8FuxBoulR4mqDxeaMyS8fGEtA2ohieugtl
-	uV6HlSVohhnj+psKXzuPFVhz0pnK58G2OP1H/zanCj706xS1xXSLGT0imD+8QEwtyeDyWebb+UX
-	q3q+W1NgmssE1XsXzju/APv6imUltiHMvg6s4PbCsobkYq+gqnUKMFI90dbccOH1XfRsZiuyT/K
-	aoiykv8iHu/ii8C8HhOnKhCDeaonIYUOYiATfjjqZbjp061kKUlHwYFjNSJ0meYemgREDh89A2d
-	D69I1pP5zH0aouvTEFTH+7CmKhnBTm7V/ymdX5rkw5AexRaV9cULfJmdkOpjoJXzoJX5RqBw0H7
-	N9I3yT5x2o/0m/8/zesSITo+6Ijhc+mPMeEWftV2be2UlpZJExex0JRXxpP8tbUhI/C1vTrcvc8
-	RPaXlOxVn0YB5JYgIsj+TrHQ==
-X-Google-Smtp-Source: AGHT+IHwKXQgZDFY2ksC9PrPtXiCCTS4iTZ51ZizmmzvjEK1aumb2ApmMMLOT1KS3maMvLsbLYFDMg==
-X-Received: by 2002:a05:6000:178e:b0:3ce:a06e:f24e with SMTP id ffacd0b85a97d-3e64c87e0a1mr4381426f8f.52.1757327165967;
-        Mon, 08 Sep 2025 03:26:05 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:2892:3aae:20fe:dbc0? ([2001:8b0:aba:5f3c:2892:3aae:20fe:dbc0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3cf34491a65sm40325716f8f.56.2025.09.08.03.26.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Sep 2025 03:26:05 -0700 (PDT)
-Message-ID: <fa1466cf08081ce9812a90639925063fbd610292.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [RFC PATCH 0/6] fetch2: add support for
- implicit urls
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>, 
-	bitbake-devel@lists.openembedded.org
-Cc: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-Date: Mon, 08 Sep 2025 11:26:04 +0100
-In-Reply-To: <be5703d4-00ee-45be-9183-7bb4a327ed79@weidmueller.com>
-References: 
-	<20250902065507.35737-1-stefan.herbrechtsmeier-oss@weidmueller.com>
-	 <c1124597a57241518f4ddee17c5786ecb11caf2f.camel@linuxfoundation.org>
-	 <be5703d4-00ee-45be-9183-7bb4a327ed79@weidmueller.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0-1 
+ dkim=pass header.i=@arm.com header.s=selector1 header.b=jvG5u73f;
+ dkim=pass header.i=@arm.com header.s=selector1 header.b=jvG5u73f;
+ spf=pass (domain: arm.com, ip: 52.101.72.8, mailfrom: ross.burton@arm.com)
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=hFkN5Z1AtoBdVtJlddEwAhvOlHlvLZmZweNzJobrqcC/xBXKpQzpYL1fPqG6WVYQc0tfM6DyLAqRkLg6mtD2Y/DO9HX5aAf79fydrjpIrVd8VwmE9gY8qhoZJgoBk4EaPCjXTzs2dx7mvLHWQuhByZg41cJzQ44FzPaoMRYfwxjd7lD3BmJom1j4IJZa1dshBek9BKq4fo4x0ZiSFxZXtpeyTARfK4/DSRUlUtUUeT+MT4ZunRSPLGQqjRDQbESneTmJTLwOs5/LecAlI7Sdn/qCrrEzVYgJs1ckoGYI3/lxe9fhhEkLf/eE4zKOqT5U6mqIHlDgP0zCuWNdx/9AsQ==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xvk2Slu95HyR44aLiBIlaFA3M4Ejf3ioHEwGMrDXuVA=;
+ b=uePt7fNkMPla+NUFe+fS0/MpMOk1R9U9yryUXJ1v9pSsQ2g6OY2oq52Zt3JuOAbYlF9hxtFanmGrEBP5bRr17Cp15xWwJ9jtmkj2GMiyECcnw0qE3MmWCAd32g1z9caXWkESMvOSikTiwGBXCCKsN7MgHhHqn64O+M5qKLlukoxZ3ZSckmusMvdASE5WJnui6decStGvMlOMz3XIK22j2LLOXcPVD1ak7CuTq0LnHtaJv/NguK5JTuLoYymQFq0R3SASa8/sd5tYz2D7vH/UUdSYrSJddMOPpUE16h+zknlYWmumYLYr26OxQVNe/MB62BG1Pw8ND1pj1KHygUmBLA==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=freemail.hu smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xvk2Slu95HyR44aLiBIlaFA3M4Ejf3ioHEwGMrDXuVA=;
+ b=jvG5u73fZgDPQWKpv2uZWrT9jxZmKPD1jHRnU0+OcXuTpf20yg8ogdVWY1GiXXHJFakR7YLIORdH2BJ8rl2MdXx4nSQ9pqIX6PTgPedh8QLPWAoEqfu1sdbuO1yihvK47z43xv2qGP1gr1Kh1W4gkJMxhorYPkCrw0DiINq+6RM=
+Received: from AS4P195CA0006.EURP195.PROD.OUTLOOK.COM (2603:10a6:20b:5e2::11)
+ by DB3PR08MB8964.eurprd08.prod.outlook.com (2603:10a6:10:431::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Mon, 8 Sep
+ 2025 11:16:36 +0000
+Received: from AMS0EPF000001AE.eurprd05.prod.outlook.com
+ (2603:10a6:20b:5e2:cafe::c2) by AS4P195CA0006.outlook.office365.com
+ (2603:10a6:20b:5e2::11) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9094.22 via Frontend Transport; Mon,
+ 8 Sep 2025 11:16:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ AMS0EPF000001AE.mail.protection.outlook.com (10.167.16.154) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9115.13
+ via Frontend Transport; Mon, 8 Sep 2025 11:16:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=s/y7bt8ga4LCSz3/6LxttWd9c2Fabb5z8fG2i2pUAw4dy8e5bq7DHgfZSCBhD0JFD6iaCHe7xMwlNC5UJabRnsL84wgZEXkSTfUw39H07jWHXS6JsujziS1FVeipMksBeEPIg78kvrc4jKcGLG294SlwwgN4I/VOqX242tmsY+60C57NpMZ1EFQx81NamFkt/FToO4wJEjzeJy8ABmlNxAnzh1Uxf/S6ryJElW8Fvf14E/S/pkDM5DZyXgCJYPgt6lSK0o438SIDjGBpCTTSchAcCWreGpJs2SD1+8vlfc+t+tEHGL3hP5ph3ApicpF8cuMePpUaHcAQBkrVzkOuVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xvk2Slu95HyR44aLiBIlaFA3M4Ejf3ioHEwGMrDXuVA=;
+ b=b+7aqnyCVGsMDr+coTB/40RlHJyFIWJzU3AC1kESAR70pzdKJK8mzSgdpcp1g66fsrK3HYeurG03jendl5MFDVKMBroLSDNTdlRW9gVLRC2UBDuB4Lm4sGx7UCMvvnxxclyVll/DEpH0K11nYHQkiKBqfJgTh0GU60f14+tE6csYWFO/TofyNdfReQ4bFLTkmAUdkUw/UynCdEKsBov8+Bo9thPFc7lZvnyEA0z86/akM/KIMbQeYnirwb1oDJGaY+zTlR0fmP+bjYCg9lcRQS8EQI+JdFvo1xappz+HZq7735PD/QkFdju+LYoMdeHK46Vgy9dnEubq/9Or+VbpyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xvk2Slu95HyR44aLiBIlaFA3M4Ejf3ioHEwGMrDXuVA=;
+ b=jvG5u73fZgDPQWKpv2uZWrT9jxZmKPD1jHRnU0+OcXuTpf20yg8ogdVWY1GiXXHJFakR7YLIORdH2BJ8rl2MdXx4nSQ9pqIX6PTgPedh8QLPWAoEqfu1sdbuO1yihvK47z43xv2qGP1gr1Kh1W4gkJMxhorYPkCrw0DiINq+6RM=
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com (2603:10a6:102:2a3::12)
+ by GV2PR08MB8678.eurprd08.prod.outlook.com (2603:10a6:150:b6::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.19; Mon, 8 Sep
+ 2025 11:16:03 +0000
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::7f73:806a:3493:7d50]) by PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::7f73:806a:3493:7d50%4]) with mapi id 15.20.9094.018; Mon, 8 Sep 2025
+ 11:16:02 +0000
+From: Ross Burton <Ross.Burton@arm.com>
+To: "egyszeregy@freemail.hu" <egyszeregy@freemail.hu>
+CC: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH] bitbake: cooker: Fix performance issue in
+ EventWriter() class
+Thread-Topic: [bitbake-devel] [PATCH] bitbake: cooker: Fix performance issue
+ in EventWriter() class
+Thread-Index: AQHbbyBbI00F+WjgWkS0zNLtnw7hY7SKhZ8A
+Date: Mon, 8 Sep 2025 11:16:02 +0000
+Message-ID: <76CB8223-6F82-4D51-A783-D0E3D1FE8031@arm.com>
+References: <20250125115640.1302-1-egyszeregy@freemail.hu>
+In-Reply-To: <20250125115640.1302-1-egyszeregy@freemail.hu>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3826.700.81)
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+x-ms-traffictypediagnostic: 
+	PA4PR08MB7411:EE_|GV2PR08MB8678:EE_|AMS0EPF000001AE:EE_|DB3PR08MB8964:EE_
+X-MS-Office365-Filtering-Correlation-Id: c54f3cf6-f72d-4485-635d-08ddeec92cb9
+x-checkrecipientrouted: true
+nodisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: 
+ BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+X-Microsoft-Antispam-Message-Info-Original: 
+ =?utf-8?B?UnBxY3NDQmQ0S3p3ekpDYzd4ejFQMkhIT0pUbDFSaFNFOSs1TXFETmlMSkhH?=
+ =?utf-8?B?bTdxbGJoejJiSi9wbXR2WnlyclZVanA4WUhsREpsRXFtSGtva0I3bFNNeXlx?=
+ =?utf-8?B?M2ZuY2dZRTgycnQ1eEFNd3F3UWlKbW5OcXYzWUZGbnhUTnk5dkV1SFMwcTVX?=
+ =?utf-8?B?bjJPY1hVNFVscDFVNm1DbXBWbnhXaTU3UmVqR0ZGMENQdVI1RlhadHNJSHIx?=
+ =?utf-8?B?dXJzRTFaRkRvb081Z1hYZ3E0VldVMDJRdUlnR2RQVkVwcXlzT29PUkpyQTJS?=
+ =?utf-8?B?TmQxY2FiSjVZSHMxSUJnM1BnQXZ3QldIalRxNHYwUkJzUzBYdEoyQXp5ZFN4?=
+ =?utf-8?B?bWg0cGFITWR0a2VKMzVROTVTMlBlbTBIVUZGNU9sL2tYOFZjRGF0UWJ6TkNQ?=
+ =?utf-8?B?cFViR3ZjS2l1czNzQXk1WjNnU3lDaFdiSUFPaDFaRnhnSFl3UGhhcWUwWXFx?=
+ =?utf-8?B?YWdYS0QwWFQ1Y0xsRWRlMGRRc045NFF4aENXWE5uMWhDeEllVys1anZQNGpw?=
+ =?utf-8?B?blk2b2I2OUlScUpwcVNFOEN1SGxxZGdsZSsvbkE5NmhaNm5saUNwZC93QTc2?=
+ =?utf-8?B?VGlTRFpaajNRalNxeWI0c00yY0dOQWFQQ2lzSTNIOE1ESDhiNVU0ZEtiMDFW?=
+ =?utf-8?B?YVhYY1dHOVJnWTdIK3prbXdYNXRUU0ZseUVHUUlHQVorT2crblNkRUpNbzB5?=
+ =?utf-8?B?akJDb3A4RkdSMDVuWFVwOHJ4VXp1ZFY4UVdpbERjUXVyWlZtcllzODNraWJu?=
+ =?utf-8?B?WHpwY0dlc3VNS3dsU1ZLK3Byai9zNVBKM1hNYkRzSHdoZzhDekZNeDFPbFRZ?=
+ =?utf-8?B?ekRabXVKMzNCQlB0Yi8wOURHOFhVYk5aRmdGb0NLczFPVUxtNWswbC9NMnV6?=
+ =?utf-8?B?T3R0V0U0YWF6aUFVaTd5MnM5NDBFYmYrWUhyNjRLbHgrOHhtSWVxeFBTbUR4?=
+ =?utf-8?B?MlIrNjI4TnNkK3o1K1FUMmRnbzdsU3ZyNUk4V0NaMVFhTDBucXI1cjVndU55?=
+ =?utf-8?B?QUNKcG52SFZIVnJZY0lTWngrSHJIWllXd0Z0bmtWVUhPd0svTDBlSVlabUli?=
+ =?utf-8?B?MWtRU3JoZEZaRkk3UTNENHBkZGNLb2xNb04wTThEakNjWExkTFdwVmM2R3hp?=
+ =?utf-8?B?ME9hanJFUGJqSUtRV201Y3Yra1Q5UE9TVHFveUNEQ08rempsWThFc1MvMk1s?=
+ =?utf-8?B?RFlSQjBjN2VnOExrR3FCL0pybDRycEQrRFIxUEZmK0FobUlLb0ZCRi9RUGhu?=
+ =?utf-8?B?RVhDVGJvMG8wLzYrbG5TaFVVZlpWV0VCTVA1YkE5dUFMbTk1VCtNRWd4cVJ4?=
+ =?utf-8?B?MzlKWWg2SXp6Mm1FM01pNHlBcVozbU00QW52LzRUdFRSZmlabmpINENJSkFZ?=
+ =?utf-8?B?eHgvd050a1RCUHFEV0hXejJ5L212SktiRWE5Y1hMME0yYjFncEJYbnhuWjJL?=
+ =?utf-8?B?a09YeUhpQXhHcDZQSWxraTcvcFVJS0xUcGNuMmpIRVhJTEs1MU9jd2l5L0k0?=
+ =?utf-8?B?TWlxTWlMRFJqUitRMEo5Wi9NNHYrS2k0WUtTVmltMkpScjhMN1J2Z085V3BX?=
+ =?utf-8?B?VkMrM3kzR3dvL1gwWG93VU9HanNPSm5oZjdvMTMwTFBSc3J5alQrNkErMGxv?=
+ =?utf-8?B?b0hLV3FOMmg1YmNPUGlVS2RTdVBTVGRyOHNXblNvL0xsbWVwU3oxZ2NGY0tN?=
+ =?utf-8?B?alcxZHVRaWxKajU0QlB3SzJzL202Y01yN3hleElKcGJCRFpRazNsajhNeGJN?=
+ =?utf-8?B?RXAzUURaTUNWakhwTmV6OXFEMDBYcWtaTFlXMFdLa3phMksrQUZxVW4zc0Ro?=
+ =?utf-8?B?bjErOWpzZ01pYzJZL0pkb2VKSis3dUl0dGFYUWpJWVdrSTdva3VKdEFnRWxw?=
+ =?utf-8?B?ek50cllTaTYrNVBxYTFlNVVwOGhZYlpPdnJNeldDV0VsNDdxNkd1SUNjV1hw?=
+ =?utf-8?B?eTdyeVpIQnVnWTJEdGp0T0xwQmpMNXkrdU45b1FJTnR6ME1UY3J5d2dxdW83?=
+ =?utf-8?B?YnNvcGswSmdRPT0=?=
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR08MB7411.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C713179A238B9147870AC2C3F3901155@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR08MB8678
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ AMS0EPF000001AE.eurprd05.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	d6bf1a1d-3eeb-426c-1813-08ddeec918d8
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|35042699022|36860700013|82310400026|14060799003|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info: 
+	=?utf-8?B?OEJidlI3RndKRS9mdkt5a0xIRlk3M2NJdXE5MTFQdmJML2EvS3h2ZTl3WW9z?=
+ =?utf-8?B?bFMxVytCZGozTUt6ZjkrN3A4UGZmZ3ZnVk5uSEFablQrSG5QQjMvVjN2aXFH?=
+ =?utf-8?B?SENUeEZZV01TYzVORkdseVZnNkVJVlA2cFFUMWY4YW5TZEQxWXl1TU5GeDlm?=
+ =?utf-8?B?RTFWTHUvV0NiQWd5bFY5d2xWL3h5K2pLSUZXaWp4cEZNRkR2bVNSZCttOEtj?=
+ =?utf-8?B?cVdrb3ZkdWlFUzlzSlJHQXJhTDlTRHp3Qmt3N2Rld2tUTlhHYlpEbkF3dHB6?=
+ =?utf-8?B?RVo3c2FGVGNqU3pIYmdnMU9ISFFGZnMyV0kwUzl5OEdPUU9GMFcySzRmUnpo?=
+ =?utf-8?B?dDNWcnB4QnBkeGhib0VKNDNUSmdMNXFFcjhONUJ1UmhhSnNGN1JxbXlicXZq?=
+ =?utf-8?B?UTN1NDNKYUJWVzliUWl0Wk9COHZVWDBMNWxqVlA3Mlo4Y3NkYmpnZDJjeWVG?=
+ =?utf-8?B?dDNPMWxYUERZaFJZbUdFY0FDUjNHS0tmd2J5S3dPKytKZHloN0pjZGJNc0VG?=
+ =?utf-8?B?c2xKK1dyOFpJNzRROUdGNnhTNGFSc0Z1MTA3RTVHSllqZHhNMkV1WXJNTno1?=
+ =?utf-8?B?dmpjbDlhWWxkbnRZUjduVThKbzFMd2RQd3pLVEd0UkVwSjg1ZFNiWDVwK3pF?=
+ =?utf-8?B?YkVBZ0VwV0NNTmdscDdhQ2ZuaW5BcUR2VitNOXgycm1yZXVGWXJjMTNqemxv?=
+ =?utf-8?B?dVhrb2NuNGRqczgwQnREZ2hBU0NqNVhEcGxacFVTZzdtUEEyNDVBY1oyVFBw?=
+ =?utf-8?B?WjErSjNyMERWZUZtNUtzUGdUVnQrU1k0Ykp4Z2VZdFJmcm9UUTZOc243b3lS?=
+ =?utf-8?B?WlNuS3hVWmxKQnBIN0tuczdTeWRNcmwzbDh0dG1UbE4xR3FpdGcwMHVpb1Br?=
+ =?utf-8?B?RVd6Q05iNUNkQkRkUHh2MDI4Y3EvU3V2bFJRRDl6ZUdDK094bFF1TmM3WDYr?=
+ =?utf-8?B?YVJrL1lkYkVOeHFrMkRtYllMSExXL3F1OHVmL25jc0ZpWWRCWldlZ1cyZmVI?=
+ =?utf-8?B?S1NFODRPQUpPVUM1amFCMlRUaGw1SUlUaFhackNieno3ZkwyWnZCalhrcklX?=
+ =?utf-8?B?d2lSd2xpeE5EMTFQTmt1WExER2Vjb1ZqVnZ6U3lSY0lmUVRPVjZWakxoTkho?=
+ =?utf-8?B?UXlXQlMrbmZEcWZxTUMwY2w4U3JucGlaWjgxNmhYSFhUQmRTL1BXanJDZ0lj?=
+ =?utf-8?B?TGlsUmhrUDhEL1BXWG1zK0w0TUZSSE5adytoSjY3azhaVVdzWU9MRVF0OGU1?=
+ =?utf-8?B?MnEwYVN4Q3c5dFZnRmNLMkpqN2VyOU1pNlFIWEhsVHRHR0lES1Blcnh4eHZw?=
+ =?utf-8?B?YTE0MDR4czJHNDFtcDkrY3dWK21YVFlTcEMzODdBQjBtNE1sam1DZHplcG1E?=
+ =?utf-8?B?ZmNubXhCS0VEWFJ0bkZ6S29qUGNBYUF1YnVSaHlFRjhwZERYRWI4a21Obko3?=
+ =?utf-8?B?RS9RRjNUV0dUNjhGNXczT1pGQ2luVWhyMVAxbGhhdzhVQVU4N2lwRFZIdzFN?=
+ =?utf-8?B?WGNzQVRqbC96MTJLa09SSENCL0lDV095aE95bGFTM0Q1OWZpY0xTR1ZNY29h?=
+ =?utf-8?B?NUt3djhnVElZWkRSWHhHc0lGVmZyd2RpbUQ4dUhCTFNHL280Y1lPeGVwck84?=
+ =?utf-8?B?eFpFeVh1WC9WWi9hSkdyTE54QktpamhsSmIzTWZJc0x0SHN3WEx4L2pqNTk3?=
+ =?utf-8?B?WVBwNDhEMGlKbGxvUWVBREI1bm94TWlpTXRSNGwvSy9IYVprYy9JRStnY1Ew?=
+ =?utf-8?B?TVkyUHRpVWNXR2dVU0dTVmcrNWhlR0hDbWFpY1A1YXZrU2xqN013YmJUcjlt?=
+ =?utf-8?B?YzhoSlFHVDFnV0c5SXZ6RGp2Z080R0tReWpVYWxQTWpTSTA4ZEh5S3ZqbFZP?=
+ =?utf-8?B?dzJBM0NoQXdrTkZTOS9ob3AxaTIvNWxDS1VwSENrSTJhZW9GYTVsbHo2aDlm?=
+ =?utf-8?B?Z00yWDNlWHRWVWYveG45ZE90aTZBMHk0VjFIbGgya1ZMcEp5Qjc5YUN3RVFT?=
+ =?utf-8?B?L3pWa0tkelEyWWtWWXBtUmVZbVdGMEZDbEFRLys0OTJwWjRSRUY3ZlRyZTFz?=
+ =?utf-8?Q?Kk5H+P?=
+X-Forefront-Antispam-Report: 
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(35042699022)(36860700013)(82310400026)(14060799003)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2025 11:16:36.2252
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c54f3cf6-f72d-4485-635d-08ddeec92cb9
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	AMS0EPF000001AE.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR08MB8964
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 08 Sep 2025 10:26:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17986
+ <bitbake-devel@lists.openembedded.org>; Mon, 08 Sep 2025 11:16:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17987
 
-On Mon, 2025-09-08 at 11:20 +0200, Stefan Herbrechtsmeier wrote:
-> =C2=A0Am 07.09.2025 um 17:52 schrieb Richard Purdie via lists.openembedde=
-d.org:
-> =C2=A0On Tue, 2025-09-02 at 08:55 +0200, Stefan Herbrechtsmeier via lists=
-.openembedded.org wrote:
-> > > The patch series add support for implicit URLs inside the fetcher. Th=
-e
-> > > implicit URLs could be defined inside a source like a version control
-> > > system (git submodule) or a lock file (package-lock.json, cargo.lock =
-or
-> > > go.sum). The integration of implicit URLs beside explicit URLs
-> > > simplifies the fetcher classes and avoid bugs because of iterations
-> > > between the Fetch and FetchMethod classes.
-> > >=20
-> > > The series remove most methods inside the gitsm fetcher and only leav=
-es
-> > > the parsing of the git submodules and the unpack functionality. It
-> > > allows the gitsm fetcher to use the premirror only feature. The curre=
-nt
-> > > implementation leads to problems because the download of the git
-> > > submodules is triggered via the download method which is called deepl=
-y
-> > > inside the fetcher code.
-
-> > =C2=A0We had the discussion a while back and the conclusion seemed to b=
-e that
-> > implict urls were disliked by a significant number of people as the
-> > were too unclear about what was going on behind the scenes and also
-> > made things like software manifests harder.
-> > =C2=A0=C2=A0
-> >=20
->=20
-> It looks like I miss some discussion and especially the conclusion.
-> =C2=A0
->=20
-> =C2=A0I assume you mean recipes by software manifests.
-
-No, I did mean software manifests. If the urls are explict, it makes
-generating manifests of the sources being used more obvious for people
-to understand. Yes, there are programmatic=C2=A0ways of doing it with
-implicit urls but people don't like them.
-
-By conclusions, I was taking that as the outcome of the last set of
-discussions but there was a lot of different emails and it was hard to
-follow. Perhaps i got the conclusion wrong, I don't know.
-
-> > =C2=A0There was a strong
-> > preference for metadata helpers and explicit lists of components
-> > which
-> > we have for crates/rust and now for go too.
-> > =C2=A0
-> =C2=A0
-> Does this mean the npmsw and gitsm fetchers are obsolete and should
-> be replace by a metadata helpers to fix open issues?
-
-I really don't know about npmsw. I don't use it and I don't really
-follow development there. I'm don't know much about the current set of
-issues it may have.
-
-With gitsm, I think that is generally accepted by people and I don't
-see a strong reason to change it at present. I would be interested in a
-clear summary of what the known issues are (e.g. the premirror issue
-you mentioned).
-
-> > It feels like this series is moving us back to the other direction.
-> > Is
-> > that correct and if so, what has changed in the approach since the
-> > last
-> > discussion?
-> > =C2=A0
-> =C2=A0
-> Do you mean the response to my last RFC? In this case it wasn't clear
-> to me that the project is against implicit URLs and that the npmsw
-> and gitsm fetcher are the wrong direction.
-
-I'm trying to read the "mood" of our developer community and right now,
-it feels like putting a lot of complexity hidden in the fetcher isn't
-what people want to see as they don't understand it and can't "see"
-what is going on. During the discussions, I think we identified some
-key fundamental issues with implict urls for some fetch types too.
-
-There is some hard work needs to be done in trying to summarise those
-discussions and writing down the "results" so that we don't have to
-redo this every time a new patch series comes along. By that, I mean a
-non-emotive list of the current advantages, disdtantages and known bugs
-of the current approach and any proposed alternatives we might choose.
-=C2=A0It perhaps falls to me as the developer lead for bitbake to try and d=
-o
-it but I'd very much welcome help from anyone else in trying to do it
-as I simply don't have the mental bandwidth to try and do that for this
-topic right now (due to e.g. bitbake-setup). I certainly don't have to
-be the one who does it. I appreciate it isn't a fun task though.
-
-
-> This series is only a cleanup of the existing functionally. The gitsm
-> fetcher uses implicit URLs but doesn't work correct because of the
-> misuses of the download code.
-
-I'm worried about where the series is trying to take the project and
-codebase though, hence the questions about intent.
-
-
-> It is useless to start the discussion again. The project doesn't like
-> implicit URLs. It prefers a special task as a replacement for the
-> separate recipetool. It decides against the on-the-fly parse inside
-> the fetcher.
-
-The developers using the project feel much happier with that approach,
-yes.
-
-> How should I proceed? I have working code which parse the cargo.lock,
-> go.sum and package-lock.json files and only use Git and Wget
-> fetchers. The code uses the vendor feature of the package managers to
-> create a patchable folder of the sources. It simplifies the npm class
-> and add additional classes to build packages. The code integrates
-> valid URLs inside the SBOM and creates components with name and
-> version per dependency. Furthermore, I have rework the gitsm fetcher
-> to hopefully fix some open issues. I can convert my cargo, go, npm
-> and gitsm parser into metadata helpers but this is useless if the
-> project dislike python functions to generate URLs like the pypi class
-> or prefer package manager specific code inside the fetcher.
-
-So you are proposing we drop the crate and gomod fetchers in favour of
-implict urls?
-
-I'd suggest sharing a branch of your changes so that others can see and
-understand the implications and hopefully experiment a bit, see if it
-can convince some people that implict urls are the way forward.
-
-Cheers,
-
-Richard
-
-
+T24gMjUgSmFuIDIwMjUsIGF0IDExOjU2LCBMaXZpdXMgdmlhIGxpc3RzLm9wZW5lbWJlZGRlZC5v
+cmcgPGVneXN6ZXJlZ3k9ZnJlZW1haWwuaHVAbGlzdHMub3BlbmVtYmVkZGVkLm9yZz4gd3JvdGU6
+DQo+IA0KPiBGcm9tOiBCZW5qYW1pbiBTesWRa2UgPGVneXN6ZXJlZ3lAZnJlZW1haWwuaHU+DQo+
+IA0KPiBSZW9wZW4gZXZlbnRmaWxlIGlzIGEgdmVyeSB0aW1lIGNvbnN1bWluZyBjYWxsIGluIGV2
+ZXJ5IHNlbmQoKSBjYWxsaW5nLiBJdCB3YXMNCj4gZml4ZWQgYnkgLT4gb3BlbiBpdHMgZmlsZSBk
+ZXNjcmlwdG9yIGluIF9faW5pdF9fKCkgYW5kIGNsb3NlIGl0IGluIF9fZGVsX18oKS4NCj4gUmVt
+b3ZlIHVudXNlZCBzZWxmLmV2ZW50X3F1ZXVlID0gW10uDQoNCklzIHRoaXMgYSByZWFsIGJvdHRs
+ZW5lY2sgeW91IG5vdGljZWQsIG9yIGEgaHlwb3RoZXRpY2FsIGJvdHRsZW5lY2s/ICBJZiByZWFs
+LCB3aGF0IHdhcyB0aGUgcGVyZm9ybWFuY2UgaW1wcm92ZW1lbnQgc2Vlbj8NCg0KUm9zcw==
 
