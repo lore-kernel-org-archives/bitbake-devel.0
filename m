@@ -1,92 +1,115 @@
-Return-Path: <patrick.vogelaar.dev@mailbox.org>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 676DECA0FED
-	for <webhook@archiver.kernel.org>; Wed, 10 Sep 2025 14:55:12 +0000 (UTC)
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
- by mx.groups.io with SMTP id smtpd.web11.20464.1757516101893792490
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8875CA0FED
+	for <webhook@archiver.kernel.org>; Wed, 10 Sep 2025 15:55:22 +0000 (UTC)
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+ by mx.groups.io with SMTP id smtpd.web10.22662.1757519718994062842
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 10 Sep 2025 07:55:02 -0700
+ Wed, 10 Sep 2025 08:55:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@mailbox.org header.s=mail20150812 header.b=DtnNknsl;
- dkim=fail reason="dkim: body hash did not verify" header.i=@mailbox.org header.s=mail20150812 header.b=CYtClDaN;
- spf=pass (domain: mailbox.org, ip: 80.241.56.152, mailfrom: patrick.vogelaar.dev@mailbox.org)
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4cMNyW3hQKz9v4D;
-	Wed, 10 Sep 2025 16:54:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1757516099;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Ug5v62dNN3QSmbts7Q/nxZG7ewHSz8FpjJKg4MEMSaY=;
-	b=DtnNknslNxQ5Yn9L66Z1TtwNGIyDtFdZpvd0vgCW2HNaKiQacIvapCEBRPciT3HnMOcQON
-	DrBP+hzOh53HB7BaJu5z/DTuTMZh+/uFmreN4Kq7SuynJdEHmaVHA5Ps0RgFStgz8Y7Ldc
-	zCBVqCoSRx0ILSdLZDbdedQ3UlAl+ceHGU/ejipRnbcM5V0ZhfOo4Vp4+/ZaaxIjgYvm0p
-	Eu0/Wdgofvvr4zireSj/RScTEjj2TdE5wwSn64EzoIqeQOhbpyPUIeZ9wpjzBXjhrApsuU
-	fKwn8q/qjIlVtoZ7X25PwIHUOrdwbnMfMEw4S6+h7VvAS9ZniUwEate/ohoomg==
-From: Patrick Vogelaar <patrick.vogelaar.dev@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1757516097;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Ug5v62dNN3QSmbts7Q/nxZG7ewHSz8FpjJKg4MEMSaY=;
-	b=CYtClDaN+fJ6MEfV/czqFdKSk/ImJqU4iW/2X9GLWpmDJbuXdQoHRYu3pg+xcgY2HTjXxC
-	nFDWTN8/QW896Yl6RaDUOUkQJtCon6/4rdf9wlskzo/Ps2WytwUx5HdgeusTel0swIGyvm
-	kxpTxTgsUCs2C/B0ALN+6PNzVFAddtYWRCJs9TeAb7j7y2iEYnb9qqQcsqXW7lXqozZyUc
-	KMKDJDU7gTWnhldSk+AMH/tTgQ3Oa5kDuhTS5MnTJU21d2bxsfDBiLgAnJZNyLGNPhH2oe
-	mBICZYDJh46njUJUqBFCVuSvWvoiCD848oWzWcY6fQjt0H7sKat1vBBHaNbsDg==
+ dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=NO3u2KCP;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.176, mailfrom: steve@sakoman.com)
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2445806df50so61802285ad.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 10 Sep 2025 08:55:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1757519718; x=1758124518; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EOSSG13RoEWg1vaiqnySprILZu2RAUDdQ+pQMjsOAKc=;
+        b=NO3u2KCPpbVp6ppI/oPkAk6wMW9skWB34M+haLQlD5sm+Ndn99OeCjlEoDt4PwvbXs
+         boVCCu76CLIqscrVzORxrF3+2jKAg04jphfE9IrvnFXYPlTOJa2OCTMK4uua5/1u6AEn
+         t2aQYy8aGkCAFcxiDGT8mm/rWj8GRTDfgUEuKZTP7uG5MBNxjiNbmJrzF2SfKq/UVbye
+         qb0GiqwKyK0x2RB3k0Ac9aJ93Fp0VPK4RwJPbgt0/QGuC9kLuIg1G6ntO6ITxPtBMx2D
+         /opPFhS/tRdj+8sA+CtbJb1mr1QvNmjZf8TFlF6bA1Lp20nIXIFnPVkIXDNm3V/tNGwT
+         hwnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757519718; x=1758124518;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EOSSG13RoEWg1vaiqnySprILZu2RAUDdQ+pQMjsOAKc=;
+        b=XcDhnRaHmEIF8ciHWAfQPhBBNyEFgXqnTR9FLQlZIG5SclqVTZo2KjrC4X9kVKEB5J
+         L5iYMbtuge+Enc5KZicDAvp9V9hexyF86qs9RIOJP0HryjnghK04YAYArTrCeSsDB/v4
+         pDpiE2riCI1V9DQ89CmovFpGzMjtsO5FNBegFYILBMJeY5Mxx6lvU7tE1FXyYSrD3zmX
+         3OyYmqzi/+9e/WZK2s67nI/oUBxp5wYD/YGqDSj2hOpZ51v/aV5GZhwvXD3zte71cQA7
+         xAbdHng5RDegH1noLfFXamOsQJsBHeDT/9QQKXx0XPPHcg7XUqxhPXSFbfkUiBZFo0vS
+         Zs+A==
+X-Gm-Message-State: AOJu0YyEHjrkX6u+pz/ArbGAccunOY656DvU+V6ovb//FOKYrsxFu9D/
+	LCkyGDjmVr4Hvr2tEgUv7wqzw62YJY4nZoe+A5yYJdBri/cNbeFrAciJF1Rp8SQxcbBV5wzkaSc
+	uosTy
+X-Gm-Gg: ASbGncuwofZYcB3mElImX9FmiaC7/siT6H3n7jzaGsRhGXLHSUDs1KRhp9gWvdL0qZA
+	o0Rwl4TdIQP19x2827cGf3gr2kU+qG/R9B+KD3j51NOXi4LczMQizrqjQqJf2wq12rWwk+9SusA
+	3EAPQRVubLzoltT5KWvDaJxFsgLi13ZOjw47+613xdY54D/JHMpaBgADPfYv6pIjvvpv12EPr2T
+	L5bPa+wWwBc0e8AefBDNWZcEEVrXdYEoJw+Yvoi0NQMwg1tI1+6gSuzla0vuOBohSYZOIPsAR1h
+	lSbFP8B266lhQg2Hse4viwCgaBXM9IQdPQgGVsFbZ6QpyB+gLJenGn9TsGwIiIl7RUw7EWZnelK
+	2riipvR4YC4R7UuqoQlrzQKrL
+X-Google-Smtp-Source: AGHT+IHruNpKQdJRpHrGVk7VmQIrDc/AONUpICG9OwIc1WjcszlKJTJpaU9vVzg74gq7W/I4fo7byg==
+X-Received: by 2002:a17:902:f786:b0:24b:74da:6273 with SMTP id d9443c01a7336-2516f04e031mr222023675ad.3.1757519718212;
+        Wed, 10 Sep 2025 08:55:18 -0700 (PDT)
+Received: from hexa.. ([2602:feb4:3b:2100:5b33:a32c:9e59:27d3])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-25a2acff3efsm31211655ad.123.2025.09.10.08.55.17
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Sep 2025 08:55:17 -0700 (PDT)
+From: Steve Sakoman <steve@sakoman.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org,
-	Patrick Vogelaar <patrick.vogelaar.dev@mailbox.org>
-Subject: [docs][PATCH] doc: enhance SRCREV_FORMAT description
-Date: Wed, 10 Sep 2025 16:54:00 +0200
-Message-Id: <20250910145400.232143-1-patrick.vogelaar.dev@mailbox.org>
+Subject: [bitbake][walnascar][2.12][PATCH 2/2] bitbake: Bump version to 2.12.1
+Date: Wed, 10 Sep 2025 08:55:10 -0700
+Message-ID: <a7d07075ed20f11a9bc068b495d739cab71b07c6.1757519577.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1757519577.git.steve@sakoman.com>
+References: <cover.1757519577.git.steve@sakoman.com>
 MIME-Version: 1.0
-X-MBO-RS-ID: 6df1d29f548423db950
-X-MBO-RS-META: 9w6yxgbuhzu9qytq8zpd3d7gjcwdxsbi
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 10 Sep 2025 14:55:12 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17996
+ <bitbake-devel@lists.openembedded.org>; Wed, 10 Sep 2025 15:55:22 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17999
 
-Adding documentation for having an empty first component for the
-SRCREV_FORMAT.
+From: Martin Jansa <martin.jansa@gmail.com>
 
-Signed-off-by: Patrick Vogelaar <patrick.vogelaar.dev@mailbox.org>
+To indicate compatibility with python 3.14
+
+[YOCTO #15858]
+
+Signed-off-by: Martin Jansa <martin.jansa@gmail.com>
+Signed-off-by: Steve Sakoman <steve@sakoman.com>
 ---
- .../bitbake-user-manual-ref-variables.rst                   | 6 ++++++
- 1 file changed, 6 insertions(+)
+ bin/bitbake        | 2 +-
+ lib/bb/__init__.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rs=
-t b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index 810f88689..07e754096 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -1670,6 +1670,12 @@ overview of their function and contents.
-       ``AUTOINC`` placeholder is added and if needed. And, this placehol=
-der
-       is placed at the start of the returned string.
-=20
-+      The :term:`SRCREV_FORMAT` can also take the form "_component2".
-+      This assumes that there is a component in the :term:`SRC_URI` that=
- does not
-+      have a name assigned. While this is not considered good practice, =
-it can be
-+      usefull if a ``.bbappend`` file needs to extend the :term:`SRC_URI=
-` with
-+      an additional repository.
-+
-    :term:`STAMP`
-       Specifies the base path used to create recipe stamp files. The pat=
-h
-       to an actual stamp file is constructed by evaluating this string a=
-nd
+diff --git a/bin/bitbake b/bin/bitbake
+index 09cbb54e8..05b6ba742 100755
+--- a/bin/bitbake
++++ b/bin/bitbake
+@@ -27,7 +27,7 @@ from bb.main import bitbake_main, BitBakeConfigParameters, BBMainException
+ 
+ bb.utils.check_system_locale()
+ 
+-__version__ = "2.12.0"
++__version__ = "2.12.1"
+ 
+ if __name__ == "__main__":
+     if __version__ != bb.__version__:
+diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
+index 605355e1a..eba7b8fdd 100644
+--- a/lib/bb/__init__.py
++++ b/lib/bb/__init__.py
+@@ -9,7 +9,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ 
+-__version__ = "2.12.0"
++__version__ = "2.12.1"
+ 
+ import sys
+ if sys.version_info < (3, 9, 0):
+-- 
+2.43.0
+
 
