@@ -1,598 +1,254 @@
-Return-Path: <stefan.herbrechtsmeier-oss@weidmueller.com>
+Return-Path: <paul@pbarker.dev>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EC3CA0FED
-	for <webhook@archiver.kernel.org>; Tue,  9 Sep 2025 12:48:43 +0000 (UTC)
-Received: from MRWPR03CU001.outbound.protection.outlook.com (MRWPR03CU001.outbound.protection.outlook.com [40.107.130.79])
- by mx.groups.io with SMTP id smtpd.web10.12111.1757422114647773548
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711C6CA0FED
+	for <webhook@archiver.kernel.org>; Wed, 10 Sep 2025 09:35:20 +0000 (UTC)
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+ by mx.groups.io with SMTP id smtpd.web11.13382.1757496911899086544
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 09 Sep 2025 05:48:36 -0700
+ Wed, 10 Sep 2025 02:35:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@weidmueller.com header.s=selector2 header.b=42spCoEb;
- spf=pass (domain: weidmueller.com, ip: 40.107.130.79, mailfrom: stefan.herbrechtsmeier-oss@weidmueller.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LvtI9DurPr6EdvGvc9TfuRslUhN4YOE2OXYrkzWIyA9SzPjWwbZUtr+xaIHiwjdL/k91a+pyoZRvnIOE02xZVX/+iy8gFIi5m3PCi7K1raPa1HI4PFpTZA/YaKIoEni8zHlugPLjKEWsddDcdW3Ql1boDIe+2GVQ934cbSp5mWkceP2Y2F7hKriby1CaHoCzvyHThD3bv0hVQnHrHNcWprkWecDEQgTpPRhbH1+btnf6hxILx+Av8OPmpOAhr+3UyYLWATTrRJ+lxWfl9e6NWcjIG9o6K/aZTMpqrBBfWoGuqm6UOWJLP+ojVJ6T05WopS5b4GreBk0SYk7LoM6bGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aV8o5z/W0qO3BMtC5RH+2DHIe8w/+wPu7YBCGK0DVoc=;
- b=uylR5f/iNnJswTJ68L5XcODR6kf+1w0ipfHCh7D7YXXUrHTwN7gI6Fj4uA98HZZrJNdJd7BfO8ldpFN+3ywrcnhWTpxN+rpDDbmJ60ZlwxsSdkmrHzcnNkXVyk0e5zuNbD1pBH7GT5dMU5H0GE6mFZbrbxDEYpHZyvSgYqOoNU8vK/8V/y3yUrTZ3UUJvMjkZPPoKcA8/vapRpQjaNU3YIL8ThqI9W5uF85fYhWBbt9G9jVLgvbDdQwl7Oan8JIrTKGWjFtpcyWrWlHq283QO77b5FZyvX1zNyQButWfDFbtLrygDJsK29cinZOwH0gITFLcdmMtHTyWUf7ztsF0Qw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=weidmueller.com; dmarc=pass action=none
- header.from=weidmueller.com; dkim=pass header.d=weidmueller.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weidmueller.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aV8o5z/W0qO3BMtC5RH+2DHIe8w/+wPu7YBCGK0DVoc=;
- b=42spCoEb/SpanQ5jD1RnfVPt7HrQjnNuWYla+WFbEM2nO4ddXShshCbZmPJlub+9rVA29a787MQDQncEYP58xTEPxznU2MyDjiLoGrBTf49EjeGMPMKlh9Y70M2Qe4z3qTk2mCZXuhST4lfocF6HuOkKZsZi4Ieec0ZLi3oWLrv9cUt9val6SOGBV+Jv/XhS/nvCZjLUUjAm14LI0UUD8vTLjhUH4OjOx0vmgCVaGRtrlUrN2NFM1o7+7Q4MPcqLlNemX7zF14nRgxeXoLU6TRg2lNlV7pn3K3LjElplL68na+MAV08g+hZRKdT6uOCXPzg0Qsp8MvBWWch7pgI40Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=weidmueller.com;
-Received: from GV1PR08MB8426.eurprd08.prod.outlook.com (2603:10a6:150:8a::17)
- by DU0PR08MB9934.eurprd08.prod.outlook.com (2603:10a6:10:402::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Tue, 9 Sep
- 2025 12:48:26 +0000
-Received: from GV1PR08MB8426.eurprd08.prod.outlook.com
- ([fe80::f9f5:b4bd:9e01:9013]) by GV1PR08MB8426.eurprd08.prod.outlook.com
- ([fe80::f9f5:b4bd:9e01:9013%5]) with mapi id 15.20.9094.021; Tue, 9 Sep 2025
- 12:48:25 +0000
-Content-Type: multipart/alternative;
- boundary="------------AzbCjl0WSMkiNPGKfAL28idk"
-Message-ID: <2ad145ba-252c-4f00-8c33-368495ab122d@weidmueller.com>
-Date: Tue, 9 Sep 2025 14:48:23 +0200
-User-Agent: Mozilla Thunderbird
-From: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
-Subject: Re: [bitbake-devel] [RFC PATCH 0/6] fetch2: add support for implicit
- urls
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
- bitbake-devel@lists.openembedded.org
-Cc: Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>
-References: <20250902065507.35737-1-stefan.herbrechtsmeier-oss@weidmueller.com>
- <c1124597a57241518f4ddee17c5786ecb11caf2f.camel@linuxfoundation.org>
- <be5703d4-00ee-45be-9183-7bb4a327ed79@weidmueller.com>
- <fa1466cf08081ce9812a90639925063fbd610292.camel@linuxfoundation.org>
-Content-Language: en-US
-In-Reply-To: <fa1466cf08081ce9812a90639925063fbd610292.camel@linuxfoundation.org>
-X-ClientProxiedBy: FR2P281CA0164.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:99::14) To GV1PR08MB8426.eurprd08.prod.outlook.com
- (2603:10a6:150:8a::17)
+ dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=aOp1/4DT;
+ dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=bbE+Cx2a;
+ spf=pass (domain: pbarker.dev, ip: 202.12.124.156, mailfrom: paul@pbarker.dev)
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id D44B57A0183;
+	Wed, 10 Sep 2025 05:35:10 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Wed, 10 Sep 2025 05:35:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1757496910; x=1757583310; bh=k0om7YKVuD
+	xtizapEOxVm/GIg3IpDg2xuJ6EyPdK+ZA=; b=aOp1/4DTzykGcpm8Yw7/85dfyY
+	pwpFomwZPr+Rz2JdYFfnyDHxBCyZ7a2HNb5Sbrf02GwF0jFUuepy84yRWmb+gDSP
+	RS/loyR+iwg1eIjVUuTldBhF9zXJEaNsCI2iRQeP+uwanBceGtQB0MglRKhFfUXD
+	YL/cFYvYC3E7zcDKJcenOQB3MZEYlBzMTIb1lVd4GjpSzfiM6cv2vzi5ebQw5a7b
+	kBY05BKvU8nJqy22GY0iHlZGbox3Wgcqo/pmeC4zClGx5r++oxDce3o8eFn7c9sG
+	BzRCAJmFqHyACqeG+4fymokzR4ZC6XPzIItqC8zGDLfozFGbkdbDPoya7Rng==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1757496910; x=1757583310; bh=k0om7YKVuDxtizapEOxVm/GIg3IpDg2xuJ6
+	EyPdK+ZA=; b=bbE+Cx2aOCxiUhegXqL8LhszJSEdVxjpR6+sViW8X9SoUSUVLdY
+	O7ab/iHPzi9cdKRoucGkPw78hv+MFii6M+Tz/5Ts/RqN18UgBfQvKKRUPbIYHjMI
+	1m37boglh2bbMBS5Rcl6ssbWOWmpWYat+A4tf7eyXUE0I8Q2HxieE5sGEAdI4Rus
+	Zc8twKH/kdZ+nbmPb/y6KXp/sBbyTaZjYWDsbvyw9GdVyhgT4KsVBAP0mh6GOmul
+	lC8kh49yuif2oXyMu+aMNbmZrFo1pZl0guiJlM29pwTu5fSpuEMWXLRWp8fLxniw
+	jQ58QMHQI29pVJCBDEYB9rlW2AFYS9Yff/Q==
+X-ME-Sender: <xms:TkbBaLuycjVhZc-gP0_Fb6unRf66gl0ZDXY2MIsCJLngckWQ9PD43g>
+    <xme:TkbBaPsjTPG3ylXrrtbWcbHl2Sr25iXSfLdxwVXWrGLRXRT0bNlnjgWYtqWKwO8Up
+    On-irKIg4IRkWtrY_k>
+X-ME-Received: <xmr:TkbBaINX7eP9a9127EJN-8mKzFegW-kVxygADUhm3AQ10y9bAtX49GkoWnJlNhwyZ7e3hRJTwaUwKjXu0IG1M3sH66NVsw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvvdelgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefkuffhvfevffgjfhgtfgggsehgtderredtreejnecuhfhrohhmpefrrghulhcuuegr
+    rhhkvghruceophgruhhlsehpsggrrhhkvghrrdguvghvqeenucggtffrrghtthgvrhhnpe
+    elfeeugeeihfetueekvdeiieetieduhfelfffhhffhvddttedugffhudelteffheenucff
+    ohhmrghinhepghhithhhuhgsrdgtohhmpdhprhhotggvshhsrdhruhhnnecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepphgruhhlsehpsggrrhhk
+    vghrrdguvghvpdhnsggprhgtphhtthhopeefpdhmohguvgepshhmthhpohhuthdprhgtph
+    htthhopegrlhgvgidrkhgrnhgrvhhinhesghhmrghilhdrtghomhdprhgtphhtthhopegs
+    ihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmhgsvgguuggvugdrohhrgh
+    dprhgtphhtthhopegrlhgvgieslhhinhhuthhrohhnihigrdguvg
+X-ME-Proxy: <xmx:TkbBaF1w0_koBThUi7mZgvv6FZV-ieRPsoxX2kDkd5B0W-yqAyqW6g>
+    <xmx:TkbBaMPmR5zE_2Nmb0ne5JoRqAgJzD5vvbeYpgQyiaBwN96ojeECPA>
+    <xmx:TkbBaN18h2cVy-phOPK_HmRdBubKI50UQxcyq6R6Cq_LPYlpmYWynQ>
+    <xmx:TkbBaLF4yfN4u3HYwkVPTRL3b_-pRXEsYV96R3bwPzLgwwPIF-KQRw>
+    <xmx:TkbBaEKRVXVqDxYxKZeUiMaUb1lA03m_N29bvhOAiRx07KK-KdnSKnwu>
+Feedback-ID: i51494658:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 10 Sep 2025 05:35:09 -0400 (EDT)
+Message-ID: <dd91f763f6d54bf3fd48215cfad51c2d0b0cfb56.camel@pbarker.dev>
+Subject: Re: [PATCH 1/3] bitbake-setup: add the initial implementation
+From: Paul Barker <paul@pbarker.dev>
+To: Alexander Kanavin <alex.kanavin@gmail.com>, 
+	bitbake-devel@lists.openembedded.org
+Cc: Alexander Kanavin <alex@linutronix.de>
+Date: Wed, 10 Sep 2025 10:35:04 +0100
+In-Reply-To: <20250908123437.1728264-1-alex.kanavin@gmail.com>
+References: <20250908123437.1728264-1-alex.kanavin@gmail.com>
+Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
+ keydata=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
+ ep0k17xg==
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-h5CcUCzloDm5U3pYbMPA"
+User-Agent: Evolution 3.56.1-1 
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV1PR08MB8426:EE_|DU0PR08MB9934:EE_
-X-MS-Office365-Filtering-Correlation-Id: d1b5b299-3547-4d2b-450f-08ddef9f2a79
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|366016|376014|1800799024|13003099007|8096899003;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?SjUxKzhrUFdCTlhZTnpldzNGZGgyV2RLRXJZQU5uS1hwSVVIeEg1Z0RNV005?=
- =?utf-8?B?MXZ5VVp3QkEwSkF4UmtTUG11MTc5QXRzVnBnWEgzOVlERWU2OURyVExWU1JU?=
- =?utf-8?B?Y1AySUpaWk5JVHFNQ3JZczcyeks5dDB3NHhhWVNxTUEyQkE4VnA1UTJ2RWdP?=
- =?utf-8?B?SklNQmducDNZcTVvVFdwcTdIVnFiYnNpK0xyYjVZYnJsK3NlZlB5WmdZbERB?=
- =?utf-8?B?a1RES25FQmM1Tm9kV3dUSjBXdWJlSlhYTm5MRlBQcXpzQ1VtK3FNWllMMldK?=
- =?utf-8?B?R0Q5RWZ2TUlFZjhCZVc3UGFRdEpPMEhYVGw3OURTQlNOTVhnL3JHNWhUdkdW?=
- =?utf-8?B?Q2pGcFJoMEJtWVhXcGJXNnhaL1FsRWNiUU1rdU9Tb21pZjZoTEQ2UGxVR0Q4?=
- =?utf-8?B?SzMvVjQycWo0anVsQ0N1NGgvUzYwV2p6bHlnL1g1UmNuRGdLVU9vRk16WGRL?=
- =?utf-8?B?T1lzRDFNS0JWYkU3M2JuTDQyd0NlMEJQMXVwRHZZOGlxblpmbmJUckNuLyto?=
- =?utf-8?B?NmJhLzVIRjVaUXJ2MmlXOG1oYkhzWTl6Z3RLZ2ZwWGw3enFKS2hDVmFHWlVO?=
- =?utf-8?B?NEJQenJYN293MGp6TlE2QllvNXczeXN5TDRTMjZkVWlnSUcvaUZkcFpJdVlM?=
- =?utf-8?B?M2pFUGJPcGN2NzNGd0VIeVdCczZ5dElsNVB3M09laUtkcXk0RFFwRDd1bFZp?=
- =?utf-8?B?QWxPbm5LVEhMbDNwNlB2MlhuYTQ2R05CMnJTeWhHaWlGWkpDZERkQnlESUpE?=
- =?utf-8?B?YjhIdHltWVIwZ3Y1dGFwY2t1OVdxUXdLcjF3KzJPWDNqUlYvZnlVZnozU0FE?=
- =?utf-8?B?b1owbGtnTktTam5pb2NhaEFDVmoxaHhiSGJHTTdmNEU0ZmVyeXBOT1k0cE1M?=
- =?utf-8?B?b0RTQmV2UHFUYytJM05VcGF1ZzQxeWx1c1daVzJuZWhGb3pQenpJVUNqSlVX?=
- =?utf-8?B?eXFNRkRhNmorMFladnRQZkhqeGJWVHFWZmFjalNVait3c0NpMjM4bUdPcjZp?=
- =?utf-8?B?NmR1Y2ZKL0kzQ3dqdEJWWFY0TGdvOWlDNHI1OVRXdStFOVI1R2J1d1h2MGRs?=
- =?utf-8?B?KzhYS0s5OUdkRXh0ZnlrN3BPQ014dGV3TXZLbTRyWXhrK1hFSXRtbUEycTQz?=
- =?utf-8?B?ejd6cEl3Qk1qenAxa1Z4aWZPa1RBbXNQNFFzYjh5RnRMY2kyQnM4L2hRTEFo?=
- =?utf-8?B?SGs2clQ3ZGlWNHdTVGFwWWhndHZQdWZ1MWpmNmtXaDRiaGJyWW5JTVdBSUQr?=
- =?utf-8?B?ekNOUFE4RkhQV2R5dWE4aWpOaUNZUzBSOFBzY2RtZVhSTXJJTEhQVDRzb0Q2?=
- =?utf-8?B?MXJNTU5qMGZtcUlTcytHU0wvcHdtVFZuTWRDM3duTGt6Sm0yLzIycFpjMTZG?=
- =?utf-8?B?TlFyb2NaS3NnZE82SVJqVFdxZTBQOVVqQlVtY1JDZTVoUmt0ZXB0K3g1OVhL?=
- =?utf-8?B?WkQyMlpIbVA0NmFwWlk2WkppQkU1b1Jaa0RXLzA3WW16VElwbktQZEt3L0RM?=
- =?utf-8?B?enlLMVlxOHBYVmpRbTc1RTBrWTZBMUpsdVNnZHZYai9pa2hEamtlcklKNlk5?=
- =?utf-8?B?UlJmN3pNd3J3U1dRM0xPRGRNcHBPZ0RNaGdnSWwwZW1VaFRlcTh0VnRUdDNV?=
- =?utf-8?B?aC9aMmJjR2VuQ1luSzRHUU0xa3d0cVVucW0wNExQQkhIZGpLSnJKVW1nTGJO?=
- =?utf-8?B?a3FuQmFEUXRWeGhxNnpZRzk3RzVtNEZzWnRtMEd5ZEFpTkVoQU9vZmJFZit1?=
- =?utf-8?B?UmtrY1FUd0o3bjBrTU54TkRWRmVtSFM2L3pQbkRNVWJhQmNIWUpJNTFtK3F1?=
- =?utf-8?B?dDdHSVIwZGJxdU5DVDdlR2dkTnMvTTA4M0JJSm0yZ1dSMjBKWGszTE1paVo4?=
- =?utf-8?Q?bl3RBmf0YtSVw?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB8426.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(13003099007)(8096899003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?aElCYVl1NHFkTFJQWE9HZDBrTGtTWG1JcTNuUCt1QWsrWFlKMjRMOWs3NVN0?=
- =?utf-8?B?K0NqVFlTcE9YTFgyelpIVTUxdEMzWitsTWJUMyt3bHdINFhpQ1pnQVlHeWNm?=
- =?utf-8?B?U090U1dSOHo3NUR5eDVuQklEa0RIWjkzc3JnZ0lRY1BEYlIvMmhwTmlaeDdF?=
- =?utf-8?B?cmVhMWIwcnJlYnhGeU83TVZ2YlBYZXdaWDgrMStQWG14R0pPZTFvZDdTcmFL?=
- =?utf-8?B?djRSNFFGTG5jdGpkWFpXRXN6bG94Q1NkUWM0SzFua0lQZzFvdVYrMDN3OTNF?=
- =?utf-8?B?THJPQ3QvS0xKcGpxMUNDRlNuTTNJZm1ybzNPdUZqejNhcDdreFRIMmNYMEZL?=
- =?utf-8?B?M2RhbDF1aFJCQ0xmbTMvT25jcUxXZGxyQm1BNERmZ3JaMm1zMGVBbjRnNzZD?=
- =?utf-8?B?dS95LzJTVlZQZkNGcmQrTnZiMXYrdkZYTFJUeGRWSGZwOU9IZzBGTHhOcU52?=
- =?utf-8?B?a2x5aGQ3c1lkb1RFcjZSVXFtY29kYlpXb0syN1BTWDN6SGF0bjF2eVUzYjNp?=
- =?utf-8?B?NjNQTlhBWGZMQ2I3ODduYjhJYnlyd2E1VXVWY1pVUzY0UUxGaDg0VUdpK1o4?=
- =?utf-8?B?eVJyOUFQbVBUMmd2VXZyZmhsRE9pUmJXRjY5Q0RIWkZhRFBjRmVKQmo1Y2pN?=
- =?utf-8?B?blUyblEzNTlPbEhWbkhSbm1CYmZQWFZ1TythS0hrNHZzR016SUMzaHVjbVpM?=
- =?utf-8?B?U215WEVMTTd0bjlmRGNHTHFiOGpGcUxSUkxhNStOaTI4QmIzR0JOQWpBbjFa?=
- =?utf-8?B?cFFHN1pNTVRBYUdRNko4RkZ6VnNNTVlEUzhFVHV2di9mWmw1VTZkL2N2VmEw?=
- =?utf-8?B?OG5UMG1xelJDdkxzZUpFMEQvcG9VWHhVMjcvNElYOUdRWTVCVGpLeStXVFdC?=
- =?utf-8?B?YmpGWWc1RjJvYTdPNTRMbHEyOTgrakw1Z2NUWldhdXl3eWF1cTVzTElwcVIx?=
- =?utf-8?B?QVRyQW1jTWUrZVprK2Q1RUhETmdpVE1obUdMRjlBY0N4QnBFakU1VW5GMVow?=
- =?utf-8?B?YTRyVXliSSt2K29BcVpQQkJzTUFkSmNiMWgzM0t3SWpDN0N2cUxkYmJiWU5J?=
- =?utf-8?B?ZzljNG13QjNicW5HdjJXSUpZVk0vS01lRFVETXFKcitHR1I2QndmSHpGSkw4?=
- =?utf-8?B?NW5NMTlOMHF0WTJIRGVKbHpSVS9hWVBnRzB6bzUzT2pvL255OGNkOGxSRmhK?=
- =?utf-8?B?NWMwS2FjWWw5SWFlVFVxeDVIZTdZc2syUHZUOTRtbVgydnJBeHQ4dFhsQ1B4?=
- =?utf-8?B?UjI5dEhCRjVORzVrNFhOTEUxcnBlMk9ZSEVJQmdRbjYvNTJ1TUQ3N3c0aUg4?=
- =?utf-8?B?b0lVYWh3SUdsancvNjZRQ3B4MmhIR0VtZkg2VFhBcTRKT3RDSFhOcStLU2N3?=
- =?utf-8?B?ZEhVclJjNUJNQWgvcXFsSXNDcmdUazNDOEg1ZlYwV2ZjejNhMmExempaWTJY?=
- =?utf-8?B?cmpFSmU1d0hXZDE5LzJGV2ViUnlyZXlwTWE2RlVLVFJrMytYTEdZUE9VQWV3?=
- =?utf-8?B?dGhKRmV4VExkdFBwWE11Sm9Zc3FvY1M1Zmh6cVBZNUJCdnhDd0tEUDNsUkRO?=
- =?utf-8?B?cDZ0SDdOSnFFVTBvbThORTFkdXM0MzFaUW9BTHRCN0prR2Fzc2hEMm1ueXhH?=
- =?utf-8?B?OTgzTWpLcnNBY0ZFWm5mTDJaN3pNenpnd3I0RmpQWVVueW1iZUJJLzdXTWZG?=
- =?utf-8?B?QTBUUmMxSG1VOEhVWm9oWlBHOVV2cWpGN1BMVnVWYmwrMlpGYnY3R2J6dXM1?=
- =?utf-8?B?UGVERndCNjBjbTNMeG95NXBjblFJYTVnTEY0R01KTlVZditrM3dzcGZBM0hy?=
- =?utf-8?B?R3ZrRHhNcU0vVGNPK3FrWkdTb1NvUzc5V1hWMENPTjlHbEoxeWV4cC9HMzBp?=
- =?utf-8?B?bmxpWmQxZHJEQ1NyM3I3KzgzMTBZdFF1eXc4QjJjSFgvVThvM2tKVVlWdzRs?=
- =?utf-8?B?RmdJWGRsUlhsM2RZSGt4R3hBWkNqOU1GbkxhUWUrMEtyMS91a293T2dCTU1U?=
- =?utf-8?B?RzNGOXIzY0plREhtaDhsOE5UK2RuNkdUQjlHNWh4ODR3WVhIYVFEdkZTTWJF?=
- =?utf-8?B?WGtIRi85R2prRGMreHFRbUc0QjlSU2xzaFpKc2dXY04xZEErYUlqN3ZCMk1v?=
- =?utf-8?B?K2hWODdJeXBjM2Z5SjFqK1E0VnFuOHMwOU9WZG9qdzVQTDZ3aEw2YzQ3N0Jq?=
- =?utf-8?B?cGc9PQ==?=
-X-OriginatorOrg: weidmueller.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d1b5b299-3547-4d2b-450f-08ddef9f2a79
-X-MS-Exchange-CrossTenant-AuthSource: GV1PR08MB8426.eurprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2025 12:48:25.2694
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e4289438-1c5f-4c95-a51a-ee553b8b18ec
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HRDVd+SIhsiFGGrZVDVdV1jyHeLws9zHinhkXUfyYp/2yB0bhBaVRH+JqahZK1mVs8NX7W6RJmkXZ7C+N8xK7g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB9934
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 09 Sep 2025 12:48:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17992
+ <bitbake-devel@lists.openembedded.org>; Wed, 10 Sep 2025 09:35:20 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/17993
 
---------------AzbCjl0WSMkiNPGKfAL28idk
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-Am 08.09.2025 um 12:26 schrieb Richard Purdie:
-> On Mon, 2025-09-08 at 11:20 +0200, Stefan Herbrechtsmeier wrote:
->>   Am 07.09.2025 um 17:52 schrieb Richard Purdie via lists.openembedded.org:
->>   On Tue, 2025-09-02 at 08:55 +0200, Stefan Herbrechtsmeier via lists.openembedded.org wrote:
->>>> The patch series add support for implicit URLs inside the fetcher. The
->>>> implicit URLs could be defined inside a source like a version control
->>>> system (git submodule) or a lock file (package-lock.json, cargo.lock or
->>>> go.sum). The integration of implicit URLs beside explicit URLs
->>>> simplifies the fetcher classes and avoid bugs because of iterations
->>>> between the Fetch and FetchMethod classes.
->>>>
->>>> The series remove most methods inside the gitsm fetcher and only leaves
->>>> the parsing of the git submodules and the unpack functionality. It
->>>> allows the gitsm fetcher to use the premirror only feature. The current
->>>> implementation leads to problems because the download of the git
->>>> submodules is triggered via the download method which is called deeply
->>>> inside the fetcher code.
->>>   We had the discussion a while back and the conclusion seemed to be that
->>> implict urls were disliked by a significant number of people as the
->>> were too unclear about what was going on behind the scenes and also
->>> made things like software manifests harder.
->>>    
->>>
->> It looks like I miss some discussion and especially the conclusion.
->>   
->>
->>   I assume you mean recipes by software manifests.
-> No, I did mean software manifests. If the urls are explict, it makes
-> generating manifests of the sources being used more obvious for people
-> to understand.
-Do you think the following is really helpful for a software manifest?
+--=-h5CcUCzloDm5U3pYbMPA
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-npm://registry.npmjs.org/;package=xyz;version=1.2.3
-gomod://xyz;version=1.2.3
-crate://crates.io/xyz/1.2.3
+Hi Alex,
 
-I assume software manifests needs the real URLs and a common style for 
-the name and version.
+I've added a few thoughts after testing this out.
 
-How do we solve the problem if we keep the gitsm fetcher and doesn't 
-propose an alternative solution?
+On Mon, 2025-09-08 at 14:34 +0200, Alexander Kanavin wrote:
+> 3. To check if the build configuration needs to be updated, run:
+>=20
+> =3D=3D=3D
+> $ bin/bitbake-setup status
+> ...
+> Configuration in /home/alex/bitbake-builds/poky-alex/ has not changed.
 
-> Yes, there are programmatic ways of doing it with
-> implicit urls but people don't like them.
+This example doesn't work without a `--build-dir` argument.
 
-Based on your reaction regarding the gitsm fetcher I would say a lot of 
-people like the implicit URLs. But without details it is impossible to 
-understand the real problem. Maybe a task to generate a generic include 
-file or a file in the work directory with explicit and implicit URLs 
-solve their problems.
+> 4. If the configuration has changed, you can bring it in sync with:
+>=20
+> $ bin/bitbake-setup update
 
-> By conclusions, I was taking that as the outcome of the last set of
-> discussions but there was a lot of different emails and it was hard to
-> follow. Perhaps i got the conclusion wrong, I don't know.
+As above, the `--build-dir` argument is needed in this example.
 
-My understand was that implicit URLs have drawbacks but nothing we 
-couldn't overcome.
+> This commit includes fixes by
+> Ryan Eatmon <reatmon@ti.com> https://github.com/kanavin/bitbake/pull/1
+> Gyorgy Sarvari <skandigraun@gmail.com> https://github.com/kanavin/bitbake=
+/pull/2
+> Johannes Schneider <johannes.schneider@leica-geosystems.com> https://gith=
+ub.com/kanavin/bitbake/pull/3
 
->>>   There was a strong
->>> preference for metadata helpers and explicit lists of components
->>> which
->>> we have for crates/rust and now for go too.
->>>   
->>   
->> Does this mean the npmsw and gitsm fetchers are obsolete and should
->> be replace by a metadata helpers to fix open issues?
-> I really don't know about npmsw. I don't use it and I don't really
-> follow development there. I'm don't know much about the current set of
-> issues it may have.
->
-> With gitsm, I think that is generally accepted by people and I don't
-> see a strong reason to change it at present.
+The commit message is missing a Signed-off-by line.
 
-Doesn't you say that people don't like implicit URLs and that they are 
-problematical for software manifests?
+> +def checkout_layers(layers, layerdir, d):
+> +    repodirs =3D []
+> +    oesetupbuild =3D None
+> +    print("Fetching layer/tool repositories into {}".format(layerdir))
+> +    for r_name in layers:
+> +        r_data =3D layers[r_name]
+> +        repodir =3D r_data["path"]
+> +        repodirs.append(repodir)
+> +
+> +        r_remote =3D r_data['git-remote']
+> +        rev =3D r_remote['rev']
+> +        remotes =3D r_remote['remotes']
+> +
+> +        for remote in remotes:
+> +            type,host,path,user,pswd,params =3D bb.fetch.decodeurl(remot=
+es[remote]["uri"])
+> +            fetchuri =3D bb.fetch.encodeurl(('git',host,path,user,pswd,p=
+arams))
+> +            print("    {}".format(r_name))
+> +            fetcher =3D bb.fetch.Fetch(["{};protocol=3D{};rev=3D{};nobra=
+nch=3D1;destsuffix=3D{}".format(fetchuri,type,rev,repodir)], d)
+> +            do_fetch(fetcher, layerdir)
 
->   I would be interested in a
-> clear summary of what the known issues are (e.g. the premirror issue
-> you mentioned).
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=15875
+We should support entries with 'path' set to an already checked out
+layer directory and no 'git-remote' key. This would allow people to use
+bitbake-setup to manage the build directories for layers which they
+maintain without having to push all changes up to a remote repository in
+order to test them.
 
-The combination of BB_FETCH_PREMIRRORONLY and gitsm doesn’t work because 
-the download of the submodules is handled inside the try_mirror_url 
-function after the enable of BB_NO_NETWORK. The current code has a 
-recurrence between the download method of the Fetch class and the 
-download function of the FetchMethod class.
+We can add that in a follow-up commit though, so there's no need for
+this to hold up the initial merge.
 
-The need_update method is used to trigger a download of the submodules 
-and the extract_urldata function is only acceptable after a download. It 
-doesn't matter if bitbake support one or more fetchers with implicit 
-URLs. Any user needs to handle it anyway. Either we should deprecate 
-implicit URLs to simply the code or we should support it inside the 
-Fetch class.
+> +    init_script =3D os.path.join(bitbake_builddir, "init-build-env")
+> +    shell =3D os.path.basename(os.environ.get("SHELL","bash"))
+> +    fragments =3D bitbake_config.get("oe-fragments", []) + sorted(bitbak=
+e_config.get("oe-fragment-choices",{}).values())
+> +    if fragments:
+> +        bb.process.run("{} -c '. {} && bitbake-config-build enable-fragm=
+ent {}'".format(shell, init_script, " ".join(fragments)))
 
->>> It feels like this series is moving us back to the other direction.
->>> Is
->>> that correct and if so, what has changed in the approach since the
->>> last
->>> discussion?
->>>   
->>   
->> Do you mean the response to my last RFC? In this case it wasn't clear
->> to me that the project is against implicit URLs and that the npmsw
->> and gitsm fetcher are the wrong direction.
-> I'm trying to read the "mood" of our developer community and right now,
-> it feels like putting a lot of complexity hidden in the fetcher isn't
-> what people want to see as they don't understand it and can't "see"
-> what is going on. During the discussions, I think we identified some
-> key fundamental issues with implict urls for some fetch types too.
-That's the reason for this series. It adds native support for implicit 
-URLs and doesn't misuse the need_update function. The implicit URL 
-fetchers only need to implement the implicit_urls function.
+We can't trust that SHELL will be posix-compliant and able to run the
+init-build-env script. Perhaps we should just use 'sh'?
 
-> There is some hard work needs to be done in trying to summarise those
-> discussions and writing down the "results" so that we don't have to
-> redo this every time a new patch series comes along. By that, I mean a
-> non-emotive list of the current advantages, disdtantages and known bugs
-> of the current approach and any proposed alternatives we might choose.
->   It perhaps falls to me as the developer lead for bitbake to try and do
-> it but I'd very much welcome help from anyone else in trying to do it
-> as I simply don't have the mental bandwidth to try and do that for this
-> topic right now (due to e.g. bitbake-setup). I certainly don't have to
-> be the one who does it. I appreciate it isn't a fun task though.
+> +def main():
+> +    def add_top_dir_arg(parser):
+> +        parser.add_argument('--top-dir-prefix', help=3D'Top level direct=
+ory prefix. This is where all top level directories are created.')
+> +        parser.add_argument('--top-dir-name', help=3D'Top level director=
+y name. Together with the top directory prefix this forms a top directory w=
+here builds are set up and downloaded configurations and layers are cached =
+for reproducibility and offline builds.')
+> +
+> +    def add_build_dir_arg(parser):
+> +        build_dir =3D get_build_dir_via_bbpath()
+> +        if build_dir:
+> +            parser.add_argument('--build-dir', default=3Dbuild_dir, help=
+=3D"Path to the build, default is %(default)s via BBPATH")
+> +        else:
+> +            parser.add_argument('--build-dir', required=3DTrue, help=3D"=
+Path to the build")
 
-What is the current approach? Do you mean implicit vs explicit URLs?
+Both of the commands which use this ('status' and 'update') take no
+other arguments. I would prefer to use
 
->> This series is only a cleanup of the existing functionally. The gitsm
->> fetcher uses implicit URLs but doesn't work correct because of the
->> misuses of the download code.
-> I'm worried about where the series is trying to take the project and
-> codebase though, hence the questions about intent.
+  ./bin/bitbake-setup status path/to/build/dir
 
-I only rework the code and make features explicit. The fetchers already 
-use implicit URLs but now it is clear that the localpaths method doesn't 
-return the local paths of the implicit URLs. The implicit URLs are 
-handled by the download method direct and not deeply inside the download 
-method via the download method of the fetcher. A recursion inside the 
-git submodules shouldn't be a problem because the outer download is 
-finished before the inner download starts.
+Instead of
 
->> It is useless to start the discussion again. The project doesn't like
->> implicit URLs. It prefers a special task as a replacement for the
->> separate recipetool. It decides against the on-the-fly parse inside
->> the fetcher.
-> The developers using the project feel much happier with that approach,
-> yes.
+  ./bin/bitbake-setup status --build-dir path/to/build/dir
 
-I wonder why these developers prefer a single gitsm SRC_URI entry 
-instead of a list of git entries because they lose the fine grain 
-control in this case.
+With those comments said, I think this is great! I'm looking forward to
+trying out bitbake-setup more.
 
->> How should I proceed? I have working code which parse the cargo.lock,
->> go.sum and package-lock.json files and only use Git and Wget
->> fetchers. The code uses the vendor feature of the package managers to
->> create a patchable folder of the sources. It simplifies the npm class
->> and add additional classes to build packages. The code integrates
->> valid URLs inside the SBOM and creates components with name and
->> version per dependency. Furthermore, I have rework the gitsm fetcher
->> to hopefully fix some open issues. I can convert my cargo, go, npm
->> and gitsm parser into metadata helpers but this is useless if the
->> project dislike python functions to generate URLs like the pypi class
->> or prefer package manager specific code inside the fetcher.
-> So you are proposing we drop the crate and gomod fetchers in favour of
-> implict urls?
-No. These changes are mutual exclusivity. In my case the crate and gomod 
-fetcher aren't needed.
+Thanks,
 
-> I'd suggest sharing a branch of your changes so that others can see and
-> understand the implications and hopefully experiment a bit, see if it
-> can convince some people that implict urls are the way forward.
-I will do but need some time because I focus on the rework of the gitsm 
-fetcher.
+--=20
+Paul Barker
 
-Regards
-   Stefan
+--=-h5CcUCzloDm5U3pYbMPA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
---------------AzbCjl0WSMkiNPGKfAL28idk
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+-----BEGIN PGP SIGNATURE-----
 
-<!DOCTYPE html><html><head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  </head>
-  <body>
-    <div class="moz-cite-prefix">Am 08.09.2025 um 12:26 schrieb Richard
-      Purdie:<br>
-    </div>
-    <blockquote type="cite" cite="mid:fa1466cf08081ce9812a90639925063fbd610292.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">On Mon, 2025-09-08 at 11:20 +0200, Stefan Herbrechtsmeier wrote:
-</pre>
-      <blockquote type="cite">
-        <pre wrap="" class="moz-quote-pre">&nbsp;Am 07.09.2025 um 17:52 schrieb Richard Purdie via lists.openembedded.org:
-&nbsp;On Tue, 2025-09-02 at 08:55 +0200, Stefan Herbrechtsmeier via lists.openembedded.org wrote:
-</pre>
-        <blockquote type="cite">
-          <blockquote type="cite">
-            <pre wrap="" class="moz-quote-pre">The patch series add support for implicit URLs inside the fetcher. The
-implicit URLs could be defined inside a source like a version control
-system (git submodule) or a lock file (package-lock.json, cargo.lock or
-go.sum). The integration of implicit URLs beside explicit URLs
-simplifies the fetcher classes and avoid bugs because of iterations
-between the Fetch and FetchMethod classes.
+iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaMFGSBEccGF1bEBwYmFy
+a2VyLmRldgAKCRCrY1Tsnbr0bkaFAQDA2LMUeNuz/VtZSeuU8K62q+bj7EoHNUiS
+Ty7qH/xQNQEA+2zzdTBPuFmlBXu+qjMkYfX9xorVNCLsmWkCwifMkAo=
+=Ntzu
+-----END PGP SIGNATURE-----
 
-The series remove most methods inside the gitsm fetcher and only leaves
-the parsing of the git submodules and the unpack functionality. It
-allows the gitsm fetcher to use the premirror only feature. The current
-implementation leads to problems because the download of the git
-submodules is triggered via the download method which is called deeply
-inside the fetcher code.
-</pre>
-          </blockquote>
-        </blockquote>
-      </blockquote>
-      <blockquote type="cite">
-        <blockquote type="cite">
-          <pre wrap="" class="moz-quote-pre">&nbsp;We had the discussion a while back and the conclusion seemed to be that
-implict urls were disliked by a significant number of people as the
-were too unclear about what was going on behind the scenes and also
-made things like software manifests harder.
-&nbsp;&nbsp;
-
-</pre>
-        </blockquote>
-        <pre wrap="" class="moz-quote-pre">It looks like I miss some discussion and especially the conclusion.
-&nbsp;
-
-&nbsp;I assume you mean recipes by software manifests.
-</pre>
-      </blockquote>
-      <pre wrap="" class="moz-quote-pre">No, I did mean software manifests. If the urls are explict, it makes
-generating manifests of the sources being used more obvious for people
-to understand. </pre>
-    </blockquote>
-    Do you think the following is really helpful for a software
-    manifest?<br>
-    <br>
-    npm://registry.npmjs.org/;package=xyz;version=1.2.3<br>
-    gomod://xyz;version=1.2.3<br>
-    crate://crates.io/xyz/1.2.3<br>
-    <br>
-    I assume software manifests needs the real URLs and a common style
-    for the name and version.<br>
-    <br>
-    How do we solve the problem if we keep the gitsm fetcher and doesn't
-    propose an alternative solution?<br>
-    <br>
-    <blockquote type="cite" cite="mid:fa1466cf08081ce9812a90639925063fbd610292.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">Yes, there are programmatic&nbsp;ways of doing it with
-implicit urls but people don't like them.</pre>
-    </blockquote>
-    <p>Based on your reaction regarding the gitsm fetcher I would say a
-      lot of people like the implicit URLs. But without details it is
-      impossible to understand the real problem. Maybe a task to
-      generate a generic include file or a file in the work&nbsp;directory
-      with explicit and implicit URLs solve their problems.&nbsp;</p>
-    <blockquote type="cite" cite="mid:fa1466cf08081ce9812a90639925063fbd610292.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">By conclusions, I was taking that as the outcome of the last set of
-discussions but there was a lot of different emails and it was hard to
-follow. Perhaps i got the conclusion wrong, I don't know.
-</pre>
-    </blockquote>
-    <p>My understand was that implicit URLs have drawbacks but nothing
-      we couldn't overcome.<br>
-      <br>
-    </p>
-    <blockquote type="cite" cite="mid:fa1466cf08081ce9812a90639925063fbd610292.camel@linuxfoundation.org">
-      <blockquote type="cite">
-        <blockquote type="cite">
-          <pre wrap="" class="moz-quote-pre">&nbsp;There was a strong
-preference for metadata helpers and explicit lists of components
-which
-we have for crates/rust and now for go too.
-&nbsp;
-</pre>
-        </blockquote>
-        <pre wrap="" class="moz-quote-pre">&nbsp;
-Does this mean the npmsw and gitsm fetchers are obsolete and should
-be replace by a metadata helpers to fix open issues?
-</pre>
-      </blockquote>
-      <pre wrap="" class="moz-quote-pre">I really don't know about npmsw. I don't use it and I don't really
-follow development there. I'm don't know much about the current set of
-issues it may have.
-
-With gitsm, I think that is generally accepted by people and I don't
-see a strong reason to change it at present.</pre>
-    </blockquote>
-    <p>Doesn't you say that people don't like implicit URLs and that
-      they are problematical for software manifests?<br>
-      <br>
-    </p>
-    <blockquote type="cite" cite="mid:fa1466cf08081ce9812a90639925063fbd610292.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre"> I would be interested in a
-clear summary of what the known issues are (e.g. the premirror issue
-you mentioned).
-</pre>
-    </blockquote>
-    <a class="moz-txt-link-freetext" href="https://bugzilla.yoctoproject.org/show_bug.cgi?id=15875" moz-do-not-send="true">https://bugzilla.yoctoproject.org/show_bug.cgi?id=15875</a><br>
-    <br>
-    The combination of BB_FETCH_PREMIRRORONLY and gitsm doesn’t work
-    because the download of the submodules is handled inside the
-    try_mirror_url function after the enable of BB_NO_NETWORK. The
-    current code has a recurrence between the download method of the
-    Fetch class and the download function of the FetchMethod class.<br>
-    <br>
-    The need_update method is used to trigger a download of the
-    submodules and the extract_urldata function is only acceptable after
-    a download. It doesn't matter if bitbake support one or more
-    fetchers with implicit URLs. Any user needs to handle it anyway.
-    Either we should deprecate implicit URLs to simply the code or we
-    should support it inside the Fetch class.&nbsp;<br>
-    <br>
-    <blockquote type="cite" cite="mid:fa1466cf08081ce9812a90639925063fbd610292.camel@linuxfoundation.org">
-      <blockquote type="cite">
-        <blockquote type="cite">
-          <pre wrap="" class="moz-quote-pre">It feels like this series is moving us back to the other direction.
-Is
-that correct and if so, what has changed in the approach since the
-last
-discussion?
-&nbsp;
-</pre>
-        </blockquote>
-        <pre wrap="" class="moz-quote-pre">&nbsp;
-Do you mean the response to my last RFC? In this case it wasn't clear
-to me that the project is against implicit URLs and that the npmsw
-and gitsm fetcher are the wrong direction.
-</pre>
-      </blockquote>
-      <pre wrap="" class="moz-quote-pre">I'm trying to read the &quot;mood&quot; of our developer community and right now,
-it feels like putting a lot of complexity hidden in the fetcher isn't
-what people want to see as they don't understand it and can't &quot;see&quot;
-what is going on. During the discussions, I think we identified some
-key fundamental issues with implict urls for some fetch types too.
-</pre>
-    </blockquote>
-    That's the reason for this series. It adds native support for
-    implicit URLs and doesn't misuse the need_update function. The
-    implicit URL fetchers only need to implement the implicit_urls
-    function.<br>
-    <br>
-    <blockquote type="cite" cite="mid:fa1466cf08081ce9812a90639925063fbd610292.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">There is some hard work needs to be done in trying to summarise those
-discussions and writing down the &quot;results&quot; so that we don't have to
-redo this every time a new patch series comes along. By that, I mean a
-non-emotive list of the current advantages, disdtantages and known bugs
-of the current approach and any proposed alternatives we might choose.
-&nbsp;It perhaps falls to me as the developer lead for bitbake to try and do
-it but I'd very much welcome help from anyone else in trying to do it
-as I simply don't have the mental bandwidth to try and do that for this
-topic right now (due to e.g. bitbake-setup). I certainly don't have to
-be the one who does it. I appreciate it isn't a fun task though.</pre>
-    </blockquote>
-    <p>What is the current approach? Do you mean implicit vs explicit
-      URLs?<br>
-      <br>
-    </p>
-    <blockquote type="cite" cite="mid:fa1466cf08081ce9812a90639925063fbd610292.camel@linuxfoundation.org">
-      <blockquote type="cite">
-        <pre wrap="" class="moz-quote-pre">This series is only a cleanup of the existing functionally. The gitsm
-fetcher uses implicit URLs but doesn't work correct because of the
-misuses of the download code.
-</pre>
-      </blockquote>
-      <pre wrap="" class="moz-quote-pre">I'm worried about where the series is trying to take the project and
-codebase though, hence the questions about intent.
-</pre>
-    </blockquote>
-    <p>I only rework the code and make features explicit. The fetchers
-      already use implicit URLs but now it is clear that the localpaths
-      method doesn't return the local paths of the implicit URLs. The
-      implicit URLs are handled by the download method direct and not
-      deeply inside the download method via the download method of the
-      fetcher. A recursion inside the git submodules shouldn't be a
-      problem because the outer download is finished before the inner
-      download starts.<br>
-      <br>
-    </p>
-    <blockquote type="cite" cite="mid:fa1466cf08081ce9812a90639925063fbd610292.camel@linuxfoundation.org">
-      <blockquote type="cite">
-        <pre wrap="" class="moz-quote-pre">It is useless to start the discussion again. The project doesn't like
-implicit URLs. It prefers a special task as a replacement for the
-separate recipetool. It decides against the on-the-fly parse inside
-the fetcher.
-</pre>
-      </blockquote>
-      <pre wrap="" class="moz-quote-pre">The developers using the project feel much happier with that approach,
-yes.
-</pre>
-    </blockquote>
-    <p>I wonder why these developers prefer a single gitsm SRC_URI entry
-      instead of a list of git entries because they lose the fine grain
-      control in this case.<br>
-      <br>
-    </p>
-    <blockquote type="cite" cite="mid:fa1466cf08081ce9812a90639925063fbd610292.camel@linuxfoundation.org">
-      <blockquote type="cite">
-        <pre wrap="" class="moz-quote-pre">How should I proceed? I have working code which parse the cargo.lock,
-go.sum and package-lock.json files and only use Git and Wget
-fetchers. The code uses the vendor feature of the package managers to
-create a patchable folder of the sources. It simplifies the npm class
-and add additional classes to build packages. The code integrates
-valid URLs inside the SBOM and creates components with name and
-version per dependency. Furthermore, I have rework the gitsm fetcher
-to hopefully fix some open issues. I can convert my cargo, go, npm
-and gitsm parser into metadata helpers but this is useless if the
-project dislike python functions to generate URLs like the pypi class
-or prefer package manager specific code inside the fetcher.
-</pre>
-      </blockquote>
-      <pre wrap="" class="moz-quote-pre">So you are proposing we drop the crate and gomod fetchers in favour of
-implict urls?
-</pre>
-    </blockquote>
-    No. These changes are mutual exclusivity. In my case the crate and
-    gomod fetcher aren't needed.<br>
-    <br>
-    <blockquote type="cite" cite="mid:fa1466cf08081ce9812a90639925063fbd610292.camel@linuxfoundation.org">
-      <pre wrap="" class="moz-quote-pre">I'd suggest sharing a branch of your changes so that others can see and
-understand the implications and hopefully experiment a bit, see if it
-can convince some people that implict urls are the way forward.
-</pre>
-    </blockquote>
-    I will do but need some time because I focus on the rework of the
-    gitsm fetcher.<br>
-    <br>
-    Regards<br>
-    &nbsp; Stefan<br>
-    <br>
-    <p><span style="white-space: pre-wrap">
-</span></p>
-  </body>
-</html>
-
---------------AzbCjl0WSMkiNPGKfAL28idk--
+--=-h5CcUCzloDm5U3pYbMPA--
 
