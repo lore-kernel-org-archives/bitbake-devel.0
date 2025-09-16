@@ -1,135 +1,91 @@
-Return-Path: <alexander.stein@ew.tq-group.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B48BCAC599
-	for <webhook@archiver.kernel.org>; Tue, 16 Sep 2025 09:44:14 +0000 (UTC)
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
- by mx.groups.io with SMTP id smtpd.web11.15454.1758015850883548795
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A4CCAC599
+	for <webhook@archiver.kernel.org>; Tue, 16 Sep 2025 11:13:35 +0000 (UTC)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.web11.17023.1758021209295113509
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 16 Sep 2025 02:44:11 -0700
+ Tue, 16 Sep 2025 04:13:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@tq-group.com header.s=key1 header.b=g9hknW5U;
- dkim=fail reason="dkim: no key for signature: lookup dkim._domainkey.ew.tq-group.com on 100.100.100.100:53: no such host" header.i=@ew.tq-group.com header.s=dkim header.b=VrfmRN+M;
- spf=pass (domain: ew.tq-group.com, ip: 93.104.207.81, mailfrom: alexander.stein@ew.tq-group.com)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=OJd+QSqv;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-45f2acb5f42so16345975e9.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 16 Sep 2025 04:13:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1758015851; x=1789551851;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=b0HmbTRyq8O85EeMVYsq7o805Rsw4UTBsTZdNQk7Hgo=;
-  b=g9hknW5U4VvgRZOkpmn4WsRpItaBnJdIYK9QXN8Y3FTpnGnsMrF3LqC8
-   cE4CQo4TWdMAtCBqJlWgaATSBn8pylB2gec3pXzqX7RqjPdrXBs3s7glY
-   09aCO/yh9XzulPnw6VvQVLuRtMyXawRaRYd4jjDIQezNfsgr1psjA4eNf
-   z2ftnJtP6y9lbb6YU50cXrx+xW0jF+RIjJF9X46mkxtZYYTDmoZrN+ZUa
-   uGG7jGOrNTlqDbgROAvGsnriMrdqtQs8plw0Ct/vrY4A+cJWchfHgeidH
-   yLJV88W9u9I/1CV7esuJJTeR+KU/HkpN2HzWbOa+H9J8NQ9Myy4Nuz8j7
-   w==;
-X-CSE-ConnectionGUID: lnJoNCYbTuiiqGxzTw7Xtw==
-X-CSE-MsgGUID: fTvpVd7sQWqzfOzqZwfSKg==
-X-IronPort-AV: E=Sophos;i="6.18,268,1751234400"; 
-   d="scan'208";a="46162311"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 16 Sep 2025 11:44:08 +0200
-X-CheckPoint: {68C93168-2F-404C3CD4-EC9FB5BB}
-X-MAIL-CPID: 1975884329F3DEC9498B53F4DBDFF815_4
-X-Control-Analysis: str=0001.0A2D0312.68C93169.000D,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D5F7E163D19;
-	Tue, 16 Sep 2025 11:44:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1758015844;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=b0HmbTRyq8O85EeMVYsq7o805Rsw4UTBsTZdNQk7Hgo=;
-	b=VrfmRN+MRAahMRS4mIlJ2Kj/nKjnE73O2leV+6Ol4BeLjuVvRJ225S0+uUp1klNfIbsYXH
-	UgnLQlwkPfbB4FjwwQMihfQ/unPSXvH5wFsvdYk8P5kmNtMIi1pO585G7HojpW87vcDHKO
-	5pj5tWEaL4i3B7cRzmJGQbSipx1gLZ/4iENLXvnlJWeD7mPlNN6nRQLQqS0x/EHwLjT6iG
-	DsBc8eVNDptuWXrWvAV0qgGK0V7dTVJ/vXBVsoJRXGTCinb7Tf3lp5KCHzjpoclogrofLW
-	9gOxbI1Eo0gYaCXA6TT4lQGHcHbV62SQemvFHfkEq+y2WL3rWxQa4iyrn/a3OA==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Ross Burton <ross.burton@arm.com>,
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [scarthgap][PATCH] bitbake: fetch2: don't try to preserve all attributes when unpacking files
-Date: Tue, 16 Sep 2025 11:43:54 +0200
-Message-ID: <20250916094357.417559-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
+        d=linuxfoundation.org; s=google; t=1758021208; x=1758626008; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SDiyzLRVM+yJSwyWUIVj5deVb0ywgPkbAsH04ZiRatw=;
+        b=OJd+QSqvr8yGPxTgo7C5//+S5/sXBaFQPURa6/31343R97USJBlZveUwQZxt2Y8npr
+         UZsSkBHSZX0CguJfeuRN/k2pRj2F4vTFdt1j1TtspQtmOneUykGYRBHE/kBRLOV9Z8zy
+         C6b53O9atnOOjynSWOlzD9hyQ/JbzpTxGy9l8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758021208; x=1758626008;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=SDiyzLRVM+yJSwyWUIVj5deVb0ywgPkbAsH04ZiRatw=;
+        b=M6GsDZJ/6TTbK3Q2P2GlOqVBXbXrzbJhQ/QBQK0Grj3z2ffSnWoLFf2Sz/UCPwDfza
+         RuxVo4s0eeRPd+829mcQvuv6zw2TxmEyyh17wE97ic7c3EITZlLy7J2Xt71jybYFcAdW
+         dfmsvFVO31PF5/24ZWKr2FqG7fGcJO3e5jZOCHQdCXZUURAcLXnYyiXx3BsFaihEr1ZK
+         3LXQIiNcXuez+NC7Slp6P/D55RxNAhvzTe8PSMFhgLh4/6+OGwaCeNp+Chs3LIOu5mSV
+         gOtRUTNo74Q4Fbm7UiDC23Qdm+ASnKGa3Rz5w/rzqOnBU5qUyTrCv9RiCAwxCYTjTGOY
+         aUQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUwu6trmsTDIh8snqwxqNbAULLYseUI3dD8qYiNkugViCdYdXhYJESD16JwFHOqvUThdBsFF1+UCpAidWF1@lists.openembedded.org
+X-Gm-Message-State: AOJu0YyLEoguyZUxwKNC7J263T/+YAvxxF4URO4TAgwL2Scl8zV48ILf
+	vW9ya85+K/Nz+11ISaMUkWMApPaqROkrEEe2EC/vDQqKWwQUL9YN6X9mnmaUcb18NaI=
+X-Gm-Gg: ASbGnctw6CuOIVAUuHurQkEGmfEbcXWjGw/xV2Vk2Legqd0f+tVxdpoffHMIJquTikU
+	VQqh16UyGHWhEd1C4ShZndnanE0g2AR0SC0C+J3AZfmmFYRYFtq3PL+ooD/QK2KtWz4a7Mrq54f
+	d56xMHHJ51LDjId2EfrgEfzxYA67OSFXHOZV4iintFXgK7qbS9UlqPurV2zBMEUrOYQKj46Fu7E
+	mPw7EQKXj5mffegCEnIW57rpFumoKRhJrRI9hrAe0Grgd910RqJV2jaFG7KnA9liiZVv5K3BBp/
+	2sgAPB22fWCJ9kNnCQXatzUu5B45JLiF+50DgIEeItgIKUsTfe88eAZ702Zi95J65oEK/nxtsqq
+	NWAZpb/RuODpOdURyEOQLee9eP24uIM6WkulaWrEtyuBmxm6Ygwdi5ptIdsHJzTi4jNoGdQdN6/
+	TjJywt8X5+DgxZKUqF4l8=
+X-Google-Smtp-Source: AGHT+IF9paa97NUT+6/kwqK4M/4OvT7vVbsX9votmTMV/kvm8pGFoJuJgR1aPIuzIXlV/iQZI3xOyQ==
+X-Received: by 2002:a05:600c:4e4b:b0:459:e002:8b1e with SMTP id 5b1f17b1804b1-45f32d54582mr22073475e9.13.1758021207651;
+        Tue, 16 Sep 2025 04:13:27 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:1187:545d:1fb:9346? ([2001:8b0:aba:5f3c:1187:545d:1fb:9346])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45e015775f1sm219016285e9.8.2025.09.16.04.13.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Sep 2025 04:13:26 -0700 (PDT)
+Message-ID: <27f6f0fa12a0896f708125c144bbf968c938dd19.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH 5/5] parse: Make include_all support
+ absolute paths
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: peter.kjellerstedt@axis.com, bitbake-devel@lists.openembedded.org
+Date: Tue, 16 Sep 2025 12:13:25 +0100
+In-Reply-To: <20250916000648.1182372-5-pkj@axis.com>
+References: <20250916000648.1182372-1-pkj@axis.com>
+	 <20250916000648.1182372-5-pkj@axis.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 16 Sep 2025 09:44:14 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18042
+ <bitbake-devel@lists.openembedded.org>; Tue, 16 Sep 2025 11:13:35 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18043
 
-From: Ross Burton <ross.burton@arm.com>
+On Tue, 2025-09-16 at 02:06 +0200, Peter Kjellerstedt via lists.openembedde=
+d.org wrote:
+> While it does not make much sense to use an absolute path with
+> include_all, if one is used, it should only be included once, rather
+> than once per path in BBPATH.
+>=20
+> Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+> ---
+> =C2=A0bitbake/lib/bb/parse/parse_py/ConfHandler.py | 2 +-
+> =C2=A0bitbake/lib/bb/tests/parse.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 1 +
+> =C2=A02 files changed, 2 insertions(+), 1 deletion(-)
 
-When copying files as part of the unpack we currently use cp -p, which
-is a shortcut for --preserve=mode,ownership,timestamps.
+I think I'd prefer this to error to be honest as it doesn't make sense.
 
-We do want to preserve timestamps, because some fetchers set these
-explicitly.
+Cheers,
 
-We don't care about ownership. If the files are owned by us then they
-ill remain owned by us, and if they're not then the attempt to change
-ownership will be silently ignored.  In a shared DL_DIR where files have
-group ownership this group access isn't relevant in the single-user build
-tree.
-
-We do want to preserve executable bits in the mode, but cp always does
-this.  The difference between --preserve=mode and no --preserve is that
-the mode isn't preserved exactly (no sticky bits, no suid, umask is
-applied) but this also isn't a relevant difference in a build tree.
-
-Also expand the arguments to be clearer about what options are being
-passed.
-
-The impetus for this is that coreutils 9.4 includes a change in gnulib[1]
-and will now try to preserve permission-based xattrs if asked to preserve
-the mode.  This can result in cp failing when copying a file from a
-NFSv4 server with ACLs stored in xattrs to a non-NFS directory where
-those xattrs cannot be written:
-
-cp: preserving permissions for ‘./jquery-3.7.1.js’: Operation not supported
-
-The error comes from the kernel refusing to write a system.nfs4_acl
-xattr to a file on ext4.
-
-This situation doesn't appear on all systems with coreutils 9.4, at the
-time of writing it fails on Ubuntu 24.04 onwards but not Fedora 40. This
-is because /etc/xattr.conf is used to determine which xattrs describe
-permissions, and Fedora 40 has removed the NFSv4 attributes[2].
-
-Also, use long-form options to make the cp command clearer.
-
-[1] https://github.com/coreutils/gnulib/commit/eb6a8a4dfb
-[2] https://src.fedoraproject.org/rpms/attr/blob/rawhide/f/0003-attr-2.4.48-xattr-conf-nfs4-acls.patch
-
-[ YOCTO #15596 ]
-
-(Bitbake rev: 2f35dac0c821ab231459922ed98e1b2cc599ca9a)
-
-Signed-off-by: Ross Burton <ross.burton@arm.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- bitbake/lib/bb/fetch2/__init__.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index 1a6ff25d4d..21e39d0908 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -1606,7 +1606,7 @@ class FetchMethod(object):
-                     if urlpath.find("/") != -1:
-                         destdir = urlpath.rsplit("/", 1)[0] + '/'
-                         bb.utils.mkdirhier("%s/%s" % (unpackdir, destdir))
--                cmd = 'cp -fpPRH "%s" "%s"' % (file, destdir)
-+                cmd = 'cp --force --preserve=timestamps --no-dereference --recursive -H "%s" "%s"' % (file, destdir)
-         else:
-             urldata.unpack_tracer.unpack("archive-extract", unpackdir)
- 
--- 
-2.43.0
-
+Richard
 
