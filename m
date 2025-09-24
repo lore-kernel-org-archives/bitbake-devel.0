@@ -1,198 +1,134 @@
-Return-Path: <chris.laplante@agilent.com>
+Return-Path: <quaresma.jose@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCC5CAC5AC
-	for <webhook@archiver.kernel.org>; Tue, 23 Sep 2025 17:22:52 +0000 (UTC)
-Received: from CY3PR05CU001.outbound.protection.outlook.com (CY3PR05CU001.outbound.protection.outlook.com [40.93.201.13])
- by mx.groups.io with SMTP id smtpd.web10.3400.1758648164723455411
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D4ECAC5A5
+	for <webhook@archiver.kernel.org>; Wed, 24 Sep 2025 10:32:26 +0000 (UTC)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web10.9476.1758709943936309775
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 23 Sep 2025 10:22:44 -0700
+ Wed, 24 Sep 2025 03:32:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@agilent.com header.s=selector1 header.b=VH1Szbc2;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.93.201.13, mailfrom: chris.laplante@agilent.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vA2UlZ+Q/F3tdNk68wVxO/nJWqSyu3h+ETSWZozdnF6GVaLE55fwpQ68a5wQ8exZJFbgKM9+0DwLrRZizsyk29OnPX4VA2Agv4Wub0Ls2/YI0Zm2hLzZAjXaytVCxrc8KMGaQSLtmVYmGZ2nhKBETtUut4C3cGh+R5RCYn4kzdRCJgg61z+RQ607bpZlvIwZZ8eedNg8o1Ot2ihx0XC0pFPcUk1MS6bK8xEumYdaCkIa0FOT80qrxd2P4hQCYJivvkYn3Uh9Fn4X0HK0oM/PKeiVkX/jH//Uuxd2VgPo2DKTfYHAoEUWSalFgZVoziuO4svxBNHYKihcncdmoGJ8xQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tRlBpHn+HOGqBgLiFIwFN1K+d7XvW4sSmDbs8l3fTsA=;
- b=wva0HctY61fEABiod2mWa7psRIY97AnAQ6bCTrTv6PHSmo9oUEa8OwD2koTESmc7S4hRSPSQ52cB18my5URfCYn4GSd3WUS3Y2Ma2Nbg6y+i2UVzFcKy8dt8no2YsxIIdGB95EphMGOpXocPZ0u6B1bu7mRSi5ol/YvyqSv25sIRYhVcKc2fvDPeYmNc7YfVpAZfC7pK0OMFIaM29BTUE+zw36EhTsBzjZGN+jWOiE83Ga4kPVCg1wR+9NLIwrayzfSOszqe1TWFx+i+FfXzYtyrsQ2wz5XtAUxKWSP+hDTahnXqI+CVBM729cdbCHHAjicOYWRsNDyVFFwNBVG5pQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=agilent.com; dmarc=pass action=none header.from=agilent.com;
- dkim=pass header.d=agilent.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tRlBpHn+HOGqBgLiFIwFN1K+d7XvW4sSmDbs8l3fTsA=;
- b=VH1Szbc2d3Dw3CgpCJXUlwmrcYONjGfqDTjRH4e1kowvA4XY3T8ggh0dVLiPdX+htG2FAelNAffWemorWRLqfDgZjFv4mXCgtWnx0A0YONzIYRH9VBC64XKupnQlU/ln7sKmWg3tw3udzzqDaEm/31qbfdXxFCV9WU260HqBFrIvsTj+itM9YPGgzAn/mbIn3F4u8h6mVs6vdOYjF/bsnr3qimGhTZ7o3+bnTo1bIOxl/QktJgpKtZh2zN1XoUfMuGm72ewPWxiNJptzDfL/lKozOX1x60rwiHJ0n8dYwjUtZa7brDYY15ASM6sGHZGbHXLAOnROz+TNrtmbSoA4Kw==
-Received: from SJ0PR12MB5437.namprd12.prod.outlook.com (2603:10b6:a03:302::19)
- by CH2PR12MB4135.namprd12.prod.outlook.com (2603:10b6:610:7c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.9; Tue, 23 Sep
- 2025 17:22:39 +0000
-Received: from SJ0PR12MB5437.namprd12.prod.outlook.com
- ([fe80::4d:3813:a91:40db]) by SJ0PR12MB5437.namprd12.prod.outlook.com
- ([fe80::4d:3813:a91:40db%3]) with mapi id 15.20.9137.018; Tue, 23 Sep 2025
- 17:22:39 +0000
-From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
-To: "steve@sakoman.com" <steve@sakoman.com>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: RE: [bitbake-devel] [bitbake][scarthgap][2.8][PATCH 3/3]
- bb/fetch2/__init__.py: remove a DeprecationWarning in uri_replace()
-Thread-Topic: [bitbake-devel] [bitbake][scarthgap][2.8][PATCH 3/3]
- bb/fetch2/__init__.py: remove a DeprecationWarning in uri_replace()
-Thread-Index: AQHcInPoU1K11qFkM0ug2+dG8IO8HrShGCow
-Date: Tue, 23 Sep 2025 17:22:38 +0000
-Message-ID: 
- <SJ0PR12MB5437EA9316337B0E3C844A3C8B1DA@SJ0PR12MB5437.namprd12.prod.outlook.com>
-References: <cover.1757523235.git.steve@sakoman.com>
- <5bdc63d1647e21a530568c0635d95c17354a18db.1757523235.git.steve@sakoman.com>
-In-Reply-To: 
- <5bdc63d1647e21a530568c0635d95c17354a18db.1757523235.git.steve@sakoman.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
- MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_ActionId=72e03e3d-9585-426e-b23b-20aaaec9d6e4;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_ContentBits=0;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Enabled=true;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Method=Standard;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Name=General;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_SetDate=2025-09-23T17:21:45Z;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_SiteId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=agilent.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SJ0PR12MB5437:EE_|CH2PR12MB4135:EE_
-x-ms-office365-filtering-correlation-id: 9aca5686-1e25-43e8-fb31-08ddfac5cbc1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700021;
-x-microsoft-antispam-message-info: 
- =?us-ascii?Q?EwJtsXaATjgwPj6p5G/lZuqVRS4ynHJhmeyP8mJkLWM56wUCLJmsd9YVNbuJ?=
- =?us-ascii?Q?IA2cc8SOSRtTu3kYWJj58btxw9+6+7JuQcIyu7zyH68/EiFTlIEy1VJr1d3y?=
- =?us-ascii?Q?ct/ypRUTrJfqDMmRRERGsnbHqma4E+bOuzCeKsL3FCkD7ZUKYbKZyPIAau2P?=
- =?us-ascii?Q?imKDt3z3ThhUXaWnm7cORpreNHMCsgd9kQKq5ayef1XM9DSUq3ZksKKu/Dzs?=
- =?us-ascii?Q?ZQQ8+kkAwZCc9C79fAoKFIALdcZUeMVlREe7igv0e4ybvcpaTS5gRqclXHpu?=
- =?us-ascii?Q?witIPlu6z9KuPhKdWtLRxWVj4X4Rga06AFMxvoHe0uZ/JmYLrTbzKu/cC3w2?=
- =?us-ascii?Q?q6PrtJSO2op9rkPOUFTiwqsTVvM8hIhkDIagqaO5KsTLGO6kxlc0vtM3/7GM?=
- =?us-ascii?Q?Urho8MFQ3Bbm3C41a8dVH5w7oKVc7eqLaSkj8gpwiCdvUS8vUlKTllc30P+l?=
- =?us-ascii?Q?LY21F+mI00Cfo4/z7RN+FClHajhNT7jUK11Iwf6dCWJrOiRsPYmcb1TSsXnd?=
- =?us-ascii?Q?pdwtJBkSFwqFX+ffeQCvanRXK+LmEBm5Xq5w1TnQVt27F1gt8eLZh/FJr10i?=
- =?us-ascii?Q?1e8SBqNCeUgfgflgCpqLuK7fYHN9slt9PclSuGa0QBr7ewPbnFcgRe7313H9?=
- =?us-ascii?Q?KWlLpum/j99skmOxHRJl/c4mX5TxkxIliUVh9jmg1NNphuvazr7/wOKpZ4h2?=
- =?us-ascii?Q?LHD7Fupb4anUNYqi0EnJBg92wZRWCVfQLfF+2b4wDqhcqcLo5D21VImHFDlk?=
- =?us-ascii?Q?fsAWfAN3WTGalUVxxfc4N5QikQnQEgdriMPd8jhGHLDwb/KJy5q8etLvyJKt?=
- =?us-ascii?Q?Ey9andpAAWNOchW6cYuddb8MCbbILY6ouZUhrtkThPHsXIHBdryaukDMzB9c?=
- =?us-ascii?Q?be0EIJ+0uy+ARcR6yD5yxCu46g0fKyTxm72uzZ6HhsKT7rLiFGz9b76rprpt?=
- =?us-ascii?Q?AfxbK4WtpXOmxXBU4VhkbI687an7WmECsE7PlquCoJ1gpLXF3AzaCvl58INu?=
- =?us-ascii?Q?wAoFKqKX11H33xUaM3GpGScGy7jvhjlK/KhH4n73rUwwzGMdRWg1GQ+GlsOd?=
- =?us-ascii?Q?C5oIqeBUTW+SSRDSWc60qSt3+ZuYz6BPWelXSjbAFwVMt0GEmAd8iK+6WDfb?=
- =?us-ascii?Q?gEJh+Paapr5LjYrCu/kO5eM21u910WYKu9iKReDDAzx+z66tJqGWgnlngxys?=
- =?us-ascii?Q?Yr/HQhnUuH1IjqUmCfPec5ZufLdlL/LNz0Vu7I6snJtiAUYXFJHCkLY4wQt0?=
- =?us-ascii?Q?6kGEDSB/fcd+lVR5opiCr3b1STjIMof39HPbqHI/4Yqlx6E7DrlxvYMfAr99?=
- =?us-ascii?Q?mtxWplANQ27gTyYqyptt07l7jgaBb7B+XiB4kaztj1orSgVU1GwfJPIgvsbV?=
- =?us-ascii?Q?UomCohXzPq1heoX4vv2F+Uh+idDo0wTVTuDBp9nk6RnDHsJq7w7fPwr5KRx0?=
- =?us-ascii?Q?PZiBu/K03/nj4eAFATeG554FZayoGEpfNxeTJ0St/rxSCUUhz3+wHw+QHLO/?=
- =?us-ascii?Q?jybbBPiT4TE1bVg=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR12MB5437.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?5UyhvUe69unYVDi6XwFL8JzsvS4a1FWd1/GUzZRLqtik/lq94IUr6zFMVwgM?=
- =?us-ascii?Q?DG+RYNTTZrabAx1qmFuo4qx0eaNEx7LqbXnwTDHvsmCMXyGORE86v8LG4qzu?=
- =?us-ascii?Q?dOgjKCZYRaFE8OINSagE2cXV8yOfye0qaqA/sNsnLKRE33s3aB3J7PptK8tu?=
- =?us-ascii?Q?KpBnDfVkzBgIVrjJK8q91qOD+WaNdmh1fqroYVc+oyU3oRaPrOxg6IKNbYGd?=
- =?us-ascii?Q?Ja7PpbUsdylfb4moNj0kT0+FFA3HZSbmz1y1G3qXbgqYCL4SYwDsdhljoxgF?=
- =?us-ascii?Q?Fa/EVjwOs9wMzPTiEKY2IPBs849tMDONkBIEks5mN/Gmklsd9jAARblf0P0J?=
- =?us-ascii?Q?NekbY1IxkXcwQJZNSMkBVjcna0Q2O+YFn5dqod+dKD+ZVqqQbzyNxUXf6e5+?=
- =?us-ascii?Q?qOsnbwEZKOgW1Jt1oaQuBZTVTiCMD1J2GYh3BeY3KDXpA9HE0pwj3gCH6RQh?=
- =?us-ascii?Q?ajjYgqlxheX71X8wRSpcLYxmhQE4OdQCE2ECyK7Xq4xxlUs9Wm9h6QQeSAh4?=
- =?us-ascii?Q?Wj+RZg2zwdo0dixk/LeD7SAzbWu8gP1jQqioKofwPSR3AJR/IqmSGTiJml53?=
- =?us-ascii?Q?CKQhZ7hWRGDXGlfw0KOll9pm3EuIiNVjSjq40HTY6juHGUYQMzjrmZH65J4z?=
- =?us-ascii?Q?C+CGetFHmEWKZHuMB2phVcfZTTkltZm22Bn6/hjxD72HE0dqdRZk6xPMJe3b?=
- =?us-ascii?Q?skAET9j9GuPi4waaS8J+ppUw4RrpQo7npAZa6L07aYDFSoO8aYN/dtPO87r6?=
- =?us-ascii?Q?LE1sCbqPLLXb3IztdDVHZ9/rz55riPUcvXwxrHdUQqqPxdkRB4hHH4irACxk?=
- =?us-ascii?Q?SR+Xaz4CFoPG9cb5CzWNUwb12SzwcukXeckqIke42lY6u1rRNygvtKaEkfrg?=
- =?us-ascii?Q?fbadRTd5c0XCgbfJ7FqsXXPA0NJyvZVAZZooJCdW2PGW9culHtk6m0uizqkU?=
- =?us-ascii?Q?Z2VvH8h1Qgeg5sIFMx1QKxe6c+W7yK+7UFL/7wziZsB3xeHWUALNgmiDCKAc?=
- =?us-ascii?Q?3UGQvZJLgAeZKqpvFkYXhRlThE8CSVaQzInMhpnVIQRx8RV5Dnl+/D2ZB7bM?=
- =?us-ascii?Q?bu8xo1uwYq25AhaOyyF0w36dyk6bfBeMjPOlapHyIaFubKMnbdvID3Z0ijaF?=
- =?us-ascii?Q?doA2NgJuc9oMxrFX4yIBFMMpGP2E3dDSYF0BFs3fDnaE20EFtWWlGl2Lyt1m?=
- =?us-ascii?Q?Zu01ARkR+yf5Z5rBGtss4XOSs0qiD4cdLG2TnZX+7iyQ6P6N1tJjZrNJ/tBC?=
- =?us-ascii?Q?1fy8V3kOEzR3Lk9t1+FOqFXHlvUhUT1EH1I2/COeOZzeEDag6d9eqUQFsLj6?=
- =?us-ascii?Q?Q7mNWymxqJXNwYGglycbcH5VavfL/iP+WjFOWvm9WdGNZyUYISqfT/zGCuCg?=
- =?us-ascii?Q?OHthNjdvYmIIRMRRMpIFFYofTY3XerVaBPwIW9EefJUOxwYMlW5mJOgUgTjD?=
- =?us-ascii?Q?Ocn7bzysaDeROzb2X3j7PGAHWPBSs9iCvHDwaTNDNuVcCjBttl57OTb5Y441?=
- =?us-ascii?Q?O1oMgjI2JsfuChKiqNChhKBqEH1M7OBU+8WGHWP8P6r6Ev17zXOwJ+D1MRYx?=
- =?us-ascii?Q?VTMIchDwnxZzEQrygsPPN+V16UeHgEeUwnenlxyR?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=GV81IaPh;
+ spf=pass (domain: gmail.com, ip: 209.85.128.52, mailfrom: quaresma.jose@gmail.com)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-45ed646b656so57632625e9.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 24 Sep 2025 03:32:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758709942; x=1759314742; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2LPbK88nc6SdkJvqQv2gYthLyoD/EXO3h9vqpi5cEsI=;
+        b=GV81IaPhccH7HwFoTZfX49UnQ/Ue7QrpwE2gcpq+xTZYNebc40ywUM94yIQcsSdccB
+         g37WEOcuuZIOcKT5v4NFRf7f9x3RJ31IjKRhTsLHNgfNRJHe8llpfatdL4l6CnfD/0CF
+         0OSE6Rk933Su7DSGcdNF1JWSuPG2jKTjepxifs6Pcj5adO4ymu5v4a6omWOEEtFEeCAj
+         vpVb+D0c46kgUhsXrtqjn0CjHs0Qqa7hdXxsY//2zW3x6dvXGHRESVSLsDCi9GcsnwHu
+         5sE/rcbNROUoBf0dkJXczbK1GDGAwC7UkNH3/udRaQHWsCHfL8sBtRdxd2DtPxCFGReg
+         XtKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758709942; x=1759314742;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2LPbK88nc6SdkJvqQv2gYthLyoD/EXO3h9vqpi5cEsI=;
+        b=Y8+kMQtfnXbYB+dYizQ6LKVwCDCBuzUAFvFwK6IecxniUzlnIqWjBXAVNi27HPdk5G
+         UHmsYHGETr+PVWIK8gNRRPdidK3m9pFIWxaKP7P1NYPZex4RNNNdafzGgoe/AgGRZNd/
+         JtJQyXz1BxrHjhzCi6nJwLqD1xJV9unQbMqiyyvwquk6SZghdbpeRlB9vqX6fAgVU9Fi
+         bE051pU3g5twgwfwkXw/sFW4o4FFww50UykH+bE6BQOChlPXLU3ECcjyhVskqBN95KOr
+         cRsfTtNiH6BmKyb1kNCj0+qpLObb6avKZS6K/qkW/Z0lq9IcL9cJwtVrKc+RddetWCvs
+         O2aw==
+X-Gm-Message-State: AOJu0Yxi6Gx3iofLViM1A7V1YyGlgHQ6hBxGuedtUAiUbe5/BYR9oZfp
+	Jrq95t3RwF6+uvhlYBlLT7BVHJdJvwujSZlh6vXqMDPvMZwZTmL+VshOLm8nfg==
+X-Gm-Gg: ASbGncusZ41sp/gpml9s7K606B1Y1v325tzwYpASypkjQE1M8tOyRgLyD5H9Z0x8zZE
+	9Mk5JrE7RO4PrLE5NTg4S7HwvGNHLpgp3/98EnJ/WMMVEqDDpkxHUECf8wswnJsEuz8/PZqxtdK
+	sdeVXL4Eo6wFzbbgglpEDOvhocfYKZCVR55UFZmsayH2nV6pF2yBduVVZNKN+P+UDVQHMPPwZaw
+	pbNsRkQJUCrYS/y/9Jk2pHYHRsgVfxyy0I5VWH0juZK+FIp/0J0e0SqpAA0F+sqTwy0Iw7zv6tb
+	Ainfoh0Li1Xf5ZcmYfDAXe1D39Q1UaujXoP42Yr7+ySw53cTct1Xurlf4VBtc7TkUGUdpyGn7bj
+	3Eqplao8udwYVqsEUjLWRJQ==
+X-Google-Smtp-Source: AGHT+IH9pbK8k8QiTc35QwvQTawwYehmw83SgYd56kzW+jBzszBXd3nRg15F20KG82GGBL7QDaqxAw==
+X-Received: by 2002:a05:6000:610:b0:3e7:5f26:f1ea with SMTP id ffacd0b85a97d-405c5bd86c9mr5464898f8f.20.1758709941734;
+        Wed, 24 Sep 2025 03:32:21 -0700 (PDT)
+Received: from fio ([185.228.162.16])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e2ab61eecsm26201605e9.20.2025.09.24.03.32.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Sep 2025 03:32:20 -0700 (PDT)
+From: Jose Quaresma <quaresma.jose@gmail.com>
+X-Google-Original-From: Jose Quaresma <jose.quaresma@foundries.io>
+To: bitbake-devel@lists.openembedded.org
+Cc: Jose Quaresma <jose.quaresma@oss.qualcomm.com>
+Subject: [RFC PATCH] cooker: add support for more than one server in BB_HASHSERVE_UPSTREAM
+Date: Wed, 24 Sep 2025 11:32:01 +0100
+Message-ID: <20250924103201.936605-1-jose.quaresma@foundries.io>
+X-Mailer: git-send-email 2.51.0
 MIME-Version: 1.0
-X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR12MB5437.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9aca5686-1e25-43e8-fb31-08ddfac5cbc1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Sep 2025 17:22:39.0363
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jNKn7n37OAfbyCn3iqNACaaCwSxLweftkuiEXckIrRcjWQ2BaodhowwbANdNpRhf1M5liHQYHc5ydiy7DCwrHNdtKDvXtp5TKwy+r09DRvM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4135
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 23 Sep 2025 17:22:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18082
+ <bitbake-devel@lists.openembedded.org>; Wed, 24 Sep 2025 10:32:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18083
 
-Hi Steve,
+From: Jose Quaresma <jose.quaresma@oss.qualcomm.com>
 
-> From: Bin Lan <bin.lan.cn@windriver.com>
->=20
-> There is the following warning when executing to bitbake linux-yocto:
->   bitbake/lib/bb/fetch2/__init__.py:464: DeprecationWarning: 'count' is p=
-assed
-> as positional argument
->=20
-> This is because the 4th parameter of re.sub(pattern, repl, string, count=
-=3D0,
-> flags=3D0) is a keyword parameter. We use keyword arguments for parameter=
-s
-> that are not positional.
->=20
-> Signed-off-by: Bin Lan <bin.lan.cn@windriver.com>
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
-> Signed-off-by: Steve Sakoman <steve@sakoman.com>
-> ---
->  lib/bb/fetch2/__init__.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py index
-> 1a6ff25d4..7b75d5d83 100644
-> --- a/lib/bb/fetch2/__init__.py
-> +++ b/lib/bb/fetch2/__init__.py
-> @@ -460,7 +460,7 @@ def uri_replace(ud, uri_find, uri_replace,
-> replacements, d, mirrortarball=3DNone):
->                  for k in replacements:
->                      uri_replace_decoded[loc] =3D uri_replace_decoded[loc=
-].replace(k,
-> replacements[k])
->                  #bb.note("%s %s %s" % (regexp, uri_replace_decoded[loc],
-> uri_decoded[loc]))
-> -                result_decoded[loc] =3D re.sub(regexp, uri_replace_decod=
-ed[loc],
-> uri_decoded[loc], 1)
-> +                result_decoded[loc] =3D re.sub(regexp,
-> + uri_replace_decoded[loc], uri_decoded[loc], count=3D1)
->              if loc =3D=3D 2:
->                  # Handle path manipulations
->                  basename =3D None
-> --
-> 2.43.0
+Making the use of python websockets mandatory when connecting to hashserve could
+create several difficulties for users, especially when the python-python is not
+available in the distribution used.
+So it will be better to have a list of servers where for example we can
+have a second fallback in case it is not possible to use the first one.
 
-I think this cherry-pick got swallowed up somewhere as I don't see it on 2.=
-8. Do you need me to resubmit it?
+If it is not possible to use any server from the specified list, this will
+cause a fatal error.
 
-Thanks,
-Chris
+Signed-off-by: Jose Quaresma <jose.quaresma@oss.qualcomm.com>
+---
+ lib/bb/cooker.py | 34 +++++++++++++++++++---------------
+ 1 file changed, 19 insertions(+), 15 deletions(-)
+
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index fb87368f1..976065622 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -312,21 +312,25 @@ class BBCooker:
+             # Create a new hash server bound to a unix domain socket
+             if not self.hashserv:
+                 dbfile = (self.data.getVar("PERSISTENT_DIR") or self.data.getVar("CACHE")) + "/hashserv.db"
+-                upstream = self.data.getVar("BB_HASHSERVE_UPSTREAM") or None
+-                if upstream:
+-                    try:
+-                        with hashserv.create_client(upstream) as client:
+-                            client.ping()
+-                    except ImportError as e:
+-                        bb.fatal(""""Unable to use hash equivalence server at '%s' due to missing or incorrect python module:
+-%s
+-Please install the needed module on the build host, or use an environment containing it (e.g a pip venv or OpenEmbedded's buildtools tarball).
+-You can also remove the BB_HASHSERVE_UPSTREAM setting, but this may result in significantly longer build times as bitbake will be unable to reuse prebuilt sstate artefacts."""
+-                                 % (upstream, repr(e)))
+-                    except ConnectionError as e:
+-                        bb.warn("Unable to connect to hash equivalence server at '%s', please correct or remove BB_HASHSERVE_UPSTREAM:\n%s"
+-                                 % (upstream, repr(e)))
+-                        upstream = None
++                hashserve_upstream_list = self.data.getVar("BB_HASHSERVE_UPSTREAM") or None
++                upstream = None
++                if hashserve_upstream_list:
++                    for hashserve_upstream in hashserve_upstream_list.split():
++                        try:
++                            with hashserv.create_client(hashserve_upstream) as client:
++                                client.ping()
++                                upstream = hashserve_upstream
++                                break
++                        except ImportError as e:
++                            bb.warn("Unable to connect to hash equivalence server at '%s' due to missing or incorrect python module:\n%s"
++                                    % (hashserve_upstream, repr(e)))
++                        except ConnectionError as e:
++                            bb.warn("Unable to connect to hash equivalence server at '%s':\n%s"
++                                    % (hashserve_upstream, repr(e)))
++
++                if hashserve_upstream_list and not upstream:
++                    bb.fatal("""Unable to use hash equivalence server:
++    You can also remove the BB_HASHSERVE_UPSTREAM setting, but this may result in significantly longer build times as bitbake will be unable to reuse prebuilt sstate artefacts.""")
+ 
+                 self.hashservaddr = "unix://%s/hashserve.sock" % self.data.getVar("TOPDIR")
+                 self.hashserv = hashserv.create_server(
+-- 
+2.51.0
 
 
