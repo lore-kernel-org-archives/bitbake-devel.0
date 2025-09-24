@@ -1,90 +1,114 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F852CAC5A5
-	for <webhook@archiver.kernel.org>; Wed, 24 Sep 2025 11:11:17 +0000 (UTC)
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
- by mx.groups.io with SMTP id smtpd.web10.10079.1758712276035000299
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8739CAC5AE
+	for <webhook@archiver.kernel.org>; Wed, 24 Sep 2025 13:48:28 +0000 (UTC)
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+ by mx.groups.io with SMTP id smtpd.web10.13576.1758721706017635541
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 24 Sep 2025 04:11:16 -0700
+ Wed, 24 Sep 2025 06:48:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=SYbrybt/;
- spf=pass (domain: gmail.com, ip: 209.85.222.172, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-856328df6e1so84267485a.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 24 Sep 2025 04:11:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758712275; x=1759317075; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xgyyItGWW/SC6Lyh2UAROmIZNkrLp3W1m3fTh9sscO4=;
-        b=SYbrybt/5UqaTXYUX2uvDKeehOfgHTFQKqByyjfWm4lhz5VDtSUwtYya7rzbUVO1Uw
-         svurM4zkHrSVyIaPA/9NZtCzizvrUz0a5Egg4TZdgArqHsL9YCZKLxE8OpGos8v/Onsa
-         Krb9+I7ODhOQE84vt+jElc3YUB9aP9qUf8p7NLS09yLTigr1a27cIlRkyIia1aXY9/wz
-         +xRxd733VIz1h/FAZJYk+ekqAF4tF/pvpvDu8+Pa6iqXO/+c1sYsE+jYEXugKnA9ZAyW
-         ezGZRCartYyVcFQ5gvykco4DPoV/O6lBAk6PItQKOtMmB6Iau729rhqWtSWp6tUewOPI
-         5BIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758712275; x=1759317075;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xgyyItGWW/SC6Lyh2UAROmIZNkrLp3W1m3fTh9sscO4=;
-        b=m8CFWjFxq61PvqULQgstwRDpcct2TRlmmAfyTEUmRpOgRq58NbH1+gFWoUgs6SjKrX
-         SlWyWcn0OK6CvfE1LuxMUh1rJvMhZSez6MDlNhgNzn42CDtVhFWD8BYgqrSS1Dppf2sa
-         1Yc9fPzvGP7LsCNSFMgVKSN0uXSH0D2IA08mCmM4HZZTbVzE8XYWJ9SFYT3qJ6eRwzm+
-         /ksNsuWWHo4UQcoEUOmFIbDu9ujDVnfMr9RZ4E+qwN2UMRcTZvbVvvc1mxw0VmSaxG3s
-         OO+bOyrX4F7c3p0l/V49KXT00qPBs8yDqQ28Bx4DYWZCc3+VNUbBDnrZB0+yRK9u44gS
-         nw7A==
-X-Gm-Message-State: AOJu0Yy6XdFtm9p9ZJwphlbQMrygJ7sj4ZJftVQ8KmkLR7eovD9nzPu2
-	9gHgW7k5ZL2uZKt2x40VTnitBpXeGj/PENzrEY7dgP5htJ2gj85sNcSPMK8C8jYbeNJWLXT/Mb7
-	zZ31Gr+XbqGWMOW+Gj9tsHD294J3wnwQ=
-X-Gm-Gg: ASbGncsXSalaOmldh74XQEcs8kMPW01bhfFAV86civUbfeND6ur3vRdAlnTtBfzI7Fp
-	ukmZoSGdlqvDyba7i3fR2XCk+KDmmlRlxsFjDzjvbvjU34HJXDgUywBv7wbhJ8LwM2F8lPa7xs1
-	w5jqg4UlKK/803JzBdx6IRUDuWA/YbWJ+70AgN6rEwBqTjRCdoghoR5mhue/m1NUMxZObjcQB9i
-	MNjxghs/WSIEysaELHaeWc262vbQPro3MFCtKaNabdwfD9EhxyAWhIRmI637OlR8x7GIwx6Kl4d
-	OWbVlSyyMhK6+kTogM1gSEp6LbDS39nUv7UCefyfFi2mQszp8Z8=
-X-Google-Smtp-Source: AGHT+IHOTsMuvuJlgOfREhGFWkxaobRtJPsGiaLgvQtfAndmRz0IghnwuUUPAfB3cHqUWNoziQbUj6tgydK5NTr+hHk=
-X-Received: by 2002:a05:6214:5199:b0:794:463c:6d26 with SMTP id
- 6a1803df08f44-7e718ddb7c7mr60823586d6.60.1758712274860; Wed, 24 Sep 2025
- 04:11:14 -0700 (PDT)
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=CzLMy2hV;
+ spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 45ED71A0F49
+	for <bitbake-devel@lists.openembedded.org>; Wed, 24 Sep 2025 13:48:24 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 0DB6160634
+	for <bitbake-devel@lists.openembedded.org>; Wed, 24 Sep 2025 13:48:24 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E6C06102F16EF;
+	Wed, 24 Sep 2025 15:48:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1758721703; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=+LJb93sOIi8ElqHT0iBkCE2TYSH2yqKkUHYzJdtgH7E=;
+	b=CzLMy2hV+wiXCA6tUou052ym1LEmtKDvwBZGc+/aRkYL7pswH+0KaMOvtZtqGktLZBwEDD
+	A1OHXk+qJmXdU65ljyAvR7Hc4+HDvqMe25UMUenHS4MQoA8BdAd7k25MKw4IhrYil1cB2w
+	wX35cTUh5Rfb2X/e17W7jWriXo07AMw+HODfEwSskhBMhaMC3WVu4zH7UG/E0cpljENrmJ
+	w84H4LH1xBZPUVe9rWfCHfT75EVXnwyr5CgXVpJ/sxOOxwKjvOeDJNR8jJIcdPu1kyRv1Q
+	XXQMVs7DQLl/lRdUfuWD+pYd+phAWPreOUI+897Gp5ze2K+7sCKmX4GWrWyoDw==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Date: Wed, 24 Sep 2025 15:48:12 +0200
+Subject: [PATCH] parse/ast: avoid AttributeError when built-in fragment
+ variable isn't defined
 MIME-Version: 1.0
-References: <18683160554EF259.24570@lists.openembedded.org>
- <CANPvuRk2n7t9YHThXATOT+zD9DYrzV36rU4r+Ku50Wy9y9Q=7g@mail.gmail.com>
- <CANNYZj9om4Ki1X9+91uDaf8WoR1z7USnbG++9qUmp-wUELai1Q@mail.gmail.com> <CANPvuRkpq1M_AEs7J5+pvo6F1SR8srEiPV=SZVGM4knqLD5OJQ@mail.gmail.com>
-In-Reply-To: <CANPvuRkpq1M_AEs7J5+pvo6F1SR8srEiPV=SZVGM4knqLD5OJQ@mail.gmail.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 24 Sep 2025 13:11:03 +0200
-X-Gm-Features: AS18NWAdYC3Rw5bqiAdXfyRtCk1NTlHVEZm0ZrdC2jUCxB5ntphco743TYy2rDM
-Message-ID: <CANNYZj85dxnKQKQsSjqtF5dsmLzUCW5uAmK6AZgcn2v=mzhy8A@mail.gmail.com>
-Subject: Re: [bitbake-devel] [RFC PATCH] cooker: add support for more than one
- server in BB_HASHSERVE_UPSTREAM
-To: Jose Quaresma <quaresma.jose@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org, 
-	Jose Quaresma <jose.quaresma@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250924-fix-no-builtin-fragment-v1-1-4d7f734b6d21@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAJv202gC/yXM0Q6CMAyF4VchvbZJXZSAr2K8WKGDEi1mG8SE8
+ O5MvfySc/4NkkSVBLdqgyirJp2t4HyqoBu9DYLaF4Mjd6XWXTDoB21GXvSZ1TBEP7zEMhI3zgd
+ iqmuG8n5HKdNf+f74Oy08SZe/Odj3Ay2DfNZ7AAAA
+X-Change-ID: 20250924-fix-no-builtin-fragment-0b82af0b066b
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1861;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=chEF2tK/SwLwApDpffTpwOzZgAvIZJ+spXmiTna7l7k=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBo0/akHBiBocvkZLef5DpPqEIDmO9DfqAJbpMm2
+ 87tUsnjZ2mJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaNP2pAAKCRDRgEFAKaOo
+ NhpMD/46bVHnmOPjIcFOiOKq5bdRzIMNt4fd6mubVcVBbXFgE6XSE3cmDCYOtw7dwULvzn3Ai/b
+ fr6f60SSjB3gmvw5k4QEqCAYqVHO5/xprl/zeuZy2qqe08GhrR9IUjTPFroszWr+/vOwvkg8ic2
+ guoP+x7CKnBDA8YG+U/nXSIChpa3N7dsIsa5UdasL9GgeF24sgSc/kVl9M3Mf3pttszshZB0TJ+
+ 1NHWZelzbLJ51Eevukjpj3StYOm6E15uEEhZ4vhzETmUM3bFMD6nixJPMINKj/xv2qbmXJJ5Alk
+ q0KZigcEb6ROHg6JF7uBGBcr5X1fyA/NK4E5xg1cMJ33Nwf7Rrk5+oJraktv3yiCf4uxAOAvrMk
+ 9jJzcKNWM5Jj17N1hbwPFFgSeSwFjOLV3ucVrvOJd1PKqxTsnVSSoD5r8izwLftzt1Dog34NDyr
+ Cm38RvWCP2xUsmUqQbuRp08wasQ7PsGb1GJPIdaUwqI4Le12EZ1GzCBnnKYqzOs7gFkW8cTV3Ir
+ jGSlZuu6NjEcz4aJO6CvYUpicDB5T0GIB8Op1snlBwRSc/YoFNYgdcHnsY16C7y8Oz6qxLfdpfN
+ wwWvXX8rwEkcrGM+Yx+bMawGQZRu+VbJodW3r/mP6/JIOwLxXWOD0vOp/lMrp3jpsR/Tz+m8CaU
+ n7BFPHu4wWWjm3Q==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 24 Sep 2025 11:11:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18087
+ <bitbake-devel@lists.openembedded.org>; Wed, 24 Sep 2025 13:48:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18088
 
-On Wed, 24 Sept 2025 at 13:06, Jose Quaresma <quaresma.jose@gmail.com> wrote:
->> > BB_HASHSERVE_UPSTREAM = "wss://hashserv.yoctoproject.org/ws hashserv.yoctoproject.org:8686"
->>
->> I'd like Joshua and Michael to comment on this ^^^
->> Specifically, are there performance implications in using one or the
->> other? Are both officially supported and maintained?
->
->
-> AFAIK the two are still supported because kirkstone only supports the raw sockets.
-> We will still prefer the first one and fallback only on hosts that don't have the python-websockets
-> I think with time they will become available widely and we can also add it as a mandatory dependency of bitbake.
+When adding the following to a configuration file:
 
-The problem is that once you have the fallback, no one will bother to
-install websockets, and they will not become available widely. I'd
-rather adjust bitbake/yocto dependency lists in yocto manuals,
-together with all other bitbake-setup tweaks.
+  addfragments ${FRAGMENTS_PREFIX} CUSTOM_FRAGMENTS FRAGMENTS_METADATA_VARS CUSTOM_FRAGMENTS_BUILTIN
 
-Alex
+Bitbake will fail with the following error if CUSTOM_FRAGMENTS_BUILTIN
+is not defined yet:
+
+  File ".../bitbake/lib/bb/parse/ast.py", line 374, in eval
+    builtin_fragments = {f[0]:f[1] for f in [f.split(':') for f in data.getVar(self.builtin_fragments_variable).split()] }
+                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  AttributeError: 'NoneType' object has no attribute 'split'
+
+To be safe, check if the value returned by getVar is None.
+
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+---
+ lib/bb/parse/ast.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index 49a0788038..317f00d3bd 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -371,7 +371,10 @@ class AddFragmentsNode(AstNode):
+         fragments = data.getVar(self.fragments_variable)
+         layers = data.getVar('BBLAYERS')
+         flagged_variables = data.getVar(self.flagged_variables_list_variable).split()
+-        builtin_fragments = {f[0]:f[1] for f in [f.split(':') for f in data.getVar(self.builtin_fragments_variable).split()] }
++        builtin_fragments = {}
++        builtin_fragments_var = data.getVar(self.builtin_fragments_variable)
++        if builtin_fragments_var is not None:
++            builtin_fragments = {f[0]:f[1] for f in [f.split(':') for f in builtin_fragments_var.split()]}
+ 
+         if not fragments:
+             return
+
+---
+base-commit: 7bd36f6c6d33211bb2a6b6fc6d40bdbd83b8b7c3
+change-id: 20250924-fix-no-builtin-fragment-0b82af0b066b
+
+Best regards,
+--  
+Antonin Godard <antonin.godard@bootlin.com>
+
 
