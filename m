@@ -1,102 +1,87 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <steve@sakoman.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5E8CAC5A7
-	for <webhook@archiver.kernel.org>; Thu, 25 Sep 2025 12:48:00 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.web11.10821.1758804478596678575
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2718CAC5A7
+	for <webhook@archiver.kernel.org>; Thu, 25 Sep 2025 14:36:50 +0000 (UTC)
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+ by mx.groups.io with SMTP id smtpd.web11.13473.1758811010039049893
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 25 Sep 2025 05:47:58 -0700
+ Thu, 25 Sep 2025 07:36:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Qn5NkwLg;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-45df0cde41bso7265895e9.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 25 Sep 2025 05:47:58 -0700 (PDT)
+ dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=FgRNzhm0;
+ spf=softfail (domain: sakoman.com, ip: 209.85.214.173, mailfrom: steve@sakoman.com)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-27ee55fa1c0so4043715ad.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 25 Sep 2025 07:36:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1758804477; x=1759409277; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kLMsOrDlJETxfdAVvIyGRD3kgx5oIwM4uxzzguJpXOI=;
-        b=Qn5NkwLgTiIzc1Wbg93bn87tQanrGP7ITN2G0vaGbwMUmDmpQJdHna1z8OUubNjALg
-         ASLoI1a1ovY1Bz/FUUesBqYya/OQ4aclCxz7LM/FyKnIst+aoWfUjdNJ3pGKjNEOtw23
-         4VHk27LIMr1DeKlDVMacSxzh7fYYLXxtD6mrQ=
+        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1758811009; x=1759415809; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=v5F7J3zyeTWE1FbsJkwmyzpHjBVnBX63QHSP/H+cQAk=;
+        b=FgRNzhm0nAbwgrYTfdkKKu+AKzCtQFHvzfH6MvofcZGp7/kACGW/MLpYxBQzARNzls
+         tUbaHYlE4PIP1RzY4cPQ3AgJa71aVPcgjO+oeFkFgV5rT+SEXTu4vZzFr02dA9UnG0ff
+         hBMgqIjEl3nhukC7Pf8CH1pZy54DgmGplpTQKLB1C4e9Xqv1oSMlZLh7FWYES64YhmnN
+         ohCdGIq9rbYAlsMKYWYQ//xj7B9EYG7Ujp7rm48dl+JbbAOInOkf6SrkPY8nh+Q/Blwr
+         XuFnObB4QAHEXFx/ntHR7+1w45rOCSVYijzsj7RmVN1S76zuz+9ntPZIdGN69iwJtfb8
+         p2PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758804477; x=1759409277;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kLMsOrDlJETxfdAVvIyGRD3kgx5oIwM4uxzzguJpXOI=;
-        b=pz95T8fHDlhl+7FRQXba08OXzUYKuXxb7hmZ35E73cRJy1t0q4Xyb11l6Z1k6/sCqy
-         utUOHOD4oSO5d4LKYdb1h2zcp2yvPKzzY4As7WRJFzIbywCBQrkISLsyf2drAMeSEm4o
-         Oug+kfg9q9IgdrdapzumHXJhLRr4YoEzZcrKiXb3kHX2shjN08hN8VX4Wg0rh0BYBwPy
-         bD8gLX70HV2L6jsru8k5EH7vRLikMbJZl1Gv6bNLyGK9J3Jmd+HM8gfoUTsr22X+vGml
-         ssladQNE8UumxuqQvNHRWakJOLvbrJUyZ2PNrPt/pc2nWJuame4XMhZyseIy21LGppgc
-         Wmaw==
-X-Forwarded-Encrypted: i=1; AJvYcCXqU2mFnfHdD/zHf0HsTGme2xY+hrA+RGcCH5AtNImmbc0UDs+OMbOssJtreB6tdWpI47B+5xAqhNj/tfJH@lists.openembedded.org
-X-Gm-Message-State: AOJu0YyGTukdpcNur0uZV3oh0fHVm7SCdigpYerZEzMltX0lP5EmLh7N
-	vEvy5XFkc0BRJSo0JnW+hgJAEo4yFqHeLkePbfGqvD49wR8ji0HxymgJB9WpZFHCFYk=
-X-Gm-Gg: ASbGnctxZSbRDQKJvwAx1BQu2Z8xUy4FpbUfLCh09HSuUOyX0jCFFhfY/0JeOJbfTSz
-	QaMs5TEyEbF9JX7iypSMB0jLiS96UVNqqvtRlXyhLVcNntFyNrfy5TwdBCKPu4a+14Q8oUtl2Kq
-	ejdv5VpYEjdmjQLQeesKWF0iL4AqSvfeqPYVIk8oXfyaFpcrMCr7iUGvveDNP3wxtesXBIwpVp9
-	PQzq4Wp6Ispht4rDPEXi9M8j3cT785vLphXMteq/XJHjqe0ug883868tmb/pEUD9wvlD07/emRl
-	ebmMYpqVYtSDYrpoZZHKQHu9AvUTbXHRfkK4QcoUZ0uVgTS2CRVjKT+EXHvLz/pdBlPpfUmLY/S
-	1rVJZnZz+r+LuoB1lbg6AoE5aSiW7yansqRPCwEgFLwNhBh74eqDVbhDbD6ppw2GZE8JboeYBlf
-	6M+VAz0FE6rFs=
-X-Google-Smtp-Source: AGHT+IHrAaU8q/CglKykE1nIeNBj1tCZvZFvYwv33Vlc2R4xHthFXaIdnRv5OCa77HUjmWqZwmoV4w==
-X-Received: by 2002:a05:600c:6214:b0:456:13b6:4b18 with SMTP id 5b1f17b1804b1-46e32a0e293mr36361635e9.31.1758804476931;
-        Thu, 25 Sep 2025 05:47:56 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:3dae:a8ef:27f5:f9cf? ([2001:8b0:aba:5f3c:3dae:a8ef:27f5:f9cf])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e2ab31f1dsm75288935e9.13.2025.09.25.05.47.55
+        d=1e100.net; s=20230601; t=1758811009; x=1759415809;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v5F7J3zyeTWE1FbsJkwmyzpHjBVnBX63QHSP/H+cQAk=;
+        b=cVGGpo8RNkdG65kYoZzDuKKVWqVc6ZqJizGAvokUfala+pm+zqemcj2TEckSZFq6nu
+         jTcYLggCSGQkNwV4/BroZiocpF0/c5lYqwVzYCLMADk5ou9l95+HO8tr8T6rIJNNd+7z
+         TQpvCT1cc6SYl3sN51v/sZgjz5xMl0hd4ks9iSdgI/FfbuEUPk+gOe4Oa5r/Yn/fAr5o
+         /AhZVWD+pqlHLXIeC1eB87uweLfwYIKfnErMuCLXMM53h+6zaLtS5J7RysN8gCkSuK+d
+         6CmLyeSgkSEA5w/yDKaOBDiAKM662o8hSZFgcN9H+eZv2GRm28kS1Dz54P2bxqaRbbYu
+         UCJw==
+X-Gm-Message-State: AOJu0YzIBzXH1H45iCiJf0lMtDY66tJpW/NQOEHl9EMglMnYJCOhJsU+
+	SjZy+KSpwqd4/1rk92P9IgYeL/oHL4tygGXAM93R3Q/zjc5BqnbYwrrEYbPJ5QGgGx/w4jSfXPq
+	lsMxt
+X-Gm-Gg: ASbGncvqF+pJFg8c0bZKtv1pif8+lrnCnaDTs3ZOMmgpXGr5JeYyhTRKOqpZebalimV
+	bV+8cqTMnTOcfYk/rZOLydbFzuXtozbsIijREsHmnlGzT6HT58zrtZWLXDLrzHwF6x3rTH8M3/U
+	FFzLOr0KT4Je8WnRP41GsU+G7kj1aHmxwRAPQP86a9mYhjYqkE+sXRciSdcpVewhTF6T3Bz4A1k
+	EuzOCkkjMCPqRaY703ZNSQnSS400sSHWdD6sumiKHQhl0gAJgZ4bzcDOwP2yqcq4I7ZO7QKOpIU
+	Xd4QtglyIzH953+HJn0TSVJyzAuxCzFm3d4GYqgDoQB1uClfyUxvo6jZZBTdi3cBbYLMvXDnjsQ
+	gDPSqNQrW+7OJfg==
+X-Google-Smtp-Source: AGHT+IGbL6yNzSbCITLg3rO/UPcgY5UOXJeirKx6/zeBub+vr1+jWGZ1QeUP6MOC/xivjY0Au1wKeg==
+X-Received: by 2002:a17:903:3845:b0:26e:7ac9:9d3 with SMTP id d9443c01a7336-27ed722bb71mr34041785ad.18.1758811008504;
+        Thu, 25 Sep 2025 07:36:48 -0700 (PDT)
+Received: from hexa.. ([2602:feb4:3b:2100:127b:348d:dc99:9937])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-27ed69a98b9sm26114015ad.111.2025.09.25.07.36.47
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Sep 2025 05:47:56 -0700 (PDT)
-Message-ID: <f2766447a2c7e3f9f036e02aa2c1913205e54191.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 1/4] bitbake-setup: add the initial
- implementation
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: alex.kanavin@gmail.com, bitbake-devel@lists.openembedded.org
-Cc: Alexander Kanavin <alex@linutronix.de>
-Date: Thu, 25 Sep 2025 13:47:55 +0100
-In-Reply-To: <20250922092731.1993813-1-alex.kanavin@gmail.com>
-References: <20250922092731.1993813-1-alex.kanavin@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0-1 
+        Thu, 25 Sep 2025 07:36:48 -0700 (PDT)
+From: Steve Sakoman <steve@sakoman.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake][scarthgap][2.8][PATCH 0/1] Pull request (cover letter only)
+Date: Thu, 25 Sep 2025 07:36:38 -0700
+Message-ID: <cover.1758810898.git.steve@sakoman.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 25 Sep 2025 12:48:00 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18093
+ <bitbake-devel@lists.openembedded.org>; Thu, 25 Sep 2025 14:36:50 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18094
 
-Just noting issues I ran into:
+The following changes since commit 1c9ec1ffde75809de34c10d3ec2b40d84d258cb4:
 
-a)
+  bitbake: Bump version to 2.8.1 (2025-09-17 23:22:33 +0100)
 
-"bitbake-setup --global-settings /tmp init"
+are available in the Git repository at:
 
-gives=C2=A0
+  https://git.openembedded.org/bitbake-contrib stable/2.8-next
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.8-next
 
-KeyError: 'default'=20
+Bin Lan (1):
+  bb/fetch2/__init__.py: remove a DeprecationWarning in uri_replace()
 
-i.e. if --global-settings is something which exists like a directory,
-you get a KeyError
+ lib/bb/fetch2/__init__.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-b)
+-- 
+2.43.0
 
-For <reasons> I tried to set an empty --top-dir-name to flatten paths
-however '' didn't work, nor did an empty parameter to the option.
-
-
-c)
-
-If you have the global and build settings in the same file, you hit
-KeyErrors.
-
-Cheers,
-
-Richard
-
-=20
 
