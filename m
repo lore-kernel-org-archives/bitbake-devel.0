@@ -1,111 +1,158 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <peter.kjellerstedt@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB3ACAC5B8
-	for <webhook@archiver.kernel.org>; Fri, 26 Sep 2025 15:16:23 +0000 (UTC)
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
- by mx.groups.io with SMTP id smtpd.web10.19920.1758899774507585797
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E74CAC5B9
+	for <webhook@archiver.kernel.org>; Sat, 27 Sep 2025 05:53:55 +0000 (UTC)
+Received: from AM0PR83CU005.outbound.protection.outlook.com (AM0PR83CU005.outbound.protection.outlook.com [52.101.69.25])
+ by mx.groups.io with SMTP id smtpd.web11.6607.1758952430301270657
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 26 Sep 2025 08:16:14 -0700
+ Fri, 26 Sep 2025 22:53:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=BmfO0G/M;
- spf=pass (domain: gmail.com, ip: 209.85.219.48, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-78f58f4230cso17669026d6.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 26 Sep 2025 08:16:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758899773; x=1759504573; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2eIJclW+njugfd01Ghh9oKQ0yqs52HIFDlSpeiZpvcw=;
-        b=BmfO0G/MKUWxWJ+KSlw3x9Zc+vO9ajEnr7SZD0FMMyXpebBGZAlR7k9/nrZf5Pc/nE
-         txWpK7vHSHFGQ3evmHjw2SggL2BHfiARCnMpLMlGf82F4wdGulQ8xjYT2G2SHYI67UCa
-         9qhfsjDwh6RjH77Dmc5LdYQmwVV/CbZHI403KmOb9lDVlVu2uDCQU5WBAxHc3i+LB8CJ
-         kP0Ertn7t3WBAvhnrx9OJ5a5WreKFZ/mgmztUtvfvzFdyKqGf2IhAd0mzvKlo+TT1WUb
-         Ux9koTQllkyE92km4aIFE2HNzME8Gz95CsmjbGnxd+I5dFIRTxHrdoDABG10IgJVidvx
-         aZkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758899773; x=1759504573;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2eIJclW+njugfd01Ghh9oKQ0yqs52HIFDlSpeiZpvcw=;
-        b=WdldJY8qdFNJs7a3oCblLH+uwNA1Em5AwywXhHKE8jvkYiBQAVswSqoxeINko6h5FJ
-         lSbtPXYWh90ctNyjOk5sbmcXRcRwEdDhqPJHzS8rrxhkHcs9vMdx+mYih7w3MqlZPJ0l
-         w3+lU7LsS4mReKSHh5R8VUVyCFIJ2Tew1dPHB7c+MdO7UjXOkUXXT7rqviYvFJ0b5Rby
-         3WN78I7wKsE9Ng9Hm7FxgNCSyVrEdjWHXBr2WR0HPaDkagM8rtoerG+nWQ3aWdFI7N2f
-         TETDKvMeI4Sa3EIP1dyHyHAXkLaGnsDcJR8Nqsp4Fsm/QCV9Duky5xIUa/GzVoBYaKIO
-         b3LA==
-X-Gm-Message-State: AOJu0YxC3MjzowybL2ph8fGgYnEAmnydA4Ggu54Obi/KWstgtTa+eU/4
-	sTgdLUGxAlk0eWLWIO+lQcLrYC4RYR58f68LAc6III2ZyWb84uvkf4QW/gNmRpQAFRSVtgduXD3
-	UFWnDNJZixRG4Mgl2n46WDN7qGm/iJK0=
-X-Gm-Gg: ASbGncv8RPYyivXZmfFJyfzJZQe0sX0hPNBbPtw+78QFiID7ZPh2BPuh64UlafCcr/K
-	ysR6JfJfhCHwY5qaLaT2zepbFztdjNBJ4WDYRT1sm/wOoFbTnp/dO/W/Wa91RyxrSHqEmJALnrk
-	1AVXKN0rlwcV3lyWXmf80PhpzyyfPJEnn36wgk31hWtcus6/iSQ3GV6ZjgDwzkZfz9Y+XtJzytv
-	sWQNcqLxj/xh2LBuCnrRGEzDi/d/D7kjuo0lVOG9AHsQirgtwS0tIqKdA10Ow0oPqk0SU8Dj+Uh
-	lK30k1SOdMQh2GlKOiQGV+jzblri4xIVz3xWkFNXMKsQaDj3H8E=
-X-Google-Smtp-Source: AGHT+IFfC/K5KqLiytWhAiHdzT0TDUn8QbNMkhu7UFoqm1cZZeeSOGOboivxcW6y9gqDRrFmJfm6f9Om0+/OlaEixpk=
-X-Received: by 2002:a05:6214:3d9c:b0:804:6a87:c9dd with SMTP id
- 6a1803df08f44-8046a87cacdmr77470386d6.5.1758899772848; Fri, 26 Sep 2025
- 08:16:12 -0700 (PDT)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@axis.com header.s=selector1 header.b=Tytsec4v;
+ spf=pass (domain: axis.com, ip: 52.101.69.25, mailfrom: peter.kjellerstedt@axis.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CfqTOFnzqwrAhGjhvpQ72j7bFSkH8rTljKFEzrjoNS8v0bHLgFCkIyrFGQcGJi1+G5WDpU+/KcoX93UOzh+MYoV6QwI10fLAEw+klkWHzdbFw5bEEyzv4FibAjPwo27nijdS/FhIPyMTQpr69lCze/djr71MDFm5O39mjZ+ui4Ae1xOXsKEM2Q7JVWEOYnfolWPw3pSQUVQghAAn4RvUTyq+SYF/aJd8o/M8SObsQyjL1nG4rgTJfGfOpcLqs4frzzKy/QqZ6AZZYYQVEM3FKRyXdEAtPHk/ruvTGjoRs8IlBRQJvrF0A6rI1BDVhGrv2HBXg2vz2L0WIHz05gKxRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vXirjeqIoBedCh6iEfVkhv9wt2jiNVFQ2/t4a5//TYY=;
+ b=E/G5/no/d8edLn933/etYIFFQXPs77mW0OwOT2EF8UTI0H87W9LgaRWXo9iHp/uIYxtMmuJ9GbrsOWIH2iK42NsNATqmsCRfKSgCRh4AIPFHtiRJnmODw6zC7pvUJZz2gXPAE0+DVqQbUR/Se/SLfHzX+ABebd7Swdu74hFCPmiPUjDbu+Dh/T1ymEq92Euxx6CAEwEy2lELVEO1/RZ6F8cEHtyaXTJE8RNCWh3JLt8LGzuuBBbGKRaI3vKr3m/uZ3/2RCytKz8tpNuVvm/ZLa6tHm3KCoQ/Wq2qUnbK/v9NXbZmo5VSBRNZOwiDn33RsKfw83MnMzqp3ULtKqfUWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=axis.com; dmarc=pass (p=none sp=none pct=100) action=none
+ header.from=axis.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vXirjeqIoBedCh6iEfVkhv9wt2jiNVFQ2/t4a5//TYY=;
+ b=Tytsec4v9OFJw4sfStUZ8dVraEobzJD1GjuIvstFxZjNqsn5YvBpumACnnPNzd5dUDHTMWICqaP70WcrxxzTZP2kx7/dM1w2bDTDMZZV7V6Pu5+Jd+rg48fhLHw4Pe1XMUUx7sF9DLl1aiOt6Q8tOJ6yz9eqptagN6xLOhoRxXo=
+Received: from AS4P195CA0028.EURP195.PROD.OUTLOOK.COM (2603:10a6:20b:5d6::13)
+ by DU0PR02MB9548.eurprd02.prod.outlook.com (2603:10a6:10:421::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.11; Sat, 27 Sep
+ 2025 05:53:44 +0000
+Received: from AMS1EPF00000045.eurprd04.prod.outlook.com
+ (2603:10a6:20b:5d6:cafe::65) by AS4P195CA0028.outlook.office365.com
+ (2603:10a6:20b:5d6::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9160.14 via Frontend Transport; Sat,
+ 27 Sep 2025 05:53:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ AMS1EPF00000045.mail.protection.outlook.com (10.167.16.42) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.9160.9 via Frontend Transport; Sat, 27 Sep 2025 05:53:44 +0000
+Received: from se-mail02w.axis.com (10.20.40.8) by se-mail01w.axis.com
+ (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.58; Sat, 27 Sep
+ 2025 07:53:43 +0200
+Received: from se-intmail02x.se.axis.com (10.4.0.28) by se-mail02w.axis.com
+ (10.20.40.8) with Microsoft SMTP Server id 15.1.2507.58 via Frontend
+ Transport; Sat, 27 Sep 2025 07:53:43 +0200
+Received: from pc56063-2339.se.axis.com (pc56063-2339.se.axis.com [10.92.3.2])
+	by se-intmail02x.se.axis.com (Postfix) with ESMTP id F3634862
+	for <bitbake-devel@lists.openembedded.org>; Sat, 27 Sep 2025 07:53:43 +0200 (CEST)
+Received: by pc56063-2339.se.axis.com (Postfix, from userid 14323)
+	id 056A7120453; Sat, 27 Sep 2025 07:53:42 +0200 (CEST)
+From: Peter Kjellerstedt <pkj@axis.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH] runqueue: Make the "Initialising tasks" progress bar finish properly
+Date: Sat, 27 Sep 2025 07:53:39 +0200
+Message-ID: <20250927055339.2472285-1-pkj@axis.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-References: <20250922092731.1993813-1-alex.kanavin@gmail.com> <5849b9f23a3782c7a4b4eb32a6797454336ffcae.camel@linuxfoundation.org>
-In-Reply-To: <5849b9f23a3782c7a4b4eb32a6797454336ffcae.camel@linuxfoundation.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Fri, 26 Sep 2025 17:16:01 +0200
-X-Gm-Features: AS18NWB1r_8_kQxs8nG8OBeUXUIWPuOZpe77sBmdOS6fTlQYL3d6AkI7k1f-WSg
-Message-ID: <CANNYZj8rP-QDE6LUnARXaLCogOSqxPExzVOKSDptZNPDEzvDgw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 1/4] bitbake-setup: add the initial implementation
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org, 
-	Alexander Kanavin <alex@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS1EPF00000045:EE_|DU0PR02MB9548:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7cf50de8-5c08-4b3d-7acb-08ddfd8a3803
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?p5t6MgrqUm3ciak3ys4+X4qZBVMbL+t7v0KHqV4JaAxL9v43EfRog34E6T2w?=
+ =?us-ascii?Q?RCUUu+nCm2aEhnLZUSVopbJ50ZlkI5JG4ofyXywkkRuqnw+FeuYK9levqOKN?=
+ =?us-ascii?Q?BwPoBUGRp5e0y71Uk5g4qgP8bD0adXnKmOiMdepWVVTnDFCbYqRiZEdT7odX?=
+ =?us-ascii?Q?ErcxDsiPtTQo2uMFfCZxYY/ms5VEMb24u6ZngofuO5SXP4ST7DR5ieUuoxDw?=
+ =?us-ascii?Q?3jsZi79Fd58KI4NiibWslgqfhTXjiDOMFCumaqPiMTTIrRiBRJdqgwDz1mRB?=
+ =?us-ascii?Q?c6eiViLXF78UWCF1p/ELqBLbce8rDLMvi/udedZzpp/gRMFKv8a3+rK76cZA?=
+ =?us-ascii?Q?V/s6lNvGYFwsb0RoFBJRyv1zsG93oePhOxkHpdHS9IRZf0Tbmi1tOs877kSV?=
+ =?us-ascii?Q?BIgNoJN6CkIVM0wlwSbdq+p2JoM65n9DSKCj4rbx+tIYsgrd+gKXAcB5mwav?=
+ =?us-ascii?Q?wzSLDG8E9dDf04tecqRN2jz6tjsc9cxxFTMNWZcW9uqXakQXxVA/j5xrHgvh?=
+ =?us-ascii?Q?tWuN8gc9rS2/GYeE/8piFnBWbGX9LIQtld9IIdzrsrrDEzdDgiysN+CsCBTC?=
+ =?us-ascii?Q?8Nl6AXBMq3LscgzVHiIj3oJU9ev6p+1FIB1LTIcbyYw2POUJt1UKdrcJ5FzK?=
+ =?us-ascii?Q?Pwcohvk4p5UWbxrcMM6Ih5CONh/pd8aBxifkw5Hgblp9ns3MKg4FZd3pAbZO?=
+ =?us-ascii?Q?josLIqipNbwLQpOGUFG8aVZG63dRvJqsZOqHY9qM2aq1THPApB1Cg+aJGgfd?=
+ =?us-ascii?Q?fwVH656b/HhFniHjI1vbnqasvPupfsk5+pclDZEcmtRob5Qcke0yo+KEXyMj?=
+ =?us-ascii?Q?xWI3JFUhjntXNkq7aott2/CL3aIMglwuBR2u/1lmAk7ahO8FMsIDqQatEUu/?=
+ =?us-ascii?Q?TO5akC3dFoDEuKYaU8vnSG3j4/AGvT4zElhJIbKtbWmPtp2FYOuHwi1x5TKI?=
+ =?us-ascii?Q?kru5lcQ0WQzaBy3iP95BfZQY18XVIF3JdVo/D24GgVXpaA7VQRYI0JjSJ4zg?=
+ =?us-ascii?Q?hVcnE34TWtvORWcewvABkhapkTm8zZbfbbo7ezwSXZtKhJ44h70PQ7j80TS7?=
+ =?us-ascii?Q?PtmiLr7MJ6BH4reYfbXB0iSLb/4o2Qko6wyS7xmdhTr2h6ZYz4t2qCFtgURB?=
+ =?us-ascii?Q?pVTq+ytHzYgfKQbLc7Nhx7JSt0b08XrQsYgnBYXcvKLvimizWwwC/VXkaydW?=
+ =?us-ascii?Q?WXv0CHoGEyAq6RuOzOLl/lwOICqDjqKu7ZlKbysBdjRtlfiAlSbc+bVusxW6?=
+ =?us-ascii?Q?iwMvRHLpf1JU5bTu4J90tZxL8unQOes00Q7q1cvx2KBlwiuDWxgSmiPzQUNx?=
+ =?us-ascii?Q?jGJJwutFy4ZzpmpNCzeJs559avDQtIgjqktG/m9rii9m0dCTMx6f4MIUuL/6?=
+ =?us-ascii?Q?E45d8rH1qknRFRbZo9cEtt6XMopJ+G87nVAHWBl8dTNFOeNVrCqqWZH8Dvzt?=
+ =?us-ascii?Q?D4a1tj4RkJ48WnRJyvhWsnp7mT2EDHqHZJIZvyPG6gjLazCWQxyC1j5dpWOb?=
+ =?us-ascii?Q?YeFS0J3RIIT+ukRD3pUfI2H8nuYMnluCFbf/3aGTnglDYfy4KEEeIbfp1OKH?=
+ =?us-ascii?Q?3lI1AXMZf/nRYFEYcKw=3D?=
+X-Forefront-Antispam-Report: 
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Sep 2025 05:53:44.3143
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7cf50de8-5c08-4b3d-7acb-08ddfd8a3803
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	AMS1EPF00000045.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR02MB9548
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 26 Sep 2025 15:16:23 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18096
+ <bitbake-devel@lists.openembedded.org>; Sat, 27 Sep 2025 05:53:55 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18097
 
-On Fri, 26 Sept 2025 at 16:23, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
->
-> I know Alex has told me the "nobranch" approach was by design however I
-> can now demonstrate why this is sub-optimal. The reason being that if
-> the branches aren't used in the fetcher, the build can't work out which
-> branch it is on. In general that isn't a problem but there are two
-> cases where it is:
->
-> a) the autobuilder was querying branch information to report back to
-> the UI. This could be done differnetly.
->
-> b) the summary output at the start of the build. This is a usability
-> issue if not fixed.
->
-> A bitbake-setup driven build prints data like this:
->
-> Build Configuration:
-> BB_VERSION           = "2.15.2"
-> BUILD_SYS            = "x86_64-linux"
-> NATIVELSBSTRING      = "ubuntu-24.04"
-> TARGET_SYS           = "aarch64-poky-linux"
-> MACHINE              = "qemuarm64"
-> DISTRO               = "poky"
-> DISTRO_VERSION       = "5.2.99+snapshot-07747aa7390e98bf2853154e5fd473e4984a1d3d"
-> TUNE_FEATURES        = "aarch64 crc cortexa57"
-> TARGET_FPU           = ""
-> meta                 = "HEAD:07747aa7390e98bf2853154e5fd473e4984a1d3d"
-> meta-yocto-bsp
-> meta-poky            = "HEAD:db24e48498b2d40131b871f6eafeb7a67da343f0"
->
-> and I'd much prefer we didn't have HEAD in there but show the actual branch.
->
-> Could we improve this?
+The "Initialising tasks" progress bar needs to be finished before
+update_scenequeue_data() creates another progress bar.
 
-Yes, I think so. 'nobranch' was simply the quickest and easiest way to
-convince the git fetcher to do a checkout when all you have is a
-revision. I need to think for a bit and do experiments, but I'll come
-up with a way to specify branches in configs and passing them to the
-fetcher.
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+---
+ bitbake/lib/bb/runqueue.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Alex
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 63d4edd892..96d70080d3 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -1610,7 +1610,6 @@ class RunQueue:
+=20
+         if self.state =3D=3D RunQueueState.SCENE_INIT:
+             self.start_worker(self.rqexe)
+-            self.rqdata.init_progress_reporter.finish()
+=20
+             # If we don't have any setscene functions, skip execution
+             if not self.rqdata.runq_setscene_tids:
+@@ -1948,6 +1947,10 @@ class RunQueueExecute:
+         self.sqdata =3D SQData()
+         build_scenequeue_data(self.sqdata, self.rqdata, self)
+=20
++        # Finish the "Initialising tasks" progress bar before
++        # update_scenequeue_data() creates another one.
++        self.rqdata.init_progress_reporter.finish()
++
+         update_scenequeue_data(self.sqdata.sq_revdeps, self.sqdata, self.r=
+qdata, self.rq, self.cooker, self.stampcache, self, summary=3DTrue)
+=20
+         # Compute a list of 'stale' sstate tasks where the current hash do=
+es not match the one
 
