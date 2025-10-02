@@ -1,137 +1,220 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF95CAC5B0
-	for <webhook@archiver.kernel.org>; Thu,  2 Oct 2025 15:01:28 +0000 (UTC)
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
- by mx.groups.io with SMTP id smtpd.web10.11094.1759417285129567433
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF8ACAC5B0
+	for <webhook@archiver.kernel.org>; Thu,  2 Oct 2025 15:52:58 +0000 (UTC)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.web10.12409.1759420374045552054
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 02 Oct 2025 08:01:25 -0700
+ Thu, 02 Oct 2025 08:52:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=gw1R65Hg;
- spf=pass (domain: gmail.com, ip: 209.85.218.44, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b00a9989633so237253966b.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 02 Oct 2025 08:01:24 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=sQ6tfndd;
+ spf=pass (domain: smile.fr, ip: 209.85.128.46, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-46e2e6a708fso7974435e9.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 02 Oct 2025 08:52:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759417283; x=1760022083; darn=lists.openembedded.org;
+        d=smile.fr; s=google; t=1759420372; x=1760025172; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bUh/ajgG6p1c/hjY3Sobt7SvIC60ZPnKZnvX9M4HXVk=;
-        b=gw1R65HgiahkPYdXJUERd9URq7szlsp5aInOJBWyeG8fUYGnFTw8vgYgj9M9lN5ydN
-         R6LGkWEmZCDoWfU1CZ4Pb1e+vQyhnu/JmNYRDuLXuAdWH5t7OrtBAcv9avmJ4qULAr5F
-         t95jtZAwW20G2AZ9wvXAXtWDTravelesWeKQvv/rQljQjUycIlQQdAOjwHhuw7LqQTh1
-         sdJ3u4NxR+WXUckjZ2A6VdgOEZdykKosKm9d+AZtMTtn+qaIkR8wmzjX8VF5EGQH4dJ3
-         2F9ZFkXs+FfrfFAIXBTz4wGAnSmCiwBEcehIJgWeDoOD+ywjBVtueaUz9i5ckh9AjGGA
-         RlQg==
+        bh=kjLGOqyoNviah1feTi2LRx4cWsjKeJvzESZRcWo2AAk=;
+        b=sQ6tfnddTDdvBmcuymb5Smh4jyhX70/MQ08oi5DRzM9v5zAYlYr7oYbb+KveFiveht
+         +EXgwyMiJpq8xQ/1rQzkZ2lUH3iIHgBZfV24fOWGMDu7pKBU6kf7DwNWDzkDnuwyGMs7
+         yh3jk7On/JcHZCdjWuV07jYq6/oorzzW8DtJw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759417283; x=1760022083;
+        d=1e100.net; s=20230601; t=1759420372; x=1760025172;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=bUh/ajgG6p1c/hjY3Sobt7SvIC60ZPnKZnvX9M4HXVk=;
-        b=CFBBQT9PECYl2bjtdNWmzq7PeNd74FnIZLuhqB6AFi5q37DrkdfKJ24MXWJeEIRe7x
-         TFRNtp7VXP8Yd/TCjFEOu1g42gEDeo74dhswDO7nDK8RmMLKIJnfdf6APkrPdMhaZcaZ
-         4JWs0FyIsIG6feVUaDsFvf4wzLvxf/UgIK9FkWzOpaesVXdXanhLm63YAN3tGhBuw+Iq
-         l2lC1xuWiZlHA18BcHHZ4pPvcTduqFyfdGpP9yDFqFATad8yi0BI+pSkVvPRNMbZ+c5d
-         WyGzsQhcQNTi86++5VxYl8XtoQsrmPVPUfhvFiKVc0dGTJQrq9UTOKYs9Zv7ew8bNA51
-         26Ug==
-X-Gm-Message-State: AOJu0YyXBn/3BLofsmoC9cwex65fAFEDM5tcFfN4d7goJodvRGZUc1Dd
-	x2f60tyCzM77cr8Wn48GYzrON40dYqgElT84TPwkLLa47nPQ5UV2X7c0jylhmQ==
-X-Gm-Gg: ASbGncuNEtePON+DMK1rhfP2GKMcO8kkPZaMFoZbp7EktBDAtR+9a3lrLUoVz+fRfSC
-	jm90i2wXrMoiIBezFwTUxJLj6UY1ZROjh/HEuUB3VKhaM4UHxwRShuT627qMfeXnTqJQIKaucJy
-	1mOB7mmIFAITK7Dqh7P8okVw1ECaWooHnz39+3pUJ+AmD7RN45Em4Z4VpmjZDOEFIAwSdrWI1/u
-	yhMLzpqf/lkf9VetH9FXBI4AwIKbANUqPlPRBhw0fAetE4aRqxJ+fRbvCIpJo3nYudfcr0/z/y7
-	JqYWqqYzKb89MQUuDQFlbfNyVwdGKemYwCGHubXJKIR6507Ha+GSNiQXrT/jJTgy85TluYKowCq
-	fE+BDGaXmRNEyuqifI2wyzDkxi6POsK/1of5tIx8jsv71d0NJjNg3aRc2JJ+2Y9mPrLVG+HwI/v
-	B38WnsnkOF0VPOIQ1FIF8+4UaUYfMY+hOhzkqAlI4kC5/KYRKn/yNIMdWqWV2ipAEULbNCGwzj/
-	CLAPAPfAQ==
-X-Google-Smtp-Source: AGHT+IFJmhyyuKWayPsglMKiuAKaAdoYcuB8F4O7lYHHIIyt+zwCDJmq7z2OVcYI/UZVbaqlGAJeaQ==
-X-Received: by 2002:a17:907:94ce:b0:b07:dd5e:16be with SMTP id a640c23a62f3a-b4859594206mr503141966b.4.1759417282687;
-        Thu, 02 Oct 2025 08:01:22 -0700 (PDT)
-Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b486a177c9csm219869966b.89.2025.10.02.08.01.22
+        bh=kjLGOqyoNviah1feTi2LRx4cWsjKeJvzESZRcWo2AAk=;
+        b=guf2MFzeUR2py/F0elx46Gc1cvLuVPMo4zNroNLZnhlsMxsaIJqlhwKIpvgp8mZgJu
+         +aVRdcla0eOIQmHMFvwXsNSl+MJqvWAZqlcpVdujgAm2SaFEcJhe4LoEtCgLicYzSzrj
+         V7YpKWem9LHjmK3/S9p87VTHj5/qloOegVCjy93EywyK0et0HbwVDIiHbfFn3XhBHVM2
+         nz4vy3z+QTiTk18ZgcTHu0dfEidkWXa8PrfdYTEtTtdHHIbWMegMhQCDKSrWqnGF1LpY
+         09IXGPADhwoDVy/jRVHf9Mb8egxe9YAo6yL8VTdXua8ylHlJ4yvyfD3zuYeQayuoO672
+         zOQg==
+X-Gm-Message-State: AOJu0YwWls4TshxrdhAGg2YX+5LeAmOrLBHjKh2VTybJtHY4ogjpqR2/
+	zzKKqaHy+OrA9GrYKU0ehqWeln3IdQ6fFO1nUYGOPp1wqMfUZ1dlbNSDhFtdedverrjJ0TH5z5R
+	5H4sYj9s=
+X-Gm-Gg: ASbGncvsCc+nRN8soMPRzj0NyFb6D1wUqdhp+LWrwIVbseOQ/AMhrR0QICTMaKRQCiu
+	ggD1p56GYXcRL+6UtsIEJODlnsmVoTL4eVGX+3ToXHmWDF1WTxfr/q8pDMR5ut9MBql4gnlqjqt
+	N+HMl7p3ErfY+K8owssPE0I1TihVcwaVvhkdwSWNpsRuujfnU8juJiKtsEos7BbbyxdAY/w9Ia+
+	/ZIq/TuQTL2TpDjWHmd/VsO5lxCCOBfudAVDw4os8t4/vDACNouGdcNgtyE1pf3EuMIuEYg4oD2
+	8zTIFYvI5oMHwi/NHOXdGmTLTWGA8MlkHOCRVl3CB1+2NG/XcPO5EtxD9ud/rCicRyacmKyLCfL
+	8Ew1qw5xU/0DXTyBf10zgqnBJvcCM7q7eCL1UNCpdAqt7MstmKTmvLWRrYJxv6KTDdsmBd/7ZO1
+	fjgIRjxf3qV1VaJpCfREJtGKdVdICQIZl98rLsYGOwYY9K/wVlvoWb0g==
+X-Google-Smtp-Source: AGHT+IGGZo8HPc2VSsd5TH6iv4zg0GLvTadZ+d/VkWldaa/R4SaeAV5KgtbrZdDB76sn0WdFSVjAXQ==
+X-Received: by 2002:a05:600c:8b66:b0:46e:39e1:fc3c with SMTP id 5b1f17b1804b1-46e6fcae45bmr11096935e9.5.1759420372224;
+        Thu, 02 Oct 2025 08:52:52 -0700 (PDT)
+Received: from P-ASN-ECS-830T8C3.home (2a01cb001331aa0017b58d8bf04048c3.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:17b5:8d8b:f040:48c3])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4255d8b0068sm4121684f8f.26.2025.10.02.08.52.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Oct 2025 08:01:22 -0700 (PDT)
-From: Alexander Kanavin <alex.kanavin@gmail.com>
+        Thu, 02 Oct 2025 08:52:51 -0700 (PDT)
+From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Cc: Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH] bitbake-setup: add support for skipping a fragment selection
-Date: Thu,  2 Oct 2025 17:01:16 +0200
-Message-Id: <20251002150116.1342276-1-alex.kanavin@gmail.com>
+Cc: Yoann Congal <yoann.congal@smile.fr>
+Subject: [RFC PATCH] bitbake-setup: optionally support JSON5 (e.g. comments) format
+Date: Thu,  2 Oct 2025 17:52:10 +0200
+Message-Id: <20251002155210.782342-1-yoann.congal@smile.fr>
 X-Mailer: git-send-email 2.39.5
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 02 Oct 2025 15:01:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18122
+ <bitbake-devel@lists.openembedded.org>; Thu, 02 Oct 2025 15:52:58 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18123
 
-From: Alexander Kanavin <alex@linutronix.de>
+From: Yoann Congal <yoann.congal@smile.fr>
 
-In autobuilder testing a use case arised where
-- the available choices in configuration file for choosing a machine are incomplete
-- putting every possible machine choice into that configuration is undesirable/not possible
-- autobuilder code can write a machine selection into the bitbake config
-after the fact.
+One major limitation of JSON files is that comments are not supported.
+JSON5 (https://json5.org/) is an extension of the current JSON file
+format that support comments (among other evolutions).
 
-So this --skip-selection option is intended for advanced users that know what they're doing
-and is generally not recommended as it requires manually tweaking the bitbake config to
-make it usable.
+This patch adds the support of the JSON5 file format when reading
+configuration files.
 
-Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+Sadly, no JSON5 support exists in Python stdlib, so we have to install a
+module. I chose https://pypi.org/project/json5/ (but
+https://pypi.org/project/pyjson5/ may be an alternative).
+
+I took care of only patching reading of the config file, the internal
+JSON files of bitbake-setup are still in classic JSON, which mean that
+operations that don't need to read the original configuration still work
+without a json5 module.
+
+I put an example of a JSON5 config in
+default-registry/configurations/poky-master_json5.conf.json
+This is poky-master.conf.json translated to JSON5 plus some comments.
+
+To try this:
+  python3 -m venv .venv; . .venv/bin/activate # if needed
+  pip install json5
+  ./bin/bitbake-setup init default-registry/configurations/poky-master_json5.conf.json poky_json5
+
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
 ---
- bin/bitbake-setup | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ bin/bitbake-setup                             |  8 ++
+ .../poky-master_json5.conf.json               | 93 +++++++++++++++++++
+ 2 files changed, 101 insertions(+)
+ create mode 100644 default-registry/configurations/poky-master_json5.conf.json
 
 diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index bb466d85b..e7b955213 100755
+index bb466d85..d1c54269 100755
 --- a/bin/bitbake-setup
 +++ b/bin/bitbake-setup
-@@ -339,9 +339,12 @@ def choose_config(configs, non_interactive):
-     config_n = int_input([i[0] for i in config_list])
-     return config_list[config_n][1]
+@@ -19,6 +19,14 @@ import datetime
+ import glob
+ import subprocess
  
--def choose_fragments(possibilities, parameters, non_interactive):
-+def choose_fragments(possibilities, parameters, non_interactive, skip_selection):
-     choices = {}
-     for k,v in possibilities.items():
-+        if skip_selection and k in skip_selection:
-+            print("Skipping a selection of {}, as requested on command line. The resulting bitbake configuration may require further manual adjustments.".format(k))
-+            continue
-         choice = [o for o in v["options"] if o in parameters]
-         if len(choice) > 1:
-             raise Exception("Options specified on command line do not allow a single selection from possibilities {}, please remove one or more from {}".format(v["options"], parameters))
-@@ -395,9 +398,10 @@ def obtain_config(settings, args, source_overrides, d):
-         upstream_config = {'type':'registry','registry':settings["default"]["registry"],'name':config_id,'data':json.load(open(get_registry_config(registry_path,config_id)))}
++try:
++    # Try to import the non-standard json5 module to load JSON files
++    from json5 import load as json5_load
++    json.load = json5_load
++    print("Using json5 to load JSON")
++except ImportError:
++    pass
++
+ default_registry = os.path.normpath(os.path.dirname(__file__) + "/../default-registry")
  
-     upstream_config['bitbake-config'] = choose_bitbake_config(upstream_config['data']['bitbake-setup']['configurations'], config_parameters, args.non_interactive)
--    upstream_config['bitbake-config']['oe-fragment-choices'] = choose_fragments(upstream_config['bitbake-config'].get('oe-fragments-one-of',{}), config_parameters[1:], args.non_interactive)
-+    upstream_config['bitbake-config']['oe-fragment-choices'] = choose_fragments(upstream_config['bitbake-config'].get('oe-fragments-one-of',{}), config_parameters[1:], args.non_interactive, args.skip_selection)
-     upstream_config['non-interactive-cmdline-options'] = [config_id, upstream_config['bitbake-config']['name']] + sorted(upstream_config['bitbake-config']['oe-fragment-choices'].values())
-     upstream_config['source-overrides'] = source_overrides
-+    upstream_config['skip-selection'] = args.skip_selection
-     return upstream_config
- 
- def init_config(settings, args, d):
-@@ -492,6 +496,7 @@ def build_status(settings, args, d, update=False):
- 
-     args.config = current_upstream_config['non-interactive-cmdline-options']
-     args.non_interactive = True
-+    args.skip_selection = current_upstream_config['skip-selection']
-     source_overrides = current_upstream_config["source-overrides"]
-     new_upstream_config = obtain_config(settings, args, source_overrides, d)
- 
-@@ -778,6 +783,7 @@ def main():
-     parser_init.add_argument('--non-interactive', action='store_true', help='Do not ask to interactively choose from available options; if bitbake-setup cannot make a decision it will stop with a failure.')
-     parser_init.add_argument('--source-overrides', action='store', help='Override sources information (repositories/revisions) with values from a local json file.')
-     parser_init.add_argument('--build-dir-name', action='store', help='A custom build directory name under the top directory.')
-+    parser_init.add_argument('--skip-selection', action='append', help='Do not select and set an option/fragment from available choices; the resulting bitbake configuration may be incomplete.')
-     parser_init.set_defaults(func=init_config)
- 
-     parser_status = subparsers.add_parser('status', help='Check if the build needs to be synchronized with configuration')
--- 
-2.39.5
-
+ bindir = os.path.abspath(os.path.dirname(__file__))
+diff --git a/default-registry/configurations/poky-master_json5.conf.json b/default-registry/configurations/poky-master_json5.conf.json
+new file mode 100644
+index 00000000..cf447e9a
+--- /dev/null
++++ b/default-registry/configurations/poky-master_json5.conf.json
+@@ -0,0 +1,93 @@
++{
++    // This file format supports comments
++    description: "Poky - The Yocto Project testing distribution configurations and hardware test platforms",
++// ^           ^ As long as the object keys are compatible with a JS variable name, quotes are optional:
++    //
++    sources: {
++        bitbake: {
++            "git-remote": { // note "git-remote" is not a valid JS variable name because of the dash
++                remotes: {
++                    origin: {
++                        uri: "git://git.openembedded.org/bitbake;protocol=https",
++                    },
++                },
++                branch: "master",
++                rev: "master", // This file format accepts a comma after the last element of lists/objects
++            },
++            path: "bitbake",
++        },
++        "openembedded-core": {
++            "git-remote": {
++                remotes: {
++                    origin: {
++                        uri: "git://git.openembedded.org/openembedded-core;protocol=https",
++                    },
++                },
++                branch: "master",
++                rev: "master",
++            },
++            path: "openembedded-core",
++        },
++        "meta-yocto": {
++            "git-remote": {
++                remotes: {
++                    origin: {
++                        uri: "git://git.yoctoproject.org/meta-yocto;protocol=https",
++                    },
++                },
++                branch: "master",
++                rev: "master",
++            },
++            path: "meta-yocto",
++        },
++        "yocto-docs": {
++            "git-remote": {
++                remotes: {
++                    origin: {
++                        uri: "git://git.yoctoproject.org/yocto-docs;protocol=https",
++                    },
++                },
++                branch: "master",
++                rev: "master",
++            },
++            path: "yocto-docs",
++        },
++    },
++    "bitbake-setup": {
++        configurations: [
++            {
++                name: "poky_json5",
++                description: "Poky - The Yocto Project testing distribution (from a JSON5 config)",
++                "bb-layers": [
++                    "openembedded-core/meta",
++                    "meta-yocto/meta-yocto-bsp",
++                    "meta-yocto/meta-poky",
++                ],
++                "oe-fragments": [
++                    "core/yocto/sstate-mirror-cdn",
++                ],
++                "oe-fragments-one-of": {
++                    machine: {
++                        description: "Target machines",
++                        options: [
++                            "machine/qemux86-64",
++                            "machine/qemuarm64",
++                            "machine/qemuriscv64",
++                            "machine/genericarm64",
++                            "machine/genericx86-64",
++                        ],
++                    },
++                    distro: {
++                        description: "Distribution configuration variants",
++                        options: [
++                            "distro/poky",
++                            "distro/poky-altcfg",
++                            "distro/poky-tiny",
++                        ],
++                    },
++                },
++            },
++        ],
++    },
++    version: "1.0",
++}
 
