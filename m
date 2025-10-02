@@ -2,64 +2,64 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E74A7CCD183
-	for <webhook@archiver.kernel.org>; Thu,  2 Oct 2025 10:09:35 +0000 (UTC)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web10.4860.1759399775010093423
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5528CCD182
+	for <webhook@archiver.kernel.org>; Thu,  2 Oct 2025 10:09:45 +0000 (UTC)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.web11.5231.1759399777849993283
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 02 Oct 2025 03:09:35 -0700
+ Thu, 02 Oct 2025 03:09:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=BYBYd52f;
- spf=pass (domain: gmail.com, ip: 209.85.221.44, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3ecde0be34eso1101247f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 02 Oct 2025 03:09:34 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=IMfsBFdc;
+ spf=pass (domain: gmail.com, ip: 209.85.221.53, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3ee130237a8so577727f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 02 Oct 2025 03:09:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759399773; x=1760004573; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1759399776; x=1760004576; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KkdaVN+no/cqOoBJpd6yvO/VRwXYD6/y37hX6rz6YK0=;
-        b=BYBYd52fSLSQHCHc+6SoWbZylSD2/DZtgk6eEH/jxpTxADdUp8jPJcdjK8AegYMKE+
-         5B5PUpJND1lu1xXk13VehgaEamadzveW0z5JpR86rNW3Vi0mdQ8t9r6VGJ04M8aDNMvq
-         6/aD27d4KQF71E6MrYZVzaSNjeiYT4pVaVEQZ7y0KM0vGy6JVRNUtETjPzLUNYtsE188
-         ra0PC5DW9Vl4Fg/8ytsf6y4kSAy7zzj15rlVxD/txSBuR1cmXEVqjx9cS7JS9v4Z7Jg6
-         QtwC045pjCA17yCq3jzqDRPzKaZXcj+C2HfdfHvFLTID7PO7jqObIv9cpdkFz8jaRxJ0
-         V2xQ==
+        bh=i8qqT3sN+iuVfNxkatQt7RoqzzONzAC1cNfVfZc6Y7I=;
+        b=IMfsBFdcZgjlQiBwMzYgq7ruwYHhZRCy1TnMRU/ikbyrKPVGoNraq4mey9CAv9x29g
+         GXGsGmCvTUzDgxBFY0UV5NgVlb75yDUv17fvC18ko/PTCDXhCB4LTO0O2Eve/0HG2Zgg
+         fSkx3MceC1V4EBe5KCsfqK+drW4iSLWozPPLpaYnWl9igVnzem96KOIqRH6u760/BccI
+         lx6/yLuXpa1iTmIfLBmF8JKGCsl8H0fY4VYyqDo1iJNhkPByokY3pJ4Re/fZuIjoJ0BQ
+         XS+CcoCw6WIve7TMbXG8dHn0MCDEr4X5nmhUgG0wE6aDBbzRN0jTDPvlId//M9y7zJ2f
+         Fdkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759399773; x=1760004573;
+        d=1e100.net; s=20230601; t=1759399776; x=1760004576;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KkdaVN+no/cqOoBJpd6yvO/VRwXYD6/y37hX6rz6YK0=;
-        b=PCh5riW/XreRoywYtupQjPE9KDrdebI+8g9wvYT5v7hPwnYvdVKsddnvi3HcX17nbA
-         tno7bszkKEMw36kqbjQPeR+8+klOsCSu7xySqfqqwCl8kUgXOC7E95vNQ0VF3fTrOzfD
-         yJ+WLkN1e/YzuMMwogBaT6b0b1iUFuocMVE8XhQZt4yaaqDo55xaSDxqaACp9PHEF1Ik
-         5ligMEpsUQB7rxWLZzlYGtnqgpPaTsNbGzzxsDZhxovCLm94YZUUolMdv2B/pLO8lMrA
-         5naX2DuDq+3TXyTHHfK0dW6eOGaghqjsltCQeDtZ4R7aPJ/P4BeyDeepEJvpy215DLz9
-         gUjQ==
-X-Gm-Message-State: AOJu0YwFU0t+o+N+X0o2JelYgshe+7DgEPy+y8Z/Z5r5hWTAo2+SeCuE
-	PBhIXWpZOWYgucEtMfFuJsA3tjq9S2Oh9FLcblI/n6Wz0NX9wNp/ljSTXAFluw==
-X-Gm-Gg: ASbGncu26q24CYMdVCeKhijmu6wwgpWjG3n49IPHPMdSpyfmt0rTICJy864jf4gmTxY
-	Im/KdgfgwsVVfdtrwLCDqJXjapbJxWW7T3Q0HFZFQFpCNas84lQtTjRQY9bR1CFxiSA83njabC/
-	sfUg2bIUF6TykdrHiyoIdCzSSL6Y4DXbeaPH9oPeA7XXtjz9yXg22cMXtCb85lcNKC8w+iyyD+w
-	bZ1oMDpJR82lyrNukVcG3QOI/nNvRev2iOMcPk+UB4R6eFqlE9V6BnudJ46/XMW4tOn4aF8R8hz
-	kH3LJmNDgjcThwlbsBs2x3hGW5Mwfw9uxA2dl/iFcH3xaboFp1ppVYVz4D74PqWs8a1zRMASPpN
-	k3GvSMVQ3QJHAEstP5fZlULG7yMcsJGAaJcvX2PdEv0iNtleqy97YCO3xyKnS10EkFgD+T7vq9Z
-	tj8/JLhcZabt9J8ScEy7xQMjN5rkliOVzBe0QiF+hBfgkDZZHPImpGNrVVDTlczM3Myx7jrU9T2
-	mtrhE03oA==
-X-Google-Smtp-Source: AGHT+IFLgurK1BFnPKjwSMx12MXmni3akUv1T6NnFE1Pp+1n/8uqCMJgUJPi+2VTb7T+o8p3WT0zww==
-X-Received: by 2002:a5d:5d10:0:b0:3ee:1494:27f5 with SMTP id ffacd0b85a97d-4255d2ad184mr1985564f8f.13.1759399773172;
-        Thu, 02 Oct 2025 03:09:33 -0700 (PDT)
+        bh=i8qqT3sN+iuVfNxkatQt7RoqzzONzAC1cNfVfZc6Y7I=;
+        b=k7Sehd6gPthTdTQJStxP9M9lVvHcnS92Y+24RwoHF10WG4IPV2qqBJ9hsdOJ7A+/I+
+         3uwUSXxKLhUfKakXVuRQg0hx6WNgM+XGqRnRyfKPsShYeEfYKvNnktqUzWCPr3/kmyfz
+         9I8QKyxs57aEIx8f2CS773K28mifdA5PkoLRlAwG5EuooNt25TUruZiAePs7joYD0Znt
+         Doz2Wl5dK5DjNbCNtCZQBa2a8FhpTm5AqBXzKwmL2Qh6kNKCosk5i41KhGRPkOsWoaVG
+         6gzdl6Dw980gSRqofE9GyiKz0Ry4+9Js19zQKt+/GS9moExE5XzluQg5ZodfHcEQDRv2
+         kYPg==
+X-Gm-Message-State: AOJu0YwnKJCVlK73B5eOJs/y896PKeXNmlgpXKl4z+lvH09hpAB4I/XF
+	bfLxKcXy0wHKyK4LtQpIJdQgSUIuBuhMloPYxi6mNNbPAK0pPG+s0oaFb1gFKA==
+X-Gm-Gg: ASbGncueoHl8SLLI4pArfkAuYE9W9wEWjG1Uy94DmXNHUlFFCNhglu+04HVaetBlTrE
+	lcqWOgn2Ju4o4I967nKGlbEGWT1WQCNH3Pv6x19XLO37ec26ytOSRiYHjGnhs00cEbNHUmp6Www
+	uT0ZudgnhqJ1t9z5AF0BaNfZwIoLgc5FXuW2CoPzQXSSy2pDbEEKE6QB5v5Dij5C3jP+5GVx1KE
+	VDYlLYjXSjWZ9Z0T0XwJz6c4WicG27zIYHa6AwCJsRFYQrvewgQ1q9zpYMSUr90Bj5E2+S7+LEA
+	ESjtNuLJ/lD2My53Y1t5cI3WOqkyLsM8zaoBJuy2XKDjeoUo4qHXtarVB57MD7+N6YcbTPP8WFO
+	nqYa43aXBsaMcklcykm/ur70f6ilBLV7v96Dxbm5SLMdUFd4+GSdCF1htOka9Pj8Jlr/8oRk/1e
+	2FChIQTAp3jH1PpWGlMbB0rhG40FQc5xN5uCzAw3rvxnAIFzAIoOvuESVrzp3m2y3XO8KqpttM7
+	tD2UI9ohQ==
+X-Google-Smtp-Source: AGHT+IE8USIC/ZgOmQAWfQ0KGSSPxz047WC7T+BSn+l9hdBaFKIB48kMCYwVcckCQLc34kfYvkhkMg==
+X-Received: by 2002:a05:6000:2012:b0:3ea:e0fd:290a with SMTP id ffacd0b85a97d-425577ecb00mr4621119f8f.12.1759399776092;
+        Thu, 02 Oct 2025 03:09:36 -0700 (PDT)
 Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4255d8a6bbesm2953894f8f.12.2025.10.02.03.09.32
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4255d8a6bbesm2953894f8f.12.2025.10.02.03.09.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Oct 2025 03:09:32 -0700 (PDT)
+        Thu, 02 Oct 2025 03:09:35 -0700 (PDT)
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH 3/7] lib/bb/tests/setup.py: define test parameters in a single dictionary
-Date: Thu,  2 Oct 2025 12:09:25 +0200
-Message-Id: <20251002100929.1054540-3-alex.kanavin@gmail.com>
+Subject: [PATCH 7/7] bitbake: registry: make a separate configuration for poky with sstate mirror
+Date: Thu,  2 Oct 2025 12:09:29 +0200
+Message-Id: <20251002100929.1054540-7-alex.kanavin@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20251002100929.1054540-1-alex.kanavin@gmail.com>
 References: <20251002100929.1054540-1-alex.kanavin@gmail.com>
@@ -68,39 +68,58 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 02 Oct 2025 10:09:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18117
+ <bitbake-devel@lists.openembedded.org>; Thu, 02 Oct 2025 10:09:45 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18121
 
 From: Alexander Kanavin <alex@linutronix.de>
 
-This makes maintaining and extending them easier.
+Using sstate mirror places much higher requirements on both network robustness
+and network bandwidth than just fetching source code. When the network doesn't meet
+those, the user experience can be very frustrating as errors can be cryptic and
+intermittent, or bitbake would just seemingly do nothing for a long time.
+
+Let's make sstate an opt-in, and provide a caution for using it. When it does
+work, it works wonderfully and does accelerate builds significantly.
 
 Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- lib/bb/tests/setup.py | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ .../configurations/poky-master.conf.json           | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
-index 329a0c525..c77e750db 100644
---- a/lib/bb/tests/setup.py
-+++ b/lib/bb/tests/setup.py
-@@ -227,9 +227,13 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
-         # (the latter two should do nothing and say that config hasn't changed)
-         test_file_content = 'initial\n'
-         self.add_file_to_testrepo('test-file', test_file_content)
--        for cf in ('test-config-1', 'test-config-2'):
--            for c in ('gadget','gizmo','gadget-notemplate','gizmo-notemplate'):
--                out = self.runbbsetup("init --non-interactive {} {}".format(os.path.join(self.registrypath,'config-2/test-config-2.conf.json') if cf == 'test-config-2' else cf, c))
-+
-+        # test-config-1 is tested as a registry config, test-config-2 as a local file
-+        test_configurations = {'test-config-1': {'cmdline': 'test-config-1', 'buildconfigs':('gadget','gizmo','gadget-notemplate','gizmo-notemplate')},
-+                               'test-config-2': {'cmdline': os.path.join(self.registrypath,'config-2/test-config-2.conf.json'), 'buildconfigs': ('gadget','gizmo','gadget-notemplate','gizmo-notemplate') } }
-+        for cf, v in test_configurations.items():
-+            for c in v['buildconfigs']:
-+                out = self.runbbsetup("init --non-interactive {} {}".format(v['cmdline'], c))
-                 buildpath = os.path.join(self.tempdir, 'bitbake-builds', '{}-{}'.format(cf, c))
-                 with open(os.path.join(buildpath, 'config', "config-upstream.json")) as f:
-                     config_upstream = json.load(f)
+diff --git a/default-registry/configurations/poky-master.conf.json b/default-registry/configurations/poky-master.conf.json
+index 3f1299179..60531ba02 100644
+--- a/default-registry/configurations/poky-master.conf.json
++++ b/default-registry/configurations/poky-master.conf.json
+@@ -53,10 +53,7 @@
+     "bitbake-setup": {
+         "configurations": [
+         {
+-            "name": "poky",
+-            "description": "Poky - The Yocto Project testing distribution",
+             "bb-layers": ["openembedded-core/meta","meta-yocto/meta-yocto-bsp","meta-yocto/meta-poky"],
+-            "oe-fragments": ["core/yocto/sstate-mirror-cdn"],
+             "oe-fragments-one-of": {
+                 "machine": {
+                     "description": "Target machines",
+@@ -66,7 +63,18 @@
+                     "description": "Distribution configuration variants",
+                     "options" : ["distro/poky", "distro/poky-altcfg", "distro/poky-tiny"]
+                 }
++            },
++            "configurations": [
++            {
++                "name": "poky",
++                "description": "Poky - The Yocto Project testing distribution"
++            },
++            {
++                "name": "poky-with-sstate",
++                "description": "Poky - The Yocto Project testing distribution with internet sstate acceleration. Use with caution as it requires a completely robust local network with sufficient bandwidth.",
++                "oe-fragments": ["core/yocto/sstate-mirror-cdn"]
+             }
++            ]
+         }
+         ]
+     },
 -- 
 2.39.5
 
