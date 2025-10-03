@@ -1,155 +1,129 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831DACAC5B8
-	for <webhook@archiver.kernel.org>; Thu,  2 Oct 2025 21:50:55 +0000 (UTC)
-Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com [74.125.224.48])
- by mx.groups.io with SMTP id smtpd.web10.377.1759441853402570189
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73054CCA471
+	for <webhook@archiver.kernel.org>; Fri,  3 Oct 2025 09:35:49 +0000 (UTC)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web10.3644.1759484145743487972
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 02 Oct 2025 14:50:53 -0700
+ Fri, 03 Oct 2025 02:35:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=bULPhFTZ;
- spf=pass (domain: gmail.com, ip: 74.125.224.48, mailfrom: jpewhacker@gmail.com)
-Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-633b87e7b9fso1534051d50.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 02 Oct 2025 14:50:53 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Angh+cz2;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.49, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-46e6a689bd0so14863935e9.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 03 Oct 2025 02:35:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759441852; x=1760046652; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=linuxfoundation.org; s=google; t=1759484144; x=1760088944; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bU2NTKhkmmb5K8MFXNlXBmlzBh1+1WP4qTgUf+8t8Is=;
-        b=bULPhFTZEPZv4ILLxzl1NKLGH5zBYvDkNEeS4MqSCxlN/j3Y+WqkigS8aaGF7ZQFIw
-         +gXxQyyhpoRXNhfHkSjYqVAaL5CeWbAsplD7S5IL8kU2j4tLycGOLUdw9JS7Rii2GrBA
-         Zty2uFf4cRlpmclNs1bOIS8dC5OPxM80CxP/LwbZotRtRhbihbLGBDhuEz+nodh8HIei
-         ezLiV6Zme14GdXzaztMM6YYIxnaGmAinxSnVHFMrJWfK+cz0jgxS3m9AJcKWqSvTrIIQ
-         Y6MbhIfRHjNWFPlszWsU4cciAcYcPrqmrOtAm//ylzm2mznr6JlQMh11Ixj1q8fghT/K
-         XJbg==
+        bh=kWUAOHQ5fK5Ko5a3AWesjbGOU23NP/tH+F+94R303yc=;
+        b=Angh+cz27gcJ8X2gGBoQuetLwhGVF/ZwP5XlMw2uGvAoEnt6n9MnFg7UE6qh/c1WXa
+         wFRyJfDnGUaJCimr3VQgg56rBJNwQeMym85qumZ5/EMuG5hoBWApyuc2PYXQWgMcpuSF
+         Qlh5VZvEURtslMItt3OE88Ckw2xnKsJ7hVbPM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759441852; x=1760046652;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bU2NTKhkmmb5K8MFXNlXBmlzBh1+1WP4qTgUf+8t8Is=;
-        b=rTrzKPz8iuBSHLldW2DjMGJBJEIADoLfGs+k4Z0H+hO23M8yB86pL+zePycJh4x+eq
-         OP59o9F8IGbCkPNdcyrO2VoSZ6UL3gq81+siTC8vHnZS64S+ja7XVlmPT8D+3zjJdP9o
-         d8teHmTtSX96p0NjuO1yaL1rRAlK4/ArsnZbTekN1PVncaP+iFYpzHUNBIAUNVOG/cbB
-         P8eDtYp18dufDB7i6aXT7XbkzyBvtdaQkFLQd4MqitPyQ7OUTRuzVTkSmjkyGszyqbSa
-         7RGqEn3PEAYyGXB/1bqnrVi8CM0Abs4M8j1tIghQicBFKbWMKSl1dELtlpfPkLfxEPW1
-         CBVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUr1Raawyicl/JVXpw+15Zi4gfT8Z+Kl5HyD6hGu8NhW1neUqvTfYI58BSfThE9+F/tMa+H2pSmUPry4csl@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yw6vlSQIgIoM+5gE1pfmLdxaaotg1K7gnVXDR9+vuMJvnnSVbNs
-	Qi662ytyOgGLi5HwBYQcGRAtYrgQ1J64ZMghcADgtdBuilCsZT6atJmz2klWScR8Fj4Oh/2ViFc
-	V1yzXm+Jt9TcNMkxzRSUZKEVkT72YiM0=
-X-Gm-Gg: ASbGncuhMMYaqU0s9CMEm8BBH6GrvIYRDrGCJ4YqN2yxoeg13Tjy6aj5l1nG9RpXZQR
-	xl1aFxYdR4cYlzokCjIeqdoxikvow5U9WUt6q+g15CXugerjixDNNWXkk7XlVxrt4nykpZF+HCT
-	NPcvq1pLQK7ms52Odmd82D2tYHfJVlLF9j/97mN/qdVLbleecRW9/aQFepfzIBJ7gYzb1FvZhWh
-	qdbkEYCZ80kxz9Bk/Sjw/DXT2HEqRt5gD2FdbTFF6276Q==
-X-Google-Smtp-Source: AGHT+IF9ObpvXLfa1hOpU9yHpkhF2zsViTw/02ZCEQHYrEZKwW3rsDi4PEHSe2fXrvkdxOVZ2zbvEsNe8wbTVNvuncg=
-X-Received: by 2002:a53:ea44:0:b0:631:559c:7426 with SMTP id
- 956f58d0204a3-63b9a08346dmr701140d50.13.1759441852466; Thu, 02 Oct 2025
- 14:50:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20251002155210.782342-1-yoann.congal@smile.fr>
- <CANNYZj8RicOLzYbtQ6anggqiMkQMDJ=REBztppNa3CP6dLOkcw@mail.gmail.com> <CAMSfU+52JC1=3q=G=eEjoh4rGtAKJO590tOYw8sLEgpqUOMRTw@mail.gmail.com>
-In-Reply-To: <CAMSfU+52JC1=3q=G=eEjoh4rGtAKJO590tOYw8sLEgpqUOMRTw@mail.gmail.com>
-From: Joshua Watt <jpewhacker@gmail.com>
-Date: Thu, 2 Oct 2025 15:50:40 -0600
-X-Gm-Features: AS18NWChWU19ViVnHc5e7HkPJZegk_H67poc9AvCWthxMG6TdGYyWsadpoxLQuA
-Message-ID: <CAJdd5GZ1gLhJYx5GQ7tY8UTv4L9y5Gj_Fjco6EjSJ-Dw4ZWAYg@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1759484144; x=1760088944;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=kWUAOHQ5fK5Ko5a3AWesjbGOU23NP/tH+F+94R303yc=;
+        b=AwoBfh+Ari/7A154ch0OuF4/zOCpuxHhzDhQ6AnubMusV1SLkKdL6RDEmLmQgh3nMK
+         Q4ujJNGsews++rXxvb+uwFyusKMMGK39/ab/F8H13wdbtLgBYdfKVlTMIDVUYKqqSpju
+         sqGlZxdKlpVa4D6bbQ2DowjBPVkz1mB7IiA7iHkBGBggS/q25y3NwdLCDB5PmePPm9to
+         CvGJy5Bo1kQQxxoqXLVN66rTMNoCCTjgkjcYoNFyy08gwytsBD2pBi7WYI3wrPr7X1jJ
+         H7zYEQAUxRxk+dLaV0kwgpobviUm7X87Qgf2T+x9dB8T5PQ74ne8ssucu35J4LbECsPv
+         Qmxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUvxNmL2StjiMvkSECyvGSCImQW9fjCzW61X9OWzrQMAtDzqbw26PQ+HZTxRdrmxzkO+5+EZTjE/YXl2LK7@lists.openembedded.org
+X-Gm-Message-State: AOJu0YysE6Y0IhtzjGNezml/TziHh4Eh2FMoET7ja9bm+vyFn1NnzfLQ
+	rXKSGyzr6z5jAisxeDbYoiDUVPMDnrEV9+RFybE4mHpVRwjid6fPpXfTHP4CjTS6PbY=
+X-Gm-Gg: ASbGncupkkJXiPLgi3TN6pX0/Odm+qSlITxTkafpzhEUHwOVI8Ok9TGlO1ELvVuZPBf
+	lmNwyyApoCuwbAOVaM4UQI9FCq+MofToUDbETeqLawX/BxNEPU7orOjf3Xqzdu+/faAbnePnCuy
+	MvPDizTWi8QmQKRPI9/zJoiQZufHiACIyVq0Jm6AsdnXpgHBDIr+1H4f7WfNtaiDRkI3fVMFQvq
+	musIqxfh72wZfWKwyCfQcm5RlBGawqaxCRzqtONSiVkI+2ttSkFQjDmeyXxZT7+WtfsBrNyc1S4
+	EDshA8ChHMMEcFBKzR0IOBSv+WKW85XXh2MU0hI84M9vrCaRJFlDh7BOY3GwpNlcSibZwo8lMdO
+	rCe4kWshJW49ckn/riyzAszwfsnq7Dps24mJ3TKyXfWXGO1TXicp2of5bEXOezJ+n6OcCz7iq9U
+	9g1CHOBEjkhyLPaCB/bfsiQjOBreHxsx2M
+X-Google-Smtp-Source: AGHT+IER3iO360Pox+PUDIWxt7g2XVfww8i0l9qRA+0y4KpL2BsSQOtDa9Rhdzwrn5JqMrn3Z+vKjA==
+X-Received: by 2002:a05:600c:4fc8:b0:45b:7d77:b592 with SMTP id 5b1f17b1804b1-46e7110adfcmr16224445e9.12.1759484143949;
+        Fri, 03 Oct 2025 02:35:43 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:67c:cc8a:4a49:c12a? ([2001:8b0:aba:5f3c:67c:cc8a:4a49:c12a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e7234e5fdsm22788845e9.6.2025.10.03.02.35.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Oct 2025 02:35:43 -0700 (PDT)
+Message-ID: <8bf3234625affeee077859ea356928d64b7116b0.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel] [RFC PATCH] bitbake-setup: optionally support
  JSON5 (e.g. comments) format
-To: yoann.congal@smile.fr
-Cc: Alexander Kanavin <alex.kanavin@gmail.com>, bitbake-devel@lists.openembedded.org
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: yoann.congal@smile.fr, bitbake-devel@lists.openembedded.org
+Date: Fri, 03 Oct 2025 10:35:42 +0100
+In-Reply-To: <20251002155210.782342-1-yoann.congal@smile.fr>
+References: <20251002155210.782342-1-yoann.congal@smile.fr>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0-1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 02 Oct 2025 21:50:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18127
+ <bitbake-devel@lists.openembedded.org>; Fri, 03 Oct 2025 09:35:49 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18128
 
-On Thu, Oct 2, 2025 at 3:06=E2=80=AFPM Yoann Congal via lists.openembedded.=
-org
-<yoann.congal=3Dsmile.fr@lists.openembedded.org> wrote:
->
->
->
-> Le jeu. 2 oct. 2025 =C3=A0 18:22, Alexander Kanavin <alex.kanavin@gmail.c=
-om> a =C3=A9crit :
->>
->> On Thu, 2 Oct 2025 at 17:52, Yoann Congal via lists.openembedded.org
->> <yoann.congal=3Dsmile.fr@lists.openembedded.org> wrote:
->>
->> > +                        ],
->> > +                    },
->> > +                },
->> > +            },
->> > +        ],
->> > +    },
->>
->> I don't know Yoann, these still need to be perfectly balanced and
->> they're still visual clutter (admittedly not as bad as xml was), which
->> is what yaml frees one from.
->
->
-> Yes, I agree with you on JSON visual clutter.
->
-> I pushed JSON5 to not stray too far from the python-stdlib-supported defa=
-ult JSON.
->
-> But, thinking about it, we could use the "install an extra module to read=
- better but incompatible config format" idea to switch to YAML. Should I se=
-nd another RFC patch to see what that looks like?
+On Thu, 2025-10-02 at 17:52 +0200, Yoann Congal via lists.openembedded.org =
+wrote:
+> From: Yoann Congal <yoann.congal@smile.fr>
+>=20
+> One major limitation of JSON files is that comments are not
+> supported.
+> JSON5 (https://json5.org/) is an extension of the current JSON file
+> format that support comments (among other evolutions).
+>=20
+> This patch adds the support of the JSON5 file format when reading
+> configuration files.
+>=20
+> Sadly, no JSON5 support exists in Python stdlib, so we have to
+> install a
+> module. I chose https://pypi.org/project/json5/=C2=A0(but
+> https://pypi.org/project/pyjson5/=C2=A0may be an alternative).
+>=20
+> I took care of only patching reading of the config file, the internal
+> JSON files of bitbake-setup are still in classic JSON, which mean
+> that
+> operations that don't need to read the original configuration still
+> work
+> without a json5 module.
+>=20
+> I put an example of a JSON5 config in
+> default-registry/configurations/poky-master_json5.conf.json
+> This is poky-master.conf.json translated to JSON5 plus some comments.
+>=20
+> To try this:
+> =C2=A0 python3 -m venv .venv; . .venv/bin/activate # if needed
+> =C2=A0 pip install json5
+> =C2=A0 ./bin/bitbake-setup init default-registry/configurations/poky-
+> master_json5.conf.json poky_json5
 
-If we are going with external dependencies, YAML makes more sense
-IMHO. YAML is a strict superset of JSON, so if you use a YAML parser
-it can parse either YAML or JSON documents, so all the existing
-documents would also parse just fine.
+We could do something horrible like preprocess the json file and remove
+any lines starting with "//". That works for reading but not for
+writing.
 
-That said, if the point is to make things interchangeable, it might be
-annoying to have some documents in YAML and some in JSON, so I'm not
-convinced this is a good idea on the face of it.
+I'm keen to try and keep the external dependencies that bitbake has to
+a minimum. Why? People don't realise the issues they create for
+documentation, container environments, things like build-appliance and
+general ease of use. Yes, you can usually pip install things but it is
+an extra hurdle for users. The websockets requirement for remote
+hashequiv is an example of how an obvious/"trivial" dependency can work
+out to be a pain and a usability issue.
 
->
-> Another idea I heard was to support a plugin mechanism in bb-setup to let=
- everyone implement their own format but that sounds like a maintenance nig=
-htmare.
->
->>
->> What's the particular need for comments? You said someone else wanted
->> them, what did they say?
->
->
-> They said nothing in particular but here is how I would use them (same ne=
-ed as comment in code) :
-> * provide documentation (in the case the "description" field is not enoug=
-h),
-> * giving the intent of the author,
-> * // TODO: ...,
-> * "temporarily" commented code blocks,
-> * a licence for the file,
-> * a small tutorial on how to use the config (should be in the README next=
- to it though)
->
->>
->>
->> Alex
->
->
->
-> --
-> Yoann Congal
-> Smile ECS
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#18126): https://lists.openembedded.org/g/bitbake-deve=
-l/message/18126
-> Mute This Topic: https://lists.openembedded.org/mt/115555001/3616693
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [JPEWha=
-cker@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
+Given that, I'd really prefer to stick to what the python standard
+library supports, which effectively means json at this point.
+
+FWIW I personally really dislike yaml files too, for no particularly
+good reason, I just don't get on with the format.
+
+Cheers,
+
+Richard
+=20
+
 
