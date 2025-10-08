@@ -1,311 +1,163 @@
-Return-Path: <adam.blank.g@gmail.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2180CCA470
-	for <webhook@archiver.kernel.org>; Wed,  8 Oct 2025 10:40:44 +0000 (UTC)
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
- by mx.groups.io with SMTP id smtpd.web11.12542.1759920035752566420
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AB4CCA470
+	for <webhook@archiver.kernel.org>; Wed,  8 Oct 2025 16:57:19 +0000 (UTC)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web11.741.1759942633206843410
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 08 Oct 2025 03:40:35 -0700
+ Wed, 08 Oct 2025 09:57:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=BGsWvmRK;
- spf=pass (domain: gmail.com, ip: 209.85.160.54, mailfrom: adam.blank.g@gmail.com)
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-36c9859b036so558831fac.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 08 Oct 2025 03:40:35 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=fhIXnzhW;
+ spf=pass (domain: gmail.com, ip: 209.85.221.48, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3ecdf2b1751so111093f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 08 Oct 2025 09:57:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759920035; x=1760524835; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ImqJ2PIAffLU4GG6s05Fuvoz0YXR8PASNj6habwlGTQ=;
-        b=BGsWvmRKHX/GgXhZ+hZdVx1Vvg2K+J4HmQKEDXpVzpnyXFnpJplwvzMrHW1Jm3EGLU
-         WV+fabhS/FXAoxRFZ4QUZxmZ4VjpzvaiZZ6+75DkHFkiCwzThRMEve3uol064Nv8zMWA
-         mQuWuf7qNdkwZpL8yUdzmkfg6SifYSnue/WlgY9W7saf5VMobpgEjQp2smDv/JoPUODL
-         5zGb3QgmsX8NpPiVvZyjg8sv2uIAJ6tv8AzDv6mp+0D4r207w5W7f6DykvTow/6xO0ot
-         ifHUn9bA8RquKURyhmP0ovCJbhXHJX5NEzfcs7yT47onfiUA60EY3QytfPyGuWQyJAjC
-         FPtQ==
+        d=gmail.com; s=20230601; t=1759942631; x=1760547431; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qZDg81WwS8Xsw5QplX9hErCH6HsyfyBJ+UWOH/LzIPg=;
+        b=fhIXnzhWngRPsMAB4Os2CJ4q2SzfHWc6RhzGYM2D+wxH+eAmnADh1QboRV7KJgBQs0
+         yTPM8jE4DcisSgGq4/YOCgx3aRvTTOMKo3JHYKRf2Mlhz8IosQDsIWv4kcbftYEbBrFd
+         jPsw0NifCXqvITk1bo1HR/S7AmVpU2dshqGWFhQRQ+zG9SFZmgbl4JKP06yzm/xJgswX
+         BPpX/hkk2CBChx+Mn7RaHUQuqbL93zXUxhl3VePKqWyqyxGIzXrVR6ppsyQ7jcfXdqVU
+         Qvu2Yj6MHQmjeWRdOYcbn+Bl8/37cO1EHNNi508NjJsVu4Cgc3cQavbzeKCoJOtNt6NS
+         2DQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759920035; x=1760524835;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1759942631; x=1760547431;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ImqJ2PIAffLU4GG6s05Fuvoz0YXR8PASNj6habwlGTQ=;
-        b=mMoJkTmL+1lopap9NAsh5AO8sLkzk/Ytl8WKG4RiUvt8P0sYqSd/RC2PHNQmw9A71S
-         ShMkFOnwmnz0GPOK26Z+PoRSDNSaP+WYKTBtxsjuyv0WVgl54pgqSwiKJEPxeDikofKq
-         oDl3Rq3byHbgCNha2HeGmC8H9CO/wKlypNWWtQzjkB7hDjjbsjqDfQj7/elQunF5y0zb
-         QnAlkGgy8OGmmms6LG+W+Tknv3fCEpQUn5b/iNcEgI+FUaPmxWM58gK72uiho92OUQpm
-         VIQX1tZWn7HtJfEN5uCmvmT8UA2MM8oruU3jZqPDn7PpsDG3t14OlPMPtgwWiavYl7bG
-         4oXg==
-X-Gm-Message-State: AOJu0YxhhnBzhzU9tGQUM9PBj++Mg61ABLTLJT8W7ir55c+egKihMiO3
-	eFk2qZhksvTECTyjWbExRsDMCNDPrnGen9FFKL2hLzMBrQAV2DDdKnQT1i4wCyRB8TPwV98KKzN
-	Nk0ryUfzWu1m4GlzOdFhdmngnt445mwNs3Q==
-X-Gm-Gg: ASbGncsg4ottxcPHRGeGt1oBbIVyTYMtMMNNhcBeqZ1Qb7nap+l1wJWY3SficLGnVea
-	lHsxEKgEWZGdbbtjMStsIMr0r4LskCf91/AfkhKBLE7ShSA4vN38XVrlyFi7RpOKaSRnIm2xjJY
-	VWG9DwbZUheLeWTRaa+VSS235BHZH6JTO6IGF5V0OYmn0PQvXFAZ0QQuLsV8wgUUlsWSSPou+0Y
-	LNQy44ViMnCYgrlq3G63H93agpOC7rXGgmnS0Fx6Y3r
-X-Google-Smtp-Source: AGHT+IEqsOdqazvQAUpkv0YYuJYUlLgEyX0ALObXDsjV+Z0npfX3BK59hW+yJjnyhLzdbFa+RxrAwcoJHKFnu8hJMAc=
-X-Received: by 2002:a05:6870:d29e:b0:345:ee86:3565 with SMTP id
- 586e51a60fabf-3c11483e0e5mr1383832fac.4.1759920034912; Wed, 08 Oct 2025
- 03:40:34 -0700 (PDT)
+        bh=qZDg81WwS8Xsw5QplX9hErCH6HsyfyBJ+UWOH/LzIPg=;
+        b=dJIjpfL63URcFbVcNUETeDAz9+rD6OoLdGYG9nU1IQ0oxQ9Gs3zAcQT6fy+dl/sb/P
+         UGr+sqLHYaaqpd+XvA0RFBl5nGPrPkqP1mYwWjb/nEROd8Y4l5bhLKBxla77F/zdqk6t
+         TsI6VgXZiQNRX4Zo3dZ4OMGvSknfFSKhxMvL6UesJu/9/BKh1S0TvAdTOyceO9nzFCZV
+         +448H1VoZa43CuHbSstkNvRY54jruCJJFbGNxadjhYlJLtWXTb3+v3FUt4RgNB9Ye3fQ
+         1Ap86CRxl44WwNbIRlz+rJN4CXt35TuE4GnAgUrLBRaUc2zPOQEhkUm5f5yjn9rkMjlZ
+         vwaQ==
+X-Gm-Message-State: AOJu0YxpJD8qjHzOey0jSABomwvUvOxdkLlVmGwrlarLnum2Cwp8Uqw8
+	SSfdb+/pKGOCLqNl0wPo3WYd1pWlExnkWDzKiZPsS3sb1UQTQrK7KflV9ckUrQ==
+X-Gm-Gg: ASbGncvKTJU+ubYAMJgdudCItzT9x0asbbgh46W/+GEX22yrXqrGq0qWRHDlA3tpAT2
+	xteidaLF+h6mTe6UvVUg8yRhz0l1QcRx3NwEM/jQQIABDEUXUH80gZaaJ20jjlN2n8eSrwmV9HE
+	Ozp3ea2ptsJuJZ0i+4LuHPTslEhwj/Z5i+BXz9PKORCWmM6Lo3SBUnToO9TooK81wzCTlczpqsC
+	9Tdfg2s0SRyQboT3GUwQQBdxb4QSe0QSJcg9ZfpCaBc6cPZ9crXRjf2CHD4hpAFQZ0KQobJHHhy
+	FtToO6wH9EhlNyXu/9fjO2yexcLGv5zgJxbPPAG6Lpz0SPwaOtOEVYHyJJDpez3qHK8HlAocrFd
+	iVS0ErUFtchMjW6/wyIAatNKcMWBcIyK6pjF3+putEb3WaUpVVz+72IpP/cleY+P6Sb3xOzVoZ/
+	LFTsmHc6GclOzpFBb0o3+woXwmzYiXkAWpNP9SxeoFoMPWerlXILPueH8DnGdAFt5gjAepV5lRe
+	nwoZ9cL+Q==
+X-Google-Smtp-Source: AGHT+IF3+HT7QudTIjAoGkGXBsuXi1X6R/ADjQ5cQ4PGrp0GztelUmnHXH+hq2pCiv/LgeYs+BJ6aQ==
+X-Received: by 2002:a5d:5d85:0:b0:425:7e45:a4df with SMTP id ffacd0b85a97d-42666ac60c3mr2694653f8f.11.1759942631313;
+        Wed, 08 Oct 2025 09:57:11 -0700 (PDT)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4255d8a6b77sm30740453f8f.6.2025.10.08.09.57.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Oct 2025 09:57:10 -0700 (PDT)
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Johannes Schneider <johannes.schneider@leica-geosystems.com>
+Subject: [PATCH 1/4] bitbake-setup: support adding environment-passthroughs to the init-build-env
+Date: Wed,  8 Oct 2025 18:56:56 +0200
+Message-Id: <20251008165659.1884881-1-alex.kanavin@gmail.com>
+X-Mailer: git-send-email 2.39.5
 MIME-Version: 1.0
-References: <20251006181951.39364-1-adam.blank.g@gmail.com> <DDCTRS0A6C72.13SF4HEOH56TD@bootlin.com>
-In-Reply-To: <DDCTRS0A6C72.13SF4HEOH56TD@bootlin.com>
-From: Adam Blank <adam.blank.g@gmail.com>
-Date: Wed, 8 Oct 2025 12:40:23 +0200
-X-Gm-Features: AS18NWAkrQ9WWTHW6j7ZyP7oYKRCltrLCW5TKFLA2iXVsFL4Om5s_3P5DWQZuec
-Message-ID: <CAFAffzzR=DYqbtaGVun07AeCw8yMcj+aNDLCPv0WTx+U1v27SA@mail.gmail.com>
-Subject: Re: [PATCH v3] doc/bitbake-user-manual-ref-variables: improve INHERIT
-To: Antonin Godard <antonin.godard@bootlin.com>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000839fb00640a3500b"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 08 Oct 2025 10:40:44 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18144
+ <bitbake-devel@lists.openembedded.org>; Wed, 08 Oct 2025 16:57:19 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18145
 
---000000000000839fb00640a3500b
-Content-Type: text/plain; charset="UTF-8"
+From: Johannes Schneider <johannes.schneider@leica-geosystems.com>
 
-Right, thanks for the tips :) I've sent a V4 of this patch.
-On a side note, would it make sense to chase other references to
-OpenEmbedded in BitBake's documentation?
+This patch adds support for extending the BB_ENV_PASSTHROUGH_ADDITIONS
+environment variable from within the `init-build-env` wrapper script -
+generated by either oe-core's oe-setup-build, or by `bitbake-setup` -
+based on per-configuration JSON settings.
 
-Thanks,
-Adam
+This enables CI workflows to inject environment-specific data - such
+as build number, host, build type, or credentials required to fetch
+from certain SRC_URIs - which cannot be captured via configuration
+fragments alone. These variables are now handled early in the setup
+process and exported directly into the build environment.
 
-On Wed, 8 Oct 2025 at 11:15, Antonin Godard <antonin.godard@bootlin.com>
-wrote:
+Example:
 
-> On Mon Oct 6, 2025 at 8:19 PM CEST, Adam Blank wrote:
-> > Current wording makes it difficult to understand what
-> > exactly is done with INHERIT-ed anonymous functions and
-> > when.
-> >
-> > Signed-off-by: Adam Blank <adam.blank.g@gmail.com>
-> > Reviewed-by: Antonin Godard <antonin.godard@bootlin.com>
-> > ---
-> > Changes in v2:
-> > - Added reference to Parsing The Base Configuration Metadata
-> > - Emphasised how disjoint the cases are
-> > Changes in v3:
-> > - Regenerate the patch previously corrupted by Emacs
-> >
-> > ---
-> >  .../bitbake-user-manual-ref-variables.rst         | 15 ++++++++++++---
-> >  1 file changed, 12 insertions(+), 3 deletions(-)
-> >
-> > diff --git
-> a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> > index 810f88689..06d48dd47 100644
-> > --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> > +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> > @@ -1200,9 +1200,18 @@ overview of their function and contents.
-> >
-> >     :term:`INHERIT`
-> >        Causes the named class or classes to be inherited globally.
-> Anonymous
-> > -      functions in the class or classes are not executed for the base
-> > -      configuration and in each individual recipe. The OpenEmbedded
-> build
-> > -      system ignores changes to :term:`INHERIT` in individual recipes.
-> > +      functions in the class or classes are executed in two disjoint
-> situations:
-> > +
-> > +      - When only the
-> > +     :ref:`base configuration
-> <bitbake-user-manual/bitbake-user-manual-execution:parsing the base
-> configuration metadata>`
-> > +     is parsed as a result of the following BitBake invocation::
-> > +
-> > +       $ bitbake -e
->
-> I guess this is _one_ of the situations where this can happen. Maybe,
-> rephrase
-> to:
->
-> """
-> ... is parsed. For example, as a result of the following BitBake
-> invocation::
-> """
->
-> > +
-> > +      - When recipes are parsed - then for each parsed recipe.
-> > +
-> > +      The OpenEmbedded build system ignores changes to :term:`INHERIT`
-> > +      in individual recipes.
->
-> This is the Bitbake documentation and Bitbake is not only used by the
-> OpenEmbedded build system, so we can't have OpenEmbedded references here.
-> So you
-> could rephrase to:
->
-> """
-> BitBake ignores changes to ...
-> """
->
-> Otherwise some documentation syntax nitpicks, not important but for next
-> time
-> you will know :) :
->
-> * We put two spaces after the "-", like so:
->
->   """
->   -  one
->   -  two
->   """
->
-> * We indent code blocks with three spaces usually, like so:
->
->   """
->   Here is a code block::
->
->      code
->   """
->
-> See
-> https://git.yoctoproject.org/yocto-docs/tree/documentation/standards.md.
-> We
-> try to follow those.
->
-> Thanks!
-> Antonin
->
-> --
-> Antonin Godard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
->
->
+  "bb-env-passthrough-additions": [
+      "ACME_DIR",
+      "ARTIFACTORY_TOKEN",
+      "ARTIFACTORY_USERNAME",
+      "GITHUB_TOKEN",
+      "GITHUB_PROTOCOL",
+      "KEY"
+  ]
+  <snip>
 
---000000000000839fb00640a3500b
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+the resulting 'init-build-env' would then be:
+  # environment passthrough added by bitbake-setup
+  export BB_ENV_PASSTHROUGH_ADDITIONS=" \
+  $BB_ENV_PASSTHROUGH_ADDITIONS \
+  ACME_DIR \
+  ARTIFACTORY_TOKEN \
+  ARTIFACTORY_USERNAME \
+  GITHUB_TOKEN \
+  GITHUB_PROTOCOL \
+  KEY"
+  # init-build-env wrapper created by bitbake-setup
+  . /tmp/acme_master-acme-distro_acme-machine_bang/layers/openembedded-core/oe-init-build-env /tmp/bitbake-setup/gs/acme_master-acme-distro_acme-machine_bang/build
 
-<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-size:small">Rig=
-ht, thanks for the tips :) I&#39;ve sent a V4 of this patch.</div><div clas=
-s=3D"gmail_default" style=3D"font-size:small">On a side note, would it make=
- sense to chase other references to OpenEmbedded in BitBake&#39;s documenta=
-tion?</div><div class=3D"gmail_default" style=3D"font-size:small"><br></div=
-><div class=3D"gmail_default" style=3D"font-size:small">Thanks,</div><div c=
-lass=3D"gmail_default" style=3D"font-size:small">Adam</div></div><br><div c=
-lass=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" class=3D"gmail_=
-attr">On Wed, 8 Oct 2025 at 11:15, Antonin Godard &lt;<a href=3D"mailto:ant=
-onin.godard@bootlin.com">antonin.godard@bootlin.com</a>&gt; wrote:<br></div=
-><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border=
--left:1px solid rgb(204,204,204);padding-left:1ex">On Mon Oct 6, 2025 at 8:=
-19 PM CEST, Adam Blank wrote:<br>
-&gt; Current wording makes it difficult to understand what<br>
-&gt; exactly is done with INHERIT-ed anonymous functions and<br>
-&gt; when.<br>
-&gt;<br>
-&gt; Signed-off-by: Adam Blank &lt;<a href=3D"mailto:adam.blank.g@gmail.com=
-" target=3D"_blank">adam.blank.g@gmail.com</a>&gt;<br>
-&gt; Reviewed-by: Antonin Godard &lt;<a href=3D"mailto:antonin.godard@bootl=
-in.com" target=3D"_blank">antonin.godard@bootlin.com</a>&gt;<br>
-&gt; ---<br>
-&gt; Changes in v2:<br>
-&gt; - Added reference to Parsing The Base Configuration Metadata<br>
-&gt; - Emphasised how disjoint the cases are<br>
-&gt; Changes in v3:<br>
-&gt; - Regenerate the patch previously corrupted by Emacs<br>
-&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 .../bitbake-user-manual-ref-variables.rst=C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0| 15 ++++++++++++---<br>
-&gt;=C2=A0 1 file changed, 12 insertions(+), 3 deletions(-)<br>
-&gt;<br>
-&gt; diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables=
-.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst<br>
-&gt; index 810f88689..06d48dd47 100644<br>
-&gt; --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst<br=
->
-&gt; +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst<br=
->
-&gt; @@ -1200,9 +1200,18 @@ overview of their function and contents.<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0:term:`INHERIT`<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 Causes the named class or classes to be inh=
-erited globally. Anonymous<br>
-&gt; -=C2=A0 =C2=A0 =C2=A0 functions in the class or classes are not execut=
-ed for the base<br>
-&gt; -=C2=A0 =C2=A0 =C2=A0 configuration and in each individual recipe. The=
- OpenEmbedded build<br>
-&gt; -=C2=A0 =C2=A0 =C2=A0 system ignores changes to :term:`INHERIT` in ind=
-ividual recipes.<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 functions in the class or classes are executed i=
-n two disjoint situations:<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 - When only the<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0:ref:`base configuration &lt;bitbake-user-manual/=
-bitbake-user-manual-execution:parsing the base configuration metadata&gt;`<=
-br>
-&gt; +=C2=A0 =C2=A0 =C2=A0is parsed as a result of the following BitBake in=
-vocation::<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0$ bitbake -e<br>
-<br>
-I guess this is _one_ of the situations where this can happen. Maybe, rephr=
-ase<br>
-to:<br>
-<br>
-&quot;&quot;&quot;<br>
-... is parsed. For example, as a result of the following BitBake invocation=
-::<br>
-&quot;&quot;&quot;<br>
-<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 - When recipes are parsed - then for each parsed=
- recipe.<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 The OpenEmbedded build system ignores changes to=
- :term:`INHERIT`<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 in individual recipes.<br>
-<br>
-This is the Bitbake documentation and Bitbake is not only used by the<br>
-OpenEmbedded build system, so we can&#39;t have OpenEmbedded references her=
-e. So you<br>
-could rephrase to:<br>
-<br>
-&quot;&quot;&quot;<br>
-BitBake ignores changes to ...<br>
-&quot;&quot;&quot;<br>
-<br>
-Otherwise some documentation syntax nitpicks, not important but for next ti=
-me<br>
-you will know :) :<br>
-<br>
-* We put two spaces after the &quot;-&quot;, like so:<br>
-<br>
-=C2=A0 &quot;&quot;&quot;<br>
-=C2=A0 -=C2=A0 one<br>
-=C2=A0 -=C2=A0 two<br>
-=C2=A0 &quot;&quot;&quot;<br>
-<br>
-* We indent code blocks with three spaces usually, like so:<br>
-<br>
-=C2=A0 &quot;&quot;&quot;<br>
-=C2=A0 Here is a code block::<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0code<br>
-=C2=A0 &quot;&quot;&quot;<br>
-<br>
-See <a href=3D"https://git.yoctoproject.org/yocto-docs/tree/documentation/s=
-tandards.md" rel=3D"noreferrer" target=3D"_blank">https://git.yoctoproject.=
-org/yocto-docs/tree/documentation/standards.md</a>. We<br>
-try to follow those.<br>
-<br>
-Thanks!<br>
-Antonin<br>
-<br>
--- <br>
-Antonin Godard, Bootlin<br>
-Embedded Linux and Kernel engineering<br>
-<a href=3D"https://bootlin.com" rel=3D"noreferrer" target=3D"_blank">https:=
-//bootlin.com</a><br>
-<br>
-</blockquote></div>
+Signed-off-by: Johannes Schneider <johannes.schneider@leica-geosystems.com>
+---
+ bin/bitbake-setup | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
---000000000000839fb00640a3500b--
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index e7b955213..7878cd939 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -162,8 +162,31 @@ def setup_bitbake_build(bitbake_config, layerdir, builddir, thisdir):
+         builddir = os.path.realpath(builddir)
+         cmd = "cd {}\nset {}\n. ./oe-init-build-env\n".format(oeinitbuildenvdir, builddir)
+         initbuild_in_builddir = os.path.join(builddir, 'init-build-env')
++
+         with open(initbuild_in_builddir, 'w') as f:
+-            f.write(cmd)
++            f.write("# init-build-env wrapper created by bitbake-setup\n")
++            f.write(cmd + '\n')
++
++    def _prepend_passthrough_to_init_build_env(builddir):
++        env = bitbake_config.get("bb-env-passthrough-additions")
++        if not env:
++            return
++
++        initbuild_in_builddir = os.path.join(builddir, 'init-build-env')
++        with open(initbuild_in_builddir) as f:
++            content = f.read()
++
++        joined = " \\\n".join(env)
++        env = "export BB_ENV_PASSTHROUGH_ADDITIONS=\" \\\n"
++        env += "${BB_ENV_PASSTHROUGH_ADDITIONS} \\\n"
++        env += joined
++        env += '"'
++
++        with open(initbuild_in_builddir, 'w') as f:
++            f.write("# environment passthrough added by bitbake-setup\n")
++            f.write(env + '\n')
++            f.write('\n')
++            f.write(content)
+ 
+     bitbake_builddir = os.path.join(builddir, "build")
+     print("Setting up bitbake configuration in\n    {}\n".format(bitbake_builddir))
+@@ -194,6 +217,8 @@ def setup_bitbake_build(bitbake_config, layerdir, builddir, thisdir):
+             return
+         _make_init_build_env(bitbake_builddir, os.path.realpath(oeinitbuildenvdir))
+ 
++    _prepend_passthrough_to_init_build_env(bitbake_builddir)
++
+     siteconf_symlink = os.path.join(bitbake_confdir, "site.conf")
+     siteconf = os.path.normpath(os.path.join(builddir, '..', "site.conf"))
+     if os.path.lexists(siteconf_symlink):
+-- 
+2.39.5
+
 
