@@ -1,144 +1,183 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <bhstalel@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43A8CCD18D
-	for <webhook@archiver.kernel.org>; Thu,  9 Oct 2025 17:58:08 +0000 (UTC)
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
- by mx.groups.io with SMTP id smtpd.web10.7145.1760032678813206199
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D78CCD183
+	for <webhook@archiver.kernel.org>; Thu,  9 Oct 2025 18:03:08 +0000 (UTC)
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+ by mx.groups.io with SMTP id smtpd.web10.7307.1760032988464310405
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 09 Oct 2025 10:57:59 -0700
+ Thu, 09 Oct 2025 11:03:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=o6qvsKeW;
- spf=pass (domain: smile.fr, ip: 209.85.221.42, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3ed20bdfdffso1290926f8f.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 09 Oct 2025 10:57:58 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=FCku/Idg;
+ spf=pass (domain: gmail.com, ip: 209.85.222.172, mailfrom: bhstalel@gmail.com)
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-863762d794cso27036085a.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 09 Oct 2025 11:03:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1760032677; x=1760637477; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1760032987; x=1760637787; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vgEzIiw4PMrBJA+GAv95nBKs2MY3G9kNGKO8iYt5zEA=;
-        b=o6qvsKeWFDdmYFPOCmhvMc7Eg/AD6zkcOmRDZJ+nANUBHGgJ3vC8+Gnt4cWXJrfxsw
-         F4qe0YPJcLOG9Jq3ZY5qWH4gbuKrIppcKuFdO+9OAJK1liwWRmkIHfn1R4EJBB/na1kD
-         WkmdrbPchdBVYPHUakFJDOEnry6crsRjdU6IQ=
+        bh=BD2qBUhtwoVCdU08sl6B/bj8ZGn/H+tQuxkeHQpjLCQ=;
+        b=FCku/IdgUZbWoqEtl8AstMMq/HL6YQjH5JQ3n4XYEf7bixwtNP6F1ksgNBt45LlHsU
+         WXlOPrFO4EoG5HHXGJXwlvO6Q0sGW+qLsYgAGLqtwrXw8eE7J+0f9fuy7Gh4DaSbUvB4
+         xvCkN6mWEnWB5N8MP4jvN8Wpvy4FWlrSaEAuASiTOhbPXCR7Ux74cDGZEW66zrCe0QCq
+         hve/HMLnZg3C0s6lAll/UnkR4JOjUxtaOikdSUsmEFnNYtvlgnMDtMiguOCQb9DRux2x
+         6my0VGyCx19zaEPzn34msqk4qyzGtWxlrtSiBJJGR84CzAKzvnvE+l89kX++misf+UU6
+         ADow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760032677; x=1760637477;
+        d=1e100.net; s=20230601; t=1760032987; x=1760637787;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=vgEzIiw4PMrBJA+GAv95nBKs2MY3G9kNGKO8iYt5zEA=;
-        b=WuejwLbM8d0hAemRn8nTL7uMVw3gfVYN0iuaK10ct0c/VhwscIug7A6szqOSHu3rTz
-         KuP/o4MSTu/Um/WXB+yXjzRR2aRWD7t8qkX0sdDgfsDxxv+u3M64MxcJyTw8fT+tzNJg
-         9QEhkGs10HMVVuW7c5MjCW+9FPvfWo+zNjYlRV2wg0bUO4NHv5ixaC92kluPJ2Q8HaGA
-         FI00/qVzJ6A7M8Jucm6aFj2XUBqtXbX+rz63op/9h0AHoqG7VspSHQyKuEBOje77Ux3N
-         PfgVzgFWL2g121N9cM81jVp4Pkd7CVnaCVRKphl0Rij3qAsAVWh0bW2p0uC23JSNscwb
-         dEJQ==
-X-Gm-Message-State: AOJu0Yxsjg0swX6Xo83dLE5iY59NB+txR/+CWgDMnzc3Xg1A7fcLE0sw
-	C/8HwdmWRw+w9Io49WLhg9axRakJUh2hQrylVnYQsCK8Cq24J1r7ZBQIiZ+BLG/1j0VSp9NSZOv
-	ddBqMf1LXDF027kHzqUboRYrWm/Ojikpcy9vMHU3202QT8QizwLGq
-X-Gm-Gg: ASbGncuBO/T/Z2hBSZKtyARRV4P3QFUXi+F0FYW5Fqq4mjwvvsA7SEdgnqW3b1kj+Nz
-	cjYCNcnib4o60J6ueuZ9r5TPRecgzLZW4J2aIpeIRp+1krn0Qw6MGbcTZuJh3I2ibVXOw5WtQnq
-	6kgu2EXs3kQ43TsPZ7sUbU+vMBTAPV4xDumGJxqRZPWx2L09K5t+gkbn7nZPUHQmZ2WMdkchY6q
-	mqwMSkk6br8rZWilDOS7yvtxfL+1f6YvwFMLKcQUvgAbt7Alqc5Z5weGtQ7/A==
-X-Google-Smtp-Source: AGHT+IEIArC+iJ2/ax+UvfhB9DDRyCd4hjb0RAKjUJDegE3WUm40OSrQ0lvrbBMBd7KXFIHuTj8La/Ykq9pyJg6nQfY=
-X-Received: by 2002:a05:6000:2285:b0:3ec:8c8:7b79 with SMTP id
- ffacd0b85a97d-4266e8e0bdfmr5942253f8f.61.1760032677178; Thu, 09 Oct 2025
- 10:57:57 -0700 (PDT)
+        bh=BD2qBUhtwoVCdU08sl6B/bj8ZGn/H+tQuxkeHQpjLCQ=;
+        b=JJB/VZCoE/H+nqK/l51hsIVkavRx0LXUEiJDsfgQCfYBG+k0lcCxDaGN8bExCRjsuZ
+         hDIwit/BD3N+bGB8CTdGYEWmhwHSsIbjjFt7DH389n5yoNZfxuu/hrkVx14EIqjIpqb3
+         xM1trWCWpx4QWYSkKDsui0/JCapTWsBC3FhhmC8Bw1Lr9jKVpxR7baFbbiw9/RYeRqDB
+         QJVO6+hbxjVuTp3WtXdtvKPCJpnPJULoJMuh3YPpd5wKEAVA8CPAWJCZAg6wfqRhXr5f
+         oPXvoL9s1nsUFz5aICdSamIh6BYAFssEulfe7Mid4cQremWNaWR3P0TYHSY/waup0Um7
+         cNzQ==
+X-Gm-Message-State: AOJu0Yw+3p0LxAEJ1XJCwuPio2WytLprw6CJ294zfSR2h6vxNDZxU5Nt
+	4uqX38feCXNIq+Jh+m58e/yHLFFlOdf9WFuvLYhSbqtvxscU7R9pjInZMv4ksABUuhzMY0J00nx
+	5lfod+fIIrN8DmT3Au6UN6EXXQRfjRV+wfjpUGbU=
+X-Gm-Gg: ASbGncu9/UJfdHgRanKua/n/kDyeHy4AwkrmozxL7fp5tor40/PqKnlUAVEZL6oxvQ6
+	eUPLvOZ1vrytuQcOow5tiGOGmwUvFSnBX1sChyKjkql7GAFlmwgM5B/L4KW5NnerOY430ZrHftn
+	ZzpOeWjoGKSEE4k3vwmS+rR2Egyn1+692d1NkxZY1D93TeFQ2j1c7T5+h6ucErYgBcSM81zzvT/
+	tXtD8l7BgZHDm8IgFm21Euvk48QYQn2
+X-Google-Smtp-Source: AGHT+IGsCW3CfY1cdIZwnkpGwQo7pwO5s5V1I+/+cFJjtej6xNSa7OOQQ3x0F2vf/vBJp7AlNdPdPd31A+kDRLUT448=
+X-Received: by 2002:a05:620a:372c:b0:86b:12e2:28d1 with SMTP id
+ af79cd13be357-88352d954aemr819159585a.7.1760032987087; Thu, 09 Oct 2025
+ 11:03:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20251009175300.7480-1-bhstalel@gmail.com>
-In-Reply-To: <20251009175300.7480-1-bhstalel@gmail.com>
-From: Yoann Congal <yoann.congal@smile.fr>
-Date: Thu, 9 Oct 2025 19:57:30 +0200
-X-Gm-Features: AS18NWDl2GgiH26-F674wpRDtLQ8HVQhqEZhXSs9m1keuMAjRJoec5VrWNgbJqI
-Message-ID: <CAMSfU+7iRzDoCTAnYQFhCju+tVVhiEXoyWceQjX7ReceegDoDg@mail.gmail.com>
+References: <20251009175300.7480-1-bhstalel@gmail.com> <CAMSfU+7iRzDoCTAnYQFhCju+tVVhiEXoyWceQjX7ReceegDoDg@mail.gmail.com>
+In-Reply-To: <CAMSfU+7iRzDoCTAnYQFhCju+tVVhiEXoyWceQjX7ReceegDoDg@mail.gmail.com>
+From: Talel BELHADJ SALEM <bhstalel@gmail.com>
+Date: Thu, 9 Oct 2025 19:02:55 +0100
+X-Gm-Features: AS18NWAILdmwW5-UgDOluBOwOa6LgdPOAlPLyUV5OtC-trMvo60gl5EiHF17hBA
+Message-ID: <CAOgG7m3BeXJ6Fha_onKa5HRZwX4=vsy4542jvJ50wzR8-NzNjw@mail.gmail.com>
 Subject: Re: [bitbake-devel][PATCH] lib/bb/data_smart: add removeFromVar method
-To: bhstalel@gmail.com
+To: Yoann Congal <yoann.congal@smile.fr>
 Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000843ffb0640bd8a4a"
+Content-Type: multipart/alternative; boundary="000000000000fd08e70640bd9c19"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 09 Oct 2025 17:58:08 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18157
+ <bitbake-devel@lists.openembedded.org>; Thu, 09 Oct 2025 18:03:08 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18158
 
---000000000000843ffb0640bd8a4a
+--000000000000fd08e70640bd9c19
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Le jeu. 9 oct. 2025 =C3=A0 19:53, BELHADJ SALEM Talel via lists.openembedde=
-d.org
-<bhstalel=3Dgmail.com@lists.openembedded.org> a =C3=A9crit :
+It has two actions on it : set and remove:
 
-> Tested with:
->
-> MY_VARIABLE =3D "foo hello foo world"
-> python () {
->     d.removeFromVar('MY_VARIABLE', 'foo')
-> }
->
-> $ bitbake-getvar -r example --value MY_VARIABLE
->  hello  world
->
-
-Out of curiosity, what does the variable history look like? (same command
-without the --value)
+$ bitbake-getvar -r example MY_VARIABLE
+> #
+> # $MY_VARIABLE [2 operations]
+> #   set /work/meta-test/recipes-example/example/example_0.1.bb:5
+> #     "foo hello foo world"
+> #   remove example_0.1.bb:8
+> [__anon_9__work_meta_test_recipes_example_example_example_0_1_bb]
+> #     "foo"
+> # pre-expansion value:
+> #   "foo hello foo world"
+> MY_VARIABLE=3D" hello  world"
 
 
-> Signed-off-by: Talel BELHAJ SALEM <bhstalel@gmail.com>
-> ---
->  lib/bb/data_smart.py | 5 +++++
->  1 file changed, 5 insertions(+)
+On Thu, Oct 9, 2025 at 6:57=E2=80=AFPM Yoann Congal <yoann.congal@smile.fr>=
+ wrote:
+
 >
-> diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-> index 2e0d30858..554255f3d 100644
-> --- a/lib/bb/data_smart.py
-> +++ b/lib/bb/data_smart.py
-> @@ -714,6 +714,11 @@ class DataSmart(MutableMapping):
->          self.varhistory.record(**loginfo)
->          self.setVar(var + ":prepend", value, ignore=3DTrue, parsing=3DTr=
+>
+> Le jeu. 9 oct. 2025 =C3=A0 19:53, BELHADJ SALEM Talel via
+> lists.openembedded.org <bhstalel=3Dgmail.com@lists.openembedded.org> a
+> =C3=A9crit :
+>
+>> Tested with:
+>>
+>> MY_VARIABLE =3D "foo hello foo world"
+>> python () {
+>>     d.removeFromVar('MY_VARIABLE', 'foo')
+>> }
+>>
+>> $ bitbake-getvar -r example --value MY_VARIABLE
+>>  hello  world
+>>
+>
+> Out of curiosity, what does the variable history look like? (same command
+> without the --value)
+>
+>
+>> Signed-off-by: Talel BELHAJ SALEM <bhstalel@gmail.com>
+>> ---
+>>  lib/bb/data_smart.py | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+>> index 2e0d30858..554255f3d 100644
+>> --- a/lib/bb/data_smart.py
+>> +++ b/lib/bb/data_smart.py
+>> @@ -714,6 +714,11 @@ class DataSmart(MutableMapping):
+>>          self.varhistory.record(**loginfo)
+>>          self.setVar(var + ":prepend", value, ignore=3DTrue, parsing=3DT=
+rue)
+>>
+>> +    def removeFromVar(self, var, value, **loginfo):
+>> +        loginfo['op'] =3D 'remove'
+>> +        self.varhistory.record(**loginfo)
+>> +        self.setVar(var + ":remove", value, ignore=3DTrue, parsing=3DTr=
 ue)
->
-> +    def removeFromVar(self, var, value, **loginfo):
-> +        loginfo['op'] =3D 'remove'
-> +        self.varhistory.record(**loginfo)
-> +        self.setVar(var + ":remove", value, ignore=3DTrue, parsing=3DTru=
-e)
-> +
->      def delVar(self, var, **loginfo):
->          self.expand_cache =3D {}
+>> +
+>>      def delVar(self, var, **loginfo):
+>>          self.expand_cache =3D {}
+>>
+>> --
+>> 2.51.0
+>>
+>>
+>> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>> Links: You receive all messages sent to this group.
+>> View/Reply Online (#18156):
+>> https://lists.openembedded.org/g/bitbake-devel/message/18156
+>> Mute This Topic: https://lists.openembedded.org/mt/115676008/4316185
+>> Group Owner: bitbake-devel+owner@lists.openembedded.org
+>> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
+>> yoann.congal@smile.fr]
+>> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>>
+>>
 >
 > --
-> 2.51.0
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#18156):
-> https://lists.openembedded.org/g/bitbake-devel/message/18156
-> Mute This Topic: https://lists.openembedded.org/mt/115676008/4316185
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> yoann.congal@smile.fr]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
+> Yoann Congal
+> Smile ECS
 >
 
---=20
-Yoann Congal
-Smile ECS
-
---000000000000843ffb0640bd8a4a
+--000000000000fd08e70640bd9c19
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote g=
-mail_quote_container"><div dir=3D"ltr" class=3D"gmail_attr">Le=C2=A0jeu. 9 =
-oct. 2025 =C3=A0=C2=A019:53, BELHADJ SALEM Talel via <a href=3D"http://list=
-s.openembedded.org">lists.openembedded.org</a> &lt;bhstalel=3D<a href=3D"ma=
-ilto:gmail.com@lists.openembedded.org">gmail.com@lists.openembedded.org</a>=
-&gt; a =C3=A9crit=C2=A0:<br></div><blockquote class=3D"gmail_quote" style=
-=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
--left:1ex">Tested with:<br>
+<div dir=3D"ltr">It has two actions on it : set and remove:<div><br></div><=
+blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-l=
+eft:1px solid rgb(204,204,204);padding-left:1ex">$ bitbake-getvar -r exampl=
+e MY_VARIABLE<br>#<br># $MY_VARIABLE [2 operations]<br># =C2=A0 set /work/m=
+eta-test/recipes-example/example/<a href=3D"http://example_0.1.bb:5">exampl=
+e_0.1.bb:5</a><br># =C2=A0 =C2=A0 &quot;foo hello foo world&quot;<br># =C2=
+=A0 remove <a href=3D"http://example_0.1.bb:8">example_0.1.bb:8</a> [__anon=
+_9__work_meta_test_recipes_example_example_example_0_1_bb]<br># =C2=A0 =C2=
+=A0 &quot;foo&quot;<br># pre-expansion value:<br># =C2=A0 &quot;foo hello f=
+oo world&quot;<br>MY_VARIABLE=3D&quot; hello =C2=A0world&quot;</blockquote>=
+</div><br><div class=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr"=
+ class=3D"gmail_attr">On Thu, Oct 9, 2025 at 6:57=E2=80=AFPM Yoann Congal &=
+lt;<a href=3D"mailto:yoann.congal@smile.fr">yoann.congal@smile.fr</a>&gt; w=
+rote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0p=
+x 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><div dir=
+=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote"><div dir=
+=3D"ltr" class=3D"gmail_attr">Le=C2=A0jeu. 9 oct. 2025 =C3=A0=C2=A019:53, B=
+ELHADJ SALEM Talel via <a href=3D"http://lists.openembedded.org" target=3D"=
+_blank">lists.openembedded.org</a> &lt;bhstalel=3D<a href=3D"mailto:gmail.c=
+om@lists.openembedded.org" target=3D"_blank">gmail.com@lists.openembedded.o=
+rg</a>&gt; a =C3=A9crit=C2=A0:<br></div><blockquote class=3D"gmail_quote" s=
+tyle=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);pad=
+ding-left:1ex">Tested with:<br>
 <br>
 MY_VARIABLE =3D &quot;foo hello foo world&quot;<br>
 python () {<br>
@@ -199,6 +238,7 @@ blank">yoann.congal@smile.fr</a>]<br>
 gnature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_signature"><d=
 iv dir=3D"ltr"><font face=3D"Raleway, regular">Yoann Congal</font><div><fon=
 t face=3D"Raleway, regular">Smile ECS</font></div></div></div></div>
+</blockquote></div>
 
---000000000000843ffb0640bd8a4a--
+--000000000000fd08e70640bd9c19--
 
