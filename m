@@ -1,137 +1,151 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592B9CCD185
-	for <webhook@archiver.kernel.org>; Thu,  9 Oct 2025 11:48:37 +0000 (UTC)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web10.10292.1760010510225338562
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53928CCD187
+	for <webhook@archiver.kernel.org>; Thu,  9 Oct 2025 16:07:48 +0000 (UTC)
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+ by mx.groups.io with SMTP id smtpd.web10.4344.1760026061070849515
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 09 Oct 2025 04:48:30 -0700
+ Thu, 09 Oct 2025 09:07:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ggivIixC;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.51, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3ee64bc6b85so949163f8f.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 09 Oct 2025 04:48:29 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=pM0vJ6wT;
+ spf=pass (domain: smile.fr, ip: 209.85.208.43, mailfrom: yoann.congal@smile.fr)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-62f24b7be4fso2057906a12.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 09 Oct 2025 09:07:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1760010508; x=1760615308; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=njmm2Acvl7N7hY4aRVCgy0wq2hXwvR1z07xGdnTDsSA=;
-        b=ggivIixC7uPj2/oE4Tx5LxAz7hyAHXcRAtYMPmnTJ0zXiNU7MTP0e84V76dN/3K5uL
-         lH57MMCwUdU2R+KYviMf4JrT9rUvQlCOzB0Q9Rmg+UNBO6vNpGDbO/aURUcJ4oXeLxg4
-         Wj3o6YPPb+X1YFbmgTr9TBI7RoMSELiWws6Gw=
+        d=smile.fr; s=google; t=1760026059; x=1760630859; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LPBHjGw0oYp1JPBBChKE5Src7Bg0SO29NsZUF0pdOxc=;
+        b=pM0vJ6wT5gZ6wT4DFUPj/n5jB2OGdZbxN+imqUUTH44MvwYA+ZXTCI8vpQhH68BR6S
+         NuUdE/gieP853GRMWypNhEXgzQZEV0HB2eWbjGq2QXAyHl9E+h5QtfDERYBptr3Jry9z
+         IgsJGf2S1vtG1KU5rbuL+KnjKwDKV0fUAYOWo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760010508; x=1760615308;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=njmm2Acvl7N7hY4aRVCgy0wq2hXwvR1z07xGdnTDsSA=;
-        b=Xre1q9ReAvVJ+qhzQI1P14OswlvAObd6baKvd5vAbYjM75iZ71eDj/+whn5udfbr6h
-         wt4tF1c+BffbYBWm2cLH34kqMfBUznljnm/GycKQ3DHMeVegZz4Diu+Fymakl6TV7lbJ
-         S3ZlygHkgyBVoSwJFe5G2ZIst10uKntFMjOxDVrFAIsQ4abUR3iRqmAhGp586Io7RzUx
-         s2ltHAz2x40X/7W5fpCCZRExE/nPl7cjn6Y2dLRJDrNzB25hdkEVgmnK2l/7YpdheRSo
-         efEUVq3Lowj3a4XKgfApmKZZVQYn7ZY5bkZ02YdOLF/b68aiV1YYsxmYN+7lRS7a5zIX
-         PO7g==
-X-Forwarded-Encrypted: i=1; AJvYcCWGbFYDLF8KNVltDEIJwQLgJBTiFNEfolr6c0loiaiZ1LBDPvYmxEIlUrpOETMD1bHkHqIj51fvbHepJmQT@lists.openembedded.org
-X-Gm-Message-State: AOJu0YxTxbJGDZXkVReva3hm492nhV9lv3maaq2BVvBkW/txan+vJBxd
-	p8N+A/c1dFOEABXV/hhGyPT/i5Qx2iDS4S1ddO/N2vfmft54PFMg+22QSPGXOjdhVsM=
-X-Gm-Gg: ASbGncuWUUgi+Rh0uacORKlohfa0DJ27xCUmEr/rw4lQFMEer78xPhOAD+XfaYIz41W
-	ZbbvKqerK0iYyEnYlvrfSWVl4RvCppcgt1lu6z8EBVaHwzqF42MyQ0bQd0EqJ9Fpx9mMc0q10L6
-	X7jzVuf2DA+zAlM+msjkX8emmeA2zSRy78galJY9/hzGmfwsVaCV/4K0FLwGSKzGI7VGhZn+Rr+
-	EUFfCXP1P6GllcW28lRIqk/ogKYlk+Y/gGRw5JoFP0HBvXMoWeXjGgBghzlcfELqjF/A7PbV9P1
-	Suyd6GjrIwowiY1Jg1sTx9RAiYJE962uz9zxP4y9k87dqW6q+jtRsNEjwo54LvMxIuX/PowubWx
-	QyZ0VDxBAfsUE2sW9MW3axFAvK1VCINatv6NaWzh/NU3GGcYoRLlvps8Q+887V5oA2q6ZCYHbQc
-	zekFSTlHGb5XwAIfras977tESu8xNtx5EXB9E=
-X-Google-Smtp-Source: AGHT+IEHt3IoMYplBYMGbhJggy6pjZ9t3Lqh7vhAQltLvBQ8ghnIa+1N4ks/RXOXX8URuMzLWn4xWQ==
-X-Received: by 2002:a05:6000:430e:b0:3e7:d199:7889 with SMTP id ffacd0b85a97d-4266e7c4ed5mr5636676f8f.27.1760010508570;
-        Thu, 09 Oct 2025 04:48:28 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:8c4a:b3bc:b910:6576? ([2001:8b0:aba:5f3c:8c4a:b3bc:b910:6576])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4255d8a6b40sm34642827f8f.2.2025.10.09.04.48.27
+        d=1e100.net; s=20230601; t=1760026059; x=1760630859;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LPBHjGw0oYp1JPBBChKE5Src7Bg0SO29NsZUF0pdOxc=;
+        b=QArZHK2eF2xodEz3KetvPbZiETesYJgTVJsDdq1EgAPiOz3a87WGkQZdiizx8IZtdl
+         NvoX9mThTK1BMzQ3bHyzOey6y8AToRjAWWbmeL9xTBzpSR/+qMr1Hp8IlGac7h+bn207
+         /sK5ketM8qG9/iZN2lzEN70KgIzFMeJK3FKlzqq1eeu0SXD1KrCQm4Lay1ohaFntRk/q
+         j7eVWOpg1++qbFGfIZpLSMBk5Ph7bOb510Z4U6BFFptgpuqiQqKLyUeU1t0OuORNwovu
+         0JtjvvlSA8rg5giDJqRgyrnfx9ZL8jD6uw4ZLCMoiIbRhWCqGvwWFXnhMI5ggeyVtu60
+         f0yQ==
+X-Gm-Message-State: AOJu0Yz8n4THib8Xk7CP51nuYa1uHCT0zas9Wf7cuFyxtbVhci6Uf34M
+	QNlwSrNUN6Ex3RAqT2cDvZnsl77x6XsQeUWvkbE6ogb9QZPQOAMi2p1ANGAbF5MFMhOmENtv/Ou
+	nkgy+vsE=
+X-Gm-Gg: ASbGnctzPg49ZPzcmAGQtTTPVZZayzDHkw9VWM1tSH0TZEZARORc+powfac8ZrAmxVv
+	nO9N+ueP/RJOHWvI80gyNmmFT9x8YjW0Tfk2kHy4qAoaGuCiajkr0sF5B+Sj2TDlyGciBjZdvfB
+	OGfOlwktAW5GZhOARmZm6TgBr0wgrw2KjOZmZxbFsG4GEdjpfKkzO/wy5Yco0G7pbESWNvm9tlC
+	YfweykSDN5oQJx4E7JXZtS5m2rW1N2k+W7Dpsq2jltutepuXFkWB5bqD3Dr3hK157X+qWIAa6AE
+	id9D0PDkUdrE2Z4tjAnZWvf+4LF8LjgW7xF0EB73Gn6QU6H7eO032g3OlB6keQLdERFGNunKA95
+	wFwKMNfCevtZjkDlru5XYn2tpxHECK7hbh6ceM9pvFpgjYtwExq88M5sz06dp383H2yUlpU0gQF
+	04Oai9bJeS1aJwZB7qu5uO/VTDFYVVt3I9TK3zFEHeMGgY8C8JM1mgP33TV2w93A==
+X-Google-Smtp-Source: AGHT+IFlbZ569lEFaU8FfRe7SYDYNeYA59iA8XwfTAKT3gMY3i2tzQKGXfL/8rFA8dGXz4jnj2SMSg==
+X-Received: by 2002:a17:907:9445:b0:b3e:5f20:889f with SMTP id a640c23a62f3a-b50aa79f502mr912975466b.26.1760026059063;
+        Thu, 09 Oct 2025 09:07:39 -0700 (PDT)
+Received: from P-ASN-ECS-830T8C3.local (2a01cb001331aa00007c0d5248a1aaa1.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:7c:d52:48a1:aaa1])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b55d5cac037sm7616366b.12.2025.10.09.09.07.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Oct 2025 04:48:27 -0700 (PDT)
-Message-ID: <b31807779ef3667b1e8008cb47f71f6db64c5211.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] runqueue: Make the "Initialising tasks"
- progress bar finish properly
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: peter.kjellerstedt@axis.com, bitbake-devel@lists.openembedded.org
-Date: Thu, 09 Oct 2025 12:48:26 +0100
-In-Reply-To: <20250927055339.2472285-1-pkj@axis.com>
-References: <20250927055339.2472285-1-pkj@axis.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0-1 
+        Thu, 09 Oct 2025 09:07:38 -0700 (PDT)
+From: Yoann Congal <yoann.congal@smile.fr>
+To: bitbake-devel@lists.openembedded.org
+Cc: Yoann Congal <yoann.congal@smile.fr>
+Subject: [RFC PATCH] ast: Better variable history for builtin fragments
+Date: Thu,  9 Oct 2025 18:07:17 +0200
+Message-Id: <20251009160717.2527351-1-yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.39.5
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 09 Oct 2025 11:48:37 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18150
+ <bitbake-devel@lists.openembedded.org>; Thu, 09 Oct 2025 16:07:48 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18151
 
-On Sat, 2025-09-27 at 07:53 +0200, Peter Kjellerstedt via lists.openembedde=
-d.org wrote:
-> The "Initialising tasks" progress bar needs to be finished before
-> update_scenequeue_data() creates another progress bar.
->=20
-> Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-> ---
-> =C2=A0bitbake/lib/bb/runqueue.py | 5 ++++-
-> =C2=A01 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-> index 63d4edd892..96d70080d3 100644
-> --- a/bitbake/lib/bb/runqueue.py
-> +++ b/bitbake/lib/bb/runqueue.py
-> @@ -1610,7 +1610,6 @@ class RunQueue:
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if self.state =3D=3D Run=
-QueueState.SCENE_INIT:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-self.start_worker(self.rqexe)
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.=
-rqdata.init_progress_reporter.finish()
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-# If we don't have any setscene functions, skip execution
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-if not self.rqdata.runq_setscene_tids:
-> @@ -1948,6 +1947,10 @@ class RunQueueExecute:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.sqdata =3D SQData()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 build_scenequeue_data(se=
-lf.sqdata, self.rqdata, self)
-> =C2=A0
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # Finish the "Initialising ta=
-sks" progress bar before
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # update_scenequeue_data() cr=
-eates another one.
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.rqdata.init_progress_rep=
-orter.finish()
-> +
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 update_scenequeue_data(s=
-elf.sqdata.sq_revdeps, self.sqdata, self.rqdata, self.rq, self.cooker, self=
-.stampcache, self, summary=3DTrue)
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # Compute a list of 'sta=
-le' sstate tasks where the current hash does not match the one
+From: Yoann Congal <yoann.congal@smile.fr>
 
-Having this call buried inside RunQueueExecute is not going to improve
-code readability or maintainability.
+As of now, the variable history for builtin fragments looks like this
+(edited for clarity):
+   $ bitbake-getvar MACHINE
+  #
+  # $MACHINE [2 operations]
+  #   set ast.py:368 [check_and_set_builtin_fragment]
+  #     "qemux86-64"
+  # pre-expansion value:
+  #   "qemux86-64"
+  MACHINE="qemux86-64"
+User can't know where MACHINE was set, this is bad.
 
-Also, whilst I agree update_scenequeue_data() *may* trigger a progress
-bar update but it is far from clear how it does that. I suspect it does
-so via code that is sstate_checkhashes() in sstate.bbclass in OE-Core
-but that is metadata dependent, may not always happen and subject to
-change totally out of sync with the code in bitbake.
+This patch tries to reconstruct a MACHINE history from OE_FRAGMENTS
+history.
+With this patch, history looks like this (for a simple case):
+   $ bitbake-getvar MACHINE
+  NOTE: Starting bitbake server...
+  #
+  # $MACHINE [2 operations]
+  #   set .../auto.conf:2
+  #     "qemux86-64 (OE_FRAGMENTS contains "machine/qemux86-64")"
+  # pre-expansion value:
+  #   "qemux86-64"
+  MACHINE="qemux86-64"
+The path where the "machine/qemux86-64" fragment was added to
+OE_FRAGMENTS is displayed, this is definitely better.
 
-I think the progress bar handling code needs to understand how to run
-multiple bars in parallel, or close any existing bars if present when a
-new one is triggered.
+But, (and this is why this patch is a RFC), on a complex case : adding
+a fragment, another, then the first one again, history looks like this:
+   $ bitbake-getvar MACHINE
+  NOTE: Starting bitbake server...
+  #
+  # $MACHINE [4 operations]
+  #   set .../auto.conf:4     # <<<<=== This line number is wrong
+  #     "qemux86-64 (OE_FRAGMENTS contains "machine/qemux86-64")"
+  #   set .../auto.conf:3
+  #     "test (OE_FRAGMENTS contains "machine/test")"
+  #   set .../auto.conf:4
+  #     "qemux86-64 (OE_FRAGMENTS contains "machine/qemux86-64")"
+  # pre-expansion value:
+  #   "qemux86-64"
+  MACHINE="qemux86-64"
+I don't know how to match OE_FRAGMENTS history with MACHINE history in
+this case. When MACHINE is set to "qemux86-64", how does the code can
+know whether it is the first instance or the second? (My patch take the
+last one)
 
-So I don't think this patch makes sense in this form, sorry.
+Also, a fragment can be removed from OE_FRAGMENTS with:
+OE_FRAGMENTS:remove = "machine/test"
+In this case, as of now, that does not generate a line in MACHINE
+variable history. I not entirely sure this is a problem or not.
 
-Cheers,
+Related to [YOCTO #15939]
 
-Richard
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+---
+ lib/bb/parse/ast.py | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index cb06e8917..27adbd860 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -364,8 +364,16 @@ class AddFragmentsNode(AstNode):
+         def check_and_set_builtin_fragment(fragment, data, builtin_fragments):
+             prefix, value = fragment.split('/', 1)
+             if prefix in builtin_fragments.keys():
++                fragment_history = data.varhistory.variable(self.fragments_variable)
++                loginfo={}
++                for fh in fragment_history[::-1]:
++                    if fh['op'] in ("set", "append") and fragment in fh["detail"]:
++                        loginfo["file"]   = fh["file"]
++                        loginfo["line"]   = fh["line"]
++                        loginfo["detail"] = f"{value} ({self.fragments_variable} contains \"{fragment}\")"
++                        break
+                 # parsing=True since we want to emulate X=Y and allow X:override=Z to continue to exist
+-                data.setVar(builtin_fragments[prefix], value, parsing=True)
++                data.setVar(builtin_fragments[prefix], value, parsing=True, **loginfo)
+                 return True
+             return False
+ 
 
