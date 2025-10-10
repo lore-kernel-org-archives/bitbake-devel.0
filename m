@@ -1,139 +1,87 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36805CAC5BB
-	for <webhook@archiver.kernel.org>; Fri, 10 Oct 2025 08:08:55 +0000 (UTC)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web11.4184.1760083727484510354
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39435CAC5BB
+	for <webhook@archiver.kernel.org>; Fri, 10 Oct 2025 08:13:25 +0000 (UTC)
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+ by mx.groups.io with SMTP id smtpd.web10.4022.1760083995630637084
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 10 Oct 2025 01:08:47 -0700
+ Fri, 10 Oct 2025 01:13:15 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=YnLBFxTl;
- spf=pass (domain: smile.fr, ip: 209.85.221.44, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-421851bcb25so772931f8f.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Oct 2025 01:08:47 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=GzHKesYz;
+ spf=pass (domain: gmail.com, ip: 209.85.219.48, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-879b99b7ca8so20617406d6.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Oct 2025 01:13:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1760083726; x=1760688526; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5s45A6r1c05zDjZFrzRgxwITdw4K8jckeunLzK7Sl0w=;
-        b=YnLBFxTlBEOpmSNxff4G3NmWg8SEphEoNKQTmot0hdKEw2uXsCCoKbBq0TYHpqIMkG
-         hLIGNrS9ui3Mg1AzY4wpDWzOgRbx1tHVGOxKYVAaHS+0shtPQZGPvEs2L4/KHm7MyE/V
-         dmSwbFz4G0DwY5KaDrblhvzSk1IpzIPZULsT8=
+        d=gmail.com; s=20230601; t=1760083994; x=1760688794; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TxZpQUs351tz3w5GjZHGe5w2kRtOzAspanyRC6iEvK0=;
+        b=GzHKesYzsUuCNUco3sJQ5eKQZ7RcSqyEa7tyXeZLQEr3rWmNLHgSw3Q9vrJ+CcjOol
+         PL/69P6BU4plZHRTdiBbCCLA8NZTgU/kPcjAkalzAxx5P3vzwg5I+NHyBeUVFm7T9Skg
+         G8GPT2zFAN5haNx+zvDa8eRczCu2f5aIdaRho4I2J4zuvTs0L151I3C8q/xeE4Ng7MQI
+         PzXX8wDFyQtqCI9D8Ch8DNf1KbTrBNEoOuC2w0xbpTkItsB8IaTGT0ZHboqQTwK6hBP1
+         pUjCYmgLo8CtcR4jnEk/ksisny2ICq8tordoC0NnNMuHsPRSB25NDnVMgmoQGuiS9xD8
+         uy8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760083726; x=1760688526;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5s45A6r1c05zDjZFrzRgxwITdw4K8jckeunLzK7Sl0w=;
-        b=BASCz9XFsvttPOjQ6Bdj/gnCgJUprjNHNR29n/ADbtr+9xOVbhdSl+zwSo93YnAtoJ
-         YCL4HX6KFj3tH8QsdZrEI7xEHA+JLJZyVH+V6CvlxoB6t12xk+n7cRHZawHvB5zb/XEQ
-         UnqlVO5FCghgmc18NlDy613qSrYTdDBv0DLnCUEKYC7xaJVIYDmfv2muCQ0iB2AazoSk
-         dE49d6VF1gfxpcd2s35nLUolShQKKRrkGt/9R1hXZFwsCEt+Xp2RgrJa4qdG28dTYaAq
-         atjcn7SUe/dMrDPELvPuILZXv0VgDeYVugay6WtugzFMqXVBbRaqD5pWc+xf1zlaToVO
-         kQSA==
-X-Gm-Message-State: AOJu0Yy58BnaU+Dsc47bdQ2B4ujZBHCG6MS0YzO4ECIWduWZbTLJk3Yd
-	JW+TjFKtwmZda9wHcispwWUOyNPjJCaFyZm4dyhL58DXVhMEwOKYxAupaAgOrtAMnzzpMT+rU7P
-	HWXvFXoVdeT6UTI8vwQVdukwlSqAWjGaod9X0NtprqQ==
-X-Gm-Gg: ASbGnctKD/O6n++IA8diEmwcfm7IjlP4ZGgU3WJXozWWVYySRdsDqybYlQeRltvByIL
-	Z+hes3lHy04fOswK+wcCvZIqeBSJanfKhIjmFf98Vpf1KAfoIXgHzY+WLN/bJF+HeKH5+pulijm
-	sENCMW8VN8IhkZswxs0Cf9vsEPFfApFEmxAySc8eshK0gXBaz3job4Hd02FX/zvWQ841FLjKsGE
-	cnAGNU8I2aabSwYZ12Lgd5XA9EqVbaMTQpKIqoeOZMVW8zgXq47laUcy9k6
-X-Google-Smtp-Source: AGHT+IFvqwkCzZpwT1e+XDYd1jrz40BZVkRNLKZHaJR2e3kW/MAG7WX1oNKPrIc3oQzCO4uZTkp4uPLEd+yHO//5UKE=
-X-Received: by 2002:a05:6000:2910:b0:3ee:109a:3a83 with SMTP id
- ffacd0b85a97d-4266e8d8e78mr6366116f8f.29.1760083725789; Fri, 10 Oct 2025
- 01:08:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1760083994; x=1760688794;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TxZpQUs351tz3w5GjZHGe5w2kRtOzAspanyRC6iEvK0=;
+        b=ZYrlC9fOZ6QPHJNYPCiHqmEpMyM9CXKA6aKISFIZMKQicQBv3kxDA5SgKG4dWNY9dx
+         125aSpMgkikm2Hvc25YClRJ3d9wJPKS6RFbLaTBnXPPF7gb4hg+8OnNXYAR0Hh4ueeCp
+         2bvHmI+JMsMFutUnNXumXuNZxE2fU8XPQDFFb4TofzxNmN+O12EVnBCz5cXQyN0AeszI
+         Nf6jXpHvQchwGw8stk21GlcXNT5a9hf/hjhyGVLgkkw6HqjE8M7bHekk4KI0/aXcF4tj
+         5/3lNHekzaQrnAR/7FMfs9GwDA4CpWPGwk01Gd12ynj0y1Qxfxl1Tw7tHFFa0aDxUNyg
+         qF/Q==
+X-Gm-Message-State: AOJu0YzWHVNEXUMUXperqULLkF23iDZwTPxOWu0Bu/UNo+6I2K73U+Vz
+	ZF8XEY3nmD6tLqLmYuuxy/s2PGponOVhUnweyWC/xyT8Do3VKGUBNsv8DfxjQGlPpWEDR7sRXjU
+	ScOYj5FgVJJhS+TzDFPU/DBGxwY8ygXPMDw==
+X-Gm-Gg: ASbGncsBQCzp0bY3dL2Hz06NxjTsWQv49eoE6a/eb79fcfgn39PP2M2VVwRh/1S106U
+	aE7B7epazCbYmAvhHWkDB7F3X7kwgN4I5o+RbNMUZpuvZCudvSQKf+rHSTIivCI79bA56UVbYJV
+	0s4q/xxngC83y4026RWB42vXwMgi3xKSY1NLq+tdYzPjqAX2q+Xepe1IpCXXGWQK+GIZaYnQ6SJ
+	A+CMav0XH5BbC+8BvfNRQ9U17pA2MfWYMOc4lrqg+O8biYK3cNHjIekUd0h3ZEVHbeDAgd77mz/
+	jy9EkcO04F6VQYn1irtTM2DY4OMGcfm6dAimgz+z4RiWH6yRS6o1PO3h6WvhwmbKak9UMg==
+X-Google-Smtp-Source: AGHT+IFhT6r5DsTsRsSSxG9WASlrFJaO8jRQ0U0hH55OrpsuDlAWlZ+NqUnH2dTNcJ8jG64zJDLwyNy1Xd3ngQ07WC8=
+X-Received: by 2002:a05:6214:4115:b0:77a:29ba:1b67 with SMTP id
+ 6a1803df08f44-87b2103c736mr138498816d6.13.1760083994574; Fri, 10 Oct 2025
+ 01:13:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20251009223552.2648331-1-yoann.congal@smile.fr> <CANNYZj9JJ+tP68X9pLyie5a1xh7+3VMUui142eV50Rc_doR81Q@mail.gmail.com>
-In-Reply-To: <CANNYZj9JJ+tP68X9pLyie5a1xh7+3VMUui142eV50Rc_doR81Q@mail.gmail.com>
-From: Yoann Congal <yoann.congal@smile.fr>
-Date: Fri, 10 Oct 2025 10:08:19 +0200
-X-Gm-Features: AS18NWBOYFOdSWEd1pxZhIJ6CADW-t3BxrmlTmZETHR2oXLJNKGEBePRKlINk7U
-Message-ID: <CAMSfU+4twDb_wpQfqoxVbzP8u_B7HqTo68TMzyQ5RLhsv9MJJA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] ast: Warn on multiple builtin config
+References: <20251010080619.2688482-1-yoann.congal@smile.fr>
+In-Reply-To: <20251010080619.2688482-1-yoann.congal@smile.fr>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Fri, 10 Oct 2025 10:13:03 +0200
+X-Gm-Features: AS18NWB_FEgogPAP3NDFDJKUu864vCDcwR3R7bZy87ctD8QsfNTSWn_ZH3Kcq6g
+Message-ID: <CANNYZj8CNarGn6vv6CyVepDnYwPmyL4HM2nb30WNug+TDj+D7A@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH v2] ast: Warn on multiple builtin config
  fragments for the same variable
-To: Alexander Kanavin <alex.kanavin@gmail.com>
+To: yoann.congal@smile.fr
 Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="0000000000004043050640c96d5f"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 10 Oct 2025 08:08:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18164
+ <bitbake-devel@lists.openembedded.org>; Fri, 10 Oct 2025 08:13:25 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18165
 
---0000000000004043050640c96d5f
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> Added warning looks like:
+> WARNING: Multiple builtin fragments are enabled for OE_FRAGMENTS via vari=
+able machine: machine/qemux86-64 machine/test machine/qemux86-64. This like=
+ly points to a mis-configuration in the metadata, as only one of them shoul=
+d be set. The build will use the last value.
 
-Le ven. 10 oct. 2025 =C3=A0 08:40, Alexander Kanavin <alex.kanavin@gmail.co=
-m> a
-=C3=A9crit :
+...
 
-> On Fri, 10 Oct 2025 at 00:36, Yoann Congal via lists.openembedded.org
-> <yoann.congal=3Dsmile.fr@lists.openembedded.org> wrote:
-> > +            if len(builtin_fragments_list) > 1:
-> > +                bb.warn(
-> > +                    ("%s has multiple builtin fragments for %s: %s. "
-> > +                     "This is not supported but build will continue
-> using the last value.")
->
-> I think the message should be:
->
-> "Multiple builtin fragments are enabled for %s via variable %s: %s. "
-> "This likely points to a mis-configuration in the metadata, as only
-> one of them should be set. The build will use the last value."
->
+> +                    % (
+> +                        self.fragments_variable,
+> +                        builtin_fragment_key,
+> +                        " ".join(builtin_fragments_list),
 
-v2 sent. Thanks!
+You need to put these into correct order.
 
-
-> Alex
->
-
-
---=20
-Yoann Congal
-Smile ECS
-
---0000000000004043050640c96d5f
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote g=
-mail_quote_container"><div dir=3D"ltr" class=3D"gmail_attr">Le=C2=A0ven. 10=
- oct. 2025 =C3=A0=C2=A008:40, Alexander Kanavin &lt;<a href=3D"mailto:alex.=
-kanavin@gmail.com">alex.kanavin@gmail.com</a>&gt; a =C3=A9crit=C2=A0:<br></=
-div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;bor=
-der-left:1px solid rgb(204,204,204);padding-left:1ex">On Fri, 10 Oct 2025 a=
-t 00:36, Yoann Congal via <a href=3D"http://lists.openembedded.org" rel=3D"=
-noreferrer" target=3D"_blank">lists.openembedded.org</a><br>
-&lt;yoann.congal=3D<a href=3D"mailto:smile.fr@lists.openembedded.org" targe=
-t=3D"_blank">smile.fr@lists.openembedded.org</a>&gt; wrote:<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if len(builtin_fragments_li=
-st) &gt; 1:<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.warn(<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- (&quot;%s has multiple builtin fragments for %s: %s. &quot;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0&quot;This is not supported but build will continue using the last v=
-alue.&quot;)<br>
-<br>
-I think the message should be:<br>
-<br>
-&quot;Multiple builtin fragments are enabled for %s via variable %s: %s. &q=
-uot;<br>
-&quot;This likely points to a mis-configuration in the metadata, as only<br=
->
-one of them should be set. The build will use the last value.&quot;<br></bl=
-ockquote><div><br></div><div>v2 sent. Thanks!</div><div>=C2=A0</div><blockq=
-uote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1p=
-x solid rgb(204,204,204);padding-left:1ex">
-Alex<br>
-</blockquote></div><div><br clear=3D"all"></div><br><span class=3D"gmail_si=
-gnature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_signature"><d=
-iv dir=3D"ltr"><font face=3D"Raleway, regular">Yoann Congal</font><div><fon=
-t face=3D"Raleway, regular">Smile ECS</font></div></div></div></div>
-
---0000000000004043050640c96d5f--
+Alex
 
