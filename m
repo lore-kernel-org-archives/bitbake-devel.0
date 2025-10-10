@@ -2,117 +2,144 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5001BCAC5BB
-	for <webhook@archiver.kernel.org>; Fri, 10 Oct 2025 08:29:35 +0000 (UTC)
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
- by mx.groups.io with SMTP id smtpd.web10.4167.1760084970200048050
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4DECCA476
+	for <webhook@archiver.kernel.org>; Fri, 10 Oct 2025 08:31:25 +0000 (UTC)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web11.4406.1760085083125764607
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 10 Oct 2025 01:29:30 -0700
+ Fri, 10 Oct 2025 01:31:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=v1oRPjY9;
- spf=pass (domain: smile.fr, ip: 209.85.208.48, mailfrom: yoann.congal@smile.fr)
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-62fc89cd68bso3622795a12.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Oct 2025 01:29:29 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=dB4i6loj;
+ spf=pass (domain: smile.fr, ip: 209.85.128.45, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-46e29d65728so10575275e9.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 10 Oct 2025 01:31:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1760084968; x=1760689768; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iaIxxaMECzNPXWI/hpiMTdrQDzTbhCE76k2Pq5C8iYQ=;
-        b=v1oRPjY9Z/POjQA1x6GMPG7vPbgQm9yIrjFMtnLTzLp1lNSyiAZvRnCP83TBb7NzOJ
-         rQo7s/mOGKtHIGcUyEg6JYA1N8O81/uBOx6arL3xIy7BGqqCs+iy+GWJ1ok/fYRPhcRu
-         GkzgIMniKpEg9mJD4Rz1MpefiNf6aOpQr2AbY=
+        d=smile.fr; s=google; t=1760085081; x=1760689881; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=7iOkDTVfSsCfgTlqeDzh1NE9YTKy+TQlr4ptN/09JeU=;
+        b=dB4i6loj5X6+mMQPoxwGLQ+NqV3QrghhdkYvG6l3t7LkDZYe7axCArgygIz0EOxJK0
+         phu5/lo7w6qhdQ393vSJaj6TDWMWlZj/GDb9nGxppfrW7KANgWjjTBX30MQ2N9vzzdOP
+         km+T8bq+TULC5XCcwx9cOzd940EPDIJm42c1s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760084968; x=1760689768;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1760085081; x=1760689881;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=iaIxxaMECzNPXWI/hpiMTdrQDzTbhCE76k2Pq5C8iYQ=;
-        b=VX+6Xq56ZDZM2+PNVJT9ztQTTqukSgZyVOTAklxRpm4da2+6SSQyELQGKD9Mf9P3La
-         30tu9uLVt1SDRH4IaKgukfeF11cT2qK06b2m1JxaV9o0a7zX4YWeXb3W+Q5MwfYfJIyQ
-         nBgjUXbQPSTxyncMSWRRA4e3jZkKSykSc119jw7zP+y9YBBJTA7w37uA3+pEvTqQLqpX
-         EujteZHjjgKPYISe6v+tQpsBWJmSc2//OqblWB16omfs6A3yxk3qGd0FeIc9HdhwXEkg
-         8sCMHy8FP+QTppVbEJ5tC8z8AspRDerOyY5NEt2HErhxXYM0l6VqVSTfkTYIrHrcEaPm
-         Cifg==
-X-Gm-Message-State: AOJu0Yz5UFzO0crlXIaupaMh/p3FnrAZmlOPQ2bV1IuPwEsCZIPhhHmI
-	C6Fljq7Ncd0JGjXmujbkkc305JUOTULM1bGDklW9I2smsgWWcwSiNODg4qvajIFioZXG1ORvk26
-	38lOuitg=
-X-Gm-Gg: ASbGncvJrzXAf8ltxtpP2NP606bp2FOALeXUodohFCGSKduRJZCtj+y5v9i8Xxa0YRo
-	zVAuY1kefv6ocg+XSn+tN3EEVUD6dweXmtbo/tdp1Y4hHaLXbYhXb072BagxlU9TVMtrhk04wVo
-	t7WMfEpB7RQ66CUy7xNzaGSQnGlshi+Vx6a5ud1Qzr8g821js0MLoKRJaHdZJpLvse+2ruCtOQB
-	j1l+yuyw3MWh6mF7SD2+aG1kPaLlkhgyWGdqFS6zdCBIezdSM+hGT1ZrEWUfJKgrvSTR2YavDnZ
-	IeaWqOAdSKpab5YzcoiqoxdSGlfVTtZ20n04pN537WmKW6hiIy/o0pOGp5hgD1WKRf2BMSWXkyq
-	Nm0vThEv+f7hH9MoA+lo9UgDwWXfc54tfDXIHB5C94EcVEuGrK/Dj0lpgZLgn68cSbHWNFAF9W8
-	2XeMKTTDymo/XExsTCrQfAV+Y3GAcY6ZAyWb/14TjKP0TGJqD6ruGWp2B0eXJ3
-X-Google-Smtp-Source: AGHT+IH8j2nXFPWYd/YFzsuZrD5fIA+Ae7bNZY5b47BscqDi6+2PcdAwwxhARt2s1OKgD4zRxGLdBQ==
-X-Received: by 2002:a05:6402:2812:b0:62e:e5b3:6388 with SMTP id 4fb4d7f45d1cf-639d5c3ec7emr11094197a12.19.1760084968368;
-        Fri, 10 Oct 2025 01:29:28 -0700 (PDT)
-Received: from P-ASN-ECS-830T8C3.local (2a01cb001331aa009af08a1246ddcfed.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:9af0:8a12:46dd:cfed])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-63a5235eb13sm1682794a12.5.2025.10.10.01.29.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Oct 2025 01:29:28 -0700 (PDT)
-From: Yoann Congal <yoann.congal@smile.fr>
-To: bitbake-devel@lists.openembedded.org
-Cc: Yoann Congal <yoann.congal@smile.fr>
-Subject: [PATCH v3] ast: Warn on multiple builtin config fragments for the same variable
-Date: Fri, 10 Oct 2025 10:29:19 +0200
-Message-Id: <20251010082919.2694739-1-yoann.congal@smile.fr>
-X-Mailer: git-send-email 2.39.5
+        bh=7iOkDTVfSsCfgTlqeDzh1NE9YTKy+TQlr4ptN/09JeU=;
+        b=lJyOoP/q4TDbj6GSxU/ugVpSBilJxcSM83ibNsjTBoUavyshz+xrKefAcliALKZSdL
+         IsHAsy2M5pfFxAqTEckE6Ui5B5ZN76zqw2/zTvXW+cb89J4XDa6QlRMQ6J7l+rGkWneg
+         ijGCT1yHLLPuOwn2Jzfe+1nsr7PzrmNRlXt/ot1Ddld03PMWsVM23gcWwqkWDg1GVRiN
+         rvPASoUDbiWdiJoqOI7ldvOaENERlC4L3ba6/IZ9dUm+zSYWdCpGJSUYiCIycwycDHhz
+         uP0ar1yVSZiIuxp+UBn4DS8rdxdb7J4vDXx24nAuiM60HqLl02YXwfU/n1Mpm6BoJ06z
+         8gBA==
+X-Gm-Message-State: AOJu0YxX8pXgDuv9yg1WkqOvfYw7zB3DJqXAFU5groYSggnFE+tY/avP
+	xPnaIeQYzvRsgxYWwxZDNSBQp3CsY/lVa+Gsg9b++6UjjwxKXjh5LGXLgjwiOOJgsrdmIXh3/W2
+	Kycow2reay5LmJStOelTKqYfGsNEq/6D43M7HB6fnsA==
+X-Gm-Gg: ASbGncvHwFdAw9+1jWvC0gSQv6aZW7qYq5E0h5LCSNhdFt21zg/6gnR115i5sJUauNY
+	VMjNrFztTjieqWi4r3TVVsr1+HcFiDlw/Nal+QoJ9jk5m1judLcf9YbrrXl04wcjnKP95Tmi3Vj
+	mbR+enqP85u4wIyZ8f3K+T6NBAacHCMxIqRCp915ePbeyqNGAUiAce+lWtlgssEzcJWmzSkvT59
+	FLo6tNfdMbMfeD3HVibAfMl1KniSCTKyb5/vRabZaxf4DeJ8qxPD7PFJYQkjAPjn4FPbxE=
+X-Google-Smtp-Source: AGHT+IEXAQ5aH6FkAy/TmnTzNs1H27uHR7T53374i+iY6aDAMbvAM7blyV3jOUeVjL8wMGssKcGOnl9V5+W04dkPA4Q=
+X-Received: by 2002:a05:600c:8b42:b0:45d:f81d:eae7 with SMTP id
+ 5b1f17b1804b1-46fa9afbd71mr66647165e9.28.1760085081390; Fri, 10 Oct 2025
+ 01:31:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251010080619.2688482-1-yoann.congal@smile.fr> <CANNYZj8CNarGn6vv6CyVepDnYwPmyL4HM2nb30WNug+TDj+D7A@mail.gmail.com>
+In-Reply-To: <CANNYZj8CNarGn6vv6CyVepDnYwPmyL4HM2nb30WNug+TDj+D7A@mail.gmail.com>
+From: Yoann Congal <yoann.congal@smile.fr>
+Date: Fri, 10 Oct 2025 10:30:54 +0200
+X-Gm-Features: AS18NWDyeyOTGMz2e6bSXe-e0-614Xne2PwQ7lRHScfw2AiZoNGTMVd8oPtiVWg
+Message-ID: <CAMSfU+4CBvPNyRA9dz+E3myXQR7z26Pg0nmRb4Tnbd4-F5zJxw@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH v2] ast: Warn on multiple builtin config
+ fragments for the same variable
+To: Alexander Kanavin <alex.kanavin@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="0000000000000d138e0640c9bef0"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 10 Oct 2025 08:29:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18166
+ <bitbake-devel@lists.openembedded.org>; Fri, 10 Oct 2025 08:31:25 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18167
 
-From: Yoann Congal <yoann.congal@smile.fr>
+--0000000000000d138e0640c9bef0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Having multiple builtin config fragments for the same variable
-(eg OE_FRAGMENTS = "... machine/A ... machine/B") is not supported.
-Warn the user to make them fix this but continue with the normal
-variable evaluation : the last affectation "wins".
+Le ven. 10 oct. 2025 =C3=A0 10:13, Alexander Kanavin <alex.kanavin@gmail.co=
+m> a
+=C3=A9crit :
 
-Added warning looks like:
-WARNING: Multiple builtin fragments are enabled for machine via variable OE_FRAGMENTS: machine/qemux86-64 machine/test machine/qemux86-64. This likely points to a mis-configuration in the metadata, as only one of them should be set. The build will use the last value.
+> > Added warning looks like:
+> > WARNING: Multiple builtin fragments are enabled for OE_FRAGMENTS via
+> variable machine: machine/qemux86-64 machine/test machine/qemux86-64. Thi=
+s
+> likely points to a mis-configuration in the metadata, as only one of them
+> should be set. The build will use the last value.
+>
+> ...
+>
+> > +                    % (
+> > +                        self.fragments_variable,
+> > +                        builtin_fragment_key,
+> > +                        " ".join(builtin_fragments_list),
+>
+> You need to put these into correct order.
+>
 
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
----
-v3: Fix string parameters
-v2: Updated warning message with Alexander Kanavin's suggestion
----
- lib/bb/parse/ast.py | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+d'oh! V3 sent :
+https://lists.openembedded.org/g/bitbake-devel/topic/patch_v3_ast_warn_on/1=
+15686012
 
-diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-index cb06e8917..cfead466e 100644
---- a/lib/bb/parse/ast.py
-+++ b/lib/bb/parse/ast.py
-@@ -376,6 +376,27 @@ class AddFragmentsNode(AstNode):
- 
-         if not fragments:
-             return
-+
-+        # Check for multiple builtin fragments setting the same variable
-+        for builtin_fragment_key in builtin_fragments.keys():
-+            builtin_fragments_list = list(
-+                filter(
-+                    lambda f: f.startswith(builtin_fragment_key + "/"),
-+                    fragments.split(),
-+                )
-+            )
-+            if len(builtin_fragments_list) > 1:
-+                bb.warn(
-+                    ("Multiple builtin fragments are enabled for %s via variable %s: %s. "
-+                     "This likely points to a mis-configuration in the metadata, as only "
-+                     "one of them should be set. The build will use the last value.")
-+                    % (
-+                        builtin_fragment_key,
-+                        self.fragments_variable,
-+                        " ".join(builtin_fragments_list),
-+                    )
-+                )
-+
-         for f in fragments.split():
-             if check_and_set_builtin_fragment(f, data, builtin_fragments):
-                 continue
+
+>
+> Alex
+>
+
+
+--=20
+Yoann Congal
+Smile ECS
+
+--0000000000000d138e0640c9bef0
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote g=
+mail_quote_container"><div dir=3D"ltr" class=3D"gmail_attr">Le=C2=A0ven. 10=
+ oct. 2025 =C3=A0=C2=A010:13, Alexander Kanavin &lt;<a href=3D"mailto:alex.=
+kanavin@gmail.com">alex.kanavin@gmail.com</a>&gt; a =C3=A9crit=C2=A0:<br></=
+div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;bor=
+der-left:1px solid rgb(204,204,204);padding-left:1ex">&gt; Added warning lo=
+oks like:<br>
+&gt; WARNING: Multiple builtin fragments are enabled for OE_FRAGMENTS via v=
+ariable machine: machine/qemux86-64 machine/test machine/qemux86-64. This l=
+ikely points to a mis-configuration in the metadata, as only one of them sh=
+ould be set. The build will use the last value.<br>
+<br>
+...<br>
+<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ % (<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 self.fragments_variable,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 builtin_fragment_key,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 &quot; &quot;.join(builtin_fragments_list),<br>
+<br>
+You need to put these into correct order.<br></blockquote><div><br></div><d=
+iv>d&#39;oh! V3 sent :=C2=A0<a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/topic/patch_v3_ast_warn_on/115686012">https://lists.openembedded=
+.org/g/bitbake-devel/topic/patch_v3_ast_warn_on/115686012</a></div><div>=C2=
+=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8e=
+x;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+<br>
+Alex<br>
+</blockquote></div><div><br clear=3D"all"></div><br><span class=3D"gmail_si=
+gnature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_signature"><d=
+iv dir=3D"ltr"><font face=3D"Raleway, regular">Yoann Congal</font><div><fon=
+t face=3D"Raleway, regular">Smile ECS</font></div></div></div></div>
+
+--0000000000000d138e0640c9bef0--
 
