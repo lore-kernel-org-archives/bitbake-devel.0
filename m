@@ -2,64 +2,64 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B73CCD184
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 010D9CCD18E
 	for <webhook@archiver.kernel.org>; Sun, 12 Oct 2025 17:47:52 +0000 (UTC)
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
- by mx.groups.io with SMTP id smtpd.web10.23230.1760291271452161668
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+ by mx.groups.io with SMTP id smtpd.web11.23345.1760291270501778433
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 12 Oct 2025 10:47:51 -0700
+ Sun, 12 Oct 2025 10:47:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=JrDjmnVc;
- spf=pass (domain: gmail.com, ip: 209.85.221.43, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3f0ae439b56so2029139f8f.3
-        for <bitbake-devel@lists.openembedded.org>; Sun, 12 Oct 2025 10:47:51 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=R398z2Um;
+ spf=pass (domain: gmail.com, ip: 209.85.221.42, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-41174604d88so1532160f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Sun, 12 Oct 2025 10:47:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760291270; x=1760896070; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1760291269; x=1760896069; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jt2gb+hCSVl3EgVl/XpvAEv/VAiHc4ww7TDk27IX7ZY=;
-        b=JrDjmnVcHJr8hUtWHTioAYYQdKZWwTHnQ5sY2Sa877+V0D7zkQ2xyhGx5blpH70cJ6
-         AUFl56H9PXTUjvYshnE+V5pYrtkRzpkKJYwk28K8suJvLPIAWdt6EljFJw7GpBcVtTD2
-         AyT6kySwApha4k93+skPDZncEtX3l6ZNJYBv/yLiBDa1Tpo4RNr9ViqNe2GGpQ9Qlzjq
-         Df5/9s9NXlmD6IIwake+srmye42yjNq1IiNUFBHKHCO6P4xb9tAGaGTjA047RaDYq/sh
-         9KTvZKFHnSW7dbM+hl/DovpWxG/+QLdSSR8Ii/h7hgLUoV+TKSnp6l7uHG1El7A/iZ5z
-         YAFA==
+        bh=sKIp9CN5M0tlAZ1XyKY84oNG4druI+nMIU9thc5s1D4=;
+        b=R398z2Umj6UnRBxtWSYk3Dfut+kqHYghTdlsEmvpHCkZTRGNIw4lJVqX+c6VSbubik
+         ShUwwhf7K8s41uQluFRgmJPsaTrZn2os7HxxxMDjnsY9PFt+LDzF0SqVn+AE0d9CMDvl
+         o2G/SJOjp3Mayeb/rIDEJuFpCdUfBhB24qsJ2r3lK73wlgh09QvZO7A8HmK20RR2zoCQ
+         nG2h0Hqi3SJUbOA9GccV44PlPejg2015aH3rVc8rDguXk9oFreiabb0Axc6zJuj1HN5a
+         6Z6gPvwG/9/UaWUIqNBRRwr4rhtJ5MzeoYoRRXlG/Ta7iCfwfZqQOe24oE0Z5MXOzmve
+         Gc7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760291270; x=1760896070;
+        d=1e100.net; s=20230601; t=1760291269; x=1760896069;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jt2gb+hCSVl3EgVl/XpvAEv/VAiHc4ww7TDk27IX7ZY=;
-        b=lBjlZ3qoAHP2AqeJTC67EVu/unttcS2Zmrko0TYcm6AUpp7fmkUkqNSJ79vd0OM3i3
-         W3PhnvGnoarNkEhgPWc36lXoML67oUiXglKmaLddJbxAHS6NCzi4CKNDQ3T4VuBuwfcn
-         e492MHWT5JnnCckuPSXwgr+qb/y/y3opjCapriN50UVgjY0jY+BVxThZ8eXKixq2dVdj
-         soXNFQURq6RrR5RG0BfKdQc7bzhs2FwC7q/qaLNxRbsMlqYjFELlItba03tQtdhP4bwZ
-         WB31pfQ4wpTRl9lvWlMnlM4LbT3DKkOJeH5ryiKnEjmplyY1j2g1XiB+HQ8DNARZsks5
-         5ZUg==
-X-Gm-Message-State: AOJu0Yz/XvUvM1iHzTNWotRCDP7DHbSZ+8uJ+6V6Z1SewaVkSw8/rcdT
-	pmgGBqAXCwRkY9BkSHakb2R4jcL54GC35SaHw/FIaEV8kZz3R3gP1GradwwKKw==
-X-Gm-Gg: ASbGnct0XXtPsg2Kbnj3lom/3uyL15wj676pYPXL/tVBqEHvVcT04BEKPCNAsUm6YPA
-	GfE+PqDGh8CJQ4JyyB+eGwOOQqF1ueUpckld0U+lPxxfSiXsq5IpIV420R8eWlJ5XcoTMQuwC6T
-	+es3Q7WL2SMQ72CnbBDhkd8xiIfO/pcVcSBPW1GRtJ5Ou/cPMaijFL+rWf5ld8oIBu3gWwkA72V
-	WPDm8yYLCN3VThlObSYAmC/xxvwqFG1XSLl2/gYZ3xcJmMbfQQ7kTThdtXfLkqO7f1oNX0J4rRy
-	KvfAgwVV99k5vwy/JWa4LerehLd+IM9uVZUlzLvYYUV9G+YzacTKm5khUWaVR3xOvH8jCaC9V2Z
-	r5Nb53Z+4rTI3VFpNRvWkbO8HOJyUh06BX6H7jzX/zDEAEpOunqgKpQPLmxzCzc3fGXUiwzkSat
-	9/Zgw9Cu1CE4Ag9Pa4UD0J97FZ3o91uZS9tY95m1s0l8BxWh4yFUvvj7xZkisefJk8jqAEu+fn1
-	q+764cN7PqO/Wg=
-X-Google-Smtp-Source: AGHT+IE+pl+nSqLU30+du08oiUAQSbwPwtJ5BMnYoeQR4g/Thruff7LNkXczbAOf2F1YftykOh6feA==
-X-Received: by 2002:a5d:5f55:0:b0:426:d55e:7b11 with SMTP id ffacd0b85a97d-426d55e7b52mr3513280f8f.47.1760291269577;
-        Sun, 12 Oct 2025 10:47:49 -0700 (PDT)
+        bh=sKIp9CN5M0tlAZ1XyKY84oNG4druI+nMIU9thc5s1D4=;
+        b=Nu6jtUImthz2InAQccarn5wmRX7KzhQ7aCf+nNRzFg7oLf/PwXSQcowAdK0UFnZuvL
+         RHecQW2fr/kXQW8rLIIzIKfWrBANQJ3I7hi/sI9MDBHOX1DESOJGqUtDl4vw1Tn7Dpib
+         S9L/LAUEbjqYC+gHcN6HCZOD5jaMD02r+U6Q5TPRF+Y3zBMW8NwoyKgJ6jBxiG/V7tr0
+         flu9e0twVKZRmAQDJDll4rINQVvcxoik+mT7ZQZf3SX18Iw9XT+1xtuJrfImZqRDKd54
+         WRUJLLsHpvlr+8qo9ZoWXj56MCt491q4QIDfSLSk0sjosG/A7q8rM8ekL2eAsnBKMeCw
+         fgFQ==
+X-Gm-Message-State: AOJu0YwX3/TPoID0PbNdYx2a1IRsShsFvKpUBvv0zBCAct+DsisKSLS6
+	fPiMnutif5Cms4a0clkCp2VuYxchl2P8FYXEWxrh6rf1t2k9CVJwUWUilxVDgA==
+X-Gm-Gg: ASbGnctDGBr7e5Q5SZGXnmrJCTb9PaUQ1dG0A1UKn1S9R90X3QvnxZ5H4wWKR4/XHZm
+	D0rguOaHeRGy0q/VMul3T0mHEZ/whuDUbcD/rSXcu+GAkICvT6YGgSWpZanOh+osGuGUGqVJlKu
+	eBDyPoW2+EPU+UgYSUhn4DEl8TZ8ov9Yrc9927jlOrRvGs1TUFjPjkTKHUTGq0MMfQYOIR6x1UP
+	UHlQ+Ptv2CzKX/pvos0BwsHq59GEa8QIb9nPOnbtP78BCubXYhE8GZkK6AgNGKK9gMo74dp8huI
+	6B3kjRfaKRB1GqIDDZc9o2EDquXkAdy89rHj3T4R/3P/7q0EXoIEoZ3W/blsvoLhdJ3FKn4l/kb
+	Rf9PF17aWVmRdJELbQYI9BzdxU2/q+1x37rKKASaNYtT4C+ISs9Np2ThRrwAHnK58p/ujxl8+rb
+	N0jALFbPUqTiuQmVi5ERGEJwQdfdB242yxtcOcDuPPa1GlIIqmF6CTFkjONO0T0WoRDI9EU9rmU
+	yHnTpMkzrQRvQ0=
+X-Google-Smtp-Source: AGHT+IHmT2NcmxWWIkgo9o+2RbqSIEcksG3Y6myLZKjG2uC4nmEYE3KKaqDNU+wxEcnxmzkhPOSShA==
+X-Received: by 2002:a05:6000:1887:b0:3eb:8395:e2e0 with SMTP id ffacd0b85a97d-4266e8de16amr11387157f8f.51.1760291268808;
+        Sun, 12 Oct 2025 10:47:48 -0700 (PDT)
 Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-426ce582abcsm14170160f8f.17.2025.10.12.10.47.48
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-426ce582abcsm14170160f8f.17.2025.10.12.10.47.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Oct 2025 10:47:49 -0700 (PDT)
+        Sun, 12 Oct 2025 10:47:48 -0700 (PDT)
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Johannes Schneider <johannes.schneider@leica-geosystems.com>
-Subject: [PATCH 3/5] bitbake-setup: use args.cmdline_settings for --settings
-Date: Sun, 12 Oct 2025 19:47:25 +0200
-Message-Id: <20251012174727.4191604-3-alex.kanavin@gmail.com>
+Subject: [PATCH 2/5] bitbake-setup: init: suggest removing a partially initialized top-dir
+Date: Sun, 12 Oct 2025 19:47:24 +0200
+Message-Id: <20251012174727.4191604-2-alex.kanavin@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20251012174727.4191604-1-alex.kanavin@gmail.com>
 References: <20251012174727.4191604-1-alex.kanavin@gmail.com>
@@ -69,48 +69,35 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Sun, 12 Oct 2025 17:47:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18177
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18176
 
 From: Johannes Schneider <johannes.schneider@leica-geosystems.com>
 
-To align the storage destination with the internally used variable
-name. This makes room for having another option use 'args.setting'
+In cases where the first call to 'init' failed or was aborted before
+creating the 'build/init-build-env' has been created, a user can get
+stuck: a second call to init aborts, suggesting 'status' or 'update'
+but these to refuse because the --build-dir is not valid.
+
+Guide the user by adding a suggestion to start over from scratch.
 
 Signed-off-by: Johannes Schneider <johannes.schneider@leica-geosystems.com>
 ---
- bin/bitbake-setup | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ bin/bitbake-setup | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index cb10b41d4..94514fd29 100755
+index f24d39481..cb10b41d4 100755
 --- a/bin/bitbake-setup
 +++ b/bin/bitbake-setup
-@@ -752,7 +752,8 @@ def main():
-     parser.add_argument('--color', choices=['auto', 'always', 'never'], default='auto', help='Colorize output (where %(metavar)s is %(choices)s)', metavar='COLOR')
-     parser.add_argument('--no-network', action='store_true', help='Do not check whether configuration repositories and layer repositories have been updated; use only the local cache.')
-     parser.add_argument('--global-settings', action='store', help='Path to the global settings file.')
--    parser.add_argument('--setting', default=[], action='append', nargs=3, help='Modify a setting (for this bitbake-setup invocation only), for example "--setting default top-dir-prefix /path/to/top/dir".')
-+    parser.add_argument('--setting', default=[], dest='cmdline_settings', action='append', nargs=3,
-+                        help='Modify a setting (for this bitbake-setup invocation only), for example "--setting default top-dir-prefix /path/to/top/dir".')
+@@ -443,7 +443,7 @@ def init_config(top_dir, settings, args, d):
  
-     subparsers = parser.add_subparsers()
+     builddir = os.path.join(os.path.abspath(top_dir), args.build_dir_name or "{}-{}".format(upstream_config['name']," ".join(upstream_config['non-interactive-cmdline-options'][1:]).replace(" ","-").replace("/","_")))
+     if os.path.exists(os.path.join(builddir, "layers")):
+-        print("Build already initialized in {}\nUse 'bitbake-setup status' to check if it needs to be updated or 'bitbake-setup update' to perform the update.".format(builddir))
++        print(f"Build already initialized in:\n    {builddir}\nUse 'bitbake-setup status' to check if it needs to be updated, or 'bitbake-setup update' to perform the update.\nIf you would like to start over and re-initialize a build in this directory, remove it, and run 'bitbake-setup init' again.")
+         return
  
-@@ -822,13 +823,13 @@ def main():
-                          }
- 
-         global_settings = load_settings(global_settings_path(args))
--        top_dir = get_top_dir(args, merge_settings(builtin_settings, global_settings, {}, args.setting))
-+        top_dir = get_top_dir(args, merge_settings(builtin_settings, global_settings, {}, args.cmdline_settings))
- 
-         # This cannot be set with the rest of the builtin settings as top_dir needs to be determined first
-         builtin_settings['default']['dl-dir'] = os.path.join(top_dir, '.bitbake-setup-downloads')
- 
-         topdir_settings = load_settings(default_settings_path(top_dir))
--        all_settings = merge_settings(builtin_settings, global_settings, topdir_settings, args.setting)
-+        all_settings = merge_settings(builtin_settings, global_settings, topdir_settings, args.cmdline_settings)
- 
-         if args.func == settings_func:
-             settings_func(top_dir, all_settings, args)
+     print("Initializing a build in\n    {}".format(builddir))
 -- 
 2.39.5
 
