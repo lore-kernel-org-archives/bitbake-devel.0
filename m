@@ -1,105 +1,136 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A8CCCD187
-	for <webhook@archiver.kernel.org>; Sun, 12 Oct 2025 18:02:33 +0000 (UTC)
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
- by mx.groups.io with SMTP id smtpd.web11.23637.1760292149984443374
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 124E0CCD18D
+	for <webhook@archiver.kernel.org>; Mon, 13 Oct 2025 14:53:20 +0000 (UTC)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web11.45885.1760367198523880370
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 12 Oct 2025 11:02:30 -0700
+ Mon, 13 Oct 2025 07:53:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=AXe56SJV;
- spf=pass (domain: gmail.com, ip: 209.85.219.50, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-799572d92b0so45240636d6.3
-        for <bitbake-devel@lists.openembedded.org>; Sun, 12 Oct 2025 11:02:29 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=O22LLW61;
+ spf=pass (domain: smile.fr, ip: 209.85.128.52, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-46e4f2696bdso44672395e9.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 13 Oct 2025 07:53:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760292149; x=1760896949; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=p1hKTsFjnk3AM7NkJQY5GmdSCHYyXAf7lbvdJDULIso=;
-        b=AXe56SJVrN+fk3QsA00pZ4vO78whVtMdu/oP0hlVDYyNlYcX+DoM7wZAoY3/FDSq/U
-         yXsoy30VRCb5+TmKcPVPMwXGHN/fT8OcvXKTJ+wv/EOsv4Mj1jL9FQJe7/VKBSgbw85u
-         9X9pg0yIyIcR/8afQ3/clUWD+aXtOAffNAt+OrLsl9YVLTqOGHouAvj6UEA9KAVu4vHT
-         nSbHS+W9Vj9+tVWAmojn5irrDN6iuPD2F1NkHhwcsQVaq/UQKaOgbMxd+SePLbcbeltY
-         9va/IxFP5LOo5hIAlE8I0QSUR6zXcsbf1F8hmE+W3juFb7NA9JQfDwY+YDqJ9UEyPlBz
-         E9IQ==
+        d=smile.fr; s=google; t=1760367197; x=1760971997; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+tjiC5aqyRltYi+uq7g+kqbqV8A+U3g6Dlzlc/DP4fA=;
+        b=O22LLW61l1y0HltItBzUSY2PHPQa+D/HWtLAc9AE0Iv2xC1GUgJDLc67nNX3vqZbQj
+         6QEGX+RecVqGL/pTmwTe8BSWfZhSDP6c4Db3ZKERhGzZGuqvEatj4j+frj/3GcmgYJVd
+         hD6L50+yLwNhvmV0bm3f9ubnMORRO2tLSruck=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760292149; x=1760896949;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1760367197; x=1760971997;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=p1hKTsFjnk3AM7NkJQY5GmdSCHYyXAf7lbvdJDULIso=;
-        b=klW8G53OerwQxnvh1yQnjLQ7iWqa5pBQOIrsZfnWR7qt5u+vfIRVzjw0f24NQ0W38F
-         7fIMtDW8d4i4L408ifIGd91Pfs5bzpp1uQuSNmAJ2eGPbFG8o9ko7A9UY77WunaFGkMN
-         tE2udzCDV7M0wDkCMvHHszGggxwrIC0XmZfkGvaqKgBo7jFpN3g3Va3YTzY7jWxHh+eW
-         i4LSzQVcKuGxtBlezI8mxZ6xJOqt0hLb8GdmA/UfeY8SDHiN/GSlu4GGxiMjE+boNILf
-         mou4pGP1QwJTFFQr3ytnK55RnqW9DDDCrRI4v1z/iJ6hSHgXLUjj3IWbMTNRJvc2/vlU
-         Eo8A==
-X-Gm-Message-State: AOJu0YwReDJ92r2gsTg5ITXYm8QaL+JZORbGP11r2Urskz9acGroAs8c
-	HkDTLzLdqZOP7kZ/77P+3UzR0iG6oFyaOyDNRn6IPz00mbRuFh/YiYLaJEZzNs78vu150axvAqH
-	/6TaQ9NIsAlzwIUmUzlHnSnOwhP3u3P4k3gAln8Y=
-X-Gm-Gg: ASbGnctP3cyv+MDHls79bf6rmvmFDN44HQ8J9z+S1IKS3GS5qfcm/qYZ/7+ZtK8bqBE
-	jCoQOxWOFlHRNILUIOvXjlRVvHCodON1svJW8oOnenBAg6v/vRULiFUPhtVMciPjAQLu+S97iDz
-	bRbyFhDrsZd4yB7vRMrdJDzNfRkt4NVs8uKv1pV/71dfgDpk13nwfhoihSkW1nYa2yNKfSGgWA+
-	IaSc2YR3a9Jluy10+WvDNQB98IhJHNcDMja2pe11MdVAZJDkM2z5QUfZ+xteCG9E7gu83EICJlk
-	YDWnEvzvH5LP2n5WyifOTR9HK2kOqgQhNklo
-X-Google-Smtp-Source: AGHT+IHmp4Ee2gaugGZAIdIXwZ4SVdTWe9YBNB29DBuIpBHaj/WE6Io+ocHTxKYT732Jo2lTZBx7BtpvqO9OWBBoJiw=
-X-Received: by 2002:a05:6214:5083:b0:783:cc80:1770 with SMTP id
- 6a1803df08f44-87b2106d967mr278370526d6.25.1760292148889; Sun, 12 Oct 2025
- 11:02:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20251012174727.4191604-1-alex.kanavin@gmail.com> <186DCF96641E42F9.9110@lists.openembedded.org>
-In-Reply-To: <186DCF96641E42F9.9110@lists.openembedded.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Sun, 12 Oct 2025 20:02:18 +0200
-X-Gm-Features: AS18NWD10uRQktsPmvzuhfl4qPqkZplDkNWtijVr8yGDFggBNSpbv9Fv8ReHDA0
-Message-ID: <CANNYZj95DHnABGNM_2ykAWn3+9kJxxDpWzPgWHqbOMokAVWQbg@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 5/5] bitbake-setup: commandline: use
- subsubparser for settings {list,set,unset}
+        bh=+tjiC5aqyRltYi+uq7g+kqbqV8A+U3g6Dlzlc/DP4fA=;
+        b=iMszuVBnPFFeuJ0fxTsJjnpZKOK/sueQ1MCMi24nuplODN4AR8yZDfazLh74+iTvhO
+         IZ4akUL69vDRDaVgfWY5ZXr6qIWi1cv2HOkzH0MNmbGO4sjGymMAFqe8twph9yZY/t1Z
+         wpDrVbYlXTKI3vLMCeUmVEl/G3e6FHnpHvCzHE6cB8G5a0QsoaBm3wRIcqpRG331nW0g
+         Jj4EY7MkqIR8RinwOV2YEKKjx1G4AsWDgUZ1cipl6SfO9lY+PR0zWGWU108E89HevFwr
+         Ulx7emh2WWbCClqE9OYfpE+pCFpUWt073Bs05kE+DUVUSRHu5jCI82Wa4J3GjJRcHWfo
+         mUhQ==
+X-Gm-Message-State: AOJu0YzLx7KUUMCf2697VWB8IeX74+cpCbe1+QHfukcoix9ZnyqSihFu
+	Gi9wwHRCwRCQM1ypsSuqJ4uykEYLh6r5DTWGAW4mlnVdK0YBqrYFun/uvRvxjTdLP0ccTm4BpSd
+	wlUKovhA=
+X-Gm-Gg: ASbGncvlxdP9HihMkwXTgtltuqlEmBAfxc6zaz/7jqEdiPpmhDRKaGs9I4sUZ7ON/u1
+	qtfVoCxc8J096B5V+HonOG1Utfx834DJVKdw42rk/4AbQPKBCQT+dp1KaTac6aa4RTRvFgtRMIh
+	0wFueog+K/rAAzMMK8Oj/DD9o2AohxPie1x8ujIuNFR3v/4+q2VTJEYh6MH+2eegDlpXZvVlzNm
+	1QzY/TEErdj46CA/lgWLI9FdjESqSBwy0oeHlWsZYmmxTaGIehy5euhbKR7Oa20GNCoTIJesCqz
+	w/EUQ+lhAJcRpeySEqlZqzlLyAAGYlpR38/hKxc44wC6Uzbf2ZjaZ1nqMflQuzuRTJdks7Og7k1
+	0SPfJeUkFZ1gDqUfsTrVZhdyXuv6gzzT1Ysusx/0VPZ99EZNW22j5OwB2B8sRCNy/l+f4cteOVB
+	iqAOfRKJGRndL+uvMHo+/okWbzE3NaQr46WNy5YK2XbBxRlZZo2n7nbQ==
+X-Google-Smtp-Source: AGHT+IE7D91uRN0gsX1ozhzvZ4w0df1+h3LmR9/TzGnTxFv86OkP3KPd1CG6sXMrEg2Ph4aQPby8lQ==
+X-Received: by 2002:a05:600c:a47:b0:46e:45ff:5bdb with SMTP id 5b1f17b1804b1-46fb4816974mr97103295e9.8.1760367196627;
+        Mon, 13 Oct 2025 07:53:16 -0700 (PDT)
+Received: from P-ASN-ECS-830T8C3.idf.intranet (static-css-ccs-204145.business.bouyguestelecom.com. [176.157.204.145])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46fab3d438fsm133282265e9.2.2025.10.13.07.53.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Oct 2025 07:53:16 -0700 (PDT)
+From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Cc: Johannes Schneider <johannes.schneider@leica-geosystems.com>, 
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc: Yoann Congal <yoann.congal@smile.fr>
+Subject: [PATCH] ast: Better variable history for builtin fragments
+Date: Mon, 13 Oct 2025 16:50:34 +0200
+Message-Id: <20251013145033.2903356-1-yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.39.5
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 12 Oct 2025 18:02:33 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18180
+ <bitbake-devel@lists.openembedded.org>; Mon, 13 Oct 2025 14:53:20 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18181
 
-On Sun, 12 Oct 2025 at 19:47, Alexander Kanavin via
-lists.openembedded.org <alex.kanavin=gmail.com@lists.openembedded.org>
-wrote:
-> The new help text now reads:
-> usage: bitbake-setup settings [-h] [--global] {list,set,unset} ...
->
-> and the respective sub commands:
-> usage: bitbake-setup settings list [-h] [--global]
-> usage: bitbake-setup settings set [-h] [--global] <section> <setting> <value>
-> usage: bitbake-setup settings unset [-h] [--global] <section> <setting>
+From: Yoann Congal <yoann.congal@smile.fr>
 
-A note from me: I'm well aware this changes the settings UI yet again,
-at the 11th hour, and I'm feeling slightly uneasy sending it, but I
-still think it's a worthy improvement:
+As of now, the variable history for builtin fragments looks like this
+(edited for clarity):
+   $ bitbake-getvar MACHINE
+  #
+  # $MACHINE [2 operations]
+  #   set ast.py:368 [check_and_set_builtin_fragment]
+  #     "qemux86-64"
+  # pre-expansion value:
+  #   "qemux86-64"
+  MACHINE="qemux86-64"
+User can't know where MACHINE was set, this is bad.
 
-- currently bitbake-setup tries to mimic older versions of 'git
-config' UI. But those older versions offer a confusing, convoluted
-mess, and shouldn't be imitated. This change adds a nice bit of
-structure and clarity to the operations, and follows what recently
-released versions of 'git config' do [1].
+This patch tries to reconstruct a MACHINE history from OE_FRAGMENTS
+history.
+With this patch, history looks like this (for a simple case):
+   $ bitbake-getvar MACHINE
+  NOTE: Starting bitbake server...
+  #
+  # $MACHINE [2 operations]
+  #   set .../auto.conf:2
+  #     "qemux86-64 (OE_FRAGMENTS contains "machine/qemux86-64")"
+  # pre-expansion value:
+  #   "qemux86-64"
+  MACHINE="qemux86-64"
+The path where the "machine/qemux86-64" fragment was added to
+OE_FRAGMENTS is displayed, this is definitely better.
 
-- the principle of reading global/local/commandline levels of settings
-and not creating them unless asked to and all other existing
-functionality is retained
+Fixes [YOCTO #15939]
 
-- the needed tweak is basically inserting 'set' into places where a
-setting is set, so it's a small one
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+---
+This was previously sent as RFC:
+[RFC PATCH] ast: Better variable history for builtin fragments
+https://lists.openembedded.org/g/bitbake-devel/topic/rfc_patch_ast_better/115674103
 
-- something like this should be done now, otherwise we're stuck with a
-sub-optimal UI.
+But, with:
+[PATCH v3] ast: Warn on multiple builtin config fragments for the same variable
+https://lists.openembedded.org/g/bitbake-devel/topic/patch_v3_ast_warn_on/115686012
 
-[1] https://git-scm.com/docs/git-config (see also 'deprecated modes'
-section for the obsoleted UI)
+I think it is ready to be merged.
+---
+ lib/bb/parse/ast.py | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-Alex
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index cb06e8917..27adbd860 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -364,8 +364,16 @@ class AddFragmentsNode(AstNode):
+         def check_and_set_builtin_fragment(fragment, data, builtin_fragments):
+             prefix, value = fragment.split('/', 1)
+             if prefix in builtin_fragments.keys():
++                fragment_history = data.varhistory.variable(self.fragments_variable)
++                loginfo={}
++                for fh in fragment_history[::-1]:
++                    if fh['op'] in ("set", "append") and fragment in fh["detail"]:
++                        loginfo["file"]   = fh["file"]
++                        loginfo["line"]   = fh["line"]
++                        loginfo["detail"] = f"{value} ({self.fragments_variable} contains \"{fragment}\")"
++                        break
+                 # parsing=True since we want to emulate X=Y and allow X:override=Z to continue to exist
+-                data.setVar(builtin_fragments[prefix], value, parsing=True)
++                data.setVar(builtin_fragments[prefix], value, parsing=True, **loginfo)
+                 return True
+             return False
+ 
 
