@@ -2,62 +2,62 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1BECCD1AA
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104BDCCD184
 	for <webhook@archiver.kernel.org>; Fri, 17 Oct 2025 23:15:25 +0000 (UTC)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web11.5849.1760742917846864206
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.web10.5876.1760742918464621553
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 17 Oct 2025 16:15:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=QAmnhWbg;
- spf=pass (domain: smile.fr, ip: 209.85.221.51, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-426f1574a14so1476201f8f.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 17 Oct 2025 16:15:17 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=NL42MVNC;
+ spf=pass (domain: smile.fr, ip: 209.85.128.43, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-47106fc51faso26748315e9.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 17 Oct 2025 16:15:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=smile.fr; s=google; t=1760742916; x=1761347716; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FihqOw83/3BqydENvAtKluDIncNWS15FK1Evg7jj5Oo=;
-        b=QAmnhWbg1W2MSWwauQqSer02KM+lB95y/03fAzb4wJRnHN0XfihzAEJmxDfGeq2Fu+
-         oTMYi8dUO+XnTU3NL8r8s/tvNp8ZLcuooph76YNxJkJj2hPvguf5NqG/pf24Ep1rvr/l
-         G/YN/xa2a4+Yq+s7D0NHA6yaq51botnv/Iaa0=
+        bh=TanCxKK4WRONBkwvniAxY86hYDc8lq4CyhbwbvBOTTI=;
+        b=NL42MVNCRYDRe9ZrkxhiL6X3UMqprgxWRgwcTw8f4IVFP+/X3UcJeR+N+KqaWKH7vh
+         dQR1x8zqIeXmT9tyoyNKdBmpr7EIXFaD1P9wWBv0q6YmCbmDR3kffvJlXPQuLqLWrJ27
+         BjiuG5alpxTwxjIOh7jKc7zSKb0432pTOZ12A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1760742916; x=1761347716;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FihqOw83/3BqydENvAtKluDIncNWS15FK1Evg7jj5Oo=;
-        b=mXhhB2efXTxHh4h+NC1ZJjgCz1OjJonnnJkaChR4ItVCn4OF3q+RgZ2rLV6e4/KR9K
-         0brXIsBEo8rI1FotFAPZAwOoJGMQJ8Jlp+cHrFb5WIqzfXh0xLGOykW2Jjx6EJlkCHXB
-         Yvn6Fz8O1+eovI3+WWLGI7vkOwpECZG9hTIMfW67FJaj69tiugSJA1o/QY7JO+Q4trRw
-         oADQ3hX3lWdeVihMvTDyS0Q2Os6X85CTEISwFJn67cvVKmN8c5d47HVJYuxYC2Clve4e
-         HRmdPdiYTglUhkWgGdxpnsPdrE9jNSvMzH3fJU0V+LdRyt7NA4xG2VLwY68GRMXxiq2B
-         WmaA==
-X-Gm-Message-State: AOJu0YwNIhfsKpg/YNPudNjj9h88zTcDj24QEn80HgBLA/W52MaBtVte
-	/zurjmFb/oUifoU2yT9Y03tVTpdx7b8wk2pE/xpD7exJkjICOXVsfIQhl4BpwCD7lLckQzlr2s/
-	RD4HTe9s=
-X-Gm-Gg: ASbGncuwz2cZQfJBtP8JRCR1fyX4XCzqqXETaMHpkK2o+IcI6+WRZCAFzSBBuunNDzH
-	iL9Nj5hrySe8mKmEFNoQhILn9S5E2ZhL9wIDe8Z+/cMZQigb1pGtTNBdYPKavNOaolsKdP4uAGv
-	lptWyASKurqBlI5zmi/Ih/rDmv3noGDoYLVdi9XXzgn3AjScSHSkpvygLSb90XPptj8d+3f8ZjK
-	ycqa8EJb6phWdcEeCrdlCKIakc+Rq7BYMeiYduweG1ZtSw2DJGreTo1FJ5PLUodsUaT3om4apDu
-	chsdTw8INeKDJjnICd37JayELpNMLUPLxwKlU6dByFUMargjQYHpNTQJemggzxUBVmXmTq8Y2Z8
-	patJhXvP+Jyukq/DBy7Fv8eB+crpZdhk1SDOExMAcwGIj2IZJsvzam3QbWw61n9KM8SMsxaGXKd
-	XlVoHeTcLH0pwNv9O0eoJcL+JC6HgzQj6zzAv+q4GnliNvnMXdzPNMQ+BIJy85qSQa5XFdphJuz
-	3sC3fn2gT0TaHTWaZi+z/8=
-X-Google-Smtp-Source: AGHT+IFC6y5CL6V91WeQdQtd+B+OScSturcQzCI18DNinJsj8P0wC6N5RvNHpmK8+kWZng14C3gKzg==
-X-Received: by 2002:a05:6000:2303:b0:427:6c7:66f8 with SMTP id ffacd0b85a97d-42706c76a55mr2840623f8f.52.1760742915912;
-        Fri, 17 Oct 2025 16:15:15 -0700 (PDT)
+        bh=TanCxKK4WRONBkwvniAxY86hYDc8lq4CyhbwbvBOTTI=;
+        b=TytOHCLn02Qgdnbn/rmw4kYGHESPljhjKZUHpLBkucxdQ1Xi5Nzadvpx5s+6fDbRV4
+         iZnigCPvIc3XRbZhkre5uiKYN4tUgOQXXGlq/+9oQG3UvTBkCIz4rJu8Sj/bSsybHOjt
+         614N2kUmJm5ob8yDkF/7RuyX/AiHsjm7w0hMSdG2aE4k+EHeSFDhwYxLRXAq5V5RI07+
+         i+EwhTwztPJ9ugLp+FpnjoUF6jwox4cEM54018Tv+genIF6Yw9iwkk4erBwibRlR1c/d
+         wc9F8IgE5AVL+z8ljbJ7h5NfB1OA/hOEnImhAd9RyQHb460GSTLLXd/eqXPOm0Ab7+bk
+         Dk6w==
+X-Gm-Message-State: AOJu0YyK60eHYdB33dxXLGGzDQHWBbXR6+MGr0DLXqlTMDokGuOEYD+w
+	ibrtvT/RJnXOBiCaok45SDrogl61gmkA8Qws5h/671M2cK65LH1bbXIKup0rEJu618wB2LAUv/J
+	Sd0yu7zI=
+X-Gm-Gg: ASbGncuGeXbOoz9ACmCJ77AguzGFyzGZBNl8nztq89rr6orctWEMIxrt8bR62IcOaRN
+	Q+l917NNyUEeXq3h7k0USqJKo9mA1Gbf5K8ze3SCFIJ0Y6RfowD8mhIUGNMN0AImMRIzs3Qf75X
+	DI5AgOf5Rrp+vs8+A3SLSAIQCuhOnhooZlrtG6fPt8fxGWOT0B00NTeD9C7O2WM/yyNZcyzoCx6
+	6SI8lKohWmsqsQKG+/1HJtC20uGJgWQN7A4mIbghkYatvcruVozg5papLArI7uU4lNZHm46wXw7
+	RDLckLRxXblriQ/O5Cu/EQxH9IvD6w9M4c2A9RPZj+1SDIFv9rZF6zd/PgsD/X5d8cOyUttV8z8
+	VqS7yfxWH4+HVgc3joyBkUGR44N3PJF+YIPWVenm47heov/iu6KrvSKO2VVrCWgw8palVwaGgRb
+	laXlpOdKuJ+5aajnGw0U0SSm0ntc39rGApZT7P8YuGljamJYSJQOJ9vHtoV6NkOuNXEgASNQ4Sd
+	DFwIqKQUxua
+X-Google-Smtp-Source: AGHT+IH/2TfXIfV94NzzPznDfrDV7NECNHzlNBvjLzLyf0YfsaiYO0rKwpxtHUrygvC0xhZEiY9blw==
+X-Received: by 2002:a5d:59af:0:b0:427:6a3:eff6 with SMTP id ffacd0b85a97d-42706a3f01fmr3196811f8f.26.1760742916448;
+        Fri, 17 Oct 2025 16:15:16 -0700 (PDT)
 Received: from P-ASN-ECS-830T8C3.local (2a01cb001331aa0017b58d8bf04048c3.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:17b5:8d8b:f040:48c3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-427ea5b3d4csm1638330f8f.19.2025.10.17.16.15.15
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-427ea5b3d4csm1638330f8f.19.2025.10.17.16.15.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Oct 2025 16:15:15 -0700 (PDT)
+        Fri, 17 Oct 2025 16:15:16 -0700 (PDT)
 From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
 Cc: Yoann Congal <yoann.congal@smile.fr>
-Subject: [RFC PATCH 3/5] schemas: Add bitbake-setup JSON schema
-Date: Sat, 18 Oct 2025 01:14:42 +0200
-Message-Id: <20251017231444.374436-4-yoann.congal@smile.fr>
+Subject: [RFC PATCH 4/5] bitbake-setup: Add an option to validate the schema
+Date: Sat, 18 Oct 2025 01:14:43 +0200
+Message-Id: <20251017231444.374436-5-yoann.congal@smile.fr>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20251017231444.374436-1-yoann.congal@smile.fr>
 References: <20251017231444.374436-1-yoann.congal@smile.fr>
@@ -67,154 +67,84 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 17 Oct 2025 23:15:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18189
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18190
 
 From: Yoann Congal <yoann.congal@smile.fr>
 
-This schema validates configurations in default-registry as well as the
-configurations used in bitbake-setup selftests.
+This adds a dependency on "jsonschema"[0] (plus recursive dependencies),
+but these dependencies are only used is the --validate option is used.
 
-Note: it uses a reference to the layers schema for the "sources"
-section.
-
-One can validate a bitbake-setup configuration with:
-  pip install check-jsonschema
-  check-jsonschema --schemafile ./schemas/bitbake-setup.schema.json --base-uri=file://. $BB_SETUP_CONF
-
-RFC: I don't know how strict/loose I should make the schema. I've tried to match
-what does accept/reject the current bitbake-setup:
-* If present, a "bb-layer" can be an empty array.
-* bb-setup accepts "configurations = []" but it results in a impossible
-  choice in interactive mode. I rejected that in the schema and plan to
-  fix that in bb-setup as well.
-* In each configuration, "name" and "description" are optional but the
-  flatten configuration must have them. I don't know if we can/want to
-  represent that in the schema.
-* bb-setup need at least one of "bb-layers" or "oe-template", that is
-  not enforced in the current schema.
-* '"additionalProperties": false' makes "comments":"..." impossible
-  right now, I plan to add them later.
-
-Also, I'm not sure this is the right path to store schemas.
+[0]: https://pypi.org/project/jsonschema/
 
 Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
 ---
- schemas/bitbake-setup.schema.json | 108 ++++++++++++++++++++++++++++++
- 1 file changed, 108 insertions(+)
- create mode 100644 schemas/bitbake-setup.schema.json
+ bin/bitbake-setup | 41 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-diff --git a/schemas/bitbake-setup.schema.json b/schemas/bitbake-setup.schema.json
-new file mode 100644
-index 000000000..a5cef7633
---- /dev/null
-+++ b/schemas/bitbake-setup.schema.json
-@@ -0,0 +1,108 @@
-+{
-+    "$schema": "https://json-schema.org/draft/2020-12/schema",
-+    "description": "Schema for bitbake-setup configuration files",
-+    "type": "object",
-+    "required": [
-+        "description",
-+        "bitbake-setup",
-+        "version"
-+    ],
-+    "properties": {
-+        "description": {
-+            "type": "string",
-+            "description": "Description of the bitbake-setup configuration file"
-+        },
-+        "sources": {
-+            "$ref": "/schemas/layers.schema.json#/properties/sources"
-+        },
-+        "bitbake-setup": {
-+            "type": "object",
-+            "description": "BitBake-setup configurations",
-+            "required": [
-+                "configurations"
-+            ],
-+            "properties": {
-+                "configurations": {
-+                    "type": "array",
-+                    "minItems": 1,
-+                    "$anchor": "configurations",
-+                    "items": {
-+                        "type": "object",
-+                        "properties": {
-+                            "name": {
-+                                "type": "string",
-+                                "description": "Name of the configuration"
-+                            },
-+                            "description": {
-+                                "type": "string",
-+                                "description": "Human-readable description of the configuration"
-+                            },
-+                            "bb-layers": {
-+                                "type": "array",
-+                                "description": "List of BitBake layers to include",
-+                                "items": {
-+                                    "type": "string"
-+                                }
-+                            },
-+                            "oe-template": {
-+                                "type": "string",
-+                                "description": "OE-template configuration"
-+                            },
-+                            "oe-fragments": {
-+                                "$anchor": "oe-fragments",
-+                                "type": "array",
-+                                "description": "List of BitBake configuration fragments to enable",
-+                                "items": {
-+                                    "type": "string"
-+                                }
-+                            },
-+                            "oe-fragments-one-of": {
-+                                "type": "object",
-+                                "description": "Mutually exclusive bitbake configuration fragment",
-+                                "patternProperties": {
-+                                    ".*": {
-+                                        "type": "object",
-+                                        "required": [
-+                                            "description",
-+                                            "options"
-+                                        ],
-+                                        "properties": {
-+                                            "description": {
-+                                                "type": "string",
-+                                                "description": "Human-readable description of the fragment category"
-+                                            },
-+                                            "options": {
-+                                                "$ref": "#oe-fragments"
-+                                            }
-+                                        },
-+                                        "additionalProperties": false
-+                                    }
-+                                },
-+                                "additionalProperties": false
-+                            },
-+                            "configurations": {
-+                                "$ref": "#configurations"
-+                            },
-+                            "bb-env-passthrough-additions": {
-+                                "type": "array",
-+                                "description": "List of environment variables to include in BB_ENV_PASSTHROUGH_ADDITIONS",
-+                                "items": {
-+                                    "type": "string"
-+                                }
-+                            }
-+                        },
-+                        "additionalProperties": false
-+                    }
-+                }
-+            },
-+            "additionalProperties": false
-+        },
-+        "version": {
-+            "description": "The version of this document; currently '1.0'",
-+            "enum": [
-+                "1.0"
-+            ]
-+        }
-+    },
-+    "additionalProperties": false
-+}
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index 38bb8099f..a96262c10 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -389,6 +389,43 @@ def choose_fragments(possibilities, parameters, non_interactive, skip_selection)
+         choices[k] = options_enumerated[option_n][1]
+     return choices
+ 
++def validate_bitbake_setup_schema(bitbake_setup_conf):
++    """
++    Validates a bitbake-setup configuration file.
++
++    Raises jsonschema.exceptions.ValidationError if the configuration file does
++    not match the schema
++    """
++    import jsonschema
++    import jsonschema.validators
++    import referencing
++    import referencing.exceptions
++
++    SCHEMAS_PATH = os.path.join(bindir, "..", "schemas")
++
++    def retrieve_resource(uri):
++        """
++        Retrieve schemas from /schemas/* URIs, reading them from
++        $BITBAKE_DIR/schemas/* files
++        """
++
++        if not uri.startswith("/schemas/"):
++            raise referencing.exceptions.NoSuchResource(uri)
++
++        schema_path = os.path.join(SCHEMAS_PATH, uri.removeprefix("/schemas/"))
++
++        if not os.path.exists(schema_path):
++            raise referencing.exceptions.NoSuchResource(uri)
++
++        with open(schema_path) as f:
++            schema = json.load(f)
++        return referencing.Resource.from_contents(schema)
++
++    registry = referencing.Registry(retrieve=retrieve_resource)
++    with open(os.path.join(SCHEMAS_PATH, "bitbake-setup.schema.json")) as f:
++        bb_setup_schema = json.load(f)
++    jsonschema.validators.validate( bitbake_setup_conf, schema=bb_setup_schema, registry=registry)
++
+ def obtain_config(top_dir, settings, args, source_overrides, d):
+     if args.config:
+         config_id = args.config[0]
+@@ -422,6 +459,9 @@ def obtain_config(top_dir, settings, args, source_overrides, d):
+         config_parameters = []
+         upstream_config = {'type':'registry','registry':settings["default"]["registry"],'name':config_id,'data':json.load(open(get_registry_config(registry_path,config_id)))}
+ 
++    if args.validate:
++        validate_bitbake_setup_schema(upstream_config['data'])
++
+     upstream_config['bitbake-config'] = choose_bitbake_config(upstream_config['data']['bitbake-setup']['configurations'], config_parameters, args.non_interactive)
+     upstream_config['bitbake-config']['oe-fragment-choices'] = choose_fragments(upstream_config['bitbake-config'].get('oe-fragments-one-of',{}), config_parameters[1:], args.non_interactive, args.skip_selection)
+     upstream_config['non-interactive-cmdline-options'] = [config_id, upstream_config['bitbake-config']['name']] + sorted(upstream_config['bitbake-config']['oe-fragment-choices'].values())
+@@ -753,6 +793,7 @@ def main():
+     parser.add_argument('--setting', default=[], action='append', dest='cmdline_settings',
+                         nargs=3, metavar=('SECTION', 'SETTING', 'VALUE'),
+                         help='Modify a setting (for this bitbake-setup invocation only), for example "--setting default top-dir-prefix /path/to/top/dir".')
++    parser.add_argument('--validate', action='store_true', help='Validate configuration files against the schema (need jsonschema)', default=False)
+ 
+     subparsers = parser.add_subparsers()
+ 
 
