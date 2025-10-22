@@ -1,130 +1,374 @@
-Return-Path: <adam.blank.g@gmail.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F47CCD1A5
-	for <webhook@archiver.kernel.org>; Tue, 21 Oct 2025 19:25:07 +0000 (UTC)
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
- by mx.groups.io with SMTP id smtpd.web10.21885.1761074703598644876
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9850FCCD1AB
+	for <webhook@archiver.kernel.org>; Wed, 22 Oct 2025 07:31:33 +0000 (UTC)
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+ by mx.groups.io with SMTP id smtpd.web10.3428.1761118283461462483
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 21 Oct 2025 12:25:03 -0700
+ Wed, 22 Oct 2025 00:31:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=QR3WdkOL;
- spf=pass (domain: gmail.com, ip: 209.85.160.42, mailfrom: adam.blank.g@gmail.com)
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-3caae20a290so2090787fac.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 21 Oct 2025 12:25:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761074703; x=1761679503; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=p9hb8GHiffawYttXTSL9WwSA6MCUJx45FsZz7Rihofc=;
-        b=QR3WdkOLLsl000RUlH8/Fp6WkdGTumtipoVlAzx8NMc4cUHsWnaONKYrjzKtczqqCE
-         kfvetcqK9hu5hoGVNiNaITeM9uv5xo+LupgYdOsIG8ppHQey602hKCPjoAB7Ad+fdcfB
-         Sto7P/vUjnpilgPJ8dAvGDDLA0SN4f58Qa3pfWtwKsrbkzZ3i0ESqUoEPPljNCPohRFg
-         sUBbU+GpJyHwPjA/VmWccPA9vZyTTanv9ZoBdvaXLVaEKgu1+yCqB+d8cDJjBx1tl1u+
-         jC/AbG8fxvy18d8hYKU/fIMyepSUE+CbTYMdSH4LqoBKbY7wzBhRrqFJfROB5zsv4Qbb
-         fPIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761074703; x=1761679503;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p9hb8GHiffawYttXTSL9WwSA6MCUJx45FsZz7Rihofc=;
-        b=oomzvB5R5N7KVqOW0Q/1QM7HpqsuRsoddaX9j7aufQCLbJTUstUTLfvHwcsEmLkzia
-         xRaGYxThId4GaIv4Dsvmr2/9G3qHR5dRKsQo/f0UxIDUVWmtr+aZeRBotlTJN0E6oHCQ
-         pXthkPMaLToRB6rSjVD/tDL6WwHHLQx1PmS2lENHsJLo+3oO7JVG2GdnGIYHf05Z6W3I
-         41yfnVyclf/b1WwQKwUbBHAC9WE2VKwWjqxmmGQhp1g2EbxlpF3KTM8TlMO70AC8m72l
-         U1kzu1KjtdDa/9DK2r7n34ObmvSsPDdZ1/RzZSjmrL0+owsrBVsH1G1HDE5YFEXLMNns
-         +FPw==
-X-Gm-Message-State: AOJu0Yw2ebef+AnUzcIW5Bs815Lobjw3Pu9wQAuFetbBJLmt+OdoBLqk
-	NFtwzMQBW10biQmeYusIur27IdhZvvwMrV+Vhef4Ida6GRyctvkM1MBiFe8R3LLA0LM1N/GgbRM
-	5wHvUN8bXvOlIhDsEZ/A8FiJYTZrOmKE=
-X-Gm-Gg: ASbGnctRWx2Uv65LjSK4CRKHgk/Sp4MX0HUobkKAu1hW82OBnujN4D3GOR+wVmLFyaM
-	AWcYzPV5N4JHXC8YmDHUEy3PWa81yvPadN1/ZnjuGG6nxtgp8/2T659qbLPLdWohPsx6MGCa7RF
-	vLCattVsw8X0gPHiIoPHbRl3/kJBZVT3pf6zzDu8OkprqZM0Y42x5CnL19Ao+r4VJtg/LDPOUxg
-	KMHYv41Co2ORlIBMBrNY5n2AXku+KzpZwOpjyDY99tUqLKvf0v/b/gAhmMNtifJi1mnBcmrB55g
-	PmEQzei5wa6IOBMplUs5HVy9WzEm
-X-Google-Smtp-Source: AGHT+IHxjFY+vKB7HbgjWJYWFRhlCwN83FYtJpn+v9jntCO2EuOoX/3Aqp4bE9ifccH6wmTVPvyR9Oi/uDg2uDMWxfg=
-X-Received: by 2002:a05:6871:285:b0:370:49f7:afad with SMTP id
- 586e51a60fabf-3c98cfce894mr7709010fac.22.1761074702830; Tue, 21 Oct 2025
- 12:25:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20251021182834.11403-1-adam.blank.g@gmail.com>
- <20251021182834.11403-2-adam.blank.g@gmail.com> <CANNYZj89auY9L+aeYNuRpxBqV0kX=3pmDMVx8w8+diAuoQuMMQ@mail.gmail.com>
- <CAFAffzy7rhcF5mxRUhX8kyRz3pezVEA9oSAD5Ukt5ax=ZsL=xA@mail.gmail.com> <CANNYZj9y7VoyCCdz2v6eGyy=bpazPUPRR-eYMGQgs2mkk2GiyQ@mail.gmail.com>
-In-Reply-To: <CANNYZj9y7VoyCCdz2v6eGyy=bpazPUPRR-eYMGQgs2mkk2GiyQ@mail.gmail.com>
-From: Adam Blank <adam.blank.g@gmail.com>
-Date: Tue, 21 Oct 2025 21:24:50 +0200
-X-Gm-Features: AS18NWCu99Bj5oQ1MAQy__tzZt2OuxQOFMxGK8_lWkc3nZd1ldCvWhVNoTNF83M
-Message-ID: <CAFAffzwKGa=sR56si52bfiODzgZixs5AGCZEtmo_4+jXtxkf3g@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 1/3] doc: bitbake-user-manual: describe
- UNPACKDIR in fetching
-To: Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="00000000000015cebf0641b028c5"
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=EHl7zPCb;
+ spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 879164E4126F
+	for <bitbake-devel@lists.openembedded.org>; Wed, 22 Oct 2025 07:31:21 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 5D4F8606DC;
+	Wed, 22 Oct 2025 07:31:21 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 86767102F2426;
+	Wed, 22 Oct 2025 09:31:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1761118281; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=cDQI7G5FJSPZaz3LhO2J/dR4gGYWLH/GQ1HmROrj14s=;
+	b=EHl7zPCbNCq7VeXmXSK08mdt5fGh/+fFMo3YUflhIPykFyh+u9p253YasfFw/aBQTnxVp5
+	8wBEnAJMLG2YZ0xvEj8pXtWvmVG0+JsukTRogaxUdyXruPXv8LXxRxu5J6CHFuh8qCLd/Z
+	D5VFJqXKxe/OKS/QWXpualAEuBDp0niJ/TMEKDRjj3wlG1bStzmbcdTkI73bO6E2s+R9NU
+	EGOMu2Fzos9RbGhQF93pc971oYI29Ai4fiqnNwFivfEi1/g9bcXTAVXXp4accPovavMbDV
+	vJJfl46vmEbIQI7vTLgxSkDso4GAkV9CKYt7/+DQFo1SmVEFAmohRKNhID670g==
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 22 Oct 2025 09:31:18 +0200
+Message-Id: <DDOOBSC2KD95.1E6Q0RAKUCAVX@bootlin.com>
+Cc: <bitbake-devel@lists.openembedded.org>
+From: "Antonin Godard" <antonin.godard@bootlin.com>
+To: "Adam Blank" <adam.blank.g@gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] doc: bitbake-user-manual: AUTOREV and
+ SRCREV_FORMAT roles in fetching
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+References: <20251017102015.5296-1-adam.blank.g@gmail.com>
+ <DDKQ53FGJVMH.12F5WALOQ3PPI@bootlin.com>
+ <CAFAffzyXUzWci6X_GhQJeQVO_x+2tJLG+peaApbeMdwxdzZkQQ@mail.gmail.com>
+In-Reply-To: <CAFAffzyXUzWci6X_GhQJeQVO_x+2tJLG+peaApbeMdwxdzZkQQ@mail.gmail.com>
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 21 Oct 2025 19:25:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18204
+ <bitbake-devel@lists.openembedded.org>; Wed, 22 Oct 2025 07:31:33 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18205
 
---00000000000015cebf0641b028c5
-Content-Type: text/plain; charset="UTF-8"
+On Sat Oct 18, 2025 at 3:18 PM CEST, Adam Blank wrote:
+[...]
+>> > --  *subdir:* Unpacks the specific URL to the specified subdirectory
+>> > -   within the root directory.
+>> > +-  *"subdir":* Unpacks the specific URL to the specified subdirectory
+>> > +   within the specified root directory. This path can be further
+>> modified
+>> > +   by fetcher specific parameters.
+>>
+>> I'm not sure I get what you mean here. Could you give a short example?
+>>
+>>
+> Sure, this is what the Git fetcher does for example (those are the actual
+> code fragments):
+> subdir =3D ud.parm.get("subdir")
+> destdir =3D os.path.join(destdir, subdir)
+> destdir =3D =3D os.path.join(destdir, destsuffix)
+> As you can see, the Git specific 'destsuffix' will be daisy-chained with
+> the more generic 'subdir'.
 
-Heh :-) Now I would be tempted to change this patch, so that it merely
-improves this "non-compliant" example, but I have a gut feeling, that "as
-long as nobody complains about it, there's no reason to touch it".
+Ah I see, ok, thanks.
+
+[...]
+>> >  Auto Revisions
+>> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> >
+>> > -We need to document ``AUTOREV`` and :term:`SRCREV_FORMAT` here.
+>> > +For recipes which need to use the latest revision of their source cod=
+e,
+>> > +the way to achieve it is to use :term:`AUTOREV` as the value of the
+>> > +source code repository's :term:`SRCREV`::
+>>
+>> Suggestion: simplify the sentence to:
+>>
+>> """
+>> For recipes which need to use the latest revision of their source code,
+>> the way to achieve it is to set :term:`SRCREV` to :term:`AUTOREV` in the
+>> recipe::
+>> """
+>>
+>>
+> I beg to differ. As a non-native English speaker, I would understand this
+> to mean
+> 'SRCREV =3D "AUTOREV"', which is a different thing entirely. In my opinio=
+n
+> those few extra
+> words are a small cost compared to the comprehensibility they provide.
+
+I understand it your way now which is clearer.
+
+>> > +
+>> > +   SRCREV =3D "${AUTOREV}"
+>> > +
+>> > +In this case, to properly show the revision information in the
+>> package's version
+>> > +string, :term:`PV` should be set to include the ``+`` sign.
+>>
+>> I'm quite sure this logic is not part of Bitbake but OE-Core:
+>>
+>> https://git.openembedded.org/openembedded-core/tree/meta/classes-global/=
+package.bbclass#n317
+>>
+>> I'm not sure having the "+" in PV adds anything for standalone Bitbake, =
+so
+>> I'd
+>> remove this sentence.
+>>
+>>
+> Sure, no problem.
+>
+>
+>> > +
+>> > +.. note::
+>> > +
+>> > +   With :term:`AUTOREV`, BitBake will always need to take the
+>> additional step of
+>> > +   querying the remore repository to retrieve the latest available
+>> revision.
+>>
+>> s/remore/remote
+>>
+>> > +
+>> > +   Also, recipes using it don't benefit from the caching mechanism.
+>>
+>> I just made a quick test:
+>>
+>> - Set SRCREV =3D "${AUTOREV}" for the procps recipe in OE-Core.
+>> - bitbake -c unpack procps -> unpacks the source code
+>> - bitbake -c unpack procps -> "Attempted 3 tasks of which 3 didn't need =
+to
+>> be
+>>   rerun and all succeeded."
+>>
+>> So I think bitbake does not rebuild when the remote hasn't changed, and
+>> recipes
+>> do benefit from the sstate-cache?
+>>
+>>
+> I did the same test, but adding the following line:
+> python() {
+>     bb.error("Reparsing %s" % d.getVar('PN'))
+> }
+> Having this line, calling 'bitbake procs' shows that it gets reparsed eve=
+ry
+> time in the case
+> where it uses AUTOREV.
+>
+> Regardless, my intention was to hint to the user, that the effects of the
+> following code can be
+> expected (again, taken from the Git fetcher):
+> def _latest_revision(self, ud, d, name):
+>     bb.fetch2.mark_recipe_nocache(d)
+>
+> I don't know what (if any) would be a better choice of words. Perhaps thi=
+s?
+> """
+> don't benefit from all the caching mechanisms
+> """
+
+I see, I assumed sstate-cache. I think what is correct to say is: "this rec=
+ipe
+is not part of the parsing-time cache and so is parsed everytime BitBake is=
+ run."
+
+>
+>> > +Multiple Source Control Repositories
+>> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> > +
+>> > +For some recipes it is necessary to make use of more than one
+>> > +version controlled source code repository. It such case, the recipe
+>>
+>> s/It/In/
+>>
+>> > +must provide BitBake with information about how it should include
+>> > +all those SCM versions in its package version string, instead of its
+>>
+>> s/all those SCM versions/the different SCM revisions/
+>>
+>> would sound better IMO.
+>>
+>> > +usual approach with a single :term:`SRCREV`.
+>> > +
+>> > +For this purpose, the recipe must set the :term:`SRCREV_FORMAT`
+>> > +variable. One notable example is the OpenEmbedded
+>> ``kernel-yocto.bbclass``::
+>>
+>> It would be nice to keep example free of OpenEmbedded references. Can yo=
+u
+>> convert it to another example, without mentioning it?
+>>
+>>
+> Of course. I was merely attempting to stick to the 'convention' from this
+> file, where base.bbclass
+> was referenced.
+>
+>
+>> > +
+>> > +   SRCREV_FORMAT ?=3D "meta_machine"
+>>
+>> > +
+>> > +The value given to :term:`SRCREV_FORMAT` references names, which were
+>>
+>> Suggestion:
+>>
+>> """
+>> The value given to :term:`SRCREV_FORMAT` references names separated by
+>> underscores ("_"), which are assigned...
+>> """
+>>
+>>
+> Hmmm. What would be the grounds for that? There is no such limitation in
+> the code.
+> In fact, even such abomination gets through:
+> 'SRCREV_FORMAT =3D "adam@machine@meta@blank"' and successfully produces a
+> package:
+> Image--5.15.173+git0+adam@fa3f7978db@567f0adb9d@blank-r0-beetroot
+> -20251018125101.bin
+
+I wasn't aware other characters could be used to separate entried here. Tha=
+nks!
+
+>> > +assigned using the ``name`` parameter to those components of
+>> :term:`SRC_URI`,
+>>
+>> Suggestion:
+>>
+>> """
+>> assigned using the ``name`` parameter in an :term:`SRC_URI` definition.
+>> """
+>>
+>> > +which represent the version controlled source code repositories. In t=
+he
+>> above
+>> > +example, the :term:`SRC_URI` contained two URLs named "meta" and
+>> "machine".
+>>
+>> IMO, it is important to give an example of the corresponding SRC_URI
+>> definition
+>> here. Users reading this will understand better with the full picture.
+>>
+>>
+> Sure thing.
+>
+>
+>> > diff --git
+>> a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+>> b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+>> > index 810f88689..9256c20b6 100644
+>> > --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+>> > +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+>> > @@ -36,6 +36,14 @@ overview of their function and contents.
+>> >        when specified allows for the Git binary from the host to be us=
+ed
+>> >        rather than building ``git-native``.
+>> >
+>> > +   :term:`AUTOREV`
+>> > +      This is a special variable used during fetching. When
+>> :term:`SRCREV` is
+>> > +      set to the value of this variable, it means that the latest
+>> revision
+>> > +      from the version controlled source code repository should be us=
+ed.
+>>
+>> Suggestion:
+>>
+>> """
+>> ...set to the value of this variable, the latest revision from the versi=
+on
+>> controlled source code repository is used.
+>> """
+>>
+>> > +      Here is an example::
+>>
+>> """
+>> It should be set as follows:
+>> """
+>>
+>> There's no other way of using AUTOREV I think, so it's not really an
+>> example.
+>>
+>> > +
+>> > +         SRCREV =3D "${AUTOREV}"
+>> > +
+>> >     :term:`AZ_SAS`
+>> >        Azure Storage Shared Access Signature, when using the
+>> >        :ref:`Azure Storage fetcher
+>> <bitbake-user-manual/bitbake-user-manual-fetching:fetchers>`
+>> > @@ -1622,7 +1630,8 @@ overview of their function and contents.
+>> >
+>> >        -  ``name``: Specifies a name to be used for association with
+>> >           :term:`SRC_URI` checksums or :term:`SRCREV` when you have mo=
+re
+>> than one
+>> > -         file or git repository specified in :term:`SRC_URI`. For
+>> example::
+>> > +         file or source control repository specified in :term:`SRC_UR=
+I`.
+>> > +         For example::
+>> >
+>> >              SRC_URI =3D "git://example.com/foo.git;branch=3Dmain;name=
+=3Dfirst
+>> \
+>> >                         git://
+>> example.com/bar.git;branch=3Dmain;name=3Dsecond \
+>> > @@ -1635,7 +1644,8 @@ overview of their function and contents.
+>> >        -  ``subdir``: Places the file (or extracts its contents) into =
+the
+>> >           specified subdirectory. This option is useful for unusual
+>> tarballs
+>> >           or other archives that do not have their files already in a
+>> > -         subdirectory within the archive.
+>> > +         subdirectory within the archive. This path can be further
+>> modified
+>> > +         by fetcher specific parameters.
+>>
+>> Ditto: I'm not sure I get what you mean here. Could you give a short
+>> example
+>> maybe?
+>>
+>> >
+>> >        -  ``subpath``: Limits the checkout to a specific subpath of th=
+e
+>> >           tree when using the Git fetcher is used.
+>> > @@ -1657,11 +1667,11 @@ overview of their function and contents.
+>> >        identifier and not just a tag.
+>> >
+>> >     :term:`SRCREV_FORMAT`
+>> > -      Helps construct valid :term:`SRCREV` values when
+>> > +      Helps construct a valid package version string when
+>>
+>> I'm not sure why this changed. This variable does help constructing
+>> multiple
+>> SRCREV values. Package version strings are just a by-product of using it=
+,
+>> no?
+>>
+>>
+> Perhaps it is again a point of view of a non-native English speaker, but =
+it
+> sounded false to
+> my ear. The way it was phrased suggested, that SRCREV_FORMAT is in some w=
+ay
+> a
+> prerequisite or an input to the final value of some SRCREV* variables. If
+> fact though, it is used solely as
+> a formatter, into which Bitbake will plug the already pre-existing values
+> of 'named'
+> SRCREV variables, to provide a string which will later be used (outside o=
+f
+> BitBake) for PKGV.
+
+I see that clearly now, understood.
 
 Thanks,
-Adam
+Antonin
 
-On Tue, 21 Oct 2025, 21:13 Alexander Kanavin, <alex.kanavin@gmail.com>
-wrote:
+--=20
+Antonin Godard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-> On Tue, 21 Oct 2025 at 20:59, Adam Blank <adam.blank.g@gmail.com> wrote:
-> > Yes, of course you are right. That being said, I must say it is truly
-> difficult to grasp the convention used in Bitbake's manual. One time an
-> oe-core class is referenced by name in a note, or an example, the other
-> time the same thing is explicitly discouraged :-) One time an abstract, non
-> oe-core example is requested, the other time a specific oe-core variable is
-> used, while an abstract one would fit just as well.
->
-> Yes, the documentation is not perfect. Neverthless, bitbake docs
-> should describe only what is implemented in bitbake itself, and strive
-> to use abstract examples.
->
-> Alex
->
-
---00000000000015cebf0641b028c5
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"auto">Heh :-) Now I would be tempted to change this patch, so t=
-hat it merely improves this &quot;non-compliant&quot; example, but I have a=
- gut feeling, that &quot;as long as nobody complains about it, there&#39;s =
-no reason to touch it&quot;.<div dir=3D"auto"><br></div><div dir=3D"auto">T=
-hanks,</div><div dir=3D"auto">Adam</div></div><br><div class=3D"gmail_quote=
- gmail_quote_container"><div dir=3D"ltr" class=3D"gmail_attr">On Tue, 21 Oc=
-t 2025, 21:13 Alexander Kanavin, &lt;<a href=3D"mailto:alex.kanavin@gmail.c=
-om">alex.kanavin@gmail.com</a>&gt; wrote:<br></div><blockquote class=3D"gma=
-il_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-lef=
-t:1ex">On Tue, 21 Oct 2025 at 20:59, Adam Blank &lt;<a href=3D"mailto:adam.=
-blank.g@gmail.com" target=3D"_blank" rel=3D"noreferrer">adam.blank.g@gmail.=
-com</a>&gt; wrote:<br>
-&gt; Yes, of course you are right. That being said, I must say it is truly =
-difficult to grasp the convention used in Bitbake&#39;s manual. One time an=
- oe-core class is referenced by name in a note, or an example, the other ti=
-me the same thing is explicitly discouraged :-) One time an abstract, non o=
-e-core example is requested, the other time a specific oe-core variable is =
-used, while an abstract one would fit just as well.<br>
-<br>
-Yes, the documentation is not perfect. Neverthless, bitbake docs<br>
-should describe only what is implemented in bitbake itself, and strive<br>
-to use abstract examples.<br>
-<br>
-Alex<br>
-</blockquote></div>
-
---00000000000015cebf0641b028c5--
 
