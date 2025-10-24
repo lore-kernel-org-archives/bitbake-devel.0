@@ -1,195 +1,169 @@
-Return-Path: <Qi.Chen@windriver.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF84CCF9F8
-	for <webhook@archiver.kernel.org>; Mon,  3 Nov 2025 07:20:58 +0000 (UTC)
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.15365.1762154450895656600
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED88CCF9FE
+	for <webhook@archiver.kernel.org>; Mon,  3 Nov 2025 11:55:10 +0000 (UTC)
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web11.14611.1761319753040507160
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 02 Nov 2025 23:20:51 -0800
+ Fri, 24 Oct 2025 08:29:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=AjajbIGC;
- spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=3402980684=qi.chen@windriver.com)
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5A36UTsx2757392
-	for <bitbake-devel@lists.openembedded.org>; Mon, 3 Nov 2025 07:20:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=cc:content-transfer-encoding:content-type:date:from
-	:message-id:mime-version:subject:to; s=PPS06212021; bh=brNqEClGU
-	M6nCO9NvaAZgcJzb3MRay2rakAsmKCJcgE=; b=AjajbIGCk2YGHDqYI7blaNyHK
-	ROp9E2/9Hy+RxTQeApQJ3C++Y433eNi3oswjrIzidUSNxvqZrIGrBzvQJ9gvaanR
-	D64slQpJ+RGWm2uD4wUlgjsg5Q3cPKgAzEZdWaB6F8uAopmchuJ/3ISIrDdirMtM
-	wE7n/bUnL4HUzro4SATqZFFM79nAcr6WIIbrvQPWkOMnoQ17bZxR8h46UOs4UzHO
-	tRfdkdu25+4hYyYhOFZAEmYsGdF2cx/dz6PPs+H1T/0Nv/3OJR3gtNYIwLgG/ggt
-	h4Kc1UVN0Uqx2a0o7QFknVIrHmfAWH4DVWDr8y1i/Dq/DlBLGLfuOGsoJLOIg==
-Received: from ph7pr06cu001.outbound.protection.outlook.com (mail-westus3azon11010043.outbound.protection.outlook.com [52.101.201.43])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4a57dx1ge2-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Mon, 03 Nov 2025 07:20:49 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qdweMAKnkukCG8h4TBpv/3g5DW/8hbkeXG4Vm5iVoFplcfg3lWiaZxb3DQCHIYMN/A6ryh5/VvRS3enjRjwtnOtTJe3KoTAyEfWUI4V10mXIjrW8fZMBW1afP2IrjU5WAj0npS/Tk8ei/5XDHn6WN4+hM3hC/dhADQi+0yZU8yF5gyYQk1jUWYcF5R4bncLveF3wdodpxD/ald6OrdFwp0yRkUnjA1pk4vqU2BrXVp87xtarrogWO/1ZQmHL1cupqiWz5Uva+GQKOJT4nmnj/Gjff2kIhvUFiLq97JDD2BGAMWaj10YT505zogRQpQleuyhTYZOqxERKbho7o38Zmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=brNqEClGUM6nCO9NvaAZgcJzb3MRay2rakAsmKCJcgE=;
- b=jo8tabVCnZDhG1t0Ugtnf5XT2jesb36uCgQSC2wLpUSl1mva2xiMwTL6O71JqPh1m6KpVmTzlObZ7AKK7XFGlf5xTgk8N0lgtrr3PiSr8ezmXLQwb8t02FEFvEj7oFUxnv7103FKsb3i2SpDIWQRAgyjiQnLQ10aOTYAMGoG9k0adczLzmWFvWIjdKut3QhNkD2aTvGuWqpxpUAWEK8CkLVd8fyOoFy5edvx2l/Rd6Dc2QJmWq4beu7Nh0ERzbp/gGh4Yo/4B60oMdkyjssEABnXFlb8+7gXZR5cmQrHKPquPNALGgttLnqC4Svl88E6zbP5MjHu20WMIkfeozJBJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from CO6PR11MB5602.namprd11.prod.outlook.com (2603:10b6:303:13a::5)
- by SN7PR11MB6775.namprd11.prod.outlook.com (2603:10b6:806:264::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.15; Mon, 3 Nov
- 2025 07:20:47 +0000
-Received: from CO6PR11MB5602.namprd11.prod.outlook.com
- ([fe80::5ad6:8f90:b01d:2c62]) by CO6PR11MB5602.namprd11.prod.outlook.com
- ([fe80::5ad6:8f90:b01d:2c62%4]) with mapi id 15.20.9275.015; Mon, 3 Nov 2025
- 07:20:47 +0000
-From: Qi.Chen@windriver.com
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=b8j4SpQw;
+ spf=pass (domain: gmail.com, ip: 209.85.221.47, mailfrom: osama.abdelkader@gmail.com)
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-426fd62bfeaso1111302f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Oct 2025 08:29:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761319751; x=1761924551; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XO26pF+bm+/vhWyIgoAqOgU82NbS28bvGv9ePq4MuP4=;
+        b=b8j4SpQwEXmYk14Cyxd2IcuXJNVlyCdzn7d1UNZquUjKmtHTpM/a/iGpiS/sFOesLJ
+         lqdnLz82LvQOg/KT8My6D1JLKQc1btbVnZoqNTAVbRzM1trJLybLECOHA121nYAeyw1T
+         d//PrKudsUY4bGoLeJ6n1I1nzRH5MbJVrt62d7g186N7EehmZnAcNAcK3NNETcU8MNgN
+         Sg+vjXhjYwAZ5Tansh8pjXKXHT3JYOPhIKGVqqqhVuGD8DWZfzp1sILL37xYVrhZOOyB
+         dQcEnruKG/VXsgVFOadesjEf2t80q3GEhu7snhjXLnh7Cf+tdphPIaNQWurvnNfVYuCW
+         EKhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761319751; x=1761924551;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XO26pF+bm+/vhWyIgoAqOgU82NbS28bvGv9ePq4MuP4=;
+        b=E7FarwLxL7OePjovGwm4bYcLOsGf0Qy5mQ1GgXzSRLpT1eG4WHwkbApQwxMtESvPSs
+         TrIT7T5POoyT7lrFPApyCxgGN58Kl0AVyMNXr64o8Pg3VmDKvcTAPlLwSg0VGZaeRMV3
+         zgepwlc5owrGV+/2JsafoYueFT3zur3FTbNahP9sWtWIIkWp5TSGz5BQwqolQKbt8xUc
+         3LdvoeNKFsEv+D/JqYP77ueED2kPQMGBgrtn4BN7Uv9i0YNWaKtWeiqsiq39rrRraFbK
+         8q7Z/w64mEwmHljFVHGa4/oD9nkzU3LG2WJ1+jayJCoNeZWf81tKx9DmqfOFwdC92Fi9
+         sTRA==
+X-Gm-Message-State: AOJu0YyqYK4u0pDXMKtfEOWIuPJDEU6CIjCe6WbRw1GPVKk5mtutMY0X
+	/5ZL+pHrFhHs46nROGsF/z2jznb9pNltfugimt3O2iuoJjiiwHOEkxibYFlwb42y
+X-Gm-Gg: ASbGncvJZ/I3Sm6Q9WZh9PTTTjhFl9+x5UaUzpez9xMAAkmKZoKrzNQqXEO99tec89x
+	J0AzjdT3pEXvxJryfdtWglJof3p6yWMUdgr6pl+fmmHZJ5lMhLp9Q5FVLsK5A2f7VRnGw8DMEoJ
+	YvM0d/Vcv4UNbN9QkmAXAwcrQoDR1XniGNvPTDLTBP4zGwj/f+zCiPbo1mGAg0BVyJUTRSd+EOq
+	0scTABYxw5UlIswZCDpO4LBoIZzNHPlymL5A9MfTohO1i4hKv4uF1OiKDPIg3PUo+qbTZemRyoZ
+	OKEqGrVGeoq51HFBQ4sAkqWvEeEwQ0d8qxs8FPnvfu5ykLBdBcLZhjKhs8kZxEWIHB4DpCIi3J1
+	aVPgsQ5a1NUudSg2rx0j2+1c8mcmK6kgNUcKoCVPIn2BnU+edwl/dk6jZxsHrUkIJDFWxva8i7S
+	Vx1w==
+X-Google-Smtp-Source: AGHT+IFriLimAYsfNtTX7LIkwmSnR+74qkdI0oHXwftMnEU38+OKhZSaqn0+EmcjXjlI3wtIgCSIsw==
+X-Received: by 2002:a05:6000:400e:b0:3ec:c50c:7164 with SMTP id ffacd0b85a97d-42704d52205mr21088335f8f.15.1761319750994;
+        Fri, 24 Oct 2025 08:29:10 -0700 (PDT)
+Received: from osama.. ([197.46.164.27])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4298b9963ccsm8215283f8f.7.2025.10.24.08.29.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Oct 2025 08:29:10 -0700 (PDT)
+From: "Osama Abdelkader" <osama.abdelkader@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: alex.kanavin@gmail.com, qi.chen@windriver.com
-Subject: [bitbake-devel][PATCH] lib/bb/parse/ast.py: exit immediately when fragement is not found
-Date: Mon,  3 Nov 2025 15:20:32 +0800
-Message-Id: <20251103072032.1015053-1-Qi.Chen@windriver.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TY4P301CA0038.JPNP301.PROD.OUTLOOK.COM
- (2603:1096:405:2be::7) To PH0PR11MB5611.namprd11.prod.outlook.com
- (2603:10b6:510:ed::9)
+Cc: richard.purdie@linuxfoundation.org,
+	Osama Abdelkader <osama.abdelkader@gmail.com>
+Subject: [PATCH] bitbake: bblayers/query: Add --show-variants option to display BBCLASSEXTEND variants
+Date: Fri, 24 Oct 2025 18:29:06 +0300
+Message-ID: <20251024152907.18547-1-osama.abdelkader@gmail.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR11MB5602:EE_|SN7PR11MB6775:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9d234749-217e-461a-4e76-08de1aa981ce
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|366016|52116014|376014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?vx5MoAhf5GQarwQMYF/Zu2od60WpIgYz+JXRQ71r8uy0bh2+sKXxjn1nxQlZ?=
- =?us-ascii?Q?bnx1eo1IQxYDc4ku9Ol+79B+8CNQixuxV1EHuJ7TAzVOIKV1Dqjgyw2+5Epu?=
- =?us-ascii?Q?kDQwRxbAVlxIaiUo8uERzW7VfTzguZw+5L+ZYWEAGW+U9jyGjEBjsEXY/uSN?=
- =?us-ascii?Q?TBr//iH2rPlLhcf9gdKOnPDGZ/PNmTLCuWD7uCxQrgJwUod/R6Kqz75pODte?=
- =?us-ascii?Q?SwPR1E6xnUnNQ2VX5liSUR80Dor87Nnk4eaUfzU75NIKV4Hog8Z8tKup3R+u?=
- =?us-ascii?Q?S8mVFUk4G7ADUoatBuBiCeAERbt8gxabZpTTGC8NS+lxNCe9rPwhjEUQpO0q?=
- =?us-ascii?Q?7KAXD3RigB68MBm9cnIQNgp4Q9dmCb24bZqEuCroVFxZq4HTyRui/jZW/AkD?=
- =?us-ascii?Q?IyIiocGJSQRg/qXsf3lZcIndRHGPf/FLLK3JNlV8KU49AcCXUn/ISrpq4UwF?=
- =?us-ascii?Q?6Khh1KiNJG6PDJ+TW70fpgjMBm57KWc02PRSMNxYiG7mgKgysb9d+M7uZrfB?=
- =?us-ascii?Q?JDV9A69EPqJ3L/N/N5kKUXVMWcOl0vduvBQf/g5KUNcFOQ2ESiBNNJ9GEhp+?=
- =?us-ascii?Q?9Qb2XlL2Bz9RAGIqmfAhTD1xYNqWz5FtT/fY3X0q8l24Ztcsis+bmJVQlzqV?=
- =?us-ascii?Q?or+/L6QkTLgOYKLtcLvWmUwahjziVnnyVoSdCoI6lrSrN6O6m62UKDcIW/MC?=
- =?us-ascii?Q?rEwV4jABg5r1m4BYJbkkwdvmamfly5NFfKoctrHf/3rKyWQ/uywlcOM2ZOaF?=
- =?us-ascii?Q?+QMF4Z43xSLGKR/AtuGEaqNzVa47SBCXeC8Aecf64Qs1205EanLEvg/OrMei?=
- =?us-ascii?Q?PQOkbgo02/9xhvIKQNmZ9BrlskcSqvpTd1XB4wsUMJREs0cJO6/wEiu8tOe6?=
- =?us-ascii?Q?NQD7muZbwixkOMVJQf7+/QFhuAtduvRehRV0z7xafKoWFPsXy9GbqqD75yfJ?=
- =?us-ascii?Q?xbEf+rOjBwrQMDhl8TlbIP9a2zxoBeMGa40q4zqKPy6BVyb2r3FKMROPstZS?=
- =?us-ascii?Q?ZmrSQCD+qvIHU8X6v4X37ZZ8JpkIvrn1nvfqxJX9uQvBOZ6Yvd0sbGF5TWrh?=
- =?us-ascii?Q?5GrFzSNHPk367NRq1lykMDur90O1otTCsMWQZ6M54dWcACTitSgFN7Mv7WqK?=
- =?us-ascii?Q?QlS3Ojd0FBFww31XB4TOllpFvnngYKEbYxY2sOt5yLQDwjJ6SCv0shLwptGe?=
- =?us-ascii?Q?uny+JaNuz44h+bhfa1dcW4mRoNXI1VzQTqjBLTehYlB/M1E/9Xw5VS+yAzOq?=
- =?us-ascii?Q?iYOGdmG2UB5xj5NWl5ho5MEiW8D4at2u+iu9WK2l/hZM0J9hRZaPWW4c75ju?=
- =?us-ascii?Q?4qGkbJZaJwucAbmsyPCK9M2J6PiaVOz6pRIjWZobypBrO5naCb4jx1kVpEZC?=
- =?us-ascii?Q?cL5mkABfS8zWpQHxqcLcObkz1N+Oj9irzhX1aywoY+Jsr6yFzPAAuoysO2qo?=
- =?us-ascii?Q?qkha8UV+FRYYi4RXtm1vpk7taXNL15CN5TuaostximX3B1mGujEZhrolNFSx?=
- =?us-ascii?Q?9nV/cDPa8LMQL5BzuetQAINhs89cGOtG1N+7?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5602.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(376014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?xwiLzwKXNsgTHCsWKf3gE82i4B2IXR0/W+aGiqcesvxZZ1AL+ayZPNOSRGeA?=
- =?us-ascii?Q?/icc7XTgYHpMb3+uUvlAeyUS2FI8UdtmI/fklRoE+GWuC2BHemD9hDRuaGUP?=
- =?us-ascii?Q?N1yBaskjRT7cWBwIhDKB2SUNpfyRr6nCZOzfMo5wAp12qvxDOTj4BCQRTdDP?=
- =?us-ascii?Q?/VsZksSSbLsX3BSrWGAeDHJiGk3aCrDNU6w/RLLXVTz2fIpBBrJlxAAWbsLH?=
- =?us-ascii?Q?fqsJ0zf3TtPq3gZ0k7nOdBb2MOOtwqvq24jTklMFwmzeNeO4YuocBJ/Gnc0T?=
- =?us-ascii?Q?1zN06nw3cTEMRjdYR6dLwbqd1kSNg7WCblB03xD9TKmLj0r1aSlV7h0ViyyQ?=
- =?us-ascii?Q?rFj+ejFkh5jHO8pzJ20MJtpjzEiTJvwvuN+RXHJF+RwNPOIdcjFUkUu82XnS?=
- =?us-ascii?Q?5aZ6a9c5KO8b6OHWSbnVYw4OtonjRyM7abrdPNGfihxtMmv+YJmB872xq/z4?=
- =?us-ascii?Q?/onAiKrja0+9XxpHWfN3CRXL8RPJXH2MBEv9bIre9e6GdIARIRMTUJ0adKRm?=
- =?us-ascii?Q?MvIGKfBwQLjMPX8j/D1o9uj59JxCWcQmRrn5l03KgXyg3SX3ofB0n0/v2h+T?=
- =?us-ascii?Q?jNlchF9mOi6pF78+cnAN/WvPomeoMJouuRhaz9vjrtB3aos2RUaNu/ocS4YD?=
- =?us-ascii?Q?du4XSnSQRT2V+i2wEtR+6dOJB8mR1AAJAVBnkyP8DFN98IDgc638FPUSB+l4?=
- =?us-ascii?Q?57QUo3N2lFhqXa1Vpo2BOdxtaeKciwZEY/kVR5RUqd9evKOFCaDXBBjz1UYD?=
- =?us-ascii?Q?wWGh2DErNaXGJQXfWlGMdWbglu2ltBfeRQ5XN2orwI/4E9IjgC+kSHiHzyKh?=
- =?us-ascii?Q?FLBfX5mqC70+IShoOycQxapS9iWAM4Qc2NfP+DMbtAu1alTQEKwTIXZ3EWFd?=
- =?us-ascii?Q?qs/Izwd62NxEVIhWXSrT0KRS2gCdqfZ27rm0byOKCnu95KLN7+h4DPYiDFrL?=
- =?us-ascii?Q?MARfDMOl7tz9TPjuteNPvHDjK8EoCk8uCm7/x0/7G/3FlQ9sYb8iltN0KI/Q?=
- =?us-ascii?Q?6LyAcgcA1aQzSw9SDGSlU9fxIq2yAXgytpJSQC4j2zZEqXGZX8381evly6/N?=
- =?us-ascii?Q?HgH3namTlF9wCHoIdB85B77yKNWe7se2rC+72OIfU3AQ1tmFIIYaZdtGS99N?=
- =?us-ascii?Q?ixLmNa0QZwQ9sUEgTrN6PW8Z9Oc2vbdnFaKczNiVk7eeVsYSh+xqlDisjq89?=
- =?us-ascii?Q?+YctOzrsk8pqzz563s9ng7kTvGhOMtv8ZBr3JfCW5bUIewFjnciBpH4RX2gR?=
- =?us-ascii?Q?yaSEhRxYQcn+77UOkdZvYwavKvhHmptmUruOgo+obZWKKtFLFCi2Q29yDNwY?=
- =?us-ascii?Q?IlXPpSpNglH9Wmd55AKQhZ/eXhr7alEg6r7iJ7UJIqwgi86GNbdoNoG2v7h2?=
- =?us-ascii?Q?GzRPrIZFwMope97IISfKv5nZMnnZJs8RF3Q/aKVjvycKC8ay7WCjupkgQ/r1?=
- =?us-ascii?Q?kyo41nrXOZ30yh0q2XWBUahuh7Dnr1oFvWoSfPbkRcaY3dkvCNeHgd1rvTFb?=
- =?us-ascii?Q?JfFP9LXNrz4GjGdQfQ+kbI663DIWb6j0DZsSsoAdPCxjiCyG+HI4d9qHmtpz?=
- =?us-ascii?Q?qDJXfQ+H7Sv3ZRG+Yi3b6RSvBONDdJ+HGcsQU1Vg?=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d234749-217e-461a-4e76-08de1aa981ce
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5611.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2025 07:20:47.1748
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dkkFO0Ug+9EW/vj1HqbEGzf68I6xzzr5SY3GD6g1gf5hdU/O6rsyWPWgU2qeWCcLq4tW8eO5T1GBtFLc9lqaDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6775
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-ORIG-GUID: Yiu3ChyhkFSN14kN_XiMYRPIng4SfyrO
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAzMDA2NyBTYWx0ZWRfX/UCq/O7xjQJJ
- 13pDJmx/FwKqL4mIP5yo8L0pkokUnHhmDvPMXERpSlpl2yjf8Kdt89Tux1k3WFmRMtEa12FUzxE
- 7doTJtnR1an8c5aNnPm5UJx5oA7rkNxnL9vl4u9RuuKjvP0LtvGlLqfjcKibTVM6pE7zaSRACUR
- sRjVBr0VtuxOQzLjZNEHEB1xHqnzl5PVqUQBEvReIhoxhkMXIBWAZIpMe4Xjq1QklNJSDzdNRPm
- zd27D8xm+fTY7KI4L5yCl74XJVvql4Ki3+CiHWQ8h7l+5cprlxI9mIlsCBlI1zpFcGHQBi8IzFQ
- tDozO9p2PlGzG/3bf3SGnwNOE1c+X0M1zU3OLn5H0thYw/RBHMxUeD44L+3gD5wh9ey1T7AushZ
- EQDrv6pVUfz23aOasXEdBb/l53rPMg==
-X-Proofpoint-GUID: R04HtTlvHRU6dAjf2zjFnTy4w2VR3hcZ
-X-Authority-Analysis: v=2.4 cv=BeTVE7t2 c=1 sm=1 tr=0 ts=690857d1 cx=c_pps
- a=MXKEcm+r4KK8PT7sjGsI9w==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
- a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
- a=xqWC_Br6kY4A:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=t7CeM3EgAAAA:8 a=AotRN4lS-wiKtkwEGOIA:9 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-02_02,2025-10-29_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 suspectscore=0 malwarescore=0 impostorscore=0 bulkscore=0
- clxscore=1015 adultscore=0 phishscore=0 lowpriorityscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511030067
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 03 Nov 2025 07:20:58 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18233
+ <bitbake-devel@lists.openembedded.org>; Mon, 03 Nov 2025 11:55:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18234
 
-From: Chen Qi <Qi.Chen@windriver.com>
+The bitbake-layers show-recipes command was hiding BBCLASSEXTEND recipe
+variants (e.g., devupstream, nativesdk, cross-canadian) by design, to
+avoid clutter in the output. However, this made it impossible to see
+recipes like linux-firmware's devupstream variant which uses git snapshots
+instead of release tarballs.
 
-When some specified fragement is not found, then the build results
-are usually not what the user wants. So instead of print out an error
-message and allow the build to continue, we'd better just exit
-immediately to save time and resources.
+This patch adds a new --show-variants (-v) option to show-recipes that
+allows users to view all BBCLASSEXTEND variants when needed, while
+maintaining the default behavior of hiding them for a cleaner output.
 
-Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+Example usage:
+  bitbake-layers show-recipes -v linux-firmware
+
+This will now show both:
+  - Base version: 1:20251011
+  - Devupstream version: 1:20251011+git
+
+Signed-off-by: Osama Abdelkader <osama.abdelkader@gmail.com>
 ---
- bitbake/lib/bb/parse/ast.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/lib/bblayers/query.py | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/bitbake/lib/bb/parse/ast.py b/bitbake/lib/bb/parse/ast.py
-index cfead466e1..1351315d78 100644
---- a/bitbake/lib/bb/parse/ast.py
-+++ b/bitbake/lib/bb/parse/ast.py
-@@ -410,7 +410,7 @@ class AddFragmentsNode(AstNode):
-                     data.setVarFlag(flagged_var, f, val)
-                     data.setVar(flagged_var, None)
-             else:
--                bb.error("Could not find fragment {} in enabled layers: {}".format(f, layers))
-+                bb.fatal("Could not find fragment {} in enabled layers: {}".format(f, layers))
+diff --git a/bitbake/lib/bblayers/query.py b/bitbake/lib/bblayers/query.py
+index eb7cb465b4..11341d5d53 100644
+--- a/bitbake/lib/bblayers/query.py
++++ b/bitbake/lib/bblayers/query.py
+@@ -52,7 +52,7 @@ layer, with the preferred version first. Note that skipped recipes that
+ are overlayed will also be listed, with a " (skipped)" suffix.
+ """
  
- def handleInclude(statements, filename, lineno, m, force):
-     statements.append(IncludeNode(filename, lineno, m.group(1), force))
+-        items_listed = self.list_recipes('Overlayed recipes', None, True, args.same_version, args.filenames, False, True, None, False, None, args.mc)
++        items_listed = self.list_recipes('Overlayed recipes', None, True, args.same_version, args.filenames, False, True, None, False, None, args.mc, False)
+ 
+         # Check for overlayed .bbclass files
+         classes = collections.defaultdict(list)
+@@ -119,9 +119,9 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
+             title = 'Matching recipes:'
+         else:
+             title = 'Available recipes:'
+-        self.list_recipes(title, args.pnspec, False, False, args.filenames, args.recipes_only, args.multiple, args.layer, args.bare, inheritlist, args.mc)
++        self.list_recipes(title, args.pnspec, False, False, args.filenames, args.recipes_only, args.multiple, args.layer, args.bare, inheritlist, args.mc, args.show_variants)
+ 
+-    def list_recipes(self, title, pnspec, show_overlayed_only, show_same_ver_only, show_filenames, show_recipes_only, show_multi_provider_only, selected_layer, bare, inherits, mc):
++    def list_recipes(self, title, pnspec, show_overlayed_only, show_same_ver_only, show_filenames, show_recipes_only, show_multi_provider_only, selected_layer, bare, inherits, mc, show_variants=False):
+         if inherits:
+             bbpath = str(self.tinfoil.config_data.getVar('BBPATH'))
+             for classname in inherits:
+@@ -203,8 +203,10 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
+                 # We only display once per recipe, we should prefer non extended versions of the
+                 # recipe if present (so e.g. in OpenEmbedded, openssl rather than nativesdk-openssl
+                 # which would otherwise sort first).
++                # However, if show_variants is True, we show all BBCLASSEXTEND variants.
+                 if realfn[1] and realfn[0] in self.tinfoil.cooker.recipecaches[mc].pkg_fn:
+-                    continue
++                    if not show_variants:
++                        continue
+ 
+                 if inherits:
+                     matchcount = 0
+@@ -229,7 +231,11 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
+                     for prov in allproviders[p]:
+                         provfile = bb.cache.virtualfn2realfn(prov[1])[0]
+                         provlayer = self.get_file_layer(provfile)
+-                        provs.append((provfile, provlayer, prov[0]))
++                        # When show_variants is True, use the virtual filename to distinguish BBCLASSEXTEND variants
++                        if show_variants:
++                            provs.append((prov[1], provlayer, prov[0]))
++                        else:
++                            provs.append((provfile, provlayer, prov[0]))
+                         if provlayer != preflayer:
+                             multilayer = True
+                         if prov[0] != pref[0]:
+@@ -238,10 +244,12 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
+                         if not items_listed:
+                             logger.plain('=== %s ===' % title)
+                             items_listed = True
++                        # When show_variants is True, use the virtual filename for preference check
++                        pref_cmp_file = pref[1] if show_variants else preffile
+                         print_item(preffile, p, self.version_str(pref[0][0], pref[0][1]), preflayer, True)
+                         for (provfile, provlayer, provver) in provs:
+-                            if provfile != preffile:
+-                                print_item(provfile, p, self.version_str(provver[0], provver[1]), provlayer, False)
++                            if provfile != pref_cmp_file:
++                                print_item(bb.cache.virtualfn2realfn(provfile)[0] if show_variants else provfile, p, self.version_str(provver[0], provver[1]), provlayer, False)
+                         # Ensure we don't show two entries for BBCLASSEXTENDed recipes
+                         preffiles.append(preffile)
+ 
+@@ -530,6 +538,7 @@ NOTE: .bbappend files can impact the dependencies.
+         parser_show_recipes.add_argument('-i', '--inherits', help='only list recipes that inherit the named class(es) - separate multiple classes using , (without spaces)', metavar='CLASS', default='')
+         parser_show_recipes.add_argument('-l', '--layer', help='only list recipes from the selected layer', default='')
+         parser_show_recipes.add_argument('-b', '--bare', help='output just names without the "(skipped)" marker', action='store_true')
++        parser_show_recipes.add_argument('-v', '--show-variants', help='show all BBCLASSEXTEND recipe variants (e.g., devupstream, nativesdk)', action='store_true')
+         parser_show_recipes.add_argument('--mc', help='use specified multiconfig', default='')
+         parser_show_recipes.add_argument('pnspec', nargs='*', help='optional recipe name specification (wildcards allowed, enclose in quotes to avoid shell expansion)')
+ 
 -- 
-2.34.1
+2.43.0
 
 
