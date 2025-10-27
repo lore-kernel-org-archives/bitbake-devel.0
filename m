@@ -1,291 +1,200 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <Qi.Chen@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAF2CCF9E0
-	for <webhook@archiver.kernel.org>; Sat, 25 Oct 2025 03:26:04 +0000 (UTC)
-Received: from OSPPR02CU001.outbound.protection.outlook.com (OSPPR02CU001.outbound.protection.outlook.com [40.107.159.40])
- by mx.groups.io with SMTP id smtpd.web11.814.1761362762478113873
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 858FCCCF9EB
+	for <webhook@archiver.kernel.org>; Mon, 27 Oct 2025 07:26:42 +0000 (UTC)
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+ by mx.groups.io with SMTP id smtpd.web10.26642.1761549999792110013
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 24 Oct 2025 20:26:03 -0700
+ Mon, 27 Oct 2025 00:26:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@axis.com header.s=selector1 header.b=WgOjT6p2;
- spf=pass (domain: axis.com, ip: 40.107.159.40, mailfrom: peter.kjellerstedt@axis.com)
+ dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=lfWylTvr;
+ spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=2395211154=qi.chen@windriver.com)
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 59R4ZNop1337097
+	for <bitbake-devel@lists.openembedded.org>; Mon, 27 Oct 2025 07:26:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=PPS06212021; bh=ol2aga1e39Gy0UfC+Jrw
+	aOIPitKQag4daWDZrPqCUp4=; b=lfWylTvrMPsZuO6XGf42Vhx44IUC7dF5sgrk
+	+2qGHkvm3t28HjRMbBVbZXCISrATZORlnCgeKOEvvcUT4ZEh7Eoc62zAaHqaPVhn
+	yEtLrdTemtWLmPrbKjiYspOHHBlVFtrEtsrEB25oB7eumJjuai7ENkbAIuCwocOD
+	U+Yhoq3sgxPyuv48UeqRsZm/2dvt5nGEUfbps40PJmAgOK0tOJhUaWnaifNIuEqe
+	Bzf7sfHSxSaojHIdhESJMsv1EYud3iYjJTY4vxwZu3TqP6nUuoluwR2owDQMAjBj
+	y1TYKnV21MzV8eiFlshhleaJP1FpUHguxQzHR8h99LnyJXETjQ==
+Received: from bn1pr04cu002.outbound.protection.outlook.com (mail-eastus2azon11010043.outbound.protection.outlook.com [52.101.56.43])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4a0nh5sgm8-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Mon, 27 Oct 2025 07:26:38 +0000 (GMT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jN/jSqsiGXcKTf6SFMd2dOftd9Kuec/i/aXvHgIDVyOSvDapqup/kuVJ51hUSmUauK4SdClNN4ExgeHVAfjG314ZoVRjJDCfU9f1FuNLkShYLgJ8ELDE/uUkH/aiYNfQ6faRVzDNN2YzaI886JMzMohJFrxY33C/p0WdoQ30FEwbZbh9GWvBwD2KPk+wGZbUmdLz3aWDuxH7ILoGJ+1ph5dc2ofBef73kwswymDUoTdIqoHUdMD9q2gwCuP95J1HG7H2xYT5qS3YLzxiCKJFfeB0JJ9OEDPsBuR+chltjMGkrDT6R18XQFGIjJzaf/80TVb9agvx27PIhJfR0S+bjA==
+ b=tCZGqNOCyTJwUIMpdxkatieHLQXPEAGS6dVUo+KbRBlzKf0gtPfE+UoN5J7ZgX4E+sTxCrCN5TIRdZ+ilrWofvX/IJiDvWuJbUzlb81ZLNt4MIX4JxsxEDUxQSx08jETk1b9jbxKsYE41bL7kqKe+2xqZSmHsnPZIRnu61cJBUAb01uMM19rRJtVKFLNDMgk+vqNOGPwZ3eNv1Cd8c4sqlIxOqRui2rWr433Hqa7oEmD9CG8esHrWuSMlSRV5F2BUkDR6uBJOO3Ri9Im+hVSHFIuRXdmdcWUhV5oolOEBdndGIGfuCep7yApBWaADJ0HovyNe8MjWqSil3tGaRGcHg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tzymOA3YtMljUz7DyC7Ut0Mlo8sb6XZKzd+0WOsSx0I=;
- b=Nudyx9samCScNd9+yP1zw7P9TKVtKWdERtQubnrWvJ9TyLpwd8S3r6tGeQv/GV/Mhf8r6o3HA0asELN/nh9D3B6Ah6FvaiQZx1OC3wPSEzE3U5Cu/4bjtUvVJybE3PjEhgG7S50sW5Jo9jD6tvFt6QCehgNIuo0wVLFpNWeugU9e6JB9h4yW7ySMIxMBaKgKPhKOH2PIUzf9810yM3fht1gk5z+nYNg/a28itw3ODGWqc41roE3sZjXKvBNR1VCAIur70XhAs5hKTWUUjWqHnNheS2qlWtn+W2ngei0aPahZfzskDyv7xNbwRcgnOlJ7UbW0fZUarYi8gvCjajw1HQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 195.60.68.100) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=axis.com; dmarc=pass (p=none sp=none pct=100) action=none
- header.from=axis.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tzymOA3YtMljUz7DyC7Ut0Mlo8sb6XZKzd+0WOsSx0I=;
- b=WgOjT6p2Kjaa9RBVQkeE8+q0cCiFnkmY6J1n+Lw7C7S1ksFK2KGTaFgxrUISNx9fjWg/BrPI3Ffhyly1An2NML1jnMdyoUjIJMvUOHkTKoilv+hJHPFVsri6E3tlAqUtfL0sly9/WEUQv5N+mdk9j37Zryw92vQ2XgXGFx7PLY8=
-Received: from DU6P191CA0019.EURP191.PROD.OUTLOOK.COM (2603:10a6:10:540::23)
- by DBAPR02MB6294.eurprd02.prod.outlook.com (2603:10a6:10:197::15) with
+ bh=ol2aga1e39Gy0UfC+JrwaOIPitKQag4daWDZrPqCUp4=;
+ b=TnSnxUOm0lhnx+TPeiURBZQ5KuWz18ig0JWiFvyRivVM24cANy9GPrcnlSkYVbUmIHz+a2JURAU+dwE5u5rERYotvk6hXYMzLSN3lqLxTORB0RTkm5Gw5z/w4uMYj0VNQSff+QDapAjUwRWBixvQFncwwTeL7zvKx0nFCMaiuSaMAjnrGDjwwI2DAuYR+pRvlmn4jMWJkhVlZneZ7d5i9oktMUWhIWXD+2IQXd+S7+jSV2BRecBidrf3/rHN2vOKjUklZx458f8mwNbMGA+hYb9rDUtDxab+5mmjdRwbVz4STRG+Vr+D9RWEA/8xN0GNRFGTB3/J2WEj6XTssqz5bg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from CO6PR11MB5602.namprd11.prod.outlook.com (2603:10b6:303:13a::5)
+ by PH0PR11MB7166.namprd11.prod.outlook.com (2603:10b6:510:1e9::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.15; Sat, 25 Oct
- 2025 03:25:57 +0000
-Received: from DB1PEPF000509E6.eurprd03.prod.outlook.com
- (2603:10a6:10:540:cafe::8a) by DU6P191CA0019.outlook.office365.com
- (2603:10a6:10:540::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9253.15 via Frontend Transport; Sat,
- 25 Oct 2025 03:25:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
- smtp.mailfrom=axis.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=axis.com;
-Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
- 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=195.60.68.100; helo=mail.axis.com; pr=C
-Received: from mail.axis.com (195.60.68.100) by
- DB1PEPF000509E6.mail.protection.outlook.com (10.167.242.56) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.9253.7 via Frontend Transport; Sat, 25 Oct 2025 03:25:55 +0000
-Received: from SE-MAIL21W.axis.com (10.20.40.16) by se-mail01w.axis.com
- (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.61; Sat, 25 Oct
- 2025 05:25:55 +0200
-Received: from se-mail01w.axis.com (10.20.40.7) by SE-MAIL21W.axis.com
- (10.20.40.16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.61; Sat, 25 Oct
- 2025 05:25:55 +0200
-Received: from se-intmail01x.se.axis.com (10.4.0.28) by se-mail01w.axis.com
- (10.20.40.7) with Microsoft SMTP Server id 15.1.2507.61 via Frontend
- Transport; Sat, 25 Oct 2025 05:25:55 +0200
-Received: from pc56063-2339.se.axis.com (pc56063-2339.se.axis.com [10.92.3.2])
-	by se-intmail01x.se.axis.com (Postfix) with ESMTP id 307396318
-	for <bitbake-devel@lists.openembedded.org>; Sat, 25 Oct 2025 05:25:55 +0200 (CEST)
-Received: by pc56063-2339.se.axis.com (Postfix, from userid 14323)
-	id E4F161200DD; Sat, 25 Oct 2025 05:25:53 +0200 (CEST)
-From: Peter Kjellerstedt <pkj@axis.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCHv2 2/2] knotty, teamcity, tinfoil: Only allow one process progress bar at once
-Date: Sat, 25 Oct 2025 05:25:50 +0200
-Message-ID: <20251025032550.2730352-2-pkj@axis.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251025032550.2730352-1-pkj@axis.com>
-References: <20251025032550.2730352-1-pkj@axis.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.18; Mon, 27 Oct
+ 2025 07:26:36 +0000
+Received: from CO6PR11MB5602.namprd11.prod.outlook.com
+ ([fe80::5ad6:8f90:b01d:2c62]) by CO6PR11MB5602.namprd11.prod.outlook.com
+ ([fe80::5ad6:8f90:b01d:2c62%4]) with mapi id 15.20.9253.017; Mon, 27 Oct 2025
+ 07:26:36 +0000
+From: Qi.Chen@windriver.com
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake-devel][PATCH] bitbake-user-manual-metadata.rst: OE_BUILTIN_FRAGMENTS -> OE_FRAGMENTS_BUILTIN
+Date: Mon, 27 Oct 2025 15:26:20 +0800
+Message-Id: <20251027072620.321672-1-Qi.Chen@windriver.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EOPAttributedMessage: 0
+X-ClientProxiedBy: SI2PR02CA0019.apcprd02.prod.outlook.com
+ (2603:1096:4:195::13) To CO6PR11MB5602.namprd11.prod.outlook.com
+ (2603:10b6:303:13a::5)
+MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB1PEPF000509E6:EE_|DBAPR02MB6294:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0a59a26f-ef72-409c-d5df-08de13763579
+X-MS-TrafficTypeDiagnostic: CO6PR11MB5602:EE_|PH0PR11MB7166:EE_
+X-MS-Office365-Filtering-Correlation-Id: 43796339-a70c-4e44-2ca4-08de152a295c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014;
+	BCL:0;ARA:13230040|376014|52116014|366016|1800799024|38350700014;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?RacWUMqFT12CqJe3NCKdoQ5U6eDy2Kn6Nsn1H/4cjI1+n7nnTJok9jqDvxAr?=
- =?us-ascii?Q?/49xo/5rDRwRdGj10FSZIizS7EVwoP8r4kLw27DuuCI+2akDU8zeG0AZn2Z1?=
- =?us-ascii?Q?yjYfXQ8vJvlauWghO622wYCQcE3oSe9YX+R+BzYm2qufviuGbGEzTAUjfM0G?=
- =?us-ascii?Q?+1eYoYdH/eN2NWJ4C8b7lULsIXwzkMKLNnzvufJvdnO38C9uh+lvAy1y9rKC?=
- =?us-ascii?Q?0Vs5EVohe06oxR4/tOpxMyQ65s45P2adB8jpvh3SPopqG9Y3stOngxqQUqHT?=
- =?us-ascii?Q?GQlNwPsRy9nsno4Yqz/IUh5d5U26IaAPCmrzt49E3BOyCB9zsDWdXLALRENF?=
- =?us-ascii?Q?hnaKidXop6RzH9UPxat8m65Skdf6UJUVptbrXGvuxwrKCScOjZqabQkcN30W?=
- =?us-ascii?Q?pfezJvmzjWRVjQ41/NsaDiuicYEekXk34ipwZB3IYU8ZNMHPQb/p6/9IRYuF?=
- =?us-ascii?Q?y8Vswwh21FV84F2ipYPzsWBBrCUK7j9hYS8y8NsGPpS6apQlfItTgwaSPSAg?=
- =?us-ascii?Q?NcTjAWYZ8t4HVwv35uK11I/sC87ZZAcyDbREaxbDp9keswuua3q030k5Vf4i?=
- =?us-ascii?Q?MQZtR1CmmwNHJq7f2sjN/ZwF7C8JSXqNL6/XnpWb1AhdrzfBx6qEE1gqe8mj?=
- =?us-ascii?Q?QRZKkOcXaVwXfPicqeODEZpSmM0C5C9Ki/9euLBFJzQzbzJ5gagtv8VwTb/4?=
- =?us-ascii?Q?kyUEuwUh76hbrRl1Kj0/LsysRO8hP2S9p/sxi9hZ++LT9NiBeWd2yNgiKxlK?=
- =?us-ascii?Q?ErWaIwxoSz1v4UihGItsbYBIkKVL5KM8lqiKqelMTUgtb7kTa0cWsWsL2rwy?=
- =?us-ascii?Q?pRID8Pn3SOLHJcwbm95bLyjQNXmKFoQxzrODXySXBg6bc0S09r0M1KfTjWo1?=
- =?us-ascii?Q?nOJJeF6YR2li1ra9oTG3U2zFgQ8/WRrbsAKFHgpioHjsG6905gHwPJ1CaxAi?=
- =?us-ascii?Q?dq4x75K+4wBHZxAjhW/2wXnzul35p0KbVde//PBzKz7l1k9039otYPcA20PI?=
- =?us-ascii?Q?HU7Ipgg94CK6JRd0KBTQWpM9TyKL9ToOdbK7UZIaLeq/RpYOdRD3FaciUbIy?=
- =?us-ascii?Q?QOaObomIzzH2gB3vwxMXpAMTuFESa9SuPSMMZkytlNJTWVqP/lnb+4lapjrA?=
- =?us-ascii?Q?yK35Koq3JDmFqEhmmf2JwiG8YMjT+ZeK/KENQvRrQuR22NnFrzDDnj+L3wyR?=
- =?us-ascii?Q?s2NJY5G+nLGfWXn7fJSYY+zC50s0Hnb8CGKnkuQjKUVXpLhmxHcIFOGxM2Gk?=
- =?us-ascii?Q?UxNCwbKwkE9Xdu6QOFUSMs3hWzu0seDUTxcec9LjlZhc81w+DqQr7MK5QHl9?=
- =?us-ascii?Q?oFG25YAQVWiJXJcH/W63eJ62JhXGIy5YccaWJNfVt4h82T/1UQcYCGNFA2iA?=
- =?us-ascii?Q?Jzw2jD+83hfplmI1oU7zOQjHPrEpevdBFRAIav35PP4l9J7nLN+1vYJ3+ZWy?=
- =?us-ascii?Q?TY7VpaJDh1xPouDAAgxQXXV0pZix2HGBvE+rNsBfTmv5wbcT9ARAuq3J2BxQ?=
- =?us-ascii?Q?80VNfM3ls0VLLcRczE7TgneiCzo85M0CYkTu9DlKxnVwi7ZOPCtY3xs46kT/?=
- =?us-ascii?Q?zaTdl4XxDqCmR1e7+Io=3D?=
+	=?us-ascii?Q?qZVO3WUgu7tM4+xoxIQfDdKFN8Gna7ynDAacZTvfm4V84T5al8/Qivp54+IW?=
+ =?us-ascii?Q?fBsnJvloMsAD11bb/Qdx8dIL9sZTkAlRUfFJysHN3ctw/mKQVdW8NiuaVqbO?=
+ =?us-ascii?Q?/hsgwcBZOAlMBLcy51zomOHG/Te8kZGO8P/j3lpx/CShdXh+8syywSiNgggk?=
+ =?us-ascii?Q?cSCegK8bpFNsHgfJgzTbsPNAmRawS0hn5MSYsVuF2U/cEK40m5f3ekzUdCZ7?=
+ =?us-ascii?Q?qXiMI6FmEkr0ibJC+pmyxEbQajFGbkOTCdv7ZELRATzGr+0sELWCocSYzI6q?=
+ =?us-ascii?Q?2AwmA6ykrkrH6iYz2nYfWYiVloiyl45ToJazGs8Nag6EPI26oaSom4ZWIiTA?=
+ =?us-ascii?Q?o//ZV5OGXsz34qN8j3ys9hNid+pUS5q3DrJKjoZajlalZNB2xGLSm1cGdrgY?=
+ =?us-ascii?Q?7sg5leZ6Px2vLa9KIfAwfJAxQi8UU86pzL1s8gmDRORSxKzGSSk4w+zdMK6s?=
+ =?us-ascii?Q?91YoxPwCF3Y7LD0zEMX+ZhIYe35qNypfFFdm0twUB4jlpVtWH0Cntfiw+Be9?=
+ =?us-ascii?Q?H1zRzMkMfRURiV9J1oufCnu9kKD1LDYjCT6Xx/4hQUWVosXW2qqsaXg3Rnby?=
+ =?us-ascii?Q?bjDEA6hjoW89aBbaCHlG/LE5dc7w69fFf8oL1nry6J09yk1s5u35t7AQPRuy?=
+ =?us-ascii?Q?Etn7OdbW9CspYN8BrdAapEiJTZYcfgD14FR7ebBKxoC08pCENXDMP2oFTlW9?=
+ =?us-ascii?Q?vzCO+75yC/mSLZ0iyvsnzg/PYsCG3UP/g/cGaAb8pkxju4p1DCWWxcvJypvu?=
+ =?us-ascii?Q?9w6tEaWLwkxHsmt7dzP3NGHJ/cXBI5RqrpRpMvXV3nLhbwGplHqmIrDX3qez?=
+ =?us-ascii?Q?KS91LaOD5gwkyHv15ofnK9yy2C5urpznJRBmL6XzAt4Yu48rRyzpdmpKyRk5?=
+ =?us-ascii?Q?Q2/lSZWXj58iTUxEeTW8erYSgRLAmszX+jZebbKeP+X3eKXsverlcH9eFEWZ?=
+ =?us-ascii?Q?0r3jp69b9NkUnO414ebrVjc65Rzu8lVWh1I0XHZsstm72rSeTPV3Ix9G4WIR?=
+ =?us-ascii?Q?S5QrQDzfkkZHI/jARaHNMYygOFnZlId2PwzvjpHOo6OG3/TmC0A7K1Q/ivgW?=
+ =?us-ascii?Q?Fpau7d8dTD7Si/OWGiteSqs5x4bA5TG3SfQ9UsdgcfONQ3n8WujFajkPKjOW?=
+ =?us-ascii?Q?r+EgEHfCD3MOJe50A/LzjNAyegtWrKyw1DFDa/zwWUo76zk05chuV0q2Pezl?=
+ =?us-ascii?Q?XsKsxtt6GNxW3+GPzOGn+qeAsrf5oJ1SAowwhSINKBCJF/IY60a61+vu2tS4?=
+ =?us-ascii?Q?XlOQTVZIL+9p2rWBWummwYEiq7J7JDGD8rzwpJtaELi1SR3DupbyVlV0qncu?=
+ =?us-ascii?Q?JYms83mG7lPLKlafgoKisEirdf2x3+zKdzELcsWs+C2XHpn+B9M/etegvaeX?=
+ =?us-ascii?Q?PQIkHzZSLz1mx0fFW/ktbzS5VJRUvx/raoIrux5Am8GjITafiuLo31FKaynP?=
+ =?us-ascii?Q?V4i9bCKdU9ZbeQhe9thOc5FBUaW1Rt+S/W8Nr7HGUH745BaETDVFhH82CrFg?=
+ =?us-ascii?Q?P9TYik5Chhr9PPQlQF0L5/MNu3pwz7xVw1HR?=
 X-Forefront-Antispam-Report: 
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2025 03:25:55.6915
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5602.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?+9Nv9SpeGDcJ1rBwgiHhTQDsiAeqOEndnG06USnXIiQp7HxDPOr0OYQTtShG?=
+ =?us-ascii?Q?ZpbH8HZs8Q9ku70V56blAZaVSD5avo2lQLNSDQ629lRToJ4GpBK978qYfgAN?=
+ =?us-ascii?Q?av0QLvsWWiaSeAniIXSzqZyZTbDCy/1x6z7/QX3JaAlv4HglfNfzHszLdAoA?=
+ =?us-ascii?Q?5KhCkOhSBsXFYHawOAwtoyKiaGWEBzjuJ5CN5o9gE6Qp8opqATGsYUyTvW0v?=
+ =?us-ascii?Q?ceETESPageUvlk48dtnKiB2/+O2FZ8v9u9KlsuB8AU1YKhHw9UxTeQX3UTJH?=
+ =?us-ascii?Q?Bq2fHvxTujihjOupccH/8zKxVYihFlZQXwZE0Qea2lJEytZpgkDYWoNKSe0n?=
+ =?us-ascii?Q?xDCVPtbPRxmRT7EBaUrgDb3mAdcSpsEWIyocss9bnIw/rl5USePP7/2KZa00?=
+ =?us-ascii?Q?YrWsZsGV0xsJ2rGk+2PSrhcCY7+LQxBwAcreZhFe5lUfrdyBTxU3yvxCaud5?=
+ =?us-ascii?Q?LnUJx5pwWRjT5pO3v8wux3Fh4MH69e0XSS+4G5GC2QS8lX1lwUKjtqrcEoPI?=
+ =?us-ascii?Q?zV5I0t2SnwUrC0qn++VuOA987WHMeq830xRwGxApTxsg4766cJwsftkkKGAM?=
+ =?us-ascii?Q?Jxed6NKFH/LyKtQou/FLGRjuJH9fI+6QsPDOZvJSk5jGWlSBNEOHbmbmrv2k?=
+ =?us-ascii?Q?udyq5nqzbPnBe8FQ9oiUIjh0rIoUCc82gRrPi/VhZveKQcjfavlYiIELadsP?=
+ =?us-ascii?Q?ylEyFDimCCWoUkrr6nMrB4zs3zyM8rXHJq3d+OHJpFN1nLVagl6pzAAmscgl?=
+ =?us-ascii?Q?7KQR4Rh9lSyC2mEHpJLCMrnGaPh/yreqrOyhm6sgM1fF9qh3VEHo7xXGw3nT?=
+ =?us-ascii?Q?I83/3N1qm2yWbEvUuxSuA3sEKpJUdS8phMLjsjL93s7Sawcy9aQGd0iMM1n5?=
+ =?us-ascii?Q?BXOkocr70J08570/CKAvVLqGRXKgc0l7MKRuoW97NePLUOw5c1q7A0zazUIc?=
+ =?us-ascii?Q?6W+WmPCoTqfM5OU5srcuNCuP3q13FZ+8OumPlQuatgzqtJdmXtE2+3QP0qbk?=
+ =?us-ascii?Q?DQZ7VYH1yEu9NWHr6GmvbYkh0wxVQLa9FCaUiOWGH2JV0b5hJSyPUpZ9Qcr4?=
+ =?us-ascii?Q?esj1+pB9Qrn07F63qp53xwyAv7a8e5RBcpRH7IZfAmvtkKoySbkKi+IOoXfb?=
+ =?us-ascii?Q?BD+N6Odj5LRSv+bP2wEde3iuFQolPc4fbJISxZMle/DtHt+na76s8XhRjv0Z?=
+ =?us-ascii?Q?uZtsP+HEq8MnLNDQVfEHbm16ZaEbo5Weyi7p6RMiUR0zhrGhJASsljasZfA1?=
+ =?us-ascii?Q?z0Q6Q/FNtj76aiQLMkrEZrQ///KLAYfQT37OKm5JrjBW2Xi2PToLpkpzKScd?=
+ =?us-ascii?Q?RM5Ik8oJSePBvanMtBtW7ZAWei1r5Guz1/GvbJl7eeuc9oqdRHr5SyweeekE?=
+ =?us-ascii?Q?q4UXQs3Eijt7RwR7JlicZioCV0v/Lb7gKFfWwjYKPTakwgXoOekrQgyg7Nug?=
+ =?us-ascii?Q?X2EUZxRUjOe5mKh33dQ6y+rBeTpyUMBQqj92+TS02PpZg8EaB2zW5OiLdb6d?=
+ =?us-ascii?Q?ED6wzQIIJn/ithO8BXU2z0r6qJzG4v0KMYFLRGvdND3bKDJK3kJ9T2eKtCcN?=
+ =?us-ascii?Q?go1abc67LAFQVaXf1joKRoJpKcWwBY9wY99uWlpz?=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43796339-a70c-4e44-2ca4-08de152a295c
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5602.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2025 07:26:36.1751
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a59a26f-ef72-409c-d5df-08de13763579
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	DB1PEPF000509E6.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR02MB6294
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cDRIdENs+gQJiJfHdHz90NIUe70SoMBu/BSoIqIJJheTjQS44dXEh5wYYbg9dZXn1ZVYBxibT7t6De/O7ncpRQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7166
+X-Proofpoint-GUID: aHfFxuBKF8q8HCmZDL85EWjWHsdKJq91
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI3MDA2NyBTYWx0ZWRfXwyhGT511dO93
+ ppwg94GMBQFQLAviSZDrBSajHeJ5ZpQ3Nz+9Ze51DddoWsUaG1cShlLabxj3l5PgphAYoB4gQBo
+ gSXl+BkTTPTw4u5OiBAWphdQZCajAWsRs+vhvDNCYoqIDoatU0/WE2oXApff6AE5hsdcwyDeofK
+ ppW0+Sves/7QqN2DbreYYLsTfbAsU1OSjCZt2UyktOBnBVjCfu0sKmhx8JAjdAC/3EscsDWzBeT
+ GnyRd47mK0+cGrSaJmsntES9BRqWcKsdwHAWmmR+BuOhxRMr/7G/sdCUxavdZTrj2Q1gRkTg81u
+ Kl/yYMBfLFmlbMmIDnLumDwrY80ytjaIL4D7wfEcvkdXgy6CEdNOja7s1G6jmxUzdXV3zAuegEX
+ gtoQIzU9aFxjUJCY/+eo0d9VpgctFw==
+X-Authority-Analysis: v=2.4 cv=FOoWBuos c=1 sm=1 tr=0 ts=68ff1eae cx=c_pps
+ a=vO6zNWk7R+xgFy8KGItNOQ==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
+ a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
+ a=xqWC_Br6kY4A:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=t7CeM3EgAAAA:8 a=al99yDq0Tk1eiIlXpJMA:9 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-ORIG-GUID: aHfFxuBKF8q8HCmZDL85EWjWHsdKJq91
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-27_03,2025-10-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 adultscore=0 suspectscore=0 lowpriorityscore=0 phishscore=0
+ malwarescore=0 clxscore=1011 spamscore=0 priorityscore=1501 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510020000 definitions=main-2510270067
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 25 Oct 2025 03:26:04 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18214
+ <bitbake-devel@lists.openembedded.org>; Mon, 27 Oct 2025 07:26:42 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18216
 
-In case a process progress bar (e.g., "Initialising tasks") is active
-when a new one (e.g., "Checking sstate mirror object availability") is
-started, then finish the first one before starting the second. Also
-ignore ProcessProgress and ProcessFinished events that are not for the
-currently active progress bar.
+From: Chen Qi <Qi.Chen@windriver.com>
 
-This also adds an id to BBProgress (initialized to the initial msg),
-which is not affected by calls to setmessage().
+The actual variable name used in oe-core is OE_FRAGMENTS_BUILTIN,
+which is in a consistent format with other OE_FRAGMENTS_XXX vars.
 
-Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 ---
+ doc/bitbake-user-manual/bitbake-user-manual-metadata.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-PATCHv2: Corrected a typo (parseprogress,finish -> parseprogress.finish)
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+index 6a3488ed2..e5075a346 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+@@ -999,7 +999,7 @@ This directive allows fine-tuning local configurations with configuration
+ snippets contained in layers in a structured, controlled way. Typically it would
+ go into ``bitbake.conf``, for example::
+ 
+-   addfragments conf/fragments OE_FRAGMENTS OE_FRAGMENTS_METADATA_VARS OE_BUILTIN_FRAGMENTS
++   addfragments conf/fragments OE_FRAGMENTS OE_FRAGMENTS_METADATA_VARS OE_FRAGMENTS_BUILTIN
+ 
+ ``addfragments`` takes four parameters:
+ 
+@@ -1040,7 +1040,7 @@ each other when several fragments are enabled.
+ 
+ The variable containing a built-in fragment definitions could look like this::
+ 
+-   OE_BUILTIN_FRAGMENTS = "someprefix:SOMEVARIABLE anotherprefix:ANOTHERVARIABLE"
++   OE_FRAGMENTS_BUILTIN = "someprefix:SOMEVARIABLE anotherprefix:ANOTHERVARIABLE"
+ 
+ and then if 'someprefix/somevalue' is added to the variable that holds the list
+ of enabled fragments:
+-- 
+2.34.1
 
- bitbake/lib/bb/tinfoil.py     | 10 +++++-----
- bitbake/lib/bb/ui/knotty.py   | 12 +++++++-----
- bitbake/lib/bb/ui/teamcity.py | 14 +++++++++++---
- 3 files changed, 23 insertions(+), 13 deletions(-)
-
-diff --git a/bitbake/lib/bb/tinfoil.py b/bitbake/lib/bb/tinfoil.py
-index e7fbcbca0a..d9e985c612 100644
---- a/bitbake/lib/bb/tinfoil.py
-+++ b/bitbake/lib/bb/tinfoil.py
-@@ -91,23 +91,23 @@ def wait_for(f):
-                             if isinstance(event, bb.event.ProcessStarted):
-                                 if self.quiet > 1:
-                                     continue
-+                                if parseprogress:
-+                                    parseprogress.finish()
-                                 parseprogress =3D bb.ui.knotty.new_progres=
-s(event.processname, event.total)
-                                 parseprogress.start(False)
-                                 continue
-                             if isinstance(event, bb.event.ProcessProgress)=
-:
-                                 if self.quiet > 1:
-                                     continue
--                                if parseprogress:
-+                                if parseprogress and parseprogress.id =3D=
-=3D event.processname:
-                                     parseprogress.update(event.progress)
--                                else:
--                                    bb.warn("Got ProcessProgress event for=
- something that never started?")
-                                 continue
-                             if isinstance(event, bb.event.ProcessFinished)=
-:
-                                 if self.quiet > 1:
-                                     continue
--                                if parseprogress:
-+                                if parseprogress and parseprogress.id =3D=
-=3D event.processname:
-                                     parseprogress.finish()
--                                parseprogress =3D None
-+                                    parseprogress =3D None
-                                 continue
-                             if isinstance(event, bb.command.CommandComplet=
-ed):
-                                 result =3D True
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index 6f03bf2faa..4bcf6bd12f 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -39,6 +39,7 @@ interactive =3D sys.stdout.isatty()
-=20
- class BBProgress(progressbar.ProgressBar):
-     def __init__(self, msg, maxval, widgets=3DNone, extrapos=3D-1, resize_=
-handler=3DNone):
-+        self.id =3D msg
-         self.msg =3D msg
-         self.extrapos =3D extrapos
-         if not widgets:
-@@ -84,6 +85,7 @@ class NonInteractiveProgress(object):
-     fobj =3D sys.stdout
-=20
-     def __init__(self, msg, maxval):
-+        self.id =3D msg
-         self.msg =3D msg
-         self.maxval =3D maxval
-         self.finished =3D False
-@@ -886,23 +888,23 @@ def main(server, eventHandler, params, tf =3D Termina=
-lFilter):
-                 if params.options.quiet > 1:
-                     continue
-                 termfilter.clearFooter()
-+                if parseprogress:
-+                    parseprogress.finish()
-                 parseprogress =3D new_progress(event.processname, event.to=
-tal)
-                 parseprogress.start(False)
-                 continue
-             if isinstance(event, bb.event.ProcessProgress):
-                 if params.options.quiet > 1:
-                     continue
--                if parseprogress:
-+                if parseprogress and parseprogress.id =3D=3D event.process=
-name:
-                     parseprogress.update(event.progress)
--                else:
--                    bb.warn("Got ProcessProgress event for someting that n=
-ever started?")
-                 continue
-             if isinstance(event, bb.event.ProcessFinished):
-                 if params.options.quiet > 1:
-                     continue
--                if parseprogress:
-+                if parseprogress and parseprogress.id =3D=3D event.process=
-name:
-                     parseprogress.finish()
--                parseprogress =3D None
-+                    parseprogress =3D None
-                 continue
-=20
-             # ignore
-diff --git a/bitbake/lib/bb/ui/teamcity.py b/bitbake/lib/bb/ui/teamcity.py
-index 7eeaab8d63..3177f4aaf4 100644
---- a/bitbake/lib/bb/ui/teamcity.py
-+++ b/bitbake/lib/bb/ui/teamcity.py
-@@ -200,6 +200,7 @@ def main(server, eventHandler, params):
-         logger.error("XMLRPC Fault getting commandline: {0}".format(x))
-         return 1
-=20
-+    active_process =3D None
-     active_process_total =3D None
-     is_tasks_running =3D False
-=20
-@@ -300,16 +301,23 @@ def main(server, eventHandler, params):
-=20
-             if isinstance(event, bb.event.ProcessStarted):
-                 if event.processname in ["Initialising tasks", "Checking s=
-state mirror object availability"]:
-+                    if active_process:
-+                        ui.progress(active_process, 100)
-+                        ui.block_end()
-+                    active_process =3D event.processname
-                     active_process_total =3D event.total
-                     ui.block_start(event.processname)
-             if isinstance(event, bb.event.ProcessFinished):
-                 if event.processname in ["Initialising tasks", "Checking s=
-state mirror object availability"]:
--                    ui.progress(event.processname, 100)
--                    ui.block_end()
-+                    if active_process and active_process =3D=3D event.proc=
-essname:
-+                        ui.progress(event.processname, 100)
-+                        ui.block_end()
-+                        active_process =3D None
-             if isinstance(event, bb.event.ProcessProgress):
-                 if event.processname in ["Initialising tasks",
-                                          "Checking sstate mirror object av=
-ailability"] and active_process_total !=3D 0:
--                    ui.progress(event.processname, event.progress * 100 / =
-active_process_total)
-+                    if active_process and active_process =3D=3D event.proc=
-essname:
-+                        ui.progress(event.processname, event.progress * 10=
-0 / active_process_total)
-             if isinstance(event, bb.event.CacheLoadStarted):
-                 ui.block_start("Loading cache")
-             if isinstance(event, bb.event.CacheLoadProgress):
 
