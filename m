@@ -1,143 +1,99 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C18CCF9E0
-	for <webhook@archiver.kernel.org>; Mon, 27 Oct 2025 09:59:33 +0000 (UTC)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.web10.28455.1761559171425212162
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C0BCCF9E5
+	for <webhook@archiver.kernel.org>; Mon, 27 Oct 2025 14:16:35 +0000 (UTC)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web11.33923.1761574593023370913
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 27 Oct 2025 02:59:31 -0700
+ Mon, 27 Oct 2025 07:16:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=NLXns2xr;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-4270a3464caso2079901f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 27 Oct 2025 02:59:31 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=hhEcOflk;
+ spf=pass (domain: gmail.com, ip: 209.85.128.45, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-47118259fd8so35349615e9.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 27 Oct 2025 07:16:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1761559169; x=1762163969; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JV5A7iXXxs+DpRsSaqoaS1g0M8ZNwm4KFZTC0SbMZ7g=;
-        b=NLXns2xrJuohOO6DKVLgBxP2x0TslWd951tI490Xue0P1F+pm81HBkvP21bCTBuRUO
-         Bek3SFDW/yf2rB7+Tl9Io63IBekYB1yfqtWw7l8lFD9tjJDdtxTpRUaypAGHMLypCjTT
-         u0Cb7ZGt8aKoUcyRWmM6RbcznUyxpkhfePCro=
+        d=gmail.com; s=20230601; t=1761574591; x=1762179391; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9EvDmq2K4Z++4OnuxytNkB4kLj3A0AgJ+iceWN1Zb34=;
+        b=hhEcOflkXd68nKQbfw7I3T3wagY7X12IWG+hDntf8HuO+73s+wdD6DScBH9N7URiH3
+         o8vaH3o1uPFx53ZQdcEVqhZcJ4ANJay7WLKgIydjICM7otfddBu0BUzV3zWj0AqHxYV7
+         62qn9oSZCY4J0OBZ7o6ZED2lwHUNJJKRI9qVwfqF/4egmN50Z+qOY/QPsCcNiO+MQ21w
+         I2MtNzNPpSr0klXH7FhTUu0iktZWWv96VDzU8f2yJPCSK4d+aDmpss/AVPIboGw6uA5x
+         QSUfKeNaRYsYio0eBzQmaoWjHMqGOTeTf//gw/I6Gz5GkL3scOrZpL1RUJSKany4IKDb
+         eX7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761559169; x=1762163969;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=JV5A7iXXxs+DpRsSaqoaS1g0M8ZNwm4KFZTC0SbMZ7g=;
-        b=xEAveqa1oUMrcwxoDj8QlcmeUQjAMwHyWWBuSmpG5CgFg9zV5MpM6ZiS8YgN9lbc64
-         cd0gS/4opvKsW0rpyAV5+kDEMdXBI+KaSWFdiq6IjgJuI3gPJLlGyI95eCrRChjXmdil
-         bKvCXIUue1lRovzVebes6oCBng4Qx3NvjbQiz2QKamGwxXaMUuIV9G5WgvcuSostQwGB
-         Ri0MZRy1Ljc4WZYAK0duAexpynGu4i5jJYZUpW8I9xmLGC9srM2q2OMrDKbysQmFKFEU
-         tJ4RaASfUTTjOYslVkzIlxI6u8CcXAD9JX3ZS2ZT8Io99u4Y9WelKZqlLjKTQzgqQg5H
-         ACzw==
-X-Forwarded-Encrypted: i=1; AJvYcCUb9l7tX9o3lPDIfAFrIPvuCDwtdN3bVOQmgQZi9oHuzde81p63GPEVcAl3XD+wlzx/Gs61OwLwwpDfMFEB@lists.openembedded.org
-X-Gm-Message-State: AOJu0YzRaTUHyhzF1Prl/zsbb/4an3Rx4AHH+wLO5yMbjcZIfTT26J96
-	ACycEd5pblcBDTyxiQVq6bk1OmooMDUbOmgqoIu0l5CO4/89LsHdFwlKJ1PhEHrTwQo=
-X-Gm-Gg: ASbGncs80sckVE7bx0QH7ufnbNiNO3/7F86DVM1hOWPpA5p1rcqWB6mFxqB2LN8IbP/
-	pFpU3ciherjJ7fkmd4YG6y3ko5tiRQcXUIuOQjkPoexxMoqaOYsUHgASOBwoHjlJu2isa2zBjlD
-	EyrUJM/XUpa5XvpGF0Lpr9f2lePHU+CjW6tiEIUJ6diGasRgU4rSwUNH9l6XvcnyVR2HoYrGtyC
-	atCKV3iovQmquXhDh+6uQRhCVFYPcohJlkGmT/10ug5L5Ooot6qCQ9CUO0SawaGDuZc/TrsbZN6
-	s0rp5CvVNwdiCIDvlTuEwzAa82qAEgeKGgdf4sxXcauznw1Re5/oag1IAiJTuP3zp1uWqWnJNXV
-	qvMr97I7VpLPEoUnX36I8a55nsrg+pRH+snWMhLKpChjYrlGnqbXRcagJ0q5P4Wo1LmgcMdH1ZY
-	UZYgKQMWzvFnSiINrYJQRONc3jamEjdZaBj7Sb9fqT8A0f4U5dHBp5TISXthV9aiss5jsRXzJJP
-	XQ=
-X-Google-Smtp-Source: AGHT+IHvtJRS6ylDxsT/8vIOKy6ybRLWnpUqvysXjjaH+9cJIMeAlKdaLXvki+nhm3GNXxFwYHyFVQ==
-X-Received: by 2002:a05:6000:428a:b0:427:2e8:fe5e with SMTP id ffacd0b85a97d-4298a0405ecmr12796993f8f.13.1761559169567;
-        Mon, 27 Oct 2025 02:59:29 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:16c5:d0d6:9af3:2bd2? ([2001:8b0:aba:5f3c:16c5:d0d6:9af3:2bd2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429952d5768sm13579714f8f.24.2025.10.27.02.59.28
+        d=1e100.net; s=20230601; t=1761574591; x=1762179391;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9EvDmq2K4Z++4OnuxytNkB4kLj3A0AgJ+iceWN1Zb34=;
+        b=YyKv5IKw7YaH/HAbtX7DSbfwvwRvAJaHvORmO5Vz42bidaLboDP5hd6FKm27WyV0kf
+         uBzHGooynrWbYS0TFI93XZihzMGsVdU0ihiB1l8QKu78KjsR65lqZohCwI3u8XN3Wmy4
+         R79h+nw8m/NTNpZOgrDSWjmtUcXQcBBXUX9MB5HfOpf/zCx+YobhilerwSVkiMkNlfWI
+         5zzLlLRKfeLH+OadumzQRCH90gM9nTmrpEXSkQEY66GZSvTe0UH9OiicP81ri9ammuFL
+         PSXGqv6o0c4N0+Rq1TUZkHV2XmT4ceBNQ2d/zh6hF4COOW8TCq/to2nbexfefSnyem8L
+         V/Mg==
+X-Gm-Message-State: AOJu0YwO5Pn7dfW94pljXv8xGYXri3c5b4EJw+rfFDV3iuFCrMSSlCNt
+	fzaPUl8tcj4yzf89iBaCS/0EBGZWIwi+vaE9yZK6Ch7PFkeOZ2BZs/Ewwm46sg==
+X-Gm-Gg: ASbGncsGmawZh8w1VWD0SbCg+JYf9ocnmW30M77X3LqF41jdt5qye+Ubv/bhMGr/1QZ
+	izlM3mw+X/JEqHayOrxnd2dX1uAwtGaIu5ChIjZODyEYHZIhsecMWfWSOngQ8K7NHUlzz5VJ6wl
+	c5/Q8KpB3DHvfdTYr0lxf80l1B4f58hJLgsF2sIhRiqVrWUMTwXj2mEgaPT5QST8sQg8p9O3+FI
+	jPqgj2AQgKqVvi+e4BpMVJmkLUNC5edxxcyYC8z6hL7OEQmn/fq429c8mpNyXFSuBS4aos7V548
+	6RNZY+i7scjM1UPZBAVpIpfEL2zzgUTW131pwMNxRgdf6PWK5s+sX1wT8Dgy4Ne1nhClomTWNTb
+	iHbX8/4mp/PSCrCHmWu3LhZYCetFnB2XH0ULEO02cX+YXcjYnOaJaip675/pX4L1bRxD8umrwzQ
+	l8mo9BMdJExL4yhSaMuVbNftCtx3nvJL5loRYuWgi1cZ8/JtiiFgpjDK0Mxbv2GJg7MZYF2bvdL
+	CXZrPltxf+E9hQHNEConwYOUTsKrg8/KVatR6uSg7At5cMt1Q==
+X-Google-Smtp-Source: AGHT+IEacXPJ9wuRffy+3u2pnF2AR150ieE/GYGNdF/NuOwwPfuBSdBTDiv4t9i9uE769U2u4AYZtw==
+X-Received: by 2002:a05:600d:634f:b0:475:d952:342f with SMTP id 5b1f17b1804b1-475d9523a1amr57774635e9.39.1761574591150;
+        Mon, 27 Oct 2025 07:16:31 -0700 (PDT)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429952cbb20sm14458247f8f.18.2025.10.27.07.16.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Oct 2025 02:59:28 -0700 (PDT)
-Message-ID: <de0bd5430a12374f5fa438306a7cad2d0746a571.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] siggen: Fix dump of non-runtime sigdata
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Paul Barker <paul@pbarker.dev>, bitbake-devel@lists.openembedded.org
-Date: Mon, 27 Oct 2025 09:59:27 +0000
-In-Reply-To: <c12740b7bc4ad5f7ddbb56f4ce57dc665892051e.camel@pbarker.dev>
-References: <20251027-fix-dumpsig-v1-1-465674c4fac3@pbarker.dev>
-		 <fd1e8c06aa46063af275cebef8aa42eb897c55e0.camel@linuxfoundation.org>
-	 <c12740b7bc4ad5f7ddbb56f4ce57dc665892051e.camel@pbarker.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0-1 
+        Mon, 27 Oct 2025 07:16:30 -0700 (PDT)
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH] bitbake-setup: correctly define --global argument for settings management
+Date: Mon, 27 Oct 2025 15:16:27 +0100
+Message-Id: <20251027141627.3724031-1-alex.kanavin@gmail.com>
+X-Mailer: git-send-email 2.39.5
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 27 Oct 2025 09:59:33 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18220
+ <bitbake-devel@lists.openembedded.org>; Mon, 27 Oct 2025 14:16:35 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18221
 
-On Mon, 2025-10-27 at 09:16 +0000, Paul Barker wrote:
-> On Mon, 2025-10-27 at 08:58 +0000, Richard Purdie wrote:
-> > On Mon, 2025-10-27 at 08:25 +0000, Paul Barker wrote:
-> > > If the debug code is uncommented in SignatureGeneratorBasic.finalise(=
-),
-> > > sigtask stamp file are created without runtime data such as
-> > > 'runtaskdeps' and 'file_checksum_values'. If we then try to run
-> > > bitbake-dumpsig on one of these files, we will see a traceback as the
-> > > expected keys are not present in the sigdata dictionary:
-> > >=20
-> > > =C2=A0=C2=A0=C2=A0 Traceback (most recent call last):
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 File ".../bitbake/bin/bitbake-dumpsig"=
-, line 195, in <module>
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 output =3D bb.siggen.dump_=
-sigfile(options.sigdatafile1)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 File ".../bitbake/lib/bb/siggen.py", l=
-ine 1266, in dump_sigfile
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 computed_taskhash =3D calc=
-_taskhash(a_data)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 ^^^^^^^^^^^^^^^^^^^^^
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 File ".../bitbake/lib/bb/siggen.py", l=
-ine 1199, in calc_taskhash
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for dep in sigdata['runtas=
-kdeps']:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ~~~~~~~^^^^^^^^^^^^^^^
-> > > =C2=A0=C2=A0=C2=A0 KeyError: 'runtaskdeps'
-> > >=20
-> > > To fix this, treat these entries as empty lists if they are not prese=
-nt.
-> > >=20
-> > > Signed-off-by: Paul Barker <paul@pbarker.dev>
-> > > ---
-> > > Richard,
-> > >=20
-> > > This patch attempts to fix an issue reported on IRC last week [1]. It
-> > > prevents the traceback, but I'll have to defer to you on whether the
-> > > taskhash calculated without 'runtimedeps' and 'file_checksum_values' =
-is
-> > > meaningful.
-> > >=20
-> > > I guess an alternative approach would be to call calc_taskhash in a t=
-ry
-> > > block and not print out a task hash if the call fails.
-> >=20
-> > Rather than compute a hash which will never work, we should just skip
-> > calculating/printing it or print something indicating it can't be
-> > calculated. I've not looked into the details yet but I will at some
-> > point unless someone beats me to it with a different patch.
->=20
-> Is calc_taskhash likely to change in the forseeable future to depend on
-> additional keys in sigdata? If not, we could just check for 'runtimedeps'=
- and
-> 'file_checksum_values' in dump_sigfile before calling calc_taskhash and s=
-ay
-> "unable to compute task hash" if they're missing.
->=20
-> I can send a v2 implementing that.
+From: Alexander Kanavin <alex@linutronix.de>
 
-Potentially it can change but it wouldn't lose the runtimedeps so
-keying off that is probably safe enough.
+--global was defined twice (for settings command as a whole, and specifically
+for set/unset sub-commands), which caused 'settings --global set ...' to
+be allowed, and at the same time not have any effect. 'settings set --global'
+is the only valid form after this change.
 
-Cheers,
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ bin/bitbake-setup | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Richard
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index 38bb8099f..a0426005f 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -785,7 +785,7 @@ def main():
+     parser_settings_arg_global = argparse.ArgumentParser(add_help=False)
+     parser_settings_arg_global.add_argument('--global', action='store_true', help="Modify the setting in a global settings file, rather than one specific to a top directory")
+ 
+-    parser_settings = subparsers.add_parser('settings', parents=[parser_settings_arg_global],
++    parser_settings = subparsers.add_parser('settings',
+                                             help='List current settings, or set or unset a setting in a settings file (e.g. the default prefix and name of the top directory, the location of build configuration registry, downloads directory and other settings specific to a top directory)')
+     parser_settings.set_defaults(func=settings_func)
+ 
+-- 
+2.39.5
+
 
