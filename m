@@ -1,89 +1,92 @@
-Return-Path: <mathieu.dubois-briand@bootlin.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDEACCF9F8
-	for <webhook@archiver.kernel.org>; Mon,  3 Nov 2025 16:03:33 +0000 (UTC)
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.888.1762185810132228706
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570ECCCFA09
+	for <webhook@archiver.kernel.org>; Mon,  3 Nov 2025 16:31:24 +0000 (UTC)
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.1687.1762187475951373011
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 03 Nov 2025 08:03:30 -0800
+ Mon, 03 Nov 2025 08:31:16 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=vgL/mgh1;
- spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: mathieu.dubois-briand@bootlin.com)
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=hIMxqaCY;
+ spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: antonin.godard@bootlin.com)
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 1E91B4E414B7;
-	Mon,  3 Nov 2025 16:03:28 +0000 (UTC)
+	by smtpout-04.galae.net (Postfix) with ESMTPS id A63E8C0D7B6;
+	Mon,  3 Nov 2025 16:30:53 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id E8D9A60628;
-	Mon,  3 Nov 2025 16:03:27 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4C9CC10B50169;
-	Mon,  3 Nov 2025 17:03:26 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 77A3C60628;
+	Mon,  3 Nov 2025 16:31:14 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 04C2B10B5016D;
+	Mon,  3 Nov 2025 17:31:12 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1762185807; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=C0NmxDhxAYwOa8kEldovb8ndwUNBmOmJMnGeCZu9yNU=;
-	b=vgL/mgh172du2YCbP4qyFyW/X5ey9MUGajBQOlAF+qC8WDlUyAAaiD+D0d5E3cly6UTzO7
-	oDIR/TMEcX00+GgEwUqj+KRUmRKQHtHUNffO/J+bOTwbveoGdO30aHmP/Fqc29iSPrfSrT
-	HOXpoFW52IzKL6EioOBgIm6M8dsXhhrt6/WGWSp9Q8j8HN+rO5Qophg2wV1om1l33lIm7T
-	cArUEVwB/L7PU/45CKs80bYQvN7oC33HzR/Hj5Ba2s9gdrczvgfUDyzdovmgY2tUjz49GH
-	rTB6eVvAoZd2hqwyQc2ez1BXLqK55wZsejuwd8Um4jJnIBGAYnYkJXObxe0eEg==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 03 Nov 2025 17:03:25 +0100
-Message-Id: <DDZ6QFANRFEB.4MFIOJHGMQ42@bootlin.com>
-Subject: Re: [bitbake-devel] [PATCH] bitbake-setup: rename 'build' ->
- 'setup'
-Cc: "Alexander Kanavin" <alex@linutronix.de>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: <alex.kanavin@gmail.com>, <bitbake-devel@lists.openembedded.org>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20251103135759.1129769-1-alex.kanavin@gmail.com>
-In-Reply-To: <20251103135759.1129769-1-alex.kanavin@gmail.com>
+	t=1762187474; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=QoKhX4bzSqoqELSu7lyw4P3R9F228/T6JuVFQrTM+a0=;
+	b=hIMxqaCYdwMxhykKxfT3/vGeqA3Vf+SIYfe5vxeTIU4FcL85NEj2dt6veYtVMdHhRrlDw7
+	Qpi/Yjyrqc3kEN8+OhENEYVoOarO4aRs0zlGyyCMKUWpi66WYLmCvngPlDuNHKy516eNFO
+	WZPCycqY4n5lUMonfO6iRDiP5LoUvFLHqqB/5yfry3QuxE4vO+Ib7qyiKhm72E6LGvEIF+
+	ynsscjykmGV6m4StQB3X0sIAq8IADxPjkWcmLxRNNiWGkB9YjKtDMgag95+bFuKMRZcZ+A
+	cL/o5ZhycUEEiw8P3nTdiRmE6qivLrLF4ZJ8bZGYJWA7meAnH7VjGCVSbgtnbw==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Subject: [PATCH 0/2] Add bitbake-setup documentation
+Date: Mon, 03 Nov 2025 17:29:48 +0100
+Message-Id: <20251103-bitbake-setup-v1-0-635a7c829a4b@bootlin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHzYCGkC/yXMQQqDMBBG4avIrA0YRdRepXSRib/tWLCSiSKId
+ zfV5bd4bydFECg9sp0CVlH5TQk2z8h/3PSGkT6ZyqKsbVFZwxLZfWEUcZkNuGXXuQ594yk1c8A
+ g2/V7vm7rwiN8/E/oOE5NKWsfcQAAAA==
+X-Change-ID: 20251031-bitbake-setup-eb8ba9a9ed7c
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=777;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=xm439Y4s4WEkO8etZFGcG6VBI+XsPr+Gk9Zzcy9PJwo=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpCNjQJIZQzf0XgUIRMkpEkxgI+x4O9Azb0pqOO
+ mNDtCEEgauJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaQjY0AAKCRDRgEFAKaOo
+ NqFJEADJifbeGNEc7PCBSto6tEPlFohGuiM00DchKlG2+ljeB+I+Fgj9b+HGZtAhoXY6xbsIiG2
+ KBOCR+PWL894zV/S8TXeNJoUoJZwhJ1AoaWYSLBJWsaKUlzxaAlmYFRSP1TumW1uOjycI0EBdcf
+ KVbH6ZSHu8T28rpkOb9Nql5h5wIcWGQEYJLUZwDOsq3YY2xGlujYWi4Hd4doZ8Y5wipayjvmIyq
+ XfCAajo05Qred0H8fq+IhVS7PjVqA24rw6U3YxlfwoinJWUYfSoHXheb2wFm+p1VSfGFywFIU98
+ eFIauF1kiazG6L6juiDR8yzKZr8FnVD9YkKhdy7OPSOZJmszqvX3ZUegFWWs08vq+/6CfRUZzbo
+ iAoAIo6wmmKe9UhWJfr9wFeO+62MZ+p036d8yN7kpSZVyGlVpSCxO9M7qfAVVkAWckCsqQqmmah
+ tuLeIxuBRx7Cb3fOK1lNUAyG0kWV6+Suwvfmh7/yeINKdwWT4nui5sRFK3Xx8XXAwzuzpPEYNl9
+ ruUkhkR9UJgZbZ6znvHdP0dVspGCFJjbSfcTZBSnRjwVU9mziJvjkTgocJttOwhB+hddmHUnyS8
+ cqiLcxfJRZXd7hk8+iuOsad7r68kL1p8qjyk7FHyAtlY7/yYTvEJfHPLjXcRfq6p0euStr1XZzq
+ 5iXTV6b7xqyJp4g==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
 X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 03 Nov 2025 16:03:33 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18240
+ <bitbake-devel@lists.openembedded.org>; Mon, 03 Nov 2025 16:31:24 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18241
 
-On Mon Nov 3, 2025 at 2:57 PM CET, Alexander Kanavin via lists.openembedded=
-.org wrote:
-> From: Alexander Kanavin <alex@linutronix.de>
->
-> After a terminology review by Antonin we brainstormed
-> something less confusing than 'build' and 'build directory'
-> for the place where bitbake-setup clones layers and
-> creates a *bitbake* build directory in. People are bound
-> to get these two confused and mix them up, and 'setup' is
-> much more distinct and aligns nicely with 'bitbake-setup'.
-> It's also not claimed by anything else in OE/Yocto.
->
-> So before:
->
-> top-dir -> build-dir (can be several) -> bitbake build dir, layer dir, co=
-nfig dir
->
-> Now:
->
-> top-dir -> setup-dir (can be several) -> bitbake build dir, layer dir, co=
-nfig dir
->
-> This also updates the respective command line options, I understand it's
-> a breaking change, but as before the tweaks are simple and we need to get=
- the
-> terminology right for the users, and now is the time to do it.
->
-> Signed-off-by: Alexander Kanavin <alex@linutronix.de>
-> ---
+Add the reference documentation for bitbake-setup, in a new
+bitbake-user-manual-environment-setup.rst document.
 
-Note, this will break with current configuration on the autobuilder, we
-will have to modify the parameters we pass to bitbake-setup.
+Depends on https://lists.openembedded.org/g/bitbake-devel/message/18237.
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+---
+Antonin Godard (2):
+      doc/conf.py: add wikipedia extlink
+      Add bitbake-setup documentation
+
+ .../bitbake-user-manual-environment-setup.rst      | 672 +++++++++++++++++++++
+ doc/conf.py                                        |   1 +
+ doc/index.rst                                      |   1 +
+ 3 files changed, 674 insertions(+)
+---
+base-commit: 35a421cdcafb3595b9de5489ffdc567825400d26
+change-id: 20251031-bitbake-setup-eb8ba9a9ed7c
+
+Best regards,
+--  
+Antonin Godard <antonin.godard@bootlin.com>
 
 
