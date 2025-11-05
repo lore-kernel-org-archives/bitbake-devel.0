@@ -1,147 +1,83 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <martin.jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0053BCCFA13
-	for <webhook@archiver.kernel.org>; Wed,  5 Nov 2025 17:44:57 +0000 (UTC)
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.15715.1762364695646484887
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 122DDCCFA0D
+	for <webhook@archiver.kernel.org>; Wed,  5 Nov 2025 18:02:28 +0000 (UTC)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.16346.1762365737729885386
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 05 Nov 2025 09:44:55 -0800
+ Wed, 05 Nov 2025 10:02:18 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=RCVlEDQA;
- spf=pass (domain: smile.fr, ip: 209.85.221.41, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-421851bca51so84148f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 05 Nov 2025 09:44:55 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=NrH+lhxC;
+ spf=pass (domain: gmail.com, ip: 209.85.208.170, mailfrom: martin.jansa@gmail.com)
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-37a5d03b53dso890771fa.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 05 Nov 2025 10:02:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1762364694; x=1762969494; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=AgHfKntNlLThV9CqOLGSKA6GyQAIjwTllB+La4U/xhE=;
-        b=RCVlEDQAPuXCcDVw/C+99RnnaRKiXe5v4IwTyGKP0PQtD5twim5Sm56P0O1wBpZqqh
-         aKbxt3XMfd5as8Gid85t4AM/tmJGDZswhUglL+ME0WJK7VxdFZPQFw0XsmT7BD+epwQN
-         vmSk4FzapbM7bOAYIRW9/JfKvSYDwKq1D86Ek=
+        d=gmail.com; s=20230601; t=1762365736; x=1762970536; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=12nWPoUtxRqGpDW9kOBeRrtSQfpXYkYzgehiGq161wg=;
+        b=NrH+lhxCik5NY+HawOZ2rppep3leaAirobRfDxaya3rg3cHx3lnWFx8Gk+dYUrJ/51
+         qMejta15cAMw+3xOpxTjM/QU4ELzWjtX+O/hUu7+UrhcEyf/j4VwkHvUb+fgRizxw+dm
+         7b/GfhQTMQ/cwlAloWsoR5P2ljfECjYA3KCheBiGjj+yksGuX/Vl4zPCRJG3hC8guhzl
+         tDTmYawhXegMUml8HX0DiI36kSza3ivGNmpCEp4+7G6o8/0KxDca+Nuy1hY2lL4ZUU1q
+         3U4mQgh/y/jQJbuAWKYjK7vlAAhIv0V6JplroD1wV2NmeAeWsXte6s0SfGPefu57+ZJ3
+         S1gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762364694; x=1762969494;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AgHfKntNlLThV9CqOLGSKA6GyQAIjwTllB+La4U/xhE=;
-        b=dPH7I597VFSNKe6VwQG6o0VozUnOwqs838VHFgJ8qZYsNrw25UrQwaMMTzOGDmK3qJ
-         C4KFoJPBRqhLnWQR24RknHGwBYyaKM641sBczDCffokpxVRB7iy6uxslRv9LTluOZQHe
-         JE/o3M/hXe9naLC63ENJizJQyMwgwXuCMP5yXKeQxtfKjy9JZhljANbE1GtJFSRZR8qA
-         Q61qwiMu22KAUuGLFaBmCtGqF4NPp1xhtHrKvi2IkDNj8EPJaMgx6uczgtf4dV4bmOly
-         ZCMkULRW5e7JtJbX7TRi5aqkbiaMxU2FuuMspgjZlpPwFYsaNjcOP90K0uBjvg5ACudG
-         pfqw==
-X-Forwarded-Encrypted: i=1; AJvYcCU10wphlFs/tt0BDMTfBvSBWnYT3gkYc7atSg6EGygXuJIGMiyZBZHLlpkwsgEb/LUYJZI+Io7iHJc/DEWa@lists.openembedded.org
-X-Gm-Message-State: AOJu0YympR1HJf2L59e2OLXbgAT05Fk0H7rXwCGFb2M/hNbR4mCD6zxi
-	kzZP77iuJFqE8gfMgnsgYuD+Ne5ROi3R/bEhtUb8FyEBlVgZKJZpQK6SyakPC+Gn51sm2WjuMuD
-	3SE6mlrqY4OlvkUpVop3OuC5queYXwDEgjFJldCOZyA==
-X-Gm-Gg: ASbGnct22c7HUxCwhPRooAtJCQVqX0cuhUuJQpG8i2YGAWiNoq7BVejL0Of+K7N2VOL
-	I1elaj8adFP09KWfTEEj4cWmNEkYg99efGNWKyaKtzmG5xAWDhRFH2V9Mu8mAvFFZbCN7NIG0jW
-	DNlNBI72PUgE8C5DMvlQVf9cwZ9fW5MA0KnpYe8Fq0hCLHqFMX6dU2P8hIK4+q/OE78tnR0CzUH
-	So4NC2MZF9/C4x/wXpndmMMMx6p/uuqzEQnG65FDW983o8/8TVkycAyhQKWbsBsBmDq+6Yn39Im
-	EYqy07aZKGJe/Qhtsiw=
-X-Google-Smtp-Source: AGHT+IHWH9amKacgvPB2cJo1hdvNVHIAdzyIUPR0mL8d1VVjVziCBeBRQ4nmbRUiS3eGD0PZZ9Cveuzc7RGwMiDaat4=
-X-Received: by 2002:a05:6000:2482:b0:429:cacf:107e with SMTP id
- ffacd0b85a97d-429e32e48camr3628303f8f.19.1762364693963; Wed, 05 Nov 2025
- 09:44:53 -0800 (PST)
+        d=1e100.net; s=20230601; t=1762365736; x=1762970536;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=12nWPoUtxRqGpDW9kOBeRrtSQfpXYkYzgehiGq161wg=;
+        b=pdpbjWAcQA7U9Kg26rjhiDsjEpSDncBe+FbOLVQh9ahRRx2sXwT7wK+ldmj/RhajGX
+         Fj1r+kFfwqsyzK5R1jkrSea+mUaNXCbWcDPcYwhch27hJ1CJxuJ0fytGKOp/s4JAamhE
+         q5MjUY4wY9MebX1wUBLdfQasoJEeLFq296+f7x8g6D5DGjeK1k3xNIyWbGqZLAhewfXT
+         SINRPAmqnvNQnaTSAUbAspjSGyK4/al2+kPs/B2Lc0PwHqeOOhFXIAVGcbcnDGWtfX1u
+         QaEM+zK7o9Ei8YHuGUvIxw2DlUtOxqVcQtachvsgl1cBicOuN95cm/Vgb7ngSxxMfwID
+         uCaw==
+X-Gm-Message-State: AOJu0Ywdx3K4rDVfEHVtJeGXcrzR6v2ct6SBKvuEPmH+LfDpqv1hCPqs
+	C5MSDnemYMVKzCohN99A/XT5vuObjCqlDPKIxeihOK4Wf9aVPoTloQraeFkdk9iZkQZ46xUAUQB
+	sFkV5iZiRmLYMQu7/vq/rANi7REORaaM=
+X-Gm-Gg: ASbGnctDAtOmX0dWRpodsNEX44gx0vOm6WN1vVxTkrdHbI5qrDk9vPyT1kkRSwdp+T/
+	cBtESrFiv8FMJGOzHRVZAPMLAC1yMGXAGNnXs3Upof/jObeBApzFl3x2M6Ex70hfn70to/rPr/V
+	cAg71b3iXBImdsdsm4Mf41lVRHXpPrM/Pmd+8iKv4TD4YLPs2xs3wkUDAOTqGtTDVVl7nHYvJ9y
+	PhkoRBaAg152fm4tEUM0X2zasOCPrwaIbar6I3QJsbGr+pKIw9/gmWN3EqxpZ8=
+X-Google-Smtp-Source: AGHT+IFsQLuJFUCmQoUWXA/eG9GzHcTos16icEw4Sm5fCS4EWyaqcj3JU3GapPD1Qx3aqPQhm50mL+IeZxcK7NU2f1o=
+X-Received: by 2002:a05:651c:234c:20b0:37a:31fc:1d47 with SMTP id
+ 38308e7fff4ca-37a513e718cmr10231511fa.14.1762365734072; Wed, 05 Nov 2025
+ 10:02:14 -0800 (PST)
 MIME-Version: 1.0
-References: <CANNYZj8p5zTnzo3AO88_c7Q=qDtO1-QWaFNh+z37xLX4Y1H8Bw@mail.gmail.com>
- <20251104151156.3125937-1-johannes.schneider@leica-geosystems.com>
- <DE0USKLW9WXP.3MKV2P4AI36E1@bootlin.com> <CANNYZj_bTNkWmDLe=wmDOXfL1xWxSTx6yP2yqAbjLVaomXoVaQ@mail.gmail.com>
-In-Reply-To: <CANNYZj_bTNkWmDLe=wmDOXfL1xWxSTx6yP2yqAbjLVaomXoVaQ@mail.gmail.com>
-From: Yoann Congal <yoann.congal@smile.fr>
-Date: Wed, 5 Nov 2025 18:44:27 +0100
-X-Gm-Features: AWmQ_bmkmGKF8_ueaps5-QqM31CuBWDKuuAah3eSEdP0i_m9IYhqO5kVTSHkN84
-Message-ID: <CAMSfU+5SOfNvM-ynzLRzthh-7=mAyFs4aAYrTM9+=e94ahrsQg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] Add bitbake-setup documentation
-To: Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: Antonin Godard <antonin.godard@bootlin.com>, 
-	Johannes Schneider <johannes.schneider@leica-geosystems.com>, 
-	bitbake-devel@lists.openembedded.org, docs@lists.yoctoproject.org, 
-	thomas.petazzoni@bootlin.com
-Content-Type: multipart/alternative; boundary="0000000000008c788a0642dc81fb"
+References: <20251105144420.359338-1-JPEWhacker@gmail.com>
+In-Reply-To: <20251105144420.359338-1-JPEWhacker@gmail.com>
+From: Martin Jansa <martin.jansa@gmail.com>
+Date: Wed, 5 Nov 2025 19:01:59 +0100
+X-Gm-Features: AWmQ_bk_rN44RB-dpiGrOhv8KeRQ0g3lBq9VNmTQ5lSzHV1UedG1zc01_N7upRg
+Message-ID: <CA+chaQcs5bUK8Aa03zcBBqN_hTBvG5cGTTBh_goyq8DE_-rziQ@mail.gmail.com>
+Subject: Re: [bitbake-devel][PATCH] knotty: Integrate PSI reporting into the UI
+To: JPEWhacker@gmail.com
+Cc: bitbake-devel@lists.openembedded.org, randy.macleod@windriver.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 05 Nov 2025 17:44:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18268
+ <bitbake-devel@lists.openembedded.org>; Wed, 05 Nov 2025 18:02:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18269
 
---0000000000008c788a0642dc81fb
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Le mer. 5 nov. 2025 =C3=A0 16:20, Alexander Kanavin <alex.kanavin@gmail.com=
-> a
-=C3=A9crit :
-
-> On Wed, 5 Nov 2025 at 16:07, Antonin Godard <antonin.godard@bootlin.com>
-> wrote:
+On Wed, Nov 5, 2025 at 3:44=E2=80=AFPM Joshua Watt via lists.openembedded.o=
+rg
+<JPEWhacker=3Dgmail.com@lists.openembedded.org> wrote:
 >
-> > Thanks Alex and Johannes for the suggestions and corrections. A v2
-> should be out
-> > soon!
->
-> Before I forget, THISDIR in bb-layers should be also documented:
->
-> https://git.openembedded.org/bitbake/commit/?id=3Db3153be29de8b8570b0c184=
-369bd41f4c646cf92
->
-> Sadly it isn't part of the formal schema definition, in hindsight it
-> probably should have.
->
+> Reworks the way that pressure stall information (PSI) is reported in the
+> UI. This change does a number of things to enable PSI to still be
+> reported, but less intrusive than a NOTE message each time it changes:
+>  1) The primary reporting of the PSI to the UI is now done through an
+>     event.
+>  2) The knotty UI handles the event and reports which PSI montiors are
+>     preventing tasks from starting with a line in the status
+>     footer.
 
-I can do that:
-* documenting "{THISDIR}/..."
-* Integrating "{THISDIR}" into the formal schema definition
-
-
->
-> Alex
->
-
-
---=20
-Yoann Congal
-Smile ECS
-
---0000000000008c788a0642dc81fb
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote g=
-mail_quote_container"><div dir=3D"ltr" class=3D"gmail_attr">Le=C2=A0mer. 5 =
-nov. 2025 =C3=A0=C2=A016:20, Alexander Kanavin &lt;<a href=3D"mailto:alex.k=
-anavin@gmail.com">alex.kanavin@gmail.com</a>&gt; a =C3=A9crit=C2=A0:<br></d=
-iv><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;bord=
-er-left:1px solid rgb(204,204,204);padding-left:1ex">On Wed, 5 Nov 2025 at =
-16:07, Antonin Godard &lt;<a href=3D"mailto:antonin.godard@bootlin.com" tar=
-get=3D"_blank">antonin.godard@bootlin.com</a>&gt; wrote:<br>
-<br>
-&gt; Thanks Alex and Johannes for the suggestions and corrections. A v2 sho=
-uld be out<br>
-&gt; soon!<br>
-<br>
-Before I forget, THISDIR in bb-layers should be also documented:<br>
-<a href=3D"https://git.openembedded.org/bitbake/commit/?id=3Db3153be29de8b8=
-570b0c184369bd41f4c646cf92" rel=3D"noreferrer" target=3D"_blank">https://gi=
-t.openembedded.org/bitbake/commit/?id=3Db3153be29de8b8570b0c184369bd41f4c64=
-6cf92</a><br>
-<br>
-Sadly it isn&#39;t part of the formal schema definition, in hindsight it<br=
->
-probably should have.<br></blockquote><div><br></div><div>I can do that:</d=
-iv><div>* documenting &quot;{THISDIR}/...&quot;</div><div>* Integrating &qu=
-ot;{THISDIR}&quot; into the formal schema definition</div><div>=C2=A0</div>=
-<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
-left:1px solid rgb(204,204,204);padding-left:1ex">
-<br>
-Alex<br>
-</blockquote></div><div><br clear=3D"all"></div><br><span class=3D"gmail_si=
-gnature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_signature"><d=
-iv dir=3D"ltr"><font face=3D"Raleway, regular">Yoann Congal</font><div><fon=
-t face=3D"Raleway, regular">Smile ECS</font></div></div></div></div>
-
---0000000000008c788a0642dc81fb--
+Small typo above, otherwise LGTM
 
