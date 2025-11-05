@@ -1,120 +1,99 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B35BCCFA1B
-	for <webhook@archiver.kernel.org>; Wed,  5 Nov 2025 19:06:48 +0000 (UTC)
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.17904.1762369604156097405
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D959ECCF9F8
+	for <webhook@archiver.kernel.org>; Wed,  5 Nov 2025 23:27:50 +0000 (UTC)
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.2580.1762385262366860974
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 05 Nov 2025 11:06:44 -0800
+ Wed, 05 Nov 2025 15:27:42 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=H+7c0YXo;
- spf=pass (domain: gmail.com, ip: 209.85.221.50, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3ee130237a8so133341f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 05 Nov 2025 11:06:43 -0800 (PST)
+ dkim=pass header.i=@smile.fr header.s=google header.b=oU/twgxZ;
+ spf=pass (domain: smile.fr, ip: 209.85.221.51, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3f0ae439b56so223813f8f.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 05 Nov 2025 15:27:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762369602; x=1762974402; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uYCNFMpdWkQFM4DMFhg+r/4DTkF+qIKKphTbOWJeHo8=;
-        b=H+7c0YXo3UjA1uGeMll/7yDQoBN3/U9yudvNUSmsIqZDZo2z/zqs98Xzf83I4HPTCw
-         Vecpfd9irz40pDkqO05A9KIFJTmCL6RBD/Q19ZaQRBc7N4of02a88Iv5Tar1GZYw2B0V
-         eR0DTgHCboUxBy47u5eBOG4Spk78YLKILfD65zE5EZnGoHfwOHf56Y05OvQHFRre6ij+
-         qZOH8g2bX+y8Pma2lNsKHo9YwOQWKFdm3p9avorqtBeNt5N3G2PmEtkvCdAOBgcky4lz
-         mpLBnHQphzS9LiBrRWHQzhkkypbjt5LLiXc1ge+h2QqxJEEt+JTfri4SMjiRRq3L+fH/
-         6a5A==
+        d=smile.fr; s=google; t=1762385260; x=1762990060; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7/3xRkzlnFSArUplThiRA/xp6DMYuc5rwUuyGP+BpIM=;
+        b=oU/twgxZ4UcqYaHfo35pVLK0/1OCsD7lQQiH8mlYBeSE314paCWirwayQ8ntSGpC8V
+         EpLlseeoxTM0GVRvmZ5zMR+qOkE/SOnZCmdHU+PwgODV8pemoAFvGo6HLJ0rxZ2GEbbI
+         qCNhuz/+Q+Dw5UQwwkdEIfjRx72kFR9JZksTU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762369602; x=1762974402;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uYCNFMpdWkQFM4DMFhg+r/4DTkF+qIKKphTbOWJeHo8=;
-        b=SCLWQ+Zx4c0nIMvcAzburHIx62O0pSmlHQ6x86+UTtaVn7swTnjM9oCguRI0nbjCaW
-         ru0O47tMFjpHxQltD5NcyLiDc7MbtJEkyOQD3/Tplxr5Fnmh0980q3g86SxXWUnXkJiN
-         ILIcCcqT1dA6+jJyRWTVcGeUpMeZhQzeewz/czDJvvW2KBkYDT6PA/RV+OcOCdQZ8Q/h
-         HbsRvYmmJhC0tb1BFkN+0g9p8uQPMENSJO3Dog/1aPv7SDFULD3kJKxo6Zv2jEYtICXF
-         wOAjKCQdMjZvZQaBE2FqLiaw0DLYnb0kwTefAnmP78TahjBDeqK7pUQvVOhrwjPlVs95
-         LtoQ==
-X-Gm-Message-State: AOJu0YzaKE2EQQ/W9KhBKnNMDAfz9BwfSMpDc4yYmyA4wq2SKH+lcgZA
-	1pBBFSOlqIryLBXhfwgiVW16VpJeOCCduKD3YXerDA+tS8Qx4OdVEts84SoH4Q==
-X-Gm-Gg: ASbGncsVeiYCWHQPveTautUhe3wSsF/9Gr7N9mjHaPy3hGTse+u2kVOvSGWhTuB8iNC
-	yM+hQrKyaD+/TxQU12Bq/VrCIHyNTHoTSdkKK8KwXtW+CANaLVUq9tt3/G4Hna4Ikkt9g1haq/y
-	uJ9bgsepMxhHH0ipcQyIpiYfPErtQwDoE39OGS/7yPIHMHjELU7h9rvyJnpsIqHO1KU//Ig2r6E
-	dULs1LoOv/UUSTaST7qn+fxeP+N27IHD2arI4ib7Eg3Q1q1o5J6wlBiNXns8+5VseDpy7ELkBap
-	cPNwUayCHBg9i0ZGQnsI89QefGOd5JyZm9V1rkOextcaUgTAj+xQheJgBElxhpNhQajL+GQuYBs
-	a3x574dXpFWWkawJ09cYaNrWH0krleZ5l5OwSfQ5pnLUl7gCPe+DWAyXarWznidi15q83BHGhbK
-	IISuSd2YBNLOQnTs2i81NQfRkUKu2+bZ7qlxXk
-X-Google-Smtp-Source: AGHT+IFiIWDoGOd4h+uByrCzBPa+JvK8oXEhulsQ4PPQOj3gi/ke28N9of+iS2uIlFb2l/ugaE1QZg==
-X-Received: by 2002:a5d:5f46:0:b0:429:8c4e:b0c8 with SMTP id ffacd0b85a97d-429e32f7b92mr4523305f8f.27.1762369602488;
-        Wed, 05 Nov 2025 11:06:42 -0800 (PST)
-Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429eb477203sm313840f8f.29.2025.11.05.11.06.41
+        d=1e100.net; s=20230601; t=1762385260; x=1762990060;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7/3xRkzlnFSArUplThiRA/xp6DMYuc5rwUuyGP+BpIM=;
+        b=a5pHlVp0H9zAegWg4skF7g2GgoLGAOL8GFCu4KpvpeK8hifGJoAUEmOe+/FPrU2Tkb
+         9H3OSKgEKDRM6XUMgt0VmrfCUSMVJ2QTskj5N62TtcP/70H57EvWezDkQkmePIDsQ74I
+         4siwsYPtAwpQ4HNhX/hzMvOTVjLgPGYOg5o1RzQ6BHb+OAHubAENtv5CziWjtMmQFgvz
+         JZPXrv4M652NfzduDf5l53vCZclziWGIYg/JsRzfnclQFS5oc8cG2fPIXMDBEwSF+5cx
+         uXIQiOPbQkh+RO7Z/UiqIIe0S55nfio0VNGB3KskfWmKO1y7FPtbnqu7pGO5ABmKZhV4
+         vu+g==
+X-Gm-Message-State: AOJu0YxQs5h1N0eXj0jLQHqA4vvzO+1KYUTI0ah5FwagftX5/lEA1+yl
+	7Tg9LftXHzDNLU0sTudkJ6lzV9MoU0BNX8IILDC3T1wI13mS73aXd4NCE7fFDPW9tcVT+zgUgtt
+	LzMhciuo=
+X-Gm-Gg: ASbGncsKsE8Rc7MEb2i7xwXr+sxFMIa4ouzEFk/k1sQ7EER0DilyU0JpbQB4omthGqf
+	tAeieSwJa7OTgJi1xXJaT/dmlMuY2eVf0z1j0FO8trYZG0DM40eoAkVgzpp8eS9vVbCyvZkhrZ8
+	rbfJxVzhsvK2fziMWXRlcn8k7xUhZJEUDmmon/bNQxqdNEaHijnlEJALme+8AS9ezEQQ2Gm33GP
+	lI9ildHnP07yYMSIfUExv1+L53JvqYO1ozkHeTpiOPt1P2yMWxXC4KmIIZxWmdiZxO5DNXZL+UO
+	ptwbSd8K4/J1dfzcq4tKljb1uxn9tzP6mPIOY+TeaQ0lWAVusZH5LGKQmuXuaKuxZc+Ym01PvHP
+	P5EKTBdB6/x/VWplKqUOVuSIoSV9AmQ2SAmCnmGvMjg+ryhdKX/mpgiZ5MKqHR/QH/7TroTqOBV
+	OU9TS0nhFthqgGuNNLJUCv50T59DClKT1hda29J5ZsusokVzaZ7/GAc1vXMyF2jQsZp2TeCQhhK
+	uWQiN/SVH8=
+X-Google-Smtp-Source: AGHT+IGwh3uAlWLJ7yc2Fm7oHtCjbAsbLrcW67+VuYZXBp2kDa7afQGbUvhD1tR9+x3syev6BUleQQ==
+X-Received: by 2002:a05:6000:290b:b0:427:492:79e5 with SMTP id ffacd0b85a97d-429e32e45fcmr3283058f8f.21.1762385260335;
+        Wed, 05 Nov 2025 15:27:40 -0800 (PST)
+Received: from P-ASN-ECS-830T8C3.home (2a01cb001331aa0017b58d8bf04048c3.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:17b5:8d8b:f040:48c3])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429eb49baaasm1381734f8f.38.2025.11.05.15.27.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Nov 2025 11:06:42 -0800 (PST)
-From: Alexander Kanavin <alex.kanavin@gmail.com>
+        Wed, 05 Nov 2025 15:27:40 -0800 (PST)
+From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Cc: Johannes Schneider <johannes.schneider@leica-geosystems.com>
-Subject: [PATCH 2/6] bitbake-setup: fix key-error when changing a new 'section'
-Date: Wed,  5 Nov 2025 20:06:32 +0100
-Message-Id: <20251105190636.679388-2-alex.kanavin@gmail.com>
+Cc: Yocto Docs ML <docs@lists.yoctoproject.org>,
+	Yoann Congal <yoann.congal@smile.fr>,
+	Antonin Godard <antonin.godard@bootlin.com>
+Subject: [master-next][PATCH] bitbake-user-manual-environment-setup: Document "{THISDIR}" in bb-layers
+Date: Thu,  6 Nov 2025 00:27:18 +0100
+Message-Id: <20251105232718.2801446-1-yoann.congal@smile.fr>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20251105190636.679388-1-alex.kanavin@gmail.com>
-References: <20251105190636.679388-1-alex.kanavin@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 05 Nov 2025 19:06:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18271
+ <bitbake-devel@lists.openembedded.org>; Wed, 05 Nov 2025 23:27:50 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18276
 
-From: Johannes Schneider <johannes.schneider@leica-geosystems.com>
+From: Yoann Congal <yoann.congal@smile.fr>
 
-Setting a key=value in a new section would raise a key-error when
-using in-memory settings, e.g:
+A "bb-layers" element can either:
+* start with "{THISDIR}/meta-xxx", then "meta-xxx" is found relative to
+  the configuration file,
+* or not, the layer is found where bitbake-setup has cloned
+  the layer from the "sources" list (usually a layers/ directory)
 
-./bin/bitbake-setup --setting default top-dir-prefix /tmp/bitbake-setup --setting default top-dir-name gs settings foo bar baz
-
-Loading settings from
-    /tmp/bitbake-setup/gs/settings.conf
-
-Traceback (most recent call last):
-  File "/tmp/bitbake-setup/bitbake/./bin/bitbake-setup", line 853, in <module>
-    main()
-  File "/tmp/bitbake-setup/bitbake/./bin/bitbake-setup", line 838, in main
-    all_settings = merge_settings(builtin_settings, global_settings, topdir_settings, args.setting)
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/tmp/bitbake-setup/bitbake/./bin/bitbake-setup", line 733, in merge_settings
-    all_settings[section][setting] = value
-    ~~~~~~~~~~~~^^^^^^^^^
-KeyError: 'foo'
-
-Signed-off-by: Johannes Schneider <johannes.schneider@leica-geosystems.com>
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+Cc: Antonin Godard <antonin.godard@bootlin.com>
 ---
- bin/bitbake-setup | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../bitbake-user-manual-environment-setup.rst                  | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index a9035e7c8..3f56f8378 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -726,9 +726,13 @@ def merge_settings(builtin_settings, global_settings, topdir_settings, cmdline_s
-     for s in (global_settings, topdir_settings):
-         for section, section_settings in s.items():
-             for setting, value in section_settings.items():
-+                if section not in all_settings.keys():
-+                    all_settings[section] = {}
-                 all_settings[section][setting] = value
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+index ad8143711..d9b7492b9 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+@@ -593,6 +593,9 @@ These files are written in the JSON file format and are stored in a
+       variables to include in :term:`BB_ENV_PASSTHROUGH_ADDITIONS`.
  
-     for (section, setting, value) in cmdline_settings:
-+        if section not in all_settings.keys():
-+            all_settings[section] = {}
-         all_settings[section][setting] = value
+    -  ``bb-layers`` (*optional*): Layers to add to the ``bblayers.conf`` file.
++      If the path starts by ``{THISDIR}/``, it will be relative to the directory
++      containing the configuration file. If not, it will be relative to the
++      directory used by ``bitbake-setup`` to store the sources.
+       This cannot be used in conjunction with the ``oe-template`` option.
  
-     return all_settings
--- 
-2.39.5
-
+    -  ``oe-template`` (*optional*, OpenEmbedded specific): OpenEmbedded template
 
