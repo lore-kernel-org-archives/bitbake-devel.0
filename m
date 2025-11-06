@@ -1,98 +1,106 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7ABCCFA13
-	for <webhook@archiver.kernel.org>; Thu,  6 Nov 2025 11:50:47 +0000 (UTC)
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.13419.1762429837602463594
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF58CCFA03
+	for <webhook@archiver.kernel.org>; Thu,  6 Nov 2025 12:11:17 +0000 (UTC)
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.13935.1762431066984326049
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 06 Nov 2025 03:50:37 -0800
+ Thu, 06 Nov 2025 04:11:07 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=NJOFcwit;
- spf=pass (domain: gmail.com, ip: 209.85.219.45, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-78f30dac856so10528706d6.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 06 Nov 2025 03:50:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762429836; x=1763034636; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ca7IZDmhwqxAtwJcEVJlN1QnHAEILc8ENm66owReKpo=;
-        b=NJOFcwitHasgdqDhu5MvT5etEns8CYleqfwNxRL8bgcyOC4fnRted0HRsotXCE+Geq
-         PrUUrL8kH+Iwp49fR9fpYzl7Wmf9Du6JXZg82kck1nGtD+RJ00RjGfFvusumo5Ij02AO
-         z2EcMGYk+wCC0M43IGUnPJ+majhHHcXwDCpkfDZ8MziKQQRWzUsme+TWauS0o4fkk0db
-         DcxOEWQqRkpWt9eBwXzL+K5ceJxfT1LRphLJBvsOmBgBP7YvN9LBjVj+BewwtrS1t3J0
-         w6tNXiMUJS2Xo0auoQkVQcbuWaTlrim0Da27E5DYHIjCWBVbQeoGuEb4MFgk4EKHDwkv
-         YA6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762429836; x=1763034636;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ca7IZDmhwqxAtwJcEVJlN1QnHAEILc8ENm66owReKpo=;
-        b=t2loHuzT8mVUfQymVRChi2f0PreJoGTJYSDz8u7U0VvRlQ0xU35kgab35sGQD/Iq7+
-         SMbKGzUbdqWIOaBg1dh73/nOMCsgB80xTQb6XdgwrxPGgK6QnJQ5JNmHIAbcMT2CfeLO
-         Mu+rCZarvXKTVgymljAlCAi9JChVEO4GtrjrRQC5p7QGZ4gY8h+fq5kN9UEQFCa0H+1U
-         b4E5WBZ060sBeawbPtQ6+xdb+hV2PqNvPYValIBXMIBxNOgthwzljehGjt7VkdlZ+nIv
-         7M92+yFXt528QnyW2dxXk2AH+is45ZhieMtA+dqQLs6C0jxao9hipu3hd3QMyqxa3z0J
-         m5TQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXs9QbIbfVYyqzBhb87WsKebPE+8+fipTcf5xQtOQqG/mbDpyr1jgPFsHpsIEmnw2BHKCFLfSH0ZoXVokvJ@lists.openembedded.org
-X-Gm-Message-State: AOJu0YxnsQ50yZFD1/RTa7eWexNIqpsNh35JitpkUaRcByojviEfbGgh
-	X07nTDpmUkoef46N0qVpYiChorfWTg8T8N7Uu0rIILGiBnrUSfNxKjxLPzR7JoR5DGDgBzJA05Y
-	8Q+u/Jw1jgYRCtlp3vOd9BkHkL6LMLeRpTBEw
-X-Gm-Gg: ASbGncsvEmrSeePSvioOfop8jBfAth7fh/Ybr1SpU85SreVZjjoWbgvCBIIC5Q7aVYp
-	0nT90YFjbUJqzPVsji2YHs2JVshvSsADx2gWHQT4yj/XDUEdWTvmEBFQLLjERN78tUqvt3/mjr9
-	vjrY9WUdpKDMAUvhv3nPjKhlcr1H8jwmZry5b2NZ+8zIUQbFeTvx1mEL7RZ52XELAvGA4n4H+Hh
-	lY8VhZ1Nv9saFyn7TjNkTuWdhb2C7Axl+/fN+UJxMjcluTaUGIoj/jJig==
-X-Google-Smtp-Source: AGHT+IFmzJj07Q4NppuaZLfNZN99/JTELUYCK/2FuV3VThiID1Xu20OvgdVJIMDiy+j/tD0kgMUUx6IzsqOdRTSk/i4=
-X-Received: by 2002:ad4:5ae1:0:b0:880:460a:96ce with SMTP id
- 6a1803df08f44-880712226b9mr97558176d6.63.1762429836508; Thu, 06 Nov 2025
- 03:50:36 -0800 (PST)
-MIME-Version: 1.0
-References: <20251105232718.2801446-1-yoann.congal@smile.fr>
- <DE1GB2U0LTRC.11DTXWB7ZUB7T@bootlin.com> <CANNYZj_KS5BKsGMiQkLSyCKtma_BYcqJ+W3_jw80SzR6D-80Pw@mail.gmail.com>
- <DE1HVJAH8J7U.29XUESHFLVEGD@bootlin.com>
-In-Reply-To: <DE1HVJAH8J7U.29XUESHFLVEGD@bootlin.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Thu, 6 Nov 2025 12:50:25 +0100
-X-Gm-Features: AWmQ_bnysqalFcp1AX699N-CQHVG1E3C4JepWC1YCa7S7cvm50O65TylzXj0qdY
-Message-ID: <CANNYZj8+BELKtPY+0bojL+zv4tbCsqgxmYUXnWLpr28urbCCSQ@mail.gmail.com>
-Subject: Re: [docs] [master-next][PATCH] bitbake-user-manual-environment-setup:
- Document "{THISDIR}" in bb-layers
-To: Antonin Godard <antonin.godard@bootlin.com>
-Cc: Yoann Congal <yoann.congal@smile.fr>, bitbake-devel@lists.openembedded.org, 
-	Yocto Docs ML <docs@lists.yoctoproject.org>
-Content-Type: text/plain; charset="UTF-8"
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=U8P/WnGT;
+ spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 8668B4E41567;
+	Thu,  6 Nov 2025 12:11:04 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 5D2ED6068C;
+	Thu,  6 Nov 2025 12:11:04 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id AFC4511850FCD;
+	Thu,  6 Nov 2025 13:11:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1762431063; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=jnACU/gM58Ie05X1g1r5slzV1WARTuvmNkS+SDo00Jk=;
+	b=U8P/WnGTpchQAQsvJ6lrTBd174i7uqDSjtnXTyO+WMC2EwmE4xAC5rteDpPDAUXel5rPLg
+	rI0/j3BIqk9qGJfH6yOSLX9Us0nvWTw/y5hch4KrkXcxpMhtPbGQilUNQSdvNqIDEDsA4W
+	uvU6LFWv9mjUXMezMwYCyQtBTKBelADXmABS+WZ0CDKeuDU/ng6+E48b2Qz0lEJQr0+dCL
+	UmJYG9Orl25Sm9ggySRMv0MpWx4AZClOeiEfwwI5R/CufEb0pkYUKZxWIsTsLuTRp/XoiE
+	5gD87Y9vkZh0kif5N6jqN57ZMdAKU2Tx5PePya/IVuTqLFTOnwvsrp/mk2GDxQ==
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 06 Nov 2025 13:11:01 +0100
+Message-Id: <DE1LO4GV39WM.156UBA1PODPOV@bootlin.com>
+Subject: Re: [bitbake-devel] [PATCH] bitbake-setup: replace {THISDIR} token
+ with an explicit keyword
+Cc: "Alexander Kanavin" <alex@linutronix.de>
+From: "Antonin Godard" <antonin.godard@bootlin.com>
+To: <alex.kanavin@gmail.com>, <bitbake-devel@lists.openembedded.org>
+References: <20251106114714.918370-1-alex.kanavin@gmail.com>
+In-Reply-To: <20251106114714.918370-1-alex.kanavin@gmail.com>
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 06 Nov 2025 11:50:47 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18286
+ <bitbake-devel@lists.openembedded.org>; Thu, 06 Nov 2025 12:11:17 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18287
 
-On Thu, 6 Nov 2025 at 10:12, Antonin Godard <antonin.godard@bootlin.com> wr=
-ote:
-> >>       This useful for a project that holds a single :term:`generic
-> >>       configuration` file next to a local layer::
-> >>
-> >>          =E2=94=9C=E2=94=80=E2=94=80 meta-myproject/
-> >>          =E2=94=94=E2=94=80=E2=94=80 myproject.conf.json
-> >
-> > I thought the use case should be described along these lines:
-> >
-> > This is useful when (one or more) configuration files and (one or
-> > more) layers are hosted in the same git repository, which is cloned
-> > and managed independently from bitbake-setup workflows.
+Hi,
+
+On Thu Nov 6, 2025 at 12:47 PM CET, Alexander Kanavin via lists.openembedde=
+d.org wrote:
+> From: Alexander Kanavin <alex@linutronix.de>
 >
-> Rephrased, thanks. I'm about to send the v2.
+> {THISDIR} is a special value token that can be used in the list of enable=
+d
+> layers to specify the layer location relative to the confguration file:
+> https://git.openembedded.org/bitbake/commit/?id=3Db3153be29de8b8570b0c184=
+369bd41f4c646cf92
+>
+> This replaces the token with an explicit separate keyword for such layers=
+:
+> so that special processing to determine the final value can be avoided, a=
+nd
+> the feature can be formalized in the json schema:
+>
+> instead of
+>    "bb-layers": [
+>         "{THISDIR}/meta-my-project"
+>     ]
+>
+> this allows
+>    "bb-layers-relative-to-this-file": [
 
-Note I just sent
-https://lists.openembedded.org/g/bitbake-devel/message/18285
+Can I suggest naming it "bb-layers-local"? "bb-layers-relative-to-this-file=
+"
+feels bit overwhelming, I think with associated documentation users will be
+able to figure what "local" stands for in this case.
 
-I do apologize for shifting the configuration format like this at the
-last moment, but I do believe avoiding tokens and not doing
-post-prosessing on values is beneficial for clarity and validation.
+I can't help but wonder: why is there a need to have a separate keyword? Ca=
+n't
+bitbake-setup do:
 
-Alex
+  for <layer> in bb-layers; do
+    if <layer> is not in <sources>; then=20
+      if <layer> is found next to the .conf.json; then=20
+        use this local layer
+      else
+        error
+      fi
+    else
+      use setup/layers/<layer>
+    fi
+  done
+
+?
+
+Antonin
+
+--=20
+Antonin Godard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
