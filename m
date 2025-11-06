@@ -1,127 +1,111 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <rpjday@crashcourse.ca>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF55DCCFA05
-	for <webhook@archiver.kernel.org>; Thu,  6 Nov 2025 15:15:48 +0000 (UTC)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.18181.1762442139284821590
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDCBCCFA05
+	for <webhook@archiver.kernel.org>; Thu,  6 Nov 2025 15:23:58 +0000 (UTC)
+Received: from cpanel10.indieserve.net (cpanel10.indieserve.net [199.212.143.9])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.18184.1762442637828264302
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 06 Nov 2025 07:15:39 -0800
+ Thu, 06 Nov 2025 07:23:58 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=cCjX6mNe;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-42421b1514fso608074f8f.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 06 Nov 2025 07:15:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1762442138; x=1763046938; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vRnsTz/8dghldaZySLGk7NsHNME9HtgpwhIDdNdbKqI=;
-        b=cCjX6mNeK8zOghRn+Gf6XDDvay615j7rqoFVBCY8k26ixtsVm2NhvCDSlb90R9QbsU
-         CHY4v3EX38MR8EjMNK+nSeW/oM1uPq8a/Wpr9UffP6hoSs6NMnC7mVaDfycKYUDyWGB+
-         2EZWvwRHsw8EprXzfczoqqsQoQ727HhEXx5bQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762442138; x=1763046938;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vRnsTz/8dghldaZySLGk7NsHNME9HtgpwhIDdNdbKqI=;
-        b=SdpNiP6+hb1ADE81j8R7jH1fwtMKFPqXHYAZuWgLkYtvg0KXIZiAkUXjSb1io/Uby0
-         XBM8L6Wt+iRMJ0D35iYC1iwF4bI5aWZRoslBZku1SrcZFB3amQlVAomUwR1GC7K6D3l4
-         K5gmndXJqo0picisMHp8sG4/alMHLnG0X1IcEYZov5CDfM+q9xh5CcsWJ2fdkDYJiXuz
-         tp3PV/FfxN8iUR58mWdyjoGWv9LDAfH8hU6kHbT1MvXdZltA/ZLk0AhWoL0V5wyksaYh
-         GvCnkh5m20B13RwiHULK7hy+s4VZR5M6CMebuVvl4r50rFwHHgiaX1RbpRMmMD+5rUu2
-         7CCQ==
-X-Gm-Message-State: AOJu0YyypMflPw5Mz+J6cJ5IIbRiP+6nlb3ginnciwRkoARbGjU99pTr
-	UpN5PSwYSpP5CoxwJTKkphEAX6XKyRHtGeOwv035UF5BurHyOuM+iAmUyoorQtRYDEY=
-X-Gm-Gg: ASbGnct+dzT1nAIkMdUFfotk5oaxSLJZQgJRifS2VO/DeqZ8gctbkoMCTO5n0i9gj0F
-	+ZUMd13jLSuxR/SbpzK8mWqHMURzojSxIMEL0nkJ6b82vN0LMYKnvWUZcd2q8roOBoip3iLf6BA
-	LaYApe8jpStiJ0oLvmx8feH45zLTUIec+dXTIoK27HCz3krY+WUr+VAuWK980ssC9CBnmxjkGLs
-	JpF0USSkwGQ78bmHHMAuXGXa+dLc54W1lTiTrQu6pPTIR/t6myq4XVYsdoi0pObQUErUlOD7I2b
-	UAMg+SqSQj3SvvgfKob72CCrOi8IqkCCHSaoXcyLopJh8d3rQgEhN0kzeUpbm0oa2OPGBwrqofG
-	kGm/In5xHvb42AZkiTa+54i2a3yDoAzrFzLAcfR4c9aOL6Vz+NEXWtKv1ybrIaS2XlpRrZhALR3
-	GtLalQCrl5LKEd0sUAb97r6g9xn4MlsfZXWeTi/pk6HSJAFWQVx8NtPBLdYKZGPSJn
-X-Google-Smtp-Source: AGHT+IEfppOWJdBwGmztf3oFwhJZST/3wTiMilLrbaitM2Dxi5Hw8RMbDXGwZE6NgNhYCz2VhNFZpA==
-X-Received: by 2002:a05:6000:4026:b0:429:d40e:fa40 with SMTP id ffacd0b85a97d-429e330b7e9mr6069801f8f.45.1762442137632;
-        Thu, 06 Nov 2025 07:15:37 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:4ec6:c811:ddd8:770d? ([2001:8b0:aba:5f3c:4ec6:c811:ddd8:770d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429eb3951c6sm5836010f8f.0.2025.11.06.07.15.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Nov 2025 07:15:36 -0800 (PST)
-Message-ID: <278bb2544a713588af57889f35197e0c6f424c8b.camel@linuxfoundation.org>
+ dkim=pass header.i=@crashcourse.ca header.s=default header.b=N+NwcFUx;
+ spf=pass (domain: crashcourse.ca, ip: 199.212.143.9, mailfrom: rpjday@crashcourse.ca)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=crashcourse.ca; s=default; h=Content-Type:MIME-Version:References:
+	Message-ID:In-Reply-To:Subject:cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=skmNc0buoXKi14wdeBP0f8cvtnEK7hYZhf747pg+TfU=; b=N+NwcFUxss3VEmPUQqtfqst+xe
+	BokfLSBTA8J193jQnXQkry4RqE8Su4RXNPUNlpixb/PMCWFfSqDqqTK6E1hpVtSN62/NOCb3/E+0f
+	i4AF6fWI2G7H64ayv1T3R1b764aY8SNQaACDS2HHJqJbm7qcBc/+eekKtUTpVWPBgx0q5TSpsylO5
+	4gzKCrLGh4tUHWYAbNZ1OBdIPdLUrnLARJk4t7toO9h8ggCbUFYGgvimH1m6z1WkmoQSg5nVT/Tll
+	uVRQAywKiQrybwOrKFrvjX+waN+ZQzMktRjZUKNaDyoBYNFHDASTymv0zxsHzeZXjSmotvIangkzk
+	EYhIXoXQ==;
+Received: from [147.129.179.166] (port=54204 helo=rday)
+	by cpanel10.indieserve.net with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <rpjday@crashcourse.ca>)
+	id 1vH1q7-0000000APgQ-0qh5;
+	Thu, 06 Nov 2025 10:23:55 -0500
+Date: Thu, 6 Nov 2025 10:26:50 -0500 (EST)
+From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+To: richard.purdie@linuxfoundation.org
+cc: alex.kanavin@gmail.com, Antonin Godard <antonin.godard@bootlin.com>, 
+    bitbake-devel@lists.openembedded.org, 
+    Alexander Kanavin <alex@linutronix.de>
 Subject: Re: [bitbake-devel] [PATCH] bitbake-setup: replace {THISDIR} token
  with an explicit keyword
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: alex.kanavin@gmail.com, Antonin Godard <antonin.godard@bootlin.com>
-Cc: bitbake-devel@lists.openembedded.org, Alexander Kanavin
- <alex@linutronix.de>
-Date: Thu, 06 Nov 2025 15:15:35 +0000
-In-Reply-To: <CANNYZj-pgb6SMxhzB4g-siGY7oWaNjb=jOSk3m-TRKLwHPytFQ@mail.gmail.com>
-References: <20251106114714.918370-1-alex.kanavin@gmail.com>
-	 <DE1LO4GV39WM.156UBA1PODPOV@bootlin.com>
-	 <CANNYZj-pgb6SMxhzB4g-siGY7oWaNjb=jOSk3m-TRKLwHPytFQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0-1 
+In-Reply-To: <278bb2544a713588af57889f35197e0c6f424c8b.camel@linuxfoundation.org>
+Message-ID: <88d8a127-0232-01d4-130f-c59162b4f818@crashcourse.ca>
+References: <20251106114714.918370-1-alex.kanavin@gmail.com>  <DE1LO4GV39WM.156UBA1PODPOV@bootlin.com>  <CANNYZj-pgb6SMxhzB4g-siGY7oWaNjb=jOSk3m-TRKLwHPytFQ@mail.gmail.com> <278bb2544a713588af57889f35197e0c6f424c8b.camel@linuxfoundation.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323329-1042225670-1762442834=:4020824"
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel10.indieserve.net
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Get-Message-Sender-Via: cpanel10.indieserve.net: authenticated_id: rpjday+crashcourse.ca/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: cpanel10.indieserve.net: rpjday@crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 06 Nov 2025 15:15:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18291
+ <bitbake-devel@lists.openembedded.org>; Thu, 06 Nov 2025 15:23:58 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18292
 
-On Thu, 2025-11-06 at 13:28 +0100, Alexander Kanavin via lists.openembedded=
-.org wrote:
-> On Thu 6. Nov 2025 at 13.11, Antonin Godard <antonin.godard@bootlin.com> =
-wrote:
-> > Hi,
-> >=20
-> > On Thu Nov 6, 2025 at 12:47 PM CET, Alexander Kanavin via lists.openemb=
-edded.org wrote:
-> > > From: Alexander Kanavin <alex@linutronix.de>
-> > >=20
-> > > {THISDIR} is a special value token that can be used in the list of en=
-abled
-> > > layers to specify the layer location relative to the confguration fil=
-e:
-> > > https://git.openembedded.org/bitbake/commit/?id=3Db3153be29de8b8570b0=
-c184369bd41f4c646cf92
-> > >=20
-> > > This replaces the token with an explicit separate keyword for such la=
-yers:
-> > > so that special processing to determine the final value can be avoide=
-d, and
-> > > the feature can be formalized in the json schema:
-> > >=20
-> > > instead of
-> > > =C2=A0 =C2=A0 "bb-layers": [
-> > > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0"{THISDIR}/meta-my-project"
-> > > =C2=A0 =C2=A0 =C2=A0]
-> > >=20
-> > > this allows
-> > > =C2=A0 =C2=A0 "bb-layers-relative-to-this-file": [
-> >=20
-> > Can I suggest naming it "bb-layers-local"? "bb-layers-relative-to-this-=
-file"
-> > feels bit overwhelming, I think with associated documentation users wil=
-l be
-> > able to figure what "local" stands for in this case.
-> >=20
->=20
->=20
->=20
-> =E2=80=98Local=E2=80=99 implies the path can be absolute, which is not su=
-pported, and it doesn=E2=80=99t suggest what the path should be relative to=
-. I=E2=80=99d rather make it longer but clearer.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-bb-layers-relative maybe?
+--8323329-1042225670-1762442834=:4020824
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-bb-layers-relative-to-this-file is precise but does feel a bit too
-unwieldy. Any other options?
+On Thu, 6 Nov 2025, Richard Purdie via lists.openembedded.org wrote:
 
-Cheers,
+> On Thu, 2025-11-06 at 13:28 +0100, Alexander Kanavin via lists.openembedded.org wrote:
+> > On Thu 6. Nov 2025 at 13.11, Antonin Godard <antonin.godard@bootlin.com> wrote:
+> > > Hi,
+> > >
+> > > On Thu Nov 6, 2025 at 12:47 PM CET, Alexander Kanavin via lists.openembedded.org wrote:
+> > > > From: Alexander Kanavin <alex@linutronix.de>
+> > > >
+> > > > {THISDIR} is a special value token that can be used in the list of enabled
+> > > > layers to specify the layer location relative to the confguration file:
+> > > > https://git.openembedded.org/bitbake/commit/?id=b3153be29de8b8570b0c184369bd41f4c646cf92
+> > > >
+> > > > This replaces the token with an explicit separate keyword for such layers:
+> > > > so that special processing to determine the final value can be avoided, and
+> > > > the feature can be formalized in the json schema:
+> > > >
+> > > > instead of
+> > > >     "bb-layers": [
+> > > >          "{THISDIR}/meta-my-project"
+> > > >      ]
+> > > >
+> > > > this allows
+> > > >     "bb-layers-relative-to-this-file": [
+> > >
+> > > Can I suggest naming it "bb-layers-local"? "bb-layers-relative-to-this-file"
+> > > feels bit overwhelming, I think with associated documentation users will be
+> > > able to figure what "local" stands for in this case.
+> > >
+> >
+> >
+> >
+> > ‘Local’ implies the path can be absolute, which is not supported, and it doesn’t suggest what the path should be relative to. I’d rather make it longer but clearer.
+>
+> bb-layers-relative maybe?
+>
+> bb-layers-relative-to-this-file is precise but does feel a bit too
+> unwieldy. Any other options?
 
-Richard
+  the qualifier "-to-this-file" seems implied and thus superfluous.
+
+rday
+--8323329-1042225670-1762442834=:4020824--
 
