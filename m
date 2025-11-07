@@ -2,165 +2,170 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FC5CCFA05
-	for <webhook@archiver.kernel.org>; Fri,  7 Nov 2025 03:33:07 +0000 (UTC)
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.3880.1762486378128756605
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93315CCF9F8
+	for <webhook@archiver.kernel.org>; Fri,  7 Nov 2025 08:00:48 +0000 (UTC)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.6650.1762502440201629490
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 06 Nov 2025 19:32:58 -0800
+ Fri, 07 Nov 2025 00:00:40 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=TuHw2tlE;
- spf=pass (domain: gmail.com, ip: 209.85.219.47, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-8804f840579so5177736d6.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 06 Nov 2025 19:32:58 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=ZVQL/6ij;
+ spf=pass (domain: gmail.com, ip: 209.85.128.42, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4775ae77516so4766475e9.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 07 Nov 2025 00:00:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762486377; x=1763091177; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XN1QU3pDeTjrg8etTs8e3giWe04uQxx49KUowQdqmlY=;
-        b=TuHw2tlEfxd/wWt8ZWTvvZ/ceRbPNSvm+smr90V+AIvcGOgXCBwvQswUgpfNm8JC25
-         yy6vlhkGwfV+mr3OyyBSQdl31Qho4vyzGZnNzmwu0Quz6UOZT4R8ggDkw9d4qVQtS4yv
-         rPeIzYGYX1deDWyRWNVgfMCTYM0Rm5pRU9xJE/mM8a/gzHWcqdRHSCte4uhlDkHbFweN
-         S5hsRHI7CrKHFK5VPiPkzZWRm8v10ST39Skprvice9hOqsnFkAQP3z5lCA4lSDSn8Y3a
-         AE79uuZpmIrwDW0sGWKUIc/aSj+AdmsUUy9K9L70eKzVjK8T1pRLyOF4mk/roZ9Xvh9r
-         GTXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762486377; x=1763091177;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1762502438; x=1763107238; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XN1QU3pDeTjrg8etTs8e3giWe04uQxx49KUowQdqmlY=;
-        b=Dku/4FgpdgQ3SeO4FJ7Ny55utpTp5+YR/AXWWbm/jTfzLMDafhT/RVj1dkMIktC6GS
-         fVgLKTFtRuIzyAll7sJfOh/Yjfs2t9Jrx0JXnDHzjDx0shx6VZXqT4LYmKzpuIv3RIzD
-         o3xj/OAgEmxOnEj4l9z2KRABwRhdC77OJoVEvrVYyciXEnQMhmvc6o8FZF7XXkE/cY21
-         1Kud5aXQRyK9Qj8PxNOzTbcv7MXipuQqm8cjk9Ha8ZJxeLO8pd7A4EqBjxPtGyrMyBD/
-         UmWE75tZY268thz6z9luXK4dujrEGS1g9M5zHnfFtK/6XSnNYAWajXcC97I/Ado5f9uO
-         8PfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVypji/ehKJlbNbpfedZjuM7Aqxb87A849Qh7dNDbgtaiQcTYf2x96MsYQ1efpdnMkVkEb3KEy5KOMg3I+7@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yx8yHpHZqJXLd77wYS9IEY1wBohLnnl+NSd6PSOeU/6f2GzA2Gu
-	h98YVRBHOvNupq9RMUYuKSHLzLabHWaMWl+6c2Szf48Y17VPoRIWbPnY5iFBZBD/cje9vYLkM2Q
-	WoBG69P/5DqdA+FwXsfaxLSw0sDwDWTc=
-X-Gm-Gg: ASbGncuQdn53z27fINoQZTb5HKx3PGgaIPpMvVDmhAnnKg16GPxt2ivqJ9753pioroW
-	/OPNcEwhxwAmiF5cq3+EuMT/KIPupFqHAaSJa/aBFHeg7Hy+MmWb0yorniAJ7gnwWATF61bbUdl
-	UtiwQMRv9C5a6TJxgTRYJFoIwUFu6OJTFq6lWfq+eJf/1EY7Cn2NW+1ECLmuPcmLk4YfzHuI7kp
-	7FbucRvEzinu50dgYVep0/YktoaeTi2x4Fv8zsmvT+WWNWU6VOOH3+LyKlY5GT9PgsT4kc23zZa
-	+MHgYhl/3dVjfdT6/AWmg7Y3tkcuww==
-X-Google-Smtp-Source: AGHT+IHYnW+plY/zrCeEccSsjGcUyAY8qzkldRuQdIH4t96cx2CfW0z37+N1sjqzTHU6VdaE264xENlmnxUx4/xl6gI=
-X-Received: by 2002:a05:6214:f29:b0:70d:fa79:baf0 with SMTP id
- 6a1803df08f44-8817678dd83mr24199146d6.38.1762486376940; Thu, 06 Nov 2025
- 19:32:56 -0800 (PST)
-MIME-Version: 1.0
-References: <20251106114714.918370-1-alex.kanavin@gmail.com>
- <DE1LO4GV39WM.156UBA1PODPOV@bootlin.com> <CANNYZj-pgb6SMxhzB4g-siGY7oWaNjb=jOSk3m-TRKLwHPytFQ@mail.gmail.com>
- <278bb2544a713588af57889f35197e0c6f424c8b.camel@linuxfoundation.org> <DB5PR02MB10213C5C0AD578C01BF7DB065EFC3A@DB5PR02MB10213.eurprd02.prod.outlook.com>
-In-Reply-To: <DB5PR02MB10213C5C0AD578C01BF7DB065EFC3A@DB5PR02MB10213.eurprd02.prod.outlook.com>
+        bh=sCYBCojf+nM8JmCvJaUEJeQuZ8fCzNNO2nBK011bOZo=;
+        b=ZVQL/6ijNl4jILrP0842VTv93bIO4e3oQFhhGGmtPZXk7tahUEbM+QyxuNNset3de+
+         CB2P3/mNWJe95TwrywSIdW23mATR7DlK5cu7qWTuT/8LKAbhT3vzjA81g4DEMDZ1utmY
+         7ZI/YyyeptsZ1sjGdzWpNEoYzTbWo0ctY1jJgXvBlf80VektgpkxzpBYvbdBAURM9RsX
+         av5ahbBBXJNqwZkWa6AT7j26HbL+teq6DsPfnj/1JlW78Scor+A7E+J7xuzd6ev0TmEY
+         gzkndp6H112aN/mVnBvq4+zL/3LPL3kqZrUc0wtPIhU8zDTHWt4S9vb0iFo4YKpz6Un7
+         DJPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762502438; x=1763107238;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=sCYBCojf+nM8JmCvJaUEJeQuZ8fCzNNO2nBK011bOZo=;
+        b=pqtFz9iXCUR9ahrFa4NdV9L/5/qxge6+jjMPcFvM0feXZjbpHO3tVOCvY1Mn7O8eYQ
+         bLz3SyrBu0X3wInghYL5WMQBxQeJcRayHvLVMswblBcS5ldcPTJoNmzrR/71QRHc8sL9
+         t1mbvr/kc6912naOuk5M+nPPpB50DxHCBBaYQGZbD1avpwGKB4NFPT4v+fJkoo1V7wta
+         f8xWfthlSgyUcWdElR5MOoqsJKsJ+5X39iIOHzVYydt4tpStrgGbZyRHENKtPwAraR+p
+         +nLR56/+xcS0ZRrATvN1navB2A3NbM7mY8hyd4lLsBv2U/KlsQoVvRHWRKsd/PLJry1x
+         lb0w==
+X-Gm-Message-State: AOJu0YwLC6UlrX+ds1TTPzQ60Dj2DmALdnb+4QW3FAfm/vcYejrLdlEw
+	IIlJuTP6f/4576yA900HC1eGMfmyjzK/VH4Xr148eWZhoucyEDhOOhoJyevMlw==
+X-Gm-Gg: ASbGncvaiBk1H1f4Yw0C4ktyFmqpt7AENkfhBHpmb3PhrH+tkT5oyQfplfc55XXD+DV
+	ieJZIJIWySOVUkchjN9QmFN3ReRtApp39IH/uVRPd1RgQlkm7p+/cY1csWuI4kwefQLXbWwtUwe
+	75165QCgeXQWD3BG8yeMru5VttbOR0j7Aya5xMnkaYBn9lM5BZ6MkAwQN7cOw8+EuzydEXcIcOe
+	9uHCvGJ+S8YVYwkPFgactd5RPwlVutY5sYpRlevJCyCHS8FBz3gu26zgma1PPycx1ZW2ewEGlOB
+	c4h5uV/gSA0vU7r9hcjbZqmbFIhnIKU+J/8TbEPbPKS+pWwrxl2GzzP2flO2O9YnLmWoFf7pULs
+	WADilBISRkqrkB6db6XyTqEt4EZ3/bRWWAA8Bj4LjMlHYo4JYOL3npOOluVXU7jwp793vSvSVqI
+	TPakjSm4TV1TU6eV1/54kKb2gK9Ly5MaM+Rdy6f12BV4uAfBR7+Nl8W4e3cQ==
+X-Google-Smtp-Source: AGHT+IF/kNTN+Dg9dihJjxPWcgAHEBYwhkGz5vxul2i0yN1oRWXanaWOdWrZIWHikYXvojzDR5cDkA==
+X-Received: by 2002:a05:600c:8b38:b0:475:da13:256b with SMTP id 5b1f17b1804b1-4776bcca1ddmr15655265e9.38.1762502438161;
+        Fri, 07 Nov 2025 00:00:38 -0800 (PST)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4775cdcc552sm161484025e9.6.2025.11.07.00.00.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Nov 2025 00:00:37 -0800 (PST)
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Fri, 7 Nov 2025 04:32:46 +0100
-X-Gm-Features: AWmQ_bkKpH32n4Y2KRn9BXFM8mC5UMixVf3H2O5zUpteADCHf_TifB_AqHEgyrw
-Message-ID: <CANNYZj_qwFt6F-LEwMqe0D04dy7t9_FJMWf1tpCUZ0bayfdUZQ@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] bitbake-setup: replace {THISDIR} token
- with an explicit keyword
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-Cc: "richard.purdie@linuxfoundation.org" <richard.purdie@linuxfoundation.org>, 
-	Antonin Godard <antonin.godard@bootlin.com>, 
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>, 
-	Alexander Kanavin <alex@linutronix.de>
-Content-Type: multipart/alternative; boundary="0000000000006b47960642f8d603"
+To: bitbake-devel@lists.openembedded.org
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH 2/2] bitbake-setup: unpack sources (e.g. layers and bitbake) into 'sources' rather than 'layers'
+Date: Fri,  7 Nov 2025 09:00:26 +0100
+Message-Id: <20251107080026.2599821-2-alex.kanavin@gmail.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20251107080026.2599821-1-alex.kanavin@gmail.com>
+References: <20251107080026.2599821-1-alex.kanavin@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 07 Nov 2025 03:33:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18296
+ <bitbake-devel@lists.openembedded.org>; Fri, 07 Nov 2025 08:00:48 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18297
 
---0000000000006b47960642f8d603
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Alexander Kanavin <alex@linutronix.de>
 
-On Fri 7. Nov 2025 at 1.59, Peter Kjellerstedt <peter.kjellerstedt@axis.com=
->
-wrote:
+'layers' is not a good directory name, as it contains bitbake, or repositories
+that can contain multiple layers or no layers at all (e.g. yocto-docs).
 
->
-> >
-> > bb-layers-relative maybe?
-> >
-> > bb-layers-relative-to-this-file is precise but does feel a bit too
-> > unwieldy. Any other options?
-> >
-> > Cheers,
-> >
-> > Richard
->
-> After I saw Alex' patch for bitbake-setup.schema.json:
->
-> https://lore.kernel.org/openembedded-core/20251106170815.2439421-1-alex.k=
-anavin@gmail.com/T/#u
-> it made me realize that I had not thought that paths in both
-> bb-layers and bb-layers-relative are actually relative, just to
-> different locations. Unfortunately, I think the newly suggested
-> name is then misleading as it implies that paths in bb-layers
-> are not relative. :( I now also understand why the longer
-> bb-layers-relative-to-this-file was originally proposed.
->
-> I don't have a good solution for this. The best I can come up
-> with is to rename them both to, e.g., bb-layers-dir-relative and
-> bb-layers-file-relative
+While there's a chance, let's name it right: 'sources'. This aligns nicely
+with both the 'sources' property in the json configs, and oe-core's unpack dir
+which also 'sources'.
 
+Then the setup directory contains:
 
-I tend to agree. I=E2=80=99d rather call them =E2=80=98bb-layers-in-sources=
-=E2=80=99 and
-=E2=80=98bb-layers-in-this-dir=E2=80=99. Patch is coming even though I=E2=
-=80=99m technically on
-holiday since midnight. This is important.
+- build (bitbake's build directory)
+- config (bitbake-setup's configuration data under version control)
+- sources (everything that was fetched and unpacked)
 
-Alex
+A patch to correct everything in yocto-autobuilder-helper will be sent
+shortly.
 
->
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ bin/bitbake-setup     | 8 ++++----
+ lib/bb/tests/setup.py | 6 +++---
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
---0000000000006b47960642f8d603
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index 50b7f1488..a9674a527 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -461,7 +461,7 @@ def init_config(top_dir, settings, args, d):
+     print("\nRun 'bitbake-setup init --non-interactive {}' to select this configuration non-interactively.\n".format(" ".join(upstream_config['non-interactive-cmdline-options'])))
+ 
+     setupdir = os.path.join(os.path.abspath(top_dir), args.setup_dir_name or "{}-{}".format(upstream_config['name']," ".join(upstream_config['non-interactive-cmdline-options'][1:]).replace(" ","-").replace("/","_")))
+-    if os.path.exists(os.path.join(setupdir, "layers")):
++    if os.path.exists(os.path.join(setupdir, "sources")):
+         print(f"Setup already initialized in:\n    {setupdir}\nUse 'bitbake-setup status' to check if it needs to be updated, or 'bitbake-setup update' to perform the update.\nIf you would like to start over and re-initialize in this directory, remove it, and run 'bitbake-setup init' again.")
+         return
+ 
+@@ -475,7 +475,7 @@ def init_config(top_dir, settings, args, d):
+     os.makedirs(setupdir, exist_ok=True)
+ 
+     confdir = os.path.join(setupdir, "config")
+-    layerdir = os.path.join(setupdir, "layers")
++    layerdir = os.path.join(setupdir, "sources")
+ 
+     os.makedirs(confdir)
+     os.makedirs(layerdir)
+@@ -535,7 +535,7 @@ def build_status(top_dir, settings, args, d, update=False):
+     setupdir = args.setup_dir
+ 
+     confdir = os.path.join(setupdir, "config")
+-    layerdir = os.path.join(setupdir, "layers")
++    layerdir = os.path.join(setupdir, "sources")
+ 
+     current_upstream_config = json.load(open(os.path.join(confdir, "config-upstream.json")))
+ 
+@@ -648,7 +648,7 @@ def install_buildtools(top_dir, settings, args, d):
+             return
+         shutil.rmtree(buildtools_install_dir)
+ 
+-    install_buildtools = os.path.join(args.setup_dir, 'layers/oe-scripts/install-buildtools')
++    install_buildtools = os.path.join(args.setup_dir, 'sources/oe-scripts/install-buildtools')
+     buildtools_download_dir = os.path.join(args.setup_dir, 'buildtools-downloads/{}'.format(time.strftime("%Y%m%d%H%M%S")))
+     print("Buildtools archive is downloaded into {} and its content installed into {}".format(buildtools_download_dir, buildtools_install_dir))
+     subprocess.check_call("{} -d {} --downloads-directory {}".format(install_buildtools, buildtools_install_dir, buildtools_download_dir), shell=True)
+diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
+index b8a5a03ad..9eebd709e 100644
+--- a/lib/bb/tests/setup.py
++++ b/lib/bb/tests/setup.py
+@@ -181,7 +181,7 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+     def check_setupdir_files(self, setuppath, test_file_content):
+         with open(os.path.join(setuppath, 'config', "config-upstream.json")) as f:
+             config_upstream = json.load(f)
+-        with open(os.path.join(setuppath, 'layers', 'test-repo', 'test-file')) as f:
++        with open(os.path.join(setuppath, 'sources', 'test-repo', 'test-file')) as f:
+             self.assertEqual(f.read(), test_file_content)
+         bitbake_config = config_upstream["bitbake-config"]
+         bb_build_path = os.path.join(setuppath, 'build')
+@@ -205,7 +205,7 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+             with open(os.path.join(bb_conf_path, 'bblayers.conf')) as f:
+                 bblayers = f.read()
+                 for l in bitbake_config["bb-layers-in-sources"]:
+-                    self.assertIn(os.path.join(setuppath, "layers", l), bblayers)
++                    self.assertIn(os.path.join(setuppath, "sources", l), bblayers)
+                 for l in bitbake_config.get("bb-layers-in-this-dir") or []:
+                     thisdir_layer = os.path.join(
+                             os.path.dirname(config_upstream["path"]),
+@@ -328,7 +328,7 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+             setuppath = os.path.join(self.tempdir, 'bitbake-builds', 'test-config-1-{}'.format(c))
+             os.environ['BBPATH'] = os.path.join(setuppath, 'build')
+             out = self.runbbsetup("status")
+-            self.assertIn("Layer repository file://{} checked out into {}/layers/test-repo updated revision master from".format(self.testrepopath, setuppath), out[0])
++            self.assertIn("Layer repository file://{} checked out into {}/sources/test-repo updated revision master from".format(self.testrepopath, setuppath), out[0])
+             out = self.runbbsetup("update")
+             if c in ('gadget', 'gizmo'):
+                 self.assertIn("Existing bitbake configuration directory renamed to {}/build/conf-backup.".format(setuppath), out[0])
+-- 
+2.39.5
 
-<div><div dir=3D"auto">On Fri 7. Nov 2025 at 1.59, Peter Kjellerstedt &lt;<=
-a href=3D"mailto:peter.kjellerstedt@axis.com" target=3D"_blank">peter.kjell=
-erstedt@axis.com</a>&gt; wrote:<br></div></div><div><div dir=3D"auto"><div =
-class=3D"gmail_quote"></div></div></div><div><blockquote class=3D"gmail_quo=
-te" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-left-sty=
-le:solid;padding-left:1ex;border-left-color:rgb(204,204,204)" dir=3D"auto">=
-<br>
-&gt; <br>
-&gt; bb-layers-relative maybe?<br>
-&gt; <br>
-&gt; bb-layers-relative-to-this-file is precise but does feel a bit too<br>
-&gt; unwieldy. Any other options?<br>
-&gt; <br>
-&gt; Cheers,<br>
-&gt; <br>
-&gt; Richard<br>
-<br>
-After I saw Alex&#39; patch for bitbake-setup.schema.json:<br>
-<a href=3D"https://lore.kernel.org/openembedded-core/20251106170815.2439421=
--1-alex.kanavin@gmail.com/T/#u" rel=3D"noreferrer" target=3D"_blank">https:=
-//lore.kernel.org/openembedded-core/20251106170815.2439421-1-alex.kanavin@g=
-mail.com/T/#u</a><br>
-it made me realize that I had not thought that paths in both <br>
-bb-layers and bb-layers-relative are actually relative, just to <br>
-different locations. Unfortunately, I think the newly suggested <br>
-name is then misleading as it implies that paths in bb-layers <br>
-are not relative. :( I now also understand why the longer <br>
-bb-layers-relative-to-this-file was originally proposed.<br>
-<br>
-I don&#39;t have a good solution for this. The best I can come up <br>
-with is to rename them both to, e.g., bb-layers-dir-relative and <br>
-bb-layers-file-relative</blockquote><div dir=3D"auto"><br></div></div><div>=
-<div dir=3D"auto">I tend to agree. I=E2=80=99d rather call them =E2=80=98bb=
--layers-in-sources=E2=80=99 and =E2=80=98bb-layers-in-this-dir=E2=80=99. Pa=
-tch is coming even though I=E2=80=99m technically on holiday since midnight=
-. This is important.</div><div dir=3D"auto"><br></div><div dir=3D"auto">Ale=
-x</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;=
-border-left-width:1px;border-left-style:solid;padding-left:1ex;border-left-=
-color:rgb(204,204,204)" dir=3D"auto"></blockquote>
-</div>
-
---0000000000006b47960642f8d603--
 
