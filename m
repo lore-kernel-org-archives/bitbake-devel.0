@@ -1,270 +1,110 @@
-Return-Path: <isaac.true@emlix.com>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3941CCFA1A
-	for <webhook@archiver.kernel.org>; Tue, 11 Nov 2025 15:55:59 +0000 (UTC)
-Received: from mx1.emlix.com (mx1.emlix.com [178.63.209.131])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.20845.1762876550265339349
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAC1CCFA1A
+	for <webhook@archiver.kernel.org>; Tue, 11 Nov 2025 16:07:29 +0000 (UTC)
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.21248.1762877240541588866
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 11 Nov 2025 07:55:51 -0800
+ Tue, 11 Nov 2025 08:07:20 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@emlix.com header.s=20250930 header.b=Rd49PPEt;
- dkim=pass header.i=@emlix.com header.s=20250930 header.b=Rd49PPEt;
- spf=pass (domain: emlix.com, ip: 178.63.209.131, mailfrom: isaac.true@emlix.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emlix.com;
-	s=20250930; t=1762876547;
-	bh=xeME42UgtjR/3O2SkTnfaq30BB+n1tJGqEtVhUj40DE=;
-	h=Date:To:From:Subject:From;
-	b=Rd49PPEtX/4BsolrR1b77u99JC9+ALE5PSbL8Y02RG1sherJuVy2WE2guMg7mg1g3
-	 ZE4fQP00bOlfDG9OD4n9xJBXJRkemSot1UKBPm8mUNyIEJVl3rHC6GCdiAXaPB0wD3
-	 0kUhHN9jcBZRnbDx9orzMNJFPf+iNOo8UOZnMGfHGxAdy7bA0whaI5C/mXIs9on+8f
-	 9qgPXG0hF0KQ16uFMoaESgPn6JBYhSo+1Xn132QNr8KfqyjaTN6Ov5c1j1vxdO6bW/
-	 2vHQlDP0GXN9261/Kwl22uiJ20x06T+Os47nypC5hifV6SqvsH0hX13rCEf5SbEjPd
-	 OqUysWSRt2NvA==
-Received: from mx1.emlix.com (localhost [127.0.0.1])
-	by mx1.emlix.com (Postfix) with ESMTP id E750C5F871;
-	Tue, 11 Nov 2025 16:55:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emlix.com;
-	s=20250930; t=1762876547;
-	bh=xeME42UgtjR/3O2SkTnfaq30BB+n1tJGqEtVhUj40DE=;
-	h=Date:To:From:Subject:From;
-	b=Rd49PPEtX/4BsolrR1b77u99JC9+ALE5PSbL8Y02RG1sherJuVy2WE2guMg7mg1g3
-	 ZE4fQP00bOlfDG9OD4n9xJBXJRkemSot1UKBPm8mUNyIEJVl3rHC6GCdiAXaPB0wD3
-	 0kUhHN9jcBZRnbDx9orzMNJFPf+iNOo8UOZnMGfHGxAdy7bA0whaI5C/mXIs9on+8f
-	 9qgPXG0hF0KQ16uFMoaESgPn6JBYhSo+1Xn132QNr8KfqyjaTN6Ov5c1j1vxdO6bW/
-	 2vHQlDP0GXN9261/Kwl22uiJ20x06T+Os47nypC5hifV6SqvsH0hX13rCEf5SbEjPd
-	 OqUysWSRt2NvA==
-Received: from mailer.emlix.com (p5098be52.dip0.t-ipconnect.de [80.152.190.82])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.emlix.com (Postfix) with ESMTPS id C5B745F92F;
-	Tue, 11 Nov 2025 16:55:47 +0100 (CET)
-Message-ID: <f0f7ae6b-33f2-402a-86f2-4714f07af30e@emlix.com>
-Date: Tue, 11 Nov 2025 16:55:46 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-NZ, de-DE
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=X8zazL/Y;
+ spf=pass (domain: gmail.com, ip: 209.85.210.51, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-7c6d13986f8so611851a34.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 11 Nov 2025 08:07:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762877239; x=1763482039; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/HYstiMKSHJgR37L13jHUmlba18a+Vvlr3q0KG+mr5Q=;
+        b=X8zazL/YuVdfg4Iwun36DXpcnGVB8W15xp1zwBI+yAQOJyMhqqCsG3mvXmkPB0HWe8
+         EkQMryoit+43j/umUImLuYQkztzPb/NBweX/b63u+P/ZZeAvaB9AuUbDFFwMCLKutfwZ
+         eUMrP61AQrods5FoM5UTpEXhKrhSJWRSYnzHwrsQOi/HlXO9hjxGwL83bCBaNqu0PqaH
+         2pbLsqZAOOca2SmgzNU36KNsaKHlCtwZd/CPDbWO90lHllK00I64W/njg7fLnUO+NxlU
+         awz59NRwphxbjIXJ29+36vyMoI0p7HJhfgJvwJihEPS1xNSBc59i9ALGFrZ/BSBSzh7b
+         4FBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762877239; x=1763482039;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/HYstiMKSHJgR37L13jHUmlba18a+Vvlr3q0KG+mr5Q=;
+        b=GPCznDqQeRwM/nIXCLBkXfbTwFrnX//4WHkt2r6gO17lWDhMxMRuIXvpWM+cW2yomJ
+         DVcOncSmde1PI0P0Yknp/aHK0rCkO8ftvgxENmYv5xSttP0NQjIXlGWkhxhMvusqCdOD
+         sf04JBctb8LgVqT7IItORurZb0Evk+vJMhfiLhR0quaB2WsJMrYzg6TSrhcpo7HsfheS
+         S2EiBGRIl3GnGBQrEOMbxB+yL0ehMNn0w35MWa8vAP5vz7csIrVtYZ01n0V8gs+J4iJ2
+         YVunGC6D10PImGP81om/hxGX7FMeY6Ab1uvXwaLiUk7Z4TrJfzfdBznxa1kK60eAkv8r
+         K/3Q==
+X-Gm-Message-State: AOJu0YysZV/4DaAmC2Uikz1w6yQiALFazNMw0rwfZx6BF0oHsbm4AEPn
+	MfgRC6Z+fYXq73/MWithGMFont67P3qfrfibSG8tXFQ6lCwaOKQhHU+o5Bs/lg==
+X-Gm-Gg: ASbGnctNtzvKRB0GT7SPelqqBYQ00UxKfuVYw4qBlGwm7VenifGOdOfWCmpKDp8NwfO
+	Q95ii++r9819c3dLEPiaJcpwxoG+Z0rxf5Kr9EUD0vr0QUl0sLrrNmXo65fO03XrIZr0XUwWuN9
+	QGqCO7Cu4ElnecbJdxBu6ogFSlBap7HJWs57D9eh2IrlfrqaAhAxl/4WZB2raOfFwHahatZkhmM
+	FpL0owbqy6zNixWghRAkdSoCuYMirND2nh12xsl8UE1SfpEyHFeeo42SWloMkjqQbtSplc6lf/m
+	6kt+KhlW2Pu2KlnPa2iHMilQgltHqH1NgaN0QEXUw+VOK+HO2L1rsIktRn53oyQ3Fty5LUrBSn/
+	enOayxRJ2ke2L8z981vXf2NCZJaRGAOWASTlhpxaquAPsCV2DzO+q2BRA90QJr9tJIuu2/6clUW
+	kwBgARebrE
+X-Google-Smtp-Source: AGHT+IFLVSoGLNZHekky2FUOq3xJVhzA6KXkZnXTdRHunROx9IoYsqHM+FbKBGd//ZipChGdmVoOxQ==
+X-Received: by 2002:a05:6830:19f7:b0:7c6:cbd2:4b56 with SMTP id 46e09a7af769-7c720a2523cmr1474688a34.2.1762877239230;
+        Tue, 11 Nov 2025 08:07:19 -0800 (PST)
+Received: from localhost.localdomain ([2601:282:4300:19e0::9115])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7c708604bb9sm3939211a34.31.2025.11.11.08.07.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Nov 2025 08:07:18 -0800 (PST)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-From: Isaac True <isaac.true@emlix.com>
-Subject: Combining PREMIRRORS and downloadfilename with wget
-Autocrypt: addr=isaac.true@emlix.com; keydata=
- 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
-Organization: emlix GmbH
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------0uMXE5XpXHFhl0SKJhi3BzCH"
-X-Virus-Scanned: ClamAV using ClamSMTP
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH] bitbake-setup: Only set top-dir-prefix and top-dir-name in global settings
+Date: Tue, 11 Nov 2025 09:07:12 -0700
+Message-ID: <20251111160712.2818289-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.51.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 11 Nov 2025 15:55:59 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18326
+ <bitbake-devel@lists.openembedded.org>; Tue, 11 Nov 2025 16:07:29 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18327
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------0uMXE5XpXHFhl0SKJhi3BzCH
-Content-Type: multipart/mixed; boundary="------------jQmLRcpLMGItVgadQxF6LWqN";
- protected-headers="v1"
-From: Isaac True <isaac.true@emlix.com>
-To: bitbake-devel@lists.openembedded.org
-Message-ID: <f0f7ae6b-33f2-402a-86f2-4714f07af30e@emlix.com>
-Subject: Combining PREMIRRORS and downloadfilename with wget
+top-dir-prefix and top-dir-name only make sense to be set in the global
+settings file, so if they are specified force them to the global
+settings file, and warn the user that this is happening.
 
---------------jQmLRcpLMGItVgadQxF6LWqN
-Content-Type: multipart/mixed; boundary="------------x9x6agsJiza4oag0IV9seme5"
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ bin/bitbake-setup | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---------------x9x6agsJiza4oag0IV9seme5
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index caec990c2..c32381e50 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -30,6 +30,12 @@ import bb.process
+ 
+ logger = bb.msg.logger_create('bitbake-setup', sys.stdout)
+ 
++# These settings can only be set in the global context
++GLOBAL_ONLY_SETTINGS = (
++    "top-dir-prefix",
++    "top-dir-name",
++)
++
+ def cache_dir(top_dir):
+     return os.path.join(top_dir, '.bitbake-setup-cache')
+ 
+@@ -685,6 +691,9 @@ def load_settings(settings_path):
+ def change_setting(top_dir, args):
+     if vars(args)['global']:
+         settings_path = global_settings_path(args)
++    elif args.setting in GLOBAL_ONLY_SETTINGS:
++        print(f"{args.setting} can only be set in the global config; '--global' is implied")
++        settings_path = global_settings_path(args)
+     else:
+         settings_path = topdir_settings_path(top_dir)
+     settings = load_settings(settings_path)
+-- 
+2.51.1
 
-SGksDQoNCkknbSBleHBlcmllbmNlIHNvbWUgY29uZnVzaW5nIGJlaGF2aW91ciB3aGVuIHRy
-eWluZyB0byBhZGQgUFJFTUlSUk9SUyB0byANCnVzZSBhbiBpbnRlcm5hbCBwcm94eSBmb3Ig
-c291cmNlIGZpbGVzIGZldGNoZWQgb3ZlciBIVFRQUywgYW5kIEknbSANCndvbmRlcmluZyBp
-ZiB0aGlzIGlzIHRoZSBpbnRlbmRlZCBiZWhhdmlvdXIgb3IgaWYgdGhpcyBpcyBhIGJ1Zy4N
-Cg0KSWYgSSBzZXQgdGhlIFNSQ19VUkkgdG8gZG93bmxvYWQgYSByZWxlYXNlIGFyY2hpdmUg
-Zm9yIGEgdGFnIGZyb20gR2l0SHViIA0KbGlrZSBzbzoNCg0KU1JDX1VSSSA9ICJodHRwczov
-L2dpdGh1Yi5jb20vR1JPVVAvUEFDS0FHRS9hcmNoaXZlL3JlZnMvdGFncy8ke1BWfS50YXIu
-Z3oiDQoNClRoZW4gSSBjYW4gc3VjY2Vzc2Z1bGx5IGRvd25sb2FkIGl0IGZyb20gdGhlIGlu
-dGVybmFsIHByb3h5IHVzaW5nIHRoZSANCmZvbGxvd2luZyBQUkVNSVJST1JTIHNldHRpbmc6
-DQoNClBSRU1JUlJPUlM6cHJlcGVuZCA9ICJodHRwczovL2dpdGh1Yi5jb20vLiogDQpodHRw
-czovL2ludGVybmFsLnByb3h5LnVybC9naXRodWIvUEFUSCAiDQoNClRoaXMgbWFwcyB0aGUg
-VVJMIGNvcnJlY3RseSBhbmQgdGhlIHNvdXJjZSBhcmNoaXZlIGNhbiBiZSBkb3dubG9hZGVk
-Og0KDQpERUJVRzogRm9yIHVybCANCmh0dHBzOi8vZ2l0aHViLmNvbS9ncm91cC9wYWNrYWdl
-L2FyY2hpdmUvcmVmcy90YWdzL1RBRy50YXIuZ3ogcmV0dXJuaW5nIA0KaHR0cHM6Ly9pbnRl
-cm5hbC5wcm94eS51cmwvZ2l0aHViL0dST1VQL1BBQ0tBR0UvYXJjaGl2ZS9yZWZzL3RhZ3Mv
-VEFHLnRhci5neg0KDQpFdmVyeXRoaW5nIHdvcmtzIGZpbmUgdXAgdW50aWwgaGVyZS4gSG93
-ZXZlciwgSSB3YW50IHRvIGNoYW5nZSB0aGUgbmFtZSANCm9mIHRoZSBkb3dubG9hZGVkIGZp
-bGUgdG8gYCR7QlBOfS0ke1BWfS50YXIuZ3pgIHRvIGVuc3VyZSBpdHMgdW5pcXVlbmVzcyAN
-CmluIHRoZSBkb3dubG9hZCBmb2xkZXIsIGFuZCB0aGF0J3Mgd2hlcmUgSSBzdGFydCB0byBy
-dW4gaW50byBpc3N1ZXMuDQoNCklmIEkgbW9kaWZ5IHRoZSBTUkNfVVJJIHRvIGFkZCBkb3du
-bG9hZGZpbGVuYW1lIGxpa2Ugc286DQoNClNSQ19VUkkgPSANCiJodHRwczovL2dpdGh1Yi5j
-b20vR1JPVVAvUEFDS0FHRS9hcmNoaXZlL3JlZnMvdGFncy8ke1BWfS50YXIuZ3o7ZG93bmxv
-YWRmaWxlbmFtZT0ke0JQTn0tJHtQVn0udGFyLmd6Ig0KDQpUaGVuIHRoZSBVUkwgcmV0dXJu
-ZWQgYnkgdGhlIFBSRU1JUlJPUlMgbWFwcGluZyBpcyB3cm9uZyBhbmQgdXNlcyB0aGUgDQpm
-aWxlbmFtZSBzcGVjaWZpZWQgaW4gZG93bmxvYWRmaWxlbmFtZSBpbiB0aGUgVVJMLCByYXRo
-ZXIgdGhhbiB0aGUgDQpvcmlnaW5hbCBuYW1lOg0KDQpERUJVRzogRm9yIHVybCANCmh0dHBz
-Oi8vZ2l0aHViLmNvbS9HUk9VUC9QQUNLQUdFL2FyY2hpdmUvcmVmcy90YWdzL1RBRy50YXIu
-Z3o7ZG93bmxvYWRmaWxlbmFtZT1QQUNLQUdFLVRBRy50YXIuZ3ogDQpyZXR1cm5pbmcgDQpo
-dHRwczovL2ludGVybmFsLnByb3h5LnVybC9naXRodWIvR1JPVVAvUEFDS0FHRS9hcmNoaXZl
-L3JlZnMvdGFncy9QQUNLQUdFLVRBRy50YXIuZ3o7ZG93bmxvYWRmaWxlbmFtZT1QQUNLQUdF
-LVRBRy50YXIuZ3oNCg0KTm90aWNlIHRoYXQgdGhlIGxhc3QgY29tcG9uZW50IG9mIHRoZSBV
-UkwgbWFwcGVkIHdpdGggdGhlIFBSRU1JUlJPUiBpcyANCm5vdyAiUEFDS0FHRS1UQUcudGFy
-Lmd6IiwgcmF0aGVyIHRoYW4ganVzdCAiVEFHLnRhci5neiIuIFRoaXMgY2F1c2VzIHRoZSAN
-CmRvd25sb2FkIGZyb20gdGhlIGludGVybmFsIHByb3h5IHRvIGZhaWwgd2l0aCBhIDQwNCBl
-cnJvciBhcyB0aGUgDQpmaWxlbmFtZSBpdCBpcyB0cnlpbmcgdG8gZG93bmxvYWQgZnJvbSBH
-aXRIdWIgaXMgbm8gbG9uZ2VyIGNvcnJlY3QuDQoNCklzIHRoaXMgdGhlIGludGVuZGVkIGJl
-aGF2aW91ciB3aGVuIGNvbWJpbmluZyBQUkVNSVJST1JTIGFuZCANCmRvd25sb2FkZmlsZW5h
-bWU/IFNob3VsZCBJIGJlIHVzaW5nIHNvbWUgb3RoZXIgbWVjaGFuaXNtIHRvIGFjaGlldmUg
-dGhpcz8NCg0KTUlSUk9SUyBleGhpYml0cyB0aGUgc2FtZSBiZWhhdmlvdXI6DQoNCkRFQlVH
-OiBUcnlpbmcgTUlSUk9SUw0KLi4uDQpERUJVRzogRm9yIHVybCANCmh0dHBzOi8vZ2l0aHVi
-LmNvbS9HUk9VUC9QQUNLQUdFL2FyY2hpdmUvcmVmcy90YWdzL1RBRy50YXIuZ3o7ZG93bmxv
-YWRmaWxlbmFtZT1QQUNLQUdFLVRBRy50YXIuZ3ogDQpyZXR1cm5pbmcgDQpodHRwczovL2lu
-dGVybmFsLnByb3h5LnVybC9naXRodWIvR1JPVVAvUEFDS0FHRS9hcmNoaXZlL3JlZnMvdGFn
-cy9QQUNLQUdFLVRBRy50YXIuZ3o7ZG93bmxvYWRmaWxlbmFtZT1QQUNLQUdFLVRBRy50YXIu
-Z3oNCg0KVGhpcyB3YXMgdGVzdGVkIHVzaW5nIEJpdEJha2UgMi44LjAgYW5kIDIuOC4xLg0K
-DQpDaGVlcnMsDQoNCi0tIA0KSXNhYWMgVHJ1ZQ0KZW1saXggR21iSCwgaHR0cHM6Ly93d3cu
-ZW1saXguY29tDQpGb24gKzQ5IDIyOCA5NCA3NyA5NiA5NA0KQmFjaHN0cmHDn2UgNiwgNTMx
-MTUgQm9ubiwgR2VybWFueQ0KU2l0eiBkZXIgR2VzZWxsc2NoYWZ0OiBHw7Z0dGluZ2VuLCBB
-bXRzZ2VyaWNodCBHw7Z0dGluZ2VuIEhSIEIgMzE2MA0KR2VzY2jDpGZ0c2Z1ZWhydW5nOiBI
-ZWlrZSBKb3JkYW4sIERyLiBVd2UgS3JhY2tlDQpVc3QtSWROci46IERFIDIwNSAxOTggMDU1
-DQoNCmVtbGl4IC0gc21hcnQgZW1iZWRkZWQgb3BlbiBzb3VyY2UNCg0K
---------------x9x6agsJiza4oag0IV9seme5
-Content-Type: application/pgp-keys; name="OpenPGP_0x979B37F4801A4D28.asc"
-Content-Disposition: attachment; filename="OpenPGP_0x979B37F4801A4D28.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-xsFNBFoIK3kBEACcmxpdUkq5XewTWCrQMt+LrzfrtnTUhj2mHZSyICsgF2lq7ggL
-OZ7AoPCX7g57lzo3ftbfz+8hJ+G33ObvmKSrX30E8B+LdugT9t8xqwyUsDVrU8OB
-qenCgusOOT5PDdx+jviJKVcnduq3735GYumJLSLNg8BOqKRFrKosynXuySWtIJVT
-fpS8tkAdrFLV88PqCVwIC+cyE1lWNIi8EnlRSGVVriRZasMoiDBLnMZESsYqYcjG
-uiTMTBkbPpXx2UVgAK8WItN4ehMt0EXq7SyYEVzn45+gRg5iMoBSIQmhYau+Y0Ya
-cqWxXol8ySb3LelYrEJClJtJnHPJiyAx43FDZ5Bfy8e44WQgPUTM+TdQtrZMxcsi
-ruOA2pLZO0Cxjy3Y1IQkT7HoBFbuu5lLYDMNLA+sGWx/3W4gB02NG9M/kecymWfn
-gu5NyjilY48/AYLJTVdZAYxOGjKB7R5CfcTlpphKScwmCwP1EWzIchWlA7bc9a3K
-T4/inz8eWI5yNbs3GiCwdAherODyiqZDzUeNBYslxlCU1OnlAvA8t3sfxOgzceic
-G7pCjULx4OofFzWDj0/urTpZaLhJWLdAgmUxvvyVQA/hh3icYnn1mKWc4FL5dP8l
-w+EO3pietKIocxUtWmXAKs9Xir9IzYtHtCAwZJ03EoXrc6Qo7JtLp9TOFwARAQAB
-zSFJc2FhYyBUcnVlIDxpc2FhYy50cnVlQGVtbGl4LmNvbT7CwY4EEwEKADgWIQSf
-WJiOZAzS1KPHi7+Xmzf0gBpNKAUCZg0HYgIbAwULCQgHAgYVCgkICwIEFgIDAQIe
-AQIXgAAKCRCXmzf0gBpNKKP9D/9n7Pj/LWp+ygdDuE2kL9B/BfAjsvPVHz8AVKcr
-DY0EJLQjc776NO2dXpICxGIyUJufm4LS8xIXjtRJIwVkmjXm9putydHgOYD1V7s4
-S/ZCQmu8cEWjLgcNA3SdtzbGxBZcxMr22EbowjmiMwfB6lj3/l06Mut8zNydkFfp
-tSSpCQTzvNMnR297ZfRrAzfZe8VqQvt4f9+0bcq5Cn+JoicUR2sHE00uNXnGqIhc
-VokXP9G34G1zJNXlwAgIBXcsDh7dnXVLSCkfdoeA9STeSo2MpLiE5SmKODfho18n
-o7cy/5/RlIuoc2qm4HhN/OIEJ8KpVP4ewqVYdkQgfkh+1Fn9FwsxiCefYoEzyvRx
-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
-Jn5D
-=3DxNCo
------END PGP PUBLIC KEY BLOCK-----
-
---------------x9x6agsJiza4oag0IV9seme5--
-
---------------jQmLRcpLMGItVgadQxF6LWqN--
-
---------------0uMXE5XpXHFhl0SKJhi3BzCH
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsF5BAABCAAjFiEEn1iYjmQM0tSjx4u/l5s39IAaTSgFAmkTXIMFAwAAAAAACgkQl5s39IAaTSjf
-YBAAgGNXAwyi0RkBJikZJxxey7vgttylMoGH0EUxT1MLZka6PbySqMbj3LpCkYZeMfQAhGZiXOIn
-8Pp1sbHamPFGyfcqK/Jx5E/9Fs+gkwY3T0tsQlOBeffV2qkUNF6q9ToLClsNV6cQWxeCkxqKgdIn
-WsZld4cWrVTAwZSwlOCvFPKTSwdxyK1Kk5uXs8T2lp9pyIRi68n3Fr+k6LN/POgG6QO0UuUNECj6
-61FnHnojkQjPwPLnAmsC1V+1OKLXjxYoKFulm1yMIsEl4BcSN+TkB1nH5OAd15pYaFHoo9sdq+Ff
-k4ldJC8CzqvmJveAawUilISG5f7yd6ROj/1fu590Un8idFeB+uoYHhVXE7QLJMzuuoYsK5+48K/4
-eAhuoYQsiW83hXXDNrh1koUAYdS8Y7O3MuHN/3akA/k6BlR01gf6HMX3r3tvEETZ5d5kmaxp66B1
-n2SkXQdgWlVp8nsXzxv7biH4wd+mINAfjszwdNVbzA7+7/8Udj2AnOef0ioeCsbcDfhHQWt7i09B
-wPNoLHZiP/fdtoNMlhYEVo9ET4r/6sSiQVWPjFAlgYb/zYlnPA9DMSVSR6yVdXtZqnkUXQWBammC
-+IZymGdZHqgqa2+OMWdY211JBno9oWmoILazoKiQkjH8BIweW/fxyVp82YCCowo4L0E7QNIhlQ6t
-SXU=
-=o0VO
------END PGP SIGNATURE-----
-
---------------0uMXE5XpXHFhl0SKJhi3BzCH--
 
