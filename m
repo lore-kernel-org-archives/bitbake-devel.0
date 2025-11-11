@@ -1,92 +1,145 @@
-Return-Path: <steve@sakoman.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7968BCCFA18
-	for <webhook@archiver.kernel.org>; Tue, 11 Nov 2025 15:02:39 +0000 (UTC)
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.19570.1762873357483871506
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A15CCFA18
+	for <webhook@archiver.kernel.org>; Tue, 11 Nov 2025 15:17:49 +0000 (UTC)
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.19873.1762874260954906726
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 11 Nov 2025 07:02:37 -0800
+ Tue, 11 Nov 2025 07:17:41 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@sakoman-com.20230601.gappssmtp.com header.s=20230601 header.b=3ZIY6grq;
- spf=softfail (domain: sakoman.com, ip: 209.85.210.169, mailfrom: steve@sakoman.com)
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7b75e366866so44094b3a.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 11 Nov 2025 07:02:37 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=b8QPPn98;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.42, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-42b3108f41fso1663574f8f.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 11 Nov 2025 07:17:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sakoman-com.20230601.gappssmtp.com; s=20230601; t=1762873356; x=1763478156; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CdK+rBYAl/Ih6k5uTYJ/phh6rO35tsHnUTnclEuUuWI=;
-        b=3ZIY6grqHZJ5AIWvfDf/LAZe2Zbh6Ib+70QRAfIBszfsaj0aYBljFsYL8oj3a/bEuP
-         Ak03KvAmhZdlWjm3MvBDzn2Cpl60qqAVPKopuNrSTFpAG7k8geanbdMwkQh2+W9xVe0S
-         zSrSTJDdwf5/WtXBNNMaqg8nhcTjTizaxO3Zpogt7h4KAXgVXcoPcgZOsclEejXjg3UY
-         XsUNMx+Hr2bz1Z6niaQq305r2LIiQg+Bq6U32wLKjb4NAvnM3YNhp+JCPooVd54T7UbQ
-         2oSIFe9Suo4kgSGmeMO2jK79WJS0IkJw2F/WMYdo90ujDNt5QNKeAOQRlQ5z5swHWzXW
-         3toQ==
+        d=linuxfoundation.org; s=google; t=1762874259; x=1763479059; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:date:to:from
+         :subject:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=NZeSacim/suGJxvAKopq+wxGScXs6Z1zH1duL91y6lE=;
+        b=b8QPPn98cRoaQF3ojqeN5S2/3nyVJqVEA8AX7N6dEkz+RYqSRYKU0LrziKOSkUBjdM
+         tk3y2FBChVJgYn+VKPt/YBh/XTnXCJD1GwSKGGirRbsCTxofZviyRTZKSAvAbNhCUSxx
+         h2v4HBM74zgcGAthIRtstdSD7syCXkJNypeV0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762873356; x=1763478156;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CdK+rBYAl/Ih6k5uTYJ/phh6rO35tsHnUTnclEuUuWI=;
-        b=T/rRexwooD2RQoCAOxpJ+9FgY17Qv5mHjo3WPxXQhd4x+CJ3Kut7KN2CQuhYMSuFWH
-         23LSp3maFSnly8LQNaDBwaHuBCwQIQyh5zz7Rnk1ow7gGKlCoXkb+xI8QcSGI/nkcJjb
-         zeF2zMxtF4+MXV/nnZpeXCKLKBY9p6puvkHg29z2yoPIrIS6Vy1ur4Gl2AvvOhxdZjkf
-         IvLgpy/u/DWQ6Gb47Nhu4kSJ98SleygLOHmSDtuZG696ZBeKevYZth+AlOsjXtmnv3ky
-         NzbF/97I1XNgqgpYkuY44+q0JOnWv6oiinVtXGfdfGq8DWi9dZALmGGPcOv7Abrav2F+
-         iDKw==
-X-Gm-Message-State: AOJu0Yw33KNRxxhfBgDg9HSrxfxGLkj+Wj2hK3etqEazb/OojEUfK1WZ
-	sGCxysRURLdHHu+GUEu57MuwVHabBgSlq1CHrA5DDQf7vcU9ajVXxEUyVIAn2ioTn/+i42kfrVU
-	ad9qbhJo=
-X-Gm-Gg: ASbGncsaqqTm85SQ3mNnGWqlKsU6J5ZGBHiFMtZPvAVaWJB5lYVkNIvMWVk72hLPN7V
-	O/9xu380qu6wjtN5GJ70c4GTPPcEyuefHVCf4YI8Scd0JVBS+G3CgskdzTZps/Ovvs5M37k8DvH
-	GUzgF98+Ij0sVRbzfIlkawbzi4rUofQrzRLAxnqzrs7AUcG+oXiHA9ys2eWZsr4z56VtZADf9fP
-	nq3ssJZ5DuwH/K5zhcfpcn8cUuMQZJjyUq6sQ9T6KfVmqzLY+dNuCbuZYb2VkZIsMmvjiGwYzbf
-	FOYlUh+EV6ILFKqSP17XpCCYq0MCOEEfDNkyCXrNsOLAMjs159SXr8jQBBawkftyKWaoBEO8JDu
-	OEwVRYxKLomNEsl8NLIiTdrfSLTYwXGapbE59i22/iMrveJoqto7r8DJmxbpNFQSNik0=
-X-Google-Smtp-Source: AGHT+IExPtnQMOBk2Ce2eK5jtcUTN6O37r/1g78p91X2Ct/F5Z1p8+Bj6i6kZFDCdXMMhECfJQEFAA==
-X-Received: by 2002:a05:6a00:230b:b0:7a3:455e:3fa5 with SMTP id d2e1a72fcca58-7b2231091e7mr14005947b3a.0.1762873356304;
-        Tue, 11 Nov 2025 07:02:36 -0800 (PST)
-Received: from hexa.. ([2602:feb4:3b:2100:db6b:ed5a:7890:6b41])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b0ccd56de8sm15778946b3a.68.2025.11.11.07.02.34
+        d=1e100.net; s=20230601; t=1762874259; x=1763479059;
+        h=mime-version:user-agent:content-transfer-encoding:date:to:from
+         :subject:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NZeSacim/suGJxvAKopq+wxGScXs6Z1zH1duL91y6lE=;
+        b=CkrII31VWoUIXfIQvM7AcfATLUUw1iR0CQ05bNQ6Br0fhfsN+1IVMz1y8FwWsTDWdS
+         YGSWvDDCy812WzXzWAPhSD/OhePWNXPVtkkAnYm0ytrpfGKTUclgM/wdkrH83CCve6sT
+         dxWDFIsR36TzvzB0dk2ScJ1GV06/e/PeYhC8jIcD0gtBKrQOaemw4K7w3gbGGfDRJesI
+         fEBPkF3Zb0dLE7oZtmLqWTgxF3b5Dg2ye9UKPu/0oq7QELz64EaLpssemzoVMOu3KgwI
+         a7E+Ef2EF4YAiQykMFqQKCQxpmox8jiqSjGp8CkKpbhYxcamYUhgKBsbitTUcnp7nj1T
+         HaDQ==
+X-Gm-Message-State: AOJu0Yz/Eq5Itz/M17eIa0otaUgFgae7yJt4miBh96ef0+InQMAzAp3c
+	xrGVIVIPO7nCsIVhCw6f/fu2fX+PG8j7Xl5N4RHa4arOzXpn6QUa2h53t6pFJUHDJ5ajBYKzWlB
+	ZKtv2
+X-Gm-Gg: ASbGncvIPl9WfW4wy2zWo/AIX/zo282B+lXfxL9ahviEaP/TKMppkPk8eH3stVtTLxu
+	y3faahCGKqKuKhkB3JjZi1RcXZS9/TFL4gcDCapNsB2JUvhvXjIO26lcZPrTDw+oXnnEn0QbuAG
+	zQr32eOxjU9cfp7Fd3k6HmE3qQPl5qskvO+Cy+jf3RegU/l3N9Zm6uz+CmwyKtR5MEC44HEQoWz
+	1teCZ0PgzewjhVCfw3gIzF+qsk5UqmfhiD45sttfe/9x98W88MbTQb6FThYhmEsUeerrmGva8Vc
+	uiWYeaLuHneEuVPJ9KIUpzs8ROghOenPMWul2/GofzbL4dEYpGU7fH2Y5aQ8SwqPLLRYDBIPGlq
+	/4gnlpHe1qHQTLIuDBfTs2I/JdicL7bRASLxoZglFi0gpZA+Yd11SQxTxLsndpBrv3yyZdl53Yw
+	MGjKDdZ/ZUHqM0WwulhnAGohucFNMsWKA7/SMP7BUK45aHPMRZjLE3EXOVXOfhGjWr
+X-Google-Smtp-Source: AGHT+IE/DkkItiYQKXrVt/VRmywAC8UvTXRa+HZ7wFoaj4pWEM0by1sX6WaK4TYqhEHddRzsy5tVEQ==
+X-Received: by 2002:a05:6000:64c:b0:427:2e8:fe3a with SMTP id ffacd0b85a97d-42b2dbe33b8mr10729248f8f.13.1762874258516;
+        Tue, 11 Nov 2025 07:17:38 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:e5b4:de25:c1b8:e4ca? ([2001:8b0:aba:5f3c:e5b4:de25:c1b8:e4ca])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42ac677abeasm29185346f8f.33.2025.11.11.07.17.37
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Nov 2025 07:02:35 -0800 (PST)
-From: Steve Sakoman <steve@sakoman.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][scarthgap][2.8][PATCH 0/2] Pull request (cover letter only)
-Date: Tue, 11 Nov 2025 07:02:21 -0800
-Message-ID: <cover.1762873246.git.steve@sakoman.com>
-X-Mailer: git-send-email 2.43.0
+        Tue, 11 Nov 2025 07:17:37 -0800 (PST)
+Message-ID: <a94dfade878b881bbd8c0524a99675983b8b20da.camel@linuxfoundation.org>
+Subject: My bitbake-setup testing notes so far
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Tue, 11 Nov 2025 15:17:37 +0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0-1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 11 Nov 2025 15:02:39 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18323
+ <bitbake-devel@lists.openembedded.org>; Tue, 11 Nov 2025 15:17:49 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18324
 
-The following changes since commit 1c9ec1ffde75809de34c10d3ec2b40d84d258cb4:
+I've noted down a summary of my recent bitbake-setup testing notes:
 
-  bitbake: Bump version to 2.8.1 (2025-09-17 23:22:33 +0100)
 
-are available in the Git repository at:
+"bitbake-setup update" moves local.conf changes out the way. I think by
+default there should be a warning about out of date conf files and a
+y/n to move. There should be a command line option not to do this as it
+really isn't what most users expect/want. I do understand why it is
+doing it from an upgrade perspective.
 
-  https://git.openembedded.org/bitbake-contrib stable/2.8-next
-  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.8-next
 
-Bin Lan (1):
-  bb/fetch2/__init__.py: remove a DeprecationWarning in uri_replace()
+As Joshua mentions, we should just error for non-global settings that
+won't do anything.
 
-Philippe-Alexandre Mathieu (1):
-  fetch2/wget: Keep query parameters in URL during checkstatus
 
- lib/bb/fetch2/__init__.py | 2 +-
- lib/bb/fetch2/wget.py     | 7 +++++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
+When we set a top level dl-dir, it should filter down into DL_DIR in
+the builds, we do want to share that.
 
--- 
-2.43.0
+
+There is a related issue with sstate-dir (and maybe hashequiv DB?) not
+being shared between builds by default. We have an opportunity to fix
+this right now.
+
+
+The message:
+'Bitbake-setup is using /XXX/bitbake-builds as top directory ("bitbake-setu=
+p settings --help" shows how to change it)"'
+is misleading. If you run that, if doesn't tell me. I need to run
+bitbake-setup settings list and know which one to change.
+
+
+I'm starting to wonder if there should a "--quickstart-help" which
+lists a set of examplecommands to run like:
+
+bitbake-setup settings set --global default top-dir-name poky
+bitbake-setup settings set --global default dl-dir /media/build/sources/
+bitbake-setup init poky-master poky distro/poky machine/qemux86-64 --setup-=
+dir-name build
+
+The reasoning being to give people an idea of needing to set some
+global values for thing like dl-dir.
+
+
+When I run init, the I should be able to edit the default build
+directory name more easily. "poky-master-poky-distro_poky-
+machine_qemux86-64" is a little nonsensical in that I can change DISTRO
+and MACHINE in a build without changing the build directory. Could we
+simplify the default? Should we give the user a hint about how to
+change the MACHINE/DISTRO? I think we do want to be able to encourage
+users to switch some settings in their builds.
+
+
+For settings, is there anything other than the default section? Should
+we perhaps default to default to simplify the commands?
+
+
+We also don't have a good way of mimicking something more similar to
+the older poky layout with bitbake-setup. The autobuilder is the
+closest on that but with some horrible commands, I think we might want
+to find a way to allow that more easily/obviously.
+
+
+
+Any one of these issues in isolation isn't a blocker but together, they
+all make the experience a bit jarring and not what people are used to
+from us. We get one chance at users of the tool, I think this will
+break it.
+
+I do probably have more thoughts, I'll try and keep more notes as I go
+and find things. I'm sorry not to have come to some of this earlier :/.
+
+Cheers,
+
+Richard
+
+
 
 
