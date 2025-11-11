@@ -1,130 +1,162 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 686BCCCFA18
-	for <webhook@archiver.kernel.org>; Tue, 11 Nov 2025 17:38:50 +0000 (UTC)
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.23483.1762882725052236229
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FADCCFA1A
+	for <webhook@archiver.kernel.org>; Tue, 11 Nov 2025 17:51:30 +0000 (UTC)
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.23790.1762883488310221957
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 11 Nov 2025 09:38:45 -0800
+ Tue, 11 Nov 2025 09:51:28 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=ehJsDpAw;
- spf=pass (domain: gmail.com, ip: 209.85.161.42, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-656b8900ac1so1785829eaf.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 11 Nov 2025 09:38:44 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=gebC5aJ9;
+ spf=pass (domain: gmail.com, ip: 209.85.219.52, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-8823dfa84c5so36588146d6.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 11 Nov 2025 09:51:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762882724; x=1763487524; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZqvaLnjQKeSQBilliInh1s8VKWQyQePXLSHfzodLwUY=;
-        b=ehJsDpAw/weXjB4f0mEKTfknBtlWczBr/wRtVkwh7SoCI5TCbobJ/wnu4GxAUNRcwJ
-         TPXsY9ZQAGb4TWRnUc6k+TX9emH96Lfger2z4AU4NJiLyj2lwtGSYqLgrrSSUIDrE7HP
-         ihaFmgCgtzvV8BDlRQow5kKWQo9+Js8bq9B3pbaSr6wr4K+lHveIx/3HihZmK000ay3Z
-         JGRTf5RMggd7V5Ubq9ZLlKuOb1e0DwKa1WT8qIaiiOV51F91vZfdypyXPXa/BLsxTLCT
-         VxGs2itHVmIsPoookr219Y80GDGIvdR66iqQMfFXJ9sxW5MlxPU1NlUBbJwKfzmZ0iUx
-         n9rA==
+        d=gmail.com; s=20230601; t=1762883487; x=1763488287; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AorGva1IO5deezkaINp2m107fZfRVHiVwiUee3K3ims=;
+        b=gebC5aJ9FsDg6zAmDhBdGoOe9LUvAFgS0vJQ6wscGxZbBSuktf5XJFoQ48bJNXOWTz
+         fWSCPvcJnhVtjsZsHTroN2BRbdSN871QTgCuNQl1Hki4RtTXWY+Q2+DK0xISzvmTB99o
+         y1tiQhSxfha8otgMMKjCX9gy7hEIVVw8i/C0aAbNQbHwZBgjzJM9bhZDSLA62UwYzQqb
+         XCO0VIGUihHcJ1x1yenXu9THGRb8zMMabHEuWpYNiU1YH8lH48FzL56sU77k/ywEvd8M
+         axoNUJ9LpAifwMP0AXJ4Air2rxd/iyTG0R+4pqe7GxVRo6M7Ui1222PTtxhglVOfKeeO
+         6UmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762882724; x=1763487524;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1762883487; x=1763488287;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZqvaLnjQKeSQBilliInh1s8VKWQyQePXLSHfzodLwUY=;
-        b=oOjcDrnvtw/vsyVCsW/JundRgXmLiiDA/YqvNJiLIvn0DQ0Z1JxTPvDrgj9Zlf+0Qd
-         MoHwm8U0Q9gvPrz6iRU9Sadv/NSSlBjVd2rVjFrA62G++BZ3rlvvkaC3rZZb2b23pweA
-         SHbELW8uz6IxVO+zCXRMaViA+NCJnTCNN2nJffbHh4mWevWyErU0mb/S9W0I9TRrDdYc
-         mFjLCs7KMEDBi+GhhToqtWZUbUrk/KrH6vpKzhHPWJrZpeQYJC2QldAZwPTJekfcy0SB
-         xVoFtAxj4yR39TKh7HwmuYvCgfE8A3kGsFyyKAfmUn+iQFGbR14TfZCLd6mFkwdd5t1f
-         Fz/g==
-X-Gm-Message-State: AOJu0Yw5ZGz3CQVgDajFEMjD3iF0OS4X6fcItGlpGgH4UoisR1/xdH4u
-	erjBkedTJtdv0sTlyhLdGo7PnCTwFHksE2EQ2yfYLNnFlEMUPIOMbAxJT4xRrA==
-X-Gm-Gg: ASbGncsLmCTmFIU134pALXVVHsEOAQ2eDEfuwjhReCxOrA/ifZIbqXsuv3LwkhFL5ie
-	2rRisd2a0DbcsL/WQMIXGeQ+IRmSN8fL/R0SHtNSe1zOda8pSs2POBKJMhLrFyTjEU8oppq8ujy
-	hKWS1BuAtAH1TucLSJQDL5kjJQhjUR3eUQ5AnshebsqiCg1knaf7yPfmY3bWvd4wodmne2uTF8s
-	nS7Y+o+Ib1Q5sQH5CluHPVY3lbhGJYXnfNF6GgJ9fRsueBohMTtWddlvc77WL/PehtwEZ7PQDPA
-	z6GitVLLsAq02AMyytDYR0jGQfAigqupBDwZTJRTLZfY2Hjqvgvcu3edaxZF9Z0cz+5vkkuk1cD
-	CIFIHwCEqHNqcE2L78EMwGS4R0ujJNslN9OYi2wR0ACMn991Ud/+7mSZ6suuNxLtNtO4ccwJ7yL
-	czeF3Re48e
-X-Google-Smtp-Source: AGHT+IFqcmVczqhJiQcrYf7OBV+86fCHhajDW0IqpAQrtA4eiZXqu5FtDpYCnEozwWiyfmFPUkgRsw==
-X-Received: by 2002:a05:6820:2209:b0:638:3df8:c802 with SMTP id 006d021491bc7-656d9005bb5mr5902952eaf.5.1762882724131;
-        Tue, 11 Nov 2025 09:38:44 -0800 (PST)
-Received: from localhost.localdomain ([2601:282:4300:19e0::9115])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-656e55853bfsm4104071eaf.10.2025.11.11.09.38.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Nov 2025 09:38:43 -0800 (PST)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] bitbake-setup: Improve continue prompt
-Date: Tue, 11 Nov 2025 10:38:41 -0700
-Message-ID: <20251111173841.2842051-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.51.1
+        bh=AorGva1IO5deezkaINp2m107fZfRVHiVwiUee3K3ims=;
+        b=TRZjmuQH4my3y3OW/winhICQDf2mB0s85LvBQs35BFvA09FUf8loaQ1gQG2y8P/RB7
+         6R1TkRghKLQtOPKtXeSO5aGLMPNJZHjTZ4nulmUPSwo8vyshEazt3/LL8pZp5hJ2H5me
+         q4f6UvxR/+9KlKpr7rRb1AKi497diZkxFkK508izFmSfPGjERyqmzAFXh0RRAMZB3K9I
+         ygL8PSUfb8NFaJ+ED1zjA2Mj0y9b9eq1g9/L5d//AbmKqPFG2IHA/pfB1XKnC3bBjuvD
+         9w5AlZp9kKTCosUoO6fqQqHlE+A4ogbCJ/4xb8HMsD6kVwf+j2ex0bXwyqQbpyjJysE2
+         Ge3A==
+X-Gm-Message-State: AOJu0Yyko41a5M+wAfK3GCTPScoZDps7SAyjdkHafaGsNLJXRwqnXB9a
+	Y0S4LmFDZMnQjHUV/33S0Tg8E69v4tnomF6PPG+wk9sZkv88TmMEUTm92TBiwrbBWCSbs8K/paf
+	a6mm9WUfO/TbtJgAdTCYPM92soMHjv+w=
+X-Gm-Gg: ASbGncs0vJ0ZPPJeKgprafmDebyo1L/S2Lj90DZz3m4j5QMyxuix8rFEPKz6o440MTu
+	6UVLzrpyGkIQ8pKNnudg0o06r8AfFCup0g0v3W4bTKaFIno35IqQfTS2rnd+Joog7YH/8kjEcDV
+	9EitZVD07Rq5voCdJRj6Mc5iYKPSoPfiwOPtT2LIqkHBCZWmzy35e0TQQPqvzpJKwIHRYQrI5Kv
+	ZLv+9ARSyZrYsi1GugExyhzCpz6kceYtf7/pNTDkoVBgp44wDOoBcxrW+8=
+X-Google-Smtp-Source: AGHT+IHmuHY2ntA0461Wcn7DPKUK6hZmoECGwir50BbHufBDyjyTwwHooW2Tno/IX30VlhO3hSJBpduDWpvKneNeUxc=
+X-Received: by 2002:a05:6214:29e7:b0:882:4901:e960 with SMTP id
+ 6a1803df08f44-88271934f88mr3569766d6.29.1762883487117; Tue, 11 Nov 2025
+ 09:51:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <a94dfade878b881bbd8c0524a99675983b8b20da.camel@linuxfoundation.org>
+In-Reply-To: <a94dfade878b881bbd8c0524a99675983b8b20da.camel@linuxfoundation.org>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Tue, 11 Nov 2025 18:51:14 +0100
+X-Gm-Features: AWmQ_bmbzMSZm8GgGR60kC4MJj8sIyyZzZIClYNgS1W5HdBT7495sORWU4imDTk
+Message-ID: <CANNYZj_yCNufCfYC8BgcZQkepyYrvPfe0qUz9k4WX-csC6jzYg@mail.gmail.com>
+Subject: Re: [bitbake-devel] My bitbake-setup testing notes so far
+To: richard.purdie@linuxfoundation.org
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 11 Nov 2025 17:38:50 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18332
+ <bitbake-devel@lists.openembedded.org>; Tue, 11 Nov 2025 17:51:30 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18333
 
-Reworks the prompt to continue with the setup wizard in a number of
-ways:
- 1) Default to 'Y' if the user just hits enter. In general, users are
-    more likely to want to continue than they want to exit.
- 2) The tools prints "Exiting" when the user doesn't want to continue,
-    as a clear indication that the script exited without doing anything.
+One thing from the tech call that should be written down is that
+top-dir-prefix should default to '.' (with code and tests fixes to
+ensure this works, as tests set top-dir-prefix to some tempdir). This
+would match the common expectation that tools write to cwd if not
+instructed otherwise. If anyone wants to take this, I'd appreciate.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- bin/bitbake-setup | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+Alex
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index 282fa82ff..9c6d787bf 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -134,6 +134,14 @@ def checkout_layers(layers, layerdir, d):
- 
-     return layers_fixed_revisions
- 
-+def prompt_continue(non_interactive):
-+    if not non_interactive:
-+        p = input('Continue? (Y/n): ')
-+        if p and p.lower() != 'y':
-+            print("Exiting")
-+            exit()
-+        print()
-+
- def setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir):
-     def _setup_build_conf(layers, filerelative_layers, build_conf_dir):
-         os.makedirs(build_conf_dir)
-@@ -483,11 +491,7 @@ def init_config(top_dir, settings, args, d):
-         return
- 
-     print("Initializing a setup directory in\n    {}".format(setupdir))
--    if not args.non_interactive:
--        y_or_n = input('Continue? (y/N): ')
--        if y_or_n != 'y':
--            exit()
--        print()
-+    prompt_continue(args.non_interactive)
- 
-     os.makedirs(setupdir, exist_ok=True)
- 
-@@ -676,10 +680,7 @@ def create_siteconf(top_dir, non_interactive=True):
-         print('A site.conf file already exists. Please remove it if you would like to replace it with a default one')
-     else:
-         print('A common site.conf file will be created, please edit or replace before running builds\n    {}\n'.format(siteconfpath))
--        if not non_interactive:
--            y_or_n = input('Proceed? (y/N): ')
--            if y_or_n != 'y':
--                exit()
-+        prompt_continue(non_interactive)
- 
-         os.makedirs(os.path.dirname(top_dir), exist_ok=True)
-         with open(siteconfpath, 'w') as siteconffile:
--- 
-2.51.1
-
+On Tue, 11 Nov 2025 at 16:17, Richard Purdie via
+lists.openembedded.org
+<richard.purdie=linuxfoundation.org@lists.openembedded.org> wrote:
+>
+> I've noted down a summary of my recent bitbake-setup testing notes:
+>
+>
+> "bitbake-setup update" moves local.conf changes out the way. I think by
+> default there should be a warning about out of date conf files and a
+> y/n to move. There should be a command line option not to do this as it
+> really isn't what most users expect/want. I do understand why it is
+> doing it from an upgrade perspective.
+>
+>
+> As Joshua mentions, we should just error for non-global settings that
+> won't do anything.
+>
+>
+> When we set a top level dl-dir, it should filter down into DL_DIR in
+> the builds, we do want to share that.
+>
+>
+> There is a related issue with sstate-dir (and maybe hashequiv DB?) not
+> being shared between builds by default. We have an opportunity to fix
+> this right now.
+>
+>
+> The message:
+> 'Bitbake-setup is using /XXX/bitbake-builds as top directory ("bitbake-setup settings --help" shows how to change it)"'
+> is misleading. If you run that, if doesn't tell me. I need to run
+> bitbake-setup settings list and know which one to change.
+>
+>
+> I'm starting to wonder if there should a "--quickstart-help" which
+> lists a set of examplecommands to run like:
+>
+> bitbake-setup settings set --global default top-dir-name poky
+> bitbake-setup settings set --global default dl-dir /media/build/sources/
+> bitbake-setup init poky-master poky distro/poky machine/qemux86-64 --setup-dir-name build
+>
+> The reasoning being to give people an idea of needing to set some
+> global values for thing like dl-dir.
+>
+>
+> When I run init, the I should be able to edit the default build
+> directory name more easily. "poky-master-poky-distro_poky-
+> machine_qemux86-64" is a little nonsensical in that I can change DISTRO
+> and MACHINE in a build without changing the build directory. Could we
+> simplify the default? Should we give the user a hint about how to
+> change the MACHINE/DISTRO? I think we do want to be able to encourage
+> users to switch some settings in their builds.
+>
+>
+> For settings, is there anything other than the default section? Should
+> we perhaps default to default to simplify the commands?
+>
+>
+> We also don't have a good way of mimicking something more similar to
+> the older poky layout with bitbake-setup. The autobuilder is the
+> closest on that but with some horrible commands, I think we might want
+> to find a way to allow that more easily/obviously.
+>
+>
+>
+> Any one of these issues in isolation isn't a blocker but together, they
+> all make the experience a bit jarring and not what people are used to
+> from us. We get one chance at users of the tool, I think this will
+> break it.
+>
+> I do probably have more thoughts, I'll try and keep more notes as I go
+> and find things. I'm sorry not to have come to some of this earlier :/.
+>
+> Cheers,
+>
+> Richard
+>
+>
+>
+>
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#18324): https://lists.openembedded.org/g/bitbake-devel/message/18324
+> Mute This Topic: https://lists.openembedded.org/mt/116239397/1686489
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alex.kanavin@gmail.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+>
 
