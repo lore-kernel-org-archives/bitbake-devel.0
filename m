@@ -2,63 +2,64 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAB1CD1297
-	for <webhook@archiver.kernel.org>; Wed, 12 Nov 2025 15:57:10 +0000 (UTC)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.650.1762963029487300072
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A8DCD13DE
+	for <webhook@archiver.kernel.org>; Wed, 12 Nov 2025 16:01:40 +0000 (UTC)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.780.1762963289988970153
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 12 Nov 2025 07:57:09 -0800
+ Wed, 12 Nov 2025 08:01:30 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=FGn92wnQ;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.49, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4777771ed1aso7544435e9.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 12 Nov 2025 07:57:09 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=AspD69eI;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-429c82bf86bso639240f8f.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 12 Nov 2025 08:01:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1762963028; x=1763567828; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1762963288; x=1763568088; darn=lists.openembedded.org;
         h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P18GHdmm8qef2Ad5vl6nP7nCl3Mz7iwdzrfmGopF02Q=;
-        b=FGn92wnQT4wc9LFkLGgrCOTFPPysLHoMkXYrH7iHLVRDI+BebtWZhdkeZsA0Tpz+ak
-         nHFPSTJShTPkRIKLzqbY8K0vnOqmHzlZtC8jBTmpQ42L890ePUSvbb1TJ2oiEmYZ9SRo
-         zyF/8cyJJhFaohmsCmGzYqzObDIftcoFsl3jg=
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=20FQaACV2clcKWlfv5qj8vcGbtQpk4oz4ZBYV3ct0Pk=;
+        b=AspD69eIRuXBFJlONTybhxe573nMw9wD9X8T6ckp/KNCI/+PeHby2CQ++oyK1G50J5
+         Zk1t8jkB5Y4WpepBk40yuZGB8ra/GzM1cA2k8eMj8lR4XadpRqqlWDMlm7p1Gpv/nL8f
+         QzIT+gqd4E9bKs44a82O2WCqW3TqQTi20b3I0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762963028; x=1763567828;
+        d=1e100.net; s=20230601; t=1762963288; x=1763568088;
         h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-gg
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P18GHdmm8qef2Ad5vl6nP7nCl3Mz7iwdzrfmGopF02Q=;
-        b=lDPE+Kj5ZjtdXVkp5dtPKrmhTbv5PMgWjldekTgHnd+s18oHk7tGHqnttopIGxFiN1
-         IcukpImZAkrKn/sgQbJh6yRBOxcb6OZpyFQZWJZeqkNXWAmQNtWFYfzjluXAZlyHO+Cq
-         ZXHz4WbdZaflIc8SKtKOnnU2V83BAEgaC6c7TKZ3XrNBpXY8jQGqTmMz2bGW68qliAoy
-         r3U4/rOOF8aQXMO6BhEzDtegQXDvdTSBWVM2Nyg+39q6Yc+GKfbNXe4H0O70gq9v/MYA
-         7U+tZzLdvRKeEyDoQcDdkjinGf3CHJfwYe4crqTDfp/6ddTxfsEVC9gMUvhXd7gUjo1K
-         00Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCWg25+qGoxHyOGWUM4BPAqiW8NxvaH7UuwsOtdwcNPyjeUMtHT2xXR4X3XsPBBDydEYw8cpRC4+Ke6diyzW@lists.openembedded.org
-X-Gm-Message-State: AOJu0YzMouxFBqzH0WTsF1049U5VAzF01IGg6KYAJ2MHdhL4seYJXdp2
-	fDrMqV9/XwCYx8vy5Y+xEjBUAvOM8VfF/k2f2JEJawJOc1/u5v87j06kNIrmeKqpOe8=
-X-Gm-Gg: ASbGncvakdGU7zGH0N3t6rPEHZAByRDmHZMt9k5HB/SnRmmzijExr3cAjwY/vkfOKwP
-	SUIZG99tPjVaYC2tC04MSoq11GfOcg02tcMUP8npsG8JB7WHk1rYcGzL8Ve5i7qVwBAH/V72ggk
-	X3xAdQbDLo7QHSJNC2Durdw+nlfoWjV/6xJVcQKBml7KgUyRccQ3VFclW9YZqgsFGWExEu+yfZW
-	zToB78szLP5e4KNvagdVEE8xPltn2/ys1PdFXJ7ugJpRd7gOnA2DD6njfgi8tDFGah7AdlpKzxH
-	T6OKvOtjROd7H3R6vSGFHmzoQtVySFs2OV3HE4ZThupkXAuAe165sFbSLXuuhDS3W8jDD2JyNy4
-	hlw8inFWqMvQm05Gp1X7Sz13zMybNea/EZZS5qUXIr/RJTmf6mLD463+RxDJZmZBRkLOF2b1I56
-	nzwLsvb+tPFMev0oPXhEjKcRdlCl7VHllUFiChjnXyPvdYQOBJqe0jYufj3u6iet6f
-X-Google-Smtp-Source: AGHT+IFNYx0hJvOMmTe5OY70Aua1IdSIMekhw/AM5/BxQ8Glb0jtlyFlNxCuQtsT0Hkt/HxpMBjzXQ==
-X-Received: by 2002:a05:600c:6305:b0:477:1bb6:17de with SMTP id 5b1f17b1804b1-477870a6bc2mr37957735e9.30.1762963027818;
-        Wed, 12 Nov 2025 07:57:07 -0800 (PST)
+        bh=20FQaACV2clcKWlfv5qj8vcGbtQpk4oz4ZBYV3ct0Pk=;
+        b=ViMtRKUbbQCBRGrRLj3LtHFIVtEH6gdOv1cto4gTOHSsINzxnx5NCgipacSYXA9KP5
+         jBmsIh0GMyd/HIcsbhKj+4EqtYDQazHrRNrWdvtFT/SLc2Jt6Zwsq6fB/kToRdsSJkSa
+         YR9/T6q62zCMvqD/6ljVZlUOLsuuXfylyLfiWCnLsZMGV0wMBKvGRyma2RSie0rxFjCY
+         CNB5b+pqpGCAk+FtjdrTDgmqzM4DkBRhb5I4nHNEAmCS4ilQqyca804tSmZL18WmguQP
+         /eQPH2+D4ZgpL5Fv6RxOXyyeK8Qbxylto4KZ3/GSfzRuPkZT5VwYl/UMXxMyfk6n8UsR
+         dbnA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNuoCePxsiw0rBoeeC6FwRUdIv9588b03P1SURnahtUoPU3uMiSljm5+1LOT+KRRFuac1H5pZA83UIrYX4@lists.openembedded.org
+X-Gm-Message-State: AOJu0Yx/iyokMNMXI9zUU9Sc+di9Zwvc/bCwx7TIkv0tN2GEjEkjCZVg
+	LGHhewEEi/RqCukKT4spMji5AmDMTBQprTPn7cCNvr+ga40RBLGQqRrf6/E8a71l20w=
+X-Gm-Gg: ASbGncsbylA9XcaPHtp2hMes4SyGuzSsZNSKEg+I+5OcjV2SQ6Pg9ldf0Jv0XJb1E7A
+	4/9IKYEe4jM3wyyDMDQU3hA9phqfr1dSm959oLR0RSFAWTkmpDVfisVoIc7KVk/FnHpxHHYoLJC
+	1CwiYr0ol4wPklbhP5VvifnrlalLXSIzeI9wWFpoy06ZQ44b7imn/Wglmkid2w+BZf4aI1KEUZJ
+	0dVvqsCjJWktyqREZFNRNtjPa+jZvXr/+/DOo6tBIeAoD3R77qzOT4jKRQkJPDf43n978HsVdYf
+	iZwIbXM8yGCFS5T/KrMl96k81yTfd3xN5SVGAT5hHZfO/HVqove3q/lu4rr9OZKCY0wDNz5Xqxf
+	R17amCIfee/bhz1d7lioCMTxRlR05GGHTy41F0zb8PKr6DZYBB2jXzYU9j5rkUmXXmpA6IOKX1r
+	1tiBmvpYNI4De1wInE63pCLgrmvgWS8aqylhHzKq7hczxMtiqVHhlrm2RKDW+VTYyo
+X-Google-Smtp-Source: AGHT+IGeXWTQ51lhfj+Gn+QwGUv2wI2G3y3gA6/aJFLlgpw1YpjMqypNscVJOkkksyCm9GSCDrviNQ==
+X-Received: by 2002:a05:6000:2891:b0:429:d6b7:6ba8 with SMTP id ffacd0b85a97d-42b4bb01da2mr2950931f8f.0.1762963287753;
+        Wed, 12 Nov 2025 08:01:27 -0800 (PST)
 Received: from ?IPv6:2001:8b0:aba:5f3c:8876:d08f:2a0c:d6ff? ([2001:8b0:aba:5f3c:8876:d08f:2a0c:d6ff])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42ac67921c3sm35500621f8f.40.2025.11.12.07.57.06
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42ac677abeasm35493138f8f.33.2025.11.12.08.01.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Nov 2025 07:57:07 -0800 (PST)
-Message-ID: <6c4906cefa9846025d944edc02351bcfc9f3f42c.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] Combining PREMIRRORS and downloadfilename with
- wget
+        Wed, 12 Nov 2025 08:01:27 -0800 (PST)
+Message-ID: <df39c2e5ee59060f170ae7e4904a72acceb73e57.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel][PATCH] lib/bb/parse/ast.py: treat internal
+ fragment setting as default value
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: isaac.true@emlix.com, bitbake-devel@lists.openembedded.org
-Date: Wed, 12 Nov 2025 15:57:06 +0000
-In-Reply-To: <f0f7ae6b-33f2-402a-86f2-4714f07af30e@emlix.com>
-References: <f0f7ae6b-33f2-402a-86f2-4714f07af30e@emlix.com>
+To: Qi.Chen@windriver.com, bitbake-devel@lists.openembedded.org
+Cc: alex.kanavin@gmail.com
+Date: Wed, 12 Nov 2025 16:01:26 +0000
+In-Reply-To: <20251112055736.3078776-1-Qi.Chen@windriver.com>
+References: <20251112055736.3078776-1-Qi.Chen@windriver.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.0-1 
@@ -66,29 +67,65 @@ MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 12 Nov 2025 15:57:10 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18357
+ <bitbake-devel@lists.openembedded.org>; Wed, 12 Nov 2025 16:01:40 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18358
 
-On Tue, 2025-11-11 at 16:55 +0100, Isaac True via lists.openembedded.org wr=
-ote:
-> I'm experience some confusing behaviour when trying to add PREMIRRORS to=
-=20
-> use an internal proxy for source files fetched over HTTPS, and I'm=20
-> wondering if this is the intended behaviour or if this is a bug.
+On Wed, 2025-11-12 at 13:57 +0800, Chen Qi via lists.openembedded.org wrote=
+:
+> From: Chen Qi <Qi.Chen@windriver.com>
+>=20
+> In this way, users can continue to override settings such as MACHINE
+> via local.conf and env vars with plain '=3D' setting.
+>=20
+> Fixes [YOCTO #16060]
+>=20
+> Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+> ---
+> =C2=A0lib/bb/parse/ast.py | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+> index e6ff1ff76..f9d93aa0f 100644
+> --- a/lib/bb/parse/ast.py
+> +++ b/lib/bb/parse/ast.py
+> @@ -373,7 +373,7 @@ class AddFragmentsNode(AstNode):
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 lo=
+ginfo["detail"] =3D f"{value} ({self.fragments_variable} contains \"{fragme=
+nt}\")"
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 br=
+eak
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 # parsing=3DTrue since we want to emulate X=3DY an=
+d allow X:override=3DZ to continue to exist
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 data.setVar(builtin_fragments[prefix], value, parsing=3D=
+True, **loginfo)
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 data.setVarFlag(builtin_fragments[prefix], '_defaultval'=
+, value, parsing=3DTrue, **loginfo)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 return True
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+return False
+>=20
 
-It is a known bug. It was mentioned in the weekly status reports for a whil=
-e.
 
-Basically nobody has been able to find the time to dive in and unravel
-things to make everything work as it should.
+This is a tough one.=C2=A0I've thought about the two sides to this and you
+can argue it both ways.
 
-There may be an open bug for it (I hope!) but if not we should have one
-open.
+If we do this, we will get questions of "I set this fragment, why
+didn't it actually do that?".
 
-We may need to introduce a new parameter with different semantics and
-remove the current one to properly solve it, going from memory.
+I think if you specify a fragment and it should override the conf
+files...
 
 Cheers,
 
 Richard
+
+
+
+
 
