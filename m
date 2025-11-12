@@ -1,135 +1,94 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C01ACD1297
-	for <webhook@archiver.kernel.org>; Wed, 12 Nov 2025 15:41:30 +0000 (UTC)
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.252.1762962088179508772
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAB1CD1297
+	for <webhook@archiver.kernel.org>; Wed, 12 Nov 2025 15:57:10 +0000 (UTC)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.650.1762963029487300072
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 12 Nov 2025 07:41:28 -0800
+ Wed, 12 Nov 2025 07:57:09 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=TUEg37s/;
- spf=pass (domain: gmail.com, ip: 209.85.166.182, mailfrom: jpewhacker@gmail.com)
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-43323851d03so3415485ab.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 12 Nov 2025 07:41:28 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=FGn92wnQ;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.49, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4777771ed1aso7544435e9.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 12 Nov 2025 07:57:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762962087; x=1763566887; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xXcfGfAPlumYckXOhqNnWJhXBJJ+4rqAuFjXu+9WaNc=;
-        b=TUEg37s/27/LXMgT+ZMFWpGSUtNniDHYhAUjXR9zJikxhmB0cljEsFv7ZFqaV2wtsK
-         fEc6zm86S5A4MzOCWwZO5UkS3ozaFlKsTEOvN/eWt7UgUovhJj+nTkTDG1r6kchJESBW
-         i4sAM7qZlyNVOgKf6u1cqg6uOci8k3jiMGMKJAn/4vOe79bIrvbvhgabXpe8gO91Ch9O
-         KySSe2gFd+FW2i5ksEKZqkFpHY9HXfdEkZJBJzz0qHHCGp1Ok9BTrYKEs6ODIU1pTjmP
-         nCQ+NBg+D8Stdrq2u6dBpBCoby7fWvGHQ8eRM8/ZpoDNtlVkP7onUtjdRy2Qo1ijYbJG
-         MGEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762962087; x=1763566887;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=linuxfoundation.org; s=google; t=1762963028; x=1763567828; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xXcfGfAPlumYckXOhqNnWJhXBJJ+4rqAuFjXu+9WaNc=;
-        b=TSof/pPZPp8OLzEjPHb2Waf1KzD/90YO/7ezySrSrBAvZE8iYIGxcRbpXlSVjjVYbq
-         8S7WsNz7hpDTLOzZSiYtI66eQAv4Gs85g+PKnLhRD4ieUMdMgHW4Ix+Zt+tBN26c20Kt
-         G4/xlzWCkTyRts9XlzbXtkEI2CjnzBz2yzfWyY+UjiYhDiIJzpviFVAg7/3ouhlcnVXs
-         gzZDoB7S0RqN8Xz5SeSVQrgLBXI9XKhPaNKqi++CwTcGLRCgw4BczJPF+5GveaCCa8re
-         GoVXiQ9Scp6eYVMaytLvGJW+gKRMsLXlXTyJBStBQ9h0wOb4e2/d/PGz0mNcjC6k1pG/
-         naEA==
-X-Gm-Message-State: AOJu0YzjTdlL8kde0obq+LsNoqPxwiK7wFBMgv0PUVLWPZ1jWJjabCeq
-	IJinGO2r/re0QE5My8hr3Y8tITcQ0j+JZzQtIWNXVC/gYvWrtiLfhCCQq+tN1w==
-X-Gm-Gg: ASbGncvSPJNjDWLcIWf7NRufM3eegw8r8yZBHajEGQChjz4BDBrP6dLGHMxDZA850RN
-	+ejcCdrdLgOCSpvAS84/Ci//SupxSFiOWpF4RprmerSJdBhek3cukq/ym0kic3kuSD7dacfjJTS
-	PKY1xdIhm1eu6pEkWfRtpijRnHusw0skPoissc/FA74dY75DH1cTnDJtm+cbPCLedq4ZoE4NiID
-	DtYuaxvacq1qO7mAEIBh/4hPm1VdVBM47CLH71UH/rWoDHxOqVWBgB8Y1YG2tRG2UudfYBVaG5T
-	OcjT/yIB6B/E8/91cRIaIuRL4kQnXg9dLZEFSS3zoO2dVVJwONTjKpuJGYzEGeE92hMSKyWS2jc
-	MxhRF6PTt0jDkAXptH9TIUxWjzba8izYEjJ9VvkT2gnWslKb2EU8i/ilPfwPhM0LydXR95Fwd/w
-	==
-X-Google-Smtp-Source: AGHT+IHSq8uus1Hmdo7pOZXws2ESNl/07FXnzPys47fFFLVzXlmBUpfugUW0vHl0290upJuf6TwmKA==
-X-Received: by 2002:a92:ca4d:0:b0:434:70bd:8b47 with SMTP id e9e14a558f8ab-43473d117f6mr54250615ab.11.1762962087113;
-        Wed, 12 Nov 2025 07:41:27 -0800 (PST)
-Received: from localhost.localdomain ([2601:282:4300:19e0::51c7])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b7aaf77e24sm1154289173.16.2025.11.12.07.41.26
+        bh=P18GHdmm8qef2Ad5vl6nP7nCl3Mz7iwdzrfmGopF02Q=;
+        b=FGn92wnQT4wc9LFkLGgrCOTFPPysLHoMkXYrH7iHLVRDI+BebtWZhdkeZsA0Tpz+ak
+         nHFPSTJShTPkRIKLzqbY8K0vnOqmHzlZtC8jBTmpQ42L890ePUSvbb1TJ2oiEmYZ9SRo
+         zyF/8cyJJhFaohmsCmGzYqzObDIftcoFsl3jg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762963028; x=1763567828;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P18GHdmm8qef2Ad5vl6nP7nCl3Mz7iwdzrfmGopF02Q=;
+        b=lDPE+Kj5ZjtdXVkp5dtPKrmhTbv5PMgWjldekTgHnd+s18oHk7tGHqnttopIGxFiN1
+         IcukpImZAkrKn/sgQbJh6yRBOxcb6OZpyFQZWJZeqkNXWAmQNtWFYfzjluXAZlyHO+Cq
+         ZXHz4WbdZaflIc8SKtKOnnU2V83BAEgaC6c7TKZ3XrNBpXY8jQGqTmMz2bGW68qliAoy
+         r3U4/rOOF8aQXMO6BhEzDtegQXDvdTSBWVM2Nyg+39q6Yc+GKfbNXe4H0O70gq9v/MYA
+         7U+tZzLdvRKeEyDoQcDdkjinGf3CHJfwYe4crqTDfp/6ddTxfsEVC9gMUvhXd7gUjo1K
+         00Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCWg25+qGoxHyOGWUM4BPAqiW8NxvaH7UuwsOtdwcNPyjeUMtHT2xXR4X3XsPBBDydEYw8cpRC4+Ke6diyzW@lists.openembedded.org
+X-Gm-Message-State: AOJu0YzMouxFBqzH0WTsF1049U5VAzF01IGg6KYAJ2MHdhL4seYJXdp2
+	fDrMqV9/XwCYx8vy5Y+xEjBUAvOM8VfF/k2f2JEJawJOc1/u5v87j06kNIrmeKqpOe8=
+X-Gm-Gg: ASbGncvakdGU7zGH0N3t6rPEHZAByRDmHZMt9k5HB/SnRmmzijExr3cAjwY/vkfOKwP
+	SUIZG99tPjVaYC2tC04MSoq11GfOcg02tcMUP8npsG8JB7WHk1rYcGzL8Ve5i7qVwBAH/V72ggk
+	X3xAdQbDLo7QHSJNC2Durdw+nlfoWjV/6xJVcQKBml7KgUyRccQ3VFclW9YZqgsFGWExEu+yfZW
+	zToB78szLP5e4KNvagdVEE8xPltn2/ys1PdFXJ7ugJpRd7gOnA2DD6njfgi8tDFGah7AdlpKzxH
+	T6OKvOtjROd7H3R6vSGFHmzoQtVySFs2OV3HE4ZThupkXAuAe165sFbSLXuuhDS3W8jDD2JyNy4
+	hlw8inFWqMvQm05Gp1X7Sz13zMybNea/EZZS5qUXIr/RJTmf6mLD463+RxDJZmZBRkLOF2b1I56
+	nzwLsvb+tPFMev0oPXhEjKcRdlCl7VHllUFiChjnXyPvdYQOBJqe0jYufj3u6iet6f
+X-Google-Smtp-Source: AGHT+IFNYx0hJvOMmTe5OY70Aua1IdSIMekhw/AM5/BxQ8Glb0jtlyFlNxCuQtsT0Hkt/HxpMBjzXQ==
+X-Received: by 2002:a05:600c:6305:b0:477:1bb6:17de with SMTP id 5b1f17b1804b1-477870a6bc2mr37957735e9.30.1762963027818;
+        Wed, 12 Nov 2025 07:57:07 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:8876:d08f:2a0c:d6ff? ([2001:8b0:aba:5f3c:8876:d08f:2a0c:d6ff])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42ac67921c3sm35500621f8f.40.2025.11.12.07.57.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Nov 2025 07:41:26 -0800 (PST)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH 1/2] bitbake-setup: Set DL_DIR and SSTATE_DIR in default site.conf
-Date: Wed, 12 Nov 2025 08:41:20 -0700
-Message-ID: <20251112154121.3750738-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.51.1
+        Wed, 12 Nov 2025 07:57:07 -0800 (PST)
+Message-ID: <6c4906cefa9846025d944edc02351bcfc9f3f42c.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] Combining PREMIRRORS and downloadfilename with
+ wget
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: isaac.true@emlix.com, bitbake-devel@lists.openembedded.org
+Date: Wed, 12 Nov 2025 15:57:06 +0000
+In-Reply-To: <f0f7ae6b-33f2-402a-86f2-4714f07af30e@emlix.com>
+References: <f0f7ae6b-33f2-402a-86f2-4714f07af30e@emlix.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0-1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 12 Nov 2025 15:41:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18355
+ <bitbake-devel@lists.openembedded.org>; Wed, 12 Nov 2025 15:57:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18357
 
-When bitbake-setup writes out a site.conf file, populate it with a
-default DL_DIR and SSTATE_DIR. By default, DL_DIR will point to the same
-DL_DIR that bitbake-setup is configured to use, and SSTATE_DIR will be a
-"sstate" directory under the top level bitbake setup directory
+On Tue, 2025-11-11 at 16:55 +0100, Isaac True via lists.openembedded.org wr=
+ote:
+> I'm experience some confusing behaviour when trying to add PREMIRRORS to=
+=20
+> use an internal proxy for source files fetched over HTTPS, and I'm=20
+> wondering if this is the intended behaviour or if this is a bug.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- bin/bitbake-setup | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+It is a known bug. It was mentioned in the weekly status reports for a whil=
+e.
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index 59f501948..590828c9b 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -19,6 +19,7 @@ import datetime
- import glob
- import subprocess
- import copy
-+import textwrap
- 
- default_registry = os.path.normpath(os.path.dirname(__file__) + "/../default-registry")
- 
-@@ -469,7 +470,7 @@ def init_config(top_dir, settings, args, d):
-         progress = event.progress if event.progress > 0 else 0
-         print("{}% {}                ".format(progress, rate), file=stdout, end='\r')
- 
--    create_siteconf(top_dir, args.non_interactive)
-+    create_siteconf(top_dir, args.non_interactive, settings)
-     source_overrides = json.load(open(args.source_overrides)) if args.source_overrides else {'sources':{}}
-     upstream_config = obtain_config(top_dir, settings, args, source_overrides, d)
-     print("\nRun 'bitbake-setup init --non-interactive {}' to select this configuration non-interactively.\n".format(" ".join(upstream_config['non-interactive-cmdline-options'])))
-@@ -672,7 +673,7 @@ def install_buildtools(top_dir, settings, args, d):
-     print("Buildtools archive is downloaded into {} and its content installed into {}".format(buildtools_download_dir, buildtools_install_dir))
-     subprocess.check_call("{} -d {} --downloads-directory {}".format(install_buildtools, buildtools_install_dir, buildtools_download_dir), shell=True)
- 
--def create_siteconf(top_dir, non_interactive=True):
-+def create_siteconf(top_dir, non_interactive, settings):
-     siteconfpath = os.path.join(top_dir, 'site.conf')
-     if os.path.exists(siteconfpath):
-         print('A site.conf file already exists. Please remove it if you would like to replace it with a default one')
-@@ -682,7 +683,19 @@ def create_siteconf(top_dir, non_interactive=True):
- 
-         os.makedirs(os.path.dirname(top_dir), exist_ok=True)
-         with open(siteconfpath, 'w') as siteconffile:
--            siteconffile.write('# This file is intended for build host-specific bitbake settings\n')
-+            siteconffile.write(
-+                textwrap.dedent(
-+                    """\
-+                    # This file is intended for build host-specific bitbake settings
-+                    DL_DIR = "{dl_dir}"
-+                    SSTATE_DIR = "{top_dir}/sstate"
-+                    """.format(
-+                        dl_dir=settings["default"]["dl-dir"],
-+                        top_dir=top_dir,
-+                    )
-+                )
-+            )
-+
- 
- def topdir_settings_path(top_dir):
-     return os.path.join(top_dir, 'settings.conf')
--- 
-2.51.1
+Basically nobody has been able to find the time to dive in and unravel
+things to make everything work as it should.
 
+There may be an open bug for it (I hope!) but if not we should have one
+open.
+
+We may need to introduce a new parameter with different semantics and
+remove the current one to properly solve it, going from memory.
+
+Cheers,
+
+Richard
 
