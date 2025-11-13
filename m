@@ -1,85 +1,167 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC8ECD5BCE
-	for <webhook@archiver.kernel.org>; Thu, 13 Nov 2025 11:36:47 +0000 (UTC)
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.21820.1763033800752267215
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E2FCD6E4D
+	for <webhook@archiver.kernel.org>; Thu, 13 Nov 2025 12:40:58 +0000 (UTC)
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.22885.1763037652800408608
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 13 Nov 2025 03:36:40 -0800
+ Thu, 13 Nov 2025 04:40:53 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=FLGSXMZK;
- spf=pass (domain: gmail.com, ip: 209.85.160.180, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4e4d9fc4316so5854501cf.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 13 Nov 2025 03:36:40 -0800 (PST)
+ dkim=pass header.i=@smile.fr header.s=google header.b=zV+NZsxX;
+ spf=pass (domain: smile.fr, ip: 209.85.221.42, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-42b387483bbso642603f8f.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 13 Nov 2025 04:40:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763033800; x=1763638600; darn=lists.openembedded.org;
+        d=smile.fr; s=google; t=1763037651; x=1763642451; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+ik58OCQCsn4XthGTF7wnFrChI/KsceArfEJtlEm0TE=;
-        b=FLGSXMZKNfk2WACe2bYJldHD32/xvr+3t6uXjmjZ7YZ8smf80TD28oveXr13ae59gL
-         dEHh/GEzHhmJqRP/aVm/SQ0VK9cLdLoOAekPILDLm/tOiJwBISrhhRHD2abmVdcdKn3H
-         2EJpwrhFAngjQBnT9Iry7wgdDdpQpkj3ymvsJiQYMVgboxVvZi0O4eF2LkDCMj/RSUa0
-         STj3NWP5FokaE6zXOxSkZ4e8ARA7l8rz1Pli0P4J/xSdEu//8TpbL94SbNEwYfv+4bRa
-         WgB6e4CQlGPow4IWe+NlXYovXA4vVHNudAz8uAShL6zLLwdld0eTTVZLa+vRDL7rPDlM
-         GVRA==
+        bh=y2GhkxtpGoGyB+mImIBwZQXadPNRnaHs8N6F/1z4s9w=;
+        b=zV+NZsxXqpgGL9LlVE8pprMaiazkDRCASWm/N0Afz4lOGGyO2RkfrogMibwN+2wHzX
+         KIE4SjcoRUwjpxGm+Hz/8xaAPHWVjXrLqN05hLCWC4AJeaPENzgNEnpJVwgtzolvJLmI
+         iFPD/CW5eOnERq+xUkC32qRaUpWD/ahhhyds0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763033800; x=1763638600;
+        d=1e100.net; s=20230601; t=1763037651; x=1763642451;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+ik58OCQCsn4XthGTF7wnFrChI/KsceArfEJtlEm0TE=;
-        b=wJUzAhRfUQe4XYcr+KLV03/t+RfrfShiVxj7RfESsvmagWNtqtCgK42CBiVXy7SCzU
-         CkiJJ1ftfcthvY5B7YMA03pt7O7t1nXV/pyNk8U8KKPPiRTMLMfW4BrvLE4uH5OwAsTb
-         hBOiWx2UyGuPuDgl7hciw+nYBEhFPoN//FW1wKnlJaDreHfX71BYDiwqaOM7MyPmXN3b
-         ci1ol7srK0T+lbSQ40+4VvuUNdpjK5841O86RfKXhjZKkM1W9G22ygb/uaxfHa61wyn6
-         +xZ2AFZ6Nj/akEqJm+ktFSUO1iOzRT7k1qPatToaEvZrIUI2fTLDGGaGOyddp90RySLj
-         thxg==
-X-Gm-Message-State: AOJu0YwupmZHWMayAKxM/jkhLYRQblLHlp0ZKUTfRxy30k7pfrsABYT9
-	m8joxiqMAzXq+B/FLH3ay1WqXDkR2wKlguJlGJT6t5XvJ2DW8sbokx0UdxdKaBkRcLce2fYdNEO
-	Uci/Hsv5PjKd/3/o5zEPcCe04lpm556Q=
-X-Gm-Gg: ASbGncvqoPz+UL6jnE0uzhiPX1i0DEqdk+vQpmVDx8eLstCbzQn+oBQ6CPb1E6GZg5Q
-	QEgeOlVsEWcNFWm44bCDkkkGwHwIuJyc4wGP3CSYJXF1x3FvoEhSbuq89sf42Q9ivGNocMd2GMs
-	580xDAAODLKYeFkfHmHwOiygpEsMgW5GWPhdMd7kiaFCa5h7yxGlvJ396QHpDclLgKtBW3SqfWF
-	AMzWcFskSIk2wDD1hc3icJOlColW/N/mW4Qik//qRJhJhHKJo8J2KTXeXS3pJ6T7Uk8GiIVOu2u
-	FNLdTsjif4/TD9eEV0M=
-X-Google-Smtp-Source: AGHT+IFTTAJyEB2PY6l/Lb1fuHjKe6FOm5iAb3IQkdY3BV9WUHr4+6uLdoS7rD3uOLzjelYtM3/BEM94VQS9IH9N94c=
-X-Received: by 2002:a05:622a:1490:b0:4eb:9c63:e279 with SMTP id
- d75a77b69052e-4eddbc4dfe3mr97316951cf.16.1763033799713; Thu, 13 Nov 2025
- 03:36:39 -0800 (PST)
+        bh=y2GhkxtpGoGyB+mImIBwZQXadPNRnaHs8N6F/1z4s9w=;
+        b=bNVV4Ac2CBB0GDeCkGudEjWGoBRAogqBHpXmcMdsi4v0DWiVIT+wIn7CVnJBOqAUjQ
+         IGooxr6Si3d76VXCurGUNl9MKi5K8W2gvdzMDLBqYNvgxeVlYq50ldjTLsbGkuUMeYnl
+         vBRNiElLFVqAQDmFNHpkSNqTkaB/a4X1LcpyBSaMu9OFClylJ4EfUdVNAQZeSOrTxqyI
+         YQT9nfvtzQDAK2/JRnXDNkN2Cn6SQOBwfBMr+i1KaP/73ta+UqP/JrFHDc6SxqkBLGen
+         tPiH06nGRlOIvPU+2wSzV3smf30SXeWk914rpcO9bRFfWFnPbn4Lr/nsQ9Ds8RF8Q1V5
+         2SDQ==
+X-Gm-Message-State: AOJu0YyKVvDmLaZGY4y3i2X14sJg6bwXs0/u8Q1JbaS0nds+7+Pn8Z6N
+	lo2apH0w5LIBdbxpyn1wGxq7BHFrOFlBS9T3l8BOOWImOyUHyvWmQLmrPMrcKZd2HSvx9v3URhF
+	amXSTlz7WGJC+jsHw241ervElkpjFIRtxcb1g4+NCkw==
+X-Gm-Gg: ASbGnctufNMhmC3Qz7mRgTj8yM9cte2XfV1+udEyRIZDuI1kHyElqJ09gxVo7CXo8fJ
+	svyvR3HPFEoRmtyn+04TenllSbSv4I252QvXFV5lMlffVl8SvatRO46zBUoz0AeB8dPaTt0Ep0P
+	C4aWrlMEb2L41iKXj+sABCaw+LxOC8dC3gYCdH4WI/CKrgW19pu5Wcqd2yXa+YizOARjDkrkqvf
+	bdHnEierQH1fSaOJhguBwoEXJ8vYWHCUMXcUPQLdp/DE0EQpIoV5kDSjLvnmOYEl19wBCBVT3n2
+	SOjPKXzzT82SPjyok2zcKG/wMf0aJw==
+X-Google-Smtp-Source: AGHT+IHgE8d6/QA5dGLuy5q9jplMG0BlGDJ91C9Y7v/NlwVNHKDTN5Mv0R5Dz1QU/qOGMPKpNW3r/dMicFnzPOCP0sQ=
+X-Received: by 2002:a05:6000:2006:b0:429:c4bb:fbc5 with SMTP id
+ ffacd0b85a97d-42b4bb87694mr4436593f8f.7.1763037651035; Thu, 13 Nov 2025
+ 04:40:51 -0800 (PST)
 MIME-Version: 1.0
 References: <2acc6d2e53840e35ca2d99839e89d94e136dd304.camel@linuxfoundation.org>
 In-Reply-To: <2acc6d2e53840e35ca2d99839e89d94e136dd304.camel@linuxfoundation.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Thu, 13 Nov 2025 12:36:28 +0100
-X-Gm-Features: AWmQ_bmD9hSV_2Ho88rlYa0cKfVoa4IcJOGT9wS8fv8elyfs41sLcaaHXnFRGSY
-Message-ID: <CANNYZj8xA39G4n48H+qqeGSHG_q5y-PaLMbvsBEXVNmsj6OWPw@mail.gmail.com>
-Subject: Re: bitbake-setup steps for release
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
+From: Yoann Congal <yoann.congal@smile.fr>
+Date: Thu, 13 Nov 2025 13:40:24 +0100
+X-Gm-Features: AWmQ_bmxV5jGXXXwkp51x9AMbLjo_2F-dp1w3_y5xLG_AfHesTJueG9GAp5NjbQ
+Message-ID: <CAMSfU+49avzzK7OYFtGAT+R39Eppp_ggjyTPb6Y7hAi9G=iDjQ@mail.gmail.com>
+Subject: Re: [bitbake-devel] bitbake-setup steps for release
+To: richard.purdie@linuxfoundation.org
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>, Paul Barker <paul@pbarker.dev>, 
-	Ross Burton <ross.burton@arm.com>, reatmon <reatmon@ti.com>, 
+	Alexander Kanavin <alex.kanavin@gmail.com>, Ross Burton <ross.burton@arm.com>, reatmon <reatmon@ti.com>, 
 	Robert Yang <liezhi.yang@windriver.com>, "antonin.godard" <antonin.godard@bootlin.com>, 
 	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, Joshua Watt <JPEWhacker@gmail.com>, 
-	Adrian Freihofer <adrian.freihofer@siemens.com>
-Content-Type: text/plain; charset="UTF-8"
+	Adrian Freihofer <adrian.freihofer@siemens.com>, 
+	Corentin GUILLEVIC <corentin.guillevic@smile.fr>
+Content-Type: multipart/alternative; boundary="000000000000ea7bae064379303a"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 13 Nov 2025 11:36:47 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18370
+ <bitbake-devel@lists.openembedded.org>; Thu, 13 Nov 2025 12:40:58 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18371
 
-On Thu, 13 Nov 2025 at 12:16, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
+--000000000000ea7bae064379303a
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Le jeu. 13 nov. 2025 =C3=A0 12:16, Richard Purdie via lists.openembedded.or=
+g
+<richard.purdie=3Dlinuxfoundation.org@lists.openembedded.org> a =C3=A9crit =
+:
 
 > I'll let anyone add anything I've missed.
 
-There are a couple important tweaks in
-https://git.openembedded.org/bitbake-contrib/log/?h=mathieu/master-next
-that were overlooked:
 
-lib/bb/parse/ast.py: exit immediately when fragement is not found
-bitbake-setup: make "path" optional
+FYI, we are working to simplify the "git-remote" element for the simple
+(and IMHO most common) case : a single remote called "origin".
+In this case, we plan to be able to replace
 
-Alex
+        "bitbake": {
+            "git-remote": {
+                "remotes": {
+                    "origin": {
+                        "uri":
+"git://git.openembedded.org/bitbake;protocol=3Dhttps"
+                    }
+                },
+                "rev": "master"
+            },
+        },
+
+by
+
+        "bitbake": {
+            "git-remote": {
+                "uri": "git://git.openembedded.org/bitbake;protocol=3Dhttps=
+",
+                "rev": "master"
+            }
+        },
+
+"uri" and "remote" would then be mutually exclusive.
+
+Originally I planned to discuss this around the working patches but since
+you asked...
+I'm not sure we can send this before the release deadline though, but I
+feel like this is something that can be added between the release and the
+LTS.
+On the other hand, if there is a strong opinion for integrating that into
+the release I can shuffle priorities and make it happen.
+--=20
+Yoann Congal
+Smile ECS
+
+--000000000000ea7bae064379303a
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr">Le=C2=A0jeu. 13 nov. 2025 =C3=A0=C2=A012:=
+16, Richard Purdie via <a href=3D"http://lists.openembedded.org">lists.open=
+embedded.org</a> &lt;richard.purdie=3D<a href=3D"mailto:linuxfoundation.org=
+@lists.openembedded.org">linuxfoundation.org@lists.openembedded.org</a>&gt;=
+ a =C3=A9crit=C2=A0:</div><div class=3D"gmail_quote gmail_quote_container">=
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
+left:1px solid rgb(204,204,204);padding-left:1ex">
+I&#39;ll let anyone add anything I&#39;ve missed.
+</blockquote></div><div><br></div><div>FYI, we are working to simplify the =
+&quot;git-remote&quot; element for the simple (and IMHO most common) case :=
+ a single remote called &quot;origin&quot;.</div><div>In this case, we plan=
+ to be able to replace<br><pre>        &quot;bitbake&quot;: {
+            &quot;git-remote&quot;: {
+                &quot;remotes&quot;: {
+                    &quot;origin&quot;: {
+                        &quot;uri&quot;: &quot;git://<a href=3D"http://git.=
+openembedded.org/bitbake;protocol=3Dhttps">git.openembedded.org/bitbake;pro=
+tocol=3Dhttps</a>&quot;=20
+                    }
+                },
+                &quot;rev&quot;: &quot;master&quot;=20
+            },
+        },<br></pre>by</div><div><pre>        &quot;bitbake&quot;: {
+            &quot;git-remote&quot;: {
+                &quot;uri&quot;: &quot;git://<a href=3D"http://git.openembe=
+dded.org/bitbake;protocol=3Dhttps">git.openembedded.org/bitbake;protocol=3D=
+https</a>&quot;,
+                &quot;rev&quot;: &quot;master&quot;=20
+            }
+        },<br></pre>&quot;uri&quot; and &quot;remote&quot; would then be mu=
+tually exclusive.</div><div><br></div><div>Originally I planned to discuss =
+this around the working patches but since you asked...</div><div>I&#39;m no=
+t sure we can send this before the release deadline though, but I feel like=
+ this is something that can be added between the release and the LTS.</div>=
+<div>On the other hand, if there is a strong opinion for integrating that i=
+nto the release I can shuffle priorities and=C2=A0make it happen.=C2=A0</di=
+v><span class=3D"gmail_signature_prefix">-- </span><br><div dir=3D"ltr" cla=
+ss=3D"gmail_signature"><div dir=3D"ltr"><font face=3D"Raleway, regular">Yoa=
+nn Congal</font><div><font face=3D"Raleway, regular">Smile ECS</font></div>=
+</div></div></div>
+
+--000000000000ea7bae064379303a--
 
