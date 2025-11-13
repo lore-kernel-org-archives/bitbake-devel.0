@@ -2,89 +2,90 @@ Return-Path: <paul@pbarker.dev>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0363CD8C91
-	for <webhook@archiver.kernel.org>; Thu, 13 Nov 2025 15:20:59 +0000 (UTC)
-Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.26524.1763047251928286921
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB934CD8C94
+	for <webhook@archiver.kernel.org>; Thu, 13 Nov 2025 15:30:39 +0000 (UTC)
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.26573.1763047835695294892
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 13 Nov 2025 07:20:52 -0800
+ Thu, 13 Nov 2025 07:30:35 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@pbarker.dev header.s=fm2 header.b=DbXUgiGq;
- dkim=pass header.i=@messagingengine.com header.s=fm3 header.b=V0kXIVK0;
- spf=pass (domain: pbarker.dev, ip: 103.168.172.144, mailfrom: paul@pbarker.dev)
+ dkim=pass header.i=@pbarker.dev header.s=fm2 header.b=BSNHJ2EV;
+ dkim=pass header.i=@messagingengine.com header.s=fm3 header.b=VoLiDf9Q;
+ spf=pass (domain: pbarker.dev, ip: 103.168.172.155, mailfrom: paul@pbarker.dev)
 Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfout.phl.internal (Postfix) with ESMTP id 350D6EC020D;
-	Thu, 13 Nov 2025 10:20:51 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Thu, 13 Nov 2025 10:20:51 -0500
+	by mailfhigh.phl.internal (Postfix) with ESMTP id A28FE14001DC;
+	Thu, 13 Nov 2025 10:30:34 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-03.internal (MEProxy); Thu, 13 Nov 2025 10:30:34 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
 	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
 	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1763047251; x=1763133651; bh=VqIjI6mffF
-	ctlTJ1UdzmOxqHqRYU7+qP/vmYg3AFwEs=; b=DbXUgiGq6sB1fG0qF9gj5sdbbE
-	JtmV8B1XkqPeanzLSbiokrBlZ1Ht6649CzAn/cmkmgYJNkNI93zPxFvurYe3ATeJ
-	HrCi+rRWoadFlc666zFpcIUozCgkWwglwZLSq2d25WXbDkPhmlCEDfkGi92DiyWe
-	xFtP1Tp14SsT21ZGgMKA6VApwamPNKN7IcyTmYQ482vOTdRp8pIRCfXef66IF0Hu
-	jybI/QfTG7wXbW4T8/Y23rljkHIBQ+UeAqHMv38jf5Fg8RjzyudCS0B5HSnqjg2A
-	Mf7BoJulUvqoiSCAOEdkpfetsC9XmhSh5uLXohiKC4eRDQe0JO2vKe4+nZNA==
+	:subject:to:to; s=fm2; t=1763047834; x=1763134234; bh=Q7kleZ5a8G
+	qtF4VLw+ETWDEHyYZHqRaGGvZ3GDEVQl4=; b=BSNHJ2EVc0BqwzxwUtG3zi5gpn
+	YX4D0w0r61T7bGP/zVwoeZ3ahPA8XhLg9QTwveVXqMk9Zn+dDZMuJxE5fbXjpYq5
+	8mIZNh/+xAVjSt618FSHIo4FdmIncDvI/q1exiy+sDMsdZW5FzeILf4FmDWdGxfV
+	XAcvoRongGpLCsF7/wHWXJ38juBKAymvp9RstlaUqsNOFLrV/pnpZ75bdFsTtSKl
+	ecm0G4gQAzBYfiiGOjsL6XwUUwJ+A4S7cQCd1o7e8Ut700RM9E4A76slTqv5q8vP
+	Cs3HlwYY5XtaUJvoiwatQeYl+hfRni+C2naUdbbcEvwKru0TRvIQhIsWsBQA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-type:content-type:date:date
 	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
 	:message-id:mime-version:references:reply-to:subject:subject:to
 	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1763047251; x=1763133651; bh=VqIjI6mffFctlTJ1UdzmOxqHqRYU7+qP/vm
-	Yg3AFwEs=; b=V0kXIVK0JalzE0OmVyoFwmoKNMJbtgNGZoZZfPBfdMgNafYNM4r
-	GI7YglIDhmdMDz0elO1ZDbGcYqFiKWN2UgdyQ3s4qkU3iYzddC26snwn0U9QXohT
-	co7PsOXBjth+PMSr9sU2la7Tc/BSMHD1panVDqQMy5oWWgJl99h2kdVx1b4pJZDc
-	OkoJ9B02ErOdsCSlU0aDu0GgvbwuOEBDUXWLNppx+R7k/98kFh6xH6NFVZN1tJlA
-	eq529RFEVCafuYyGzlytA+43RNLVchYwaegzGsaQlGqV+siiHiqnQ8ozeHxQxM1q
-	z9QGLUm1FncydSuPsOfsOfMwTGJIXGWGN1g==
-X-ME-Sender: <xms:UvcVadyUiexgNIvjXB7tsFMSb9jl2hqBPghOnoaMWu04iVXs3x-AFw>
-    <xme:UvcVaZ3w7czE_S5rWyH90cl0hCz7V2zQ0USHBIOWtq-w_MqbEgs84UjQWb3lNj_6s
-    _MVqCM4oG0yDggc4ygBkPbfvoRCVMQIIMz655b-ig14aI3kCfqq>
-X-ME-Received: <xmr:UvcVaby53nG8Z-aDnH7VgNjYeLiq3wWB9-pL5jrT_zqKnjojLhZPQcJuyvqIYWVEI1BAiYhIDRKjm53o91iUuZTGISNxUA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvtdejvdelucetufdoteggodetrf
+	1763047834; x=1763134234; bh=Q7kleZ5a8GqtF4VLw+ETWDEHyYZHqRaGGvZ
+	3GDEVQl4=; b=VoLiDf9QBsFYlXwAYNsrl78Q3+bNL4C53dDrGB1zzplnuAX14af
+	NA0SkuHBOdZRZ/OO89oko+pWOLw3oRh4+5zk1htlLpITuhgtrVovAvCF23bLbzio
+	rAbP57xPxFNX/QoBeaMTklzc7HvKyDjaTzPCbrZBZLveQVVo/wqcSRkMB+PFHDoQ
+	4gFOy3NeJg55Q1oj+d/lqSFyFEFo5jgCz/ilOwCV/m+fRGfY0R1SbsGsTKZyumvr
+	pc7nFR4L8tdALG7SabmXe6yBMl8v8tJQLYTgll6IVzdWUZtRkH1AJRbEaAaAVlP3
+	FGEr4JsdPeKpW0y03FvrXytOGVixE4Ga0UA==
+X-ME-Sender: <xms:mvkVafhKM0on1KqQw6lwMBsTCq2U878mKp7F7RdR1xdAnxFkXEayWQ>
+    <xme:mvkVaYminVGi4ukFikkea-wYgfxHmHw2URJ0vpkVtfDglVXNEN2BIRIWBDVGPFDQO
+    _EBfyJ6Ne9LwkTNf0wA6kxk65qqkunvDPIG4-QnNO_nxCxKqbHT>
+X-ME-Received: <xmr:mvkVaTiDF3jtiQkAmX9cO3wPGSd7CUOid60RxFIept4xGdw0vKhj8Fy77N5hKsGWb0cl3OdbEV_i5TVQx7KF4IQ3q_b-MA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvtdejfedtucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhepkffuhffvveffjghftggfggesghdtreertderjeenucfhrhhomheprfgruhhluceu
     rghrkhgvrhcuoehprghulhesphgsrghrkhgvrhdruggvvheqnecuggftrfgrthhtvghrnh
-    epfeffvdefgeevkeduhfetueehhfeikedvieeufeevieffueektdeluddtgfegveehnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepphgruhhlse
-    hpsggrrhhkvghrrdguvghvpdhnsggprhgtphhtthhopedutddpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtohepjhhpvgifhhgrtghkvghrsehgmhgrihhlrdgtohhmpdhrtghpth
-    htoheprhhitghhrghrugdrphhurhguihgvsehlihhnuhigfhhouhhnuggrthhiohhnrdho
-    rhhgpdhrtghpthhtohepsghithgsrghkvgdquggvvhgvlheslhhishhtshdrohhpvghnvg
-    hmsggvugguvggurdhorhhgpdhrtghpthhtoheprghlvgigrdhkrghnrghvihhnsehgmhgr
-    ihhlrdgtohhmpdhrtghpthhtoheprhhoshhsrdgsuhhrthhonhesrghrmhdrtghomhdprh
-    gtphhtthhopehrvggrthhmohhnsehtihdrtghomhdprhgtphhtthhopehlihgviihhihdr
-    higrnhhgseifihhnughrihhvvghrrdgtohhmpdhrtghpthhtoheprghnthhonhhinhdrgh
-    houggrrhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtohepmhgrthhhihgvuhdrughu
-    sghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomh
-X-ME-Proxy: <xmx:UvcVaWX-eAg3VUUc_AjtENFFibqxqvJ5MHjIgOy_j64NH7e11NqwhQ>
-    <xmx:UvcVaf_mTMdZ-CZkt774pHf2uuAyNjApp5I_A1x7vfDcdbssCEOBzg>
-    <xmx:UvcVaRvsXeEl1N2ktUjLUmEiJkcklyOKQXdlkrWpXNdfDfH_vZUZKA>
-    <xmx:UvcVaX0ywv2QzpXuQfz_7wsmQ6wou1obS9c6EPQZuaf1rhlN9UY9YQ>
-    <xmx:U_cVaSfidIXp4iFAhvkAfdGroBU6rZIBRH6ne7l6OfyucRA3-7-jcJL3>
+    ephfekhfeugfelfeeludellefhkeetvdffiedttdeuueekhfeiudeivdefueehuddtnecu
+    ffhomhgrihhnpehophgvnhgvmhgsvgguuggvugdrohhrghenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehprghulhesphgsrghrkhgvrhdruggv
+    vhdpnhgspghrtghpthhtohepuddtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhope
+    grlhgvgidrkhgrnhgrvhhinhesghhmrghilhdrtghomhdprhgtphhtthhopehrihgthhgr
+    rhgurdhpuhhrughivgeslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtth
+    hopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmhgsvgguuggvugdr
+    ohhrghdprhgtphhtthhopehrohhsshdrsghurhhtohhnsegrrhhmrdgtohhmpdhrtghpth
+    htoheprhgvrghtmhhonhesthhirdgtohhmpdhrtghpthhtoheplhhivgiihhhirdihrghn
+    ghesfihinhgurhhivhgvrhdrtghomhdprhgtphhtthhopegrnhhtohhnihhnrdhgohgurg
+    hrugessghoohhtlhhinhdrtghomhdprhgtphhtthhopehmrghthhhivghurdguuhgsohhi
+    shdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtohepjhhpvgifhhgrtg
+    hkvghrsehgmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:mvkVaTEw_PluqobvMJyc48IbK9Fchv3lEjM7_BkX1bQpKamTckaJWA>
+    <xmx:mvkVadti9kqY4DKYq--LTeL-xCpYELYAcWk3HIFzI2DMLp3XoveEEQ>
+    <xmx:mvkVacdQnyxH3ZnDg2W9DN8qHLicWHGu6S3C4-8pm02UzDz260P7cw>
+    <xmx:mvkVabmXnL8M9hwouqN_6wF-DFskA6FshqsP1fa8enXhSNleXPTx_Q>
+    <xmx:mvkVaaPRa_STSd0d_wiMo11X9lRH2R2q6u2eLJ2481MNcwqJpPtdMrup>
 Feedback-ID: i51494658:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 13 Nov 2025 10:20:48 -0500 (EST)
-Message-ID: <1ca381cd8ac386f7cd17fdada79109e8550fc332.camel@pbarker.dev>
-Subject: Re: bitbake-setup steps for release
+ 13 Nov 2025 10:30:32 -0500 (EST)
+Message-ID: <d6865d19f95b3e7a3addfc14f08ce042a82aa43c.camel@pbarker.dev>
+Subject: Re: [bitbake-devel] bitbake-setup steps for release
 From: Paul Barker <paul@pbarker.dev>
-To: Joshua Watt <jpewhacker@gmail.com>
+To: Alexander Kanavin <alex.kanavin@gmail.com>
 Cc: Richard Purdie <richard.purdie@linuxfoundation.org>, bitbake-devel	
- <bitbake-devel@lists.openembedded.org>, Alexander Kanavin	
- <alex.kanavin@gmail.com>, Ross Burton <ross.burton@arm.com>, reatmon	
- <reatmon@ti.com>, Robert Yang <liezhi.yang@windriver.com>, "antonin.godard"
-	 <antonin.godard@bootlin.com>, Mathieu Dubois-Briand	
- <mathieu.dubois-briand@bootlin.com>, Adrian Freihofer	
- <adrian.freihofer@siemens.com>
-Date: Thu, 13 Nov 2025 15:20:44 +0000
-In-Reply-To: <CAJdd5GaU0ANma4FLB4wdhLXVQAxHbBOdEGELLE=yXhyhHQT4Sw@mail.gmail.com>
+ <bitbake-devel@lists.openembedded.org>, Ross Burton <ross.burton@arm.com>, 
+ reatmon <reatmon@ti.com>, Robert Yang <liezhi.yang@windriver.com>,
+ "antonin.godard"	 <antonin.godard@bootlin.com>, Mathieu Dubois-Briand	
+ <mathieu.dubois-briand@bootlin.com>, Joshua Watt <JPEWhacker@gmail.com>, 
+ Adrian Freihofer <adrian.freihofer@siemens.com>
+Date: Thu, 13 Nov 2025 15:30:28 +0000
+In-Reply-To: <CANNYZj_p_FX1sb6UduS-5H=jsmBrZA5crpJFPi3juRXjRtarXQ@mail.gmail.com>
 References: 
 	<2acc6d2e53840e35ca2d99839e89d94e136dd304.camel@linuxfoundation.org>
 	 <d13ed5957b2de69f5985ee524e006835f9e2b740.camel@pbarker.dev>
-	 <CAJdd5GaU0ANma4FLB4wdhLXVQAxHbBOdEGELLE=yXhyhHQT4Sw@mail.gmail.com>
+	 <18779541E6AD04B6.981615@lists.openembedded.org>
+	 <CANNYZj_p_FX1sb6UduS-5H=jsmBrZA5crpJFPi3juRXjRtarXQ@mail.gmail.com>
 Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  keydata=mQINBGC756sBEADXL6cawsZRrDvICz9Y1SG0/lW1me4xpq36obh7a0IGAzp3ywNRb/4MO
  DTqP4+DD0cIFuDY41/N17g0sNlp8z+/k/IIDmNPtYQOTVmAkrkdDU4BP8dD3Cp1PUw6nrbInfujAJ
@@ -130,119 +131,77 @@ Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  OqpPZn7Ij1ga5IAOHNRi5MbyRFROYOeaOj7sz7S7roHQwdP3Q1qTwTOv30hlOSe6uz4PTBiEIKBQH
  ep0k17xg==
 Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-vNMK650HikcOkW1ltX5K"
+	protocol="application/pgp-signature"; boundary="=-oirpeoUbLAEsCWB96DSc"
 User-Agent: Evolution 3.56.1-1+deb13u1 
 MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 13 Nov 2025 15:20:59 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18377
+ <bitbake-devel@lists.openembedded.org>; Thu, 13 Nov 2025 15:30:39 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18378
 
 
---=-vNMK650HikcOkW1ltX5K
+--=-oirpeoUbLAEsCWB96DSc
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2025-11-13 at 08:13 -0700, Joshua Watt wrote:
-> On Thu, Nov 13, 2025 at 6:18=E2=80=AFAM Paul Barker <paul@pbarker.dev> wr=
-ote:
-> >=20
-> > On Thu, 2025-11-13 at 11:16 +0000, Richard Purdie wrote:
-> > > Hi All,
-> > >=20
-> > > Huge thanks to everyone who has sent patches. Having multiple people
-> > > looking at this and sending them has allowed "parallel processing" th=
-at
-> > > is really moving us closer to release.
-> > >=20
-> > > The review call agreed with the patches on master-next and that those
-> > > should merge. Not all are perfect and there will be some further twea=
-ks
-> > > needed but they do move things closer to where we need to be.
-> >=20
-> > I think we're making good progress so thanks to everyone who has helped=
-!
-> > More testing and feedback at this stage would still be really
-> > appreciated to make sure that bitbake-setup meets the needs of differen=
-t
-> > users & developers.
-> >=20
-> > > There are some things we all thought still needed fixing before
-> > > release:
-> > >=20
-> > > a) The update command needs to prompt y/n on overwriting bblayers.con=
-f
-> > > or local.conf and give the users a choice. We need a way for users to
-> > > update the repos with one command, we can improve the conf file
-> > > upgrading later.
-> > >=20
-> > > b) There should be a --no-conf-updates (better naming?) to the update
-> > > command
-> >=20
-> > I suggest --conf-updates=3D[yes,no,prompt] with 'prompt' being the
-> > default. 'yes' means update without asking, 'no' means don't touch the
-> > config files, 'prompt' means ask separately for each of bblayers.conf
-> > and local.conf.
-> >=20
-> > > c) The default build path should not include the machine name. Ryan
-> > > mentioned his previous patches which have the concept of a format
-> > > string, or we have a include y/n piece in the json config. Otherwise
-> > > you can end up with multiple elements like poky_poky.
-> > >=20
-> > > d) We need to tell the user how to change the machine/distro layer as
-> > > nobody knows about the bitbake-config-build command. Mention "bitbake=
--
-> > > config-build enable-fragment machine/XXX" in output when running the
-> > > tool.
-> > >=20
-> > > e) Add a comment into toolcfg.conf to point at the command to change
-> > >=20
-> > > f) Catch conf file configuration of MACHINE/DISTRO conflicting with a
-> > > fragment?
-> > >=20
-> > > I'll let anyone add anything I've missed.
-> >=20
-> > I'm still struggling to use bitbake-setup while hacking on bitbake &
-> > openembedded-core themselves. I've always had permanent working
-> > repositories in my home directory and more ephemeral build directories
-> > under a path like /mnt/build which may be thrown away when no longer
-> > needed. My home directory gets backed up but my build directories don't=
-,
-> > so I don't want to do my work inside the layers directory created by
-> > bitbake-setup.
+On Thu, 2025-11-13 at 15:06 +0100, Alexander Kanavin wrote:
+> On Thu, 13 Nov 2025 at 14:51, Alexander Kanavin via
+> lists.openembedded.org <alex.kanavin=3Dgmail.com@lists.openembedded.org>
+> wrote:
 >=20
-> Perhaps bitbake-setup needs a build-dir equivalent to top-dir that
-> specifies where the build directories get placed (using the same
-> setup-name scheme)? If unspecified it would just default to top-dir.
+> > I'd probably extend the schema to have 'local'-type entry in addition
+> > to 'git-remote'-type, and then you can override one with the other
+> > from the override file.
+>=20
+> Then the implementation would symlink the original local path into
+> layers/. That way things like bb-layers entries, and various other
+> places that expect sources to be in layers/ will work as before and do
+> not need special casing.
 
-This bit actually works fine for me as things are. In my global
-settings.conf file I have:
+I think this may be enough of a solution. I also like the idea of
+bitbake-setup symlinking things into the layers directory so that we
+don't need to handle these paths as special cases.
 
-    [default]
-    top-dir-prefix =3D /mnt/build
-    top-dir-name =3D
-    dl-dir =3D /mnt/downloads
+So, are we thinking of an override file like this?
 
-It's using my existing bitbake & layer checkouts without having to
-push/pull git branches which needs a little extra support.
+    {
+        "description": "Local overrides for development",
+        "sources": {
+            "bitbake": {
+                "local": {
+                    "path": "~/src/bitbake"
+                }
+            },
+            "openembedded-core": {
+                "local": {
+                    "path": "~/src/openembedded-core"
+                }
+            }
+        }
+    }
+
+I think it's important to support '~' in the path, we can easily call
+os.path.expanduser() to handle this. We should also support relative
+paths, which are interpreted as relative to directory containing the
+override json file.
 
 Thanks,
 
 --=20
 Paul Barker
 
---=-vNMK650HikcOkW1ltX5K
+--=-oirpeoUbLAEsCWB96DSc
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 
 -----BEGIN PGP SIGNATURE-----
 
-iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaRX3TBEccGF1bEBwYmFy
-a2VyLmRldgAKCRCrY1Tsnbr0bgNuAP4h4LAA3x8ODclRW7PN8QbyhnISTD/j2+GR
-hHs4ifteFwEA1nFNjoidn3JhfM8z8ardTDiPwlOgn5naBwxQCpfJbgk=
-=pXZJ
+iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaRX5lBEccGF1bEBwYmFy
+a2VyLmRldgAKCRCrY1Tsnbr0bmzvAPkBFovKZAfUZA5kGF/9ygT0TN4Zmisct3TL
+XdE9UXCz7wD+IC70HgWI/Bu7qBHrvRxpmCrG8sF77ocFaWu0dgSDowQ=
+=6Ora
 -----END PGP SIGNATURE-----
 
---=-vNMK650HikcOkW1ltX5K--
+--=-oirpeoUbLAEsCWB96DSc--
 
