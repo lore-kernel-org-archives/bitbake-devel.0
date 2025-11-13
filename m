@@ -1,279 +1,108 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFE0CCFA18
-	for <webhook@archiver.kernel.org>; Thu, 13 Nov 2025 05:13:25 +0000 (UTC)
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.16953.1763010800295860351
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93736CD5BC5
+	for <webhook@archiver.kernel.org>; Thu, 13 Nov 2025 11:10:47 +0000 (UTC)
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.21464.1763032241046618706
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 12 Nov 2025 21:13:20 -0800
+ Thu, 13 Nov 2025 03:10:41 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=fdpaBG2A;
- spf=pass (domain: gmail.com, ip: 209.85.219.46, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-88242fc32c9so4608776d6.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 12 Nov 2025 21:13:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763010799; x=1763615599; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kIv95pW82Q+L4BjKI4hXGYshi+LE8kMYBXU/21jVe78=;
-        b=fdpaBG2ABYf26080Splxan7QI98t/bo1G6FDX0P7j9XnhczDg01Ikr0bgQwcSWPScA
-         4NverlXbgQN7HSdy9Y5HLrLydxBbIhFu1aesCAsRPgrMGBAHpE6sQFXZlQdh5N5fhVFZ
-         YZ/dtDXUiURny8ECX2gP1nRX/oqo2qedBtU0eddoDNDPVJqHwh9cIuKqipDjPV5lnjO4
-         2DsTlo6T6Wx+rS2oJOeQLU9yfn4QLOoyTG4f8gkxfouEjNtaSJZb1QmMcHoeyMuimCQn
-         ozrpK6icYlIaKw5hOxzLRXdoNZj/OC2XPXsM+gXaTMI46FrQuV68ary4G/YlOmCNsocg
-         tVGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763010799; x=1763615599;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kIv95pW82Q+L4BjKI4hXGYshi+LE8kMYBXU/21jVe78=;
-        b=h+WsFnZvk09AC2s473Tf0PgAUSuwJaEhmyrY7d9wsYre6BrtMzNcrlekuVEnk5hpiU
-         yv0o/8/ygrnFWvM7Z9Bs7BePrXJAFmHdIVnN+4piG7q9JpaPhUdB/zYxajGe9WuTBc7B
-         GgmA0VqlLAbLP9Xz3i2/++oUn92c4tYm0UdnfUZEPfDlicWE294MAnVsbarra83mJkeT
-         XByCgyxgyILJKxx4RqRe4bukbboU9ybdBt8kf65wlPNV0ALZLJw1CZFOcFz2F1y715t4
-         KMphTI7M+HmMlGRFdGl7MOKi7TLXeKRQVOPyILhWO2kWa4YL6gplEgmO7/OaN4+mKQwd
-         pBbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV++JA0gdrwBXg998lOt+2k9TOq2TshXDFTBTdtgEm0pT7EW5GRvZB6HyZIB5fxlQEdZMboeRquEn2/iVvj@lists.openembedded.org
-X-Gm-Message-State: AOJu0Ywln6GipTdTm8F5BPe6jdknYkQcjsj8Loh915ULkq+QnB0wIu8z
-	8idpAAV3VhnZWwZfFo6LJXZIJ2GcbvEtMi1aWW176/f9iZ+FY03wSTLeh379bd+3ynUpfUm9pSM
-	Lo4AtStruVWi+pBLBRaYZiKYkyIGzqg8=
-X-Gm-Gg: ASbGncsIzgLFXFNaJ4yPCrjQYm3u86wtuTo17f9YVscUCiihhstrFx3hKDNQagRLJrG
-	etzZACat8kMeiKcVZpk4zBw1Vg7lqlAwRQIKiRphgVHNVlNHyzZh2jnxbLdbJDk8Bam2k9q1yJ3
-	cNnHegVDRwvB6hEeZO13He9fUTTRWIfcD5SY66RjDHps9sJ4JsOPTX65+DQVgiUfs+TnlutU64R
-	o3mRIsI8hBLAt0HbSuydnJr5NYFGjN2ghMOOd26+VuFKNFcwYy1Da6wngqbmn8ERtx9gNrw8qJO
-	DVRrxbFcUJdNHnDKnU15NFiTMtFL
-X-Google-Smtp-Source: AGHT+IF7NtUDbLWRyL2NN3FYAvwERalxMVlvXddoMcKb+iu4sxr510NM8vr4QbMvvtr4IMHDIWZMiD+9yiUbJ8wWYrQ=
-X-Received: by 2002:a05:6214:21a8:b0:880:8843:1f91 with SMTP id
- 6a1803df08f44-88271914f29mr82414946d6.22.1763010799157; Wed, 12 Nov 2025
- 21:13:19 -0800 (PST)
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=RXrXUiOR;
+ spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 494C7C10F45
+	for <bitbake-devel@lists.openembedded.org>; Thu, 13 Nov 2025 11:10:17 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 028886068C
+	for <bitbake-devel@lists.openembedded.org>; Thu, 13 Nov 2025 11:10:39 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 18373102F22CB;
+	Thu, 13 Nov 2025 12:10:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1763032238; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=ggydC0PUsBsRnLOTar1uduh+b2eEU2hc24ozX+KrLUI=;
+	b=RXrXUiORReT+XjFZG5jnUMHi5DkV3CznpVX7K+lZSKmcsVDI+InI+gjItJ2zi3HsxhBukc
+	z5j2th5Wvex+c12im99czj6PlJs+JHU6dMbLPV/P40RfnTYjpTuvaFUTj269HXk8BnJ/k5
+	tvTWlknQ98BLhcTz1pjPDtXz12BrMstbXLSwB1JHcazWwR2NYoG1jFf8MuHZYWNQfO9+fb
+	ng6TKNbkjyjXguIWqhKYvGdqufzxByiQCsvOuZ5pl+gMZkiUhCzJ3FIJUR7wMkOMiYgyd8
+	UWsLm7cRRlxXTkDzg68h5GSnkEe7LNTUrR3kHZx6AXzoQAgiYU4ii0EQw7uNlQ==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Date: Thu, 13 Nov 2025 12:10:29 +0100
+Subject: [PATCH] bitbake-setup: add description of DL_DIR in default
+ site.conf
 MIME-Version: 1.0
-References: <20251112055736.3078776-1-Qi.Chen@windriver.com>
- <df39c2e5ee59060f170ae7e4904a72acceb73e57.camel@linuxfoundation.org> <CO6PR11MB5602B41B30DBB7A223F58822EDCDA@CO6PR11MB5602.namprd11.prod.outlook.com>
-In-Reply-To: <CO6PR11MB5602B41B30DBB7A223F58822EDCDA@CO6PR11MB5602.namprd11.prod.outlook.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Thu, 13 Nov 2025 06:13:08 +0100
-X-Gm-Features: AWmQ_bkmbILdTcLGQAgk4c95mmKxSuiWnEq16mntxY6WV0rRi6eeXIkAm4cOJ3o
-Message-ID: <CANNYZj9WOBX0fbJdBr8pqUbpsiwcW4JFKGefS7Eci_Ndk+GR5A@mail.gmail.com>
-Subject: Re: [bitbake-devel][PATCH] lib/bb/parse/ast.py: treat internal
- fragment setting as default value
-To: "Chen, Qi" <Qi.Chen@windriver.com>
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>, 
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="0000000000006b4563064372f036"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20251113-add-dl-dir-comments-v1-1-01fbda836324@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAKS8FWkC/yXMQQ6CQAxA0auQrm1CmZCAVzEu6rRIiQxmisaEc
+ HdGXb7F/xu4ZlOHc7VB1re5LamAThXEkdNd0aQYmrppiSggi6A8UCxjXOZZ0+rYaR+YteYwEJT
+ ymXWwz+96uf7tr9ukcf2uYN8P16lTYncAAAA=
+X-Change-ID: 20251113-add-dl-dir-comments-8e93aae0a3f1
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1725;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=wIaL1OH07perHQ/axP+xH8hk2Sy+QvjbH1+Hy0MWqng=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpFbytkwr1+INompPDKmAdYSdo2R+b1P0RWVe6r
+ ZpBUUthb32JAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaRW8rQAKCRDRgEFAKaOo
+ NlvID/9T4ej2j89hPv9jkda1WPV4WzBp6Jdw1G4QTjqev4DelCG6PSZ9e9lQpTGkw741svhqtmZ
+ DR2nPKiFelRHUZbj61Z5Qul/B4q8EKjyi9XJS2jhd5/+leXalVPoglrd6maE0v3icSqDk6sLTID
+ xsbCZSbCtXqQGItwGBsQ24NpQP3cxwAmqHaabXFxcKGchOL8f9/sU15gTW7GuD+70kG47BktUbj
+ bBQUIxi9quHZaXRpHe4W8OexSEF37YIsLEeY6DmsTv525Hwqgtbq8LnU5LDGDoIkrnDhBiIaFnW
+ q7WJIHJK/aBT3MNBrGRR4vyPn7/U+77yAgAV8nYtWou4PVE1x3L8JmZjsj+nXsDwVP5lM0mn1g0
+ ROXgajytyjYHHCY8wHjcQazaDha5pPvgbvHoNbn+H1/xggAGXE1D6K/mZKCffkx2od79vxtp7k1
+ JkW3Jk/DbvE2nXOWJfRry5564Q5yFpNpggHgdr8KjkrbTfw6qR7pTv1wngSlLfmGKkfVHIhEG7p
+ aC5FfTS0Mnz2YFtJ+iGfbzmnumGHvNIwMXUJT6RUom/Ytbc+VbiNIkPiyho33M2B/WxJWb+qS0R
+ XNgaf3vJ8+QCyFKcERcHOXtMhdR8ISKvSx0L0fvly/iMgDMEgrxsd9PA7ro6bLPOJFEc1HKvUhe
+ Xiu2u25ivF9THAw==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 13 Nov 2025 05:13:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18367
+ <bitbake-devel@lists.openembedded.org>; Thu, 13 Nov 2025 11:10:47 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18368
 
---0000000000006b4563064372f036
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Add the comment from the local.conf.sample file in meta-poky to the
+default site.conf file. It's a better experience for the user to have a
+quick description of the variable when opening the file for the first
+time.
 
-For what it=E2=80=99s worth I agree with Chen. Priority order should be
-environment, local.conf and only then toolcfg.conf. Yes it will lead to
-confusion in legacy local.conf driven setups, but overriding machine on the
-command line is a common use case and it should work.
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+---
+Note this is a follow-up to Joshua's patch:
+https://lore.kernel.org/r/20251112172619.3764053-1-JPEWhacker@gmail.com
+---
+ bin/bitbake-setup | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Alex
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index 3a281defac..243c7c512b 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -683,6 +683,15 @@ def create_siteconf(top_dir, non_interactive, settings):
+                 textwrap.dedent(
+                     """\
+                     # This file is intended for build host-specific bitbake settings
++
++                    # Where to place downloads
++                    #
++                    # During a first build the system will download many different source code
++                    # tarballs from various upstream projects. This can take a while, particularly
++                    # if your network connection is slow. These are all stored in DL_DIR. When
++                    # wiping and rebuilding you can preserve this directory to speed up this part of
++                    # subsequent builds. This directory is safe to share between multiple builds on
++                    # the same machine too.
+                     DL_DIR = "{dl_dir}"
+                     """.format(
+                         dl_dir=settings["default"]["dl-dir"],
 
-On Thu 13. Nov 2025 at 4.17, Chen, Qi <Qi.Chen@windriver.com> wrote:
+---
+base-commit: fd7960eded6228486e75d1c253b5c672b24f505c
+change-id: 20251113-add-dl-dir-comments-8e93aae0a3f1
 
-> Thank you for the explanation.
->
-> My major concern is about the behavioral change in a project setup by
-> bitbake-setup.
->
-> When I was trying out bitbake-setup, the OE_FRAGMENTS are automatically
-> generated in conf/toolcfg.conf. And I got an "empty" local.conf. So at th=
-at
-> time, I felt it natural that user configuration (local.conf) should take
-> priority over the automatically generated one (toolcfg.conf). The logic i=
-s
-> like /etc and /usr in Linux systems.
->
-> It's a little counter-intuitive that local.conf does not override setting=
-s
-> in toolcfg.conf. I mean, people have to  edit toolcfg.conf to change
-> MACHINE in a project setup by bitbake-setup. And they can't use
-> "MACHINE=3Dxxx bitbake <pkg>".
->
-> Regards,
-> Qi
->
-> -----Original Message-----
-> From: Richard Purdie <richard.purdie@linuxfoundation.org>
-> Sent: Thursday, November 13, 2025 12:01 AM
-> To: Chen, Qi <Qi.Chen@windriver.com>; bitbake-devel@lists.openembedded.or=
-g
-> Cc: alex.kanavin@gmail.com
-> Subject: Re: [bitbake-devel][PATCH] lib/bb/parse/ast.py: treat internal
-> fragment setting as default value
->
-> On Wed, 2025-11-12 at 13:57 +0800, Chen Qi via lists.openembedded.org
-> wrote:
-> > From: Chen Qi <Qi.Chen@windriver.com>
-> >
-> > In this way, users can continue to override settings such as MACHINE
-> > via local.conf and env vars with plain '=3D' setting.
-> >
-> > Fixes [YOCTO #16060]
-> >
-> > Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
-> > ---
-> >  lib/bb/parse/ast.py | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py index
-> > e6ff1ff76..f9d93aa0f 100644
-> > --- a/lib/bb/parse/ast.py
-> > +++ b/lib/bb/parse/ast.py
-> > @@ -373,7 +373,7 @@ class AddFragmentsNode(AstNode):
-> >                          loginfo["detail"] =3D f"{value}
-> ({self.fragments_variable} contains \"{fragment}\")"
-> >                          break
-> >                  # parsing=3DTrue since we want to emulate X=3DY and al=
-low
-> > X:override=3DZ to continue to exist
-> > -                data.setVar(builtin_fragments[prefix], value,
-> > parsing=3DTrue, **loginfo)
-> > +                data.setVarFlag(builtin_fragments[prefix],
-> > +'_defaultval', value, parsing=3DTrue, **loginfo)
-> >                  return True
-> >              return False
-> >
->
->
-> This is a tough one. I've thought about the two sides to this and you can
-> argue it both ways.
->
-> If we do this, we will get questions of "I set this fragment, why didn't
-> it actually do that?".
->
-> I think if you specify a fragment and it should override the conf files..=
-.
->
-> Cheers,
->
-> Richard
->
->
->
->
->
-
---0000000000006b4563064372f036
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"auto">For what it=E2=80=99s worth I agree with Chen. Priority o=
-rder should be environment, local.conf and only then toolcfg.conf. Yes it w=
-ill lead to confusion in legacy local.conf driven setups, but overriding ma=
-chine on the command line is a common use case and it should work.=C2=A0</d=
-iv><div dir=3D"auto"><br></div><div dir=3D"auto">Alex</div><div><br><div cl=
-ass=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" class=3D"gmail_a=
-ttr">On Thu 13. Nov 2025 at 4.17, Chen, Qi &lt;<a href=3D"mailto:Qi.Chen@wi=
-ndriver.com">Qi.Chen@windriver.com</a>&gt; wrote:<br></div><blockquote clas=
-s=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;b=
-order-left-style:solid;padding-left:1ex;border-left-color:rgb(204,204,204)"=
->Thank you for the explanation. <br>
-<br>
-My major concern is about the behavioral change in a project setup by bitba=
-ke-setup.<br>
-<br>
-When I was trying out bitbake-setup, the OE_FRAGMENTS are automatically gen=
-erated in conf/toolcfg.conf. And I got an &quot;empty&quot; local.conf. So =
-at that time, I felt it natural that user configuration (local.conf) should=
- take priority over the automatically generated one (toolcfg.conf). The log=
-ic is like /etc and /usr in Linux systems.<br>
-<br>
-It&#39;s a little counter-intuitive that local.conf does not override setti=
-ngs in toolcfg.conf. I mean, people have to=C2=A0 edit toolcfg.conf to chan=
-ge MACHINE in a project setup by bitbake-setup. And they can&#39;t use &quo=
-t;MACHINE=3Dxxx bitbake &lt;pkg&gt;&quot;.<br>
-<br>
-Regards,<br>
-Qi<br>
-<br>
------Original Message-----<br>
-From: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfoundation.o=
-rg" target=3D"_blank">richard.purdie@linuxfoundation.org</a>&gt; <br>
-Sent: Thursday, November 13, 2025 12:01 AM<br>
-To: Chen, Qi &lt;<a href=3D"mailto:Qi.Chen@windriver.com" target=3D"_blank"=
->Qi.Chen@windriver.com</a>&gt;; <a href=3D"mailto:bitbake-devel@lists.opene=
-mbedded.org" target=3D"_blank">bitbake-devel@lists.openembedded.org</a><br>
-Cc: <a href=3D"mailto:alex.kanavin@gmail.com" target=3D"_blank">alex.kanavi=
-n@gmail.com</a><br>
-Subject: Re: [bitbake-devel][PATCH] lib/bb/parse/ast.py: treat internal fra=
-gment setting as default value<br>
-<br>
-On Wed, 2025-11-12 at 13:57 +0800, Chen Qi via <a href=3D"http://lists.open=
-embedded.org" rel=3D"noreferrer" target=3D"_blank">lists.openembedded.org</=
-a> wrote:<br>
-&gt; From: Chen Qi &lt;<a href=3D"mailto:Qi.Chen@windriver.com" target=3D"_=
-blank">Qi.Chen@windriver.com</a>&gt;<br>
-&gt; <br>
-&gt; In this way, users can continue to override settings such as MACHINE <=
-br>
-&gt; via local.conf and env vars with plain &#39;=3D&#39; setting.<br>
-&gt; <br>
-&gt; Fixes [YOCTO #16060]<br>
-&gt; <br>
-&gt; Signed-off-by: Chen Qi &lt;<a href=3D"mailto:Qi.Chen@windriver.com" ta=
-rget=3D"_blank">Qi.Chen@windriver.com</a>&gt;<br>
-&gt; ---<br>
-&gt; =C2=A0lib/bb/parse/ast.py | 2 +-<br>
-&gt; =C2=A01 file changed, 1 insertion(+), 1 deletion(-)<br>
-&gt; <br>
-&gt; diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py index <br>
-&gt; e6ff1ff76..f9d93aa0f 100644<br>
-&gt; --- a/lib/bb/parse/ast.py<br>
-&gt; +++ b/lib/bb/parse/ast.py<br>
-&gt; @@ -373,7 +373,7 @@ class AddFragmentsNode(AstNode):<br>
-&gt; =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- loginfo[&quot;detail&quot;] =3D f&quot;{value} ({self.fragments_variable} =
-contains \&quot;{fragment}\&quot;)&quot;<br>
-&gt; =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- break<br>
-&gt; =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 # parsing=3DTrue since we want to emulate X=3DY=
- and allow <br>
-&gt; X:override=3DZ to continue to exist<br>
-&gt; -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 data.setVar(builtin_fragments[prefix], value, <br>
-&gt; parsing=3DTrue, **loginfo)<br>
-&gt; +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 data.setVarFlag(builtin_fragments[prefix], <br>
-&gt; +&#39;_defaultval&#39;, value, parsing=3DTrue, **loginfo)<br>
-&gt; =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 return True<br>
-&gt; =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 return False<br>
-&gt; <br>
-<br>
-<br>
-This is a tough one.=C2=A0I&#39;ve thought about the two sides to this and =
-you can argue it both ways.<br>
-<br>
-If we do this, we will get questions of &quot;I set this fragment, why didn=
-&#39;t it actually do that?&quot;.<br>
-<br>
-I think if you specify a fragment and it should override the conf files...<=
-br>
-<br>
-Cheers,<br>
-<br>
-Richard<br>
-<br>
-<br>
-<br>
-<br>
-</blockquote></div></div>
-
---0000000000006b4563064372f036--
 
