@@ -1,102 +1,96 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1ECCE8D6F
-	for <webhook@archiver.kernel.org>; Fri, 14 Nov 2025 18:30:16 +0000 (UTC)
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.5249.1763145016040845647
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A76CE8D7D
+	for <webhook@archiver.kernel.org>; Fri, 14 Nov 2025 19:20:36 +0000 (UTC)
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.6250.1763148036189521014
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 14 Nov 2025 10:30:16 -0800
+ Fri, 14 Nov 2025 11:20:36 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=Fpjg5age;
- spf=pass (domain: gmail.com, ip: 209.85.128.182, mailfrom: jpewhacker@gmail.com)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-78933de9ab5so6708867b3.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 14 Nov 2025 10:30:15 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=IDO2xYNv;
+ spf=pass (domain: gmail.com, ip: 209.85.219.51, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-88056cab4eeso17330526d6.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 14 Nov 2025 11:20:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763145015; x=1763749815; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oI/JdbF42U/4zPEVNhn5RYDw0uJp0DBcA7Syw3qjT1I=;
-        b=Fpjg5ageO2ULlzgA8B0FDjtIiffLWf7cTsExmTJU2XjZxyh8i/NmfqRd5Scg9QwEYg
-         UmHwKOgONQ1Ckk1E8NMDFKWGfSuwY2kdya2aEQHh1x+8gH1d/SSpD/PgSJFkV/IpjHv0
-         V+3AI7B3jFbvDoSxPBK4cim3BAJ0Xk3hK+6AkDgfNoM6/dMRU4oBu+9dJ+TwC3qWQLbU
-         Ic4+1siYl/zvDBMjeIu8RpqDaVLR087VkgKHO1Yuvh4Ez6DGbuYGzdQxhei4x8CeubDH
-         /9PhORDL5o1KZplSGTcdsl95bXYaHmEjrSIZzYw2SKZYkTRFj7iKPlm4uyDTflc3rOJR
-         K76A==
+        d=gmail.com; s=20230601; t=1763148035; x=1763752835; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/uxJuuc3qqK5+Tz+UlhWpx131NNSuFle0rpofmZcaZ0=;
+        b=IDO2xYNv82dhYdqBVB4xC1nM5YIS08eDDGqEpfWs/yVetSlK60QTK1LcwVSwWRsrkx
+         ABzA6P+wP/omAPWdBeWTLPs3tAisTSgTa5uNt1n/b1xwTH8dKjIMYl90pz9QfgjKdHYT
+         KXgz0DAHcTJOaOugWLKOGmQzQudykcP0c9Pvc5AWzwkSamobUBo/yram0hr0pCF59SsC
+         CvI2gqBY723+5KZlvJWIisYkDIUeBHB8r7nhGmmmZ/AnuO8rT9R7SN4sq5VxYyyso7X5
+         JlDOCrpt1qIIr1n4boUoxHJS70ptG3K2qINK60zm4u44D69l08fyvIZhORqLp0EnwIsc
+         p+tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763145015; x=1763749815;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=oI/JdbF42U/4zPEVNhn5RYDw0uJp0DBcA7Syw3qjT1I=;
-        b=OmUQHNub6mwpt26r5D7xG2Ay5t47KDdBJ5pdBqfTQyEQR590ugcsGQC1Q3lL4ROHeh
-         341j79IPP7/sjG8WQYARTUjdrATTfjiav+vRPuzuIulqbMrH/JG8mvtzdijQ6E7m2rSF
-         1G/BH1WcNR7UFD34aDuSVuA7kzY/2MIk5K/2j4qaMzULjz0iLHYKZY4WEB6Dv4z0Eof/
-         XURm+CYAtgI6PVdORBk7gun2mNPdarrInouEbrzbdCiAWtDaB/zQ/cVUnJAumvepYpzM
-         zFt2pqCySmf+kY6yYzZPbVRw8IK7zqajTvSEtdk+JgVQiDLXrpBgjL8nSxVrkFF/JCrw
-         TnuA==
-X-Forwarded-Encrypted: i=1; AJvYcCUoUh7mChfI1ZCWI5SKutykJOWuIwLum4KVQ+iejXYWYXVsj7ZGVMZ7aR+H0bytdIBwOZpZAJ+OisKhEeC5@lists.openembedded.org
-X-Gm-Message-State: AOJu0YwtMDrW9HctClc1Be2H0F7UDdIezHVbbYKOIIqgW68cVDKl/M7O
-	Rm+5q0k01yaCy3zaScKT+8wtFNS5APxsoSORBmH3Se3miBVXgHx192htp0iKgnkZnQ6OWN7oadX
-	RRfB7gsnuAwMTGUkXJp3DUhBTLv9RJtA=
-X-Gm-Gg: ASbGncsSJF/U+pGF3XUz4VFY3kaSJnLIfJDL77JJHEdRH5sn6DnvhVgsHI2KMpoKAZZ
-	DckmvE0eCjG71gMLAAnyhgL8MDfYdJ9A7hVrAqyyRYqUxJDTcSlb5DmQeGEZOkzsOsWC5tldQHp
-	WxXfrOpUh9APUnbn9XNJkaUj45awrFz4DifPKYdVxSi6PEh1cqRH53lkk9ZiakMMzUtkSJxgIQ7
-	k2tCEPaaOyMFG7TheaEXcDBoV/G7ctm6TDOWjWNaaCbcphn67YcPdYjjAq6MI+5aAl3m3Pi77wW
-	shOqLUc1Nw==
-X-Google-Smtp-Source: AGHT+IF6zeG41wSXSjmmLMw3MQDzHqEnHhHxaMqA2YzyrVjXtUTshe4leo8VBr9jJSfy9/HeAYNs5zWiUfo/ACKc4SM=
-X-Received: by 2002:a05:690c:6c0c:b0:786:9be4:749c with SMTP id
- 00721157ae682-78929e8ee59mr40433267b3.31.1763145015019; Fri, 14 Nov 2025
- 10:30:15 -0800 (PST)
+        d=1e100.net; s=20230601; t=1763148035; x=1763752835;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/uxJuuc3qqK5+Tz+UlhWpx131NNSuFle0rpofmZcaZ0=;
+        b=kBm1+NXFoPfLHWzMeqLzp3D2XTatnVR02coPXaMq5h2gq/1tokeExvd2fyLUH2iIGC
+         2rzZmpBzz/v1wT71Lm/SRs7hukFVx2b+F9/E46BMLHLHbp/nn3N/5/wF9x80O+oGvXbe
+         vXx3t4F/NycfshZqaUw2crDV6wCgZH6Cfl7JJwZZ6Pn7ts9w56CscsO0hbq1D6Boujta
+         JRQhiAy5I6f2ZR24r3Dk82pEKK1S+YixQf8qkw5J2MSQnoH0/nmpneaADmdL3ENnrILx
+         BCAeeyBrAkEfARIFQClwXZCdG4M63LIGh9PdP/qFrpXa8DHO8MUHKtIVjXEA1fpi1CB7
+         hw9Q==
+X-Gm-Message-State: AOJu0YzBZzNfjszljiQ7kzaZrQ3eBF1NzwwyfP/s+E56yaD47GzA06x2
+	wgbZoc/mSEnc/8teinLb/r1P0BGR6siLLbUX74dmz/ymZViRrfVhPV1GVpoYmRPl56FCPVeHx1W
+	C+9rCQThuLSqt3xrNSZw4ujpzx2GRLFI=
+X-Gm-Gg: ASbGnctx1VISMgMeojRNLWXnJWw2oO2tFbx9RrLzatFtNfqcg4MkxmuI+OnASyAopQ8
+	wjjI3zKJUOsIEuWWr1I8vK4EXPcBA5tfiZBGngpJmj1mScsiwIEf9LZRxQr8szVidyNIPSH7Tdf
+	7oW3AkdYr+H5bQk6sidZSUHv559P+fYDD4QxIhg5/Ppk6GAmH2NPqmRAL+nlrP2Cub8V/XJ7iwj
+	C598FG7MJ/yU8BrgH9nQH5JShm0jmQeNFQSHv6a1KeORrD8w3Lfn47hqwuQc6rHDcyqv5DVW3pS
+	2DXF
+X-Google-Smtp-Source: AGHT+IHarOXrxJbXuJMvLRN+WZIxaUOBkUtRsaomlFhHvzvPJv2q6Cf6fgJhqVr6Lub/DoO6v4K2B23QQDpKx6u2j9g=
+X-Received: by 2002:ad4:4eed:0:b0:806:c33d:be with SMTP id 6a1803df08f44-88292684b14mr59263706d6.32.1763148035077;
+ Fri, 14 Nov 2025 11:20:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20251114-bitbake-setup-abort-v1-0-d2f9967df3b1@bootlin.com>
- <20251114-bitbake-setup-abort-v1-1-d2f9967df3b1@bootlin.com> <CANNYZj8wihnjM0YQwLGz-s9N2jvYwuGsUO0et9=V_sJj15as3Q@mail.gmail.com>
-In-Reply-To: <CANNYZj8wihnjM0YQwLGz-s9N2jvYwuGsUO0et9=V_sJj15as3Q@mail.gmail.com>
-From: Joshua Watt <jpewhacker@gmail.com>
-Date: Fri, 14 Nov 2025 11:30:03 -0700
-X-Gm-Features: AWmQ_bkRk2C1yaaQpG0HzJxvEaGMvxF3gsPtYdItYAihnGLoeabdwPOHGomaj5Y
-Message-ID: <CAJdd5GYUSajdDwnC3DBOWCRjj0giE+10OAGR6e8afftRSxV8HA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 1/3] bitbake-setup: fix top_dir creation
- in create_siteconf
-To: alex.kanavin@gmail.com
-Cc: antonin.godard@bootlin.com, bitbake-devel@lists.openembedded.org, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20251114-bitbake-setup-conf-updates-v1-0-990583d8251b@bootlin.com>
+ <20251114-bitbake-setup-conf-updates-v1-1-990583d8251b@bootlin.com>
+In-Reply-To: <20251114-bitbake-setup-conf-updates-v1-1-990583d8251b@bootlin.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Fri, 14 Nov 2025 20:20:22 +0100
+X-Gm-Features: AWmQ_bnoIStWtm_kkPkKBSetm6XaiayHKKAvOmAzWadRJImpmt63cDiVdrIIiYc
+Message-ID: <CANNYZj8GTMaqAhgbvJ213mEYtfnD-b9BgJtJV6bC163N2Copxw@mail.gmail.com>
+Subject: Re: [docs] [PATCH 1/2] bitbake-setup: update: add a --update-bb-conf option
+To: antonin.godard@bootlin.com
+Cc: bitbake-devel@lists.openembedded.org, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, docs@lists.yoctoproject.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 14 Nov 2025 18:30:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18411
+ <bitbake-devel@lists.openembedded.org>; Fri, 14 Nov 2025 19:20:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18412
 
-On Fri, Nov 14, 2025 at 11:21=E2=80=AFAM Alexander Kanavin via
-lists.openembedded.org <alex.kanavin=3Dgmail.com@lists.openembedded.org>
-wrote:
->
-> On Fri, 14 Nov 2025 at 12:07, Antonin Godard via
-> lists.openembedded.org
-> <antonin.godard=3Dbootlin.com@lists.openembedded.org> wrote:
-> > -        os.makedirs(os.path.dirname(top_dir), exist_ok=3DTrue)
-> > +        os.makedirs(top_dir, exist_ok=3DTrue)
->
-> Wait. What and where creates the top directory then, if writing the
-> site.conf still succeeds without this change?
+On Fri, 14 Nov 2025 at 17:44, Antonin Godard via
+lists.yoctoproject.org
+<antonin.godard=bootlin.com@lists.yoctoproject.org> wrote:
+> +    if update_bb_conf == "prompt":
+> +        print(f'bitbake-setup can update the BitBake configuration in {setupdir}/conf')
+> +        print('This means updating the local.conf, bblayers.conf, and other files in this directory.')
+> +        print('A backup will be created for the existing files.')
+> +        y_or_n = input('Proceed to update? (y/N): ')
+> +        if y_or_n == 'y':
+> +            update_bb_conf = 'yes'
+> +
+> +    if update_bb_conf == "yes":
+> +        setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir)
 
-I think the directory was being created by accident in init_bb_cache()
+I don't think this is the proper way to implement the feature. Even if
+the user answers no, they should still get the new updated config that
+they can inspect and integrate into their existing one, so rather than
+ask the question here, it should be asked *inside*
+setup_bitbake_build(), and only if that function determines that a
+config already exists. Then, depending on the answer, it either
+renames the old config, and writes a new one (current behavior), or
+leaves the current one as it is, and writes the new config into a
+newly made separate directory. Then there's existing code to compare
+and diff the directories, so if they turn out identical, the redundant
+copy is deleted.
 
->
-> Alex
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#18408): https://lists.openembedded.org/g/bitbake-deve=
-l/message/18408
-> Mute This Topic: https://lists.openembedded.org/mt/116290012/3616693
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [JPEWha=
-cker@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
+Alex
 
