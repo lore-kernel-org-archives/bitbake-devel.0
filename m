@@ -1,129 +1,102 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8931BCE8D77
-	for <webhook@archiver.kernel.org>; Fri, 14 Nov 2025 18:27:26 +0000 (UTC)
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.5081.1763144840943809401
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1ECCE8D6F
+	for <webhook@archiver.kernel.org>; Fri, 14 Nov 2025 18:30:16 +0000 (UTC)
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.5249.1763145016040845647
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 14 Nov 2025 10:27:21 -0800
+ Fri, 14 Nov 2025 10:30:16 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=Qos/VOWI;
- spf=pass (domain: gmail.com, ip: 209.85.160.172, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4eddfc251d0so21375491cf.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 14 Nov 2025 10:27:20 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Fpjg5age;
+ spf=pass (domain: gmail.com, ip: 209.85.128.182, mailfrom: jpewhacker@gmail.com)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-78933de9ab5so6708867b3.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 14 Nov 2025 10:30:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763144840; x=1763749640; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FBpzbxW3R8LwYvTmtJjLlTgMTTN0mzF/tR9X08GQm34=;
-        b=Qos/VOWILUdCbnA0oKcJpSOD3frA9ojI+LmeyE03cXwdQNBbrF2VmPRrvbU2HOAmb7
-         82jMykb9mYWq2po4m/WySjVvXFmLeXfHWKmzq1aPPH1VrRB0UDDuY3Cb831QwkhsKgSc
-         dN/eujOYLgXqxCs0tN3mRUT7slCfaMlAVvP/LQ3u03Mv/VUNKd/5902z7yw64DQEcRrf
-         YgoC4fyYPEH6bypyp0dKbsFFr5sSOYFcZZccMAWbKhyoCIIe690use84SloeCDV4w1Pl
-         4vfS2FKLSZJCSKzrfyLkpSFrlHMhanpadnkYPGQg0K8ylBwXIWiLKzZFcK4xhBtMECtm
-         dltA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763144840; x=1763749640;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1763145015; x=1763749815; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FBpzbxW3R8LwYvTmtJjLlTgMTTN0mzF/tR9X08GQm34=;
-        b=uQZ1Ap/Kr19ow3+WsO32cn3F6AxBwURDV0BxDiudMi9zmsJoljmC5QHMJ821899/gO
-         PSsMltUNL64jevQ/OnkIGsEQkJx/YPg0pNA1/dB3mjJYupxhT9OppKrAlodY5BXB6fxt
-         bYQjueQF+hEtKK/GmUeD3OWC4aCN4UvTxmeKYdc7W5YDGrK9K1NVTlZPXSEDnAxxjbeB
-         qPC5DKK5DyRob6iRUy7+gyiWW45biZxV1GwqXF09Rn+0dyuhBdkNnorNApM8NQ0WUu5Y
-         aX/N1jOZUZGfvrO8+X6awJNg9kBiXzGzZ4U001abotGTGGxB6O70c8+bDxP3gfnxg3nd
-         rinw==
-X-Gm-Message-State: AOJu0YwJ6yEaZI+JZ1fy6G5/+DIoNbBGxE5QdhVdN40KDPmiGYHRkKxN
-	DMJm3EPy1r68ys4MRN4DhxWfWFCt1VBmZdNRSX1T70LCroVC1/7VMRzXhO1M96MbXnypxienffy
-	+WgA44jxRSnDEjiOVARQJXl1es52JcnEzOA==
-X-Gm-Gg: ASbGnctZsqqpV5sglsjgC5WJk2pZUxu5EJw+67K6qVQ9qE4jXXT14v1i6rbA+F/PO4m
-	VypP8mMWBGLCFtqAaFgjuL9U4oFhdoFNL5DzyjQILZwSd9SP5rzUaNedzygfkZMS2Jof2/0mWQu
-	T0CahzoGkbi4bzEml8IMswxs3HWfkleDNfgWUe9nvMBaEPMlK1K0nLrFN7XsHkcE6lAvY9D4mAQ
-	d9ZjIZEX+fqGYEur7bgAmICYr7M2W5QjaV5eHNcYUGJW7/jELRqd65kgpJMfjDPUDKkLQ==
-X-Google-Smtp-Source: AGHT+IFoMzyE0fiVkYsaUQKGVlG7Bowo4QtRToUTJk5cnbHMRLXvyUmUsVQs3UHXPXBi+aE/8fjvhwS+Qz14QbMj3ko=
-X-Received: by 2002:a05:622a:4105:b0:4ee:d6:7a51 with SMTP id
- d75a77b69052e-4ee00d68253mr9090531cf.12.1763144839261; Fri, 14 Nov 2025
- 10:27:19 -0800 (PST)
+        bh=oI/JdbF42U/4zPEVNhn5RYDw0uJp0DBcA7Syw3qjT1I=;
+        b=Fpjg5ageO2ULlzgA8B0FDjtIiffLWf7cTsExmTJU2XjZxyh8i/NmfqRd5Scg9QwEYg
+         UmHwKOgONQ1Ckk1E8NMDFKWGfSuwY2kdya2aEQHh1x+8gH1d/SSpD/PgSJFkV/IpjHv0
+         V+3AI7B3jFbvDoSxPBK4cim3BAJ0Xk3hK+6AkDgfNoM6/dMRU4oBu+9dJ+TwC3qWQLbU
+         Ic4+1siYl/zvDBMjeIu8RpqDaVLR087VkgKHO1Yuvh4Ez6DGbuYGzdQxhei4x8CeubDH
+         /9PhORDL5o1KZplSGTcdsl95bXYaHmEjrSIZzYw2SKZYkTRFj7iKPlm4uyDTflc3rOJR
+         K76A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763145015; x=1763749815;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=oI/JdbF42U/4zPEVNhn5RYDw0uJp0DBcA7Syw3qjT1I=;
+        b=OmUQHNub6mwpt26r5D7xG2Ay5t47KDdBJ5pdBqfTQyEQR590ugcsGQC1Q3lL4ROHeh
+         341j79IPP7/sjG8WQYARTUjdrATTfjiav+vRPuzuIulqbMrH/JG8mvtzdijQ6E7m2rSF
+         1G/BH1WcNR7UFD34aDuSVuA7kzY/2MIk5K/2j4qaMzULjz0iLHYKZY4WEB6Dv4z0Eof/
+         XURm+CYAtgI6PVdORBk7gun2mNPdarrInouEbrzbdCiAWtDaB/zQ/cVUnJAumvepYpzM
+         zFt2pqCySmf+kY6yYzZPbVRw8IK7zqajTvSEtdk+JgVQiDLXrpBgjL8nSxVrkFF/JCrw
+         TnuA==
+X-Forwarded-Encrypted: i=1; AJvYcCUoUh7mChfI1ZCWI5SKutykJOWuIwLum4KVQ+iejXYWYXVsj7ZGVMZ7aR+H0bytdIBwOZpZAJ+OisKhEeC5@lists.openembedded.org
+X-Gm-Message-State: AOJu0YwtMDrW9HctClc1Be2H0F7UDdIezHVbbYKOIIqgW68cVDKl/M7O
+	Rm+5q0k01yaCy3zaScKT+8wtFNS5APxsoSORBmH3Se3miBVXgHx192htp0iKgnkZnQ6OWN7oadX
+	RRfB7gsnuAwMTGUkXJp3DUhBTLv9RJtA=
+X-Gm-Gg: ASbGncsSJF/U+pGF3XUz4VFY3kaSJnLIfJDL77JJHEdRH5sn6DnvhVgsHI2KMpoKAZZ
+	DckmvE0eCjG71gMLAAnyhgL8MDfYdJ9A7hVrAqyyRYqUxJDTcSlb5DmQeGEZOkzsOsWC5tldQHp
+	WxXfrOpUh9APUnbn9XNJkaUj45awrFz4DifPKYdVxSi6PEh1cqRH53lkk9ZiakMMzUtkSJxgIQ7
+	k2tCEPaaOyMFG7TheaEXcDBoV/G7ctm6TDOWjWNaaCbcphn67YcPdYjjAq6MI+5aAl3m3Pi77wW
+	shOqLUc1Nw==
+X-Google-Smtp-Source: AGHT+IF6zeG41wSXSjmmLMw3MQDzHqEnHhHxaMqA2YzyrVjXtUTshe4leo8VBr9jJSfy9/HeAYNs5zWiUfo/ACKc4SM=
+X-Received: by 2002:a05:690c:6c0c:b0:786:9be4:749c with SMTP id
+ 00721157ae682-78929e8ee59mr40433267b3.31.1763145015019; Fri, 14 Nov 2025
+ 10:30:15 -0800 (PST)
 MIME-Version: 1.0
-References: <20251114-bitbake-setup-abort-v1-0-d2f9967df3b1@bootlin.com> <20251114-bitbake-setup-abort-v1-3-d2f9967df3b1@bootlin.com>
-In-Reply-To: <20251114-bitbake-setup-abort-v1-3-d2f9967df3b1@bootlin.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Fri, 14 Nov 2025 19:27:07 +0100
-X-Gm-Features: AWmQ_bkdKdwoBHEAYAozup8Y-PlAfmF1lwqHKXT7IOkKdKv8o_mKeDfduY_KEns
-Message-ID: <CANNYZj9-eUPC0TTFus0J3AF4KXappsuxSFx0rvrwJk1Dmn=TPg@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 3/3] bitbake-setup: handle ctrl+c in init
-To: antonin.godard@bootlin.com
-Cc: bitbake-devel@lists.openembedded.org, 
+References: <20251114-bitbake-setup-abort-v1-0-d2f9967df3b1@bootlin.com>
+ <20251114-bitbake-setup-abort-v1-1-d2f9967df3b1@bootlin.com> <CANNYZj8wihnjM0YQwLGz-s9N2jvYwuGsUO0et9=V_sJj15as3Q@mail.gmail.com>
+In-Reply-To: <CANNYZj8wihnjM0YQwLGz-s9N2jvYwuGsUO0et9=V_sJj15as3Q@mail.gmail.com>
+From: Joshua Watt <jpewhacker@gmail.com>
+Date: Fri, 14 Nov 2025 11:30:03 -0700
+X-Gm-Features: AWmQ_bkRk2C1yaaQpG0HzJxvEaGMvxF3gsPtYdItYAihnGLoeabdwPOHGomaj5Y
+Message-ID: <CAJdd5GYUSajdDwnC3DBOWCRjj0giE+10OAGR6e8afftRSxV8HA@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 1/3] bitbake-setup: fix top_dir creation
+ in create_siteconf
+To: alex.kanavin@gmail.com
+Cc: antonin.godard@bootlin.com, bitbake-devel@lists.openembedded.org, 
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 14 Nov 2025 18:27:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18410
+ <bitbake-devel@lists.openembedded.org>; Fri, 14 Nov 2025 18:30:16 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18411
 
-Since other functions may also become interactive (e.g. update
-prompting the user if files in build/conf/ should be replaced),
-shouldn't this be installed as a generic handler in main()?
+On Fri, Nov 14, 2025 at 11:21=E2=80=AFAM Alexander Kanavin via
+lists.openembedded.org <alex.kanavin=3Dgmail.com@lists.openembedded.org>
+wrote:
+>
+> On Fri, 14 Nov 2025 at 12:07, Antonin Godard via
+> lists.openembedded.org
+> <antonin.godard=3Dbootlin.com@lists.openembedded.org> wrote:
+> > -        os.makedirs(os.path.dirname(top_dir), exist_ok=3DTrue)
+> > +        os.makedirs(top_dir, exist_ok=3DTrue)
+>
+> Wait. What and where creates the top directory then, if writing the
+> site.conf still succeeds without this change?
 
-Alex
+I think the directory was being created by accident in init_bb_cache()
 
-On Fri, 14 Nov 2025 at 12:07, Antonin Godard via
-lists.openembedded.org
-<antonin.godard=bootlin.com@lists.openembedded.org> wrote:
 >
-> Instead of printing the stack trace, print "Shutting down..." when the
-> user presses Ctrl+C during the init. Mention that the top-directory's
-> setups might be incomplete if the topdir was already created.
+> Alex
 >
-> Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
-> ---
->  bin/bitbake-setup | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-> index 3dc46cbbfa..151cb79cac 100755
-> --- a/bin/bitbake-setup
-> +++ b/bin/bitbake-setup
-> @@ -17,6 +17,8 @@ import glob
->  import subprocess
->  import copy
->  import textwrap
-> +import signal
-> +import functools
->
->  default_registry = os.path.normpath(os.path.dirname(__file__) + "/../default-registry")
->
-> @@ -452,7 +454,15 @@ def obtain_config(top_dir, settings, args, source_overrides, d):
->      upstream_config['skip-selection'] = args.skip_selection
->      return upstream_config
->
-> +def init_sigint_handler(sig, frame, top_dir):
-> +    print(f'\nShutting down...')
-> +    if isinstance(top_dir, str) and os.path.exists(top_dir):
-> +        print(f'{top_dir} may contain an incomplete setup!')
-> +    exit()
-> +
->  def init_config(top_dir, settings, args):
-> +    _handler = functools.partial(init_sigint_handler, top_dir=top_dir)
-> +    signal.signal(signal.SIGINT, _handler)
->      create_siteconf(top_dir, args.non_interactive, settings)
->
->      d = init_bb_cache(top_dir, settings, args)
->
-> --
-> 2.51.0
->
->
-> -=-=-=-=-=-=-=-=-=-=-=-
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 > Links: You receive all messages sent to this group.
-> View/Reply Online (#18392): https://lists.openembedded.org/g/bitbake-devel/message/18392
-> Mute This Topic: https://lists.openembedded.org/mt/116290015/1686489
+> View/Reply Online (#18408): https://lists.openembedded.org/g/bitbake-deve=
+l/message/18408
+> Mute This Topic: https://lists.openembedded.org/mt/116290012/3616693
 > Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alex.kanavin@gmail.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [JPEWha=
+cker@gmail.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 >
 
