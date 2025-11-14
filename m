@@ -1,254 +1,120 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A05CCCE7AF7
-	for <webhook@archiver.kernel.org>; Fri, 14 Nov 2025 11:50:39 +0000 (UTC)
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.16235.1763121036984107284
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D007ECE7AFD
+	for <webhook@archiver.kernel.org>; Fri, 14 Nov 2025 12:14:39 +0000 (UTC)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.16463.1763122469983578492
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 14 Nov 2025 03:50:37 -0800
+ Fri, 14 Nov 2025 04:14:30 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=GyBHO0xt;
- spf=pass (domain: gmail.com, ip: 209.85.219.49, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-880503ab181so17123076d6.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 14 Nov 2025 03:50:36 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=BEwVTOWT;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-47775fb6cb4so14072805e9.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 14 Nov 2025 04:14:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763121036; x=1763725836; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6rRwLoItVvoZwKDCKiehA8CJBKVPTBkFnLMXsgeMcYc=;
-        b=GyBHO0xtfdWcECi9BjiDNWSQuz0ztxdY0y2Q4JLRRHcEX7FKnoF4UzFUF/2+np+DdV
-         mxS44wVflzfV+xJIucQyjtwlntCWkuWVWbyotC8JZTHczIMiUmaT8cI6whEFo3ycNql0
-         EXBGx7xiOc0MvQETDvziIAHiMhT8YeCkWAhsf7u2+Yrl6T7CmyihT8Um+TL6kGR2Utm0
-         v+bkO3YTQpk5Q0jrOPyiQFxSLprc2Fq7bu+omZTl8JexMmMlDFKZxMh7gFWgm+Yr0OFr
-         TfDVF76c14MBtcTT/EtR8Dhq/oSGDjxBJDJFOq04JHHWTOtLSftTFoIz5QuEUViGfA0p
-         JeUg==
+        d=linuxfoundation.org; s=google; t=1763122468; x=1763727268; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ToO9hbwAPxy3VX1RwsF7Mw+gPm6MuDHF1erY8wObP0c=;
+        b=BEwVTOWTrQtk115O12lpkd6Dx+HWV0cgWpjMoPtG+GRFXPj+1r2GvTvoVtwHsjP29K
+         xtCIKtQJ+t/oOBLfqyEqe6Z/+NoutvFSMK6H0VT7iGOT0p6FyD20XXR+rcZ1MCUaVRmQ
+         VoEY5haxkDZfshXlWH6d26NINdZaVX0b5ZfNM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763121036; x=1763725836;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6rRwLoItVvoZwKDCKiehA8CJBKVPTBkFnLMXsgeMcYc=;
-        b=RH4uKP0Ft6zv5gF5hbPlPdn3tOXAAwmfJIcswS3nlSDrHuhdyAcwK7mELaxyWKBVVS
-         1iw27HHBXv/2leRGa9aaKlcf8lopaBio9TsTzhiE9EKLUj4kSbt2Ov+Mjn76srK/lEtv
-         /VOG0NuzmK/pajtgxR1Xx6q8jFprf/kKBbT5dyGcsavHa9C+c/LSwBVuZ5tQe41XebwW
-         82M4PIn1cLZkZsfXxzXGoVSz7odz2fCZQ0sTNY06Q1VCAPnAvDe/EhG8Cz0b32kI5FZD
-         FMKaxKSV3Yysz9Az22vboCZ0Jns5f4Zvm4fGfoUiw3cmccsAFyAWuRwS1d/Q9Q6B+OJf
-         wnjw==
-X-Gm-Message-State: AOJu0YzZDwBRsG55N6EaKVIuPJOduJFBMxT9Lho4z+J/DNQbfUwAInxD
-	2WzSywvucW/dJSAe8zMdaF16KauVx/i5rGhyK8YfzVCqEO9dtz0H23NMn/yZJgtE26jre97JdE7
-	OlNXt9phfIvAir4Wk9dgB3FYq4mKa/24=
-X-Gm-Gg: ASbGncvJGCyX1JZZvbBupuC2RS74nzwnD4JDdyh1M2JaOpl2vHvEXeiVvgoo3HiEfUd
-	x8uqnnK49x5oOdinfAPzvgK2LGQs1OAxvjCLmOim0IS55qvNm0eBZlWBoBADzYfpjZyXzkkcV1z
-	NTdziWVVPI9YESn9jH4Ws81PtqXJyle5XIjtvix3i5tx7htp1HodjqVWGuTY1h+V7LQiVY401hx
-	a3ujdXnLQiaPXeYcKahk6qXP/9+HIX7CKd+Ru5pQS7/kiavl34x2Dr+u1e1xICSxJhni49L38kD
-	6C1QEdqDxz13XQMS4Hz0jgX6eLE9F6dQc1ir
-X-Google-Smtp-Source: AGHT+IHwGbmaGDoEeu2EM57KfttXUgvDwUfmSgau3jHmkD8bE6xWBdsd1BL863nlX5dBg0tJOhdG8jNw7wim4CHD8E4=
-X-Received: by 2002:ad4:5ba8:0:b0:880:5cc1:6923 with SMTP id
- 6a1803df08f44-8829269e378mr42859686d6.36.1763121035884; Fri, 14 Nov 2025
- 03:50:35 -0800 (PST)
-MIME-Version: 1.0
-References: <20251114060211.1742728-1-Qi.Chen@windriver.com>
- <CANNYZj_J6oJOpdYsX7Rnz8ViL4==q4ktLhfx5MZHQNe1s9SF-g@mail.gmail.com>
- <a0e64b88-cb5b-4dcc-8b6f-147765f373e0@windriver.com> <CANNYZj8tDk8izGO2f_8ADHsaN9VudG_hsQrcw2N2O8NnXtdCCQ@mail.gmail.com>
- <5fffd119-5b6c-462d-9f1e-5b2b30f81715@windriver.com> <CANNYZj8eqw8QF8eWCoLki7XXWZ197pVZHckLtQ5aQx29aU+o4A@mail.gmail.com>
- <451e3958-7661-4070-bff9-b3bce661c21d@windriver.com> <afddd5c5-ab6b-4e9a-a667-93408a2d070c@windriver.com>
-In-Reply-To: <afddd5c5-ab6b-4e9a-a667-93408a2d070c@windriver.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Fri, 14 Nov 2025 12:50:25 +0100
-X-Gm-Features: AWmQ_bmZ-XytNpPSeYYq3hjscEgmP06FKu0b-bM81BcN97hnglw-GTEIeMO9Dy4
-Message-ID: <CANNYZj_efuiNV2LMfkQbXBD5QzV4NyHLcGM5JicetcyVZquwXA@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1763122468; x=1763727268;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ToO9hbwAPxy3VX1RwsF7Mw+gPm6MuDHF1erY8wObP0c=;
+        b=ZzA4xjvTA3Nr1BGRwhtxrAC7T3B51X05QB9flQMUACoEwdOJlMLXeHtnaPP2i2zAaN
+         ANxi43maZ7CIO12midUmcwkx4D7YECnACXAFm58h3rkLoBynoX5me1OEuPPQichyu5Od
+         HqUsdKOt41yJ3a4Cy50o7Bng44rX7RqzeWFx/0vUTTmQSLfJvn6c1cFkd2IgZSV0Xxf2
+         YYpYat7GW4O6Iigl3uS6TnaRFvni9RQCQpMtXRnJUFFxjB3b0sLeVcXa3a2CjJCNOTHU
+         NRmb+yccjLJFLG8CRQpxspd6qe91eYjhRWU/U9V4iad24zKddd+vkbEqnqMDb3FqeGTc
+         Tj/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUliRYaGT/MpNwPvanCWjFR6MzKY1Xllns8TPCqwLdpsH4b//jCI2TesO7fuRTl7Fn0jh7DcayXjnRl/yNi@lists.openembedded.org
+X-Gm-Message-State: AOJu0Ywz0iy6r4MfH/EHBBWEiV06VJmyo0G1PXgspw0L2ZxPnj9bM+da
+	J58a96G3CvgF1XMUzq/YnzKS5mimwDw19yBFYdYvQqfmszHeloRLvvf/4V1eacN+xaM=
+X-Gm-Gg: ASbGncv93BwmQvJK8D+8EPKYOH98VPH4fQSw8Z4d1TKAEa+VLuNSHEJV7kdPwJSuDtJ
+	X6xgO7CGMAKcER4QCyh7socnuci+RfSLY5Bd80f8f0IoF4BufLOiOgY0t6oJM9m+defKR1yem3J
+	TqVScnnQGPSLWPhHqalvR4WGvXPY/zBgd+ULnIHktvC3OcRMzpkw4qz6n4pUAlhaHegf3JUrMwH
+	YDaEYzqFoD6j4ugWkoMaMvIhMYw9QtSW2mnvEBuL3Qey9QQsdx8UYMiZpXIX9YwqxIvPQ6c5BRe
+	5bgWb8ZD/dNl7wOwU/F8Zf/HIylOnjI4+CK+ak1Lg+6wjBc3ge8SfeN4iTJWuRHe43JOGaxHDim
+	YqZtNd0mM9Kjsmqc4vMVR0ozaXFNpM/IYrCKqSvSgbPkFGkUfU5pFAgSHGa8xCbPE6nd7Nt7zL0
+	FScJqtHPxMLZmWZ7IXcvYpJLmbR4iLZIGkOCWId+pTTc7FDcRrkpSExCIeb0L3H8xS
+X-Google-Smtp-Source: AGHT+IEK7MevCpTkqeLEWcmSVsygjFUHiQ7YMyl+UgHoxYYr54MxyaHBhwgFp9OjnbWqA2BLUEIUQw==
+X-Received: by 2002:a05:600c:4513:b0:477:7b16:5f77 with SMTP id 5b1f17b1804b1-4778fe59a16mr30676315e9.3.1763122468176;
+        Fri, 14 Nov 2025 04:14:28 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:e30a:8116:32e6:5cd2? ([2001:8b0:aba:5f3c:e30a:8116:32e6:5cd2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53f17cbfsm9424001f8f.35.2025.11.14.04.14.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Nov 2025 04:14:27 -0800 (PST)
+Message-ID: <74af9f38baceead07ed102aef4559b6b01612c0e.camel@linuxfoundation.org>
 Subject: Re: [bitbake-devel][PATCH V2] lib/bb/parse/ast.py: error out for
  internal fragment in case of a previous value
-To: ChenQi <Qi.Chen@windriver.com>
-Cc: bitbake-devel@lists.openembedded.org, richard.purdie@linuxfoundation.org
-Content-Type: multipart/alternative; boundary="0000000000000a3d9e06438c9b4e"
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Qi.Chen@windriver.com, bitbake-devel@lists.openembedded.org
+Cc: alex.kanavin@gmail.com
+Date: Fri, 14 Nov 2025 12:14:26 +0000
+In-Reply-To: <20251114060211.1742728-1-Qi.Chen@windriver.com>
+References: <20251114060211.1742728-1-Qi.Chen@windriver.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0-1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 14 Nov 2025 11:50:39 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18397
+ <bitbake-devel@lists.openembedded.org>; Fri, 14 Nov 2025 12:14:39 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18398
 
---0000000000000a3d9e06438c9b4e
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Fri, 2025-11-14 at 14:02 +0800, Qi.Chen@windriver.com wrote:
+> From: Chen Qi <Qi.Chen@windriver.com>
+>=20
+> When an internal fragment is enabled, and there's already a value
+> for the corresponding variable, we should error out to avoid any
+> confusion.
+>=20
+> For example, when 'machine/qemux86-64' fragement is enabled, and
+> we get some "MACHINE =3D xxx" in local.conf or env, we should error
+> out and recomment users to use 'bitbake-config-build disable-fragment'.
+>=20
+> We should be tolerating weak assignments. For example, DISTRO defaults
+> to "nodistro", and when 'distro/poky" fragment is enabled, there should
+> be no confusion.
+>=20
+> The implementation hacks the environment variable as a way to tell
+> bitbake that we're using 'bitbake-config-build'. Because we recommend
+> users to use bitbake-config-build, then it should not error out.
+>=20
+> Fixes [YOCTO #16060]
+>=20
+> Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+> ---
+> =C2=A0bin/bitbake-layers=C2=A0 | 3 +++
+> =C2=A0lib/bb/parse/ast.py | 7 +++++++
+> =C2=A02 files changed, 10 insertions(+)
 
-Thanks Chen. I=E2=80=99m only reading emails this week, but I=E2=80=99ll tr=
-y to look into
-it and come up with ideas on Monday.
+Thanks, I think this is a step in the right direction but I can see the
+challenge you're facing with the parsing. There are probably other bugs
+in this area, for example what if there is an invalid fragment set (you
+delete a fragment file, then try to disable it with bitbake-build-
+config?).
 
-Alex
+What might be a slightly "nicer" approach would be to pass the toolname
+into the bitbake datastore as some variable (BB_TOOLNAME?) from
+tinfoil, then we might want to skip all of the fragment code if
+bitbake-config-build is in use?
 
-On Fri 14. Nov 2025 at 8.17, ChenQi <Qi.Chen@windriver.com> wrote:
+We'd have to check what other implications that might have, for
+example, does bitbake-build-config need a full datastore? What are the
+implications for bitbake's cache files and cache file hashes?
 
-> On 11/14/25 15:12, Chen Qi via lists.openembedded.org wrote:
-> > On 11/14/25 14:49, Alexander Kanavin wrote:
-> >> On Fri, 14 Nov 2025 at 07:37, ChenQi <Qi.Chen@windriver.com> wrote:
-> >>> When machine/qemux86-64 fragment is enabled and users use 'MACHINE=3D=
-xxx
-> >>> bitbake <pkg>', the expected behavior is to error out and recommend
-> >>> user
-> >>> to use 'bitbake-config-build disable-fragment'.
-> >>>
-> >>> Here comes the problem. bitbake-config-build makes use of tinfoil and
-> >>> when setting up tinfoil, the above error will appear again. We can't
-> >>> recommend users to use 'bitbake-config-build disable-fragment' while
-> >>> the
-> >>> recommended method still errors out. This is the reason for the speci=
-al
-> >>> exception.
-> >> But why would users be running 'MACHINE=3Dxxx bitbake-config-build
-> >> disable-fragment ...' ? That prefix is intended only for bitbake
-> >> invocations.
-> >>
-> >> Alex
-> >
-> Hi Alex,
->
-> Ignore the reply below. Sorry, I just realized what's going on here.
->
-> I was using 'MACHINE =3D"qemuarm64"' in local.conf to test things.
->
-> So the error will appear again and again even with a simple
-> 'bitbake-config-build --help' if there's no such special exception.
->
-> Regards,
-> Qi
->
-> > I mean that users run something like 'MACHINE=3Dqemuarm64 bitbake
-> > base-files', and they get error like below:
-> >
-> > ERROR: A builtin fragment 'machine/qemux86-64' is used while MACHINE
-> > has already got an assignment.
-> > Please either disable the fragment or remove the value assignment.
-> > To disable the fragment, use 'bitbake-config-build disable-fragment
-> > machine/qemux86-64'.
-> >
-> > Now they run 'bitbake-config-build disable-fragment
-> > machine/qemux86-64' as recommended. If there's no such special
-> > exception, they will get the same error again. Even if they run a
-> > simple 'bitbake-config-build --help', they'll get the same error again.
-> >
-> > That's the reason for this special exception.
-> >
-> > Regards,
-> > Qi
-> >
-> >
-> > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> > Links: You receive all messages sent to this group.
-> > View/Reply Online (#18387):
-> https://lists.openembedded.org/g/bitbake-devel/message/18387
-> > Mute This Topic: https://lists.openembedded.org/mt/116288219/7304865
-> > Group Owner: bitbake-devel+owner@lists.openembedded.org
-> > Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> Qi.Chen@eng.windriver.com]
-> > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> >
->
->
+Cheers,
 
---0000000000000a3d9e06438c9b4e
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Richard
 
-<div dir=3D"auto">Thanks Chen. I=E2=80=99m only reading emails this week, b=
-ut I=E2=80=99ll try to look into it and come up with ideas on Monday.</div>=
-<div dir=3D"auto"><br></div><div dir=3D"auto">Alex</div><div><br><div class=
-=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" class=3D"gmail_attr=
-">On Fri 14. Nov 2025 at 8.17, ChenQi &lt;<a href=3D"mailto:Qi.Chen@windriv=
-er.com">Qi.Chen@windriver.com</a>&gt; wrote:<br></div><blockquote class=3D"=
-gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border=
--left-style:solid;padding-left:1ex;border-left-color:rgb(204,204,204)">On 1=
-1/14/25 15:12, Chen Qi via <a href=3D"http://lists.openembedded.org" rel=3D=
-"noreferrer" target=3D"_blank">lists.openembedded.org</a> wrote:<br>
-&gt; On 11/14/25 14:49, Alexander Kanavin wrote:<br>
-&gt;&gt; On Fri, 14 Nov 2025 at 07:37, ChenQi &lt;<a href=3D"mailto:Qi.Chen=
-@windriver.com" target=3D"_blank">Qi.Chen@windriver.com</a>&gt; wrote:<br>
-&gt;&gt;&gt; When machine/qemux86-64 fragment is enabled and users use &#39=
-;MACHINE=3Dxxx<br>
-&gt;&gt;&gt; bitbake &lt;pkg&gt;&#39;, the expected behavior is to error ou=
-t and recommend <br>
-&gt;&gt;&gt; user<br>
-&gt;&gt;&gt; to use &#39;bitbake-config-build disable-fragment&#39;.<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt; Here comes the problem. bitbake-config-build makes use of tinf=
-oil and<br>
-&gt;&gt;&gt; when setting up tinfoil, the above error will appear again. We=
- can&#39;t<br>
-&gt;&gt;&gt; recommend users to use &#39;bitbake-config-build disable-fragm=
-ent&#39; while <br>
-&gt;&gt;&gt; the<br>
-&gt;&gt;&gt; recommended method still errors out. This is the reason for th=
-e special<br>
-&gt;&gt;&gt; exception.<br>
-&gt;&gt; But why would users be running &#39;MACHINE=3Dxxx bitbake-config-b=
-uild<br>
-&gt;&gt; disable-fragment ...&#39; ? That prefix is intended only for bitba=
-ke<br>
-&gt;&gt; invocations.<br>
-&gt;&gt;<br>
-&gt;&gt; Alex<br>
-&gt;<br>
-Hi Alex,<br>
-<br>
-Ignore the reply below. Sorry, I just realized what&#39;s going on here.<br=
->
-<br>
-I was using &#39;MACHINE =3D&quot;qemuarm64&quot;&#39; in local.conf to tes=
-t things.<br>
-<br>
-So the error will appear again and again even with a simple <br>
-&#39;bitbake-config-build --help&#39; if there&#39;s no such special except=
-ion.<br>
-<br>
-Regards,<br>
-Qi<br>
-<br>
-&gt; I mean that users run something like &#39;MACHINE=3Dqemuarm64 bitbake =
-<br>
-&gt; base-files&#39;, and they get error like below:<br>
-&gt;<br>
-&gt; ERROR: A builtin fragment &#39;machine/qemux86-64&#39; is used while M=
-ACHINE <br>
-&gt; has already got an assignment.<br>
-&gt; Please either disable the fragment or remove the value assignment.<br>
-&gt; To disable the fragment, use &#39;bitbake-config-build disable-fragmen=
-t <br>
-&gt; machine/qemux86-64&#39;.<br>
-&gt;<br>
-&gt; Now they run &#39;bitbake-config-build disable-fragment <br>
-&gt; machine/qemux86-64&#39; as recommended. If there&#39;s no such special=
- <br>
-&gt; exception, they will get the same error again. Even if they run a <br>
-&gt; simple &#39;bitbake-config-build --help&#39;, they&#39;ll get the same=
- error again.<br>
-&gt;<br>
-&gt; That&#39;s the reason for this special exception.<br>
-&gt;<br>
-&gt; Regards,<br>
-&gt; Qi<br>
-&gt;<br>
-&gt;<br>
-&gt; -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-&gt; Links: You receive all messages sent to this group.<br>
-&gt; View/Reply Online (#18387): <a href=3D"https://lists.openembedded.org/=
-g/bitbake-devel/message/18387" rel=3D"noreferrer" target=3D"_blank">https:/=
-/lists.openembedded.org/g/bitbake-devel/message/18387</a><br>
-&gt; Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/11628821=
-9/7304865" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.=
-org/mt/116288219/7304865</a><br>
-&gt; Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedde=
-d.org" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-&gt; Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel=
-/unsub" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org=
-/g/bitbake-devel/unsub</a> [<a href=3D"mailto:Qi.Chen@eng.windriver.com" ta=
-rget=3D"_blank">Qi.Chen@eng.windriver.com</a>]<br>
-&gt; -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-&gt;<br>
-<br>
-</blockquote></div></div>
 
---0000000000000a3d9e06438c9b4e--
 
