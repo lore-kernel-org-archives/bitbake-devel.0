@@ -2,60 +2,61 @@ Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649F1CEACEF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E56CE8D6B
 	for <webhook@archiver.kernel.org>; Mon, 17 Nov 2025 08:16:11 +0000 (UTC)
 Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.5031.1763367367950185254
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.5028.1763367367784713275
  for <bitbake-devel@lists.openembedded.org>;
  Mon, 17 Nov 2025 00:16:08 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=bKFcpiD4;
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=u0fHkWwf;
  spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: antonin.godard@bootlin.com)
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 914B3C12652
-	for <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 08:15:44 +0000 (UTC)
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 7CEF3C12650
+	for <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 08:15:43 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id A2467606B9
-	for <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 08:16:06 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 022AC10371CF5;
-	Mon, 17 Nov 2025 09:16:05 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 8EB89606B9
+	for <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 08:16:05 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id BF06F10371CF2;
+	Mon, 17 Nov 2025 09:16:04 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1763367366; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1763367365; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=MnSEZW0wRWQ8QN8GaC2bT6iZ4uVXzqAuG97Um+qQH1M=;
-	b=bKFcpiD40tUkNiR8IcRdPKbWb/rmmBhvzyfRBMh0KU8lPyvP8EWpUrx8DNZYctTZ5Jxpb6
-	ZBjNAqs05tBkKnfENajFdobVS5tOiJxD78RYSdgp1YUI00nGGoMQwPO6ZJ4Ld0DjWIcLOY
-	MHHFIjVffN+z4zOOMrn2uSfzSWYG21Jc1kkUu3KEv9x8tPqNQgZM3YlEkNY+b3EQwzEG2A
-	YpsReCR928hipcy8oZ10raMr7gh/JSUCAIuRyMhRYPf9gEKHkbZPjFYnzTt5EZexe2Tdeb
-	TQCyeuAZrceWpuKXmtb0LfYUfvrC1x7sdbQkDdC4/3o8JyCb4pMZnIWb3MZPrg==
+	bh=exuxfBKY59beoSUAOswzK49Q23ZXwj5MFjVXjKrX+8w=;
+	b=u0fHkWwfcvd7rywV2HPo+ps1Y+RZVgckfZNofs/2Qc/yXnXu141dZlKM64vhRTcFplDKj5
+	tkIZRQUQVUHkgdXazjnrKaDtSjoKKbwhBEipbnsuDfCbHnyWLZZJHLMjIG2CLcZ5Px/5G5
+	MzPzHy+A0oNl/HSk7V4PuvS7R3WjfvEejMp/Pf3C0w2TIBqBxYhyf3sdZm+fos5I0gu+oG
+	pK1ej9WL9NSaTBniJ30hVJ7zcQTF2RuVcf6U4Ohyw/MzC4dpFLBEDyTxCATWK/8I6KCOhG
+	wBbixxBXDYS7xPo26ECC9pKDiZrFgivLNHn7j3alI/GS5DwLylVGQ1AiUzLFsw==
 From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Mon, 17 Nov 2025 09:15:39 +0100
-Subject: [PATCH v2 3/3] bitbake-setup: handle ctrl+c
+Date: Mon, 17 Nov 2025 09:15:37 +0100
+Subject: [PATCH v2 1/3] bitbake-setup: fix top_dir creation in
+ create_siteconf
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251117-bitbake-setup-abort-v2-3-a73f44e83bc0@bootlin.com>
+Message-Id: <20251117-bitbake-setup-abort-v2-1-a73f44e83bc0@bootlin.com>
 References: <20251117-bitbake-setup-abort-v2-0-a73f44e83bc0@bootlin.com>
 In-Reply-To: <20251117-bitbake-setup-abort-v2-0-a73f44e83bc0@bootlin.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
  Antonin Godard <antonin.godard@bootlin.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2108;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=934;
  i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=9UlVZbTkq7Amgm2c4h+zTJxdpl7zse+/A1ySEWamKB4=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpGtnDQtDpaLY2QXHlx6kZVB8fagsBqd1ORj1Gm
- 7sCK/8nk+iJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaRrZwwAKCRDRgEFAKaOo
- Nt/7D/4tlqOYgcmXBqhMft9RhL5CiWbyrSj2nNg2kjsLO6YytHoD6WmTkE54gtlj1RebhQ5yji9
- 2+nX6W4JO9FrD1WL2gTiK6g5WM6EY7AWQQvyCMgZo2VGLUNShMTlXAJiXcZYXhfOGJHtlC3h6OO
- VqAnsJpD3qzh63ggHo5qE91oHAujDpACziVeURBvbTQJHImN+hiJevBaGgjAV3jk96+LGL8ThTG
- iPmZsmcchNKyfWGQxNuWCKEJ+cdmmMfVSvhgEAM8r94Gu+fqqr9nL6tBahdh+Zp4c2xaFpCVUjD
- 4co5TlGy4NSMI7rbMBTFo4x01IF4YVxubcCIvtzZAey3EHBPo4oup3wzapfIcRgfv64KtPrYZBt
- bTQfeoiez/CSzNMTD7B0Qbv1KHqFJw3jRZ2zA6gi/gDAhvGnEYjQTSmkbEfiQ6hLVOU9DRGqCgS
- 7qG1DhRFtA7Uf9WgHzDE0eO5HUO6d/kdG7ue13mNwGRPVCWKUdPvd3p0juWYkoXUrrNwC0SlJgS
- gOlkZcUEvNgbQH7jVY6n7xhqxrm53PQw9A6cyNCk7cyvT0LSzaa8cTY7kkW2/gx6TNNvWT+ML7N
- cw/8lFE+NqyZwnjMWKMvOgqWkCmzDW6mbCzzebsyNBYTzZA7T3GY+iuGBeQ++G1Y9Rori5Ce6f/
- t9lnz0PCENt0zyQ==
+ bh=C073iM5h3Rt0VCEkrJbH98jjKQ3zxWgUnavg299Pwl0=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpGtnCBtLGqWn9HttHIBiSUZAUFGCBb8ZBtiiYm
+ fj4VOMe9g+JAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaRrZwgAKCRDRgEFAKaOo
+ NhvfEACjqlEalfv53OTdDkAnODnGSWmVTtsIGk5yxWdvVgPcWmSVH0AjkKCBUpbOQacPTABfpjh
+ FIOBHNQO7KkxKvJN5ZdiJEv9x1GjtTsWepTAnS+JlNl/Xj2gU0LLHpUkOq+K1G2ZngzHv82xU0j
+ zQcRx0pSsO1YxF9OwYX5s5fImz0Bdzu/TmAJq1polYbUIUimSYsvqiz3enoV9GcxyqD1qHj+vAj
+ xM3AkXmdzeojGSJIlaZipcErUzQE3IAH1UpcHppbUScP6KzK1icaIEs6jFN+TOeVjyxuihEzUBM
+ TJPRNtB0EyTVMgav5h6vy6sdrA/RuJ/wpMzCynZkMCcq11DbmAYaAuxyzNU6A3jSkz38TOm6olX
+ CDutUhcMSKp2bempQYhwEwmwLH9Ct51iROHlw9jsYoi/2hH1eHNF0yDjuVS87gtT7zLXNMGXGDd
+ cQpkxe72Qzsmn91DzOqtKuETdGlZr9OXhhi4lGPGiyCGzskvwOMwlErK+/s12xEa0BwbEwI75XI
+ qbmniV+egaZh83QK853TJ007pvSpFIMF7zMYd2MDcA6ugT5KPNFA+F6rYUZ3irAFRff83FO3CEz
+ uJji+n5l6gG6u+Wg1tOwUXaLQu9wEs4+wiAmwHX+4boxD6nwkTthMR5mBQ/PCm6GU+ujkFvV4/p
+ suyNSqsPjutEYNA==
 X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
  fpr=8648725188DD401BB9A0D3FFD180414029A3A836
 X-Last-TLS-Session-Version: TLSv1.3
@@ -63,60 +64,32 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 08:16:11 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18417
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18416
 
-Instead of printing the stack trace, print "Shutting down..." when the
-user presses Ctrl+C during command executions. Mention that the
-top-directory's setups might be incomplete if the topdir was already
-created at this point.
+The intent of the create_siteconf() is to create the site.conf file
+common to all setups. For this it needs the top directory to be created.
+Create the top directory instead of its parent.
+
+Previously, this directory was created by chance by init_bb_cache().
 
 Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
 ---
- bin/bitbake-setup | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ bin/bitbake-setup | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index db6428f8d2..d0a932a6b2 100755
+index 3a281defac..adf19ab09f 100755
 --- a/bin/bitbake-setup
 +++ b/bin/bitbake-setup
-@@ -17,6 +17,8 @@ import glob
- import subprocess
- import copy
- import textwrap
-+import signal
-+import functools
+@@ -677,7 +677,7 @@ def create_siteconf(top_dir, non_interactive, settings):
+             if y_or_n != 'y':
+                 exit()
  
- default_registry = os.path.normpath(os.path.dirname(__file__) + "/../default-registry")
- 
-@@ -783,6 +785,15 @@ def merge_settings(builtin_settings, global_settings, topdir_settings, cmdline_s
- 
-     return all_settings
- 
-+def sigint_handler(sig, frame, func, top_dir):
-+    print(f'\nShutting down...')
-+    if isinstance(top_dir, str) and os.path.exists(top_dir):
-+        if func in [init_config, build_update]:
-+            print(f'{top_dir} may contain an incomplete setup!')
-+        elif func == install_buildtools:
-+            print(f'{top_dir} may contain an incomplete buildtools installation!')
-+    exit()
-+
- def main():
-     def add_setup_dir_arg(parser):
-         setup_dir = get_setup_dir_via_bbpath()
-@@ -888,6 +899,12 @@ def main():
-         global_settings = load_settings(global_settings_path(args))
-         top_dir = get_top_dir(args, merge_settings(builtin_settings, global_settings, {}, args.cmdline_settings))
- 
-+        # register handler now to pass top_dir
-+        _handler = functools.partial(sigint_handler,
-+                                     func=args.func,
-+                                     top_dir=os.path.abspath(top_dir))
-+        signal.signal(signal.SIGINT, _handler)
-+
-         # This cannot be set with the rest of the builtin settings as top_dir needs to be determined first
-         builtin_settings['default']['dl-dir'] = os.path.join(top_dir, '.bitbake-setup-downloads')
- 
+-        os.makedirs(os.path.dirname(top_dir), exist_ok=True)
++        os.makedirs(top_dir, exist_ok=True)
+         with open(siteconfpath, 'w') as siteconffile:
+             siteconffile.write(
+                 textwrap.dedent(
 
 -- 
 2.51.0
