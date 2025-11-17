@@ -1,82 +1,135 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8EECE8D6B
-	for <webhook@archiver.kernel.org>; Mon, 17 Nov 2025 19:55:25 +0000 (UTC)
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.18649.1763409320029199482
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0212CE8D6B
+	for <webhook@archiver.kernel.org>; Mon, 17 Nov 2025 19:58:05 +0000 (UTC)
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.18786.1763409482670497843
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 17 Nov 2025 11:55:20 -0800
+ Mon, 17 Nov 2025 11:58:02 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=UOJoLGA1;
- spf=pass (domain: gmail.com, ip: 209.85.219.50, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-8804f1bd6a7so46797986d6.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 11:55:19 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=MARc0yd/;
+ spf=pass (domain: gmail.com, ip: 209.85.128.171, mailfrom: jpewhacker@gmail.com)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-78802ac22abso45861067b3.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 11:58:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763409319; x=1764014119; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1763409482; x=1764014282; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=h1RTT3GsC74X8BRpkcJARIdccJ9QEGVw3oiI4ydyVRc=;
-        b=UOJoLGA1PeK6zzbTyDfIExDg4Zr283C6FK+j/bdIpiWIe1o7rvvrXSssaFo2D4Yy4U
-         TU0xYE3CXlQO5I7LkMDCoBu5WptUQhIX5xa1AAmZfFcq7VxEg9Ypw7jC0dLenl+3S6ob
-         +59A0ei4PKvY43jn4Rudzknzf6R3sXZivcWbMyrz1tPCiscblmE/by69WtEi+B1w7lrX
-         Iv6hRQbDjc/X8knsAYg7gC1K2xke9BTJcWhvg2PMyTGiJ22470/ra6+MgtlK6uLLs+5c
-         0f2gjdm4Ewdo5pEqvx3vd80bE53lBFgUI/7RWewdJMCD1PcAreSJ/xbxQ0/pESuFAPuZ
-         fGpA==
+        bh=Y/wM9vztRYgl/29F/ftsAvXZAYOY6//ctjsP2+OEr6g=;
+        b=MARc0yd/aZRqqoDJNi4xxxF3xN1kByd98A3UybmRsnofW/lRMx51k2C7qmwzK1eeeN
+         mKXANNL/TYdrRX8N+HIYA89VJislEo38qgMUUG5BY+EdyfNSbSwOvahYsRjsqNxtDqE0
+         JTwO56RNNsgVkgKLHWrKWrrbrKj2DdI08zzPQCS2GOMDaepvAy7MDtFTaIMSFBwVsWef
+         4NFuxDKVUbtsDFuJRtU2NxCcxXDLl2x86z+85JSLqMMENXv2R+UT/UvkUnbKO7MkDEtY
+         q1EwrNpHMk4cgDi2dFtZDyYdjgqJ+CGJ8Qr2WX78DEKTl/H0mRxojMmnSXaK22C3ofi7
+         MEPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763409319; x=1764014119;
+        d=1e100.net; s=20230601; t=1763409482; x=1764014282;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h1RTT3GsC74X8BRpkcJARIdccJ9QEGVw3oiI4ydyVRc=;
-        b=s+J18hvJnj3PZlA34uWbvYtoDK2ANalI8rtigBCz60iFVHawmg7XfSMQrJXlzn/M34
-         emEnMjdVcBUaCblRUo54T0e7lNrveKNrHAUMb2CAjdcVXB/aPOfBeYT7ePa6Zcwd2xLk
-         bGi3vK+eYfrCOiW29qYnmSUUjAGc+uu9nHD22EPCPoPXD0HUyn/r9H48Ch2tdPYmm3Dy
-         GtgcIyzmQfu+arCQV8gQjydWZehWjQPd13erDmAeN0jWpGOQK9a42nJ1+u1cmuZXZq7A
-         +n1YBHBQzrbw4IZA88NdNHz/MjhakboNoyNFzE0PHc2PyfzFkEcueMAGwk7upx0Qt2ir
-         X1mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwCt8e07idcoOquzT+xNgFIL/w/+BLpGuroY8BUYTHBn+t6LfJ6+it64qKKePV2U+cVKnsKsvZAFtm77Vr@lists.openembedded.org
-X-Gm-Message-State: AOJu0YxSXTvQ3Bx9/ofXVeDPoqCX4XT9cmoG8yGQDTgBv/s1A40Fa6Zn
-	IWRBtIVAgfZA/mBTUwv8bu9+E4gK7jsdpx1Y9DE3jCWZY1Qpekd3fEKfwf1mRaaBdr8j6pMWdd7
-	rXnAPrZMf12nZ0inny2LZYpXBIC6os3A=
-X-Gm-Gg: ASbGncvLILWJ0GT8CvSbrJd2UIy39zG+/7ukGYSfjxZgWx+3+4rjR4g63YS3+GPKg1S
-	D04QpB2qeYsnfHDVBBhXfMWz0MAsg6KTXX35PDqeIhf6AdqMb/zFO3M29ALFXVpg9HujQsM81IH
-	n/DwCN5+9OAO+mKvLfWNHzUWLbYPHR1JSMPLmpS3ND5cy1HTlreYv7YMLL54XCAWKjNAGuoWsOI
-	M/NsYoj+f4eM44rwPYEoA9nt1Bh50OhrE5jbzJYaDGHl5preLmgUtoi9Ary3eM7hn+67KD92Zpw
-	gSGiBhv2QA79tyEtKDfiSm3Tj3kgVQ==
-X-Google-Smtp-Source: AGHT+IG48oJ4vuVvkOBFbXS42qSajuCYaZYXiUH0XeZEnltZTrq2VvEFeT4n2lKJbVz8qjKVvp2qMMgASThxgGdAhN8=
-X-Received: by 2002:a05:6214:258b:b0:880:5867:45b4 with SMTP id
- 6a1803df08f44-88292589037mr202484446d6.13.1763409318975; Mon, 17 Nov 2025
- 11:55:18 -0800 (PST)
+        bh=Y/wM9vztRYgl/29F/ftsAvXZAYOY6//ctjsP2+OEr6g=;
+        b=XK2+CuTeed2CxEjzu01QLTi+SzFAM3LuUXPaUWhe0OuMx+B2ODDNKAmUlwwTJfVy9F
+         2HFdlctkHK+fmZVWu39WAlLHvHHcOEa8Ksd7I47o3BX/0q5UqZ01v3qB6zAYe1p4pGIq
+         2fuVXV5opANj+b4hsMRSKJDqaUV1TTjUf/uMKNg0h4tz6RBtkwkVGX35rwrxywzRiQHE
+         aKZ4jEvrR2ibXteiZmBcWxsGhiLAHMaA4eewUtFJPdcj9ukEB3I8foLJOuJta1JHEP3t
+         mG49NN544KnL7KhvBJzog6gQg/9gj6K43SPD/6MEeYQlkribqPEaM3CypTpsqnbve8T6
+         wHSQ==
+X-Gm-Message-State: AOJu0YzRerStk7NOwzqX3Yo9RCKztqeQbRTCtli61E+o3tQRjTZRwmI6
+	V3t9pQVstw1bPLrmwkMsTZnhPxEYvYbjbe0cOeDn3bEkfiGcvhvDpmRA+WQU88ZaO9z5tpd9SwJ
+	qok57qsqoN3kNgeDTcXE4DOnOnQ0NQqE=
+X-Gm-Gg: ASbGnctYtrC3UXLyffuejBB6zk6wcDnkdTeARRZP6z9p7DbMHlMs8e4cG1/WWBdA+Rt
+	Jttb2gL5IrbaDORFHwU4DxRZ872iQ6fr19DH7IhcdbZtwHb2El4WktVpeQ8HjVnHdhMlqOjmzai
+	WTrhmnxzNB/qWsLwsCYKrTKR0ycvr4Evazn4GLDDf7k+xBP1WFC65T2Gvpu9thzg1kkyo1WOInX
+	u7lD3DReXkfYgt/Idx+liZW9qSC2eOgo/N7X/e/+0qHrsVHRS865Wu6UWK+jMDrMKdjtPF+mpFb
+	a6XJZ6ENXrVuEQhvY4gkji6Oe/c=
+X-Google-Smtp-Source: AGHT+IEZpgY1sM4VwHRuZvfxD+u3t5IVjZMmt5mpeMmAlOLsxU2b9HuV8s1owKuVXsROuwz0m4YAbCgZ9nzaqtcPx/c=
+X-Received: by 2002:a05:690e:2494:b0:641:f5bc:69a5 with SMTP id
+ 956f58d0204a3-641f5bc729emr6061832d50.83.1763409481693; Mon, 17 Nov 2025
+ 11:58:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20251117194840.2322115-1-JPEWhacker@gmail.com> <1878E35BD8113CE6.1265056@lists.openembedded.org>
-In-Reply-To: <1878E35BD8113CE6.1265056@lists.openembedded.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Mon, 17 Nov 2025 20:55:07 +0100
-X-Gm-Features: AWmQ_bkp0_1TCtrHVqzF_J9UwgtuZQTRIvpyznY8dPS6STYV2fi3Hs564Jm9pvg
-Message-ID: <CANNYZj8OMHqFdUcgWnE2_XEJKoR8=+NBVKbRf51m=rnXTGOVgg@mail.gmail.com>
+References: <20251117194840.2322115-1-JPEWhacker@gmail.com>
+ <1878E35BD8113CE6.1265056@lists.openembedded.org> <CANNYZj8OMHqFdUcgWnE2_XEJKoR8=+NBVKbRf51m=rnXTGOVgg@mail.gmail.com>
+In-Reply-To: <CANNYZj8OMHqFdUcgWnE2_XEJKoR8=+NBVKbRf51m=rnXTGOVgg@mail.gmail.com>
+From: Joshua Watt <jpewhacker@gmail.com>
+Date: Mon, 17 Nov 2025 12:57:51 -0700
+X-Gm-Features: AWmQ_bl_vK-5HB7B8Sq9R6lUAYVf2jWRJmAxSKl9HWWcfMYAWfByn74inhkJYcI
+Message-ID: <CAJdd5Gbkd=gHL8CMdXDoMv=ZpckQvdReB5OmOkF33K091V5mZg@mail.gmail.com>
 Subject: Re: [bitbake-devel][PATCH 1/2] bitbake-setup: Allow setup-dir-name to
  be specified in JSON
-To: alex.kanavin@gmail.com
-Cc: JPEWhacker@gmail.com, bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
+To: Alexander Kanavin <alex.kanavin@gmail.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="000000000000bffe200643cfc3a1"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 19:55:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18440
+ <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 19:58:05 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18441
 
-On Mon, 17 Nov 2025 at 20:53, Alexander Kanavin via
-lists.openembedded.org <alex.kanavin=gmail.com@lists.openembedded.org>
+--000000000000bffe200643cfc3a1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Nov 17, 2025, 12:55=E2=80=AFPM Alexander Kanavin <alex.kanavin@gmai=
+l.com>
 wrote:
-> This (and the actual json tweaks) greatly increases the chances of
-> directory names clashing, so there should be a check for existence,
-> and a logic to deal with it (probably just fall back to the full
-> style)?
 
-Also see my proposal for a setting. There are pros and cons for either
-approach, I just would like you to read and consider it.
+> On Mon, 17 Nov 2025 at 20:53, Alexander Kanavin via
+> lists.openembedded.org <alex.kanavin=3Dgmail.com@lists.openembedded.org>
+> wrote:
+> > This (and the actual json tweaks) greatly increases the chances of
+> > directory names clashing, so there should be a check for existence,
+> > and a logic to deal with it (probably just fall back to the full
+> > style)?
+>
+> Also see my proposal for a setting. There are pros and cons for either
+> approach, I just would like you to read and consider it.
+>
 
-Alex
+Ya this was more just to show how to do the template string per request,
+not necessarily the complete solution. I probably should have sent it as an
+RFC.
+
+
+
+
+> Alex
+>
+
+--000000000000bffe200643cfc3a1
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"auto"><div><br><br><div class=3D"gmail_quote gmail_quote_contai=
+ner"><div dir=3D"ltr" class=3D"gmail_attr">On Mon, Nov 17, 2025, 12:55=E2=
+=80=AFPM Alexander Kanavin &lt;<a href=3D"mailto:alex.kanavin@gmail.com">al=
+ex.kanavin@gmail.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quo=
+te" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"=
+>On Mon, 17 Nov 2025 at 20:53, Alexander Kanavin via<br>
+<a href=3D"http://lists.openembedded.org" rel=3D"noreferrer noreferrer" tar=
+get=3D"_blank">lists.openembedded.org</a> &lt;alex.kanavin=3D<a href=3D"mai=
+lto:gmail.com@lists.openembedded.org" target=3D"_blank" rel=3D"noreferrer">=
+gmail.com@lists.openembedded.org</a>&gt;<br>
+wrote:<br>
+&gt; This (and the actual json tweaks) greatly increases the chances of<br>
+&gt; directory names clashing, so there should be a check for existence,<br=
+>
+&gt; and a logic to deal with it (probably just fall back to the full<br>
+&gt; style)?<br>
+<br>
+Also see my proposal for a setting. There are pros and cons for either<br>
+approach, I just would like you to read and consider it.<br></blockquote></=
+div></div><div dir=3D"auto"><br></div><div dir=3D"auto">Ya this was more ju=
+st to show how to do the template string per request, not necessarily the c=
+omplete solution. I probably should have sent it as an RFC.</div><div dir=
+=3D"auto"><br></div><div dir=3D"auto"><br></div><div dir=3D"auto"><br></div=
+><div dir=3D"auto"><div class=3D"gmail_quote gmail_quote_container"><blockq=
+uote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc =
+solid;padding-left:1ex">
+<br>
+Alex<br>
+</blockquote></div></div></div>
+
+--000000000000bffe200643cfc3a1--
 
