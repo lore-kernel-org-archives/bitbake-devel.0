@@ -1,123 +1,92 @@
-Return-Path: <mathieu.dubois-briand@bootlin.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A26ACEACEF
-	for <webhook@archiver.kernel.org>; Mon, 17 Nov 2025 12:08:53 +0000 (UTC)
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.7715.1763381327888082991
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D7DCE8D6B
+	for <webhook@archiver.kernel.org>; Mon, 17 Nov 2025 12:14:33 +0000 (UTC)
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.8010.1763381667029113244
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 17 Nov 2025 04:08:48 -0800
+ Mon, 17 Nov 2025 04:14:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=lH/x7IQV;
- spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: mathieu.dubois-briand@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 7AB95C12654
-	for <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 12:08:23 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 864DF606B9;
-	Mon, 17 Nov 2025 12:08:45 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E06E11037183E;
-	Mon, 17 Nov 2025 13:08:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1763381325; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=0L0OpgI6K8rb3IwgVlgTgOyS/pBZLzW5R9MDPHn9yow=;
-	b=lH/x7IQVr4ypZozTH7g5eUNJIVeGlwFqjmkE6/LzBMIrEXTRuVQtxzCTDbTYmgexMMSlrl
-	KbdP9nF0+5s3gWQatpv5iwOlPEwFIb0KOauyRo9e8e8vaqm5zdPklMTolsR08VXAbolqYl
-	u3iRZCmeyekw8oTsya1rVKfdTU6R53OnaRY3OhGRFuteJnVSdzCO0CJQoEGJesHFDDir4N
-	56/4F/HgB4DTqNRo1H+ts0ewKgEY2fhUvOO8FAdDxj+v65PuV33oIQEECwmXKETGYL7LU5
-	2/63uj7o1LR6gTX+Wg3Ud9Nkp6PQm1bheNkhzrwXMUa9Zd0GOxDnVf4WEyBSmA==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 17 Nov 2025 13:08:43 +0100
-Message-Id: <DEAYICIFFDWO.3R8QEGO7FSMBV@bootlin.com>
-Subject: Re: [docs] [PATCH 2/2] bitbake-selftest: setup: add test for
- --update-bb-conf=no
-Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
- <docs@lists.yoctoproject.org>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: <antonin.godard@bootlin.com>, <bitbake-devel@lists.openembedded.org>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20251114-bitbake-setup-conf-updates-v1-0-990583d8251b@bootlin.com> <20251114-bitbake-setup-conf-updates-v1-2-990583d8251b@bootlin.com>
-In-Reply-To: <20251114-bitbake-setup-conf-updates-v1-2-990583d8251b@bootlin.com>
-X-Last-TLS-Session-Version: TLSv1.3
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=PdXOIi1l;
+ spf=pass (domain: gmail.com, ip: 209.85.219.41, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-88057f5d041so42119446d6.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 04:14:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763381666; x=1763986466; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=n/6IiHb/SRwidpZR5HcRMSiLLGbFqrPBbU7wABedDbc=;
+        b=PdXOIi1luG7VjZMnz7KoyIFp4aInJDQMZ0MbbdBq2Tlj/8og2PtwnBPgsiizlC8PqI
+         ythiil45riQGIbHm9u7Cd2FMkWR7qAV0eI46eyHrLIDdRY1edzOF8rHwl6zvMt5/4nrx
+         i6BM6kYvnPVzZGHamKnqKG8FvX8eVRiU+xJf+tL9zdI70pUAm2HUkVYJn6rZyMtuu5Lm
+         lSVrCiAXixYnq93/7Cxy9BLTf+rQVOvIMSv5KtfZ0emLCRp3ayFFbF3yeSOu6hX7WHye
+         ra1706FmhhV+RhQ938vacHR4ok6g6LM8Ch+7Q3jn5mMm0O2o81EKwsHatqiwvguPdz/Q
+         WdBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763381666; x=1763986466;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n/6IiHb/SRwidpZR5HcRMSiLLGbFqrPBbU7wABedDbc=;
+        b=HGTj9iWuZi7FkD1D3VxexsfxM/YVF9Q1OY2tIb+5L0bQTQciLgOjBMEhfjdXWzlRx4
+         O7TIXn1Qp9yzKvz3XXTwIjZU69nXgU5Y3NZIaxxYAgCrG8hhniTwIgFI5HFloLgOs+7Q
+         Zc8I5jWvieDj1ilohFKYGDo/CzfyWsEZzp72tuUl9tFYLNhVYaSDnFXWHqAMi8XArCF+
+         WQHpuqBHN7w5gog21Q+p6jYTGdoF2riWOsXcnKAf2OK/yGPOC3/LAXfHNWXuYFKe3Mvq
+         lvAvcnnrhF6cQljFgwDSiCT/20jLah1MQMqED+5t3KRWwRdiDJktg6lL63bcYrax8OT8
+         EB4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUh0P4skdN+Sqw8SIazqKyboODJsFrIcn90bGF6g4v6jruTxowbV8us0pzWCNMuV9VD/0Oi9d3XwvqdvkGs@lists.openembedded.org
+X-Gm-Message-State: AOJu0YyGw571T1LpN4PLgeWIJZG4erMkZALdhc/uEewFclw1lBYKHWsi
+	iNqnr0QWQc7iV+OnXsJt7xenZVX/y+HiX2YxCsEAXwMHZBeKvBgDBIk0bUQWoOFLteAuBE2Z/Hx
+	df4mfcV+kwHU0/8aS7HKqLZHrqWiBurw=
+X-Gm-Gg: ASbGncscbClfMWe6x5to6McCF6z9LgnvTF0CjfSXjId6jfot/kAY2mj1Qy45OJKYyog
+	fMsyZKdDXv1iKngGBvtprxWIgfb+NNcw24g2xMTWjR7XGHNeTVXCiS9+15spvPsX2ykENIxS10E
+	V9xJepXy3x9LNo+xrlasWgj/uPYZneSncHQ3dXWP97adtYqoS02JD1ZvABFM4d4Wbp+A5njG0M0
+	aQKCtUBda0d1xLULlNdibaBdRaSCydw8x0quDI/aWH01ImHDlSZijVkG3pv3MzuMMX3z8/2SuWh
+	PVjdechCOsqiyXrO2u+SnJjvYcApQQ==
+X-Google-Smtp-Source: AGHT+IGt/tUWUovEH/gsnh8LwnCnfHyVCSOiGyWXmcmU6rnM0baXtV5Ng5++gVQ2oqWNdUjroxfzflAugosiv2Sg3ic=
+X-Received: by 2002:a05:6214:19e2:b0:880:48c6:ad02 with SMTP id
+ 6a1803df08f44-88292699637mr200213856d6.52.1763381665955; Mon, 17 Nov 2025
+ 04:14:25 -0800 (PST)
+MIME-Version: 1.0
+References: <20251114-bitbake-setup-conf-updates-v1-0-990583d8251b@bootlin.com>
+ <20251114-bitbake-setup-conf-updates-v1-2-990583d8251b@bootlin.com> <DEAYICIFFDWO.3R8QEGO7FSMBV@bootlin.com>
+In-Reply-To: <DEAYICIFFDWO.3R8QEGO7FSMBV@bootlin.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Mon, 17 Nov 2025 13:14:14 +0100
+X-Gm-Features: AWmQ_bncGK6BDdfP_C1-Xp8ceUWRc77mwUUzWgwBUx9_Un_TgbCFSNl-HcKxKwE
+Message-ID: <CANNYZj9f+WDUSppAkUPHh3EsnUGVYJLV2S5AAMwAtE9PfQqLLQ@mail.gmail.com>
+Subject: Re: [docs] [PATCH 2/2] bitbake-selftest: setup: add test for --update-bb-conf=no
+To: mathieu.dubois-briand@bootlin.com
+Cc: antonin.godard@bootlin.com, bitbake-devel@lists.openembedded.org, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, docs@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 12:08:53 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18424
+ <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 12:14:33 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18425
 
-On Fri Nov 14, 2025 at 5:44 PM CET, Antonin Godard via lists.yoctoproject.o=
-rg wrote:
-> We want to check that with --update-bb-conf set to 'no' our BitBake
-> configuration remains unchanged. For this create a list of checksums of
-> the files in conf/ and compare before/after bitbake-setup update
-> --update-bb-conf=3Dno.
+On Mon, 17 Nov 2025 at 13:08, Mathieu Dubois-Briand via
+lists.yoctoproject.org
+<mathieu.dubois-briand=bootlin.com@lists.yoctoproject.org> wrote:
+> hashlib.file_digest was added in python 3.11, so this is failing on some
+> supported distros:
 >
-> Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
-> ---
->  lib/bb/tests/setup.py | 35 +++++++++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
+> Traceback (most recent call last):
+>   File "/srv/pokybuild/yocto-worker/oe-selftest-debian/build/layers/bitbake/lib/bb/tests/setup.py", line 393, in test_setup
+>     sums_before = _conf_chksum(f"{setuppath}/build/conf")
+>   File "/srv/pokybuild/yocto-worker/oe-selftest-debian/build/layers/bitbake/lib/bb/tests/setup.py", line 373, in _conf_chksum
+>     sum = os.path.basename(f) + '_' + hashlib.file_digest(fd, "sha256").hexdigest()
+> AttributeError: module 'hashlib' has no attribute 'file_digest'
 >
-> diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
-> index 58049c8c7a..b4258f0492 100644
-> --- a/lib/bb/tests/setup.py
-> +++ b/lib/bb/tests/setup.py
-> @@ -6,6 +6,8 @@
-> =20
->  from bb.tests.fetch import FetcherTest
->  import json
-> +import hashlib
-> +import glob
-> =20
->  class BitbakeSetupTest(FetcherTest):
->      def setUp(self):
-> @@ -360,3 +362,36 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
->                  self.assertIn("Existing bitbake configuration directory =
-renamed to {}/build/conf-backup.".format(setuppath), out[0])
->                  self.assertIn('-{}+{}'.format(prev_test_file_content, te=
-st_file_content), out[0])
->              self.check_setupdir_files(setuppath, test_file_content)
-> +
-> +        # do the same as the previous test, but now without updating the=
- bitbake configuration (--update-bb-conf=3Dno)
-> +        # and check that files have not been modified
-> +
-> +        def _conf_chksum(confdir: str) -> list:
-> +            sums =3D []
-> +            for f in glob.glob(f'{confdir}/*'):
-> +                if not os.path.islink(f):
-> +                    with open(f, 'rb') as fd:
-> +                        sum =3D os.path.basename(f) + '_' + hashlib.file=
-_digest(fd, "sha256").hexdigest()
+> https://autobuilder.yoctoproject.org/valkyrie/#/builders/35/builds/2707
+>
+> Can you find some alternative?
 
-Hi Antonin,
+I think it should be a simple change to read the file content, and
+feed that into hashlib.
 
-hashlib.file_digest was added in python 3.11, so this is failing on some
-supported distros:
-
-Traceback (most recent call last):
-  File "/srv/pokybuild/yocto-worker/oe-selftest-debian/build/layers/bitbake=
-/lib/bb/tests/setup.py", line 393, in test_setup
-    sums_before =3D _conf_chksum(f"{setuppath}/build/conf")
-  File "/srv/pokybuild/yocto-worker/oe-selftest-debian/build/layers/bitbake=
-/lib/bb/tests/setup.py", line 373, in _conf_chksum
-    sum =3D os.path.basename(f) + '_' + hashlib.file_digest(fd, "sha256").h=
-exdigest()
-AttributeError: module 'hashlib' has no attribute 'file_digest'
-
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/35/builds/2707
-
-Can you find some alternative?
-
-Thanks,
-Mathieu
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Alex
 
