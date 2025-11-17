@@ -1,139 +1,123 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <mathieu.dubois-briand@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0180ACE8D6B
-	for <webhook@archiver.kernel.org>; Mon, 17 Nov 2025 11:52:53 +0000 (UTC)
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.7480.1763380370924353128
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A26ACEACEF
+	for <webhook@archiver.kernel.org>; Mon, 17 Nov 2025 12:08:53 +0000 (UTC)
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.7715.1763381327888082991
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 17 Nov 2025 03:52:51 -0800
+ Mon, 17 Nov 2025 04:08:48 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=U7tftK6e;
- spf=pass (domain: gmail.com, ip: 209.85.219.53, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-880439c5704so38062596d6.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 03:52:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763380370; x=1763985170; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0OKncnFIm3zgJ+IeY2cJjF9l0J+9dbsiQbuxG2esbdM=;
-        b=U7tftK6egV0FsFkdBoexP9HUwVmg2qaC2b9SlFWY4BfoMXSkzT5T2/LxRhfzRFpdWw
-         z9y/wJP6S9UCsdLUPzSiH16vM7ypD2XvwfeSc8+0ALsAGjln2ZS9Vxs5qqzxKgPjpP9C
-         ssFFffcCAq2fwfxUrEI44YRUQlNXXz7mFJnnaTWI1ytXo3/qkFPGExtN42YjddTih5EV
-         XP2yYDGaX569mk6m0caohmwQTGduVMe2D4Z9jKyuF891t5T2sM6mLQ+MhWdNtgCUPgZo
-         am2Lx2lwf0eLR9UxOrMv0FwlUG5EFT75zKwcnHJlJO3bVHdTZ6d/c100tdQOxLktx3pr
-         gKSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763380370; x=1763985170;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0OKncnFIm3zgJ+IeY2cJjF9l0J+9dbsiQbuxG2esbdM=;
-        b=uMLKxyMvGwxvImt3T6BUkVMQrT3sPUt1STPKTGcmhzlSRk1eraqJijQJwV3Q3wZmSg
-         f8AQsxKbGnlk8w4awwrYw06EK9p21c2HH+F9XN3IgSRzjNpkliTQkdrmVvu+602CEWzF
-         5pzbp600dHWaOxnHXM+Nfc/d4wXVEwrDPKbdhEOwSP6dvbpglCK9XhSUSde9MHWkxoh5
-         d01ZXVGwOKRk6NnhjF4vxeK580LKTOQYcfLD2vTb+CAl7AQkJpLiMDOim5AfuAsYWHtx
-         8NdHerLNOtso3LwIAFAjhr9/rpRBfU2fmXv/ij63Ky8dattmwYR+I+HF/bW3Zi58zStf
-         2IQw==
-X-Gm-Message-State: AOJu0YzEAD1HiwB8fs4j7D1KE2Po08241YfmQ1RzFe+8VvEEk2KZrFHT
-	T3brs3R8SzQfHlx6AtL85cezdRtvQMvlPfkMnUnyxXeCunzcJFybli0eeVMavLYNha9sJtKC38Z
-	fKcLCXDaOmnxgcn83LcbALsLfBCnKHwI=
-X-Gm-Gg: ASbGncsVyoLeW6elX8d2x3qaaruFqvBrV7aQ9YqVAer8GZhwoJhPa+YKmKEl/nY0XHP
-	9uLXaEekzIj+pJwUXhUhwVUWYqvd0Vm7z1/GO47qwa3lA/mz/2sUFPR4UYwEHVns5JlJFuoxAum
-	fCk0MWgnZVsT8KVFr7Oo0Vwy8LDxP+sJ6L6NnCzXmNXlCN4wd7imWtVwUNWaqh6omhIYyNpmPH2
-	rlNfuBCkcwL1Wp9qkMLIzMVWRex+xwfYlx5+ofP5CGy0nraVFPiwClECV5t1SGB+dyqB7Bxot7G
-	WP4Hd3LR0X0PJz3LGvgrq/u4TDOUYdLejZkELm3f
-X-Google-Smtp-Source: AGHT+IHkCZrF7HZXdBmA8gLirEFzytKQ9zOAPtSYVWIJLB7hNUwyuEiDGjODqK8frZOrQM5vGb9asovWwy/eHYNpFtA=
-X-Received: by 2002:a05:6214:410f:b0:87c:28cc:9e69 with SMTP id
- 6a1803df08f44-882926af38dmr162119946d6.55.1763380369835; Mon, 17 Nov 2025
- 03:52:49 -0800 (PST)
-MIME-Version: 1.0
-References: <20251117-bitbake-setup-conf-updates-v2-0-209637e01fbe@bootlin.com>
- <20251117-bitbake-setup-conf-updates-v2-1-209637e01fbe@bootlin.com>
-In-Reply-To: <20251117-bitbake-setup-conf-updates-v2-1-209637e01fbe@bootlin.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Mon, 17 Nov 2025 12:52:38 +0100
-X-Gm-Features: AWmQ_bkAo5OszNiz7q_LSiw0MXSiIu1eHUXu53NzJBCJikbfi9EZda3qPl2BKpI
-Message-ID: <CANNYZj9SDzt_LoR2fjENeYrmBUjjquQ=kQvoawp0HXLxkKRgwQ@mail.gmail.com>
-Subject: Re: [docs] [PATCH v2 1/2] bitbake-setup: update: add a
- --update-bb-conf option
-To: antonin.godard@bootlin.com
-Cc: bitbake-devel@lists.openembedded.org, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, docs@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=lH/x7IQV;
+ spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: mathieu.dubois-briand@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 7AB95C12654
+	for <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 12:08:23 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 864DF606B9;
+	Mon, 17 Nov 2025 12:08:45 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E06E11037183E;
+	Mon, 17 Nov 2025 13:08:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1763381325; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=0L0OpgI6K8rb3IwgVlgTgOyS/pBZLzW5R9MDPHn9yow=;
+	b=lH/x7IQVr4ypZozTH7g5eUNJIVeGlwFqjmkE6/LzBMIrEXTRuVQtxzCTDbTYmgexMMSlrl
+	KbdP9nF0+5s3gWQatpv5iwOlPEwFIb0KOauyRo9e8e8vaqm5zdPklMTolsR08VXAbolqYl
+	u3iRZCmeyekw8oTsya1rVKfdTU6R53OnaRY3OhGRFuteJnVSdzCO0CJQoEGJesHFDDir4N
+	56/4F/HgB4DTqNRo1H+ts0ewKgEY2fhUvOO8FAdDxj+v65PuV33oIQEECwmXKETGYL7LU5
+	2/63uj7o1LR6gTX+Wg3Ud9Nkp6PQm1bheNkhzrwXMUa9Zd0GOxDnVf4WEyBSmA==
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 17 Nov 2025 13:08:43 +0100
+Message-Id: <DEAYICIFFDWO.3R8QEGO7FSMBV@bootlin.com>
+Subject: Re: [docs] [PATCH 2/2] bitbake-selftest: setup: add test for
+ --update-bb-conf=no
+Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
+ <docs@lists.yoctoproject.org>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: <antonin.godard@bootlin.com>, <bitbake-devel@lists.openembedded.org>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20251114-bitbake-setup-conf-updates-v1-0-990583d8251b@bootlin.com> <20251114-bitbake-setup-conf-updates-v1-2-990583d8251b@bootlin.com>
+In-Reply-To: <20251114-bitbake-setup-conf-updates-v1-2-990583d8251b@bootlin.com>
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 11:52:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18423
+ <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 12:08:53 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18424
 
-On Mon, 17 Nov 2025 at 09:21, Antonin Godard via
-lists.yoctoproject.org
-<antonin.godard=bootlin.com@lists.yoctoproject.org> wrote:
-> -        bitbake_config_diff = get_diff(backup_bitbake_confdir, bitbake_confdir)
+On Fri Nov 14, 2025 at 5:44 PM CET, Antonin Godard via lists.yoctoproject.o=
+rg wrote:
+> We want to check that with --update-bb-conf set to 'no' our BitBake
+> configuration remains unchanged. For this create a list of checksums of
+> the files in conf/ and compare before/after bitbake-setup update
+> --update-bb-conf=3Dno.
+>
+> Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+> ---
+>  lib/bb/tests/setup.py | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>
+> diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
+> index 58049c8c7a..b4258f0492 100644
+> --- a/lib/bb/tests/setup.py
+> +++ b/lib/bb/tests/setup.py
+> @@ -6,6 +6,8 @@
+> =20
+>  from bb.tests.fetch import FetcherTest
+>  import json
+> +import hashlib
+> +import glob
+> =20
+>  class BitbakeSetupTest(FetcherTest):
+>      def setUp(self):
+> @@ -360,3 +362,36 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+>                  self.assertIn("Existing bitbake configuration directory =
+renamed to {}/build/conf-backup.".format(setuppath), out[0])
+>                  self.assertIn('-{}+{}'.format(prev_test_file_content, te=
+st_file_content), out[0])
+>              self.check_setupdir_files(setuppath, test_file_content)
+> +
+> +        # do the same as the previous test, but now without updating the=
+ bitbake configuration (--update-bb-conf=3Dno)
+> +        # and check that files have not been modified
+> +
+> +        def _conf_chksum(confdir: str) -> list:
+> +            sums =3D []
+> +            for f in glob.glob(f'{confdir}/*'):
+> +                if not os.path.islink(f):
+> +                    with open(f, 'rb') as fd:
+> +                        sum =3D os.path.basename(f) + '_' + hashlib.file=
+_digest(fd, "sha256").hexdigest()
 
-... replaced by:
+Hi Antonin,
 
-> +        try:
-> +            conf_diff = bb.process.run(f'git diff --no-index "{backup_bitbake_confdir}" "{bitbake_confdir}"')[0]
-> +        except bb.process.ExecutionError as e:
-> +            if e.exitcode == 1:
-> +                conf_diff = e.stdout
-> +            else:
-> +                raise e
+hashlib.file_digest was added in python 3.11, so this is failing on some
+supported distros:
 
-Why? I think the function helper should be reused to keep the main
-code more succinct.
+Traceback (most recent call last):
+  File "/srv/pokybuild/yocto-worker/oe-selftest-debian/build/layers/bitbake=
+/lib/bb/tests/setup.py", line 393, in test_setup
+    sums_before =3D _conf_chksum(f"{setuppath}/build/conf")
+  File "/srv/pokybuild/yocto-worker/oe-selftest-debian/build/layers/bitbake=
+/lib/bb/tests/setup.py", line 373, in _conf_chksum
+    sum =3D os.path.basename(f) + '_' + hashlib.file_digest(fd, "sha256").h=
+exdigest()
+AttributeError: module 'hashlib' has no attribute 'file_digest'
 
-> +    _extra_msg_info = " (--update-bb-conf=yes)"
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/35/builds/2707
 
-I'd say it's better to print appropriate messages directly in the
-logic branches (even if they differ only slightly), rather than set
-and tweak a variable.
+Can you find some alternative?
 
-> +    if update_bb_conf == "no":
-> +        print('Ignoring upstream bitbake configuration changes (--update-bb-conf=no)')
-> +        print(f'Leaving the upstream configuration in {upstream_bitbake_confdir}')
-> +        os.rename(bitbake_confdir, upstream_bitbake_confdir)
-> +        os.rename(backup_bitbake_confdir, bitbake_confdir)
-> +    elif conf_diff:
+Thanks,
+Mathieu
 
-The first check should be if bitbake configuration has changed at all,
-and the new config should be removed if so.
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-See the proposal here:
-https://lists.yoctoproject.org/g/docs/message/8056
-
-So the overall logic should be:
-
-if os.path.exists(backup_bitbake_confdir):
-    ... (obtain the diff)
-    if not conf_diff:
-        print("New bitbake configuration from upstream is the same as
-the old one, no need to update it.")
-        os.rmtree(new)
-        os.rename(backup, main)
-        return
-    else:
-       print('Upstream bitbake configuration changes were found:')
-       print(conf_diff)
-       if update_bb_conf == 'prompt':
-          ... ask for yes or no
-
-    if update_bb_conf == 'no':
-       ... (the block quoted above)
-       return
-
-... (write readme and print instructions and notice where the old config is)
-
-
->  def build_update(top_dir, settings, args, d):
-> -    build_status(top_dir, settings, args, d, update=True)
-> +    build_status(top_dir, settings, args, d, update=True, update_bb_conf=args.update_bb_conf)
-
-args are already passed in, so no need to pass args.update_bb_conf as
-a separate argument. build_status() can just obtain it from args.
-
-Alex
 
