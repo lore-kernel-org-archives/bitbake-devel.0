@@ -2,129 +2,92 @@ Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71643CEBF93
-	for <webhook@archiver.kernel.org>; Mon, 17 Nov 2025 08:16:11 +0000 (UTC)
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.5030.1763367367788735536
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849CCCE8D6B
+	for <webhook@archiver.kernel.org>; Mon, 17 Nov 2025 08:21:21 +0000 (UTC)
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.5100.1763367676138068184
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 17 Nov 2025 00:16:08 -0800
+ Mon, 17 Nov 2025 00:21:16 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=iqR2ksyH;
- spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: antonin.godard@bootlin.com)
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=KOpkN/QJ;
+ spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 03A58C12651
-	for <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 08:15:44 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 0F73B1A1B54;
+	Mon, 17 Nov 2025 08:21:14 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 15A89606B9
-	for <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 08:16:06 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 71A1A10371CF4;
-	Mon, 17 Nov 2025 09:16:05 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id D1FFC606B9;
+	Mon, 17 Nov 2025 08:21:13 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D558C103716CF;
+	Mon, 17 Nov 2025 09:21:12 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1763367365; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=0bTTjHJyAbZw61A67EDvCtePF4Lc0qskl+WzGjgbnsI=;
-	b=iqR2ksyHupVT5MwdUzsgKcG0Ui60Eh7WAQ7OWr+z/Gk9ujf0399B/MWH2zg2GS4H4C8FdY
-	7JYpoyPXgtqSX58qpWazfs9u7oXLBUTdAPI+0yDhJazRMxpy9ShpA7h/qjPipXIHVaKIrA
-	5NxzjrmDe72PDFi0Z4wkgM1JrzEArk/m5RXxIxiQgl2+ukanqK4niwpNOqMWvYzXGjH0QO
-	1KqqPNItJZJVm2PTZ5N+Ob6Z2TRfEP9au94AvzLqtW8L0rLl9ZnYLmG6n0mT2Hbw2s4N5z
-	bxcOOH6oWpAkza66gL4D4vEHHs5cPGOBQ0KJXoGB0ZjB/ZhgrSGd8zH4a+0vWw==
+	t=1763367673; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=QNyXaXAVQPHuAOZnVAI8hV2lfi4U0CfTigAZw3Uv1FY=;
+	b=KOpkN/QJOcxjiAc0yMSUoqEzEciSd/2LIC92MIaSV2zHKV/I0+uOt7Qh6S1zXOlp4WtoGl
+	NvC63522hdIRLkG/3W170ti8nV0oep8ZVgFVTXgRDVygzm/Tfej/d6xaxsubtyf31fsBAt
+	BtO/AMA0KdKzc6q/jU/WTbyTvgduiUFDHgkcT6sr6gr+vvD5l7mTxVyQ6HQwbjKNiEsYrB
+	ajEvNvWdPRgG6iQdRS07jX9gvspvh9XDsMCZWDhzuQYzkDfKk+FU4WcTMFfD7dITSFEX7d
+	AVl4J42Zvhh3UuUkoIVi0n823Pme2u+jtqtKgrYNvlv9P5XWfE3mrqf+ZUgj/Q==
 From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Mon, 17 Nov 2025 09:15:38 +0100
-Subject: [PATCH v2 2/3] bitbake-setup: create top-dir later in init
+Subject: [PATCH v2 0/2] bitbake-setup: update: add a --update-bb-conf
+ option
+Date: Mon, 17 Nov 2025 09:21:07 +0100
+Message-Id: <20251117-bitbake-setup-conf-updates-v2-0-209637e01fbe@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251117-bitbake-setup-abort-v2-2-a73f44e83bc0@bootlin.com>
-References: <20251117-bitbake-setup-abort-v2-0-a73f44e83bc0@bootlin.com>
-In-Reply-To: <20251117-bitbake-setup-abort-v2-0-a73f44e83bc0@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAPPaGmkC/42NSw6CMBBAr2Jm7RiKYMCV9zAs2jLI+GlJpxAN4
+ e4WvIDLl7y8N4NQYBI472YINLGwdwny/Q5sr92NkNvEkGd5qZQq0HA0+kEoFMcBrXcdjkOrIwn
+ WSlNBna5OmiAFhkAdv7f4tfmxjOZONq7F1ehZog+f7T6p1ftrNCnMsK6zsjq2VdLNxXgfn+wO1
+ r+gWZblC/aHim3YAAAA
+X-Change-ID: 20251114-bitbake-setup-conf-updates-91ae4efa86ae
 To: bitbake-devel@lists.openembedded.org
 Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Antonin Godard <antonin.godard@bootlin.com>
+ docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2571;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=978;
  i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=pDvHWcmjKOobHVPCY4tp6SM9gOlyOOBSaDfq1iveWSc=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpGtnCOps86HopqizE4j0DhbHwoPnfem/H3ibwR
- w/qmnwcSy6JAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaRrZwgAKCRDRgEFAKaOo
- NiUzD/4oz9lrzxL11rpXKkfPbuocG19zOOhdUyyS7oQ3rW/f87U+L1uRwwhpUwGrCFbMQwNnjMf
- V4ccPRqmW9qZz2f3d+U/rvX6epfGMZTKLZMS7bypguixhN/0mNSOTdPM/nH0azSRClUIL+hCG5s
- LKCNsQZe0giwpdwBSejgUl80vEKcfKtEXIkG1sUSi2Zqke/mxDeAv8+Fh0oMxK3dc/varPi8/jx
- 7pRF2NJxdapCI5JSCvd0GU4bnP9Hs8nXXMncphgrpBfhHIaO4Ak5W5pkNCCzYzAGgKJgRAWEyuN
- w9/DePCmZ3Mh5TT31b2vxZrbg35pg9jxVAGac66ZSKnefLJl2VGq1Cv6G9Cgv552QSgDNyjOovj
- 1DTO0WiAXdB8nbFrMGINdwWIc4yjfRMWELP2SWJ+4rcQ2/YLgG14GXK2zuBFyNYLpemB2mu3hk8
- epb93IH5erbAA1aTksu8XCFcAl59WhUZYc5zOcNOb6I24XTp/soFYuwvvXJmpt5gOs9QEas070D
- zdsUunlmdO/CKdBRr4B8lRva4o1wBf3lahU4SoncxGX1hPcuC4/kF1d9zuM2uQZ5ffZSrKmQWgK
- SRzANZcaYmTakaZa9ydSK3wWlsBD39TFoj+Fm7+5SJ1noef0rNNisn0VzSluqYrqzeMgM5k55O4
- jgEVCtsYDXiIpXQ==
+ bh=Wmj6Boucr+cUvjsf1fOlXfphBuOdoHU0BzsXn9fI6rU=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpGtr3KRP8uMtEFVZ2ckDoMOdOBeGF5x7ZBTHEA
+ hSZhYz0tlGJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaRra9wAKCRDRgEFAKaOo
+ Nt4QEADMbS2rhBtSFQkYuXx6LcI6+YQjmQRdqYxdf03yQpPxwDK/dCtqWh2pFkRFrXpOu6gRvKe
+ X8ibr8t4o1ufC40gYBmJUs8kT6umj4auVZrzo3OpuR6V0Pmy7kT/Ymg1+AoHv+1CRBaS+wjlwCr
+ Vqldn+6Qx3RKGyOaTJA267BLWMh128q9m14EMlP9KeZv603gNzvJlXT7ny+iHmIxu0nsW3Zo5Qp
+ aVbdhpqj0TevUG0eA1Fm6s9cktzd8emyhYhmVHA+7zmj5xcMjPw7kyOuqtFlkjppgDpMRXvlFCZ
+ L13VbkTx3uc5G3EutaRRGqG75q1RGsiLSkF3tJFh3drRO/y2dq/E1GeYqs1qbs7Euxykwrj+HHV
+ z6mNvLECcxbmaIgGTMOwT82sJQymNWXm4gIRcJH+nLY/zmbr649JtudppQh1vtNwYuy25tQDenf
+ vfdeCocTG0xRM81OcllEcLJ1Aw2wrMyJcGVXUChA22W9+HugeV0X/tWfYHU58Fe9OTR0mmfIoAf
+ 51o262G7ST+QZ8TkITDLpBsjGu8g6d8H4zrvutgjt50XnMbolj0i4xFXJM4t3jws0QOLcAuYyQJ
+ kVwKyqPvaOsx9C8yKPdkGjwEzNmHTx0sZ31FTYco70T83wL/eU0abkFMS+u/VNWT3vRrCWDg84n
+ I9K32mY8E83y80A==
 X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
  fpr=8648725188DD401BB9A0D3FFD180414029A3A836
 X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 08:16:11 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18418
-
-Calling init_bb_cache() before init_config() creates the top-directory
-already, before the user has accepted to proceed after the first few
-messages:
-
-  Bitbake-setup is using <topdir> as top directory ("bitbake-setup settings --help" shows how to change it).
-
-  A common site.conf file will be created, please edit or replace before running builds
-      <topdir>/site.conf
-
-  Proceed? (y/N):
-
-Saying N here would leave an empty top directory which is unexpected.
-
-Move the init_bb_cache() call later in init_config().
+ <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 08:21:21 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18419
 
 Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
 ---
- bin/bitbake-setup | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+Changes in v2:
+- As suggested by Alex, Rework the logic to apply upstream configuration
+  changes first, then print the diff and ask the user whether to apply
+  or not (default behavior).
+- Behavior can still be overridden with --update-bb-conf='yes/no/prompt'
+- Link to v1: https://lore.kernel.org/r/20251114-bitbake-setup-conf-updates-v1-0-990583d8251b@bootlin.com
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index adf19ab09f..db6428f8d2 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -452,14 +452,16 @@ def obtain_config(top_dir, settings, args, source_overrides, d):
-     upstream_config['skip-selection'] = args.skip_selection
-     return upstream_config
- 
--def init_config(top_dir, settings, args, d):
-+def init_config(top_dir, settings, args):
-+    create_siteconf(top_dir, args.non_interactive, settings)
-+
-+    d = init_bb_cache(top_dir, settings, args)
-     stdout = sys.stdout
-     def handle_task_progress(event, d):
-         rate = event.rate if event.rate else ''
-         progress = event.progress if event.progress > 0 else 0
-         print("{}% {}                ".format(progress, rate), file=stdout, end='\r')
- 
--    create_siteconf(top_dir, args.non_interactive, settings)
-     source_overrides = json.load(open(args.source_overrides)) if args.source_overrides else {'sources':{}}
-     upstream_config = obtain_config(top_dir, settings, args, source_overrides, d)
-     print("\nRun 'bitbake-setup init --non-interactive {}' to select this configuration non-interactively.\n".format(" ".join(upstream_config['non-interactive-cmdline-options'])))
-@@ -898,8 +900,12 @@ def main():
- 
-         print('Bitbake-setup is using {} as top directory ("bitbake-setup settings --help" shows how to change it).\n'.format(top_dir, global_settings_path(args)))
- 
--        d = init_bb_cache(top_dir, all_settings, args)
--        args.func(top_dir, all_settings, args, d)
-+        if args.func == init_config:
-+            init_config(top_dir, all_settings, args)
-+        else:
-+            d = init_bb_cache(top_dir, all_settings, args)
-+            args.func(top_dir, all_settings, args, d)
-+
-         save_bb_cache()
-     else:
-         from argparse import Namespace
+---
+Antonin Godard (2):
+      bitbake-setup: update: add a --update-bb-conf option
+      bitbake-selftest: setup: add test for --update-bb-conf=no
 
--- 
-2.51.0
+ bin/bitbake-setup                                  | 98 ++++++++++++++--------
+ .../bitbake-user-manual-environment-setup.rst      |  8 ++
+ lib/bb/tests/setup.py                              | 40 ++++++++-
+ 3 files changed, 108 insertions(+), 38 deletions(-)
+---
+base-commit: ae9a70c919f14ca323eb7c03ef9080fd0bd52c29
+change-id: 20251114-bitbake-setup-conf-updates-91ae4efa86ae
 
 
