@@ -2,131 +2,141 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B688CE8D6B
-	for <webhook@archiver.kernel.org>; Mon, 17 Nov 2025 18:43:15 +0000 (UTC)
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.17168.1763404993700207319
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B29CEACEF
+	for <webhook@archiver.kernel.org>; Mon, 17 Nov 2025 19:06:05 +0000 (UTC)
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.17711.1763406357053018876
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 17 Nov 2025 10:43:13 -0800
+ Mon, 17 Nov 2025 11:05:57 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=T18GDpAh;
- spf=pass (domain: gmail.com, ip: 209.85.160.178, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4b109c6b9fcso38646401cf.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 10:43:13 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=CryQqv0a;
+ spf=pass (domain: gmail.com, ip: 209.85.219.46, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-8823cde292eso54482096d6.2
+        for <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 11:05:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763404993; x=1764009793; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1763406356; x=1764011156; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=H2h2PAuDpwWPw2Z5gbP+hEQt/ldakIITnX/BVCK3jpQ=;
-        b=T18GDpAhCKshmTdjJg2O9LEHzxsCGGmrnYaFLIpe6NAMkmWnwl9Q435jFzb4bkczG1
-         5I1s+HZKvuxYp22E3+JgbjyhXSsAkC8ROjFEeBtdz3uMG4MOJ9q1jBKG8okQQZEKPwvv
-         tMJxm0j8r70zh1lHKXyqEBpa1RclB8868gYWAFKY4q8fot5tfhrtTeM7dNk2JQbeo/jj
-         8L2WVVkt+/WKqZQLaXvk9c5VuXbSNfuPFn+5O2x+z9iMIBBANNEnt0K1JkNSb+fIoCFt
-         d057azwyjMeL3oueG63867rvjwcba4kOc1Et8JQESsayHLiZVspv/s4pjvrCCmrrcYjH
-         N2jQ==
+        bh=RrOWT9L1Yi2mmJpx/jUfwJWWOh8YeL6sZ5BJYLOSRAU=;
+        b=CryQqv0aF1bicTlhTzzJ26hzMampV+n9bERtzds0GnMGQ7iLjFTnoYfX4tSJulNkxh
+         Kq3e3klrS0lwXR2QVTR3MMYmXbdThZXWc+IyezLySaQtVXRA+xyFUdAAfTwsN8Mkmncl
+         nL+CSfqiK1FgrxXSxOEt8aKf1NpNjOemfaQxmCg5bwVw4vvDFvLk42RSVHYaNHXVISn5
+         jlSiY8stSfS/LPS5/tU3mpUEOSfcWdJQfdt+mvpfE5bfhsLUyhEw5mLNdXo9QCe+6/hL
+         +VvprnAb61NcLGEfzmiK9C1YsdR59SpDFd09L+yEST6z7/FNBJAag7/fFne4+lyil8AJ
+         g69A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763404993; x=1764009793;
+        d=1e100.net; s=20230601; t=1763406356; x=1764011156;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=H2h2PAuDpwWPw2Z5gbP+hEQt/ldakIITnX/BVCK3jpQ=;
-        b=LaiRzfQbHj7MXezxAieG7BN5wd8MDFytQD45pBv89lPZyIwaBhMWLR38A3On+y9aPi
-         /vre+nn/9SeqWIipl8iXCU7hbsA0fIDTB8aTur9Wu+HkJ4yHfNJddAYORU8dJ5rqgsbd
-         XFqCUnTVTcq9o4goxWWmVPyc0oqTs7MMaJ232kqpDnpKct79PQwI//MCfl0u/Am79gGK
-         BxrOdbjHVodoM/vswSTG1TP5pDhFY11tbUbnaUFYHZXtzATGWU5ipLfpDl2UjKUsjW1t
-         pVfx4i/4ZLyRu1paJes8gnVy1JMZZYchpreb4/7IS2Mw/lEy63QylZZOibT0kAtig6pv
-         +JpQ==
-X-Gm-Message-State: AOJu0Ywa8U5ULoLUHnVqRPlvPTcHHeXNLlMsz9Cc7FfW3dYBVKHvJdfP
-	Bt+3al+jnDvaWIcWi/lPjukhbsynaiPjVIBEUZWetRJziCJ541tySeh6vQ5QGZx3RBBypMLlnjk
-	IHdSc+Vy96unslGgxr9/8ALj50p7m9Tc=
-X-Gm-Gg: ASbGncuKGZa7xZ8YiRKdZX4HshJGRo4eJ4/nHyRJe3X8tnPsfFp7riaTis4A5S+DsPI
-	8r9ECDTOBEcqjdy82a3WOhdda38m4bqUZ79BaI8z0eaOCwt5LNl2k5A4rCH5dLOGp+EsVC710cF
-	ajPpSsvtBRvkFyr0ECfdubU4bx2YkLnfQbIp5ZVuYl1C38z+rw3EIPEblRevNmDySigv3H+dsFC
-	4oXVmA8e3uGrjsYd0hiPz13AjfPdHQBdbAG5z9HlbsYiEd62+/zW1BJquIf6IT7t5nqPF1XHixJ
-	1Xtt
-X-Google-Smtp-Source: AGHT+IGYEhypT/6588rbe89lVAX3wyFfxhyguv3W6r+IODM4CzCSBkVwP7PVNwF5WSn6GxNb2YMw7mLnJh+G22ZdpOk=
-X-Received: by 2002:a05:622a:64b:b0:4ee:18e7:c4de with SMTP id
- d75a77b69052e-4ee18e7c892mr86146421cf.78.1763404992583; Mon, 17 Nov 2025
- 10:43:12 -0800 (PST)
+        bh=RrOWT9L1Yi2mmJpx/jUfwJWWOh8YeL6sZ5BJYLOSRAU=;
+        b=mP8ZyejsOYhCALq73oE6AIZeNQTRRwpPIEIX2qLXIVUh556qF+d65nVldd6rJoJcbb
+         rMreDkWQUBBXXno/7rr/dG3Pwd6wnSAKEXodpFtqSxwZYjh5X8ZYLe7k0yufAiZpu1vE
+         UxoE51nmD2XdSjivVj+g75pYKSGTw/RfXDO2GEe7haBSE0PFb4qjoMoIkN7iyg6OVFyX
+         nNHPkhRzlwmszGmm5H0Ll1KimqJczx3m+0SQikwj3CNeMW7k2Pq7EeH3MsZsDpJuPI6N
+         66Hl1zQcuK+iGLOePzES4NjrXjenRXnO7RuEHYD08Ol0WSZxAFj8HVXkgZCsJgK9jkKj
+         KLNA==
+X-Gm-Message-State: AOJu0YylWxLrNfgssAzNrg4oKIApSVoBcB6fg7L2bm9qdWA5vRYuCu6U
+	7EsN/F2skyxhFG8Il0gSoGHLv+qd2DSXDN4vhGt99lul4mhwdamn3+CmlOfu2kCiY1Mnh/+vhMD
+	DPOcJbEEvq/rvK8elBsELXNKP/MBQTA8=
+X-Gm-Gg: ASbGncs6j7uNjZo6/w9d3KL7SegHWRbKVjlQdOKAyx87aLgg/W1qKEp+0Yac3b/2hcg
+	fr4kSwxa8dRcljADUTUV50uwDRtOEuFW0WwxKtwU8cnZkweTFNKQ7Mt7ZQUZjFLMpKnwrssJ/7M
+	a/eF0awOk/DWZcOFlCcM3VSHOwPN1D64p93wTMYcQfIc2wgQwV5y/I66y51KHLuuRs7jzpKPMIZ
+	jKowpzwlUcKInYmMX602GO7ubbbmsocf5W+NJOKZPnOzQCvkaceK/z/XJcYo/aq5GLnmKwkNuht
+	q8Ux
+X-Google-Smtp-Source: AGHT+IGq3ZtQwIM6YJsBZ9F+6s+017o4XItjE4RkectmhNH95ka3jxYGCq4vihDzV2+KNFT+pmHPMKQzCftK1t9KTkU=
+X-Received: by 2002:a05:6214:1ccf:b0:880:47d8:dec7 with SMTP id
+ 6a1803df08f44-882926b36c3mr179257596d6.44.1763406355967; Mon, 17 Nov 2025
+ 11:05:55 -0800 (PST)
 MIME-Version: 1.0
-References: <20251112154121.3750738-2-JPEWhacker@gmail.com> <20251113161524.4068231-1-JPEWhacker@gmail.com>
-In-Reply-To: <20251113161524.4068231-1-JPEWhacker@gmail.com>
+References: <2acc6d2e53840e35ca2d99839e89d94e136dd304.camel@linuxfoundation.org>
+In-Reply-To: <2acc6d2e53840e35ca2d99839e89d94e136dd304.camel@linuxfoundation.org>
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Mon, 17 Nov 2025 19:43:01 +0100
-X-Gm-Features: AWmQ_bm0-g_hweqPFJhbKaGguAtvjNPT7ptWY7quu0zANpWnFxxkjfQX8fg59VI
-Message-ID: <CANNYZj9E7yTmM5BX08wNveWJ-LnVbx3gbRcR7kd6wpBofo0Gxg@mail.gmail.com>
-Subject: Re: [bitbake-devel][PATCH v2] bitbake-setup: Tell the user what to do
- if they don't like the top dir
-To: JPEWhacker@gmail.com
-Cc: bitbake-devel@lists.openembedded.org
+Date: Mon, 17 Nov 2025 20:05:44 +0100
+X-Gm-Features: AWmQ_bmlzFg5Epv7RNJD9B6DXXECa_UH0VoWEI5QMaMzB0pVmIgjx7VJeaKK7kk
+Message-ID: <CANNYZj_wF-LY60jTG6hjW_2jfQZiPHt9=h5=uNs-DHw8t60+Vw@mail.gmail.com>
+Subject: Re: bitbake-setup steps for release
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>, Paul Barker <paul@pbarker.dev>, 
+	Ross Burton <ross.burton@arm.com>, reatmon <reatmon@ti.com>, 
+	Robert Yang <liezhi.yang@windriver.com>, "antonin.godard" <antonin.godard@bootlin.com>, 
+	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, Joshua Watt <JPEWhacker@gmail.com>, 
+	Adrian Freihofer <adrian.freihofer@siemens.com>
 Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 18:43:15 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18433
+ <bitbake-devel@lists.openembedded.org>; Mon, 17 Nov 2025 19:06:05 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18434
 
-I had the vague feeling during the call there's a patch I've seen
-which was missed, and this is the patch.
+On Thu, 13 Nov 2025 at 12:16, Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+> a) The update command needs to prompt y/n on overwriting bblayers.conf
+> or local.conf and give the users a choice. We need a way for users to
+> update the repos with one command, we can improve the conf file
+> upgrading later.
+>
+> b) There should be a --no-conf-updates (better naming?) to the update
+> command
 
-Can you tweak it, so that this message:
-Bitbake-setup is using /home/alex/bitbake-builds as top directory
-("bitbake-setup settings --help" shows how to change it).
+Antonin's patches are nearly ready (one more simple tweak and I'm happy).
 
-does not anymore include the bit in ( )
-(RP pointed out that "bitbake-setup settings --help" doesn't actually
-show that, but the newly added prints would address that)
+> c) The default build path should not include the machine name. Ryan
+> mentioned his previous patches which have the concept of a format
+> string, or we have a include y/n piece in the json config. Otherwise
+> you can end up with multiple elements like poky_poky.
+>
+> d) We need to tell the user how to change the machine/distro layer as
+> nobody knows about the bitbake-config-build command. Mention "bitbake-
+> config-build enable-fragment machine/XXX" in output when running the
+> tool.
+>
+> e) Add a comment into toolcfg.conf to point at the command to change
+
+This was discussed on the patch review call. The unresolved question
+is what to do with c, as d and e are simple tweaks.
+
+The situation right now is:
+- it's possible to specify a custom setup dir name with --setup-dir-name=...
+- it's also possible to type in a custom setup dir name in an
+interactive initialization, if the suggested default isn't okay
+- so the unresolved part is this: the suggested default is long and
+ugly. But on the other hand it is guaranteed to be unique, and
+includes all the parts that allow easily identifying what kind of
+configuration is found inside that directory. I wrote it that way to
+basically please myself, as I'm jugging at least 30 different build
+directories, and need some kind of structure in their names to see
+what is where. Aesthetically pleasant, short names are not important
+(to me personally :).
+
+So how is it long and ugly? As of now, if someone initializes poky
+from the default registry they will get bitbake configuration in
+something like this:
+
+./bitbake-builds/poky-master-poky-distro_poky-machine_qemux86-64/build/conf/
+
+The parts are:
+- 'poky-master' is the filename of the configuration file. It contains
+the project name and the branch/release name, so a different choice
+could produce oenodistro-whintter
+- 'poky' is the selected configuration inside that file. Another
+option right now is 'poky-with-sstate'
+- the remaining parts are fragment selections. bitbake-setup does not
+know anything about machine or distro, it just concatenates the
+fragment selections made during initialization: name-value.
+
+So where do we go from here? How can we prevent poky being mentioned
+three times? Should the tool try a short directory name first, and if
+that already exists, try a longer one, and if that's taken, add even
+more pieces, and, as a last resort, a magic number? Honestly, I don't
+have clarity in my head now. Asking the audience!
+
+> f) Catch conf file configuration of MACHINE/DISTRO conflicting with a
+> fragment?
+
+Chen Qi is working on this piece.
+
+Thanks all!
 
 Alex
-
-
-
-
-On Thu, 13 Nov 2025 at 17:15, Joshua Watt via lists.openembedded.org
-<JPEWhacker=gmail.com@lists.openembedded.org> wrote:
->
-> If the top level directory look new (e.g. doesn't contain a site.conf
-> file), then instruct the user on how to choose a different directory if
-> they desire. This should help clarify what bitbake-setup is about to do
-> and how to change it if desired.
->
-> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-> ---
->  bin/bitbake-setup | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-> index 3a281defa..b54e98ba2 100755
-> --- a/bin/bitbake-setup
-> +++ b/bin/bitbake-setup
-> @@ -671,7 +671,16 @@ def create_siteconf(top_dir, non_interactive, settings):
->      if os.path.exists(siteconfpath):
->          print('A site.conf file already exists. Please remove it if you would like to replace it with a default one')
->      else:
-> -        print('A common site.conf file will be created, please edit or replace before running builds\n    {}\n'.format(siteconfpath))
-> +        print(f'{top_dir} looks like a new top directory. If you would like to use a different directory, answer "n" below and either:')
-> +        print('\t1) Pass one or more options to bitbake-setup change the top level directory:')
-> +        print('\t\tbitbake-setup --setting default top-dir-prefix <PATH> ...')
-> +        print('\t\tbitbake-setup --setting default top-dir-name <NAME> ...')
-> +        print('\t2) Change the default bitbake-setup configuration with:')
-> +        print('\t\tbitbake-setup settings set default top-level-prefix <PATH>')
-> +        print('\t\tbitbake-setup settings set default top-level-name <NAME>')
-> +        print()
-> +
-> +        print('A common site.conf file will be created, please check it is correct before running builds\n    {}\n'.format(siteconfpath))
->          if not non_interactive:
->              y_or_n = input('Proceed? (y/N): ')
->              if y_or_n != 'y':
-> --
-> 2.51.1
->
->
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#18379): https://lists.openembedded.org/g/bitbake-devel/message/18379
-> Mute This Topic: https://lists.openembedded.org/mt/116276734/1686489
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alex.kanavin@gmail.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
 
