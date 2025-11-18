@@ -2,128 +2,289 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E4DCED255
-	for <webhook@archiver.kernel.org>; Tue, 18 Nov 2025 09:29:19 +0000 (UTC)
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.8642.1763458149748312189
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BA0CED631
+	for <webhook@archiver.kernel.org>; Tue, 18 Nov 2025 12:00:40 +0000 (UTC)
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.10685.1763467237839205140
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 18 Nov 2025 01:29:09 -0800
+ Tue, 18 Nov 2025 04:00:38 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=bcFyF6B+;
- spf=pass (domain: gmail.com, ip: 209.85.219.52, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-8824a756771so51749946d6.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 18 Nov 2025 01:29:09 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=iznYM6ee;
+ spf=pass (domain: gmail.com, ip: 209.85.128.44, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4779a4fc95aso18820905e9.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 18 Nov 2025 04:00:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763458149; x=1764062949; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pusW3JUNqAf0VfljNaU2ND+svvC0VYbC3ysky7kYTKo=;
-        b=bcFyF6B+jorBKk3NS+ncPP97gWn82ksNVB4w5vaPkhDaPqlslcAiRy4fOhPEz6UWri
-         T10IxQMU1iiGgj9Wmf2BW8bdKGs7Ps7q+Vq/Buut4f40/q2l54dcHfx2Fz1wP2mKaAaM
-         IoD/y4/OobEszCqAAtZLv48Xdla2mqjJGyt7yefsUGJ7LjrMks/SuVHAEgUIfEqHmU1C
-         MOqF+gMugqO25mw7u7dNR0/+m+fFQ/XN3FoByTZLcw17RL6hguW3jifEsTZ5IeLL/a4L
-         qA2AgF4xCKRE5B/qg8W75fapLyHWl98zwWKXd88e50jCBkjYXv9+e8UnZL/i8H4qARia
-         nZwQ==
+        d=gmail.com; s=20230601; t=1763467236; x=1764072036; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Wnqp7/TvujECyo045W3JKxv/5cixkkxRASlNf6g41s=;
+        b=iznYM6eey2XQGFjz80wJ1Rn2p8z4OQRvQGXpgONmF1DdUmGQanR7C9E8XeVF9XJ6+0
+         RTiacMDwlGVlg6DsP3zBQPs/1QXWAwUsiKMklB8r1gbvcflMstr6fLzoizRWXOD7T0kq
+         SaSxyS3M21XSyyyTZlTEAGgJI49/rZhYjZ9/yZcwWPD15hWfg2kf6wj4aPQdFYVf+fb5
+         /PPpt6cqOax27NuiGqhu6eqQLtRpxe5fYl/vZou7fILTmMZ0Wdt3R5Uqa3TIrWmlUEIy
+         XHyrlzf3kSYn5mgtgThtqNXvhP6T8emSV25rJ+IKvx9CTQHL0VrkNdOttCMehD94Wcsb
+         kOdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763458149; x=1764062949;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1763467236; x=1764072036;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pusW3JUNqAf0VfljNaU2ND+svvC0VYbC3ysky7kYTKo=;
-        b=Xo8/WDfpqolOPT33J97vSJN5akmc8mRnjCVEUiaWD7qJrm/g8ZAWP3w3Vd8KgbwjF5
-         RIKrsVvqQnckxpIZflOi7lAXw8ZcBkyRCaL235QfzhWcmXl2Tqm2NB8UBp38UM8v54gc
-         5hdVA6wIIFwSK/nQd8GqR8pX8il9W/1PEoJ1osUlLEPD/CMMb/IxfSg1vMIk8yaUJXVQ
-         heU8NnEpNbfbwl8VMnBI/DZkpPIzxgi3BSgNAwX72+ka8Wp/pQqFZcUHrlJLAW//j9Wj
-         qc00bWlmyHPS9a/ftalD1ne/5CKjeKvA7GIi4q0607Um25565JZVRAC4IsXWW7/H5hIA
-         0Omw==
-X-Gm-Message-State: AOJu0Ywc3e4Rbzgc26X5iyXD3mHo3I5olnLJyU1XxlYASEaP7QiPiwok
-	jMC170gmpIvpLkAiys9JHsml6reAbeqzXd4qzA2rXtfRbPPMNuIhLWCXpseHVHsgOModikHcqgc
-	bGpHpalkOv8hTxNN47QbVTIPEoDkqyPAYCA==
-X-Gm-Gg: ASbGncuMZQ7KiOARpCyRVnnPNs7q9ZV/Zmw70z66AhI0Ca1B93xFxxzerpKs2AHUaDl
-	6hKg0Z8qpsXay56jkBewUCh5V5++LdrNNFe3WE+CITOLvlkCAmAAkEnJnjFnmHZeOahm/mEJAiv
-	JywztBWSK0YLhfpSP6gSqUiKjx2ANQFT1XCJr0ycpfSXbIOCClSbD1TLoEWjB7WPV1XdaWKedXu
-	C21aQfEx4FmZ0hN+W1aMLd4ko47Nfi6pur5txkhyShiR6Z7cRrUL97zgVNdWvGsbiP0b3C1Nk7I
-	eov6JL7XxFivXRAWGtYKMT3e10vt2mF8pJc8i7Cb
-X-Google-Smtp-Source: AGHT+IGk3Rp8q0c2BOJ/Q9r7LUklezvX6Lk5S4FIhlV+zL6U7WUA2ZQWa31peXwYKyVdX8GlGw2jXTJMZoxJh3g0C6A=
-X-Received: by 2002:a05:6214:2682:b0:880:4c2b:1c31 with SMTP id
- 6a1803df08f44-88452c0df35mr35583636d6.32.1763458148604; Tue, 18 Nov 2025
- 01:29:08 -0800 (PST)
-MIME-Version: 1.0
-References: <20251118-bitbake-setup-conf-updates-v4-0-7336b663bca6@bootlin.com>
-In-Reply-To: <20251118-bitbake-setup-conf-updates-v4-0-7336b663bca6@bootlin.com>
+        bh=2Wnqp7/TvujECyo045W3JKxv/5cixkkxRASlNf6g41s=;
+        b=E7ki4sVZSvVHS4Vk0VYN9V8hjHYMKG6+xpJPyD4M7sIBRW9vf7pWb90k4v8pHj++pG
+         bs3EJsJExriK0pyNiGwRsxdvuMWZ5Bb2hzjlt1awmc19SsdbU9TCMlPcYvCrSLxPJnjg
+         gdCY0kL3t+L2+ZE5NOC80Hrky2DuWUAtPxtvQ/dvOZWvUg5JM+qsBmkULU26NnCPmyM0
+         ikVXIvFeCc1PZAPlSK/Sgc6iiwcu0zhMGylUqV4l0AlYH/4X8GdwWteCSkiwu6stNYXg
+         an/oxT8ppWVup1ld0is/BCay8OxO8M6IaoEzlzN/JaRQH2I0Q1uh8GRl2Ma8Rkiu/cGm
+         Az7A==
+X-Gm-Message-State: AOJu0YyAq5PANOaouwEwFXzzpfn45KgBHDakSEPXFYPepWDB0skcm/1v
+	UG3wfsztNKgCNe9ggfbU3XAkPBBLbK4iFrjds+WymXghazQHTi18bKNcdD51wQ==
+X-Gm-Gg: ASbGncvq73SZowcK9YtuqyfCNYoZLOeMSToXCzGDARjiI865ZGFeXi5xPMmL810ztVU
+	mUgYtlu8n1Des5Yoc5jdmqbYDwnnZ8k2ChO2MrtIAJoSNwVnQvi8VuBIpUer8SiadZFAqesASgO
+	9Yr+PbZOn5GXY3wnAdybcvPTSeFhfULHR59P87/o2PlQOpEXHRh5pPjK3/ZiA1FmwWqvCJSG1Ed
+	wl+id1rD8UXwgE4hvHuy9sZ3FqkeHsAk28O6kTsUb9jq4+zjly5cV0OGG7yr3hfkTfz6pmL5f0D
+	6hIkfU0hn9Qu2mxDzS7yLm6h2SMvtS1nsipBSgFnww8TenBSa5DesHXzB25901yCycgwQVpXH9Z
+	MPDqtiEO0+afoXfpXIL01mA0ASNyFE6IPSXYMG5BZCKhwLbW9RAtDtviYmequQfVxQ5oenzCvSV
+	DYMiFQYztUNBN5gBdeYkuKApv29DQpHMSmoNCm4+gbI2DkYIM=
+X-Google-Smtp-Source: AGHT+IHmiK2PJi4gbwyvDr0WkDbTisPebzt2OffYPKm17lkVjLBfpUCxstrrb6Qq0wf4zRyaZvm65Q==
+X-Received: by 2002:a05:600c:a0b:b0:477:bf1:8c82 with SMTP id 5b1f17b1804b1-477a94fd02amr27023785e9.15.1763467235494;
+        Tue, 18 Nov 2025 04:00:35 -0800 (PST)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4779f44a0e4sm145540195e9.15.2025.11.18.04.00.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Nov 2025 04:00:34 -0800 (PST)
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Tue, 18 Nov 2025 10:28:57 +0100
-X-Gm-Features: AWmQ_blHPbYZmizYzJc8MRavt5ozSgQqTYBZeZTPXiP4BngSL6QwSNEExZF5-n0
-Message-ID: <CANNYZj8LQR-VBPzsk0fLbOtqLS9+jcY73aBOxA43-=rag5MEfw@mail.gmail.com>
-Subject: Re: [docs] [PATCH v4 0/2] bitbake-setup: update: add a
- --update-bb-conf option
-To: antonin.godard@bootlin.com
-Cc: bitbake-devel@lists.openembedded.org, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, docs@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
+To: bitbake-devel@lists.openembedded.org
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH] setup-schema/bitbake-setup.schema.json: move from oe-core repo
+Date: Tue, 18 Nov 2025 13:00:32 +0100
+Message-Id: <20251118120032.3627227-1-alex.kanavin@gmail.com>
+X-Mailer: git-send-email 2.39.5
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 18 Nov 2025 09:29:19 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18447
+ <bitbake-devel@lists.openembedded.org>; Tue, 18 Nov 2025 12:00:40 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18448
 
-Thanks, I think this patchset is now ready.
+From: Alexander Kanavin <alex@linutronix.de>
 
-I'm glad there are now several people that actually know the code;
-that means you can experiment and implement your own ideas :)
+The schema for bitbake-setup configurations was provisionally
+placed into oe-core, as it is an extension of an earlier
+layer setup schema, but with bitbake-setup becoming the primary
+way to set up layers, it makes sense to maintain both schemas
+in bitbake, so that any updates and tweaks can be done in
+lockstep in a single repository.
 
-Alex
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ setup-schema/bitbake-setup.schema.json | 115 +++++++++++++++++++++++++
+ setup-schema/layers.schema.json        |  73 ++++++++++++++++
+ 2 files changed, 188 insertions(+)
+ create mode 100644 setup-schema/bitbake-setup.schema.json
+ create mode 100644 setup-schema/layers.schema.json
 
-On Tue, 18 Nov 2025 at 09:20, Antonin Godard via
-lists.yoctoproject.org
-<antonin.godard=bootlin.com@lists.yoctoproject.org> wrote:
->
-> Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
-> ---
-> Changes in v4:
-> - Simplify argument passing in build_status(), as suggested by Alex
-> - Link to v3: https://lore.kernel.org/r/20251117-bitbake-setup-conf-updates-v3-0-46cdf826e79c@bootlin.com
->
-> Changes in v3:
-> - bitbake-setup:
->   - Change the conf diff logic as suggested by Alex.
->   - Use args in build_status() to get update_bb_conf.
->   - Use get_diff() instead of git diff in _setup_bitbake_build()
-> - test:
->   - Use hashlib update() instead of file_digest() for
->     backwards-compatibility.
->   - When computing checkum check that the item returned by glob.glob is
->     a file and not a link (previously it would have tried to open a
->     directory).
-> - Link to v2: https://lore.kernel.org/r/20251117-bitbake-setup-conf-updates-v2-0-209637e01fbe@bootlin.com
->
-> Changes in v2:
-> - As suggested by Alex, Rework the logic to apply upstream configuration
->   changes first, then print the diff and ask the user whether to apply
->   or not (default behavior).
-> - Behavior can still be overridden with --update-bb-conf='yes/no/prompt'
-> - Link to v1: https://lore.kernel.org/r/20251114-bitbake-setup-conf-updates-v1-0-990583d8251b@bootlin.com
->
-> ---
-> Antonin Godard (2):
->       bitbake-setup: update: add a --update-bb-conf option
->       bitbake-selftest: setup: add test for --update-bb-conf=no
->
->  bin/bitbake-setup                                  | 53 ++++++++++++++++------
->  .../bitbake-user-manual-environment-setup.rst      |  8 ++++
->  lib/bb/tests/setup.py                              | 41 +++++++++++++++--
->  3 files changed, 84 insertions(+), 18 deletions(-)
-> ---
-> base-commit: ae9a70c919f14ca323eb7c03ef9080fd0bd52c29
-> change-id: 20251114-bitbake-setup-conf-updates-91ae4efa86ae
->
->
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#8068): https://lists.yoctoproject.org/g/docs/message/8068
-> Mute This Topic: https://lists.yoctoproject.org/mt/116353215/1686489
-> Group Owner: docs+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/docs/unsub [alex.kanavin@gmail.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
+diff --git a/setup-schema/bitbake-setup.schema.json b/setup-schema/bitbake-setup.schema.json
+new file mode 100644
+index 000000000..7030f1d6d
+--- /dev/null
++++ b/setup-schema/bitbake-setup.schema.json
+@@ -0,0 +1,115 @@
++{
++    "$schema": "https://json-schema.org/draft/2020-12/schema",
++    "description": "Schema for bitbake-setup configuration files",
++    "type": "object",
++    "required": [
++        "description",
++        "bitbake-setup",
++        "version"
++    ],
++    "properties": {
++        "description": {
++            "type": "string",
++            "description": "Description of the bitbake-setup configuration file"
++        },
++        "sources": {
++            "$ref": "layers.schema.json#/properties/sources"
++        },
++        "bitbake-setup": {
++            "type": "object",
++            "description": "BitBake-setup configurations",
++            "required": [
++                "configurations"
++            ],
++            "properties": {
++                "configurations": {
++                    "type": "array",
++                    "minItems": 1,
++                    "$anchor": "configurations",
++                    "items": {
++                        "type": "object",
++                        "properties": {
++                            "name": {
++                                "type": "string",
++                                "description": "Name of the configuration"
++                            },
++                            "description": {
++                                "type": "string",
++                                "description": "Human-readable description of the configuration"
++                            },
++                            "bb-layers": {
++                                "type": "array",
++                                "description": "List of BitBake layer paths to include, relative to the layers download directory",
++                                "items": {
++                                    "type": "string"
++                                }
++                            },
++                            "bb-layers-file-relative": {
++                                "type": "array",
++                                "description": "List of BitBake layers paths to include, relative to the directory with the configuration file",
++                                "items": {
++                                    "type": "string"
++                                }
++                            },
++                            "oe-template": {
++                                "type": "string",
++                                "description": "OE-template configuration"
++                            },
++                            "oe-fragments": {
++                                "$anchor": "oe-fragments",
++                                "type": "array",
++                                "description": "List of BitBake configuration fragments to enable",
++                                "items": {
++                                    "type": "string"
++                                }
++                            },
++                            "oe-fragments-one-of": {
++                                "type": "object",
++                                "description": "Mutually exclusive bitbake configuration fragment",
++                                "patternProperties": {
++                                    ".*": {
++                                        "type": "object",
++                                        "required": [
++                                            "description",
++                                            "options"
++                                        ],
++                                        "properties": {
++                                            "description": {
++                                                "type": "string",
++                                                "description": "Human-readable description of the fragment category"
++                                            },
++                                            "options": {
++                                                "$ref": "#oe-fragments"
++                                            }
++                                        },
++                                        "additionalProperties": false
++                                    }
++                                },
++                                "additionalProperties": false
++                            },
++                            "configurations": {
++                                "$ref": "#configurations"
++                            },
++                            "bb-env-passthrough-additions": {
++                                "type": "array",
++                                "description": "List of environment variables to include in BB_ENV_PASSTHROUGH_ADDITIONS",
++                                "items": {
++                                    "type": "string"
++                                }
++                            }
++                        },
++                        "additionalProperties": false
++                    }
++                }
++            },
++            "additionalProperties": false
++        },
++        "version": {
++            "description": "The version of this document; currently '1.0'",
++            "enum": [
++                "1.0"
++            ]
++        }
++    },
++    "additionalProperties": false
++}
+diff --git a/setup-schema/layers.schema.json b/setup-schema/layers.schema.json
+new file mode 100644
+index 000000000..b5c13fdb5
+--- /dev/null
++++ b/setup-schema/layers.schema.json
+@@ -0,0 +1,73 @@
++{
++    "description": "OpenEmbedder Layer Setup Manifest",
++    "type": "object",
++    "additionalProperties": false,
++    "required": [
++        "version"
++    ],
++    "properties": {
++        "version": {
++            "description": "The version of this document; currently '1.0'",
++            "enum": ["1.0"]
++        },
++        "sources": {
++            "description": "The dict of layer sources",
++            "type": "object",
++            "patternProperties": { ".*" : {
++                "type": "object",
++                "description": "The upstream source from which a set of layers may be fetched",
++                "additionalProperties": false,
++                "properties": {
++                    "path": {
++                        "description": "The path where this layer source will be placed when fetching",
++                        "type": "string"
++                    },
++                    "contains_this_file": {
++                        "description": "Whether the directory with the layer source also contains this json description. Tools may want to skip the checkout of the source then.",
++                        "type": "boolean"
++                    },
++                    "git-remote": {
++                                "description": "A remote git source from which to fetch",
++                                "type": "object",
++                                "additionalProperties": false,
++                                "required": [
++                                    "rev"
++                                ],
++                                "properties": {
++                                    "branch": {
++                                        "description": "The git branch to fetch (optional)",
++                                        "type": "string"
++                                    },
++                                    "rev": {
++                                        "description": "The git revision to checkout",
++                                        "type": "string"
++                                    },
++                                    "describe": {
++                                        "description": "The output of 'git describe' (human readable description of the revision using tags in revision history).",
++                                        "type": "string"
++                                    },
++                                    "remotes": {
++                                        "description": "The dict of git remotes to add to this repository",
++                                        "type": "object",
++                                        "patternProperties": { ".*" : {
++                                            "description": "A git remote",
++                                            "type": "object",
++                                            "addtionalProperties": false,
++                                            "required": [
++                                                "uri"
++                                            ],
++                                            "properties": {
++                                                "uri": {
++                                                    "description": "The URI for the remote",
++                                                    "type": "string"
++                                                }
++                                            }
++                                        }}
++                                    }
++                                }
++                    }
++                }
++            }
++        }}
++    }
++}
+-- 
+2.39.5
+
 
