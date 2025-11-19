@@ -1,75 +1,75 @@
-Return-Path: <rpjday@crashcourse.ca>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DFCCF34D0
-	for <webhook@archiver.kernel.org>; Wed, 19 Nov 2025 15:09:59 +0000 (UTC)
-Received: from cpanel10.indieserve.net (cpanel10.indieserve.net [199.212.143.9])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.9261.1763564990124600565
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C31CF34D1
+	for <webhook@archiver.kernel.org>; Wed, 19 Nov 2025 15:10:48 +0000 (UTC)
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.9290.1763565039607399590
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 19 Nov 2025 07:09:50 -0800
+ Wed, 19 Nov 2025 07:10:44 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@crashcourse.ca header.s=default header.b=DbuETnJ8;
- spf=pass (domain: crashcourse.ca, ip: 199.212.143.9, mailfrom: rpjday@crashcourse.ca)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=crashcourse.ca; s=default; h=Content-Type:MIME-Version:References:
-	Message-ID:In-Reply-To:Subject:cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=8Bm+1wul9/kSJeZDpU7PR6cMA/VgPUjEVmQxskldVvA=; b=DbuETnJ84RZIXZBBXhtCE4BdoV
-	dCDe8BosQ27urwiPguCq95//SLPmnlE4pOs0Lb2lASHeHtyGAd2AKsJwS1mrbUaxDGuWVNNeejgfs
-	99npOPWEkX5r9/yMFh2cv68zF46Rtxc2vJGEkqPxN9/BdzcsAqAsA4mJ5uj8ID/f3dJDoIsIAihn1
-	XUdSwPevusU9rr0DLAYAuaNKzpFH9JkxOmMYTAJ7mFrt1E1V1tTjvtRQNyr2gY0IuRT8H9Hd9Kq40
-	z1aOLYF1zCYMNCqxkTXWvHCKvjBi5AgMLcC2Br+WiLDN+PPzsjnsKP8H9nuSKoojd5tbbSEH2ynEX
-	jSkxSE6A==;
-Received: from [147.129.179.166] (port=38996 helo=rday)
-	by cpanel10.indieserve.net with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <rpjday@crashcourse.ca>)
-	id 1vLjoX-00000003Pi7-1zsr;
-	Wed, 19 Nov 2025 10:09:48 -0500
-Date: Wed, 19 Nov 2025 10:10:25 -0500 (EST)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-To: Joshua Watt <jpewhacker@gmail.com>
-cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=l3+EWg6c;
+ spf=pass (domain: gmail.com, ip: 209.85.219.52, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-882360ca0e2so50196586d6.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 07:10:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763565038; x=1764169838; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ilGZIHCihGNRrHbJI98S/xTblgli9c9LzMP0UD338Tw=;
+        b=l3+EWg6cGTQkBKN+I1G3eGbqe6kQ2gFD15+orBvRxKcAHrora6WQx1FjnFhN4epJTX
+         2ueaAQ7o/H4tv2pBSedB3C7jp+xR4Xqzh/0Bb0w08o4F08NjREaU9RlWndsGY7TY4e6k
+         nplWVr95jOT912eCvOiG+2eigS1wUSB1Cjiz6HbMgmBZ1eKs6QB3j6wsCZKmg8Vm6OBX
+         OSFHmPSshCm06Lggi4X+deoUslJxTDM8ujPKGKiEu8TRHGLM1CICyOqqm3F4jMSdkxxs
+         IO+9Hf1ZmXyQNy07NXpCSI9tLZSxObmTSTRHzOwSW4ZXqA4wEY8PnovOlnZwNuJ0ZXQC
+         Eigg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763565038; x=1764169838;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ilGZIHCihGNRrHbJI98S/xTblgli9c9LzMP0UD338Tw=;
+        b=se8ijFhx9zxbYbIeWa9UiIcOnO1cyhio2MyY9mAaenlBI/AIfv8xE720oE76OwSsgn
+         NjboIinm5Z40Q0FhXSXFr1eMAjo5cVFFdukNaZ4QqWTIM1TfBTmsP6TYz6Ianf+XJN8n
+         rkVk7MmjurSQJ7Da4/R+Udk6viFNeZ0Xh/ju7Xcu/sTCa3RKnXuqzhQU1YbBz0fxgv9y
+         IhbrR47L7h4/y291AT06LfQMkgo/uYVANwidFyDhK84HEwCnzPjve0fTx+uN5ScIj81L
+         Ay5FLHxBUgYXEAnIwVlw3DcZLj7Y4VyO3acv0NyfuwVA6Yw64THFAVaNO7LE6ex0eWT3
+         N4+A==
+X-Forwarded-Encrypted: i=1; AJvYcCV8TXUCzdooDnlnz9iAiLa4C3EIL5zj5cSl8w1HXreKf8U2Lbl2THqgSAfyjwJhh2xZ5qupVjmCUZb38yK1@lists.openembedded.org
+X-Gm-Message-State: AOJu0YxHXc+ysdWz863pSKz0mQE1xjw1Plu2PNn8xMA0NK0LNj7Z6pn9
+	1rM2i+3+3aHVY6kdbyzKWTK3uhugCVp+kQppA1WsNMX8G72DDGBeZLUyKlS2MmMAET/sR0xRPAF
+	cMbOKfWZAz55T+z2boxOXY+6EN2C5SF4=
+X-Gm-Gg: ASbGncvf4nOoO54UtcOMq844+VVtIW9ug83SIASTxHDosnR1lHIRVdvVn51FqwzZQaR
+	U797uzzUe5KblF0WINC+/kZOkla6SJfUqtwCSefVeZk+UTGTQrzsYVQ2hxWjlY5ml7Zy4EgYlzz
+	mbk2S1ixIccSGULCgNfEDy2mVEkEGezg/DG9D/HhZTgqyEg5/7/SFpAG81YYEAHHlr7vT/NTgDW
+	cVagiAcfkLvd3K6UhoxKRF0ie6hygnnTuATcfvGiWzBoTMjmj8EL8HIZoQ4qS0YxGamdAyMzPHT
+	oYJBGjQU4Uf1gBhN3s7ns0jwfkjYFA==
+X-Google-Smtp-Source: AGHT+IEJJWkERXa/CLiRHmkyjZvxF74opVpsXwwwYHoVj+nYaY16APJDHHx3atpp+QyrG1vJbZQDhR3JtDb0cyUqCpw=
+X-Received: by 2002:ad4:5f49:0:b0:880:4695:466b with SMTP id
+ 6a1803df08f44-882926034c9mr333637646d6.30.1763565038463; Wed, 19 Nov 2025
+ 07:10:38 -0800 (PST)
+MIME-Version: 1.0
+References: <42bcc23e-27ae-8bf4-486d-3e552d58c701@crashcourse.ca> <CAJdd5GZZNGyPePiJEQnn-0mZK0cX9dzTh7KM3uqkFJtnJ6dVQg@mail.gmail.com>
+In-Reply-To: <CAJdd5GZZNGyPePiJEQnn-0mZK0cX9dzTh7KM3uqkFJtnJ6dVQg@mail.gmail.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Wed, 19 Nov 2025 16:10:26 +0100
+X-Gm-Features: AWmQ_bl7MRbI4jcgaWR4XHn-xXu75Isu_W3MPdQGgCsMqxFy2KaeluoLbY97UMw
+Message-ID: <CANNYZj8J3FGkjpjoAqaPqAqvobScA=HEOpz2BSj=SXpgcVP-cQ@mail.gmail.com>
 Subject: Re: [bitbake-devel] why is "bitbake-setup list" trying to *create*
  bitbake-builds directory?
-In-Reply-To: <CAJdd5GZZNGyPePiJEQnn-0mZK0cX9dzTh7KM3uqkFJtnJ6dVQg@mail.gmail.com>
-Message-ID: <47d2ddfd-d3bc-e1be-33d3-193b7e6c8168@crashcourse.ca>
-References: <42bcc23e-27ae-8bf4-486d-3e552d58c701@crashcourse.ca> <CAJdd5GZZNGyPePiJEQnn-0mZK0cX9dzTh7KM3uqkFJtnJ6dVQg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-521544058-1763565028=:3386664"
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel10.indieserve.net
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Get-Message-Sender-Via: cpanel10.indieserve.net: authenticated_id: rpjday+crashcourse.ca/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: cpanel10.indieserve.net: rpjday@crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+To: JPEWhacker@gmail.com
+Cc: rpjday@crashcourse.ca, 
+	BitBake developer list <bitbake-devel@lists.openembedded.org>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 15:09:59 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18460
+ <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 15:10:48 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18461
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-521544058-1763565028=:3386664
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-
-On Wed, 19 Nov 2025, Joshua Watt wrote:
-
-> On Wed, Nov 19, 2025 at 7:58 AM Robert P. J. Day via
-> lists.openembedded.org <rpjday=crashcourse.ca@lists.openembedded.org>
-> wrote:
-> >
-> >
+On Wed, 19 Nov 2025 at 16:03, Joshua Watt via lists.openembedded.org
+<JPEWhacker=gmail.com@lists.openembedded.org> wrote:
 > >   i'm confused about why "bitbake-setup list" is not just attempting
 > > to "list" stuff, but is actively creating a "bitbake-builds" directory
 > > in my current location.
@@ -85,9 +85,17 @@ On Wed, 19 Nov 2025, Joshua Watt wrote:
 > been fixed by: 0ae46d39c ("bitbake-setup: create top-dir later in
 > init")
 
-  i just pulled bitbake master and it is still behaving this way -- i
-will make absolutely sure i'm up to date. can you not reproduce this?
+It does yes. The issue is that bitbake-setup needs to set up a bitbake
+datastore (at least), and potentially fetch and unpack the registry
+repository, so it can walk its file tree looking for configs. The code
+to do this is shared with things like init/status/update, and so uses
+the same top dir as those other commands do. And of course there was
+pressure to change the default top dir to . (instead of ~) which is
+how attempting to list from places like /etc no longer works.
 
-rday
---8323329-521544058-1763565028=:3386664--
+I guess it can be changed to use a throwaway tempdir as topdir rather,
+or go through the same "print top dir info/confirm top dir" sequence
+as init does.
+
+Alex
 
