@@ -1,124 +1,123 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD810CF31BA
-	for <webhook@archiver.kernel.org>; Wed, 19 Nov 2025 12:35:46 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.5853.1763555746336983818
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F023FCF34AA
+	for <webhook@archiver.kernel.org>; Wed, 19 Nov 2025 12:48:46 +0000 (UTC)
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.6082.1763556519226737295
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 19 Nov 2025 04:35:46 -0800
+ Wed, 19 Nov 2025 04:48:39 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=iCRg77gr;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-47798ded6fcso16904765e9.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 04:35:45 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Ise6iKeq;
+ spf=pass (domain: gmail.com, ip: 209.85.221.54, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-429ce7e79f8so4651943f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 04:48:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1763555744; x=1764160544; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1oUC6ECs8Rx3K+cQmHq9SSAKrQOgW/1h+O+Am7g2Oxg=;
-        b=iCRg77grlkT3uD9qLoaQmNzU1tqyEieokYoKU1OHIDhCe1K9bE6EFixuKKnOzy2HBs
-         TKEICr1D6Qt3XSWPc3bTygI24zu7vuBcdsmcvFQKhQwBlkD3C+ZhppyTSx0jRrhOWj7U
-         UF91axLBPU5bbkZmdBrYyjA3xdoLZg11mzYi0=
+        d=gmail.com; s=20230601; t=1763556517; x=1764161317; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZwT85iqWOOT/NJOLHany4M5pCkoglgquUmc2kVdDHNY=;
+        b=Ise6iKeqU9iLs+DzFQgglUh0OM79UsewU7CSUyOzcKGvocH7EyTIa4bUcu0h7FZGYq
+         p+ysfrJCSevi/Fw4vGSldgIXYqCgbEmG9hSuXCqOH8pYC6Z2qGZH86UQkxDIu8QAMP01
+         khYGaIGd7V3ba2jp+/n4U7up1mdZUEqTiCs9QLr9y08h82apKoxp+1Nku8+nOCH7IeyQ
+         EFVRLbsElmVz4n4pUdULgv7zd+hvWpJC9qwGe5Z/auLSi0bYvTw/USuoKR1rMfkDSK3H
+         1Uyac8pb2gyQ7eFiyuneECaFfB+ontH6Di+1mTP5ch6xJRxG1PPMwts/7sZBljLKSNkp
+         NmXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763555744; x=1764160544;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1oUC6ECs8Rx3K+cQmHq9SSAKrQOgW/1h+O+Am7g2Oxg=;
-        b=l99X3IEOCxgVdhh5H+4dDFxRbvJxsOGY0/+2kKu+Ikw/URaxrMUjAvo/HnpjCO7QdV
-         5TSC44wxxrky6mV+UOmyVg3VaCK827fSj6K4dDAjswhnTEVEvJiQhPTVbZyAQDld563i
-         Rqy9HchB2UZFRIanC0rUom4SRBgz/Sw4iWZcRtlat/Sh4NUR+Be7ZdcqrtV8JCawQ+3l
-         LWMbDkJbc3Pe5T4eDJVBnF567wOH+KKmvYPDtTghW84Uab3dAzP3XMhkOoY33z4gwLJ5
-         1cKT2NjqHZp9SNb8PKL5keq/xqo9BENFKzhkBZQ6T9MKPSrb3Riu1+Yvg+JEU+Adg++r
-         hWBg==
-X-Forwarded-Encrypted: i=1; AJvYcCWhfrQE4e6oqGCk9ex+p8vOnKnvit1F0L/3Mhv+PZUZKp36htN7HmS+Tk0QB6N84+rhB5ZPKtfwIS5qkf/Y@lists.openembedded.org
-X-Gm-Message-State: AOJu0YynLf6jXyaq53PehurQ62PpchWbJa+e+hjVJakx9qj/ICts2Dks
-	RaC4wosngk8K3BwRMfSdwuQAs5uoDQheO/WcH7RWfWglLTcd1XTifR4oqgq9Vy2ho5U=
-X-Gm-Gg: ASbGncsXzZaIMTQ/+xfyCGsqF0wCyNl/6o+XGOmr7KCqUN+dUQwbILAVjepnVEO9MXr
-	j5bkbd7Ff06ygkl4an1UxbxiRv7DMU+RnmUPgLlU3br7GIUNpTTIoS0A/k27c6Qr/cCtT+/PIuy
-	kmU9jWnJvpcn4ZLjG0W9tmIFmLhFaMD0KjWe2Bx/224LNo1MI407xhlun5j3dO1i2y+H/xcFh5w
-	rHQkn3U8LS2C1EATRkvp444qpfOh1dP4DjSygTARPDQTcLj6y7lqI39rSDpZ/PKzT+8V8Ebxn09
-	6TegOlAcVWNJXbpQJjoh3lFSoLn2rZLjRn2lXruRU6X1aUtFfJj1FXJIVweNnP/JMmDFl4Vvek2
-	JuU4auExV7CZn4w21+mBt6QWalCwfz6z4xFR2dRLP1vzOpCTxQfP7LmtEG1c2k+/62QvV40D0rP
-	bLbIqgHjhQvOlZuMcNx/SrNhJ9OfrugcCJCmYRJbOar0DF6B9am8jz0xScFJry15TWVBPPS8nLt
-	oCoTmN4mz+OAQ==
-X-Google-Smtp-Source: AGHT+IGOhNbj/u0B4uwJMQn3eOoh4jPWVovSoRozEnccXY2l9Pr/FRxQOdj7DkQAgNFbOuAIIvvW1w==
-X-Received: by 2002:a05:600c:a49:b0:475:e007:baf1 with SMTP id 5b1f17b1804b1-4778feadb6dmr175060455e9.34.1763555744286;
-        Wed, 19 Nov 2025 04:35:44 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:8b60:264a:98da:e4b2? ([2001:8b0:aba:5f3c:8b60:264a:98da:e4b2])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477b106b10asm46295965e9.10.2025.11.19.04.35.43
+        d=1e100.net; s=20230601; t=1763556517; x=1764161317;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZwT85iqWOOT/NJOLHany4M5pCkoglgquUmc2kVdDHNY=;
+        b=TfZQeUxhIv+tE+rL2k8aG7AVGPJBqxR0x5T0VLz9apGAO0v8XLTQA7J5WNYL8intVf
+         weoBG/EANGGCm6Ff/QtMOs9n+bBraye0VJLEZMQeLEGPpg1TGqD1akj6/2ySDv3hs5h3
+         rOf3NLn+ERtxELhOUUSN2WJdL59V8KfjlglcDumQBAcHmlsyRUi7iE7glEObq59XZv4D
+         XFlO4mJQOVGm9h/L8YusvrLKTL5EbSbLWX7CUWPLyC0uG4kjZgyT94/WOnBTvwaThqVE
+         CST5+qKBYetyHAWvm59L/fs+fG/QpigfcuiHvW140VFLLAOt0ukMVmq4OOZL9vVtm2Vn
+         Bl8g==
+X-Gm-Message-State: AOJu0YwQ3GXyZKSUJ5GucNbK9iTzof6bOhygvYjWBTQ6XIWue6Icz1EX
+	2Di09OExaBCm6/CRkQaj7wvyDYloGbjpSWkh4XPK566vRSeHjKuo4tlf64mAOw==
+X-Gm-Gg: ASbGncvF7PDGiGWufEu8f2LhoLcz8X2gP/7ONaHUj/M2z/J//h/jtm+7NLRWroZsMBx
+	aR8ao15rgkb8zAlpgq8Frtjf3IsLAw2VxP7qBQBRYGESblCXUFO7OdAGQMNBWpwg5MJUUcN9GgS
+	061BvCSehUUfUuEp6X0q8ax2cUciymrw5f9U6oxNPwA0cN3G2y3Hii9FFRmsTUfQ8tNGsdnImrH
+	ZYkD/I7iUYNcHoxHe8bZsQNQIH6yz+LXZ3qXJcMMwIV1jTnUTv173HLYP313zKFTtZSfUGE7zSI
+	B4o1WhLT9p7gnhJdVQsScQiKnRYOmM8rqR15K0gk4nwRAgx9MI3dXq8b4HsMvkkU9lZ5mLM1zL/
+	n+xnyqRD3yUrL+4+Sk2fSWhIXkXdF35+uUch5fept/WlpCsS/9dtk36ultS6hWSh6nnyPixlbdR
+	DdkeopQZ7/J8omUnivJMbQENnfc4/vlNOKl5nuvf5KfCIhv7I=
+X-Google-Smtp-Source: AGHT+IG2tx85v2BEYCV346rOrbXHiSABpRwt+HFu5eViZnKleS2XxhsfLW2N0TngK5WQxe7J7JaAhQ==
+X-Received: by 2002:a05:6000:2909:b0:429:d66b:507f with SMTP id ffacd0b85a97d-42b5939111dmr20430720f8f.48.1763556517318;
+        Wed, 19 Nov 2025 04:48:37 -0800 (PST)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53e846afsm36953267f8f.13.2025.11.19.04.48.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Nov 2025 04:35:43 -0800 (PST)
-Message-ID: <40e6833209f3155e7bce445ba8f8d32cada2388a.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] bb/utils: add layer_path() function
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: ross.burton@arm.com, bitbake-devel@lists.openembedded.org
-Date: Wed, 19 Nov 2025 12:35:42 +0000
-In-Reply-To: <20251117153649.3611181-1-ross.burton@arm.com>
-References: <20251117153649.3611181-1-ross.burton@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0-1 
+        Wed, 19 Nov 2025 04:48:36 -0800 (PST)
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: "Joshua Watt via lists.openembedded.org" <JPEWhacker=gmail.com@lists.openembedded.org>,
+	Joshua Watt <JPEWhacker@gmail.com>,
+	Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH 1/3] bitbake-setup: Tell the user what to do if they don't like the top dir
+Date: Wed, 19 Nov 2025 13:48:30 +0100
+Message-Id: <20251119124832.3906214-1-alex.kanavin@gmail.com>
+X-Mailer: git-send-email 2.39.5
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 12:35:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18454
+ <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 12:48:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18455
 
-On Mon, 2025-11-17 at 15:36 +0000, Ross Burton via lists.openembedded.org w=
-rote:
-> diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-> index 366836bfc9..8106ada29c 100644
-> --- a/lib/bb/utils.py
-> +++ b/lib/bb/utils.py
-> @@ -1902,6 +1902,22 @@ def get_file_layer(filename, d, collection_res=3D{=
-}):
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0 return result
-> =C2=A0
-> +def layer_path(layername, d):
-> +=C2=A0=C2=A0=C2=A0 """
-> +=C2=A0=C2=A0=C2=A0 Return the path to the specified layer, or raises Key=
-Error if the layer
-> +=C2=A0=C2=A0=C2=A0 cannot be found.
-> +=C2=A0=C2=A0=C2=A0 """
-> +=C2=A0=C2=A0=C2=A0 bbpath =3D d.getVar("BBPATH").split(":")
-> +=C2=A0=C2=A0=C2=A0 pattern =3D d.getVar('BBFILE_PATTERN_' + layername)
-> +=C2=A0=C2=A0=C2=A0 if not pattern:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise KeyError(f"Cannot find =
-BBFILE_PATTERN for {layername}")
-> +
-> +=C2=A0=C2=A0=C2=A0 # Sort and reverse to protect against BBFILE_PATTERNs=
- that don't have
-> +=C2=A0=C2=A0=C2=A0 # trailing slashes
-> +=C2=A0=C2=A0=C2=A0 for path in reversed(sorted(bbpath)):
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if re.match(pattern, path + "=
-/"):
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retur=
-n path
-> +=C2=A0=C2=A0=C2=A0 raise KeyError(f"Could not match BBFILE_PATTERN for {=
-layername}")
-> =C2=A0
-> =C2=A0# Constant taken from http://linux.die.net/include/linux/prctl.h
-> =C2=A0PR_SET_PDEATHSIG =3D 1
+From: "Joshua Watt via lists.openembedded.org" <JPEWhacker=gmail.com@lists.openembedded.org>
 
-I have a concern with this.=C2=A0I think having such an API is good but I a=
-m
-worried about the implementation details. If we add this it means we
-have two different pieces of code handling layer pattern matching. I'm
-a bit worried this function could return one thing while the parse
-process could do something slightly differently.
+If the top level directory look new (e.g. doesn't contain a site.conf
+file), then instruct the user on how to choose a different directory if
+they desire. This should help clarify what bitbake-setup is about to do
+and how to change it if desired.
 
-I think in the next development cycle, we may be better off clearing
-out some of the legacy collection API since layers are clearly the
-better solution to that problem. I'd hope that allows us to simplify
-the code and allow a function like this to be abstracted.
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 
-Cheers,
+Changed the wording and order of the two possibilities: changing
+the settings comes first.
 
-Richard
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ bin/bitbake-setup | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index ca0517924..cbcd637b2 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -697,7 +697,16 @@ def create_siteconf(top_dir, non_interactive, settings):
+     if os.path.exists(siteconfpath):
+         print('A site.conf file already exists. Please remove it if you would like to replace it with a default one')
+     else:
+-        print('A common site.conf file will be created, please edit or replace before running builds\n    {}\n'.format(siteconfpath))
++        print(f'{top_dir} looks like a new top directory. If you would like to use a different directory, answer "n" below and either:')
++        print('\t1) Change the default bitbake-setup settings:')
++        print('\t\tbitbake-setup settings set default top-level-prefix <PATH>')
++        print('\t\tbitbake-setup settings set default top-level-name <NAME>')
++        print('\t2) Pass one or more options on the command line to change the top level directory in that invocation only:')
++        print('\t\tbitbake-setup --setting default top-dir-prefix <PATH> ...')
++        print('\t\tbitbake-setup --setting default top-dir-name <NAME> ...')
++        print()
++
++        print('A common site.conf file will be created, please check it is correct before running builds\n    {}\n'.format(siteconfpath))
+         if not non_interactive:
+             y_or_n = input('Proceed? (y/N): ')
+             if y_or_n != 'y':
+@@ -947,7 +956,7 @@ def main():
+             settings_func(top_dir, all_settings, args)
+             return
+ 
+-        print('Bitbake-setup is using {} as top directory ("bitbake-setup settings --help" shows how to change it).\n'.format(top_dir, global_settings_path(args)))
++        print('Bitbake-setup is using {} as top directory.\n'.format(top_dir, global_settings_path(args)))
+ 
+         if args.func == init_config:
+             init_config(top_dir, all_settings, args)
+-- 
+2.39.5
+
 
