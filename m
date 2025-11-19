@@ -2,118 +2,129 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5F4CF3185
-	for <webhook@archiver.kernel.org>; Wed, 19 Nov 2025 09:33:15 +0000 (UTC)
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.2986.1763544787442997996
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6896CF3186
+	for <webhook@archiver.kernel.org>; Wed, 19 Nov 2025 09:47:15 +0000 (UTC)
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.3150.1763545627639165220
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 19 Nov 2025 01:33:07 -0800
+ Wed, 19 Nov 2025 01:47:07 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=EpR7/1RR;
- spf=pass (domain: gmail.com, ip: 209.85.219.48, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-880570bdef8so62741736d6.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 01:33:07 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=d61IHB8H;
+ spf=pass (domain: gmail.com, ip: 209.85.219.41, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-8738c6fdbe8so8262706d6.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 01:47:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763544786; x=1764149586; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1763545625; x=1764150425; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pjipmBVnE9OcOr4YX8q2PnIYJUI+wDGQgdY585yD6Sk=;
-        b=EpR7/1RRT7pZfFmSwmUHLcQj/nl0AzWr/W2RYw0a2lKPnYqiz6XYhauvRDel7gMa1H
-         nUXFQD1ipISSReEvH4mM4wOnp6KWEgZVfEtXuNjzB74GljoAkfye3rqcTvemZoFnI5Zw
-         NQWSvFePUX7inAXncwJRXVz8kF37+fgAi7/YL+pyaSDxzAEimNrUNZgPMcqmNKpvsxI7
-         Lu4tZHa0scgPJ4XatkTk8cBIHmHd+TzvpE2eRRI6q3N1eOxSfWcXX/LrRuieOBscoVHj
-         JVgrPBjRL85hqXg/jUVEf8/UA2bwNDyGvd7bDUwF34oJqGO59AA5wZ9OFBxLGHFditmX
-         D06w==
+        bh=7aNrjsJFhBBzyZ7D6Qv7eh9WwzecCpV41YAAQlB2/Gc=;
+        b=d61IHB8Hc1mvqYFqF4mfxKnLKkRhhuSjwv3NGLodY42/XT80DiMl7jo1gO8CpOkd7x
+         1NWU9lJZQcxd8xraHEL7vPKqx2wxrR4mf7LZneXk20uLVbzuNsLYGsyhwaMchMKBidv2
+         pvZWIWH8Z4zgLr3b0FAXjrlkMn55A7N4k7h9qfPaHLTDFuBEKtw1ku+8PKFUPjxm50Vj
+         ya+gx91owgsn5iIGouS9ekb4RF49OYtyWgo9VAVJYIYZedPxfVV/ZA2j/o5NKY28xxVZ
+         INSPba7lGu0BiEFraT32p0n1FgJEoz5l6OZ+FcgC6BFY7l+PO6RS6E6xOnOKKnyXkVu6
+         J3Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763544786; x=1764149586;
+        d=1e100.net; s=20230601; t=1763545625; x=1764150425;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pjipmBVnE9OcOr4YX8q2PnIYJUI+wDGQgdY585yD6Sk=;
-        b=Z0x+vfn6ml8Y5tPPo8mh+Zhr0NUNYoyS2lVGYTNf2RVsWay/BoWLyLnTsdGBi42U86
-         qeXSJ/Q0R8Anugi3WvG7JxIvaQFTJ/lOBZposP7TS3/bifRBvQXfrxG1DXf40ujp44F3
-         r9Luu9n0muMbwopX5C6EmLzGxoA744fsQg57uBTm01v70g++nyE11b1+M/wTN/1LDgXB
-         lsLFYsIspPt6dmOgaWIksRCkfbaRpBuBBA8EKUWLuNzpVLUvilL1f2L10IKwLpQh9kKY
-         1KzkErARbXz21DQJ/WVtV6PDTJAsXV1CcCVm7Qro0WyZEZ15G9Ja0MCdjs+ZJpbZHBOB
-         YXQQ==
-X-Gm-Message-State: AOJu0YwrseruricXFRd4BI8XOyT1rBpkg+GSHUESbWEcP7Lnv9OYDFkc
-	mjcgGaaCeuPsfLKQxWQdAvPgqLuzVCqS8zW1vMdUrEYAAMhdFefbiZ0n2bOcFsMuBtSMkhsk5ZF
-	eY9fGS6JbR57jtl9ks70GUAkDxg/TksY=
-X-Gm-Gg: ASbGncsEnlFHXbiVHydQ+AbDcEBnssauOCFjnp0Gdx8uRlG4QTpSuaeTEYHBUPrlEen
-	fAW2rqixE0kHp/Iuj/KGX+GKaQJzTPMJ2fe1kNTl1WBVnYaWT2yVnjQhM+vJyILAdpL71PC+wxu
-	JGI9UIsJG7z4lGANvMN5cZkDkBV9Bjnv1verYDVd1Q2/oOWr/PO/3o79OwOe8ZDGIyezOh/C7a2
-	1sWn40VMmnOB+XjoVVRaghVABXNBtj3sNo1cXL+ioxQAhUoZlFbrMJB+vYlsAYOPvAV995F7bAu
-	wopGowisW66caljKfJTROmEa4Jir0g==
-X-Google-Smtp-Source: AGHT+IGlzDj79323wqeZ+8vxbRLkZEjhUR2dKviOpkC7CG7Iqgu50u2CXTIZCQQdji1iElhDeya83NoofUxHCKgLf1s=
-X-Received: by 2002:a05:6214:410f:b0:87c:28cc:9e69 with SMTP id
- 6a1803df08f44-882926af38dmr270428966d6.55.1763544786276; Wed, 19 Nov 2025
- 01:33:06 -0800 (PST)
+        bh=7aNrjsJFhBBzyZ7D6Qv7eh9WwzecCpV41YAAQlB2/Gc=;
+        b=tJHtjynhZ9vkrCd2zzEfPikZ953IiZfXlxx7FAYLrlPEZBlaKTR2wdrh5+7mi/A6uc
+         vqhn35mXkLykvJvosNyFT5Gojsyn5uCXp4kKBMiqIyXSCt6KIN2oJ2EnJCgJNrARzjHX
+         LFG5xF8hW+0hdGGB2DVlDp6YulaUK15kQKBG6axHc9JaGGWoFlMzS79+gBLS5+0n0hD3
+         8Mg1HVEdmyyowsflZQrH8RC8r5BX1pj+fZU7Ah0bdWiUhCqYKorH1AA+muARj+JIG682
+         1VL/axt5+CtvzB8+wrAOA1fnmDpUR3Nf+CFpgJLx4w+FAWvht1P4bTqKvB67qNvpJXby
+         vldQ==
+X-Gm-Message-State: AOJu0YyUhlYbQlxYg4M4AOC31MpTP3tLoDRbLXdHU/MFuwYJ30Pf83Gr
+	dqqzo4ju/X2vDAJG+w2dUk01SMehCJN/P+AF2ul8u2bCyoR7cmKz+DNOXuBfFDzpEsY31Vxg33i
+	VNcPJCGlxHPdpLngozWHMtCjYeVk2vWg=
+X-Gm-Gg: ASbGnctFd0JcA830PEMtw8N9fif8fHjTNtcepnlJKX4bMB6fnOMxCaH5k9pUckXbA09
+	E9amloRVPqH/zkI088X75cSZMGXM0Sxxs2LnRM2cGl0kAdD1Jysxe1ZMwM4QIFKvLEZVlWJaJa3
+	knntV6XCY2RmvLoJtwqCFEHPTBRJsPqsJGsLCeLMhiFCeiRUsimVHA6tNubjUpi164v5Kc+arWC
+	FIILSUBlF51zxCINLElQrj9E5tyqRITfkY22y2oy3ieHT1C5JZbFuqAD+9Pj9T3n/Avhgl+v+SA
+	5i2p
+X-Google-Smtp-Source: AGHT+IHqoDeNibnVMBJKvRWxgAk7gJLWHOWTR8QAARC/+/MMwwXsILavudJJ7mkSHI5Kp9a9uHHlypztKHLUbidIdZY=
+X-Received: by 2002:a05:6214:76c:b0:880:837d:aa4c with SMTP id
+ 6a1803df08f44-8846038358cmr22879596d6.28.1763545625329; Wed, 19 Nov 2025
+ 01:47:05 -0800 (PST)
 MIME-Version: 1.0
-References: <20251119090045.107642-1-Qi.Chen@windriver.com> <20251119090045.107642-2-Qi.Chen@windriver.com>
-In-Reply-To: <20251119090045.107642-2-Qi.Chen@windriver.com>
+References: <20251113161524.4068231-1-JPEWhacker@gmail.com> <20251117194805.2322020-1-JPEWhacker@gmail.com>
+In-Reply-To: <20251117194805.2322020-1-JPEWhacker@gmail.com>
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 19 Nov 2025 10:32:54 +0100
-X-Gm-Features: AWmQ_bltjzOnFdUNjXZvO4oa0snAsTHp4jOwDnAecqnm6jkXmCc7gtsX4tzWtaM
-Message-ID: <CANNYZj-4R8w3urqPq6cD-kVFF82RWODEDTE=RDz7+xsCrjCuEA@mail.gmail.com>
-Subject: Re: [bitbake-devel][PATCH V3 2/2] lib/bb/parse/ast.py: error out for
- internal fragment in case of a previous value
-To: Qi.Chen@windriver.com
-Cc: bitbake-devel@lists.openembedded.org, richard.purdie@linuxfoundation.org
+Date: Wed, 19 Nov 2025 10:46:54 +0100
+X-Gm-Features: AWmQ_bnyW2K2gEpS8kazXge5wU2lNEqw-NF_ro1EH61Dw8yvcnSf54TzAQqW4bs
+Message-ID: <CANNYZj83XxAV8EL1Q3e0FO2YWDyO9iVm=bwbL2ant7_Nwx6Y0g@mail.gmail.com>
+Subject: Re: [bitbake-devel][PATCH v2] bitbake-setup: Tell the user what to do
+ if they don't like the top dir
+To: JPEWhacker@gmail.com
+Cc: bitbake-devel@lists.openembedded.org
 Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 09:33:15 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18451
+ <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 09:47:15 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18452
 
-Thanks, this looks much more elegant!
-
-Now I just need to finish up the shorter setup dir name feature (and a
-couple minor tweaks), and we're good to release.
+This doesn't apply on current master. I'll rebase and resend as part
+of further tweaks to address the remaining issues.
 
 Alex
 
-On Wed, 19 Nov 2025 at 10:01, <Qi.Chen@windriver.com> wrote:
+On Mon, 17 Nov 2025 at 20:48, Joshua Watt via lists.openembedded.org
+<JPEWhacker=gmail.com@lists.openembedded.org> wrote:
 >
-> From: Chen Qi <Qi.Chen@windriver.com>
+> If the top level directory look new (e.g. doesn't contain a site.conf
+> file), then instruct the user on how to choose a different directory if
+> they desire. This should help clarify what bitbake-setup is about to do
+> and how to change it if desired.
 >
-> When an internal fragment is enabled, and there's already a value
-> for the corresponding variable, we should error out to avoid any
-> confusion.
->
-> For example, when 'machine/qemux86-64' fragement is enabled, and
-> we get some "MACHINE = xxx" in local.conf or env, we should error
-> out and recomment users to use 'bitbake-config-build disable-fragment'.
->
-> We should be tolerating '??=' assignments. For example, DISTRO defaults
-> to "nodistro" in oe-core layer, and when 'distro/poky" fragment is enabled,
-> there should be no confusion.
->
-> Fixes [YOCTO #16060]
->
-> Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 > ---
->  lib/bb/parse/ast.py | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  bin/bitbake-setup | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
 >
-> diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-> index bf9bd4f55..00e3615e6 100644
-> --- a/lib/bb/parse/ast.py
-> +++ b/lib/bb/parse/ast.py
-> @@ -367,6 +367,12 @@ class AddFragmentsNode(AstNode):
->          def check_and_set_builtin_fragment(fragment, data, builtin_fragments):
->              prefix, value = fragment.split('/', 1)
->              if prefix in builtin_fragments.keys():
-> +                if data.getVar(builtin_fragments[prefix], noweakdefault=True) != None:
-> +                    bb.fatal(
-> +                        ("A builtin fragment '%s' is used while %s has already got an assignment.\n"
-> +                         "Please either disable the fragment or remove the value assignment.\n"
-> +                         "To disable the fragment, use 'bitbake-config-build disable-fragment %s'."
-> +                         ) % (fragment, builtin_fragments[prefix], fragment))
->                  fragment_history = data.varhistory.variable(self.fragments_variable)
->                  loginfo={}
->                  for fh in fragment_history[::-1]:
+> diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+> index 3a281defa..7e9491fac 100755
+> --- a/bin/bitbake-setup
+> +++ b/bin/bitbake-setup
+> @@ -671,7 +671,16 @@ def create_siteconf(top_dir, non_interactive, settings):
+>      if os.path.exists(siteconfpath):
+>          print('A site.conf file already exists. Please remove it if you would like to replace it with a default one')
+>      else:
+> -        print('A common site.conf file will be created, please edit or replace before running builds\n    {}\n'.format(siteconfpath))
+> +        print(f'{top_dir} looks like a new top directory. If you would like to use a different directory, answer "n" below and either:')
+> +        print('\t1) Pass one or more options to bitbake-setup change the top level directory:')
+> +        print('\t\tbitbake-setup --setting default top-dir-prefix <PATH> ...')
+> +        print('\t\tbitbake-setup --setting default top-dir-name <NAME> ...')
+> +        print('\t2) Change the default bitbake-setup configuration with:')
+> +        print('\t\tbitbake-setup settings set default top-level-prefix <PATH>')
+> +        print('\t\tbitbake-setup settings set default top-level-name <NAME>')
+> +        print()
+> +
+> +        print('A common site.conf file will be created, please check it is correct before running builds\n    {}\n'.format(siteconfpath))
+>          if not non_interactive:
+>              y_or_n = input('Proceed? (y/N): ')
+>              if y_or_n != 'y':
+> @@ -896,7 +905,7 @@ def main():
+>              settings_func(top_dir, all_settings, args)
+>              return
+>
+> -        print('Bitbake-setup is using {} as top directory ("bitbake-setup settings --help" shows how to change it).\n'.format(top_dir, global_settings_path(args)))
+> +        print('Bitbake-setup is using {} as top directory.\n'.format(top_dir, global_settings_path(args)))
+>
+>          d = init_bb_cache(top_dir, all_settings, args)
+>          args.func(top_dir, all_settings, args, d)
 > --
-> 2.34.1
+> 2.51.1
+>
+>
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#18436): https://lists.openembedded.org/g/bitbake-devel/message/18436
+> Mute This Topic: https://lists.openembedded.org/mt/116276734/1686489
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alex.kanavin@gmail.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
 >
 
