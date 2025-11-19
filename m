@@ -2,100 +2,121 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C31CF34D1
-	for <webhook@archiver.kernel.org>; Wed, 19 Nov 2025 15:10:48 +0000 (UTC)
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.9290.1763565039607399590
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EDCCF3955
+	for <webhook@archiver.kernel.org>; Wed, 19 Nov 2025 16:24:19 +0000 (UTC)
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.11195.1763569456332195971
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 19 Nov 2025 07:10:44 -0800
+ Wed, 19 Nov 2025 08:24:16 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=l3+EWg6c;
- spf=pass (domain: gmail.com, ip: 209.85.219.52, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-882360ca0e2so50196586d6.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 07:10:39 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=MHcq6EDO;
+ spf=pass (domain: gmail.com, ip: 209.85.221.47, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-42bb288c1bfso3101401f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 08:24:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763565038; x=1764169838; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ilGZIHCihGNRrHbJI98S/xTblgli9c9LzMP0UD338Tw=;
-        b=l3+EWg6cGTQkBKN+I1G3eGbqe6kQ2gFD15+orBvRxKcAHrora6WQx1FjnFhN4epJTX
-         2ueaAQ7o/H4tv2pBSedB3C7jp+xR4Xqzh/0Bb0w08o4F08NjREaU9RlWndsGY7TY4e6k
-         nplWVr95jOT912eCvOiG+2eigS1wUSB1Cjiz6HbMgmBZ1eKs6QB3j6wsCZKmg8Vm6OBX
-         OSFHmPSshCm06Lggi4X+deoUslJxTDM8ujPKGKiEu8TRHGLM1CICyOqqm3F4jMSdkxxs
-         IO+9Hf1ZmXyQNy07NXpCSI9tLZSxObmTSTRHzOwSW4ZXqA4wEY8PnovOlnZwNuJ0ZXQC
-         Eigg==
+        d=gmail.com; s=20230601; t=1763569455; x=1764174255; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sbj5O290ajhpEa/C/eQEbseDCuKKfi1YSno9oHdF70Y=;
+        b=MHcq6EDOQBdHtos+NI5o+BbQtmSkDI+qRt8pV0pEIc0Ku1MBJmlPosfew+C/PQJZoL
+         /cUTpYBjK9CzmfzqRVxcuLFDyzEmNj4lIGv+oo9f7G6Jl5k2wb5FX+fKeRXPV9K7f8V0
+         2OZRlhljvB+j+5nDDmMNsc8E3Sy7OMB7jPaRsHXG4GRtGcXlIeY4gnS5mQCFBVrxwU8i
+         MnsTizzCIIJYp0JjfAQxqQmpNFbrVN/uzbHWwchjuT/tlS9oPsCK2iSRbRj17tbjJPHm
+         +CUozp3IDBM3DtRBjGCsFq2i5kJYX1EwLRvHtjVOIO5Z/p+Ad/mE8dSWdXI2UtaxAYgG
+         KA/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763565038; x=1764169838;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1763569455; x=1764174255;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ilGZIHCihGNRrHbJI98S/xTblgli9c9LzMP0UD338Tw=;
-        b=se8ijFhx9zxbYbIeWa9UiIcOnO1cyhio2MyY9mAaenlBI/AIfv8xE720oE76OwSsgn
-         NjboIinm5Z40Q0FhXSXFr1eMAjo5cVFFdukNaZ4QqWTIM1TfBTmsP6TYz6Ianf+XJN8n
-         rkVk7MmjurSQJ7Da4/R+Udk6viFNeZ0Xh/ju7Xcu/sTCa3RKnXuqzhQU1YbBz0fxgv9y
-         IhbrR47L7h4/y291AT06LfQMkgo/uYVANwidFyDhK84HEwCnzPjve0fTx+uN5ScIj81L
-         Ay5FLHxBUgYXEAnIwVlw3DcZLj7Y4VyO3acv0NyfuwVA6Yw64THFAVaNO7LE6ex0eWT3
-         N4+A==
-X-Forwarded-Encrypted: i=1; AJvYcCV8TXUCzdooDnlnz9iAiLa4C3EIL5zj5cSl8w1HXreKf8U2Lbl2THqgSAfyjwJhh2xZ5qupVjmCUZb38yK1@lists.openembedded.org
-X-Gm-Message-State: AOJu0YxHXc+ysdWz863pSKz0mQE1xjw1Plu2PNn8xMA0NK0LNj7Z6pn9
-	1rM2i+3+3aHVY6kdbyzKWTK3uhugCVp+kQppA1WsNMX8G72DDGBeZLUyKlS2MmMAET/sR0xRPAF
-	cMbOKfWZAz55T+z2boxOXY+6EN2C5SF4=
-X-Gm-Gg: ASbGncvf4nOoO54UtcOMq844+VVtIW9ug83SIASTxHDosnR1lHIRVdvVn51FqwzZQaR
-	U797uzzUe5KblF0WINC+/kZOkla6SJfUqtwCSefVeZk+UTGTQrzsYVQ2hxWjlY5ml7Zy4EgYlzz
-	mbk2S1ixIccSGULCgNfEDy2mVEkEGezg/DG9D/HhZTgqyEg5/7/SFpAG81YYEAHHlr7vT/NTgDW
-	cVagiAcfkLvd3K6UhoxKRF0ie6hygnnTuATcfvGiWzBoTMjmj8EL8HIZoQ4qS0YxGamdAyMzPHT
-	oYJBGjQU4Uf1gBhN3s7ns0jwfkjYFA==
-X-Google-Smtp-Source: AGHT+IEJJWkERXa/CLiRHmkyjZvxF74opVpsXwwwYHoVj+nYaY16APJDHHx3atpp+QyrG1vJbZQDhR3JtDb0cyUqCpw=
-X-Received: by 2002:ad4:5f49:0:b0:880:4695:466b with SMTP id
- 6a1803df08f44-882926034c9mr333637646d6.30.1763565038463; Wed, 19 Nov 2025
- 07:10:38 -0800 (PST)
-MIME-Version: 1.0
-References: <42bcc23e-27ae-8bf4-486d-3e552d58c701@crashcourse.ca> <CAJdd5GZZNGyPePiJEQnn-0mZK0cX9dzTh7KM3uqkFJtnJ6dVQg@mail.gmail.com>
-In-Reply-To: <CAJdd5GZZNGyPePiJEQnn-0mZK0cX9dzTh7KM3uqkFJtnJ6dVQg@mail.gmail.com>
+        bh=Sbj5O290ajhpEa/C/eQEbseDCuKKfi1YSno9oHdF70Y=;
+        b=ae5hbhIwx7+kiP00kFhR7TaJChkWNsfDBV5jPD3neCw7BzIRodqBbF3Qg4jB13DZmA
+         tPRLxyKsGVCVzC5ebYsBPUmK8V1mAh6w47XGIWSzU1jQt2U9HYVRwoCjezGm3Smw5m28
+         lOCffevseluKVcp2C17xn2Lh3ivaPl1PpYZIPwjktO1qkE2yUlCw1aWpT8DZFn0fOFMe
+         /elkjvAM6CWFhDxK0uoWpqQUvtIPdrum0RPxM1FCZ4yqmgQWBn2ndjvIi7xNh/YF4434
+         SDq/fJnebHmdYFnsOcr/oC6vQJl2bkFS8RD8zI6QwrxdqSSluZCmOr2Ars/2rQRTsZiy
+         RDfg==
+X-Gm-Message-State: AOJu0Yw0ZOtTR1vOC5U4hLgFFrxpvV9Xqr7NiLqpI+5SKL68l62W+gg/
+	PMA4ZEeatoSOmLNV87Hj2YOF+gg2Fe/+RVe6swJr4l78chAfeDs2gkH4HC2XbA==
+X-Gm-Gg: ASbGncseP6q39X2Mkx6RzL5de4ujfgEVIf/kmNHZWPz+dHxGBsVh3gSGNJM+105+V87
+	IVn9xwy9EDO0maC5YhEgh1m2l7/yI+HtvxzynKzSHt48ILkMA68Flo7OdjxkYj65SWEvte3yIhL
+	H58oLOqM2viI1iErbKKIFyyGCfyxSf1isBguuQEbZq502gQXyduvboIzot8pr2mrmCCWzeGyX6U
+	TLdKKN2XOVF3IBAYbFj3aMvB2/ESH0b2DyJBI3Tr/FAmWzt6N0CGrB2681sEzl9G8vbMjmX1uwx
+	IL9G+VfjQ4NUfDX5HYy8o4Fz9R+SfQ0HBSfsBwbdqypTqZwZWgeQ1Y/9BOA/sfHhAjEAuyC4nLq
+	PZQpEruWuuDVOxZoWP/3To+7jwEJ/uzaMAzsr64nDqUuNLqUJZzKyYPio1jP4f68QoB0fxetTvx
+	VRKbyDd+THiaFZMakaJpvWzj1DltHQxzW4XcKeGgtx21nxxGfM0cGviqvQTg==
+X-Google-Smtp-Source: AGHT+IFd8bMsFm558GPyGQN4drsVPeWWrEP23RjHgKzqJjuo82Ju/EhaOhmQIo1dcnKJeUH+8CwhKw==
+X-Received: by 2002:a05:6000:615:b0:425:75c6:7125 with SMTP id ffacd0b85a97d-42b5934f2famr18159051f8f.16.1763569454426;
+        Wed, 19 Nov 2025 08:24:14 -0800 (PST)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7f363c0sm42850f8f.18.2025.11.19.08.24.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Nov 2025 08:24:14 -0800 (PST)
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 19 Nov 2025 16:10:26 +0100
-X-Gm-Features: AWmQ_bl7MRbI4jcgaWR4XHn-xXu75Isu_W3MPdQGgCsMqxFy2KaeluoLbY97UMw
-Message-ID: <CANNYZj8J3FGkjpjoAqaPqAqvobScA=HEOpz2BSj=SXpgcVP-cQ@mail.gmail.com>
-Subject: Re: [bitbake-devel] why is "bitbake-setup list" trying to *create*
- bitbake-builds directory?
-To: JPEWhacker@gmail.com
-Cc: rpjday@crashcourse.ca, 
-	BitBake developer list <bitbake-devel@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
+To: bitbake-devel@lists.openembedded.org
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH] bitbake-setup: use a transient temporary top_dir to list available configs
+Date: Wed, 19 Nov 2025 17:24:08 +0100
+Message-Id: <20251119162408.3793924-1-alex.kanavin@gmail.com>
+X-Mailer: git-send-email 2.39.5
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 15:10:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18461
+ <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 16:24:19 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18462
 
-On Wed, 19 Nov 2025 at 16:03, Joshua Watt via lists.openembedded.org
-<JPEWhacker=gmail.com@lists.openembedded.org> wrote:
-> >   i'm confused about why "bitbake-setup list" is not just attempting
-> > to "list" stuff, but is actively creating a "bitbake-builds" directory
-> > in my current location.
-> >
-> >   if i have no bitbake-builds in my home directory and i'm *in* that
-> > directory, then:
-> >
-> > $ bitbake-setup list
-> > Bitbake-setup is using /home/rpjday/bitbake-builds as top directory
-> > ("bitbake-setup settings --help" shows how to change it).
->
-> Does this still happen on the latest master? I think it might have
-> been fixed by: 0ae46d39c ("bitbake-setup: create top-dir later in
-> init")
+From: Alexander Kanavin <alex@linutronix.de>
 
-It does yes. The issue is that bitbake-setup needs to set up a bitbake
-datastore (at least), and potentially fetch and unpack the registry
-repository, so it can walk its file tree looking for configs. The code
-to do this is shared with things like init/status/update, and so uses
-the same top dir as those other commands do. And of course there was
-pressure to change the default top dir to . (instead of ~) which is
-how attempting to list from places like /etc no longer works.
+As pointed out here:
+https://lists.openembedded.org/g/bitbake-devel/topic/116374639
 
-I guess it can be changed to use a throwaway tempdir as topdir rather,
-or go through the same "print top dir info/confirm top dir" sequence
-as init does.
+reusing the standard top_dir is prone to issues: the user, if they're just starting,
+may not want anything to be left over after issuing 'list' or even want to decide where
+the top_dir should be, they just want a list of configs.
 
-Alex
+Also if the top_dir is set to . (which is the default) and the user is in
+a directory that cannot be written into, there'll be a baffling traceback.
+
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ bin/bitbake-setup | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index a8da10e4f..792f5579f 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -681,10 +681,15 @@ def list_registry(registry_path, with_expired):
+                     json_data[config_name] = {"description": config_desc}
+     return json_data
+ 
+-def list_configs(top_dir, settings, args, d):
++def list_configs(settings, args):
++    import tempfile
++    top_dir = tempfile.mkdtemp(prefix="bitbake-setup-list-")
++    d = init_bb_cache(top_dir, settings, args)
+     registry_path = update_registry(settings["default"]["registry"], cache_dir(top_dir), d)
+     json_data = list_registry(registry_path, args.with_expired)
+-    print("\nAvailable configurations:")
++    shutil.rmtree(top_dir)
++
++    print("Available configurations:")
+     for config_name, config_data in json_data.items():
+         expiry_date = config_data.get("expires", None)
+         config_desc = config_data["description"]
+@@ -983,6 +988,9 @@ def main():
+         if args.func == settings_func:
+             settings_func(top_dir, all_settings, args)
+             return
++        if args.func == list_configs:
++            list_configs(all_settings, args)
++            return
+ 
+         print('Bitbake-setup is using {} as top directory.\n'.format(top_dir, global_settings_path(args)))
+ 
+-- 
+2.39.5
+
 
