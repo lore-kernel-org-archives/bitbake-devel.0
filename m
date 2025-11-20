@@ -2,234 +2,297 @@ Return-Path: <Qi.Chen@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B714DCF64BB
-	for <webhook@archiver.kernel.org>; Thu, 20 Nov 2025 05:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E271CF854F
+	for <webhook@archiver.kernel.org>; Thu, 20 Nov 2025 07:33:54 +0000 (UTC)
 Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.27806.1763616059544709410
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.29543.1763624028123604724
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 19 Nov 2025 21:20:59 -0800
+ Wed, 19 Nov 2025 23:33:48 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=l+IG40v8;
+ dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=Zx4uAUTE;
  spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=3419979445=qi.chen@windriver.com)
 Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AK4t10C071231
-	for <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 21:20:59 -0800
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AK5NhnE117714
+	for <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 23:33:47 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
 	 h=cc:content-transfer-encoding:content-type:date:from
 	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	PPS06212021; bh=ocVmLS5cl3mk2DJcbG+71Irj6KHYvKb9d/2pRaxWxkw=; b=
-	l+IG40v85LedQHZOQEcCbr2JbrztrBal2ObfpUtT3WWIdoH4j3ZG4EszwKmexv0D
-	h4T9q6FRQKW3PF7E5LqoBlOrT+6LSoAMFw+N0LcgxtN4j0U3YlLMD6yEFqdHKKLA
-	4+Rg8Sz2cgqFoEfI839FGcAUQoO2+V4tsoBESqP0OR/EijHmi92DZ0TNxFQJDPpr
-	ENjJVXuUwnfUoFq4/nOEEm2ICVHtVKE/K/ayQrQHvMz1gVCPtdt/VBaN8qz3w1Za
-	J8hVoIxdD6fd8rWh4byYB56tovVNhWLjiYG/lQ1EQ7+fdG66qkST5FX0pQ+Zo9Bb
-	yQXIxj+s+k+ZR8ni6yVMXA==
-Received: from sj2pr03cu001.outbound.protection.outlook.com (mail-westusazon11012035.outbound.protection.outlook.com [52.101.43.35])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4aenp2wxbe-1
+	PPS06212021; bh=upVVe3VWmcsq3kiA6Qqo550Qba3LX3jnZx/g4KXSdWo=; b=
+	Zx4uAUTEfFJAcCTkZ6FaniZ+sR7M+x9O/Me6ZIsJKP4lVKdDs3vOmMq6ol7mRHX/
+	+282YXTYVDAaQStATfgW7PRehEgU7U52HGVI3SaXBMuKxhpc/SadIhpDmJBAjMtg
+	/2THISFnIPdDro2GgroNFrwklLxOQohPx/72sJYcVKNnUhVbtoKEV/Eq1JdNBfZl
+	OKr+LG6VWPcoHniSBmgbDKnZCzAy4X+qHxx19TkS6Nx2FsGMGz2ipreoh5Uzh+os
+	qQQpzuoeWArqaCUftmlH5H/X6iSiC7vYcoF2ZD5wXySvWtjskv0RrtG0UDpDSe6q
+	j8FPvGl83CBHGPS5HKts2Q==
+Received: from cy7pr03cu001.outbound.protection.outlook.com (mail-westcentralusazon11010047.outbound.protection.outlook.com [40.93.198.47])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4aenp2x1hr-2
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 19 Nov 2025 21:20:57 -0800 (PST)
+	Wed, 19 Nov 2025 23:33:47 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wTbCtMEXb4+rrCuEH77EbIk9OY7q7aQfQLOuRjRjRG0xyif92GzTefNAEQJ+IbDxKzkJRu2oc22y13GgLWR0RtEToBToHDYbJM03ZTBMtb6iUOlcOUMObYVg4q1i6av8MzaQkOt5lLmSUrAU+LXzc38pn66LNIYXWhCk5KuNVtlKxE/ZZlR4OIHR5egP4go+ROuRGeH+Hw4PiilkFTc0NGiXMnCkTuqEOtZ6fjN5WAC0hWeCGpX+xNaXdOLL2tSuUMZGnAWD37CxiPALfJADJfuMOcjUjkNfuOjnoox3+VzTovvFFvy52xRLHhF9ynWoITUPZrDrZyunx7NHSFEkGA==
+ b=PqkU5kTICoxUhkBv0gpEVGLae8YWmjmY6dE7QIOit6KSBhotcQLPcuT+6yEcuKCXSs/SxsKI35yeb9wu/dX2feMklk+QJblqHpab3gtKm+4yeJHo980qzibtWyOfy0QzmiikyTbXIrxfFaUJ/BYoYEIyX5POdUoR6qkBIwqYv5Gm8NZMkDwCrtELNhJQyB3Hf7zY1r1y4B0T6+dMI/TiNeZVRTcQmplC5arlM1dBaVPD1D5QQExeDu7FT8t5QAJKImHq5msm9KxbPptMtKfsRj1+Ozxx7Awl8Qh5ZM8GjI/Hlay0hlZ4tGaysLSc2cQKPuEyevBRO1KJdh0XQBT6Mw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ocVmLS5cl3mk2DJcbG+71Irj6KHYvKb9d/2pRaxWxkw=;
- b=TXB3n47D1wzqLiJXlVF3yu5j2eaUydbgksotyMUuAyBEExtPXJni3NdWfPC9cU4ND+pbWwLL7/b5+K4lzaj62rd7Tre4ISuC+CW/RJC0CtRkv4AWiasKghPCX258T3D8QJo/FRnFgmzF5vy9BBlQ6jX5aM7yu9MEk7Z5D8tono+3vDScd13JYpknAog5zLfuP1R0xJBShMdnBUjo3ZzHRuKkrM01JR3B8E7+6N1f2zGKTpCpCfBSfBeYuXEjSzzxtMYA8VJoOV7XuABYz22X4rU4MMFBSVfG4BQ+jE1QNU46NI4A2OAbzZyQkoWB8wGCO+YAx2gkM8it4+pb0eXvHA==
+ bh=upVVe3VWmcsq3kiA6Qqo550Qba3LX3jnZx/g4KXSdWo=;
+ b=Yu1R3CilsBIVTlq3NcW2vmXgmU5ssHkNGPsir3OT4Wo/pMfe2uQs0ocUJlp2qiPYMDb1e/nvt5FXde69tcH9JEq/PPAYIleac0rreM4KPSWma+TM6MOzlX5xbUfdOBCIbSfsRuI4jkeDDl3MM/AHcA6oDjnf6XZMQdJccK/IDgTCPi+dutF+TnOrpNxHXk9qGfUBGvSHrKF/SEoNcyp+va5Ns2I01oS+WhbLSc9vjIu2T5juOUZhdUfaYMDFOKlawS2RuqVRgw0CrlUyawOr1MOpB406CJm+yrdzCJlLulr0LWFX69owAaK2/ii1CINapnqXxsuqtG3iQ6ajgPhdvA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=windriver.com; dmarc=pass action=none
  header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
 Received: from CO6PR11MB5602.namprd11.prod.outlook.com (2603:10b6:303:13a::5)
- by IA1PR11MB7269.namprd11.prod.outlook.com (2603:10b6:208:42b::15) with
+ by SJ5PPFC295640A5.namprd11.prod.outlook.com (2603:10b6:a0f:fc02::852) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.10; Thu, 20 Nov
- 2025 05:20:54 +0000
+ 2025 07:33:45 +0000
 Received: from CO6PR11MB5602.namprd11.prod.outlook.com
  ([fe80::5ad6:8f90:b01d:2c62]) by CO6PR11MB5602.namprd11.prod.outlook.com
  ([fe80::5ad6:8f90:b01d:2c62%4]) with mapi id 15.20.9343.009; Thu, 20 Nov 2025
- 05:20:54 +0000
-From: "Chen, Qi" <Qi.Chen@windriver.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-        "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-CC: "alex.kanavin@gmail.com" <alex.kanavin@gmail.com>
-Subject: RE: [bitbake-devel][PATCH V3 1/2] bitbake: add SKIP_FRAGMENTS
- CookerFeature
-Thread-Topic: [bitbake-devel][PATCH V3 1/2] bitbake: add SKIP_FRAGMENTS
- CookerFeature
-Thread-Index: AQHcWTMJQuq7VYVm2kWlYP5sfTHa3rT6tREAgABRHrA=
-Date: Thu, 20 Nov 2025 05:20:54 +0000
-Message-ID: 
- <CO6PR11MB5602B69971A6CAE7656225E8EDD4A@CO6PR11MB5602.namprd11.prod.outlook.com>
-References: <20251119090045.107642-1-Qi.Chen@windriver.com>
- <ccf1083effb1ace096439c3acee7b867c88cad0b.camel@linuxfoundation.org>
-In-Reply-To: 
- <ccf1083effb1ace096439c3acee7b867c88cad0b.camel@linuxfoundation.org>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
- MSIP_Label_3ea094ce-8c76-406f-84c8-0af1663f74b7_ActionId=ef8241f2-a27f-4c98-8bcc-229e90b02e31;MSIP_Label_3ea094ce-8c76-406f-84c8-0af1663f74b7_ContentBits=0;MSIP_Label_3ea094ce-8c76-406f-84c8-0af1663f74b7_Enabled=true;MSIP_Label_3ea094ce-8c76-406f-84c8-0af1663f74b7_Method=Standard;MSIP_Label_3ea094ce-8c76-406f-84c8-0af1663f74b7_Name=INTERNAL;MSIP_Label_3ea094ce-8c76-406f-84c8-0af1663f74b7_SetDate=2025-11-20T05:12:39Z;MSIP_Label_3ea094ce-8c76-406f-84c8-0af1663f74b7_SiteId=8ddb2873-a1ad-4a18-ae4e-4644631433be;MSIP_Label_3ea094ce-8c76-406f-84c8-0af1663f74b7_Tag=10,
- 3, 0, 1;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CO6PR11MB5602:EE_|IA1PR11MB7269:EE_
-x-ms-office365-filtering-correlation-id: 23e0da4f-79fe-459a-f14d-08de27f4941d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700021;
-x-microsoft-antispam-message-info: 
- =?utf-8?B?c2hYR0hRSGQ4NHVaTjE2MUlpZ1pHYkJBQ0RZRCt4dERMcnFlVFZ5Z2xZRE9X?=
- =?utf-8?B?NzVGRFMzWXpMYkRnL2pjVDhodEJOMm1kOUY4UTdkdk5qSU8zeFllSkhIVHFi?=
- =?utf-8?B?Q3F0a20wMVJmd3JoQTBIcml2b0l2UmFhcWVMYjRka29pMnFpcm9KbWpEenFy?=
- =?utf-8?B?WnU1TnpySjZEb2FSd2wyR1MwSGlwc3pwWER6YVJOR1lPWWZ1empDalNTU0NI?=
- =?utf-8?B?b2M2dUpIS3J6UDRGK3lFVmZhWW9ibVNxQ241bUdOK3RUYVlic1cvOUR2aHNy?=
- =?utf-8?B?VEFpb1EzVXZGN1BIRjVuRlFWdUtoS084OWNFUldZbWJPTmRCeW5TTXdGNVh0?=
- =?utf-8?B?SEtxUUpPbUxKVjdqMG1QaWFvQ2dnRUhGcUVGQVVJVXNqZjRDM1YvOVBrWFlC?=
- =?utf-8?B?NHpXWDRZUkdaY3hwSW0vbmpSTEc3QWNDb2psdjF3cTl5eGY0NmwwczFiWUlZ?=
- =?utf-8?B?K2J0VmJNalVnd0R4d0lxeGhVUytEY3Qrc2RXWkp2MTRSV2tlUHcxNnJ6OURi?=
- =?utf-8?B?VVVnY3U1VGZQcWhIZjQxZ29QR3oxalVvZUVndHlPWVJmL0ZDNnJOS1BmbWdm?=
- =?utf-8?B?dWxhdHhETVh3bnJUNEtWV2JyR3dJcGxCdU53U0NQWnJrRnUxNzZZcDVTc0NJ?=
- =?utf-8?B?K2RUY1RMdHE0TEVhZ1lTam5tK2ZDVC9IQnJJaGFiQU1jenJuZnBEUHdwaTlJ?=
- =?utf-8?B?bVVOWTViNnBGY3NsMmNDVkJkWHBYaTVwbmwrbnlYbmw0eDdoMk9aOXNaR2xz?=
- =?utf-8?B?WldPT0dyd1NQYXJ6QUdDcjliUkI0MGdDVmxCWTZtNzdkQzBGTlNXQVVLcDBO?=
- =?utf-8?B?MVBOek9XRytYa2piZXVNemszZ3ZnWjBUQlZPY2E1M3phVEM3ME5JUkRiQVBu?=
- =?utf-8?B?cE9JSVY4Wk1WMEVkWExzeFl3Rk5PSWYvL095UWc1Sm5SMHRQSmlYdVVKOGI4?=
- =?utf-8?B?SlBGWGJSOEFDeGFFVElNbFBEUGlaWFE5dTFnZGd3MmNhcFNMTlI5YjZtZ2xJ?=
- =?utf-8?B?VzRMbkxNMWRuYnplS1JNVkZsUVFVUXNPNmhESGlURWVnYUhLYndhZitsSVR4?=
- =?utf-8?B?MFdqUE5GNlFIQXR5M1I3WG5pL0JMS2JpMUc2QzhyRnBDMTlCYVBYY3lnK1Rm?=
- =?utf-8?B?Wmd3Nk80TkQwb1d3ZWExWHhsM01HVUlUcGg5aG5XVHFhVTVqbjhOUUlMUWRU?=
- =?utf-8?B?TDBxTVl2bTYvdlJoN1FlWWRwNldLSktIMnE3Tk9NaUVxb1BTK2J6dWRoTEpQ?=
- =?utf-8?B?dTg5b1hUS1dVQml1dXdRQ0lTUjI0SUFtUDVHZ2NhTG1CZmdqbkpHUHRvS0hJ?=
- =?utf-8?B?dHRaK3BvWktkMFpuek5abWEySWRrd1NFN0QyZzBsVzYrZ1E2SnB1OFdLb1lW?=
- =?utf-8?B?ankxbFZLTDYrcThLQXRRS295a2FDSlBNTmo0UVFLRTZCa0dQZFhGcmwyTXc1?=
- =?utf-8?B?ZlZmZXB5aFUrbkdVcFFHSFlLelltTTlXMUZIKzl3dlhPTnppVFd4eWVWT1BO?=
- =?utf-8?B?dUs2WGFubklYTklrdlNkb2twRWxKOStGazdNck5EV2dkTmNxa25naWhJNWl5?=
- =?utf-8?B?c0VreUZJaGsxaDRQWjFkUUh6ZDl6dWcrcXQxWDdUdVU1c0xqTzN5VU1Lbzk4?=
- =?utf-8?B?YlVWd3FqaXpkVWZRK3paajBXTjg1ZWFnbjluZldqRmlEWC9oaFhPNDc4Z21B?=
- =?utf-8?B?eEsrd2kwRUtvQ0RmTHVCOGhFY0hHNkRPWGxRajB2RGQ3aUZNbjlhajBSdDJY?=
- =?utf-8?B?OUtjSDFkaHZ1Y0hUSnphNFhoMG5OU3RHR0FqUDJHSi9wdGhoM1F6ZnVJWk4w?=
- =?utf-8?B?NWNOK2JqWTNYZ0E1QzF5MW9Md0V3QnA0blJpOUxnT3luSjdYSTFEVWM3U2Uv?=
- =?utf-8?B?RHJaOXR6TWZIRmcwWlNwMktHMHNmMXE0SVFwUE5BeEwxalNSeUE2all2SXhy?=
- =?utf-8?B?V2hYdUxGQWxsVHJQY1NWZ1VvN0FIcWwwNTZDRFd6TitRejByUWlIdzMzUXEy?=
- =?utf-8?B?VnEzQ0hzblR3PT0=?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5602.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?utf-8?B?R3FUN2tsQlBJMm9DbjNEYTdOdHQyTzY0bjVrUXdLN3RHUDVXeDByNkd6VHVz?=
- =?utf-8?B?VmdNRUpLZUJBSXR5cGlkdzFBL3k2R2s3Z3FVc1QzUlliclRENTRCZlpjM2dh?=
- =?utf-8?B?SE5kOTBValRqZWhURDg3NnJ6MGh4Z1dWb25OSkF0eU9HVForL2p4andPb2hh?=
- =?utf-8?B?M2Q0SXFpcVNIdThCRnBobTRrclRGTVcxbGpJa3hUcmthU2FBWWJVSVZod1hQ?=
- =?utf-8?B?MFZQeWVFbTBXWlZzRFBFaXZUcThnOHdmK1JETElGNi9Hc0hTbERkWlVXUzRV?=
- =?utf-8?B?OGd5QjdDc0twWnRVRjNnWmM0NDhWTEI4WDJiU1lBYStnVEZsVFd4Skx3Qzd6?=
- =?utf-8?B?SjV1ZWJ5ZklFd0VocW80c2dQY1o2eURiYVZidEV2RWpNa0NCZ2hObUMxaWVu?=
- =?utf-8?B?bkJNWEJVVUpsL3Q0SzNkc1VCb3JTT214by9NN3hEWmZJczFmVUR4L1Z5K2JB?=
- =?utf-8?B?NHc2WWwwVE5WQzN2dDEzTjFkVDJ4VlpJNTNYTjYzRjE0OTJFNVlNWko5N0Vw?=
- =?utf-8?B?MXpDWFgrM05NMTI4c2xOdStyRm56byt4YzBvcWx2U3h4N3MvNFpLK1lVRDRB?=
- =?utf-8?B?bDdsU1E1TVFidWZjYVY2MHVYd0o3emJ6dEdjdWw5VUVoVVZDek02MjI5UHhQ?=
- =?utf-8?B?czZiUkdSTE5jcWVZRUg4cDJWbjNiMmQzQXNyOFl4M2xQbDFhNUdtMTNtK0pR?=
- =?utf-8?B?M2ExazgvRUh6UWhrYWxtbExZOEtkOTZyZ2JZSGE4OUZyamVzK1ZFUnprcEh6?=
- =?utf-8?B?Z3lmOGlxNXpJNEUyK01Ja0NDSWNLYzhralpxQWpkS2JFQ1JmK1ArbUhKVHlh?=
- =?utf-8?B?akJWOWZkamI5TjY2aGlXNzdJbGVFN1V2MFJHcWhoT0g1VytDZDcvRjFmQmZy?=
- =?utf-8?B?OGhBZGU1UUdOcS94UFFBb0FveS95amxIdEs2RERuRFc1OVFtZlNqZzNrQm5H?=
- =?utf-8?B?S0VGbjNVTkZ1cEVZRVNtSU9xTmFzdHM5TUZhUnI5REErMHpRL085ZzFYYTcv?=
- =?utf-8?B?UmtxaENJbGpMb25tcXlWbkpBK2hNRXdpdnRSeGtrQ1hRdVovUjZiR2Vpdk5Q?=
- =?utf-8?B?aXpEYVhxQVFnMWJ0cUNMTG1iMTRBeUlCSHJxS0NsVTNwUU82VEhka1M4OHpW?=
- =?utf-8?B?U2xXamVoRE4rM3pidnVqRGxmdXpZNXRab3BCOVQyMHV0NUczT2dqQ3lTZkxs?=
- =?utf-8?B?NXpDSG11QkI3cjlITzBtK1NXNzg1OGRKOWVBN2poMGZmWmV1Y1daRlhVa1RK?=
- =?utf-8?B?YjhJd3BUbzBFUmo4SU40Qk85YzIvZzRKV0R3eUR6eE5GNUZYanQweE5seTJ5?=
- =?utf-8?B?YTdPaDYwVStranhsYlVLUFpGYy9GSTdDOVpGa1hqdFNtMWhVbDk3ZDlwMUtY?=
- =?utf-8?B?c1k0NWFtMTZlT04rUlE0QUlsWmd3SmJCOG4wdUdvNHRyTUVOQVRFUDltRWl5?=
- =?utf-8?B?UUV0WUVEcFVsOWpOTzMxbEw2elYxWElQc2NXcnJGSFQrZk15UEdVUmJRdk8y?=
- =?utf-8?B?UGxnSGJrTVVRdjRKeTlHQTVNcXgyTE5FRzJEaWdObXZ1U0xHZnR0UlpQU3Ra?=
- =?utf-8?B?VTBrOE81MjJCQnNsbGpEQjJaOHU0UGVNUkNTeGtXcmVGVjZzcUJoVExoTEpP?=
- =?utf-8?B?UUovQmlIcHIrWDZVK1Avbml0eU9jazA4cWk2MU9kcFI0ZitlQWtSZ2JzQWpM?=
- =?utf-8?B?Rm1rMHZUNVlWeUlDSTZIMUN2RUl2NnNraGhsZDZIbmhFenhmV285SVM0Q25s?=
- =?utf-8?B?dEZOWDZCeENQWHorYTUrUnNTQjJXRmIxVFQwT3lEK1plOUlnSmhUMDU5VGFF?=
- =?utf-8?B?TllyN2RpZjVJM3k3ZFpDM1NncXdWWjlhczRKMSsvbkJZSUIwY2ZyU1hjQnpr?=
- =?utf-8?B?RGxmYVlWNnc5aysvM1Jwb1UwS2l5K1pWTzNad1VSL2pMK2tUeVBYd2pwRHFu?=
- =?utf-8?B?TVVnOUhZaE5PbWI3OHRwbWZ4VHl1UVZkMlA3bW1ycGRNV1Qzc1hEZG1OekxS?=
- =?utf-8?B?TnZIZUpadml3cDhXU0xKOWFIS29FRi8zN25sVkxPSlZhYnQwZWNiMzY5ZzB3?=
- =?utf-8?B?OTJuckhPdXB1U0gwdlhITkhQSG5iUFNYb3ZPelFhdHlZWTRvY1dRN05nYTdO?=
- =?utf-8?Q?jPDq3VBu+mC/66iJOFQL6VypW?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ 07:33:45 +0000
+From: Qi.Chen@windriver.com
+To: bitbake-devel@lists.openembedded.org
+Cc: alex.kanavin@gmail.com, richard.purdie@linuxfoundation.org,
+        qi.chen@windriver.com
+Subject: [bitbake-devel][PATCH V4 2/3] bitbake: add SKIP_FRAGMENTS CookerFeature
+Date: Thu, 20 Nov 2025 15:33:23 +0800
+Message-Id: <20251120073324.136238-2-Qi.Chen@windriver.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20251120073324.136238-1-Qi.Chen@windriver.com>
+References: <20251120073324.136238-1-Qi.Chen@windriver.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2P153CA0006.APCP153.PROD.OUTLOOK.COM (2603:1096::16) To
+ CO6PR11MB5602.namprd11.prod.outlook.com (2603:10b6:303:13a::5)
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO6PR11MB5602:EE_|SJ5PPFC295640A5:EE_
+X-MS-Office365-Filtering-Correlation-Id: ea34b349-c02e-49fd-5975-08de280722e1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|1800799024|366016|376014|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?rRQoYkC1ElFdhR3Z27XTX+waZIWYo6KouaX/erSJLyPU/r0abMFMo1niW6h1?=
+ =?us-ascii?Q?lqoYKd9QFb3V0AHIXyTZjUx55S8F20T5vg3S/0cW/xAel9BuWz0COoylp2gX?=
+ =?us-ascii?Q?iUJ9JDR4x5tqnOzBm2CZr0GYsFafHiMsklR+UdwH1q9zfwX9ZRG/dPXZC59h?=
+ =?us-ascii?Q?MCW3tWC8UN6e4cIpQvhVhirVG8XjkQ7daukKOyq4dAP3n0cx7GwNAHGeDO6R?=
+ =?us-ascii?Q?afgtTIWqLx/Z3hs4q3ozt7RlnPdjRrBHfQKOJNXgMTpxcoxCJ6z2WV+PMVM3?=
+ =?us-ascii?Q?RtzWAckE6ekwRQ6AOojcoY064gS1EuK+2ADk+2OjhCYpe/WwEnfkyJ9pomt9?=
+ =?us-ascii?Q?IKY6u6SmOSyc1vOqJcGzNh+fkU3cNHUFdQbFNxJmmPcdpTDz8IckS3rkZKgx?=
+ =?us-ascii?Q?pk5mdOx3FHws2eWEP9WXv3EhG9OUxIi5rCTdtIjE6byEUeryPrPwhUUEsvYe?=
+ =?us-ascii?Q?tkQInndMpH3ZfZkLDJMWMhMYZSnwdPitofv15/hKJcsWroPUc5uRn73db0hU?=
+ =?us-ascii?Q?iPWjKnxR4DIxykKGLY7oZO49zNWstu2BEXT5LsnyqvYePqJwMLYa1lkSquP/?=
+ =?us-ascii?Q?fYGMIj4g9Jr4dykF2KR54TOj2QX6LF62T2Ryvyoy2WHcQuGPt5Dd2SywrBDU?=
+ =?us-ascii?Q?2kJwdfdygT2UrP1Tyce20gxA4dy6gLyxT6zomfORSMQZcpA+0gbpbm/Ln6B/?=
+ =?us-ascii?Q?q/NHjmoLITUfUDsxrR9j5Kd43prov3hqK0nfCfjIqu4itzHIMhXbzcu4sjGZ?=
+ =?us-ascii?Q?geRIWS7PG3APSenR1O9aptoywo/b54wdK7fCZXWAxIpGEDY2ug9iq+Uv2eE+?=
+ =?us-ascii?Q?dVoDteZGEsgnUNDjNhVtb2PQZ48qAdanxBuEAINDr8BuY1ES/qk7LVhX5rkO?=
+ =?us-ascii?Q?UmEWI3ujyArsAxwdz9Lq9qwZ1U63/lKRsEG2+pBcuqHJ8ZaNun02bdTC7o4L?=
+ =?us-ascii?Q?LeVNTbLKaEzxHXiw+MJwL4CHE0+pOp4aW5cmJWSyiz0klmxfp6UYLWmCpNXY?=
+ =?us-ascii?Q?AWThAqvTxBL/N1vAXOXi81Atg9ntRIe5dx5XDn7hJKjGgOBRrkmof2LmTV4q?=
+ =?us-ascii?Q?lQxirndEtiiCkmVGZDBchV2ry7JBYp9/VeFIArcBlq/8kiP5CuKo6xTlneCi?=
+ =?us-ascii?Q?JBPW6Po5ETVZpR2d9JpsKgBNpNSxgGN1CkGliGNjPXCyGFllH/LkIKJN4Owt?=
+ =?us-ascii?Q?MRv4Zdzb9b4LculUFioHKzWGWmHok4iAkXgbLMX/nIFzDHW6cbIP0W6Ka01i?=
+ =?us-ascii?Q?K8szw0ntUYfTrlODVJZ6OjjgwPicBUebDOGYHcm4KAdieeUyrVNXWu9VfGMZ?=
+ =?us-ascii?Q?Pp5F31H2m0oGkjiD/OpYLn9a+pA5IUq3rm02C3o5bqo9IXwkZGdB1nGHp/rp?=
+ =?us-ascii?Q?5UneslzVs5oQkXqHT2FWbEItBtNDL8jXNe7k596nFCwztqyjCacsEkqOKl74?=
+ =?us-ascii?Q?RyX9zU7IRY7r9Kc89LFMntgz95SgXCRfm7icCJHOytThq4oTLIrVDaKQ6yOG?=
+ =?us-ascii?Q?IQCMScJpPKUePBa415mBb0aKWZCc470q+hLM?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5602.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?LR1vP89K/OUokfM5lY8fQUbjGMgu+gLh2e7pF25lZElUAiOnTthl1vyxTQd/?=
+ =?us-ascii?Q?tBm+619+EFz7RVPmQqPu7/osRcUyBYHGp6vRCxrMJMbAgfKGsKFf1M4czR3h?=
+ =?us-ascii?Q?LjxEM3sit5rfZ4fKkyqmy/FZwJD0SFceSu/pYhxtVKu5vcB3MaF9l9OomXyZ?=
+ =?us-ascii?Q?zTL1QIKVos0yZMpVqQGy3UO8sDIjiVDZbiasaajojLupkzX6AH2Tf9AdjeEd?=
+ =?us-ascii?Q?gvDcYd22M7eo6UUKT+gaRoArCyrkUgg8lT1b3oTI7vxkE5V0rxWndH4k9qb6?=
+ =?us-ascii?Q?q+tGpLuJbgUyRq8ylF+FmneAOueVS9TNA4l5SU1whX8q7R1zfLG7D/10QEO7?=
+ =?us-ascii?Q?hpgcy0KF3H2obFYkWerik7/3ExI1yXaCx29hrl/g+US4JD1M97ppJDj7Gixi?=
+ =?us-ascii?Q?n+2lIjkqTmldzdc1I9wSvZBbwf5BJ6Qnwbqbt+6SrDRYCYWCH31Ho9ZgFx+4?=
+ =?us-ascii?Q?nhsEvain5LJRSj4VQZgi/bWSPzyiDIn+Gx2jyojFUcz6U9yuQ1L+lk0xkt4W?=
+ =?us-ascii?Q?1rAN11fahMSq2U1F8ES9dC+q9yOvk/dxirWVoljk5t1btp77LB4sGjp/MQ0T?=
+ =?us-ascii?Q?Hs+LyKV9FJfwnkPRMWPy+JAUifNIrsGh29AgQBvH9/o7hYUuWllWi8Tf6fKx?=
+ =?us-ascii?Q?3PTRP5M69D83AWWldSc42WdUj/16wPvGMqx3JQFnilTEKIksPCbYmpdzKjbD?=
+ =?us-ascii?Q?N8EL8vYA9KYbeCQflSfW75WgvZfFpK92LSWskS1QZ1QwkcNG6zfAikov6+6E?=
+ =?us-ascii?Q?/t/3QCK7wT7P4G2CeYwqzELe/VZ5LTN7VDZw/eGVeKY1vujmDkHwEVpms1kb?=
+ =?us-ascii?Q?9vFYG+7CJNu04LfZxakI5A/ysFUXVWGV0bC3Twho9lMM06ikvwO78Qa6keIu?=
+ =?us-ascii?Q?xtfK1AHZvHxOdqCeCcXhH0tL3hAvsLL4hxBfcqbYEZ6tyAhW7WJ+xZ8hBX6D?=
+ =?us-ascii?Q?TXOu6QdU/lOje8EzkLl8y3T/ldR0UerzwHRUFOjiY7uHCoRNc1hjwwNApT0c?=
+ =?us-ascii?Q?Su6e+9FFnCWcoI+Npr6nPb9cUoaaM/MO44i6nLQzIo4fBzDLvObozdw3Sx0R?=
+ =?us-ascii?Q?qm507vRBYji4ltxAWJJg7R8mFUs+l0siH/y+5k/o6TNeKOoXH9xpPjjK+pgo?=
+ =?us-ascii?Q?bWD0PvrOP+yH4dtirMg+3JaeJhHCK1kSnpC+ahQdkhdwLIGUNSM2XCZg9yCC?=
+ =?us-ascii?Q?CTh5dnOYHdFeQX5aopUJnD6JBQb1jS/4LgwcgxCLIk6ijj4eaf+uNt0cy6kC?=
+ =?us-ascii?Q?TxrEziLp/OBGv+d3Tz/Rn/+EANG/YPFvHYExiMkuPAzntOjQ0VfxQnTlGpnV?=
+ =?us-ascii?Q?OfQrck9ZjhR1EbhbagNLBpmXCMn357xUaIUomGGCCf4Jy/io/2cULk9lmpa6?=
+ =?us-ascii?Q?4/MXxTgUa/jzqF/F+BHaTNBC3ABgRoTqJYBWkvUxgo4ITq5Zp4YoiLSc9zav?=
+ =?us-ascii?Q?G41G7Hd5LE9/LJDtPtaX9aERExFf1YdfhBxecS8oEY/bpv5m8nh1OisEhkUC?=
+ =?us-ascii?Q?ogR/+aS6XIe+Lqw0pmSRXSEWxx1cSMl+bdaNXz9abcp1pqfP1iEyC7UPsFPJ?=
+ =?us-ascii?Q?k+7UlgPmiMeRY4E1w7UprQue3Ss6MG48jFXIUgqs?=
 X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea34b349-c02e-49fd-5975-08de280722e1
 X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5602.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 23e0da4f-79fe-459a-f14d-08de27f4941d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2025 05:20:54.3510
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2025 07:33:45.0438
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: d69oxI8GhOjtvn9okYgArxQ3kHCNE1tbyR1uKGk9dsf+dvgVyp+2RhR4JRDX27QZolT3RrZIOUWOuIZ/DBBXjw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB7269
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pzvHDSSqcw+HjA8EmD9U2ViJX+HAK1cG3Ag974f1KQQ8wiOztJ9TQjISICf8vhi6OzIzdLnBN/S9C6k/3G4Epw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPFC295640A5
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTIwMDAyOCBTYWx0ZWRfX8Hb4J31Bz9tM
- lmVhroIhBWClipwW7ZWWAMYM/WOKKCFL/L5JOkzT6rETuncL0VfSIKO+dFtQYCtMqMY8+LqufFe
- NDu3QcehloC70Jwd3xB7p8f2OMe2DfOPJ07i4mcldZ84MbrZOZgZ4euqDeB/hxlvDS85WZR3L2V
- rirz53Hx15lEe05WIyc/Zu67T4mrhjhEsbcc+ebuP7UhvZBosKqhiT3IsnSDy3NWSm1l3og3msN
- gF6zcf1U31sQpmnDzO/a7OsaqiAJ1PgSLCgDM8aaz69uJncLgSIxHhdMqJnQhaayUelg74hFh1A
- mYx1t81aYBBpDbIfukkUOyuWjKGzgdFSDxSEszYemBumG3vOQyevcwf75NjXbksrjwJTZ2MyWPt
- IW6PefnDMcSn0B0YfjtB+ESwHPyb8w==
-X-Proofpoint-ORIG-GUID: YpMuLngdhK7s-iLA5dB19BtLFjMju6bU
-X-Proofpoint-GUID: RiH92PxkpRHkNjUULzugcE0Wc9V5kafk
-X-Authority-Analysis: v=2.4 cv=Z6Xh3XRA c=1 sm=1 tr=0 ts=691ea53a cx=c_pps
- a=MRNWLIXgA5QtCoQasNiLPg==:117 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=iGHA9ds3AAAA:8 a=ag1SF4gXAAAA:8
- a=t7CeM3EgAAAA:8 a=Q4-j1AaZAAAA:8 a=pGLkceISAAAA:8 a=4XQ8ZmzKVQIhuAIa0egA:9
- a=QEXdDO2ut3YA:10 a=nM-MV4yxpKKO9kiQg6Ot:22 a=Yupwre4RP9_Eg_Bd0iYG:22
- a=FdTzh2GWekK77mhwV6Dw:22 a=9H3Qd4_ONW2Ztcrla5EB:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTIwMDA0MyBTYWx0ZWRfXy3oW7yOwtEfS
+ bE9dp6mU8nT8qjPm9AvAuO3VvuA8uu9r+VL0B5CDVB0rGahKqWP/lcKo/ZTchGFq3OiKWv3/7o4
+ oRMHtMjqhk+JkufCp4PyOCrdM1r5pfglRwUf+6YJzyBDZKPxgaXbzAvWdp4VTgPvxRnKM8vXZoH
+ yRIzEqN31x8FOct6O40mzVYY5I/ckxxX/p9lARQwhxur3W+X1cNKc9alFm0TDx249ax56Mdu+dh
+ 9tHBdVCdK+xevaoDEmohA44u96LqTh8rQB5xpJujmHa5HhP3MIr36tn/v8se2Lhr+ft/27PVbUw
+ CydEZXnTukvj2uTJmlmOoMbAqnzFb6LnFL8vaj12rztvMFUjZsNyKvC0k6UytoVTBI7XLB7mx8w
+ KQiD9yrPkLxCP25SNYpTiqBUG/sQ7g==
+X-Proofpoint-ORIG-GUID: yYtJTWrnzHrJJbL-0rOgLUBkWMzvQD1K
+X-Proofpoint-GUID: E2z8DZsKsEEDazNZSKm1tRu-v-ey36_c
+X-Authority-Analysis: v=2.4 cv=Z6Xh3XRA c=1 sm=1 tr=0 ts=691ec45b cx=c_pps
+ a=NlF6qXdsITzFGNsd7EO88Q==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
+ a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
+ a=xqWC_Br6kY4A:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=t7CeM3EgAAAA:8 a=DII4xfcm4MOyQyFNyJMA:9 a=FdTzh2GWekK77mhwV6Dw:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-20_01,2025-11-18_02,2025-10-01_01
+ definitions=2025-11-20_02,2025-11-18_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  bulkscore=0 spamscore=0 phishscore=0 suspectscore=0 adultscore=0
  lowpriorityscore=0 impostorscore=0 malwarescore=0 clxscore=1015
  priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2510240001
- definitions=main-2511200028
+ definitions=main-2511200043
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 20 Nov 2025 05:21:03 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18465
+ <bitbake-devel@lists.openembedded.org>; Thu, 20 Nov 2025 07:33:54 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18467
 
-SGkgUmljaGFyZCwNCg0KVGhhbmtzIGZvciBpbmZvcm1hdGlvbi4NCg0KSSBjYW4gbm93IHJlcHJv
-ZHVjZSB0aGUgaXNzdWUgd2l0aDoNCjEuIGV4cG9ydCBCQl9TRVJWRVJfVElNRU9VVD02MA0KMi4g
-Yml0YmFrZS1jb25maWctYnVpbGQgLS1oZWxwICYmIGJpdGJha2UtZ2V0dmFyIE1BQ0hJTkUNCg0K
-SXQgbG9va3MgbGlrZSB0aGF0IHRoZSBiaXRiYWtlIHNlcnZlciBpcyBub3QgZG9pbmcgYSByZS1w
-YXJzaW5nIHdoZW4gcmUtY29ubmVjdGVkIHdpdGggYSByZW1vdmVkIGZlYXR1cmVzZXQuDQpJJ2xs
-IGNoZWNrIG1vcmUgdG8gc2VlIGhvdyB0byBmaXggdGhpcy4NCg0KUmVnYXJkcywNClFpDQoNCi0t
-LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBSaWNoYXJkIFB1cmRpZSA8cmljaGFyZC5w
-dXJkaWVAbGludXhmb3VuZGF0aW9uLm9yZz4gDQpTZW50OiBUaHVyc2RheSwgTm92ZW1iZXIgMjAs
-IDIwMjUgODoyMiBBTQ0KVG86IENoZW4sIFFpIDxRaS5DaGVuQHdpbmRyaXZlci5jb20+OyBiaXRi
-YWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcNCkNjOiBhbGV4LmthbmF2aW5AZ21haWwu
-Y29tDQpTdWJqZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxdW1BBVENIIFYzIDEvMl0gYml0YmFrZTog
-YWRkIFNLSVBfRlJBR01FTlRTIENvb2tlckZlYXR1cmUNCg0KT24gV2VkLCAyMDI1LTExLTE5IGF0
-IDE3OjAwICswODAwLCBRaS5DaGVuQHdpbmRyaXZlci5jb20gd3JvdGU6DQo+IEZyb206IENoZW4g
-UWkgPFFpLkNoZW5Ad2luZHJpdmVyLmNvbT4NCj4gDQo+IFRoaXMgcGF0Y2ggYWRkIGEgbmV3IENv
-b2tlckZlYXR1cmUsIFNLSVBfRlJBR01FTlRTLCB3aGljaCB3aGVuIGVuYWJsZWQgDQo+IHdpbGwg
-c2tpcCBmcmFnbWVudHMgcGFyc2luZy4NCj4gDQo+IFRoaXMgZmVhdHVyZSBpcyBtYWlubHkgdXNl
-ZCBieSBiaXRiYWtlLWNvbmZpZy1idWlsZC4gSXQncyBhIHRvb2wgdG8gDQo+IG1hbmFnZSBmcmFn
-ZW1lbnRzLiBTbyB3ZSB3YW50IHRvIHNraXAgZnJhZ21lbnQgcGFyc2luZyB0byBhdm9pZCANCj4g
-dW5uZWNlc3NhcnkgZXJyb3JzLg0KPiANCj4gRml4ZXMgW1lPQ1RPICMxNjA2MF0NCj4gDQo+IFNp
-Z25lZC1vZmYtYnk6IENoZW4gUWkgPFFpLkNoZW5Ad2luZHJpdmVyLmNvbT4NCj4gLS0tDQo+IMKg
-YmluL2JpdGJha2UtbGF5ZXJzwqDCoCB8IDcgKysrKysrLQ0KPiDCoGxpYi9iYi9jb29rZXIucHnC
-oMKgwqDCoCB8IDggKysrKysrKy0NCj4gwqBsaWIvYmIvY29va2VyZGF0YS5weSB8IDQgKysrKw0K
-PiDCoGxpYi9iYi9wYXJzZS9hc3QucHnCoCB8IDMgKysrDQo+IMKgNCBmaWxlcyBjaGFuZ2VkLCAy
-MCBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpUaGUgcGF0Y2ggZG9lcyBsb29rIGxp
-a2UgdGhlIHJpZ2h0IHRoaW5nIHRvIGRvIGFuZCBJIGxpa2UgaXQgYSBsb3QsIHRoYW5rcyBmb3Ig
-cHV0dGluZyBpdCB0b2dldGhlci4NCg0KVW5mb3J0dW5hdGVseSwgdGVzdGluZyBvbiB0aGUgYXV0
-b2J1aWxkZXIgaXMgc2hvd2luZyBhbiBpc3N1ZSB3aGVyZSBmcmFnbWVudHMgYXJlIGRpc2FwcGVh
-cmluZy4gSXQgaXMgd2hlbiBtZW1vcnkgcmVzaWRlbnQgYml0YmFrZSBpcyBpbiB1c2UsIGkuZS4g
-QkJfU0VSVkVSX1RJTUVPVVQ9NjANCg0KRm9yIGV4YW1wbGU6DQoNCmh0dHBzOi8vYXV0b2J1aWxk
-ZXIueW9jdG9wcm9qZWN0Lm9yZy92YWxreXJpZS8jL2J1aWxkZXJzLzIvYnVpbGRzLzI3NjANCg0K
-d2hlcmUgTUFDSElORSBzZWVtcyB0byBiZSB1bnNldCBpbiBzb21lIGJ1aWxkcy4NCg0KSWYgdGhl
-IHRpbWVvdXQgaGFwcGVucywgdGhlIHNlcnZlciBkb2VzIHByb3Blcmx5IHJlc2V0IGFuZCB0aGUg
-YnVpbGRzIHdvcmsgc28gaXQgaXMgdGltaW5nIHNlbnNpdGl2ZS4NCg0KSSd2ZSBub3QgbWFuYWdl
-ZCB0byBnZXQgdG8gdGhlIGJvdHRvbSBvZiBpdCB5ZXQgc28gSSB3YW50ZWQgdG8gYXQgbGVhc3Qg
-c2hhcmUgdGhlIGlzc3VlIGJlZm9yZSBJIHNsZWVwIQ0KDQpDaGVlcnMsDQoNClJpY2hhcmQNCg==
+From: Chen Qi <Qi.Chen@windriver.com>
+
+This patch add a new CookerFeature, SKIP_FRAGMENTS, which when enabled
+will skip fragments parsing.
+
+This feature is mainly used by bitbake-config-build. It's a tool to
+manage fragements. So we want to skip fragment parsing to avoid
+unnecessary errors.
+
+Fixes [YOCTO #16060]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ bin/bitbake-layers   |  7 ++++++-
+ lib/bb/cooker.py     | 13 ++++++++++++-
+ lib/bb/cookerdata.py |  4 ++++
+ lib/bb/parse/ast.py  |  3 +++
+ 4 files changed, 25 insertions(+), 2 deletions(-)
+
+diff --git a/bin/bitbake-layers b/bin/bitbake-layers
+index 341ecbcd9..7d929567a 100755
+--- a/bin/bitbake-layers
++++ b/bin/bitbake-layers
+@@ -23,6 +23,7 @@ topdir = os.path.dirname(bindir)
+ sys.path[0:0] = [os.path.join(topdir, 'lib')]
+ 
+ import bb.tinfoil
++import bb.cooker
+ import bb.msg
+ 
+ logger = bb.msg.logger_create(toolname, sys.stdout)
+@@ -64,7 +65,11 @@ def main():
+         if global_args.force > 1:
+             bbpaths = []
+         else:
+-            tinfoil.prepare(True)
++            if toolname == "bitbake-config-build":
++                extra_features = [bb.cooker.CookerFeatures.SKIP_FRAGMENTS]
++            else:
++                extra_features = None
++            tinfoil.prepare(True, extra_features=extra_features)
+             bbpaths = tinfoil.config_data.getVar('BBPATH').split(':')
+ 
+         for path in ([topdir] + bbpaths):
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 1c06737ad..b896c233e 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -79,7 +79,7 @@ class SkippedPackage:
+ 
+ 
+ class CookerFeatures(object):
+-    _feature_list = [HOB_EXTRA_CACHES, BASEDATASTORE_TRACKING, SEND_SANITYEVENTS, RECIPE_SIGGEN_INFO] = list(range(4))
++    _feature_list = [HOB_EXTRA_CACHES, BASEDATASTORE_TRACKING, SEND_SANITYEVENTS, RECIPE_SIGGEN_INFO, SKIP_FRAGMENTS] = list(range(5))
+ 
+     def __init__(self):
+         self._features=set()
+@@ -286,6 +286,11 @@ class BBCooker:
+                 logger.critical("Unable to import extra RecipeInfo '%s' from '%s': %s" % (cache_name, module_name, exc))
+                 raise bb.BBHandledException()
+ 
++        if CookerFeatures.SKIP_FRAGMENTS in self.featureset:
++            self.enableSkipFragments()
++        else:
++            self.disableSkipFragments()
++
+         self.databuilder = bb.cookerdata.CookerDataBuilder(self.configuration, False)
+         self.databuilder.parseBaseConfiguration()
+         self.data = self.databuilder.data
+@@ -363,6 +368,12 @@ You can also remove the BB_HASHSERVE_UPSTREAM setting, but this may result in si
+         if hasattr(self, "data"):
+             self.data.disableTracking()
+ 
++    def enableSkipFragments(self):
++        self.configuration.skip_fragments = True
++
++    def disableSkipFragments(self):
++        self.configuration.skip_fragments = False
++
+     def revalidateCaches(self):
+         bb.parse.clear_cache()
+ 
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+index 65c153a5b..b6dca7af7 100644
+--- a/lib/bb/cookerdata.py
++++ b/lib/bb/cookerdata.py
+@@ -137,6 +137,7 @@ class CookerConfiguration(object):
+         self.build_verbose_stdout = False
+         self.dry_run = False
+         self.tracking = False
++        self.skip_fragments = False
+         self.writeeventlog = False
+         self.limited_deps = False
+         self.runall = []
+@@ -226,12 +227,15 @@ class CookerDataBuilder(object):
+         self.prefiles = cookercfg.prefile
+         self.postfiles = cookercfg.postfile
+         self.tracking = cookercfg.tracking
++        self.skip_fragments = cookercfg.skip_fragments
+ 
+         bb.utils.set_context(bb.utils.clean_context())
+         bb.event.set_class_handlers(bb.event.clean_class_handlers())
+         self.basedata = bb.data.init()
+         if self.tracking:
+             self.basedata.enableTracking()
++        if self.skip_fragments:
++            self.basedata.setVar("_BB_SKIP_FRAGMENTS", "1")
+ 
+         # Keep a datastore of the initial environment variables and their
+         # values from when BitBake was launched to enable child processes
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index e6ff1ff76..bf9bd4f55 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -351,6 +351,9 @@ class AddFragmentsNode(AstNode):
+         self.builtin_fragments_variable = builtin_fragments_variable
+ 
+     def eval(self, data):
++        if data.getVar('_BB_SKIP_FRAGMENTS') == '1':
++            return
++
+         # No need to use mark_dependency since we would only match a fragment
+         # from a specific layer and there can only be a single layer with a
+         # given namespace.
+-- 
+2.34.1
+
 
