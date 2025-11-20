@@ -1,88 +1,115 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46580CF3957
-	for <webhook@archiver.kernel.org>; Wed, 19 Nov 2025 16:25:09 +0000 (UTC)
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.11216.1763569501096640715
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B77CF649D
+	for <webhook@archiver.kernel.org>; Thu, 20 Nov 2025 00:22:32 +0000 (UTC)
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.21780.1763598144825623320
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 19 Nov 2025 08:25:01 -0800
+ Wed, 19 Nov 2025 16:22:25 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=JaRzzVdL;
- spf=pass (domain: gmail.com, ip: 209.85.219.42, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-882360ca0e2so50836266d6.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 08:25:00 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Pvrl+8W2;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.51, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-47755a7652eso2027265e9.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 16:22:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763569500; x=1764174300; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fH7o4wnrfRIdShx8pLId8ouNjFI/bx5HsVz8Jykb0DA=;
-        b=JaRzzVdLsDslo9/PHR6Zl7Ef7mobbPCVv9d7afFxQiA/3WxeAS+DLTkDZNJ4hvozzR
-         SQOcGr2Qf2QEOf7UgHKZvZCMeCCNK4omLw8VEgOEsyuAHj1H+hewnFsSl4c/F6kjlpF2
-         KlCOGYLfeyMnwDXg1SgzOLuEi2bo3fPFj4WKjnK6mqg/wGGE8XnmaXGt2HgPbVdZHYXE
-         Fn8OVWWTzaW6UlO8fc680kE+d4ICmokL8PzZqpA8P9O26AQ2bIYIW/bKshkX+IVvy7fY
-         HEJldIN678d7G/u5IbTj4Qvqs6ck+AHiHmai7UEmLZChfN7f622vGIv7U9vj/ApEj6J3
-         12Bw==
+        d=linuxfoundation.org; s=google; t=1763598143; x=1764202943; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IisqoaaHwpYBnvnTjUzRc1W5oiB56nvMVjFunnp0vwY=;
+        b=Pvrl+8W2cIXJZn1bokXEzz4ab9B9NlzJ9AA9M7Lpi6JUAZfbomY+AGXOKsgJTauBcI
+         rZglWlxJbV/abSqR0ofBBfEjPklW7G4Zk9ZrKVSvrShWCV+gKsBCOk3ldaiKfIpd4J//
+         DzyUe24UEG2KWs3KHMHuuyPcoKPwnK9XIRVDw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763569500; x=1764174300;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fH7o4wnrfRIdShx8pLId8ouNjFI/bx5HsVz8Jykb0DA=;
-        b=tlZYTLbbsX/wUDIT90CXt5pHb4cyBlwTETHWxV1JWUCGUbFQMtdTp94/4tZCMYhcK/
-         fzd9aosPsofwPd840oOBttKJqHIARlFw/izxg0IgYFDSQRjTp6c33GS8nSSWqmPH1vzM
-         4+eql7lxtqr8L4Vzcqqeh5O2ycjfbYhh6Mywwn6HESMqxYl31m89iM9An0AqExToyHYl
-         DGxreBtuQAvQGPSGC2iLwdQ2I6wtIKPo24JAqKCmFtRoRhHM4Wd39BTeCyma+v7z4blf
-         K4VyAuQFoqS4O1+jeHpg1FGSPj7s0YC8dfe8LwMFsLEqP75V9FdzJ5U18X4Y7DQvQAVr
-         PmMg==
-X-Gm-Message-State: AOJu0YwypefIPZ3YenAS0Fpv04EIhVkS16+ehRvMXHvl/iYzjzqMVdx2
-	fzPWCeS4yoMp1a1VdL68bi1pv9pS+S23Yhc9FputOn9Sz+gwAISs6Ob0Op5mIuN3ArKadxmIlJT
-	RuqkAzAzg4HBdLqubeNYfXq2A/o3UQHYxbg==
-X-Gm-Gg: ASbGncsA+e3oJDMls2YpsGFhkqYJf3Hg1eLOaXbdkzvBGXCYwfuYtYSP9VkyqEFKvPD
-	H5ERwG372E+BkPKrjy7DvVKFWxc3qvKQu+bftqbd+4lr0uP05wdOSj8twbtve810utYmndBmq/N
-	CPQTPttirKcknWAKy8PlHL/bUeMnWDWeuvKZj/dG9Mp3tcd2xOzaHesWe4wSjUJI2/qU/v/J2sK
-	ZByy4mnV7eInfStrI93OCO7AJ+2/YqtMgc6xmYO1Y5r2yxSH46IWB+raIb0SI2XAtsYFEFxuCNx
-	8sPB4K9KBbJhbBP0o3IbATPmQLcsfndt39zTcQlL
-X-Google-Smtp-Source: AGHT+IEpZjsK4YG1QpeLgBiwqWvCtO1tCPuKMpFllmECYSqPjxT1K0CjC8jjfRM/3TqB4rc4vUMVZCEvJjTehrfrpw4=
-X-Received: by 2002:a05:6214:509b:b0:880:52b8:2f9e with SMTP id
- 6a1803df08f44-882925f7830mr258730046d6.21.1763569499939; Wed, 19 Nov 2025
- 08:24:59 -0800 (PST)
-MIME-Version: 1.0
-References: <42bcc23e-27ae-8bf4-486d-3e552d58c701@crashcourse.ca>
- <CAJdd5GZZNGyPePiJEQnn-0mZK0cX9dzTh7KM3uqkFJtnJ6dVQg@mail.gmail.com> <1879711085697862.1423420@lists.openembedded.org>
-In-Reply-To: <1879711085697862.1423420@lists.openembedded.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 19 Nov 2025 17:24:48 +0100
-X-Gm-Features: AWmQ_bkBUVkpefvg2BTZbDqZ7utxD61s7XXMSbFzg5Cc0GDqCfZT0kckcpEAGqk
-Message-ID: <CANNYZj_t7mtmdY2bW8+2zL6Ro_KFW4D=MXwygQEu3HB64-5=Hw@mail.gmail.com>
-Subject: Re: [bitbake-devel] why is "bitbake-setup list" trying to *create*
- bitbake-builds directory?
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Cc: JPEWhacker@gmail.com, rpjday@crashcourse.ca
+        d=1e100.net; s=20230601; t=1763598143; x=1764202943;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IisqoaaHwpYBnvnTjUzRc1W5oiB56nvMVjFunnp0vwY=;
+        b=bzBW8BGlqurmDetCejB2ZAsSswTbNRWmUUEFfp8eLuIe31oaOvZ26m7UoibIsP3Vr0
+         ldSlAbyI8R80SKQvOnWHvBhhILQuy15S7srXCjfRhtK4Y9Y7xHRwF5O4X1Q0GFxYfnmW
+         NL+xwgYpqO9PU7A+vS8+A/wwo7EeBH+WipwnUjli/fRxkiaXFOTV6IU9wRhv7SjvWZIW
+         5JiRHjgTiQCTL9M3IO8zQu0cpl0NpNl+XkUKfwdp++kbuYqhF+yEb0VLmQQPw4SBV14p
+         VkZp8waxcq6HrEiuyvwfbIlkYh/w3lk39vKzNMC2YQ94kuIYqsqIZTIFeru6NBNWoeqW
+         8xvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUl6uegHPzxdlDUGpeNP+ukeVVo9mKmkKBZiZuPqTDOcC68GmngyUHHyh/OXWZRJtwMwlDxaqolBwaQncfT@lists.openembedded.org
+X-Gm-Message-State: AOJu0YxLqkA58RvQ4SnwX3XzxhulqNSdMw1SpF9PfWlKfJvOuBGRADRp
+	oDmDqAY5NQI2flFVlCShXMlouaLgh9jjfsGcr9ewdtv59z1grUFJ1L8e5LFn4yvXj04=
+X-Gm-Gg: ASbGncvvPeSHeDAQOlQi17wyHXs38EQg4wf9buDErb5ezWuE1nMM1x+BukjqKl68z1p
+	H7UP0rkV1kCFM1Fez1xwxn4rlYY7dzcO1T6f2eHILgGqfvi6KGVBdugg2/8Wta/D/k1W9/kOkLt
+	TkXr53Kq4EAHSNp6onqPFc2VLPoc4E7s6G5DI4RyMOFd4BbAKusGaszfqN5wSyQr/hNJRzDdznl
+	zI4w8w55aQlFXg/J1XEYtlG17tmbNOp7Kxq6uyqQSq9Qwa2I5dkwsDMs+LZDNs0y7Paufr3Hqly
+	fDqrPDQf77phqJlSIHPDhieNrsK+ykCgHEkN6fDZ6hdSMW5p8WeIjwjDxQ45ZSAnrn37dybp/N1
+	A31wJdmWcJALhOyV3HFYxMZ3gmXKNn9g0ZcExFuS59cSYyLZwNJ5ZVDBbdzqmE4VGpiVY1zNZKZ
+	JQvjxHiqG27Uj+dFJBeyqLrDuxCQ2ND4DoeKznKuTuRNaRIYE7YB0PQE/FQ6EGf9PAxrZfo9u7
+X-Google-Smtp-Source: AGHT+IEvePQ+vdh1da1X5oR9i9sBfl1TPCZHl918S+uqWlRhxL5wdHMgdYDDq7kw6W3TONLioyrrQQ==
+X-Received: by 2002:a05:600c:6008:b0:477:6d96:b3e5 with SMTP id 5b1f17b1804b1-477b9083613mr5999275e9.7.1763598142890;
+        Wed, 19 Nov 2025 16:22:22 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:bcb9:ef4:6cdc:29d7? ([2001:8b0:aba:5f3c:bcb9:ef4:6cdc:29d7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7fd9061sm1968397f8f.41.2025.11.19.16.22.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Nov 2025 16:22:21 -0800 (PST)
+Message-ID: <ccf1083effb1ace096439c3acee7b867c88cad0b.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel][PATCH V3 1/2] bitbake: add SKIP_FRAGMENTS
+ CookerFeature
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Qi.Chen@windriver.com, bitbake-devel@lists.openembedded.org
+Cc: alex.kanavin@gmail.com
+Date: Thu, 20 Nov 2025 00:22:20 +0000
+In-Reply-To: <20251119090045.107642-1-Qi.Chen@windriver.com>
+References: <20251119090045.107642-1-Qi.Chen@windriver.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0-1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 19 Nov 2025 16:25:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18463
+ <bitbake-devel@lists.openembedded.org>; Thu, 20 Nov 2025 00:22:32 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18464
 
-On Wed, 19 Nov 2025 at 16:10, Alexander Kanavin via
-lists.openembedded.org <alex.kanavin=gmail.com@lists.openembedded.org>
-wrote:
-> It does yes. The issue is that bitbake-setup needs to set up a bitbake
-> datastore (at least), and potentially fetch and unpack the registry
-> repository, so it can walk its file tree looking for configs. The code
-> to do this is shared with things like init/status/update, and so uses
-> the same top dir as those other commands do. And of course there was
-> pressure to change the default top dir to . (instead of ~) which is
-> how attempting to list from places like /etc no longer works.
->
-> I guess it can be changed to use a throwaway tempdir as topdir rather,
-> or go through the same "print top dir info/confirm top dir" sequence
-> as init does.
+On Wed, 2025-11-19 at 17:00 +0800, Qi.Chen@windriver.com wrote:
+> From: Chen Qi <Qi.Chen@windriver.com>
+>=20
+> This patch add a new CookerFeature, SKIP_FRAGMENTS, which when enabled
+> will skip fragments parsing.
+>=20
+> This feature is mainly used by bitbake-config-build. It's a tool to
+> manage fragements. So we want to skip fragment parsing to avoid
+> unnecessary errors.
+>=20
+> Fixes [YOCTO #16060]
+>=20
+> Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+> ---
+> =C2=A0bin/bitbake-layers=C2=A0=C2=A0 | 7 ++++++-
+> =C2=A0lib/bb/cooker.py=C2=A0=C2=A0=C2=A0=C2=A0 | 8 +++++++-
+> =C2=A0lib/bb/cookerdata.py | 4 ++++
+> =C2=A0lib/bb/parse/ast.py=C2=A0 | 3 +++
+> =C2=A04 files changed, 20 insertions(+), 2 deletions(-)
 
-I just sent a patch for this.
+The patch does look like the right thing to do and I like it a lot,
+thanks for putting it together.
 
-Alex
+Unfortunately, testing on the autobuilder is showing an issue where
+fragments are disappearing. It is when memory resident bitbake is in
+use, i.e. BB_SERVER_TIMEOUT=3D60
+
+For example:
+
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/2/builds/2760
+
+where MACHINE seems to be unset in some builds.
+
+If the timeout happens, the server does properly reset and the builds
+work so it is timing sensitive.
+
+I've not managed to get to the bottom of it yet so I wanted to at least
+share the issue before I sleep!
+
+Cheers,
+
+Richard
 
