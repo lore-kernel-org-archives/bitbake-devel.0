@@ -2,39 +2,39 @@ Return-Path: <peter.kjellerstedt@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81945CFA45D
-	for <webhook@archiver.kernel.org>; Fri, 21 Nov 2025 00:08:32 +0000 (UTC)
-Received: from AM0PR02CU008.outbound.protection.outlook.com (AM0PR02CU008.outbound.protection.outlook.com [52.101.72.66])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.285.1763683706983509009
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F79FCFA45D
+	for <webhook@archiver.kernel.org>; Fri, 21 Nov 2025 00:08:42 +0000 (UTC)
+Received: from DUZPR83CU001.outbound.protection.outlook.com (DUZPR83CU001.outbound.protection.outlook.com [52.101.66.2])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.288.1763683711952157667
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 20 Nov 2025 16:08:27 -0800
+ Thu, 20 Nov 2025 16:08:32 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@axis.com header.s=selector1 header.b=fcC6Xlac;
- spf=pass (domain: axis.com, ip: 52.101.72.66, mailfrom: peter.kjellerstedt@axis.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@axis.com header.s=selector1 header.b=ICdmqREP;
+ spf=pass (domain: axis.com, ip: 52.101.66.2, mailfrom: peter.kjellerstedt@axis.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IFWOa66Pl0MqzEC3aJVSH03Uj+AQx6cC76t5MPSRPXqLpMmXctR7KqehvFyWAQZNh9iC0DGMgZOTEt1L5qlTONA517BFjJ7XkYUDIDsJQDUMiaGAMoLIry3hKx/ArnbIzET89px7f/8Sybl8oID6qAA5LmxAGxnxpknTqjNkUB9mgLKTUoi+oQ048lrtitxVylNxcm6eqy2B+bOUNP1WiVokOh7KgjIpELujsTOCGWrb9xcGMevUqssRgn0gK4GHVe+oimlcfj+VvNB0180KJft3k+1FXh6zAcBpfAgubmxZJTPsCBi/k0u7Nyq92Sw+7SvnA21xmg4bvXoPow5PVg==
+ b=bF5h1EWvRvxL4SvmbHQmWOvJumUpcg3/xVIV4SCfwoqvIPtXyaUv1lwgeVUoO6GcTQ8uxTCYg66qf4ROmpK8iA5Xqv1XacDRk/4mwnSYMz57BraTEOL5KahDmcq3MwzpSX7UnoUcgoyDA5ZRi95HPJZ7Ls9G3gFp8dNA4kWCiB9xYsx2Oh+w5PBTmR1YkEnkNHZvlhJwgEc8QMJfApb23trVdM6nYUewCv8HR4rl3GMDJ35dioFKKCZfC6S7BizXaBSLSmdUrj4pX80pCvGkoRC0fkCmOcosepaOOe9ZbdWCLOijgJORUgdYMz2hFyEIF4+6PWpfOI5WCb+YfadPgg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dCcqCjwvXwjBq5q5oyUtuSSDJJpEIgJvo0Vt48pbXjY=;
- b=btX8lETH1cKxjT/B8x2ue242CyYbqwRJDcK896ME7hmHYCbMb/gtjNcCLXIGgp6m2/xx1voZ2u2qYjAfHiZdnGs9q550eU0EBOtrUA/bJu7CyH0H723I+Ruja/llpseqhD4XfI20Xm/y1mrVHTQpR/Caz7EV9AAHCBdjb2GvOuWXvVZis4S9ukXCNh83/M0YpX8O8L8aVwbtw1L0E8/tWy7LRHjRSD04356o4p0pHb4y+A6RYHlnGeC3pk9dWm1aIlL2u4g1RRYdzu7H9jKUMoKiyy0lVHejjiwdVuq6yfPOuj6hIYeNavTGlMUSlgqAWTVF6p9ij4HgoPzvrAeRNg==
+ bh=KMdW8ZarikQ8Y4XhrxJc2mznWw/fJfEqVAuuhhZ2+ik=;
+ b=EANVzM+bqXMAiQDy1I7c8/GfV3EUPY0aX//nQVUmw+6xZmJ9jw++DxSqzzRPk30rwEb1raMdbrWK3gnjxs3AKjYaEmEYmonvQ50EdnQCAApTzIFlj+iVgM/ntv5zkojefBVf1DXmSRYXFozj3XXb0zacGxdvUL3cA+wgmLUEf5tu644E/0M5UV0UerqjQbTFm6vuKD/t0SvHkBjl+u54pJb1lcLD5hhnB0scocHISF9z42r0Fb4GCXagpXW8o6TdhJBXTUfjtYt3KtfWuYvYtSpKEwfdyrwWIzsNjGG0twNohlfCT+f8wzslxQTWNBrMyMhTC9+7HV4u7ec1rynjbQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  195.60.68.100) smtp.rcpttodomain=lists.openembedded.org
  smtp.mailfrom=axis.com; dmarc=pass (p=none sp=none pct=100) action=none
  header.from=axis.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dCcqCjwvXwjBq5q5oyUtuSSDJJpEIgJvo0Vt48pbXjY=;
- b=fcC6XlacnsckS0ENytvZuvOIfD1Ygd5ErhMqq5NGwcALFuBQkc7UDFA4RtckFH45YfUDNXsU+El0TKrbyUL4dK6KbdwTt4KBJYvWeCWda7hKm75TWuOI0h8E0nBcKDrwLDYHQqSiL5BivKs/tXJhyDwi+IQ4ilWxpgISx89nJqU=
-Received: from AM4PR0302CA0024.eurprd03.prod.outlook.com (2603:10a6:205:2::37)
- by PA6PR02MB10458.eurprd02.prod.outlook.com (2603:10a6:102:3c9::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.16; Fri, 21 Nov
+ bh=KMdW8ZarikQ8Y4XhrxJc2mznWw/fJfEqVAuuhhZ2+ik=;
+ b=ICdmqREPHZxLHAoPLmyeaC1wOkjh2afhf666fN09bdaNR5ijvHFkVTBk5/oCqSh8mzuNtP7LGL3tVst/8FMG91RiQ9yFpErKp16N08+1BssIKnKulgbTfa8kJV6vbnQ9di+OQZQwPha3O0VGZMZjNXEiW2EL5WN0SSqqPMyn3Z8=
+Received: from DU7PR01CA0040.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:50e::23) by PAVPR02MB9307.eurprd02.prod.outlook.com
+ (2603:10a6:102:30c::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.10; Fri, 21 Nov
  2025 00:08:22 +0000
-Received: from AMS1EPF0000004E.eurprd04.prod.outlook.com
- (2603:10a6:205:2:cafe::8e) by AM4PR0302CA0024.outlook.office365.com
- (2603:10a6:205:2::37) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9343.10 via Frontend Transport; Fri,
+Received: from DB1PEPF000509E8.eurprd03.prod.outlook.com
+ (2603:10a6:10:50e:cafe::2f) by DU7PR01CA0040.outlook.office365.com
+ (2603:10a6:10:50e::23) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9343.11 via Frontend Transport; Fri,
  21 Nov 2025 00:08:21 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
  smtp.mailfrom=axis.com; dkim=none (message not signed)
@@ -43,30 +43,26 @@ Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
  195.60.68.100 as permitted sender) receiver=protection.outlook.com;
  client-ip=195.60.68.100; helo=mail.axis.com; pr=C
 Received: from mail.axis.com (195.60.68.100) by
- AMS1EPF0000004E.mail.protection.outlook.com (10.167.16.139) with Microsoft
+ DB1PEPF000509E8.mail.protection.outlook.com (10.167.242.58) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.20.9343.9 via Frontend Transport; Fri, 21 Nov 2025 00:08:22 +0000
-Received: from se-mail02w.axis.com (10.20.40.8) by se-mail10w.axis.com
- (10.20.40.10) with Microsoft SMTP Server (version=TLS1_2,
+Received: from se-mail02w.axis.com (10.20.40.8) by se-mail11w.axis.com
+ (10.20.40.11) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1748.39; Fri, 21 Nov
  2025 01:08:21 +0100
-Received: from se-mail01w.axis.com (10.20.40.7) by se-mail02w.axis.com
- (10.20.40.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.61; Fri, 21 Nov
- 2025 01:08:21 +0100
-Received: from se-intmail02x.se.axis.com (10.4.0.28) by se-mail01w.axis.com
- (10.20.40.7) with Microsoft SMTP Server id 15.1.2507.61 via Frontend
+Received: from se-intmail02x.se.axis.com (10.4.0.28) by se-mail02w.axis.com
+ (10.20.40.8) with Microsoft SMTP Server id 15.1.2507.61 via Frontend
  Transport; Fri, 21 Nov 2025 01:08:21 +0100
 Received: from pc56063-2339.se.axis.com (pc56063-2339.se.axis.com [10.92.3.2])
-	by se-intmail02x.se.axis.com (Postfix) with ESMTP id A979128DA
+	by se-intmail02x.se.axis.com (Postfix) with ESMTP id AD3312911
 	for <bitbake-devel@lists.openembedded.org>; Fri, 21 Nov 2025 01:08:21 +0100 (CET)
 Received: by pc56063-2339.se.axis.com (Postfix, from userid 14323)
-	id F0E22120126; Fri, 21 Nov 2025 01:10:09 +0100 (CET)
+	id 012D312058E; Fri, 21 Nov 2025 01:10:09 +0100 (CET)
 From: Peter Kjellerstedt <pkj@axis.com>
 To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH 2/3] bitbake-layers: Remove the --force option for bitbake-config-build
-Date: Fri, 21 Nov 2025 01:10:05 +0100
-Message-ID: <20251121001006.3756451-2-pkj@axis.com>
+Subject: [PATCH 3/3] ast: Improve output when a fragment cannot be found
+Date: Fri, 21 Nov 2025 01:10:06 +0100
+Message-ID: <20251121001006.3756451-3-pkj@axis.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251121001006.3756451-1-pkj@axis.com>
 References: <20251121001006.3756451-1-pkj@axis.com>
@@ -75,98 +71,80 @@ Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AMS1EPF0000004E:EE_|PA6PR02MB10458:EE_
-X-MS-Office365-Filtering-Correlation-Id: d34061ea-172e-4646-8029-08de2892155b
+X-MS-TrafficTypeDiagnostic: DB1PEPF000509E8:EE_|PAVPR02MB9307:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1d794f59-23bc-4704-0ed8-08de28921557
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
+	BCL:0;ARA:13230040|376014|1800799024|82310400026|36860700013;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?Nvmw0UffkNGfn9ezaEaLh0+dH9WkLtYEmpczG0H4QYVbHBOzRA4MzV+P6tyr?=
- =?us-ascii?Q?4wVPK7Sj2fev8tZU5uJmKjaW/jReq1obnV/9PQMZ5YAD7MiVR3pFlSHc4ErZ?=
- =?us-ascii?Q?qucp11c6pGb/HmpJMesuhWsr6ew+Uh48sY/3cCYjw6bF5peyyKQwTxlDA6gW?=
- =?us-ascii?Q?DeY5jIF8Epk/P+psDo7EsAYU2Aw549feeuzaalQGH/nrCnlEssUF1Bs8m7tr?=
- =?us-ascii?Q?liHFEQl+UqA6aYk2Mxnyaj20RQg4b3H9pit25yTIeMyFp9ZIQLMzIIer3TbR?=
- =?us-ascii?Q?1gh7JMf2Bmn8AcpuJZyCGDB0kcxsVbLOg342q5urzpjJuDSXLsfgdARK92ef?=
- =?us-ascii?Q?9ufIB4C0pEn8Zx/OkX8FcVopkRqnd//oIs0NdHKiRpePh1PcCLVz6WgjRg8D?=
- =?us-ascii?Q?gAbknPeDdix8NRODNx66d9EVIkKGUIHIOWwBSgtocHv79Y0MCfWdW3VnDEIV?=
- =?us-ascii?Q?QTF4VaiboSDVdyeq7hxCutq2ML/Bx55xHlwBi7KkFsTorPyIKf/hnsfHC2me?=
- =?us-ascii?Q?5rK4xnz/iuHUBBtrybjpM6vdfPwW2cm4l03HZ4pHFfDZFYKHHsqWL9gyQrhz?=
- =?us-ascii?Q?ANyXlhBlHiHYPXRoMhBqXMJt0g2/wJ2rt+yhrX9xCOldT4N0mW60Q9wctRNj?=
- =?us-ascii?Q?9FyQQiZhIXCAu7xwnhp3jDog1T8cfJvUTalIh0uHfeI5ROICgU7BkML/bJAH?=
- =?us-ascii?Q?2PLn/hlwg3mCiq+4lPjggLeWFVH1sxzbZ0EartKTLlIIL13/jWrHyuMK8N+k?=
- =?us-ascii?Q?nNkxY+eZl80WffsaH9q21hn1I1iku5ESrYX87Nas0m4gWSL5u59+qq1WlpOM?=
- =?us-ascii?Q?RpEQ7i7or3NVPRa3SG3c8YaI+na0G4WKAtjHynfRNtkXHeNAYdav38PEmucN?=
- =?us-ascii?Q?0N3nKlBhJHzoFL19NdGUkm7NJjlDl2g/wAHsMKc6SE3JGXsn7DtckQXNtn7o?=
- =?us-ascii?Q?zJGR8aAsN1+0Sv0OYi7d1q0wcdn1bwDo9ALUkZXU4rmkT7MHY6crF8fPFcpE?=
- =?us-ascii?Q?g3pgWv4A090hBZBxt/9Z3wps4KtEuUk7FikmX0wEaK+FfZHD93FpVzvZpXqM?=
- =?us-ascii?Q?99qmAfquyxJRytDlx9eXy7DCf/BK5TQ6QlTXe3JmHwvhV/zapf4jJS8jZHWq?=
- =?us-ascii?Q?Q9Ag3L7xez8ImLnMxEEWlENQdd83dcMq/vzOIux3pA/UM5fSwhT7yF19cJky?=
- =?us-ascii?Q?Zbw0zYcVfOCKvdzESYFBOUpRjphZzdR7plN2RpTIv0OT8uBRfHs1TKXR/n1B?=
- =?us-ascii?Q?ZC5zfa1Wd4KSYe2rbIjlPCafGZa77qhf2l+uDVZPN7fivbmbpOOBmx76Obq6?=
- =?us-ascii?Q?hoCTYq778T+Ug+8Lq25WAED+myNKJLF50ht6ISz5hnCsIh7jtYzf5m2yDOMD?=
- =?us-ascii?Q?2mD/fWwqQ95r7onBDqyHzrAUwXW9JsHgUO63oix/UCc2MhuHXOSOxAixfWxY?=
- =?us-ascii?Q?yoi/HqZzBRt0ga9ZH6qHpOSA7v5Hle+w5LEL99XfWiT9kd3z2JZRfDRAXXgB?=
- =?us-ascii?Q?a8F54ao9XgpHuT1UxidC/n2xsYZo8qx6xRl/G5D8fs4FU0sDJ/PnFAx0wxqY?=
- =?us-ascii?Q?QkoMU/WIVffn/LVSpx4=3D?=
+	=?us-ascii?Q?4g8z4oG8GWfwWYMaDOfb0RJIuZt3wbLK2mXuDrsLmoUBFDpLOyo0aAPP4Q7n?=
+ =?us-ascii?Q?Xp0GDMQhpVjxYFrgfUXbAO4l10EZKGC6nuhiyt4f+1psAcSZ2waXEJ5xG3/U?=
+ =?us-ascii?Q?M0dUgTuxN2KDtuz76B2gXAzWrKkZyHVlIg2IQNNnLwYNaSI934dsyAtOdfI6?=
+ =?us-ascii?Q?dCp6JNCebYIxan1hkC7t2eI0Gk9WqbhYLIx0wtxT5LOsEUXHEF+8UAc66dMa?=
+ =?us-ascii?Q?msEWU/M/kfuXBIYFjWRAlj7d1tQYEZtZMlcRkJLxZhpMg5uriEgOw0uDHUW1?=
+ =?us-ascii?Q?c67ItglCwOidWq0L96ce1feJZpqm2nKVGbp3KhL9GeoL7zhXwwKyCLdchIzr?=
+ =?us-ascii?Q?eTrNnv14+Maym2bzU8YBLbvMU6jDh9D6ODELQnEVLEuWzNhi8U8QstWW1fS1?=
+ =?us-ascii?Q?0QHmLZdYfUXo/zyYRkKurKE0re3rpuVNSd+0ovtp1p+0xixVrcve54eYCAz5?=
+ =?us-ascii?Q?yBhNikS2eOBaOqS72nGXstgF8cWfXKHbrm3tcN1V9qyLM8z5idwOcO+7Oz6M?=
+ =?us-ascii?Q?H4iD3NLB6LfYfCJPCZuOPLFXK47Sb1UJsTRViPVCh34+odE5YqX9inuv9moo?=
+ =?us-ascii?Q?XZkG2hRvTEMZ6+8fKNIJfYpHSCvt08d9Z8pQgaDS0rkA9IQYTR5+ffXbdKML?=
+ =?us-ascii?Q?tVlP6KKtVx8s9Nz3lbHV/Ly7g6DJK0OeEiJTIh+dPBcPJvoHvDxV2AtyHW6V?=
+ =?us-ascii?Q?qauvY4qBGW7p2uUHWC6s/dSfZDdKhnToho+Ho/Kmrsj7uJE56JOHnZ+SYbaO?=
+ =?us-ascii?Q?l7JMs4hw3oWPAeLzt+YAJU0b3UM+dEcXiQLQF4S+7fqaI+GiIHDh56OhkyUv?=
+ =?us-ascii?Q?LCO22xMTZPrYuDmnzcC6ghmJtpaiQqj1w7CuWkvgBpNrPdMwOYocXnT+9Xz8?=
+ =?us-ascii?Q?ct6SpERw+dFH9V4cJ3LDnulbWU9i5/N1H4xpPFbaZaNYUnmRD+w5DgyJ1y9B?=
+ =?us-ascii?Q?vCx8YJC6eYb363wpABXo7EyM3R3V/UwrXcS6Cak+bCnsrKbgCNmZMqqrgfKF?=
+ =?us-ascii?Q?0cEugj/A8Zoa20/wU7eW657pv71l+rgR0WKIL8dBKY8WovMDrlaHV+rE0c/3?=
+ =?us-ascii?Q?iimW3C/3eB2cQLHs3jZae8nkuKiythzwGAna/rOFYZokIy+SM6I5ol+e3rRJ?=
+ =?us-ascii?Q?LFag0nd2sPDLlFxwrIIDXrA9izh6hlC4L8SEz5QActFXZ1bvV6yvSjPiWAcU?=
+ =?us-ascii?Q?fv4qxaZayeIAC6soitSmVW3klow+eJDZcd+RG5LG5FE2GfRXqTf4QITqyY6A?=
+ =?us-ascii?Q?UUO+9N2otvtW3CmT+N54+wuFkFJPvEEiWeo724a0ROC16grjaLIZEUQnK1KX?=
+ =?us-ascii?Q?a0tjPYuXWYDbcxvyYdddmZBlvUJfHrZLAh4N3lTYOPcDnf+kH8Oe9P9sGABd?=
+ =?us-ascii?Q?lbM/hbhS6JlR8GRbLhAS6O9OAO0hD1PkB7ZGDo4wX+shNAHjf9yVzRBscJIC?=
+ =?us-ascii?Q?fheBVzQ3LVJGqyJXhUX0YtdjH0ilY1i0f3hIZN+795kZINa5VYEwj4rOg7ul?=
+ =?us-ascii?Q?qBfIhD8a+3yjbgNjyKlmDYQja+NIBowJoF5ZMHv2e/xRmWiioWx8hnuI541k?=
+ =?us-ascii?Q?rH3w+o0coYzYCfPgjyA=3D?=
 X-Forefront-Antispam-Report: 
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2025 00:08:22.1390
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2025 00:08:22.0999
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d34061ea-172e-4646-8029-08de2892155b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d794f59-23bc-4704-0ed8-08de28921557
 X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	AMS1EPF0000004E.eurprd04.prod.outlook.com
+	DB1PEPF000509E8.eurprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA6PR02MB10458
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR02MB9307
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 21 Nov 2025 00:08:32 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18471
+ <bitbake-devel@lists.openembedded.org>; Fri, 21 Nov 2025 00:08:42 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18473
 
-There is currently no use for it, and its help message makes no sense in
-the context of bitbake-config-build.
+Show the list of searched layers as one layer per line rather than just
+dumping the contents of the BBLAYERS variable.
 
 Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 ---
- bin/bitbake-layers | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ lib/bb/parse/ast.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bin/bitbake-layers b/bin/bitbake-layers
-index 1154eb6d2..945921d9d 100755
---- a/bin/bitbake-layers
-+++ b/bin/bitbake-layers
-@@ -35,11 +35,15 @@ def main():
-         add_help=3DFalse)
-     parser.add_argument('-d', '--debug', help=3D'Enable debug output', act=
-ion=3D'store_true')
-     parser.add_argument('-q', '--quiet', help=3D'Print only errors', actio=
-n=3D'store_true')
--    parser.add_argument('-F', '--force', help=3D'Forced execution: can be =
-specified multiple times. -F will force add without recipe parse verificati=
-on and -FF will additionally force the run withput layer parsing.', action=
-=3D'count', default=3D0)
-+    if toolname =3D=3D "bitbake-layers":
-+        parser.add_argument('-F', '--force', help=3D'Forced execution: can=
- be specified multiple times. -F will force add without recipe parse verifi=
-cation and -FF will additionally force the run without layer parsing.', act=
-ion=3D'count', default=3D0)
-     parser.add_argument('--color', choices=3D['auto', 'always', 'never'], =
-default=3D'auto', help=3D'Colorize output (where %(metavar)s is %(choices)s=
-)', metavar=3D'COLOR')
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index 69e9f166c..e23ef6db3 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -427,7 +427,7 @@ class AddFragmentsNode(AstNode):
+                     data.setVarFlag(flagged_var, f, val)
+                     data.setVar(flagged_var, None)
+             else:
+-                bb.fatal("Could not find fragment {} in enabled layers: {}=
+".format(f, layers))
++                bb.fatal("Could not find fragment {} in enabled layers:\n\=
+t{}".format(f, "\n\t".join(layers.split())))
 =20
-     global_args, unparsed_args =3D parser.parse_known_args()
-=20
-+    if toolname !=3D "bitbake-layers":
-+        global_args.force =3D 0
-+
-     # Help is added here rather than via add_help=3DTrue, as we don't want=
- it to
-     # be handled by parse_known_args()
-     parser.add_argument('-h', '--help', action=3D'help', default=3Dargpars=
-e.SUPPRESS,
+ def handleInclude(statements, filename, lineno, m, force):
+     statements.append(IncludeNode(filename, lineno, m.group(1), force))
 
