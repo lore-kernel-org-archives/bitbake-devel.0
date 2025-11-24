@@ -1,105 +1,141 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <osama.abdelkader@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 695E0CFA46B
-	for <webhook@archiver.kernel.org>; Sun, 23 Nov 2025 16:16:29 +0000 (UTC)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.17503.1763914586050782958
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2C0CFD313
+	for <webhook@archiver.kernel.org>; Mon, 24 Nov 2025 17:24:19 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.22310.1764005050941371695
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 23 Nov 2025 08:16:26 -0800
+ Mon, 24 Nov 2025 09:24:11 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=PAxRLP7p;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-477bf34f5f5so17839255e9.0
-        for <bitbake-devel@lists.openembedded.org>; Sun, 23 Nov 2025 08:16:25 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=kvEKFTnQ;
+ spf=pass (domain: gmail.com, ip: 209.85.128.43, mailfrom: osama.abdelkader@gmail.com)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-477b198f4bcso29887705e9.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 24 Nov 2025 09:24:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1763914584; x=1764519384; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=C+ti2BuqQ4IWY3ESeNA0Ehqvt3olb3WwnMkWrXbFiSE=;
-        b=PAxRLP7poyWGYu3cUQdHD38SfzCDv8iVlRnsox2XK5OXz0WoL0l7zmyT4D7dagUEh6
-         QAU9h4fNPhOv9lHRB5Xx7pHFspQedL971adZ1ya1FjT8URulmYPQs6kCOy/YJ4UFhGw2
-         0kPwOnHGPvEjPmEcjWtNO2REZRjYdDSZLwZYQ=
+        d=gmail.com; s=20230601; t=1764005049; x=1764609849; darn=lists.openembedded.org;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z1w4Edq4dQOsXAUQy6Awzvx150CoxD4fFYbvbZfQETw=;
+        b=kvEKFTnQZ4rTCGFLgn1VwzbQkX3C4cbOz5XNsf16qcooHBzs7ozahnQe1KJTgeCaxK
+         1GCgtFTyUfyyrjX5UObS2+ZP4xH12E1gg7OZB6hDB+97VDuSKyTN2jJy+QN9wx7VMc7d
+         QC4fsgxNAmCkbQEjRBXUJNNiZ4L16eu9htX8Z1QiCdUlPvl2ZgMGXMXkjh4az/Sqr2ZN
+         fblqCX8c9pGCvNZVQJOoSYH1hUZ7pXrlCXzrGyO8pEsqXaomI6v3YrEHfY3DNPvQM9WS
+         u54buc1N1U6TAlMAeTUU65VkHL6E7wkKEnWiE8BkewDxtKLyZmK5Xi8eaaFcpYvMt5Yf
+         /ATQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763914584; x=1764519384;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C+ti2BuqQ4IWY3ESeNA0Ehqvt3olb3WwnMkWrXbFiSE=;
-        b=NnA6IjBz3+ITtp9m0zf7n+PwiYF9jtkBikY/R68otV0Y+95KAoyieJXX+gzC4aBh9D
-         xFByZrgsPHapqgr3W5ZCn9FAl0hV03peo71ND0WwrAoXAosqUvDkP6OAH7dWigmlb4lI
-         V89Y1VYlTuLgyu0LiUkqlCx3u24ZAXobhb9Rs2LDsh1oSeB6p5n+1IpGYYGYA1QuyPtE
-         OskRzV4LNyiFriOjlE6QMEZHpV7yF2Jzy83vdqoAeV6q2gomm4mq51FiqwilAdPzUpGv
-         jkW3HRgps29NVbY+YMPUjNdkjgnuFdRPtDhg6RzD4PjEVzBVSK9mk7j3H2O36G6a3zQO
-         l0CQ==
-X-Gm-Message-State: AOJu0YyH+RAxXc6X5eLVIfkKEzzMLtkn7Or1NNbKbByqvSR2cZ1eaSOy
-	+c7sTMYWxon8RMs/LnYLWMT/Tm8F+2SiO+/25PNeVCJEqsoi1ovJFgAMFBJ5y8htTRCefB61Kr8
-	C97/H
-X-Gm-Gg: ASbGncvgOfL4kaN2qnFNHb2AUtKjDKROnDCqsYKSIjthPfTRhYHEjW66A6WcurOWJi2
-	ZsIF0mztWuhuf3sLsqBsy6puQ4Eue4hdY1XdrpeaBD2adrXbP6NuVMYa1HPWeSbVlVD8uSnyzsz
-	Ur7AZzSAb48jmdFzMyqynmetLkT0dz3lO2YCsF0PK3BN+9QwfwmTVSLYk/vpchVE5G5LDoalS03
-	n7lpQK4Wmb0BxeQ89/MMLWQPuGEhIIQEXs5ArQVnOBP62WX9M7ymFXC0oHmFYuJLjM4DhmileVm
-	pc/S0+fUt5PB72jJZYnREP9AL76En6ti4/6KOCKNVh6n+x4V8PzEAq31FeAwaXaTUZ7IOoY8/gI
-	5Gb4lQUacqkY0Ltri/+DQOEuRsIfyo59clytti5zWawQpGUYDuSCw9P1lKlqQqdH1pl552mz5IK
-	ecfesQyuCjEmf8IEWYo7Ru6QAIKNh0+HJUOEJOyA==
-X-Google-Smtp-Source: AGHT+IFaPuNF3qkKwnGYx9MTYBeCmM0f4AYkjbK8LrtT3iQDL2C5NiysmuHYPOCDXRXG5w3vAZmVww==
-X-Received: by 2002:a05:600c:5252:b0:477:569c:34e9 with SMTP id 5b1f17b1804b1-477c01defd8mr95210335e9.23.1763914583701;
-        Sun, 23 Nov 2025 08:16:23 -0800 (PST)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:775c:23a4:f31e:9be])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477a9e0c802sm127620105e9.15.2025.11.23.08.16.22
-        for <bitbake-devel@lists.openembedded.org>
+        d=1e100.net; s=20230601; t=1764005049; x=1764609849;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Z1w4Edq4dQOsXAUQy6Awzvx150CoxD4fFYbvbZfQETw=;
+        b=LpdUzXgaYIFOlvn/CwbneV/Z9KJoIrvCuj/WOL8jjP5hbmYdrpTBzOhihRgt/gU4GH
+         lMzAq6rIGBaOiIOpa0nPfHXfC3rcMFV9wYcX/OKWVzkb+1exPM8vGy0ShZrBThmh2EUV
+         OPc4KKXod1RaGdw7U5guiFsmBggxoRmJBRJuIr42158DA/OMsoN+SlrPW8LYAJY74z4Q
+         T2Xda8rLu5q/Eka29PFkEMXaupuMF1jf0W2vvRVSubZMx/bFr3XGyslG9P7vrhWmBeFM
+         B3UxUfUoxvRwkIcqn2QI+fxENkb+KTcxgYMllulUW799JLYBm7/KVAVhREgD/l2lAt34
+         +JQQ==
+X-Gm-Message-State: AOJu0YxgElMp7MXZ993VXmyfY7j9xEpt5gRvgPOEFr3MrLfE32DgOtqT
+	mKe8+1nHvh0vL0gi8btGINa1RvF6Rs3ylcBuzNddg24qLBVRPlc9lBPQ
+X-Gm-Gg: ASbGncuDKYwshiaDCQ1gaqPioZbMsEpLiNd5WN83PlOt4fwNIASffXRQ0V/PrUuCrA/
+	ZM3akRK7TqmEl+5TEc0Rvu8LUc5ClXgRLLaH5e8eeCubkLq9XmBU4hau5uy7Dum+IqvitctNrm5
+	OtamsAiXzyfm5rWP1VUgHHTrGC+Ja6HAmWYgCNo5XKilHFFVE86br9L+GvgXijkmYmzdaLN4SNr
+	joq20U/cTNo0U358AR+nbjl6/9IK+JuzFvX9hhZ00S+Qv1fMW/z1zablAtpBZfwoGprs9NiH1Mn
+	DNub1j4rgoWKq4HMaQ/lSAZ/h5Z2okMX3psmt2dVUCsn6RLXuJfCowLjnHefZzj5dk/GqOwI0s0
+	zse8zrW9yPbqryIxv5X+mgnU0m9m6d/j0fgMpzUMGDpBqUfrZhvOb5Flxayz2cnftXwNuyTHMbA
+	Q47HMyaiTZAq+K
+X-Google-Smtp-Source: AGHT+IGUs/f3tHVysB1ZlKntMi7sxySBVZQRtXWjJhMqnNWGPV/qgKkNy1XRXLpitVWnH7qtYFQzVQ==
+X-Received: by 2002:a05:600c:1994:b0:477:7af8:c88b with SMTP id 5b1f17b1804b1-477c01740e1mr121978775e9.11.1764005048828;
+        Mon, 24 Nov 2025 09:24:08 -0800 (PST)
+Received: from osama ([156.223.112.153])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477bf3af0ecsm208610655e9.9.2025.11.24.09.24.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Nov 2025 08:16:22 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] data_smart: Fix cache issues with noweakdefault getVar
-Date: Sun, 23 Nov 2025 16:16:21 +0000
-Message-ID: <20251123161621.114056-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.48.1
+        Mon, 24 Nov 2025 09:24:08 -0800 (PST)
+Date: Mon, 24 Nov 2025 19:24:04 +0200
+From: Osama Abdelkader <osama.abdelkader@gmail.com>
+To: yocto@lists.yoctoproject.org
+Cc: bitbake-devel@lists.openembedded.org
+Subject: [RFC] Proposal: New tool to display recipe dependency trees
+Message-ID: <aSSUtHYFQlychNQk@osama>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 23 Nov 2025 16:16:29 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18479
+ <bitbake-devel@lists.openembedded.org>; Mon, 24 Nov 2025 17:24:19 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18480
 
-The recently fragment error handling code uses noweakdefault=True to getVar.
-Unfortunately there is a bug where the expand cache may cause that value to
-ignored, giving confusing error messages.
+Hi All,
 
-Avoid the expand cache if that parameter is used.
+I would like to propose adding a new command-line tool (or BitBake subcommand) that generates
+dependency trees, including:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/data_smart.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+DEPENDS (build-time)
+RDEPENDS (runtime)
+Optional graph output (text, JSON)
 
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 2e0d3085882..110dfa11162 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -781,10 +781,10 @@ class DataSmart(MutableMapping):
-                 return None
-             cachename = var + "[" + flag + "]"
- 
--        if not expand and retparser and cachename in self.expand_cache:
-+        if not expand and retparser and cachename in self.expand_cache and not noweakdefault:
-             return self.expand_cache[cachename].unexpanded_value, self.expand_cache[cachename]
- 
--        if expand and cachename in self.expand_cache:
-+        if expand and cachename in self.expand_cache and not noweakdefault:
-             return self.expand_cache[cachename].value
- 
-         local_var = self._findVar(var)
-@@ -904,7 +904,7 @@ class DataSmart(MutableMapping):
-                 value = bb.filter.apply_filters(value, [self.filters[basevar],])
-                 parser.value = value
- 
--        if parser:
-+        if parser and not noweakdefault:
-             self.expand_cache[cachename] = parser
- 
-         if retparser:
+Motivation
+
+Currently, BitBake provides:
+
+bitbake -g produces task-depends.dot (task-level, not recipe-level, must use graphviz)
+oe-pkgdata-util runtime dependency only
+bitbake -e <recipe> view variables, but manually
+Errors from the dependency resolver (if a recipe is missing)
+
+But there is no built-in CLI tool to display a recipe dependency tree, e.g.:
+
+bitbake-deptree dnf
+
+dnf
+ ├── libdnf
+ │    ├── libsolv
+ │    └── json-c
+ └── sqlite3
+
+
+Such a tool would help:
+
+layer developers understanding complex deps
+learning how Yocto resolves recipe names, PROVIDES, virtual/ mappings
+documenting or visualizing architecture
+
+I started experimenting with a prototype using Tinfoil to walk DEPENDS and collect data through BitBake’s recipecache, and it seems feasible.
+
+Questions for the community
+
+Before developing this further, I would like guidance on the following:
+
+Is this functionality valuable upstream? Would BitBake benefit from such a tool?
+
+Where should it live?
+Options I see:
+
+new BitBake subcommand (e.g. bitbake-deptree)
+extension to oe-pkgdata-util
+standalone Python tool under scripts/
+part of devtool?
+
+Preferred output format(s)?
+Plain ASCII tree (default)
+JSON
+
+
+Should the tool:
+
+cover only DEPENDS (build-time)?
+include RDEPENDS with pkgdata?
+resolve virtual/ providers?
+
+Any prior work I may have missed?
+
+If the idea is acceptable, I will prepare a proper implementation and send a patchset to the appropriate mailing list.
+Thank you for your feedback!
+
+Best regards,
+Osama
 
