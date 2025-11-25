@@ -1,102 +1,178 @@
-Return-Path: <changqing.li@windriver.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D48CD0E6CD
-	for <webhook@archiver.kernel.org>; Tue, 25 Nov 2025 12:08:29 +0000 (UTC)
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.15282.1764072507036802362
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C0ED0E6E5
+	for <webhook@archiver.kernel.org>; Tue, 25 Nov 2025 13:42:49 +0000 (UTC)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.17246.1764078165123659317
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 25 Nov 2025 04:08:27 -0800
+ Tue, 25 Nov 2025 05:42:45 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=JLcAG3sk;
- spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=34243e2576=changqing.li@windriver.com)
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5APAUm5p3346880
-	for <bitbake-devel@lists.openembedded.org>; Tue, 25 Nov 2025 04:08:26 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=PPS06212021; bh=3Usb2D07e1xKJZMIbFhN
-	Foe4fPHMuj3O43YDrbPLFHo=; b=JLcAG3sk/zv16vhUfCFu0uVd6VzE62DMtuF4
-	1kuQ6hrycyhtoWU5/x9HNkCistvjqm95/lUKJXTrY2fBz7XD100ftyBY3kn0VW73
-	hiM1F7UB1IFPbNmf3EOQNYrjEvGhAQ/7xCAVbRVF7rYDNnu2V6Dkcp2+aW1lUyhO
-	WqmI9byWrpDX96rowRY+aufzroZl9bcZJ4Azx6faqtBbiec5lTxtqZMrOVmYHpdC
-	OOMTD2QGvHLrc5IF+rK20nwPFMbJ0YvZ807RUNih3QM1qh51w/vY05hr+dwVRizd
-	zCvkgp6XolZ1jh3GLixPMvxI/LriCl0bvcbBWS1DWKAZm0s7qw==
-Received: from ala-exchng01.corp.ad.wrs.com ([128.224.246.36])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4akdjjaqqf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Tue, 25 Nov 2025 04:08:26 -0800 (PST)
-Received: from ala-exchng01.corp.ad.wrs.com (10.11.224.121) by
- ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.61; Tue, 25 Nov 2025 04:08:25 -0800
-Received: from pek-lpg-core6.wrs.com (10.11.232.110) by
- ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server id
- 15.1.2507.61 via Frontend Transport; Tue, 25 Nov 2025 04:08:25 -0800
-From: <changqing.li@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH V2] bitbake-setup: Avoid unexpected positional parameter propagation when sourcing scripts
-Date: Tue, 25 Nov 2025 20:08:24 +0800
-Message-ID: <20251125120824.1023662-1-changqing.li@windriver.com>
-X-Mailer: git-send-email 2.34.1
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=E9jWEynn;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-42b39d51dcfso3321898f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Tue, 25 Nov 2025 05:42:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1764078163; x=1764682963; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X/BfgHZxYlkVl8SOD0mnfvHRh6A0ZCb2x2B/JLuQ+z4=;
+        b=E9jWEynnamCp8vAdlNA8GRFag42aLfndMX7OAvppTwlMlLQ6nXefQvQMLoBBS9cPOC
+         TN0c4BHQw2RqOsG5HYpxuV4kExNRwioSo8+Ky38THQrLHcaXg2BvhFRDvFlqRMXXhMud
+         E0b+uT2m7JGjmGJyWRo/gAzz3FtQ/DXtIRoY4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764078163; x=1764682963;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X/BfgHZxYlkVl8SOD0mnfvHRh6A0ZCb2x2B/JLuQ+z4=;
+        b=Pz2xSBcF/IeVPMYcsHXb4eZUM77V9y5CKnghQ1LpYW9pKRNhm8cnRAhW61+Nf/oa6I
+         cXNWF/CTlq+SUhDBt4QVFuziFmE9YZk3CDwsRolIGnPHhHY5wiagWxh926yupkwLdvMe
+         e+FM84XzkzDvGJ+w07jlND2oocbX7yrsAUuwAYDjEeiA/4Nm5snOy+81f/z8gNoODbr4
+         1m3btF5jwERhXmn6mqAlAUZOzxrp16UnIYNP0aGpl3gerhEQ4IMFr0uptxhPi9q0Me1h
+         vWxYE+6MHNoKGCCjtpY3CYj/pPLtlVtsJt56UwUl3Aa6pa9/CkSrrWMfXhz4riS7FxVQ
+         4lsQ==
+X-Gm-Message-State: AOJu0YwZq3vcoNtwS/aRyWronEJL9S4GzX+sZYCX9wjKRXD03LJHX0i6
+	+g9H/X87/7wjJtY1ou4uT87014Tfibz4mpNCaE3L+h2MxHMqKuh95f6Mbna2jfeATCDwaW/YgiI
+	qXbz/
+X-Gm-Gg: ASbGncthO0pwWVZzD1ugKmd/9HTiKtw6gSI6QJY3ZQ/ABOOo3N4+nmZlevjS3iwGX2i
+	Ga0FUnze9EqOUcFBWPj3LTs3ldl3HsLdv9sN4T/oVESpp2ctSK/o6SwSVAiVHbhux2fIERGjcVv
+	asWp2n8Y2/MBskKi1f8UiJyK2sIQ3CvcmojQG1+glzX6zeEr39l6rKxC3RT+Ctg9FwGSraDmsli
+	p+DuRZI8yVwvKNyVV4b83+OsAUKVKtWfJxBR4Y2iMTiA+gIEGz4Atm1LAooMJ0Nu/nuEJ0f/ykU
+	HKyu9euvqkixmJjhmrbYd52stltj4e8HFycdQ7n5ySm8T9lt7bjjnBbE/qt9hdCsNYSW2BBQ+gT
+	pdKeIBf8MoHDqy87WtUUBu1D7AN8wUslFiIAy7J1hdaIb/hD3T1J7rbolSNyWGO4V9CPItzHfTJ
+	Ax97WOW8Ti3K/ebzwtGe4KNe4xPBRmSINPF/P9XrM=
+X-Google-Smtp-Source: AGHT+IGujBUpBMsmrzlhWHDCdXrzZWxTDoAXJLQDuN8LA0VzepqY5m+lVkahZYRgEfMzlI3qbduwBw==
+X-Received: by 2002:adf:f3c3:0:b0:42b:41dc:1b5f with SMTP id ffacd0b85a97d-42cc1cf4535mr12362948f8f.32.1764078162616;
+        Tue, 25 Nov 2025 05:42:42 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:c8cd:1015:2ce5:f243])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7fba201sm34385192f8f.32.2025.11.25.05.42.41
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Nov 2025 05:42:42 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] cooker/cookerdata: Ensure clean cache parsing/correctness with memres bitbake
+Date: Tue, 25 Nov 2025 13:42:41 +0000
+Message-ID: <20251125134241.401158-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.48.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI1MDA5OCBTYWx0ZWRfX0dUPpXMEsGY9
- ngg+1+Jq2xNrABgXXI+yaz1EObqEnxfq2T13Bx/uy7Sv1fXImIBl7sxpzNNeWjkaib6EP+BoIsw
- qKUwaNXUvM4rBaUL5MJe0Mrg71RVkHM4jX37gxNOkAymoTsiJfGf5LyWUYLkIKk2FX8GbQE0wk7
- 2e4NKYJ3slXUQdcbaL3w7H2P67xs5V86efP3wlkUjPyWTvReYd/UJPOMN7UBCy2/p80k/UdvVm4
- lbEheCMfOcXbwRo3asbc+qTpmZBUBvyiOSmolXvStgH6+qowFYsWxY0QTDoOOqqEXvTegtVBWtc
- dbpNJVfYk3v2bACSujQAxEdBh/jew9E9ellokF+j0RHdFk8gQgNQweojC4IRmaXmXHChiSKCv6y
- aRbg6Hu9QiQuno8sMVhQ9R+uSysjgQ==
-X-Proofpoint-ORIG-GUID: BCYGfNoeBXdDRZviVn1uHV43tr494WQt
-X-Authority-Analysis: v=2.4 cv=Wq8m8Nfv c=1 sm=1 tr=0 ts=69259c3a cx=c_pps
- a=AbJuCvi4Y3V6hpbCNWx0WA==:117 a=AbJuCvi4Y3V6hpbCNWx0WA==:17
- a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=t7CeM3EgAAAA:8
- a=q66ld7yrh25gMnS-DFMA:9 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-GUID: BCYGfNoeBXdDRZviVn1uHV43tr494WQt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-25_02,2025-11-25_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0
- priorityscore=1501 impostorscore=0 bulkscore=0 malwarescore=0 spamscore=0
- adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2510240001
- definitions=main-2511250098
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 25 Nov 2025 12:08:29 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18490
+ <bitbake-devel@lists.openembedded.org>; Tue, 25 Nov 2025 13:42:49 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18491
 
-From: Changqing Li <changqing.li@windriver.com>
+After the changes which meant cooker features were changing more often, it
+highlighted a caching bug in bitbake where files would change and we would
+reparse but old versions of the file contents would be used from
+cached_statements.
 
-Using `set` to define positional parameters in the current shell causes
-those parameters to persist. When another script is sourced in the same
-shell without explicit arguments, it unexpectedly inherits these
-positional parameters. This change prevents such unintended propagation.
+A second issue was observed where we'd try and rehash the configuration data
+stores even if the cache was invalid, causing a backtrace.
 
-Signed-off-by: Changqing Li <changqing.li@windriver.com>
+To fix both issues, ensure revalidateCaches is called from the datastore init
+function and ensure calc_datastore_hashes handles the case where caches are
+invalid.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bin/bitbake-setup | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/cooker.py     | 23 +++++++++++++++++------
+ lib/bb/cookerdata.py |  6 +++++-
+ 2 files changed, 22 insertions(+), 7 deletions(-)
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index 75be90940..8e229073a 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -184,7 +184,7 @@ def setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_c
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index b896c233ec9..e4e927b7974 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -247,6 +247,7 @@ class BBCooker:
+                 self.featureset.delFeature(orig_feature)
+         bb.debug(1, "Features set %s (was %s)" % (list(self.featureset), original_featureset))
+         if (original_featureset != list(self.featureset)) and self.state != State.ERROR and hasattr(self, "data"):
++            bb.server.process.serverlog("Reseting due to feature chanages")
+             self.reset()
  
-     def _make_init_build_env(builddir, oeinitbuildenvdir):
-         builddir = os.path.realpath(builddir)
--        cmd = "cd {}\nset {}\n. ./oe-init-build-env\n".format(oeinitbuildenvdir, builddir)
-+        cmd = 'cd {}\nset {}\n. ./oe-init-build-env\nset --\n'.format(oeinitbuildenvdir, builddir)
-         initbuild_in_builddir = os.path.join(builddir, 'init-build-env')
+     def initConfigurationData(self):
+@@ -258,7 +259,11 @@ class BBCooker:
+             if mod not in self.orig_sysmodules:
+                 del sys.modules[mod]
  
-         with open(initbuild_in_builddir, 'w') as f:
--- 
-2.34.1
-
++        self._baseconfig_set(False)
++        self._parsecache_set(False)
++
+         self.configwatched = {}
++        self.revalidateCaches()
+ 
+         # Need to preserve BB_CONSOLELOG over resets
+         consolelog = None
+@@ -312,7 +317,6 @@ class BBCooker:
+             self.add_filewatch(mc.getVar("__base_depends", False), configwatcher=True)
+ 
+         self._baseconfig_set(True)
+-        self._parsecache_set(False)
+ 
+     def handlePRServ(self):
+         # Setup a PR Server based on the new configuration
+@@ -377,6 +381,12 @@ You can also remove the BB_HASHSERVE_UPSTREAM setting, but this may result in si
+     def revalidateCaches(self):
+         bb.parse.clear_cache()
+ 
++        if not self.baseconfig_valid:
++            bb.parse.BBHandler.cached_statements = {}
++            if hasattr(self, "databuilder"):
++                self.databuilder.calc_datastore_hashes(clean=False)
++            return
++
+         clean = True
+         for f in self.configwatched:
+             if not bb.parse.check_mtime(f, self.configwatched[f]):
+@@ -384,7 +394,10 @@ You can also remove the BB_HASHSERVE_UPSTREAM setting, but this may result in si
+                 self._baseconfig_set(False)
+                 self._parsecache_set(False)
+                 clean = False
+-                break
++                bb.parse.BBHandler.cached_statements = {}
++                if hasattr(self, "databuilder"):
++                    self.databuilder.calc_datastore_hashes(clean=False)
++                return
+ 
+         if clean:
+             for f in self.parsewatched:
+@@ -392,15 +405,13 @@ You can also remove the BB_HASHSERVE_UPSTREAM setting, but this may result in si
+                     bb.server.process.serverlog("Found %s changed, invalid cache" % f)
+                     self._parsecache_set(False)
+                     clean = False
++                    bb.parse.BBHandler.cached_statements = {}
+                     break
+ 
+-        if not clean:
+-            bb.parse.BBHandler.cached_statements = {}
+-
+         # If writes were made to any of the data stores, we need to recalculate the data
+         # store cache
+         if hasattr(self, "databuilder"):
+-            self.databuilder.calc_datastore_hashes()
++            self.databuilder.calc_datastore_hashes(clean=clean)
+ 
+     def parseConfiguration(self):
+         self.updateCacheSync()
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+index b6dca7af702..22ac95eac9f 100644
+--- a/lib/bb/cookerdata.py
++++ b/lib/bb/cookerdata.py
+@@ -259,7 +259,11 @@ class CookerDataBuilder(object):
+         self.data = self.basedata
+         self.mcdata = {}
+ 
+-    def calc_datastore_hashes(self):
++    def calc_datastore_hashes(self, clean=True):
++        if not clean:
++            self.data_hash = None
++            return
++
+         data_hash = hashlib.sha256()
+         data_hash.update(self.data.get_hash().encode('utf-8'))
+         multiconfig = (self.data.getVar("BBMULTICONFIG") or "").split()
 
