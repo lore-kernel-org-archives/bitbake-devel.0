@@ -1,166 +1,123 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA7DD11183
-	for <webhook@archiver.kernel.org>; Thu, 27 Nov 2025 09:42:25 +0000 (UTC)
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.15149.1764236538385066519
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C191FD116EA
+	for <webhook@archiver.kernel.org>; Thu, 27 Nov 2025 10:29:45 +0000 (UTC)
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.15741.1764239376364525650
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 27 Nov 2025 01:42:19 -0800
+ Thu, 27 Nov 2025 02:29:36 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=mOXdd8On;
- spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 52B031A1DBE;
-	Thu, 27 Nov 2025 09:42:16 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 269E56068C;
-	Thu, 27 Nov 2025 09:42:16 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 90CA2102F2328;
-	Thu, 27 Nov 2025 10:42:14 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1764236535; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=m0Fm8L8Y1IQ2V0pFqdMQNh4aplc0FRQFpFppeYLzspY=;
-	b=mOXdd8Onfo3NCytC9704qKKMoutF9vNkjuRrfEigUpIxZe1JIxqv+vSQ206/uVrw4QE522
-	rFZL4heQ7qg9p3AjS1oGyArdKbPL8B3FmAIsHkNjWqN7vsAB/HVzygjidkyWd8e2KDYb11
-	A1lpjpA2i0NE5s4gAdtWKAttqtStZRhRPTrxTz79LZ+NoQT21COFHZf+EqRp4+C+aq/KI8
-	ExeINl/exdnvB5zA+RKegWpRMRA3QZmwIe3TnxqgFhZjZvXfjiNUnp8dI6p3Tz1WGV+z1v
-	0AghH1okcWOy+1UMceJgIdV9O33TXCqxD5tx1mqC4nQP7D3EYKHJ6qPGqE14KA==
-From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Thu, 27 Nov 2025 10:42:03 +0100
-Subject: [PATCH] doc/bitbake-user-manual-ref-variables.rst: update pressure
- monitoring instructions
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251127-update-bb-pressure-instructions-v1-1-36f69a25d4ef@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAOocKGkC/yWNSwoCQQwFrzJkbcBuogNeRVz0J2pctEPSLcIwd
- zfqsqBevRWMVdjgNK2g/BKTZ3MIuwnKPbUbo1RniPt4CCHOOJaaOmPOuCibDXWjWddRuk8NA3E
- lmomOKYFX3LrK+/dwvvzZRn5w6d8sbNsHOkhztYMAAAA=
-X-Change-ID: 20251127-update-bb-pressure-instructions-14ed447446aa
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=IyJYZ2Pi;
+ spf=pass (domain: gmail.com, ip: 209.85.208.52, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6418738efa0so1255413a12.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 27 Nov 2025 02:29:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764239374; x=1764844174; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bDx2ZgvcQyT35l+YEdYSU4nMh8imeSLCeknPMd/ZeDM=;
+        b=IyJYZ2PiXB0E2YssQlER6v+OWLxLpRHYw/NFz6NlpxGoJVCtwkDpfsc8lpXn08QKes
+         Lb/64wj1VlGkrFsO9taCY8GwkqZFw4iGFSgnAiZJ3L4eOHc10QihOkmrzhz874I0Zc1D
+         hB23eqVWFnNT8bK+1mtN1hS4hn4sQply48+um9yZmbX+ryCfT4CdviSPYmODhs02kFvE
+         DWHlMFCwl0kTmi6wWXEGjWnBq0B+S6v5scjMEK6xXLfGC/PuXhyOzexrbsvaWxYNmdyi
+         E0kXB4KC5JlrBb1q37gZwc3EkRA5rDs5nw7z3CSCDVpnruEe0F5KYK9aTDWwDsR6nx6j
+         Vn+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764239374; x=1764844174;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bDx2ZgvcQyT35l+YEdYSU4nMh8imeSLCeknPMd/ZeDM=;
+        b=s+S9jcuH9tJjUPcHO4f3nZz1px6Hip3JgG/Go5BjaEiSHhoKHtSvtGVKwznVzoIXKF
+         0vpL9zXOD3jvbYgHjkt+6XDRA4Z25SQTF6cHMPINeFgZ017RFGH/vwlJq/RVpwBMS088
+         ukgpn0P+Q5i8aRo1H2XgMtqREgtI0q9P2YKPSjAZjLb9Jjv+Z/KbmGAnJ/0peBsLfIxF
+         8LnMh/y+sKb9/hJot7/ALbwMg7HbrDxXsaF4ghzwtonNiI6ACxjO9SKz0543o5rXuy/Q
+         sbkNUJoEU1H2rd7xxDg7NLVLYHQS5bjWQGb3QfbbX/m/rmGGMkENOf/u1143kH5PFjr3
+         Q49A==
+X-Gm-Message-State: AOJu0YzdtXiC5JEmwmAHtg1CyHExvMEOoUddcml6MDg3cK8GCVgLlKgB
+	xMGkkGwQs901pbehVRc3MPJLLqHBzgLv7gqQbI7q9mZZf/CaC9SkU1t6zMhKRw==
+X-Gm-Gg: ASbGncuxeL3SyYbx1o3X9j3wRKOlC8P9cvq3rjJ7rszGzi2uTDLoCarG+BtdckFpQ0w
+	qQ84lgOrrkPqxjQ8tiIQAR9z6WRXUx5r3aZDjbRd6inWgDwhqXHYOU+iKgnqBFo0aVFgvUry2+O
+	6KxDK+xcjtielbzTZpW0bjAaMo1OmUGxEDnAZc6dzvMi+hOj5UJWsDu4Gz+YKMewS0oZ9ukvosB
+	0RFn5NMTEl8fG+s24WI5nU0HQEMKmcU/oNTfHyBbmkCi7ZdH/fmN8U6hTabO1bMe2bwDgB2iCdl
+	BJagWcWjf3p+yYuM9LgwYXbye6SWi6ICCloSwPKv3RETChEiKOsDAtzDSiQnNe4TFecovAvIvMS
+	9x3g1tOVuXqF9l6r8+hGSnPIFcAMTYMIU6YlqhFSUcNj0eYE3XH/htF2e7+HnV+PnaaeFIg/KYu
+	iBRUT4CwOG5dbMppqoZJJBEStDMaa/sC5LM/1/bveSuJaIA897/uk=
+X-Google-Smtp-Source: AGHT+IF8woOomNGzFnnhPDeDqAu+gKiEvqlkkcmNqZzjCR2C3q3wRtNqA0vZA+XSC0ZkYmZvkbulag==
+X-Received: by 2002:a17:906:1d0d:b0:b76:8671:6cc5 with SMTP id a640c23a62f3a-b7686716d5amr1623699466b.53.1764239374265;
+        Thu, 27 Nov 2025 02:29:34 -0800 (PST)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b76f59a6a74sm122661566b.45.2025.11.27.02.29.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Nov 2025 02:29:33 -0800 (PST)
+From: Alexander Kanavin <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5125;
- i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=ru7+nnQaYBVX6wceVB9/vTgHxCgnHL3sScVDNsKbpBs=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpKBz29/Zfi/fJBoPoGYmg7xsphV77OxJNi9td1
- zlMop6pZTiJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaSgc9gAKCRDRgEFAKaOo
- NmA5EACUoDf2Sv2NkyUR17ekTKvCNBAUG5MuUw6sY/VdEghyaxRIYBzB9NX5HbywYUWTOZ2wLP6
- kCteKTIc5bvm8Wf4tr3v5nfxW6/HbljmotTti5Pav+rtGH7MqcwSXX0s5bXwOeW2lZcVgfC/sl2
- WUoy62w4W5+tNwEVueuFRE8hgl2r2HRyoOah2H/R/LIjy53crgPqxwVUUsR2LtnZe9DF1g4yO7C
- 3niAO8fFR7M2GXAIY+Jdp5MXabI8uZKZunvT1Z21aDXdg3L5TLXpQ6olx9pVeXNO0uYzI5psyTa
- siHMsM1pY2zE/nLqp0VaO0Twu90n7HfjaYOYOizB1pXIWf5LpCM2vCrjYVwS4uT2cJmdkEoO1PE
- pRjQ2Qj+DMt2gBh10CzvKb39SdkP/LQan78XhJ3eJ6ROZ1FclOtrVSb9if2E854iWgzXIrid6J+
- pJypJRqsQ8u8nlgv5NJ1Ua0qYmfg22DqSXDxjfsE2L3+Zsz00zmt2N4lDOS7aQNF3kd3wxDI6sT
- suCkXfh+v8PCkIEG7lzmK7V0w/CSBmN/6dF2iUwxF/WM0KhheGggv2hLO6CiTM6pjEbOjFSF858
- Z2RfOEZV++La7wf6U8OB40P1+BgFyRcarCgTIYWFLf3N3Dx5LriS6XmbsrUrDdCKk6OApSmKkHd
- HHdd7XCBbk5bYpg==
-X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
- fpr=8648725188DD401BB9A0D3FFD180414029A3A836
-X-Last-TLS-Session-Version: TLSv1.3
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH v2 1/3] bitbake-setup: rename oe-nodistro to oe-nodistro-master
+Date: Thu, 27 Nov 2025 11:29:26 +0100
+Message-Id: <20251127102928.3647918-1-alex.kanavin@gmail.com>
+X-Mailer: git-send-email 2.39.5
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 27 Nov 2025 09:42:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18499
+ <bitbake-devel@lists.openembedded.org>; Thu, 27 Nov 2025 10:29:45 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18500
 
-After commit d492bbf0503d ("knotty: Integrate PSI reporting into the
-UI") on BitBake, the pressure information is no longer printed on the
-console by default and has moved to its own log domain.
+From: Alexander Kanavin <alex@linutronix.de>
 
-Update the BB_PRESSURE_* variable descriptions to show how to follow
-these messages.
+This makes it consistent with poky-master and upcoming
+release-specific configurations (e.g. poky-whinlatter).
 
-Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- .../bitbake-user-manual-ref-variables.rst          | 48 ++++++++++++++--------
- 1 file changed, 30 insertions(+), 18 deletions(-)
+ .../{oe-nodistro.conf.json => oe-nodistro-master.conf.json}   | 2 +-
+ .../bitbake-user-manual-environment-setup.rst                 | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+ rename default-registry/configurations/{oe-nodistro.conf.json => oe-nodistro-master.conf.json} (96%)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index 734c7858a2..339143d4ea 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -579,14 +579,18 @@ overview of their function and contents.
+diff --git a/default-registry/configurations/oe-nodistro.conf.json b/default-registry/configurations/oe-nodistro-master.conf.json
+similarity index 96%
+rename from default-registry/configurations/oe-nodistro.conf.json
+rename to default-registry/configurations/oe-nodistro-master.conf.json
+index 9f9314399..180d2008a 100644
+--- a/default-registry/configurations/oe-nodistro.conf.json
++++ b/default-registry/configurations/oe-nodistro-master.conf.json
+@@ -40,7 +40,7 @@
+         {
+             "name": "nodistro",
+             "description": "OpenEmbedded 'nodistro'",
+-            "setup-dir-name": "oe-nodistro",
++            "setup-dir-name": "oe-nodistro-master",
+             "bb-layers": ["openembedded-core/meta"],
+             "oe-fragments-one-of": {
+                 "machine": {
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+index 2b8051bcb..962fc9463 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+@@ -334,7 +334,7 @@ In addition, the command can take the following arguments:
  
-       .. note::
+    .. code-block:: shell
  
--         You may see numerous messages printed by BitBake in case the
--         :term:`BB_PRESSURE_MAX_CPU` is too low::
-+         You can track the pressure information while a build is running with:
+-      $ ./bitbake/bin/bitbake-setup init https://git.openembedded.org/bitbake/plain/default-registry/configurations/oe-nodistro.conf.json
++      $ ./bitbake/bin/bitbake-setup init https://git.openembedded.org/bitbake/plain/default-registry/configurations/oe-nodistro-master.conf.json
  
--            Pressure status changed to CPU: True, IO: False, Mem: False (CPU: 1105.9/2.0, IO: 0.0/2.0, Mem: 0.0/2.0) - using 1/64 bitbake threads
-+         .. code-block:: shell
+ -  This example initializes a :term:`Setup` with: 
  
--         This means that the :term:`BB_PRESSURE_MAX_CPU` should be increased to
--         a reasonable value for limiting the CPU pressure on the system.
--         Monitor the varying value after ``CPU:`` above to set a sensible value.
-+            $ tail -F tmp/log/cooker/<machine>/console-latest.log | grep "Pressure status changed"
-+            NOTE: Pressure status changed to CPU: True, IO: False, Mem: False (CPU: 1105.9/2.0, IO: 0.0/2.0, Mem: 0.0/2.0) - using 1/64 bitbake threads
-+            ...
-+
-+         If these messages are printed a lot, it means that the :term:`BB_PRESSURE_MAX_CPU`
-+         should be increased to a reasonable value for limiting the CPU pressure
-+         on the system. Monitor the varying value after ``CPU:`` above to set a
-+         sensible value.
+@@ -845,7 +845,7 @@ Generic Configuration Examples
  
-    :term:`BB_PRESSURE_MAX_IO`
-       Specifies a maximum I/O pressure threshold, above which BitBake's
-@@ -616,14 +620,18 @@ overview of their function and contents.
+ OpenEmbedded "nodistro" configuration for master branches:
  
-       .. note::
+-.. literalinclude:: ../../default-registry/configurations/oe-nodistro.conf.json
++.. literalinclude:: ../../default-registry/configurations/oe-nodistro-master.conf.json
+    :language: json
  
--         You may see numerous messages printed by BitBake in case the
--         :term:`BB_PRESSURE_MAX_IO` is too low::
-+         You can track the pressure information while a build is running with:
-+
-+         .. code-block:: shell
- 
--            Pressure status changed to CPU: None, IO: True, Mem: False (CPU: 2236.0/None, IO: 153.6/2.0, Mem: 0.0/2.0) - using 19/64 bitbake threads
-+            $ tail -F tmp/log/cooker/<machine>/console-latest.log | grep "Pressure status changed"
-+            NOTE: Pressure status changed to CPU: None, IO: True, Mem: False (CPU: 2236.0/None, IO: 153.6/2.0, Mem: 0.0/2.0) - using 19/64 bitbake threads
-+            ...
- 
--         This means that the :term:`BB_PRESSURE_MAX_IO` should be increased to
--         a reasonable value for limiting the I/O pressure on the system.
--         Monitor the varying value after ``IO:`` above to set a sensible value.
-+         If these messages are printed a lot, it means that the :term:`BB_PRESSURE_MAX_IO` 
-+         should be increased to a reasonable value for limiting the I/O pressure
-+         on the system. Monitor the varying value after ``IO:`` above to set a
-+         sensible value.
- 
-    :term:`BB_PRESSURE_MAX_MEMORY`
-       Specifies a maximum memory pressure threshold, above which BitBake's
-@@ -655,14 +663,18 @@ overview of their function and contents.
- 
-       .. note::
- 
--         You may see numerous messages printed by BitBake in case the
--         :term:`BB_PRESSURE_MAX_MEMORY` is too low::
-+         You can track the pressure information while a build is running with:
-+
-+         .. code-block:: shell
- 
--            Pressure status changed to CPU: None, IO: False, Mem: True (CPU: 29.5/None, IO: 0.0/2.0, Mem: 2553.3/2.0) - using 17/64 bitbake threads
-+            $ tail -F tmp/log/cooker/<machine>/console-latest.log | grep "Pressure status changed"
-+            NOTE: Pressure status changed to CPU: None, IO: False, Mem: True (CPU: 29.5/None, IO: 0.0/2.0, Mem: 2553.3/2.0) - using 17/64 bitbake threads
-+            ...
- 
--         This means that the :term:`BB_PRESSURE_MAX_MEMORY` should be increased to
--         a reasonable value for limiting the memory pressure on the system.
--         Monitor the varying value after ``Mem:`` above to set a sensible value.
-+         If these messages are printed a lot, it means that the :term:`BB_PRESSURE_MAX_MEMORY`
-+         should be increased to a reasonable value for limiting the memory
-+         pressure on the system. Monitor the varying value after ``Mem:`` above
-+         to set a sensible value.
- 
-    :term:`BB_RUNFMT`
-       Specifies the name of the executable script files (i.e. run files)
-
----
-base-commit: 6ee4df8ab58e0175b43106d8a6cbac1f6ab8d022
-change-id: 20251127-update-bb-pressure-instructions-14ed447446aa
+ Poky distribution configuration for master branches:
+-- 
+2.39.5
 
 
