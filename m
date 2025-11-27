@@ -1,203 +1,166 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCBDD116F3
-	for <webhook@archiver.kernel.org>; Thu, 27 Nov 2025 09:11:15 +0000 (UTC)
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.14804.1764234670709844250
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA7DD11183
+	for <webhook@archiver.kernel.org>; Thu, 27 Nov 2025 09:42:25 +0000 (UTC)
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.15149.1764236538385066519
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 27 Nov 2025 01:11:11 -0800
+ Thu, 27 Nov 2025 01:42:19 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=jY9ReffP;
- spf=pass (domain: smile.fr, ip: 209.85.221.48, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-42bb288c17bso383110f8f.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 27 Nov 2025 01:11:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1764234669; x=1764839469; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qEnVDAMYNDlIYJbdevEumLXZgeNVg+XQFxWZVKBCLyA=;
-        b=jY9ReffPHtxcKp1Q8wgbbkaT0y2cLuB+P2nScD0Yx0d4tE4jr8X18Y74PQ1Sjiiv2c
-         n2Ylbn3vbuaDC8MA06iWveBWaiGzjl5wHjg7Gfl7eGf5cQm8XC2LiDQeNfRIKRyIjz0J
-         KcVm47XZqTZZ9CtbeId6U50fdQl5cOBqyi6FQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764234669; x=1764839469;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qEnVDAMYNDlIYJbdevEumLXZgeNVg+XQFxWZVKBCLyA=;
-        b=nJNiQX+1PuJPC9EE21pQ0tKk/dibFJnooVGDXCIhh0AkXw2gAg6ZDxwfegTRrh9EeP
-         9sCa9KzdT5oW8dN0jEQQFlE7ctgq6bB9PHAKJcCHQnVJ4Vmf3YfZMO21dlcffIvCO1N5
-         9FngXEA14eBjQsOj9SHWzzpFm8wLiTSVQXga98lBLXz2eS9HHfgZhcK6hDvmE2pPLmOC
-         2DKlEvt0FVGMMAOW28ZRWXUqTVLZ5rSDhHpzh1rd5NumehkfhsTf+abdKD1nsJY/4PZO
-         LHLxxrP4ACaEOaf+rUW4KhBMMQd3C+mdzUJu4AeCJy6UEcdteu48OquDW/cWj/7CF/OQ
-         f4iA==
-X-Gm-Message-State: AOJu0YxYVwDgt8p7uRwKWw2GPYoSj1hpynM1857rojRzk+4ft71dIPsY
-	0F38Hu3nDURenxTIq143kBzskKEmCYHoq83IYHRYsgtVB1UOI/op3PyMMQju3oa7/R/utMs9MJd
-	e/stBtdFDC7GVvzhmdQExlsbJ0FCHdDQIzyn7zwjF5A==
-X-Gm-Gg: ASbGncuwzSXssbrgFvBILXXD8agj95rrYawwNPXt2gWpTcXydJYv69ARo1+MNzYutsy
-	nfGf9dSzrJpfcD6u6Fehr7Ci7qsC0WD11aBMYa4AWD/PR7XuGzwqVTYV5Y5LAMZWVomtu+zBztG
-	PH3BKTZE3pvNPlLXiIGUTzOlMERj8oRbRtbOXFvXKFuXbCb2UMSwf6JDuy3zYnTpmISK0p8NLh1
-	K62gnoiTcocNDP6YFqcHgNwFu/pheYzt3yn7Q0i+WuL4uLoU3Y0uSjseQGfue6kJL0k5a0YxKcB
-	WKbkSDAmioSDHWDR3M9MtyB8eVySvrkt3vL7/Zo=
-X-Google-Smtp-Source: AGHT+IHwE7X/6CVa5rH8/8qR4HVXqOa9p14heVLH5FnM+xIp2cI923rEVS5PpRzYNA1EvdYS+5ShcgFUw+HeKsBE754=
-X-Received: by 2002:a05:6000:1252:b0:42b:47da:c318 with SMTP id
- ffacd0b85a97d-42cc1d19514mr19233152f8f.52.1764234668810; Thu, 27 Nov 2025
- 01:11:08 -0800 (PST)
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=mOXdd8On;
+ spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 52B031A1DBE;
+	Thu, 27 Nov 2025 09:42:16 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 269E56068C;
+	Thu, 27 Nov 2025 09:42:16 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 90CA2102F2328;
+	Thu, 27 Nov 2025 10:42:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1764236535; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=m0Fm8L8Y1IQ2V0pFqdMQNh4aplc0FRQFpFppeYLzspY=;
+	b=mOXdd8Onfo3NCytC9704qKKMoutF9vNkjuRrfEigUpIxZe1JIxqv+vSQ206/uVrw4QE522
+	rFZL4heQ7qg9p3AjS1oGyArdKbPL8B3FmAIsHkNjWqN7vsAB/HVzygjidkyWd8e2KDYb11
+	A1lpjpA2i0NE5s4gAdtWKAttqtStZRhRPTrxTz79LZ+NoQT21COFHZf+EqRp4+C+aq/KI8
+	ExeINl/exdnvB5zA+RKegWpRMRA3QZmwIe3TnxqgFhZjZvXfjiNUnp8dI6p3Tz1WGV+z1v
+	0AghH1okcWOy+1UMceJgIdV9O33TXCqxD5tx1mqC4nQP7D3EYKHJ6qPGqE14KA==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Date: Thu, 27 Nov 2025 10:42:03 +0100
+Subject: [PATCH] doc/bitbake-user-manual-ref-variables.rst: update pressure
+ monitoring instructions
 MIME-Version: 1.0
-References: <20251127-bbsetup-path-option-v1-1-2d2565eb927c@bootlin.com>
-In-Reply-To: <20251127-bbsetup-path-option-v1-1-2d2565eb927c@bootlin.com>
-From: Yoann Congal <yoann.congal@smile.fr>
-Date: Thu, 27 Nov 2025 10:10:42 +0100
-X-Gm-Features: AWmQ_bmscLFxH9c9zoz_Xyb5QvhfglXoHgQYSJqVckCCqJvhj_XFtUm15NQC2Z8
-Message-ID: <CAMSfU+5aTymkg9Aws_AQcKhbfU1UpfOx-gSGM-ejK9s68PvNXA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] doc/bitbake-setup: extend doc of "path" option
-To: antonin.godard@bootlin.com
-Cc: bitbake-devel@lists.openembedded.org, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, docs@lists.yoctoproject.org
-Content-Type: multipart/alternative; boundary="000000000000bc315f06448fe414"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20251127-update-bb-pressure-instructions-v1-1-36f69a25d4ef@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAOocKGkC/yWNSwoCQQwFrzJkbcBuogNeRVz0J2pctEPSLcIwd
+ zfqsqBevRWMVdjgNK2g/BKTZ3MIuwnKPbUbo1RniPt4CCHOOJaaOmPOuCibDXWjWddRuk8NA3E
+ lmomOKYFX3LrK+/dwvvzZRn5w6d8sbNsHOkhztYMAAAA=
+X-Change-ID: 20251127-update-bb-pressure-instructions-14ed447446aa
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5125;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=ru7+nnQaYBVX6wceVB9/vTgHxCgnHL3sScVDNsKbpBs=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpKBz29/Zfi/fJBoPoGYmg7xsphV77OxJNi9td1
+ zlMop6pZTiJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaSgc9gAKCRDRgEFAKaOo
+ NmA5EACUoDf2Sv2NkyUR17ekTKvCNBAUG5MuUw6sY/VdEghyaxRIYBzB9NX5HbywYUWTOZ2wLP6
+ kCteKTIc5bvm8Wf4tr3v5nfxW6/HbljmotTti5Pav+rtGH7MqcwSXX0s5bXwOeW2lZcVgfC/sl2
+ WUoy62w4W5+tNwEVueuFRE8hgl2r2HRyoOah2H/R/LIjy53crgPqxwVUUsR2LtnZe9DF1g4yO7C
+ 3niAO8fFR7M2GXAIY+Jdp5MXabI8uZKZunvT1Z21aDXdg3L5TLXpQ6olx9pVeXNO0uYzI5psyTa
+ siHMsM1pY2zE/nLqp0VaO0Twu90n7HfjaYOYOizB1pXIWf5LpCM2vCrjYVwS4uT2cJmdkEoO1PE
+ pRjQ2Qj+DMt2gBh10CzvKb39SdkP/LQan78XhJ3eJ6ROZ1FclOtrVSb9if2E854iWgzXIrid6J+
+ pJypJRqsQ8u8nlgv5NJ1Ua0qYmfg22DqSXDxjfsE2L3+Zsz00zmt2N4lDOS7aQNF3kd3wxDI6sT
+ suCkXfh+v8PCkIEG7lzmK7V0w/CSBmN/6dF2iUwxF/WM0KhheGggv2hLO6CiTM6pjEbOjFSF858
+ Z2RfOEZV++La7wf6U8OB40P1+BgFyRcarCgTIYWFLf3N3Dx5LriS6XmbsrUrDdCKk6OApSmKkHd
+ HHdd7XCBbk5bYpg==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 27 Nov 2025 09:11:15 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18498
+ <bitbake-devel@lists.openembedded.org>; Thu, 27 Nov 2025 09:42:25 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18499
 
---000000000000bc315f06448fe414
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+After commit d492bbf0503d ("knotty: Integrate PSI reporting into the
+UI") on BitBake, the pressure information is no longer printed on the
+console by default and has moved to its own log domain.
 
-Le jeu. 27 nov. 2025 =C3=A0 09:56, Antonin Godard via lists.openembedded.or=
-g
-<antonin.godard=3Dbootlin.com@lists.openembedded.org> a =C3=A9crit :
+Update the BB_PRESSURE_* variable descriptions to show how to follow
+these messages.
 
-> The commit 6727d0852f3f ("bitbake-setup: make "path" optional") changed
-> the behavior of this bitbake-setup JSON option. Document it.
->
-> Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
->
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+---
+ .../bitbake-user-manual-ref-variables.rst          | 48 ++++++++++++++--------
+ 1 file changed, 30 insertions(+), 18 deletions(-)
 
-Thanks Antonin!
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index 734c7858a2..339143d4ea 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -579,14 +579,18 @@ overview of their function and contents.
+ 
+       .. note::
+ 
+-         You may see numerous messages printed by BitBake in case the
+-         :term:`BB_PRESSURE_MAX_CPU` is too low::
++         You can track the pressure information while a build is running with:
+ 
+-            Pressure status changed to CPU: True, IO: False, Mem: False (CPU: 1105.9/2.0, IO: 0.0/2.0, Mem: 0.0/2.0) - using 1/64 bitbake threads
++         .. code-block:: shell
+ 
+-         This means that the :term:`BB_PRESSURE_MAX_CPU` should be increased to
+-         a reasonable value for limiting the CPU pressure on the system.
+-         Monitor the varying value after ``CPU:`` above to set a sensible value.
++            $ tail -F tmp/log/cooker/<machine>/console-latest.log | grep "Pressure status changed"
++            NOTE: Pressure status changed to CPU: True, IO: False, Mem: False (CPU: 1105.9/2.0, IO: 0.0/2.0, Mem: 0.0/2.0) - using 1/64 bitbake threads
++            ...
++
++         If these messages are printed a lot, it means that the :term:`BB_PRESSURE_MAX_CPU`
++         should be increased to a reasonable value for limiting the CPU pressure
++         on the system. Monitor the varying value after ``CPU:`` above to set a
++         sensible value.
+ 
+    :term:`BB_PRESSURE_MAX_IO`
+       Specifies a maximum I/O pressure threshold, above which BitBake's
+@@ -616,14 +620,18 @@ overview of their function and contents.
+ 
+       .. note::
+ 
+-         You may see numerous messages printed by BitBake in case the
+-         :term:`BB_PRESSURE_MAX_IO` is too low::
++         You can track the pressure information while a build is running with:
++
++         .. code-block:: shell
+ 
+-            Pressure status changed to CPU: None, IO: True, Mem: False (CPU: 2236.0/None, IO: 153.6/2.0, Mem: 0.0/2.0) - using 19/64 bitbake threads
++            $ tail -F tmp/log/cooker/<machine>/console-latest.log | grep "Pressure status changed"
++            NOTE: Pressure status changed to CPU: None, IO: True, Mem: False (CPU: 2236.0/None, IO: 153.6/2.0, Mem: 0.0/2.0) - using 19/64 bitbake threads
++            ...
+ 
+-         This means that the :term:`BB_PRESSURE_MAX_IO` should be increased to
+-         a reasonable value for limiting the I/O pressure on the system.
+-         Monitor the varying value after ``IO:`` above to set a sensible value.
++         If these messages are printed a lot, it means that the :term:`BB_PRESSURE_MAX_IO` 
++         should be increased to a reasonable value for limiting the I/O pressure
++         on the system. Monitor the varying value after ``IO:`` above to set a
++         sensible value.
+ 
+    :term:`BB_PRESSURE_MAX_MEMORY`
+       Specifies a maximum memory pressure threshold, above which BitBake's
+@@ -655,14 +663,18 @@ overview of their function and contents.
+ 
+       .. note::
+ 
+-         You may see numerous messages printed by BitBake in case the
+-         :term:`BB_PRESSURE_MAX_MEMORY` is too low::
++         You can track the pressure information while a build is running with:
++
++         .. code-block:: shell
+ 
+-            Pressure status changed to CPU: None, IO: False, Mem: True (CPU: 29.5/None, IO: 0.0/2.0, Mem: 2553.3/2.0) - using 17/64 bitbake threads
++            $ tail -F tmp/log/cooker/<machine>/console-latest.log | grep "Pressure status changed"
++            NOTE: Pressure status changed to CPU: None, IO: False, Mem: True (CPU: 29.5/None, IO: 0.0/2.0, Mem: 2553.3/2.0) - using 17/64 bitbake threads
++            ...
+ 
+-         This means that the :term:`BB_PRESSURE_MAX_MEMORY` should be increased to
+-         a reasonable value for limiting the memory pressure on the system.
+-         Monitor the varying value after ``Mem:`` above to set a sensible value.
++         If these messages are printed a lot, it means that the :term:`BB_PRESSURE_MAX_MEMORY`
++         should be increased to a reasonable value for limiting the memory
++         pressure on the system. Monitor the varying value after ``Mem:`` above
++         to set a sensible value.
+ 
+    :term:`BB_RUNFMT`
+       Specifies the name of the executable script files (i.e. run files)
 
+---
+base-commit: 6ee4df8ab58e0175b43106d8a6cbac1f6ab8d022
+change-id: 20251127-update-bb-pressure-instructions-14ed447446aa
 
-> ---
->  doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst | 4 ++=
-+-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git
-> a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-> b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-> index 2b8051bcb4..edbc749ad6 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-> @@ -688,7 +688,9 @@ They contain the following sections:
->     -  ``branch`` (**required**): the Git branch, used to check that the
->        specified ``rev`` is indeed on that branch.
->
-> -   -  ``path`` is where the source is extracted.
-> +   -  ``path`` (*optional*): where the source is extracted, relative to
-> the
-> +      ``layers/`` directory of a :term:`Setup`. If unspecified, the name
-> of the
-> +      source is used.
->
->  -  ``expires`` (*optional*): Expiration date of the configuration. This
-> date
->     should be in :wikipedia:`ISO 8601 <ISO_8601>` format
-> (``YYYY-MM-DDTHH:MM:SS``).
->
-> ---
-> base-commit: 6ee4df8ab58e0175b43106d8a6cbac1f6ab8d022
-> change-id: 20251127-bbsetup-path-option-ca416ef22fa8
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#18497):
-> https://lists.openembedded.org/g/bitbake-devel/message/18497
-> Mute This Topic: https://lists.openembedded.org/mt/116498233/4316185
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> yoann.congal@smile.fr]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
-
---=20
-Yoann Congal
-Smile ECS
-
---000000000000bc315f06448fe414
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr">Le=C2=A0jeu. 27 nov. 2025 =C3=A0=C2=A009:=
-56, Antonin Godard via <a href=3D"http://lists.openembedded.org">lists.open=
-embedded.org</a> &lt;antonin.godard=3D<a href=3D"mailto:bootlin.com@lists.o=
-penembedded.org">bootlin.com@lists.openembedded.org</a>&gt; a =C3=A9crit=C2=
-=A0:</div><div class=3D"gmail_quote gmail_quote_container"><blockquote clas=
-s=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid r=
-gb(204,204,204);padding-left:1ex">The commit 6727d0852f3f (&quot;bitbake-se=
-tup: make &quot;path&quot; optional&quot;) changed<br>
-the behavior of this bitbake-setup JSON option. Document it.<br>
-<br>
-Signed-off-by: Antonin Godard &lt;<a href=3D"mailto:antonin.godard@bootlin.=
-com" target=3D"_blank">antonin.godard@bootlin.com</a>&gt;<br>
-</blockquote><div><br></div><div>Thanks Antonin!</div><div>=C2=A0</div><blo=
-ckquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left=
-:1px solid rgb(204,204,204);padding-left:1ex">---<br>
-=C2=A0doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst | 4=
- +++-<br>
-=C2=A01 file changed, 3 insertions(+), 1 deletion(-)<br>
-<br>
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.=
-rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst<br>
-index 2b8051bcb4..edbc749ad6 100644<br>
---- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst<br>
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst<br>
-@@ -688,7 +688,9 @@ They contain the following sections:<br>
-=C2=A0 =C2=A0 -=C2=A0 ``branch`` (**required**): the Git branch, used to ch=
-eck that the<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0specified ``rev`` is indeed on that branch.<br>
-<br>
--=C2=A0 =C2=A0-=C2=A0 ``path`` is where the source is extracted.<br>
-+=C2=A0 =C2=A0-=C2=A0 ``path`` (*optional*): where the source is extracted,=
- relative to the<br>
-+=C2=A0 =C2=A0 =C2=A0 ``layers/`` directory of a :term:`Setup`. If unspecif=
-ied, the name of the<br>
-+=C2=A0 =C2=A0 =C2=A0 source is used.<br>
-<br>
-=C2=A0-=C2=A0 ``expires`` (*optional*): Expiration date of the configuratio=
-n. This date<br>
-=C2=A0 =C2=A0 should be in :wikipedia:`ISO 8601 &lt;ISO_8601&gt;` format (`=
-`YYYY-MM-DDTHH:MM:SS``).<br>
-<br>
----<br>
-base-commit: 6ee4df8ab58e0175b43106d8a6cbac1f6ab8d022<br>
-change-id: 20251127-bbsetup-path-option-ca416ef22fa8<br>
-<br>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#18497): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/18497" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/18497</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/116498233/431=
-6185" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/m=
-t/116498233/4316185</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:yoann.congal@smile.fr" target=3D"_=
-blank">yoann.congal@smile.fr</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div><div><br clear=3D"all"></div><br><span class=3D"gmail_si=
-gnature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_signature"><d=
-iv dir=3D"ltr"><font face=3D"Raleway, regular">Yoann Congal</font><div><fon=
-t face=3D"Raleway, regular">Smile ECS</font></div></div></div></div>
-
---000000000000bc315f06448fe414--
 
