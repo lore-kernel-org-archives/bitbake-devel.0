@@ -1,129 +1,97 @@
-Return-Path: <mathieu.dubois-briand@bootlin.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29806D11183
-	for <webhook@archiver.kernel.org>; Thu, 27 Nov 2025 07:56:25 +0000 (UTC)
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.13777.1764230177743179025
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF7DD11183
+	for <webhook@archiver.kernel.org>; Thu, 27 Nov 2025 08:56:55 +0000 (UTC)
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.14605.1764233806532293325
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 26 Nov 2025 23:56:19 -0800
+ Thu, 27 Nov 2025 00:56:47 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=uGB8G3jx;
- spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: mathieu.dubois-briand@bootlin.com)
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=ap5L3PEm;
+ spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 85BC6C16A14
-	for <bitbake-devel@lists.openembedded.org>; Thu, 27 Nov 2025 07:55:52 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 694F51A1DBA
+	for <bitbake-devel@lists.openembedded.org>; Thu, 27 Nov 2025 08:56:44 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 48CFB6068C;
-	Thu, 27 Nov 2025 07:56:15 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A0127102F2585;
-	Thu, 27 Nov 2025 08:56:13 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 411186068C;
+	Thu, 27 Nov 2025 08:56:44 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 75A02102F260E;
+	Thu, 27 Nov 2025 09:56:42 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1764230174; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=mTLIq9ZJC5kri6l0FPIep915y/N2GAPYwt57Jw8ch68=;
-	b=uGB8G3jxjHMZxYac1R5HO8Y/uIVHMLDjsjDslcrl/2SN3wQ/ZmaC+U2A6tyZ89F0a+mpQR
-	3RJSmHTG0AobfBDvy1EtCFSNWOvZpF7hdGEM4LczzwI7HUGRa0FABpgdLQFFxsr/wOODKz
-	yGOIhczF8MdH8T5VjSbZ2VorBTbR9okH3LILQVNuMFulpsJkjT37ix2/tap3ZH/HNyz9qe
-	pT9AzRRppu1oXoOxDvZ1XTiQiN+TNsNxej7KQaBS85UA+WweFOOvW/cQe3E5kEPazOKDc/
-	V56114SBpeOkbkXER56KKGV8w3Bn/GA8j+Ov6ultkyDztpNuFgOd2mhlhi3azQ==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 27 Nov 2025 08:56:09 +0100
-Message-Id: <DEJBEF60AW06.39XZQAP8JIJV3@bootlin.com>
-To: <alex.kanavin@gmail.com>, <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH] bitbake-setup: add whinlatter configs
- for poky and oe-nodistro
-Cc: "Alexander Kanavin" <alex@linutronix.de>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20251126085726.2502674-1-alex.kanavin@gmail.com>
-In-Reply-To: <20251126085726.2502674-1-alex.kanavin@gmail.com>
+	t=1764233803; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=BvwWu1G78M1AQX8Cvvo90AHPDkQ4jk/Ws9jwYsHRvxY=;
+	b=ap5L3PEm5UIr+UqQEE4RukT8qjRaXCRMoStB0vClTNk0Ce6aEXGDECxmRQxotCxRL4rUx8
+	tvTCQ58Rg90k0AHITNMFikKQG2xDowdwSXIO6554iZcjRygAHzUDxF3hqZp/7rZZqDjyHn
+	3RzlJbaRZtzlFmUsYaI2aObIY2WL00lsPVutSXIh7J4idWnKj9H7SFkoMzmv/kjdagj5Lc
+	4oAfroBSZ2aCWr60067DU0vD0M1rYt/OTdIJkxKrsv/irOK3RH+MlAh9woQaxWLev6xrN7
+	Xx/oXmj9/ogPpxvpqSN4FAmh4uy5nEveqxhsoa6cmDzIl1bgPeoD4wq2IjUslg==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Date: Thu, 27 Nov 2025 09:56:30 +0100
+Subject: [PATCH] doc/bitbake-setup: extend doc of "path" option
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20251127-bbsetup-path-option-v1-1-2d2565eb927c@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAD0SKGkC/yXMQQqDMBCF4avIrDvQDNWKV5Eukjip04WGTJSCe
+ HejLj94799AOQkrdNUGiVdRmacC86jAj3b6MspQDPSk2hh6o3PKeYkYbR5xjrns0duXaTgQBdt
+ CecbEQf5Xtf/c1sX92OczBft+AEZYHjR3AAAA
+X-Change-ID: 20251127-bbsetup-path-option-ca416ef22fa8
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1366;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=haPeBitl40M++TWiB7UtKLLxAJ8ml33aPVC/sXigk1A=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpKBJKIkpzCczYYFv8yhNiol6Hu+OoTVSGeH+Sz
+ RJSA440WSyJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaSgSSgAKCRDRgEFAKaOo
+ NmJCEAC6oGZUTnS4dZxAAuEXDLLpDgo/rhdkY4yc6uch9gZGAnc6ztGib/SzzhS4JM2vrsFiDvm
+ 1NyChBQdLIxuT8faP0L6ZKkSG85Av7T+XLAy+F3MjYLu2SRXeY+rSjro5PcnFxObBehsOshzY4a
+ Qh8xv/I1Wu50OAjWxCScyOxnKR0Ggve9zGFC2U4bX/9YZJXfAtHWJeAZgPiHD2jr4kPqaVBgjXq
+ HnyTLknSu53I3to1QQ3G/N8WcYd9JjuqY974qXiZmLXUPpSttBcFUfm2tp4IiEmwFnkf75vpxzR
+ NIS1ZfLcEs8mR6IwkSPTObPOYBzR2IT79FNQKmMX0o2U3ifrMO+WrH8+B4SKzmqaIsbNnE0t05y
+ Sjr9X5F7qJgJX8qSo6S4IRwKiiSKijSDDAct/uUkvVKAFHSGjEtS92ITHtmThgmqaYDQkS+6V8V
+ SFHA+M3GykuDi/QndNPThe3m+li1DwIrAr+XuaqkmoNiYzkzX2OvJdk8db1IL1hS3Rqem2DlS7E
+ U7h0VEc58Dal3gEBUQYg614FFSSammrxfA7bjkjID15PgoazG1vjYLevcz4osczC3znBI/aT9Mg
+ xrXpseTawj6r1ZWOpuWMfse6CxmfAnIvLOHQLuL1W+sDfzMcNOa7IJ3ATdZ/1Bf68NO2i8Oj13d
+ P1QA3gp44rlmcrw==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
 X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 27 Nov 2025 07:56:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18496
+ <bitbake-devel@lists.openembedded.org>; Thu, 27 Nov 2025 08:56:55 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18497
 
-On Wed Nov 26, 2025 at 9:57 AM CET, Alexander Kanavin via lists.openembedde=
-d.org wrote:
-> From: Alexander Kanavin <alex@linutronix.de>
->
-> Compared to master, these:
-> - adjust the branch names (particularly bitbake is at 2.16, making a refe=
-rence
-> for matching it with whinlatter branches in layers and docs)
-> - adjust the description to add "release 5.3 'whinlatter'
-> - add an 'expires' field so that bitbake-setup can print the date until
-> the release is supported (and exclude it from 'list' and interactive 'ini=
-t'
-> thereafter, unless whinaltter is explicitly asked for).
->
-> Bitbake-setup output:
->
-> Available configurations:
-> 1. poky-master	Poky - The Yocto Project testing distribution configuratio=
-ns and hardware test platforms
-> 2. oe-nodistro-master	OpenEmbedded - 'nodistro' basic configuration
-> 3. poky-whinlatter	Poky - The Yocto Project testing distribution configur=
-ations and hardware test platforms, release 5.3 'whinlatter' (supported unt=
-il 2026-05-31)
-> 4. oe-nodistro-whinlatter	OpenEmbedded - 'nodistro' basic configuration, =
-release 5.3 'whinlatter' (supported until 2026-05-31)
->
-> Signed-off-by: Alexander Kanavin <alex@linutronix.de>
-> ---
+The commit 6727d0852f3f ("bitbake-setup: make "path" optional") changed
+the behavior of this bitbake-setup JSON option. Document it.
 
-Hi Alexander,
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+---
+ doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thanks for your patch.
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+index 2b8051bcb4..edbc749ad6 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+@@ -688,7 +688,9 @@ They contain the following sections:
+    -  ``branch`` (**required**): the Git branch, used to check that the
+       specified ``rev`` is indeed on that branch.
+ 
+-   -  ``path`` is where the source is extracted.
++   -  ``path`` (*optional*): where the source is extracted, relative to the
++      ``layers/`` directory of a :term:`Setup`. If unspecified, the name of the
++      source is used.
+ 
+ -  ``expires`` (*optional*): Expiration date of the configuration. This date
+    should be in :wikipedia:`ISO 8601 <ISO_8601>` format (``YYYY-MM-DDTHH:MM:SS``).
 
-It looks like this is breaking some test on the oe-core side:
-
-2025-11-26 18:03:29,827 - oe-selftest - INFO - bblayers.BitbakeLayers.test_=
-validate_bitbake_setup_default_registry (subunit.RemotedTestCase)
-2025-11-26 18:03:29,828 - oe-selftest - INFO -  ... FAIL
-...
-{'description': "Poky - The Yocto Project testing distribution configuratio=
-ns and hardware test platforms, release 5.3 'whinlatter'", 'expires': '2026=
--05-31', 'sources': {'bitbake': {'git-remote': {'remotes': {'origin': {'uri=
-': 'https://git.openembedded.org/bitbake'}}, 'branch': '2.16', 'rev': '2.16=
-'}}, 'openembedded-core': {'git-remote': {'remotes': {'origin': {'uri': 'ht=
-tps://git.openembedded.org/openembedded-core'}}, 'branch': 'whinlatter', 'r=
-ev': 'whinlatter'}}, 'meta-yocto': {'git-remote': {'remotes': {'origin': {'=
-uri': 'https://git.yoctoproject.org/meta-yocto'}}, 'branch': 'whinlatter', =
-'rev': 'whinlatter'}}, 'yocto-docs': {'git-remote': {'remotes': {'origin': =
-{'uri': 'https://git.yoctoproject.org/yocto-docs'}}, 'branch': 'whinlatter'=
-, 'rev': 'whinlatter'}}}, 'bitbake-setup': {'configurations': [{'bb-layers'=
-: ['openembedded-core/meta', 'meta-yocto/meta-yocto-bsp', 'meta-yocto/meta-=
-poky'], 'setup-dir-name': '$distro-whinlatter', 'oe-fragments-one-of': {'ma=
-chine': {'description': 'Target machines', 'options': ['machine/qemux86-64'=
-, 'machine/qemuarm64', 'machine/qemuriscv64', 'machine/genericarm64', 'mach=
-ine/genericx86-64']}, 'distro': {'description': 'Distribution configuration=
- variants', 'options': ['distro/poky', 'distro/poky-altcfg', 'distro/poky-t=
-iny']}}, 'configurations': [{'name': 'poky', 'description': 'Poky - The Yoc=
-to Project testing distribution'}, {'name': 'poky-with-sstate', 'descriptio=
-n': 'Poky - The Yocto Project testing distribution with internet sstate acc=
-eleration. Use with caution as it requires a completely robust local networ=
-k with sufficient bandwidth.', 'oe-fragments': ['core/yocto/sstate-mirror-c=
-dn']}]}]}, 'version': '1.0'}: Additional properties are not allowed ('expir=
-es' was unexpected)
-
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/23/builds/2897
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/35/builds/2759
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/48/builds/2655
-
-Can you have a look at this?
-
-Thanks,
-Mathieu
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+---
+base-commit: 6ee4df8ab58e0175b43106d8a6cbac1f6ab8d022
+change-id: 20251127-bbsetup-path-option-ca416ef22fa8
 
 
