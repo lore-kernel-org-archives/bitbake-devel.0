@@ -2,150 +2,204 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E99DD1171B
-	for <webhook@archiver.kernel.org>; Tue,  2 Dec 2025 17:41:01 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.1881.1764697253698637693
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2EDD12663
+	for <webhook@archiver.kernel.org>; Tue,  2 Dec 2025 17:54:01 +0000 (UTC)
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.2244.1764698040017609107
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 02 Dec 2025 09:40:54 -0800
+ Tue, 02 Dec 2025 09:54:00 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=AjSt8zli;
- spf=pass (domain: smile.fr, ip: 209.85.128.45, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4779ce2a624so59299015e9.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 02 Dec 2025 09:40:53 -0800 (PST)
+ dkim=pass header.i=@smile.fr header.s=google header.b=Hyuq+p8G;
+ spf=pass (domain: smile.fr, ip: 209.85.128.48, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-477bf34f5f5so38381165e9.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 02 Dec 2025 09:53:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1764697252; x=1765302052; darn=lists.openembedded.org;
+        d=smile.fr; s=google; t=1764698038; x=1765302838; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kb3ZbDPnkE2nkvxab+fShyt/iTPaIrNz5+wTQ86lEnA=;
-        b=AjSt8zli8L7mLnmxdXFlZCC4I8P1tK2ZgcqAo+2WwS7JniCLtdHgqBxI1RncjlwL4N
-         IjfSLtBLCBrC48nebimug3PDR6LzdVgTn/fbuj1uONmD6nC6EoAKj+96gTIFZ8Sw7VdS
-         ozQkHcIWg4GT6e2ieua9UEZkfvpgIhCP8/vk0=
+        bh=iyAodCjAK0l5MJl5WFAczreQ14CRBxtS+6stSjNZ5DY=;
+        b=Hyuq+p8GO1AsWvdMTwPFU3wBfBTka3tmVy7KfkHmInm2BM6GXONnZLevlfWvLQDHUe
+         UOdbpk5ZWcPU7PKeIfo7qUrafcJQRG3/WFCjaW9ORQntsNxHyeJGW0k3u+HSd1lM5X+v
+         e8uK+Nb5xybYF9OmRgT9Gsq6sX529B11HcVrI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764697252; x=1765302052;
+        d=1e100.net; s=20230601; t=1764698038; x=1765302838;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Kb3ZbDPnkE2nkvxab+fShyt/iTPaIrNz5+wTQ86lEnA=;
-        b=J5hZwvpd08hEGJ+LuxovoYha1At5/vx14R2OyZl3lfiDMRFaLq0AtuPGJSr7gjKFox
-         7t7uAp9HdaNaMqByXAmi2KJHfuJxR/dTTUYS+YMpOox0AF6Cj7MWejalSQhrwBBg+Tsx
-         Y6es7xkXFbYaSj7JM0wU0LT5wW5rac/Ap81xpVCq1+QvvK2FgR680AZKJ5KGR3tNZLOb
-         OyMpg1jQCcp0L8iWMhszHVHwiEIz9ZUvUWlimiwggmH85eNRQJYmpBN5n1wDlj0/hCg5
-         fRjuN4qq3cZr5wZHmtNAKhzqyp79BJQBEuZ9s56yGCy6pOsndEdjSZgC36edhakQUyx2
-         Zihw==
-X-Forwarded-Encrypted: i=1; AJvYcCVlEGnDx7tQDdFASESXpb3LzBKAQpVpjbQc2TBHZBRtxgl2z1D2nPzXDdKaSddiqr+8FkABWWhemBdtVAmo@lists.openembedded.org
-X-Gm-Message-State: AOJu0YyywtLC/T1XN0eJ6XqBlI0IMz9bl0RhU/OEgrXx9jrBt5Bhbb9K
-	hqMyw72o5EmT+c9EnI006uAPYmU3orQ3zgzVw3qfUSiofEWKyVZIvRo6g5lS8w5FGd2JECPAPgo
-	23IhRHVseFDZk4JO5JAguM1RsxTNAD5d2JuNmGHHUWA==
-X-Gm-Gg: ASbGncsjDtYWXbZnJye5APBbQYNRsyOSWtDjBF/iSV2NuuQapBW2syQkr9yFA0YvDsr
-	cJa/mVCj/TeNTAeOLAdj8yZ17n9DOmV7XhD8Dj27vCdPDQ8IvSyJfkwzoHb1DQWVgjGltsrHoXu
-	OWVjryBfAOHp+WQqBJwk/YS7mrjXS910IH90kZSux/14unGBu3ZrsZjtGPMRvgeCkvjfGAz3atS
-	7daXVMi3d4hBUobxViPQIQU1NBzf2H23j6yUG8gEmwYv6k/vDgl5E9RLpk4RoaRGcjeLIZ6+2r0
-	BMpdQryHlJb8Kb9lPbOehlR8c2/b
-X-Google-Smtp-Source: AGHT+IGg9FmiqfshEVm9LPZ975KfvzYZfiRkhpd73TKpEMhdh+cRrLA7YhlG7SA1Ltysgi9bhHg2vfl2f2ntbvMUOK0=
-X-Received: by 2002:a05:600c:8b37:b0:477:569c:34e9 with SMTP id
- 5b1f17b1804b1-47904b1eda4mr260704245e9.23.1764697252013; Tue, 02 Dec 2025
- 09:40:52 -0800 (PST)
+        bh=iyAodCjAK0l5MJl5WFAczreQ14CRBxtS+6stSjNZ5DY=;
+        b=ebIAZzYaHtdOFOPdOgOCI/QPzYg4SPcnbdqFcBmDJIlrbkfmpMgni+pwCEdQTWsFdD
+         TDn31F1pGqehNtQ3EISajrPVzi/lN2zthShQscDgK0cdhxcka7m/t6wxXjdbKPXGRjAh
+         b0NKi5QyMvHKH6T0xFt7yyeElr4zLGEgKW4WPRriyQJZhCfXPWLDyCRz9wTw/Ui01iGL
+         4bNH9RgKw0T3UW1auJI/EZsYTDUMOQHzeSSAPZ3S/4yED2H9idSK48GEPNyCqF0DbWCF
+         T9jcPw+aOphkjglVrfpurvRP1htfu04YqPDTPMgOKfGHaZajJXvC6eBr3FP95mJXVW61
+         yg4g==
+X-Forwarded-Encrypted: i=1; AJvYcCXT2e0URC+ep0gLMoi7JpYVi00sXoAsHn9OKOak8udWIVj5IkOeZNiocaXC5Qkn5J3kGnqv3PQwUF7imivo@lists.openembedded.org
+X-Gm-Message-State: AOJu0YwOmGrfUlXcxXPgdzBw4XVbXcXmmpFpxCeRJHRPu/hgM5IvkgbM
+	UatYb00VYBCYZKiz9zN57Dxv6eMUiFN5JNY1gBinrSLNUgGzXnD1/I88M8Vs3hLDLNVlmi4vB10
+	yGk6+wnTO37v4+GNTnYo75Nm5e05bQEnvKOIMwwciwg==
+X-Gm-Gg: ASbGncupIz64eWQodkNgCteiOTZFLFKMkv22sjEpqcp3giDW65gPjW+OShSeqiRV7I7
+	XDcmMKxGUIvZl1IXIYbdBWlsHK7MOHVky6+Yjdf2tVyHYN/UqfE1CPNyQl+b15q7a+HI/cp3djq
+	tBkDBDpUcFbAJBM+Gj07PLK1T2HB+Bu6qZY9qIdEFfCxlbr2SwCwHNsXGyu0F6q2hI3t3tmPf6D
+	9bj8AIpS4g904bQkifhJwxovYQuUtN/wDpJMxA+Wc97Y9YVNiu05TldHdulU4ogXRWa6n5zak/m
+	ZGzaXzo812UkkOOvzfE5DoqoxFNd
+X-Google-Smtp-Source: AGHT+IFnci4qH0nmbZHQi6u3EOAOHzffDkoK1vbWtnND0si9sbFWWMlPdQMhm0RrNj7xsVroQw+hS8NOG8X5zx1sEMA=
+X-Received: by 2002:a05:6000:3106:b0:429:c709:7b58 with SMTP id
+ ffacd0b85a97d-42e0f358b03mr33699040f8f.50.1764698038307; Tue, 02 Dec 2025
+ 09:53:58 -0800 (PST)
 MIME-Version: 1.0
-References: <e48f35c8b286c03c0e423ffd5feccfccc995c282.camel@linuxfoundation.org>
-In-Reply-To: <e48f35c8b286c03c0e423ffd5feccfccc995c282.camel@linuxfoundation.org>
+References: <20251202160402.819060-1-corentin.guillevic@smile.fr>
+ <20251202160402.819060-2-corentin.guillevic@smile.fr> <CANNYZj-dNDhzchZU02w6-Q-CLkU2MiFaZ-z-=n7JxsmGdDsgxQ@mail.gmail.com>
+In-Reply-To: <CANNYZj-dNDhzchZU02w6-Q-CLkU2MiFaZ-z-=n7JxsmGdDsgxQ@mail.gmail.com>
 From: Yoann Congal <yoann.congal@smile.fr>
-Date: Tue, 2 Dec 2025 18:40:26 +0100
-X-Gm-Features: AWmQ_blUYZ2VCfHzP6MnsZoIGq-bdL_JlqMYNLQnntETdWyw-SLwVlTbNz1aGuI
-Message-ID: <CAMSfU+6-pM5wXcjUc6QNmqYsUX75=74knAUw1iMbaZRnzczjAw@mail.gmail.com>
-Subject: Re: [bitbake-devel] Project role announcements
-To: richard.purdie@linuxfoundation.org
-Cc: openembedded-architecture <openembedded-architecture@lists.openembedded.org>, 
-	openembedded-core <openembedded-core@lists.openembedded.org>, 
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="000000000000d7b90d0644fb98da"
+Date: Tue, 2 Dec 2025 18:53:31 +0100
+X-Gm-Features: AWmQ_blvoEMe-sAMpYTpXKVpi3n0RBTHBuQoprs-WN_uFImOGqUj6_6m-g5YECE
+Message-ID: <CAMSfU+6JeaWFAah4AH_N7Ewpzw8g-WCq=we4-kTVfaNF63MdaQ@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 2/2] layers.schema.json: support 'uri',
+ make this and 'remotes' mutually exclusive
+To: alex.kanavin@gmail.com
+Cc: corentin.guillevic@smile.fr, bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="000000000000b59d8d0644fbc79a"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 02 Dec 2025 17:41:01 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18514
+ <bitbake-devel@lists.openembedded.org>; Tue, 02 Dec 2025 17:54:01 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18515
 
---000000000000d7b90d0644fb98da
+--000000000000b59d8d0644fbc79a
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Le mar. 2 d=C3=A9c. 2025 =C3=A0 13:02, Richard Purdie via lists.openembedde=
-d.org
-<richard.purdie=3Dlinuxfoundation.org@lists.openembedded.org> a =C3=A9crit =
-:
+Le mar. 2 d=C3=A9c. 2025 =C3=A0 17:13, Alexander Kanavin via lists.openembe=
+dded.org
+<alex.kanavin=3Dgmail.com@lists.openembedded.org> a =C3=A9crit :
 
-> It gives me great pleasure to be able to announce that we have filled
-> the two recently advertised positions.
+> On Tue, 2 Dec 2025 at 17:04, Corentin Guillevic via
+> lists.openembedded.org
+> <corentin.guillevic=3Dsmile.fr@lists.openembedded.org> wrote:
+>  -                                }
+> > +                                },
+> > +                                "oneOf": [
+> > +                                    {
+> > +                                        "required": [
+> > +                                            "uri"
+> > +                                        ]
+> > +                                    },
+> > +                                    {
+> > +                                        "required": [
+> > +                                            "remotes"
+> > +                                        ]
+> > +                                    }
+> > +                                ]
 >
-> [...]
->
-> I'd also like to announce Yoann Congal with backup from others at Smile
-> as our new LTS maintainer as Steve Sakoman takes a well deserved
-> retirement. Yoann/Smile have been doing great work on meta-openembedded
-> with our various metrics and tracking tools as well as being active in
-> various project meetings including bug fixing so many of you know him
-> already. There will be an transition period as we transfer the role.
->
-> I want to take the opportunity to say a huge thanks to Steve Sakoman
-> for looking after multiple LTS releases in a careful, considered and
-> smooth way. I no longer had to worry about them, I could just trust
-> everything was being handled which is probably the best way I can
-> illustrate the job Steve has been doing. So a huge thanks to Steve, I
-> (and the project) really do appreciate what you've achieved there and
-> you set a high standard to follow!
+> I don't think it needs to be mutually exclusive. If both uri and
+> remotes are present that's not an invalid combination.
 >
 
-I'm truly honored to take on this role. I hope to run the LTS maintenance
-process as smoothly as Steve has. And I know that is a high bar to clear!
+That was to avoid weird behavior on "origin" being defined twice: once in
+"uri" and once in remotes/origin.
+How do you suggest to handle this case, throw an error?
 
-We will give it our best effort to carry the torch and ensure our LTS users
-are
-well supported.
 
-Best Regards,
+>
+> Alex.
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#18510):
+> https://lists.openembedded.org/g/bitbake-devel/message/18510
+> Mute This Topic: https://lists.openembedded.org/mt/116578607/4316185
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
+> yoann.congal@smile.fr]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
+>
+
 --=20
 Yoann Congal
 Smile ECS
 
---000000000000d7b90d0644fb98da
+--000000000000b59d8d0644fbc79a
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div dir=3D"ltr">Le=C2=A0mar. 2 d=C3=A9c. 2025 =C3=A0=C2=
-=A013:02, Richard Purdie via <a href=3D"http://lists.openembedded.org">list=
-s.openembedded.org</a> &lt;richard.purdie=3D<a href=3D"mailto:linuxfoundati=
-on.org@lists.openembedded.org">linuxfoundation.org@lists.openembedded.org</=
-a>&gt; a =C3=A9crit=C2=A0:</div><div class=3D"gmail_quote gmail_quote_conta=
-iner"><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;b=
-order-left:1px solid rgb(204,204,204);padding-left:1ex">It gives me great p=
-leasure to be able to announce that we have filled<br>
-the two recently advertised positions.<br><br>[...]<br>
+<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote g=
+mail_quote_container"><div dir=3D"ltr" class=3D"gmail_attr">Le=C2=A0mar. 2 =
+d=C3=A9c. 2025 =C3=A0=C2=A017:13, Alexander Kanavin via <a href=3D"http://l=
+ists.openembedded.org">lists.openembedded.org</a> &lt;alex.kanavin=3D<a hre=
+f=3D"mailto:gmail.com@lists.openembedded.org">gmail.com@lists.openembedded.=
+org</a>&gt; a =C3=A9crit=C2=A0:<br></div><blockquote class=3D"gmail_quote" =
+style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);pa=
+dding-left:1ex">On Tue, 2 Dec 2025 at 17:04, Corentin Guillevic via<br>
+<a href=3D"http://lists.openembedded.org" rel=3D"noreferrer" target=3D"_bla=
+nk">lists.openembedded.org</a><br>
+&lt;corentin.guillevic=3D<a href=3D"mailto:smile.fr@lists.openembedded.org"=
+ target=3D"_blank">smile.fr@lists.openembedded.org</a>&gt; wrote:<br>
+=C2=A0-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 }<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 },<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;oneOf&quot;: [<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 &quo=
+t;required&quot;: [<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 &quot;uri&quot;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ]<br=
+>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 },<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 &quo=
+t;required&quot;: [<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 &quot;remotes&quot;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ]<br=
+>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 }<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ]<br>
 <br>
-I&#39;d also like to announce Yoann Congal with backup from others at Smile=
+I don&#39;t think it needs to be mutually exclusive. If both uri and<br>
+remotes are present that&#39;s not an invalid combination.<br></blockquote>=
+<div><br></div><div>That was to avoid weird behavior on &quot;origin&quot; =
+being defined twice: once in &quot;uri&quot; and once in remotes/origin.</d=
+iv><div>How do you suggest to handle this case, throw an error?</div><div>=
+=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0=
+.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
 <br>
-as our new LTS maintainer as Steve Sakoman takes a well deserved<br>
-retirement. Yoann/Smile have been doing great work on meta-openembedded<br>
-with our various metrics and tracking tools as well as being active in<br>
-various project meetings including bug fixing so many of you know him<br>
-already. There will be an transition period as we transfer the role.<br>
+Alex.<br>
 <br>
-I want to take the opportunity to say a huge thanks to Steve Sakoman<br>
-for looking after multiple LTS releases in a careful, considered and<br>
-smooth way. I no longer had to worry about them, I could just trust<br>
-everything was being handled which is probably the best way I can<br>
-illustrate the job Steve has been doing. So a huge thanks to Steve, I<br>
-(and the project) really do appreciate what you&#39;ve achieved there and<b=
-r>
-you set a high standard to follow!<br></blockquote><div><br></div>I&#39;m t=
-ruly honored to take on this role. I hope to run the LTS maintenance <br>pr=
-ocess as smoothly as Steve has. And I know that is a high bar to clear!<br>=
-<br>We will give it our best effort to carry the torch and ensure our LTS u=
-sers are <br>well supported.</div><div class=3D"gmail_quote gmail_quote_con=
-tainer"><br></div><div class=3D"gmail_quote gmail_quote_container">Best Reg=
-ards,</div><span class=3D"gmail_signature_prefix">-- </span><br><div dir=3D=
-"ltr" class=3D"gmail_signature"><div dir=3D"ltr"><font face=3D"Raleway, reg=
-ular">Yoann Congal</font><div><font face=3D"Raleway, regular">Smile ECS</fo=
-nt></div></div></div></div>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+Links: You receive all messages sent to this group.<br>
+View/Reply Online (#18510): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/18510" rel=3D"noreferrer" target=3D"_blank">https://list=
+s.openembedded.org/g/bitbake-devel/message/18510</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/116578607/431=
+6185" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/m=
+t/116578607/4316185</a><br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
+b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
+tbake-devel/unsub</a> [<a href=3D"mailto:yoann.congal@smile.fr" target=3D"_=
+blank">yoann.congal@smile.fr</a>]<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+<br>
+</blockquote></div><div><br clear=3D"all"></div><br><span class=3D"gmail_si=
+gnature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_signature"><d=
+iv dir=3D"ltr"><font face=3D"Raleway, regular">Yoann Congal</font><div><fon=
+t face=3D"Raleway, regular">Smile ECS</font></div></div></div></div>
 
---000000000000d7b90d0644fb98da--
+--000000000000b59d8d0644fbc79a--
 
