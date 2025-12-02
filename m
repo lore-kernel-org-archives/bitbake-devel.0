@@ -1,91 +1,106 @@
-Return-Path: <david.partain@est.tech>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E45CFD376
-	for <webhook@archiver.kernel.org>; Tue,  2 Dec 2025 07:34:28 +0000 (UTC)
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.2581.1764660741745141977
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C38BFCFD2F6
+	for <webhook@archiver.kernel.org>; Tue,  2 Dec 2025 12:02:00 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.6244.1764676917106072197
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 01 Dec 2025 23:32:21 -0800
+ Tue, 02 Dec 2025 04:01:57 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=MdR6XRRZ;
- spf=pass (domain: gmail.com, ip: 209.85.214.173, mailfrom: swami310@gmail.com)
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-29555b384acso57692735ad.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 01 Dec 2025 23:32:21 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=NmUnH2yU;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-477b5e0323bso35452415e9.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 02 Dec 2025 04:01:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764660741; x=1765265541; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kgH0kR1nFtxBlXf+FFDytk9gq8kxDROLf0Js0utIu7s=;
-        b=MdR6XRRZAUXqAqTuQOSKdaQrssrUgMye8HU7yfNZLZoGQQvREks9SdH/eQRnkGuWwF
-         DGYbwGMj7iiLExQzX5nhZvTUuKa7hiDFepBmjn4oiTA1qtV/2LO4W2N/qp2wXfdeRSGZ
-         fMRQXkZZfF8HcLqLzPH9YKShS2d50YqEfTbf6Dv36oed3AJhTxaj0XKjXFo364cZ5GVt
-         p9xrDT/KCvUabp+r2O1OSTrLDTErGa1gccncbJgy/UyXOCLTdEntq1DYh5dZFlNe0usU
-         tobhLF1kLzrRskCbnbmyIGCYM3uKcj6EckFk9IvH+ZArXrGrj+762VyAU4joQu82N21/
-         IMbg==
+        d=linuxfoundation.org; s=google; t=1764676915; x=1765281715; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:date:to:from
+         :subject:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=RiwWcYInXxqMhKWe9JtgaNWZgWHBXX5DsWxwPVfDo6w=;
+        b=NmUnH2yUlihCm2KaZlOwnYTosF+bsCeHCJwnKkXrXk2h4Q5Vgwg6syiiH5RURHK2Qk
+         JxH0Ee4JF1je8OzrAFM5iayGXVc9E/66W4ukREPtJWF5mJo+TSLcrzhQptcv4Eft8xoy
+         ax32AZc39HYOvc6MXkuupK8xXNjAj2Li4P4/w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764660741; x=1765265541;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kgH0kR1nFtxBlXf+FFDytk9gq8kxDROLf0Js0utIu7s=;
-        b=jCSzu+xAMrUmulnFLErIYueeKvTkaQyJJP5GZOz5gKo2fgW2JMlOpWf71XyU1DvuYV
-         E8ny0UFuNCik+CJySy9WMXFeUvOxehAo47+cMyH4ae+H3wEW4q2AkCzd1DrxncM7n51e
-         Yw26bvuwMmdSfxT1XQTWl48KiMFwkYUQRTmGo6DXhTCMsBQR14fDVBblfFGJJCOZV/Uy
-         aTdm17hn3c/qnL0zK4JGTaU0kuXm92EyfvyzzAVMp3hdtArjMkuamanJg++Vow2rubFS
-         k2TgEmGBtluNiS0+fZpMON4wtctcNcsb1URDM0W2kDTCti0jIXCdS8hYAfhTJlw0tOnz
-         nVXg==
-X-Gm-Message-State: AOJu0YzbU1e+rDFVP2RRkqeP0KuEgev2yb0JQuXR3ao3e5KXFfeUBaRx
-	9LR7/mupyWlmCHNOGZJjto3+1ng9LU/DQN6PGYpdzlZTH1I8RUIGnM6RZq+UMQ==
-X-Gm-Gg: ASbGncu7YERaVXzht35FDfTsQiQ2R7/Uc/6F4xdISln9yFvCZ/PhVbia1eZKq+WuGga
-	Tli0OZXMMU/JNBXjwkaavRephOaUqDX1eILF5LOHIShX1FIpYdEetfjOT0+Jh0v/KyhFS9nzV5i
-	1z95so4ynTZMcEDJ9APUn3bEDf6+KDYwwc5v2pXWxOxwcupXc6xzLP9cudsx9iTJSk68cu9BGrn
-	VXtDo2tFf3qJgW6UkU1AXBCMdzqHXWNS4R4cN7rksY34SANUBuvYUQUdN3labpE69LbU+kTE3wB
-	6j35lHB5ozRIrXZ1Fip4FzbqAfKwfSUwa0Dww0IpCPhBTKlv8AR5jZhLJTj8FpP3aPQcn84JB/a
-	dorWYiyDCc8FqlJdhWFcPJS/bWOLbtKvhG3RuXY4V3x8RL9eBM3elawroFrcZTycXCy9pDUGD0S
-	bbtizSUxkyzouXFHoHOUHpTna4idfOJklEXBnB
-X-Google-Smtp-Source: AGHT+IGA0jvLMH48L6Z/KXXKP8nUS4q+tbJCsLqMZeBqcxkuvPZTy4KTAXdYhxCCE/xufIrdQVPqBA==
-X-Received: by 2002:a17:903:1b4d:b0:27e:eabd:4b41 with SMTP id d9443c01a7336-29b6c3c30d4mr425658605ad.7.1764660740707;
-        Mon, 01 Dec 2025 23:32:20 -0800 (PST)
-Received: from lenovo-ThinkPad-T480.. ([2405:201:e00e:f828:5c52:5a3d:b109:1650])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29bceb27653sm146635445ad.50.2025.12.01.23.32.19
+        d=1e100.net; s=20230601; t=1764676915; x=1765281715;
+        h=mime-version:user-agent:content-transfer-encoding:date:to:from
+         :subject:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=RiwWcYInXxqMhKWe9JtgaNWZgWHBXX5DsWxwPVfDo6w=;
+        b=m9Jfxb0GjohWBtYXA0ZtCJeJfBXI15SE4ntqK8bmVrfMt170HV6vMkRq+8QZUjECUV
+         LMVzCAjQOBcpFf9K/8cpL4bCcU8iMdDfGukM5nrLjhtzAimTcv+v6z4AcF5kTM79wbyM
+         RjRzvQFIhmbef9COlC9CREhQ0FrGbPzYyi/Kui8l7WQAovpm8oMvd8pI3jHM1XV76k5Q
+         G+Db7LaTr/bPlUQu7W07HYmuV7vZTgnfi/fhdDeGRVdiL7Yfx8TyX/XBpgM15ch9TTrP
+         a7YrULaxTpY8JvUogGRfSE7O05Pp9POVaz/EruGejtqB8vB/HE9qERZf2sqKPicq1NTk
+         xrag==
+X-Forwarded-Encrypted: i=1; AJvYcCVdoDIJwoPk6R6fdN/SCZaCugEi0T1NNulQJmy0mQN9rRzCoi61GutOw3cvr+rAvEInVNW0j50cZ62tnJ3+@lists.openembedded.org
+X-Gm-Message-State: AOJu0YzHhp1oeh8CanRz1AvFGnX4aMCpdlpYCFbw8bfTNbZJ0xE6Jz4v
+	GwU/jSPIj/x/9HaduJvHn6crdUvOR0jL9baKZZnuDEadyG6v98e41BWXHKJXHq40L7yakXa3fFz
+	LS5g8
+X-Gm-Gg: ASbGncuHBv1sjALXaDNMqWQJA5/JAuKcZBhlP6DvqyKiCKmyB0jfjaE+9ULEkzs+iEC
+	KFKOiNvLW9ySVGpc4ZcQ82LI7ZWWr94PR7nf9AoLh0VgjXsyxLRoFXvb6viny9h54ngkVMbf6Qw
+	ezlirhs34WLQGLERUHybxEXr8vXlTjjGCqDVJ3fsZ0SulUBbnLru75JHkWvRdZJu8en/yCUs2sA
+	TBaQvIdNby5y/oirFmu7uujvDWPjbXnLO/KF9v5noLw/zyg/fg4SrnEkJlFNnlz3Nh+Ven5u0tq
+	at94NfdKqTW2P1dEI6bvWLsl9rJklgaJDkxI2lOFMyTSaQ5d83KoWQWHeP0DKtaYifiqu0gt/cV
+	W31BGRGhhNRY+Knc6jTUJshox3A97dGazwdklWlAmcZL9nZ4TA7LvKtlLGtcLgDbXtg+yFUsAxn
+	91buFggvm2IKa8CW1lzOOFvIUbRt5akSvCuRoPe6uKQKjtzcO6n31cm5KXJD4dFNU7l6NaBQGi3
+	fXxdvU+/IMqPA==
+X-Google-Smtp-Source: AGHT+IGb5sGowVYkhYXKAgdMChfkvfz06e4dp7Lm0NGI3adfvTp07jOK5/Q99qDuJhUIwlNADSxoYw==
+X-Received: by 2002:a05:600c:1c9e:b0:477:9e0c:f59 with SMTP id 5b1f17b1804b1-47926f80703mr26873235e9.2.1764676915400;
+        Tue, 02 Dec 2025 04:01:55 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:e6f5:c2db:4a3e:b000? ([2001:8b0:aba:5f3c:e6f5:c2db:4a3e:b000])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4792760e31asm55293595e9.1.2025.12.02.04.01.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Dec 2025 23:32:20 -0800 (PST)
-From: swami310@gmail.com
-To: bitbake-devel@lists.openembedded.org
-Cc: Swami <swami310@gmail.com>
-Subject: [PATCH] Documenting BB_CMDLINE
-Date: Tue,  2 Dec 2025 13:01:40 +0530
-Message-ID: <20251202073141.16223-1-swami310@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Tue, 02 Dec 2025 04:01:53 -0800 (PST)
+Message-ID: <e48f35c8b286c03c0e423ffd5feccfccc995c282.camel@linuxfoundation.org>
+Subject: Project role announcements
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: openembedded-architecture
+	 <openembedded-architecture@lists.openembedded.org>, openembedded-core
+	 <openembedded-core@lists.openembedded.org>, bitbake-devel
+	 <bitbake-devel@lists.openembedded.org>
+Date: Tue, 02 Dec 2025 12:01:52 +0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0-1ubuntu0.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 02 Dec 2025 07:34:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18505
+ <bitbake-devel@lists.openembedded.org>; Tue, 02 Dec 2025 12:02:00 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18506
 
-Signed-off-by: Swaminathan K <swami310@gmail.com>
-Upstream-Status: Submitted
----
- doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst | 4 ++++
- 1 file changed, 4 insertions(+)
+It gives me great pleasure to be able to announce that we have filled
+the two recently advertised positions.
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index 734c7858a..5e14e40b4 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -116,6 +116,10 @@ overview of their function and contents.
-       Specifies if SSL certificates should be checked when fetching. The default
-       value is ``1`` and certificates are not checked if the value is set to ``0``.
- 
-+   :term:`BB_CMDLINE`
-+        BB_CMDLINE is an internal variable and is read-only. It captures the exact
-+        command line used for the current invocation of bitbake 
-+      
-    :term:`BB_HASH_CODEPARSER_VALS`
-       Specifies values for variables to use when populating the codeparser cache.
-       This can be used selectively to set dummy values for variables to avoid
+I'd like to welcome Paul Barker as our Ecosystem Engineering and
+Operations Lead. Paul has been around both the Yocto Project and
+OpenEmbedded for a long time and is a name many will recognise. You
+will start to see Paul helping out with the day to day running in
+various areas of the project, giving the project some redundancy and
+enabling me to take a break too.
+
+I'd also like to announce Yoann Congal with backup from others at Smile
+as our new LTS maintainer as Steve Sakoman takes a well deserved
+retirement. Yoann/Smile have been doing great work on meta-openembedded
+with our various metrics and tracking tools as well as being active in
+various project meetings including bug fixing so many of you know him
+already. There will be an transition period as we transfer the role.
+
+I want to take the opportunity to say a huge thanks to Steve Sakoman
+for looking after multiple LTS releases in a careful, considered and
+smooth way. I no longer had to worry about them, I could just trust
+everything was being handled which is probably the best way I can
+illustrate the job Steve has been doing. So a huge thanks to Steve, I
+(and the project) really do appreciate what you've achieved there and
+you set a high standard to follow!
+
+I also want to thank all who applied for these roles, there were many
+good candidates and the final decision was a tough one so thanks to
+everyone who applied.
+
+Cheers,
+
+Richard
+
 
