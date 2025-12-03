@@ -1,140 +1,110 @@
-Return-Path: <michael.opdenacker@rootcommit.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D93D12D41
-	for <webhook@archiver.kernel.org>; Wed,  3 Dec 2025 10:51:46 +0000 (UTC)
-Received: from zebra.cherry.relay.mailchannels.net (zebra.cherry.relay.mailchannels.net [23.83.223.195])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.12351.1764759099453969758
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93986D12D4A
+	for <webhook@archiver.kernel.org>; Wed,  3 Dec 2025 11:47:16 +0000 (UTC)
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.13278.1764762426161544624
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 03 Dec 2025 02:51:39 -0800
+ Wed, 03 Dec 2025 03:47:06 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@rootcommit.com header.s=hostingermail-a header.b=gn5hd+Lr;
- spf=pass (domain: rootcommit.com, ip: 23.83.223.195, mailfrom: michael.opdenacker@rootcommit.com)
-X-Sender-Id: hostingeremail|x-authuser|michael.opdenacker@rootcommit.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id A984D82128F;
-	Wed, 03 Dec 2025 10:51:38 +0000 (UTC)
-Received: from fr-int-smtpout14.hostinger.io (trex-green-9.trex.outbound.svc.cluster.local [100.102.148.76])
-	(Authenticated sender: hostingeremail)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 8735B821343;
-	Wed, 03 Dec 2025 10:51:37 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1764759098;
-	b=LPN76+wCpveHbqdMEGmH27xhrtLDTG1ihx01j/0goAA6mI44FZHK9+evpCj2rcx+u+2Ci8
-	9j8Q/vW/Bs41+YTmTs3FnFd4u56qR2h+ndVl8jK3bk3T1Vq7mtoTzUb50v57OBWAMAMJXw
-	pNhJUbNXcQh7WIkLezyDmsn+EjLjYdYi6m++w8/9waASc9zYyLj7TmeYT9CnNTIqqSAKDn
-	6Th4hPS6rC6gpsiyg9Xpq42oMs2OehBbsleXz0kHK4AjkY9ACTMpwkmC7YyKOCrgjdDHxR
-	FsNbXDhOFREWPmL9/GnS70spF8VXLBLhny55NSUFzsX8AZJP/l3Dd3m2amRp1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1764759098;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=QaXG4wf2is8FLc1iPWiOw6+8wwT4yykSigS50p2Gy+Q=;
-	b=J6e0h1z/ZDSi6eN0AybtsSm6CKOGFSNYhZjn8oIP+LICeMmJ4wUauQORfBWq+5ykMgnN+M
-	jpKcIqPYryvtE87EEDBaJC3kKzeEcsNl5Mr+SLsyKLkiMw+W+NFpM3U2nUwl+ayRIdthPr
-	QvgqaBfqrl2mOgQo3x40SzH8ZIGfI5FKjyhBAMKJd61WV3jBR4cGM6llP0kfjQew005Ico
-	nJfgxmwk5THifcV5XrRASfW2wWNX4Ns1FNWBbqvDYp98AIaWxsj7JiyAk3af2alT4lJRav
-	GFt/aGd493sEr8nvdMgkHXUSCtOdJkbuAFXk/YgHzmfV66vwR/c7l4Myy0xRUQ==
-ARC-Authentication-Results: i=1;
-	rspamd-57b9fc4dc5-gx4jn;
-	auth=pass smtp.auth=hostingeremail
- smtp.mailfrom=michael.opdenacker@rootcommit.com
-X-Sender-Id: hostingeremail|x-authuser|michael.opdenacker@rootcommit.com
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: 
- hostingeremail|x-authuser|michael.opdenacker@rootcommit.com
-X-MailChannels-Auth-Id: hostingeremail
-X-Trouble-Plucky: 3158e7565ef0c6f5_1764759098424_379119169
-X-MC-Loop-Signature: 1764759098424:2759221947
-X-MC-Ingress-Time: 1764759098424
-Received: from fr-int-smtpout14.hostinger.io (fr-int-smtpout14.hostinger.io
- [148.222.54.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.102.148.76 (trex/7.1.3);
-	Wed, 03 Dec 2025 10:51:38 +0000
-Received: from [IPV6:2001:861:4450:d360:cbc7:a3f4:aebd:6628] (unknown [IPv6:2001:861:4450:d360:cbc7:a3f4:aebd:6628])
-	(Authenticated sender: michael.opdenacker@rootcommit.com)
-	by smtp.hostinger.com (smtp.hostinger.com) with ESMTPSA id 4dLvZv2QBBz1y1j;
-	Wed,  3 Dec 2025 10:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rootcommit.com;
-	s=hostingermail-a; t=1764759095;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QaXG4wf2is8FLc1iPWiOw6+8wwT4yykSigS50p2Gy+Q=;
-	b=gn5hd+LrHQxRJIleUtKLU7KzOzM8Ags+nZYZBtPpuIdudoPchDJZM7nH1Ug2ClitIu4GZk
-	MOl71GRogRnuYyonS5FuKpjuZO9npss7Cv74Qj8Rp9ImkGQlJB5R5GIL8LZB3CK5OE/C34
-	iVulNunAeXSbE55uCEVSbD1efXmj/Q6fSJG3ZekFeiaee7AshL/iUdUPdHZdnFp4CKcKpw
-	VqOL2sg7nOZIwWTIvNAwJRpMl5zPQk3wjneAzIHBA4Z3zq3bO4iB/4NvYW/8rCf44B4gcg
-	s23YVWsLma6skfBrzMMVNE+CdXMogka8fU8ldcZcno7QSynBwpWLDlM5Jki6Bw==
-Message-ID: <e4ad3921-db47-4ac0-887c-6e3d485d8edb@rootcommit.com>
+ dkim=pass header.i=@smile.fr header.s=google header.b=oRwOQja5;
+ spf=pass (domain: smile.fr, ip: 209.85.221.42, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-42e2b90ad22so1735195f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 03 Dec 2025 03:47:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smile.fr; s=google; t=1764762424; x=1765367224; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cTZvfTtBvORQTMWBVgPoiCGqMLZwOYnSyE03BM9+T9o=;
+        b=oRwOQja5ObhxiSvfLEuY1L+C7RTKX8tUYGHhmlsPSWfjvnTcila2AoUBDa+ODDX6VG
+         kSXB2PSUZxMLNeFP6mTGc/PrKNetl3/Dzot6tB/t1vDdaJ12U8kjdB1dgNir98pZ8HwD
+         +4XWsUwDayild+sZDZZoD1Y4jO8HIw6hb7cvw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764762424; x=1765367224;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=cTZvfTtBvORQTMWBVgPoiCGqMLZwOYnSyE03BM9+T9o=;
+        b=g7rMWmJxTUTjpdW1qqu5lZGNX3kvTV593FK/CXMkV41CEcc1lvHCaEhYzw73HLAf8q
+         wX2ZH+aM3NzMGSq33D94JhqyJJifyWOr6tRiYP7lp3xpXX3s6IDvBBeXS3poJ3HEDRDj
+         eozgNWatMneHxvJ/NktDAk5sBGi8NnuCLXgKwwCqvtVusZz1LwSLHvWHsqUMnoDFneQP
+         eA+gFEk4weHBk5BkipnmILMKsX8Wa1bvuOzEW2M4oWxj7qyy+2GrX/N1Hzj8sc5UELlg
+         XUQI9MEHFNO9tMlRlNlQ+lD3cPwt/LPmjuRMbftkEQ/4E7ECIP9PMWUz1MnhmCP9dqSB
+         lCQg==
+X-Forwarded-Encrypted: i=1; AJvYcCULqSvG7bJyBtRCfPO6spDIJ/BUdnt1BVJqD+sViszUQuoFEnXnnoL3fL59ZUNuLIQufBUCZchhe8FsRgV/@lists.openembedded.org
+X-Gm-Message-State: AOJu0Yz+k45Ma+2PfUaII5nXRi0wh2twjm5HXW8Z/BNcnPBVOLWhbkfU
+	FsYReRAsuR7xxx3zsyyuCPqDo2J5jW4kJrbj+zYb4KZ+KYHVFoP/oc8uywigFQBCKyWQwwJkgk2
+	Xi0GEf7uNR3amIEoCm/wcDlIU2eqMJnSlpe9C115t4w==
+X-Gm-Gg: ASbGncuzpWBiqNonEOXDSpwXcNQ++olKQsn5YjWOn/sWgMLDnL2MWmyxTuR3kdOL+tP
+	SJEuTYnPCplZdKkTiC44TMLoE+h2P9S5vwhAjh8LF4Izd3ZEmwgsl+4zwlc/FZMhV6Z4rKVcl+w
+	FLOSl3YkKHF8/qncxbzaeK0qcyNtXgijwQUIJsoOQPDPq6v2fJgAW7ULDt3w2BE8rVkY7CB1vRw
+	f5ru6K3ilWSTY3FwojL4tEvqNZy1jErgFXHavect5jTVEVhkGfYJFS50oii6jsEsl/SfRzsqCGd
+	lYzWT8hE567+rPz6R0M1JxHYJSMhXZav+sGRSUk=
+X-Google-Smtp-Source: AGHT+IFDZSlRY1WZatKuV5RKlund+OelqI9b7CRoVK1ygNLCKSzpq0bdN6l4DiLmfJvCKqBJR1yiv2DeMcvC3ZpNjfo=
+X-Received: by 2002:a05:6000:1887:b0:42b:2f90:bd05 with SMTP id
+ ffacd0b85a97d-42f731c3290mr1868309f8f.45.1764762424558; Wed, 03 Dec 2025
+ 03:47:04 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: michael.opdenacker@rootcommit.com, bitbake-devel@lists.openembedded.org,
- docs@lists.yoctoproject.org
-Subject: Re: [PATCH v3] bitbake-user-manual: Documenting BB_CMDLINE
-To: Swami <swami310@gmail.com>
-References: <20251203085540.18826-1-swami310@gmail.com>
-Content-Language: en-US, fr
-From: Michael Opdenacker <michael.opdenacker@rootcommit.com>
-Organization: Root Commit
-In-Reply-To: <20251203085540.18826-1-swami310@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Date: Wed,  3 Dec 2025 10:51:35 +0000 (UTC)
-X-CM-Envelope: MS4xfOSKnOVN/AwKlED6zwvIrHZ6l4Qorreb9hXUv+4ick43Zo/DKoev9I5AvVKtWcEDu/vf5OplknODnFiCSdCpzSn0n2cGmJBbUAGNkoM1TzM2eRNI7wBG ciZk8a1VVTH4h6747EpeTLAUiBtZDLqT0gyWE0lTBiXivicqUB4sbUAWvLBkTWxHvRVKPMGbWbJTSw+PabLjpxxfDbeVpADI9yXnhOTsqlJbm3r7KOfnfUpf 14IibDb1y1sE9Ef5YOu0MbsbizGkCua1jbtbKiZOrbMgHufFN5q9qQHW48NkAbp1iZeQCdLUK0CJSpcJr34yotqeqrD7Td++gD8QxIPaUxxRtDe1BdHD+4Ki gCdEsH/lUYqKF2JCGHzTK4Um+OcR2XVU/svM8lNZ1UaxBUwfv1IKnHZdNds5X3uWdkZc50r54+ZDnrfyOUH6JOvWmmtRFDFM6MuHZj4hlb9kuHvKhq4=
-X-CM-Analysis: v=2.4 cv=NuiDcNdJ c=1 sm=1 tr=0 ts=69301637 a=OqpkdRz8NeyqghF3LjKiWg==:617 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=d70CFdQeAAAA:8 a=pGLkceISAAAA:8 a=yRnJVOifdGIRP--LNFEA:9 a=QEXdDO2ut3YA:10 a=NcxpMcIZDGm-g932nG_k:22
-X-AuthUser: michael.opdenacker@rootcommit.com
+References: <20251202160402.819060-1-corentin.guillevic@smile.fr>
+ <20251202160402.819060-2-corentin.guillevic@smile.fr> <CANNYZj-dNDhzchZU02w6-Q-CLkU2MiFaZ-z-=n7JxsmGdDsgxQ@mail.gmail.com>
+ <CAMSfU+6JeaWFAah4AH_N7Ewpzw8g-WCq=we4-kTVfaNF63MdaQ@mail.gmail.com> <CANNYZj91Q5GxUVmMoOrZg17tdY=TCsAmF8SEM+Mtriu1VQNTOQ@mail.gmail.com>
+In-Reply-To: <CANNYZj91Q5GxUVmMoOrZg17tdY=TCsAmF8SEM+Mtriu1VQNTOQ@mail.gmail.com>
+From: Yoann Congal <yoann.congal@smile.fr>
+Date: Wed, 3 Dec 2025 12:46:38 +0100
+X-Gm-Features: AWmQ_bmHIlda7Q9h4MqOkclkRrBnAFcJ4GWOdhNRytDq5_Li227gP8QpqHsOIAA
+Message-ID: <CAMSfU+4RTXYaTqLuOFrYDWY_RZYfxM+FNDSjD92WA6-E58z7yQ@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 2/2] layers.schema.json: support 'uri',
+ make this and 'remotes' mutually exclusive
+To: Alexander Kanavin <alex.kanavin@gmail.com>
+Cc: corentin.guillevic@smile.fr, bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 03 Dec 2025 10:51:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18520
+ <bitbake-devel@lists.openembedded.org>; Wed, 03 Dec 2025 11:47:16 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18521
 
-Hi Swami
-
-Thanks for this update!
-
-On 12/3/25 09:55, Swami wrote:
-> Add documentation for the internal read-only variable :term:'BB_CMDLINE'.
-> Fixes [YOCTO #15746]
-> Signed-off-by: Swaminathan K <swami310@gmail.com>
-> ---
->   doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst | 4 ++++
->   1 file changed, 4 insertions(+)
+Le mar. 2 d=C3=A9c. 2025 =C3=A0 19:28, Alexander Kanavin
+<alex.kanavin@gmail.com> a =C3=A9crit :
 >
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> index 734c7858a..f756c436d 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> @@ -116,6 +116,10 @@ overview of their function and contents.
->         Specifies if SSL certificates should be checked when fetching. The default
->         value is ``1`` and certificates are not checked if the value is set to ``0``.
->   
-> +   :term:`BB_CMDLINE`
-> +        :term:'BB_CMDLINE' is an internal variable and is read-only.It captures the exact
-> +        command line used for the current invocation of BitBake.
+> On Tue, 2 Dec 2025 at 18:53, Yoann Congal <yoann.congal@smile.fr> wrote:
+>
+> > That was to avoid weird behavior on "origin" being defined twice: once =
+in "uri" and once in remotes/origin.
+> > How do you suggest to handle this case, throw an error?
+>
+> If a config defines the same fetch uri twice, regardless of which
+> syntax is used, that's a mistake in the config. Not the reason to make
+> the two ways mutually exclusive.
+>
+> Or did I misunderstand you? Can you show an example?
+
+At first that was to avoid this kind of setup:
+"uri": "http://example.org/git/",
+"remotes" : {
+  "origin": {
+    "uri": "http://anotherexample.org/git/"
+  }
+}
+In this config, what the "origin" remote should be? To avoid this
+confusion I proposed to make the two modes mutually exclusive.
+
+But, thinking about it, when using the short version, a user most
+likely won't care about the remote name so we can choose anything that
+isn't a "remotes":{} key : a random string, an incrementing
+"origin_%d", ...
+
+What do you think?
+
+> Alex
 
 
-Two more issues:
 
-  * You need backquotes around the second instance of BB_CMDLINE, just
-    like in the first line. Otherwise, the reference is not created.
-  * There is a missing space between "read-only." and "It"
-
-It's almost good!
-Thanks
-Michael.
-
--- 
-Michael Opdenacker
-Root Commit
-Yocto Project and OpenEmbedded Training course - Learn by doing:
-https://rootcommit.com/training/yocto/
-
+--=20
+Yoann Congal
+Smile ECS
 
