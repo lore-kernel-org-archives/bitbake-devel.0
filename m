@@ -1,195 +1,252 @@
-Return-Path: <paul@pbarker.dev>
+Return-Path: <osama.abdelkader@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43167D3B7E2
-	for <webhook@archiver.kernel.org>; Mon,  8 Dec 2025 16:59:33 +0000 (UTC)
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.1782.1765213166460952933
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 249FAD3B7EA
+	for <webhook@archiver.kernel.org>; Mon,  8 Dec 2025 19:46:58 +0000 (UTC)
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.1664.1765223210064226847
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 08 Dec 2025 08:59:26 -0800
+ Mon, 08 Dec 2025 11:46:50 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@pbarker.dev header.s=fm2 header.b=vqLEdnF6;
- dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=OfeHg+cn;
- spf=pass (domain: pbarker.dev, ip: 202.12.124.145, mailfrom: paul@pbarker.dev)
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfout.stl.internal (Postfix) with ESMTP id C59EA1D00221;
-	Mon,  8 Dec 2025 11:59:25 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Mon, 08 Dec 2025 11:59:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
-	cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1765213165; x=1765299565; bh=cDlZ9BciJ8
-	sETnVEGlt4yOmKvRNNPwAADjSVlIRdv0g=; b=vqLEdnF64KRDrlJUhfNqAGEbdX
-	O4f0cNYAP+SEmxlGKm/wfdGpxMYgQkJ1SsF1RAuIn0um8pqKMfCUi1VnGtdNAr4w
-	k30i1ve4SFy/XnuWLWn3QyA0J0hjEu1qMkyGLV9A6bUJfyc1Z2A0VlJrPRCfSb4y
-	/3HQr6m+ybNojipkPl5V1ojLltO8g2KRSSRpLJpe12jn8pO29P+fYAsGx/2gyXKp
-	2fhojv+DlrZZB18FNYSdcBMsCrnyw6ur2rfQV7izj8skbG6tuQY24foFxjm//S/q
-	+UfY5TwtKI5hDHLyhihD1z8L7Zjl+p83qXU0PbO/u2cNjgIOOv6ItYvkksKw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1765213165; x=1765299565; bh=cDlZ9BciJ8sETnVEGlt4yOmKvRNNPwAADjS
-	VlIRdv0g=; b=OfeHg+cnxDrFZ3Lq6PzwYc1AQHvxbtD0TZenZhV4fGulNZ0V0mu
-	Ij1NC7otpbpfrO3EiF6y5S3VshzK3OLqiiVdI+CirAqBgYu92KSCUmOAmga9Xbkx
-	0yrpA3eEJJucMoL5S6Iv/L8XDvvH29+Mjv3vwyCqZcIqkkKLvfz0YhRhUcegQQdA
-	l7ksPnA8It2qGXjgsoDx5UmW23JWHs2lKkaTIBMY41et8bmm8gr3Laia35AEMwIe
-	iVIk4tq7n4owo9v7Q8pEuQD8hc0Bsd/LsUAteaAJlMdqitICoGy0cVlCcezuZjKA
-	/lZ96mj+53srCDbw21SP1TUd5VdNC9jLwJw==
-X-ME-Sender: <xms:7QM3aUSkLE_schXAWTm-tXE8MRAs8Gxsm8NHz5ALYkeBSpA_EvfpNw>
-    <xme:7QM3aXyo2hAFtQrS6y9TYl3c42YoyT0W_2KX8Jok8tTCCeIhXm0PJbtRXewDHi0Fn
-    0hhrC3r2BlFkm0Wc4Y7gLM6TwrC4oSQmoM6kIMuGxuYtTpqVKEO-Q>
-X-ME-Received: <xmr:7QM3afcaEq_CF4t_fpjx_O269rUGypauffxvT1Y6gFomIAGU1cCCsYkAMiQEsbNT1E-5ERGSp91o1kVUpwu7pb6eiPqjSuOBOMWd>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddujedvvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecunecujfgurhepkffuhffvffgjfhgtfgggsehgtderredtre
-    ejnecuhfhrohhmpefrrghulhcuuegrrhhkvghruceophgruhhlsehpsggrrhhkvghrrdgu
-    vghvqeenucggtffrrghtthgvrhhnpeegfefhudethfffveehveekjefhgeffgeeikedtfe
-    ektdethfduvdffueeiieetffenucffohhmrghinhepohhpvghnvghmsggvugguvggurdho
-    rhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepph
-    gruhhlsehpsggrrhhkvghrrdguvghvpdhnsggprhgtphhtthhopedvpdhmohguvgepshhm
-    thhpohhuthdprhgtphhtthhopegtohhrvghnthhinhdrghhuihhllhgvvhhitgesshhmih
-    hlvgdrfhhrpdhrtghpthhtohepsghithgsrghkvgdquggvvhgvlheslhhishhtshdrohhp
-    vghnvghmsggvugguvggurdhorhhg
-X-ME-Proxy: <xmx:7QM3aTKufQTXH40L9Ktn2aWZrnHiomlrGpYP73MyvgLMOfFUW9ktfg>
-    <xmx:7QM3aQGV4q85x_AdDYFVjRegQgbAEx4BJUUBHsDCCVj54Q02QHegfw>
-    <xmx:7QM3adpC3E1Du3xjIx4wakVZkz-8_mjBIAMrYzOenM8VyCwqBWGVmA>
-    <xmx:7QM3aZQFZZMBa6S6prDv6_5OmNycWvIddZYUF9mJVnuUETbPx207Ig>
-    <xmx:7QM3aQ3JdwGbbpdDX2cF4TWuq5pJRFxbhtumKmxTeFZq1oytyVVmJYzu>
-Feedback-ID: i51494658:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 8 Dec 2025 11:59:24 -0500 (EST)
-Message-ID: <7501fc9f5b22984c6279f56b04f3888b34913d1a.camel@pbarker.dev>
-Subject: Re: [bitbake-devel] [PATCH] fetch2: Skip AUTOREV management if no
- SCM URI
-From: Paul Barker <paul@pbarker.dev>
-To: corentin.guillevic@smile.fr, bitbake-devel@lists.openembedded.org
-Date: Mon, 08 Dec 2025 16:59:21 +0000
-In-Reply-To: <20251208161219.41335-1-corentin.guillevic@smile.fr>
-References: <20251208161219.41335-1-corentin.guillevic@smile.fr>
-Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
- keydata=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
- ep0k17xg==
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-7fMgmyGZtKqPqMPB0+C5"
-User-Agent: Evolution 3.52.3-0ubuntu1.1 
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=QAIdWzpY;
+ spf=pass (domain: gmail.com, ip: 209.85.208.54, mailfrom: osama.abdelkader@gmail.com)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6492e78ce07so1848038a12.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 08 Dec 2025 11:46:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765223208; x=1765828008; darn=lists.openembedded.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=V3KU9yXqaoMrTZupkLM8n1Q+r2o9Ch9PGGUw2bb2fos=;
+        b=QAIdWzpYKkH13Ezka2aWJKH+Gi47sn18lVCTqoZNzLlNYPQQvFIawMpXUkZ2gtiyZS
+         9Q56WQgnDt7zREfjiM01SZtHSpjy48AF5es3A+ZcX0Ug4qY0jXxt3OFA2PoqGpB7+Nib
+         6vmr/kHLcUvGDF8lKZpglnYpJNsiCcbu6+P1kI1dumpe+ckVAIz8+BXWRtVIat4N0HOO
+         ddRByNwEoAFcUrWTMLlRgpPwW1OogKm2S8KtIMHvjIKMMMJ9mDF3vYeMpvzjYBIbaRqn
+         8nYGNFXUUnJwRbn3mHI5q0UDbkqh26/pDw33+3EdUSmmva96i0YB4C4Ukm48PpKMNjua
+         36CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765223208; x=1765828008;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V3KU9yXqaoMrTZupkLM8n1Q+r2o9Ch9PGGUw2bb2fos=;
+        b=rg3In8lVnHjxZppXj0dasHScc8S2+GCvHiya9Y3Fofrzn0CKqgvhjfic7cmttGB8xg
+         3KWplU/paBetRIciIppKiSmAg4v6dE35omJoRAdfdc4EXVgkS3TX4AUaHQH4Vo1EQkfG
+         XqWOEwstMOge0CW3Wy6aBvl/T8oZgWfHaiUMnt5LoQJV4P1K594z1x5rJYibZ4nVu34v
+         9L4CmSUu/OQvSLCCNpb+Xw2H9UGc2QCLTACSlvayJzsD9cT8efnJX+9bPBHKeiLqgoJR
+         2yh3qEnoF65y8X+xSwkOPlNMSRaGp+I0GA8MV0Tr5+OKqjyUXs0DKXWD+guIlncpFFIu
+         OHuw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+ev+VNG1Dd0CfujNJ/NqXZABOM6X1JrkUyz4Cv9JCi1/7J8dxMikt9mrEYBvjQ2xsBuuPvEBNS+LBsQdL@lists.openembedded.org
+X-Gm-Message-State: AOJu0Yznf5BA83IgYsMQK1wZm4uzkBd55PmXGrcEXd/rHrGUYy8MTpw2
+	3WgxOVs8ytmUhv3E5OS4PVQOz2pIj32Fd4zCMcrXLYf5zSz/wzHhDJXk
+X-Gm-Gg: ASbGnctXH3TbKzo6g/7uuYkXTat9DxG1dq/e8OR1YIp1XYAYZz/Qaj59pYgd5zUZ/rK
+	qKp+ZwYHmHK5ITTGz5dHeCnWDl/UCg5ng8QBW6r5G95TRxo7DB5LUDdmHDlWZgyT9ZrpN2gHzYz
+	HCk7sg/oZdZz0UneRNhFwbV8ID5JmFJn1VxSF9pMmnohdTwvR3HR/szsi7Va3yLOQZ1VJbpuyop
+	/0bT5Brr/Vz7bCUfUDDLY+Em/xzeEHQEwUfw94pyA9sSKb0TezogbYRuk46JfWymoXssefC66Ux
+	9jimVpLUJE5GkrZvW/WdaYZD+mONQ7Ku8mthWKxxKu3NePb9Vh91selGWZ3ySvqnAPI3npbHvHP
+	09z4w/ZXsU+utKHNi7AwyiHHNTGNFmYX9Ip2MLqt7NEYmHgWfn9tWk/VmDDWuFj8gPvo5XdfIJk
+	P43RbLtvLbXt7p
+X-Google-Smtp-Source: AGHT+IFgf6xT7wK9RA5rAT6UY5xFbGeGHFGm21zp6A3DQ1Y0CfB4BIOUJ3jB4m2/fAhzMQOYuEaXaw==
+X-Received: by 2002:a17:907:86ab:b0:b73:52c7:faba with SMTP id a640c23a62f3a-b7a242722bbmr902218466b.4.1765223208098;
+        Mon, 08 Dec 2025 11:46:48 -0800 (PST)
+Received: from osama ([2a02:908:1b4:dac0:c90a:1ef9:90ed:ab9c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b79f49a898bsm1181624966b.48.2025.12.08.11.46.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Dec 2025 11:46:47 -0800 (PST)
+Date: Mon, 8 Dec 2025 20:46:45 +0100
+From: Osama Abdelkader <osama.abdelkader@gmail.com>
+To: adrian.freihofer@gmail.com
+Cc: openembedded-core@lists.openembedded.org,
+	bitbake-devel@lists.openembedded.org
+Subject: Re: [OE-core] [PATCH] bitbake: bblayers/query: Add --show-variants
+ option to display BBCLASSEXTEND variants
+Message-ID: <aTcrJTEdhuMQFPfZ@osama>
+References: <20251024164008.4753-1-osama.abdelkader@gmail.com>
+ <f74759654e7b562f1177b6fea9b4cabf6072e8ce.camel@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f74759654e7b562f1177b6fea9b4cabf6072e8ce.camel@gmail.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 08 Dec 2025 16:59:33 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18553
+ <bitbake-devel@lists.openembedded.org>; Mon, 08 Dec 2025 19:46:58 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18554
 
+On Mon, Dec 08, 2025 at 06:28:12PM +0100, adrian.freihofer@gmail.com wrote:
+> On Fri, 2025-10-24 at 19:40 +0300, Osama Abdelkader via
+> lists.openembedded.org wrote:
+> > The bitbake-layers show-recipes command was hiding BBCLASSEXTEND
+> > recipe
+> > variants (e.g., devupstream, nativesdk, cross-canadian) by design, to
+> > avoid clutter in the output. However, this made it impossible to see
+> > recipes like linux-firmware's devupstream variant which uses git
+> > snapshots
+> > instead of release tarballs.
+> > 
+> > This patch adds a new --show-variants (-v) option to show-recipes
+> > that
+> > allows users to view all BBCLASSEXTEND variants when needed, while
+> > maintaining the default behavior of hiding them for a cleaner output.
+> > 
+> > Example usage:
+> >   bitbake-layers show-recipes -v linux-firmware
+> > 
+> > This will now show both:
+> >   - Base version: 1:20251011
+> >   - Devupstream version: 1:20251011+git
+> > 
+> > Signed-off-by: Osama Abdelkader <osama.abdelkader@gmail.com>
+> > ---
+> >  bitbake/lib/bblayers/query.py | 23 ++++++++++++++++-------
+> >  1 file changed, 16 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/bitbake/lib/bblayers/query.py
+> > b/bitbake/lib/bblayers/query.py
+> > index eb7cb465b4..11341d5d53 100644
+> > --- a/bitbake/lib/bblayers/query.py
+> > +++ b/bitbake/lib/bblayers/query.py
+> > @@ -52,7 +52,7 @@ layer, with the preferred version first. Note that
+> > skipped recipes that
+> >  are overlayed will also be listed, with a " (skipped)" suffix.
+> >  """
+> >  
+> > -        items_listed = self.list_recipes('Overlayed recipes', None,
+> > True, args.same_version, args.filenames, False, True, None, False,
+> > None, args.mc)
+> > +        items_listed = self.list_recipes('Overlayed recipes', None,
+> > True, args.same_version, args.filenames, False, True, None, False,
+> > None, args.mc, False)
+> >  
+> >          # Check for overlayed .bbclass files
+> >          classes = collections.defaultdict(list)
+> > @@ -119,9 +119,9 @@ skipped recipes will also be listed, with a "
+> > (skipped)" suffix.
+> >              title = 'Matching recipes:'
+> >          else:
+> >              title = 'Available recipes:'
+> > -        self.list_recipes(title, args.pnspec, False, False,
+> > args.filenames, args.recipes_only, args.multiple, args.layer,
+> > args.bare, inheritlist, args.mc)
+> > +        self.list_recipes(title, args.pnspec, False, False,
+> > args.filenames, args.recipes_only, args.multiple, args.layer,
+> > args.bare, inheritlist, args.mc, args.show_variants)
+> >  
+> > -    def list_recipes(self, title, pnspec, show_overlayed_only,
+> > show_same_ver_only, show_filenames, show_recipes_only,
+> > show_multi_provider_only, selected_layer, bare, inherits, mc):
+> > +    def list_recipes(self, title, pnspec, show_overlayed_only,
+> > show_same_ver_only, show_filenames, show_recipes_only,
+> > show_multi_provider_only, selected_layer, bare, inherits, mc,
+> > show_variants=False):
+> >          if inherits:
+> >              bbpath = str(self.tinfoil.config_data.getVar('BBPATH'))
+> >              for classname in inherits:
+> > @@ -203,8 +203,10 @@ skipped recipes will also be listed, with a "
+> > (skipped)" suffix.
+> >                  # We only display once per recipe, we should prefer
+> > non extended versions of the
+> >                  # recipe if present (so e.g. in OpenEmbedded,
+> > openssl rather than nativesdk-openssl
+> >                  # which would otherwise sort first).
+> > +                # However, if show_variants is True, we show all
+> > BBCLASSEXTEND variants.
+> >                  if realfn[1] and realfn[0] in
+> > self.tinfoil.cooker.recipecaches[mc].pkg_fn:
+> > -                    continue
+> > +                    if not show_variants:
+> > +                        continue
+> >  
+> >                  if inherits:
+> >                      matchcount = 0
+> > @@ -229,7 +231,11 @@ skipped recipes will also be listed, with a "
+> > (skipped)" suffix.
+> >                      for prov in allproviders[p]:
+> >                          provfile =
+> > bb.cache.virtualfn2realfn(prov[1])[0]
+> >                          provlayer = self.get_file_layer(provfile)
+> > -                        provs.append((provfile, provlayer, prov[0]))
+> > +                        # When show_variants is True, use the
+> > virtual filename to distinguish BBCLASSEXTEND variants
+> > +                        if show_variants:
+> > +                            provs.append((prov[1], provlayer,
+> > prov[0]))
+> > +                        else:
+> > +                            provs.append((provfile, provlayer,
+> > prov[0]))
+> >                          if provlayer != preflayer:
+> >                              multilayer = True
+> >                          if prov[0] != pref[0]:
+> > @@ -238,10 +244,12 @@ skipped recipes will also be listed, with a "
+> > (skipped)" suffix.
+> >                          if not items_listed:
+> >                              logger.plain('=== %s ===' % title)
+> >                              items_listed = True
+> > +                        # When show_variants is True, use the
+> > virtual filename for preference check
+> > +                        pref_cmp_file = pref[1] if show_variants
+> > else preffile
+> >                          print_item(preffile, p,
+> > self.version_str(pref[0][0], pref[0][1]), preflayer, True)
+> >                          for (provfile, provlayer, provver) in provs:
+> > -                            if provfile != preffile:
+> > -                                print_item(provfile, p,
+> > self.version_str(provver[0], provver[1]), provlayer, False)
+> > +                            if provfile != pref_cmp_file:
+> > +                               
+> > print_item(bb.cache.virtualfn2realfn(provfile)[0] if show_variants
+> > else provfile, p, self.version_str(provver[0], provver[1]),
+> > provlayer, False)
+> >                          # Ensure we don't show two entries for
+> > BBCLASSEXTENDed recipes
+> >                          preffiles.append(preffile)
+> >  
+> > @@ -530,6 +538,7 @@ NOTE: .bbappend files can impact the
+> > dependencies.
+> >          parser_show_recipes.add_argument('-i', '--inherits',
+> > help='only list recipes that inherit the named class(es) - separate
+> > multiple classes using , (without spaces)', metavar='CLASS',
+> > default='')
+> >          parser_show_recipes.add_argument('-l', '--layer', help='only
+> > list recipes from the selected layer', default='')
+> >          parser_show_recipes.add_argument('-b', '--bare',
+> > help='output just names without the "(skipped)" marker',
+> > action='store_true')
+> > +        parser_show_recipes.add_argument('-v', '--show-variants',
+> > help='show all BBCLASSEXTEND recipe variants (e.g., devupstream,
+> > nativesdk)', action='store_true')
+> 
+> 
+> During the patch review session, we concluded that -v usually stands
+> for “verbose” or often for “version.” Would it be possible to remove -v
+> for this somewhat more specific feature and only keep the long option?
+> 
 
---=-7fMgmyGZtKqPqMPB0+C5
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, 2025-12-08 at 17:12 +0100, Corentin Guillevic via
-lists.openembedded.org wrote:
-> AUTOREV allows to fetch the latest revision. If no SCM URI is used (e.g. =
-git://, ...),
-> AUTOREV has no effect. However there is one case in which a recipe with A=
-UTOREV
-> but no SCM URI will lead to a parsing error:
->=20
-> ERROR: /path/to/yocto/builds/build-qemux86-64/workspace/recipes/i2c-tools=
-/i2c-tools_3.1.2.bb: AUTOREV/SRCPV set too late for the fetcher to work pro=
-perly, please set the variables earlier in parsing. Erroring instead of lat=
-er obtuse build failures.
->=20
-> This error is raised when AUTOREV occurs (__BBAUTOREV_SEEN) but is not ac=
-ted
-> upon (__BBAUTOREV_ACTED_UPON). A recipe with one SCM URI causes the
-> srcrev_internal_helper() function to run, and read the value of SRCREV. I=
-f
-> SRCREV =3D "${AUTOREV}", then AUTOREV will be acted upon.
->=20
-> If the recipe does not have an SCM URI, SRCREV is not parsed and AUTOREV =
-remains
-> unchanged. However, if SRCREV is expanded during the parsing time in Pyth=
-on code
-> (either pure or evaluated from BitBake code), then AUTOREV will be expand=
-ed too
-> and resulting in the setting of __BBAUTOREV_SEEN. However, as there is no=
- SCM
-> URI, the code flow that would act upon AUTOREV is never run.
->=20
-> The fix slightly changes the way AUTOREV is handled: if no SCM URI is pro=
-vided,
-> AUTOREV will be considered to have never occurred (__BBAUTOREV_SEEN will =
-not be
-> defined).
-
-It makes more sense to me to throw an error if AUTOREV is seen but no
-SCM URI is provided, rather than silently ignoring AUTOREV. Perhaps we
-just need to improve the error that is raised.
-
-Is there any valid case for `SRCREV =3D "${AUTOREV}` when no SCM URI is
-given?
+Sure, I'm going to send v2.
 
 Thanks,
+Osama
 
---=20
-Paul Barker
-
-
-
---=-7fMgmyGZtKqPqMPB0+C5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaTcD6REccGF1bEBwYmFy
-a2VyLmRldgAKCRCrY1Tsnbr0bltgAP4/Wgb7897d6OcKjNKn6ZpxatdhhLiCT34T
-rnS+3nXcPgEAsZqGcJa3/Hfksgq/r/kFp8C7UkJM3IGRLGoAOqXowQM=
-=0jGZ
------END PGP SIGNATURE-----
-
---=-7fMgmyGZtKqPqMPB0+C5--
+> Thank you.
+> Adrian
+> 
+> >          parser_show_recipes.add_argument('--mc', help='use specified
+> > multiconfig', default='')
+> >          parser_show_recipes.add_argument('pnspec', nargs='*',
+> > help='optional recipe name specification (wildcards allowed, enclose
+> > in quotes to avoid shell expansion)')
+> >  
+> > 
+> > -=-=-=-=-=-=-=-=-=-=-=-
+> > Links: You receive all messages sent to this group.
+> > View/Reply Online (#225300):
+> > https://lists.openembedded.org/g/openembedded-core/message/225300
+> > Mute This Topic: https://lists.openembedded.org/mt/115931358/4454582
+> > Group Owner: openembedded-core+owner@lists.openembedded.org
+> > Unsubscribe:
+> > https://lists.openembedded.org/g/openembedded-core/unsub [
+> > adrian.freihofer@gmail.com]
+> > -=-=-=-=-=-=-=-=-=-=-=-
 
