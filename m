@@ -2,78 +2,75 @@ Return-Path: <paul@pbarker.dev>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2566D4417F
-	for <webhook@archiver.kernel.org>; Fri, 12 Dec 2025 11:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FACD49201
+	for <webhook@archiver.kernel.org>; Fri, 12 Dec 2025 11:30:24 +0000 (UTC)
 Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.10664.1765538877125416277
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.10775.1765539019144662468
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Dec 2025 03:27:57 -0800
+ Fri, 12 Dec 2025 03:30:19 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=z1YtRwU7;
- dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=j/GUeSLj;
+ dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=VJsiR1ZN;
+ dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=rHodYU9z;
  spf=pass (domain: pbarker.dev, ip: 103.168.172.145, mailfrom: paul@pbarker.dev)
-Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
-	by mailfout.phl.internal (Postfix) with ESMTP id 3313EEC05F2;
-	Fri, 12 Dec 2025 06:27:56 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-12.internal (MEProxy); Fri, 12 Dec 2025 06:27:56 -0500
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfout.phl.internal (Postfix) with ESMTP id 4D117EC04C1;
+	Fri, 12 Dec 2025 06:30:18 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Fri, 12 Dec 2025 06:30:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
 	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
 	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1765538876; x=1765625276; bh=tIomm+e7Wu
-	O4JlsbXQfpWabmmKfXwlkI2MrAdP6Kbdo=; b=z1YtRwU7x4veKH/5RVnDfNTGkz
-	uJQNwH9IlMfeSoGwnxI7J110VEtaPPmRZSydZxtqiNnGMoZUnuE+mjHFN5MTr2iM
-	gUj87FZrHaqbBOY96XHfvUd15kIsQOoJ6wb0jN0M7TsoVKxZqPERnn5D9OLBHc1D
-	XGLJhlI0FF6ZpvoRjDcAssidcYvyIYTPsuAlyXYTNFId0zg+z9sVWeKEEO5e55OF
-	R0E/5IuUAzOkan4muWqpm+0mBP/gOlYC1pmLLulgX0Xw8/M3EfjocRJl41b8H9Fr
-	Vp3p8YCFddGtTOFDqiRnlStKoM/F5bJX0CZVRbrM1Tys57RFJ/X3wsBd6rnQ==
+	:subject:to:to; s=fm3; t=1765539018; x=1765625418; bh=Uz+9cxFCgd
+	eqiPcb1wvKVXa9iAB5xlrro+9U//b2OeE=; b=VJsiR1ZNy5leFAP4dxhgzkecKs
+	dhjRGPe50GRXUz0Du2RsgdZAq0AimVwbP/yZ758CRLjCBd3ir1pNUl6kP2zso8SO
+	K4mM4E0hQdOmSq+rvJd9qIMSF7Q0gx/mR9lRA/JzIwyeqObZD+78NbWA2sfPVpo/
+	9x96ORnd2NoM/xcXpILJes1muZCLQtYLYXrkZ3i1jpY0CUI3buX0dycuHPk7WFdn
+	SeruC8FrY+RS6Yq+YHBN11J1uQI2+5wJG/YP85/q/jLWHQsLzSpGnFzPwJHPFkTy
+	oDVfA02Q77monPc1td1IbpcpYTznX8MRhb3RpZHxa8MkjFLbdOlCRG5MOoZg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-type:content-type:date:date
 	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
 	:message-id:mime-version:references:reply-to:subject:subject:to
 	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1765538876; x=1765625276; bh=tIomm+e7WuO4JlsbXQfpWabmmKfXwlkI2Mr
-	AdP6Kbdo=; b=j/GUeSLjpNG8pVmHHbHzqM0X4X3BdQxerB2MAF5TCdIynJVpZ2o
-	tKN7B7HiYR+X+7OnD8vbup/4NWe3HZDjz/7T65tmXn0AXJV9cV+tFsCO+Z5ppVBg
-	CrXVF0Mi2eFw+Z71ZZCmWXYQgL2VKdj50HGMz4YEsP97aO4RllQd6T5u5XwmDDm3
-	AKad5y8LoDpVICXw9BmT8vJHOIg97blDqYaS6p9u4V7u/VADZ6oBfCfCTM7YK+Dv
-	Oli+XSFmyHJXHrvXoqEBVgUuSAtLjgO61XU5xsIi4hdwMn2p2hD9fqRjSyCJ8oUH
-	0yHeIwxSGFqJOq5a0P6X1LJbSBWz8faZmwA==
-X-ME-Sender: <xms:O_w7aYQuQR-pzq9cZ6TRvagAhnTCeJo3GTNX5KmH93RUKsFoKjIBEw>
-    <xme:O_w7adNdDepB8z1r32Blpo9IZoS7gcm5PFBor03gbRIhw1hwFFupl0ZNbcZhhv9uS
-    XSBzAdaXUYmUwB2yViLrJY8Z4kS1kiiPYdQuDD_TJH0K6XRmJa-oK6->
-X-ME-Received: <xmr:O_w7aTON_lZL4OzTRHSHNCUKn59ImuRB1ZvbvK-ybr8ylpmDcVImuMwlMoZWSbTG7eKdrYzUBeU77VLjMMciMR0HZ0IiItR__wt_-XGUzxDH>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkedthecutefuodetggdotefrod
+	1765539018; x=1765625418; bh=Uz+9cxFCgdeqiPcb1wvKVXa9iAB5xlrro+9
+	U//b2OeE=; b=rHodYU9zQALzrwOLPVy05bY0gDT9Xj00JuRUsdZjOkoCM0cfYcT
+	m9I+Cia4wbqUGTwQn6W0W5CSy5Mr9XyXrlvX2M8pB5BEMlbpaiGqog/35vr1DXIT
+	1PCMQDeLQ9dBazwBAYBTVSnO9eO6sCGZsRI4B2vpS3TJQQUEEggO10jYozXNMorK
+	Np4hKNUoP4y6RuKHasiBmYPr/Zqn85Tka/tnaB+8ii/TLhlcj7sxzjjm9L598BGe
+	qRulnQQexj6OCEhYouvn213MZ/WP7jjmBRsLDu7eZEwPSm/zvw/8bqTydh3isJ4l
+	Ure7BSaF9xkE/+NvXB9E5+fTv3Z9eDbYunw==
+X-ME-Sender: <xms:yvw7aQ2faqVZrQe4Ym9OMF_dQoL5DIGW_hsUZCw8kLlhuDr6FYQ8Jw>
+    <xme:yvw7aSheGdFD8ggh0PjADtD1_DlvAWLqReVzrOS01a4wbRdxHJBI0WoKh4ua-h6ih
+    v9kJCy2CnmuZzMB_Jj6U-e_hwdu08IBPvbPY8-8-fL9jImsPGpQSw>
+X-ME-Received: <xmr:yvw7aWQPw4P4zqZiDGCudAcDsYEoYlpXNmi_7GldOk_HXdzB06Hm6YuYNuGZKbY7521yLo_2n6HgrsDn_Rn1fvSlpsV5jr-Xu-lmFvsAfaI1>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkedtjecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
     hrpefkuffhvfevffgjfhgtfgggsehgtderredtreejnecuhfhrohhmpefrrghulhcuuegr
     rhhkvghruceophgruhhlsehpsggrrhhkvghrrdguvghvqeenucggtffrrghtthgvrhhnpe
-    fhkefhuefgleefleduleelhfektedvffeitddtueeukefhieduiedvfeeuhedutdenucff
-    ohhmrghinhepohhpvghnvghmsggvugguvggurdhorhhgnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomhepphgruhhlsehpsggrrhhkvghrrdguvghv
-    pdhnsggprhgtphhtthhopeefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrlh
-    gvgidrkhgrnhgrvhhinhesghhmrghilhdrtghomhdprhgtphhtthhopegsihhtsggrkhgv
-    qdguvghvvghlsehlihhsthhsrdhophgvnhgvmhgsvgguuggvugdrohhrghdprhgtphhtth
-    hopegrlhgvgieslhhinhhuthhrohhnihigrdguvg
-X-ME-Proxy: <xmx:O_w7aVt0DAtmwfvSllw-40hPN6W0Jt4sErYSpb-GE4H5bLD27HTCPA>
-    <xmx:O_w7aVXIHH1BAhSqsTaX081sHaIR9vqUTEvIP-opzVuiAVXmfGArjw>
-    <xmx:O_w7aVsrK5DoxhvF4NJlaW2e19hUAiQNf--OSrwd2HNrjjpZ3Xj3jQ>
-    <xmx:O_w7aZVBDHvgRQfJUxg6k_uEk9XJROG38IjG1BO2rfSr_t6LNgfWHw>
-    <xmx:PPw7aahYUMxZ6gH24rVNF6V9uMnbSqYLHAar9FdQkXxcbxqLbp-oqcV4>
+    efffdvfeegveekudfhteeuhefhieekvdeiueefveeiffeukedtledutdfggeevheenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehprghulhesph
+    gsrghrkhgvrhdruggvvhdpnhgspghrtghpthhtohepfedpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtoheprghlvgigrdhkrghnrghvihhnsehgmhgrihhlrdgtohhmpdhrtghpth
+    htohepsghithgsrghkvgdquggvvhgvlheslhhishhtshdrohhpvghnvghmsggvugguvggu
+    rdhorhhgpdhrtghpthhtoheprghlvgigsehlihhnuhhtrhhonhhigidruggv
+X-ME-Proxy: <xmx:yvw7aTjp2yqZPYE2DNtp7I6d6FbClvLb31BRSk3Cey7G8oyhwK2Htw>
+    <xmx:yvw7aW4YLM162mO6dki1Sw1hZIWo0LQzv7ZIuuk7p6eiLzSOH-7vOg>
+    <xmx:yvw7aQC8su2wg_l-tLd8f_oQTLKFpSojcOageQHlAPoKhN_ue2Yulw>
+    <xmx:yvw7adYV1YfTbwzg6o-AQDQ3mVwNXIV2SGrG0D_poHnAmu0W82UMIg>
+    <xmx:yvw7afXb9CHuR39lfWF_wOY0x_QYpUuBMRpxSx0gIFLZyFBoinHJjgtm>
 Feedback-ID: i51494658:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 12 Dec 2025 06:27:55 -0500 (EST)
-Message-ID: <9df2121472cb0296ca4c1ded0edeb1059e55a130.camel@pbarker.dev>
-Subject: Re: [PATCH 4/4] bitbake-setup: implement symlinking local sources
- into builds
+ 12 Dec 2025 06:30:17 -0500 (EST)
+Message-ID: <0a4abf6d3dc39a15d3a901842446fc38c7c17d31.camel@pbarker.dev>
+Subject: Re: [PATCH 1/4] setup-schema/layers.schema.json: correct indentation
 From: Paul Barker <paul@pbarker.dev>
 To: Alexander Kanavin <alex.kanavin@gmail.com>, 
 	bitbake-devel@lists.openembedded.org
 Cc: Alexander Kanavin <alex@linutronix.de>
-Date: Fri, 12 Dec 2025 11:27:52 +0000
-In-Reply-To: <20251211142532.983960-4-alex.kanavin@gmail.com>
+Date: Fri, 12 Dec 2025 11:30:15 +0000
+In-Reply-To: <20251211142532.983960-1-alex.kanavin@gmail.com>
 References: <20251211142532.983960-1-alex.kanavin@gmail.com>
-	 <20251211142532.983960-4-alex.kanavin@gmail.com>
 Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  keydata=mQINBGC756sBEADXL6cawsZRrDvICz9Y1SG0/lW1me4xpq36obh7a0IGAzp3ywNRb/4MO
  DTqP4+DD0cIFuDY41/N17g0sNlp8z+/k/IIDmNPtYQOTVmAkrkdDU4BP8dD3Cp1PUw6nrbInfujAJ
@@ -119,107 +116,154 @@ Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  OqpPZn7Ij1ga5IAOHNRi5MbyRFROYOeaOj7sz7S7roHQwdP3Q1qTwTOv30hlOSe6uz4PTBiEIKBQH
  ep0k17xg==
 Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-imcoZNW4Lyhblt50bjT3"
+	protocol="application/pgp-signature"; boundary="=-m/F/CUiYePdBI+iQ2hv6"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 12 Dec 2025 11:28:04 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18573
+ <bitbake-devel@lists.openembedded.org>; Fri, 12 Dec 2025 11:30:24 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18574
 
 
---=-imcoZNW4Lyhblt50bjT3
+--=-m/F/CUiYePdBI+iQ2hv6
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, 2025-12-11 at 15:25 +0100, Alexander Kanavin wrote:
 > From: Alexander Kanavin <alex@linutronix.de>
 >=20
-> The feature and the use case were proposed here:
-> https://lists.openembedded.org/g/bitbake-devel/message/18373
->=20
-> The implementation extends the schema with a 'local' source type,
-> and simply symlinks them into the setup directory during 'init'.
-> 'status' or 'update' do not consider or modify the symlinks.
->=20
-> The overrides support is extended to add a command line 'shortcut'
-> for overriding sources with a local path, and massaging relative or
-> ~-containing paths as appropriate.
->=20
-> Documentation is extended to describe the local sources and show
-> examples. The json properties for sources are also grouped correctly to s=
-how
-> what is git-specific, what is local-specific and what is common.
->=20
-> Tests are extended to cover a few things that weren't previously tested:
-> source overrides, custom setup directory names, and tests for local
-> sources are added as well.
+> Shift one of the inner blocks 8 spaces to the left, so that
+> everything is indented by 4 spaces.
 >=20
 > Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 > ---
->  bin/bitbake-setup                             | 29 ++++++++++-
->  .../bitbake-user-manual-environment-setup.rst | 50 +++++++++++++++++--
->  lib/bb/tests/setup.py                         | 28 +++++++++++
->  setup-schema/layers.schema.json               | 14 ++++++
->  4 files changed, 115 insertions(+), 6 deletions(-)
+>  setup-schema/layers.schema.json | 72 ++++++++++++++++-----------------
+>  1 file changed, 36 insertions(+), 36 deletions(-)
 >=20
-> diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-> index 1f83b1b2a..30c5c44f7 100755
-> --- a/bin/bitbake-setup
-> +++ b/bin/bitbake-setup
-> @@ -109,6 +109,10 @@ def checkout_layers(layers, layerdir, d):
->              revision =3D urldata.revision
->              layers_fixed_revisions[r_name]['git-remote']['rev'] =3D revi=
-sion
-> =20
-> +    def _symlink_local(src, dst):
-> +        print("Making a symbolic link {} pointing to {}".format(dst, src=
-))
-> +        os.symlink(src, dst)
-> +
->      layers_fixed_revisions =3D copy.deepcopy(layers)
->      repodirs =3D []
->      oesetupbuild =3D None
-> @@ -121,6 +125,9 @@ def checkout_layers(layers, layerdir, d):
->          r_remote =3D r_data.get('git-remote')
->          if r_remote:
->              _checkout_git_remote(r_remote, repodir, layers_fixed_revisio=
-ns)
-> +        local =3D r_data.get('local')
-> +        if local:
-> +            _symlink_local(os.path.expanduser(local["path"]), os.path.jo=
-in(layerdir,repodir))
+> diff --git a/setup-schema/layers.schema.json b/setup-schema/layers.schema=
+.json
+> index 144ea6d9f..9a0b4ed61 100644
+> --- a/setup-schema/layers.schema.json
+> +++ b/setup-schema/layers.schema.json
+> @@ -27,44 +27,44 @@
+>                          "type": "boolean"
+>                      },
+>                      "git-remote": {
+> -                                "description": "A remote git source from=
+ which to fetch",
+> +                        "description": "A remote git source from which t=
+o fetch",
+> +                        "type": "object",
+> +                        "additionalProperties": false,
+> +                        "required": [
+> +                            "rev"
+> +                        ],
+> +                        "properties": {
+> +                            "branch": {
+> +                                "description": "The git branch to fetch =
+(optional)",
+> +                                "type": "string"
+> +                            },
+> +                            "rev": {
+> +                                "description": "The git revision to chec=
+kout",
+> +                                "type": "string"
+> +                            },
+> +                            "describe": {
+> +                                "description": "The output of 'git descr=
+ibe' (human readable description of the revision using tags in revision his=
+tory).",
+> +                                "type": "string"
+> +                            },
+> +                            "remotes": {
+> +                                "description": "The dict of git remotes =
+to add to this repository",
+>                                  "type": "object",
+> -                                "additionalProperties": false,
+> -                                "required": [
+> -                                    "rev"
+> -                                ],
+> -                                "properties": {
+> -                                    "branch": {
+> -                                        "description": "The git branch t=
+o fetch (optional)",
+> -                                        "type": "string"
+> -                                    },
+> -                                    "rev": {
+> -                                        "description": "The git revision=
+ to checkout",
+> -                                        "type": "string"
+> -                                    },
+> -                                    "describe": {
+> -                                        "description": "The output of 'g=
+it describe' (human readable description of the revision using tags in revi=
+sion history).",
+> -                                        "type": "string"
+> -                                    },
+> -                                    "remotes": {
+> -                                        "description": "The dict of git =
+remotes to add to this repository",
+> -                                        "type": "object",
+> -                                        "patternProperties": { ".*" : {
+> -                                            "description": "A git remote=
+",
+> -                                            "type": "object",
+> -                                            "addtionalProperties": false=
+,
+> -                                            "required": [
+> -                                                "uri"
+> -                                            ],
+> -                                            "properties": {
+> -                                                "uri": {
+> -                                                    "description": "The =
+URI for the remote, using git URL syntax",
+> -                                                    "type": "string"
+> -                                                }
+> -                                            }
+> -                                        }}
+> +                                "patternProperties": { ".*" : {
+> +                                    "description": "A git remote",
+> +                                    "type": "object",
+> +                                    "addtionalProperties": false,
+> +                                    "required": [
+> +                                        "uri"
+> +                                    ],
+> +                                    "properties": {
+> +                                        "uri": {
+> +                                            "description": "The URI for =
+the remote, using git URL syntax",
+> +                                            "type": "string"
+> +                                        }
+>                                      }
+> -                                }
+> +                                }}
+> +                            }
+> +                        }
+>                      }
+>                  }
+>              }
 
-Applying overrides shouldn't result in both 'git-remote' and 'local'
-keys being present for the same source, but a badly written .conf.json
-file could contain both. We should probably error out if both keys are
-provided.
+Reviewed-by: Paul Barker <paul@pbarker.dev>
 
-We call os.path.expanduser() in obtain_overrides, so I don't think we
-need to call it again here.
-
-And, I'd prefer the variable name r_local to match r_remote.
-
-The rest of this looks great and works well in my local testing. Thanks
-for implementing this!
+Best regards,
 
 --=20
 Paul Barker
 
 
 
---=-imcoZNW4Lyhblt50bjT3
+--=-m/F/CUiYePdBI+iQ2hv6
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 
 -----BEGIN PGP SIGNATURE-----
 
-iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaTv8OBEccGF1bEBwYmFy
-a2VyLmRldgAKCRCrY1Tsnbr0bkwgAQClNdcaG132fhcTbl00OL37YOWeXsHUT4Cy
-j8XviustlgD/eCHS8xjbtc2XUD23BrHsHy/Em3dDVklyvy5W+yu7Gwg=
-=fbY5
+iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaTv8xxEccGF1bEBwYmFy
+a2VyLmRldgAKCRCrY1Tsnbr0bi4BAQDptPXxYwO9AF+/Nc2AmrVnT3+tQQQcgL4+
+kbQLTtSHOgD/dYYrvZqzREj/MQt+0fbQgGPJ/kzEWoGIxJ9cwlfAVAk=
+=+Y7L
 -----END PGP SIGNATURE-----
 
---=-imcoZNW4Lyhblt50bjT3--
+--=-m/F/CUiYePdBI+iQ2hv6--
 
