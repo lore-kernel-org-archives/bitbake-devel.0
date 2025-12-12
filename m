@@ -2,48 +2,48 @@ Return-Path: <paul@pbarker.dev>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F11AD49201
-	for <webhook@archiver.kernel.org>; Fri, 12 Dec 2025 11:31:14 +0000 (UTC)
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.10786.1765539072450971942
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E38D49202
+	for <webhook@archiver.kernel.org>; Fri, 12 Dec 2025 11:36:04 +0000 (UTC)
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.10749.1765539360219063264
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Dec 2025 03:31:12 -0800
+ Fri, 12 Dec 2025 03:36:00 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=EXT2Ji8y;
- dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=LEjfuwqv;
- spf=pass (domain: pbarker.dev, ip: 103.168.172.154, mailfrom: paul@pbarker.dev)
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 9C90E140023D;
-	Fri, 12 Dec 2025 06:31:11 -0500 (EST)
+ dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=wndzUL2p;
+ dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=bF7O/NBt;
+ spf=pass (domain: pbarker.dev, ip: 103.168.172.145, mailfrom: paul@pbarker.dev)
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfout.phl.internal (Postfix) with ESMTP id 82B32EC07AD;
+	Fri, 12 Dec 2025 06:35:59 -0500 (EST)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Fri, 12 Dec 2025 06:31:11 -0500
+  by phl-compute-01.internal (MEProxy); Fri, 12 Dec 2025 06:35:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
 	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
 	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1765539071; x=1765625471; bh=CPv/rnpJVJ
-	lpJPTmLPHTuJYSEolJGNpJNXOilNK8wUc=; b=EXT2Ji8ywgpVm0cA9eM8UFY6Qc
-	hhjWMPv5SAuiMy2/R7zhEDIs8N5aTxD8pJ/6kmxjO/V2igeUjGJOsIR8Ra+nuRbQ
-	DnXQy5MIVgH65mS/4PxWmB4kxrSe+JmXXcoeD3Q6det6OwkqQ8Gww1x5bLI1cWWa
-	6vczirS4mafv8NPVxXOm1k9VgZNWbhYkX4tQg99eszkJRINxJzeTcHFctQ1zTxaf
-	zA/LkpHvVZgNASr/DUyiN6m5ND9IOt9Rz4ZN8flUQAsCiiMF4Q75XFzgs+l3szYq
-	GvfnysOEuHCJWEltjPK9QVZN89Eh9JhN8jy1vddUlHqAMoOfKKY8DNnL6vsA==
+	:subject:to:to; s=fm3; t=1765539359; x=1765625759; bh=ohvr+PFeeQ
+	aiWadrbQ1N2gJvSGdclb9Mvm6KNYuUj8Q=; b=wndzUL2pBUal2RKdLZe7WyHeSs
+	C0NCszkyNa9r6naC8R+YdMiCe+U65N9KwaNdXxK75iBrMj61RxKUMGfTo+06f7Gl
+	UIkUQ4feHLRMTRP/je1kvAiU9AYoczNX2e4GpK8erC4lgK4X6g72S3OnmgLb7kVM
+	f4+pujOsgbs5Qe1YvAa79Dr5K3zr1qO/QK54Ck8A4zUd8IYjl+JVVn67VGFhtf1T
+	Iaqv+dBeIA8XxKIDdeVAp9a1mD+P6fbdefkelrnn70xn2dPANVHYVn6o68WCqGza
+	JUoDGxAF5imo/iSvWj/7u53PoqPrQs/ggu0ltX4L2jggJwRxgeZQsP0ZTEsg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-type:content-type:date:date
 	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
 	:message-id:mime-version:references:reply-to:subject:subject:to
 	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1765539071; x=1765625471; bh=CPv/rnpJVJlpJPTmLPHTuJYSEolJGNpJNXO
-	ilNK8wUc=; b=LEjfuwqvOxFlx6nOpdO0U7v11jMz8gdAm4HXorsY/SmXLBD1H/P
-	tX+77J4pIw15Gnge67DZt1q6zO0LKZ0KrZjjmBlSL7V4/VVLG/YMwn9QW0RktAmU
-	4fIR8q/LDKWX/uKR1xafshOlltSzE8XvCzwpyJPa/66z+3dVdsAOarLr73eqGTRH
-	H81x8UPpJ++R1taRHU0BwI1kJ607E84so1LmYrqtPZFZBzkSyynZ3w7kjISYHzMd
-	kPOZmBZXFaFeaOYe6a59V+Oo5vDGJCF3r2VtZP2qqUTmPdA0Gi/NQdfhfXSfZSj1
-	6TNngn8fjUZLozQLeEPHqpF7ufNWnGF3+Mw==
-X-ME-Sender: <xms:__w7abWKwCVamoVVxZK1CH8Jg_WU2yT8E5-7GjnD3CixtlNpLPNsdA>
-    <xme:__w7abCkR5ZqcRv9uZPSESMmSQHMPqcHp2viw1ChdFR3zirJbQNfOTGdVx71qbZpT
-    LWeBfSMvz3HoY_mYaewT170ABBtqHSik36Eao76eJYHihmx1hgcFPo>
-X-ME-Received: <xmr:__w7aUxHNQFUapdSfkdJ0yL7jbv9ipq7VcnSzjg9VsnqjkagzxutPC3spX1PhSwVO-4OQqevUHTZk9C9GJC1SHQYlcO-UzilRFkCu9sedU4u>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkedtjecutefuodetggdotefrod
+	1765539359; x=1765625759; bh=ohvr+PFeeQaiWadrbQ1N2gJvSGdclb9Mvm6
+	KNYuUj8Q=; b=bF7O/NBtM8zibXOPDYA79Zpy8GjwgP0/TLCV60DlkRRvHD32J72
+	xP4PCYp5dGA51GhWF+PZIo2mcVBwjMdOHccHZVd2vjWZFQ1qmIC5G7TQJKfhNcoM
+	jksETI789GwJvfMD0ab9I13Un/aFK5fyPxmrLLGcck8RlBZx6fhLZcyTcYJPGCzg
+	LllgO9zIvPZuNbVUeS2cLmejq37ncXh+befxnoUMa6nWecr20WpW/iFpxhMb+8Qb
+	XyP9SUdPo8QlwKwPbzpcSIFurfQ2MgSjtwVrlPiZ/n2O+kXhduu8b214sqsShFDE
+	bGBRTjeNCN9v4aWjmMffD71np09OPnO/K1Q==
+X-ME-Sender: <xms:H_47aaooKFXCJAYeH5ajBRgm68ZZMSZUudiB4nVxD1rVG0z3vQmD7Q>
+    <xme:H_47aQEELPHd8vWYdL8tA2VrZ3jghPMtrRf6wvpBPbIUFZvon-ApLwXpYaZx23whT
+    V8m0hgEtbFfTaiI6eepvZtNB1uHNHO1SEYcpPfK0sz4GQz7NjjPZw>
+X-ME-Received: <xmr:H_47acmiwP6g6cWJSCO8nYybZdiUxD9yTCniFqfdCUBj3PYZRA5BlNTXxSZrgD_-yOfpbCQm4J-wIh39q0ijiNvRQPszsgRJARDIQ2yEV7AP>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkedtkecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
     hrpefkuffhvfevffgjfhgtfgggsehgtderredtreejnecuhfhrohhmpefrrghulhcuuegr
@@ -54,25 +54,25 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkedtjecutefuodetgg
     pdhrtghpthhtoheprghlvgigrdhkrghnrghvihhnsehgmhgrihhlrdgtohhmpdhrtghpth
     htohepsghithgsrghkvgdquggvvhgvlheslhhishhtshdrohhpvghnvghmsggvugguvggu
     rdhorhhgpdhrtghpthhtoheprghlvgigsehlihhnuhhtrhhonhhigidruggv
-X-ME-Proxy: <xmx:__w7aQAnmOwj7mqO-YHBixoIVpdblngZtZr58vV3qKwPHVqMhhwR4Q>
-    <xmx:__w7aZYWNM5iCTvMo-3A8jfl22mSgLO3ANqP5rFDxHXsLpe4Hj71Gw>
-    <xmx:__w7aQjjUYkVsnT8hEx2n98KmphiCPhwKFYa4nI4vhrFuB3pB6Y6Sg>
-    <xmx:__w7aT7kCbM87dbzAtW2Cus_DP3llhlMkcL7I9M40MKv4FHkqP_YUQ>
-    <xmx:__w7aT23h3asLXESTnNTHTMV143-8TdOxFT2YsxD7ki9t2Gg5y5SrCM->
+X-ME-Proxy: <xmx:H_47aTlpXNKPC9qT3OmmOX9yaU64l7JYJKFkTVs-WuZkmZac7l-cSg>
+    <xmx:H_47adt-z3DIDFfe6-rSlPqMAkiNR5ruCp4GkaNlPEs3qtW1IZT98A>
+    <xmx:H_47aWlGx1oyBLugLmvOBioGlxq1cMAIuzBK290b3JIr1DD6pjQ5GA>
+    <xmx:H_47aYtauhQISEo_yFg9HKh02vleOsf8hl2Cqi2FHHd039xz8wSaHg>
+    <xmx:H_47aSZFyO96YeerND7xDYpTJiLMP4XNe5oLBnLlT6_NDcCu-P7I61WD>
 Feedback-ID: i51494658:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 12 Dec 2025 06:31:10 -0500 (EST)
-Message-ID: <ef7d55279a74b6c9708fac6d9a770c7699709af6.camel@pbarker.dev>
-Subject: Re: [PATCH 2/4] bitbake-setup: override complete source entries,
- not just the git-remote properties
+ 12 Dec 2025 06:35:58 -0500 (EST)
+Message-ID: <a3b033459a62ffffbdf78553909621f28192ef01.camel@pbarker.dev>
+Subject: Re: [PATCH 3/4] bitbake-setup: use separate functions for
+ git-specific operations
 From: Paul Barker <paul@pbarker.dev>
 To: Alexander Kanavin <alex.kanavin@gmail.com>, 
 	bitbake-devel@lists.openembedded.org
 Cc: Alexander Kanavin <alex@linutronix.de>
-Date: Fri, 12 Dec 2025 11:31:08 +0000
-In-Reply-To: <20251211142532.983960-2-alex.kanavin@gmail.com>
+Date: Fri, 12 Dec 2025 11:35:56 +0000
+In-Reply-To: <20251211142532.983960-3-alex.kanavin@gmail.com>
 References: <20251211142532.983960-1-alex.kanavin@gmail.com>
-	 <20251211142532.983960-2-alex.kanavin@gmail.com>
+	 <20251211142532.983960-3-alex.kanavin@gmail.com>
 Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  keydata=mQINBGC756sBEADXL6cawsZRrDvICz9Y1SG0/lW1me4xpq36obh7a0IGAzp3ywNRb/4MO
  DTqP4+DD0cIFuDY41/N17g0sNlp8z+/k/IIDmNPtYQOTVmAkrkdDU4BP8dD3Cp1PUw6nrbInfujAJ
@@ -118,52 +118,120 @@ Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  OqpPZn7Ij1ga5IAOHNRi5MbyRFROYOeaOj7sz7S7roHQwdP3Q1qTwTOv30hlOSe6uz4PTBiEIKBQH
  ep0k17xg==
 Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-6B20LW2a4vs3Ssofa0uu"
+	protocol="application/pgp-signature"; boundary="=-FuonhUXespZ+x6a1R7pQ"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 12 Dec 2025 11:31:14 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18575
+ <bitbake-devel@lists.openembedded.org>; Fri, 12 Dec 2025 11:36:04 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18576
 
 
---=-6B20LW2a4vs3Ssofa0uu
+--=-FuonhUXespZ+x6a1R7pQ
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, 2025-12-11 at 15:25 +0100, Alexander Kanavin wrote:
 > From: Alexander Kanavin <alex@linutronix.de>
 >=20
-> The code was assuming that a source entry always contains
-> a git-remote property, and that is the only property that
-> should be replaced.
+> This prepares the code for adding different type of sources than git remo=
+tes:
 >=20
-> With upcoming introduction of local sources (using 'local' as a
-> property as an alternative to the existing 'git-remote'
-> property) that is no longer true.
+> - put git-specific operations into their own functions (no behavior chang=
+es)
+>=20
+> - call them only if a git-remote entry actually exists in the configurati=
+on;
+> do not assume it is always there.
 >=20
 > Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 > ---
->  bin/bitbake-setup | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  bin/bitbake-setup | 42 ++++++++++++++++++++++++++----------------
+>  1 file changed, 26 insertions(+), 16 deletions(-)
 >=20
 > diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-> index b1d751899..8d4e9769a 100755
+> index 8d4e9769a..1f83b1b2a 100755
 > --- a/bin/bitbake-setup
 > +++ b/bin/bitbake-setup
-> @@ -323,7 +323,7 @@ def update_build(config, confdir, setupdir, layerdir,=
- d, update_bb_conf=3D"prompt"
->      layer_overrides =3D config["source-overrides"]["sources"]
->      for k,v in layer_overrides.items():
->          if k in layer_config:
-> -            layer_config[k]["git-remote"] =3D v["git-remote"]
-> +            layer_config[k] =3D v
->      sources_fixed_revisions =3D checkout_layers(layer_config, layerdir, =
-d)
->      bitbake_config =3D config["bitbake-config"]
->      thisdir =3D os.path.dirname(config["path"]) if config["type"] =3D=3D=
- 'local' else None
+> @@ -90,16 +90,7 @@ def _write_layer_list(dest, repodirs):
+>          json.dump({"version":"1.0","layers":layers}, f, sort_keys=3DTrue=
+, indent=3D4)
+> =20
+>  def checkout_layers(layers, layerdir, d):
+> -    layers_fixed_revisions =3D copy.deepcopy(layers)
+> -    repodirs =3D []
+> -    oesetupbuild =3D None
+> -    print("Fetching layer/tool repositories into {}".format(layerdir))
+> -    for r_name in layers:
+> -        r_data =3D layers[r_name]
+> -        repodir =3D r_data.get("path", r_name)
+> -        repodirs.append(repodir)
+> -
+> -        r_remote =3D r_data['git-remote']
+> +    def _checkout_git_remote(r_remote, repodir, layers_fixed_revisions):
+>          rev =3D r_remote['rev']
+>          branch =3D r_remote.get('branch', None)
+>          remotes =3D r_remote['remotes']
+> @@ -118,6 +109,19 @@ def checkout_layers(layers, layerdir, d):
+>              revision =3D urldata.revision
+>              layers_fixed_revisions[r_name]['git-remote']['rev'] =3D revi=
+sion
+> =20
+> +    layers_fixed_revisions =3D copy.deepcopy(layers)
+> +    repodirs =3D []
+> +    oesetupbuild =3D None
+> +    print("Fetching layer/tool repositories into {}".format(layerdir))
+> +    for r_name in layers:
+> +        r_data =3D layers[r_name]
+> +        repodir =3D r_data.get("path", r_name)
+> +        repodirs.append(repodir)
+> +
+> +        r_remote =3D r_data.get('git-remote')
+> +        if r_remote:
+> +            _checkout_git_remote(r_remote, repodir, layers_fixed_revisio=
+ns)
+> +
+>          if os.path.exists(os.path.join(layerdir, repodir, 'scripts/oe-se=
+tup-build')):
+>              oesetupbuild =3D os.path.join(layerdir, repodir, 'scripts/oe=
+-setup-build')
+>              oeinitbuildenvdir =3D os.path.join(layerdir, repodir)
+> @@ -563,12 +567,8 @@ def get_diff(file1, file2):
+>      return None
+> =20
+>  def are_layers_changed(layers, layerdir, d):
+> -    changed =3D False
+> -    for r_name in layers:
+> -        r_data =3D layers[r_name]
+> -        repodir =3D r_data.get("path", r_name)
+> -
+> -        r_remote =3D r_data['git-remote']
+> +    def _is_git_remote_changed(r_remote, repodir):
+> +        changed =3D False
+>          rev =3D r_remote['rev']
+>          branch =3D r_remote.get('branch', None)
+>          remotes =3D r_remote['remotes']
+> @@ -586,6 +586,16 @@ def are_layers_changed(layers, layerdir, d):
+>              if upstream_revision !=3D local_revision:
+>                  changed =3D True
+>                  print('Layer repository {} checked out into {} updated r=
+evision {} from {} to {}'.format(remotes[remote]["uri"], os.path.join(layer=
+dir, repodir), rev, local_revision, upstream_revision))
+> +        return changed
+> +
+> +    changed =3D False
+> +    for r_name in layers:
+> +        r_data =3D layers[r_name]
+> +        repodir =3D r_data.get("path", r_name)
+> +
+> +        git_remote =3D r_data.get('git-remote', repodir)
+> +        if git_remote:
+> +            changed =3D changed | _is_git_remote_changed(git_remote, rep=
+odir)
+> =20
+>      return changed
+> =20
 
 Reviewed-by: Paul Barker <paul@pbarker.dev>
 
@@ -173,17 +241,17 @@ Best regards,
 Paul Barker
 
 
---=-6B20LW2a4vs3Ssofa0uu
+--=-FuonhUXespZ+x6a1R7pQ
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 
 -----BEGIN PGP SIGNATURE-----
 
-iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaTv8/BEccGF1bEBwYmFy
-a2VyLmRldgAKCRCrY1Tsnbr0bmUZAQDdYjHPNw7JWVb6Cj6hjk9IxVUqxvvSV6sm
-DEnnUOuzCwEArRHJcc5suQoXG8xWpzmubJ24TI4RiRB7Y6DiGhiwQAM=
-=+MNY
+iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaTv+HBEccGF1bEBwYmFy
+a2VyLmRldgAKCRCrY1Tsnbr0bsx/AQC0MSKBl0Nt9DY9vKTPPPhww0R/T0brO831
+FogPpWRmTQD+KF1XU6gFWNnGGWrTo8tgyJc6YMtto2pDMUO/hH9srQw=
+=pCUS
 -----END PGP SIGNATURE-----
 
---=-6B20LW2a4vs3Ssofa0uu--
+--=-FuonhUXespZ+x6a1R7pQ--
 
