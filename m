@@ -2,47 +2,47 @@ Return-Path: <paul@pbarker.dev>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FACD49201
-	for <webhook@archiver.kernel.org>; Fri, 12 Dec 2025 11:30:24 +0000 (UTC)
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.10775.1765539019144662468
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F11AD49201
+	for <webhook@archiver.kernel.org>; Fri, 12 Dec 2025 11:31:14 +0000 (UTC)
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.10786.1765539072450971942
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Dec 2025 03:30:19 -0800
+ Fri, 12 Dec 2025 03:31:12 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=VJsiR1ZN;
- dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=rHodYU9z;
- spf=pass (domain: pbarker.dev, ip: 103.168.172.145, mailfrom: paul@pbarker.dev)
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id 4D117EC04C1;
-	Fri, 12 Dec 2025 06:30:18 -0500 (EST)
+ dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=EXT2Ji8y;
+ dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=LEjfuwqv;
+ spf=pass (domain: pbarker.dev, ip: 103.168.172.154, mailfrom: paul@pbarker.dev)
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 9C90E140023D;
+	Fri, 12 Dec 2025 06:31:11 -0500 (EST)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Fri, 12 Dec 2025 06:30:18 -0500
+  by phl-compute-04.internal (MEProxy); Fri, 12 Dec 2025 06:31:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
 	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
 	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1765539018; x=1765625418; bh=Uz+9cxFCgd
-	eqiPcb1wvKVXa9iAB5xlrro+9U//b2OeE=; b=VJsiR1ZNy5leFAP4dxhgzkecKs
-	dhjRGPe50GRXUz0Du2RsgdZAq0AimVwbP/yZ758CRLjCBd3ir1pNUl6kP2zso8SO
-	K4mM4E0hQdOmSq+rvJd9qIMSF7Q0gx/mR9lRA/JzIwyeqObZD+78NbWA2sfPVpo/
-	9x96ORnd2NoM/xcXpILJes1muZCLQtYLYXrkZ3i1jpY0CUI3buX0dycuHPk7WFdn
-	SeruC8FrY+RS6Yq+YHBN11J1uQI2+5wJG/YP85/q/jLWHQsLzSpGnFzPwJHPFkTy
-	oDVfA02Q77monPc1td1IbpcpYTznX8MRhb3RpZHxa8MkjFLbdOlCRG5MOoZg==
+	:subject:to:to; s=fm3; t=1765539071; x=1765625471; bh=CPv/rnpJVJ
+	lpJPTmLPHTuJYSEolJGNpJNXOilNK8wUc=; b=EXT2Ji8ywgpVm0cA9eM8UFY6Qc
+	hhjWMPv5SAuiMy2/R7zhEDIs8N5aTxD8pJ/6kmxjO/V2igeUjGJOsIR8Ra+nuRbQ
+	DnXQy5MIVgH65mS/4PxWmB4kxrSe+JmXXcoeD3Q6det6OwkqQ8Gww1x5bLI1cWWa
+	6vczirS4mafv8NPVxXOm1k9VgZNWbhYkX4tQg99eszkJRINxJzeTcHFctQ1zTxaf
+	zA/LkpHvVZgNASr/DUyiN6m5ND9IOt9Rz4ZN8flUQAsCiiMF4Q75XFzgs+l3szYq
+	GvfnysOEuHCJWEltjPK9QVZN89Eh9JhN8jy1vddUlHqAMoOfKKY8DNnL6vsA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-type:content-type:date:date
 	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
 	:message-id:mime-version:references:reply-to:subject:subject:to
 	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1765539018; x=1765625418; bh=Uz+9cxFCgdeqiPcb1wvKVXa9iAB5xlrro+9
-	U//b2OeE=; b=rHodYU9zQALzrwOLPVy05bY0gDT9Xj00JuRUsdZjOkoCM0cfYcT
-	m9I+Cia4wbqUGTwQn6W0W5CSy5Mr9XyXrlvX2M8pB5BEMlbpaiGqog/35vr1DXIT
-	1PCMQDeLQ9dBazwBAYBTVSnO9eO6sCGZsRI4B2vpS3TJQQUEEggO10jYozXNMorK
-	Np4hKNUoP4y6RuKHasiBmYPr/Zqn85Tka/tnaB+8ii/TLhlcj7sxzjjm9L598BGe
-	qRulnQQexj6OCEhYouvn213MZ/WP7jjmBRsLDu7eZEwPSm/zvw/8bqTydh3isJ4l
-	Ure7BSaF9xkE/+NvXB9E5+fTv3Z9eDbYunw==
-X-ME-Sender: <xms:yvw7aQ2faqVZrQe4Ym9OMF_dQoL5DIGW_hsUZCw8kLlhuDr6FYQ8Jw>
-    <xme:yvw7aSheGdFD8ggh0PjADtD1_DlvAWLqReVzrOS01a4wbRdxHJBI0WoKh4ua-h6ih
-    v9kJCy2CnmuZzMB_Jj6U-e_hwdu08IBPvbPY8-8-fL9jImsPGpQSw>
-X-ME-Received: <xmr:yvw7aWQPw4P4zqZiDGCudAcDsYEoYlpXNmi_7GldOk_HXdzB06Hm6YuYNuGZKbY7521yLo_2n6HgrsDn_Rn1fvSlpsV5jr-Xu-lmFvsAfaI1>
+	1765539071; x=1765625471; bh=CPv/rnpJVJlpJPTmLPHTuJYSEolJGNpJNXO
+	ilNK8wUc=; b=LEjfuwqvOxFlx6nOpdO0U7v11jMz8gdAm4HXorsY/SmXLBD1H/P
+	tX+77J4pIw15Gnge67DZt1q6zO0LKZ0KrZjjmBlSL7V4/VVLG/YMwn9QW0RktAmU
+	4fIR8q/LDKWX/uKR1xafshOlltSzE8XvCzwpyJPa/66z+3dVdsAOarLr73eqGTRH
+	H81x8UPpJ++R1taRHU0BwI1kJ607E84so1LmYrqtPZFZBzkSyynZ3w7kjISYHzMd
+	kPOZmBZXFaFeaOYe6a59V+Oo5vDGJCF3r2VtZP2qqUTmPdA0Gi/NQdfhfXSfZSj1
+	6TNngn8fjUZLozQLeEPHqpF7ufNWnGF3+Mw==
+X-ME-Sender: <xms:__w7abWKwCVamoVVxZK1CH8Jg_WU2yT8E5-7GjnD3CixtlNpLPNsdA>
+    <xme:__w7abCkR5ZqcRv9uZPSESMmSQHMPqcHp2viw1ChdFR3zirJbQNfOTGdVx71qbZpT
+    LWeBfSMvz3HoY_mYaewT170ABBtqHSik36Eao76eJYHihmx1hgcFPo>
+X-ME-Received: <xmr:__w7aUxHNQFUapdSfkdJ0yL7jbv9ipq7VcnSzjg9VsnqjkagzxutPC3spX1PhSwVO-4OQqevUHTZk9C9GJC1SHQYlcO-UzilRFkCu9sedU4u>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkedtjecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
@@ -54,23 +54,25 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkedtjecutefuodetgg
     pdhrtghpthhtoheprghlvgigrdhkrghnrghvihhnsehgmhgrihhlrdgtohhmpdhrtghpth
     htohepsghithgsrghkvgdquggvvhgvlheslhhishhtshdrohhpvghnvghmsggvugguvggu
     rdhorhhgpdhrtghpthhtoheprghlvgigsehlihhnuhhtrhhonhhigidruggv
-X-ME-Proxy: <xmx:yvw7aTjp2yqZPYE2DNtp7I6d6FbClvLb31BRSk3Cey7G8oyhwK2Htw>
-    <xmx:yvw7aW4YLM162mO6dki1Sw1hZIWo0LQzv7ZIuuk7p6eiLzSOH-7vOg>
-    <xmx:yvw7aQC8su2wg_l-tLd8f_oQTLKFpSojcOageQHlAPoKhN_ue2Yulw>
-    <xmx:yvw7adYV1YfTbwzg6o-AQDQ3mVwNXIV2SGrG0D_poHnAmu0W82UMIg>
-    <xmx:yvw7afXb9CHuR39lfWF_wOY0x_QYpUuBMRpxSx0gIFLZyFBoinHJjgtm>
+X-ME-Proxy: <xmx:__w7aQAnmOwj7mqO-YHBixoIVpdblngZtZr58vV3qKwPHVqMhhwR4Q>
+    <xmx:__w7aZYWNM5iCTvMo-3A8jfl22mSgLO3ANqP5rFDxHXsLpe4Hj71Gw>
+    <xmx:__w7aQjjUYkVsnT8hEx2n98KmphiCPhwKFYa4nI4vhrFuB3pB6Y6Sg>
+    <xmx:__w7aT7kCbM87dbzAtW2Cus_DP3llhlMkcL7I9M40MKv4FHkqP_YUQ>
+    <xmx:__w7aT23h3asLXESTnNTHTMV143-8TdOxFT2YsxD7ki9t2Gg5y5SrCM->
 Feedback-ID: i51494658:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 12 Dec 2025 06:30:17 -0500 (EST)
-Message-ID: <0a4abf6d3dc39a15d3a901842446fc38c7c17d31.camel@pbarker.dev>
-Subject: Re: [PATCH 1/4] setup-schema/layers.schema.json: correct indentation
+ 12 Dec 2025 06:31:10 -0500 (EST)
+Message-ID: <ef7d55279a74b6c9708fac6d9a770c7699709af6.camel@pbarker.dev>
+Subject: Re: [PATCH 2/4] bitbake-setup: override complete source entries,
+ not just the git-remote properties
 From: Paul Barker <paul@pbarker.dev>
 To: Alexander Kanavin <alex.kanavin@gmail.com>, 
 	bitbake-devel@lists.openembedded.org
 Cc: Alexander Kanavin <alex@linutronix.de>
-Date: Fri, 12 Dec 2025 11:30:15 +0000
-In-Reply-To: <20251211142532.983960-1-alex.kanavin@gmail.com>
+Date: Fri, 12 Dec 2025 11:31:08 +0000
+In-Reply-To: <20251211142532.983960-2-alex.kanavin@gmail.com>
 References: <20251211142532.983960-1-alex.kanavin@gmail.com>
+	 <20251211142532.983960-2-alex.kanavin@gmail.com>
 Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  keydata=mQINBGC756sBEADXL6cawsZRrDvICz9Y1SG0/lW1me4xpq36obh7a0IGAzp3ywNRb/4MO
  DTqP4+DD0cIFuDY41/N17g0sNlp8z+/k/IIDmNPtYQOTVmAkrkdDU4BP8dD3Cp1PUw6nrbInfujAJ
@@ -116,133 +118,52 @@ Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  OqpPZn7Ij1ga5IAOHNRi5MbyRFROYOeaOj7sz7S7roHQwdP3Q1qTwTOv30hlOSe6uz4PTBiEIKBQH
  ep0k17xg==
 Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-m/F/CUiYePdBI+iQ2hv6"
+	protocol="application/pgp-signature"; boundary="=-6B20LW2a4vs3Ssofa0uu"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 12 Dec 2025 11:30:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18574
+ <bitbake-devel@lists.openembedded.org>; Fri, 12 Dec 2025 11:31:14 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18575
 
 
---=-m/F/CUiYePdBI+iQ2hv6
+--=-6B20LW2a4vs3Ssofa0uu
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, 2025-12-11 at 15:25 +0100, Alexander Kanavin wrote:
 > From: Alexander Kanavin <alex@linutronix.de>
 >=20
-> Shift one of the inner blocks 8 spaces to the left, so that
-> everything is indented by 4 spaces.
+> The code was assuming that a source entry always contains
+> a git-remote property, and that is the only property that
+> should be replaced.
+>=20
+> With upcoming introduction of local sources (using 'local' as a
+> property as an alternative to the existing 'git-remote'
+> property) that is no longer true.
 >=20
 > Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 > ---
->  setup-schema/layers.schema.json | 72 ++++++++++++++++-----------------
->  1 file changed, 36 insertions(+), 36 deletions(-)
+>  bin/bitbake-setup | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >=20
-> diff --git a/setup-schema/layers.schema.json b/setup-schema/layers.schema=
-.json
-> index 144ea6d9f..9a0b4ed61 100644
-> --- a/setup-schema/layers.schema.json
-> +++ b/setup-schema/layers.schema.json
-> @@ -27,44 +27,44 @@
->                          "type": "boolean"
->                      },
->                      "git-remote": {
-> -                                "description": "A remote git source from=
- which to fetch",
-> +                        "description": "A remote git source from which t=
-o fetch",
-> +                        "type": "object",
-> +                        "additionalProperties": false,
-> +                        "required": [
-> +                            "rev"
-> +                        ],
-> +                        "properties": {
-> +                            "branch": {
-> +                                "description": "The git branch to fetch =
-(optional)",
-> +                                "type": "string"
-> +                            },
-> +                            "rev": {
-> +                                "description": "The git revision to chec=
-kout",
-> +                                "type": "string"
-> +                            },
-> +                            "describe": {
-> +                                "description": "The output of 'git descr=
-ibe' (human readable description of the revision using tags in revision his=
-tory).",
-> +                                "type": "string"
-> +                            },
-> +                            "remotes": {
-> +                                "description": "The dict of git remotes =
-to add to this repository",
->                                  "type": "object",
-> -                                "additionalProperties": false,
-> -                                "required": [
-> -                                    "rev"
-> -                                ],
-> -                                "properties": {
-> -                                    "branch": {
-> -                                        "description": "The git branch t=
-o fetch (optional)",
-> -                                        "type": "string"
-> -                                    },
-> -                                    "rev": {
-> -                                        "description": "The git revision=
- to checkout",
-> -                                        "type": "string"
-> -                                    },
-> -                                    "describe": {
-> -                                        "description": "The output of 'g=
-it describe' (human readable description of the revision using tags in revi=
-sion history).",
-> -                                        "type": "string"
-> -                                    },
-> -                                    "remotes": {
-> -                                        "description": "The dict of git =
-remotes to add to this repository",
-> -                                        "type": "object",
-> -                                        "patternProperties": { ".*" : {
-> -                                            "description": "A git remote=
-",
-> -                                            "type": "object",
-> -                                            "addtionalProperties": false=
-,
-> -                                            "required": [
-> -                                                "uri"
-> -                                            ],
-> -                                            "properties": {
-> -                                                "uri": {
-> -                                                    "description": "The =
-URI for the remote, using git URL syntax",
-> -                                                    "type": "string"
-> -                                                }
-> -                                            }
-> -                                        }}
-> +                                "patternProperties": { ".*" : {
-> +                                    "description": "A git remote",
-> +                                    "type": "object",
-> +                                    "addtionalProperties": false,
-> +                                    "required": [
-> +                                        "uri"
-> +                                    ],
-> +                                    "properties": {
-> +                                        "uri": {
-> +                                            "description": "The URI for =
-the remote, using git URL syntax",
-> +                                            "type": "string"
-> +                                        }
->                                      }
-> -                                }
-> +                                }}
-> +                            }
-> +                        }
->                      }
->                  }
->              }
+> diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+> index b1d751899..8d4e9769a 100755
+> --- a/bin/bitbake-setup
+> +++ b/bin/bitbake-setup
+> @@ -323,7 +323,7 @@ def update_build(config, confdir, setupdir, layerdir,=
+ d, update_bb_conf=3D"prompt"
+>      layer_overrides =3D config["source-overrides"]["sources"]
+>      for k,v in layer_overrides.items():
+>          if k in layer_config:
+> -            layer_config[k]["git-remote"] =3D v["git-remote"]
+> +            layer_config[k] =3D v
+>      sources_fixed_revisions =3D checkout_layers(layer_config, layerdir, =
+d)
+>      bitbake_config =3D config["bitbake-config"]
+>      thisdir =3D os.path.dirname(config["path"]) if config["type"] =3D=3D=
+ 'local' else None
 
 Reviewed-by: Paul Barker <paul@pbarker.dev>
 
@@ -252,18 +173,17 @@ Best regards,
 Paul Barker
 
 
-
---=-m/F/CUiYePdBI+iQ2hv6
+--=-6B20LW2a4vs3Ssofa0uu
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 
 -----BEGIN PGP SIGNATURE-----
 
-iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaTv8xxEccGF1bEBwYmFy
-a2VyLmRldgAKCRCrY1Tsnbr0bi4BAQDptPXxYwO9AF+/Nc2AmrVnT3+tQQQcgL4+
-kbQLTtSHOgD/dYYrvZqzREj/MQt+0fbQgGPJ/kzEWoGIxJ9cwlfAVAk=
-=+Y7L
+iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaTv8/BEccGF1bEBwYmFy
+a2VyLmRldgAKCRCrY1Tsnbr0bmUZAQDdYjHPNw7JWVb6Cj6hjk9IxVUqxvvSV6sm
+DEnnUOuzCwEArRHJcc5suQoXG8xWpzmubJ24TI4RiRB7Y6DiGhiwQAM=
+=+MNY
 -----END PGP SIGNATURE-----
 
---=-m/F/CUiYePdBI+iQ2hv6--
+--=-6B20LW2a4vs3Ssofa0uu--
 
