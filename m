@@ -2,65 +2,65 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB5AD5B16F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4A8D5B175
 	for <webhook@archiver.kernel.org>; Mon, 15 Dec 2025 12:51:45 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.47587.1765803101210799227
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.47792.1765803098828779092
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 15 Dec 2025 04:51:41 -0800
+ Mon, 15 Dec 2025 04:51:39 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=OhgshmjK;
- spf=pass (domain: gmail.com, ip: 209.85.128.41, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-47789cd2083so17695545e9.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 15 Dec 2025 04:51:40 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=MtCzcyk3;
+ spf=pass (domain: gmail.com, ip: 209.85.221.51, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-42e2d02a3c9so2313343f8f.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 15 Dec 2025 04:51:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765803099; x=1766407899; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1765803097; x=1766407897; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pOA7jdb7VMS1AP03P6V6D3fejhob3fBniwiRuAG9NOY=;
-        b=OhgshmjKZ6BNEwRKLxu+5XBQFmGGgZK2DHXncWwOl3byPmZvcTDqxeZtD8XTaaPDUO
-         /+pZCwWO0IYojobTcsW3HWJZAqBxgfczYh553WMSAyXndDixIyai93VNbA/fh7NC7jpF
-         eKVTW/m0HkOH+Cjdbjy4a53szGFYdEPHOluMp8/51EK6CYslJ1o6uOdvMfzhgA3ita19
-         JmgVWNOmseYVqFz57kNBav95OjWkj1Lx395LzCZg/NGbkR5NZU0EcQuvwZisPAGkPKv7
-         Kr2k9qpgK2YWdOx4fAcSYSUy+A9TMDyY8l3Kc36pifrl/1/wBq0z23UeTFhBhAPgG9Jc
-         hkTg==
+        bh=6w+MKpO1iFq+PRm1njJInaGAotTj17Qh3O4toYc/64w=;
+        b=MtCzcyk35c2kMjiVqF7sNoi7LhMAZo4VNn7Yh2H70MYbfXDusd5XbsjCeFIUjZlFvl
+         fKPGKHHXDFRrkLQ/j7t6sP9GWM9oG8wt+1l5kQ2kYxCBUlsy8uF0qpN5TN7tcjYUB4Fh
+         LYw12VQhqXMXV0TR9/f2FcxsM0SEPKxzvq68IyMfdImCZo1jLrVGYnlUJbwSmHWZ7G1D
+         knnUPlA33DGULI0JRCoF+AZWPe+FjlRsjl/FfTE3rrjRoNRokHY8Yx9bCGudG8oQjYHU
+         YtvlA1du5JTX8+Q/Dw4D2z0+JMq+pL+EEm4reC2o1LyDWwXcK9GCTs7d6SHv5cCoditP
+         T7gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765803100; x=1766407900;
+        d=1e100.net; s=20230601; t=1765803097; x=1766407897;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=pOA7jdb7VMS1AP03P6V6D3fejhob3fBniwiRuAG9NOY=;
-        b=uR+9fQWUShNKQTfJfJj86uQACNNQO/Jjd+PqCFr7KBKSy4kH0oaL9WWcQxPisp6ZxL
-         mf/zu4rU+ukUAILvAlnto5PX0KcqHkTKr4nSZdK4oUcJZqtPROwqTks90I02IynXZqdT
-         Tm/fj9W3Ipu5kKm6X9jVgHEEY0KFWbLxR9rTHWmGzFFwHVKXB44it3CFPokPqabfoQLS
-         FZ4FhjmIjaw1RT4mi2Aa9ilJe6ek1Gf2AWnY8lE8IRom0is0XayJUSaS4el4NmrRT/Dp
-         QYezoMo209tIVBg4hS69PuDoHshIhRSqX3GMqNmPWoK0bEPy8HCCKcXtxaByFKrOxjeb
-         hYFg==
-X-Gm-Message-State: AOJu0YzVtoojyCNNWmpWLxY9bAB50jWL9RuTM1luhpRSljQAPzXJxqAR
-	9Hikklri+PTqoNbwhND8wDdmzg5lY5aFXAFKyry9uw5QjdI8oXraEyFm2J9WEQ==
-X-Gm-Gg: AY/fxX66+tbsl6ujJ/8YsFf6FjhULf9DqNrcd0Zq5SJm81qOkIase3KQaAisvJ9ihkS
-	W6D0ybb+5jq2aAe/UdutSZQXGlJmwTl3EIXUfKcFzULHqmAWdJCLAL9kZpXzYjGM5a3hRs+PtOb
-	nqLKcrZh565G/KTRtZSQuqQ8SHl1GH7CESG1xHJXy9oyaxnfYJYgIZEuCVHKag49tQrv+bz7ahT
-	PoXjuRzGP13y/CMJlVFM+98bFsfmG1/hH79JeRgWzExULbeiCxHnJL46g21BJVD/X7/CjLdjyUc
-	XNCmP2o3H6ix+bB7g5hRJKqBcK4qEH3dTYsn7kP2/FkiJ4xZV86hP8wQAJIvEjd+RMzOxX6CVkk
-	8xwho0Ibxjah5VwbVUlunoFMJUnMIKwKMFiTJ15NRLAGyzveykndTRb1pN72feOm8+lKZkkrun4
-	921E8zCQCpwM2LDVsfsew6XH4pfZJcMAcspRY4bS8H6TH6GdQ=
-X-Google-Smtp-Source: AGHT+IGonLle4z6DnY7qyxaEQbNHKY3JWqoQ7nDlTsVRjZx3hWFdpNTQlX15sC3Av9rvuOgvBAe4Yw==
-X-Received: by 2002:a05:600c:c172:b0:46e:37a7:48d1 with SMTP id 5b1f17b1804b1-47a8f915c34mr98254365e9.34.1765803099254;
-        Mon, 15 Dec 2025 04:51:39 -0800 (PST)
+        bh=6w+MKpO1iFq+PRm1njJInaGAotTj17Qh3O4toYc/64w=;
+        b=YBc/HqHwav2gpTI9/ChvEdOpDDQ0wEjG5IeCQkHGTgaBkompMMA35OYHJyc9JSHYpd
+         oaGBDgSq4oaf/HOtS7+c1qCueLMZinv44p9OEg9prizAvWvHRSWCw1+HXp2SgGX2YrYl
+         V50p/+Zm72B/Eemy3uSkW/baffm03Ndmx2sWZYPK2zdkRwmoVtN+9QdMIdmTvsSEXj3A
+         7CT6BgefeXV/b78Phy/d8+FzSuE/hoEGjfcpa1zsdFOjQroMrPiWDZIaf1aP2YbktymU
+         m/7bIJpn8NrzJIC7mTI3oE1MzQryA9xLG+3kebWEofTM7GCxV8uouHFSa0SLiGf9P2cr
+         KUAQ==
+X-Gm-Message-State: AOJu0YyA70tFq74C+zqOo7w/x/PwG+DP1j17kbcY0UkZVZIqAdq8YaSB
+	g5XxDmZVKc2XZqs0vA79DabQTeh5aZkZI//jmiHVrNpSvA2SYuD35d046JZ6zw==
+X-Gm-Gg: AY/fxX7Hlf/fqxXaboZnzmsiopnTwc77vs7m56LI9mzNBRUrUg7iPUGrj32ic8IF/W3
+	KXaS8SkJ3eplH1wlX0hOBtDL+skU8lqbuSgyDjXZ2PxBX+hYJtW7N6pC2s3Lb4ZXxgfqzBTkSCR
+	v2hbBVLriKEfJ2koP6FO411sJbZ+MZsljftNLS2q20crZVnYZZDtv+xGv+AarkTpOrd0vOEXGbS
+	9h4pRzcdLxDnpfHqYYuXC6o/rO/mkTMLlLfDOFHf9NZZC+k5PfW8v/OGXC76GlxS4Bbg7JfqqeE
+	rAfOmIkDt7spgkjzoA7i+EGPdyS311lc4jwmMaQwZY/pTSQiyCXBJ5JRnycD60EKKzr64azvDvr
+	aC5iHkQgIjaLrOA3vsu8xhiwvBjfqDX2spA3JNK+wY9QBzk9tLJ0+8xrX/rtBVWEIxiT29O/D1X
+	xNaOJKVX8JqBk7bclt8JCTvx33zC8PAEESxY7F426ilMr+/RY=
+X-Google-Smtp-Source: AGHT+IHABIRq9rzApx+Bz3Jf0VtqNqtVeyLUm0lOuIDF92p635elYSxmL3Lx2NwmG1O9wDqsb4I5yw==
+X-Received: by 2002:a05:6000:420e:b0:430:f241:a11f with SMTP id ffacd0b85a97d-430f241a3cfmr8690821f8f.30.1765803097092;
+        Mon, 15 Dec 2025 04:51:37 -0800 (PST)
 Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42fa8a09fbesm29303342f8f.0.2025.12.15.04.51.38
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42fa8a09fbesm29303342f8f.0.2025.12.15.04.51.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Dec 2025 04:51:38 -0800 (PST)
+        Mon, 15 Dec 2025 04:51:36 -0800 (PST)
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: paul@pbarker.dev,
 	antonin.godard@bootlin.com,
 	Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH v2 5/5] bitbake-setup: adjust the decription of git-remote properties to correctly describe remotes
-Date: Mon, 15 Dec 2025 13:51:27 +0100
-Message-ID: <20251215125127.2660714-5-alex.kanavin@gmail.com>
+Subject: [PATCH v2 2/5] bitbake-setup: override complete source entries, not just the git-remote properties
+Date: Mon, 15 Dec 2025 13:51:24 +0100
+Message-ID: <20251215125127.2660714-2-alex.kanavin@gmail.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20251215125127.2660714-1-alex.kanavin@gmail.com>
 References: <20251215125127.2660714-1-alex.kanavin@gmail.com>
@@ -70,34 +70,36 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Mon, 15 Dec 2025 12:51:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18595
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18592
 
 From: Alexander Kanavin <alex@linutronix.de>
 
-Specifically, 'uri' property is not on the top level (for now), but
-inside a remote, which itself is in a 'remotes' dictionary.
+The code was assuming that a source entry always contains
+a git-remote property, and that is the only property that
+should be replaced.
+
+With upcoming introduction of local sources (using 'local' as a
+property as an alternative to the existing 'git-remote'
+property) that is no longer true.
 
 Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- .../bitbake-user-manual-environment-setup.rst                | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ bin/bitbake-setup | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-index 35aa43f9b..ec1bdeecd 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-@@ -702,8 +702,9 @@ They contain the following sections:
- 
-       ``git-remote`` entries are specified with the following options:
- 
--      -  ``uri`` (**required**): a URI that follows the git URI syntax.
--         See https://git-scm.com/docs/git-clone#_git_urls for more information.
-+      -  ``remotes`` (**required**): a dictionary of git remote names, each containing a ``uri`` property
-+         with a URI that follows the git URI syntax. See https://git-scm.com/docs/git-clone#_git_urls
-+         and https://git-scm.com/docs/git-remote for more information.
- 
-       -  ``rev`` (**required**): the revision to checkout. Can be the name of the
-          branch to checkout on the latest revision of the specified ``branch``.
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index b1d751899..8d4e9769a 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -323,7 +323,7 @@ def update_build(config, confdir, setupdir, layerdir, d, update_bb_conf="prompt"
+     layer_overrides = config["source-overrides"]["sources"]
+     for k,v in layer_overrides.items():
+         if k in layer_config:
+-            layer_config[k]["git-remote"] = v["git-remote"]
++            layer_config[k] = v
+     sources_fixed_revisions = checkout_layers(layer_config, layerdir, d)
+     bitbake_config = config["bitbake-config"]
+     thisdir = os.path.dirname(config["path"]) if config["type"] == 'local' else None
 -- 
 2.47.3
 
