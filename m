@@ -1,221 +1,101 @@
-Return-Path: <corentin.guillevic@smile.fr>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C40CED609BE
-	for <webhook@archiver.kernel.org>; Tue, 16 Dec 2025 16:12:06 +0000 (UTC)
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.26691.1765901517052601853
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3488D609DE
+	for <webhook@archiver.kernel.org>; Tue, 16 Dec 2025 19:18:19 +0000 (UTC)
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.2093.1765912697994922829
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 16 Dec 2025 08:11:57 -0800
+ Tue, 16 Dec 2025 11:18:18 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=XUNHXWfv;
- spf=pass (domain: smile.fr, ip: 209.85.208.53, mailfrom: corentin.guillevic@smile.fr)
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6492e7925d2so5712693a12.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 16 Dec 2025 08:11:56 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=DxwSNcdP;
+ spf=pass (domain: gmail.com, ip: 209.85.219.42, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-88a346c284fso28739806d6.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 16 Dec 2025 11:18:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1765901515; x=1766506315; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1zj0bjkDQByIrZ5mdsfaTwWI6+H91UH18PFrL5q5evw=;
-        b=XUNHXWfvej83IIYlUbxhuY6OjEsBzgOiXb42lnibJ9CLLxKzwqFXU3ywWxIixEB3y9
-         Yb5hg41DHk4CmuqcRt7ol6cswIHQ0Pl0ARPXl6mMhdB8sJflTJflyDQGIQ6wKP61Kwqs
-         51n9XlC0NFDmfX6e7vcDxVJ7z9OASust6niKw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765901515; x=1766506315;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1765912697; x=1766517497; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1zj0bjkDQByIrZ5mdsfaTwWI6+H91UH18PFrL5q5evw=;
-        b=HwDavF4nsmM2si+4cXu7ulw2VWmEstLi1qr/8JOIemMOOcY45x6WeerDOSLzDmmysF
-         /eeOmnqYmihUY0zZBd16doHD7+3IXS0oEQ46DS+NZ2tR04PW3NwXtH2S9RS5AbYyGpsO
-         H94iNX6jJEfYwhVbdH+mnH0EQs62uj5cWyi1GIPvIH26Tzhv3CoV2xy0ziY+8ZUsFvxq
-         5XUreYLLTYvWDhNXziLO2s3m7XloqeQmjl2tGQSsJCG2RU4Tena6LakXZzadTCuBPSAJ
-         +Ud19cCfJfxi3+7+Pu+k5asiadOZJy6iIlGYyNkeSxeYT8oPXG+NZN41jF31yCiYJSEY
-         x/gQ==
-X-Gm-Message-State: AOJu0YwoGopJ+HNtCNsh4xOWhn/iOvZFmlZkk8/ZIJ3ZLmjysUR9ux38
-	jgL5D3zVdpkbLr1DZbyIGnvdyMCvWOOAC6q1MYWHUX32SaS1aBxg8Y39t/ZUuBE2OfE3wA0+REJ
-	rm85HZWtChTwQu0p1xlfJf/3LQGptkcU9aZ6DfB8adg==
-X-Gm-Gg: AY/fxX4oijelezAJ+x03TROJdBgbT0FKkjRctNL5go0W/UyFVx/TXVJJ/1pPGmCQJez
-	E76Jnsa3dmjFFestNi/iuQ99TzmWaaESMyVeFVo5LtSNAsG10TnCzaNlIempYp6x7vh+NNjaBQJ
-	fYgGQEbnalsy8wqm0G+ccpnxy8OepEwLgt6BmZUYZppELwYkF3o8LQKaBYbCSrtazFBPwvstqN0
-	t8Nc37+NPpNShNq7n3HIKmbPzzBfJDijKxjWDcoV73EP1ABgaRf83qTNn6IP6wC6PiCjL7HR3gh
-	ZpdIIwx7U/MgNw1fN6ccJBlf0A==
-X-Google-Smtp-Source: AGHT+IG71zAf+RwSwgVrC9jaE93NCMdVQ3mfOSkQjnhOIHlKly1HkWFnUa0Aw/lFBhcCHne2g0zay3sHDyKP8iQKX0A=
-X-Received: by 2002:a05:6402:3551:b0:649:81f6:c35b with SMTP id
- 4fb4d7f45d1cf-6499b118103mr15259465a12.7.1765901515336; Tue, 16 Dec 2025
- 08:11:55 -0800 (PST)
+        bh=G6k4ogg30Y+OgVr7I3TqKBeq9JfxXwqEOuY7LkQNxkA=;
+        b=DxwSNcdP5/kCZ0JVyFj9doVQ9FqSzKCQl3YzP8F0lQ/jTTFS2DsojeAUfFh8p6OYPC
+         xd0b8UapERYwkabHtDgwn4PkeKSrxssqjbMqeUoQ8cXsCsaA2eHscCQgEwzOOMzkhXuW
+         20tUTyIcJ6yo0QpBPEo/WBE5eFwJjB0WKaFX9RgfUt1EnsSVG46hlVNQUF55/nilHaDQ
+         1T5LfTctjKmtwW1zeFARNidvRY/Q4qfLy0fyocwYdJd75kGptb2g7nqbnL7kEeUM1+xX
+         IhVUQyQXtWUbrta5l9CyosIsviGEHQn4Vg9atI10ortciBgjxpbqUkKw23TFmugnNGU0
+         j50A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765912697; x=1766517497;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=G6k4ogg30Y+OgVr7I3TqKBeq9JfxXwqEOuY7LkQNxkA=;
+        b=iB1T+7+LoVpLwtYByWq6YW2VuC1e8sDZpCylRPy0y3zB1Hq4BYXGo9vT6bi6I7zUkz
+         wlLLOeZVmvPWwAU6TlnMg2pihbS6xyK6Rf7KDTA/MRK6YDQmHcm4x06dGB2MiIUEUmqy
+         nxhhyNaJFInIiftLDTB6awbu6RMC7l6UiMus4JJnG5hg/UfoFAYiLyfr8RW/biKSmMcT
+         icqcXG2T7CVpdqK046bNnTcP3KTKjmOjBHeGouvQ6tX03+ZyrD6xNHFMYDfQE19rswij
+         UfDJQ6chgfpNCu6GLsgP0f12dN6IwaxstyCl+XN0lIALyGhwRx0vlEYPeceq5CQYDA0/
+         PeBg==
+X-Gm-Message-State: AOJu0Yyf8TPBeuBtEIn2HY1rBcKmc+yumEN9CrzXDIJoeyHYWbvySX6g
+	9OTBTRsxDyZsmXM3bfN3+Fz3wmXlKz7pvehE2Ayo4t4ulQogkSO4iLxdVELOZv2JQxxeG54wk6Z
+	8ooECkUKNGFy8/OgJmb9d5QHGmanCMxg0NA==
+X-Gm-Gg: AY/fxX5U6mOwg0cX0CYBXLqlW26NEXRKsZNNm/P2ykTBwXTy8vg+mpLpOu9BIRfLKrg
+	YG0NwGbFxAJRDP88z0P1WADapG7gRO4TK2GN+F9guIT2HPxnq+w/TbgMQ6z9qALEbNTDMf5Ow32
+	qQwTFvYKx7Bn6PcrGF3qRF+QhupHBG/5X0tF1Bb3cAAFFD8ZKptf1TOa6xHKlvu671Nk3OBgE+B
+	wKbMgKzDsmqFzJHZrrfDITu92/w0pLhufO+zVHT9WrkNszotB/9gQSXySZU6mLm7GpBhIsn2q5a
+	x5USwJCUIRshBOIC9q0J61nxXqLnaQ==
+X-Google-Smtp-Source: AGHT+IF+EegmUU0vY6Uh/sY1rcWwRzkd0jOfvIHgbxJm57Q7ns47oR8ahnhi8VHyUiNqworTzCSaeJk4f/Lb0UHsdW4=
+X-Received: by 2002:a05:6214:2c10:b0:880:5a06:3a64 with SMTP id
+ 6a1803df08f44-8887e169dcbmr263382826d6.66.1765912696865; Tue, 16 Dec 2025
+ 11:18:16 -0800 (PST)
 MIME-Version: 1.0
-References: <20251215103256.902711-1-corentin.guillevic@smile.fr> <CANNYZj_4XFj2Sgv1Q4_=BwDBCAtCpj5X=XfQ2=CuiJjoqOrA4w@mail.gmail.com>
-In-Reply-To: <CANNYZj_4XFj2Sgv1Q4_=BwDBCAtCpj5X=XfQ2=CuiJjoqOrA4w@mail.gmail.com>
-From: Corentin GUILLEVIC <corentin.guillevic@smile.fr>
-Date: Tue, 16 Dec 2025 17:11:44 +0100
-X-Gm-Features: AQt7F2osqfTEthVxrmwl_A0VFjGS3rwJfLHEB4Udpnd-z-RqHQXw3oVnbSUL6Yw
-Message-ID: <CAMFqQmq8G-JLzZ6zfkrXThSnCYQq16jjLY0spUhOrHv+=xA0DQ@mail.gmail.com>
+References: <20251215103256.902711-1-corentin.guillevic@smile.fr>
+ <CANNYZj_4XFj2Sgv1Q4_=BwDBCAtCpj5X=XfQ2=CuiJjoqOrA4w@mail.gmail.com> <CAMFqQmq8G-JLzZ6zfkrXThSnCYQq16jjLY0spUhOrHv+=xA0DQ@mail.gmail.com>
+In-Reply-To: <CAMFqQmq8G-JLzZ6zfkrXThSnCYQq16jjLY0spUhOrHv+=xA0DQ@mail.gmail.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Tue, 16 Dec 2025 20:18:05 +0100
+X-Gm-Features: AQt7F2oDZHzss8vCxD17d9p3pQkG7TzlF5Ik_WYa2uq4jR5oWZaNjqZMrg1PHd0
+Message-ID: <CANNYZj8yH_5zB7rR=Xu-gb5B7XJe65yaeW9m4E23zz9f1vBegg@mail.gmail.com>
 Subject: Re: [bitbake-devel] [PATCH v2 1/3] bitbake-setup: add inline URI
-To: Alexander Kanavin <alex.kanavin@gmail.com>
+To: Corentin GUILLEVIC <corentin.guillevic@smile.fr>
 Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="00000000000087bb84064613fc37"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 16 Dec 2025 16:12:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18601
+ <bitbake-devel@lists.openembedded.org>; Tue, 16 Dec 2025 19:18:19 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18602
 
---00000000000087bb84064613fc37
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Tue, 16 Dec 2025 at 17:11, Corentin GUILLEVIC
+<corentin.guillevic@smile.fr> wrote:
+> However, what is it expected of the registered remote(s) once the source =
+has been cloned? When using several remotes for one source, I discovered th=
+at they are all cloned but only one is registered in the final layer (in th=
+e layers/ directory). For example, we can add another remote to the bitbake=
+ layer in the 'oe-nodistro-master' configuration, but this results in only =
+one remote in bitbake-builds/oe-nodistro-master/layers/bitbake/.
 
-Thank you for your review, I have taken it into account.
+Hello Corentin,
 
-However, what is it expected of the registered remote(s) once the source
-has been cloned? When using several remotes for one source, I discovered
-that they are all cloned but only one is registered in the final layer (in
-the layers/ directory). For example, we can add another remote to the
-bitbake layer in the 'oe-nodistro-master' configuration, but this results
-in only one remote in bitbake-builds/oe-nodistro-master/layers/bitbake/.
+bitbake-setup is using bitbake's git fetcher to perform fetch/unpack:
 
-How to reproduce:
-# In-place edition, add a new remote called "origin-2"
-$ jq --indent 4 '.sources.bitbake."git-remote".remotes +=3D {"origin-2":
-{"uri": "https://github.com/distro-core-curated-mirrors/bitbake/"}}' \
-  default-registry/configurations/oe-nodistro-master.conf.json | sponge
-default-registry/configurations/oe-nodistro-master.conf.json
-# Clear previous work
-$ rm -rf bitbake-builds/oe-nodistro-master/
-# Choose 'oe-nodistro-master'
-$ ./bin/bitbake-setup init
-$ git -C bitbake-builds/oe-nodistro-master/layers/bitbake/ remote -v
-origin  https://github.com/distro-core-curated-mirrors/bitbake/ (fetch)
-origin  https://github.com/distro-core-curated-mirrors/bitbake/ (push)
+        fetcher =3D bb.fetch.Fetch([src_uri], d)
+        fetcher.download()
+        fetcher.unpack(dir)
 
-What should print the command "git remote -v"?
+ and I think that doesn't have support for multiple remotes that
+unpack into the same directory.
 
-Corentin
+It isn't entirely clear how to map multiple remotes (when specified in
+json) into bb-setup's behavior, but I think the current behavior at
+least makes sure they're all cloned into DL_DIR, so DL_DIR has a local
+copy for all of them. We could probably add some after-the fact 'git
+remote add <some-remote> ...' operation to the directory that gets
+unpacked by the fetcher, but that's a separate issue, and probably a
+fairly marginal use case. I have a hunch almost everyone will put just
+one remote per source into the json config.
 
-Le lun. 15 d=C3=A9c. 2025 =C3=A0 12:01, Alexander Kanavin <alex.kanavin@gma=
-il.com> a
-=C3=A9crit :
-
-> On Mon, 15 Dec 2025 at 11:33, Corentin Guillevic via
-> lists.openembedded.org
-> <corentin.guillevic=3Dsmile.fr@lists.openembedded.org> wrote:
-> > +        if 'remotes' in r_remote:
-> > +            if not 'bitbake-setup-uri' in r_remote['remotes']:
-> > +                r_name =3D 'bitbake-setup-uri'
-> > +            else:
-> > +                idx =3D 1
-> > +                while 'bitbake-setup-uri_{}'.format(idx) in
-> r_remote['remotes']:
-> > +                    idx +=3D 1
-> > +                r_name =3D 'bitbake-setup-uri_{}'.format(idx)
-> > +        else:
-> > +            r_name =3D 'bitbake-setup-uri'
-> > +
-> > +        remotes.update({r_name: {'uri': r_remote['uri']}})
->
-> Thanks for continuing to work on this.
->
-> I think we can avoid adding the above code, see below.
->
-> > -        remotes =3D r_remote['remotes']
-> > +
-> > +        remotes =3D _get_remotes(r_remote)
-> >
-> >          for remote in remotes:
-> >              prot,host,path,user,pswd,params =3D
-> bb.fetch.decodeurl(remotes[remote]["uri"])
->
-> The names of the remotes are not actually used anywhere for anything.
-> So the _get_remotes() can return a flat list of URIs instead, and then
-> it doesn't have to do complicated name calculations like implemented
-> above. Then this loop can iterate directly on URIs in the list.
->
-> Alex
->
-
---00000000000087bb84064613fc37
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div>Thank you for your =
-review, I have taken it into account.</div><div><br></div><div>However, wha=
-t is it expected of the registered remote(s) once the source has been clone=
-d? When using several remotes for one source,=C2=A0I discovered that=C2=A0t=
-hey are all cloned but only one is registered in the final layer (in the la=
-yers/ directory). For example, we can add another remote to the bitbake lay=
-er in the &#39;oe-nodistro-master&#39; configuration, but this results in o=
-nly one remote in=C2=A0bitbake-builds/oe-nodistro-master/layers/bitbake/.</=
-div><div><br></div><div>How to reproduce:</div><div># In-place edition, add=
- a new remote called &quot;origin-2&quot;</div><div>$ jq --indent 4 &#39;.s=
-ources.bitbake.&quot;git-remote&quot;.remotes +=3D {&quot;origin-2&quot;: {=
-&quot;uri&quot;: &quot;<a href=3D"https://github.com/distro-core-curated-mi=
-rrors/bitbake/" target=3D"_blank">https://github.com/distro-core-curated-mi=
-rrors/bitbake/</a>&quot;}}&#39; \<br>=C2=A0 default-registry/configurations=
-/oe-nodistro-master.conf.json | sponge default-registry/configurations/oe-n=
-odistro-master.conf.json<br></div><div># Clear previous work</div><div>$ rm=
- -rf bitbake-builds/oe-nodistro-master/</div><div># Choose &#39;oe-nodistro=
--master&#39;</div><div>$ ./bin/bitbake-setup init<br>$ git -C bitbake-build=
-s/oe-nodistro-master/layers/bitbake/ remote -v<br>origin =C2=A0<a href=3D"h=
-ttps://github.com/distro-core-curated-mirrors/bitbake/" target=3D"_blank">h=
-ttps://github.com/distro-core-curated-mirrors/bitbake/</a> (fetch)<br>origi=
-n =C2=A0<a href=3D"https://github.com/distro-core-curated-mirrors/bitbake/"=
- target=3D"_blank">https://github.com/distro-core-curated-mirrors/bitbake/<=
-/a> (push)</div><div><br></div><div>What should print the command &quot;git=
- remote -v&quot;?</div><div><br></div><div>Corentin</div></div><br><div cla=
-ss=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">Le=C2=A0lun. 15 d=
-=C3=A9c. 2025 =C3=A0=C2=A012:01, Alexander Kanavin &lt;<a href=3D"mailto:al=
-ex.kanavin@gmail.com" target=3D"_blank">alex.kanavin@gmail.com</a>&gt; a =
-=C3=A9crit=C2=A0:<br></div><blockquote class=3D"gmail_quote" style=3D"margi=
-n:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex=
-">On Mon, 15 Dec 2025 at 11:33, Corentin Guillevic via<br>
-<a href=3D"http://lists.openembedded.org" rel=3D"noreferrer" target=3D"_bla=
-nk">lists.openembedded.org</a><br>
-&lt;corentin.guillevic=3D<a href=3D"mailto:smile.fr@lists.openembedded.org"=
- target=3D"_blank">smile.fr@lists.openembedded.org</a>&gt; wrote:<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 if &#39;remotes&#39; in r_remote:<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if not &#39;bitbake-setup-u=
-ri&#39; in r_remote[&#39;remotes&#39;]:<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 r_name =3D &#=
-39;bitbake-setup-uri&#39;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 else:<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 idx =3D 1<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 while &#39;bi=
-tbake-setup-uri_{}&#39;.format(idx) in r_remote[&#39;remotes&#39;]:<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- idx +=3D 1<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 r_name =3D &#=
-39;bitbake-setup-uri_{}&#39;.format(idx)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 else:<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 r_name =3D &#39;bitbake-set=
-up-uri&#39;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 remotes.update({r_name: {&#39;uri&#39;: r=
-_remote[&#39;uri&#39;]}})<br>
-<br>
-Thanks for continuing to work on this.<br>
-<br>
-I think we can avoid adding the above code, see below.<br>
-<br>
-&gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 remotes =3D r_remote[&#39;remotes&#39;]<b=
-r>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 remotes =3D _get_remotes(r_remote)<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 for remote in remotes:<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 prot,host,path,user,ps=
-wd,params =3D bb.fetch.decodeurl(remotes[remote][&quot;uri&quot;])<br>
-<br>
-The names of the remotes are not actually used anywhere for anything.<br>
-So the _get_remotes() can return a flat list of URIs instead, and then<br>
-it doesn&#39;t have to do complicated name calculations like implemented<br=
->
-above. Then this loop can iterate directly on URIs in the list.<br>
-<br>
-Alex<br>
-</blockquote></div>
-</div>
-</div>
-
---00000000000087bb84064613fc37--
+Alex
 
