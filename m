@@ -1,178 +1,98 @@
-Return-Path: <corentin.guillevic@smile.fr>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A748D65530
-	for <webhook@archiver.kernel.org>; Wed, 17 Dec 2025 10:15:45 +0000 (UTC)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.11098.1765966537907304112
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B25D6554F
+	for <webhook@archiver.kernel.org>; Wed, 17 Dec 2025 11:08:26 +0000 (UTC)
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.11901.1765969700071040450
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 17 Dec 2025 02:15:38 -0800
+ Wed, 17 Dec 2025 03:08:20 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=Fm4RBL7f;
- spf=pass (domain: smile.fr, ip: 209.85.218.48, mailfrom: corentin.guillevic@smile.fr)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b713c7096f9so927506066b.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 17 Dec 2025 02:15:37 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=i5UMuwsv;
+ spf=pass (domain: gmail.com, ip: 209.85.222.177, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-8ba0d6c68a8so612570385a.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 17 Dec 2025 03:08:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1765966536; x=1766571336; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1765969699; x=1766574499; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7sht0x3JduNvm3b9x0fkKEzZ4FnEJuFNgq+dzsbM1LI=;
-        b=Fm4RBL7fA8pAftkKhEEjoVeS0Zltw/TxdTYjgTUjbfq0sO1Njk+8CkMWCIXs09cEEe
-         +nWOKE0ulfxjJll6dU3oCpOMEGDmmOe0R38TmGLFRuzZlPTkiYF3ab6hnqghqJ6vQdRb
-         ly5ZvGwBIRy3ypltqnYB9PmtwSNt78UTGlEgU=
+        bh=q47Ao8ZknizFRT7n1MstPCYktxo/5yw2up4KJbNDqEE=;
+        b=i5UMuwsvDHlxGj47KY7LlLOR9A99GfGls6+dljpD6bBFByqQ9Y5wVmH3EGQ6yWaPki
+         x76f8J4SIbV/vmIWFQI95Fg25EI5Zkxrdh+vJUEhyDaZA9gzAX8/0zl9BnARmSfURlvG
+         hKV22mfy/Oy1GuejQNujiglINeI2jLTlOHY3EznB46sBc//2+7TTJ+5PPx8wu3fe7gZt
+         rn+oNUtj8nQGi8y5NcgfTKRcshgBCd4gxJGqV7KbL1lGmle2KcWcrr8Lphxcp7WMNJON
+         Q2DOaHg6WRh4Bt8v2Qv3fEaVReLpbnuU0Ag++aeXE9QC6bq/XVp6DaJ1qXiLOW85Vpcq
+         BBiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765966536; x=1766571336;
+        d=1e100.net; s=20230601; t=1765969699; x=1766574499;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7sht0x3JduNvm3b9x0fkKEzZ4FnEJuFNgq+dzsbM1LI=;
-        b=xRhTt1P3/T+X7XfFmQg+lneFePnmAbNgeMYWIzkZHgpcZvRgpQvubv8F8YZ2rUa+Mo
-         okeZHBithcXdDuFW16kgqovoa+bGFs/S5nAyLRMzWzsjWJCmR6TuJ+eRRvWKvfez/yBC
-         RejecxjOKtnhIIz2F2Rp+XKov9L7t1bTvjsjPptbGN68vREkrsQHDOV60YKQc9MgDQVj
-         v3FkEQMdovMIroiqNXX1sDfMSR/13T3KYaRDsd7F/26ikiI7Em7T8w3MzlaGITTT1z85
-         aERad/0NR3ex9ftjGlK+wbabhwdKghrQgLQYsecIJOvmj05FrynZuXqVUkV0uoWvvHKr
-         u/FA==
-X-Gm-Message-State: AOJu0Yy/YN98mR+XvmhAubt1JioffruqNnj8VCaxv0ed77ZKV0f8yMXx
-	ACubZ7htMwVciwZYWF+mSY00dlPTzPXqVELoDMQTp1Eccc+YzXd02k0tfnyGM51Tj8yVYfryJTv
-	lOS67yGrO8Lu/IL6PHoTVuJyXa1ac9URDCTmTZKPm+g==
-X-Gm-Gg: AY/fxX7J8sl8qWaBUUT+75iIeV0WO1Cg6y5zYNjSZjiT5Wfl/+dnGdBMOGdwlWwztRX
-	BnLffWxPS3aNrnYidDiE6ruIpdqg7lkDjevRofHBkyxg06go+ccstO2fN5lPfqv2Vezrs7273pw
-	Z++CxJe9hw/WOijw0LBoW3SNOCqN4mOuMElhQTyKQ+KOj7CysjqTfuoKhfdyRtsXf72GFRue7Ab
-	++BAqCzmCypDO53skX0KwEZboiQ7FRSiu+HG4xS5Oi7cwxiL+NHwT7cQuW45eCPQNDnVeoSi9lp
-	O7Xmlr4iStoXfwApycgI72Q+bw==
-X-Google-Smtp-Source: AGHT+IE0QUaApC2rbtp+gtxodfJdDomyFxfKt2ZqqGXDpWIt95J0rTooj8I9tzf1GHCs+YA8N94eQiKQIjHsSElliLA=
-X-Received: by 2002:a17:906:7956:b0:b76:ece6:2ca1 with SMTP id
- a640c23a62f3a-b7d23a9c7ffmr1954361366b.57.1765966536091; Wed, 17 Dec 2025
- 02:15:36 -0800 (PST)
+        bh=q47Ao8ZknizFRT7n1MstPCYktxo/5yw2up4KJbNDqEE=;
+        b=j/wDtU3/3JViOkOq2d/hwITXNL/yCpRMlplJfJn14sEQklrjGpAaQMDFJnEYEsYbdX
+         w0pGc39hi7UFa0LSUfDFTyQunuTli0jCqHO8Yg/Yhz3fuCbRcv4DKz4jp7dDJ1PQsSM8
+         irC496FltxL7GWzJOrFxj8QCvLLjGvBeihR75yvOGOoAop4E/iaVZnGIEcYKy5u//QmK
+         YJoEbYy/GNiMlFOpa+g+5YoDEuM89vykSJut+n2fI3wKhUZlPVQFx2ppOXGmHovnM4dD
+         BE7Eq7hqdE6vSifc+g5uPAySZA+iKW4kcFWHNldVRWCpT1vEG3YgqabkxH5pqIkbU/u1
+         YC3Q==
+X-Gm-Message-State: AOJu0Yz7CgGdWay2+PJdVkrn6J19hsuK3Xoxv9jpoDfmfuzZkn2iTGTL
+	wOi9Z4mYz6kCwyWYeid27j2pz7emop0LT4miA+b7/nJXujTKZdmnEEY+Ne1lJbmbs2xetTgSBY6
+	fxMtz04Xjq94IQRDbEo2uMO0Kuqep+DtS+Q==
+X-Gm-Gg: AY/fxX5WPIFaLCPXyYq5GCXtpBdHaUt/cEKlDgzPi/VZX+8V49m+Yx85BlQkXOv+B/O
+	Ibbth6BVjjM9Rw5DXuhuMbjkvdO58pMEDdu3UhGpMdDV4tKdlgxBHRphJIkZzNmosP8Ii9+cyJv
+	FFGjDYlXgBeQ940eNSwPPwoxFM6xYcTkNPVA2SklydoQ467fKaEtDSNF5FUVBIkBFWFDETUrY+A
+	67KvUsTv2Zso2DEdA1RF/ww/UzMlhdPdUtdODXo18g0B8fMev+LqcOK63auSuM29M/FpmDVP39C
+	epkYP+HAQ3+ojTtfJXbfzHRwraM0hw==
+X-Google-Smtp-Source: AGHT+IGTZE28CBjR54mibKshccW/aOEXbBDaMxluIXUYHDYymceR+phN3wnujY/pB7fto9o2jkQVuNf+0ZxiBPt438M=
+X-Received: by 2002:ad4:5f45:0:b0:88a:306b:8204 with SMTP id
+ 6a1803df08f44-88a306b8295mr174581696d6.40.1765969698936; Wed, 17 Dec 2025
+ 03:08:18 -0800 (PST)
 MIME-Version: 1.0
-References: <20251215103256.902711-1-corentin.guillevic@smile.fr>
- <CANNYZj_4XFj2Sgv1Q4_=BwDBCAtCpj5X=XfQ2=CuiJjoqOrA4w@mail.gmail.com>
- <CAMFqQmq8G-JLzZ6zfkrXThSnCYQq16jjLY0spUhOrHv+=xA0DQ@mail.gmail.com> <CANNYZj8yH_5zB7rR=Xu-gb5B7XJe65yaeW9m4E23zz9f1vBegg@mail.gmail.com>
-In-Reply-To: <CANNYZj8yH_5zB7rR=Xu-gb5B7XJe65yaeW9m4E23zz9f1vBegg@mail.gmail.com>
-From: Corentin GUILLEVIC <corentin.guillevic@smile.fr>
-Date: Wed, 17 Dec 2025 11:15:25 +0100
-X-Gm-Features: AQt7F2qZUiL1kXXh_JLa_SxI_Z_hA3U8Mq1XuFo6uv6T6WGnac7Pz5M8asyqpFs
-Message-ID: <CAMFqQmrBJEwNPGN9zFGiW1+qgFJqRAFK5eqVr7ThWLZ9U=00Uw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH v2 1/3] bitbake-setup: add inline URI
-To: Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="00000000000011be39064623206e"
+References: <20251217-bbsetup-logger-v1-0-6bc7d02c11c6@bootlin.com>
+In-Reply-To: <20251217-bbsetup-logger-v1-0-6bc7d02c11c6@bootlin.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Wed, 17 Dec 2025 12:08:08 +0100
+X-Gm-Features: AQt7F2oFpCkjYh3jvKmv8Fa6sTZprNxIQ2oqxQ2sgmsrEvWZ959sOvY9lshGDAk
+Message-ID: <CANNYZj9VbZ1hNHuD4fVgpQqDy5V=zy7umoFwkfQB6+TyKJPN7w@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 0/2] bitbake-setup: convert print calls to logger
+To: antonin.godard@bootlin.com
+Cc: bitbake-devel@lists.openembedded.org, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 17 Dec 2025 10:15:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18606
+ <bitbake-devel@lists.openembedded.org>; Wed, 17 Dec 2025 11:08:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18607
 
---00000000000011be39064623206e
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Thanks, this lgtm.
 
-> It isn't entirely clear how to map multiple remotes (when specified in
-> json) into bb-setup's behavior, but I think the current behavior at
-> least makes sure they're all cloned into DL_DIR, so DL_DIR has a local
-> copy for all of them.
-Yes I confirm that all URIs are cloned into DL_DIR. Currently, this is the
-last treated URI that will always be used in the final layer, as every git
-unpack prunes any previous destination directory.
+Alex
 
-Corentin
-
-Le mar. 16 d=C3=A9c. 2025 =C3=A0 20:18, Alexander Kanavin <alex.kanavin@gma=
-il.com> a
-=C3=A9crit :
-
-> On Tue, 16 Dec 2025 at 17:11, Corentin GUILLEVIC
-> <corentin.guillevic@smile.fr> wrote:
-> > However, what is it expected of the registered remote(s) once the sourc=
-e
-> has been cloned? When using several remotes for one source, I discovered
-> that they are all cloned but only one is registered in the final layer (i=
-n
-> the layers/ directory). For example, we can add another remote to the
-> bitbake layer in the 'oe-nodistro-master' configuration, but this results
-> in only one remote in bitbake-builds/oe-nodistro-master/layers/bitbake/.
+On Wed, 17 Dec 2025 at 09:48, Antonin Godard via
+lists.openembedded.org
+<antonin.godard=bootlin.com@lists.openembedded.org> wrote:
 >
-> Hello Corentin,
+> Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+> ---
+> Antonin Godard (2):
+>       bitbake-setup: remove logging stream configuration
+>       bitbake-setup: convert print calls to logger
 >
-> bitbake-setup is using bitbake's git fetcher to perform fetch/unpack:
+>  bin/bitbake-setup | 155 +++++++++++++++++++++++++++---------------------------
+>  1 file changed, 78 insertions(+), 77 deletions(-)
+> ---
+> base-commit: 0dde1a3ff852be057be40d17f233ecca19e7b389
+> change-id: 20251217-bbsetup-logger-8b0984046ca0
 >
->         fetcher =3D bb.fetch.Fetch([src_uri], d)
->         fetcher.download()
->         fetcher.unpack(dir)
 >
->  and I think that doesn't have support for multiple remotes that
-> unpack into the same directory.
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#18603): https://lists.openembedded.org/g/bitbake-devel/message/18603
+> Mute This Topic: https://lists.openembedded.org/mt/116823858/1686489
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alex.kanavin@gmail.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
 >
-> It isn't entirely clear how to map multiple remotes (when specified in
-> json) into bb-setup's behavior, but I think the current behavior at
-> least makes sure they're all cloned into DL_DIR, so DL_DIR has a local
-> copy for all of them. We could probably add some after-the fact 'git
-> remote add <some-remote> ...' operation to the directory that gets
-> unpacked by the fetcher, but that's a separate issue, and probably a
-> fairly marginal use case. I have a hunch almost everyone will put just
-> one remote per source into the json config.
->
-> Alex
->
-
---00000000000011be39064623206e
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">&gt;=C2=A0It isn&#39;t entirely clear how to map multiple =
-remotes (when specified in<br>&gt; json) into bb-setup&#39;s behavior, but =
-I think the current behavior at<br>&gt; least makes sure they&#39;re all cl=
-oned into DL_DIR, so DL_DIR has a local<br><div>&gt; copy for all of them.<=
-/div><div>Yes I confirm that all URIs are cloned into DL_DIR. Currently, th=
-is is the last treated URI that will=C2=A0always=C2=A0be used=C2=A0in the f=
-inal layer, as every git unpack prunes any previous destination directory.<=
-/div><div><br></div><div>Corentin</div></div><br><div class=3D"gmail_quote =
-gmail_quote_container"><div dir=3D"ltr" class=3D"gmail_attr">Le=C2=A0mar. 1=
-6 d=C3=A9c. 2025 =C3=A0=C2=A020:18, Alexander Kanavin &lt;<a href=3D"mailto=
-:alex.kanavin@gmail.com">alex.kanavin@gmail.com</a>&gt; a =C3=A9crit=C2=A0:=
-<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8=
-ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">On Tue, 16 Dec =
-2025 at 17:11, Corentin GUILLEVIC<br>
-&lt;<a href=3D"mailto:corentin.guillevic@smile.fr" target=3D"_blank">corent=
-in.guillevic@smile.fr</a>&gt; wrote:<br>
-&gt; However, what is it expected of the registered remote(s) once the sour=
-ce has been cloned? When using several remotes for one source, I discovered=
- that they are all cloned but only one is registered in the final layer (in=
- the layers/ directory). For example, we can add another remote to the bitb=
-ake layer in the &#39;oe-nodistro-master&#39; configuration, but this resul=
-ts in only one remote in bitbake-builds/oe-nodistro-master/layers/bitbake/.=
-<br>
-<br>
-Hello Corentin,<br>
-<br>
-bitbake-setup is using bitbake&#39;s git fetcher to perform fetch/unpack:<b=
-r>
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher =3D bb.fetch.Fetch([src_uri], d)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher.download()<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher.unpack(dir)<br>
-<br>
-=C2=A0and I think that doesn&#39;t have support for multiple remotes that<b=
-r>
-unpack into the same directory.<br>
-<br>
-It isn&#39;t entirely clear how to map multiple remotes (when specified in<=
-br>
-json) into bb-setup&#39;s behavior, but I think the current behavior at<br>
-least makes sure they&#39;re all cloned into DL_DIR, so DL_DIR has a local<=
-br>
-copy for all of them. We could probably add some after-the fact &#39;git<br=
->
-remote add &lt;some-remote&gt; ...&#39; operation to the directory that get=
-s<br>
-unpacked by the fetcher, but that&#39;s a separate issue, and probably a<br=
->
-fairly marginal use case. I have a hunch almost everyone will put just<br>
-one remote per source into the json config.<br>
-<br>
-Alex<br>
-</blockquote></div>
-
---00000000000011be39064623206e--
 
