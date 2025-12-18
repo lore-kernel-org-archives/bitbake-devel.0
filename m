@@ -2,79 +2,77 @@ Return-Path: <paul@pbarker.dev>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FCBD70DF2
-	for <webhook@archiver.kernel.org>; Thu, 18 Dec 2025 19:39:43 +0000 (UTC)
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.849.1766086773057575794
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60925D711A1
+	for <webhook@archiver.kernel.org>; Thu, 18 Dec 2025 19:49:33 +0000 (UTC)
+Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.1147.1766087363478482885
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 18 Dec 2025 11:39:33 -0800
+ Thu, 18 Dec 2025 11:49:23 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=rkvWfTh7;
- dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=ld/0EeRf;
- spf=pass (domain: pbarker.dev, ip: 103.168.172.159, mailfrom: paul@pbarker.dev)
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 32F0B14001D5;
-	Thu, 18 Dec 2025 14:39:32 -0500 (EST)
+ dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=hhavOx/V;
+ dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=GjS+VRwb;
+ spf=pass (domain: pbarker.dev, ip: 103.168.172.150, mailfrom: paul@pbarker.dev)
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+	by mailfout.phl.internal (Postfix) with ESMTP id A3E35EC0011;
+	Thu, 18 Dec 2025 14:49:22 -0500 (EST)
 Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Thu, 18 Dec 2025 14:39:32 -0500
+  by phl-compute-06.internal (MEProxy); Thu, 18 Dec 2025 14:49:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
 	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
 	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1766086772; x=1766173172; bh=44hLIHlMdD
-	vZPgRjX6P3ZRCLYRc7Gg/5eqDAWfy2EDI=; b=rkvWfTh7NIFlvYhQ4VAYCxXvO2
-	bZNOHzU9uLZ5HQu8s1+kQ2BQX+rQtmdSdARU2Kg8vdgyXFipWzRxJoW7wKeD9CbB
-	dNEDA+htU+/+rYX7qq2lRe54lHexKugY/+/8zD29mKHsYeYA/W95gBs9Sy833iBB
-	XclixtV3swUCgJ8Lh3VlybEk6toxNBIyL6I+mxLlbSXaqsmcNRLCAe/lEXAkAbhv
-	w2ZvxaJL/Qo71hrUxlxE3fY1LFFwJGP6LhKkS9ktos0s5eEnXP5mQPiAvqzvQWv8
-	fzJxCq11AO0bkvNfs5kRTf3Ph2BdXs1FKzrBywev/XqSNeJjvvgxLeNeqWiA==
+	:subject:to:to; s=fm3; t=1766087362; x=1766173762; bh=HYNCgpsPQw
+	W5YzfneYsJuCPs4XvAnvOxiO5ayS/rngU=; b=hhavOx/Vn4IQ2NvLfZZKudnpWO
+	CO0CPBJL5JhUdEELet8GIxe3MAtN8SZBmOKtVS8ftuJLFrz81hDkTfT5oIf0v8sC
+	pIYfyzCQ+ODiSUNectrjYi/eOzxVPDVpkhCvg3fK/jCnV9FySWohAvAl3BkoXu67
+	tGwiJSMxYoiZOO7bs60+fJdyYyUM5bS5EbqKHfSSXgIW6YAy0STJxIewNwZ8aW7q
+	bttDcTJeAXqgRE++47gtPlwb3MdzBraKgDO0cYB3Te4pT551XPI7IgmtwuCYEmoK
+	L9PbDzWZ/9qVBaHSAIyLZnSu7RV8KL4N/nrCkALYkznHYusORlhk03xV1S8w==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-type:content-type:date:date
 	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
 	:message-id:mime-version:references:reply-to:subject:subject:to
 	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1766086772; x=1766173172; bh=44hLIHlMdDvZPgRjX6P3ZRCLYRc7Gg/5eqD
-	AWfy2EDI=; b=ld/0EeRf/LXv0zhF3ySpXlQQrkTIhDr911CvQ4LYJOtDg7EMx6E
-	X8QneL5O8ruMukybnlLUGnc9Hib0StqpGrXCvBDfIOMm00WNd8tvYeaYXdtM9p2S
-	pAotAx50g1FI5JfU3tWNQmZrpYXV/Ia2yUlCDAq5IIA7QcU5GG0d/9f4Jg7ms0+6
-	XfhEUCFCjemYADiUpuBWmwjh8kTOtow2Ti9OWT6r19J2E7JzxQkoEFMraFdeaffe
-	n9vPqpEfshld1ZFIbZ7/hSscr+z8QtO6CO3IflvXqyWJPqv9f6oNE8SgaLtN0+53
-	cNU9hMEigB5TIX7qeGz5ex74PDFHnap0kWA==
-X-ME-Sender: <xms:c1hEaV_RIO9e2GaQ7-EqQ1HJSTuPP0lxTzuxtdb7rEXfUQLHAdEjJQ>
-    <xme:c1hEafsePIvms29WdP_1HQF1yzxcsxD3of6Ae51DRlECcCalJ_BY_zbNgdad-u1q9
-    FIAyHMLt00exAUYT8ZJPbQDeEQFDg_GQitJComg_7V0awSSYNf_Rw>
-X-ME-Received: <xmr:c1hEaQqpG7oLT4jxK5j-iiBJkg_r9T-jzd0IdGDrbxWj7wehR3y92g1QlqVqR34hzs4gqGepecs1e0lpFTFJ8rlimP2qGKA3xWxlBYkBLJMk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdegiedvkecutefuodetggdotefrod
+	1766087362; x=1766173762; bh=HYNCgpsPQwW5YzfneYsJuCPs4XvAnvOxiO5
+	ayS/rngU=; b=GjS+VRwb0t9XFCBUwEKBSCFkOhoTKwz9CrcQud1E4m6tfV9ohO6
+	W7ZNrSnONPpH0wdjFsC4wzR9BkbHr5RAzKpH+Y6c7DK/DKAk9coqbJ/D1q6HvW7J
+	EWIbmvYVY0iwR2PtWTisw86t51k+RGKYNZpUTY7KbqGvElbeQp7TyBO8yz45w+pn
+	fcjwG6owzYOkNx4y1f8oAGWGhvW+CbeNdCS4OfEUh527NK4NoLdIq252SsDvbvf1
+	xEI+aIgorg/nsoiI2RU/X6CztzNgC0i8ESVpD20sINxj5cTtlMTXiN5JEXDBdrlq
+	4kd7aLWYoOKH5ZO2N4hHkmR8alo37BPUByg==
+X-ME-Sender: <xms:wlpEaSoxRdrXfvr1-PrgMzFmPt4uEs2peOFFOHKPJlPGnJ1oegvX6Q>
+    <xme:wlpEaYGiK4oh7__8u0VM70ckQIz5PDZKY4lGutRvZJU3EyYhENORnBt6hC5sDFFXU
+    vl8j6P8UD3VW02UrYT9Qy88gIoC7alVzBR9wC-veGcl1k3CerGjWNY>
+X-ME-Received: <xmr:wlpEaUkf_umt9lr_FDotsKop72E4Hgyb66ot3iDeAlhxDIw1jIEY2R9Cu36BXxyXJ6bdASKlz6iy4qhc-HsWcme7TpacDAGkhErlYGwvihgj>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdegieeftdcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
     hrpefkuffhvfevffgjfhgtfgggsehgtderredtreejnecuhfhrohhmpefrrghulhcuuegr
     rhhkvghruceophgruhhlsehpsggrrhhkvghrrdguvghvqeenucggtffrrghtthgvrhhnpe
-    etieejkeehleejgeeigfdtteelgffglefgjedtjefhffeijefgveduudefffeiueenucff
-    ohhmrghinhepghhithdqshgtmhdrtghomhdphihotghtohhprhhojhgvtghtrdhorhhgne
-    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepphgruhhl
-    sehpsggrrhhkvghrrdguvghvpdhnsggprhgtphhtthhopedvpdhmohguvgepshhmthhpoh
-    huthdprhgtphhtthhopehoshgrmhgrrdgrsgguvghlkhgruggvrhesghhmrghilhdrtgho
-    mhdprhgtphhtthhopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmh
-    gsvgguuggvugdrohhrgh
-X-ME-Proxy: <xmx:c1hEaUk-uMCeil6TWE1rhBYbEMpVX_b6bxM4dI-buqmfu3Trrs5EAw>
-    <xmx:c1hEacyYejkngecDV3TmkVHN7jTq0BXamG1hETWXRK3qIEQZP2m-Og>
-    <xmx:c1hEaUlCIgCq45B_CIbeY5t4RQF07Yxr9BXYWmilDMMV8fs8XySwMw>
-    <xmx:c1hEadeBBBtaCZ2FPQhs4J9nQfiMoU4xPbB8vWi_wTQE8cxTfCw6QA>
-    <xmx:dFhEabPmChCbnZL7MShmAgVMVRjYlKDQdurfEaOyQxEy2ea-zZEOMQdL>
+    eugeeiudeifeekgffhveeggffffedtkeegudeujefhhfeigfetvedtuedutdehfeenucff
+    ohhmrghinhepohhpvghnvghmsggvugguvggurdhorhhgpdhsqhhlihhtvgdrohhrghenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehprghulhes
+    phgsrghrkhgvrhdruggvvhdpnhgspghrtghpthhtohepfedpmhhouggvpehsmhhtphhouh
+    htpdhrtghpthhtoheprghlvgigrdhkrghnrghvihhnsehgmhgrihhlrdgtohhmpdhrtghp
+    thhtohepsghithgsrghkvgdquggvvhgvlheslhhishhtshdrohhpvghnvghmsggvugguvg
+    gurdhorhhgpdhrtghpthhtoheprghlvgigsehlihhnuhhtrhhonhhigidruggv
+X-ME-Proxy: <xmx:wlpEablrZf8lej_uUGWUcwdoPwEMIPSoAzIqWMDdCcfe-EP5oaJL-A>
+    <xmx:wlpEaVuP5AP7ci9mz9WtTKED2dq_0YJkLwsv4qOlLbBsJ71a3LoA9A>
+    <xmx:wlpEaelMkh3E4fP-KnPEvLz8w6wiix4Fb5yN7AQ2s9drLjf4m0zjeg>
+    <xmx:wlpEaQsfA2vUcZ5o2p84WnodbKpXGwZuVHcMNnT0ycFmg9jqjIPK7Q>
+    <xmx:wlpEaaY_yBJ6U0NaIErIZ1McaF3s4I-8nUObmDA58q2X5X9V-m9REuRb>
 Feedback-ID: i51494658:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 18 Dec 2025 14:39:31 -0500 (EST)
-Message-ID: <c84892212ed26bf08b1e7447391188ea5793a8a3.camel@pbarker.dev>
-Subject: Re: [PATCH 2/4] bitbake-layers: layerindex-fetch: Fix branch
- detection method
+ 18 Dec 2025 14:49:21 -0500 (EST)
+Message-ID: <62e07a47b15a48f0e7d80f2dcb88fd37a52bd4c4.camel@pbarker.dev>
+Subject: Re: [bitbake-devel] [RFC PATCH 2/2] bitbake-setup: share sstate by
+ default between builds
 From: Paul Barker <paul@pbarker.dev>
-To: Osama Abdelkader <osama.abdelkader@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Date: Thu, 18 Dec 2025 19:39:28 +0000
-In-Reply-To: <aUCM_Y388wesrBe-@osama>
-References: <20251212190806.32476-1-osama.abdelkader@gmail.com>
-	 <20251212190806.32476-3-osama.abdelkader@gmail.com>
-	 <016117db60e8c28186fd3ac5d078f9a0de727682.camel@pbarker.dev>
-	 <aUCM_Y388wesrBe-@osama>
+To: alex.kanavin@gmail.com, bitbake-devel@lists.openembedded.org
+Cc: Alexander Kanavin <alex@linutronix.de>
+Date: Thu, 18 Dec 2025 19:49:19 +0000
+In-Reply-To: <20251215145418.2680311-2-alex.kanavin@gmail.com>
+References: <20251215145418.2680311-1-alex.kanavin@gmail.com>
+	 <20251215145418.2680311-2-alex.kanavin@gmail.com>
 Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  keydata=mQINBGC756sBEADXL6cawsZRrDvICz9Y1SG0/lW1me4xpq36obh7a0IGAzp3ywNRb/4MO
  DTqP4+DD0cIFuDY41/N17g0sNlp8z+/k/IIDmNPtYQOTVmAkrkdDU4BP8dD3Cp1PUw6nrbInfujAJ
@@ -120,81 +118,95 @@ Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  OqpPZn7Ij1ga5IAOHNRi5MbyRFROYOeaOj7sz7S7roHQwdP3Q1qTwTOv30hlOSe6uz4PTBiEIKBQH
  ep0k17xg==
 Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-yWs0Y9qDcsokr5xkfUHQ"
+	protocol="application/pgp-signature"; boundary="=-RC+vztnLMsNZbn/lCdQO"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 18 Dec 2025 19:39:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18609
+ <bitbake-devel@lists.openembedded.org>; Thu, 18 Dec 2025 19:49:33 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18610
 
 
---=-yWs0Y9qDcsokr5xkfUHQ
+--=-RC+vztnLMsNZbn/lCdQO
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2025-12-15 at 23:34 +0100, Osama Abdelkader wrote:
-> On Mon, Dec 15, 2025 at 11:54:20AM +0000, Paul Barker wrote:
-> > On Fri, 2025-12-12 at 20:08 +0100, Osama Abdelkader wrote:
-> > > Replace fragile parsing of 'git branch' output with the more reliable
-> > > 'git rev-parse --abbrev-ref HEAD' command to get the current branch n=
-ame.
-> > > This avoids parsing issues and is the recommended way to get the curr=
-ent branch name.
-> >=20
-> > Do you have a source for this recommendation? I thought the preferred
-> > command was `git branch --show-current` as that just prints the branch
-> > name with no extra formatting.
+On Mon, 2025-12-15 at 15:54 +0100, Alexander Kanavin via
+lists.openembedded.org wrote:
+> From: Alexander Kanavin <alex@linutronix.de>
 >=20
-> Git commands are divided into two groups:
+> Nowadays sharing sstate must also include sharing the hash equivalency
+> information and thus, managing a hash equivalency server. There are
+> two ways to do it:
 >=20
-> Porcelain - High level commands intended to be used at the command line
-> Plumbing - Low level commands intended for use in scripts
+> - starting/stopping the server outside the bitbake invocations, and
+> guaranteeing that it's available when bitbake is invoked.
 >=20
-> git rev-parse is a "plumbing" command, meaning its output format is guara=
-nteed to be stable across different versions of Git.
-> It reliably outputs only the raw branch name to standard output.
+> - using bitbake's built-in start/stop code which launches a server
+> before a build starts and stops it when a build is finished; essentially
+> this is a private server, using a database private to a build directory
+> (by default).
 >=20
-> git branch is a "porcelain" command, intended for human users. While git =
-branch --show-current currently behaves helpfully,
-> the formatting of porcelain commands is theoretically subject to change i=
-n future Git releases, which could break your build
-> scripts unexpectedly.
+> I couldn't come up with a good way to do the first option in bitbake-setu=
+p:
+> it needs to be invisible to users, they should not have to run special co=
+mmands
+> and they should not wonder why there is a mysterious background process.
+> It's not impossible to auto-start a shared server, but that will quickly
+> run into synchronization issues: if one server is being started, another
+> should not be started at the same time. If one server is shutting down
+> (e.g. after an inactivity timeout), another starting server should wait
+> until it frees the socket, and block all bitbake invocations on that.
+> Memory resident bitbake does this in lib/bb/server/process.py with a lot =
+of
+> complexity, and I don't think it should be added to the hash server as we=
+ll.
 >=20
-> https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain
-> https://git-scm.com/docs/git-rev-parse
+> On the other hand, hash equivalency database is sqlite-driven, and sqlite
+> documentation reassures that sharing it between different simultaneous
+> processes is okay: nothing will get lost or corrupted: https://sqlite.org=
+/faq.html#q5
+>=20
+> I've confirmed this by running simultaneous builds that way: nothing
+> unusual happened, and sstate was shared as it's supposed to.
+>=20
+> There's a new setting that turns off this behavior for situations
+> where the server and sstate are managed externally.
 
-Hi Osama,
+To capture the concerns discussed on the patch review call this morning,
+since Christmas & New Year are about to happen and we may all forget
+things otherwise...
 
-Thanks for the additional context! We discussed this on the patch review
-call today.
+The sqlite faq you linked (https://sqlite.org/faq.html#q5) says:
 
-`git rev-parse --abbrev-ref` is definitely an improvement over calling
-`git branch`, but we have still seen some issues with this command in
-other contexts on the autobuilder. The best command to use seems to be
-`git name-rev --name-only` [1].
+  But use caution: this locking mechanism might not work correctly if
+  the database file is kept on an NFS filesystem. This is because
+  fcntl() file locking is broken on many NFS implementations. You should
+  avoid putting SQLite database files on NFS if multiple processes might
+  try to access the file at the same time.
 
-[1]: https://git.yoctoproject.org/yocto-autobuilder-helper/commit/?id=3D1e8=
-0c19f62169c536e44f99fdcdf9f1e84c65d99
+We do promote the sharing of the sstate directory over NFS as safe, so
+we should be very careful about placing the hashequiv db file in the
+sstate directory in light of the above.
 
-Best regards,
+Thanks,
 
 --=20
 Paul Barker
 
 
---=-yWs0Y9qDcsokr5xkfUHQ
+--=-RC+vztnLMsNZbn/lCdQO
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 
 -----BEGIN PGP SIGNATURE-----
 
-iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaURYcBEccGF1bEBwYmFy
-a2VyLmRldgAKCRCrY1Tsnbr0bvUHAQDHuLOitGD96osb1gm8CGZ3I4lMgzEAHWDT
-F0VDQQNVqAEA5VXKDl4pRutc6+9sxoktD+DvDoCU7osz2L6JBrBQRgs=
-=E8B0
+iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaURavxEccGF1bEBwYmFy
+a2VyLmRldgAKCRCrY1Tsnbr0bpViAQDfI6GVBEIocbSYLJfg0i07TbAclx2F/uoD
+T0ThS0BRyQD/Wuck/Xq829LR0K/2ot/DRWeljYgPZmqgAWmNbfGtow4=
+=tDEY
 -----END PGP SIGNATURE-----
 
---=-yWs0Y9qDcsokr5xkfUHQ--
+--=-RC+vztnLMsNZbn/lCdQO--
 
