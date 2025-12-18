@@ -1,575 +1,200 @@
-Return-Path: <oobitots@cisco.com>
+Return-Path: <paul@pbarker.dev>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3598D66B85
-	for <webhook@archiver.kernel.org>; Wed, 17 Dec 2025 18:24:38 +0000 (UTC)
-Received: from rcdn-iport-6.cisco.com (rcdn-iport-6.cisco.com [173.37.86.77])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.21978.1765995874290036323
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FCBD70DF2
+	for <webhook@archiver.kernel.org>; Thu, 18 Dec 2025 19:39:43 +0000 (UTC)
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.849.1766086773057575794
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 17 Dec 2025 10:24:34 -0800
+ Thu, 18 Dec 2025 11:39:33 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: message contains an insecure body length tag" header.i=@cisco.com header.s=iport01 header.b=CsFlV6CR;
- spf=pass (domain: cisco.com, ip: 173.37.86.77, mailfrom: oobitots@cisco.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=cisco.com; i=@cisco.com; l=16952; q=dns/txt;
-  s=iport01; t=1765995874; x=1767205474;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:mime-version;
-  bh=weNNGgnifdFE4EvSxJG0eob08kwKIHxyQitf3qF3eMQ=;
-  b=CsFlV6CR4eg6Ce9q5hJLabMNXmPpI0ZibALkYnk0nW17a/wie5gXlHjb
-   LIN525n7Os1qfFdkgDVQft1CLY70ANQ8uDsU32z2EXVIXiNj65bTm2ktO
-   ev+dJIdEjvTn2KzDGmGGndlQJk2bQtADaiEG795mKUox+Ph5roSXNXBzM
-   rW5rH1qrHRSZvS2mhJ2hXW3i2Oa8Zoqm5LiPtmzNgnpBHznsKIq+8y7Vz
-   7SJoBOgiD/qbilxqvghqNpfUAQ2qEDiqM8bmgSRbOp55MxrC5gRbZLrr8
-   QRMTwYJLONk21TVTNnD1Vyh8HzzYeEcXPnlpDMjyqg3Qid6CtN2Jj888R
-   A==;
-X-CSE-ConnectionGUID: OZ6CIokxQwyPPRvLc9+AEA==
-X-CSE-MsgGUID: tLIg83DpRkGhSgglDGUJuA==
-X-IPAS-Result: =?us-ascii?q?A0BEAAAM9EJp/4r/Ja1aHQEBAQEJARIBBQUBQCWBFwgBC?=
- =?us-ascii?q?wGBPDFSB30CgQ8SSYggA4RNX4h5A54agX8PAQEBDQIuAQIgBAEBhQcCjGkCJ?=
- =?us-ascii?q?jQJDgECBAEBAQEDAgMBAQEBAQEBAQEBAQsBAQUBAQECAQcFgQ4Thk8BDIZaA?=
- =?us-ascii?q?QEBAQMBEWIFEAIBCBEEAQEvJwobAggCBA4FCBqCYYIdFkADAQKlNwGBQAKKK?=
- =?us-ascii?q?3iBNIEB4CiBSwGFOoMXAQEqgTSCWYEehREnG4INgVeCaD6CYQKBYjyDV4IvB?=
- =?us-ascii?q?IIiehSGH5NcgUQiAyYzLAFVExcLBwWBJEIDKjQtIkwFLR2BIyAeFxNgVECDS?=
- =?us-ascii?q?RgGaA8GgREZSQICAgUCQDqBZgYDGSISAgMBAgI6VQuBdgICBIIYfoIKD4c+g?=
- =?us-ascii?q?QEFLoEfPAMLbT03FBsFBIE1BZM9XE6CKwh6CQoBKyCCV5JjCQFEjxBHgTWCI?=
- =?us-ascii?q?YpClRcKKIN0jB6NPYgyF4VbpRAumFgiixOYRoUaAgQCBAUCEAEBBoFoPCuBL?=
- =?us-ascii?q?nAVO4JnCUkZD5IhhWTCU3g8AgcLAQEDCZNnAQE?=
-IronPort-PHdr: A9a23:N9gCPBGHj2SX/uKxRERi5J1GfhMY04WdBeZdwpMjj7QLdbys4NG+e
- kfe/v5qylTOWNaT5/FFjr/Ourv7ESwb4JmHuWwfapEESRIfiMsXkgBhSM6IAEH2NrjrOgQxH
- d9JUxlu+HTTDA==
-IronPort-Data: A9a23:mMZi/6sDMM4GEQ3FMxGEK4sWwOfnVAlfMUV32f8akzHdYApBsoF/q
- tZmKTuFPPeKZjPwe9h2b4+0oRxUuJPRztNrHQFqqygzQ3tDgMeUXt7xwmUckM+xwmwvaGo9s
- q3yv/GZdJhcokf0/0nrav666yEgiclkf5KkYMbcICd9WAR4fykojBNnioYRj5Vh6TSDK1vlV
- eja/YuFYTdJ5xYuajhJsvja90sz1BjPkGpwUmIWNKgjUGD2zxH5PLpHTYmtIn3xRJVjH+LSb
- 47r0LGj82rFyAwmA9Wjn6yTWhVirmn6ZFXmZtJ+AsBOszAazsAA+v9T2Mk0NS+7vw60c+VZk
- 72hg3AfpTABZcUgkMxFO/VR/roX0aduoNcrKlDn2SCfItGvn3bEm51T4E8K0YIw3dQpKkBJ9
- uwhNyE1Viqdo+nng5uWY7w57igjBJGD0II3oHpsy3TdSP0hW52GG/yM7t5D1zB2jcdLdRrcT
- 5NGMnw0M1KaPkAJYwxHYH49tL/Aan3XdDpSqU6SubEf6GnIxws327/oWDbQUoDQFJoKwx/C/
- woq+UzlJjAVZIez0QCG3XKXieDLsQzGep87QejQGvlCxQf7KnYoIBcXSVGyovT8hkOgVtZ3L
- 00P5jFoqrA/8kGuRNTxUxC05nmesXYht8F4CeY27kSJj6HT+QvcXjFCRT9aY9tgv8gzLdA36
- mK0cxrSLWUHmJWeSGmW8fGfqjbaBMTfBTVqifMsJefd3+TenQ==
-IronPort-HdrOrdr: A9a23:+ToS/K4TVoEFHhq7eQPXwYiCI+orL9Y04lQ7vn2ZFiYlEfBwxv
- rPoB1E737JYW4qKQ8dcLC7VJVpQRvnhPhICPoqTMaftWjdySSVxe5ZnPHfKlHbaknDH6tmpN
- hdmstFeZPN5DpB/LvHCWCDer5KrqjkgcWVbKXlvgtQpGpRGthdBnJCe32m+zpNNXF77PQCZf
- 2hz/sCjQCNPV4QacO2DGQEWe/sm/3n/aiNXTc2QzQcxE2rlz2H1J7WeiL04v4ZaVxy6IZn1V
- KAvx3y562lvf3+4ATbzXXv45Nfn8ak4sdfBeSX4/JlagnEu0KNXsBMSreCtDc6rKWE81Axiu
- TBpB8mIoBa927RRGeouhHgsjOQkwrGqkWSi2Nws0GT5fARdwhKTPapQrgpNCcx3nBQ+e2UFp
- g7hl5x+aAnVS8o1x6Nl+QgHysa5XZc50BS0NL6SxdkINEjgHg7l/1FwKtYfa1wbh7S+cQpFv
- JjA9rb4+sTeVSGb2rBtm0q29C0WG8vdy32CHTql/blmwS+pkoJhHcw1YgahDMN5Zg9Q55L66
- DNNblpjqhHSosTYbhmDOkMTMOrAiiVKCi8fF66MBDiDuUKKnjNo5n47PE84/yrYoUByN83lI
- 7aWF1VuGYucwblCNGI3pdM7hfRKV/NEAjF24Vb/dx0q7f8TL3kPWmKT00vidKpp7EFDsjSS5
- +ISdtr6j/YXB3T8KpyrnrDssNpWAwjueUuy6IGZ24=
-X-Talos-CUID: 9a23:X/yrmmP1KTBFBO5Dfxs5328TGdAcbWzl9E3OB0TpSk9EYejA
-X-Talos-MUID: =?us-ascii?q?9a23=3AD5TpZQwWTfMYzU5lWYcfVUVVJrSaqLiKKU9dyrk?=
- =?us-ascii?q?egcqrNRd/NDOxowmVX6Zyfw=3D=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-Received: from rcdn-l-core-01.cisco.com ([173.37.255.138])
-  by rcdn-iport-6.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 17 Dec 2025 18:24:33 +0000
-Received: from alln-opgw-4.cisco.com (alln-opgw-4.cisco.com [173.37.147.252])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by rcdn-l-core-01.cisco.com (Postfix) with ESMTPS id 6376E180002BB
-	for <bitbake-devel@lists.openembedded.org>; Wed, 17 Dec 2025 18:24:33 +0000 (GMT)
-X-CSE-ConnectionGUID: FF6ynFZyTWiuZ5uAHEwpxw==
-X-CSE-MsgGUID: zM4XynvmSACiZjf/pEJ4yg==
-Authentication-Results: alln-opgw-4.cisco.com; dkim=pass (signature verified) header.i=@cisco.com
-X-IronPort-AV: E=Sophos;i="6.21,156,1763424000"; 
-   d="scan'208,217";a="60230770"
-Received: from mail-cy3pr08cu00100.outbound.protection.outlook.com (HELO CY3PR08CU001.outbound.protection.outlook.com) ([40.93.6.104])
-  by alln-opgw-4.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 17 Dec 2025 18:24:33 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BfoG7abHy3U1yfA4xE1OC7M/7CtM5n7BguiTZITNui6ouoM3UVRdBu0ZmSLp7pGMYIKO+ZQqXQGrCQ14U/kNaRfbkDpMuKWnvg/7rsEngC+2U6aU4LcZw5WTO3rBKotDDBL0cs1hP0jMbhOk1wypEceEo3kZ1XRS75gr2K7D9WuE9zXK0ZQ1fh9OFJS7UxysYd1dq3VWYDdFOJyp/ZsDNeONlDQ9OVdTo2ezGI9L4HeKOzRXE0eVTHrJX3pMFtLeHhnAwUCF7r80X3hD6Atg8Hy+gOoIHrqE2AoGcCGfuj3cC9StzguTQd/qscJqowZ+sISG2UQn5aV4Jjwk6kt/uQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=weNNGgnifdFE4EvSxJG0eob08kwKIHxyQitf3qF3eMQ=;
- b=tPRK2HuQfJ208/lPfq9sU4Tzmf89YwaT+9ki5fUR7ay0vGPCxOdhPI2HTQXqjUJzzNZQOSgDfeWfURBVsfGkuc1+RAApgGRaH4awdkll/ksw4TpYrAg3PQ6+D3EiBM7o8JsOfcMO7GblAYVIz8uvX4NgDUP1RfUH2UXGrTau35XUCNLL7SoWIB/8J/dCndXgJRSIyiGP1oPoTwmjVXZLBMdJY01Hw9cUYy3E2FpffkZBnhPQPU7+5PRQNHmknhHi1UUo8i9fIqIoOuAdDyldWgqHoFxogXnXYnaLXGRlzB395EBZHvGL9RUyuFr6GYl8/f1cwtoak3fHnM7CpLu9pQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cisco.com; dmarc=pass action=none header.from=cisco.com;
- dkim=pass header.d=cisco.com; arc=none
-Received: from PH7PR11MB6401.namprd11.prod.outlook.com (2603:10b6:510:1fb::12)
- by DM3PPFF2E67D388.namprd11.prod.outlook.com (2603:10b6:f:fc00::f60) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.7; Wed, 17 Dec
- 2025 18:24:31 +0000
-Received: from PH7PR11MB6401.namprd11.prod.outlook.com
- ([fe80::956a:249b:d135:b43e]) by PH7PR11MB6401.namprd11.prod.outlook.com
- ([fe80::956a:249b:d135:b43e%3]) with mapi id 15.20.9434.001; Wed, 17 Dec 2025
- 18:24:31 +0000
-From: "Oleksiy Obitotskyy -X (oobitots - GLOBALLOGIC INC at Cisco)"
-	<oobitots@cisco.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-CC: "Ruslan Bilovol (rbilovol)" <rbilovol@cisco.com>
-Subject: Fw: do_patch confused with URL value
-Thread-Topic: do_patch confused with URL value
-Thread-Index: AQHcb1sUlwK+s7A4DUeERElH/UjvKrUmJbLG
-Date: Wed, 17 Dec 2025 18:24:31 +0000
-Message-ID: 
- <PH7PR11MB64013779E8056343242A983CD7ABA@PH7PR11MB6401.namprd11.prod.outlook.com>
-References: 
- <PH7PR11MB64018740A35A908068C72F11D7ABA@PH7PR11MB6401.namprd11.prod.outlook.com>
-In-Reply-To: 
- <PH7PR11MB64018740A35A908068C72F11D7ABA@PH7PR11MB6401.namprd11.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR11MB6401:EE_|DM3PPFF2E67D388:EE_
-x-ms-office365-filtering-correlation-id: 733bc588-775a-4cf8-76e1-08de3d9985a1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230040|1800799024|366016|376014|8096899003|38070700021;
-x-microsoft-antispam-message-info: 
- =?iso-8859-1?Q?0Lyk2FTB313glCOxEBB3sFwPEblEjd+eF7BVZOqoIZx/lVcci3eZejqI1i?=
- =?iso-8859-1?Q?aviNJC5KvkYvmojx4WvYD1wBq7uKx6wxKQ+eRH5lNsUYmc539ddjAvpLmt?=
- =?iso-8859-1?Q?zdcrsTAGMB3XJqRWxfr90vazCQaqWfRdHYbZ9MWXvuUyq+WkycE150I5Mp?=
- =?iso-8859-1?Q?nGSynpRozHWKXooFpnKob1aJXpyFfHBL4YzQ/W3ztlzsLYJS0kw91pEMxB?=
- =?iso-8859-1?Q?tPeNSbA5x1v9lDmkcycORdk75K/jCQmoybfdKryeMJPDWDU+5ZOzvC3FVd?=
- =?iso-8859-1?Q?1Q+qjjHR/dMy4vpERh9mPJN3h0HHcdYQV5VxjIyfCpYcEW6Oxo59gtW0kR?=
- =?iso-8859-1?Q?E82p8yJYYvnN4++3qppOHVIG0VNU45PSRApLzVOgp5c93zO3b2sABxO+rN?=
- =?iso-8859-1?Q?lItLHR2tEyDQWTwyDKD+kTMsDedZL1AhpezyKrBcz9E22o8JutenhvHaS2?=
- =?iso-8859-1?Q?iehPL+TBHNDYKSCBjyZkS3luBzeiMxmrdW0FKSd0doLGmfdQDlWW4fHoPh?=
- =?iso-8859-1?Q?+OHnIoIxOEOdLei6+QTv49t0uJGD7Msq681wE8uRRtjaHM7kiJdVmYA3UV?=
- =?iso-8859-1?Q?uXK3yNxcqPQaXNzQb75aoVj+Z718zRzuDjNDfiq/CP3I3bcQ8pDNkQQgsk?=
- =?iso-8859-1?Q?wVEHp0ocePKZyeZf/RkTHREquqLY0h8Mdt4nt9CC0oZIsSeaeaXlShKP3x?=
- =?iso-8859-1?Q?CrMbFoOoiUkkQpfp+Ke3f3Sp1CFgx3I6Ggh8N4wR4OzDu2XxrDJZj0+EGi?=
- =?iso-8859-1?Q?xFcAd8ERKg0Izk4s8jhUkMdgIrMujPSw7rQUpAaphPEVv7/DPuZafiuBuY?=
- =?iso-8859-1?Q?m/zEFBru0i59Cb15aOtSyyOAoBBPzLcRzG4TUMksqkpPsRJJ+KfAvoIjM9?=
- =?iso-8859-1?Q?tBCKLK4l7NIxPlz9oAstEwbjaw73rQkABKMVWmeOJBxnMjkFFyhZOIPlA+?=
- =?iso-8859-1?Q?ZnruNLM4YUl5wv7MRgR6u/n8x00bFk8VL/CsSUForEzDcDwGGYVR4tVZhk?=
- =?iso-8859-1?Q?VsVnC4IkSoxej0KOAmgQtC9bnUaBihCUkAnMiXEYKYxRRV/aVGHhndg5FA?=
- =?iso-8859-1?Q?A0wRRrtSnioDaPZ8BVvc6ijlYxbXMBbbaVLQZA+xoFb7kQEBaAQU4rl5kv?=
- =?iso-8859-1?Q?bKU3pO6868/dggQWLJFoRUWadMBWE22rxGl/sDbPR/t0fss3FylGwNHlKZ?=
- =?iso-8859-1?Q?lUH1UKFRIKI4nUPm51Z/C/q83k434iWtP67MoIB/OpSTCQZN+n3HGStLBb?=
- =?iso-8859-1?Q?nuy60KFFnF7d5/h56KA8L6OeQuWVbbeinhA07UEiMhZtTBCM3thnB9JqYG?=
- =?iso-8859-1?Q?jPMd1smiWalKFbWbOAiJNdWDGIHxZ4xElaRgGKsUVubY3zaZhtWhm1xd/M?=
- =?iso-8859-1?Q?gOhHHJGvh2HAp3vBFCVkyFCfqdd+dEOPNTT06lZ7yh+ofgJx7dGCtx5UvR?=
- =?iso-8859-1?Q?+vb68+Z6VBgrd5TOGHMTKTKl0kuRcEj+VN+jWPBRzdOIZMUXFZ7pXu6xAN?=
- =?iso-8859-1?Q?3ThwMpbZ/LlCNV+QQdS9ZJfw4Zkjq/0eL2lJKIRzZCgSsVd1LfxedoOwZ0?=
- =?iso-8859-1?Q?9jYpPn42ZyV5aiiiFRWzkQpikt+9?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6401.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(8096899003)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?iso-8859-1?Q?I+5ckHfxRFcF3Eu4ZlJ8P9pDmFTQCyFw94K+Unvy33z92lYHBhWZv6Tpl0?=
- =?iso-8859-1?Q?I66ylWHadhOSlYYHGNbxBcz9FHERPryUmhfoz0A4YewR0LsmrH2Zv/J4TD?=
- =?iso-8859-1?Q?zNq0RhFZciLqmYOBSduuan7m0IrMcbfyil/qKiJ1m89gMe8pYKTmkqWXy2?=
- =?iso-8859-1?Q?6p9grLGM/yo351GV59iOgaToHFWaQu3WXz3dYI1ke6B9/yKOA3owXLX990?=
- =?iso-8859-1?Q?sooHZdTduXAK5hunMf0PqU7/JRSazp0LioIdh2NwscKEK0eL+WAIZ++FIb?=
- =?iso-8859-1?Q?c6cImOo84hTvcXA55iwVxbTW0akwEG10HWbYfcJWQ5upd9IpxsuSNIf8XH?=
- =?iso-8859-1?Q?bn4/8TEl6BNvZaEWUyfzX1QlY+47Nkp5j/Ta/3fZ8cg9qq7Bllu9Xtv1i0?=
- =?iso-8859-1?Q?gkZTskJl0jDV92hgEQ6EDNWGAqTtxC4Cw5zreW6UsqLlkOUcTRDmZ8PsIH?=
- =?iso-8859-1?Q?FWmF1p5UQEgWHD39MSX6E1gBNU0EK/wIsV2QaDMLRNLuCk+/UY6VhPIgfe?=
- =?iso-8859-1?Q?0RRfExgklnD3jCeBkffr2uS9n2PkOz28pJc9ZXLQKMn1XA7lXTnKHXoPsr?=
- =?iso-8859-1?Q?tUZqATUV1JTvxb9Sg2Fo6pMaA5uEMY5sqFSc3NfFJWW1t1r5NtAjTNsf8+?=
- =?iso-8859-1?Q?0tdnMUsEkPNLhTp27ywGMRnGPiRIYOrxGn3rsm+FIS44XjhO+p76IKWGnn?=
- =?iso-8859-1?Q?UTKQbMcR2P7P/k50naX5cP0NF9QCs5mX8+aDx97KQmNdYVn5uymnoWUzMq?=
- =?iso-8859-1?Q?ogeawf2kkVLvYJAcSpmrvYuUrebgkdxJQawSr8ehVSTzCSlvk/t7RzOBhi?=
- =?iso-8859-1?Q?iJxNH/rUwvzcI075RaEBeg411WdUYi1oNjlwe1069/1le4j1DSI9MJ87c4?=
- =?iso-8859-1?Q?gkajk5IEZ2pNDBMFDcQU2NLCitjK7EVDsyjf0GxKob6z2u+BpuIYz32CDn?=
- =?iso-8859-1?Q?PBdVm80RtFApescRCnQegMk/s0l8fMCSI4aGXgd20+0lYqB+8b/XA2gVdH?=
- =?iso-8859-1?Q?eFjs340XNK/vpUWPgWnpqt/Me1Qv370h40wUdH4Quc8x0l3TSFQIWBidoF?=
- =?iso-8859-1?Q?IDykdqiSPM2JNNPzKJqEaTe0VPr3NSIUdE8dinJiU66ebF53ZRjs90s+jK?=
- =?iso-8859-1?Q?v7i7I01mQimzjZOWV/UEQjbQi+LIQ7fHnDomAo1NqaTAQG759sHP/au997?=
- =?iso-8859-1?Q?W810vPfPruLLkVHuZOW4keb9DrG9SUAD1+m5U8NzKv/USlxa16KY/QKalH?=
- =?iso-8859-1?Q?eAu7SfE17NZo1eWh9wOEJD14ujwJWyyXdAqo9h8YpU1XGCexWoC6VqoZbi?=
- =?iso-8859-1?Q?2NjYxXzyVabjozHCw8aMUbx7PxKPRJxBjRVMZ4m4BALdZlvefxxVzWA/qv?=
- =?iso-8859-1?Q?yL8cBbfLbzsU5MyTGfHRoCs3FTiVJcgCnOKL9tLpMF+Y1gJz/mNZyBRkXj?=
- =?iso-8859-1?Q?p7+f2aMAUW+K0A7jeu8wpvgBKE0qHoxIn6oE+jTyb1a/kDl4i1hmCxdSy+?=
- =?iso-8859-1?Q?tGBpo30gBHLSukYmHBRCd/ooz/OFKz2EwMJzpqVcJma2mDm2KJFDxFi6IC?=
- =?iso-8859-1?Q?RT4YJdRbeDCLp5eYnukZia7c28vBpKDaYN9kwde1L8uxvzUreSl3oLf3mO?=
- =?iso-8859-1?Q?JbuOPpJHwY060=3D?=
-Content-Type: multipart/alternative;
-	boundary="_000_PH7PR11MB64013779E8056343242A983CD7ABAPH7PR11MB6401namp_"
+ dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=rkvWfTh7;
+ dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=ld/0EeRf;
+ spf=pass (domain: pbarker.dev, ip: 103.168.172.159, mailfrom: paul@pbarker.dev)
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 32F0B14001D5;
+	Thu, 18 Dec 2025 14:39:32 -0500 (EST)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Thu, 18 Dec 2025 14:39:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1766086772; x=1766173172; bh=44hLIHlMdD
+	vZPgRjX6P3ZRCLYRc7Gg/5eqDAWfy2EDI=; b=rkvWfTh7NIFlvYhQ4VAYCxXvO2
+	bZNOHzU9uLZ5HQu8s1+kQ2BQX+rQtmdSdARU2Kg8vdgyXFipWzRxJoW7wKeD9CbB
+	dNEDA+htU+/+rYX7qq2lRe54lHexKugY/+/8zD29mKHsYeYA/W95gBs9Sy833iBB
+	XclixtV3swUCgJ8Lh3VlybEk6toxNBIyL6I+mxLlbSXaqsmcNRLCAe/lEXAkAbhv
+	w2ZvxaJL/Qo71hrUxlxE3fY1LFFwJGP6LhKkS9ktos0s5eEnXP5mQPiAvqzvQWv8
+	fzJxCq11AO0bkvNfs5kRTf3Ph2BdXs1FKzrBywev/XqSNeJjvvgxLeNeqWiA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1766086772; x=1766173172; bh=44hLIHlMdDvZPgRjX6P3ZRCLYRc7Gg/5eqD
+	AWfy2EDI=; b=ld/0EeRf/LXv0zhF3ySpXlQQrkTIhDr911CvQ4LYJOtDg7EMx6E
+	X8QneL5O8ruMukybnlLUGnc9Hib0StqpGrXCvBDfIOMm00WNd8tvYeaYXdtM9p2S
+	pAotAx50g1FI5JfU3tWNQmZrpYXV/Ia2yUlCDAq5IIA7QcU5GG0d/9f4Jg7ms0+6
+	XfhEUCFCjemYADiUpuBWmwjh8kTOtow2Ti9OWT6r19J2E7JzxQkoEFMraFdeaffe
+	n9vPqpEfshld1ZFIbZ7/hSscr+z8QtO6CO3IflvXqyWJPqv9f6oNE8SgaLtN0+53
+	cNU9hMEigB5TIX7qeGz5ex74PDFHnap0kWA==
+X-ME-Sender: <xms:c1hEaV_RIO9e2GaQ7-EqQ1HJSTuPP0lxTzuxtdb7rEXfUQLHAdEjJQ>
+    <xme:c1hEafsePIvms29WdP_1HQF1yzxcsxD3of6Ae51DRlECcCalJ_BY_zbNgdad-u1q9
+    FIAyHMLt00exAUYT8ZJPbQDeEQFDg_GQitJComg_7V0awSSYNf_Rw>
+X-ME-Received: <xmr:c1hEaQqpG7oLT4jxK5j-iiBJkg_r9T-jzd0IdGDrbxWj7wehR3y92g1QlqVqR34hzs4gqGepecs1e0lpFTFJ8rlimP2qGKA3xWxlBYkBLJMk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdegiedvkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefkuffhvfevffgjfhgtfgggsehgtderredtreejnecuhfhrohhmpefrrghulhcuuegr
+    rhhkvghruceophgruhhlsehpsggrrhhkvghrrdguvghvqeenucggtffrrghtthgvrhhnpe
+    etieejkeehleejgeeigfdtteelgffglefgjedtjefhffeijefgveduudefffeiueenucff
+    ohhmrghinhepghhithdqshgtmhdrtghomhdphihotghtohhprhhojhgvtghtrdhorhhgne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepphgruhhl
+    sehpsggrrhhkvghrrdguvghvpdhnsggprhgtphhtthhopedvpdhmohguvgepshhmthhpoh
+    huthdprhgtphhtthhopehoshgrmhgrrdgrsgguvghlkhgruggvrhesghhmrghilhdrtgho
+    mhdprhgtphhtthhopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmh
+    gsvgguuggvugdrohhrgh
+X-ME-Proxy: <xmx:c1hEaUk-uMCeil6TWE1rhBYbEMpVX_b6bxM4dI-buqmfu3Trrs5EAw>
+    <xmx:c1hEacyYejkngecDV3TmkVHN7jTq0BXamG1hETWXRK3qIEQZP2m-Og>
+    <xmx:c1hEaUlCIgCq45B_CIbeY5t4RQF07Yxr9BXYWmilDMMV8fs8XySwMw>
+    <xmx:c1hEadeBBBtaCZ2FPQhs4J9nQfiMoU4xPbB8vWi_wTQE8cxTfCw6QA>
+    <xmx:dFhEabPmChCbnZL7MShmAgVMVRjYlKDQdurfEaOyQxEy2ea-zZEOMQdL>
+Feedback-ID: i51494658:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 18 Dec 2025 14:39:31 -0500 (EST)
+Message-ID: <c84892212ed26bf08b1e7447391188ea5793a8a3.camel@pbarker.dev>
+Subject: Re: [PATCH 2/4] bitbake-layers: layerindex-fetch: Fix branch
+ detection method
+From: Paul Barker <paul@pbarker.dev>
+To: Osama Abdelkader <osama.abdelkader@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+Date: Thu, 18 Dec 2025 19:39:28 +0000
+In-Reply-To: <aUCM_Y388wesrBe-@osama>
+References: <20251212190806.32476-1-osama.abdelkader@gmail.com>
+	 <20251212190806.32476-3-osama.abdelkader@gmail.com>
+	 <016117db60e8c28186fd3ac5d078f9a0de727682.camel@pbarker.dev>
+	 <aUCM_Y388wesrBe-@osama>
+Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
+ keydata=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
+ ep0k17xg==
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-yWs0Y9qDcsokr5xkfUHQ"
+User-Agent: Evolution 3.52.3-0ubuntu1.1 
 MIME-Version: 1.0
-X-OriginatorOrg: cisco.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6401.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 733bc588-775a-4cf8-76e1-08de3d9985a1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2025 18:24:31.4373
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pnRA3EItu0CQKlGXShBOYxSYdppIjb7R8ESkJpPpV1D8Uftsvx7Ulgt8CZwlDDjOGjybJAdSlomiZkR/rIi3TQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPFF2E67D388
-X-Outbound-SMTP-Client: 173.37.147.252, alln-opgw-4.cisco.com
-X-Outbound-Node: rcdn-l-core-01.cisco.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 17 Dec 2025 18:24:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18608
+ <bitbake-devel@lists.openembedded.org>; Thu, 18 Dec 2025 19:39:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18609
 
---_000_PH7PR11MB64013779E8056343242A983CD7ABAPH7PR11MB6401namp_
-Content-Type: text/plain; charset="iso-8859-1"
+
+--=-yWs0Y9qDcsokr5xkfUHQ
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Sent to the wrong list, so duplicate here.
+On Mon, 2025-12-15 at 23:34 +0100, Osama Abdelkader wrote:
+> On Mon, Dec 15, 2025 at 11:54:20AM +0000, Paul Barker wrote:
+> > On Fri, 2025-12-12 at 20:08 +0100, Osama Abdelkader wrote:
+> > > Replace fragile parsing of 'git branch' output with the more reliable
+> > > 'git rev-parse --abbrev-ref HEAD' command to get the current branch n=
+ame.
+> > > This avoids parsing issues and is the recommended way to get the curr=
+ent branch name.
+> >=20
+> > Do you have a source for this recommendation? I thought the preferred
+> > command was `git branch --show-current` as that just prints the branch
+> > name with no extra formatting.
+>=20
+> Git commands are divided into two groups:
+>=20
+> Porcelain - High level commands intended to be used at the command line
+> Plumbing - Low level commands intended for use in scripts
+>=20
+> git rev-parse is a "plumbing" command, meaning its output format is guara=
+nteed to be stable across different versions of Git.
+> It reliably outputs only the raw branch name to standard output.
+>=20
+> git branch is a "porcelain" command, intended for human users. While git =
+branch --show-current currently behaves helpfully,
+> the formatting of porcelain commands is theoretically subject to change i=
+n future Git releases, which could break your build
+> scripts unexpectedly.
+>=20
+> https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain
+> https://git-scm.com/docs/git-rev-parse
 
-Regards,
-Oleksiy
+Hi Osama,
 
-________________________________
-From: Oleksiy Obitotskyy -X (oobitots - GLOBALLOGIC INC at Cisco) <oobitots=
-@cisco.com>
-Sent: Wednesday, December 17, 2025 14:48
-To: openembedded-core@lists.openembedded.org <openembedded-core@lists.opene=
-mbedded.org>
-Subject: do_patch confused with URL value
+Thanks for the additional context! We discussed this on the patch review
+call today.
 
-Hi,
+`git rev-parse --abbrev-ref` is definitely an improvement over calling
+`git branch`, but we have still seen some issues with this command in
+other contexts on the autobuilder. The best command to use seems to be
+`git name-rev --name-only` [1].
 
-Got an interesting case when patch stage failed.
-And I would like to ask if it is a known issue and it makes sense to improv=
-e logic (maybe I'm missing something).
+[1]: https://git.yoctoproject.org/yocto-autobuilder-helper/commit/?id=3D1e8=
+0c19f62169c536e44f99fdcdf9f1e84c65d99
 
-```
-ERROR: nativesdk-yq-4.30.8+gitdd6cf3df146f3e2c0f8c765a6ef9e35780ad8cc1-r0 d=
-o_patch: >>> url git://github.com/pkg/diff;name=3Ddiff;destsuffix=3Dbuild/v=
-endor/src/github.com/pkg/diff;branch=3Dmain;protocol=3Dhttps local '<sdk-di=
-r>/build/downloads/git2/github.com.pkg.diff' all False
-ERROR: nativesdk-yq-4.30.8+gitdd6cf3df146f3e2c0f8c765a6ef9e35780ad8cc1-r0 d=
-o_patch: >>> url file://run-ptest local None all False
-ERROR: nativesdk-yq-4.30.8+gitdd6cf3df146f3e2c0f8c765a6ef9e35780ad8cc1-r0 d=
-o_patch: Importing patch 'github.com.pkg.diff' with striplevel '1'
-FileNotFoundError(2, 'No such file or directory')
-ERROR: Logfile of failure stored in: <sdk-dir>/build/tmp/work/x86_64-native=
-sdk-xesdk-linux/nativesdk-yq/4.30.8+gitdd6cf3df146f3e2c0f8c765a6ef9e35780ad=
-8cc1/temp/log.do_patch.3930851
-ERROR: Task (virtual:nativesdk:<sdk-dir>/distro/openembedded-core/../meta-v=
-irtualization/recipes-devtools/yq/yq_git.bb:do_patch) failed with exit code=
- '1'
-```
+Best regards,
 
-Custom yocto scarthgap version.
-In my scenario I used mirror for downloads and states and build offline (BB=
-_NO_NETWORK =3D "1"), so I have files
+--=20
+Paul Barker
 
-<sdk-dir>/build/downloads/gitshallow_github.com.pkg.diff_20ebb0f-1_main.tar=
-.gz[.done] before fetch
-and after fetch I have no
-<sdk-dir>/build/downloads/git2/github.com.pkg.diff directory
 
-check for directory failed
+--=-yWs0Y9qDcsokr5xkfUHQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-openembedded-core/meta/lib/oe/patch.py
-```
-890     local =3D fetch.localpath(url)
-891     if os.path.isdir(local):
-892         return
-```
-...
-```
-base, ext =3D os.path.splitext(os.path.basename(local))
-```
+-----BEGIN PGP SIGNATURE-----
 
-gives us 'github.com.pkg', '.diff'
+iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaURYcBEccGF1bEBwYmFy
+a2VyLmRldgAKCRCrY1Tsnbr0bvUHAQDHuLOitGD96osb1gm8CGZ3I4lMgzEAHWDT
+F0VDQQNVqAEA5VXKDl4pRutc6+9sxoktD+DvDoCU7osz2L6JBrBQRgs=
+=E8B0
+-----END PGP SIGNATURE-----
 
-and this check also failed
-
-openembedded-core/meta/lib/oe/patch.py
-```
-904     elif ext not in (".diff", ".patch"):
-905         return
-```
-
-Hence, return local from function and this is treated as local patch should=
- be applied.
-
-In works in cases when we have no mirrors and after fetch I got file
-
-<sdk-dir>/build/downloads/git2/github.com.pkg.diff
-
-Regards,
-Oleksiy
-
---_000_PH7PR11MB64013779E8056343242A983CD7ABAPH7PR11MB6401namp_
-Content-Type: text/html; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
-1">
-<style type=3D"text/css" style=3D"display:none;"> P {margin-top:0;margin-bo=
-ttom:0;} </style>
-</head>
-<body dir=3D"ltr">
-<div style=3D"font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, =
-Calibri, Helvetica, sans-serif; font-size: 11pt; color: rgb(0, 0, 0);" clas=
-s=3D"elementToProof">
-Sent to the wrong list, so duplicate here.</div>
-<div><br>
-</div>
-<div style=3D"font-family: Calibri, Arial, Helvetica, sans-serif; font-size=
-: 12pt; color: rgb(0, 0, 0);" class=3D"elementToProof">
-Regards,</div>
-<div style=3D"font-family: Calibri, Arial, Helvetica, sans-serif; font-size=
-: 12pt; color: rgb(0, 0, 0);" class=3D"elementToProof">
-Oleksiy</div>
-<div style=3D"font-family: Calibri, Arial, Helvetica, sans-serif; font-size=
-: 12pt; color: rgb(0, 0, 0);" class=3D"elementToProof">
-<br>
-</div>
-<hr style=3D"display: inline-block; width: 98%;">
-<div style=3D"font-family: Calibri, Arial, Helvetica, sans-serif; font-size=
-: 12pt; color: rgb(0, 0, 0);">
-<b>From:</b>&nbsp;Oleksiy Obitotskyy -X (oobitots - GLOBALLOGIC INC at Cisc=
-o) &lt;oobitots@cisco.com&gt;<br>
-<b>Sent:</b>&nbsp;Wednesday, December 17, 2025 14:48<br>
-<b>To:</b>&nbsp;openembedded-core@lists.openembedded.org &lt;openembedded-c=
-ore@lists.openembedded.org&gt;<br>
-<b>Subject:</b>&nbsp;do_patch confused with URL value </div>
-<div style=3D"font-family: Calibri, Arial, Helvetica, sans-serif; font-size=
-: 12pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"direction: ltr; font-family: Aptos, Aptos_EmbeddedFont, Aptos=
-_MSFontService, Calibri, Helvetica, sans-serif; font-size: 11pt; color: rgb=
-(0, 0, 0);">
-Hi,</div>
-<div style=3D"direction: ltr; font-family: Aptos, Aptos_EmbeddedFont, Aptos=
-_MSFontService, Calibri, Helvetica, sans-serif; font-size: 11pt; color: rgb=
-(0, 0, 0);">
-<br>
-</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-Got an interesting case when patch stage failed.&nbsp;</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-And I would like to ask if it is a known issue and it makes sense to improv=
-e logic (maybe I'm missing something).</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-```</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-ERROR: nativesdk-yq-4.30.8+gitdd6cf3df146f3e2c0f8c765a6ef9e35780ad8cc1-r0 d=
-o_patch: &gt;&gt;&gt; url git://github.com/pkg/diff;name=3Ddiff;destsuffix=
-=3Dbuild/vendor/src/github.com/pkg/diff;branch=3Dmain;protocol=3Dhttps loca=
-l '&lt;sdk-dir&gt;/build/downloads/git2/github.com.pkg.diff'
- all False</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-ERROR: nativesdk-yq-4.30.8+gitdd6cf3df146f3e2c0f8c765a6ef9e35780ad8cc1-r0 d=
-o_patch: &gt;&gt;&gt; url file://run-ptest local None all False</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-ERROR: nativesdk-yq-4.30.8+gitdd6cf3df146f3e2c0f8c765a6ef9e35780ad8cc1-r0 d=
-o_patch: Importing patch 'github.com.pkg.diff' with striplevel '1'</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-FileNotFoundError(2, 'No such file or directory')</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-ERROR: Logfile of failure stored in: &lt;sdk-dir&gt;/build/tmp/work/x86_64-=
-nativesdk-xesdk-linux/nativesdk-yq/4.30.8+gitdd6cf3df146f3e2c0f8c765a6ef9e3=
-5780ad8cc1/temp/log.do_patch.3930851</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-ERROR: Task (virtual:nativesdk:&lt;sdk-dir&gt;/distro/openembedded-core/../=
-meta-virtualization/recipes-devtools/yq/yq_git.bb:do_patch) failed with exi=
-t code '1'</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-```</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-Custom yocto scarthgap version.</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-In my scenario I used mirror for downloads and states and build offline (BB=
-_NO_NETWORK =3D &quot;1&quot;), so I have files</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-&lt;sdk-dir&gt;/build/downloads/gitshallow_github.com.pkg.diff_20ebb0f-1_ma=
-in.tar.gz[.done] before fetch</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-and after fetch I have no</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-&lt;sdk-dir&gt;/build/downloads/git2/github.com.pkg.diff directory</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-check for directory failed</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-openembedded-core/meta/lib/oe/patch.py</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-```</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-890 &nbsp; &nbsp; local =3D fetch.localpath(url)</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-891 &nbsp; &nbsp; if os.path.isdir(local):</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-892 &nbsp; &nbsp; &nbsp; &nbsp; return</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-```</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-...</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-```</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-base, ext =3D os.path.splitext(os.path.basename(local))</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-```</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-gives us 'github.com.pkg', '.diff'</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-and this check also failed</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-openembedded-core/meta/lib/oe/patch.py</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-```</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-904 &nbsp; &nbsp; elif ext not in (&quot;.diff&quot;, &quot;.patch&quot;):<=
-/div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-905 &nbsp; &nbsp; &nbsp; &nbsp; return</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-```</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-Hence, return local from function and this is treated as local patch should=
- be applied.</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-In works in cases when we have no mirrors and after fetch I got file</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"direction: ltr; line-height: 19px; font-family: Aptos, Aptos_=
-EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-siz=
-e: 11pt; color: rgb(0, 0, 0);">
-&lt;sdk-dir&gt;/build/downloads/git2/github.com.pkg.diff</div>
-<div style=3D"direction: ltr; font-family: Aptos, Aptos_EmbeddedFont, Aptos=
-_MSFontService, Calibri, Helvetica, sans-serif; font-size: 11pt; color: rgb=
-(0, 0, 0);">
-<br>
-</div>
-<div style=3D"direction: ltr; font-family: Aptos, Aptos_EmbeddedFont, Aptos=
-_MSFontService, Calibri, Helvetica, sans-serif; font-size: 11pt; color: rgb=
-(0, 0, 0);">
-Regards,</div>
-<div style=3D"direction: ltr; font-family: Aptos, Aptos_EmbeddedFont, Aptos=
-_MSFontService, Calibri, Helvetica, sans-serif; font-size: 11pt; color: rgb=
-(0, 0, 0);">
-Oleksiy</div>
-</body>
-</html>
-
---_000_PH7PR11MB64013779E8056343242A983CD7ABAPH7PR11MB6401namp_--
+--=-yWs0Y9qDcsokr5xkfUHQ--
 
