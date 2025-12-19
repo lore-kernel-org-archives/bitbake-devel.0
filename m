@@ -1,166 +1,159 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <corentin.guillevic@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87E7D74967
-	for <webhook@archiver.kernel.org>; Fri, 19 Dec 2025 08:44:37 +0000 (UTC)
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.13078.1766133872889567834
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72CFD767E0
+	for <webhook@archiver.kernel.org>; Fri, 19 Dec 2025 11:36:28 +0000 (UTC)
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.14950.1766144180632815615
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 19 Dec 2025 00:44:34 -0800
+ Fri, 19 Dec 2025 03:36:20 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=oh0yHv/j;
- spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id DC27E1A22E6;
-	Fri, 19 Dec 2025 08:44:30 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id A97886071D;
-	Fri, 19 Dec 2025 08:44:30 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3275B102F0B57;
-	Fri, 19 Dec 2025 09:44:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1766133868; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=ApOL1XPOwUIkXNxGlChZZvocSCo+/+/hdFpV5CpsK8o=;
-	b=oh0yHv/jgyR9kvW2O1v9fwOsHWMIf+RSNv+TMmv1d2jpMNKG4QSdSrtHVa9Nd+4P9fZ16m
-	POqgX/CEfbVZZ0fgwDK1PXoYF7FlU4fAS+aaIqfmaXYo6zNzB0ufA6OJsFjDALbYB9Skjz
-	ExuvpJIL9iqjkwGliFid/pZWWQwR4oTCzrhZXXQ53hdQLBWbHWSU09kQuhgFI23MJmkOUl
-	KXkDl5UeEvBFI+CYAukHycEffSXDQDtEtQiTAxvKsdyJY1/g25rs/GEz3snpDKcJ8gJF2S
-	XUN7Q9MOkYLnJ9O29fe/uaBUUg/WPwxmSvmvvDz/3KIMknIvDpJJSs0YUQUGrg==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 19 Dec 2025 09:44:25 +0100
-Message-Id: <DF227D3UEFF6.E74AE0VVVWS5@bootlin.com>
-From: "Antonin Godard" <antonin.godard@bootlin.com>
-To: <alex.kanavin@gmail.com>, <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [RFC PATCH 2/2] bitbake-setup: share sstate by
- default between builds
-Cc: "Alexander Kanavin" <alex@linutronix.de>
-References: <20251215145418.2680311-1-alex.kanavin@gmail.com>
- <20251215145418.2680311-2-alex.kanavin@gmail.com>
-In-Reply-To: <20251215145418.2680311-2-alex.kanavin@gmail.com>
-X-Last-TLS-Session-Version: TLSv1.3
+ dkim=pass header.i=@smile.fr header.s=google header.b=NnsP/Xri;
+ spf=pass (domain: smile.fr, ip: 209.85.221.43, mailfrom: corentin.guillevic@smile.fr)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-430fbb6012bso1189828f8f.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 19 Dec 2025 03:36:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smile.fr; s=google; t=1766144179; x=1766748979; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FhqWUByAkSvehtTlEpgsFsTVY6wqzyDLwvkVPsuDxf4=;
+        b=NnsP/XriF+3Fi9xBQLJWLJ0NbIO+Dnv5Oh0rKOGggmNadM6QR0mx945XSWgGJ+w14n
+         CFMFr4t9nNYJ1mDDhlwZ49KZj1rfIF3BEoo2sGExlsTGgWjFb/8hAPIE7VfyYTsecSOl
+         tXOe/+sbJaAAYVS3obMsmqXdWJfjmrBPG8kGM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766144179; x=1766748979;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FhqWUByAkSvehtTlEpgsFsTVY6wqzyDLwvkVPsuDxf4=;
+        b=M+RdXgepikEXVPUrd7Z0DW5i20awKcuKbWU2MJxiSfzoK7qfIbjYkgu3GYG+MqWxLS
+         Hho/IkUThpHRDXnu1c2Y7XdBVIc9vmV+g9Ydrc3wcMcjh2Lta++PA8WBEVNa1lz3HL/q
+         +ebatIoHZIo71qabWSNo/oTbiki4jICVn/P6W8INvp3MgCF5vpUiATrsfaxazB24kbO5
+         9UnLD2RNeAbMzBQF/vkZAr8iJcip8G11yMLEZNQhF5b2ry7fyHN8v6mapdtTI5URgVJl
+         urgmW8rjPyZqAQXlt8PGwWwIqpNo+SdgVZhDaHCys366HyiMjzC3SJbkH0Nd6Vcpsoo+
+         jedQ==
+X-Gm-Message-State: AOJu0YxzXdtH3jQs7pAO6YV8siWGphBKnuWzUMxxRHBvDRHM1ZeyMxyw
+	TG45pkaQ03ksfsQG5g8EgDgSv4yr8ki0iu3H1MDKbyT+6p4jh2b8eywALM2QYoejWDaqoho6qAD
+	zg4D3dTk=
+X-Gm-Gg: AY/fxX4k+BjWsT/mDXVw5t3d3CuvGrBXsrmP+JlUTyy50U/O6kQWv+/4Hei6TSOxySH
+	9evONioXc/B/u3u3wYXpiGK5dIF5tpd8udo3lcEooQ1DZ2/fjiwkzb83xT9Elv7F7xxTNI8pJdd
+	8lpqGlEJi/sWpebew1om3BaaaEkNurHoWXWN5edtCBxHkeklRB61PlfCW2c8O4bWIDK9WK0XItQ
+	XopYbnbF92itspgkVH+siD68wP5GOT5kxrHY4hx02RZ8o1DB8DxEUJzJpB1HHBSe2zKw5qRC/vI
+	LQEuxydYqpbq7f4Ox5ePGqnYLwmYsAksur6EOFUnm/+0qib1Gvc9Tbcw3C30dBr4f1x6LSkM9je
+	IzGOSW6EXwGhJyMyXOG6bcKzZgQ+vYgE0QroT+4dw0qL/RhM9hQ6SiFNPYoCetjJiL04XS63PL+
+	ZLJAZGF5Z7b+psISeoatfT1683ksOf/hdEYR8HbIu8Cygb5y2lTACrINBNaWrNATRBpV8dA6jQa
+	TztQxE4BiZbifvuJDg=
+X-Google-Smtp-Source: AGHT+IFcpYcap0Ilb3DXpbz8RjFUgSLi1t02CzxVuUHh/8jVz4BKwoq47tdfdtU3LKecWibWUsHhKg==
+X-Received: by 2002:a05:6000:2892:b0:429:d170:b3ac with SMTP id ffacd0b85a97d-4324e4c714cmr2681088f8f.13.1766144178990;
+        Fri, 19 Dec 2025 03:36:18 -0800 (PST)
+Received: from heaven.idf.intranet (static-css-ccs-204145.business.bouyguestelecom.com. [176.157.204.145])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324ea1aee5sm4549810f8f.4.2025.12.19.03.36.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Dec 2025 03:36:18 -0800 (PST)
+From: Corentin Guillevic <corentin.guillevic@smile.fr>
+To: bitbake-devel@lists.openembedded.org
+Cc: Corentin Guillevic <corentin.guillevic@smile.fr>
+Subject: [PATCH v3 1/2] oe-setup-layers: support inline URI
+Date: Fri, 19 Dec 2025 12:36:14 +0100
+Message-ID: <20251219113615.1573842-1-corentin.guillevic@smile.fr>
+X-Mailer: git-send-email 2.51.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 19 Dec 2025 08:44:37 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18613
+ <bitbake-devel@lists.openembedded.org>; Fri, 19 Dec 2025 11:36:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18614
 
-Hi,
+Most of the time, when we describe a remote, the layer data (also used by
+the script bitbake-setup) looks like this:
 
-On Mon Dec 15, 2025 at 3:54 PM CET, Alexander Kanavin via lists.openembedde=
-d.org wrote:
-> From: Alexander Kanavin <alex@linutronix.de>
->
-> Nowadays sharing sstate must also include sharing the hash equivalency
-> information and thus, managing a hash equivalency server. There are
-> two ways to do it:
->
-> - starting/stopping the server outside the bitbake invocations, and
-> guaranteeing that it's available when bitbake is invoked.
->
-> - using bitbake's built-in start/stop code which launches a server
-> before a build starts and stops it when a build is finished; essentially
-> this is a private server, using a database private to a build directory
-> (by default).
->
-> I couldn't come up with a good way to do the first option in bitbake-setu=
-p:
-> it needs to be invisible to users, they should not have to run special co=
-mmands
-> and they should not wonder why there is a mysterious background process.
-> It's not impossible to auto-start a shared server, but that will quickly
-> run into synchronization issues: if one server is being started, another
-> should not be started at the same time. If one server is shutting down
-> (e.g. after an inactivity timeout), another starting server should wait
-> until it frees the socket, and block all bitbake invocations on that.
-> Memory resident bitbake does this in lib/bb/server/process.py with a lot =
-of
-> complexity, and I don't think it should be added to the hash server as we=
-ll.
->
-> On the other hand, hash equivalency database is sqlite-driven, and sqlite
-> documentation reassures that sharing it between different simultaneous
-> processes is okay: nothing will get lost or corrupted: https://sqlite.org=
-/faq.html#q5
->
-> I've confirmed this by running simultaneous builds that way: nothing
-> unusual happened, and sstate was shared as it's supposed to.
->
-> There's a new setting that turns off this behavior for situations
-> where the server and sstate are managed externally.
->
-> Signed-off-by: Alexander Kanavin <alex@linutronix.de>
-> ---
->  bin/bitbake-setup | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-> index 6f7dba16c..f382f6eb0 100755
-> --- a/bin/bitbake-setup
-> +++ b/bin/bitbake-setup
-> @@ -777,6 +777,12 @@ def create_siteconf(top_dir, non_interactive, settin=
-gs):
-> =20
->          os.makedirs(top_dir, exist_ok=3DTrue)
->          with open(siteconfpath, 'w') as siteconffile:
-> +            sstate_settings =3D textwrap.dedent(
-> +                """
-> +                SSTATE_DIR =3D "{sstate_dir}"
-> +                BB_HASHSERVE_DB_DIR =3D "{sstate_dir}"
+"bitbake": {
+    "git-remote": {
+        "remotes": {
+            "origin": {
+                "uri": "https://git.openembedded.org/bitbake"
+            }
+        },
+        ...
+    }
+}
 
-Like DL_DIR, it would be nice to add a comment to explain what these variab=
-les
-do.
+i.e. an URI with the common name 'origin'. Alternatively, we could simplify this, by
+using a shorter structure with the property 'uri' only:
 
-Maybe needs some rework but something like this (adapted from poky's templa=
-te
-files):
+"bitbake": {
+    "git-remote": {
+        "uri": "https://git.openembedded.org/bitbake
 
-```
-# Where to place shared-state files
-#
-# BitBake has the capability to accelerate builds based on previously built=
- output.
-# This is done using "shared state" files which can be thought of as cache =
-objects
-# and this option determines where those files are placed.
-#
-# You can wipe out TMPDIR leaving this directory intact and the build would=
- regenerate
-# from these files if no changes were made to the configuration. If changes=
- were made
-# to the configuration, only shared state files where the state was still v=
-alid would
-# be used (done using checksums).
-SSTATE_DIR =3D "{sstate_dir}"
+",
+        ...
+    }
+}
 
-# Hash Equivalence database location
-#
-# Hash equivalence improves reuse of sstate by detecting when a given sstat=
-e
-# artifact can be reused as equivalent, even if the current task hash doesn=
-'t
-# match the one that generated the artifact. This variable controls where t=
-he
-# Hash Equivalence database ("hashserv.db") is stored and can be shared bet=
-ween
-# concurrent builds.
-BB_HASHSERVE_DB_DIR =3D "{sstate_dir}"
-```
+These properties can be used together.
 
-We would probably also need an sstate-dir setting, like dl-dir?
+Signed-off-by: Corentin Guillevic <corentin.guillevic@smile.fr>
+---
 
-FWIW, I've tested this locally and it works as expected but I did not run
-concurrent builds.
+Changes in v3:
+- Use a more pythonic way to increment an integer
 
-Antonin
+ scripts/oe-setup-layers | 32 +++++++++++++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
---=20
-Antonin Godard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+diff --git a/scripts/oe-setup-layers b/scripts/oe-setup-layers
+index 31cb963251..5ab7d8be96 100755
+--- a/scripts/oe-setup-layers
++++ b/scripts/oe-setup-layers
+@@ -60,6 +60,35 @@ def _write_layer_list(dest, repodirs):
+     with open(layers_f, 'w') as f:
+         json.dump({"version":"1.0","layers":layers}, f, sort_keys=True, indent=4)
+ 
++def _get_remotes(r_remote):
++    remotes = {}
++
++    if not 'remotes' in r_remote and not 'uri' in r_remote:
++        raise Exception("Expected key(s): 'remotes', 'uri'")
++
++    if 'remotes' in r_remote:
++        remotes = r_remote['remotes'].copy()
++
++    if 'uri' in r_remote:
++        r_name = ''
++
++        if 'remotes' in r_remote:
++            if not 'origin' in r_remote['remotes']:
++                r_name = 'origin'
++            else:
++                import itertools
++                for i in itertools.count(start=1):
++                    if not 'origin-{}'.format(i) in r_remote['remotes']:
++                        break
++
++                r_name = 'origin-{}'.format(i)
++        else:
++            r_name = 'origin'
++
++        remotes.update({r_name: {'uri': r_remote['uri']}})
++
++    return remotes
++
+ def _do_checkout(args, json):
+     repos = json['sources']
+     repodirs = []
+@@ -80,7 +109,8 @@ def _do_checkout(args, json):
+         if not desc:
+             desc = rev[:10]
+         branch = r_remote['branch']
+-        remotes = r_remote['remotes']
++
++        remotes = _get_remotes(r_remote)
+ 
+         print('\nSetting up source {}, revision {}, branch {}'.format(r_name, desc, branch))
+         if not _is_repo_git_repo(repodir):
+-- 
+2.51.0
 
 
