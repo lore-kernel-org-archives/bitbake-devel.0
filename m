@@ -1,107 +1,153 @@
-Return-Path: <osama.abdelkader@gmail.com>
+Return-Path: <corentin.guillevic@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0D9D78798
-	for <webhook@archiver.kernel.org>; Fri, 19 Dec 2025 16:11:10 +0000 (UTC)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.20207.1766160660380697084
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB80D7879A
+	for <webhook@archiver.kernel.org>; Fri, 19 Dec 2025 16:13:10 +0000 (UTC)
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.20251.1766160782173400084
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 19 Dec 2025 08:11:00 -0800
+ Fri, 19 Dec 2025 08:13:02 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=nXsmxhMW;
- spf=pass (domain: gmail.com, ip: 209.85.208.47, mailfrom: osama.abdelkader@gmail.com)
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-64b5ed53d0aso2449944a12.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 19 Dec 2025 08:11:00 -0800 (PST)
+ dkim=pass header.i=@smile.fr header.s=google header.b=mUGdDWQw;
+ spf=pass (domain: smile.fr, ip: 209.85.128.44, mailfrom: corentin.guillevic@smile.fr)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-477aa218f20so12953345e9.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 19 Dec 2025 08:13:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766160659; x=1766765459; darn=lists.openembedded.org;
+        d=smile.fr; s=google; t=1766160780; x=1766765580; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YNo0IJIF5S14qJVRGpCnFVLNnSPvE+uxNcCUQLkH8w8=;
-        b=nXsmxhMWvH0sQjGC4y8FHTE7gQc6PHgiPtgDnkHPo6BVHH60No5cDNQmhVZcuQN7WO
-         RRTqP3pEdlhaxougdHccmozoKvbqvThUqiT1EovufFZSFjXDys+41wQPak/4BpT20gh0
-         Bc1t3wJ/6JcefYUP9wye/G2IFjRDLXKsEPcflizOi2wGTz41B1wQr7CDiZOUqFzBDm52
-         eRGlLcZQP3JVvy8hVvFtotJRPggRZRcMjtUireluZbC8mB9Al6hka4f7WTuslba5095l
-         6aeyoegjaIQHP5zp72lLi4nZSFOxQonGkQ7sZpvgyfdWYFAm3A5QGdzRZUimKEQI+tnB
-         6O3w==
+        bh=jjRy5tZso9UuF28Ax1i5OBiNUaO/2m5T6L/sZvQuwQg=;
+        b=mUGdDWQwsL4ZrenCy0bFUR9awfmJoMAvpSaZVu10DYqU4IcKpSlxdSNTvDsq4b1JAK
+         P0tyq6prQ6K2uImlf0jVyiJdfU33DH0g0N+85BsnADv6duxWv/T8McbxHlNvcxo2kV/6
+         R4gL7bBvK8TsqV1YSIWLEJwa/BbTulq2dsN+U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766160659; x=1766765459;
+        d=1e100.net; s=20230601; t=1766160780; x=1766765580;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YNo0IJIF5S14qJVRGpCnFVLNnSPvE+uxNcCUQLkH8w8=;
-        b=hiQ6viYEsTarJm+ON+pat+jpYHalf93Bsreqo8XaQPu8U97YQ/D0pem3I86sWZj19H
-         D7RHuFTNhRE2nYwKkDJWBJ6eo4mSElyVcncyn+2M+U2hoFnNLXTT8+smT/xhbtTfQ93J
-         pofO62zAH7PUqRGDJfAqt4bnYWoBMoIW8gw+h0HpxpdY0lUNTReaD14dipzHM8QRbjFN
-         vo2K7IxUxQuU1dk/rKzU/jEL9b5nSEPY10842ttN0xahyZVA8woYp2wcDPS02xWw/6+/
-         I+lT19tabySZWjsC5ahJ6quskSKqb79e7GLOoCN9JQgOV69lN+OkXYEdWcmHpOg+jHSx
-         stvw==
-X-Gm-Message-State: AOJu0YzkkkQBsi+7ZnUg4rsRamJ1DYbtoZLqm81YLDLihkJ31z+pf40s
-	Zre05mTR8Wlwmq2+rr2ghWWlOBbQavGUr3rt2k4M1+Bp54F0OZmerjdP/sNtFA==
-X-Gm-Gg: AY/fxX4nzlZ5ZpAz6vnUEl3zdmr3mO/zeHQ6uqAC1+BsNbCN/sRDE4VREwEgNTtuKzh
-	xjGYbhURoJt7HoI7N6zuzt1oEqUjFyxJr4VyBONAkrtWoI5WxkhNiru7+/fH9mwXfDRD/6x0VdQ
-	m3UzTw5RPqBJ7iVQ6kVTD7Y7ZEDxIaC9euAcj9T9GIHwTQJRVcNFzmuRQupP0bOFuaWt62q7veD
-	CNspaVx/WaLiEu2t5gJppT9Sx0CzCYORzp3KkGhw/U5U9GbWZ/Jf4Xz7bqWl6bvN8xgcXiBqaEk
-	sTPxaYKFnBWinE5KGCM6dqB2ElSzFmpCymNh2iDmKFs9xlSWusqHizgCcA1NAy27bLkKIduK/C+
-	w89o4Vli++hTgrNm6/ubiAtlpMBMVSz8dZfIz8ORXTgBGiVv5/GLDP7vqiZg+i3Dj1tl9NphThP
-	MaVWGgf2RkOKK0
-X-Google-Smtp-Source: AGHT+IGSSZo4LwVdhArWi5HRvW1QbvtWHck0aI0Zi5KerfQKiL9HgRb9EwrLRdPPmJzelrlYY2adZQ==
-X-Received: by 2002:a17:907:6eac:b0:b73:6b24:14a0 with SMTP id a640c23a62f3a-b8036f10e30mr349354366b.18.1766160658433;
-        Fri, 19 Dec 2025 08:10:58 -0800 (PST)
-Received: from osama.. ([2a02:908:1b4:dac0:27:4771:315a:aa0f])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8037ab7f86sm262894466b.17.2025.12.19.08.10.57
+        bh=jjRy5tZso9UuF28Ax1i5OBiNUaO/2m5T6L/sZvQuwQg=;
+        b=vLZ+l75dolnXGYpbidCJeEWnykVbv17sGaKXyhlRdH+wH5JNMq5L+jHqUlLStunPnO
+         /xrJWiPvVQ/yqHi85eWE5TyM+a8y35bpf5PCtpIaOfKlKdUi1cVePOsC1ka4bk5+4Ezs
+         o7nKZInIkSxbGxGzg9ycAuAzzCxSBmOJkUHiBndjsC0N4lst+s+iqBqUgzxxEqCZK9wO
+         jF7zQ/yuhgEDYhlNFr3vP2CrvUhCc6niiSDZ6pC/ABafslfJ+FRYK0Yk7L1v9s+TauDD
+         El8rnlECNS5tRExZdgiZFEs9YEo3B37P2LM+7Yq6bspDUihFMc+LEV6aoJCYo8hqUIFS
+         Eriw==
+X-Gm-Message-State: AOJu0YyLaCLtsAoTwecmTrAa3FO9ImAqoA9FSU/4yNbMPZejFSGyY6Do
+	0cYeExKF+3LbzgSj40rMRC5ExP98H0cJdfkUNCg9JuvBmCHuFa0PHgDrrhFS0MFRTmjggtTPL/Y
+	qUZ1DPHQ=
+X-Gm-Gg: AY/fxX7WDMgJi7h8FQR6LLei+c60Sl0MMze6Na2spV0MBInl/HalR7uxESurD++mil8
+	9l1QkGNSAC/JGqbGPxUuGGuj3zmrXDDevU30G4vGvTtEPIyL9A1P5m7j75I826dQz+gxPvdPfcT
+	UsNg6hymjEkJhwlQY5iRGlGomCpBe5G69622eaDqRcJf4EsiGkTwLqUQPqtQ0L0EGOxdy+77rdZ
+	XnNiJ649hA1wUdcdemBYKLs3u95VRu6x4dXF+TT/wHrlNPHnWnHEylb4cyulb9JGik1SUrIzt0h
+	W+QzvPSt+Lqn6IWusLX5FQ28uzZ2ttjClIqQzzpB3tPeNvCvLXiwIWe+r+3GY5zZ5cQE+bplsDz
+	TsO692EhCB9GMBwV03HoHC2L0QA2zQokE93d3yPKKnYk+U50P6feitjPahXp5BGLlpDKzgFEKwJ
+	2aMl3QeIYxi9qHpQAIFzYcjqq0y+AoWgmHrrLUZqilJ7BXz1JURMWaj/WN4FaFnpKV2oSi0KiKI
+	0FOlJIHi6LE9HHOttE=
+X-Google-Smtp-Source: AGHT+IFBQChDBj02LKcwNek1D6j22t3xkieustZjTGb7irWQDWmmvaVt9+eFzxHOKlFMKbTAd9JW+w==
+X-Received: by 2002:a05:600c:154b:b0:477:55c9:c3ea with SMTP id 5b1f17b1804b1-47d1958e7b9mr32151735e9.35.1766160780516;
+        Fri, 19 Dec 2025 08:13:00 -0800 (PST)
+Received: from heaven.idf.intranet (static-css-ccs-204145.business.bouyguestelecom.com. [176.157.204.145])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47be273f147sm105391065e9.7.2025.12.19.08.13.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Dec 2025 08:10:57 -0800 (PST)
-From: Osama Abdelkader <osama.abdelkader@gmail.com>
-To: bitbake-devel@lists.openembedded.org,
-	paul@pbarker.dev
-Cc: Osama Abdelkader <osama.abdelkader@gmail.com>
-Subject: [PATCH v2 2/4] bitbake-layers: layerindex-fetch: Fix branch detection method
-Date: Fri, 19 Dec 2025 17:10:51 +0100
-Message-ID: <20251219161051.6503-1-osama.abdelkader@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Fri, 19 Dec 2025 08:13:00 -0800 (PST)
+From: Corentin Guillevic <corentin.guillevic@smile.fr>
+To: bitbake-devel@lists.openembedded.org
+Cc: Corentin Guillevic <corentin.guillevic@smile.fr>
+Subject: [PATCH v4 1/4] bitbake-setup: add inline URI
+Date: Fri, 19 Dec 2025 17:12:52 +0100
+Message-ID: <20251219161255.2293450-1-corentin.guillevic@smile.fr>
+X-Mailer: git-send-email 2.51.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 19 Dec 2025 16:11:10 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18623
+ <bitbake-devel@lists.openembedded.org>; Fri, 19 Dec 2025 16:13:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18624
 
-Replace fragile parsing of 'git branch' output with the more reliable
-'git name-rev --name-only HEAD' command to get the current branch name.
-This avoids parsing issues and is the recommended way to get the current branch name.
+Most of the time, when we describe a remote, a bitbake-setup source looks like this:
 
-Signed-off-by: Osama Abdelkader <osama.abdelkader@gmail.com>
+"bitbake": {
+    "git-remote": {
+        "remotes": {
+            "origin": {
+                "uri": "https://git.openembedded.org/bitbake"
+            }
+        },
+        ...
+    }
+}
+
+i.e. an URI with the common name 'origin'. Alternatively, we could simplify this, by
+using a shorter structure with the property 'uri' only:
+
+"bitbake": {
+    "git-remote": {
+        "uri": "https://git.openembedded.org/bitbake",
+        ...
+    }
+}
+
+These properties can be used together.
+
+Signed-off-by: Corentin Guillevic <corentin.guillevic@smile.fr>
 ---
-v2: change current branch detection to name-rev --name-only
----
- lib/bblayers/layerindex.py | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bblayers/layerindex.py b/lib/bblayers/layerindex.py
-index 0ffc95822b..1c6511889d 100644
---- a/lib/bblayers/layerindex.py
-+++ b/lib/bblayers/layerindex.py
-@@ -55,13 +55,15 @@ class LayerIndexPlugin(ActionPlugin):
-             switching branches if necessary and possible.
-             """
-             base_cmd = ['git', '--git-dir=%s/.git' % repodir, '--work-tree=%s' % repodir]
--            cmd = base_cmd + ['branch']
-+            # Get current branch name
-+            cmd = base_cmd + ['name-rev', '--name-only', 'HEAD']
-             completed_proc = subprocess.run(cmd, text=True, capture_output=True)
-             if completed_proc.returncode:
-                 logger.error("Unable to validate repo %s (%s)" % (repodir, completed_proc.stderr))
-                 return None, None, None
-             else:
--                if branch != completed_proc.stdout[2:-1]:
-+                current_branch = completed_proc.stdout.strip()
-+                if branch != current_branch:
-                     cmd = base_cmd + ['status', '--short']
-                     completed_proc = subprocess.run(cmd, text=True, capture_output=True)
-                     if completed_proc.stdout.count('\n') != 0:
+Changes in v4:
+- Fix a wrong indentation in the file bitbake-user-manual-environment-setup.rst
+
+ bin/bitbake-setup | 23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
+
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index 73f734e73..809077518 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -89,14 +89,30 @@ def _write_layer_list(dest, repodirs):
+     with open(layers_f, 'w') as f:
+         json.dump({"version":"1.0","layers":layers}, f, sort_keys=True, indent=4)
+ 
++def _get_remotes(r_remote):
++    remotes = []
++
++    if not 'remotes' in r_remote and not 'uri' in r_remote:
++        raise Exception("Expected key(s): 'remotes', 'uri'")
++
++    if 'remotes' in r_remote:
++        for remote in r_remote['remotes']:
++            remotes.append(r_remote['remotes'][remote]['uri'])
++
++    if 'uri' in r_remote:
++        remotes.append(r_remote['uri'])
++
++    return remotes
++
+ def checkout_layers(layers, layerdir, d):
+     def _checkout_git_remote(r_remote, repodir, layers_fixed_revisions):
+         rev = r_remote['rev']
+         branch = r_remote.get('branch', None)
+-        remotes = r_remote['remotes']
++
++        remotes = _get_remotes(r_remote)
+ 
+         for remote in remotes:
+-            prot,host,path,user,pswd,params = bb.fetch.decodeurl(remotes[remote]["uri"])
++            prot,host,path,user,pswd,params = bb.fetch.decodeurl(remote)
+             fetchuri = bb.fetch.encodeurl(('git',host,path,user,pswd,params))
+             logger.plain("    {}".format(r_name))
+             if branch:
+@@ -600,7 +616,8 @@ def are_layers_changed(layers, layerdir, d):
+         changed = False
+         rev = r_remote['rev']
+         branch = r_remote.get('branch', None)
+-        remotes = r_remote['remotes']
++
++        remotes = _get_remotes(r_remote)
+ 
+         for remote in remotes:
+             type,host,path,user,pswd,params = bb.fetch.decodeurl(remotes[remote]["uri"])
 -- 
-2.43.0
+2.51.0
 
 
