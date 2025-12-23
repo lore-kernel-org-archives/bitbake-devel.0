@@ -2,110 +2,163 @@ Return-Path: <corentin.guillevic@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 248DDE6F082
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CFEE6F081
 	for <webhook@archiver.kernel.org>; Tue, 23 Dec 2025 10:18:13 +0000 (UTC)
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.98157.1766485088147837264
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.98151.1766485083185026949
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 23 Dec 2025 02:18:08 -0800
+ Tue, 23 Dec 2025 02:18:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=c7o+8+i8;
- spf=pass (domain: smile.fr, ip: 209.85.128.68, mailfrom: corentin.guillevic@smile.fr)
-Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-477ba2c1ca2so48783945e9.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 23 Dec 2025 02:18:07 -0800 (PST)
+ dkim=pass header.i=@smile.fr header.s=google header.b=t/y0WVTX;
+ spf=pass (domain: smile.fr, ip: 209.85.221.53, mailfrom: corentin.guillevic@smile.fr)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-431048c4068so2701323f8f.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 23 Dec 2025 02:18:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1766485086; x=1767089886; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CtbCIQ3ZC+dM0PqspT29FgKVTSObuAISrT2YCdXsYgo=;
-        b=c7o+8+i8OjJMSPQcU/fKULvJAwbqo9ZP039aPfNCAmMp4NhHgiV98NKrqNjCxX1bRg
-         M1AbxybFRnbuT4wTvQUIhn0OI1CwK97KQ33Uq0r11KtbFFXDfTzjlliifqjtjVUwlF4x
-         dhyQ0Vk71sD1tAYUpG9W8z2J1ezf94Gr1FJKc=
+        d=smile.fr; s=google; t=1766485081; x=1767089881; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TCkfCCZ9nEfkzPtpUEPMRRhVAly37SgIK5FMbNl/QTs=;
+        b=t/y0WVTXKfLQ8aZykWqVp3b1gqyevUPeqbcH8B7OoUAKgUCiLhgJEk+Kwi9RgGQOxI
+         NJ7QDLxnQXH8CR/QmLEZUy9v13Gm9k8g/o7YQVHKTrSMr3GfLkMRVql/02Ea0nw/fxKQ
+         makK4m52rmlDLDZBvkMDN7DPxHk5WClR1PouY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766485086; x=1767089886;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=CtbCIQ3ZC+dM0PqspT29FgKVTSObuAISrT2YCdXsYgo=;
-        b=W+Ekin0V64zTh0+7nSfz/A3vyT3XzLd9YxrENga9JFkXnaEEBizE7zTywr4WnyVApm
-         sRmxVKQJijmgxr9Z2crUsYNsPcei496qLyxt6aWnoCE3ehgKLPVtjJ+C923GJT2VFRNB
-         4/XbQpEnuQHXt7pjwKv8EvmLKVf6hXX2AIeoypF7UJb8jI5qQkChEG2NQRI1vzCAbbyd
-         oYKLmuvpsbTeHvZ5BCJ//F5l5vLXCToGtmgmgT1+9CeIVm7crTo8KuavdWQtWtbXXO3w
-         iu8T467HzK9A0CLtjAQJeN3Wmeqch9QafgNoLSMZCXxTrIZJ6uzQM54wmDfonf7ksGXO
-         7Gdw==
-X-Gm-Message-State: AOJu0Yz0goJmkQJYTUf3n0sI5n7aD5blpNlsmZ+BzMgPNptqBtWJyT5h
-	ovqotjGx6YX3lXZS9WT7CMWQI86iS5grtLjz5a5sKQCLi90Bhg+Y8BTYLicP/f7qx8dNpugJq4l
-	iQJml8tntVg==
-X-Gm-Gg: AY/fxX572OKIYUTvQpQ5LOWpIrzk3MzUk2aPjDqa0WxBcV4DQIEBcDk6oP4yR/v1CwZ
-	rjBZs+uppnmUgf2pJgoog7LReU1DOGcS/5mxxfyrjRRUR8LkgpQWAfSNnRlery9Ti+OR+DazpHq
-	9Q2Fgwq26/++3nHLWVfyvFjGUsS5rg/DtpFqwCQO3UfqSAB+cKGzex/EZSQHtxg8zyLEAZ8p4VN
-	Wbx0fPiQGAtaMCWdinnCHcUYr7A/ol8cHdUI6X56vhwxBnmrbPSDJIahSgz0gucw77hNq7FKVCA
-	5y/5KzFOQD9RffN+JVcM26U6NxGbQWwZJ+lnnbHg86a7IZ8gR8h3c0nAeMoKy4kDmOvytp8NMrL
-	OcPd7estOPqRJeChHxQC0Fp3uQXKmuTu+W95RpbncdVLAZHkp+RN0j9KI82oVfkII41i+H6SWIt
-	J0gkYRvrZs+YxJbmk=
-X-Google-Smtp-Source: AGHT+IEo1klbgwyFiMm4n10FYMsb3BuyVnC6wFWbnEpFpxuyLhXU7veWqyNe0+EDSbItp4iJbOKjEg==
-X-Received: by 2002:a05:600c:4e01:b0:477:9574:d641 with SMTP id 5b1f17b1804b1-47d1957f712mr147674695e9.22.1766485086498;
-        Tue, 23 Dec 2025 02:18:06 -0800 (PST)
+        d=1e100.net; s=20230601; t=1766485081; x=1767089881;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TCkfCCZ9nEfkzPtpUEPMRRhVAly37SgIK5FMbNl/QTs=;
+        b=SGS0Ur9wv/FvEJIOUUjMaeh/yjNVwYSu3m4MJ/lBO8TwZo7JE4fgXtJzUvzLjSJvE0
+         WvH3g+uJI39T303OR5x6Qpb2dm97Gt7tO4GPGDCCRM7yA0FZtCmLjHbV/j/vk0y8DUuL
+         Pp0ggsRxVRaMC4bxjAS9GBueiJeEpP/oS1xbFjPnb5cRxZRwyIS7cZasrhI6hCbrG4Nv
+         YlfNx/pNKOZhHDEuOKwtfarFlsrklDg5HxRm4g+DvRZ2JtxtYkgN0S3lccmhvOoV9B/5
+         5SlHA+ix6JS3bVdf4GmE3z+RzF5psv2+TqmGyccWwT5RsxvwRTW1lK86NeHsfjXvV+tx
+         Olzg==
+X-Gm-Message-State: AOJu0Yxapoc4p0C9T2T9n7qwJ/TlSOITR79fVDKDfLUzZEd9wo21s+oG
+	W/UuQ/nUWtHRp2bojCU/74mo26eKzod3oJN4BmEnjmLn/Mtv60XB42pVruO5+UPZDDDwS1rk6wA
+	CUI53SbA=
+X-Gm-Gg: AY/fxX58LXuSkV5cU5bn+Ja+x/T3rz7/8+0kIUYiUCyjVCiyC/CxafwEsHxgQOeMxFB
+	95gTeweR/y8tdY80aHBkZ4oqId87Ve0ACT6MmkdAr0CNVxZ4YIT7lvp4pJy3DiVwEdReRp9kPjf
+	cDZ5pMk9g/0pUlqTzrZ6KcZ0amNhjf34v8yswPpto2ormKwinkTpyztYGxAcZ3zi4oNMqSVdh03
+	hpUammja2SJqkBkgWEvxeMv9D2xUm5SZbiZV9ppHSdhSpmX+xro0/gBnsG9c5vIONfR+cHoJ4UI
+	KJeZXXKoOKkjOZEEaduoOdBN0y9fWrZVcxiU1tY4T4q7/HjFdKKpN/XJ+ZmCsPGPVRj//HPaxuZ
+	W8WNJ7gDB/UDamFlZJgyoK7HjyuyyYvBoaJgiGwWMVIu8w8OPxsEgtfFItmcm1Y9Rnh09Pbq9Hh
+	8qKC3W3FdCKQqp23E=
+X-Google-Smtp-Source: AGHT+IFCzCpAEtPoBs4Ffpm+3dc2Z1tlbSGuKX9xVFhFQZ6L8D1pIG6NhK8eVru0cd1drcH4P/wTjg==
+X-Received: by 2002:a05:6000:24c3:b0:431:1c7:f967 with SMTP id ffacd0b85a97d-4324e4172camr18456239f8f.17.1766485081476;
+        Tue, 23 Dec 2025 02:18:01 -0800 (PST)
 Received: from heaven ([2a01:e0a:25d:d2b0:4eb0:a6f9:d3f9:1686])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324eab257asm27428376f8f.38.2025.12.23.02.18.06
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324eab257asm27428376f8f.38.2025.12.23.02.18.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Dec 2025 02:18:06 -0800 (PST)
+        Tue, 23 Dec 2025 02:18:01 -0800 (PST)
 From: Corentin Guillevic <corentin.guillevic@smile.fr>
 To: bitbake-devel@lists.openembedded.org
 Cc: Corentin Guillevic <corentin.guillevic@smile.fr>
-Subject: [PATCH v5 4/4] doc/bitbake-setup: document "uri" property
-Date: Tue, 23 Dec 2025 11:17:56 +0100
-Message-ID: <20251223101757.1057188-4-corentin.guillevic@smile.fr>
+Subject: [PATCH v5 1/4] bitbake-setup: add inline URI
+Date: Tue, 23 Dec 2025 11:17:53 +0100
+Message-ID: <20251223101757.1057188-1-corentin.guillevic@smile.fr>
 X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251223101757.1057188-1-corentin.guillevic@smile.fr>
-References: <20251223101757.1057188-1-corentin.guillevic@smile.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 23 Dec 2025 10:18:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18646
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18643
 
-The property 'uri' is a simplification of the property 'remotes'. It is
-used to provide only one URI.
+Most of the time, when we describe a remote, a bitbake-setup source looks like this:
+
+"bitbake": {
+    "git-remote": {
+        "remotes": {
+            "origin": {
+                "uri": "https://git.openembedded.org/bitbake"
+            }
+        },
+        ...
+    }
+}
+
+i.e. an URI with the common name 'origin'. Alternatively, we could simplify this, by
+using a shorter structure with the property 'uri' only:
+
+"bitbake": {
+    "git-remote": {
+        "uri": "https://git.openembedded.org/bitbake",
+        ...
+    }
+}
+
+These properties can be used together.
 
 Signed-off-by: Corentin Guillevic <corentin.guillevic@smile.fr>
 ---
- .../bitbake-user-manual-environment-setup.rst        | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-index ec1bdeecd..b3588f27d 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-@@ -673,11 +673,7 @@ They contain the following sections:
-          "sources": {
-              "bitbake": {
-                  "git-remote": {
--                     "remotes": {
--                         "origin": {
--                             "uri": "https://git.openembedded.org/bitbake"
--                         }
--                     },
-+                     "uri": "https://git.openembedded.org/bitbake",
-                      "branch": "master",
-                      "rev": "master"
-                  },
-@@ -716,6 +712,12 @@ They contain the following sections:
-       -  ``branch`` (**required**): the Git branch, used to check that the
-          specified ``rev`` is indeed on that branch.
+Changes in v5:
+- Fix variable mistake in are_layers_changed() function
+
+ bin/bitbake-setup | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
+
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index 73f734e73..d868d8a11 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -89,14 +89,30 @@ def _write_layer_list(dest, repodirs):
+     with open(layers_f, 'w') as f:
+         json.dump({"version":"1.0","layers":layers}, f, sort_keys=True, indent=4)
  
-+      -  ``uri`` (*optional*): a URI that follows the git URI syntax. Can replace the
-+         ``remotes`` structure if only one URI is provided. Despite this, ``uri`` and
-+         ``remotes`` can still be used together.
++def _get_remotes(r_remote):
++    remotes = []
 +
-+         See https://git-scm.com/docs/git-clone#_git_urls for more information.
++    if not 'remotes' in r_remote and not 'uri' in r_remote:
++        raise Exception("Expected key(s): 'remotes', 'uri'")
 +
-    -  ``local`` (*optional*): specifies a path on local disk that should be symlinked
-       to under ``layers/``. This is useful for local development, where some layer
-       or other component used in a build is managed separately, but should still be
++    if 'remotes' in r_remote:
++        for remote in r_remote['remotes']:
++            remotes.append(r_remote['remotes'][remote]['uri'])
++
++    if 'uri' in r_remote:
++        remotes.append(r_remote['uri'])
++
++    return remotes
++
+ def checkout_layers(layers, layerdir, d):
+     def _checkout_git_remote(r_remote, repodir, layers_fixed_revisions):
+         rev = r_remote['rev']
+         branch = r_remote.get('branch', None)
+-        remotes = r_remote['remotes']
++
++        remotes = _get_remotes(r_remote)
+ 
+         for remote in remotes:
+-            prot,host,path,user,pswd,params = bb.fetch.decodeurl(remotes[remote]["uri"])
++            prot,host,path,user,pswd,params = bb.fetch.decodeurl(remote)
+             fetchuri = bb.fetch.encodeurl(('git',host,path,user,pswd,params))
+             logger.plain("    {}".format(r_name))
+             if branch:
+@@ -600,10 +616,11 @@ def are_layers_changed(layers, layerdir, d):
+         changed = False
+         rev = r_remote['rev']
+         branch = r_remote.get('branch', None)
+-        remotes = r_remote['remotes']
++
++        remotes = _get_remotes(r_remote)
+ 
+         for remote in remotes:
+-            type,host,path,user,pswd,params = bb.fetch.decodeurl(remotes[remote]["uri"])
++            type,host,path,user,pswd,params = bb.fetch.decodeurl(remote)
+             fetchuri = bb.fetch.encodeurl(('git',host,path,user,pswd,params))
+             if branch:
+                 fetcher = bb.fetch.FetchData("{};protocol={};rev={};branch={};destsuffix={}".format(fetchuri,type,rev,branch,repodir), d)
+@@ -614,7 +631,7 @@ def are_layers_changed(layers, layerdir, d):
+             local_revision = rev_parse_result[0].strip()
+             if upstream_revision != local_revision:
+                 changed = True
+-                logger.info('Layer repository {} checked out into {} updated revision {} from {} to {}'.format(remotes[remote]["uri"], os.path.join(layerdir, repodir), rev, local_revision, upstream_revision))
++                logger.info('Layer repository {} checked out into {} updated revision {} from {} to {}'.format(remote, os.path.join(layerdir, repodir), rev, local_revision, upstream_revision))
+         return changed
+ 
+     changed = False
 -- 
 2.51.0
 
