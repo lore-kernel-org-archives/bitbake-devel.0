@@ -1,274 +1,143 @@
-Return-Path: <corentin.guillevic@smile.fr>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282A5E6F07C
-	for <webhook@archiver.kernel.org>; Tue, 23 Dec 2025 10:18:13 +0000 (UTC)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.98377.1766485087103952532
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82566E6F084
+	for <webhook@archiver.kernel.org>; Tue, 23 Dec 2025 10:59:23 +0000 (UTC)
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.98819.1766487554566392450
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 23 Dec 2025 02:18:07 -0800
+ Tue, 23 Dec 2025 02:59:15 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=WuUGCfzu;
- spf=pass (domain: smile.fr, ip: 209.85.128.53, mailfrom: corentin.guillevic@smile.fr)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-47a8195e515so33390535e9.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 23 Dec 2025 02:18:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1766485085; x=1767089885; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4ma4NVhkjtSUmoFMFBl/xlOWpNKtRTxHX3lfQZzkESI=;
-        b=WuUGCfzuWvUqa/aTnOoQ6OOqfBJyZrmxkXGc5BO3Gh0EDEFu6rS9307rdX4zb3R3f2
-         FZrpkvTS6avaqYq8yyE2j0ITEfx8fzI0boa8f4YJZrfPcLMKWjCA1PqhS2duU8x3UDpi
-         uMwLj3JRzzcZjJ1vNakDGJl88EAZscHeK6zOA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766485085; x=1767089885;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=4ma4NVhkjtSUmoFMFBl/xlOWpNKtRTxHX3lfQZzkESI=;
-        b=bE1n/9XTWKGjAdWmDR+U/r3VKzXgGXLtqAOrL0Bk0KEVynBdBEteUnV7fxGIaR9dCn
-         4ZD4aJynge1WVq8N8VMJN4lpvdRSavl3Xk5O2bTN520UDWLShOouepFaa1xyyuTvMi42
-         7Ov6CPmxzbwoTSC8MtGUJVXEgNKiw0c0M0wudLXoEeTREE9Jr10kdcVIBP+IJhOsx3pR
-         3e9zMt5RENR2okL3dvsl7V8kXz6+DEAhTftADVwMowNgIUV/LVw0Rx0kS9rxDzC3QN9n
-         ZraD01eZaJOIOtTPbdtgNhgB8IFh77wJePpTWYiN5V36QkfttWVLiGLvbjsJiCe08Rdl
-         xgmQ==
-X-Gm-Message-State: AOJu0YwCjq7hGZI8GhuDOIA/w6VOKifitBrK2j5ZYy5ER4pOejT1qxmU
-	0cbXpFOQddZQmPSe9N76EghM8eIYT4XiJ0zm/Z6siocikz7o3cIAMVl93NNQQIDHc5eRt5hvMy0
-	LvUIMPrg=
-X-Gm-Gg: AY/fxX6OxwsGnYxY0SCqS8J79iGmp5NmUF8FPFB70QExYts3yPBQATvSoNKrbFQm1px
-	y0IJO8O3U7oaIMlb3f9l2PA9KTdb6857U748ycYQ20S4irji85ZielDQa8Tqk0kT7pljdM7oqkf
-	xwLkKoA06pAEoYZYNXXOAzMc5mecYEVWvh8Px86HBYKoWTyUNpQ2fDehjBH7z9244KQXLoKzSny
-	a0DrTwSYbjo5K9sGDNisxX4EYn2PrbwjU1YSxSz2hpfUc3X1W8o9eU3b6O1/ZwfpLIBDBhULLlt
-	Mf0FLsUmd8d4RmJmWNC1dgCVrwoWdvID7vdLepF4PdkeX+EtLHsMKiTas/qKSwRn/SX6POeKTYl
-	c0wKeyOJhFLs84wryrVStkcAHNoweLvLAH67JoYAM/OQyNj3lblrt4FLUw2QsCRvBwdoWSNZaZ5
-	P/eLfnc8+qX5c3Gz4=
-X-Google-Smtp-Source: AGHT+IGs2AXutsPXg98DCZA5DifK0r3ZK3ML8RzqlQ6WaQDRoMlmgcmgci64bVjpLaGly3FH81WhjQ==
-X-Received: by 2002:a05:600d:108:20b0:477:214f:bd95 with SMTP id 5b1f17b1804b1-47d1c036d6cmr106964915e9.23.1766485085438;
-        Tue, 23 Dec 2025 02:18:05 -0800 (PST)
-Received: from heaven ([2a01:e0a:25d:d2b0:4eb0:a6f9:d3f9:1686])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324eab257asm27428376f8f.38.2025.12.23.02.18.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Dec 2025 02:18:05 -0800 (PST)
-From: Corentin Guillevic <corentin.guillevic@smile.fr>
-To: bitbake-devel@lists.openembedded.org
-Cc: Corentin Guillevic <corentin.guillevic@smile.fr>
-Subject: [PATCH v5 3/4] bitbake-setup: use URI shortcut for all configurations
-Date: Tue, 23 Dec 2025 11:17:55 +0100
-Message-ID: <20251223101757.1057188-3-corentin.guillevic@smile.fr>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251223101757.1057188-1-corentin.guillevic@smile.fr>
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=Arli0E5E;
+ spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 76AE01A23A4;
+	Tue, 23 Dec 2025 10:59:12 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 4510460716;
+	Tue, 23 Dec 2025 10:59:12 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id EE69010AB0A17;
+	Tue, 23 Dec 2025 11:59:10 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1766487551; h=from:subject:date:message-id:to:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=vK+vtM6eAeWuk7imbvBnQMZKv0I4Io0QkrSVeIgcLBQ=;
+	b=Arli0E5E2x+Soglng1q7hj7akrk1K0C31REonQ98z8d/wf2KOWy2xYY/EwARFqgiH1oZLZ
+	rbs/c+wOqD4Ce+C9hRCZohQ2oI4kl609lhO2yMDKMk6rmOP37j8u3hSH4f0SR4X9eWyygs
+	tozCeaIWvSGXTyCY92MS/1hrBriuImuamcNV3Bctg6ErL6ARjDZinKFfa8gRTGnTt8wlt8
+	18h6rs+RCNhnh3fpX+CzB5A/JDl1CpxG8lNoiz0ig7ZEJfAOsfSI9X5ALbTQZQFlTa3HdB
+	Uh4aCcDPR8uitxk+L8RyLQ7pWxAoEsLIsw72MNvlVG6KvFLhJOAMbLdk6Ko+rg==
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 23 Dec 2025 11:59:10 +0100
+Message-Id: <DF5JKPLOIHB1.3B4RJC8E90CG@bootlin.com>
+Subject: Re: [bitbake-devel] [PATCH v5 4/4] doc/bitbake-setup: document
+ "uri" property
+From: "Antonin Godard" <antonin.godard@bootlin.com>
+To: <corentin.guillevic@smile.fr>, <bitbake-devel@lists.openembedded.org>
 References: <20251223101757.1057188-1-corentin.guillevic@smile.fr>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+ <20251223101757.1057188-4-corentin.guillevic@smile.fr>
+In-Reply-To: <20251223101757.1057188-4-corentin.guillevic@smile.fr>
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 23 Dec 2025 10:18:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18645
+ <bitbake-devel@lists.openembedded.org>; Tue, 23 Dec 2025 10:59:23 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18647
 
-Currently, no source has several remotes. So we can replace their entire
-structure 'remote' -> 'origin' -> 'uri' with a shorter one (property 'uri'
-only).
+Hi,
 
-Signed-off-by: Corentin Guillevic <corentin.guillevic@smile.fr>
----
- .../oe-nodistro-master.conf.json              | 18 +++-----------
- .../oe-nodistro-whinlatter.conf.json          | 18 +++-----------
- .../configurations/poky-master.conf.json      | 24 ++++---------------
- .../configurations/poky-whinlatter.conf.json  | 24 ++++---------------
- 4 files changed, 14 insertions(+), 70 deletions(-)
+On Tue Dec 23, 2025 at 11:17 AM CET, Corentin Guillevic via lists.openembed=
+ded.org wrote:
+> The property 'uri' is a simplification of the property 'remotes'. It is
+> used to provide only one URI.
+>
+> Signed-off-by: Corentin Guillevic <corentin.guillevic@smile.fr>
+> ---
+>  .../bitbake-user-manual-environment-setup.rst        | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+>
+> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setu=
+p.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+> index ec1bdeecd..b3588f27d 100644
+> --- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+> +++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+> @@ -673,11 +673,7 @@ They contain the following sections:
+>           "sources": {
+>               "bitbake": {
+>                   "git-remote": {
+> -                     "remotes": {
+> -                         "origin": {
+> -                             "uri": "https://git.openembedded.org/bitbak=
+e"
+> -                         }
+> -                     },
 
-diff --git a/default-registry/configurations/oe-nodistro-master.conf.json b/default-registry/configurations/oe-nodistro-master.conf.json
-index 180d2008a..e4e842177 100644
---- a/default-registry/configurations/oe-nodistro-master.conf.json
-+++ b/default-registry/configurations/oe-nodistro-master.conf.json
-@@ -3,33 +3,21 @@
-     "sources": {
-         "bitbake": {
-             "git-remote": {
--                "remotes": {
--                    "origin": {
--                        "uri": "https://git.openembedded.org/bitbake"
--                    }
--                },
-+                "uri": "https://git.openembedded.org/bitbake",
-                 "branch": "master",
-                 "rev": "master"
-             }
-         },
-         "openembedded-core": {
-             "git-remote": {
--                "remotes": {
--                    "origin": {
--                        "uri": "https://git.openembedded.org/openembedded-core"
--                    }
--                },
-+                "uri": "https://git.openembedded.org/openembedded-core",
-                 "branch": "master",
-                 "rev": "master"
-             }
-         },
-         "yocto-docs": {
-             "git-remote": {
--                "remotes": {
--                    "origin": {
--                        "uri": "https://git.yoctoproject.org/yocto-docs"
--                    }
--                },
-+                "uri": "https://git.yoctoproject.org/yocto-docs",
-                 "branch": "master",
-                 "rev": "master"
-             }
-diff --git a/default-registry/configurations/oe-nodistro-whinlatter.conf.json b/default-registry/configurations/oe-nodistro-whinlatter.conf.json
-index 7b183ae1c..8342f2cf5 100644
---- a/default-registry/configurations/oe-nodistro-whinlatter.conf.json
-+++ b/default-registry/configurations/oe-nodistro-whinlatter.conf.json
-@@ -4,33 +4,21 @@
-     "sources": {
-         "bitbake": {
-             "git-remote": {
--                "remotes": {
--                    "origin": {
--                        "uri": "https://git.openembedded.org/bitbake"
--                    }
--                },
-+                "uri": "https://git.openembedded.org/bitbake",
-                 "branch": "2.16",
-                 "rev": "2.16"
-             }
-         },
-         "openembedded-core": {
-             "git-remote": {
--                "remotes": {
--                    "origin": {
--                        "uri": "https://git.openembedded.org/openembedded-core"
--                    }
--                },
-+                "uri": "https://git.openembedded.org/openembedded-core",
-                 "branch": "whinlatter",
-                 "rev": "whinlatter"
-             }
-         },
-         "yocto-docs": {
-             "git-remote": {
--                "remotes": {
--                    "origin": {
--                        "uri": "https://git.yoctoproject.org/yocto-docs"
--                    }
--                },
-+                "uri": "https://git.yoctoproject.org/yocto-docs",
-                 "branch": "whinlatter",
-                 "rev": "whinlatter"
-             }
-diff --git a/default-registry/configurations/poky-master.conf.json b/default-registry/configurations/poky-master.conf.json
-index 1de038bab..82464e8ab 100644
---- a/default-registry/configurations/poky-master.conf.json
-+++ b/default-registry/configurations/poky-master.conf.json
-@@ -3,44 +3,28 @@
-     "sources": {
-         "bitbake": {
-             "git-remote": {
--                "remotes": {
--                    "origin": {
--                        "uri": "https://git.openembedded.org/bitbake"
--                    }
--                },
-+                "uri": "https://git.openembedded.org/bitbake",
-                 "branch": "master",
-                 "rev": "master"
-             }
-         },
-         "openembedded-core": {
-             "git-remote": {
--                "remotes": {
--                    "origin": {
--                        "uri": "https://git.openembedded.org/openembedded-core"
--                    }
--                },
-+                "uri": "https://git.openembedded.org/openembedded-core",
-                 "branch": "master",
-                 "rev": "master"
-             }
-         },
-         "meta-yocto": {
-             "git-remote": {
--                "remotes": {
--                    "origin": {
--                        "uri": "https://git.yoctoproject.org/meta-yocto"
--                    }
--                },
-+                "uri": "https://git.yoctoproject.org/meta-yocto",
-                 "branch": "master",
-                 "rev": "master"
-             }
-         },
-         "yocto-docs": {
-             "git-remote": {
--                "remotes": {
--                    "origin": {
--                        "uri": "https://git.yoctoproject.org/yocto-docs"
--                    }
--                },
-+                "uri": "https://git.yoctoproject.org/yocto-docs",
-                 "branch": "master",
-                 "rev": "master"
-             }
-diff --git a/default-registry/configurations/poky-whinlatter.conf.json b/default-registry/configurations/poky-whinlatter.conf.json
-index bfa67426d..80b3c7f8c 100644
---- a/default-registry/configurations/poky-whinlatter.conf.json
-+++ b/default-registry/configurations/poky-whinlatter.conf.json
-@@ -4,44 +4,28 @@
-     "sources": {
-         "bitbake": {
-             "git-remote": {
--                "remotes": {
--                    "origin": {
--                        "uri": "https://git.openembedded.org/bitbake"
--                    }
--                },
-+                "uri": "https://git.openembedded.org/bitbake",
-                 "branch": "2.16",
-                 "rev": "2.16"
-             }
-         },
-         "openembedded-core": {
-             "git-remote": {
--                "remotes": {
--                    "origin": {
--                        "uri": "https://git.openembedded.org/openembedded-core"
--                    }
--                },
-+                "uri": "https://git.openembedded.org/openembedded-core",
-                 "branch": "whinlatter",
-                 "rev": "whinlatter"
-             }
-         },
-         "meta-yocto": {
-             "git-remote": {
--                "remotes": {
--                    "origin": {
--                        "uri": "https://git.yoctoproject.org/meta-yocto"
--                    }
--                },
-+                "uri": "https://git.yoctoproject.org/meta-yocto",
-                 "branch": "whinlatter",
-                 "rev": "whinlatter"
-             }
-         },
-         "yocto-docs": {
-             "git-remote": {
--                "remotes": {
--                    "origin": {
--                        "uri": "https://git.yoctoproject.org/yocto-docs"
--                    }
--                },
-+                "uri": "https://git.yoctoproject.org/yocto-docs",
-                 "branch": "whinlatter",
-                 "rev": "whinlatter"
-             }
--- 
-2.51.0
+Can you please port this deleted example under the description of the "remo=
+tes"
+property?
+
+We still want to show how someone can configure this property. It would be =
+nice
+if you could showcase another remote name, so it highlights why this option
+could be used instead of the simplified "uri" option.
+
+Something like:
+
+  "git-remote": {
+      "remotes": {
+          "origin": {
+              "uri": "https://git.openembedded.org/bitbake"
+          },
+          "contrib": {
+              "uri": "https://git.openembedded.org/bitbake-contrib"
+          }
+      },
+  }
+
+And then explain how one or the other can be used with bitbake-setup (I hav=
+e no
+clue).
+
+This also makes the "remotes" option optional, so you need to update its
+description.
+
+> +                     "uri": "https://git.openembedded.org/bitbake",
+>                       "branch": "master",
+>                       "rev": "master"
+>                   },
+> @@ -716,6 +712,12 @@ They contain the following sections:
+>        -  ``branch`` (**required**): the Git branch, used to check that t=
+he
+>           specified ``rev`` is indeed on that branch.
+> =20
+> +      -  ``uri`` (*optional*): a URI that follows the git URI syntax. Ca=
+n replace the
+
+s/Can/You can/
+
+> +         ``remotes`` structure if only one URI is provided. Despite this=
+, ``uri`` and
+> +         ``remotes`` can still be used together.
+> +
+> +         See https://git-scm.com/docs/git-clone#_git_urls for more infor=
+mation.
+> +
+>     -  ``local`` (*optional*): specifies a path on local disk that should=
+ be symlinked
+>        to under ``layers/``. This is useful for local development, where =
+some layer
+>        or other component used in a build is managed separately, but shou=
+ld still be
+
+Thanks,
+Antonin
+
+--=20
+Antonin Godard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
