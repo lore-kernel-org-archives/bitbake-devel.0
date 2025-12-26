@@ -1,133 +1,127 @@
-Return-Path: <adrian.freihofer@siemens.com>
+Return-Path: <mathieu.dubois-briand@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60671E77361
-	for <webhook@archiver.kernel.org>; Wed, 24 Dec 2025 15:13:12 +0000 (UTC)
-Received: from mta-65-225.siemens.flowmailer.net (mta-65-225.siemens.flowmailer.net [185.136.65.225])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.121737.1766589184693513474
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 771AEE8FDAB
+	for <webhook@archiver.kernel.org>; Fri, 26 Dec 2025 16:33:18 +0000 (UTC)
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.155971.1766766793366117021
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 24 Dec 2025 07:13:06 -0800
+ Fri, 26 Dec 2025 08:33:14 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=adrian.freihofer@siemens.com header.s=fm2 header.b=DlDo9Sb7;
- spf=pass (domain: rts-flowmailer.siemens.com, ip: 185.136.65.225, mailfrom: fm-1329275-20251224151302a4ed7233bd0002072d-whwkov@rts-flowmailer.siemens.com)
-Received: by mta-65-225.siemens.flowmailer.net with ESMTPSA id 20251224151302a4ed7233bd0002072d
-        for <bitbake-devel@lists.openembedded.org>;
-        Wed, 24 Dec 2025 16:13:02 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
- d=siemens.com; i=adrian.freihofer@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=rF76PJA1JSAEv8GMo6KLJX2On3Ut5QtEvzOGp5QWlsU=;
- b=DlDo9Sb7eoG1y3g2ezlRQloBc+thmVKL+B+fSHnD+Iu0WdlUhRC6tg18SVET5mPTPrAies
- V/aM9ZjtqLO286w9viP9coVsyZRaqYkaeOxsRMIdJhumfzX+PQkqwGJ23CsKBtvVBAEuK+k7
- q+jee5WrOgMmJQZcDvvzfAQtUYf320FnaNeAr8LgzymseaWlbsHkCPKY5fa4YNuOOnF8sSHE
- q5v4VitclFB3egkGFqFp5P1ker9U0oMzNYOp8zaFZkxb7kCfHXfp6fxvrrWMMWuEKhcQaebM
- D4GaCK/Hsi1I/hlwi5+mcBqiObjRVrGxhUX8nG4CvIpNwhQm/ddoP6Zg==;
-From: AdrianF <adrian.freihofer@siemens.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Adrian Freihofer <adrian.freihofer@siemens.com>
-Subject: [PATCH 1/1] bitbake-setup: Initialize build environment after setup/update
-Date: Wed, 24 Dec 2025 16:12:15 +0100
-Message-ID: <20251224151248.3313463-2-adrian.freihofer@siemens.com>
-In-Reply-To: <20251224151248.3313463-1-adrian.freihofer@siemens.com>
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=sFNlUeqW;
+ spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: mathieu.dubois-briand@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id E853AC1D183
+	for <bitbake-devel@lists.openembedded.org>; Fri, 26 Dec 2025 16:32:45 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 063DE606E4;
+	Fri, 26 Dec 2025 16:33:11 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 81499103C8D10;
+	Fri, 26 Dec 2025 17:33:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1766766790; h=from:subject:date:message-id:to:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=H0n2/JKBMh/0XFQYLdoi2fdYmB7QCf+QIpuXpkYECd4=;
+	b=sFNlUeqWsSrhmFeABX78KLCXqa9Su94pOpz9TJChsPQoJWiOMHLXrL27F6OgU4a8k4GDWw
+	gVZATlGq8Ai9X6JB3yYBa9Rl6z0hce1DgrjLqCtqD5manZu5eQT0Ql3sXMbyhULAiY0Agm
+	KSn55naGXOIMnnjZCJb78R7P0tSiwiMOYoiI9oH/DBVkciRQKlssYe7U152YMAgVUJgijo
+	hod5XKwzmDb9dHNkW/mebxHXyUUxtecXl29c20IHpN2oWrYldSRghYP0xv+D1MahVFiNcj
+	4l+k+cbLVE2L22UKwycgkvSim1O4AxFjLYGmx60YHBuNGU7C95DZYdYgfJ8phg==
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 26 Dec 2025 17:33:08 +0100
+Message-Id: <DF8AK1TAXAUW.30M2AJXJ9EEBE@bootlin.com>
+Subject: Re: [bitbake-devel] [PATCH 0/1] bitbake-setup: Initialize build
+ environment after setup/update
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: <adrian.freihofer@siemens.com>, <bitbake-devel@lists.openembedded.org>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
 References: <20251224151248.3313463-1-adrian.freihofer@siemens.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-1329275:519-21489:flowmailer
+In-Reply-To: <20251224151248.3313463-1-adrian.freihofer@siemens.com>
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 24 Dec 2025 15:13:12 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18649
+ <bitbake-devel@lists.openembedded.org>; Fri, 26 Dec 2025 16:33:18 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18650
 
-From: Adrian Freihofer <adrian.freihofer@siemens.com>
+On Wed Dec 24, 2025 at 4:12 PM CET, Adrian Freihofer via lists.openembedded=
+.org wrote:
+> From: Adrian Freihofer <adrian.freihofer@siemens.com>
+>
+> This is related to https://lists.openembedded.org/g/openembedded-core/mes=
+sage/228541
+>
+> It does not have a hard dependency on the oe-core change, but this bitbak=
+e change
+> does not make sense without it.
+>
+> Adrian Freihofer (1):
+>   bitbake-setup: Initialize build environment after setup/update
+>
+>  bin/bitbake-setup | 24 ++++++++++++++++++++----
+>  1 file changed, 20 insertions(+), 4 deletions(-)
 
-Add verify_and_prepare_environment() function to source the init-build-env
-script after configuration setup or updates. This ensures the build
-environment is properly initialized and IDE configuration files (such as
-.vscode/settings.json) are created before the user starts the IDE.
+Hi Adrian,
 
-Signed-off-by: Adrian Freihofer <adrian.freihofer@siemens.com>
----
- bin/bitbake-setup | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+Thanks for your patch.
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index 73f734e73..4c9a86b34 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -324,6 +324,8 @@ The bitbake configuration files (local.conf, bblayers.conf and more) can be foun
-     logger.plain("{}\n".format(fragment_note))
-     logger.plain("The bitbake configuration files (local.conf, bblayers.conf and more) can be found in\n    {}/conf\n".format(bitbake_builddir))
- 
-+    return init_script
-+
- def get_registry_config(registry_path, id):
-     for root, dirs, files in os.walk(registry_path):
-         for f in files:
-@@ -340,8 +342,9 @@ def update_build(config, confdir, setupdir, layerdir, d, update_bb_conf="prompt"
-     sources_fixed_revisions = checkout_layers(layer_config, layerdir, d)
-     bitbake_config = config["bitbake-config"]
-     thisdir = os.path.dirname(config["path"]) if config["type"] == 'local' else None
--    setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_conf)
-+    init_script = setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_conf)
-     write_sources_fixed_revisions(confdir, sources_fixed_revisions)
-+    return init_script
- 
- def int_input(allowed_values, prompt=''):
-     n = None
-@@ -511,6 +514,14 @@ def obtain_overrides(args):
- 
-     return overrides
- 
-+def verify_and_prepare_environment(init_script):
-+    """
-+    Source the build environment init-build-env script.
-+
-+    This verifies the setup is working.
-+    Additionally it may initialize the environment with e.g. a .vscode/settings.json if needed.
-+    """
-+    bb.process.run(['sh', '-c', '. {}'.format(init_script)])
- 
- def init_config(top_dir, settings, args):
-     create_siteconf(top_dir, args.non_interactive, settings)
-@@ -580,9 +591,12 @@ def init_config(top_dir, settings, args):
-     bb.event.register("bb.build.TaskProgress", handle_task_progress, data=d)
- 
-     write_upstream_config(confdir, upstream_config)
--    update_build(upstream_config, confdir, setupdir, layerdir, d, update_bb_conf="yes")
-+    init_script = update_build(upstream_config, confdir, setupdir, layerdir, d, update_bb_conf="yes")
-     commit_config(confdir)
- 
-+    # Source the build environment to verify setup and prepare for VSCode if needed
-+    verify_and_prepare_environment(init_script)
-+
-     bb.event.remove("bb.build.TaskProgress", None)
- 
- def get_diff(file1, file2):
-@@ -649,16 +663,18 @@ def build_status(top_dir, settings, args, d, update=False):
-         logger.plain('\nConfiguration in {} has changed:\n{}'.format(setupdir, config_diff))
-         if update:
-             commit_config(confdir)
--            update_build(new_upstream_config, confdir, setupdir, layerdir, d,
-+            init_script = update_build(new_upstream_config, confdir, setupdir, layerdir, d,
-                          update_bb_conf=args.update_bb_conf)
-+            verify_and_prepare_environment(init_script)
-         else:
-             bb.process.run('git -C {} restore config-upstream.json'.format(confdir))
-         return
- 
-     if are_layers_changed(current_upstream_config["data"]["sources"], layerdir, d):
-         if update:
--            update_build(current_upstream_config, confdir, setupdir, layerdir,
-+            init_script = update_build(current_upstream_config, confdir, setupdir, layerdir,
-                          d, update_bb_conf=args.update_bb_conf)
-+            verify_and_prepare_environment(init_script)
-         return
- 
-     logger.plain("\nConfiguration in {} has not changed.".format(setupdir))
--- 
-2.52.0
+It looks like this is breaking some bitbake selftest:
+
+ERROR: test_setup (bb.tests.setup.BitbakeSetupTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/pokybuild/yocto-worker/oe-selftest-debian/build/layers/bitbake=
+/lib/bb/tests/setup.py", line 369, in test_setup
+    out =3D self.runbbsetup("update --update-bb-conf=3D'yes'")
+  File "/srv/pokybuild/yocto-worker/oe-selftest-debian/build/layers/bitbake=
+/lib/bb/tests/setup.py", line 90, in runbbsetup
+    return bb.process.run("{} --global-settings {} {}".format(bbsetup, os.p=
+ath.join(self.tempdir, 'global-config'), cmd))
+  File "/srv/pokybuild/yocto-worker/oe-selftest-debian/build/layers/bitbake=
+/lib/bb/process.py", line 189, in run
+    raise ExecutionError(cmd, pipe.returncode, stdout, stderr)
+bb.process.ExecutionError: Execution of '/srv/pokybuild/yocto-worker/oe-sel=
+ftest-debian/build/layers/bitbake/bin/bitbake-setup --global-settings /tmp/=
+bitbake-fetch-uqye_k49/global-config update --update-bb-conf=3D'yes'' faile=
+d with exit code 1:
+Traceback (most recent call last):
+  File "/srv/pokybuild/yocto-worker/oe-selftest-debian/build/layers/bitbake=
+/bin/bitbake-setup", line 1058, in <module>
+    main()
+  File "/srv/pokybuild/yocto-worker/oe-selftest-debian/build/layers/bitbake=
+/bin/bitbake-setup", line 1051, in main
+    args.func(top_dir, all_settings, args, d)
+  File "/srv/pokybuild/yocto-worker/oe-selftest-debian/build/layers/bitbake=
+/bin/bitbake-setup", line 683, in build_update
+    build_status(top_dir, settings, args, d, update=3DTrue)
+  File "/srv/pokybuild/yocto-worker/oe-selftest-debian/build/layers/bitbake=
+/bin/bitbake-setup", line 677, in build_status
+    verify_and_prepare_environment(init_script)
+  File "/srv/pokybuild/yocto-worker/oe-selftest-debian/build/layers/bitbake=
+/bin/bitbake-setup", line 524, in verify_and_prepare_environment
+    bb.process.run(['sh', '-c', '. {}'.format(init_script)])
+  File "/srv/pokybuild/yocto-worker/oe-selftest-debian/build/layers/bitbake=
+/lib/bb/process.py", line 189, in run
+    raise ExecutionError(cmd, pipe.returncode, stdout, stderr)
+bb.process.ExecutionError: Execution of 'sh -c ". None"' failed with exit c=
+ode 2:
+sh: 1: .: None: not found
+
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/35/builds/2917
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/23/builds/3054
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/48/builds/2810
+
+Can you have a look at this?
+
+Thanks,
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
