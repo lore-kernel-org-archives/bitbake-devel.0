@@ -2,161 +2,86 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1771EE57EC
-	for <webhook@archiver.kernel.org>; Wed, 31 Dec 2025 09:03:20 +0000 (UTC)
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.82485.1767171795536430969
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E02EE57F5
+	for <webhook@archiver.kernel.org>; Wed, 31 Dec 2025 09:12:10 +0000 (UTC)
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.82534.1767172325154862630
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 31 Dec 2025 01:03:15 -0800
+ Wed, 31 Dec 2025 01:12:05 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=NUyjkQs8;
- spf=pass (domain: gmail.com, ip: 209.85.160.171, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4ed66b5abf7so127620651cf.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 31 Dec 2025 01:03:15 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=fj/RJ/gf;
+ spf=pass (domain: gmail.com, ip: 209.85.219.46, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-88888d80590so155163346d6.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 31 Dec 2025 01:12:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767171794; x=1767776594; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1767172324; x=1767777124; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=g3KTsAQVgeVd8uqDrtLIG6UcgdfpT5yejXi+e9/mjMI=;
-        b=NUyjkQs8UKcqmu3T1u3XXx5FQV69cWF8SKzTZKxCTwpM9V+lq8mT9J/kf1TZ330j8H
-         nMmjJtuUiNGcWhkepuMocW9rPsxGhZuYGjVtzfxEuvnWPRMf12UdGCMgNvnq9QclS/3z
-         07dN9WUxku7PFEbiMWfggHcnOpcJdlC9VQvIoV+uI7YsCiPOuV8wvQnJCawehsXBBByA
-         dCAnZA2i8zSihwNrjUc6XXC+N/F2leW2k1LjnyyaVyFxsbgCIerXihaPjjYrFI2SXSVR
-         ux6FA6ZBlX7ntxBGfhoKwiT6wlnueHflRlmNgXiji9IIoCyjdOTzw7UHbCqb/Njl3L+G
-         NeWA==
+        bh=ahOEANdYkLnPyoY28SlCnpeVBWI+M/O2rA/QGL9uiwY=;
+        b=fj/RJ/gfhMDXv9AhrZU2i3ZByiNRQ+B/4owq8PEVsoIZI9B/OEViJ87hI38GqkXdwu
+         xtnl6RJcjldHtfLnzv6+Rcnhye/QTxMVyh/oX9KBaHJegehr44WTz3xucPIi0Ssgbj06
+         t6YyioGeCn+GqEmHGGTpzoDPDQgfHcsFrKREPna3rIlvmJsYthDui3ZibUQ+ASJRvfa7
+         xUwCAWuv96m5dJ0bqZDTah1MeML5X0TGWLhO3lLVfVuzLv0fCTXTl/ksY2iSgxUbHFis
+         2LdiyZIdMfMC1oAfrLT+zEhBA4JyZl2URL8GtVRpN1A8eH+oY//m5nYiQ8sZvfD1Kb0a
+         0jxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767171794; x=1767776594;
+        d=1e100.net; s=20230601; t=1767172324; x=1767777124;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=g3KTsAQVgeVd8uqDrtLIG6UcgdfpT5yejXi+e9/mjMI=;
-        b=pxGAzoTij72tjUIR+7J5Rjs1dVEmj6wT87U1GQz2iAzyexWprmh1k4m0KAb6LzOoeh
-         zmiDOVgDfBhbpOjHtjEerFcwbn++FdxqP9NkUyFhOC2XMTPxS0Klq0kRPzGCCszRWCKG
-         ZiwNLDtLjFR8M7x58bVsuMY5+JNUEeIH1dmyN6OJEsTTjnVOMcRBMsoXBE5e0MGHEJ21
-         TG5CcZy5mPyIFb/oJ/Pia0KqrV/EpwwQDaO+VmbvNRaVizCVTRZlW/5XLQBx7SiB4NSB
-         nxnUObxYyGvb5rlp6zCdQ78kcdECQSxnF3Ih1Hv84Bv9IJX4JJ2sS+PwRaJ4zN87m90B
-         KiHg==
-X-Gm-Message-State: AOJu0Yxsam2TXhUI8tQTv0ZU4MWsEyOS+eG3/C8QY+tJau0zJDeqv44f
-	HciOBGpCbr0HZDCEV+DnzP6wHCPYLUtIAavZXGS7sHCNh+X0JEAocBIw+7BvP0HpMalv453Xole
-	SzSdhE9VQYzXqHngfwQE30+6DZ1g+qGE=
-X-Gm-Gg: AY/fxX5DZRCO5IMZAXTpoMGqaCuIO4wFZej2+Z2DQ++PIvqZqc4EYwtYGaGdUs0zkfa
-	J1vZUfLYW4J3h9pzlKQ270qOKnMO42LvqbgR+VsaXtSn3khD6wrQp0J7BKXgN85NSl+vOZNsl4B
-	x3a3XHWQCgAGX342jE/EYYyfBdOm78BtJjYuFGnLgbb8SwwK/rIjkMRAuo1vCMr2QnXm1XEJz2V
-	TGPmtHlHvNBArwoyNpUsOdC5Eyz17Qt9+XVb1ilnAZ8TVZtPLRRopQdwzXKIv7u7gW6/garXd73
-	M4K5HmkuY+dMZ83S/UO5AZBS3rdQbQ==
-X-Google-Smtp-Source: AGHT+IELyBkRjpPB8J8UsdU2pcoOdZ82yPnR43Iorsuxmnm79bWZRcMMHp7AQxr7aUkjZ0FsXKjdndkSneBAInGxhdk=
-X-Received: by 2002:a05:622a:2d2:b0:4ed:a2dc:9e51 with SMTP id
- d75a77b69052e-4f35f43ab71mr587821241cf.21.1767171794543; Wed, 31 Dec 2025
- 01:03:14 -0800 (PST)
+        bh=ahOEANdYkLnPyoY28SlCnpeVBWI+M/O2rA/QGL9uiwY=;
+        b=W8j046c5HZGbrgFbv8tbhP7TpJoNXX7qR453uGSw8n/VizpRHY0n7LjNjxPbywvGNH
+         8h9jkiY4WXg0fwIzhPxVGQw+Yz2UBQ2f+BR0unDMpMjqQJvwDzc1roC7gy7Z/c4b8hlC
+         JINoCvyrTinWDJN/g+QssGfDh98JK5WTV3NG818DPmduLllpdwbCUpfN8zxlP+Fdfhsc
+         xV67y6ySUnJMb2v7e7SHN+gIM3EkVxxkzUbKpBBq2vdRbEewWio7wUYYdSC4fSgRGPsq
+         8zgCMI9mcNLAX75+wcGI3ZSaYOdoBNWi8saeOENpuWSVOdZ+i/nRRogd7H7EdBHieJVZ
+         VVgg==
+X-Gm-Message-State: AOJu0YzBH4XOgYRNOpO2CQGpgwRkEfv/8LqOcClP6TxAIn0Ox5/IV8dp
+	ZnCwft5VI/pobYFvf+UV80im5JVpwtb8f34oHpfAHcuWy+hKBpc/GUIjgWiwQ01+VGNL6FY/3zP
+	povbgo2HSTEuNM1h2FGJ5BKW49IHuj8o=
+X-Gm-Gg: AY/fxX7VWeQ+XZo6v+nIrid1XIeN3XnVpykO0/CaYl9KPK/cNyRKFjlkd4cK79wWwA3
+	dU03sZd3AQYiI0yPwcsBNFLZE471PhKKSeI8x4LwmnsGJRNwjU3rNly7mRYCNDP7uD75OaQEnZb
+	Nhb1MHlmuZswq8ENp73NlehFSNDUi9E3yzXuLeQSO1rSXj2yKKJbuRqGchYInloJAtEnrQ/SKl/
+	ZG62dev7ICnXkERkADROppLUB/1DVuSxBfvSCyYYtaAS1zjLs65jgyqAoZ3BwagYr0vqckMlCyP
+	/FY1ESEerLB9vJyyYRQzRhSUCb8a9g==
+X-Google-Smtp-Source: AGHT+IHEwUOrUg5jHnKs1XEIkc1pNLpu7aZ3y9AijHIn8PpLG7d1dM4DfHJRIQ88SNS+GZs826d4JnbnYs0y/326694=
+X-Received: by 2002:a05:6214:62a:b0:87d:622d:dd7b with SMTP id
+ 6a1803df08f44-88d851fc3a1mr642993736d6.1.1767172324161; Wed, 31 Dec 2025
+ 01:12:04 -0800 (PST)
 MIME-Version: 1.0
-References: <CGME20251230234958epcms1p5f6e7ba1c00c63d05a1b71fcdbcb7a18a@epcms1p8>
- <20251230235724epcms1p84d784e88ac7f220b8e1e5a6ee09e83a9@epcms1p8>
-In-Reply-To: <20251230235724epcms1p84d784e88ac7f220b8e1e5a6ee09e83a9@epcms1p8>
+References: <20251230153539.3940266-1-adrian.freihofer@siemens.com> <20251230153539.3940266-2-adrian.freihofer@siemens.com>
+In-Reply-To: <20251230153539.3940266-2-adrian.freihofer@siemens.com>
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 31 Dec 2025 10:03:03 +0100
-X-Gm-Features: AQt7F2qBTSrCQbg8IVieWcXXRw87xLmKlxlKVWu5mBV8BxOPp_gHZLgbt1uonK4
-Message-ID: <CANNYZj_8kRAM0rFdtFyXbfR=NWhBE7RnwRObWesT945tNW_RMg@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] Enhance shell_trap_code to support custom shebang
-To: sangmin5.lee@samsung.com
-Cc: "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="0000000000001226d006473bbfcc"
+Date: Wed, 31 Dec 2025 10:11:52 +0100
+X-Gm-Features: AQt7F2qaJVRdtKwP8p8BowS3_IH0tjHEiIXD_ejBc0LeHQ37PtiO7c7lK2ydAt4
+Message-ID: <CANNYZj_RiybYM31_uwwYZx+kNz_QLs8Ud4yZ1DXfL9RGU1gP-g@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH v2 1/2] bitbake: add --skip-deps option to
+ re-run tasks directly
+To: adrian.freihofer@siemens.com
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 31 Dec 2025 09:03:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18664
+ <bitbake-devel@lists.openembedded.org>; Wed, 31 Dec 2025 09:12:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18665
 
---0000000000001226d006473bbfcc
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Tue, 30 Dec 2025 at 16:36, Adrian Freihofer via
+lists.openembedded.org
+<adrian.freihofer=siemens.com@lists.openembedded.org> wrote:
+> This is aimed at development workflows (for example devtool ide-sdk)
+> where an IDE or developer wants to re-run a single task (such as
+> do_install) and then deploy or debug it on a target without rebuilding
+> or executing unrelated dependent tasks.
 
-On Wed, 31 Dec 2025 at 00:57, =EC=9D=B4=EC=83=81=EB=AF=BC via lists.openemb=
-edded.org <sangmin5.lee=3D
-samsung.com@lists.openembedded.org> wrote:
+The patch is horribly invasive, and I'm afraid the premise for it is
+shaky, and should've been discussed here first.
 
-> This change improves flexibility in script execution environments.
->
-
-Can you illustrate this with examples please? What kind of use cases this
-enables?
-
-
-> @@ -434,7 +444,7 @@ def exec_func_shell(func, d, runfile, cwd=3DNone):
->
->       d.delVarFlag('PWD', 'export')
->
->
->
->       with open(runfile, 'w') as script:
->
-> -         script.write(shell_trap_code())
->
-> +         script.write(shell_trap_code(d))
->
->
->
->           bb.data.emit_func(func, script, d)
->
-
-My understanding is that shell tasks in recipes are all expected to be
-written using POSIX shell. If users set SHELL to something else and try to
-execute them with those other shells, all kinds of breakage will happen.
+Can you formulate the problem more specifically? What are those
+unrelated dependent tasks? Why do we want to skip them? They are in
+the dependency tree for a reason: so that configure/compile/install
+can run without error. Even if compile is replaced with some kind of
+IDE-specific re-implementation, it still needs those pieces.
 
 Alex
-
---0000000000001226d006473bbfcc
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_quote gmail_quote_container"><div dir=
-=3D"ltr" class=3D"gmail_attr">On Wed, 31 Dec 2025 at 00:57, =EC=9D=B4=EC=83=
-=81=EB=AF=BC via <a href=3D"http://lists.openembedded.org">lists.openembedd=
-ed.org</a> &lt;sangmin5.lee=3D<a href=3D"mailto:samsung.com@lists.openembed=
-ded.org">samsung.com@lists.openembedded.org</a>&gt; wrote:<br></div><blockq=
-uote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1p=
-x solid rgb(204,204,204);padding-left:1ex"><div class=3D"msg-34951883556004=
-72257"><u></u>
-
-
-
-
-
-<div><p style=3D"font-family:&quot;courier new&quot;,sans-serif;font-size:1=
-0pt;margin:0px"><span>This change improves flexibility in
-script execution environments.</span></p></div></div></blockquote><div><br>=
-</div><div>Can you illustrate this with examples please? What kind of use c=
-ases this enables?<br></div><div>=C2=A0<br></div><blockquote class=3D"gmail=
-_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204=
-,204);padding-left:1ex"><div class=3D"msg-3495188355600472257"><div><p styl=
-e=3D"font-family:&quot;courier new&quot;,sans-serif;font-size:10pt;margin:0=
-px"><span>@@ -434,7 +444,7 @@ def
-exec_func_shell(func, d, runfile, cwd=3DNone):</span></p>
-<p style=3D"font-family:&quot;courier new&quot;,sans-serif;font-size:10pt;m=
-argin:0px"><span>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0d.delVarFlag(&#39;PWD&=
-#39;, &#39;export&#39;)</span></p>
-<p style=3D"font-family:&quot;courier new&quot;,sans-serif;font-size:10pt;m=
-argin:0px"><span>=C2=A0</span></p>
-<p style=3D"font-family:&quot;courier new&quot;,sans-serif;font-size:10pt;m=
-argin:0px"><span>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0with open(runfile, &#3=
-9;w&#39;) as script:</span></p>
-<p style=3D"font-family:&quot;courier new&quot;,sans-serif;font-size:10pt;m=
-argin:0px"><span>-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0scr=
-ipt.write(shell_trap_code())</span></p>
-<p style=3D"font-family:&quot;courier new&quot;,sans-serif;font-size:10pt;m=
-argin:0px"><span>+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0scr=
-ipt.write(shell_trap_code(d))</span></p>
-<p style=3D"font-family:&quot;courier new&quot;,sans-serif;font-size:10pt;m=
-argin:0px"><span>=C2=A0</span></p>
-<p style=3D"font-family:&quot;courier new&quot;,sans-serif;font-size:10pt;m=
-argin:0px"><span>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0bb.data.emit_func(func, script, d)</span></p></div></div></blockquote></=
-div><div class=3D"gmail_quote gmail_quote_container"><br></div><div class=
-=3D"gmail_quote gmail_quote_container">My understanding is that shell tasks=
- in recipes are all expected to be written using POSIX shell. If users set =
-SHELL to something else and try to execute them with those other shells, al=
-l kinds of breakage will happen.</div><div class=3D"gmail_quote gmail_quote=
-_container"><br></div><div class=3D"gmail_quote gmail_quote_container">Alex=
-<br></div></div>
-
---0000000000001226d006473bbfcc--
 
