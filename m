@@ -1,84 +1,130 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <adrian.freihofer@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2373EE57FA
-	for <webhook@archiver.kernel.org>; Wed, 31 Dec 2025 09:27:40 +0000 (UTC)
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.82611.1767173257674059030
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0F6EE642A
+	for <webhook@archiver.kernel.org>; Wed, 31 Dec 2025 11:00:41 +0000 (UTC)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.83460.1767178836179454483
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 31 Dec 2025 01:27:37 -0800
+ Wed, 31 Dec 2025 03:00:36 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=EdsFtYfh;
- spf=pass (domain: gmail.com, ip: 209.85.222.177, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-8b1e54aefc5so952855585a.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 31 Dec 2025 01:27:37 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=dXe1C1QR;
+ spf=pass (domain: gmail.com, ip: 209.85.221.48, mailfrom: adrian.freihofer@gmail.com)
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-42fb03c3cf2so5401772f8f.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 31 Dec 2025 03:00:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767173256; x=1767778056; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5QAJboJ4uNsncXB2PeaJxJubBp6MT9XQUCtd6a0ibmc=;
-        b=EdsFtYfhVMUFRDqcpIqnaCjZcBd9+q/STfTz5F9pBVLSGS+MACxVNr/raPT0ONK6AK
-         lm5UW8tlDLq4tHVHL9MJW1iiIuZbI69qwvyRjKjOqdnqss5n3C6x2JBorjJaYqJv2fBB
-         yE54lF0nwRciOo3wk8lCWje0QcjPWBbcj5EaFWqZncfeSsFOJN1AqOU/G3gx4JUmq298
-         SZRuzSsPe0WBOstWWeIF5RIP5pPdTm+HZgmK+tfUtwdJOquYFncK8QtKRYXTTYXUYM/I
-         Y0BbWQVQtAB369IzRZfSfpO72uYIdOFhA2EVinZEFuOoosV7SzSP1e5QVvLg+HovDBsP
-         +Svw==
+        d=gmail.com; s=20230601; t=1767178834; x=1767783634; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qG4OvBfppjDY9yE9s6zxju44dxmZjT/swe+9zMt2tLw=;
+        b=dXe1C1QRSehmltFftrAYGwMSUxTmdYmZRhDZWDFvR2vV7MEhW9k51Q8UJ4uk+LsvAu
+         Qs/q9LguHRgJ4NPED4Xkru/9q72ASRTaBYSsWr2aPjYMfar7UYzg+ichxJiw9TCH9pDK
+         nUEREA/PYQq12eKXZhJH4QEEGX/V6lzkrv3kj1XA4Hzl21U0bb1Y+gtOz7BWYniVdUbn
+         85gkP0/5TVLLRKewkchIKY1EgtBmbz2q4RzDUD80cCLnOFtCKj+lXtW2vNTDhqQKx5zQ
+         /RMjmPbPaafGaWMQGApkHPXWLDspRCLu1y+Tx81F7OF1bTve3g6dKJP2jy3mh/gDzNol
+         IpJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767173256; x=1767778056;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5QAJboJ4uNsncXB2PeaJxJubBp6MT9XQUCtd6a0ibmc=;
-        b=vD2Qg/3njPyGY3lmf6AXf3qn1nQhAyeOgofzsgYA6YdIAJB9arn1fa9YQuIeZsaJ8p
-         pZo2IC/gdTrp10gOnSYN1N8NHLTXI5fqixfpwdYKqDCGxTYuUgt1RsmpD+wSP6JzEYcL
-         M7XD8gehjFPLEPxlt1eBBKW92orcnoCzFrP2ILGoxhZe6/WiJf2PS6xu2FU1tLI860pk
-         swjN2OuZo0kBWkS/VAusFfMyYYpwlG8s6YtE/pHQfesYusGpfj7mo4ms0FmQdszVPV6K
-         cEnxuJGM5kXSRsJgZH8QbgqGwaGddqVamOgHqA7a39Y4EOGovgU8cm8/2+u5I40BRXGR
-         FMTw==
-X-Gm-Message-State: AOJu0YwI/l+x+Cbq979gn3WdZ9c29ojcFugMrbD9fg85JlaBKkOTW5pN
-	USuTLkLHg2UmIjAkC/kpE5E+Iz6VSiISMQpk9hXQJIq0PjWvJahKrwJuA/k0cqJdg2ywR2skq5m
-	/u9oXeL9S6HSJWnYFMQtbxwU79gmWdAQ=
-X-Gm-Gg: AY/fxX4mVtNJAzdpnMymohjw0qK/t23GX3lb/QitXPD2G+h6EzodVr5ek6ECOFr48/b
-	oL+CIJA3Gw703op0mNDmX6t8s0BjoMWA/xbJx5SHB+yNs0M3BegebAXDD0+8jGwjFxO/5HEePA+
-	i9e1UJAgyij1DWrXZSH0D6aljegSa+oo5c8OJza/GQZI3IHq11avOwBLjN/fM/HZeXVxVbCcg+K
-	AFYkOR6Qt6Xs8IGYFvAR4O9zq/ZoJA8ddfCoYS3nu3C2rBxvDFv4ITNT4sedqYAVOoUeJpkatiP
-	rkQyvwrYe0i2t90l1UTU0XDvYDpINQ==
-X-Google-Smtp-Source: AGHT+IHYvMI/mn5VA8xnkrh4kwDH21XuSRHxZ7uR0nIWTNxcSEYwAuCUjM+O064Y86mloJqzG/6KlJkMZv3SOPrtwwQ=
-X-Received: by 2002:a05:622a:5c97:b0:4f4:f834:44ed with SMTP id
- d75a77b69052e-4f4f8344763mr270329261cf.64.1767173256544; Wed, 31 Dec 2025
- 01:27:36 -0800 (PST)
-MIME-Version: 1.0
-References: <20251222181527.2424323-1-anibal@limonsoftware.com>
- <CANNYZj-=2r9VFg4AGfKiYbOp5Eh57uvVQt11UTT0xVWPhfxbhw@mail.gmail.com> <CAOU5ZMthyn3+Y9axBKSdVy3qukFo2j_eU0VnJupTZ6pX7PoPag@mail.gmail.com>
-In-Reply-To: <CAOU5ZMthyn3+Y9axBKSdVy3qukFo2j_eU0VnJupTZ6pX7PoPag@mail.gmail.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 31 Dec 2025 10:27:25 +0100
-X-Gm-Features: AQt7F2rkNpbpj7LOfQ1omQiTs8rSMYHsFllRRam_J7x44uObtVHG_hZXDIjsCPE
-Message-ID: <CANNYZj-uV4ob-aCWH9uQGCnmMgq0p1RCh3qeBo_fp=a6iUtqBg@mail.gmail.com>
-Subject: Re: [PATCH] bitbake-setup: _symlink_local fix case when update
-To: Anibal Limon <anibal@limonsoftware.com>
-Cc: bitbake-devel@lists.openembedded.org, richard.purdie@linuxfoundation.org
+        d=1e100.net; s=20230601; t=1767178834; x=1767783634;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qG4OvBfppjDY9yE9s6zxju44dxmZjT/swe+9zMt2tLw=;
+        b=AOueXcGwWRGflxVIsjC4CfnTOb0F0gbXSZFnsjU+LtJ07Z8mR1bShgOLyDolOWaTcj
+         VJJvaLpfx9OrCoi8sx+z2g8hrhX/GkGkDXWnxj8GpgNY1T4h+ZD4fnzHgNlkJZAnCiXp
+         QHSh1Loky/ldcW/vCZ6Nf6lbmfTNtxPk33laMtEdUyWw/uvy7K4MsRa/whe9eLUxLNTj
+         ysREGNkOko8tImKWphBTyXMqZqYOwIewCV/sT9AruNzCFnnc9YurKm3ZZAX8CSSN7Gwk
+         SKYtl+U1wIqa9gnW148SNb8hdNqNwdjQq7I8DiTjtPQ5F6QjC3GWeR5+JBbAbh5gUklm
+         6mHA==
+X-Gm-Message-State: AOJu0YxFqyGB8Di8fEPwQ+tXHK7yOKIJdaA9+al1/hHTDUbOG8WhjBHN
+	c2SMlX5bJT0A9gBn/g7qrRuY0kySkRhQkBqCMD3jTjvf2TF0xFc14e74
+X-Gm-Gg: AY/fxX5p0t5PURU56+Dh+WE+QuCqffCbKzNaI1m0jl3eEPPWdMLoPpZLkr8NsgTxMOx
+	0//Iq8ecyoqo4L13drLAd3dM5pBQ3jcAQgxwkgp7B3o79b9JH6Gd3jQZJ9ocq7ypKU1ap75UVXm
+	HZY+I6arvVKQxXQ+KQv7BxK1Qqh3ehPzjvZmHn3K7+xs2zPwaEmPTLlMbfzbMB6L1mLhZOByEAk
+	fN6/Tg/8YdlWKQI9hsUpWALj2cNhxtgzX9AI/CoBMAjLn8cCzwmqbUrsBxOzvhilUMHbUWFrYAc
+	inSozajlmmDhMmfdK0TWouMa4R6vtKRzbPdTAh/lkEiHN6/weJ9YnXQUkYqn8BL54QSePIPntQK
+	5Ld9GSbDFC66lDztKeHy2n+D5ZTIi/nLrZ8yYV+Ly/OTRmuKdKNtiPenkNVGKaKWrewKcMmhF8G
+	kY4aUw6wZFEam3yCZKQB7D0gCffyAwtKzsMfueEZlE2/0aTMWiMIUtf0jBBzNdpA==
+X-Google-Smtp-Source: AGHT+IEYGbJKIcYlrNiUjs9RucXGXd56Q4WTtC+u8XTjyYdiVB2XVHm9AjFTsnHrI9shJ0iGuYi1Gg==
+X-Received: by 2002:a05:6000:2909:b0:431:8da:11aa with SMTP id ffacd0b85a97d-4324e704794mr41382053f8f.59.1767178834335;
+        Wed, 31 Dec 2025 03:00:34 -0800 (PST)
+Received: from ?IPv6:2a02:169:59a6:0:55c4:f628:91f3:4287? ([2a02:169:59a6:0:55c4:f628:91f3:4287])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4325d10cc48sm63287759f8f.16.2025.12.31.03.00.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Dec 2025 03:00:33 -0800 (PST)
+Message-ID: <55d314c3c6bd3e72c3ff972927dac0169d431982.camel@gmail.com>
+Subject: Re: [bitbake-devel] [PATCH v2 1/2] bitbake: add --skip-deps option
+ to re-run tasks directly
+From: adrian.freihofer@gmail.com
+To: alex.kanavin@gmail.com, adrian.freihofer@siemens.com
+Cc: bitbake-devel@lists.openembedded.org
+Date: Wed, 31 Dec 2025 12:00:33 +0100
+In-Reply-To: <CANNYZj_RiybYM31_uwwYZx+kNz_QLs8Ud4yZ1DXfL9RGU1gP-g@mail.gmail.com>
+References: <20251230153539.3940266-1-adrian.freihofer@siemens.com>
+	 <20251230153539.3940266-2-adrian.freihofer@siemens.com>
+	 <CANNYZj_RiybYM31_uwwYZx+kNz_QLs8Ud4yZ1DXfL9RGU1gP-g@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 31 Dec 2025 09:27:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18666
+ <bitbake-devel@lists.openembedded.org>; Wed, 31 Dec 2025 11:00:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18667
 
-On Mon, 22 Dec 2025 at 20:53, Anibal Limon <anibal@limonsoftware.com> wrote:
+Hi Alex
 
->> This and the previous patch expose a gap in testing, perhaps
->> status/update tests should be extended to cover local sources?
->
->
-> Ack. I will look at the tests and send v2.
+On Wed, 2025-12-31 at 10:11 +0100, Alexander Kanavin via
+lists.openembedded.org wrote:
+> On Tue, 30 Dec 2025 at 16:36, Adrian Freihofer via
+> lists.openembedded.org
+> <adrian.freihofer=3Dsiemens.com@lists.openembedded.org> wrote:
+> > This is aimed at development workflows (for example devtool ide-
+> > sdk)
+> > where an IDE or developer wants to re-run a single task (such as
+> > do_install) and then deploy or debug it on a target without
+> > rebuilding
+> > or executing unrelated dependent tasks.
+>=20
+> The patch is horribly invasive, and I'm afraid the premise for it is
+> shaky, and should've been discussed here first.
 
-Just wanted to give a heads-up that I'm working on a more extensive
-set of fixes and test coverage improvements that incorporates both of
-your patches. So you don't need to complete a v2, but reviewing my
-patchset would be appreciated. I'll follow up with a link once I send
-it out.
+We are discussing this since a very long time. My previous attempt is
+here:
+https://lists.openembedded.org/g/openembedded-core/message/223669.
 
-Alex
+With the new attempt I'm trying to follow the advice from Richard to
+add a feature to bitbake which allows to address this use case in a
+generic way.
+
+>=20
+> Can you formulate the problem more specifically? What are those
+> unrelated dependent tasks? Why do we want to skip them? They are in
+> the dependency tree for a reason: so that configure/compile/install
+> can run without error. Even if compile is replaced with some kind of
+> IDE-specific re-implementation, it still needs those pieces.
+
+If compile is done by the IDE, there is no need for doing it again.
+Resolving the full dependency chain is not what an SDK should do.
+That's very important.
+
+Reagrds,
+Adrian
+
+>=20
+> Alex
+>=20
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#18665):
+> https://lists.openembedded.org/g/bitbake-devel/message/18665
+> Mute This Topic: https://lists.openembedded.org/mt/116998957/4454582
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe:
+> https://lists.openembedded.org/g/bitbake-devel/unsub=C2=A0[adrian.freihof=
+er@gmail.com
+> ]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 
