@@ -2,152 +2,115 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC604CDC178
-	for <webhook@archiver.kernel.org>; Tue,  6 Jan 2026 12:10:39 +0000 (UTC)
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.88564.1767701438893195569
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFB5CDC17D
+	for <webhook@archiver.kernel.org>; Tue,  6 Jan 2026 12:10:49 +0000 (UTC)
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.88565.1767701439557138628
  for <bitbake-devel@lists.openembedded.org>;
  Tue, 06 Jan 2026 04:10:39 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=HWyWr9zE;
- spf=pass (domain: gmail.com, ip: 209.85.218.53, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b7277324054so164384466b.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 06 Jan 2026 04:10:38 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=RXPxm7BT;
+ spf=pass (domain: gmail.com, ip: 209.85.218.41, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b8010b8f078so147161366b.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 06 Jan 2026 04:10:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767701437; x=1768306237; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+AvEvZMWxk89/Km99mkiP7CsVVAby6Ms07AOXtOi0WM=;
-        b=HWyWr9zEGxjTWmFoRQOMMai6+52px3Uxknp9FrtuARfhpYUOJ0RMUWBdjmGoKB0Ura
-         9TMU4tcIL59+resihy5ZuNRO4xK4j3k50nG/FnVdF9pMXgdj6a6m56eTMs6IcGc8Dt3V
-         SFVeLnPqva3Kfsd6py25ftlijU/xVxyL1/4zC9bZbCRiMEiC5299eD81ytejZWR4hG1+
-         dkLHApBp5SMjArUu8DWuH4v9QX/0aJLMOkvM8GMiyWq9YrRviRCIXPeEEMP5XeQwdW4I
-         maDCURt+sF3fQRsmBmqK5WVT2Oj7bL7X42HjQs2JMsb6HxA/IOVt7xSghjIeDCItTL+c
-         UmCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767701437; x=1768306237;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1767701438; x=1768306238; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+AvEvZMWxk89/Km99mkiP7CsVVAby6Ms07AOXtOi0WM=;
-        b=wJGXpzb8eAC3zlf2z9+DCHC0jP3oiHAsv2vG2kQgeHVku9lW2Z4B2AWEcsoO2qSStu
-         wedHZuym0GQpk97Y+JZ+V79ujFWJGz6vuvcaXRYQZr7F0XWY40XgMvAKflX7jagI0QF9
-         wsvVrLROuU2J5pQ09kYpXhfeV1GhQxG2sz1zgelIeJoAExfuirk5djPkrHn6RGrMJCAh
-         RrultrD5ktJSLOuVsRnqxe5gfKJrEIEFTfxz/Kfb2ph2lnAbm2G1AriyttH+JzR/tXYZ
-         BtR9r0WEVFuYNS+lwAPMhNO5OBPTuGdODBtcUfkXV6ecyvqdFQD2P7Da9HPACL9Q4iOR
-         g5Wg==
-X-Gm-Message-State: AOJu0Yzqfgxc73/mgFOZUCjjLI7ZJUyMMHR8d+nIvbzna2Gm0yDjNaXl
-	OQT+FEK8pNMx+FnfHbN+bAiveH2DRcrpGKfwDLgj7zDL6ywEzIs3RGZ7jpl68A==
-X-Gm-Gg: AY/fxX5tznilPoEMm9YWynkxNR+UpiLT6JQPxkulec5xjQrwlOAD5JcFDLd0FIETFYP
-	k0nZ3qG4HoHP6AH0OJHI3wswFxQjP+SzLcFUqFyDVRt1BPsHQuFRapPfZcs8Q2tZj34UKWGHK3o
-	7gteb+B+mHAgRp+rctLiqX/mrK8HBB0AICdDy8Y3eaArDEjfZ9ILHEERscBLorPSLj81GiahDVR
-	8yWANZaDDkIVfFTxx8WP+mgOeDWIDnzCPK/D4nGI+SySIztSZMUN0MVjB8JNdfHKZIYsRhhb3Nm
-	+VEsdcCiZpfoQB95hI4CW/GsAGjXVe8j9kXa1oee/YlOlN5hqu43Y/kn7ayraXVWRHvYunLx6Cd
-	Z43iLkXXZxOI1wZ9/mrxUU89l+oGtA8n8oMc/RjqIqQHOjax9ypEcWyRINbSee7V7TLrQpu5dTg
-	q5i9MJLHNCdQ+iatiDEC6vDHmvoO6GDc8DdeUNsFye6i9Q7uA=
-X-Google-Smtp-Source: AGHT+IGYT+q2jvbNiUNJUm8HRkFvat9gBlWrGKuabql3lFFBLZqQ9/JtmZlrrBXTyftUOKblhkIOdA==
-X-Received: by 2002:a17:907:6d22:b0:b73:667e:bb29 with SMTP id a640c23a62f3a-b8426a4a80cmr285678566b.8.1767701436972;
-        Tue, 06 Jan 2026 04:10:36 -0800 (PST)
+        bh=VGnHNMj4wrW4+b/3IfY5d1qVTc9C6XP6HyxlqMq5pI8=;
+        b=RXPxm7BTfTvZ415ordC0Nyym/Yg3rWbBlSlsRu6+BmTZxQOaXfPmW2PtKAx6K2WldB
+         9lYAp9U15Gscb+upAzb6/PR4uitDCOMHi7e0rHmonf+0Pj+w0UliMGOZeSepu7hR3Ch6
+         S4oOVtOojo6Zy8tHkFSUFuPygYmrzMAKoeemVIfTeFdYDEzz0Nl5GZiyHddw1hI1S1iH
+         /d6DigHbVkT1fPYkz00E6eZLPL3MH+P3EpWnYNADtjwWUKFAHi+3lY4RULUf1/1SsrD5
+         RYpmshlVwy8HVpyE5X+7N+pq7UxWtHjfnQv4z0l+m7M0hDdWUBnrVLDUK+Tr407lRpxq
+         GFew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767701438; x=1768306238;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=VGnHNMj4wrW4+b/3IfY5d1qVTc9C6XP6HyxlqMq5pI8=;
+        b=Km2VtybX7GpUNv6oAzkPgEVdck2Hag8oJh/UuZRqu1kJ6AXvQ4E9rpHp7QICKp+16O
+         7Uy3jEah4aQuXidAUxYah7HocinSAb164QbMLeHkMbZ9xcf6TadYUjyTZPe7FL1y4leK
+         RomC2G97Qehuu4wSUgZKDv1F+saz5UXq8y2ut9Mlb8lws0ecow7/iePS9VKnzU5NRODE
+         CQrXhz8G/QDI0sLyTv6NoSisk6eaB0ynIqOV3sWIf0p+gOwyQLjHmm11CQVaoYoSAcFL
+         QH3K/60Kil0r/BJipslDCv7qq0hHbknaJKjbHc26AYS7WsD3GvZLXLDgoEvVrc5u52C0
+         ursg==
+X-Gm-Message-State: AOJu0Ywi6xaIIhO6mfPinvhiJFBe9f9RizDgHLi7OP0L89dCig+4uRQ7
+	lqrz0Smx4tH8aPzwy2tGOSPbLpwIVqwhIEpxR6UEHAFQQszlPrGyZS4KNmHygg==
+X-Gm-Gg: AY/fxX6YsgtEyTt15oGpV1zxs6hKyWmEqD5sn0LTlY97m48cEBPIVDlPVEqOdJteSUx
+	2vtqLhJac2Xkvx5stdPD7UKKZ00AK6OlwoFRtufdZs6J9Sw5obLI1UYbyBeDoXR5Ye/N3t0LSuk
+	mZE9ETL11ykzN0DGkRaMVPtHK506/gGKZx03IX2d7yomLu6JuGg1KokIbsbn2f/JL/wL9/aEaLf
+	0QCNNQdYN2s5v/28bS0+ARN0BUw9HV5bxPrOAH+dAO45GGU2LprXwY/eDPS689dKjCKa6gbzt8D
+	lrEZOCGjCPU7zi/woYqMSXk8WugDazD0cdpTlZRI4z7F5tj3y5tmQiJuh/30lLDyOe8e/SCXFxo
+	n0IQ05o4m1sTXj1y4qRIQuVo3Pz8L3U5rLlPzGFXciWNFrrmjfXaBuOI6tgFW06Og7zY3yoc3nn
+	W7ruNqB2RUDJYW1v6oxGA3WgAgySRQDIxft2sHMpe04ivyuxjeJo+ANxUAOQ==
+X-Google-Smtp-Source: AGHT+IE1SoyfEYAdZ8j3HlXW88eO/EtoQw3UOwr6aMhKjhv4u0cbdGPPNfZIfbrALUONuKYMAtiZzw==
+X-Received: by 2002:a17:906:4788:b0:b73:845f:4432 with SMTP id a640c23a62f3a-b8426bb964fmr342031366b.32.1767701437742;
+        Tue, 06 Jan 2026 04:10:37 -0800 (PST)
 Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8429fdf4e7sm223329466b.0.2026.01.06.04.10.36
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8429fdf4e7sm223329466b.0.2026.01.06.04.10.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jan 2026 04:10:36 -0800 (PST)
+        Tue, 06 Jan 2026 04:10:37 -0800 (PST)
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH v2 01/10] bitbake-setup: move the local source tests to the end
-Date: Tue,  6 Jan 2026 13:10:23 +0100
-Message-ID: <20260106121033.3892596-1-alex.kanavin@gmail.com>
+Subject: [PATCH v2 02/10] bitbake-setup: consistently add configuration commits at the end of updates
+Date: Tue,  6 Jan 2026 13:10:24 +0100
+Message-ID: <20260106121033.3892596-2-alex.kanavin@gmail.com>
 X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260106121033.3892596-1-alex.kanavin@gmail.com>
+References: <20260106121033.3892596-1-alex.kanavin@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 06 Jan 2026 12:10:39 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18691
+ <bitbake-devel@lists.openembedded.org>; Tue, 06 Jan 2026 12:10:49 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18692
 
 From: Alexander Kanavin <alex@linutronix.de>
 
-They are not a part of the main testing sequence, and logically
-should not be in the middle of it.
+bitbake-setup tracks configuration history under setup directory in config/.
+
+Making commits in there wasn't consistently done in all init/update scenarios
+sometimes leaving uncommitted files. Move the commit creation to the end of
+update_build() function, ensuring it always happens.
 
 Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- lib/bb/tests/setup.py | 56 +++++++++++++++++++++----------------------
- 1 file changed, 28 insertions(+), 28 deletions(-)
+ bin/bitbake-setup | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
-index 933178c84..ad09913f4 100644
---- a/lib/bb/tests/setup.py
-+++ b/lib/bb/tests/setup.py
-@@ -320,34 +320,6 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
-                 out = self.runbbsetup("update --update-bb-conf='yes'")
-                 self.assertIn("Configuration in {} has not changed".format(setuppath), out[0])
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index 73f734e73..a0d1aaeda 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -342,6 +342,7 @@ def update_build(config, confdir, setupdir, layerdir, d, update_bb_conf="prompt"
+     thisdir = os.path.dirname(config["path"]) if config["type"] == 'local' else None
+     setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_conf)
+     write_sources_fixed_revisions(confdir, sources_fixed_revisions)
++    commit_config(confdir)
  
--        # check source overrides, local sources provided with symlinks, and custom setup dir name
--        source_override_content = """
--{
--    "sources": {
--        "test-repo": {
--            "local": {
--                "path": "."
--            }
--        }
--    }
--}"""
--        override_filename = 'source-overrides.json'
--        custom_setup_dir = 'special-setup-dir'
--        self.add_file_to_testrepo(override_filename, source_override_content)
--        out = self.runbbsetup("init --non-interactive --source-overrides {} --setup-dir-name {} test-config-1 gadget".format(os.path.join(self.testrepopath, override_filename), custom_setup_dir))
--        custom_setup_path = os.path.join(self.tempdir, 'bitbake-builds', custom_setup_dir)
--        custom_layer_path = os.path.join(custom_setup_path, 'layers', 'test-repo')
--        self.assertTrue(os.path.islink(custom_layer_path))
--        self.assertEqual(self.testrepopath, os.path.realpath(custom_layer_path))
--
--        # same but use command line options to specify local overrides
--        custom_setup_dir = 'special-setup-dir-with-cmdline-overrides'
--        out = self.runbbsetup("init --non-interactive -L test-repo {} --setup-dir-name {} test-config-1 gadget".format(self.testrepopath, custom_setup_dir))
--        custom_setup_path = os.path.join(self.tempdir, 'bitbake-builds', custom_setup_dir)
--        custom_layer_path = os.path.join(custom_setup_path, 'layers', 'test-repo')
--        self.assertTrue(os.path.islink(custom_layer_path))
--        self.assertEqual(self.testrepopath, os.path.realpath(custom_layer_path))
--
-         # install buildtools
-         out = self.runbbsetup("install-buildtools")
-         self.assertIn("Buildtools installed into", out[0])
-@@ -428,3 +400,31 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
-             out = self.runbbsetup("update --update-bb-conf='no'")
-             sums_after = _conf_chksum(f"{setuppath}/build/conf")
-             self.assertEqual(sums_before, sums_after)
-+
-+        # check source overrides, local sources provided with symlinks, and custom setup dir name
-+        source_override_content = """
-+{
-+    "sources": {
-+        "test-repo": {
-+            "local": {
-+                "path": "."
-+            }
-+        }
-+    }
-+}"""
-+        override_filename = 'source-overrides.json'
-+        custom_setup_dir = 'special-setup-dir'
-+        self.add_file_to_testrepo(override_filename, source_override_content)
-+        out = self.runbbsetup("init --non-interactive --source-overrides {} --setup-dir-name {} test-config-1 gadget".format(os.path.join(self.testrepopath, override_filename), custom_setup_dir))
-+        custom_setup_path = os.path.join(self.tempdir, 'bitbake-builds', custom_setup_dir)
-+        custom_layer_path = os.path.join(custom_setup_path, 'layers', 'test-repo')
-+        self.assertTrue(os.path.islink(custom_layer_path))
-+        self.assertEqual(self.testrepopath, os.path.realpath(custom_layer_path))
-+
-+        # same but use command line options to specify local overrides
-+        custom_setup_dir = 'special-setup-dir-with-cmdline-overrides'
-+        out = self.runbbsetup("init --non-interactive -L test-repo {} --setup-dir-name {} test-config-1 gadget".format(self.testrepopath, custom_setup_dir))
-+        custom_setup_path = os.path.join(self.tempdir, 'bitbake-builds', custom_setup_dir)
-+        custom_layer_path = os.path.join(custom_setup_path, 'layers', 'test-repo')
-+        self.assertTrue(os.path.islink(custom_layer_path))
-+        self.assertEqual(self.testrepopath, os.path.realpath(custom_layer_path))
+ def int_input(allowed_values, prompt=''):
+     n = None
+@@ -581,7 +582,6 @@ def init_config(top_dir, settings, args):
+ 
+     write_upstream_config(confdir, upstream_config)
+     update_build(upstream_config, confdir, setupdir, layerdir, d, update_bb_conf="yes")
+-    commit_config(confdir)
+ 
+     bb.event.remove("bb.build.TaskProgress", None)
+ 
+@@ -648,7 +648,6 @@ def build_status(top_dir, settings, args, d, update=False):
+     if config_diff:
+         logger.plain('\nConfiguration in {} has changed:\n{}'.format(setupdir, config_diff))
+         if update:
+-            commit_config(confdir)
+             update_build(new_upstream_config, confdir, setupdir, layerdir, d,
+                          update_bb_conf=args.update_bb_conf)
+         else:
 -- 
 2.47.3
 
