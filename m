@@ -2,122 +2,177 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E792BCDC192
-	for <webhook@archiver.kernel.org>; Tue,  6 Jan 2026 12:10:49 +0000 (UTC)
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.88587.1767701440987032787
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB28CDC17E
+	for <webhook@archiver.kernel.org>; Tue,  6 Jan 2026 12:11:09 +0000 (UTC)
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.88598.1767701467468071216
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 06 Jan 2026 04:10:41 -0800
+ Tue, 06 Jan 2026 04:11:07 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=d9k5bx7+;
- spf=pass (domain: gmail.com, ip: 209.85.208.43, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6505cac9879so1380104a12.1
-        for <bitbake-devel@lists.openembedded.org>; Tue, 06 Jan 2026 04:10:40 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=VujlrVqG;
+ spf=pass (domain: gmail.com, ip: 209.85.222.182, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-8ba0d6c68a8so85519485a.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 06 Jan 2026 04:11:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767701439; x=1768306239; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BVvPZUTrqnZCZBZwVYqJUkuEtLQjD9tVRkQn0CEDe1k=;
-        b=d9k5bx7+U1iQOra7U4iwosud4a9UTYHUFO3TiH4cs2XS7ywOglC/+LrOsC8jp6qYJ3
-         fnnISJ8zjf4+rqkEQW5Cbk9odPdueDMAoTmtSvKGmrblLBZJt+T9M+qDuBoEv7V/I1Sx
-         Imymeo0z9TEP0bcoquGU5xkhPPfrUob5xTRDS8p2gtEORI5f8Qj6ujTCvZ2UhHAILC6f
-         EtZRtJ6x03KDfBbUJYR2Fmjm8I59jcL7kPxDiAcuvRhsZhGSTftbtNoMxQz/4PZLlZP0
-         G8Yd3SWrVusD4cifLoFqD0xgU4HankDqTqkyyBRdjfohRfjElCuFO6WkFqeuocqqg/MA
-         Mzgg==
+        d=gmail.com; s=20230601; t=1767701466; x=1768306266; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=QA7vQZsW28N82Kl2VSYHT2FnhOX1Q2vpURFUBAFN6A4=;
+        b=VujlrVqG1MBwkoY47UZWuQeCKSMXV1v0bp6cepymPUiOXZ1HvPksjBaT4HKuwjjcum
+         EWlJhvb+IPL1yTsjRDSJq5MPhRvP8XsEufuMJYRDNhGinO379hYXMituY8RBpwLrm90j
+         ZaBs+NbV9+wLlWbET6JQhfyFirQbXMHBDP1KYF0+US1mN2d6IPR2gVCtaruBbNuSY98s
+         lTEyml0YcrnDxnvwD1YMu94UL50IBLUXol8w8uZnxG/Hv6c774FQrt95KfhVGfZS0fp4
+         GV/WgVQnCJJcZFJx+78Nk3SuiBoS1aqmDPYaV5vtpklGWjypID/+hTWGXifsadsZR0AH
+         uldA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767701439; x=1768306239;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=BVvPZUTrqnZCZBZwVYqJUkuEtLQjD9tVRkQn0CEDe1k=;
-        b=h42CWfAeAlB9zqvqat0M6qjFL8Tpqi0ZlCwecpeYEVu/9bpz/bAIKmGqi30g06Wo+/
-         SA9H+VlpvI1cWndPrFg4PrLYkXrHchawnVMqTSZqp94N5sFIwndaEXvluT/3thU8prOt
-         +24xaMezcpZW4Ro92MsqFwDsaRRpnRKOyPA0qzjm1BbT6l4+qkPdgwWu16LRFI9JgSZ9
-         iSWWdzataL+bJEKSZCtmLC6pqLKPSTi7+MX3YsG1b31xdEtIY1SZK6DHrWjt22VaArQo
-         oUZxVWwDImes/TOhNjjdK/baRTquyiDKBSf45UdvPDrhXU34nK0yAVg5g8z6mzDhkUWf
-         KT1w==
-X-Gm-Message-State: AOJu0Yy7sc1VygCHw86dqv2Vz8Apgd9C/g5uxt/nzdKn+oEUwTaijZti
-	xtHRhNW2OcS3A8sRsy+Gbniytp9YqH5gMHTqdxOUxSFsWi9zMplkUmA1BLCE4Q==
-X-Gm-Gg: AY/fxX4SIeVL1raCykEe2dAAYjbTbaHv7bHaH9/8q3dW5TQEzLph6LWhDtJWyrXHLa5
-	76s5Od9hR8Sa/Vk6wjPfnxMXFyGNrvHUHhF7VQ0i8oAsvFVuozBlM6KsZnf2MMFEZUQyfAOAtHk
-	YNj7kaG5xJg0FY3SzKcI4+KjCpali7ROVnx1Tamub7lFnN5jMjyHyzwlWMfMTw8Ih8JVcdQD4yC
-	AAFLxpjxuTT0eJyWzRJ9luvMF3BSyWOMFj12mPbHWin+gqmsyZdjqwHfnhOH1/MuyI3TVbap8Tg
-	2XSkEfzTk4VOrv85py5CEKiOD2erZt3+ioqPLe/0qk93DSSdYq0jGG5oqzrgpDyn2jwlui3INOQ
-	NemOhUq7Nd4xIz3V/c0RuQbyQYwVMZZZNYxohkjgtzM3fp5lpZBPW1fiQBfCdmwQ9dW8ngbmZ4j
-	uSHql0swpsPZaqFoXvvogy4JT8BV1/nG91o7YSRQ8Ehfv/ue8=
-X-Google-Smtp-Source: AGHT+IGK9s6y/lvcwLafk6Vfgs5xXvTvFnn8OvQnYimiPZtmAwdmF+Geh5Yjfw63xDL4Vb/3HYPtIQ==
-X-Received: by 2002:a17:906:d554:b0:b76:d880:398c with SMTP id a640c23a62f3a-b8426c99fe3mr309361766b.61.1767701439187;
-        Tue, 06 Jan 2026 04:10:39 -0800 (PST)
-Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8429fdf4e7sm223329466b.0.2026.01.06.04.10.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jan 2026 04:10:38 -0800 (PST)
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH v2 04/10] bitbake-setup: consider overrides when checking whether layers have changed in 'status'/'update'
-Date: Tue,  6 Jan 2026 13:10:26 +0100
-Message-ID: <20260106121033.3892596-4-alex.kanavin@gmail.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260106121033.3892596-1-alex.kanavin@gmail.com>
-References: <20260106121033.3892596-1-alex.kanavin@gmail.com>
+        d=1e100.net; s=20230601; t=1767701466; x=1768306266;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QA7vQZsW28N82Kl2VSYHT2FnhOX1Q2vpURFUBAFN6A4=;
+        b=pNR7NT3LHGLUtvx9IaHAWOmdhHPxbdi0s8+wWgWslwu1ArcBTbvbaeqoPNXgZN0bP5
+         rYBQZtq3C04xES0olkUyqO7tAQqtwivw2NoHp/GkvY8sbhcKMagIciTDLL0ytMnaT3IH
+         vdYY95lkUVXT0Gh0+LK0wcZLZ7XJYfpAuivg1IK6hAJVwN8vB33wPqaxl/lIo4EaPSes
+         iomcXne4iNiplj/fw1N5EhDghkszQFjZ8XK/ok0qFzYWQoVo2GoJ54qBvSyBFzcQex04
+         Dzzn9h+X0Pr38c/N91BlICNGgVQ+yhNPBFIdW/pMm1nnrAGEWWjgHr9FQhiaFyEccJHY
+         Cm0g==
+X-Gm-Message-State: AOJu0YzLXYUQ0Ml4Q/CmxRmmQ253tJ3JlE4mgXL7FAq00vhlPUrGXKaf
+	6oZ/Xn8m8Svems1YL/BN/ZVnHJVAvT09si2nGtWnqjDChMkAFPdYXin2a5NNXeQa/66OOpiz3e6
+	xUaI44S8WLeQGrOYT0kyzt+iQHGJTZPY=
+X-Gm-Gg: AY/fxX4MNZI2EWLnvkCAfzmJ4ZEjfQpAektAa1ggLtpsN0gmvthWrqy+IEP9hteeacR
+	fqmCMWmuMGJkDL211nRrYpA6F1D+ETfhnx1PyCIPBbMoD8sYWkACFmN35AR4itPKgsZazKQFZ0B
+	nKBvKr+Q5VEec9rZHu/N75r52lTlNWWTdXt61JWQqGzKY61VvgbITQ2CKyzk/sQFr2bCrqVtVLz
+	87gJbfDL3fbTNqa+aJpsd0SdSf1rqlurZplrJb3deRjjcNGAYPIi+okWTmvbv8bwTkQO///nBdG
+	70GC5lYWM6wNlXs6iXgdz4Z38N4uPpPploUIEy0q
+X-Google-Smtp-Source: AGHT+IFyBNkEykhSCq1MJPSUfRaT5wolyiaSpCuPb5XCKWqrq2gIoN7rm91LApq+CtgKsPbnZel/EnT568+wW8WRysA=
+X-Received: by 2002:ad4:4145:0:b0:890:7fc7:8839 with SMTP id
+ 6a1803df08f44-8907fc78a69mr4352756d6.25.1767701466234; Tue, 06 Jan 2026
+ 04:11:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260102193438.2960561-1-alex.kanavin@gmail.com>
+ <20260102193438.2960561-9-alex.kanavin@gmail.com> <DFHDMY9WEY3D.RDQ8ZANAMU5L@bootlin.com>
+In-Reply-To: <DFHDMY9WEY3D.RDQ8ZANAMU5L@bootlin.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Tue, 6 Jan 2026 13:10:54 +0100
+X-Gm-Features: AQt7F2pBYqS_egRbS8nExUDyjpro-UxCFCGS86ad7PNGQJI3gr2BZy46Noe_gtI
+Message-ID: <CANNYZj_9G5YE1hO0cbK3KK2ZJEB634sprqmuo17OdkcpOXfmfw@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 09/10] doc: document fixed revisions
+ override in bitbake-setup manual
+To: Antonin Godard <antonin.godard@bootlin.com>
+Cc: bitbake-devel@lists.openembedded.org, 
+	Alexander Kanavin <alex@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 06 Jan 2026 12:10:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18694
+ <bitbake-devel@lists.openembedded.org>; Tue, 06 Jan 2026 12:11:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18701
 
-From: Alexander Kanavin <alex@linutronix.de>
+Thanks, I corrected all of these and sent a v2.
 
-This was erroneusly not done, and the original layer spec was used.
+Alex
 
-Make a function out of the code that overlayes overrides onto
-the base layer spec, so the code doesn't have to be repeated.
-
-Signed-off-by: Alexander Kanavin <alex@linutronix.de>
----
- bin/bitbake-setup | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
-
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index a0d1aaeda..7c4fa1934 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -331,12 +331,15 @@ def get_registry_config(registry_path, id):
-                 return os.path.join(root, f)
-     raise Exception("Unable to find {} in available configurations; use 'list' sub-command to see what is available".format(id))
- 
-+def merge_overrides_into_sources(sources, overrides):
-+    layers = copy.deepcopy(sources)
-+    for k,v in overrides.items():
-+        if k in layers:
-+            layers[k] = v
-+    return layers
-+
- def update_build(config, confdir, setupdir, layerdir, d, update_bb_conf="prompt"):
--    layer_config = copy.deepcopy(config["data"]["sources"])
--    layer_overrides = config["source-overrides"]["sources"]
--    for k,v in layer_overrides.items():
--        if k in layer_config:
--            layer_config[k] = v
-+    layer_config = merge_overrides_into_sources(config["data"]["sources"], config["source-overrides"]["sources"])
-     sources_fixed_revisions = checkout_layers(layer_config, layerdir, d)
-     bitbake_config = config["bitbake-config"]
-     thisdir = os.path.dirname(config["path"]) if config["type"] == 'local' else None
-@@ -654,7 +657,8 @@ def build_status(top_dir, settings, args, d, update=False):
-             bb.process.run('git -C {} restore config-upstream.json'.format(confdir))
-         return
- 
--    if are_layers_changed(current_upstream_config["data"]["sources"], layerdir, d):
-+    layer_config = merge_overrides_into_sources(current_upstream_config["data"]["sources"], current_upstream_config["source-overrides"]["sources"])
-+    if are_layers_changed(layer_config, layerdir, d):
-         if update:
-             update_build(current_upstream_config, confdir, setupdir, layerdir,
-                          d, update_bb_conf=args.update_bb_conf)
--- 
-2.47.3
-
+On Tue, 6 Jan 2026 at 09:52, Antonin Godard <antonin.godard@bootlin.com> wrote:
+>
+> Hi,
+>
+> On Fri Jan 2, 2026 at 8:34 PM CET, Alexander Kanavin via lists.openembedded.org wrote:
+> > From: Alexander Kanavin <alex@linutronix.de>
+> >
+> > Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+> > ---
+> >  .../bitbake-user-manual-environment-setup.rst | 46 +++++++++++++++++++
+> >  1 file changed, 46 insertions(+)
+> >
+> > diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+> > index ec1bdeecd..68b2ad31d 100644
+> > --- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+> > +++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+> > @@ -938,3 +938,49 @@ Here is an example file that overrides the branch of the BitBake repository to
+> >  -  The ``sources`` section contains the same options as the ``sources`` option
+> >     of a :term:`Generic Configuration` file. See the
+> >     :ref:`ref-bbsetup-section-config-reference` section for more information.
+> > +
+> > +.. _ref-bbsetup-fixed-revisions
+>
+> Missing colon at the end:
+>
+> .. _ref-bbsetup-fixed-revisions:
+>
+> otherwise this is treated as a comment.
+>
+> > +
+> > +Fixed source revisions
+> > +======================
+> > +
+> > +:term:`Generic Configuration` can set source revisions in ``rev`` to a tag or a branch.
+> > +Bitbake-setup will make sure the actual revision will match the tag or branch when performing
+> > +initializations or updates, and will capture the revisions in a :ref:`_ref-bbsetup-source-overrides`
+> > +file.
+> > +
+> > +The file is named ``sources-fixed-revisions.json`` and is available in ``layers/``
+>
+> s/The/This/ ?
+>
+> if this is a continuation to your previous sentence
+>
+> > +or ``config/`` under :term:`Setup` directory. It can be used to keep record of
+>
+> s/under :term:`Setup` directory/under the :term:`Setup` directory/
+>
+> Why layers/ _or_ config/? It's ambiguous for users reading here what the
+> difference between the two might be. If this is a compatibility thing (because
+> bitbake-setup used to do it one way, then it was changed to another location), I
+> would just keep the final one documented here (or explain that it's for
+> compatibility).
+>
+> > +what was checked out when using configurations that do not specify exact revisions.
+> > +
+> > +Also, as it is an override file, it can be combined with the original configurations
+> > +to initialize a setup in a reproducible way that guarantees an exact, never-changing
+> > +set of revisions.
+> > +
+> > +For example if the original configuration had specified only a master branch
+> > +for a source::
+> > +
+> > +     "bitbake": {
+> > +         "git-remote": {
+> > +             "remotes": {
+> > +                 "origin": {
+> > +                     "uri": "https://git.openembedded.org/bitbake"
+> > +                 }
+> > +             },
+> > +             "branch": "master",
+> > +             "rev": "master"
+> > +     }
+> > +
+> > +
+> > +the override will contain the exact revisions::
+> > +
+> > +     "bitbake": {
+> > +         "git-remote": {
+> > +             "remotes": {
+> > +                 "origin": {
+> > +                     "uri": "https://git.openembedded.org/bitbake"
+> > +                 }
+> > +             },
+> > +             "branch": "master",
+> > +             "rev": "720df1a53452983c1c832f624490e255cf389204"
+> > +     }
+>
+> """
+> This file can later be used with the ``--source-overrides`` option of the
+> :ref:`ref-bbsetup-command-init` command.
+> """
+>
+> ?
+>
+> Thanks,
+> Antonin
+>
+> --
+> Antonin Godard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+>
 
