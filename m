@@ -2,64 +2,63 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B705ECDC185
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B98DECDC183
 	for <webhook@archiver.kernel.org>; Tue,  6 Jan 2026 12:10:49 +0000 (UTC)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.88567.1767701441755637357
+Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.88590.1767701444446940170
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 06 Jan 2026 04:10:42 -0800
+ Tue, 06 Jan 2026 04:10:44 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=b6cOVXrg;
- spf=pass (domain: gmail.com, ip: 209.85.208.44, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6505d3b84bcso1358035a12.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 06 Jan 2026 04:10:41 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=E+lNxBlG;
+ spf=pass (domain: gmail.com, ip: 209.85.218.67, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-b79ea617f55so185309366b.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 06 Jan 2026 04:10:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767701440; x=1768306240; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1767701443; x=1768306243; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CpdJzUw9SMxn5LmzNOuQmPvXU0YGfPMFhYPS+4Ho5Pk=;
-        b=b6cOVXrgpMfGyZJJatCNs4P5LRcDGyO7MP4/WILhUcEk3wK0uVi4lK97xnHpIAGPme
-         JaOtH3dOFul0dqO49sK3YxIxMC2WsYSjsGodwjD4qsT0WbRciQDeQ7C3fLU2fFkA9oTL
-         7soTKoXWNMaepxdwLVsUidUthVTMSdQMeVQQUIUmk3JcAW8ZKxCypvp0VzLdaQyQ7QhW
-         xQGXzdcBIogm2y8h5cRQfzyVCNRQVpmQT5w/+u9WkmLqFukSiZ/215HPUuA8LA5G8LTg
-         OIE/xrZkfCgvTZnYBbp+qMGgHlWaSJCFrRjCxz3+1ktevtmiI1yOiR9RfVoFEWbORtob
-         FYIw==
+        bh=nq2HYK3ovBdUnncix2/oKx2HCz3tbzN+EdAxiupZnf4=;
+        b=E+lNxBlGtLOjJ+hTGlTQkhfeOGnGqHm6Qv5w/4r2Kp/q3gP0eNPlThqMWQWMc1O+F9
+         HyeWuYjxR1MsAHwQR/WuiKmn+HZyvmLqaV1LLokCxoQkcTwI71IIRJNmUlXxyUlb5AV0
+         XeRBxVUMpTtD9ushx599ODdTwPh/jwMX9ERd8puRZgytFNIR6YSHXXr93kgyyj6DmxW3
+         1kKU+pcJiNyyp3838j1aScmlNVMtBYESXyhiHfApEPC4OwIGjRwdvTRCkK5qBT7Dvbrt
+         9gpjCjI1NSipi0PNLI3+y0uit4FyFDe8adKOhWqdlPnWQmcLhWZ33Tk38YM8WGu9M/A+
+         sqtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767701440; x=1768306240;
+        d=1e100.net; s=20230601; t=1767701443; x=1768306243;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=CpdJzUw9SMxn5LmzNOuQmPvXU0YGfPMFhYPS+4Ho5Pk=;
-        b=wqAJQpFX2KRiypvCmlJll8eQTLCfYQcPBQkiphDTOkKbp/lEKllb6tKjpERU1FWDFY
-         VNyHFlybr7BtVSAFoL3xgClVUr/p0Fr3l6OQFo5gb76XHfGjoI+O9/ZBjt5KZScKI4+k
-         tXtRL2rHMaWykkocyt5TE2DCpaHa7eew42HZxTvxlq17XEzN0okC7EpJbLxwoh017AwY
-         ENZypFOKL7LnzHjoIqBks+64m8ETOQ96fvIl6orFxDB4uWgyoPP0WFqDZoJMEFrsTkqz
-         cH6NsHVT2b3kDSKHXeDINSLqERs2HmAXmwEkqzchvpQiku2wOIlOF1OkW3B1kLGrsTsO
-         XJ7w==
-X-Gm-Message-State: AOJu0YxIVUd+kUR8p0+3SGTiqF4XYVr6iZLLrM08myN3dlIOGPxmwQx6
-	LhXRmr0AphNdeY+nx/Kz77sv5cbRcAkMwToCzXwLsSR/vmWb83ueNGvppknz9Q==
-X-Gm-Gg: AY/fxX7Wj4lTcbDkOaJce22c+XPExM0GPAW2OkmXPkhHtKLffuZeex8i97/547B0pd1
-	kJnqaMrXaU0v9KqQyYNvAsxjBiQSRasz9YhclCNYLoGEqZ/1FokTZXBZdVS3NULgWsDgjXb6TUa
-	j1Iu8plDRRD7F30oyO9HaRRMWf/L0CH/5IXbS6Q97WqvYvPa/U4TCyumX2oBe3DrMZPwYJgseXZ
-	UcMuY4nGGhl30zjFp/BGKsN95pJB1e6ArjyGXSec8BzQW+E5HOB0kuXcTla52gODdk/BSSPpRUX
-	Xv6KQwKvwQkjgpfeSbvatql9zY0aa57Oazcx8b6+DDYFRGClEQnPZKMlzg3Nzq/Er6htzMOGZ9n
-	JvV0LEsUbYC3JtFTxXkT3bU/8t2Sz0kulKvaL+joMAxMD4EQJTAD6zM9sDu3ew1cMagG61y/39B
-	RD/VlGZAJIgdNQIhg05UkvhCqSkFPEioTaR+/YRsSwUfTsGnE=
-X-Google-Smtp-Source: AGHT+IHHtcsT+0B3fzcCik/OH/mtYZuHN+O8Cue94hooBqfdh9wEZ6HS87DUHBwBSaiyCHkgT4Rq9A==
-X-Received: by 2002:a17:907:86a8:b0:b84:2223:56a9 with SMTP id a640c23a62f3a-b8426bff4eamr311297666b.40.1767701439896;
-        Tue, 06 Jan 2026 04:10:39 -0800 (PST)
+        bh=nq2HYK3ovBdUnncix2/oKx2HCz3tbzN+EdAxiupZnf4=;
+        b=rR4Vd8ZSIQbHnq18y05SK68U93dXcxkyWKal0sLXujTnUhHz1cyWdj7Hmvj/y7n7D+
+         WkjJRCeOpN+8gWyPPGrofNOz1gFveDOa6B7mFONETAwawTIjFglKAkKykuqhqy5GC4B9
+         a+qygP9+20dnQbGs9FPRM2Kz5LObMt/2UZK3F2K59ZKz8BMWdxy4r84o+j5RFns+ar4e
+         iMLWClRthSI/4bYnH0Ez32krck9R7PuVslWfzrrDXDhTW4yTI1bBD3kyiIN8reoIvdum
+         1RccMNXTHUhZW2qQGVL60Ki2eJNrAkCNyegITZ5X2MrEOTfy2mCEVN2iXEyBLtHraz5c
+         F14g==
+X-Gm-Message-State: AOJu0YybeUR9nRn+EKYBfwt8h+rxlcy3MgxS2JSsyyqyG+nKw8cdc0GL
+	dRn317fEpGsqpgN2P5UZoQhpiuLYi1YD1JzDpi+dm/Due+ycKhY4G34zJKc3IZXK
+X-Gm-Gg: AY/fxX6kbH5ukBR7yGhSInR+dMxX+Av91/6Kk3iICSaU3Dw4d8puOsfgPY7Uyv3knMP
+	SSD2hbx70YEGYGHKK/1mZIOCVdrUbn0d0q5bNaRFEybX5sa2HKhTqyAHVQUUkW6knWMrg0oo0vp
+	1oCjurMebujLSfm+eUmfJRAvrFL71VY3B5PohWmodPNr+jxNmMI49Wjmc5FyxAh2qOb6AAhK+qS
+	9DbkoQePmwBjXA7ncVttkqzcLWBuoF2XDB7GdxdnLLbZAuMgogmWIcPSBZ6hrnQYp21yFgHHcMb
+	UWIcnFutQYDNrMWEkXo08n/3RvsRBvRpNtvQJion5q7BHTI5l0Vs9pxstO5bf1m5p9iUoaa+1kb
+	FroaShVd1FtsqPmoqTyDpHzsCIXiP291m08Qc6GON0kVaxYAlVMZ9vYWHBZOU+fL052QdZ7b6QB
+	RQJevmA1ATzwDe94CH1FMXb3Sk00Kdm87eOIL9+099pNHz6F+hzH8yA+lkCQ==
+X-Google-Smtp-Source: AGHT+IHwl7arRnDGmS+jv/9FYqdm/9diIV7IAnT4dzc60Jlwy03imhB9Dka/7avZgPD+rx1LyobrFQ==
+X-Received: by 2002:a17:906:c101:b0:b77:1b03:66a1 with SMTP id a640c23a62f3a-b8426bc2947mr286645966b.41.1767701442619;
+        Tue, 06 Jan 2026 04:10:42 -0800 (PST)
 Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8429fdf4e7sm223329466b.0.2026.01.06.04.10.39
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8429fdf4e7sm223329466b.0.2026.01.06.04.10.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jan 2026 04:10:39 -0800 (PST)
+        Tue, 06 Jan 2026 04:10:42 -0800 (PST)
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Anibal Limon <anibal@limonsoftware.com>,
-	Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH v2 05/10] bitbake-setup: fix are_layers_changed when use local source
-Date: Tue,  6 Jan 2026 13:10:27 +0100
-Message-ID: <20260106121033.3892596-5-alex.kanavin@gmail.com>
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH v2 09/10] doc: document fixed revisions override in bitbake-setup manual
+Date: Tue,  6 Jan 2026 13:10:31 +0100
+Message-ID: <20260106121033.3892596-9-alex.kanavin@gmail.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260106121033.3892596-1-alex.kanavin@gmail.com>
 References: <20260106121033.3892596-1-alex.kanavin@gmail.com>
@@ -69,61 +68,73 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 06 Jan 2026 12:10:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18695
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18699
 
-From: Anibal Limon <anibal@limonsoftware.com>
-
-When use local source the git-remote isn't set causing exception because
-takes repodir as default value.
-
-Fixes:
-
-```
-NOTE: Looking up config ls-master in configuration registry
-Traceback (most recent call last):
-  File "/home/workspaces/ls/bitbake/bin/bitbake-setup", line 1042, in <module>
-    main()
-    ~~~~^^
-  File "/home/workspaces/ls/bitbake/bin/bitbake-setup", line 1035, in main
-    args.func(top_dir, all_settings, args, d)
-    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/workspaces/ls/bitbake/bin/bitbake-setup", line 667, in build_update
-    build_status(top_dir, settings, args, d, update=True)
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/workspaces/ls/bitbake/bin/bitbake-setup", line 658, in build_status
-    if are_layers_changed(current_upstream_config["data"]["sources"], layerdir, d):
-       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/workspaces/ls/bitbake/bin/bitbake-setup", line 627, in are_layers_changed
-    changed = changed | _is_git_remote_changed(git_remote, repodir)
-                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
-  File "/home/workspaces/ls/bitbake/bin/bitbake-setup", line 601, in _is_git_remote_changed
-    rev = r_remote['rev']
-          ~~~~~~~~^^^^^^^
-TypeError: string indices must be integers, not 'str'
-```
-
-Signed-off-by: Anibal Limon <anibal@limonsoftware.com>
-
-Alex: remove the default '' value from get() as None is used otherwise, which is also suitable.
+From: Alexander Kanavin <alex@linutronix.de>
 
 Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- bin/bitbake-setup | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2: address feedback by Antonin
+---
+ .../bitbake-user-manual-environment-setup.rst | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index 7c4fa1934..0d33f0896 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -625,7 +625,7 @@ def are_layers_changed(layers, layerdir, d):
-         r_data = layers[r_name]
-         repodir = r_data.get("path", r_name)
- 
--        git_remote = r_data.get('git-remote', repodir)
-+        git_remote = r_data.get('git-remote')
-         if git_remote:
-             changed = changed | _is_git_remote_changed(git_remote, repodir)
- 
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+index ec1bdeecd..fcffab812 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+@@ -938,3 +938,51 @@ Here is an example file that overrides the branch of the BitBake repository to
+ -  The ``sources`` section contains the same options as the ``sources`` option
+    of a :term:`Generic Configuration` file. See the
+    :ref:`ref-bbsetup-section-config-reference` section for more information.
++
++.. _ref-bbsetup-fixed-revisions:
++
++Fixed source revisions
++======================
++
++:term:`Generic Configuration` can set source revisions in ``rev`` to a tag or a branch.
++Bitbake-setup will make sure the actual revision will match the tag or branch when performing
++initializations or updates, and will capture the revisions in a :ref:`_ref-bbsetup-source-overrides`
++file.
++
++This file is named ``sources-fixed-revisions.json`` and is available in ``layers/``
++under the :term:`Setup` directory (as well as under ``config/`` for backwards compatibility).
++It can be used to keep record of what was checked out when using configurations that do not
++specify exact revisions.
++
++Also, as it is an override file, it can be combined with the original configurations
++to initialize a setup in a reproducible way that guarantees an exact, never-changing
++set of revisions, by using the ``--source-overrides`` option of the
++:ref:`ref-bbsetup-command-init` command.
++
++For example if the original configuration had specified only a master branch
++for a source::
++
++     "bitbake": {
++         "git-remote": {
++             "remotes": {
++                 "origin": {
++                     "uri": "https://git.openembedded.org/bitbake"
++                 }
++             },
++             "branch": "master",
++             "rev": "master"
++     }
++
++
++the override will contain the exact revisions::
++
++     "bitbake": {
++         "git-remote": {
++             "remotes": {
++                 "origin": {
++                     "uri": "https://git.openembedded.org/bitbake"
++                 }
++             },
++             "branch": "master",
++             "rev": "720df1a53452983c1c832f624490e255cf389204"
++     }
 -- 
 2.47.3
 
