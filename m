@@ -1,168 +1,154 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5F1C47BC9
-	for <webhook@archiver.kernel.org>; Tue,  6 Jan 2026 08:52:07 +0000 (UTC)
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.86149.1767689523198671367
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC604CDC178
+	for <webhook@archiver.kernel.org>; Tue,  6 Jan 2026 12:10:39 +0000 (UTC)
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.88564.1767701438893195569
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 06 Jan 2026 00:52:04 -0800
+ Tue, 06 Jan 2026 04:10:39 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=f5STu+3a;
- spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 11AB21A2691;
-	Tue,  6 Jan 2026 08:52:01 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id DB3C960739;
-	Tue,  6 Jan 2026 08:52:00 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 52FA3103C85DD;
-	Tue,  6 Jan 2026 09:51:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1767689520; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=MxcYKwrjR4UicAH8UootFLXfc1+Qmwqbpt6YAln/YM4=;
-	b=f5STu+3aLgYOzXIot3PiNkdqdhS+fjTi4+NlSDQFGNi9fzw0RARl9i19CiSSDh5F2+SfJH
-	j6igoqviC2+PZ7Tv8tqsuZcguVxSuupFbpa8LGAWsXb/LwCudlmfJkj4Hz4WWSokoQ7mQN
-	jyV/BvihwvaNu4UvBMJF2KLhE6xJ3Y7/nxK8/rDM/+arJ3nrjRcHJMzf3G3Q64I7vkkZVL
-	Y//gqt28iFQ3U+nLNWpj7b+N5C8934e5fobskJfzyqPD2dBmB9KROgy5h0ZdpOJH/wmphp
-	wdwUhunUdKMTKxkBKFkYn25uc0xqbwwWG2M41Z1C8BmOpH2wiW+BGlUZwn4IgQ==
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 06 Jan 2026 09:51:58 +0100
-Message-Id: <DFHDMY9WEY3D.RDQ8ZANAMU5L@bootlin.com>
-Subject: Re: [bitbake-devel] [PATCH 09/10] doc: document fixed revisions
- override in bitbake-setup manual
-Cc: "Alexander Kanavin" <alex@linutronix.de>
-From: "Antonin Godard" <antonin.godard@bootlin.com>
-To: <alex.kanavin@gmail.com>, <bitbake-devel@lists.openembedded.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-References: <20260102193438.2960561-1-alex.kanavin@gmail.com>
- <20260102193438.2960561-9-alex.kanavin@gmail.com>
-In-Reply-To: <20260102193438.2960561-9-alex.kanavin@gmail.com>
-X-Last-TLS-Session-Version: TLSv1.3
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=HWyWr9zE;
+ spf=pass (domain: gmail.com, ip: 209.85.218.53, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b7277324054so164384466b.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 06 Jan 2026 04:10:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767701437; x=1768306237; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+AvEvZMWxk89/Km99mkiP7CsVVAby6Ms07AOXtOi0WM=;
+        b=HWyWr9zEGxjTWmFoRQOMMai6+52px3Uxknp9FrtuARfhpYUOJ0RMUWBdjmGoKB0Ura
+         9TMU4tcIL59+resihy5ZuNRO4xK4j3k50nG/FnVdF9pMXgdj6a6m56eTMs6IcGc8Dt3V
+         SFVeLnPqva3Kfsd6py25ftlijU/xVxyL1/4zC9bZbCRiMEiC5299eD81ytejZWR4hG1+
+         dkLHApBp5SMjArUu8DWuH4v9QX/0aJLMOkvM8GMiyWq9YrRviRCIXPeEEMP5XeQwdW4I
+         maDCURt+sF3fQRsmBmqK5WVT2Oj7bL7X42HjQs2JMsb6HxA/IOVt7xSghjIeDCItTL+c
+         UmCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767701437; x=1768306237;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+AvEvZMWxk89/Km99mkiP7CsVVAby6Ms07AOXtOi0WM=;
+        b=wJGXpzb8eAC3zlf2z9+DCHC0jP3oiHAsv2vG2kQgeHVku9lW2Z4B2AWEcsoO2qSStu
+         wedHZuym0GQpk97Y+JZ+V79ujFWJGz6vuvcaXRYQZr7F0XWY40XgMvAKflX7jagI0QF9
+         wsvVrLROuU2J5pQ09kYpXhfeV1GhQxG2sz1zgelIeJoAExfuirk5djPkrHn6RGrMJCAh
+         RrultrD5ktJSLOuVsRnqxe5gfKJrEIEFTfxz/Kfb2ph2lnAbm2G1AriyttH+JzR/tXYZ
+         BtR9r0WEVFuYNS+lwAPMhNO5OBPTuGdODBtcUfkXV6ecyvqdFQD2P7Da9HPACL9Q4iOR
+         g5Wg==
+X-Gm-Message-State: AOJu0Yzqfgxc73/mgFOZUCjjLI7ZJUyMMHR8d+nIvbzna2Gm0yDjNaXl
+	OQT+FEK8pNMx+FnfHbN+bAiveH2DRcrpGKfwDLgj7zDL6ywEzIs3RGZ7jpl68A==
+X-Gm-Gg: AY/fxX5tznilPoEMm9YWynkxNR+UpiLT6JQPxkulec5xjQrwlOAD5JcFDLd0FIETFYP
+	k0nZ3qG4HoHP6AH0OJHI3wswFxQjP+SzLcFUqFyDVRt1BPsHQuFRapPfZcs8Q2tZj34UKWGHK3o
+	7gteb+B+mHAgRp+rctLiqX/mrK8HBB0AICdDy8Y3eaArDEjfZ9ILHEERscBLorPSLj81GiahDVR
+	8yWANZaDDkIVfFTxx8WP+mgOeDWIDnzCPK/D4nGI+SySIztSZMUN0MVjB8JNdfHKZIYsRhhb3Nm
+	+VEsdcCiZpfoQB95hI4CW/GsAGjXVe8j9kXa1oee/YlOlN5hqu43Y/kn7ayraXVWRHvYunLx6Cd
+	Z43iLkXXZxOI1wZ9/mrxUU89l+oGtA8n8oMc/RjqIqQHOjax9ypEcWyRINbSee7V7TLrQpu5dTg
+	q5i9MJLHNCdQ+iatiDEC6vDHmvoO6GDc8DdeUNsFye6i9Q7uA=
+X-Google-Smtp-Source: AGHT+IGYT+q2jvbNiUNJUm8HRkFvat9gBlWrGKuabql3lFFBLZqQ9/JtmZlrrBXTyftUOKblhkIOdA==
+X-Received: by 2002:a17:907:6d22:b0:b73:667e:bb29 with SMTP id a640c23a62f3a-b8426a4a80cmr285678566b.8.1767701436972;
+        Tue, 06 Jan 2026 04:10:36 -0800 (PST)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8429fdf4e7sm223329466b.0.2026.01.06.04.10.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Jan 2026 04:10:36 -0800 (PST)
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH v2 01/10] bitbake-setup: move the local source tests to the end
+Date: Tue,  6 Jan 2026 13:10:23 +0100
+Message-ID: <20260106121033.3892596-1-alex.kanavin@gmail.com>
+X-Mailer: git-send-email 2.47.3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 06 Jan 2026 08:52:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18690
+ <bitbake-devel@lists.openembedded.org>; Tue, 06 Jan 2026 12:10:39 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18691
 
-Hi,
+From: Alexander Kanavin <alex@linutronix.de>
 
-On Fri Jan 2, 2026 at 8:34 PM CET, Alexander Kanavin via lists.openembedded=
-.org wrote:
-> From: Alexander Kanavin <alex@linutronix.de>
->
-> Signed-off-by: Alexander Kanavin <alex@linutronix.de>
-> ---
->  .../bitbake-user-manual-environment-setup.rst | 46 +++++++++++++++++++
->  1 file changed, 46 insertions(+)
->
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setu=
-p.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-> index ec1bdeecd..68b2ad31d 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-> @@ -938,3 +938,49 @@ Here is an example file that overrides the branch of=
- the BitBake repository to
->  -  The ``sources`` section contains the same options as the ``sources`` =
-option
->     of a :term:`Generic Configuration` file. See the
->     :ref:`ref-bbsetup-section-config-reference` section for more informat=
-ion.
-> +
-> +.. _ref-bbsetup-fixed-revisions
+They are not a part of the main testing sequence, and logically
+should not be in the middle of it.
 
-Missing colon at the end:
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ lib/bb/tests/setup.py | 56 +++++++++++++++++++++----------------------
+ 1 file changed, 28 insertions(+), 28 deletions(-)
 
-.. _ref-bbsetup-fixed-revisions:
-
-otherwise this is treated as a comment.
-
-> +
-> +Fixed source revisions
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +:term:`Generic Configuration` can set source revisions in ``rev`` to a t=
-ag or a branch.
-> +Bitbake-setup will make sure the actual revision will match the tag or b=
-ranch when performing
-> +initializations or updates, and will capture the revisions in a :ref:`_r=
-ef-bbsetup-source-overrides`
-> +file.
-> +
-> +The file is named ``sources-fixed-revisions.json`` and is available in `=
-`layers/``
-
-s/The/This/ ?
-
-if this is a continuation to your previous sentence
-
-> +or ``config/`` under :term:`Setup` directory. It can be used to keep rec=
-ord of
-
-s/under :term:`Setup` directory/under the :term:`Setup` directory/
-
-Why layers/ _or_ config/? It's ambiguous for users reading here what the
-difference between the two might be. If this is a compatibility thing (beca=
-use
-bitbake-setup used to do it one way, then it was changed to another locatio=
-n), I
-would just keep the final one documented here (or explain that it's for
-compatibility).
-
-> +what was checked out when using configurations that do not specify exact=
- revisions.
-> +
-> +Also, as it is an override file, it can be combined with the original co=
-nfigurations
-> +to initialize a setup in a reproducible way that guarantees an exact, ne=
-ver-changing
-> +set of revisions.
-> +
-> +For example if the original configuration had specified only a master br=
-anch
-> +for a source::
-> +
-> +     "bitbake": {
-> +         "git-remote": {
-> +             "remotes": {
-> +                 "origin": {
-> +                     "uri": "https://git.openembedded.org/bitbake"
-> +                 }
-> +             },
-> +             "branch": "master",
-> +             "rev": "master"
-> +     }
-> +
-> +
-> +the override will contain the exact revisions::
-> +
-> +     "bitbake": {
-> +         "git-remote": {
-> +             "remotes": {
-> +                 "origin": {
-> +                     "uri": "https://git.openembedded.org/bitbake"
-> +                 }
-> +             },
-> +             "branch": "master",
-> +             "rev": "720df1a53452983c1c832f624490e255cf389204"
-> +     }
-
-"""
-This file can later be used with the ``--source-overrides`` option of the
-:ref:`ref-bbsetup-command-init` command.
-"""
-
-?
-
-Thanks,
-Antonin
-
---=20
-Antonin Godard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
+index 933178c84..ad09913f4 100644
+--- a/lib/bb/tests/setup.py
++++ b/lib/bb/tests/setup.py
+@@ -320,34 +320,6 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+                 out = self.runbbsetup("update --update-bb-conf='yes'")
+                 self.assertIn("Configuration in {} has not changed".format(setuppath), out[0])
+ 
+-        # check source overrides, local sources provided with symlinks, and custom setup dir name
+-        source_override_content = """
+-{
+-    "sources": {
+-        "test-repo": {
+-            "local": {
+-                "path": "."
+-            }
+-        }
+-    }
+-}"""
+-        override_filename = 'source-overrides.json'
+-        custom_setup_dir = 'special-setup-dir'
+-        self.add_file_to_testrepo(override_filename, source_override_content)
+-        out = self.runbbsetup("init --non-interactive --source-overrides {} --setup-dir-name {} test-config-1 gadget".format(os.path.join(self.testrepopath, override_filename), custom_setup_dir))
+-        custom_setup_path = os.path.join(self.tempdir, 'bitbake-builds', custom_setup_dir)
+-        custom_layer_path = os.path.join(custom_setup_path, 'layers', 'test-repo')
+-        self.assertTrue(os.path.islink(custom_layer_path))
+-        self.assertEqual(self.testrepopath, os.path.realpath(custom_layer_path))
+-
+-        # same but use command line options to specify local overrides
+-        custom_setup_dir = 'special-setup-dir-with-cmdline-overrides'
+-        out = self.runbbsetup("init --non-interactive -L test-repo {} --setup-dir-name {} test-config-1 gadget".format(self.testrepopath, custom_setup_dir))
+-        custom_setup_path = os.path.join(self.tempdir, 'bitbake-builds', custom_setup_dir)
+-        custom_layer_path = os.path.join(custom_setup_path, 'layers', 'test-repo')
+-        self.assertTrue(os.path.islink(custom_layer_path))
+-        self.assertEqual(self.testrepopath, os.path.realpath(custom_layer_path))
+-
+         # install buildtools
+         out = self.runbbsetup("install-buildtools")
+         self.assertIn("Buildtools installed into", out[0])
+@@ -428,3 +400,31 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+             out = self.runbbsetup("update --update-bb-conf='no'")
+             sums_after = _conf_chksum(f"{setuppath}/build/conf")
+             self.assertEqual(sums_before, sums_after)
++
++        # check source overrides, local sources provided with symlinks, and custom setup dir name
++        source_override_content = """
++{
++    "sources": {
++        "test-repo": {
++            "local": {
++                "path": "."
++            }
++        }
++    }
++}"""
++        override_filename = 'source-overrides.json'
++        custom_setup_dir = 'special-setup-dir'
++        self.add_file_to_testrepo(override_filename, source_override_content)
++        out = self.runbbsetup("init --non-interactive --source-overrides {} --setup-dir-name {} test-config-1 gadget".format(os.path.join(self.testrepopath, override_filename), custom_setup_dir))
++        custom_setup_path = os.path.join(self.tempdir, 'bitbake-builds', custom_setup_dir)
++        custom_layer_path = os.path.join(custom_setup_path, 'layers', 'test-repo')
++        self.assertTrue(os.path.islink(custom_layer_path))
++        self.assertEqual(self.testrepopath, os.path.realpath(custom_layer_path))
++
++        # same but use command line options to specify local overrides
++        custom_setup_dir = 'special-setup-dir-with-cmdline-overrides'
++        out = self.runbbsetup("init --non-interactive -L test-repo {} --setup-dir-name {} test-config-1 gadget".format(self.testrepopath, custom_setup_dir))
++        custom_setup_path = os.path.join(self.tempdir, 'bitbake-builds', custom_setup_dir)
++        custom_layer_path = os.path.join(custom_setup_path, 'layers', 'test-repo')
++        self.assertTrue(os.path.islink(custom_layer_path))
++        self.assertEqual(self.testrepopath, os.path.realpath(custom_layer_path))
+-- 
+2.47.3
 
 
