@@ -2,76 +2,76 @@ Return-Path: <paul@pbarker.dev>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A290D185F6
-	for <webhook@archiver.kernel.org>; Thu,  8 Jan 2026 13:26:22 +0000 (UTC)
-Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.6248.1767878774704133458
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB8FD1D477
+	for <webhook@archiver.kernel.org>; Thu,  8 Jan 2026 15:17:42 +0000 (UTC)
+Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.8656.1767885459624879581
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 08 Jan 2026 05:26:14 -0800
+ Thu, 08 Jan 2026 07:17:39 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=LVKzDM8D;
- dkim=pass header.i=@messagingengine.com header.s=fm2 header.b=TEwy719b;
- spf=pass (domain: pbarker.dev, ip: 202.12.124.151, mailfrom: paul@pbarker.dev)
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfout.stl.internal (Postfix) with ESMTP id 3D6921D0009F;
-	Thu,  8 Jan 2026 08:26:14 -0500 (EST)
+ dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=LibhW0H9;
+ dkim=pass header.i=@messagingengine.com header.s=fm2 header.b=brn4D4CJ;
+ spf=pass (domain: pbarker.dev, ip: 202.12.124.144, mailfrom: paul@pbarker.dev)
+Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
+	by mailfout.stl.internal (Postfix) with ESMTP id CF8741D00144;
+	Thu,  8 Jan 2026 10:17:38 -0500 (EST)
 Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Thu, 08 Jan 2026 08:26:14 -0500
+  by phl-compute-09.internal (MEProxy); Thu, 08 Jan 2026 10:17:38 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
 	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
 	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1767878774; x=1767965174; bh=UA4qO7cMXi
-	EqOR5s+GmMuSSJUHNQxTTOx4NC8LXZVVc=; b=LVKzDM8DGQlcqjqKpNGL1zvGoE
-	J5CCCd+vCQDbbdrimClca3S2QcM3/q2Tx6chAO4oB8F87L4ttXz1Aj1M+pjDo0fV
-	HpQaiQb/WIYzUxTe6kQAn9KfIgBS16JMJ8IK3g3662QNlbSYBUqhUFSoK4PInemG
-	dd38Nc8438dz0KKn8CZXNE/DcDBF0wWWm0hjcQ4+IE9d/dAnPUtNLQsxquB1H2bR
-	lfjza7NwapjfA1fDC9xWZKa7IB0f4LRlF1mZN1pIyj0mJ5fpuSJiphHemGa6aEZp
-	dJrhZxIM2iRyvFWQGnWuu5/eGcuxRaXgWmdtBvQVCkssdV7erPzucDnjHA3Q==
+	:subject:to:to; s=fm3; t=1767885458; x=1767971858; bh=2hFMxYKqgT
+	z6I/1b8qgwRbLSkgPYQ1dW20upyP5a1/g=; b=LibhW0H9AXiZ8YSG4/3ONtuOw6
+	N4N4BoFotJndL7/mYMETkt/tE+M+apmccYqgKO7QydO8+lZByq5fOqIsuxUWQaDx
+	64eJR7nU3nUOWqXG5B5l/hEaGOQ8jCSo6wU1ORn8eLzo3MTJgBw4GBaajct5rJoU
+	AhatNwtPGz/MndMKHTD4iph9k47xetvCziszAmpEFJNf0Z0TzvjUNMf3yBmdOkp/
+	2zLcLRL0ZVxX2VOES/akkx6q/Trd/f2yWbKAhJTx9BchPvNmWWP8T00y1qn/uwH8
+	j5QTmTGBNWaZSbcU469H2/Oizen+lIKzPM2Fm81PCHbQUoBgR+OavFbS5B9A==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-type:content-type:date:date
 	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
 	:message-id:mime-version:references:reply-to:subject:subject:to
 	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1767878774; x=1767965174; bh=UA4qO7cMXiEqOR5s+GmMuSSJUHNQxTTOx4N
-	C8LXZVVc=; b=TEwy719b3KYY+GO2EVQZkDnW/0chL5sn4g+oB0tqciVebwaa/dJ
-	9NGSB5Iy64kepz36FjgJrrT8y3/uavW8H2X4kBosKR7gSC/ig/mrjgCXR4hlY9vH
-	rNwg7RYWgB4XVEBsduJvV+1FvEG9m5SN3nweOHmLeGUYDkvBQbdWXRq7MF6fyFWr
-	WFPDxy/Z8TTcSDfdST5yrt8z+ZGMsFQcGQHXteuAQE/A+ekMihcsHZqN3Q2OwtVv
-	jfu1KbWWnzFZbKtlrIKqxcW7gw+09VowC5wwfKr8iOm3jMgUhcKsyjZ/x7pP2KOy
-	gYYMxrhB0y49geTFcONMg2wl9ckEvytskgA==
-X-ME-Sender: <xms:drBfabzFmxui-ruJfbCMY9F7atZ0Rf6PxSDXCf2O3OwZ--RShQ9_8Q>
-    <xme:drBfaZS43d5oCNn1afrnoomBllplQem9feDVqXMBSP94SkM9h3-PUKlNyMv3h21v5
-    JQC6yoZhM0E74YvNT5qEJFk4T2tuBDYvSIP9BDiVlRjvsa36Dc75g>
-X-ME-Received: <xmr:drBfaS-F9cw4ATOT8MWwq508fgMACTXggRRO3y6ziFTlJgG3xv6hR1T83032OW9K_J6mnanDS6o058K9qBOIA-yTfxzo86kNLj7gsqsUmc-t>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddutdeitdejucetufdoteggodetrf
+	1767885458; x=1767971858; bh=2hFMxYKqgTz6I/1b8qgwRbLSkgPYQ1dW20u
+	pyP5a1/g=; b=brn4D4CJ+MiTSh0meo6130aglcIBeCIg7hlbafsHeRQSpDbOowU
+	qgVqzVCG6WI5d/butl5oIsQRPy9h8hYyeanylHJbS4uCiuf25+cgLPzEDpZWWS91
+	A9Ts2iaNdRsjooN+8ZuDz6iY4VHn2/mmo/ljV2O3hi69UxzXv5XqWk4tVdjFaEHz
+	dv5kGrbEcVGri8et041FmmgvmCvwXVdzqB217nGckLHsc09wBm/3wML1mJB2DoxG
+	wTsKU35aI1qfiYemTjfFtM3S/kVwlgfsGxdJnbZLGnJMocJTGxy7xEgQ7exdlFsq
+	5VObuRMk71hrYQY+czXyjVo2ZruqCc0kCBQ==
+X-ME-Sender: <xms:kspfaTTw9-4pcLPxknXdYyt8ldb8TzxRF7mz4vlnEwWItCsdL0GLvA>
+    <xme:kspfacP1IbtKiL45AlFZXyMBpx3T1IyHuh3AYtMIuWjH_9vHqjUI6ouLG4Kz5O7Hu
+    cJsjdVCofD4sJ8M3IwULuICQyuSONjqXJJm-rh91_92MXAn-bGVwtI>
+X-ME-Received: <xmr:kspfaWPehA5ciHITD9edTbujOm5tBNtrAO6fWMNYcW5B014xKRcxjVz4ZECV-9sr8C3vdOcvKCVQ63sh6kHtQuZGU_bd_9jpiTFlr_gqh84o>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddutdeivdelucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucenucfjughrpefkuffhvfevffgjfhgtfgggsehgtderre
-    dtreejnecuhfhrohhmpefrrghulhcuuegrrhhkvghruceophgruhhlsehpsggrrhhkvghr
-    rdguvghvqeenucggtffrrghtthgvrhhnpeegkedvffdvhefhueduleffiedtieeuiedvge
-    ehhfdvkeevtdeihfegteefjedtgeenucffohhmrghinhepohhpvghnvghmsggvugguvggu
-    rdhorhhgpdhphihshhhtrggslhgvshdrphihnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepphgruhhlsehpsggrrhhkvghrrdguvghvpdhnsggp
-    rhgtphhtthhopedvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrlhgvgidrkh
-    grnhgrvhhinhesghhmrghilhdrtghomhdprhgtphhtthhopegsihhtsggrkhgvqdguvghv
-    vghlsehlihhsthhsrdhophgvnhgvmhgsvgguuggvugdrohhrgh
-X-ME-Proxy: <xmx:drBfaQo4YIusIyAtzoRJQVUHXMOzehl7i4JVeiTZBAMnyxzwnd6WtQ>
-    <xmx:drBfaflVTwkH3X9erkIhb0jj5LjZ-Gc3uC6yVb0sorSgrg3al5pReA>
-    <xmx:drBfaXI8KQsQpUk8iXTWdwhqLEW9BwyoEqZli_Z4jaH4WhDne4ZT2Q>
-    <xmx:drBfaUzbiT2D5Iz9e26thgEVz9y-nR0yPtMZuB4lD2_5TRoj4E6yPA>
-    <xmx:drBfabDuGj5T6ORm3MO5qjApiPMvfvSdRrnwm1y7suDjR-2TMvyNg_oD>
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepkffuhffvveffjghftggfggesghdtreertderjeenucfhrhhomheprfgruhhluceu
+    rghrkhgvrhcuoehprghulhesphgsrghrkhgvrhdruggvvheqnecuggftrfgrthhtvghrnh
+    ephfekhfeugfelfeeludellefhkeetvdffiedttdeuueekhfeiudeivdefueehuddtnecu
+    ffhomhgrihhnpehophgvnhgvmhgsvgguuggvugdrohhrghenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehprghulhesphgsrghrkhgvrhdruggv
+    vhdpnhgspghrtghpthhtohepfedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprg
+    hlvgigrdhkrghnrghvihhnsehgmhgrihhlrdgtohhmpdhrtghpthhtohepsghithgsrghk
+    vgdquggvvhgvlheslhhishhtshdrohhpvghnvghmsggvugguvggurdhorhhgpdhrtghpth
+    htoheprghlvgigsehlihhnuhhtrhhonhhigidruggv
+X-ME-Proxy: <xmx:kspfacslblQKYx3ykwi5oJZixX_FsUakw4RvcbVjqDPIkHWWh338zA>
+    <xmx:kspfaQX1XzTSmDFoOxISX5gwYfxGccc8TUKuG1BELmvCJOl0EEvhGQ>
+    <xmx:kspfaUtSK8TZAeZgIt0NSlHqU39aSu1n3PhtRJFvSEtnRl2oOuDM4g>
+    <xmx:kspfacV1WMfg45NaXt2tX_ZbWjZ9pWhpxvH-QKI4DW8Xcj67ryvcAQ>
+    <xmx:kspfaRg_4p3mNDaoMzQorjGdWsefHuLrOtXmr-_SpIJoVzJzH0jl3U7c>
 Feedback-ID: i51494658:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 8 Jan 2026 08:26:13 -0500 (EST)
-Message-ID: <428c9c8cb2f184be1d3b8fca2a6884e2e9b6a8f5.camel@pbarker.dev>
-Subject: Re: [bitbake-devel] [PATCH] gitignore: Ignore bitbake-builds
- directory
+ 8 Jan 2026 10:17:37 -0500 (EST)
+Message-ID: <2854f27b68c3e3bfaf897fdbfcc97ae715d3e96e.camel@pbarker.dev>
+Subject: Re: [bitbake-devel] [PATCH v2 01/10] bitbake-setup: move the local
+ source tests to the end
 From: Paul Barker <paul@pbarker.dev>
-To: alex.kanavin@gmail.com
-Cc: bitbake-devel@lists.openembedded.org
-Date: Thu, 08 Jan 2026 13:26:09 +0000
-In-Reply-To: <CANNYZj9Z4NXfhcRRyjqkX=egw+0EQoUptgrFYXk6a6ZxU+0bQw@mail.gmail.com>
-References: <20260108-ignore-bitbake-builds-v1-1-f7a993e9059f@pbarker.dev>
-	 <CANNYZj9Z4NXfhcRRyjqkX=egw+0EQoUptgrFYXk6a6ZxU+0bQw@mail.gmail.com>
+To: alex.kanavin@gmail.com, bitbake-devel@lists.openembedded.org
+Cc: Alexander Kanavin <alex@linutronix.de>
+Date: Thu, 08 Jan 2026 15:17:34 +0000
+In-Reply-To: <20260106121033.3892596-1-alex.kanavin@gmail.com>
+References: <20260106121033.3892596-1-alex.kanavin@gmail.com>
 Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  keydata=mQINBGC756sBEADXL6cawsZRrDvICz9Y1SG0/lW1me4xpq36obh7a0IGAzp3ywNRb/4MO
  DTqP4+DD0cIFuDY41/N17g0sNlp8z+/k/IIDmNPtYQOTVmAkrkdDU4BP8dD3Cp1PUw6nrbInfujAJ
@@ -117,50 +117,135 @@ Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  OqpPZn7Ij1ga5IAOHNRi5MbyRFROYOeaOj7sz7S7roHQwdP3Q1qTwTOv30hlOSe6uz4PTBiEIKBQH
  ep0k17xg==
 Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-cQD8UubhCBPPaXH/syRb"
+	protocol="application/pgp-signature"; boundary="=-jtMLQJ6bhOLNoz4Mu7Fs"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 08 Jan 2026 13:26:22 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18711
+ <bitbake-devel@lists.openembedded.org>; Thu, 08 Jan 2026 15:17:42 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18712
 
 
---=-cQD8UubhCBPPaXH/syRb
+--=-jtMLQJ6bhOLNoz4Mu7Fs
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2026-01-08 at 13:27 +0100, Alexander Kanavin via
+On Tue, 2026-01-06 at 13:10 +0100, Alexander Kanavin via
 lists.openembedded.org wrote:
-> On Thu, 8 Jan 2026 at 13:23, Paul Barker via lists.openembedded.org
-> <paul=3Dpbarker.dev@lists.openembedded.org> wrote:
-> >=20
-> > Running `./bin/bitbake-setup init ...` in the bitbake directory with th=
-e
-> > default bitbake-setup configuration creates a bitbake-builds directory.
-> > Add this to .gitignore so it's not tracked.
-> >=20
-> > Signed-off-by: Paul Barker <paul@pbarker.dev>
-> > ---
-> >  .gitignore | 1 +
-> >  1 file changed, 1 insertion(+)
-> >=20
-> > diff --git a/.gitignore b/.gitignore
-> > index fbf9eb2031c8..8152f617e72b 100644
-> > --- a/.gitignore
-> > +++ b/.gitignore
-> > @@ -3,6 +3,7 @@
-> >  *~
-> >  pyshtables.py
-> >  /doc/manual/html/
-> > +/bitbake-builds/
+> From: Alexander Kanavin <alex@linutronix.de>
 >=20
-> Perhaps it should be ignored across the whole bitbake tree?
+> They are not a part of the main testing sequence, and logically
+> should not be in the middle of it.
 >=20
-> **/bitbake-builds/
+> Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+> ---
+>  lib/bb/tests/setup.py | 56 +++++++++++++++++++++----------------------
+>  1 file changed, 28 insertions(+), 28 deletions(-)
+>=20
+> diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
+> index 933178c84..ad09913f4 100644
+> --- a/lib/bb/tests/setup.py
+> +++ b/lib/bb/tests/setup.py
+> @@ -320,34 +320,6 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+>                  out =3D self.runbbsetup("update --update-bb-conf=3D'yes'=
+")
+>                  self.assertIn("Configuration in {} has not changed".form=
+at(setuppath), out[0])
+> =20
+> -        # check source overrides, local sources provided with symlinks, =
+and custom setup dir name
+> -        source_override_content =3D """
+> -{
+> -    "sources": {
+> -        "test-repo": {
+> -            "local": {
+> -                "path": "."
+> -            }
+> -        }
+> -    }
+> -}"""
+> -        override_filename =3D 'source-overrides.json'
+> -        custom_setup_dir =3D 'special-setup-dir'
+> -        self.add_file_to_testrepo(override_filename, source_override_con=
+tent)
+> -        out =3D self.runbbsetup("init --non-interactive --source-overrid=
+es {} --setup-dir-name {} test-config-1 gadget".format(os.path.join(self.te=
+strepopath, override_filename), custom_setup_dir))
+> -        custom_setup_path =3D os.path.join(self.tempdir, 'bitbake-builds=
+', custom_setup_dir)
+> -        custom_layer_path =3D os.path.join(custom_setup_path, 'layers', =
+'test-repo')
+> -        self.assertTrue(os.path.islink(custom_layer_path))
+> -        self.assertEqual(self.testrepopath, os.path.realpath(custom_laye=
+r_path))
+> -
+> -        # same but use command line options to specify local overrides
+> -        custom_setup_dir =3D 'special-setup-dir-with-cmdline-overrides'
+> -        out =3D self.runbbsetup("init --non-interactive -L test-repo {} =
+--setup-dir-name {} test-config-1 gadget".format(self.testrepopath, custom_=
+setup_dir))
+> -        custom_setup_path =3D os.path.join(self.tempdir, 'bitbake-builds=
+', custom_setup_dir)
+> -        custom_layer_path =3D os.path.join(custom_setup_path, 'layers', =
+'test-repo')
+> -        self.assertTrue(os.path.islink(custom_layer_path))
+> -        self.assertEqual(self.testrepopath, os.path.realpath(custom_laye=
+r_path))
+> -
+>          # install buildtools
+>          out =3D self.runbbsetup("install-buildtools")
+>          self.assertIn("Buildtools installed into", out[0])
+> @@ -428,3 +400,31 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+>              out =3D self.runbbsetup("update --update-bb-conf=3D'no'")
+>              sums_after =3D _conf_chksum(f"{setuppath}/build/conf")
+>              self.assertEqual(sums_before, sums_after)
+> +
+> +        # check source overrides, local sources provided with symlinks, =
+and custom setup dir name
+> +        source_override_content =3D """
+> +{
+> +    "sources": {
+> +        "test-repo": {
+> +            "local": {
+> +                "path": "."
+> +            }
+> +        }
+> +    }
+> +}"""
+> +        override_filename =3D 'source-overrides.json'
+> +        custom_setup_dir =3D 'special-setup-dir'
+> +        self.add_file_to_testrepo(override_filename, source_override_con=
+tent)
+> +        out =3D self.runbbsetup("init --non-interactive --source-overrid=
+es {} --setup-dir-name {} test-config-1 gadget".format(os.path.join(self.te=
+strepopath, override_filename), custom_setup_dir))
+> +        custom_setup_path =3D os.path.join(self.tempdir, 'bitbake-builds=
+', custom_setup_dir)
+> +        custom_layer_path =3D os.path.join(custom_setup_path, 'layers', =
+'test-repo')
+> +        self.assertTrue(os.path.islink(custom_layer_path))
+> +        self.assertEqual(self.testrepopath, os.path.realpath(custom_laye=
+r_path))
+> +
+> +        # same but use command line options to specify local overrides
+> +        custom_setup_dir =3D 'special-setup-dir-with-cmdline-overrides'
+> +        out =3D self.runbbsetup("init --non-interactive -L test-repo {} =
+--setup-dir-name {} test-config-1 gadget".format(self.testrepopath, custom_=
+setup_dir))
+> +        custom_setup_path =3D os.path.join(self.tempdir, 'bitbake-builds=
+', custom_setup_dir)
+> +        custom_layer_path =3D os.path.join(custom_setup_path, 'layers', =
+'test-repo')
+> +        self.assertTrue(os.path.islink(custom_layer_path))
+> +        self.assertEqual(self.testrepopath, os.path.realpath(custom_laye=
+r_path))
 
-I've sent a v2.
+The ordering definitely makes more sense now so this is good.
+
+We do have a single very long test case covering bitbake-setup here. We
+should think about splitting it up into separate test cases in the
+future so that pass/fail results are more specific and easier to triage.
 
 Best regards,
 
@@ -168,17 +253,17 @@ Best regards,
 Paul Barker
 
 
---=-cQD8UubhCBPPaXH/syRb
+--=-jtMLQJ6bhOLNoz4Mu7Fs
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 
 -----BEGIN PGP SIGNATURE-----
 
-iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaV+wchEccGF1bEBwYmFy
-a2VyLmRldgAKCRCrY1Tsnbr0btMwAQDiOg3iQjwbp1a9TMQ8UAM1tnW2Ic2obJ6K
-SY3rSnyLSQEAx2Im31J0G2aSqFJp8ar4XD0Ow0bMFpt3+Ut3Mr2gewQ=
-=DZA5
+iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaV/KjhEccGF1bEBwYmFy
+a2VyLmRldgAKCRCrY1Tsnbr0bvCxAQCC9RCI/c7FT9+pyfgEn+r6qTSI/73MlzX/
+1n1VzfHefAD+Lx91eDHApA/2d4SDliJxdmTr/R2BGo+tLSs4j0fgtgY=
+=7Wp5
 -----END PGP SIGNATURE-----
 
---=-cQD8UubhCBPPaXH/syRb--
+--=-jtMLQJ6bhOLNoz4Mu7Fs--
 
