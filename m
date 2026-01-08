@@ -1,96 +1,124 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <paul@pbarker.dev>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A6DD185E9
-	for <webhook@archiver.kernel.org>; Thu,  8 Jan 2026 12:14:31 +0000 (UTC)
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.5146.1767874463881322067
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8ADD185EC
+	for <webhook@archiver.kernel.org>; Thu,  8 Jan 2026 12:23:41 +0000 (UTC)
+Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.5267.1767875017609380471
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 08 Jan 2026 04:14:24 -0800
+ Thu, 08 Jan 2026 04:23:37 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=hU49eE50;
- spf=pass (domain: gmail.com, ip: 209.85.222.170, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-8b2d7c38352so192412285a.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 08 Jan 2026 04:14:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767874463; x=1768479263; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PLg5uRYigNAU/Q7emjxtbrtH9v3myOFz8YvDs3z5nNQ=;
-        b=hU49eE50qQts+ALdoosDx8AG4AHj6u9KHm5rcQDW8KoW7mWN8cEwC4Y/jquO/OfUgm
-         BI9G9J5D3HZ7El+0sCQ6ODsD/rXbbDRpQBBEosJr1m6bKZ8bDNDKEGLAlEW+/5DInPfL
-         xiOz1U0JTO3GOHYF4hm632RTW0Y0VvN+x4r56bva3dgGeX98VzlJlA1W93dxy5+4Cto7
-         5pzvY/aPHKNQK52BGNX+e/j9MJPEZhKicRAZBhewEuPfxN3AswkBIfDdaoVLaCQI1McY
-         c9VwEgAn8qerh6wmPl57Il+yRo9H9H6VjzldXW5TWzuy2Pk82G87DRbL7E/m76GJy8hh
-         Z/xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767874463; x=1768479263;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PLg5uRYigNAU/Q7emjxtbrtH9v3myOFz8YvDs3z5nNQ=;
-        b=gvLlYaU0GrM3VJ9z5fR5RNHPdOWm8S8iR+3JYSG0W63GTELgs8UUQ7r/qz8OV+qAR0
-         yTXQpLMC//sCIYdboVB1dH2jrRzTtbuoLIFffFRccvjlBMyH0g2+sbvZfwClrOJWiYUQ
-         xdbzEjH1KC7M9tCTSW+mnzmGEXuWIOxi0vbvhgwJH4Dnh7U7thgiY6bQSk3uVoeMvh2E
-         2sDxmWpenVtFgbnYA6Ya/MQ9ci/mMm3o2bUqN/WHv9Z8wOLiWFqjNWF+L3AiME0fTJeL
-         npQghg2J2rY1dkQzXOisVRd541X3M5cdBZW5qtXy/Mpa/s4HDFN+PVI7XbtMVWJfpvm7
-         FLpQ==
-X-Gm-Message-State: AOJu0Yx7cLkcnSdAzs1wAQU/FzK3e+r0UyETQmALDfZWd/xCSKosvP2b
-	eMzleVVFJTKYb9T5pL43rX6eq/Jp1bEd4gEokA0BejwN6iI2xM1iIQn8QmOu5pH7Qbr8pYfuqex
-	r9T47sJDQ4L0edFyfAAYChkp1cx1NIcE=
-X-Gm-Gg: AY/fxX7LpOE7n1Mjwv8DI04p5N+YCZMr3lUxJu0UtkAAEBHO8l8qPbATVfPSzZYw2My
-	a8LpSq7Vf+gzs9QSdmJClgOxvI178UxpBOCg0tFkDO65oQXqjKFULY/PyGKtEOOYPH+sdo4vdU2
-	DvlLdAyGPUXEpRFcfSM/H3AMLh3ir1MzW6ZtxfWWefA4DZQ0l0H2wwS+KgH5vgVmLnVAJmdfMKS
-	YIHSmF1Y7/q5asWVQzAAV1q7ur6VpcTldxNxPgWVkzeRc+/+NqrxGrXpW+nRIPz1QtqIGULz238
-	P3lbug2YhSQmY4hyGNshZnaqUX+BoyqZwgGpIUwp
-X-Google-Smtp-Source: AGHT+IEAUBLKUvJw15KhpNQD4wuLMTIIIv+EsAnC4xn+otJ9OUeisa63v24Vxvq+KBqq49Ph8imn24PAdqhwTCAIWPA=
-X-Received: by 2002:a05:6214:3988:b0:890:597b:ac04 with SMTP id
- 6a1803df08f44-89083cbb484mr86930746d6.18.1767874462766; Thu, 08 Jan 2026
- 04:14:22 -0800 (PST)
+ dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=MH4ccygB;
+ dkim=pass header.i=@messagingengine.com header.s=fm2 header.b=EUr+YtdY;
+ spf=pass (domain: pbarker.dev, ip: 202.12.124.158, mailfrom: paul@pbarker.dev)
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id CF4657A008E;
+	Thu,  8 Jan 2026 07:23:36 -0500 (EST)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Thu, 08 Jan 2026 07:23:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm3; t=1767875016; x=1767961416; bh=Nl
+	v7L5zF5knw9Yx1eBMmiF4HvT7u99NQ+yJGPaOBA0E=; b=MH4ccygBCP+0k+wgT+
+	DBD52cCxWK6bqjOu95AllOMXThrWXVVS9GwYIuWyhFRh/1vhrcjvVExyWzdtsRm3
+	ADsEYVESnf72g3FrWKERF2n6M5q2fU70YtQ7XWhh+gJ8XmPIn2zMYRWp0ubkA4l2
+	q1fYIq9vVwfnYK3B0/kFEY7OgXs3gHySrVWD1sxIJkhWyV44nQP6yWeA93TCyp6k
+	C+q3UJDpXSUGt/XcOe+8T23bD0uutZmCD4fqT/GnxDB6RTpBk48l3FO3LosZZ0Y1
+	uc0hc7ikK+jh+Vgt0m0+SpYbFnZZQS9vpqzFN7hBxW3xKor3hJTB1+vkkx4GMauZ
+	Kovg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1767875016; x=1767961416; bh=Nlv7L5zF5knw9Yx1eBMmiF4HvT7u
+	99NQ+yJGPaOBA0E=; b=EUr+YtdYlr/nkgdl6ZEx7scAklZGeZeDHTeZoaQcEpPR
+	5KpGAwhOky61qtDTG/9BmThm0/C/V/lDFY3/ZZDmfasG0jAWVwwuFkUeiB5pV3LZ
+	+/vywEGuhbZQmU5AuZIjsXZxwNrCEgScgoGJbLSNW5BPNFOAZinT/tU+Z9uBcPqo
+	1+Zj9nqWXRskcfwazgYESHVHyKNQVlJOt/XhWFfa+hoTVJYqODH44AvIch8wyURu
+	RvFNyME9MhWB2/OCHfjpT+JlMQBoXhKx5X3sBr2WukEBEnZgur4Kt3khKW69Ptg1
+	/bpuSAsuAZOz0uc1WaMpg77ApP+NrC3dJGePgDEnSQ==
+X-ME-Sender: <xms:yKFfaWpcwF2B9Lk7Zfci46BbdNJMR5jqLcu_5ZS9fp82V3c2ik8VTg>
+    <xme:yKFfaao0OrThhFNM-nVeZSLgEJp3wPFodRZmnX1KDLvRxMmgxrT12Ab3Ymj970dPX
+    9xitOXSjUTSoTEJB1NgadpvJPIegYngr23rgrBQWqAYHRQAxGUo>
+X-ME-Received: <xmr:yKFfaY0eGjWdxe94_mye7BxSnCc_5-Xex_Ajh5t0672cA_-QIfu7_2l1xgXrtEn5DkbvHugI_jmp9-hm25l8KBh1vm3R9ls>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddutdehleegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucenucfjughrpefhfffugggtgffkvfevofesthejredtre
+    dtjeenucfhrhhomheprfgruhhluceurghrkhgvrhcuoehprghulhesphgsrghrkhgvrhdr
+    uggvvheqnecuggftrfgrthhtvghrnhepfeduvddukedtjeeftdegleejfeffkedvtdeiff
+    fgfeffieekjefggffgkedttddtnecuffhomhgrihhnpehphihshhhtrggslhgvshdrphih
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepphgruh
+    hlsehpsggrrhhkvghrrdguvghvpdhnsggprhgtphhtthhopedvpdhmohguvgepshhmthhp
+    ohhuthdprhgtphhtthhopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnh
+    gvmhgsvgguuggvugdrohhrghdprhgtphhtthhopehprghulhesphgsrghrkhgvrhdruggv
+    vh
+X-ME-Proxy: <xmx:yKFfaRD5Z6ux8n3wz9axVbDWzb_KWYqfQre5zCS5cEZBOpqjsxV7pg>
+    <xmx:yKFfaYfpj8kPHZp2tcLx3n5_dG-gEKVwE5e973r1DqggrDi3TeBLSA>
+    <xmx:yKFfaeijIRYyH4lwJmHrg3g7KHkbfMoH7usn3BE-EDHIgIArzDjVLQ>
+    <xmx:yKFfaYrsCcvUpzJqYdFl4dfHn--6RnYUf3IEOfcC1i_sN2Xdwk-dBQ>
+    <xmx:yKFfaVOB1Kjcrwq1Vjkm1GEodrBNMrDw5h-lNXEJ9Tj66mchkGPBKAhQ>
+Feedback-ID: i51494658:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 8 Jan 2026 07:23:36 -0500 (EST)
+From: Paul Barker <paul@pbarker.dev>
+Date: Thu, 08 Jan 2026 12:23:33 +0000
+Subject: [PATCH] gitignore: Ignore bitbake-builds directory
 MIME-Version: 1.0
-References: <a0cf0864-dd61-48db-b856-575f8fc4c149@gmail.com>
- <CAMSfU+71B0VQvP7U5BPDcgY++q=PMY3pfTOWdOREXorwAAU9bA@mail.gmail.com>
- <1dc33b07-759f-499f-82cb-84e5c20f77ec@gmail.com> <1883858B93EFC423.1614991@lists.openembedded.org>
- <188385EDFF4B6429.1342979@lists.openembedded.org> <18870377D56AF168.1986633@lists.openembedded.org>
-In-Reply-To: <18870377D56AF168.1986633@lists.openembedded.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Thu, 8 Jan 2026 13:14:11 +0100
-X-Gm-Features: AQt7F2oLUOUNcD9mrePagXjEU0xxiDFedvD9hSj-EovqQbKewTVeqrguw9fsKUk
-Message-ID: <CANNYZj8+msix6SFiCH=4UcLogt-+zA6=keGtXtBPbTE8vKTqoA@mail.gmail.com>
-Subject: Re: [bitbake-devel] bitbake-setup update problem
-To: alex.kanavin@gmail.com
-Cc: bitbake-devel@lists.openembedded.org, uvv.mail@gmail.com, 
-	Yoann Congal <yoann.congal@smile.fr>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260108-ignore-bitbake-builds-v1-1-f7a993e9059f@pbarker.dev>
+X-B4-Tracking: v=1; b=H4sIAMShX2kC/x2MSwqAMAwFr1KytlAFtXgVcdFPrEGp0qoIxbsbX
+ A3D8F6BjIkwwyAKJLwp0x5Z6kqAW0wMKMmzQ6OaTtVKSwpxTygtndaszIs2n6V3miP2VrUWeHs
+ knOn5f8fpfT9D+m/QZwAAAA==
+X-Change-ID: 20260108-ignore-bitbake-builds-dc8108e7b05b
+To: bitbake-devel@lists.openembedded.org
+Cc: Paul Barker <paul@pbarker.dev>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=679; i=paul@pbarker.dev;
+ h=from:subject:message-id; bh=iFiAq4SrNikVZndt54FnU8YRhtYEAYQfGW8Q+knvR5Y=;
+ b=owGbwMvMwCW2OjnkzdxdX/IYT6slMWTGLzz+9tdMvQec5tsbD68Mcg2YVpg+U96y8Ab/N9afG
+ 102LGHi6ihlYRDjYpAVU2TZ3PP1/tNeR96MkFsKMHNYmUCGMHBxCsBErFwZGZYerE5/sr02ylJz
+ 3eFULqMPSpcbip8tZahhT/3bpbL1lRTDP41VJW2FTOH3XNPri34e2Ku9fVv9JdWodXe7St+t2eI
+ nwQgA
+X-Developer-Key: i=paul@pbarker.dev; a=openpgp;
+ fpr=98B2AAC100AC3F82BB5D546774975C81B7E66BAC
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 08 Jan 2026 12:14:31 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18707
+ <bitbake-devel@lists.openembedded.org>; Thu, 08 Jan 2026 12:23:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18708
 
-On Fri, 2 Jan 2026 at 21:19, Alexander Kanavin via
-lists.openembedded.org <alex.kanavin=gmail.com@lists.openembedded.org>
-wrote:
+Running `./bin/bitbake-setup init ...` in the bitbake directory with the
+default bitbake-setup configuration creates a bitbake-builds directory.
+Add this to .gitignore so it's not tracked.
 
-> I posted a patch which adds the local modifications check.
-> Unfortunately I couldn't figure out how to check for additional local
-> branches: it checks only if there are uncommitted changes, or changes
-> on the current branch. If you have ideas I'd appreciate (simply
-> running 'git branch' and counting the lines does not work, as git
-> fetcher's unpack first unpacks master, then checks out the final
-> branch if necessary, so both one and two branches can mean no local
-> modifications).
+Signed-off-by: Paul Barker <paul@pbarker.dev>
+---
+ .gitignore | 1 +
+ 1 file changed, 1 insertion(+)
 
-The more I think about it, the more I'm convinced git repositories
-managed by bitbake-setup should have a commit hook that prevents
-making commits altogether and tells users to use 'bitbake-setup init
--L repo local-path'.
+diff --git a/.gitignore b/.gitignore
+index fbf9eb2031c8..8152f617e72b 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -3,6 +3,7 @@
+ *~
+ pyshtables.py
+ /doc/manual/html/
++/bitbake-builds/
+ /build/
+ /bin/bitbakec
+ *.swp
 
-The local modifications check should remain, to guard for cases where
-there are uncommitted changes.
+---
+base-commit: 6e511d035a3d1e4129dab7b0dfbf216bd8e99b47
+change-id: 20260108-ignore-bitbake-builds-dc8108e7b05b
 
-I'll make a v3.
+Best regards,
+-- 
+Paul Barker
 
-Alex
 
