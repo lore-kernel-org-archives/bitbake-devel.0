@@ -1,100 +1,102 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF3ED1A610
-	for <webhook@archiver.kernel.org>; Fri,  9 Jan 2026 12:24:17 +0000 (UTC)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.8904.1767961448094696747
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE6AD1A623
+	for <webhook@archiver.kernel.org>; Fri,  9 Jan 2026 13:20:18 +0000 (UTC)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.9818.1767964810076635355
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 09 Jan 2026 04:24:08 -0800
+ Fri, 09 Jan 2026 05:20:10 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=MDqrsKE0;
- spf=pass (domain: smile.fr, ip: 209.85.128.53, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4779cc419b2so37325065e9.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 09 Jan 2026 04:24:07 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=W5VIbZEs;
+ spf=pass (domain: gmail.com, ip: 209.85.128.54, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-47d493a9b96so25251175e9.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 09 Jan 2026 05:20:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1767961446; x=1768566246; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3O+i3Cnhof1ns83kiz3l3gW9YJjW9kjW5P8dSzuGMlI=;
-        b=MDqrsKE0OgzHD2Wuvz5wCA5oZbt+QPMoKhdG/W+udIbwGQtnoLghBorzkj1kZnDNfj
-         X3Ge/ANxFnUPmfKiKeNouzkH2ZF4gNyKmtZxl48+uqgjN5DwcnSS50A9fqXj9mH+9hSl
-         4RJxJeLCAN/jKGGhrNh6V8VcpK844yxceET28=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767961446; x=1768566246;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1767964808; x=1768569608; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3O+i3Cnhof1ns83kiz3l3gW9YJjW9kjW5P8dSzuGMlI=;
-        b=iPlv25ZjVUEkOGQicvC3IZhNtm0BanmQd9tBbtOQAm7sX2Vtr9O4Bg4+TTU48AiuN6
-         eDcHXx2q3Ws0XE6ZFSq0vZ7c/JSm30QvjXfYOoR82JdBTJF8bvOhC0MPOCCqtGmqTxxC
-         sERBqyAmAWMbffyEwMUZepIxZIYFNxtrpHsP+e/j8quHNtvJkM+i9xRGJr5x7bsQW+Iy
-         WWeGpIDTQnLof3rBv7VY88zyfie+p3v3YBu++9mKOK2dTVTrE/0g9WqgCqzSU2UZ07HT
-         PAf9J1CiSvo3pJ/7M3ik+PupJsmvkoF0I6nov24KdhJEeBSn0a8o21a2wQczzA6JIi9R
-         cLSQ==
-X-Gm-Message-State: AOJu0YzGAlCE0yHjKkuw7Ik87V46+1j/Cgc5ZyWYQA4TvojbkZG2C3Nr
-	SflZlJmV6qsuPWJnyHI9ivLSKzbywG4MHDMMn2q7mHRc+s+Z99ujx/B//ttvXD2IhBK5W5OJ1m1
-	unHj3
-X-Gm-Gg: AY/fxX4n56LiN5ViRI2VTxeydHJJuJqluopVBuMItxCbwTqi1pgzLePe36AR2bv2PLw
-	JiPqGUrPOSnM3RZxmrow+cZSTmas/tjdtTjhZWFjSj27xquQ8AEwZmIXpRE3gUEI5JJFFX4ZRwH
-	/GN7CaLHT6tr/PwEXxCRoweBslT1zn2ikpgd5NZ4sgQohi1QxuVyjEWP83q6865WTK5so/pUWTl
-	dYjC2RtJ3Rivq81srgFSW48UMe0kABkVhSLXtrhQgPuhB9ONOkoq/iXHqiCPUY/ezUdHQqvm+yI
-	i7DUWQ3IcJFXQo+XWeVEo5qVosU2EIthKBzW9+iwSzzBSM9RLkiojDMESZpjyMWVHoMqX6Is6Ht
-	r/gSN5XI3ncQLnjKnZ7nTQvOmFphp2vSH3+qI2Ro+Bjnj8ggZK1eMct/bszlNDsWfl5xpY+LEy3
-	b28OuM2BE3A+ZdagfeRtUKAMF9w18pNVW7NzD49PPApHcO3+H1JbA9E0onXR4OUYDsjO8GA+f+G
-	TghTgZviQqLGzgO
-X-Google-Smtp-Source: AGHT+IE6zA+XagRHZIOHEEl3NUIybctTUSKXIZMPOtLWV2JfJ7aMD5Mp5E2qO81pU08f6vtVMWIYmA==
-X-Received: by 2002:a05:600c:19c9:b0:477:63db:c718 with SMTP id 5b1f17b1804b1-47d84b18215mr123002335e9.16.1767961446130;
-        Fri, 09 Jan 2026 04:24:06 -0800 (PST)
-Received: from FRSMI25-LASER.home (2a01cb001331aa00280df0dfad12f819.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:280d:f0df:ad12:f819])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d7f668e03sm215793505e9.14.2026.01.09.04.24.05
+        bh=xFu5lhkrxPgZPOqnSmBLnqC98ebar0RJTdyfmfIIZc0=;
+        b=W5VIbZEsOUABpaipXsdrc5k42Nn2mfEWFGDeevsnol/BtQ9l0cM7B0LYLBNaBCbA7c
+         xB3EluTiyVmsN6GbyAWdjx9aIkmx+sYec2EY0epCvIVP/CE0/S2Ap12LsRTddSaoZphX
+         6JDwOKRgfdf1YrSxn1XZJ2IbjLnzgUK/sDad42CvFDGt90UYMNw65cFUzP5h5Ku+lJ8T
+         LGqdwkQbDq/ZBAabn49w9lLoUWGLzNuhFZJd2RkcP2RVxUenzvwONsjbtYdvFAgxA/1h
+         UPt/JIA0KKXWLGibAiUfi3b+q/jEkfWQvwLKamX2L6jCpKCUqwzrB+DVJBF+Y4fxqHH9
+         vsbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767964808; x=1768569608;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=xFu5lhkrxPgZPOqnSmBLnqC98ebar0RJTdyfmfIIZc0=;
+        b=lrT9XerNpnuquuVGN2Xv8/YvZB2wjIyHirtu8TCQ62n9z/B27bM/5/EcxJAqJPiORd
+         pUFubGD6cET4FYL1sdPrah5x1GNcog+iSk5qRYnMKrEfpol8JdJd5Z8uTP9T+Kjy+UT1
+         pj83DDQo9vdbn8ZHclRCVy/W/RcQO2RtlessH/E+kmI7Qvy2+ZTCUWrW1KT2nktfeKd5
+         m1hfgjhS2EI4CrSeFPwt1gNvKAaabxAac65IR21E7UCIFqUKwasvmkv/9laF9UDsDnvK
+         cV4bXtqZRM4MSI2jjgPCugr0kPR4yXwC+B6aPDXirzzD77Ew8ji+tqHTMj9ZdYH7vOJw
+         jDng==
+X-Gm-Message-State: AOJu0YxQX2ke0qV2el9FqR0VcQ/7X5jhUYIpG3EjagVjiGCT3IbvPBaw
+	ttXVXUme3n9qEXDeo4qm5BrRlpqa9rKTRqBJUlJMnpmEo0x9vStrt7qDsDBk4w==
+X-Gm-Gg: AY/fxX7/5Zrjo56m64HbSddmrzzpVyjx9S/0E/yvrT7zrOO9fCC6FCBYs1ZHRByARar
+	5qN7RdY3cKyjjtVgaKWzxTLEzSm/EuEm3WEvGVcM5cvRRa3sQHfTVIvX8JhOUoZiRrN0csVCuuv
+	3Ax+cwCMkVB+3dNvgfMvm3v6RGPJRacsUdoIOeQ0R4J9UnBN8O7ib7dG1G34lxXrRPh138svq7S
+	jdsGUiwM7iNH4pVokTsGC8iCKUuIEHFcGTvuhB2ZZvgsoCKXcZj37fG4/QDCYSWJCULWre588Zt
+	wvrXPO1rxFaMiSC/82E7wY2TJfqFEmnZRaiaGUNLWECjYoENSrY76gHepHRfDWSi0nwjanU1Ec2
+	x4PbiYr6DYyAOg0ztmDRyq1dRDfRLrFiX78T23GqGN0vgnr6Z1qw1kA/pnu6DHnsDvPo3kU7akv
+	t07EWw6WQMwydDI4NYedXWqHrGzAC1BS4NSGRHZ3dfTwyls0E=
+X-Google-Smtp-Source: AGHT+IHPxN3wr8Oh/Zej0Qm7QbmTUsP9K41ekL6S3Mh05UTYoXPqzQ5hGzdkb0G/LTi2nF15p4h9Sw==
+X-Received: by 2002:a05:600c:3b15:b0:45c:4470:271c with SMTP id 5b1f17b1804b1-47d84b36bcbmr99672455e9.18.1767964808289;
+        Fri, 09 Jan 2026 05:20:08 -0800 (PST)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d7f6953fasm202291505e9.5.2026.01.09.05.20.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jan 2026 04:24:05 -0800 (PST)
-From: Yoann Congal <yoann.congal@smile.fr>
+        Fri, 09 Jan 2026 05:20:07 -0800 (PST)
+From: Alexander Kanavin <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Paul Barker <paul@pbarker.dev>
-Subject: [bitbake][whinlatter][2.16][PATCH 0/2] Pull request (cover letter only)
-Date: Fri,  9 Jan 2026 13:23:23 +0100
-Message-ID: <cover.1767960616.git.yoann.congal@smile.fr>
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH 3/5] bitbake-setup: allow empty commits in configuration history repo
+Date: Fri,  9 Jan 2026 14:19:58 +0100
+Message-ID: <20260109132000.2372791-3-alex.kanavin@gmail.com>
 X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260109132000.2372791-1-alex.kanavin@gmail.com>
+References: <20260109132000.2372791-1-alex.kanavin@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 09 Jan 2026 12:24:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18722
+ <bitbake-devel@lists.openembedded.org>; Fri, 09 Jan 2026 13:20:18 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18725
 
-Passed a-full on autobuilder:
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/3006
-no-x11 build was hit by
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=16117 "do_package: Error executing a python function in exec_func_python() autogenerated"
-but succesfully rebuilt in https://autobuilder.yoctoproject.org/valkyrie/#/builders/25/builds/2995
+From: Alexander Kanavin <alex@linutronix.de>
 
-The following changes since commit 720df1a53452983c1c832f624490e255cf389204:
+This can happen when a user has checked out a different commit
+in a component under layers/. 'bitbake-setup update' will reset
+to the commit in the configuration, but there will be no changes
+to it, and so no difference in the config history repo to be
+committed.
 
-  bitbake-setup: add whinlatter configs for poky and oe-nodistro (2025-11-27 11:11:07 +0000)
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ bin/bitbake-setup | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-are available in the Git repository at:
-
-  https://git.openembedded.org/bitbake-contrib stable/2.16-next
-  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.16-next
-
-for you to fetch changes up to abf7064d86ea9fa67a6a407af3a6f42458cfbf48:
-
-  bin: Hide os.fork() deprecation warning in all bitbake scripts (2025-12-19 10:15:36 -0800)
-
-----------------------------------------------------------------
-
-Mathieu Dubois-Briand (2):
-  bitbake-layers: Also hide os.fork() deprecation warning
-  bin: Hide os.fork() deprecation warning in all bitbake scripts
-
- bin/bitbake          | 1 +
- bin/bitbake-diffsigs | 1 +
- bin/bitbake-getvar   | 1 +
- bin/bitbake-layers   | 1 +
- 4 files changed, 4 insertions(+)
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index 4ccf47e87..93c11bd09 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -81,7 +81,7 @@ def write_sources_fixed_revisions(config_dir, layer_dir, config_data):
+ 
+ def commit_config(config_dir):
+     bb.process.run("git -C {} add .".format(config_dir))
+-    bb.process.run("git -C {} commit --no-verify -a -m 'Configuration at {}'".format(config_dir, time.asctime()))
++    bb.process.run("git -C {} commit --allow-empty --no-verify -a -m 'Configuration at {}'".format(config_dir, time.asctime()))
+ 
+ def _write_layer_list(dest, repodirs):
+     layers = []
+-- 
+2.47.3
 
 
