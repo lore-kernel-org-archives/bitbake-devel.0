@@ -1,125 +1,100 @@
-Return-Path: <rpjday@crashcourse.ca>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5E3D1680F
-	for <webhook@archiver.kernel.org>; Fri,  9 Jan 2026 11:01:37 +0000 (UTC)
-Received: from cpanel10.indieserve.net (cpanel10.indieserve.net [199.212.143.9])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.7743.1767956486747944512
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF3ED1A610
+	for <webhook@archiver.kernel.org>; Fri,  9 Jan 2026 12:24:17 +0000 (UTC)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.8904.1767961448094696747
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 09 Jan 2026 03:01:27 -0800
+ Fri, 09 Jan 2026 04:24:08 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@crashcourse.ca header.s=default header.b=V9q7yKYz;
- spf=pass (domain: crashcourse.ca, ip: 199.212.143.9, mailfrom: rpjday@crashcourse.ca)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=crashcourse.ca; s=default; h=Content-Type:MIME-Version:References:
-	Message-ID:In-Reply-To:Subject:cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=KqPJAY8m7d9Ege8Uahn7cqydV+p2FeIr5o3Q8ouKmFE=; b=V9q7yKYzIin8+aNfMqSrmGXnZV
-	GWFfiJAUvqUUlwJyYlUhu8IapdnTospCK9kvBb7/0V9InioGrec3TC447smxqZzFz1tVGhzrPc2n4
-	5CxWZkb0LSB0bUWNYmFv1JAv3SxfQ+5O555EZXP4NbBK14wf4cF7QyekcAv4Dcv5nMfvS5dj1OIl+
-	7ospt5Ke4AaHZ8ZLg9LAqqW4sR0/E17HY4JpueTfW41QJste5W6+HgR/3T6u7fgj2cE0EKHwZvMk/
-	hcQbj/Ud4YsdRRafpevTx68YIwl+jMaLVPV+9LnzNUNdRf0pL8QEUNco3lG161zYunkTsmithWsAc
-	2AwiJRUg==;
-Received: from [147.129.179.166] (port=53816 helo=rday)
-	by cpanel10.indieserve.net with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.99.1)
-	(envelope-from <rpjday@crashcourse.ca>)
-	id 1veAF9-00000004r33-3yRp;
-	Fri, 09 Jan 2026 06:01:25 -0500
-Date: Fri, 9 Jan 2026 06:04:24 -0500 (EST)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-To: antonin.godard@bootlin.com
-cc: BitBake developer list <bitbake-devel@lists.openembedded.org>, 
-    YP docs mailing list <docs@lists.yoctoproject.org>
-Subject: Re: [bitbake-devel] [docs] [PATCH] doc: bitbake ch 2: use example
- of nginx to explain DEFAULT_PREFERENCE
-In-Reply-To: <DFJYMW8QAZ22.1GOY96LCY19VK@bootlin.com>
-Message-ID: <f2ade0a5-f600-b5a0-637d-128df8dcad59@crashcourse.ca>
-References: <5113f81f-1b33-a4ac-f71d-432caf8e709a@crashcourse.ca> <DFJYMW8QAZ22.1GOY96LCY19VK@bootlin.com>
+ dkim=pass header.i=@smile.fr header.s=google header.b=MDqrsKE0;
+ spf=pass (domain: smile.fr, ip: 209.85.128.53, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4779cc419b2so37325065e9.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 09 Jan 2026 04:24:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smile.fr; s=google; t=1767961446; x=1768566246; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3O+i3Cnhof1ns83kiz3l3gW9YJjW9kjW5P8dSzuGMlI=;
+        b=MDqrsKE0OgzHD2Wuvz5wCA5oZbt+QPMoKhdG/W+udIbwGQtnoLghBorzkj1kZnDNfj
+         X3Ge/ANxFnUPmfKiKeNouzkH2ZF4gNyKmtZxl48+uqgjN5DwcnSS50A9fqXj9mH+9hSl
+         4RJxJeLCAN/jKGGhrNh6V8VcpK844yxceET28=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767961446; x=1768566246;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3O+i3Cnhof1ns83kiz3l3gW9YJjW9kjW5P8dSzuGMlI=;
+        b=iPlv25ZjVUEkOGQicvC3IZhNtm0BanmQd9tBbtOQAm7sX2Vtr9O4Bg4+TTU48AiuN6
+         eDcHXx2q3Ws0XE6ZFSq0vZ7c/JSm30QvjXfYOoR82JdBTJF8bvOhC0MPOCCqtGmqTxxC
+         sERBqyAmAWMbffyEwMUZepIxZIYFNxtrpHsP+e/j8quHNtvJkM+i9xRGJr5x7bsQW+Iy
+         WWeGpIDTQnLof3rBv7VY88zyfie+p3v3YBu++9mKOK2dTVTrE/0g9WqgCqzSU2UZ07HT
+         PAf9J1CiSvo3pJ/7M3ik+PupJsmvkoF0I6nov24KdhJEeBSn0a8o21a2wQczzA6JIi9R
+         cLSQ==
+X-Gm-Message-State: AOJu0YzGAlCE0yHjKkuw7Ik87V46+1j/Cgc5ZyWYQA4TvojbkZG2C3Nr
+	SflZlJmV6qsuPWJnyHI9ivLSKzbywG4MHDMMn2q7mHRc+s+Z99ujx/B//ttvXD2IhBK5W5OJ1m1
+	unHj3
+X-Gm-Gg: AY/fxX4n56LiN5ViRI2VTxeydHJJuJqluopVBuMItxCbwTqi1pgzLePe36AR2bv2PLw
+	JiPqGUrPOSnM3RZxmrow+cZSTmas/tjdtTjhZWFjSj27xquQ8AEwZmIXpRE3gUEI5JJFFX4ZRwH
+	/GN7CaLHT6tr/PwEXxCRoweBslT1zn2ikpgd5NZ4sgQohi1QxuVyjEWP83q6865WTK5so/pUWTl
+	dYjC2RtJ3Rivq81srgFSW48UMe0kABkVhSLXtrhQgPuhB9ONOkoq/iXHqiCPUY/ezUdHQqvm+yI
+	i7DUWQ3IcJFXQo+XWeVEo5qVosU2EIthKBzW9+iwSzzBSM9RLkiojDMESZpjyMWVHoMqX6Is6Ht
+	r/gSN5XI3ncQLnjKnZ7nTQvOmFphp2vSH3+qI2Ro+Bjnj8ggZK1eMct/bszlNDsWfl5xpY+LEy3
+	b28OuM2BE3A+ZdagfeRtUKAMF9w18pNVW7NzD49PPApHcO3+H1JbA9E0onXR4OUYDsjO8GA+f+G
+	TghTgZviQqLGzgO
+X-Google-Smtp-Source: AGHT+IE6zA+XagRHZIOHEEl3NUIybctTUSKXIZMPOtLWV2JfJ7aMD5Mp5E2qO81pU08f6vtVMWIYmA==
+X-Received: by 2002:a05:600c:19c9:b0:477:63db:c718 with SMTP id 5b1f17b1804b1-47d84b18215mr123002335e9.16.1767961446130;
+        Fri, 09 Jan 2026 04:24:06 -0800 (PST)
+Received: from FRSMI25-LASER.home (2a01cb001331aa00280df0dfad12f819.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:280d:f0df:ad12:f819])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d7f668e03sm215793505e9.14.2026.01.09.04.24.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jan 2026 04:24:05 -0800 (PST)
+From: Yoann Congal <yoann.congal@smile.fr>
+To: bitbake-devel@lists.openembedded.org
+Cc: Paul Barker <paul@pbarker.dev>
+Subject: [bitbake][whinlatter][2.16][PATCH 0/2] Pull request (cover letter only)
+Date: Fri,  9 Jan 2026 13:23:23 +0100
+Message-ID: <cover.1767960616.git.yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.47.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel10.indieserve.net
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Get-Message-Sender-Via: cpanel10.indieserve.net: authenticated_id: rpjday+crashcourse.ca/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: cpanel10.indieserve.net: rpjday@crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 09 Jan 2026 11:01:37 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18721
+ <bitbake-devel@lists.openembedded.org>; Fri, 09 Jan 2026 12:24:17 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18722
 
-On Fri, 9 Jan 2026, Antonin Godard via lists.openembedded.org wrote:
+Passed a-full on autobuilder:
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/3006
+no-x11 build was hit by
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=16117 "do_package: Error executing a python function in exec_func_python() autogenerated"
+but succesfully rebuilt in https://autobuilder.yoctoproject.org/valkyrie/#/builders/25/builds/2995
 
-> Hi,
->
-> On Thu Jan 8, 2026 at 11:08 PM CET, Robert P. J. Day wrote:
-> >
-> > At the moment, the section on explaining DEFAULT_PREFERENCE uses an
-> > example of busybox, which does not even use this feature anymore.
-> > Replace this with an example using "nginx", which does.
-> >
-> > Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
-> >
-> > ---
-> >
-> > diff --git a/doc/bitbake-user-manual/bitbake-user-manual-execution.rst b/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-> > index d407f59c0..1638a8f5c 100644
-> > --- a/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-> > +++ b/doc/bitbake-user-manual/bitbake-user-manual-execution.rst
-> > @@ -337,21 +337,22 @@ file that BitBake parses, you can change that preference::
-> >
-> >  .. note::
-> >
-> > -   It is common for a recipe to provide two versions -- a stable,
-> > -   numbered (and preferred) version, and a version that is automatically
-> > -   checked out from a source code repository that is considered more
-> > -   "bleeding edge" but can be selected only explicitly.
-> > -
-> > -   For example, in the OpenEmbedded codebase, there is a standard,
-> > -   versioned recipe file for BusyBox, ``busybox_1.22.1.bb``, but there
-> > -   is also a Git-based version, ``busybox_git.bb``, which explicitly
-> > -   contains the line ::
-> > -
-> > -     DEFAULT_PREFERENCE = "-1"
-> > -
-> > -   to ensure that the
-> > -   numbered, stable version is always preferred unless the developer
-> > -   selects otherwise.
-> > +   It is not uncommon for a given recipe to provide more than one
-> > +   version -- a stable (and preferred) version that should be selected
-> > +   by default, and a newer, development or "bleeding edge" version that
-> > +   will be selected only explicitly by the developer.
-> > +
-> > +   For example, at the moment, in the OpenEmbedded codebase, there are
-> > +   two versions of the ``nginx`` webserver: a stable "1.28.0" version
-> > +   that would be selected by default, and a newer "1.29.1" development
-> > +   version that a developer would need to choose explicitly.
-> > +
-> > +   This can be seen based on this snippet from the ``nginx`` 1.29.1
-> > +   recipe file::
-> > +
-> > +      # 1.28.x branch is the current stable branch, the recommended default
-> > +      # 1.29.x is the current mainline branches containing all new features
-> > +      DEFAULT_PREFERENCE = "-1"
->
-> We should consider dropping these kinds of phrasings in favor of generic
-> examples inspired from real life, e.g. "Consider the following example
-> recipe...". That way, no maintenance burden like this one.
+The following changes since commit 720df1a53452983c1c832f624490e255cf389204:
 
-  to *some* extent, i agree with you, but i also feel that it's
-valuable to demonstrate some explanations with examples ripped
-straight from the source code so that beginning developers can see
-those things in action. i agree that this is not the *best* example to
-use for this, though, but it will do for now.
+  bitbake-setup: add whinlatter configs for poky and oe-nodistro (2025-11-27 11:11:07 +0000)
 
-rday
+are available in the Git repository at:
+
+  https://git.openembedded.org/bitbake-contrib stable/2.16-next
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.16-next
+
+for you to fetch changes up to abf7064d86ea9fa67a6a407af3a6f42458cfbf48:
+
+  bin: Hide os.fork() deprecation warning in all bitbake scripts (2025-12-19 10:15:36 -0800)
+
+----------------------------------------------------------------
+
+Mathieu Dubois-Briand (2):
+  bitbake-layers: Also hide os.fork() deprecation warning
+  bin: Hide os.fork() deprecation warning in all bitbake scripts
+
+ bin/bitbake          | 1 +
+ bin/bitbake-diffsigs | 1 +
+ bin/bitbake-getvar   | 1 +
+ bin/bitbake-layers   | 1 +
+ 4 files changed, 4 insertions(+)
+
 
