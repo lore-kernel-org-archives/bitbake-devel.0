@@ -1,103 +1,105 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <tim.orling@konsulko.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2277D29DF8
-	for <webhook@archiver.kernel.org>; Tue, 13 Jan 2026 09:37:40 +0000 (UTC)
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.55283.1768297052316492226
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5F5D2F34D
+	for <webhook@archiver.kernel.org>; Tue, 13 Jan 2026 17:52:24 +0000 (UTC)
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.65086.1768326739603645983
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 13 Jan 2026 01:37:33 -0800
+ Tue, 13 Jan 2026 09:52:19 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=DstegA/n;
- spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 9B249C20878;
-	Tue, 13 Jan 2026 09:37:03 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 269EA60732;
-	Tue, 13 Jan 2026 09:37:30 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 123C9103C92F2;
-	Tue, 13 Jan 2026 10:37:27 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1768297049; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=WKDyASyE59m0+8gCsxGiVykTM7c/CqWoT6Ar3tskxfM=;
-	b=DstegA/n1ci2ny8CyHrmgKPu6piA1Q9JMTXW0fO+w6cJTQelaC80y0RX2yQMWZwoi5hUx5
-	U9bkXxnA5upa5IBlCK6iniSDTDpwBB4HOM/4Jyu+nTXSNA6MTTFZ22rN3cIYTIBvLzmhBK
-	54MZs/UvJf/FmYQfsA/xMbMiF8WE5X2BlExyEYIGtSuKvKayjgqRzFXfwyXmuI6e4P5NJO
-	s0sFwj1H4x4fzFYH+JyiVB1Ev0nAXZ7R6U8Zv1r6Q0xtW9Fj4/yohdD2W3Vg6Hu8iQGK/L
-	nIvfRvhcRkSVS4VXk7/PHzbDihpYj5M3FD0Cui7o/WK61mDVfDGJ4bKsm0AoCQ==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 13 Jan 2026 10:37:27 +0100
-Message-Id: <DFNCZL4DGO9X.1I4P89HIL9I30@bootlin.com>
-Cc: <docs@lists.yoctoproject.org>, "Quentin Schulz"
- <quentin.schulz@cherry.de>, "Robert P. J. Day" <rpjday@crashcourse.ca>
-From: "Antonin Godard" <antonin.godard@bootlin.com>
-To: "Quentin Schulz" <foss@0leil.net>,
- <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH 0/8] doc: bitbake-user-manual-metadata:
- misc improvements on sharing functionality
-X-Mailer: aerc 0.21.0-63-gbde0bca3c3bc
-References: <20260112-doc-directives-v1-0-b23923cfce89@cherry.de>
-In-Reply-To: <20260112-doc-directives-v1-0-b23923cfce89@cherry.de>
-X-Last-TLS-Session-Version: TLSv1.3
+ dkim=pass header.i=@konsulko.com header.s=google header.b=NDYrQBlS;
+ spf=pass (domain: konsulko.com, ip: 209.85.214.180, mailfrom: tim.orling@konsulko.com)
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2a0833b5aeeso77342325ad.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 13 Jan 2026 09:52:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google; t=1768326738; x=1768931538; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HI62A5A5xOk1uGxBZLdL8aBpy0M6ai6dQvk5rY85d1s=;
+        b=NDYrQBlSsSex6ukL6iNVmHE4LAL2sr4q/XrGQ8NCNFVmHK0SwXoOUtwsDwRq2vuW0q
+         zyzjrWMmk5t8t8Uyl0uf9qM0yNulKfggMCyK0arkB1+q5k2LNxSWsUNjdBtnoD0zanTz
+         mjjo+qtx4oaRe9PJKz46wWxqOgLmEG+7dvD78=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768326738; x=1768931538;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HI62A5A5xOk1uGxBZLdL8aBpy0M6ai6dQvk5rY85d1s=;
+        b=ViO8QFiLHFJ65VUjDlYHEPLBL/mfjv5jM1FWr+3a9paN9dYBV7/rPcEF56QsG5s8T3
+         diduZo9EolvosRF5vkZfHYarxDH9Vaws2+Pth4t0g2imSH2m2vgbhTYNAs/jQuC3UHzF
+         +FnHLXtZQfgHH3yYhBEOBIKwrO5RomJJkHmdwyFhSXvHNRQlKanbxTLIAFwZhxhhYcoE
+         I4+zfjDKwgn7wt8ZjdCXmy5A+5dbp5iB0O/gxXVmoK1BdhA7pBX8WWT4dwq4e1e0TyeZ
+         ePKQsX06VlsJPsoaMe2pyGrE8rs62cH/xHG2CG1TKSYAQ9Hv/OxFXu6nRl5OI23XKhGc
+         KrVw==
+X-Gm-Message-State: AOJu0YwMETCjRdI2G7fEWmmEvEpZJn1i+bOVeef4vACHXsNazOcVE+hk
+	B3Gsjr2Y+UTJ7nSMKEdQI8KDSqbnrQYSLaRLQHNxw0vC2x8Eco7+5VRtZX9fRAfItMfDG751WcM
+	5GPef
+X-Gm-Gg: AY/fxX4XakdPMnlROIjDX8YpsI5r8q4nIrXx9MFNLNqIQN4XfUThzf+o2BYfK2zYy7P
+	Ed6/lLwdzsZWhslJsynE9L/ow+EZrGBzrZ84AWMMn6ISFNZYpLLb/SwzfH+xkGmDYI/mdoA1tmU
+	w3pjrfPJQdXKK8qvBPdU5DmAzjEZm4dDa0ktLrMhto7GqV/EmvNepEuaUsOai/UvRByfa4Uo2Nd
+	KAmcOAqAe3VM5z5GdzQYUQjFIvmv5AavPoNbQy/RiEdgCtG8vAuKdbiv5XJcam1/iF6ws2OkH55
+	cEQKsDa6VTGqWZezi82Q50/3KxVbUs7NYeM5MW3jIw7C/rYU8cq+Tjiq5webI7/FTzaHtPKBb/1
+	qLGdiMjyMShsQjYq6UT8kS0AH+T3a84zL+COdPDMRAVCEbmRUm62aBPc+uBfecxJb1c2GIKjitL
+	dfldNlB5Vjrx6XbNGYcE8j/BhE0DhQnEafda7Zii6/sJDmQeGryg==
+X-Google-Smtp-Source: AGHT+IG3YeL+JhHnyBhc5eRR+uICKIn/7zCNdvtuwo4FUdakVvD3Sjo+xlDRfg9PrdvM+1JwAfKsyg==
+X-Received: by 2002:a17:903:15ce:b0:295:62d:5004 with SMTP id d9443c01a7336-2a3ee456360mr203023065ad.26.1768326738343;
+        Tue, 13 Jan 2026 09:52:18 -0800 (PST)
+Received: from localhost (c-98-232-159-17.hsd1.or.comcast.net. [98.232.159.17])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3cb2b4dsm210625015ad.54.2026.01.13.09.52.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Jan 2026 09:52:17 -0800 (PST)
+From: tim.orling@konsulko.com
+To: bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org,
+	Tim Orling <tim.orling@konsulko.com>
+Subject: [PATCH] doc/bitbake-setup: add example of ssh:// uri
+Date: Tue, 13 Jan 2026 09:52:14 -0800
+Message-ID: <20260113175214.2570644-1-tim.orling@konsulko.com>
+X-Mailer: git-send-email 2.43.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 13 Jan 2026 09:37:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18744
+ <bitbake-devel@lists.openembedded.org>; Tue, 13 Jan 2026 17:52:24 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18745
 
-On Mon Jan 12, 2026 at 5:36 PM CET, Quentin Schulz wrote:
-> This expands on the include_all directive by providing an example and
-> highlighting the difference with the include directive.
->
-> It fixes some highlighting and cross-referencing inconsistencies as well
-> as the wrong path in the examples.
->
-> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
-> ---
-> Quentin Schulz (8):
->       doc: bitbake-user-manual-metadata: list (in order) all sharing dire=
-ctives
->       doc: bitbake-user-manual-metadata: highlight configuration fragment=
- differently
->       doc: bitbake-user-manual-metadata: use a cross-reference for addfra=
-gments
->       doc: bitbake-user-manual-metadata: specify that current dir won't b=
-e searched for include_all
->       doc: bitbake-user-manual-metadata: add missing highlight for BBPATH=
- and PATH
->       doc: bitbake-user-manual-metadata: fix incorrect path in example fo=
-r locating files
->       doc: bitbake-user-manual-metadata: expand on search paths for inclu=
-de directive
->       doc: bitbake-user-manual-metadata: expand locating files example fo=
-r include_all directive
->
->  .../bitbake-user-manual-metadata.rst               | 65 ++++++++++++++++=
-++----
->  1 file changed, 54 insertions(+), 11 deletions(-)
-> ---
-> base-commit: f23e186a75e71ba885b9b53a1dfda99af29c67b0
-> change-id: 20260112-doc-directives-6e42bc047525
->
-> Best regards,
+From: Tim Orling <tim.orling@konsulko.com>
 
-Great improvements over what I wrote a while back! I'm glad we have a detai=
-led
-explanation on all of these directives now.
+For private git repositories, we often need to use the ssh git fetcher;
+add a hypothetical example to Generic Configuration Files Reference.
 
-Reviewed-by: Antonin Godard <antonin.godard@bootlin.com>
+Signed-off-by: Tim Orling <tim.orling@konsulko.com>
+---
+ .../bitbake-user-manual-environment-setup.rst        | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Thanks!
-Antonin
-
---=20
-Antonin Godard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+index ec1bdeecd..635e0c76a 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+@@ -687,6 +687,18 @@ They contain the following sections:
+                  "local": {
+                      "path": "~/path/to/local/openembedded-core"
+                  }
++             },
++             "meta-private": {
++                 "git-remote": {
++                     "remotes": {
++                         "origin": {
++                             "uri": "ssh://git@git.example.com/meta-private"
++                         }
++                     },
++                     "branch": "master",
++                     "rev": "master"
++                 },
++                 "path": "meta-private"
+              }
+          }
+       }
+-- 
+2.43.0
 
 
