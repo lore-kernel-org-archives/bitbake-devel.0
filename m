@@ -2,83 +2,97 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B90D29FF2
-	for <webhook@archiver.kernel.org>; Wed, 14 Jan 2026 11:36:34 +0000 (UTC)
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.8132.1768390593048718458
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF02D29FF3
+	for <webhook@archiver.kernel.org>; Wed, 14 Jan 2026 11:39:24 +0000 (UTC)
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.8045.1768390760009454575
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 14 Jan 2026 03:36:33 -0800
+ Wed, 14 Jan 2026 03:39:20 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=I1i/BBps;
- spf=pass (domain: gmail.com, ip: 209.85.219.54, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-8804f1bd6a7so74308166d6.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 14 Jan 2026 03:36:32 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=TA+rV5+L;
+ spf=pass (domain: gmail.com, ip: 209.85.128.44, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-477563e28a3so4906725e9.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 14 Jan 2026 03:39:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768390592; x=1768995392; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=I/XfkhhILS5Pn+/hgJCLd5EdWjJBHxDHASPFpSXQ9AM=;
-        b=I1i/BBps/6CKzfN/Dwo79ADBcuM36Bvo56y9846eqosAOJlmnjBqYRh2cKo1QOvLbb
-         xh+vxUBJnnsV1zPNH09kypvRilYDnw87j0P0bVJAGQoa+nEZ3IqJQ7F7NGHhLJcHG3Qf
-         KuVRmmDYcWx59vJF98cPDBmq1ElJCLCyuMQd741TdNYO3qgayUfb7P8epfu2Fjsc2EXg
-         qFBSTR2OfzlKGcnBNik6WEI+AHS2fgxxtHbDtJoJqG4RJQeCUmaUB7xRkAUa0d1Ciybi
-         YzGoguDiFPgtfmyQJTLZGGPt/TX77S9cy8UJZV/0GSHcm/PzHLqHrSBW9ohO87ogXvHW
-         rqyg==
+        d=gmail.com; s=20230601; t=1768390758; x=1768995558; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=115CKfd2PHyKpUkxwBuLvIaCjOcSfyOszf4QvUiEn9c=;
+        b=TA+rV5+LCresPm7lbepQDJN5Bcmw1/GRATrosZvHWQ+jj7hhcBAmINQ5XISA9Fpeu4
+         dL4WQ/dvPzR301YmSbv4EVMRhP2kY2jrOeLC62cy2LA+v7gxFIDH1MuWyLz3DISs6R3W
+         hlDEuDd/NXE+xb4YMD8zR87Lh815lTdMArvTaGc25Z4YvkIxK9ljyRx1oK9gG95UsRxj
+         6lyYInoi5vkJmKaYNs2WfkoR1u+X4imCxXOUGtximxv0nddmfUT5Z95vsqjXIxvC+Ga6
+         s9dJ3GY+v6CVWQe6mgHtbgZe+Cr3N7PDzVcwHLOZ1Ns+M/pFasDRzbvg9S1DcM7UsK6w
+         Kf0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768390592; x=1768995392;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1768390758; x=1768995558;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=I/XfkhhILS5Pn+/hgJCLd5EdWjJBHxDHASPFpSXQ9AM=;
-        b=TVJGvOV+wDvx5WGvR/AGY+bPuPuCGtsEQxlaBjrAplM71NaxEibzt9vurQkobjPwur
-         QLWsrdL97wjlzshYMdTI1M0SIEh9QYaxjALOm7xkUrxfVJUmFGeAFwf50V/G0XN8/bsQ
-         BZvTxjDkSNReBWIS1doCcmJOfzihqLXj1GaonDm+pLLLTfxhV26LSNpH6xuZwApu3tsd
-         SF2jLn2xXcoYYb2AF5T5lpc8LIFFPKSCD8qkWWUyveH3z5L1mfRUA9pEenyaPlT4giHI
-         F65jD2whSIaBhQ0bjHQP4coaVaCc8QEozmJIe7YcZaYszKkvt0tOH/SVfQ5vmUsq2QzD
-         si5g==
-X-Gm-Message-State: AOJu0Yz2y4cNUKmD2fl2E67SC2JjKQgv48Db4XV6tj7Hvq2K9siwUhyo
-	MZvAtyXqpxC6Ly9aOGVwMfDzHPyP3YJWZX4LVLSu15zHyTqNdesP2zNPUlYBc3Pf9+Ba0abKAI5
-	UWXBKMfLG2Pm20GQttdLc9qVx/FwA5G0=
-X-Gm-Gg: AY/fxX6zb3MkFAXO5vBNGwNRvn4uhVKXPwxLeilN5NsB9it4XAHKB+tnO4+Y7qoPkJE
-	4kfGnQM8UlAm+9jHNHCgacIt9PMMn45rEMaw2XS4r+Uc65Ag5hed9+AuzPWxPa/FZHomKnxj6eO
-	eEaOxo42vWry+JlqaxKlb2AFraB0Pge1etvcDotfecMj9rvY3kzn2oZvCqNWDGU50LBAym27qKp
-	nypI+h8LCnkMxVs0O1UsM7LKUI67dS+SNh6iXZh2YjraSyWRMbpPqzTLutTId/8h9pXd/Ug
-X-Received: by 2002:ad4:5ceb:0:b0:88a:529a:a53a with SMTP id
- 6a1803df08f44-8927443262amr31611876d6.51.1768390592015; Wed, 14 Jan 2026
- 03:36:32 -0800 (PST)
-MIME-Version: 1.0
-References: <20260114080414.2927046-1-alex.kanavin@gmail.com>
- <0adf825db9501818398a9ef04752e4000bd3133e.camel@linuxfoundation.org>
- <CANNYZj8fqxz+jVu8_eWBaCCGCaZoWA5dO5foPTKWnNOEoH3c4A@mail.gmail.com> <31a6956818136b65783063d9b5e946fca25ce49f.camel@linuxfoundation.org>
-In-Reply-To: <31a6956818136b65783063d9b5e946fca25ce49f.camel@linuxfoundation.org>
+        bh=115CKfd2PHyKpUkxwBuLvIaCjOcSfyOszf4QvUiEn9c=;
+        b=kioeYJHVjJ3tfg2x5iRHo1CCh0yHsEV4iK09XnZhLhPbG6sD/ReUcLYiuU/7pN+el1
+         p6Lc+fr7hUlxeMdKCNXcPTe1MUEHTFS4WStsIusdMRouYKziINypyKVAGEUpVILjZ87O
+         LLZnKT9gJPERJK8kVGm4JTyJDCcNQpaTxM6EI1mAk6epsACYEeYzHN0M8/OuPP3XR5dU
+         5bv4JXGS9g0M+Cd6fZ5pYb+LHRNSVxQU5hSo/Ts6ggy+zNWQKUzUyiLgzmIkw++qHBwS
+         T6J5mR6VNGwiUSmmZvvgP+DohwsnCtUhago1CJDKQ7hD08MYUtsxaNtKXqO8076sJzzx
+         2bFw==
+X-Gm-Message-State: AOJu0Yxt+mT2yJMdj2cJD+N1/P/hTDapSmNyfK2+S8TQ+wNIqZKRDkYj
+	OP0JcPG1XoQAT/K6+Nf4ieKnR1ke7KVbxucm2LLOsdAkCF/xSkj/zFTNnMnaOBZU
+X-Gm-Gg: AY/fxX6z3mliLv7+q8Zx3Zxap1v3rEuWLy17Xqk91ju4fNcinTlfKk2LpB6KtjWUIRF
+	/SzAkxrFfzy9PBXQzC6PGBlRB8EiNqC9Ov/rQUDccBNOB0b90qVS+5GkoJqkuM2YwQbWIRpiy3I
+	/oGW7fHnK+4LmgvaCHCAjnovv8NGM6KWP57yHpmuNo0UG0l2tKaUPIbwZMo2IKd5bXFmXdVb05H
+	anaMpJRJlFvT0crRl7L4Th6SDglHawIOlqVNc5V6b/IUU7vY8bt1sfqRZdunYjg6EVT16HSyvji
+	Lsexo5DghyEBcnBhonPkBGFscfze/hdFZxeSxpus7bhRzY1BFnvTZiByHQk8TrEpw45YEmLVqv6
+	s3U8u7gLGnd2x8J++4bKfb5TZqcHX5iy/em7vJyUuL2O4oDQxrdIN44RqNivSdLEc5RbManErFG
+	sBdMSJ9n6dzuWZ3B+Fwi13F91KM3mnZpWsl0FjSBvQzczj4L8=
+X-Received: by 2002:a05:600c:c48e:b0:477:a53c:8ca1 with SMTP id 5b1f17b1804b1-47ed7c386e5mr72004845e9.14.1768390758181;
+        Wed, 14 Jan 2026 03:39:18 -0800 (PST)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47ee5613cfbsm24289165e9.0.2026.01.14.03.39.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Jan 2026 03:39:17 -0800 (PST)
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 14 Jan 2026 12:36:21 +0100
-X-Gm-Features: AZwV_QgwH8VK8VfFA23mNmwGB-IGzsBi6alRFxcoqIP4JbZXAv_87ZWh3UKycGQ
-Message-ID: <CANNYZj_K36YQ4QvwxLUvaOwguERp_S54kfUZSpdSr1ejJ4CQVw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] bitbake-setup: use internal registry if
- run from git checkout, bitbake repo otherwise
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org, Rob.Woolley@windriver.com, 
-	Alexander Kanavin <alex@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+To: bitbake-devel@lists.openembedded.org
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH] bitbake-setup: ensure 'list' does not write anything into top dir
+Date: Wed, 14 Jan 2026 12:39:13 +0100
+Message-ID: <20260114113914.2998470-1-alex.kanavin@gmail.com>
+X-Mailer: git-send-email 2.47.3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 14 Jan 2026 11:36:34 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18753
+ <bitbake-devel@lists.openembedded.org>; Wed, 14 Jan 2026 11:39:24 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18754
 
-On Wed, 14 Jan 2026 at 12:14, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
-> It might be worth a comment about the design intent here, something
-> like:
->
-> # If bitbake is from a release tarball or somewhere like pypi where
-> # updates may not be straightforward, prefer to use the git repo as the
-> # default registry
->
-> ?
+From: Alexander Kanavin <alex@linutronix.de>
 
-Yep, I sent a v2.
+The goal for the 'list' command is to not leave any files or directories
+behind, as it may be issued before the user has decided where to
+place the top directory. 'list' redirects the top directory
+to a temporary location, but it didn't do the same for the downloads,
+which led to the default top directory being polluted with them.
+This has now been fixed.
 
-Alex
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ bin/bitbake-setup | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index 4ed06fc62..4d709ed8c 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -785,6 +785,7 @@ def list_registry(registry_path, with_expired):
+ def list_configs(settings, args):
+     import tempfile
+     top_dir = tempfile.mkdtemp(prefix="bitbake-setup-list-")
++    settings['default']['dl-dir'] = os.path.join(top_dir, '.bitbake-setup-downloads')
+     d = init_bb_cache(top_dir, settings, args)
+     registry_path = update_registry(settings["default"]["registry"], cache_dir(top_dir), d)
+     json_data = list_registry(registry_path, args.with_expired)
+-- 
+2.47.3
+
 
