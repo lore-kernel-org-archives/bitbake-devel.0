@@ -1,98 +1,172 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF02D29FF3
-	for <webhook@archiver.kernel.org>; Wed, 14 Jan 2026 11:39:24 +0000 (UTC)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.8045.1768390760009454575
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89F9D37E41
+	for <webhook@archiver.kernel.org>; Wed, 14 Jan 2026 15:19:35 +0000 (UTC)
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.12651.1768403974063731700
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 14 Jan 2026 03:39:20 -0800
+ Wed, 14 Jan 2026 07:19:35 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=TA+rV5+L;
- spf=pass (domain: gmail.com, ip: 209.85.128.44, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-477563e28a3so4906725e9.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 14 Jan 2026 03:39:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768390758; x=1768995558; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=115CKfd2PHyKpUkxwBuLvIaCjOcSfyOszf4QvUiEn9c=;
-        b=TA+rV5+LCresPm7lbepQDJN5Bcmw1/GRATrosZvHWQ+jj7hhcBAmINQ5XISA9Fpeu4
-         dL4WQ/dvPzR301YmSbv4EVMRhP2kY2jrOeLC62cy2LA+v7gxFIDH1MuWyLz3DISs6R3W
-         hlDEuDd/NXE+xb4YMD8zR87Lh815lTdMArvTaGc25Z4YvkIxK9ljyRx1oK9gG95UsRxj
-         6lyYInoi5vkJmKaYNs2WfkoR1u+X4imCxXOUGtximxv0nddmfUT5Z95vsqjXIxvC+Ga6
-         s9dJ3GY+v6CVWQe6mgHtbgZe+Cr3N7PDzVcwHLOZ1Ns+M/pFasDRzbvg9S1DcM7UsK6w
-         Kf0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768390758; x=1768995558;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=115CKfd2PHyKpUkxwBuLvIaCjOcSfyOszf4QvUiEn9c=;
-        b=kioeYJHVjJ3tfg2x5iRHo1CCh0yHsEV4iK09XnZhLhPbG6sD/ReUcLYiuU/7pN+el1
-         p6Lc+fr7hUlxeMdKCNXcPTe1MUEHTFS4WStsIusdMRouYKziINypyKVAGEUpVILjZ87O
-         LLZnKT9gJPERJK8kVGm4JTyJDCcNQpaTxM6EI1mAk6epsACYEeYzHN0M8/OuPP3XR5dU
-         5bv4JXGS9g0M+Cd6fZ5pYb+LHRNSVxQU5hSo/Ts6ggy+zNWQKUzUyiLgzmIkw++qHBwS
-         T6J5mR6VNGwiUSmmZvvgP+DohwsnCtUhago1CJDKQ7hD08MYUtsxaNtKXqO8076sJzzx
-         2bFw==
-X-Gm-Message-State: AOJu0Yxt+mT2yJMdj2cJD+N1/P/hTDapSmNyfK2+S8TQ+wNIqZKRDkYj
-	OP0JcPG1XoQAT/K6+Nf4ieKnR1ke7KVbxucm2LLOsdAkCF/xSkj/zFTNnMnaOBZU
-X-Gm-Gg: AY/fxX6z3mliLv7+q8Zx3Zxap1v3rEuWLy17Xqk91ju4fNcinTlfKk2LpB6KtjWUIRF
-	/SzAkxrFfzy9PBXQzC6PGBlRB8EiNqC9Ov/rQUDccBNOB0b90qVS+5GkoJqkuM2YwQbWIRpiy3I
-	/oGW7fHnK+4LmgvaCHCAjnovv8NGM6KWP57yHpmuNo0UG0l2tKaUPIbwZMo2IKd5bXFmXdVb05H
-	anaMpJRJlFvT0crRl7L4Th6SDglHawIOlqVNc5V6b/IUU7vY8bt1sfqRZdunYjg6EVT16HSyvji
-	Lsexo5DghyEBcnBhonPkBGFscfze/hdFZxeSxpus7bhRzY1BFnvTZiByHQk8TrEpw45YEmLVqv6
-	s3U8u7gLGnd2x8J++4bKfb5TZqcHX5iy/em7vJyUuL2O4oDQxrdIN44RqNivSdLEc5RbManErFG
-	sBdMSJ9n6dzuWZ3B+Fwi13F91KM3mnZpWsl0FjSBvQzczj4L8=
-X-Received: by 2002:a05:600c:c48e:b0:477:a53c:8ca1 with SMTP id 5b1f17b1804b1-47ed7c386e5mr72004845e9.14.1768390758181;
-        Wed, 14 Jan 2026 03:39:18 -0800 (PST)
-Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47ee5613cfbsm24289165e9.0.2026.01.14.03.39.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jan 2026 03:39:17 -0800 (PST)
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH] bitbake-setup: ensure 'list' does not write anything into top dir
-Date: Wed, 14 Jan 2026 12:39:13 +0100
-Message-ID: <20260114113914.2998470-1-alex.kanavin@gmail.com>
-X-Mailer: git-send-email 2.47.3
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=PUHYoKwk;
+ spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 16E524E420D7;
+	Wed, 14 Jan 2026 15:19:32 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id E14056074A;
+	Wed, 14 Jan 2026 15:19:31 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A009610B68265;
+	Wed, 14 Jan 2026 16:19:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1768403971; h=from:subject:date:message-id:to:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=0zSRvIFKsGt8FjBzOVTm6OpBXmaI/vVK/rUEyDbHXuE=;
+	b=PUHYoKwkC+ZYHMZK31MmHRB73K3gzrPEDR/pubWWJx/d0UQHEW4+i4QvgmPXj1iTMd/s8r
+	YVQD7gyemcJmfT95MMsCJIVMXh/3OXdJMgqtkmp5Y8Hw5wyt0s8MY2mAY56Bqt+4iPyA1I
+	jev01ihhMkIbcPefnQfxEnozTh8MKilH5C55uV6mc99holf0YzthiVJBAwfcnZJtAtFkcF
+	wel79Tr1Ir+W6ilTeCfX5U/bFqbmYhjYWCszsPJfUCW0amBH1WONgHxSYvybR25805aKTD
+	AsT3YCFhC7/uu4jUgZBHXxb6oZCsoFHRmECSL10Ndoa1ux9u2TvukHOQpo2AfA==
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 14 Jan 2026 16:19:29 +0100
+Message-Id: <DFOEW0JK0R5M.RI0FHSXWERO2@bootlin.com>
+From: "Antonin Godard" <antonin.godard@bootlin.com>
+To: <otavio.salvador@ossystems.com.br>,
+ <bitbake-devel@lists.openembedded.org>, "Patches and discussions about the
+ oe-core layer" <openembedded-core@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [RFC] bitbake-setup: Documentation terminology
+ and tooling suggestions
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+References: <CAP9ODKowQqn-VuqaT1w3cXCWGfBeMtG2rHR9HXBFqxSfttAk4Q@mail.gmail.com>
+In-Reply-To: <CAP9ODKowQqn-VuqaT1w3cXCWGfBeMtG2rHR9HXBFqxSfttAk4Q@mail.gmail.com>
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 14 Jan 2026 11:39:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18754
+ <bitbake-devel@lists.openembedded.org>; Wed, 14 Jan 2026 15:19:35 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18755
 
-From: Alexander Kanavin <alex@linutronix.de>
+Hi,
 
-The goal for the 'list' command is to not leave any files or directories
-behind, as it may be issued before the user has decided where to
-place the top directory. 'list' redirects the top directory
-to a temporary location, but it didn't do the same for the downloads,
-which led to the default top directory being polluted with them.
-This has now been fixed.
+On Wed Jan 14, 2026 at 1:02 AM CET, Otavio Salvador via lists.openembedded.=
+org wrote:
+[...]
+> 1. Generic Configuration =E2=86=92 BitBake Setup Template
+>
+> The term "Generic Configuration" does not immediately convey that this is=
+ a
+> reusable template file used as input to create a build environment. The
+> word "generic" can be interpreted as "basic" or "non-specialized" rather
+> than "reusable template."
+>
+> We suggest *BitBake Setup Template* as an alternative. This clearly
+> communicates that the .conf.json file serves as a template for creating
+> setups.
+> 2. Specific Configuration =E2=86=92 BitBake Setup Instance
+>
+> Similarly, "Specific Configuration" does not clearly indicate that this i=
+s
+> the *result* of applying a template with user choices. The relationship
+> between "Generic" and "Specific" is not immediately obvious.
+>
+> We suggest *BitBake Setup Instance* as an alternative. The "Template =E2=
+=86=92
+> Instance" pattern is widely understood by developers and immediately
+> conveys the relationship: a template is used to create an instance.
 
-Signed-off-by: Alexander Kanavin <alex@linutronix.de>
----
- bin/bitbake-setup | 1 +
- 1 file changed, 1 insertion(+)
+I like the Template/Instance suggestion, but I'm not sure about removing th=
+e
+word "configuration" out of these terms. We are speaking about the
+_configuration_ of a Setup after all, and "BitBake Setup Instance" could be
+misinterpreted as a running bitbake-setup execution.
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index 4ed06fc62..4d709ed8c 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -785,6 +785,7 @@ def list_registry(registry_path, with_expired):
- def list_configs(settings, args):
-     import tempfile
-     top_dir = tempfile.mkdtemp(prefix="bitbake-setup-list-")
-+    settings['default']['dl-dir'] = os.path.join(top_dir, '.bitbake-setup-downloads')
-     d = init_bb_cache(top_dir, settings, args)
-     registry_path = update_registry(settings["default"]["registry"], cache_dir(top_dir), d)
-     json_data = list_registry(registry_path, args.with_expired)
--- 
-2.47.3
+So maybe:
+
+  Bitbake Setup Configuration Template
+  Bitbake Setup Configuration Instance
+
+or simply:
+
+  Configuration Template
+  Configuration Instance
+
+Would be enough. Having "BitBake Setup" prefixing every occurrence of this =
+term
+is going to be too much otherwise?
+
+What do you think?
+
+> 3. Nested "configurations" =E2=86=92 Variant
+>
+> Within a BitBake Setup Template, there are nested "configurations" (e.g.,
+> poky, poky-with-sstate) that represent predefined bundles of fragments an=
+d
+> settings. Using "configuration" here creates confusion since the term is
+> already heavily overloaded in the Yocto ecosystem.
+>
+> We suggest *Variant* as an alternative. This conveys that these are
+> different flavors or variations of the same base template, similar to how
+> distributions have variants or flavors.
+
+That sounds good to me, but would you also define a Variant as its own term=
+ (in
+the glossary)?
+
+[...]
+> 2. Allow Empty Variants in Templates
+>
+> Currently, bitbake-setup init requires the user to select a variant when
+> one is defined in the template. There is no option to skip this selection=
+.
+
+I believe this is already achievable with the --skip-selection option?
+
+> Allowing templates without variants (or making variant selection optional=
+)
+> would reduce the number of questions during setup, making the process
+> faster and more approachable for newcomers.
+
+Instead of no variants, maybe we just want to instruct the user to run:
+
+  bitbake-setup init --non-interactive choice1 choice2 ...
+
+Another idea would be to make it possible to define default choices
+in an existing template? The documentation would then instruct the user to
+simply execute:
+
+  bitbake-setup init --non-interactive
+
+which, with no choices passed on the command-line, would provide the user w=
+ith
+the default variant (the Poky Setup). The default choices would still have =
+to be
+printed on the console to make it clear to the user what was selected.
+
+[...]
+> 5. Fragment Discovery on OpenEmbedded Layer Index
+>
+> The OpenEmbedded Layer Index (https://layers.openembedded.org) is an
+> excellent resource for discovering layers. However, there is no equivalen=
+t
+> discovery mechanism for configuration fragments.
+>
+> Adding a tab or section for fragments would help users discover available
+> fragments and understand what problems they solve.
+
+Good idea IMO, as we already have machines and distros there, fragments wou=
+ld be
+a nice addition.
+
+Thanks for looking into this!
+
+Regards,
+Antonin
+
+--=20
+Antonin Godard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
