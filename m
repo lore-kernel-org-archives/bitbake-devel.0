@@ -1,79 +1,145 @@
-Return-Path: <foss@0leil.net>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5A8D37E56
-	for <webhook@archiver.kernel.org>; Wed, 14 Jan 2026 15:41:45 +0000 (UTC)
-Received: from smtp-190c.mail.infomaniak.ch (smtp-190c.mail.infomaniak.ch [185.125.25.12])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.13162.1768405300032412189
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 463CDD37E59
+	for <webhook@archiver.kernel.org>; Wed, 14 Jan 2026 15:55:26 +0000 (UTC)
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.13471.1768406120100247019
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 14 Jan 2026 07:41:40 -0800
+ Wed, 14 Jan 2026 07:55:21 -0800
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: 0leil.net, ip: 185.125.25.12, mailfrom: foss+yocto@0leil.net)
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4drr296QNzzxsF;
-	Wed, 14 Jan 2026 16:41:37 +0100 (CET)
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4drr2646LnzGy5;
-	Wed, 14 Jan 2026 16:41:34 +0100 (CET)
-From: Quentin Schulz <foss+yocto@0leil.net>
-Date: Wed, 14 Jan 2026 16:41:20 +0100
-Subject: [PATCH] doc: bitbake-user-manual-ref-variables: BB_ENV_PASSTHROUGH
- is not in default BB_ENV_PASSTHROUGH_ADDITIONS (anymore)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260114-env-passthru-v1-1-fd5ef76eab61@cherry.de>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzMDQ0MT3dS8Mt2CxOLikoyiUl0TUzMLS8u0VNNEC2MloJaCotS0zAqwcdG
- xtbUAgX3srl4AAAA=
-X-Change-ID: 20260114-env-passthru-456899fe5a83
-To: bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org, Quentin Schulz <quentin.schulz@cherry.de>, 
- "Robert P. J. Day" <rpjday@crashcourse.ca>, 
- Richard Purdie <richard.purdie@linuxfoundation.org>
-X-Mailer: b4 0.14.3
-X-Infomaniak-Routing: alpha
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=OMnJzawe;
+ spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 203814E420B2;
+	Wed, 14 Jan 2026 15:55:18 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id EAE366074A;
+	Wed, 14 Jan 2026 15:55:17 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0814910B6826D;
+	Wed, 14 Jan 2026 16:55:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1768406117; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=3+HUCu+K3wTSYZSgvM7PxGMFH7fB89pjHq3Z7tgIQHM=;
+	b=OMnJzawes77YxzU+pmbqsD7LhfjZC5d/4l0/iTdcd/6B3llVVfJSkgfoDRVLF3ZdeB7mnr
+	fG7sUrzz9/g26a1VQosoSnWPb6vlvpGOFcM1anwx0WyS2KRnLLnn6fsY68iF3+kuJ5zORI
+	6TpK2HKSI+rSE28rGuofKSFTt9sVhRuNF8MVaETOng/lqxpb0Z22xxzLf9RGcepIVtW7Kv
+	d1fTDQX8doseCwGWhWoVzE4KHUw2H96ZAX2dAcCXUwf11WIWJVIqBlvRnblUT7SzZr5I7P
+	si3G2zNl6XMUlLdGAJ9IwOWhD9nKWz+xiHGPUfENuHs7aOZvMtNzXWVQNf11Ug==
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 14 Jan 2026 16:55:15 +0100
+Message-Id: <DFOFNE5RSKSK.XVWT4WC911UE@bootlin.com>
+To: <alex.kanavin@gmail.com>
+Subject: Re: [bitbake-devel] [RFC] bitbake-setup: Documentation terminology
+ and tooling suggestions
+Cc: <otavio.salvador@ossystems.com.br>,
+ <bitbake-devel@lists.openembedded.org>, "Patches and discussions about the
+ oe-core layer" <openembedded-core@lists.openembedded.org>
+From: "Antonin Godard" <antonin.godard@bootlin.com>
+References: <CAP9ODKowQqn-VuqaT1w3cXCWGfBeMtG2rHR9HXBFqxSfttAk4Q@mail.gmail.com> <DFOEW0JK0R5M.RI0FHSXWERO2@bootlin.com> <CANNYZj-YDD6-K=6W5mvEXRgQwm3XmbqAhhByTzD_givkDjxzmQ@mail.gmail.com>
+In-Reply-To: <CANNYZj-YDD6-K=6W5mvEXRgQwm3XmbqAhhByTzD_givkDjxzmQ@mail.gmail.com>
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 14 Jan 2026 15:41:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18757
+ <bitbake-devel@lists.openembedded.org>; Wed, 14 Jan 2026 15:55:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18758
 
-From: Quentin Schulz <quentin.schulz@cherry.de>
+Hi,
 
-BB_ENV_PASSTHROUGH_ADDITIONS variable doesn't contain BB_ENV_PASSTHROUGH
-anymore since commit 0a33b560233b ("utils: remove BB_ENV_PASSTHROUGH
-from preserved_envvars()") so let's fix this oversight.
+On Wed Jan 14, 2026 at 4:39 PM CET, Alexander Kanavin via lists.openembedde=
+d.org wrote:
+[...]
+>> > 2. Allow Empty Variants in Templates
+>> >
+>> > Currently, bitbake-setup init requires the user to select a variant wh=
+en
+>> > one is defined in the template. There is no option to skip this select=
+ion.
+>>
+>> I believe this is already achievable with the --skip-selection option?
+>>
+>> > Allowing templates without variants (or making variant selection optio=
+nal)
+>> > would reduce the number of questions during setup, making the process
+>> > faster and more approachable for newcomers.
+>>
+>> Instead of no variants, maybe we just want to instruct the user to run:
+>>
+>>   bitbake-setup init --non-interactive choice1 choice2 ...
+>>
+>> Another idea would be to make it possible to define default choices
+>> in an existing template? The documentation would then instruct the user =
+to
+>> simply execute:
+>>
+>>   bitbake-setup init --non-interactive
+>>
+>> which, with no choices passed on the command-line, would provide the use=
+r with
+>> the default variant (the Poky Setup). The default choices would still ha=
+ve to be
+>> printed on the console to make it clear to the user what was selected.
+>
+> It would really help to provide an example config template, and use
+> that to illustrate usability issues, and proposed improvements. I'm
+> afraid I simply am confused by the point 2, and I don't understand the
+> issue reported in it, or the suggested solution.
+>
+> If there are no choices to be made (e.g. only one variant),
+> bitbake-setup will pick that without asking. There's also
+> --skip-selection option, but it is expressly *not* for newcomers as it
+> will result in an incomplete bitbake config. If one wants less
+> questions, then they should remove variants from the configuration
+> template, otherwise bitbake-setup needs to pick something from several
+> choices one way or another.
 
-Reported-by: Robert P. J. Day <rpjday@crashcourse.ca>
-Suggested-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
----
- doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I think the point here is that newcomers reading the documentation will use=
+ the
+default registry and not a custom configuration template, and that it would=
+ be
+more user-friendly to _not_ make the user choose options from the default
+registry.
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index af911f306..345da647e 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -286,8 +286,8 @@ overview of their function and contents.
-       Specifies the internal list of variables to allow through from
-       the external environment into BitBake's datastore. If the value of
-       this variable is not specified (which is the default), the following
--      list is used: :term:`BBPATH`, :term:`BB_PRESERVE_ENV`,
--      :term:`BB_ENV_PASSTHROUGH`, and :term:`BB_ENV_PASSTHROUGH_ADDITIONS`.
-+      list is used: :term:`BBPATH`, :term:`BB_PRESERVE_ENV`, and
-+      :term:`BB_ENV_PASSTHROUGH_ADDITIONS`.
- 
-       .. note::
- 
+That being said=E2=80=A6 I think it was the intention of the project to giv=
+e the user the
+option to choose. I don't really have an opinion on whether the user should
+choose or not choose at the moment.
 
----
-base-commit: f23e186a75e71ba885b9b53a1dfda99af29c67b0
-change-id: 20260114-env-passthru-456899fe5a83
+On that note, if we go the "user has to choose every option" way, I think i=
+t
+would be nice to have a description of built-in fragments too.
 
-Best regards,
--- 
-Quentin Schulz <quentin.schulz@cherry.de>
+If you read this as a newcomer:
+=20
+  Target machines:
+  1. machine/qemux86-64
+  2. machine/qemuarm64
+  3. machine/qemuriscv64
+  4. machine/genericarm64
+  5. machine/genericx86-64
+
+  Please select one of the above options by its number:
+
+  Distribution configuration variants:
+  1. distro/poky
+  2. distro/poky-altcfg
+  3. distro/poky-tiny
+
+  Please select one of the above options by its number:
+
+I'm not sure a newcomer would know what to choose here. A description would
+probably help. It's also a simple addition I guess?
+
+Antonin
+
+--=20
+Antonin Godard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
