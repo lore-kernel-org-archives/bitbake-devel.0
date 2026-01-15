@@ -1,175 +1,172 @@
-Return-Path: <quentin.schulz@cherry.de>
+Return-Path: <daiane.angolini@foundries.io>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4823DD44C5A
-	for <webhook@archiver.kernel.org>; Thu, 15 Jan 2026 14:38:04 +0000 (UTC)
-Received: from MRWPR03CU001.outbound.protection.outlook.com (MRWPR03CU001.outbound.protection.outlook.com [40.107.130.55])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.37161.1768487882971564882
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA2FD44C5B
+	for <webhook@archiver.kernel.org>; Thu, 15 Jan 2026 14:49:54 +0000 (UTC)
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.37419.1768488585392804681
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 15 Jan 2026 06:38:03 -0800
+ Thu, 15 Jan 2026 06:49:45 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@cherry.de header.s=selector1 header.b=R4tYbLxp;
- spf=pass (domain: cherry.de, ip: 40.107.130.55, mailfrom: quentin.schulz@cherry.de)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DSg8QsFDoWH2fwPCdsiX4OrBiG9sg9dDjhhwRmypfoCqeJZyBJMBGJUT8Vx3wK+SVQUgAwocaLy6yyUXeAiO8RFMnOoNzMqor8CSjTP43vTU2ZvwJjRaUZOc1GcU83+Rc/t9VcFWEGlZ6hUEPh1mBZOeZ09xxaKs4xFzA4ShdIA98xBc9IuYwarB/vaLftmqD9IKUayI5z2ZvfDxMRqFgvMkSGh0StwUWvXW0M1K5Rq9VjMtUHZSz8DQAJjO4xjeJcJPo96JuMX2jdTk4aseVSZScgYznV07xzi5wwI9GfcX6fC266oXYDV3jD1qmxCXrMfwfOtuWf3FaVH7r+TcEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UBfJXSzbj7QrOzVwyTjtcolmwDkgvLhf+VpEWb7zYAo=;
- b=OWe7QvzkKg8bnkeVRg2Enu0y4iTj6sIkXUL3ciOKZ+H2KFHMOGdkAEG1FJGRUCuscemAhfjIBQJxMi/7h95h7RVLNSSXkeAuDaKecmkgVBJ0m7+pHjB2I7oy+ypgPAQwk7smbFBze8shU8SXgBOt4dhrv+BmtbXhUEiSHrT7k2L1eIVi34oMKy3gUc9gtiE7hwZlU6wWdZXCkvFn80WshddmbHL9ZG/waoajQ8aqLNlEYAB+kQ7nuzJNOeVtoHAVwTXQz36eTHkihip60EN9u2xhR+pU0OZ56D5AILAcdOYctjjFtZuotbyGn2tLZ1D8ZmUA97k+eI0Pt+ADZrj5lQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UBfJXSzbj7QrOzVwyTjtcolmwDkgvLhf+VpEWb7zYAo=;
- b=R4tYbLxpZSiJcpPbGr5M9zBQVKgI+G6xALs8V5qwaso7sk/o6SwrxW3P2XoK/MYPT9upTMAc8ETXsxrTM9/f+jI5t3DlBpmI1XdqX4QmRKhxkGQbjQeFjH5cCDVxdhIi37z09ohrxVcZb/A9qWqpgefe5gjyUKDWmY1MaDrFqcQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from GVXPR04MB12038.eurprd04.prod.outlook.com (2603:10a6:150:2be::5)
- by PA6PR04MB11778.eurprd04.prod.outlook.com (2603:10a6:102:525::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.5; Thu, 15 Jan
- 2026 14:37:59 +0000
-Received: from GVXPR04MB12038.eurprd04.prod.outlook.com
- ([fe80::6c04:8947:f2f0:5e78]) by GVXPR04MB12038.eurprd04.prod.outlook.com
- ([fe80::6c04:8947:f2f0:5e78%6]) with mapi id 15.20.9520.005; Thu, 15 Jan 2026
- 14:37:59 +0000
-Message-ID: <2623916e-0753-445d-9e1c-074680963ae5@cherry.de>
-Date: Thu, 15 Jan 2026 15:37:46 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [docs] [PATCH] doc: use "+=" for BBFILE* assignments in
- layer.conf example
-To: rpjday@crashcourse.ca, YP docs mailing list <docs@lists.yoctoproject.org>
-Cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
-References: <2e02ce72-29bb-272c-fece-49be130611aa@crashcourse.ca>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <2e02ce72-29bb-272c-fece-49be130611aa@crashcourse.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR4P281CA0001.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:c8::15) To GVXPR04MB12038.eurprd04.prod.outlook.com
- (2603:10a6:150:2be::5)
+ dkim=pass header.i=@foundries.io header.s=google header.b=SxGnSeXk;
+ spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: foundries.io, ip: 205.220.180.131, mailfrom: daiane.angolini@foundries.io)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60FBU9ds2165358
+	for <bitbake-devel@lists.openembedded.org>; Thu, 15 Jan 2026 14:49:44 GMT
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bpydugfp3-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Thu, 15 Jan 2026 14:49:44 +0000 (GMT)
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-c337375d953so569650a12.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 15 Jan 2026 06:49:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=foundries.io; s=google; t=1768488583; x=1769093383; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LKrYyMa5YkLA7Q/rXc/aYGnfb4TJxNhMsSBREcK2SsI=;
+        b=SxGnSeXkLFAfngYfdkWx80Vsvja1xG2iDjTDVACa1RBQQEKbdKMxbqKpYGcrRTCDhh
+         f9nuNe33qxvysb+YzJ7pf+ua6J2rpKObx93VzkR5t51vSsxcEe+Bcx+Ie7icAx2R1t/v
+         yoCrM9iyOIspNJe6f1FPfuGUWONkEsfSjzlHrsvp5Bm3N3qUm00ucxihCfWrgoymAf2r
+         0BSGUx3z6i8lFbeJRAa1NRmoG1OLH/e/nRb0bPBWRDDLSy9lr4J4ALre6EAparrDN4Z/
+         pqsFA1MrSLpuvpCDuPqsbvMKF6QkE85pidzJkKBzsqFn5B/UVbsf2Wjt8INr8yZ5+L7v
+         i4fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768488583; x=1769093383;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=LKrYyMa5YkLA7Q/rXc/aYGnfb4TJxNhMsSBREcK2SsI=;
+        b=MSXbK1yDiHySoVdpxuxUjfDyQ6nhsI+P70wKUNtLmhhYmXvNWxABBcQnnYhC1/0bbc
+         2fI+TO+6evuxgVTr2MJ6bxgGv7mtcxhPTShzrTtlsYBtiLjJRa+/dGqKsomQVYuhns0N
+         nL7YvkUywT91DyGzErjzva0vsAZDLlJisVjqwfKWPccsN+7qnEBDX4ThMhy/tpDbgPw1
+         SQpGNBF+yr71wGxf2868p1ZpfIC/TDgF1C/+INeICewgLee4zPvT1ylH3iN88wqt5dDk
+         BocX2B0AGaWnUwvddwcrzXXERTzgVyA/0g7qFJZXTdtQGe8ftHD/wzngAbnSiWMcJ0Y6
+         50nw==
+X-Gm-Message-State: AOJu0YwmO7xYY4o0UuswA3CZVzNmwBtLdpcEOd/sXsEfyb/pXAcayhXc
+	VOavyjOmR+7UyIgwO6HWgNRDNYlOzemeO1BkFQ3Xw64UW1EkP6pQud1CMeNOkwQC6GImYS+RC45
+	/ldsR4fcKfSw6a/5oJp0SxK/mSprUMPi3mHkUyono7oMKtET0Xy80DciZvMx53i83kZCWdoLo9f
+	0VyMx9cuZbSgtlnrJItR9tnNBt67rJOFmfIkGbmf+MmaR/Jkzn9DQ=
+X-Gm-Gg: AY/fxX7JI9Y5LFNXjKR0lFH0pHA89Q9soTBjdzqun4zFuOJKPTW1TBBgP7aCeh7uJPL
+	uWRyXzWJqPILGT1qf5ZFzuK5W4lxlo/uMDoY5I0d9yf+tc3BR6YRD8K8zXJgaEvdGYLVFI+UBSw
+	P8qCaj5ARodCHGONcAh2TfrnH2wdTOTCdYB54tKMOtf0YwQIIQfv9r+qeZQzeZMgBSRDs+xDJlx
+	ccMDDeRLyNNYT1Ayi4p2+WG2Q2t6DxNGYdQqMNjQ4bdqQx1g/H5Srk3
+X-Received: by 2002:a17:90b:1cc6:b0:33f:eca0:47c6 with SMTP id 98e67ed59e1d1-3510913e871mr5767689a91.30.1768488583307;
+        Thu, 15 Jan 2026 06:49:43 -0800 (PST)
+X-Received: by 2002:a17:90b:1cc6:b0:33f:eca0:47c6 with SMTP id
+ 98e67ed59e1d1-3510913e871mr5767671a91.30.1768488582862; Thu, 15 Jan 2026
+ 06:49:42 -0800 (PST)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GVXPR04MB12038:EE_|PA6PR04MB11778:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9544a3ca-7d51-441b-87e8-08de5443add2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?eGVSRzdsdlhRWW43VjZ5UGZWRTROZGVKenMzVUFrMGhZZ2JUbWdKUy84dGRC?=
- =?utf-8?B?T1g1OERPU2FnZmVnRE5RcUJzK0Jxb3o4MEVYL1BlM3BzbXV1UCs2VCtKR2xr?=
- =?utf-8?B?dXh3NzhvRWVKSkxqUWM0cGlVcXc1VXhSSTRSc1dSV2RGaFBVdGVzS2dKNjRU?=
- =?utf-8?B?RE15UitsamN6dFNLZGNMSW9xcFg0VWkrN3NlQ1EwSkJCYkk2dG5uSU5wUFJ3?=
- =?utf-8?B?dFA2eUN4eVRwZFFDT0pqVitRS3pxQkwyNUQ2UVNuTEYvblcxQUpzbzRIaklQ?=
- =?utf-8?B?UytPaGJiL1U3NzlENXpxQkRRNTQzVk9YTy80dlV5ZmZtZ3ZrVFJRWGZvMVpa?=
- =?utf-8?B?Z0RRcXQ1aGFwUWsrNkpZdDR0NE9JaTV3Zi83QmMxVUY0cDFLU2dEaUQrZ0xz?=
- =?utf-8?B?MFdSb3RBenNJd0h6ZzFNUkNuNEY3YmUxeFFIWUdnRjlQRC9KdDF4SnFkUkgw?=
- =?utf-8?B?b3NPcVRNN3ZNWVFZRytSdExRU1N5M0NtaFpNS2tHQ0dacFlYQS9XcmdGcFQ4?=
- =?utf-8?B?emlWeEMxTTZrWkVEQ1plYzd4Q3hpbnFoU21GV05HVzZIRWo2NGJhOWhaK3ZE?=
- =?utf-8?B?czQ1ZUFRaWRqd3NHMFMvTmEvQm91Uk0wYTFTaWpONGl0MGh6OFJrVnBNNGlD?=
- =?utf-8?B?NEx2czBTVUtEcUg1cVZlZzZFZUN5VDB0NUhsaDhBTWhkM2lMalRZd1lWa05n?=
- =?utf-8?B?UXI2ZE5UdnUvMmVUTXJjVEpqb010dlJJT0o1STRNK3pyQytJOG9zMCs2eVla?=
- =?utf-8?B?RXlZdWlkYnJQNkRBZzlkSFh1Tkt0RCtNeS9xdnZTOGJ2K1VXeEVKTU9QRVhp?=
- =?utf-8?B?aVJDc3hLV2ZPbDhhMTIzVWMyVlU1QUU1OGFuUVJGOWpCeHJVcUE4MTFqU2Fx?=
- =?utf-8?B?S0lBd1dPemtJUGRwVGI3Ums2c0krenBuTndDaVI3VjlGUVhHdm5nRkpBUzN4?=
- =?utf-8?B?Sms2TVlnaWNwRTRUUFVYUzJFSCt2Nyt3MW54VTZKMW04ek9MUWRyMS9CY3lF?=
- =?utf-8?B?RitqQkpUQlQxSDJnNTlYYjZYc3ZwYlRIODB6QUFDOVpWbXF4THpjS0ZzWHlq?=
- =?utf-8?B?bkRkOStlZWtPQzBwdUpWS1hPdHJYNlVQOXFpLy9OditJSHRnd3N6am8xVDBO?=
- =?utf-8?B?ekdiclJGc2RDL0I2MU1VSmNDcGZSaElvK3RUdnVRUHRjWWNCMy9jT0FJVnpX?=
- =?utf-8?B?L3J6YXdEZkp6UHU3Q1k2aWt5Wi8rdWxsRVNNb2RDK09wZDcxNCtRTGFjaHNM?=
- =?utf-8?B?YlZXc3doWVJ4dHdUTVdibXM3WFp6R3JCMUcyZFd0MU1Gc3hKbkVCeVpZOFRT?=
- =?utf-8?B?aTNBdXFuOHFRTTlvOFU1Y0FwM3hDamE0SUdiOHNJakZ1OWZxQnl2ZVZya1Jy?=
- =?utf-8?B?Rnp1LzZTV0xJSFF1QTVIZ1NGN1J2K1lxK28zUjNLdlR1cmR6VHZRZmsxZWhs?=
- =?utf-8?B?ODdXNlZmQ3VwRkhlaC9sZVFLSVpVQ2tzU002SXlZVHNUSXpjMUxSRldjNWt4?=
- =?utf-8?B?Y2tmZ2NSRUZwV282TmNLUTRFVFg4VGwzQ2c2MzJ4aHpvbGV6Tm12SWh2UlJv?=
- =?utf-8?B?bUZrQzlkTThmeVhCaDgxTVhlbHRWSnl3WkNZN3NsbnYwY1BkcFNvb0d1Snhj?=
- =?utf-8?B?QjdEcjFCNGplNndSdlpTOTZuSjBZRHBHeXd5ZFN3R1IxOWhpYTg3U0VmVFc3?=
- =?utf-8?B?U1BWZEhkcUMrNUlrc0NuVnJNUWF6MVpQWmFWcXQvMklJVE1BYi9vV2p1cFJZ?=
- =?utf-8?B?L0dFYTdpb0tCZzAvS2Q3TUYzTmMzWDBFN0Fqc0JGcXQ2d25ieFFlcElVMlBC?=
- =?utf-8?B?N3dsTGYvZmlXZ3pXQ1NJdXhGYzJSR2VLMytqdnp4SDZiWWw0aytPYVBNNGdS?=
- =?utf-8?B?NlgxRFU4ZVZmaHU1S0NuZVZRbzNid25sOVpxeFkyd0FZVldpaHd2endodlpl?=
- =?utf-8?B?Z1RnU25hWmhDQUF2ZGUwWDlTRUN5b09EbHo5QmV0aW5JN3lkTnVrWm81OWZD?=
- =?utf-8?B?djFhRGhUd0dTbDN6SHRjY0RKK2dxVXJvRDlPVjU5RHRuY3FFNlBoR2toZnZn?=
- =?utf-8?B?TXppNm05L0hocVc2QjZyQmVyVnNCNisyMnBTUVRSMFBOOGgrMi9tVEpXMnJ3?=
- =?utf-8?Q?+hBs=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GVXPR04MB12038.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?WkI2NVhCRDNwMGU5c3JkeHcvbVdCZGNGcVdvdEFka0RGTWdVWG1vK2JIY3NP?=
- =?utf-8?B?SlpmQkhtcmR2cXh0UFdycmJKMm9lTDBSaGdqOThOVkVrSFgyVGh6TGh1VUly?=
- =?utf-8?B?YkUyNWl5eC85QTk4dWdxWDBxcm9zeXFpN0tBOUJ4WHF5ZzZheW1xQ2swSnda?=
- =?utf-8?B?MWpXR2xaUjNGa3hSU3owc0N0T0NaaVk4TzJFRkNCa3FlcVltUlRaWUtoYTBX?=
- =?utf-8?B?dk82TVl6MkpRbWp3MDltL3FjYWE4OWFuMVlzWHRmZ1FScVhDZEFsWElldVlP?=
- =?utf-8?B?NmU2bUFWWm1ONUZock9MY2lQVjZHdzA2SE1qTS9Wb25zNmFQdUtXb2NIaHMv?=
- =?utf-8?B?NU85cGd5V2Z3eGdqVnBRUnFJK3J2SnpMQmdLclR5cEIzNC9qWnBrZlZralM2?=
- =?utf-8?B?dkZoSUhJd2c2enRkZU9sS0RZQ2t4Y2dHdDcweWJsVkY3MHpyNXlHL3ZtYlRX?=
- =?utf-8?B?Wklub1hxVjZzQ2JTVDFyY0YrbTZ6YjlmZUkvUkx3aWZiM0thbFRZTnhXMjBo?=
- =?utf-8?B?SjA0ZDQralJkY1laRC9sNC81ZEdvUERlclhGV05MM292YWNSbnNjdUtoYU15?=
- =?utf-8?B?azJPYjNBbnVuMFNLeGEzTnVab0tic1FWazRNTmJ2ZVBkUElXeGRzS0RtWDN0?=
- =?utf-8?B?UzUzUnZmNG9DSWZleDJOeDB3YlN4bzV0dFpOV04xUyt5TWdqK0E3QktUbWwx?=
- =?utf-8?B?R0lhcE5EeExDNGlpdXU2dEU3bGNlYmJuQUt6RzBYZVhuTko2TUFxUndPTFcv?=
- =?utf-8?B?Tkk2WTY1MWxpUzZ4VHlheGR0RS9nak1JclJNSW5MSkhxZWovUGo2OVBTalBv?=
- =?utf-8?B?N0JWSWkzOGFxRXdIZEZVOWVQZ2JvSXdRdUdMM1dkbnAzeUhxV1JtbVhRNGFp?=
- =?utf-8?B?a2JhM0FwNzkwKzFwUW9nRVZiK3VVSmI1a05wQlMyeTZxNzZvR05HbE9kNnVy?=
- =?utf-8?B?NmNrdEVYbkdWaXlmM2tGZHBRRS9Ra2g0SXM5NC9jM09JTFBRZDZ5Qm1NMW1D?=
- =?utf-8?B?a0dWZW9FbGlaT2pvYStsajRtNHIvMkgxTkk5R2JEdjB5dE9mY2JVL0xFaHlM?=
- =?utf-8?B?ZHRFck1WaTdSTnlrYk1VOWJBVlZST1dWRjk1WHV6V0JmVStUMlJXdDVaUXht?=
- =?utf-8?B?RDAyWDE5bmJHaUVVOGRvejJUaXovMFR3cDZXVWRXa2QxeE8zVnAvdmsxaXFi?=
- =?utf-8?B?ZmIyWmhZdnc5eTVncUpXWVZEVjJDcE1VQVlsUW5GYUNJL093dVhaS3lnejVM?=
- =?utf-8?B?Q0NkYVVhRnFJS2JuK1dlNUdLbDMrOWtBbFEyeFdnMG5zWGc5a0tPMHFtSnJ4?=
- =?utf-8?B?NVFQc0NMVlV2QWhvOGdIMHZ0enkzODRrVHlDWEpOSnI1YWFGSllpVzJSUGhR?=
- =?utf-8?B?OERVdmJjbVZaaVptSXNoRUowaHVNZFpmUldkL21kQzMyRzM5THJvbzBwTHJJ?=
- =?utf-8?B?NWZNdmw0d1UrL0lTcUgxU044d2ZQZlQwR0ZqcEw0UUtCNXZsTDU5Mnp4dUJr?=
- =?utf-8?B?REVxeGFGRFhoREJBS0xmSUtjRy9hVnIvUmNBRHRIN2VoYkRKMHY3dlZnR1l2?=
- =?utf-8?B?aWlXdHBnV0t1WDBsZ0Rubk9XTmN5cmE0RHczRlV0Mjd4cXg2K2l3aFRpK3kz?=
- =?utf-8?B?UXI2b3pORG1GeEZBRC9kY2EvNVNiRDl6cVN3QkMxeUVFNjI1ak1ybEZnakpM?=
- =?utf-8?B?aTZTWFVBdWhJQlIrUHd6S2VyYVdsenZTVHYvTmVzbjZ0TmhnTFBWVUN1YjJV?=
- =?utf-8?B?M3Bjcll0T1lwd2Q2OFU5OWlWRjc4VUdlREFhVkE5eVJPZHJTaGU4d3FkRWhX?=
- =?utf-8?B?aWlUcGZ2a0xVT0lzZ0RkdEEySTFXTDdzOVhUZ21CYm1DeGxudHAwZzhPTXpO?=
- =?utf-8?B?dTNobXNHMGVLSmQwMWhSM0tMc2VpOUs1ckVES25iTm1ubmpwbEN1N3VrUlly?=
- =?utf-8?B?YkZPcUw0Ykh3RVZZdFZEMDVGRnl4T1JzL1FhNzA3K3JtZTUvYkFXWkpHOG5P?=
- =?utf-8?B?WFpWSWVzSHNidVA5dVVTVnpLamp0QkVYN243RnZtMG91VG1XU1hrL2wwMkda?=
- =?utf-8?B?WjAwSEFEcW5SUGFOYmRWMkoyTFgzSkF4cTYxSVUweHA0TG1ramZORnhqNlBm?=
- =?utf-8?B?azhxOUg3dWZUQmpFZ2ZHdUcyUU9UREdOS3gyMFNWYUd0TlFEQ25nU0s2UGd1?=
- =?utf-8?B?bnlUWlRPS3ZqR3kwUVcvR3ZwNnNNeGE1VUlSRXRYUGpTbkZBYk9BUVlIcE9n?=
- =?utf-8?B?dG5ZUVpsTER4cU8wLzFDM0dMUytMaWdLbCswZEVObmQ3THZDNFVVaU9EdVVa?=
- =?utf-8?B?UmwzeFhvdFR5YS8xVVhRdE5iM2ZKYTBCUE83ak1OcGNzRFdRVjE2UT09?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9544a3ca-7d51-441b-87e8-08de5443add2
-X-MS-Exchange-CrossTenant-AuthSource: GVXPR04MB12038.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2026 14:37:59.0409
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9U6HqBRYrqle03dutUrw1B5Ayh7DrrdPbplB0Umnudr68B9n0QSSwAKuAA6yJtGFqHnP89y1ZNN0b84j+XO3FNQkfU4pSWWa7oOERXIRG7w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA6PR04MB11778
+References: <20260115132223.2034792-1-daiane.angolini@foundries.io> <CANNYZj-5nZLvez9VVz1UxYotBu3xZxY19hagxJ9srrgrBjDzng@mail.gmail.com>
+In-Reply-To: <CANNYZj-5nZLvez9VVz1UxYotBu3xZxY19hagxJ9srrgrBjDzng@mail.gmail.com>
+From: Daiane Angolini <daiane.angolini@foundries.io>
+Date: Thu, 15 Jan 2026 11:49:30 -0300
+X-Gm-Features: AZwV_Qii96OlJPwgsaD9prRqogVIernpoRyHBRvkJkagcbs9WvZPJH30pGHBKMo
+Message-ID: <CA+HEL7_1fF5tNAvzTfSgHLtpR2z7B4udYQdF_pkjBv6csj0cww@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] bitbake-setup: verify if a configuration
+ file is html
+To: Alexander Kanavin <alex.kanavin@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTE1MDExMCBTYWx0ZWRfXzzih8lzVMZFg
+ /w4Jl+whDC+oEXV/4S+GYeceStkLPT1OLaWAF/AxkNuwB0jaN+dkDtuvKNWXRiiO0aO4jIyuzDQ
+ axucUW9fysakL7IChCbzm8qFEsCTU3YgSkxQ/cdVbY1NTRlnRetBvicRhSTf/VUe/Qwo2Osa6xE
+ +Vvbkg+HJ3YKw1Htyu+hBhrNIJ49ZfP6yzZfE0xiMFYi8GsJ1170xu2kwAoSErjAjWLQNHPWqeg
+ 1QT07M2d/lD5Eh1ai7l7Q0edybdbEDsrUpl6IdCOc5AhdesYPGFGYbCQtJ8c2XknjlpxbIpO2Vz
+ rXfGXDxa8/fT5IUcxkVWUp4zERN/ccmgv/MlDnowb6I+I2ATTjP8li4gz7hsbCVyUC3pX7lwtwR
+ bNQFmZZH/VelCofuGB9wBqErxvP+eDttxAS2DiD5ebyi2gi1uvqjsllNAcj2Tykjj1JR1jFU73P
+ LxRv429OFyExyYbWNcQ==
+X-Proofpoint-ORIG-GUID: uJzqUtno3HvZLKqd4T8O_tAg1s7_zCq3
+X-Authority-Analysis: v=2.4 cv=NafrFmD4 c=1 sm=1 tr=0 ts=6968fe88 cx=c_pps
+ a=rz3CxIlbcmazkYymdCej/Q==:117 a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10
+ a=9UA2AVYIz8kA:10 a=VkNPw1HP01LnGYTKEx00:22 a=8AHkEIZyAAAA:8 a=pGLkceISAAAA:8
+ a=Q4-j1AaZAAAA:8 a=2V6DY6BgAAAA:8 a=NEAV23lmAAAA:8 a=HdMDhIewZqt9SfbRrD4A:9
+ a=QEXdDO2ut3YA:10 a=OryzfZJIzKIA:10 a=bFCP_H2QrGi7Okbo017w:22
+ a=9H3Qd4_ONW2Ztcrla5EB:22 a=ldqKKs2zR4t-S6fqr-1n:22
+X-Proofpoint-GUID: uJzqUtno3HvZLKqd4T8O_tAg1s7_zCq3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2026-01-15_04,2026-01-15_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 bulkscore=0 lowpriorityscore=0 suspectscore=0
+ phishscore=0 clxscore=1015 priorityscore=1501 malwarescore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2512120000 definitions=main-2601150110
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 15 Jan 2026 14:38:04 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18780
+ <bitbake-devel@lists.openembedded.org>; Thu, 15 Jan 2026 14:49:54 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18781
 
-Hi Robert,
+On Thu, Jan 15, 2026 at 11:14=E2=80=AFAM Alexander Kanavin
+<alex.kanavin@gmail.com> wrote:
+>
+> On Thu, 15 Jan 2026 at 14:22, Daiane Angolini via
+> lists.openembedded.org
+> <daiane.angolini=3Dfoundries.io@lists.openembedded.org> wrote:
+> > If the file is a html and not a json, lets notify the user.
+>
+> The commit message needs a bit of additional context: when a user is
+> copy-pasting a URI from a browser, they need the URI to the raw JSON
+> data, not an HTML representation of it (as is common with web UIs to
+> git repositories for example). JSON decoding errors are not helpful in
+> that situation, so let's provide a better message.
+>
+ok
 
-On 1/15/26 10:11 AM, Robert P. J. Day via lists.yoctoproject.org wrote:
-> 
-> In a layer.conf file, assignments to BBFILES and BBFILE_COLLECTIONS
-> should use "+=", not just "=".  Even though this is just an example,
-> it should still be correct.
-> 
-> Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
-> 
+> >
+> > Signed-off-by: Daiane Angolini <daiane.angolini@foundries.io>
+> > ---
+> >  bin/bitbake-setup | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+> > index abe7614c8..1a1f0cdd4 100755
+> > --- a/bin/bitbake-setup
+> > +++ b/bin/bitbake-setup
+> > @@ -528,7 +528,10 @@ def obtain_config(top_dir, settings, args, source_=
+overrides, d):
+> >              logger.info("Reading configuration from network URI\n    {=
+}".format(config_id))
+> >              import urllib.request
+> >              with urllib.request.urlopen(config_id) as f:
+> > -              upstream_config =3D {'type':'network','uri':config_id,'n=
+ame':get_config_name(config_id),'data':json.load(f)}
+> > +                content =3D f.read().decode('utf-8')
+> > +                if content.lstrip().startswith('<!') or content.lstrip=
+().lower().startswith('<html'):
+> > +                    raise Exception("Invalid configuration file: recei=
+ved HTML instead of JSON from {}".format(config_id))
+> > +                upstream_config =3D {'type':'network','uri':config_id,=
+'name':get_config_name(config_id),'data':json.loads(f)}
+>
+> if f contains valid json, then f.read() is followed by json.loads(f).
+> Will the second call still obtain the needed json data from f, once
+> it's already been read previously?
 
-Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
+I've decided to go with the flow, let it fail and only raise the exception.
 
-Thanks!
-Quentin
+>
+> I'd suggest simply:
+>
+> try:
+>     json_data =3D json.loads(f)
+> except json.JSONDecodeError as e:
+>    ... (do stuff with e.doc per
+> https://docs.python.org/3/library/json.html#json.JSONDecodeError)
+
+Thanks, will do that!
+
+Do you think it worth trying to guess the raw/plain URI and use the
+guessing instead? I know how to guess for git.openembedded and
+github.com, but I cannot imagine how to guess for every single
+possibility in the world (that's why I haven't tried to guess)
+
+Daiane
+>
+>
+> Thanks,
+> Alex
 
