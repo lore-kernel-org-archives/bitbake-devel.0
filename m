@@ -2,122 +2,135 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DB7D46620
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AE2D4A619
 	for <webhook@archiver.kernel.org>; Fri, 16 Jan 2026 09:57:55 +0000 (UTC)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.2687.1768557473400416161
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.2683.1768557469458865816
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 16 Jan 2026 01:57:53 -0800
+ Fri, 16 Jan 2026 01:57:49 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=AWZdHm6+;
- spf=pass (domain: gmail.com, ip: 209.85.128.51, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-47eddddcdcfso9749285e9.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 16 Jan 2026 01:57:53 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=CroGw5tm;
+ spf=pass (domain: gmail.com, ip: 209.85.128.68, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-4801d1daf53so9394465e9.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 16 Jan 2026 01:57:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768557472; x=1769162272; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FPZVyFzsh7QyVAzh7m6PEX5MZGWV8bpAcx7k7OH+u0o=;
-        b=AWZdHm6+nmTwKTWNboqr5GXZA4v028Esrvx3H6b6DcoEUvzzG9ap3EKWgbQ01RxETd
-         bCB26lwNE6Ou9iqZoiZSC9+OskljK3YI2wgPn1kINtDhxoXqMDLJnIL1Xl1uUz+fE/SS
-         4vhfqcJ2t0mjNItzvGjWiQKg3lPOB00ZuV/VEDZWgQO0/C7KauXODISXqy/bqVkO/9Gn
-         s81y2D0YdSuBea/OXMKcqoJhw2X7cZTzhPDWoQJbFv3DfHhpo/adQO04qtIWyMyxl7gf
-         w2XSlbJTD8aC/4a+dTWRgbSXnJw1saJ2IOEC0J5JLDSmhs62VlJDR+8WSuyfoDyFdYdF
-         RE0g==
+        d=gmail.com; s=20230601; t=1768557468; x=1769162268; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=18LELIipLKKARrAqkE2/P1tV1/34wQQlQQyaU3oYwBc=;
+        b=CroGw5tmprka8ZxRAGZELlwlz1l8PEEtHRAWnn/BvyKlkfFPg9DUMq1FrXZmiyEofI
+         AqriB+8jvFm8dW0MafRKGbmsyZgJo9qZ+VpJXlzXbqQzL2OlY7Th7N41ZZU+Xh8G6cvG
+         D0aOjGVY8ip4HCpH5gbk4MFGU5X/YMff9U7eVCEujbyDgxIlcc+k1m4O1xgF3AMLuhcC
+         TOVZunXakc4/HQzFhTy9eoQ+jc7eXAVqysWflfEBWoHHroi9bp5nj+nrlx4kBtPO2tq1
+         vQPPVOCfB1fYaZVJsFgFpEx24goqBa+5C9VkuAnYHpWCiLOFlVq/7cTbMlWMlqAm5eOu
+         bPaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768557472; x=1769162272;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=FPZVyFzsh7QyVAzh7m6PEX5MZGWV8bpAcx7k7OH+u0o=;
-        b=K8kVklr9VuGr6i/S+GFsIKYKxvBMfgdX1AjeBorlcE8MJjJ8W1fiXobihK8ruFCU+L
-         6QlbX/0EsGlpWjj2+q3BxGUHg5gXaUmTBVON3TbDqOBI5h8/ECFHASklo6bHhJsc74ZJ
-         pJeBBgVQGeuocD2tIKbpks9wk97XSnt5p839lmKaVY4379IVJLOFNiTqjdUR0fZYEtxl
-         pi5OGKGW4fhDEqFF9HX/lBkLpegdRTpd0lPrk01PgkYwBwPTxW4TJ0YMc3ybHciLnUxR
-         Pg6Y5JcCfpAq/Eq5HGM15vbvB+QG3ny+pX1nJhaFMtZD4PxmSZnUsdlobjnYKAaZ+sN0
-         Bpmg==
-X-Gm-Message-State: AOJu0YwP6XvIpokdbdHEstd4IbpuoEtHN3aeOOr08ZEnNMT8COBxmh1T
-	wtAQ4cluNNiA/1ftL6pDYHAMatJ2pzcBiybtEoHf7+G/HJLgQ71TrUfZVbqXGEmN
-X-Gm-Gg: AY/fxX7r/c5i5p1kPuTkrLYWMc6Ck5Xfx+Y0Tz9yzGEZO1nous7J/JLZUqu0t8fCzy/
-	CW/lceBHDjQhMkBHjh6YfLb218DyLIcByFZEeOGWGSnH5HCyEgid8+w+Hd1LoGGAsS6t58fntzz
-	eZqTADTv+iYOx5EPbh1vzrkljvlw4Jb2n9AB4CBQp1eKnrwuMPRINlGv18KhyAGijl7HeLY7IYd
-	c0+qic5HdNhLNKILPmDeYIdHWBo4iRJUsstJUCIKby4ypLJOveSmU4mOKg6228K5DAqIdLowU/D
-	Dx1GdOpKhvefvlyWz50WnpyytFpn1FMLvH4VFlpIy120MLU4lOaqInPvJVPmSGrtNwq0i47m0YN
-	8WXC2CeHvhb6riiUuQ/HOfkYy5nCunvpQMzOGC9TFwwvlQUdQvSFSlrtZU5HUJOzQgo4UhHWdhT
-	oNo5I46mKhmbZ8cP4QxiIgSqcxPLTPOQaVIlKtAo/hYk5dwGE=
-X-Received: by 2002:a05:600c:458f:b0:477:5cc6:7e44 with SMTP id 5b1f17b1804b1-4801eabee40mr21733795e9.11.1768557471635;
-        Fri, 16 Jan 2026 01:57:51 -0800 (PST)
+        d=1e100.net; s=20230601; t=1768557468; x=1769162268;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=18LELIipLKKARrAqkE2/P1tV1/34wQQlQQyaU3oYwBc=;
+        b=TuXGwU8SNQJ8IZ8lFl1IyNi4kxnOr/eVoIzX7lJzohTQMIZhEkkOz9uH0LT4sJFr6m
+         ZlgLgXy6ikwuO8E3B496/1SCMhKFEhRbfRi82Kv4G4uScNOpscLrCeshh6LQAAM1qmp1
+         GjmOwLqO8jxRQuvfZCqCiPLVMWhB2lP28dJA9Aoez3lVSLr65MpARRfYeBwJJ93HOOIZ
+         BllLYXZuoAP2ODdw6mVPbChPN9VRwz49Q/SLQNE4mkc/2WgVgRICPBBjMNKOqD7jy82Q
+         roMVWtaa/J5a0EuEHpyW8+5lVaX0M7a2jZ9vNt1+3Kkzk7q6af/NShFidosJsJ0IIYgz
+         v0gA==
+X-Gm-Message-State: AOJu0YxhsPS3P3GRXb3bepHYTdJ4HDQMKx4nFLNFj61qmreXXSMPqERk
+	G3YyBT2a3lzijieVfNvR2FYVX6gob8+kxMI7cQT01exqX66lwl5SLtKWxgcCbNyd8H0=
+X-Gm-Gg: AY/fxX5gJNdXsfE7aZwUUVmNvTneiI/P2F3Mj7h0RQUYDau21SJ19E68LAzG7Uq5/q+
+	7cz1+dQAz/W7NIpDw/z7830LOrt1AdWsE2fhzqMLYCFCstRn7rqGDHAqgq1DlKEOlr7ujXGxzkW
+	3F30QB6ngHRZtsFe/NEDe6+mvg3xa8x+LxPRPFvWOhNSZijc2PYlHNvWKd4NfM9kq/9FcsalWy1
+	WsAtDvHAhf0263EC5RNSpBF/X+1Z/NVv2f/B9zlKsyBIRV6XSbAN95FWhiKVfcKzlXgYrgZaYDV
+	16u+HL/TZ3pjKfERvhsfqinm0sDJbVneVwDIMKmMQNgL5xJ7FZ7RVefeLENaM6igyfzfG7N8waU
+	O8diP0aB+Y+GoH96T69TJk/9uW9OPqT82XpAusNmEITeQS5hbB4StFLTxycpXVkMEdOO6a3D65M
+	3sg90zP7SVAATqrZs/xexhSkC9DN4oNek1yqMP6iApe3mJIEQ=
+X-Received: by 2002:a05:600c:c4a4:b0:477:7bca:8b2b with SMTP id 5b1f17b1804b1-4801e2fef34mr34419125e9.15.1768557467585;
+        Fri, 16 Jan 2026 01:57:47 -0800 (PST)
 Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4801e86c1b2sm34188175e9.3.2026.01.16.01.57.51
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4801e86c1b2sm34188175e9.3.2026.01.16.01.57.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jan 2026 01:57:51 -0800 (PST)
+        Fri, 16 Jan 2026 01:57:47 -0800 (PST)
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH 7/7] bitbake-setup: tests: add a test for getting configs over http
-Date: Fri, 16 Jan 2026 10:57:40 +0100
-Message-ID: <20260116095741.3654153-7-alex.kanavin@gmail.com>
+Subject: [PATCH 1/7] bitbake-setup: pass only the registry settting into obtain_config(), not the whole settings
+Date: Fri, 16 Jan 2026 10:57:34 +0100
+Message-ID: <20260116095741.3654153-1-alex.kanavin@gmail.com>
 X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260116095741.3654153-1-alex.kanavin@gmail.com>
-References: <20260116095741.3654153-1-alex.kanavin@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 16 Jan 2026 09:57:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18798
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18792
 
 From: Alexander Kanavin <alex@linutronix.de>
 
-Configs from registry, and configs on local filesystem were tested,
-but not configs obtained over http URIs.
+This will help the following commit.
 
 Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- lib/bb/tests/setup.py | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ bin/bitbake-setup | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
-index 41aae2d36..a98160f4a 100644
---- a/lib/bb/tests/setup.py
-+++ b/lib/bb/tests/setup.py
-@@ -8,6 +8,7 @@ from bb.tests.fetch import FetcherTest
- import json
- import hashlib
- import glob
-+from bb.tests.support.httpserver import HTTPService
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index 4d709ed8c..4496cb61c 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -523,7 +523,7 @@ def choose_fragments(possibilities, parameters, non_interactive, skip_selection)
+         choices[k] = options_enumerated[option_n][1]
+     return choices
  
- class BitbakeSetupTest(FetcherTest):
-     def setUp(self):
-@@ -323,19 +324,24 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
-         test_file_content = 'initial\n'
-         self.add_file_to_testrepo('test-file', test_file_content)
+-def obtain_config(top_dir, settings, args, source_overrides, d):
++def obtain_config(top_dir, registry, args, source_overrides, d):
+     if args.config:
+         config_id = args.config[0]
+         config_parameters = args.config[1:]
+@@ -541,20 +541,20 @@ def obtain_config(top_dir, settings, args, source_overrides, d):
+               upstream_config = {'type':'network','uri':config_id,'name':get_config_name(config_id),'data':json.load(f)}
+         else:
+             logger.info("Looking up config {} in configuration registry".format(config_id))
+-            registry_path = update_registry(settings["default"]["registry"], cache_dir(top_dir), d)
++            registry_path = update_registry(registry, cache_dir(top_dir), d)
+             registry_configs = list_registry(registry_path, with_expired=True)
+             if config_id not in registry_configs:
+                 raise Exception("Config {} not found in configuration registry, re-run 'init' without parameters to choose from available configurations.".format(config_id))
+-            upstream_config = {'type':'registry','registry':settings["default"]["registry"],'name':config_id,'data':json.load(open(get_registry_config(registry_path,config_id)))}
++            upstream_config = {'type':'registry','registry':registry,'name':config_id,'data':json.load(open(get_registry_config(registry_path,config_id)))}
+         expiry_date = upstream_config['data'].get("expires", None)
+         if has_expired(expiry_date):
+             logger.warning("This configuration is no longer supported after {}. Please consider changing to a supported configuration.".format(expiry_date))
+     else:
+-        registry_path = update_registry(settings["default"]["registry"], cache_dir(top_dir), d)
++        registry_path = update_registry(registry, cache_dir(top_dir), d)
+         registry_configs = list_registry(registry_path, with_expired=True)
+         config_id = choose_config(registry_configs, args.non_interactive)
+         config_parameters = []
+-        upstream_config = {'type':'registry','registry':settings["default"]["registry"],'name':config_id,'data':json.load(open(get_registry_config(registry_path,config_id)))}
++        upstream_config = {'type':'registry','registry':registry,'name':config_id,'data':json.load(open(get_registry_config(registry_path,config_id)))}
  
--        # test-config-1 is tested as a registry config, test-config-2 as a local file
-+        # test-config-1 is tested as a registry config and over http, test-config-2 as a local file
-+        server = HTTPService(self.registrypath, host="127.0.0.1")
-+        server.start()
-         variants = ('gadget','gizmo','gizmo-env-passthrough','gizmo-no-fragment','gadget-notemplate','gizmo-notemplate')
-         variants_local = variants + ('gizmo-notemplate-with-filerelative-layers',)
-         test_configurations = ({'name':'test-config-1','cmdline': 'test-config-1',
-                                                  'buildconfigs': variants},
-                                {'name':'test-config-2','cmdline': os.path.join(self.registrypath,'config-2/test-config-2.conf.json'),
--                                                 'buildconfigs': variants_local}
-+                                                 'buildconfigs': variants_local},
-+                               {'name':'test-config-1','cmdline':'http://127.0.0.1:{}/test-config-1.conf.json'.format(server.port),
-+                                                 'buildconfigs': variants}
-                                )
-         for v in test_configurations:
-             for c in v['buildconfigs']:
-                 out = self.runbbsetup("init --non-interactive {} {}".format(v['cmdline'], c))
-                 setuppath = self.get_setup_path(v['name'], c)
-                 self.check_setupdir_files(setuppath, test_file_content)
-+        server.stop()
+     upstream_config['bitbake-config'] = choose_bitbake_config(upstream_config['data']['bitbake-setup']['configurations'], config_parameters, args.non_interactive)
+     upstream_config['bitbake-config']['oe-fragment-choices'] = choose_fragments(upstream_config['bitbake-config'].get('oe-fragments-one-of',{}), config_parameters[1:], args.non_interactive, args.skip_selection)
+@@ -594,7 +594,7 @@ def init_config(top_dir, settings, args):
+         logger.handlers[0].terminator = '\n'
  
-         # install buildtools
-         out = self.runbbsetup("install-buildtools --setup-dir {}".format(setuppath))
+     source_overrides = obtain_overrides(args)
+-    upstream_config = obtain_config(top_dir, settings, args, source_overrides, d)
++    upstream_config = obtain_config(top_dir, settings["default"]["registry"], args, source_overrides, d)
+     logger.info("Run 'bitbake-setup init --non-interactive {}' to select this configuration non-interactively.\n".format(" ".join(upstream_config['non-interactive-cmdline-options'])))
+ 
+     if args.setup_dir_name:
+@@ -708,7 +708,7 @@ def build_status(top_dir, settings, args, d, update=False):
+     args.non_interactive = True
+     args.skip_selection = current_upstream_config['skip-selection']
+     source_overrides = current_upstream_config["source-overrides"]
+-    new_upstream_config = obtain_config(top_dir, settings, args, source_overrides, d)
++    new_upstream_config = obtain_config(top_dir, settings["default"]["registry"], args, source_overrides, d)
+ 
+     write_upstream_config(confdir, new_upstream_config)
+     config_diff = bb.process.run('git -C {} diff'.format(confdir))[0]
 -- 
 2.47.3
 
