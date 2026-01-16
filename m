@@ -1,198 +1,112 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CC9C982DD
-	for <webhook@archiver.kernel.org>; Fri, 16 Jan 2026 15:49:25 +0000 (UTC)
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.53.1768578561427704381
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C48AAC982F1
+	for <webhook@archiver.kernel.org>; Fri, 16 Jan 2026 18:23:36 +0000 (UTC)
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.4049.1768587816318205767
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 16 Jan 2026 07:49:22 -0800
+ Fri, 16 Jan 2026 10:23:36 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=laAMomir;
- spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id A40B74E42119
-	for <bitbake-devel@lists.openembedded.org>; Fri, 16 Jan 2026 15:49:19 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 5754360732;
-	Fri, 16 Jan 2026 15:49:19 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2FA5B10B68B17;
-	Fri, 16 Jan 2026 16:49:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1768578558; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=G/7vlC8JdBpsm5C1Vqx8F3UfGoRpakg75pHjG8iBxJk=;
-	b=laAMomirZvKGcYndabRI4Ui0y4hns+pV23od1PDTB4sg6YYmV0dLzUrQCGWPlQhtY/dXyu
-	D1+RckaKrfZDkUutqZUEn46lIneR1Xa+FVSs7mkBKdV9Gu7v6TrsZfkuelP/gI4ikVE+qB
-	HVdAGf8POvoEAOOR7cXq5Pj4Uk0hq4Sy2zCb8e64RYXEpZ8j2GtcOZBGrnT/naxm8mqHzD
-	7U58PLmUytlzP2bng2ujLd+WQJtk2SOlA3oUeGnyBpoC++WpBl0ptMnsC0ua94xeuBGTAq
-	j05SRo24KV2ro8xvHB3kddLiz4zIU/KkMh1+k4K28/vbcsWb/v/nkKQq92qTeQ==
-From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Fri, 16 Jan 2026 16:48:56 +0100
-Subject: [PATCH 1/2] bin/bitbake-setup: add descriptions for fragment
- choices
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=HD3ooZGz;
+ spf=pass (domain: gmail.com, ip: 209.85.219.46, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-8804f1bd6a7so21410706d6.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 16 Jan 2026 10:23:36 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1768587815; cv=none;
+        d=google.com; s=arc-20240605;
+        b=MX0UKfV0C6LPgk0W1yNukCjfcxDBCWAFdKTbsRAgrG5gh+CCuSB7ZocsUTNCndbUTF
+         YaQTHFww/p15DGMKOAL6J84w24sddoCdJhZvxS0/THGF/2dHwwEJr8JCBOeMZyaYleBv
+         mF2kQBN3nQy1/qVy+D8qmZWAPAAcWK2oJkkbAqIUoSV17ZCAtG1MafKcBRRHlX1oWmuZ
+         fm91YgkEaxLMh3dnmXAJouf9X7hNVgq5vsxFhYSQVH98pEvTlYpZ5E8vOi0hLdC1PzqD
+         47tMD8c6DezT6a7+XHm8u/S7ww0HhvGVnVvNqcrBfjGSPFOgiwD4r8al8FNAXuFkj1D3
+         WAJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=ZZmozKIMcZ6woPCG6Gog7/sAXAP6BVus9NNbaUcw11E=;
+        fh=4iyoqXWXzr419C+IQOwDq6Y51UQKhKZf37iVDBoh7vA=;
+        b=Aui2AXKDGtx5rUvUQlle8ivVZ8QTZ0av1hNJjakJN39ULOUXtjyps/cbr1YBh69h2e
+         JpFpQyuBm8SYBV6pi7feW6IXc7vYB6oyw/jipTd6qijlJCpkCrykaU/fSc+kt/kbM0cS
+         yL067p+xy85RMWTSwMxbpZrplwO9kSmr01HRcVkAucDo+jL3RagDHCbaiFBqQsvJbGr4
+         EG8BWEjZseyaYOwUmm8yZUsfWb1Dlg7iqzfEkcVzRM7CipGTGYob/qoDhS6DYEEXSwZM
+         AOZG2Onmfn+aaS9+LTRkQR/gjpY/0tas6oHt/vPqkt7AUmXcBa28NcC/23HDNG3GxIJL
+         6B5Q==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768587815; x=1769192615; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZZmozKIMcZ6woPCG6Gog7/sAXAP6BVus9NNbaUcw11E=;
+        b=HD3ooZGzbfIgIKlBP8ESsWBGgnPGl0ln8zl7BKTtuJWbjz8DRCv2accNiuk9ajURJN
+         KerPOKLJBVIYL+TBqBpwW4VoIoLew8yz4CWlWEp027iz3h7aA+kaQPhp5Wzky0+WPmvL
+         KCOKQGNSKWmyb5UD6XCOx1tv3kDyppLxRFVB0sA3mRbxCLywJpqkMbNgc7jwhAzE66q1
+         5/m5TpQpfxNoa7lT/koQ5ERUWu+d5L8tJAK6IlBSarYJsLiPSD7zY2mHmKEnsxxES6kj
+         WWb0Ej90C1g+/8WpQp0K8FA0KxA3OIEGA/f4KLLJY8dwqjL1uDDCqn+5RiyCg3hFntMW
+         zhhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768587815; x=1769192615;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZZmozKIMcZ6woPCG6Gog7/sAXAP6BVus9NNbaUcw11E=;
+        b=LhDZaSDaRw2afD3KdeZRL+kBn6EXvrtMCebEpN3zrm8Zdl6/VajGXd2No/scoCWoPQ
+         ntW1GKFGoOnaU0SNnYglhpdbAxDP6okR7gE+oE84j7l9TfTTcKerGQNEDjmXpG8Iihtb
+         ygNmxNWap8ReytdBYfeZDZ0i0cXVgDlaI6WphZNJrEGOvdNIBLZ09aF7W+KV88l/2v9H
+         3Jb0lgxuzWBOVJWQ6KhxXgxSgXpXucVNyyKUFRXXT+ROh87jQ81z73yCqUqSVnK6qd2K
+         8BemQeQryckzLlXP6meX3epdryQU7Ndb4Ci9K3mV9aNmV/yEMZUyfYGjnvXn7raqYTS4
+         nf3g==
+X-Gm-Message-State: AOJu0Yxyvf1b7zGAmwKx7nedr9X1I9qX3wLSyQqjOZy81zI1SrzAy81+
+	z4/FVfkb5sZuMylnG4R71hVaZN/Ch3wZU57boNR9N5ogT7a1PNwCmWuEkW1p2DGLuI0sFq9xrbY
+	GPE73RLFvigARxU8W8V2jeyvdu4Oz5eN8fg4d
+X-Gm-Gg: AY/fxX6jHiwWND4S/7QE+QvEV7RewXDpxhaf9MvN4ck4iaZWX50TzrUSeWPjFtsCaXb
+	lMS5Lq1lpzMcYh79HFOTRkls1u4K9nUci+cYwLNeSFfbukgzSUOqogsKWpRqkJ6Owz0yXMsSbxw
+	OM72s2yG7EvjScajUmIA9+mn1fcYXzT7SJFYZT5pKJFW1vHahS70x7kBjDC1hIuoSJo1VcLhTQw
+	B0Jt1l4XYrPxnDd2T4KsF9xEP/Okm+EU7+EG73U9TdrkG8jJ6AvrMVeBUdQIhyMoytCy7KoOSgQ
+	Z9Y=
+X-Received: by 2002:ad4:574e:0:b0:88f:a4ff:454e with SMTP id
+ 6a1803df08f44-8942dbf126dmr56609396d6.10.1768587815333; Fri, 16 Jan 2026
+ 10:23:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260116-bitbake-setup-choose-builtin-v1-1-8d66666a9efd@bootlin.com>
 References: <20260116-bitbake-setup-choose-builtin-v1-0-8d66666a9efd@bootlin.com>
-In-Reply-To: <20260116-bitbake-setup-choose-builtin-v1-0-8d66666a9efd@bootlin.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7126;
- i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=tlp6hip2p/9/3ZXhelbdnlyveJ0kI/VghE+L7eJgaWo=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpal36Ph+x09G1rgamXz3W+TKwum2xZkMcO9q9z
- YLs3vNFmRyJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaWpd+gAKCRDRgEFAKaOo
- Ns0SEADCHEZIFK/1449rxrw+iOKyczY16BDWdJzd3fLTmHfW/d284h8AfyNd3wNcBSpNQS+xrrm
- b55qoeqQmZGdBmNbEET/0mSvxkJX7ZdqZL5HfwLRMCWyEIt7HW/za4fDiJMVxCfUsAXvAYxgRek
- Yyt73i6WL3BW0wzGqK/sz/dZ8TUoDaZ4ecQYZtP4R26vSve/zKH7LPZcoT13ioBVeDiz0oBNcWf
- CZlObSEVxYNiZB3LnVzsuMVDhXvTxfW6aAApOnILqgfWoFUyhpIwJ10odlF6QHBQzhswcKa5z34
- 5JCzskqUjZN+xrn8oXio96dXahSmAX6Os41vWuAyI5vUGeapoD5rWtlO/YM4CHRvdHdTXXyyYLd
- cnrcIfrEQXUYzfgdMgGw2O5ARSUhDooyUZxGgZVCFqT9sOinzGdG61uK0DMwEwJ3OWYMmHpe6Ex
- grV6rFP4RpzBuCqabx7+DWuPqzoO2K5u/Knly2ANIV1C9a5w3WrdNqGYYlsd/vGVzwRTwNRM6xG
- M0xcUOEbV3t0Pb5sdsEnwR+TpjR1ZoUQ7jHMEvJ/NT+JFTouPxLa6s176eWkhrTCpbv+xA5VN4n
- EeStyMmthlMuXkK4VROF0r0worEdo3i5UteuoAtWVfELLWyIVEyKj7QyC1Pin8xg7cC6uMH47Ys
- 6RuVtdNC0jjU9Tg==
-X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
- fpr=8648725188DD401BB9A0D3FFD180414029A3A836
-X-Last-TLS-Session-Version: TLSv1.3
+ <20260116-bitbake-setup-choose-builtin-v1-1-8d66666a9efd@bootlin.com>
+In-Reply-To: <20260116-bitbake-setup-choose-builtin-v1-1-8d66666a9efd@bootlin.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Fri, 16 Jan 2026 19:23:24 +0100
+X-Gm-Features: AZwV_Qi7jqFMn7lqYWdJMZ5JIvEe3BU7kudNh3FKrhvOR4W-t8h2CQfTzrFxl2s
+Message-ID: <CANNYZj-Oh-WWLEhX=ZKpB2ddrR=oYseXBBgT-zQQ0CPUdA+HBg@mail.gmail.com>
+Subject: Re: [docs] [PATCH 1/2] bin/bitbake-setup: add descriptions for
+ fragment choices
+To: antonin.godard@bootlin.com
+Cc: bitbake-devel@lists.openembedded.org, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, docs@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 16 Jan 2026 15:49:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18800
+ <bitbake-devel@lists.openembedded.org>; Fri, 16 Jan 2026 18:23:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18802
 
-Make it possible to give fragments descriptions as it can help users
-determine which fragments to pick during bitbake-setup init.
+On Fri, 16 Jan 2026 at 16:49, Antonin Godard via
+lists.yoctoproject.org
+<antonin.godard=bootlin.com@lists.yoctoproject.org> wrote:
+> -                        "options" : ["machine/qemux86-64", "machine/qemuarm64", "machine/qemuriscv64", "machine/genericarm64", "machine/genericx86-64"]
+> +                        "options" : {
+> +                            "machine/qemux86-64": "Machine configuration for running an x86-64 system on QEMU",
+> +                            "machine/qemuarm64": "Machine configuration for running an ARMv8 system on QEMU",
+> +                            "machine/qemuriscv64": "Machine configuration for running an RISC-V system on QEMU",
+> +                            "machine/genericarm64": "Machine configuration for Arm64 SystemReady IR/ES platforms",
+> +                            "machine/genericx86-64": "Machine configuration for generic x86_64 (64-bit) PCs and servers"
 
-It is still possible to provide a list (with no descriptions) for
-backwards-compatibility.
+Let's make this properly extensible:
 
-Update the documentation accordingly.
+options: [ {"name":"machine/qemux86-64","description":"Machine
+configuration for ..."}, {"name":...},...]
 
-Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
----
- bin/bitbake-setup                                  | 14 ++++++++-----
- .../bitbake-user-manual-environment-setup.rst      | 21 ++++++++++++++++++--
- setup-schema/bitbake-setup.schema.json             | 23 +++++++++++++++++-----
- 3 files changed, 46 insertions(+), 12 deletions(-)
+Basically "options" remains a list, but each item in that list can be
+either a string, or a dictionary. That way more keys can be added to
+the dictionary in the future if needed.
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index abe7614c832..bb0a579bbed 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -494,20 +494,24 @@ def choose_fragments(possibilities, parameters, non_interactive, skip_selection)
-         if skip_selection and k in skip_selection:
-             logger.info("Skipping a selection of {}, as requested on command line. The resulting bitbake configuration may require further manual adjustments.".format(k))
-             continue
--        choice = [o for o in v["options"] if o in parameters]
-+        options = v["options"]
-+        choice = [o for o in options if o in parameters]
-         if len(choice) > 1:
--            raise Exception("Options specified on command line do not allow a single selection from possibilities {}, please remove one or more from {}".format(v["options"], parameters))
-+            raise Exception("Options specified on command line do not allow a single selection from possibilities {}, please remove one or more from {}".format(options, parameters))
-         if len(choice) == 1:
-             choices[k] = choice[0]
-             continue
- 
-         if non_interactive:
--            raise Exception("Unable to choose from options in non-interactive mode: {}".format(v["options"]))
-+            raise Exception("Unable to choose from options in non-interactive mode: {}".format(options))
- 
-         logger.plain("\n" + v["description"] + ":")
--        options_enumerated = list(enumerate(v["options"], 1))
-+        options_enumerated = list(enumerate(options, 1))
-         for n,o in options_enumerated:
--            logger.plain("{}. {}".format(n, o))
-+            opt_str = f"{n}. {o}"
-+            if isinstance(options, dict):
-+                opt_str += f"\t{options[o]}"
-+            logger.plain(opt_str)
-         option_n = int_input([i[0] for i in options_enumerated],
-                              "\nPlease select one of the above options by its number: ") - 1
-         choices[k] = options_enumerated[option_n][1]
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-index fcffab8123b..14d0f87aeb4 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-@@ -747,11 +747,21 @@ They contain the following sections:
-                 "oe-fragments-one-of": {
-                     "machine": {
-                         "description": "Target machines",
--                        "options" : ["machine/qemux86-64", "machine/qemuarm64", "machine/qemuriscv64", "machine/genericarm64", "machine/genericx86-64"]
-+                        "options" : {
-+                            "machine/qemux86-64": "Machine configuration for running an x86-64 system on QEMU",
-+                            "machine/qemuarm64": "Machine configuration for running an ARMv8 system on QEMU",
-+                            "machine/qemuriscv64": "Machine configuration for running an RISC-V system on QEMU",
-+                            "machine/genericarm64": "Machine configuration for Arm64 SystemReady IR/ES platforms",
-+                            "machine/genericx86-64": "Machine configuration for generic x86_64 (64-bit) PCs and servers"
-+                        }
-                     },
-                     "distro": {
-                         "description": "Distribution configuration variants",
--                        "options" : ["distro/poky", "distro/poky-altcfg", "distro/poky-tiny"]
-+                        "options" : {
-+                            "distro/poky": "Distro configuration for Poky (Yocto Project Reference Distro)",
-+                            "distro/poky-altcfg": "Distro configuration for Poky (systemd init manager)",
-+                            "distro/poky-tiny": "Distro configuration for Poky (optimized for size)"
-+                        }
-                     }
-                 },
-                 "configurations": [
-@@ -840,6 +850,13 @@ They contain the following sections:
-    -  ``oe-fragments-one-of`` (*optional*, OpenEmbedded specific): the OpenEmbedded
-       fragments to select as part of the build.
- 
-+      This can one of two formats:
-+
-+      -  A dictionary where keys are fragments names and values are descriptions
-+         for these fragments (like in the example above).
-+
-+      -  A list of fragment names.
-+
-       This will trigger choices to make during the
-       :ref:`ref-bbsetup-command-init` command execution.
- 
-diff --git a/setup-schema/bitbake-setup.schema.json b/setup-schema/bitbake-setup.schema.json
-index e51fef3b97c..51035fbaa53 100644
---- a/setup-schema/bitbake-setup.schema.json
-+++ b/setup-schema/bitbake-setup.schema.json
-@@ -61,11 +61,24 @@
-                             },
-                             "oe-fragments": {
-                                 "$anchor": "oe-fragments",
--                                "type": "array",
--                                "description": "List of BitBake configuration fragments to enable",
--                                "items": {
--                                    "type": "string"
--                                }
-+                                "oneOf": [
-+                                    {
-+                                        "type": "array",
-+                                        "description": "List of BitBake configuration fragments to enable",
-+                                        "items": {
-+                                            "type": "string"
-+                                        }
-+                                    },
-+                                    {
-+                                        "type": "object",
-+                                        "description": "Dictionary of BitBake configuration fragments to enable (with description)",
-+                                        "patternProperties": {
-+                                            ".*": {
-+                                                "type": "string"
-+                                            }
-+                                        }
-+                                    }
-+                                ]
-                             },
-                             "oe-fragments-one-of": {
-                                 "type": "object",
-
--- 
-2.52.0
-
+Alex
 
