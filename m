@@ -1,218 +1,363 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <rob.woolleywr@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED841D2ECE9
-	for <webhook@archiver.kernel.org>; Tue, 20 Jan 2026 13:48:26 +0000 (UTC)
-Received: from DUZPR83CU001.outbound.protection.outlook.com (DUZPR83CU001.outbound.protection.outlook.com [52.101.66.2])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.6649.1768916904803243982
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E25D262A3
+	for <webhook@archiver.kernel.org>; Tue, 20 Jan 2026 21:19:42 +0000 (UTC)
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.17339.1768943981834625476
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 20 Jan 2026 05:48:25 -0800
+ Tue, 20 Jan 2026 13:19:41 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=selector1 header.b=f8hdrq10;
- spf=pass (domain: axis.com, ip: 52.101.66.2, mailfrom: peter.kjellerstedt@axis.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jbmZoftvWB4ZIuSSdpgQVoiVWPAIqqkBMNHBCeHW0s93H2m1v5JPwqiYnF8TdTNUH2lwxp+fgj8EkHhkqDM8//yX87BYgaJOMAG/EmyP0/nexrKyvkl86KZ11iqfS8rsU+/agJ8Rk/us81vTlr1udnjiSaTHAIxOrrnt+w6Yz06xMx7U4+pmnsxurQFssmQa8ezTFgNMe108LnZ2m4Y+SPHTx3pSmMoJnhQJtiwL073GzT5f3w2NQvmb4HGJ/cdeTxIMx5Na1UjazGDjyrlcV3oftJeajPHLqFVquZeZb37w2pU+G16uwwVexSXH27TJTwvcXUFRuIPan55f1uT8vw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fQXf60V3RHFK3tcFj317S1XSvM7lnnKdGxpancCDEHQ=;
- b=GE5xdF5b6/dIzHcoi6/5CkA8y5ap7q6u4hLRI0xO/imFBdUua11uJ7lHoEzANHvYZfwD/mKT7mILOGgn/Wojwk5K/KsnCWASuVr37oUmCSVHOMceQl14Cxg5SiAOXEvv6LkkWguLzc8qn0OKUKwnda90ByWj5PGeYUeAuQBlrSo9BMXK5fID1/YY3QWw+rhi7ZztkzJepT02WX5HCtgCW0rS+P9HyMzgyWYaebjd7glh3yT050mPRPw/FY/KDaVTRBm08JbinECSg3LzeePTWjrv2oLo4NNiEGLys1jNgk95Ynjuq+iZq0fUUkTAqsbGkXENPU8MYrwB+nW8HL5Gmw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
- dkim=pass header.d=axis.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fQXf60V3RHFK3tcFj317S1XSvM7lnnKdGxpancCDEHQ=;
- b=f8hdrq10ipi8uBA+ZOyXktZElP7+HD8Xy1noXEEivnabHEEZu3XILYLF3HK5Rmj1E6frw5pxbUuQ5RW/cgQ6KwjkPLC8eTg6vXkf7KmAJWqwIiL9GObSuUxb8chh8DiEKwWAWOfe+5OjB3pUNYB65s1ggQjajxg1fIdLU0mRWsI=
-Received: from DB5PR02MB10213.eurprd02.prod.outlook.com (2603:10a6:10:4a8::17)
- by GV4PR02MB11326.eurprd02.prod.outlook.com (2603:10a6:150:296::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.12; Tue, 20 Jan
- 2026 13:48:20 +0000
-Received: from DB5PR02MB10213.eurprd02.prod.outlook.com
- ([fe80::1bee:3174:a078:5af9]) by DB5PR02MB10213.eurprd02.prod.outlook.com
- ([fe80::1bee:3174:a078:5af9%7]) with mapi id 15.20.9520.003; Tue, 20 Jan 2026
- 13:48:19 +0000
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: "uvv.mail@gmail.com" <uvv.mail@gmail.com>, Alexander Kanavin
-	<alex.kanavin@gmail.com>
-CC: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>, Yoann Congal <yoann.congal@smile.fr>
-Subject: RE: [bitbake-devel] bitbake-setup update problem
-Thread-Topic: [bitbake-devel] bitbake-setup update problem
-Thread-Index: AQHccyDvmDSJG5dctkCNDN3fz4V8KrUtXygAgAABNgCAGuoU3IAPfbGAgANzlgA=
-Date: Tue, 20 Jan 2026 13:48:19 +0000
-Message-ID: 
- <DB5PR02MB10213E60D96F5D4AE9C5DBB93EF89A@DB5PR02MB10213.eurprd02.prod.outlook.com>
-References: <a0cf0864-dd61-48db-b856-575f8fc4c149@gmail.com>
- <CAMSfU+71B0VQvP7U5BPDcgY++q=PMY3pfTOWdOREXorwAAU9bA@mail.gmail.com>
- <1dc33b07-759f-499f-82cb-84e5c20f77ec@gmail.com>
- <1883858B93EFC423.1614991@lists.openembedded.org>
- <188385EDFF4B6429.1342979@lists.openembedded.org>
- <18870377D56AF168.1986633@lists.openembedded.org>
- <CANNYZj8+msix6SFiCH=4UcLogt-+zA6=keGtXtBPbTE8vKTqoA@mail.gmail.com>
- <df05a1fd-23ba-45be-886e-886e4a79cb74@gmail.com>
-In-Reply-To: <df05a1fd-23ba-45be-886e-886e4a79cb74@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axis.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DB5PR02MB10213:EE_|GV4PR02MB11326:EE_
-x-ms-office365-filtering-correlation-id: 957b41ca-38ab-4bc6-ec6d-08de582a924d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700021;
-x-microsoft-antispam-message-info: 
- =?utf-8?B?OTJZUmtiWjJ5ZlZjSmRNQTI1dmRlWXRJZU9qcEJ0UlZ5L3RDS3JmaW1vaXlU?=
- =?utf-8?B?aUlEd1VOdVYvbTJkdHdoSS9BUFBES3I2SUJ5TTFlZm9LNHZmeDVaVUNFNjVY?=
- =?utf-8?B?MmtBSDQyN1REZjR1Y0JuQkM4NFQrZllEQUxXQTdjTTNmWUhyRnR6SzR6Q1pI?=
- =?utf-8?B?V1NOazdGMmtINEM1c3gxUDQyYjFVamxXWWFaaHJhQXVFRVlabTYwTGRDWTVY?=
- =?utf-8?B?bkhHbFJCa0p1aFlPaTZmVjl2U1B3STVLRGdFdjNQaEhsUXkxbHZQd0NVOTRw?=
- =?utf-8?B?NXp3enlSa24xbGxBZGQrRW5TYmJoQVZvbm9MUDVqQVQ5aHZzd3orUWo4aFhJ?=
- =?utf-8?B?Sm9vMmpaKzVYdWliQnpoZG5pMFNlZm8zRnBIZmhjcXVhbXRwOWZBR2Z2d1Fq?=
- =?utf-8?B?cmUxc1NybUNCY1I2RlEyZy83TkdhZlZnUTJPR1A3ZVdybG9UT3oyczNkRFU0?=
- =?utf-8?B?UVNqc205THR1MUVCM0NvVUtmYVRLR1A1SnFSOEM5a3FvR0owVWlnWGNRc05P?=
- =?utf-8?B?R1MxdktOaWVsSTFNSUY2bkZ6TXpQdzF4ZTMvb0ltMHpxTXJrSmVWS2pDN05S?=
- =?utf-8?B?enVyTExCZ0dBV2xHZnkvMHI1NVhLeWdXRncxNWttL1pXZWR0eHV6U1RyNXcz?=
- =?utf-8?B?d2tXZ0F6R05hVzZaaXU1UEcvWUc0bEcvZkkzcGFBcDFXOHFVQTdkVmZtTi9C?=
- =?utf-8?B?UnlkUnljY1ZzQUJxZVBHd1FwN0Ntb0VLY0N0ZnFZVFJZOUdWRDhGNkFSWlV2?=
- =?utf-8?B?bkNPTHRFVVJWbmQ3NDJ1bjZnQlV0cmVoUjZ1RC9EVlVFLzBQaEp0NWlZNWdV?=
- =?utf-8?B?NWlpNSszQmZ1akY0OU5CaVl6Y09adEVHaGVKaUE5c3ErTlFCN2p0dW13VGlt?=
- =?utf-8?B?dk1wajk5WkxHRzcvc0FDSU95QmdXa01pb09QRGRnSmxpTDJ6Ryt3eVBSNWJG?=
- =?utf-8?B?am55dXN5ZHEySk05RCtTbDZMQjNRWm5GZGQyeXRBbkNQUkZNak1samtGQ1B6?=
- =?utf-8?B?bUhtd3JnTjAzanZ3Rmd2MkZjT00weEt2VGV6cFhuZnl0STNaVU5DbnQ4dFJz?=
- =?utf-8?B?ZXJWZUtGRy9KTlpRODVOdDZtTmtMaVhycU52RjRBTDd3MHNJSHVzSVl0T1dQ?=
- =?utf-8?B?NFkzeTlYdGZRbm0ra3pZampzaWk0SnBxbjlveVpaMGNYWE5VUXVsN3REMHJS?=
- =?utf-8?B?dzdxbEVpL1UrdW5sZXlSdm9HenZ2c3lKZ25MZzlOMlUwZkMxRFI4d3VzVG5B?=
- =?utf-8?B?RnZuZjdGclhlY0pVcThxQXpTZW1GVEc5R2JFWUF0T0N2MGthdStPUGltOTJ4?=
- =?utf-8?B?WGpMSG9CRG9UVVA2SGFvRk9QRmdKUHYyVEdDUE9hWWNSU3A4VVBKS243UUpY?=
- =?utf-8?B?WW5CT0VIaXhZSkEyL09uM0ZaVGo3aUo4bVRRdis4ZEhGcXhaRWJuR1Vsbkda?=
- =?utf-8?B?L2xDZCtvUkN6ZjZBYytYVWZMTVNXQmxhM1BzOE8zR1ZJeTE4T1Z0bTBUL1d4?=
- =?utf-8?B?dk5SVXBJZFJBbDJYZjN5d1hCblVrdWZodkpldVd0Y1htaDZLdFdRbXM3M3BV?=
- =?utf-8?B?SjRkbFpFUEs5dGZnZHBXVllEUjRIYlFxT1NlejlPVllZUVpoQk9DbFV2c0k1?=
- =?utf-8?B?UlVNQXpweklFMjRaZFZKYi9UcEVZSDJJTmNxNU9YOWxrQkkxeXAxSnJHS1Rq?=
- =?utf-8?B?VUVIMFJnYTg5eXIzS05DVTV0WVF1S3NPUEVXTmVvV0VGVDYwY25pTmhTQnc5?=
- =?utf-8?B?aElDcnNwRW0rQ3Y4VHF0YzkwRTRwb3FneVhYK3BZdTlVWnV1SlU0NG1EeXc0?=
- =?utf-8?B?NTlaNW5KZm5helpQaDBXR0xaaVkyMVQ0WXpYMVBkZ2crWGVMeTFRLy9oZXNq?=
- =?utf-8?B?ci9kb3FOYXJsNW1SLzF3YXNEeU9PTEhOT1pBckxYOTJVMjU4UEdqWFN1N29S?=
- =?utf-8?B?M3NXaTN6eE03ek9pc2wrWjdOM2hQbmlnZ3RRWCtnOTVZa1h2N3luM3hhTml2?=
- =?utf-8?B?b3Z2TGw3MUx5WnhTai9oTTBGcE5hZmpCMXAvOWNMaktsMHVrdzVXaVlXdkJ4?=
- =?utf-8?B?dnpHTXFreWhhWmxDUjRXbldCU2o1YmQySjNhL0wzeE5ZamIwQVQ5Z0FaSDVS?=
- =?utf-8?B?RlR0aXdsUnZpbzZzQWtMd1ZqVzAzbWRINkRmdldyZnNncDlubXF6Sm00eGVX?=
- =?utf-8?Q?W73wcynuuqRK998QAr34Fro=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB5PR02MB10213.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?utf-8?B?VEd4OER4amxTWXhiUjZRWXlJSVdLbkxCNFYwOWhHNG05Q2REMW9aeVhSa0Zv?=
- =?utf-8?B?WXUwS1k2d01RalFMMVBXcG52SmZ2VlZSRjRzM20xeU90RHA4cVZzR0ozMjZK?=
- =?utf-8?B?cW1CS1YvdUc4TC8yRWVHSSsvZElzMUE1TTNqak52TjlueU1tZlliK1lmQisv?=
- =?utf-8?B?NmRzL1FqS0lJNWswaWNXODBjYU45MmxGaWFDamVhWkhBN3Q2czJCaFg0THhS?=
- =?utf-8?B?Yk9rZDNlamhKS2pQdTJ4djdqMW1zM1o1d2NvTDR3VHgwRlFjaVUzWmpYb0lO?=
- =?utf-8?B?dG9iSUhkYlVMRGl5MU80dXZxYnlvMFlob29uTS9vaWF1bDJCT0NYOHdhZ3Y1?=
- =?utf-8?B?NE94NDZra2tGQ25QUUlyVmR5NDZFWTlWaklNMGxMcFNnKy8zSElFOHlrNnk0?=
- =?utf-8?B?dFQvY1F3eG9mV2l5ZkdEemFGV1F0WUZ0TTBzNG1NWFl0S0tENkhjQVMrM0s3?=
- =?utf-8?B?cnYzY0NyaHRwdlhkdngwN3JTUmx3bkt4UStFeWV3T2RPbzAreFg4WnpNZytQ?=
- =?utf-8?B?TDNxSnJhOHY2MThHVEJJbHZMdEo1YVlOK0w3NjFKYnJNazgwWDEzMzE4MGdC?=
- =?utf-8?B?L000eXpvczVVdFI4c1BpWU13cHJXakJXdS9uMit3aHlZcVpBV01YT3N1eXJk?=
- =?utf-8?B?WEt3S2dRUXoycVJYSTNrVU5ianQzN3ZoNDgvVGRkY1NhZ2xPUWJRdDRtWDRu?=
- =?utf-8?B?RnNWcy9aNWRkQUdmQ25UVFhWR241eExSYmtwQ0VCZFdmOXJQTG5YaTYyZ0dP?=
- =?utf-8?B?S2pkd3A1RGJnd0NMUjF1QnUwTnBBQzhjSWdGU2FBcGFOYzJsQmNMM0lyTTdL?=
- =?utf-8?B?T3dQaEx4MXR5cThtT0VMTVg1akJHek9iT1R5NDFCR1ROYXR2RTBBcmxia1g1?=
- =?utf-8?B?QmNWaGp6VUMzQnNISEdxK21vRzhBcXlBN2VUaHIyS2JQSHZMNGRtRm0xYjhx?=
- =?utf-8?B?dEdjMHNIOUNhd3BBOEZtQy9QeHd6V1pJWEFTVGxpUk1lVzhiMkZKUS9WMTNk?=
- =?utf-8?B?M2gyOWdnTDVFT3ZYaWY5aGVtclNFS3RRZkg4dVUxRG0vVFdCbm43V3BuWkxr?=
- =?utf-8?B?aW9kU1RPQWJWa0VPQUVOREZKOWhsREkvdkh4czdvSDhQUVJSVENuU2hvTm0z?=
- =?utf-8?B?ZzJHZzEwZlpNV0VQQ3NEdDloRlhCcm81ZFdSTkwwTlBEbnJzT0g3OUxvd3k1?=
- =?utf-8?B?Q1NQNHh0S3c5TzFYWHN2UUNVMG5Hc0xVSXVMTStKdytiR002dEsxSERIWWJk?=
- =?utf-8?B?eHBIL3NvSXZscEMrc2pYaCtZcFRaRzVkUEJ6M0hTVUdpM09aaDY0WmtYaTJH?=
- =?utf-8?B?RlU4MUxPRGFyMHBoSUp6dmFPcGZYRTRENzVpU2p2TjFwWlkxZzc0Z1NWQ0wy?=
- =?utf-8?B?U1E3RldpN25oM2dla1RscjNOeFVibmFKcHVPWmZOSC9VY1k3cXd0allvRTY3?=
- =?utf-8?B?OVpEd0VPSG4yb2NDcDlYVys0ZDRVU3hQbm5Pcy9FMDBUMHc1ZzNGQVB6dzNy?=
- =?utf-8?B?cm5TOWNETG1HdDk5b2FHS2JuMy9qMUpEQXRYYWoya2pXTEkrb1ZKSG5xRTdF?=
- =?utf-8?B?TWNxVTErWFpzZkM1Ry92K1dxYk1PVUYrSVRaVUZMSlR3dW9oN0pzMngvNWVZ?=
- =?utf-8?B?T3JMdnMrRmpXN2xuUHRCOEgyOW56MFJMN2xvSHd3TjlxSHlpamVGa2oxU24x?=
- =?utf-8?B?QjNmM21hRkREd1NSWHRjNkVPRVpyeTdLZ3h1a1N3SXFNOVZwdUpuRGJIUEFO?=
- =?utf-8?B?aldEVWg0cDJzUS93Zm9uQSt6MnpiVnpmbUVBUHZkTS9FRFczQVlIUmM3NjZE?=
- =?utf-8?B?OS9MZmp5TWo2cTQ2Sm5NQ0hCT0UrdWs2VjNGbHJmWktaVGhJYzhodlFUeUh0?=
- =?utf-8?B?amwwSlBXTlEvcTNPVTBtWEJWQUxUUWp0WTZuK2MwWGlTa1l6Yllvci9Pbko5?=
- =?utf-8?B?QkVQVzV1NkE4QllrQkpFL0lId25QZFdwczhhc2h3R0d4VHdDOGg3bmtVRG85?=
- =?utf-8?B?QjNlZ0JaM2NBd1kvTk95dXY2Z0Y2eFlvSkJrQmJHRndQTWZRS0lWTkt1bGFX?=
- =?utf-8?B?dVA5SE1DWCtUbDF2MXA0R1BVSnNnTkl1eDhGakJDTkZQQklwR0dydVl6WjRy?=
- =?utf-8?B?V1R1MFF1aDNkWTVKTzJPTUZNazBIU2VDS2hLN1RIRno1M1JjVHlLMTlqZ3Vi?=
- =?utf-8?B?OHNmek1sUlgzdUxjMGhCbjA3SnRzejRnWk1sa3BONytTY1ZreEx6Tmh4dVNx?=
- =?utf-8?Q?H2nC/72PFsDkUp9CGV1oAO236tjD2Hs5SMdzO0nQw4=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Z3IDbkLP;
+ spf=pass (domain: gmail.com, ip: 209.85.128.176, mailfrom: rob.woolleywr@gmail.com)
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-7927b1620ddso4598317b3.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 20 Jan 2026 13:19:41 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1768943981; cv=none;
+        d=google.com; s=arc-20240605;
+        b=FTXBdidV0DfJSziAbLSEN1PjZCXeKzm2Llcbp4ZaT+JeV+cksQ/rouV/gTHHxqWbvt
+         iE7acHitLLQEY59Zj34O6hGmDg62+rjoc0QFTBb459g4QFblim/M63wdQKUyLqbr5uWC
+         4K2aODw22sp5Mjg0LxOWWe/+rEkAKP28wdtr4BOGvpdElrJlI7Q61oLKwyx54wOAWqMk
+         YZDbYqJx9tq3YZeUCCWZSxAq8BMLwkJaGp6X+UTSLci4Z2hqZnkypqCQ6cIIw6w+URYe
+         BRcTm1OF563d1DE9bLdN26vvaifVYsUjJF4q5wO0TpQSkPEsaMm+SWi4ssgA3XIjIl/4
+         S+0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=7SEvy2uKkKAblDtsg6VFTACJPg0pr6aYWso3FDvDBQc=;
+        fh=CBLIpFpDSR1ZSgtLtgUQ15hbal3lIR5M0HdUWYcS4mQ=;
+        b=QZRVvQJ+PdRXCL+pMxUaimpscJtiHZw/eHQV+7qn/i7Jfsmkrut95n8DUnHhVH8ZcF
+         T1bM7lPeZpWehZLwSrhiCG5bFWn7JlYRBx0TDsUgM/lGqX0/zJ/Ky9OX0vS/AxiDXq/P
+         G+J59kyqzKXL5xNW/bkYIwu0/Oeoq0HUjjTK7r32J52LXpXIlTtMjcg+gAkUzjck8ri7
+         W/p5simmhP/q/bVovel5Uqf93ubBx4o0Cjb2r6hq7vOHo3xab9Mt3yLHru7MPX1UmPj5
+         uaWuvMvLC3TctKdJP9ud79FFmWYGJ7sLvi9wZmGmycFeRgASuflDayFSk7as9dF7diAV
+         E9Vg==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768943981; x=1769548781; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=7SEvy2uKkKAblDtsg6VFTACJPg0pr6aYWso3FDvDBQc=;
+        b=Z3IDbkLPR0xBfT6X0qo5LXT3ymgKBPRU3seoluw75hHYiHEgzbOHVPtcP+QpYUUD5r
+         LF2Q2RKgOu/q1IHpDFkhI8aVPKD8w2VpG8LSbbceGfIGfFSjEAKfEjgyfJcZgCfURkta
+         /HgaiCesPlY/atoGc7XAgK+svH6/TlpQzc4NiWNcgjCtsaxdnd9czDR4SS6ClSRM9Iej
+         5NXkT0GK7I7FGnrTvFP4dpmfjztRhQOhSZhIw/b3S3OEDH8VNAPW3flKOjhqxKbIKpEg
+         BL4PI5l53+0o7qpPpjwDkhNgZrPNqQGzzKdoUyxCCC38Pu22pXFA3+t9lovfpRVexPr1
+         buyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768943981; x=1769548781;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7SEvy2uKkKAblDtsg6VFTACJPg0pr6aYWso3FDvDBQc=;
+        b=Ch3xrC5t4ZY6EWpuOU1ln2KfcQtB/WI4IEtK7H6K1w+LnmRelsX5xytgQoakESl2Jz
+         Y0FEr7xR5iayjHqjTj+lLSbuq3CcocM3kwzNa0JOCPFXlr0Jtn7N0L3OelYn6Zbgxw6t
+         il59Xq3NmP1s6rmLHFvatx0Hr77FL47VVbe1NDJEUtA2CA958bj4NatdONSsqplEVIVr
+         UhhlJe2cUoTBuRwPGZCNZk8BWELoYcJehyueU3XwPQac8K/2x/dUl64gsXmXFfaS3fAd
+         AwenjGar+nIMhnJrDPq4HVqAJatpPH8NaK8M0qThA4C4yb236041Ub7gewV8h0up/ffj
+         Nr/w==
+X-Forwarded-Encrypted: i=1; AJvYcCXn2E/9tnHKpKEPw1mnPlfvMQLV01NqNdPUF0kMobIMmMcBJenrgrhS2ZMvDJhZihCedc8DlmW3O90ZEgqM@lists.openembedded.org
+X-Gm-Message-State: AOJu0YxfE8hvkcL4Jl61l8RVYV3NhA+LgIAm2lhcFellmHG3erCJSlz5
+	Z1igVgAo/TgPQJUaE2tunhJLm/vsRjwxWVdazS4Mh/4hZm57+XsjsG1umsqqBMpGeBRqd68C1KI
+	JLXOGJOyLUW3ZKGFdjJjzOfcYfWhv4YI=
+X-Gm-Gg: AZuq6aL8Qc7tLXVsyRqLqfaoGFJQhOiIR/NfKnFhPebY9ZNEIlYXZy4t+HFvJ2dAeG5
+	oA0Ib2424LjMAKx+tQ6IHeUraUU2fnk6LEVhqxWgdlwXF/+3jwFjslR8n3xfO2bRZlDoGKLXfMe
+	yzCvdWadV+wvQn+JETCgKjvhVYFL0iRGERCqduOmaHM10Yfzs8HZQ7QV3zzRgt4fFvWSBd/q4eV
+	2nJwDXZknQKK1eQCUmIDYHnuDdy+3C0+v3z3y3k+W6JKSf8hxsKZ2sNdwn2CZSBVQ528n0G5sY/
+	+h3WOyRoDiJjT6bHZ5ZyXj8kisA=
+X-Received: by 2002:a05:690c:9c0b:b0:78f:cd29:51b9 with SMTP id
+ 00721157ae682-793c57f0aa2mr129653977b3.10.1768943980844; Tue, 20 Jan 2026
+ 13:19:40 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB5PR02MB10213.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 957b41ca-38ab-4bc6-ec6d-08de582a924d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jan 2026 13:48:19.9306
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Si6Si/tsWGQevudBkqsP2Fhu5ABaM49DxIB6L4gFpYqGKWoh+tphYn9HQshSQ8bp
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV4PR02MB11326
+References: <20260114113348.2991476-1-alex.kanavin@gmail.com> <188AEF393CB94A54.3093368@lists.openembedded.org>
+In-Reply-To: <188AEF393CB94A54.3093368@lists.openembedded.org>
+From: Rob Woolley <rob.woolleywr@gmail.com>
+Date: Tue, 20 Jan 2026 16:19:29 -0500
+X-Gm-Features: AZwV_QjaoZRvPxUBCjd_NLHmFFZ9kbmbB6vkaMdvMSCpOQrBIzY_tEmFjJ_WVV4
+Message-ID: <CAGAhMBxt23tFCAqfmCycxTyByXN_5=F4jHsfv0-XhjoFjsAeNA@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH v2] bitbake-setup: use internal registry
+ if run from git checkout, bitbake repo otherwise
+To: rob.woolleywr@gmail.com
+Cc: alex.kanavin@gmail.com, bitbake-devel@lists.openembedded.org, 
+	Alexander Kanavin <alex@linutronix.de>
+Content-Type: multipart/alternative; boundary="0000000000009b1a5a0648d85d15"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 20 Jan 2026 13:48:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18820
+ <bitbake-devel@lists.openembedded.org>; Tue, 20 Jan 2026 21:19:42 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18821
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBiaXRiYWtlLWRldmVsQGxpc3Rz
-Lm9wZW5lbWJlZGRlZC5vcmcgPGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZz4g
-T24gQmVoYWxmIE9mIFZ5YWNoZXNsYXYgWXVya292IHZpYSBsaXN0cy5vcGVuZW1iZWRkZWQub3Jn
-DQo+IFNlbnQ6IGRlbiAxOCBqYW51YXJpIDIwMjYgMDk6NDgNCj4gVG86IEFsZXhhbmRlciBLYW5h
-dmluIDxhbGV4LmthbmF2aW5AZ21haWwuY29tPg0KPiBDYzogYml0YmFrZS1kZXZlbEBsaXN0cy5v
-cGVuZW1iZWRkZWQub3JnOyBZb2FubiBDb25nYWwgPHlvYW5uLmNvbmdhbEBzbWlsZS5mcj4NCj4g
-U3ViamVjdDogUmU6IFtiaXRiYWtlLWRldmVsXSBiaXRiYWtlLXNldHVwIHVwZGF0ZSBwcm9ibGVt
-DQo+IA0KPiBPbiAwOC4wMS4yMDI2IDEzOjE0LCBBbGV4YW5kZXIgS2FuYXZpbiB3cm90ZToNCj4g
-PiBPbiBGcmksIDIgSmFuIDIwMjYgYXQgMjE6MTksIEFsZXhhbmRlciBLYW5hdmluIHZpYQ0KPiA+
-IGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcgPGFsZXgua2FuYXZpbj1nbWFpbC5jb21AbGlzdHMub3Bl
-bmVtYmVkZGVkLm9yZz4NCj4gPiB3cm90ZToNCj4gPg0KPiA+PiBJIHBvc3RlZCBhIHBhdGNoIHdo
-aWNoIGFkZHMgdGhlIGxvY2FsIG1vZGlmaWNhdGlvbnMgY2hlY2suDQo+ID4+IFVuZm9ydHVuYXRl
-bHkgSSBjb3VsZG4ndCBmaWd1cmUgb3V0IGhvdyB0byBjaGVjayBmb3IgYWRkaXRpb25hbCBsb2Nh
-bA0KPiA+PiBicmFuY2hlczogaXQgY2hlY2tzIG9ubHkgaWYgdGhlcmUgYXJlIHVuY29tbWl0dGVk
-IGNoYW5nZXMsIG9yIGNoYW5nZXMNCj4gPj4gb24gdGhlIGN1cnJlbnQgYnJhbmNoLiBJZiB5b3Ug
-aGF2ZSBpZGVhcyBJJ2QgYXBwcmVjaWF0ZSAoc2ltcGx5DQo+ID4+IHJ1bm5pbmcgJ2dpdCBicmFu
-Y2gnIGFuZCBjb3VudGluZyB0aGUgbGluZXMgZG9lcyBub3Qgd29yaywgYXMgZ2l0DQo+ID4+IGZl
-dGNoZXIncyB1bnBhY2sgZmlyc3QgdW5wYWNrcyBtYXN0ZXIsIHRoZW4gY2hlY2tzIG91dCB0aGUg
-ZmluYWwNCj4gPj4gYnJhbmNoIGlmIG5lY2Vzc2FyeSwgc28gYm90aCBvbmUgYW5kIHR3byBicmFu
-Y2hlcyBjYW4gbWVhbiBubyBsb2NhbA0KPiA+PiBtb2RpZmljYXRpb25zKS4NCj4gPiBUaGUgbW9y
-ZSBJIHRoaW5rIGFib3V0IGl0LCB0aGUgbW9yZSBJJ20gY29udmluY2VkIGdpdCByZXBvc2l0b3Jp
-ZXMNCj4gPiBtYW5hZ2VkIGJ5IGJpdGJha2Utc2V0dXAgc2hvdWxkIGhhdmUgYSBjb21taXQgaG9v
-ayB0aGF0IHByZXZlbnRzDQo+ID4gbWFraW5nIGNvbW1pdHMgYWx0b2dldGhlciBhbmQgdGVsbHMg
-dXNlcnMgdG8gdXNlICdiaXRiYWtlLXNldHVwIGluaXQNCj4gPiAtTCByZXBvIGxvY2FsLXBhdGgn
-Lg0KPiA+DQo+ID4gVGhlIGxvY2FsIG1vZGlmaWNhdGlvbnMgY2hlY2sgc2hvdWxkIHJlbWFpbiwg
-dG8gZ3VhcmQgZm9yIGNhc2VzIHdoZXJlDQo+ID4gdGhlcmUgYXJlIHVuY29tbWl0dGVkIGNoYW5n
-ZXMuDQo+ID4NCj4gPiBJJ2xsIG1ha2UgYSB2My4NCj4gPg0KPiA+IEFsZXgNCj4gDQo+IFRoaXMg
-aXMgd2h5IEkgZG9uJ3QgbGlrZSAncmVwbycgYW5kIG90aGVyIHdyYXBwZXJzIHRoYXQgcmVxdWly
-ZSB0aGF0LiBJDQo+IGRvbid0IHdhbnQgdG8gdXNlIGFub3RoZXIgdG9vbCBvbiB0b3Agb2YgZ2l0
-Lg0KPiANCj4gU2xhdmENCg0KSSdtIG5vdCBzdXJlIHdoeSB5b3UgYXJlIHBvaW50aW5nIGF0IHJl
-cG8gaGVyZSwgYmVjYXVzZSB0aGlzIGlzIGFjdHVhbGx5IA0KYSB1c2UgY2FzZSB0aGF0IHJlcG8g
-aGFuZGxlcyBleHRyZW1lbHkgd2VsbC4gV2UgaGF2ZSBiZWVuIHVzaW5nIHJlcG8gZm9yIA0Kb3Zl
-ciB0ZW4geWVhcnMgdG8gbWFpbnRhaW4gdGhlIG1hbmlmZXN0cyBmb3IgYWxsIG91ciBidWlsZHMs
-IGFuZCAoQUZBSUspIA0Kd2UgaGF2ZSBub3QgaGFkIGEgc2luZ2xlIGNhc2Ugb2YgcmVwbyBsb29z
-aW5nIGFueSBkYXRhIGR1ZSB0byBkb2luZyBhbiANCnVwZGF0ZS4NCg0KV2hhdCByZXBvIGRvZXMg
-aXMgZmlyc3QsIGlmIHRoZXJlIGFyZSB1bmNvbW1pdHRlZCBjaGFuZ2VzLCB0aGVuIGl0IHdpbGwg
-DQpub3QgdXBkYXRlIHRoYXQgc3BlY2lmaWMgcmVwb3NpdG9yeSB1bnRpbCB0aG9zZSBjaGFuZ2Vz
-IGhhdmUgZWl0aGVyIGJlZW4gDQpyZW1vdmVkIG9yIGNvbW1pdHRlZC4gU2Vjb25kLCBpdCByZWJh
-c2VzIGFsbCBsb2NhbCBjb21taXRzIGR1cmluZyB0aGUgDQp1cGRhdGUuIFRoaXMgY2FuIG9mIGNv
-dXJzZSByZXN1bHQgaW4gYSBjb25mbGljdCwgd2hpY2ggdGhlbiBuZWVkcyB0byBiZSANCmhhbmRs
-ZWQgbWFudWFsbHksIGp1c3QgbGlrZSBhbnkgb3RoZXIgR2l0IGNvbmZsaWN0IHJlc29sdXRpb24u
-IFdoYXQncyANCm1vcmUsIHJlcG8gYWxzbyBoYW5kbGVzIGEgcmVwb3NpdG9yeSBiZWluZyByZW1v
-dmVkIGFuZCBsYXRlciByZWFkZGVkIA0Kd2l0aG91dCBsb29zaW5nIGFueSBtZXRhZGF0YS4gVGhp
-cyBpcyBiZWNhdXNlIHJlcG8gYWN0dWFsbHkgZG9lcyBub3QgDQprZWVwIG1vc3Qgb2YgR2l0J3Mg
-bWV0YWRhdGEgaW4gdGhlIC5naXQgZGlyZWN0b3J5IGZvciBlYWNoIHJlcG9zaXRvcnksIA0KYnV0
-IHJhdGhlciBpbiBpdHMgb3duIC5yZXBvIGRpcmVjdG9yeS4gVGhpcyBhbGxvd3MgZm9yIGdvaW5n
-IGJhY2sgYW5kIA0KZm9ydGggaW4gbWFuaWZlc3QgcmV2aXNpb25zIGV2ZW4gd2hlbiB0aGVyZSBh
-cmUgY2hhbmdlcyB0byB3aGljaCANCnJlcG9zaXRvcmllcyBhcmUgYmVpbmcgY2hlY2tlZCBvdXQs
-IHdpdGhvdXQgZmVhciBvZiBsb3NpbmcgYW55IGRhdGEuDQoNCi8vUGV0ZXINCg0K
+--0000000000009b1a5a0648d85d15
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Alex,
+
+I tested your fix and confirm that it works both with and without the .git
+directory present.  When .git/ is missing I see the lines:
+
+NOTE: Fetching configuration registry
+    git://
+git.openembedded.org/bitbake;protocol=3Dhttps;branch=3Dmaster;rev=3Dmaster
+into
+
+/ala-lpggp21/rwoolley/vanilla-bitbake-setup/bitbake-builds/.bitbake-setup-c=
+ache/configurations
+
+In both cases, "bitbake-setup init" completes successfully.
+
+I also rebased my Python packaging changes and hope to push the patches
+soon.
+
+Regards,
+Rob
+
+On Thu, Jan 15, 2026 at 9:53=E2=80=AFAM Rob Woolley via lists.openembedded.=
+org
+<rob.woolleywr=3Dgmail.com@lists.openembedded.org> wrote:
+
+> Hi Alex,
+>
+> Thanks! I will give this a try.
+>
+> I have a need to be able to use bitbake-setup for air-gapped builds. I
+> will experiment with how we might make this work for situations where
+> git.openembedded.org is unavailable.  (In the past I have used git
+> "insteadof" to accomplish this)
+>
+> Regards,
+> Rob
+>
+> On Wed, Jan 14, 2026 at 6:33=E2=80=AFAM Alexander Kanavin via
+> lists.openembedded.org <alex.kanavin=3Dgmail.com@lists.openembedded.org>
+> wrote:
+>
+>> From: Alexander Kanavin <alex@linutronix.de>
+>>
+>> If bitbake-setup is packaged and obtained from pypi, or another package
+>> feed
+>> it needs to be able to find standard configurations. It is not impossibl=
+e
+>> to package configurations into some location inside the package
+>> and add logic to find them, but it is much easier to just fetch the
+>> bitbake
+>> repo and use that as a configuration registry. The other benefit is that
+>> such packaged/installed bitbake-setup will not have to be updated in ord=
+er
+>> to obtain latest configurations: it will simply check the registry and
+>> fetch
+>> them as needed, which is the original intent of config registries as
+>> repos.
+>>
+>> Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+>> ---
+>>  bin/bitbake-setup | 15 ++++++++++++---
+>>  1 file changed, 12 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+>> index 2c2b6d8ec..4ed06fc62 100755
+>> --- a/bin/bitbake-setup
+>> +++ b/bin/bitbake-setup
+>> @@ -21,8 +21,6 @@ import signal
+>>  import functools
+>>  import string
+>>
+>> -default_registry =3D os.path.normpath(os.path.dirname(__file__) +
+>> "/../default-registry")
+>> -
+>>  bindir =3D os.path.abspath(os.path.dirname(__file__))
+>>  sys.path[0:0] =3D [os.path.join(os.path.dirname(bindir), 'lib')]
+>>
+>> @@ -37,6 +35,17 @@ GLOBAL_ONLY_SETTINGS =3D (
+>>      "top-dir-name",
+>>  )
+>>
+>> +# If bitbake is from a release tarball or somewhere like pypi where
+>> +# updates may not be straightforward, prefer to use the git repo as the
+>> +# default registry
+>> +def get_default_registry():
+>> +    internal_registry =3D os.path.normpath(os.path.dirname(__file__) +
+>> "/../default-registry")
+>> +    git_registry =3D "git://
+>> git.openembedded.org/bitbake;protocol=3Dhttps;branch=3Dmaster;rev=3Dmast=
+er"
+>> +    if os.path.exists(os.path.dirname(__file__) + "/../.git"):
+>> +        return internal_registry
+>> +    else:
+>> +        return git_registry
+>> +
+>>  def cache_dir(top_dir):
+>>      return os.path.join(top_dir, '.bitbake-setup-cache')
+>>
+>> @@ -1084,7 +1093,7 @@ def main():
+>>          builtin_settings['default'] =3D {
+>>                           'top-dir-prefix':os.getcwd(),
+>>                           'top-dir-name':'bitbake-builds',
+>> -                         'registry':default_registry,
+>> +                         'registry':get_default_registry(),
+>>                           'use-full-setup-dir-name':'no',
+>>                           'common-sstate':'yes',
+>>                           }
+>> --
+>> 2.47.3
+>>
+>>
+>>
+>>
+>>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#18782):
+> https://lists.openembedded.org/g/bitbake-devel/message/18782
+> Mute This Topic: https://lists.openembedded.org/mt/117259398/556952
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
+> rob.woolleywr@gmail.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
+>
+
+--0000000000009b1a5a0648d85d15
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi Alex,<div><br></div><div>I tested your fix and confirm =
+that it works both with and without the .git directory present.=C2=A0 When =
+.git/ is missing I see the=C2=A0lines:</div><div><br></div><div>NOTE: Fetch=
+ing configuration registry<br>=C2=A0 =C2=A0 git://<a href=3D"http://git.ope=
+nembedded.org/bitbake;protocol=3Dhttps;branch=3Dmaster;rev=3Dmaster">git.op=
+enembedded.org/bitbake;protocol=3Dhttps;branch=3Dmaster;rev=3Dmaster</a><br=
+>into<br>=C2=A0 =C2=A0 /ala-lpggp21/rwoolley/vanilla-bitbake-setup/bitbake-=
+builds/.bitbake-setup-cache/configurations<br><br>In both cases, &quot;bitb=
+ake-setup init&quot; completes successfully.<br><br>I also rebased my Pytho=
+n packaging changes and hope to push the patches soon.<br><br>Regards,</div=
+><div>Rob</div></div><br><div class=3D"gmail_quote gmail_quote_container"><=
+div dir=3D"ltr" class=3D"gmail_attr">On Thu, Jan 15, 2026 at 9:53=E2=80=AFA=
+M Rob Woolley via <a href=3D"http://lists.openembedded.org">lists.openembed=
+ded.org</a> &lt;rob.woolleywr=3D<a href=3D"mailto:gmail.com@lists.openembed=
+ded.org">gmail.com@lists.openembedded.org</a>&gt; wrote:<br></div><blockquo=
+te class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px =
+solid rgb(204,204,204);padding-left:1ex"><div dir=3D"ltr">Hi Alex,<div><br>=
+</div><div>Thanks! I will give this a try.</div><div><br></div><div>I have =
+a need to be able to use bitbake-setup for air-gapped builds. I will experi=
+ment with how we might make this work for situations where <a href=3D"http:=
+//git.openembedded.org" target=3D"_blank">git.openembedded.org</a> is unava=
+ilable.=C2=A0 (In the past I have used git &quot;insteadof&quot; to accompl=
+ish this)</div><div><br>Regards,</div><div>Rob</div></div><br><div class=3D=
+"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Wed, Jan 14, 2026 at=
+ 6:33=E2=80=AFAM Alexander Kanavin via <a href=3D"http://lists.openembedded=
+.org" target=3D"_blank">lists.openembedded.org</a> &lt;alex.kanavin=3D<a hr=
+ef=3D"mailto:gmail.com@lists.openembedded.org" target=3D"_blank">gmail.com@=
+lists.openembedded.org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_q=
+uote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,2=
+04);padding-left:1ex">From: Alexander Kanavin &lt;<a href=3D"mailto:alex@li=
+nutronix.de" target=3D"_blank">alex@linutronix.de</a>&gt;<br>
+<br>
+If bitbake-setup is packaged and obtained from pypi, or another package fee=
+d<br>
+it needs to be able to find standard configurations. It is not impossible<b=
+r>
+to package configurations into some location inside the package<br>
+and add logic to find them, but it is much easier to just fetch the bitbake=
+<br>
+repo and use that as a configuration registry. The other benefit is that<br=
+>
+such packaged/installed bitbake-setup will not have to be updated in order<=
+br>
+to obtain latest configurations: it will simply check the registry and fetc=
+h<br>
+them as needed, which is the original intent of config registries as repos.=
+<br>
+<br>
+Signed-off-by: Alexander Kanavin &lt;<a href=3D"mailto:alex@linutronix.de" =
+target=3D"_blank">alex@linutronix.de</a>&gt;<br>
+---<br>
+=C2=A0bin/bitbake-setup | 15 ++++++++++++---<br>
+=C2=A01 file changed, 12 insertions(+), 3 deletions(-)<br>
+<br>
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup<br>
+index 2c2b6d8ec..4ed06fc62 100755<br>
+--- a/bin/bitbake-setup<br>
++++ b/bin/bitbake-setup<br>
+@@ -21,8 +21,6 @@ import signal<br>
+=C2=A0import functools<br>
+=C2=A0import string<br>
+<br>
+-default_registry =3D os.path.normpath(os.path.dirname(__file__) + &quot;/.=
+./default-registry&quot;)<br>
+-<br>
+=C2=A0bindir =3D os.path.abspath(os.path.dirname(__file__))<br>
+=C2=A0sys.path[0:0] =3D [os.path.join(os.path.dirname(bindir), &#39;lib&#39=
+;)]<br>
+<br>
+@@ -37,6 +35,17 @@ GLOBAL_ONLY_SETTINGS =3D (<br>
+=C2=A0 =C2=A0 =C2=A0&quot;top-dir-name&quot;,<br>
+=C2=A0)<br>
+<br>
++# If bitbake is from a release tarball or somewhere like pypi where<br>
++# updates may not be straightforward, prefer to use the git repo as the<br=
+>
++# default registry<br>
++def get_default_registry():<br>
++=C2=A0 =C2=A0 internal_registry =3D os.path.normpath(os.path.dirname(__fil=
+e__) + &quot;/../default-registry&quot;)<br>
++=C2=A0 =C2=A0 git_registry =3D &quot;git://<a href=3D"http://git.openembed=
+ded.org/bitbake;protocol=3Dhttps;branch=3Dmaster;rev=3Dmaster" rel=3D"noref=
+errer" target=3D"_blank">git.openembedded.org/bitbake;protocol=3Dhttps;bran=
+ch=3Dmaster;rev=3Dmaster</a>&quot;<br>
++=C2=A0 =C2=A0 if os.path.exists(os.path.dirname(__file__) + &quot;/../.git=
+&quot;):<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 return internal_registry<br>
++=C2=A0 =C2=A0 else:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 return git_registry<br>
++<br>
+=C2=A0def cache_dir(top_dir):<br>
+=C2=A0 =C2=A0 =C2=A0return os.path.join(top_dir, &#39;.bitbake-setup-cache&=
+#39;)<br>
+<br>
+@@ -1084,7 +1093,7 @@ def main():<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0builtin_settings[&#39;default&#39;] =3D {=
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 &#39;top-dir-prefix&#39;:os.getcwd(),<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 &#39;top-dir-name&#39;:&#39;bitbake-builds&#39;,<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0&#39;registry&#39;:default_registry,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0&#39;registry&#39;:get_default_registry(),<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 &#39;use-full-setup-dir-name&#39;:&#39;no&#39;,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 &#39;common-sstate&#39;:&#39;yes&#39;,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 }<br>
+-- <br>
+2.47.3<br>
+<br>
+<br>
+<br>
+<br>
+</blockquote></div>
+<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+Links: You receive all messages sent to this group.<br>
+View/Reply Online (#18782): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/18782" rel=3D"noreferrer" target=3D"_blank">https://list=
+s.openembedded.org/g/bitbake-devel/message/18782</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/117259398/556=
+952" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
+/117259398/556952</a><br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
+b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
+tbake-devel/unsub</a> [<a href=3D"mailto:rob.woolleywr@gmail.com" target=3D=
+"_blank">rob.woolleywr@gmail.com</a>]<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+<br>
+</blockquote></div>
+
+--0000000000009b1a5a0648d85d15--
 
