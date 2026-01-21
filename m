@@ -1,150 +1,115 @@
-Return-Path: <rob.woolley@windriver.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1958DCA5FB6
-	for <webhook@archiver.kernel.org>; Wed, 21 Jan 2026 02:47:48 +0000 (UTC)
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.3866.1768963660538938967
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F9BC44502
+	for <webhook@archiver.kernel.org>; Wed, 21 Jan 2026 09:26:10 +0000 (UTC)
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.8081.1768987562582655856
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 20 Jan 2026 18:47:40 -0800
+ Wed, 21 Jan 2026 01:26:02 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=X8OM2SYU;
- spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=548130ef9c=rob.woolley@windriver.com)
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60L1hetG858135;
-	Wed, 21 Jan 2026 02:47:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=cc:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	PPS06212021; bh=b3oeAljtarYMz1oF5GPqVrshaK3ZzgddU2HF/rfw6ew=; b=
-	X8OM2SYU8VoaJLcO0PB9jb6VbyF92ZvqgL7ZPtmp5i60uTczHF3QSTrIyepZ5iKx
-	Oap2Hz14SArhlpRmcEZZn9gRtyUPlWBwUTspeKImN8u8f+q9d/VtvA5rkM99zfnC
-	sw1jnhEmpG89VDuVqoFHfyVClbr48OOY0u28NRB2heU042QPYXtmFjI30UGO49Nl
-	1NbaRiIsm904yIPNbZzHqA+iEaGh9L/L4EYQc0e0nIgZCR5fAEYv7lIvDJOWS9SZ
-	xEfk9TiHqVspf2CB0goMQhm/2rBMOXIHdCM13UZN4Gc33jsWkTnuMllTrQfKeHW8
-	fLw7T5aJpQDOaPoZZtuEYA==
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [128.224.246.37])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4btncwg1gg-5
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 21 Jan 2026 02:47:26 +0000 (GMT)
-Received: from ala-exchng01.corp.ad.wrs.com (10.11.224.121) by
- ALA-EXCHNG02.corp.ad.wrs.com (10.11.224.122) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.61; Tue, 20 Jan 2026 18:47:24 -0800
-Received: from ala-lpggp2.wrs.com (10.11.232.110) by
- ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server id
- 15.1.2507.61 via Frontend Transport; Tue, 20 Jan 2026 18:47:24 -0800
-From: Rob Woolley <rob.woolley@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-CC: Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH 4/5] Add Python packaging files
-Date: Tue, 20 Jan 2026 18:47:22 -0800
-Message-ID: <20260121024723.2634264-5-rob.woolley@windriver.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20260121024723.2634264-1-rob.woolley@windriver.com>
-References: <20260121024723.2634264-1-rob.woolley@windriver.com>
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Xb+2txEs;
+ spf=pass (domain: gmail.com, ip: 209.85.222.177, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-8c53421cdbfso620511085a.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 21 Jan 2026 01:26:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1768987561; cv=none;
+        d=google.com; s=arc-20240605;
+        b=JM5kxYgFsGQYt8D/CIcYm8QaqOaENnTEZve3qdkaaIuiRTAdBkm+KYYH7dPvi9c9WH
+         FdKk4YE7nuelMh0p2bWjvomiKvI1fj5rMne8o9qQwG3Sm61odmnPn85OLDQVm19Nb8gv
+         7TThYzhlUg004/chJM9BQ0Z4a5xdBGTS2Hzvq8JE80DyEVist3afFCdJpv1n6/uQ554S
+         ctLi3Pk7mnFa6k6MrqjJLyllkmmbOBjYMFtYh26ocUVq18btYdFZZPJ+qQEf683oWYFF
+         2f4ivxEKgLQRt0DqaU4eCu9P710tTc12tt+ozSWJ0yC1sMl+28ziBoohxPuQ5narcu4h
+         sCnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=GM+udl2LOBzkT17b8ClrEWLZEc0zz/AH5prkxpORL60=;
+        fh=An8TtTKvZj+7ly6IPQ9GZdX1ZHXEU8WmhPzj1ghEr8I=;
+        b=i4Q/s1fJIBC1nyer3CziAvAzk5zh7ABX+86vh4fYOskNQIyvAtB8Ta5rvM75si4OXG
+         sS5U/LyxnoDMJTSWIXKVJf6kUyJ+lMdgMmqUfuHSstRLOb14CJjem5ySugsc0pBnHFxL
+         wtFrt8Bou0F5y+ye6kT5cMM8JntL+n1fin16wCqSgh3pgZ+C3ikEQPzmB54lvkk04qgD
+         794rjsSvppVhR4ii5dZEwhv/EI6q0R38EleXtakd5JQSslGKf9vfQ0uPooY7KwRnL2/t
+         8H7sUSqmzV5hMw+l2vUzruc0eWBh8zeJRHnbuNsux6IWI/kWCoz+hC2HLh1N41Ve9DTa
+         dBrw==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768987561; x=1769592361; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GM+udl2LOBzkT17b8ClrEWLZEc0zz/AH5prkxpORL60=;
+        b=Xb+2txEsgmZ9x7UvSAGE4Mq+81miIDbA0IY8rxgIy7QvCqMWxT7W6OCrFCgnTJqypq
+         iYGo6TXSnSkoGeEG0q4FFRXq1lIv2SbdWN0FC5qN73CH8z1pxYq5kvkcaC7CVul5PPGE
+         6lUpKZlq8Ujr7NuiCjGDNTsgbO1LB2P66JAqaz7Wba4TDSxpw8z1qkOyBqPE+Uz2GERe
+         ghR8GpY1jsGEiUjHDEOYtmPnPuj0o7W3u6NrxXSV37CUGG6Kgh3XapeXn1YLJNb77kwM
+         9+1/r91X/HawLYH0S9FSWphpBHQRt1QDvCj7zROsSMQfT6N+PhnIsld/heO/YeBAO/lW
+         EN0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768987561; x=1769592361;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GM+udl2LOBzkT17b8ClrEWLZEc0zz/AH5prkxpORL60=;
+        b=UORcDu9IHISn24ThxhndBa1Q7DRCW8X9Z3Lv3YV/tm9IUbcVWBGG3nkr9VD/INoC5q
+         W7cKcIYaT2wsZJUsVdB4PBfJA/Nv9cTP3cYLxOafNi8yAXBbs0c85luaOkCtLMk7JlBd
+         JjgIi8PC++t6F7Tmu3A2ZS7y0MIaU7FOneNMyETK5k9uPZb2OKdfiHlPZogTeeF+Ge92
+         KPy9Y0mPphlCt6r6URfDGsmOY3TxD8huXnddoUtztMuNtXYiskqyv2R4D85oB6hJLir5
+         Q0nkWueDdiMAE4jc9erqLEWmy/VugJZznBe+Sez0uozeDT6AsCvEEMSjGKgdRjMqm+TS
+         fROw==
+X-Forwarded-Encrypted: i=1; AJvYcCWz+dcR5nT0UG83W3d15Ea0jXu4zo4it7Q79rYlTHSHoc/T3uqsX6mNSWlc7ngn+47/0N/O/KQg/wywITyI@lists.openembedded.org
+X-Gm-Message-State: AOJu0Ywv3f4/MxBVUR3UM3TTSq2WJSLLgJiLHZxvaj24fuEMI0mnC8SR
+	enzhyrHLJ+7JO80mCbwWtx3hkn8g/yvCiBeZ7/PsbLRVCtq4CCAJjkSjs5BQ+Jvp9FKWMedt7ZL
+	pVCEYkxB+hgZb3wt0MfLQgIAZmHbsSto=
+X-Gm-Gg: AZuq6aJIzxM9FM4xavROp09IHBMDIk4ixNQx5odFr/zGpeHzvoBMM8/BgWpiNENgxQE
+	llB71uNRjrIALjtc5r6DeUMn7fUSpc5ISf69tbmkSi1ClLesEyZMMWswCJD0lY7JmyHlCt1bIxS
+	DErskIE8ODvUO0il8sPXivFRIhohvqBTCuXfcaUaR1IFbPVIB/sEJxvvvUZDg80lmyZ37aIMY/h
+	ftXQj2IcgMFLposoOSxu5LvvjmWLFOOzLuB23K2txvaNWIiy+GFh23lR/ohildMfRnu4Ib0278K
+	70oOkDEZXWpLaaKftwNMDXZFM1CYeg==
+X-Received: by 2002:a05:620a:19a0:b0:8c2:3f3b:dae8 with SMTP id
+ af79cd13be357-8c6ccdb0dc5mr590794085a.24.1768987561504; Wed, 21 Jan 2026
+ 01:26:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: wqS0tsxwjux4H3GhtZeT8Gsyj8ZnHCJU
-X-Authority-Analysis: v=2.4 cv=ecwwvrEH c=1 sm=1 tr=0 ts=69703e3e cx=c_pps
- a=Lg6ja3A245NiLSnFpY5YKQ==:117 a=Lg6ja3A245NiLSnFpY5YKQ==:17
- a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=NEAV23lmAAAA:8 a=t7CeM3EgAAAA:8
- a=Q4-j1AaZAAAA:8 a=v01NFZE1Ztd_FFm_sXkA:9 a=FdTzh2GWekK77mhwV6Dw:22
- a=9H3Qd4_ONW2Ztcrla5EB:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTIxMDAyMiBTYWx0ZWRfX81yeAfjk+64W
- WDxdws19S0sYIXrS5LjznbXnDVWnGRxsyyt9TzdKu/fu/ESTViElC5MrR9i+xJs7AaUyRkFWwnJ
- TpMc+qT+i6Y3nIxDaqQ8/fzlUUyDb2TJkVe3tuCmj38rSISRpH0Et3sZBefhcuGyV2wf6MR1tpm
- RbYyxiMV0G5GPo2onphsHTTpj8HH5T9JUIFRoY1YJRvQaTTejaXUBk/hpgXLfjIIZe+7DowUfLH
- 7GI2ENtV31auPnxZUHd7CTTTk7tPqPUDDh1CGR2wfUPNb+lDEc8KiA7yg+2jL+1WTEZbUFk91nN
- QsaHPtnXzgI9sS7vXJq/NtUOfcQlb9P6j2keyrVG9iAUOGAInpLBghl+5V4x1FFuSMXtAdWoih0
- VR4n6E6IFIUYpE9Q7aaVo2Yvh0h5IO6aQ2vbVxHclPUfibWP7R5e4LtIRfiw4mhUcLJDfco8BjD
- nxfU7x/1lCEsoskv59w==
-X-Proofpoint-ORIG-GUID: wqS0tsxwjux4H3GhtZeT8Gsyj8ZnHCJU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.20,FMLib:17.12.100.49
- definitions=2026-01-21_01,2026-01-20_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 impostorscore=0 spamscore=0 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 bulkscore=0 clxscore=1015 phishscore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
- definitions=main-2601210022
+References: <20260119073419.952608-1-adrian.freihofer@siemens.com>
+ <CANNYZj9rLfTy2A7P-CbEuM4uEqOELqABCPJc_XQXr3W6R5e18w@mail.gmail.com> <daaeb2e7bbdd85c5ec6861f0129048b5e1810412.camel@gmail.com>
+In-Reply-To: <daaeb2e7bbdd85c5ec6861f0129048b5e1810412.camel@gmail.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Wed, 21 Jan 2026 10:25:50 +0100
+X-Gm-Features: AZwV_QjccafDGwVxyzCFC0VASoV6bYnbW8oLRu2fVAz81d0Qz6uNiDSDvSkaMio
+Message-ID: <CANNYZj_+2UuVqvOBaSAQ8XiRhH1uXnPvE6r-xtcEgePHddmydw@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 0/2] bitbake-setup: Add VSCode workspace
+ generation support
+To: adrian.freihofer@gmail.com
+Cc: adrian.freihofer@siemens.com, bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 21 Jan 2026 02:47:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18826
+ <bitbake-devel@lists.openembedded.org>; Wed, 21 Jan 2026 09:26:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18830
 
-This enables creating a pip package for PyPI with:
+On Tue, 20 Jan 2026 at 23:13, <adrian.freihofer@gmail.com> wrote:
+> I was not aware of the -L option until now. The idea for this series
+> was to configure VS Code to edit the Git repositories in the layers
+> directory. Now bitbake-setup informs me that I must not do that. But if
+> I have to clone the layers manually, why should I use bitbake-setup at
+> all? Not sure we can find an easy solution for this.
 
-    python3 -m build
+Yes. The problem is, adding a 'non-destructive unpack' to bitbake's
+git fetcher is not easy. On the other hand, there was already one
+incident of data loss caused by the destructive unpack in
+'bitbake-setup update', and that is quite enough.
 
-Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
----
- pyproject.toml |  3 +++
- setup.cfg      | 40 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 43 insertions(+)
- create mode 100644 pyproject.toml
- create mode 100644 setup.cfg
+One possibility is to add a 'bitbake-setup local-source <layer>'
+command, which would:
+- clone a source from layers/ into something like local-layers/
+- replace the source in layers/ with a symlink to local-layers/
+- tell the user that they're now free to modify that source, but it
+will not be handled in status/update operations
 
-diff --git a/pyproject.toml b/pyproject.toml
-new file mode 100644
-index 00000000..4aff98bb
---- /dev/null
-+++ b/pyproject.toml
-@@ -0,0 +1,3 @@
-+[build-system]
-+requires = ["setuptools>=61.0.0", "wheel"]
-+build-backend = "setuptools.build_meta"
-diff --git a/setup.cfg b/setup.cfg
-new file mode 100644
-index 00000000..3eaa3c49
---- /dev/null
-+++ b/setup.cfg
-@@ -0,0 +1,40 @@
-+[metadata]
-+name = bitbake-setup
-+version = 2.16.0a1
-+author = OpenEmbedded BitBake Developers
-+author_email = bitbake-devel@lists.openembedded.org
-+description = bitbake-setup
-+long_description = file: README.md
-+long_description_content_type = text/markdown
-+url = https://github.com/openembedded/bitbake.git
-+license = "GPL-2.0-only and MIT"
-+classifiers =
-+    Programming Language :: Python :: 3
-+    License :: OSI Approved :: MIT License
-+    License :: OSI Approved :: GNU General Public License v2 (GPLv2)
-+    Operating System :: POSIX :: Linux
-+
-+[options]
-+package_dir =
-+    = lib
-+packages = find:
-+include_package_data = True
-+zip_safe = False
-+python_requires = >=3.6
-+py_modules = codegen
-+
-+install_requires =
-+    ; List any non-standard dependencies BitBake needs
-+    ; BitBake is mostly self-contained, but check its documentation
-+
-+[options.packages.find]
-+where = lib
-+include =
-+    bb*
-+    bs4*
-+    ply
-+    bitbake_setup
-+
-+[options.entry_points]
-+console_scripts =
-+    bitbake-setup = bitbake_setup.__main__:main
--- 
-2.49.0
+Kind of like 'init -L', but without having to clone the layer by hand
+first, and done as a separate after-init operation. Would that fit
+into vscode workflows?
 
+Alex
 
