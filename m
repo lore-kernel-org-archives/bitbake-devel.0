@@ -2,62 +2,64 @@ Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76C4D3EE75
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63F6D3EE74
 	for <webhook@archiver.kernel.org>; Thu, 22 Jan 2026 15:02:29 +0000 (UTC)
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.39175.1769094145510361766
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.39445.1769094143653009245
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 22 Jan 2026 07:02:25 -0800
+ Thu, 22 Jan 2026 07:02:24 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=PU3017xX;
- spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=GwYheRdO;
+ spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: antonin.godard@bootlin.com)
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 07DE51A2AB7;
-	Thu, 22 Jan 2026 15:02:24 +0000 (UTC)
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 2F44FC21AA4;
+	Thu, 22 Jan 2026 15:02:21 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id D2202606B6;
-	Thu, 22 Jan 2026 15:02:23 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9FB19119B82CA;
-	Thu, 22 Jan 2026 16:02:22 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 565A0606B6;
+	Thu, 22 Jan 2026 15:02:21 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7F5F0119B808A;
+	Thu, 22 Jan 2026 16:02:19 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1769094143; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=w6YpKyhVEVkY2m3oUrvIRe72GLcX/x2doVwwHuBXJAM=;
-	b=PU3017xXy4QUPTlImuv/nK/3ALxhsgwfaimgZ4EEYySJcETb28+MJKqUdoJdYC0JfRIwiF
-	P9pfGA5GCCuiQ0J6cgtAAcHTklyP6gMea7RCCexAXz37BDLeQfCrOb31aDch+iHTH/VRA/
-	mN4ArNXqAMXxVvmR3AVH+AjlNR2t5anZI3UyfJe/G/6lhi/HwgSQMIYQLzFXVK2aKsAxeL
-	pkn0szjA0Bh5oe86nTiF3pEDXQAL75UdbTi8KONlMqQqZzQGnX8z7X8V+ue6vQ1oNJmKp5
-	GcHiXV8UXHUtjcB0LHFnYzFLQ01OTcckc6ZRKvJOmdWfLO24yJmcktCXbbFq6g==
+	t=1769094140; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=SdingNcLYXXUoTr/iMtw7Bkny18IDuIF88EYSKxE+zU=;
+	b=GwYheRdO4Q7/TEJq8RnJ2iM06cWBbPazE5kHavWvg27dbayx/SuM8C0ieh9L4kjRP1AkWg
+	OAC8rXbtDqEwD9buwvsoABqkhaoWeAGZM1RzFcppZrJvza7fAXTXrhR9jPRkRIWekBUT5X
+	VN1E5nr3bIb9/qPG1WCdrvNToTInwtxpOtA9390NgFaXPM9lQmeP5O6j6pJfLw05rC53Q0
+	OUzYLXZIgQ4XUS/3Bzw8F6CqnR38ZrmKp1iVXKGlOn+nTmvP9CTLylGV3Ua2clVL8t1Dgy
+	x4+wNGFVnvqQpeBZey51+3kTEi3L0uyq4asbHzRxRDaTnc/R2uqYg5nZDM8rnw==
 From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Thu, 22 Jan 2026 16:02:00 +0100
-Subject: [PATCH v3 3/3] lib/bb/tests/setup.py: add tests for
- oe-fragments-one-of
+Subject: [PATCH v3 0/3] bitbake-setup: add descriptions for fragment
+ choices
+Date: Thu, 22 Jan 2026 16:01:57 +0100
+Message-Id: <20260122-bitbake-setup-choose-builtin-v3-0-c55291acc1a7@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260122-bitbake-setup-choose-builtin-v3-3-c55291acc1a7@bootlin.com>
-References: <20260122-bitbake-setup-choose-builtin-v3-0-c55291acc1a7@bootlin.com>
-In-Reply-To: <20260122-bitbake-setup-choose-builtin-v3-0-c55291acc1a7@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAOU7cmkC/43NzQ7CIBAE4FcxnF0D9CfWk+9hPBS62NUKTaGNp
+ um7C/WiJ53bJJNvZuZxIPTssJnZgBN5cjaWbLthuq3tBYGa2JnksuRClKAoqPqG4DGMPejWOY+
+ gRuoCWTBKVBUvcq1lwSLRD2josfKn87v7UV1Rh2SmRUs+uOG5/k8i7f68mgRw2DdlSl2haY7Ku
+ dCR3Wl3Z+lskh+c5D84Gbm6wZLnxsisEN/csiwvtqp5wSsBAAA=
+X-Change-ID: 20260116-bitbake-setup-choose-builtin-fb199054cc25
 To: bitbake-devel@lists.openembedded.org
 Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
  Alexander Kanavin <alex.kanavin@gmail.com>, docs@lists.yoctoproject.org, 
  Antonin Godard <antonin.godard@bootlin.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3282;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1447;
  i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=ufSG9isX7KWwE+vhuAsJ6JUlLpPim390Gv0zZ9uNxpI=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpcjv7aHx+k3Tq2ys5NdgwGfhdb/6L+WSx9x0Bw
- UzxwwT/DsqJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaXI7+wAKCRDRgEFAKaOo
- NrxlD/9Ye0tTP4tQU8R22a+Ogu8bzajDEnC6u9IGhAgfPHG3CJ8TV5/D7kcsLVkj7g3damfnmX+
- bHDjgc9/0ZgyGT6Hyb5uGhHH9kVnvHeNKXiEs+y7BCpnfyJMJxsX4uPhl1znnNw9H4KTyrOeGdG
- 3hXflKjcOwNNXOWMT2QChmce7Dv0oHslSl1M84HtrOi/dbf82doqWhpDHeuzPY2+23vvnGcHEgm
- DJTlKIVFLTsiC+OGaC6e+2hPe66bEriKQ+VkI7sqzHIk/fqDYkSYcZdbOCjv5jC6Zc/Fr0MFqfy
- bXPntS1uVxYipBYk31JJKL5jY/WdEz5uBZj++B6BHQCjvi9UPR2Opoo8e+Ao8j296jDR4ilSTjW
- MTv5Zk9BanCikqrknn9JOV14opgT/5+L+Gd4K/j6J6ycRArCZDInUsnRU39U71v/D4/dD7IX6/9
- IsrkC++78wz4MHuwB041LVSkXkOgU/va5sj4dAPHYioPE0x91lhnyvqlrBYpEZjMN51j3fv6WAf
- +EY+NewbLaTW5473Zijmj3a/5SyITH0H0qpktcChx+hdbTGX6TQkEA+RzSgx0OQXn3n5stSjDyS
- nUOa1nN2hlvFHxJmXN78Hirnd239sHtdN3qhO67XshVQIILHFjQ25u8pCoIdj8tdYNql1mvfKb/
- MtvcEzkV6tq9Wdw==
+ bh=cZ/k+ft8kVeLvM/Tf0oJgbccZoRulu19x3+Z9fT6GQE=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpcjv6vLsMrGKnuZGTaWtxX7TBDe3xgvtLGLD8I
+ K2yOvqjXTyJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaXI7+gAKCRDRgEFAKaOo
+ NtQJEACx83QrIUKpf2Z/zfSVDIn/NnPMnirpyUgnLVFE3M37gcbdlw3WuAjtyT5+qktELweNVZQ
+ jePnuxcyraW6t/lDPU+H/pl/V6uwSI1hBMbN9faXf+zPbyyd6Xt07OtS7Kx/XUcRVix4P8hjM19
+ 5OYnyVUBz6EbgX7dYKvTIG3yHm0URLPDmKCqHr6AJKEbXyeJNyUTgpM1JwnSJ5aJH7CUurXw2Fo
+ H7M7yJgzVtiYVnohs8MJREv/byff2Gx5ETq3Jv/H1W72+//coRhsUw3O7fmS7MyvFVpmN/fNbpw
+ cvVnPRQWq6Af1p0fFar5hRqmL7+ZfkUQNbkIyK5b59WCEUhIM6AfLsY/RSkHBrEJTF29iESic7N
+ GE26PWJsj6SwYtp1z/FMrPXpcUF9SAqvJblHJC5A/CxXGVLGAK0m0TfTKErWTs0qU4fnDhdl+fH
+ 5lTP7Bt5hLKEhftROd98EzukqY+hPHpbtxz51UOKmq8wMUPyyWxwNCFUim1IqHbnsG97RMO7Unv
+ IoMkGav4DzjoKqpuOhN5sBmxadMsqxCoivtF4NfqlkDzAHcCxUdmAuJxT1Dzl6BxtX+Z49OIleL
+ xD3B6kJ2Y1X1jXary6Mce4LiGDjD/BbTSlFQTzEM8mNb0M3R5sdIFceDqXO1AgX8iIdFZiD2Z//
+ FkHcLzK+YrSBgKw==
 X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
  fpr=8648725188DD401BB9A0D3FFD180414029A3A836
 X-Last-TLS-Session-Version: TLSv1.3
@@ -65,69 +67,36 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 22 Jan 2026 15:02:29 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18851
-
-There were no tests of oe-fragments-one-of so add a new configuration
-for it, and test both formats for the options (with or without a
-description).
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18849
 
 Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
 ---
- lib/bb/tests/setup.py | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+Changes in v3:
+- Rework logic as suggested by Alex
+- Remove modifications of {oe-nodistro,poky}-whinlatter.conf.json
+- Add a test case for oe-fragments-one-of
+- Link to v2: https://patch.msgid.link/20260120-bitbake-setup-choose-builtin-v2-0-ade604ff2351@bootlin.com
 
-diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
-index 834d098547c..eaada3ce1e7 100644
---- a/lib/bb/tests/setup.py
-+++ b/lib/bb/tests/setup.py
-@@ -146,6 +146,25 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
-                 "bb-layers": ["layerC","layerD/meta-layer"],
-                 "bb-layers-file-relative": ["layerE/meta-layer"],
-                 "oe-fragments": ["test-fragment-2"]
-+            },
-+            {
-+                "name": "gizmo-fragments-one-of",
-+                "description": "Gizmo configuration using oe-fragments-one-of, both formats",
-+                "oe-template": "test-configuration-gizmo",
-+                "oe-fragments-one-of": {
-+                    "fragment-desc": {
-+                        "description": "Test fragments (with description)",
-+                        "options" : [
-+                            { "name": "fragment-desc-1", "description": "fragment 1 desc" }
-+                        ]
-+                    },
-+                    "fragment-nodesc": {
-+                        "description": "Test fragments (no description)",
-+                        "options" : [
-+                            "fragment-nodesc-1"
-+                        ]
-+                    }
-+                }
-             }
-         ]
-     },
-@@ -258,7 +277,7 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
-     def get_setup_path(self, cf, c):
-         if c == 'gizmo':
-             return os.path.join(self.tempdir, 'bitbake-builds', 'this-is-a-custom-gizmo-build')
--        return os.path.join(self.tempdir, 'bitbake-builds', '{}-{}'.format(cf, c))
-+        return os.path.join(self.tempdir, 'bitbake-builds', '{}-{}'.format(cf, "-".join(c.split())))
- 
-     def test_setup(self):
-         # unset BBPATH to ensure tests run in isolation from the existing bitbake environment
-@@ -328,7 +347,9 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
-                                                  'buildconfigs':('gadget','gizmo',
-                                                                  'gizmo-env-passthrough',
-                                                                  'gizmo-no-fragment',
--                                                                 'gadget-notemplate','gizmo-notemplate')},
-+                                                                 'gadget-notemplate',
-+                                                                 'gizmo-notemplate',
-+                                                                 'gizmo-fragments-one-of fragment-desc-1 fragment-nodesc-1')},
-                                'test-config-2': {'cmdline': os.path.join(self.registrypath,'config-2/test-config-2.conf.json'),
-                                                  'buildconfigs': ('gadget','gizmo',
-                                                                   'gizmo-env-passthrough',
+Changes in v2:
+- As suggested by Alex, change the new way of specifying fragments to
+  remain a dictionary so they can be extended in the future
+- Link to v1: https://patch.msgid.link/20260116-bitbake-setup-choose-builtin-v1-0-8d66666a9efd@bootlin.com
 
--- 
-2.52.0
+---
+Antonin Godard (3):
+      bin/bitbake-setup: add descriptions for fragment choices
+      default-registry: update fragments choices with descriptions
+      lib/bb/tests/setup.py: add tests for oe-fragments-one-of
+
+ bin/bitbake-setup                                  | 23 ++++++++++++++-----
+ .../configurations/oe-nodistro-master.conf.json    |  6 ++++-
+ .../configurations/poky-master.conf.json           | 14 ++++++++++--
+ .../bitbake-user-manual-environment-setup.rst      | 26 ++++++++++++++++++++--
+ lib/bb/tests/setup.py                              | 25 +++++++++++++++++++--
+ setup-schema/bitbake-setup.schema.json             | 21 ++++++++++++++++-
+ 6 files changed, 101 insertions(+), 14 deletions(-)
+---
+base-commit: 5127faf986d8543bb88e73cf3dccb407d80c9a25
+change-id: 20260116-bitbake-setup-choose-builtin-fb199054cc25
 
 
