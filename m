@@ -1,158 +1,125 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1378CD3EE95
-	for <webhook@archiver.kernel.org>; Thu, 22 Jan 2026 16:53:51 +0000 (UTC)
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.42246.1769100820929321716
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7908CD6261B
+	for <webhook@archiver.kernel.org>; Thu, 22 Jan 2026 17:55:11 +0000 (UTC)
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.43650.1769104503085053813
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 22 Jan 2026 08:53:41 -0800
+ Thu, 22 Jan 2026 09:55:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=N+SePImn;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.41, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-42fb4eeb482so893538f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 22 Jan 2026 08:53:40 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Zx33yhMK;
+ spf=pass (domain: gmail.com, ip: 209.85.219.47, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-88a35a00506so19621306d6.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 22 Jan 2026 09:55:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769104502; cv=none;
+        d=google.com; s=arc-20240605;
+        b=etaFgFyoL20cFOs+7Xz8vRSVmSaTZEflWhYl1YMV43ZGCijCjwfP+QBd338blkUt53
+         jyi2jqXOSkX6IYC9Lpd9PUQGKw+WH4kFGlgm3HKIoIwdmkZHg2YJP714ra2wzHjrYWow
+         b/SkOemAZRtTFQ+9o0lUDKaGNhQLwjo26ijz+XznflgRZtoJn40PR1NWpsZLUj0dFkby
+         rV+K5iBX6Kx0Mi/g0pSNBg6CbS90EpwiJMS+NBesPnwsdmEmUx8G6NgYkjl1cJ6z0Zw8
+         MP2evYerBNr+twxhfFz8K9ytHMvGzzV3Ppje2JradDXsmKJRBRc9nDREEBTfbmXaH2SN
+         TUMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=6nue6nmU5mXdC5K4QDrTfm9FnLMNFMqwdEXJ/cKPSv8=;
+        fh=qhSEGFZ5DCm8IWokOYU3VicGVJrPDbAcwTkr5XyhA7I=;
+        b=GmefTjChldUg2ydn8wU5PKzmPaHryrx3CZoXFGRkQeJz1brfaHj0RgkXlTsJP0MTlf
+         r9gw7RsvhRZlp7DU/IBZycp//Nl6gT8QofvUrPYX1XC8OpPIQgzZ/3dnQnJ08pDAUo1Z
+         LYsMAwn9AnwJwMFmFTcyz5/1TGys9pk81w/p156kQwyJJhsnD1L5Z1GmOCgUwGNaoi+t
+         GtEeYQBn8qGZLnCe7kQ4kyC1mMd/97IDJhTnFm648HNQBZ0/1Fkj2eO37lJphdytRb8Q
+         BjzM+zeh7bW+llyYYk8z6ydhxlQclTi8+UkC2puSxzxpjczrYr0wv+WNDHDfHXO/Jw8t
+         cIig==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1769100819; x=1769705619; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AriWRKzKPb8vSv7wXSUFHkdoNgE8LFU6/pXB4/jSaq8=;
-        b=N+SePImnQcRbmHWei45V2n3A34gOoV/vicrizq2uKYVVKRst+2mVkYzjzoPxm34BEm
-         J6dRx7xD3xNGmT2PCCa5djNn1wy33tm1w3FOTagrmvxXEccw0fQ0xS/gOPK7OkeX+kIf
-         Xit8zo8LxknB4NPflOe+LrwZFoe1bXWP7/TAw=
+        d=gmail.com; s=20230601; t=1769104502; x=1769709302; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6nue6nmU5mXdC5K4QDrTfm9FnLMNFMqwdEXJ/cKPSv8=;
+        b=Zx33yhMKkw/abQAVLrgWxu0HCH8ByO1Meo8hK8pgsg6bl8FTL+QPClRL5DZiROnwCW
+         eKb58zKeq+CEm4N/rRoF/Jxt5bckWKOTLHAEDHxEtIcva4e/wktB/XCg5jhP35OHoTQQ
+         KiE2WpWmYgyprM5Jh7I7ztz9c/xJ/LyMFSAAgfd5AZJn3ufq8W6qiSAYPQcgmIwlzlsm
+         BWqweU9nltvsOIV7n+IzieUD0DH49dPm61CfO0DP4G1+ep0uTCL0X7uetuEoeoVWnRwU
+         H5geunRaeSftkOwzwZO4SLw9V7z7o2Wzi2UNbCVG+lqXd0yv3IfX7s9Shd+mY1RT3tk5
+         iX1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769100819; x=1769705619;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AriWRKzKPb8vSv7wXSUFHkdoNgE8LFU6/pXB4/jSaq8=;
-        b=JzjsXwktUhPZ4hrmiN0l26gyyZv/V0vY881aSFegqme52ZbdOqO7pQY6jLiXPdvu1U
-         aL2fAPnB1+Kj6wSpf6tP+vVqIzevVAoF4zwXg9dgX95dCFvjA/FiriB98p1B5jWAh/7O
-         wiBwU4JBOtTp/7glfRnFdVNZuBzLORjaQhkWg+U5931oyFun7G79YiUJN0BS0zqhsX8A
-         Z3W7Kh8bWfjY45WYEVYtEwZx0YTtg+GdZvj3vyYg/qPgi+8DwcTIwhnp5alugvkY1qjc
-         LOwlzCWIN2Df8CcY+6pba6y3p1CGsOpLCGpgwoAFAwYpS3lXSk5J82tKQ7EG0QZgTg69
-         PCZQ==
-X-Gm-Message-State: AOJu0YzC1gZ5Apg8bFCPGv/NG4p9ZLZP5pA8DsfGw9fQ1f17/L79apoL
-	QE1o4S523M1i+CdlmSvqRIHC35ol/PWZLOqOLpxAbeCGwzFd08Ujnswik0Z3hwNaAXG3s6/mhb6
-	KNzRj9QI=
-X-Gm-Gg: AZuq6aIk/Ro9pheoPKLCtbxQgKNquCd5CAIgP53mgDeoQom71o2vl3iNnU9cXctyxtX
-	WES8DokKOIgd5HSIqU/jKthf28HSBIIx499Qn3Ja7/pegxjZquWjoMEf32CfDVGyMjampUXm2rm
-	/JbTnTGhPeQGyXxefP0tGs4KaPy6KrGKGkyq/RpplpCoAUhb8SMxPpyRD3SZpqH+GIPwZ04gQs7
-	p7nXmUgw3/+w7131Q9ee4O0FQU2QDZEaj7tqYvQ7zIKrWToMVOoQUgdO6tE2tZJEHWDGKDASlkp
-	bSl2tUtDe2BKN/fq5/OUiEMK4d3D6ZqNX5MKDlYmRq+4Qg6LaEPJLlTDnQmVIMwPYnPTn2jaT3j
-	77QduWhUKjlQ9/1jE45rbsiVjHNn4UHvx9/DmoYO8zNK+GFgHI85LCqikAZYjH6WpYp8s3Q3JQP
-	XT7qx/xE4t9Qzm63OiQdWyOAD5p2CBmdzVUT3Qp4c=
-X-Received: by 2002:a5d:5d10:0:b0:435:b0e7:ea1 with SMTP id ffacd0b85a97d-435b15990c1mr275424f8f.19.1769100818550;
-        Thu, 22 Jan 2026 08:53:38 -0800 (PST)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:8ce7:5a61:b9e8:a245])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356992c6f2sm44182613f8f.19.2026.01.22.08.53.37
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jan 2026 08:53:37 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH v4] tests/fetch: Disable npm tests
-Date: Thu, 22 Jan 2026 16:53:37 +0000
-Message-ID: <20260122165337.1818686-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.48.1
+        d=1e100.net; s=20230601; t=1769104502; x=1769709302;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6nue6nmU5mXdC5K4QDrTfm9FnLMNFMqwdEXJ/cKPSv8=;
+        b=KZVikAZYek8N6mSbOR7tXWleVDrSyhqErt771hEyirkJf2nmE+eZBc5Ho5Y8rv6mD8
+         TRdP69eQwSjUHJMKBnmT5ZzCmcyM1YB1X7vIMfocn6OFbyyTInqhxZnQb2eOwEtRQd2O
+         m96yto0ZvcqBmhCUGOZHhpJVliTRI0sFk6KnoCoLrgVlt0C1BVWyVtUSoq5scHpi+TTD
+         rMiwOu+WCTIzWUsFmUTHNh7ATc67ao+rA+tGPAGWKMfpXfCj+MwzTCSoCa2GkOQzhFy/
+         sovvhjVuzY61qrVR4j2+bQF2OlhSbu3ysqRw42yIw1VZxBPuKG0Mt1F/gPQAfns5NN77
+         ov8Q==
+X-Gm-Message-State: AOJu0YzFofCCzPP2hkiXbokM3WBvbg/IwFgv2pj0gaH55tGVTUb+QXnx
+	9ivsZoVDfwzMh3tPNVt1f5IPQSwnEDOwejB4wVJfrzdtSBlE83Uj4jZ7HVsL7gySAisFHiKUGGI
+	q6+PxDYGXXSJK/WVrbK80/Bsuuz1snQY=
+X-Gm-Gg: AZuq6aKVIA3oBjcvaOxoIeMXyivJ8fwzBfbspO7cFzLiatio+4qlXsJ9gtt/7ANHCGj
+	wYYNkT73K+8ExTzYQE+0kgK5k2v/SLGuNMOU6k+lSAYBu9OTOeg4GmaHvTtHlBS5KfNdURVhq6u
+	GdiRsCCbK+D8zZLQIHzvqV5/dqGM2adEdL3KrUtga8vo3U7pAH07Zb9tKzefhmtvFqXBw2LV6Q+
+	RmfOZipv9KjOTbeNC7fjzKpTAmD3Hn6idrMsJFizpODxp9WYHy9FZL/gitmN7W4xkn13zPQJnil
+	FOCwMrwsRItNF2Wo0OWedI4xhi33UUPVwsg851r4
+X-Received: by 2002:a05:622a:44d:b0:4ee:1b0e:861a with SMTP id
+ d75a77b69052e-502f772500cmr6356921cf.13.1769104501970; Thu, 22 Jan 2026
+ 09:55:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260122-bitbake-setup-choose-builtin-v3-0-c55291acc1a7@bootlin.com>
+ <20260122-bitbake-setup-choose-builtin-v3-3-c55291acc1a7@bootlin.com>
+In-Reply-To: <20260122-bitbake-setup-choose-builtin-v3-3-c55291acc1a7@bootlin.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Thu, 22 Jan 2026 18:54:50 +0100
+X-Gm-Features: AZwV_QjO-jYNQXari-fVIBaJhP-1xx7vE748q_nwOSbT8drWAnNQtjwT2e8z538
+Message-ID: <CANNYZj_SUcRFLWobRO9GHPzN+ZtG9koKVg4iZ-gzoKsSAUiMoQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] lib/bb/tests/setup.py: add tests for oe-fragments-one-of
+To: Antonin Godard <antonin.godard@bootlin.com>
+Cc: bitbake-devel@lists.openembedded.org, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, docs@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 22 Jan 2026 16:53:51 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18853
+ <bitbake-devel@lists.openembedded.org>; Thu, 22 Jan 2026 17:55:11 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18854
 
-Since the npm fetcher is disabled, we should skip the npm tests too.
+On Thu, 22 Jan 2026 at 16:02, Antonin Godard <antonin.godard@bootlin.com> wrote:
+> +            },
+> +            {
+> +                "name": "gizmo-fragments-one-of",
+> +                "description": "Gizmo configuration using oe-fragments-one-of, both formats",
+> +                "oe-template": "test-configuration-gizmo",
+> +                "oe-fragments-one-of": {
+> +                    "fragment-desc": {
+> +                        "description": "Test fragments (with description)",
+> +                        "options" : [
+> +                            { "name": "fragment-desc-1", "description": "fragment 1 desc" }
+> +                        ]
+> +                    },
+> +                    "fragment-nodesc": {
+> +                        "description": "Test fragments (no description)",
+> +                        "options" : [
+> +                            "fragment-nodesc-1"
+> +                        ]
+> +                    }
+> +                }
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/tests/fetch.py | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+To avoid multiplying test configs further (and making the tests
+slower), perhaps this can be added to gizmo-notemplate, and that
+renamed to gizmo-notemplate-fragments-one-of ?
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index e027705bf40..e2a7eec9cbd 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -2811,6 +2811,7 @@ class CrateTest(FetcherTest):
- 
- class NPMTest(FetcherTest):
-     def skipIfNoNpm():
-+        return unittest.skip('npm disabled due to security issues')
-         if not shutil.which('npm'):
-             return unittest.skip('npm not installed')
-         return lambda f: f
-@@ -2937,6 +2938,7 @@ class NPMTest(FetcherTest):
-         self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.json')))
- 
-     def test_npm_no_network_no_tarball(self):
-+        return unittest.skip('npm disabled due to security issues')
-         urls = ['npm://registry.npmjs.org;package=@savoirfairelinux/node-server-example;version=1.0.0']
-         self.d.setVar('BB_NO_NETWORK', '1')
-         fetcher = bb.fetch.Fetch(urls, self.d)
-@@ -3033,6 +3035,7 @@ class NPMTest(FetcherTest):
- 
-     @skipIfNoNetwork()
-     def test_npmsw(self):
-+        return unittest.skip('npm disabled due to security issues')
-         swfile = self.create_shrinkwrap_file({
-             'packages': {
-                 'node_modules/array-flatten': {
-@@ -3069,6 +3072,7 @@ class NPMTest(FetcherTest):
- 
-     @skipIfNoNetwork()
-     def test_npmsw_git(self):
-+        return unittest.skip('npm disabled due to security issues')
-         swfile = self.create_shrinkwrap_file({
-             'packages': {
-                 'node_modules/cookie': {
-@@ -3082,6 +3086,7 @@ class NPMTest(FetcherTest):
- 
-     @skipIfNoNetwork()
-     def test_npmsw_dev(self):
-+        return unittest.skip('npm disabled due to security issues')
-         swfile = self.create_shrinkwrap_file({
-             'packages': {
-                 'node_modules/array-flatten': {
-@@ -3110,6 +3115,7 @@ class NPMTest(FetcherTest):
- 
-     @skipIfNoNetwork()
-     def test_npmsw_destsuffix(self):
-+        return unittest.skip('npm disabled due to security issues')
-         swfile = self.create_shrinkwrap_file({
-             'packages': {
-                 'node_modules/array-flatten': {
-@@ -3125,6 +3131,7 @@ class NPMTest(FetcherTest):
-         self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'foo', 'bar', 'node_modules', 'array-flatten', 'package.json')))
- 
-     def test_npmsw_no_network_no_tarball(self):
-+        return unittest.skip('npm disabled due to security issues')
-         swfile = self.create_shrinkwrap_file({
-             'packages': {
-                 'node_modules/array-flatten': {
-@@ -3164,6 +3171,7 @@ class NPMTest(FetcherTest):
- 
-     @skipIfNoNetwork()
-     def test_npmsw_npm_reusability(self):
-+        return unittest.skip('npm disabled due to security issues')
-         # Fetch once with npmsw
-         swfile = self.create_shrinkwrap_file({
-             'packages': {
-@@ -3186,6 +3194,7 @@ class NPMTest(FetcherTest):
- 
-     @skipIfNoNetwork()
-     def test_npmsw_bad_checksum(self):
-+        return unittest.skip('npm disabled due to security issues')
-         # Try to fetch with bad checksum
-         swfile = self.create_shrinkwrap_file({
-             'packages': {
-@@ -3282,6 +3291,7 @@ class NPMTest(FetcherTest):
- 
-     @skipIfNoNetwork()
-     def test_npmsw_bundled(self):
-+        return unittest.skip('npm disabled due to security issues')
-         swfile = self.create_shrinkwrap_file({
-             'packages': {
-                 'node_modules/array-flatten': {
+> -                                                                 'gadget-notemplate','gizmo-notemplate')},
+> +                                                                 'gadget-notemplate',
+> +                                                                 'gizmo-notemplate',
+> +                                                                 'gizmo-fragments-one-of fragment-desc-1 fragment-nodesc-1')},
+
+As there's only one choice in each, bitbake-setup should pick that
+without asking, or having to specify them on command line. Let's test
+that too, and drop the fragment names from here.
+
+Alex
 
