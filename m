@@ -1,252 +1,125 @@
-Return-Path: <rybczynska@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C50C44506
-	for <webhook@archiver.kernel.org>; Wed, 21 Jan 2026 19:07:53 +0000 (UTC)
-Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.19902.1769022464405994306
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD491C44500
+	for <webhook@archiver.kernel.org>; Thu, 22 Jan 2026 08:09:37 +0000 (UTC)
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.32955.1769069367652013309
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 21 Jan 2026 11:07:44 -0800
+ Thu, 22 Jan 2026 00:09:28 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=VyKx3nfr;
- spf=pass (domain: gmail.com, ip: 74.125.82.49, mailfrom: rybczynska@gmail.com)
-Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-12460a7caa2so293394c88.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 21 Jan 2026 11:07:44 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769022464; cv=none;
-        d=google.com; s=arc-20240605;
-        b=CkcQ8/9AGYpIOQV4tJdLzf4jqo3huUIZQp2yZdSBzkd9Go7Vk84PiE/p2SWTfxdkN/
-         iRy4U+oBvw/yXure5nZ3FERnAEVEpto+0i9FYAWStNy38ntZDi95H7USlUPvVhfua60R
-         LeyxGpYfHQf5eAmzuEvdvrbNuRIxKEflgE5YK7Uvd9r3NUsw6OTt6wmPNbulrpC2zfPg
-         1pdrhP477sLi8TL59c+KZkhTAbylY1D/xbaNtE2BoOQjAftZbZqLvt3OgpACxMWm1hSx
-         5+AGVvV8ChYSltDwDPtsTVHV25DUZnApe8XCZa/p8yTL8pDenT0rvhxWcGrZkJdHVY+/
-         AFMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=CYhcjog6V09ezuuLcgP5l3lk3gfm/MyHas/1BDTKYhs=;
-        fh=kwhZ3Li+yPVxdlH3ayfQoAuPa3/pJuSlz2Co5M6h6T8=;
-        b=dCbC6OFR2zADxkmWwtp5QdZHUZXf1S8Jz3mM3DA5OASFsd4GBMf7uBmJE7MxVk6cd0
-         fEi9YSY2qav5e2NfZkxYz8EQdsYJ9Tf7X2+T/PMwu95aZreBsH+RvCgZ+IDJJOjUhQxD
-         Y7vl0s00MWPkS7j/vWDJknR4Oe6SBJZBxw+1efsl0mnhEd+5P6UDanueGmnneOuw5hUw
-         f/vJGDMNlW3wjKkGvOznHjH3OQcbGj9GcjA0PJ3vCwQVdeFqQ1NGquylT4jcg4e86Oy6
-         P6z0/o3FyPOM8NFNP1knzr6Chazj81TgieL+pxY+pIsf1Vp87eLpdFOqeYe9Fp1ws13D
-         WQAQ==;
-        darn=lists.openembedded.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=d45GDL1m;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.50, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-435903c4040so391050f8f.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 22 Jan 2026 00:09:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769022464; x=1769627264; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=CYhcjog6V09ezuuLcgP5l3lk3gfm/MyHas/1BDTKYhs=;
-        b=VyKx3nfr3BrMlssUIs3ynCgBmPGIu35U4HNEocJ5yS+mInLGf9QcwuqQQltincg4gI
-         1XCMMznUORqKXKkhav3gu85UTF5KluiSSjxI30KJWx2H4juaOh5eDZvO9lnzXNO3or+M
-         hrbLHiGIK1bsWoAmRThiMD0aWHyH+45yRO2Qew+ezG1MNQ4znAvo6oKuuxf0dov1hiGC
-         k82ONllPY10f3Mq6YMCcMD+rJ5xyThx0ieF4fMrbd8XAI9wQYEpO4OclS9BntLA3YVlh
-         M/xYsS3vUU6oyDvGQS5VL8pjWoqfYsFShxHpFs79llecXS586vXZ1lqzpBbRIMKqWl4h
-         kWag==
+        d=linuxfoundation.org; s=google; t=1769069365; x=1769674165; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3G70b/X5XXZI1BX6mwo0H39NMCVFCVpKHr5c3QUrt/c=;
+        b=d45GDL1mZuAI/wqUk1UUbe6z4y9fIOBZcU6F4xLi244IkXZ1e/7jPNgKDWOlsFx92u
+         wbrPBWHTLO28E1BfEEJyq6jzJu/MTYnRYjXSpOortOBrgLZQbrK8mFj7c4OrJ9cydDUk
+         9LqnUp2GuqeHNnMJDDWCCLcdz/W7uqpdKSQ7M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769022464; x=1769627264;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CYhcjog6V09ezuuLcgP5l3lk3gfm/MyHas/1BDTKYhs=;
-        b=nbrrrFV00jZ7DzQCYEYNeF0N3QM9zrzNvOSA2wNelQaoWeQvDakecuGN/TkDLPviwe
-         xsQtkom3rvNyqTal8rc6SGXem8/u6NA/+VU0QtdSiJwsWWgFxLqlYI0OWAlC7aMHyibV
-         lL4eFalC9HjV2lcxNYDT6oCrebHbwXzTj1ZnWzCWypedJ7/YIjSJma+7KVAdvAog+Mjf
-         uSroRLuki+SqJOxKGnkdsSpzw9JJIw78tmng73frNno+1AKm2DICuker0PHZk6dISYwn
-         H197GSPQNBnGyvQ8mOaUsALIXVF/iOF9tarjHlh4hh6uVJOmnt2V7TWS9sPsHJ77p/71
-         c+AQ==
-X-Gm-Message-State: AOJu0Ywjl5R6gthOiVSJL8mSo+GUW4hJ4mnvfWk82UmzVXZRnOJpPtyO
-	MqIduZRGp9Sj0LD9ZwBMX5P+MspcVnO2rVPAlnuHt66xJMebWjax5CDrTXJjqDgTefXfuk3LFf2
-	PZxRjc/6PhGZgQ3HU/wx8AbBdC2xi55k=
-X-Gm-Gg: AZuq6aIWxVuL9+sTCJuyBWGKxjBm0n4Z4PdLz9600sHQVsijpW1Fn2028B/E1E8fK0Q
-	2LR9ib0cCYTB1QUVDCjBqVhzK0fCr5xtGJczn1enR4Q5qAjFBbVScWDDD/jg7SKyzfPiaTVv3VZ
-	tA9M5rvInoaZWEXgpyn1H1UuLcR0WIEkuxf0DuULw+Zj9ePwrzEkhjd0k4DXwEjo8eR4P2yIj5j
-	fNvdfZsSHzWlWmXM3Hyd8Ae1Jh/cX49syA2slL9bTo2QsTusNt2Ye+QF7yzbJB5A3Jg6fBk1Zjw
-	83KmW4OghVB+dc3o0a3rTsoNGfaKPOd31io6lGbRd29X66pEhWpapcRZpUo=
-X-Received: by 2002:a05:7022:b88e:b0:11b:aca4:be1f with SMTP id
- a92af1059eb24-1244b31eca9mr9891141c88.17.1769022463617; Wed, 21 Jan 2026
- 11:07:43 -0800 (PST)
+        d=1e100.net; s=20230601; t=1769069365; x=1769674165;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3G70b/X5XXZI1BX6mwo0H39NMCVFCVpKHr5c3QUrt/c=;
+        b=P5FgQdSIMEIwEbSUZGTrRYuq8OLw1DVJCp/fPCiklsWpXh2KqvQJ/hhdsP/3Td8ulL
+         QRHwR7wlC6NxFEzikpHih3Hxv8dYZiY888d3SC2UqvgbJP+dyzKXG7Y39TVvp1dtiRyQ
+         PbfH4Mf5GgzsopgiCFySc2DiABP2tslN/HEE/ZEXXa8BvbNPUgqhC6otVw+EsIxk1Spt
+         Mmo5rn7Wmguta0ncPZ3cjPyrMsS3hyE2PB+6YWQbJhITZEjpZI9oV/IQYSZ3uhkbzySf
+         BbeMpNFtOTyq0N6bO/EluSLbTTSFVSFR8v7MIb+GpJ8Ef6gCdX9hdLZ5Ve3qeh4WmnuT
+         e0Yg==
+X-Gm-Message-State: AOJu0YxqSPpMpLsO4YEwBgTmJTtJ12mcCGJIT0B6CnoPpnSk/ifygugl
+	LPfMzViAtoqQrsZ+Gbo5pZH4cunus9/nz+TuJrYq6iwDlaufCfYJf9yZFr8oRxpJ45TptNA//5Y
+	RTn4xgc8=
+X-Gm-Gg: AZuq6aIVgzVV3nuUOu5gvricm9Fk2IUgx3yIMTxDEEmdIdadtGbCL07S+WNmjTwwcCl
+	KlcP3iz5lK4CxukxhL3kNobpysDtX73JCZTZYjgyjFkb71eF+UNUbF2DNn7dRdxoNPuFy8FiwJz
+	c4y8S8R0xuoshpqUvcxSWQIgHfumsVK4tjlEB1crN2ng84ablst9bqVdoY2NaBgjKzENvMOHqjX
+	DvmqCzSkmnR8T70gjqGOkVSqR6tyYV9qkkO3G0NlviCK0dE6WE8gGpY8rlGtTaucBCreKkjOtHT
+	avKIT/rhiTQzmgG3h4iYxyGKlB3o/amD+XJocn6oSyXRMpVOeRnZB/H6btPKQR25hDkeCSOgkST
+	4hohOj525toQu1H/79P290puPPISGADCATYS4auBILhcCOMjt51RSB2uKItxrmwQOo2k3qI/abq
+	XVRcpWPiHy3PkN5wq0tL0VK1a9QEZSXsACa5Jjsh4=
+X-Received: by 2002:a05:6000:1883:b0:431:b6e:8be3 with SMTP id ffacd0b85a97d-4356a0538c8mr32750960f8f.38.1769069365041;
+        Thu, 22 Jan 2026 00:09:25 -0800 (PST)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:8ce7:5a61:b9e8:a245])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43569921dddsm44589731f8f.6.2026.01.22.00.09.24
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Jan 2026 00:09:24 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH v3] fetch2/npm/npmsw: Disable npm and npmsw fetchers due to security concerns
+Date: Thu, 22 Jan 2026 08:09:22 +0000
+Message-ID: <20260122080922.1695912-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.48.1
 MIME-Version: 1.0
-References: <188CD19B4A7A27E1.3547823@lists.openembedded.org> <80835073604216efd7372b2b019f3d4463f11e0e.camel@linuxfoundation.org>
-In-Reply-To: <80835073604216efd7372b2b019f3d4463f11e0e.camel@linuxfoundation.org>
-From: Marta Rybczynska <rybczynska@gmail.com>
-Date: Wed, 21 Jan 2026 20:07:32 +0100
-X-Gm-Features: AZwV_Qj7aQVJ4OHEw2qp2Nsvpsa0QyueuI5GbkmhoKgli689uNuPpZsRbn-PJts
-Message-ID: <CAApg2=SyaJyU=SFTKnYZXBsApc6Abgff+upMnAePdEEend5-Pg@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] fetch2/npm/npmsw: Disable npm and npmsw
- fetchers due to security concerns
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="0000000000008b2f810648eaa346"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 21 Jan 2026 19:07:53 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18841
+ <bitbake-devel@lists.openembedded.org>; Thu, 22 Jan 2026 08:09:37 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18842
 
---0000000000008b2f810648eaa346
-Content-Type: text/plain; charset="UTF-8"
+We've been made aware that are security issues within the npm/npmsw fetchers.
+The issue is that the code accepts data like checksums from the upstream
+servers, rather than verifying it against local data from the recipes. This
+means the upstream servers could feed aritrary data into the build.
 
-On Wed, 21 Jan 2026, 19:44 Richard Purdie via lists.openembedded.org,
-<richard.purdie=linuxfoundation.org@lists.openembedded.org> wrote:
+There have been maintainance issues on these fetchers for a while and despite
+asking in multiple forums, we've been unable to find anyone to help fix the
+issues. Until that issue is resolved and we can be convinced the fetcher is
+secure and modelling best practices for reproduciblity (inc. mirroring), this
+patch disables the fetchers. This has been discussed and agreed by the OE TSC.
 
-> On Wed, 2026-01-21 at 18:13 +0000, Richard Purdie via
-> lists.openembedded.org wrote:
-> > We've been made aware that are security issues within the npm/npmsw
-> fetchers.
-> > The issue is that the code accepts data like checksums from the upstream
-> > servers, rather than verifying it against local data from the recipes.
-> This
-> > means the upstream servers could feed aritrary data into the build.
-> >
-> > There have been maintainance issues on these fetchers for a while and
-> despite
-> > asking in multiple forums, we've been unable to find anyone to help fix
-> the
-> > issues. Until that issue is resolved and we can be convinced the fetcher
-> is
-> > secure and modelling best practices for reproduciblity (inc. mirroring),
-> this
-> > patch disables the fetchers. This has been discussed and agreed by the
-> OE TSC.
-> >
-> > Parsing will not show errors but the recipes using these fetchers will
-> not be
-> > available. Recipes will be skipped at parsing amd will show an error if
-> a user
-> > tries to build a recipe using them.
-> >
-> > [YOCTO #16105]
-> >
-> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > ---
-> >  lib/bb/fetch2/npm.py   | 5 ++++-
-> >  lib/bb/fetch2/npmsw.py | 4 ++++
-> >  2 files changed, 8 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-> > index e469d667687..15057da7d3f 100644
-> > --- a/lib/bb/fetch2/npm.py
-> > +++ b/lib/bb/fetch2/npm.py
-> > @@ -39,6 +39,7 @@ from bb.fetch2 import URI
-> >  from bb.fetch2 import check_network_access
-> >  from bb.fetch2 import runfetchcmd
-> >  from bb.utils import is_semver
-> > +from bb.parse import SkipRecipe
-> >
-> >  def npm_package(package):
-> >      """Convert the npm package name to remove unsupported character"""
-> > @@ -150,7 +151,9 @@ class Npm(FetchMethod):
-> >
-> >      def supports(self, ud, d):
-> >          """Check if a given url can be fetched with npm"""
-> > -        return ud.type in ["npm"]
-> > +        #return ud.type in ["npm"]
-> > +        if ud.type in ["npm"]:
-> > +            raise SkipRecipe("The npm fetcher has been disabled due to
-> security issues and there is maintainer to address them")
->
-> I will fix this to say "there is no maintainer to address them" on both
-> messages.
->
+Parsing will not show errors but the recipes using these fetchers will not be
+available. Recipes will be skipped at parsing and will show an error if a user
+tries to build a recipe using them.
 
-Thanks Richard, there's also a typo in the commit message "amd" -> and if
-you're rebasing.
+The import is local to the function to avoid circular dependencies within
+the hashserv selftests.
 
-Cheers,
-Marta
+[YOCTO #16105]
 
->
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/fetch2/npm.py   | 6 +++++-
+ lib/bb/fetch2/npmsw.py | 4 ++++
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
---0000000000008b2f810648eaa346
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"auto"><div><br><br><div class=3D"gmail_quote gmail_quote_contai=
-ner"><div dir=3D"ltr" class=3D"gmail_attr">On Wed, 21 Jan 2026, 19:44 Richa=
-rd Purdie via <a href=3D"http://lists.openembedded.org">lists.openembedded.=
-org</a>, &lt;richard.purdie=3D<a href=3D"mailto:linuxfoundation.org@lists.o=
-penembedded.org">linuxfoundation.org@lists.openembedded.org</a>&gt; wrote:<=
-br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;borde=
-r-left:1px #ccc solid;padding-left:1ex">On Wed, 2026-01-21 at 18:13 +0000, =
-Richard Purdie via <a href=3D"http://lists.openembedded.org" rel=3D"norefer=
-rer noreferrer" target=3D"_blank">lists.openembedded.org</a> wrote:<br>
-&gt; We&#39;ve been made aware that are security issues within the npm/npms=
-w fetchers.<br>
-&gt; The issue is that the code accepts data like checksums from the upstre=
-am<br>
-&gt; servers, rather than verifying it against local data from the recipes.=
- This<br>
-&gt; means the upstream servers could feed aritrary data into the build.<br=
->
-&gt; <br>
-&gt; There have been maintainance issues on these fetchers for a while and =
-despite<br>
-&gt; asking in multiple forums, we&#39;ve been unable to find anyone to hel=
-p fix the<br>
-&gt; issues. Until that issue is resolved and we can be convinced the fetch=
-er is<br>
-&gt; secure and modelling best practices for reproduciblity (inc. mirroring=
-), this<br>
-&gt; patch disables the fetchers. This has been discussed and agreed by the=
- OE TSC.<br>
-&gt; <br>
-&gt; Parsing will not show errors but the recipes using these fetchers will=
- not be<br>
-&gt; available. Recipes will be skipped at parsing amd will show an error i=
-f a user<br>
-&gt; tries to build a recipe using them.<br>
-&gt; <br>
-&gt; [YOCTO #16105]<br>
-&gt; <br>
-&gt; Signed-off-by: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@lin=
-uxfoundation.org" target=3D"_blank" rel=3D"noreferrer">richard.purdie@linux=
-foundation.org</a>&gt;<br>
-&gt; ---<br>
-&gt; =C2=A0lib/bb/fetch2/npm.py=C2=A0=C2=A0 | 5 ++++-<br>
-&gt; =C2=A0lib/bb/fetch2/npmsw.py | 4 ++++<br>
-&gt; =C2=A02 files changed, 8 insertions(+), 1 deletion(-)<br>
-&gt; <br>
-&gt; diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py<br>
-&gt; index e469d667687..15057da7d3f 100644<br>
-&gt; --- a/lib/bb/fetch2/npm.py<br>
-&gt; +++ b/lib/bb/fetch2/npm.py<br>
-&gt; @@ -39,6 +39,7 @@ from bb.fetch2 import URI<br>
-&gt; =C2=A0from bb.fetch2 import check_network_access<br>
-&gt; =C2=A0from bb.fetch2 import runfetchcmd<br>
-&gt; =C2=A0from bb.utils import is_semver<br>
-&gt; +from bb.parse import SkipRecipe<br>
-&gt; =C2=A0<br>
-&gt; =C2=A0def npm_package(package):<br>
-&gt; =C2=A0=C2=A0=C2=A0=C2=A0 &quot;&quot;&quot;Convert the npm package nam=
-e to remove unsupported character&quot;&quot;&quot;<br>
-&gt; @@ -150,7 +151,9 @@ class Npm(FetchMethod):<br>
-&gt; =C2=A0<br>
-&gt; =C2=A0=C2=A0=C2=A0=C2=A0 def supports(self, ud, d):<br>
-&gt; =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &quot;&quot;&quot;Che=
-ck if a given url can be fetched with npm&quot;&quot;&quot;<br>
-&gt; -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ud.type in [&quot;n=
-pm&quot;]<br>
-&gt; +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #return ud.type in [&quot;=
-npm&quot;]<br>
-&gt; +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ud.type in [&quot;npm&q=
-uot;]:<br>
-&gt; +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ra=
-ise SkipRecipe(&quot;The npm fetcher has been disabled due to security issu=
-es and there is maintainer to address them&quot;)<br>
-<br>
-I will fix this to say &quot;there is no maintainer to address them&quot; o=
-n both<br>
-messages.<br></blockquote></div></div><div dir=3D"auto"><br></div><div dir=
-=3D"auto">Thanks Richard, there&#39;s also a typo in the commit message &qu=
-ot;amd&quot; -&gt; and if you&#39;re rebasing.</div><div dir=3D"auto"><br><=
-/div><div dir=3D"auto">Cheers,</div><div dir=3D"auto">Marta</div><div dir=
-=3D"auto"><div class=3D"gmail_quote gmail_quote_container"><blockquote clas=
-s=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;pad=
-ding-left:1ex">
-</blockquote></div></div></div>
-
---0000000000008b2f810648eaa346--
+diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
+index e469d667687..72a24c8c35f 100644
+--- a/lib/bb/fetch2/npm.py
++++ b/lib/bb/fetch2/npm.py
+@@ -150,7 +150,11 @@ class Npm(FetchMethod):
+ 
+     def supports(self, ud, d):
+         """Check if a given url can be fetched with npm"""
+-        return ud.type in ["npm"]
++        #return ud.type in ["npm"]
++        if ud.type in ["npm"]:
++            from bb.parse import SkipRecipe
++            raise SkipRecipe("The npm fetcher has been disabled due to security issues and there is maintainer to address them")
++        return False
+ 
+     def urldata_init(self, ud, d):
+         """Init npm specific variables within url data"""
+diff --git a/lib/bb/fetch2/npmsw.py b/lib/bb/fetch2/npmsw.py
+index 2f9599ee9e2..322c7b331e5 100644
+--- a/lib/bb/fetch2/npmsw.py
++++ b/lib/bb/fetch2/npmsw.py
+@@ -64,6 +64,10 @@ class NpmShrinkWrap(FetchMethod):
+     def supports(self, ud, d):
+         """Check if a given url can be fetched with npmsw"""
+         return ud.type in ["npmsw"]
++        if ud.type in ["npmsw"]:
++            from bb.parse import SkipRecipe
++            raise SkipRecipe("The npmsw fetcher has been disabled due to security issues and there is maintainer to address them")
++        return False
+ 
+     def urldata_init(self, ud, d):
+         """Init npmsw specific variables within url data"""
 
