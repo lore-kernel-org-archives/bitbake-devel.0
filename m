@@ -1,213 +1,154 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D835BD3EE7F
-	for <webhook@archiver.kernel.org>; Thu, 22 Jan 2026 15:02:29 +0000 (UTC)
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.39171.1769094143801258491
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 334D6D3EE92
+	for <webhook@archiver.kernel.org>; Thu, 22 Jan 2026 16:52:51 +0000 (UTC)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.41830.1769100762786874700
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 22 Jan 2026 07:02:24 -0800
+ Thu, 22 Jan 2026 08:52:43 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=1d7hEdHW;
- spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id E07FFC21AA6
-	for <bitbake-devel@lists.openembedded.org>; Thu, 22 Jan 2026 15:02:21 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 1505D606B6;
-	Thu, 22 Jan 2026 15:02:22 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 289E8119B82C8;
-	Thu, 22 Jan 2026 16:02:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1769094141; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=2ZGEPt+4v/RyZV4sMzJbPe5hi+in9DOkXCMf+lyuY7Y=;
-	b=1d7hEdHWq8evc6+p4TBRp0Ox1+6pSPJfqiOY7bknhtWuTCAp7LDHsTX5Xu74ONOSb/5MDf
-	ZOkJNYXuWmHenHEUOrOLc/k7JXi3s5qZjIPwQRUgqbEnMWWScK93v5lqki1ffM8ibZ46XB
-	htxqEtnssdqqpFylh2SmheALm9FZDKkZbPcDsEZLp0Q0MkvxWQ5iWg9ug9rAJiooE+agAo
-	ydgtdofcLjcwdeKirkkYHal8cr+0VChHRISqWTAPThrKb7WP7pyFnIin3eDR24JzixZWht
-	z66kRURU2XhqL1WXqmHzymcdJkmUtUwyKTfx2OatMLemgm4j5/qpviQeHbeAxg==
-From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Thu, 22 Jan 2026 16:01:58 +0100
-Subject: [PATCH v3 1/3] bin/bitbake-setup: add descriptions for fragment
- choices
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=YNb2fHK4;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.50, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-47ee4539adfso12648375e9.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 22 Jan 2026 08:52:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1769100761; x=1769705561; darn=lists.openembedded.org;
+        h=mime-version:user-agent:references:in-reply-to:date:cc:to:from
+         :subject:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=FXazJqkHlnXeFT66i56/rsq3qXNqDSnKD9Dnwk+yhMU=;
+        b=YNb2fHK4Ea7mKGK9echGR2gxLWTi/CBM/q+8qtKrji5y7lDiE3eLed1H2Yx4v5Y9tA
+         D7ADPsbhLf08y3iTRwR7r1JtgTYO/FLBhBg4OO2RY1Y0pq8B/q6XpABNIhspzoHBowIS
+         Y9vq05k1WCB5BVWttweU2YICs1aslwoYAyBZg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769100761; x=1769705561;
+        h=mime-version:user-agent:references:in-reply-to:date:cc:to:from
+         :subject:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FXazJqkHlnXeFT66i56/rsq3qXNqDSnKD9Dnwk+yhMU=;
+        b=UGgJIJjYTz3sd2mXFo2d11uFlfKB3m0BcjPV6jgoKG0dZi8XuQlRsx14D8j4PC7e4d
+         eIese5tWbNowbQ6q7kGK3QeLtNfjXIZOF45eGj8abuDSy90UaB1y3pgF26TeyYewZWCc
+         JsxEQRZyaBm/ypRGONB9ZnPvpBAJBwtomjE0Aw62aIfh0WLW8e055KcZuGcjP1zqZJkd
+         jhAkWDQxqFVM5xiFVeb57T19N5LnDMLoTT1XYvxjjCVej35QQCa5bTRbcia2y2uFlcTa
+         RuSifIBVEsWWrQCtEV+a0X2knqCi7rB+Vh2AxQqwkGLThGStz0psAyqcWiehUwSkLIOo
+         fk+Q==
+X-Gm-Message-State: AOJu0Yy90blEq0PKUo/IE/q58y7Bj6Vh7teL3m/XhQeKPeE6vuxDPQW+
+	pb0rrW/f/9DYY6R0zJPvZ8JP/xRjepHGSKFMlw4SwNNTdKHZdS97jTJeUI4NSeT4TqA=
+X-Gm-Gg: AZuq6aKgM/HyNUf56h4NZagukJBb4sXzwHPe3UiDxyr67UkheJSNgL6gQedK/l3C+I7
+	SuVrFjd3RFhDdQFxGq3IpjOXpE/AxOuZuAyER1oCL5cyG8WBMJnycqyq7BM6ZeIMRKsN5mXrQ+j
+	vnIEIzMB9c9Qnl3bPC57LQ6Yt2ogWtksz8/l4SKCR7slpDB7bRxGBfRTJWXNaSOEIqNQUbSGAwy
+	1CRys4mnQgHVvCAKt48U4QKYL8cEpsuTCQQVGL/FDW9Kk3xIiyJuQEYtuTnU/cwwCezj2fmeMLF
+	7KLBPSeRPXwQ4byiNeeiQhh0LBVvc6IsfKjhhEnACoPZ0jLtHkNwMGJhLxkE18Wy7LtmNWOm729
+	vgDDCbMXyVxXez2uiuQFfS7pqVUFDTGZ/LFCsFhqStYE4Ns8x4FNicP7AW7aEqDwgTx5GU0NqnU
+	W6NPdKUpBvUzTX8SfZjYSwCH1QAgpKoLV0QmPflK2IFQGrY1SSdMvXMcX86wptx+fONZa8GRAy/
+	yb7mX3MsvY92w==
+X-Received: by 2002:a05:600c:1c13:b0:480:4a90:1afe with SMTP id 5b1f17b1804b1-4804c9d116emr3813135e9.34.1769100761133;
+        Thu, 22 Jan 2026 08:52:41 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:8ce7:5a61:b9e8:a245? ([2001:8b0:aba:5f3c:8ce7:5a61:b9e8:a245])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48047028928sm120882535e9.2.2026.01.22.08.52.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Jan 2026 08:52:40 -0800 (PST)
+Message-ID: <95d5cdea6bc5458c5a72842e81a62c14e35a0563.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH v3] fetch2/npm/npmsw: Disable npm and
+ npmsw fetchers due to security concerns
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Stefan Herbrechtsmeier <stefan.herbrechtsmeier-oss@weidmueller.com>
+Cc: bitbake-devel@lists.openembedded.org, rybczynska@gmail.com
+Date: Thu, 22 Jan 2026 16:52:39 +0000
+In-Reply-To: <3f3a900e-f2fb-4596-9274-d2129799e498@weidmueller.com>
+References: <20260122080922.1695912-1-richard.purdie@linuxfoundation.org>
+	 <CAApg2=R1ek+YS44f++taB-N2WpJkZ+3vJWD_dukZ+=WVhzuqnw@mail.gmail.com>
+	 <3f3a900e-f2fb-4596-9274-d2129799e498@weidmueller.com>
+Content-Type: multipart/alternative; boundary="=-3sArPqAJovR6LfwnnZdJ"
+User-Agent: Evolution 3.56.0-1ubuntu0.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260122-bitbake-setup-choose-builtin-v3-1-c55291acc1a7@bootlin.com>
-References: <20260122-bitbake-setup-choose-builtin-v3-0-c55291acc1a7@bootlin.com>
-In-Reply-To: <20260122-bitbake-setup-choose-builtin-v3-0-c55291acc1a7@bootlin.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Alexander Kanavin <alex.kanavin@gmail.com>, docs@lists.yoctoproject.org, 
- Antonin Godard <antonin.godard@bootlin.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8159;
- i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=afytrESbCE7KTnmirGBuEgjb8HMwyH4hCj3g5uHb2Jo=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpcjv6eEMWViqzbc+rzHzRkuFZLxXxDTfae8d0b
- 4mUdcQCAiOJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaXI7+gAKCRDRgEFAKaOo
- Nj0cEACtD49NhzETKalLQD0Fy7d7sPhsjH4vDeyCDogjnGG91oJNE7lN+2mF+UezI3/qt/T0Wui
- G8D/h1gNYFEz/lrKmPKe0MS/+srLVqpKYlcuawLgkSZ1hG8+f81S0f9KbcCjybm/rAEo6y72izy
- FmCxlpofoDNVknp1vM6P99EEh2LBSH0ALwS2R1fs/EQBrpQzJTUrUorhEXZUtgNGgD9fG5ZM4jc
- C0FayzdZIvCNjYp6Gf1VyIuyZXKsykEJRDbmz5sgldo40MtpEalc0i1Y6DWifMO3zphE9ebWWv3
- nmC630oIbBUK6HxxPe45BggtbItwzuHuCzZ2oOxUCR2cM9FcvP9sFwPquFpxVNcn396CrDD8ZY0
- q2aJ2w21MP1Wx+n1tKJwnzEMwStsbgpfKPK6u1chfNiOnyjJ3APTyk38zafSZAC/P7Yhd8H/MtW
- go61a442LfR2D4qkKDYpGU9rEwIw3IcEoq2nI4SYDDTf8le96+3oJ8x8IWDhXEFcJMASe5fgvgd
- /yB5iHAHWhmbtPEj8hbX2ESryleWOKV3fb4hxK3yn7LZ8g9mBNYqDThyRi1t5cw4zw7GCAoyJRJ
- Fd6uob88KKtNMP/8oXp4BXvZMUXO04aAihUuXtB2ycP2Ft1YjpcQ4oZgr6Pr9E3oWPQTmig03wK
- pON7BZIpuO6dhvQ==
-X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
- fpr=8648725188DD401BB9A0D3FFD180414029A3A836
-X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 22 Jan 2026 15:02:29 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18848
+ <bitbake-devel@lists.openembedded.org>; Thu, 22 Jan 2026 16:52:51 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18852
 
-Make it possible to give fragments descriptions as it can help users
-determine which fragments to pick during bitbake-setup init.
+--=-3sArPqAJovR6LfwnnZdJ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-It is still possible to provide a list (with no descriptions) for
-backwards-compatibility.
+On Thu, 2026-01-22 at 15:53 +0100, Stefan Herbrechtsmeier wrote:
+> =20
+> Am 22.01.2026 um 14:01 schrieb Marta Rybczynska via
+> lists.openembedded.org:
+> > On Thu, Jan 22, 2026 at 9:09=E2=80=AFAM Richard Purdie via
+> > lists.openembedded.org
+> > <richard.purdie=3Dlinuxfoundation.org@lists.openembedded.org> wrote:
+> > =20
+> > > diff --git a/lib/bb/fetch2/npmsw.py b/lib/bb/fetch2/npmsw.py
+> > > index 2f9599ee9e2..322c7b331e5 100644
+> > > --- a/lib/bb/fetch2/npmsw.py
+> > > +++ b/lib/bb/fetch2/npmsw.py
+> > > @@ -64,6 +64,10 @@ class NpmShrinkWrap(FetchMethod):
+> > > =C2=A0 =C2=A0 =C2=A0def supports(self, ud, d):
+> > > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0"""Check if a given url can be fetc=
+hed with npmsw"""
+> > > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ud.type in ["npmsw"]
+> > >=20
+> > =20
+> > =20
+> > =20
+> =20
+> You forgot to remove or comment out this line.
 
-Update the documentation accordingly.
+Thanks, I will send a new version and retest.
 
-Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
----
- bin/bitbake-setup                                  | 23 ++++++++++++++-----
- .../bitbake-user-manual-environment-setup.rst      | 26 ++++++++++++++++++++--
- setup-schema/bitbake-setup.schema.json             | 21 ++++++++++++++++-
- 3 files changed, 61 insertions(+), 9 deletions(-)
+Cheers,
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index abe7614c832..b0d14e7c1b8 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -494,23 +494,34 @@ def choose_fragments(possibilities, parameters, non_interactive, skip_selection)
-         if skip_selection and k in skip_selection:
-             logger.info("Skipping a selection of {}, as requested on command line. The resulting bitbake configuration may require further manual adjustments.".format(k))
-             continue
--        choice = [o for o in v["options"] if o in parameters]
-+
-+        # options can be a list of strings or a list of dicts
-+        options = v["options"]
-+        if len(options) > 0 and isinstance(v["options"][0], str):
-+            options = [{"name": o, "description": ""} for o in v["options"]]
-+
-+        choice = [o["name"] for o in options if o["name"] in parameters]
-         if len(choice) > 1:
--            raise Exception("Options specified on command line do not allow a single selection from possibilities {}, please remove one or more from {}".format(v["options"], parameters))
-+            raise Exception("Options specified on command line do not allow a single selection "
-+                            f"from possibilities {[o['name'] for o in options]}, please "
-+                            f"remove one or more from {parameters}")
-         if len(choice) == 1:
-             choices[k] = choice[0]
-             continue
- 
-         if non_interactive:
--            raise Exception("Unable to choose from options in non-interactive mode: {}".format(v["options"]))
-+            raise Exception(f"Unable to choose from options in non-interactive mode: {[o['name'] for o in options]}")
- 
-         logger.plain("\n" + v["description"] + ":")
--        options_enumerated = list(enumerate(v["options"], 1))
-+        options_enumerated = list(enumerate(options, 1))
-         for n,o in options_enumerated:
--            logger.plain("{}. {}".format(n, o))
-+            opt_str = f"{n}. {o['name']}"
-+            if o["description"]:
-+                opt_str += f"\t{o['description']}"
-+            logger.plain(opt_str)
-         option_n = int_input([i[0] for i in options_enumerated],
-                              "\nPlease select one of the above options by its number: ") - 1
--        choices[k] = options_enumerated[option_n][1]
-+        choices[k] = options_enumerated[option_n][1]["name"]
-     return choices
- 
- def obtain_config(top_dir, settings, args, source_overrides, d):
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-index 3b6a73fd8d3..92fedd7d969 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-@@ -759,11 +759,21 @@ They contain the following sections:
-                 "oe-fragments-one-of": {
-                     "machine": {
-                         "description": "Target machines",
--                        "options" : ["machine/qemux86-64", "machine/qemuarm64", "machine/qemuriscv64", "machine/genericarm64", "machine/genericx86-64"]
-+                        "options" : [
-+                            { "name": "machine/qemux86-64", "description": "Machine configuration for running an x86-64 system on QEMU" },
-+                            { "name": "machine/qemuarm64", "description": "Machine configuration for running an ARMv8 system on QEMU" },
-+                            { "name": "machine/qemuriscv64", "description": "Machine configuration for running an RISC-V system on QEMU" },
-+                            { "name": "machine/genericarm64", "description": "Machine configuration for Arm64 SystemReady IR/ES platforms" },
-+                            { "name": "machine/genericx86-64", "description": "Machine configuration for generic x86_64 (64-bit) PCs and servers" }
-+                        ]
-                     },
-                     "distro": {
-                         "description": "Distribution configuration variants",
--                        "options" : ["distro/poky", "distro/poky-altcfg", "distro/poky-tiny"]
-+                        "options" : [
-+                            { "name": "distro/poky", "description": "Distro configuration for Poky (Yocto Project Reference Distro)" },
-+                            { "name": "distro/poky-altcfg", "description": "Distro configuration for Poky (systemd init manager)" },
-+                            { "name": "distro/poky-tiny", "description": "Distro configuration for Poky (optimized for size)" }
-+                        ]
-                     }
-                 },
-                 "configurations": [
-@@ -852,6 +862,18 @@ They contain the following sections:
-    -  ``oe-fragments-one-of`` (*optional*, OpenEmbedded specific): the OpenEmbedded
-       fragments to select as part of the build.
- 
-+      This can one of two formats:
-+
-+      -  A list of dictionaries with ``name`` and a ``description``,
-+         corresponding to respectively the fragments names and fragment
-+         descriptions (like in the example above).
-+
-+      -  A list of fragment names. For example:
-+
-+         .. code-block:: json
-+
-+            "options" : ["machine/qemux86-64", "machine/qemuarm64", "machine/qemuriscv64", "machine/genericarm64", "machine/genericx86-64"]
-+
-       This will trigger choices to make during the
-       :ref:`ref-bbsetup-command-init` command execution.
- 
-diff --git a/setup-schema/bitbake-setup.schema.json b/setup-schema/bitbake-setup.schema.json
-index e51fef3b97c..be8772db1b2 100644
---- a/setup-schema/bitbake-setup.schema.json
-+++ b/setup-schema/bitbake-setup.schema.json
-@@ -64,7 +64,26 @@
-                                 "type": "array",
-                                 "description": "List of BitBake configuration fragments to enable",
-                                 "items": {
--                                    "type": "string"
-+                                    "oneOf": [
-+                                        {
-+                                            "type": "string",
-+                                            "description": "Configuration fragment name"
-+                                        },
-+                                        {
-+                                            "type": "object",
-+                                            "description": "Dictionary of BitBake configuration fragments to enable (with description)",
-+                                            "properties": {
-+                                                "name": {
-+                                                    "type": "string",
-+                                                    "description": "Configuration fragment name"
-+                                                },
-+                                                "description": {
-+                                                    "type": "string",
-+                                                    "description": "Human-readable description of the fragment"
-+                                                }
-+                                            }
-+                                        }
-+                                    ]
-                                 }
-                             },
-                             "oe-fragments-one-of": {
+Richard
 
--- 
-2.52.0
+--=-3sArPqAJovR6LfwnnZdJ
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+<html><head>
+
+  <style>pre,code,address {
+  margin: 0px;
+}
+h1,h2,h3,h4,h5,h6 {
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+ol,ul {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+blockquote {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+</style></head>
+  <body><div>On Thu, 2026-01-22 at 15:53 +0100, Stefan Herbrechtsmeier wrot=
+e:</div><blockquote type=3D"cite" style=3D"margin:0 0 0 .8ex; border-left:2=
+px #729fcf solid;padding-left:1ex"><div> </div><p>Am 22.01.2026 um 14:01 sc=
+hrieb Marta Rybczynska via lists.openembedded.org:</p><blockquote type=3D"c=
+ite" cite=3D"mid:CAApg2=3DR1ek+YS44f++taB-N2WpJkZ+3vJWD_dukZ+=3DWVhzuqnw@ma=
+il.gmail.com" style=3D"margin:0 0 0 .8ex; border-left:2px #729fcf solid;pad=
+ding-left:1ex"><div dir=3D"ltr"><div dir=3D"ltr">On Thu, Jan 22, 2026 at 9:=
+09=E2=80=AFAM Richard Purdie via <a href=3D"http://lists.openembedded.org" =
+moz-do-not-send=3D"true">lists.openembedded.org</a> &lt;richard.purdie=3D<a=
+ href=3D"mailto:linuxfoundation.org@lists.openembedded.org" moz-do-not-send=
+=3D"true" class=3D"moz-txt-link-freetext">linuxfoundation.org@lists.openemb=
+edded.org</a>&gt; wrote:</div><div class=3D"gmail_quote gmail_quote_contain=
+er"> <br><blockquote type=3D"cite" style=3D"margin:0 0 0 .8ex; border-left:=
+2px #729fcf solid;padding-left:1ex"><div>diff --git a/lib/bb/fetch2/npmsw.p=
+y b/lib/bb/fetch2/npmsw.py<br> index 2f9599ee9e2..322c7b331e5 100644<br> --=
+- a/lib/bb/fetch2/npmsw.py<br> +++ b/lib/bb/fetch2/npmsw.py<br> @@ -64,6 +6=
+4,10 @@ class NpmShrinkWrap(FetchMethod):<br> &nbsp; &nbsp; &nbsp;def suppo=
+rts(self, ud, d):<br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"""Check if a given=
+ url can be fetched with npmsw"""<br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ret=
+urn ud.type in ["npmsw"]<br> </div><br></blockquote> </div> </div><div> </d=
+iv></blockquote><div> </div><p>You forgot to remove or comment out this lin=
+e.<br></p></blockquote><div><br></div><div>Thanks, I will send a new versio=
+n and retest.</div><div><br></div><div>Cheers,</div><div><br></div><div>Ric=
+hard</div><div><br></div><div><span></span></div></body></html>
+
+--=-3sArPqAJovR6LfwnnZdJ--
 
