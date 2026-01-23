@@ -2,40 +2,40 @@ Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95258D74EC5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E66B2D74ED0
 	for <webhook@archiver.kernel.org>; Fri, 23 Jan 2026 13:24:28 +0000 (UTC)
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.67344.1769174659873895011
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.67346.1769174660951257844
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 23 Jan 2026 05:24:20 -0800
+ Fri, 23 Jan 2026 05:24:21 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=JZD1n4fA;
- spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=pHy0MzRC;
+ spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 5D11D1A2AD4
-	for <bitbake-devel@lists.openembedded.org>; Fri, 23 Jan 2026 13:24:18 +0000 (UTC)
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 62B344E42219;
+	Fri, 23 Jan 2026 13:24:19 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 2D3616070A;
-	Fri, 23 Jan 2026 13:24:18 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3BD18119A87D8;
-	Fri, 23 Jan 2026 14:24:17 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 390396070A;
+	Fri, 23 Jan 2026 13:24:19 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2838D119A879C;
+	Fri, 23 Jan 2026 14:24:18 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1769174657; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1769174658; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=jgM4Kg90qhX31I7AWOB41exSR9nYVnnPa/BevY8S2A4=;
-	b=JZD1n4fAykJKSMoJVd3gfOI7s8gfzADIeO3LcrcLhlGeHs1BpeyZcKz65R+S1yvNZBHvFO
-	GG8LSkJTzqKIiZWpZup2gHA0Ma/IdCAPf/Mz3fT7gDq+7TG2dS0tu5Welc0kfLMlK4XeKS
-	KsIo8UVI03ymH5rtnebEcIauEDKcEYMGTr4txmsW1i5ZXEvC3CGhUL5ctJX6w5mBr5k6yP
-	3CWstyVfajgtZr+1cAAsB5f3fprEAgZ7GAHFSPxf9K1DKLr1KgjcBFCHQLUSzpEqldt69I
-	wISRpv4Y/orp0RqtVNULW08A1gvjN0Vs8WBJCsKQVv6kA8dHgJbyt9hAJsBiBQ==
+	bh=g2koIJSmJjswh6P8PjjE4ZEWlWyNrD5iZxRgYd1r9ZY=;
+	b=pHy0MzRCzw+Nigi3TSb4hC8K2XYOBn4gfE8C2Tos9MnAByP13jj6/bvpBi/Z3laRFW/RjZ
+	kPhMyPb5zSdO+et0B1sZYBMmED8Bp+C5UOqL1Kal201es+S9/QeITStE9qiXBgEEyfTz98
+	mu0DOBUcV38E9Xwx01Dn2dw3YOpZhgb4n4vACS4I/fr/lbWM8A/I/T8cNp5AcoXnMaHFNK
+	+QD0WSYAeLMAPQiN79nwJ3V3bPEqAz3KLMvo5op65hMzp1p0zWKOVKkiB2aGsjjs6cqWEM
+	KqOqGUS2UmGRF55wI6gDV2F8C6SPxOkqKwVbd0XEaUJol1F/KVl5I7JTMBsuKA==
 From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Fri, 23 Jan 2026 14:24:07 +0100
-Subject: [PATCH v4 2/3] default-registry: update fragments choices with
- descriptions
+Date: Fri, 23 Jan 2026 14:24:08 +0100
+Subject: [PATCH v4 3/3] lib/bb/tests/setup.py: add tests for
+ oe-fragments-one-of
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260123-bitbake-setup-choose-builtin-v4-2-99361f2128f6@bootlin.com>
+Message-Id: <20260123-bitbake-setup-choose-builtin-v4-3-99361f2128f6@bootlin.com>
 References: <20260123-bitbake-setup-choose-builtin-v4-0-99361f2128f6@bootlin.com>
 In-Reply-To: <20260123-bitbake-setup-choose-builtin-v4-0-99361f2128f6@bootlin.com>
 To: bitbake-devel@lists.openembedded.org
@@ -43,21 +43,21 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
  Alexander Kanavin <alex.kanavin@gmail.com>, docs@lists.yoctoproject.org, 
  Antonin Godard <antonin.godard@bootlin.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3676;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3627;
  i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=jWpA35XcRtNFx/OZh7hKYjjVUJYcHpz6omjTxj5vqeI=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpc3Z+JbAcSLDarIwgdLe89shulujdlmQueNOso
- TefvNmHykmJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaXN2fgAKCRDRgEFAKaOo
- Nu/ZD/9oZkKMvuT33u2jl8QQFKnOpNblx+JcJbCufDC4lo7dWoiBjhl1DMeJvp9HJuy4RpitaJI
- ipS+yvgKs89KJthClp2U9tBJ5iiKu8OFPSGA9cHAG6kbvMRAIf5T3keCGGJT7EzPAsbgzIt2qWE
- PfqsGwQwyoho3rg9sEzYVwzC/bWHVw16qPj6iJfwLT+nzH6mTGmbRAB4P1Ck2TX2m/l8+s7adhc
- 4ofAd7whJDxiPqaJUjWlzd1EgdUsz6PbrhtsaohgKhkVizGdOQ6zyk/sK4WKYG5CLrUWMWMO2Ml
- 3OZCwlFfhBQ3JzCKjzv8FYvbPIgKZlS5cLjs1vS1t6WoqDAXLDcQBB7uB1/5OA7/dP6W4rSLXvX
- MOiVoBXxadcNU6qkVq0rtKdnSLlV+f+j0W/AsXPRq+7RZCNxmF30vKKVTboYJDII+Up/uD7sC3r
- QqySymosgVDG9+sdN/QRIeAUczN0C2BIpx7kT9t4afuMMt2fSSLnnt5e9GJ/AVprWZXYDNgZem8
- Ji5HbZ+eyGjazX7hiUd/DmR7WPajGxzYvTncv6dEwcDIw+BK5zHTj33u/smw5uYTs0tkG8bbq/o
- 802JG+FbOKmzszLMA06sdz1c7gPJTV+1HjYqq677FSjC3uZVPKxRpTdPyvEnPSK5sQ5qm4FxeqW
- JxF/BFA8g93jRhQ==
+ bh=UCnMFPZz7Di0N5U7Oen8QNvdvN3re6ulXQivsjIYkmE=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpc3Z+Pk7NmjiHrtQcz6XHzeCLdPRext/iZc7qF
+ 7ujF8yQ4QOJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaXN2fgAKCRDRgEFAKaOo
+ NlW2EACfPAoE/DKMh+hQB4q1II8gF2BnWwu5PFVGI1TkjFWLiD5qHgZ+fO6P0ltB7irZh9JW59p
+ WQN+H0EHrTDdCEbj2sJN1fQ8Viy0pyIpD9KmkXXTSo9SemSEadkUUEX+tecgOOxLBCubFaPzBMT
+ qjDW5kYnEW9DjnXYvUJGBicMhRJHpHuP+QcIohFys2YxiR+nF4YyKlKJFbSOZLpwbvuAYqHz1CY
+ oW3A/SrYDn0nE2+EmXZ1RIB5CpstDk9rVXp7+/+MmSe2f0LflrqmowFCld+Nd1JiBcFlCZ164Qb
+ 78UllCsa74C9lABiaVVi33BpwvzOFHjIDH+bYh/GQzkTiPCHcQNBEsQ/lsEtfvM1a+iGQKriJWm
+ pBuwfr6ZZhR26BrL/iKT6qVXmUqNkd225CTto9OepaFrm3XnhNJQ3ncD7+f1ezegNClsS2oK9YF
+ 8lX1nc10zL0/4f64PJinh/do8QQCFZgLYada3qj1mvDQHiBn91Wb2eNs8GbDu0o4rBPjcssnaCF
+ 0JPxA9fW/qcEUXg+OWmz9UuLlODmztGe92F4DPQ8hiBvudI7j7NveuSfs2CUMoTcP/3jvAFnFY+
+ VG/fkCBcls2Eh6Zu9ZjGY6kwrYYKP33PdVEbV1dhOeENG9NOFKXFVNm6JDK8vZlrnsALFYGdgeh
+ YyWPe2DdFLdP+Uw==
 X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
  fpr=8648725188DD401BB9A0D3FFD180414029A3A836
 X-Last-TLS-Session-Version: TLSv1.3
@@ -65,64 +65,80 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 23 Jan 2026 13:24:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18858
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18861
 
-Give descriptions to the fragment choices to help the user know what to
-pick during 'bitbake-setup init'. These descriptions were based on the
-descriptions found in the corresponding configuration files in
-OE-Core/meta-yocto.
+There were no tests of oe-fragments-one-of so modify gizmo-notemplate to
+gizmo-notemplate-fragments-one-of, and test both formats for the options
+(with or without a description).
+
+In get_setup_path(), if the configuration specified on the command-line
+contains fragments, join everything with "-" as this is what will be the
+final directory name of the setup. This does not affect other current
+variants.
 
 Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
 ---
- .../configurations/oe-nodistro-master.conf.json            |  6 +++++-
- default-registry/configurations/poky-master.conf.json      | 14 ++++++++++++--
- 2 files changed, 17 insertions(+), 3 deletions(-)
+ lib/bb/tests/setup.py | 31 +++++++++++++++++++++++++++----
+ 1 file changed, 27 insertions(+), 4 deletions(-)
 
-diff --git a/default-registry/configurations/oe-nodistro-master.conf.json b/default-registry/configurations/oe-nodistro-master.conf.json
-index 180d2008a72..00c4befb1ac 100644
---- a/default-registry/configurations/oe-nodistro-master.conf.json
-+++ b/default-registry/configurations/oe-nodistro-master.conf.json
-@@ -45,7 +45,11 @@
-             "oe-fragments-one-of": {
-                 "machine": {
-                     "description": "Target machines",
--                    "options" : ["machine/qemux86-64", "machine/qemuarm64", "machine/qemuriscv64"]
-+                    "options" : [
-+                        { "name": "machine/qemux86-64", "description": "Machine configuration for running an x86-64 system on QEMU" },
-+                        { "name": "machine/qemuarm64", "description": "Machine configuration for running an ARMv8 system on QEMU" },
-+                        { "name": "machine/qemuriscv64", "description": "Machine configuration for running an RISC-V system on QEMU" }
-+                    ]
-                 }
-             }
-         }
-diff --git a/default-registry/configurations/poky-master.conf.json b/default-registry/configurations/poky-master.conf.json
-index 1de038babe7..18657ece103 100644
---- a/default-registry/configurations/poky-master.conf.json
-+++ b/default-registry/configurations/poky-master.conf.json
-@@ -54,11 +54,21 @@
-             "oe-fragments-one-of": {
-                 "machine": {
-                     "description": "Target machines",
--                    "options" : ["machine/qemux86-64", "machine/qemuarm64", "machine/qemuriscv64", "machine/genericarm64", "machine/genericx86-64"]
-+                    "options" : [
-+                        { "name": "machine/qemux86-64", "description": "Machine configuration for running an x86-64 system on QEMU" },
-+                        { "name": "machine/qemuarm64", "description": "Machine configuration for running an ARMv8 system on QEMU" },
-+                        { "name": "machine/qemuriscv64", "description": "Machine configuration for running an RISC-V system on QEMU" },
-+                        { "name": "machine/genericarm64", "description": "Machine configuration for Arm64 SystemReady IR/ES platforms" },
-+                        { "name": "machine/genericx86-64", "description": "Machine configuration for generic x86_64 (64-bit) PCs and servers" }
-+                    ]
-                 },
-                 "distro": {
-                     "description": "Distribution configuration variants",
--                    "options" : ["distro/poky", "distro/poky-altcfg", "distro/poky-tiny"]
-+                    "options" : [
-+                        { "name": "distro/poky", "description": "Distro configuration for Poky (Yocto Project Reference Distro)" },
-+                        { "name": "distro/poky-altcfg", "description": "Distro configuration for Poky (systemd init manager)" },
-+                        { "name": "distro/poky-tiny", "description": "Distro configuration for Poky (optimized for size)" }
-+                    ]
-                 }
+diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
+index 8b6046c049a..744dfe903ed 100644
+--- a/lib/bb/tests/setup.py
++++ b/lib/bb/tests/setup.py
+@@ -136,10 +136,26 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+                 "oe-fragments": ["test-fragment-1"]
              },
-             "configurations": [
+             {
+-                "name": "gizmo-notemplate",
++                "name": "gizmo-notemplate-fragments-one-of",
+                 "description": "Gizmo notemplate configuration",
+                 "bb-layers": ["layerC","layerD/meta-layer"],
+-                "oe-fragments": ["test-fragment-2"]
++                "oe-fragments": ["test-fragment-2"],
++                "oe-fragments-one-of": {
++                    "fragment-desc": {
++                        "description": "Test fragments (with description)",
++                        "options" : [
++                            { "name": "fragment-desc-1", "description": "fragment 1 desc" },
++                            { "name": "fragment-desc-2", "description": "fragment 2 desc" }
++                        ]
++                    },
++                    "fragment-nodesc": {
++                        "description": "Test fragments (no description)",
++                        "options" : [
++                            "fragment-nodesc-1",
++                            "fragment-nodesc-2"
++                        ]
++                    }
++                }
+             },
+             {
+                 "name": "gizmo-notemplate-with-filerelative-layers",
+@@ -259,7 +275,7 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+     def get_setup_path(self, cf, c):
+         if c == 'gizmo':
+             return os.path.join(self.tempdir, 'bitbake-builds', 'this-is-a-custom-gizmo-build')
+-        return os.path.join(self.tempdir, 'bitbake-builds', '{}-{}'.format(cf, c))
++        return os.path.join(self.tempdir, 'bitbake-builds', '{}-{}'.format(cf, "-".join(c.split())))
+ 
+     def test_setup(self):
+         # unset BBPATH to ensure tests run in isolation from the existing bitbake environment
+@@ -327,7 +343,14 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+         # test-config-1 is tested as a registry config and over http, test-config-2 as a local file
+         server = HTTPService(self.registrypath, host="127.0.0.1")
+         server.start()
+-        variants = ('gadget','gizmo','gizmo-env-passthrough','gizmo-no-fragment','gadget-notemplate','gizmo-notemplate')
++        variants = (
++            'gadget',
++            'gizmo',
++            'gizmo-env-passthrough',
++            'gizmo-no-fragment',
++            'gadget-notemplate',
++            'gizmo-notemplate-fragments-one-of fragment-desc-1 fragment-nodesc-1',
++        )
+         variants_local = variants + ('gizmo-notemplate-with-filerelative-layers',)
+         test_configurations = ({'name':'test-config-1','cmdline': 'test-config-1',
+                                                  'buildconfigs': variants},
 
 -- 
 2.52.0
