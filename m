@@ -1,109 +1,99 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4F8D74ECB
-	for <webhook@archiver.kernel.org>; Fri, 23 Jan 2026 13:24:28 +0000 (UTC)
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.67693.1769174658999001709
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 238CCD74ED4
+	for <webhook@archiver.kernel.org>; Fri, 23 Jan 2026 13:38:39 +0000 (UTC)
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.67987.1769175509501369527
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 23 Jan 2026 05:24:20 -0800
+ Fri, 23 Jan 2026 05:38:29 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=xyKuaW9F;
- spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id D07504E42218;
-	Fri, 23 Jan 2026 13:24:16 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id A685F6070A;
-	Fri, 23 Jan 2026 13:24:16 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 18E28119A8547;
-	Fri, 23 Jan 2026 14:24:14 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1769174656; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=9bM5YhDkoGyIeRI0Mwnah6pNmMxAAYHiBWP4K+DnrLM=;
-	b=xyKuaW9FNyWRfQcJ+frwStQCalAsCGjXRpPue3QzOJObDAOrSYCKgSbcYsxQLvBYredsVG
-	VmMVfZl51nEG7XkzOMSaLi6IQbFjLbF47jQe3h1hYxqgKd4VpZmhkMW1xHuglHdRHeG+KH
-	r7RoxCT70g7CXA5on3s+2i4UtH4NKIlFTN6hGnteSukIba41vm/EjIX1fV+W4B4nBg3TLX
-	vIHZiY3lw05w+ERArGvFlG1IKG6098AnCiwfRKsV5PT0J3DwgiGZpwc+uADsl9iiQE1u8w
-	F89xvmixsEn9NawB6mm8qWYjx9YLq/9pRwDn34i8uCAquq79HKJxx/6e2eZmAw==
-From: Antonin Godard <antonin.godard@bootlin.com>
-Subject: [PATCH v4 0/3] bitbake-setup: add descriptions for fragment
- choices
-Date: Fri, 23 Jan 2026 14:24:05 +0100
-Message-Id: <20260123-bitbake-setup-choose-builtin-v4-0-99361f2128f6@bootlin.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAHV2c2kC/43NwW7CMBAE0F9BPmNkb+K06an/UfVgb9ZkC8Qod
- iIQyr9jwwXEgc5tpNGbi4g0MkXxtbqIkWaOHIZc6vVKYG+HLUnuchegoFFaN9JxcnZHMlKajhL
- 7ECJJN/E+8SC9022rTI0IRmTiOJLn043/+b33OLk/wlTMsug5pjCeb/+zLrt/Xs1aKvnZNSW2J
- d99uxDSnocNhoMoZzM8cKDecJA521Gjau+hMvqVqx45eMNVmUNjoNUWUduPZ25ZlitYyzCZegE
- AAA==
-X-Change-ID: 20260116-bitbake-setup-choose-builtin-fb199054cc25
+ dkim=pass header.i=@smile.fr header.s=google header.b=Xy0u77nb;
+ spf=pass (domain: smile.fr, ip: 209.85.128.51, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-48049955f7fso16538635e9.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 23 Jan 2026 05:38:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smile.fr; s=google; t=1769175508; x=1769780308; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ekfLVinpzXmgwEICDAtJ4EOK///xHDOol0ztEyzDrn0=;
+        b=Xy0u77nbbSeId4fQaO66gREFA3f7t6PVMvq7VFGWorXOo41oKCsU5yd2Nfqz9ChVak
+         dzJfIs/pPgWrZz19mi+gx5stiB/SYVXC3Ni5q7XpvZ6wmt2qEyeXoMBsNRwQJNe4ittU
+         QJTNtGSK9gowyrhZR29/hjIgBSrUUB94+E8e8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769175508; x=1769780308;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ekfLVinpzXmgwEICDAtJ4EOK///xHDOol0ztEyzDrn0=;
+        b=bZ/r/khsdF9zYE4I2Anvna2nmmKq7BkdqoCjMRIpKAXzB+s3VeHgWKyf83GmwWuUuX
+         est2KE/YDUO/vOTWnrtYpPaaL9OA0t4HWnEYuDseRwmTjZzaib6znsxC1RL7/JNwjHPr
+         5Z9eYXG+0lZMohQJnvyKDLh7XiTUsfJzPsSWhy7XDdU6J9rY2oTm9WVtp26dB4nklWnN
+         r74uicD2rzXRxjI3Sd5XKgEj7n8pxdFwdq+gvkfS8D2Y9oGY7iEkHRnIw8lLgxI7lugk
+         sPlfUwNxLbAH3UeM899fTjz5GxvGJEksItGqC8q8HaojamqFacaVlSvnXo0NM32j5UoK
+         FH2g==
+X-Gm-Message-State: AOJu0YzDgEQ78PUixhqUSvURk417A9tWO8pkWOmZO10lorL3CqAu3tL1
+	LVvp/kx3qPI9dukZKomN6d2tvy1zCr5qXjonPPVb94v2JYzGctfWNI1QXe+YqZweQsIZnhPho9c
+	otzku/80=
+X-Gm-Gg: AZuq6aILatEvtjUP82UsiZToMaCRVdLcH0MJp91Akb2RFCd0zt+pILRHVQNMbJMOvLg
+	/z/V7Jyx8oIUBmLfINF8QzC5mx6nNOacI0+5DpDSVP2hV5QdPyC9a0EbojWSS+YTQEKH9FtkHHa
+	x5CnxeA4PuRL6EHYZ/jYqK/ilIAUptPgDu7gmPImBN8dcT5RbmkpQck2m9/6Qx4fW6L3qlnEq+m
+	YbEIDj6mC+vsKLCrCvAmoSzN0Hh38CkEG/OvNtxL5eRu3YGgvEsbF4XpofYxuusEFTnOB9obUWT
+	M55w2eecPM9vzRsVCC2GQoLRHCf+jam7FC3IRlIehAJYGILbqwEhaY15VeHqnYjg7oNlI2XOiFy
+	rZtHpII1CPRbpVweryeEkak+yglkzjrmUNqT7GY9rRMtNXb4SuP/c7TlyQDZRggRa3eyIXZ7MTo
+	KlNc51+u2q9HLPBxCtlNXsi6ARyRqQJ2sW4OCwv5F46jbil61SD9UnKL5/BlTQjdsLlu7yLNOZW
+	vDAODUr+rA5QTk=
+X-Received: by 2002:a05:600c:4751:b0:47e:e8c2:905f with SMTP id 5b1f17b1804b1-480511e4ecbmr21023155e9.8.1769175507585;
+        Fri, 23 Jan 2026 05:38:27 -0800 (PST)
+Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4804703b59esm145546055e9.4.2026.01.23.05.38.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Jan 2026 05:38:27 -0800 (PST)
+From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Alexander Kanavin <alex.kanavin@gmail.com>, docs@lists.yoctoproject.org, 
- Antonin Godard <antonin.godard@bootlin.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1793;
- i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=+zvISwPJyxrRMRIPYtMJGAwppezsmNcN/yxQ/WBcIvA=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpc3Z9Ztb4SmVwlA0/X4evR2WOaYkPvpttRYIzN
- 74xCYwVV/mJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaXN2fQAKCRDRgEFAKaOo
- NlcPD/0ZHWrdyBMOG7eoNINMCG0vfK+48Wn9JuUL5OHzd8DFiOjHAsZmGjMJ0uGicXc/YcUi3q1
- a6fXU3i8RBUxmHX+c11TZwSTDup+EbvSg+1z/gBl1j94pU+6nB/GKBydLfvQj0/lYMw3/46LHOu
- OfMvAtHtz1rkVWTUp4ZNtgvLZczC9NroS9MjBATS8u974xpSrJfMf5z9tKM6x68jfbQ3E8sZTS5
- XY+KwiA93WAxIFISEzkc882Jasur6wgFzarJuzsJc/DJvmMvVjBBfwpZz1Zwn+ZmJLFl5ebUYtb
- Kl4vws91kEA0cXyfYHqmJ8vop4xBMDXBs7ekZo/0rvrbolPgP/MG0IgOLHdsBkk0yba/gFJTUY2
- W35SoTekq4jJcNlaNlHkswD+UidOAUVHvzYxQrt1mOFkwoqNkXd+OPHRjQcGKm/TQwY7JlDoIlC
- 1ups82zHUQ6BDGIBSwaxGZkjtoBygXIL5UCffx7I5ut+hXaDNmYfxfA/Xirlg5C0WXn/QJD5Nqz
- /X+GKXCLFxBv+stCAXONhLnuuT3fAPHkFL5Taor4viQhjwGGR0yfSWHnEw8GpvzJPRK/UaRTI1+
- LmERaws/2Ax9NU5DflIe9DKU6JWFP3kTS2NMxbaKqfI2jRH4bKnOdhBM1ipYnUVCoomC95lMaEK
- KYJIToGN7kvSpwA==
-X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
- fpr=8648725188DD401BB9A0D3FFD180414029A3A836
-X-Last-TLS-Session-Version: TLSv1.3
+Cc: Paul Barker <paul@pbarker.dev>
+Subject: [bitbake][whinlatter][2.16][PATCH 0/1] Pull request (cover letter only)
+Date: Fri, 23 Jan 2026 14:38:24 +0100
+Message-ID: <cover.1769175148.git.yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.47.3
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 23 Jan 2026 13:24:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18859
+ <bitbake-devel@lists.openembedded.org>; Fri, 23 Jan 2026 13:38:39 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18862
 
-Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
----
-Changes in v4:
-- setup.py: move the fragments to gizmo-notemplate, add a second option
-  (that isn't used, but it doesn't make much sense otherwise)
-- rebase on top of https://lore.kernel.org/r/20260116095741.3654153-1-alex.kanavin@gmail.com
-- Link to v3: https://patch.msgid.link/20260122-bitbake-setup-choose-builtin-v3-0-c55291acc1a7@bootlin.com
+This is the patch from the last patch review:
+https://lore.kernel.org/bitbake-devel/cover.1768909613.git.yoann.congal@smile.fr/T/
 
-Changes in v3:
-- Rework logic as suggested by Alex
-- Remove modifications of {oe-nodistro,poky}-whinlatter.conf.json
-- Add a test case for oe-fragments-one-of
-- Link to v2: https://patch.msgid.link/20260120-bitbake-setup-choose-builtin-v2-0-ade604ff2351@bootlin.com
+Passed a-full on autobuilder:
+https://autobuilder.yoctoproject.org/valkyrie/?#/builders/29/builds/3112
+The "Send QA Email" step failed, that is a known AB-INT bug:
+#15696 – AB_INT: resulttool: File exists
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=15696
 
-Changes in v2:
-- As suggested by Alex, change the new way of specifying fragments to
-  remain a dictionary so they can be extended in the future
-- Link to v1: https://patch.msgid.link/20260116-bitbake-setup-choose-builtin-v1-0-8d66666a9efd@bootlin.com
+The following changes since commit 663021740bc086bd959a8457ad9ddb6da52a8278:
 
----
-Antonin Godard (3):
-      bin/bitbake-setup: add descriptions for fragment choices
-      default-registry: update fragments choices with descriptions
-      lib/bb/tests/setup.py: add tests for oe-fragments-one-of
+  bin: Hide os.fork() deprecation warning in all bitbake scripts (2026-01-12 09:17:16 +0000)
 
- bin/bitbake-setup                                  | 23 +++++++++++-----
- .../configurations/oe-nodistro-master.conf.json    |  6 ++++-
- .../configurations/poky-master.conf.json           | 14 ++++++++--
- .../bitbake-user-manual-environment-setup.rst      | 26 ++++++++++++++++--
- lib/bb/tests/setup.py                              | 31 +++++++++++++++++++---
- setup-schema/bitbake-setup.schema.json             | 21 ++++++++++++++-
- 6 files changed, 105 insertions(+), 16 deletions(-)
----
-base-commit: f48cd5c7dc58aa95032f19d4d628acb31512d9d6
-change-id: 20260116-bitbake-setup-choose-builtin-fb199054cc25
+are available in the Git repository at:
+
+  https://git.openembedded.org/bitbake-contrib stable/2.16-next
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.16-next
+
+for you to fetch changes up to 74f8a927ca6a20342072e5579182aea917b6dc30:
+
+  bitbake-setup: ensure paths with timestamps in them are unique (2026-01-17 23:15:33 +0100)
+
+----------------------------------------------------------------
+
+Alexander Kanavin (1):
+  bitbake-setup: ensure paths with timestamps in them are unique
+
+ bin/bitbake-setup | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
 
