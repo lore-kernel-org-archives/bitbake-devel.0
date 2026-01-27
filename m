@@ -2,83 +2,82 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC680D2D8F4
-	for <webhook@archiver.kernel.org>; Tue, 27 Jan 2026 10:38:58 +0000 (UTC)
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.7601.1769510329320778891
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D698DD2D8F6
+	for <webhook@archiver.kernel.org>; Tue, 27 Jan 2026 10:44:18 +0000 (UTC)
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.7673.1769510651315253642
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 27 Jan 2026 02:38:49 -0800
+ Tue, 27 Jan 2026 02:44:11 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=Nw9XiKQE;
- spf=pass (domain: gmail.com, ip: 209.85.219.45, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-88a3d2f3299so59531906d6.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 27 Jan 2026 02:38:49 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769510328; cv=none;
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=Miw++UWU;
+ spf=pass (domain: gmail.com, ip: 209.85.160.170, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-503347dea84so192101cf.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 27 Jan 2026 02:44:11 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769510650; cv=none;
         d=google.com; s=arc-20240605;
-        b=D56WXk54AIk0GrMrls70yTJQQ1JKV+SKXMB+2TLm4II9GbHz4ZgB/J2PZVxLXKfhic
-         Nyp6+MAkDizBUtuRHAnDlEVnUt3ZgKzn+OckBYX03C7CW/TNg8Plz1SxUfAao0qARHRc
-         XCb3KtAv7XZ8cr700cajphDqDaIcDnvqcneo9luMRl61Xgiq+DnZCmh4De1TpFXktle2
-         xzHH42v6SzLwfLykANms0TMq+4i8xUDw2ofzhOfHLoU4T2BwdhaB/hiJEW4o86nPbvyH
-         dGmhKBUnY8Bz4t+wRu2MvnUwEDEXaj5XwlQgkqPc0WSoqUo7LlC8gKA2sdtfe/cFh7F8
-         od5g==
+        b=RmlxwasTQfMzhdi4XhsdOjxQUhZlL8ThkQkXqcoHOCQ54RWelnnw4TpnaTyyK0+ihp
+         8eLTmH8VcKk8lWKHWJ5eRb8sj9QgUGHwdcfxsEjpX8aGBk2QJSTtckUTN2zh9LNQzgx4
+         y3AQws8XyG6URyilF0SVBEm/8WS6c3nE/fSpjA6LotAoPchufA9Q1FqfOHShclgM0UtW
+         1jCj0MxiPBKOiTnU85TW/DOJbaEkFqhUbmkQA03w84Kz5+PIrM2v+DqRRnAm9wD+lDHT
+         SBvjL1g+/75e8MVGJz60ko9aYZScoigB7ACvlPoOkeodlg1myG5W+euSkHKwgP/TbhvT
+         mDJA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=4v4eSQ8jgTzNdM3sbXh8YrUEq+2TIvFlzsH+VpZCLXc=;
-        fh=umA1a24LPGx/1pgYgyDscyd4c4a8k8kCCBoGTYGy/ac=;
-        b=QhRj9Li+KP00AWfBxSojbOjPR1lm6inYoh1uEJ9Mij5h/N3Cloq9KQhDcOHTX2xYWC
-         MinB3sjzT8z6bb1ZmVMKEtt5AIbV1uTFdwhSomhq1BRN2cnS2r/taMtpXUwTxBOvYMm5
-         JEgBDlADRd2gNqK+l+BWhtY7muUCJBAxiF9tkSQl9RgtNhsYLH4+T92R97M3mK3EDusj
-         O6j+f6niW2xqQFgx7v9lI58el03z3q2OyqsaGfa3k9JWdCSA8JG3BhJL4VwsECD/HxqY
-         ItZTGgCnDCCESPdbob0AU76KKeassOqc8oc/NIwkbw7/WpUfZTIHloJzg8YNB+WnqWN5
-         jfgQ==;
+        bh=O1dRrqSjAfpuALSlYBmNstyRYp69oeSQCakXU844s4M=;
+        fh=fgeOaIk/qQG7/UHDHYidsJY0ruIp9MeIKtSfkGgxb/U=;
+        b=YpnMT98eWFdP6AW+Nrzl/yV1kRtJFhDwwaFpok5xo0eZVRTwNhw+uzgKbmhywwuPSC
+         ky5tjfPkiXfzKf0KmEnKxwMPoxDes/7w/t7VGILoO1t+5QnJ0U8rQ1vze05+CSF2/bHW
+         Hn2lO77ccCEnZhm6bV2uypWOc6zyiBwd80zogjrP1sZDyZ5vq0bl4475qCyT1keoclZ9
+         HuJ85VkO46aRyZhgluGx3zGdyebbXnEi+Rk2mJfCGJRwD28ftzO4vdtK31S9kf8aPqjj
+         Tpj1QET+4HSjmqHEseFOdVYfwITcY4RMDxPQpteoJyiMkdshH25kOYpJVNif72+4Ntml
+         57PA==;
         darn=lists.openembedded.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769510328; x=1770115128; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1769510650; x=1770115450; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4v4eSQ8jgTzNdM3sbXh8YrUEq+2TIvFlzsH+VpZCLXc=;
-        b=Nw9XiKQEsBV5YkTR6x6j2Jv8TrhaJBgy66rlbP1xJYi9iKW5rkcgSuIZML8eavJuCx
-         BjQfU846NWk0Oov8nRqjLhCloV7pAV/raIgVv0Nr1kotzTG0X0FV96tTtIDH0r9Vnyf4
-         FV+fFQeGLfaYY3Rgi3rKl+d3nPYbTrwLMMEXAy1B13/GkC8uhgYDQ2kYZkA+3ruUX/np
-         cKcsz8rf1As8ZwnJWC/7j5gH7Ise5HC0kBFyhhucOrb4fXCALwLvS5lVKwRwLH7OUYsU
-         O+KhHauP++7vaO67kFhTJRlnhpCbYIHjkx6JpbyFZiDd56pSvaa3QJBDS1amUiATuvMU
-         1yww==
+        bh=O1dRrqSjAfpuALSlYBmNstyRYp69oeSQCakXU844s4M=;
+        b=Miw++UWUpw17lBVV0C9xZqgapBNSA4M9wEBrciWXbjbdDxFKxLYsYVlLG4r4BZhL6P
+         cJ66myyZFdieaYfStGbGj1WeZIGubkybFbKjhMUiZY71tQNR0sP3daGKCknVYVLktFsf
+         O2bL7dZ5jHRD1/YS17ugJbe56Bli68aYrMQzgIy3ZiYVrYlt8f0i5tR7PcyVxGNWdShW
+         +Nne73mM+GB0cMoJyEifMPyECfAG/U6JaHMpNMfuu05Yaw25fd1toc1Xwq1tF9fhgybT
+         p+q64bbA2lXtLDnrH4GoGtLw+ptiXqEnwRl3RfJ6A3s00XZOOaK7twMk0SkNzqurSBIO
+         emMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769510328; x=1770115128;
+        d=1e100.net; s=20230601; t=1769510650; x=1770115450;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4v4eSQ8jgTzNdM3sbXh8YrUEq+2TIvFlzsH+VpZCLXc=;
-        b=anAO7YGovg+DNmYgEHWbd+0JlE5pKVLnmSkXypZsLUxuH9mpWsVQVr2pL1pG/Yvko5
-         ItKyv6vyy2NeBSgFs2AHjemrZuBsaX4/YLf21+ycFNJzMYOJuzSXzEIfd/FiwDyA5L7s
-         GhwVsqB2UsBu4sweRFqCj5So3SJq+0IGLFUDilbMB8lr+hbAOY98ZMuyeDlq+uQL0X88
-         myQ12KotAct4Lk9nto1l/5a8onSjkFY3vfGEVw2OKvITQ7TrxepzX3X1sSI2bFqhxssP
-         gWIBJgC2ZxxxkGgdfx8D36sqjqVnQ0T5NH5wiia1Yw/LBohU9oX+J/TmWY7PYucwSnT7
-         iqbw==
-X-Forwarded-Encrypted: i=1; AJvYcCVlS8wEJOeKwfAjsMgOOCB1pOO6XZID9W0yqFWURLga8SSv/J8QH/Y587x5TVwsUCId+4T1gPETV68MEiI8@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yw5JNUiC41fAN+XLzkrHbQHTMbhZm+trARvQcqoB1JFEqzUpS/G
-	J69w5jKgBznqOxrIBjKNF+5pA5sUKk9vIfGKMmrXnjpOH+6/LsfiUszbcrG4O3FWCm328FssJEX
-	sdBuRIdFvmtbYwqdBM5KR+woAQg9IonY=
-X-Gm-Gg: AZuq6aJ9x86gM7roAhBJzraHxykjpsf/2IpvZOOpztBllUgnIUJoJu+c7hj6p/wkLIS
-	jQQX/8ZYmOq5BYBS43fIt1aneLuOGkYVf1jBwIun8vIzYJyvXYlzR5Xs1G0BKKffgdODtaI5+Zb
-	rDPaPGo8L4nEf9C431uh+2MHW5eTWHIZskKqfoCZhqyAo+ttvTRV6LrCDtOofHQ0RJK50DXUZYe
-	Y+kb8+RXb5+L3IDSLBnHkz1kwTMDA5ll82aBRjUF5fTtsQYbjjUk9qTC5Layoesj4QU9iBoEjgB
-	rF8hTlDcwMWY8pmpE2K3QCDpjySCxQ==
-X-Received: by 2002:ad4:5f8a:0:b0:88a:525a:8db8 with SMTP id
- 6a1803df08f44-894cc8fdb0fmr14037396d6.35.1769510328192; Tue, 27 Jan 2026
- 02:38:48 -0800 (PST)
+        bh=O1dRrqSjAfpuALSlYBmNstyRYp69oeSQCakXU844s4M=;
+        b=woOz/h3DvAW76uKcjz+MumqLlHhH9p1q9uylRN8xJMvnYi++CF4mtB6MX5iaeiUs5x
+         Fz7VufD2NiJcF0tvaaNQSaGbqnkfXEy5s5HPXPVQVyGjpq+f7AdoEUt2nLxrJ2tmwM7d
+         jTiHG4SVSiC9SjXw+EN7v7NDcXm1D8I/eQsuyoCJk3eRHPk8isEsYO6rN68paMQgWMj5
+         IyvBtDbo/4puvrrNPgtLWrZn0ZMRoOhN3w73AzrxGBu+gEF4l3nAYyA7v26Si9lqvaPi
+         2x4LeamktYb/yZpl2tFnxNnWbYkiW6iDK3EIi91ZO9mYQZytzItrNWY/ZXE8TdRfPKD/
+         o4+w==
+X-Forwarded-Encrypted: i=1; AJvYcCXn9INNHyXshBapugrUy+3OBL7OOvZE2QtjQ09JhGzVLcIHzJ8Bv79PcEOg0k6MeRe6QqEO1IB87OAk6R7J@lists.openembedded.org
+X-Gm-Message-State: AOJu0YyE8WHH7cdLcTIG763a4KdG6YB6nUtT3kmxXRcasQmdOrs6OMVU
+	cZGztDICr2lhRXS1lUepg/dvjGKc6Vu5AHTlx0sOeOkGWD3+kvZYKtJzx7Ua30sYU18zuPR2kuo
+	uFq8RzstSU3vYNhdJwJG8h2kou2LvhyU=
+X-Gm-Gg: AZuq6aKClD5FzooSQVExt+qOYxocXOy0XVTA7Gt7439H6YjF74fjYGM3C06P6vueIYf
+	6crLYdSc17Re+YcOXsGHVLi5Q2ly8qxK++J9wEip4wCJ+pK/m39LHcdYkZJyOWHiN1OcwE2V5Xe
+	caexVdlsvrZxaYqQKsbzmFfSPWCefC+XFqG2tHcmqZbWH+Pxt8siOe7oXOaPZ1scM2OCY47DW/I
+	juYs5vz/q2Z8vrC45/wRgWFHH3gJNNq6SXmgs4Sx/W1RJdxwcSHTdrFpPt9yMnTQO8VfXfOFHr/
+	cfy7jhsm939TL86l/3eEWNbx8z7LiUbvLLla3WBo
+X-Received: by 2002:ac8:5f52:0:b0:502:f7d2:23f9 with SMTP id
+ d75a77b69052e-5032fc19eb2mr10597301cf.83.1769510650394; Tue, 27 Jan 2026
+ 02:44:10 -0800 (PST)
 MIME-Version: 1.0
 References: <20260126222743.411405-1-daiane.angolini@foundries.io>
- <20260126222743.411405-2-daiane.angolini@foundries.io> <DFZAUTK11Y5A.1PPDDZRLH02PU@bootlin.com>
-In-Reply-To: <DFZAUTK11Y5A.1PPDDZRLH02PU@bootlin.com>
+ <20260126222743.411405-3-daiane.angolini@foundries.io> <DFZAUOEWOS1H.14T46F1J7RX3A@bootlin.com>
+In-Reply-To: <DFZAUOEWOS1H.14T46F1J7RX3A@bootlin.com>
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Tue, 27 Jan 2026 11:38:37 +0100
-X-Gm-Features: AZwV_Qh9wDAh7ZfkBuP_MVSxUgfx_u2EDJp2g2Upfs4EyoJabjIAqLHSjjZVZFQ
-Message-ID: <CANNYZj_DhwvpzBcG0Vi7E9aYqx7b30uDUxJFkmdE686f1+Zkog@mail.gmail.com>
-Subject: Re: [docs][PATCH 2/5] bitbake-setup: Change the output to match the
- terminology in the docs
+Date: Tue, 27 Jan 2026 11:43:59 +0100
+X-Gm-Features: AZwV_Qi7AwNMO2JU4xfOIC3doHvf-w38HfMZCMiXEpdPDu-IHFgQZfTmeoPS-Mk
+Message-ID: <CANNYZj8-_0eiZpzYqH3Rw-kzjoB5jd873coJ-saO5hkDNwUCKw@mail.gmail.com>
+Subject: Re: [docs][PATCH 3/5] docs: Fix leading text for bitbake-setup init
 To: antonin.godard@bootlin.com
 Cc: daiane.angolini@foundries.io, bitbake-devel@lists.openembedded.org, 
 	docs@lists.yoctoproject.org
@@ -86,19 +85,22 @@ Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 27 Jan 2026 10:38:58 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18883
+ <bitbake-devel@lists.openembedded.org>; Tue, 27 Jan 2026 10:44:18 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18884
 
 On Tue, 27 Jan 2026 at 11:29, Antonin Godard via
 lists.yoctoproject.org
 <antonin.godard=bootlin.com@lists.yoctoproject.org> wrote:
-> > -    logger.plain("\nAvailable bitbake configurations:")
-> > +    logger.plain("\nAvailable Variants:")
+> > -#. With the default choices, the ``bitbake-setup init`` command creates the
+> > +#. One example of ``bitbake-setup init`` possible command creates the
+> >     following files and directories::
 
-To be honest, I am no longer sure introducing 'variants' as a term is
-an improvement. Someone well familiar with the terms will get it,
-someone running the tool for the first time will be baffled. 'bitbake
-confugurations' is more familiar and straightforward.
+"One example of 'bitbake-setup init' possible command creates ...' is
+very clumsy.
+
+Better:
+Here is a example of a directory/file tree structure created by
+'bitbake-setup init'
 
 Alex
 
