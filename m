@@ -1,107 +1,106 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35D8D2D8F1
-	for <webhook@archiver.kernel.org>; Tue, 27 Jan 2026 10:29:18 +0000 (UTC)
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.7750.1769509754307431581
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D00E9D2D8F2
+	for <webhook@archiver.kernel.org>; Tue, 27 Jan 2026 10:35:18 +0000 (UTC)
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.7549.1769510112814111320
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 27 Jan 2026 02:29:14 -0800
+ Tue, 27 Jan 2026 02:35:12 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=1moVNk2x;
- spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 5DFDEC211D2
-	for <bitbake-devel@lists.openembedded.org>; Tue, 27 Jan 2026 10:29:14 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 5BF6F606F5;
-	Tue, 27 Jan 2026 10:29:12 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 91C2E119A8687;
-	Tue, 27 Jan 2026 11:29:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1769509752; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=USBzX3GJBwwbwBR5Gur/5RirA8Ii+M16x/kS2UWKWwM=;
-	b=1moVNk2xVe0uuEpnWB/RQV3Ws7Fgfy8flpwldrfGhOdIv1sYM3LzXVwHW+YD7b4ffYNqvt
-	I4KdebBcmWmUddS2lYpMDBxJwi63TJ3XJ7UaIJ6KQPevSIDJlOdFhEEKLIYXzcurNtzYhV
-	6ZJI1KhDp6vEHbkvmXdiKl87pXfM9NnntPmlS8x+dqXiJ1e1TpPChFP5LxtKV2nLhjGf2n
-	7JKr3GMwTVaSQBqZHVlYPqWt5G393C0biAe5A5VjoLHhgRHfG8MllRnyYMfmwLepQIpvPy
-	MpgBT9eGsy3bWBiW54D3HHSqZa4cccDUqEWvx3hZiQrOwgoJp+cUQQGHbyZAOw==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 27 Jan 2026 11:29:11 +0100
-Message-Id: <DFZAUTK11Y5A.1PPDDZRLH02PU@bootlin.com>
-Subject: Re: [docs][PATCH 2/5] bitbake-setup: Change the output to match the
- terminology in the docs
-Cc: <docs@lists.yoctoproject.org>
-From: "Antonin Godard" <antonin.godard@bootlin.com>
-To: <daiane.angolini@foundries.io>, <bitbake-devel@lists.openembedded.org>
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=QgyklWRy;
+ spf=pass (domain: gmail.com, ip: 209.85.222.169, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-8c52c1d2a7bso722670285a.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 27 Jan 2026 02:35:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769510112; cv=none;
+        d=google.com; s=arc-20240605;
+        b=E+HctqUNdJmYz8SqQad4D/118dkvX27K1FUtLf8IYgk5HPo9NS3PBMEkt2EnWvIjYi
+         ISIIBQVDNMfj5R8VsRhm0f/Na75HpGQTDBgo4Fil1XEkKYvQBV62FmgmtZbZpqpYG6VM
+         UzvZ06YZMNzESqcWOgxxbUdRMbIp8f7PijMLaeYzyLP6b1YhYYikBdoKShTS0VwWfI2c
+         N2SqVhTuA2Wsh+4LmPlMVBoZyHKTMwpf1oCjcOtdnEFreax3mN4cu4apgZ0C4cf1TiAR
+         Znj8GUm9Of0LOrOsYCVvP47lI7BvKedBPOAojVlrgZlZ6sc2Uh0+qhhYc+wn8N83cMk6
+         52GA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=3gzFffLDvIdr0NjekHc53yJhmvgBqh197is7zUtJo9s=;
+        fh=KW0f7yRIx3yXFpTJLQhuYUN1/mEK/3oIWqWPK3KyzVA=;
+        b=P2MFTfaiAcRXzyzk5ASkS97dWXVxjPHmcF1+PRVh/gvjmLAsJjZP3Q2e0zBhKWbo4P
+         8gka5LaFBNmRiAsAssOsOI6p26CiRfSofwSg2yvOcWU8ahC+CEUpXip9tvuxKqoHRbjE
+         o0wO/vFDsR2N0xLM3ySu8js17aKLZHn47nNSrxO+jVCbO9EqKsyyC+h1Es5agA6dozs7
+         v2O2nAVFHSO/VIN0oMabAxJzgTqO6E6QPPPlFTsknamh/PopCvMPO0+3dMtIafWrAM8w
+         2nlIsSAPyBK7QmYv+PkYJvZDJu2+dkh+4NRflxj7zUQjLinwCjiONNflEju5DRhnTOtC
+         Pfpw==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769510112; x=1770114912; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3gzFffLDvIdr0NjekHc53yJhmvgBqh197is7zUtJo9s=;
+        b=QgyklWRy3egkJD0+qHsDfS2sx9myqhckULy2mfPtkmZXxLEtimUwP/mtoH/uv5AVlE
+         Nc0p5tvWwkW+WLp7fVGBNPE5+oJYNhpsKcvI5KRkAggKl9bE/l72QZCi/zoKKRfuiCve
+         V7YEgD3AAdCqIsZI26FYV5un91SaqqeNLxGNlfJGVNGxZOLY+pnNp5l3eP2O5i9uioQr
+         OsDG6eYvTNHsoz+BqjCKQ53Rf7tG8BEcEXuzzckfjRMTHR0o4pKqn8I6HTn/WbkBySgB
+         ivsN3JusNXaVPAJH6EV9BlTc6UIQ0VmAdXWcIjU9amjeLu9i+jvA3IDYuFysKNNApoUt
+         sZzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769510112; x=1770114912;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3gzFffLDvIdr0NjekHc53yJhmvgBqh197is7zUtJo9s=;
+        b=FwnpZhSgBbIqNEy0LKJlrQq8Ya0bPsqVGwXowNQdam2AD74ENGJu8zGuM06NsVOQ+T
+         P881lW7hIAR16r9jCBzroa0nZfGUSikjhNVe4kD9s68l4Nrns9Fpzd9eRjSSi5yuCoJW
+         heT0CPaH9t3VpzLVjcQ3YFYR2+tjpo6af8Gz5GvtvqB0AKNJuLPA2Ny7tr75aPmYXmUU
+         RrJGsNr8y6E5j+yzX2a+dpQK9DIoxQ3CdHvLBB6+xwtTKnRmw45rO8VGtfDzLyxxd68q
+         iMibCAv+p6KSf/OGa44DMWWCawuKeb+LW26EOAchssbOo3cq2pRzP7J9VxJUI//8b3To
+         A3Uw==
+X-Gm-Message-State: AOJu0YwEmwN/quoVudUT9O8NY1/zrsMjIRV2JeWifvIpATmmUGsNNvhX
+	qnIC2d6BtWkjo6q4Z4UWa+5cCxjq5U3YNnSJun1V5TD22l2FNWQOGTBC7Hj0dIdOsYQVeaaN9wN
+	DPY0bxUlGxaPLffeLz2JAkfJzVUjIHuI=
+X-Gm-Gg: AZuq6aL9Biw4+zOF5lEcPpSs03x+LiHEn9vs0XLE3EaJ8U9nujEHfbf1YLD8rDt8gFj
+	tFl843u6hZHfMyw/ou7gOzJh5OSEXGuZHO8m0M3ByXwZtL2l2FWq6dfokwnNVpNsf785cOqvdw7
+	NB3noTcUAgc8audSKHQXT0Nq4+wtu4oXFINHan5Nq+k4Cmv68tPA1zcTWkbHrfpklOSE7yy6s7e
+	xXgA8sAkobWHpUS3ccGGBWDyQoZkBOPmYVvPf3eklDj613blj0lxeDt58rnWUDlAAInoEAoaFss
+	kafMOvePGxhOSf0Km8PbQrJ0S5zigQ==
+X-Received: by 2002:a05:620a:4593:b0:891:7008:f2e0 with SMTP id
+ af79cd13be357-8c70c17d025mr105188685a.8.1769510111650; Tue, 27 Jan 2026
+ 02:35:11 -0800 (PST)
+MIME-Version: 1.0
 References: <20260126222743.411405-1-daiane.angolini@foundries.io>
- <20260126222743.411405-2-daiane.angolini@foundries.io>
-In-Reply-To: <20260126222743.411405-2-daiane.angolini@foundries.io>
-X-Last-TLS-Session-Version: TLSv1.3
+In-Reply-To: <20260126222743.411405-1-daiane.angolini@foundries.io>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Tue, 27 Jan 2026 11:35:00 +0100
+X-Gm-Features: AZwV_Qjen7b5Z803R9gbwpnPTe01Fmuf2b2n8KG5yo6sDNspzyXJYMmy2gTkZc8
+Message-ID: <CANNYZj9_AWqqHRWWiXg8R9y9Ash9pev2xKqUPAxzuy_1YdYoPg@mail.gmail.com>
+Subject: Re: [docs][PATCH 1/5] doc: change some terminology around bitbake-setup
+To: daiane.angolini@foundries.io
+Cc: bitbake-devel@lists.openembedded.org, docs@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 27 Jan 2026 10:29:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18881
+ <bitbake-devel@lists.openembedded.org>; Tue, 27 Jan 2026 10:35:18 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18882
 
-Hi,
+On Mon, 26 Jan 2026 at 23:28, Daiane Angolini via
+lists.yoctoproject.org
+<daiane.angolini=foundries.io@lists.yoctoproject.org> wrote:
 
-On Mon Jan 26, 2026 at 11:27 PM CET, Daiane Angolini via lists.yoctoproject=
-.org wrote:
-> The original output in the script does not use the original terminology
-> from the document. This patch changes the script output to match the
-> terminoly, this way user can search the documentation for help.
->
-> Signed-off-by: Daiane Angolini <daiane.angolini@foundries.io>
-> ---
->  bin/bitbake-setup                                         | 8 ++++----
->  default-registry/configurations/poky-master.conf.json     | 2 +-
->  default-registry/configurations/poky-whinlatter.conf.json | 2 +-
->  .../bitbake-user-manual-environment-setup.rst             | 4 ++--
->  4 files changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-> index abe7614c8..65f0c5eb3 100755
-> --- a/bin/bitbake-setup
-> +++ b/bin/bitbake-setup
-> @@ -457,11 +457,11 @@ def choose_bitbake_config(configs, parameters, non_=
-interactive):
->      if non_interactive:
->          raise Exception("Unable to choose from bitbake configurations in=
- non-interactive mode: {}".format(configs_dict))
-> =20
-> -    logger.plain("\nAvailable bitbake configurations:")
-> +    logger.plain("\nAvailable Variants:")
->      for n, config_data in enumerated_configs:
->          logger.plain("{}. {}\t{}".format(n, config_data["name"], config_=
-data["description"]))
->      config_n =3D int_input([i[0] for i in enumerated_configs],
-> -                         "\nPlease select one of the above bitbake confi=
-gurations by its number: ") - 1
-> +                         "\nPlease select one of the above Variants by i=
-ts number: ") - 1
->      return flattened_configs[config_n]
-> =20
->  def choose_config(configs, non_interactive):
-> @@ -475,7 +475,7 @@ def choose_config(configs, non_interactive):
->      if non_interactive:
->          raise Exception("Unable to choose from configurations in non-int=
-eractive mode: {}".format(not_expired_configs))
-> =20
-> -    logger.plain("\nAvailable configurations:")
-> +    logger.plain("\nAvailable BitBake Setup Template:")
+> -   -  ``configurations``: Configurations can recursively contain as many nested
+> -      configurations as needed. This will create more choices when running the
+> +   -  ``configurations``: Configurations can recursively contain as many
+> +      variants as needed. This will create more choices when running the
+>        :ref:`ref-bbsetup-command-init` command.
 
-s/Template/Templates/
+This is describing the format of the json file, and it should be
+conveying that 'configurations' are recursive: they can contain nested
+'configurations' in their values.
 
-Antonin
+Configuration variants come into play when the tool has processed the
+template, and made a flat list that can be presented to users.
 
---=20
-Antonin Godard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Alex
 
