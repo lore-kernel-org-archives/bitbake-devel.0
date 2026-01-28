@@ -1,135 +1,124 @@
-Return-Path: <daiane.angolini@foundries.io>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F33A8D2FEF8
-	for <webhook@archiver.kernel.org>; Tue, 27 Jan 2026 21:53:30 +0000 (UTC)
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.1240.1769550807783916639
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 337AAD25B4C
+	for <webhook@archiver.kernel.org>; Wed, 28 Jan 2026 12:15:02 +0000 (UTC)
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.11861.1769602497223326585
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 27 Jan 2026 13:53:28 -0800
+ Wed, 28 Jan 2026 04:14:57 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@foundries.io header.s=google header.b=mP+6REVT;
- spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: foundries.io, ip: 205.220.180.131, mailfrom: daiane.angolini@foundries.io)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60RH80Wu1268770
-	for <bitbake-devel@lists.openembedded.org>; Tue, 27 Jan 2026 21:53:26 GMT
-Received: from mail-dl1-f72.google.com (mail-dl1-f72.google.com [74.125.82.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bxnyauf6w-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Tue, 27 Jan 2026 21:53:26 +0000 (GMT)
-Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-124a710003fso106901c88.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 27 Jan 2026 13:53:26 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=FUb9QNec;
+ spf=pass (domain: gmail.com, ip: 209.85.222.172, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-8c532d8be8cso616905585a.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 28 Jan 2026 04:14:57 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769602496; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ifkH1pOb+kTLBGLjiap78rDbMukqUA+ooShamCboyCH4Lt0Daq9asJ8z5MgAmO26dI
+         u9jlAHSiNnnKmbs6SLPKRljbH8kDTfu4a+oX9VTTdurAOLkZbKzRukISI6GiMC6Zssb5
+         +20Gn7/HOHZzpZ8OwiWKcL9HUER9rq5X91Kunszx9RgPdkl/fgsYfQqMeh1g7zwQPVlR
+         hQvB2pUJBkwsRxQ4RwpKr13TOQXzwcgXfD4JA0vUYSj7USHKXpZZ54ixqGiX8gQEPwAo
+         3/Kcz/5wUEdL0WOPP9PZMpTfTxdrFwv/Jvl1xoKPgUAPHkAqvwFksdTZ6qwGTt0pkKl7
+         udVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=mnLseGUE5HH7AE+ozy4iT4qV0avr8JCjRUSqx1Z8/jY=;
+        fh=OW3Dv9aSaONdxqFEg+gHG7ItOEhRMtXzTVqh/JdGy3c=;
+        b=UjAdumRABPJx7zEBw9D3abYkC1i5mpIR0+PLvowm/4tI+usn2ZHOZ3MujbQqVA1k2Y
+         kJpPGdXM4KWgSYYNlYVDJtt1Jqm/yu5FEh3WASooPo7pbz4i7+fL00nASXsT2Ty9JZr8
+         x9EGze+VS3PQi+/MTRBMjtWlYQSY43ClJczzoVLP3ZRqkhyDnughE/E3vhmDCazE23E8
+         hZT4kRW8Lpc1QpOc56INZvtTgCp6ErLfJGhRyEXHtNPt52Woo0JxI5uxySTBawITz27S
+         L5HJ8MwH2Ds/DHmBrG60Brxe6SNS+AJcBn2bmpieJLiioxT5r83KmMvNG3NKfv+Dd3ei
+         jIrA==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=foundries.io; s=google; t=1769550805; x=1770155605; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wz0uqWgQ1hdqBdE8i4ul6Oa/CAVX7Z5/wVEh6XPOWlc=;
-        b=mP+6REVThmv72VEP8WQksISFKajg3LnKbj/oWJYqt0DO/xXbkum4RSz5EFLX+dh0lH
-         ub6EzjSvGXuVPvWi9m+TrvYKn29wXZaG87pmq/dr4470A0O5LuMVPkfkVeuBXRFOOiQy
-         OFdrSDfsZB4wVwlcTr+rMyNvqeYHiRw9cNic2HGONWdlaiKLECCKnB02XRSk2Up+dk/m
-         xkeb4DbFO8/d+TRmUSaj6PopeN5ZTGG/rL2gANYB6ULVv3fNp32JUTkZd4117g2YFnLj
-         GG/scLQYPsfvhtge7jPlcIByG+StAYiho9Idb8r+ZIP5ynapLk1c35hmBX+7KYRwXYKj
-         TIQQ==
+        d=gmail.com; s=20230601; t=1769602496; x=1770207296; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=mnLseGUE5HH7AE+ozy4iT4qV0avr8JCjRUSqx1Z8/jY=;
+        b=FUb9QNec4q7AueLR9Sc4GAcWOvez7qLEhGBfsdg4WG94KXdqA3afr8gGh6Cx3/6aWL
+         utypolfPqKJ8ZJ47e0Gvnk2FUOgh/9j1aWJxWJPG30TvExpiM2K3eR+KwxpQUPKIEAff
+         pss2/mGAdB1KIQy0F9Aj950Ad1NV0UF/Zz8AVc/fkFf0Vsie7qb6r9N6mKXM0UY8CYBe
+         +as6JjP4Sy53AWL2kJ1wzAnBiVSR9wL15um7EFO8v9OoBqyOvhF0MiZ4W6c2eY+FfRZu
+         bNvIxWNOI+zyvCLwlaoRHK8XtaRCXJWihFc9RmArCxqVYOBmA5EXRVZ6S1B/jMSvli/3
+         Ql4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769550805; x=1770155605;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=wz0uqWgQ1hdqBdE8i4ul6Oa/CAVX7Z5/wVEh6XPOWlc=;
-        b=CIZ+/CAVClxgCQb0q8LGmRWsMoQaqnqtbv18+d4C+RNXPvBPqg4vBU5UesKsot0wYP
-         MrWTqvK8uwlEtqOP5ykCW6iO9zLE7y6DjBOtyTUbip6OLdeDTfbxPe/IctTQZTqOOuQF
-         3lGJMi8AQb1Nb7kXoVMLlJK5ay0TV5vzbRjK2rQpXd4kDdrkQKY+saLA05jjlIoh1SvA
-         M4Sb9sjgjpT0QyOmhOpgmoDF/esaIjpELOABrTdYaHmEuIj+XKOIBTd8PifyZU6j05hO
-         GhjPYbcIpNKdlSxNc6GIp/z8rbuLocLdfJh865X19EdGs8mf1O2Yad3q8ypexv/I4Y7D
-         l5TQ==
-X-Gm-Message-State: AOJu0Yy+qKTL+c8TM++ClpxGkLpqkTNy0KKkuLfvQXhviyM5mAEhi7Ui
-	51TfSH9uA2FvxzjTSODqJApMczSBBy5I0qU2TSB5oMnBgxpltFHH6oK8/oCHTTcHx+xCo9qXzan
-	q5Zh8Z0EF47WPELQX6fZCLP/yej88FxJbuFZ7DM6WnKkxn4J+aOR4xdgA6sS/iFhMRt4OU/Q/fp
-	GG8f0Hgvg7
-X-Gm-Gg: AZuq6aKOHJgI7br8S9waaxbJZplb0BMnau213Uf9A2dSeyFGqNdoijt77X8wvYYwMcf
-	cSFeeydnXF4lSpkbKPfoq+DaMGFWaMLN3XkdeTMVmPJaZrof9onXEYENFwnPwRCRlQ00zvtdfMn
-	7KV8uANYPB63nJzGipWfwvvt/Xd7JhwLGO/HVuFDbHqUWubvFBRr5Dug7JtJYvfylatAhdJU2bQ
-	IUZNup73WzDscs/UpVv5DzrSneSCLZx2HkvwpoOlZu0Nz2k9CpA0jEkJY5bQmUMt2FnsK+6WXQj
-	QJdLU6pQsj0a6f8EbSk9SnHRelT39hema2dejh8BbEhE+mN7ITOYKULVQneVQzzJuppo+PoELWs
-	l1NsG2b/noG7Peg2CuVFsRXXlYHefyZ+fM55p/5o8XFg50gerAnZC4mvt+2NGyMcdlQbw46LlHu
-	+OgA==
-X-Received: by 2002:a05:7022:90e:b0:11b:f271:835a with SMTP id a92af1059eb24-124a05796c7mr1775789c88.3.1769550805247;
-        Tue, 27 Jan 2026 13:53:25 -0800 (PST)
-X-Received: by 2002:a05:7022:90e:b0:11b:f271:835a with SMTP id a92af1059eb24-124a05796c7mr1775771c88.3.1769550804792;
-        Tue, 27 Jan 2026 13:53:24 -0800 (PST)
-Received: from lola.lan ([187.183.40.109])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-124a9cdcbcfsm31627c88.0.2026.01.27.13.53.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jan 2026 13:53:24 -0800 (PST)
-From: Daiane Angolini <daiane.angolini@foundries.io>
-To: bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org,
-        Daiane Angolini <daiane.angolini@foundries.io>
-Subject: [docs][PATCH v2 4/4] docs: Fix sources as required
-Date: Tue, 27 Jan 2026 18:53:03 -0300
-Message-Id: <20260127215303.512936-5-daiane.angolini@foundries.io>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260127215303.512936-1-daiane.angolini@foundries.io>
-References: <20260127215303.512936-1-daiane.angolini@foundries.io>
+        d=1e100.net; s=20230601; t=1769602496; x=1770207296;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mnLseGUE5HH7AE+ozy4iT4qV0avr8JCjRUSqx1Z8/jY=;
+        b=ZxtAYxN4BxpZNd+uaIeMFSuoYX4CDV4c2kMTLkRvdz6gsLJpmA2+fpS2dhuCLNdxEh
+         JZAG7RebJMhFJD2x3mE4HWd6X5jGAbmMC53XYhtP3lrp0j/7M7RB+Ec+fVQMm3uxgy1S
+         /ZG2EDjuAvGvuqQszT3Dov6hAMzG9PNTH/jaHdoQXegHL8qSi/vPnfwRDp+Q9kz6Ur2u
+         Bzsof9Av9CdVdga6vgBDtfWVDA9N1XSBbPz8k1GhtkSTAuXSkKBm2sd1E9SzmFDQqbIC
+         vfBj+XyQn9nFRVcrycjiwy5gfPa0WxHxWE8A+6eCD0QF3uvs4u/aDHp3hkingLwsMC5S
+         aLng==
+X-Gm-Message-State: AOJu0YxeYnblm1HZNAtG5p4gB7VxQ3L/onMTZC7TY35q2Jr8JPserc5R
+	RXZa4kwjylo9af55vJEHDYLFCh29MOqhXVb5jGa8KDeSru6aDnhkEGr8tbs9MRAeu9HyMVK/4iI
+	tqH4z36VvCPFbITxbU0kPQsSiGicnDa9twwZh
+X-Gm-Gg: AZuq6aKwRnVVxeuxNZRyuk73Z+NcuypvcaX6k+6hIsThTK7NNGrtb8/6QF2a6l1IpRR
+	OWaYvDwBjoeWi2tUBO4jOCsw3CCMU1/nQPnK45oOL/Ok/cVyXGTCnf2tBsSz0RXLhVflAk8qxPy
+	VmxhqlKj0iKhOk6JeH2WsKfs2dDQqxmdG6buH04arvhimryZfyo9ZQU25OSQFqKt6cWWKVvOB6c
+	i5IVtd2myun/LKNH3MX4+IIgcijT0xReCvA45sjrx7TEbYAPHqKReRP2GYg4QWnEQEBhWAHgnvH
+	iGZQCrTPJIbdWkUsKFGpg2/rdlbkVw==
+X-Received: by 2002:a05:620a:1724:b0:8c3:5a72:b11 with SMTP id
+ af79cd13be357-8c70b92f7c0mr648709685a.90.1769602496112; Wed, 28 Jan 2026
+ 04:14:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: fMK7K_CBwb01ktmr7GGyAlHDCEczd464
-X-Authority-Analysis: v=2.4 cv=JZqxbEKV c=1 sm=1 tr=0 ts=697933d6 cx=c_pps
- a=bS7HVuBVfinNPG3f6cIo3Q==:117 a=PIITv4rVe324bgT4salBLw==:17
- a=vUbySO9Y5rIA:10 a=9UA2AVYIz8kA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=1OdKnqY07euSGrlipCwA:9 a=vBUdepa8ALXHeOFLBtFW:22
-X-Proofpoint-ORIG-GUID: fMK7K_CBwb01ktmr7GGyAlHDCEczd464
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI3MDE3OCBTYWx0ZWRfX8IT4kJba7KWc
- zOcfOeVyKpN1alxqk29LJDjZ81GFOmtSiAzRslBPQXPuD9hm4j+YkTpAkGQAlp3U+5tGUy2Bu47
- 5G/acVsXlYQOf3xPcUf8ZKs1ysZvAYn1IFfTqpZHt6XWIwfkPwmNf5hASVUR91uc6Z99OZqyuCY
- ZxCyT7umlLJr5VJw6XDCC1I+EwwOgniqFO5LbHCugqaYtaVFUBWrMCZCTBznJu7Bd2BVzEvEyLp
- h63bJL3QSP5doMZdvW3lzxXkCxhNTW2eCLN0TVhhcg2s4Jcb5WrNJw2Ll71e+QWBwewwR1QZdkj
- 0pucYROHKEZFrUJaMtQ12Fpwc9WsaHkoEhMqcC4lGbNBD1oywlXbcL3Vn7iRpaud5Keq3SoFFE6
- slI4QczwhI1mmTy5JLlRee8fNfy7qY8ow6tQ7fZhDwAnzRQE+GdrMMbgJAjtIxklP7PlS64eagX
- mpEGHF/h+vHI9/ZSowA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-01-27_04,2026-01-27_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 impostorscore=0 suspectscore=0 lowpriorityscore=0
- malwarescore=0 spamscore=0 adultscore=0 clxscore=1015 phishscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
- definitions=main-2601270178
+References: <20260127160508.3392732-1-rob.woolley@windriver.com> <20260127160508.3392732-8-rob.woolley@windriver.com>
+In-Reply-To: <20260127160508.3392732-8-rob.woolley@windriver.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Wed, 28 Jan 2026 13:14:45 +0100
+X-Gm-Features: AZwV_QgJZp49ZnYyOYahyLzv2gdiEPsmXMSCHv9wt6mlTLYZPYLgvBUeHZdm6Uc
+Message-ID: <CANNYZj9+7rLoDbtyujAu1S=WQE6Hd2eBRAo6Evy8osHvF7ww+w@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH v2 07/10] bitbake-setup: Remove unused
+ stdout variable
+To: rob.woolley@windriver.com
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 27 Jan 2026 21:53:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18909
+ <bitbake-devel@lists.openembedded.org>; Wed, 28 Jan 2026 12:15:02 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18910
 
-If sources is empty, nothing happens. So let's just not say it's
-optional, and let's say the minimum is bitbake source code.
+On Tue, 27 Jan 2026 at 17:05, Rob Woolley via lists.openembedded.org
+<rob.woolley=windriver.com@lists.openembedded.org> wrote:
+>
+> The ruff lint tool reported that stdout was never used:
+>
+>     F841 Local variable `stdout` is assigned to but never used
+>
+> Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
+> ---
+>  bin/bitbake-setup | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+> index 59412588..e3e577e9 100755
+> --- a/bin/bitbake-setup
+> +++ b/bin/bitbake-setup
+> @@ -583,7 +583,7 @@ def init_config(top_dir, settings, args):
+>      create_siteconf(top_dir, args.non_interactive, settings)
+>
+>      d = init_bb_cache(top_dir, settings, args)
+> -    stdout = sys.stdout
+> +
+>      def handle_task_progress(event, d):
+>          rate = event.rate if event.rate else ''
+>          progress = event.progress if event.progress > 0 else 0
 
-Signed-off-by: Daiane Angolini <daiane.angolini@foundries.io>
----
- .../bitbake-user-manual-environment-setup.rst               | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+The next line is
+        print("{}% {}                ".format(progress, rate),
+file=stdout, end='\r')
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-index 8d86659bf..fdfefac0e 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-@@ -660,8 +660,10 @@ They contain the following sections:
-           "description": "OpenEmbedded - 'nodistro' basic configuration"
-       }
- 
---  ``sources`` (*optional*): sources, such as git repositories that should be provided
--   under ``layers/`` directory of a :term:`Setup`.
-+-  ``sources`` (**required**): sources, such as git repositories that should
-+   be provided under ``layers/`` directory of a :term:`Setup`. Although the
-+   list of sources can be very flexible, at least BitBake should be cloned
-+   to generate a :term:`Setup`.
- 
-    Example:
- 
--- 
-2.34.1
+So stdout is used. We can't simply supply sys.stdout, as do_fetch does
+tricks with it to redirect the logs into a file (otherwise they would
+clutter the console).
 
+Alex
 
