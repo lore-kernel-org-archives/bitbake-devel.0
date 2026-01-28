@@ -1,209 +1,144 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <foss@0leil.net>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F4FD3F083
-	for <webhook@archiver.kernel.org>; Wed, 28 Jan 2026 15:47:01 +0000 (UTC)
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.327.1769615217861591169
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD81D3F09C
+	for <webhook@archiver.kernel.org>; Wed, 28 Jan 2026 17:11:22 +0000 (UTC)
+Received: from smtp-8fad.mail.infomaniak.ch (smtp-8fad.mail.infomaniak.ch [83.166.143.173])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.2699.1769620279245507406
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 28 Jan 2026 07:46:59 -0800
+ Wed, 28 Jan 2026 09:11:19 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=MF7vFeZt;
- spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id ED2D4C211E8
-	for <bitbake-devel@lists.openembedded.org>; Wed, 28 Jan 2026 15:46:57 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 4256C6071F;
-	Wed, 28 Jan 2026 15:46:55 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 8A162119A86D4;
-	Wed, 28 Jan 2026 16:46:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1769615214; h=from:subject:date:message-id:to:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=qwWUoajQ7CkjgBUQtumBjUCQkAgghTYHZJ19uwSaOw4=;
-	b=MF7vFeZt6mSLPBtg/agGHsyGMBPtJ0ralx/e6mOcvfUr4WFxHd7rsrPMkD3iPTovzcVK7h
-	GQj5ikiXacMPNp0X1EHJCSUP9DRgQBLEIkY9vfALHiatgaqb0iBapLoeZK/pF4kOq7VTsV
-	sGLAGIyVmeNKIW/gP8GdNarl1ABAY8AL9SlW5FZQZeTlwphsERvb4ZqcwrmScwbBAJG/Hm
-	w5VcHjBSJ4dIAllLE6gdIZLJM8qp0vEMfMEMOhbQF3a5k5dZlHxwDSH1T5RoBuGRDuQe3V
-	QyZkDVTdOuVcvKtl5q+CLsKBSmi/r+UB1+dfe1126fwuHTOgGJ7P73eYtu8a0Q==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 28 Jan 2026 16:46:52 +0100
-Message-Id: <DG0C8LN6ZUK1.3ACK0646PJ6FP@bootlin.com>
-From: "Antonin Godard" <antonin.godard@bootlin.com>
-To: <rob.woolley@windriver.com>, <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH v2 02/10] bitbake-setup: Add pypi
- packaging
-References: <20260127160508.3392732-1-rob.woolley@windriver.com>
- <20260127160508.3392732-3-rob.woolley@windriver.com>
-In-Reply-To: <20260127160508.3392732-3-rob.woolley@windriver.com>
-X-Last-TLS-Session-Version: TLSv1.3
+ dkim=none (message not signed); spf=pass (domain: 0leil.net, ip: 83.166.143.173, mailfrom: foss+yocto@0leil.net)
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4f1TM91chkzJKS;
+	Wed, 28 Jan 2026 18:11:17 +0100 (CET)
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4f1TM707YpzSx2;
+	Wed, 28 Jan 2026 18:11:14 +0100 (CET)
+From: Quentin Schulz <foss+yocto@0leil.net>
+Date: Wed, 28 Jan 2026 18:11:06 +0100
+Subject: [PATCH] doc: bitbake-user-manual-intro: improve bbappend file
+ matching doc
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260128-bbappend-matching-v1-1-29fef2d63489@cherry.de>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MTQqAIBBA4avErBN0wP6uEi00p5xFJhoRSHdPW
+ n6L9wpkSkwZpqZAopszn6FCtQ2s3oSdBLtqQImdVDgIa02MFJw4zLV6Drtw0mrUaJTqR6hdTLT
+ x8z/n5X0/RCqg0WMAAAA=
+X-Change-ID: 20260128-bbappend-matching-d0b5252a1179
+To: bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org, Quentin Schulz <quentin.schulz@cherry.de>, 
+ "Robert P. J. Day" <rpjday@crashcourse.ca>
+X-Mailer: b4 0.14.3
+X-Infomaniak-Routing: alpha
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 28 Jan 2026 15:47:01 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18919
+ <bitbake-devel@lists.openembedded.org>; Wed, 28 Jan 2026 17:11:22 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18920
 
-Hi,
+From: Quentin Schulz <quentin.schulz@cherry.de>
 
-On Tue Jan 27, 2026 at 5:04 PM CET, Rob Woolley via lists.openembedded.org =
-wrote:
-[...]
-> diff --git a/contrib/pypi/README.md b/contrib/pypi/README.md
-> new file mode 100644
-> index 00000000..a6dd99e0
-> --- /dev/null
-> +++ b/contrib/pypi/README.md
-> @@ -0,0 +1,42 @@
-> +# bitbake-setup
-> +
-> +This package provides the `bitbake-setup` command and the Python modules
-> +required to support BitBake setup and configuration.
+The recipe name matching wasn't fully explained and were missing a few
+important corner cases such as recipes without a version, or using the %
+character outside of the version part of the filename for example.
 
-s/BitBake setup/`bitbake-setup`/
+This adds the last missing bits to cover every append naming scenario
+that exist today.
 
-> +
-> +## Usage
-> +
-> +Instructions on uses of bitbake-setup can be found in=20
-> +[Setting Up the Environment With bitbake-setup](https://docs.yoctoprojec=
-t.org/bitbake/dev/bitbake-user-manual/bitbake-user-manual-environment-setup=
-.html) from the Yocto Project manual.
+This was derived from lib/bb/cooker.py:get_file_appends().
 
-s/Yocto Project Manual/BitBake Manual/
+Reported-by: Robert P. J. Day <rpjday@crashcourse.ca>
+Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+---
+ .../bitbake-user-manual-intro.rst                  | 51 +++++++++++++++++-----
+ 1 file changed, 40 insertions(+), 11 deletions(-)
 
-> +
-> +List the available configurations;
-> +```bash
-> +bitbake-setup list
-> +```
-> +
-> +Show the help for the bitbake-setup init subcommand:
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
+index baad71304..c971976d3 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
+@@ -271,12 +271,9 @@ same root filename. The filenames can differ only in the file type
+ suffix used (e.g. ``formfactor_0.0.bb`` and
+ ``formfactor_0.0.bbappend``).
+ 
+-Information in append files extends or overrides the information in the
+-underlying, similarly-named recipe files.
+-
+ When you name an append file, you can use the "``%``" wildcard character
+-to allow for matching recipe names. For example, suppose you have an
+-append file named as follows::
++to allow for a less strict recipe name matching. For example, suppose you have
++an append file named as follows::
+ 
+   busybox_1.21.%.bbappend
+ 
+@@ -290,12 +287,6 @@ the append file would match the following recipe names::
+   busybox_1.21.10.bb
+   busybox_1.21.11.bb
+ 
+-.. note::
+-
+-   The use of the " % " character is limited in that it only works directly in
+-   front of the .bbappend portion of the append file's name. You cannot use the
+-   wildcard character in any other location of the name.
+-
+ If the ``busybox`` recipe was updated to ``busybox_1.3.0.bb``, the
+ append name would not match. However, if you named the append file
+ ``busybox_1.%.bbappend``, then you would have a match.
+@@ -303,6 +294,44 @@ append name would not match. However, if you named the append file
+ In the most general case, you could name the append file something as
+ simple as ``busybox_%.bbappend`` to be entirely version independent.
+ 
++The "``%``" character is a marker for BitBake, and everything after that marker
++will not be used for matching recipe names. That is, an append file named::
++
++   busybox_1.%.11.bb
++
++will match recipes named::
++
++   busybox_1.0.11.bb
++   busybox_1.2.bb
++   busybox_1.3.48.bb
++
++Note that the "``%``" character is not specific to the version part of the
++recipe name. That is, an append file named::
++
++   linux-yocto%.bbappend
++
++will match recipes named::
++
++   linux-yocto.bb
++   linux-yocto_6.18.bb
++   linux-yocto-tiny_6.12.bb
++   linux-yocto-rt_6.16.bb
++
++While it can be useful to append to similar recipes with slightly different
++names, it is highly discouraged to do so as recipes from other layers may be
++named similarly enough that the append file would unwittingly match them.
++
++A recipe named without a version may only be appended by an append file named
++exactly the same. That is, a recipe named::
++
++   mesa.bb
++
++can only be appended by an append file named::
++
++   mesa.bbappend
++
++That is, ``mesa_%.bbappend`` append file will not match ``mesa.bb`` recipe.
++
+ Obtaining BitBake
+ =================
+ 
 
-s/bitbake-setup/`bitbake-setup`/
+---
+base-commit: cdd79c1768ac396a9c6577e38098da4331507f24
+change-id: 20260128-bbappend-matching-d0b5252a1179
 
-> +```bash
-> +bitbake-setup init --help
-> +usage: bitbake-setup init [-h] [--non-interactive] [--source-overrides S=
-OURCE_OVERRIDES] [--setup-dir-name SETUP_DIR_NAME] [--skip-selection SKIP_S=
-ELECTION] [-L SOURCE_NAME PATH]
-> +                          [config ...]
-> +
-> +positional arguments:
-> +  config                path/URL/id to a configuration file (use 'list' =
-command to get available ids), followed by configuration options. Bitbake-s=
-etup will ask to choose from available
-> +                        choices if command line doesn't completely speci=
-fy them.
-> +
-> +options:
-> +  -h, --help            show this help message and exit
-> +  --non-interactive     Do not ask to interactively choose from availabl=
-e options; if bitbake-setup cannot make a decision it will stop with a fail=
-ure.
-> +  --source-overrides SOURCE_OVERRIDES
-> +                        Override sources information (repositories/revis=
-ions) with values from a local json file.
-> +  --setup-dir-name SETUP_DIR_NAME
-> +                        A custom setup directory name under the top dire=
-ctory.
-> +  --skip-selection SKIP_SELECTION
-> +                        Do not select and set an option/fragment from av=
-ailable choices; the resulting bitbake configuration may be incomplete.
-> +  -L SOURCE_NAME PATH, --use-local-source SOURCE_NAME PATH
-> +                        Symlink local source into a build, instead of ge=
-tting it as prescribed by a configuration (useful for local development).
-> +```
-
-I would avoid pasting a command output here, it's hard to maintain properly=
-.
-Just leave `bitbake-setup init --help` is enough.
-
-[...]
-> diff --git a/contrib/pypi/pyproject.toml b/contrib/pypi/pyproject.toml
-> new file mode 100644
-> index 00000000..53d5ffc1
-> --- /dev/null
-> +++ b/contrib/pypi/pyproject.toml
-> @@ -0,0 +1,97 @@
-> +[build-system]
-> +requires =3D [
-> +    "setuptools>=3D64",
-> +    "setuptools_scm[toml]>=3D8",
-> +]
-> +build-backend =3D "setuptools.build_meta"
-> +
-> +[project]
-> +name =3D "bitbake-setup"
-> +dynamic =3D ["version"]
-> +description =3D "bitbake-setup"
-> +readme =3D "README.md"
-
-Wondering if it would be possible to include the
-doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst file here
-instead of a custom README?
-
-We will likely forget about the above README.md file, and that's one more f=
-ile
-to maintain. If the README needs to be next to the other file, maybe create=
- a
-symlink to bitbake-user-manual-environment-setup.rst?
-
-> +requires-python =3D ">=3D3.9"
-> +license =3D "GPL-2.0-only AND MIT"
-> +authors =3D [
-> +  { name =3D "OpenEmbedded BitBake Developers", email =3D "bitbake-devel=
-@lists.openembedded.org" }
-> +]
-> +classifiers =3D [
-> +  "Programming Language :: Python :: 3",
-> +  "Operating System :: POSIX :: Linux",
-> +]
-> +
-> +dependencies =3D [
-> +  # BitBake is mostly self-contained
-> +]
-> +
-> +[project.optional-dependencies]
-> +test =3D [
-> +  "pytest>=3D7",
-> +]
-> +
-> +lint =3D [
-> +  "ruff>=3D0.3",
-> +  "mypy>=3D1.8",
-> +]
-> +
-> +dev =3D [
-> +  "nox>=3D2022.11.21",
-> +  "pytest>=3D7",
-> +  "ruff>=3D0.3",
-> +  "mypy>=3D1.8",
-> +  "build",
-> +  "twine",
-> +]
-> +
-> +[project.scripts]
-> +bitbake-setup =3D "bitbake_setup.__main__:main"
-> +
-> +[project.urls]
-> +Homepage =3D "https://git.openembedded.org/bitbake/"
-> +Documentation =3D "https://docs.yoctoproject.org/bitbake/dev/bitbake-use=
-r-manual/"
-
-Not sure we want to link to the development version of the documentation he=
-re.
-You could instead link to the latest released documentation:
-https://docs.yoctoproject.org/bitbake/bitbake-user-manual/
-
-Antonin
-
---=20
-Antonin Godard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Best regards,
+-- 
+Quentin Schulz <quentin.schulz@cherry.de>
 
 
