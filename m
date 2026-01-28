@@ -1,137 +1,123 @@
-Return-Path: <anibal@limonsoftware.com>
+Return-Path: <rpjday@crashcourse.ca>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF30D46BF6
-	for <webhook@archiver.kernel.org>; Wed, 28 Jan 2026 19:32:04 +0000 (UTC)
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.3258.1769628722783642731
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E76D46C04
+	for <webhook@archiver.kernel.org>; Wed, 28 Jan 2026 21:56:32 +0000 (UTC)
+Received: from cpanel10.indieserve.net (cpanel10.indieserve.net [199.212.143.9])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.1609.1769637390354117372
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 28 Jan 2026 11:32:02 -0800
+ Wed, 28 Jan 2026 13:56:30 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@limonsoftware-com.20230601.gappssmtp.com header.s=20230601 header.b=3Z8Usffm;
- spf=pass (domain: limonsoftware.com, ip: 209.85.210.46, mailfrom: anibal@limonsoftware.com)
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7d1916d1e24so112695a34.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 28 Jan 2026 11:32:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=limonsoftware-com.20230601.gappssmtp.com; s=20230601; t=1769628722; x=1770233522; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=V8I5ihvOLy4xm/XQW8LX+ajLL1GGOJA1fNgPWKvZ2a4=;
-        b=3Z8Usffmg4CnM9tsszDeKxSfu1xtmrpMSXWKreSOgfp3wPPbsT3y5qrUUU8x/Kq2RP
-         whvopGeAqvFc2sff0QB/Yfu3jKdk+dAq6zUJxwiCcaB3q2p/wOQcQBchyR3uLWJTgiGu
-         KM4EExCjhnCf+CkQoJYCK7JRnwMkO74RfJJWHvQMZHRLYsiwit5Sn7DGF+S0Rxppea+X
-         UeImTxGzN+857ROTwhAObMGA8+kymHFlkTNSIRalxnKzH3xCsupn24xdVT23z0gwoL4T
-         Bqy4hyg3WX/WIEpYPJ9jJ9dSjvb/7gu1pbBuq+YydGa4q2HQAlSeVTrAM3WJh17gvsqF
-         gNkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769628722; x=1770233522;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V8I5ihvOLy4xm/XQW8LX+ajLL1GGOJA1fNgPWKvZ2a4=;
-        b=mOfb38RbpsjdBqIakC+DJFaJN2EfoDv6UvPjiWbP/Gjip6tHT/zN5M2+EA0vkRjhfE
-         4eOuBRkCUbZl7bmWU5HqMgLjjXd9LITuFmaLGxpZa2dJq+S3Wk4ZrVhJDILUF8JKAVyf
-         1jNyNPeyG2CXti9IlDE3GQByKOOwQk4LLBl/2tjtLFTlsYOvNxgHJF9EbCp6966rN5su
-         DjtADPXyQ/hBHid4WvcImlEYfxMBCIAd5oiOCSAsUXGVYjCZAKwbEmIg6whOW51lX/pN
-         tQH3DL08gLAxUbq7YEgoKDGK0XZjJzg1nVwgVSDjgq7yM2XedF6Anzen+yFLRIIy5AEs
-         BCsg==
-X-Gm-Message-State: AOJu0Yz7GoJU4EkS3Gvd8npkSrAjsEaOJ9aYYTQRiIojnlwIVKsTi3R/
-	GxKRJS1pNciWYII2d0qYCq0JpsR0oZzYZqY8R7iqfBYwmkkgWOc5vrrSpMz6IE1molhTIhNj3Da
-	+x4oq4uw=
-X-Gm-Gg: AZuq6aJu1dt0Nw8bhntuvjal4oRHyjULNcgDNlZ1RuL+BKnUL74/1sOgeHImQbm9Kns
-	ereAKuUVi6z86uCU7dVVKoG6YaukSMXfDeLzsxiNA2ybV1fAfO1767ZXBSI2h/hS6pMlBvMLYRM
-	4vO7AoswO8pqCIJobMgOcw3x6wIuBu6WkhFIHdKmVi1UKq9BPv/EtZglCKjqyGALhNSRJyg7jMJ
-	ocqQBR2qnjsYd47vJiKTNgCn0VSjGnnhxSWWPEz9QtKyr1InmkVNdTaTov407tq0Lf1j4JNRVt9
-	ks3NAyPPZGQkm8U6ojCL/Lozmw18LH09nodnxDtjn+SOUEIXxDl03zjo19X5c/RD/oR/ddJ4i42
-	jzXqxVDVLEgaW0vMyrjQ/8fojfr3Nuj8sI3hcWWVENMYqV+c4TZkohEia8oTUXwyOUkBUPHEYUK
-	GQcNE+c1QWde84UeOJuxFqD3BZ1lgghLrFfk5RsPGv6efp2fwIi3u3F61p2IVZxVZvTy7KY52zs
-	lCloybbkg==
-X-Received: by 2002:a05:6830:411f:b0:7c7:6479:38ce with SMTP id 46e09a7af769-7d1850ce292mr4303505a34.18.1769628721855;
-        Wed, 28 Jan 2026 11:32:01 -0800 (PST)
-Received: from blackbox.Home ([189.172.116.66])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7d18c6b9c8dsm2482811a34.13.2026.01.28.11.32.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jan 2026 11:32:01 -0800 (PST)
-From: Anibal Limon <anibal@limonsoftware.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: alex@linutronix.de,
-	Anibal Limon <anibal@limonsoftware.com>
-Subject: [PATCHv2] bitbake-setup: _has_local_modifications fix user case when add/remove/add layer
-Date: Wed, 28 Jan 2026 13:31:56 -0600
-Message-ID: <20260128193156.2019850-1-anibal@limonsoftware.com>
-X-Mailer: git-send-email 2.51.0
+ dkim=pass header.i=@crashcourse.ca header.s=default header.b=xTVgE6K8;
+ spf=pass (domain: crashcourse.ca, ip: 199.212.143.9, mailfrom: rpjday@crashcourse.ca)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=crashcourse.ca; s=default; h=Content-Type:MIME-Version:References:
+	Message-ID:In-Reply-To:Subject:cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=GmNNRPpAmKrowws8ZZsEMHIolCnyFJ3YLCfcapo5WzE=; b=xTVgE6K8OwXiUrQGhf/R6kgDdJ
+	5imN4+WSH6w41SabanYuta9QixedIWnoG/E84WkRX299W7SIme+p8wN2vD25ozsbQEl/0X9PlBTy3
+	CDVg88K/HFnE3ahItOe/n2v9yw84WMVz2OOi3ZofVV2WjzQIKm3KezcaETNTHEkObso6XJEwkVLo8
+	OaEe6shMpkdxPWgSABGmTDUnaSssPCj8P4beDxPUnRnPe6xc31Sqrb6KJLvChVBqK5gEkK8r1SgCp
+	jEGs0retXrZUEF0Mq0nFi0k4XgE0Jg/lSpPhRhzAKJNy2B3uL0j7y+10zxrKLMBzzgpcjm+J9gPUF
+	JmAHYDFg==;
+Received: from pool-174-115-41-146.cpe.net.cable.rogers.com ([174.115.41.146]:60416 helo=rday)
+	by cpanel10.indieserve.net with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.99.1)
+	(envelope-from <rpjday@crashcourse.ca>)
+	id 1vlDWU-000000037m6-2fau;
+	Wed, 28 Jan 2026 16:56:29 -0500
+Date: Wed, 28 Jan 2026 16:57:08 -0500 (EST)
+From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+To: Quentin Schulz <foss@0leil.net>
+cc: bitbake-devel@lists.openembedded.org, docs@lists.yoctoproject.org, 
+    Quentin Schulz <quentin.schulz@cherry.de>
+Subject: Re: [docs] [PATCH] doc: bitbake-user-manual-intro: improve bbappend
+ file matching doc
+In-Reply-To: <20260128-bbappend-matching-v1-1-29fef2d63489@cherry.de>
+Message-ID: <5d9a1e87-f8d4-19f6-4367-74f361d5d3f7@crashcourse.ca>
+References: <20260128-bbappend-matching-v1-1-29fef2d63489@cherry.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel10.indieserve.net
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Get-Message-Sender-Via: cpanel10.indieserve.net: authenticated_id: rpjday+crashcourse.ca/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: cpanel10.indieserve.net: rpjday@crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 28 Jan 2026 19:32:04 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18926
+ <bitbake-devel@lists.openembedded.org>; Wed, 28 Jan 2026 21:56:32 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18927
 
-While develop a registry configuration adding a new layer and then back
-to previous configuration without the _has_local_modifications breaks
-because the code expects the layer to be in sources-fixed-revisions.json.
+On Wed, 28 Jan 2026, Quentin Schulz wrote:
 
-This can be reproduced with next steps:
+> From: Quentin Schulz <quentin.schulz@cherry.de>
+>
+> The recipe name matching wasn't fully explained and were missing a few
+> important corner cases such as recipes without a version, or using the %
+> character outside of the version part of the filename for example.
+>
+> This adds the last missing bits to cover every append naming scenario
+> that exist today.
+>
+> This was derived from lib/bb/cooker.py:get_file_appends().
+>
+> Reported-by: Robert P. J. Day <rpjday@crashcourse.ca>
+> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+> ---
+>  .../bitbake-user-manual-intro.rst                  | 51 +++++++++++++++++-----
+>  1 file changed, 40 insertions(+), 11 deletions(-)
+>
+> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
+> index baad71304..c971976d3 100644
+> --- a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
+> +++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
+> @@ -271,12 +271,9 @@ same root filename. The filenames can differ only in the file type
+>  suffix used (e.g. ``formfactor_0.0.bb`` and
+>  ``formfactor_0.0.bbappend``).
+>
+> -Information in append files extends or overrides the information in the
+> -underlying, similarly-named recipe files.
+> -
+>  When you name an append file, you can use the "``%``" wildcard character
+> -to allow for matching recipe names. For example, suppose you have an
+> -append file named as follows::
+> +to allow for a less strict recipe name matching. For example, suppose you have
+> +an append file named as follows::
+>
+>    busybox_1.21.%.bbappend
+>
+> @@ -290,12 +287,6 @@ the append file would match the following recipe names::
+>    busybox_1.21.10.bb
+>    busybox_1.21.11.bb
+>
+> -.. note::
+> -
+> -   The use of the " % " character is limited in that it only works directly in
+> -   front of the .bbappend portion of the append file's name. You cannot use the
+> -   wildcard character in any other location of the name.
+> -
+>  If the ``busybox`` recipe was updated to ``busybox_1.3.0.bb``, the
+>  append name would not match. However, if you named the append file
+>  ``busybox_1.%.bbappend``, then you would have a match.
+> @@ -303,6 +294,44 @@ append name would not match. However, if you named the append file
+>  In the most general case, you could name the append file something as
+>  simple as ``busybox_%.bbappend`` to be entirely version independent.
+>
+> +The "``%``" character is a marker for BitBake, and everything after that marker
+> +will not be used for matching recipe names. That is, an append file named::
+> +
+> +   busybox_1.%.11.bb
 
-- Call bitbake-setup with configX.
-- Remove a LayerY from the configX.
-- Call bitbake-setup with configX.
-- Add the layerY again to configX.
-- Call bitbake-setup with configX (break).
+  that's not an append file.
 
-Fixes:
-
-```
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 1137, in <module>
-    main()
-    ~~~~^^
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 1130, in main
-    args.func(top_dir, all_settings, args, d)
-    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 735, in build_update
-    build_status(top_dir, settings, args, d, update=True)
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 719, in build_status
-    update_build(new_upstream_config, confdir, setupdir, layerdir, d,
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                 update_bb_conf=args.update_bb_conf)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 408, in update_build
-    sources_fixed_revisions = checkout_layers(layer_config, confdir, layerdir, d)
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 184, in checkout_layers
-    elif _has_local_modifications(r_name, repodir_path):
-         ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 143, in _has_local_modifications
-    rev = fixed_revisions['sources'][r_name]['git-remote']['rev']
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
-KeyError: 'meta-freescale'
-```
-
-Signed-off-by: Anibal Limon <anibal@limonsoftware.com>
----
- bin/bitbake-setup | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index 4d709ed8c..5e0f15555 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -140,6 +140,12 @@ def checkout_layers(layers, confdir, layerdir, d):
- 
-     def _has_local_modifications(r_name, r_path):
-         fixed_revisions = json.load(open(os.path.join(confdir, "sources-fixed-revisions.json")))
-+
-+        if not r_name in fixed_revisions['sources']:
-+            logger.warning("""Source {} in {} doesn't have an entry in sources-fixed-revisions.json,
-+ Source {} was previously remove from configuration.""".format(r_name, r_path, r_name))
-+            return True
-+
-         rev = fixed_revisions['sources'][r_name]['git-remote']['rev']
-         status = bb.process.run('git -C {} status --porcelain'.format(r_path))[0]
-         if status:
--- 
-2.51.0
-
+rday
 
