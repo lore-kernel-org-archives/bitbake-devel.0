@@ -1,126 +1,110 @@
-Return-Path: <anibal@limonsoftware.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 845EAD3F071
-	for <webhook@archiver.kernel.org>; Wed, 28 Jan 2026 14:33:43 +0000 (UTC)
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.14648.1769610821889126122
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CA9D3F077
+	for <webhook@archiver.kernel.org>; Wed, 28 Jan 2026 14:49:53 +0000 (UTC)
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.15038.1769611787050457767
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 28 Jan 2026 06:33:42 -0800
+ Wed, 28 Jan 2026 06:49:47 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@limonsoftware-com.20230601.gappssmtp.com header.s=20230601 header.b=DtZgXm6B;
- spf=pass (domain: limonsoftware.com, ip: 209.85.128.181, mailfrom: anibal@limonsoftware.com)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-7942fca0da6so49699417b3.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 28 Jan 2026 06:33:41 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=nd6bVtoY;
+ spf=pass (domain: gmail.com, ip: 209.85.222.177, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-8c07bc2ad13so483486485a.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 28 Jan 2026 06:49:46 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769611786; cv=none;
+        d=google.com; s=arc-20240605;
+        b=DBd0huAeAxW3I7/QGzfLbrV7y0/BsVJEeb4u1Qbpzz7MRF6ED1ECzMixa1+dYWCS5e
+         McEGO2apA8QUjwSZ3yQ28GunmuZocYO7HkE74moq5i6rb//AGyyrEL2dYCLzJqdcH6qM
+         D8IabW1EDYL5yTJurN9uD58uWdKIRUQylF+kmsOCABqgwzxgql0wrWSUkfVArQr0TJFG
+         /9REvEutrnJwR9+rKK//ZbGvi66bwLojftzN07vkN6dpeHRdsmPIshARTK6zCRJPJphz
+         xoBuVSpS27jDSc/+kUlT5TsKN3FdFpZdzw7fVrUPJRQJ8N8V2cFTbHWaTP5Z4//kb9no
+         Y5+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=yLBd2B0bWvpe78aeudFvuqg3AZf3mM/hyw6vBafMnT4=;
+        fh=V8wtxET+8j6WYeXAAiNwzCXmItNoSm1UUSrmSFvX+YA=;
+        b=INpcN4fSBNlUB8e7sidECJTIiTph46qcuzuj9K2WXEWAzYP4BtKMcURvZbO+zXqQ7K
+         wjECxIBl50zCSmorrZ0mR+xkFpVrlnLBvTHpG9o98+ri98N5uSGj89wXxIQiRdX6yW6t
+         PTk39OexVLvRUHr/TRB3HIpCFiNdiZQz6tk0BlgmO8m4TSBzeUWiaXLVn1ZT0vnkfBKd
+         DdRUZSQl/wmi4Zzha4nYhxYu7gDaQqVHB/lR+h8/gm5e2eAQ5WL9oyajN7i9HdDtjMYp
+         OXHDr6EayJAWdx577PbWly01yWvDebx1QHixDvPvTLLEmvrJZZeeNhxaAB5/5p75KKFW
+         p8xg==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=limonsoftware-com.20230601.gappssmtp.com; s=20230601; t=1769610821; x=1770215621; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kh9V8fscpk9jHM72ic8ut+DVEuxYjcgyhkzlVYpUFvo=;
-        b=DtZgXm6BK28C0sH/lWfy/wztSmRVNohz+9ZvJPddOYBxzX3h3UG08I5RQLfT8x3LtF
-         2TaipenYVSgJLk2GaQPlUYS7x4zFo/i7sMGd6UcG0ajosKx8FiLF2HUyaVbXxpPsjWuy
-         AC3gpGIaXXH9PqFrpIi4xg1lZKdbgOzFoKiP1kdGNQmUHROmifwUvqKmc+HAALtSU1eK
-         HXwtQWtuMV3475JSqB6UIgCqf5HRQGzgG2ezw6Ooi9/AV4lVdH8FigF5QVwyKQnKV9zg
-         Y0Z9YQviGcEoBUsesz7jkiAzd3uTY7CluTinipd+rGw9tuZrqRaTE29RnT5+FLV9rqlN
-         VE+A==
+        d=gmail.com; s=20230601; t=1769611786; x=1770216586; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=yLBd2B0bWvpe78aeudFvuqg3AZf3mM/hyw6vBafMnT4=;
+        b=nd6bVtoYu9yQuKvr4rO8fjcf2ePQ4W/qfepkDAlPbM8lWdq9b288U06VEfmmZpxqKr
+         oPd6eQauuKGJ0ko5ihwg3pd0IPhQtvT5pbdHDd5aQ//YUOPvYnkloO3wkqw40H5wy3dB
+         EFDuFN3UUCksHVM7Rt8VK7S3uKrJiOoaVaHT7yoHVhCZ2kZr2X5ulNNrFj+pg6V5vrEB
+         H/Ga3L1Lzv1dxwmbHytyQfi3ttdbG3AqI9N8derdRW8FyCKQQIoidXtqk90ncIwSBrJI
+         NJnol/AUI0hxANstLEn+kWv+Usg95YiGhDxHGfFOXkpIu/ktQ8imiLGU4srhEmFbUuIW
+         LxMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769610821; x=1770215621;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1769611786; x=1770216586;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kh9V8fscpk9jHM72ic8ut+DVEuxYjcgyhkzlVYpUFvo=;
-        b=L7wnHx0w9xswaxL0wbWnqIGJMilVeaKA4iWU+Qf1PDm0FNohZemsCmeRrdFEPjr2xr
-         eDIMlP6Q0Nl/a7QhPaQTo007nhPsYIE8MBsk0EdbtQpjupoBD7M8aGV2yfOSw3BFlMuj
-         2Slu7nOLB1aYM2KQZjr4GqcBRMNEnCfDaad9KJnvxxqp4tuiGX7wCniJFmlzgLfu5wra
-         E4+9GXC/Oz9E/QIzlIiWir8G5eQ1B8E41d6VgLauYgQR/6ZHvVqR2rXTHoNMuoC2KLOB
-         U92DlQJX3Umht0IHBBNaafOTWGL4ODQLwXKG/tarHnivCV1FSlbI2S4rSCwgyYhhk2n8
-         CcbQ==
-X-Gm-Message-State: AOJu0YzHe+/ALcAZs1mbFrTiUt9AJxsOiL5Kpns05uBqo5v4KGl9xEIU
-	i5MSnS14OqS8qC8ZeFf4RSnXmezlcT8dyjKjG1SuURggO0EjHkZSI7KnB5Ns4Uf0udq5sbNCyoo
-	QYIR9aGQ=
-X-Gm-Gg: AZuq6aKLpM+XBihCvMNnQYjjPIgMf7gvFoL13n4SN9ArHytUHUxTuCmLeSakfbgqchm
-	n/aoaUK0+bLmifmeVSAXf+1I2L02xsHMkq+LIhsjOpnI5BuEtD3+3pn0KQHDoVLwHUXF+thDHdC
-	ipqdjF65VWobH8xpprUYippbai+6ywcGsBsbgJZE9DLMDge/bxKFrJKoBk3l8OcAjhZaucG1b94
-	Qdb39UC/H9mGo+eTXK703IVsR8Tf0ctV4yAYjo4Ivlv48JGtfRzNkeZihNHM6UQuK6CnhZTEggM
-	F2yBFAddspmDkLDn0ud0HPN7NNC+qMrNe6zNu9jrNoNxlWU4pbQZdcK5y9om/gQrWLHYVMVHggk
-	tPkdRq4OjDNDz7AApVnAS3RnyUUKMtcEA8H+u0nnRD1rCcseRN0rWDr/MjXnJNvXvoe0vB0eitO
-	IHRmyTfOdwu0hDk2e8kpfcWfQG1tgv354e2wFaZ3AtAON5umA8z3BYCLGHK2YFYA/c7fR8Fb5Ha
-	QSi1uRY/w==
-X-Received: by 2002:a05:690c:6a0c:b0:794:8f0f:e8ae with SMTP id 00721157ae682-7948f0fe99bmr665337b3.64.1769610820918;
-        Wed, 28 Jan 2026 06:33:40 -0800 (PST)
-Received: from blackbox.Home ([189.172.116.66])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7948278ef12sm11227447b3.21.2026.01.28.06.33.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jan 2026 06:33:40 -0800 (PST)
-From: Anibal Limon <anibal@limonsoftware.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: alex@linutronix.de,
-	jonas@limonsoftware.com,
-	Anibal Limon <anibal@limonsoftware.com>
-Subject: [PATCH] bitbake-setup: _has_local_modifications fix layer add on existing project
-Date: Wed, 28 Jan 2026 08:33:36 -0600
-Message-ID: <20260128143336.1963432-1-anibal@limonsoftware.com>
-X-Mailer: git-send-email 2.51.0
+        bh=yLBd2B0bWvpe78aeudFvuqg3AZf3mM/hyw6vBafMnT4=;
+        b=p1XMsCMibN8w9qJZZChgiRVGvxdFKow6oF5gDI//SXr1nofV4/S6/ygptk37I5B/SX
+         rXvz8I1flciTsZtETvRRxuAlcD8YENpT9i54/GWYDvHhUOsqEIKgttQ8CW1Pt5SvHSoZ
+         SBbcxIeQKa+x1Gg5gXg9mkMThdcoSAj9EMcVUYea4tgm7KmRFxmsCEChTTQb6NBx+jX4
+         H1+1F0IpXicEscT0vOUL51cPvLezfnzw9ZnuMU0JrNdKdfCGX8q/g45MbvyOEJepGGNi
+         qVdPhAO8spRH4kgZ/HxpA9uNZxnVfeb1UzqrhmiLPXPbWyrJaPdEKRm7OUiAJwPBfRKI
+         WxaQ==
+X-Gm-Message-State: AOJu0YwExXePQP7ymoluso1WimfEVrw2dpZau/lDaDWF+ql/JRURk9c/
+	PQNEgPsZ+SgqzvS1ksf8+FFaRht8tPQeaw9iSMqA6PxryJ+zQVw05WUieVC+wCxXfr3UJgq6QhP
+	/WZ8c6O8Xs/u9+KGlV3RSR+w/w+EMn6Q=
+X-Gm-Gg: AZuq6aJ6wPfn0DG3YTRfS5s3L2xidTTN9AhIyqKbXpw+eALqE87M3kTfVjBI4yEp6SD
+	6QBJDnR59wJggHd8SnlWNMJ4YSU2QHyDoym5dHIwthfz9Ww04JLHJyZgJx34n5wMbEUtuoAyaZX
+	WMFiJuf0Rd26UgwIqMY0+N43d4aFmV+WvTEW9sEUNgumbzbo5/frmUc453yEYxOdArnC+wIUKfd
+	Cx6SWqRizp3pkM5gVwGvlGP0r2sJHRxYCiLH3SCt59ysiTiwhf0Cqc6xi6Q81kzEYB7pYDJyGhv
+	d6n00GGIf4QdKZQl3YkRqvy9CWi4tQ==
+X-Received: by 2002:a05:620a:2807:b0:8c5:3202:8bb1 with SMTP id
+ af79cd13be357-8c70b859447mr651700385a.13.1769611785923; Wed, 28 Jan 2026
+ 06:49:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260128143336.1963432-1-anibal@limonsoftware.com>
+In-Reply-To: <20260128143336.1963432-1-anibal@limonsoftware.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Wed, 28 Jan 2026 15:49:35 +0100
+X-Gm-Features: AZwV_QgBliL0pkt2o6SB0aXM51RWSdHtYhDF0bYKlPZjo2fsJE_v_6o7gHXVvX4
+Message-ID: <CANNYZj9xAuhZK2+BfPdTJjmCoZBZ_1srxFUUrFRPi5d7zYi_GA@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] bitbake-setup: _has_local_modifications
+ fix layer add on existing project
+To: anibal@limonsoftware.com
+Cc: bitbake-devel@lists.openembedded.org, alex@linutronix.de, 
+	jonas@limonsoftware.com
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 28 Jan 2026 14:33:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18917
+ <bitbake-devel@lists.openembedded.org>; Wed, 28 Jan 2026 14:49:53 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18918
 
-When a layer is add to the registry and previous project checkout exists,
-the sources-fixed-revisions.json not has a previous revision.
+On Wed, 28 Jan 2026 at 15:33, Anibal Limon via lists.openembedded.org
+<anibal=limonsoftware.com@lists.openembedded.org> wrote:
+> +
+> +        if not r_name in fixed_revisions['sources']:
+> +            return False
 
-Fixes:
+I'm not sure False is a correct value to return? My understanding is
+that the scenario you have hit is as follows:
 
-```
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 1137, in <module>
-    main()
-    ~~~~^^
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 1130, in main
-    args.func(top_dir, all_settings, args, d)
-    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 735, in build_update
-    build_status(top_dir, settings, args, d, update=True)
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 719, in build_status
-    update_build(new_upstream_config, confdir, setupdir, layerdir, d,
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                 update_bb_conf=args.update_bb_conf)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 408, in update_build
-    sources_fixed_revisions = checkout_layers(layer_config, confdir, layerdir, d)
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 184, in checkout_layers
-    elif _has_local_modifications(r_name, repodir_path):
-         ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 143, in _has_local_modifications
-    rev = fixed_revisions['sources'][r_name]['git-remote']['rev']
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
-KeyError: 'meta-freescale'
-```
+- manually clone meta-freescale into layers/
+- add meta-freescale to a configuration
+- run bitbake-setup update
 
-Signed-off-by: Anibal Limon <anibal@limonsoftware.com>
----
- bin/bitbake-setup | 3 +++
- 1 file changed, 3 insertions(+)
+At this point bitbake-setup sees that meta-freescale already exists,
+and it needs to decide whether to preserve it or not. As there is no
+record in fixed revisions of what the original revision was, should it
+default to preserving, so that any possible user modifications are
+saved?
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index 4d709ed8c..46b2bff01 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -140,6 +140,9 @@ def checkout_layers(layers, confdir, layerdir, d):
- 
-     def _has_local_modifications(r_name, r_path):
-         fixed_revisions = json.load(open(os.path.join(confdir, "sources-fixed-revisions.json")))
-+
-+        if not r_name in fixed_revisions['sources']:
-+            return False
-         rev = fixed_revisions['sources'][r_name]['git-remote']['rev']
-         status = bb.process.run('git -C {} status --porcelain'.format(r_path))[0]
-         if status:
--- 
-2.51.0
-
+Alex
 
