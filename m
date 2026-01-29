@@ -2,168 +2,211 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B5CD61011
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36026D6100C
 	for <webhook@archiver.kernel.org>; Thu, 29 Jan 2026 12:04:37 +0000 (UTC)
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.13353.1769688267484928713
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.13185.1769688268138790150
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 29 Jan 2026 04:04:27 -0800
+ Thu, 29 Jan 2026 04:04:28 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=AmL+sZQr;
- spf=pass (domain: gmail.com, ip: 209.85.221.52, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-42fed090e5fso787316f8f.1
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=XUWsLjG+;
+ spf=pass (domain: gmail.com, ip: 209.85.221.47, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-42fbc305914so893637f8f.0
         for <bitbake-devel@lists.openembedded.org>; Thu, 29 Jan 2026 04:04:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1769688266; x=1770293066; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hdqtuWOZPocisiw0ivyfpEO7qmiwAmXp/Bet1HYBRpw=;
-        b=AmL+sZQrtQa9lyj/Y96p4yNEt+CaebyFrfGLlzv0pNL9VbooBhP28d7jn30wmsJNzh
-         UVDumJqfjETZsmGSHaM7xYEExJUum1mlyuRSSMLrcBNRkmKro3ivxhffb78buRciVYyz
-         frksKrxhB3CRKqizMHN3OqJlWefHI34wFuLwzxVe8GdSH1jhaJ73rdyHLn63RiHPsWZ8
-         qvbjC8wYMcw3Yu7hjdsY1fI/Xx+6D835tJOgHVAPJSCFbVg7riaZjgz9AoA2pMdaXJgF
-         AaUKAV4s9T6kStRf8vhjImTMvmzeYNIfsIAv7PJ2hhOp/YiL9pnJ0fr1MVWu9da35lju
-         mG1w==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eLDlf5CELV31ncNl8r8OduqP1mS8Qm67x4WnQg4CXus=;
+        b=XUWsLjG+XWiOOle16m9+okBD4xwd+6/h6wwkWQ84y+Hc+1HvFmdwkBBIXGuY9KiSQy
+         VYKl4AzBYRACdxhxKRRg3z333KDtgr2FYknE/zPKdWusTzqwhr/47F5hjh8x+zZgeDwQ
+         1fdfTzjA7mL8t24/xsP1YSfSDDyKWKT7YdRoLH7aIVpGfKTYI7O9BLJtN4A/IIz46nKb
+         wxZRNJ8pM34N/9eDGld5fNCVcyqHgvL51d4LhXmoLCfkVrHyZMfAAuGc3QdQplpyZsmq
+         1thUWd+T6rP0Dcm82GLrFUFFSeQ1Tw4xyqrnPCenozqWlX7/nZYC2s5+Dzfj79uUtBWs
+         itjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1769688266; x=1770293066;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hdqtuWOZPocisiw0ivyfpEO7qmiwAmXp/Bet1HYBRpw=;
-        b=VS15jgROdgUsk4GZSCqLcwUX5QqLQ4jgGDVgJ0Li56WJJ8a4deIjsMG1jRySy9/e5A
-         MOWfOJxYzQJl2knVLWGubo/0bsNwcta8xT7hOqNnMmHM/AhFNw2oer69bbSNzbZN2OTi
-         mGMniMuzOStoXFPNjFuk98WpU7bdZZy0XjLq4SrNnGMjwNlLaH/6D7clRONtaV3LcXdF
-         R0GW6CwkAaVDV5IeyjfRSNliohVJj8TNm12RW3wSd7TqmfF2LkPkqDWBhznBWfpgbgs8
-         fvNj9m7dzOOQW3qPY7MaOEUAoXY6N1of/vU+l8MxtInaIFlgWr/QsQNFiGZdrF9ReDjj
-         KACw==
-X-Gm-Message-State: AOJu0YwwWvVH6ddzKH4X6jLdW6DzGgAMxjjwWkRYT2wczbvPrXvQHshX
-	B5Hgb5+t7ZEtBpU2d51XrOgwaYgw3pPAYR/kUL8tZnhcuaCezdrn3IratpZQZw==
-X-Gm-Gg: AZuq6aKydrOc8hV00TKp/ydzo0yFHQj9Racv1tyAEBsc+Zi6/pBiRIVuo180f/7Fpvh
-	LO9Wlzx4YDzPqyLCLr0Bb0Z/UfktLnCCXiXPPusVKot+eA/1N33Ykv0E3dlzmawwxOKn+NecZ0a
-	13m3oJ6+hQ27u9bBL3pvW8FKHBY5CchiCcGySsCUVD3EWcUUD4SuvW/laONVIM/VxZvRm1f/f0f
-	dw4wojBAQgdcIaOBLPQ8dIAk8PXwCC26N6LBPwQs8mUSYXm/WXPKBI8AniU4u+hL6FlaTrhjKHb
-	BKr73haSM6z2s4XyKiQgk80ATdGEBwhSi0kEfcKIBLhrLvO8k2Zc0+l+I+odQhjOr/oZp5cOodl
-	kI9GXn3m/tYwQzVcFifWbo1UE+fTCJlTsnPcFdorGnRZwcb/2Ln+F5eaumGY5PMKYo6LHCF6TPL
-	EE9e6ySvIGy7gZgUbKcVjv/Wl9k7lOLOWCurknaQrBvEQjHgc=
-X-Received: by 2002:a05:6000:1843:b0:431:266:d13a with SMTP id ffacd0b85a97d-435dd0b18f0mr12349306f8f.48.1769688265644;
-        Thu, 29 Jan 2026 04:04:25 -0800 (PST)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=eLDlf5CELV31ncNl8r8OduqP1mS8Qm67x4WnQg4CXus=;
+        b=ORzGBHkmvxn3wy8HrSBeJsugOb6qTZG8dgFwRMXdTYhr9AGwEZtmTGWHKH7zfaquxQ
+         oXAlGgiVbPDCLgJP+wop+ffKzsZVawJY4OoUmBkDrMuxki21PAzYlsNCDuoQ1M7A+bAG
+         f6n/yakCmZ2nhxRFRrhjH7gkZtKIwZideKLnG3Pj3mXbar1oSs/ybwvGVKpJLw8lieVa
+         8hyHhuJ6dWycg7u2Fwqa87sEQlY6xwmLHTqGo1LwCv9ny33meWbJv1994wxUVNg0lJA9
+         ouKDw4UKHE+ILthYM47SVVFfByQ69Jffg02cX8eMoQUfOdAB9WppSq9Ks2fimn+CRRzP
+         nRrQ==
+X-Gm-Message-State: AOJu0YxebSPidmntvdmWUwQxmg37tp9ygQBSNdV1wTP057+z7Ek4v+yK
+	xJttEn5soLAixXS/nYjACCqkaQlOeLMCJPzwkdZooYk3Vzwy8vk99pg+ltTZXw==
+X-Gm-Gg: AZuq6aKUbr+L8uK8ZyQ9EpFnrmTSZGRKODsh7cAKBK0cd0l/oijSrVZ7LZVv8GCC0fl
+	xL/SSsyUkD2mr2rZnQappidAqGBRX0SUoxjPmM8SspollxjokwzY8EcEjAcIU2101W/0tkYUkbf
+	LcL0T+IWt8fiV/1QJwRjOh/yrjb3gwFFqbvLQbJ5znwD9D1i15tcJZZ91nGQb2yFOSH5ZhacR4o
+	EKGqxKJ1gqovefPTFc8PvvLu9l0XW4PMIUeEqydw0bmn5+SQ7dZ1ki6wWfSP7hhWgbFELhAj65K
+	RYAJ7tEPngEU2wnKcY1nbZPk0sE98i7hEq+AdD/R1CmdbsNSfwwFIpj77BnEEyqILmaM/D5Rz65
+	riKO1uFPmr/4+/AtBPir4rEnmbKj0UOFeHw14NTseqP7jzxLxSvUcfk7cOk78l/DCOhAeGqpl6G
+	54qAD8vLZsCRvu5b2GRzpU3secc/Hv9QEh52WL05Dt48QwZIM=
+X-Received: by 2002:a05:6000:2511:b0:435:a464:f468 with SMTP id ffacd0b85a97d-435dd1cd4ffmr12076261f8f.47.1769688266343;
+        Thu, 29 Jan 2026 04:04:26 -0800 (PST)
 Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435e1354114sm15143594f8f.42.2026.01.29.04.04.24
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435e1354114sm15143594f8f.42.2026.01.29.04.04.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jan 2026 04:04:25 -0800 (PST)
+        Thu, 29 Jan 2026 04:04:26 -0800 (PST)
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH v3 1/2] cooker: use BB_HASHSERVE_DB_DIR for hash server database location
-Date: Thu, 29 Jan 2026 13:04:20 +0100
-Message-ID: <20260129120421.4413-1-alex.kanavin@gmail.com>
+Subject: [PATCH v3 2/2] bitbake-setup: share sstate by default between builds
+Date: Thu, 29 Jan 2026 13:04:21 +0100
+Message-ID: <20260129120421.4413-2-alex.kanavin@gmail.com>
 X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260129120421.4413-1-alex.kanavin@gmail.com>
+References: <20260129120421.4413-1-alex.kanavin@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 29 Jan 2026 12:04:37 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18933
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18934
 
 From: Alexander Kanavin <alex@linutronix.de>
 
-If unset, the existing behavior is preseved.
+Nowadays sharing sstate must also include sharing the hash equivalency
+information and thus, managing a hash equivalency server. There are
+two ways to do it:
 
-The use case is sharing the database in bitbake-setup's driven builds
-without having to set up/start/stop a common single server shared
-between them (this is added to bitbake-setup in the next commit).
+- starting/stopping the server outside the bitbake invocations, and
+guaranteeing that it's available when bitbake is invoked.
 
-Also create the specified directory if it doesn't yet exist.
+- using bitbake's built-in start/stop code which launches a server
+before a build starts and stops it when a build is finished; essentially
+this is a private server, using a database private to a build directory
+(by default).
 
-Add a check that the directory is not on a NFS path, and error out then,
-guiding the user to set up a standalone hash equivalency server.
+I couldn't come up with a good way to do the first option in bitbake-setup:
+it needs to be invisible to users, they should not have to run special commands
+and they should not wonder why there is a mysterious background process.
+It's not impossible to auto-start a shared server, but that will quickly
+run into synchronization issues: if one server is being started, another
+should not be started at the same time. If one server is shutting down
+(e.g. after an inactivity timeout), another starting server should wait
+until it frees the socket, and block all bitbake invocations on that.
+Memory resident bitbake does this in lib/bb/server/process.py with a lot of
+complexity, and I don't think it should be added to the hash server as well.
 
-Note: the check runs 'stat' executable with a format string parameter,
-ensuring it prints only the filesystem type and nothing else.
-Python's standard library does not have a statfs() wrapper,
-and using ctypes to call into it would've required delicate,
-crash-prone data type definitions, full of magic numbers.
+On the other hand, hash equivalency database is sqlite-driven, and sqlite
+documentation reassures that sharing it between different simultaneous
+processes is okay: nothing will get lost or corrupted: https://sqlite.org/faq.html#q5
+
+I've confirmed this by running simultaneous builds that way: nothing
+unusual happened, and sstate was shared as it's supposed to.
+
+There's a new setting that turns off this behavior for situations
+where the server and sstate are managed externally.
 
 Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- .../bitbake-user-manual-ref-variables.rst     | 23 +++++++++++++++++++
- lib/bb/cooker.py                              | 11 ++++++++-
- lib/bb/utils.py                               |  8 +++++++
- 3 files changed, 41 insertions(+), 1 deletion(-)
+v2: use ?= (weak assignments) for sstate variables to make it easier
+to override them in particular builds, set hashserve db location
+from value of SSTATE_DIR, rather than as direct value.
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index af911f306..4b3b10d46 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -475,6 +475,29 @@ overview of their function and contents.
-       equivalences that correspond to Share State caches that are
-       only available on specific clients.
+v3: use {{ }} to avoid brace-based format string expansion in python
+and include literal braces instead.
+---
+ bin/bitbake-setup                             | 28 ++++++++++++++++++-
+ .../bitbake-user-manual-environment-setup.rst | 19 +++++++++++++
+ 2 files changed, 46 insertions(+), 1 deletion(-)
+
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index 7f6ea550c..f45cc8885 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -838,6 +838,31 @@ def create_siteconf(top_dir, non_interactive, settings):
  
-+   :term:`BB_HASHSERVE_DB_DIR`
-+      When :term:`BB_HASHSERVE` is set to ``auto``, bitbake will use
-+      a private location inside a particular build directory for the sqlite
-+      database file that holds hash equivalency data.
-+
-+      This variable allows using a different path, which can be shared
-+      between multiple build directories and bitbake instances
-+      that operate on them. This enables using a common ``${SSTATE_DIR}``
-+      together with common hash equivalency data for local builds, without having to
-+      separately manage a hash equivalency server.
-+
-+      .. note::
-+
-+         This variable cannot be set to a NFS mount and bitbake will error out then.
-+         The reason is that NFS implementations can have file locking issues, which
-+         can cause data loss and corruption when there are multiple writers operating
-+         on a file at the same time as explained in https://sqlite.org/faq.html#q5
-+
-+         If you'd like to share hash equivalency data between multiple computers, you
-+         need to set up a hash equivalency server separately and point :term:`BB_HASHSERVE`
-+         to it. See https://docs.yoctoproject.org/dev-manual/hashequivserver.html for
-+         additional information.
-+
-    :term:`BB_HASHSERVE_UPSTREAM`
-       Specifies an upstream Hash Equivalence server.
+         os.makedirs(top_dir, exist_ok=True)
+         with open(siteconfpath, 'w') as siteconffile:
++            sstate_settings = textwrap.dedent(
++                """
++                #
++                # Where to place shared-state files
++                #
++                # BitBake has the capability to accelerate builds based on previously built output.
++                # This is done using "shared state" files which can be thought of as cache objects
++                # and this option determines where those files are placed.
++                #
++                # You can wipe out TMPDIR leaving this directory intact and the build would regenerate
++                # from these files if no changes were made to the configuration. If changes were made
++                # to the configuration, only shared state files where the state was still valid would
++                # be used (done using checksums).
++                SSTATE_DIR ?= "{sstate_dir}"
++                #
++                # Hash Equivalence database location
++                #
++                # Hash equivalence improves reuse of sstate by detecting when a given sstate
++                # artifact can be reused as equivalent, even if the current task hash doesn't
++                # match the one that generated the artifact. This variable controls where the
++                # Hash Equivalence database ("hashserv.db") is stored and can be shared between
++                # concurrent builds.
++                BB_HASHSERVE_DB_DIR ?= "${{SSTATE_DIR}}"
++                """.format(sstate_dir=os.path.join(top_dir, ".sstate-cache"))
++            )
+             siteconffile.write(
+                 textwrap.dedent(
+                     """\
+@@ -855,7 +880,7 @@ def create_siteconf(top_dir, non_interactive, settings):
+                     """.format(
+                         dl_dir=settings["default"]["dl-dir"],
+                     )
+-                )
++                ) + (sstate_settings if settings["default"]["common-sstate"] == 'yes' else "")
+             )
  
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index fa7747d64..4b6ba3196 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -328,7 +328,16 @@ class BBCooker:
-         if self.data.getVar("BB_HASHSERVE") == "auto":
-             # Create a new hash server bound to a unix domain socket
-             if not self.hashserv:
--                dbfile = (self.data.getVar("PERSISTENT_DIR") or self.data.getVar("CACHE")) + "/hashserv.db"
-+                bb_hashserve_db_dir = self.data.getVar("BB_HASHSERVE_DB_DIR")
-+                if bb_hashserve_db_dir and utils.is_path_on_nfs(bb_hashserve_db_dir):
-+                    bb.fatal("""Hash equivalency database location (set via BB_HASHSERVE_DB_DIR to {})
-+cannot be on a NFS mount due to potential NFS locking issues between sqlite clients, per https://sqlite.org/faq.html#q5
+ 
+@@ -1061,6 +1086,7 @@ def main():
+                          'top-dir-name':'bitbake-builds',
+                          'registry':default_registry,
+                          'use-full-setup-dir-name':'no',
++                         'common-sstate':'yes',
+                          }
+ 
+         global_settings = load_settings(global_settings_path(args))
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+index 3b6a73fd8..b7212f1af 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+@@ -517,6 +517,7 @@ A valid settings file would for example be:
+    registry = /path/to/bitbake/default-registry
+    dl-dir = /path/to/bitbake-setup-downloads
+    use-full-setup-dir-name = yes
++   common-sstate = yes
+ 
+ Settings and their values can be listed and modified with the ``bitbake-setup
+ settings`` command. See the :ref:`ref-bbsetup-command-settings` section for
+@@ -621,6 +622,24 @@ will override the suggestions for the :term:`Setup` directory name made by
+ will make the directory names longer, but fully specific: they will contain
+ all selections made during initialization.
+ 
++.. _ref-bbsetup-setting-common-sstate:
 +
-+If you need to share the database between several computers, set up a permanently running hash equivalency server
-+according to https://docs.yoctoproject.org/dev-manual/hashequivserver.html""".format(bb_hashserve_db_dir))
-+                dbdir = bb_hashserve_db_dir or self.data.getVar("PERSISTENT_DIR") or self.data.getVar("CACHE")
-+                os.makedirs(dbdir, exist_ok=True)
-+                dbfile = dbdir + "/hashserv.db"
-                 upstream = self.data.getVar("BB_HASHSERVE_UPSTREAM") or None
-                 if upstream:
-                     try:
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 366836bfc..974611bc7 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -2264,3 +2264,11 @@ def lock_timeout_nocheck(lock):
-         if l:
-             lock.release()
-         sigmask(signal.SIG_SETMASK, s)
++``common-sstate``
++-----------------
 +
-+def is_path_on_nfs(path):
-+    """
-+    Returns True if ``path`` argument is on a NFS mount.
-+    """
-+    import bb.process
-+    fstype = bb.process.run("stat -f -c %T {}".format(path))[0].strip()
-+    return fstype == "nfs"
++When this setting is set to ``yes`` (which is also the default), bitbake-setup will
++set up a common sstate directory and common hash equivalency database for all the
++:term:`setups <Setup>` in a :term:`Top Directory`. This is very beneficial for speeding
++up builds as build artefacts will be reused whenever possible between them.
++
++Set this to ``no`` for advanced use cases, such as placing the sstate directory on a NFS
++mount and maintaining a separate hash equivalency server, so that sstate and hash equivalency
++data can be shared between several computers. For such use cases the sstate settings need
++to be added to a build configuration separately.
++
++See https://docs.yoctoproject.org/dev-manual/hashequivserver.html for how to share sstate
++on the network.
++
+ .. _ref-bbsetup-section-config-reference:
+ 
+ Generic Configuration Files Reference
 -- 
 2.47.3
 
