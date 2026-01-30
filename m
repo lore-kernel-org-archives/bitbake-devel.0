@@ -1,157 +1,70 @@
-Return-Path: <foss@0leil.net>
+Return-Path: <rpjday@crashcourse.ca>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E92C2E6BF28
-	for <webhook@archiver.kernel.org>; Fri, 30 Jan 2026 16:23:00 +0000 (UTC)
-Received: from smtp-bc0f.mail.infomaniak.ch (smtp-bc0f.mail.infomaniak.ch [45.157.188.15])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.14467.1769790170454666598
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECE1E6BF34
+	for <webhook@archiver.kernel.org>; Fri, 30 Jan 2026 18:33:42 +0000 (UTC)
+Received: from cpanel10.indieserve.net (cpanel10.indieserve.net [199.212.143.9])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.1055.1769798020129764231
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 30 Jan 2026 08:22:50 -0800
+ Fri, 30 Jan 2026 10:33:40 -0800
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: 0leil.net, ip: 45.157.188.15, mailfrom: foss+yocto@0leil.net)
-Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6b])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4f2hBJ2Vxwzfwl;
-	Fri, 30 Jan 2026 17:22:48 +0100 (CET)
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4f2hBG5JPyzqt7;
-	Fri, 30 Jan 2026 17:22:46 +0100 (CET)
-From: Quentin Schulz <foss+yocto@0leil.net>
-Date: Fri, 30 Jan 2026 17:22:38 +0100
-Subject: [PATCH v3] doc: bitbake-user-manual-intro: improve bbappend file
- matching doc
+ dkim=pass header.i=@crashcourse.ca header.s=default header.b=IdLiRr+B;
+ spf=pass (domain: crashcourse.ca, ip: 199.212.143.9, mailfrom: rpjday@crashcourse.ca)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=crashcourse.ca; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+	cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=kie/EvhZ00/fQXahD3bG44ua7FOtjRLrKVsqFur3FuU=; b=IdLiRr+BLPbrbs1z+6FXf1hJxq
+	UuJoNmQflqQWkK7v64LZAQ83oXlvFKj6FyuEEvcxj4EFqOaeQ5/UH8FIn5ouYxup1qMacKfT2/oo0
+	h8MNSiUmTvnm7EoY+//mKnraN5G3EuiCEB5FUWlprl39CUzm+6sSZOJigWPdb9suyc4zwluVKusrV
+	hTxw2UuLFfawOo1zLRsy31xW+i7LhA+tvniBlV0tW9bNDCP3pXNRZxNA+Xzt2UcDaZcMQmdD1UdUY
+	JM5h7vz7qqQhVa0Psr9UNHvA/9tF4cOlpqOlcmRNYm+y3bokplwjrg2VKB7PF/31N8Vha32E0lw0T
+	tMswQU1w==;
+Received: from pool-174-115-41-146.cpe.net.cable.rogers.com ([174.115.41.146]:59408 helo=rday)
+	by cpanel10.indieserve.net with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.99.1)
+	(envelope-from <rpjday@crashcourse.ca>)
+	id 1vltJJ-00000009nzb-2luy;
+	Fri, 30 Jan 2026 13:33:38 -0500
+Date: Fri, 30 Jan 2026 13:34:38 -0500 (EST)
+From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+To: YP docs mailing list <docs@lists.yoctoproject.org>
+cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
+Subject: Should the BB manual have a comprehensive reference for handler
+ event masks?
+Message-ID: <d6529c1a-8b4a-d5e6-d8df-ef5fe27fe74d@crashcourse.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260130-bbappend-matching-v3-1-7e3c7c7d87f5@cherry.de>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/33NTQ6DIBCG4asY1qWB8afSVe/RdIEwCIsiAUNqj
- HcvunLRdPl+yTyzkoTRYSL3aiURs0tu8iXqS0WUlX5E6nRpAgw6xqGnwyBDQK/pW87KOj9SzYY
- WWpCc3wQpdyGicZ/DfL5KW5fmKS7Hi8z39Z+WOeUUhEEDuqubXjyUxRiXq0ayaxnOgvglQBEa1
- nBplKxVD2dh27YvUEHT1/QAAAA=
-X-Change-ID: 20260128-bbappend-matching-d0b5252a1179
-To: bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org, Quentin Schulz <quentin.schulz@cherry.de>, 
- "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-Mailer: b4 0.14.3
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset=US-ASCII
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel10.indieserve.net
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Get-Message-Sender-Via: cpanel10.indieserve.net: authenticated_id: rpjday+crashcourse.ca/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: cpanel10.indieserve.net: rpjday@crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 30 Jan 2026 16:23:00 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18941
+ <bitbake-devel@lists.openembedded.org>; Fri, 30 Jan 2026 18:33:42 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18942
 
-From: Quentin Schulz <quentin.schulz@cherry.de>
 
-The recipe name matching wasn't fully explained and were missing a few
-important corner cases such as recipes without a version, or using the %
-character outside of the version part of the filename for example.
+  While perusing some vendor's code, I ran across an example of
+setting a handler eventmask to "bb.event.SanityCheck". Out of
+curiosity, I looked up the current BB manual for that event, but it is
+not listed here (many others are, of course):
 
-This adds the last missing bits to cover every append naming scenario
-that exist today.
+https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user-manual-metadata.html#events
 
-This was derived from lib/bb/cooker.py:get_file_appends().
+  Is there any value in having a comprehensive and complete list of
+BB-supplied events? If not, how do we expect a developer to know about
+the ones that are not documented?
 
-Reported-by: Robert P. J. Day <rpjday@crashcourse.ca>
-Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
----
-Changes in v3:
-- put busybox_1.%.11.bbappend and linux-yocto% examples in a note,
-- Link to v2: https://patch.msgid.link/20260129-bbappend-matching-v2-1-4041afca3c82@cherry.de
-
-Changes in v2:
-- fixed typo for bbappend named bb,
-- added "a" before "``mesa.bb`` recipe",
-- Link to v1: https://patch.msgid.link/20260128-bbappend-matching-v1-1-29fef2d63489@cherry.de
----
- .../bitbake-user-manual-intro.rst                  | 54 +++++++++++++++++-----
- 1 file changed, 43 insertions(+), 11 deletions(-)
-
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
-index baad71304..6bcab4870 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
-@@ -271,12 +271,9 @@ same root filename. The filenames can differ only in the file type
- suffix used (e.g. ``formfactor_0.0.bb`` and
- ``formfactor_0.0.bbappend``).
- 
--Information in append files extends or overrides the information in the
--underlying, similarly-named recipe files.
--
- When you name an append file, you can use the "``%``" wildcard character
--to allow for matching recipe names. For example, suppose you have an
--append file named as follows::
-+to allow for a less strict recipe name matching. For example, suppose you have
-+an append file named as follows::
- 
-   busybox_1.21.%.bbappend
- 
-@@ -290,12 +287,6 @@ the append file would match the following recipe names::
-   busybox_1.21.10.bb
-   busybox_1.21.11.bb
- 
--.. note::
--
--   The use of the " % " character is limited in that it only works directly in
--   front of the .bbappend portion of the append file's name. You cannot use the
--   wildcard character in any other location of the name.
--
- If the ``busybox`` recipe was updated to ``busybox_1.3.0.bb``, the
- append name would not match. However, if you named the append file
- ``busybox_1.%.bbappend``, then you would have a match.
-@@ -303,6 +294,47 @@ append name would not match. However, if you named the append file
- In the most general case, you could name the append file something as
- simple as ``busybox_%.bbappend`` to be entirely version independent.
- 
-+A recipe named without a version may only be appended by an append file named
-+exactly the same. That is, a recipe named::
-+
-+   mesa.bb
-+
-+can only be appended by an append file named::
-+
-+   mesa.bbappend
-+
-+That is, ``mesa_%.bbappend`` append file will not match a ``mesa.bb`` recipe.
-+
-+.. note::
-+
-+   The "``%``" character is a marker for BitBake, and everything after that
-+   marker will not be used for matching recipe names. That is, an append file
-+   named::
-+
-+      busybox_1.%.11.bbappend
-+
-+   will match recipes named::
-+
-+      busybox_1.0.11.bb
-+      busybox_1.2.bb
-+      busybox_1.3.48.bb
-+
-+   Note that the "``%``" character is not specific to the version part of the
-+   recipe name. That is, an append file named::
-+
-+      linux-yocto%.bbappend
-+
-+   will match recipes named::
-+
-+      linux-yocto.bb
-+      linux-yocto_6.18.bb
-+      linux-yocto-tiny_6.12.bb
-+      linux-yocto-rt_6.16.bb
-+
-+   While it can be useful to append to similar recipes with slightly different
-+   names, it is highly discouraged to do so as recipes from other layers may be
-+   named similarly enough that the append file would unwittingly match them.
-+
- Obtaining BitBake
- =================
- 
-
----
-base-commit: cdd79c1768ac396a9c6577e38098da4331507f24
-change-id: 20260128-bbappend-matching-d0b5252a1179
-
-Best regards,
--- 
-Quentin Schulz <quentin.schulz@cherry.de>
-
+rday
 
