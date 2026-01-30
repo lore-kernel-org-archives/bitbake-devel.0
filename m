@@ -1,139 +1,193 @@
-Return-Path: <anibal@limonsoftware.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 877CDD73EAF
-	for <webhook@archiver.kernel.org>; Fri, 30 Jan 2026 01:56:36 +0000 (UTC)
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.1347.1769738188952333317
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A34AE6BF17
+	for <webhook@archiver.kernel.org>; Fri, 30 Jan 2026 14:06:10 +0000 (UTC)
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.11039.1769781965516315957
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 29 Jan 2026 17:56:29 -0800
+ Fri, 30 Jan 2026 06:06:06 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@limonsoftware-com.20230601.gappssmtp.com header.s=20230601 header.b=NgmvHgTA;
- spf=pass (domain: limonsoftware.com, ip: 209.85.167.174, mailfrom: anibal@limonsoftware.com)
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-45f053b7b90so1028695b6e.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 29 Jan 2026 17:56:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=limonsoftware-com.20230601.gappssmtp.com; s=20230601; t=1769738188; x=1770342988; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tkxCJ6mGj2qCZk8Ds906xR3MRBKNh4afQKTLg9S2x44=;
-        b=NgmvHgTAJ4TInoVtp/rUXVgoeLBKGGMHd1E0Lyr0DzdJL+iwHjDVsv3xz826YQwDGe
-         bloYHBsUCQHFH9BeN/N2aD3pK41YjGeUyLi7HizHrIwJtd+Fij08AUwsmFq4ymMNVvx5
-         nzoYFpw085S3Z5Pws+uv7dHxHtgI/uu8s/CDwuWcX4qFpxr8SQcWdRQ33Fa3Pig8yHjK
-         Bg/Yr02+y4C5z2OpHYTxhz45PxGQdiqNJiO98+4sfCMn3JWBUVc1KAgwQ48b4+0xGTFR
-         He9uY3DDgAU+tTJM2VcICnIUUur+FSJQ36ytHmmrYDA46GaKjpTFgsGNCWK+CjCnIATq
-         Xssw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769738188; x=1770342988;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tkxCJ6mGj2qCZk8Ds906xR3MRBKNh4afQKTLg9S2x44=;
-        b=SaE7/PqfI7dlJB+d7D4Bgw91vS1Fy9LndYSDM8HFx96DfrBEG+GGtM8aorWjA7sc05
-         OrRVZZmaAqlOFThqAe25CO6dvpeBNsti6AR6sj3EVwQp4zUyMeT62nCC+dEGSTIhyxcr
-         tSzi0o4u8e5CLQsGQR5JQt81QOEd/bPO7iS/2lfhrPZZeumKUPWeZv4qqhxi+0JKFuUF
-         AcPoGt/Je91jAQBxIosurhdjbbob78trVwryVimr0stnsm0TlYoKgw2psjPRQ0FgbxPJ
-         rvNhTpTmvVMdr12ZS6rmljJM2MuGflfTcmGwoocQOHTxQ3CYyTMcQMDbbhVq2jXS5mgX
-         1M+A==
-X-Gm-Message-State: AOJu0YxF/gljMhv5/guAEfbsu7MFNmNjptqDNjjOiBAUlXWn4dCBey4c
-	Drh172PUlEkvaAa5I4bLJAP59tmQNkncutrlQwr9X82MhePmKkcLU/dxYsCvvdipW/UoeYpLyj9
-	xYa+Wh+I=
-X-Gm-Gg: AZuq6aKpCj5+ErNSagdoHzBcA9/e6+uoHmk/GKt69GmX1LR6B7ZLK+2F26Tmxkxl4Fo
-	CpIjdWH4q/CMQeHPJv8JyyVtmowyYabTPNwAQqn1gMZTFW9hNIAPAJHhpmnPN7t4WZKrirFPh2L
-	aW7VbiFMEsTXt7m9o0xPUPHieWz8b4BAgKdbFNUTSuO4KpJsNEzxkZeyh51QLnXbpMwnJPiCPPH
-	xPcMorfQ+k5DSFtbZ1T9K0PvMnc8xF3TaT6PCu6NYBfJkVptn8sGyYxUQ1aXfLcdsLvMg7XMdy8
-	MCfZB4b0H1L0Is1gP9qb8krz4YYwacLHw326bT/+vqgCnlRwX6P3j+Ok7Uhp/bH0AUfTNej1C0/
-	8zt59f0GmN9MGK+jZBweHDB2UyNbfZRQrWpD194PLsWqyjbfrOX7m/6nFpRQTUAtfAOnbt9XvPP
-	scAmyU/V6Ck+U4CGqUWERpmsjWXF1HdStb8qFoF0yI5VZ2y/pPjLBlSifgZvpgkESNhqdrp5Tl8
-	gKPskOd
-X-Received: by 2002:a05:6808:15a1:b0:45a:770c:d77b with SMTP id 5614622812f47-45f34cd613cmr1242229b6e.35.1769738187882;
-        Thu, 29 Jan 2026 17:56:27 -0800 (PST)
-Received: from blackbox.Home ([189.197.16.79])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-45f08f60119sm3784500b6e.17.2026.01.29.17.56.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jan 2026 17:56:27 -0800 (PST)
-From: Anibal Limon <anibal@limonsoftware.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: alex@linutronix.de,
-	Anibal Limon <anibal@limonsoftware.com>
-Subject: [PATCHv3] bitbake-setup: _has_local_modifications fix user case when add/remove/add layer
-Date: Thu, 29 Jan 2026 19:56:24 -0600
-Message-ID: <20260130015624.2228926-1-anibal@limonsoftware.com>
-X-Mailer: git-send-email 2.51.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=iQEnNxzc;
+ spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id A32014E42352;
+	Fri, 30 Jan 2026 14:06:03 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 613B56075A;
+	Fri, 30 Jan 2026 14:06:03 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 50CFA119A885C;
+	Fri, 30 Jan 2026 15:06:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1769781962; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=WTq54cgUrkBl/XN4ybLoxtqb5IhQEzO8zXgd8j2ZeyE=;
+	b=iQEnNxzcuvzgSobf39uWBHCZ24iwhuxqartSeR4KXhWCMff5XFlit2p1MZoBfqIlPMVZa7
+	ecaGiEE5BKthIWK0pIcWj/KUeeMtQoeD3sOa1L+v8fThtEXWnheUoQzaY/fUP2TX4lVBo9
+	LVbkvQ0x9fzQAXgpYRcFvletPDKX+u6XVbeJXxM/43cWiK3I1eMOaxTvdpin707y+fBPm/
+	TmKih3SEfCu7Cuvdv7rHJFU1f1hEI/Xwt62R+ZoWvEkfjxq/bWF7ZNgR6LPIK8pClKP8Lo
+	AnXseHK3oZ/RVA9ekoHRDCyDEVqBzdtdYPu7WzPHtaOicCf3mx9OfqhSHmh6Iw==
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 30 Jan 2026 15:06:00 +0100
+Message-Id: <DG1ZCGR9A4OJ.3918WSIWBKUDI@bootlin.com>
+Subject: Re: [docs] [PATCH v2] doc: bitbake-user-manual-intro: improve
+ bbappend file matching doc
+Cc: <docs@lists.yoctoproject.org>, "Quentin Schulz"
+ <quentin.schulz@cherry.de>, "Robert P. J. Day" <rpjday@crashcourse.ca>
+From: "Antonin Godard" <antonin.godard@bootlin.com>
+To: "Quentin Schulz" <foss@0leil.net>,
+ <bitbake-devel@lists.openembedded.org>
+References: <20260129-bbappend-matching-v2-1-4041afca3c82@cherry.de>
+In-Reply-To: <20260129-bbappend-matching-v2-1-4041afca3c82@cherry.de>
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 30 Jan 2026 01:56:36 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18936
+ <bitbake-devel@lists.openembedded.org>; Fri, 30 Jan 2026 14:06:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18937
 
-While develop a registry configuration adding a new layer and then back
-to previous configuration without the _has_local_modifications breaks
-because the code expects the layer to be in sources-fixed-revisions.json.
+Hi,
 
-This can be reproduced with next steps:
+On Thu Jan 29, 2026 at 11:07 AM CET, Quentin Schulz wrote:
+> From: Quentin Schulz <quentin.schulz@cherry.de>
+>
+> The recipe name matching wasn't fully explained and were missing a few
+> important corner cases such as recipes without a version, or using the %
+> character outside of the version part of the filename for example.
+>
+> This adds the last missing bits to cover every append naming scenario
+> that exist today.
 
-- Call bitbake-setup with configX.
-- Remove a LayerY from the configX.
-- Call bitbake-setup with configX.
-- Add the layerY again to configX.
-- Call bitbake-setup with configX (break).
+Thanks, this was indeed missing!
 
-Fixes:
+> This was derived from lib/bb/cooker.py:get_file_appends().
+>
+> Reported-by: Robert P. J. Day <rpjday@crashcourse.ca>
+> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+> ---
+> Changes in v2:
+> - fixed typo for bbappend named bb,
+> - added "a" before "``mesa.bb`` recipe",
+> - Link to v1: https://patch.msgid.link/20260128-bbappend-matching-v1-1-29=
+fef2d63489@cherry.de
+> ---
+>  .../bitbake-user-manual-intro.rst                  | 51 ++++++++++++++++=
++-----
+>  1 file changed, 40 insertions(+), 11 deletions(-)
+>
+> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst b/doc/=
+bitbake-user-manual/bitbake-user-manual-intro.rst
+> index baad71304..69ad6037b 100644
+> --- a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
+> +++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
+> @@ -271,12 +271,9 @@ same root filename. The filenames can differ only in=
+ the file type
+>  suffix used (e.g. ``formfactor_0.0.bb`` and
+>  ``formfactor_0.0.bbappend``).
+> =20
+> -Information in append files extends or overrides the information in the
+> -underlying, similarly-named recipe files.
+> -
+>  When you name an append file, you can use the "``%``" wildcard character
+> -to allow for matching recipe names. For example, suppose you have an
+> -append file named as follows::
+> +to allow for a less strict recipe name matching. For example, suppose yo=
+u have
+> +an append file named as follows::
+> =20
+>    busybox_1.21.%.bbappend
+> =20
+> @@ -290,12 +287,6 @@ the append file would match the following recipe nam=
+es::
+>    busybox_1.21.10.bb
+>    busybox_1.21.11.bb
+> =20
+> -.. note::
+> -
+> -   The use of the " % " character is limited in that it only works direc=
+tly in
+> -   front of the .bbappend portion of the append file's name. You cannot =
+use the
+> -   wildcard character in any other location of the name.
+> -
+>  If the ``busybox`` recipe was updated to ``busybox_1.3.0.bb``, the
+>  append name would not match. However, if you named the append file
+>  ``busybox_1.%.bbappend``, then you would have a match.
+> @@ -303,6 +294,44 @@ append name would not match. However, if you named t=
+he append file
+>  In the most general case, you could name the append file something as
+>  simple as ``busybox_%.bbappend`` to be entirely version independent.
+> =20
 
-```
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 1137, in <module>
-    main()
-    ~~~~^^
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 1130, in main
-    args.func(top_dir, all_settings, args, d)
-    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 735, in build_update
-    build_status(top_dir, settings, args, d, update=True)
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 719, in build_status
-    update_build(new_upstream_config, confdir, setupdir, layerdir, d,
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                 update_bb_conf=args.update_bb_conf)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 408, in update_build
-    sources_fixed_revisions = checkout_layers(layer_config, confdir, layerdir, d)
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 184, in checkout_layers
-    elif _has_local_modifications(r_name, repodir_path):
-         ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspaces/ls/meta-ls/bitbake/bin/bitbake-setup", line 143, in _has_local_modifications
-    rev = fixed_revisions['sources'][r_name]['git-remote']['rev']
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
-KeyError: 'meta-freescale'
-```
+I would wrap from here...
 
-Signed-off-by: Anibal Limon <anibal@limonsoftware.com>
----
- bin/bitbake-setup | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> +The "``%``" character is a marker for BitBake, and everything after that=
+ marker
+> +will not be used for matching recipe names. That is, an append file name=
+d::
+> +
+> +   busybox_1.%.11.bbappend
+> +
+> +will match recipes named::
+> +
+> +   busybox_1.0.11.bb
+> +   busybox_1.2.bb
+> +   busybox_1.3.48.bb
+> +
+> +Note that the "``%``" character is not specific to the version part of t=
+he
+> +recipe name. That is, an append file named::
+> +
+> +   linux-yocto%.bbappend
+> +
+> +will match recipes named::
+> +
+> +   linux-yocto.bb
+> +   linux-yocto_6.18.bb
+> +   linux-yocto-tiny_6.12.bb
+> +   linux-yocto-rt_6.16.bb
+> +
+> +While it can be useful to append to similar recipes with slightly differ=
+ent
+> +names, it is highly discouraged to do so as recipes from other layers ma=
+y be
+> +named similarly enough that the append file would unwittingly match them=
+.
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index 4d709ed8c..893cb68fe 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -140,6 +140,14 @@ def checkout_layers(layers, confdir, layerdir, d):
- 
-     def _has_local_modifications(r_name, r_path):
-         fixed_revisions = json.load(open(os.path.join(confdir, "sources-fixed-revisions.json")))
-+
-+        if not r_name in fixed_revisions['sources']:
-+            logger.warning("""Source {} is added with path {}.
-+This path already exists, but it has no entry in a fixed revisions
-+record. To ensure possible local modifications are not lost, it will
-+be preserved in a backup directory.""".format(r_name, r_path))
-+            return True
-+
-         rev = fixed_revisions['sources'][r_name]['git-remote']['rev']
-         status = bb.process.run('git -C {} status --porcelain'.format(r_path))[0]
-         if status:
--- 
-2.51.0
+...to there under a .. note:: block. First because it will make it separate=
+ from
+the first part of this section, and second because it will highlight that t=
+his
+is an in-depth explanation of this percent sign, not really a standard use.
+
+I would however move what's below from here...
+
+> +A recipe named without a version may only be appended by an append file =
+named
+> +exactly the same. That is, a recipe named::
+> +
+> +   mesa.bb
+> +
+> +can only be appended by an append file named::
+> +
+> +   mesa.bbappend
+> +
+> +That is, ``mesa_%.bbappend`` append file will not match a ``mesa.bb`` re=
+cipe.
+> +
+
+...to there _above_ the ..note block as this is a pretty standard bbappend
+use-case.
+
+Thanks,
+Antonin
+
+--=20
+Antonin Godard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
