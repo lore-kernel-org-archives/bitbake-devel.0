@@ -1,70 +1,63 @@
-Return-Path: <rpjday@crashcourse.ca>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECE1E6BF34
-	for <webhook@archiver.kernel.org>; Fri, 30 Jan 2026 18:33:42 +0000 (UTC)
-Received: from cpanel10.indieserve.net (cpanel10.indieserve.net [199.212.143.9])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.1055.1769798020129764231
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44ABEE73146
+	for <webhook@archiver.kernel.org>; Mon,  2 Feb 2026 08:32:46 +0000 (UTC)
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.48190.1770021159535163773
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 30 Jan 2026 10:33:40 -0800
+ Mon, 02 Feb 2026 00:32:40 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@crashcourse.ca header.s=default header.b=IdLiRr+B;
- spf=pass (domain: crashcourse.ca, ip: 199.212.143.9, mailfrom: rpjday@crashcourse.ca)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=crashcourse.ca; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-	cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=kie/EvhZ00/fQXahD3bG44ua7FOtjRLrKVsqFur3FuU=; b=IdLiRr+BLPbrbs1z+6FXf1hJxq
-	UuJoNmQflqQWkK7v64LZAQ83oXlvFKj6FyuEEvcxj4EFqOaeQ5/UH8FIn5ouYxup1qMacKfT2/oo0
-	h8MNSiUmTvnm7EoY+//mKnraN5G3EuiCEB5FUWlprl39CUzm+6sSZOJigWPdb9suyc4zwluVKusrV
-	hTxw2UuLFfawOo1zLRsy31xW+i7LhA+tvniBlV0tW9bNDCP3pXNRZxNA+Xzt2UcDaZcMQmdD1UdUY
-	JM5h7vz7qqQhVa0Psr9UNHvA/9tF4cOlpqOlcmRNYm+y3bokplwjrg2VKB7PF/31N8Vha32E0lw0T
-	tMswQU1w==;
-Received: from pool-174-115-41-146.cpe.net.cable.rogers.com ([174.115.41.146]:59408 helo=rday)
-	by cpanel10.indieserve.net with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.99.1)
-	(envelope-from <rpjday@crashcourse.ca>)
-	id 1vltJJ-00000009nzb-2luy;
-	Fri, 30 Jan 2026 13:33:38 -0500
-Date: Fri, 30 Jan 2026 13:34:38 -0500 (EST)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-To: YP docs mailing list <docs@lists.yoctoproject.org>
-cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Subject: Should the BB manual have a comprehensive reference for handler
- event masks?
-Message-ID: <d6529c1a-8b4a-d5e6-d8df-ef5fe27fe74d@crashcourse.ca>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel10.indieserve.net
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Get-Message-Sender-Via: cpanel10.indieserve.net: authenticated_id: rpjday+crashcourse.ca/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: cpanel10.indieserve.net: rpjday@crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=Y/FZRAdV;
+ spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 5FFDC1A2B9B;
+	Mon,  2 Feb 2026 08:32:37 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 14F2860767;
+	Mon,  2 Feb 2026 08:32:37 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D7D78119A8891;
+	Mon,  2 Feb 2026 09:32:34 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1770021156; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=NgRGJ+0c8SuRAkXcIzpL8yRC9aiYNj9/dsLCIJRt6Ps=;
+	b=Y/FZRAdVBle/NsV04WpoeoygwKRV6mSN0OasFXnqagEjCJExX70EDs1EjCiP73wDZ3etpw
+	LIW3puvHBxEM4FtMZCLjiUe9PhSiJyV5kEVhOxdXcHWPit2umtH19R25KGNdVH1dh3MsL3
+	5Nc9TfN6q9MHoA1aQHgDsXi9B4qS8Cui2ED8TKoT2McRhLHm7fGHaifbNeNRUZP13dIhfF
+	02hljrJ9fyHSblC4iYkoQF5FM4NfE89//jrwZ0UZXOHlpMoGFoiGGUs0iwoujRid0wowBy
+	THoISX5IApLsrQIdyD1XBTuseiS4NdL3eITARqXFLU4cCjROOyk7ESKW1P75vg==
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 02 Feb 2026 09:32:34 +0100
+Message-Id: <DG4C4SSPGMEU.2TU95P0C4S8KX@bootlin.com>
+Cc: <docs@lists.yoctoproject.org>, "Quentin Schulz"
+ <quentin.schulz@cherry.de>, "Robert P. J. Day" <rpjday@crashcourse.ca>
+From: "Antonin Godard" <antonin.godard@bootlin.com>
+To: "Quentin Schulz" <foss@0leil.net>,
+ <bitbake-devel@lists.openembedded.org>
+Subject: Re: [docs] [PATCH v3] doc: bitbake-user-manual-intro: improve
+ bbappend file matching doc
+X-Mailer: aerc 0.21.0-63-gbde0bca3c3bc
+References: <20260130-bbappend-matching-v3-1-7e3c7c7d87f5@cherry.de>
+In-Reply-To: <20260130-bbappend-matching-v3-1-7e3c7c7d87f5@cherry.de>
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 30 Jan 2026 18:33:42 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18942
+ <bitbake-devel@lists.openembedded.org>; Mon, 02 Feb 2026 08:32:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18943
 
+Reviewed-by: Antonin Godard <antonin.godard@bootlin.com>
 
-  While perusing some vendor's code, I ran across an example of
-setting a handler eventmask to "bb.event.SanityCheck". Out of
-curiosity, I looked up the current BB manual for that event, but it is
-not listed here (many others are, of course):
+Thanks!
+Antonin
 
-https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user-manual-metadata.html#events
+--=20
+Antonin Godard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-  Is there any value in having a comprehensive and complete list of
-BB-supplied events? If not, how do we expect a developer to know about
-the ones that are not documented?
-
-rday
 
