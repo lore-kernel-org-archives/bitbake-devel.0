@@ -1,151 +1,118 @@
-Return-Path: <corentin.guillevic@smile.fr>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA58FE95386
-	for <webhook@archiver.kernel.org>; Wed,  4 Feb 2026 11:11:16 +0000 (UTC)
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.18131.1770203470893609900
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC590E9539E
+	for <webhook@archiver.kernel.org>; Wed,  4 Feb 2026 13:32:47 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.20390.1770211966444126447
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 04 Feb 2026 03:11:11 -0800
+ Wed, 04 Feb 2026 05:32:46 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=msTHMLKQ;
- spf=pass (domain: smile.fr, ip: 209.85.128.65, mailfrom: corentin.guillevic@smile.fr)
-Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-4806bf03573so33199455e9.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 04 Feb 2026 03:11:10 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Yu37c2w4;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-480142406b3so51509695e9.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 04 Feb 2026 05:32:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1770203469; x=1770808269; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cZR7a6GLkW7V1+r1XxllDy0CCArUN82Ge0HkOFpObsA=;
-        b=msTHMLKQAfYpCAOAD5GRAKvEON7bwt7aLGbtOygckEhbtK5li/pxx4SupJJE5hkIqX
-         4+gpK+go1GtGVC2fTAAE3EhRLXchxqT+JZS9pG/5OXy0bgCoeZW9VY1ase6WCHHry1U3
-         m6i1/VcS4LBaBKQAvXXnwfkKFBWtg+uVK3C7Y=
+        d=linuxfoundation.org; s=google; t=1770211965; x=1770816765; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3BwZ8IBQdwbJL5ARI6rPTCtw8xNgciE64ufrG68z1BI=;
+        b=Yu37c2w4RakuwEz5HYIXxpAsd18bnhpJHX39ixIwqqz2Zy7NASh0QcfS8+ys8eBmp6
+         vSNmrPuUlU806XvJQlKZNQfrRMToCKNDDGXRwyo9UJhklpkD9kVi5ofC3KNgMgi3KoBR
+         P9cTqtk5HcjYs5LWPDa1ll8dOJgmL5g6kMK7k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770203469; x=1770808269;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=cZR7a6GLkW7V1+r1XxllDy0CCArUN82Ge0HkOFpObsA=;
-        b=BqIYv8j1q94SuMaTyTEpBh0OPfvaoAIGGuDtId+O7/9h0AV4sNlLYCjJXtjPiRINe4
-         XNBIEAIoYvmqwORYT67loFUhE7Ne6ZhkZ7VBZDoeb1OD3vFL6xd4wZRO4eE2woNQFSyB
-         97yca4fVrUE8du+A5QXub2vRcY8tQ+KfAt1+Xi19aabAULlJzfWIb88RbiiSpSbWCr+l
-         6OTVbqtim+O/hQc69ojQUTsmDaEBsuLNjQOa6zhTnLxX6mmU0sUummHXDX9gSw1aGB0g
-         jk4fRYn1szr7/vC1mUseiBWHPTyByBKt5M5A6Rl01uCRdRHVdj6Zpsy+/4wAcd7q/bSi
-         bpWw==
-X-Gm-Message-State: AOJu0YzIk4Ssc9sKWI/xA4FMfvPwiBZeyUgB4BpvAArKtrpG+A0efjBS
-	xRykYFx5EScMhjUjRToD8Hb+XqJp1rPI+oDYaPx2N+WONxzvRRZXcoyXUDMeEQW/yQ0GILAvCLE
-	FsJzdVrY=
-X-Gm-Gg: AZuq6aJPWEn/xB7wEnX2OZPVekfM1yefBoCfhaup1lK8jO5VbPBM0dtK0aEegSGpcN4
-	QO7swkUeR18MRAkuDGTB+YQU07+oofJtcAewmvmL4OA69225+vUCO64k3umKxJ9FtiA+l14pu8R
-	pdncPQhNp1Jj9ZGk75s19SbEPBwKTwtI2c+KQQbWUtliL2nmPcrcGeZvMKkqAG1r5uZro2n+tNW
-	uUTOmHfjr0vGZgE6f4y3cynEBpCKb4YvMjHaVpFjYjqRam6Q8XcU1FG9DRs7v08+JvcokNvbayQ
-	RVIybuWmzw6pslqd4NJUcQgCSJEza0xZ/LbeSlJhJjQrERxWVj+w0wpfW46TwKkat9X8rb0hoyM
-	wAXpc/O8lGUqGnWEzMPMlsTzOpL6PaqpVu4k39KAO5CjpToioICRncCU8bJWSOvVBlr9Y5UgTr7
-	7jYKj+rwOiY+LdZWQFSlHw
-X-Received: by 2002:a05:600c:a03:b0:47d:885d:d2ff with SMTP id 5b1f17b1804b1-4830e991bf6mr32653165e9.29.1770203469191;
-        Wed, 04 Feb 2026 03:11:09 -0800 (PST)
-Received: from heaven.lan ([2001:861:3080:b0f0:481f:fde1:912:228])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4830fc0a3bbsm28824395e9.1.2026.02.04.03.11.08
+        d=1e100.net; s=20230601; t=1770211965; x=1770816765;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3BwZ8IBQdwbJL5ARI6rPTCtw8xNgciE64ufrG68z1BI=;
+        b=UqdGV7rTsbBjirfRMK0Dh/Hu9rSfiiOrqe3fDXbyxGyr0tAq/qtu1bVDicBznNBq0G
+         Q5lP7F9sLWA1Tgzp/Eue5UCt9HAZngTJm0yS5ZRyXKHOklY68C6xn/a+f7SUJNzZVBqx
+         qTfDxjbVVLdo/JvRxja+fIIauFuGw6ufTwPpVCUAeoG/FgGuH/A61ZYtwH8RLkxuOPCh
+         g3sYz2gMDmPMt6UPbnWcIfarKQwIpVl+dsWIqmOGQWTNEkg4BLZAAXEwuQgGdouv/fYl
+         C07XPtxaZNhJR+BV26YjNQcUUYd8ztvlq5c1xk08/jrmfBzSv2ub+7xiRyXVqsazseIj
+         r1sg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpC1WVgc3h72uxU2WeYARaIBWR+aHDyP6QGS1ka59H2D8bEOxmdlLpsDmUmlOeFJl0lIx0PBcG7NRmMBh5@lists.openembedded.org
+X-Gm-Message-State: AOJu0YwLPqMunZad2C3U3P8FKZR86lk97/BvF/Wa4EmZxs7xLAM+i3A7
+	r6VicoK8q1YsEtlaV393vnuL0JOcdICzbJp8rlRZnzwZLL+rapgRXZmsLW0/gHae+iM=
+X-Gm-Gg: AZuq6aLPfLPv2aScWZSuiJbpvwP/TX7Z+A9tc7XKA1yw26yCHBhp9vNBRMkWWn9pPqB
+	jtJieUeo+hmWrTgWrjeOEkabunHoFVAM4DY4NnKBbVSzdATkG416Hbv79L4icU3psBDmqXzyoio
+	u9BiolF3NuiDv82ZJT55nkrQDxLNo/2q5//+VH2azlVP8mXd5ltkenLUlYW871mOkMUBDqLfaNz
+	vRWJAMKEIVZfYb/xQKqBRkyLL4bkJ5AZv/o5eLEzzGsb9WAe1M9zxBlFaTE7ccAsgKGcvwwnzaf
+	sVqIbGJxRCWhipKuS/4U5XuiJ6DHDkcq7/R7025N6Kd9yvhO9PAcCT/zDsa5ffYAMxdBQlo1+UH
+	ajDfFUMX7ASOOYi73ZCyPN2r4CoufIR0yKajr3tD0WcGSM10SvS4RaE4bwU0wi8o1MPXnnZ2I+2
+	215nnxcI7HwQgbg6jiE8SC/Cob8wFmlVvsMa/vC7M14faJJg90sdJbjokuULr4KoHTM0q/zqquX
+	/o=
+X-Received: by 2002:a05:600c:8489:b0:483:ea6:8767 with SMTP id 5b1f17b1804b1-4830ea687b8mr40244435e9.36.1770211964723;
+        Wed, 04 Feb 2026 05:32:44 -0800 (PST)
+Received: from ?IPv6:2001:8b0:aba:5f3c:ac04:f180:6f5c:7b1d? ([2001:8b0:aba:5f3c:ac04:f180:6f5c:7b1d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4831091a0e9sm77799335e9.10.2026.02.04.05.32.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Feb 2026 03:11:08 -0800 (PST)
-From: Corentin Guillevic <corentin.guillevic@smile.fr>
-To: bitbake-devel@lists.openembedded.org
-Cc: Corentin Guillevic <corentin.guillevic@smile.fr>
-Subject: [PATCH v7 4/4] doc/bitbake-setup: document "uri" property
-Date: Wed,  4 Feb 2026 12:10:51 +0100
-Message-ID: <20260204111051.1444641-4-corentin.guillevic@smile.fr>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260204111051.1444641-1-corentin.guillevic@smile.fr>
-References: <20260204111051.1444641-1-corentin.guillevic@smile.fr>
+        Wed, 04 Feb 2026 05:32:43 -0800 (PST)
+Message-ID: <ad6217119fe0e7382684ef6a41078e172a4e8498.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH v2] doc: fix the switchers menu
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: antonin.godard@bootlin.com, bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	docs@lists.yoctoproject.org
+Date: Wed, 04 Feb 2026 13:32:43 +0000
+In-Reply-To: <20260204-fix-switchers-js-v2-1-ea80107eff85@bootlin.com>
+References: <20260204-fix-switchers-js-v2-1-ea80107eff85@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0-1ubuntu0.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 04 Feb 2026 11:11:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18953
+ <bitbake-devel@lists.openembedded.org>; Wed, 04 Feb 2026 13:32:47 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18954
 
-The property 'uri' is a simplification of the property 'remotes'. It is
-used to provide only one URI.
+On Wed, 2026-02-04 at 11:03 +0100, Antonin Godard via lists.openembedded.or=
+g wrote:
+> Fix the switchers.js script of Bitbake to show what are the supported
+> versions and be able to switch between them.
+>=20
+> The default landing page is the stable branch and shows the BitBake
+> version along with the corresponding Yocto Project codename. This
+> hopefully makes it easier to remember the correspondance between the
+> BitBake version and the Yocto Project version.
+>=20
+> This works thanks to a set_versions.py script, which is largely inspired
+> from yocto-docs. It reads the tags from the repository and tries to
+> guess the currently checked out version of BitBake on which we are.
+>=20
+> The "obsolete" warning is now also shown when browsing outdated manuals,
+> meaning any version not part of activereleases in set_versions.py.
+>=20
+> Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+> ---
+> Note: This will be accompanied by a patch to adapt the Autobuilder to
+> generate this file for each release.
+> ---
+> Changes in v2:
+> - Remove environment information grabbing mechanism, making this fully
+> =C2=A0 standalone.
+> - Link to v1: https://lore.kernel.org/r/20250915-fix-switchers-js-v1-0-52=
+3ef53fe802@bootlin.com
+> ---
+> =C2=A0doc/.gitignore=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=
+=A0 2 +
+> =C2=A0doc/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0=C2=A0 3 +-
+> =C2=A0doc/bitbake.yaml.in=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
 
-Signed-off-by: Corentin Guillevic <corentin.guillevic@smile.fr>
----
- .../bitbake-user-manual-environment-setup.rst | 42 ++++++++++++++++---
- 1 file changed, 36 insertions(+), 6 deletions(-)
+I was about to merge this however is there a requirement to use yaml
+here? I ask mainly as we don't currently have yaml config files and I'd
+prefer not to start adding them and try to remain consistent with what
+we're using...
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-index 3b6a73fd8..d20ddcaea 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-@@ -673,11 +673,7 @@ They contain the following sections:
-          "sources": {
-              "bitbake": {
-                  "git-remote": {
--                     "remotes": {
--                         "origin": {
--                             "uri": "https://git.openembedded.org/bitbake"
--                         }
--                     },
-+                     "uri": "https://git.openembedded.org/bitbake",
-                      "branch": "master",
-                      "rev": "master"
-                  },
-@@ -714,10 +710,38 @@ They contain the following sections:
- 
-       ``git-remote`` entries are specified with the following options:
- 
--      -  ``remotes`` (**required**): a dictionary of git remote names, each containing a ``uri`` property
-+      -  ``remotes`` (*optional*): a dictionary of git remote names, each containing a ``uri`` property
-          with a URI that follows the git URI syntax. See https://git-scm.com/docs/git-clone#_git_urls
-          and https://git-scm.com/docs/git-remote for more information.
- 
-+         This structure is useful if you want to provide several remotes. Please
-+         note that each URI will be cloned, but only the the last treated one
-+         will be used in the unpacked source.
-+
-+         Example:
-+
-+         .. code-block:: json
-+            :force:
-+
-+            {
-+               "sources": {
-+                   "bitbake": {
-+                       "git-remote": {
-+                           "remotes": {
-+                               "origin": {
-+                                   "uri": "https://git.openembedded.org/bitbake"
-+                               },
-+                               "contrib": {
-+                                   "uri": "https://git.openembedded.org/bitbake-contrib"
-+                               }
-+                           },
-+                           "branch": "master",
-+                           "rev": "master"
-+                       },
-+                       "path": "bitbake"
-+                   }
-+               }
-+            }
-       -  ``rev`` (**required**): the revision to checkout. Can be the name of the
-          branch to checkout on the latest revision of the specified ``branch``.
- 
-@@ -728,6 +752,12 @@ They contain the following sections:
-       -  ``branch`` (**required**): the Git branch, used to check that the
-          specified ``rev`` is indeed on that branch.
- 
-+      -  ``uri`` (*optional*): a URI that follows the git URI syntax. You can replace
-+         the ``remotes`` structure if only one URI is provided. Despite this, ``uri``
-+         and ``remotes`` can still be used together.
-+
-+         See https://git-scm.com/docs/git-clone#_git_urls for more information.
-+
-    -  ``local`` (*optional*): specifies a path on local disk that should be symlinked
-       to under ``layers/``. This is useful for local development, where some layer
-       or other component used in a build is managed separately, but should still be
--- 
-2.51.0
+Cheers,
 
+Richard
 
