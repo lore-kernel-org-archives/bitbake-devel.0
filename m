@@ -2,63 +2,63 @@ Return-Path: <david.partain@est.tech>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBE1E9127F
-	for <webhook@archiver.kernel.org>; Thu,  5 Feb 2026 07:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6DCE91283
+	for <webhook@archiver.kernel.org>; Thu,  5 Feb 2026 07:03:09 +0000 (UTC)
 Received: from esa8.hc1455-7.c3s2.iphmx.com (esa8.hc1455-7.c3s2.iphmx.com [139.138.61.253])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.14260.1770268776604894205
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.12318.1770259513665693629
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 04 Feb 2026 21:19:37 -0800
+ Wed, 04 Feb 2026 18:45:14 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@fujitsu.com header.s=fj2 header.b=hfPJRPKK;
+ dkim=pass header.i=@fujitsu.com header.s=fj2 header.b=bxmNDXDM;
  spf=pass (domain: fujitsu.com, ip: 139.138.61.253, mailfrom: liuyd.fnst@fujitsu.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1770268776; x=1801804776;
+  t=1770259511; x=1801795511;
   h=from:to:subject:date:message-id:mime-version:
    content-transfer-encoding;
   bh=B25GpftxO6zjvXJHUOfMCKNqezG9VqiUW9b7kOWCREc=;
-  b=hfPJRPKKCvPfgtK+DxQM2Pmk/KaUNtML8lqqhFkQsKGFRbwEtrGrOVw+
-   wPBjQYk4NfUI7gIe447PaEu5Jtz3jfBAXB9A/X8S24xGPrvin5djssv8p
-   8BmWmgxErkKhh0zO56viC+j+m4IVyV8r3AaMv18YM2UwnWqfObiG+A1tg
-   iEcnnYi5xP6Tg+3ylMRvD+8pgjNHPTbwRCvcUwMprdaUgwnix+sdhQ7oN
-   guJ43T4NgbExPLyshK82g0MZGEXCmSrPHeAPMmj0ozvAFhcHjdTVm5F0M
-   Ah2DBvqr/vCrfou/nRH4trIg496tYESvaho8TV68ACKfANee/NN/fYdnJ
-   w==;
-X-CSE-ConnectionGUID: fQNj59FTQA2BMO+pcbFcvw==
-X-CSE-MsgGUID: e2NZ/81oTNKfYM1O9VJjhg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="216544286"
-X-IronPort-AV: E=Sophos;i="6.21,274,1763391600"; 
-   d="scan'208";a="216544286"
+  b=bxmNDXDMT/6dm9SsMznE6Nfky+qbko6/nqdXdMrfqkXndD5TNg4dTzVS
+   7+sa505nrvT8CJ9lHKL1ON2LATQF54mZdMQTOoFz8CvXh1mq+NGFtBbD/
+   FSNJdOBpiJgeanfxPYo9A9kgH9Rg3vFYNtPYQzE/M15wH4FxRYwMa6Bph
+   yirqCgNpNUQpMMmrNBmUamvY48/r7QNCPrBUPvfRJjirVrP7nH4donOEQ
+   2hfynCqlUsu+K/SQ+pGm1WID/s6wDdrbMDeAaPO6VlDxDEjmTNNLTLaoR
+   1kXPcCFChLBHXTIYOvApoPU0+yqABhxGegspogaOY9UmSoXJCEN4PFml9
+   g==;
+X-CSE-ConnectionGUID: iv4JIECHQCaB9cStGm4moA==
+X-CSE-MsgGUID: vJqMH20HSACnUt4b3JFq1Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="216523887"
+X-IronPort-AV: E=Sophos;i="6.21,273,1763391600"; 
+   d="scan'208";a="216523887"
 Received: from unknown (HELO mail.fujitsu.com) ([51.138.80.169])
-  by esa8.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2026 14:19:35 +0900
+  by esa8.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2026 11:45:10 +0900
 Received: from az2uksmgm4.o.css.fujitsu.com (unknown [10.151.22.201])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by az2nlsmgr2.fujitsu.com (Postfix) with ESMTPS id 0CF013FD7
-	for <bitbake-devel@lists.openembedded.org>; Thu,  5 Feb 2026 05:19:35 +0000 (UTC)
-Received: from az2uksmom4.o.css.fujitsu.com (az2uksmom4.o.css.fujitsu.com [10.151.22.204])
+	by az2nlsmgr4.fujitsu.com (Postfix) with ESMTPS id DB04142A31C
+	for <bitbake-devel@lists.openembedded.org>; Thu,  5 Feb 2026 02:45:11 +0000 (UTC)
+Received: from az2uksmom2.o.css.fujitsu.com (az2uksmom2.o.css.fujitsu.com [10.151.22.203])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by az2uksmgm4.o.css.fujitsu.com (Postfix) with ESMTPS id A69E5140734A
-	for <bitbake-devel@lists.openembedded.org>; Thu,  5 Feb 2026 05:19:34 +0000 (UTC)
+	by az2uksmgm4.o.css.fujitsu.com (Postfix) with ESMTPS id 81BF21407342
+	for <bitbake-devel@lists.openembedded.org>; Thu,  5 Feb 2026 02:45:11 +0000 (UTC)
 Received: from G08FNSTD190101.g08.fujitsu.local (unknown [10.193.135.3])
-	by az2uksmom4.o.css.fujitsu.com (Postfix) with ESMTP id 67306404686
-	for <bitbake-devel@lists.openembedded.org>; Thu,  5 Feb 2026 05:19:32 +0000 (UTC)
+	by az2uksmom2.o.css.fujitsu.com (Postfix) with ESMTP id 42E1A1400128
+	for <bitbake-devel@lists.openembedded.org>; Thu,  5 Feb 2026 02:45:08 +0000 (UTC)
 From: "Yiding Liu (Fujitsu)" <liuyd.fnst@fujitsu.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] bitbake-setup: Add strip to dldir
-Date: Thu,  5 Feb 2026 13:19:08 +0800
-Message-ID: <20260205051908.2553-1-liuyd.fnst@fujitsu.com>
+Subject: [OE-core][PATCH] bitbake-setup: Add strip to dldir
+Date: Thu,  5 Feb 2026 10:45:02 +0800
+Message-ID: <20260205024502.2382-1-liuyd.fnst@fujitsu.com>
 X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 05 Feb 2026 07:02:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18959
+ <bitbake-devel@lists.openembedded.org>; Thu, 05 Feb 2026 07:03:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18960
 
 If user add "" to dl-dir as DL_DIR, it will show FetchError as following.
 
