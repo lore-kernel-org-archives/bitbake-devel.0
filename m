@@ -1,98 +1,113 @@
-Return-Path: <liuyd.fnst@fujitsu.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6963BEB28DF
-	for <webhook@archiver.kernel.org>; Fri,  6 Feb 2026 07:55:40 +0000 (UTC)
-Received: from esa1.hc1455-7.c3s2.iphmx.com (esa1.hc1455-7.c3s2.iphmx.com [207.54.90.47])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.6623.1770364530571497664
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC23EB28F1
+	for <webhook@archiver.kernel.org>; Fri,  6 Feb 2026 08:40:50 +0000 (UTC)
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.7403.1770367242776051679
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 05 Feb 2026 23:55:31 -0800
+ Fri, 06 Feb 2026 00:40:44 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@fujitsu.com header.s=fj2 header.b=mgzU3CMl;
- spf=pass (domain: fujitsu.com, ip: 207.54.90.47, mailfrom: liuyd.fnst@fujitsu.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1770364531; x=1801900531;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=lt0rhtH1Gdu9EZtViSExSFTU0+4YzmSlzkyDCQV4zC0=;
-  b=mgzU3CMl9YevKkOSixnFCm6u8sEgJZ7yAyw5XXjdA20scgeQ+hRGizTt
-   ZrbgS1NqYGNWTARufw6yJM/SHwVSeelylZWxH5D7IpRPc0RQF1iHxqphq
-   Bx9I+6F4PV8G3+mJM+W4iDIeNp1KosDi9qU8RjxHp6zj0Omum5AOuQ5/U
-   gNr/72xSLmGrYf0HaTXIDq5vlIQTCD4NaOX+yluExUDt4q0HcVKJmXR5g
-   llokOoex706LnSo4nmUquf5CRtEvA6LulyavW9w+C29L7wU8uT967mWX9
-   Kfiufr4k+Y/DIN99pn7QN1xzhTjy7BaHC5KA6umfG7IXUZIe5BmaDHnwZ
-   A==;
-X-CSE-ConnectionGUID: VfjEmVHBTminOCRZbGYjHw==
-X-CSE-MsgGUID: nHti7YVCQTe5buTm+qC8SQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11692"; a="228780519"
-X-IronPort-AV: E=Sophos;i="6.21,276,1763391600"; 
-   d="scan'208";a="228780519"
-Received: from unknown (HELO mail.fujitsu.com) ([20.61.8.234])
-  by esa1.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2026 16:55:29 +0900
-Received: from az2uksmgm2.o.css.fujitsu.com (unknown [10.151.22.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by az2nlsmgr4.fujitsu.com (Postfix) with ESMTPS id BA4E64071E4
-	for <bitbake-devel@lists.openembedded.org>; Fri,  6 Feb 2026 07:55:28 +0000 (UTC)
-Received: from az2uksmom2.o.css.fujitsu.com (az2uksmom2.o.css.fujitsu.com [10.151.22.203])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by az2uksmgm2.o.css.fujitsu.com (Postfix) with ESMTPS id 5A1C0180ABFA
-	for <bitbake-devel@lists.openembedded.org>; Fri,  6 Feb 2026 07:55:28 +0000 (UTC)
-Received: from G08FNSTD190101.g08.fujitsu.local (unknown [10.193.135.3])
-	by az2uksmom2.o.css.fujitsu.com (Postfix) with ESMTP id 2E5C314000DB
-	for <bitbake-devel@lists.openembedded.org>; Fri,  6 Feb 2026 07:55:25 +0000 (UTC)
-From: Liu Yiding <liuyd.fnst@fujitsu.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake-devel][PATCH v2] bitbake-setup: Add strip to value from settings.conf
-Date: Fri,  6 Feb 2026 15:55:22 +0800
-Message-ID: <20260206075522.5620-1-liuyd.fnst@fujitsu.com>
-X-Mailer: git-send-email 2.43.0
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=ZIm1P2LD;
+ spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id B23714E42431
+	for <bitbake-devel@lists.openembedded.org>; Fri,  6 Feb 2026 08:40:40 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 8A45760729;
+	Fri,  6 Feb 2026 08:40:40 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D2809119D17B1;
+	Fri,  6 Feb 2026 09:40:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1770367240; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=J151b4t0BgMBv96LemtRcN/GW9PS9gyRyfgouEY29ts=;
+	b=ZIm1P2LDeSjkVFVzc666H3LJwJJluvKocMIQzIp5KRhGGRSwXJS2mPPeM+kQKLCMyh2sO3
+	J5jxAvnM4nEf+UTVhwErujhHS+AWUjWfLvkNCWoktQj6N0NkScJ0SzQYAa2aA36KW60DpZ
+	u5LQu/sxB/bJ14dR0fK5punfQHdfa05QC6GymHzO27kMtRWbK5uzT0cBu5tx5eZ62wmcBl
+	Fe7hB9FlY6v6JJWDFxqv9QYrG2r9D3SQVpdJ9bGKs2o+HdQv/qGZ2bYkJvCfBb9SfsEwqp
+	qlQRfAOTY1drki17SzI4H2wzekG7thz5L5zfGxXR+0NCYiHTxu6sUajK5i2smg==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Subject: [PATCH v5 0/2] bitbake-setup: add descriptions for fragment
+ choices
+Date: Fri, 06 Feb 2026 09:40:16 +0100
+Message-Id: <20260206-bitbake-setup-choose-builtin-v5-0-3038da12dd2f@bootlin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/43NwU7EIBQF0F+ZsBbDexQcXPkfxgXQh0VnyqTQR
+ jPpvwvjpmYW9e5ucnPulWWaImX2fLiyiZaYYxprUQ8H5gc7vhOPfe0MBWoBoLmLxdlP4pnKfOF
+ +SCkTd3M8lTjy4MAYoTrvUbFKXCYK8evGv7799jy7D/KlmW0xxFzS9H37X6Dt/nm1ABf82OsWa
+ yj0Ly6lcorjo09n1s4W3HAodjisnO1Jiy4ElAruObnlcIeTlfNKoQHrPdine67bcnKH6ypnjNQ
+ QEPAY9F9uXdcfQbPiD8kBAAA=
+X-Change-ID: 20260116-bitbake-setup-choose-builtin-fb199054cc25
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Alexander Kanavin <alex.kanavin@gmail.com>, docs@lists.yoctoproject.org, 
+ Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1861;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=XPdDPi3/+B3ouYGCxvW1NiWpoEI2ZCHmVE8Xu536Uf0=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBphakGHhdS0xrhb8Wqe0cVHqondvaUuKXm+dW/9
+ vVrzpC56KaJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaYWpBgAKCRDRgEFAKaOo
+ NliXD/9YoukXKHoVAwBi2zfNlX9MYJ6RL69P8MukJ0TL2LPJixnTAsQjWA2pewORWs2NDj5Nsh0
+ CX4fFdMOWKbPmeXB/Tye8uTbYhUHjteVTFEIBRN6qXlQkMdS/8w2Q0fa+675kC8dnzC48vWo/iu
+ DsiVLtuYwgEeBrsxoBngMwEHPxMbg+hxgh4+ixu0dhbGoD6/f2omj90itBhGTZFFy7VRqOcpWLg
+ tOf9Hv7ixE8qpa8uCtR65JfSI5+2RwPkn8MTuSU0eW598Zc1vEm0YLXoOvlnlJiDU/Md221qyVT
+ fuKLKoeBq/nOzzqvwYtDKl0/1AW7XloIbnrhzbrhiXVDYmKoJgjaxLg/kyUSLLNbY3x4XeqQ681
+ gksiZsCnj5v7IK7Jz6STYIuPzECQzGRbVKQTqsmTIn24hRyAdN36F7oxJd+Odr37V3aTb4Drif/
+ qZXc/M/088JuYBDfv6jw+9LF2YUYAE99XyfSeZj90MW8yRlwYNvYtF/p9lyFRNeLeYecO432NGV
+ n3bRYc9jCPpgPoyXeU521aZdnZiP8o/IM2x5TWQ2ds+rbI9rQnHwbE0snzAOkFRl+PvwqhwUKSf
+ OGqHxM2D8luNQ0uNusfp8Tkt45X9yIyIDpmP3H3OauMQf0Jjpg5z66WEV2jFOYlRZ2dEWVw1Fpf
+ evNlo3OOhbZui/Q==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 06 Feb 2026 07:55:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18976
+ <bitbake-devel@lists.openembedded.org>; Fri, 06 Feb 2026 08:40:50 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18977
 
-If user add "" to dl-dir as DL_DIR, it will show FetchError as following.
-
- raise FetchError("Unable to fetch URL from any source.", u)
-bb.fetch2.FetchError: Fetcher failure for URL: 'git://git.openembedded.org/bitbake;protocol=https;rev=master;branch=master;destsuffix=bitbake'. Unable to fetch URL from any source.
-
-But from this log, user can't locate the real reason which is that the path "/aa/bb" is invalid.
-
-So I make this fix, even if user add "" to dl-dir, the dl-dir will be the valid path.
-Other settings value also need this fix.
-
-Signed-off-by: Liu Yiding <liuyd.fnst@fujitsu.com>
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
 ---
- bin/bitbake-setup | 6 ++++++
- 1 file changed, 6 insertions(+)
+Changes in v5:
+- Rebase on master, which makes me drop PATCH 1 from v4, which was
+  merged.
+- This is also based on https://lore.kernel.org/r/20260205115414.3956729-1-alex.kanavin@gmail.com
+  to avoid conflicts
+- Shorten fragment descriptions
+- Link to v4: https://patch.msgid.link/20260123-bitbake-setup-choose-builtin-v4-0-99361f2128f6@bootlin.com
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index abe7614c8..e06c40dc6 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -869,6 +869,12 @@ def load_settings(settings_path):
-     if os.path.exists(settings_path):
-         logger.info('Loading settings from {}'.format(settings_path))
-         settings.read_file(open(settings_path))
-+
-+        for section in settings.sections():
-+            for key in settings[section]:
-+                value = settings[section][key]
-+                settings[section][key] = value.strip('"')
-+
-     return settings
- 
- def change_setting(top_dir, args):
--- 
-2.43.0
+Changes in v4:
+- setup.py: move the fragments to gizmo-notemplate, add a second option
+  (that isn't used, but it doesn't make much sense otherwise)
+- rebase on top of https://lore.kernel.org/r/20260116095741.3654153-1-alex.kanavin@gmail.com
+- Link to v3: https://patch.msgid.link/20260122-bitbake-setup-choose-builtin-v3-0-c55291acc1a7@bootlin.com
+
+Changes in v3:
+- Rework logic as suggested by Alex
+- Remove modifications of {oe-nodistro,poky}-whinlatter.conf.json
+- Add a test case for oe-fragments-one-of
+- Link to v2: https://patch.msgid.link/20260120-bitbake-setup-choose-builtin-v2-0-ade604ff2351@bootlin.com
+
+Changes in v2:
+- As suggested by Alex, change the new way of specifying fragments to
+  remain a dictionary so they can be extended in the future
+- Link to v1: https://patch.msgid.link/20260116-bitbake-setup-choose-builtin-v1-0-8d66666a9efd@bootlin.com
+
+---
+Antonin Godard (2):
+      default-registry: update fragments choices with descriptions
+      lib/bb/tests/setup.py: add tests for oe-fragments-one-of
+
+ .../configurations/oe-nodistro-master.conf.json    |  6 ++++-
+ .../configurations/poky-master.conf.json           | 16 ++++++++---
+ lib/bb/tests/setup.py                              | 31 +++++++++++++++++++---
+ 3 files changed, 45 insertions(+), 8 deletions(-)
+---
+base-commit: 1ee053e1b1f9f8f008fbf7d7a5c93ebc8718d4b5
+change-id: 20260116-bitbake-setup-choose-builtin-fb199054cc25
 
 
