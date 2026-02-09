@@ -1,105 +1,105 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949A5E7E0A7
-	for <webhook@archiver.kernel.org>; Mon,  9 Feb 2026 09:33:17 +0000 (UTC)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.44031.1770629593910734293
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04399E81BAE
+	for <webhook@archiver.kernel.org>; Mon,  9 Feb 2026 12:27:19 +0000 (UTC)
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.46369.1770640030449479323
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 09 Feb 2026 01:33:14 -0800
+ Mon, 09 Feb 2026 04:27:10 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=W90GNDyk;
- spf=pass (domain: smile.fr, ip: 209.85.128.47, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4807068eacbso37550305e9.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 09 Feb 2026 01:33:13 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=iLADoRUH;
+ spf=pass (domain: gmail.com, ip: 209.85.219.51, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-89503a3bb83so36082766d6.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 09 Feb 2026 04:27:10 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770640029; cv=none;
+        d=google.com; s=arc-20240605;
+        b=QAW+AlLxcvDD7FPYUTXnZVIef3P9BuO4oEohIk60U2/8MTQ3Gc1x8aYz4BuzYRZL+9
+         saPVOWKr7RY2O33QcigRaUCr4CyMrpd8s6Hsk2l0rYQMQGAvC6u9A77YlFyVuwCF+uTy
+         5+JE3ixTe/5NNHjABRVschl8waPKBbOyFW3owMt3z7z8h3SbjPRdxFIg+OUkU6daH1b+
+         STP5F1TDFD8OwWkOrpFoD1vQXEuBu/laXEkv28vMwxKWDRWTBY5wADS0jPAjMWicSf95
+         YDW8Nqg9TxPTSA3nRgYdFolV8YEK4nDB7zQ9sMpLlg8iHOXkiihnKjXe8AHjyoTogq9i
+         8qNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=IobwCmUnD1GuuL9ynlSnJwTE0x3uPC9PPmaU7ww0bxY=;
+        fh=AzhvQHsntPIv1eM1lpjGIR2sWw2cIaM7npVj0FDUl9k=;
+        b=O27ec7ffSkXRyMaPKtygur4dK7pIYqnfo3xC9YpBuSPRZbBBpZWh/fc9B1hUUYhfj9
+         9ygVrHU8Z5oWw6nEzsLVuIno9yrfLIWFxTSQ3BwGBozY+B231Vu/NVowHA+fcXjeD43c
+         eOApxSLKpxzgr/lMVPc4fZXit1g9wZYjzHdQfed6pcrr9nbdM2iQ1gFGHnr3r/vNQjBN
+         ITSeMiz65DOxLG5zbwYAE4lmKpjyEf/uqlkEmODwahL3pLMIE4HOMihupqg2VmLw/9wr
+         4puXnW2dPkBeN8iFH3k3oB1UGqy3SYdvjDpOnUTJJ4lHO6sRdzdZPI8sY3e5vRr6fc0O
+         kToA==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1770629592; x=1771234392; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DtxR5Z+70VIP+f84g611Q9sD1nlr1qPIJEXqoYxmxz8=;
-        b=W90GNDyk7nL7ZMeX9rbbFBzA21shYLHfQKrjCRVisTIwnggfU4YtDb56eGlzbcTgkM
-         1Vx1C8A2JXQVV4vRSLbA4r0N+O3SPYWOOsllgl8Xvf2w4y4MzdgVm0IgQc7Cbqx5VLog
-         YPt9CpML859M00Tbdb6OswpWLnKrL0jMMazVE=
+        d=gmail.com; s=20230601; t=1770640029; x=1771244829; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IobwCmUnD1GuuL9ynlSnJwTE0x3uPC9PPmaU7ww0bxY=;
+        b=iLADoRUH/A1Cxo+Pp10tbeSHsbM0wYLNK83BEs6ssRHRGrqJkkb0YZWUq5vPHORXZM
+         FHi/89+vH3vItgtXanq6ao8V1t3OeT4pWkVBLhJdxhTCPNdlpCVrM39Bt9c1pld9IEeY
+         GA3jsbwqsvCjRzgPr7KZGLmpmN+PfUZ62othI5OXeyQAzkaXaJrcMWq/fjRx4EdmyXru
+         R3oMTKEcCOVkDoImkauERy7z00qXtnfkXuvelw71l52l08X3p2oiPEsmox8d9dhXNwrL
+         VY9Ef8LunNC/u5GHz+vvmQnbjx/F2ynOcDoVM8NNhI+6lesbNwePUxb4YBnUwNPrSsy9
+         g5Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770629592; x=1771234392;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=DtxR5Z+70VIP+f84g611Q9sD1nlr1qPIJEXqoYxmxz8=;
-        b=eC0ev1QH+qgEUMOw+3tyAsgqyj7ri0elPWP1KnCR5ShluqFee8OLNwLh1GVLVIIRaD
-         O4huadWY/94k58e9kN/aGSmq8NhH83leuCb4qxEdfM01XhdZyY4qhSQQKmI7TAN6/hfg
-         B4dAXDlTIHTBOZtQWCOpopWmy2+wzBGfIsXN/Ll9rg88vjhOVnbhnLVxJ2lv573Tgjhn
-         a/4tQVkHe7VoDCMc22KNqSj99oufDMUvx1R4wwqi3HnRFZL+b25gIrC8vxUl0IylXDHc
-         Cw2Dq8NNcysgSzBEYcqaWEIS03TPOn3a6RjFFtQapU6lJr+tRP2toE8VNFZqxwD5tB/y
-         yQXg==
-X-Gm-Message-State: AOJu0Yyatz8kfg5Z/U5ez5h4vfmoxsoxZIm0zT4QorFJtNRL3FYSjjYx
-	87aZaQ5m6q51vIQV6Kr8QxjC60CC2yo2uEGmZAhn3VA9D4uwVFC74WABWcC3q+gLjDoFQCofdFL
-	fFC6qieg=
-X-Gm-Gg: AZuq6aLQKm2efcwi+mKMwNXmDKAStZeBCH6jy42OYtmkoIhypp9vAJtt4w9jreAwnJT
-	Ys+am64fdTa6y8/73xeC9+TEB3Gq3b7ZpPQZDB7pPKM/sTd7hqebTal1Nxox8OrmBusOYRX64tS
-	WFKhy+Do20zGDZ8WfjM1ix8UGKp4HmLCr1KFoXeP3QX+EdomCA/OrwhE19zps5PmMguIHrPPEBl
-	F5l1zoJveIliUPKKeVi2P6fVLnBjZ1yy8f7j712Zxg8uw16yk3pVnGnE1gatQI0jMJgpk3cylFq
-	IYp2PwBZ5FUZC5bjpoyx3g2G7kJmfr/mPFBu5GXF7S5sczBb5vidxcf7Rqdbm4mYNTCBZf9Ine4
-	6cYezJKnx5GtSB24zC1/uw6oiBKoJhxyzqtATuANw9CK/wfaAbXoZxlNGCGOs9F+dg23PBHVG5n
-	GwcmT0BaM67lEiaTJLbs57uTz8Lxr+5ITBFQXgRLiIdPLnJnJKtLBwUA1uHVi0Sy8Etk4RX8HOq
-	zLvzlRkCdwAM4o=
-X-Received: by 2002:a05:600c:c16d:b0:480:4a90:1b00 with SMTP id 5b1f17b1804b1-4832021605bmr126371425e9.20.1770629592025;
-        Mon, 09 Feb 2026 01:33:12 -0800 (PST)
-Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4376b62b835sm11321718f8f.12.2026.02.09.01.33.11
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Feb 2026 01:33:11 -0800 (PST)
-From: Yoann Congal <yoann.congal@smile.fr>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][scarthgap][2.8][PATCH 1/2] knotty: fix TIOCGWINSZ call for Python 3.14 and later
-Date: Mon,  9 Feb 2026 10:33:01 +0100
-Message-ID: <e1f50c8c400f1691e514ee604fc33c5cda0df8fb.1770629479.git.yoann.congal@smile.fr>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1770629479.git.yoann.congal@smile.fr>
-References: <cover.1770629479.git.yoann.congal@smile.fr>
+        d=1e100.net; s=20230601; t=1770640029; x=1771244829;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IobwCmUnD1GuuL9ynlSnJwTE0x3uPC9PPmaU7ww0bxY=;
+        b=kdIf70ozC3/SkR5JS8WFENBsUvDWxAN54a9qaQ8P5dVoquOAK4WLYZg99lajY0sUPA
+         +mlXc/ZKUdZGOaxTMpbBrdE05tUnbwPff+0Wy1IF3mO2YWsRf9q14wn8cw1yBQKfYLdW
+         Tu0M4h7V/BJXVbpQNkYSGCUAd7wD+vTJVrT3EsGE7tSI9xoIUyEmVPnnxJRdFnXaXQGs
+         /aqb7AToeaapQ1/xhxNKIXnSLpHGvuXvKrAST4CINgDXYPd+iaaA+I1X1H+pkPM4k3BL
+         T0xYYDMdfWrKXae2RlkwEkKgyv+o8b9f/6eq+9jKgtCRGNjzfwPi25No6go3EDyVLaZj
+         Ga/w==
+X-Gm-Message-State: AOJu0Yx6ET/xtM0A5Xo3Y597vtoWsMqRtkImypfs4X1ZncoD1/trBrvA
+	wkWfMsqPyLUbN0/JIXXS+wmydenOaN55Cf0ISX/6QMPmhcl7MmH9Rrkkp0/POkjzjfU69PfWcKC
+	w+cPN/Wn5npVe7T0GQuXqUNvfO6aznVc=
+X-Gm-Gg: AZuq6aLSHVOHGyrF3o/LLdihoeuwtBiD2Hgo84GaOU9999jq6fXVh1cwe6TCTRDUS09
+	ecOersecxKWSLAsVZAzQWUP/z/1d/tmDi/1ufqwCUA3EmcVSVqkPT7dqDZr+lVa0LrtemOjQxdo
+	3DOJCelPP1E3Qd1YMxY+vLsW+VABIED14fCmhV2eXkOOj2QhtH44c71hC+VRzhuc1xdGHAKMfta
+	1VKzjoVsWIWlxSGZ17rxW+7vQi7T084O/Ur0uN9Aw1vZPKIn+FsE2QPkcRg55zcxSz5guiPNHD5
+	syjGcYIvxq2z4qY/WzeA/3/ayzCJ2A==
+X-Received: by 2002:ad4:5aa3:0:b0:894:6609:da20 with SMTP id
+ 6a1803df08f44-8953c811590mr145138226d6.9.1770640029118; Mon, 09 Feb 2026
+ 04:27:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260209021712.9724-1-liuyd.fnst@fujitsu.com>
+In-Reply-To: <20260209021712.9724-1-liuyd.fnst@fujitsu.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Mon, 9 Feb 2026 13:26:57 +0100
+X-Gm-Features: AZwV_Qgh-6TPAAsSr86ST0oA5rWWRAPu69lAKnHhCOyBC7_jBaZLGsgRNK_hDA0
+Message-ID: <CANNYZj9c=FLoQM0ZQVZKOgPRVGHEqyeqpwT+qS+f-u-CHzH6EQ@mail.gmail.com>
+Subject: Re: [bitbake-devel][PATCH v3] bitbake-setup: Add strip to value from settings.conf
+To: liuyd.fnst@fujitsu.com
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 09 Feb 2026 09:33:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18986
+ <bitbake-devel@lists.openembedded.org>; Mon, 09 Feb 2026 12:27:19 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18988
 
-From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+On Mon, 9 Feb 2026 at 03:17, Yiding Liu (Fujitsu) via
+lists.openembedded.org <liuyd.fnst=fujitsu.com@lists.openembedded.org>
+wrote:
+> +        for section in settings.sections():
+> +            for key in settings[section]:
+> +                value = settings[section][key]
+> +                settings[section][key] = value.strip('\"\'')
 
-Python 3.14 enforces stricter type and size checking for fcntl.ioctl()
-buffer arguments. The previous code passed a short 4-byte string ('1234')
-to TIOCGWINSZ, which worked by accident in older Python versions but causes
-a SystemError ("buffer overflow") in 3.14.
+I think this can be simplified further:
 
-TIOCGWINSZ expects an 8-byte (4x 16-bit) buffer corresponding to
-(rows, cols, xpix, ypix). Use an 8-byte bytes literal instead and unpack
-the first two values.
+       for section in settings.sections():
+           for key, value in settings[section].items():
+               settings[section][key] = value.strip('\"\'')
 
-Tested with Python 3.11, 3.13, and 3.14.
+Otherwise, looks good.
 
-Signed-off-by: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 415e9e329cf8cc0c2caa01cba80c21cfac9e2414)
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
----
- lib/bb/ui/knotty.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 3784c93ad..41a943adf 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -131,7 +131,7 @@ class TerminalFilter(object):
-     def getTerminalColumns(self):
-         def ioctl_GWINSZ(fd):
-             try:
--                cr = struct.unpack('hh', fcntl.ioctl(fd, self.termios.TIOCGWINSZ, '1234'))
-+                cr = struct.unpack('hhhh', fcntl.ioctl(fd, self.termios.TIOCGWINSZ, b'12345678'))[0:2]
-             except:
-                 return None
-             return cr
+Alex
 
