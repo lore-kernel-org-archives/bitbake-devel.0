@@ -2,122 +2,104 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7A6E7E0AF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949A5E7E0A7
 	for <webhook@archiver.kernel.org>; Mon,  9 Feb 2026 09:33:17 +0000 (UTC)
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.44032.1770629594924029177
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.44031.1770629593910734293
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 09 Feb 2026 01:33:15 -0800
+ Mon, 09 Feb 2026 01:33:14 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=015mk/os;
- spf=pass (domain: smile.fr, ip: 209.85.221.43, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-4359249bbacso2886003f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Mon, 09 Feb 2026 01:33:14 -0800 (PST)
+ dkim=pass header.i=@smile.fr header.s=google header.b=W90GNDyk;
+ spf=pass (domain: smile.fr, ip: 209.85.128.47, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4807068eacbso37550305e9.2
+        for <bitbake-devel@lists.openembedded.org>; Mon, 09 Feb 2026 01:33:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1770629593; x=1771234393; darn=lists.openembedded.org;
+        d=smile.fr; s=google; t=1770629592; x=1771234392; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pWifF7f9AlJlYEptrwOvYtaZw4YPuCbshzV8lH0r030=;
-        b=015mk/os0DSdjWYNxI01Wqo90SvIr3+a6xsh2pMBbU5mi6ABtObAsLO5ctd7rBYrmr
-         hL1rkQlDMp1B59X3zbTxLFhb6GqP7zDPNgoQerY6Dv0QPTBAEbRrrAQmihr15/DA0ykk
-         t9NDtrAfyBidTFQ3ZPZb0noCeAtmxN7rsHBek=
+        bh=DtxR5Z+70VIP+f84g611Q9sD1nlr1qPIJEXqoYxmxz8=;
+        b=W90GNDyk7nL7ZMeX9rbbFBzA21shYLHfQKrjCRVisTIwnggfU4YtDb56eGlzbcTgkM
+         1Vx1C8A2JXQVV4vRSLbA4r0N+O3SPYWOOsllgl8Xvf2w4y4MzdgVm0IgQc7Cbqx5VLog
+         YPt9CpML859M00Tbdb6OswpWLnKrL0jMMazVE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770629593; x=1771234393;
+        d=1e100.net; s=20230601; t=1770629592; x=1771234392;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=pWifF7f9AlJlYEptrwOvYtaZw4YPuCbshzV8lH0r030=;
-        b=iPPLeO4N1RUeBTXzEsaFQbx9TKcfKNaW9FlBPIb5aKowE1Dgo+ol9cpH0wA2fR0j/c
-         PkKR5Gg0CRTWaJ/UxNj8PQ9VsX7ZvjHEJODztLkste7OhK1tuVveln84ElIOVML4O8ul
-         B1UMaJp5Bu+EAR/RZiI2wXvYCPn5nxaPRRCX1Rg5YEHvhRfj9XO3qb26hLuaUqxsI9Pp
-         jXS1Th6p9Zyt63tn2yvHVe86nmY/BDtHY8zxa2aw30+vhEtsHAXRlYjeCe1+4A5veTZP
-         FZzoSgOSmA8vejMpLE+hNIGkDYL7MW+XWtEp74eqp84KVysNRVKujS9+/uexzSYquJFK
-         6QHg==
-X-Gm-Message-State: AOJu0Yxqhhhi1C/fS/uj5WGg0zEvWrpwt03YPXX/7mdBLpZQ+7yHO/r+
-	4HtJAzey+Jqhz/SNkdTHv/B/LHnMThz4jO+bc2fpGsHQPdij4HXGTLE+17C58SU3/rGSWUMHCPJ
-	JnUbl1Qw=
-X-Gm-Gg: AZuq6aIHNa0Kd3wpyTWZr9btGs829klh/QBvV8+dW1jd00jSgHfjfmPaLrCTrwi9VAY
-	9Vww+Es5gJEg00ebGXsv4SLzZ2GpPvoUwweiwPRsgTY8utuP+/pDuoNomQs90yF6uIpdMAWgLL3
-	QMbXiOh2P4bKnR+4BL1JqxuXc+IlUwk6PriZFTigDOANKj1NrT5ai3YjP/Dnkg41vUiN/tWe8jV
-	tAXTbE6i5CmdGf0flJ3f8zs5wlV6GVmpX/so12E870HV70Fu/OuqxzqgwjEybAmZ0b/qaJaw+R5
-	Bd0if9W9IpLqawXISjz4rO24/xoMeAScYJSo49rMFkm6qO+l0DQftCrd3tmgFFTpThF+7vBVO2X
-	N2EM4sJ1spjKhK3zADhiZohkmoePu0/h8W1lmkLTxgAKYdfL/yw1M4/T9VrCT0Z4JBI1JjjPc1I
-	MA2vaF5COmrOqlP88ARFCfzrLgVd9FDDenYH8vt6hSiXekJ2WTScNckwkEHj2EdbADj7hV2TTtp
-	fsASXetpvvk2Iuv8YtaTKBHlA==
-X-Received: by 2002:a05:6000:2884:b0:436:8f7e:a486 with SMTP id ffacd0b85a97d-4368fbbae4dmr11192268f8f.11.1770629593031;
-        Mon, 09 Feb 2026 01:33:13 -0800 (PST)
+        bh=DtxR5Z+70VIP+f84g611Q9sD1nlr1qPIJEXqoYxmxz8=;
+        b=eC0ev1QH+qgEUMOw+3tyAsgqyj7ri0elPWP1KnCR5ShluqFee8OLNwLh1GVLVIIRaD
+         O4huadWY/94k58e9kN/aGSmq8NhH83leuCb4qxEdfM01XhdZyY4qhSQQKmI7TAN6/hfg
+         B4dAXDlTIHTBOZtQWCOpopWmy2+wzBGfIsXN/Ll9rg88vjhOVnbhnLVxJ2lv573Tgjhn
+         a/4tQVkHe7VoDCMc22KNqSj99oufDMUvx1R4wwqi3HnRFZL+b25gIrC8vxUl0IylXDHc
+         Cw2Dq8NNcysgSzBEYcqaWEIS03TPOn3a6RjFFtQapU6lJr+tRP2toE8VNFZqxwD5tB/y
+         yQXg==
+X-Gm-Message-State: AOJu0Yyatz8kfg5Z/U5ez5h4vfmoxsoxZIm0zT4QorFJtNRL3FYSjjYx
+	87aZaQ5m6q51vIQV6Kr8QxjC60CC2yo2uEGmZAhn3VA9D4uwVFC74WABWcC3q+gLjDoFQCofdFL
+	fFC6qieg=
+X-Gm-Gg: AZuq6aLQKm2efcwi+mKMwNXmDKAStZeBCH6jy42OYtmkoIhypp9vAJtt4w9jreAwnJT
+	Ys+am64fdTa6y8/73xeC9+TEB3Gq3b7ZpPQZDB7pPKM/sTd7hqebTal1Nxox8OrmBusOYRX64tS
+	WFKhy+Do20zGDZ8WfjM1ix8UGKp4HmLCr1KFoXeP3QX+EdomCA/OrwhE19zps5PmMguIHrPPEBl
+	F5l1zoJveIliUPKKeVi2P6fVLnBjZ1yy8f7j712Zxg8uw16yk3pVnGnE1gatQI0jMJgpk3cylFq
+	IYp2PwBZ5FUZC5bjpoyx3g2G7kJmfr/mPFBu5GXF7S5sczBb5vidxcf7Rqdbm4mYNTCBZf9Ine4
+	6cYezJKnx5GtSB24zC1/uw6oiBKoJhxyzqtATuANw9CK/wfaAbXoZxlNGCGOs9F+dg23PBHVG5n
+	GwcmT0BaM67lEiaTJLbs57uTz8Lxr+5ITBFQXgRLiIdPLnJnJKtLBwUA1uHVi0Sy8Etk4RX8HOq
+	zLvzlRkCdwAM4o=
+X-Received: by 2002:a05:600c:c16d:b0:480:4a90:1b00 with SMTP id 5b1f17b1804b1-4832021605bmr126371425e9.20.1770629592025;
+        Mon, 09 Feb 2026 01:33:12 -0800 (PST)
 Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4376b62b835sm11321718f8f.12.2026.02.09.01.33.12
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4376b62b835sm11321718f8f.12.2026.02.09.01.33.11
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Feb 2026 01:33:12 -0800 (PST)
+        Mon, 09 Feb 2026 01:33:11 -0800 (PST)
 From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][scarthgap][2.8][PATCH 2/2] knotty: Make sure getTerminalColumns() returns two integers
-Date: Mon,  9 Feb 2026 10:33:02 +0100
-Message-ID: <1b923cdd50449aaa41152b72eac8669f27ec7ec2.1770629479.git.yoann.congal@smile.fr>
+Subject: [bitbake][scarthgap][2.8][PATCH 1/2] knotty: fix TIOCGWINSZ call for Python 3.14 and later
+Date: Mon,  9 Feb 2026 10:33:01 +0100
+Message-ID: <e1f50c8c400f1691e514ee604fc33c5cda0df8fb.1770629479.git.yoann.congal@smile.fr>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <cover.1770629479.git.yoann.congal@smile.fr>
 References: <cover.1770629479.git.yoann.congal@smile.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Mon, 09 Feb 2026 09:33:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18987
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18986
 
-From: Zoltan Boszormenyi <zboszor@gmail.com>
+From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
 
-Python 3.14 complains about these:
+Python 3.14 enforces stricter type and size checking for fcntl.ioctl()
+buffer arguments. The previous code passed a short 4-byte string ('1234')
+to TIOCGWINSZ, which worked by accident in older Python versions but causes
+a SystemError ("buffer overflow") in 3.14.
 
-Traceback (most recent call last):
-  File "/mnt2/zozo/yocto-5.3/bitbake/lib/bb/ui/knotty.py", line 722, in main
-    termfilter.updateFooter()
-    ~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "/mnt2/zozo/yocto-5.3/bitbake/lib/bb/ui/knotty.py", line 339, in updateFooter
-    lines = self.getlines(content)
-  File "/mnt2/zozo/yocto-5.3/bitbake/lib/bb/ui/knotty.py", line 370, in getlines
-    lines = lines + 1 + int(len(line) / (self.columns + 1))
-                                         ~~~~~~~~~~~~~^~~
-TypeError: can only concatenate str (not "int") to str
+TIOCGWINSZ expects an 8-byte (4x 16-bit) buffer corresponding to
+(rows, cols, xpix, ypix). Use an 8-byte bytes literal instead and unpack
+the first two values.
 
-and
+Tested with Python 3.11, 3.13, and 3.14.
 
-Traceback (most recent call last):
-  File "/mnt2/zozo/yocto-5.3/bitbake/lib/bb/ui/knotty.py", line 722, in main
-    termfilter.updateFooter()
-    ~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "/mnt2/zozo/yocto-5.3/bitbake/lib/bb/ui/knotty.py", line 341, in updateFooter
-    for tasknum, task in enumerate(tasks[:(self.rows - 1 - lines)]):
-                                           ~~~~~~~~~~^~~
-TypeError: unsupported operand type(s) for -: 'str' and 'int'
-
-Make sure getting the number of rows and columns from the terminal
-via the environment variables LINES and COLUMNS are returned as a
-pair of integers. This matches the return value of ioctl_GWINSZ().
-
-Signed-off-by: Zoltán Böszörményi <zboszor@gmail.com>
+Signed-off-by: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit a4e0b6f8077276a0bfb9d05c759bc752a84d1f76)
+(cherry picked from commit 415e9e329cf8cc0c2caa01cba80c21cfac9e2414)
 Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
 ---
  lib/bb/ui/knotty.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 41a943adf..5198e93d8 100644
+index 3784c93ad..41a943adf 100644
 --- a/lib/bb/ui/knotty.py
 +++ b/lib/bb/ui/knotty.py
-@@ -145,7 +145,7 @@ class TerminalFilter(object):
-                 pass
-         if not cr:
+@@ -131,7 +131,7 @@ class TerminalFilter(object):
+     def getTerminalColumns(self):
+         def ioctl_GWINSZ(fd):
              try:
--                cr = (os.environ['LINES'], os.environ['COLUMNS'])
-+                cr = (int(os.environ['LINES']), int(os.environ['COLUMNS']))
+-                cr = struct.unpack('hh', fcntl.ioctl(fd, self.termios.TIOCGWINSZ, '1234'))
++                cr = struct.unpack('hhhh', fcntl.ioctl(fd, self.termios.TIOCGWINSZ, b'12345678'))[0:2]
              except:
-                 cr = (25, 80)
-         return cr
+                 return None
+             return cr
 
