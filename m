@@ -1,154 +1,117 @@
-Return-Path: <srbruno@gmail.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D8AE9462E
-	for <webhook@archiver.kernel.org>; Tue, 10 Feb 2026 11:30:04 +0000 (UTC)
-Subject: Re: [bitbake][lib/bb/fetch2/git.py] Re-introducing --prune option in fetch_cmd #bitbake
-To: bitbake-devel@lists.openembedded.org
-From: "Bruno Ferreira" <srbruno@gmail.com>
-X-Originating-Location: Porto, PT (78.137.195.170)
-X-Originating-Platform: Mac Firefox 147
-User-Agent: GROUPS.IO Web Poster
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B14DEA8103
+	for <webhook@archiver.kernel.org>; Tue, 10 Feb 2026 11:57:54 +0000 (UTC)
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.17799.1770724668926339565
+ for <bitbake-devel@lists.openembedded.org>;
+ Tue, 10 Feb 2026 03:57:49 -0800
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=luwU4zHp;
+ spf=pass (domain: gmail.com, ip: 209.85.219.48, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-896f4627dffso8796136d6.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 10 Feb 2026 03:57:48 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770724668; cv=none;
+        d=google.com; s=arc-20240605;
+        b=bQOigb+DOWdPW1NWfP6bXrAjRg9p6MrYMJPA+wN7gmxbdTpUuN64uZYVaCbwy5v/eK
+         gVkAIIpz52vBEmQxXwprG72XA0d6s/ciH0CIhc51BLxYYnZuSHXYRMl/LWfIBArDzgT/
+         AwlktCCqSEZlWu02HUfIxRmszKRNtbUx/BQAD0vxe2TsZq136zSuqCQooL5x1d7P71V9
+         7cWIjX8v0hsuqRPNNBYcYEX7Vs5HDQw10KnbHHdIVsE1Zex8dvnaTM0O9QkJ1Lg2WPrv
+         ht9WITYOkrkbfZu+kw2U0rLh0SZoT2KSeHTTKIZ2JHOqNnwPcTTByd8dNekUB/5cnflv
+         3K3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=vJB6bXBIlwYjglHYIVNMA6QP+93tH/QiA8cbNlQ+gq8=;
+        fh=ipjyoT70VIvOR0iB/vrqcblb8LhgBH+H6fBb7Y+6I3Y=;
+        b=Qut2fnEw3896bElNdOf4gHVZGKe5akqmK0teVXIoCjR+yaON6iWK3ncG335dGV6+Ci
+         1VcBjGKcJb++csVqzedMW4hOQrWrwW9+8TSeh4EgrQudecK5TbytwaaRZqsEdJkVXTbb
+         +VTdKDJHLU8z9dGqenr+7bH0N0Vkd4YcF/ngTG+bU+sGWqG66sC0TTX9fwFLCoEOzxXU
+         X8SCcpiV17UDLmxcdAFDio6YshII/JiEc3fLWl7UMV2S+vKEdemKWHFA42QvpFJFGwi/
+         F/X6O2FWH/OHxbMVCgXpwpCijdX01fJah1dLTmpupyvzMwj9BK21h7SbuyF92JKpkbHn
+         p2Cg==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770724668; x=1771329468; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=vJB6bXBIlwYjglHYIVNMA6QP+93tH/QiA8cbNlQ+gq8=;
+        b=luwU4zHp3VqtcCvtkZo5Oij3s3gHjxFGh7pZ20iVQT9Lh59J0EcyrtRipLzPxyLysh
+         ix9kz9Myhh1TpHR3KcgJSCXLUzRhYwqo/uqcQTFKpZqY9q034A64GBdLEVSlzviBcBTS
+         d3b0NtC0+mE8PDZ5SO5gtV/3atBQYFh698Cfzg9H74uDXF/bxV7jmpHuGgLPVEfc9yYG
+         hie3Ci8ojgS80qnRhAjk4ps23Lw+wSgW7SBD5YFjaPA87e83qZVSMTm02co20wZm7E8k
+         JrNSQJFVer3AyTgqFjkAYA28JoR7bYSKNaqw3KXohS+dVncNmX1NMVphw7CawXhwSTWV
+         iCew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770724668; x=1771329468;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vJB6bXBIlwYjglHYIVNMA6QP+93tH/QiA8cbNlQ+gq8=;
+        b=oGr0HtfmGJPcJcORePBK1dUBACHKqG73R98SoH62yAse0z4BcFmzZmaqJw7V4frXbc
+         5ONnhO20bYVpryM6m5g6jfAr17Gj81ismEuFEqKAG29+lEQxGCmOHKZTLc4TmFbNFnWT
+         5IUNsEgMcJAUbOowvm8UuZSeEONPBpP60ZpPVao4qtM/PqXA6ErYwvR9jQgaIyIFLhZc
+         BWvrjRBwAvhm8rgeFLXl1BK3cpBCIl/etnNI2O6/dEdAUKDcgNlLOoOJ4XdNL5I/KHMB
+         XTRUUiUyidCo/FsUTeUc/oHrWVV2hem2FBYgnEG33B+Lq+L2iQZqeFiEq8jV07iBacbz
+         tnBQ==
+X-Gm-Message-State: AOJu0Yw2gYeue+h/ShaQkNys+B+2RgKzmeaMw2wvrHnQeVaBO6Fe/5iJ
+	Iab2F7zty7aFAksRDQP4s3+VDJh1vwpHMeORl0ehbxgBfwNqZdhjUOStNfGo3qStreqWHNlvjpL
+	BboBlTwnGfaI6P15As37B3sgYhoXqPDo=
+X-Gm-Gg: AZuq6aIcmmVtlxO5JS0WGqnz5EVsAFnWe92Ll5fWT6CrAOCJ8KXHFRBHSyD/RIwpM8R
+	/LryBqEETrzgnrJuU4XRoEO61ryVkutG7efnJS8hCrycGGnDU1HsJuqtoZmSqE24tQX01ShtX8l
+	RokBcOYrco2BFeYbYBNe2YYQOdO2tLi8Mz3/S1Qd089v5Cq85dj4OGIky4nc32kKeZQADdZOsDg
+	zeIH3WJgn02E2zI1KsLKn/z042ZKfGEiHsO3K1wkgyckrnQ/sFpuJADLNFN+p8SBriO+1xx9mKn
+	sjy1qw3cRGA86omzwTDxKIaY3GYvLCgA/wvVWaURug==
+X-Received: by 2002:ad4:5deb:0:b0:895:4c45:a617 with SMTP id
+ 6a1803df08f44-8954c45ac06mr159901236d6.36.1770724667857; Tue, 10 Feb 2026
+ 03:57:47 -0800 (PST)
 MIME-Version: 1.0
-Date: Tue, 10 Feb 2026 03:29:58 -0800
-References: <K7wT.1770654725256025131.AKh3@lists.openembedded.org> <CANNYZj-pfZ79Uedy0-SNX5Go_gOWy0XpSQDgp7C1a8=kUAPdLw@mail.gmail.com>
-In-Reply-To: <CANNYZj-pfZ79Uedy0-SNX5Go_gOWy0XpSQDgp7C1a8=kUAPdLw@mail.gmail.com>
-Message-ID: <660988.1770722998965341769@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="Wrwxa8R4zoYw2gIj9Ami"
+References: <K7wT.1770654725256025131.AKh3@lists.openembedded.org>
+ <CANNYZj-pfZ79Uedy0-SNX5Go_gOWy0XpSQDgp7C1a8=kUAPdLw@mail.gmail.com> <660988.1770722998965341769@lists.openembedded.org>
+In-Reply-To: <660988.1770722998965341769@lists.openembedded.org>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Tue, 10 Feb 2026 12:57:36 +0100
+X-Gm-Features: AZwV_QhogPcUKNviZ6VLEG_f3PQt7ulgA_9OtD9n_rBeGD3gjVjr9TS7hz-Z5sQ
+Message-ID: <CANNYZj-+b-mRistOxuaHFGgrLHG61ff-ZpARmfYOtr85zbNFqg@mail.gmail.com>
+Subject: Re: [bitbake-devel] [bitbake][lib/bb/fetch2/git.py] Re-introducing
+ --prune option in fetch_cmd #bitbake
+To: srbruno@gmail.com
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 10 Feb 2026 11:30:04 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18997
+ <bitbake-devel@lists.openembedded.org>; Tue, 10 Feb 2026 11:57:54 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/18998
 
---Wrwxa8R4zoYw2gIj9Ami
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
->=20
-> New fetcher configuration options aren't particularly welcome, as they
-> need documentation, tests, and create alternative code paths and
-> complexity.
->=20
-
-That confirms my initial expectations, thanks for clarifying it.
-
->=20
-> Perhaps it would help if you show the sequence of steps that leads to
-> breakage, as it's hard to tell from just the description above what
-> the problem is exactly.
->=20
->=20
-
-Sure. So first of all this is a git "problem" not a bitbake fetcher git.py =
-lib "problem".
-
-A developer created an upstream branch named "foo" with code changes
-and changed a recipe SRC_URI to use the following:
-
-SRC_URI =3D git://github.com/org/random-repo.git;protocol=3Dhttps;branch=3D=
-foo
-
-do_fetch task was able to fetch everything properly during recipe build, st=
-oring it in DL_DIR as expected.
-
-Second developer created the upstream branch "foo/bar" with code changes.
-Meanwhile the first developer deleted the branch "foo" upstream.
-
-The second developer updated the recipe to use the new branch:
-
-SRC_URI =3D git://github.com/org/random-repo.git;protocol=3Dhttps;branch=3D=
-foo/bar
-
-During do_fetch, git is not able to fetch the "foo/bar" branch as the paren=
-t reference "foo"
-no longer exists in the upstream repo (only exists on local) triggering the=
- error visible in the log.do_fetch
-
->=20
-> error: cannot lock ref 'refs/heads/foo/bar': 'refs/heads/foo' exists;
-> cannot create 'refs/heads/foo/bar'
-> From https://github.com/org/random-repo
-> ! [new branch] =C2=A0 =C2=A0 =C2=A0foo/bar -> foo/bar =C2=A0(unable to up=
-date local ref)
->=20
-
-If I add back the --prune option that was removed here ( https://git.yoctop=
-roject.org/poky/commit/?id=3D61931d14df3be5273a38008ae2dff2a60a7d9b02 ) , "=
-git fetch" will work with the following message
-will appear in log.do_fetch
-
->=20
-> From https://github.com/org/random-repo
-> - [deleted] =C2=A0 =C2=A0 =C2=A0 =C2=A0 (none) =C2=A0 =C2=A0 -> foo
-> * [new branch] =C2=A0 =C2=A0 =C2=A0foo/bar -> foo/bar
+On Tue, 10 Feb 2026 at 12:29, Bruno Ferreira via
+lists.openembedded.org <srbruno=gmail.com@lists.openembedded.org>
+wrote:
+> If I add back the --prune option that was removed here, "git fetch" will work with the following message
+> will appear in log.do_fetch
 >
+> From https://github.com/org/random-repo
+> - [deleted]         (none)     -> foo
+> * [new branch]      foo/bar -> foo/bar
 
---Wrwxa8R4zoYw2gIj9Ami
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+The option was removed for good reasons, we can't simply discard those
+reasons. I think that change was prompted by mass master -> main
+renames?
 
-<blockquote>
-<div>New fetcher configuration options aren't particularly welcome, as they=
-<br />need documentation, tests, and create alternative code paths and<br /=
->complexity.</div>
-</blockquote>
-<div>&nbsp;</div>
-<div>That confirms my initial expectations, thanks for clarifying it.</div>
-<div>&nbsp;</div>
-<blockquote>
-<div>Perhaps it would help if you show the sequence of steps that leads to<=
-br />breakage, as it's hard to tell from just the description above what<br=
- />the problem is exactly.</div>
-<div>&nbsp;</div>
-</blockquote>
-<div>&nbsp;</div>
-<div>
-<div>Sure. So first of all this is a git "problem" not a bitbake fetcher gi=
-t.py lib "problem".</div>
-<div>&nbsp;</div>
-<div>A developer created an upstream branch named "foo" with code changes<b=
-r />and changed a recipe SRC_URI to use the following:</div>
-<div>&nbsp;</div>
-<div>SRC_URI =3D <a href=3D"git://github.com/org/random-repo.git;protocol=
-=3Dhttps;branch=3Dfoo" target=3D"_blank" rel=3D"noopener">git://github.com/=
-org/random-repo.git;protocol=3Dhttps;branch=3Dfoo</a></div>
-<div>&nbsp;</div>
-<div>do_fetch task was able to fetch everything properly during recipe buil=
-d, storing it in DL_DIR as expected.</div>
-<div>&nbsp;</div>
-<div>
-<div>Second developer created the upstream branch "foo/bar" with code chang=
-es.<br />Meanwhile the first developer deleted the branch "foo" upstream.</=
-div>
-<div>&nbsp;</div>
-<div>The second developer updated the recipe to use the new branch:</div>
-<div><br />SRC_URI =3D <a href=3D"git://github.com/org/random-repo.git;prot=
-ocol=3Dhttps;branch=3Dfoo/bar" target=3D"_blank" rel=3D"noopener">git://git=
-hub.com/org/random-repo.git;protocol=3Dhttps;branch=3Dfoo/bar</a></div>
-<div>&nbsp;</div>
-<div>During do_fetch, git is not able to fetch the "foo/bar" branch as the =
-parent reference "foo"<br />no longer exists in the upstream repo (only exi=
-sts on local) triggering the error visible in the log.do_fetch</div>
-<div>&nbsp;</div>
-<blockquote>
-<div>error: cannot lock ref 'refs/heads/foo/bar': 'refs/heads/foo' exists; =
-cannot create 'refs/heads/foo/bar'<br />From https://github.com/org/random-=
-repo<br />! [new branch] &nbsp; &nbsp; &nbsp;foo/bar -&gt; foo/bar &nbsp;(u=
-nable to update local ref)</div>
-</blockquote>
-<div><br />If I add back the --prune option that was removed <a href=3D"htt=
-ps://git.yoctoproject.org/poky/commit/?id=3D61931d14df3be5273a38008ae2dff2a=
-60a7d9b02" target=3D"_blank" rel=3D"noopener">here</a>, "git fetch" will wo=
-rk with the following message<br />will appear in log.do_fetch</div>
-<blockquote>
-<div>From https://github.com/org/random-repo<br />- [deleted] &nbsp; &nbsp;=
- &nbsp; &nbsp; (none) &nbsp; &nbsp; -&gt; foo<br />* [new branch] &nbsp; &n=
-bsp; &nbsp;foo/bar -&gt; foo/bar</div>
-</blockquote>
-</div>
-</div>
+I'd say you simply have to ask developers to namespace their branches
+properly and don't step on each other; once there is a branch named
+foo, one cannot anymore create a branch foo/bar, and vice versa. It's
+caused by how git stores branch information in .git/refs/heads/ - the
+slash-separated parts of the branch name become directories. Usually
+branch names are prefixed with developer's nicknames for this reason.
 
---Wrwxa8R4zoYw2gIj9Ami--
+One could also argue that once there is a revision of some recipe in
+commit history that refers to a particular branch, that branch should
+not be deleted so that the repository with the recipe remains
+bisectable.
+
+Alex
 
