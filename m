@@ -1,197 +1,165 @@
-Return-Path: <paul@pbarker.dev>
+Return-Path: <ukleinek@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B03ECD6C4
-	for <webhook@archiver.kernel.org>; Wed, 11 Feb 2026 16:13:28 +0000 (UTC)
-Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.22787.1770826405364248737
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC55ECD6D0
+	for <webhook@archiver.kernel.org>; Wed, 11 Feb 2026 17:37:38 +0000 (UTC)
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.25091.1770831450315890082
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 11 Feb 2026 08:13:25 -0800
+ Wed, 11 Feb 2026 09:37:30 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@pbarker.dev header.s=fm2 header.b=WytaPYA/;
- dkim=pass header.i=@messagingengine.com header.s=fm3 header.b=qK63TSs9;
- spf=pass (domain: pbarker.dev, ip: 103.168.172.153, mailfrom: paul@pbarker.dev)
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 800CF140010E;
-	Wed, 11 Feb 2026 11:13:24 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Wed, 11 Feb 2026 11:13:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
-	cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1770826404; x=1770912804; bh=BQnoVchrWw
-	useNWbhYHKqkHPc6yHQwyyOcFvWnQxt7k=; b=WytaPYA/wPMP2BzMd15oPZPKlw
-	xWsGPN7wyE3rlsfN6zAXQlhFwFiSbpD3OG2+ASrKjK46t1cTD8PcjopBIEFIXVXU
-	+tyVyqaIm9PlS3IIpD3TJb1hdF0lY7HDIdYgl2z+Gxk7UoJtBuIfe+Cx/qxE/nl+
-	0KtNBaFZMXdIDR6Rd8htg3rZ3EdSBMhqdYDl9xmIpUB2AMeVGxEwQCrrIUhKpehI
-	r0e7c7XJTiZV7KCpBsK2OspVDQDgrnj6M8TPyx+wh/9RulltBXcDqg0bW8hVyDdW
-	7SXcdAnR/G2wpVRl0adiBvIjbnJpKITG//3qJVmjib3dMfRKfRpkEjg2FmDA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1770826404; x=1770912804; bh=BQnoVchrWwuseNWbhYHKqkHPc6yHQwyyOcF
-	vWnQxt7k=; b=qK63TSs9Q+WoaQM/a+Cx0OVcNY93xe6e5RT7bSyh/V1XcX8Gsja
-	ljHDfeRaC3aA9XZEuczdCoK5rYwKPWgxFdGBog5KnQY4ZC/lxcA6RCytsLpzkbmI
-	ACy7WVf7Hewvy824M2SSJGLgrhzERciO6tistmNXTw9Tz/EGv1wVMgkxIVNdaHYt
-	HmBhslt3D5TQWUJASpazBpbceTIoZvi6bYGPASIwXxaDRwjwMHVk9zIbLVf0nrz+
-	z1Lyvi6f/QLOcjzmTLrv0GB4MnJQh76HOmX/s1BxlmeWXoPJARqxcLVH2/TBYhsH
-	CgNZ8c47IZLzFmPAbmriUQ8mhmJiopV8lTQ==
-X-ME-Sender: <xms:pKqMaZpiVINFnngskjJnvsClsor_4KOMjSCHGDUg5Rfm-GaDrJ7c1w>
-    <xme:pKqMaRr3DwY2CH9b79ZZBGGlsabeI9nbAfWr7xUS4ZbEWMaGDsZr0AjtcfaG9XJOj
-    9nuLFVBvutPxb3i-YbBdm4dqkZ5JRjvixuLk6eErIjHFVXtM5LFww>
-X-ME-Received: <xmr:pKqMaT2IDnk78Fb0wIRAzzbIwwbhn6JiAeTI6eF7v-O35e3ekz0boeSxjui8bbyiF5xYMfTUvfiI7PtEU9iWJAYwpny2fHGdmdeCL_I>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvtddvleekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucenucfjughrpefkuffhvfffjghftggfggesghdtreertd
-    erjeenucfhrhhomheprfgruhhluceurghrkhgvrhcuoehprghulhesphgsrghrkhgvrhdr
-    uggvvheqnecuggftrfgrthhtvghrnhepgeefhfdutefhffevheevkeejhfegffegieektd
-    efkedttefhuddvffeuieeiteffnecuffhomhgrihhnpehophgvnhgvmhgsvgguuggvugdr
-    ohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    hprghulhesphgsrghrkhgvrhdruggvvhdpnhgspghrtghpthhtohepvddpmhhouggvpehs
-    mhhtphhouhhtpdhrtghpthhtohepqhhirdgthhgvnhesfihinhgurhhivhgvrhdrtghomh
-    dprhgtphhtthhopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmhgs
-    vgguuggvugdrohhrgh
-X-ME-Proxy: <xmx:pKqMaQAZrT85-kDW_DKK10TjpnDSgVdBfO_LZcwzcKRmNxRo1YzB1Q>
-    <xmx:pKqMabci8JY-2K_xskJ03MZa0DFZr9xMNsL-ixx8Sixz6As9THKnUw>
-    <xmx:pKqMaVgdu1PziSbXravFjpWNQ1P3x_smCcQvoH6GwWiaOEjBzvpSFg>
-    <xmx:pKqMaTpBvfsfyNepXVLJWNJLgPG83PZavYdAhXYQo2ey0yaGEP_WoQ>
-    <xmx:pKqMaVIBBwf1JKf0l-_R0j13QiFlf0xiXn9dlxial9lVBqEpQZWlZWHn>
-Feedback-ID: i51494658:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 11 Feb 2026 11:13:23 -0500 (EST)
-Message-ID: <0251564542cdad8e2c571c2c153dda82a11ee715.camel@pbarker.dev>
-Subject: Re: [bitbake-devel][PATCH] fetch2/git.py: fix update_mirror_links
-From: Paul Barker <paul@pbarker.dev>
-To: Qi.Chen@windriver.com, bitbake-devel@lists.openembedded.org
-Date: Wed, 11 Feb 2026 16:13:20 +0000
-In-Reply-To: <20251230025413.1293484-1-Qi.Chen@windriver.com>
-References: <20251230025413.1293484-1-Qi.Chen@windriver.com>
-Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
- keydata=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
- LUewj8JVy0aJsGTwI4invl
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-Q+Oux+mfzq49lIA9LbR7"
-User-Agent: Evolution 3.52.3-0ubuntu1.1 
+ dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=LgTce6jN;
+ spf=pass (domain: baylibre.com, ip: 209.85.221.43, mailfrom: ukleinek@baylibre.com)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-43767807da6so1643645f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 11 Feb 2026 09:37:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1770831448; x=1771436248; darn=lists.openembedded.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cKwXBQ3ykLEYlPeVrG4gj23aIt/9E2BIVfELccjkvRU=;
+        b=LgTce6jNQsN56BhSpjlCmur3tQ0wVuNotgfdeNRESK5bqAt/Ys3C8x4z/aUH5RCOMm
+         oP1UQVJ9xLexU+Xuw9Z3PKBmwbTZylvLUwj5dXugerPf0cp7jJNtTcId2pK2Z1acU6uX
+         u+i5PTj0puHBQSITbPRwSBUljBzjHFHBsKT72igjfFlGU1N0t+PPVedoR6B22VVY8TKU
+         30Nzoz3GWNT/Hay0ipRtvCSevBjIMxKmnLqhFfjUajRACOfsIkrdjVGrY2AggvuXxAev
+         uguMQ1FGOtV2ZwR96oxfykWlAr5a7GrqtD724bg6ufFIW9BaIzhfkemMMTg6sApJW4rz
+         pqGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770831448; x=1771436248;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cKwXBQ3ykLEYlPeVrG4gj23aIt/9E2BIVfELccjkvRU=;
+        b=H8ogM5Zs1PQWqq+6OyVAOxc+B6aaL+voDd5wo+xNF7zINF0Q54HuUyX5VZUWWOZec5
+         J31kNGqCJJMKlbcJykSceRrQ0o+KbhsKmEXoq5sue/0w9GPTZLcRt0aQJ/8zj2LbUt3P
+         WcfE4pxPKtM+T2U/FVTC8crEF1mwj0OQdNLvf+SaRUF6zCvcRaFieIEmFE3lAqLaxwZg
+         Abfs4b/oqL1nHvt7pm7P/1WQ8iQvIbvRZ/ZmM8MIw44JrC07M9CVY1wHkF8KcNhBcMTr
+         sXgPToN99q53bGDkxz8SZqSgk/q0UzC1LOWAk6s9khweEOTfHUlSvqHC2TbohV6yOc78
+         tnUw==
+X-Gm-Message-State: AOJu0YwdisihoHd9rrF8DwaeHqbzw4hVvaeJx+eKRRv0onqKnPsatEyc
+	N2OUZxJmQ62XzDaFjcjPi013R2Js7USCZfOdZDzeDcEAkusqwj0o8VaEFXreQztXJL4=
+X-Gm-Gg: AZuq6aIDbA4rXbdb66+ByOB+aPleb+euiQzfnSzC3VaMX4EDQRiwK910UgsRvuM0lPg
+	77GH16rsAnWM5/JeVtde0gFVrC5z6rVEJhdUbbsWToPDgWfoGV4QiJCP0gmWuzkHAQj3r9BJpiQ
+	CrK0knJe7L7run7YEVb9D0BpZ2d/SsTdVqUqH68X0aWdEfFX8Ii4/U6M6xcuYiDaEi+T0qaC6Ok
+	uHzX1PRd7NYb4Wk1kPn9INZ0cSNs+piKTKK2bZm8nmI2zDy8FoxLf5Rp8TcJG+P1Gw82R3h4nA5
+	eE8vJa9h+2ooVCQL2BjSuyogZxMXMmaFPU2SlNxfKGn/fekYkVNu5aHVPKv75MEv275Y4mBBrkj
+	aBfgCF0mtXdrfhgcPDJlaBbeKL6BjDMZZccJam1clyLUOBx1fC7/wqPzjPqfD9RNuxfRSu1T+XO
+	c+FfWoLHsPDhy1ZfktN6s3pF+DYDx7FKag/u8YCh2/ynZaxBHayzA8YT7TNBVOncgFlkJX+jAuX
+	GUy8r+xpL3SjZQ=
+X-Received: by 2002:a05:6000:1786:b0:437:69c0:9619 with SMTP id ffacd0b85a97d-4378ad91896mr337667f8f.29.1770831448193;
+        Wed, 11 Feb 2026 09:37:28 -0800 (PST)
+Received: from localhost (p200300f65f20eb04129994ada78a8b10.dip0.t-ipconnect.de. [2003:f6:5f20:eb04:1299:94ad:a78a:8b10])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-43783e544e2sm6975091f8f.32.2026.02.11.09.37.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Feb 2026 09:37:27 -0800 (PST)
+Date: Wed, 11 Feb 2026 18:37:26 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Paul Barker <paul@pbarker.dev>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] bitbake/bzr: Drop check for unset .revision after
+ .setup_revisions()
+Message-ID: <aYy8KMgZOhqfDnph@monoceros>
+References: <20251006140246.2459639-2-u.kleine-koenig@baylibre.com>
+ <5bcaffcd860a42d9b0d28d6eb43b58ba8ca6c4f2.camel@pbarker.dev>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ujzybkl3ka2x3biv"
+Content-Disposition: inline
+In-Reply-To: <5bcaffcd860a42d9b0d28d6eb43b58ba8ca6c4f2.camel@pbarker.dev>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 11 Feb 2026 16:13:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19006
+ <bitbake-devel@lists.openembedded.org>; Wed, 11 Feb 2026 17:37:38 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19007
 
 
---=-Q+Oux+mfzq49lIA9LbR7
-Content-Type: text/plain; charset="UTF-8"
+--ujzybkl3ka2x3biv
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] bitbake/bzr: Drop check for unset .revision after
+ .setup_revisions()
+MIME-Version: 1.0
 
-On Tue, 2025-12-30 at 10:54 +0800, Chen Qi via lists.openembedded.org
-wrote:
-> From: Chen Qi <Qi.Chen@windriver.com>
+Hello Paul,
+
+On Wed, Feb 11, 2026 at 11:56:29AM +0000, Paul Barker wrote:
+> On Mon, 2025-10-06 at 16:02 +0200, Uwe Kleine-K=F6nig wrote:
+> > FetchMethod.latest_revision() expects three parameters, so the call
+> > `self.latest_revision(ud, d)` triggers an exception.
+> >=20
+> > Drop that error path that obviously isn't used.
+> >=20
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+> > ---
+> > Hello,
+> >=20
+> > I didn't hit this exception and only noticed that problem during
+> > research for another problem. I'm unsure if deleting is really the right
+> > thing to do (i.e. if .setup_revisions() always returns something that
+> > evaluates to True when interpreted as Bool), but it seems nobody hit
+> > that error path since commit 7b7a4517c600 ("fetch2: Allow multiple src
+> > rev to be used in one src_uri").
+> > (Hmm, maybe the author of commit 7c94ca56b2fd ("fetch2: Correct a few
+> > calls to latest_revision()") should have noticed ....)
+> >=20
+> > There is a similar issue in lib/bb/fetch2/hg.py. I'll postpone sending a
+> > patch for that until we agreed on what to do here.
 >=20
-> We cannot assume ud has the same fetcher with origud. For example,
-> if we set map git:// to file:// in PREMIRRORS, ud is using local fetcher
-> and origud is using git fetcher. In such case, the ud does have the
-> 'shallow' attribute. And we'll see the following error:
+> Apologies, this patch seems to have dropped through the cracks. Feel
+> free to send us a ping after a couple of weeks in the future if you've
+> had no replies.
+
+I forgot about this, too :-) I only sent it because the status quo
+looked wrong to me and after sending the patch considered my duty done.
+
+> >  lib/bb/fetch2/bzr.py | 3 ---
+> >  1 file changed, 3 deletions(-)
+> >=20
+> > diff --git a/lib/bb/fetch2/bzr.py b/lib/bb/fetch2/bzr.py
+> > index fc558f50b047..443195fa00bc 100644
+> > --- a/lib/bb/fetch2/bzr.py
+> > +++ b/lib/bb/fetch2/bzr.py
+> > @@ -35,9 +35,6 @@ class Bzr(FetchMethod):
+> > =20
+> >          ud.setup_revisions(d)
+> > =20
+> > -        if not ud.revision:
+> > -            ud.revision =3D self.latest_revision(ud, d)
+> > -
 >=20
->   Exception: AttributeError: 'FetchData' object has no attribute 'shallow=
-'
+> Looking at the git fetcher, this should probably be fixed to call
+> self.latest_revision(ud, d, ud.name) instead.
 >=20
-> Looking at the logic of this function, I think it's the origud's shallow
-> that should be checked. So the logic becomes: if origud is using shallow
-> and its full shallow tarball does not exist yet, symlink to ensure it
-> exists. This should make more sense.
->=20
-> Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
-> ---
->  lib/bb/fetch2/git.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-> index 709c692a8..f288afb51 100644
-> --- a/lib/bb/fetch2/git.py
-> +++ b/lib/bb/fetch2/git.py
-> @@ -359,7 +359,7 @@ class Git(FetchMethod):
->          super().update_mirror_links(ud, origud)
->          # When using shallow mode, add a symlink to the original fullsha=
-llow
->          # path to ensure a valid symlink even in the `PREMIRRORS` case
-> -        if ud.shallow and not os.path.exists(origud.fullshallow):
-> +        if origud.shallow and not os.path.exists(origud.fullshallow):
->              self.ensure_symlink(ud.localpath, origud.fullshallow)
-> =20
->      def try_premirror(self, ud, d):
+> Are you actually using the bzr fetcher? I'd like to propose deprecating
+> it then removing it after the LTS release.
 
-Hi Qi, thanks for your patience on this one as we work through the
-backlog.
+No I don't. I worked on the git fetcher (resulting in commits
+ddf00d6aee955878c070327ee8d751fdb6099444 and
+cb36e8a62d7d31b75b3ddc6b84c1bdee09ebbc60 in oe-core) and just looked
+left and right while doing that.
 
-The only place update_mirror_links is currently called is from
-try_mirror_url() in lib/bb/fetch2/__init__.py. This is called as
-origud.method.update_mirror_links(ud, origud), so checking
-origud.shallow instead of ud.shallow looks correct to me. I think your
-patch is correct, we'll take another look at it in the next review call
-and hopefully get it merged.
+So I'm unsure what to do next here. Given that I'm not using the bzr
+fetcher (nor the hg one), is a patch adding `ud.name` to these callers
+welcome and sensible?
 
-Best regards,
+Best regards
+Uwe
 
---=20
-Paul Barker
-
-
---=-Q+Oux+mfzq49lIA9LbR7
+--ujzybkl3ka2x3biv
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
 
 -----BEGIN PGP SIGNATURE-----
 
-iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaYyqoBEccGF1bEBwYmFy
-a2VyLmRldgAKCRCrY1Tsnbr0bu7kAP9usyj7Mw+GaRgi78omQ9G7wTxBAffy43Fn
-tfUZolBKTgEAvonxeZf4+WpmXnxrZgft7IWqy/j9Z/9SzdrPi8wjxgE=
-=yjv+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmmMvlMACgkQj4D7WH0S
+/k5O1gf/ROpTb6xSu2eEDitGLzP1AupoNVBtjNHPVRPkQq5RBNJKZcXQjIXvbL/U
+cHMAyNNcmVWhH8IA2Cvot+SwTY05a4egll0v31gBKebThWmEguNaGVsN/UBvtqRI
+BR3Cn/DZ8vAaFZRY7e+Q1SW/RR5kmT2DVdbvsRVUjK8YeHLdQYyMwcktiribZFwF
+C9W+zuyyLPI1u1wVvTvEyx5qYF7r05LdZNkXyPjjNihfcRaNLSd+78pvEZgvANiF
+79pLjacJiWGm48ByVP0pIEBnDGloDssWP9jw4HTS4JlNscXWWQJ/hHvcUHf5bFe2
+9+I7fo8wWYHp9ckGgL/VK6RCW7hlKQ==
+=FpOJ
 -----END PGP SIGNATURE-----
 
---=-Q+Oux+mfzq49lIA9LbR7--
+--ujzybkl3ka2x3biv--
 
