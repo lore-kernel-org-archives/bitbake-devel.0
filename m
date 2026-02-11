@@ -2,42 +2,40 @@ Return-Path: <foss@0leil.net>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF54ECD6D3
-	for <webhook@archiver.kernel.org>; Wed, 11 Feb 2026 18:06:38 +0000 (UTC)
-Received: from smtp-1909.mail.infomaniak.ch (smtp-1909.mail.infomaniak.ch [185.125.25.9])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.25756.1770833191606378143
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FF1ECD6E0
+	for <webhook@archiver.kernel.org>; Wed, 11 Feb 2026 18:06:39 +0000 (UTC)
+Received: from smtp-190d.mail.infomaniak.ch (smtp-190d.mail.infomaniak.ch [185.125.25.13])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.25478.1770833192708117228
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 11 Feb 2026 10:06:32 -0800
+ Wed, 11 Feb 2026 10:06:33 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@0leil.net header.s=20231125 header.b=XfvdTC9r;
- spf=pass (domain: 0leil.net, ip: 185.125.25.9, mailfrom: foss+yocto@0leil.net)
-Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4fB5wP3KQjzCCt;
-	Wed, 11 Feb 2026 19:06:29 +0100 (CET)
+ dkim=pass header.i=@0leil.net header.s=20231125 header.b=YpijehKQ;
+ spf=pass (domain: 0leil.net, ip: 185.125.25.13, mailfrom: foss+yocto@0leil.net)
+Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6b])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4fB5wQ5l9pzC22;
+	Wed, 11 Feb 2026 19:06:30 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=0leil.net;
-	s=20231125; t=1770833189;
-	bh=DQs3IIDR2kYwh8J9vIm8okx41gD8sElb7HJV3I+CS3g=;
-	h=From:Subject:Date:To:Cc:From;
-	b=XfvdTC9rJhO1dx+3C8t2HtI97yeuGPsFB/a+uYe52G+STXIJui5SkpOAm5uvrMDOO
-	 vRPM93OG+TMFbUHC5oHtuyjOCpEaJbbP5zuRx4yaa3o6/ILUuUsEAK2tgyH7rgeBxl
-	 bQyTlNBbFWijBN/0kc7UDFDkmLRpcWRDfOifoMOgu3v7RYhWEvjYVmqQAp1B7LxCRn
-	 wV3g0ek4AdQBe4Y3VTxDeYwX86cLSMEloQuEkO1H859IQrqm1TCQL2RTyPunlxwc8S
-	 vt0tIfxFCI8SyCdQivPS4JVq4zEZObRUCg3hv3fgVOyuEmJuqOU0ssCu3YvqWhO1qK
-	 Z61pGEb9R5qsQ==
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4fB5wN1Vjvzg0P;
-	Wed, 11 Feb 2026 19:06:28 +0100 (CET)
+	s=20231125; t=1770833190;
+	bh=WSXc47pUNY65BTpch+5vXCYfACEp0V2Dos511v5FpL0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=YpijehKQqqsTeEppGZ2ZldRrEo3fokoHfCxFp3zVG6rXwHCI6KSuetwUfuPSn5OvV
+	 u75rkBpbcKSPV8sHFuvhVJFpYIWSjkrQEjyoDJtDHib6cMsmdgZ6obuxVbzcTWSUUR
+	 FTTmEachBg2sKbz78j0kXPNombOgPcW8HZU4JxBJwfr+Nxm7/6XISEzWUmTxr9qr2y
+	 6MMOOy+DbVFNXKo8yJ8Zmg50MwTAbVNDx7r8j7jLO2CH5KDXLRTghBeirr32m0mSt9
+	 +QfUJLKivpomiAR0l2+YsHPJpZp8/Ih3FCsO6Dag5iA2Ac5QyefHApXDwj0CN5KQPE
+	 aba7NrsbjeBGQ==
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4fB5wQ1q5dzgcn;
+	Wed, 11 Feb 2026 19:06:30 +0100 (CET)
 From: Quentin Schulz <foss+yocto@0leil.net>
-Subject: [PATCH 0/4] doc: bitbake-user-manual-ref-variables: clarify BBMASK
- examples
-Date: Wed, 11 Feb 2026 19:06:19 +0100
-Message-Id: <20260211-bbmask-slashes-v1-0-b72161c647ef@cherry.de>
+Date: Wed, 11 Feb 2026 19:06:21 +0100
+Subject: [PATCH 2/4] doc: bitbake-user-manual-ref-variables: have directory
+ examples be consistent
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMTQ5AMBBA4avIrDVpSwhXEYuWwfhPB5GIuyuW3
- +K9CxgdIUMeXODwIKZl9lBhAFVn5hYF1d6gpU6kVkpYOxkeBI+GO2SRoslkbJskilPw0eqwofM
- bFuVv3m2P1fZe4L4fbmv9wHIAAAA=
-X-Change-ID: 20260211-bbmask-slashes-7ea904bf6347
+Message-Id: <20260211-bbmask-slashes-v1-2-b72161c647ef@cherry.de>
+References: <20260211-bbmask-slashes-v1-0-b72161c647ef@cherry.de>
+In-Reply-To: <20260211-bbmask-slashes-v1-0-b72161c647ef@cherry.de>
 To: bitbake-devel@lists.openembedded.org
 Cc: "Robert P. J. Day" <rpjday@crashcourse.ca>, docs@lists.yoctoproject.org, 
  Quentin Schulz <quentin.schulz@cherry.de>
@@ -47,39 +45,42 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 11 Feb 2026 18:06:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19008
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19010
 
-Robert reported being confused by the leading slash inconsistencies in
-our BBMASK examples and wondered if it had any significance. After
-reading the code and testing, it does, so this tries to explain the
-difference and why you would want a leading slash in most cases.
+From: Quentin Schulz <quentin.schulz@cherry.de>
 
-It also explains that still with only a leading slash there could be
-involuntary matches, which one should be able to get rid of by using
-BBFILE_PATTERN from the layer they want to mask recipe or append files
-from.
+It's a bit confusing to have a mix of paths with and without a leading
+slash. The behavior is actually different. The next commit will explain
+when/why to add a leading slash.
 
-While at it, update the meta-ti example such that it matches what's
-currently in the repo (migrated in kirkstone from a single meta-ti git
-repo layer to a meta-ti git repo with multiple layers, such as
-meta-ti-bsp).
-
+Reported-by: Robert P. J. Day <rpjday@crashcourse.ca>
 Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
 ---
-Quentin Schulz (4):
-      doc: bitbake-user-manual-ref-variables: clarify BBMASK directory matching
-      doc: bitbake-user-manual-ref-variables: have directory examples be consistent
-      doc: bitbake-user-manual-ref-variables: clarify BBMASK matching patterns
-      doc: bitbake-user-manual-ref-variables: update BBMASK example with current meta-ti
+ doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- .../bitbake-user-manual-ref-variables.rst          | 30 +++++++++++++++++++---
- 1 file changed, 26 insertions(+), 4 deletions(-)
----
-base-commit: af9dd012e7f4d16dccd1d6118be5da94ede68f85
-change-id: 20260211-bbmask-slashes-7ea904bf6347
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index 18bbd638d..f20a9012c 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -1054,13 +1054,13 @@ overview of their function and contents.
+       BitBake to ignore all recipe and recipe append files in
+       ``meta-ti/recipes-misc/`` directories (and their subdirectories)::
+ 
+-         BBMASK = "meta-ti/recipes-misc/"
++         BBMASK = "/meta-ti/recipes-misc/"
+ 
+       If you want to mask out multiple directories or recipes, you can
+       specify multiple regular expression fragments. This next example
+       masks out multiple directories and individual recipes::
+ 
+-         BBMASK += "/meta-ti/recipes-misc/ meta-ti/recipes-ti/packagegroup/"
++         BBMASK += "/meta-ti/recipes-ti/packagegroup/"
+          BBMASK += "/meta-oe/recipes-support/"
+          BBMASK += "/meta-foo/.*/openldap"
+          BBMASK += "opencv.*\.bbappend"
 
-Best regards,
---  
-Quentin Schulz <quentin.schulz@cherry.de>
+-- 
+2.53.0
 
 
