@@ -2,82 +2,81 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 891F1E8382C
-	for <webhook@archiver.kernel.org>; Mon, 16 Feb 2026 19:52:14 +0000 (UTC)
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.2572.1771271532747302126
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B2FE8382D
+	for <webhook@archiver.kernel.org>; Mon, 16 Feb 2026 19:55:04 +0000 (UTC)
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.2643.1771271701244413084
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 16 Feb 2026 11:52:12 -0800
+ Mon, 16 Feb 2026 11:55:01 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=ZF6ZLAuv;
- spf=pass (domain: gmail.com, ip: 209.85.160.177, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-506bcb23a78so17351621cf.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 16 Feb 2026 11:52:12 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771271532; cv=none;
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=FxSwr8o6;
+ spf=pass (domain: gmail.com, ip: 209.85.219.45, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-896f5af3d8aso52618176d6.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 16 Feb 2026 11:55:01 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771271700; cv=none;
         d=google.com; s=arc-20240605;
-        b=DfDP8v9gw7vdr+xs1lSNnl2TBqkQEtJH25UO6AegoIeiI2ic4g1LR5LjLkLwnG4P1C
-         lDnpCnBKK9ZEQXeVr4mhvfdGWtS2MZemKN36J6oxfV0eB7FuozcYhbkBpgD++uWsSP5A
-         LfqEJ1MLrP8tmcz+1KPXqIWFQ3BBsllI4rfzZX+omEm/NhpjIMXltXnKcnlKUXxGZ+La
-         V/ijIZCeZJT4sjpn/2bj/KUzflXhE+ejJ1n0NGAY+jmfZowaGjWND1f7JZ2AxSF7Gy68
-         ARxuZnoBJHGxhyHkaa5AQ+tOtuYnACZ8n8f/Hdo3iyRkY6dcCgEG9QFo0+Aj4SD5CSag
-         xtRA==
+        b=HMDIG73cDjT6ALZLvKbpLKezTAZChVtIkUXIP8RS5QHVnSh4qV2kgHFrPmgf3E4KPy
+         5XM/Xo5e2dgzG6s5r+hQMyIiVCo2aRzjDdDWXSpB3vif6SDHUCNY2vBc8pFoo324lNqr
+         oq1xg1vmyF86fPkUJ6dyLF0jMbiJXPnfkGfWUbNBjzSFuEjHBhndHLF4kkCGJ1W8sD6o
+         7h9nHcbOP1NG3pgAcfsADeP0LKvxRW6weibw0R38RdcUTWLwUWml6fKA/d7/xEcHntFj
+         7TUZvgAVb3HZQHXO68jcynmbQ0aUFQSDEokiSIM81D94H+/RCvy4z4Ke6+bQgcuwlWIv
+         q0Lw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=YxLCDavuCY5l/sVzQzWevXu3RGEbqZ04BTskGCqz0bQ=;
+        bh=H5NqIUWKhcl1vXNW7Rft5uw/KvIY44wZXLiwh5EIsK4=;
         fh=UY90k4PlQOzv0SHkLPYnGUROqDnYu+dGNcFSIvIhMlk=;
-        b=jBzGVW0mgNfBRe852/dE8lJMmrUaowKsOYEX6EM8N1piy+0PSG/Ap6w91JuxoLuheI
-         gcBCZWCtb6DJUBGWR65WcakTOLhD/KNde+tKr4myoBfcv8mSBQ6B20e4A1CTSHcvM04h
-         4MifDnd4Xp0a0grp6F9jfypZJzTxJ0jx1TZuVXTnEeMis20rFRcTWw4UfHqYAWGnyeTG
-         iMV14tvVfpnRgL/hwZXVAAYlFSdd0s0BdO4Vvij/WvVfIEPUoPCYTJph4ktzSLmXrWd/
-         EnCDzUpKuUZQrAn+OYFYj4ILdr2tygu91LK+waPmhyuoD9Ltxhrbpk4/uTOXA5qzpBR0
-         sofg==;
+        b=etOdKGW840IFMWd/ErErnX3gDEBVgB4f0SAiGTiuTe/VW7tEa34BUONHKfTH6D/gSp
+         SCXlRbJzc1XRcTtKqjZtx9IsYIMb7J1sfoPpwPF1oixJAjTkmUPxd1dnamqRPkE2MCu4
+         awav5UBugSAcXQi1GLWQPDpXIL6l3eWGj+CRMpKGwETTt61P3vzmrMJraMGAve7E32lV
+         JWQyUd7AK5rlbws1liB0xIY/a+gJBzWPV2f97dGJwnJY6RvDohvvDxrU8gXr7wDVR28u
+         FfnKLghf6Qg680M4snuPK9U3c4XYmLwWEQLalQo9Qoey8N3RIDnwgcTExSXuhPHyhGCC
+         xC2Q==;
         darn=lists.openembedded.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771271532; x=1771876332; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1771271700; x=1771876500; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=YxLCDavuCY5l/sVzQzWevXu3RGEbqZ04BTskGCqz0bQ=;
-        b=ZF6ZLAuv+v/nREXRSg0rzQVf9g1vvoEiFzyXgudQZBvRSpmoUdL8SvZFsOdnpHOkPK
-         MhiHzW32/i/fYjJCmvk0uKOrzTfoHim2ZkLcSiAWA0+z//aAvc9tGT8e75wv73ZTCfCW
-         2lalC73JKJS8EHfdyE6O1B9AB52L7KUFdH6X0RcEY9Sl8KFBBNOoW8J/dLNrfzhgRVw/
-         BfcWWxpKpR4HHp0aiMn5CV3DRBEUyXFrZsasHThwG4Nr4guK45QsvN2OqPpsNApk13G7
-         my+TcfZ/SdpsgvORAzd+iWee/GS/YrwFqkC0ZDUgOdkc2ud1NUeIpybUrammxLqj4rSx
-         hqHw==
+        bh=H5NqIUWKhcl1vXNW7Rft5uw/KvIY44wZXLiwh5EIsK4=;
+        b=FxSwr8o6+Aa8qrtXaX7thLh7WGQoJFCC6PTWZmqa6KGu1cVR1Ub8B8TP+KK/yClLHF
+         UZsIyEit98CP83Yog7qw3GkG3krA17Arb2PeGNHxmtWNICLDRHVtFfsGxAFSLTwFgnsL
+         wMaSNMbcjNhOddZbGOOJBzLlWWhQ2B6mNfmlN3LBaZSDO9IMfJxI0cjQpD0M88Aof2jM
+         kXoUIu7paV+qaQYt8Nw/LyFSvwGMQ+7yrUlElAyTx33VV5tb8VfasjNGB0wdjwvZRIxg
+         mD0jgmYU+6T2AtWaTkSVH5qCw+ChttsSptNeteidSCG8Ecb05sD+PlACMospqZKLy1cx
+         /2LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771271532; x=1771876332;
+        d=1e100.net; s=20230601; t=1771271700; x=1771876500;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YxLCDavuCY5l/sVzQzWevXu3RGEbqZ04BTskGCqz0bQ=;
-        b=qA1wBw5/GiH4Hljqsv81cZfCxl29i/iCQQpM9m0pfNAJA3C1aWEB/K+C6nKXqI1+dx
-         h4ebYDIxkfzNQvdJpLnKeRQ+3GMDctRneviukiQ9gsWFf9Eipw2+oPRJGF+4XIk2vkJB
-         Y7KPEuqlqqkyu7IG10JOB+WdPq0uaOrbb6yp64JytpAwOVSif9Bf6Q/166nv8bn9AtOt
-         OafR25rvJ4Gat4PWQ8biBht/iUIuGoDABNXECy+Re8wTohTPf/+RhM4yx/CM+jImCesZ
-         pO+VD/KO7lLB6Jm9AzMlZDZDKYLi2CwLzVUC78P0z/cc7ZUBpq4lGUlaEN2L0bULBzBI
-         Fg6A==
-X-Gm-Message-State: AOJu0YwMEDNu2yOaIKwF9x77pnPfaokL+RD9F0U4/TZYZNr4MQDZpTNC
-	SL0F67izJcE/vbVyGUqKxsf9fNQVA4KpCZpOCd6upjLXjOfXN7lJSs/SnIfUnew9axxMmdK0lfY
-	Iud+sI9QMTFnJW4IUHFLhX9o5ssmzPwo=
-X-Gm-Gg: AZuq6aJF5GudGBAMjQvHXjPY1OyE3rKSL3HEKYVMIXTNYXrLnrdaDW0N/P3Ni1piExT
-	C0q8wVGGKZgVNXTKY0475YiNFzf93h1JC3Y9BoMH5f2+1MwYv1dGhxiYs5l5Tr3PCZGtvtZOwNX
-	BgcHnahX7d8AqOUPhM4LBdlzWs9SP4tUMFb1n+sZuspbAaacZ9adVPGukd0zdp5+6TYPQrG/Uli
-	QKt70UnfbGqRvNBo39fSUKMF8XmKVESxx65nf9S0hCCi7rYq+naBl/BIbSfxBPObk4AW+gpR803
-	NhLeCHfTpasZZBraPReBIWRxzcF0hXVKHMSEHHENAQ==
-X-Received: by 2002:ac8:5e09:0:b0:506:1f48:a009 with SMTP id
- d75a77b69052e-506a8370540mr148924931cf.74.1771271531524; Mon, 16 Feb 2026
- 11:52:11 -0800 (PST)
+        bh=H5NqIUWKhcl1vXNW7Rft5uw/KvIY44wZXLiwh5EIsK4=;
+        b=IWitCoIs9cbMHknJI4dvYtp4hv4454I1z/sF2BMTk5xwt6BuX1qgNuG+sINtQhxpxK
+         SQWHQKVJOBPmKSV1MQXqfDeIQd/P0TBBqWrrE8A1TI44tr7pxYbV2OrEkmNOtHOAgtgE
+         rFzhX0POWSrHjjaCIjnx5IDarI6Iwjs6j5OC4v3p70MoZuFLkImzEHqPvWqnOgUsvP0N
+         UbDBivzQOKNuHDQcqmqAfryT9qXLdgMbyga/aLpLUVDRKF8tju0k8IO4OJot03d7Y19W
+         JAYT6m1nO7PoI6tzdrponu5EIo0o3+F/QUcq7DXJgqqAnruZ9Fmt+dQ3a8mlaPL60CFe
+         NpsQ==
+X-Gm-Message-State: AOJu0Yx1+jsyRjpTJNRVegysPYb7kfy9dybbSiuO2OOfkVSVfxRBcYE+
+	EyXLCrVhH6kmeA03ejRsZNtPZ7/Bf7qn+WMhzWEqyXPH6u2siZfaLsskyLFMCq0xtZKDw7CGNf/
+	VGV+0dSA3CIjmcxzSAcLMw09+NUlBXN0=
+X-Gm-Gg: AZuq6aIRVKTVm1/Aqby9ta3NNy3DndC4AlvIaoDCyZ6aAOe1d6hx7xPz+EDHJaebrka
+	05wmd+tKTkwBREsn07DVFAPpwAATuU/YhVUV4vmmdIisXzLE4t0J8/1y9IBN12qtiYzPWYAgXHG
+	MB+bDOCTqatMT6WdvhVMRgOWI42q2wgLFNQNkPObHYOo3iJ51m4dF84f24J7/FhCKKqF75FnUy4
+	WF4c/D1N7IZapR6NgkvbszkNWOPTTub1v6w51PAoqdQ0WLji9Y27soWQvbKNosiVtqCbqnsGoYX
+	rujRIheTyld++AnH0sq2wfRVe/opWjywq477L0WoSA==
+X-Received: by 2002:a05:6214:1d21:b0:896:fdd6:4a8f with SMTP id
+ 6a1803df08f44-8973630c3c1mr168942946d6.69.1771271700220; Mon, 16 Feb 2026
+ 11:55:00 -0800 (PST)
 MIME-Version: 1.0
 References: <20260213-improve-bbsetup-readability-v1-0-41cec3b06992@bootlin.com>
- <20260213-improve-bbsetup-readability-v1-1-41cec3b06992@bootlin.com>
-In-Reply-To: <20260213-improve-bbsetup-readability-v1-1-41cec3b06992@bootlin.com>
+ <20260213-improve-bbsetup-readability-v1-4-41cec3b06992@bootlin.com>
+In-Reply-To: <20260213-improve-bbsetup-readability-v1-4-41cec3b06992@bootlin.com>
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Mon, 16 Feb 2026 20:51:59 +0100
-X-Gm-Features: AaiRm53oW2jS2DpoFP2ztf_wnZVWglnkSMRgUTYcR7C0yFzE-tGA_V2YeZJXWMA
-Message-ID: <CANNYZj95XYCc3hGQA3jwxR+CYHsPn8gpmbAbS-UuY8sNQGPcoQ@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 1/4] bitbake-setup: define a global for
- the color choice
+Date: Mon, 16 Feb 2026 20:54:49 +0100
+X-Gm-Features: AaiRm52xTQryXB3li3gmwQpq-bs8afGBLVdfRwg3LtiiVu0Dm500enQuTIGeHLc
+Message-ID: <CANNYZj-V3gv=4dbwCJY9r_d=EagM7+8qq0L_ahrHrp_8U2zXnw@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 4/4] bitbake-setup: print colored diffs
 To: antonin.godard@bootlin.com
 Cc: bitbake-devel@lists.openembedded.org, 
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
@@ -85,23 +84,18 @@ Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 16 Feb 2026 19:52:14 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19041
+ <bitbake-devel@lists.openembedded.org>; Mon, 16 Feb 2026 19:55:04 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19042
 
 On Fri, 13 Feb 2026 at 14:50, Antonin Godard via
 lists.openembedded.org
 <antonin.godard=bootlin.com@lists.openembedded.org> wrote:
-> +    global BBSETUP_COLOR
-> +    if args.color == 'always' or (args.color == 'auto' and sys.stdout.isatty() and os.environ.get('NO_COLOR', '') == ''):
-> +        BBSETUP_COLOR = True
-> +
+> -    config_diff = bb.process.run('git -C {} diff'.format(confdir))[0]
+> +    config_diff = bb.process.run('git -C {} diff --color={}'.format(confdir, "always" if BBSETUP_COLOR else "never"))[0]
 
-Global variables are evil. They easily enable unwanted side effects,
-when a function call doesn't just 'return something', it also changes
-the global program state, which makes it harder to reason about
-program behavior, especially when the program is multi-threaded.
+These three color-enabling changes also should be split into a helper function:
 
-Which is to say, can you change this into a function please?
+run_git_diff(path, parameters)
 
 Alex
 
