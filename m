@@ -1,126 +1,163 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46534E68164
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47411E68166
 	for <webhook@archiver.kernel.org>; Tue, 17 Feb 2026 10:18:55 +0000 (UTC)
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.9001.1771323534045924182
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.9137.1771323528008408671
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 17 Feb 2026 02:18:54 -0800
+ Tue, 17 Feb 2026 02:18:48 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=ManbzEUD;
- spf=pass (domain: gmail.com, ip: 209.85.219.52, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-89505dd3e24so56647636d6.1
-        for <bitbake-devel@lists.openembedded.org>; Tue, 17 Feb 2026 02:18:53 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771323533; cv=none;
-        d=google.com; s=arc-20240605;
-        b=VzssJbm1mt0pes/tCd4nWNpg8OMU4EVA8ZcxlFu7emXMccrQiJSQPtuuD7tRfi+0Dc
-         Ge0250CF1ZrbQLWlQRmM2G0FibG6ufWayq+RUzsqAmpZwRrPpxbWPxj4OvV5do3TF79f
-         AnZVMNHer0o5BLrhPu8cyhXUsJrBNvwFffb3AhVgEZRqFEYonttY0D+WcZRTU3n5yMLF
-         VR5nuZTG9u8K+XuXSur3XvYrACag77ReyJ3wtgFnLhzcm8Qf4uiZuwRc32Er+LcPWXJa
-         FHXNum3WUITwGCItWOw2Z+5vGw1ERlXnwlwidlcG3QYVvxE+uKY1mtBsfWsqt/95sGfh
-         yozA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=A2kdcFxt+hJGkqiB13chOVBwoaFsVlU5TOo481UzQug=;
-        fh=UJkoOGbn+U5q9XkTPsz9HbukLwUOOXfVEaqD2z76Yx4=;
-        b=Jbclo/olCDkjROYIi4ivRb1+u21E8TLg/Rr1tQSdY6SiXSRVPHp+Zo8aaO7/B2rhLK
-         dBB3MjKubvspTrz6msCO3014S2oXd8k4JkQe84+iJwThs1FHcD4Q47iuNVFc5M5QdZ9+
-         1jlvdFme16mvVjkHhoxQ2CD3VLebtalfJPnXPH1SV5foWcXkrgHrXaLqEDTsU9QwA0nc
-         gGqKz0CrkbdCteU3XKKi3Ss58HYoNnTzX6FTc67pSlwUeZNUeuF/9pmnpF1y0vvZMk5j
-         ipoF+z0q0bEUe/kwdFGIXIl4LdK80p+0PkJmfdTFlsjHhtXSY4rtEQ0HRv1wl7jz0DAl
-         yaMw==;
-        darn=lists.openembedded.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771323533; x=1771928333; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=A2kdcFxt+hJGkqiB13chOVBwoaFsVlU5TOo481UzQug=;
-        b=ManbzEUDYtbnboJGAItRFdkTuIaRv1Tf8fqNGqfcySbPpCte1h0st46opegOsOJL8b
-         wFiurb4sUSFiKelcsZ0F6qDWVqg5zrk4zTLk0NODBPGVCtAi2ShkAbh/SYYe8u0jyicD
-         tsJ+mGSt0W7ITeIT6w7Fa2H+lFHqg4f7rN40SQJVRuTp00mvpVatM1czmMzBjNw4YC19
-         DRfRUgafLrsQ8EORm/HECWJoh+BkPcqpqJBiOF9RsyBakQFMF/H8TT7ZMG69AMLlGncV
-         VcF1UFbraccZp8WwAyVr2C4XQZqHh6xa9TKY5I+5qBwoZBBK3zf58agBg3KE7+g9KaJy
-         IOAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771323533; x=1771928333;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A2kdcFxt+hJGkqiB13chOVBwoaFsVlU5TOo481UzQug=;
-        b=vsdyyKWaBZK+kAukpZ8QCg6ZWs/SyD15wvL4aOTdyz6Wv3m/lxish9ArudaX66tuah
-         f2KDNZtS7aCwkYs7Lip8siRqWYZcwnDCqacAqhHW3eknDvsA5A6bH4vv0Sq+AvUqVCO8
-         kupvzw6W5xeeep2jk5Jzz6N4dpEq999E8yeFqcSU9q6MJVPzNbZ0KtvVO8ay4lf7VBAH
-         jz6oALPNK45JKCOLQpl8P6a8mIov/XGhDM3zRwsG6Gx+Vw4NSc0vk1t3kSwtx8lLZF/7
-         A1tyUx3Y27lJ0kU6vU8hfFbCyB0AKpq1wfAhXqTgGSpR0HkzMKK18cCeYLXhLRZOi6A+
-         Uy0g==
-X-Gm-Message-State: AOJu0Yx9qf+9BTQlJGLSA3v9Wmode3BcdgoyaX2KMsqSbDTZACi05i0M
-	JWIHhs0IDnGhnfe8Ko6Z/OPWBW2wGtm50XzwWPM6murCCl5+RO/1bgy6lkalHFKl96ijdX3h6AA
-	rz6V+tPhUVgcRDtfq0lizV4U3Xm4UL4E=
-X-Gm-Gg: AZuq6aKm8+RadCBb/ei75wupoLxt+UEaN1zp27A392xDCIoC+uyDKWp45pVbNWaMJgB
-	ixNkJ4ExJK/Cy593S87BCYDZqM7QB/gy6/vzvWnvYRr/kZN7j1Ch8r7bm0wSjDHjBQgq7LpkJOH
-	VglIp0jN837nGKQRCnZnS93FCrSOu9DsKYMY+8WoqhxNqAW8maPl3fX5JdL+R3bT2iQ0LCYopBo
-	X0Jk+oPpKegh5OVVQc/dsp40AmHPGezzl+r2GjlKnus3yz8VZM/G2Dn3FW0morSVqJuqr5Z5goF
-	MWOYeg/8/sQOmAK6Jl4VaFhw7oQEiSrcOhIThujxng==
-X-Received: by 2002:ad4:5c4b:0:b0:88a:57db:8e04 with SMTP id
- 6a1803df08f44-8973606edfemr150795576d6.8.1771323532919; Tue, 17 Feb 2026
- 02:18:52 -0800 (PST)
-MIME-Version: 1.0
-References: <20260213-improve-bbsetup-readability-v1-0-41cec3b06992@bootlin.com>
- <20260213-improve-bbsetup-readability-v1-3-41cec3b06992@bootlin.com>
- <1894D252853C99A9.200918@lists.openembedded.org> <CANNYZj94DXwkDaucq4Du2Pnvv+PD084SmHU+URb6djKFuUf4Pg@mail.gmail.com>
- <DGH4W65QBJ7Q.3NRH3Z4SBANMN@bootlin.com>
-In-Reply-To: <DGH4W65QBJ7Q.3NRH3Z4SBANMN@bootlin.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Tue, 17 Feb 2026 11:18:41 +0100
-X-Gm-Features: AaiRm52W_AX1ypnFq07EPVwRKE2qzWlV45ZqvYalvD6JRjoGnDFaPXEwYhqBz1s
-Message-ID: <CANNYZj-Ta+QKHXpzCyPS0eLOX6irVadGGEO1T7RJSTeAKGzpvA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 3/4] bitbake-setup: print plain messages
- in quiet mode
-To: Antonin Godard <antonin.godard@bootlin.com>
-Cc: bitbake-devel@lists.openembedded.org, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=Y4qN1RHZ;
+ spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id E13E91A1030
+	for <bitbake-devel@lists.openembedded.org>; Tue, 17 Feb 2026 10:18:45 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id B6373606D1;
+	Tue, 17 Feb 2026 10:18:45 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7AD4E1036894D;
+	Tue, 17 Feb 2026 11:18:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1771323525; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=0HY6ky40/uv9KbJHhtZG3Z/QUCSuGLw2VnzApKK8Ojg=;
+	b=Y4qN1RHZrCWFlykQk8+H6kUW+5FabHsT8PE29BRx5Nvi5oy8M+oU+gf1TZC61kUHi7EeDS
+	Bfp1YZSBmD3At/ELHxI1ODVHdugWMi9QDJ6bIYJqETN4qk0VP7XV4AxcEfLnO3KCqh0XBi
+	jmror/QY+JaZKXRU5VfqxznG7vt7fsAf2r7q0D3k01WYCgmxU3GQcIoEPKyOVJLOOuMLOT
+	rN9JAtd3i1HmDf5ayeOWlLwJkjC79G8V44Wn5rJts9KIe5jvNrEZ28AI4aANeAHXslOn6r
+	vNQaEt2GfC2JBneRaIzTWuSklTYIwa1y3e6wZfTmEBXMA5sumGwP9IEP2kTilA==
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 17 Feb 2026 11:18:42 +0100
+Message-Id: <DGH5S8O1WAJV.1GBNF55N3LGY2@bootlin.com>
+Subject: Re: [docs] [PATCH v2 3/5] doc: bitbake-user-manual-ref-variables:
+ expand and reorganize BBMASK explanations
+Cc: "Robert P. J. Day" <rpjday@crashcourse.ca>,
+ <docs@lists.yoctoproject.org>, "Quentin Schulz" <quentin.schulz@cherry.de>
+From: "Antonin Godard" <antonin.godard@bootlin.com>
+To: <foss@0leil.net>, <bitbake-devel@lists.openembedded.org>
+References: <20260216-bbmask-slashes-v2-0-b9bb52f5fd3d@cherry.de>
+ <20260216-bbmask-slashes-v2-3-b9bb52f5fd3d@cherry.de>
+In-Reply-To: <20260216-bbmask-slashes-v2-3-b9bb52f5fd3d@cherry.de>
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 17 Feb 2026 10:18:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19047
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19046
 
-On Tue, 17 Feb 2026 at 10:36, Antonin Godard <antonin.godard@bootlin.com> wrote:
+Hi,
 
-> Actually, when I was testing things I was in interactive mode. Previously,
-> passing --quiet in interactive mode would just leave you with nothing printed
-> on the console (only warning and errors), which is strange for an interactive
-> progem. However I forgot than in non-interactive mode you may want that to
-> happen (nothing printed).
+On Mon Feb 16, 2026 at 11:36 AM CET, Quentin Schulz via lists.yoctoproject.=
+org wrote:
+> From: Quentin Schulz <quentin.schulz@cherry.de>
 >
-> So maybe, we should look at the --non-interactive option value and print nothing
-> (i.e. leave the current state, only warnings and errors are printed) when True,
-> but raise the loglevel to have at least PLAIN messages when True? Or give the
-> user a warning that running the init command shouldn't be run with --quiet?
+> The documentation doesn't explain the side-effect of putting a leading
+> slash, only the trailing slash.
+>
+> The leading slash is not for making the regular expression match an
+> absolute path, but to force the match on the directory or file that
+> exactly starts (and ends if there is a trailing slash) with the
+> specified string. So let's explain that.
+>
+> This also explains that this doesn't prevent more than the intended path
+> to be caught, specifically because it is NOT a regular expression
+> matching an absolute path.
+>
+> Because any pattern not starting with a ^ character can match multiple
+> directories from multiple directories, let's make the usage of
+> BBFILE_PATTERN_my-layer the recommended one. Keep the rest as hints at
+> what can happen when not using but reiterate what users should be using.
+>
+> Reported-by: Robert P. J. Day <rpjday@crashcourse.ca>
+> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+> ---
+>  .../bitbake-user-manual-ref-variables.rst          | 87 ++++++++++++++++=
++++---
+>  1 file changed, 78 insertions(+), 9 deletions(-)
+>
+> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rs=
+t b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> index f20a9012c..06e1112b5 100644
+> --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> @@ -1052,24 +1052,93 @@ overview of their function and contents.
+> =20
+>        The following example uses a complete regular expression to tell
+>        BitBake to ignore all recipe and recipe append files in
+> -      ``meta-ti/recipes-misc/`` directories (and their subdirectories)::
+> +      ``recipes-bsp`` directory (recursively) of ``meta-ti``::
+> =20
+> -         BBMASK =3D "/meta-ti/recipes-misc/"
+> +         BBMASK =3D "${BBFILE_PATTERN_meta-ti}/recipes-bsp/"
+> =20
+>        If you want to mask out multiple directories or recipes, you can
+>        specify multiple regular expression fragments. This next example
+>        masks out multiple directories and individual recipes::
+> =20
+> -         BBMASK +=3D "/meta-ti/recipes-ti/packagegroup/"
+> -         BBMASK +=3D "/meta-oe/recipes-support/"
+> -         BBMASK +=3D "/meta-foo/.*/openldap"
+> -         BBMASK +=3D "opencv.*\.bbappend"
+> -         BBMASK +=3D "lzma"
+> +         BBMASK +=3D "${BBFILE_PATTERN_meta-ti}/recipes-graphics/libgal/=
+"
+> +         BBMASK +=3D "${BBFILE_PATTERN_openembedded-layer}/recipes-suppo=
+rt/"
+> +         BBMASK +=3D "${BBFILE_PATTERN_openembedded-layer}/.*/openldap"
+> +         BBMASK +=3D "${BBFILE_PATTERN_meta-ti}/.*/optee.*\.bbappend"
+> +
+> +      This masks the ``recipes-graphics/libgal/`` from ``meta-ti``, ever=
+ything
+> +      under ``recipes-support`` in ``meta-oe``, every directory or file =
+whose
+> +      name starts with ``openldap`` in ``meta-oe`` at any directory dept=
+h > 1
+> +      (e.g. in ``meta-oe``, ``recipes-foo/openldap-stuff/`` or
+> +      ``recipes-bar/baz/openldap_0.1.bb`` but not ``openldap/``), every =
+append
+> +      file in ``meta-ti`` at any directory depth > 1 (e.g.
 
-I'd suggest that we start with setting clear criteria for using
-various printing/logging levels:
+s/every append file/every append file starting with ``optee``/ ?
 
-- any interactive selections and prompts should be using
-logger.verbnote (which is higher level than plain or info, but isn't a
-warning).
-- regular messages right now are using a mix of plain and info -
-what's the difference and criteria for picking one or the other?
-Should they be unified, or do we still need to use both?
+> +      ``optee/optee-examples_%.bbappend`` and
+> +      ``recipes-security/optee/optee-client_%.bbappend``).
+> =20
+>        .. note::
+> =20
+> -         When specifying a directory name, use the trailing slash charac=
+ter
+> -         to ensure you match just that directory name.
+> +         Because these are complete regular expressions, if you want to =
+match a
+> +         directory and not a file, you must end the expression with a tr=
+ailing
+> +         slash. That is::
+> +
+> +            BBMASK +=3D "${BBFILE_PATTERN_meta-ti}/recipes-graphics/libg=
+al/"
+> +
+> +         Will match anything under ``recipes-graphics/ligbal/`` director=
+y of
+> +         ``meta-ti``. And::
+> +
+> +            BBMASK +=3D "${BBFILE_PATTERN_meta-ti}/recipes-graphics/libg=
+al"
+> +
+> +         Will match in ``meta-ti`` any file prefixed with ``libgal`` in
+> +         ``recipes-graphics/`` and any directory (recursively; and its
+> +         recipes and recipe append files regardless how they are named) =
+prefixed
+> +         with ``libgal`` in ``recipes-graphics/``. That is, provided you=
+r layers
+> +         are available at ``/build/layers/``, it'll match::
 
-Then, modes could be defined like this: quiet mode prints only
-verbnote and higher. Regular mode prints info and higher. Debug mode
-prints debug and higher.
+s/build/builds/
 
-One possibility with modes is to actually remove --quiet altogether -
-is there really a use case for it? Bitbake-setup doesn't flood the
-console, and what it prints can be useful in finding out what went
-wrong, in addition to the actual error.
+Looks good otherwise, thanks for the reorganization!
 
-Alex
+Antonin
 
