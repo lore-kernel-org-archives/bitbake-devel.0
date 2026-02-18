@@ -2,114 +2,114 @@ Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 359F9E9A03B
-	for <webhook@archiver.kernel.org>; Wed, 18 Feb 2026 08:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FDEE9A049
+	for <webhook@archiver.kernel.org>; Wed, 18 Feb 2026 13:15:41 +0000 (UTC)
 Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.8053.1771404463635956128
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.11682.1771420538932565673
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 18 Feb 2026 00:47:44 -0800
+ Wed, 18 Feb 2026 05:15:39 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=P9y86UBB;
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=mBajMpIB;
  spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: antonin.godard@bootlin.com)
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 2E97AC1D732
-	for <bitbake-devel@lists.openembedded.org>; Wed, 18 Feb 2026 08:47:53 +0000 (UTC)
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 44F33C10F46
+	for <bitbake-devel@lists.openembedded.org>; Wed, 18 Feb 2026 13:15:49 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 5946F60738;
-	Wed, 18 Feb 2026 08:47:41 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E187710368334;
-	Wed, 18 Feb 2026 09:47:39 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 5C2256074B
+	for <bitbake-devel@lists.openembedded.org>; Wed, 18 Feb 2026 13:15:37 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4871910368B90;
+	Wed, 18 Feb 2026 14:15:36 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1771404460; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1771420536; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=zksTQQCXG4aroURmYqTk+v32xStAoZXGHMkNar2r/u0=;
-	b=P9y86UBBesQt37iOqogkMiI0Plj/P3q2ZDYYr/gQ2LNe3wLxeELKxhJi8eLzij5MokM3AC
-	swjHN+3+U3B7xrkIddIIUppGly67XVc5XC8jmd069uldWl+/8dQck7tNwEqfXIt1TbCujz
-	UUrfrJznLkGH55A8IwNn0inDOAZ7qOdjo+JEu0J4jzKeC1EkXFwhwhl4P0qTzrdgTtqKJF
-	/T2H9/Ufuu44fUunrevZr4QuJ3TMXAULSbRX4hUlTDO3Vlz/Xiw/2t73tAmXhe1zERAfOL
-	FO1+j/0tJGwmE8wcSFS8dIvkwEraheogd35C9lePM4KEt9r9ZgI+UgPRMHTErQ==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 18 Feb 2026 09:47:39 +0100
-Message-Id: <DGHYH2CB1NGG.265ZFRUDDWCJG@bootlin.com>
-Subject: Re: [bitbake-devel] [PATCH 3/4] bitbake-setup: print plain messages
- in quiet mode
-Cc: <bitbake-devel@lists.openembedded.org>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Antonin Godard" <antonin.godard@bootlin.com>
-To: <alex.kanavin@gmail.com>
-References: <20260213-improve-bbsetup-readability-v1-0-41cec3b06992@bootlin.com> <20260213-improve-bbsetup-readability-v1-3-41cec3b06992@bootlin.com> <1894D252853C99A9.200918@lists.openembedded.org> <CANNYZj94DXwkDaucq4Du2Pnvv+PD084SmHU+URb6djKFuUf4Pg@mail.gmail.com> <DGH4W65QBJ7Q.3NRH3Z4SBANMN@bootlin.com> <CANNYZj-Ta+QKHXpzCyPS0eLOX6irVadGGEO1T7RJSTeAKGzpvA@mail.gmail.com>
-In-Reply-To: <CANNYZj-Ta+QKHXpzCyPS0eLOX6irVadGGEO1T7RJSTeAKGzpvA@mail.gmail.com>
+	bh=76RXd3jeHr8FJ8Sp2GOSjOr1XCug/lBjSYxNjzqUxfs=;
+	b=mBajMpIBtbyPKQd27nEVogQWQ2jDt5/ZBIN5iuc1yPUGIxE4Kiq0EIcuRycD68AhEep+Gs
+	ierSljalK6EvKxHSvo/RHMSK++4sr7AfoWCA78hZuybsnxrQJCBbrD3/yfO6n38jbnV5z0
+	rMU3xnwAgHVVShjKA95w7NwrnaY9um9/FmNNFcEWeSSalINVYKv+W3owxVtg+LJgQVksvc
+	1xQ932z8AQjjWrl9DcqY2bwzCtt2CIu2W1AXwWj2llFRhRY3ijF+vqkTc77S6sVBE0a3z2
+	ElotxnrZNmcZVyGArnECMYN51orsG8y/ZQSlBCQWIhv8rtAkg0tuarHhRZw2bQ==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Date: Wed, 18 Feb 2026 14:15:29 +0100
+Subject: [PATCH v2 4/4] bitbake-setup: drop get_diff and replace by
+ run_git_diff
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260218-improve-bbsetup-readability-v2-4-351584e5df9c@bootlin.com>
+References: <20260218-improve-bbsetup-readability-v2-0-351584e5df9c@bootlin.com>
+In-Reply-To: <20260218-improve-bbsetup-readability-v2-0-351584e5df9c@bootlin.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1901;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=auJhwDgYVWeHQY7B8MndgeBym8zdwl7wT8Vq9TwcR6M=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBplbt11xyeDXQ8UZWe862FUPReTKShMXy7z07K6
+ BEV6Lk+R/KJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaZW7dQAKCRDRgEFAKaOo
+ NgKcD/94It7ApsyNfW0fTlGebLC3xBzRB805emStGhQH94LIg/4EpiDVuKX9gDDH1SQDyqaKSpg
+ c70bF4wnpJQTzVFn3L98GIkyXVUkRE8bbk1S5cQauYaN06S9VQwfwFUufofnviJ4b+MUmMFCOZd
+ WfLnJB5aeo7d+n7NdbaNO+JMkZTVp6ba9H4Kaqn3uwta0Z2xqEFDcpTTAJA0nk1lip43CJlTdwX
+ 0CWJUcnQMfhbT8kMiqzB2A2FiCibS1pYtSb6wjZOLESq+J8cvSnnrWYd4OORVnMFKNyLkoB51qF
+ t+p1HRXL22OZU43a1CuYjzaBPp40WO7Td5EwNvUi7h1MHnQOe3f/gi1YZYpyb5LgpOGYfz0g90j
+ w8YfuvJYjT8Bl+fnDjfU5CgVrVHAQF+ZssymMif6okz5Q4mcvOX6jOHUcG0YIhzjCRIHNLA2J73
+ B2dA/8MLGYjGPtwqpKn9tFbyfdYOXsyZ5fSwKqo6nxhIWKVsEF2krBDirXd3GtBXE7SEBQeMcmv
+ 8tY3POOIkOD1BQ4GRnS4OomQ7uikNdhKbOqpVjqST0qxzbjClufRhTnWPFgXHWOGiOVV4BedVTe
+ PfPNOvIdbxiDZFMVAtrKlQKJAnfELs1xCIDXJCmv+5tFB+Y94Bgw+h0F8Y8CT7iphAtI17Koeap
+ KOfR6GPou7ujKQg==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
 X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 18 Feb 2026 08:47:50 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19057
+ <bitbake-devel@lists.openembedded.org>; Wed, 18 Feb 2026 13:15:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19062
 
-On Tue Feb 17, 2026 at 11:18 AM CET, Alexander Kanavin via lists.openembedd=
-ed.org wrote:
-> On Tue, 17 Feb 2026 at 10:36, Antonin Godard <antonin.godard@bootlin.com>=
- wrote:
->
->> Actually, when I was testing things I was in interactive mode. Previousl=
-y,
->> passing --quiet in interactive mode would just leave you with nothing pr=
-inted
->> on the console (only warning and errors), which is strange for an intera=
-ctive
->> progem. However I forgot than in non-interactive mode you may want that =
-to
->> happen (nothing printed).
->>
->> So maybe, we should look at the --non-interactive option value and print=
- nothing
->> (i.e. leave the current state, only warnings and errors are printed) whe=
-n True,
->> but raise the loglevel to have at least PLAIN messages when True? Or giv=
-e the
->> user a warning that running the init command shouldn't be run with --qui=
-et?
->
-> I'd suggest that we start with setting clear criteria for using
-> various printing/logging levels:
->
-> - any interactive selections and prompts should be using
-> logger.verbnote (which is higher level than plain or info, but isn't a
-> warning).
+We have a new run_git_diff() function that can be used both for showing
+diffs in git repositories, but also for printing diffs between two
+directories or files, making get_diff() redundant. Replace the single
+call to get_diff() by run_git_diff().
 
-Agreed. I think verbnote messages appear with a "NOTE: " prefix though, whi=
-ch I
-don't think is necessary for bitbake-setup.
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+---
+ bin/bitbake-setup | 14 +-------------
+ 1 file changed, 1 insertion(+), 13 deletions(-)
 
-> - regular messages right now are using a mix of plain and info -
-> what's the difference and criteria for picking one or the other?
-> Should they be unified, or do we still need to use both?
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index e456aa93bf3..56c579d19f7 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -430,7 +430,7 @@ def setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_c
+         bb.process.run("{} -c '. {} && bitbake-config-build enable-fragment {}'".format(shell, init_script, " ".join(fragments)))
+ 
+     if os.path.exists(backup_bitbake_confdir):
+-        conf_diff = get_diff(backup_bitbake_confdir, bitbake_confdir)
++        conf_diff = run_git_diff(path1=backup_bitbake_confdir, path2=bitbake_confdir)
+         if not conf_diff:
+             logger.plain('New bitbake configuration from upstream is the same as the current one, no need to update it.')
+             shutil.rmtree(bitbake_confdir)
+@@ -759,18 +759,6 @@ def init_config(top_dir, settings, args):
+ 
+     bb.event.remove("bb.build.TaskProgress", None)
+ 
+-def get_diff(file1, file2):
+-    try:
+-        bb.process.run('diff --color={} -uNr {} {}'.format("always" if BBSETUP_COLOR else "never",
+-                                                           file1,
+-                                                           file2))
+-    except bb.process.ExecutionError as e:
+-        if e.exitcode == 1:
+-            return e.stdout
+-        else:
+-            raise e
+-    return None
+-
+ def are_layers_changed(layers, layerdir, d):
+     def _is_git_remote_changed(r_remote, repodir):
+         changed = False
 
-It was a bit arbitrary, but info messages seemed less "important" to me tha=
-n
-plain messages (their "NOTE:" prefix is what this feels like to me at least=
-).
+-- 
+2.52.0
 
-> Then, modes could be defined like this: quiet mode prints only
-> verbnote and higher. Regular mode prints info and higher. Debug mode
-> prints debug and higher.
->
-> One possibility with modes is to actually remove --quiet altogether -
-> is there really a use case for it? Bitbake-setup doesn't flood the
-> console, and what it prints can be useful in finding out what went
-> wrong, in addition to the actual error.
-
-I think it's ok to keep it, it shouldn't be hard to support and there might=
- be a
-use-case for it for some people.
-
-I will take this out of this series, as this requires more thought-processi=
-ng. I
-will try to follow-up with some proposal when I have some time, including
-verbnote, etc.
-
-Thanks!
-Antonin
 
