@@ -1,111 +1,329 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35716C56203
-	for <webhook@archiver.kernel.org>; Fri, 20 Feb 2026 14:30:23 +0000 (UTC)
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.39933.1771597814409432613
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA6BC5AE49
+	for <webhook@archiver.kernel.org>; Fri, 20 Feb 2026 19:59:30 +0000 (UTC)
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.6159.1771617562717702648
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 20 Feb 2026 06:30:15 -0800
+ Fri, 20 Feb 2026 11:59:22 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=fcmI5B6y;
- spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 1FBE51A0A79
-	for <bitbake-devel@lists.openembedded.org>; Fri, 20 Feb 2026 14:30:12 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id EA0CA5FA8F
-	for <bitbake-devel@lists.openembedded.org>; Fri, 20 Feb 2026 14:30:11 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B89C210368D20;
-	Fri, 20 Feb 2026 15:30:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1771597811; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=bj3R+FN05BST1DxUZj2kjIJ5JfUQuw0ZcE/f54WIJHU=;
-	b=fcmI5B6yirtxDPN81wKh7zPFtVl4Rs/CzSOLvUvm3GHraKwrCtPY7ShHJVqqQ2OZ0J5Q+Y
-	T9ER05q5S1gQmx9U+pb7RCqWgtxRLFv3l6pYvF9kq6DQD3jYnpXVoY1vY/2G9eHdJ1G1i1
-	7OJ5dqWWZEemtNynfpsoWjwUcg8hgQ3pgOPATlh5ECEcLYf8S2eQKC+PQFD7P3LVLNG8/F
-	JTlYMuGte04PQncDFQ+0ADDaRIDp1XeGHGhgR8fUqL4eppRtKFSrk0TGb5bqEPhGOuwRr7
-	Q/xcAsBjg5UXbWh8MKd9LHXYWhTsldsM7GC8+Lw128XSOF9rDPoGw10CmqThMA==
-From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Fri, 20 Feb 2026 15:30:07 +0100
-Subject: [PATCH] tinfoil: show close matches when no providers are found
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260220-bitbake-getvar-close-matches-v1-1-c69d9496915b@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMTQ6CMBAG0KuQWTtJbQATr2JctMMHjD9gOpWYE
- O5O1eXbvJUMSWF0rlZKWNR0ngqOh4pkDNMA1q6YvPOt895x1BzDHTwgLyGxPGYDP0OWEcbSiY9
- NfWrqFlSKV0Kvn19/uf5t73iD5O9J27YDh61BY4AAAAA=
-X-Change-ID: 20260220-bitbake-getvar-close-matches-cdc2b547546e
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=dXaiPOy+;
+ spf=pass (domain: gmail.com, ip: 209.85.167.169, mailfrom: jpewhacker@gmail.com)
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-45efd53148eso826370b6e.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 20 Feb 2026 11:59:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771617562; x=1772222362; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lZnKLZ1bxFJ0QGiaYUsVvArhbZ6LJfmZ/T6k2pNAVsk=;
+        b=dXaiPOy+LJQw+AaICpiOtQOMHrqVHf13CIoeZX06kwqR+Dp1VyuU12v1Jl3ElPLXG1
+         yFiAXsd81/PSg8TXUy7ptcrrGK3yO9KgLUE6cKo9KvyaNRad04OU6fI9FcW2ZGsdbhmA
+         UqYTNcYlvrKmX+kCPbwVePpkcQ1yWjX+HAb3WKpsfg+CFGfKjiFNf1Gyqig0EUeLbcUE
+         SKAVLhm1SuqtsTULAIfV1E0dATjf2/HFv6VUIVrnyG0cDIRfjj8bxWY587SnhARVt69p
+         M5wbT+yfiC4hcTRtC3RE0vkSWU5d7f1IZ+FXwcJy5Mee12uPqHVZ39g+K+jhAUjEqG7B
+         rZYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771617562; x=1772222362;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=lZnKLZ1bxFJ0QGiaYUsVvArhbZ6LJfmZ/T6k2pNAVsk=;
+        b=CK+Rmei6P4UGMXDzL8PH89IMukX8vNBfJxiMZ/jMqudHum8mEkQhdh+sVTkZMD55/m
+         EGPTgPPl80JY6VH0tSsGFeZr7cUFmd6xehVORt8N9lFOnuVBFce0vdpVZs3awNobdJ4l
+         WCUfjWOOwD921fLgEZlfMRUPEJ3xT881rpZGPRIaM9Jhf364zSdNrk5wfsE+aqsaPP9q
+         b38jWHnhXMlPWSdrykRusuDKFYqViGkYW9n0/m4jIcJ6uBCFVY0smN2z53AY/h40yWkh
+         SmV8evwTMsHzDez0pRX+46oHLLyqkOZxkOdMD/dFbxAjgHKf0gR4P93oviP6/1wwZP8Y
+         /9Dg==
+X-Gm-Message-State: AOJu0Yy6jBCRhSWWKTgc7rxqJsrvOAnq99hDtiIGAw16jLzhpLcVMa1M
+	1KnpAQJ1ZVVwiUwBLFlN7+zPOLhGlTRUMUEUrQiGHFAhgGbhmZfxK6BwhdY3mw==
+X-Gm-Gg: AZuq6aLroAAo4atXyCHKng1fv3g3pqvG+ftohVmycJLz7mpoRLA4jWaXMqB541nVsvq
+	MIIPdJLmuxlF7E/HrBSdpwpiKJMxcaM80EXwbmEFl2kzhZ7OU4wZWXW+8shrSEs8yEs8eeRZx7I
+	87zPXLrsEVSHOuMnoSuRDdu8wQEBzgskVQZAarVKB8J/X34LVbxH0WQcSuo83ypT2fljGztZU5V
+	kqntvWf91JWtX51YXta5JOPkbQfJocfaUn2WUa5hwhkdc2EjFkZF0rj38E/3pDWoJda76koZ2TF
+	WLzskZWci9fjwaMnMUA//Ch7Xnea/dQhvIWKUc698lCd+6GdvRHMxDWD14m57lqLJSTOGViCpFE
+	/Zk5lQ9kzg8o4tham9q0A4f0V4Qa1WbwwNuLN2xeeDwLyh2doCjDeA3E6MyzQSqdbrm5pR0HIDR
+	pRdI2RHFV6xQGT5dWFUjVNauw3OBlRCbY=
+X-Received: by 2002:a05:6808:2f18:b0:450:4782:2b0e with SMTP id 5614622812f47-46446177726mr718635b6e.15.1771617561634;
+        Fri, 20 Feb 2026 11:59:21 -0800 (PST)
+Received: from localhost.localdomain ([2601:282:4200:11c0::6492])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-46449fd6ebbsm99085b6e.2.2026.02.20.11.59.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Feb 2026 11:59:21 -0800 (PST)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Antonin Godard <antonin.godard@bootlin.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1625;
- i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=B3XTai0DFlqk86zSZ+JzbRv1Hu/jJZVWfUxSeNEMndQ=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpmG/yhVEXmc66+vmE2qsvVOj1spepPxP4XuUAR
- gbtmKkfQgOJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaZhv8gAKCRDRgEFAKaOo
- NhsAD/wMX+C0mEOg4sMi7yopPfkWvrFfl5KoCHcvbq0aournZDgogzYq+w4tU3fMAVXB6+pgKEP
- rBXB9SwGTDiLKY4xrOyJhlQLq7eu/lz6ET1TE3CYU2cs4WTva0RC278r1QPvOorbCY5v+ve1uB6
- Nb4+avs9x0N02hO2vgupYip9JvmbaZU2Bg3V69mQzwa9EKnPdEOZ2Sm6ppvBb0/V3rRX3fj3lvT
- UfU8056BxBZ6RRpCWMBYWTeLYCmlTvvIwRhAQ+Gw/RNQp+Ws9d3P1ueaiBrf7dTwH69CXPppso8
- wOSFEEGPdeGM/Jgn2z+kKPh051dWJD0Dd12i/4FnG4m/OZ6qsZF0es6fkMdb0OV7cWjTnin/c3O
- kPo4wWbMEmb1mQuKL/3MqWbj5A2LJ2NPZ6QUyYrtwewhAiM5kZzxHQlzO0KmPWLP/HIaK9/fRbK
- QTUWIOyvrR98shhzq3UEeUR9XaD8nJxGI3GnuZbUJ9PFVH3AgB+MPPID1iT0cQgSsyERl68Qo3r
- JiGFuNzMNdmQbjo+t1a/4o4HUKsKKtsCCSFKFsnPjDueh9z7A2INpiKzVt9TeT1rHG47LKZ0jBG
- UtOZUQ/oRDPKnPjO1OAr6oCS1X8eP9ZyPVUWyM9z/TjnCynoW21+6RjrYPk2WaR3reoBKLJDpwl
- 9UlvxAWjMdZHTew==
-X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
- fpr=8648725188DD401BB9A0D3FFD180414029A3A836
-X-Last-TLS-Session-Version: TLSv1.3
+Cc: Joshua Watt <jpewhacker@gmail.com>,
+	Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v3] cookerdata: Include "originating" recipe name when parsing
+Date: Fri, 20 Feb 2026 12:58:43 -0700
+Message-ID: <20260220195915.466314-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20251219223620.2222861-1-JPEWhacker@gmail.com>
+References: <20251219223620.2222861-1-JPEWhacker@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 20 Feb 2026 14:30:23 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19076
+ <bitbake-devel@lists.openembedded.org>; Fri, 20 Feb 2026 19:59:30 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19077
 
-When calling 'bitbake-getvar -r somerecipe FOO', show close matches when
-'somerecipe' doesn't exist but close matches are found. This replicates
-the behavior of 'bitbake -e'.
+From: Joshua Watt <jpewhacker@gmail.com>
 
-Example output:
+When a bbappend file is parsed, the FILE variable is set to the name of
+the actual file being parsed (e.g. the name of the bbappend). Since
+PN/PV etc. are derived from FILE, this means that they can be
+misleading in the event that bbappend is using wildcards (e.g. PV might
+have the value of "%" instead of the actual version number).
 
-$ bitbake-getvar -r binutils-cross FOO
-Unable to find any recipe file matching "binutils-cross". Close matches:
-  binutils-cross-aarch64
-  binutils
-  util-macros
+In order to allow bbappends to derived the actual information of the
+recipe, capture the name of the original recipe being parsed as
+__BB_RECIPE_FILE when parsing a new recipe. The value of this variable
+doesn't change when parsing .bbappend or .inc file associated with the
+recipe
 
-Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/bb/tinfoil.py | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+V3: Rename to __BB_RECIPE_FILE, add documentation and tests
 
-diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
-index d9e985c612c..9c1768942ab 100644
---- a/lib/bb/tinfoil.py
-+++ b/lib/bb/tinfoil.py
-@@ -685,7 +685,14 @@ class Tinfoil:
-             if skipreasons:
-                 raise bb.providers.NoProvider('%s is unavailable:\n  %s' % (pn, '  \n'.join(skipreasons)))
-             else:
--                raise bb.providers.NoProvider('Unable to find any recipe file matching "%s"' % pn)
-+                msg = f'Unable to find any recipe file matching "{pn}"'
-+                import difflib
-+                providers = self.get_all_providers()
-+                close_matches = difflib.get_close_matches(pn, providers, cutoff=0.7)
-+                if close_matches:
-+                    close_matches = "\n  ".join(close_matches)
-+                    msg += f'. Close matches:\n  {close_matches}'
-+                raise bb.providers.NoProvider(msg)
-         return best[3]
+
+ .../bitbake-user-manual-ref-variables.rst     |   4 +
+ lib/bb/cookerdata.py                          |   2 +
+ lib/bb/tests/parse-tests/classes/base.bbclass |   5 +
+ .../classes/recipe-file-class.bbclass         |   2 +
+ lib/bb/tests/parse-tests/conf/bitbake.conf    |  15 ++
+ lib/bb/tests/parse.py                         | 132 +++++++++++++++++-
+ 6 files changed, 159 insertions(+), 1 deletion(-)
+ create mode 100644 lib/bb/tests/parse-tests/classes/base.bbclass
+ create mode 100644 lib/bb/tests/parse-tests/classes/recipe-file-class.bbclass
+ create mode 100644 lib/bb/tests/parse-tests/conf/bitbake.conf
+
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index 3a01144ff..5940e6670 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -720,6 +720,10 @@ overview of their function and contents.
+          pressure on the system. Monitor the varying value after ``Mem:`` above
+          to set a sensible value.
  
-     def get_file_appends(self, fn, mc=''):
-
----
-base-commit: d9700632bd6b627d1124fdc83ddf7bfb4199228d
-change-id: 20260220-bitbake-getvar-close-matches-cdc2b547546e
++   :term:`__BB_RECIPE_FILE`
++      Specifies the name of the recipe file that is being parsed. This is the
++      same even if when evalated in a bbappend, include or bbclass file.
++
+    :term:`BB_RUNFMT`
+       Specifies the name of the executable script files (i.e. run files)
+       saved into ``${``\ :term:`T`\ ``}``. By default, the
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+index 22ac95eac..59f808c96 100644
+--- a/lib/bb/cookerdata.py
++++ b/lib/bb/cookerdata.py
+@@ -512,6 +512,8 @@ class CookerDataBuilder(object):
+         bb_data.setVar("__BBMULTICONFIG", mc)
+         bb_data.setVar("FILE_LAYERNAME", layername)
+ 
++        bb_data.setVar("__BB_RECIPE_FILE", bbfile)
++
+         bbfile_loc = os.path.abspath(os.path.dirname(bbfile))
+         bb.parse.cached_mtime_noerror(bbfile_loc)
+ 
+diff --git a/lib/bb/tests/parse-tests/classes/base.bbclass b/lib/bb/tests/parse-tests/classes/base.bbclass
+new file mode 100644
+index 000000000..db8898e12
+--- /dev/null
++++ b/lib/bb/tests/parse-tests/classes/base.bbclass
+@@ -0,0 +1,5 @@
++# At least one task is required for bitbake to parse
++do_fetch() {
++    :
++}
++addtask do_fetch
+diff --git a/lib/bb/tests/parse-tests/classes/recipe-file-class.bbclass b/lib/bb/tests/parse-tests/classes/recipe-file-class.bbclass
+new file mode 100644
+index 000000000..4682dc6c3
+--- /dev/null
++++ b/lib/bb/tests/parse-tests/classes/recipe-file-class.bbclass
+@@ -0,0 +1,2 @@
++BBCLASS_RECIPE_FILE := "${@os.path.basename(d.getVar('__BB_RECIPE_FILE'))}"
++BBCLASS_FILE := "${@os.path.basename(d.getVar('FILE'))}"
+diff --git a/lib/bb/tests/parse-tests/conf/bitbake.conf b/lib/bb/tests/parse-tests/conf/bitbake.conf
+new file mode 100644
+index 000000000..e03625061
+--- /dev/null
++++ b/lib/bb/tests/parse-tests/conf/bitbake.conf
+@@ -0,0 +1,15 @@
++CACHE = "${TOPDIR}/cache"
++THISDIR = "${@os.path.dirname(d.getVar('FILE'))}"
++COREBASE := "${@os.path.normpath(os.path.dirname(d.getVar('FILE')+'/../../'))}"
++EXTRA_BBFILES ?= ""
++BBFILES = "${COREBASE}/recipes/*.bb ${COREBASE}/recipes/*.bbappend ${EXTRA_BBFILES}"
++PROVIDES = "${PN}"
++PN = "${@bb.parse.vars_from_file(d.getVar('FILE', False),d)[0]}"
++PF = "${BB_CURRENT_MC}:${PN}"
++export PATH
++TMPDIR ??= "${TOPDIR}"
++STAMP = "${TMPDIR}/stamps/${PN}"
++T = "${TMPDIR}/workdir/${PN}/temp"
++BB_NUMBER_THREADS = "4"
++
++BB_BASEHASH_IGNORE_VARS = "BB_CURRENT_MC BB_HASHSERVE TMPDIR TOPDIR SLOWTASKS SSTATEVALID FILE BB_CURRENTTASK"
+diff --git a/lib/bb/tests/parse.py b/lib/bb/tests/parse.py
+index d3867ece9..6ac2137e0 100644
+--- a/lib/bb/tests/parse.py
++++ b/lib/bb/tests/parse.py
+@@ -11,6 +11,8 @@ import tempfile
+ import logging
+ import bb
+ import os
++import subprocess
++import textwrap
+ 
+ logger = logging.getLogger('BitBake.TestParse')
+ 
+@@ -210,7 +212,7 @@ python () {
+     #
+     # Test based upon a real world data corruption issue. One
+     # data store changing a variable poked through into a different data
+-    # store. This test case replicates that issue where the value 'B' would 
++    # store. This test case replicates that issue where the value 'B' would
+     # become unset/disappear.
+     #
+     def test_parse_classextend_contamination(self):
+@@ -508,3 +510,131 @@ EXTRA_OECONF:append = " foobar"
+             test_helper("require some3.conf", " foobar")
+             test_helper("include_all some.conf", " bar foo")
+             test_helper("include_all some3.conf", " foobar")
++
++    def test_file_variables(self):
++        # Tests the values of FILE and __BB_RECIPE_FILE in different
++        # combinations of bbappends, includes, and inherits
++
++        def write_file(path, data):
++            with open(path, "w") as f:
++                f.write(textwrap.dedent(data))
++
++        def run_bitbake(cmd, builddir, extraenv={}):
++            env = os.environ.copy()
++            env["BBPATH"] = os.path.realpath(os.path.join(os.path.dirname(__file__), "parse-tests"))
++            env["BB_ENV_PASSTHROUGH_ADDITIONS"] = "TOPDIR"
++            env["TOPDIR"] = builddir
++            for k, v in extraenv.items():
++                env[k] = v
++                env["BB_ENV_PASSTHROUGH_ADDITIONS"] = env["BB_ENV_PASSTHROUGH_ADDITIONS"] + " " + k
++            try:
++                return subprocess.check_output(cmd, env=env, stderr=subprocess.STDOUT, universal_newlines=True, cwd=builddir)
++            except subprocess.CalledProcessError as e:
++                self.fail("Command %s failed with %s" % (cmd, e.output))
++
++        with tempfile.TemporaryDirectory(prefix="parserecipes") as recipes, tempfile.TemporaryDirectory(prefix="parsetest") as builddir:
++            extraenv = {
++                "EXTRA_BBFILES": f"{recipes}/*.bb {recipes}/*.bbappend",
++            }
++
++            inc_path = f"{recipes}/recipe-file.inc"
++            bbappend_path = f"{recipes}/recipe-%.bbappend"
++            recipe_path = f"{recipes}/recipe-file1.bb"
++
++            # __BB_RECIPE_FILE should always be the name of .bb file, even
++            # when set in a bbappend. FILE is the name of the bbappend
++            write_file(recipe_path, "")
++            write_file(bbappend_path,
++                """\
++                BBAPPEND_RECIPE_FILE := "${@os.path.basename(d.getVar('__BB_RECIPE_FILE'))}"
++                BBAPPEND_FILE := "${@os.path.basename(d.getVar('FILE'))}"
++                """
++            )
++            output = run_bitbake(["bitbake", "-e", "recipe-file1"], builddir, extraenv).splitlines()
++            self.assertIn('BBAPPEND_FILE="recipe-%.bbappend"', output)
++            self.assertIn(f'BBAPPEND_RECIPE_FILE="recipe-file1.bb"', output)
++
++            # __BB_RECIPE_FILE should always be the name of .bb file, even when
++            # set in an include file. FILE is the name of the include
++            write_file(recipe_path,
++                """\
++                require recipe-file.inc
++                """
++            )
++            write_file(inc_path,
++                """\
++                INC_RECIPE_FILE := "${@os.path.basename(d.getVar('__BB_RECIPE_FILE'))}"
++                INC_FILE := "${@os.path.basename(d.getVar('FILE'))}"
++                """
++            )
++            output = run_bitbake(["bitbake", "-e", "recipe-file1"], builddir, extraenv).splitlines()
++            self.assertIn('INC_FILE="recipe-file.inc"', output)
++            self.assertIn(f'INC_RECIPE_FILE="recipe-file1.bb"', output)
++
++            # Test when the include file is included from a bbappend
++            write_file(recipe_path, "")
++            write_file(bbappend_path,
++                """\
++                require recipe-file.inc
++                """
++            )
++            output = run_bitbake(["bitbake", "-e", "recipe-file1"], builddir, extraenv).splitlines()
++            self.assertIn('INC_FILE="recipe-file.inc"', output)
++            self.assertIn(f'INC_RECIPE_FILE="recipe-file1.bb"', output)
++
++            # Test the variables in a bbclass when inherited directly in the
++            # recipe. Note that FILE still refers to the recipe in a bbclass
++            write_file(recipe_path,
++                """\
++                inherit recipe-file-class
++                """
++            )
++            output = run_bitbake(["bitbake", "-e", "recipe-file1"], builddir, extraenv).splitlines()
++            self.assertIn('BBCLASS_FILE="recipe-file1.bb"', output)
++            self.assertIn(f'BBCLASS_RECIPE_FILE="recipe-file1.bb"', output)
++
++            # Test the variables when the inherit is in a bbappend. In this
++            # case, FILE is the bbappend
++            write_file(recipe_path, "")
++            write_file(bbappend_path,
++                """\
++                inherit recipe-file-class
++                """
++            )
++            output = run_bitbake(["bitbake", "-e", "recipe-file1"], builddir, extraenv).splitlines()
++            self.assertIn('BBCLASS_FILE="recipe-%.bbappend"', output)
++            self.assertIn(f'BBCLASS_RECIPE_FILE="recipe-file1.bb"', output)
++
++            # Test the variables when the inherit is in a include. In this
++            # case, FILE is the include file
++            write_file(recipe_path,
++                """\
++                require recipe-file.inc
++                """
++            )
++            write_file(bbappend_path, "")
++            write_file(inc_path,
++                """\
++                inherit recipe-file-class
++                """
++            )
++            output = run_bitbake(["bitbake", "-e", "recipe-file1"], builddir, extraenv).splitlines()
++            self.assertIn('BBCLASS_FILE="recipe-file.inc"', output)
++            self.assertIn(f'BBCLASS_RECIPE_FILE="recipe-file1.bb"', output)
++
++            # Test the variables when the inherit is in a include included from
++            # a bbappend. In this case, FILE is the include file
++            write_file(recipe_path, "")
++            write_file(bbappend_path,
++                """\
++                require recipe-file.inc
++                """
++            )
++            write_file(inc_path,
++                """\
++                inherit recipe-file-class
++                """
++            )
++            output = run_bitbake(["bitbake", "-e", "recipe-file1"], builddir, extraenv).splitlines()
++            self.assertIn('BBCLASS_FILE="recipe-file.inc"', output)
++            self.assertIn(f'BBCLASS_RECIPE_FILE="recipe-file1.bb"', output)
+-- 
+2.53.0
 
 
