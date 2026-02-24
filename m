@@ -1,111 +1,110 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <mathieu.dubois-briand@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB0EEFB815
-	for <webhook@archiver.kernel.org>; Tue, 24 Feb 2026 08:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1322EFB815
+	for <webhook@archiver.kernel.org>; Tue, 24 Feb 2026 08:26:38 +0000 (UTC)
 Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.15729.1771920253707233605
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.15927.1771921597583421961
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 24 Feb 2026 00:04:14 -0800
+ Tue, 24 Feb 2026 00:26:38 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=ok72CqEK;
- spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=B2Zk5wcE;
+ spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: mathieu.dubois-briand@bootlin.com)
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 91B304E41053;
-	Tue, 24 Feb 2026 08:04:11 +0000 (UTC)
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 5EF0E4E41053;
+	Tue, 24 Feb 2026 08:26:35 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 610135FD9D;
-	Tue, 24 Feb 2026 08:04:11 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E2F8C10368B84;
-	Tue, 24 Feb 2026 09:04:07 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 347EC5FD9D;
+	Tue, 24 Feb 2026 08:26:35 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A6AEE10368B4A;
+	Tue, 24 Feb 2026 09:26:33 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1771920250; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1771921594; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=lSSF0z7vIWA9QxrScYzqvzsRViFwVzbzZXedM2eqS/E=;
-	b=ok72CqEKCPISbQr4u/dcj8jZbGzLljVRt/pVGdwWD2Wu9Al8xcZVTN4tpZpC3zJV3/x3pb
-	23sC7dOklQxLMEn4X2t6Re35kMz/BxpytOeH1X+hKs47LhC5774cAEMmoDf7XklESeGi8u
-	YKxcO85BpLa1rLlE1Jnlq/pF7uh4QudGdDreFG/LD5OCsKhWrBrke5uGrC1MLG4TOdGU0F
-	eSKvQE/yJEw+6Kfe/KwYNtAXmYW7TugWhEMmzv5mwBQ2qrFtFC1OYA+Q2/MH6KG1QrJ1pK
-	jgDTPTNyw7JV4zZaNSu90X+SyEC1uZqUXDZ3cpYSxT8RNSsAf9CS8MFnnzHb9A==
+	bh=RFwI0V7M896dypEc3Y0A0vfM5RBwFQmOXgYt8ucrceY=;
+	b=B2Zk5wcE9aM/y/hRb4MUAioQP7CTrkX3jIbd9YVN34IVw/LIlf50kozN2JgPmPqLLAkpDA
+	C6+ozVItOp1ZUUU3ZSTGJ6yEQ0c9UCn9izkyCqp0FbcOfoyPYEfMgTiGdfgTfVF2NliTlV
+	266RPanf/PWT6Z88342iNvfFXmJtdDsEbxxXYN5RMqVHeyAB2KrMp2ZE2QkKtc4Z2qXT50
+	rO68aBy10Fyrh72UMEa3tGS3v7cbL8PFRK+kXPyEGN5Y+rOFIlVOXq7Y435FOeQf9bCjup
+	Y1bwn8eya197juqpTH7qMXKDMk0y28Q9Em8WnbNnb9kQzKfWq9PCaGH2n1uvFw==
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 24 Feb 2026 09:04:06 +0100
-Message-Id: <DGN1AZTS0P6Q.2G1QBUYVST3ME@bootlin.com>
-Cc: <docs@lists.yoctoproject.org>, "Robert P. J. Day"
- <rpjday@crashcourse.ca>, "Richard Purdie"
- <richard.purdie@linuxfoundation.org>
-From: "Antonin Godard" <antonin.godard@bootlin.com>
-To: <quentin.schulz@cherry.de>, "Quentin Schulz" <foss+yocto@0leil.net>,
- <bitbake-devel@lists.openembedded.org>
-Subject: Re: [docs] [PATCH] doc: bitbake-user-manual-ref-variables:
- BB_ENV_PASSTHROUGH is not in default BB_ENV_PASSTHROUGH_ADDITIONS (anymore)
-X-Mailer: aerc 0.21.0-124-ga1ff16134ae6
-References: <20260114-env-passthru-v1-1-fd5ef76eab61@cherry.de>
- <a0b211c4-320f-46cb-80db-d4dcbd56ef04@cherry.de>
-In-Reply-To: <a0b211c4-320f-46cb-80db-d4dcbd56ef04@cherry.de>
+Date: Tue, 24 Feb 2026 09:26:32 +0100
+Message-Id: <DGN1S5X3G8U3.1ZM8WFKT6ZDKZ@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: <alex.kanavin@gmail.com>, <bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH] cooker: warn when sstate is outside of
+ build dir, but hash equiv database is inside it
+Cc: "Alexander Kanavin" <alex@linutronix.de>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20260223143118.1533806-1-alex.kanavin@gmail.com>
+In-Reply-To: <20260223143118.1533806-1-alex.kanavin@gmail.com>
 X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 24 Feb 2026 08:04:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19080
+ <bitbake-devel@lists.openembedded.org>; Tue, 24 Feb 2026 08:26:38 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19081
 
-On Mon Feb 23, 2026 at 7:03 PM CET, Quentin Schulz via lists.yoctoproject.o=
-rg wrote:
-> Hi all,
+On Mon Feb 23, 2026 at 3:31 PM CET, Alexander Kanavin via lists.openembedde=
+d.org wrote:
+> From: Alexander Kanavin <alex@linutronix.de>
 >
-> I don't see this in master/master-next so gentle ping (feedback of=20
-> course welcome).
+> This should help with the long-standing usability problem: when
+> someone tweaks the configuration to put sstate somewhere else than
+> the default (so that it can be shared between local builds, or over NFS),
+> they should also share the hash equivalency database, but there would not
+> be any indication to do so.
 >
-> Cheers,
-> Quentin
+> This will issue a warning and recommend to start a dedicated hash equival=
+ency
+> server (if sstate is on NFS), or set BB_HASHSERVE_DB_DIR (if it isn't).
 >
-> On 1/14/26 4:41 PM, Quentin Schulz wrote:
->> From: Quentin Schulz <quentin.schulz@cherry.de>
->>=20
->> BB_ENV_PASSTHROUGH_ADDITIONS variable doesn't contain BB_ENV_PASSTHROUGH
->> anymore since commit 0a33b560233b ("utils: remove BB_ENV_PASSTHROUGH
->> from preserved_envvars()") so let's fix this oversight.
->>=20
->> Reported-by: Robert P. J. Day <rpjday@crashcourse.ca>
->> Suggested-by: Richard Purdie <richard.purdie@linuxfoundation.org>
->> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
->> ---
->>   doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.r=
-st b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
->> index af911f306..345da647e 100644
->> --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
->> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
->> @@ -286,8 +286,8 @@ overview of their function and contents.
->>         Specifies the internal list of variables to allow through from
->>         the external environment into BitBake's datastore. If the value =
-of
->>         this variable is not specified (which is the default), the follo=
-wing
->> -      list is used: :term:`BBPATH`, :term:`BB_PRESERVE_ENV`,
->> -      :term:`BB_ENV_PASSTHROUGH`, and :term:`BB_ENV_PASSTHROUGH_ADDITIO=
-NS`.
->> +      list is used: :term:`BBPATH`, :term:`BB_PRESERVE_ENV`, and
->> +      :term:`BB_ENV_PASSTHROUGH_ADDITIONS`.
->>  =20
->>         .. note::
->>  =20
->>=20
->> ---
->> base-commit: f23e186a75e71ba885b9b53a1dfda99af29c67b0
->> change-id: 20260114-env-passthru-456899fe5a83
->>=20
->> Best regards,
+> Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+> ---
 
-Looking good to me
+Hi Alex,
 
-Reviewed-by: Antonin Godard <antonin.godard@bootlin.com>
+Thanks for your patch.
 
-Thanks!
-Antonin
+It looks like this is breaking the
+bb.tests.runqueue.RunQueueTests.test_hashserv_double test:
+
+FAIL: test_hashserv_double (bb.tests.runqueue.RunQueueTests.test_hashserv_d=
+ouble)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/pokybuild/yocto-worker/oe-selftest-debian/build/layers/bitbake=
+/lib/bb/tests/runqueue.py", line 41, in run_bitbakecmd
+    output =3D subprocess.check_output(cmd, env=3Denv, stderr=3Dsubprocess.=
+STDOUT,universal_newlines=3DTrue, cwd=3Dbuilddir)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^=
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=3DPIPE, timeout=3Dtimeout, check=3DTrue,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['bitbake', 'a1', 'b1', 'e1']' retu=
+rned non-zero exit status 1.
+
+The bb.tests.runqueue.RunQueueTests.test_hashserv_multiple_setscene test
+is also failing, with a similar error.
+
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/35/builds/3266
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/48/builds/3144
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/23/builds/3385
+
+Can you have a look at the issue?
+
+Thanks,
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
