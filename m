@@ -1,139 +1,128 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <pedro.ms.ferreira@ctw.bmwgroup.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4DDEA4E2A
-	for <webhook@archiver.kernel.org>; Mon,  2 Mar 2026 15:56:56 +0000 (UTC)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.163751.1772467011297421978
- for <bitbake-devel@lists.openembedded.org>;
- Mon, 02 Mar 2026 07:56:51 -0800
-Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Hny52Z3U;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-482f454be5bso50852595e9.0
-        for <bitbake-devel@lists.openembedded.org>; Mon, 02 Mar 2026 07:56:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1772467010; x=1773071810; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=SM2FKAYCuNh2sjlDnf6PSoXGDwxmO4E+Q5AzBXb/pJo=;
-        b=Hny52Z3UB+b+bOh6JAQJRAE9gmAHVrOvo6hDuSuN/T5C7zQ+efoASdqhp/S9Vq0gt0
-         +1PCYKQdItOlcVdY4qzJFJUWnwloDBBo0MTLhOv0yieM8yZsSgMIAiUOO1sK5P//YYpE
-         DY6fr3mfhxotJiI9toIpFdMRDsHi5Vn+vWjJU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772467010; x=1773071810;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SM2FKAYCuNh2sjlDnf6PSoXGDwxmO4E+Q5AzBXb/pJo=;
-        b=rMmBRtzragJPLKr3TKzRbJsiAwN83Aq6QOtlpwohvwReE2gBP9nRWcXktrGgq6cEQt
-         yf4gLEbQKp3Sn8Fh56D5sCbJo7b2mFlxeyASiesNTaWtlen1qK0iaS5XuTSSEu0BoZpX
-         qPuQS3kiswXcmIZXL3yjtLgvMJoS6qWAVc1vmd3Ipkl9jKYHxh6nd1mN85izSVM92bjG
-         sxItBgNs0Qyd/rIavuYHNq+1fKyufJQfgUNQR95jcY86/CsxwWDdRHi8hmObfGQBkErb
-         S84sxumi52C/+xtADZCoim/4+vi07dCLQBGzBo00ak9iyMPw3YYOJXKmwz1xmhnMIFmJ
-         Vuig==
-X-Forwarded-Encrypted: i=1; AJvYcCXYUQZwVw8OP1tX0bQX3jjjfFkO5AW/UMIYxqkkUx7B8TEfPeQQ3+5/sJnFURcZo6DfGwlG8ncqu/aL0Yiu@lists.openembedded.org
-X-Gm-Message-State: AOJu0YyRQP7fTcIjtbKFeVli0iXwg4szPsrtlXeoX3lTSBIMIo7HRvzb
-	GzXXyAkcLEXzONnhjU92KHEFpQwD4JhYbEl5AQVrK7dFKqdMXjpnaMfYCSRFYlnCUf8=
-X-Gm-Gg: ATEYQzwK+dyiaGn7pJJbOXBW8my54jH69mffBWaBcx+yQseB3Nww/mEwMNwYVpHjv2e
-	gIXg2tavblIcQVJP1orVRAGsHBUpRojABkAJtwTkdumW4gW/MWCwrzoY1Y8MC5UFGlYpW/AFsoX
-	4/BfM6BSuzLW3Rjok9kN6S2x6LABvgpYo6ZMkg+Y2OKX+r8JXvT9GkGi9CjJ5sq0GIV/vpQTW0i
-	Lt/m9/C9XHjpf9G5o9JUEqDxLpbPETdV2FpdAtSkdvnuqx8VS/PYloYqrK8sZ2OyOPHtMTjAvZE
-	eU9zOOO7g464gWKxky0Wrj1IBDeHv5AZivU0ZaayLxxARL6OEMXt+ys1epbOk8qiTG2xK8OSRbJ
-	45l2X8T+RzcDPcCwPfZsYwIvqcfUIk2fVcYIYLprxMw4aCuOyzr0THusfalGd7Mh43ZCezyOSOu
-	5wOvsq+rXYuW5TGidzN2pP8BQgG/741MdFJQuOV+hJeMxYZBTbjJ870iD2TODuo4J5RRF+TPQE0
-	M81aa4OJfsf+Go=
-X-Received: by 2002:a05:600c:8b5b:b0:481:a662:b3f3 with SMTP id 5b1f17b1804b1-483c990c263mr251407215e9.7.1772467009583;
-        Mon, 02 Mar 2026 07:56:49 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:dd78:7aff:8be3:3eb6? ([2001:8b0:aba:5f3c:dd78:7aff:8be3:3eb6])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483bfbb465bsm305510375e9.3.2026.03.02.07.56.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2026 07:56:48 -0800 (PST)
-Message-ID: <e58fedf42052698a50007bd5d49a70e0b77aa702.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] fetch2: avoid reuse download filenames
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: pmi183@gmail.com, bitbake-devel@lists.openembedded.org
-Cc: Pedro Ferreira <Pedro.MS.Ferreira@ctw.mbwgroup.com>
-Date: Mon, 02 Mar 2026 15:56:47 +0000
-In-Reply-To: <20260302151443.256386-1-pedro.ms.ferreira@ctw.bmwgroup.com>
-References: <20260302151443.256386-1-pedro.ms.ferreira@ctw.bmwgroup.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0-1ubuntu0.1 
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC100E9B37E
+	for <webhook@archiver.kernel.org>; Mon,  2 Mar 2026 16:54:16 +0000 (UTC)
+Subject: Re: [PATCH] fetch2: avoid reuse download filenames
+To: bitbake-devel@lists.openembedded.org
+From: pedro.ms.ferreira@ctw.bmwgroup.com
+X-Originating-Location: Porto, PT (213.205.68.220)
+X-Originating-Platform: Linux Chrome 145
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
+Date: Mon, 02 Mar 2026 08:54:15 -0800
+References: <20260302151443.256386-1-pedro.ms.ferreira@ctw.bmwgroup.com> <e58fedf42052698a50007bd5d49a70e0b77aa702.camel@linuxfoundation.org>
+In-Reply-To: <e58fedf42052698a50007bd5d49a70e0b77aa702.camel@linuxfoundation.org>
+Message-ID: <1127752.1772470455842490403@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="plavj4w4xFSLooVdiwmn"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 02 Mar 2026 15:56:56 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19098
+ <bitbake-devel@lists.openembedded.org>; Mon, 02 Mar 2026 16:54:16 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19099
 
-On Mon, 2026-03-02 at 15:14 +0000, Pedro Ferreira via lists.openembedded.or=
-g wrote:
-> When fetch task runs and while running checksum validation
-> detects that for a source file the checksum mismatches,
-> instead of aborting, its allowing to move aside and download again.
-> This might allow users to taint the source files instead of acting
-> as a safe mechanism to fix some issue occurred on the download stage.
->=20
-> Signed-off-by: Pedro Ferreira <Pedro.MS.Ferreira@ctw.mbwgroup.com>
-> ---
-> =C2=A0lib/bb/fetch2/__init__.py | 11 ++++-------
-> =C2=A01 file changed, 4 insertions(+), 7 deletions(-)
+--plavj4w4xFSLooVdiwmn
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Do you have a bit more information about the issue you ran into?
+Hi Richard,
 
-This behaviour was added so that a "bad" mirror with a broken file
-wouldn't stop a build when there were mirrors with the correct file
-present. That is beneficial for some scenarios.
+This was detected internally when users modify source files and update
+the hashes inside the recipes to match. Bitbake is allowing this operations
+because it identifies a mismatch and renames it to procede with the downloa=
+d.
 
-Cheers,
+I tested this locally with:
 
-Richard
+- Create a source file, for example, test_download.tar.gz
+- Create a simple http server (python3 -m http.server 1212 )
+- Create a small recipe, local_test.bb
+------------------------------------------------------------------------
+SUMMARY =3D "local test recipe"
+DESCRIPTION =3D "Downloads and installs test files"
+LICENSE =3D "CLOSED"
 
+SRC_URI =3D "http://0.0.0.0:1212/test_download.tar.gz"
 
-> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-> index dcf7adc26..b8d8957b0 100644
-> --- a/lib/bb/fetch2/__init__.py
-> +++ b/lib/bb/fetch2/__init__.py
-> @@ -716,13 +716,10 @@ def verify_donestamp(ud, d, origud=3DNone):
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 p.dump(checksums)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return True
-> =C2=A0=C2=A0=C2=A0=C2=A0 except ChecksumError as e:
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # Checksums failed to verify,=
- trigger re-download and remove the
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # incorrect stamp file.
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 logger.warning("Checksum mism=
-atch for local file %s\n"
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Cleaning and =
-trying again." % ud.localpath)
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if os.path.exists(ud.localpat=
-h):
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 renam=
-e_bad_checksum(ud, e.checksum)
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bb.utils.remove(ud.donestamp)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # If there is a checksum mism=
-atch, it is likely because the file
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # is being tainted or some co=
-rruption is occurring when downloading.
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # Download cache should be cl=
-eaned up before trying again.
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bb.fatal("Checksum mismatch f=
-or local file %s\n" % ud.localpath)
-> =C2=A0=C2=A0=C2=A0=C2=A0 return False
-> =C2=A0
-> =C2=A0
->=20
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#19097): https://lists.openembedded.org/g/bitbake-deve=
-l/message/19097
-> Mute This Topic: https://lists.openembedded.org/mt/118095154/1686473
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub=C2=A0[r=
-ichard.purdie@linuxfoundation.org]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+S =3D "${WORKDIR}"
+
+SRC_URI[md5sum] =3D "12e597833772126eade44740570aab3c"
+SRC_URI[sha256sum] =3D "f03e325aa451beda1b340a7ce0fcfd620b74c86e12b8156a3d4=
+949f7de67fc87"
+
+do_install() {
+install -d ${D}/etc/test
+install =C2=A0${S}/README.md -C ${D}/etc/test
+}
+
+FILES:${PN} =3D "/etc/test/README.md"
+
+------------------------------------------------------------------------
+- Run it: bitbake -C fetch local-test
+- Modify source file
+- Update the hash
+- Run it: bitbake -C fetch local-test
+- A warning is raised: WARNING: local-test-1.0-r0 do_fetch: Renaming /home/=
+test/yocto-downloads/test_download.tar.gz to /home/test/yocto-downloads/tes=
+t_download.tar.gz_bad-checksum_f03e325aa451beda1b340a7ce0fcfd620b74c86e12b8=
+156a3d4949f7de67fc87
+- Bitbake continues the next steps with this new tarball.
+
+Cheers.
+
+--plavj4w4xFSLooVdiwmn
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div>Hi Richard,</div>
+<div>&nbsp;</div>
+<div>This was detected internally when users modify source files and update=
+</div>
+<div>the hashes inside the recipes to match. Bitbake is allowing this opera=
+tions</div>
+<div>because it identifies a mismatch and renames it to procede with the do=
+wnload.</div>
+<div>&nbsp;</div>
+<div>I tested this locally with:</div>
+<div>&nbsp;</div>
+<div>&nbsp;- Create a source file, for example, test_download.tar.gz</div>
+<div>&nbsp;- Create a simple http server (python3 -m http.server 1212 )</di=
+v>
+<div>&nbsp;- Create a small recipe, local_test.bb</div>
+<div>----------------------------------------------------------------------=
+--</div>
+<div>
+<div>SUMMARY =3D "local test recipe"<br />DESCRIPTION =3D "Downloads and in=
+stalls test files"<br />LICENSE =3D "CLOSED"</div>
+<div>&nbsp;</div>
+<div>SRC_URI =3D "http://0.0.0.0:1212/test_download.tar.gz"</div>
+<div><br />S =3D "${WORKDIR}"</div>
+<div>&nbsp;</div>
+<div>SRC_URI[md5sum] =3D "12e597833772126eade44740570aab3c"<br />SRC_URI[sh=
+a256sum] =3D "f03e325aa451beda1b340a7ce0fcfd620b74c86e12b8156a3d4949f7de67f=
+c87"</div>
+<div>&nbsp;</div>
+<div>do_install() {<br />&nbsp; &nbsp; install -d ${D}/etc/test<br />&nbsp;=
+ &nbsp; install &nbsp;${S}/README.md -C ${D}/etc/test<br />}</div>
+<div>&nbsp;</div>
+<div>FILES:${PN} =3D "/etc/test/README.md"</div>
+<div>&nbsp;</div>
+</div>
+<div>----------------------------------------------------------------------=
+--</div>
+<div>&nbsp;- Run it: bitbake -C fetch local-test</div>
+<div>&nbsp;- Modify source file</div>
+<div>&nbsp;- Update the hash</div>
+<div>&nbsp;- Run it: bitbake -C fetch local-test</div>
+<div>&nbsp; &nbsp;- A warning is raised: WARNING: local-test-1.0-r0 do_fetc=
+h: Renaming /home/test/yocto-downloads/test_download.tar.gz to /home/test/y=
+octo-downloads/test_download.tar.gz_bad-checksum_f03e325aa451beda1b340a7ce0=
+fcfd620b74c86e12b8156a3d4949f7de67fc87</div>
+<div>&nbsp; - Bitbake continues the next steps with this new tarball.</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>Cheers.</div>
+
+--plavj4w4xFSLooVdiwmn--
 
