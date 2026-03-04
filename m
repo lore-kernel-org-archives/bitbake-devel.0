@@ -2,70 +2,73 @@ Return-Path: <tgamblin@baylibre.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8425EF8FEC
-	for <webhook@archiver.kernel.org>; Wed,  4 Mar 2026 14:26:03 +0000 (UTC)
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.19292.1772634361166755683
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF96EF8FEE
+	for <webhook@archiver.kernel.org>; Wed,  4 Mar 2026 14:26:04 +0000 (UTC)
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.19295.1772634362709885171
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 04 Mar 2026 06:26:01 -0800
+ Wed, 04 Mar 2026 06:26:02 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=X1L1Lv7B;
- spf=pass (domain: baylibre.com, ip: 209.85.219.42, mailfrom: tgamblin@baylibre.com)
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-89a07f66f4eso28616386d6.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 04 Mar 2026 06:26:00 -0800 (PST)
+ dkim=pass header.i=@baylibre-com.20230601.gappssmtp.com header.s=20230601 header.b=I+CyiECF;
+ spf=pass (domain: baylibre.com, ip: 209.85.219.53, mailfrom: tgamblin@baylibre.com)
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-899fa7d0780so34282866d6.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 04 Mar 2026 06:26:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1772634359; x=1773239159; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=s/dcqTyrI7Xj+6MKZl6IXErxObEPCgyq8VbyBKzYpt4=;
-        b=X1L1Lv7B3RjBi2nHQtIIg+f6FUcd32XxVCLokzymHq3l0yVsivUveWrDlVhjrwLM8Q
-         xvVc6r8jTuH2rzPazNcBfNyeenr+eNWETnerOQ1zrIZYw9mEJkj7H+yp+L8lckT+LE2R
-         40x0VUkpoRqpBUop7XGVPKywOWgcWEopGI0Cy7ymsEfDjolf84NE3BwwggSrCZNXNBTJ
-         dBs3vrEsjsOKHLreoS0P92loLZFt3Ez8Ht/xeOR56S3hRsMcTcwNDxiz418UQtBje/QH
-         TisRBUOK2XrjQ0kZUvsRXvcV8nXw0LbLQoOpehObBqttrIwrjEsqEdama2Ezy58UNTJk
-         NmUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772634359; x=1773239159;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1772634361; x=1773239161; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=s/dcqTyrI7Xj+6MKZl6IXErxObEPCgyq8VbyBKzYpt4=;
-        b=i0xC7MVS2fROKFLGkCY7og1LYjVymVWPaN6yDj6rsqDTtQUi37u6z5f842oaEL4Gud
-         0k7D3ugZb1uycdg9ljoimR5XHLIcTtBUjLsvenmJ1U3LV55PhonhRohjVJxDzYmgEiGD
-         /1ITEkMH0MeXlMzUnJBb5uxEwH1FNOcgoIj7ni2QA54mSQeVn1kp//30fezTVfCVJQkm
-         OBUnPo5uzWk4NVr48I0geYMInIkfQpfdKvm03BTsboQsjREG8r97GOcVtTXS+6F7j0XL
-         Stv+/srlCvNN6+HL2q35P6PbUpL6pJRNqQUwoWa27+auQ4eiy3tQE0Uopswqse+JMIMz
-         kIgQ==
-X-Gm-Message-State: AOJu0YwPp/lQcQthEkDHa1h4kOPvZysHlIDt/T1FIzJlHf/v5EnC8UEL
-	w30EZeyCNtBlI+Uvdi4kRp/Q+qqy111sf/3CWvGf078+mAWDOUhEJA7Pbv7GU2SBhzzWd6oE5OU
-	T+gAUFG8=
-X-Gm-Gg: ATEYQzxclA9FZ0m3f2YU2bPA59JyIZ2TSCOZ8jFB/IsNJy5sSG2hdk/xpfEExsAXUeQ
-	yB4HbxQHlQbO8crwkhoizw86CzuF/vtPSN6neKxWg9EWd/I21jg8cj1F4L+984ZNGpNwR2rR8mj
-	T6EpfRooMkyU4llNgPMV12dydiKLSQVLCx9ZgRGaQlZV+chtzQAyJ5dkAHQZENR2lDJrlslzIPj
-	yabwN/nhLncR0uFlDCuwqnh4snFtBK0iwbYoiX+gmmMeSAB7S8coJPI56E3B2UGrZQ8iWTAzOCV
-	fJDKYihVM0BwBhkOFhLSuNabVdUbeQZEe+N9Qs2Bm4y1tnHWfpw4JtB9RwW7RP34hcvwYMBvcUP
-	Waz4EFixQU9FWQXWzF8+E5XZJckukfF1uzBKgW6xxl3BnuILzIllGvRUSj7lQudQaeeWhYqEzTA
-	1yCiDmYBWBBJAYFA75C36bB/rFe+0=
-X-Received: by 2002:a05:6214:2423:b0:89a:18bc:2b27 with SMTP id 6a1803df08f44-89a19d39d01mr24293926d6.65.1772634359215;
-        Wed, 04 Mar 2026 06:25:59 -0800 (PST)
+        bh=fx1ZzFVBRA7FVcWlaot1GDP3l07yUC3efpw+DD9grbA=;
+        b=I+CyiECFcGgqmbQ7J/SRvnPExb1nZMuOznm7MWbX/SxFWi+MUZXRMYB2ynQySEFxh6
+         EJk5QGqIJBoBwBxrgad1pB5UcDNfIUjcqcNhwZiHALCzVfNYNLwInyUxOW8XmNVdF/YW
+         OVsgoq3YG/ZWpiUk814pjLKELIN/lSlYgC9yLFNAVVp3P00bxWyJFQkBBBypoS0Qwc0v
+         MV1Tet4uOtHUHkTSi5bmml26IwX324VMVgtD98dqQZrNNzDYOrxubW3uqn7m3yTV0AGq
+         HHGcLzNnkNqn4SP8aSqv32CgUc7ixD7NzKFiCy5i0xpWv0mLsSdj7n5gskgBCTObiEEU
+         NMIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772634361; x=1773239161;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fx1ZzFVBRA7FVcWlaot1GDP3l07yUC3efpw+DD9grbA=;
+        b=fyHsYDyZmNtzfj1N6zs3T41HYKSA9BJJi6qwUsy3Kez2iCRU6oADlmHIMM/yrSRIDv
+         Svr4VtT7PCSYH8aGvbUKD0K6T1RTWlQWsjbUn9kmO3wveF+LJFyvXxme4Lg7Js5mNJCv
+         H5i8j10+BhGev3iV4ik7c1c6JsRDh74d4WfQlcnkh0kbxKnFKWpcqHNPyg1UrHc7PaPG
+         h0prm5+cO8IZxBXZtwBNTvFVa+dS/RQeQhvo4x14bYqLZjL3hrOsJosSSdoKDm2sG/A1
+         J766kLOjCfxJLpevZ8CBDMuDP5kuWNzPD2rzbYQk0+6eBNqziHTtLaS6X6/9fPyZmYMS
+         rf2g==
+X-Gm-Message-State: AOJu0Yw9Wd+0YQDfJpWyMlr/W85nY6d1hhwvVepxZSe/uqF/lYimJ03i
+	MUF4bArVBUert3/VCP0K+4tkSmTZk2OTv1OQQTf0JkcgQF3E/OnzH/BM9Eyh7NFkfafirgFLxj6
+	xNz34DfQ=
+X-Gm-Gg: ATEYQzwnNfZLQp8oUEcVMa9Cg4rDchrt+lEKINl6YGKoBu+/h1WY2lFg5w5q4w3fSL3
+	QhByz1tg3s+9WFuFHIPbWG+kHf08AA2ZUSkDW1yFGDqjD9EZnTZK/Wj8doPNbPm7Wv0kH21mj7t
+	JnjrOk8rjdO0iUR19O4u74z8rVn/+o13B+qQE27Tch6faucBE8zpdHblE7eEP3h2JPkqtQi0VSa
+	rHeyTZVh26e7FL2spx3MLXMtkkOQJg3gFGOpuaeDWm6CUMa/VSEAnw1EJdMG5wjwIKTbVBDEhuv
+	vl9vgjgdQeIZbaKhJo8NUQaFhxkAm9Nr7fHUbiGQVl1S9BBdhZIZulZe3RUieX0n9y4wgo2t5cT
+	81ryIiyKXUew3+Wd5IGJ3nO1wgLmeKNOvJ5w9LhOOqOgGNPBOs9WqWFsBvmJmtqyN1W+/dkQVWr
+	L/BGsL2y5ab4CDoCCG2ntfb+wbsN8=
+X-Received: by 2002:a05:6214:d4b:b0:899:fea9:ccff with SMTP id 6a1803df08f44-89a19d09608mr30710906d6.55.1772634360951;
+        Wed, 04 Mar 2026 06:26:00 -0800 (PST)
 Received: from localhost ([2001:1970:3847:e000:e8bd:ca0f:c232:9f10])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cbbf736bffsm1608072385a.50.2026.03.04.06.25.58
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89a1fcb781fsm4305566d6.23.2026.03.04.06.26.00
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2026 06:25:58 -0800 (PST)
+        Wed, 04 Mar 2026 06:26:00 -0800 (PST)
 From: Trevor Gamblin <tgamblin@baylibre.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake-devel][PATCH v2] runqueue.py: make sure we use bb multiprocessing
-Date: Wed,  4 Mar 2026 09:25:55 -0500
-Message-ID: <20260304142556.3346042-1-tgamblin@baylibre.com>
+Subject: [PATCH] runqueue.py: make sure we use bb multiprocessing
+Date: Wed,  4 Mar 2026 09:25:56 -0500
+Message-ID: <20260304142556.3346042-2-tgamblin@baylibre.com>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260304142556.3346042-1-tgamblin@baylibre.com>
+References: <20260304142556.3346042-1-tgamblin@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 04 Mar 2026 14:26:03 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19105
+ <bitbake-devel@lists.openembedded.org>; Wed, 04 Mar 2026 14:26:04 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19106
 
 Otherwise, we see errors like:
 
@@ -124,8 +127,6 @@ Fixes: [YOCTO #16184]
 
 Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
 ---
-v2 removes an unnecessary import from the bb module.
-
  lib/bb/runqueue.py | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
