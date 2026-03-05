@@ -1,100 +1,218 @@
-Return-Path: <mathieu.dubois-briand@bootlin.com>
+Return-Path: <pedro.ms.ferreira@ctw.bmwgroup.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B66EEF315
-	for <webhook@archiver.kernel.org>; Thu,  5 Mar 2026 07:39:40 +0000 (UTC)
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.39379.1772696378398436611
- for <bitbake-devel@lists.openembedded.org>;
- Wed, 04 Mar 2026 23:39:39 -0800
-Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=MNhU0Z7E;
- spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: mathieu.dubois-briand@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 6EADCC40404
-	for <bitbake-devel@lists.openembedded.org>; Thu,  5 Mar 2026 07:39:54 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id E06885FDEB;
-	Thu,  5 Mar 2026 07:39:35 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6303E10369827;
-	Thu,  5 Mar 2026 08:39:34 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1772696375; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=MpLwAh+2mbH0Y/6E+eBonStcBWhKtLzT2ElcyM0CS0o=;
-	b=MNhU0Z7EAUkyHhokMpLSrIduuP8+G7JuM1mO96zxRtGou42fi9ZaIoEpGpmTNmZztU0BRe
-	I0mWFGy5cxqX8F+eqagLMhmKMgrOCtCGtirecAHv5Oh1nqcMNRP6cnTVAKVUKwNSQ2Lx2x
-	LAYbPnXKC07D4TeExWlwbtyYA87RAtxEekngJkW8aOO1R2VGwfnbm6+opb939DClA+zX25
-	dTjCaOXVA5nxTohyZtrgPr+XSteaGf64Kzqny5IvXD6v613ZZJUaqxjafkrIxYL+FKBp94
-	ILq/cPe6PKN0zEKLoq2BfjuXkR2FzZCGhSUdESnu+HEyPlWp64xXDROwC6w9cA==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 05 Mar 2026 08:39:25 +0100
-Message-Id: <DGUOEZNW5M9V.3MTEVU4DE42P4@bootlin.com>
-Subject: Re: [bitbake-devel] [PATCH] fetch2: avoid reuse download filenames
-Cc: "Pedro Ferreira" <Pedro.MS.Ferreira@ctw.mbwgroup.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: <pmi183@gmail.com>, <bitbake-devel@lists.openembedded.org>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20260302151443.256386-1-pedro.ms.ferreira@ctw.bmwgroup.com>
-In-Reply-To: <20260302151443.256386-1-pedro.ms.ferreira@ctw.bmwgroup.com>
-X-Last-TLS-Session-Version: TLSv1.3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B9AF3092D
+	for <webhook@archiver.kernel.org>; Thu,  5 Mar 2026 10:22:41 +0000 (UTC)
+Subject: Re: [PATCH] fetch2: avoid reuse download filenames
+To: bitbake-devel@lists.openembedded.org
+From: pedro.ms.ferreira@ctw.bmwgroup.com
+X-Originating-Location: Porto, PT (213.205.68.221)
+X-Originating-Platform: Linux Chrome 145
+User-Agent: GROUPS.IO Web Poster
+MIME-Version: 1.0
+Date: Thu, 05 Mar 2026 02:22:40 -0800
+References: <20260302151443.256386-1-pedro.ms.ferreira@ctw.bmwgroup.com> <e58fedf42052698a50007bd5d49a70e0b77aa702.camel@linuxfoundation.org>
+In-Reply-To: <e58fedf42052698a50007bd5d49a70e0b77aa702.camel@linuxfoundation.org>
+Message-ID: <245205.1772706160236503925@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="ZAJ1UPpxUEvO6HD6j6R4"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 05 Mar 2026 07:39:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19107
+ <bitbake-devel@lists.openembedded.org>; Thu, 05 Mar 2026 10:22:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19108
 
-On Mon Mar 2, 2026 at 4:14 PM CET, Pedro Ferreira via lists.openembedded.or=
-g wrote:
-> When fetch task runs and while running checksum validation
-> detects that for a source file the checksum mismatches,
-> instead of aborting, its allowing to move aside and download again.
-> This might allow users to taint the source files instead of acting
-> as a safe mechanism to fix some issue occurred on the download stage.
->
-> Signed-off-by: Pedro Ferreira <Pedro.MS.Ferreira@ctw.mbwgroup.com>
-> ---
+--ZAJ1UPpxUEvO6HD6j6R4
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Pedro,
+Hi Richard,
 
-Thanks for your patch.
+I tested a few scenarios to be sure that this is not blocking or changing b=
+ehavior apart from the one use case that im trying to fix.
 
-I suspect this is making the bitbake-selftest fail:
+Use case 1
+- No local file
+- Two mirrors with the source file:
+- Mirror 1: 7da977765ddfe7a38e72905d6e2ae71b
+- Mirror 2: 12e597833772126eade44740570aab3c
+- Recipe points SRC_URI to 12e597833772126eade44740570aab3c
+- PREMIRRORS appended with both http servers
 
-ERROR: test_invalid_missing_donestamp (bb.tests.fetch.FetcherNoNetworkTest.=
-test_invalid_missing_donestamp)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/srv/pokybuild/yocto-worker/oe-selftest-armhost/build/layers/bitbak=
-e/lib/bb/fetch2/__init__.py", line 710, in verify_donestamp
-    checksums =3D verify_checksum(ud, d, precomputed_checksums)
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/srv/pokybuild/yocto-worker/oe-selftest-armhost/build/layers/bitbak=
-e/lib/bb/fetch2/__init__.py", line 660, in verify_checksum
-    raise ChecksumError("\n".join(messages), ud.url, bad_checksum)
-bb.fetch2.ChecksumError: Fetcher failure for URL: 'http://invalid.yoctoproj=
-ect.org/test-file.tar.gz'. Checksum mismatch!
-File: '/tmp/bitbake-fetch-gc0zy9ws/download/test-file.tar.gz' has md5 check=
-sum 'd41d8cd98f00b204e9800998ecf8427e' when '4221d002ceb5d3c9e9137e495ceaa6=
-47' was expected
-File: '/tmp/bitbake-fetch-gc0zy9ws/download/test-file.tar.gz' has sha256 ch=
-ecksum 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' w=
-hen
+bitbake -C fetch local-test - Succeeds
+---------------------------------------------------------------------------=
+------------------------
+WARNING: local-test-1.0-r0 do_fetch: Checksum mismatch for local file (...)=
+ /yocto-downloads/test_download.tar.gz
+Cleaning and trying again.
+WARNING: local-test-1.0-r0 do_fetch: Renaming (...)/yocto-downloads/ test_d=
+ownload.tar.gz to (...) /yocto-downloads/ test_download.tar.gz_bad-checksum=
+_f03e325aa451beda1b340a7ce0fcfd620b74c86e12b8156a3d4949f7de67fc87
+WARNING: local-test-1.0-r0 do_fetch: Checksum failure encountered with prem=
+irror download of http://0.0.0.0:1234/ test_download.tar.gz - will attempt =
+other sources.
+---------------------------------------------------------------------------=
+------------------------
 
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/23/builds/3454
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/48/builds/3224
+Use case 2
+- No local file
+- Two mirrors with the source file:
+- Mirror 1: 7da977765ddfe7a38e72905d6e2ae71b
+- Mirror 2: 7da977765ddfe7a38e72905d6e2ae71b
+- Recipe points SRC_URI to 12e597833772126eade44740570aab3c
+- PREMIRRORS appended with both http servers
 
-Can you have a look at these errors?
+bitbake -C fetch local-test - Fails
+---------------------------------------------------------------------------=
+------------------------
+ERROR: local-test-1.0-r0 do_fetch: Fetcher failure for URL: 'http://0.0.0.0=
+:1234/test_download.tar.gz'. Checksum mismatch!
+File: '(...)/yocto-downloads/test_download.tar.gz.tmp' has sha256 checksum =
+'f03e325aa451beda1b340a7ce0fcfd620b74c86e12b8156a3d4949f7de67fc87' when '0f=
+27e2d871ee8ae4784e4461ea2c35190df94ec8e8b07caba80056b2520999e1' was expecte=
+d
+If this change is expected (e.g. you have upgraded to a new version without=
+ updating the checksums) then you can use these lines within the recipe:
+SRC_URI[sha256sum] =3D "f03e325aa451beda1b340a7ce0fcfd620b74c86e12b8156a3d4=
+949f7de67fc87"
+Otherwise you should retry the download and/or check with upstream to deter=
+mine if the file has become corrupted or otherwise unexpectedly modified.
+ERROR: local-test-1.0-r0 do_fetch: Bitbake Fetcher Error: FetchError('Unabl=
+e to fetch URL from any source.', 'http://0.0.0.0:1234/test_download.tar.gz=
+')
+ERROR: Logfile of failure stored in:(...)/qemux86-64/build/tmp/work/core2-6=
+4-poky-linux/local-test/1.0/temp/log.do_fetch.13826
+ERROR: Task (.../local-test/local-test.bb:do_fetch) failed with exit code '=
+1'
+---------------------------------------------------------------------------=
+------------------------
 
-Thanks,
-Mathieu
+Use case 3 (Target scenario with the patch proposed)
+- Local file (7da977765ddfe7a38e72905d6e2ae71b)
+- Two mirrors with the source file:
+- Mirror 1: 12e597833772126eade44740570aab3c
+- Mirror 2: 12e597833772126eade44740570aab3c
+- Recipe points SRC_URI to 12e597833772126eade44740570aab3c
+- PREMIRRORS appended with both http servers
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+bitbake -C fetch local-test - Fails
+---------------------------------------------------------------------------=
+------------------------
+ERROR: local-test-1.0-r0 do_fetch: Checksum mismatch for local file (...)/y=
+octo-downloads/test_download.tar.gz
+ERROR: Logfile of failure stored in: (...)/qemux86-64/build/tmp/work/core2-=
+64-poky-linux/local-test/1.0/temp/log.do_fetch.28967
+ERROR: Task (.../local-test/local-test.bb:do_fetch) failed with exit code '=
+1'
+---------------------------------------------------------------------------=
+------------------------
 
+I think this covers at least the most common cases, imho it makes sense to =
+block any attempt of users to overwrite old source files,
+and this should be user responsibility to fix the recipe.
+If you have any other use case in mind please let me know.
+
+Cheers.
+
+--ZAJ1UPpxUEvO6HD6j6R4
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div>Hi Richard,</div>
+<div>&nbsp;</div>
+<div>I tested a few scenarios to be sure that this is not blocking or chang=
+ing behavior apart from the one use case that im trying to fix.</div>
+<div>&nbsp;</div>
+<div>Use case 1</div>
+<div>- No local file</div>
+<div>- Two mirrors with the source file:</div>
+<div>&nbsp;- Mirror 1: 7da977765ddfe7a38e72905d6e2ae71b</div>
+<div>&nbsp;- Mirror 2: 12e597833772126eade44740570aab3c</div>
+<div>- Recipe points SRC_URI to 12e597833772126eade44740570aab3c</div>
+<div>- <span data-teams=3D"true">PREMIRRORS appended with both http servers=
+</span></div>
+<div>&nbsp;</div>
+<div><span data-teams=3D"true">bitbake -C fetch local-test - Succeeds</span=
+><span data-teams=3D"true"></span></div>
+<div><span data-teams=3D"true">--------------------------------------------=
+-------------------------------------------------------</span></div>
+<div><span data-teams=3D"true">WARNING: local-test-1.0-r0 do_fetch: Checksu=
+m mismatch for local file <span data-teams=3D"true">(...)</span>/yocto-down=
+loads/test_download.tar.gz<br />Cleaning and trying again.<br />WARNING: lo=
+cal-test-1.0-r0 do_fetch: Renaming (...)/yocto-downloads/<span data-teams=
+=3D"true">test_download</span>.tar.gz to <span data-teams=3D"true">(...)</s=
+pan>/yocto-downloads/<span data-teams=3D"true">test_download</span>.tar.gz_=
+bad-checksum_f03e325aa451beda1b340a7ce0fcfd620b74c86e12b8156a3d4949f7de67fc=
+87<br />WARNING: local-test-1.0-r0 do_fetch: Checksum failure encountered w=
+ith premirror download of http://0.0.0.0:1234/<span data-teams=3D"true">tes=
+t_download</span>.tar.gz - will attempt other sources.</span></div>
+<div>----------------------------------------------------------------------=
+-----------------------------</div>
+<div>&nbsp;</div>
+<div>
+<div>Use case 2</div>
+<div>- No local file</div>
+<div>- Two mirrors with the source file:</div>
+<div>&nbsp;- Mirror 1: 7da977765ddfe7a38e72905d6e2ae71b</div>
+<div>&nbsp;- Mirror 2: 7da977765ddfe7a38e72905d6e2ae71b</div>
+<div>- Recipe points SRC_URI to 12e597833772126eade44740570aab3c</div>
+<div>- <span data-teams=3D"true">PREMIRRORS appended with both http servers=
+</span></div>
+<div>&nbsp;</div>
+<div><span data-teams=3D"true">bitbake -C fetch local-test - Fails</span><s=
+pan data-teams=3D"true"></span></div>
+<div><span data-teams=3D"true">--------------------------------------------=
+-------------------------------------------------------</span></div>
+<div>ERROR: local-test-1.0-r0 do_fetch: Fetcher failure for URL: 'http://0.=
+0.0.0:1234/test_download.tar.gz'. Checksum mismatch!<br />File: '(...)/yoct=
+o-downloads/test_download.tar.gz.tmp' has sha256 checksum 'f03e325aa451beda=
+1b340a7ce0fcfd620b74c86e12b8156a3d4949f7de67fc87' when '0f27e2d871ee8ae4784=
+e4461ea2c35190df94ec8e8b07caba80056b2520999e1' was expected<br />If this ch=
+ange is expected (e.g. you have upgraded to a new version without updating =
+the checksums) then you can use these lines within the recipe:<br />SRC_URI=
+[sha256sum] =3D "f03e325aa451beda1b340a7ce0fcfd620b74c86e12b8156a3d4949f7de=
+67fc87"<br />Otherwise you should retry the download and/or check with upst=
+ream to determine if the file has become corrupted or otherwise unexpectedl=
+y modified.<br />ERROR: local-test-1.0-r0 do_fetch: Bitbake Fetcher Error: =
+FetchError('Unable to fetch URL from any source.', 'http://0.0.0.0:1234/tes=
+t_download.tar.gz')<br />ERROR: Logfile of failure stored in:(...)/qemux86-=
+64/build/tmp/work/core2-64-poky-linux/local-test/1.0/temp/log.do_fetch.1382=
+6<br />ERROR: Task (.../local-test/local-test.bb:do_fetch) failed with exit=
+ code '1'</div>
+<div>----------------------------------------------------------------------=
+-----------------------------</div>
+<div>&nbsp;</div>
+<div>Use case 3 (Target scenario with the patch proposed)</div>
+<div>
+<div>- Local file (7da977765ddfe7a38e72905d6e2ae71b)</div>
+<div>- Two mirrors with the source file:</div>
+<div>&nbsp;- Mirror 1: 12e597833772126eade44740570aab3c</div>
+<div>&nbsp;- Mirror 2: 12e597833772126eade44740570aab3c</div>
+<div>- Recipe points SRC_URI to 12e597833772126eade44740570aab3c</div>
+<div>- <span data-teams=3D"true">PREMIRRORS appended with both http servers=
+</span></div>
+<div>&nbsp;</div>
+<div><span data-teams=3D"true"><span data-teams=3D"true">bitbake -C fetch l=
+ocal-test - Fails</span></span></div>
+<div><span data-teams=3D"true"><span data-teams=3D"true">------------------=
+---------------------------------------------------------------------------=
+------</span></span></div>
+</div>
+<div>ERROR: local-test-1.0-r0 do_fetch: Checksum mismatch for local file (.=
+..)/yocto-downloads/test_download.tar.gz<br />ERROR: Logfile of failure sto=
+red in: (...)/qemux86-64/build/tmp/work/core2-64-poky-linux/local-test/1.0/=
+temp/log.do_fetch.28967<br />ERROR: Task (.../local-test/local-test.bb:do_f=
+etch) failed with exit code '1'</div>
+</div>
+<div>----------------------------------------------------------------------=
+-----------------------------</div>
+<div>&nbsp;</div>
+<div>I think this covers at least the most common cases, imho it makes sens=
+e to block any attempt of users to overwrite old source files,</div>
+<div>and this should be user responsibility to fix the recipe.</div>
+<div>If you have any other use case in mind please let me know.</div>
+<div>&nbsp;</div>
+<div>Cheers.</div>
+
+--ZAJ1UPpxUEvO6HD6j6R4--
 
