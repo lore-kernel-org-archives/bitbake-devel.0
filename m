@@ -2,67 +2,58 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EA5EB1056
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E562EB1058
 	for <webhook@archiver.kernel.org>; Tue, 10 Mar 2026 14:10:48 +0000 (UTC)
-Received: from mx-relay39-hz2.antispameurope.com (mx-relay39-hz2.antispameurope.com [94.100.136.239])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.40359.1773150123895767939
+Received: from www537.your-server.de (www537.your-server.de [188.40.3.216])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.40471.1773150451784561405
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 10 Mar 2026 06:42:04 -0700
+ Tue, 10 Mar 2026 06:47:32 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=softfail (domain: ew.tq-group.com, ip: 94.100.136.239, mailfrom: prvs=05227c41ac=alexander.feilke@ew.tq-group.com)
-ARC-Authentication-Results: i=1; mx-gate39-hz2.hornetsecurity.com 1;
- spf=softfail reason=mailfrom (ip=94.100.132.6, headerfrom=ew.tq-group.com)
- smtp.mailfrom=ew.tq-group.com smtp.helo=smtp-out02-hz1.hornetsecurity.com;
- dmarc=fail header.from=ew.tq-group.com orig.disposition=quarantine
-ARC-Message-Signature: a=rsa-sha256;
- bh=79jxoX5LYkz6Mx9cHqDXUvVMEx+qyJs7RsHcmkILmPY=; c=relaxed/relaxed;
- d=hornetsecurity.com; h=from:to:date:subject:mime-version:; i=1; s=hse1;
- t=1773148948;
- b=O/WHJ5mWU5iu+UiGc5v/O3+sqimikkoKSlOxocDNSakIIuBj0RBswTJw6u/8rgk+EiPSOBQo
- haN+v4wY/kPgcGaUmV7b8RAFXY8l2m3+Rn8OOUrAYhxASXQ+DxWf80pCbQq3gzG9MEUNR5LQ3RC
- Rg/RE099EM/2qWGNltuvc8Qgd9EhLnMCWC+ILaEMBX1p/eN/Etctt4hbvgVLl1faBMoh98neJEl
- KSbTNPnh+0dZKPdCfhVi2q43JYdPsQXkF4YPXj4j6Fo9GGeqoB42keEtpeNEvGWQ4hUOSQAbS7h
- WOXuPdokN/KJjIJPxD8Cr0UInFCAOAhBouZ84JCpLGp6w==
-ARC-Seal: a=rsa-sha256; cv=none; d=hornetsecurity.com; i=1; s=hse1;
- t=1773148948;
- b=H6FSqB8AhW1diBmkfm5j78cYi69Bbo36h/KmiFhr2Naiu/U3RqcFPCshisVFIXnc4EoWA7+k
- IDi3O8ShbE0JIdfT6oxD0q0FITiY8FDXJ90HSzBbo97mJTEUcoxZBRmD8I7wVz4mIFFeL7SpS6W
- pkCv68oMWZ0gk/OMUkhwL0knL4w0zM0lLCaXlXddp/4drxPw1qI+zQHVX62oc576FIHUycAvt70
- W42gYmmoJFoH+opv6wNI6ugWZdgQau4/PmVJalioiJ5BRpRmGiwdecvwDtpJ85mitn3ix9Ho0IN
- AgBDBpcbbXYrVAIWFcGi62YdlQPYl/47sYdcNB0mseYTA==
-Received: from he-nlb01-hz1.hornetsecurity.com ([94.100.132.6]) by mx-relay39-hz2.antispameurope.com;
- Tue, 10 Mar 2026 14:22:28 +0100
-Received: from FEILKEA-LNX-W.tq-net.de (host-82-135-125-110.customer.m-online.net [82.135.125.110])
-	(Authenticated sender: alexander.feilke@ew.tq-group.com)
-	by smtp-out02-hz1.hornetsecurity.com (Postfix) with ESMTPSA id 2681B5A0B46;
-	Tue, 10 Mar 2026 14:22:23 +0100 (CET)
+ dkim=pass header.i=@ew.tq-group.com header.s=default2602 header.b=qFK7U7nq;
+ spf=pass (domain: ew.tq-group.com, ip: 188.40.3.216, mailfrom: alexander.feilke@ew.tq-group.com)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=ew.tq-group.com; s=default2602; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=79jxoX5LYkz6Mx9cHqDXUvVMEx+qyJs7RsHcmkILmPY=; b=qFK7U7nq0n5xlZLwGAkTM9l0SX
+	bFjLe9csv+DcNnFl64Xzgh6iqIENbwTlc/p3sc9nQKfKKgt9GRbjFFvOMd9GFwa6GmuKrSTFR4HDn
+	cM3VLZ8Vavo1gq44WM0qOLSLCetocEdx9A9S0Bd9tzJURay168NdgoqL9EtBrQWGofEpyy6LCwh3b
+	/cckzwFmGczGPr6//gnn6kLJ2WzLUz8r1KLZv21uKEguA7+VT6oHK6FroyllcOe1xTKkvsaB604bb
+	4/PzBLwKr5c6y8oF3101gr4YQpKAyRZrpVfIZyGR7oP/CsO4WzZAWCMarPoHMl80NxNR0+sK6axCd
+	43F6F7DQ==;
+Received: from sslproxy04.your-server.de ([78.46.152.42])
+	by www537.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <Alexander.Feilke@ew.tq-group.com>)
+	id 1vzxQn-000FZa-0M;
+	Tue, 10 Mar 2026 14:47:29 +0100
+Received: from localhost ([127.0.0.1])
+	by sslproxy04.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <Alexander.Feilke@ew.tq-group.com>)
+	id 1vzxQm-0002pc-2k;
+	Tue, 10 Mar 2026 14:47:28 +0100
 From: "Alexander Feilke" <alexander.feilke@ew.tq-group.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Ross Burton <ross.burton@arm.com>,
 	Richard Purdie <richard.purdie@linuxfoundation.org>,
 	Alexander Feilke <Alexander.Feilke@ew.tq-group.com>
-Subject: [PATCH] fetch2: don't try to preserve all attributes when unpacking files
-Date: Tue, 10 Mar 2026 14:22:15 +0100
-Message-ID: <20260310132215.864868-1-Alexander.Feilke@ew.tq-group.com>
+Subject: [PATCH 1/1] fetch2: don't try to preserve all attributes when unpacking files
+Date: Tue, 10 Mar 2026 14:46:56 +0100
+Message-ID: <20260310134659.882794-2-Alexander.Feilke@ew.tq-group.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260310134659.882794-1-Alexander.Feilke@ew.tq-group.com>
+References: <20260310134659.882794-1-Alexander.Feilke@ew.tq-group.com>
 MIME-Version: 1.0
-X-cloud-security-sender: alexander.feilke@ew.tq-group.com
-X-cloud-security-recipient: bitbake-devel@lists.openembedded.org
-X-cloud-security-crypt: load encryption module
-X-cloud-security-Mailarchiv: E-Mail archived for: alexander.feilke@ew.tq-group.com
-X-cloud-security-Mailarchivtype: outbound
-X-cloud-security-Virusscan: CLEAN
-X-cloud-security-disclaimer: This E-Mail was scanned by E-Mailservice on mx-relay39-hz2.antispameurope.com with 4fVZL73qcYz2Bgg7
-X-cloud-security-connect: he-nlb01-hz1.hornetsecurity.com[94.100.132.6], TLS=1, IP=94.100.132.6
-X-cloud-security-Digest: a262fbdddd33bea01794f485c106e7a6
-X-cloud-security: scantime:1.653
+X-Virus-Scanned: Clear (ClamAV 1.4.3/27936/Tue Mar 10 07:24:39 2026)
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 10 Mar 2026 14:10:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19142
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19143
 
 From: Ross Burton <ross.burton@arm.com>
 
