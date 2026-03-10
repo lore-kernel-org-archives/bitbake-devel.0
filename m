@@ -1,127 +1,97 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E562EB1058
-	for <webhook@archiver.kernel.org>; Tue, 10 Mar 2026 14:10:48 +0000 (UTC)
-Received: from www537.your-server.de (www537.your-server.de [188.40.3.216])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.40471.1773150451784561405
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3077FD88CB
+	for <webhook@archiver.kernel.org>; Tue, 10 Mar 2026 22:56:19 +0000 (UTC)
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.8023.1773183375914525159
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 10 Mar 2026 06:47:32 -0700
+ Tue, 10 Mar 2026 15:56:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@ew.tq-group.com header.s=default2602 header.b=qFK7U7nq;
- spf=pass (domain: ew.tq-group.com, ip: 188.40.3.216, mailfrom: alexander.feilke@ew.tq-group.com)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=ew.tq-group.com; s=default2602; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=79jxoX5LYkz6Mx9cHqDXUvVMEx+qyJs7RsHcmkILmPY=; b=qFK7U7nq0n5xlZLwGAkTM9l0SX
-	bFjLe9csv+DcNnFl64Xzgh6iqIENbwTlc/p3sc9nQKfKKgt9GRbjFFvOMd9GFwa6GmuKrSTFR4HDn
-	cM3VLZ8Vavo1gq44WM0qOLSLCetocEdx9A9S0Bd9tzJURay168NdgoqL9EtBrQWGofEpyy6LCwh3b
-	/cckzwFmGczGPr6//gnn6kLJ2WzLUz8r1KLZv21uKEguA7+VT6oHK6FroyllcOe1xTKkvsaB604bb
-	4/PzBLwKr5c6y8oF3101gr4YQpKAyRZrpVfIZyGR7oP/CsO4WzZAWCMarPoHMl80NxNR0+sK6axCd
-	43F6F7DQ==;
-Received: from sslproxy04.your-server.de ([78.46.152.42])
-	by www537.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <Alexander.Feilke@ew.tq-group.com>)
-	id 1vzxQn-000FZa-0M;
-	Tue, 10 Mar 2026 14:47:29 +0100
-Received: from localhost ([127.0.0.1])
-	by sslproxy04.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <Alexander.Feilke@ew.tq-group.com>)
-	id 1vzxQm-0002pc-2k;
-	Tue, 10 Mar 2026 14:47:28 +0100
-From: "Alexander Feilke" <alexander.feilke@ew.tq-group.com>
+ dkim=pass header.i=@smile.fr header.s=google header.b=FshYjZzM;
+ spf=pass (domain: smile.fr, ip: 209.85.221.47, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-439baf33150so316620f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 10 Mar 2026 15:56:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smile.fr; s=google; t=1773183374; x=1773788174; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DcRnX2X9AoZM3ioWqGPDQQaLHhyIS+oBXnqpJqnRVFQ=;
+        b=FshYjZzM+kvkjndG2shw2SxtVNbkBmxoBw/qxiy229z5pk7iw/sDJC2CIvqOGOAV1L
+         e8T56QuXNn5WrQHRa8v3foBFTLMHbEx3OxUUjosdMdNPwjb8sLRUnKxfEn9AxY6IUxYX
+         MaJmh22YHrc3s0B5MF4ANAqi1pawvxtKP22CM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773183374; x=1773788174;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DcRnX2X9AoZM3ioWqGPDQQaLHhyIS+oBXnqpJqnRVFQ=;
+        b=vvUQCsIwDN63VX2HcSl0KPb4QXGYtufKowB7lONrfkiJQvCoyujCFgxgmZRWVECVKS
+         IqnKyMAK7ZzhjfbM8dqjApjQFBA111G4+FWNbKge5dVO9RD7h2VoFM4fcXOhA2yPOqr/
+         gMxwoET07PC/h1zzD83tOj3ltCU1emg4RlStWGxhlQ5RwhyUCwrdSmd1N7Hx7wd/WGta
+         xShaQ2q0mTPEVxlW0Zu6+Mf4Cj4k9OopOovg93tOnOUTMAJ50pbcbMaSlMfjXaSNQM5+
+         t6Bey5QtJ+uh4T+UNHT9OxR5esw9d6LGrd0+ClczGLh3y4eh5tC3vPyn/+J8Ar5rAqVP
+         tdOA==
+X-Gm-Message-State: AOJu0YzRB1ALwHY2XCXxAC2sqi/q6lCzOgoP0XXxBHlPch6Tcrx+wku8
+	J1JhZ/I3YG4Jfrh77wZ82s36kcOynIMiq6JrOtXYrYYA3rfzUhM1zDumWKEMNi9s2At8Y0ERash
+	q2uMw
+X-Gm-Gg: ATEYQzzxQzInsTUmcDwTE2SpgvScFw9XaF5N4qp1simhMX+WlbjitN0B5OWf0rAcDs1
+	pv/BioOnrHKqKmwgyKNNN1SFFC7w24keCqCQWzutPdhoC26TI2+lJag9SUeXRzBL59H66NsGUz/
+	WC0IQNi0wWQCPIEcqdS1rPSY5r1f9B9Fpd3Hx33LYJ4k48BDN8rnT57LkF0GR1kBCryldOE12Yd
+	h3rH4PFvvQIj5wHdZsqdqY2vBcbq3/KE7E6gC1lYPFYE+CKklNW0n6KNIlJacj/lYm7bMXCtodY
+	sS5JAKmK60YuIuTEwjFg56ps4UlSonjeN06J+drgPoC4018svgc5CFHHcOsa3zfoOPYsEB8BXXG
+	rgJ0Wii1gQPqQo4z9B649nMAC32wa7XGB19Xf1aMi/uKCi9lEGEpFzlXY+IaP2WZsaLSg/uDAsv
+	YXKu1EDAGQuwqk2C6FKczURE/qlQVLWXbD9frh9t2mgcRkT0eocPkpktK5H84GhPylXLUMJaLMg
+	wBgprj7CaBN3GkBp/I+zTXh3msEWO3quNTM8w==
+X-Received: by 2002:a5d:5f82:0:b0:439:bee4:8a93 with SMTP id ffacd0b85a97d-439f8bbd6f7mr758593f8f.12.1773183374024;
+        Tue, 10 Mar 2026 15:56:14 -0700 (PDT)
+Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439f81a0239sm1498473f8f.10.2026.03.10.15.56.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2026 15:56:13 -0700 (PDT)
+From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Cc: Ross Burton <ross.burton@arm.com>,
-	Richard Purdie <richard.purdie@linuxfoundation.org>,
-	Alexander Feilke <Alexander.Feilke@ew.tq-group.com>
-Subject: [PATCH 1/1] fetch2: don't try to preserve all attributes when unpacking files
-Date: Tue, 10 Mar 2026 14:46:56 +0100
-Message-ID: <20260310134659.882794-2-Alexander.Feilke@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260310134659.882794-1-Alexander.Feilke@ew.tq-group.com>
-References: <20260310134659.882794-1-Alexander.Feilke@ew.tq-group.com>
+Cc: Paul Barker <paul@pbarker.dev>
+Subject: [bitbake][scarthgap][2.8][PATCH 0/1] Pull request (cover letter only)
+Date: Tue, 10 Mar 2026 23:55:56 +0100
+Message-ID: <cover.1773183271.git.yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.47.3
 MIME-Version: 1.0
-X-Virus-Scanned: Clear (ClamAV 1.4.3/27936/Tue Mar 10 07:24:39 2026)
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 10 Mar 2026 14:10:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19143
+ <bitbake-devel@lists.openembedded.org>; Tue, 10 Mar 2026 22:56:19 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19144
 
-From: Ross Burton <ross.burton@arm.com>
+Those are the patches from the last patch review:
+https://lore.kernel.org/bitbake-devel/cover.1772924048.git.yoann.congal@smile.fr/T/#t
+(no change during review)
 
-When copying files as part of the unpack we currently use cp -p, which
-is a shortcut for --preserve=mode,ownership,timestamps.
+Passed a-full on autobuilder:
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/3349
+Ignore the warning about Centos Stream9 (it's support is a work in progress)
 
-We do want to preserve timestamps, because some fetchers set these
-explicitly.
+The following changes since commit 10118785e4a670bce4980e1044c0888a8b6e84af:
 
-We don't care about ownership. If the files are owned by us then they
-ill remain owned by us, and if they're not then the attempt to change
-ownership will be silently ignored.  In a shared DL_DIR where files have
-group ownership this group access isn't relevant in the single-user build
-tree.
+  knotty: Make sure getTerminalColumns() returns two integers (2026-02-13 08:48:40 +0000)
 
-We do want to preserve executable bits in the mode, but cp always does
-this.  The difference between --preserve=mode and no --preserve is that
-the mode isn't preserved exactly (no sticky bits, no suid, umask is
-applied) but this also isn't a relevant difference in a build tree.
+are available in the Git repository at:
 
-Also expand the arguments to be clearer about what options are being
-passed.
+  https://git.openembedded.org/bitbake-contrib stable/2.8-next
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.8-next
 
-The impetus for this is that coreutils 9.4 includes a change in gnulib[1]
-and will now try to preserve permission-based xattrs if asked to preserve
-the mode.  This can result in cp failing when copying a file from a
-NFSv4 server with ACLs stored in xattrs to a non-NFS directory where
-those xattrs cannot be written:
+for you to fetch changes up to bebecffef63a3ac60420b5347d549f71b00dc151:
 
-cp: preserving permissions for ‘./jquery-3.7.1.js’: Operation not supported
+  COW: Fix hardcoded magic numbers and work with python 3.13 (2026-03-06 21:15:02 +0100)
 
-The error comes from the kernel refusing to write a system.nfs4_acl
-xattr to a file on ext4.
+----------------------------------------------------------------
 
-This situation doesn't appear on all systems with coreutils 9.4, at the
-time of writing it fails on Ubuntu 24.04 onwards but not Fedora 40. This
-is because /etc/xattr.conf is used to determine which xattrs describe
-permissions, and Fedora 40 has removed the NFSv4 attributes[2].
+Richard Purdie (1):
+  COW: Fix hardcoded magic numbers and work with python 3.13
 
-Also, use long-form options to make the cp command clearer.
-
-[1] https://github.com/coreutils/gnulib/commit/eb6a8a4dfb
-[2] https://src.fedoraproject.org/rpms/attr/blob/rawhide/f/0003-attr-2.4.48-xattr-conf-nfs4-acls.patch
-
-[ YOCTO #15596 ]
-
-Signed-off-by: Ross Burton <ross.burton@arm.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 2f35dac0c821ab231459922ed98e1b2cc599ca9a)
-Signed-off-by: Alexander Feilke <Alexander.Feilke@ew.tq-group.com>
----
- lib/bb/fetch2/__init__.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 7b75d5d83..224408de0 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1606,7 +1606,7 @@ class FetchMethod(object):
-                     if urlpath.find("/") != -1:
-                         destdir = urlpath.rsplit("/", 1)[0] + '/'
-                         bb.utils.mkdirhier("%s/%s" % (unpackdir, destdir))
--                cmd = 'cp -fpPRH "%s" "%s"' % (file, destdir)
-+                cmd = 'cp --force --preserve=timestamps --no-dereference --recursive -H "%s" "%s"' % (file, destdir)
-         else:
-             urldata.unpack_tracer.unpack("archive-extract", unpackdir)
- 
--- 
-2.43.0
+ lib/bb/COW.py | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 
