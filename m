@@ -1,188 +1,160 @@
-Return-Path: <pierre-loup.gosse@smile.fr>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FCBFED2FB
-	for <webhook@archiver.kernel.org>; Thu, 12 Mar 2026 09:57:55 +0000 (UTC)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.17774.1773309467116360611
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DF7105A58C
+	for <webhook@archiver.kernel.org>; Thu, 12 Mar 2026 11:34:09 +0000 (UTC)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.19155.1773315243915941207
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 12 Mar 2026 02:57:47 -0700
+ Thu, 12 Mar 2026 04:34:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=3PtY/5Ou;
- spf=pass (domain: smile.fr, ip: 209.85.167.48, mailfrom: pierre-loup.gosse@smile.fr)
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-59de8155501so873813e87.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 12 Mar 2026 02:57:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773309465; cv=none;
-        d=google.com; s=arc-20240605;
-        b=ZnKIWQFig748GHSj15C5/eJnMbUMnbafdFNBVEIoD23wva6IRNJBEwTvu3+7T4RKQ4
-         iTX/ezKvVvan4HoBXZwsQO9kHeI86Hhz7fwclz+yfOEg8Dtc2qwdMceUlRzw/kw2O+Q1
-         pTztkuDPUjT+qL+fCL6SsM8cYyyfm/rth869PMMiPcFSU7kNtJjPid4kjaH/J1vEniIp
-         3WlRE40uwseXcPQ/78dvEmcqokPwaudZkAwAy7I+ReaLK3xCY945+Ui4HhHFTc63kk0b
-         GCUWvMTY6TNZbwbPO+RHc4FexvxH/PCnvUVVd031NUfBo4vtsxb0ExxHRiCvaxHejfDP
-         swNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=S9bvwES+JdkYOfDzcYw8ZNM+/XaqtBUZeq6YafW/OTc=;
-        fh=mDpvvBKTylZqe907qYZ2WV5PmbYApZx9Yq0Zo6x98DY=;
-        b=a7VzpgoSy1umOW729Y4nBOZqp0UI5VWo9KQqH/MSpgHuqdruXzjTJZacB11u7zUoe7
-         yZr5DApJhUKtx7PI3FD5sSFTVejNnp8juP7LuA0Faa2NnMQjA9tEAmMHeMxFO0LnD1pp
-         86q4rhRWgYT/8eBmXPmIJNkUKs3gnVSOH8/KFgqHpVUK4xrfEgFK9H9qvzx5X+uXzflV
-         Tg2mnVjBxAabEo5VS2+C6DR0lWJjYJSp4MXtDfh73YVjsrV66P+ozSfzKC555dtdemaJ
-         97Uu6CmX3LmQstRYN9W8kj5ZoB5Gu0kzhUef9/GKeB/afUXEIIHFaXAqT/2GElMDIKRr
-         qjfw==;
-        darn=lists.openembedded.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fnLtCL49;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.50, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4852e9ca034so8774945e9.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 12 Mar 2026 04:34:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1773309465; x=1773914265; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=S9bvwES+JdkYOfDzcYw8ZNM+/XaqtBUZeq6YafW/OTc=;
-        b=3PtY/5Ou3/P1Fx6Vmhp/LzsNdESKY+wGt5PSig80flU0DvIArgliCBtXxmtdQ0HUu3
-         oeE6z8Qk6Wxr1ZbsUue9vQS1htPIQO7EHJHLj8T6zPnbezubQt+iqk4muE7muDCG9t2D
-         +04CQsaG9PSvFHZtxfFY6177yE0cE9hvrcR2o=
+        d=linuxfoundation.org; s=google; t=1773315242; x=1773920042; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FAOnkanBa7lgItfJCp/PPNCAfZETKl7JRNcbqjfj6GM=;
+        b=fnLtCL49RHphmEokjoOWegyVnK+FOKtk55nUmblYLbIndmL7O2hYxlzYwh+6iJe427
+         kE2V/nvTU9Ke+gaQLcKDQYMfefZWC2FiB7yUVP0Dq0uCrcEgSTj0rN9Q4+WVvAXfEl3s
+         ABr/y4Lbb8aYF1nIfGxpOQ3d7dUo6Nv919KK4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773309465; x=1773914265;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S9bvwES+JdkYOfDzcYw8ZNM+/XaqtBUZeq6YafW/OTc=;
-        b=gQgBFWLxT/ciRWXgtSOoOO6Q7+GR6Y6EcBwLYEsw15ap6ZzK/LFgBhrjXk0xKwTVzf
-         lAvFwp6e63MwPcGr1BFVKANMkk8lgT7iIkdQfnRbBNktULozTiMuDgM2eKvJX7Vf2VVs
-         SQtB9PoyXoVu5mLNyo01ibE/yn7F6Zmuwzd6tFKJbjLFZPgSu1CX3/LaWs0ECj0T8MUd
-         xON6TXha0kkWd1iJKeLHyXaB+mCq6ID3GSMSRenAuf1ZYFC2RcEO68Ogwl5Hbu6CmdDR
-         951yvL0bLnl3gzeulndXtsJjrttFhZ2HKWa01mGkoArxLKNlDWhuvqy1PNyzlM0u3b0R
-         ubEw==
-X-Gm-Message-State: AOJu0YxdKObIzBe92v3YYyo4b8s9SDKrnYXcc3/4mfwRwCmrYp2ygBgt
-	gHXLVQR2IKe/jnJZGpUWBKEan7No+BCqsfRQreXpcoxGvw7GcEbE8iC7PZFXT3B5FueARa5/NO9
-	rwpyBtbBSE9y/yHayD5Rj8HCyWOx9E1dgyuTf6bRq7g==
-X-Gm-Gg: ATEYQzzg2hHGmvzKtROnEUG0zSXHBS6RVyhy+p27z3YOzAe8tvHCF7xL0ibUvsQCfa0
-	BPXtGM+CWtYxhq/hZuyYCe6GEwNF+LWB92mLywUeBBuYOGHsU/Lx5my7l+jQ0ih8nhGkDMAUT3b
-	UcUQb9jI8AuEvMmvICBLhzJTvezoGEUmAwGOpUZM0e5FXBj91axfu1//+T3X59yZNMX0gAREaaD
-	rTyZy2Qk4tN8V/frrepHRHA0YzlZ52ZzZAgHH/lOpfouQlAYQe54a+6YdtcMOAnUd2yJsxWAeAP
-	SA2ROIJFGBLEVXejn7PgYtY43XzEx4Z/XWHbGcLYesB8gEzsW2gqW33uxgEvmvoQ5p1KcDw=
-X-Received: by 2002:a05:6512:61d4:20b0:5a1:3400:f937 with SMTP id
- 2adb3069b0e04-5a156bb35ebmr1643563e87.7.1773309464652; Thu, 12 Mar 2026
- 02:57:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1773315242; x=1773920042;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FAOnkanBa7lgItfJCp/PPNCAfZETKl7JRNcbqjfj6GM=;
+        b=MroGxLwVuP1bB5fgqJvgxaH2rSl3zLOaMMCPmetYvEgXil6Du0/oup9ecpqgZV30OV
+         Ob8OsAtu1Ea3s250Gpgq11jP194cwmaDnHmHYGYLXjoBUVLR70Qw76iXehCsig/paD3W
+         X8hBbZUpQ4iJu3dCmnxec133B2woGfNqPL3mFjEAVvZTRG3e4j7UVQhB7KzMk09FjAI6
+         SYur5oyPNtQAChS+FMWBz+zeQ74z0EOMbQlOuilvIxsZJA2yC3tNlowGSl6TW1kRdYJw
+         POTc4R6/q0bXfO0aXlQYMyNfJzNZ6EcnBvvZTZEjjoLjKN2k8LqEuwujbtmmLAnaFizx
+         gf4g==
+X-Forwarded-Encrypted: i=1; AJvYcCWgucyrrmP5d9hC0OtMyWwVC1a5FGgSQyMvyo0oFUeOoc/k9xJr2Gy3ApVT7sUKbZwUNGPa4Yq+/k3RkxdW@lists.openembedded.org
+X-Gm-Message-State: AOJu0Ywb8V/iPs6BMz6DXVC2Uo9HflTUFCDXhB37+yuZODA5w11RZJ6w
+	05LOECcLx/eYT4kl/mupH/gSRVCZxXHzrAQ6L/YbaYTCf9YeZOpKbBxF0LhDpiEsl4o=
+X-Gm-Gg: ATEYQzxguG+q5dwyPLoftT/TjWXsI3qK5kTQusiG5o7L7jx6O42YcFOJDHHPF4+GmFW
+	g/qamasP4DMT9XNPxb/CkJhYPblpY/F/DV6UGNKvas6b6o6N2qRZdO/YMJJ6MLojQa9AyXTYl7l
+	eFvVEbmz8CmfDE7bqOZshse1BaI/DbtKllGyPAS+SJvwpobqkdebrr+3hDYDm3dHQvLRyP3/GAF
+	X0BnZn1U9B76psMQK8H7sz0TeMVRuG5/IShPXyUQl974Zai13VylOm0WD55zEmrUa/+1SoN0GHd
+	AHMkFSET0Za/rQRn/FlfJFO4Nb2tooKTwthRhpVygyLIdSufz50neHw6KFYOnyAAqySoG8kUzLg
+	UPDyya9y25FY9dcTjSKQ/7jsKz1JEULjAZrjfqKbrMSRXhuftpJChZmpaRyquS8EknANMZbdKl1
+	8QVeuJ8sZWV9AOCw4pfqhhaLQOaMUX8omlIodiJpemCNIgHjGTzkMcEQtVx2m7CoJK6B3iwq5lm
+	C3SLLFNCYPx
+X-Received: by 2002:a05:600c:3551:b0:485:2f6a:6ed with SMTP id 5b1f17b1804b1-4854b10cf6amr105212705e9.28.1773315242146;
+        Thu, 12 Mar 2026 04:34:02 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:215f:5162:d0b:8f1d? ([2001:8b0:aba:5f3c:215f:5162:d0b:8f1d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4854e2537c3sm108685325e9.15.2026.03.12.04.34.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2026 04:34:01 -0700 (PDT)
+Message-ID: <e5911b86ad67a0341afa4e811fcb7dede1c8c9eb.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH v2 0/4] fetch2: add alternative fetch
+ method based on curl
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: pascal.eberhard@gmail.com, bitbake-devel@lists.openembedded.org
+Cc: Pascal Eberhard <pascal.eberhard@se.com>
+Date: Thu, 12 Mar 2026 11:34:00 +0000
+In-Reply-To: <20260310-add_alt_fetch_method_curl-v2-0-4789639b28f1@se.com>
+References: <20260310-add_alt_fetch_method_curl-v2-0-4789639b28f1@se.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0-1ubuntu0.1 
 MIME-Version: 1.0
-References: <20260311131917.2203296-1-pierre-loup.gosse@smile.fr>
- <fc5468c04fc393f098ffeb1ea37c4332587ddd59.camel@linuxfoundation.org> <146381.1773306543289644043@lists.openembedded.org>
-In-Reply-To: <146381.1773306543289644043@lists.openembedded.org>
-From: Pierre-loup GOSSE <pierre-loup.gosse@smile.fr>
-Date: Thu, 12 Mar 2026 10:57:33 +0100
-X-Gm-Features: AaiRm532T6qulb_-bH-uFi8QAq_xB1To5xNoFxrmSalTorpFM4jYjBW8cBoGQ28
-Message-ID: <CAHT-cZtiwNVxLSzUb5NaQFixQicYVHKuoTMv-5US8LVU+T0ETw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 1/1] utils: add is_enabled function
-To: michalwsieron@gmail.com, richard.purdie@linuxfoundation.org
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000b7bc34064cd0c8d7"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 12 Mar 2026 09:57:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19149
+ <bitbake-devel@lists.openembedded.org>; Thu, 12 Mar 2026 11:34:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19150
 
---000000000000b7bc34064cd0c8d7
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Pascal,
 
-Hi,
+On Tue, 2026-03-10 at 00:29 +0100, Pascal Eberhard via B4 Relay via lists.o=
+penembedded.org wrote:
+> wget fetch method is used for web downloads with http, https, ftp, ftps
+> protocols. wget cmdline tool is missing some features such as hostname
+> resolution by the proxy when using SOCKS5 proxy. SSH tunnel provides
+> this feature for example.
+>=20
+> This curl fetch method is based on curl cmdline tool and provides the
+> same protocols as wget and supports SOCKS5 hostname resolution.
+> This class inherits wget method in order to avoid code duplication as
+> much as possible.
+>=20
+> wget remains the default download method. curl fetch method can be
+> enabled by setting a new bitbake variable:
+> =C2=A0 BB_FETCH_METHOD_HTTP =3D "curl"
+>=20
+> The hostname resolution by SOCKS5 proxy is activated by setting
+> environment variable:
+> =C2=A0 all_proxy=3D"socks5h://...""
+>=20
+> a patch on ce-core will be sent if this proposal is accepted to
+> conditionnaly add curl to HOSTTOOLS variable in meta/conf/bitbake.conf:
+> HOSTTOOLS +=3D "${@bb.utils.contains('BB_FETCH_METHOD_HTTP', 'curl', 'cur=
+l','', d)}"
+>=20
+> Signed-off-by: Pascal Eberhard <pascal.eberhard@se.com>
+> ---
+> Changes in v2:
+> - removed type hint unions and tested with Python 3.9, thanks Mathieu
+> =C2=A0 Dubois-Briand for reporting this.
+> - curl tests are now skipped when curl cmdline tool is not found.
+> - Link to v1: https://lore.kernel.org/r/20260305-add_alt_fetch_method_cur=
+l-v1-0-0d0220e5fa59@se.com
 
-Isn't this identical to `oe.utils.vartrue()` anyway?
+We discussed this today a bit on the review call and we're all very
+nervous about this change.
 
+One of our guiding principles is not to have multiple ways of doing the
+same thing. The reason is simple, so that we don't end up with two semi
+functional things instead of one good one. Adding this "curl" mode to
+the fetcher creates this scenario where one thing works for some and
+the other works for everyone else. We'd then have to document when to
+use one, when to use the other and potentially which functionalities
+work in each different case.
 
-I missed that, yes it is. Thanks. I mistakenly focused only on the bitbake
-lib.
+The fetcher changes don't appear to change everything, they look like
+you changed just enough to get your use cases to work.
 
-Richard, I can use to_boolean, but given Michal's comment, is the function
-still necessary in the bitbake lib if it already exists in the OE lib?
+The "wget" fetcher is already a hybrid where it uses wget for some
+things and urllib for others. It does do that consistently though,
+always using wget for certain operations and urllib for the status
+tests.
 
-Regards,
+We're not wedded to using wget, what we do want to do is provide a
+strong stable and single API to enable fetching of http/https urls.
 
-Pierre-Loup
+Given this, adding in the switch isn't an approach the project wants to
+take. Equally, we've used wget reliably for a long time and it is the
+thing we know. Swapping it for something else isn't something we'd
+undertake lightly either. There are likely things that wget does better
+than curl too for example. There are also factors like documentation to
+consider if we were to switch to curl, our prerequisites would need
+updating for all the distros, our autobuilder workers would need to be
+reconfigured and so on.
 
+I think we therefore need to have a wider discussion about how to move
+forward here and work out what the best solution would be to aim for
+long term, then come up with a plan to get there.
 
-On Thu, Mar 12, 2026 at 10:09=E2=80=AFAM Michal Sieron via lists.openembedd=
-ed.org
-<michalwsieron=3Dgmail.com@lists.openembedded.org> wrote:
+I'm conscious the LTS/feature freeze is looming but this isn't the kind
+of change we can rush in before then unfortunately, we are simply too
+late for that.
 
-> Isn't this identical to `oe.utils.vartrue()` anyway?
->
-> ```
-> def vartrue(var, iftrue, iffalse, d):
->     import oe.types
->     if oe.types.boolean(d.getVar(var)):
->         return iftrue
->     else:
->         return iffalse
-> ```
->
-> Br,
-> Michal
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Liens: Vous recevez tous les messages envoy=C3=A9s =C3=A0 ce groupe.
-> Voir/R=C3=A9pondre en ligne (#19148):
-> https://lists.openembedded.org/g/bitbake-devel/message/19148
-> Sujets: https://lists.openembedded.org/mt/118259802/9955716
-> Propri=C3=A9taire du groupe: bitbake-devel+owner@lists.openembedded.org
-> Se d=C3=A9sabonner: https://lists.openembedded.org/g/bitbake-devel/unsub =
-[
-> pierre-loup.gosse@smile.fr]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
+I'm also really aware of the limited bandwidth many of us have to
+contribute to discussions like this. I personally find that really
+frustrating as I want to try and help but there simply aren't enough
+hours in the day :/.
 
---000000000000b7bc34064cd0c8d7
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+So whilst I appreciate this isn't the answer you wanted to hear, I
+don't think we can take these changes right now and we need to find a
+different way to help you solve your issue.
 
-<div dir=3D"ltr"><div dir=3D"ltr"><div>Hi,<br><br><blockquote class=3D"gmai=
-l_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,20=
-4,204);padding-left:1ex">Isn&#39;t this identical to `oe.utils.vartrue()` a=
-nyway?</blockquote></div><div><br>I missed that, yes it is. Thanks. I mista=
-kenly focused only on the bitbake lib.<br><br>Richard,
- I can use to_boolean, but given Michal&#39;s comment, is the function stil=
-l
- necessary in the bitbake lib if it already exists in the OE lib?<br><br>Re=
-gards,<br><br>Pierre-Loup</div><br></div><br><div class=3D"gmail_quote gmai=
-l_quote_container"><div dir=3D"ltr" class=3D"gmail_attr">On Thu, Mar 12, 20=
-26 at 10:09=E2=80=AFAM Michal Sieron via <a href=3D"http://lists.openembedd=
-ed.org">lists.openembedded.org</a> &lt;michalwsieron=3D<a href=3D"mailto:gm=
-ail.com@lists.openembedded.org">gmail.com@lists.openembedded.org</a>&gt; wr=
-ote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px=
- 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><div>Isn&#3=
-9;t this identical to `oe.utils.vartrue()` anyway?</div>
-<div>=C2=A0</div>
-<div>```</div>
-<div>def vartrue(var, iftrue, iffalse, d):<br>=C2=A0 =C2=A0 import oe.types=
-<br>=C2=A0 =C2=A0 if oe.types.boolean(d.getVar(var)):<br>=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 return iftrue<br>=C2=A0 =C2=A0 else:<br>=C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 return iffalse</div>
-<div>```</div>
-<div>=C2=A0</div>
-<div>Br,</div>
-<div>Michal</div>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Liens: Vous recevez tous les messages envoy=C3=A9s =C3=A0 ce groupe.<br>
-Voir/R=C3=A9pondre en ligne (#19148): <a href=3D"https://lists.openembedded=
-.org/g/bitbake-devel/message/19148" rel=3D"noreferrer" target=3D"_blank">ht=
-tps://lists.openembedded.org/g/bitbake-devel/message/19148</a><br>
-Sujets: <a href=3D"https://lists.openembedded.org/mt/118259802/9955716" rel=
-=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt/1182598=
-02/9955716</a><br>
-Propri=C3=A9taire du groupe: <a href=3D"mailto:bitbake-devel%2Bowner@lists.=
-openembedded.org" target=3D"_blank">bitbake-devel+owner@lists.openembedded.=
-org</a><br>
-Se d=C3=A9sabonner: <a href=3D"https://lists.openembedded.org/g/bitbake-dev=
-el/unsub" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.o=
-rg/g/bitbake-devel/unsub</a> [<a href=3D"mailto:pierre-loup.gosse@smile.fr"=
- target=3D"_blank">pierre-loup.gosse@smile.fr</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div></div>
+Cheers,
 
---000000000000b7bc34064cd0c8d7--
+Richard
 
