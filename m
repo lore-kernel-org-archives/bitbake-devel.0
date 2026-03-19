@@ -1,237 +1,279 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441A4107529F
-	for <webhook@archiver.kernel.org>; Thu, 19 Mar 2026 12:28:39 +0000 (UTC)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.9788.1773923316234886645
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112B4109190A
+	for <webhook@archiver.kernel.org>; Thu, 19 Mar 2026 18:18:44 +0000 (UTC)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.2931.1773944314549996803
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 19 Mar 2026 05:28:36 -0700
+ Thu, 19 Mar 2026 11:18:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Yx+Hj2jW;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.49, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4852e9ca034so7842005e9.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 19 Mar 2026 05:28:35 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=kIgpq5gA;
+ spf=pass (domain: gmail.com, ip: 209.85.128.45, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-486fd27754bso4964395e9.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 19 Mar 2026 11:18:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1773923314; x=1774528114; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yk029to6cIlv8D3f0zDt272H11k9cJlzce37OGoLNH0=;
-        b=Yx+Hj2jWI9MHO/D5OibCWHPe19t43cyYfxkDuTrW6jo+VRIdR3rT/pyldwAbgOm5QB
-         LgP/5rC/KsfowYAsyjbfOjQOAJIqtVTQ89e/suEeURLCEqNjjbLCshO/sZh043d4AzN5
-         8P1fjM8d0vTljzsgNFuHFOc27Hbn7LcwEv45g=
+        d=gmail.com; s=20230601; t=1773944313; x=1774549113; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CgBhB2NpIhu9PLBioIjGjKeWx+1rA7wMhC8G1ww2Tcc=;
+        b=kIgpq5gAW4baavFm9buxIClGlv4Ue3yDWXHtkWHiBZeVxr/tNVvcJU4LdM60jNZvZB
+         Mc+FXRj0bLbF7Y5MT2KCPdFa5Nqqyt8NCiJ0IXF+bHFLoByc3r4GVfX/boRJIRhuAOVn
+         Kjhw9TU/p6Ij9s3RT+acc+op3w8f1BHr3aCZ7yTv4dbYyqvBMA4TUtUS1HyVnLwFfFLE
+         l2BebvvPHMkArvJ3k2233zwCluu1FgiG7gxF11/M6HPrjdB3b8NE0ie+PE8PuSpOuIRd
+         Sxe6hCmc/d0GVv1E5pwB1ABroA+UsYto/ktCQkCnD5RdZ23wBnJ5r9ojN7KMk0S0CEkW
+         BHdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773923314; x=1774528114;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yk029to6cIlv8D3f0zDt272H11k9cJlzce37OGoLNH0=;
-        b=nVekIibGfdve6gSASj8xF/GcgtBxdiUlted6yaAzK18JdIJ79K3nkeFB1RQqunvq4w
-         023zLZ0Q2G76O4xfCMQe63pYGrrhjBsbd4uL582J1+hIg97BLFrhSGRVlCm7xMmUwfFq
-         7bFl4c2vPK3Ho5Gv1txjUcgQZEne5sPhI1YsqPQuiWoj6StrLVBorhJ5mm4mAMSff5uA
-         gaLArlcP32mtQClwgGGajTN8pcjGZSQHBHiky13jAzGTqfc3I6as5UlZTlttNWDC/+TO
-         jf5tgKaH/DtPg5AXjOPG8snSwwG5+jMZTtJMtd4NczxnhWBIOjZ2ykJbfan4nLVK1kKH
-         TgYA==
-X-Gm-Message-State: AOJu0YyR6f53cw1RhztL5QoJNbSdvK6wuKUzZIkvoWJraFHVLcGUKmks
-	BBx0QsWlg6x3yucTT4yn9an92zXXdf3rKHwS5gcczQbq7NT11Jg+08DyoC9WPH/VzD4EmRF8jwl
-	B6/nKDxQ=
-X-Gm-Gg: ATEYQzw5lqncalhJ4ZZ+uYj9ZzGHN020/zEQ7A4MBOMEMLGaMllzBS8qZbZ+RqcHF6G
-	MSCXmfnkrNl+6Vqqew+XZxq4WQOSDAUsMOzQDmEkqW+vd6rk92UCdVcasAYtty+RhenZIMXkwp4
-	DWvixCgx/VPrpF8WPXzvqPQ/Tp4/uZ9t9BIfTKyqHduN0nILpvTwl50xJKaLYr46nuAU6DGfTk0
-	WJjBfkiah3PJttRyul28dWs3O1PLyF1xmxGLlUKAdxQkQGFP445EfPidW34j0tnmR4HAtgsW8X5
-	T/FSX44i/fhvFUJhVmJemojiwjyUeShFjGczSPRpVPR/g0Jq80xefXlIlEa8CIsjHzYTCFp/vcE
-	QN0sQfAmi3ZXTLjS7QSw6tKmnXICbyePfbI7/tpvfbcIWL4CxVOrLAJF+8kIbZJdu09Lnnznbrw
-	P8rND5tJv7oYiw1cfhoa/eVli0Rqc0YYw6lK9/e59lkuT0nD89zBDYM7KoTDde/Q==
-X-Received: by 2002:a05:600c:1d0b:b0:485:45fb:3472 with SMTP id 5b1f17b1804b1-486f441bacdmr120114205e9.7.1773923313941;
-        Thu, 19 Mar 2026 05:28:33 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:ff93:3918:cd96:9fb9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486f8ba4baesm91419815e9.13.2026.03.19.05.28.32
-        for <bitbake-devel@lists.openembedded.org>
+        d=1e100.net; s=20251104; t=1773944313; x=1774549113;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CgBhB2NpIhu9PLBioIjGjKeWx+1rA7wMhC8G1ww2Tcc=;
+        b=suSjw7FjOjN9xw2QR8pti1NpvyusOqv5cPj3Ox7AxGZoMirwKqCwIJNuHNxD7ln8dk
+         JRZndlZpGAJNkqlrL5lXu6W1tHxovTw2gUfffxjGWaUWfnoC8eOw1qUy0dKJnJXgKstm
+         LntcUV0EMzmHcIVWNFrwSLOWvG1RWqPUSq91uIyz127nM/2vFLAOJKMW4xWCgf/EOpuG
+         rZcoacbjtTEhFv1H6E49e59pPgblQAIA+hIEqbocsuSb3yfhVmz8Z1qy4BHjWvEqqKAU
+         zzZqDMjVrVHoL61V6hANBSkj08+NzHyuLOFwvEuUS8DYiZThb4UUJO19Xp45gt7uxQeY
+         jyTQ==
+X-Gm-Message-State: AOJu0YwmD4SowuDM5pLr/Cr8dF1swhO4TjVw55ZohpRVSn8cvMeq4HFu
+	zxHRtY9GQpJT0jMKrG28KpNn8Xjc2mU4fEVIgxdFPNQLBbIxBLS1xbkbQ6lqTQ==
+X-Gm-Gg: ATEYQzyVpZL8QWQJ2Szp4KTXF22jDG0/Qfd1odgQSWmSphtk4BhBOr9SaD1j6jQttoo
+	wPWWr44lK8TuT6dAD5t9D1UGgnaJ7h3l6h2Vut1zLMbU/R890cALOWWtstDVA6DTOUtTSNalIn3
+	WiwX4qB9X6+/W+W8sDO0D9z/urrUhNsnqT51d/IV2zNy6PbSyXFnMhNE9gCWdkve7VDO7/1uSAl
+	iLnhZzcV7JmDASOyfqfDDDan4Tdsd0OFapsBO5Uhse/Cbet3/lnyNTxzFL/ItAZYJrWbyekXv5Q
+	BBluzUJ5YTdb4y1fcjhHyBznhYq1NtS10B+ppHMrs3IgR9kO/6K8gJZuPZ5WVIJStJhZeofFGT+
+	56BAHLkQSVXCnLzdYhErcteYe/xswaibZMAr96cpyEzg6vOC715IyQCidxmsiWe/VzotshkOpwT
+	7/gdfOfF5W8lGBWHNFOp+XswPq9yGR1FUR4JwXxbowqNLxQx7ytAAm/h98RUM=
+X-Received: by 2002:a05:600c:8b0a:b0:47e:e57d:404 with SMTP id 5b1f17b1804b1-486fee0f917mr1420975e9.16.1773944312630;
+        Thu, 19 Mar 2026 11:18:32 -0700 (PDT)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486f8ba4a74sm82794005e9.12.2026.03.19.11.18.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 05:28:33 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Thu, 19 Mar 2026 11:18:32 -0700 (PDT)
+From: Alexander Kanavin <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] fetch/git: Add an 'update' unpack mode to the fetchers (git only for now)
-Date: Thu, 19 Mar 2026 12:28:32 +0000
-Message-ID: <20260319122832.2607446-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.48.1
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH] bitbake-setup: use non-destructive 'update' mode of the git fetcher
+Date: Thu, 19 Mar 2026 19:18:29 +0100
+Message-ID: <20260319181829.2818648-1-alex.kanavin@gmail.com>
+X-Mailer: git-send-email 2.47.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 19 Mar 2026 12:28:39 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19172
+ <bitbake-devel@lists.openembedded.org>; Thu, 19 Mar 2026 18:18:44 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19173
 
-We need a way to allow the git fetcher to update data in place rather
-than remove and replace. This change adds an unpack_update() function
-which can be used in place of the usual unpack() call. This will attempt
-to rebase changes on top of the upstream changes. It will raise an error
-if any local uncommitted changes are present.
+From: Alexander Kanavin <alex@linutronix.de>
 
-The implementation adds a "dldir" origin to the list of origins in the git
-repo which we can then fetch from and update against. This origin may be
-of use to users accessing the git repo outside the fetcher too.
+This allows removing the git hook that prohibited making commits
+in repositories under layers/, significantly improving user experience.
 
-unpack_update() should never delete existing data in the way unpack() does
-but can error out in many more different ways due to the number of possible
-input states.
+bitbake-setup logic is adjusted to account for these situations:
 
-Currently only git is supported.
+- if a git checkout is being replaced with a local symlink,
+that checkout is moved to a backup location, regardless of whether
+it has local changes or not
+- if a git checkout has uncommited changes, the 'update' mode is
+going to fail. Bitbake-setup anticipates this, and stashes these
+changes, with a warning.
 
-The intention is for this to use used by bitbake-setup instead of unpack.
+The tests are modified so that:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+- the check for layer backups is run earlier, and check that
+backups happen when they're supposed to (which should be just once).
+
+- the test that previously checked that local commits are rejected
+is adjusted to check that such a commit is accepted, and layer
+is updated from remote without creating a backup directory.
+
+- a test is added to force a rebase conflict on update, and
+check that it indeed happens. We can think of better ways
+to handle rebase conflicts in bitbake-setup later on; right now
+it simply stops at that point.
+
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- lib/bb/fetch2/__init__.py | 13 ++++++++--
- lib/bb/fetch2/git.py      | 51 +++++++++++++++++++++++++++++++++++----
- 2 files changed, 57 insertions(+), 7 deletions(-)
+ aaaa                  |  0
+ bin/bitbake-setup     | 42 ++++++++----------------------------------
+ lib/bb/tests/setup.py | 42 +++++++++++++++++++++++++++---------------
+ 3 files changed, 35 insertions(+), 49 deletions(-)
+ create mode 100644 aaaa
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index aaefd860204..909ae98146e 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1634,6 +1634,9 @@ class FetchMethod(object):
+diff --git a/aaaa b/aaaa
+new file mode 100644
+index 000000000..e69de29bb
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index ca4461b1e..a446efbd9 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -191,38 +191,10 @@ def checkout_layers(layers, confdir, layerdir, d):
+         logger.plain("Making a symbolic link {} pointing to {}".format(dst, src))
+         os.symlink(src, dst)
  
-         return
+-    def _has_local_modifications(r_name, r_path):
+-        fixed_revisions = json.load(open(os.path.join(confdir, "sources-fixed-revisions.json")))
+-
+-        if not r_name in fixed_revisions['sources']:
+-            logger.warning("""Source {} is added with path {}.
+-This path already exists, but it has no entry in a fixed revisions
+-record. To ensure possible local modifications are not lost, it will
+-be preserved in a backup directory.""".format(r_name, r_path))
+-            return True
+-
+-        rev = fixed_revisions['sources'][r_name]['git-remote']['rev']
++    def _has_uncommitted_changes(r_path):
+         status = bb.process.run('git -C {} status --porcelain'.format(r_path))[0]
+         if status:
+             return True
+-        diff = bb.process.run('git -C {} diff {} {}'.format(r_path, get_diff_color_param(), rev))[0]
+-        if diff:
+-            return True
+-        return False
+-
+-    def _restrict_commits(r_name, r_path):
+-        hook_path = os.path.join(r_path, '.git', 'hooks', 'pre-commit')
+-        restrict_hook = """#!/bin/sh
+-echo "This repository is managed by bitbake-setup, and making commits is restricted.
+-If you wish to make local modifications, clone it separately, and re-initialize using
+-bitbake-setup init -L {} /path/to/repo/checkout"
+-exit 1
+-""".format(r_name)
+-        with open(hook_path, 'w') as f:
+-            f.write(restrict_hook)
+-        import stat
+-        st = os.stat(hook_path)
+-        os.chmod(hook_path, st.st_mode | stat.S_IEXEC)
  
-+    def unpack_update(self, urldata, rootdir, data):
-+        raise RuntimeError("No method available for this url type: %s" % urldata.type)
+     layers_fixed_revisions = copy.deepcopy(layers)
+     repodirs = []
+@@ -242,19 +214,21 @@ exit 1
+         if os.path.lexists(repodir_path):
+             if os.path.islink(repodir_path):
+                 os.remove(repodir_path)
+-            elif _has_local_modifications(r_name, repodir_path):
++            elif r_local:
+                 backup_path = add_unique_timestamp_to_path(repodir_path + '-backup')
+                 logger.warning("""Source {} in {} contains local modifications. Renaming to {} to preserve them.
+ For local development work it is recommended to clone the needed layers separately and re-initialize using -L option:
+ bitbake-setup init -L {} /path/to/repo/checkout""".format(
+                     r_name, repodir_path, backup_path, r_name))
+                 os.rename(repodir_path, backup_path)
+-            else:
+-                shutil.rmtree(repodir_path)
++            elif _has_uncommitted_changes(repodir_path):
++                logger.warning("""Source {} in {} contains uncommitted changes. They will be saved using 'git stash',
++to allow rebasing onto latest commits""".format(r_name, repodir_path))
++                bb.process.run("git -C {} add .".format(repodir_path))
++                bb.process.run("git -C {} stash".format(repodir_path))
+ 
+         if r_remote:
+             _checkout_git_remote(r_remote, repodir, layers_fixed_revisions)
+-            _restrict_commits(r_name, repodir_path)
+         if r_local:
+             _symlink_local(os.path.expanduser(r_local["path"]), repodir_path)
+ 
+@@ -830,7 +804,7 @@ def do_fetch(fetcher, dir):
+         oldstdout = sys.stdout
+         sys.stdout = f
+         fetcher.download()
+-        fetcher.unpack(dir)
++        fetcher.unpack_update(dir)
+         sys.stdout = oldstdout
+ 
+ def update_registry(registry, cachedir, d):
+diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
+index e3557d8f3..a66f05b36 100644
+--- a/lib/bb/tests/setup.py
++++ b/lib/bb/tests/setup.py
+@@ -447,16 +447,27 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+             self.assertEqual(self.testrepopath, os.path.realpath(custom_layer_path))
+             self.config_is_unchanged(custom_setup_path)
+ 
++        def _check_layer_backups(layer_path, expected_backups):
++            files = os.listdir(layer_path)
++            backups = len([f for f in files if 'backup' in f])
++            self.assertEqual(backups, expected_backups, msg = "Expected {} layer backups, got {}, directory listing: {}".format(expected_backups, backups, files))
 +
-     def clean(self, urldata, d):
-         """
-         Clean any existing full or partial download
-@@ -1990,7 +1993,7 @@ class Fetch(object):
-             if not ret:
-                 raise FetchError("URL doesn't work", u)
+         # Change the configuration to refer to a local source, then to another local source, then back to a git remote
+         # Run status/update after each change and verify that nothing breaks
++        # Also check that layer backups happen when expected
+         c = 'gadget'
+         setuppath = self.get_setup_path('test-config-1', c)
+         self.config_is_unchanged(setuppath)
  
--    def unpack(self, root, urls=None):
-+    def unpack(self, root, urls=None, update=False):
-         """
-         Unpack urls to root
-         """
-@@ -2009,7 +2012,10 @@ class Fetch(object):
-                     lf = bb.utils.lockfile(ud.lockfile)
- 
-                 unpack_tracer.start_url(u)
--                ud.method.unpack(ud, root, self.d)
-+                if update:
-+                    ud.method.unpack_update(ud, root, self.d)
-+                else:
-+                    ud.method.unpack(ud, root, self.d)
-                 unpack_tracer.finish_url(u)
- 
-             finally:
-@@ -2018,6 +2024,9 @@ class Fetch(object):
- 
-         unpack_tracer.complete()
- 
-+    def unpack_update(self, root, urls=None):
-+        self.unpack(root, urls, update=True)
++        layers_path = os.path.join(setuppath, 'layers')
++        layer_path = os.path.join(layers_path, 'test-repo')
++        _check_layer_backups(layers_path, 0)
 +
-     def clean(self, urls=None):
-         """
-         Clean files that the fetcher gets or places
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 738174cd104..1de70c5757a 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -656,7 +656,10 @@ class Git(FetchMethod):
-         # The url is local ud.clonedir, set it to upstream one
-         runfetchcmd("%s remote set-url origin %s" % (ud.basecmd, shlex.quote(repourl)), d, workdir=dest)
+         json_1 = self.add_local_json_config_to_registry('test-config-1.conf.json', self.testrepopath)
+         os.environ['BBPATH'] = os.path.join(setuppath, 'build')
+         out = self.runbbsetup("update --update-bb-conf='yes'")
+         _check_local_sources(setuppath)
++        _check_layer_backups(layers_path, 1)
  
--    def unpack(self, ud, destdir, d):
-+    def unpack_update(self, ud, destdir, d):
-+        return self.unpack(ud, destdir, d, update=True)
+         prev_path = self.testrepopath
+         self.testrepopath = prev_path + "-2"
+@@ -465,23 +476,14 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+         os.environ['BBPATH'] = os.path.join(setuppath, 'build')
+         out = self.runbbsetup("update --update-bb-conf='yes'")
+         _check_local_sources(setuppath)
++        _check_layer_backups(layers_path, 1)
+ 
+         self.testrepopath = prev_path
+         json_1 = self.add_json_config_to_registry('test-config-1.conf.json', branch, branch)
+         os.environ['BBPATH'] = os.path.join(setuppath, 'build')
+         out = self.runbbsetup("update --update-bb-conf='yes'")
+         self.check_setupdir_files(setuppath, test_file_content)
+-
+-        # Also check that there are no layer backups up to this point, then make a change that should
+-        # result in a layer backup, and check that it does happen.
+-        def _check_layer_backups(layer_path, expected_backups):
+-            files = os.listdir(layer_path)
+-            backups = len([f for f in files if 'backup' in f])
+-            self.assertEqual(backups, expected_backups, msg = "Expected {} layer backups, got {}, directory listing: {}".format(expected_backups, backups, files))
+-
+-        layers_path = os.path.join(setuppath, 'layers')
+-        layer_path = os.path.join(layers_path, 'test-repo')
+-        _check_layer_backups(layers_path, 0)
++        _check_layer_backups(layers_path, 1)
+ 
+         ## edit a file without making a commit
+         with open(os.path.join(layer_path, 'local-modification'), 'w') as f:
+@@ -492,16 +494,26 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+         out = self.runbbsetup("update --update-bb-conf='yes'")
+         _check_layer_backups(layers_path, 1)
+ 
+-        ## edit a file and try to make a commit; this should be rejected
++        ## edit a file and make a commit such that no rebase conflicts occur
+         with open(os.path.join(layer_path, 'local-modification'), 'w') as f:
+             f.write('locally-modified-again\n')
+         self.git('add .', cwd=layer_path)
+-        with self.assertRaisesRegex(bb.process.ExecutionError, "making commits is restricted"):
+-            self.git('commit -m "Adding a local modification"', cwd=layer_path)
++        self.git('commit -m "Adding a local modification"', cwd=layer_path)
+         test_file_content = "modified-again-and-again\n"
+         self.add_file_to_testrepo('test-file', test_file_content)
+         out = self.runbbsetup("update --update-bb-conf='yes'")
+-        _check_layer_backups(layers_path, 2)
++        _check_layer_backups(layers_path, 1)
 +
-+    def unpack(self, ud, destdir, d, update=False):
-         """ unpack the downloaded src to destdir"""
++        ## edit a file and make a commit in a way that causes a rebase conflict
++        with open(os.path.join(layer_path, 'test-file'), 'w') as f:
++            f.write('locally-modified\n')
++        self.git('add .', cwd=layer_path)
++        self.git('commit -m "Adding a local modification"', cwd=layer_path)
++        test_file_content = "remotely-modified\n"
++        self.add_file_to_testrepo('test-file', test_file_content)
++        with self.assertRaisesRegex(bb.process.ExecutionError, "Merge conflict in test-file"):
++            out = self.runbbsetup("update --update-bb-conf='yes'")
++        _check_layer_backups(layers_path, 1)
  
-         subdir = ud.parm.get("subdir")
-@@ -680,7 +683,7 @@ class Git(FetchMethod):
- 
-         destsuffix = ud.parm.get("destsuffix", def_destsuffix)
-         destdir = ud.destdir = os.path.join(destdir, destsuffix)
--        if os.path.exists(destdir):
-+        if os.path.exists(destdir) and not update:
-             bb.utils.prunedir(destdir)
-         if not ud.bareclone:
-             ud.unpack_tracer.unpack("git", destdir)
-@@ -691,11 +694,15 @@ class Git(FetchMethod):
-             ud.basecmd = "GIT_LFS_SKIP_SMUDGE=1 " + ud.basecmd
- 
-         source_found = False
-+        update_mode = False
-         source_error = []
- 
-         clonedir_is_up_to_date = not self.clonedir_need_update(ud, d)
-         if clonedir_is_up_to_date:
--            runfetchcmd("%s clone %s %s/ %s" % (ud.basecmd, ud.cloneflags, ud.clonedir, destdir), d)
-+            if update and os.path.exists(destdir):
-+                update_mode = True
-+            else:
-+                runfetchcmd("%s clone %s %s/ %s" % (ud.basecmd, ud.cloneflags, ud.clonedir, destdir), d)
-             source_found = True
-         else:
-             source_error.append("clone directory not available or not up to date: " + ud.clonedir)
-@@ -703,8 +710,11 @@ class Git(FetchMethod):
-         if not source_found:
-             if ud.shallow:
-                 if os.path.exists(ud.fullshallow):
--                    bb.utils.mkdirhier(destdir)
--                    runfetchcmd("tar -xzf %s" % ud.fullshallow, d, workdir=destdir)
-+                    if update and os.path.exists(destdir):
-+                        update_mode = True
-+                    else:
-+                        bb.utils.mkdirhier(destdir)
-+                        runfetchcmd("tar -xzf %s" % ud.fullshallow, d, workdir=destdir)
-                     source_found = True
-                 else:
-                     source_error.append("shallow clone not available: " + ud.fullshallow)
-@@ -714,6 +724,32 @@ class Git(FetchMethod):
-         if not source_found:
-             raise bb.fetch2.UnpackError("No up to date source found: " + "; ".join(source_error), ud.url)
- 
-+        if update_mode:
-+            if ud.shallow:
-+                bb.fetch2.UnpackError("Can't update shallow clones checkouts without network access, not supported.", ud.url)
-+
-+            output = runfetchcmd("%s status --porcelain" % (ud.basecmd), d, workdir=destdir)
-+            if output:
-+                raise bb.fetch2.UnpackError("Repository at %s has uncommitted changes, unable to update:\n%s" % (destdir, output), ud.url)
-+
-+            # Set up remote for the download location if it doesn't exist
-+            try:
-+                runfetchcmd("%s remote get-url dldir" % (ud.basecmd), d, workdir=destdir)
-+            except bb.fetch2.FetchError:
-+                if ud.clonedir:
-+                    runfetchcmd("%s remote add dldir file://%s" % (ud.basecmd, ud.clonedir), d, workdir=destdir)
-+            try:
-+                runfetchcmd("%s fetch dldir" % (ud.basecmd), d, workdir=destdir)
-+                runfetchcmd("%s rebase --no-autosquash --no-autostash %s" % (ud.basecmd, ud.revision), d, workdir=destdir)
-+            except bb.fetch2.FetchError as e:
-+                # If rebase failed, abort it
-+                try:
-+                    runfetchcmd("%s rebase --abort" % (ud.basecmd), d, workdir=destdir)
-+                except Exception:
-+                    pass
-+                raise bb.fetch2.UnpackError("Failed to update checkout in place: %s" % str(e), ud.url)
-+            return True
-+
-         # If there is a tag parameter in the url and we also have a fixed srcrev, check the tag
-         # matches the revision
-         if 'tag' in ud.parm and sha1_re.match(ud.revision):
-@@ -729,6 +765,11 @@ class Git(FetchMethod):
- 
-         repourl = self._get_repo_url(ud)
-         runfetchcmd("%s remote set-url origin %s" % (ud.basecmd, shlex.quote(repourl)), d, workdir=destdir)
-+        if ud.clonedir:
-+            try:
-+                runfetchcmd("%s remote get-url dldir" % (ud.basecmd), d, workdir=destdir)
-+            except bb.fetch2.FetchError:
-+                runfetchcmd("%s remote add dldir file://%s" % (ud.basecmd, ud.clonedir), d, workdir=destdir)
- 
-         if self._contains_lfs(ud, d, destdir):
-             if not need_lfs:
+         # check source overrides, local sources provided with symlinks, and custom setup dir name
+         source_override_content = """
+-- 
+2.47.3
+
 
