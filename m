@@ -1,202 +1,237 @@
-Return-Path: <peter.kjellerstedt@axis.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7CB1088E6C
-	for <webhook@archiver.kernel.org>; Thu, 19 Mar 2026 03:04:11 +0000 (UTC)
-Received: from AM0PR83CU005.outbound.protection.outlook.com (AM0PR83CU005.outbound.protection.outlook.com [52.101.69.35])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.3048.1773889444425557019
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 441A4107529F
+	for <webhook@archiver.kernel.org>; Thu, 19 Mar 2026 12:28:39 +0000 (UTC)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.9788.1773923316234886645
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 18 Mar 2026 20:04:04 -0700
+ Thu, 19 Mar 2026 05:28:36 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@axis.com header.s=selector1 header.b=W1f6ZBSL;
- spf=pass (domain: axis.com, ip: 52.101.69.35, mailfrom: peter.kjellerstedt@axis.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UqrEJxMlMYoGfyx2o3y2wCepcITuupCrT1kZUhoDCUaYQzCD2Im/xCJB1KCbZwZcfZgnSM1ZeE5VYPq4PaaFYeXPSaeyhENBZHvVipvsRo4ID6Ain7n6F762maLdpmxuX1Kk6eGi+ziMHoQ6DYdknw9vub5eWgAIeb+m/IhycHPxXHAlP7Ue3boPBw1v0IRHULDIkipIAXFMvmD5lzC4OD6kow71Q6nTjRvgieiRQnMpCuhyUfk4crmq6zFVNbK/A1JnWuLOiquNDM4VPA1iHh8N2kESUt7VtoFiMN7ezqT3zjQeiC6zaxDbNi5joUHTpvgqSGg68HI3pOmTlIK0zw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7kQpjLlE3o1L2P4uRyIUYRug1KLOXuRZeB8dRN04s+w=;
- b=a8s3+MsCjF6MY/2IHf9P0+RJeAKJWNhow+jO8ah8hKw20qmRUGyXKtzJTV1S7I0RSJ0Drs66gLqFrRIf3O5spSE8ZejPvcZDNTnrX9gNq4ZJl28pkrA/yhkGlqP35wEdALzJb7/TNL4obE7NrX9KLqtZGF152h1dinRFlfGHJ7Awazmm85izh0dl9FSdEvrYL6YKPaT8NC7NTmw9dxsYVquijvAJ5ob2L2Ci4MmnSRjJuDHYYphxMnHVuc4EpQdZGHoeVAr32c3jnMWnI8nl/nrqgm3DJIqCcYT+tE5wIS1wz6cGLQ8/kdLRIlAwYXRxRHJxLSYefBfLZ1MF2AUcpA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
- dkim=pass header.d=axis.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7kQpjLlE3o1L2P4uRyIUYRug1KLOXuRZeB8dRN04s+w=;
- b=W1f6ZBSL7kXJcvPLWmLX32gG/7heOTG3tsj7jd2qqAYJHKaxucj3aJgk9EVLIbPMoIbPD5Lj1V/A1biVUi9Rxi/vn9hSlnCy109vz0SwZvs8rWB09xpV5/IzCK0r4xlhAlyO6uJijnl09AKH8TYUzWnaGHht0KTxEgeh47fMiiI=
-Received: from DB5PR02MB10213.eurprd02.prod.outlook.com (2603:10a6:10:4a8::17)
- by AS2PR02MB10314.eurprd02.prod.outlook.com (2603:10a6:20b:62f::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.18; Thu, 19 Mar
- 2026 03:04:00 +0000
-Received: from DB5PR02MB10213.eurprd02.prod.outlook.com
- ([fe80::e5b6:b9a8:2a5d:e0cd]) by DB5PR02MB10213.eurprd02.prod.outlook.com
- ([fe80::e5b6:b9a8:2a5d:e0cd%5]) with mapi id 15.20.9723.018; Thu, 19 Mar 2026
- 03:04:00 +0000
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: RE: [bitbake-devel] [meta-oe][PATCH] liboauth2: Backport a patch to
- build with glibc 2.43
-Thread-Topic: [bitbake-devel] [meta-oe][PATCH] liboauth2: Backport a patch to
- build with glibc 2.43
-Thread-Index: AQHct0r/myIpCwkX6ke33NtvFWDk3bW1K3Fg
-Date: Thu, 19 Mar 2026 03:04:00 +0000
-Message-ID: 
- <DB5PR02MB1021324A07FE6D266942933A4EF4FA@DB5PR02MB10213.eurprd02.prod.outlook.com>
-References: <189E1E3E0D3BF4AB.2964266@lists.openembedded.org>
-In-Reply-To: <189E1E3E0D3BF4AB.2964266@lists.openembedded.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axis.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DB5PR02MB10213:EE_|AS2PR02MB10314:EE_
-x-ms-office365-filtering-correlation-id: 0a524f0a-04fd-49b0-88e3-08de85642b7d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230040|1800799024|376014|366016|38070700021|22082099003|18002099003|56012099003|7053199007;
-x-microsoft-antispam-message-info: 
- uIbIfT09UlX9PF38EHiWggA9t0oF50/7t+KWFaURdkfa8ToMdXZ4BmMjMBHNJWkS7TR+HUw1HDpeJAsq/GcBXns/STL2RWnpRsFXrLwoshKbFwtjyZvc8Ibg3iZO69WG7G8H4CBmFCAe7I4GwXANO2sH+qpiS7clrAoimm8EUUG+IStf1XZ8oUigyUfo6dxIsqscuVJR+ZW5W52uLQP4UKyGaA15kEA+UUxzjqi9zgEYXKCSvZg+5SRdjAjYqnDEP8K3hi7+/8rCCGnbOAu4+eCJyGN2EX60NH9GFXu6NHCT+a22Q2r2rm1BjZZaSFR6z/grBAu+FJT1dsIA8wJy/2q/Nyndkuq8aUtmMlsPrioCh5o+fqWkk9NmksekfqeV1RGR7dYcKBKIzr+ynjS8InVr3umU4sM0ohVHheqoddMopF9kFCNwDFkUk9Wf+/nHbFb/dIAXSmqvx4YaAT7EkSuXo3Bt1taxyrKUB7GcPgKSmAokATP0Ey26/BJKPx0ixgIqzMMmmiUrKu7qSiJWzxzUTeOPA1WxUxO9IctXgm7mdaOIhAhzVk4YEw4+c/SsrqEGOiefV1pMoU53ZMa1bmLTJuKN4UCHLSrWXLPdMY1jwcOuqvUvIU75CYFWrnS6g03Na9f9rqxuXEldCSSZjd5psOYzy2wLoOLW6B2LmHrU6S8VZAdP70jM1RfeR1hD/WgiSTSH1KyoEYHhIhMx7Y6SqMGWp13PIRUKcSuUkVpU1qiScphJ5TH7hxai8CWI4re4Mbj6UpVAhHR17+Cv8HTZQJtTKCmBcEb+32zICVM=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB5PR02MB10213.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700021)(22082099003)(18002099003)(56012099003)(7053199007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?A3l1ZeDqA+3PxtEShQYVqSPkXGZPCgvLnNUIgnExgwEJ57LiX0E7TIpt3wSa?=
- =?us-ascii?Q?kT3gTPLNBusS8SIIY6K1C4OrKx6J8SKWK5EKLGbnmafHQ92cXpfX8hR0aH+M?=
- =?us-ascii?Q?zYjBOQlj6gtEABAjUUi+42s0zv2S2y7n/WhCscHQpGcGKVQd9iGaLe/648eq?=
- =?us-ascii?Q?he6C1O9adaNbQfj2sRucLZHX2dxep2YjEaaY2VvAcCYe/KOXS2xkrzTxumNY?=
- =?us-ascii?Q?XuoDex0xZ/Fo5ccKnYw23zW/tzF4IJSoq/uLZ53POW+CQONAatefDcJrbiCm?=
- =?us-ascii?Q?q+WnV2tXy3LZZIVlzSMRIf1ZoMh2DIclL54rxC4Edxmt1ssrNnRec9fSiq1n?=
- =?us-ascii?Q?xwaRS0n0mYzzHWYKRDv5S2DzUODinMyFZ7KYgRwtrw1MetgetFMvjTLkBOlI?=
- =?us-ascii?Q?rGgoKIx6ZeO5FOIC77UPgqXvSunPC3hfao/GGfR848Rxe7tfLETMHjOQTXj7?=
- =?us-ascii?Q?wcrQgMDpo9eqI/7f0Ad9xHkScjWOtUtkwYRaotjQgwVOczFtinS+PL50TAV9?=
- =?us-ascii?Q?ctY+A4Ehh9pAujtaA1AegitLG7bRsvwb6NjuUbEbObspTBsGcnKwPX1Z5gVt?=
- =?us-ascii?Q?UwNINAUmOA6FXdiSjXk0OVCEAnEq+mME75jS11XxKcaC0SqTjLPSOOaAHNxj?=
- =?us-ascii?Q?YzPV1D1OyQHBlUHr2DTU89Jdb3H0ayYnejigsTY7vRxQbPRlGO1lrDhHPi0v?=
- =?us-ascii?Q?6++yMiQY4EVCamrXcwCQ2pXSn43k8AYY81nqQ+BLDScEFxq6bLbDmuz1MrNL?=
- =?us-ascii?Q?FuZoG0gTdEMqNNn8nhfdeMHJ1xpqW+F6zPnLyV1Al1KiIGpHfVQ28C3QP+UM?=
- =?us-ascii?Q?AbdfWpA2ZOLGwBO3RlpddbO21P6sFuuxkls7ibA6g9dNeWMvYUb7ewSsGDj8?=
- =?us-ascii?Q?A+3ECm28nK1FjSnDRpSENSYSxTIR+NyEWhKS5R+9mS3mIGLfphmS/LRNQ7MH?=
- =?us-ascii?Q?yEM7DIHHrzOEYFdYi/E4WOEdvwXY5SWNo4QoeFOaRJ+tHXDp1fHAMUr4+wGr?=
- =?us-ascii?Q?YxK82IQqqumFZx/fCCRPIcajGDsPeNoUkqnBA9U07uMifazNCvlhLxtTxQEu?=
- =?us-ascii?Q?9IwpnISY2XC55T39xUWJ24Q41/WYyeSeLoAnvTFetyw6ax+oq4bb1pbazeZp?=
- =?us-ascii?Q?bhQMEzTfmUUMiIOvMVxepPCy2AWew5plkGFa8zY4UUwLNFq/LyNA3PIxRYe7?=
- =?us-ascii?Q?8zpU5Pe1jm/4429p1xgjlhNCqAQqe7zh6oPFhnUKnAc+ky5OzJACEhrGHSF8?=
- =?us-ascii?Q?azEfqOozoUHMX2BDwiu7gBlxMnYeIR5ctVa7jnDbwZxXz61VhQapKnjkrAl0?=
- =?us-ascii?Q?6RGgU/VGHlkV/nTertUbkEOOP1NVTxRjWHe2xOv/U7dFeeGb2NIwmeP39ajY?=
- =?us-ascii?Q?FerNzErZk8YOhdmLqTw2+Jf99drc4jPzOt2rLNccXtKAlLtTB/9er2FqWIUm?=
- =?us-ascii?Q?XV5fkFmOJJFJbl3jFEWensm+6JAaNVUXSvNt+2GB3/Tgv25AJ1JMA6YTq97D?=
- =?us-ascii?Q?HbV4XChl27Ww0tHHXILOqyMqlmOKdkixizEH+BFftTo2yHhIwN3uLrBy2CPY?=
- =?us-ascii?Q?oz2+p08IVz8Ds7blV+lroSYDIjr1HxGWcd11XlPoOINhCh0qOWAR4BirGS03?=
- =?us-ascii?Q?tjSsphORzrTACGBHQ8sAPFSkktbS8T5lGG/rj9t7TiyMV5KUCHa7SuWAqQl4?=
- =?us-ascii?Q?shcLDGL1WnvLSbWrHEuGODZVImM=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Yx+Hj2jW;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.49, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4852e9ca034so7842005e9.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 19 Mar 2026 05:28:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1773923314; x=1774528114; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yk029to6cIlv8D3f0zDt272H11k9cJlzce37OGoLNH0=;
+        b=Yx+Hj2jWI9MHO/D5OibCWHPe19t43cyYfxkDuTrW6jo+VRIdR3rT/pyldwAbgOm5QB
+         LgP/5rC/KsfowYAsyjbfOjQOAJIqtVTQ89e/suEeURLCEqNjjbLCshO/sZh043d4AzN5
+         8P1fjM8d0vTljzsgNFuHFOc27Hbn7LcwEv45g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773923314; x=1774528114;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yk029to6cIlv8D3f0zDt272H11k9cJlzce37OGoLNH0=;
+        b=nVekIibGfdve6gSASj8xF/GcgtBxdiUlted6yaAzK18JdIJ79K3nkeFB1RQqunvq4w
+         023zLZ0Q2G76O4xfCMQe63pYGrrhjBsbd4uL582J1+hIg97BLFrhSGRVlCm7xMmUwfFq
+         7bFl4c2vPK3Ho5Gv1txjUcgQZEne5sPhI1YsqPQuiWoj6StrLVBorhJ5mm4mAMSff5uA
+         gaLArlcP32mtQClwgGGajTN8pcjGZSQHBHiky13jAzGTqfc3I6as5UlZTlttNWDC/+TO
+         jf5tgKaH/DtPg5AXjOPG8snSwwG5+jMZTtJMtd4NczxnhWBIOjZ2ykJbfan4nLVK1kKH
+         TgYA==
+X-Gm-Message-State: AOJu0YyR6f53cw1RhztL5QoJNbSdvK6wuKUzZIkvoWJraFHVLcGUKmks
+	BBx0QsWlg6x3yucTT4yn9an92zXXdf3rKHwS5gcczQbq7NT11Jg+08DyoC9WPH/VzD4EmRF8jwl
+	B6/nKDxQ=
+X-Gm-Gg: ATEYQzw5lqncalhJ4ZZ+uYj9ZzGHN020/zEQ7A4MBOMEMLGaMllzBS8qZbZ+RqcHF6G
+	MSCXmfnkrNl+6Vqqew+XZxq4WQOSDAUsMOzQDmEkqW+vd6rk92UCdVcasAYtty+RhenZIMXkwp4
+	DWvixCgx/VPrpF8WPXzvqPQ/Tp4/uZ9t9BIfTKyqHduN0nILpvTwl50xJKaLYr46nuAU6DGfTk0
+	WJjBfkiah3PJttRyul28dWs3O1PLyF1xmxGLlUKAdxQkQGFP445EfPidW34j0tnmR4HAtgsW8X5
+	T/FSX44i/fhvFUJhVmJemojiwjyUeShFjGczSPRpVPR/g0Jq80xefXlIlEa8CIsjHzYTCFp/vcE
+	QN0sQfAmi3ZXTLjS7QSw6tKmnXICbyePfbI7/tpvfbcIWL4CxVOrLAJF+8kIbZJdu09Lnnznbrw
+	P8rND5tJv7oYiw1cfhoa/eVli0Rqc0YYw6lK9/e59lkuT0nD89zBDYM7KoTDde/Q==
+X-Received: by 2002:a05:600c:1d0b:b0:485:45fb:3472 with SMTP id 5b1f17b1804b1-486f441bacdmr120114205e9.7.1773923313941;
+        Thu, 19 Mar 2026 05:28:33 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:ff93:3918:cd96:9fb9])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486f8ba4baesm91419815e9.13.2026.03.19.05.28.32
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2026 05:28:33 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] fetch/git: Add an 'update' unpack mode to the fetchers (git only for now)
+Date: Thu, 19 Mar 2026 12:28:32 +0000
+Message-ID: <20260319122832.2607446-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.48.1
 MIME-Version: 1.0
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB5PR02MB10213.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a524f0a-04fd-49b0-88e3-08de85642b7d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2026 03:04:00.6016
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pkh1OR/5tddUQ3kBAyZIhs2HSIgHObO/anuGi71NXjFe3+3CcRVQXm61ICwO0Vza
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR02MB10314
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 19 Mar 2026 03:04:11 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19171
+ <bitbake-devel@lists.openembedded.org>; Thu, 19 Mar 2026 12:28:39 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19172
 
-Please ignore. Wrong list.
+We need a way to allow the git fetcher to update data in place rather
+than remove and replace. This change adds an unpack_update() function
+which can be used in place of the usual unpack() call. This will attempt
+to rebase changes on top of the upstream changes. It will raise an error
+if any local uncommitted changes are present.
 
-//Peter
+The implementation adds a "dldir" origin to the list of origins in the git
+repo which we can then fetch from and update against. This origin may be
+of use to users accessing the git repo outside the fetcher too.
 
-> -----Original Message-----
-> From: bitbake-devel@lists.openembedded.org <bitbake-
-> devel@lists.openembedded.org> On Behalf Of Peter Kjellerstedt via
-> lists.openembedded.org
-> Sent: den 19 mars 2026 03:49
-> To: bitbake-devel@lists.openembedded.org
-> Subject: [bitbake-devel] [meta-oe][PATCH] liboauth2: Backport a patch to
-> build with glibc 2.43
->=20
-> Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-> ---
->  .../0002-Fix-use-of-strchr-with-new-GCC.patch | 33 +++++++++++++++++++
->  .../liboauth2/liboauth2_2.2.0.bb              |  1 +
->  2 files changed, 34 insertions(+)
->  create mode 100644 meta-oe/recipes-support/liboauth2/liboauth2/0002-Fix-
-> use-of-strchr-with-new-GCC.patch
->=20
-> diff --git a/meta-oe/recipes-support/liboauth2/liboauth2/0002-Fix-use-of-
-> strchr-with-new-GCC.patch b/meta-oe/recipes-
-> support/liboauth2/liboauth2/0002-Fix-use-of-strchr-with-new-GCC.patch
-> new file mode 100644
-> index 0000000000..65340e806a
-> --- /dev/null
-> +++ b/meta-oe/recipes-support/liboauth2/liboauth2/0002-Fix-use-of-strchr-
-> with-new-GCC.patch
-> @@ -0,0 +1,33 @@
-> +From 0dcba079907d559550ee8d9a201d26203bb8aebd Mon Sep 17 00:00:00 2001
-> +From: Alexander Bokovoy <abokovoy@redhat.com>
-> +Date: Wed, 7 Jan 2026 11:41:37 +0200
-> +Subject: [PATCH] Fix use of strchr with new GCC
-> +
-> +According to C specification, 7.28.5.1, strchr() is a generic function
-> +and its string argument's type is promoted to the result. So if it is
-> +const char*, the result will be const char* as well.
-> +
-> +gcc in Fedora Rawhide (15.2.1 20251111 or later) implements this
-> +conformance, resulting in a compilation fail with
-> +-Werror=3Ddiscarded-qualifiers.
-> +
-> +Signed-off-by: Alexander Bokovoy <abokovoy@redhat.com>
-> +Upstream-Status: Backport
-> [https://github.com/OpenIDC/liboauth2/commit/0dcba079907d559550ee8d9a201d=
-2
-> 6203bb8aebd]
-> +Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-> +---
-> + src/jose.c | 2 +-
-> + 1 file changed, 1 insertion(+), 1 deletion(-)
-> +
-> +diff --git a/src/jose.c b/src/jose.c
-> +index fbaf661..a3441c8 100644
-> +--- a/src/jose.c
-> ++++ b/src/jose.c
-> +@@ -993,7 +993,7 @@ char *oauth2_jose_jwt_header_peek(oauth2_log_t *log,
-> + {
-> + 	char *input =3D NULL, *result =3D NULL;
-> + 	json_t *json =3D NULL;
-> +-	char *p =3D NULL;
-> ++	const char *p =3D NULL;
-> + 	size_t result_len;
-> + 	char *rv =3D NULL;
-> +
-> diff --git a/meta-oe/recipes-support/liboauth2/liboauth2_2.2.0.bb b/meta-
-> oe/recipes-support/liboauth2/liboauth2_2.2.0.bb
-> index 31d7aec69d..244cd51a2c 100644
-> --- a/meta-oe/recipes-support/liboauth2/liboauth2_2.2.0.bb
-> +++ b/meta-oe/recipes-support/liboauth2/liboauth2_2.2.0.bb
-> @@ -6,6 +6,7 @@ LIC_FILES_CHKSUM =3D
-> "file://LICENSE;md5=3D2ee41112a44fe7014dce33e26468ba93"
->  SRC_URI =3D " \
->=20
-> git://github.com/OpenIDC/liboauth2;protocol=3Dhttps;branch=3Dmaster;tag=
-=3Dv${PV}
-> \
->      file://0001-fix-clang-curl_easy_setopt-takes-a-long-not-an-int.patch
-> \
-> +    file://0002-Fix-use-of-strchr-with-new-GCC.patch \
->      "
->=20
->  PV =3D "2.2.0"
+unpack_update() should never delete existing data in the way unpack() does
+but can error out in many more different ways due to the number of possible
+input states.
+
+Currently only git is supported.
+
+The intention is for this to use used by bitbake-setup instead of unpack.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/fetch2/__init__.py | 13 ++++++++--
+ lib/bb/fetch2/git.py      | 51 +++++++++++++++++++++++++++++++++++----
+ 2 files changed, 57 insertions(+), 7 deletions(-)
+
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index aaefd860204..909ae98146e 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1634,6 +1634,9 @@ class FetchMethod(object):
+ 
+         return
+ 
++    def unpack_update(self, urldata, rootdir, data):
++        raise RuntimeError("No method available for this url type: %s" % urldata.type)
++
+     def clean(self, urldata, d):
+         """
+         Clean any existing full or partial download
+@@ -1990,7 +1993,7 @@ class Fetch(object):
+             if not ret:
+                 raise FetchError("URL doesn't work", u)
+ 
+-    def unpack(self, root, urls=None):
++    def unpack(self, root, urls=None, update=False):
+         """
+         Unpack urls to root
+         """
+@@ -2009,7 +2012,10 @@ class Fetch(object):
+                     lf = bb.utils.lockfile(ud.lockfile)
+ 
+                 unpack_tracer.start_url(u)
+-                ud.method.unpack(ud, root, self.d)
++                if update:
++                    ud.method.unpack_update(ud, root, self.d)
++                else:
++                    ud.method.unpack(ud, root, self.d)
+                 unpack_tracer.finish_url(u)
+ 
+             finally:
+@@ -2018,6 +2024,9 @@ class Fetch(object):
+ 
+         unpack_tracer.complete()
+ 
++    def unpack_update(self, root, urls=None):
++        self.unpack(root, urls, update=True)
++
+     def clean(self, urls=None):
+         """
+         Clean files that the fetcher gets or places
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 738174cd104..1de70c5757a 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -656,7 +656,10 @@ class Git(FetchMethod):
+         # The url is local ud.clonedir, set it to upstream one
+         runfetchcmd("%s remote set-url origin %s" % (ud.basecmd, shlex.quote(repourl)), d, workdir=dest)
+ 
+-    def unpack(self, ud, destdir, d):
++    def unpack_update(self, ud, destdir, d):
++        return self.unpack(ud, destdir, d, update=True)
++
++    def unpack(self, ud, destdir, d, update=False):
+         """ unpack the downloaded src to destdir"""
+ 
+         subdir = ud.parm.get("subdir")
+@@ -680,7 +683,7 @@ class Git(FetchMethod):
+ 
+         destsuffix = ud.parm.get("destsuffix", def_destsuffix)
+         destdir = ud.destdir = os.path.join(destdir, destsuffix)
+-        if os.path.exists(destdir):
++        if os.path.exists(destdir) and not update:
+             bb.utils.prunedir(destdir)
+         if not ud.bareclone:
+             ud.unpack_tracer.unpack("git", destdir)
+@@ -691,11 +694,15 @@ class Git(FetchMethod):
+             ud.basecmd = "GIT_LFS_SKIP_SMUDGE=1 " + ud.basecmd
+ 
+         source_found = False
++        update_mode = False
+         source_error = []
+ 
+         clonedir_is_up_to_date = not self.clonedir_need_update(ud, d)
+         if clonedir_is_up_to_date:
+-            runfetchcmd("%s clone %s %s/ %s" % (ud.basecmd, ud.cloneflags, ud.clonedir, destdir), d)
++            if update and os.path.exists(destdir):
++                update_mode = True
++            else:
++                runfetchcmd("%s clone %s %s/ %s" % (ud.basecmd, ud.cloneflags, ud.clonedir, destdir), d)
+             source_found = True
+         else:
+             source_error.append("clone directory not available or not up to date: " + ud.clonedir)
+@@ -703,8 +710,11 @@ class Git(FetchMethod):
+         if not source_found:
+             if ud.shallow:
+                 if os.path.exists(ud.fullshallow):
+-                    bb.utils.mkdirhier(destdir)
+-                    runfetchcmd("tar -xzf %s" % ud.fullshallow, d, workdir=destdir)
++                    if update and os.path.exists(destdir):
++                        update_mode = True
++                    else:
++                        bb.utils.mkdirhier(destdir)
++                        runfetchcmd("tar -xzf %s" % ud.fullshallow, d, workdir=destdir)
+                     source_found = True
+                 else:
+                     source_error.append("shallow clone not available: " + ud.fullshallow)
+@@ -714,6 +724,32 @@ class Git(FetchMethod):
+         if not source_found:
+             raise bb.fetch2.UnpackError("No up to date source found: " + "; ".join(source_error), ud.url)
+ 
++        if update_mode:
++            if ud.shallow:
++                bb.fetch2.UnpackError("Can't update shallow clones checkouts without network access, not supported.", ud.url)
++
++            output = runfetchcmd("%s status --porcelain" % (ud.basecmd), d, workdir=destdir)
++            if output:
++                raise bb.fetch2.UnpackError("Repository at %s has uncommitted changes, unable to update:\n%s" % (destdir, output), ud.url)
++
++            # Set up remote for the download location if it doesn't exist
++            try:
++                runfetchcmd("%s remote get-url dldir" % (ud.basecmd), d, workdir=destdir)
++            except bb.fetch2.FetchError:
++                if ud.clonedir:
++                    runfetchcmd("%s remote add dldir file://%s" % (ud.basecmd, ud.clonedir), d, workdir=destdir)
++            try:
++                runfetchcmd("%s fetch dldir" % (ud.basecmd), d, workdir=destdir)
++                runfetchcmd("%s rebase --no-autosquash --no-autostash %s" % (ud.basecmd, ud.revision), d, workdir=destdir)
++            except bb.fetch2.FetchError as e:
++                # If rebase failed, abort it
++                try:
++                    runfetchcmd("%s rebase --abort" % (ud.basecmd), d, workdir=destdir)
++                except Exception:
++                    pass
++                raise bb.fetch2.UnpackError("Failed to update checkout in place: %s" % str(e), ud.url)
++            return True
++
+         # If there is a tag parameter in the url and we also have a fixed srcrev, check the tag
+         # matches the revision
+         if 'tag' in ud.parm and sha1_re.match(ud.revision):
+@@ -729,6 +765,11 @@ class Git(FetchMethod):
+ 
+         repourl = self._get_repo_url(ud)
+         runfetchcmd("%s remote set-url origin %s" % (ud.basecmd, shlex.quote(repourl)), d, workdir=destdir)
++        if ud.clonedir:
++            try:
++                runfetchcmd("%s remote get-url dldir" % (ud.basecmd), d, workdir=destdir)
++            except bb.fetch2.FetchError:
++                runfetchcmd("%s remote add dldir file://%s" % (ud.basecmd, ud.clonedir), d, workdir=destdir)
+ 
+         if self._contains_lfs(ud, d, destdir):
+             if not need_lfs:
 
