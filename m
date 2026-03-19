@@ -2,69 +2,69 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112B4109190A
-	for <webhook@archiver.kernel.org>; Thu, 19 Mar 2026 18:18:44 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.2931.1773944314549996803
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED27109190B
+	for <webhook@archiver.kernel.org>; Thu, 19 Mar 2026 18:24:14 +0000 (UTC)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.3031.1773944645181989645
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 19 Mar 2026 11:18:34 -0700
+ Thu, 19 Mar 2026 11:24:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=kIgpq5gA;
- spf=pass (domain: gmail.com, ip: 209.85.128.45, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-486fd27754bso4964395e9.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 19 Mar 2026 11:18:34 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=AOeyIaGc;
+ spf=pass (domain: gmail.com, ip: 209.85.221.53, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-43b41b545d9so1372129f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 19 Mar 2026 11:24:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773944313; x=1774549113; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1773944643; x=1774549443; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CgBhB2NpIhu9PLBioIjGjKeWx+1rA7wMhC8G1ww2Tcc=;
-        b=kIgpq5gAW4baavFm9buxIClGlv4Ue3yDWXHtkWHiBZeVxr/tNVvcJU4LdM60jNZvZB
-         Mc+FXRj0bLbF7Y5MT2KCPdFa5Nqqyt8NCiJ0IXF+bHFLoByc3r4GVfX/boRJIRhuAOVn
-         Kjhw9TU/p6Ij9s3RT+acc+op3w8f1BHr3aCZ7yTv4dbYyqvBMA4TUtUS1HyVnLwFfFLE
-         l2BebvvPHMkArvJ3k2233zwCluu1FgiG7gxF11/M6HPrjdB3b8NE0ie+PE8PuSpOuIRd
-         Sxe6hCmc/d0GVv1E5pwB1ABroA+UsYto/ktCQkCnD5RdZ23wBnJ5r9ojN7KMk0S0CEkW
-         BHdA==
+        bh=XPUy6nj26nFGTchjPVLvtpnREVucmmuld2sLz2RQlNs=;
+        b=AOeyIaGc16efy63GHAKBAdsUJoKVYGUIoe8yGR8hHj8gxZN0M4LVwf0ujO4AG9UME0
+         e8Zb44mYfdFLUcJzRamlRSXDocjaxOORuxQvaNwIBLZgvyByFtuKfBwL5O85G6JsvCCA
+         0wyro8BQXcDYP82IsON9X9CHdop5xrcmfub74dd85z2d3L+LKQR6bOw9rCG8a7YKGxKU
+         b7mih1rGN6rbZZQBkhvHkdAZFX58lntyUxNQ3eDjEbEldNbjXa1mTqzKQu+8U1fQQ4rV
+         f+g/viAREt6idi2D9W9JphVaIvMe5u6zOWM4H1LcI2PJgDbmVzuURiI7+wAmQDtbzdhV
+         timQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773944313; x=1774549113;
+        d=1e100.net; s=20251104; t=1773944643; x=1774549443;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CgBhB2NpIhu9PLBioIjGjKeWx+1rA7wMhC8G1ww2Tcc=;
-        b=suSjw7FjOjN9xw2QR8pti1NpvyusOqv5cPj3Ox7AxGZoMirwKqCwIJNuHNxD7ln8dk
-         JRZndlZpGAJNkqlrL5lXu6W1tHxovTw2gUfffxjGWaUWfnoC8eOw1qUy0dKJnJXgKstm
-         LntcUV0EMzmHcIVWNFrwSLOWvG1RWqPUSq91uIyz127nM/2vFLAOJKMW4xWCgf/EOpuG
-         rZcoacbjtTEhFv1H6E49e59pPgblQAIA+hIEqbocsuSb3yfhVmz8Z1qy4BHjWvEqqKAU
-         zzZqDMjVrVHoL61V6hANBSkj08+NzHyuLOFwvEuUS8DYiZThb4UUJO19Xp45gt7uxQeY
-         jyTQ==
-X-Gm-Message-State: AOJu0YwmD4SowuDM5pLr/Cr8dF1swhO4TjVw55ZohpRVSn8cvMeq4HFu
-	zxHRtY9GQpJT0jMKrG28KpNn8Xjc2mU4fEVIgxdFPNQLBbIxBLS1xbkbQ6lqTQ==
-X-Gm-Gg: ATEYQzyVpZL8QWQJ2Szp4KTXF22jDG0/Qfd1odgQSWmSphtk4BhBOr9SaD1j6jQttoo
-	wPWWr44lK8TuT6dAD5t9D1UGgnaJ7h3l6h2Vut1zLMbU/R890cALOWWtstDVA6DTOUtTSNalIn3
-	WiwX4qB9X6+/W+W8sDO0D9z/urrUhNsnqT51d/IV2zNy6PbSyXFnMhNE9gCWdkve7VDO7/1uSAl
-	iLnhZzcV7JmDASOyfqfDDDan4Tdsd0OFapsBO5Uhse/Cbet3/lnyNTxzFL/ItAZYJrWbyekXv5Q
-	BBluzUJ5YTdb4y1fcjhHyBznhYq1NtS10B+ppHMrs3IgR9kO/6K8gJZuPZ5WVIJStJhZeofFGT+
-	56BAHLkQSVXCnLzdYhErcteYe/xswaibZMAr96cpyEzg6vOC715IyQCidxmsiWe/VzotshkOpwT
-	7/gdfOfF5W8lGBWHNFOp+XswPq9yGR1FUR4JwXxbowqNLxQx7ytAAm/h98RUM=
-X-Received: by 2002:a05:600c:8b0a:b0:47e:e57d:404 with SMTP id 5b1f17b1804b1-486fee0f917mr1420975e9.16.1773944312630;
-        Thu, 19 Mar 2026 11:18:32 -0700 (PDT)
+        bh=XPUy6nj26nFGTchjPVLvtpnREVucmmuld2sLz2RQlNs=;
+        b=HPiQVvLh512KZlpwtlTP2mH2SjKNN2rrHGVWmNVTbMd6oMQodRL3I+3Buzn5xX3Pe0
+         /AXCa4FT67CmBoNBAWMtedw2A333mpPXMfAXzmFrNn9eOzz5GLvYZgHeR4NKEdkw9+QT
+         /u3JCyamMjJ1GcnJw8fr9Rcx7OIxtEYuPsyNeJ45na0EId/iGECkGNuIRzAKRLAbI4A3
+         7e3IZeYN+qTD4VyoRFfR9wG4sgHUUqV9t4ovn1oVLSn7VplGMXp2+C6Gsfwff33mZXK7
+         +ZEu8gfdCL3BdFa+BXdCQQVz7irPl1HPRWT1dDVGM7QJbd9+c1NUKIRWZexSTtmU4Nqb
+         JcjQ==
+X-Gm-Message-State: AOJu0YzcogOhpzOFHrrGPgJgZEsvlCEJNNTd8XEHTM2b/8/qjt4convK
+	73+eyCTPDAUCX+Uu1/skZy7Tb3/tPzIyuk101eFGJTlGh9/KqHjXKjYdfUbvoQ==
+X-Gm-Gg: ATEYQzy9Sm7asxKy5FSIJRVTfQcqsuF+yMF2GW+ngo6rpmmS7AhQ3pxf34kyvmsJEoy
+	dUjHcAwk4UTh8w2PG+qKNSvTnBxyL18tBJ8eBmPdWB2O3sGsc2WpzzA8x9D8+SWrDLLLfHjN20U
+	5wuLapVlcmCW0vBDj+A3ojsgHvYdTEggbRplo/HAi4uVl0GjdM6stSoxtOPlt+Gb+qiyC4CFD4I
+	QN7xWSoLdzYN5IXJgOLrHqT82f3hLcGnGs9CrsSI84gw1gN7/sRFrg0azTaNdSiaD48QCrhy3mk
+	QUBIoK813rPSJHYFKOlopoNXkYJipjjdxDQ9CCPA+kzNhR0CaYt9Ferk8OKnh/hvqerBbqe8Uw4
+	0WB+LFJHDJ+cPy/h8emPe6iQp8KwxuXzvqoHQj7bNdXos5QB5vy4Nc/o20R58sjXQDrHrPIiAnT
+	F4OpJdJsKqA+waSLN1PC4A/fwhTZ7zkt6LZPHBFcoQgvpLibq6Nn20l+Os+0E=
+X-Received: by 2002:a05:6000:240d:b0:439:b7c9:2ef1 with SMTP id ffacd0b85a97d-43b6423bc2dmr629475f8f.20.1773944643154;
+        Thu, 19 Mar 2026 11:24:03 -0700 (PDT)
 Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486f8ba4a74sm82794005e9.12.2026.03.19.11.18.31
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b647177e8sm334154f8f.34.2026.03.19.11.24.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 11:18:32 -0700 (PDT)
+        Thu, 19 Mar 2026 11:24:02 -0700 (PDT)
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH] bitbake-setup: use non-destructive 'update' mode of the git fetcher
-Date: Thu, 19 Mar 2026 19:18:29 +0100
-Message-ID: <20260319181829.2818648-1-alex.kanavin@gmail.com>
+Subject: [PATCH v2] bitbake-setup: use non-destructive 'update' mode of the git fetcher
+Date: Thu, 19 Mar 2026 19:23:58 +0100
+Message-ID: <20260319182358.2819585-1-alex.kanavin@gmail.com>
 X-Mailer: git-send-email 2.47.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 19 Mar 2026 18:18:44 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19173
+ <bitbake-devel@lists.openembedded.org>; Thu, 19 Mar 2026 18:24:14 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19174
 
 From: Alexander Kanavin <alex@linutronix.de>
 
@@ -96,15 +96,12 @@ it simply stops at that point.
 
 Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- aaaa                  |  0
+v2: removed bogus empty 'aaaa' file which was from a local experiment
+---
  bin/bitbake-setup     | 42 ++++++++----------------------------------
  lib/bb/tests/setup.py | 42 +++++++++++++++++++++++++++---------------
- 3 files changed, 35 insertions(+), 49 deletions(-)
- create mode 100644 aaaa
+ 2 files changed, 35 insertions(+), 49 deletions(-)
 
-diff --git a/aaaa b/aaaa
-new file mode 100644
-index 000000000..e69de29bb
 diff --git a/bin/bitbake-setup b/bin/bitbake-setup
 index ca4461b1e..a446efbd9 100755
 --- a/bin/bitbake-setup
