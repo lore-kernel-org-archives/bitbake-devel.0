@@ -1,97 +1,237 @@
-Return-Path: <zhangfei.gao@linaro.org>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F09108B8E3
-	for <webhook@archiver.kernel.org>; Fri, 20 Mar 2026 09:44:17 +0000 (UTC)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.9105.1773999853080358634
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA6A108B8F7
+	for <webhook@archiver.kernel.org>; Fri, 20 Mar 2026 11:07:39 +0000 (UTC)
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.10101.1774004850307733028
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 20 Mar 2026 02:44:13 -0700
+ Fri, 20 Mar 2026 04:07:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=dLGKJKlV;
- spf=pass (domain: linaro.org, ip: 209.85.221.47, mailfrom: zhangfei.gao@linaro.org)
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-43b44c0bcdbso1559885f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 20 Mar 2026 02:44:12 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=D9JHj93U;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-486b96760easo20632285e9.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 20 Mar 2026 04:07:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1773999851; x=1774604651; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4bE0vnYm8peH9c6Ns66/fhiFau+t2d6qXBWQm2/OTV4=;
-        b=dLGKJKlVOljx2xVhMlYp8JytIIjM7LFy7PT59RnMVNgsuFAhB3CWPSZy/s3KRIW4dn
-         YmHAF9W7n2tFTJJlg60UYN1PJjL+aFQMC+G7XPDiFKDPIMuijTACCqRo0+bDqKtDTba9
-         GvAWVuYKVIFNJ7X+Hqxg0Qj6d42qEZbAQsuxyApeHJc6Or8a/OqOXx//S78IFSKUV9HJ
-         DlrMbEbkwiP44mNnCWZ49Yj+TPweLaIjccqmU+Y8RxkQCebBELbncqjHWS0/y30UUC/4
-         TZTRdD/u4HckX2aoaYkTyZVpib6YPtekZVRX+g2ePg4ruOQvdLyPuJFSorw2EMwqTV9j
-         Qsfg==
+        d=linuxfoundation.org; s=google; t=1774004848; x=1774609648; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aNs7iTAie1C3Y5FChX0eYzt3UEajE1IRn9Ut9+X1HgM=;
+        b=D9JHj93UQP9uqoCN7bswmzYi5aQ5Sw+uHPy/zwAOcoUeP22AmppYua2voA4XC5kmSp
+         gpV91CrWqXv/wZmKBa8BrIqomHY+VLHJxy6ug+W2/zyXwWy5qUzWWO7vQA/oTGBfTTDx
+         3n06WHkWQih9cVaYtlMspf3jMLGVtViuLxUyk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773999851; x=1774604651;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4bE0vnYm8peH9c6Ns66/fhiFau+t2d6qXBWQm2/OTV4=;
-        b=ZR8XRVJXrcza03OKH0Ase36mBR5jIxYYl++D2fo3HXHxXiJRgzXanvQ5aRRDGlHKzD
-         zXRskpaaKjiAIcF08pu3IQ4KE+2Ga3W4RhBc1yAIXH02FY4dayNBuFKZ1s7+ugGumKP6
-         D43JYMuCfmrvHM6WzGT+9ilcy3Rt0ViCP4uxV+USAv8ul51rPmMmrv2ga83SZXWubo9i
-         jC8cSLVsZwi8/H25XpsIRA38PTGP9pCgTdjg8n16dw2BCFMdq+rSvDo5pVO/jlsq6DKM
-         W7tVhzrPMRIug46+Kmbgz+fS1CQBokj9mzvPZgW6k6E2n3o87vIj0s+0R9Dqagb+UE9j
-         rh9A==
-X-Gm-Message-State: AOJu0Yy1Gsvwykti8ys78lhzGW1h5eNjk+ycXj3nwM1esvhw4phYTMWs
-	0j42I4dHEywi5fHMmWvc8PiwLvqXeKmh/R+S9ylP4d/LlIXNIAANb4XGP+0CZ3cDYdB2KZRXNnF
-	H+EUemaDUAw==
-X-Gm-Gg: ATEYQzzH2C0lut53Tm5d7DVa34gdRJvVARep11QzLZei7YtzioQ6/ovXXg5KfFIRSyG
-	maoAZK07MUsOyCScKA5Jpv/6I4FSMaUWBMyBPDieQMLR8b4re9kaVWHoKmYkDWqNTF8W5NXc3/q
-	Ik0AP19ARQQemTzXLDl8w7qlUbotvhmFTfxl/OMz3UZKYqjAjJ1F009V8rPAbveo7PzRvpbmw2S
-	+QcgMUOOqcOScj5nWAoKJhzwP4af8hmzOx4Zi2F36+EGsmuYADgzighZcpjSGySCZVMHNqMrklq
-	HbRYXl+nNsItiWGRqPh9ASiZ6FqFesCS/81Qc4L2gSwJZo06cJWUS/KtI0H/TAdhR5vKqT+SZjk
-	kydLk+163Q1Bho/nr3WyPvr9XLjWeI5Tq917tlwZagYAbzONoCYz0lIbRvl6jPQHqpEo2bEZPTr
-	1+waYLpw61P8S57g1eIIMAT0zAQ/Q4mfcp8+PWKPsycDfrzdNlLGTa7+ebMrw8EsMkCrTzYhfx
-X-Received: by 2002:a05:6000:220b:b0:43b:436d:782c with SMTP id ffacd0b85a97d-43b64232947mr4040858f8f.4.1773999850991;
-        Fri, 20 Mar 2026 02:44:10 -0700 (PDT)
-Received: from hackbox2.linaro.org ([2a00:2381:fd67:101:f4c1:e8ff:fe8f:2fb2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b64717e97sm5221557f8f.35.2026.03.20.02.44.10
+        d=1e100.net; s=20251104; t=1774004848; x=1774609648;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aNs7iTAie1C3Y5FChX0eYzt3UEajE1IRn9Ut9+X1HgM=;
+        b=PT1eujMqZSOralpKU1BYFsCGXirWSqqQjXxWqHlkN2TXe/SjySfMlSPHhn64hJlCqI
+         JWm4MjsYQ5I2p7jn1wIQzDvARH9Rjc+MLClyXiPpfkKr4+pmcbnosbzfB6CINUBzpHGw
+         w3/mKcHwfA43r0/T7la0NNUwzE97zOn1xx5xVlfkbZ1NPH7NLj7wADBXG/CWGZJg+dUB
+         WHxW8DV402Fd76FHmQS3GWepJZ1F6XUfS7WZaDx3LPBSpq3jss7Z3aYRPnnWEbvkIwZE
+         3b/WRr3J1fOGDDUyfMP4frHwijxPD0yWX/llgEpjlReqr9krOShBTsmQlqvliQEAUrZ2
+         JN6w==
+X-Gm-Message-State: AOJu0YyxEHloZouP/HW8grgpQIvlNd8AKOaUszWx+xnjVjH3UN/L2QiE
+	fAn3UBn/Q12Y8JFFSJOrOX3UoSqaf6BVV6Dy+03y93uWqfRwt83iQWgBqTrlLFKqk9rPJccUCZk
+	k5rOYwQs=
+X-Gm-Gg: ATEYQzzYqtr6zPRusl1GTekkV2oDRk4upP7Z2wBv6CBA13QbmkOR1oUjpAcJALW/Jpc
+	+s6gB577aDSHAjALVaYoSWcYcV8dn35nnoBachHlmuGDKvzsS/CttkWwnJqdQV3Whgax5V4UB7j
+	44kMyKJntUe/tIqZWZeyvLB4ef3BrirNWyNEVuwcBcFKDb4Sww466ICQTRAkKtCZkXHBw2IG/KX
+	0AmkjfZgx1og/258kPPfKz6sgV8qDBl94QjviKZN5txCs9dyznlg5WbAk1p++gm39JVEVdm9gcD
+	gp0MDBJ0dPzGpQRK0uGzrtbcnCAYyMtSK1CPETFvgwWsyaWrVlaf/FR1xNKyqGOa36J19Cr9L5w
+	BAIv2J1/xT7Y+z1ab+87qolF17z5JoOrV59edSGQAZDPg9qp+NhBP7vQjsFwuV+D7cu1x1mMZhE
+	ic9aQnz6R3MQGKUZRBoqAZaJA1eYXt+AE4RCApEyACWty/Xbkgs+fa
+X-Received: by 2002:a05:600c:47ca:b0:487:169:9f64 with SMTP id 5b1f17b1804b1-4870169a1eemr10494165e9.12.1774004847765;
+        Fri, 20 Mar 2026 04:07:27 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:72df:cb96:568c:f7d8])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486ff19d393sm13977285e9.16.2026.03.20.04.07.26
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2026 02:44:10 -0700 (PDT)
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
+        Fri, 20 Mar 2026 04:07:27 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH] bitbake-setup: make DL_DIR in site.conf overridable by env
-Date: Fri, 20 Mar 2026 09:44:07 +0000
-Message-Id: <20260320094407.4169544-1-zhangfei.gao@linaro.org>
-X-Mailer: git-send-email 2.34.1
+Subject: [PATCH v2] fetch/git: Add an 'update' unpack mode to the fetchers (git only for now)
+Date: Fri, 20 Mar 2026 11:07:26 +0000
+Message-ID: <20260320110726.477775-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.53.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 20 Mar 2026 09:44:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19184
+ <bitbake-devel@lists.openembedded.org>; Fri, 20 Mar 2026 11:07:39 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19185
 
-Use '?=' instead of '=' when writing DL_DIR to site.conf, so an
-exported DL_DIR can be reused across environments.
+We need a way to allow the git fetcher to update data in place rather
+than remove and replace. This change adds an unpack_update() function
+which can be used in place of the usual unpack() call. This will attempt
+to rebase changes on top of the upstream changes. It will raise an error
+if any local uncommitted changes are present.
 
-This keeps a default value while allowing environment-based cache
-configuration in mixed workflows (e.g. container/host).
+The implementation adds a "dldir" origin to the list of origins in the git
+repo which we can then fetch from and update against. This origin may be
+of use to users accessing the git repo outside the fetcher too.
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+unpack_update() should never delete existing data in the way unpack() does
+but can error out in many more different ways due to the number of possible
+input states.
+
+Currently only git is supported.
+
+The intention is for this to use used by bitbake-setup instead of unpack.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bin/bitbake-setup | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/fetch2/__init__.py | 13 ++++++++--
+ lib/bb/fetch2/git.py      | 51 +++++++++++++++++++++++++++++++++++----
+ 2 files changed, 57 insertions(+), 7 deletions(-)
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index 53dbb6221..9d08f3a1b 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -947,7 +947,7 @@ def create_siteconf(top_dir, non_interactive, settings):
-                     # wiping and rebuilding you can preserve this directory to speed up this part of
-                     # subsequent builds. This directory is safe to share between multiple builds on
-                     # the same machine too.
--                    DL_DIR = "{dl_dir}"
-+                    DL_DIR ?= "{dl_dir}"
-                     """.format(
-                         dl_dir=settings["default"]["dl-dir"],
-                     )
--- 
-2.34.1
-
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index aaefd860204..909ae98146e 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1634,6 +1634,9 @@ class FetchMethod(object):
+ 
+         return
+ 
++    def unpack_update(self, urldata, rootdir, data):
++        raise RuntimeError("No method available for this url type: %s" % urldata.type)
++
+     def clean(self, urldata, d):
+         """
+         Clean any existing full or partial download
+@@ -1990,7 +1993,7 @@ class Fetch(object):
+             if not ret:
+                 raise FetchError("URL doesn't work", u)
+ 
+-    def unpack(self, root, urls=None):
++    def unpack(self, root, urls=None, update=False):
+         """
+         Unpack urls to root
+         """
+@@ -2009,7 +2012,10 @@ class Fetch(object):
+                     lf = bb.utils.lockfile(ud.lockfile)
+ 
+                 unpack_tracer.start_url(u)
+-                ud.method.unpack(ud, root, self.d)
++                if update:
++                    ud.method.unpack_update(ud, root, self.d)
++                else:
++                    ud.method.unpack(ud, root, self.d)
+                 unpack_tracer.finish_url(u)
+ 
+             finally:
+@@ -2018,6 +2024,9 @@ class Fetch(object):
+ 
+         unpack_tracer.complete()
+ 
++    def unpack_update(self, root, urls=None):
++        self.unpack(root, urls, update=True)
++
+     def clean(self, urls=None):
+         """
+         Clean files that the fetcher gets or places
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 738174cd104..84fecdad07e 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -656,7 +656,10 @@ class Git(FetchMethod):
+         # The url is local ud.clonedir, set it to upstream one
+         runfetchcmd("%s remote set-url origin %s" % (ud.basecmd, shlex.quote(repourl)), d, workdir=dest)
+ 
+-    def unpack(self, ud, destdir, d):
++    def unpack_update(self, ud, destdir, d):
++        return self.unpack(ud, destdir, d, update=True)
++
++    def unpack(self, ud, destdir, d, update=False):
+         """ unpack the downloaded src to destdir"""
+ 
+         subdir = ud.parm.get("subdir")
+@@ -680,7 +683,7 @@ class Git(FetchMethod):
+ 
+         destsuffix = ud.parm.get("destsuffix", def_destsuffix)
+         destdir = ud.destdir = os.path.join(destdir, destsuffix)
+-        if os.path.exists(destdir):
++        if os.path.exists(destdir) and not update:
+             bb.utils.prunedir(destdir)
+         if not ud.bareclone:
+             ud.unpack_tracer.unpack("git", destdir)
+@@ -691,11 +694,15 @@ class Git(FetchMethod):
+             ud.basecmd = "GIT_LFS_SKIP_SMUDGE=1 " + ud.basecmd
+ 
+         source_found = False
++        update_mode = False
+         source_error = []
+ 
+         clonedir_is_up_to_date = not self.clonedir_need_update(ud, d)
+         if clonedir_is_up_to_date:
+-            runfetchcmd("%s clone %s %s/ %s" % (ud.basecmd, ud.cloneflags, ud.clonedir, destdir), d)
++            if update and os.path.exists(destdir):
++                update_mode = True
++            else:
++                runfetchcmd("%s clone %s %s/ %s" % (ud.basecmd, ud.cloneflags, ud.clonedir, destdir), d)
+             source_found = True
+         else:
+             source_error.append("clone directory not available or not up to date: " + ud.clonedir)
+@@ -703,8 +710,11 @@ class Git(FetchMethod):
+         if not source_found:
+             if ud.shallow:
+                 if os.path.exists(ud.fullshallow):
+-                    bb.utils.mkdirhier(destdir)
+-                    runfetchcmd("tar -xzf %s" % ud.fullshallow, d, workdir=destdir)
++                    if update and os.path.exists(destdir):
++                        update_mode = True
++                    else:
++                        bb.utils.mkdirhier(destdir)
++                        runfetchcmd("tar -xzf %s" % ud.fullshallow, d, workdir=destdir)
+                     source_found = True
+                 else:
+                     source_error.append("shallow clone not available: " + ud.fullshallow)
+@@ -714,6 +724,32 @@ class Git(FetchMethod):
+         if not source_found:
+             raise bb.fetch2.UnpackError("No up to date source found: " + "; ".join(source_error), ud.url)
+ 
++        if update_mode:
++            if ud.shallow:
++                raise bb.fetch2.UnpackError("Can't update shallow clones checkouts without network access, not supported.", ud.url)
++
++            output = runfetchcmd("%s status --untracked-files=no --porcelain" % (ud.basecmd), d, workdir=destdir)
++            if output:
++                raise bb.fetch2.UnpackError("Repository at %s has uncommitted changes, unable to update:\n%s" % (destdir, output), ud.url)
++
++            # Set up remote for the download location if it doesn't exist
++            try:
++                runfetchcmd("%s remote get-url dldir" % (ud.basecmd), d, workdir=destdir)
++            except bb.fetch2.FetchError:
++                if ud.clonedir:
++                    runfetchcmd("%s remote add dldir file://%s" % (ud.basecmd, ud.clonedir), d, workdir=destdir)
++            try:
++                runfetchcmd("%s fetch dldir" % (ud.basecmd), d, workdir=destdir)
++                runfetchcmd("%s rebase --no-autosquash --no-autostash %s" % (ud.basecmd, ud.revision), d, workdir=destdir)
++            except bb.fetch2.FetchError as e:
++                # If rebase failed, abort it
++                try:
++                    runfetchcmd("%s rebase --abort" % (ud.basecmd), d, workdir=destdir)
++                except Exception:
++                    pass
++                raise bb.fetch2.UnpackError("Failed to update checkout in place: %s" % str(e), ud.url)
++            return True
++
+         # If there is a tag parameter in the url and we also have a fixed srcrev, check the tag
+         # matches the revision
+         if 'tag' in ud.parm and sha1_re.match(ud.revision):
+@@ -729,6 +765,11 @@ class Git(FetchMethod):
+ 
+         repourl = self._get_repo_url(ud)
+         runfetchcmd("%s remote set-url origin %s" % (ud.basecmd, shlex.quote(repourl)), d, workdir=destdir)
++        if ud.clonedir:
++            try:
++                runfetchcmd("%s remote get-url dldir" % (ud.basecmd), d, workdir=destdir)
++            except bb.fetch2.FetchError:
++                runfetchcmd("%s remote add dldir file://%s" % (ud.basecmd, ud.clonedir), d, workdir=destdir)
+ 
+         if self._contains_lfs(ud, d, destdir):
+             if not need_lfs:
 
