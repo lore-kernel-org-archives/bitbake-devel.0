@@ -2,140 +2,123 @@ Return-Path: <zhangfei.gao@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 939B71098796
-	for <webhook@archiver.kernel.org>; Fri, 20 Mar 2026 15:03:34 +0000 (UTC)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.15013.1774019009384453130
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997031098799
+	for <webhook@archiver.kernel.org>; Fri, 20 Mar 2026 15:03:44 +0000 (UTC)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.15029.1774019017741635010
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 20 Mar 2026 08:03:29 -0700
+ Fri, 20 Mar 2026 08:03:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=iEDPggew;
- spf=pass (domain: linaro.org, ip: 209.85.128.53, mailfrom: zhangfei.gao@linaro.org)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4853c1ca73aso18886635e9.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 20 Mar 2026 08:03:29 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=FCKi93c8;
+ spf=pass (domain: linaro.org, ip: 209.85.128.45, mailfrom: zhangfei.gao@linaro.org)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4870206f73bso2827885e9.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 20 Mar 2026 08:03:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1774019007; x=1774623807; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=b0aItrdv4AukKW9E4HFaYiFlbyH7pKb+rL1OfNWSWzA=;
-        b=iEDPggewUZzs/Uxf/sXp/e2lYjdaZNytkU6q27ZCp2QET/5hdtAW+IFR+LX1GQK+AL
-         I76QH2xmDEN1eMNI6M7aoBbvgWOz5n6X87imnnK7e97cPKieM2OmMzrSle+UPjvUWgys
-         RsBSNcDQ8NOB3tPNth4/5D5KNEmMt+ENTShDVFliFMci/dgPX8m4XMEOgFmpxTTtki3Y
-         ttnI03Hc6575KtW3Alq8V9i5fpmUyTQzavZlY7jR/V56l0FZ8Yn3dY2mbOGQIChwUtQV
-         Nt23bPoCAPmtgQFF/bjTwMkr2d3PspJZhVPWF7qoAPsUU/J4Jl7IQCUwWNCFUQ/4TasU
-         +rgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774019007; x=1774623807;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1774019015; x=1774623815; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=b0aItrdv4AukKW9E4HFaYiFlbyH7pKb+rL1OfNWSWzA=;
-        b=VOOjCNFCfr4zVbXzn1UIH6TqqxDPGh+hBN4aocVuPDRKgAgZSL54rWnhgso6NBC2Yq
-         zCbGIs335jVpvjswplcjwCluxA5YsWa3pemBy/GLoF6Op0EOp85p2aP/MLbEGVHMuNTB
-         bTK2DjHAUJhBlSqQf7qxZ3e+FIkefYsJXxPPZJugylL+cPdsvbBzOHY/GTLxvaR/ZDKu
-         x5m2IPDOGKjEjEyL14IKhExPakFW9YHeIw1IzYN+rePpMtnRtNh7QvsBqvMx1oMQgt5S
-         U5y/tDknsoweQMAxSpW+MhhAvmKA0a0kf7gazdMKiG4atrugqduG2INcCWo4z8yZ1zsn
-         WBdQ==
-X-Gm-Message-State: AOJu0YwZzL7AlybnxD7RzGnK+hcVznKSxKGG0Bobm5klrZjHY+ooWxmS
-	V5lf/Q+AsJFg8WOkzFqknAj2gZumPf6dvOQ8G0BYdLKMWONPIdT1ZkB0dXD2a0EKtQyjFAHPweA
-	BbxCNvX/nZg==
-X-Gm-Gg: ATEYQzz/bUT/ZACK7zk1CV4FAICT4X5kBimzhUlFAULfH0IugdjyS7UOsrJDpzrjB+H
-	soejZ3b9QIXGBS4L6wnBLQWptlsm0XeaVio9WOVgUPWSZcZWZz6AKvjWMk70zCGkMtXFJ0Z2cbW
-	AjJHyd/AvcxoE0LZUD73PB84H1gZ5hoxrencxBGqPcX+8aG5MZLE18WxKcNK/xe7Z5XgFVsaaVW
-	5lXSzbOtw/nHjnMo8OSqG3aw0zUSaGGZ+xwcqCWABYiGDHU4YeY4gW87b7vORNQkdz+1auexwgO
-	PmPurC+vgOII2yJWs3iROeAAUr0N4TG7qB0rpzFVw+TYJEWNsY6CFV0/awLsjpUKtcPTGIZjPs1
-	VHyDrRy51e3hkkaTqeDWg+W0SJLNFLcZyMWtDzUJAYFpGVp7fl0HJTzuSHd/HRt91dSitMKrL34
-	Fj4vqE83h+lUVcmPNxrmCVk1GiM+ufjoPCJGdpHwFN8rCX8UimJEdmEuqPdAZCVpLtjRyakPQu
-X-Received: by 2002:a05:600c:a416:b0:480:69b6:dfed with SMTP id 5b1f17b1804b1-486ff0303admr44808405e9.24.1774019007299;
-        Fri, 20 Mar 2026 08:03:27 -0700 (PDT)
+        bh=mRlWjYAxTjgu09xRrYvad1lZ06Zx13fRvHxlh1szo8M=;
+        b=FCKi93c8HQQHeBwXrAUkFTCkMV3QGb4H3aru2HOQjxd68phqMhdpAqTcwgShl8cvjm
+         ogZGMr0jHShmEk3BWWnurI9NiaLIXB6xoEGCgEIajhTYzDr6cgvhByttnusfQYsX3N0y
+         gXCd2RsMtYq4bbiN0goP5IjMGfpcH8mFDCtpqRTxFBBFAAjkHCJRrYznZP9yJH3Cslyt
+         FYIFbXSdy9QnDY9zy9ql7vIkXF9S4XOSFixGyCPbKCoissRI676KFHVaCUJAcywedz9y
+         GJTVnL9Un2WYb+I2yHpJWlFR2+/8wqE3q8m45W3/Z82o1UWald6fUzUNhiljO1Gf2oxK
+         DpHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774019015; x=1774623815;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mRlWjYAxTjgu09xRrYvad1lZ06Zx13fRvHxlh1szo8M=;
+        b=oLHqpK0dVDPx6QpCiFbfUckltJcQuvw7vp8usLjrrxzKiUQj6bqcc8wbX9hrGFivrL
+         Z6ol0UXaXlQ4G8KtfT///BKecDoR9fnma/28kbaI4sTbUPxpBscys045bDwKpG1gANlo
+         OQuexKWcHFGRI1+q0qQYsVIKg5sPuCBstj53aRQgjqI8OaV+Pmci08WJiMcBqC2gFME2
+         uZFK9YvV5ILXI2RVa7xnhHMBeLI2fWRK9swyDE8GFfmVfmiz8gd1cbTMB4xTRTzTLAPy
+         fa+8SHdR17/1LT2jsrVeLEwSn90NcCaXOvJYBek2OvoBXVWStfLPdNZ7VrHDp78SL3/r
+         wesA==
+X-Gm-Message-State: AOJu0YxnMYp+Qfqz6nbCBZFuTyhHR59+QAKh3lKy/8ZTVQxb7NU2ihl2
+	BWARUnudQpoJgtrC8aTAkue9/SxEkC/2BmtddVfnSlGLuSatAOD+DEtCMhnOOBSxLwdspJqK2Jf
+	nzk3zII/hUw==
+X-Gm-Gg: ATEYQzx9CxfMRzB4tkmBs5nxg3D3fxgp1PEjMOFT6+l74zmYMSVOt+KLh9TOaqvG4to
+	CZkzdMZsKA9PRRI/GavePsO1wdwx9myBYtcMx8+QugVIm6zI+AGhh0FOcB23GNtbuzv5WyqrLTK
+	yprg2jfXFE0TrVFGCn0sZe6xA7OQkXHlnlQvcMudzSWyEkASfKMmk1Vddx0X03D6aW3Nai2k/WW
+	HN3BAnWPdV9hnGzEQ/V6rsPtUx/ncujD/hH+IvzqiKUDyjIt8C7v9QJ+fJbs79/EdorB0k2Uo17
+	d7Sv1cB8tU//FDiQ3e6wRlYi54beSwIxCxb+0HDFgeYbPXw8efbXmWch6vPCpqXPg3lsppT+fpe
+	+1+ktBq8NPKq7iz/JmVP+72Ce51Wfh+bIVWSB/1cVBtPpBtBL3yCzgW9SXala3kkuFRB4li0t+l
+	7429DeQ7KBi5MM2yiTjG0fC7ScoWA+wHjZzZnpZqPYUTSIkSdj4UYwsoAZ7YU6Ak7KSHNsTpVR
+X-Received: by 2002:a05:600c:a55:b0:485:6bcc:87dc with SMTP id 5b1f17b1804b1-486fedc3db0mr49876215e9.14.1774019015412;
+        Fri, 20 Mar 2026 08:03:35 -0700 (PDT)
 Received: from hackbox2.linaro.org ([2a00:2381:fd67:101:f4c1:e8ff:fe8f:2fb2])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486f8b322d9sm132096145e9.8.2026.03.20.08.03.23
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486f8b322d9sm132096145e9.8.2026.03.20.08.03.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2026 08:03:24 -0700 (PDT)
+        Fri, 20 Mar 2026 08:03:32 -0700 (PDT)
 From: Zhangfei Gao <zhangfei.gao@linaro.org>
 To: bitbake-devel@lists.openembedded.org
 Cc: christopher.obbard@linaro.org,
 	Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [RFC PATCH 0/3] bitbake-setup: config-driven local.conf, default target and docs
-Date: Fri, 20 Mar 2026 15:03:09 +0000
-Message-Id: <20260320150312.1243270-1-zhangfei.gao@linaro.org>
+Subject: [PATCH 3/3] doc: document bb-local-conf-header and bb-target
+Date: Fri, 20 Mar 2026 15:03:12 +0000
+Message-Id: <20260320150312.1243270-4-zhangfei.gao@linaro.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260320150312.1243270-1-zhangfei.gao@linaro.org>
+References: <20260320150312.1243270-1-zhangfei.gao@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 20 Mar 2026 15:03:34 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19191
+ <bitbake-devel@lists.openembedded.org>; Fri, 20 Mar 2026 15:03:44 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19194
 
-Hi all,
-
-This RFC explores small additions to reduce project-side wrapper logic
-when using bitbake-setup for machine-specific build flows.
-
-Patch 1 allows local.conf snippets to be provided by configuration data.
-Patch 2 allows a default build target to be provided by configuration
-and exposed via a generated build-target helper script.
-Patch 3 documents both new optional keys in the user manual.
-
-The field names in this RFC are intentionally aligned with existing
-bitbake-setup naming style and kept open for feedback:
+Describe two optional bitbake-setup configuration keys in the user
+manual:
 - bb-local-conf-header
 - bb-target
 
-Goal:
-- move common project policy from external wrappers into setup config
-- keep setup usage closer to one-command build workflows
+Include behavior notes and a minimal JSON example for local.conf
+injection and setupdir/build-target usage.
 
-Before/after example (qemux86-64):
+Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+---
+ .../bitbake-user-manual-environment-setup.rst | 23 +++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-With this RFC, config can define:
-- bb-target = "xxx-image-minimal-sdk"
-- bb-local-conf-header = [
-    "MACHINE ?= \"qemux86-64\"",
-    "DISTRO ?= \"xxx\"",
-    "EXTRA_IMAGECMD:ext4 = \"-O ^metadata_csum,^dir_index\""
-  ]
-
-Then a plain:
-  bitbake-setup init --non-interactive qemux86-64.conf.json
-
-is enough to:
-- populate build/conf/local.conf with the configured lines
-- generate setupdir/build-target for default target build
-
-Without this RFC, projects must do extra wrapper steps for each machine,
-for example:
-
-1) Initialize setup:
-   bitbake-setup init --non-interactive qemux86-64.conf.json
-
-2) Append machine policy into local.conf (manually or via wrapper):
-   echo 'MACHINE ?= "qemux86-64"' >> <setup>/build/conf/local.conf
-   echo 'DISTRO ?= "xxx"' >> <setup>/build/conf/local.conf
-   echo 'EXTRA_IMAGECMD:ext4 = "-O ^metadata_csum,^dir_index"' >> \
-        <setup>/build/conf/local.conf
-
-3) Source environment and build an explicit target in wrapper logic:
-   . <setup>/build/init-build-env
-   bitbake xxx-image-minimal-sdk
-
-This is functional, but significantly more verbose and error-prone,
-especially when scaling across many machine configs.
-
-This is RFC because naming/schema expectations may need adjustment.
-
-Thanks for review.
-
-Zhangfei Gao (3):
-  bitbake-setup: support bb-local-conf-header injection
-  bitbake-setup: add bb-target build wrapper
-  doc: document bb-local-conf-header and bb-target
-
- bin/bitbake-setup                                   | 34 +++++++++++++++++++++
- .../bitbake-user-manual-environment-setup.rst       | 23 ++++++++++++++
- 2 files changed, 57 insertions(+)
-
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+index f7580c8e0..fc9ab12ac 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+@@ -847,6 +847,29 @@ They contain the following sections:
+    -  ``bb-env-passthrough-additions`` (*optional*): List of environment
+       variables to include in :term:`BB_ENV_PASSTHROUGH_ADDITIONS`.
+ 
++   -  ``bb-local-conf-header`` (*optional*): Local configuration lines to
++      append into ``build/conf/local.conf`` during :ref:`ref-bbsetup-command-init`.
++
++      This can be either a single string or a list of strings.
++
++      Example::
++
++         {
++            ...
++            "bb-local-conf-header": [
++               "MACHINE ?= "qemux86-64"",
++               "DISTRO ?= "poky""
++            ],
++            ...
++         }
++
++   -  ``bb-target`` (*optional*): Default bitbake target to
++      use for the generated ``build-target`` helper in a :term:`Setup`.
++
++      If this key is present, bitbake-setup generates a ``build-target`` script
++      in the setup directory. Running ``./build-target`` uses this default
++      target. Passing arguments to ``./build-target`` overrides the default.
++
+    -  ``bb-layers`` (*optional*): List of layers to add to the ``bblayers.conf``
+       file. Paths in this list are relative to the ``layers/`` directory of a
+       :term:`Setup`.
 -- 
 2.34.1
+
 
