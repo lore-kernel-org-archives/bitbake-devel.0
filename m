@@ -2,83 +2,80 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880D0108B908
-	for <webhook@archiver.kernel.org>; Fri, 20 Mar 2026 11:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B02108B909
+	for <webhook@archiver.kernel.org>; Fri, 20 Mar 2026 12:00:49 +0000 (UTC)
 Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.10879.1774007935706841021
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.10925.1774008046594970786
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 20 Mar 2026 04:58:56 -0700
+ Fri, 20 Mar 2026 05:00:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=PRzcENd3;
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=VMZZU2X5;
  spf=pass (domain: gmail.com, ip: 209.85.128.47, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-486fda2a389so3987495e9.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 20 Mar 2026 04:58:55 -0700 (PDT)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4852e9ca034so4936525e9.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 20 Mar 2026 05:00:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1774007934; x=1774612734; darn=lists.openembedded.org;
+        d=gmail.com; s=20230601; t=1774008045; x=1774612845; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DMuDEJWTi66JP9ysSwygGomnXiRP3kc0ZxSNMJefoSc=;
-        b=PRzcENd3Fpjn7CbyemnC/2VuaBDgwgIyF2J4finNcd1hnAyCoW2HoZ+DP05NSE3+gr
-         x1G/B9WvKun/OqfcD2HOGsfZWsvgLluYKPSJEo3I5YLRSKEjvnxkT9TkHuGte1DhcLR5
-         zy/TdN9aT67Fftyzb+PQ2RXeDBWZryt7/gYM0RPgaLHbuzivtG1vNMkMMvtIlWAeKIdz
-         njZ6voLarvg3flRGZjpVonGbJxF3aS/Cwc6YKKrJKOzNy5Ci8lgFptQj6M8R7nj+XcnW
-         C6pli68TBQVjqO4ziDTmNRwFql8twmCRL6i4Wi4XsFPvw6rBvanrhrFhA769oT4gA3wA
-         NRjQ==
+        bh=DNY/GbeWqN43R/X/a7WPl99LjmIuS+fGD4ZKMyd2W/w=;
+        b=VMZZU2X5wzxgzdZQGss2fZIM9OaK3Q6UwnbIBz3awJGcTH/pO1fwW2c48XM1zjlYYc
+         +zeNtO2ztWM7uV2yY2YCfbJUzLNAL8mo5pHWtArYTg5LVpotXm389MlrO2o3FMAgAGip
+         gqKlGwG49yJ6fgE7jQVTfeA7Fk3J1EBjtxR2FsxeYnThcX70zUnAWZmZqASzflcwK+T3
+         7Ajxul6BIR35du89wrX5IL2Ola9pb7YOkc9JrzkZpc2sD1LxDSBQviy4DE0NB16wygLm
+         01opvK8PKMP4lve6eyEUbF4TBkeAv2w3PQBo8/puNpMugRcTGrSFwzQOPF4wZN14si+O
+         f8fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774007934; x=1774612734;
+        d=1e100.net; s=20251104; t=1774008045; x=1774612845;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DMuDEJWTi66JP9ysSwygGomnXiRP3kc0ZxSNMJefoSc=;
-        b=PbfjPoJh2toVsL4n8fd67xOeKEk1vjIoKWSRA8RdYYSoZ9Shz5jEjmqfOFygnP5Kuk
-         uy7nN0iSnhJYfX4DN0tkmEtae/qzePmEhso3AoIDiSaGzeuK3YNAYlScPI/rJV91oxwU
-         LuXrr2TTeeFzwmwIxAtqKUjEH1Pp4t11F/nt8y5wlf6euHFlgcanIWCqcP6Pxu0DQEy5
-         7ftDf3oxVfpni+CVeoOUEnmT0VXmOiaycJ1gLSHOuXSCwxzNpQLsYnNzygwm6y/44VLu
-         yqXdES8CbaGqypmmdwh/ugy/J+bIY9em+lzKL8tulR4qCstkmKe1m99v1gCrLQAvgEKR
-         Uj9Q==
-X-Gm-Message-State: AOJu0YyVEcLHUkiH5XwZ+toT60sQSttoX0465k1O8S2/wQBNc/Y4tXMw
-	nKGLl67SPtOrqE5Ga5f3x9j3zgQzUqVbb/SwZ8Fe57/P8kH95np+mFyss3llaA==
-X-Gm-Gg: ATEYQzxL/DVFXBqmWKRuWYo6YlIRDq8+jOwE8jV0ThC6/NM/MW2rLFfvEPVUaeOpDD/
-	55F9ucbAr4+A309jnsmySJfjyWOi4u2rVnj/0Cl7rG/g7gp2RxkUQ3CMFwPqAvGpnudAbf8GiWo
-	cWHVEmTpfP5JoMcPLVG1t2GtA8JZLv1APlyqhkxkbPAdW05m1QnBBryBfTlU0Wdsq8yt4P+7A+D
-	ROtJ7luko/drsooZHhQEFfFY3CcC5d3t6/x4yYm74JU7J45l2WDbUgRAozSYVZW48YjVOmwsBa+
-	zbSdlFn7DWHKeWyOefk8p4f6wGT6vjYkxPzI3JjerV6ALMZuN500stR/mYpATi7u4z7ElA08bOf
-	vDXn0DBlRIhXGgXTI1jY40mcAHUE0JoY60Qevbv7FWOxiu3i/Qq8xS1hoTiPWvNcw7RBCZkTbmu
-	raNRFb2IG+NUCDF8GXPBcAfyiN70pia07p88geNP3ZoVUMlRk0JNt0wtdrlYM=
-X-Received: by 2002:a05:600c:1c16:b0:485:39d4:2dd9 with SMTP id 5b1f17b1804b1-486ff04fb4cmr47524755e9.33.1774007933693;
-        Fri, 20 Mar 2026 04:58:53 -0700 (PDT)
+        bh=DNY/GbeWqN43R/X/a7WPl99LjmIuS+fGD4ZKMyd2W/w=;
+        b=qh85Oq7M3vkibXoHVo55Q20RwpwJnNzKvber4+KpfroUe8DaFXBYIpp7ztEPDiQGTR
+         uvCDKvjqpSfwfsHf/TAg2y0vJwtIaNH2EVSY0KzHHKC3RzNhC39PLRMhCB18SUpXf13S
+         P6iQIow7GPyp40uECTsZ3CPr3qzoIHXdjlpCTVYmeymDmeigS7HpRHHkyIvJVFWlQH92
+         1LNnSq+NnjhFfs3Z73zZMTOftt1a6Y/iVBOAbtdGZmj2azMBGaHId0wZZ6bY/mJhQSpY
+         r4ZvH/Au/t+NSZ7lOpFwKiFWJjziRSvrp7X2IYYugVnjQM3nWxiULgtQV5JEbJcfuFcG
+         Dw/w==
+X-Gm-Message-State: AOJu0Yx6nEBZfOadWhbLbBdPRpeMFpxo63QFCHyFChM+j7Nwa+ieO10T
+	2ubJJxsqIHDZRxfkZCEozfLOuzFkWuEZvywatwzVlTSFlobtfgvPivM/y3K6ew==
+X-Gm-Gg: ATEYQzxcwYQd8JYE5q1V2FyLi8W82HN8ZmwQIdueXj7IpsYee7obymE4TlykFPL6JV6
+	O/E27Ngk+bR0oUut+axTZLGpJPT7SRSH5iDFVskV5B0xtClqgFxYhWMBVWa2nJLCBB+dckiBL8P
+	qxAHiD2NEzvU38/b64qz5F+SQ4W2/g5D0/v3KQYvXDgr5WZ/9BVullLu+ChNb7ZEEQYjTaIXHCP
+	uewu0DmAHpJnFdtrZAkEp5So48Gx859I11pES5+Plh/DFIFPRSfVWs7pZEeLaIBrTdwsFkBa+er
+	vw6mnf8p1Tt8akHx8wo49V4fv+5x0zB12MigLrbvpKbs60ZWJ9PQITWGU4nGp67k/zMWSmYPbkV
+	tyRm8Pl2sv5E8Kk8XjcXEKTn+x1x94UtTOieonEhaaDbMAbeUthbXq6cV6rwyLSL/WEsmc5k8HW
+	/U4t8p3awFBUU8IpbsSPnGX/jULlzhzk/Ojoq2PAuDILlsbyaFyhmCZUVnfc8=
+X-Received: by 2002:a05:600c:8b46:b0:485:3baa:af14 with SMTP id 5b1f17b1804b1-486fee0fc11mr40977415e9.18.1774008043155;
+        Fri, 20 Mar 2026 05:00:43 -0700 (PDT)
 Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486fc4d90f4sm108148985e9.1.2026.03.20.04.58.52
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486fd9845a2sm126070095e9.6.2026.03.20.05.00.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2026 04:58:53 -0700 (PDT)
+        Fri, 20 Mar 2026 05:00:42 -0700 (PDT)
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH v3] bitbake-setup: use non-destructive 'update' mode of the git fetcher
-Date: Fri, 20 Mar 2026 12:58:50 +0100
-Message-ID: <20260320115850.3017114-1-alex.kanavin@gmail.com>
+Subject: [PATCH v4] bitbake-setup: use non-destructive 'update' mode of the git fetcher
+Date: Fri, 20 Mar 2026 13:00:40 +0100
+Message-ID: <20260320120040.3017651-1-alex.kanavin@gmail.com>
 X-Mailer: git-send-email 2.47.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 20 Mar 2026 11:58:59 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19188
+ <bitbake-devel@lists.openembedded.org>; Fri, 20 Mar 2026 12:00:49 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19189
 
 From: Alexander Kanavin <alex@linutronix.de>
 
 This allows removing the git hook that prohibited making commits
 in repositories under layers/, significantly improving user experience.
 
-bitbake-setup logic is adjusted to account for these situations:
+bitbake-setup logic is adjusted to account for:
 
 - if a git checkout is being replaced with a local symlink,
 that checkout is moved to a backup location, regardless of whether
 it has local changes or not
-- if a git checkout has uncommited changes, the 'update' mode is
-going to fail. Bitbake-setup anticipates this, and stashes these
-changes, with a warning.
 
 The tests are modified so that:
 
@@ -98,6 +95,7 @@ Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
 v2: removed bogus empty 'aaaa' file which was from a local experiment
 v3: removed auto-stashing of uncommitted changes
+v4: adjusted commit message to not mention auto-stash
 ---
  bin/bitbake-setup     | 40 ++--------------------------------------
  lib/bb/tests/setup.py | 42 +++++++++++++++++++++++++++---------------
