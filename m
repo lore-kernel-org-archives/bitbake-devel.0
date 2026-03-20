@@ -1,119 +1,111 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <zhangfei.gao@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE639108B90F
-	for <webhook@archiver.kernel.org>; Fri, 20 Mar 2026 12:02:59 +0000 (UTC)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.10967.1774008176638796586
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DDF1098797
+	for <webhook@archiver.kernel.org>; Fri, 20 Mar 2026 15:03:34 +0000 (UTC)
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.15016.1774019011678696311
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 20 Mar 2026 05:02:57 -0700
+ Fri, 20 Mar 2026 08:03:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=J/KCOfK1;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.208.181, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-38a23dd61c1so18932211fa.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 20 Mar 2026 05:02:56 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=x5Lb+NOT;
+ spf=pass (domain: linaro.org, ip: 209.85.128.47, mailfrom: zhangfei.gao@linaro.org)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-48558d6ef83so6757005e9.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 20 Mar 2026 08:03:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1774008175; x=1774612975; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=mRlf+gLpy+GbTQOEjAJkPHj3tipsEaYLEjuMwkolB/k=;
-        b=J/KCOfK1NN5kTAJIZ5QKYW0mQo1LdFlfFGq5jmzhaVvmFyIVjvv4ABMtopbztAYdqC
-         hBhCucIj5eH6wGkCmMCGekoazP4qpzjT2j8+lepaSmuPF49Yii17nXpZq6EhZLP0dSOi
-         eJKgWSSnqves0riU9Z2LPBf329MO5tGF+iW1k=
+        d=linaro.org; s=google; t=1774019010; x=1774623810; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vMrp1sC9cvPAua46zgYQGqEZX8VTCeuby5c8Rw2WTGo=;
+        b=x5Lb+NOTHjcgUNED0HB9dCQV4Y/DNyywtVX5TFW41Xmd7vOv1pXwqGB0VKNQXnm/Nd
+         4DqqtWRa8Pcix6orTrXrf9NnCbIxLL9n+X/01fKyLGscqJDcBr0X9pPdAkOavggQOEQz
+         Z8jABYKZkDHVjMdLygoVIF1+CyPVVxb/TulFbtgqb8dasyBBiqb//DfRrR+EsBZD+Swc
+         wCgSj7+9LpQeaDvh//lciSx8eZo/M/78XkBDsHnJsEQl6NuVfl6sfVueRDL2OWhz6OlH
+         /UQSMt//Fj3M/QhMqWEX29pGUS7pRgolVYSDbaU5qUdOUyrme1qiMwjBlTtMKu1vKLSM
+         vXYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774008175; x=1774612975;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mRlf+gLpy+GbTQOEjAJkPHj3tipsEaYLEjuMwkolB/k=;
-        b=SxQKtbayeqacI6auFztL9ts+/rJpE66bZXxWpzWkkvsCtqKLDi8hhm4iZX6GUnse0P
-         Db8yVNaKMcw1Go2Fd+vyxiSlhTQKw443cL6Ck005Sgw3o5hE+gdm+7e3QegMAqGaWDi4
-         vwFGP93FsoeBt/n7Lkg1c/mVYg/1d99SFYiYzuvlh+ulXzfmUleSzLtoM7mREA/deonS
-         Ac6CuqDpRq7uOMqONCiJnUj66Y6Qw+5kXBMn9Zwz9H0dXxtRf+crQKdPLDHOsMoxWKd6
-         ElHA20CCsU6DvPBzmVClx9OTg/punazn+B2exH8Q5PcgCSBOGrUsQ7iv2WtADC0B9PGP
-         u9CA==
-X-Gm-Message-State: AOJu0Ywo+XnyC2HiTA2hCibdW+X7EJ6Gp8qpFe6JbNnou7kdGKo5wO5f
-	TsJz/HrjmzhXrNuyNpUA3AhA0dnzOpnMKKNnhtva0Ca4thBo8fICnbxZhoFrwo7WxY8=
-X-Gm-Gg: ATEYQzwJmr7TEQUegDxF2hD5Esbc+mKsf9xPZPk1U+sibUXWcTi1NPlmfyjxmhMGFCi
-	qfPu40i6Qx0jSaxODzuAZdNKAkKA2N0od2gfBDWtl17ZjxT/m9CYZLhlnSugsGRJVgFSBchSXCp
-	CWr5dCQ+JQDMGDX6EGSCmRbYkUDOulQwfI7JMgRTdNFWXzB5TV37+KGbbxN9c1FToDA66gO0OGT
-	KGAIWi7TxSyenSq4yVcRMUCyA+hfDhw745BT0uKlrda5Z0zSjN9UwMhkAdGPHunr4SeG09pvoqW
-	t8lvJGiCBN8mZs/czRGbgWMMCeWDNCX7Q/yhHnwa+htuopthV/HXnWW7erHl+eh/um2FNd78CmF
-	ScSxSFSpXJZYXUSjlsWTBzd+231v9Osixd682ZLKluut3Wq4Uz2CMkrT8nN/yFQQ1+uE8lD7SFz
-	AFdIjg/PXseU8Oe4Wcl6L7TP8acg8NL11ix1DXMkGYlgYDKY5/WD5p4WPivHaZX9vQk/8V4PAn3
-	aBl2l4cJwPx39GT
-X-Received: by 2002:a05:651c:409a:b0:387:98:f2b4 with SMTP id 38308e7fff4ca-38bf962b834mr6336261fa.11.1774008173684;
-        Fri, 20 Mar 2026 05:02:53 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:72df:cb96:568c:f7d8? ([2001:8b0:aba:5f3c:72df:cb96:568c:f7d8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae16fsm6632327f8f.8.2026.03.20.05.02.52
+        d=1e100.net; s=20251104; t=1774019010; x=1774623810;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=vMrp1sC9cvPAua46zgYQGqEZX8VTCeuby5c8Rw2WTGo=;
+        b=niXUyM1sMuID/WBsqqdJrjqRJVsfBXL80aGXoMj3he9az4gUF7wL6X6FxF4qQDVF/l
+         fZIvYnJQtLtUdX1TpyJ7Ki1EeV0V1SMb2OkfmXfGRq8CPINeP2doeYj8iA+GYRGM+1ga
+         JeN6Bfxe111Zt2s332tN2QU0ffYW8F49rsqee8qMunlhyx1oFi4zKwPCi34J2jVF38xi
+         OTYtVLfdQO2BCpVFxzIVAcfxuDGdYnwHHTzWwmy4HvaAA2Tv2awWitv9oHM1em+xHAVJ
+         41g/tqMGgDCWTG1vNocUKwJQcOQRNNn3SwAU2QMdvQvolTwRQrDsT6wodIsIGalnynyZ
+         ntVw==
+X-Gm-Message-State: AOJu0YxOnPHvDObQgpB1Pd7eciXvKnan6C2u2c+1XCFZQYI8Ku3/sdNS
+	G7DdEUSMEAoxZQ8RCdqti5byrqZMgW7G8tkGuIWHgwAgy/h2KgeHIcuXue4Km2G/Y6tpBWkDHAI
+	jBAzd9+XNhg==
+X-Gm-Gg: ATEYQzw1JYOwogDDeArXKuOo6k652wCi5F1TGriOrqdd/bqHVGyPB5bwUkT8F2U9lwe
+	/CHAT1QwlL0ow7rYNtPo5NAMZj+3VRBTbxtSIu+CabzsRrldkCb0hz4VqWX2T+C6wjekwZI+aqC
+	6P1rxOwmCn5XnuJG2kFI5Qf5ADzcxTHW+0wIqGMBtALQMxk8ywjY0edND/oKwqFnRab8J/jw6LK
+	FmMntnAIxLyiy/tMf3xdRaGJwlsrnFXYP8SRpYghxWMwZVHpJWYRR7ioNCKnZTd3Yx0+Y8Ldrvk
+	iWgvTWgZb501DPED02X2IhH8nx6dm90lV6jN9XxSr+kwlK8vMqBkmdg3y0ihiKg85DUnADE3USh
+	kO//IK1Fs3V2EYZ82Q7ohpKEXec3fehnvq0Mu3GCpTNxEfrWihD2m+tgM6Olf7bFJGs0s0QOyYR
+	Mel8AFmRppzErUKq8KvxF5077mU/PEZPYw7mJd+pB9Xu+AZWk3RxCm8VI/bFaNp58N1gqSsKaz
+X-Received: by 2002:a05:600c:8b25:b0:480:6bef:63a0 with SMTP id 5b1f17b1804b1-486fee0d8cdmr57888645e9.21.1774019009594;
+        Fri, 20 Mar 2026 08:03:29 -0700 (PDT)
+Received: from hackbox2.linaro.org ([2a00:2381:fd67:101:f4c1:e8ff:fe8f:2fb2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486f8b322d9sm132096145e9.8.2026.03.20.08.03.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2026 05:02:52 -0700 (PDT)
-Message-ID: <6aae56ff64f2f836d4647d6cd3957268abbc30b7.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] fetch/git: Add an 'update' unpack mode
- to the fetchers (git only for now)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alexander Kanavin <alex.kanavin@gmail.com>, adrian.freihofer@gmail.com
-Cc: bitbake-devel@lists.openembedded.org, Adrian Freihofer
-	 <adrian.freihofer@siemens.com>
-Date: Fri, 20 Mar 2026 12:02:52 +0000
-In-Reply-To: <CANNYZj_FgKB8jnmdDBwPiWC1bQ_jS5nx8o5nJ5nQko6C3JsRjA@mail.gmail.com>
-References: <189E3DDB9FE2B7C7.1764087@lists.openembedded.org>
-	 <e551779604af9981640c070e5b9d07cb68f813fd.camel@linuxfoundation.org>
-	 <CANNYZj-dY7PfmJDe7W4KjbRp-WL2iLVBXo3MnLk3OmJ1+QtGsQ@mail.gmail.com>
-	 <c16464d67528ac1bf90a466eb96b695da1471159.camel@linuxfoundation.org>
-	 <10dc9e4874cf39b81d8b749793c8bb9044140ae9.camel@gmail.com>
-	 <CANNYZj_FgKB8jnmdDBwPiWC1bQ_jS5nx8o5nJ5nQko6C3JsRjA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-9 
+        Fri, 20 Mar 2026 08:03:27 -0700 (PDT)
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+To: bitbake-devel@lists.openembedded.org
+Cc: christopher.obbard@linaro.org,
+	Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH 1/3] bitbake-setup: support bb-local-conf-header injection
+Date: Fri, 20 Mar 2026 15:03:10 +0000
+Message-Id: <20260320150312.1243270-2-zhangfei.gao@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260320150312.1243270-1-zhangfei.gao@linaro.org>
+References: <20260320150312.1243270-1-zhangfei.gao@linaro.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 20 Mar 2026 12:02:59 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19190
+ <bitbake-devel@lists.openembedded.org>; Fri, 20 Mar 2026 15:03:34 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19192
 
-On Fri, 2026-03-20 at 12:47 +0100, Alexander Kanavin wrote:
-> On Fri, 20 Mar 2026 at 00:55, <adrian.freihofer@gmail.com> wrote:
-> > Here is my branch which tries to solve this (with --untracked-
-> > files=3Dno
-> > so far):
-> > https://git.openembedded.org/bitbake-contrib/log/?h=3Dadrianf/bitbake-s=
-etup-init-vscode
-> >=20
-> > I guess the rebase with untracked files should be properly handled
-> > and
-> > tested on the git fetcher level already.
-> >=20
-> > Handling corner cases for bb.fetch2.UnpackError at the bitbake-
-> > setup
-> > level is complex, and accidental file deletion remains a concern.
-> > However, we should pursue an implementation that supports automatic
-> > rebasing with untracked files, which are commonplace. Backup-based
-> > approaches are cumbersome and should be a last resort.
-> >=20
-> > I tried to achieve this by adding many test cases, at least.
->=20
-> The additional test cases are very useful but we should tread
-> carefully with adding bitbake-setup update logic (e.g. in your
-> patchset it first tries non-destrictuive unpack, then in case of
-> fetcher errors falls back to backup+clean unpack, not giving users a
-> chance to resolve conflicts - I am not sure users are going to like
-> that).
->=20
-> Let's first not try to handle UnpackErrors at all, and implement
-> simple support for unpack_update(). Users would resolve the conflicts
-> and run bitbake-setup update again.
+Allow bitbake configurations to provide local.conf content through
+'bb-local-conf-header'.
 
-I think this is the best approach. Users are going to want to know
-about conflicts and will usually have an idea of how they want to
-resolve them. The point of this update mechanism is to make it easy for
-the user to pull in changes but allow them to have local changes too,
-since most of us will end up doing that, I know I do...
+When present, bitbake-setup appends the provided value (string or list
+of lines) to build/conf/local.conf during setup initialization.
 
-Cheers,
+This helps projects carry machine-specific local.conf policy in
+configuration data instead of wrapper scripts.
 
-Richard
+Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+---
+ bin/bitbake-setup | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index 9d08f3a1b..edb8c4d1f 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -310,6 +310,15 @@ def setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_c
+ # layer fragments from changes made here.
+ #
+ """
++
++        local_conf_extra = bitbake_config.get("bb-local-conf-header")
++        if local_conf_extra:
++            local_conf += "\n# Added by bitbake-setup from bb-local-conf-header\n"
++            if isinstance(local_conf_extra, list):
++                local_conf += "\n".join(local_conf_extra) + "\n"
++            else:
++                local_conf += str(local_conf_extra) + "\n"
++
+         with open(os.path.join(build_conf_dir, "local.conf"), 'w') as f:
+             f.write(local_conf)
+ 
+-- 
+2.34.1
+
 
