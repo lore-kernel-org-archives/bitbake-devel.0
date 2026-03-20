@@ -2,103 +2,110 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48396109193B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48ECE109193C
 	for <webhook@archiver.kernel.org>; Fri, 20 Mar 2026 00:26:17 +0000 (UTC)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.2597.1773966375675948163
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.2588.1773966376608808765
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 19 Mar 2026 17:26:15 -0700
+ Thu, 19 Mar 2026 17:26:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=fJW2u432;
- spf=pass (domain: smile.fr, ip: 209.85.128.53, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-486ff3a0fc1so1347345e9.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 19 Mar 2026 17:26:15 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=m4wHKFGb;
+ spf=pass (domain: smile.fr, ip: 209.85.128.46, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-48540d21f7dso944905e9.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 19 Mar 2026 17:26:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1773966374; x=1774571174; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IcE4gdpqjIv0gOpkeuL0eIZwySoFPZG1R4dvAKSUbVw=;
-        b=fJW2u432MQ+jwHrjqAl3pwmrOvmPs/SUgThKxvoPts497Os8mwWXI5YpP2UaOF5I7F
-         MNK1MnVsyE2xBs5QbO2PKSXL/tlbeNTj22ZIyDdBTBOIR+fy+BdHSB8bpUOjpLxWOc0P
-         DUKk2xleNy276NL002zfhTmNzCwttab1u6Q00=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773966374; x=1774571174;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=smile.fr; s=google; t=1773966375; x=1774571175; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IcE4gdpqjIv0gOpkeuL0eIZwySoFPZG1R4dvAKSUbVw=;
-        b=f4g7t9Mn3Tn4usMZa+dHYBJmgpX5UCSRlcpYppo5+mAhBTjdgH9sn/3fNRz4LHJUCI
-         9umHAuZH9HjRcRbKb1Xjr9K2hjObSaob1LyvBHNl8pFSCn6aTxF1NbCwWZw6kF2whvqe
-         USZ6aP52Cw4GB7EpYmvPsg5JUGA6YsD4yHqEMW/OTgLjykaQk8hEUNX5ekPLKsr5Tv2B
-         W+rTmx20M9yrFfQLMBanzzCJiXL5nKR3cEMcwD7h+aPooHOVnFIVC3BcEceprfimksPG
-         stPlgkQYEXk0jbS89ge7m9wlOnJCpkrVQmZXt89jZ6M3qg8uPMrCTpjgRKn2rmLlFhl0
-         wvmg==
-X-Gm-Message-State: AOJu0YzUONUasZf8JepndLCFErL8OtjpFKp5uLG2nsm/XWOZ1JFtSZQX
-	w8qKidmsVifSQqcfN+uC3VI9rl9nKXWY8ZvNvwysf3D5scD4EJejLl/OunARZNA/wUu2qRHqreP
-	kJ40S
-X-Gm-Gg: ATEYQzyInkm8+LDeYylqHTVfp6TX241szmeCKIcP9tQVnVrv8L0R/H/6wb7YVgpA+/T
-	qt34YeXUjqpYgorGxhNADGd9UGA7IbEyzRKk5uNQJVnAvYP/JeJP/aYF7f+91zZ14e0UR2MVHE7
-	GjAsALago/xXiW+Nr2vxz5znGc0nhFjIiHDXia/VfGoPkX0ARvw7tCyHiN+DfJvx9HGe/zuWax8
-	c5EuTMSO0TUGx2bMnumptUy8o+lMOl8oISEG6yb81UDVGfVYwZzIwJFi5Lr0qilLEnUKAzEuoML
-	YxqVMfFkyRXUZ8nohzhQJI6tTcyhTpfrXA1x1PNi/ye8QgfBmAVr8woySefMVS60G+n6Wh3FA/C
-	dvndH3QHvquTZFygYBpr80w/sOv32aiwdcXLvB0SBwIj/wYzcF3PbUX9FDGYOE9+rH1WwMWfqVS
-	SeDLV7Bph7Ta+Hp/lUYuB+buKihaQjgY/wHmwaYbvRMCn7IMYfeRwrBvEjbOVHALfAJJxMK3uwR
-	tCeyMVLX5Cl9VNj4Pahi/PxCXtuB8WKfAgTBQ==
-X-Received: by 2002:a05:600c:8b6e:b0:485:3949:e5c6 with SMTP id 5b1f17b1804b1-486febb56a2mr15675415e9.3.1773966373581;
-        Thu, 19 Mar 2026 17:26:13 -0700 (PDT)
+        bh=p7ch6NEFQBLiey3BkCQwVphC2JH8/he69fIO2/9bYmo=;
+        b=m4wHKFGbiEGRkHmaUfVb8UEZDSoFiIeG+oMQv6HGQo9Ei7aIubGKLR1FBScwDUmcOk
+         zrjIrqVFvP0PO5rUlHfSwBvgRd8qlWXuYMox2jgiXXJY3N0Y7z03FcQa2QF+YoBcS+d1
+         fRKnSqbIYzZC325SjtJhosVKvU8kLiuPuQSfg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773966375; x=1774571175;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=p7ch6NEFQBLiey3BkCQwVphC2JH8/he69fIO2/9bYmo=;
+        b=RlFeHAq26ePAmAMVGlDl9545LwW+LPwrDELWSATgf9Xepw4wi4ghKEBWlUGtMMkt97
+         8o8ecSKJMVUddxpvLCY18NpZxShU8F/QRItRVTU4kJLM6eOsNW7hxPg9Tka+oxEdP27A
+         ZgG9wsv1NFZdFLDxipBdTM9cxJhTyHAmHowoWyvOJkaoi4ZE7+5QhOZN14i1C9QzOefn
+         S6YQmQJ+6rUVTK6dxA1DJpnQsEumVlyyCOpUWnypEKzYLh0HR6OSQnqQlT3C1WZw77Q4
+         TdVsI3ontATCacaw41YDgsPMRu5dc0M7FRkaQB/JZDF8ID06iJDqGDlA9kKTlDUF+KhY
+         mqfA==
+X-Gm-Message-State: AOJu0YzFMKdoKUBF4mxbZdzwTV7Fix6DBQXH6dtivDos75WgKgPc8mRG
+	lmqxO5HAcw44feliscTP/Dnff62AijNfQnm1vG6wxBgYr7WuETAIdNCXxQuxVGk6otOSKXfB3HJ
+	xlfQk
+X-Gm-Gg: ATEYQzzqdfbVqqH+fw+56UctQuTUuz/vAs7E2hdFDnUt/BwohIL6i/2yH+7+m8ANJ71
+	myu1JboSUy82aw2TQcUju+F3Mwx2LL5ScacbTXzYjVeHlbwmVNLxeQXrPtWXf5ruAdUXBbOCeQ3
+	6zod2nxR3UH9cXqEeeLFvilYfd3fd9Kca9LhwcddbQx1FAp9EngH3DUT9xzJO4KDJLl+SOE35kh
+	Ocdic0JGPi4HleIO8okFKD6AvkJXhV/oxrzpnx2mxPhsO8EIHNK/kKzaf+AozOx5b8+2xAiXFRj
+	Ss3pNtAm+YV9LygUl2WdzMqzyvC7nUPE/HpwGanbTsqvC3ZGKY9h1ew0vYaR5QRwh9QBLR/ljpe
+	dcfb/oDdFzUE0BiAaZcMVNUGdvSJcBfUv0BUpTgoFfg1Al2TdD9P+QlsMc0Qz415Iu36asg5f4q
+	hfrvAbKtj+NqguC+8uUDcuRlGEue67hHJIiPQRYAgAdO+JaOob2BIa9ks4NOE1ttcmbqexKlVZd
+	+JmjCIdmb4M7QQjgHDZMRHEFQU0c/8WrztX3w==
+X-Received: by 2002:a05:600c:5291:b0:485:34b3:8589 with SMTP id 5b1f17b1804b1-486ff04d42fmr13976135e9.31.1773966374678;
+        Thu, 19 Mar 2026 17:26:14 -0700 (PDT)
 Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486fb4309d1sm106036545e9.3.2026.03.19.17.26.13
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486fb4309d1sm106036545e9.3.2026.03.19.17.26.14
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 17:26:13 -0700 (PDT)
+        Thu, 19 Mar 2026 17:26:14 -0700 (PDT)
 From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][scarthgap][2.8][PATCH 0/4] Patch review
-Date: Fri, 20 Mar 2026 01:26:07 +0100
-Message-ID: <cover.1773966318.git.yoann.congal@smile.fr>
+Subject: [bitbake][scarthgap][2.8][PATCH 2/4] gitsm: Add clean function
+Date: Fri, 20 Mar 2026 01:26:09 +0100
+Message-ID: <6cb07e8c702b750c5047dcd646ca72ca5f75321c.1773966318.git.yoann.congal@smile.fr>
 X-Mailer: git-send-email 2.47.3
+In-Reply-To: <cover.1773966318.git.yoann.congal@smile.fr>
+References: <cover.1773966318.git.yoann.congal@smile.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 20 Mar 2026 00:26:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19179
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19181
 
-Please review this set of changes for 2.8/scarthgap and have comments back by
-end of day Monday, March 23.
+From: Robert Yang <liezhi.yang@windriver.com>
 
-Passed a-full on autobuilder:
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/3457
+Fixed:
+$ bitbake utfcpp -cfetch && bitbake utfcpp -ccleanall
 
-The following changes since commit a0a5ce49f28d886b1dac173842642e69517b44e3:
+The downloads/git2/github.com.nemtrif.ftest won't be cleaned without this fix.
 
-  COW: Fix hardcoded magic numbers and work with python 3.13 (2026-03-16 09:24:26 +0000)
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit 79f25fc5c1b8d0e08540f4aa07875309f5325f47)
+Suggested-by: Michael Siebold <michael.siebold@gmail.com>
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+---
+ lib/bb/fetch2/gitsm.py | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-are available in the Git repository at:
-
-  https://git.openembedded.org/bitbake-contrib stable/2.8-nut
-  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.8-nut
-
-for you to fetch changes up to d3b4c352dd33fca90cd31649eda054b884478739:
-
-  fetch2: Fix LFS object checkout in submodules (2026-03-19 00:14:50 +0100)
-
-----------------------------------------------------------------
-
-Philip Lorenz (2):
-  fetch2: Fix incorrect lfs parametrization for submodules
-  fetch2: Fix LFS object checkout in submodules
-
-Robert Yang (1):
-  gitsm: Add clean function
-
-Ross Burton (1):
-  fetch2: don't try to preserve all attributes when unpacking files
-
- lib/bb/fetch2/__init__.py |  2 +-
- lib/bb/fetch2/gitsm.py    | 26 +++++++++++++++++++-------
- 2 files changed, 20 insertions(+), 8 deletions(-)
-
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index fab4b1164..ba62517f0 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -249,6 +249,19 @@ class GitSM(Git):
+             # should also be skipped as these files were already smudged in the fetch stage if lfs
+             # was enabled.
+             runfetchcmd("GIT_LFS_SKIP_SMUDGE=1 %s submodule update --recursive --no-fetch" % (ud.basecmd), d, quiet=True, workdir=ud.destdir)
++    def clean(self, ud, d):
++        def clean_submodule(ud, url, module, modpath, workdir, d):
++            url += ";bareclone=1;nobranch=1"
++            try:
++                newfetch = Fetch([url], d, cache=False)
++                newfetch.clean()
++            except Exception as e:
++                logger.warning('gitsm: submodule clean failed: %s %s' % (type(e).__name__, str(e)))
++
++        self.call_process_submodules(ud, d, True, clean_submodule)
++
++        # Clean top git dir
++        Git.clean(self, ud, d)
+ 
+     def implicit_urldata(self, ud, d):
+         import shutil, subprocess, tempfile
 
