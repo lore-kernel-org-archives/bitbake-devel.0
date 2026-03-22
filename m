@@ -2,33 +2,33 @@ Return-Path: <adrian.freihofer@siemens.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C61D58B02
-	for <webhook@archiver.kernel.org>; Sun, 22 Mar 2026 19:35:08 +0000 (UTC)
-Received: from mta-64-227.siemens.flowmailer.net (mta-64-227.siemens.flowmailer.net [185.136.64.227])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.1878.1774208105448860720
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB06D58CA9
+	for <webhook@archiver.kernel.org>; Sun, 22 Mar 2026 19:35:09 +0000 (UTC)
+Received: from mta-65-226.siemens.flowmailer.net (mta-65-226.siemens.flowmailer.net [185.136.65.226])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.1828.1774208105449174887
  for <bitbake-devel@lists.openembedded.org>;
  Sun, 22 Mar 2026 12:35:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=adrian.freihofer@siemens.com header.s=fm1 header.b=EEX7TjZY;
- spf=pass (domain: rts-flowmailer.siemens.com, ip: 185.136.64.227, mailfrom: fm-1329275-20260322193502cb1de83b3e00020764-x8lcne@rts-flowmailer.siemens.com)
-Received: by mta-64-227.siemens.flowmailer.net with ESMTPSA id 20260322193502cb1de83b3e00020764
+ dkim=pass header.i=adrian.freihofer@siemens.com header.s=fm1 header.b=eDZPZMX/;
+ spf=pass (domain: rts-flowmailer.siemens.com, ip: 185.136.65.226, mailfrom: fm-1329275-202603221935026b3758b61900020759-mp2qfr@rts-flowmailer.siemens.com)
+Received: by mta-65-226.siemens.flowmailer.net with ESMTPSA id 202603221935026b3758b61900020759
         for <bitbake-devel@lists.openembedded.org>;
         Sun, 22 Mar 2026 20:35:02 +0100
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
  d=siemens.com; i=adrian.freihofer@siemens.com;
  h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=y/ZJkYoFmkQPEd+6iBDi9gIAMJjHJx4RfN3Ndwc97Fk=;
- b=EEX7TjZY2CQpOhv5Uv/qou68Eh4G3MkPQBOQY4kJNKkRjhaPwH5P5XO/nncwqntbrHxSHd
- 1YZ5sw+yyVGBe4pOZL7S/kKOoYQHZCeWF7rAwd7/2e4OqsDA8uQ6O/wt+HzGT3WbqWhsqiLe
- 00qXZtyLx8caNiASjBS/hNXOQb8Und3GFVfxQZbuCJNkmZO0vKIXYJw5ec7q1k9EZVkGXffH
- 326cAuN4vBi3iyo/PJr/IDLZZe6p09ROEwbZwuAIn9oilpKRR4Tgpvy4dbqj6AhhvI51y+TT
- iiGsfW8mC9p4s0OvznlWOypVosF+n2MKdC3Eu3KdaCSV5Tkegbyq+o4A==;
+ bh=tHatzJkj8v41S00Pvw0rYn2RiqmtE0gHkGSd5U3RR+E=;
+ b=eDZPZMX/o4lw0BCUi+JN8RYsyJnJ4JrplYnfiYIA9R/8Fr4nRy8yyLHMj3gKb0FcK2qQq+
+ QSiGUT38NLj6L032E3iOh2ZsOeu3YXbWd7SuigENt+neLuNxvY8ESEJ5d3bTbkS0Ox8+ps0P
+ eWaXbEMNvPIjRjusV3rcZZeyJNf9FqaTZCyWpsXTDQLGxcdcnYc5q6kT+DbednH/tXT2IOv0
+ hQqXTFoO0O347QcXMS6Klk/syBM+rJv4/CBUDIObvUz1gItblIxw0VKsQ88uVjGVkIHmd91E
+ lkMyddr2zm/i0dbiQzoH+zam+JsdLQB9C60DH6YyKrNnJ2Er1SCXTzHg==;
 From: AdrianF <adrian.freihofer@siemens.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Adrian Freihofer <adrian.freihofer@siemens.com>
-Subject: [PATCH 6/9] bitbake-setup: generate config files for VSCode
-Date: Sun, 22 Mar 2026 20:34:17 +0100
-Message-ID: <20260322193440.870120-7-adrian.freihofer@siemens.com>
+Subject: [PATCH 4/9] tests/setup: fix dead check_setupdir_files guards
+Date: Sun, 22 Mar 2026 20:34:15 +0100
+Message-ID: <20260322193440.870120-5-adrian.freihofer@siemens.com>
 In-Reply-To: <20260322193440.870120-1-adrian.freihofer@siemens.com>
 References: <20260322193440.870120-1-adrian.freihofer@siemens.com>
 MIME-Version: 1.0
@@ -38,361 +38,46 @@ Feedback-ID: 519:519-1329275:519-21489:flowmailer
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 22 Mar 2026 19:35:08 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19204
+ <bitbake-devel@lists.openembedded.org>; Sun, 22 Mar 2026 19:35:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19199
 
 From: Adrian Freihofer <adrian.freihofer@siemens.com>
 
-This change introduces a function to generate a VSCode workspace file
-(`bitbake.code-workspace`). This workspace file is preferred over a
-project-specific `.vscode/settings.json` for several reasons:
+Two conditions in check_setupdir_files used wrong key names and
+so never triggered:
 
-- It allows for a multi-root workspace, which is ideal for a bitbake
-  project structure setup with bitbake-setup. This enables including all
-  layer repositories and the build configuration directory as top-level
-  folders in the explorer.
-- The workspace file can be located at the top level of the setup,
-  outside of any version-controlled source directory. This avoids
-  cluttering the git repositories with editor-specific configuration.
-- It provides a centralized place for all VSCode settings related to the
-  project, including those for the bitbake extension, Python language
-  server, and file associations, ensuring a consistent development
-  environment for all users of the project.
+- 'oe-fragment' -> 'oe-fragments' (plural): fragment-existence
+  assertions were never reached for any variant that has fragments.
 
-The Python analysis paths (`python.analysis.extraPaths`) are configured
-with absolute paths. This is a workaround for a limitation in the Pylance
-extension, which does not correctly resolve `${workspaceFolder:...}`
-variables in a multi-root workspace context for import resolution. Using
-absolute paths ensures that Pylance can find all necessary modules from
-the various layers.
+- 'bb-environment-passthrough' -> 'bb-env-passthrough-additions':
+  BB_ENV_PASSTHROUGH_ADDITIONS assertions were never reached for
+  the gizmo-env-passthrough variant.
 
-There is room for improvement. Starting a terminal (bitbake or any other)
-is cumbersome, as VSCode wants to start it for one of the layers rather
-than the build directory.
+Also drop the redundant .keys() call on both guards.
 
 Signed-off-by: Adrian Freihofer <adrian.freihofer@siemens.com>
 ---
- bin/bitbake-setup | 200 ++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 185 insertions(+), 15 deletions(-)
+ lib/bb/tests/setup.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index 6d24f8fcc..695043378 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -246,7 +246,7 @@ bitbake-setup init -L {} /path/to/repo/checkout""".format(
+diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
+index d52a81395..1af3d8b50 100644
+--- a/lib/bb/tests/setup.py
++++ b/lib/bb/tests/setup.py
+@@ -260,11 +260,11 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+                         )
+                     self.assertIn(filerelative_layer, bblayers)
  
-     return layers_fixed_revisions
+-        if 'oe-fragment' in bitbake_config.keys():
++        if 'oe-fragments' in bitbake_config:
+             for f in bitbake_config["oe-fragments"]:
+                 self.assertTrue(os.path.exists(os.path.join(bb_conf_path, f)))
  
--def setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_conf):
-+def setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_conf, init_vscode=False):
-     def _setup_build_conf(layers, filerelative_layers, build_conf_dir):
-         os.makedirs(build_conf_dir)
-         layers_s = []
-@@ -376,7 +376,7 @@ def setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_c
-             logger.plain('New bitbake configuration from upstream is the same as the current one, no need to update it.')
-             shutil.rmtree(bitbake_confdir)
-             os.rename(backup_bitbake_confdir, bitbake_confdir)
--            return
-+            return bitbake_builddir, init_script
- 
-         logger.plain('Upstream bitbake configuration changes were found:')
-         logger.plain(conf_diff)
-@@ -391,24 +391,30 @@ def setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_c
-             logger.plain(f'Leaving the upstream configuration in {upstream_bitbake_confdir}')
-             os.rename(bitbake_confdir, upstream_bitbake_confdir)
-             os.rename(backup_bitbake_confdir, bitbake_confdir)
--            return
-+            return bitbake_builddir, init_script
- 
-         logger.plain('Applying upstream bitbake configuration changes')
-         logger.plain(f'Leaving the previous configuration in {backup_bitbake_confdir}')
- 
-     fragment_note = "Run 'bitbake-config-build enable-fragment <fragment-name>' to enable additional fragments or replace built-in ones (e.g. machine/<name> or distro/<name> to change MACHINE or DISTRO)."
- 
-+    workspace_file = os.path.join(setupdir, "bitbake.code-workspace")
-+
-+    readme_extra = ""
-+    if init_vscode:
-+        readme_extra = "\n\nTo edit the code in VSCode, open the workspace: code {}\n".format(workspace_file)
-+
-     readme = """{}\n\nAdditional information is in {} and {}\n
- Source the environment using '. {}' to run builds from the command line.\n
- {}\n
--The bitbake configuration files (local.conf, bblayers.conf and more) can be found in {}/conf
--""".format(
-+The bitbake configuration files (local.conf, bblayers.conf and more) can be found in {}/conf{}""".format(
-         bitbake_config["description"],
-         os.path.join(bitbake_builddir,'conf/conf-summary.txt'),
-         os.path.join(bitbake_builddir,'conf/conf-notes.txt'),
-         init_script,
-         fragment_note,
--        bitbake_builddir
-+        bitbake_builddir,
-+        readme_extra
-         )
-     readme_file = os.path.join(bitbake_builddir, "README")
-     with open(readme_file, 'w') as f:
-@@ -419,6 +425,10 @@ The bitbake configuration files (local.conf, bblayers.conf and more) can be foun
-     logger.plain("To run builds, source the environment using\n    . {}\n".format(init_script))
-     logger.plain("{}\n".format(fragment_note))
-     logger.plain("The bitbake configuration files (local.conf, bblayers.conf and more) can be found in\n    {}/conf\n".format(bitbake_builddir))
-+    if init_vscode:
-+        logger.plain("To edit the code in VSCode, open the workspace:\n    code {}\n".format(workspace_file))
-+
-+    return bitbake_builddir, init_script
- 
- def get_registry_config(registry_path, id):
-     for root, dirs, files in os.walk(registry_path):
-@@ -434,14 +444,15 @@ def merge_overrides_into_sources(sources, overrides):
-             layers[k] = v
-     return layers
- 
--def update_build(config, confdir, setupdir, layerdir, d, update_bb_conf="prompt"):
-+def update_build(config, confdir, setupdir, layerdir, d, update_bb_conf="prompt", init_vscode=False):
-     layer_config = merge_overrides_into_sources(config["data"]["sources"], config["source-overrides"]["sources"])
-     sources_fixed_revisions = checkout_layers(layer_config, confdir, layerdir, d)
-     bitbake_config = config["bitbake-config"]
-     thisdir = os.path.dirname(config["path"]) if config["type"] == 'local' else None
--    setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_conf)
-+    bitbake_builddir, init_script = setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_conf, init_vscode)
-     write_sources_fixed_revisions(confdir, layerdir, sources_fixed_revisions)
-     commit_config(confdir)
-+    return bitbake_builddir, init_script
- 
- def int_input(allowed_values, prompt=''):
-     n = None
-@@ -628,6 +639,151 @@ def obtain_overrides(args):
- 
-     return overrides
- 
-+def configure_vscode(setupdir, layerdir, builddir, init_script):
-+    """
-+    Configure the VSCode environment by creating or updating a workspace file.
-+
-+    Create or update a bitbake.code-workspace file with folders for the layers and build/conf.
-+    Managed folders are regenerated; user-added folders are kept. Settings are merged, with
-+    managed keys (bitbake.*, python extra paths) always overwritten.
-+    """
-+    logger.debug("configure_vscode: setupdir={}, layerdir={}, builddir={}, init_script={}".format(
-+        setupdir, layerdir, builddir, init_script))
-+
-+    # Get git repository directories
-+    git_repos = []
-+    if os.path.exists(layerdir):
-+        for entry in os.listdir(layerdir):
-+            entry_path = os.path.join(layerdir, entry)
-+            if os.path.isdir(entry_path) and not os.path.islink(entry_path):
-+                # Check if it's a git repository
-+                if os.path.exists(os.path.join(entry_path, '.git')):
-+                    git_repos.append(entry)
-+    logger.debug("configure_vscode: found {} git repos: {}".format(len(git_repos), git_repos))
-+
-+    conf_path = os.path.relpath(os.path.join(builddir, "conf"), setupdir)
-+    repo_paths = [os.path.relpath(os.path.join(layerdir, repo), setupdir) for repo in git_repos]
-+    logger.debug("configure_vscode: conf_path={}, repo_paths={}".format(conf_path, repo_paths))
-+
-+    # Load existing workspace
-+    workspace_file = os.path.join(setupdir, "bitbake.code-workspace")
-+    workspace = {
-+        "extensions": {
-+            "recommendations": [
-+                "yocto-project.yocto-bitbake"
-+            ]
-+        }
-+    }
-+    if os.path.exists(workspace_file):
-+        logger.debug("configure_vscode: loading existing workspace file: {}".format(workspace_file))
-+        try:
-+            with open(workspace_file, 'r') as f:
-+                workspace = json.load(f)
-+            logger.debug("configure_vscode: loaded workspace with {} folders, {} settings".format(
-+                len(workspace.get("folders", [])), len(workspace.get("settings", {}))))
-+        except (json.JSONDecodeError, OSError) as e:
-+            logger.error(
-+                "Unable to read existing workspace file {}: {}. Skipping update.".format(
-+                    workspace_file, str(e)
-+                )
-+            )
-+            return
-+    else:
-+        logger.debug("configure_vscode: creating new workspace file: {}".format(workspace_file))
-+
-+    # Update folders
-+    existing_folders = workspace.get("folders", [])
-+    new_folders = [{"name": "conf", "path": conf_path}]
-+    for rp in repo_paths:
-+        repo_name = os.path.basename(rp)
-+        new_folders.append({"name": repo_name, "path": rp})
-+    # Keep any user-added folders that are not managed
-+    managed_paths = {f["path"] for f in new_folders}
-+    for f in existing_folders:
-+        if f["path"] not in managed_paths:
-+            new_folders.append(f)
-+            logger.debug("configure_vscode: keeping user-added folder: {}".format(f["path"]))
-+    workspace["folders"] = new_folders
-+    logger.debug("configure_vscode: updated workspace with {} folders".format(len(new_folders)))
-+
-+    # Build Python extra paths for each layer - only check top level of each repo
-+    extra_paths = []
-+    subdirs_to_check = ['lib', 'scripts']
-+    for repo in git_repos:
-+        repo_path_abs = os.path.join(layerdir, repo)
-+        for subdir in subdirs_to_check:
-+            sub_path = os.path.join(repo_path_abs, subdir)
-+            if os.path.isdir(sub_path):
-+                extra_paths.append(sub_path)
-+
-+    # Update settings
-+    existing_settings = workspace.get("settings", {})
-+    new_settings = {
-+        "bitbake.disableConfigModification": True,
-+        "bitbake.pathToBitbakeFolder": os.path.join(layerdir, "bitbake"),
-+        "bitbake.pathToBuildFolder": builddir,
-+        "bitbake.pathToEnvScript": init_script,
-+        "bitbake.workingDirectory": builddir,
-+        "files.associations": {
-+            "*.conf": "bitbake",
-+            "*.inc": "bitbake"
-+        },
-+        "files.exclude": {
-+            "**/.git/**": True
-+        },
-+        "search.exclude": {
-+            "**/.git/**": True,
-+            "**/logs/**": True
-+        },
-+        "files.watcherExclude": {
-+            "**/.git/**": True,
-+            "**/logs/**": True
-+        },
-+        "python.analysis.exclude": [
-+            "**/.git/**",
-+            "**/logs/**"
-+        ],
-+        "python.autoComplete.extraPaths": extra_paths,
-+        "python.analysis.extraPaths": extra_paths
-+    }
-+
-+    # Merge settings: add missing, always update bitbake paths and python extra paths
-+    for key, value in new_settings.items():
-+        if key not in existing_settings:
-+            existing_settings[key] = value
-+        elif key.startswith("bitbake.") or key in [
-+            "python.autoComplete.extraPaths",
-+            "python.analysis.extraPaths",
-+        ]:
-+            # Always replace - these are managed/machine-generated settings
-+            existing_settings[key] = value
-+        elif key in [
-+            "files.associations",
-+            "files.exclude",
-+            "search.exclude",
-+            "files.watcherExclude",
-+            "python.analysis.exclude",
-+        ]:
-+            # For dicts and lists, merge new values in without removing user additions
-+            if isinstance(value, dict):
-+                if not isinstance(existing_settings[key], dict):
-+                    existing_settings[key] = {}
-+                for k, v in value.items():
-+                    if k not in existing_settings[key]:
-+                        existing_settings[key][k] = v
-+            elif isinstance(value, list):
-+                if not isinstance(existing_settings[key], list):
-+                    existing_settings[key] = []
-+                for item in value:
-+                    if item not in existing_settings[key]:
-+                        existing_settings[key].append(item)
-+
-+    workspace["settings"] = existing_settings
-+    logger.debug("configure_vscode: merged settings, total {} keys".format(len(existing_settings)))
-+
-+    with open(workspace_file, 'w') as f:
-+        json.dump(workspace, f, indent=4)
-+    logger.debug("configure_vscode: wrote workspace file: {}".format(workspace_file))
- 
- def init_config(top_dir, settings, args):
-     create_siteconf(top_dir, args.non_interactive, settings)
-@@ -669,7 +825,8 @@ def init_config(top_dir, settings, args):
-                 setup_dir_name = n
- 
-     setupdir = os.path.join(os.path.abspath(top_dir), setup_dir_name)
--    if os.path.exists(os.path.join(setupdir, "layers")):
-+    layerdir = os.path.join(setupdir, "layers")
-+    if os.path.exists(layerdir):
-         logger.info(f"Setup already initialized in:\n    {setupdir}\nUse 'bitbake-setup status' to check if it needs to be updated, or 'bitbake-setup update' to perform the update.\nIf you would like to start over and re-initialize in this directory, remove it, and run 'bitbake-setup init' again.")
-         return
- 
-@@ -683,7 +840,6 @@ def init_config(top_dir, settings, args):
-     os.makedirs(setupdir, exist_ok=True)
- 
-     confdir = os.path.join(setupdir, "config")
--    layerdir = os.path.join(setupdir, "layers")
- 
-     os.makedirs(confdir)
-     os.makedirs(layerdir)
-@@ -697,7 +853,10 @@ def init_config(top_dir, settings, args):
-     bb.event.register("bb.build.TaskProgress", handle_task_progress, data=d)
- 
-     write_upstream_config(confdir, upstream_config)
--    update_build(upstream_config, confdir, setupdir, layerdir, d, update_bb_conf="yes")
-+    bitbake_builddir, init_script = update_build(upstream_config, confdir, setupdir, layerdir, d, update_bb_conf="yes", init_vscode=args.init_vscode)
-+
-+    if args.init_vscode:
-+        configure_vscode(setupdir, layerdir, bitbake_builddir, init_script)
- 
-     bb.event.remove("bb.build.TaskProgress", None)
- 
-@@ -773,8 +932,10 @@ def build_status(top_dir, settings, args, d, update=False):
-     if config_diff:
-         logger.plain('\nConfiguration in {} has changed:\n{}'.format(setupdir, config_diff))
-         if update:
--            update_build(new_upstream_config, confdir, setupdir, layerdir, d,
--                         update_bb_conf=args.update_bb_conf)
-+            bitbake_builddir, init_script = update_build(new_upstream_config, confdir, setupdir, layerdir, d,
-+                         update_bb_conf=args.update_bb_conf, init_vscode=args.init_vscode)
-+            if args.init_vscode:
-+                configure_vscode(setupdir, layerdir, bitbake_builddir, init_script)
-         else:
-             bb.process.run('git -C {} restore config-upstream.json'.format(confdir))
-         return
-@@ -782,11 +943,16 @@ def build_status(top_dir, settings, args, d, update=False):
-     layer_config = merge_overrides_into_sources(current_upstream_config["data"]["sources"], current_upstream_config["source-overrides"]["sources"])
-     if are_layers_changed(layer_config, layerdir, d):
-         if update:
--            update_build(current_upstream_config, confdir, setupdir, layerdir,
--                         d, update_bb_conf=args.update_bb_conf)
-+            bitbake_builddir, init_script = update_build(current_upstream_config, confdir, setupdir, layerdir,
-+                         d, update_bb_conf=args.update_bb_conf, init_vscode=args.init_vscode)
-+            if args.init_vscode:
-+                configure_vscode(setupdir, layerdir, bitbake_builddir, init_script)
-         return
- 
-     logger.plain("\nConfiguration in {} has not changed.".format(setupdir))
-+    if update and args.init_vscode:
-+        configure_vscode(setupdir, layerdir, os.path.join(setupdir, "build"),
-+                         os.path.join(setupdir, "build", "init-build-env"))
- 
- def build_update(top_dir, settings, args, d):
-     build_status(top_dir, settings, args, d, update=True)
-@@ -1093,6 +1259,8 @@ def main():
-     parser_init.add_argument('--skip-selection', action='append', help='Do not select and set an option/fragment from available choices; the resulting bitbake configuration may be incomplete.')
-     parser_init.add_argument('-L', '--use-local-source', default=[], action='append', nargs=2, metavar=('SOURCE_NAME', 'PATH'),
-                         help='Symlink local source into a build, instead of getting it as prescribed by a configuration (useful for local development).')
-+    parser_init.add_argument('--init-vscode', action=argparse.BooleanOptionalAction, default=bool(shutil.which('code')),
-+                        help='Generate VSCode workspace configuration (default: %(default)s)')
-     parser_init.set_defaults(func=init_config)
- 
-     parser_status = subparsers.add_parser('status', help='Check if the setup needs to be synchronized with configuration')
-@@ -1102,6 +1270,8 @@ def main():
-     parser_update = subparsers.add_parser('update', help='Update a setup to be in sync with configuration')
-     add_setup_dir_arg(parser_update)
-     parser_update.add_argument('--update-bb-conf', choices=['prompt', 'yes', 'no'], default='prompt', help='Update bitbake configuration files (bblayers.conf, local.conf) (default: prompt)')
-+    parser_update.add_argument('--init-vscode', action=argparse.BooleanOptionalAction, default=bool(shutil.which('code')),
-+                        help='Generate VSCode workspace configuration (default: %(default)s)')
-     parser_update.set_defaults(func=build_update)
- 
-     parser_install_buildtools = subparsers.add_parser('install-buildtools', help='Install buildtools which can help fulfil missing or incorrect dependencies on the host machine')
+-        if 'bb-environment-passthrough' in bitbake_config.keys():
++        if 'bb-env-passthrough-additions' in bitbake_config:
+             with open(os.path.join(bb_build_path, 'init-build-env'), 'r') as f:
+                 init_build_env = f.read()
+             self.assertTrue('BB_ENV_PASSTHROUGH_ADDITIONS' in init_build_env)
 -- 
 2.53.0
 
