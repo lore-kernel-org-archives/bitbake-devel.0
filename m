@@ -1,114 +1,106 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0941F4612B
-	for <webhook@archiver.kernel.org>; Mon, 23 Mar 2026 14:26:06 +0000 (UTC)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.18844.1774275966058008830
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6323CF483E1
+	for <webhook@archiver.kernel.org>; Mon, 23 Mar 2026 18:22:17 +0000 (UTC)
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.2066.1774290129238053678
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 23 Mar 2026 07:26:06 -0700
+ Mon, 23 Mar 2026 11:22:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=IerPlnAa;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-439cd6b0aedso2853094f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 23 Mar 2026 07:26:05 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=fdy9Btde;
+ spf=pass (domain: gmail.com, ip: 209.85.160.173, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-50b2b2aa276so36050091cf.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 23 Mar 2026 11:22:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774290128; cv=none;
+        d=google.com; s=arc-20240605;
+        b=CWimcLvreKx7+ZL8wP/gzZf/nnIjIw4fCxvEdO76SNI5jt+84MJCDmAWy3NRPIRV+o
+         B4IfzaS89PAeic/VRL/3zx52BEZB6iakirZC5SPDuHl77XGrm4puHCmAQh/+qt6HNXqL
+         hZRXbjcE/9eqggJEYCJUMqFqJ6dTyx9mw6IR58v0x6i8dE6udZ+HAJW8BCHSnTMBL+Yi
+         8KVvLRus1el+PkDx+QFolUKP7k7NchUNsZ9plluXx1QmFNnXshQSehDpDCMWxk1j2GxD
+         eONa76PeoBRxbCWLSnJ534P1sM4SrzJKKFqs41lph1WEQdDkUVtfbmRZRK0BEUBWKgDI
+         c0vw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=I0M8vVWGhafb25pkl7UhssG5qkfvvJRVM4oCqmHEOHM=;
+        fh=z79r7devTYIWKIIJnNEQrp8fu91t3iK8WPc0gYxDyHM=;
+        b=NBTGtA5lKsgKPHXQQasCfeOAhAPneDlKuS8IIDUaEoC7bc10FfI7njO4PZfRpsDFNl
+         9hA/kl2RnzcuDGhmNufiBYS7noxW89xfKJYXSnvMIbGX2kRpByBflaedcrjzoPKb4Csx
+         tbh958+4sCX0SN+pvXJVs19WYY8FIFaigJIbSfBaPC0nDoIo/6gqML5KAC5taDuMHhFU
+         pbEUSRMBTPcyKKPDf24F0IyKv13407sMJJNaafQiX+EIXLM1rSGS47SMs45W+JDY9e3w
+         JltX7e5U4ygQJ7+MZFuZAWvHKKBGyPYTL2DVPRu09thS+e3QPwf7j17C5PfPvTQp6G4y
+         9Prg==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1774275964; x=1774880764; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NxGbK/ArfTpRiuWZnO99pRgBjNfyr7+hEzQU5vipQvw=;
-        b=IerPlnAaAmu5Wzx4Nhn0Sgl6TZ4VJaTjNf6YTolb324G+4RhAQPXIo9ZehoOsDD4oF
-         d22cnkfYVSRT+z9/0sBoAG0O3462V+35qN6MgQSWnZqqcNy5RqWHu5C5+1hNGm5GkC6U
-         dTfqOfY50p1sVTH8ls4Xxzs5uKs2q9oM35gTs=
+        d=gmail.com; s=20251104; t=1774290128; x=1774894928; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=I0M8vVWGhafb25pkl7UhssG5qkfvvJRVM4oCqmHEOHM=;
+        b=fdy9BtdexZ3hS7WWnVmnZAKFukfpyboNgv+1H5yozpQSOoNcJNYJmd3MznHnQThVxP
+         hvUKVYS9AxZMuiAmUhPV9y54b4Qct+HI+ger7mR8vom8nYPqV6rZ6hX329pGMiztNWHe
+         qaa8SwQwpM/abm2koFzWn/U5BBfMxJXWMmXZZi1tkuqhhjzbdTu7/D2nHHjH4M+nTlfi
+         t1b3XHby6cFFE0p0hWqaNsJk+TijQYt61msyjAusuJ1I+BTAuToeoUDCQcMFsCs4vbUG
+         /lknjpGqkICgPIcyS/y+6k5NRDdju0FAzOcZcTBPQSmkZzmMYZ+GgTZ3gGFp6XtCzn3c
+         y/+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774275964; x=1774880764;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NxGbK/ArfTpRiuWZnO99pRgBjNfyr7+hEzQU5vipQvw=;
-        b=VehWc32+Qfnwy2O44H7EvuHwKh4zFTVfau7cHsRaQfujlqnqKdPMRcPg3iCThxF99I
-         KywIytmbI0MQIs6MvZGIxtbaQU6jZDb/dE19vcmB5Y9R/pKIGF3GNDResFxfKOto4tjY
-         4beczV16tYEGRgdTdna9ieIyXWXu8/HNwnw4UAi8JhxohMKpYlNnb1+jT+YDHi5V/WJv
-         uJ/xgjdzT89E5vFCaxlzJtA8s8uhD9k5l7RxuoTCo3WqVU8vLc3JHUVmmIG2mZ9elOgT
-         IrPJbL6y9/l6OYc+43D8xs0hE4S54qeDvdhFACbX5e3ddY5fLSzHsJGENiWMuHpJKtQC
-         fOfA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPWKtC1PGWrivcvkrxqu+crNZLdw+hztsG2MUyfIrsx+fW4sIKjk9vHkcuFkjtv1Oq7p9nqutLJBKe5clp@lists.openembedded.org
-X-Gm-Message-State: AOJu0YyCiephPE9UcHOkTYfz/ijOT3fUKgWaxl02CSKecgr54gHnmA/0
-	bRL3KXPgwUtox0MffaRmUTFyjUxukqJQlV7+uALZViitqy35m5e3FLsDKyBAzYO0d2k=
-X-Gm-Gg: ATEYQzxbpkYkt9H1eVSVorNR4miFYhtp94Wk2dUQKSrHosxoOWxvKWtSrZQMr73GlJB
-	5yR+yWJYq+zSPkMWT0AJ9RRT/44FVG7AfMs7xgIC4qHS38wctU61TzEoMDrigkG5qXhgE2BPK+e
-	YusnClVZDwH9NdeppEtdZ9pXGKqKftDCRfBMAtFr+ENRpHVIdIP9RLYERFi/+/I1HpnRuE93tWK
-	7fxhXQ1MymQzpsy2i5GezTqWTpOwfvQoXzLbRI36Ybpj8YBHEztuh3ONZ3ItYpjyrzqCWI0nF2G
-	lRVsqmMs2qsxeNNho4LmIxp7jfczw7sKnQG6X34viK1tyj1iNNK9Zkyj+2pmr6e464k4mgfLAgi
-	XBGMrlyqPnPr0NX0Gr6Eofen7s8Jrv9YRuA3emq4VQ0WZOxTKpMvSceDV0vizVViiUcBn5WO7tE
-	6UeDcN6uLxWEhQqEWOxw0mNR4I3TaEAFnXUeSdAQ/c6u/JGBKZdqLBVSiQk7b8bZdmgPVmXT+JQ
-	1PXtaAOnTdaB/2B
-X-Received: by 2002:a5d:5f86:0:b0:43b:5356:a7f7 with SMTP id ffacd0b85a97d-43b6423db79mr19949947f8f.9.1774275964299;
-        Mon, 23 Mar 2026 07:26:04 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:dee7:1e95:1d9e:b065? ([2001:8b0:aba:5f3c:dee7:1e95:1d9e:b065])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b64703c7fsm29815410f8f.23.2026.03.23.07.26.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2026 07:26:03 -0700 (PDT)
-Message-ID: <2ce1a755a695b80d825e28b9d31968cc4e1a30e4.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 5/9] bitbake-setup: report local
- modifications blocking an update
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: adrian.freihofer@siemens.com, bitbake-devel@lists.openembedded.org
-Date: Mon, 23 Mar 2026 14:26:02 +0000
-In-Reply-To: <20260322193440.870120-6-adrian.freihofer@siemens.com>
-References: <20260322193440.870120-1-adrian.freihofer@siemens.com>
-	 <20260322193440.870120-6-adrian.freihofer@siemens.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.56.2-9 
+        d=1e100.net; s=20251104; t=1774290128; x=1774894928;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I0M8vVWGhafb25pkl7UhssG5qkfvvJRVM4oCqmHEOHM=;
+        b=S8NOglhR+ZlWUIFC2PAyndrSMMCKXbnon68FRMYiNAqws6XL40jmd2ahxIX2tIyFrx
+         p0yFnWhdxTbCMrPQs8WH3hzH+0u4QWqrSikZmis3MDrjXEjd3+TGZtal+PS3YKoAP9sY
+         4L4JPDAufiTMMvbzBWVQ/DZlXJl66SREfwb1yx6EsHfur6dIcCHk4n8RIaeoSU/dwCQj
+         ODh6mmcujlJRft7BpMEL1kyHv+ls8MmOO8PU3+YLJujGBvHADLBmpzEmWbcF3Z7bJu69
+         vWlTNkitadU/syQ04ebUqtER/JF4gV86G6JD5ekd1wAm+p57rh3TjA9z7gVYysoA7g/T
+         PBhg==
+X-Gm-Message-State: AOJu0YxrWrEeP26nbQp8lEWng9RDXmhj/Opj/mnr7UWKrsiku7qggjed
+	HUQovU+rebBtTAYqjPbb1CnUQ0EiivSKFd93J+3VC5zSfeeSim+EKP8IRlXkWSOI420KjS4JylW
+	d7hcKD9LecKdwVLyJ5ctZQmjd0kt7sbM=
+X-Gm-Gg: ATEYQzw4yudD+3zBcRhGwwKQOP597gY2nuvE+nDJrevTKRJl8GE/dMRO538nexy7M5e
+	2DyXpI/7l6a/i+GvO8mYVh2t4AZJtWfKkJZ9R0l03/510IhUqnCv9CL016bN+EPNcZ92goJSoWT
+	Ld9fQ0DP2ykIH3zei4HRXiNprZ+oFKK8p2MeNQAkZ/CJvaIk2aB6T805ggXRgbhiNeW2l1ns5PT
+	YgfOPkctKUNC9ST4DNSkQmoQLMsNbxrcoSXQbihWRHTHaFCL05AWmvTEVxa/MnysRtFJ0KLzzie
+	X9YJtqPgOaSYyRn2V6SkSUy97z4DvwO7DlXjPQx+ln92/2M7X1Mn
+X-Received: by 2002:a05:622a:1922:b0:50b:317c:33aa with SMTP id
+ d75a77b69052e-50b374c77f1mr205011081cf.34.1774290128197; Mon, 23 Mar 2026
+ 11:22:08 -0700 (PDT)
 MIME-Version: 1.0
+References: <20260322193440.870120-1-adrian.freihofer@siemens.com> <20260322193440.870120-9-adrian.freihofer@siemens.com>
+In-Reply-To: <20260322193440.870120-9-adrian.freihofer@siemens.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Mon, 23 Mar 2026 19:21:57 +0100
+X-Gm-Features: AQROBzBkJcnrSGZR4KNJMvyeSKuyoyyC-yVkPdZo0gidRHH69gPWqjyDccrVOPU
+Message-ID: <CANNYZj9=cDxqcT9JZ961eeDBkoW5Xo10BzbBiRFsbLBLXZx-HA@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 8/9] bitbake-setup: add --rebase-strategy
+ to the update command
+To: adrian.freihofer@siemens.com
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 23 Mar 2026 14:26:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19209
+ <bitbake-devel@lists.openembedded.org>; Mon, 23 Mar 2026 18:22:17 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19210
 
-T24gU3VuLCAyMDI2LTAzLTIyIGF0IDIwOjM0ICswMTAwLCBBZHJpYW4gRnJlaWhvZmVyIHZpYSBs
-aXN0cy5vcGVuZW1iZWRkZWQub3JnIHdyb3RlOgo+IEZyb206IEFkcmlhbiBGcmVpaG9mZXIgPGFk
-cmlhbi5mcmVpaG9mZXJAc2llbWVucy5jb20+Cj4gCj4gV2hlbiB1bnBhY2tfdXBkYXRlKCkgZGV0
-ZWN0cyB1bmNvbW1pdHRlZCBjaGFuZ2VzIGluIGEgbGF5ZXIgcmVwb3NpdG9yeQo+IGl0IHJhaXNl
-cyBhbiBVbnBhY2tFcnJvciwgd2hpY2ggcHJldmlvdXNseSBwcm9wYWdhdGVkIGFzIGFuIHVuaGFu
-ZGxlZAo+IGV4Y2VwdGlvbiB3aXRoIGFuIG9wYXF1ZSB0cmFjZWJhY2suCj4gCj4gQ2F0Y2ggdGhl
-IFVucGFja0Vycm9yIGluIF9jaGVja291dF9naXRfcmVtb3RlIGFuZCByZS1yYWlzZSBpdCBhcyBh
-Cj4gcGxhaW4gRXhjZXB0aW9uIHdpdGggYSBtZXNzYWdlIHRoYXQ6Cj4gLSBuYW1lcyB0aGUgYWZm
-ZWN0ZWQgc291cmNlIGFuZCBpdHMgcGF0aAo+IC0gdGVsbHMgdGhlIHVzZXIgdG8gY29tbWl0LCBz
-dGFzaCBvciBkaXNjYXJkIHRoZSBjaGFuZ2VzCj4gLSBpbmNsdWRlcyB0aGUgb3JpZ2luYWwgZXJy
-b3IgZGV0YWlsIGZvciBkaWFnbm9zdGljcwo+IAo+IFNpZ25lZC1vZmYtYnk6IEFkcmlhbiBGcmVp
-aG9mZXIgPGFkcmlhbi5mcmVpaG9mZXJAc2llbWVucy5jb20+Cj4gLS0tCj4gwqBiaW4vYml0YmFr
-ZS1zZXR1cCB8IDkgKysrKysrKystCj4gwqAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCsp
-LCAxIGRlbGV0aW9uKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2Jpbi9iaXRiYWtlLXNldHVwIGIvYmlu
-L2JpdGJha2Utc2V0dXAKPiBpbmRleCBlOGQ1MjA2ODcuLjZkMjRmOGZjYyAxMDA3NTUKPiAtLS0g
-YS9iaW4vYml0YmFrZS1zZXR1cAo+ICsrKyBiL2Jpbi9iaXRiYWtlLXNldHVwCj4gQEAgLTE4Miw3
-ICsxODIsMTQgQEAgZGVmIGNoZWNrb3V0X2xheWVycyhsYXllcnMsIGNvbmZkaXIsIGxheWVyZGly
-LCBkKToKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZWxzZToKPiDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCBzcmNfdXJpID0gZiJ7ZmV0Y2h1cml9O3Byb3RvY29sPXtwcm90fTty
-ZXY9e3Jldn07bm9icmFuY2g9MTtkZXN0c3VmZml4PXtyZXBvZGlyfSIKPiDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgZmV0Y2hlciA9IGJiLmZldGNoLkZldGNoKFtzcmNfdXJpXSwgZCkKPiAtwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCBkb19mZXRjaChmZXRjaGVyLCBsYXllcmRpcikKPiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCByZXBvZGlyX3BhdGggPSBvcy5wYXRoLmpvaW4obGF5ZXJkaXIsIHJl
-cG9kaXIpCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdHJ5Ogo+ICvCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgZG9fZmV0Y2goZmV0Y2hlciwgbGF5ZXJkaXIpCj4gK8KgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgZXhjZXB0IGJiLmZldGNoMi5VbnBhY2tFcnJvciBhcyBlOgo+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmFpc2UgRXhjZXB0aW9uKAo+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAiQ2Fubm90IHVwZGF0ZSBzb3VyY2UgJ3t9JyBpbiB7
-fSBiZWNhdXNlIGl0IGhhcyBsb2NhbCBtb2RpZmljYXRpb25zLlxuIgo+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAiUGxlYXNlIGNvbW1pdCwgc3Rhc2ggb3IgZGlzY2Fy
-ZCB5b3VyIGNoYW5nZXMgYW5kIHJlLXJ1biB0aGUgdXBkYXRlLlxuIgo+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAiRGV0YWlsczoge30iLmZvcm1hdChyX25hbWUsIHJl
-cG9kaXJfcGF0aCwgZSkpIGZyb20gTm9uZQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1cmxk
-YXRhID0gZmV0Y2hlci51ZFtzcmNfdXJpXQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXZp
-c2lvbiA9IHVybGRhdGEucmV2aXNpb24KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbGF5ZXJz
-X2ZpeGVkX3JldmlzaW9uc1tyX25hbWVdWydnaXQtcmVtb3RlJ11bJ3JldiddID0gcmV2aXNpb24K
-ClRoZSBweXRob25pYyB0aGluZyB0byBkbyBoZXJlIGlzIHByb2JhYmx5IHRvIGNyZWF0ZSBhIG5l
-dyBleGNlcHRpb24gZm9yCmxvY2FsIGNoYW5nZSBpbiB0aGUgZmV0Y2hlciBpdHNlbGYsIHN1YmNs
-YXNzaW5nIFVucGFja0Vycm9yIHdpdGggdGhlCnN0aW5nIHlvdSdyZSB1c2luZyBhcyB0aGUgZXJy
-b3Igc3RyaW5nPwoKQ2hlZXJzLAoKUmljaGFyZAoKCg==
+On Sun, 22 Mar 2026 at 20:35, Adrian Freihofer via
+lists.openembedded.org
+<adrian.freihofer=siemens.com@lists.openembedded.org> wrote:
+> +    parser_update.add_argument('--rebase-strategy', choices=['stop', 'backup'], default='stop',
+> +                        help="What to do when a layer repository has local modifications that prevent "
+> +                             "an in-place update: 'stop' (default) aborts with an error message; "
+> +                             "'backup' renames the directory to a timestamped backup and re-clones from upstream.")
 
+This option should probably be called 'rebase-conflicts-strategy' as
+it deals specifically with the situations when there are conflicts?
+And the choices should be 'abort' and 'backup', as 'stop' can be
+interpreted as "stop mid-rebase with conflict markers left in the code
+for the user to resolve".
+It wasn't immediately obvious to me, but fetcher explicitly aborts a
+failed rebase and rolls back the code to where it was.
+
+Alex
 
