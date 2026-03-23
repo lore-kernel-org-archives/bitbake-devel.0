@@ -2,105 +2,150 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6323CF483E1
-	for <webhook@archiver.kernel.org>; Mon, 23 Mar 2026 18:22:17 +0000 (UTC)
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.2066.1774290129238053678
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EEFF483E5
+	for <webhook@archiver.kernel.org>; Mon, 23 Mar 2026 18:48:27 +0000 (UTC)
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.2329.1774291697775566158
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 23 Mar 2026 11:22:09 -0700
+ Mon, 23 Mar 2026 11:48:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=fdy9Btde;
- spf=pass (domain: gmail.com, ip: 209.85.160.173, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-50b2b2aa276so36050091cf.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 23 Mar 2026 11:22:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774290128; cv=none;
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=S4Fo2JL1;
+ spf=pass (domain: gmail.com, ip: 209.85.222.171, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-8cfc1aced74so480541785a.2
+        for <bitbake-devel@lists.openembedded.org>; Mon, 23 Mar 2026 11:48:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774291697; cv=none;
         d=google.com; s=arc-20240605;
-        b=CWimcLvreKx7+ZL8wP/gzZf/nnIjIw4fCxvEdO76SNI5jt+84MJCDmAWy3NRPIRV+o
-         B4IfzaS89PAeic/VRL/3zx52BEZB6iakirZC5SPDuHl77XGrm4puHCmAQh/+qt6HNXqL
-         hZRXbjcE/9eqggJEYCJUMqFqJ6dTyx9mw6IR58v0x6i8dE6udZ+HAJW8BCHSnTMBL+Yi
-         8KVvLRus1el+PkDx+QFolUKP7k7NchUNsZ9plluXx1QmFNnXshQSehDpDCMWxk1j2GxD
-         eONa76PeoBRxbCWLSnJ534P1sM4SrzJKKFqs41lph1WEQdDkUVtfbmRZRK0BEUBWKgDI
-         c0vw==
+        b=cgiouv39Gxv5pCgxXimUPGjTG7oGf4aRiUNoGeoVi8yLdDPS8rG61fKLPsYaz541ki
+         zmHtletzg2L5SprEs+W0nr6NId5jh3zvj/RJL++ikBcmnFERQvphySHVH9N/iy4ZD5b1
+         WUMePEvcoeDa07gGq2Cl28UUQ7+W/WfBdNVgYPO6ORzD1xr6PELsbkwS/wPzj9B5ubiP
+         C8m+rV4iTOdJ1c7rWlh+uhfeslEO8fo6l4CiTURah1Ffr3tYJ8/eplL+gIfNUj9u/by1
+         ZjHRFcsGFacR6QYyU2W7Zk+OLhTZGDHxiC9e3nQ7scOji/mMozg0Pn4HqoBftMIVInLm
+         wZYQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=I0M8vVWGhafb25pkl7UhssG5qkfvvJRVM4oCqmHEOHM=;
+        bh=cGI52ibGWmF7BswJ10pyt75KoOvgNPjZfFZFSg/Gl4U=;
         fh=z79r7devTYIWKIIJnNEQrp8fu91t3iK8WPc0gYxDyHM=;
-        b=NBTGtA5lKsgKPHXQQasCfeOAhAPneDlKuS8IIDUaEoC7bc10FfI7njO4PZfRpsDFNl
-         9hA/kl2RnzcuDGhmNufiBYS7noxW89xfKJYXSnvMIbGX2kRpByBflaedcrjzoPKb4Csx
-         tbh958+4sCX0SN+pvXJVs19WYY8FIFaigJIbSfBaPC0nDoIo/6gqML5KAC5taDuMHhFU
-         pbEUSRMBTPcyKKPDf24F0IyKv13407sMJJNaafQiX+EIXLM1rSGS47SMs45W+JDY9e3w
-         JltX7e5U4ygQJ7+MZFuZAWvHKKBGyPYTL2DVPRu09thS+e3QPwf7j17C5PfPvTQp6G4y
-         9Prg==;
+        b=GhF8Ztm01MU2ATwFAlJ/s9JFeHW40FtP6AFWaQxpt2nYAt61L5A6OG8qYzNn8CvtnY
+         ff25mnQVWlWUZsbqbIkm/KXD7ImZhHGhRDyQRHQz2PNo9NdMnbjpu4XXA/SdccoT91c+
+         Kk/jqkusr/v7N8kj+80R/ZN7C7Vt+GTK0vJqeTwbyEex3lN3rtfq2top26MMNMV29FW4
+         iYDgSo/lxbX9rbcCAgo9ANwQDbfsRLZOeb7fm1YLySiqSLnCeNBYWOH31BMxvtqLDYCJ
+         4uSuxaflkyGRQs81kaW3Uqg/iBEiStwjkLQzzojLxiTCrSerF7j3J2231J6EesPX9RGy
+         LL4A==;
         darn=lists.openembedded.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774290128; x=1774894928; darn=lists.openembedded.org;
+        d=gmail.com; s=20251104; t=1774291697; x=1774896497; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=I0M8vVWGhafb25pkl7UhssG5qkfvvJRVM4oCqmHEOHM=;
-        b=fdy9BtdexZ3hS7WWnVmnZAKFukfpyboNgv+1H5yozpQSOoNcJNYJmd3MznHnQThVxP
-         hvUKVYS9AxZMuiAmUhPV9y54b4Qct+HI+ger7mR8vom8nYPqV6rZ6hX329pGMiztNWHe
-         qaa8SwQwpM/abm2koFzWn/U5BBfMxJXWMmXZZi1tkuqhhjzbdTu7/D2nHHjH4M+nTlfi
-         t1b3XHby6cFFE0p0hWqaNsJk+TijQYt61msyjAusuJ1I+BTAuToeoUDCQcMFsCs4vbUG
-         /lknjpGqkICgPIcyS/y+6k5NRDdju0FAzOcZcTBPQSmkZzmMYZ+GgTZ3gGFp6XtCzn3c
-         y/+Q==
+        bh=cGI52ibGWmF7BswJ10pyt75KoOvgNPjZfFZFSg/Gl4U=;
+        b=S4Fo2JL17iiPnc/0E6U0L/C9n01nnj8/qtfrBRnH5648j44mjcGf1HIftAcHqCTntH
+         TmkAyde3h8TUSIucZT13oplJ9XrzXSibkDkyq9dnBz3rGDioVKaNbceaISoRyfk51wGg
+         ZMvE+Why0COB+Sw1v4dM6viXc/jI7Ne4H0akzBBq6hwCzd+yiEe1bqSR9rv1xvFAxNoW
+         ViPz07xfkNMHT+JOPWV/sf5VWpgXNZ+jvFRyBd58C98MQJvVGaoY/+lnxTiqcptsg7bF
+         B9DiVqpaC3BEFe7ArUO0eLDUxPIg2J/VcK5CCp/pelTgC2dvsYTzBwk1tCauACWjf7CO
+         WNmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774290128; x=1774894928;
+        d=1e100.net; s=20251104; t=1774291697; x=1774896497;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=I0M8vVWGhafb25pkl7UhssG5qkfvvJRVM4oCqmHEOHM=;
-        b=S8NOglhR+ZlWUIFC2PAyndrSMMCKXbnon68FRMYiNAqws6XL40jmd2ahxIX2tIyFrx
-         p0yFnWhdxTbCMrPQs8WH3hzH+0u4QWqrSikZmis3MDrjXEjd3+TGZtal+PS3YKoAP9sY
-         4L4JPDAufiTMMvbzBWVQ/DZlXJl66SREfwb1yx6EsHfur6dIcCHk4n8RIaeoSU/dwCQj
-         ODh6mmcujlJRft7BpMEL1kyHv+ls8MmOO8PU3+YLJujGBvHADLBmpzEmWbcF3Z7bJu69
-         vWlTNkitadU/syQ04ebUqtER/JF4gV86G6JD5ekd1wAm+p57rh3TjA9z7gVYysoA7g/T
-         PBhg==
-X-Gm-Message-State: AOJu0YxrWrEeP26nbQp8lEWng9RDXmhj/Opj/mnr7UWKrsiku7qggjed
-	HUQovU+rebBtTAYqjPbb1CnUQ0EiivSKFd93J+3VC5zSfeeSim+EKP8IRlXkWSOI420KjS4JylW
-	d7hcKD9LecKdwVLyJ5ctZQmjd0kt7sbM=
-X-Gm-Gg: ATEYQzw4yudD+3zBcRhGwwKQOP597gY2nuvE+nDJrevTKRJl8GE/dMRO538nexy7M5e
-	2DyXpI/7l6a/i+GvO8mYVh2t4AZJtWfKkJZ9R0l03/510IhUqnCv9CL016bN+EPNcZ92goJSoWT
-	Ld9fQ0DP2ykIH3zei4HRXiNprZ+oFKK8p2MeNQAkZ/CJvaIk2aB6T805ggXRgbhiNeW2l1ns5PT
-	YgfOPkctKUNC9ST4DNSkQmoQLMsNbxrcoSXQbihWRHTHaFCL05AWmvTEVxa/MnysRtFJ0KLzzie
-	X9YJtqPgOaSYyRn2V6SkSUy97z4DvwO7DlXjPQx+ln92/2M7X1Mn
-X-Received: by 2002:a05:622a:1922:b0:50b:317c:33aa with SMTP id
- d75a77b69052e-50b374c77f1mr205011081cf.34.1774290128197; Mon, 23 Mar 2026
- 11:22:08 -0700 (PDT)
+        bh=cGI52ibGWmF7BswJ10pyt75KoOvgNPjZfFZFSg/Gl4U=;
+        b=GwLI3bwB92C7Klyws6R5kDKOyP7C/BxWMD+OrEN1DhgodDQtQplnIgKKj64R0NDo7r
+         8gktgPW6NIhcH029QwQfrLq+oMt+uKqAnpeYWe0Dp9bFXOvfJda+eIYpPmtuH+ja9sy7
+         w035hwgQeyeBzK0JAa+cwfHPzoOKvIIKhM/eEKevwHOGPXBgLAgSQwwnSjjDeHdU5e7T
+         q8itLo4ipZO4nxY/lAbSLl68NvFY00gvj/WfQMYxb/T9YfY+XAAVEP7KijvuoSHCHsgw
+         Z6E5O1tCpoIfg0GtIa66d3MbXPEO5k0l/7teEOpG/PQPUXgDD8ik4WAAcjrb0LbHbTzt
+         C+qQ==
+X-Gm-Message-State: AOJu0YySvtd1HAdkU6f6Ar58SHG0NL91FOX2mw2bN5XPOJX7ZX9uTKoJ
+	083aDRlYgxN4Ow1Vmfifwm7mly5wZjF3dQsaWwkI7AgtFn3D6nxJWAk28Hev9gd18ioWHgxtu9p
+	gEbVfKfJ5a/W0lwYnUsqUuDub2tCe9zw=
+X-Gm-Gg: ATEYQzxWUu0sYE9FS/DLN0UkyPJA6go5Z1Qul2obK50Udmx0iK95kvID2zikizi/Nmk
+	zLPmyP7AlDTxNgcnwG4AhAtnsjt4Xkc8EN4AoJSvpgwt5NPca81q85P0PE8Z62/Ette7RIev+Vo
+	UIFDTkQLFwCncI9r33v6RMHpfwe7kouLLnWqbVyT/chxIP3Jsd+LAWFfP0qQO8A4sbwpKmOjCfH
+	KXZ2bB/k6IeceIhuq2IdS71J7XXqK2rOWi2uJim24rEr7LatvCLIc0MttWdE/EUopPtgyzQBv9U
+	K3Erv5dgKupef7SpRYzg3E+92VHBvr8FwAnHjDGqZw==
+X-Received: by 2002:a05:620a:4588:b0:8cf:ebeb:c284 with SMTP id
+ af79cd13be357-8cfebebc5d4mr465233385a.54.1774291696789; Mon, 23 Mar 2026
+ 11:48:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20260322193440.870120-1-adrian.freihofer@siemens.com> <20260322193440.870120-9-adrian.freihofer@siemens.com>
-In-Reply-To: <20260322193440.870120-9-adrian.freihofer@siemens.com>
+References: <20260322193440.870120-1-adrian.freihofer@siemens.com> <20260322193440.870120-7-adrian.freihofer@siemens.com>
+In-Reply-To: <20260322193440.870120-7-adrian.freihofer@siemens.com>
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Mon, 23 Mar 2026 19:21:57 +0100
-X-Gm-Features: AQROBzBkJcnrSGZR4KNJMvyeSKuyoyyC-yVkPdZo0gidRHH69gPWqjyDccrVOPU
-Message-ID: <CANNYZj9=cDxqcT9JZ961eeDBkoW5Xo10BzbBiRFsbLBLXZx-HA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 8/9] bitbake-setup: add --rebase-strategy
- to the update command
+Date: Mon, 23 Mar 2026 19:48:03 +0100
+X-Gm-Features: AQROBzDegWJKiOxXWSly7GyUCLhe4dzfTKVZBvI2M_mpM6CSM3IdykaKES_eoi4
+Message-ID: <CANNYZj9DLHBhbKuaExm8+Do=HBh-g4Vyu0ASVkDPYb_8ikW5uA@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 6/9] bitbake-setup: generate config files
+ for VSCode
 To: adrian.freihofer@siemens.com
 Cc: bitbake-devel@lists.openembedded.org
 Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 23 Mar 2026 18:22:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19210
+ <bitbake-devel@lists.openembedded.org>; Mon, 23 Mar 2026 18:48:27 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19211
 
 On Sun, 22 Mar 2026 at 20:35, Adrian Freihofer via
 lists.openembedded.org
 <adrian.freihofer=siemens.com@lists.openembedded.org> wrote:
-> +    parser_update.add_argument('--rebase-strategy', choices=['stop', 'backup'], default='stop',
-> +                        help="What to do when a layer repository has local modifications that prevent "
-> +                             "an in-place update: 'stop' (default) aborts with an error message; "
-> +                             "'backup' renames the directory to a timestamped backup and re-clones from upstream.")
+> -def setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_conf):
+> +def setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_conf, init_vscode=False):
 
-This option should probably be called 'rebase-conflicts-strategy' as
-it deals specifically with the situations when there are conflicts?
-And the choices should be 'abort' and 'backup', as 'stop' can be
-interpreted as "stop mid-rebase with conflict markers left in the code
-for the user to resolve".
-It wasn't immediately obvious to me, but fetcher explicitly aborts a
-failed rebase and rolls back the code to where it was.
+....
+
+>      write_upstream_config(confdir, upstream_config)
+> -    update_build(upstream_config, confdir, setupdir, layerdir, d, update_bb_conf="yes")
+> +    bitbake_builddir, init_script = update_build(upstream_config, confdir, setupdir, layerdir, d, update_bb_conf="yes", init_vscode=args.init_vscode)
+> +
+> +    if args.init_vscode:
+> +        configure_vscode(setupdir, layerdir, bitbake_builddir, init_script)
+>
+>      bb.event.remove("bb.build.TaskProgress", None)
+>
+> @@ -773,8 +932,10 @@ def build_status(top_dir, settings, args, d, update=False):
+>      if config_diff:
+>          logger.plain('\nConfiguration in {} has changed:\n{}'.format(setupdir, config_diff))
+>          if update:
+> -            update_build(new_upstream_config, confdir, setupdir, layerdir, d,
+> -                         update_bb_conf=args.update_bb_conf)
+> +            bitbake_builddir, init_script = update_build(new_upstream_config, confdir, setupdir, layerdir, d,
+> +                         update_bb_conf=args.update_bb_conf, init_vscode=args.init_vscode)
+> +            if args.init_vscode:
+> +                configure_vscode(setupdir, layerdir, bitbake_builddir, init_script)
+>          else:
+>              bb.process.run('git -C {} restore config-upstream.json'.format(confdir))
+>          return
+> @@ -782,11 +943,16 @@ def build_status(top_dir, settings, args, d, update=False):
+>      layer_config = merge_overrides_into_sources(current_upstream_config["data"]["sources"], current_upstream_config["source-overrides"]["sources"])
+>      if are_layers_changed(layer_config, layerdir, d):
+>          if update:
+> -            update_build(current_upstream_config, confdir, setupdir, layerdir,
+> -                         d, update_bb_conf=args.update_bb_conf)
+> +            bitbake_builddir, init_script = update_build(current_upstream_config, confdir, setupdir, layerdir,
+> +                         d, update_bb_conf=args.update_bb_conf, init_vscode=args.init_vscode)
+> +            if args.init_vscode:
+> +                configure_vscode(setupdir, layerdir, bitbake_builddir, init_script)
+>          return
+>
+>      logger.plain("\nConfiguration in {} has not changed.".format(setupdir))
+> +    if update and args.init_vscode:
+> +        configure_vscode(setupdir, layerdir, os.path.join(setupdir, "build"),
+> +                         os.path.join(setupdir, "build", "init-build-env"))
+
+This last call to configure_vscode isn't consistent with the rest of
+them which rely on data from update_build(); this one is doing
+'guessing'. I guess the intent is to force configure_vscode() with an
+'update --init-vscode' even when nothing has changed in the
+configuration, but I'd suggest this is taken out for now and dealt
+with separately. Perhaps we can add a separate command: 'bitbake-setup
+configure-vscode'.
+
+If this is done, then a *much* simpler approach would be to run
+configure_vscode() inside setup_bitbake_build(), rather than at much
+higher levels? That would not require passing additional data around,
+and ensuring every call to update_build() must be followed by
+configure_vscode().
 
 Alex
 
