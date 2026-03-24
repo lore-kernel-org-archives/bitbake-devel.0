@@ -1,123 +1,97 @@
-Return-Path: <zhangfei.gao@linaro.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5579E9A755
-	for <webhook@archiver.kernel.org>; Tue, 24 Mar 2026 09:51:15 +0000 (UTC)
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.16220.1774345866028467800
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B116EE9A75C
+	for <webhook@archiver.kernel.org>; Tue, 24 Mar 2026 10:02:15 +0000 (UTC)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.16358.1774346527402699230
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 24 Mar 2026 02:51:06 -0700
+ Tue, 24 Mar 2026 03:02:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=DECYwwpI;
- spf=pass (domain: linaro.org, ip: 209.85.128.169, mailfrom: zhangfei.gao@linaro.org)
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-79ab0e9c724so12338797b3.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 24 Mar 2026 02:51:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774345865; cv=none;
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=rYocsO7e;
+ spf=pass (domain: gmail.com, ip: 209.85.222.51, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-950b801b75fso1325527241.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 24 Mar 2026 03:02:07 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774346526; cv=none;
         d=google.com; s=arc-20240605;
-        b=WJpHJTXEE+3b286qSS8L6/MVXc2N3oCg8iMXfE5JbsaAPTKoYvnGxXSy1UpWSxBfBa
-         l7IV/CarFq56cTM2Ms5xq/1D/eKO/hHB8a/8YUsbXqrIsDs3XYDhdEc/NelSStPLfIDx
-         SrSGuu7RBVD2TTbWa9xS03Zj2H9Un15ytBsFD4aSKMX+hZFj1OxDjAOnyktNcdzqvykZ
-         ES3Sz8StTEWwrv0AADEmEe6YSf+FIYQgsvXGdE8KEIkqCAFDOjlulzWud7tKCRA3m0cQ
-         a1MmR7+ERxuhJecFWbSucFVDw+RDFfq33Ie6Dnaly8uwAL/Q4ntfJAwsIiiyUf3Gia38
-         GIuw==
+        b=bH+EMU46V6hFBnAB2jKnEIiVTC2EsO2lWXdRDnczrKo2OocKbU0/zA4zXFv36sAyDh
+         wpyIVUy8parl7d8raLznYqQ6ggT/bH7Xz9eyckmASSGpG/w3aU3JEyX/9xO2e1q4fsIV
+         a0BgtLAgU903QVkwDlwG+Lvkp+oTDVDZCTk6PXFvKfXKzWJF2EAvgnM/fn234XGVntTc
+         /YUSIYBOG1jJVeJzCfoirEA8mK5h6P8oLGgwT6Fp3N5LCCWLUtWy8bM0EdNN3Xa2eyGf
+         J2o2RU2HhL6+G1Ing+ePY42qmSLnPjnoznyhlTP1gNcfKAD9p77mK0uCOPcYStAzihOA
+         CRtg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :dkim-signature;
-        bh=cuDbrua0yFZotn5hdK04poyfzvYg2VjKyp3W8hAQl0Y=;
-        fh=khSXsbLRHoN+BlxcBQl3HLVnzQtvEgisVj721t+OlzE=;
-        b=KpAes1pY516bpG76AXFtELaA0zSnYTqmC7RYzObNirXaAvFIWu8I4ayVNRoEBEQ6Yy
-         LIRypki75eHEUEIkES6SEE5JXfd4uh/5T755iI6BEJauFpjNQjZ4z2DaTjsuw7XUusI2
-         UNmiAyuUoUdnzWekFsW42yATATWlHALX39TW9YOyL0uceJGkDUnaVt2mSwr4kUgs7AB7
-         luuIpU9ucFYWxzDEbR0b95JcC53v35BwMp5MVJNaCBUvqhPjWqN9Gi/bjFE0oMkQ/m1Z
-         A3Bw+sXSCS5oTpHMv9+/t0atu0LhphQXSqMTniOYfciS+cgRE0QeM5aD8EXJyX/Mb4GR
-         Kx2Q==;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=sNkayc5WW9LUUjaUCuR7LDJXlN3Ig1oC8H38Os5z1BY=;
+        fh=QpFsERMIO2vEQ8DmeUbvV18kFt0Ljkq4lnm01aFduCg=;
+        b=Pj33m8rpkGj/EOE+D/LIAAuwgkA4og7Z6h35rO2C3CggyFZdbVNPy+b3L+HLcjUHgZ
+         TjwFR2sCtGjwu1I2NUrhWu7s4JtSiVMI2/wQX54NdZqORTAfWnoCCLB39Qzf6gsktPOU
+         MW+ZE8CLeG7slIcBfVgsifzCkXph6DUefDR0aTrBvFNPHL78jiieaS9RoXXV6zX/c9rf
+         mzrSAbWzWPL010NsN4EJo/U6s6yWel3W+wKTUvAkJkaEuMFxE806JzJ7jyt4nUNHFUmB
+         BDR9zco3o6DkQiZMxDFt+AkbQQVi6nqbG7P2V0IcvUWmARMVRffJ8ACv1puBvEd7CC8y
+         sLYw==;
         darn=lists.openembedded.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1774345865; x=1774950665; darn=lists.openembedded.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cuDbrua0yFZotn5hdK04poyfzvYg2VjKyp3W8hAQl0Y=;
-        b=DECYwwpIl5sy9fHycE/B5NwRyYRSxSxp0n0TgLI4+u8OiYYaQWrm4at6xp1EQgN000
-         txBaKxz0wPNYnDPnhs8locOcjmZEWe+sx0y7FhgiavnIsYpfWESKkw51QOOW+01jJRYT
-         4gYHsC7iuIXlzDjEKtWeF3RZxB9kemrTygqntWYzLeZcp8Yy8FFDPwVVx74HGJXnx9cr
-         dq+zwSOlKKKSpbPsZrohg6k1HkHn6BfmsS2Y96M+noJZmYr2MHmqvhGVOfu5/meNeWwu
-         4n29mgNw9av9kFoJiM7EDWi0EYzolzEEVcwFMbtzQbP2IIXe/8MXHLdr+PpVmahiB0+/
-         C6nQ==
+        d=gmail.com; s=20251104; t=1774346526; x=1774951326; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=sNkayc5WW9LUUjaUCuR7LDJXlN3Ig1oC8H38Os5z1BY=;
+        b=rYocsO7efNM7BX4JFUv7Bytw9fvuKfos9G3ObzewGy6BEbeW2+FdWKzFpBwQX+MUp3
+         SwXw/49f6I6TY7eCqtgTMJdyQoEHz9mdf2wy3VE4a+86S4ugs/nAEhTu4FyagVt4jhxz
+         JwaiRalk9IyXEoSSZKICgM8dEgCha81/CeDU1kKx/kkZF8l19XtKeu4A5nMqyaEhJBei
+         PVcSZk8npuxhYSmyVBKIGvuCKSfTj16+h+mGmxBYar9AzpBqrW0XzMFMEFJ5W1rwV95q
+         QYV+ensjbdsY4CTg4KrdpKxT2oe2aTLzo6qX548ppVBXlN75FsTxliVXHz6F4GKy/nZi
+         00DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774345865; x=1774950665;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cuDbrua0yFZotn5hdK04poyfzvYg2VjKyp3W8hAQl0Y=;
-        b=f4s31gLpOwuhkAMupIqoB3XeRWKtsiyLcCTwnnbgzYwS3gVh/ZiZVfb4moL5A0MeoI
-         r0pAtLsMwbkxGBWxKXPKbSbOypZG0kqWt7FfWTc6OCi43LqdLb1qmTALJD5W45wSRyf4
-         Qu5Bly/S84x/1nxh0i8Bgocfvhc3PTmxEXklQU4RyJTFvagU1i9SnYsWDYAItso8AAoV
-         pPkwPqnb96Q/mu1oRy7N1ubHHWE1iZKB9QUsIU7UFgHr4OfYlclwFxbp4DtRsQ45dRrA
-         ZaYmuELawfK/r1Oz/SNzu+ji8SOL+/5PWBBzz1+6m+7dQ2WvLoUUsLBV8l7Juzgf4Noj
-         tYcg==
-X-Gm-Message-State: AOJu0Yym+Pe6ZFFMDR2juGZTwaV220GiaHXm7l4qXSlVslTuhq3XhlSl
-	CgjDAu3QgGKVn1wuyzeXMvXLASc7t71r8dwR2DjQRnOcbAUHauE5FqQ/XLUJauvZi89sQU7Xo+D
-	2c3vzn1HE46AgM2uYZ1j0EIth+OtwFVGAJuonwCe/PuPj6xHBE0LucIxFfPwchRw=
-X-Gm-Gg: ATEYQzwxyE22wrvhLlw+LtzKt//8AMYgH8HoP2DgbdXvbySoDCKwH2VWHVFGYR5cDSp
-	Ddz9CciwXbTlKsBPTGkaG9UHL02m7LTqFJ1X70FRUzqGRXS/H9Y7221hbHC1+6qyLSGehMDmg1h
-	7XocRjrjbvpUxoVPc5/xgvnT/QxUFY4BL2vr/bLENS3gRS0pwmfO5SB3kENblcSFVyNfhcEVG42
-	iOCCjVs46QgfWvX9rR4APyEH5taQduOadUVEPIKo+gT8VFp5hDXfQ+VboSEKluDRpXe2zw8/F5v
-	F9zJwW2hAhCljEZ9gsc0UWUH7QChEDVbR7NaXa3G
-X-Received: by 2002:a05:690c:9204:b0:79a:4558:b95d with SMTP id
- 00721157ae682-79a90c32bbcmr132944137b3.56.1774345864844; Tue, 24 Mar 2026
- 02:51:04 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1774346526; x=1774951326;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sNkayc5WW9LUUjaUCuR7LDJXlN3Ig1oC8H38Os5z1BY=;
+        b=VO50dAKx8UynbfG/zqj1JYlK6snKJRw+HPERY0U6Z+U6GMt2M3k4JP8Uhg3RnkZpsz
+         25UIVU6HHButFCilg0nijPR5drp7yyDNkHV9F7Kxztg7+GmcJr/Z7PmFc7YdDbOPliWY
+         bS7/ZEzLwuDdgiyqEa2CsPPnQjRZtG9aDdhF0uJLPQqtpLRehMLA7433Z5FyyJG1xqVZ
+         ONIdEn9SrbsvEA/xyZ+o3HeIOHlKpgXEsxrynFZ0fgvBcrEFNvHGvTbxcBZAKyNDw0ah
+         QwD22Yt6gUbeLrw9sYlwKpDFwYhAhp2Z5JYMW59cxMhqhPyELhcVTMtGmhcg7uYfvNxZ
+         YE7Q==
+X-Gm-Message-State: AOJu0YwjIOCGUTuq+WMrMzaFMNKRZuJxnN5Otp4burEO0PCAV1yVs1sV
+	fKgVyMgmdSu0oJHx4S6H68yrcF268gKJF7gfOiV+JYlrcE/riEGyIjZ2/hTCV8QGcFL7mUsyTVj
+	DcUtK1VQB0t/J+0mTetrq3CJChGRf8z4=
+X-Gm-Gg: ATEYQzwVWcKniclEhGGaDE+HUIwzGXRq60HutKa4NF9aQGa8/ZpnVb9oCxPB/AeLDHF
+	NjpBe/U8I5vFKj+hyowEak8BeW7P6mgX/45cHbAHHx+FopdYtPAFKctOf/itGuhg4vkdnasLsFl
+	Pn0VpbgvmqS6mkhQ07+uJv+DKo+1Myf/hAGXb36X0WOiKvy6aqj3fIpSXhfVQp48E7CHTAlsWRu
+	xlh2hkGtbSkyt01iYXsZtDE0FS4kiYJjflHzYtMqIvQwLuxUvJWCwIf+gF6RBbDobQ29CmAEr/8
+	2RDZgn/QtrD0SVkV2/mUYpnjUX6sbR+5JfSWMUTS/Q==
+X-Received: by 2002:a05:6102:3f92:b0:5ff:efdc:e225 with SMTP id
+ ada2fe7eead31-602aea9296fmr6699467137.3.1774346526414; Tue, 24 Mar 2026
+ 03:02:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20260320094407.4169544-1-zhangfei.gao@linaro.org>
-In-Reply-To: <20260320094407.4169544-1-zhangfei.gao@linaro.org>
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Date: Tue, 24 Mar 2026 17:50:53 +0800
-X-Gm-Features: AaiRm53emfZRXH45Z-xz4Bvw90lQCdNEpv6_h1NDn2v9qsj0Ki5l8ukYCSIyUY0
-Message-ID: <CABQgh9E7kLETKA8obFb5uAYGSy4T9LhYqpzNKUxBEpbEL+o5QQ@mail.gmail.com>
+References: <20260320094407.4169544-1-zhangfei.gao@linaro.org> <CABQgh9E7kLETKA8obFb5uAYGSy4T9LhYqpzNKUxBEpbEL+o5QQ@mail.gmail.com>
+In-Reply-To: <CABQgh9E7kLETKA8obFb5uAYGSy4T9LhYqpzNKUxBEpbEL+o5QQ@mail.gmail.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Tue, 24 Mar 2026 11:01:55 +0100
+X-Gm-Features: AQROBzCqZ8G6DEvmE2gLSG09aDt9EpWbDIoNR-faL0Hbg3yDOrkP74IC2g-qffI
+Message-ID: <CANNYZj_ToWTnueF4yLWbmLNw-uBC7g72L8UkhMJ_x0AtZcWKiw@mail.gmail.com>
 Subject: Re: [PATCH] bitbake-setup: make DL_DIR in site.conf overridable by env
-To: bitbake-devel@lists.openembedded.org, 
-	Alexander Kanavin <alex.kanavin@gmail.com>, Christopher Obbard <christopher.obbard@linaro.org>
+To: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: bitbake-devel@lists.openembedded.org, 
+	Christopher Obbard <christopher.obbard@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 24 Mar 2026 09:51:15 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19214
+ <bitbake-devel@lists.openembedded.org>; Tue, 24 Mar 2026 10:02:15 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19215
 
-Hi, Alex
+On Tue, 24 Mar 2026 at 10:51, Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
+> Would you mind take a look.
 
-On Fri, 20 Mar 2026 at 17:44, Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
->
-> Use '?=' instead of '=' when writing DL_DIR to site.conf, so an
-> exported DL_DIR can be reused across environments.
->
-> This keeps a default value while allowing environment-based cache
-> configuration in mixed workflows (e.g. container/host).
->
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> ---
->  bin/bitbake-setup | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-> index 53dbb6221..9d08f3a1b 100755
-> --- a/bin/bitbake-setup
-> +++ b/bin/bitbake-setup
-> @@ -947,7 +947,7 @@ def create_siteconf(top_dir, non_interactive, settings):
->                      # wiping and rebuilding you can preserve this directory to speed up this part of
->                      # subsequent builds. This directory is safe to share between multiple builds on
->                      # the same machine too.
-> -                    DL_DIR = "{dl_dir}"
-> +                    DL_DIR ?= "{dl_dir}"
->                      """.format(
->                          dl_dir=settings["default"]["dl-dir"],
->                      )
-> --
-> 2.34.1
->
+This patch is okay. We didn't get to it yet in reviews. Contributors
+are notified only when something is unclear or needs to be changed,
+otherwise the process is entirely silent.
 
-Would you mind take a look.
-
-Thanks
+Alex
 
