@@ -1,97 +1,108 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B116EE9A75C
-	for <webhook@archiver.kernel.org>; Tue, 24 Mar 2026 10:02:15 +0000 (UTC)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.16358.1774346527402699230
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CC0FEC11B
+	for <webhook@archiver.kernel.org>; Tue, 24 Mar 2026 22:01:05 +0000 (UTC)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.9029.1774389656107844939
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 24 Mar 2026 03:02:07 -0700
+ Tue, 24 Mar 2026 15:00:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=rYocsO7e;
- spf=pass (domain: gmail.com, ip: 209.85.222.51, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-950b801b75fso1325527241.1
-        for <bitbake-devel@lists.openembedded.org>; Tue, 24 Mar 2026 03:02:07 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774346526; cv=none;
-        d=google.com; s=arc-20240605;
-        b=bH+EMU46V6hFBnAB2jKnEIiVTC2EsO2lWXdRDnczrKo2OocKbU0/zA4zXFv36sAyDh
-         wpyIVUy8parl7d8raLznYqQ6ggT/bH7Xz9eyckmASSGpG/w3aU3JEyX/9xO2e1q4fsIV
-         a0BgtLAgU903QVkwDlwG+Lvkp+oTDVDZCTk6PXFvKfXKzWJF2EAvgnM/fn234XGVntTc
-         /YUSIYBOG1jJVeJzCfoirEA8mK5h6P8oLGgwT6Fp3N5LCCWLUtWy8bM0EdNN3Xa2eyGf
-         J2o2RU2HhL6+G1Ing+ePY42qmSLnPjnoznyhlTP1gNcfKAD9p77mK0uCOPcYStAzihOA
-         CRtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=sNkayc5WW9LUUjaUCuR7LDJXlN3Ig1oC8H38Os5z1BY=;
-        fh=QpFsERMIO2vEQ8DmeUbvV18kFt0Ljkq4lnm01aFduCg=;
-        b=Pj33m8rpkGj/EOE+D/LIAAuwgkA4og7Z6h35rO2C3CggyFZdbVNPy+b3L+HLcjUHgZ
-         TjwFR2sCtGjwu1I2NUrhWu7s4JtSiVMI2/wQX54NdZqORTAfWnoCCLB39Qzf6gsktPOU
-         MW+ZE8CLeG7slIcBfVgsifzCkXph6DUefDR0aTrBvFNPHL78jiieaS9RoXXV6zX/c9rf
-         mzrSAbWzWPL010NsN4EJo/U6s6yWel3W+wKTUvAkJkaEuMFxE806JzJ7jyt4nUNHFUmB
-         BDR9zco3o6DkQiZMxDFt+AkbQQVi6nqbG7P2V0IcvUWmARMVRffJ8ACv1puBvEd7CC8y
-         sLYw==;
-        darn=lists.openembedded.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=RamTBouZ;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.45, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-43b4d734678so1720033f8f.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 24 Mar 2026 15:00:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774346526; x=1774951326; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=sNkayc5WW9LUUjaUCuR7LDJXlN3Ig1oC8H38Os5z1BY=;
-        b=rYocsO7efNM7BX4JFUv7Bytw9fvuKfos9G3ObzewGy6BEbeW2+FdWKzFpBwQX+MUp3
-         SwXw/49f6I6TY7eCqtgTMJdyQoEHz9mdf2wy3VE4a+86S4ugs/nAEhTu4FyagVt4jhxz
-         JwaiRalk9IyXEoSSZKICgM8dEgCha81/CeDU1kKx/kkZF8l19XtKeu4A5nMqyaEhJBei
-         PVcSZk8npuxhYSmyVBKIGvuCKSfTj16+h+mGmxBYar9AzpBqrW0XzMFMEFJ5W1rwV95q
-         QYV+ensjbdsY4CTg4KrdpKxT2oe2aTLzo6qX548ppVBXlN75FsTxliVXHz6F4GKy/nZi
-         00DA==
+        d=linuxfoundation.org; s=google; t=1774389654; x=1774994454; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=j38dY99DQqTQmBPrCdm3zNpyGNSN26KIb3Ry/xZCsCo=;
+        b=RamTBouZV2bUJApaMt3Od/ZVEZwDxcFriQx6lg2NXed39gBoARoqRgcXaWA7VEpt+K
+         o/aZyq2pMB4YES9TlXxx+73etj+Rk4zEdVTLqkiyQOfbHFzHORun0YJdKcmcRTi4hSwR
+         aedf4F6YUO6736iFyuhFUjT453BZiA0KJ2zzo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774346526; x=1774951326;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sNkayc5WW9LUUjaUCuR7LDJXlN3Ig1oC8H38Os5z1BY=;
-        b=VO50dAKx8UynbfG/zqj1JYlK6snKJRw+HPERY0U6Z+U6GMt2M3k4JP8Uhg3RnkZpsz
-         25UIVU6HHButFCilg0nijPR5drp7yyDNkHV9F7Kxztg7+GmcJr/Z7PmFc7YdDbOPliWY
-         bS7/ZEzLwuDdgiyqEa2CsPPnQjRZtG9aDdhF0uJLPQqtpLRehMLA7433Z5FyyJG1xqVZ
-         ONIdEn9SrbsvEA/xyZ+o3HeIOHlKpgXEsxrynFZ0fgvBcrEFNvHGvTbxcBZAKyNDw0ah
-         QwD22Yt6gUbeLrw9sYlwKpDFwYhAhp2Z5JYMW59cxMhqhPyELhcVTMtGmhcg7uYfvNxZ
-         YE7Q==
-X-Gm-Message-State: AOJu0YwjIOCGUTuq+WMrMzaFMNKRZuJxnN5Otp4burEO0PCAV1yVs1sV
-	fKgVyMgmdSu0oJHx4S6H68yrcF268gKJF7gfOiV+JYlrcE/riEGyIjZ2/hTCV8QGcFL7mUsyTVj
-	DcUtK1VQB0t/J+0mTetrq3CJChGRf8z4=
-X-Gm-Gg: ATEYQzwVWcKniclEhGGaDE+HUIwzGXRq60HutKa4NF9aQGa8/ZpnVb9oCxPB/AeLDHF
-	NjpBe/U8I5vFKj+hyowEak8BeW7P6mgX/45cHbAHHx+FopdYtPAFKctOf/itGuhg4vkdnasLsFl
-	Pn0VpbgvmqS6mkhQ07+uJv+DKo+1Myf/hAGXb36X0WOiKvy6aqj3fIpSXhfVQp48E7CHTAlsWRu
-	xlh2hkGtbSkyt01iYXsZtDE0FS4kiYJjflHzYtMqIvQwLuxUvJWCwIf+gF6RBbDobQ29CmAEr/8
-	2RDZgn/QtrD0SVkV2/mUYpnjUX6sbR+5JfSWMUTS/Q==
-X-Received: by 2002:a05:6102:3f92:b0:5ff:efdc:e225 with SMTP id
- ada2fe7eead31-602aea9296fmr6699467137.3.1774346526414; Tue, 24 Mar 2026
- 03:02:06 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1774389654; x=1774994454;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=j38dY99DQqTQmBPrCdm3zNpyGNSN26KIb3Ry/xZCsCo=;
+        b=o78VqH7CULm7SVpFYOqIhz5ln+Yc/GGDyoghrOWvZvanKlKhG3IM0LOJ1z6K4P9Aip
+         wBnVhISgzajHm6sKoo+w7qgKWs13XDPtY8T9kFdw6s1eRDeBjmDnqucJOeQQjYyGCyko
+         8EkAG5Cx21RWoioqXUvX5iWa6SLrGu2ezyOvgpUHtdXlHyyyvEtpDB5BFT/4V4hRzKnX
+         Y7CoZLy1t9g70Svh0KlrOg+Zhj4IY1a4k/WQ019QiBQUDKti7CZGcg0XVL+9gODro6aC
+         43kFBElSq23xeSfz6QCRhBTtrRXa/UsQ4VXdxXtYjON3EPSBhBmUVNaVzWQIY5AOK52M
+         mnjQ==
+X-Gm-Message-State: AOJu0YzWCH1zc3xPgGx38EnrEaT+RhzMmPEyxK/a1Z+fPhJtTEy9VJ8n
+	g2wjcwze96pDdbKfriDk+sxt1IE4NlMHlVJ2pUPf/qEX2PkBMMOX68fTFOkuEA2rlMs2edMh9tt
+	+1oCj
+X-Gm-Gg: ATEYQzwPTIIfZM5EOt99Dhmqs24LG2t8n0WkAhhfmv5RFjo1+fmHEJkA4RyvM5TwHIk
+	OHQ18voJ86I/6kLJi0UNZU4UXdXNxcpNSgmrl2dQYJH/byGO3wvZk+AaA6z2OCTTSRDXAtisi3Q
+	XA/7WDZNxRMw2MnRLa7CEwa6Eza+ZdOxCrGjM6LfIOVYxc5bWOiBDw/+VGkkQIfIzz+B+qKITA1
+	tY+4oW6NjQo6421FfJ+IeM4ruLrfcWiF2afkHvs9HAHcTCCWI5JOItovsePEeIeXHZhFvvrs0gb
+	6tLS6xYI8GR5fQedXStBq6rKhwV/djvG/yGhoYb8JdYRo7q8mKZS7CzSds5uUEh9zO6NAIWx1X+
+	e2tcpZQt5GP0LXPM0JlOGXZOI4LE7U+5De1mGisW/R/81EBlaobmEqVFa1Kf9sqO4SbUlIXTKkn
+	pDrLwSB362EODoT2rIaZjvbWOW9hl5CPS++dbaMyoQSh/CMEF8uWQ=
+X-Received: by 2002:a05:6000:2405:b0:43b:4352:1be6 with SMTP id ffacd0b85a97d-43b88a39b6fmr1474617f8f.48.1774389653481;
+        Tue, 24 Mar 2026 15:00:53 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:5a86:3f36:450:3dc8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b86fbb195sm4955240f8f.14.2026.03.24.15.00.52
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2026 15:00:52 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] progressbar/knotty: Allow mixing log messages and progress bars
+Date: Tue, 24 Mar 2026 22:00:51 +0000
+Message-ID: <20260324220051.3701826-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.53.0
 MIME-Version: 1.0
-References: <20260320094407.4169544-1-zhangfei.gao@linaro.org> <CABQgh9E7kLETKA8obFb5uAYGSy4T9LhYqpzNKUxBEpbEL+o5QQ@mail.gmail.com>
-In-Reply-To: <CABQgh9E7kLETKA8obFb5uAYGSy4T9LhYqpzNKUxBEpbEL+o5QQ@mail.gmail.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Tue, 24 Mar 2026 11:01:55 +0100
-X-Gm-Features: AQROBzCqZ8G6DEvmE2gLSG09aDt9EpWbDIoNR-faL0Hbg3yDOrkP74IC2g-qffI
-Message-ID: <CANNYZj_ToWTnueF4yLWbmLNw-uBC7g72L8UkhMJ_x0AtZcWKiw@mail.gmail.com>
-Subject: Re: [PATCH] bitbake-setup: make DL_DIR in site.conf overridable by env
-To: Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc: bitbake-devel@lists.openembedded.org, 
-	Christopher Obbard <christopher.obbard@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 24 Mar 2026 10:02:15 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19215
+ <bitbake-devel@lists.openembedded.org>; Tue, 24 Mar 2026 22:01:05 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19216
 
-On Tue, 24 Mar 2026 at 10:51, Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
-> Would you mind take a look.
+If we try and print a log message in the middle of progress bar, the display
+can be corrupted. Add a clear() method to progress bars allowing them to be
+removed for the log message, then reprinted using update().
 
-This patch is okay. We didn't get to it yet in reviews. Contributors
-are notified only when something is unclear or needs to be changed,
-otherwise the process is entirely silent.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/ui/knotty.py            | 5 +++++
+ lib/progressbar/progressbar.py | 3 +++
+ 2 files changed, 8 insertions(+)
 
-Alex
+diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+index e4b7b83061e..06b654c4422 100644
+--- a/lib/bb/ui/knotty.py
++++ b/lib/bb/ui/knotty.py
+@@ -791,7 +791,12 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+                         event.msg = taskinfo['title'] + ': ' + event.msg
+                 if hasattr(event, 'fn') and event.levelno not in [bb.msg.BBLogFormatter.WARNONCE, bb.msg.BBLogFormatter.ERRORONCE]:
+                     event.msg = event.fn + ': ' + event.msg
++                # Need to remove any progress bar, then add it back after we print this message
++                if parseprogress:
++                    parseprogress.clear()
+                 logging.getLogger(event.name).handle(event)
++                if parseprogress:
++                    parseprogress.update(parseprogress.currval)
+                 continue
+ 
+             if isinstance(event, bb.build.TaskFailedSilent):
+diff --git a/lib/progressbar/progressbar.py b/lib/progressbar/progressbar.py
+index a8e2dc09c91..1562774ba1a 100644
+--- a/lib/progressbar/progressbar.py
++++ b/lib/progressbar/progressbar.py
+@@ -278,6 +278,9 @@ class ProgressBar(object):
+         self.last_update_time = now
+         return output
+ 
++    def clear(self):
++        self.fd.write(" " * self.term_width + '\r')
++        self.fd.flush()
+ 
+     def start(self, update=True):
+         """Starts measuring time, and prints the bar at 0%.
 
