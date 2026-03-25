@@ -2,35 +2,36 @@ Return-Path: <adrian.freihofer@siemens.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF5EFEA826
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CF9FEA822
 	for <webhook@archiver.kernel.org>; Wed, 25 Mar 2026 07:14:12 +0000 (UTC)
-Received: from mta-64-228.siemens.flowmailer.net (mta-64-228.siemens.flowmailer.net [185.136.64.228])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.16762.1774422847650004916
+Received: from mta-65-228.siemens.flowmailer.net (mta-65-228.siemens.flowmailer.net [185.136.65.228])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.16760.1774422847649471384
  for <bitbake-devel@lists.openembedded.org>;
  Wed, 25 Mar 2026 00:14:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=adrian.freihofer@siemens.com header.s=fm1 header.b=NAZHhhe7;
- spf=pass (domain: rts-flowmailer.siemens.com, ip: 185.136.64.228, mailfrom: fm-1329275-202603250714044721ec9401000207c1-s8g437@rts-flowmailer.siemens.com)
-Received: by mta-64-228.siemens.flowmailer.net with ESMTPSA id 202603250714044721ec9401000207c1
+ dkim=pass header.i=adrian.freihofer@siemens.com header.s=fm1 header.b=eo63SPfH;
+ spf=pass (domain: rts-flowmailer.siemens.com, ip: 185.136.65.228, mailfrom: fm-1329275-2026032507140574482c20350002073e-jpfbsx@rts-flowmailer.siemens.com)
+Received: by mta-65-228.siemens.flowmailer.net with ESMTPSA id 2026032507140574482c20350002073e
         for <bitbake-devel@lists.openembedded.org>;
         Wed, 25 Mar 2026 08:14:05 +0100
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
  d=siemens.com; i=adrian.freihofer@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
- bh=a28sr2MnPbPhLUCW5YzgFekEtDEeA01PBw7NtOAs1x8=;
- b=NAZHhhe7rdHKGcJXH1kDVXIs61TVWZrd1ai2+DPjH20j6Rka0RYQ1u404qaWoAFyy/DQ4d
- ZmQ0wpYndOfY82ufd9uzlbA/SfcYZzR4xdWsoYbJneTWJEBB0vP5Elu7TbpS04RGc+Dyka4O
- NVhXs+H4LWbzyRzEf3OKA7G95GkmvHqB6Q8ElnJfKgzNn0n4miOjteyvBQ+tri77FP7GV7Zk
- iFOwBSg1QCLe0B079ZmILcurMFs3UXaF35hukN4jiOjVmX4vR5wITw6+XGTqHCxtxAsfn4EA
- 8+J4csagvin84hGkyMzI+PlDyM0ETaxIgvCtsSqBWlGSOLAYa9m+oV5w==;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=jNtCpr5FFCFklpndqR4ITvVKi67qimn+drWpM3s3Nag=;
+ b=eo63SPfHIVR8r9H/9Bm6lJlpW7LuX4lY7ox/4aLd0QHaIoI4XCOMh0O/EywtjyHmgKvG5F
+ 704kRjNIBIRegRlzyi646D8w73mLQSgoPFjpNyGLW68M/nWBxBM5B/uJFh/JBxegM864TRod
+ FgP3kBmW6WlXBuht8XW9cThGaSvXKY7fcDEPrpoko6VIfwYUViCM7qaZTeInBLao0Lrsil6a
+ sjWOsH8VF7iiCKnYIRp2ffC05fDJsC9pKlgv/4SZthbKMP86zZ8/mnUPS5W6D5J0wxZQdZwZ
+ q0cHDS/TGKUsKM6BnJdtaUWo5GZrV7hLIGmf7YKcmQLOdagVkA0NB6fA==;
 From: AdrianF <adrian.freihofer@siemens.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Adrian Freihofer <adrian.freihofer@siemens.com>
-Subject: [PATCH v2 00/10] bitbake-setup: improvements, VSCode workspace generation
-Date: Wed, 25 Mar 2026 07:51:42 +0100
-Message-ID: <20260325071342.47272-1-adrian.freihofer@siemens.com>
+Subject: [PATCH v2 09/10] bitbake-setup: add --rebase-conflicts-strategy to the update command
+Date: Wed, 25 Mar 2026 07:51:51 +0100
+Message-ID: <20260325071342.47272-10-adrian.freihofer@siemens.com>
+In-Reply-To: <20260325071342.47272-1-adrian.freihofer@siemens.com>
+References: <20260325071342.47272-1-adrian.freihofer@siemens.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Flowmailer-Platform: Siemens
 Feedback-ID: 519:519-1329275:519-21489:flowmailer
@@ -38,109 +39,119 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 25 Mar 2026 07:14:12 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19225
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19223
 
 From: Adrian Freihofer <adrian.freihofer@siemens.com>
 
-Comparison to v1:
-- Rebased on latest master
-- Addressed feedback from Richard:
-  - There is now a bb.fetch2.LocalModificationsError
-  - Adapted test accordingly (changed order of commits because of that)
-- Addressed feedback from Alexander:
-  - run configure_vscode() inside setup_bitbake_build(), simplifying the logic
-  - Remove the --init-vscode option from update (only init supports it now)
-  - Renamed --rebase-strategy to --rebase-conflicts-strategy with
-    'abort' and 'backup' options
-  - Adapted tests accordingly
+When unpack_update() raises a LocalModificationsError due to local
+modifications in a layer repository, the caller now has a choice of
+how to handle it, controlled by the new --rebase-conflicts-strategy
+option on the 'update' subcommand:
 
+- abort (default): re-raise the error so the update stops with a clear
+  message that names the affected source and its path. The fetcher has
+  already aborted the rebase and restored the checkout to its previous
+  state.
+- backup: rename the directory to a timestamped <name>-backup path to
+  preserve local work, then re-clone from upstream via fetcher.unpack().
 
-Adds:
-- Tests for bitbake fetcher unpack_update: add GitUnpackUpdateTest covering
-  the full unpack_update workflow — fast-forward rebase with local commits,
-  dldir remote setup, conflict detection, staged/modified file blocking,
-  untracked file handling, shallow clone rejection, and stale dldir remote.
+The strategy is threaded from the CLI argument through build_status()
+and update_build() down to checkout_layers().
 
-- Some findings in bitbake-setup: always restore sys.stdout after fetch log
-  redirection; fix dead guards in check_setupdir_files; clean up imports;
-  turn unhandled Exception in main() into a clean ERROR log line and non-zero
-  exit instead of a raw traceback; report local modifications that block an
-  update with an actionable error message.
+Signed-off-by: Adrian Freihofer <adrian.freihofer@siemens.com>
+---
+ bin/bitbake-setup | 42 ++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 36 insertions(+), 6 deletions(-)
 
-- VSCode workspace generation (--init-vscode / --no-init-vscode):
-  bitbake-setup init and update can generate a bitbake.code-workspace file
-  that configures the Yocto BitBake VS Code extension, Python analysis paths,
-  file associations, and folders for each layer repository. User-added folders
-  and settings are preserved on update; a corrupt workspace file is detected
-  and left unchanged.
-
-- bitbake-setup rebase strategy (--rebase-conflicts-strategy abort|backup):
-  When unpack_update() cannot rebase a layer repository due to uncommitted
-  local modifications or a committed local change that causes a rebase
-  conflict, the default 'abort' strategy aborts with a clear, actionable
-  error message. The 'backup' strategy renames the directory to a timestamped
-  backup and re-clones from upstream instead.
-
-
-Testing
-- bitbake-selftest bb.tests.fetch.GitUnpackUpdateTest
-- bitbake-selftest bb.tests.setup
-- Manual testing with --rebase-conflicts-strategy abort:
-  - bitbake-setup init
-  - cd layers/openembedded-core
-  - git checkout older commit
-  - modify a file to provoke a conflict without committing
-  - bitbake-setup update
-    --> fails with a clear message about local modifications blocking the update
-  - git stash
-    bitbake-setup update
-    --> succeeds with a fast-forward update
-    git stash pop
-  ==> Workflow feels smooth :-)
-
-- Manual testing with --rebase-conflicts-strategy backup (uncommitted changes):
-  - bitbake-setup init
-  - cd layers/openembedded-core
-  - git checkout older commit
-  - modify a file to provoke a conflict without committing
-  - bitbake-setup update --rebase-conflicts-strategy backup
-    --> succeeds with a backup and a fresh clone from upstream
-  ==> Workflow feels smooth :-)
-
-- Manual testing with --rebase-conflicts-strategy backup (committed conflict):
-  - bitbake-setup init
-  - cd layers/openembedded-core
-  - edit a file to provoke a conflict
-  - bitbake-setup update --rebase-conflicts-strategy backup
-    --> succeeds: the conflicting directory is backed up and re-cloned cleanly
-  ==> Workflow feels smooth, but we probably need to improve it later
-    - VSCode shows the backup directory as a workspace folder, that's fine
-    - Who is going to delete the backup later? In VSCode it's possible to
-      click "Remove folder from workspace" and then delete it manually on the command line
-    Some features like bitbake-setup update --remove-backups interactively might be nice
-
-
-
-Adrian Freihofer (10):
-  fetch2: add LocalModificationsError for uncommitted changes blocking
-    update
-  bitbake-selftest: add GitUnpackUpdateTest
-  tests/fetch: remove unused import, fix trailing whitespace
-  bitbake-setup: always restore sys.stdout
-  tests/setup: cleanup imports
-  tests/setup: fix dead check_setupdir_files guards
-  bitbake-setup: generate config files for VSCode
-  tests/setup: add test_vscode for VSCode workspace generation
-  bitbake-setup: add --rebase-conflicts-strategy to the update command
-  tests/setup: add test_update_rebase_conflicts_strategy
-
- bin/bitbake-setup         | 223 ++++++++++++++-
- lib/bb/fetch2/__init__.py |   8 +
- lib/bb/fetch2/git.py      |   2 +-
- lib/bb/tests/fetch.py     | 563 +++++++++++++++++++++++++++++++++++++-
- lib/bb/tests/setup.py     | 195 ++++++++++++-
- 5 files changed, 965 insertions(+), 26 deletions(-)
-
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index bebf2e705..a5f33b794 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -166,7 +166,7 @@ def _get_remotes(r_remote):
+ 
+     return remotes
+ 
+-def checkout_layers(layers, confdir, layerdir, d):
++def checkout_layers(layers, confdir, layerdir, d, rebase_conflicts_strategy='abort'):
+     def _checkout_git_remote(r_remote, repodir, layers_fixed_revisions):
+         rev = r_remote['rev']
+         branch = r_remote.get('branch', None)
+@@ -182,7 +182,33 @@ def checkout_layers(layers, confdir, layerdir, d):
+             else:
+                 src_uri = f"{fetchuri};protocol={prot};rev={rev};nobranch=1;destsuffix={repodir}"
+             fetcher = bb.fetch.Fetch([src_uri], d)
+-            do_fetch(fetcher, layerdir)
++            repodir_path = os.path.join(layerdir, repodir)
++            try:
++                do_fetch(fetcher, layerdir)
++            except bb.fetch2.LocalModificationsError as e:
++                if rebase_conflicts_strategy != 'backup':
++                    e.msg += ("\nUse 'bitbake-setup update --rebase-conflicts-strategy=backup'"
++                              " to automatically back up the directory and re-clone from upstream,"
++                              " or use 'bitbake-setup init -L %s /path/to/local/checkout'"
++                              " to work with a local checkout instead." % r_name)
++                    raise
++                backup_path = add_unique_timestamp_to_path(repodir_path + '-backup')
++                logger.warning(
++                    "Source '{}' at {} has local modifications that prevent an in-place update.\n"
++                    "Renaming it to {} to preserve your work, then re-cloning from upstream."
++                    .format(r_name, repodir_path, backup_path))
++                os.rename(repodir_path, backup_path)
++                fetcher.unpack(layerdir)
++            except bb.fetch2.UnpackError as e:
++                if rebase_conflicts_strategy != 'backup':
++                    raise
++                backup_path = add_unique_timestamp_to_path(repodir_path + '-backup')
++                logger.warning(
++                    "Source '{}' at {} could not be updated in place (rebase conflict).\n"
++                    "Renaming it to {} to preserve your work, then re-cloning from upstream."
++                    .format(r_name, repodir_path, backup_path))
++                os.rename(repodir_path, backup_path)
++                fetcher.unpack(layerdir)
+             urldata = fetcher.ud[src_uri]
+             revision = urldata.revision
+             layers_fixed_revisions[r_name]['git-remote']['rev'] = revision
+@@ -441,9 +467,9 @@ def merge_overrides_into_sources(sources, overrides):
+             layers[k] = v
+     return layers
+ 
+-def update_build(config, confdir, setupdir, layerdir, d, update_bb_conf="prompt", init_vscode=False):
++def update_build(config, confdir, setupdir, layerdir, d, update_bb_conf="prompt", init_vscode=False, rebase_conflicts_strategy='abort'):
+     layer_config = merge_overrides_into_sources(config["data"]["sources"], config["source-overrides"]["sources"])
+-    sources_fixed_revisions = checkout_layers(layer_config, confdir, layerdir, d)
++    sources_fixed_revisions = checkout_layers(layer_config, confdir, layerdir, d, rebase_conflicts_strategy=rebase_conflicts_strategy)
+     bitbake_config = config["bitbake-config"]
+     thisdir = os.path.dirname(config["path"]) if config["type"] == 'local' else None
+     setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_conf, init_vscode)
+@@ -926,7 +952,7 @@ def build_status(top_dir, settings, args, d, update=False):
+         logger.plain('\nConfiguration in {} has changed:\n{}'.format(setupdir, config_diff))
+         if update:
+             update_build(new_upstream_config, confdir, setupdir, layerdir, d,
+-                         update_bb_conf=args.update_bb_conf)
++                         update_bb_conf=args.update_bb_conf, rebase_conflicts_strategy=args.rebase_conflicts_strategy)
+         else:
+             bb.process.run('git -C {} restore config-upstream.json'.format(confdir))
+         return
+@@ -935,7 +961,7 @@ def build_status(top_dir, settings, args, d, update=False):
+     if are_layers_changed(layer_config, layerdir, d):
+         if update:
+             update_build(current_upstream_config, confdir, setupdir, layerdir,
+-                         d, update_bb_conf=args.update_bb_conf)
++                         d, update_bb_conf=args.update_bb_conf, rebase_conflicts_strategy=args.rebase_conflicts_strategy)
+         return
+ 
+     logger.plain("\nConfiguration in {} has not changed.".format(setupdir))
+@@ -1256,6 +1282,10 @@ def main():
+     parser_update = subparsers.add_parser('update', help='Update a setup to be in sync with configuration')
+     add_setup_dir_arg(parser_update)
+     parser_update.add_argument('--update-bb-conf', choices=['prompt', 'yes', 'no'], default='prompt', help='Update bitbake configuration files (bblayers.conf, local.conf) (default: prompt)')
++    parser_update.add_argument('--rebase-conflicts-strategy', choices=['abort', 'backup'], default='abort',
++                        help="What to do when a layer repository has local modifications that prevent "
++                             "an in-place update: 'abort' (default) aborts with an error message; "
++                             "'backup' renames the directory to a timestamped backup and re-clones from upstream.")
+     parser_update.set_defaults(func=build_update)
+ 
+     parser_install_buildtools = subparsers.add_parser('install-buildtools', help='Install buildtools which can help fulfil missing or incorrect dependencies on the host machine')
 -- 
 2.53.0
 
