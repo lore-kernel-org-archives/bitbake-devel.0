@@ -1,127 +1,682 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <adrian.freihofer@siemens.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A97EFEA818
-	for <webhook@archiver.kernel.org>; Wed, 25 Mar 2026 07:12:11 +0000 (UTC)
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.16738.1774422717925606186
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DF3FEA81A
+	for <webhook@archiver.kernel.org>; Wed, 25 Mar 2026 07:14:10 +0000 (UTC)
+Received: from mta-65-225.siemens.flowmailer.net (mta-65-225.siemens.flowmailer.net [185.136.65.225])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.17082.1774422847651944667
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 25 Mar 2026 00:11:58 -0700
+ Wed, 25 Mar 2026 00:14:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Gu8KjLIa;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-43b4d734678so1971726f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 25 Mar 2026 00:11:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1774422716; x=1775027516; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wDlrp4i2LcvUom+NjlkLxKqXmODFBXOJeGcAsltEH68=;
-        b=Gu8KjLIavvvflAmcxuGg267Va/WBjk07lePjADMx5TNfasP26xSsvRcLP4AcZv8nM9
-         knEAA9rJjGd3D/VBM76+ctQSPYezrc8hsD2e8b73Pcv1LrIL4UjqJIZgQp7diRiTxrun
-         2MFoXIK7bWGqquZseWRv7dr9WKYUZrvHHcvaQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774422716; x=1775027516;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wDlrp4i2LcvUom+NjlkLxKqXmODFBXOJeGcAsltEH68=;
-        b=qdWgQ5xIiMsKezTVJXfe+Jq3qcAPsF9YmfopFara+nbuFTwysfizZpIMZ9nHBqG2Bx
-         HllSXYQack5fHwIMee72E4FvKtvnHUHX9l0xJCE86Jeu21eP3LTmNbu291daHLjoh2zc
-         rmXrJVFiuu8Sa1VzeLItZjXLyoimP6zVvt3ZukqeC9RYfclNH81Vb+l3W6mT2RhIQBj6
-         8RgLphDft39/JTQuxYUIQrk98tdi5Rj7a6aNiqLx1O+uH1H9ZuzLh5+P2N14qhjxIhJr
-         tmfRpX5qTMWkh8VHwyG+RggsyXiWhb8OEoelt5DLEFbBQw0vfi1U2w54ckUBU6WVlMEo
-         766w==
-X-Gm-Message-State: AOJu0Yyc+74ln1+RXbxtAFaALCkHLXOPUtgUHaW4qabO2Q252P/qGmHC
-	1W15aE5aNOiki6uJCYytQRDflMpAyzS+kuOOVKaOPx5eiS8mjTCRmZ7IuT3Q7xEDp8uF130DxCC
-	X0i5l
-X-Gm-Gg: ATEYQzzuBjXa7UtyFLntfX9jJEw21gtwdtcNNrCWL6wJVoUkn9N5eK1+0FIUCbDXhX1
-	cgdPQS9chjTc0tYAmaF/ZKc5P++o+Aydq5yyIeO9USMqTZmMd6aZa1WfdjhpnE8J/ucalZ/PtG/
-	Q01lzB/bZuBowaXLpTZkIsMO1QKIg5sWA6lAG13Qwd9I3NHnpKfgCvCrXVwdT2RKK/BS/EHqw/d
-	X1rMUFWjpfs57ihW+4xsddXzrAfZi/6dIs6HDBH+ICNIYfkZDx0qeRljKI2/3kCFqVLkJzJeMe6
-	lKgT5+RRC9i9FCqB5ceHSa+gKIxUPwXymKvz7FawyTUJXnfl7JEK+5aU8Ul9gVVIT9MW2omAMUb
-	WKmeWkzM4eWdxA8vXjLyc/wxWYtBlElVFoba4ys+5fJjgz23OK1OL0KpsA65jYa38Q0A3TfZIHW
-	g416wUI5Hm/V2n87Wl7vHTq2FKWd0uymh8JFQG1v5P1YusKmtlXjJ9
-X-Received: by 2002:a05:6000:4285:b0:439:f5ba:8c2e with SMTP id ffacd0b85a97d-43b889a8526mr3170444f8f.18.1774422715599;
-        Wed, 25 Mar 2026 00:11:55 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:74e2:2425:51dc:4aed])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b6470f902sm47450402f8f.28.2026.03.25.00.11.54
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2026 00:11:54 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+ dkim=pass header.i=adrian.freihofer@siemens.com header.s=fm1 header.b=e5KMPaMG;
+ spf=pass (domain: rts-flowmailer.siemens.com, ip: 185.136.65.225, mailfrom: fm-1329275-20260325071404aa370c328100020791-z8avl6@rts-flowmailer.siemens.com)
+Received: by mta-65-225.siemens.flowmailer.net with ESMTPSA id 20260325071404aa370c328100020791
+        for <bitbake-devel@lists.openembedded.org>;
+        Wed, 25 Mar 2026 08:14:05 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
+ d=siemens.com; i=adrian.freihofer@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=HQkO8pRCxFX5GjFeHSMGuIDODG4BzWMPBjQTKYu+icg=;
+ b=e5KMPaMGpOsJeA4WUnIFWud9YtzpLit+tdzq7a4a1H+if6zfFSbqYK1G9Rh4FfVgAGSnRp
+ YHwrKAQMBN38NhkisskGwDO5UxrDLc7Plb6MR9SJQrfW0c1LlnoypAYv6HB2GT35FbzurtGG
+ uykEqlwD1UMNlUfyzODSQAM4+I+Y7Ipmurvsu8tvgbPXkhfAQw8R4/4wG1prfVjfsfN5gSgl
+ F8scNcn2LnuXtMn6oFGYEs3rvVd8JX49z8fsAnMH8FIVZXMdKSgRSbONMxpy9xt9j08YG6NU
+ vQHkpLP4dwlJFKZ2CeBWjO37HgSf36lCZBYc7CxXTrXFOLZy6i/itbTA==;
+From: AdrianF <adrian.freihofer@siemens.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH v2] progressbar/knotty: Allow mixing log messages and progress bars
-Date: Wed, 25 Mar 2026 07:11:51 +0000
-Message-ID: <20260325071151.3947605-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.53.0
+Cc: Adrian Freihofer <adrian.freihofer@siemens.com>
+Subject: [PATCH v2 02/10] bitbake-selftest: add GitUnpackUpdateTest
+Date: Wed, 25 Mar 2026 07:51:44 +0100
+Message-ID: <20260325071342.47272-3-adrian.freihofer@siemens.com>
+In-Reply-To: <20260325071342.47272-1-adrian.freihofer@siemens.com>
+References: <20260325071342.47272-1-adrian.freihofer@siemens.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-1329275:519-21489:flowmailer
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 25 Mar 2026 07:12:11 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19219
+ <bitbake-devel@lists.openembedded.org>; Wed, 25 Mar 2026 07:14:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19230
 
-If we try and print a log message in the middle of progress bar, the display
-can be corrupted. Add a clear() method to progress bars allowing them to be
-removed for the log message, then reprinted using update().
+From: Adrian Freihofer <adrian.freihofer@siemens.com>
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Add a test class that exercises the new unpack_update() code path in the
+Git fetcher, ordered from basic building blocks to advanced workflow and
+error cases:
+
+  test_unpack_update_full_clone
+    Basic update to a newer upstream revision succeeds and the working
+    tree reflects the new content.
+
+  test_unpack_update_dldir_remote_setup
+    The "dldir" remote pointing to ud.clonedir is created during the
+    initial unpack and is present for subsequent update calls.
+
+  test_unpack_update_ff_with_local_changes
+    Full workflow: after a normal unpack the "dldir" remote is verified,
+    a local commit is added, download() brings updated_rev into the
+    clonedir, and unpack_update() fetches from dldir and rebases the
+    local commit fast forward on top. The commit graph (HEAD^ ==
+    updated_rev) and both file contents are asserted.
+
+  test_unpack_update_already_at_target_revision
+    Calling unpack_update() when the checkout is already at SRCREV is
+    a no-op: it succeeds and the working tree is left unchanged.
+
+  test_unpack_update_with_untracked_file
+    The status check uses --untracked-files=no so untracked files are
+    invisible to it; the update succeeds and the untracked file survives
+    the rebase unchanged.
+
+  test_unpack_update_with_staged_changes
+    Staged (but not committed) changes cause git to refuse to rebase
+    under --no-autostash; UnpackError is raised so the caller can fall
+    back to backup + re-fetch.
+
+  test_unpack_update_with_modified_tracked_file
+    An unstaged modification to a tracked file is detected by
+    "git status --untracked-files=no --porcelain" and blocks the
+    update; UnpackError is raised.
+
+  test_unpack_update_conflict_raises_unpack_error
+    A local commit that conflicts with the incoming upstream change
+    raises UnpackError; the repository is left in a clean state with
+    no pending rebase (rebase --abort was called).
+
+  test_unpack_update_untracked_file_overwritten_by_upstream
+    An untracked file that would be overwritten by an incoming upstream
+    commit causes git to refuse the rebase; UnpackError is raised and
+    the repository is not left in a mid-rebase state. Two sub-cases
+    are covered: a top-level file clash and a clash inside a
+    subdirectory (xxx/somefile).
+
+  test_unpack_update_shallow_clone_fails
+    Shallow clones do not carry enough history; UnpackError is raised.
+
+  test_unpack_update_stale_dldir_remote
+    When the clonedir has been removed after the initial unpack the
+    dldir remote no longer resolves; UnpackError is raised so the
+    caller can fall back to a full re-fetch.
+
+  test_fetch_unpack_update_toplevel_api
+    The public Fetch.unpack_update(root) API (used by callers such as
+    bitbake-setup) dispatches correctly end-to-end through to the Git
+    fetcher.
+
+Signed-off-by: Adrian Freihofer <adrian.freihofer@siemens.com>
 ---
- lib/bb/ui/knotty.py            | 10 ++++++++++
- lib/progressbar/progressbar.py |  3 +++
- 2 files changed, 13 insertions(+)
+ lib/bb/tests/fetch.py | 556 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 556 insertions(+)
 
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index e4b7b83061e..82531ef8f31 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -87,6 +87,7 @@ class NonInteractiveProgress(object):
-     def __init__(self, msg, maxval):
-         self.id = msg
-         self.msg = msg
-+        self.currval = 0
-         self.maxval = maxval
-         self.finished = False
- 
-@@ -96,6 +97,10 @@ class NonInteractiveProgress(object):
-         return self
- 
-     def update(self, value):
-+        self.currval = value
-+        pass
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 7b8297a78..25432e030 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -3793,3 +3793,559 @@ class GoModGitTest(FetcherTest):
+         self.assertTrue(os.path.exists(os.path.join(downloaddir, 'go.opencensus.io/@v/v0.24.0.mod')))
+         self.assertEqual(bb.utils.sha256_file(os.path.join(downloaddir, 'go.opencensus.io/@v/v0.24.0.mod')),
+                          '0dc9ccc660ad21cebaffd548f2cc6efa27891c68b4fbc1f8a3893b00f1acec96')
 +
-+    def clear(self):
-         pass
- 
-     def finish(self):
-@@ -791,7 +796,12 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                         event.msg = taskinfo['title'] + ': ' + event.msg
-                 if hasattr(event, 'fn') and event.levelno not in [bb.msg.BBLogFormatter.WARNONCE, bb.msg.BBLogFormatter.ERRORONCE]:
-                     event.msg = event.fn + ': ' + event.msg
-+                # Need to remove any progress bar, then add it back after we print this message
-+                if parseprogress:
-+                    parseprogress.clear()
-                 logging.getLogger(event.name).handle(event)
-+                if parseprogress:
-+                    parseprogress.update(parseprogress.currval)
-                 continue
- 
-             if isinstance(event, bb.build.TaskFailedSilent):
-diff --git a/lib/progressbar/progressbar.py b/lib/progressbar/progressbar.py
-index a8e2dc09c91..1562774ba1a 100644
---- a/lib/progressbar/progressbar.py
-+++ b/lib/progressbar/progressbar.py
-@@ -278,6 +278,9 @@ class ProgressBar(object):
-         self.last_update_time = now
-         return output
- 
-+    def clear(self):
-+        self.fd.write(" " * self.term_width + '\r')
-+        self.fd.flush()
- 
-     def start(self, update=True):
-         """Starts measuring time, and prints the bar at 0%.
++
++class GitUnpackUpdateTest(FetcherTest):
++    """Test the unpack_update functionality for git fetcher.
++
++    Intended workflow
++    1. First-time setup:
++       1. download()  — clones the upstream repo into DL_DIR/git2/... (clonedir).
++       2. unpack()    — clones from clonedir into the workspace (S/workdir) and
++                        registers a 'dldir' git remote pointing at
++                        file://DL_DIR/git2/... for later offline use.
++
++    2. Subsequent updates (what unpack_update is designed for):
++       1. The user works in the unpacked source tree.
++       2. Upstream advances — SRCREV changes in the recipe.
++       3. download()        — fetches the new revision into the local clonedir.
++       4. unpack_update()   — instead of wiping the workspace and re-cloning:
++           * fetches the new revision from the local 'dldir' remote
++           * rebases the user's local commits on top of the new SRCREV
++           * raises UnpackError if anything prevents a clean rebase so the
++             caller (e.g. bitbake-setup) can fall back to backup + re-clone.
++
++    Key design constraints:
++      * unpack_update() never deletes existing data (unlike unpack()).
++      * Only staged/modified tracked files block the update; untracked files and
++        committed local work are handled gracefully.
++      * The 'dldir' remote is intentionally visible to users outside the
++        fetcher (e.g. for manual 'git log dldir/master').
++      * Currently only git is supported.
++    """
++
++    def setUp(self):
++        """Set up a local bare git source repository with two commits on 'master'.
++
++        self.initial_rev  — the first commit (testfile.txt: 'initial content')
++        self.updated_rev  — the second commit (testfile.txt: 'updated content')
++
++        SRCREV is initialised to self.initial_rev so individual tests can
++        advance it to self.updated_rev (or create further commits) as needed.
++        """
++        FetcherTest.setUp(self)
++
++        self.gitdir = os.path.join(self.tempdir, 'gitrepo')
++        self.srcdir = os.path.join(self.tempdir, 'gitsource')
++
++        self.d.setVar('WORKDIR', self.tempdir)
++        self.d.setVar('S', self.gitdir)
++        self.d.delVar('PREMIRRORS')
++        self.d.delVar('MIRRORS')
++
++        # Create a source git repository
++        bb.utils.mkdirhier(self.srcdir)
++        self.git_init(cwd=self.srcdir)
++
++        # Create initial commit
++        with open(os.path.join(self.srcdir, 'testfile.txt'), 'w') as f:
++            f.write('initial content\n')
++        self.git(['add', 'testfile.txt'], cwd=self.srcdir)
++        self.git(['commit', '-m', 'Initial commit'], cwd=self.srcdir)
++        self.initial_rev = self.git(['rev-parse', 'HEAD'], cwd=self.srcdir).strip()
++
++        # Create a second commit
++        with open(os.path.join(self.srcdir, 'testfile.txt'), 'w') as f:
++            f.write('updated content\n')
++        self.git(['add', 'testfile.txt'], cwd=self.srcdir)
++        self.git(['commit', '-m', 'Update commit'], cwd=self.srcdir)
++        self.updated_rev = self.git(['rev-parse', 'HEAD'], cwd=self.srcdir).strip()
++
++        self.d.setVar('SRCREV', self.initial_rev)
++        self.d.setVar('SRC_URI', 'git://%s;branch=master;protocol=file' % self.srcdir)
++
++    def test_unpack_update_full_clone(self):
++        """Test that unpack_update updates an existing checkout in place for a full clone.
++
++        Steps:
++        1. Fetch and unpack at self.initial_rev — verify 'initial content'.
++        2. Advance SRCREV to self.updated_rev and re-download.
++        3. Call unpack_update() instead of unpack() — the existing checkout
++           must be updated via 'git fetch dldir' + 'git rebase' without
++           re-cloning the directory.
++        4. Verify testfile.txt now contains 'updated content'.
++        """
++        # First fetch at initial revision
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++        fetcher.unpack(self.unpackdir)
++
++        # Verify initial state
++        unpack_path = os.path.join(self.unpackdir, 'git')
++        self.assertTrue(os.path.exists(os.path.join(unpack_path, 'testfile.txt')))
++        with open(os.path.join(unpack_path, 'testfile.txt'), 'r') as f:
++            self.assertEqual(f.read(), 'initial content\n')
++
++        # Update to new revision
++        self.d.setVar('SRCREV', self.updated_rev)
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++
++        # Use unpack_update
++        uri = self.d.getVar('SRC_URI')
++        ud = fetcher.ud[uri]
++        git_fetcher = ud.method
++        git_fetcher.unpack_update(ud, self.unpackdir, self.d)
++
++        # Verify updated state
++        with open(os.path.join(unpack_path, 'testfile.txt'), 'r') as f:
++            self.assertEqual(f.read(), 'updated content\n')
++
++    def test_unpack_update_dldir_remote_setup(self):
++        """Test that unpack() adds a 'dldir' git remote pointing at ud.clonedir.
++
++        The 'dldir' remote is used by subsequent unpack_update() calls to fetch
++        new commits from the local download cache (${DL_DIR}/git2/…) without
++        requiring network access. After a normal unpack the remote must exist
++        and its URL must be 'file://<ud.clonedir>'.
++        """
++        # First fetch
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++
++        uri = self.d.getVar('SRC_URI')
++        ud = fetcher.ud[uri]
++
++        fetcher.unpack(self.unpackdir)
++
++        unpack_path = os.path.join(self.unpackdir, 'git')
++
++        # Check that dldir remote exists
++        remotes = self.git(['remote'], cwd=unpack_path).strip().split('\n')
++        self.assertIn('dldir', remotes)
++
++        # Verify it points to the clonedir
++        dldir_url = self.git(['remote', 'get-url', 'dldir'], cwd=unpack_path).strip()
++        self.assertEqual(dldir_url, 'file://{}'.format(ud.clonedir))
++
++    def test_unpack_update_ff_with_local_changes(self):
++        """Test that unpack_update rebases local commits fast forward.
++
++        Full workflow:
++        1. Fetch + unpack at initial_rev — verify 'dldir' remote is created
++           pointing at ud.clonedir.
++        2. Add a local commit touching localfile.txt.
++        3. Advance SRCREV to updated_rev and call download() — verify that
++           ud.clonedir (the dldir bare clone) now contains updated_rev.
++        4. Call unpack_update() — it fetches updated_rev from dldir into the
++           working tree and rebases the local commit on top.
++        5. Verify the final commit graph: HEAD's parent is updated_rev, and
++           both testfile.txt ('updated content') and localfile.txt ('local
++           change') are present.
++
++        Note: git rebase operates the same way regardless of whether HEAD is
++        detached or on a named branch (e.g. 'master' or a local feature branch),
++        so this test covers those scenarios implicitly.
++        """
++        # Step 1 — fetch + unpack at initial_rev
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++        fetcher.unpack(self.unpackdir)
++
++        uri = self.d.getVar('SRC_URI')
++        ud = fetcher.ud[uri]
++        unpack_path = os.path.join(self.unpackdir, 'git')
++
++        # The normal unpack must have set up the 'dldir' remote pointing at
++        # ud.clonedir so that subsequent unpack_update() calls work offline.
++        dldir_url = self.git(['remote', 'get-url', 'dldir'], cwd=unpack_path).strip()
++        self.assertEqual(dldir_url, 'file://{}'.format(ud.clonedir))
++
++        # Step 2 — add a local commit that touches a new file
++        with open(os.path.join(unpack_path, 'localfile.txt'), 'w') as f:
++            f.write('local change\n')
++        self.git(['add', 'localfile.txt'], cwd=unpack_path)
++        self.git(['commit', '-m', 'Local commit'], cwd=unpack_path)
++        local_commit = self.git(['rev-parse', 'HEAD'], cwd=unpack_path).strip()
++
++        # Step 3 — advance SRCREV and download; clonedir must now contain
++        # updated_rev so that unpack_update can fetch it without network access.
++        self.d.setVar('SRCREV', self.updated_rev)
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++
++        ud = fetcher.ud[uri]
++        clonedir_refs = self.git(['rev-parse', self.updated_rev], cwd=ud.clonedir).strip()
++        self.assertEqual(clonedir_refs, self.updated_rev,
++                         "clonedir must contain updated_rev after download()")
++
++        # Step 4 — unpack_update fetches from dldir and rebases
++        git_fetcher = ud.method
++        git_fetcher.unpack_update(ud, self.unpackdir, self.d)
++
++        # Step 5 — verify the commit graph and working tree content
++        # HEAD is the rebased local commit; its parent must be updated_rev
++        head_rev = self.git(['rev-parse', 'HEAD'], cwd=unpack_path).strip()
++        parent_rev = self.git(['rev-parse', 'HEAD^'], cwd=unpack_path).strip()
++        self.assertNotEqual(head_rev, local_commit,
++                            "local commit should have a new SHA after rebase")
++        self.assertEqual(parent_rev, self.updated_rev,
++                         "HEAD's parent must be updated_rev after fast-forward rebase")
++
++        with open(os.path.join(unpack_path, 'testfile.txt'), 'r') as f:
++            self.assertEqual(f.read(), 'updated content\n')
++        with open(os.path.join(unpack_path, 'localfile.txt'), 'r') as f:
++            self.assertEqual(f.read(), 'local change\n')
++
++    def test_unpack_update_already_at_target_revision(self):
++        """Test that unpack_update is a no-op when the checkout is already at SRCREV.
++
++        Calling unpack_update() without advancing SRCREV must succeed and leave
++        the working tree unchanged. No rebase should be attempted because the
++        checkout already points at ud.revision.
++        """
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++        fetcher.unpack(self.unpackdir)
++
++        unpack_path = os.path.join(self.unpackdir, 'git')
++        with open(os.path.join(unpack_path, 'testfile.txt')) as f:
++            self.assertEqual(f.read(), 'initial content\n')
++
++        # Call unpack_update with SRCREV still at initial_rev — no upstream change
++        uri = self.d.getVar('SRC_URI')
++        ud = fetcher.ud[uri]
++        git_fetcher = ud.method
++        result = git_fetcher.unpack_update(ud, self.unpackdir, self.d)
++        self.assertTrue(result)
++
++        # Content must be unchanged
++        with open(os.path.join(unpack_path, 'testfile.txt')) as f:
++            self.assertEqual(f.read(), 'initial content\n')
++
++    def test_unpack_update_with_untracked_file(self):
++        """Test that unpack_update succeeds when the checkout has an untracked file.
++
++        The status check uses '--untracked-files=no', so untracked files are not
++        detected and do not trigger the fallback path.  git rebase also leaves
++        untracked files untouched, so both the upstream update and the untracked
++        file must be present after the call.
++        """
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++        fetcher.unpack(self.unpackdir)
++
++        unpack_path = os.path.join(self.unpackdir, 'git')
++
++        # Create an untracked file (not staged, not committed)
++        untracked = os.path.join(unpack_path, 'untracked.txt')
++        with open(untracked, 'w') as f:
++            f.write('untracked content\n')
++
++        # Update to new upstream revision
++        self.d.setVar('SRCREV', self.updated_rev)
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++
++        uri = self.d.getVar('SRC_URI')
++        ud = fetcher.ud[uri]
++        git_fetcher = ud.method
++
++        # --untracked-files=no means the status check passes; rebase preserves the file
++        git_fetcher.unpack_update(ud, self.unpackdir, self.d)
++
++        with open(os.path.join(unpack_path, 'testfile.txt'), 'r') as f:
++            self.assertEqual(f.read(), 'updated content\n')
++
++        # Untracked file must survive the rebase
++        self.assertTrue(os.path.exists(untracked))
++        with open(untracked, 'r') as f:
++            self.assertEqual(f.read(), 'untracked content\n')
++
++    def test_unpack_update_with_staged_changes(self):
++        """Test that unpack_update fails when the checkout has staged (but not committed) changes.
++
++        The rebase is run with --no-autostash so git refuses to rebase over a
++        dirty index. The caller (bitbake-setup) is expected to catch the
++        resulting LocalModificationsError and fall back to backup + re-fetch.
++        """
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++        fetcher.unpack(self.unpackdir)
++
++        unpack_path = os.path.join(self.unpackdir, 'git')
++
++        # Stage a new file without committing it
++        staged = os.path.join(unpack_path, 'staged.txt')
++        with open(staged, 'w') as f:
++            f.write('staged content\n')
++        self.git(['add', 'staged.txt'], cwd=unpack_path)
++
++        # Update to new upstream revision
++        self.d.setVar('SRCREV', self.updated_rev)
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++
++        uri = self.d.getVar('SRC_URI')
++        ud = fetcher.ud[uri]
++        git_fetcher = ud.method
++
++        # Should fail — git rebase refuses to run with a dirty index
++        with self.assertRaises(bb.fetch2.LocalModificationsError):
++            git_fetcher.unpack_update(ud, self.unpackdir, self.d)
++
++    def test_unpack_update_with_modified_tracked_file(self):
++        """Test that unpack_update fails when a tracked file has unstaged modifications.
++
++        'git status --untracked-files=no --porcelain' reports unstaged modifications
++        to tracked files (output line ' M filename'), which must block the update so
++        the caller can fall back to backup + re-fetch rather than silently discarding
++        work in progress.
++        """
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++        fetcher.unpack(self.unpackdir)
++
++        unpack_path = os.path.join(self.unpackdir, 'git')
++
++        # Modify a tracked file without staging or committing
++        with open(os.path.join(unpack_path, 'testfile.txt'), 'w') as f:
++            f.write('locally modified content\n')
++
++        # Update to new upstream revision
++        self.d.setVar('SRCREV', self.updated_rev)
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++
++        uri = self.d.getVar('SRC_URI')
++        ud = fetcher.ud[uri]
++        git_fetcher = ud.method
++
++        # Should fail — unstaged modification to tracked file is detected by
++        # 'git status --untracked-files=no --porcelain'
++        with self.assertRaises(bb.fetch2.LocalModificationsError):
++            git_fetcher.unpack_update(ud, self.unpackdir, self.d)
++
++    def test_unpack_update_conflict_raises_unpack_error(self):
++        """Test that unpack_update raises UnpackError on a rebase conflict.
++
++        When a local commit modifies the same lines as an incoming upstream commit,
++        git rebase cannot resolve the conflict automatically. unpack_update must
++        abort the failed rebase and raise UnpackError so the caller can fall back
++        to a backup + re-fetch.
++        """
++        # Fetch and unpack at the initial revision
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++        fetcher.unpack(self.unpackdir)
++
++        unpack_path = os.path.join(self.unpackdir, 'git')
++
++        # Make a local commit that edits the same lines as the upcoming upstream commit
++        with open(os.path.join(unpack_path, 'testfile.txt'), 'w') as f:
++            f.write('conflicting local content\n')
++        self.git(['add', 'testfile.txt'], cwd=unpack_path)
++        self.git(['commit', '-m', 'Local conflicting commit'], cwd=unpack_path)
++
++        # Add a third upstream commit that also edits testfile.txt differently
++        with open(os.path.join(self.srcdir, 'testfile.txt'), 'w') as f:
++            f.write('conflicting upstream content\n')
++        self.git(['add', 'testfile.txt'], cwd=self.srcdir)
++        self.git(['commit', '-m', 'Upstream conflicting commit'], cwd=self.srcdir)
++        conflict_rev = self.git(['rev-parse', 'HEAD'], cwd=self.srcdir).strip()
++
++        # Update SRCREV to the new upstream commit
++        self.d.setVar('SRCREV', conflict_rev)
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++
++        uri = self.d.getVar('SRC_URI')
++        ud = fetcher.ud[uri]
++        git_fetcher = ud.method
++
++        # unpack_update must fail and clean up (rebase --abort) rather than
++        # leaving the repo in a mid-rebase state
++        with self.assertRaises(bb.fetch2.UnpackError):
++            git_fetcher.unpack_update(ud, self.unpackdir, self.d)
++
++        # Verify the repo is not left in a conflicted / mid-rebase state
++        rebase_merge = os.path.join(unpack_path, '.git', 'rebase-merge')
++        rebase_apply = os.path.join(unpack_path, '.git', 'rebase-apply')
++        self.assertFalse(os.path.exists(rebase_merge),
++                         "rebase-merge dir should not exist after failed unpack_update")
++        self.assertFalse(os.path.exists(rebase_apply),
++                         "rebase-apply dir should not exist after failed unpack_update")
++
++    def test_unpack_update_untracked_file_overwritten_by_upstream(self):
++        """Test that unpack_update raises UnpackError when an untracked file would be
++        overwritten by an incoming upstream commit.
++
++        We skip untracked files in the pre-check (git rebase doesn't touch harmless
++        untracked files), but git itself refuses to rebase when an untracked file would
++        be overwritten by the incoming changes. The resulting FetchError must be caught
++        and re-raised as UnpackError without leaving the repo in a mid-rebase state.
++
++        Two sub-cases are covered:
++        - top-level untracked file clashing with an incoming upstream file
++        - untracked file inside a subdirectory (xxx/somefile) clashing with an
++          upstream commit that adds the same path
++        """
++        def _run_case(upstream_path, local_rel_path, commit_msg):
++            """
++            Add upstream_path to self.srcdir, create local_rel_path as an
++            untracked file in the checkout, then assert that unpack_update
++            raises UnpackError and leaves no mid-rebase state, and that the
++            local file is untouched.
++            """
++            # Fresh fetch + unpack at the current SRCREV
++            fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++            fetcher.download()
++            fetcher.unpack(self.unpackdir)
++
++            unpack_path = os.path.join(self.unpackdir, 'git')
++
++            # Upstream adds the file (potentially inside a subdirectory)
++            full_upstream = os.path.join(self.srcdir, upstream_path)
++            os.makedirs(os.path.dirname(full_upstream), exist_ok=True)
++            with open(full_upstream, 'w') as f:
++                f.write('upstream content\n')
++            self.git(['add', upstream_path], cwd=self.srcdir)
++            self.git(['commit', '-m', commit_msg], cwd=self.srcdir)
++            new_rev = self.git(['rev-parse', 'HEAD'], cwd=self.srcdir).strip()
++
++            # Create the clashing untracked file in the checkout
++            full_local = os.path.join(unpack_path, local_rel_path)
++            os.makedirs(os.path.dirname(full_local), exist_ok=True)
++            with open(full_local, 'w') as f:
++                f.write('local untracked content\n')
++
++            self.d.setVar('SRCREV', new_rev)
++            fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++            fetcher.download()
++
++            uri = self.d.getVar('SRC_URI')
++            ud = fetcher.ud[uri]
++            git_fetcher = ud.method
++
++            # git rebase refuses because the untracked file would be overwritten
++            with self.assertRaises(bb.fetch2.UnpackError):
++                git_fetcher.unpack_update(ud, self.unpackdir, self.d)
++
++            # Repo must not be left in a mid-rebase state
++            self.assertFalse(os.path.exists(os.path.join(unpack_path, '.git', 'rebase-merge')))
++            self.assertFalse(os.path.exists(os.path.join(unpack_path, '.git', 'rebase-apply')))
++
++            # The local untracked file must be untouched
++            self.assertTrue(os.path.exists(full_local))
++            with open(full_local) as f:
++                self.assertEqual(f.read(), 'local untracked content\n')
++
++            # Reset unpackdir for the next sub-case
++            import shutil as _shutil
++            _shutil.rmtree(self.unpackdir)
++            os.makedirs(self.unpackdir)
++
++        # Sub-case 1: top-level file clash
++        _run_case('newfile.txt', 'newfile.txt',
++                  'Upstream adds newfile.txt')
++
++        # Sub-case 2: file inside a subdirectory (xxx/somefile)
++        _run_case('xxx/somefile.txt', 'xxx/somefile.txt',
++                  'Upstream adds xxx/somefile.txt')
++
++    def test_unpack_update_shallow_clone_fails(self):
++        """Test that unpack_update raises UnpackError for shallow-tarball checkouts.
++
++        Shallow clones lack full history, which makes an in-place rebase impossible
++        without network access. After fetching with BB_GIT_SHALLOW=1 the clonedir
++        is deleted so that unpack() is forced to use the shallow tarball.
++        A subsequent call to unpack_update() must raise UnpackError and the message
++        must mention 'shallow clone' so callers can distinguish this case.
++        """
++        self.d.setVar('BB_GIT_SHALLOW', '1')
++        self.d.setVar('BB_GENERATE_SHALLOW_TARBALLS', '1')
++
++        # First fetch at initial revision
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++
++        # Remove clonedir to force use of shallow tarball
++        clonedir = os.path.join(self.dldir, 'git2')
++        if os.path.exists(clonedir):
++            shutil.rmtree(clonedir)
++
++        fetcher.unpack(self.unpackdir)
++
++        # Update to new revision
++        self.d.setVar('SRCREV', self.updated_rev)
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++
++        # unpack_update should fail for shallow clones
++        uri = self.d.getVar('SRC_URI')
++        ud = fetcher.ud[uri]
++        git_fetcher = ud.method
++
++        with self.assertRaises(bb.fetch2.UnpackError) as context:
++            git_fetcher.unpack_update(ud, self.unpackdir, self.d)
++
++        self.assertIn("shallow clone", str(context.exception).lower())
++
++    def test_unpack_update_stale_dldir_remote(self):
++        """Test that unpack_update raises UnpackError when the dldir remote URL is stale.
++
++        If the clonedir has been removed after the initial unpack (e.g. DL_DIR was
++        cleaned) the 'dldir' remote URL no longer resolves. The fetch inside
++        update_mode will fail with a FetchError which must be re-raised as
++        UnpackError so the caller can fall back to a full re-fetch.
++        """
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++        fetcher.unpack(self.unpackdir)
++
++        unpack_path = os.path.join(self.unpackdir, 'git')
++
++        # Advance SRCREV to trigger update_mode
++        self.d.setVar('SRCREV', self.updated_rev)
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++
++        uri = self.d.getVar('SRC_URI')
++        ud = fetcher.ud[uri]
++
++        # Delete the clonedir and corrupt the dldir remote URL so that
++        # 'git fetch dldir' fails, simulating a missing or relocated DL_DIR.
++        shutil.rmtree(ud.clonedir)
++        self.git(['remote', 'set-url', 'dldir', 'file://' + ud.clonedir],
++                 cwd=unpack_path)
++
++        git_fetcher = ud.method
++        with self.assertRaises(bb.fetch2.UnpackError):
++            git_fetcher.unpack_update(ud, self.unpackdir, self.d)
++
++    def test_fetch_unpack_update_toplevel_api(self):
++        """Test that the top-level Fetch.unpack_update() dispatches to Git.unpack_update().
++
++        Callers such as bitbake-setup use fetcher.unpack_update(root) rather than
++        calling the method on the Git fetcher directly. Verify that the public API
++        works end-to-end: fetch at initial_rev, unpack, advance to updated_rev,
++        fetch again, then call fetcher.unpack_update(root) and confirm the content
++        is updated.
++        """
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++        fetcher.unpack(self.unpackdir)
++
++        unpack_path = os.path.join(self.unpackdir, 'git')
++        with open(os.path.join(unpack_path, 'testfile.txt')) as f:
++            self.assertEqual(f.read(), 'initial content\n')
++
++        self.d.setVar('SRCREV', self.updated_rev)
++        fetcher = bb.fetch2.Fetch([self.d.getVar('SRC_URI')], self.d)
++        fetcher.download()
++
++        # Use the public Fetch.unpack_update() rather than the method directly
++        fetcher.unpack_update(self.unpackdir)
++
++        with open(os.path.join(unpack_path, 'testfile.txt')) as f:
++            self.assertEqual(f.read(), 'updated content\n')
+-- 
+2.53.0
+
 
