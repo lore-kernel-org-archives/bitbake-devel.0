@@ -1,65 +1,111 @@
-Return-Path: <rpjday@crashcourse.ca>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0575E106B52D
-	for <webhook@archiver.kernel.org>; Wed, 25 Mar 2026 12:54:05 +0000 (UTC)
-Received: from cpanel10.indieserve.net (cpanel10.indieserve.net [199.212.143.9])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.21825.1774443239246412660
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12300106F308
+	for <webhook@archiver.kernel.org>; Thu, 26 Mar 2026 08:55:21 +0000 (UTC)
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.43098.1774515313975025941
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 25 Mar 2026 05:53:59 -0700
+ Thu, 26 Mar 2026 01:55:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@crashcourse.ca header.s=default header.b=dMpBihVZ;
- spf=pass (domain: crashcourse.ca, ip: 199.212.143.9, mailfrom: rpjday@crashcourse.ca)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=crashcourse.ca; s=default; h=Content-Type:MIME-Version:References:
-	Message-ID:In-Reply-To:Subject:cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=xT9CiIuTaC9mpet+wvfnaYx8RmlyaP11yQLTMPiehXM=; b=dMpBihVZrv3SIdVuPoh9PodmUu
-	YGBOV7lQCd1ulso7Hav/wJWQFyBpsVGqBPt2QPqlRG41oBUBWb5FIS+I+I0bjnPARAJw+C+ezekDS
-	LVT46aiYj4jz/pAGRP6eWcpjFrM0f3pfbvrrKPellL/pLHOzwWIfbygfvxys6Wb5hg8PziITC8BsC
-	cL4IuVToEmxd6kAKclyYxUDGJaXG9jFSOS+jq36K1ya6WkGuYKuEBPkhHV+l2WUomFP5On1aBs6YS
-	Sc0e8D7f/ggfwCwqRfOrw3JR/YMcCrANvQZK84Ebt6WkDt38WYjqLtBaGduJltBlpFde20gAprzlu
-	HTT9MtMA==;
-Received: from [147.129.179.166] (port=39402 helo=rday)
-	by cpanel10.indieserve.net with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.99.1)
-	(envelope-from <rpjday@crashcourse.ca>)
-	id 1w5NkC-00000007sMI-3aUF;
-	Wed, 25 Mar 2026 08:53:57 -0400
-Date: Wed, 25 Mar 2026 08:54:33 -0400 (EDT)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-To: richard.purdie@linuxfoundation.org
-cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] [PATCH] toaster: Update fixtures for wrynose
- release
-In-Reply-To: <20260325125019.297452-1-richard.purdie@linuxfoundation.org>
-Message-ID: <cb2250b7-db56-206c-1639-72e3ce9c4849@crashcourse.ca>
-References: <20260325125019.297452-1-richard.purdie@linuxfoundation.org>
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=TQkqK18L;
+ spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id D84B34E42802
+	for <bitbake-devel@lists.openembedded.org>; Thu, 26 Mar 2026 08:55:11 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id AE87B5FDEB;
+	Thu, 26 Mar 2026 08:55:11 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6E03810451B10;
+	Thu, 26 Mar 2026 09:55:10 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1774515311; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=J/91ipG0ZB3RNVSfO11un9UylTOngOUnkBNXT4w21S4=;
+	b=TQkqK18LFbOr5zgrHf3vbLBChxsbHZ6AbJ3E6ThaCPqxL4s8hI2sgxrxluiAIQLNVdkSFR
+	4dr7q2khCCoCKASu4XEbMFRYf9AlDZiQp6PoGZR2Fs5Y3KVhBsg2f0kgMILSRCixu7Upq4
+	y/Bqcr+9NNmvhqtm88kNzWyUtWi199tDpNmkiwqz3C9+ukbRasiXaCYv06+m1pQ8AH6bWK
+	n5NAOQi+zCJWN/HkS3uyd3N4fS0V0GYEw9X/qyyG0Likih1vKVO/vKMYz77MkJcLBIyeIG
+	ZtRN0Fcls6o/d1wDah2RODgT4arAG9VzgonqTQvoHg0yL5Rjc9psXZ3wnH1gAA==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Date: Thu, 26 Mar 2026 09:54:57 +0100
+Subject: [PATCH] doc/bitbake-user-manual-fetching: add warning on the Git
+ subpath parameter
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel10.indieserve.net
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Get-Message-Sender-Via: cpanel10.indieserve.net: authenticated_id: rpjday+crashcourse.ca/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: cpanel10.indieserve.net: rpjday@crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260326-add-subpath-warning-v1-1-ece919e8779a@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMTQ6DIBBA4auYWXcSBcG2VzEuEEadLqgB/EmMd
+ xfb5bd474BIgSnCuzgg0MqRvz6jehRgJ+NHQnbZIEqhSyk0GucwLv1s0oSbCZ79iJWSdpDPpql
+ fCnI5Bxp4/13b7u+cfMimewXneQHZjSSXdwAAAA==
+X-Change-ID: 20260326-add-subpath-warning-153cf3877495
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1886;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=1bijF0g2TeMyz2ubl2WddW3x3dVZYJt2Luvn2/3nvOw=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpxPRu1diP0bP0XehWpIC4pntKipwt/BVWvQk+B
+ SZ2x9or3KqJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCacT0bgAKCRDRgEFAKaOo
+ NrImD/9uZr+g7qJ+2CWv5DHAz79d53eClQ944GukeJ5IHh2oe8BIh3Qegc7kcErudaRZ3PtRgUG
+ jbihGrWt0zNnBhO3k64iZDSswJAQ1NWgHEZxW0A0KHjAxwoGOWLGrlXqrSStHC+NHDPS/FSsBMU
+ Iw9wM5SzWO3RaJ7aFh28kBr9hSnpMUVycTOimjTd/FVOhGHkUtj9aM5TlDijmTj8oRtuKFGBn61
+ wtqgZCk34r2HBgNMjvxb60mZvBIhFZyU88nVsslm+uwXaCdEtU4lFSFLttny/Av/Pd9DqjaMK9d
+ S5UhXRelaf28SyHiXI2nP0PmnPPF9WlomtPzRkKe6dRgcJC8klB1yddlbRkvbsrLwEwNjrQgY+f
+ RgslK5h0JvlPBu25BnyykVjhBWUmPEe+K384+NkSwv8Py8jNdRPhx/4JiiXOCmVAT89bNTYoaA7
+ EYxIv05kRdPmjpRwbMSkPUUbvXPot4JNBim9YRbXDHnAkCMNr68ClREs9A6V6Zv0RvJILl7Rryc
+ yo8yR0KfqhcrMc4ZOswimP1hHAgg49+Qjjr7fgQkyYAnjrK3YmnGIwLU21rEdBmdlk5WA0zzdby
+ RdKZOiMuCrkXvx+i1XAYGhurpPazLCXyCD1KOGIFbM5MjYTI/MEj5972FfX/jwWHLkmBb/smDhv
+ wCQN8MZQdznzX9g==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 25 Mar 2026 12:54:05 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19232
+ <bitbake-devel@lists.openembedded.org>; Thu, 26 Mar 2026 08:55:21 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19233
 
-On Wed, 25 Mar 2026, Richard Purdie via lists.openembedded.org wrote:
+[YOCTO #15558]
 
-> Update the fixtures for toaster to add wynose. Update the tests to
-> match.
+Add a warning on the subpath option which has an unexpected behavior
+with regards to how the HEAD is updated in the checked out repository.
 
-  "wynose"
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+---
+ doc/bitbake-user-manual/bitbake-user-manual-fetching.rst | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+index 1dcdc0ffee1..5d7d6f7a34d 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+@@ -380,6 +380,21 @@ This fetcher supports the following parameters:
+ -  *"subpath":* Limits the checkout to a specific subpath of the tree.
+    By default, the whole tree is checked out.
+ 
++   .. warning::
++
++      When using this option, the value of :term:`SRCREV` may not be reflected
++      in the checked out repository.
++
++      To achieve a partial checkout of the repository with the ``subpath``
++      option, the BitBake Git fetcher makes use of Git "plumbing" commands: `git
++      read-tree <https://git-scm.com/docs/git-read-tree>`__ and `git
++      checkout-index <https://git-scm.com/docs/git-checkout-index>`__. However,
++      these commands only update the **files** within the repository, and do not
++      update the current ``HEAD`` to point to the commit specified by
++      :term:`SRCREV`. Instead, the value of ``HEAD`` will always point to the
++      tip of the branch specified by the ``branch`` parameter, which may or may
++      not correspond to :term:`SRCREV`.
++
+ -  *"destsuffix":* The name of the path in which to place the checkout.
+    By default, the path is ``git/``.
+ 
+
+---
+base-commit: 112bddd8fc684fbdd71139429251b127739f863b
+change-id: 20260326-add-subpath-warning-153cf3877495
+
 
