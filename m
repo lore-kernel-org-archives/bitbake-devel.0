@@ -1,131 +1,115 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED815106F310
-	for <webhook@archiver.kernel.org>; Thu, 26 Mar 2026 09:11:30 +0000 (UTC)
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.43268.1774516285981149376
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F1010A1E81
+	for <webhook@archiver.kernel.org>; Thu, 26 Mar 2026 11:50:22 +0000 (UTC)
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.46304.1774525818363087595
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 26 Mar 2026 02:11:26 -0700
+ Thu, 26 Mar 2026 04:50:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=m0zIm7n4;
- spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id E80511A2FFC
-	for <bitbake-devel@lists.openembedded.org>; Thu, 26 Mar 2026 09:11:23 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id B17CF5FDEB;
-	Thu, 26 Mar 2026 09:11:23 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id DD65210451B15;
-	Thu, 26 Mar 2026 10:11:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1774516283; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=pJavGwPN6TGzODHmY5BDSvsWsSwPcsugDECMA8yF1K8=;
-	b=m0zIm7n4Zrz7V0P2zMLh4sjnia+pXlniLBhLz9BwgpU/NgVASjOKt74BbmIbL4RDMmaljw
-	zQ2qogegpGlRl/iaNuPWtMy1sE+qUKBljK/SpSVk9LjTO4nGeGSG7wrxFCMATnfIlN8fvv
-	ACS/Md1akqG411v+QzWAzWPqZFCTNioE2Lgmsh8SYt9eUvQC4aLVN+7hZyNSUOK44YIIOh
-	R0lfdlY8K1kh4ClX+668QSAahefzJC1xqnf+4+YK7jTeopHb/QLn78afLPuwbEY2UgoBka
-	J15HTu9s8Nn9F9NzdfLLLDOZZU63ujph6ER5B60Y12sBEIuZvF0jByHVaJr1UA==
-From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Thu, 26 Mar 2026 10:11:14 +0100
-Subject: [PATCH] doc: add warning notes on the disabled NPM fetcher
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=cvVAltLc;
+ spf=pass (domain: gmail.com, ip: 209.85.219.50, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-89a1347051aso13830236d6.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 26 Mar 2026 04:50:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774525817; cv=none;
+        d=google.com; s=arc-20240605;
+        b=fRzxOk4jNDUjtgK7XwpHuEyWgGC/o9h1/1RauqsjZ/umP5QOOzWpJCtC8kfm0/ivWy
+         s6IuYBL3nfxDAbsWHULVKuNB2tcIq3HRx75sxS9qEkw/hvasScgJaSfy/QsynDOWq2vV
+         TJ7+OFv8WJeFGPcR3CmzO469yj+MUG9e1b11JRlY/LDvvKSF9L7NMiCbZaA7mC9dzR7X
+         8uI3P+rx5cnkEixqR2qePcSQOJlUnPxTqnd/oihjZlIF5HEUi/OhvCgEyDyou0T9L1Sk
+         AYagk/SYXjDqYqMw/I/Nm2cNPAtX4MCjVh4dZpqxRyRc8tKA4zIRbEo4pagdp+A0qFJR
+         JqJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=1wMuBeujn0Jvp/COOJ9fbWFAS4bba5aqp9875+pt3/c=;
+        fh=z79r7devTYIWKIIJnNEQrp8fu91t3iK8WPc0gYxDyHM=;
+        b=acDEU/e7Lkgyv1Zpnv5Jt2Q4P+NQXC9XE+Lwnz9k0eLIB3ACvV8Rme1lVM6or4VY84
+         Am9k+5ApRfMEXhLydBYdCUIgMxtJ5W3jv3Cgb9RH4jdwYt4tXSZICJTR51gOsALBDDUM
+         QcLgqwHxC9NO3tx5nSha3y2ZCj+HcuLVgTpEHkSl7DklquZOgJCR54WksWtgnTGKw+4B
+         EdVbIEdAHhVevq91p3dXXWWOtK5iQStBsIQIovJ+d2ReuFCHf77dX1imRM3YpXzNpDGR
+         gqQBkFIdHo9bGGCGaugUABAha9gERZAnIh8613LunqLrKYf+sjZeGioquOuF/SBSv4sX
+         e0Tw==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774525817; x=1775130617; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1wMuBeujn0Jvp/COOJ9fbWFAS4bba5aqp9875+pt3/c=;
+        b=cvVAltLcJ7ChnS2iwPPtQ781KdCwto1hHXdOdE/8GJGS2yUwTSwIXO2SCy7W+Lc1RN
+         FiVT0LNxTcHlVRJLGv031sSKh3IRUEvYfDSXH7Ye4rudBAlGCu8DX4SDBS0gKhn73blh
+         RcPt3to0btDhmm0fqd3Si2cNGjiMZ9pzcColhH5uiQmBYTSXt02yoRc/ngCcFNnnHEDT
+         f2r+9QA6RBujJEu/brzElznj9b8FMYH+Hj89XIpClPOFtHyc7g6UisfE7cLfJ1mGUekh
+         x6o7f+WRFAN3gPmiznWAPjYzHvWpaEQadya8esyBec4IBAQIMfLdIXfPKFj8o4/BWlIJ
+         LnEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774525817; x=1775130617;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1wMuBeujn0Jvp/COOJ9fbWFAS4bba5aqp9875+pt3/c=;
+        b=R6kSieYS1nHR8NqwRv1Z+KDpCQr70hIPb+B1IrajftmqbWrgSqEgqHGkdtOs1sp6uc
+         TZIboAlXUQGJoaRRngF8/PNUguxMpybO0AcOfU2D2y73EuFN11mtVUqjG6kcKXiChaWD
+         UkiVuY7BgSNZmPveENJdU4OhFVEKPILe1/9iXRasrFE+u9FcDjjRGvtxUCKYKVP0fjUu
+         z+eeJHMtIg3itGGgPPdUJGwhG1PKjDfP0tvfQ2YMHxUv+j13vUBE6T8FJIgEIqgm9y3v
+         S6cNnlsSUfnWMAo5MrgXRqKLFltGZAoLU+ogB113QwgfXMVPPzeJ4YG21/1PCNFLlnuG
+         ExqQ==
+X-Gm-Message-State: AOJu0YyX0Pm/toAcRmQc1ufveZMmdsg1RTLHfQy+ZqR/3h+jIm1OfdHJ
+	11BPTmoUDNjdAtz0QJTFIWVKqiJX44N/SmWfVvOERBxlMKwiNDki/apSnhK/bKviOFid5/L3KjA
+	3oPxcNAi62fas7dmp4mnUJj12JafmEmg=
+X-Gm-Gg: ATEYQzxB/VZVpztfmtHmtqbxYSxLztp67qHS30tAqHQRdJQJq+hOhjncY+7QlVFfw/w
+	r9HAkBWCVM8E4P4f9l63ae9p8BPJMKOjE9yRf6TaxTu1aOTVNzmH/mV4ivOxItWyoXhaa/PUuIg
+	1KMEMo2BqWbhPhIYuQrNeP94w7sYSOZQWhnYxjfO4Mm6Wgg+Zap9AgkOfuiI6s9p++idRuXcpyp
+	a0Dngu8s0SnXylMufg3xtM1iKSKNRYFvsteI4zzVIAmzHheuNQfb1ICGfQJkCVX6A4gNSa9scWo
+	3QxGc2QqJlUzu1tfap9gruyyp1BcuOT1UOCViqXAhQ==
+X-Received: by 2002:a05:6214:2508:b0:89a:6142:377b with SMTP id
+ 6a1803df08f44-89cc4779065mr121687196d6.0.1774525817284; Thu, 26 Mar 2026
+ 04:50:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260326-disabled-npm-fetcher-docs-v1-1-8e2fa7c1d0c6@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMQQrCMBBG4auUWTsQI7ToVcRFMvnbjmhaMlWE0
- rsb7fJbvLeSoSiMLs1KBW81nXLF8dCQjCEPYE3V5J1v3cm3nNRCfCBxnp/cY5ERhdMkxk6CdOj
- OPvhItZ8Lev3839fbbnvFO2T5DWnbvo/ZsHh9AAAA
-X-Change-ID: 20260326-disabled-npm-fetcher-docs-0cac7e792a2b
-To: bitbake-devel@lists.openembedded.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2759;
- i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=q+kU0eToGTOEbPZMDo8h4yWHtbiapD5OvaqVRmiZFZ8=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpxPg65OnQ21cOFATZRF7PxNwbKub+VAY63abdh
- Feyc7XIi1WJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCacT4OgAKCRDRgEFAKaOo
- NuzQD/9nxs25H5UwFwz5ul61TwO1F6qUCqfGgPw4GrV3fCvtSzUVyRnnVVTQ/0uNZ8Mx9qlT3IU
- zzCXXQyisDaxMTofHR/3otmApRT0l+HrRiObxPmesN6l8z+l4mERvc0P1ILR9QKr55xmx15dTKk
- cfj2Ns+zm3at0RHjMq8CTciOnWCHY+cAlPOiuf2/Rr1l6VosZQMXVF7MWYRnBT4Zt5ct4PyJ8hv
- wfM2q++6d3BKSBZ7zAebNgmb+fMBzlzWhVDE2eTt2AZGNumxRap0qSDe9ezCSyLxygVw5ta6XF1
- LGE9w3eC4JMsLnQTm8gxtnTgxF3gQUcjayR2jBTVoCACaxlUO16dCDwlUNC/0LahyP5KSYx0IYz
- F2Z1mDOQlDJGzo3J6r/EwVA0Rh8cAWchrukGghTuEH7GyaFf9K4EQEqiLMO3xWxoy9xB4DZodyj
- dtWBdE8BaXybpgkq5+FzOE+gZbnDyQEdm3GdIOzI5Q1OqRjYBqGk6wDzK/XHDYyecrETeRmECf9
- m9SW/fclEbKwNHMzQxJrCmWlDWbzkK42tvccvrUBZBTS28j1L5L+UpkwTZhXqdtVN57GmNcJmfn
- qtI4qaB98LoF1H3jgy4sgw9HQWsT2x9LcVYSscrnQijhI+t+AK3a4wW+rA3rk2PSt5/0+qWgzp6
- ztDyTLmfyhwBj1w==
-X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
- fpr=8648725188DD401BB9A0D3FFD180414029A3A836
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20260325071342.47272-1-adrian.freihofer@siemens.com> <20260325071342.47272-2-adrian.freihofer@siemens.com>
+In-Reply-To: <20260325071342.47272-2-adrian.freihofer@siemens.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Thu, 26 Mar 2026 12:50:06 +0100
+X-Gm-Features: AQROBzDKbRrvBb6z6RLjFHcmLpA_uqlmjWr6T37Fr5w_ONLeFFgzDHai_1j3e8s
+Message-ID: <CANNYZj_yBNCE8OZ_OioZFsiAacwgqYADUkjfxVVmhBDRWPLLtg@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH v2 01/10] fetch2: add LocalModificationsError
+ for uncommitted changes blocking update
+To: adrian.freihofer@siemens.com
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 26 Mar 2026 09:11:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19234
+ <bitbake-devel@lists.openembedded.org>; Thu, 26 Mar 2026 11:50:22 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19235
 
-Add warning notes in bitbake-user-manual-fetching.rst and
-bitbake-user-manual-ref-variables.rst regarding the disabled NPM
-fetcher.
+On Wed, 25 Mar 2026 at 08:14, Adrian Freihofer via
+lists.openembedded.org
+<adrian.freihofer=siemens.com@lists.openembedded.org> wrote:
 
-Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
----
- doc/bitbake-user-manual/bitbake-user-manual-fetching.rst     | 12 ++++++++++++
- .../bitbake-user-manual-ref-variables.rst                    |  6 ++++++
- 2 files changed, 18 insertions(+)
+>              output = runfetchcmd("%s status --untracked-files=no --porcelain" % (ud.basecmd), d, workdir=destdir)
+>              if output:
+> -                raise bb.fetch2.UnpackError("Repository at %s has uncommitted changes, unable to update:\n%s" % (destdir, output), ud.url)
+> +                raise bb.fetch2.LocalModificationsError(destdir, ud.url, output)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-index 1dcdc0ffee1..6af80359125 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-@@ -680,6 +680,12 @@ Here is an example URL::
- NPM Fetcher (``npm://``)
- ------------------------
- 
-+.. warning::
-+
-+   The NPM fetcher is currently disabled due to security concerns. See
-+   `355cd226e0720a9ed7683bb01c8c0a58eee03664 <https://git.openembedded.org/bitbake/commit/?id=355cd226e0720a9ed7683bb01c8c0a58eee03664>`__
-+   for more information.
-+
- This submodule fetches source code from an
- `NPM <https://en.wikipedia.org/wiki/Npm_(software)>`__
- Javascript package registry.
-@@ -719,6 +725,12 @@ to automatically create a recipe from an NPM URL.
- NPM shrinkwrap Fetcher (``npmsw://``)
- -------------------------------------
- 
-+.. warning::
-+
-+   The NPM fetcher is currently disabled due to security concerns. See
-+   `355cd226e0720a9ed7683bb01c8c0a58eee03664 <https://git.openembedded.org/bitbake/commit/?id=355cd226e0720a9ed7683bb01c8c0a58eee03664>`__
-+   for more information.
-+
- This submodule fetches source code from an
- `NPM shrinkwrap <https://docs.npmjs.com/cli/v8/commands/npm-shrinkwrap>`__
- description file, which lists the dependencies
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index 06bd536195c..8d8e8b8b912 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -1738,6 +1738,12 @@ overview of their function and contents.
- 
-       -  ``npm://``: Fetches JavaScript modules from a registry.
- 
-+         .. warning::
-+
-+            The NPM fetcher is currently disabled due to security concerns. See
-+            `355cd226e0720a9ed7683bb01c8c0a58eee03664 <https://git.openembedded.org/bitbake/commit/?id=355cd226e0720a9ed7683bb01c8c0a58eee03664>`__
-+            for more information.
-+
-       -  ``p4://``: Fetches files from a Perforce (``p4``) revision
-          control repository.
- 
+A bit further there's this block that handles rebase conflicts:
 
----
-base-commit: 112bddd8fc684fbdd71139429251b127739f863b
-change-id: 20260326-disabled-npm-fetcher-docs-0cac7e792a2b
+            except bb.fetch2.FetchError as e:
+                # If rebase failed, abort it
+                try:
+                    runfetchcmd("%s rebase --abort" % (ud.basecmd), d,
+workdir=destdir)
+                except Exception:
+                    pass
+                raise bb.fetch2.UnpackError("Failed to update checkout
+in place: %s" % str(e), ud.url)
 
+I think this too needs its own exception, bb.fetch2.RebaseError. So
+that bitbake-setup can handle these two exceptions specifically, and
+raise other UnpackErrors without assuming anything about them.
+
+Alex
 
