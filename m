@@ -1,156 +1,137 @@
-Return-Path: <david.partain@est.tech>
+Return-Path: <adrian.freihofer@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A429310F3DC9
-	for <webhook@archiver.kernel.org>; Mon, 30 Mar 2026 13:56:40 +0000 (UTC)
-Received: from mail-lf1-f66.google.com (mail-lf1-f66.google.com [209.85.167.66])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.51896.1774878921146393352
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6C21061B16
+	for <webhook@archiver.kernel.org>; Mon, 30 Mar 2026 16:34:23 +0000 (UTC)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.55812.1774888458279720550
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 30 Mar 2026 06:55:21 -0700
+ Mon, 30 Mar 2026 09:34:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@qbee.io header.s=google header.b=grVoB3Fj;
- spf=pass (domain: qbee.io, ip: 209.85.167.66, mailfrom: piotr@qbee.io)
-Received: by mail-lf1-f66.google.com with SMTP id 2adb3069b0e04-59e4989dacdso3521542e87.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Mar 2026 06:55:20 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=VGI6WaC+;
+ spf=pass (domain: gmail.com, ip: 209.85.128.50, mailfrom: adrian.freihofer@gmail.com)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4873ce69ba9so12238185e9.2
+        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Mar 2026 09:34:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=qbee.io; s=google; t=1774878919; x=1775483719; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6+HyFQTtqgOJKmweCRC/Rqjm1sYUk9gMXobc9DPYYXA=;
-        b=grVoB3FjlRH954ytx01fm1W6lEcDCQPk6dHTaWsmSBB6nTICmzzkhk3uYlrcIUPr+P
-         w1B2IYLrG+zTSPgo+1RcM1yZHOLvJNDsQOIFpynQxGYsrF4judHd8CRgKcuR2PckrEPx
-         Xwp4IfCgv8bUFv7E5BubJC219EAOItx/nmxoc=
+        d=gmail.com; s=20251104; t=1774888457; x=1775493257; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5KS7P1T5kTERsMbToJwjPckRMEOwiXbbKga8IX4fk28=;
+        b=VGI6WaC+b4OE9S9PIeMI9cgB+7HDTgSXncME6GP7Hhizmi6VtcIZu32yEvfr390J4T
+         az1hNrHHjL4W8yimEeN22AMh3Fn8za18CXMnFOwl4I+1ZQ0CyZhk+igdJnCO2RRpvptO
+         BiRss1IRljdl462i0lsjXywhA9p6y4EvxKZrs1PHkLNMnbyodTn8yzuYAetVlALofhme
+         x7gUt4qOvG7r2+XMvIHe21Lt5QT3UzJes4NE1WPZX4NSTXUNJuKBh2KjQdhLSk5PiaHK
+         Iskok4u4p3rToZdP5SpwAicPPCC696KSCxi0AoSVsgVsc5fz9wfZaPstoIzX6pdVL2uF
+         ndzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774878919; x=1775483719;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=6+HyFQTtqgOJKmweCRC/Rqjm1sYUk9gMXobc9DPYYXA=;
-        b=Kvd8pVkglSPwUSrRFImMhNCIbdhaL1/D5kpZeeG6YMx5b/6pEwj82hypxW558FB3J4
-         13+1QFRjWwR8rT+WzX7LU4jDjyrfBSmCSWA12v7bWoxaBFZWr3VWPRDkYqtIFX9IrJiD
-         eWxgaB5NWEYO+s+yRuviY3+/l6HXh4gVb2U4TPvqhcmFZzmyyyTk4sb8vLLyOYtHab1M
-         MdjLLV2q31/gUamtQJY1Jnjw1Stjrz8nCyrfzge9tqrl+VI9taKoNDwmXGRNtv0UlvSm
-         vY9jgTNoRrolxosX+grJwq2ji/yxwUpJ3/ywcEHEyMhmRmep/VWrNOHin+HgSS76uOGq
-         2/cA==
-X-Gm-Message-State: AOJu0YxOU5IHiLNOuQyaGJxK2cSyd4kh+PpYL5Te5ummrEOJQpq+mK8J
-	NCI3JR5yRQjMM0YTWMRH1wmse+a2lbGmmIF/MzRifQW62I8rnbk8NM9YvHYM1WhMwASh3AWDogF
-	gbPHV7xSBOGJ7
-X-Gm-Gg: ATEYQzzMJZsOW3SfLOQTlWrp3Mh823t2RAKCYWyzbKrCS0rYQyTxArBeP+sLpsvwggw
-	aGpgjMXfj/K9An8I6A+WNB9kdt8fJQkDrlUYvZE6jAh6x5HYsHHkBMjgvNXj+MZTJlRFryLbF5A
-	bh+l1mBTqUWF4frnT2nIEqQ5qCDIgREOlryk1DS++Jbd592H7zjX5T9vcmrTIKKmgyl8yqPg645
-	fMtGLabhYpRXta+U3cxdMcCd7mxkOj+SJ3bBA2UZBJUNA6cxVXUrQxzLSHpRXkpSFgLY8W+0r7j
-	s25XXXywjPz1fVqVAYWHSNU02ilmbn+NRR0Y2qHByR3Zbcsoxt4kNop2RDo+hg6leZtlo5ic9i3
-	9uygGTtP2yuIB33OGnYueqOaOn2OleV59mpT+ltB92v1sRTcRqzyn0DgVdQbbh/IVizmBcBk1HP
-	V+SRmG4IHK7Qvnvqa7EupvBRWYlBqO5tkpDtR4E3rabBJ7FNXY9Q0g
-X-Received: by 2002:a05:6512:2303:b0:5a1:18f0:930b with SMTP id 2adb3069b0e04-5a2ab93823bmr4137767e87.42.1774878918794;
-        Mon, 30 Mar 2026 06:55:18 -0700 (PDT)
-Received: from localhost (80.89-10-247.nextgentel.com. [89.10.247.80])
-        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-5a2b14449c8sm1667434e87.49.2026.03.30.06.55.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Mar 2026 06:55:18 -0700 (PDT)
-From: =?UTF-8?B?UGlvdHIgQnVsacWEc2tp?= <piotr@qbee.io>
-To: bitbake-devel@lists.openembedded.org
-Cc: =?UTF-8?q?Piotr=20Buli=C5=84ski?= <piotr@qbee.io>
-Subject: [PATCH] Prevent loading unnecessary resources from layerindex-web
-Date: Mon, 30 Mar 2026 15:54:49 +0200
-Message-ID: <20260330135449.29161-2-piotr@qbee.io>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20260330135449.29161-1-piotr@qbee.io>
-References: <20260330135449.29161-1-piotr@qbee.io>
+        d=1e100.net; s=20251104; t=1774888457; x=1775493257;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5KS7P1T5kTERsMbToJwjPckRMEOwiXbbKga8IX4fk28=;
+        b=U0iHepRKJVJUn9tmcKBO6rfNCOJTrDMwo9xvcQ+E+aCjDozO7r1lS9j0EbsJxD6CDM
+         +g/bUEvf4NCzMC0R6o/ueIyiOZtJLSv8XrUxcwdRofq2TdOJWHP8/32tdLcaUMzb/pwv
+         XSVbZw9AFLwEzr/BN5Aw0/aQcEay0hqcB+/YkUwS9veP1eyTXA1EBFOiU5ydlrUz2QKd
+         cnCh2A+vPMG6Z+Aj0PhHpzxGLMr9kk+cPcfIkMQfVhIFbDVe1HayB4B89WHahebM6M/m
+         dwXfMrnUK4bBtEf2+VcFpWxG8hLdSB+XgEJxdSju6/b6a1vQ/ljLQokNg4rWksYosP0T
+         /PVg==
+X-Forwarded-Encrypted: i=1; AJvYcCXsFxZoBJ9Hi0qLd/8X6H4jMdFdxL55ewWIz+lJOpAd7xHZ2Ffnxae/yImzQLDazkNOQlxTV2rMyc57xZm2@lists.openembedded.org
+X-Gm-Message-State: AOJu0YxPOcmbaMMQ6k0w2Z+mc5Cz1QhDKcrjkwy6OulGRF2Al3rOeIkX
+	1dJyORr/5ntL6Vp1I8jxX7VePNZcwPRM70Z0Tn3uO+4wkGg354bDjbnn
+X-Gm-Gg: ATEYQzyyram8/n5fjuoUgUTJtmzPsj0caF6eDTxnq/LDgGmQb87QUaCgce81lTeO6Yi
+	9ba9J5geS6WunqRUquiQhbzNSDGYDWKtShXs/5de135vG/W+G+uJevX8DwQPd9APQMhrYbz02kL
+	WLiMlwnHYyfGK7cbWmzNAuzu5S3LbM2t52vhK9OBovUuIPsTpVKohlel90R06AsDfVP09bTj4i9
+	T8dlIFjzNenI05lHBdHOt4vRRy/ZvhvSJh5OomEDlHKtZ7blQzlBLi72yc+Sa8uD5o7FK2MFlOQ
+	EEIWAGq5DGHQ8q7kegv2Sv2p/RmzkbTVv5HEsV4C8+qaoOFl4jMN7PmIFE4IzCtZ2xrErJnuCqX
+	CWs4nWX3zqU3ekBcW4IAyYpwChXiutxVJHLylkYlWqOhq/h+4+t2vABSzsLhvceNfZ8fCaya4K4
+	eSjxpa1XYYU6RKJ1DCGOZIAuFJuJoThODeWnZwG5ZBLseLnCCldpRDWEsa/cKbGyNSaAHCJ+No
+X-Received: by 2002:a05:600c:6094:b0:486:fd71:e609 with SMTP id 5b1f17b1804b1-48727f1fc05mr208054745e9.25.1774888456405;
+        Mon, 30 Mar 2026 09:34:16 -0700 (PDT)
+Received: from ?IPv6:2a02:169:59a6:0:55c4:f628:91f3:4287? ([2a02:169:59a6:0:55c4:f628:91f3:4287])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-487351fb38csm204372585e9.4.2026.03.30.09.34.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2026 09:34:15 -0700 (PDT)
+Message-ID: <fcac19e4dff25335679496878b691fa73bcb7485.camel@gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 10/11] bitbake-setup: Set function
+ default to None
+From: adrian.freihofer@gmail.com
+To: rob.woolley@windriver.com, bitbake-devel@lists.openembedded.org
+Cc: alex.kanavin@gmail.com
+Date: Mon, 30 Mar 2026 18:34:15 +0200
+In-Reply-To: <20260326185742.542268-11-rob.woolley@windriver.com>
+References: <20260326185742.542268-1-rob.woolley@windriver.com>
+	 <20260326185742.542268-11-rob.woolley@windriver.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 30 Mar 2026 13:56:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19282
+ <bitbake-devel@lists.openembedded.org>; Mon, 30 Mar 2026 16:34:23 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19283
 
-When I was using `bitbake-layers layerindex-fetch ...` I noticed it being quite
-slow. Upon further investigation, I found that the call to `load_layerindex()`
-inside layerindexlib was called with the deafult `load` argument.
+On Thu, 2026-03-26 at 11:57 -0700, Rob Woolley via
+lists.openembedded.org wrote:
+> The function defaults are evaluated once and use across calls
+> can lead to unexpected behaviour.
+>=20
+> Set the value to none and let the function initialize the value
+> in the case when the value is not set.
+>=20
+> Resolves B006 from flake8-bugbear
+>=20
+> Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
+> ---
+> =C2=A0bin/bitbake-setup | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+> index 2e1e347d6..6b210cd3e 100755
+> --- a/bin/bitbake-setup
+> +++ b/bin/bitbake-setup
+> @@ -45,7 +45,7 @@ def color_enabled() -> bool:
+> =C2=A0def get_diff_color_param() -> str:
+> =C2=A0=C2=A0=C2=A0=C2=A0 return "--color=3Dalways" if color_enabled() els=
+e "--color=3Dnever"
+> =C2=A0
+> -def print_configs(prompt: str, choices: list[str], descriptions:
+> list[str] =3D []):
+> +def print_configs(prompt: str, choices: list[str], descriptions:
+> list[str] =3D None):
 
-The deafault was set to ['layerDependencies', 'recipes', 'machines', 'distros']
-where the `layerindex-fetch` effectively requires only ['layerDependencies'].
+While "=3D None" looks better than "=3D []", this is still a bit wrong. It
+should be:
+  list[str] | None =3D None
 
-So whenever a `layerindex-fetch` is used, we pull for example 'recipes', which
-is about 18-20MB in size - it takes time to produce that response by the
-layerindex-web and ship over the internet, just to be discarded.
+However, this syntax would require Python 3.10+, so not possible.
 
-This change addresses the issue by setting a "sane" default (empty `load` list)
-and sets a correct, explicit `load` list whenever it's needed (e.g. toaster)
-by the caller.
+Other options could be:
+- Dropping the type checks from this function
+- Using typing.Optional ?
 
-Lastly, there seems to be an error when the cooker index is loaded in the
-process with the `load='layerDependencies'`, that's incorrect, as the
-implementation expects also a list, so that's corrected as well.
+Regards,
+Adrian
 
-Signed-off-by: Piotr Buliński <piotr@qbee.io>
----
- lib/bblayers/layerindex.py                       | 4 ++--
- lib/layerindexlib/__init__.py                    | 6 +++---
- lib/toaster/orm/management/commands/lsupdates.py | 3 ++-
- 3 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/lib/bblayers/layerindex.py b/lib/bblayers/layerindex.py
-index 308a5532d..2ba1103a3 100644
---- a/lib/bblayers/layerindex.py
-+++ b/lib/bblayers/layerindex.py
-@@ -116,7 +116,7 @@ class LayerIndexPlugin(ActionPlugin):
- 
-         # Load the cooker DB
-         cookerIndex = layerindexlib.LayerIndex(self.tinfoil.config_data)
--        cookerIndex.load_layerindex('cooker://', load='layerDependencies')
-+        cookerIndex.load_layerindex('cooker://', load=['layerDependencies'])
- 
-         # Fast path, check if we already have what has been requested!
-         (dependencies, invalidnames) = cookerIndex.find_dependencies(names=args.layername, ignores=ignore_layers)
-@@ -137,7 +137,7 @@ class LayerIndexPlugin(ActionPlugin):
- 
-             for remoteurl in _construct_url(apiurl, branches):
-                 logger.plain("Loading %s..." % remoteurl)
--                remoteIndex.load_layerindex(remoteurl)
-+                remoteIndex.load_layerindex(remoteurl, load=['layerDependencies'])
- 
-             if remoteIndex.is_empty():
-                 logger.error("Remote layer index %s is empty for branches %s" % (apiurl, branches))
-diff --git a/lib/layerindexlib/__init__.py b/lib/layerindexlib/__init__.py
-index c3265ddaa..e693e5c11 100644
---- a/lib/layerindexlib/__init__.py
-+++ b/lib/layerindexlib/__init__.py
-@@ -174,15 +174,15 @@ class LayerIndex():
-         return res
- 
- 
--    def load_layerindex(self, indexURI, load=['layerDependencies', 'recipes', 'machines', 'distros'], reload=False):
-+    def load_layerindex(self, indexURI, load=[], reload=False):
-         '''Load the layerindex.
- 
-            indexURI - An index to load.  (Use multiple calls to load multiple indexes)
- 
-            reload - If reload is True, then any previously loaded indexes will be forgotten.
- 
--           load - List of elements to load.  Default loads all items.
--                  Note: plugs may ignore this.
-+           load - List of elements to load. By default, an empty list is used to keep things lean.
-+                  Callers need to specify a minimal set of elements to load, such as ['layerDependencies'] for dependency resolution.
- 
- The format of the indexURI:
- 
-diff --git a/lib/toaster/orm/management/commands/lsupdates.py b/lib/toaster/orm/management/commands/lsupdates.py
-index 0ee00aa15..153b26f60 100644
---- a/lib/toaster/orm/management/commands/lsupdates.py
-+++ b/lib/toaster/orm/management/commands/lsupdates.py
-@@ -105,7 +105,8 @@ class Command(BaseCommand):
-             url_branches = ";branch=%s" % ','.join(allowed_branch_names)
-         else:
-             url_branches = ""
--        layerindex.load_layerindex("%s%s" % (self.apiurl, url_branches))
-+        layerindex.load_layerindex("%s%s" % (self.apiurl, url_branches),
-+                                   load=['layerDependencies', 'recipes', 'machines', 'distros'])
- 
-         http_progress.stop()
- 
+> =C2=A0=C2=A0=C2=A0=C2=A0 """
+> =C2=A0=C2=A0=C2=A0=C2=A0 Helper function to print a list of choices and a=
+lign the output.
+> =C2=A0=C2=A0=C2=A0=C2=A0 Each option name is made bold to stand out, unle=
+ss color is not
+> enabled in
+>=20
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#19255):
+> https://lists.openembedded.org/g/bitbake-devel/message/19255
+> Mute This Topic: https://lists.openembedded.org/mt/118523930/4454582
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe:
+> https://lists.openembedded.org/g/bitbake-devel/unsub=C2=A0[adrian.freihof=
+er@gmail.com
+> ]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 
