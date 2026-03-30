@@ -2,60 +2,63 @@ Return-Path: <david.partain@est.tech>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F3810F3DC8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A429310F3DC9
 	for <webhook@archiver.kernel.org>; Mon, 30 Mar 2026 13:56:40 +0000 (UTC)
 Received: from mail-lf1-f66.google.com (mail-lf1-f66.google.com [209.85.167.66])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.51887.1774878906414347544
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.51896.1774878921146393352
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 30 Mar 2026 06:55:06 -0700
+ Mon, 30 Mar 2026 06:55:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@qbee.io header.s=google header.b=cESkewUf;
+ dkim=pass header.i=@qbee.io header.s=google header.b=grVoB3Fj;
  spf=pass (domain: qbee.io, ip: 209.85.167.66, mailfrom: piotr@qbee.io)
-Received: by mail-lf1-f66.google.com with SMTP id 2adb3069b0e04-5a2b5ea59a1so1053896e87.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Mar 2026 06:55:06 -0700 (PDT)
+Received: by mail-lf1-f66.google.com with SMTP id 2adb3069b0e04-59e4989dacdso3521542e87.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 30 Mar 2026 06:55:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=qbee.io; s=google; t=1774878904; x=1775483704; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6+HyFQTtqgOJKmweCRC/Rqjm1sYUk9gMXobc9DPYYXA=;
-        b=cESkewUfnWeJ61XVjOCW2emsBJLtbUJF4NF+z4hDFz3TzxWMuNdx2CA0Fw4Z1jE6FJ
-         Ua6Py7sewg7qkkOhClN363IuhAje8rGtvzWUcVABblK+cESPZTpGNJjA6NAmvoojiJPA
-         SaeJY/L5gmFfGoVtPWMcPFqfgih/7rqM11/PA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774878904; x=1775483704;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=qbee.io; s=google; t=1774878919; x=1775483719; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
         bh=6+HyFQTtqgOJKmweCRC/Rqjm1sYUk9gMXobc9DPYYXA=;
-        b=OpA4qeyQZkPhJBVpc0TzZUgk6q7FPefo/CZ+MTfNNfeJIp5P7UckPqTNEiAEw1eiK7
-         7n9apNY4d4DiDOUsIFdHe7iYDCmm5WmnfrSOseH/zS81QsOkIl7pXUW5H6hZVIVsJBxA
-         1V6L4drn4gVqkw2Hsh+jujKdlWWMBjvaV2BOOpbbN9qeAuiZe7jpzCpqiytB0+7FjtHe
-         C88d05kosSfTmhK8Lj9VfBFZUUFWqDX+PNx1ya8Ngfxa3auuIK2Ne5chpyujwLW0Xy0e
-         TBDMbN0jmIkiSc/DXJNbYNl6NWxpOPUL9HOf4ufi9NDVZlCEjKmNNnY4JJhcKnHYSQ/s
-         nFQQ==
-X-Gm-Message-State: AOJu0Ywy0NQKIBPKlmnDn+tzhGlR0u6ZdBqQ3EcasG4wYsHqlv7g96X+
-	yVLWlLm+NzLBEUrrZBfFqTL46tulKU/qRy7NwtGMjPNaFycjXaJ55vJy9RDwhk5/Xfdqjvj8fC7
-	s95hQAUoskZ1f
-X-Gm-Gg: ATEYQzyjVjoTBLrSFk0Rm+JBzcKLLsELwwbrbsf7HaaUackCEraM8q8dXhjfFJts5IF
-	whYoPvfUnShqeAmfvqOfOpuUSDhOihZhmsHNLeAi+ozWVFN5GJ51YZKfsS0bKUUlfaRlij6nPvp
-	uJHMpOzThAo1Dsi+4NYPcu3jAWGRxwpUWGwCVzDO2y+gPIBwJx2rL+NdWcmBk4gVLlu2Ez/8/+s
-	O9TeNBy2hxg5cjZiPTbiOx2uOtwE+F4j1pAmh8whzX9eIP4Gvv815ndvQhr//xg8/kCBZ60qLUN
-	rMR0mDjReNh5uw3FAHvrNutRaof/T7dymg+UkDO3hluHFfh8qjHKbqsvBMsdjxMPuxg0q7SScaV
-	X0AbSwg7WUCk7C4Qa9Sb6P1Zyb91jm2TurifxSw5UnOLIdkGMCaizolo+vN2Pqiwbk87XickA+E
-	WRaDMLGn3T56IHTET3kFJ3+DrOF5W3artZdJ9szEcX8NQ11gwMdUTH
-X-Received: by 2002:a05:6512:6d5:b0:5a2:7865:3672 with SMTP id 2adb3069b0e04-5a2ab920700mr4575951e87.28.1774878904112;
-        Mon, 30 Mar 2026 06:55:04 -0700 (PDT)
+        b=grVoB3FjlRH954ytx01fm1W6lEcDCQPk6dHTaWsmSBB6nTICmzzkhk3uYlrcIUPr+P
+         w1B2IYLrG+zTSPgo+1RcM1yZHOLvJNDsQOIFpynQxGYsrF4judHd8CRgKcuR2PckrEPx
+         Xwp4IfCgv8bUFv7E5BubJC219EAOItx/nmxoc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774878919; x=1775483719;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=6+HyFQTtqgOJKmweCRC/Rqjm1sYUk9gMXobc9DPYYXA=;
+        b=Kvd8pVkglSPwUSrRFImMhNCIbdhaL1/D5kpZeeG6YMx5b/6pEwj82hypxW558FB3J4
+         13+1QFRjWwR8rT+WzX7LU4jDjyrfBSmCSWA12v7bWoxaBFZWr3VWPRDkYqtIFX9IrJiD
+         eWxgaB5NWEYO+s+yRuviY3+/l6HXh4gVb2U4TPvqhcmFZzmyyyTk4sb8vLLyOYtHab1M
+         MdjLLV2q31/gUamtQJY1Jnjw1Stjrz8nCyrfzge9tqrl+VI9taKoNDwmXGRNtv0UlvSm
+         vY9jgTNoRrolxosX+grJwq2ji/yxwUpJ3/ywcEHEyMhmRmep/VWrNOHin+HgSS76uOGq
+         2/cA==
+X-Gm-Message-State: AOJu0YxOU5IHiLNOuQyaGJxK2cSyd4kh+PpYL5Te5ummrEOJQpq+mK8J
+	NCI3JR5yRQjMM0YTWMRH1wmse+a2lbGmmIF/MzRifQW62I8rnbk8NM9YvHYM1WhMwASh3AWDogF
+	gbPHV7xSBOGJ7
+X-Gm-Gg: ATEYQzzMJZsOW3SfLOQTlWrp3Mh823t2RAKCYWyzbKrCS0rYQyTxArBeP+sLpsvwggw
+	aGpgjMXfj/K9An8I6A+WNB9kdt8fJQkDrlUYvZE6jAh6x5HYsHHkBMjgvNXj+MZTJlRFryLbF5A
+	bh+l1mBTqUWF4frnT2nIEqQ5qCDIgREOlryk1DS++Jbd592H7zjX5T9vcmrTIKKmgyl8yqPg645
+	fMtGLabhYpRXta+U3cxdMcCd7mxkOj+SJ3bBA2UZBJUNA6cxVXUrQxzLSHpRXkpSFgLY8W+0r7j
+	s25XXXywjPz1fVqVAYWHSNU02ilmbn+NRR0Y2qHByR3Zbcsoxt4kNop2RDo+hg6leZtlo5ic9i3
+	9uygGTtP2yuIB33OGnYueqOaOn2OleV59mpT+ltB92v1sRTcRqzyn0DgVdQbbh/IVizmBcBk1HP
+	V+SRmG4IHK7Qvnvqa7EupvBRWYlBqO5tkpDtR4E3rabBJ7FNXY9Q0g
+X-Received: by 2002:a05:6512:2303:b0:5a1:18f0:930b with SMTP id 2adb3069b0e04-5a2ab93823bmr4137767e87.42.1774878918794;
+        Mon, 30 Mar 2026 06:55:18 -0700 (PDT)
 Received: from localhost (80.89-10-247.nextgentel.com. [89.10.247.80])
-        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-5a2b13f4329sm1667694e87.3.2026.03.30.06.55.03
+        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-5a2b14449c8sm1667434e87.49.2026.03.30.06.55.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Mar 2026 06:55:03 -0700 (PDT)
+        Mon, 30 Mar 2026 06:55:18 -0700 (PDT)
 From: =?UTF-8?B?UGlvdHIgQnVsacWEc2tp?= <piotr@qbee.io>
 To: bitbake-devel@lists.openembedded.org
 Cc: =?UTF-8?q?Piotr=20Buli=C5=84ski?= <piotr@qbee.io>
-Subject: [layerindexlib] Prevent loading unnecessary resources from layerindex-web
-Date: Mon, 30 Mar 2026 15:54:48 +0200
-Message-ID: <20260330135449.29161-1-piotr@qbee.io>
+Subject: [PATCH] Prevent loading unnecessary resources from layerindex-web
+Date: Mon, 30 Mar 2026 15:54:49 +0200
+Message-ID: <20260330135449.29161-2-piotr@qbee.io>
 X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20260330135449.29161-1-piotr@qbee.io>
+References: <20260330135449.29161-1-piotr@qbee.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,7 +66,7 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Mon, 30 Mar 2026 13:56:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19281
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19282
 
 When I was using `bitbake-layers layerindex-fetch ...` I noticed it being quite
 slow. Upon further investigation, I found that the call to `load_layerindex()`
