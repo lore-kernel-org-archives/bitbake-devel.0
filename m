@@ -2,32 +2,31 @@ Return-Path: <rob.woolley@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0D1109B494
-	for <webhook@archiver.kernel.org>; Tue, 31 Mar 2026 16:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 238E9109B495
+	for <webhook@archiver.kernel.org>; Tue, 31 Mar 2026 16:07:17 +0000 (UTC)
 Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.24317.1774973226660700639
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.23968.1774973226538381157
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 31 Mar 2026 09:07:06 -0700
+ Tue, 31 Mar 2026 09:07:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=Ail9XdYl;
+ dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=E68dyBNL;
  spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=85502649bd=rob.woolley@windriver.com)
 Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62V5i48A352519;
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62V5i489352519;
 	Tue, 31 Mar 2026 16:07:05 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
 	 h=cc:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	PPS06212021; bh=9DbXTTApyr1oxfRG351I6WsDlIPDW/JO0fqB8YhPn/o=; b=
-	Ail9XdYlwfzZvEIBBrp+kqT85Ns/6PmoTNFZzyGEamm0v5jIepWmjBZMzdRcGJjV
-	d0FB+Xu6ieNdLNjmD2iuZenYpvCZKW9h2F8Dyilx7g3IU5Dmw23Xayf0t2EnfjLv
-	X7OY3eNrjBgzSV4AztY6bcVvz21wEBPDulkZw7TccUOPUN7Udxl0b1Qek5gFQO65
-	xWGeCKJwI3ubYQqvM3yp1M+zaUbtAKKfLVV0YXCrCc4aGjhmMIfQRvq7cw4dJ7zG
-	SNyACzYDbxXg7djMAnApp+yGMXaRPt2rW8baMD2pDvC7YN3X3HFmoYbRc+0DK3ft
-	9GPw9d4yoK1VFaeUKJAMvA==
+	:message-id:mime-version:subject:to; s=PPS06212021; bh=Bst0b3Nhk
+	bpen0QgndiRNhYzfqs14/DOO+ch21eRddw=; b=E68dyBNL3J3RUjRi+qrTARum1
+	YTyCRRnO9sFLhYPiMFOnRZUFmyptcf+wc+SK8vNzodyR27QNk/aL60kO2b72ITRA
+	DAFauJiYfE6EYGh6OL+7puyUa8QfZ+HbiZnR+zjAWUnhVXuPJ9P2XkuulgLwRpQO
+	JGac2CSJ9cNeWSuM3sfdu9qnIya2+Jw1pMZqx1w6CLv9eSPJqy8WPhsbxL7kY+1/
+	U5CUpGRVdIjtR6aio6WbnQppyU4mmCmS0VeVNyF4C6c12jor8PEcaKJEsUfgDpDT
+	DVrEDJ4wcKOFxRWg6rdAssnUg+WOMkWGJKSRGlHwsbS1BtI7RWEtCQy34lCFQ==
 Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [128.224.246.36])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4d65y4bxjb-2
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4d65y4bxjb-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 31 Mar 2026 16:07:05 +0000 (GMT)
+	Tue, 31 Mar 2026 16:07:04 +0000 (GMT)
 Received: from ala-exchng01.corp.ad.wrs.com (10.11.224.121) by
  ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
@@ -38,30 +37,28 @@ Received: from ala-lpggp3.wrs.com (10.11.232.110) by
 From: Rob Woolley <rob.woolley@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
 CC: <alex.kanavin@gmail.com>
-Subject: [PATCH v2 01/13] bitbake-setup: Resolve unused loop control variables
-Date: Tue, 31 Mar 2026 09:06:51 -0700
-Message-ID: <20260331160703.3137930-2-rob.woolley@windriver.com>
+Subject: [PATCH v2 00/13] bitbake-setup PyPI Packaging
+Date: Tue, 31 Mar 2026 09:06:50 -0700
+Message-ID: <20260331160703.3137930-1-rob.woolley@windriver.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20260331160703.3137930-1-rob.woolley@windriver.com>
-References: <20260331160703.3137930-1-rob.woolley@windriver.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=QaZrf8bv c=1 sm=1 tr=0 ts=69cbf129 cx=c_pps
+X-Authority-Analysis: v=2.4 cv=QaZrf8bv c=1 sm=1 tr=0 ts=69cbf128 cx=c_pps
  a=AbJuCvi4Y3V6hpbCNWx0WA==:117 a=AbJuCvi4Y3V6hpbCNWx0WA==:17
  a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=bi6dqmuHe4P4UrxVR6um:22
- a=fTW__CHxibyLmBMfj2wP:22 a=t7CeM3EgAAAA:8 a=IJQjoT7YMls2vlgdCqcA:9
- a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzMxMDE1NCBTYWx0ZWRfX/xl+dWhmpmep
- 2G2BeTTAA9BCw3lQEhf4uitnAzd05Ubp90HsQyOmP8ns/780J3J77xQPqxjj4fLAKViX7w3zhXY
- c3+IBAC/+CyJLAeEwQ/DpIi0YJ9oqXBxyZcvve3JcCP97JBGiTFcNg8lzvRK8z2qauhQxinWmxx
- 7ThHCJfArG4cpXokjIVfRzx1K0+Ogxx1DW0uYSKzIX2Th81PEARKHCz6hAU9//DcD31wKHa2eoZ
- QE1Ga9pgqDREqJi0LocCRcgO+ZYicv9rnR47A3Am8AY0Xqqe4UUB78Pu7BF+l1SKVC5wJmPZlcA
- A5R0oCBothC2WMzhZzJNiOr07e00Jo22FISlUbwyUT+aNDw8C5h80TITEJ1WqbHqYWk6xpmtdRD
- hzieh9GcY3seD+k55sHqFgrPdqyuWNpVActF2cUkFQagUfCcsjjY2qF2H1hW6aA6TYHWJwqAV1C
- pDNo7Rtwre25+GKlDIA==
-X-Proofpoint-GUID: G5PiQoy7IBogT8fX2uwnOajSWe22jfKa
-X-Proofpoint-ORIG-GUID: G5PiQoy7IBogT8fX2uwnOajSWe22jfKa
+ a=fTW__CHxibyLmBMfj2wP:22 a=NEAV23lmAAAA:8 a=Q4-j1AaZAAAA:8
+ a=K_1DeRggfWye27DRFMsA:9 a=9H3Qd4_ONW2Ztcrla5EB:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzMxMDE1NCBTYWx0ZWRfX+tYggFKF/oqq
+ 1sZIlZ1WZ9YzFmQ85347dkxAftnE0zdGsTYab2LMUS0g3kSc952TQ9dMr02tPkeZNKoueDaPaKF
+ EspgOOlVhUfXja8V85Wz/a2LBcA0+axORwO11e3dWKLzxFgOUaxpkc2ZvDP4mTA2fFvxkfX7PPy
+ VDNRKp9zsUw80rMH0bYJGYou/MD/6jVP6+GtRFnN5XW4QesVij8JYChq6lxLd2KTGg+WRUgsp4Q
+ th02teeWwc127jPKGLDxng78QdS0fRPy5SseauAcxaRWcmgSLvut+S7z5WTAlZBgzOAgsFx9wwQ
+ ARPX6uoKGu5ZCXrwi3knzaiYUCaqfOfcfpytUMYRgG/XvlOpVxnhXGvVTHCSrNYIOVvEv8h6m9s
+ CIlFCneXlfmWROuYwJoXYZWx6QP9qKzx+k9FAssFRSwbJuycYu1ktfxmHPzV1kCswcUnHWK9ytW
+ FRQ6b/ur1gTaVr5oJNQ==
+X-Proofpoint-GUID: xbb8hPaKe70zF0vjk6p6h99QJ6DMxn14
+X-Proofpoint-ORIG-GUID: xbb8hPaKe70zF0vjk6p6h99QJ6DMxn14
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-03-31_03,2026-03-31_02,2025-10-01_01
@@ -73,53 +70,115 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 31 Mar 2026 16:07:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19299
+ <bitbake-devel@lists.openembedded.org>; Tue, 31 Mar 2026 16:07:17 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19300
 
-The ruff lint tool reported loop control variables that were
-not being used:
-    B007 Loop control variable `dirs` not used within loop body
+This is a new series to add PyPI packaging for bitbake-setup.  It is based on
+my development branch here: https://github.com/robwoolley/bitbake/tree/add-pypi-v6
 
-Adding underscore as a prefix helps indicate that it is not
-being used inside the loop.
+UPDATE: This series is based on the HEAD of bitbake master.  It repeats any of
+the previous linting fixes that have not yet been applied.  As such this v2
+stands alone independent of any previous emails sent by me recently.
 
-Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
----
- bin/bitbake-setup | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+The main challenge has been to package bitbake-setup independently from the
+rest of bitbake.  This necessitates creating a separate staging directory
+with pyproject.toml at the root.  Details are in the commit messages.
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index b02cbc2b1..304fbe6cc 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -134,7 +134,7 @@ def commit_config(config_dir):
- def _write_layer_list(dest, repodirs):
-     layers = []
-     for r in repodirs:
--        for root, dirs, files in os.walk(os.path.join(dest,r)):
-+        for root, _dirs, files in os.walk(os.path.join(dest,r)):
-             if os.path.basename(root) == 'conf' and 'layer.conf' in files:
-                 layers.append(os.path.relpath(os.path.dirname(root), dest))
-     layers_f = os.path.join(dest, ".oe-layers.json")
-@@ -445,7 +445,7 @@ The bitbake configuration files (local.conf, bblayers.conf and more) can be foun
-         configure_vscode(setupdir, layerdir, bitbake_builddir, init_script)
- 
- def get_registry_config(registry_path, id):
--    for root, dirs, files in os.walk(registry_path):
-+    for root, _dirs, files in os.walk(registry_path):
-         for f in files:
-             if f.endswith('.conf.json') and id == get_config_name(f):
-                 return os.path.join(root, f)
-@@ -996,7 +996,7 @@ def has_expired(expiry_date):
- def list_registry(registry_path, with_expired):
-     json_data = {}
- 
--    for root, dirs, files in os.walk(registry_path):
-+    for root, _dirs, files in os.walk(registry_path):
-         for f in files:
-             if f.endswith('.conf.json'):
-                 config_name = get_config_name(f)
--- 
-2.49.0
+I have tested using these changes to package all of bitbake to make sure that
+these changes didn't inhibit that from working. That is beyond the scope of
+work for what I was trying to do.
 
+There are 2 challenges I had to overcome:
+
+1. Ensuring that all primary workflows worked:
+   (a) Running bitbake and bitbake-setup directly from git
+   (b) Allowing developers to use pip install -e . to develop in-tree
+   (c) Enabling pip install in virtual environments and at the system-level
+
+2. Historically,  he sys.path modificiations made it easy to refer to the
+   vendorized modules without worrying about system-wide package conflicts.
+   Adding packaging support required that the modules be properly
+   vendorized so they didn't conflict with the upstream packages.
+   Vendorizing the bb module resulted in too much churn as we import bb
+   and its sub-modules across all the files in lib/bb/*
+   Given that the bb package on PyPI is obscure and hasn't been updated in
+   a very long time, I chose to bundle bb instead of vendorize it.
+
+
+Here are the detailed testing steps that I used to verify this series before
+submitting it to bitbake-devel:
+
+$ python3 -m venv venv
+
+$ source venv/bin/activate
+
+$ pip install build
+
+$ BB_SKIP_PYPI_TESTS=no bin/bitbake-selftest -v bb.tests.setup.PyPIPackagingTest
+
+bb.tests.setup.PyPIPackagingTest
+test_console_script_help (bb.tests.setup.PyPIPackagingTest)
+Verify bitbake-setup --help runs successfully. ... ok
+test_console_script_list (bb.tests.setup.PyPIPackagingTest)
+Verify bitbake-setup list runs successfully. ... ok
+test_entry_points (bb.tests.setup.PyPIPackagingTest)
+Verify console script entry points are correctly defined. ... ok
+test_imports (bb.tests.setup.PyPIPackagingTest)
+Verify all expected modules can be imported from installed package. ... ok
+test_package_metadata (bb.tests.setup.PyPIPackagingTest)
+Verify package metadata is correctly set. ... ok
+test_vendored_dependencies (bb.tests.setup.PyPIPackagingTest)
+Verify vendored dependencies (bs4, ply, progressbar, simplediff) are not bundled in package. ... ok
+test_version_from_wheel (bb.tests.setup.PyPIPackagingTest)
+Verify version is set correctly (not fallback 0.0.0 unless expected). ... ok
+test_wheel_metadata_file (bb.tests.setup.PyPIPackagingTest)
+Verify wheel METADATA file contains required fields. ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 18.014s
+
+OK
+
+$ contrib/pypi/package-bitbake-setup.py
+
+$ cd packaging_workspace/
+
+$ pip install -e .
+
+$ which bitbake-setup
+/ala-lpggp31/rwoolley/bitbake-testing/bitbake/venv/bin/bitbake-setup
+
+$ bitbake-setup --version
+bitbake-setup 2.16.0
+
+$ bitbake-setup list
+NOTE: Fetching configuration registry
+    git://git.openembedded.org/bitbake;protocol=https;branch=master;rev=master
+into
+    /tmp/bitbake-setup-list-v1m6p7s3/.bitbake-setup-cache/configurations
+Available configurations:
+oe-nodistro-master      OpenEmbedded - 'nodistro' basic configuration
+oe-nodistro-whinlatter  OpenEmbedded - 'nodistro' basic configuration, release 5.3 'whinlatter' (supported until 2026-05-31)
+poky-master     Poky - The Yocto Project testing distribution configurations and hardware test platforms
+poky-whinlatter Poky - The Yocto Project testing distribution configurations and hardware test platforms, release 5.3 'whinlatter' (supported until 2026-05-31)
+
+Run 'init' with one of the above configuration identifiers to set up a build.
+
+$ pip uninstall bitbake-setup
+
+$ python3 -m build
+
+$ pip install dist/bitbake_setup-2.16.0-py3-none-any.whl
+Processing ./dist/bitbake_setup-2.16.0-py3-none-any.whl
+Installing collected packages: bitbake-setup
+Successfully installed bitbake-setup-2.16.0
+
+$ cd $(mktemp -d)
+
+$ bitbake-setup init
+
+... 
+
+The bitbake configuration files (local.conf, bblayers.conf and more) can be found in
+    /tmp/tmp.s1MXZQ5XiF/bitbake-builds/poky-whinlatter/build/conf
 
