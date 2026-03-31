@@ -2,556 +2,139 @@ Return-Path: <rob.woolley@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF0F109B497
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A76109B49F
 	for <webhook@archiver.kernel.org>; Tue, 31 Mar 2026 16:07:17 +0000 (UTC)
 Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.23975.1774973230339005905
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.23971.1774973228312520572
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 31 Mar 2026 09:07:10 -0700
+ Tue, 31 Mar 2026 09:07:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=nbmFwt09;
+ dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=PdQ0fttZ;
  spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=85502649bd=rob.woolley@windriver.com)
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62V6nv8T2249206;
-	Tue, 31 Mar 2026 16:07:09 GMT
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62V5i48D352519;
+	Tue, 31 Mar 2026 16:07:07 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
 	 h=cc:content-transfer-encoding:content-type:date:from
 	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	PPS06212021; bh=CPfjqgxC1Pw7+596qsTMfKEFSYZzXk7VTn/7xhI6Ls0=; b=
-	nbmFwt09UjoVFxejaomvZGmyJQz6yLj/qsOuApmPJ7jF0Hcdj8lrU3vTova+aFVe
-	D7LBbu+fOR5rL/Z+WphAjnpnz27YT9BumlZLEiZDUR/U1+AM7Bps8s+bKtM+Cmor
-	xlmAXaCRilcH3/blw/Luhwl5eLqN0kbPH4pRCTg1C3X+c8rrrJ6Oikq4LpjNDYkm
-	KbafNlO5D/dblc0XeR5YFGOte97EcT+wMj2FWx2VKHWaWFQ6i8YkGE0ls7deWon2
-	eY1775LppQpGGkVqQpZIDVqjhIdWWf2C02gE7j0xA5TD5gYxggTPHEzUwnwOUUl/
-	pqpi1VeYoGX9skJT7r+1Mw==
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [128.224.246.37])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4d646vuyv2-7
+	PPS06212021; bh=AvKZqiwd/n6WH/MmsL8NLmWgPhqfFwGkwu4APuWTDew=; b=
+	PdQ0fttZ7QRgln/yFTcp+Jo/KvO3N71FgKYf0AE8hRqYDgKtTNhRmcKB8Z+8ryGg
+	HS1UbNaAQVfLXFJ/rThEHU0JP5UTGf6CwpaVoXn4LqXxc+TbdYxYN+GqI+qmIvvO
+	bD/ERWzt6RYYpm3mKIMTtoE+J2c5wEvjEa9hrFJeljhNVzIBwrKEDjeQzHSmgjy8
+	Mwmj39eqXXpkJmzOXc8seQuDAujyZ8f+88O7l0KoW2ThmDUvtPz+p0Xc1cay/dkI
+	nuPOomKJEtOe/BSJlImJFjQ7Zak9aRS6LoIdCC1+tHmrflMp168vsxM4HK1u1LLI
+	AFu/xoCwZIybqbJ90/sGnw==
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [128.224.246.36])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4d65y4bxjb-5
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 31 Mar 2026 16:07:08 +0000 (GMT)
+	Tue, 31 Mar 2026 16:07:06 +0000 (GMT)
 Received: from ala-exchng01.corp.ad.wrs.com (10.11.224.121) by
- ALA-EXCHNG02.corp.ad.wrs.com (10.11.224.122) with Microsoft SMTP Server
+ ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.61; Tue, 31 Mar 2026 09:07:05 -0700
+ 15.1.2507.61; Tue, 31 Mar 2026 09:07:04 -0700
 Received: from ala-lpggp3.wrs.com (10.11.232.110) by
  ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server id
- 15.1.2507.61 via Frontend Transport; Tue, 31 Mar 2026 09:07:05 -0700
+ 15.1.2507.61 via Frontend Transport; Tue, 31 Mar 2026 09:07:04 -0700
 From: Rob Woolley <rob.woolley@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
 CC: <alex.kanavin@gmail.com>
-Subject: [PATCH v2 12/13] lib: Vendorize bundled third-party libraries under bb._vendor
-Date: Tue, 31 Mar 2026 09:07:02 -0700
-Message-ID: <20260331160703.3137930-13-rob.woolley@windriver.com>
+Subject: [PATCH v2 04/13] bitbake-setup: Add checks for version information
+Date: Tue, 31 Mar 2026 09:06:54 -0700
+Message-ID: <20260331160703.3137930-5-rob.woolley@windriver.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20260331160703.3137930-1-rob.woolley@windriver.com>
 References: <20260331160703.3137930-1-rob.woolley@windriver.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=Zqjg6t7G c=1 sm=1 tr=0 ts=69cbf12c cx=c_pps
- a=Lg6ja3A245NiLSnFpY5YKQ==:117 a=Lg6ja3A245NiLSnFpY5YKQ==:17
+X-Authority-Analysis: v=2.4 cv=QaZrf8bv c=1 sm=1 tr=0 ts=69cbf12a cx=c_pps
+ a=AbJuCvi4Y3V6hpbCNWx0WA==:117 a=AbJuCvi4Y3V6hpbCNWx0WA==:17
  a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=bi6dqmuHe4P4UrxVR6um:22
- a=klDOsUkWDRETUCZYPvoE:22 a=t7CeM3EgAAAA:8 a=sdMhlzqdCMuPHYe87FcA:9
+ a=fTW__CHxibyLmBMfj2wP:22 a=t7CeM3EgAAAA:8 a=vUYKkVZVldypNouynCYA:9
  a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-ORIG-GUID: JQDDYh5VvOC9vVMKbm7FendGfA53dBn1
-X-Proofpoint-GUID: JQDDYh5VvOC9vVMKbm7FendGfA53dBn1
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzMxMDE1NCBTYWx0ZWRfX5ZnsyiQXj7F0
- fd1/xLeqMQZsN4UYNKpQCTUQhfuInx7f53ojeyrT3JW2gnVJLtm6//eF7XvXOELXm5g7xhz2WOx
- xpf5XyiwoffsD2H6uqClZEoJVKUaomw8fioPCBQpqnxWa+0Se7cGRO+t7WoKGtfJOq5B9B7ydFH
- XliKfcFc5ZU2tWdV6fsJ3K/CO6zpiXPN2/qakoeZvH2cexlNHD96pOMKKqgniPtGCLf0dPCDLJq
- zpS49C/bVmH8ajqpfLenkndQ89z8EloCW+C2a+fnkoUSpvybnAUHPo7Vf8MsA0+BAsnsoXLuSqm
- wexfp/GbCyONNqBGsrQF173ZJcodcdBxET3dRI102tZs0sFHvVlg80cqzl5TWEdPRO4kGlrGqdI
- YBaGMfxMfO/sntssRc7rGpl9yaNfSruwTBCbntITOvQ/ivZ3TqCxoqdRmKEu0FXuUblje0M3agh
- pKc95IBiv+b6Uehln3g==
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzMxMDE1NCBTYWx0ZWRfX9GaIhEIX428c
+ Pqk2f7rRbi6pXQAtUS9BuTIZ9h2S2vqkWGZlFC98Zc4x5GbL+VKTKnEUV4Q9MehFDWLJfMolRJG
+ dDGHa5akIliXbtv4aEtGaCIhOM0MLjVkX0+JbjNgggjW8cxa8a+f382wSZuQA7yUZ/m+Z512kV3
+ B/lH7LVdwt7jSSYylC5LtJiVzYNA/BE42wZi0hlPShPR+WfrS2Zk0gCPtNuhyBV5svCtQXXpQf4
+ G0/dc5rWWooBYomAc8N77zq33W4Kw9/6cZv/8TipQbL2jkccePIE48uFfrEuWpyEpziNUvLnd+g
+ eKNHtxt+OFcpIPQfwYsnLPDYRmhBa1Go3IHvnMdmqR1/Sp9hU7WSBwjGcW8GKKDcQWbe6haSHVs
+ 4wOufOl/J3T3mixM1oGQXDd8BL3ujRv+HQyBzmYkXpSbs1nD//5U13hGSkVipAKF0z6ubdkBFmo
+ 76086w4FIxDOH5nstzA==
+X-Proofpoint-GUID: 4C2EiwcqghJmFtV0KuTrHItML3q2qFKO
+X-Proofpoint-ORIG-GUID: 4C2EiwcqghJmFtV0KuTrHItML3q2qFKO
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-03-31_03,2026-03-31_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 spamscore=0 suspectscore=0 phishscore=0 impostorscore=0
- bulkscore=0 priorityscore=1501 malwarescore=0 lowpriorityscore=0
- clxscore=1015 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
- definitions=main-2603310154
+ spamscore=0 phishscore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
+ malwarescore=0 adultscore=0 suspectscore=0 clxscore=1015 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603310154
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Tue, 31 Mar 2026 16:07:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19311
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19306
 
-Move ply, progressbar, simplediff, and bs4 from lib/ into
-lib/bb/_vendor/ to avoid conflicts with system-installed versions
-and to support proper packaging. These libraries contain local
-modifications from their upstream versions.
+The __version__ has been present since bbmake to ensure that the
+Python script uses the appropriate bb module.  Other bitbake-*
+scripts do not check the version.
 
-- Create lib/bb/_vendor/__init__.py
-- Move ply/, progressbar/, simplediff/, bs4/ into bb/_vendor/
-- Convert absolute self-references to relative imports within
-  ply (yacc.py) and bs4 (20 import sites across 8 files)
-- Update all external import sites to use bb._vendor prefix:
-  bb/pysh/pyshlex.py, bb/pysh/pyshyacc.py, bb/ui/knotty.py,
-  bb/siggen.py, bb/fetch2/wget.py, toaster/tests/views/test_views.py
+When executed in place, the bitbake-* scripts manipulate sys.path
+to find the bb module in ../lib. This path is inserted to the
+beginning of sys.path and it cannot be overridden by any other
+modules named bb.
 
-Assisted-by: Claude:claude-4.6-opus
+This commit adds a check for ../lib/bb/__init__.py before making
+changes to sys.path. It falls back to importing the bitbake_setup
+module using a custom bitbake_setup package.
+
 Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
 ---
- lib/bb/_vendor/__init__.py                     | 18 ++++++++++++++++++
- lib/{ => bb/_vendor}/bs4/AUTHORS               |  0
- lib/{ => bb/_vendor}/bs4/CHANGELOG             |  0
- lib/{ => bb/_vendor}/bs4/LICENSE               |  0
- lib/{ => bb/_vendor}/bs4/__init__.py           |  0
- lib/{ => bb/_vendor}/bs4/builder/__init__.py   |  2 +-
- lib/{ => bb/_vendor}/bs4/builder/_html5lib.py  | 12 ++++++------
- .../_vendor}/bs4/builder/_htmlparser.py        |  6 +++---
- lib/{ => bb/_vendor}/bs4/builder/_lxml.py      |  6 +++---
- lib/{ => bb/_vendor}/bs4/css.py                |  2 +-
- lib/{ => bb/_vendor}/bs4/dammit.py             |  0
- lib/{ => bb/_vendor}/bs4/diagnose.py           |  9 ++++-----
- lib/{ => bb/_vendor}/bs4/element.py            |  6 +++---
- lib/{ => bb/_vendor}/bs4/formatter.py          |  2 +-
- lib/{ => bb/_vendor}/ply/__init__.py           |  0
- lib/{ => bb/_vendor}/ply/lex.py                |  0
- lib/{ => bb/_vendor}/ply/yacc.py               |  6 +-----
- lib/{ => bb/_vendor}/progressbar/LICENSE.txt   |  0
- lib/{ => bb/_vendor}/progressbar/__init__.py   |  0
- lib/{ => bb/_vendor}/progressbar/compat.py     |  0
- .../_vendor}/progressbar/progressbar.py        |  0
- lib/{ => bb/_vendor}/progressbar/widgets.py    |  0
- lib/{ => bb/_vendor}/simplediff/LICENSE        |  0
- lib/{ => bb/_vendor}/simplediff/__init__.py    |  0
- lib/bb/fetch2/wget.py                          |  4 ++--
- lib/bb/pysh/pyshlex.py                         |  2 +-
- lib/bb/pysh/pyshyacc.py                        |  2 +-
- lib/bb/siggen.py                               |  2 +-
- lib/bb/ui/knotty.py                            |  2 +-
- lib/toaster/tests/views/test_views.py          |  2 +-
- 30 files changed, 48 insertions(+), 35 deletions(-)
- create mode 100644 lib/bb/_vendor/__init__.py
- rename lib/{ => bb/_vendor}/bs4/AUTHORS (100%)
- rename lib/{ => bb/_vendor}/bs4/CHANGELOG (100%)
- rename lib/{ => bb/_vendor}/bs4/LICENSE (100%)
- rename lib/{ => bb/_vendor}/bs4/__init__.py (100%)
- rename lib/{ => bb/_vendor}/bs4/builder/__init__.py (99%)
- rename lib/{ => bb/_vendor}/bs4/builder/_html5lib.py (98%)
- rename lib/{ => bb/_vendor}/bs4/builder/_htmlparser.py (99%)
- rename lib/{ => bb/_vendor}/bs4/builder/_lxml.py (99%)
- rename lib/{ => bb/_vendor}/bs4/css.py (99%)
- rename lib/{ => bb/_vendor}/bs4/dammit.py (100%)
- rename lib/{ => bb/_vendor}/bs4/diagnose.py (96%)
- rename lib/{ => bb/_vendor}/bs4/element.py (99%)
- rename lib/{ => bb/_vendor}/bs4/formatter.py (99%)
- rename lib/{ => bb/_vendor}/ply/__init__.py (100%)
- rename lib/{ => bb/_vendor}/ply/lex.py (100%)
- rename lib/{ => bb/_vendor}/ply/yacc.py (99%)
- rename lib/{ => bb/_vendor}/progressbar/LICENSE.txt (100%)
- rename lib/{ => bb/_vendor}/progressbar/__init__.py (100%)
- rename lib/{ => bb/_vendor}/progressbar/compat.py (100%)
- rename lib/{ => bb/_vendor}/progressbar/progressbar.py (100%)
- rename lib/{ => bb/_vendor}/progressbar/widgets.py (100%)
- rename lib/{ => bb/_vendor}/simplediff/LICENSE (100%)
- rename lib/{ => bb/_vendor}/simplediff/__init__.py (100%)
+ bin/bitbake-setup | 29 ++++++++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
 
-diff --git a/lib/bb/_vendor/__init__.py b/lib/bb/_vendor/__init__.py
-new file mode 100644
-index 000000000..3c054dc32
---- /dev/null
-+++ b/lib/bb/_vendor/__init__.py
-@@ -0,0 +1,18 @@
-+#
-+# Copyright BitBake Contributors
-+#
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+
-+"""
-+Vendored third-party libraries for BitBake.
-+
-+These libraries have been modified from their upstream versions and are
-+bundled here to avoid conflicts with system-installed packages.
-+
-+Vendored packages:
-+    - bs4 (BeautifulSoup4)
-+    - ply
-+    - progressbar
-+    - simplediff
-+"""
-diff --git a/lib/bs4/AUTHORS b/lib/bb/_vendor/bs4/AUTHORS
-similarity index 100%
-rename from lib/bs4/AUTHORS
-rename to lib/bb/_vendor/bs4/AUTHORS
-diff --git a/lib/bs4/CHANGELOG b/lib/bb/_vendor/bs4/CHANGELOG
-similarity index 100%
-rename from lib/bs4/CHANGELOG
-rename to lib/bb/_vendor/bs4/CHANGELOG
-diff --git a/lib/bs4/LICENSE b/lib/bb/_vendor/bs4/LICENSE
-similarity index 100%
-rename from lib/bs4/LICENSE
-rename to lib/bb/_vendor/bs4/LICENSE
-diff --git a/lib/bs4/__init__.py b/lib/bb/_vendor/bs4/__init__.py
-similarity index 100%
-rename from lib/bs4/__init__.py
-rename to lib/bb/_vendor/bs4/__init__.py
-diff --git a/lib/bs4/builder/__init__.py b/lib/bb/_vendor/bs4/builder/__init__.py
-similarity index 99%
-rename from lib/bs4/builder/__init__.py
-rename to lib/bb/_vendor/bs4/builder/__init__.py
-index ffb31fc25..d60a9a672 100644
---- a/lib/bs4/builder/__init__.py
-+++ b/lib/bb/_vendor/bs4/builder/__init__.py
-@@ -6,7 +6,7 @@ import itertools
- import re
- import warnings
- import sys
--from bs4.element import (
-+from ..element import (
-     CharsetMetaAttributeValue,
-     ContentMetaAttributeValue,
-     RubyParenthesisString,
-diff --git a/lib/bs4/builder/_html5lib.py b/lib/bb/_vendor/bs4/builder/_html5lib.py
-similarity index 98%
-rename from lib/bs4/builder/_html5lib.py
-rename to lib/bb/_vendor/bs4/builder/_html5lib.py
-index 7c46a8511..8ca19fec6 100644
---- a/lib/bs4/builder/_html5lib.py
-+++ b/lib/bb/_vendor/bs4/builder/_html5lib.py
-@@ -7,14 +7,14 @@ __all__ = [
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index f90f01f55..073b18f95 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -23,10 +23,33 @@ import time
  
- import warnings
- import re
--from bs4.builder import (
-+from . import (
-     DetectsXMLParsedAsHTML,
-     PERMISSIVE,
-     HTML,
-     HTML_5,
-     HTMLTreeBuilder,
-     )
--from bs4.element import (
-+from ..element import (
-     NamespacedAttribute,
-     nonwhitespace_re,
- )
-@@ -23,7 +23,7 @@ from html5lib.constants import (
-     namespaces,
-     prefixes,
-     )
--from bs4.element import (
-+from ..element import (
-     Comment,
-     Doctype,
-     NavigableString,
-@@ -134,7 +134,7 @@ class TreeBuilderForHtml5lib(treebuilder_base.TreeBuilder):
-         if soup:
-             self.soup = soup
-         else:
--            from bs4 import BeautifulSoup
-+            from .. import BeautifulSoup
-             # TODO: Why is the parser 'html.parser' here? To avoid an
-             # infinite loop?
-             self.soup = BeautifulSoup(
-@@ -180,7 +180,7 @@ class TreeBuilderForHtml5lib(treebuilder_base.TreeBuilder):
-         return TextNode(Comment(data), self.soup)
  
-     def fragmentClass(self):
--        from bs4 import BeautifulSoup
-+        from .. import BeautifulSoup
-         # TODO: Why is the parser 'html.parser' here? To avoid an
-         # infinite loop?
-         self.soup = BeautifulSoup("", "html.parser")
-@@ -198,7 +198,7 @@ class TreeBuilderForHtml5lib(treebuilder_base.TreeBuilder):
-         return treebuilder_base.TreeBuilder.getFragment(self).element
+ bindir = os.path.abspath(os.path.dirname(__file__))
+-sys.path[0:0] = [os.path.join(os.path.dirname(bindir), 'lib')]
++libdir = os.path.join(os.path.dirname(bindir), 'lib')
++bbfile = os.path.join(libdir, 'bb', '__init__.py')
  
-     def testSerializer(self, element):
--        from bs4 import BeautifulSoup
-+        from .. import BeautifulSoup
-         rv = []
-         doctype_re = re.compile(r'^(.*?)(?: PUBLIC "(.*?)"(?: "(.*?)")?| SYSTEM "(.*?)")?$')
+-import bb.msg  # noqa: E402
+-import bb.process  # noqa: E402
++# Obtain __version__ and import bb
++if os.path.exists(bbfile):
++    # Execute bitbake-setup in git repository
++    try:
++        sys.path[0:0] = [libdir]
++        import bb.msg  # noqa: E402
++        import bb.process  # noqa: E402
++        from bb import __version__  # noqa: E402
++    except ImportError as e:
++        print(f"Could not import bb from lib: {e}")
++else:
++    # Execute bitbake-setup installed with packages
++    try:
++        from importlib.metadata import version, PackageNotFoundError  # noqa:E402
++        try:
++            import bb.msg  # noqa: E402
++            import bb.process  # noqa: E402
++            __version__ = version("bitbake_setup")
++        except ImportError as e:
++            print(f"Could not import bb: {e}")
++        except PackageNotFoundError as e:
++            print(f"Could not find package bb: {e}")
++    except ImportError as e:
++        print(f"Could not import bb from package: {e}")
  
-diff --git a/lib/bs4/builder/_htmlparser.py b/lib/bb/_vendor/bs4/builder/_htmlparser.py
-similarity index 99%
-rename from lib/bs4/builder/_htmlparser.py
-rename to lib/bb/_vendor/bs4/builder/_htmlparser.py
-index 3cc187f89..f55cbadf6 100644
---- a/lib/bs4/builder/_htmlparser.py
-+++ b/lib/bb/_vendor/bs4/builder/_htmlparser.py
-@@ -13,16 +13,16 @@ from html.parser import HTMLParser
- import sys
- import warnings
+ logger = bb.msg.logger_create('bitbake-setup', sys.stdout)
  
--from bs4.element import (
-+from ..element import (
-     CData,
-     Comment,
-     Declaration,
-     Doctype,
-     ProcessingInstruction,
-     )
--from bs4.dammit import EntitySubstitution, UnicodeDammit
-+from ..dammit import EntitySubstitution, UnicodeDammit
- 
--from bs4.builder import (
-+from . import (
-     DetectsXMLParsedAsHTML,
-     ParserRejectedMarkup,
-     HTML,
-diff --git a/lib/bs4/builder/_lxml.py b/lib/bb/_vendor/bs4/builder/_lxml.py
-similarity index 99%
-rename from lib/bs4/builder/_lxml.py
-rename to lib/bb/_vendor/bs4/builder/_lxml.py
-index 4f7cf7468..fc80133b2 100644
---- a/lib/bs4/builder/_lxml.py
-+++ b/lib/bb/_vendor/bs4/builder/_lxml.py
-@@ -14,14 +14,14 @@ except ImportError as e:
- from io import BytesIO
- from io import StringIO
- from lxml import etree
--from bs4.element import (
-+from ..element import (
-     Comment,
-     Doctype,
-     NamespacedAttribute,
-     ProcessingInstruction,
-     XMLProcessingInstruction,
- )
--from bs4.builder import (
-+from . import (
-     DetectsXMLParsedAsHTML,
-     FAST,
-     HTML,
-@@ -30,7 +30,7 @@ from bs4.builder import (
-     ParserRejectedMarkup,
-     TreeBuilder,
-     XML)
--from bs4.dammit import EncodingDetector
-+from ..dammit import EncodingDetector
- 
- LXML = 'lxml'
- 
-diff --git a/lib/bs4/css.py b/lib/bb/_vendor/bs4/css.py
-similarity index 99%
-rename from lib/bs4/css.py
-rename to lib/bb/_vendor/bs4/css.py
-index cd1fd2df8..7cbeb83c1 100644
---- a/lib/bs4/css.py
-+++ b/lib/bb/_vendor/bs4/css.py
-@@ -68,7 +68,7 @@ class CSS(object):
-         result (a common mistake).
-         """
-         # Import here to avoid circular import
--        from bs4.element import ResultSet
-+        from .element import ResultSet
-         return ResultSet(None, results)
- 
-     def compile(self, select, namespaces=None, flags=0, **kwargs):
-diff --git a/lib/bs4/dammit.py b/lib/bb/_vendor/bs4/dammit.py
-similarity index 100%
-rename from lib/bs4/dammit.py
-rename to lib/bb/_vendor/bs4/dammit.py
-diff --git a/lib/bs4/diagnose.py b/lib/bb/_vendor/bs4/diagnose.py
-similarity index 96%
-rename from lib/bs4/diagnose.py
-rename to lib/bb/_vendor/bs4/diagnose.py
-index 469279534..76d0be8f1 100644
---- a/lib/bs4/diagnose.py
-+++ b/lib/bb/_vendor/bs4/diagnose.py
-@@ -6,9 +6,8 @@ __license__ = "MIT"
- import cProfile
- from io import BytesIO
- from html.parser import HTMLParser
--import bs4
--from bs4 import BeautifulSoup, __version__
--from bs4.builder import builder_registry
-+from . import BeautifulSoup, __version__
-+from .builder import builder_registry
- 
- import os
- import pstats
-@@ -219,8 +218,8 @@ def profile(num_elements=100000, parser="lxml"):
-     filename = filehandle.name
- 
-     data = rdoc(num_elements)
--    vars = dict(bs4=bs4, data=data, parser=parser)
--    cProfile.runctx('bs4.BeautifulSoup(data, parser)' , vars, vars, filename)
-+    vars = dict(BeautifulSoup=BeautifulSoup, data=data, parser=parser)
-+    cProfile.runctx('BeautifulSoup(data, parser)' , vars, vars, filename)
- 
-     stats = pstats.Stats(filename)
-     # stats.strip_dirs()
-diff --git a/lib/bs4/element.py b/lib/bb/_vendor/bs4/element.py
-similarity index 99%
-rename from lib/bs4/element.py
-rename to lib/bb/_vendor/bs4/element.py
-index 0aefe734b..38ca2dc27 100644
---- a/lib/bs4/element.py
-+++ b/lib/bb/_vendor/bs4/element.py
-@@ -9,8 +9,8 @@ import re
- import sys
- import warnings
- 
--from bs4.css import CSS
--from bs4.formatter import (
-+from .css import CSS
-+from .formatter import (
-     Formatter,
-     HTMLFormatter,
-     XMLFormatter,
-@@ -420,7 +420,7 @@ class PageElement(object):
-             and not isinstance(new_child, NavigableString)):
-             new_child = NavigableString(new_child)
- 
--        from bs4 import BeautifulSoup
-+        from . import BeautifulSoup
-         if isinstance(new_child, BeautifulSoup):
-             # We don't want to end up with a situation where one BeautifulSoup
-             # object contains another. Insert the children one at a time.
-diff --git a/lib/bs4/formatter.py b/lib/bb/_vendor/bs4/formatter.py
-similarity index 99%
-rename from lib/bs4/formatter.py
-rename to lib/bb/_vendor/bs4/formatter.py
-index 9fa1b57cb..50f775aee 100644
---- a/lib/bs4/formatter.py
-+++ b/lib/bb/_vendor/bs4/formatter.py
-@@ -1,4 +1,4 @@
--from bs4.dammit import EntitySubstitution
-+from .dammit import EntitySubstitution
- 
- class Formatter(EntitySubstitution):
-     """Describes a strategy to use when outputting a parse tree to a string.
-diff --git a/lib/ply/__init__.py b/lib/bb/_vendor/ply/__init__.py
-similarity index 100%
-rename from lib/ply/__init__.py
-rename to lib/bb/_vendor/ply/__init__.py
-diff --git a/lib/ply/lex.py b/lib/bb/_vendor/ply/lex.py
-similarity index 100%
-rename from lib/ply/lex.py
-rename to lib/bb/_vendor/ply/lex.py
-diff --git a/lib/ply/yacc.py b/lib/bb/_vendor/ply/yacc.py
-similarity index 99%
-rename from lib/ply/yacc.py
-rename to lib/bb/_vendor/ply/yacc.py
-index 529f85b08..0cd9b522b 100644
---- a/lib/ply/yacc.py
-+++ b/lib/bb/_vendor/ply/yacc.py
-@@ -100,12 +100,8 @@ try:
- except AttributeError:
-     MAXINT = sys.maxsize
- 
--# Python 2.x/3.0 compatibility.
- def load_ply_lex():
--    if sys.version_info[0] < 3:
--        import lex
--    else:
--        import ply.lex as lex
-+    from . import lex
-     return lex
- 
- # This object is a stand-in for a logging object created by the 
-diff --git a/lib/progressbar/LICENSE.txt b/lib/bb/_vendor/progressbar/LICENSE.txt
-similarity index 100%
-rename from lib/progressbar/LICENSE.txt
-rename to lib/bb/_vendor/progressbar/LICENSE.txt
-diff --git a/lib/progressbar/__init__.py b/lib/bb/_vendor/progressbar/__init__.py
-similarity index 100%
-rename from lib/progressbar/__init__.py
-rename to lib/bb/_vendor/progressbar/__init__.py
-diff --git a/lib/progressbar/compat.py b/lib/bb/_vendor/progressbar/compat.py
-similarity index 100%
-rename from lib/progressbar/compat.py
-rename to lib/bb/_vendor/progressbar/compat.py
-diff --git a/lib/progressbar/progressbar.py b/lib/bb/_vendor/progressbar/progressbar.py
-similarity index 100%
-rename from lib/progressbar/progressbar.py
-rename to lib/bb/_vendor/progressbar/progressbar.py
-diff --git a/lib/progressbar/widgets.py b/lib/bb/_vendor/progressbar/widgets.py
-similarity index 100%
-rename from lib/progressbar/widgets.py
-rename to lib/bb/_vendor/progressbar/widgets.py
-diff --git a/lib/simplediff/LICENSE b/lib/bb/_vendor/simplediff/LICENSE
-similarity index 100%
-rename from lib/simplediff/LICENSE
-rename to lib/bb/_vendor/simplediff/LICENSE
-diff --git a/lib/simplediff/__init__.py b/lib/bb/_vendor/simplediff/__init__.py
-similarity index 100%
-rename from lib/simplediff/__init__.py
-rename to lib/bb/_vendor/simplediff/__init__.py
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index ca4959ab5..aaa5027f3 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -27,8 +27,8 @@ from   bb.fetch2 import FetchMethod
- from   bb.fetch2 import FetchError
- from   bb.fetch2 import logger
- from   bb.fetch2 import runfetchcmd
--from   bs4 import BeautifulSoup
--from   bs4 import SoupStrainer
-+from   bb._vendor.bs4 import BeautifulSoup
-+from   bb._vendor.bs4 import SoupStrainer
- 
- class WgetProgressHandler(bb.progress.LineFilterProgressHandler):
-     """
-diff --git a/lib/bb/pysh/pyshlex.py b/lib/bb/pysh/pyshlex.py
-index a42c29446..3f99cd1bd 100644
---- a/lib/bb/pysh/pyshlex.py
-+++ b/lib/bb/pysh/pyshlex.py
-@@ -14,7 +14,7 @@
- # that hard to enable pull mode.
- import re
- 
--from ply import lex
-+from bb._vendor.ply import lex
- from bb.pysh.sherrors import *
- 
- class NeedMore(Exception):
-diff --git a/lib/bb/pysh/pyshyacc.py b/lib/bb/pysh/pyshyacc.py
-index 924860a6f..67e22c96e 100644
---- a/lib/bb/pysh/pyshyacc.py
-+++ b/lib/bb/pysh/pyshyacc.py
-@@ -13,7 +13,7 @@ import sys
- import bb.pysh.pyshlex as pyshlex
- tokens = pyshlex.tokens
- 
--from ply import yacc
-+from bb._vendor.ply import yacc
- import bb.pysh.sherrors as sherrors
-     
- class IORedirect:
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 985fa7e4c..4d0aa4ac3 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -12,7 +12,7 @@ import tempfile
- import pickle
- import bb.data
- import difflib
--import simplediff
-+from bb._vendor import simplediff
- import json
- import types
- from contextlib import contextmanager
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 82531ef8f..15025e8dd 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -14,7 +14,7 @@ import io
- import os
- import sys
- import logging
--import progressbar
-+from bb._vendor import progressbar
- import signal
- import bb.msg
- import time
-diff --git a/lib/toaster/tests/views/test_views.py b/lib/toaster/tests/views/test_views.py
-index e1adfcf86..5e64e8192 100644
---- a/lib/toaster/tests/views/test_views.py
-+++ b/lib/toaster/tests/views/test_views.py
-@@ -27,7 +27,7 @@ import toastergui
- 
- from toastergui.tables import SoftwareRecipesTable
- import json
--from bs4 import BeautifulSoup
-+from bb._vendor.bs4 import BeautifulSoup
- import string
- 
- PROJECT_NAME = "test project"
 -- 
 2.49.0
 
