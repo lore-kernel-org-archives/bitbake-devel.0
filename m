@@ -1,220 +1,198 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <quentin.schulz@cherry.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DE9FF60EB
-	for <webhook@archiver.kernel.org>; Tue, 31 Mar 2026 08:15:24 +0000 (UTC)
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.15386.1774944914360537994
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DC6FF60F6
+	for <webhook@archiver.kernel.org>; Tue, 31 Mar 2026 09:00:45 +0000 (UTC)
+Received: from AS8PR04CU009.outbound.protection.outlook.com (AS8PR04CU009.outbound.protection.outlook.com [52.101.70.27])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.15869.1774947641511315783
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 31 Mar 2026 01:15:14 -0700
+ Tue, 31 Mar 2026 02:00:42 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=nhOd+IbW;
- spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id CC07A4E42883
-	for <bitbake-devel@lists.openembedded.org>; Tue, 31 Mar 2026 08:15:12 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id A25D86029D;
-	Tue, 31 Mar 2026 08:15:12 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id AC03510450FF2;
-	Tue, 31 Mar 2026 10:15:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1774944912; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=6P45JJd0fgE6H5JrxTm9kKaMyNc0mzEFcKSTHRirpTg=;
-	b=nhOd+IbWE7R31dpj1w5aGcFSVuEeTkBEJBsXhC8NgL6RvQeb6CilvNrOo5KJ9WKzb7P3lo
-	oVcLmmNWDWazp/8+2iZXNK6/0r1iNnMr5oAuwdMyo/3H5rikLlzqOikKbywvrfXByC0kOk
-	2qEQn2rlKBkgx0ouy1skrEDpVH1O0iGji+6lmEI17/pRpM9s8jOGJF6DYUu+5Xedoz5g5M
-	jJKDmmhR7fxiyoycZ5jzjUIvnw31CvZbAxyRIsaarYoaTrxeh1Xq6gc9YbiiV9LILjNPL1
-	UpOk0dxFWJ+T8CKnTi6V/b5bSpqwAyJh+Ad1TpNVzcmKzNKHCFCUOiR6im0ulQ==
-From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Tue, 31 Mar 2026 10:14:52 +0200
-Subject: [PATCH 2/2] doc/bitbake-user-manual-environment-setup.rst: replace
- shell blocks by console
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260331-docs-fixes-v1-2-45ee34341e72@bootlin.com>
+ dkim=pass header.i=@cherry.de header.s=selector1 header.b=T7PlvlEo;
+ spf=pass (domain: cherry.de, ip: 52.101.70.27, mailfrom: quentin.schulz@cherry.de)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CShI5JDaSzsaEJIrdh1YkwjL2+pbsWHlieCcxAhOgqMfx0TjVNj5Gs6ugK9ziR0HkKS9sK6WBRhBjtImGK/dzgI+QYAJPotkAuzuy7K10yBwXqumbdjvMzDSApc/uw2ec4esdLc8lQ2so5X5gibppTu1ktx0rwYPmvnGxr+SEbPR42JuGJa6xbCbXkJa2VIAz/jxCbgtwBWhwB6Pk410JJrCqFZGAWUeD6+4rgLJpoBM9jhyPtmRDVEb+PJDkv5fXpj3kgwxW4VKdyDBrxEvjTNQtZvVbmkLAYA/wIwElyZ4PG/gSXawTQGTmWNvt9csH/H5RjyJaG9jcS258UkZ7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IiB2c4p4HIwAzv8joC7bf1fzD1Wf4nRmBFmD1/hxNOo=;
+ b=rsDbOoJzc2rHMMbyluVNcy8ae4Ud6iLPsJzLa5g/CFfKENfm3ficeNU80aBHu91FqHIQs32hCGz4htlQ8w+x97xFsjqoafYEufYCQtcDE3/BVcW4YV4B0Ah+x63r0ajVlioYxXyG+cL8+ecEQzrDCKAz7sVNXtC2BaG4QelztUUCBOg3bHmuYmO/W43ZFIkY+nbBtaqeNDBPxi1tC/Ho0528zdyb7T7MWrLmLEX77dFbW2y0naFNnw6bz9ohaV4zLJwKy04gYbBjQZVEzyShN1eYg2e7fb0wAF2i3csZPuH+WJshwDWE+MordU1Fxc6a/YnHOaO2SnvnI2h5O1qxnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IiB2c4p4HIwAzv8joC7bf1fzD1Wf4nRmBFmD1/hxNOo=;
+ b=T7PlvlEoWY6KMDUqZJe4nVYLJrKJbnmSV+rtcncigoj4PBmtw6nE+v0qD6GyNZEfJ45sxEnl1z5oht/I/HaPe6MOerazqJo1pdC5Mb3dSQBUg/kk0CQv4NJ1R1RHev4SETN0n5mf2FrsyPNda8rJMSxEg4EiFa4OapnN/i+isVE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from DBBPR04MB7737.eurprd04.prod.outlook.com (2603:10a6:10:1e5::22)
+ by AM7PR04MB7062.eurprd04.prod.outlook.com (2603:10a6:20b:122::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.28; Tue, 31 Mar
+ 2026 09:00:37 +0000
+Received: from DBBPR04MB7737.eurprd04.prod.outlook.com
+ ([fe80::5960:fb4b:9313:2b00]) by DBBPR04MB7737.eurprd04.prod.outlook.com
+ ([fe80::5960:fb4b:9313:2b00%4]) with mapi id 15.20.9745.027; Tue, 31 Mar 2026
+ 09:00:35 +0000
+Message-ID: <6f743774-fe4b-4e9e-ba99-6ffe1d76a51b@cherry.de>
+Date: Tue, 31 Mar 2026 11:00:34 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [docs] [PATCH 1/2] bitbake-setup: rename "abort" rebase conflict
+ stragegy to "halt"
+To: antonin.godard@bootlin.com, bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ docs@lists.yoctoproject.org
 References: <20260331-docs-fixes-v1-0-45ee34341e72@bootlin.com>
-In-Reply-To: <20260331-docs-fixes-v1-0-45ee34341e72@bootlin.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
-X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5839;
- i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=sldTZpzHi0cENzuSTCJDMP3kle1yGBxNnajv8r1OP4c=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBpy4KNCivgqp+UJ/za2sx7ozz4LY4vrfvkMxyWa
- 20RirdJIH2JAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCacuCjQAKCRDRgEFAKaOo
- NkD7D/4nFD3OYD/zbr/jt9IsxnO6xpHTREiC89otOBpjKLjgMczbNz3QRMqUpQJQy0DlVqXYYNf
- 3FdDey8MbSZrRz9rvRUGC7CBop6yKlMwnac7+itcmQTonsplrDmZY/NXiYugOG2WRCjtNwVK89E
- 6Nk7xX50LPch8Hi97Yz4LCcMwCIe9O552FIaSAvtl/Op8TIpZNG3qfffm2am1r5w8sO15SMDAv/
- e0a9DNW0ddf91g0g2r0KtGSDTvNVrdUgeK6i52dG0Tdszv/njv9jjXCQbhcj0jmZAs6MwQ3FfQA
- s53nzwGMmJshUysmj4Lz6eqdmM+ECq4jOTdUOTcy1QzWIpcyBh2oyJJXI+vyLKgI9wkmVULicMT
- JHlaLDDxqx+uOkD+zhVl1Nj+UTJQsbCJ33KFiqC3obnWKM86eZlk1BJz641ATvS9Br1GT9nALcu
- cYTgQ0syDXJ9TrAO1hKoNsWIFwZbQdJ03RPQO+M5TKlVAmh7BpDGtODCMUTLbSeOSZ0vyh88OdE
- wwqTM+XXpBVhN2XE5lwOiJUjHKyWs/zD3pCmo6o5r+BNXNZW65v2FdDHVjGnCGhdTaBxChbtUu3
- rEf+Hy3UmowuVT00A+pjQ8XSHKAPd1vle81/81h6VNL1RtDGtKN69EWubEC+HNBcEkjphbW9BPZ
- peHTKSU2L5cr5uw==
-X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
- fpr=8648725188DD401BB9A0D3FFD180414029A3A836
-X-Last-TLS-Session-Version: TLSv1.3
+ <20260331-docs-fixes-v1-1-45ee34341e72@bootlin.com>
+Content-Language: en-US
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <20260331-docs-fixes-v1-1-45ee34341e72@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-ClientProxiedBy: FR4P281CA0282.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:e6::7) To DBBPR04MB7737.eurprd04.prod.outlook.com
+ (2603:10a6:10:1e5::22)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DBBPR04MB7737:EE_|AM7PR04MB7062:EE_
+X-MS-Office365-Filtering-Correlation-Id: 38ded5bb-7a19-4a80-f2b2-08de8f03f8df
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|376014|1800799024|366016|18002099003|22082099003|56012099003;
+X-Microsoft-Antispam-Message-Info: 
+	AYUFxgpNw9Ith1nrALnxWLtPgXTP6neOI+mQJpK42gbenMGRmT6zp8N/lRV2J9B9h+XNL7vWD1ewbe/w7IURweW27hTYAYVME2UqTtapzG7XochPkHj9d2AKRgXK3BxpAxb+pj2GIcP4h37bp08RCLsdCimqsFTUJOEpgwZ7NgcrnZqBf7Nt4N1aa8ShQuoc29f4D5Ebj0PAlR0h/D2+zU0Ja1l9lrLvy9XwbrupdONmH7xoFs8gH0XmbcwrPnHSM9c0JrbNuLB3jaFJfSL3iwMWEtHs7PcfbHgtmZ2LNJJOPH0XnR0qU+hQyifQeaj1MI5mDiKRnQsGSu9zyZ0Hwg38nct8B5VRL2W5rv1JrpHNqlvGWwTpcKGcT3FiZDvxHF5dmZjPoFIeZDW1lWJqlcmUs/4VUOgSeS8kZHQMcsIBKI2ihSpZFjZU5w7Qv14NyswXgjhDfEWCi5mqKXfqhHpRqzU1h0A7oCuwg6iJREfeTooTfQKbUsdk2dtK65Qp55q6CAshJef6ioIdpk4BlVf4BbD+17KmvZjFgt3VU6+o8Wzy/p9DN2HUlzgk7Epx+Ay8Y6lJxux/CYosCuq46VnFBnjnn+pcpDHylRbFQwGNg0FOvlb5Npsb5I+sldAZgsu6IBWN1836UlwwYXd8J50TL7bb23+AJfRQmxCoVqaXSQ4ccYrG4hWWzemOiN81
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR04MB7737.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?dGRsRWt5Uzl0b0U3UGdwWjRpVThRWldoTnU1bVFNMXN4NTRhekg0Q1RvVWtV?=
+ =?utf-8?B?N0FtSG5pZnB0ZC9rcXY4NlNHeUFER1B3OW1TcHhJL2hKZnBSMW1laU1ZbEV5?=
+ =?utf-8?B?VTZmdlhYY0tjd0pob2hMcXE3cFdkTzBVVktZbEZaaGk5bUVDRFRhMEdqV2px?=
+ =?utf-8?B?VGFBUTlXQWxHNXFvSzZVby9pc04xVEl0YWI1U0YzUTBIUUVia0VUTDdxemQx?=
+ =?utf-8?B?aXQreWNVZ01wOW5CM2NidFBTZmV0ekt0NGZUM3M0WmdqY0R5YmdQTjdGV24r?=
+ =?utf-8?B?cXVYSS9mcmxMQmJXczhLem9GVWE0N2VjTTVyZFlrV1R2czQ2dTZSNnlnV2pp?=
+ =?utf-8?B?Ymd6VytJVUJvK3NqMFV2UDJNWXQ5QXN0SVZsU0ZEVk5sQjVWZGZtTy9wdTFh?=
+ =?utf-8?B?c3hWdllxK0VtNktkT3lseVBpeW8yTHY2akFuOEV5SWMxQUNtTzdyN3V1L25T?=
+ =?utf-8?B?TkNOb1BTbm53R1g5czZkbkUxUEVGNnAxTjRVUFo2QktVQ29ZUk40S2ZtbVY4?=
+ =?utf-8?B?THQ0bi9lVVYwbHpmYW5BNlRUcm9WZlFXRUorOU00S1MvZjhlSCtoVzhhOUFE?=
+ =?utf-8?B?N1p1NXZueE5ZMHIySERLSTNEL2VzSzZuNDlyUmV6QXpjYTI2NG4wMExYL3cz?=
+ =?utf-8?B?VmFDTGxoRGZ2SGpsMVE0MG5UZ1drZDZYaFhjVnV4ZjEzNXA1TGZTQkhCajRI?=
+ =?utf-8?B?UDFpMG9Mdk9mSHV0REVEUE9IM0QxUHpzSWZjNkxYdTRGOGc0b1pEaXdIV29H?=
+ =?utf-8?B?VWFkY0tNbVU3T2lRSkpLQVdEQkhndks2NkRkZVgxM0tORSt0c1pDU2RJV2Q2?=
+ =?utf-8?B?aTBGTXpsZHJQemsrMCtTMXNyOUExTWlaQWV6dnVQZEtWcHoyY2cvbmNwZ0hC?=
+ =?utf-8?B?K0JCQVJ6TXlqSkZDeVVxUmI0bFlRNzMyYm9ueWFpUThHM1Z2YW1xdXZNVUZp?=
+ =?utf-8?B?Y01WUTFnci8vZW5ZSUgyYURHdXBDRUhVUXI2RVZ2Z2xKNWY0OW5WaTljTjFn?=
+ =?utf-8?B?aXU0TGd6MXM2UnZWK1B4cTFlYmRXMCtFemEyNUdXeUdaTlNQNlAzaTc4aXY1?=
+ =?utf-8?B?dEk3VEtUQ0V6WTBMTW5PbkdpU05QQXdWNmFTUmpxZitIbm90aGltT3huZnJC?=
+ =?utf-8?B?d2pUdzlDUDVxdVhPMzZkSkswSUVPSE5KM0xKbHVVODA5MWUrRCtwTVdSdjd4?=
+ =?utf-8?B?ZkhDdGxtL3RxL0NEdmZ2MndYWEJ5R3d5ZmNxWTZ5RElNVU4zTHYyYWgweUhP?=
+ =?utf-8?B?SGQvUk5pWEZoUnlUZnkzSW01eU9YWkZKTGdDbVoxRytzN2NKZENsLzJvUk5s?=
+ =?utf-8?B?eTl2dVBOUDFWdDhFUXBMRExzZG5kNWlwMmNob3dadjZzTU5jLzJIRW8xYmZy?=
+ =?utf-8?B?WnBBQ05xNnZiZTRnRkFUUGFmdGFIc2p3VVlSZVd0bEdmdURuMEQwU2J0bXpV?=
+ =?utf-8?B?ZCs2Y3kvVGRBc1FGajJRK1JlRXhIU3o0WkgwNi9lakhuekg3bGRReFIrN2hC?=
+ =?utf-8?B?dWtpeDB2UTMvN3dZbzNmaC9NN3Q5MGhaaXZORDVmb0JydVVSTFlVczk4QXZH?=
+ =?utf-8?B?VmNBdXpTY1pzeHpaNm9kMW15bVhPREk3SmQ1b0J2R2YvczR1WG4xUHBGTEcz?=
+ =?utf-8?B?WW45aXBwOFIzZVEycEZnejJHcFBjNHNjNnlWT1orTG5rL215QU5zVTkvcC9U?=
+ =?utf-8?B?c2VXRVVYbGs0RGFmeUpKQWRGbTZvNmo5N3ZHeVJaSWRJYkNLNFpDWVRieUpW?=
+ =?utf-8?B?eVpsdDNRZTliMXczTkdIVnlURlJtaDB6OU9KaWZKUDg1eFh3YStQZitJK2Vy?=
+ =?utf-8?B?ZG40OFNMcFFHSkRUSS9sZE1LdXQ2eThvSlB4c3N0VXN1KzhYQWxyUElBTlBH?=
+ =?utf-8?B?ODErYTFpOStWYVZJOFFqNDQzcmRZYm1CUFoyR3pkYWdHZVBjZW5MV2RFSmhL?=
+ =?utf-8?B?V0xtZFJ0ZGdYK25TaEVGTXRtOEVJcUZmTTNHR2tBb1pTUWo5ei95S1V2RWp5?=
+ =?utf-8?B?eStZVmxDOThQWkoveExsdW1tZE9aMDFPL0ViZTN3alhNNVJCNkR3Qng1SmFy?=
+ =?utf-8?B?Y1FGeEhzTFk0S3RHZnRkclVxby9xeXBwQzlhZVJZZklXR0FqME85TTRLOHNJ?=
+ =?utf-8?B?cHFWZTZCa0Q3Y0poOTllSUJwN2l0OXJKVkE1dDNRUUlZNndWNzAyNmZyZnNw?=
+ =?utf-8?B?S0ZFOXloVVZVbGVHZDdEUzJESU83RUhpelJVRHdHMmpQSmYzeldMTDBkQWcz?=
+ =?utf-8?B?N05qaC9nSlI2OFp0ZEN6UUh1ZXZVeVIrTldORDhwUDRwUkRQai9jbmNWMTc0?=
+ =?utf-8?B?Rm5xR0hobDRyTVQwRXROQldTc2FacDA1aGJCeXY4cWNhQ3RVUHM0dz09?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: 38ded5bb-7a19-4a80-f2b2-08de8f03f8df
+X-MS-Exchange-CrossTenant-AuthSource: DBBPR04MB7737.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2026 09:00:35.7977
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4q7BAAayobLrMXzMxofVg1B0LkCM5lX7mGEYMN7x8VRUVSmTL7vsutAmq98sBGLHp/JIN69cpyR8b05Gnbe3AYu+VsW1GXFxTePCEBuDjP8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7062
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 31 Mar 2026 08:15:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19288
+ <bitbake-devel@lists.openembedded.org>; Tue, 31 Mar 2026 09:00:45 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19289
 
-The appropriate lexer to use for command examples is console, not shell.
-Replace all misuses of this lexer in this document.
+Hi Antonin,
 
-Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
----
- .../bitbake-user-manual-environment-setup.rst      | 30 +++++++++++-----------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+On 3/31/26 10:14 AM, Antonin Godard via lists.yoctoproject.org wrote:
+> As per [1], do not use the word "abort" and replace it with "halt" for
+> the rebase conflicts strategy. This is something we try to follow in our
+> documentation.
+> 
+> [1]: https://inclusivenaming.org/word-lists/tier-1/abort/
+> 
+> Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+> ---
+>   bin/bitbake-setup                                                 | 8 ++++----
+>   doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst | 6 +++---
+>   doc/bitbake-user-manual/bitbake-user-manual-fetching.rst          | 2 +-
+>   lib/bb/tests/setup.py                                             | 8 ++++----
+>   4 files changed, 12 insertions(+), 12 deletions(-)
+> 
+> diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+> index b02cbc2b1c4..33cbefb4914 100755
+> --- a/bin/bitbake-setup
+> +++ b/bin/bitbake-setup
+> @@ -167,7 +167,7 @@ def _get_remotes(r_remote):
+>   
+>       return remotes
+>   
+> -def checkout_layers(layers, confdir, layerdir, d, rebase_conflicts_strategy='abort'):
+> +def checkout_layers(layers, confdir, layerdir, d, rebase_conflicts_strategy='halt'):
+>       def _checkout_git_remote(r_remote, repodir, layers_fixed_revisions):
+>           rev = r_remote['rev']
+>           branch = r_remote.get('branch', None)
+> @@ -458,7 +458,7 @@ def merge_overrides_into_sources(sources, overrides):
+>               layers[k] = v
+>       return layers
+>   
+> -def update_build(config, confdir, setupdir, layerdir, d, update_bb_conf="prompt", init_vscode=False, rebase_conflicts_strategy='abort'):
+> +def update_build(config, confdir, setupdir, layerdir, d, update_bb_conf="prompt", init_vscode=False, rebase_conflicts_strategy='halt'):
+>       layer_config = merge_overrides_into_sources(config["data"]["sources"], config["source-overrides"]["sources"])
+>       sources_fixed_revisions = checkout_layers(layer_config, confdir, layerdir, d, rebase_conflicts_strategy=rebase_conflicts_strategy)
+>       bitbake_config = config["bitbake-config"]
+> @@ -1273,9 +1273,9 @@ def main():
+>       parser_update = subparsers.add_parser('update', help='Update a setup to be in sync with configuration')
+>       add_setup_dir_arg(parser_update)
+>       parser_update.add_argument('--update-bb-conf', choices=['prompt', 'yes', 'no'], default='prompt', help='Update bitbake configuration files (bblayers.conf, local.conf) (default: prompt)')
+> -    parser_update.add_argument('--rebase-conflicts-strategy', choices=['abort', 'backup'], default='abort',
+> +    parser_update.add_argument('--rebase-conflicts-strategy', choices=['halt', 'backup'], default='halt',
+>                           help="What to do when a layer repository has local modifications that prevent "
+> -                             "an in-place update: 'abort' (default) aborts with an error message; "
+> +                             "an in-place update: 'halt' (default) halts with an error message; "
+>                                "'backup' renames the directory to a timestamped backup and re-clones from upstream.")
+>       parser_update.set_defaults(func=build_update)
+>   
+> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+> index c22e19bd665..c7b73001404 100644
+> --- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+> +++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+> @@ -458,9 +458,9 @@ In addition, the command can take the following arguments:
+>      local modifications or commits that prevent an in-place update. Accepted
+>      values are:
+>   
+> -   -  ``abort`` (default): stop with an error message describing the problem.
+> +   -  ``halt`` (default): stop with an error message describing the problem.
+>         The repository is left in its previous state (the failed rebase is
+> -      automatically aborted). The error message includes a hint to re-run with
+> +      automatically halted). The error message includes a hint to re-run with
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-index c7b73001404..ece872ad26c 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-@@ -27,7 +27,7 @@ Quick Start
- 
- #. If you haven't already, clone the BitBake repository:
- 
--   .. code-block:: shell
-+   .. code-block:: console
- 
-       $ git clone https://git.openembedded.org/bitbake
- 
-@@ -36,7 +36,7 @@ Quick Start
- 
-    To start, run:
- 
--   .. code-block:: shell
-+   .. code-block:: console
- 
-       $ ./bitbake/bin/bitbake-setup init
- 
-@@ -94,7 +94,7 @@ Quick Start
- #. Source the ``init-build-env`` file present in the :term:`BitBake Build`
-    directory:
- 
--   .. code-block:: shell
-+   .. code-block:: console
- 
-       $ source ./poky-master-poky-distro_poky-machine_qemux86-64/build/init-build-env
- 
-@@ -343,7 +343,7 @@ In addition, the command can take the following arguments:
- -  This example prompts the user to choose a :term:`Configuration Template` from
-    a custom registry:
- 
--   .. code-block:: shell
-+   .. code-block:: console
- 
-       $ ./bitbake/bin/bitbake-setup \
-           --setting default registry 'git://example.com/bitbake-setup-configurations.git;protocol=https;branch=main;rev=main' \
-@@ -352,7 +352,7 @@ In addition, the command can take the following arguments:
- -  This example takes a :term:`Configuration Template` from a remote location
-    (here, one of the default configuration in BitBake):
- 
--   .. code-block:: shell
-+   .. code-block:: console
- 
-       $ ./bitbake/bin/bitbake-setup init https://git.openembedded.org/bitbake/plain/default-registry/configurations/oe-nodistro-master.conf.json
- 
-@@ -363,7 +363,7 @@ In addition, the command can take the following arguments:
-    -  A standalone :term:`Configuration Template` file.
-    -  Choices passed on the command-line, applied non-interactively.
- 
--   .. code-block:: shell
-+   .. code-block:: console
- 
-       $ ./bitbake/bin/bitbake-setup \
-           --setting default top-dir-prefix /work/bitbake-setup \
-@@ -477,7 +477,7 @@ In addition, the command can take the following arguments:
-    environment. Local commits in any layer directory are rebased on top of
-    the new upstream revision and preserved:
- 
--   .. code-block:: shell
-+   .. code-block:: console
- 
-       $ bitbake-setup update
-       NOTE: Bitbake-setup is using /path/to/bitbake-builds as top directory.
-@@ -493,7 +493,7 @@ In addition, the command can take the following arguments:
- -  This example shows what happens when a layer directory contains staged or
-    unstaged changes to tracked files. The update is blocked with an error:
- 
--   .. code-block:: shell
-+   .. code-block:: console
- 
-       $ bitbake-setup update
-       NOTE: Bitbake-setup is using /path/to/bitbake-builds as top directory.
-@@ -515,7 +515,7 @@ In addition, the command can take the following arguments:
- 
-    Stashing the changes and re-running resolves the issue:
- 
--   .. code-block:: shell
-+   .. code-block:: console
- 
-       $ git -C layers/openembedded-core stash
-       $ bitbake-setup update
-@@ -526,7 +526,7 @@ In addition, the command can take the following arguments:
-    is automatically halted, and the ``dldir`` remote is left in the repository
-    for manual resolution:
- 
--   .. code-block:: shell
-+   .. code-block:: console
- 
-       $ bitbake-setup update
-       ERROR: Repository at layers/openembedded-core has local commits that could
-@@ -539,7 +539,7 @@ In addition, the command can take the following arguments:
-    The conflict can be resolved manually using the ``dldir`` remote that
-    ``bitbake-setup`` adds to the repository:
- 
--   .. code-block:: shell
-+   .. code-block:: console
- 
-       $ git -C layers/openembedded-core rebase dldir/master
-       # fix conflicts in an editor, then stage the resolved files:
-@@ -552,7 +552,7 @@ In addition, the command can take the following arguments:
-    preserves the conflicting directory under a timestamped backup path and
-    re-clones the layer cleanly from upstream:
- 
--   .. code-block:: shell
-+   .. code-block:: console
- 
-       $ bitbake-setup update --rebase-conflicts-strategy=backup
-       NOTE: Bitbake-setup is using /path/to/bitbake-builds as top directory.
-@@ -583,7 +583,7 @@ In addition, the command can take the following arguments:
-    the following commands can be used to apply these commits on top of the new
-    upstream revision in the fresh clone:
- 
--   .. code-block:: shell
-+   .. code-block:: console
- 
-       $ git -C layers/openembedded-core-backup.20260329160426 log --oneline my-wip
-       a1b2c3d u-boot: fix compilation with newer GCC
-@@ -620,7 +620,7 @@ In addition, the command can take the following arguments:
-    Once all desired commits have been recovered and verified, the backup
-    directory can be removed:
- 
--   .. code-block:: shell
-+   .. code-block:: console
- 
-       $ rm -rf layers/openembedded-core-backup.20260329160426
- 
-@@ -856,7 +856,7 @@ These files are written in the JSON file format and are stored in a
- :term:`Registry`. They can also be standalone files directly passed to the
- :ref:`ref-bbsetup-command-init` command:
- 
--.. code-block:: shell
-+.. code-block:: console
- 
-    $ bitbake-setup init /path/to/config.conf.json
- 
+This is not what halt means. Maybe 'reset' would be a better choice? Or 
+if you really want to follow the recommendations from that website, I 
+guess "cancel"?
 
--- 
-2.53.0
-
+Cheers,
+Quentin
 
