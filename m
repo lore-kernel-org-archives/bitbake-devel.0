@@ -1,115 +1,95 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4ED10FCAF0
-	for <webhook@archiver.kernel.org>; Wed,  1 Apr 2026 21:44:27 +0000 (UTC)
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.2930.1775079863987805260
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502BAD730BD
+	for <webhook@archiver.kernel.org>; Fri,  3 Apr 2026 08:07:11 +0000 (UTC)
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.7080.1775203629635713394
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 01 Apr 2026 14:44:24 -0700
+ Fri, 03 Apr 2026 01:07:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=JInLCoCW;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-486507134e4so2044935e9.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 01 Apr 2026 14:44:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1775079862; x=1775684662; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=WGr6MYzrHlBaovCCZgZQzsrww4LFMhDCr+zwiRqT3ug=;
-        b=JInLCoCW0T8qXHV2S20wVJ5btEXOtVenMxT5aGQ6XqS9GDoLMmaWhhuGXM+RNKb6qO
-         3UgsH5XUdasjkw5uze1FWpgmumgJ4ybI3Fzaxpm5Bwq0HTAmRgXs+w1e8Vh4GVgv6/+l
-         pwqatWLHJCovHKho2yAzDozNdbK5fTSZ1MPUw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775079862; x=1775684662;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WGr6MYzrHlBaovCCZgZQzsrww4LFMhDCr+zwiRqT3ug=;
-        b=ZAAzWJ9p6B31Zwn56WZGTp+zEbAsVea84rPB2SwbuC57CT1jHrR3pwNnPZDhhfoyb7
-         i3fiXZGuzK8F3YdB1sI+MgnClMxTsVMo80Ui835Au/BdtxKON1dMRGJ9zA2xKy7M8dju
-         XQaU/jUk1a1RbCV1tVsbZxAMvHCzsY7VRQsAa3FMV4/w1GAm65ZMZ9omE03qZlLwcLwA
-         6z8yNjkQ3hgrY5PgLFgev5nLzZMW7GJXcUAtfcAnUhi9W3/mT4lepaoOBNsMURfCUU2k
-         w82lsO3fm9i214EAkFf6TbXlTWyGUkeEQg+tCRV5TYkP+xZMUCh5IHyEAUh9d0iASsTX
-         rK8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVZUp9Ilt/lGSE0UUHWPRBjAkXriIiGZh3irX7HsUsGgTDl2GznbZ2ANZrVkAW+iUy0+FUxxmYDEXkrHYKo@lists.openembedded.org
-X-Gm-Message-State: AOJu0YyIi1MxvCGcNzHrFR+iFgm4dHmOJemWIZ69AMn/2hDd0yHQejD2
-	xDQ/DqXg1bKXxzueJ5fJqtGFsBXsTWodZiL3pNuhE6PkvZ6MqC/buHSbZOfP8Yw+oLc=
-X-Gm-Gg: ATEYQzwbVmWXL2QHQO3btg5K0a1XYwPd3zbiJL0moha/GngF4cMFGHfAcWzYE4n/beQ
-	3Qxw8zkgHeNbDPxJ6s8lq+mTws9ATvdF18Vc5Vo98a6z/4bCqDXaAV/i5ezYyY/q1L8z3TV7i7y
-	/5RGHta/K7BMF/UsMw3ahqsG8GYxReYxGIYJ4joGnUmwzKD2tExPbBqqfrHph8N9+p5GGt8FeAZ
-	G03qQepPuAnqQzi+bFo5EwAiqJ6JlvaStV7u2KrpmghPBm+sxp35G65Q2rj40YocRX+F2/lqCWV
-	dHmmnEzhz7aSsIvHVWc52mKhB37vHsS9jcNAIILctsha5SlkYBpnYfr+c/+YN6HF6kA59mUDjhA
-	Ev3pf7lvoerH2YzQV/Rz8y6XZs0mowtp+FfeDDsXcASlVEO9wra2l9IsgPH6QezG2E/YAJ9VZmI
-	glZEL7LE7H8Qac42cELl57Xk/ZtmzwvJhK8yWdbwl+qarFzEMGLkz1X8JawUQqyuFDyd3pK2cgo
-	kHO4nCd3qCYWaHK
-X-Received: by 2002:a05:600c:450f:b0:485:3b00:f92e with SMTP id 5b1f17b1804b1-48883569dd5mr87033645e9.2.1775079862340;
-        Wed, 01 Apr 2026 14:44:22 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:d91c:a3aa:733d:be2a? ([2001:8b0:aba:5f3c:d91c:a3aa:733d:be2a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d1e2c5468sm2977902f8f.13.2026.04.01.14.44.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2026 14:44:21 -0700 (PDT)
-Message-ID: <fc03b4e55fe901ef7b5ac103340e929af8edd5af.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH v2 01/13] bitbake-setup: Resolve unused
- loop control variables
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: rob.woolley@windriver.com, bitbake-devel@lists.openembedded.org
-Cc: alex.kanavin@gmail.com
-Date: Wed, 01 Apr 2026 22:44:21 +0100
-In-Reply-To: <20260331160703.3137930-2-rob.woolley@windriver.com>
-References: <20260331160703.3137930-1-rob.woolley@windriver.com>
-	 <20260331160703.3137930-2-rob.woolley@windriver.com>
-Content-Type: text/plain; charset="UTF-8"
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=v7wFbFUa;
+ spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 1FF304E428CE
+	for <bitbake-devel@lists.openembedded.org>; Fri,  3 Apr 2026 08:07:08 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id E9E07603C1;
+	Fri,  3 Apr 2026 08:07:07 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id EFAC0104502AB;
+	Fri,  3 Apr 2026 10:07:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1775203627; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=NAY2NN02oRLhy2ltKPneURyOaaWGZ51Uhg2LOmXL7Ow=;
+	b=v7wFbFUaY9H3WqYY3SX+GMPAoXP54HMRUJEAmrmX43pBW7npinfWX2KS0ZeGem9/qty6Ga
+	/JmG9B2I0p9Okc+sfgcpRe02P11Mo3rUe7PPMCFNv6SLmT+yy/Oc6bPtF+j78AB81lTY7G
+	mMCGvtmLc/OQ40HPKz2Qd91yNaFCweQkO4ViY7a1eCPqBbsXWlQ6u0xwj3goJ/MFUr+0tj
+	pwapPwW+2zror+7dRD+4R/aJDvu8ATEPogiVHtJWkGkbo2FiMVuqQtitHCG6ilR/7CIDBe
+	k5bWiVtYuwxHYc08vKH2jwconDjI25VpOUOd1lHuy+TfQ/8D9clGf+Cy5lGyuw==
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 03 Apr 2026 10:07:05 +0200
+Message-Id: <DHJD5ZA0XGWN.3LDDWNE9PDM1X@bootlin.com>
+Subject: Re: [bitbake-devel] [docs] [PATCH 1/2] bitbake-setup: rename
+ "abort" rebase conflict stragegy to "halt"
+Cc: <quentin.schulz@cherry.de>, <bitbake-devel@lists.openembedded.org>,
+ "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
+ <docs@lists.yoctoproject.org>
+From: "Antonin Godard" <antonin.godard@bootlin.com>
+To: "Alexander Kanavin" <alex.kanavin@gmail.com>,
+ <richard.purdie@linuxfoundation.org>
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-9 
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20260331-docs-fixes-v1-0-45ee34341e72@bootlin.com>
+ <20260331-docs-fixes-v1-1-45ee34341e72@bootlin.com>
+ <6f743774-fe4b-4e9e-ba99-6ffe1d76a51b@cherry.de>
+ <57bb4e5300a4be34f4cfddcf41d9a21b5b7bc579.camel@linuxfoundation.org>
+ <CANNYZj9U3BYUv-cvQvmu7d=8O82Gdg-2GSon6vNJ71BMi6bKsg@mail.gmail.com>
+In-Reply-To: <CANNYZj9U3BYUv-cvQvmu7d=8O82Gdg-2GSon6vNJ71BMi6bKsg@mail.gmail.com>
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 01 Apr 2026 21:44:27 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19314
+ <bitbake-devel@lists.openembedded.org>; Fri, 03 Apr 2026 08:07:11 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19315
 
-On Tue, 2026-03-31 at 09:06 -0700, Rob Woolley via lists.openembedded.org w=
-rote:
-> The ruff lint tool reported loop control variables that were
-> not being used:
-> =C2=A0=C2=A0=C2=A0 B007 Loop control variable `dirs` not used within loop=
- body
->=20
-> Adding underscore as a prefix helps indicate that it is not
-> being used inside the loop.
->=20
-> Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
-> ---
-> =C2=A0bin/bitbake-setup | 6 +++---
-> =C2=A01 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-> index b02cbc2b1..304fbe6cc 100755
-> --- a/bin/bitbake-setup
-> +++ b/bin/bitbake-setup
-> @@ -134,7 +134,7 @@ def commit_config(config_dir):
-> =C2=A0def _write_layer_list(dest, repodirs):
-> =C2=A0=C2=A0=C2=A0=C2=A0 layers =3D []
-> =C2=A0=C2=A0=C2=A0=C2=A0 for r in repodirs:
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for root, dirs, files in os.w=
-alk(os.path.join(dest,r)):
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for root, _dirs, files in os.=
-walk(os.path.join(dest,r)):
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-if os.path.basename(root) =3D=3D 'conf' and 'layer.conf' in files:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 layers.append(os.path.relpath(os.path.dirname(root=
-), dest))
-> =C2=A0=C2=A0=C2=A0=C2=A0 layers_f =3D os.path.join(dest, ".oe-layers.json=
-")
+On Tue Mar 31, 2026 at 1:36 PM CEST, Alexander Kanavin wrote:
+> There=E2=80=99s a simpler rationale too: this follows =E2=80=98git rebase=
+ =E2=80=94abort=E2=80=99. If git
+> upstream finds a better word, we will follow. And I agree that all of the
+> proposed alternatives are less accurate.
 
-I'd suggest just using "_" alone as the name as that is how we do it everyw=
-here else.
+This goes against previous efforts to convert the documentation and other
+components to not use these words :/
+https://lists.openembedded.org/g/openembedded-architecture/topic/inclusive_=
+language_summary/75821819
 
-Cheers,
+[...]
+>> > This is not what halt means. Maybe 'reset' would be a better choice? O=
+r
+>> > if you really want to follow the recommendations from that website, I
+>> > guess "cancel"?
+>>
+>> The trouble is none of these alternatives really match what abort
+>> means, reset and cancel do mean something different. "abandon" might be
+>> closer but still isn't right. "attempt" maybe? If we get too creative
+>> with this, users just won't understand what it means :(
 
-Richard
+I had the impression, from the documentation, that bitbake-setup would leav=
+e the
+repository in the middle of a rebase, to let you deal with conflict, and th=
+en
+continue on the next bitbake-setup update call.
+
+It appears to use --abort instead, so a misunderstanding from my part.
+
+Out of these options, I think "reset" might be the best one, I agree with
+Quentin. But I'm not a native speaker, so I might not have an understanding=
+ as
+subtle as others.
+
+I'll let Richard decide on what to do here.
+
+Antonin
 
