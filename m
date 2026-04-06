@@ -1,124 +1,112 @@
-Return-Path: <zizuzacker@gmail.com>
+Return-Path: <rob.woolley@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C355E64012
-	for <webhook@archiver.kernel.org>; Sun,  5 Apr 2026 05:29:52 +0000 (UTC)
-Subject: Re: [PATCH] bitbake: Resolve symlink duplicates in layer paths
-To: bitbake-devel@lists.openembedded.org
-From: "Zk47T" <zizuzacker@gmail.com>
-X-Originating-Location: Hanoi, VN (14.177.124.140)
-X-Originating-Platform: Linux Chrome 143
-User-Agent: GROUPS.IO Web Poster
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDE4F46C4E
+	for <webhook@archiver.kernel.org>; Mon,  6 Apr 2026 17:21:14 +0000 (UTC)
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.60252.1775496074578130290
+ for <bitbake-devel@lists.openembedded.org>;
+ Mon, 06 Apr 2026 10:21:14 -0700
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=OGxtPcZn;
+ spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=85563bbf72=rob.woolley@windriver.com)
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 636ASbC11474696
+	for <bitbake-devel@lists.openembedded.org>; Mon, 6 Apr 2026 10:21:14 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=PPS06212021;
+	 bh=Wx7OWBXpZ6MP+Lb3TJJn3GXDRJYUn9VF6o6HyKsC21A=; b=OGxtPcZnOueb
+	cRxdRIP1qdufPWscXSBBRzbE8Lhg6I8STvflLQ+RJDNEWp1OtAwGje3AC+KbGRum
+	bQ1AbKaNhQdg0FA2m5iC3Mkr1kIbIhfWDEGKz5VH0Rv/oe772RcPEo2Og8ESq4Si
+	ZxW/VLu9+p5/io1kfur5RJp7d9g5HogVDgCTZFj4xQC84yZpxZvFMZH/2Vk0UueQ
+	b1nBZc6kCkXgxhNNIUe2WtrMfxaWOxurkXaifYKyED5v/ROt/h00fR2z8udaFFeE
+	Wuye0PvwvnpNosSmHTmFv+MpXm7fFinZXFT58VII2Mm/IQO0wJR4Li+T4uAvK0JA
+	o/fKDfH3Xw==
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [128.224.246.36])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4dawwx9rha-9
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Mon, 06 Apr 2026 10:21:14 -0700 (PDT)
+Received: from ala-exchng01.corp.ad.wrs.com (10.11.224.121) by
+ ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.61; Mon, 6 Apr 2026 10:21:12 -0700
+Received: from ala-lpggp3.wrs.com (10.11.232.110) by
+ ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server id
+ 15.1.2507.61 via Frontend Transport; Mon, 6 Apr 2026 10:21:12 -0700
+From: Rob Woolley <rob.woolley@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH 8/8] layers.schema.json: Remove trailing period
+Date: Mon, 6 Apr 2026 10:21:10 -0700
+Message-ID: <20260406172110.2050236-9-rob.woolley@windriver.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20260406172110.2050236-1-rob.woolley@windriver.com>
+References: <20260406172110.2050236-1-rob.woolley@windriver.com>
 MIME-Version: 1.0
-Date: Sat, 04 Apr 2026 22:29:42 -0700
-References: <20260403153327.64044-1-zizuzacker@gmail.com> <112696b9cf819c10a162830a2e7759cf188ba216.camel@linuxfoundation.org>
-In-Reply-To: <112696b9cf819c10a162830a2e7759cf188ba216.camel@linuxfoundation.org>
-Message-ID: <275547.1775366982271565372@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="lwYwqkMnqyLK3l8SPLu1"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA2MDE3MCBTYWx0ZWRfX7oHs8W5UDPBL
+ Z5RL5/x69RXLWxVGsx0JYfLz11+GXfct1VP3QhxOMD7TGTZYh/EzNeDYrbH2ftSRkTFwn4B56r9
+ sSxXk2EfBELHvnsyHYsRgYXBBfv8aHtKOVHvSm0YK0FoFxyozZo0qMADqvIK8dI1+LgjQAv7YLC
+ baVa5m01t/EQsbTzQZuCH9M7Yfa6giwdAAVcNerFn32b5maTbprFiWhyiWMUTtMKahM1KSojbRx
+ phJKZHgCH50q0twly91H4lRlYVr1M3bzFHZPRK98FmJe8OAJckyc7ijCE70xt2+9Lee4KEr4Tpb
+ shZd9DOjfe+960nGF7J8pVM0oV3KCtMpsmQg8BG79GkKaipBvLNr8/CFh3y599TD+P9MKkQcHXN
+ /VT1sm+pwu5MaQlytYZ3Uvj4by3qd3t2lMRIaf5p3YgFNyfojbnaZ6HhPojT1ddopqEk9UEEjj3
+ bCOu6L7RV+JRMOJOFOA==
+X-Proofpoint-ORIG-GUID: DiYbPSY8w4yIGiduDEEfXrZFGFHUjvbO
+X-Proofpoint-GUID: DiYbPSY8w4yIGiduDEEfXrZFGFHUjvbO
+X-Authority-Analysis: v=2.4 cv=AZm83nXG c=1 sm=1 tr=0 ts=69d3eb8a cx=c_pps
+ a=AbJuCvi4Y3V6hpbCNWx0WA==:117 a=AbJuCvi4Y3V6hpbCNWx0WA==:17
+ a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=bi6dqmuHe4P4UrxVR6um:22
+ a=HK-ge7EqtdluswH-FwHe:22 a=t7CeM3EgAAAA:8 a=3uTWGShvVuBnwnTlEbcA:9
+ a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-06_03,2026-04-03_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 spamscore=0 adultscore=0 clxscore=1015 malwarescore=0
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604060170
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 05 Apr 2026 05:29:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19322
+ <bitbake-devel@lists.openembedded.org>; Mon, 06 Apr 2026 17:21:14 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19331
 
---lwYwqkMnqyLK3l8SPLu1
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+This resolves the jsonschema linting error:
+  Descriptions should not end with a period to give user interfaces
+  flexibility in presenting the text (description_trailing_period)
 
-The user doesn't intentionally add the same layer twice =E2=80=94 this happ=
-ens when the working directory uses a symlink path (e.g., /home/pokybuild =
-=E2=86=92 /srv/ pokybuild ). Running bitbake-layers add-layer /srv/pokybuil=
-d/.../meta-mingw resolves to a different string than what's already in bbla=
-yers.conf (which was set via the symlink path), causing ERROR: Found duplic=
-ated BBFILE_COLLECTIONS.
+Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
+---
+ setup-schema/layers.schema.json | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The main fix is using os.path.realpath() inste ad of os.path.abspath() in d=
-o_ add_layer() and canonicalise_ path() , which prevents the duplicate from=
- being added in the first place.
+diff --git a/setup-schema/layers.schema.json b/setup-schema/layers.schema.json
+index 25248a4ba..a07bbc41b 100644
+--- a/setup-schema/layers.schema.json
++++ b/setup-schema/layers.schema.json
+@@ -42,7 +42,7 @@
+                         "type": "string"
+                     },
+                     "contains_this_file": {
+-                        "description": "Whether the directory with the layer source also contains this json description. Tools may want to skip the checkout of the source then.",
++                        "description": "Whether the directory with the layer source also contains this json description. Tools may want to skip the checkout of the source then",
+                         "type": "boolean"
+                     },
+                     "git-remote": {
+@@ -62,7 +62,7 @@
+                                 "type": "string"
+                             },
+                             "describe": {
+-                                "description": "The output of 'git describe' (human readable description of the revision using tags in revision history).",
++                                "description": "The output of 'git describe' (human readable description of the revision using tags in revision history)",
+                                 "type": "string"
+                             },
+                             "uri": {
+-- 
+2.49.0
 
-Regarding the warning in cookerdata.py =E2=80=94 I can remove it if you pre=
-fer silent deduplication. I added it for visibility when users have manuall=
-y edited bblayers.conf with symlink paths. Would you prefer it to silently =
-resolve duplicates instead?
-
-This behavior as you shared in root ticket bugzilla https://bugzilla.yoctop=
-roject. org/show_bug.cgi?id=3D15591 ( https://bugzilla.yoctoproject.org/sho=
-w_bug.cgi?id=3D15591 )
-
-I try to implement the fix
-
---lwYwqkMnqyLK3l8SPLu1
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div>
-<p style=3D"color: #222222; font-family: Arial, Helvetica, sans-serif; font=
--size: small; font-style: normal; font-variant-ligatures: normal; font-vari=
-ant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; tex=
-t-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spa=
-cing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-=
-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: =
-initial; text-decoration-color: initial;">The user doesn't intentionally ad=
-d the same layer twice &mdash; this happens when the working directory uses=
- a symlink path (e.g.,<span>&nbsp;</span><code>/home/pokybuild</code><span>=
-&nbsp;</span>&rarr;<span>&nbsp;</span><code>/srv/<wbr />pokybuild</code>). =
-Running<span>&nbsp;</span><code>bitbake-layers add-layer /srv/pokybuild/...=
-/meta-mingw</code><span>&nbsp;</span><wbr />resolves to a different string =
-than what's already in bblayers.conf (which was set via the symlink path), =
-causing<span>&nbsp;</span><code>ERROR: Found duplicated BBFILE_COLLECTIONS<=
-/code>.</p>
-<p style=3D"color: #222222; font-family: Arial, Helvetica, sans-serif; font=
--size: small; font-style: normal; font-variant-ligatures: normal; font-vari=
-ant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; tex=
-t-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spa=
-cing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-=
-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: =
-initial; text-decoration-color: initial;">The main fix is using<span>&nbsp;=
-</span><code>os.path.realpath()</code><span>&nbsp;</span>inste<wbr />ad of<=
-span>&nbsp;</span><code>os.path.abspath()</code><span>&nbsp;</span>in<span>=
-&nbsp;</span><code>do_<wbr />add_layer()</code><span>&nbsp;</span>and<span>=
-&nbsp;</span><code>canonicalise_<wbr />path()</code>, which prevents the du=
-plicate from being added in the first place.</p>
-<p style=3D"color: #222222; font-family: Arial, Helvetica, sans-serif; font=
--size: small; font-style: normal; font-variant-ligatures: normal; font-vari=
-ant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; tex=
-t-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spa=
-cing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-=
-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: =
-initial; text-decoration-color: initial;">Regarding the warning in<span>&nb=
-sp;</span><code>cookerdata.py</code><span>&nbsp;</span>&mdash; I can remove=
- it if you prefer silent deduplication. I added it for visibility when user=
-s have manually edited bblayers.conf with symlink paths. Would you prefer i=
-t to silently resolve duplicates instead?</p>
-<p style=3D"color: #222222; font-family: Arial, Helvetica, sans-serif; font=
--size: small; font-style: normal; font-variant-ligatures: normal; font-vari=
-ant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; tex=
-t-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spa=
-cing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-=
-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: =
-initial; text-decoration-color: initial;">&nbsp;</p>
-<p style=3D"color: #222222; font-family: Arial, Helvetica, sans-serif; font=
--size: small; font-style: normal; font-variant-ligatures: normal; font-vari=
-ant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; tex=
-t-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spa=
-cing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-=
-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: =
-initial; text-decoration-color: initial;">This behavior as you shared in ro=
-ot ticket bugzilla<span>&nbsp;</span><a style=3D"color: #1155cc;" href=3D"h=
-ttps://bugzilla.yoctoproject.org/show_bug.cgi?id=3D15591" target=3D"_blank"=
- rel=3D"noopener" data-saferedirecturl=3D"https://www.google.com/url?q=3Dht=
-tps://bugzilla.yoctoproject.org/show_bug.cgi?id%3D15591&amp;source=3Dgmail&=
-amp;ust=3D1775453193778000&amp;usg=3DAOvVaw2ZyPQXBFEts-3mwIo2GPCl">https://=
-bugzilla.yoctoproject.<wbr />org/show_bug.cgi?id=3D15591</a>&nbsp;</p>
-<p style=3D"color: #222222; font-family: Arial, Helvetica, sans-serif; font=
--size: small; font-style: normal; font-variant-ligatures: normal; font-vari=
-ant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; tex=
-t-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spa=
-cing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-=
-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: =
-initial; text-decoration-color: initial;">I try to implement the fix</p>
-</div>
-
---lwYwqkMnqyLK3l8SPLu1--
 
