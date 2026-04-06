@@ -1,102 +1,181 @@
-Return-Path: <rob.woolley@windriver.com>
+Return-Path: <adrian.freihofer@siemens.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7AFF46C70
-	for <webhook@archiver.kernel.org>; Mon,  6 Apr 2026 17:21:18 +0000 (UTC)
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.60247.1775496071877201603
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD13FB5168
+	for <webhook@archiver.kernel.org>; Mon,  6 Apr 2026 20:24:57 +0000 (UTC)
+Received: from mta-64-228.siemens.flowmailer.net (mta-64-228.siemens.flowmailer.net [185.136.64.228])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.64178.1775507090714686345
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 06 Apr 2026 10:21:12 -0700
+ Mon, 06 Apr 2026 13:24:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=C3twDKeL;
- spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=85563bbf72=rob.woolley@windriver.com)
-Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 636ASbBq1474696
-	for <bitbake-devel@lists.openembedded.org>; Mon, 6 Apr 2026 10:21:11 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=PPS06212021;
-	 bh=+AWa84/yvIs5zIgFbHutINL0kc5JVeD8qdQY962gXBM=; b=C3twDKeL0Nfu
-	/0fSJoPFZdaIXAtWEgRMpDqREg4NyZ7RRWKAGPIGReym3V+usywq4velkQ9VOPVM
-	ACnuTP0159NvnoLfRsa7x1IFSQ/Z5J1s5ABDQwOBSTf9pIrAxTGVi3LT8rDmHzu+
-	fyhCiByEhtQJIANZ/6gSFw7A80r1PMaEIHOVnLSxRg/QeWxNujC3KwwOCDFsP3jw
-	5T2x7Zy5wATJ5B00sAxRsYBSHvSshifSpscKbj+CAU2gFSb53pdprpE0jG/kJtn/
-	QvTsjjgJKWHcXUjm7UR2WDO/tk64swxpYCYZ/aiHQG3KEeyOJJX4tI+ejxf2iROq
-	0trkw3l1hw==
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [128.224.246.36])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4dawwx9rha-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Mon, 06 Apr 2026 10:21:11 -0700 (PDT)
-Received: from ala-exchng01.corp.ad.wrs.com (10.11.224.121) by
- ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.61; Mon, 6 Apr 2026 10:21:10 -0700
-Received: from ala-lpggp3.wrs.com (10.11.232.110) by
- ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server id
- 15.1.2507.61 via Frontend Transport; Mon, 6 Apr 2026 10:21:10 -0700
-From: Rob Woolley <rob.woolley@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Subject: [PATCH 1/8] bitbake-setup.schema.json: Add title for schema
-Date: Mon, 6 Apr 2026 10:21:03 -0700
-Message-ID: <20260406172110.2050236-2-rob.woolley@windriver.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20260406172110.2050236-1-rob.woolley@windriver.com>
-References: <20260406172110.2050236-1-rob.woolley@windriver.com>
+ dkim=pass header.i=adrian.freihofer@siemens.com header.s=fm2 header.b=gTuaRyoZ;
+ spf=pass (domain: rts-flowmailer.siemens.com, ip: 185.136.64.228, mailfrom: fm-1329275-202604062024487d9059058c000207bb-gnr_91@rts-flowmailer.siemens.com)
+Received: by mta-64-228.siemens.flowmailer.net with ESMTPSA id 202604062024487d9059058c000207bb
+        for <bitbake-devel@lists.openembedded.org>;
+        Mon, 06 Apr 2026 22:24:48 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=adrian.freihofer@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=XH4IOArApZVDEVG2LUg6sWwiGV8EVXDZ+HOpIVnxhiE=;
+ b=gTuaRyoZSqNt+Dov3DG6Kpk4kLbnDorEgY9ktGbQD/u6A9O/quBUMpT1g8T89CwVrXcSx1
+ SK5EHyk5cDKC9Ih23S1IG52PG+2Sqp+vr+FM2z2N9Txi7iS+foydis56Cl4G3WEgWLVG7sfC
+ fPV0iCaQ2/iCNvDBVx9aOy75SMf3/cO7N8Z/2X8FZaC/Mga4gRtxvvA8tznkxwdpdZpAUCWB
+ u/E4dFQsx1UDykbCi+nBB9W2Mw8p4Ure4zxpGTRqT3F6fE3mA+Q3Xk0XAeoX5M2BsEXuKkKo
+ dN8eFSUMdYdgys40pHVe4mOIdsg0mFgCMuuQD5cngnZk5XHLPbSuwJ+g==;
+From: AdrianF <adrian.freihofer@siemens.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Adrian Freihofer <adrian.freihofer@siemens.com>
+Subject: [PATCH 4/4] bitbake-selftest: setup: add test_extra_remotes
+Date: Mon,  6 Apr 2026 22:24:05 +0200
+Message-ID: <20260406202430.1856836-5-adrian.freihofer@siemens.com>
+In-Reply-To: <20260406202430.1856836-1-adrian.freihofer@siemens.com>
+References: <20260406202430.1856836-1-adrian.freihofer@siemens.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA2MDE3MCBTYWx0ZWRfX/m6tPOaD/YkM
- 4ZXuVC1qSuB5pY2WeytKu0qNOt9yzVHIz6Te8Ld057oiG6XgaacgoP+Jcyf4wgvdTlyrM/bszrK
- AXBLH3ECxqsHND96nUSh9LEYRWLkn0jd6tyQW0UqC/ZK4vXQ5S0jr5vBUi3UivY3KYFTGwhBqhd
- jgElehifRRH29wmbZb4sWAB+CrOSD327p/R8SxuyHdXKFk7qkmYTPmEIbCG8qFkvSx8R+QEQHsx
- i29aXixcgCdtUwE55K54bYapOOXCX3CoQUWwuY53lGDNhMRhPn23jr7NRtobrna8I+61sBcHL0N
- 5cq2Ik3XBYwzYyjrQaKLQ2T4MwZGMATUTsm1Y+XeikPHflTW5rNzVyRwnqwutKfZHKbUYT2K5af
- 981BHokyQFsV5etbiAWBSwwGdonE/yYsRCgFIVtomlKevOsTyaMXg6VO1pU/Eb/Yx6G6irY3E5H
- sbeEZo3au8x6DWAPgsw==
-X-Proofpoint-ORIG-GUID: 1GGqkd905VlEa13lraE_HUblbic2ZaG4
-X-Proofpoint-GUID: 1GGqkd905VlEa13lraE_HUblbic2ZaG4
-X-Authority-Analysis: v=2.4 cv=AZm83nXG c=1 sm=1 tr=0 ts=69d3eb87 cx=c_pps
- a=AbJuCvi4Y3V6hpbCNWx0WA==:117 a=AbJuCvi4Y3V6hpbCNWx0WA==:17
- a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=bi6dqmuHe4P4UrxVR6um:22
- a=HK-ge7EqtdluswH-FwHe:22 a=eRc3Im3UAAAA:8 a=t7CeM3EgAAAA:8
- a=HJ-jhe7wTB9-2I0lzokA:9 a=6K7LhGdg8M_A9WyCZdwM:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-06_03,2026-04-03_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 adultscore=0 clxscore=1015 malwarescore=0
- bulkscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604060170
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-1329275:519-21489:flowmailer
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 06 Apr 2026 17:21:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19323
+ <bitbake-devel@lists.openembedded.org>; Mon, 06 Apr 2026 20:24:57 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19335
 
-Resolves the jsonschema linting error:
-  Set a concise non-empty title at the top level of the schema to
-  explain what the definition is about (top_level_title)
+From: Adrian Freihofer <adrian.freihofer@siemens.com>
 
-Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
+Test the extra-remotes feature added in the preceding commit:
+
+1. Default 'non-optional' filter: the non-optional remote is added to
+   the checked-out layer, the optional one is skipped.
+2. --extra-remotes-filter=all: both optional and non-optional remotes
+   are added.
+3. --extra-remotes-filter=none: no extra remotes are added.
+4. --extra-remotes-filter=<name>: only the explicitly named remote is
+   added.
+5. update re-applies extra remotes and calls 'git remote set-url' when
+   the URI of an existing remote changes.
+
+Signed-off-by: Adrian Freihofer <adrian.freihofer@siemens.com>
 ---
- setup-schema/bitbake-setup.schema.json | 1 +
- 1 file changed, 1 insertion(+)
+ lib/bb/tests/setup.py | 107 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 107 insertions(+)
 
-diff --git a/setup-schema/bitbake-setup.schema.json b/setup-schema/bitbake-setup.schema.json
-index be8772db1..d340c9785 100644
---- a/setup-schema/bitbake-setup.schema.json
-+++ b/setup-schema/bitbake-setup.schema.json
-@@ -1,6 +1,7 @@
- {
-     "$schema": "https://json-schema.org/draft/2020-12/schema",
-     "description": "Schema for bitbake-setup configuration files",
-+    "title": "bitbake-setup configuration file",
-     "type": "object",
-     "required": [
-         "description",
+diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
+index 638d56d3b..7b259cc97 100644
+--- a/lib/bb/tests/setup.py
++++ b/lib/bb/tests/setup.py
+@@ -726,3 +726,110 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+             self.assertEqual(f.read(), 'conflicting-upstream\n',
+                              "re-cloned layer must contain the upstream content after conflict backup")
+         del os.environ['BBPATH']
++
++    def test_extra_remotes(self):
++        """
++        Test that extra-remotes are added and filtered correctly during init and update.
++
++        Covers:
++          1. Default 'non-optional' filter: non-optional remote added, optional skipped.
++          2. --extra-remotes-filter=all: both optional and non-optional remotes added.
++          3. --extra-remotes-filter=none: no extra remotes added.
++          4. --extra-remotes-filter=<name>: only the explicitly named remote added.
++          5. update re-applies extra remotes and updates the URI of an existing remote.
++        """
++        if 'BBPATH' in os.environ:
++            del os.environ['BBPATH']
++        os.chdir(self.tempdir)
++
++        self.runbbsetup("settings set default registry 'git://{};protocol=file;branch=master;rev=master'".format(self.registrypath))
++        self.add_file_to_testrepo('test-file', 'initial\n')
++
++        # Two local repos used as extra remote targets (remote_a = initial URI, remote_b = updated URI)
++        remote_a = os.path.join(self.tempdir, 'extra-remote-a')
++        remote_b = os.path.join(self.tempdir, 'extra-remote-b')
++        for remote in (remote_a, remote_b):
++            os.makedirs(remote)
++            self.git_init(cwd=remote)
++            self.git('commit --allow-empty -m "Initial commit"', cwd=remote)
++
++        # Config with one non-optional and one optional extra-remote
++        sources_both = '''
++        "test-repo": {
++            "git-remote": {
++                "remotes": {"origin": {"uri": "file://%s"}},
++                "branch": "master",
++                "rev": "master",
++                "extra-remotes": {
++                    "required-remote": {"uri": "file://%s"},
++                    "optional-remote": {"uri": "file://%s", "optional": true}
++                }
++            }
++        }
++        ''' % (self.testrepopath, remote_a, remote_b)
++        self._add_json_config_to_registry_helper('er-test.conf.json', sources_both)
++
++        def get_remotes(layer_path):
++            return self.git('remote', cwd=layer_path).split()
++
++        # 1. Default filter 'non-optional': required-remote added, optional-remote skipped
++        out = self.runbbsetup("init --non-interactive er-test gadget")
++        setuppath = self.get_setup_path('er-test', 'gadget')
++        layer_path = os.path.join(setuppath, 'layers', 'test-repo')
++        remotes = get_remotes(layer_path)
++        self.assertIn('required-remote', remotes,
++                      "non-optional extra remote must be added with the default 'non-optional' filter")
++        self.assertNotIn('optional-remote', remotes,
++                         "optional extra remote must be skipped by the default 'non-optional' filter")
++        self.assertEqual(
++            self.git('remote get-url required-remote', cwd=layer_path).strip(),
++            'file://' + remote_a)
++        self.assertIn("Added extra remote 'required-remote'", out[0])
++
++        # 2. --extra-remotes-filter=all: both optional and non-optional remotes added
++        self.runbbsetup("init --non-interactive --extra-remotes-filter=all --setup-dir-name er-filter-all er-test gadget")
++        all_layer = os.path.join(self.tempdir, 'bitbake-builds', 'er-filter-all', 'layers', 'test-repo')
++        remotes = get_remotes(all_layer)
++        self.assertIn('required-remote', remotes)
++        self.assertIn('optional-remote', remotes)
++
++        # 3. --extra-remotes-filter=none: no extra remotes added
++        self.runbbsetup("init --non-interactive --extra-remotes-filter=none --setup-dir-name er-filter-none er-test gadget")
++        none_layer = os.path.join(self.tempdir, 'bitbake-builds', 'er-filter-none', 'layers', 'test-repo')
++        remotes = get_remotes(none_layer)
++        self.assertNotIn('required-remote', remotes)
++        self.assertNotIn('optional-remote', remotes)
++
++        # 4. --extra-remotes-filter=<name>: only the explicitly named remote added
++        self.runbbsetup("init --non-interactive --extra-remotes-filter=optional-remote --setup-dir-name er-filter-named er-test gadget")
++        named_layer = os.path.join(self.tempdir, 'bitbake-builds', 'er-filter-named', 'layers', 'test-repo')
++        remotes = get_remotes(named_layer)
++        self.assertNotIn('required-remote', remotes)
++        self.assertIn('optional-remote', remotes)
++
++        # 5. update re-applies extra remotes and updates the URI of an existing remote
++        sources_updated = '''
++        "test-repo": {
++            "git-remote": {
++                "remotes": {"origin": {"uri": "file://%s"}},
++                "branch": "master",
++                "rev": "master",
++                "extra-remotes": {
++                    "required-remote": {"uri": "file://%s"}
++                }
++            }
++        }
++        ''' % (self.testrepopath, remote_b)
++        config_path = os.path.join(self.registrypath, 'er-test.conf.json')
++        os.remove(config_path)
++        self._add_json_config_to_registry_helper('er-test.conf.json', sources_updated)
++
++        os.environ['BBPATH'] = os.path.join(setuppath, 'build')
++        out = self.runbbsetup("update --update-bb-conf='no'")
++        del os.environ['BBPATH']
++
++        self.assertEqual(
++            self.git('remote get-url required-remote', cwd=layer_path).strip(),
++            'file://' + remote_b,
++            "update must call 'git remote set-url' to update the existing remote to the new URI")
++        self.assertIn("Updated extra remote 'required-remote'", out[0])
 -- 
-2.49.0
+2.53.0
 
 
