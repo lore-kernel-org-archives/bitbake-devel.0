@@ -1,128 +1,111 @@
-Return-Path: <zboszor@gmail.com>
+Return-Path: <rob.woolley@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C972FEEF49
-	for <webhook@archiver.kernel.org>; Tue,  7 Apr 2026 13:54:00 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.81907.1775570034918025558
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB72EFEEF59
+	for <webhook@archiver.kernel.org>; Tue,  7 Apr 2026 15:02:51 +0000 (UTC)
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.83445.1775574171277011434
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 07 Apr 2026 06:53:55 -0700
+ Tue, 07 Apr 2026 08:02:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=VLGInrBj;
- spf=pass (domain: gmail.com, ip: 209.85.128.54, mailfrom: zboszor@gmail.com)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-482f454be5bso63568625e9.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 07 Apr 2026 06:53:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775570033; x=1776174833; darn=lists.openembedded.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2mAZyGaMVAA+cXzmtigSt+5P2gl0PlSPg3ntgrtdGN4=;
-        b=VLGInrBj+RY48pCGDIcsnPdSj3a1A5SCX6NguKFz14hANN0dP/d20Tt5QQqmxjX3hY
-         M1Fz5wZHacN3A2x2JqMDNSWuR3aUxNu8HFpFwMVV3ErV7MVhp6aYAThqQdZlGMO8ZhHE
-         FASr3xiheeF4Wqd3AgIMttDAmxXTsstNA095lB8wqojeqw4Qj7AOqJQaHX3dT9LEx3jJ
-         P9/3bgvt3WAFSeLGPueAstMlwn21cDwUMr2wJkJnYTnbh3KmV8LCKDY6FoK/JIBLZnSw
-         K+LYDGiSsygd13KGGjTz1BlOtMPDXjaE+CwCa0IQfuZgKcP/OoitG/kYq2WUpoyLckaF
-         xy8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775570033; x=1776174833;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2mAZyGaMVAA+cXzmtigSt+5P2gl0PlSPg3ntgrtdGN4=;
-        b=Ro3Ka1z3zqug8Z4sBDTeA4SZUkZMbsG761dOCQVGsBov/1ZDTjL61fjTLzZtPwwu3L
-         eHRne/630vmi4NAkSeAhtHW0+4SM3du6blvuDP+t7LnDxdsdOGJBrBL2wkY+upq7S8aq
-         L3nd2qztZBp37DuHQuecjYwkiBOU8JL8SOtf8oRKFGIdh03g3l/5morTwPve/0coMGD7
-         hZzTrRynDXSrkdttz5XBrl8XENJI/5SrnXLRKLl6teuuhQvgHeglOIHIo4OktqwslDoF
-         KnhSWRrteMDhurTjY2p09U3qoFgMqI/czc4AJF5YByrZUTyDZ8Em2NIpADar86wkZZ0P
-         izOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX25NgZOFh7BAuAzxZzQ/I+AJLfEmcE5+VKwgSypcYXyQ9fawZx3M6My8CMZBi+BjfI+13F0Lro3aWLuzPe@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yw8zfHJruWPT7JGRZh9w2MgWRK8aiIRusIkqVq7pAjWWYiW4x42
-	6HQJWEqMWYgIlf6IVn15B5Gx1S2itJsP1SnlR/uPvtIPQ4WmxIb1Ev75
-X-Gm-Gg: AeBDiesWhGM8BFefQatmHVbEFC7geGY42C9uKdce6uQ9J2F7iRJhIeFcw6LPxXHkhdV
-	/A+0VEQ1mQKPpYQi3juse6JoAUlIH14/SN4J/vxpuQOqkeuLrXj7+T4h3mCMVGRl9WOjgtGEiiR
-	zpGYayB0NvoYHKKJb9pOtzBtwodJv0E5x93K+p14bV1BkoX3E2bxFI4vnaYB3lWSdNMlPWKVkqK
-	X4gO85Nn8mKZ/z9AlSnNXUBwfYFlGyd41divxwrQiOxcl7SQLCulfGYjHLvPeWlqwjteVHiNVSQ
-	ZE6pX1+Xexe5Oh4B8206y1PFR6+1w+CMQiFnL6bX6XCL4izuUatFm06UFaAHNH2tC7JzJvcnCg/
-	ekMFst5GbkWEYEGOlpvegiOGYh0zBERomrVEC398KEXzd433ufW8zaw1nfhFFkjYaJSseTw14Vy
-	ZaKh/dlJnFrpQGzK5BUQl5KXoEd7qKPhB+2pl8ah7aVmgSRWxKqGA7TjCsjoQgttx/
-X-Received: by 2002:a05:600c:45cf:b0:477:9890:9ab8 with SMTP id 5b1f17b1804b1-4889945f8c3mr201669995e9.3.1775570033056;
-        Tue, 07 Apr 2026 06:53:53 -0700 (PDT)
-Received: from [192.168.2.122] (95C81E23.dsl.pool.telekom.hu. [149.200.30.35])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488a4b2e111sm291870475e9.1.2026.04.07.06.53.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2026 06:53:52 -0700 (PDT)
-Message-ID: <7e6015d3-bb8c-4267-a7b1-2d79091f108d@gmail.com>
-Date: Tue, 7 Apr 2026 15:53:51 +0200
+ dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=gJb/1CIn;
+ spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=8557d86685=rob.woolley@windriver.com)
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 637BTJfH4040614
+	for <bitbake-devel@lists.openembedded.org>; Tue, 7 Apr 2026 08:02:51 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=PPS06212021;
+	 bh=yB6MIF44GZ2Bh2VHVl+TbDJmI1oLr+YJK6FpzjW36v8=; b=gJb/1CIn5jhn
+	hm3bU+gvkQYFrh2/1jqIvuXdrf0Ep+/TxghyBJpEViZUqWKv+x6+aY0Kg2A/qOuN
+	EVjgFEg9tAI4fOl4ixM6g/5ablNrZ1/XSe8Ly9cPuk0T94fyGzn3b9XVtYJd5T6m
+	8W8BnQGvxK4C5ywz+EWxGyb0kwIiKFAyUBaWSykdUBnV7AtvffZYEbwLdpJt56oz
+	Af5icmXUHtQk0Da08koLbF430o2DVafAwpKVz17PD9ZB/j7xyOiIE1xqQQMZsaCr
+	1XUUcvbPx+ZjGpx72p7PWoI7dTaN+Y0b+Ndb1COhJ+PpG8WaKWR9OMnFXHLNcm0T
+	wPxjOnFCTg==
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [128.224.246.36])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4dcmrygvh5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Tue, 07 Apr 2026 08:02:50 -0700 (PDT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (10.11.224.122) by
+ ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.61; Tue, 7 Apr 2026 08:02:50 -0700
+Received: from ala-lpggp3.wrs.com (10.11.232.110) by
+ ALA-EXCHNG02.corp.ad.wrs.com (10.11.224.122) with Microsoft SMTP Server id
+ 15.1.2507.61 via Frontend Transport; Tue, 7 Apr 2026 08:02:50 -0700
+From: Rob Woolley <rob.woolley@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH v2 3/9] bitbake-setup.schema.json: Use anyOf for non-disjoint subschemas
+Date: Tue, 7 Apr 2026 08:02:44 -0700
+Message-ID: <20260407150250.104135-4-rob.woolley@windriver.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20260407150250.104135-1-rob.woolley@windriver.com>
+References: <20260407150250.104135-1-rob.woolley@windriver.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [OE-core] [bitbake-devel] End of whinlatter stable support
-To: yoann.congal@smile.fr, martin.jansa@gmail.com
-Cc: Yocto ML <yocto@lists.yoctoproject.org>,
- OE-core ML <openembedded-core@lists.openembedded.org>,
- bitbake ML <bitbake-devel@lists.openembedded.org>
-References: <DHJDUJSPA7LG.3IKCP2QUJBMRL@smile.fr>
- <CA+chaQdp8E_HMyo6Qx6C+PuRrLbrqgbFdQF_WdbZS1ONncxb3w@mail.gmail.com>
-Content-Language: en-US
-From: =?UTF-8?B?QsO2c3rDtnJtw6lueWkgWm9sdMOhbg==?= <zboszor@gmail.com>
-In-Reply-To: <CA+chaQdp8E_HMyo6Qx6C+PuRrLbrqgbFdQF_WdbZS1ONncxb3w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: HbNfwebzo3sPhvnMBK-zXHGhrcqrBgOj
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA3MDEzNyBTYWx0ZWRfX1Xqt/65U7pMC
+ 9NBejFxhK9vK0KJQuci3iq6dhPkIFTibTcMdiMeB8xmBpxnapOzA/zNzLAvmf1KDWYaNO4hvMXa
+ 48ND/XfWI5RBjYOf+t3Zca8OvoJu5t0OTj3V7bfDYekXPrVNLEbkIUhmTL55Cx87JSd54TLYLtw
+ RChZ80z+3QDsUf7ILdE5bMeBlziKZ3eDwhVxjWHMZPJtCq6eyqnvKz+2gGtVwUKVVes+OOynEmz
+ zmhNdI/ElmB2Z/xH71NrplRRmmT4QWJiIaPy9agr8EOWRREMzGYmgxZycDEnm9AZiUXtkVfnh5B
+ VKdcpqCbfsZKMe6+bRzm6uW27GGGpaTn8UFIwojqAxSQN9ON3iy9RWIWAEgoyKM0qCwEZ+f82pl
+ Bfuxz2xH750jB/nhDcRLstNwMhXe78Vnv8qH4GVD2n04GiUcWqvOdvEHMtNo9G4TtyP76zpiaQT
+ lf7uO8k5e5SJ8NvjBhA==
+X-Proofpoint-GUID: HbNfwebzo3sPhvnMBK-zXHGhrcqrBgOj
+X-Authority-Analysis: v=2.4 cv=Wcg8rUhX c=1 sm=1 tr=0 ts=69d51c9a cx=c_pps
+ a=AbJuCvi4Y3V6hpbCNWx0WA==:117 a=AbJuCvi4Y3V6hpbCNWx0WA==:17
+ a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=bi6dqmuHe4P4UrxVR6um:22
+ a=HK-ge7EqtdluswH-FwHe:22 a=t7CeM3EgAAAA:8 a=jJoEvPsC45Y7O9PwoMIA:9
+ a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-07_03,2026-04-07_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 suspectscore=0 malwarescore=0 bulkscore=0 spamscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604010000
+ definitions=main-2604070137
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 07 Apr 2026 13:54:00 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19338
+ <bitbake-devel@lists.openembedded.org>; Tue, 07 Apr 2026 15:02:51 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19339
 
-2026. 04. 03. 11:14 keltezéssel, Martin Jansa via lists.openembedded.org írta:
-> On Fri, Apr 3, 2026 at 10:46 AM Yoann Congal via
-> lists.openembedded.org <yoann.congal=smile.fr@lists.openembedded.org>
-> wrote:
->> Hello everyone,
->>
->> As you may have noticed, the end-of-life date of whinlatter (2.16 for
->> bitbake) is near.
->> The last release of whinlatter will be the 5.3.4 and will be built in
->> the week of the 20th of april 2026 for a release the week of the 6th of may.
->>
->> If you have patches that you want to see merged in this last version,
->> please send them before the 10th (next week) so we get enough time for
->> review and testing.
-> I would like to see my glibc-2.43 compatibility changes I've sent last
-> week merged.
->
-> I've tested it on 26.04 in docker, if it doesn't show any issue on
-> other hosts used by AB, then what's the harm of merging them to
-> whinlatter and scarthgap?
+The oneOf keyword is for matching exactly one subschema.
 
-That series is indeed needed for whinlatter in my testing on
-Fedora 44 (post-beta, practically final), plus the other series
-I just sent that fixes binutils-native and gcc-cross.
+However, the 2 possible BitBake configuration fragments
+are not disjoint. Since a simple example with type and
+description would match both. For this reason, we should
+use anyOf instead.
 
-Unfurtunately, pseudo would need another fix to work on
-Fedora 44 as is, see my mail at
-https://lists.openembedded.org/g/openembedded-core/message/234730
+This resolves the following jsonschema linting error:
+  A `oneOf` where all branches have disjoint types can be safely
+  converted to `anyOf` (oneof_to_anyof_disjoint_types)
 
-For now, I can't build neither whinlatter, nor current master
-on Fedora 44 due to the pseudo issue.
+Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
+---
+ setup-schema/bitbake-setup.schema.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Even after whinlatter gets EOL someone might use latest ubuntu release
-> on host and then try to compare his wrynose build (where 26.04 works
-> fine) with whinlatter build (which fails immediately without these
-> changes). I often use EOL OE releases when trying to "bisect" what
-> changed in upstream layers e.g. between scarthgap and wrynose.
->
-> Cheers,
->
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#234574): https://lists.openembedded.org/g/openembedded-core/message/234574
-> Mute This Topic: https://lists.openembedded.org/mt/118647081/3617728
-> Group Owner: openembedded-core+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/openembedded-core/unsub [zboszor@gmail.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
+diff --git a/setup-schema/bitbake-setup.schema.json b/setup-schema/bitbake-setup.schema.json
+index 3324546de..f2e466c9b 100644
+--- a/setup-schema/bitbake-setup.schema.json
++++ b/setup-schema/bitbake-setup.schema.json
+@@ -92,7 +92,7 @@
+                                 "type": "array",
+                                 "description": "List of BitBake configuration fragments to enable",
+                                 "items": {
+-                                    "oneOf": [
++                                    "anyOf": [
+                                         {
+                                             "type": "string",
+                                             "description": "Configuration fragment name"
+-- 
+2.49.0
 
 
