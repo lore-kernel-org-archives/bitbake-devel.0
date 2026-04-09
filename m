@@ -1,106 +1,97 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C971073CA6
-	for <webhook@archiver.kernel.org>; Wed,  8 Apr 2026 12:22:56 +0000 (UTC)
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.105108.1775650969138984745
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9EFF364D2
+	for <webhook@archiver.kernel.org>; Thu,  9 Apr 2026 22:49:56 +0000 (UTC)
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.144470.1775774988246274123
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 08 Apr 2026 05:22:49 -0700
+ Thu, 09 Apr 2026 15:49:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=gwsionHd;
- spf=pass (domain: gmail.com, ip: 209.85.219.45, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-8a210c813f8so47622786d6.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 08 Apr 2026 05:22:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775650968; cv=none;
-        d=google.com; s=arc-20240605;
-        b=VJaxmYoRWdLT5oloBTdysPpRrtojox8jdMOSQbeueE3qxf97wDjYGHmuPwqDOKZvnC
-         Fynn8uRMiFh8s824IPEHBDzJZzitDVVA+KdoeFYuTdB2ABNqA75lqDCGZJ1P9DQ6Iqvf
-         UoRoRYPO+DFabvqm6eCXfXWLGz5YLpK45LuObNMgtfhZtnP/OupeV9COBTMaMLG02hvR
-         hOvwNNpCTVJE1ggljmi8/0PsvrB96kqlSL1F0VabqPQR9/G+A6KI7LV9ibwlCLibJr5m
-         U9qErM4yv5TTQHJV7G6Sti9yFD3TdY4Uiay7cvIjo695yQZfmz3YKIctPV1MrrBHBtcY
-         CqbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=Km6ZSNRMN4EpDI7xcXi2tUf+nkDIO8UwypxK0QOIqdQ=;
-        fh=t9be2Uk2CNCD6EY0MUbMSR/9GYVzCEQdV7d0/UQTe04=;
-        b=gyNDQp/ldCuWu8xA8dxlWZ6NnxaIqtGPsXhOD8mMFz21retFKQEtZ7fEaUOULJdiCz
-         HSoOBLAuMXUOAb01hXtG2cvnVNmZVf2CWlUH/RZeEdBq52GzqNO92bY0tI8H4IF28kPj
-         hbkzcCM2tJIpSf9pVcDqlI/0z+5F9EKf9AHDiRJVe1H3PpyUUTLW31t5GPfV4a/vbl7H
-         eHbSJa0c3kK8LeMh+3jRfsl2FHksbsp96wVXZZ1CgrFTVZajBaISxHc+n3DBO1siaz80
-         EsnJTX0C9aFQAc/r5BOXvd6EBfeHdAbT94if8N0s5nI5amqme8i7cmZpm2lD3ZuRVpSM
-         FpMQ==;
-        darn=lists.openembedded.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+ dkim=pass header.i=@smile.fr header.s=google header.b=YZuEKcCS;
+ spf=pass (domain: smile.fr, ip: 209.85.128.66, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-488ab2db91aso20240855e9.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 09 Apr 2026 15:49:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775650968; x=1776255768; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Km6ZSNRMN4EpDI7xcXi2tUf+nkDIO8UwypxK0QOIqdQ=;
-        b=gwsionHdkISdCrCf7r0H/IHA+JcY1aYKG+VdCMvrfVpAToDIn3dCRDwQexpr5q9DeL
-         FqBAcrSXUjeP7OhcUSijBcVIwLmfDJHIbQMhUB7LSP7FcAFDjAI+opauxpl7oMWwmhnI
-         8/SKJXHLYOdV47rBnngsBfOF0mswp7EpCbLTLwi51sx1jtPgOVjx14L03acU04m70B+0
-         qNJaomnMcU3XqoPSHbI2J5BR6jzhJFsdBA9lAbO6upQYzoStdrqyEeyXaLOwy9Ee8/wo
-         FfQdblFV/arXb9Ti8zvqSfxDYixohJyXZWCgdNj48Ds+sdQCds2oEQCngcfOTje6rmGh
-         UuNw==
+        d=smile.fr; s=google; t=1775774986; x=1776379786; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+OGfQsZ47CujHWeRw0X9cbwNxshU2GdsZ4GTtnXbgHk=;
+        b=YZuEKcCS2n5pw1MEiiPBGlUeAcZq+r+Oa2wBAzh4uGu65upz+bDcuLn3PewNn59+Qu
+         BDgavzTzWQUVBux1CR+qKAqvz+hVyeNI+FQD7hZC64hrBY9z3wOK/+/mlm3pB20IX7Mx
+         w7jBvgnOQ5G7NhCAuiuP7KU97DVfuTYgBRW6o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775650968; x=1776255768;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Km6ZSNRMN4EpDI7xcXi2tUf+nkDIO8UwypxK0QOIqdQ=;
-        b=b/GH0ay8PIifeLXxz3rQRw7uj6pXq2/mr+wyo3nlYzCm6xvty28dI8bxjvjwbGtWrA
-         HL4z8nmTFmyoHxS6u2ZcO0XeNfrqHpvEz3XwcJhekhxjDdk3aJ7ivdUIblcu1AexfRBV
-         LYz3LvFDcQUBE7ylv6RF28qjbUmY+/HxdpsUBo3PYEM1+GGR4Y42QltslkStI4kDLw5Z
-         KkhDul6Dt6o0UhiONFOmS55TAL5Kc3Jmt2dpWAqm4hIpXHHm+MCc0fisWmKDM1/5qUlp
-         +TRsvvRKSQzaYyEh7RaXRolSg8Jrreau9aAqpdvAn0XK5w9T3G3UOBOsi8fodhp00CG1
-         n0BA==
-X-Forwarded-Encrypted: i=1; AJvYcCXXtjxABM0ZdUV+UsEMyLneANT3DMskOSPzsNKkQCkoexH8heMHfsjO7ClaCZEy9D7yFWqgwVc7Y/qYOEcJ@lists.openembedded.org
-X-Gm-Message-State: AOJu0YxdZrKuYqbM/8Ag/WJaxfgDr8DPWI3vIpqFWuqv8vXMBfRssB+K
-	RCDh0LBC49/3AsNrlqTwGumAHshZNWisA0rgQ6ygrmzEAIbnvprSUBFzBHrmmqamZ34nHMwrFiI
-	Yk4CCE1aSumm2p440xOuMN3MOHhT+oDQ=
-X-Gm-Gg: AeBDiev5AsRiaf4b2CRV7W9PgBAeAnk9DkGNp6uaHUvNJKslsbLrO2oADICLmGIRhWp
-	xXZNluqz3JxIsNpAgUwt5siVyRAGabey3g+sw5FfA3aKtLqBd2BsuVGrjnJmpzyO9POPeROpr1z
-	zl/2IsvlpzJdkfYQObZllqtuLUhTDFs2lZedXEVP9FHfHc5GNKfnfsTphfnpYbzCdhuJnC9HkCM
-	7+GTQoLX+KWG/VPsk5Kiw6WPZYzs3pUx/24Hj+lvwzUikheOuQMdjyfAi7pxJNYV+qZm28kF17k
-	P6lpkDvjDSA/elhiaGw3/wPq5PdKAHqtGb/z8RaoDA==
-X-Received: by 2002:a05:6214:c8c:b0:8a4:21d9:bbf2 with SMTP id
- 6a1803df08f44-8a7049c6e94mr327039276d6.33.1775650968111; Wed, 08 Apr 2026
- 05:22:48 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1775774986; x=1776379786;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+OGfQsZ47CujHWeRw0X9cbwNxshU2GdsZ4GTtnXbgHk=;
+        b=sv5oV/UYdigHAKpjqs5T69qO4D7QCCVjBmrhXwCtiPeVQsj0Q2xz+reK+TAjHyjuUV
+         uLGEpR0umCAIDZ6Eb//ERk+TaDUKf1PRpfDHhiMAx7xBspffEUKEpZ5x9uG0tfeZQfRg
+         OO09aXfPhvkTyTPdCUYk+fJpIQvaxjQHZEZBh/cnNSfzhqGLYq+K824awxkIRXt85aVB
+         DUO2E1bHacE4TdwAijwwuVGLjVQ7+J5JgpgU8s7oSzgUBVjXtL/cHAeybMGt2IWTa2fI
+         p06hiUjqxqXaEG68ImJg3134RteW75rXWHFQJwWlxfn9Ox1e/npVquNpsMZ8YoKb1s7s
+         Fnrw==
+X-Gm-Message-State: AOJu0YzWAm2aBU4yG4zHnKtTZLxZn0O4GCQcL30ec2Vq08iWhbM54fzk
+	J5Wmx8rlrhdcJCzRAYrN5dNrp8XhRsODatP14QIJ3i652pvfUHQK8r19aRh00kxdfCoNAE9wHhi
+	6r+lnphnTHXEQ
+X-Gm-Gg: AeBDieuWJ3c5DB4hKY9H2NTjU4ilcFW2HiBUDOuhhwU2kRe8S7+7+ysNDtLzn6jViHO
+	T+FGC4GXM3zT/QDGptokCZ40DvIvjTFxOSV4Apz789AgdwTHQLmn7BAoqJEkyv+o8/y3mcU98c2
+	yX0wCBQs02RMaFu9cptvFg7YqTpXBgBBuyKXY6Q/WtD9L5Kq2p5fpYRKQ/FcDr/Wn0Q0ZtXTsZy
+	VgNzMj+ZcKLFHMoOfxb3ZwIuNi2pbcMKExyWevq9LziGzxvt51MiEpoCWb4i9AA2xGVWvE0t1nl
+	pTTmOQKPgwUPVjzpGLPX1XXSenDcW/mLoEaC+aDgLon3+unRrcAomS+5/sSLVO0nuHmNHeWnLJI
+	j3YstVloJml3fQdUzZO2VUulou0R63yNTrvPYyPFfRA5VEynRk30Npc1zoBUq4ArzTSOVa3Bda7
+	nP+NWEDTHBCitN3q+u/jjvk4+GaeoZOySIiMrt1kMBA/F7U9fkK09wYOjM4yJNgtvepFKJG+oG9
+	DodRPvWQLHlfVdWdq6VRMLNE/+9
+X-Received: by 2002:a05:600c:8218:b0:488:a14d:3d81 with SMTP id 5b1f17b1804b1-488d67c7034mr8638695e9.2.1775774986426;
+        Thu, 09 Apr 2026 15:49:46 -0700 (PDT)
+Received: from FRSMI25-LASER.home (2a01cb001331aa00af4acfc73fc9518a.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:af4a:cfc7:3fc9:518a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488d6839981sm4234305e9.21.2026.04.09.15.49.45
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2026 15:49:45 -0700 (PDT)
+From: Yoann Congal <yoann.congal@smile.fr>
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake][kirkstone][2.0][PATCH 1/1] tests/fetch: Avoid using git protocol in tests
+Date: Fri, 10 Apr 2026 00:49:29 +0200
+Message-ID: <7fd0197fd5fedd23cc885b5e7e816d86a392fdf9.1775774593.git.yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <cover.1775774593.git.yoann.congal@smile.fr>
+References: <cover.1775774593.git.yoann.congal@smile.fr>
 MIME-Version: 1.0
-References: <20260406202430.1856836-1-adrian.freihofer@siemens.com>
- <20260406202430.1856836-2-adrian.freihofer@siemens.com> <CANNYZj-K5KWN9Z9CDZnQyU34bVT+8rkH0uEcfg=FXeOWfm9XHw@mail.gmail.com>
- <6d97488e80b23b08ce5bea25650891f07ff2a9a1.camel@gmail.com>
-In-Reply-To: <6d97488e80b23b08ce5bea25650891f07ff2a9a1.camel@gmail.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 8 Apr 2026 14:22:38 +0200
-X-Gm-Features: AQROBzBAQW487pLZJZ_JRdQOW8rHyeMwg6-07Y76jnv2Lo93wWl7wpphMMlEobs
-Message-ID: <CANNYZj8V4ETVtdRLQkwSfydb7SvMJhC0JqXgdRfLw_w_U_TgVw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 1/4] bitbake-setup: update vscode
- workspace always
-To: adrian.freihofer@gmail.com
-Cc: adrian.freihofer@siemens.com, bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 08 Apr 2026 12:22:56 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19356
+ <bitbake-devel@lists.openembedded.org>; Thu, 09 Apr 2026 22:49:56 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19358
 
-On Tue, 7 Apr 2026 at 21:58, <adrian.freihofer@gmail.com> wrote:
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-> Maybe this patch is not very important if bitbake-setup itself does not
-> change anymore. Might be that I thought this should be improved when
-> working on bitbake-setup itself, which is a very special use case.
+A test was still using git protocol to access git services.
+For the submodule test, the upstream repo has been updated.
 
-What I would like to understand is this: what kind of local changes
-require re-generating the vscode workspace (when otherwise there are
-no changes in bitbake-setup configuration). Presumably the user does
-'something' that causes the workspace to go out of sync, what is it,
-can you provide examples? Can we write the workspace in a more
-'universal' way such that it doesn't happen?
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit 5d722b5d65e4eef7befe6376983385421e993f86)
+[YC: Backport: only kept the part that applied]
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+---
+ lib/bb/tests/fetch.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Alex
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index e46278dcb..b3890ef41 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -1053,7 +1053,7 @@ class FetcherNetworkTest(FetcherTest):
+         # URL with ssh submodules
+         url = "gitsm://git.yoctoproject.org/git-submodule-test;branch=ssh-gitsm-tests;rev=049da4a6cb198d7c0302e9e8b243a1443cb809a7;branch=master"
+         # Original URL (comment this if you have ssh access to git.yoctoproject.org)
+-        url = "gitsm://git.yoctoproject.org/git-submodule-test;branch=master;rev=a2885dd7d25380d23627e7544b7bbb55014b16ee;branch=master"
++        url = "gitsm://git.yoctoproject.org/git-submodule-test;branch=master;rev=38e61644af90dccd73c03ed3acaed98c8dda9294;branch=master;protocol=https"
+         fetcher = bb.fetch.Fetch([url], self.d)
+         fetcher.download()
+         # Previous cwd has been deleted
 
