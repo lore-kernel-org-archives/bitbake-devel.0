@@ -2,60 +2,60 @@ Return-Path: <yann.dirson@vates.tech>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172FEEBFD2F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AA4EBFD30
 	for <webhook@archiver.kernel.org>; Mon, 13 Apr 2026 09:59:38 +0000 (UTC)
-Received: from mail187-1.suw11.mandrillapp.com (mail187-1.suw11.mandrillapp.com [198.2.187.1])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.268918.1776074372649433262
+Received: from mail187-14.suw11.mandrillapp.com (mail187-14.suw11.mandrillapp.com [198.2.187.14])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.268919.1776074373398703883
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 13 Apr 2026 02:59:32 -0700
+ Mon, 13 Apr 2026 02:59:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: signature did not verify: crypto/rsa: verification error" header.i=@mandrillapp.com header.s=mte1 header.b=OAIHBHCb;
- dkim=fail reason="dkim: signature did not verify: crypto/rsa: verification error" header.i=yann.dirson@vates.tech header.s=mte1 header.b=pVJR/dxq;
- spf=pass (domain: bounce.vates.tech, ip: 198.2.187.1, mailfrom: bounce-md_30504962.69dcbe83.v1-ee302bc02eac441b884f69a4693c9262@bounce.vates.tech)
+ dkim=fail reason="dkim: signature did not verify: crypto/rsa: verification error" header.i=@mandrillapp.com header.s=mte1 header.b=sMPHTwBK;
+ dkim=fail reason="dkim: signature did not verify: crypto/rsa: verification error" header.i=yann.dirson@vates.tech header.s=mte1 header.b=wvidtTLO;
+ spf=pass (domain: bounce.vates.tech, ip: 198.2.187.14, mailfrom: bounce-md_30504962.69dcbe84.v1-db4c095609a740e7b2c7182ba3bb2136@bounce.vates.tech)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com;
-	s=mte1; t=1776074371; x=1776344371;
-	bh=M3RH0gI8jxTntjmZhDm9okkroS6lGh6elJlRfav6Xuk=;
+	s=mte1; t=1776074372; x=1776344372;
+	bh=UwPEUWVCAf3wFNiyyNveriV7FhqJXMVNLXYmrR4wg4k=;
 	h=From:Subject:To:Cc:Message-Id:In-Reply-To:References:Feedback-ID:
 	 Date:MIME-Version:Content-Type:Content-Transfer-Encoding:CC:Date:
 	 Subject:From;
-	b=OAIHBHCb5O+icRIRmr6WQodk+oFkzoctWcmpWpJ1VA8bPkBPGc464cubJ3oO1pbXY
-	 PqlW78F0T+/AebxS7efIZ9O4TYNHHEz2QdmeybojG5fGUiGQoqpLbQqaTPMdjgoQ/z
-	 UVDzzYVU/PquQFDaLBzMUqkKcBLf/RnIKmIfTEFEhLE0xEnJEhmg4qz8MYfoe7orkl
-	 vjCdPRmiiQ4Hct7/EYbRoYBVVgiN9eDwN+RVD7v0O8HCV1Luqt5XvAUvfqnlBMDikw
-	 OiQb8OD2Q2okV2Q17SyNwl0b4B5sMGsjD25y2+XjWveBIf0nGufX3OA18hU+ehv/zx
-	 s6eWcv6O40yYA==
+	b=sMPHTwBKQJU7ry+QYs0BZ+bJ9XdojbhIWLE0XYIg9IwiZNOOTNDZ71zjwwY1iIAU5
+	 ag0+L3WQYFzaz1cb3tfLtAVEUV4+ht3FqUKAmUddDJT06HbO2Dz7e+GMdl/y2HSk72
+	 B2FJyRUq2Pk61nxYjlapRLpt55RTOJzLXe9LR+u1866/YBQpVmSxhX2EjcneIbnnae
+	 TORuIAL28sy47M2WGMIBmvESZCTMzkMIvovHHkeAfrkbYhApvlBJI9zJov5LM/F814
+	 xNwre0q1DDDUcguFA2c8UfG+KYNxzCp9ep+VasRBLpDbP9oeiyUm7K8BOfbxbiprSD
+	 +7YrmqIp+GQNQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vates.tech; s=mte1;
-	t=1776074371; x=1776334871; i=yann.dirson@vates.tech;
-	bh=M3RH0gI8jxTntjmZhDm9okkroS6lGh6elJlRfav6Xuk=;
+	t=1776074372; x=1776334872; i=yann.dirson@vates.tech;
+	bh=UwPEUWVCAf3wFNiyyNveriV7FhqJXMVNLXYmrR4wg4k=;
 	h=From:Subject:To:Cc:Message-Id:In-Reply-To:References:Feedback-ID:
 	 Date:MIME-Version:Content-Type:Content-Transfer-Encoding:CC:Date:
 	 Subject:From;
-	b=pVJR/dxqduhbMXB5IzuD4wLnCCWksdpnigdw9p75RQLQECadELr76LFEcL2/G0vFR
-	 GtQfDKfrMM0w+ZrZ6QuIAAgcFjkF0yhuV9B+h3IBlyCqZjA6asHw36ewe9qngZ1jqn
-	 X+q4Pl1KewrafkVz2VcfjyCEl5MkuTnvUjek6iOePcaHVm5CqZ/svqAN9q6HeSXQ4G
-	 2jyil3ufYKTT0GM51bPtF4lb4kNgSzP7MQIoaLHiilbG36E5vwuk4FNINcVLCOddgk
-	 q+ucHV8ufQUR/93zkzab5QbFutoKuTXSnBqOSTYCreIYv8M73E8wBuKmbQ2XJViBGP
-	 IK35RpQ59JKbw==
+	b=wvidtTLOwCWTX/EOL6wkI2i39NuS9+mKOE1FlM04ZD/uNr2syUG0S/PEyscPNYwaR
+	 kkvM8WJbpISCMTvQ0un54m/lspxenxiFliPds5hQ6jyDcroDbHDzNVi/zhLnU6T5cE
+	 CLSl8MGqKnoCN/99Bqd/bWQW43ptkXA2M2eyPWLtmvLwzYni4Ixn/oBcoo9C31NnQT
+	 cHfBt1kFLYUhnrpTg3t5Lmm+DjvKDzXEDQ47Sk2k5DQcUKdU8jAKo009ZpO1NFhoyi
+	 N4nqT6TNxNU3R8HgRSzO+EXdmNOE/ZAIrcbQDewY0zNXlzMyc5D7qIcxrnnxtqAed4
+	 JsLdpWbSk3BqA==
 Received: from pmta09.mandrill.prod.suw01.rsglab.com (localhost [127.0.0.1])
-	by mail187-1.suw11.mandrillapp.com (Mailchimp) with ESMTP id 4fvNDM6BwBzBsTtBk
-	for <bitbake-devel@lists.openembedded.org>; Mon, 13 Apr 2026 09:59:31 +0000 (GMT)
+	by mail187-14.suw11.mandrillapp.com (Mailchimp) with ESMTP id 4fvNDN4SvMz8XS2dY
+	for <bitbake-devel@lists.openembedded.org>; Mon, 13 Apr 2026 09:59:32 +0000 (GMT)
 From: "Yann Dirson" <yann.dirson@vates.tech>
-Subject: =?utf-8?Q?[PATCH=202/3]=20RunQueueData.prepare:=20fix=20comment=20typos?=
-Received: from [37.26.189.201] by mandrillapp.com id ee302bc02eac441b884f69a4693c9262; Mon, 13 Apr 2026 09:59:31 +0000
+Subject: =?utf-8?Q?[PATCH=203/3]=20goh1=5Ffile:=20deal=20with=20false=20positives=20from=20is=5Fzipfile?=
+Received: from [37.26.189.201] by mandrillapp.com id db4c095609a740e7b2c7182ba3bb2136; Mon, 13 Apr 2026 09:59:32 +0000
 X-Mailer: git-send-email 2.47.3
 X-Bm-Disclaimer: Yes
 X-Bm-Milter-Handled: 4ffbd6c1-ee69-4e1b-aabd-f977039bd3e2
-X-Bm-Transport-Timestamp: 1776074371308
+X-Bm-Transport-Timestamp: 1776074372058
 To: bitbake-devel@lists.openembedded.org
 Cc: "Yann Dirson" <yann.dirson@vates.tech>
-Message-Id: <20260413095918.20804-2-yann.dirson@vates.tech>
+Message-Id: <20260413095918.20804-3-yann.dirson@vates.tech>
 In-Reply-To: <20260413095918.20804-1-yann.dirson@vates.tech>
 References: <20260413095918.20804-1-yann.dirson@vates.tech>
 X-Native-Encoded: 1
-X-Report-Abuse: =?UTF-8?Q?Please=20forward=20a=20copy=20of=20this=20message,=20including=20all=20headers,=20to=20abuse@mandrill.com.=20You=20can=20also=20report=20abuse=20here:=20https://mandrillapp.com/contact/abuse=3Fid=3D30504962.ee302bc02eac441b884f69a4693c9262?=
+X-Report-Abuse: =?UTF-8?Q?Please=20forward=20a=20copy=20of=20this=20message,=20including=20all=20headers,=20to=20abuse@mandrill.com.=20You=20can=20also=20report=20abuse=20here:=20https://mandrillapp.com/contact/abuse=3Fid=3D30504962.db4c095609a740e7b2c7182ba3bb2136?=
 X-Mandrill-User: md_30504962
 Feedback-ID: 30504962:30504962.20260413:md
-Date: Mon, 13 Apr 2026 09:59:31 +0000
+Date: Mon, 13 Apr 2026 09:59:32 +0000
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
@@ -63,35 +63,50 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Mon, 13 Apr 2026 09:59:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19361
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19362
+
+This function is known https://github.com/python/cpython/issues/72680 for
+false-positives.  With python 3.13.5 there is one with
+https://vault.almalinux.org/10.0/CRB/x86_64_v2/os/Packages/jdom2-2.0.6.1-8.el10.noarch.rpm
+
+The double "is_zipfile = False" is redundant but likely more clear.
 
 Signed-off-by: Yann Dirson <yann.dirson@vates.tech>
 ---
- lib/bb/runqueue.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/bb/utils.py | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index a880a0d54..8aae4e290 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -693,7 +693,7 @@ class RunQueueData:
-         # To create the actual list of tasks to execute we fix the list of
-         # providers and then resolve the dependencies into task IDs. This
-         # process is repeated for each type of dependency (tdepends, deptask,
--        # rdeptast, recrdeptask, idepends).
-+        # rdeptask, recrdeptask, idepends).
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 366836bfc..aeeb3f2ee 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -694,14 +694,19 @@ def goh1_file(filename):
+     import zipfile
  
-         def add_build_dependencies(depids, tasknames, depends, mc):
-             for depname in depids:
-@@ -841,7 +841,7 @@ class RunQueueData:
-         # (makes sure sometask runs after someothertask of all DEPENDS, RDEPENDS and intertask dependencies, recursively)
-         # We need to do this separately since we need all of runtaskentries[*].depends to be complete before this is processed
- 
--        # Generating/interating recursive lists of dependencies is painful and potentially slow
-+        # Generating/iterating recursive lists of dependencies is painful and potentially slow
-         # Precompute recursive task dependencies here by:
-         #     a) create a temp list of reverse dependencies (revdeps)
-         #     b) walk up the ends of the chains (when a given task no longer has dependencies i.e. len(deps) == 0)
+     lines = []
++    is_zipfile = False
+     if zipfile.is_zipfile(filename):
+-        with zipfile.ZipFile(filename) as archive:
+-            for fn in sorted(archive.namelist()):
+-                method = hashlib.sha256()
+-                method.update(archive.read(fn))
+-                hash = method.hexdigest()
+-                lines.append("%s  %s\n" % (hash, fn))
+-    else:
++        try:
++            with zipfile.ZipFile(filename) as archive:
++                for fn in sorted(archive.namelist()):
++                    method = hashlib.sha256()
++                    method.update(archive.read(fn))
++                    hash = method.hexdigest()
++                    lines.append("%s  %s\n" % (hash, fn))
++            is_zipfile = True
++        except zipfile.BadZipFile:
++            is_zipfile = False
++    if not is_zipfile:
+         hash = _hasher(hashlib.sha256(), filename)
+         lines.append("%s  go.mod\n" % hash)
+     method = hashlib.sha256()
 -- 
 2.47.3
 
