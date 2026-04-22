@@ -1,103 +1,202 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD35F588F7
-	for <webhook@archiver.kernel.org>; Mon, 20 Apr 2026 16:29:58 +0000 (UTC)
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.23617.1776702588314145807
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AED4F9B5F6
+	for <webhook@archiver.kernel.org>; Wed, 22 Apr 2026 09:18:34 +0000 (UTC)
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.76817.1776849509492130858
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 20 Apr 2026 09:29:48 -0700
+ Wed, 22 Apr 2026 02:18:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=2jk5wOHM;
- spf=pass (domain: smile.fr, ip: 209.85.128.52, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-48334ee0aeaso33011365e9.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 20 Apr 2026 09:29:48 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=AXBXKjh4;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-43eada6d900so5128126f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 22 Apr 2026 02:18:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1776702586; x=1777307386; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IzOoGjz11nr/q1EasMWNoxEoBldEFDaUKaIj3yojxD0=;
-        b=2jk5wOHMs2KaleDXJmW9Q89F+oU2ewMG8VCx+66qewUuMKxWw/qUvZxgEDrpUqM+cS
-         CUJXFsAs3w9BHa35/IJc5x/Wkq9ZB5V96vr2T62hQ8VDUYdynRoCjdlfexmwa3YWanCO
-         Pd291F2zXPTPr4agJ0qyNexL4arGwKAOqlZOc=
+        d=linuxfoundation.org; s=google; t=1776849507; x=1777454307; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PUTOygwDgP77eW+kxmSfELS8drI7WYvBEiFPHEMCEaU=;
+        b=AXBXKjh4LXGEQQ1nLDIX5U/q51sdFUiS+nFe7U4CG4ASH9ufeo2rwQMIZ78tvEG1o+
+         t6O24OIGyQEsyBKRmhB5jLyCHRyZKnyFUaCRGQl+w6Kfiwq5KvA3/yl2Sv/YcCJcFksa
+         xjgDcJ8Ekmi7Y3adbWcI/kzQCw+9Li8/DHWCU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776702586; x=1777307386;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IzOoGjz11nr/q1EasMWNoxEoBldEFDaUKaIj3yojxD0=;
-        b=Ye5hFNa+a7NgEqN9p5Blb6aFkLztMc11lpkyT19f0JFbMDCC/RJMG2fJ76abzwNsLQ
-         GQtKnJA+LJDWJkVmoQ50HQIYSpM2ZPIp7xNVm+UjxAWnGVvK7IIL8Gz9jOt0TtpiVz8N
-         5rlk2K1XFC4TMEaDESH3YdY/jTUiOhMmf2Chd9Pt8aPUp0wNSF0NVTz/FoxEflIagb4j
-         alC+2xtXEIRGOu+ElyzDp8m/dQHRU0OKjJsMJYqeA/POsRqEYRdaa8wzSh+a5qydyEBg
-         agMfNualocVvNTcrNGVR3tcSCH+TY3YVhw4DTr1Gfd/T5QOV0O8/sbBL6ujF1AZGecN3
-         TQQg==
-X-Gm-Message-State: AOJu0YwgVa3uWdjNM4gJrOTYEcVzOnFqki2j5g5iixYycCMfmaHpwA5n
-	a6Bff5h6GSgpMCC51HKRx1c7cXer9+HeEf9gilJU2POK9JPCGq0+0KKhqnD3ueojSBTxIgsaQiv
-	zkHgj1H8=
-X-Gm-Gg: AeBDieuKr+ArKMVjVZGsqqDKfLOhw1FScnAjnM/i92pyFPyurOBGUrWB90OWBV8rQRc
-	/1avBUODZrQ4NTo/HcuYtWr/EbpcLYCIpSl/uZ7/Xz5UVz/qofYQbR8CwjKVeZkgmwFyauD7Xnk
-	qg3wjZm7kOyXDDnKpD2zDQ1++pYvfs7j9khQaiM19MQUrvxs2ZgD10lMVzTHJgmCmzPnSKykjGP
-	vkANDPimIR4h9HztdhaEsgv/EBQQnN99QxEgKlpRssXQovdla2jszuY0rH2C6vZSUhdqRapjQB3
-	tDXaZUexBjtrwlft6MD0EGu/l5DanivPEIWD7Omgt/ZMHdmTTwZv/94JTkPjq/oRxNtFH0IGi0v
-	N7iGiFk/qs8X04vAFgV/+YH5UNsvYp3I9cKzUWku9ziZIOxY3vzBFchVWqvq7rMA1AcCzoh9LDP
-	ld6NJVGxImM3252a4PLKb6Lf1GTYwtdP3x6L0oXDb+NTt2Qlh4YREHU3mQcSAxMc5UuefI53dDQ
-	QTkX7jjJtQOSgmjpwsj1NTzhshWTtW1RPoFcDj8SyR6
-X-Received: by 2002:a05:600c:48a1:b0:489:a4:e58a with SMTP id 5b1f17b1804b1-48900a4e881mr98480545e9.19.1776702586325;
-        Mon, 20 Apr 2026 09:29:46 -0700 (PDT)
-Received: from FRSMI25-LASER.idf.intranet (static-css-ccs-204145.business.bouyguestelecom.com. [176.157.204.145])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43fe4e4d6casm28431943f8f.32.2026.04.20.09.29.45
+        d=1e100.net; s=20251104; t=1776849507; x=1777454307;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PUTOygwDgP77eW+kxmSfELS8drI7WYvBEiFPHEMCEaU=;
+        b=azJy6KiQBKZJc5Q0BhEvQrqD65kK0kmNsqi3yqyh1f/A7jmWvwvXjD5DnwDgE4jhKp
+         9hUh/5AD7cOxS3eoKNClzgaTf4kKefMf7fjMuzwnezPg+CvXpevvJWz9qrZ4T9BNDan4
+         wOcFxYQaqD3+OBZte1lYKJLmsfCsshEtDLF6p6rESfuaHj4frItd+JJ81RpaC1YB+L3e
+         q9oZywWLJWphSm5NzJIsnM/cnjPApzPjVZJ9xtRN0MZ9Tssy+J/4FyVAfywbOUyydrr+
+         J1nEq2HJIDi5rGpiCwB4HusEIZHTj9OtTBtFm7QWo7/tZZhgGg/vG6yvLZ1EhY8cXW69
+         qy2w==
+X-Gm-Message-State: AOJu0YzcFgFvgvDWpbD6knX87rjvEIkxcrac8T0bdl676OOvxFIRKzev
+	8gAWmxwjOFvl059KucEVFX7LRxwnnEytuzR4pGmD2XRH7RNIT0ShE/xI920f878zZvcVntht6WV
+	c+e654TA=
+X-Gm-Gg: AeBDietnYY2ZTAvC+wO4CLm7mOaQYEaX363jcMN6orY3RgsfejbAeTJsZWubUmvjMoW
+	dUPg1QnhshSG4fYZWlpdAahczvD5uWdCg0rIFVPG+X2YLNeuTKy6rAxMI55nTPBnnsh/IbXfX9Z
+	NJ2UwEVbWbDF2gR7bO2o9pktX+TeyIUn9kcjdoSzYKkFz2fXyUWOuXZXc4MMnnTwVbmAEQF+G+d
+	Q3tOZxxdqVlphkYHb8baJw45ppwm91HJDjphLazji8//XUn9Li4HoWgWHGgm7zAL14riPTYneZJ
+	22fT4pX0icqwXDlw10/Ra5Zwad+2yqxBpePgqum4IOvX2GE7kAm7QUZvpY/c260PrSKKDz+yuGk
+	DETOBd5ix4UN6NofOIqt6/3e3BLGHMb2O/suQglSVsJoj0KALv0kuXDnrwFJkFkDnPGlUvSvQG7
+	gjMLe3h1K2WrUxp9+eLaj2rj7Sv7pSIk6yc/8T0AHFrCGw6cgq7Chnnk1P0DRzmqA=
+X-Received: by 2002:a05:6000:22c5:b0:43c:ef4f:79dc with SMTP id ffacd0b85a97d-43fe3db9b0emr33234699f8f.8.1776849507329;
+        Wed, 22 Apr 2026 02:18:27 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:a9c6:3deb:bd01:ef01])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43fe4cc09b1sm44755222f8f.9.2026.04.22.02.18.26
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2026 09:29:45 -0700 (PDT)
-From: Yoann Congal <yoann.congal@smile.fr>
+        Wed, 22 Apr 2026 02:18:26 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [bitbake][whinlatter][2.16][PATCH 0/2] Pull request (cover letter only)
-Date: Mon, 20 Apr 2026 18:29:38 +0200
-Message-ID: <cover.1776702471.git.yoann.congal@smile.fr>
-X-Mailer: git-send-email 2.47.3
+Subject: [PATCH] default-registry: Update whinlatter -> wrynose
+Date: Wed, 22 Apr 2026 10:18:25 +0100
+Message-ID: <20260422091826.135946-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.53.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 20 Apr 2026 16:29:58 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19371
+ <bitbake-devel@lists.openembedded.org>; Wed, 22 Apr 2026 09:18:34 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19372
 
-Those are the patches from the last patch review:
-https://lore.kernel.org/bitbake-devel/cover.1776322491.git.yoann.congal@smile.fr/T/#t
+Add the new release, replacing whinlatter which it supersedes.
 
-Passed a-full on autobuilder:
-https://autobuilder.yoctoproject.org/valkyrie/?#/builders/29/builds/3678
-* qemuarm64-ptest failed with #16150 - AB-INT: oe-selftest-armhost: Failed to start QEMU (hangs with drm)
-  https://autobuilder.yoctoproject.org/valkyrie/?#/builders/61/builds/3503
-  * ... but was sucessfully retried as:
-    https://autobuilder.yoctoproject.org/valkyrie/?#/builders/61/builds/3505
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ ...onf.json => oe-nodistro-wrynose.conf.json} | 16 +++++++-------
+ ...atter.conf.json => poky-wrynose.conf.json} | 22 +++++++++----------
+ 2 files changed, 19 insertions(+), 19 deletions(-)
+ rename default-registry/configurations/{oe-nodistro-whinlatter.conf.json => oe-nodistro-wrynose.conf.json} (82%)
+ rename default-registry/configurations/{poky-whinlatter.conf.json => poky-wrynose.conf.json} (84%)
 
-The following changes since commit 7af7e04f3adc8ba144d9e2e6b37ed4ddb3b59df0:
-
-  bitbake-setup: ensure paths with timestamps in them are unique (2026-01-26 09:06:04 +0000)
-
-are available in the Git repository at:
-
-  https://git.openembedded.org/bitbake-contrib stable/2.16-next
-  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.16-next
-
-for you to fetch changes up to 713fbbdb9ecc195ceb2216a2345e0d79dbee2135:
-
-  runqueue.py: make sure we use bb multiprocessing (2026-04-13 16:17:31 +0200)
-
-----------------------------------------------------------------
-
-Richard Purdie (1):
-  tests/fetch: Avoid using git protocol in tests
-
-Trevor Gamblin (1):
-  runqueue.py: make sure we use bb multiprocessing
-
- lib/bb/runqueue.py    | 3 ++-
- lib/bb/tests/fetch.py | 5 +++--
- 2 files changed, 5 insertions(+), 3 deletions(-)
-
+diff --git a/default-registry/configurations/oe-nodistro-whinlatter.conf.json b/default-registry/configurations/oe-nodistro-wrynose.conf.json
+similarity index 82%
+rename from default-registry/configurations/oe-nodistro-whinlatter.conf.json
+rename to default-registry/configurations/oe-nodistro-wrynose.conf.json
+index 7b183ae1c43..45fe24a85fa 100644
+--- a/default-registry/configurations/oe-nodistro-whinlatter.conf.json
++++ b/default-registry/configurations/oe-nodistro-wrynose.conf.json
+@@ -1,5 +1,5 @@
+ {
+-    "description": "OpenEmbedded - 'nodistro' basic configuration, release 5.3 'whinlatter'",
++    "description": "OpenEmbedded - 'nodistro' basic configuration, release 6.0 'wrynose'",
+     "expires": "2026-05-31",
+     "sources": {
+         "bitbake": {
+@@ -9,8 +9,8 @@
+                         "uri": "https://git.openembedded.org/bitbake"
+                     }
+                 },
+-                "branch": "2.16",
+-                "rev": "2.16"
++                "branch": "2.18",
++                "rev": "2.18"
+             }
+         },
+         "openembedded-core": {
+@@ -20,8 +20,8 @@
+                         "uri": "https://git.openembedded.org/openembedded-core"
+                     }
+                 },
+-                "branch": "whinlatter",
+-                "rev": "whinlatter"
++                "branch": "wrynose",
++                "rev": "wrynose"
+             }
+         },
+         "yocto-docs": {
+@@ -31,8 +31,8 @@
+                         "uri": "https://git.yoctoproject.org/yocto-docs"
+                     }
+                 },
+-                "branch": "whinlatter",
+-                "rev": "whinlatter"
++                "branch": "wrynose",
++                "rev": "wrynose"
+             }
+         }
+     },
+@@ -41,7 +41,7 @@
+         {
+             "name": "nodistro",
+             "description": "OpenEmbedded 'nodistro'",
+-            "setup-dir-name": "oe-nodistro-whinlatter",
++            "setup-dir-name": "oe-nodistro-wrynose",
+             "bb-layers": ["openembedded-core/meta"],
+             "oe-fragments-one-of": {
+                 "machine": {
+diff --git a/default-registry/configurations/poky-whinlatter.conf.json b/default-registry/configurations/poky-wrynose.conf.json
+similarity index 84%
+rename from default-registry/configurations/poky-whinlatter.conf.json
+rename to default-registry/configurations/poky-wrynose.conf.json
+index 4827ebe1148..c3a72a99fd7 100644
+--- a/default-registry/configurations/poky-whinlatter.conf.json
++++ b/default-registry/configurations/poky-wrynose.conf.json
+@@ -1,6 +1,6 @@
+ {
+-    "description": "Poky - The Yocto Project testing distribution configurations and hardware test platforms, release 5.3 'whinlatter'",
+-    "expires": "2026-05-31",
++    "description": "Poky - The Yocto Project testing distribution configurations and hardware test platforms, release 6.0 'wrynose'",
++    "expires": "2030-05-31",
+     "sources": {
+         "bitbake": {
+             "git-remote": {
+@@ -9,8 +9,8 @@
+                         "uri": "https://git.openembedded.org/bitbake"
+                     }
+                 },
+-                "branch": "2.16",
+-                "rev": "2.16"
++                "branch": "2.18",
++                "rev": "2.18"
+             }
+         },
+         "openembedded-core": {
+@@ -20,8 +20,8 @@
+                         "uri": "https://git.openembedded.org/openembedded-core"
+                     }
+                 },
+-                "branch": "whinlatter",
+-                "rev": "whinlatter"
++                "branch": "wrynose",
++                "rev": "wrynose"
+             }
+         },
+         "meta-yocto": {
+@@ -31,8 +31,8 @@
+                         "uri": "https://git.yoctoproject.org/meta-yocto"
+                     }
+                 },
+-                "branch": "whinlatter",
+-                "rev": "whinlatter"
++                "branch": "wrynose",
++                "rev": "wrynose"
+             }
+         },
+         "yocto-docs": {
+@@ -42,8 +42,8 @@
+                         "uri": "https://git.yoctoproject.org/yocto-docs"
+                     }
+                 },
+-                "branch": "whinlatter",
+-                "rev": "whinlatter"
++                "branch": "wrynose",
++                "rev": "wrynose"
+             }
+         }
+     },
+@@ -51,7 +51,7 @@
+         "configurations": [
+         {
+             "bb-layers": ["openembedded-core/meta","meta-yocto/meta-yocto-bsp","meta-yocto/meta-poky"],
+-            "setup-dir-name": "$distro-whinlatter",
++            "setup-dir-name": "$distro-wrynose",
+             "oe-fragments-one-of": {
+                 "machine": {
+                     "description": "Target machines",
 
