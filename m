@@ -1,202 +1,115 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AED4F9B5F6
-	for <webhook@archiver.kernel.org>; Wed, 22 Apr 2026 09:18:34 +0000 (UTC)
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.76817.1776849509492130858
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F055F9B600
+	for <webhook@archiver.kernel.org>; Wed, 22 Apr 2026 09:39:24 +0000 (UTC)
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.78579.1776850754205370899
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 22 Apr 2026 02:18:29 -0700
+ Wed, 22 Apr 2026 02:39:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=AXBXKjh4;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-43eada6d900so5128126f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 22 Apr 2026 02:18:29 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=PwnWi5LI;
+ spf=pass (domain: gmail.com, ip: 209.85.222.182, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-8eb5ad01402so331772585a.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 22 Apr 2026 02:39:14 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776850753; cv=none;
+        d=google.com; s=arc-20240605;
+        b=QsZqXR0SMnE2Lp6HtIEh74el9AoLa4ydjsadkU1OHdoJvv3f/b/6S+MqEMk7FhMqfy
+         y5wi7pydf+JtNgpBy4WsCOhyNJaR0XupEZzxom8X6gijnb+3qq0Xv10rKn3jTe7R4G0k
+         vrDWueke3PRgocpoptIqqxAAd+NlX35WuL9Vw2KJzHNX+XaCq/PnxMZH7rd69VN3+p+/
+         G548sJmi084I813bmQ9wLqHwPkoV6q+ntH4bIlTqIeP7cOnR9svwGrHZ/mZNJ7nVlP4r
+         WlYkyPVFU53Uved6Vrw6Tlpvyblyy/YYZStp/DCtj9cFlCNnvtMFGtXMVjy7aROTU+CO
+         ghWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=rj3OcTDPBXoFykaKY0bF94hl3jd3x6owUrdKpD3T2C8=;
+        fh=nTTaCMLSXiKcsNq27TrJZaTuW3XGD70wCTeR+9P8VtA=;
+        b=NVzvmnwfV7thZx7KK2JrZiPgTqh3aVV+DbgCeIZYiJRm902PBtndcTo8YotVTm4NXc
+         qnKqq1g9yzd4B485jwlbb61q6ctYo1HxNRNBwUY8IwfotYa+BzrUZe4uVnEvoKunJ0hA
+         GVWjeWc1n6/OFOfSrESIe1lP7T1pBEbTvcZb7WpdmnD38fnJ1n661GbyLhbcUrAp75AV
+         hlFQKyDhSdeJtdFt2OVnKA+AHTTgxU+cP1Aq8JJjRGnfJUz4UAgQXla7jEYUNvs7WmaO
+         MYoiNZ7kSOxj4BBalGCF2nuYTz2EamPPzLa+DWmDJkCbxCtiBM+9HeU6TxzXuWB1Eb06
+         fN1A==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1776849507; x=1777454307; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PUTOygwDgP77eW+kxmSfELS8drI7WYvBEiFPHEMCEaU=;
-        b=AXBXKjh4LXGEQQ1nLDIX5U/q51sdFUiS+nFe7U4CG4ASH9ufeo2rwQMIZ78tvEG1o+
-         t6O24OIGyQEsyBKRmhB5jLyCHRyZKnyFUaCRGQl+w6Kfiwq5KvA3/yl2Sv/YcCJcFksa
-         xjgDcJ8Ekmi7Y3adbWcI/kzQCw+9Li8/DHWCU=
+        d=gmail.com; s=20251104; t=1776850753; x=1777455553; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rj3OcTDPBXoFykaKY0bF94hl3jd3x6owUrdKpD3T2C8=;
+        b=PwnWi5LIB/f/EFLmGKVDGvXFJH2idDrot0vACa84c1rWxZ0tBIqLRlucAQZ8OPX9fp
+         J+DypbwtXj/+PljddKvxZ92pO63eWJxgPpoayQfxKiW+UjcGgrrU37oJLERgx5l4dEID
+         BkT62++EgMxJtAH8Ok6tj0TQyZ7VH2as7oUEdUafrsuwWuzgz5BJDWp95qAId0KIQV3c
+         SIbFy9k8F8k0Ocgvs6b9sLrRKjXQsys4Zg0H541TbWdUmC72hPSKIPf/BNiTTWndKsN/
+         p/5HxahgoZP3OvIo66QmcHxaEb+C4kvfFdnGPf5Kl9IDugWE+L6eynTWIWcPjr0iivKu
+         PE3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776849507; x=1777454307;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PUTOygwDgP77eW+kxmSfELS8drI7WYvBEiFPHEMCEaU=;
-        b=azJy6KiQBKZJc5Q0BhEvQrqD65kK0kmNsqi3yqyh1f/A7jmWvwvXjD5DnwDgE4jhKp
-         9hUh/5AD7cOxS3eoKNClzgaTf4kKefMf7fjMuzwnezPg+CvXpevvJWz9qrZ4T9BNDan4
-         wOcFxYQaqD3+OBZte1lYKJLmsfCsshEtDLF6p6rESfuaHj4frItd+JJ81RpaC1YB+L3e
-         q9oZywWLJWphSm5NzJIsnM/cnjPApzPjVZJ9xtRN0MZ9Tssy+J/4FyVAfywbOUyydrr+
-         J1nEq2HJIDi5rGpiCwB4HusEIZHTj9OtTBtFm7QWo7/tZZhgGg/vG6yvLZ1EhY8cXW69
-         qy2w==
-X-Gm-Message-State: AOJu0YzcFgFvgvDWpbD6knX87rjvEIkxcrac8T0bdl676OOvxFIRKzev
-	8gAWmxwjOFvl059KucEVFX7LRxwnnEytuzR4pGmD2XRH7RNIT0ShE/xI920f878zZvcVntht6WV
-	c+e654TA=
-X-Gm-Gg: AeBDietnYY2ZTAvC+wO4CLm7mOaQYEaX363jcMN6orY3RgsfejbAeTJsZWubUmvjMoW
-	dUPg1QnhshSG4fYZWlpdAahczvD5uWdCg0rIFVPG+X2YLNeuTKy6rAxMI55nTPBnnsh/IbXfX9Z
-	NJ2UwEVbWbDF2gR7bO2o9pktX+TeyIUn9kcjdoSzYKkFz2fXyUWOuXZXc4MMnnTwVbmAEQF+G+d
-	Q3tOZxxdqVlphkYHb8baJw45ppwm91HJDjphLazji8//XUn9Li4HoWgWHGgm7zAL14riPTYneZJ
-	22fT4pX0icqwXDlw10/Ra5Zwad+2yqxBpePgqum4IOvX2GE7kAm7QUZvpY/c260PrSKKDz+yuGk
-	DETOBd5ix4UN6NofOIqt6/3e3BLGHMb2O/suQglSVsJoj0KALv0kuXDnrwFJkFkDnPGlUvSvQG7
-	gjMLe3h1K2WrUxp9+eLaj2rj7Sv7pSIk6yc/8T0AHFrCGw6cgq7Chnnk1P0DRzmqA=
-X-Received: by 2002:a05:6000:22c5:b0:43c:ef4f:79dc with SMTP id ffacd0b85a97d-43fe3db9b0emr33234699f8f.8.1776849507329;
-        Wed, 22 Apr 2026 02:18:27 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:a9c6:3deb:bd01:ef01])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43fe4cc09b1sm44755222f8f.9.2026.04.22.02.18.26
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2026 02:18:26 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] default-registry: Update whinlatter -> wrynose
-Date: Wed, 22 Apr 2026 10:18:25 +0100
-Message-ID: <20260422091826.135946-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.53.0
+        d=1e100.net; s=20251104; t=1776850753; x=1777455553;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rj3OcTDPBXoFykaKY0bF94hl3jd3x6owUrdKpD3T2C8=;
+        b=fKjd6oO8KR/3wE7EI/XLS99FosTkUvpLEA55owe+FnQiL8LROYZlfx1RiTdewCLwtR
+         kfw5h6K6BXYlXNdOr5VruX4R449MZokxwme+w77Ejj05hjGr7amj92VcqRQ6U/asx38D
+         SlFBrp4QBdPD2Gc3ppE36BMzhct9xX4gwWzrEhURiQs0BxooObQmKHzCjAPqsTju8k00
+         tgPVsEMvLPgxzJnGssbr1jhHsaQa0sNRXaZEc/pY7jhpyHm8nX1aHaTUP7Ppo8AHEDd8
+         x5BTYevjfLL74lerkE6/ECCbMYP0NI1BXKRZzIYF/RzhQktfXRygKjbsN6nBvsKEaphc
+         excA==
+X-Gm-Message-State: AOJu0Yw1jY9/q8hpZCQsThD6IQkFtLPkSGs+sOxfY8/pICV0rojbrBhk
+	7Pa+1dHEZvDj2RnEGc5Q8BtIpVzAlvWaIc4VZNn0c2/oL9N/KTlUww6eyAGxK6rUqvAbrsAsCNh
+	B8PE6GDL8NWsH95rZr8dcD9lzp9M7no+Tbw==
+X-Gm-Gg: AeBDiet46AHBiDa2WlEUCnDkzGEo7+NFKBz3PPRiYiwnBFT8mXPbneIUDHpjpJQtPYr
+	HUc1URpRLlYV6wgfgiGn/+53qbEu3GQdBe5Y/O5N1Ka/aayGfSXKqtXGgUZABoT+FqCadx945Jd
+	FEjFHjOYhL4ZZPB4e4skI07SWQRV9GtIuCKUfinZpG255oxKJ+KJOpLg6N4Glq29bSRr7lewMIk
+	uLdF2oYTM5RkMvaD1hbfvNcesJlcKHgSU+VWEm0YE9NdRuwDDjjPCWKGg0jlJ19EjGvRsIboMKJ
+	fOS4t9FZflCrh7jEymM8elNJsUpIfiB8XLTs+PFs9gZ0wwqa8tcF
+X-Received: by 2002:a05:6214:cc1:b0:8ac:b4b3:3ce2 with SMTP id
+ 6a1803df08f44-8b02813ae21mr328958716d6.41.1776850753117; Wed, 22 Apr 2026
+ 02:39:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260422091826.135946-1-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20260422091826.135946-1-richard.purdie@linuxfoundation.org>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Wed, 22 Apr 2026 11:39:02 +0200
+X-Gm-Features: AQROBzDYCGGyfEsCOojGfUTg9obzCAjnuZcO0Fjklx9_thJTqCNKOVGzeuAaYeo
+Message-ID: <CANNYZj8jK1aNNsDufo3y3_Dd95VrAFCdu32OfykMzRuPdxmouw@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] default-registry: Update whinlatter -> wrynose
+To: richard.purdie@linuxfoundation.org
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 22 Apr 2026 09:18:34 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19372
+ <bitbake-devel@lists.openembedded.org>; Wed, 22 Apr 2026 09:39:24 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19373
 
-Add the new release, replacing whinlatter which it supersedes.
+On Wed, 22 Apr 2026 at 11:18, Richard Purdie via
+lists.openembedded.org
+<richard.purdie=linuxfoundation.org@lists.openembedded.org> wrote:
+>
+> Add the new release, replacing whinlatter which it supersedes.
+>
+>  ...onf.json => oe-nodistro-wrynose.conf.json} | 16 +++++++-------
+>  ...atter.conf.json => poky-wrynose.conf.json} | 22 +++++++++----------
+>  2 files changed, 19 insertions(+), 19 deletions(-)
+>  rename default-registry/configurations/{oe-nodistro-whinlatter.conf.json => oe-nodistro-wrynose.conf.json} (82%)
+>  rename default-registry/configurations/{poky-whinlatter.conf.json => poky-wrynose.conf.json} (84%)
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- ...onf.json => oe-nodistro-wrynose.conf.json} | 16 +++++++-------
- ...atter.conf.json => poky-wrynose.conf.json} | 22 +++++++++----------
- 2 files changed, 19 insertions(+), 19 deletions(-)
- rename default-registry/configurations/{oe-nodistro-whinlatter.conf.json => oe-nodistro-wrynose.conf.json} (82%)
- rename default-registry/configurations/{poky-whinlatter.conf.json => poky-wrynose.conf.json} (84%)
+If someone has set up a build from whinlatter, this will break updates
+for them. I think it's better to make a copy, rather than rename.
 
-diff --git a/default-registry/configurations/oe-nodistro-whinlatter.conf.json b/default-registry/configurations/oe-nodistro-wrynose.conf.json
-similarity index 82%
-rename from default-registry/configurations/oe-nodistro-whinlatter.conf.json
-rename to default-registry/configurations/oe-nodistro-wrynose.conf.json
-index 7b183ae1c43..45fe24a85fa 100644
---- a/default-registry/configurations/oe-nodistro-whinlatter.conf.json
-+++ b/default-registry/configurations/oe-nodistro-wrynose.conf.json
-@@ -1,5 +1,5 @@
- {
--    "description": "OpenEmbedded - 'nodistro' basic configuration, release 5.3 'whinlatter'",
-+    "description": "OpenEmbedded - 'nodistro' basic configuration, release 6.0 'wrynose'",
-     "expires": "2026-05-31",
-     "sources": {
-         "bitbake": {
-@@ -9,8 +9,8 @@
-                         "uri": "https://git.openembedded.org/bitbake"
-                     }
-                 },
--                "branch": "2.16",
--                "rev": "2.16"
-+                "branch": "2.18",
-+                "rev": "2.18"
-             }
-         },
-         "openembedded-core": {
-@@ -20,8 +20,8 @@
-                         "uri": "https://git.openembedded.org/openembedded-core"
-                     }
-                 },
--                "branch": "whinlatter",
--                "rev": "whinlatter"
-+                "branch": "wrynose",
-+                "rev": "wrynose"
-             }
-         },
-         "yocto-docs": {
-@@ -31,8 +31,8 @@
-                         "uri": "https://git.yoctoproject.org/yocto-docs"
-                     }
-                 },
--                "branch": "whinlatter",
--                "rev": "whinlatter"
-+                "branch": "wrynose",
-+                "rev": "wrynose"
-             }
-         }
-     },
-@@ -41,7 +41,7 @@
-         {
-             "name": "nodistro",
-             "description": "OpenEmbedded 'nodistro'",
--            "setup-dir-name": "oe-nodistro-whinlatter",
-+            "setup-dir-name": "oe-nodistro-wrynose",
-             "bb-layers": ["openembedded-core/meta"],
-             "oe-fragments-one-of": {
-                 "machine": {
-diff --git a/default-registry/configurations/poky-whinlatter.conf.json b/default-registry/configurations/poky-wrynose.conf.json
-similarity index 84%
-rename from default-registry/configurations/poky-whinlatter.conf.json
-rename to default-registry/configurations/poky-wrynose.conf.json
-index 4827ebe1148..c3a72a99fd7 100644
---- a/default-registry/configurations/poky-whinlatter.conf.json
-+++ b/default-registry/configurations/poky-wrynose.conf.json
-@@ -1,6 +1,6 @@
- {
--    "description": "Poky - The Yocto Project testing distribution configurations and hardware test platforms, release 5.3 'whinlatter'",
--    "expires": "2026-05-31",
-+    "description": "Poky - The Yocto Project testing distribution configurations and hardware test platforms, release 6.0 'wrynose'",
-+    "expires": "2030-05-31",
-     "sources": {
-         "bitbake": {
-             "git-remote": {
-@@ -9,8 +9,8 @@
-                         "uri": "https://git.openembedded.org/bitbake"
-                     }
-                 },
--                "branch": "2.16",
--                "rev": "2.16"
-+                "branch": "2.18",
-+                "rev": "2.18"
-             }
-         },
-         "openembedded-core": {
-@@ -20,8 +20,8 @@
-                         "uri": "https://git.openembedded.org/openembedded-core"
-                     }
-                 },
--                "branch": "whinlatter",
--                "rev": "whinlatter"
-+                "branch": "wrynose",
-+                "rev": "wrynose"
-             }
-         },
-         "meta-yocto": {
-@@ -31,8 +31,8 @@
-                         "uri": "https://git.yoctoproject.org/meta-yocto"
-                     }
-                 },
--                "branch": "whinlatter",
--                "rev": "whinlatter"
-+                "branch": "wrynose",
-+                "rev": "wrynose"
-             }
-         },
-         "yocto-docs": {
-@@ -42,8 +42,8 @@
-                         "uri": "https://git.yoctoproject.org/yocto-docs"
-                     }
-                 },
--                "branch": "whinlatter",
--                "rev": "whinlatter"
-+                "branch": "wrynose",
-+                "rev": "wrynose"
-             }
-         }
-     },
-@@ -51,7 +51,7 @@
-         "configurations": [
-         {
-             "bb-layers": ["openembedded-core/meta","meta-yocto/meta-yocto-bsp","meta-yocto/meta-poky"],
--            "setup-dir-name": "$distro-whinlatter",
-+            "setup-dir-name": "$distro-wrynose",
-             "oe-fragments-one-of": {
-                 "machine": {
-                     "description": "Target machines",
+It's also good to diff the new wrynose configs against master configs,
+to ensure they're in sync with them, similar to how wrynose itself is
+branched off master.
+
+>      "expires": "2026-05-31",
+
+This needs to be updated to 2030 :) This field is how bitbake-setup
+decides whether to include a given config in listings or interactive
+selections, so whinlatter will simply not be included in those after
+that date passes.
+
+Alex
 
