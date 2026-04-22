@@ -1,111 +1,104 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5912AF9B609
-	for <webhook@archiver.kernel.org>; Wed, 22 Apr 2026 10:19:28 +0000 (UTC)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.79150.1776853167620728539
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C28FF9EDFC
+	for <webhook@archiver.kernel.org>; Wed, 22 Apr 2026 15:19:32 +0000 (UTC)
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.85251.1776871164336890331
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 22 Apr 2026 03:19:28 -0700
+ Wed, 22 Apr 2026 08:19:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=dYz9oelu;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-43d75312379so3924397f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 22 Apr 2026 03:19:27 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=JlV1CErM;
+ spf=pass (domain: gmail.com, ip: 209.85.128.51, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4890d945eb4so24310635e9.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 22 Apr 2026 08:19:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1776853166; x=1777457966; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KtDQVPYpwTbMYlScB3Puz6m3D2wmjHxSMxiS8o1yBXA=;
-        b=dYz9oeluza06m2qlB2g7Gv7DxlZGs2gpmtmYaEzYlN87U8qVdCUhBxrJu+mZfjEA52
-         AWf8DBToqVvLfWCBQN3NSgDI/SbA1R2r+temfhm7fyXQMIYd1wgowGgEAefyycXfXImx
-         fczLSYiqsiNgU8eoGBisECuV4TTc+TuSMVKhY=
+        d=gmail.com; s=20251104; t=1776871162; x=1777475962; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=w41vFNHOqWx0n33s1UH/Sv0plJWxcOrAS+1RMqL1v5Q=;
+        b=JlV1CErMcGyqEWGlDKLwauGxt/T3zmYcdP9x1zMRmxhbkL0XP/E5QlnAXGDv4uC2BL
+         8rrfhSwCo3m+t5j9LJ+u47mfiCRt86FX6qTUKuphy3LW+39s8o8IjYVVRF5rUlWmiN+E
+         pTdkZEqwItp0vAlAtR33VCeVOJd0cl0ENlrnorVS+bA2541Z2fPZlomEbgpWZ++GQ34Z
+         243dbll6bdPRl8JmgYWJByWJigpMnuSH8YDWtVIb5NOd53tzqwEsWyjI7Cyn/zkiJ2UZ
+         Zrngtf2sbnPukqwgRPlA2iWgZe6KO99/vFMvNyy6MyCiYj5oxkHmTXxIeazWicZODfp7
+         tLHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776853166; x=1777457966;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KtDQVPYpwTbMYlScB3Puz6m3D2wmjHxSMxiS8o1yBXA=;
-        b=sRVX1PMR492o32BgnCfErkAaTC2NsxSojnqNrhfvCDGrcGQqg12S5dmqiu4c2AVGeE
-         9/bO7vO4fP6NBObNqKvt6rRf5YaDQJzud3OvYofeYlgqYHkdcGEEq5LC/+oPAsm3LAk/
-         m7VNXd7JviMxwzpXQDDyKE+yO9qqzEgPm2vdLL4rSWePetMhbpwuQlOVXtzlCKJQQiqs
-         o58AVCD+rQzim/T4NiOof/BbcRHSagfZqSmxfvIqKoaPDsr8DJQd0kWOTNtej5CC8n8n
-         CC26iiTwLNC5dlbh7UI8Km8GvZhidPk29Px31PBTZtIgDg+2P41xl8Jm2gxaXG6J0Jty
-         WMCQ==
-X-Gm-Message-State: AOJu0YyMvkCg6KSfo7zJRPeniOUCdPucAtdHMKCXy2XUmjplwDBTdDAj
-	9MoNvDOC9wnhVqG3qDAXF06V1xQLvL9PKbdALDNu3PmM8Kooy2gl7aZeo9UyPpJUrSY=
-X-Gm-Gg: AeBDievWnRAkiB8yW8E7j4w+ojAPjR26Ix5M8i1JDTJD8ohFKLFPATVrmhR3W+ndqOf
-	AlmROk2B5grldC51VnUW0j3l8rxt/+OSusFRvF48XunJtMOxgHME4WEyew9ylVALF0krNNcuvdD
-	/W92gQ/9AGyoKlPTLPyArH8WKticHmJ6jXoXGCXQ3HoW9GsvvVkPsF4ulUjYna3zBzJVA2NjSUE
-	Q45c3HSKZ9UsOZP4guqaBQKjv07/SNC01u+sVKmVomn+sSZx3W8kPJv1fJqPJX9msd4wkb4s1Qf
-	md0gFuKGxbv9vvL4tailSN+x3xGrf+mBeAzXswEx7uqgHunUxVRlKPUlLE4XPyBTuHfKBkVO2mF
-	5CbKHPdtLH5Mmz1cDX5pdJF5B0L+uOFeZTnrdmxvZRRe+4zW+CzGVrPAD9YBlK5wqanIiMZwiEm
-	piNV3m1nTp/C+1HrpZc3+NwUANh1Gr7kOVC6kX+ounYzP55+0XPVMvJ9i3hmYiorLpyyNdIcoSl
-	HnOdt9Rt7nPXj3vsOcuGIa5Fyic5pxmhxMMgw==
-X-Received: by 2002:a05:6000:2505:b0:43d:1598:2d6e with SMTP id ffacd0b85a97d-43fe407c3camr34182655f8f.20.1776853165793;
-        Wed, 22 Apr 2026 03:19:25 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:a9c6:3deb:bd01:ef01? ([2001:8b0:aba:5f3c:a9c6:3deb:bd01:ef01])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43fe4e4ffa8sm45647195f8f.35.2026.04.22.03.19.25
+        d=1e100.net; s=20251104; t=1776871162; x=1777475962;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w41vFNHOqWx0n33s1UH/Sv0plJWxcOrAS+1RMqL1v5Q=;
+        b=DhCYfefEx0VDezNDn1cELXfGuCjk+AWKB6l4LfHwbKOJYg805Kt5CR517ytAIa3HMB
+         Nvhaor7CKVbv2YpcqN57Swyj/QpOHsdGGbUn8pfLmKa4gXPvp/S+UrQSFkdWsIAob7RH
+         KtwM1BPK5ZGfZrfWtAJUwkLbJ13FK5JnOUjsCsLHPd4Rf1uo6mnZ/acAa23Bwq9rz/lk
+         tu/228pVGFnKpcuZ/BP6ogDz8wLpZE3IPHSNCUmYd6KKR7li7aXdQQjpgomhffGmOtaH
+         YgssiLVkQUxPmBs+kdV8wVN5vHGiMwmYR7yfwNZJhjVtf6kd2NECMtpfQREvyOMHJNSg
+         k9bQ==
+X-Gm-Message-State: AOJu0YwNvBU8M73baHhXTmwvhsY/vE57Hdsew1hLW9mv2AZ3brp/XWH2
+	/Uy+7jmwrIQDAykgkHvG0dYj2PB//CN21miMIg0AGUU5/gO8zh0VC2F9YKKnKg==
+X-Gm-Gg: AeBDieu8U69+h49xKQhRkDlkQLbiXBlwqN7L0bJEM7qYLEYlXpGxoIFRnw8VUX9hcZG
+	io+qPw1SiomJvzNjJs5X1oU4bAtJtkh3YC6WzMZG7aswLIO74bmixxB0Cz6N9g9e4bcRu36+AGr
+	HWekx9tgdlYrBNlV1Pr7Yuq9dnXuHMStXN5S3XF4rZFV/5kUMh7jJuwD2HHkcBsoRIMG5qVvdy7
+	l7Ej0MYD2ovuu7FAJFGrceVU7x0BGo/2KAMzj/0PmR/8AawRYpWpJEu2++y/flAmEBIk3TC5RwD
+	xBQVrh3zdrGQXdlEww6+LKHna8Gb87Fv6Mi4qAJx7YqBbrjg4zHXQCo02ftb2QTNz3egB0HExRr
+	Ve8lwTny+eZpn5zSoOB/4/4NVSCSSeq4uTiHdInH1AAWKVdYjVps12UnPWiRhDmrMtZhsXGufda
+	7Bg1kbQ+JRWrIhW1gtapIq+vDgbKm3kwfYVu/+IIFhVURPExF4tk6dB+D6YHVBja8E+gpUxw==
+X-Received: by 2002:a05:600c:4e0c:b0:489:1d7a:4537 with SMTP id 5b1f17b1804b1-4891d7a463emr178188465e9.3.1776871162346;
+        Wed, 22 Apr 2026 08:19:22 -0700 (PDT)
+Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fc18bccfsm413681215e9.8.2026.04.22.08.19.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2026 03:19:25 -0700 (PDT)
-Message-ID: <9e395359d0cba6898d50451c0355861d45e7bb1f.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] default-registry: Update whinlatter ->
- wrynose
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Date: Wed, 22 Apr 2026 11:19:24 +0100
-In-Reply-To: <CANNYZj8jK1aNNsDufo3y3_Dd95VrAFCdu32OfykMzRuPdxmouw@mail.gmail.com>
-References: <20260422091826.135946-1-richard.purdie@linuxfoundation.org>
-	 <CANNYZj8jK1aNNsDufo3y3_Dd95VrAFCdu32OfykMzRuPdxmouw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-9 
+        Wed, 22 Apr 2026 08:19:21 -0700 (PDT)
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Alexander Kanavin <alex@linutronix.de>
+Subject: [PATCH] fetch/wget: in upstream version checks, match versioned directories exactly
+Date: Wed, 22 Apr 2026 17:19:12 +0200
+Message-ID: <20260422151912.2598831-1-alex.kanavin@gmail.com>
+X-Mailer: git-send-email 2.47.3
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 22 Apr 2026 10:19:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19376
+ <bitbake-devel@lists.openembedded.org>; Wed, 22 Apr 2026 15:19:32 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19377
 
-On Wed, 2026-04-22 at 11:39 +0200, Alexander Kanavin wrote:
-> On Wed, 22 Apr 2026 at 11:18, Richard Purdie via
-> lists.openembedded.org
-> <richard.purdie=3Dlinuxfoundation.org@lists.openembedded.org> wrote:
-> >=20
-> > Add the new release, replacing whinlatter which it supersedes.
-> >=20
-> > =C2=A0...onf.json =3D> oe-nodistro-wrynose.conf.json} | 16 +++++++-----=
---
-> > =C2=A0...atter.conf.json =3D> poky-wrynose.conf.json} | 22 +++++++++---=
--------
-> > =C2=A02 files changed, 19 insertions(+), 19 deletions(-)
-> > =C2=A0rename default-registry/configurations/{oe-nodistro-whinlatter.co=
-nf.json =3D> oe-nodistro-wrynose.conf.json} (82%)
-> > =C2=A0rename default-registry/configurations/{poky-whinlatter.conf.json=
- =3D> poky-wrynose.conf.json} (84%)
->=20
-> If someone has set up a build from whinlatter, this will break updates
-> for them. I think it's better to make a copy, rather than rename.
->=20
-> It's also good to diff the new wrynose configs against master configs,
-> to ensure they're in sync with them, similar to how wrynose itself is
-> branched off master.
+From: Alexander Kanavin <alex@linutronix.de>
 
-Fair enough, I sent a v2. This is a learning experience :)
+This change is in code that iterates over a html page, picking
+out links to versioned subdirectories to check further for new versions.
 
-> > =C2=A0=C2=A0=C2=A0=C2=A0 "expires": "2026-05-31",
->=20
-> This needs to be updated to 2030 :) This field is how bitbake-setup
-> decides whether to include a given config in listings or interactive
-> selections, so whinlatter will simply not be included in those after
-> that date passes.
+Without the ^ and $ guards, there would be sub-string matches. This results in
+querying the server multiple times for the same directory (for example,
+perl check where the page contains multiple references to 5.0/something-unrelated)
+or querying the server for directory that doesn't exist (nasm check, where
+existence of 3.02rcX directories would result in querying the server for non-existing 3.02).
 
-I'd got one and missed the other, thanks!
+I have confirmed that the overall oe-core version check returns same results as before, with
+less network churn and nasm version check working properly again.
 
-Cheers,
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ lib/bb/fetch2/wget.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Richard
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index ca4959ab5..6ac4306c0 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -539,7 +539,7 @@ class Wget(FetchMethod):
+         version_dir = ['', '', '']
+         version = ['', '', '']
+ 
+-        dirver_regex = re.compile(r"(?P<pfx>\D*)(?P<ver>(\d+[\.\-_])*(\d+))")
++        dirver_regex = re.compile(r"^(?P<pfx>\D*)(?P<ver>(\d+[\.\-_])*(\d+))$")
+         s = dirver_regex.search(dirver)
+         if s:
+             version_dir[1] = s.group('ver')
+-- 
+2.47.3
+
 
