@@ -1,104 +1,130 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <corentin.guillevic@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C28FF9EDFC
-	for <webhook@archiver.kernel.org>; Wed, 22 Apr 2026 15:19:32 +0000 (UTC)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.85251.1776871164336890331
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B07D5F9936B
+	for <webhook@archiver.kernel.org>; Thu, 23 Apr 2026 10:31:13 +0000 (UTC)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.16584.1776940263345646455
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 22 Apr 2026 08:19:24 -0700
+ Thu, 23 Apr 2026 03:31:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=JlV1CErM;
- spf=pass (domain: gmail.com, ip: 209.85.128.51, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4890d945eb4so24310635e9.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 22 Apr 2026 08:19:24 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=wdInTmyr;
+ spf=pass (domain: smile.fr, ip: 209.85.128.42, mailfrom: corentin.guillevic@smile.fr)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-488e1a8ac40so80226635e9.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 23 Apr 2026 03:31:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776871162; x=1777475962; darn=lists.openembedded.org;
+        d=smile.fr; s=google; t=1776940261; x=1777545061; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=w41vFNHOqWx0n33s1UH/Sv0plJWxcOrAS+1RMqL1v5Q=;
-        b=JlV1CErMcGyqEWGlDKLwauGxt/T3zmYcdP9x1zMRmxhbkL0XP/E5QlnAXGDv4uC2BL
-         8rrfhSwCo3m+t5j9LJ+u47mfiCRt86FX6qTUKuphy3LW+39s8o8IjYVVRF5rUlWmiN+E
-         pTdkZEqwItp0vAlAtR33VCeVOJd0cl0ENlrnorVS+bA2541Z2fPZlomEbgpWZ++GQ34Z
-         243dbll6bdPRl8JmgYWJByWJigpMnuSH8YDWtVIb5NOd53tzqwEsWyjI7Cyn/zkiJ2UZ
-         Zrngtf2sbnPukqwgRPlA2iWgZe6KO99/vFMvNyy6MyCiYj5oxkHmTXxIeazWicZODfp7
-         tLHA==
+        bh=uFvcLF2vz/VnAMvJ/34URS1/SIp2qLg04nGe/McP+xk=;
+        b=wdInTmyrMJ6CLSl+HHPWF4UiF29e2/uEbdhv+Nbi2hzjsSeqJuFEMmssepzk2TS01p
+         bhu7IVotzbiI9/eZK4UwJWNNX4Awvv848CEJ73UDjmBX7iaJGBIARrEe/2mzN3Fq6pJo
+         Nvne7n3O5qkdz/9PS5irzSt6s53d88u37BZyM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776871162; x=1777475962;
+        d=1e100.net; s=20251104; t=1776940261; x=1777545061;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=w41vFNHOqWx0n33s1UH/Sv0plJWxcOrAS+1RMqL1v5Q=;
-        b=DhCYfefEx0VDezNDn1cELXfGuCjk+AWKB6l4LfHwbKOJYg805Kt5CR517ytAIa3HMB
-         Nvhaor7CKVbv2YpcqN57Swyj/QpOHsdGGbUn8pfLmKa4gXPvp/S+UrQSFkdWsIAob7RH
-         KtwM1BPK5ZGfZrfWtAJUwkLbJ13FK5JnOUjsCsLHPd4Rf1uo6mnZ/acAa23Bwq9rz/lk
-         tu/228pVGFnKpcuZ/BP6ogDz8wLpZE3IPHSNCUmYd6KKR7li7aXdQQjpgomhffGmOtaH
-         YgssiLVkQUxPmBs+kdV8wVN5vHGiMwmYR7yfwNZJhjVtf6kd2NECMtpfQREvyOMHJNSg
-         k9bQ==
-X-Gm-Message-State: AOJu0YwNvBU8M73baHhXTmwvhsY/vE57Hdsew1hLW9mv2AZ3brp/XWH2
-	/Uy+7jmwrIQDAykgkHvG0dYj2PB//CN21miMIg0AGUU5/gO8zh0VC2F9YKKnKg==
-X-Gm-Gg: AeBDieu8U69+h49xKQhRkDlkQLbiXBlwqN7L0bJEM7qYLEYlXpGxoIFRnw8VUX9hcZG
-	io+qPw1SiomJvzNjJs5X1oU4bAtJtkh3YC6WzMZG7aswLIO74bmixxB0Cz6N9g9e4bcRu36+AGr
-	HWekx9tgdlYrBNlV1Pr7Yuq9dnXuHMStXN5S3XF4rZFV/5kUMh7jJuwD2HHkcBsoRIMG5qVvdy7
-	l7Ej0MYD2ovuu7FAJFGrceVU7x0BGo/2KAMzj/0PmR/8AawRYpWpJEu2++y/flAmEBIk3TC5RwD
-	xBQVrh3zdrGQXdlEww6+LKHna8Gb87Fv6Mi4qAJx7YqBbrjg4zHXQCo02ftb2QTNz3egB0HExRr
-	Ve8lwTny+eZpn5zSoOB/4/4NVSCSSeq4uTiHdInH1AAWKVdYjVps12UnPWiRhDmrMtZhsXGufda
-	7Bg1kbQ+JRWrIhW1gtapIq+vDgbKm3kwfYVu/+IIFhVURPExF4tk6dB+D6YHVBja8E+gpUxw==
-X-Received: by 2002:a05:600c:4e0c:b0:489:1d7a:4537 with SMTP id 5b1f17b1804b1-4891d7a463emr178188465e9.3.1776871162346;
-        Wed, 22 Apr 2026 08:19:22 -0700 (PDT)
-Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fc18bccfsm413681215e9.8.2026.04.22.08.19.21
+        bh=uFvcLF2vz/VnAMvJ/34URS1/SIp2qLg04nGe/McP+xk=;
+        b=K2tE+ev4hvkDzWgNWuLRmiCJqmY7VnpTr3YdV1wpKDk5xButkLC/GpKbiNdF3JsT3z
+         Whau4JQmuwPo2JhGcu5csqVLBW+yLALt8rsmHzL9k0PZnhTV2BiFXmOMW4zU6EJJhdsy
+         /DCQ6oiZy0q1UvW6EAnVu3AgbxQ3kIZ+Jr8Hfgy6JEh3dvvSXfc51wo6tOAWoSaiSltu
+         8AyB6No9lZrmp3v/r8+aJLUUH/lVPa2VCxJRdMy2M5Uz34tiAoDPbSkwo6Xk1C0/OTWr
+         fqkZCCZm5b7MhxpJEX7+LxaPDQ183kjrKu5PL4cUYSty1FM1CMwppsJ/dluDQzl0NsPf
+         BtxQ==
+X-Gm-Message-State: AOJu0YzK4lRVp9ejZFrS9AcdOi4khv3Gg7MIE4eoS4ixpX+epsprzzuS
+	t3NQYZHb1S/L1LDyJSftPuGkV0zW7UFMJTyWyJtHefG3FQNF7U9vLcFR3yaLs0IlK+jl4fYjISP
+	dKZwKE4w=
+X-Gm-Gg: AeBDievXQFDEljWyb5qztn8LkjO4S3o0pV2eF7Iure9YVsqgVRO6Vn6+P3tiOY0aQhF
+	BNzYqjzzC3kBnh60EOaiklErN/EDe2pXXRgQEYQE6QaYhPgJcUVtly0JOrBBy8+r9tMecd+zD7M
+	cldkhrm9ntTnOes4licIUDXPrkurWK2435Rv5IIk5zcrtNTS5jMHfkcsMH8O9PCX+zfaJYvm69C
+	oiPWV1wzak2OKfKHw4K+nYljT3JG4lxm7ls5TG+Q1utEdvHNs/J8PelgXgHgseLB1NOC7jxTq6u
+	yVsAnTSUXTgl1nxs5lnLl0EHEdwy6o22ajISvrxjP2X5uOUeiip/e13495nhz4yXTJtd8rP3i0N
+	oWuLfHyOOnR6L9CeDgxvpLKLmtcCTA2ixwo34jgn8SGfOitTUnyfnQyxLw8O41A9HTjdwwaQ8ft
+	wd5eLJhxYmpx3KlesunVTtJEOOYWTe3XTFNv19Ow==
+X-Received: by 2002:a05:600c:548c:b0:48a:568f:ae6b with SMTP id 5b1f17b1804b1-48a568fafcbmr147589055e9.7.1776940261439;
+        Thu, 23 Apr 2026 03:31:01 -0700 (PDT)
+Received: from heaven ([2a01:e0a:2c:37e0:31a6:f161:bbe5:6cec])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a4b329542sm416746315e9.3.2026.04.23.03.31.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2026 08:19:21 -0700 (PDT)
-From: Alexander Kanavin <alex.kanavin@gmail.com>
+        Thu, 23 Apr 2026 03:31:01 -0700 (PDT)
+From: corentin.guillevic@smile.fr
 To: bitbake-devel@lists.openembedded.org
-Cc: Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH] fetch/wget: in upstream version checks, match versioned directories exactly
-Date: Wed, 22 Apr 2026 17:19:12 +0200
-Message-ID: <20260422151912.2598831-1-alex.kanavin@gmail.com>
-X-Mailer: git-send-email 2.47.3
+Cc: Corentin Guillevic <corentin.guillevic@smile.fr>
+Subject: [PATCH] cooker: limit the execution of the hashequiv client/server ping
+Date: Thu, 23 Apr 2026 12:29:51 +0200
+Message-ID: <20260423102950.697501-2-corentin.guillevic@smile.fr>
+X-Mailer: git-send-email 2.51.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 22 Apr 2026 15:19:32 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19377
+ <bitbake-devel@lists.openembedded.org>; Thu, 23 Apr 2026 10:31:13 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19378
 
-From: Alexander Kanavin <alex@linutronix.de>
+From: Corentin Guillevic <corentin.guillevic@smile.fr>
 
-This change is in code that iterates over a html page, picking
-out links to versioned subdirectories to check further for new versions.
+The ping method is used to test the connection to the hash equivalence server.
+However, if the server is unavailable, the bitbake server has to wait several
+minutes for the system to terminate.
 
-Without the ^ and $ guards, there would be sub-string matches. This results in
-querying the server multiple times for the same directory (for example,
-perl check where the page contains multiple references to 5.0/something-unrelated)
-or querying the server for directory that doesn't exist (nasm check, where
-existence of 3.02rcX directories would result in querying the server for non-existing 3.02).
+While waiting for a response from the hash server, the bitbake server does not
+provide any feedback to the bitbake client. The latter then closes the link and
+fails with the error:
 
-I have confirmed that the overall oe-core version check returns same results as before, with
-less network churn and nasm version check working properly again.
+Timeout while waiting for a reply from the bitbake server (60s at 09:50:15.377337)
 
-Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+Adding a timeout to the ping step allows quicker action when a remote server is
+unavailable, and prevents disconnection of the client due to timeout.
+The default timeout is 10 seconds, but this can be set using the
+BB_HASHSERVER_TIMEOUT variable.
+
+Signed-off-by: Corentin Guillevic <corentin.guillevic@smile.fr>
 ---
- lib/bb/fetch2/wget.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/asyncrpc/client.py | 4 ++--
+ lib/bb/cooker.py          | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index ca4959ab5..6ac4306c0 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -539,7 +539,7 @@ class Wget(FetchMethod):
-         version_dir = ['', '', '']
-         version = ['', '', '']
+diff --git a/lib/bb/asyncrpc/client.py b/lib/bb/asyncrpc/client.py
+index 17b72033b..7ef76c90c 100644
+--- a/lib/bb/asyncrpc/client.py
++++ b/lib/bb/asyncrpc/client.py
+@@ -199,8 +199,8 @@ class AsyncClient(object):
+         self.check_invoke_error(result)
+         return result
  
--        dirver_regex = re.compile(r"(?P<pfx>\D*)(?P<ver>(\d+[\.\-_])*(\d+))")
-+        dirver_regex = re.compile(r"^(?P<pfx>\D*)(?P<ver>(\d+[\.\-_])*(\d+))$")
-         s = dirver_regex.search(dirver)
-         if s:
-             version_dir[1] = s.group('ver')
+-    async def ping(self):
+-        return await self.invoke({"ping": {}})
++    async def ping(self, timeout):
++        return await asyncio.wait_for(self.invoke({"ping": {}}), timeout)
+ 
+     async def __aenter__(self):
+         return self
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 4b6ba3196..0bc9b7aec 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -342,7 +342,7 @@ according to https://docs.yoctoproject.org/dev-manual/hashequivserver.html""".fo
+                 if upstream:
+                     try:
+                         with hashserv.create_client(upstream) as client:
+-                            client.ping()
++                            client.ping(self.data.getVar("BB_HASHSERVER_TIMEOUT") or 10)
+                     except ImportError as e:
+                         bb.fatal(""""Unable to use hash equivalence server at '%s' due to missing or incorrect python module:
+ %s
+@@ -352,7 +352,7 @@ Please install the needed module on the build host, or use an environment contai
+  - or set up pip venv
+ You can also remove the BB_HASHSERVE_UPSTREAM setting, but this may result in significantly longer build times as bitbake will be unable to reuse prebuilt sstate artefacts."""
+                                  % (upstream, repr(e)))
+-                    except ConnectionError as e:
++                    except (ConnectionError, TimeoutError) as e:
+                         bb.warn("Unable to connect to hash equivalence server at '%s', please correct or remove BB_HASHSERVE_UPSTREAM:\n%s"
+                                  % (upstream, repr(e)))
+                         upstream = None
 -- 
-2.47.3
+2.51.0
 
 
