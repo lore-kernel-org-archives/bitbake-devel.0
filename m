@@ -2,50 +2,51 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97BCFF8848
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF3EFF8844
 	for <webhook@archiver.kernel.org>; Fri, 24 Apr 2026 21:02:35 +0000 (UTC)
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.32116.1777064547680335986
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.32755.1777064548140921797
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 24 Apr 2026 14:02:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=jfyE+QEv;
- spf=pass (domain: smile.fr, ip: 209.85.221.65, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wr1-f65.google.com with SMTP id ffacd0b85a97d-43d572f7437so5429823f8f.1
+ dkim=pass header.i=@smile.fr header.s=google header.b=RQEMzk76;
+ spf=pass (domain: smile.fr, ip: 209.85.221.43, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-43d734223e4so5683142f8f.0
         for <bitbake-devel@lists.openembedded.org>; Fri, 24 Apr 2026 14:02:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=smile.fr; s=google; t=1777064546; x=1777669346; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IH+yaaJWApW9bfTgYAxDbMs8aKOTC7g6E8lsWHFiwyU=;
-        b=jfyE+QEvy5xn481Y9TwWFcamqRfwxgkFfDYODniCUjTeE8Ytjkdkxa086tDJtnxLh2
-         QfVk6SQqwvbnVs3W68H2fe970panil/YVvsQXwhwUjT9qibOr3/YUHQLyP9YYmJVWHdC
-         Or7CD+lX0hb2F+TaiRJCZQODARX6G7LzZE+Ak=
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R5mkfX5qyQ9/Bu4pIuSfN9gNPThYa22SsqLJccA1eAA=;
+        b=RQEMzk76ikep17SyiS8SK5nIkNwb3V6dFFpRjT57tX9a99rg4Z9+sHXx8pZqohNgln
+         HCn8B0XkeSez7ETqesQPVFEaDfTeLktgZZR6Yequ1bhSJ7WSCdbkFxFwHUGoOidQFz/B
+         0+rIns38b/sOTkLY7vNkkTBq4e9RLeKMMftCI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20251104; t=1777064546; x=1777669346;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IH+yaaJWApW9bfTgYAxDbMs8aKOTC7g6E8lsWHFiwyU=;
-        b=VBf6g61kBc4mW9ANxmG+/p97rq+BApNsW5cgqy/g57JFNFQslHr1hFiA7Kz6mYJd+9
-         3Akn7pV6zT/7fYSDd0tBJuGgZveKmFiT7L5gUOvADgnkQccPlUR1exN5gAbmSWy3p16K
-         0CFkpMpKA4L60NXyfCqSxbV6N8SqJcuwaVczT+42UDZLUkyVyut8YTzIC6QoZ5GEnuTU
-         coMd/9Zr0u/PgdaqSrUDxuY4fiNSMveFr4JFRbwfMrrpk7qnils8Qle08oHzMHDOw6FS
-         ydCMmjH8KloCIObhbV9uZHBjAkrToXM/I1Ym3QGpL3BfgTp0gbI+1LKpKIet8BIvXI9c
-         QGag==
-X-Gm-Message-State: AOJu0YxZszJwYDiCgYRVVWqGFBlhnGB49v6cZUuHdvUXaPIIuTn7y/mm
-	vSFxl2ppdmVXp7hORk45hdwGMjYYMqusGkFATM9AJ9XKh+y+JIjhumn1H3AlYGJ8C110nCJvhiB
-	4oJkLB5cNmnDb
-X-Gm-Gg: AeBDiev+igMu1QwE47z2QLSxDZ+zmbe15IDiSkpZkBLN6UYwD3WGMP7z/sTMegORHRj
-	xB9R6WodKfgNXMQ+ltNmDl8NwQ+/1ZXeXHYHi6PC21I9LRUtZVOtP9ZS+N1EwvlNpo/g0GyDN8C
-	DSVnMXaFKsRTThzrTQu8HycTyT3yHUyUqYBIpMtj8/UlZl4HYMvbyBMSDJFD5+KTvRs1DBTAikI
-	1SNZNCIqZyiFjpn0yKAxIWJkKOmtLxRAgWhd0t42GODMXEupZqn0BKFG1lQAb6vgkcGHp4eIAB1
-	9lLyiW7L1ceNXDD4hBhLLxcclKXWPQXPypE5uPRCft2XnV5w+avrQ08we/CLBZBYOE5fuFBb7WU
-	qTkD5teOKlHN1n7IGbiZrKrRIRbj+TsqtHIUkgN7pnzoEbJP4Va0fO/f034AYu2aauWc8emLxDn
-	bDwFjRM/DTMvGA1oxuNxITgZA7x4bDa9RNc+QfEwKWMZmV4VWHIW9X130Gge7M9Yj8CF6XTPcTX
-	E/wR2tFMJ1HnRNZB+NFYvA7MwBS/35twAzMKw==
-X-Received: by 2002:a5d:5e01:0:b0:43d:c95c:5e75 with SMTP id ffacd0b85a97d-43fe3dbec67mr50111128f8f.4.1777064545522;
-        Fri, 24 Apr 2026 14:02:25 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=R5mkfX5qyQ9/Bu4pIuSfN9gNPThYa22SsqLJccA1eAA=;
+        b=ZydLWszKX19BnK3bOz8W6WSTSpzmy3kN12pireItpNr57LTCTUpDfT2ORkP/IyxJif
+         dvjc7A0CvutWAUecad+93HTjsUft4p+PNH3DkR0ccNY9io0owEUroMf/2EXTG0zDj7rs
+         RL4MsTC3l+y5OSXy+GZ80k8/61JIscDNy3VyEFzXL7YJp8Oks8g15lKNsxUGBUUwSEFH
+         2lntXP55pb8eRnsxrg3VnC0RkfHx8Fm+lszcOTLkUsHiAqyFjqCIquLzmbQyPByLwdGx
+         DYh6jf3QxSg2pkM7+JCz4ZJKl1rdvUNkrDsax2uhw+yy1DBU2CXOCvyYbSpfdIgohWtW
+         oPFA==
+X-Gm-Message-State: AOJu0Yy567gogNvWNtTm47z4EgtopyE/BAQC/Aszubzj5/D+QYpvZoPm
+	Bbh6XqGbFHMmDkEiIsUq3Rof5czgRxQS0YPaokM4UEAvjdgAOHGrdiORzCQHNsmBu9VPd+a30uI
+	Qy/F5DxNmNQ==
+X-Gm-Gg: AeBDies76nK3HdclyHiYOHokmvbiY+Tmnk/cG18dxJsBVaBonOz4pAE7LjjusQRXGTD
+	NIY2eDVsBY17u4x6E+YeArBGtSYJGKsV7a9LDUfN2fuqwD1kJ0LI/TOFA/I5ntlrpVZl/ZuDqhi
+	xsz43zWQd8B/RS4Dk+af+8DkaK9DT8guPjrV88jrf5is6Il6HC1fDR9w+SCRh7msI9iWP28v40g
+	BPUGZFcZzPI6yC/VRxNhaHOhUmHrht7vrMY/YL/QRu/BO0rJL7CyzPquJtUMluqdI2qioCYhueF
+	O8VuAaoVQXacihkrIEDvEtEsO7sasFw7kY5R9U9OmpIzzJqCZ8SrA3ijSqlM4hizizYCuGfh3hS
+	KydjsqDlo88JqHmHjmyQR+KkhpQb7sb7vlEOiKnZTsu3M179ikFwK0g+I166OxpSdAHlh9wCw+I
+	Iz61bhP5cYLcnnn2THCkoUNCB4mZuLLAIDAMdD7QMC2Jz8X+n/xyROoYEvvuCocpgs/5TFFTxfD
+	jQFyJrYIkSgUXH1AN9i3YrE6JK8ZHBl806PpzTOZzMlqSp5
+X-Received: by 2002:a05:6000:228a:b0:43d:779e:afa8 with SMTP id ffacd0b85a97d-43fe407a7e5mr54358638f8f.16.1777064546300;
+        Fri, 24 Apr 2026 14:02:26 -0700 (PDT)
 Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
         by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43fe4e3a7b4sm58146548f8f.22.2026.04.24.14.02.25
         for <bitbake-devel@lists.openembedded.org>
@@ -53,55 +54,101 @@ Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wan
         Fri, 24 Apr 2026 14:02:25 -0700 (PDT)
 From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][scarthgap][2.8][PATCH 0/1] Patch review
-Date: Fri, 24 Apr 2026 23:02:18 +0200
-Message-ID: <cover.1777064423.git.yoann.congal@smile.fr>
+Subject: [bitbake][scarthgap][2.8][PATCH 1/1] runqueue.py: make sure we use bb multiprocessing
+Date: Fri, 24 Apr 2026 23:02:19 +0200
+Message-ID: <c118575bc4f278bc857c532089e1c66ae81234f8.1777064424.git.yoann.congal@smile.fr>
 X-Mailer: git-send-email 2.47.3
+In-Reply-To: <cover.1777064423.git.yoann.congal@smile.fr>
+References: <cover.1777064423.git.yoann.congal@smile.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 24 Apr 2026 21:02:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19390
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19391
 
-Please review this set of changes for scarthgap and have comments back by
-end of day Tuesday, April 28.
+From: Trevor Gamblin <tgamblin@baylibre.com>
 
-Passed a-full on autobuilder:
-https://autobuilder.yoctoproject.org/valkyrie/?#/builders/29/builds/3732
-But got impacted by 2 intermittent failures:
-* qemuarm64-ptest failed with a python3 ptest failure
-  https://autobuilder.yoctoproject.org/valkyrie/?#/builders/61/builds/3558
-  * I reported the (new) issue in:
-    #16267 – [scarthgap] AB-INT PTEST: python3 failure (test_wrong_cert_tls13)
-    https://bugzilla.yoctoproject.org/show_bug.cgi?id=16267
-  * successfuly retried as https://autobuilder.yoctoproject.org/valkyrie/?#/builders/61/builds/3559
-* oe-selftest-armhost failed to download Rust crates from crates.io in bitbake selftest
-  https://autobuilder.yoctoproject.org/valkyrie/?#/builders/23/builds/3835
-  * This bitbake commit did pass in https://autobuilder.yoctoproject.org/valkyrie/?#/builders/23/builds/3814
-  * This is a really recent issue (it also impacted the 6.0 release build)
+Otherwise, we see errors like:
 
-The following changes since commit d3b4c352dd33fca90cd31649eda054b884478739:
+|ERROR: An uncaught exception occurred in runqueue
+|Traceback (most recent call last):
+|  File "/srv/pokybuild/yocto-worker/check-layer/build/layers/bitbake/lib/bb/runqueue.py", line 1663, in execute_runqueue
+|    return self._execute_runqueue()
+|           ~~~~~~~~~~~~~~~~~~~~~~^^
+|  File "/srv/pokybuild/yocto-worker/check-layer/build/layers/bitbake/lib/bb/runqueue.py", line 1607, in _execute_runqueue
+|    retval = self.dump_signatures(dumpsigs)
+|  File "/srv/pokybuild/yocto-worker/check-layer/build/layers/bitbake/lib/bb/runqueue.py", line 1718, in dump_signatures
+|    p.start()
+|    ~~~~~~~^^
+|  File "/usr/lib64/python3.14/multiprocessing/process.py", line 121, in start
+|    self._popen = self._Popen(self)
+|                  ~~~~~~~~~~~^^^^^^
+|  File "/usr/lib64/python3.14/multiprocessing/context.py", line 224, in _Popen
+|    return _default_context.get_context().Process._Popen(process_obj)
+|           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+|  File "/usr/lib64/python3.14/multiprocessing/context.py", line 300, in _Popen
+|    return Popen(process_obj)
+|  File "/usr/lib64/python3.14/multiprocessing/popen_forkserver.py", line 35, in __init__
+|    super().__init__(process_obj)
+|    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+|  File "/usr/lib64/python3.14/multiprocessing/popen_fork.py", line 20, in __init__
+|    self._launch(process_obj)
+|    ~~~~~~~~~~~~^^^^^^^^^^^^^
+|  File "/usr/lib64/python3.14/multiprocessing/popen_forkserver.py", line 47, in _launch
+|    reduction.dump(process_obj, buf)
+|    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+|  File "/usr/lib64/python3.14/multiprocessing/reduction.py", line 60, in dump
+|    ForkingPickler(file, protocol).dump(obj)
+|    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+|_pickle.PicklingError: Can't pickle local object <function CoreRecipeInfo.init_cacheData.<locals>.<lambda> at 0x7f7925667d70>
+|when serializing tuple item 0
+|when serializing collections.defaultdict reconstructor arguments
+|when serializing collections.defaultdict object
+|when serializing dict item 'rundeps'
+|when serializing bb.cache.CacheData state
+|when serializing bb.cache.CacheData object
+|when serializing dict item ''
+|when serializing dict item 'recipecaches'
+|when serializing bb.cooker.BBCooker state
+|when serializing bb.cooker.BBCooker object
+|when serializing dict item 'cooker'
+|when serializing bb.runqueue.RunQueue state
+|when serializing bb.runqueue.RunQueue object
+|when serializing tuple item 0
+|when serializing method reconstructor arguments
+|when serializing method object
+|when serializing dict item '_target'
+|when serializing multiprocessing.context.Process state
+|when serializing multiprocessing.context.Process object
 
-  fetch2: Fix LFS object checkout in submodules (2026-03-19 00:14:50 +0100)
+Fixes: [YOCTO #16184]
 
-are available in the Git repository at:
-
-  https://git.openembedded.org/bitbake-contrib stable/2.8-nut
-  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.8-nut
-
-for you to fetch changes up to c118575bc4f278bc857c532089e1c66ae81234f8:
-
-  runqueue.py: make sure we use bb multiprocessing (2026-04-22 17:28:54 +0200)
-
-----------------------------------------------------------------
-
-Trevor Gamblin (1):
-  runqueue.py: make sure we use bb multiprocessing
-
+Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit 35866d55908009df429870b28cda0d2266074b48)
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+---
  lib/bb/runqueue.py | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index db68f97e6..5dc6fc047 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -22,11 +22,12 @@ from bb import msg, event
+ from bb import monitordisk
+ import subprocess
+ import pickle
+-from multiprocessing import Process
+ import shlex
+ import pprint
+ import time
+ 
++Process = bb.multiprocessing.Process
++
+ bblogger = logging.getLogger("BitBake")
+ logger = logging.getLogger("BitBake.RunQueue")
+ hashequiv_logger = logging.getLogger("BitBake.RunQueue.HashEquiv")
 
