@@ -1,154 +1,160 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <mathieu.dubois-briand@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF3EFF8844
-	for <webhook@archiver.kernel.org>; Fri, 24 Apr 2026 21:02:35 +0000 (UTC)
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.32755.1777064548140921797
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 059DAFF885E
+	for <webhook@archiver.kernel.org>; Mon, 27 Apr 2026 08:51:36 +0000 (UTC)
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.39398.1777279884870248866
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 24 Apr 2026 14:02:28 -0700
+ Mon, 27 Apr 2026 01:51:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=RQEMzk76;
- spf=pass (domain: smile.fr, ip: 209.85.221.43, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-43d734223e4so5683142f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Apr 2026 14:02:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1777064546; x=1777669346; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=R5mkfX5qyQ9/Bu4pIuSfN9gNPThYa22SsqLJccA1eAA=;
-        b=RQEMzk76ikep17SyiS8SK5nIkNwb3V6dFFpRjT57tX9a99rg4Z9+sHXx8pZqohNgln
-         HCn8B0XkeSez7ETqesQPVFEaDfTeLktgZZR6Yequ1bhSJ7WSCdbkFxFwHUGoOidQFz/B
-         0+rIns38b/sOTkLY7vNkkTBq4e9RLeKMMftCI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777064546; x=1777669346;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=R5mkfX5qyQ9/Bu4pIuSfN9gNPThYa22SsqLJccA1eAA=;
-        b=ZydLWszKX19BnK3bOz8W6WSTSpzmy3kN12pireItpNr57LTCTUpDfT2ORkP/IyxJif
-         dvjc7A0CvutWAUecad+93HTjsUft4p+PNH3DkR0ccNY9io0owEUroMf/2EXTG0zDj7rs
-         RL4MsTC3l+y5OSXy+GZ80k8/61JIscDNy3VyEFzXL7YJp8Oks8g15lKNsxUGBUUwSEFH
-         2lntXP55pb8eRnsxrg3VnC0RkfHx8Fm+lszcOTLkUsHiAqyFjqCIquLzmbQyPByLwdGx
-         DYh6jf3QxSg2pkM7+JCz4ZJKl1rdvUNkrDsax2uhw+yy1DBU2CXOCvyYbSpfdIgohWtW
-         oPFA==
-X-Gm-Message-State: AOJu0Yy567gogNvWNtTm47z4EgtopyE/BAQC/Aszubzj5/D+QYpvZoPm
-	Bbh6XqGbFHMmDkEiIsUq3Rof5czgRxQS0YPaokM4UEAvjdgAOHGrdiORzCQHNsmBu9VPd+a30uI
-	Qy/F5DxNmNQ==
-X-Gm-Gg: AeBDies76nK3HdclyHiYOHokmvbiY+Tmnk/cG18dxJsBVaBonOz4pAE7LjjusQRXGTD
-	NIY2eDVsBY17u4x6E+YeArBGtSYJGKsV7a9LDUfN2fuqwD1kJ0LI/TOFA/I5ntlrpVZl/ZuDqhi
-	xsz43zWQd8B/RS4Dk+af+8DkaK9DT8guPjrV88jrf5is6Il6HC1fDR9w+SCRh7msI9iWP28v40g
-	BPUGZFcZzPI6yC/VRxNhaHOhUmHrht7vrMY/YL/QRu/BO0rJL7CyzPquJtUMluqdI2qioCYhueF
-	O8VuAaoVQXacihkrIEDvEtEsO7sasFw7kY5R9U9OmpIzzJqCZ8SrA3ijSqlM4hizizYCuGfh3hS
-	KydjsqDlo88JqHmHjmyQR+KkhpQb7sb7vlEOiKnZTsu3M179ikFwK0g+I166OxpSdAHlh9wCw+I
-	Iz61bhP5cYLcnnn2THCkoUNCB4mZuLLAIDAMdD7QMC2Jz8X+n/xyROoYEvvuCocpgs/5TFFTxfD
-	jQFyJrYIkSgUXH1AN9i3YrE6JK8ZHBl806PpzTOZzMlqSp5
-X-Received: by 2002:a05:6000:228a:b0:43d:779e:afa8 with SMTP id ffacd0b85a97d-43fe407a7e5mr54358638f8f.16.1777064546300;
-        Fri, 24 Apr 2026 14:02:26 -0700 (PDT)
-Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43fe4e3a7b4sm58146548f8f.22.2026.04.24.14.02.25
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2026 14:02:25 -0700 (PDT)
-From: Yoann Congal <yoann.congal@smile.fr>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][scarthgap][2.8][PATCH 1/1] runqueue.py: make sure we use bb multiprocessing
-Date: Fri, 24 Apr 2026 23:02:19 +0200
-Message-ID: <c118575bc4f278bc857c532089e1c66ae81234f8.1777064424.git.yoann.congal@smile.fr>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1777064423.git.yoann.congal@smile.fr>
-References: <cover.1777064423.git.yoann.congal@smile.fr>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=XZcuh7wJ;
+ spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: mathieu.dubois-briand@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 6BD7DC5CD45;
+	Mon, 27 Apr 2026 08:52:05 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 55728600D1;
+	Mon, 27 Apr 2026 08:51:22 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 22BAC1072239C;
+	Mon, 27 Apr 2026 10:51:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1777279881; h=from:subject:date:message-id:to:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=jGyzr1l7GoBlxypZx/IS+5xqNztGBOQRwSDZLoEUiqI=;
+	b=XZcuh7wJGuvusUi2n+3x1A73ONk/AE5K6XK4u3lE5Z/DcJxdGv9n/hCoOb1+w0nEuuilk9
+	yQ9bMbRfH9u21mecjAq/vZ8T2MSDYcRaUUoQZKLZ+Z78Qz2+PzCf+VtJXmJvCIGikW5Fq1
+	GLE07R+VecYk6dH6X4SyPAFiI7Do4PHLx0DJM+lad2o491imyYJIuSGk8VpYodxdhA84mc
+	pfrOKdk5QvCPuErRJf5M9XXNedkHIl/6unqSKhacWOkDmFfkbL6sab5QqHlj6wq1MLk3rR
+	ZyYqfj6giQSVWdRdL53HCJgXl9ua+PmtgJtXTIB+N54ViTNlG+LZ3XpyHvyWYg==
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 27 Apr 2026 10:51:20 +0200
+Message-Id: <DI3T4XKSTUPE.Y4MSPXKSLM3S@bootlin.com>
+To: <corentin.guillevic@smile.fr>, <bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH] cooker: limit the execution of the
+ hashequiv client/server ping
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20260423102950.697501-2-corentin.guillevic@smile.fr>
+In-Reply-To: <20260423102950.697501-2-corentin.guillevic@smile.fr>
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 24 Apr 2026 21:02:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19391
+ <bitbake-devel@lists.openembedded.org>; Mon, 27 Apr 2026 08:51:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19392
 
-From: Trevor Gamblin <tgamblin@baylibre.com>
+On Thu Apr 23, 2026 at 12:29 PM CEST, Corentin Guillevic via lists.openembe=
+dded.org wrote:
+> From: Corentin Guillevic <corentin.guillevic@smile.fr>
+>
+> The ping method is used to test the connection to the hash equivalence se=
+rver.
+> However, if the server is unavailable, the bitbake server has to wait sev=
+eral
+> minutes for the system to terminate.
+>
+> While waiting for a response from the hash server, the bitbake server doe=
+s not
+> provide any feedback to the bitbake client. The latter then closes the li=
+nk and
+> fails with the error:
+>
+> Timeout while waiting for a reply from the bitbake server (60s at 09:50:1=
+5.377337)
+>
+> Adding a timeout to the ping step allows quicker action when a remote ser=
+ver is
+> unavailable, and prevents disconnection of the client due to timeout.
+> The default timeout is 10 seconds, but this can be set using the
+> BB_HASHSERVER_TIMEOUT variable.
+>
+> Signed-off-by: Corentin Guillevic <corentin.guillevic@smile.fr>
+> ---
 
-Otherwise, we see errors like:
+Hi Corentin,
 
-|ERROR: An uncaught exception occurred in runqueue
-|Traceback (most recent call last):
-|  File "/srv/pokybuild/yocto-worker/check-layer/build/layers/bitbake/lib/bb/runqueue.py", line 1663, in execute_runqueue
-|    return self._execute_runqueue()
-|           ~~~~~~~~~~~~~~~~~~~~~~^^
-|  File "/srv/pokybuild/yocto-worker/check-layer/build/layers/bitbake/lib/bb/runqueue.py", line 1607, in _execute_runqueue
-|    retval = self.dump_signatures(dumpsigs)
-|  File "/srv/pokybuild/yocto-worker/check-layer/build/layers/bitbake/lib/bb/runqueue.py", line 1718, in dump_signatures
-|    p.start()
-|    ~~~~~~~^^
-|  File "/usr/lib64/python3.14/multiprocessing/process.py", line 121, in start
-|    self._popen = self._Popen(self)
-|                  ~~~~~~~~~~~^^^^^^
-|  File "/usr/lib64/python3.14/multiprocessing/context.py", line 224, in _Popen
-|    return _default_context.get_context().Process._Popen(process_obj)
-|           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-|  File "/usr/lib64/python3.14/multiprocessing/context.py", line 300, in _Popen
-|    return Popen(process_obj)
-|  File "/usr/lib64/python3.14/multiprocessing/popen_forkserver.py", line 35, in __init__
-|    super().__init__(process_obj)
-|    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-|  File "/usr/lib64/python3.14/multiprocessing/popen_fork.py", line 20, in __init__
-|    self._launch(process_obj)
-|    ~~~~~~~~~~~~^^^^^^^^^^^^^
-|  File "/usr/lib64/python3.14/multiprocessing/popen_forkserver.py", line 47, in _launch
-|    reduction.dump(process_obj, buf)
-|    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
-|  File "/usr/lib64/python3.14/multiprocessing/reduction.py", line 60, in dump
-|    ForkingPickler(file, protocol).dump(obj)
-|    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
-|_pickle.PicklingError: Can't pickle local object <function CoreRecipeInfo.init_cacheData.<locals>.<lambda> at 0x7f7925667d70>
-|when serializing tuple item 0
-|when serializing collections.defaultdict reconstructor arguments
-|when serializing collections.defaultdict object
-|when serializing dict item 'rundeps'
-|when serializing bb.cache.CacheData state
-|when serializing bb.cache.CacheData object
-|when serializing dict item ''
-|when serializing dict item 'recipecaches'
-|when serializing bb.cooker.BBCooker state
-|when serializing bb.cooker.BBCooker object
-|when serializing dict item 'cooker'
-|when serializing bb.runqueue.RunQueue state
-|when serializing bb.runqueue.RunQueue object
-|when serializing tuple item 0
-|when serializing method reconstructor arguments
-|when serializing method object
-|when serializing dict item '_target'
-|when serializing multiprocessing.context.Process state
-|when serializing multiprocessing.context.Process object
+Thanks for your patch.
 
-Fixes: [YOCTO #16184]
+It looks like this is triggering some oe-selftest failures:
 
-Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 35866d55908009df429870b28cda0d2266074b48)
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
----
- lib/bb/runqueue.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+2026-04-24 13:28:03,744 - oe-selftest - INFO - prservice.BitbakePrTests.tes=
+t_import_export_override_db (subunit.RemotedTestCase)
+2026-04-24 13:28:03,746 - oe-selftest - INFO -  ... FAIL
+...
+  File "/srv/pokybuild/yocto-worker/oe-selftest-armhost/build/layers/openem=
+bedded-core/meta/lib/oeqa/selftest/cases/prservice.py", line 115, in test_i=
+mport_export_override_db
+    self.run_test_pr_export_import('m4', replace_current_db=3DFalse)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/pokybuild/yocto-worker/oe-selftest-armhost/build/layers/openem=
+bedded-core/meta/lib/oeqa/selftest/cases/prservice.py", line 89, in run_tes=
+t_pr_export_import
+    self.increment_package_pr(package_name)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/srv/pokybuild/yocto-worker/oe-selftest-armhost/build/layers/openem=
+bedded-core/meta/lib/oeqa/selftest/cases/prservice.py", line 61, in increme=
+nt_package_pr
+    self.assertEqual(res.status, 0, msg=3Dres.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/unittest/case.py", line 907, in assertEqual
+    assertion_func(first, second, msg=3Dmsg)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/unittest/case.py", line 900, in _baseAssertEqua=
+l
+    raise self.failureException(msg)
+AssertionError: 1 !=3D 0 : NOTE: Reconnecting to bitbake server...
+NOTE: Retrying server connection (#1)... (13:28:02.531366)
+NOTE: Started PRServer with DBfile: /srv/pokybuild/yocto-worker/oe-selftest=
+-armhost/build/build-st-1371670/cache/prserv.sqlite3, Address: 127.0.0.1:37=
+647, PID: 2273277
+ERROR: PRservice localhost:37647 not available
+ERROR: Unable to start PR Server, exiting, check the bitbake-cookerdaemon.l=
+og
+...
+2026-04-24 13:28:06,081 - oe-selftest - INFO - prservice.BitbakePrTests.tes=
+t_import_export_replace_db (subunit.RemotedTestCase)
+2026-04-24 13:28:06,081 - oe-selftest - INFO -  ... FAIL
+...
+2026-04-24 13:28:08,453 - oe-selftest - INFO - prservice.BitbakePrTests.tes=
+t_pr_service_deb_arch_dep (subunit.RemotedTestCase)
+2026-04-24 13:28:08,453 - oe-selftest - INFO -  ... FAIL
+...
+2026-04-24 13:28:10,791 - oe-selftest - INFO - prservice.BitbakePrTests.tes=
+t_pr_service_deb_arch_indep (subunit.RemotedTestCase)
+2026-04-24 13:28:10,792 - oe-selftest - INFO -  ... FAIL
+...
+2026-04-24 13:28:13,383 - oe-selftest - INFO - prservice.BitbakePrTests.tes=
+t_pr_service_ipk_arch_dep (subunit.RemotedTestCase)
+2026-04-24 13:28:13,384 - oe-selftest - INFO -  ... FAIL
+...
+2026-04-24 13:28:15,719 - oe-selftest - INFO - prservice.BitbakePrTests.tes=
+t_pr_service_ipk_arch_indep (subunit.RemotedTestCase)
+2026-04-24 13:28:15,720 - oe-selftest - INFO -  ... FAIL
+...
+2026-04-24 13:28:18,037 - oe-selftest - INFO - prservice.BitbakePrTests.tes=
+t_pr_service_rpm_arch_dep (subunit.RemotedTestCase)
+2026-04-24 13:28:18,038 - oe-selftest - INFO -  ... FAIL
+...
+2026-04-24 13:28:20,344 - oe-selftest - INFO - prservice.BitbakePrTests.tes=
+t_pr_service_rpm_arch_indep (subunit.RemotedTestCase)
+2026-04-24 13:28:20,345 - oe-selftest - INFO -  ... FAIL
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index db68f97e6..5dc6fc047 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -22,11 +22,12 @@ from bb import msg, event
- from bb import monitordisk
- import subprocess
- import pickle
--from multiprocessing import Process
- import shlex
- import pprint
- import time
- 
-+Process = bb.multiprocessing.Process
-+
- bblogger = logging.getLogger("BitBake")
- logger = logging.getLogger("BitBake.RunQueue")
- hashequiv_logger = logging.getLogger("BitBake.RunQueue.HashEquiv")
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/23/builds/3834
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/35/builds/3744
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/48/builds/3624
+
+Can you have a look at the issue?
+
+Thanks,
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
