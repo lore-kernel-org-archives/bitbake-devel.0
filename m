@@ -1,126 +1,159 @@
-Return-Path: <bijak.dawid@gmail.com>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1A2FF8868
-	for <webhook@archiver.kernel.org>; Mon, 27 Apr 2026 18:14:29 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.2506.1777313661442414540
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4824FF8868
+	for <webhook@archiver.kernel.org>; Mon, 27 Apr 2026 20:27:00 +0000 (UTC)
+Received: from GVXPR05CU001.outbound.protection.outlook.com (GVXPR05CU001.outbound.protection.outlook.com [52.101.83.39])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.5349.1777321611028098927
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 27 Apr 2026 11:14:21 -0700
+ Mon, 27 Apr 2026 13:26:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=IgVCLKbw;
- spf=pass (domain: gmail.com, ip: 209.85.128.45, mailfrom: bijak.dawid@gmail.com)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4891d7164ddso52625895e9.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 27 Apr 2026 11:14:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777313660; x=1777918460; darn=lists.openembedded.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lU2hFO35lQ/6lsNT/GMS2wzI4J2DCb+H81By6kYtJ4U=;
-        b=IgVCLKbwi65csUljwmMu6BHScxM87aJzl8vuVMhpuTohAVsT87WoFtq1i9WkE6R5lw
-         sZW0eUHi7UH56xBTAgRFdV3+W1b2Ex/msOiAVQSw6CGwZTGNCRAUpZRdy7oLQwFkYKAu
-         lQUi4DW6+67gPVE4qzY5a0kirdbtrCKI+Ek+y7U3EMTk3BlBzO7SzFFJ52cpzTWnzoTJ
-         DruLYo3akoSG31PbqzBkLhTpmyJvwqvBCjZZ+S2F7seW44eLRpbJXK8G8S2sk0IyE+1T
-         7ArrtqSIUy7EcZnNvSEoFr6Jc4tw20rnjmeKBb1xl6PVxAxjc50uetH1ffbSE4+VuZ0q
-         kv8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777313660; x=1777918460;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lU2hFO35lQ/6lsNT/GMS2wzI4J2DCb+H81By6kYtJ4U=;
-        b=GQ9z0JYB/t9iySETkk9VumyU9iqxwNc5dsLhIISYYPv9eMTzFtfEfDcpW7R8rihN3W
-         mIziB2c6AnbyMeOz4I5vaXk228qSiBCrLBSKVYMgP22hr+rQLhSz1tGGZ8JFd+0ibk4a
-         WBLGmvhk6a4LU281fIsiaxQvO+RhQiwt7Bn8sCCpcTvEFSf7NotOTSZcaKqlhPvloiNy
-         MvKH6x76E+cg7+XK+7387lTQw/DM0bXs2xwbL/YThEIR64sYZdEzyuE4YcfEXVPEGG8Q
-         8OEnIESAFaO0SUhQplik9WJ9rzEnN2YKT2OqAC5XvmrkYu09YL4z8TEE0OA/XNr29NKj
-         o99w==
-X-Gm-Message-State: AOJu0Ywtg9iqUi8RzXXfa2QAdarDqw3RC5rHCmhtcCtLpeAvRdHCX0k3
-	/VMUXq81vAOvlFkIQWpLssELXTpQ0faLVAkXfIR+Y383OuviJcmWudXM
-X-Gm-Gg: AeBDiev5dAJ+6Sn4+KKAo3wtpki40u4s3VjjemJMB8K47P1OFQMwmLr7pPlDCGRBCAR
-	0/4NSEo7okpOdSIlq2cWMLzsh+5pjaD1WDibfj43xMDoUNbCG0+Nvfx9ATDYKMrsYKL5tVKcnix
-	A0JMUdl0axFAKyDUBTjDSMDQOOyym2Ybt091wwawkgPMFqsj2SZAZMZwuZN1RTctQufFBJkwLsd
-	WbnBMILw/63Q1AFlOxBZRnbQL4JweGknqDCl59fKidQOwr4OoQbc4pqh5YypRHsuJVNB5flk8y9
-	zRJEYnEEEvp4qYnRSk8TeR0zrI25lX+5hc6YcQ5+sGDq5njGskUcalFXmUYS4NaDdgGQRH5AQqa
-	qsh3qKkHqM5jqOvQeKkwpOcOzPNpi+vD/qqJ8SFKloHtQdWkgOhFFvEl6qbeAhRjPj1EhgxD01c
-	QHYzxgPxbViDicLBSg6HdK0jiWwpj55NCfELetCFaI5yh9X8mdyVqkPO3kRjyfWtdhmsYC91olm
-	RnhFW0u18TK12E+WqCJHamxrMVKPdjJPz9eELVcCodxJF8VRpcXSQVUv86s
-X-Received: by 2002:a05:600c:4fc5:b0:483:64b4:79da with SMTP id 5b1f17b1804b1-48a76f8e680mr4985205e9.26.1777313659552;
-        Mon, 27 Apr 2026 11:14:19 -0700 (PDT)
-Received: from thinkpad ([2a02:8070:d188:380:a171:2495:6920:2d36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a76f7ecb2sm7957325e9.0.2026.04.27.11.14.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2026 11:14:19 -0700 (PDT)
-Date: Mon, 27 Apr 2026 20:14:16 +0200
-From: Dawid Bijak <bijak.dawid@gmail.com>
-To: Quentin Schulz <quentin.schulz@cherry.de>
-Cc: bitbake-devel@lists.openembedded.org, docs@lists.yoctoproject.org
-Subject: Re: [docs] [PATCH 1/1] doc: bitbake-user-manual-metadata: fix
- inherit_defer documentation
-Message-ID: <ljbjkwt32h72aziah2gepb6k5rfxygfrhkfysmulj5scnca5pu@o4vikz4hfmh3>
-References: <20260424062327.820993-1-bijak.dawid@gmail.com>
- <20260424062327.820993-2-bijak.dawid@gmail.com>
- <c25e0e9a-8809-4ac6-90ee-3687972e03af@cherry.de>
+ dkim=pass header.i=@arm.com header.s=selector1 header.b=YPxaJvK1;
+ dkim=pass header.i=@arm.com header.s=selector1 header.b=YPxaJvK1;
+ spf=pass (domain: arm.com, ip: 52.101.83.39, mailfrom: ross.burton@arm.com)
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=d4lpum9/sQDnaOY1T97cpkT/bEIOEeBn2uTbNq2FzUYZrVeNVod2EowXzpxoAdOtM8h7uNAigZr+63mZBjhtNQwX+9AoPIWty8UQk33audNg+wEhei/8a7FrGV2uLlHipW91wQQHcyPOiSAvEZwyd9cGURpqyk49UCwY2xkk2QbUJwdwU3pT1C+5+2tkZJNfeHpNYR+BdTM3fpxwEhLwLsCaUNBmO7ZN6fAGDlxBxzTf8E8ppnGzIUASDJLnf+GyMkTcHQ/8W3ahovZObIIKEbfCKpi2dWVq6F20NSbKWys6HoLrNfn9jDiXLVxDmcwkOM653sk/naXoHSHy6Vyr+Q==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vBKWsshrY92MGReOK6RRAYbHMkGHZ69DpsgmvJc+1LY=;
+ b=vP+IF5h9TAwJ+DmBjCZBEOWXchU4TZe/tkgTDDzStwZotgUVWLqSzqpUmsOrzRIU7Ls5+7DceqX8NDFMH8NPgDW8oXu2irkVeMobMrR5Fxu1gFD0YO4YE+AR/ejSOhH6UkpyD4NVqSzWC9nscraG1aQt1mKUfpS6drcdyUYLAX8xm4U9zSgGMh9+p4x/721iJg3ztKfmcuKcjiwDp1YSTGbuJ7kDurkipByOfRgU3yacXr9OIIwMaWylgme8kt5mnFRQG+3R9BnlAaVCiHvOin1an6BCJp3fs1rQnnSaA6jdBOEANWSwyhYa4pXG5nrM6yBp351E8NZSmbEXP8pGvQ==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=cherry.de smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vBKWsshrY92MGReOK6RRAYbHMkGHZ69DpsgmvJc+1LY=;
+ b=YPxaJvK1rg5il+ZqGFnsp22X01cFp+y1w9HIxNS5EE+NnjJ1i+uvq6XINCNHFuCmtURObvdSxAtcHH4UADfw9veUarFVvprRY8L+/HcUxTXnHmkJ1HXiTkmF6a4w1jsN6m/9vf6yrJHhWgQOulg7jewh4IhxNu4b+CosJuyCcp0=
+Received: from DUZPR01CA0052.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:469::8) by PAWPR08MB9544.eurprd08.prod.outlook.com
+ (2603:10a6:102:2f2::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.26; Mon, 27 Apr
+ 2026 20:26:46 +0000
+Received: from DB1PEPF000509FA.eurprd03.prod.outlook.com
+ (2603:10a6:10:469:cafe::16) by DUZPR01CA0052.outlook.office365.com
+ (2603:10a6:10:469::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9846.26 via Frontend Transport; Mon,
+ 27 Apr 2026 20:26:45 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ DB1PEPF000509FA.mail.protection.outlook.com (10.167.242.36) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9846.18
+ via Frontend Transport; Mon, 27 Apr 2026 20:26:45 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=P9PHis4LZ408tDcX4OFXPSY0B0b7ZgE//FpnDfHCY8+y71oZW1YEx1Z85IxPoyOX1tKg74DCtkpsshmVaQ1kvHhcRLTT7jMvww60UP0kOp1LwuGvKCbIyDMbxMMTYN9HKZnzVPHNB+SSBzBYTwUTbk19tvILUODwGZo1nDaSjn/B0q1QlWAY4lvhRkO3CKY5L2v7yJwWZR8wEQB/wOjbABHdR/q86yP9g14oERpARv7CQw9jfdI1zc1mk1w6b/c/zai5ekawcLlZOasa7OsThykWVFZSvPckEIrqBa1Gcu5OrB5SWT7Gq6TZw4R9Npk0HgMhBeVl20T5e5mpgefDxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vBKWsshrY92MGReOK6RRAYbHMkGHZ69DpsgmvJc+1LY=;
+ b=cEnwVCriZr05sqEByqj0Wl2187Kqu2Wvh3FZ8J211GvSTtw7vn6W7x+fokHdixUgOQ6F3t4WCKFjuJLvYw1CoC8lk6dtvWrhIrgneA6XD4wK+8C1MVsAMD+GW7Yz1UB/CqLokqkj/VT7vXrtozfMTm8Kpn5u2DWc7kZNkr/ezdT5HwOnRq6kjsNb2cfrxhoOShfYymXJEqkrjTRxygkRURfsCKxZk4WlRhqIzUiy6Mc070hPcIOHvhN0gCiP33aFgUZGwnQX2TApvzHysaK6ASImpMeYUl9trP4tNaXGwT4Rr/q1u4Htfc63zso+9vNaJ9lo2Vi6piqT6ruIDDHdZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vBKWsshrY92MGReOK6RRAYbHMkGHZ69DpsgmvJc+1LY=;
+ b=YPxaJvK1rg5il+ZqGFnsp22X01cFp+y1w9HIxNS5EE+NnjJ1i+uvq6XINCNHFuCmtURObvdSxAtcHH4UADfw9veUarFVvprRY8L+/HcUxTXnHmkJ1HXiTkmF6a4w1jsN6m/9vf6yrJHhWgQOulg7jewh4IhxNu4b+CosJuyCcp0=
+Received: from AM9PR08MB6258.eurprd08.prod.outlook.com (2603:10a6:20b:287::19)
+ by PAWPR08MB10922.eurprd08.prod.outlook.com (2603:10a6:102:46b::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.26; Mon, 27 Apr
+ 2026 20:25:41 +0000
+Received: from AM9PR08MB6258.eurprd08.prod.outlook.com
+ ([fe80::171d:1f8b:720d:7a1b]) by AM9PR08MB6258.eurprd08.prod.outlook.com
+ ([fe80::171d:1f8b:720d:7a1b%6]) with mapi id 15.20.9846.025; Mon, 27 Apr 2026
+ 20:25:41 +0000
+From: Ross Burton <Ross.Burton@arm.com>
+To: "quentin.schulz@cherry.de" <quentin.schulz@cherry.de>
+CC: "johan.anderholm@axis.com" <johan.anderholm@axis.com>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH 0/1] crates.io data access policy
+Thread-Topic: [bitbake-devel] [PATCH 0/1] crates.io data access policy
+Thread-Index: AQHc1kz+R+z6SrN+S0aMGeDp1+dCCrXzK8uAgAAvlgA=
+Date: Mon, 27 Apr 2026 20:25:41 +0000
+Message-ID: <0839CEDA-841B-4A8F-91E9-E229A20C434D@arm.com>
+References: <20260427135122.1504143-1-johanam@axis.com>
+ <9abe98c8-4f08-4d34-9e16-52e21e874066@cherry.de>
+In-Reply-To: <9abe98c8-4f08-4d34-9e16-52e21e874066@cherry.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3826.700.81.1.6)
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+x-ms-traffictypediagnostic: 
+	AM9PR08MB6258:EE_|PAWPR08MB10922:EE_|DB1PEPF000509FA:EE_|PAWPR08MB9544:EE_
+X-MS-Office365-Filtering-Correlation-Id: 02581281-72fe-429c-d90d-08dea49b4d50
+x-checkrecipientrouted: true
+nodisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: 
+ BCL:0;ARA:13230040|376014|1800799024|366016|38070700021|18002099003|22082099003|56012099003;
+X-Microsoft-Antispam-Message-Info-Original: 
+ myeWVKwi2xvmCiTa3LeWvTDKmF5g7nHTKrI4gQzP778krWa6aOjAwdwCWbZwHZgFNfxr+OSbObBzvs19WtgBrLuYUNr52jz75uw+R6JqjFEzZTc8K+IdtG8jip9iCPcsa+CgyEfRORcgtI/Cea0a2+NDr4I16s0rcEXQ+Pt26uEx/wLfyk953+Z5BH32w6WT8r9Xd5b9xO3PrYe7WWXOE7m5hHQVkISRPdQCvYZNr+uVUwzO+iavpnQ/6RYSw8GufeEz/jzZIwkxOdC3B1ckJEvSkDDuIfxH9DIqeU/tFbwCo4zSWbKtr71h3thproCm6wGIxsl74KL0QwMmZYZXdhv52N8lqJ/5djiSs7n+CBa/rESYFjRuD1+0g0x12tnQfNCYPsE8aghqdK/Evm4xArrxhhEf1doN3mvYX1fiY/DNOPVVUlWDbVVzCIieSHvQesZxxgJA3NhUi2Dgdym6TClSS6YobjaR2JYQSqZIGQ1dGAMyXc2DukFxq6x2UdrcCg4pSnw6lDdFIguOUf5bfBqdsZ7VQTJJnerDURbKHbgGSHkg7Ok23BS0FoayVfwVZKqdbfTJ72Kn4IKz0OIwI8v9uK4IPyJE5qBJYmxFystLBB6SgvYx7wyjsvpsodlKJCwm1OGpb0tKlfbX+grrUaC4kpULtkYKFEhoL7fQbzlHk2CZ7omSmq/3hBDcHi1oHq0NFVpFUkBQb82VsSgx5WI7uLOVOIf0h0nZiPMolvImfbYNXiToU9ARhFWApaLuY3QcsqTyNOvTpUi4QtJgP7uQ0DOLUC9/WmjausiMq84=
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB6258.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700021)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <25524DE7AC5A03448533EB7B118F378F@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c25e0e9a-8809-4ac6-90ee-3687972e03af@cherry.de>
+X-Exchange-RoutingPolicyChecked: 
+ M7Nli26jeZszSbiEVQED9u9dkuiy6fccZ2Dnke69XlC6tuyrt2Wd45tcTEJABmdzbhycbVpz6gpUx7MTBGJlZf8kviaMWL3Vl4FtL8MPJe31jBnCnoJipFka21PO5HmaDOJlWac5H3mlnD6vscMhCAvB2/1LPD1ZcJr7SxS+IUhRkdhJD/DcWOuxLuh67tXdOWtedl59mcWF4H00SlffIwVKK5wRuaDvwbhQcWyulj8VXlEVoU5ibgKFDrPmH4y5sn0yrUrde7dNaXVTiLcWQt9Rr5oW4QVP7LQVBZWbplCMPU1tHKsowvnw4cR5RiQf0wRoPBsVeOberYf93RBCdQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR08MB10922
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ DB1PEPF000509FA.eurprd03.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	0c644e00-cc0e-4087-40c7-08dea49b26f7
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|36860700016|14060799003|35042699022|82310400026|1800799024|376014|56012099003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info: 
+	vGeJWI1XztcoavM1lclbnVpOrsR7KuVUl67zpYTc2Oi0v/Z/LFXA5d4pP/S9W2L6SWfCxnnXphTZZn8ww//LBXqFnFEB+emi/5MIBSga2JQO6OgrG/fM49bWMnWRuwDfqwBACBGzE6XH+UPvf47B85LzhVoDJSJBSNuh2wDIjUt5eE4Awe5jzKcw2uhUrNDPYiaxM+0vmjQaGZNu9ZVNy59e7MoEnGi/T+aYY2xRtm+iSUTjRDBwBQVRdAWSsAvGek+wawx0qQxaAb7KSI42rJllHQxcA7jeEHl/NjMpu9jMx91+O8PM86t+cRc430yw8+5OQv2Bwt+zpN6+jz7fI2uhqMbxz6GkYHTuRH1i8AdSwmxB4wuXiO7VTyoWJxbvpORl0r8knXa8DYQSW6B0xWA3NwUm7ol02d9EOIYz3Gyr4CrUvpJy6KKZOqWEb06cl0V6AXMDWLtW76+5RSqAqmlHAJytvcZNqRap9oEapXqParVnCGVVhUf7SX+AkGHn/KdqjhWczyUk1yUUFFa+T7UuV0edaiQyjmyXy1m10T9WIykL8I/CHs5Fh9a8c5SSPrtOTL1r9/KweA/wKNg6IDv6GtcwLCNGownW/hrJHrSy70TmFN88w1Lnl1qhhTd5GxsUNivJbpmzn0Sc1BudrpMesdbH/UAyEoDywSZeJ3+WawA+Jn3Th+5gVlq9ZNX1BAQhU2VFRFrdjoRP+i63YC4gQSRYAWwmkIBn+1JicaXRUpwTmqWjBLlo9T2WAMrHA1cjkcoODgILi/bPrcsV2Q==
+X-Forefront-Antispam-Report: 
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(14060799003)(35042699022)(82310400026)(1800799024)(376014)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	DXmxAR0tDiwjM5hUw/czC0ndPrKIfyE+2gG9wc6ZmcpCOg58YPKZ21+iox9LAxPPJlHs6ZW4tNsz4S1PNC7/8EasVdKr77mu9qmdfDsY2hIaMwJIx8Ieciyw6HxWSiw0v1fzLnLXwe3wFhB+3GcdA2Q4r96lCSMkHcPhU0MNQDJTgeF8dump5u0ehMR75bukv7rZ06/rT4m/XyioSQq4t06jVwhMIfQNeFcLAt6kHUXxcW8DxicJrLh6fjIjhUc8kcDJ7lQFo8GjUz+SdiiXR1G1roOonztPSESVyqEgAD8arXy5dYBKyYK/MhWeZh3OGyLtm3dK4/HJM+atX28vdFOe/hl0hTy12KPYIWi0FVLTgL0PTE9nr4RisnYqUMYhGJfWjqtqOnN8dboM2Nec6ifZ94NNg1Ba3ku7yDKpoEo9JH606+w30MWCon08UYLV
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2026 20:26:45.6049
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02581281-72fe-429c-d90d-08dea49b4d50
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	DB1PEPF000509FA.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR08MB9544
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 27 Apr 2026 18:14:29 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19398
+ <bitbake-devel@lists.openembedded.org>; Mon, 27 Apr 2026 20:27:00 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19399
 
-On Mon, Apr 27, 2026 at 02:35:45PM +0200, Quentin Schulz wrote:
-> Hi Dawid,
-> 
-> On 4/24/26 8:23 AM, Dawid Bijak via lists.yoctoproject.org wrote:
-> > [You don't often get email from bijak.dawid=gmail.com@lists.yoctoproject.org. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
-> > 
-> > The documentation for inherit_defer contained the claim
-> > 
-> > "If VARNAME is going to be set, it needs to be set before the
-> > inherit_defer statement is parsed"
-> > 
-> > which is incorrect and contradicts the purpose of inherit_defer.
-> > The wrong claim is replaced with an example which demonstrates
-> > the contrast between a plain defer statement and the inherit_defer
-> > statement by using an override assignment placed after inherit_defer
-> > 
-> > Additionally the inline python expression examples have been
-> > moved from the inherit_defer section up to the inherit section, since
-> > they apply to both directives
-> > 
-> 
-> I'm pretty sure the whole inherit_defer thing started because an inline
-> Python expression didn't work. I vaguely remember a bbappend either adding
-> this new inherit based on PACKAGECONFIG containing a value, or having the
-> main recipe with this inherit <PACKAGECONFIG.contains> and a bbappend modify
-> PACKAGECONFIG. See commit 5c2e840eafeb ("ast/BBHandler: Add inherit_defer
-> support") in BitBake.
-> 
-> So I'm very skeptical this is correct.
-
-Hi Quentin,
-Thanks for your response.
-I'm afraid I don't quite follow your point about PACKAGECONFIG.contains.
-I'm not sure what you're referring to exactly.
-But, as far as I can tell, the inherit statement works fine with inline python expressions. 
-I think, it evaluates the expression in place, much like := would.
-
-For example, on current master I tried the following:
- COND = ""
- COND:append = " x"
- inherit ${@bb.utils.contains('COND', 'x', 'foo', 'bar', d)}
-This inherits foo. 
-
-However, if I move the :append below the inherit directive:
- COND = ""
- inherit ${@bb.utils.contains('COND', 'x', 'foo', 'bar', d)}
- COND:append = " x"
-it inherits bar.
-
-Greets,
-Dawid
+T24gMjcgQXByIDIwMjYsIGF0IDE4OjM1LCBRdWVudGluIFNjaHVseiB2aWEgbGlzdHMub3BlbmVt
+YmVkZGVkLm9yZyA8cXVlbnRpbi5zY2h1bHo9Y2hlcnJ5LmRlQGxpc3RzLm9wZW5lbWJlZGRlZC5v
+cmc+IHdyb3RlOg0KPiANCj4gVGhlIGNyYXRlIGZldGNoZXIgaXMgZGVyaXZlZCBmcm9tIHRoZSB3
+Z2V0IGZldGNoIG1ldGhvZCB3aGljaCBkb2VzIHNlZW0gdG8gaW1wbGVtZW50IGEgVUEgcmVwb3J0
+aW5nIGJpdGJha2UgYW5kIGl0cyB2ZXJzaW9uLCBzZWUgMjM0ZjllODEwNDk0ICgiZmV0Y2gyL3dn
+ZXQ6IHNldCBVc2VyLUFnZW50IHRvICdiaXRiYWtlL3ZlcnNpb24nIGluIGNoZWNrc3RhdHVzKCki
+KS4gVGhlIGJlc3QgdGhpbmcgd291bGQgYmUgdG8gdHJ5IHlvdXJzZWxmIChJJ20gYXNzdW1pbmcg
+aGF2aW5nIGEgd2Vic2VydmVyIHlvdSBjb250cm9sIGFuZCBjaGFuZ2UgdGhlIGZldGNoZXIgdG8g
+dXNlIHlvdXIgbG9jYWwgd2Vic2VydmVyIChvciBwb3NzaWJseSBldmVuIHNldHRpbmcgdXAgYSBQ
+UkVNSVJST1JTIGZvciBjcmF0ZXMpKS4NCg0KVGhhdOKAmXMgY2hlY2tzdGF0dXMsIG5vdCB0aGUg
+YWN0dWFsIGZldGNoLg0KDQpQdXQgdGhpcyBvbiB0aGUgbGlzdCBvZiByZWFzb25zIHdoeSBJIGRp
+c2xpa2UgdGhlIHdnZXQgZmV0Y2hlcjogdHdvIGVudGlyZWx5IGRpc3RpbmN0IGNvZGVwYXRocy4N
+Cg0KUm9zcw==
 
