@@ -1,159 +1,184 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <johan.anderholm@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4824FF8868
-	for <webhook@archiver.kernel.org>; Mon, 27 Apr 2026 20:27:00 +0000 (UTC)
-Received: from GVXPR05CU001.outbound.protection.outlook.com (GVXPR05CU001.outbound.protection.outlook.com [52.101.83.39])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.5349.1777321611028098927
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B56DEFF886D
+	for <webhook@archiver.kernel.org>; Tue, 28 Apr 2026 14:03:54 +0000 (UTC)
+Received: from GVXPR05CU001.outbound.protection.outlook.com (GVXPR05CU001.outbound.protection.outlook.com [52.101.83.35])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.13857.1777385030668202942
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 27 Apr 2026 13:26:52 -0700
+ Tue, 28 Apr 2026 07:03:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@arm.com header.s=selector1 header.b=YPxaJvK1;
- dkim=pass header.i=@arm.com header.s=selector1 header.b=YPxaJvK1;
- spf=pass (domain: arm.com, ip: 52.101.83.39, mailfrom: ross.burton@arm.com)
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=d4lpum9/sQDnaOY1T97cpkT/bEIOEeBn2uTbNq2FzUYZrVeNVod2EowXzpxoAdOtM8h7uNAigZr+63mZBjhtNQwX+9AoPIWty8UQk33audNg+wEhei/8a7FrGV2uLlHipW91wQQHcyPOiSAvEZwyd9cGURpqyk49UCwY2xkk2QbUJwdwU3pT1C+5+2tkZJNfeHpNYR+BdTM3fpxwEhLwLsCaUNBmO7ZN6fAGDlxBxzTf8E8ppnGzIUASDJLnf+GyMkTcHQ/8W3ahovZObIIKEbfCKpi2dWVq6F20NSbKWys6HoLrNfn9jDiXLVxDmcwkOM653sk/naXoHSHy6Vyr+Q==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vBKWsshrY92MGReOK6RRAYbHMkGHZ69DpsgmvJc+1LY=;
- b=vP+IF5h9TAwJ+DmBjCZBEOWXchU4TZe/tkgTDDzStwZotgUVWLqSzqpUmsOrzRIU7Ls5+7DceqX8NDFMH8NPgDW8oXu2irkVeMobMrR5Fxu1gFD0YO4YE+AR/ejSOhH6UkpyD4NVqSzWC9nscraG1aQt1mKUfpS6drcdyUYLAX8xm4U9zSgGMh9+p4x/721iJg3ztKfmcuKcjiwDp1YSTGbuJ7kDurkipByOfRgU3yacXr9OIIwMaWylgme8kt5mnFRQG+3R9BnlAaVCiHvOin1an6BCJp3fs1rQnnSaA6jdBOEANWSwyhYa4pXG5nrM6yBp351E8NZSmbEXP8pGvQ==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=cherry.de smtp.mailfrom=arm.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
- (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vBKWsshrY92MGReOK6RRAYbHMkGHZ69DpsgmvJc+1LY=;
- b=YPxaJvK1rg5il+ZqGFnsp22X01cFp+y1w9HIxNS5EE+NnjJ1i+uvq6XINCNHFuCmtURObvdSxAtcHH4UADfw9veUarFVvprRY8L+/HcUxTXnHmkJ1HXiTkmF6a4w1jsN6m/9vf6yrJHhWgQOulg7jewh4IhxNu4b+CosJuyCcp0=
-Received: from DUZPR01CA0052.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:469::8) by PAWPR08MB9544.eurprd08.prod.outlook.com
- (2603:10a6:102:2f2::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.26; Mon, 27 Apr
- 2026 20:26:46 +0000
-Received: from DB1PEPF000509FA.eurprd03.prod.outlook.com
- (2603:10a6:10:469:cafe::16) by DUZPR01CA0052.outlook.office365.com
- (2603:10a6:10:469::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9846.26 via Frontend Transport; Mon,
- 27 Apr 2026 20:26:45 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DB1PEPF000509FA.mail.protection.outlook.com (10.167.242.36) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9846.18
- via Frontend Transport; Mon, 27 Apr 2026 20:26:45 +0000
+ dkim=fail reason="dkim: body hash did not verify" header.i=@axis.com header.s=selector1 header.b=YzU73awh;
+ spf=pass (domain: axis.com, ip: 52.101.83.35, mailfrom: johan.anderholm@axis.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=P9PHis4LZ408tDcX4OFXPSY0B0b7ZgE//FpnDfHCY8+y71oZW1YEx1Z85IxPoyOX1tKg74DCtkpsshmVaQ1kvHhcRLTT7jMvww60UP0kOp1LwuGvKCbIyDMbxMMTYN9HKZnzVPHNB+SSBzBYTwUTbk19tvILUODwGZo1nDaSjn/B0q1QlWAY4lvhRkO3CKY5L2v7yJwWZR8wEQB/wOjbABHdR/q86yP9g14oERpARv7CQw9jfdI1zc1mk1w6b/c/zai5ekawcLlZOasa7OsThykWVFZSvPckEIrqBa1Gcu5OrB5SWT7Gq6TZw4R9Npk0HgMhBeVl20T5e5mpgefDxQ==
+ b=RHGPMQ3srUn3ZCqtbNx2ni4S1Y4X2/hz0YCW9/EibkniZFfuwjCf98ZoHID1AogN6KIRDpA2Lf3iZzCbSMdyjaGoS8ROYAiisj+Vhpcv0RJmo5BllP5wHKeiIdmp/2WugNd6iNCpOPlrQw5sm0kfz06yLBbx6AJUtKQ1UshKFvdsNheUjggjpCInJ+SISTz+Qd/aI5kxRuVC08Zbs+I09Q/pbLDQahpPYnD8BnDSGWe9iOJU7wokLc8fYZKMYrFzIkNrvoEH/3v0m5QV6amgzSw4q6HtpN9q/CrA2WjRGT9BqOLeCKivApY7DAoPnoyCk8t+X+oUkY+2oq4iECWGQw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vBKWsshrY92MGReOK6RRAYbHMkGHZ69DpsgmvJc+1LY=;
- b=cEnwVCriZr05sqEByqj0Wl2187Kqu2Wvh3FZ8J211GvSTtw7vn6W7x+fokHdixUgOQ6F3t4WCKFjuJLvYw1CoC8lk6dtvWrhIrgneA6XD4wK+8C1MVsAMD+GW7Yz1UB/CqLokqkj/VT7vXrtozfMTm8Kpn5u2DWc7kZNkr/ezdT5HwOnRq6kjsNb2cfrxhoOShfYymXJEqkrjTRxygkRURfsCKxZk4WlRhqIzUiy6Mc070hPcIOHvhN0gCiP33aFgUZGwnQX2TApvzHysaK6ASImpMeYUl9trP4tNaXGwT4Rr/q1u4Htfc63zso+9vNaJ9lo2Vi6piqT6ruIDDHdZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ bh=Aug2gN+ziVkgaYSL+PzSmI8HIOCJQS7PbGsCfNXfjv0=;
+ b=a6IMo8krHXmLo4xO/S0lMg4dIaP1KnxJtAiR2W+I87+w4U+3TgFBJROhfVJH4lCKeY9BljjqTBt9+CSGrbZaBuLXY20YvfF3bvP0iUIz+8SifBuTXgDg4cPU2/jmFnItuD6ZNFaXk6CUVk3WlOF8c2Zug/cGqU6BunPnyt2H8ZimhAjrD0iva+5oAuYrAaWlWx51s2UHFLTxl/7GgSqMZS2RIgrep3elXzW8Um7JTgk80YH3oWZ7dTjyNrxggGjHUmsa1vJZU1ByT0gUYJpvYPG8i0sFYJbFtC1fDZvzIYvqFlNR/4qA4oGhhIGdjjN4TT8/bBbqZTObRoujUAFang==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=axis.com; dmarc=pass (p=none sp=none pct=100) action=none
+ header.from=axis.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vBKWsshrY92MGReOK6RRAYbHMkGHZ69DpsgmvJc+1LY=;
- b=YPxaJvK1rg5il+ZqGFnsp22X01cFp+y1w9HIxNS5EE+NnjJ1i+uvq6XINCNHFuCmtURObvdSxAtcHH4UADfw9veUarFVvprRY8L+/HcUxTXnHmkJ1HXiTkmF6a4w1jsN6m/9vf6yrJHhWgQOulg7jewh4IhxNu4b+CosJuyCcp0=
-Received: from AM9PR08MB6258.eurprd08.prod.outlook.com (2603:10a6:20b:287::19)
- by PAWPR08MB10922.eurprd08.prod.outlook.com (2603:10a6:102:46b::10) with
+ bh=Aug2gN+ziVkgaYSL+PzSmI8HIOCJQS7PbGsCfNXfjv0=;
+ b=YzU73awhfsJWVGJ4rALENRhDAtYJLhVQLL4Png+GNpnhSwaNW30aWOkDgSyf0lOhVcL0FObqG+52WGNAbv75R3kV2cAv+Siv6lWTZgoYmvTzmvKkwqES0j6UJKsb7mSFF6RVcH+eKc/NLVEk0JBTtK20I2dWqho9//lvQQ7YhH4=
+Received: from DU2PR04CA0036.eurprd04.prod.outlook.com (2603:10a6:10:234::11)
+ by AM7PR02MB5782.eurprd02.prod.outlook.com (2603:10a6:20b:104::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.26; Mon, 27 Apr
- 2026 20:25:41 +0000
-Received: from AM9PR08MB6258.eurprd08.prod.outlook.com
- ([fe80::171d:1f8b:720d:7a1b]) by AM9PR08MB6258.eurprd08.prod.outlook.com
- ([fe80::171d:1f8b:720d:7a1b%6]) with mapi id 15.20.9846.025; Mon, 27 Apr 2026
- 20:25:41 +0000
-From: Ross Burton <Ross.Burton@arm.com>
-To: "quentin.schulz@cherry.de" <quentin.schulz@cherry.de>
-CC: "johan.anderholm@axis.com" <johan.anderholm@axis.com>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH 0/1] crates.io data access policy
-Thread-Topic: [bitbake-devel] [PATCH 0/1] crates.io data access policy
-Thread-Index: AQHc1kz+R+z6SrN+S0aMGeDp1+dCCrXzK8uAgAAvlgA=
-Date: Mon, 27 Apr 2026 20:25:41 +0000
-Message-ID: <0839CEDA-841B-4A8F-91E9-E229A20C434D@arm.com>
-References: <20260427135122.1504143-1-johanam@axis.com>
- <9abe98c8-4f08-4d34-9e16-52e21e874066@cherry.de>
-In-Reply-To: <9abe98c8-4f08-4d34-9e16-52e21e874066@cherry.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3826.700.81.1.6)
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-x-ms-traffictypediagnostic: 
-	AM9PR08MB6258:EE_|PAWPR08MB10922:EE_|DB1PEPF000509FA:EE_|PAWPR08MB9544:EE_
-X-MS-Office365-Filtering-Correlation-Id: 02581281-72fe-429c-d90d-08dea49b4d50
-x-checkrecipientrouted: true
-nodisclaimer: true
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.26; Tue, 28 Apr
+ 2026 14:03:43 +0000
+Received: from DB5PEPF00014B99.eurprd02.prod.outlook.com
+ (2603:10a6:10:234:cafe::d3) by DU2PR04CA0036.outlook.office365.com
+ (2603:10a6:10:234::11) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9846.26 via Frontend Transport; Tue,
+ 28 Apr 2026 14:03:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ DB5PEPF00014B99.mail.protection.outlook.com (10.167.8.166) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9846.18 via Frontend Transport; Tue, 28 Apr 2026 14:03:42 +0000
+Received: from SE-MAILARCH01W.axis.com (10.20.40.15) by se-mail10w.axis.com
+ (10.20.40.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1748.39; Tue, 28 Apr
+ 2026 16:03:42 +0200
+Received: from se-mail11w.axis.com (10.20.40.11) by SE-MAILARCH01W.axis.com
+ (10.20.40.15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.61; Tue, 28 Apr
+ 2026 16:03:42 +0200
+Received: from se-intmail01x.se.axis.com (10.4.0.28) by se-mail11w.axis.com
+ (10.20.40.11) with Microsoft SMTP Server id 15.2.1748.39 via Frontend
+ Transport; Tue, 28 Apr 2026 16:03:42 +0200
+Received: from bldod238s600920-7.se.axis.com (bldod238s600920-7.se.axis.com [10.64.16.16])
+	by se-intmail01x.se.axis.com (Postfix) with ESMTP id 4CCAE768
+	for <bitbake-devel@lists.openembedded.org>; Tue, 28 Apr 2026 16:03:42 +0200 (CEST)
+Received: by bldod238s600920-7.se.axis.com (Postfix, from userid 20481)
+	id 48A54609E493; Tue, 28 Apr 2026 16:03:42 +0200 (CEST)
+From: Johan Anderholm <johanam@axis.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH 1/2] fetch2/wget: allow identifying with a bitbake user agent
+Date: Tue, 28 Apr 2026 16:03:25 +0200
+Message-ID: <20260428140325.3948844-2-johanam@axis.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260428140325.3948844-1-johanam@axis.com>
+References: <20260428140325.3948844-1-johanam@axis.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB5PEPF00014B99:EE_|AM7PR02MB5782:EE_
+X-MS-Office365-Filtering-Correlation-Id: 60549a38-2455-4849-1c98-08dea52ef4ed
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: 
- BCL:0;ARA:13230040|376014|1800799024|366016|38070700021|18002099003|22082099003|56012099003;
-X-Microsoft-Antispam-Message-Info-Original: 
- myeWVKwi2xvmCiTa3LeWvTDKmF5g7nHTKrI4gQzP778krWa6aOjAwdwCWbZwHZgFNfxr+OSbObBzvs19WtgBrLuYUNr52jz75uw+R6JqjFEzZTc8K+IdtG8jip9iCPcsa+CgyEfRORcgtI/Cea0a2+NDr4I16s0rcEXQ+Pt26uEx/wLfyk953+Z5BH32w6WT8r9Xd5b9xO3PrYe7WWXOE7m5hHQVkISRPdQCvYZNr+uVUwzO+iavpnQ/6RYSw8GufeEz/jzZIwkxOdC3B1ckJEvSkDDuIfxH9DIqeU/tFbwCo4zSWbKtr71h3thproCm6wGIxsl74KL0QwMmZYZXdhv52N8lqJ/5djiSs7n+CBa/rESYFjRuD1+0g0x12tnQfNCYPsE8aghqdK/Evm4xArrxhhEf1doN3mvYX1fiY/DNOPVVUlWDbVVzCIieSHvQesZxxgJA3NhUi2Dgdym6TClSS6YobjaR2JYQSqZIGQ1dGAMyXc2DukFxq6x2UdrcCg4pSnw6lDdFIguOUf5bfBqdsZ7VQTJJnerDURbKHbgGSHkg7Ok23BS0FoayVfwVZKqdbfTJ72Kn4IKz0OIwI8v9uK4IPyJE5qBJYmxFystLBB6SgvYx7wyjsvpsodlKJCwm1OGpb0tKlfbX+grrUaC4kpULtkYKFEhoL7fQbzlHk2CZ7omSmq/3hBDcHi1oHq0NFVpFUkBQb82VsSgx5WI7uLOVOIf0h0nZiPMolvImfbYNXiToU9ARhFWApaLuY3QcsqTyNOvTpUi4QtJgP7uQ0DOLUC9/WmjausiMq84=
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB6258.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700021)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <25524DE7AC5A03448533EB7B118F378F@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-Exchange-RoutingPolicyChecked: 
- M7Nli26jeZszSbiEVQED9u9dkuiy6fccZ2Dnke69XlC6tuyrt2Wd45tcTEJABmdzbhycbVpz6gpUx7MTBGJlZf8kviaMWL3Vl4FtL8MPJe31jBnCnoJipFka21PO5HmaDOJlWac5H3mlnD6vscMhCAvB2/1LPD1ZcJr7SxS+IUhRkdhJD/DcWOuxLuh67tXdOWtedl59mcWF4H00SlffIwVKK5wRuaDvwbhQcWyulj8VXlEVoU5ibgKFDrPmH4y5sn0yrUrde7dNaXVTiLcWQt9Rr5oW4QVP7LQVBZWbplCMPU1tHKsowvnw4cR5RiQf0wRoPBsVeOberYf93RBCdQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR08MB10922
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- DB1PEPF000509FA.eurprd03.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	0c644e00-cc0e-4087-40c7-08dea49b26f7
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|36860700016|14060799003|35042699022|82310400026|1800799024|376014|56012099003|18002099003|22082099003;
+	BCL:0;ARA:13230040|376014|36860700016|1800799024|82310400026|13003099007|18002099003|56012099003|22082099003;
 X-Microsoft-Antispam-Message-Info: 
-	vGeJWI1XztcoavM1lclbnVpOrsR7KuVUl67zpYTc2Oi0v/Z/LFXA5d4pP/S9W2L6SWfCxnnXphTZZn8ww//LBXqFnFEB+emi/5MIBSga2JQO6OgrG/fM49bWMnWRuwDfqwBACBGzE6XH+UPvf47B85LzhVoDJSJBSNuh2wDIjUt5eE4Awe5jzKcw2uhUrNDPYiaxM+0vmjQaGZNu9ZVNy59e7MoEnGi/T+aYY2xRtm+iSUTjRDBwBQVRdAWSsAvGek+wawx0qQxaAb7KSI42rJllHQxcA7jeEHl/NjMpu9jMx91+O8PM86t+cRc430yw8+5OQv2Bwt+zpN6+jz7fI2uhqMbxz6GkYHTuRH1i8AdSwmxB4wuXiO7VTyoWJxbvpORl0r8knXa8DYQSW6B0xWA3NwUm7ol02d9EOIYz3Gyr4CrUvpJy6KKZOqWEb06cl0V6AXMDWLtW76+5RSqAqmlHAJytvcZNqRap9oEapXqParVnCGVVhUf7SX+AkGHn/KdqjhWczyUk1yUUFFa+T7UuV0edaiQyjmyXy1m10T9WIykL8I/CHs5Fh9a8c5SSPrtOTL1r9/KweA/wKNg6IDv6GtcwLCNGownW/hrJHrSy70TmFN88w1Lnl1qhhTd5GxsUNivJbpmzn0Sc1BudrpMesdbH/UAyEoDywSZeJ3+WawA+Jn3Th+5gVlq9ZNX1BAQhU2VFRFrdjoRP+i63YC4gQSRYAWwmkIBn+1JicaXRUpwTmqWjBLlo9T2WAMrHA1cjkcoODgILi/bPrcsV2Q==
+	hJrs6ofaq5WF9oe+Ur1IRT6jyvZZDpcCH/t72WzbfyvnJSrOG/qdi+UFcYxlgmTzfIbYF4uria/6TnjV4ttnCpX2dke7jpXMzU7/4Hl2YeQKZtQdDAUrE/f4qEITtVsoliDdd9PK08UJ8GcabYHmvNzu0JqmFTjaTpvK1vQAHYxHxqezqsQjx5YjTvYh55RnKp7Wf6fsdk7Xuz3EuWsOmRJbQBt7bqJDESK732bJPfeFf2qzw2HoqkmgUUJLgLK2yTOo9b7t5EasNAu5+mk0Ogc4UOeGZtOAeuUlaIxrYVla3/m0ovQa5+zbUOY6PRW+ZKwGmtoNnYfQEzoumrxgBamI5qlRzm5ZSijJ988XA34c2CCIaDzh+AHYa07baeIf/n4vB+bOt0S8eASzm41xbWEXKg3HrhguALPUoF49SCzVYN95nds5PAvTrzAPioB7hKp00zZdODvgaITEPjLTaKw1hjWAb0JGvLmg1lwarz+0D/5vIxPQWevCtNY1TYOl82vbUsIFzuWwiKvoSX5VzuWwVdJCMKok1eeGnuvc1qGddaJPD7ojjq/z5oX1GuiFkvlDQ37XF+3lpcuPICFfMK4eG9BUDo9LBc/eaUtOLfruiaLJiBq+67gSU9Ce56rWkhDH/0pLMB3HHs0/atK6VFeq5qM4GiVB7xb/Vr12rxjyAnlv8x9wk5XEplv1V12xmr9wqnOZLMxH2lr907/XQW/nod6Z32uHaCJGlXC/YEc=
 X-Forefront-Antispam-Report: 
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(14060799003)(35042699022)(82310400026)(1800799024)(376014)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700016)(1800799024)(82310400026)(13003099007)(18002099003)(56012099003)(22082099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	DXmxAR0tDiwjM5hUw/czC0ndPrKIfyE+2gG9wc6ZmcpCOg58YPKZ21+iox9LAxPPJlHs6ZW4tNsz4S1PNC7/8EasVdKr77mu9qmdfDsY2hIaMwJIx8Ieciyw6HxWSiw0v1fzLnLXwe3wFhB+3GcdA2Q4r96lCSMkHcPhU0MNQDJTgeF8dump5u0ehMR75bukv7rZ06/rT4m/XyioSQq4t06jVwhMIfQNeFcLAt6kHUXxcW8DxicJrLh6fjIjhUc8kcDJ7lQFo8GjUz+SdiiXR1G1roOonztPSESVyqEgAD8arXy5dYBKyYK/MhWeZh3OGyLtm3dK4/HJM+atX28vdFOe/hl0hTy12KPYIWi0FVLTgL0PTE9nr4RisnYqUMYhGJfWjqtqOnN8dboM2Nec6ifZ94NNg1Ba3ku7yDKpoEo9JH606+w30MWCon08UYLV
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2026 20:26:45.6049
+	FVrBRYFQf7ySf9z2RIEGNeKFm2HsaPhYjgAOVA4tZBoaSMU8Q9h9Wa1tpBrwz9CLJ0IDux1ggK4tS72WsUpIIsSGIAS1KWcDaGCgEQg5bGgFe8gnLZ7pZ+Ik4ZVad47mju7pMj84X26MdWFBTFyyIocwUm7w6NCGknVVHDKHNe5GK6BGUmikO+VNz8/36ZEdAr37Oza5q7Ri/RXxqg0CmzAwOQQsc+kIFjZIa9Z4wqovGPX7QnmqmLYFYi7TLMImnbUZqXeQaNnAsQooWNnD9I9vLQOm+fpqTQUs6WYlW2kxGC4NvOPCJnDH84Q7L3e2Pcou0fedQIZzbMYuCT/FUzgwSB1bjMYi4z9mg/dtpVIfvu+x/RmK5vPeB+wcVPxbQ+55Y/XSjkRflTIF6eAOcLs3W9FpuTMZGIt4uJ8fO2Dop0bbQ0Xj+c4Ek/hEvnPj
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2026 14:03:42.8970
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02581281-72fe-429c-d90d-08dea49b4d50
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60549a38-2455-4849-1c98-08dea52ef4ed
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	DB1PEPF000509FA.eurprd03.prod.outlook.com
+	DB5PEPF00014B99.eurprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR08MB9544
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR02MB5782
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 27 Apr 2026 20:27:00 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19399
+ <bitbake-devel@lists.openembedded.org>; Tue, 28 Apr 2026 14:03:54 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19400
 
-T24gMjcgQXByIDIwMjYsIGF0IDE4OjM1LCBRdWVudGluIFNjaHVseiB2aWEgbGlzdHMub3BlbmVt
-YmVkZGVkLm9yZyA8cXVlbnRpbi5zY2h1bHo9Y2hlcnJ5LmRlQGxpc3RzLm9wZW5lbWJlZGRlZC5v
-cmc+IHdyb3RlOg0KPiANCj4gVGhlIGNyYXRlIGZldGNoZXIgaXMgZGVyaXZlZCBmcm9tIHRoZSB3
-Z2V0IGZldGNoIG1ldGhvZCB3aGljaCBkb2VzIHNlZW0gdG8gaW1wbGVtZW50IGEgVUEgcmVwb3J0
-aW5nIGJpdGJha2UgYW5kIGl0cyB2ZXJzaW9uLCBzZWUgMjM0ZjllODEwNDk0ICgiZmV0Y2gyL3dn
-ZXQ6IHNldCBVc2VyLUFnZW50IHRvICdiaXRiYWtlL3ZlcnNpb24nIGluIGNoZWNrc3RhdHVzKCki
-KS4gVGhlIGJlc3QgdGhpbmcgd291bGQgYmUgdG8gdHJ5IHlvdXJzZWxmIChJJ20gYXNzdW1pbmcg
-aGF2aW5nIGEgd2Vic2VydmVyIHlvdSBjb250cm9sIGFuZCBjaGFuZ2UgdGhlIGZldGNoZXIgdG8g
-dXNlIHlvdXIgbG9jYWwgd2Vic2VydmVyIChvciBwb3NzaWJseSBldmVuIHNldHRpbmcgdXAgYSBQ
-UkVNSVJST1JTIGZvciBjcmF0ZXMpKS4NCg0KVGhhdOKAmXMgY2hlY2tzdGF0dXMsIG5vdCB0aGUg
-YWN0dWFsIGZldGNoLg0KDQpQdXQgdGhpcyBvbiB0aGUgbGlzdCBvZiByZWFzb25zIHdoeSBJIGRp
-c2xpa2UgdGhlIHdnZXQgZmV0Y2hlcjogdHdvIGVudGlyZWx5IGRpc3RpbmN0IGNvZGVwYXRocy4N
-Cg0KUm9zcw==
+Certain hosts do not allow identifying as wget, but want an application
+specific user agent.
+
+This change causes a slight change in how checkstatus will identify.
+Instead of simply using bitbake/<version>, it will now also include
+project contact information:
+
+bitbake/<version> (https://lists.openembedded.org/g/bitbake-devel; bitbake-=
+devel@lists.openembedded.org)
+
+This change was made to comply with the data access policy of crates.io,
+while not introducing too many user agent variants.
+
+Some more information on user agents can be found in 234f9e810494
+
+Signed-off-by: Johan Anderholm <johanam@axis.com>
+---
+ lib/bb/fetch2/wget.py | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index 6ac4306c0..93c8b73f4 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -60,6 +60,19 @@ class Wget(FetchMethod):
+         """
+         return (d.getVar("BB_CHECK_SSL_CERTS") or "1") !=3D "0"
+=20
++    def identify_as_bitbake(self):
++        """
++        Should wget identify as bitbake?
++        """
++        return False
++
++    def bitbake_user_agent(self):
++        """
++        Certain hosts require users to identify with an application specif=
+ic user-agent.
++        E.g. crates.io according to https://crates.io/data-access
++        """
++        return "bitbake/{} (https://lists.openembedded.org/g/bitbake-devel=
+; bitbake-devel@lists.openembedded.org)".format(bb.__version__)
++
+     def supports(self, ud, d):
+         """
+         Check to see if a given url can be fetched with wget.
+@@ -122,6 +135,10 @@ class Wget(FetchMethod):
+                 # Authorization header.
+                 fetchcmd +=3D " --user=3D%s --password=3D%s" % (ud.user, u=
+d.pswd)
+=20
++        # Some hosts, e.g. crates.io, may require using a special user-age=
+nt.
++        if self.identify_as_bitbake():
++            fetchcmd +=3D " --user-agent=3D'%s'" % self.bitbake_user_agent=
+()
++
+         uri =3D ud.url.split(";")[0]
+         fetchcmd +=3D " --continue --directory-prefix=3D%s '%s'" % (dldir,=
+ uri)
+         self._runwget(ud, d, fetchcmd, False)
+@@ -371,7 +388,7 @@ class Wget(FetchMethod):
+                 # Some servers (FusionForge, as used on Alioth) require th=
+at the
+                 # optional Accept header is set.
+                 r.add_header("Accept", "*/*")
+-                r.add_header("User-Agent", "bitbake/{}".format(bb.__versio=
+n__))
++                r.add_header("User-Agent", self.bitbake_user_agent())
+                 def add_basic_auth(login_str, request):
+                     '''Adds Basic auth to http request, pass in login:pass=
+word as string'''
+                     import base64
+--=20
+2.34.1
+
 
