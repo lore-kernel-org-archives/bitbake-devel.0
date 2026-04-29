@@ -1,125 +1,119 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <bijak.dawid@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44ED6FF8875
-	for <webhook@archiver.kernel.org>; Wed, 29 Apr 2026 11:15:02 +0000 (UTC)
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.8772.1777461291855281979
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14981FF8873
+	for <webhook@archiver.kernel.org>; Wed, 29 Apr 2026 14:11:48 +0000 (UTC)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.12275.1777471901014141711
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 29 Apr 2026 04:14:52 -0700
+ Wed, 29 Apr 2026 07:11:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=YWgZI6Zl;
- spf=pass (domain: gmail.com, ip: 209.85.219.41, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-8b3d6b215cfso45365866d6.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 29 Apr 2026 04:14:51 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777461291; cv=none;
-        d=google.com; s=arc-20240605;
-        b=HBD3V0Kds6dW3WkOsQ5nTdsfJyQX5yPpBI7ul9wasoB0ISjwI0WKFChCTCOKyzvOx6
-         DtOeTbZl/hLswLsLVyNnDwoJF9sGlbIPGoTMrON92BTXvkxWUXyT7yphwX1Sql2EC6OB
-         WM1O4oKibzqtTGJ5TA/FlggUhOD+9hecigaVWdoOwJ5bt6DPPk47DAmpIjSEJj2ul6y+
-         DgRgjKAPmEDufnJNJMR6M/l+pjqyKGXbd+BqtqKVYqbcrtYESVIsIJ0fXurWFCeRf1oz
-         Z+0zUeRRMWwCSEXRIJ1y4aKKEFSmZcQmq2QuhCdUMciAx1CXDWKYmXx9263Qqvuo1Cb1
-         LvQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=lxaGUYTJzcMAekOYKEPq5e5uos33yruOe6m2ewmi4T4=;
-        fh=210XcDjSW4JLGGT2kvxa/vXYLFPraDxedRqab8Hp1fo=;
-        b=RK+q5EHY3GKZA0Bo73+2IB6woHNjDBsYbLLGl9ubpmCEx1tKkIXBqEZ19iXYPvdKB8
-         h4IxshI+uUmZ0vnem5TnMLqFE9nYGSpsz10IHah5+vYVWCVh5Hl8yZxtbHFhFFTcREj1
-         1a2bou0mKTmpcf7Bkor5XjGlMazcbwRZW0PntNhXj7Oa4hItWc7b96msVEHGchqWB8eZ
-         4XfWzXReYAL087uofqXmh6niwav/lfc1YNkVUKDbDo5Y+Np9ZKQ4pnS45OXoUOhczVSb
-         5EMAAT+qbYvbA5qwGWi9234tRdE3RQ8LVdtLptvVguutZh/bhnHpoxonj2flIv6SWcHn
-         rO6Q==;
-        darn=lists.openembedded.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=TIWH5XCR;
+ spf=pass (domain: gmail.com, ip: 209.85.128.54, mailfrom: bijak.dawid@gmail.com)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-488ab2db91aso178279175e9.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 29 Apr 2026 07:11:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777461291; x=1778066091; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lxaGUYTJzcMAekOYKEPq5e5uos33yruOe6m2ewmi4T4=;
-        b=YWgZI6Zlp0W3mWRsE6iFgmUy00wvSB2h6LqMnhZMYoXaBuaOuoc+GPMYFRoq/aS0hG
-         kOAhw5bC8KBxXXVu1C94mULjJTONne2Z9pNYsYN6CjkO7zYzY+H2HLk0Bz09/PZMFlfM
-         Dm/l7ofAluWVR4faiV0gG0GauIB8dO57xGrYoppsJ9cNoidSgQlTAfaGblijduc5KLRi
-         M08rA811PLfmUrOHZDuejWNAKjJ0ffi+NORQOXXO6FfcPsPMkorRV7exsp+qPC1ITsOu
-         ZAUpFN1eN6sXGiAt+DK9w0KpaQJu7XAJjOFKIC/RUFNJxQGBVqe36vElggygFe7O3A3+
-         GH+g==
+        d=gmail.com; s=20251104; t=1777471899; x=1778076699; darn=lists.openembedded.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=DsaQNVoq4S6+n5sskorI9xNspPcsNDC+qNkAlpahskQ=;
+        b=TIWH5XCRPrWdiMRESI/d/T1FF6aIUTXI0C7Vm386ZqGqnDrn8S3Rm34pDmr8FMiiNF
+         tdstt2asGYUI7/A0KtkhGXKw2OtmfcV900bzCYr3sjl7RzGLScXAHwd6R5O82LmdP02l
+         p6V+9OQuI1et5Eax6eYuXqraxCrZxw84DfBdFuM32DEyEhh9XUBpmbm4lOxL5oArdvj5
+         hc9zHcQLKIMApnyi6/PZQAmobD/AioKCYz8BB+AdVqpXPWQI6qM7sulPeV80psQyMxOf
+         hwh8z8WLP+Imyilx/ehckw433cLcWghRA9OJaaFwA/y1ndSM+D5IW2tRGX0fvfvY0Gv5
+         pwfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777461291; x=1778066091;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lxaGUYTJzcMAekOYKEPq5e5uos33yruOe6m2ewmi4T4=;
-        b=GV9i8gIcgjXrHdWjQbyuochctTsJ1TnARw5OugBPZvujVQtDQhEpzuF7RfgCZ3o+ZX
-         5igG1p472bewJbyoVQKqXyCZ1Nf6j6ePDBNlzfaNbK403mIK9mWif+QiMWN7sh6Afv/U
-         0Dv/mV1PDauhlN9GVkz04W+qEKpIMbq4LlvQnqEf38fMAObMWL/dOw6f9qvf0QQxaz63
-         vXYZaK/0Y3XBvpwBrJ3iYj/xJcobQRYlZGVZkdrmiPG2A712l9M6X/LnPh9qaJry8TWu
-         zyOfYzkNJj/Xuivw4XX8/E9V4CugfiF0zFAarbdzcq48aYkIWrTgb0EKj91I3g8erg7l
-         dpww==
-X-Gm-Message-State: AOJu0YwZNrOr3ZQJVAmc1rCSORgErzSTV+4WPZjh23hs34oQLnfNlBa0
-	Z+NvXd+pTvrPjCsIuwMSA3IvAZGwCnI3RhuqYE0Bd2m4l51ytsySd0O65dvr/XF7Lgd0HNj8A3L
-	JJeXDuh8KEUUaSBNsp7IYj5tpLDLT9M8aOqg+
-X-Gm-Gg: AeBDies+rDXbpvV4ux+TIJ08S4ciE/MVAtkMByCWmQ2ZGC8NNeCNJAJojJIAOmCZrs5
-	7tU5pC7+OECQ0O7pw8hAj1r/VqAyEM15lYmYcIsm6IaxfjLekzjDixkSy63xk4rLhpLfgwG3JvM
-	RcAcNkGGwlngaU4C3fHvwtN9PEk+Qo9bl0nNieT+WWq21VBSDBLXJEl83qumoc8ilDFMnf7pcJV
-	V+y2FSetN2fA2wezqPCVb6ovF45TlXGte9Yi51n1JBoisFXg2iDiPZbpxpvvK3GyY1HKFmGVATs
-	b6U/PqCfvSaMZP2Fh4ozvwhjUQHTIvqV7CX4KfdBO2+qpBJ0f9qk
-X-Received: by 2002:a05:6214:5098:b0:8ac:a976:f8d with SMTP id
- 6a1803df08f44-8b3e300eb72mr110206376d6.22.1777461290704; Wed, 29 Apr 2026
- 04:14:50 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1777471899; x=1778076699;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DsaQNVoq4S6+n5sskorI9xNspPcsNDC+qNkAlpahskQ=;
+        b=aLO+FsYkncDhvLgkZBhhT9nKv4hN4JUu14sfvqGPJ7PneA3XjjrsfzapatddvMpOGa
+         2WZNj1DEv24TS2JIIVzrqV54kJMKf1fFEoHN5b3L4Yqpll5ltNSv2WO/q+I60ks08yrd
+         OxqxpaTCcWgGO6XmqcHOpl+QSyPKE1VP82Sc4o1fM+VeshsuDTMbX/WWMdAf3NSl6X2f
+         VYdD7TMonQP++p5vb/ilmByTnB7BYSfQWO+jEJXguaKCPk1775qd8V7RRYIGthECxktE
+         6kfVLSSLDIixg4sV7ag+0DOrdMhtK9tmWXbuJCBBcm3WJpkoRw5qcyzQ5JUCIsidUU1g
+         EPrQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9K0B4niK+HSuudXJqENHEvhgKyl9mRHEBd4umRePg9cNLOSlpwalldq5VvWcHBUTW5xkOnGoak9dV1hl3p@lists.openembedded.org
+X-Gm-Message-State: AOJu0YxsaAnaZDa7CjraqHlxay1ihn+f02WxIGnsoKYzxyIHBLqplaXW
+	JLFZmsJWsm+gP+kkuynC8ugeMroSBrkm1DZR5QUc5Q82aN526luS2LLw
+X-Gm-Gg: AeBDieuLWX4w/eDfZYobI3BG25MgurLa9BE3zddDBTY21I/mr/NU+1Exig1TXWqcWnW
+	HEAsQJE/mCma3mBCdTXm3rxuhea48S5J6s33PcUjBFzETop45hsbH7RqqikQZv414p19myO6j8T
+	SZEl+iiigKB9k/yEeYJp7wwhWNynXhhYoCF2cltTgtZjxG1UlzKgvJRq5mf0JdnxVjGLwIQapsE
+	e/qrOfx/wiiJ9xRntxrcLlr3wFAckT/rmGA8sY7SXIMza1sskanpReuJPB2dB0idQRlz+mD7uR5
+	K7kdsMSxtB6ItbYO0svW/dhKsbpCF4qRGocn6uK0YSPlpCgIFj3UUvxPCQFpjgdLLmBYAX1PVRj
+	TYF88BuCx3gjXIDLmgWcvkvE15/dUBPj9PVUyvmCeXjyB0sG7LrmAr1gJ2LxGdw839vmrEr691X
+	TkMYInJLejMk9aNsRf3WLn4kHHjdJl1uBLr9JZEcUiTRFIAf+V5jXyfupCqZjaNTLavJPcm3NYC
+	m6iGm7OURCjkD34fLVvqcVeM00+lXfYGfRej4dmbawu2kqvdBw=
+X-Received: by 2002:a05:600c:5247:b0:489:e696:836f with SMTP id 5b1f17b1804b1-48a7b519485mr69695185e9.10.1777471895031;
+        Wed, 29 Apr 2026 07:11:35 -0700 (PDT)
+Received: from thinkpad ([2a02:8070:d188:380:590d:4498:b2ca:2c58])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a7c3057f8sm19643125e9.14.2026.04.29.07.11.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2026 07:11:33 -0700 (PDT)
+Date: Wed, 29 Apr 2026 16:11:31 +0200
+From: Dawid Bijak <bijak.dawid@gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: Quentin Schulz <quentin.schulz@cherry.de>, 
+	bitbake-devel@lists.openembedded.org, docs@lists.yoctoproject.org
+Subject: Re: [bitbake-devel] [docs] [PATCH 1/1] doc:
+ bitbake-user-manual-metadata: fix inherit_defer documentation
+Message-ID: <qwehgszst3cphuw4jqsj2u36333p2lpo6cytkdcx22prjmxrdx@acnraxmxwfl5>
+References: <20260424062327.820993-1-bijak.dawid@gmail.com>
+ <20260424062327.820993-2-bijak.dawid@gmail.com>
+ <c25e0e9a-8809-4ac6-90ee-3687972e03af@cherry.de>
+ <ljbjkwt32h72aziah2gepb6k5rfxygfrhkfysmulj5scnca5pu@o4vikz4hfmh3>
+ <eeab5758b01722f5474855d21f718ea2d5cabff8.camel@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20260429032436.1075831-1-Qi.Chen@windriver.com>
-In-Reply-To: <20260429032436.1075831-1-Qi.Chen@windriver.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 29 Apr 2026 13:14:36 +0200
-X-Gm-Features: AVHnY4KCwkgsV-s7n-SSyLGnwaD_izANnpyEbihnr6r9jt141vcOdA1dncH7xNs
-Message-ID: <CANNYZj-anuHaAL6bJbkpO_bUuqQd-ZLmdRAA8bLf3iSnMYRzdQ@mail.gmail.com>
-Subject: Re: [bitbake-devel][RFC][PATCH 1/3] lib/bb/fetch2/git.py: add
- optional major_version parameter to latest_versionstring
-To: Qi.Chen@windriver.com
-Cc: bitbake-devel@lists.openembedded.org, richard.purdie@linuxfoundation.org, 
-	Randy.MacLeod@windriver.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <eeab5758b01722f5474855d21f718ea2d5cabff8.camel@linuxfoundation.org>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 29 Apr 2026 11:15:02 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19414
+ <bitbake-devel@lists.openembedded.org>; Wed, 29 Apr 2026 14:11:48 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19415
 
-On Wed, 29 Apr 2026 at 05:24, <Qi.Chen@windriver.com> wrote:
-> +    def latest_versionstring(self, ud, d, major_version=None):
+Hi,
 
-...
+On Tue, Apr 28, 2026 at 09:42:28PM +0100, Richard Purdie wrote:
+> On Mon, 2026-04-27 at 20:14 +0200, Dawid Bijak via lists.openembedded.org wrote:
+> > Hi Quentin,
+> > Thanks for your response.
+> > I'm afraid I don't quite follow your point about PACKAGECONFIG.contains.
+> > I'm not sure what you're referring to exactly.
+> > But, as far as I can tell, the inherit statement works fine with inline python expressions. 
+> > I think, it evaluates the expression in place, much like := would.
+> > 
+> > For example, on current master I tried the following:
+> > �COND = ""
+> > �COND:append = " x"
+> > �inherit ${@bb.utils.contains('COND', 'x', 'foo', 'bar', d)}
+> > This inherits foo. 
+> > 
+> > However, if I move the :append below the inherit directive:
+> > �COND = ""
+> > �inherit ${@bb.utils.contains('COND', 'x', 'foo', 'bar', d)}
+> > �COND:append = " x"
+> > it inherits bar.
+> 
+> It works, as long as you are sure that COND won't be changed after the
+> inherit. When mutliple files altering the variables are involved, that
+> is often unclear. I think the doc's intent is therefore to recommend
+> anything with variable accesses is therefore deferred, unless the user
+> is sure they know what they're doing.
 
-> +            if major_version:
-> +                if not pver.startswith(major_version+'.'):
-> +                    continue
+Richard, thanks for chiming in. Your explanation reassures me that my understanding 
+of inherit_defer was correct.
 
-This handles one way of versioning bugfix releases (x.y.z -> x.y.z+1),
-but upstreams might invent all kinds of different ways. E.g. systemd
-is using x -> x.1 -> x.2 -> ...,
-or openssh is using x.y->x.yp1.
+In summary, I believe the 3 issues with the current documentation that I identified 
+in the cover letter are still valid, and my patch still applies.
 
-Let's make it more general. I'd suggest passing in an optional
-filter_regex argument that would be matched with a 'candidate'
-version. Then the most common use case (point releases) could be
-supported like this:
+Greets,
+Dawid
 
-upstream-stable-releases-point.bbclass:
-UPSTREAM_MAJMIN_VERSION_REGEX = ... (set from ${PV}, e.g. 3.4.5 becomes 3\.4)
-UPSTREAM_STABLE_RELEASES_REGEX = "${MAJMIN_VERSION}\.\d+" (this in
-turn becomes 3\.4\.\d+)
-
-systemd and openssh on the other hand could set
-UPSTREAM_STABLE_RELEASES_REGEX directly according to their custom
-versioning schemas.
-
-Then recipes which are known to do release maintenance (in a way
-that's compatible with Yocto stable policy) via point releases could
-inherit that class or set regex directly. And recipeutils in oe-core
-would pick up the regex from UPSTREAM_STABLE_RELEASES_REGEX and pass
-it in to the fetcher's latest version function.
-
-Alex
 
