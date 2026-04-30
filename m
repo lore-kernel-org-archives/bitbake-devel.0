@@ -2,137 +2,119 @@ Return-Path: <marciohenriques84@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C17FF8875
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5E6FF8873
 	for <webhook@archiver.kernel.org>; Thu, 30 Apr 2026 12:39:03 +0000 (UTC)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.19571.1777552739762163035
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.19567.1777552733422476982
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 30 Apr 2026 05:39:00 -0700
+ Thu, 30 Apr 2026 05:38:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=FcrJLYfh;
- spf=pass (domain: gmail.com, ip: 209.85.221.45, mailfrom: marciohenriques84@gmail.com)
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-43d75312379so1212048f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 30 Apr 2026 05:38:59 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=H9/QpSrg;
+ spf=pass (domain: gmail.com, ip: 209.85.221.46, mailfrom: marciohenriques84@gmail.com)
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-43cf8d550bdso805176f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 30 Apr 2026 05:38:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777552738; x=1778157538; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9W3HsvYAxMlAVlMJlJvVZed0I3wE57twcaEn7xyjAWo=;
-        b=FcrJLYfhNvv+JOds2imbpGRN4tz5cZbPAz2Csz7yziuxLBgmt2KJwyGXrnfeT4MA6P
-         f5G7/UwBGTwAn9BurQPixeBY0DRQg7Ujn5bzCLxgN8v0cc74s8lgWApus7XRQMDIKtIN
-         Io+TniVTavkOEBf+F7r0+t1S+aU76H/P6mUAH8DksWD+sNbR5uOdf+wRa3lA/OpMQLKl
-         82Jh4GdikczNVQu08LkpaiwHo5qMYGDtOdNZ8mqcnHTKYfaW2ZULcs7XqXW9+H8sIVZd
-         xfGxln0rEF9HI9x3HxfKnZioUUdnshqGdvuaxo5faXhoZFlOmCq1ZiIJh8tbRyP6+480
-         Hglw==
+        d=gmail.com; s=20251104; t=1777552732; x=1778157532; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fm0sznUCinLSvkcne7Jlr9vCozCsSPdMt956UJsEUXM=;
+        b=H9/QpSrgmU/088Sdmc8HlyBpuZLUfyC26uuYew8QLzFsb0tE6ayWL6RXJob5q0VKc2
+         YeHWH6+JYORl7XWaUa7+ryzNOmx3aDh9JZNHnSO7UwuhWta0QHiHXZk3J0Y5fEsbOvW2
+         gFEki4VCvhWT6MMqzo8B+frZu6HyKNKQUsM3z0DGGGmM7dwmLgv+/9vdNVj/H0gMgyM7
+         m7wxV3DbZKXNvEW4uVbjf6dzN2LKseq05ivtaJ6CETtHeN3WE7x0RTd55FZiakRsPYMT
+         oe4Y7F/oPRqbyH+I2FmaUhCFh3oMSpjtX1iWD0vtAJO+i88l5dyQ0iA4JIJteyksH3z7
+         PO2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777552738; x=1778157538;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=9W3HsvYAxMlAVlMJlJvVZed0I3wE57twcaEn7xyjAWo=;
-        b=LWEDLZygY3l1lXbCnMAdVm2BBTSLIEQWsGZ0iBzy31xoyESBpbEfviFLgIdIXnwDA7
-         B872Lf2eZvD/rvefW1fvFpBunjkkQwebvURKQjH+flrgzcaB3g56DJKwhM1O6cywoeiE
-         5Oa7fIaOkdb2kOWiygB38dlHrn/d8/6jlP1Jiq1EOzu+ye1fmzEL5OVeQ4iMkg+Ye9Wx
-         /fOIRdebnJjRDQfCiggn6Y1uSD4naKn4wU5SVci1xAjxXPaqsnoU7VM5nxMUsW2TgpW2
-         xkHChtrlJLP3edt1EMjt7ca35BExE91eA3ZuHehSv+CQWlalYCA/GS6nsUkehkj1AYQe
-         +5yQ==
-X-Gm-Message-State: AOJu0YwmplhkThbjlJuoblcnb9qYIX2O24QeOUkEFAC8+06nnRx6YHFv
-	w1dInNo8vxZAQzIZ6DM30WQC7JmHMwYuXHrgDU8xXykQ32gNOosuxDFc4buFkMDN
-X-Gm-Gg: AeBDievEOmc7C4CiJTMRJTKouFWtBVJ71Hjo2Sjo+oelJICEFk/aqUWaQ/ETHkcQeys
-	ueXcU1H7o+1ev7S+jR+Dzo25tRyaX3VjNYCFlnJlFC5mZXPg/TITwvw7euqyIjdw8DXZ/GEs7cJ
-	8Y+TW8h7UlSUfiWkQoopE6syAsXJK47+JquP6TDZ2GvS1ZAjsXU6TMf58eF/sZuBPuGS2erVpKE
-	H9VgY/zNAFGKESGVJAe9H3G+Ph7nENqbhzZI/snDosDq+8S6JaLx1BBr3w1XgSxGtumHrgDWiwB
-	2IkR2HOX8bwlROgTlRoy6qhOnZHzKLJ8jio2jMewRkvMqbJ/qoZDY4nGXYKqz3QcyqJkkBVMPhM
-	JBkiqZscKxtsD5QhTYQEiMflM0qxn3J2lYxyofiUvytxqiRNmGzdtPVNyee4NKgPPrqxIW8Tez8
-	IVsfkSlNa3utkIOPdi5RuuQyUUypwSPEy85YyFHse0si2rW+XXIILvXPxeEzS55OkgEQeJ9eTUH
-	E24kONal60aZkMyxnXdZMsGrO0Gxp+moPcT6SURFPzLQ/8A7lXnaDIP
-X-Received: by 2002:a05:6000:288f:b0:449:df0c:c258 with SMTP id ffacd0b85a97d-449df0cc371mr1640423f8f.27.1777552737673;
-        Thu, 30 Apr 2026 05:38:57 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1777552732; x=1778157532;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fm0sznUCinLSvkcne7Jlr9vCozCsSPdMt956UJsEUXM=;
+        b=hEgc+fcHObHLdq8Cx0uzVvew50DD7ZwkL9sfRKHGbHryFUPKEnzMRADmLTBVGM0kk8
+         Ov89v7c9Locew34AGvFjQS+Gi22rOkMTZPL/VUg3DkyF25E6xL6XEtknxCvxExdDTMT4
+         /78Z8JTHm0TM+s/4AyfRBlHYi8JuKmGDQm/G3ltOJw6UwdpTDva4HvvfTChftyBapebP
+         TH3YiM6hwRx9ywnD6xstQNdU1iR4toY2oRqjczs6QSObCXdCocRc2BVVtFhxpln/rZHC
+         AGcRki5Ha+WSR5rAmpF02B+DgMmUmA3fAi4Q3o6EwqB4XD8TZlwDk9qj5pIY3PIOS4Dt
+         Xokg==
+X-Gm-Message-State: AOJu0YyFZ6hF5T4exSNX3R2Qdu/aahph9Ef4bREg0GdH+L9OYU0Yb8G9
+	eb6uWVb0v6adQkVE12mqz5RBRoAJHGuHAY+FfHdavtMueMSXVs7I5JwQ4l0pIKHR
+X-Gm-Gg: AeBDievcCb6RIv7Q16QejtjwpBIgXrr4wp3weL6IaN0bkJVhdaKNrbnCXOWYet/Bq2/
+	Uujp5Gsv75tAoPnUqf5quDJiBIp8br+E2dUvoUDB2zAsE2zLUOkvNdeD+eD5TJs3un2OmXVmelg
+	kLGpxqUFtzKrUNqHK19EJEt4/VXEpMIK9gsygUvwoHmVrCE4jYHYeAX0nqvqh/mGWWzdNejt2OM
+	qx6Z0prla0spOGYvZLHswZO6gBe62WYO1b2daqLIgSaPRr1YSiDENnTOU8sluolZDLqO4nAMqUq
+	oT38asWpQladcJsSiAiHFQBcwnPlDb+hYO/Mc8Q5WWlp1zm/whUMaKooPdT+E+i4i5Xq4ePwh9I
+	RDsq6CCpIslHlj5NkWIx+r/UfscnyOpxRj/dJjXxxqhcvGM7dpciazXdRAsyd7Vy3FAs5ma9jkh
+	CTQt5ZUofHtVRGcVwKfAGNif/QUGBnuZEE7Mx+3/1n4Y6bKgGZFBhRnKUEPRcr43+lgKBVf0DPn
+	cmCRUbqyF2cr9KyL+vDGpC04yYX5pTS9MavJAVIA+XCYzZz+KYPPDsq
+X-Received: by 2002:a05:6000:b8e:b0:449:cfea:ca91 with SMTP id ffacd0b85a97d-449cfeacad4mr1513809f8f.37.1777552731387;
+        Thu, 30 Apr 2026 05:38:51 -0700 (PDT)
 Received: from PT-PF3LTRXS.critical.pt ([213.205.68.220])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-447b4216675sm12966638f8f.11.2026.04.30.05.38.56
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-447b4216675sm12966638f8f.11.2026.04.30.05.38.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2026 05:38:56 -0700 (PDT)
+        Thu, 30 Apr 2026 05:38:50 -0700 (PDT)
 From: Marcio Henriques <marciohenriques84@gmail.com>
 X-Google-Original-From: Marcio Henriques <marcio.henriques@ctw.bmwgroup.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Marcio Henriques <marcio.henriques@ctw.bmwgroup.com>
-Subject: [PATCH 1/1] bitbake: add BB_GIT_SHALLOW_SKIP_FAST to disable fast shallow mode
-Date: Thu, 30 Apr 2026 13:38:44 +0100
-Message-ID: <20260430123847.25046-2-marcio.henriques@ctw.bmwgroup.com>
+Subject: [PATCH 0/1] Subject: [RFC PATCH] bitbake: fetch2/git: add switch to disable fast shallow path
+Date: Thu, 30 Apr 2026 13:38:43 +0100
+Message-ID: <20260430123847.25046-1-marcio.henriques@ctw.bmwgroup.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260430123847.25046-1-marcio.henriques@ctw.bmwgroup.com>
-References: <20260430123847.25046-1-marcio.henriques@ctw.bmwgroup.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 30 Apr 2026 12:39:03 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19421
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19420
 
-In some CI environments, shallow tarballs are preferred as fallback artifacts,
-not as the primary source path.
+Hi all,
 
-Today, enabling shallow mode also enables an initial fast shallow path that may
-avoid creating/using the regular local clone flow in DL_DIR. This can reduce
-the effectiveness of incremental fetches and lead to larger re-downloads.
+This is an RFC for a small behavior change in the Git fetcher shallow flow.
 
-Add BB_GIT_SHALLOW_SKIP_FAST as an opt-in switch. When set to 1, the fetcher
-skips the fast shallow path from initialization and proceeds with the regular
-clone/update flow, while still allowing shallow behavior and tarball fallback.
+Problem statement:
 
-Default behavior is preserved when the variable is unset.
+Our CI setup uses a hybrid strategy combining both a full local git clone and shallow tarballs.
 
-Signed-off-by: Marcio Henriques <marcio.henriques@ctw.bmwgroup.com>
----
+The full bare clone in DL_DIR/git2/ is the primary working copy. It is kept up to date across builds so that each CI run only needs to fetch the delta of new commits rather than re-cloning from scratch. This is used to bump revisions.
+
+Shallow tarballs serve as fallback artifacts for cases where an upstream revision has disappeared (e.g. due to a force push or a deleted branch). They also allow DL_DIR to be cleaned up at any time, since all previously integrated revisions remain available as shallow tarballs and can be used to restore a working state without fetching the full upstream history.
+
+The problem is that enabling BB_GIT_SHALLOW also silently activates a fast shallow path that, when no local clone exists, clones directly from upstream into a temporary directory and produces a shallow tarball — completely bypassing creation of a persistent full clone in DL_DIR/git2/.
+
+Proposed change:
+Introduce a new configuration variable, BB_GIT_SHALLOW_SKIP_FAST.
+When set, shallow mode remains fully functional (tarballs are still generated and used as fallback) but the fetcher always goes through the regular clone/update path first, ensuring DL_DIR/git2/ is created and kept current. Subsequent builds fetch only the delta.
+
+Why RFC:
+I want feedback on:
+1. Variable naming and scope.
+2. Whether this behavior should remain opt-in.
+3. Any concerns about interaction with existing shallow tarball workflows.
+
+Compatibility:
+Default behavior is unchanged unless BB_GIT_SHALLOW_SKIP_FAST is explicitly set to 1.
+
+Expected benefits:
+1. Better CI network efficiency for repeated builds.
+2. Keep shallow tarballs as fallback artifacts rather than primary source.
+3. More consistent use of local mirror/clone state in DL_DIR.
+
+Configuration example:
+BB_GIT_SHALLOW = "1"
+BB_GIT_SHALLOW_SKIP_FAST = "1"
+
+Thanks for feedback.
+
+Best regards,
+Marcio Henriques
+
+Marcio Henriques (1):
+  bitbake: add BB_GIT_SHALLOW_SKIP_FAST to disable fast shallow mode
+
  .../bitbake-user-manual-ref-variables.rst     | 19 +++++++++++++++++++
  lib/bb/fetch2/git.py                          |  4 +++-
  2 files changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index 8d8e8b8b..1def16e7 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -390,6 +390,25 @@ overview of their function and contents.
-          # This defaults to enabled if both BB_GIT_SHALLOW and
-          # BB_GENERATE_MIRROR_TARBALLS are enabled
-          BB_GENERATE_SHALLOW_TARBALLS ?= "1"
-+   
-+      :term:`BB_GIT_SHALLOW_SKIP_FAST`
-+      When :term:`BB_GIT_SHALLOW` is enabled, BitBake will by default attempt a
-+      fast initial shallow clone directly from the upstream repository, bypassing
-+      the creation of a local full clone in :term:`DL_DIR`. Setting this variable
-+      to ``"1"`` disables that fast path so the fetcher always creates and
-+      maintains a local clone in :term:`DL_DIR`, allowing subsequent builds to
-+      fetch only the delta of changes rather than re-downloading the full shallow
-+      history.
-+
-+      This is useful in CI environments where shallow tarballs are treated as
-+      fallback artifacts and incremental network efficiency is preferred.
-+
-+      Example usage::
-+
-+         BB_GIT_SHALLOW ?= "1"
-+         BB_GIT_SHALLOW_SKIP_FAST ?= "1"
-+
-+      See also :term:`BB_GIT_SHALLOW` and :term:`BB_GIT_SHALLOW_DEPTH`.
- 
-    :term:`BB_GIT_SHALLOW_DEPTH`
-       When used with :term:`BB_GENERATE_SHALLOW_TARBALLS`, this variable sets
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 21f5f28a..f72173b9 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -196,7 +196,9 @@ class Git(FetchMethod):
-         if ud.bareclone:
-             ud.cloneflags += " --mirror"
- 
--        ud.shallow_skip_fast = False
-+        # Allow disabling the fast shallow path so DL_DIR keeps a local clone
-+        # that can be incrementally updated in CI.
-+        ud.shallow_skip_fast = d.getVar("BB_GIT_SHALLOW_SKIP_FAST") == "1"
-         ud.shallow = d.getVar("BB_GIT_SHALLOW") == "1"
-         ud.shallow_extra_refs = (d.getVar("BB_GIT_SHALLOW_EXTRA_REFS") or "").split()
-         if 'tag' in ud.parm:
 
