@@ -1,119 +1,92 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <me@anthonysquires.ca>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AAFCD3424
-	for <webhook@archiver.kernel.org>; Fri,  1 May 2026 09:30:06 +0000 (UTC)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.10896.1777627803530102916
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 915B0CCFA13
+	for <webhook@archiver.kernel.org>; Sat,  2 May 2026 02:51:28 +0000 (UTC)
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.72.1777690278143562348
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 01 May 2026 02:30:03 -0700
+ Fri, 01 May 2026 19:51:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=X8brXa0W;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.44, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4896c22fcbaso12314625e9.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 01 May 2026 02:30:03 -0700 (PDT)
+ dkim=pass header.i=@anthonysquires-ca.20251104.gappssmtp.com header.s=20251104 header.b=XhdMe9O5;
+ spf=softfail (domain: anthonysquires.ca, ip: 209.85.216.52, mailfrom: me@anthonysquires.ca)
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-35f9ab079bdso1856240a91.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 01 May 2026 19:51:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1777627802; x=1778232602; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IPKcRng6cW2OnHDaYQ4I1VJ4YNznE5gXGE2YMPhwRpg=;
-        b=X8brXa0W3IC+O5lytUGNkM8PRVStQJHS1xA5em0/beZNmtqJPngwLAUf2sjFfIcp/o
-         p2kIH16LNKtNFXVwA1QfiS9MCAu8s+1lvtdePZyzzMAb0MYEEo77sOk2sub4ZhAZwRCy
-         lKTfK76izY+PT1jldmMNlmCu+ZvlhzSJ29wfk=
+        d=anthonysquires-ca.20251104.gappssmtp.com; s=20251104; t=1777690277; x=1778295077; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yfo6A/O1u9K9GbFTN66t2DnC4oZKSrAk87G2t3w0CR0=;
+        b=XhdMe9O5eYHJjFTuomywmI6eFIE9HPie0xBh/nOrv3R+waqEKViGesoDuIents/aAJ
+         u5jRrx85nrqHcXHVopnU4ToIatwYspUOLhwBdIFq/zRIg5EwckKQnKXCEx3AjAhqAX6v
+         QOABI1N7I98pRsBCD49TUzsi9UoSLYM1Kk1dDlb3ILlYXmR3+ln83eVgSoEdFRj/PmMz
+         uWDI6C0Fi+Zw+bWPoib/LpTjPb2Vz7GR9oJ8Zl2fH79r91ii4x28CzJgzFiGgPiubYq/
+         4jlBUbJIpmZgSFw644mWbViSjRWtzE4RZXiHwLPGHZ8htoDjOUAiV0wPgGfmOJPFa9SK
+         5Siw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777627802; x=1778232602;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IPKcRng6cW2OnHDaYQ4I1VJ4YNznE5gXGE2YMPhwRpg=;
-        b=qz8QgmHEPDwyN7xK/Y/GEvPT2XQUO0XdjrWswSsSyoEJwAgQ4M5pMyf4vpPL5d1qpQ
-         8DPI7bBfgxfiadqt9YoPSCoXIyF8x8mKShY9ymuY0IrvyE4Klxm2PddNu0IVNC2TpGLf
-         cVmJ91QCVZ6XU21n8EnKloE5egRv9JMy/ei3qn1UgbeN7oH2O7L/ZQxPlnzqy9ggztdN
-         8ZiE3WPub0w18emIMVvgutF72TQJdr5zoafeDfyZOcnxp26xfqt/Qyobtgw8loyzOklV
-         jD3dELUCMSPAndX9ZWM21mACydri/4lGtBDqofJr5V9gGr6E8zPIhprhHgr/DeBumDar
-         RIKQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9xy8Vrq0o/7Aksx2AD7gI5LZDKp+IA+pJAcA1KSMeDYlxcbs9rEQphIC4chnbHiu0RDSHEUS3zlXGj4CpE@lists.openembedded.org
-X-Gm-Message-State: AOJu0YzQgiP6OyhzhJHr3TlZnNRApuCJuYTFL0U+gs3Gv46qwvLrIjto
-	p+cvlkbc/2k/GzgoViFjnU6/amSPDH8HgKLRYRY6bh0OHb2N2lHwhwxBEVIdk/4pOGU=
-X-Gm-Gg: AeBDieuCygIFRj8JiQxRgqN8Jbh8iwU2qq7l7ePIYi0OdSmMwXfH2Bh+uhSVrdDtc0v
-	fhKzzUTuzY+DlaPqiO4BmjUK2eXQ+ReMWmYpDt2eFm7VuUgRaheypfrpaawzqcmaSaPbl+mPhnu
-	I01LQS3LNicR7vD5KV/8mIzlkITmPhi/p9A8KxjMhgVETR8VXzs8QD4E2NVEyozzntkkWqBi+st
-	5eYc40lFlwKSIlgDO4GAocRD6adVdjZDKybrgdFbop3w0KD9gZrvvYa0ExmY+SHEkUdWgkTSb5h
-	+eJQ7bB/nVTwQdaRi9JDXXcSVxzz5jN3gvu7KBN/DIFavAeJJRjcO2v1dmR0sy+DH5LpZG2ED5p
-	2N2McTyoux0D1RycmAsP5Pn5fmmlpAxAksh6RXW+FVvXELe1Uv9rVqtG39Fo5XFB2KLepveX0dZ
-	8bk+aBHyvKcUh6C5Rewmo2V4biRz64mcOqvkegE7q5g9WzypN7oOislf51z/tXVGj1S0UvgxzI4
-	ApL745LnJX7Wp1ms5Gn3g==
-X-Received: by 2002:a05:600c:8288:b0:489:a4:e578 with SMTP id 5b1f17b1804b1-48a8eb8a3camr33081835e9.14.1777627801660;
-        Fri, 01 May 2026 02:30:01 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:87e5:38df:dc:249c? ([2001:8b0:aba:5f3c:87e5:38df:dc:249c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a8ebc4201sm71527465e9.15.2026.05.01.02.30.00
+        d=1e100.net; s=20251104; t=1777690277; x=1778295077;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Yfo6A/O1u9K9GbFTN66t2DnC4oZKSrAk87G2t3w0CR0=;
+        b=PTjoHVrureWrN40JkqflWageldEtJ3v3B5X9WWNBfWGHTvRgO0alchxhk2Xb7Rn8IR
+         dLGQwIP0elXiXtuI0UjOONezimW3zladvSsM2RyWp5w/QWLhmHW26Hq3P64DeMXvwsPu
+         Uz8VCaRdcyyaMD/3V/Jx8sQueRLh2S5xv6puG45ECe8LOoiGAck2eTt3Sxr38V4ftW8m
+         P7Td1Red9mFJQgM4QYtSHBoemQk4J4VbhCVn85+NsD9vu44gXy50ofX1zJo6YL/0TYkm
+         W/tGy6MhTcc7o5i0s+PXm2iB/zryWiPVHTxxfLXOVr86viRMTtGLdABHKfRJxFGGunxZ
+         yxvg==
+X-Gm-Message-State: AOJu0YyDHqoWvwHfVaMSjkHnqq2YTd0i9wmv++GxuJEmv53y+Y8sxEN+
+	OcDGa1u9l730q+I6jJ4kQWq2pT8fD/omHcMzh07yqqxsY4Nxx12iF/2KU346ewfvFDD0qn7Z97n
+	m/aAPLQ==
+X-Gm-Gg: AeBDieu95RIAHswbuP0Tme4VbpTceB5zkfwRpGx/LfwiPvgtbbPgu5jkeS+CdSdLNMU
+	r1hVP/9I0eq3OoFi0e7O1X+Qx8Crs03gi/jadEN5liqKNdiAP4CGN/bu8qr4p1Ujvc/6mElPqKm
+	On8Tpe+4EGTJJVnPXt4iOpMgp/gRg/ia38M0c25n0vDERWQzcLDUKiXSBAV3NKDRMr43YL3jfAS
+	MzTd45Jjprwgqn1Cvrf9arl4JxTVIwPW7FESDEQhLLwYLe6EWAdGpgjI3q59Ur08QuGTSX6z9OL
+	ILDOON9ntGxWAGXzvYe/17hN68wi+OGfcyBlTpCfQ8S6jOiBWa56JD6cXLWvPFSpswRrvtlHTiO
+	efs5elwx/761XkZdFVoOrYBGVctzH3eaFEkjc+J6dUZbdChJiUw4CrsJ5aG8yHkJNjbH87mQSmv
+	7G4iAMayK1g0Bv6NQpDYPN1U4GNwE+IQZ920d/1qCihjsY4p8SjQ==
+X-Received: by 2002:a17:903:4b50:b0:2b7:beb5:3002 with SMTP id d9443c01a7336-2b9f25957cdmr14512505ad.12.1777690276887;
+        Fri, 01 May 2026 19:51:16 -0700 (PDT)
+Received: from localhost.localdomain ([2604:3d08:7f7c:ca00:e2f4:7d6f:21ab:4d32])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b9cae0e5fasm34400185ad.54.2026.05.01.19.51.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2026 02:30:00 -0700 (PDT)
-Message-ID: <b49490a4a2e1cbbbdd8eb84d3c5bb2af57418488.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 1/1] bitbake: add
- BB_GIT_SHALLOW_SKIP_FAST to disable fast shallow mode
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: marciohenriques84@gmail.com, bitbake-devel@lists.openembedded.org
-Cc: Marcio Henriques <marcio.henriques@ctw.bmwgroup.com>
-Date: Fri, 01 May 2026 10:29:59 +0100
-In-Reply-To: <20260430123847.25046-2-marcio.henriques@ctw.bmwgroup.com>
-References: <20260430123847.25046-1-marcio.henriques@ctw.bmwgroup.com>
-	 <20260430123847.25046-2-marcio.henriques@ctw.bmwgroup.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-9 
+        Fri, 01 May 2026 19:51:16 -0700 (PDT)
+From: Anthony Squires <me@anthonysquires.ca>
+To: bitbake-devel@lists.openembedded.org
+Cc: Anthony Squires <me@anthonysquires.ca>
+Subject: [PATCH] fetch2: reraise IOError during download
+Date: Fri,  1 May 2026 19:51:09 -0700
+Message-ID: <20260502025109.3466845-1-me@anthonysquires.ca>
+X-Mailer: git-send-email 2.47.3
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 01 May 2026 09:30:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19430
+ <bitbake-devel@lists.openembedded.org>; Sat, 02 May 2026 02:51:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19431
 
-On Thu, 2026-04-30 at 13:38 +0100, Marcio Henriques via lists.openembedded.=
-org wrote:
-> In some CI environments, shallow tarballs are preferred as fallback artif=
-acts,
-> not as the primary source path.
->=20
-> Today, enabling shallow mode also enables an initial fast shallow path th=
-at may
-> avoid creating/using the regular local clone flow in DL_DIR. This can red=
-uce
-> the effectiveness of incremental fetches and lead to larger re-downloads.
->=20
-> Add BB_GIT_SHALLOW_SKIP_FAST as an opt-in switch. When set to 1, the fetc=
-her
-> skips the fast shallow path from initialization and proceeds with the reg=
-ular
-> clone/update flow, while still allowing shallow behavior and tarball fall=
-back.
->=20
-> Default behavior is preserved when the variable is unset.
->=20
-> Signed-off-by: Marcio Henriques <marcio.henriques@ctw.bmwgroup.com>
-> ---
-> =C2=A0.../bitbake-user-manual-ref-variables.rst=C2=A0=C2=A0=C2=A0=C2=A0 |=
- 19 +++++++++++++++++++
-> =C2=A0lib/bb/fetch2/git.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 4 +++-
-> =C2=A02 files changed, 22 insertions(+), 1 deletion(-)
+Fixes [YOCTO #16268]
 
-I'm wondering why you wouldn't just turn off shallow clones in this
-scenario?
+Adds a missing "raise" statement to download that ensures when there is an IOError/OSError that is is correctly reported and not silently discarded.
+When an IOError is thrown in this case do_fetch silently passes which then leads to downstream failures in do_unpack when the file doesn't exist.
 
-I'm also conscious of not wanting to add too many options to the
-fetcher, it makes the code more of a labyrinth and harder to
-test/maintain. Would it make sense to use BB_GENERATE_MIRROR_TARBALLS
-here to change behaviour?
+Signed-off-by: Anthony Squires <me@anthonysquires.ca>
+---
+ lib/bb/fetch2/__init__.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-That option is usually set for people wanting to build source
-mirrors...
-
-
-Cheers,
-
-Richard
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 52d5556d3..f7d5dfe9a 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1962,6 +1962,7 @@ class Fetch(object):
+                 if e.errno in [errno.ESTALE]:
+                     logger.error("Stale Error Observed %s." % u)
+                     raise ChecksumError("Stale Error Detected")
++                raise
+ 
+             except BBFetchException as e:
+                 if isinstance(e, NoChecksumError):
 
