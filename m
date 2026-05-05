@@ -1,125 +1,211 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F55CD3430
-	for <webhook@archiver.kernel.org>; Tue,  5 May 2026 09:41:14 +0000 (UTC)
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.35071.1777974069586546589
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE91CD3436
+	for <webhook@archiver.kernel.org>; Tue,  5 May 2026 10:18:15 +0000 (UTC)
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.35501.1777976288898345092
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 05 May 2026 02:41:10 -0700
+ Tue, 05 May 2026 03:18:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=T4NAZChL;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.52, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-43fe608cb92so2968530f8f.2
-        for <bitbake-devel@lists.openembedded.org>; Tue, 05 May 2026 02:41:09 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=hoG/w52h;
+ spf=pass (domain: gmail.com, ip: 209.85.219.53, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-8acae26e564so56962836d6.2
+        for <bitbake-devel@lists.openembedded.org>; Tue, 05 May 2026 03:18:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777976288; cv=none;
+        d=google.com; s=arc-20240605;
+        b=eAiupGFSJuPtNcG2pIdnIWiMhqLt1ziX9SWHeNwzjrDiYgkca3cSDL4zj2vRSAKpWm
+         /wQPZtmJs3MsWij7sFvcVEgDn6DPXX1wdABTeWl6Pj0Mcu8CZoaJT54RxPku9aT6aQhq
+         UxwB0BWNyKoTiuamrfgmELO/MjviiASCoIaRDwh6uAjfgelNnDvlhwokDoeybQqDakNX
+         xdAX6ojKVm5v9dUaltD33dMz/kmp3K/Bo6/V+9in9C0MKF4Z3Gliq5HzJxPe/3Sxi7Gr
+         2RkDwr/qstzrp3+vqISi1asbEOu3/YrF3FTuORSKM6oL67wOwfjp7xgwH7YZfzdD4mOW
+         hzEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=yLH7T/q9GlnulcBlgWduRvWX+JuQf6bMzZp1jQz/M/o=;
+        fh=s6/eSLcAb/9Eou+x7s6XzERmHPTCE2m421x3NkLhcjg=;
+        b=ZYNbE0tBnfjkmxAaS2aU6ghf5BbN6C8gvWbmSPdRwur7dZud29RLzNRpeghKRGg76r
+         RZ6AI65qdiMlzaJLCzFO4sRdIjcMrhxuoz7P6Y/ux6T9fV8wISr/BgXL6rz8vomnrKxA
+         zgNH8xfS/udGoqB4fchFKtaOpS0fBGcPVqovlWGw42w7jaoWCvjNYzmMF5eLbggNiBYA
+         X/5x0BmMz52OIDNa8BnMeHCglGTaFBAP6LmuWyl6p+Rnv1iX+92yqPbEE11c0lyqYVw/
+         mAdYaW0DNZ0nhXdbl+4OJwT5dOXuM4U02w6KgSdvscjZ5p9K0NEyHpD6t5w1I8UtOXLZ
+         yQ2g==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1777974068; x=1778578868; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qmiqzTB7Gl3AjKfSwrDYeTOcrurfEbMe/JWkd9nvk4A=;
-        b=T4NAZChLonnTgtSuGrLx22lVwAVW/fPlzBSRcpTkXDX5F5iRWmn4DH0oJm9OwvpRwu
-         g4YeyVqpljJ44mZoNx47jstSu6dles61T9oPfzBlA9kysoHzv+zx9iFi4QfvtLpRi4wb
-         jbFf0kgkWr1whykFJRUBxFqr4qOm3rJ2Um2Tc=
+        d=gmail.com; s=20251104; t=1777976288; x=1778581088; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yLH7T/q9GlnulcBlgWduRvWX+JuQf6bMzZp1jQz/M/o=;
+        b=hoG/w52h+ROzuYcwa1unUhTh/fi0jyDqDYRhUc7BQh4yMgPKy/JdNspjHCO/x2ds5H
+         4WQIgPe/nz8AD0zq53snCebC4xKicb/3SFSAxD7XkP6WHjisR6y9n1ATwoQPTsgVRF7H
+         vTbDg5zkpluk+CD8su27cclJFZb87UoQRC8wbMDl7bKeu3ruA6FXfMOn/PE5jYhNG4sA
+         XCsv/3wYI4G/dPP7inCOMfbo5KF3CqDCakzv5beW+jG67J7f7/EwsK9Rd/jZrHS/QyBB
+         mrt2x+Js025iU8dXf9hb6+gm4ZWNeWQUvQDiqYgg3FTdev6RgIQfBNaFm22chfFp25Oa
+         S9lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777974068; x=1778578868;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-gg
+        d=1e100.net; s=20251104; t=1777976288; x=1778581088;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qmiqzTB7Gl3AjKfSwrDYeTOcrurfEbMe/JWkd9nvk4A=;
-        b=X9Kh8CfjhC4O+yUMBY54RVOtDPYehz3WmYrCe/RSeRR3WnfXC3IlQ2ta1mzdOUVRXu
-         zg8L9aUKRNyLkkkNxfrZkvPi0BL341uVhX3AOPZ5u9ccwslp69ZaQOcdWDKmrblmZa7O
-         GFekb3xZqERd7C4B9UP2cUHCQEA1VqLhDVP8OoJdAxm7iCJoWDfwatO1Ur3n0zxmcUgk
-         UOD/hyk3W/IOYKsf5Yk6QuTdB6G463hIeauVEcelhFdXnwykrRF5X6Gj91pCfcGjqL1i
-         VMOhfu2ZyT3/pzO3MSzxO8xPHfZ+eOGec5m6Yq7f1URaZU/yGo8JJCsniOJ4G8Wt6lNQ
-         gkBQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8r8uVvbyg/xRBJdeeIa2jNjgOEzLTFrJgH41gtblXymh1z5FTfl/I+QrcrbUJ9cPX2oMuJ9sXEFCrauDKC@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yz7m9W5ht9atw4bQupO9JDD7981HPsCeAOoWX2uPJbdAQRi5LXr
-	H4dtseCw6uBbJYOPg8OAwWhpegps6E+yxjyH/A5G6LjtvdDncvEp2GaWizTcIP7eMAs=
-X-Gm-Gg: AeBDies3mKesTCuNQAPJaYhMCK+jwAb6CZcIZYE4IqkVsTFFWragTlYNHaP0zGZVf0U
-	dobonz4JgIG6GIk4t+tyv/c14XTqMtKCwz4AwIIllS5vig44omBvGYYnZsirEcABlyZxJ77y6WT
-	ioSnnLRBXTlPt+q9XxetDxPXqOGhvsJsexLzu/nFppw2u4MTDR3lN6HfhnwZsZidu94KFj+USRk
-	5dT3yug45qgLauUz7YPMjO+gH0TKArK7xF6TCkQo8lcdrRainCnALGEGMfe6VGVwO1j4DdDEGlM
-	6TEzR7MoIZSOiwCWePDV3jBw3Jt+q0+F98gtJYyXEODYzbAdQs5NYqRVwgukGbUY4uI4q6UbqfB
-	pIF4O8/jfUQ55JTBsyajAgHQbxdQDuc6VMV86ZRsQFTwXPM03bxtmdBjiXZ1/Zozzfd7BmNo0Va
-	Q46Wgxnr5ZvvZR402kYaTGOGCquZGBwotZPxuqV5uC6xcioLoWviXz1RMs3xzum9lhM9nmRSR3T
-	1d//u+7+9iPTRHoHGrZTdTV5EQ=
-X-Received: by 2002:a05:6000:3112:b0:44f:da83:2030 with SMTP id ffacd0b85a97d-44fda9262cfmr5356720f8f.41.1777974067663;
-        Tue, 05 May 2026 02:41:07 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:8349:ba09:9e5a:e125? ([2001:8b0:aba:5f3c:8349:ba09:9e5a:e125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45055960aa2sm3134488f8f.29.2026.05.05.02.41.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2026 02:41:07 -0700 (PDT)
-Message-ID: <7ac8312de40809f14006bfff65143f002543c50b.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 1/1] bitbake: add
- BB_GIT_SHALLOW_SKIP_FAST to disable fast shallow mode
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: marciohenriques84@gmail.com, bitbake-devel@lists.openembedded.org
-Date: Tue, 05 May 2026 10:41:06 +0100
-In-Reply-To: <1413912.1777968532263348828@lists.openembedded.org>
-References: <20260430123847.25046-1-marcio.henriques@ctw.bmwgroup.com>
-	 <20260430123847.25046-2-marcio.henriques@ctw.bmwgroup.com>
-	 <b49490a4a2e1cbbbdd8eb84d3c5bb2af57418488.camel@linuxfoundation.org>
-	 <1413912.1777968532263348828@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-9 
+        bh=yLH7T/q9GlnulcBlgWduRvWX+JuQf6bMzZp1jQz/M/o=;
+        b=AQMItw2Nwc+7VC2Cm9LD469gBAR3fBVSWZDO9rZGKeYDJRuSMb7Vv3GJtx9glyGs5b
+         uMPamClzo2KGTA9XDXYhO+E46rGONiOV2pj3kLkLa7ugnrMxDWGpH4o40Gk5YxyzTm4r
+         YQR0iEm9JMqQf8gox2SbwREKGMZsOrFL4V+DUAgaTsDR4CZcfcBjIDElZV5mYeN9BqDu
+         7AqgfrjbFW2MD7irtc0DvzNoaHIKYHfIzEdKbHjtVRSjv9huGr4Ew4bditG6mG0dJCNG
+         2Ym+Wm0Tbc6eaGFzZux5/g3djnDpZD4SsHUB79WczgN8v7yPvS9gmufVNstnTIZAWah+
+         gNgg==
+X-Forwarded-Encrypted: i=1; AFNElJ9N4CWO4HBBYHRssh2hfnOI8Zyv4hDqgirIoyQbogH7778IlQSg8s5tDhKMm9gMbd6Cabw53qsjeq8uxwoC@lists.openembedded.org
+X-Gm-Message-State: AOJu0YxNOm+HlFKGEBaH78C7l64U6XTpO3bWU+YJ22AW7v0bG82Ug+cN
+	q6s4YPqFxScCnYCWfc2U/DiDawCcYTk48J5lnj9XIJrq1WzwsMGyp715RpaFrAgiSJSz3V7l8Fa
+	6jBORBrtNNipZRa+uu5OcLPZHLaNhsPk=
+X-Gm-Gg: AeBDiesvmTUhUlOGXrodBeT8JnlbSA6kSWzN8KKarhiiyeahwATKdiAt4yrhCbXtZyF
+	zkiyBf61MyemZyWo/DgRrnX3MKv2fDDJRq/k75CBVOtfpGZaMxgHUI3gvwvT/vXIyuoAiyzQ//7
+	2JDuOV/vy2T02r/Rh06sz4G5WdTVgUKHPOwufDk1g7m6ec+cUJ009sd44cYACIv+IswuUxZk8V7
+	dNqmn3FT3eDG/HzotLt0kf0TKJm7ywm9QO7ReuthAp614Sp4tjruaAPRtA0fROcWPlzcKjABc7n
+	J2K+kNpYAJgdbbDXYCIGgXFlvwfW8C0YJ2kpmxjPGyRHNv2o5H2C
+X-Received: by 2002:a0c:f40c:0:b0:8ac:a62a:a451 with SMTP id
+ 6a1803df08f44-8b6667ee786mr228338486d6.12.1777976287813; Tue, 05 May 2026
+ 03:18:07 -0700 (PDT)
 MIME-Version: 1.0
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Tue, 5 May 2026 12:17:56 +0200
+X-Gm-Features: AVHnY4LDlgd8L4ccdLjUQRzUXFt9PQH3zC1NelmB_8Gd1bEl84Gq1OtOseKbz4w
+Message-ID: <CANNYZj-hrSdEoX5XRmM1MYhXMVkqpa0CBHHbMqVhjM034bKTDg@mail.gmail.com>
+Subject: proposal: build pipelines in bitbake-setup
+To: openembedded-architecture <openembedded-architecture@lists.openembedded.org>, 
+	bitbake-devel <bitbake-devel@lists.openembedded.org>, 
+	Yocto-mailing-list <yocto@lists.yoctoproject.org>
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 05 May 2026 09:41:14 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19434
+ <bitbake-devel@lists.openembedded.org>; Tue, 05 May 2026 10:18:15 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19435
 
-On Tue, 2026-05-05 at 01:08 -0700, Marcio Henriques via lists.openembedded.=
-org wrote:
-> We want to create a download mirror to store all sources needed to build =
-a =C2=A0
-> specific project.
-> =C2=A0
-> The idea is to use Git shallow tarballs because each tarball has a unique=
- name. =C2=A0
-> This prevents files from being overwritten in the mirror. With full Git =
-=C2=A0
-> tarballs, the name is always the same, so the mirror file gets replaced e=
-ach =C2=A0
-> time. If something is removed from the upstream repository, we might uplo=
-ad a =C2=A0
-> new tarball that no longer contains a reference used by a recipe that was=
- =C2=A0
-> already integrated.
+Hello,
 
-FWIW the git fetcher is specifically coded to avoid removing
-references. It shouldn't remove old revisions or obsolete heads (e.g.
-for repos that changed master -> main). If it is doing that, that is
-something we should fix.
+bitbake-setup currently doesn't support describing build pipelines: a
+sequence of commands that actually produce something useful. For a
+true end-to-end solution this gap should be filled.
 
-> With shallow tarballs, we can safely clean DL_DIR since it's not the sour=
-ce of =C2=A0
-> truth. If something is removed from upstream, we fall back to the mirror =
-and =C2=A0
-> use the shallow tarball.
-> =C2=A0
-> For most of the builds, we want to use the bare clone in DL_DIR/git2 and =
-just =C2=A0
-> update the repo when bumping a SRCREV. The DL_DIR/git2 repositories are =
-=C2=A0
-> available on the machine that triggers the build.
-> =C2=A0
-> The shallow tarball is a fallback for cases where something was removed f=
-rom =C2=A0
-> the repository (for example, after a force push) and is not present in =
-=C2=A0
-> DL_DIR/git2 or upstream, but was merged at some point. This is why we use=
- Git =C2=A0
-> shallow and set shallow_skip_fast to True.
+Here's my proposal, which probably has obvious shortcomings, that I
+would like to hear about :)
 
-I can see why you might decide to do that but it will be a pretty
-inefficient use of space with an archive for every revision and means
-turning everything into shallow clones, which has its own challenges.
+0. Design goals:
 
-Cheers,
+- something suitable for most situations, including newcomers running
+a local build, and CI doing a nightly job
+- avoid custom scripts in most situations
+- self-documented; everything must be described
+- extensible; if there's something missing that no one thought about,
+it can be added later in a way that supplements existing features
+without replacing them.
 
-Richard
+1. Specification in a build configuration would look like this:
+
+"build-targets": {
+    "steps" : [
+        { "name": "build-apple", "description": "Build an apple for
+the purpose of making apple pie", "command": "bitbake apple-image"},
+        { "name": "build-orange", "description": "Build an orange for
+the purpose of making orange juice", "command": "bitbake
+orange-image"},
+        { "name": "test-apple", "description": "Test an apple using
+testimage class", "command": "bitbake -c testimage apple-image"},
+        { "name": "test-orange", "description": "Test an orange using
+testimage class", "command": "bitbake -c testimage orange-image"},
+        { "name": "qemu-console", "description": "Start the last built
+image in qemu with console UI", "command": "runqemu kvm snapshot
+nographic"},
+        { "name": "publish", "description":"Copy build artefacts to a
+public download server", "command":
+"path/to/publish-image-executable"}
+    ],
+    "pipelines": [
+        {"name": "publish-apple", "description": "Build, test, and
+publish apple (requires publishing rights on the download server)",
+"steps": ["build-apple", "test-apple", "publish"]},
+        {"name": "publish-orange", "description": "Build, test, and
+publish orange  (requires publishing rights on the download server)",
+"steps": ["build-orange", "test-orange", "publish"]},
+        {"name": "qemu-apple", "description": "Build and start apple
+in qemu with console UI", "steps": ["build-apple", "qemu-console"]},
+        {"name": "qemu-orange", "description": "Build and start orange
+in qemu with console UI", "steps": ["build-orange", "qemu-console"]}
+    ]
+}
+
+Configurations would include a list of possible pipelines:
+        "configurations": [
+        {
+            "name": "fruitgarden",
+            "description": "Alex's fruit garden",
+            "bb-layers": ["meta-fruit"],
+            "oe-fragments": [ "distro/fruit-garden", "machine/earth" ],
+            "pipelines": ["qemu-apple", "qemu-orange",
+"publish-apple", "publish-orange"]
+        }
+
+2. Nomenclature:
+
+- "step" is a single command that is also given a short name and a
+longer description. Steps are building blocks for pipelines and can't
+be individually executed.
+- "pipeline" is a sequence of steps, that is also given a short name
+and a longer description. Pipelines can mix and match defined steps as
+they please.
+- each configuration includes a list of possible targets, and once it
+is set up, any of them can be executed (see below for the UI).
+
+3. User Interface to pipelines
+
+Once there is a setup, there are two ways to execute a pipeline:
+
+a) For each pipeline there is a shell script that can be run directly:
+
+/path/to/bitbake-builds/fruitgarden/qemu-apple
+/path/to/bitbake-builds/fruitgarden/publish-apple
+etc.
+
+qemu-apple script would look something like:
+
+#!/bin/sh
+# Build and start apple in qemu with console UI
+. init-build-env
+# Build an apple for the purpose of making apple pie
+bitbake apple-image
+# Start the last built image in qemu with console UI
+runqemu kvm snapshot nographic
+
+e.g. assembled from pipeline steps and their descriptions.
+
+b) Interactive UI :'bitbake-setup build'
+
+This would present an interactive UI similar to 'bitbake-setup init', e.g:
+$ bitbake-setup build
+Available build pipelines:
+1. qemu-apple  Build and start apple in qemu with console UI
+2. qemu-orange Build and start orange in qemu with console UI
+... etc
+Please choose one of the above: 1
+
+The following commands will be executed:
+# Build an apple for the purpose of making apple pie
+bitbake apple-image
+# Start the last built image in qemu with console UI
+runqemu kvm snapshot nographic
+
+Proceed? [y/N]
+etc.
+
+4. Implementation
+
+This should actually be fairly straightforward. There's no need to add
+new features to bitbake (e.g. 'standard target definitions' in layers
+was considered at some point, but after more consideration I think it
+can be postponed or perhaps altogether avoided), or modify oe-core.
+
+Alex
 
