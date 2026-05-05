@@ -1,257 +1,140 @@
-Return-Path: <tgamblin@baylibre.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73351FF8855
-	for <webhook@archiver.kernel.org>; Tue,  5 May 2026 16:17:12 +0000 (UTC)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.52.1777997831094565469
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89129CD3439
+	for <webhook@archiver.kernel.org>; Tue,  5 May 2026 18:42:46 +0000 (UTC)
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.954.1778006563460533223
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 05 May 2026 09:17:11 -0700
+ Tue, 05 May 2026 11:42:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@baylibre-com.20251104.gappssmtp.com header.s=20251104 header.b=EO8sI/p3;
- spf=pass (domain: baylibre.com, ip: 209.85.217.44, mailfrom: tgamblin@baylibre.com)
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-5ff05af29b4so2074269137.1
-        for <bitbake-devel@lists.openembedded.org>; Tue, 05 May 2026 09:17:10 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=CGoDkV1O;
+ spf=pass (domain: gmail.com, ip: 209.85.160.180, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-50d6ab4476eso56006341cf.2
+        for <bitbake-devel@lists.openembedded.org>; Tue, 05 May 2026 11:42:43 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778006562; cv=none;
+        d=google.com; s=arc-20240605;
+        b=A9GCt/qNX97s1XBbwtH+zVGN/cMkuan8FFgYaVa00n3Y3U373k9NCgCmnUV372yWo7
+         7ewjnxAWFH/ZiiIchqi4JYa6ihXRIvozedzetU756EzcmicyjwO0Ebpqs/Yq7JrNOOTY
+         dre16eaf5Qa9V4F4sQnnJiXessAcjf8pgzEz6+OpmcTKef5Qxg7ZIPBt/FKCXY51nIjt
+         jDqy9OQLx8LICPquB5RhMMug/LyluQUKwLxl3s3EuCG7A2gdMyGuwzhsZEk7lK4TAt26
+         vjSxxKx/fsglNsVch+etAaE9HrCRIHN58AoLPw0R0jN9VggADPfhevqqvnAVRLV94ElJ
+         Ldsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=3rq3u6OmiejPmPOcR1S7QtfFh+XkfWCIhJO7bp+sQZY=;
+        fh=6Y7Fblq6GiUwnun5lf2EZMV7UnFHSvG6NLim31xDnM0=;
+        b=Vp3ZnYmfjh4pMaJxM8hDwTRcUaB1EO7l5ZpzK4NV3y/i2Zi+YPOcM+jyax7yQqK69I
+         qAfD3XT5/oCBAnKEvq33QZHg1rCTUDW/VcNzrZJjzF4a6LD2MkzC9SJ1oWlTJjGOJlrX
+         6UR6sOlxc/WtEP/JsOoeKVmImJpYi6qdWAKIopPGqOsMNEhD6+605sa7y0B0SosUwa9/
+         0BHuMGwd/UQgUkvJ9rUr/xV/2LTB74Ubntj+z/NqynsOpuTJfNdrPQN0J47KHz32qX6H
+         Rf7XZBso5PI2EnF1y0t9PHP4ajm+RgeCtACE55ydcXLFObW2J+680dx9xTGgb+9nySVJ
+         cugw==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20251104.gappssmtp.com; s=20251104; t=1777997830; x=1778602630; darn=lists.openembedded.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6nGSvQVpSfeJYCcs1PDXxkoAM88WLZN8az4OGBrRbmg=;
-        b=EO8sI/p30J/m2COiVYCZabdn5F4/61GIiS3Rk7KMBce88rcUMRTtcqgtTMj9dmkGBt
-         mEFkt1Nn1iBvbZM8wUW/QagG20C8v7Dq3V3rbaS8f+DcbWzrHqNRQ80UlCQcMuuvM+Js
-         E5KW3GX1v9C+SDeTg/Vr/UKg98UjinGKTSFWxqY0T4Vcgnbb1eBcT/yGwf7ep9rHfDLh
-         cAN5zpxW3+qZK1snsrtxv4AVwxa0SHSAv0PhEfvD/HNU/y6JU/5e8gAtKUd3B7a8LOvG
-         LQlGd9vMFTOci/Nr/1o+5J9BIgjBF3RT0Sta8KJ+3fd0s3+2GPh7Tcszv2HMV21OwX69
-         vL2w==
+        d=gmail.com; s=20251104; t=1778006562; x=1778611362; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3rq3u6OmiejPmPOcR1S7QtfFh+XkfWCIhJO7bp+sQZY=;
+        b=CGoDkV1OSwjqSZ8YNAtLC1k4rEacze66YXUxLyZ8lrnutT56vzGA+iDIMc79gPLPlo
+         HT3rKwXetXl3/ZCUFcgpqfeA5VHmwtptW0Ufrvst0BaEKM2pWBdSEDuZ31Q0HfoRlnbd
+         getVSMuY2NL48ZESHNUkxpIGC0+02I61+PMyuQq7/+fp8B8IyQU4o7FxAHRS0lvLh4iy
+         2AyPyc1JOr41xuCG3Wvf43M6299Sx8c51WZaWAuV3UPEIMWgY81PIq+RfmCs8PMGWTfP
+         urj+eBOcSpVShTQy2AIfQ0b5Pdi0y6xTI8xfCrxe1Gvl6nVDDhaVpy7jPJELmKqwyOoU
+         otOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777997830; x=1778602630;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6nGSvQVpSfeJYCcs1PDXxkoAM88WLZN8az4OGBrRbmg=;
-        b=lgGcNrSHmlwT7DxWhWq9dMns9cE9bVt+VFeVOpEXp2K7zXKGDycCMvEqcSVjc3IkOX
-         j5jtQz8vyXceV3umhjT1hVO0jlwg/1/2mSnnkDDXu+fFIsWZ9t4XPrCxFo2IOFwejCY6
-         15XmuSEjBAR5pqTH2LtAooXYCMTZk2FvYAGniAttuuihP+tdg5fsiwM8RCaFUp6P8e7N
-         R5yQXn2hf9o4ZyyAt8LsyHx62J1pfIs09cRgoHLt8DT4SLHNCqM4vGM5/73L2rMAV+IS
-         dQk3nkzEdpQtiJ09rCk6wZ31eKM5cWGwUk6ZK0UE/dMS5I0oQ++H9MBP0+RNs1S/IW0Z
-         jsUw==
-X-Forwarded-Encrypted: i=1; AFNElJ8AvczYX/HX9fxKubg2H2OnqrpLniOcmGrI01TpT97H/8Glf/37eWAZ5wEhQ083lwRmTllygu/OJmqjB77Q@lists.openembedded.org
-X-Gm-Message-State: AOJu0YyfgyAXN3zEY7UD2QFIE8Rwwcf5G8O+AguvfjMVATwJNMdia08H
-	49luJCnH8C/uAi68mYu8fCurBmt6wPFF5e0Hz8WA06UOOfZdV0snjSDAYlqoc1fpjQI=
-X-Gm-Gg: AeBDieuJ8ukcmKWBnjrR+Ve5ZHVwLACJc21k6zmr96tw2HQYTKiANHWAfhIXtlWxrYt
-	bs+cMucH4JOw/1hlYzvUJOMFA4b5KfhfUxdCqRPLIYUtcEr5xFIGt7OpTcjenOjlKsy//HpI2Op
-	v1SMYusQVWyF8yvrOfXpuV+xhEltR355X4hL4k3pHMK7y7MRYK8ESec0ZnvCzn6mnClcGdoLXzr
-	lNa1yy22xbbNihq0lq2SttDi9KrGxADwpOG4Tmk0SyN324mOYw23zrP7R6fcty69KqJOvHbAqNv
-	WAa3OaLNe8bVVwLPnZPq14ZjjNgDYknod96npi02zGovxNiaqLILOjl+FJQACuMdC/4vyGrUE43
-	+gqOS7DNhNuXWtr9PpB7u6Kt4n0opZMczXNva0HR8GzLnJuRvCcXra6+HvQJW34Np+UVYZDL8yY
-	tpOpAk7HCWJe5wax7tAcMwEUxUqeieiQCU0dgl4QOjH3+iNt6d+8ht9cx3RCk22UoJhYLERJDIf
-	xF5RSonz353QU4=
-X-Received: by 2002:a05:6102:50a5:b0:605:3556:6619 with SMTP id ada2fe7eead31-62f593135e9mr2250953137.31.1777997829842;
-        Tue, 05 May 2026 09:17:09 -0700 (PDT)
-Received: from ?IPV6:2001:1970:3847:e000:1977:be2f:4a71:2892? ([2001:1970:3847:e000:1977:be2f:4a71:2892])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-62bfd8b5aeesm7598475137.7.2026.05.05.09.17.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2026 09:17:09 -0700 (PDT)
-Message-ID: <66b3dbc7-e6f0-4013-8d2e-d646f0fd8c9b@baylibre.com>
-Date: Tue, 5 May 2026 12:17:07 -0400
+        d=1e100.net; s=20251104; t=1778006562; x=1778611362;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3rq3u6OmiejPmPOcR1S7QtfFh+XkfWCIhJO7bp+sQZY=;
+        b=rvjpGCH9CwZ9DMs+ATl5zwncnTvsw64eYH4R8WQtpvEyXffZY55hsHC67M0GpilCeo
+         yXQ2i0i9EUs/aaHVqtxdSh7rPysJZ6aZyZfVUk3LsDbMPZwABcihNW58pzT6vBjYqH+I
+         tVjC4ti9uT3D6YOeCAN/cNLqTClpfSv1sF51gQ/1rKlM7CMJawPHMVAuH8Ju/kJwmsRD
+         RezNaH8IV+tVEnCjTU66msK3wYVp8IEBgjAmYsJWwxqNFi39lxKCQL1oYe1sGJ2jzswR
+         K/vjlTnIL3nfbHFmnNQgmJahFGOIhJ/XuXEcaw8ZFGZvFE+z688HOF0J4FAO/WvzSVON
+         rd2A==
+X-Forwarded-Encrypted: i=1; AFNElJ/B9qS9ugjaKd/j9zViEv1St69YGpkP9xgD1HUBmTlqG981BviKTaDNgTYnc0DcST65J4mA5cw3snejVp3U@lists.openembedded.org
+X-Gm-Message-State: AOJu0YyMNsZQ1UBDFChos+C6Zc7KjZqZTWp8eYoz7kU0Qnfa4S4nVlKV
+	zaRaJFkypKuCCo0TG0g6g0xF9mCbFLYHui+joydNiPrcyjDhr1Vx27Nq7A2GisNxeBL24FLoH68
+	k2qLqDmgFEmUBz1rMxq9R5SMG7hgWCMIx0fhc
+X-Gm-Gg: AeBDiesQT5j9ybkt+Liq3F9VBfGD7/zMlT/YHJOSkX81rBTRrx2L/ifEGZvz6KD3c1f
+	jTd5hHPnk70/kcJ2bSPo9LUhd5G/GvG5pwbfXJbJZgYv2d2mJU5t5czS3+XNDsW1+6sok/2Ttgg
+	VYrMss7QUgwD7xZEWreHHVnIfEN4VZXEHiLUBnMJNxeN+XVM2htOrkauP2x51QPSfUtfZkPijwp
+	P+0FNcYNVEUm+i3KQjp/a2D2q9e2s8rzdSlD7CnU8OFUnJYGhGDqc9XTk5/HNDAQBT3XMDm/hZQ
+	Z8JeIIg9YODGJoYLcImOvH/zmDtjQFUk1kTZh6VCD4PYFF/uOqk6
+X-Received: by 2002:a05:622a:6111:b0:50f:be8b:f803 with SMTP id
+ d75a77b69052e-51461f73c89mr3589521cf.29.1778006562270; Tue, 05 May 2026
+ 11:42:42 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Openembedded-architecture] proposal: build pipelines in
- bitbake-setup
-To: alex.kanavin@gmail.com,
- openembedded-architecture
- <openembedded-architecture@lists.openembedded.org>,
- bitbake-devel <bitbake-devel@lists.openembedded.org>,
- Yocto-mailing-list <yocto@lists.yoctoproject.org>
-Cc: Zhangfei Gao <zhangfei.gao@linaro.org>
 References: <CANNYZj-hrSdEoX5XRmM1MYhXMVkqpa0CBHHbMqVhjM034bKTDg@mail.gmail.com>
-Content-Language: en-US
-From: Trevor Gamblin <tgamblin@baylibre.com>
-In-Reply-To: <CANNYZj-hrSdEoX5XRmM1MYhXMVkqpa0CBHHbMqVhjM034bKTDg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <66b3dbc7-e6f0-4013-8d2e-d646f0fd8c9b@baylibre.com>
+In-Reply-To: <66b3dbc7-e6f0-4013-8d2e-d646f0fd8c9b@baylibre.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Tue, 5 May 2026 20:42:30 +0200
+X-Gm-Features: AVHnY4JWu_pyaNEg1IPxR6nVaP2hNAMV3z9AiuvkxIjHp_m9FWQSxowWV8EchZQ
+Message-ID: <CANNYZj9dsi3XDGVBtEM4Hp8eqZfLtf9Jwa-0m8T5J9rt7V7skw@mail.gmail.com>
+Subject: Re: [Openembedded-architecture] proposal: build pipelines in bitbake-setup
+To: Trevor Gamblin <tgamblin@baylibre.com>
+Cc: openembedded-architecture <openembedded-architecture@lists.openembedded.org>, 
+	bitbake-devel <bitbake-devel@lists.openembedded.org>, 
+	Yocto-mailing-list <yocto@lists.yoctoproject.org>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 05 May 2026 16:17:12 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19438
+ <bitbake-devel@lists.openembedded.org>; Tue, 05 May 2026 18:42:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19439
 
+On Tue, 5 May 2026 at 18:17, Trevor Gamblin <tgamblin@baylibre.com> wrote:
+> > 2. Nomenclature:
+> >
+> > - "step" is a single command that is also given a short name and a
+> > longer description. Steps are building blocks for pipelines and can't
+> > be individually executed.
+> Why not? Why not have the ability to run something like 'bitbake-setup
+> run-step <step_name'? That would actually be an advantage this feature
+> could provide over many other CI systems, as it's usually difficult or
+> impossible to rerun individual steps (you have to re-run a whole job or
+> pipeline). I can see this being very useful for example when you need to
+> run 'bitbake -c testimage' in a loop many times to try and catch
+> intermittent failures.
 
-On 2026-05-05 06:17, Alexander Kanavin via lists.openembedded.org wrote:
-> Hello,
->
-> bitbake-setup currently doesn't support describing build pipelines: a
-> sequence of commands that actually produce something useful. For a
-> true end-to-end solution this gap should be filled.
->
-> Here's my proposal, which probably has obvious shortcomings, that I
-> would like to hear about :)
+The reason I suggested that steps can't be run individually is that I
+wanted to keep the UI simple, and couldn't think of use cases for
+individual steps. One has to start somewhere, my starting point is
+baffled yocto newcomers, and poorly written custom build scripts :)
 
-Hi,
+Anyway! This was very useful to read, and I agree with what you say.
+Here's how the UI could look like:
 
-Thanks for submitting this proposal. I will try to summarize some of my 
-thoughts from the public call and otherwise in-line.
+1. Interactively choose a pipeline and run it:
+$ bitbake-setup build
 
->
-> 0. Design goals:
->
-> - something suitable for most situations, including newcomers running
-> a local build, and CI doing a nightly job
-> - avoid custom scripts in most situations
-> - self-documented; everything must be described
-> - extensible; if there's something missing that no one thought about,
-> it can be added later in a way that supplements existing features
-> without replacing them.
->
-> 1. Specification in a build configuration would look like this:
->
-> "build-targets": {
->      "steps" : [
->          { "name": "build-apple", "description": "Build an apple for
-> the purpose of making apple pie", "command": "bitbake apple-image"},
->          { "name": "build-orange", "description": "Build an orange for
-> the purpose of making orange juice", "command": "bitbake
-> orange-image"},
->          { "name": "test-apple", "description": "Test an apple using
-> testimage class", "command": "bitbake -c testimage apple-image"},
->          { "name": "test-orange", "description": "Test an orange using
-> testimage class", "command": "bitbake -c testimage orange-image"},
->          { "name": "qemu-console", "description": "Start the last built
-> image in qemu with console UI", "command": "runqemu kvm snapshot
-> nographic"},
->          { "name": "publish", "description":"Copy build artefacts to a
-> public download server", "command":
-> "path/to/publish-image-executable"}
->      ],
->      "pipelines": [
->          {"name": "publish-apple", "description": "Build, test, and
-> publish apple (requires publishing rights on the download server)",
-> "steps": ["build-apple", "test-apple", "publish"]},
->          {"name": "publish-orange", "description": "Build, test, and
-> publish orange  (requires publishing rights on the download server)",
-> "steps": ["build-orange", "test-orange", "publish"]},
->          {"name": "qemu-apple", "description": "Build and start apple
-> in qemu with console UI", "steps": ["build-apple", "qemu-console"]},
->          {"name": "qemu-orange", "description": "Build and start orange
-> in qemu with console UI", "steps": ["build-orange", "qemu-console"]}
->      ]
-> }
->
-> Configurations would include a list of possible pipelines:
->          "configurations": [
->          {
->              "name": "fruitgarden",
->              "description": "Alex's fruit garden",
->              "bb-layers": ["meta-fruit"],
->              "oe-fragments": [ "distro/fruit-garden", "machine/earth" ],
->              "pipelines": ["qemu-apple", "qemu-orange",
-> "publish-apple", "publish-orange"]
->          }
-I think it's worth considering for the nightly-job-in-CI case whether 
-people will want to use bitbake-setup to cover that entire scope (i.e., 
-build-test-publish). There are a lot of existing CI systems out there 
-(Buildbot, Tekton, GitHub/Gitea/Forgejo Actions, GitLab CI, etc.) where 
-you already define pipelines as a series of stages/steps, and each one 
-is generally intended to cover either a single command or a handful of 
-closely-associated ones. I am not sure that users would want to invoke a 
-bitbake-setup pipeline as a single step in these systems, as that would 
-potentially obfuscate failures and configuration issues just by having 
-too many things happening per step. However, I can see it being useful 
-to people who want a fire-and-forget reproducer for typical build/test 
-configurations.
+2. Run a pipeline given on command line:
+$ bitbake-setup build <pipeline-name>
 
-As a side note, it feels like stepping outside of the "build setup" 
-space and including things like runtime testing, artifact publishing, 
-etc. feels like a clash with bitbake-setup's name.
->
-> 2. Nomenclature:
->
-> - "step" is a single command that is also given a short name and a
-> longer description. Steps are building blocks for pipelines and can't
-> be individually executed.
-Why not? Why not have the ability to run something like 'bitbake-setup 
-run-step <step_name'? That would actually be an advantage this feature 
-could provide over many other CI systems, as it's usually difficult or 
-impossible to rerun individual steps (you have to re-run a whole job or 
-pipeline). I can see this being very useful for example when you need to 
-run 'bitbake -c testimage' in a loop many times to try and catch 
-intermittent failures.
-> - "pipeline" is a sequence of steps, that is also given a short name
-> and a longer description. Pipelines can mix and match defined steps as
-> they please.
-> - each configuration includes a list of possible targets, and once it
-> is set up, any of them can be executed (see below for the UI).
->
-> 3. User Interface to pipelines
->
-> Once there is a setup, there are two ways to execute a pipeline:
->
-> a) For each pipeline there is a shell script that can be run directly:
->
-> /path/to/bitbake-builds/fruitgarden/qemu-apple
-> /path/to/bitbake-builds/fruitgarden/publish-apple
-> etc.
->
-> qemu-apple script would look something like:
->
-> #!/bin/sh
-> # Build and start apple in qemu with console UI
-> . init-build-env
-> # Build an apple for the purpose of making apple pie
-> bitbake apple-image
-> # Start the last built image in qemu with console UI
-> runqemu kvm snapshot nographic
->
-> e.g. assembled from pipeline steps and their descriptions.
-Similarly here - maybe a 'bitbake-setup run-pipeline <pipeline_name>' 
-would be more effective?
->
-> b) Interactive UI :'bitbake-setup build'
->
-> This would present an interactive UI similar to 'bitbake-setup init', e.g:
-> $ bitbake-setup build
-> Available build pipelines:
-> 1. qemu-apple  Build and start apple in qemu with console UI
-> 2. qemu-orange Build and start orange in qemu with console UI
-> ... etc
-> Please choose one of the above: 1
->
-> The following commands will be executed:
-> # Build an apple for the purpose of making apple pie
-> bitbake apple-image
-> # Start the last built image in qemu with console UI
-> runqemu kvm snapshot nographic
->
-> Proceed? [y/N]
-> etc.
->
-> 4. Implementation
->
-> This should actually be fairly straightforward. There's no need to add
-> new features to bitbake (e.g. 'standard target definitions' in layers
-> was considered at some point, but after more consideration I think it
-> can be postponed or perhaps altogether avoided), or modify oe-core.
-My other main concern about this is around maintenance - depending on 
-how it is ultimately implemented, it could end up looking like a 
-miniature CI/CD system for Yocto builds - that is certainly how I find 
-myself seeing it, and I've written my responses in that mindset. I can 
-see the utility in having the feature available more generally to reduce 
-time spent reproducing a common build/test case, but I wonder if it'd 
-get used often enough under its currently proposed form.
+3. List pipeline steps
+$ bitbake-setup build --list-steps <pipeline-name>
+(this can be used to avoid hardcoding step names and their sequence
+into CI-specific definitions, e.g. CI would first list the steps, then
+iterate over them, avoiding the 'giant single step' problem - this of
+course requires support for creating steps 'on the fly', which I think
+at least buildbot can do)
 
-Trevor
->
-> Alex
->
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#2324): https://lists.openembedded.org/g/openembedded-architecture/message/2324
-> Mute This Topic: https://lists.openembedded.org/mt/119158252/7611679
-> Group Owner: openembedded-architecture+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/openembedded-architecture/unsub [tgamblin@baylibre.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
+4. Run a single step:
+$ bitbake-setup build <pipeline-name> <step-name>
+
+5. Run a pipeline, starting at a particular step:
+$ bitbake-setup build <pipeline-name> --start-at <step-name>
+
+6. Run a pipeline, stopping after a particular step:
+$ bitbake-setup build <pipeline-name> --stop-after <step-name>
+
+Etc. How's this looking?
+
+Alex
 
