@@ -1,133 +1,112 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <mathieu.dubois-briand@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A609DCD3436
-	for <webhook@archiver.kernel.org>; Wed,  6 May 2026 11:25:44 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.16198.1778066739064789960
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC520CD342C
+	for <webhook@archiver.kernel.org>; Wed,  6 May 2026 11:30:14 +0000 (UTC)
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.16249.1778067010925728474
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 06 May 2026 04:25:39 -0700
+ Wed, 06 May 2026 04:30:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=TFhyz+WQ;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-48d146705b4so23212995e9.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 06 May 2026 04:25:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1778066737; x=1778671537; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WnHO4On6AgP9UDy201rhTsPkQ1/fBejWtZn7Sm7pCFg=;
-        b=TFhyz+WQR4ICLdth28tomEmpiFR/R913nFIEPXNIKv6N6te+5kHw3QhypsZjwpIXfY
-         6WrNqs09Ne5W++yb7dBNjI7MimHKfObfZb9a3r/Kla+w/jXW+YLrSf1gqkKkq0oKU5tt
-         L+l6Fr31zoWVePE3wS4qcXkUnlfg1LBPW2aes=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778066737; x=1778671537;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=WnHO4On6AgP9UDy201rhTsPkQ1/fBejWtZn7Sm7pCFg=;
-        b=U4/zasl4pHhRU7QP1XoL0aI41CqnjQhbqi52jA6eqb3FLC5XVyym+4ZlcG8DcSIj0l
-         x8izhi2fn/0+72KesjgJD3wXBSFmeeNsZA0M3KMKaVVO2kM1hMomaRp/bOF9r9QkeGHq
-         ujvxpI8EkJ4RlnmZhWXwz2yQHTX89iSKsGeANwQk2HmjRXkaw+6EtcimS0zPUSxV9t5h
-         qK1qQv9GxYpaVaAfxEENWuQKxKo2J7Onj2+PzxU3JhX7E+jEpbKFFH+pK97Tp3dwCY1v
-         M5ysDLrESwDFpCCv3i2O5y9ocRovPW5Fm5LqA0/gdLShWoRBZ4HwtJd7U9D9lyV8lTro
-         5Qww==
-X-Gm-Message-State: AOJu0YxD705U0qFvJW0Aje7nw9eqVfNOhUc8uGZhoWtHNP1ym6/BPD+Y
-	Z2fXBTLyM+s22ONO/VWUxaKW0qa2NrPajMJdQDcaBBgELNG70QfzC5/ZN5ak8IsBgQ0spZ0M2cF
-	HUqY6
-X-Gm-Gg: AeBDieuBenXbZhkJ8vkH5d0ROGzEKWEVs7jl4ruiR7d1snOyq6ri1q18z/s5mgUcBQr
-	z1JFJB9jnPZYzR3tHorQmpe1fMtUl19kja3qcDvH5hkmcgC77J2Fycab2Y/OHA7MABEBdxBAccu
-	C7SNyAr46hphaPZ9aeHVDgbxmzYuSDC6xRc/q4iqsjsLjBySB68kpc9wRCt6o3TB+SppVABXihn
-	79Kg3MUanYJLW/T74KhUF4mIz2J/tjJeYAxY9kRkLXWnO1pm98lsqVVh7k/2N2ov1oQps0idxhq
-	rdQrx2bieOLQeVI/7PTvVk0KYKYSZiebraJcKyt/aPZtEe1/yKhyxTbAf5/VEMe/0omPvBP/7H8
-	2F2OTUYaZEij4waxcL+JP5QOL/f09zl3nHsGTWyxJmzRxB1qPqeyp7z52uNxPi8rOwKa4I3FH71
-	1VJqjOmVi5312JXwKSD6aXntRjUk92ZylNCZP4S/mLxZFdZIGiJl1vdiRHDZS8pms=
-X-Received: by 2002:a05:600c:871b:b0:48a:592c:e655 with SMTP id 5b1f17b1804b1-48e51f45eddmr48551055e9.17.1778066736806;
-        Wed, 06 May 2026 04:25:36 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:5409:94a2:bd3e:6c21])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e5312de76sm14463775e9.21.2026.05.06.04.25.35
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2026 04:25:35 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/2] fetch/git: Improve temporary directory handling
-Date: Wed,  6 May 2026 12:25:33 +0100
-Message-ID: <20260506112533.3826658-2-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260506112533.3826658-1-richard.purdie@linuxfoundation.org>
-References: <20260506112533.3826658-1-richard.purdie@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=UFDBvYMT;
+ spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: mathieu.dubois-briand@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id E9E89C5DC45
+	for <bitbake-devel@lists.openembedded.org>; Wed,  6 May 2026 11:30:55 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id AC7266053C;
+	Wed,  6 May 2026 11:30:08 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6090B102F2279;
+	Wed,  6 May 2026 13:30:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1778067008; h=from:subject:date:message-id:to:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=ROrwbcQeU0DaQo0fhGj0JL0nzLoRgsgP3EyoB0hJJ80=;
+	b=UFDBvYMTb4nSakTfvaBO+ljEwRixwdDQrzkfnQNHFI2B146EMaa/5Ic0r2UVi0dOTMSpoQ
+	xRbvGE3pcvgBgPbywUoZHFs46RvxGsqO5ZaFWTRcMdbBntSW68g+rFBmceOu4q7Ug/qYW3
+	wELsAPA/o875nAsG0kPkkul58WrkecP4Q+UxNmYtNCQ3p+Vpg55MN5mj3hBEqdwyTK1am8
+	S91PhN1cqgaJDAyiXVfsRfR4PAxZgoU3/P6IHr+b5itQ9qCnDD2gSpP7iBdAm7h0AI2H0B
+	FUksBk3ff+vUOC5ZEV5DDhMSg4Q+Dr52ioxMzcc4k0EpXVPif2MGr0K1CsauKw==
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 06 May 2026 13:30:06 +0200
+Message-Id: <DIBK5E9R3MCA.2M9Y3MZ27X9SM@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: <corentin.guillevic@smile.fr>, <bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH v2] cooker: limit the execution of the
+ hashequiv client/server ping
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20260505160556.3688048-2-corentin.guillevic@smile.fr>
+In-Reply-To: <20260505160556.3688048-2-corentin.guillevic@smile.fr>
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 06 May 2026 11:25:44 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19443
+ <bitbake-devel@lists.openembedded.org>; Wed, 06 May 2026 11:30:14 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19444
 
-Whilst this code doesn't leak a temporary directory, it is a little
-unsafe around directory creation/reuse due to the cleanup and retry
-logic.
+On Tue May 5, 2026 at 6:05 PM CEST, Corentin Guillevic via lists.openembedd=
+ed.org wrote:
+> From: Corentin Guillevic <corentin.guillevic@smile.fr>
+>
+> The ping method is used to test the connection to the hash equivalence se=
+rver.
+> However, if the server is unavailable, the bitbake server has to wait sev=
+eral
+> minutes for the system to terminate.
+>
+> While waiting for a response from the hash server, the bitbake server doe=
+s not
+> provide any feedback to the bitbake client. The latter then closes the li=
+nk and
+> fails with the error:
+>
+> Timeout while waiting for a reply from the bitbake server (60s at 09:50:1=
+5.377337)
+>
+> Adding a timeout to the ping step allows quicker action when a remote ser=
+ver is
+> unavailable, and prevents disconnection of the client due to timeout.
+> The default timeout is 10 seconds, but this can be set using the
+> BB_HASHSERVE_UPSTREAM_TIMEOUT variable.
+>
+> Signed-off-by: Corentin Guillevic <corentin.guillevic@smile.fr>
+> ---
 
-Restructure the function so it can use tempfile.TemporaryDirectory
-as a context manager with a context per loop iteration.
+Hi Corentin,
 
-Behavour shouldn't be changed, the deletion/recreation is just removed.
+Thanks for the new version.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/fetch2/git.py | 38 +++++++++++++++++---------------------
- 1 file changed, 17 insertions(+), 21 deletions(-)
+> --- a/lib/bb/cooker.py
+> +++ b/lib/bb/cooker.py
+> @@ -342,7 +342,7 @@ according to https://docs.yoctoproject.org/dev-manual=
+/hashequivserver.html""".fo
+>                  if upstream:
+>                      try:
+>                          with hashserv.create_client(upstream) as client:
+> -                            client.ping()
+> +                            client.ping(int(self.data.getVar("BB_HASHSER=
+VE_UPSTREAM_TIMEOUT")) or 10)
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index fda7bf9faae..01bebb7648e 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -542,27 +542,23 @@ class Git(FetchMethod):
-             runfetchcmd("touch %s.done" % ud.fullmirror, d)
- 
-     def clone_shallow_with_tarball(self, ud, d):
--        ret = False
--        tempdir = tempfile.mkdtemp(dir=d.getVar('DL_DIR'))
--        shallowclone = os.path.join(tempdir, 'git')
--        try:
--            try:
--                self.clone_shallow_local(ud, shallowclone, d)
--            except:
--                logger.warning("Fast shallow clone failed, try to skip fast mode now.")
--                bb.utils.remove(tempdir, recurse=True)
--                os.mkdir(tempdir)
--                ud.shallow_skip_fast = True
--                self.clone_shallow_local(ud, shallowclone, d)
--            logger.info("Creating tarball of git repository")
--            with self.create_atomic(ud.fullshallow) as tfile:
--                runfetchcmd("tar -czf %s ." % tfile, d, workdir=shallowclone)
--            runfetchcmd("touch %s.done" % ud.fullshallow, d)
--            ret = True
--        finally:
--            bb.utils.remove(tempdir, recurse=True)
--
--        return ret
-+        for fast in [True, False]:
-+            ud.shallow_skip_fast = not fast
-+            with tempfile.TemporaryDirectory(dir=d.getVar('DL_DIR')) as tempdir:
-+                shallowclone = os.path.join(tempdir, 'git')
-+                try:
-+                    self.clone_shallow_local(ud, shallowclone, d)
-+                except:
-+                    if not fast:
-+                        raise
-+                    logger.warning("Fast shallow clone failed, try to skip fast mode now.")
-+                    continue
-+                logger.info("Creating tarball of git repository")
-+                with self.create_atomic(ud.fullshallow) as tfile:
-+                    runfetchcmd("tar -czf %s ." % tfile, d, workdir=shallowclone)
-+                runfetchcmd("touch %s.done" % ud.fullshallow, d)
-+                return True
-+        return False
- 
-     def clone_shallow_local(self, ud, dest, d):
-         """
+I believe this is not sufficient when BB_HASHSERVE_UPSTREAM_TIMEOUT is
+not defined:
+
+TypeError: int() argument must be a string, a bytes-like object or a real n=
+umber, not 'NoneType'
+
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/80/builds/3542
+
+Maybe this is just a parenthesis issue?
+client.ping(int(self.data.getVar("BB_HASHSERVE_UPSTREAM_TIMEOUT") or 10))
+
+Thanks,
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
