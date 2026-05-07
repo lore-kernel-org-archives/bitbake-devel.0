@@ -1,426 +1,229 @@
-Return-Path: <quaresma.jose@gmail.com>
+Return-Path: <Qi.Chen@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FA7CD343B
-	for <webhook@archiver.kernel.org>; Wed,  6 May 2026 14:50:10 +0000 (UTC)
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.20493.1778078999754239542
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8BFCD3427
+	for <webhook@archiver.kernel.org>; Thu,  7 May 2026 06:19:13 +0000 (UTC)
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.5952.1778134752171749224
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 06 May 2026 07:50:00 -0700
+ Wed, 06 May 2026 23:19:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=M2N9RzXs;
- spf=pass (domain: gmail.com, ip: 209.85.218.53, mailfrom: quaresma.jose@gmail.com)
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b93698bb57aso169937566b.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 06 May 2026 07:49:59 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778078998; cv=none;
-        d=google.com; s=arc-20240605;
-        b=BYTN55gjXz+OuU2cdY1ltEF3iPRgMZS2/kq/TsSuji2CQgoD7alDtrKTH/fIbBIEYe
-         gkjIe/9eCt413CUroBEmt7Se1EkPiwT+uWg9a2gP/UISKFquQO2x9dMvOUGt7HC9h+5I
-         /48OaWlri/HQXsm5vjI6xCk6N7oYrV9Edj/Xor8tMzPxp8sDGXniZjBLFlQOw3J1kO6N
-         OauCGJH35FhFOliFtnFxlYr05DSGpSCHny6tqgeOjDW8TEFom6KO9XlRM3ofKbCRcn0U
-         05KWO82c4QdP/KCYQTppwfnz0l52vO77db5tieRRtqCOM7+/40a0VEN5Fj9ziLy58KAG
-         XFWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=K3XwcAoF87sCtvFWTNhQhfPe9e+WlPx8lMWJSLe5xVw=;
-        fh=CXP6ezNhZ2dwV30j1TErAxvqUUUhI3me3DSdqP20/oA=;
-        b=V5WoYw0tyNnYvEVMHnaAHVLJ6Cq25jKp9WgolW+Qmb5WpG2KwJRIn7XBx2bJEu/58Z
-         J4YAWJoVE9atuhe22vK+5ctAqQl3bKgs1490JJ3q8ZcU7uD8piSJoxqIuyLfm9ZqMJYD
-         vCJIRenNcx3MKrArmeHn3j0j/g0NosEYmXmESN/goGwrQ6hwblEVkSCgGYKwxyqsYcLo
-         4LWlabO0f1cvkXKz9I9dXrwM7F+dODZKP+k6fPDhjglRdq2fkieXK+/WX08oWKX/AqEG
-         DX961ZhiFKpa9AU8hYMvE6+mpoRMZLL5g7Tf3GSQFLggMTgOYbxGXPMYnbv9YGlqGrLa
-         JFIA==;
-        darn=lists.openembedded.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778078998; x=1778683798; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=K3XwcAoF87sCtvFWTNhQhfPe9e+WlPx8lMWJSLe5xVw=;
-        b=M2N9RzXsPtJVZWRVsx4UonmxwbMrWpfL/tZPI7NHPceCs7AXSZXP283khqv1qbwHYp
-         LyN4g4bJDjyWVAe9jtZ9SxwUlTbpgC3FUVSCEXNcdvyfMj/GzzHYLyxhlbr9Zhbl5Hav
-         eRY47yNK9Ft5cnhLcGwKSx0neJ6Ul2gM1dsOg+4x+powhESsunzRzMJrjWr3/2GGuEAs
-         vBwRWgIwEY/qreFvNRMbks/Ke2NG6lLMWhI5vBOVAv6BZNvuJuttiT0chOB2Nrcmb0gz
-         va1BbL2z1C9BhAGn525SMQk1xAEJVTBG2+peqEzZp7qe8QwfrZUudnvipfcuPGnolyoZ
-         Jeuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778078998; x=1778683798;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K3XwcAoF87sCtvFWTNhQhfPe9e+WlPx8lMWJSLe5xVw=;
-        b=YAeWvVXaKXP96TCpK4AM+CIbS16rpc1RrNDfTfLdWRlYeFJpc+SORWPtShHoChj5d9
-         pG5St/zldQzZeGeLt78uJsvBD4vNfUMZOdFvttoQrLW/wt+Ca5BvnsXQjC73kvIATG8h
-         bylKfx2j3T49iKyXu4Awpn0DqOuGuWDW80/Mme9evTgQC7WL8+jjkJWp7UWTors2Bnuw
-         RuN3chZOP/36MErZ/namYzWhtJTHqfGPlWakoTkotbyR5jJIgoG55rgfwohe5oaeT50a
-         eawLBwiBtT6Ino3oZBj8ssMoziqbMJvkUSvRWY1yBGXMR7lMkvPz43Qargvs6bt0z2kD
-         qhZw==
-X-Gm-Message-State: AOJu0YwwYgkvR3+x0p+QKZY0mAH3GI7ijEVwu8bdGnPuBbI2CbZyx9UR
-	fZ6TcBxHP9MxEFyiBPUe8Abh7gedWSGRfpC6uCxDYEI+6sYbftThJdO4b5sBdpwCNPwSf1ljKZH
-	oQQtFbvx1po6jG42aleQ48RuM7gHITP7izA==
-X-Gm-Gg: AeBDiet3wtMPwvzBVeUg3jaWHCTbKGHVGCsN9lFTZL+gVl/S4AwmScegMYi0m8fwAbT
-	cVSw5/LULBcmWCukhlZBOpFcNh2QGqkaRDTtygke92dxhGdw7iZ2rBh2per+9ZTd10Os1uwkNeV
-	0A15FoQa5u6aArRM/jhytbmIkTuodHP6KSlDj1ZY+O9RlCeHQQa7YqsQG+DpMeeSGZXWt16RGeW
-	gqJxKi+SnfaP3h+y4HzowdCjZSJbIu7uwUq2VwSBLdTZBB23xMORPUIf6lvaoMDcok57Ew+2nZn
-	ZaMYNdno1WDvzf0Fbu0bdoHkT4WCOZ/9B17pLqNn1ND+jejNlt3kdn5c6iRWAhoa/Lmp5oq8gMf
-	ExNvi
-X-Received: by 2002:a17:907:97c7:b0:b9e:8d2:1eb6 with SMTP id
- a640c23a62f3a-bc3d1854d5bmr384084666b.27.1778078997793; Wed, 06 May 2026
- 07:49:57 -0700 (PDT)
+ dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=JhMYbQJD;
+ spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=9587885fd3=qi.chen@windriver.com)
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6475KetD3268537
+	for <bitbake-devel@lists.openembedded.org>; Wed, 6 May 2026 23:19:11 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=cc:content-transfer-encoding:content-type:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to; s=
+	PPS06212021; bh=cBH7skyi9vYmfIDyznFMicMZQ98OLsR7ozxkbg6kD2M=; b=
+	JhMYbQJD3Y29J6f2wagV9+Y1aRWb/2aBkvAyOIt5z/hGXqIakf63f34045B1e2Uo
+	BsFDcTwklQd74G36nKTlfrwbMZuGzdQhWAU95cqKGKVfOKzQB0GCqkn5z7pLsXvm
+	xbEZC/4pWCE7Kr5ks8ne/4nQXs+vgzrSjYpcHVrkM0aD4qC9dd/OMTvRi8GKrIuo
+	7+QMlps9LfgIyMu2IT9sdABTCKohPwpc0m8Bt50ml3KnUcQUCQXpdGf13JfUELHz
+	uTOb7ZskAe0f/LuEaHqRc+l4+Uky4yqMpHGouWvQio6RjfEFv/WBzgpPXwny5ZMS
+	83WEBMYZ+IKlJ/d7Eb6e8Q==
+Received: from dm5pr21cu001.outbound.protection.outlook.com (mail-centralusazon11011048.outbound.protection.outlook.com [52.101.62.48])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4dwchywwmc-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Wed, 06 May 2026 23:19:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ALtJ9Vp/CMYDYYVRSAVcq/KgVUKkZ7kOeR4KXXSe6+GGyFwRTy5cWGJCP1jVTjarXstx6P8FUJIUGUcqaTZCGY9BVs7MA5bD2zRY9B5+4tPPeBxsfvv12hXsdqnm4iEROeKmx6CcG64Oa3EA8vratGBJeqFSm0lUSXJPlZkPj6e/f8tOZ7xowLWI60AAsL/GfK7cWRjYmjzuU6xScTHTCYu6drFB58KLJX5A1uYUG8ZS2j4Qk/OxAqo7IiwaDLg+ooT3El4kln204R1fHKGNV+7GXYMYcoTY0oGGMlVuv1VE5BBEu2gmbFtAECGxR6Dzw1xie1D5Cl9AMsHKprdPbg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cBH7skyi9vYmfIDyznFMicMZQ98OLsR7ozxkbg6kD2M=;
+ b=kKri3h471TNJUsrYf0YM8igGX0bHrTDiRM9g+1kGh20Pq3sxwvnMMq8hZXI1E8YGxiAlqKfwetLQQwuixWyebX4TtGZP+py05nUleMaWGGQ5ZFjZF0OJLuo7b2y1T09Tpe4RP77Ob2iemD5LPmx/nS0LjhPIdySkjZTqcYQLZQOB8vpiSJqrv0n5cBjhihYJuCvQ+5T/huaLHNvLwzNSusnOHMU5eSCyj3EZVW1XcnFLUbylLHibANioH5zyXiotTqWUXv3XX958U9b2odMBWhZzTmLVSBjvZ53ki4xtQtK5VJJugLlJYHeDITLEd7GBfQfVcsva2AmILOeQ0738Yg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from CO6PR11MB5602.namprd11.prod.outlook.com (2603:10b6:303:13a::5)
+ by PH3PPF383C22AA3.namprd11.prod.outlook.com (2603:10b6:518:1::d17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.15; Thu, 7 May
+ 2026 06:19:09 +0000
+Received: from CO6PR11MB5602.namprd11.prod.outlook.com
+ ([fe80::5ad6:8f90:b01d:2c62]) by CO6PR11MB5602.namprd11.prod.outlook.com
+ ([fe80::5ad6:8f90:b01d:2c62%3]) with mapi id 15.20.9891.008; Thu, 7 May 2026
+ 06:19:09 +0000
+From: Qi.Chen@windriver.com
+To: bitbake-devel@lists.openembedded.org
+Cc: alex.kanavin@gmail.com, randy.macleod@windriver.com
+Subject: [bitbake-devel][PATCH V2 3/5] fetch2/crate.py: add filter_regex parameter to latest_versionstring
+Date: Thu,  7 May 2026 14:18:43 +0800
+Message-Id: <20260507061845.1460893-3-Qi.Chen@windriver.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260507061845.1460893-1-Qi.Chen@windriver.com>
+References: <20260507061845.1460893-1-Qi.Chen@windriver.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SL2P216CA0217.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:101:18::22) To CO6PR11MB5602.namprd11.prod.outlook.com
+ (2603:10b6:303:13a::5)
 MIME-Version: 1.0
-References: <20260506123755.628267-3-corentin.guillevic@smile.fr>
-In-Reply-To: <20260506123755.628267-3-corentin.guillevic@smile.fr>
-From: Jose Quaresma <quaresma.jose@gmail.com>
-Date: Wed, 6 May 2026 15:49:46 +0100
-X-Gm-Features: AVHnY4JnUBu6XqAAzhyyKb7WVelpyn1AiVO8A73p5NsjU7eGo9_LyLXc4tWgGgU
-Message-ID: <CANPvuRm-iYiu4MJ5YfO9VxEP-4Qxc8N5dq0-TQo9ay+UWhqtfQ@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH v3] cooker: limit the execution of the
- hashequiv client/server ping
-To: corentin.guillevic@smile.fr
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="0000000000000bd28a06512747fc"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO6PR11MB5602:EE_|PH3PPF383C22AA3:EE_
+X-MS-Office365-Filtering-Correlation-Id: 944f3e5e-e185-4fd9-304c-08deac008c7a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|1800799024|376014|52116014|366016|38350700014|22082099003|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info: 
+	x7DPN+9wRfKbcSf7EQrkChgjmeMIBztEJWAto3hz8gCNsgM9uL2HrFRm5o7fDW47ddq12BO4llKatP8rRXxB7JBzpNRrgJHQPbKRknsyUJ4WRhJhrusxU4BYY3Vbk10H+ZVaO5x2s7cqD+RKARUlF2LOjp68KzzzS2k2H+0xMb1s26QBOoBQDLCbGN+mOIF8LHFG2IwQRlIPZscmMB/60OOKQkVlVBwG83ON58Ow35hdkExLP/QuGxcqFJzOth3G1Y/WfY4758GuQrZxyNopd53v32zZy7z2i7hFuwLiAf6AgC26yTIo3vClMoCclJiJqnq9eCq8E1gqSzrUa4DVlNpusSjq5Lhy5MJd+3NiWdTjDoyudUXoegdy1UPM298f/sFETFV5iZKI5zvxy6e4UHQ73nttkKKGl5bN9YEXFvbUtWF+ien9Qz+e5P4B/3aYKzb4iu/mesiImfQwkfF7SFfrTvpffeMtLJi9oPyz8QxYDtDoRt++yXINSNsr7IqGQWu1AO8tV6uWNvsuFxtvyHi1EoSUpmne4jG4uC7jc88pc994N/1VJQGBZprrcWDXHb8al2pVxyvIXfmlROmhEU08Ag9tkSTfhrNDKGiVeNcoh/ndln8BBpUmvBYcZRVr1BEq+MqgmNtnVAwKNdy1NEypKmz/tpYGgyIKbdcCh0q7I15hG+xN5/TdWzXRib/IlQ9wcwWijdwMJP5CanGS8a+mTFl8AXvpjDdUlAoFWnbo7clN4ZumqM4Utc1/sDK/
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5602.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(366016)(38350700014)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?9NaPX7UChIPn+Eq0JBtYsHAYs3JGn3ZczMBmInAkSHyhevXZrqSQWOEL2fcc?=
+ =?us-ascii?Q?j1H8T2PjPUYbseNE14Gi+KWZkcu+xR4YV67Jwyb6PX3+LD+Rwv9S+MyQ8GQM?=
+ =?us-ascii?Q?K9HEkTMZOgRb3iW3Go/+gGZl2xpgu9PLr6uCsD4pc1g6mEtOkkIo4mHJ9BEL?=
+ =?us-ascii?Q?8lS4foU1XpdFklO4rcYLWhJBJuHYmkF+dEUpe28CiBD2uHP1vFFy3YFve9kl?=
+ =?us-ascii?Q?GFDwBadXiMzdBe7Ew/6MezmO3JRLkVy1OLNSVu365zuSHBtxoNb3VhZgmw5z?=
+ =?us-ascii?Q?o9WmWsKDMGhpvEw2p+DxX/b4wxHF5WyRoj5scmNcOuAZ45jS9umgGpdepEk+?=
+ =?us-ascii?Q?FoOo2Vuk2miycDOwbDmPZSLl4lStOYQHk+Dr2BAR4JanbexU611dKep5IXej?=
+ =?us-ascii?Q?M7RPAuFL1NOy6xvdMC7fmd9Mei21m9iNouxKEq2TvGIc8VB+Nm72cOmGCxxc?=
+ =?us-ascii?Q?zJlmcn5VbT0+ya8BYgVxfbCbEaTQwDxg6tazG81+CobTMpRobJnBO8l1WsmR?=
+ =?us-ascii?Q?Kulol64vWpmlDuJ7WNOAA6TZFaJWM356IqUPiRw2c+Fy/7YhspQzsC7In+zv?=
+ =?us-ascii?Q?cfk19Sn+ENGc3t6VyrdFjXkcnCdjECm3JUI4q16fraUiA+W9sXEsfe60ZYQz?=
+ =?us-ascii?Q?w3W1bemugRGEtEBYE1wYUco0fAHGBP6+kxn5+ExUtUXZiGKXnOX86vG1A1FD?=
+ =?us-ascii?Q?nLLf+Tb1JU/gw8F95Ooe3eAvBqqknAPPhwD6jOuhSBrhytDYm2nId58Ae8nK?=
+ =?us-ascii?Q?FCTWabFRpKcgrBGNyzNYZuTjHPAmrgxS7VTkW+GnUZhP9qEyr0OPS4HU82UL?=
+ =?us-ascii?Q?xY0FWyI8khJSf/RLoeeqoEECbmoqeGxsvhxWEti0rSrSauy7Z0NC4emu0M+C?=
+ =?us-ascii?Q?776SH1a7TOAQW8ZsM/vp/vVLoXvjk9X9n7jL5YtiRIdVik7+2fimYqbdFcfZ?=
+ =?us-ascii?Q?mj4PNuJsewxk8d/RtgT8n91EcfxrNsyEuqnEiBbmCjhqSGOOdlrFWzLL0uLN?=
+ =?us-ascii?Q?KDnC5RJFZGV5O3fo/AgFnohfYkw3JKkMKgINpu78HYIpJIbuNvP3GIGBOyMJ?=
+ =?us-ascii?Q?m6RJvj77+4dSaO0+UTDRmduyeGPrg72s7Jt/VaTp0SVhXiLbh/jnOSB2fFi6?=
+ =?us-ascii?Q?kpDBkdy3ARBKm3J4KAuCKUguNX59GbO7wd0SGgfIoOZuN+JOsWF9SRWPsHZB?=
+ =?us-ascii?Q?KUDfZiSCwYuYgivX2n0PiOiQW4DrgjUTEza+EJjPB7H6toULiLjc52jqKVKa?=
+ =?us-ascii?Q?yJJ7P5wln5USIhlN1f1U32bYDdEx9Upce8BFdJnUfFB5sP49X9ISkjQ8oyCY?=
+ =?us-ascii?Q?3rz9tebOZn4EVoJiULmFTm/SLXIyc2SEWYytpO/LAMn+DuKrDSikH1FpYwdk?=
+ =?us-ascii?Q?ehtiA97v2YbAGbxiwW6Xc8n4XG65/Hk1knQ1jdLKMt5gmEjeihWoq0HPJjbb?=
+ =?us-ascii?Q?iccROYQNMGloSDPw1RuDPmoLOXbP6bXHt2reC6q8S7JhJCvCROwl9LdIhTCK?=
+ =?us-ascii?Q?H9Dnr0FgzmRY5whztmonDhxxbHLNeWsAN1dZT1gZDm9xmsGO0CxATJ+vM8N8?=
+ =?us-ascii?Q?WRKA7AukYjEk62RR7FUlaWP4GZ5B6um2U/7naC+Qa/o5Kx8Bb3b3/rbMU+K5?=
+ =?us-ascii?Q?l3dMso2fEgT4+QffVHRrs6nOBksWpEknVvyg5YIsofrR2/vbrfEQ/qVxTE+R?=
+ =?us-ascii?Q?iMbgbYpxLOmXBbhwcDBx7S1OU7QdAcLs6+B/CvjdzeWfCGMbQSEZ8o93STgd?=
+ =?us-ascii?Q?ab7KJITEcg=3D=3D?=
+X-Exchange-RoutingPolicyChecked: 
+	b1zRmkb6s97M6ftDGG6mTAIIodChiwAAWvGJy/wDqDDvl1D+syuvk+MXkdZIAXW2lMYn/kxnqMFK2NnWCTrgiofuudSfTZFxQAPLIT4w6C83yL9mZcYDkmiRJXQE/6a+dDhH7CIQPGezkyqtggGobpiBUxNqORlL1mcj6tuo3lkvhab+7jEupjNd/CHJiANFXqt6pj3TCnCZFgQmsJ3muHPAcOZ1iVD4/zZ/Bmim+XSJHGMhca4uImX9rHBGCqzDbn0dGvm49RPtViC+1gNkW8x0iPKhShA2lpLu55yn0DML+pPF0NhJwFADUCFo17kpAU4cQEou9INDMh8cm1TQdQ==
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 944f3e5e-e185-4fd9-304c-08deac008c7a
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5602.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2026 06:19:09.2152
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: paI05ak6igRoPs9Xv+pbSDVZbou+ZPexO2kOScH4G153JTG/HzFCfOk3JxX37zGMYdrt9LOA80FRyyOPHIuSLw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPF383C22AA3
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA3MDA1OCBTYWx0ZWRfX8iVh2AHSuqLQ
+ CqtzoH5Y9E0UmQMd3ke1w2myjJwKgk1W2L5r7Kx5rnWMprfybEVyvkxU3NTdP6n0EMc++eqCCuS
+ zLo8dgAoIbxp2LyFccKwHLbjSh3tX826hYvEK4SjQFT4TNLqsDSsA+m+l6TOtkgqpJKz7xbEltM
+ PRnRSK/t53cMUyfzXNfbOxV/jrR3/8MISop4yotfldjMMwp7jkh/GF/m57folbyVn6r0vEBOwJL
+ 7Zo/2S36Jaaz78HHmRvTfJYAmHz4BS1ojbrz1hoKKl3/hKA1A38JwdfTRmIuy2NpTtED82/Vqzp
+ 5j3E+drL0GDn/hDFn4acb+ip/0qkNwTe3Z221+bfPkOsMaCYNsBaEqRIHntSbu5oP1ri+OCq48A
+ Jee73HqqDXRWbJX5u3HQOlbAGM8VYvKAXQ+bhSnwTGDeOob2mrZ6nJueQjJosj1gf21MLjJEAIj
+ 4002PvpxrBADPylebQw==
+X-Proofpoint-ORIG-GUID: phES1rqvwdpD1UOXco0LWgRDbDv4FUa3
+X-Authority-Analysis: v=2.4 cv=LsSiDHdc c=1 sm=1 tr=0 ts=69fc2edf cx=c_pps
+ a=puQxxl069aAozDPRWZ8vNg==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
+ a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
+ a=xqWC_Br6kY4A:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=bi6dqmuHe4P4UrxVR6um:22 a=HK-ge7EqtdluswH-FwHe:22 a=t7CeM3EgAAAA:8
+ a=hIPOLQWK0ZafnOV6iRwA:9 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: w1a0a06g4oLjTPB7BWlx7vA-XmETPM83
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-06_02,2026-05-06_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0 suspectscore=0
+ adultscore=0 clxscore=1015 malwarescore=0 bulkscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605070058
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 06 May 2026 14:50:10 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19450
+ <bitbake-devel@lists.openembedded.org>; Thu, 07 May 2026 06:19:13 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19453
 
---0000000000000bd28a06512747fc
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Chen Qi <Qi.Chen@windriver.com>
 
-Hi Corentin,
+We want to be able to do stable version upgrade for recipes. For
+example, 1.0.0 -> 1.0.1 instead of 1.0.0 -> 1.1.0.
 
-Corentin Guillevic via lists.openembedded.org <corentin.guillevic=3D
-smile.fr@lists.openembedded.org> escreveu (quarta, 6/05/2026 =C3=A0(s) 13:4=
-0):
+To to this, we need an extra paramter to latest_versionstring
+so that we are able to filter out the versions we need. Using regex
+has the advantage of adapting to different version schemes.
 
-> From: Corentin Guillevic <corentin.guillevic@smile.fr>
->
-> The ping method is used to test the connection to the hash equivalence
-> server.
-> However, if the server is unavailable, the bitbake server has to wait
-> several
-> minutes for the system to terminate.
->
-> While waiting for a response from the hash server, the bitbake server doe=
-s
-> not
-> provide any feedback to the bitbake client. The latter then closes the
-> link and
-> fails with the error:
->
-> Timeout while waiting for a reply from the bitbake server (60s at
-> 09:50:15.377337)
->
-> Adding a timeout to the ping step allows quicker action when a remote
-> server is
-> unavailable, and prevents disconnection of the client due to timeout.
-> The default timeout is 10 seconds, but this can be set using the
-> BB_HASHSERVE_UPSTREAM_TIMEOUT variable.
->
-> Signed-off-by: Corentin Guillevic <corentin.guillevic@smile.fr>
-> ---
->
-> Notes:
->     Changes in v3:
->     - Fix TypeError exception when BB_HASHSERVE_UPSTREAM_TIMEOUT is not
-> defined
->
->  .../bitbake-user-manual-ref-variables.rst             | 11 +++++++++++
->  lib/bb/asyncrpc/client.py                             |  4 ++--
->  lib/bb/cooker.py                                      |  4 ++--
->  3 files changed, 15 insertions(+), 4 deletions(-)
->
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rs=
-t
-> b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> index 9824b58ef..cce03bc0c 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> @@ -511,6 +511,17 @@ overview of their function and contents.
->
->           BB_HASHSERVE_UPSTREAM =3D "hashserv.yoctoproject.org:8686"
->
-> +   :term:`BB_HASHSERVE_UPSTREAM_TIMEOUT`
-> +      Specifies the duration (in seconds) for which BitBake waits for th=
-e
-> first
-> +      response from the upstream Hash Equivalence server (specified by
-> +      :term:`BB_HASHSERVE_UPSTREAM`).
-> +
-> +      This variable prevents BitBake from waiting too long for an
-> unavailable server.
-> +      If the time expires, the upstream Hash Equivalence server will be
-> skipped for
-> +      the build.
-> +
-> +      The default value is "10" (seconds).
-> +
->     :term:`BB_INVALIDCONF`
->        Used in combination with the ``ConfigParsed`` event to trigger
->        re-parsing the base metadata (i.e. all the recipes). The
-> diff --git a/lib/bb/asyncrpc/client.py b/lib/bb/asyncrpc/client.py
-> index 17b72033b..5e2505494 100644
-> --- a/lib/bb/asyncrpc/client.py
-> +++ b/lib/bb/asyncrpc/client.py
-> @@ -199,8 +199,8 @@ class AsyncClient(object):
->          self.check_invoke_error(result)
->          return result
->
-> -    async def ping(self):
-> -        return await self.invoke({"ping": {}})
-> +    async def ping(self, timeout=3DNone):
-> +        return await asyncio.wait_for(self.invoke({"ping": {}}), timeout=
-)
->
->      async def __aenter__(self):
->          return self
-> diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-> index 4b6ba3196..128cbaee9 100644
-> --- a/lib/bb/cooker.py
-> +++ b/lib/bb/cooker.py
-> @@ -342,7 +342,7 @@ according to
-> https://docs.yoctoproject.org/dev-manual/hashequivserver.html""".fo
->                  if upstream:
->                      try:
->                          with hashserv.create_client(upstream) as client:
-> -                            client.ping()
-> +
-> client.ping(int(self.data.getVar("BB_HASHSERVE_UPSTREAM_TIMEOUT") or 10))
->                      except ImportError as e:
->                          bb.fatal(""""Unable to use hash equivalence
-> server at '%s' due to missing or incorrect python module:
->  %s
-> @@ -352,7 +352,7 @@ Please install the needed module on the build host, o=
-r
-> use an environment contai
->   - or set up pip venv
->  You can also remove the BB_HASHSERVE_UPSTREAM setting, but this may
-> result in significantly longer build times as bitbake will be unable to
-> reuse prebuilt sstate artefacts."""
->                                   % (upstream, repr(e)))
-> -                    except ConnectionError as e:
-> +                    except (ConnectionError, TimeoutError) as e:
->                          bb.warn("Unable to connect to hash equivalence
-> server at '%s', please correct or remove BB_HASHSERVE_UPSTREAM:\n%s"
->
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ lib/bb/fetch2/crate.py | 29 ++++++++++++++++++++++++-----
+ 1 file changed, 24 insertions(+), 5 deletions(-)
 
-What about:
+diff --git a/lib/bb/fetch2/crate.py b/lib/bb/fetch2/crate.py
+index b89817ab9..1127fa802 100644
+--- a/lib/bb/fetch2/crate.py
++++ b/lib/bb/fetch2/crate.py
+@@ -14,6 +14,7 @@ import hashlib
+ import json
+ import os
+ import subprocess
++import re
+ import bb
+ from   bb.fetch2 import logger, subprocess_setup, UnpackError
+ from   bb.fetch2.wget import Wget
+@@ -155,18 +156,26 @@ class Crate(Wget):
+             with open(mdpath, "w") as f:
+                 json.dump(metadata, f)
+ 
+-    def latest_versionstring(self, ud, d):
++    def latest_versionstring(self, ud, d, filter_regex=None):
+         """
+         Return the latest version available when versionsurl is the [name]/versions URL.
+         """
+         from functools import cmp_to_key
+         json_data = json.loads(self._fetch_index(ud.versionsurl, ud, d))
+         versions = [(0, i["num"], "") for i in json_data["versions"]]
++        if filter_regex:
++            filtered_versions = []
++            for v in versions:
++                if re.match(filter_regex, v[1]):
++                    filtered_versions.append(v)
++            versions = filtered_versions
+         versions = sorted(versions, key=cmp_to_key(bb.utils.vercmp))
++        if versions:
++            return (versions[-1][1], "")
++        else:
++            return ('', '')
+ 
+-        return (versions[-1][1], "")
+-
+-    def latest_versionstring_from_index(self, ud, d):
++    def latest_versionstring_from_index(self, ud, d, filter_regex=None):
+         """
+         Return the latest version available when versionsurl is a Cargo index
+         file.
+@@ -180,5 +189,15 @@ class Crate(Wget):
+             data = json.loads(line)
+             versions.append((0, data["vers"], ""))
+ 
++        if filter_regex:
++            filtered_versions = []
++            for v in versions:
++                if re.match(filter_regex, v[1]):
++                    filtered_versions.append(v)
++            versions = filtered_versions
++
+         versions = sorted(versions, key=cmp_to_key(bb.utils.vercmp))
+-        return (versions[-1][1], "")
++        if versions:
++            return (versions[-1][1], "")
++        else:
++            return ('', '')
+-- 
+2.34.1
 
-"Unable to connect to hash equivalence server at '%s' after '%s' seconds,
-please correct or remove BB_HASHSERVE_UPSTREAM or increase the
-BB_HASHSERVE_UPSTREAM_TIMEOUT:\n%s"
-
-To raise awareness about the possible causes.
-
-Jose
-
-                                  % (upstream, repr(e)))
->                          upstream =3D None
-> --
-> 2.51.0
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#19445):
-> https://lists.openembedded.org/g/bitbake-devel/message/19445
-> Mute This Topic: https://lists.openembedded.org/mt/119177877/5052612
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> quaresma.jose@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
-
---=20
-Best regards,
-
-Jos=C3=A9 Quaresma
-
---0000000000000bd28a06512747fc
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr">Hi Corentin,</div><div d=
-ir=3D"ltr"><br></div><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"g=
-mail_attr">Corentin Guillevic via <a href=3D"http://lists.openembedded.org"=
- target=3D"_blank">lists.openembedded.org</a> &lt;corentin.guillevic=3D<a h=
-ref=3D"mailto:smile.fr@lists.openembedded.org" target=3D"_blank">smile.fr@l=
-ists.openembedded.org</a>&gt; escreveu (quarta, 6/05/2026 =C3=A0(s) 13:40):=
-<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8=
-ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">From: Corentin =
-Guillevic &lt;<a href=3D"mailto:corentin.guillevic@smile.fr" target=3D"_bla=
-nk">corentin.guillevic@smile.fr</a>&gt;<br>
-<br>
-The ping method is used to test the connection to the hash equivalence serv=
-er.<br>
-However, if the server is unavailable, the bitbake server has to wait sever=
-al<br>
-minutes for the system to terminate.<br>
-<br>
-While waiting for a response from the hash server, the bitbake server does =
-not<br>
-provide any feedback to the bitbake client. The latter then closes the link=
- and<br>
-fails with the error:<br>
-<br>
-Timeout while waiting for a reply from the bitbake server (60s at 09:50:15.=
-377337)<br>
-<br>
-Adding a timeout to the ping step allows quicker action when a remote serve=
-r is<br>
-unavailable, and prevents disconnection of the client due to timeout.<br>
-The default timeout is 10 seconds, but this can be set using the<br>
-BB_HASHSERVE_UPSTREAM_TIMEOUT variable.<br>
-<br>
-Signed-off-by: Corentin Guillevic &lt;<a href=3D"mailto:corentin.guillevic@=
-smile.fr" target=3D"_blank">corentin.guillevic@smile.fr</a>&gt;<br>
----<br>
-<br>
-Notes:<br>
-=C2=A0 =C2=A0 Changes in v3:<br>
-=C2=A0 =C2=A0 - Fix TypeError exception when BB_HASHSERVE_UPSTREAM_TIMEOUT =
-is not defined<br>
-<br>
-=C2=A0.../bitbake-user-manual-ref-variables.rst=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0| 11 +++++++++++<br>
-=C2=A0lib/bb/asyncrpc/client.py=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 4 ++-=
--<br>
-=C2=A0lib/bb/cooker.py=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 |=C2=A0 4 ++--<br>
-=C2=A03 files changed, 15 insertions(+), 4 deletions(-)<br>
-<br>
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst =
-b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst<br>
-index 9824b58ef..cce03bc0c 100644<br>
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst<br>
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst<br>
-@@ -511,6 +511,17 @@ overview of their function and contents.<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 BB_HASHSERVE_UPSTREAM =3D &quot;<a href=
-=3D"http://hashserv.yoctoproject.org:8686" rel=3D"noreferrer" target=3D"_bl=
-ank">hashserv.yoctoproject.org:8686</a>&quot;<br>
-<br>
-+=C2=A0 =C2=A0:term:`BB_HASHSERVE_UPSTREAM_TIMEOUT`<br>
-+=C2=A0 =C2=A0 =C2=A0 Specifies the duration (in seconds) for which BitBake=
- waits for the first<br>
-+=C2=A0 =C2=A0 =C2=A0 response from the upstream Hash Equivalence server (s=
-pecified by<br>
-+=C2=A0 =C2=A0 =C2=A0 :term:`BB_HASHSERVE_UPSTREAM`).<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 This variable prevents BitBake from waiting too long =
-for an unavailable server.<br>
-+=C2=A0 =C2=A0 =C2=A0 If the time expires, the upstream Hash Equivalence se=
-rver will be skipped for<br>
-+=C2=A0 =C2=A0 =C2=A0 the build.<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 The default value is &quot;10&quot; (seconds).<br>
-+<br>
-=C2=A0 =C2=A0 :term:`BB_INVALIDCONF`<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0Used in combination with the ``ConfigParsed`` ev=
-ent to trigger<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0re-parsing the base metadata (i.e. all the recip=
-es). The<br>
-diff --git a/lib/bb/asyncrpc/client.py b/lib/bb/asyncrpc/client.py<br>
-index 17b72033b..5e2505494 100644<br>
---- a/lib/bb/asyncrpc/client.py<br>
-+++ b/lib/bb/asyncrpc/client.py<br>
-@@ -199,8 +199,8 @@ class AsyncClient(object):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.check_invoke_error(result)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return result<br>
-<br>
--=C2=A0 =C2=A0 async def ping(self):<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 return await self.invoke({&quot;ping&quot;: {}=
-})<br>
-+=C2=A0 =C2=A0 async def ping(self, timeout=3DNone):<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 return await asyncio.wait_for(self.invoke({&qu=
-ot;ping&quot;: {}}), timeout)<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0async def __aenter__(self):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return self<br>
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py<br>
-index 4b6ba3196..128cbaee9 100644<br>
---- a/lib/bb/cooker.py<br>
-+++ b/lib/bb/cooker.py<br>
-@@ -342,7 +342,7 @@ according to <a href=3D"https://docs.yoctoproject.org/d=
-ev-manual/hashequivserver.html" rel=3D"noreferrer" target=3D"_blank">https:=
-//docs.yoctoproject.org/dev-manual/hashequivserver.html</a>&quot;&quot;&quo=
-t;.fo<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if upstream:<=
-br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0try:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0with hashserv.create_client(upstream) as client:<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 client.ping()<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 client.ping(int(self.data.getVar(&quot;BB_HASHSERV=
-E_UPSTREAM_TIMEOUT&quot;) or 10))<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0except ImportError as e:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0bb.fatal(&quot;&quot;&quot;&quot;Unable to use hash equiva=
-lence server at &#39;%s&#39; due to missing or incorrect python module:<br>
-=C2=A0%s<br>
-@@ -352,7 +352,7 @@ Please install the needed module on the build host, or =
-use an environment contai<br>
-=C2=A0 - or set up pip venv<br>
-=C2=A0You can also remove the BB_HASHSERVE_UPSTREAM setting, but this may r=
-esult in significantly longer build times as bitbake will be unable to reus=
-e prebuilt sstate artefacts.&quot;&quot;&quot;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 % (upstream, repr(e)))<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 exce=
-pt ConnectionError as e:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 exce=
-pt (ConnectionError, TimeoutError) as e:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0bb.warn(&quot;Unable to connect to hash equivalence server=
- at &#39;%s&#39;, please correct or remove BB_HASHSERVE_UPSTREAM:\n%s&quot;=
-<br></blockquote><div><br></div><div>What about:</div><div><br></div><div>&=
-quot;Unable to connect to hash equivalence server at &#39;%s&#39; after &#3=
-9;%s&#39;=C2=A0seconds, please correct or remove BB_HASHSERVE_UPSTREAM or i=
-ncrease=C2=A0the BB_HASHSERVE_UPSTREAM_TIMEOUT:\n%s&quot;</div><div><br></d=
-iv><div>To raise awareness about the possible causes.</div><div><br></div><=
-div>Jose</div><div><br></div><blockquote class=3D"gmail_quote" style=3D"mar=
-gin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1=
-ex">
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 % (upstream, repr(e)))<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0upstream =3D None<br>
--- <br>
-2.51.0<br>
-<br>
-<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#19445): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/19445" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/19445</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/119177877/505=
-2612" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/m=
-t/119177877/5052612</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:quaresma.jose@gmail.com" target=3D=
-"_blank">quaresma.jose@gmail.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div><div><br clear=3D"all"></div><div><br></div><span class=
-=3D"gmail_signature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_s=
-ignature"><div dir=3D"ltr">Best regards,<div><br>Jos=C3=A9 Quaresma</div></=
-div></div></div>
-</div>
-
---0000000000000bd28a06512747fc--
 
