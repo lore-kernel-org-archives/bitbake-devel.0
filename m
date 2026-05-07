@@ -2,80 +2,80 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3078CD3442
-	for <webhook@archiver.kernel.org>; Thu,  7 May 2026 10:43:47 +0000 (UTC)
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.8730.1778150622907523588
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10D5CD3427
+	for <webhook@archiver.kernel.org>; Thu,  7 May 2026 10:52:17 +0000 (UTC)
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.8940.1778151129621303438
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 07 May 2026 03:43:43 -0700
+ Thu, 07 May 2026 03:52:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=LdHBfue0;
- spf=pass (domain: gmail.com, ip: 209.85.222.171, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-8cbc593a67aso63791385a.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 07 May 2026 03:43:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778150622; cv=none;
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=gX8DKueO;
+ spf=pass (domain: gmail.com, ip: 209.85.219.41, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-899d6b7b073so6144206d6.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 07 May 2026 03:52:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778151129; cv=none;
         d=google.com; s=arc-20240605;
-        b=VMX1EHqWClQtyO1DjBRbCzBLHWAQl1i1ixAcm89FNMqEZJDB8DoVOYkvDkQAuMR7fh
-         KgU838+UamK4bJ8MFViVTniGuVqcprQzzOO8Xxe74cjWga+gq9P3j6g5rLjooqYU/+OV
-         p8sb1eW2es9EuCqHMBJ+G1UNI1uuYVljOBRb2j6ysVIs2r/cCkf9TdIo2/de+Ms7mqW0
-         iYfzG+UV4av2zPVyDojsLNUaxwst6clpjFwXyYjKaHtZruF7Ym4k0lZR8mEHZkB8hSKe
-         b/0mcEMng+KWVXT7pLfl+/N//ZVsM62OrG3+efrXgsOWyDoLoNZq6kKavXc2ukXst5ds
-         YVYA==
+        b=HHNeb1MtSkaP92fHonEUqGVIn7tu0mHqlMa47rFr+LQ/91YxYOx5pbENGczZV7G/99
+         ZWIusADSsaPMwbW5kPjBHVtCpEutwhf25ceM3hGWYYwqw5iwpqS4KuPEu9wk1ixqcc38
+         FVlCChNdF68qDw0O3ZCwX8qFJQU+xtutDlh0aOSYCWMD7wT/2Qorm+5DpwC3JfxD8shL
+         7M9jtM842uj4mifPY+2NXJK3tfs8AXuK/+9XoS0WNNUlo4oka98Do6TuvUEbyYv2stTk
+         8fUzqV41uzmQPJslxZVDel57OQMMkLZ5vwp4paw0jV8Xaqu7sO0jhmfXzCIda1YwxFCl
+         SYuA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=DiAThaUf4U8iCTufd/BX6d6GHpNe8WtAIUBmS92c5fA=;
+        bh=oPTaAKyagcz3jDQM+9BKN2BuQ37TCo9PRxmptHL5Ur8=;
         fh=dgzQfTLjzSgWVmQrNoc/yMagAB/pjHol9ZsAWrRYMX0=;
-        b=VPdHlz4N10Tn1Li3Nfbnu2DC3+58+GQCNBlqTyx8jy1BNCk0TB6Mf6bcv9PoYekGbE
-         EpK2T0nc5r8dyj9v41RLyp44l7QLB9s8Ug6FqGDPE3to4qebj80NeTt38GZnwhhCBvQg
-         9w+stOnvTZipkfh9rS6nGc7sWsNxIpL5fh5I/k8mco2rbz2cJJ4R5ttDVeY4Gbh+xJcv
-         e0nlDBFv/k9KT+mel/1TXHtDrFGY71aJauQb+ZajUBH2Jyl46WxQasm5BHOasgdWDwPg
-         /es+iQuZON/H0fMfdqlIltC4LsAsotP9U0m43Ca8Qw8p9ZbUMJyIaGZXgJPJ8wzeKH8M
-         x0SQ==;
+        b=MKgNrH6lIMA5gXswsKLUXjVS1snCExHULzkh2DLNrbozr6JFtX+ifn3uYkz74J0DtW
+         xJ+LcGSckpQqMXLNBz41m9KQ0w1thsC5ONthsd6RqYnbfzf71fvweE31e/3DUcJbKSwt
+         ybjfcr4VEpTMOg/3kAV9LosvKhQ5xPtCO9O4iqm1EGGFvHMVdH3RqQRjCS3lPwCR1brQ
+         HkCl4i1vXD1eenMEIKEZ8ewhLO7ip8vYlxmtf6zsTYsAj9JuwOkgVrBC+1FTsqJCHLXO
+         qUBnSuMaHfaBOZEh7FP5PJPVvWtOPZ9/I5PedH48HKCqpVpPw6WgW9HRXbtktetDhaB2
+         BY8w==;
         darn=lists.openembedded.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778150622; x=1778755422; darn=lists.openembedded.org;
+        d=gmail.com; s=20251104; t=1778151129; x=1778755929; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DiAThaUf4U8iCTufd/BX6d6GHpNe8WtAIUBmS92c5fA=;
-        b=LdHBfue0vyzTJvHEWGi7HYInHoST6JaJCM3uddkNh2Gea71i6htxy6A+MFiGut+TM2
-         eUCcLy91XWNastw/j5IGakdH3JMt5dxbOs2U0BuxgLGDntT9shrYa5SjQTcymrLNEMr7
-         VYMiXOvuLXIc7LujNM3RKQP3Cb0Ej2rktuAiBJpBRTe0XB+uCfE/+3SC9TSFknN9cBUU
-         96yLqp0HhNVkDCZbFLfyH6oST/TyEtVhWG8nIVtICjXu647gBTmNBrVkGAMPsHBQlFRI
-         h3z88Qh2gVmhHZnLD22hnOXF3SuOYY6Eqapf2jOMHouc1XxhdU0TxHqmGxF5A7tTfSun
-         iRgQ==
+        bh=oPTaAKyagcz3jDQM+9BKN2BuQ37TCo9PRxmptHL5Ur8=;
+        b=gX8DKueOGB4bllycCvXTW+F3DyAV6CM5wOVvG0ZHshd8sSdSG6bke6LeiNILyQIboS
+         QgAqWP/kUEoV1jCEGJF/T3yqCU6rgTn4d8o+1ygr99g7KF2P7HCadHDNohHHtS9FjXuC
+         SyiWjhATqk8zzkGTHJQhD4L40rCb5oxZtNJ8RQv41oVFrDCba1xmIRnvjCwpmtfC1Mo6
+         PftdB1Ev6Qcc1YAjHXBDSQ4kZ4fPLb15l1wG0qz6sx6INJuQ76x61RUg42LhweKTeiVo
+         1xSOzQEsdqebXDtp9Uyu9sBZwxKBieNlUa4z8JBjIoz1dbkqfy1v8pjmdC3uuRsPXvU1
+         uV1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778150622; x=1778755422;
+        d=1e100.net; s=20251104; t=1778151129; x=1778755929;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DiAThaUf4U8iCTufd/BX6d6GHpNe8WtAIUBmS92c5fA=;
-        b=A/NbZLgLgnBG1xYmUU9wdTUyFFXgK/zqghjcoJJgsicFbCYkxVMpOWWJ0xx4qJ4joO
-         5FHAb7QS9xSc1BcsWfDmPXlP//A30nwhCG+XievFCX/rq7diNB8mb358ub84apPPCayW
-         mzOFPdCO7pE60CRtlALrgdpXb6VZ3BdYBmpnExBoTsutd4wCAlrJwcaGnWS7HXLCgFct
-         FNS9ncwpnxw9XhRrL3n4kcUzT40yqxtVBp66Gfcncm0Kun5Ik++nSPZq2On1/apq9bZu
-         Vls/nO+94wcDqonoNpTr+i34Bw4g3cMTh01XJ8k7D2dOoS/krS6BXtktTcNYK99jEZpz
-         hXbA==
-X-Gm-Message-State: AOJu0YzL8ZCN9f/Od+TRNTAQl8AlfipD+0zmEMFhizY6ipaszjtOGIQp
-	1hxWPCn7poDeJ+teaCyHfIfm2/cmoeliCP5m0ZXyo5ROO2dRgBBQXMexf38JTFEEpJqnUxVFXPi
-	T8zfjzXGdKlnDXCfb4kA92mnyWNLljxQqhg==
-X-Gm-Gg: AeBDies0ta6cJWN+QNPrZ5rBBTygdq7gOUsvDqaDS4K1gvG/Vbhn+stYgt/EyYs388j
-	Lu2x0/d29wXjLWQMVSCLSUfA0jn7n/PLzhEhMe1q0rimQpP0OZyq72F8HUEYEpoLok4md4qra6C
-	mpGsUhoYBGJLSORBXVgRjXsG1pb+c86S0UsYyXozfHVD6XrHsmdw3FBDtlog3w8KyuruQEhZyXX
-	1E5jov07bsEjXcg0XZITjl9MR7APIMXtDZS+BYNAKR0Kg1CYj3UdLcTre1FhYC9cWa8vvShBlZO
-	uTq7p9YJn1iaJSTmu6YnzSNweeAINM//5gfuVqqRFyJCZRJdAMXy7Lp+N8nHtes=
-X-Received: by 2002:a0c:e016:0:b0:8b1:f069:3fc6 with SMTP id
- 6a1803df08f44-8bc4536b4f5mr96314216d6.40.1778150621869; Thu, 07 May 2026
- 03:43:41 -0700 (PDT)
+        bh=oPTaAKyagcz3jDQM+9BKN2BuQ37TCo9PRxmptHL5Ur8=;
+        b=irNk5EQUrKgbrriXc/zXh6wrykREMJRxChc/b7VzaTMhgy/q85eaXcGOQxJP5RUsWN
+         /Dzd5S/0QwxeHBCRm8qNS/w2UECr7cQFQyY8kLVp7YAPDA2scoWEXn1LUWV8pwI5Tclb
+         X9jlhAiuWQKuBOhzGqBJXmIHGcRzq/YkG/fGDL3I0GXXveg6tK6l2S0v277Gw6GN49kE
+         j77btqFqaMuigXya0eKUnOhAT7XvM/0lZnG+hZl30FiQ3IzNMxsFa5XiuQ+BWZM5EUPS
+         6MDy7ReYbrE7HqwwI37LC2yNX4uIFYJd35rm52j9Ba3TARBwdeOjMU7gQbxIXhb1I/0i
+         M1Pw==
+X-Gm-Message-State: AOJu0YwXnvtrucjDDzXC2ojXn9Jted3q1RzLYhMvMKotcyvvKUxpZvBa
+	mrc/rhqYbyQKH46ienbVVl856AbBsMmy5UCje4DPrRDGD46tvniSRLv5Ka+QyY98P+2zqYNQQK/
+	gzMrc3HwjtJuZNCOJBuqV0Y4BdjENrlgZpcwy
+X-Gm-Gg: AeBDiesXo1lksumCb+xeM7YJNKvcYm9G2L4tFU5sewECk4X7FyXh61I8FrU/bj++SH8
+	XJ+sS4bSKKzmVta8XxLIyecZRAePNNXT8RHxU6/XFb3TB3JgoklGIu4NwKxvZQHoUfYU/Q1YliA
+	6Yb4hSbvbHpcmCJt6+t3S4bLEyi6rb5oeyyZeyPem7JNVqX6ungJ6XR5GY+SjE52kikiDrBvTm3
+	LlRAOQDJ1hu5z3Gt4T775pe6rum+BO4NPcpu/3mtaRq87vqJ9iNMAhg7js1p1FEFKBBdI2diNQW
+	wPKZPodK+69/SEYNT1tKHQUa9xs+xg4smIH6dN0JCf4sAzXJb21M
+X-Received: by 2002:a05:6214:5008:b0:8bd:59a6:41f4 with SMTP id
+ 6a1803df08f44-8bd59a64732mr58087396d6.9.1778151128596; Thu, 07 May 2026
+ 03:52:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20260507061845.1460893-1-Qi.Chen@windriver.com> <20260507061845.1460893-2-Qi.Chen@windriver.com>
-In-Reply-To: <20260507061845.1460893-2-Qi.Chen@windriver.com>
+References: <20260507061845.1460893-1-Qi.Chen@windriver.com> <20260507061845.1460893-3-Qi.Chen@windriver.com>
+In-Reply-To: <20260507061845.1460893-3-Qi.Chen@windriver.com>
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Thu, 7 May 2026 12:43:29 +0200
-X-Gm-Features: AVHnY4KKxdwQ7uIqIT8Xd6bbWwKV77QaJFpx6pHIg3C1P5WNIYcJOkcpklPm4cA
-Message-ID: <CANNYZj86Swp0qkKi2U_3zusvGm2cXXeSg3iMd6fRLN05uCKwfA@mail.gmail.com>
-Subject: Re: [bitbake-devel][PATCH V2 2/5] fetch2/wget.py: add filter_regex
+Date: Thu, 7 May 2026 12:51:57 +0200
+X-Gm-Features: AVHnY4LjQCP3pMN8PnS4-7DcclCBErEALI1Q1N1iau3hq2bY0LF-1q-ZFt7utGg
+Message-ID: <CANNYZj_=Zo78eVodPtrAuRtkNyb1sMkmVjxf-VA43fpPBYFRRA@mail.gmail.com>
+Subject: Re: [bitbake-devel][PATCH V2 3/5] fetch2/crate.py: add filter_regex
  parameter to latest_versionstring
 To: Qi.Chen@windriver.com
 Cc: bitbake-devel@lists.openembedded.org, randy.macleod@windriver.com
@@ -83,23 +83,29 @@ Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 07 May 2026 10:43:47 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19456
+ <bitbake-devel@lists.openembedded.org>; Thu, 07 May 2026 10:52:17 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19457
 
 On Thu, 7 May 2026 at 08:19, <Qi.Chen@windriver.com> wrote:
-> +                if filter_regex:
-> +                    if not re.match(filter_regex, re.sub('_', '.', newver[1])):
+>          versions = [(0, i["num"], "") for i in json_data["versions"]]
+> +        if filter_regex
+> +            filtered_versions = []
+> +            for v in versions:
+> +                if re.match(filter_regex, v[1]):
+> +                    filtered_versions.append(v)
+> +            versions = filtered_versions
 
-This needs to include a note explaining that filter_regex is derived
-from PV, and so uses . as separator, while upstream may be using _ as
-separator (as seen below in the code where the same conversion happens
-before the discovered version is returned).
+This could also use list comprehension:
 
-> -                            package, package_regex, current_version, ud, d)
-> +                            package, package_regex, current_version, ud, d, filter_regex=filter_regex)
+if filter_regex:
+    versions = [v for v in versions if re.match(filter_regex, v[1])]
 
-Here and in other places you can perhaps simply pass in filter_regex
-without naming the argument?
+You can even form the list with a single statement by setting the
+condition like this:
+
+... if not filter_regex or re.match...
+
+but doing list comprehension twice is perhaps more clear.
 
 Alex
 
