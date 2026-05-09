@@ -2,136 +2,105 @@ Return-Path: <bijak.dawid@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B89CD3447
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D65DFCD343F
 	for <webhook@archiver.kernel.org>; Sat,  9 May 2026 10:44:02 +0000 (UTC)
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.9796.1778323433239404105
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.9797.1778323437675853499
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 09 May 2026 03:43:53 -0700
+ Sat, 09 May 2026 03:43:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=Z0Nw3Ctm;
- spf=pass (domain: gmail.com, ip: 209.85.221.52, mailfrom: bijak.dawid@gmail.com)
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-44c350a5b87so1708421f8f.3
-        for <bitbake-devel@lists.openembedded.org>; Sat, 09 May 2026 03:43:53 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=ioaClIet;
+ spf=pass (domain: gmail.com, ip: 209.85.128.45, mailfrom: bijak.dawid@gmail.com)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4896c22fcbaso25076445e9.0
+        for <bitbake-devel@lists.openembedded.org>; Sat, 09 May 2026 03:43:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778323431; x=1778928231; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kUFCdRUkuEzjdflg14UBcBVEsLEgF2wLJXC56CSYySc=;
-        b=Z0Nw3CtmpfasEg0o12djjG1j1tg8WKnWD8knbXqqT/k8OS7XR1uV5JkD48cpz3JOqC
-         KPNyXOy2y4WqVTBIINUtESzjY9pk7/alRy8RMDDWYk1fqpU5kJb/Ilm45DZquZi7K44c
-         VpsMRNrU+prkFDgu3l4KEeu9/rx4Q7YMdJI2ndIHsv8XJNTlcoBD7N0HEMgUfnfVUHRR
-         N2w1qbRdKXAZu+065gAKFVwoBJkxxpD5ga5PaOYiwSIkDYUk44fyJ6zXr0ygkdvdqBZa
-         RCvhD4oCciBnhwHjrj9TtEqnseIyFU3RNGlUCN6nF1y/upPqS9QMPzlCsoFUz4rAjSea
-         4YBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778323431; x=1778928231;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1778323436; x=1778928236; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kUFCdRUkuEzjdflg14UBcBVEsLEgF2wLJXC56CSYySc=;
-        b=Z8ukZDDw+6ds1GNX6BhkCqviKPtg6fHyElxvUJrPQPaBdIOuT0p4KXk4zAVVkVr5FT
-         1JXedIIEk4EJMGvI95MioLhufLIDULa+TKN7MHABircYPF2Fv1MkQUQALtu4GRlsoCbb
-         4nmdV9WFP1xdZx9PGhfSjJYdXMiAjawEWjRAeXFhgW94AgFZ79TNW9m/Q9N0muCVpJXt
-         23xzOPOb3N4U+mIMZQXaeZLWEn7s3pgqd8aCPZQ3VmaruZ7EoPLtUUGUONuTqdM01Em0
-         v/91VhJ9PfQwgj/EuayJAUrOOttOo/YXN/qrY5C8bbQhHopN+CPW9baCz4I57zz7m/Yi
-         KUrQ==
-X-Gm-Message-State: AOJu0Yy2IxlsE9ls6R6FV8wb1QJTqL6VFmXXujW9bIaspR8R8nOJAx25
-	Idw966Zh903VU4iA8BS9gGnb8e2uRGYdDz0+u0vNeZMLrNGyh3CiUzHtb9jCoTHDuo9mNg==
-X-Gm-Gg: Acq92OHDlfJZ4TZ0idznMyXKtgqLZ+hTbv6iQ1zU3oJO1uL8aky4ZHnslYt0FyaoGlR
-	9uWYEXHJ2viKHvEF1+B8dCuBbr7BK9loknojBQ0AkTS8v+mIX2ZaUCRgqdjOuJ1mIMqu+kDj+M1
-	Uqkwbh3YXh8nVyGpcQtO241xlII/IgCPCrtBOU3fjSh43AS5fkC41wX5yd+FPjvqqgJG95FITiY
-	cHu/LjtiBkEx0e55MRR1G6OijH/ZLS+sieaeL5Jqhx1v/FzP7cUtlIUwipl+5hxdW8CYqbqPrLq
-	kgw1Riwzgd9K+zm6e+eiGsO2LoSB1QnQ5ZHqOnV/ZsvpCcj7WM/rRLq7UeUISbh+7g5T0WrfKhx
-	1X+twbLMutEJITqq1s1tSDNiM3PWEZAjdqBE0RJbudlrqEqOJeOdaBcgezUKuyIRg/w1U9XDovW
-	vwK8jwTuwXchT7npH++KCGFHOr2bQrvLupCn/NAnCEpRlk+AY2tWEV0kCGiGwqdWPuFAxojbPOP
-	1zVyRaO2UKOfgMRoXsIFYYWhv9m8Xakfp61NJPhBU6cja6oVHjSbtF2CiAnUpdpGQ==
-X-Received: by 2002:a05:600c:3548:b0:48a:7aad:4425 with SMTP id 5b1f17b1804b1-48e51e097fcmr245675045e9.3.1778323431136;
-        Sat, 09 May 2026 03:43:51 -0700 (PDT)
+        bh=E/gfo6xS2VGl9I6jZAN9maWCY/TzpDh7+NefMkw5nc4=;
+        b=ioaClIetCbHgUgGPzwVUUrbYZrPqfe23tguN5uOxoRnCrA9h1iOfYtuS7Wl/K90t6P
+         DuTVQBcP7dLJMlBF0St40OPqqaW/Tky8RSDFJkbXW3evUteFU1jVPV+6qIczhkcdEFyC
+         ZnYIrnnp5YqY8h4AmtI7vr6AdypfCZq5SxIZR3HyTvR7Hpa1S3o/HdDCV9HXXw5IBPP7
+         p/Pycep72nbdY3+yQl/YVyHXHnSURfcb3eR/EFWftE3fuEVAMpOVMlwrupbnq+e3UNNT
+         bLMr1H/Fav8ppKo93hxgoxYTURgYrAbJtpBJAEQOT21gihPGQzEVb4hHyubf87PCI7x4
+         qU2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778323436; x=1778928236;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=E/gfo6xS2VGl9I6jZAN9maWCY/TzpDh7+NefMkw5nc4=;
+        b=Oo3/AhrYPABHeY2qK4abz/u7U1Bb25aCDGprRm8OAbBkCJsoE5wk+THu4I9JJUZO2M
+         1qlBoD19ropDvLe/kUmsd0svBswnxSYXHcxKrRuWdoAVRLQIHtjljji2ygzGp7KRHhzV
+         jOosiuxXniF0JDgyvPI6XDECNyuIhaCA6+I9yyUzl8giapCMnla9eFFGtaceYBl4JTxt
+         OHb8jcVdNFSyPTs5SXH/i+CNyPSA03si6owUSSxLgTmIJXRL9SsTGfR/3hJuwHm/jPed
+         yz8SLvJtEg6ofjWkYVgjF3c6dKk+tFoqFDh9zFiqJtx14nmtKdHz2n0cy6EeF2fGC6WK
+         wdrw==
+X-Gm-Message-State: AOJu0YygXWI3wdEx7a7lAG811aI/RYSyh5ANMWQzanhWGoQeboJrt0rg
+	pBoKA4odOeE+RCUOTisAasBE0S+HD59P8lFj89MZMDr4HNgHKlxv6QxObiKNlcjjQQ396g==
+X-Gm-Gg: Acq92OGbKzekvr9neEFaAyJvLKEQo07OG1CL11MYlhEQZ9Jc2x+l3fCdMlz9IP3A/Ce
+	j4jrZaNNq2waZfsyVS42UGLswdbQBEZMZxf1snIJ/XvDqQxR1UzPBlgklAwGOZSC++Edqx2WHJG
+	acLArVS7NJlynulWIeo0HrtbDbHK8WACB/9wD6vdwpjbJ6dWkql7xRf/Vl9y7a5MEb0KxUYy7GC
+	ScoNT05JCimGEWITOMoTTmL9VKoXbuGbzGzVIDnSZWf2utqnYjHul+FMKgnsHc21Cti00iPW2Hb
+	nNdU8yf3OKdku6+r/E7WL8tuHbA7P6bF2XbRDIPoct6g1sTBQlBxDAt99OR/zQUlUkdcXoHXZ+j
+	XWKxssDix5wsUVP7wbctVhjnMNhXEcAlRnKSW8gTTR1Ex4ZkCeWTDuNAaRxIHyO3zGal1rJccs+
+	yvfxtKsrEE4ptJzJCzz+/alKzL3GMZoGpTNhjW8cnizCg1zRh4QPjHsqvTwHdkGDjcrYo/8zoDa
+	OfIrb3eRxpV9H4eDnO4IEnUgpjiKHRLaMAI/wZBwOyX81uAjA2eTbo=
+X-Received: by 2002:a05:600c:8486:b0:48a:6fd4:d3d3 with SMTP id 5b1f17b1804b1-48e706be062mr31199445e9.20.1778323435643;
+        Sat, 09 May 2026 03:43:55 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:8070:d188:380:b100:f430:86bd:b50])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-48e6d895781sm38837255e9.0.2026.05.09.03.43.49
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-48e6d895781sm38837255e9.0.2026.05.09.03.43.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 May 2026 03:43:50 -0700 (PDT)
+        Sat, 09 May 2026 03:43:55 -0700 (PDT)
 From: Dawid Bijak <bijak.dawid@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: docs@lists.yoctoproject.org,
 	quentin.schulz@cherry.de,
 	richard.purdie@linuxfoundation.org,
 	Dawid Bijak <bijak.dawid@gmail.com>
-Subject: [PATCH v3 0/3] doc: bitbake-user-manual-metadata: clarify inherit_defer documentation
-Date: Sat,  9 May 2026 12:43:04 +0200
-Message-ID: <20260509104307.26698-1-bijak.dawid@gmail.com>
+Subject: [PATCH v3 1/3] doc: bitbake-user-manual-metadata: remove incorrect claim
+Date: Sat,  9 May 2026 12:43:05 +0200
+Message-ID: <20260509104307.26698-2-bijak.dawid@gmail.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20260509104307.26698-1-bijak.dawid@gmail.com>
+References: <20260509104307.26698-1-bijak.dawid@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Sat, 09 May 2026 10:44:02 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19484
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19485
 
-v3 of a series addressing a few inaccuracies I came across while reading the inherit_defer documentation.
+The documentation for inherit_defer contained the claim
+"If VARNAME is going to be set, it needs to be set before the
+inherit_defer statement is parsed"
+which is incorrect and contradicts the purpose of inherit_defer.
 
-1)
-    Drop the claim that "If VARNAME is going to be set, it needs to be set before the inherit_defer statement is parsed"
-    which is wrong and defeats the purpose of inherit_defer.
-    The whole point of deferred evaluation is that assignments made after the directive are taken into account.
+Drop the incorrect statement.
 
-2)
-    Drop the anonymous Python example of assigning the class name from an anonymous Python function, which does not work:
+Signed-off-by: Dawid Bijak <bijak.dawid@gmail.com>
+Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
+---
+ doc/bitbake-user-manual/bitbake-user-manual-metadata.rst | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-    python () {
-        if d.getVar('SOMETHING') == 'value':
-            d.setVar('VARIABLE', 'someclass')
-        else:
-            d.setVar('VARIABLE', '')
-    }
-    inherit_defer ${VARIABLE}
-
-    inherit_defer is resolved before anonymous Python functions run, so ${VARIABLE} always expands to empty
-    and the inherit is a no-op.
-
-    add a warning explaining that using a anonymous python has no effect
-    on the inherit_defer
-
-3)
-    Add a short explanation of how inherit_defer interacts with conditional overrides, and rename VARNAME to
-    VARIABLE for consistency with the rest of documentation.
-
-Changes since v2:
-    - Link to v2: [2]
-    - Picked up Quentin's Reviewed-by for patch 1 from [3]
-    - Applied Quentin's suggestion from [4] and added Suggested-by:
-      Quentin to patch 2
-    - Renamed VARNAME to VARIABLE as suggested by Quentin in [5] in
-      patch 3
-    - Dropped patch 4 following NACK in [6]
-
-Changes since v1:
-  - Link to v1: [1]
-  - Split single patch into four
-  - Shorten the override example explanation
-  - Drop the "footgun" example from the previous patch
-
-[1] https://lore.kernel.org/all/20260424062327.820993-1-bijak.dawid@gmail.com/
-[2] https://lore.kernel.org/all/20260501091418.76994-1-bijak.dawid@gmail.com/
-[3] https://lore.kernel.org/all/aff89f3f-7bc6-4634-b834-1872d559c8e0@cherry.de/
-[4] https://lore.kernel.org/all/fec735f6-f87d-4036-a013-384ed7c54701@cherry.de/
-[5] https://lore.kernel.org/all/a3a8a5c5-81c3-4764-aba6-32c84ce55a7e@cherry.de/
-[6] https://lore.kernel.org/all/7558cb67-4ee0-4cde-9d43-4ce2b8d1ef5f@cherry.de/
-
-Greets,
-Dawid
-
-Dawid Bijak (3):
-  doc: bitbake-user-manual-metadata: remove incorrect claim
-  doc: bitbake-user-manual-metadata: remove invalid anonymous Python
-    example
-  doc: bitbake-user-manual-metadata: explain inherit_defer example
-
- .../bitbake-user-manual-metadata.rst          | 28 +++++++++----------
- 1 file changed, 14 insertions(+), 14 deletions(-)
-
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+index 40cae6b05..ee6919dc4 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+@@ -829,9 +829,7 @@ Here is an example::
+ 
+    inherit_defer ${VARNAME}
+ 
+-If ``VARNAME`` is
+-going to be set, it needs to be set before the ``inherit_defer`` statement is
+-parsed. One way to achieve a conditional inherit in this case is to use
++One way to achieve a conditional inherit in this case is to use
+ overrides::
+ 
+    VARIABLE = ""
 -- 
 2.48.1
 
