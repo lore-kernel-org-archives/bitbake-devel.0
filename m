@@ -2,39 +2,38 @@ Return-Path: <Qi.Chen@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9568CD37B2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F79CD343F
 	for <webhook@archiver.kernel.org>; Sat,  9 May 2026 05:30:29 +0000 (UTC)
 Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.6867.1778304620791242824
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.6789.1778304619871642534
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 08 May 2026 22:30:21 -0700
+ Fri, 08 May 2026 22:30:20 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=mF79XgWZ;
+ dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=XJbQNJiR;
  spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=95895a8adf=qi.chen@windriver.com)
 Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6495U56w2363029
-	for <bitbake-devel@lists.openembedded.org>; Sat, 9 May 2026 05:30:19 GMT
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6494jIVN2286826
+	for <bitbake-devel@lists.openembedded.org>; Sat, 9 May 2026 05:30:18 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
 	 h=cc:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	PPS06212021; bh=lUZPcJKxeUSMjDhSh+ln14WTABVX0AL0Rkd8B3lIpIw=; b=
-	mF79XgWZo0oKlYj7o488rSKppTnXJdBOz5ZDdwEvA4AwXl8vzbJtNb50SkmVpw9U
-	WzrQ9rIl0VsE5e9u3foHi1sBtUOXX2PkDSbLET4ik/QrzrgPvku1iISGu9X14qQr
-	XndbrMt4YLmdIOMkSaaSuaDCe7QwuQ3jZYjTlkAx6rWCnL/XQ7Wk/ti+O+HX9Ety
-	+fvs8H2lL2ailzD0gvEiH9MQd+K5JUgcxcnu99C9PTM1y/jUZgxEAY/RK15lGcBn
-	xYyawK3fUU2IAHof4KFrN4U5ITVkQsEl32jPpSbH9jcrQ+kfHQlyQWo3b1OV7Mh5
-	kcEZa3KVz75nKLvd6n4CYw==
-Received: from ch5pr02cu005.outbound.protection.outlook.com (mail-northcentralusazon11012034.outbound.protection.outlook.com [40.107.200.34])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4e1uw6g3xq-1
+	:message-id:mime-version:subject:to; s=PPS06212021; bh=4GYnbJYsN
+	u6tMakLuSMeRYquElI8go5B0OurvZ2Qqmw=; b=XJbQNJiRYNAQZ5XKA7sAfB1R7
+	e6m+rXe38qiiueI/5J+fbqYyTHEVHGnFkTgpkoLAUXRWKerkkz40wnqvzA1PbnAP
+	SxCjD1mVGYjNeQh2usJSho8JRLObeTtguMYfIh5008G29W7EF0dOXXsHig9GehbV
+	jvkZYMMgBOhazRJFySyu+nTmGHDhsTPBB9qLhAZBg8CDE8eYvoW/N3zGoQ0Eakbb
+	BZagRnNWIUIkQ3yOjeGZ/uVBT6Q2BgSj77utV+ftq95Lf+x3QHdPIwYOxTekC+FW
+	o61Fw2ZiQ0+W9FIvtbwErbuE3EoDsrvRat7/awU2FmgHaY8CjmZrGdVDHxABA==
+Received: from ch5pr02cu005.outbound.protection.outlook.com (mail-northcentralusazon11012068.outbound.protection.outlook.com [40.107.200.68])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4e1uw6g3xe-3
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Sat, 09 May 2026 05:30:19 +0000 (GMT)
+	Sat, 09 May 2026 05:30:18 +0000 (GMT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nTOMPP8jouy5GOxe8tGVQo2481RIU5Gndj+xsfG7qIemUHgmQXbviN9HNLRmaCatVBDe8iS3dN+GCGTXrllxMmC4YW35k9gIo0yM7FW+PAewC44gjaIKQSHafnvu3W+fQheL8je8j4IyF6beOdJgZwziBOS0EJUnTGYIXuQ88Bu57UTEf623rHTWuhi1Q2QyuPxiprgAPp0rGSZqn9P6mbMKcIKVuA2iRnWllMqJmeayfJ+x/apR4ocLrGvSGF+GaXVppXYzF9UDSlX3aEofTtVCEIFUTsm7wdLcV72THahtG++CYaTgPE0+C0s6Grh0SkTeKocbfwvsKPhgdPIibQ==
+ b=aSKOeUnGpcEK/oqH/Hm1zEjnikqAmbdr/FPRpA6zEiGcKhW2gTd8PesnWfX03nF+9uwJpKAOZU6lbmfi8N8jyynB+8CzWXRfmrLHiQYJxPa3Go/WDtMMIrFOLi6pVef53e8XSAPrarSkD6B/jtkRjlihq/XxQv+9udkgHTeZmUwKKEuzpgVHmOJaQGP/yN4GYnOtV1ImEfzykdOp6iuNFKKXvg5DZ8F3+DeOEvIhaQTWqpmBSap18lNQ5SQjx7CLejzSWoy+aaA8oK4/LqoIOdI0K2GkZFF9+YUregvBL5JQHT2RkLG3dH9QBnhvddy4fyTg8fopWBfCHLbwILI9NQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lUZPcJKxeUSMjDhSh+ln14WTABVX0AL0Rkd8B3lIpIw=;
- b=c4Jf1w9Y7kza6RFNEqZdwIlXTGgY8WdX9WuYbaFYwsEYt7HBTCfT+eTNNA1xvKA32Hpx+JdLl4qCdLSAn5tDRzZVjSDsjTHEURf9cqwJpgLSR9XpmbOEjv2q7bMt7E0lsDeprUo6V7kDUcGjSVCy4ul5UG5LMzkRk8oNTp3M9cgp03o5w/5DKb0S1WPvTLjKjLnpBJ4Zm+WzF0n9cwSTyImZlXf7jJwxdgeJmsziHX/suer7zwh+lJFgS1mVWx0Krw+0fxYpkVbd0hySSkCfzCvlY+SbwZNm7sHGqoln2gQsKT4Y3mDrt1GXSo56nWZVhoY/aZ/a37YdnjeEVygzhQ==
+ bh=4GYnbJYsNu6tMakLuSMeRYquElI8go5B0OurvZ2Qqmw=;
+ b=OSIXUPwEWyvh06u5rDIVnCvdYpCSySN5I9HMcmcT3gh6wykUrF+jIzI5p0L6VGpiOqMIr8HMW7BPtYj/mmmMKrqhc/hS82wGwNTIihQqJnvD8A4KnMzjuHBhxOEbdb0gXEhhyUjZxa92BO/lWZ3OMIs0UMGQ+NwxFqy76ppqcS3neNj+9/zkdVa4Ljd4d+3lmQKbLcVY5Pp3lKBfa6BUVBo2fCbfm/fwYrHD9WtOL99YqSGlL8BZcE0HAkyezVG8kzQMxkv6jZe+1XTuDeCHnlodnf+A+XreffjVDyhpoBDwjhUZVEhSUG+N1c20KIn5ptn+w3WfS9h5+0vdwukaFg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=windriver.com; dmarc=pass action=none
  header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
@@ -42,20 +41,18 @@ Received: from CO6PR11MB5602.namprd11.prod.outlook.com (2603:10b6:303:13a::5)
  by CH3PR11MB8657.namprd11.prod.outlook.com (2603:10b6:610:1ca::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.20; Sat, 9 May
- 2026 05:30:17 +0000
+ 2026 05:30:10 +0000
 Received: from CO6PR11MB5602.namprd11.prod.outlook.com
  ([fe80::5ad6:8f90:b01d:2c62]) by CO6PR11MB5602.namprd11.prod.outlook.com
  ([fe80::5ad6:8f90:b01d:2c62%3]) with mapi id 15.20.9891.019; Sat, 9 May 2026
- 05:30:17 +0000
+ 05:30:08 +0000
 From: Qi.Chen@windriver.com
 To: bitbake-devel@lists.openembedded.org
 Cc: alex.kanavin@gmail.com, randy.macleod@windriver.com
-Subject: [bitbake-devel][PATCH V3 5/5] bb/tests/fetch.py: add case for filter_regex parameter in latest_versionstring
-Date: Sat,  9 May 2026 13:29:50 +0800
-Message-Id: <20260509052950.1565384-5-Qi.Chen@windriver.com>
+Subject: [bitbake-devel][PATCH V3 1/5] fetch2/git.py: add filter_regex parameter to latest_versionstring
+Date: Sat,  9 May 2026 13:29:46 +0800
+Message-Id: <20260509052950.1565384-1-Qi.Chen@windriver.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260509052950.1565384-1-Qi.Chen@windriver.com>
-References: <20260509052950.1565384-1-Qi.Chen@windriver.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: TYCP286CA0087.JPNP286.PROD.OUTLOOK.COM
@@ -64,78 +61,77 @@ X-ClientProxiedBy: TYCP286CA0087.JPNP286.PROD.OUTLOOK.COM
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CO6PR11MB5602:EE_|CH3PR11MB8657:EE_
-X-MS-Office365-Filtering-Correlation-Id: 729a6ad6-bffd-456b-1bef-08dead8c0d7e
+X-MS-Office365-Filtering-Correlation-Id: 62bfb0d2-60e3-46af-2732-08dead8c089c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014|56012099003|18002099003|22082099003|3023799003;
+	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014|56012099003|18002099003|3023799003;
 X-Microsoft-Antispam-Message-Info: 
-	DDhmQZ4LH//NM6p5SYtUgKFyBZYJro/1Iz/TIqfdNbv7QQRsMqCrTYy3EY8G8Hii2zfZN168ilVmoquMsUvtTVERz2SaxdLsU5mayMP328PwZpwpbYqnfhkFVl4XieJDVoXcpFR+caJH8mCF4SG+pjagjPAbB0RG+emefbVzg9PyWQwh+r/xdMD2Hv1pbsWxVh/u79foR/MmuV5f3fpYIK3l0JUPQ/bMhP/U7tCsOXsC/7tOdS7kUZCp3vD8stvQlQwwfBUW3BSJyX+sa5beJ04qgF2yGbdeOItWrEPOsO3/Eqq8irAXiH90DBTxjyMzjeYpn/EIcOuJ9hIVT9BNtJodZXGG5vSgNuNVH5qFB1vP/wG3cgXftmY0kW8oLw8PghVHyq1INxPi195DZHDjKwGQXTQFzs8uvJHgCtmJVdP9MsgrflU/rsdFxlav9ouaDJtp/qpl0XwpR44l0wq64GrEZMw2T0IIlbgmUtRhL/WyqPwnFuPIO9kSuUUGQF+TYoz/v+Sxpqn+VbxQVGyvD8K50j3/c29x3UnXkYEN5goAoNoUt3pP5zaN/naMAWCa5sK+fEE6n4XIj1MtJzYUoOheG9WaqKxMWyJcxAsUk6ACtVwyOdjEmXMIp7vFTjBKuvmjWxLPmBcFH+vJzSM1DKr3ylHvZLzur6mx0uaVPB4wXxZg7SrKU3zeMFqFa77CEv6AI5hl5HRKhFfmrazy+w==
+	579aZkGtqGgmY0XRRmFIKI2wGqIj0/dfoKzy3457/PFweNAirZuxlLRp7zzWaK4IB6PUY2MaFNw+/hF9Yf8xvGD+9KC8O0zJLo0NGpw2ArExdoV7MjuDD6fYAA2dsJ7DvETGF5YuS4qTwS/ycRkikhDagqBFr8MUV18lLPhePFo+hlZeSD58ivLZ2ZFbbJ4dO/SNksVXaiQonOoXwNx7t6NcxbUl2eFEd/R5TDoY/laqxpH+Lved6fdlQ6ceNlLRBmfV5YSnXxwwh6SSNKRpTlWeMURxvqSwwvtv3YavD3/QnLh3aAPQJLtIMjLCxLxfD+II51pVZwgmZfROk+Lc6FnUk9QX6IRemvWNoSH9kJaUoHdggah7M7VqUA8WJhnHCI5A8XENnkgyiETV0m5X2czIsTV2+6PNlbATkSq/0ILjhFNRDkFxb1CWQPcg5IZQGUyeHDqilkNS6ccYF3eASDGW5lruaSlta9OCk1uEFD6sjbbI66Nb+stnvJ/07s76VCBMrUnhwFjNo8LadrZutxinzSUzg4dR3UPq7gPVYvyS0FzDNOm7gGMF7a0cRrVvm7SgneYqEiwBaHL7QkLQuklTazVI9yZjBra25UVeILpF3uh/j3XPfVJ2xPrK5y7BO1cGgCnR5SCFpvLT4MAqGTx1iVNWuR2mz2m+CHiiFEX5fdIRf9BHvbnEVRjbt8Gu1+D2xxVcW3NirMnH2MUlvitVjSNqQrg5zflU7fXXONfngDzKLJoJFGOEgPOu8KoK
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5602.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014)(56012099003)(18002099003)(22082099003)(3023799003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5602.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014)(56012099003)(18002099003)(3023799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?aVJAvjmrnH/V33RTLGSDceVWhm9d3qED5O8/+Iarhdfx+DVDd9Dlk6F4tbqn?=
- =?us-ascii?Q?3rxAEJFCDvsqK74Oj2mDoXvZ70nq7TcVdgFb8+l/5AjPPv5R9nGkEfqjWlDa?=
- =?us-ascii?Q?yH7ipLP8IipvJYIf9RyhubbB9oVUY6cmctCwZj2FzuSStkxaPwsdymSgTfQK?=
- =?us-ascii?Q?zVtL0vxex+f7e6zS8I17l22THmmg5sRvy805U+rOEjDcXXPnO6QavgZvoMQT?=
- =?us-ascii?Q?oYQeFlFt7PtmvnJaaLehMA8BTGQDbgpCqyQLFo4eBXHehEcflle/1JypRzAx?=
- =?us-ascii?Q?cS0uYqvn0B3fddiU7bNrOFwNHfK5SqnRSfwfUmu4qrpmVkBDKdyYlyuCrAM0?=
- =?us-ascii?Q?2Jt1qz7nRkp5IEVOTMwkDBLr70f5hHzhl5Sxt0nyLC3DYzkmb7CL4DY2hx95?=
- =?us-ascii?Q?uwiclyFdvJEyQwX++IpOTF7XfxfNn4qZCCH34XjaEbYhhTYLiSD791fBJnu2?=
- =?us-ascii?Q?E1DB6RtMzpu9oB4UzRNegXV4iSQnIU6V6tyRiBan3ZdkUYmdEfzifd3eZdC4?=
- =?us-ascii?Q?j9DVVxQ+nrNN1t4G88XluKl1cjYZNvXUI2Gg0582n5Qy7Wqbpp2xM3IrOVkG?=
- =?us-ascii?Q?zth7B0/wT5d9rX/7U9hnSZTZAn0sfrITtNAi4DmF7TRlOPVGkLV4lMTcNKgU?=
- =?us-ascii?Q?8bAKR/iGTtAdxoTvQ8MFSZTZtbKdYvirUSOSGRTDGQM0MUTSweJBZP28gpsS?=
- =?us-ascii?Q?1fjjWkPJPcac2fcDkAvzxhM8Gk7oHFv0L3cvmLllP3waWv7SJOq2tFIXYUwL?=
- =?us-ascii?Q?QCfJYvhYHZVCUKcxz0dH1YG0Tk1hr1xs4thaH0nifqU7XvzXotK3xbwUQ7DJ?=
- =?us-ascii?Q?cp1t++uJkAn9/rV7EKGdeTcvZlesyrYvvL7FGR3dUEgz1uOLzzjaM2iWepi6?=
- =?us-ascii?Q?KnMkN/5QBIyjpzR2w+bjueG5nrCzgpp5KaLNqW3qKDrBQ9hl5E3ItpjbIY+x?=
- =?us-ascii?Q?vJttXwJMCOzKz//Se0CatV3wXeMzsxvcGH+UFL8+fF4WquGdzsbYhEy3MOqP?=
- =?us-ascii?Q?LwovPtFTq/DmoV3y4r2IVzGX9Nozmrhm7cr9PB0AQzv/L/5kgHn0hp4a19nu?=
- =?us-ascii?Q?dR5ClRp51ugHFNupLCat6GHXLg2WSwEdrMBP+FjOjgnGQrQKzjK0CqVPE85u?=
- =?us-ascii?Q?uQ/PpxZvR+o3bcZO7iJEdi50rEhMJTTCYkCuN94UuuJ75wjmq0QifhuDJ3x/?=
- =?us-ascii?Q?6ctdccMFzhvXma94UOaRMgCkq7GxGwqnOTi5j97wYcVkk3MV0CBgTKDVeC4T?=
- =?us-ascii?Q?ki5NTPe5dxhhdZxtgTh/278OASxeHJO4N9eKoDU2H2wA/IxkOAsQ73aox3KD?=
- =?us-ascii?Q?jrt9SruzEtNAK8SyiZY2vc71RBRoJVsnDs27IFvCugsbiHbBTjO31KdQGGJD?=
- =?us-ascii?Q?Wbif3jSLzw26Ba7V18RGIyH1Bes4TCBqqvn5hfSACjYuomYzD/L1Lx8hsp3k?=
- =?us-ascii?Q?8m8JeqDAGnbGKKijASVzMMFGHtNS5Mu53JR0djyaM08zIgYvFHA5OrjaMHyK?=
- =?us-ascii?Q?HTnHMVMLW+FXtTJMKdV/WKlUcAZ0ZK2PYKftVzsh5fbk/E4lYv5R2T2dFZYN?=
- =?us-ascii?Q?V3BF9+tp4/rZTXsZFlpsD5etPQbLAV5uFIbTnHOb3ncDNDTkqVNoJ2YfqBvy?=
- =?us-ascii?Q?E/PjHl3T9zxcdevn7slxd5KX6PrKW8fAGEdlKB0QC6MsBsHmNQ/3wnfoFAjL?=
- =?us-ascii?Q?aiqumtGUR4cgQflXmsIgnoUFIZ7cf2B18Zn9IPDsbO1NvpSSpkPxzOVe8PzA?=
- =?us-ascii?Q?iXBnwm1u+w=3D=3D?=
+	=?us-ascii?Q?zYXny70xKHxT0bFmDG6YWBktGuc5hHTlj0WNNLo0T/hndL2jRDm08sekdgS6?=
+ =?us-ascii?Q?qY9RO8+385vCH7fqjwaQQM3rLUR6aunFSVEDrjLH3ZwRZyvkwvcD/+oEm2KN?=
+ =?us-ascii?Q?lqnS088xvpxf3gILWnWX0kHnQimqxTwuHP7p23jFkrd9hjfo/jnQN12+iL0u?=
+ =?us-ascii?Q?lZIYmGo7D3o0l7L5M6w6+rbFJpZWr41g9b6XZ6l++Oye8liQOpFSo1w92F+L?=
+ =?us-ascii?Q?rN39+/jZqk9FfFxp1R3ghCDtmO2di4IMShMkN3LYQJPl3+C2ILv+ShU82hbf?=
+ =?us-ascii?Q?EqXRqMjHaA1eP9zxK1pYetDubMJjvoKnPP2NUFy1Tb759nIvMDLNl4+X/R3K?=
+ =?us-ascii?Q?ZbZxb50AQpTzZL56VNJf2D6WHw/MzBcQl6rRUHIR/nTJqVPEZWYEjnkFPLNz?=
+ =?us-ascii?Q?mU0W7Q8OKZb2grOTmcp91URnD+1JrVv/MsN1luuKQDLUvaxyDY41eDovcBGI?=
+ =?us-ascii?Q?DxsEgzO19+7bmP5XpC1HodQvDBBLFlzUq6AYzSstsn/fGf+HFZoXUP6rq/Dg?=
+ =?us-ascii?Q?3527hzb3xmbCxNSkdnkokUh7OEG1zFxbEdHZJIn5hRhLKn3ZF2wnrtYCZIkf?=
+ =?us-ascii?Q?kJy0wQ89aq3ds4O+ADh1BCLZacFikmt6BvZIspkvaUp9x9Sdx7WnK4+bwsMK?=
+ =?us-ascii?Q?0RXWcw8T0Ra6l6tHvrQrqB57ZX1bwkLDL9tzF0NxcPgSij2ovVUPUrJ3pWLM?=
+ =?us-ascii?Q?S890nM4FTqXPJGud69yx5jK3FQUSh/GxxGoG71tXGGDGPfANKERThBnQliyG?=
+ =?us-ascii?Q?yjfOFM4FkNcOdkYrsJanglDBB5ZwA6q1lxsyIYh0wyW3rqynE8WIasWCB2mP?=
+ =?us-ascii?Q?xPIEQhPH1c4M+fGwwJIBSBouZs34n+MZVJuVzdETViSiZOILhNyHMLHwgMTH?=
+ =?us-ascii?Q?jvFeHjQ31L4gnDDLVbEwZhubz5ATRtikXEq+1fYrF5UgBt6X+wtbSL4CY9FM?=
+ =?us-ascii?Q?dgmrXqJXLp031dyDXpUh/pmWnkRm0WhsDLGiHVm2FKoVEvRjZ9jAh90/AWhk?=
+ =?us-ascii?Q?5uKuz2sMgLbFHkU+wn6iNQeGTVLqg4eAc8DRJHLB0PPUMGzVoWvpcAlqsLtc?=
+ =?us-ascii?Q?35lsCRYvR6Mda3qBTbyZC7PBdYtewCFnPUda/y1ONUs24FOJGEVeR730eNT4?=
+ =?us-ascii?Q?jxk7Nl+osiT0l1hE+lx+sK7bU6Hm9Ug8YjxTmfQr/4caIu6X7PQ9K+6JhWpJ?=
+ =?us-ascii?Q?ecc9NnyqtdeuTE1FK28NPOceEPKvuw+ocPxjz28dKVtD664vR8U0oLIEe3k/?=
+ =?us-ascii?Q?4SiTxr+CDZ4JUMW9Sx3oIN+bOifIUXolfY7TkkI8IbZwxoEO9pwCq87jomW5?=
+ =?us-ascii?Q?9StVFEVHjgYwDI6zGWLOjiyDbJ4vnfZdviwtGlayLkt9wCtMGwsx2tl6CPgW?=
+ =?us-ascii?Q?sXNl8vOa5yPzE2bus2R/zVv64qbsBsuDdmGVDnr5nJeSRDVxxA0n+naPtgP2?=
+ =?us-ascii?Q?7Jlx1ZkNaA7oiyVviBRGbMK1cZ/6lomWLY6XuC2wb4G15j19sN140jNP/ut1?=
+ =?us-ascii?Q?RXgCoRpfaYGz5bIrGboicvfFYjnjaDuh8Uvr4C1z+XVwlC7KjPxPmIVMTIUj?=
+ =?us-ascii?Q?OODquIsp+MhpV/X4kzxhZfMUbanRw2hIrPwA/p9LR03G//pu+QQHkm1M/1F1?=
+ =?us-ascii?Q?wI2J+WGgjuzWu/7riK185f6XuKZ89f/dDAJj8GdYu1nRHwTEIEHr390yVj7i?=
+ =?us-ascii?Q?yex5/9yY7w2NgxJ0daonHPwbiIockjVKY0pckVVbhNI76nwVh/2lMu66Xlng?=
+ =?us-ascii?Q?n+R1D240iQ=3D=3D?=
 X-Exchange-RoutingPolicyChecked: 
-	M+RS/f7qROuHKE35EpuJXRiY2rQiH1qAXmdXdJsTQEp5DzZ8rGnTucXlhKDYYPvOT0ZS0tPKmO6cgLjjAm2w+EVS3d7/y/wpmtyjEK+HibO1Tq8w1+47CUFdx3dzY2bzOYK8cc9UaiOssT4gfu7TPCwVQD4dvgdjsp1JJjbMhtUR9OS8RErQIyAvB9U9CHJBpId1ovklM7Yg2SPCMJ06DMNxs0leUSqWrgNhfQHEYFVVGxohqrhSw7LghmxwkNZGueK7s9CmJlKXtroPzyRIi612yINr2Np1vYxQ271JDzdcxFguvCG6o90b+KpsGf49DDTwXsdr+coHGXg/IQNPyA==
+	LlpzJNUkTQvYsCTfqG92GEim1hsF8tgZ4iB3ZrMrhHuRUflk+1O9sZ6LhREEH21AFX9kdd38/YZrMAakkCpHJX8H5hTZONak5qCzUAJshvZ/OS0TeTTm79BF4sgqOCeFLVrag61Hsi5ozrAooqAqToWzqwXUzZWD6ogZISCG8jjQLUQ8KmuhWmgZqrZ/mjiNQiuxDAgpo1EnvhgjWvXp3NXi5Q38Jw7a91eC5qko6G+63L94WiGRuOgwDmFIxQoteQf1+nMsmAlG3YXrmfkEu6FLBjryKXj7ojSbLcgm1PYBSXO5/iDjxb3GY63E1FUH1Dz5cSj+FMo08PN+hCas4A==
 X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 729a6ad6-bffd-456b-1bef-08dead8c0d7e
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62bfb0d2-60e3-46af-2732-08dead8c089c
 X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5602.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2026 05:30:16.9831
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2026 05:30:08.7729
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1Dwq7wRnn1fbL4EDipmmP5qt+lUemyzBIZ3EAa5J4VA0ZIdBNmC2M1TxWJtIF4L2kg6xvTrH/izckweTLCFcnA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9joVriNaFa/c366dORB4mpYohytLxpA88sMfoyJC2jyFfLOUmXFCSBFM2NuZDnNnnIPkewbJ3XN2zFAsLbo0NA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8657
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA5MDA1NCBTYWx0ZWRfX9yRUt+EzIKHb
- Es5esiO89v25+WQz8zqJWZWgNaXk+zdlQ65sDzG3V6y7erGJLaZ4+9iHHMMAxtZOv+U9qBlO+9j
- 0XbDLu0/mmIPCG00W/fbmjy6kiNrANaoPFf2luU4PFCkL2kf8MU7u/bjZMhv2EmYgeP5hXehx9l
- cA1zbW5IHFY3ouEXZ5rAsmluEkI4O9LDgZzngvOelmmJsxRQezma4YhBKkMIbTN5Rkp/I6H/Lpc
- PbMbf3Bc7Er03EWsKBIJtF/X1nheuX4Dq6rd04ixaQL1xpbpBYYCgE3Vz4JGZbObCU9XgD7uHdD
- YKO5PM7XY/E7JXtavujlOeB0J53vJsts1xYwUmhL/Am37nq+jAxxIeItFC7JG24ykH6553/80jD
- ao3Jecg9xBfn0h9Zcor99illL8GnxIsrVc1E50j6EFqHdrILiCY899mjLeuhj6cQyTRv7KAgugA
- 70voZxN5ZhiV+4jAZJw==
-X-Authority-Analysis: v=2.4 cv=d6nFDxjE c=1 sm=1 tr=0 ts=69fec66b cx=c_pps
- a=9AcDkMntNQwiSFi2uhiI7g==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA5MDA1NCBTYWx0ZWRfX5tlY0uPWktuG
+ NySMTRGmDSmOxU+YURPPGhG0IGn9YIvbqfv5VbqpGoXg8fiMdEYKHykMtyIMpDQJ5OqfDroFf2Q
+ yyqS4J0TB47uBXU8HD6i6DsoVNjeVLkWmpOa5GIPxWPUlvxFQX1eoW9o6T+YtUgMrvsCHB40XST
+ ckF0q3Mbf2JFw6TI00TqUsDLE+I3R/y6bWkDNArLMKS/ylgkgC5afQWCAWp0VpxXiko++EDgDsU
+ 6GlP2um8r9N1EkCkCdgwprO8VMOJn1f8BZ7YjuQseLwQOZpDKGIP3iQMuWw/22zrzKXdilE7Jft
+ 5mCBwKZp6r/tDgzUy81lKDos+5Y+aqJX/Car8E6/lPq5w9eBpgHPkhcj7sJEBQvJEkjvUdP03Rt
+ j5Ee6dL0tRovuToM9sIOWb9nx3edGRUSOPouYCAivKJpT+2cfUQH4KuDoKQq7rSomUtWYp1Ptzi
+ uNaOEmah0v/rmwLixBg==
+X-Authority-Analysis: v=2.4 cv=d6nFDxjE c=1 sm=1 tr=0 ts=69fec66a cx=c_pps
+ a=hdF+edV3qND9tYm1xB2jJw==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
  a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
  a=xqWC_Br6kY4A:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=bi6dqmuHe4P4UrxVR6um:22 a=fTW__CHxibyLmBMfj2wP:22 a=3tcz3bTJAAAA:8
- a=iGHA9ds3AAAA:8 a=t7CeM3EgAAAA:8 a=NEAV23lmAAAA:8 a=r6VMbn1M5JNI-OT2GTcA:9
- a=4EbjBm0RLgFgoQzmu6QD:22 a=nM-MV4yxpKKO9kiQg6Ot:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-GUID: KzaIvXSEAkoMVjWMOyFTlTS8QdipzRmd
-X-Proofpoint-ORIG-GUID: TV5Aq-qsn9J42Hx2Fq8RJ9jx5nWR5FvO
+ a=bi6dqmuHe4P4UrxVR6um:22 a=fTW__CHxibyLmBMfj2wP:22 a=t7CeM3EgAAAA:8
+ a=rVcF9mjB7NWXllDnQBEA:9 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: ylF2_WiDQRFQ1Gc0OnbqdKNlp2C3MYLn
+X-Proofpoint-ORIG-GUID: wR4qg7Czalu_xi2b7bWgohReO0Hfu0RN
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-05-09_02,2026-05-08_02,2025-10-01_01
@@ -149,114 +145,46 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Sat, 09 May 2026 05:30:29 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19483
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19482
 
 From: Chen Qi <Qi.Chen@windriver.com>
 
-Add bitbake selftest case for fitler_regex parameter in
-latest_versionstring to ensure no regression.
+We want to be able to do stable version upgrade for recipes. For
+example, 1.0.0 -> 1.0.1 instead of 1.0.0 -> 1.1.0.
+
+To to this, we need an extra paramter to latest_versionstring
+so that we are able to filter out the versions we need. Using regex
+has the advantage of adapting to different version schemes.
 
 Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 ---
- lib/bb/tests/fetch.py | 78 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 77 insertions(+), 1 deletion(-)
+ lib/bb/fetch2/git.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 86dd92992..2ee1a883f 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -1512,7 +1512,24 @@ class FetchLatestVersionTest(FetcherTest):
-         # basic example; version pattern "A.B.C+cargo-D.E.F"
-         ("cargo-c", "crate://crates.io/cargo-c/0.9.18+cargo-0.69")
-             : "0.9.29"
--   }
-+    }
-+
-+    test_git_stable_uris = {
-+        ("dtc", "git://git.yoctoproject.org/bbfetchtests-dtc.git;branch=master;protocol=https", "65cc4d2748a2c2e6f27f1cf39e07a5dbabd80ebf", "", r"1\.4\.\d")
-+            : ("1.4.0", "1.5.0"),
-+        ("systemd", "git://github.com/systemd/systemd.git;protocol=https;branch=stable/v259-stable", "b3d8fc43e9cb531d958c17ef2cd93b374bc14e8a", "", r"259\.\d")
-+            : ("259.5", "260")
-+    }
-+
-+    test_wget_stable_uris = {
-+        ("openssh", "https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-10.2p1.tar.gz", "10.2p1", "", "", r"10\.2p\d")
-+            : ("10.2p1", "10.3")
-+    }
-+
-+    test_crate_stable_uris = {
-+        ("cargo-c", "crate://crates.io/cargo-c/0.9.18+cargo-0.69", r"0\.9\.\d")
-+            : ("0.9.29", "0.10.0")
-+    }
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 10eb63b20..a3a26a46c 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -976,7 +976,7 @@ class Git(FetchMethod):
+         raise bb.fetch2.FetchError("Unable to resolve '%s' in upstream git repository in git ls-remote output for %s" % \
+             (ud.unresolvedrev, ud.host+ud.path))
  
-     @skipIfNoNetwork()
-     def test_git_latest_versionstring(self):
-@@ -1569,6 +1586,65 @@ class FetchLatestVersionTest(FetcherTest):
-                 r = bb.utils.vercmp_string(v, verstring)
-                 self.assertTrue(r == -1 or r == 0, msg="Package %s, version: %s <= %s" % (k[0], v, verstring))
+-    def latest_versionstring(self, ud, d):
++    def latest_versionstring(self, ud, d, filter_regex=None):
+         """
+         Compute the latest release name like "x.y.x" in "x.y.x+gitHASH"
+         by searching through the tags output of ls-remote, comparing
+@@ -1016,6 +1016,10 @@ class Git(FetchMethod):
  
-+    @skipIfNoNetwork()
-+    def test_git_latest_versionstring_stable(self):
-+        for k, v in self.test_git_stable_uris.items():
-+            with self.subTest(pn=k[0]):
-+                self.d.setVar("PN", k[0])
-+                self.d.setVar("SRCREV", k[2])
-+                self.d.setVar("UPSTREAM_CHECK_GITTAGREGEX", k[3])
-+                filter_regex = k[4]
-+                ud = bb.fetch2.FetchData(k[1], self.d)
-+                pupver= ud.method.latest_versionstring(ud, self.d, filter_regex=filter_regex)
-+                verstring = pupver[0]
-+                self.assertTrue(verstring, msg="Could not find upstream version for %s" % k[0])
-+                v_less_or_equal = v[0]
-+                v_larger = v[1]
-+                r = bb.utils.vercmp_string(v_less_or_equal, verstring)
-+                self.assertTrue(r == -1 or r == 0, msg="Package %s, version: %s < %s" % (k[0], v_less_or_equal, verstring))
-+                r = bb.utils.vercmp_string(verstring, v_larger)
-+                self.assertTrue(r == -1, msg="Package %s, version: %s <= %s" % (k[0], v_larger, verstring))
+             pver = m.group('pver').replace("_", ".")
+ 
++            if filter_regex:
++                if not re.match(filter_regex, pver):
++                    continue
 +
-+    @skipIfNoNetwork()
-+    def test_wget_latest_versionstring_stable(self):
-+        for k, v in self.test_wget_stable_uris.items():
-+            with self.subTest(pn=k[0]):
-+                self.d.setVar("PN", k[0])
-+                url = k[1]
-+                self.d.setVar("PV", k[2])
-+                if k[3]:
-+                    self.d.setVar("UPSTREAM_CHECK_URI", k[3])
-+                if k[4]:
-+                    self.d.setVar("UPSTREAM_CHECK_REGEX", k[4])
-+                filter_regex = k[5]
-+                ud = bb.fetch2.FetchData(url, self.d)
-+                pupver= ud.method.latest_versionstring(ud, self.d, filter_regex=filter_regex)
-+                verstring = pupver[0]
-+                self.assertTrue(verstring, msg="Could not find upstream version for %s" % k[0])
-+                v_less_or_equal = v[0]
-+                v_larger = v[1]
-+                r = bb.utils.vercmp_string(v_less_or_equal, verstring)
-+                self.assertTrue(r == -1 or r == 0, msg="Package %s, version: %s < %s" % (k[0], v_less_or_equal, verstring))
-+                r = bb.utils.vercmp_string(verstring, v_larger)
-+                self.assertTrue(r == -1, msg="Package %s, version: %s <= %s" % (k[0], v_larger, verstring))
-+
-+    @skipIfNoNetwork()
-+    def test_crate_latest_versionstring(self):
-+        for k, v in self.test_crate_stable_uris.items():
-+            with self.subTest(pn=k[0]):
-+                self.d.setVar("PN", k[0])
-+                ud = bb.fetch2.FetchData(k[1], self.d)
-+                filter_regex = k[2]
-+                pupver = ud.method.latest_versionstring(ud, self.d, filter_regex=filter_regex)
-+                verstring = pupver[0]
-+                self.assertTrue(verstring, msg="Could not find upstream version for %s" % k[0])
-+                v_less_or_equal = v[0]
-+                v_larger = v[1]
-+                r = bb.utils.vercmp_string(v_less_or_equal, verstring)
-+                self.assertTrue(r == -1 or r == 0, msg="Package %s, version: %s < %s" % (k[0], v_less_or_equal, verstring))
-+                r = bb.utils.vercmp_string(verstring, v_larger)
-+                self.assertTrue(r == -1, msg="Package %s, version: %s <= %s" % (k[0], v_larger, verstring))
-+
- class FetchCheckStatusTest(FetcherTest):
-     test_wget_uris = ["https://downloads.yoctoproject.org/releases/sato/sato-engine-0.1.tar.gz",
-                       "https://downloads.yoctoproject.org/releases/sato/sato-engine-0.2.tar.gz",
+             if verstring and bb.utils.vercmp(("0", pver, ""), ("0", verstring, "")) < 0:
+                 continue
+ 
 -- 
 2.34.1
 
