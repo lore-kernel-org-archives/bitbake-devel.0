@@ -1,474 +1,236 @@
-Return-Path: <paul@pbarker.dev>
+Return-Path: <Qi.Chen@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3B7CD3436
-	for <webhook@archiver.kernel.org>; Fri,  8 May 2026 14:13:34 +0000 (UTC)
-Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.14695.1778249611232356246
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD50CD3447
+	for <webhook@archiver.kernel.org>; Sat,  9 May 2026 05:30:19 +0000 (UTC)
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.6788.1778304619438913563
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 08 May 2026 07:13:31 -0700
+ Fri, 08 May 2026 22:30:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@pbarker.dev header.s=fm1 header.b=F3Y3APJ6;
- dkim=pass header.i=@messagingengine.com header.s=fm3 header.b=nl0yqKk1;
- spf=pass (domain: pbarker.dev, ip: 202.12.124.153, mailfrom: paul@pbarker.dev)
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 4101E7A0101;
-	Fri,  8 May 2026 10:13:30 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Fri, 08 May 2026 10:13:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
-	cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1778249610; x=1778336010; bh=n4nvoSy2wh
-	16ueqaSPoyJWYAfBsodORouORiSZEaMcM=; b=F3Y3APJ6cALo/BLg7qkjshwD13
-	Rb8kbjKBSsNqBrXVu3CiUoWue8yCiUDFN7FyyQo5Cndte8QHo89Sy6e6TTLVxvd2
-	/Hm6/PMcNDTYzY3mZXiBbgj4SS+cgI5h+3PeRBjWjO9fydsSgKtkaisXHhl1oWqx
-	3O865AGx/NQ7LF5sOjQgnznUdNfPQghko4cjal3W9Eb3DakUWCaJ4OXibiJ9SIND
-	VV2TDmutDMNhXGWyRgmQE8EeZJnYo/KLiPW+WcM0gw8WAze4vRfgGwAU6kDM/qQv
-	18dZKS/GHvk+zj1cR0sPoDFoKak2oIoCtL34KvyjSa7k+91wB0CNBkrRkFCw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1778249610; x=1778336010; bh=n4nvoSy2wh16ueqaSPoyJWYAfBsodORouOR
-	iSZEaMcM=; b=nl0yqKk18d7Tpk5qnmuQurLRY4PjA7V/sHTGXR+H4A7rdljfC8x
-	CtkfwhC+HnQESehvcO0FjGR6N+oZy5J+hQNF2nhLonyTvBBu1IuOArwjJiWmIqfe
-	pnLyAf5EdsSscxac8X3f7McbYwAuBZpMX+VVzVHCkXZ9W7J/vb2DxWE/XtL3x9C7
-	36bf8iFgvCoo4ndb6B5Qln8tsoRf8gMFDyyvBf2YUB7hDk/THV0QsidxGE8Hjb5o
-	vh+7H5fUJKpgcmsNVeyUfy7aa3s3XjdB5qV3r1EwbKpJ9Ijde1wuihFyh+M2FUhW
-	rGjnJFrLmjkHHzCn2+Fz5whbBfeHdHfMtgQ==
-X-ME-Sender: <xms:ie_9aYjs4fLuYtn_aCgK_kHIXKY0d3WIVrygO_npCXzEOpHcM8h-xQ>
-    <xme:ie_9aXCFpzrFf-Ozqr1-dmOt4VUHJUmJsAz7978okYrgd1n3sTKAoXC6PxWEOUimD
-    57NySn23eKowrHm8zm7F11PfLMvgQ1uocur0CBnmL2cLmTrrh1kmCk>
-X-ME-Received: <xmr:ie_9adtmv9Jr7cZxDricrS_h-Q91il1IMzDoU-x9-HVRk6icKItd_T_qm0S2dpLRVd1UUykt6CXz7xqa_RRi5DV_PczksZvE_8yt_US4Bsfh>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdduuddtheeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucenucfjughrpefkuffhvfffjghftggfggesghdtreertd
-    erjeenucfhrhhomheprfgruhhluceurghrkhgvrhcuoehprghulhesphgsrghrkhgvrhdr
-    uggvvheqnecuggftrfgrthhtvghrnhepveegieelgfdvuedttedtkeduueejffetueehte
-    duudetudekffduuefgveeijeejnecuffhomhgrihhnpehophgvnhgvmhgsvgguuggvugdr
-    ohhrghdphhhtthhpphgrthhhfihouhhlughothhhvghrfihishgvrhgrtggvrghgrghinh
-    hsthhthhgvfhhilhgvohhrihhguhgurdhithdphihotghtohhprhhojhgvtghtrdhorhhg
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepphgruh
-    hlsehpsggrrhhkvghrrdguvghvpdhnsggprhgtphhtthhopedvpdhmohguvgepshhmthhp
-    ohhuthdprhgtphhtthhopehjhhhonhgrthgrrdhpohhmrgesghhmrghilhdrtghomhdprh
-    gtphhtthhopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmhgsvggu
-    uggvugdrohhrgh
-X-ME-Proxy: <xmx:ie_9aUbWpZVb6yXaQQprZbpgrj96mIDjSy2I3RitsBepYQ4biH1yIQ>
-    <xmx:ie_9aYWdbdzHedvBUmCZpEHmI1Ok2QGhmK3MNVoHzEUtPZ95iEjqaw>
-    <xmx:ie_9aQ57ZYDtEQmCghstY1kOoSWJKozq2xgW4CGjIHguNGSEc64UPw>
-    <xmx:ie_9abirQEj1SXWEJF7Us_GBfX_LlF4yHMnk2SqSvG5x16ZqEKk9Aw>
-    <xmx:iu_9afzOFa58NMQk2da6u8PbCvifOGxccketb0rSJFSWUH5jhb7rd56K>
-Feedback-ID: i51494658:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 8 May 2026 10:13:29 -0400 (EDT)
-Message-ID: <162413fca4aa8fa53472aa6ba1e12b56c1a5c5c9.camel@pbarker.dev>
-Subject: Re: [bitbake-devel] [PATCH] fetch2/local: verify checksums for
- file:// urls
-From: Paul Barker <paul@pbarker.dev>
-To: Jhonata.poma@gmail.com, bitbake-devel@lists.openembedded.org
-Date: Fri, 08 May 2026 15:13:26 +0100
-In-Reply-To: <20260430-b4-yocto-9993-v1-1-a54d842cd0fd@gmail.com>
-References: <20260430-b4-yocto-9993-v1-1-a54d842cd0fd@gmail.com>
-Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
- keydata=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
- LUewj8JVy0aJsGTwI4invl
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-D2Hx8J2P0wmlyNuI/UGR"
-User-Agent: Evolution 3.52.3-0ubuntu1.1 
+ dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=suQqM+Jr;
+ spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=95895a8adf=qi.chen@windriver.com)
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6494jIVM2286826
+	for <bitbake-devel@lists.openembedded.org>; Sat, 9 May 2026 05:30:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=cc:content-transfer-encoding:content-type:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to; s=
+	PPS06212021; bh=3Msu7VGPBNSik7DqiP9QgBDdmBdMMdDKggXjzbsBbIs=; b=
+	suQqM+JrL5tR9HxRrmkrVvcg+NHcfoFiMNpBtnp5rIOlNn2a6LQhShzdox+P8FCb
+	uYe9XtRvMTY83ptQW+H9WugOMQflBU01pSFen15fR0PEz4MCiCQQYE+yo5z9W8lK
+	o2dKpzp1EIvsQmGPUWhAW2S/BH4WIJlgRaY7SnF2xqsvRSMUEBwANaFeSiNc7VZj
+	2JxR3jEYudetTcfksuvZKlhCAx9x04h/wrTh/e4v1YB2iy4cnACwoXfpLHzIQWi+
+	XeejP2CKFG9n2kykssNQkpcDpFYXrhJeNw0wLfpYlcNein7bjLJ7NoATSoLqC3D5
+	cOprA1UaIg/fwlcZi6v6+w==
+Received: from ch5pr02cu005.outbound.protection.outlook.com (mail-northcentralusazon11012068.outbound.protection.outlook.com [40.107.200.68])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4e1uw6g3xe-2
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Sat, 09 May 2026 05:30:18 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FRqe9ZhuSlMSCCFQrP9sGw9ZakyA27+ACWelk2POMn+VpX/WOF1dxxpU3rrch2O5nIR6QKMKNmIvJ+rsEtgvtxxJL4u0xk+D2cPaf9JNvgwcAP8O4cceuxX8Sim3sly6RoEwc04c2SFgCLdvqzNG2JfGE5PXheuBgFBiHam+TNkvqlph823GEFAjlzX7Y1BwDNYopX0q/4P3RbFLTxqokQ0AVo+AJcursEdi9oCymfushSQdiGV8OmWvYQCSdYZciwMxUt6SRxSFwPrYmF3HTr3TwJVUKZlNM3GnQdbKX5zoBgNrJiG9oXFkvUTWAB4ue/E33cKZDulN2YwicrhGWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3Msu7VGPBNSik7DqiP9QgBDdmBdMMdDKggXjzbsBbIs=;
+ b=CB32mgchLwbmgYVMQ0BAvCIrvW6tEIxVg1xojfDGYv5wnF//Qep/0BFxd+MLuK6sy5THEBBjGQ5DegHlVKch6p2g5hKMqcR9gMlGfBDOV+f4dDsr5cAwPLkW/aEoHDJiPWO9IfKiN2Ae7JLrbszKyuGqwEi80kfV2HPmI+XOMlNiRE+E6/vEF/YA8Yb4JUKbvqQiraiZ7Kp0JoAxz7jKInwB/5VOIgrUvYYv94jSgrcbyXmx2mHJstvJ5J+ZYARlHN9FoQlv4ehFIlTGae7UZk4dV4Olwky+/KcNwcjtAGCkvkchXPts7DFcGhidn6r74ptXVCHYIg3wi6omVKjDwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from CO6PR11MB5602.namprd11.prod.outlook.com (2603:10b6:303:13a::5)
+ by CH3PR11MB8657.namprd11.prod.outlook.com (2603:10b6:610:1ca::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.20; Sat, 9 May
+ 2026 05:30:11 +0000
+Received: from CO6PR11MB5602.namprd11.prod.outlook.com
+ ([fe80::5ad6:8f90:b01d:2c62]) by CO6PR11MB5602.namprd11.prod.outlook.com
+ ([fe80::5ad6:8f90:b01d:2c62%3]) with mapi id 15.20.9891.019; Sat, 9 May 2026
+ 05:30:11 +0000
+From: Qi.Chen@windriver.com
+To: bitbake-devel@lists.openembedded.org
+Cc: alex.kanavin@gmail.com, randy.macleod@windriver.com
+Subject: [bitbake-devel][PATCH V3 2/5] fetch2/wget.py: add filter_regex parameter to latest_versionstring
+Date: Sat,  9 May 2026 13:29:47 +0800
+Message-Id: <20260509052950.1565384-2-Qi.Chen@windriver.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260509052950.1565384-1-Qi.Chen@windriver.com>
+References: <20260509052950.1565384-1-Qi.Chen@windriver.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYCP286CA0087.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:2b3::18) To CO6PR11MB5602.namprd11.prod.outlook.com
+ (2603:10b6:303:13a::5)
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO6PR11MB5602:EE_|CH3PR11MB8657:EE_
+X-MS-Office365-Filtering-Correlation-Id: 48881d46-fbed-4392-d35d-08dead8c09d3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014|56012099003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info: 
+	UPvnP8qmBty6hxcA20vupAQjwRgSk53JW5padKdz8z1SWNJRbO8a1k2E7A6yY0V1c9XbfHf485XaepyIjGE7D6Ik5hTz+TSrsU3jFY+nVkWd0Mcn2bTDZjYbvZpzIMAonNCLeJcnKGwX+vrzwJ+7+426hBrdxDTBZqgJ7b1yFUc3dF2UzYnXmXhHhTAG/4JVGal/+dMVv7jOLKqu4vwmEV6AOwBDwtQsHpR5fhaZ1ztJhaommjarBo3ZFTuE7SeTXjbS2d7XzBdONxlXjYnDZmHkZUaHDF9Z9DiNszS3lBFql3l3uIVTpnxnAVgj10nsRHN7MxXDhTQhwKJ+t/AP7+Yds8r/W5Q1Q8Lk/y1BgHaRzgMN3TWZWQv42BxcLQQ9ZR9NhESqSE/v2+cH51wVtr6IPhDeG2QtupX8rJLHMAp7YlGIXnHolJ4ETuufzMb3BVOxA8oLrUH/sG1ggjrTofo1kXmRzi1oSxXC+5dB39XYiGE++XQNMqNL828R2KRiFevl4w3Nte+ntQZ+WGV2oK/ThXyzAyjL0AiBKCymA8vA+OF/G52mqQNG3KYwNaCaJid417ifOVz6UMaf+kpMLiqotYFXnESiSXHKh6awFIRfGIYUAe5VSVEseQBoGlMlZQ4TWzQXqr7sj1p87Nap9VVZWZWyiXNyvJ3fNS9wxMuqywZ6r14Bsu5kzHIsz0obEyn4p7uNOba08rOEINyPOS3+JrOKnXYjbZejPPY+XlkxlfK29wF6wrCcliu6+Xm8
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5602.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?t514guAR1waX/uldXduWsLsWjfyXTrFFkxlDCYpB70aDG8sks+msxJa7BCHs?=
+ =?us-ascii?Q?CrYUVTCHlpR8cKfZQxIOuqv0qs4TMdD7oHyVaIFVoBwJxgAusrpYCAWLXpmi?=
+ =?us-ascii?Q?9F76oWCViKberYyQ29v9BmsimRw9iQkOTqdPqbUU51MCBVTKEamAyPEvmg/A?=
+ =?us-ascii?Q?KLpCevpiDgJThOGUOOEFCiuNgbwuoXkI1ClG8b+wcMZPCccLaztMUZmmLLe7?=
+ =?us-ascii?Q?AgkR9jxNnxeQc6mOh6W2hwy0llPbcKU9sLRPhf22sMfnFXaJNCpP0qn2aePO?=
+ =?us-ascii?Q?9S01hDSq7DIJVMG1Tcap7nWspDOb73ZTkIPXrt/PAQ737tNSK5hF+HQrnpyo?=
+ =?us-ascii?Q?OfIEoUNd+ZSphlukSV2thBAfOdyZVGMWaZwZikvpg5XpY5bP3jctruKkb4Sk?=
+ =?us-ascii?Q?z4Elcc8335SRLvtmmUb3rWhNMGONk296BCqgd3C2M+Sa6Mo8FPUI39l2O75v?=
+ =?us-ascii?Q?34c5SoD3UuFvQuC0Q2uZD0xiuMuQCJSYf4B7j8d1c+UMwrsVIrYorw2OPeAi?=
+ =?us-ascii?Q?kyM6Gu7mKxDGZ5T1KRRm06GnowR8DqCWjJO1KBkQSl/bT2eMSXFY+AVLFdeG?=
+ =?us-ascii?Q?iwPuG1ksqtDYyRTkKfQgpXPMak68vJvv80/BbmdzhEo9/Pip1oej1SvlnaHi?=
+ =?us-ascii?Q?IWaiSS9WAEHC1rFouuoHX+/5D5t9RU60GUDGocPPIWmxx6fNpcO8Y9nIXUtN?=
+ =?us-ascii?Q?be1rgUKpURiyhOuVDuOmewX806Ifc28CT2bbKpup6tqls6UujityQAztzj7M?=
+ =?us-ascii?Q?9O0xbN48P6Ai8U5+4uQPdfeVA+gcXCnTnLs2huf6p1rdt+YMvTsMpwMJu7NM?=
+ =?us-ascii?Q?eJXcMmMhaQEt4MTYMyMDnar0HfSdOHn2b0csfDq5E71bNg+nW+y04zQwpWzd?=
+ =?us-ascii?Q?WwiDLmJUlmRUurVxcs5+RGKXnXvu4xBCODoWLljafKi4fLOALDy2nnUdisKz?=
+ =?us-ascii?Q?dUHIrmUDpDxKYKZovM6Wima/UH7M6KjlMkrxBRD5OQizkcQp3Dte99dShQHh?=
+ =?us-ascii?Q?7Iuf3MU/XDz8RguEOAe/2IspKlg7AjX8KonhhhrU6ysgzasyE0NAZ0qu/UNH?=
+ =?us-ascii?Q?+GwpmSQ9HolTbWop5PvWUfjskEo4DTT59OMb2LnQP7uS8AVbCVtYzvtKGt7o?=
+ =?us-ascii?Q?gaElYTCC3M1tQG/uaK5tcvzcugJb1I63wPftzzYE4KHm4VHxnuLiZpQgTipv?=
+ =?us-ascii?Q?HZsSB7pvnorBkmLt/5sriNfnSD7Dor4mIiyZI5surQ8fKScarFs/olQQsg4D?=
+ =?us-ascii?Q?97P0QliQW9xz1qoF9f4+PuXXNrUZ+2hFF6FGsMfNQifF4BDaccOdRtqQ6jpN?=
+ =?us-ascii?Q?r5O8IL+Ph2u3d24KP90CAA/Gd6BL6uRXlTUjqxZ6il2VpAqpLVB02Ke2YWTx?=
+ =?us-ascii?Q?FyjJi5KgybQ8iPYbEXYoCjBgCGpH8ifq4m41HU/2rFmGVly5kpT6R+S4iCmQ?=
+ =?us-ascii?Q?7MSA1xDgeNVuCaJpNFnGSVIh8mcgjvv4PG9VktDGAVD5QPqfjsSBq5CBxoHI?=
+ =?us-ascii?Q?B/LjgNuAir0KqRiQcAw8rd/4FFlRsUXuvJaBYVQivEzIuRVXexAsXEBn2EXQ?=
+ =?us-ascii?Q?Iusounxs7hSghBwysVGiTA0D8pXx2OQSYm+eE4UBFdlJeSTLxjTuwcTvEfVn?=
+ =?us-ascii?Q?BqnhzqAIrs9B7xzoje8vXIfhz+2K11rAU7w2Szp2jZSm/MOrxabs0q50HARW?=
+ =?us-ascii?Q?ZZdAEoHcVUDc9+7BvTPy2ARxpUetFARIGvofyDOLoEISVT6fJ+YG4URAnGI2?=
+ =?us-ascii?Q?1PoWxMH38Q=3D=3D?=
+X-Exchange-RoutingPolicyChecked: 
+	iuFfSPOyPmtWOkqreNQO8smH9jCEByyhqgilHl4GFVLm3lv7jDWsqr65cDvDJ3att+820z53aLkGGTiiNMCvqznA2kT5q4GdNowB/pEEapMpvCCgpdTOwtZm4t264kHRFT7KnqCFKASr6HwjW/wD8qleDBeer+JzGz8lNnwrtEYJDMIcd8Fhjf+dM7WM18EgZdVt/0k9jIZ3bRvi59wuapXUGxKGKQ9UefiYP7QsIuilFP3Gb6ffCOW0/WEloGs8zufDfwmvnzDK54J1LAuZsnjhbhSGD7oyuNJwRRFS2LdSEknIa7N6SxML7vzSr7I1dEi0QFdBbS3fY41sISqa5g==
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48881d46-fbed-4392-d35d-08dead8c09d3
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5602.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2026 05:30:10.9892
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: msqkTJTyQD7EiYqj0+WgxlgE5PWug6id5HCEIbmQc42YW3t/DRt54+BtnhK+RSKIn2MIKLAPSNjlTzbl8UZ56w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8657
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA5MDA1NCBTYWx0ZWRfX2OW0kjjA+OzQ
+ nCXaLiZ/fW7BAaTv9uMVJ32oPlbYIVXDr/+HYSxmUQoBbpq8bUgoWKBZnOD9MNdZ/bYog1Xlon9
+ 1zT40xiHr4x7td1mb6KmXsjXQTTiWhDWYDL5aEbNBxAl0eROJyyyt2c7i8JgHCUd/Q5skWHH2hx
+ CiAD/+4KNFo1aHDT4T8HdKoAWCJNNkX0QceVzM9q/zKaltdVmXTOs+q+RX0rsE8dpMP4sYSMg9k
+ gJctBF00gH3iAKCV9Eu7y3SmYx0R73IeOFGX4d892yMTmbSy1PiLxLwlKgw1gi2yns2xb770A2z
+ Tz33z2pqqBG/muVR21IFE8KNnvHLW0BfqdT8AWHKTy3rLH/oHFojj3dhajlQsl4Y1DGpRFJuQDz
+ xacEMtX9QEUE2QR7UNjouHhoLkY/oI4vY3FLCivVKwO9YupHGE8zMkgq3iaKubxmOOdhVUfqGlg
+ FOvcIiY3TzaOX8N4pJA==
+X-Authority-Analysis: v=2.4 cv=d6nFDxjE c=1 sm=1 tr=0 ts=69fec66a cx=c_pps
+ a=hdF+edV3qND9tYm1xB2jJw==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
+ a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
+ a=xqWC_Br6kY4A:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=bi6dqmuHe4P4UrxVR6um:22 a=fTW__CHxibyLmBMfj2wP:22 a=t7CeM3EgAAAA:8
+ a=zn5JUfJC_tOmDknYn7cA:9 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: u-d-KXjInsLyygdKH_REEo7HAN0hOrRn
+X-Proofpoint-ORIG-GUID: vhi1GW1ZzLdYUcdwARo3iMbTIBp5A3mP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-09_02,2026-05-08_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 suspectscore=0
+ spamscore=0 adultscore=0 clxscore=1015 phishscore=0 malwarescore=0
+ bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.22.0-2604200000
+ definitions=main-2605090054
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 08 May 2026 14:13:34 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19478
+ <bitbake-devel@lists.openembedded.org>; Sat, 09 May 2026 05:30:19 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19480
 
+From: Chen Qi <Qi.Chen@windriver.com>
 
---=-D2Hx8J2P0wmlyNuI/UGR
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+We want to be able to do stable version upgrade for recipes. For
+example, 1.0.0 -> 1.0.1 instead of 1.0.0 -> 1.1.0.
 
-On Thu, 2026-04-30 at 16:25 +0200, Jhonata Poma-Hansen via
-lists.openembedded.org wrote:
-> Local.urldata_init unconditionally cleared ud.needdonestamp, which
-> short-circuited the donestamp + verify_checksum cycle for every
-> file:// url. As a result, a checksum supplied as a url parameter
-> (for instance UNINATIVE_CHECKSUM expanded into the uninative
-> tarball's file:// url) was never compared against the file's
-> actual contents - the fetcher silently used whatever bytes were
-> at the path.
->=20
-> Keep needdonestamp at the FetchData default (True) when the url
-> carries any of the known checksum parameters, so the standard
-> verify_checksum flow runs and a mismatch raises ChecksumError just
-> like it does for http:// and friends. The check uses CHECKSUM_LIST
-> and handles both the bare ;<algo>sum=3D form and the named
-> ;name=3Dfoo;foo.<algo>sum=3D form that recipes (and UNINATIVE_CHECKSUM)
-> actually use. When no checksum is supplied (the common case for
-> file:// recipe patches) needdonestamp stays False and behavior is
-> unchanged - no .done / .lock files appear in DL_DIR for those urls.
->=20
-> For checksummed file:// urls, the donestamp + lockfile do land in
-> DL_DIR (keyed by basename, alongside the existing http(s) state
-> for the same basename); this is intentional and matches how every
-> other fetcher tracks verified content.
->=20
-> An earlier fix (b8b14d975a25 "fetch2: Ensure we don't have file
-> downloads overwriting each other", 2017) added a short-circuit at
-> the top of verify_donestamp() so that when origud is a file:// url
-> with needdonestamp=3DFalse, the function returns True early. That
-> short-circuit was protecting the SSTATE_MIRRORS case where a
-> file:// url is mapped to an http:// mirror and the http path would
-> otherwise race against the file:// origud. It still does the
-> right thing under this change: the only file:// origud whose
-> needdonestamp now flips to True is one that carries an explicit
-> checksum parameter, and in that case we actively want the mirror
-> to run verify_donestamp(), not bypass it. The unchecksummed
-> file:// origud case (the original SSTATE_MIRRORS scenario) keeps
-> needdonestamp=3DFalse and the 2017 short-circuit fires unchanged.
->=20
-> Two related changes in fetch2 are worth pointing at:
->=20
-> * commit 6424f4b7e9c1 ("fetch2: Ensure mirror tarballs don't enforce
->   checksum", 2022) marks SSTATE_MIRRORS targets with
->   newud.ignore_checksums =3D True. Its commit message states "local
->   file fetches now validate checksums" - this fix is what finally
->   makes that statement true. The ignore_checksums flag also acts as
->   the safety hatch that prevents flipping needdonestamp on for
->   checksummed file:// urls from propagating verification onto
->   mirror-of-git-repo tarballs (whose checksums by design do not
->   match).
-> * commit 4b8de2e7d126 ("wget: Avoid bad checksum race issues",
->   2022) established the don't-mutate-on-mismatch doctrine for
->   downloaded artifacts via the localpath=3D and fatal_nochecksum=3D
->   parameters. The rename_bad_checksum() early-return below applies
->   the same doctrine to a fetcher whose 'localpath' is the user's
->   source tree.
->=20
-> A checksum mismatch on a file:// url must not mutate the user's
-> source tree the way it does for downloaded artifacts in DL_DIR.
-> The standard error path renames <localpath> to
-> <localpath>_bad-checksum_<sha> via rename_bad_checksum(), which
-> for file:// would rename a recipe-shipped patch or an absolute
-> path the user had supplied. Skip that rename inside
-> rename_bad_checksum() when ud.type =3D=3D 'file' so all four call
-> sites stay consistent and a ChecksumError surfaces cleanly without
-> on-disk side effects.
->=20
-> Add unit tests in FetcherLocalTest covering: the no-checksum hot
-> path keeps needdonestamp=3DFalse (no regression for recipe patches);
-> matching and mismatching sha256 and md5 checksums; the named
-> ;name=3Dfoo;foo.sha256sum=3D form; and that a directory url with a
-> checksum is silently ignored (supports_checksum() is False for
-> directories). The mismatch tests assert that the source file is
-> not renamed.
->=20
-> Link: https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D9993
-> [YOCTO #9993]
->=20
-> Signed-off-by: Jhonata Poma-Hansen <jhonata.poma@gmail.com>
+To to this, we need an extra paramter to latest_versionstring
+so that we are able to filter out the versions we need. Using regex
+has the advantage of adapting to different version schemes.
 
-Hi,
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ lib/bb/fetch2/wget.py | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-The commit message here is incredibly verbose, to the point that it is
-difficult to read. While being verbose, it fails to mention that
-UNINATIVE_URL uses 'https://' in our metadata and so the issue only
-arises when you replace this with a local 'file://' URL (this is
-mentioned in the description of issue #9993).
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index 6ac4306c0..6e186e1ca 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -492,7 +492,7 @@ class Wget(FetchMethod):
+ 
+         return fetchresult
+ 
+-    def _check_latest_version(self, url, package, package_regex, current_version, ud, d):
++    def _check_latest_version(self, url, package, package_regex, current_version, ud, d, filter_regex=None):
+         """
+         Return the latest version of a package inside a given directory path
+         If error or no version, return ""
+@@ -515,6 +515,11 @@ class Wget(FetchMethod):
+                 newver = self._parse_path(package_regex, str(line))
+ 
+             if newver:
++                if filter_regex:
++                    # filter_regex is derived from PV, and uses . as separator
++                    # while upstream may be using _ as separator
++                    if not re.match(filter_regex, re.sub('_', '.', newver[1])):
++                        continue
+                 bb.debug(3, "Upstream version found: %s" % newver[1])
+                 if valid == 0:
+                     version = newver
+@@ -532,7 +537,7 @@ class Wget(FetchMethod):
+ 
+         return ""
+ 
+-    def _check_latest_version_by_dir(self, dirver, package, package_regex, current_version, ud, d):
++    def _check_latest_version_by_dir(self, dirver, package, package_regex, current_version, ud, d, filter_regex=None):
+         """
+         Scan every directory in order to get upstream version.
+         """
+@@ -576,7 +581,7 @@ class Wget(FetchMethod):
+                         ud.user, ud.pswd, {}])
+ 
+                     pupver = self._check_latest_version(uri,
+-                            package, package_regex, current_version, ud, d)
++                            package, package_regex, current_version, ud, d, filter_regex)
+                     if pupver:
+                         version[1] = pupver
+ 
+@@ -637,7 +642,7 @@ class Wget(FetchMethod):
+ 
+         return package_custom_regex_comp
+ 
+-    def latest_versionstring(self, ud, d):
++    def latest_versionstring(self, ud, d, filter_regex=None):
+         """
+         Manipulate the URL and try to obtain the latest package version
+ 
+@@ -678,11 +683,11 @@ class Wget(FetchMethod):
+                 dirver_pn_regex = re.compile(r"%s\d?" % (re.escape(pn)))
+                 if not dirver_pn_regex.search(dirver):
+                     return (self._check_latest_version_by_dir(dirver,
+-                        package, package_regex, current_version, ud, d), '')
++                        package, package_regex, current_version, ud, d, filter_regex), '')
+ 
+             uri = bb.fetch.encodeurl([ud.type, ud.host, path, ud.user, ud.pswd, {}])
+         else:
+             uri = regex_uri
+ 
+         return (self._check_latest_version(uri, package, package_regex,
+-                current_version, ud, d), '')
++                current_version, ud, d, filter_regex), '')
+-- 
+2.34.1
 
-Please simplify the commit message and focus on the relevant
-information.=20
-
-> ---
->  lib/bb/fetch2/__init__.py |   8 ++++
->  lib/bb/fetch2/local.py    |  19 ++++++++-
->  lib/bb/tests/fetch.py     | 104 ++++++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 129 insertions(+), 2 deletions(-)
->=20
-> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-> index 52d5556d..35874e25 100644
-> --- a/lib/bb/fetch2/__init__.py
-> +++ b/lib/bb/fetch2/__init__.py
-> @@ -1075,6 +1075,14 @@ def rename_bad_checksum(ud, suffix):
->      if ud.localpath is None:
->          return
-> =20
-> +    # For file:// URLs the localpath points at the user's source tree
-> +    # (e.g. recipe-shipped files under FILESPATH or an absolute path the
-> +    # user passed in). Renaming those out from under the user is
-> +    # destructive and surprising; surface the ChecksumError without
-> +    # mutating their files.
-> +    if ud.type =3D=3D 'file':
-> +        return
-
-We should not be adding special cases for specific fetchers in
-__init__.py. Perhaps we could instead check if ud.localpath is under
-DL_DIR, or move this function to the FetchMethod class so that the Local
-fetcher can override it with an empty function.
-
-> +
->      new_localpath =3D "%s_bad-checksum_%s" % (ud.localpath, suffix)
->      bb.warn("Renaming %s to %s" % (ud.localpath, new_localpath))
->      if not bb.utils.movefile(ud.localpath, new_localpath):
-> diff --git a/lib/bb/fetch2/local.py b/lib/bb/fetch2/local.py
-> index fda56a56..2abcc5eb 100644
-> --- a/lib/bb/fetch2/local.py
-> +++ b/lib/bb/fetch2/local.py
-> @@ -17,7 +17,7 @@ import os
->  import urllib.request, urllib.parse, urllib.error
->  import bb
->  import bb.utils
-> -from   bb.fetch2 import FetchMethod, FetchError, ParameterError
-> +from   bb.fetch2 import CHECKSUM_LIST, FetchMethod, FetchError, Paramete=
-rError
->  from   bb.fetch2 import logger
-> =20
->  class Local(FetchMethod):
-> @@ -31,7 +31,22 @@ class Local(FetchMethod):
->          # We don't set localfile as for this fetcher the file is already=
- local!
->          ud.basename =3D os.path.basename(ud.path)
->          ud.basepath =3D ud.path
-> -        ud.needdonestamp =3D False
-> +        # Without a donestamp the verify_checksum path is bypassed entir=
-ely
-> +        # for file:// urls, so an explicit checksum on the url (for inst=
-ance
-> +        # UNINATIVE_CHECKSUM expanded into the uninative tarball file://=
- url)
-> +        # is never compared against the file's actual contents. Keep
-> +        # needdonestamp at the FetchData default (True) when any of the
-> +        # known checksum parameters is present, so the standard
-> +        # donestamp + verify_checksum cycle runs and a mismatch raises
-> +        # ChecksumError. When no checksum is supplied (the common case f=
-or
-> +        # recipe patches under file://) needdonestamp stays False and
-> +        # behavior is unchanged.
-> +        name =3D ud.parm.get("name")
-> +        ud.needdonestamp =3D any(
-> +            (name and "%s.%ssum" % (name, a) in ud.parm)
-> +            or "%ssum" % a in ud.parm
-> +            for a in CHECKSUM_LIST
-> +        )
-
-The comment here is of about the right level of detail for the commit
-message. A one or two line comment here to explain the conditional may
-be useful, but more than that is probably too verbose.
-
->          if "*" in ud.path:
->              raise bb.fetch2.ParameterError("file:// urls using globbing =
-are no longer supported. Please place the files in a directory and referenc=
-e that instead.", ud.url)
->          return
-> diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-> index 077f741e..3347c60d 100644
-> --- a/lib/bb/tests/fetch.py
-> +++ b/lib/bb/tests/fetch.py
-> @@ -813,6 +813,110 @@ class FetcherLocalTest(FetcherTest):
->          tree =3D self.fetchUnpack(['file://archive.tar.bz2;subdir=3Dbar;=
-striplevel=3D1'])
->          self.assertEqual(tree, ['bar/c', 'bar/d', 'bar/subdir/e'])
-> =20
-> +    def test_local_no_checksum_no_donestamp(self):
-> +        # The common case: file:// recipe patches without a checksum
-> +        # parameter must keep the historical "no donestamp tracking"
-> +        # behavior so this fix does not regress the hot path. After
-> +        # download(), no .done / .lock entries must appear in DL_DIR
-> +        # for the bare file:// url.
-> +        with open(os.path.join(self.localsrcdir, 'plain'), 'wb') as f:
-> +            f.write(b"plain\n")
-> +        fetcher =3D bb.fetch.Fetch(['file://plain'], self.d)
-> +        ud =3D fetcher.ud[fetcher.urls[0]]
-> +        self.assertFalse(ud.needdonestamp)
-> +        # When needdonestamp is False, FetchData leaves ud.donestamp
-> +        # unset (None); we assert that no .done / .lock entries are
-> +        # written to DL_DIR for the bare file:// url after download.
-> +        fetcher.download()
-> +        for entry in os.listdir(self.dldir):
-> +            self.assertFalse(entry.startswith('plain.done'))
-> +            self.assertFalse(entry.startswith('plain.lock'))
-
-I don't think this test case adds much value.
-
-> +
-> +    def test_local_checksum_match(self):
-> +        # A correct sha256 must drive the verify_checksum cycle to
-> +        # completion: download() returns without raising AND the
-> +        # donestamp lands in DL_DIR. The donestamp is the on-disk
-> +        # evidence that update_stamp() ran after verify_checksum()
-> +        # passed - without the fix, needdonestamp=3DFalse short-circuits
-> +        # update_stamp() and no donestamp is written even on "match".
-> +        import hashlib
-> +        content =3D b"file:// checksum match test\n"
-> +        with open(os.path.join(self.localsrcdir, 'sumfile'), 'wb') as f:
-> +            f.write(content)
-> +        good =3D hashlib.sha256(content).hexdigest()
-> +        fetcher =3D bb.fetch.Fetch(['file://sumfile;sha256sum=3D' + good=
-], self.d)
-> +        ud =3D fetcher.ud[fetcher.urls[0]]
-> +        self.assertTrue(ud.needdonestamp)
-> +        fetcher.download()
-> +        self.assertTrue(os.path.exists(ud.donestamp))
-
-This test case looks good, but the comment is again too verbose, please
-simplify it.
-
-> +
-> +    def test_local_checksum_mismatch(self):
-> +        content =3D b"file:// checksum mismatch test\n"
-> +        srcpath =3D os.path.join(self.localsrcdir, 'sumfile')
-> +        with open(srcpath, 'wb') as f:
-> +            f.write(content)
-> +        bad =3D "0" * 64
-> +        fetcher =3D bb.fetch.Fetch(['file://sumfile;sha256sum=3D' + bad]=
-, self.d)
-> +        with self.assertRaises(bb.fetch2.FetchError):
-> +            fetcher.download()
-> +        # The user's source tree must not be mutated. rename_bad_checksu=
-m
-> +        # would otherwise leave a <path>_bad-checksum_<sha> sibling and
-> +        # remove the original.
-> +        self.assertTrue(os.path.exists(srcpath))
-> +        with open(srcpath, 'rb') as f:
-> +            self.assertEqual(f.read(), content)
-> +        for entry in os.listdir(self.localsrcdir):
-> +            self.assertNotIn('_bad-checksum_', entry)
-
-This test case is mostly good. I don't think we need to loop through the
-whole of the directory listing, can we just confirm that the
-bad-checksum marker for sumfile doesn't exist?
-
-> +
-> +    def test_local_checksum_mismatch_md5(self):
-> +        # Coverage for an algorithm other than sha256 so a regression
-> +        # that special-cased sha256 detection does not slip through.
-> +        # Mirror the sha256 mismatch assertions: source file present,
-> +        # contents unchanged, no _bad-checksum_ sibling left behind.
-> +        content =3D b"file:// md5 mismatch test\n"
-> +        srcpath =3D os.path.join(self.localsrcdir, 'sumfile_md5')
-> +        with open(srcpath, 'wb') as f:
-> +            f.write(content)
-> +        bad =3D "0" * 32
-> +        fetcher =3D bb.fetch.Fetch(['file://sumfile_md5;md5sum=3D' + bad=
-], self.d)
-> +        with self.assertRaises(bb.fetch2.FetchError):
-> +            fetcher.download()
-> +        self.assertTrue(os.path.exists(srcpath))
-> +        with open(srcpath, 'rb') as f:
-> +            self.assertEqual(f.read(), content)
-> +        for entry in os.listdir(self.localsrcdir):
-> +            self.assertNotIn('_bad-checksum_', entry)
-
-I don't think this test case adds value, the implementation is not
-sha256sum specific.
-
-> +
-> +    def test_local_checksum_named(self):
-> +        # UNINATIVE_CHECKSUM (the original reproducer for this bug) and
-> +        # several other recipe-driven file:// urls use the name=3D prefi=
-x
-> +        # form: foo.sha256sum=3D rather than bare sha256sum=3D. Confirm =
-the
-> +        # named form flips needdonestamp AND that the verify cycle runs
-> +        # (donestamp on disk after download).
-> +        import hashlib
-> +        content =3D b"file:// named checksum test\n"
-> +        with open(os.path.join(self.localsrcdir, 'sumfile_named'), 'wb')=
- as f:
-> +            f.write(content)
-> +        good =3D hashlib.sha256(content).hexdigest()
-> +        fetcher =3D bb.fetch.Fetch(
-> +            ['file://sumfile_named;name=3Dblob;blob.sha256sum=3D' + good=
-], self.d)
-> +        ud =3D fetcher.ud[fetcher.urls[0]]
-> +        self.assertTrue(ud.needdonestamp)
-> +        fetcher.download()
-> +        self.assertTrue(os.path.exists(ud.donestamp))
-
-This is a case of testing at the wrong level of detail. Do we already
-have test coverage that setting foo.some_property for a SRC_URI entry
-with name=3Dfoo results in the property being set for the appropriate
-entry? If so, we don't need further test coverage here. If not, we
-should add a generic test case for that.=20
-
-> +
-> +    def test_local_checksum_directory_ignored(self):
-> +        # Local supports directory urls; supports_checksum returns False
-> +        # for directories. A checksum parm on a directory url should
-> +        # therefore be a no-op rather than a hard error: verify_checksum
-> +        # short-circuits on supports_checksum() and no ChecksumError is
-> +        # raised even when the checksum value is bogus.
-> +        bad =3D "0" * 64
-> +        fetcher =3D bb.fetch.Fetch(['file://dir;sha256sum=3D' + bad], se=
-lf.d)
-> +        ud =3D fetcher.ud[fetcher.urls[0]]
-> +        self.assertFalse(ud.method.supports_checksum(ud))
-> +        fetcher.download()
-
-This tests that we suppress an error that we should actually be raising.
-If the checksum is invalid, then we should raise an error.
-
-Best regards,
-
---=20
-Paul Barker
-
-
---=-D2Hx8J2P0wmlyNuI/UGR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaf3vhhEccGF1bEBwYmFy
-a2VyLmRldgAKCRCrY1Tsnbr0bmfzAP4p5wOMG6yd4vUfkHwVg/KQOuK9Mpqh9Ypv
-QhCi36bwcgEAqVIsJra+qHd2M71FnL1KTMd9u+yJk00pTjlQh46dRQk=
-=P/1X
------END PGP SIGNATURE-----
-
---=-D2Hx8J2P0wmlyNuI/UGR--
 
