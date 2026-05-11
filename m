@@ -2,285 +2,106 @@ Return-Path: <Jhonata.poma@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2EDCD37BE
-	for <webhook@archiver.kernel.org>; Mon, 11 May 2026 14:58:41 +0000 (UTC)
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.52314.1778511512886789105
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0A6CD37BE
+	for <webhook@archiver.kernel.org>; Mon, 11 May 2026 15:01:41 +0000 (UTC)
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.52401.1778511697782046297
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 11 May 2026 07:58:33 -0700
+ Mon, 11 May 2026 08:01:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=UQURqMRG;
- spf=pass (domain: gmail.com, ip: 209.85.218.47, mailfrom: jhonata.poma@gmail.com)
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-bd2087858c4so40278066b.0
-        for <bitbake-devel@lists.openembedded.org>; Mon, 11 May 2026 07:58:32 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=DPLLIpEN;
+ spf=pass (domain: gmail.com, ip: 209.85.218.49, mailfrom: jhonata.poma@gmail.com)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-bd2087858c4so41081166b.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 11 May 2026 08:01:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778511511; x=1779116311; darn=lists.openembedded.org;
+        d=gmail.com; s=20251104; t=1778511696; x=1779116496; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/O1b8UEx/oFnNQBTqxm406CKxkC+mCbcryYA2SRZ2aU=;
-        b=UQURqMRGD0oltcuVtzz+DloirEJpj9V5sXsnNEka8eQtY12bNzeGdvN3HSxcfKxe6I
-         iWGol7QZ0FZQ0Fmj/+uQxGbKP+UQR5uhOX8+kxh4sc4aT/KRy+lpLuBzG3w6chuxSWOa
-         0dnxJc/aUqunZgTWHLkQkbNYH2urlRJ9934bU9SR1+0E2m2Cx4LOP2j2z2shQiQKofq+
-         HJ7I0DiFYkm3xqlP57m3BBKsGjJuymzz+neAbzdHsE8EBrRgQhpdHUrw393ywpmSKVEJ
-         foxs0zoHOBKG+a5m16v48LZI+REBMm8Q4OcHkq2P2HIrfWZpPdiZwrHHxwSXZ+tRFdGc
-         fr0g==
+        bh=xM5SXnpIStDHUjjoM8JAQ6RQ2XeY9xaFlXS2YoOUS5Y=;
+        b=DPLLIpENEbSAOS4CrNvVyLhrJ8lqXyooRLvBNEwcFNtsZCXKhyKhiFjav87PsG+bRP
+         eBKS7kRm5A5NH+WafFJsm1E9JfEJGHwlObAeXuDktcm1yJ8SHlPlpN2eIGe8ITl11f5y
+         f3KWi60LbV/ymF+rqV3CDfIcjrAXgQtZfaSPHUaUTeKh9DiRo8xp7EQJSJ7Rd/diNF+h
+         fxA12wRzLbzhRAbfhU/9S+3RQ016X7Zx4Y5ux8E8Tnszl0YjcDBKVelLSMVScI/fNKtS
+         BdJL0TWOgGglNwuS7ksAoVXoufmPvt+aO4RK+/g6iMoemvh9zd/WbMo6G+KoKnpBNxRX
+         4Zew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778511511; x=1779116311;
+        d=1e100.net; s=20251104; t=1778511696; x=1779116496;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=/O1b8UEx/oFnNQBTqxm406CKxkC+mCbcryYA2SRZ2aU=;
-        b=BA+nBF5TCqDOdrYq6Hg0V79QWF/iYHowNPzD9ohXPrDHge8OP/ZHgceUbIRVHj1A67
-         MESJ+naDRv5gdfA8pCOMoGVJG1IeZAfaigVieVlFjF95IwHsSjGiu97bLMD2eqqB1HkJ
-         Dt4fpw4wcpj8vjc52dskMXpQTCMJwJbDBfVMHlVfiZOAZvcICiR33jx3MwUWYNl6k+1h
-         ppJa5vYm53VpDJYExDX+Qw/vh5WiTZ38m4JSV28Uvq1PrIwWcuAop7HC0DmT/FKHVLF3
-         UIFQid8EwYSC1Jlh8RH24wYlNgtgC4keciRtX87XqjSGfixcqbAAA5BF2LZJiuN5FyZE
-         PXDA==
-X-Gm-Message-State: AOJu0YydIB1vQZuxoaYs7ewyWzEfZox9p/NvuVsULLMOHfhLLvcyd/4f
-	pg8FKa3xd9FaGLTtcP/jbpbEbo0urHDBarIQjDvQGc4fOickWIEFldhGBE67HdX8
-X-Gm-Gg: Acq92OECWT0r+/3714eS6OXdzXxGaelbQ3MWcvKgBJtR7PsiBo7A5uukNHhxC2b0HSP
-	odZ7EOFjqqav3TnUv0xIGnmYe6LmobGDHFmdRti8HTaz3FCu8iAf+cVutOqcjXpPe/SkY950A39
-	PhzBjOP2ZXzW+PnsNZKqy0t7BgL3/5QNhG3xXV+3ZbHZRRDtQzVGGfpCAdqrmc/YeGsVKOQIpxg
-	oCwCtB3BbgXdhCcKjYoHf5mGXJ0lwTbYuDBHIeRKNMMF9CmlRm4K/5PToJPXAMltEKhtXvilfkE
-	mNJZK4doX+pLhzhfd6USoUj/vTFOgheaQY/ZvHiI3mFg+B+4Y56XmlJxSIQyirS1xD+qgBEEm6B
-	TZKqWN8CaG/5HsaAN5yNDxfN8C+TZHxKuiZgKtKmat18zKGH26zKsx/2XOS0apb2kjT7Ajf3NKf
-	BKBJMIsJfQsk0Vmioxv8HvFDoT8n9e+z00fjT76jbggsHSZaPs2TFIBa2qFy/mjcnVHdkkHAvAz
-	Ry8bBFvsmsA
-X-Received: by 2002:a17:907:d508:b0:bd1:d4b8:b05c with SMTP id a640c23a62f3a-bd1d4b8b0b0mr99033666b.28.1778511510658;
-        Mon, 11 May 2026 07:58:30 -0700 (PDT)
+        bh=xM5SXnpIStDHUjjoM8JAQ6RQ2XeY9xaFlXS2YoOUS5Y=;
+        b=XMfEotDyVnfPtAOjTRHBwrZXdoqWcv7dwvKzh/MSNzCwHLINA+i/f5WJwlp5yc60fY
+         3ydnB3XlhX1lhIRf/CWudU/rDzbQGDaxQluOtq9jta5SIzyDAJUvknOvnezQc/eI6gsN
+         akNV0wFAT8LerDQun9YPA9Q6IjqVtgO1KT0ZjIoWtEH+ltjZ+WS8JW5bEW+zp8I5K1ML
+         0Whl1yHVdGYfIXLijHkImj1agLEPwTEyNqUTu9U9CRWIv71or2RvtlmoQ4bb0dbsX/d4
+         8Qd57FM2TdJkS6JA2bIAepbKeb/jWN8eYZKrhcS+RA9/e2/5BlqXnwIdTYe/FsI+pIq/
+         etpA==
+X-Gm-Message-State: AOJu0YxnVR3ox/a7cMumAk/5PyLEgg0blp3ccdRL5x9jxhjVH7y4c64v
+	PNyBarknl9TmaC0p08xz6ttSKs+G8bEGDcTOntQWL0Rpf0NaP/tDULvpZ8YuhPlD
+X-Gm-Gg: Acq92OHVw8aqPP5NWILuUTRi/KYTk3hOYJIP388GV9SodJlgtcw7FWBgjayxMjtbkyr
+	qLjzDhS0Gg3BoYfmdcOhCqXhHzd7ZjRZEvrTxGiOnmF+hnT/mpJ1yr9Ees82q95+46i4vrNUBjo
+	3j/Sl+70pXipT94dhFYm/QeXmKRJwpQOJsEx6pzVgAZuNAsv8AQeSYhLmkPN2Hu60fK6bcHbzl/
+	JaigvVBq83hDigX550/EcPgdm0h+2dV1QQm+COH1WTv/lFm7ZBByJSvUvNznGCU6cBKwFUtctwC
+	qN5Ka2QmbUKZcgIaBu5XPVHMuB1vKAtDvXS2Khdf3aduyV7VL0/pzn+tv1mHX0SXORDjud2vz7w
+	LMxpz9ZGBmjQ7yPOr0RuuX/50cvCmaoEfNadVND1soqTESm6KsAevXaVnfQmMQrZVpLjHrNWipK
+	UOg3AFobS7dtVO8Wv7yL5hiuiUtVso9g5i0uQBvDirUvGYZdgpvi2XikXkDTaaFYK9fIBi0HNBP
+	WOl69ardAKe
+X-Received: by 2002:a17:907:9345:b0:b9d:1673:9994 with SMTP id a640c23a62f3a-bcaacd3d944mr839674066b.39.1778511695398;
+        Mon, 11 May 2026 08:01:35 -0700 (PDT)
 Received: from karaburan ([89.150.155.129])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bce4c41b1e8sm252529766b.8.2026.05.11.07.58.29
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bd11371bad9sm102388466b.57.2026.05.11.08.01.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2026 07:58:30 -0700 (PDT)
+        Mon, 11 May 2026 08:01:34 -0700 (PDT)
 From: Jhonata Poma-Hansen <jhonata.poma@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: paul@pbarker.dev,
 	richard.purdie@linuxfoundation.org,
 	peter.kjellerstedt@axis.com,
 	jhonata.poma@gmail.com
-Subject: [PATCH v2] fetch2/local: verify checksums for file:// urls
-Date: Mon, 11 May 2026 16:58:27 +0200
-Message-ID: <20260511-b4-yocto-9993-v2-1-9d5a1c1451ba@gmail.com>
+Subject: Re: [PATCH v2] fetch2/local: verify checksums for file:// urls
+Date: Mon, 11 May 2026 17:01:32 +0200
+Message-ID: <20260511-b4-yocto-9993-v2-followup-1-cf3a8d2b1e74@gmail.com>
 X-Mailer: git-send-email 2.51.2
-In-Reply-To: <162413fca4aa8fa53472aa6ba1e12b56c1a5c5c9.camel@pbarker.dev>
-References: <20260430-b4-yocto-9993-v1-1-a54d842cd0fd@gmail.com> <162413fca4aa8fa53472aa6ba1e12b56c1a5c5c9.camel@pbarker.dev>
+In-Reply-To: <20260511-b4-yocto-9993-v2-1-9d5a1c1451ba@gmail.com>
+References: <20260430-b4-yocto-9993-v1-1-a54d842cd0fd@gmail.com> <162413fca4aa8fa53472aa6ba1e12b56c1a5c5c9.camel@pbarker.dev> <20260511-b4-yocto-9993-v2-1-9d5a1c1451ba@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-X-Change-ID: 20260429-b4-yocto-9993-cadd9cbed7ce
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 11 May 2026 14:58:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19490
+ <bitbake-devel@lists.openembedded.org>; Mon, 11 May 2026 15:01:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19491
 
-UNINATIVE_URL ships as an https:// url in metadata and verify_checksum
-catches a corrupt download. Replace it with a local file:// (the
-supported form for offline or pinned uninative tarballs) and the
-checksum supplied via UNINATIVE_CHECKSUM was silently ignored:
-Local.urldata_init unconditionally cleared ud.needdonestamp,
-short-circuiting the donestamp + verify_checksum cycle for every
-file:// url. Recipes that supply ;sha256sum= on a file:// url hit the
-same hole.
+Apologies, the "Changes in v2:" section in v2 ships with two literal
+b4 placeholder lines starting with "EDITME: ..." that I forgot to
+fill in before sending. Please disregard those two lines. The actual
+changes from v1, addressing Paul Barker's review
+(lore.kernel.org/r/162413fca4aa8fa53472aa6ba1e12b56c1a5c5c9.camel@pbarker.dev):
 
-Keep needdonestamp at the FetchData default (True) when the url carries
-any of the known checksum parameters (bare ;<algo>sum= or named
-;name=foo;foo.<algo>sum= form), so the standard verify_checksum flow
-runs and a mismatch raises ChecksumError just like it does for
-http(s)://. When no checksum is supplied (the common file:// recipe
-patch case) needdonestamp stays False and behavior is unchanged.
+- Commit body trimmed; UNINATIVE_URL trigger now leads paragraph 1
+  (Paul flagged this was missing from v1).
+- Dropped the long historical commit references (b8b14d975a25,
+  6424f4b7e9c1, 4b8de2e7d126) from the commit body.
+- rename_bad_checksum moved from a module-level helper in
+  bb/fetch2/__init__.py onto the FetchMethod class; Local overrides
+  it as a no-op so a ChecksumError surfaces without renaming files
+  under the user's source tree. Four callsites updated to
+  ud.method.rename_bad_checksum(...). No "ud.type == 'file'" special
+  case in __init__.py.
+- Inline comment in local.py trimmed from ~10 lines to 3.
+- Tests reduced to two keepers in FetcherLocalTest:
+  - test_local_checksum_match: simpler comment; same assertion.
+  - test_local_checksum_mismatch: dropped the os.listdir loop,
+    replaced with a direct assertFalse on the specific
+    bad-checksum sibling path.
+  Dropped: test_local_no_checksum_no_donestamp,
+  test_local_checksum_mismatch_md5, test_local_checksum_named,
+  test_local_checksum_directory_ignored (the directory-with-bad-
+  checksum case Paul noted should raise; left out of this patch
+  rather than widening scope).
 
-A checksum mismatch on a file:// url must not mutate the user's source
-tree the way it does for downloaded artifacts under DL_DIR. Move
-rename_bad_checksum onto FetchMethod and override it as a no-op in the
-Local fetcher so a ChecksumError surfaces without an on-disk
-<localpath>_bad-checksum_<sha> sibling.
-
-Link: https://bugzilla.yoctoproject.org/show_bug.cgi?id=9993
-[YOCTO #9993]
-
-Signed-off-by: Jhonata Poma-Hansen <jhonata.poma@gmail.com>
----
-Changes in v2:
-- EDITME: describe what is new in this series revision.
-- EDITME: use bulletpoints and terse descriptions.
-- Link to v1: https://lore.kernel.org/r/20260430-b4-yocto-9993-v1-1-a54d842cd0fd@gmail.com
----
- lib/bb/fetch2/__init__.py | 36 ++++++++++++++++++------------------
- lib/bb/fetch2/local.py    | 18 ++++++++++++++++--
- lib/bb/tests/fetch.py     | 30 ++++++++++++++++++++++++++++++
- 3 files changed, 64 insertions(+), 20 deletions(-)
-
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 52d5556d..5f4db608 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -738,7 +738,7 @@ def verify_donestamp(ud, d, origud=None):
-         logger.warning("Checksum mismatch for local file %s\n"
-                        "Cleaning and trying again." % ud.localpath)
-         if os.path.exists(ud.localpath):
--            rename_bad_checksum(ud, e.checksum)
-+            ud.method.rename_bad_checksum(ud, e.checksum)
-         bb.utils.remove(ud.donestamp)
-     return False
- 
-@@ -771,7 +771,7 @@ def update_stamp(ud, d):
-             logger.warning("Checksum mismatch for local file %s\n"
-                            "Cleaning and trying again." % ud.localpath)
-             if os.path.exists(ud.localpath):
--                rename_bad_checksum(ud, e.checksum)
-+                ud.method.rename_bad_checksum(ud, e.checksum)
-             bb.utils.remove(ud.donestamp)
-             raise
- 
-@@ -1067,20 +1067,6 @@ def build_mirroruris(origud, mirrors, ld):
- 
-     return uris, uds
- 
--def rename_bad_checksum(ud, suffix):
--    """
--    Renames files to have suffix from parameter
--    """
--
--    if ud.localpath is None:
--        return
--
--    new_localpath = "%s_bad-checksum_%s" % (ud.localpath, suffix)
--    bb.warn("Renaming %s to %s" % (ud.localpath, new_localpath))
--    if not bb.utils.movefile(ud.localpath, new_localpath):
--        bb.warn("Renaming %s to %s failed, grep movefile in log.do_fetch to see why" % (ud.localpath, new_localpath))
--
--
- def try_mirror_url(fetch, origud, ud, ld, check = False):
-     # Return of None or a value means we're finished
-     # False means try another url
-@@ -1156,7 +1142,7 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
-             logger.warning("Mirror checksum failure for url %s (original url: %s)\nCleaning and trying again." % (ud.url, origud.url))
-             logger.warning(str(e))
-             if os.path.exists(ud.localpath):
--                rename_bad_checksum(ud, e.checksum)
-+                ud.method.rename_bad_checksum(ud, e.checksum)
-         elif isinstance(e, NoChecksumError):
-             raise
-         else:
-@@ -1472,6 +1458,20 @@ class FetchMethod(object):
-         """
-         return True
- 
-+    def rename_bad_checksum(self, ud, suffix):
-+        """
-+        Rename ud.localpath with the given suffix on checksum mismatch.
-+        Local overrides this to a no-op since its localpath points at the
-+        user's source tree.
-+        """
-+        if ud.localpath is None:
-+            return
-+
-+        new_localpath = "%s_bad-checksum_%s" % (ud.localpath, suffix)
-+        bb.warn("Renaming %s to %s" % (ud.localpath, new_localpath))
-+        if not bb.utils.movefile(ud.localpath, new_localpath):
-+            bb.warn("Renaming %s to %s failed, grep movefile in log.do_fetch to see why" % (ud.localpath, new_localpath))
-+
-     def verify_donestamp(self, ud, d):
-         """
-         Verify the donestamp file
-@@ -1937,7 +1937,7 @@ class Fetch(object):
-                             logger.warning("Checksum failure encountered with download of %s - will attempt other sources if available" % u)
-                             logger.debug(str(e))
-                             if os.path.exists(ud.localpath):
--                                rename_bad_checksum(ud, e.checksum)
-+                                ud.method.rename_bad_checksum(ud, e.checksum)
-                         elif isinstance(e, NoChecksumError):
-                             raise
-                         else:
-diff --git a/lib/bb/fetch2/local.py b/lib/bb/fetch2/local.py
-index fda56a56..f9808e9b 100644
---- a/lib/bb/fetch2/local.py
-+++ b/lib/bb/fetch2/local.py
-@@ -17,7 +17,7 @@ import os
- import urllib.request, urllib.parse, urllib.error
- import bb
- import bb.utils
--from   bb.fetch2 import FetchMethod, FetchError, ParameterError
-+from   bb.fetch2 import CHECKSUM_LIST, FetchMethod, FetchError, ParameterError
- from   bb.fetch2 import logger
- 
- class Local(FetchMethod):
-@@ -31,11 +31,25 @@ class Local(FetchMethod):
-         # We don't set localfile as for this fetcher the file is already local!
-         ud.basename = os.path.basename(ud.path)
-         ud.basepath = ud.path
--        ud.needdonestamp = False
-+        # Honor explicit checksum params (UNINATIVE_CHECKSUM, recipe
-+        # ;sha256sum=) by leaving needdonestamp at FetchData's default so
-+        # verify_checksum runs.
-+        name = ud.parm.get("name")
-+        ud.needdonestamp = any(
-+            (name and "%s.%ssum" % (name, a) in ud.parm)
-+            or "%ssum" % a in ud.parm
-+            for a in CHECKSUM_LIST
-+        )
-         if "*" in ud.path:
-             raise bb.fetch2.ParameterError("file:// urls using globbing are no longer supported. Please place the files in a directory and reference that instead.", ud.url)
-         return
- 
-+    def rename_bad_checksum(self, ud, suffix):
-+        # file:// urls point at the user's source tree (recipe-shipped files
-+        # under FILESPATH or an absolute path the user passed in); skip the
-+        # rename so a ChecksumError surfaces without mutating their files.
-+        return
-+
-     def localpath(self, urldata, d):
-         """
-         Return the local filename of a given url assuming a successful fetch.
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 077f741e..93e889fd 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -813,6 +813,36 @@ class FetcherLocalTest(FetcherTest):
-         tree = self.fetchUnpack(['file://archive.tar.bz2;subdir=bar;striplevel=1'])
-         self.assertEqual(tree, ['bar/c', 'bar/d', 'bar/subdir/e'])
- 
-+    def test_local_checksum_match(self):
-+        # Correct sha256 must run verify_checksum to completion; donestamp
-+        # lands in DL_DIR.
-+        import hashlib
-+        content = b"file:// checksum match test\n"
-+        with open(os.path.join(self.localsrcdir, 'sumfile'), 'wb') as f:
-+            f.write(content)
-+        good = hashlib.sha256(content).hexdigest()
-+        fetcher = bb.fetch.Fetch(['file://sumfile;sha256sum=' + good], self.d)
-+        ud = fetcher.ud[fetcher.urls[0]]
-+        self.assertTrue(ud.needdonestamp)
-+        fetcher.download()
-+        self.assertTrue(os.path.exists(ud.donestamp))
-+
-+    def test_local_checksum_mismatch(self):
-+        # Bad sha256 raises ChecksumError without renaming the user's
-+        # source file to the <localpath>_bad-checksum_<sha> sibling.
-+        content = b"file:// checksum mismatch test\n"
-+        srcpath = os.path.join(self.localsrcdir, 'sumfile')
-+        with open(srcpath, 'wb') as f:
-+            f.write(content)
-+        bad = "0" * 64
-+        fetcher = bb.fetch.Fetch(['file://sumfile;sha256sum=' + bad], self.d)
-+        with self.assertRaises(bb.fetch2.FetchError):
-+            fetcher.download()
-+        self.assertTrue(os.path.exists(srcpath))
-+        with open(srcpath, 'rb') as f:
-+            self.assertEqual(f.read(), content)
-+        self.assertFalse(os.path.exists(srcpath + '_bad-checksum_' + bad))
-+
-     def dummyGitTest(self, suffix):
-         # Create dummy local Git repo
-         src_dir = tempfile.mkdtemp(dir=self.tempdir,
-
----
-base-commit: 5d722b5d65e4eef7befe6376983385421e993f86
-change-id: 20260429-b4-yocto-9993-cadd9cbed7ce
-
-Best regards,
--- 
-Jhonata Poma-Hansen <jhonata.poma@gmail.com>
+Thanks,
+Jhonata
 
