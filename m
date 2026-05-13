@@ -1,123 +1,109 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <martin.jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F5CCD4F24
-	for <webhook@archiver.kernel.org>; Wed, 13 May 2026 11:33:50 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.5411.1778672015887320126
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12932CD4F24
+	for <webhook@archiver.kernel.org>; Wed, 13 May 2026 13:39:55 +0000 (UTC)
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.7899.1778679589760677894
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 13 May 2026 04:33:36 -0700
+ Wed, 13 May 2026 06:39:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=NqIywm5S;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-488b0e1b870so111785435e9.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 13 May 2026 04:33:35 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=pCMRgZ3F;
+ spf=pass (domain: gmail.com, ip: 209.85.128.47, mailfrom: martin.jansa@gmail.com)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-488ff90d6c7so60800775e9.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 13 May 2026 06:39:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1778672014; x=1779276814; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=57wTbMZjhJZAFox6peekKIZ3FCISLwAv8Jgt7dAKc0g=;
-        b=NqIywm5SUivM7W+CUP6LIi2G0XembmliHDxrH8t+Thdaq61tU/IIxs0T206twCSROl
-         RJc/z5fHGcDKzb8/V2H4fCVj1MO3Jv4qyUx6zc6T1Al+E3uGksqRklDWJw+Yo27g957o
-         5eGHqn80ou9BdPjZX1fhQDd10TVI+94JApP64=
+        d=gmail.com; s=20251104; t=1778679588; x=1779284388; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vx+WKFMfDuahEL2CVHb/2LPYX8PmX0GLWpi6vn7gATs=;
+        b=pCMRgZ3FVkfFF7D+cF3bDl0PPGCJFMO4Mzsu1CNMD6AH3h8Jxf0pdTZiO/tPQX0H+R
+         TF/u7nZ/SoN6C6WLs8P7BtVTovnf7eVNmnhD2Y8CxDoL1Ucm58Mikmck4jKDFuDTg4nh
+         bu3TztznunHpL20v1/pEDhfG+JLg/zwmrdJT3zJek/m6lNd41h9hAydn/unCvzpgfgyk
+         Mwz7QAGyt12PvkebaPuN9fMjrVI7u8cPkqBBnyS2+vM67x8PuhUrub/XrrKQ/FLwf0gT
+         Cs0OTipNS/K6LB7ExiklLxUTW0no9hYZCDABKZIGOh9ywXAOkta9dBnwwQFV1l5Kbu1p
+         UmkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778672014; x=1779276814;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=57wTbMZjhJZAFox6peekKIZ3FCISLwAv8Jgt7dAKc0g=;
-        b=ThxFPPxbiltOKEL93ISAWl53cFY0xDutjxrNyigBhUghPWCrz/sLCWjdKXK/bvN8A9
-         vSciUUV41sRpioTO+NHAHvPG90KeUODG1ya7uRvF1H7sx4FXFHfLVwdwT4tqtBM7kSra
-         MCwdct3cMvS8jf7kbIFUwP7O2qXI5xMHLR4qhtmu1j/vT4CmTomqwH2edqN6/8Agx3Lt
-         8gUU8bt5TVFFcwkBAi0ICJrT32k0dlkbwq/efv4yauEUfSaR0OI4MnvKOqNy3K3SSHQy
-         MFiohLXfeMP4pHKAWkaRmXKmcnCgAzH/RuSOJu2qJ8CjSsOPPv7MK0sYmfUH0RD510Dr
-         u/7g==
-X-Forwarded-Encrypted: i=1; AFNElJ+FlXr4karW9cg9ZqKrPlSRM28RAE0YNg7JVKd+Dtzutm0JcP61eBDaO/UZ7bCKoCBR8NHSSDj8Is0Fw18m@lists.openembedded.org
-X-Gm-Message-State: AOJu0YxYOlNpoWebVkLs0uM8Jpf5LzNq5dMZ8ko2Z2wZzwvtOBdQB+8A
-	w1jDGgApXcR0Dd5fsZLaph9hMjhR4Hvka3uWbb1AlLtFLmN9uFh2FP1Q8TYoJKxC+VA=
-X-Gm-Gg: Acq92OEwRCbQXOzGv4+k+8LpR32zQjeqZQtj4GEtmm8HJ5MqHko4rsmfx0ke1MEAg8X
-	r8WPDbr4JHH/vF2zWvW4mLoZUOly7sV9i92Myg2qmN4swklymEL8hP/vy3abpeAfro/WVj5Ca4x
-	Ju/lkt7MM4CDPUlhhXcBW/q0B2K3LTlObPdghf6vSWDp9CXMgm86EE2PqCR1WRqrSGl8ed2AYxe
-	bZ6bS8NoAvhQbxyWPnM5WSDI4RKMU6+Z4MfY8t5g1VVQ6kbfYagswq/gJoY+zBBcUBC1iWtnbDV
-	nv0fjqRMm4aQ4l0CBlD12FmXHi2WwFHffnF9SmxWURWsey5lfIiTeCe+Qthb79S32KUha64FMLR
-	7djzHRVim83TCHUxAV7WJdE3FZcJ1qN8FEllOUdEHhQZG8vv5fdPXGp/EoWkR22VtLHrOwgOXbz
-	D7wSK4Qwdy7eX8zawrY9qAqTvyPaXLlMb5AmSUcPaSWXBBCBH1+6NrIdcKwEsb1WyM+3+Ws+6Rz
-	qCpLPpkTqCtKA1h
-X-Received: by 2002:a05:600c:3e87:b0:48e:8499:4be0 with SMTP id 5b1f17b1804b1-48fce9eec6dmr31907365e9.15.1778672013838;
-        Wed, 13 May 2026 04:33:33 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:b7ef:b234:c010:91da? ([2001:8b0:aba:5f3c:b7ef:b234:c010:91da])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45491e94c0fsm42170861f8f.32.2026.05.13.04.33.32
+        d=1e100.net; s=20251104; t=1778679588; x=1779284388;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vx+WKFMfDuahEL2CVHb/2LPYX8PmX0GLWpi6vn7gATs=;
+        b=Ek1GwtGXV9lPbZmRCep7a9AEXAjMesa9ooAwpDpAe39rGwy0OmCXy+igTDPc1PsAX7
+         Jb+buwEirG6YSYyurI2BCYIdnwfK+hNj0aDAO2swUH/NCmddgfASSMs0mmL086nCb7ZH
+         tFPoUMZH9lthgO0VIqobir5WHi8ia+UVyCeGh7ZItCvwRj4CnAsexrdATAkxY6NjedKQ
+         5wIzRovQMY3iFh207+rUIbuqsxa60tkj6Q+PhgH35E2+bRiQqyzBdJV2RrV0HKmyvPxd
+         k0n3T9pySWKerbdq8aIWQplqeLa0iNmCeE47GG/64HdVug76mvkSY2dib5DxJHcgnY+c
+         88kQ==
+X-Gm-Message-State: AOJu0Yxo8btgWc6bw4UkeF8cFlOrXpfmFuh9qhXkVkPGI5d78iw8zrKG
+	qUHwcI9ntateJ4zHWnEqDsqjXZnxuUFhqPBV0CZZN8O5J4KMoIGaDxNgyuUQMQ==
+X-Gm-Gg: Acq92OEdDmAci3vWfkkZTi6EsOTFJWb2DJwR2cjR2yCC+RyPOaglboJLtpYVOMbmw2c
+	ygmySmoJEbXam/V1kw6RJS0BcLsmeFwMUFthXZYB57ymziHszW3/yRytNpRnKxHib8USLDjY44q
+	sVQFa2QQsfvsA5SXs9QvsjVdUbXQQQaRKwXgL98JJlYFQFALNAtXq16LsCVd+PRJAX1DDTfD74X
+	dLl3u9grVV345K/CRAk9rVQeAZfJMYIiqCmliB1rk8Q+RgYwtKFP8N7MJcXabKNQaE5j0hmdz1p
+	wURaFuIXRnu1FSHP3unTgeaSiAGdCdjjEI3qfblst6+kWLY50XmyugdR1SMmyRcSVtHQVaRtXBq
+	zqqGVezNdgZCNp9ihvuQlyISeZX8SOMJaEmpXhajmqjGcUmrHtizRa4tH0xD9xEe5UIo+yFbrCg
+	F15o6McgGPDsn5gWvJ09WH5vZuMbxdtICjNMwNcEARM4DpxA0+4aKtkyuTZfAifZZv2Tzw1LiPl
+	Klu9bTlRN4UWkXEJWnE
+X-Received: by 2002:a05:600c:8b45:b0:489:1ba8:5bf0 with SMTP id 5b1f17b1804b1-48fce9f4aeamr42046995e9.21.1778679587790;
+        Wed, 13 May 2026 06:39:47 -0700 (PDT)
+Received: from localhost ([109.238.218.228])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fce05f41csm84715225e9.5.2026.05.13.06.39.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2026 04:33:33 -0700 (PDT)
-Message-ID: <6163fabfba1e616cdd3ef01d79ef47d81b198553.camel@linuxfoundation.org>
-Subject: Re: [PATCH] checksum: only split file-checksums entries at
- right-most colon
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Rasmus Villemoes <ravi@prevas.dk>, bitbake-devel@lists.openembedded.org
-Date: Wed, 13 May 2026 12:33:32 +0100
-In-Reply-To: <20260513105549.527210-1-ravi@prevas.dk>
-References: <20260513105549.527210-1-ravi@prevas.dk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-9 
+        Wed, 13 May 2026 06:39:43 -0700 (PDT)
+From: martin.jansa@gmail.com
+To: bitbake-devel@lists.openembedded.org
+Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [2.18][PATCH 1/2] fetch/git: Fix leaking of temporary directory
+Date: Wed, 13 May 2026 15:39:34 +0200
+Message-ID: <20260513133935.814961-1-martin.jansa@gmail.com>
+X-Mailer: git-send-email 2.54.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 13 May 2026 11:33:50 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19509
+ <bitbake-devel@lists.openembedded.org>; Wed, 13 May 2026 13:39:55 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19510
 
-On Wed, 2026-05-13 at 12:55 +0200, Rasmus Villemoes wrote:
-> While paths generally do not contain :, it is not forbidden. Even when
-> ordinary files do not contain : anywhere in the path, there is a
-> real-world example where the current code ends up emitting a false
-> warning:
->=20
-> meta-rauc's bundle.bbclass [*] expects the user to set RAUC_KEY_FILE
-> and RAUC_CERT_FILE to point at the key/certificate used for signing a
-> RAUC bundle. Since those files are not in SRC_URI but are used
-> directly in the do_bundle task, they set
->=20
-> do_bundle[file-checksums] +=3D "${RAUC_CERT_FILE}:False ${RAUC_KEY_FILE}:=
-False"
->=20
-> The :False is because they also allow these variables to be pkcs#11
-> uris. However, in that case, it will be something like
->=20
-> =C2=A0 RAUC_KEY_FILE =3D "pkcs11:object=3Dsome-id"
->=20
-> and the file-checksums entry ends up being
-> "pkcs11:object=3Dsome-id:False". So the python code ends up seeing
-> "object=3Dsome-id" as the [1] entry in the split and "pkcs11" as the [0]
-> entry, and the whole thing ends up doing
->=20
-> WARNING: Unable to get checksum for system-bundle SRC_URI entry pkcs11: [=
-Errno 2] No such file or directory: 'pkcs11'
->=20
-> The code really just wants the right-most, colon-delimited field, with
-> anything before being the path. So change to use .rsplit(":", 1)
-> instead. This should make no functional change for items that contain
-> exactly one :, and matches the change done in a70a7376a ("cache:
-> correctly handle file names containing colons").
->=20
-> [*] https://github.com/rauc/meta-rauc/blob/master/classes-recipe/bundle.b=
-bclass
->=20
-> Signed-off-by: Rasmus Villemoes <ravi@prevas.dk>
-> ---
->=20
-> Note: I'm not really sure meta-rauc's use of [file-checksums] in this
-> way is correct; it seems that the flag should reflect whether the file
-> actually exists, not whether it is guaranteed to exist. But
-> regardless, this patch should be correct.
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Your patch is probably fine but meta-rauc is not using those correctly,
-I suspect it simply won't work or do what they're expecting and the
-code is actually pointless in the current form.
+We create a temporary directory for holding a clone but we never clean it
+up. Fix this by using a context manager areound the temporary directory.
 
-Cheers,
+This resolves a buildup of tmp directories in DL_DIR in builds.
 
-Richard
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/fetch2/git.py | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 21f5f28a0..17cb38cf3 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -392,14 +392,14 @@ class Git(FetchMethod):
+                 bb.utils.mkdirhier(ud.clonedir)
+                 runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=ud.clonedir)
+             else:
+-                tmpdir = tempfile.mkdtemp(dir=d.getVar('DL_DIR'))
+-                runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=tmpdir)
+-                output = runfetchcmd("%s remote" % ud.basecmd, d, quiet=True, workdir=ud.clonedir)
+-                if 'mirror' in output:
+-                    runfetchcmd("%s remote rm mirror" % ud.basecmd, d, workdir=ud.clonedir)
+-                runfetchcmd("%s remote add --mirror=fetch mirror %s" % (ud.basecmd, tmpdir), d, workdir=ud.clonedir)
+-                fetch_cmd = "LANG=C %s fetch -f --update-head-ok  --progress mirror " % (ud.basecmd)
+-                runfetchcmd(fetch_cmd, d, workdir=ud.clonedir)
++                with tempfile.TemporaryDirectory(dir=d.getVar('DL_DIR')) as tmpdir:
++                    runfetchcmd("tar -xzf %s" % ud.fullmirror, d, workdir=tmpdir)
++                    output = runfetchcmd("%s remote" % ud.basecmd, d, quiet=True, workdir=ud.clonedir)
++                    if 'mirror' in output:
++                        runfetchcmd("%s remote rm mirror" % ud.basecmd, d, workdir=ud.clonedir)
++                    runfetchcmd("%s remote add --mirror=fetch mirror %s" % (ud.basecmd, tmpdir), d, workdir=ud.clonedir)
++                    fetch_cmd = "LANG=C %s fetch -f --update-head-ok  --progress mirror " % (ud.basecmd)
++                    runfetchcmd(fetch_cmd, d, workdir=ud.clonedir)
+         repourl = self._get_repo_url(ud)
+ 
+         needs_clone = False
 
