@@ -1,117 +1,116 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D759CD37AC
-	for <webhook@archiver.kernel.org>; Wed, 13 May 2026 21:59:42 +0000 (UTC)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.8726.1778709575450165553
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C35E3CD4F39
+	for <webhook@archiver.kernel.org>; Thu, 14 May 2026 06:55:37 +0000 (UTC)
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.4926.1778741730827026325
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 13 May 2026 14:59:35 -0700
+ Wed, 13 May 2026 23:55:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=Fpnf9CGS;
- spf=pass (domain: smile.fr, ip: 209.85.128.48, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-48a7fe4f40bso83023595e9.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 13 May 2026 14:59:35 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=GFCH2pid;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-448528f4e69so4399869f8f.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 13 May 2026 23:55:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1778709574; x=1779314374; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5kflq12mqJSreOcA4DhpgzQ00XWdjyCTeUOl31UI1no=;
-        b=Fpnf9CGSOe/91fMSMqiojSrejE97/0W+smtoG5ItqwFaCX2U0CaVZFJ3HHOvWTN5xG
-         9pVHxrHAMlPm0e/tZ+pOL1HPB2YQM3POj9+7ZwwOAXpc+uke/hllg9JckUIoK44bvgH6
-         y7aS++5DYUnQOAhAd4+dOIbfF5Yj0kFP8D5ek=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778709574; x=1779314374;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=linuxfoundation.org; s=google; t=1778741729; x=1779346529; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5kflq12mqJSreOcA4DhpgzQ00XWdjyCTeUOl31UI1no=;
-        b=oc4P7f229tYX3uBG6hG01b7JDVUQDFw1fdqvYlATl6RWsygs/JrIW+H49JcE/CB8Cf
-         5rrur+YJ0Y871WE4sjGTjFolFPIe5EBg0xt3T9gQJNFTNLxuxRmOFVKoZDzizhXIxWOP
-         OgirtuUNohNYj0hnsievWr+o+ByVY+UAn6EwlUpvZ9KKQDcFED2vM4TVXxskO7D3YbeC
-         AymvBy/JNlvM6pCZR3aXI9QCeSxB96jyHaT475ekwM6oWDLFKpc1+6pKnuYPlsdfbPXY
-         df62kZBbv85+mwBicFnb2iu+Adct+0JCgahEC2SOWMX34GMeI43w5+zyuAgRCeXxV49u
-         WGdg==
-X-Gm-Message-State: AOJu0YzanoE7x8E5w84rF1yNZ7jtUAoogUClK2Zs+LM5Z+dmYU7xCT0e
-	cWoEMuUBu3PPDIrPPsYPisRDHfpyP4EfubREIOilAP2y7k2TlWXin+5Os7bec27wXVXR9MJ17Sd
-	+zL+wNgU=
-X-Gm-Gg: Acq92OHWpqzttSlUGL1QODrpenJCynAOd9vcF0RaOW9QeueZ5uTX9tGW/YCT4PcEpJD
-	Taid7oRHvGLBX881BKOLe3QCh9hC7ynhHPnMzQzPY3S0i9kBiegJzjy0YRElhWNGfJQ0ZTyMa04
-	KmTd5tkE1KneA+bgXChCbhHOLBVV1A6KQ4Nvp/KcclWRVZTlgRHj3XlhsBenX+Ids/BxZEydbjL
-	aQF0PL2FdqicvkiFQEQQjxMQch+CcgTP9jq+gJdHQXOoqsIEEQXpzxJYFRxYgqixhbb6aw3P3zr
-	OhZQ+9VSeoJu/3AuEGcczXUz/KzlOGJe5iBFNzA/X1e5ofjHnG5GVhnPpUsIau0xODNAWl2lusa
-	zSr3jXgEAAmQbg9rrAUpkJFLFePb5GsmGahB9E5nJn4QJ7ArldQREB+c8spFca0UPu6Yq2LF/zt
-	Ag2WymEJDIdR/P6Xj9ctiFOlkkyRZnsrWd8R+S
-X-Received: by 2002:a05:600c:8b86:b0:48a:563c:c8c5 with SMTP id 5b1f17b1804b1-48fce9ab28emr68060235e9.8.1778709573684;
-        Wed, 13 May 2026 14:59:33 -0700 (PDT)
-Received: from localhost.localdomain ([45.11.68.226])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fd7184d1fsm4919815e9.4.2026.05.13.14.59.33
+        bh=BKrfuSkV3AtbrgsFEQsZ7R7NyTmJ6y3tcKcvcPEC21I=;
+        b=GFCH2pidCfp5onG9rTWYlF79EqXfvOVzmZp1bORA4gWSVgP11tWgXEaSc/ACfbUaaJ
+         tkMK47fFraJwLyNSGl5C0xdB2x5dzTt75Fm7br5aN8bochIzBUz8VUeOUSLzAX6Xcqge
+         sOW5FoarLAL/BMRcKW0nOxbN7a6UOdyujwOAM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778741729; x=1779346529;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BKrfuSkV3AtbrgsFEQsZ7R7NyTmJ6y3tcKcvcPEC21I=;
+        b=BeeE2esgaJ+Qkh/AlU+DgUTZ+qKt7GVaRMC5/aW1DEzrulZQpUQdS/9d+PTkQxSfz1
+         AKPwZtVVBxbAbog4WGkwvQtWLEQPcdZ2RNRm4AGGtmRup6MRDKAPPQKLeRalM4ZW/zvI
+         nNfOcXyJz/bMqEPGozLKGGmXSyNFV7BITYcioKzVTasDHoDpS97cOPsjSHJ+YgqR250h
+         T0lgXwN17Rdv6jlnpY9Zn+6fD9uq7JXIPwMvIt69OKwAiXAQxfCshFxRHH5CuNHMv0+q
+         a2Gu6F0tc7iKGwkSK2KzHetpTqUU+/xN41IKLagbDerAuUtMJSMCmSB6lb5nrkfX1oqd
+         weMQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8TSDdqpKAfwEIrLmH2nyJwYZzCatwl2kvtqkESOcS0Bt1k3rcGusQQGPb4DTwZgpN0AhxnkC29O3T6ISom@lists.openembedded.org
+X-Gm-Message-State: AOJu0YzLckw5Lj53/WEjZZrSZb7E4gp7esM202iMsAj7xVtgUtN+OZnR
+	gajXSv/K5cSg5n0ZqBZCwPZGxaoEJbLf4iT8F1ZHhQt/XQ03VxHz8xkKaLd2yW/iQuM=
+X-Gm-Gg: Acq92OHRpdPx4r7My7iDm44rk8E7cJF9r40K5NRgamqryUgHkopgMkfLpJshbJpem0k
+	r4gN3zantdQpx2DVe2eVphIAOFb3OulqoqyJfHpTS+w/iHmZUmmrTnSiWmWzfJgCNq0c8gg8EbF
+	sQSpVtzt5msnUdoJfitWswx/vEKhIy7gh1rZSpSNk/Rwu4Kxejsx0QKg8n6q0OnpNJR7RduAOwE
+	591PdjAWjaohxy1vjIDW73+7DdpNL5B8NlYGN9YDBeQmA61uXKog0wo+sA2rOPhIuPtWY8SQEDG
+	HbXk//2q7JXHLp6v3HQ9NJ6Z5W02VX2d+uXK3W4Xuk2hZBojLNCcsTDoqt2vnaC/IYybRPyfRia
+	68WHjrJz8wTasghjvdQ8SNSyDEFL0xX3RfCp3FgxX445Cziy9CW9g8v3Apuvs5VKQ/Ue1HkO5qb
+	jRPnA+i6BL5jMBLvxcc6XrfNBhfDVYehv3sUNKTWdEn52k/cu9P09nJRxFc8bOEOybv3sn7N9Y5
+	xDRE53GVH4MRA==
+X-Received: by 2002:a05:6000:26c2:b0:45a:1b61:9f9a with SMTP id ffacd0b85a97d-45c580cdfccmr9996038f8f.1.1778741729085;
+        Wed, 13 May 2026 23:55:29 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:fdc9:4435:e57:8008? ([2001:8b0:aba:5f3c:fdc9:4435:e57:8008])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45da15a666fsm4221229f8f.36.2026.05.13.23.55.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2026 14:59:33 -0700 (PDT)
-From: Yoann Congal <yoann.congal@smile.fr>
-To: bitbake-devel@lists.openembedded.org
-Cc: Yoann Congal <yoann.congal@smile.fr>,
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [2.8][scarthgap][PATCH] tests/fetch: Avoid using git protocol in tests
-Date: Wed, 13 May 2026 23:56:59 +0200
-Message-ID: <20260513215657.2885852-3-yoann.congal@smile.fr>
-X-Mailer: git-send-email 2.47.3
+        Wed, 13 May 2026 23:55:28 -0700 (PDT)
+Message-ID: <097843c651961a6f5156b4e6febfd3f9910e7a73.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel][PATCH] fetch: Upgrade shown checksum to SHA-512
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: JPEWhacker@gmail.com, bitbake-devel@lists.openembedded.org
+Date: Thu, 14 May 2026 07:55:26 +0100
+In-Reply-To: <20260513144621.440431-1-JPEWhacker@gmail.com>
+References: <20260513144621.440431-1-JPEWhacker@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-9 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 13 May 2026 21:59:42 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19516
+ <bitbake-devel@lists.openembedded.org>; Thu, 14 May 2026 06:55:37 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19517
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+On Wed, 2026-05-13 at 08:46 -0600, Joshua Watt via lists.openembedded.org w=
+rote:
+> Regulatory standards for Software Bill of Materials like BSI TR-03183
+> [1] are requiring SHA 512 as the minimum checksum for validation.
+> Upgrade the checksum suggested by the bitbake fetcher to align with this
+> requirement.
+>=20
+> Note that the checker has allowed SHA 512 as the checksum for some time
+> now, this only changes the checksum that is suggested by tooling.
+>=20
+> [1]: https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Sta=
+ndards-und-Zertifizierung/Technische-Richtlinien/TR-nach-Thema-sortiert/tr0=
+3183/TR-03183_node.html
+>=20
+> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> ---
+> =C2=A0lib/bb/fetch2/__init__.py | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+> index f7d5dfe9a..1e78c4fda 100644
+> --- a/lib/bb/fetch2/__init__.py
+> +++ b/lib/bb/fetch2/__init__.py
+> @@ -35,7 +35,7 @@ _revisions_cache =3D bb.checksum.RevisionsCache()
+> =C2=A0logger =3D logging.getLogger("BitBake.Fetcher")
+> =C2=A0
+> =C2=A0CHECKSUM_LIST =3D [ "goh1", "md5", "sha256", "sha1", "sha384", "sha=
+512" ]
+> -SHOWN_CHECKSUM_LIST =3D ["sha256"]
+> +SHOWN_CHECKSUM_LIST =3D ["sha256", "sha512"]
+> =C2=A0
+> =C2=A0class BBFetchException(Exception):
+> =C2=A0=C2=A0=C2=A0=C2=A0 """Class all fetch exceptions inherit from"""
+>=20
 
-Two of the tests were still using git protocol to access git services.
-For the submodule test, the upstream repo has been updated.
+This change will need a tweak to one of the devtool tests:
 
-In the other case, we need to pass the correct command to the manual
-git commandline, we can't use a recipe url that previously just happened
-to work.
+devtool.DevtoolUpgradeTests.test_devtool_upgrade_drop_md5sum
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 5d722b5d65e4eef7befe6376983385421e993f86)
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
----
-This backport fixes failures seen during 5.0.18rc3 build:
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/3818
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/48/builds/3720
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/35/builds/3853
 
- lib/bb/tests/fetch.py | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Cheers,
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index b57cf511a..3775ab0f3 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -1107,7 +1107,7 @@ class FetcherNetworkTest(FetcherTest):
-         # URL with ssh submodules
-         url = "gitsm://git.yoctoproject.org/git-submodule-test;branch=ssh-gitsm-tests;rev=049da4a6cb198d7c0302e9e8b243a1443cb809a7;branch=master;protocol=https"
-         # Original URL (comment this if you have ssh access to git.yoctoproject.org)
--        url = "gitsm://git.yoctoproject.org/git-submodule-test;branch=master;rev=a2885dd7d25380d23627e7544b7bbb55014b16ee;branch=master;protocol=https"
-+        url = "gitsm://git.yoctoproject.org/git-submodule-test;branch=master;rev=38e61644af90dccd73c03ed3acaed98c8dda9294;branch=master;protocol=https"
-         fetcher = bb.fetch.Fetch([url], self.d)
-         fetcher.download()
-         # Previous cwd has been deleted
-@@ -3267,6 +3267,7 @@ class FetchPremirroronlyNetworkTest(FetcherTest):
-         self.reponame = "fstests"
-         self.clonedir = os.path.join(self.tempdir, "git")
-         self.gitdir = os.path.join(self.tempdir, "git", "{}.git".format(self.reponame))
-+        self.giturl = "https://git.yoctoproject.org/fstests"
-         self.recipe_url = "git://git.yoctoproject.org/fstests;protocol=https"
-         self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")
-         self.d.setVar("BB_NO_NETWORK", "0")
-@@ -3276,7 +3277,7 @@ class FetchPremirroronlyNetworkTest(FetcherTest):
-         import shutil
-         self.mirrorname = "git2_git.yoctoproject.org.fstests.tar.gz"
-         os.makedirs(self.clonedir)
--        self.git("clone --bare --shallow-since=\"01.01.2013\" {}".format(self.recipe_url), self.clonedir)
-+        self.git("clone --bare --shallow-since=\"01.01.2013\" {}".format(self.giturl), self.clonedir)
-         bb.process.run('tar -czvf {} .'.format(os.path.join(self.mirrordir, self.mirrorname)), cwd =  self.gitdir)
-         shutil.rmtree(self.clonedir)
- 
+Richard
 
