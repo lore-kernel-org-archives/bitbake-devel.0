@@ -1,116 +1,311 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DE3CD37AC
-	for <webhook@archiver.kernel.org>; Thu, 14 May 2026 18:22:17 +0000 (UTC)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.18245.1778782934971796616
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45087CD4F39
+	for <webhook@archiver.kernel.org>; Thu, 14 May 2026 20:06:28 +0000 (UTC)
+Received: from Minsungs-MacBook-Air.local (Minsungs-MacBook-Air.local [24.205.142.70])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.20356.1778789127566883781
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 14 May 2026 11:22:15 -0700
+ Thu, 14 May 2026 13:05:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=JtDcxXjr;
- spf=pass (domain: smile.fr, ip: 209.85.128.42, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-488b0e1b870so138078835e9.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 14 May 2026 11:22:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1778782933; x=1779387733; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MMs3HwGCH52TgocaJ1vnFmeY2mvyQxAKzqUVi58bnV0=;
-        b=JtDcxXjrJ2JgWUlnxCbGKQ/2xChqYe/Nm9W9at5V0iKWlPHPg3qJHnJ81GcEr17LtP
-         TzA7iLtp0VYB944W25PVTHmlnnTHL/ikocxjEL2kmmamLkad6gQprN5Eh9SxWucPXGcs
-         BJgrN6+I/3Ozayw1CxHiXMARSwzopHSbSBQiw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778782933; x=1779387733;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=MMs3HwGCH52TgocaJ1vnFmeY2mvyQxAKzqUVi58bnV0=;
-        b=nmOsRm1QYDVznmgTnehidQ2ovBrDAk6a3gvG3c7aWAE451wE1uPXLtwKj2WwwegvoQ
-         jvXPF43ZtMw4k4Jp7EFRneE0izowF4KkNwdDmZq8dUT9eHYslqTSAEFsPCVvK8WHCV7I
-         fApbKks3asEaJY4n7V4X5yEUEbc8hsK/w8jEDT5Iy54kAYrtfVCOjHJctsjrZOoyAuOu
-         gNl2tMQk/pEvJ5SDgaWZpU/sOPCIqqaZsHksts2ZtecrcnL2+7oFsMWeQX8dUGk5lQEe
-         OvOmbaky3sC5ng9Qyh64c5+gaMMUFxnU32ziwiNASycnqeQ/IxPUFRacrKCUxh5Bwpst
-         +Ngw==
-X-Gm-Message-State: AOJu0YzWwjXK4n5YhYYAxyBaIYNhQdJNhQ1TVsjr0pOvRz6rZidFebUi
-	Z3/uOhwzxrUZBQASQdJU4Fq+UDLzwI3RmRu7WqyJFdePliGMeXxunzbPPUJ7AQvBCiXrfcAPDtr
-	gEDPa5JM=
-X-Gm-Gg: Acq92OFVIZbNLHQn5Zjx5z616gwjP/0xP/cV996YonBmy/l9hm2AHMXeoWyYdLJG/Qw
-	1DEzMcaedj7aHtQPqXZfs53r4SGOM/lDbMxHTG8Ib1ON86kqEFuDOkCwSjiTFBR/6hAZz4ueHCW
-	BUTuo4RSxnY2c/OrIiFThRsm3dsV0jaOWZLe1xOG7Sd8yCqKSpGAcGtgBBOK1lo0aRMnLBbRRg0
-	tBvoFDIkrF8Wn0JwRQphpf6FsupJj84m6r40NoM5OUE6HDpwud8YjJUd4A8MphBCt7ixg5hVsmN
-	5wRX54gpuviAScW+bL/ZtVAg09t3fkyq65sli9FfkiWUESNysmIeJ9mrE0tZt32sigwd2SrAiQq
-	gwAbOohzSnvVjmq7Ybl7wjPJUSAfVkGxP8+BT7XMCEa86X8+914oDckO1Vi6ebeQfDS/cELdFzz
-	/tClzNqmZdSUxBnMWkNqrUvhNhbEzG3EoISJrjJpO8oeuF1D0=
-X-Received: by 2002:a05:600c:a417:b0:488:a882:c7 with SMTP id 5b1f17b1804b1-48fe65168a7mr5930045e9.25.1778782933400;
-        Thu, 14 May 2026 11:22:13 -0700 (PDT)
-Received: from localhost.localdomain ([45.11.68.226])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fe53804aesm7806275e9.15.2026.05.14.11.22.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2026 11:22:12 -0700 (PDT)
-From: Yoann Congal <yoann.congal@smile.fr>
+ dkim=none (message not signed); spf=none, err=permanent DNS error (domain: minsungs-macbook-air.local, ip: 24.205.142.70, mailfrom: minsung@minsungs-macbook-air.local)
+Received: by Minsungs-MacBook-Air.local (Postfix, from userid 501)
+	id D56525C2A00B; Thu, 14 May 2026 13:05:26 -0700 (PDT)
+From: ms98.cho@gmail.com
 To: bitbake-devel@lists.openembedded.org
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [bitbake][scarthgap][2.8][PATCH 1/1] tests/fetch: Avoid using git protocol in tests
-Date: Thu, 14 May 2026 20:20:53 +0200
-Message-ID: <82abbfcdbda949851a03bb2cb2049ea689564ad6.1778782313.git.yoann.congal@smile.fr>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1778782313.git.yoann.congal@smile.fr>
-References: <cover.1778782313.git.yoann.congal@smile.fr>
+Cc: "minsung.cho" <ms98.cho@gmail.com>
+Subject: [PATCH v2] fetch2/crate: support configurable registry and index URLs
+Date: Thu, 14 May 2026 13:05:26 -0700
+Message-ID: <20260514200526.98596-1-ms98.cho@gmail.com>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20260514051143.67992-1-ms98.cho@gmail.com>
+References: <20260514051143.67992-1-ms98.cho@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 14 May 2026 18:22:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19524
+ <bitbake-devel@lists.openembedded.org>; Thu, 14 May 2026 20:06:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19525
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+The crate fetcher previously hardcoded the crates.io download URL and
+only supported a fixed /crate/versions API shape for custom registries.
+This prevented recipes from using private registries or mirrors with
+different download paths or Cargo sparse indexes.
 
-Two of the tests were still using git protocol to access git services.
-For the submodule test, the upstream repo has been updated.
+Add BB_CRATE_REGISTRY_URL[host] and BB_CRATE_INDEX_URL[host] templates
+with {crate}, {version}, and {index_path} placeholders. Keep the
+existing crates.io defaults, allow custom API-style version endpoints,
+and mark sparse indexes explicitly so latest-version checks parse Cargo
+index NDJSON instead of JSON API responses.
 
-In the other case, we need to pass the correct command to the manual
-git commandline, we can't use a recipe url that previously just happened
-to work.
+Add non-network tests for default crates.io URLs, custom registry
+templates, sparse index paths, trailing slash handling, and both
+latest-version parser paths. Also make the fetch test cleanup chmod
+invocation portable by placing -R before the mode.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 5d722b5d65e4eef7befe6376983385421e993f86)
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+[YOCTO #16276]
+
+Signed-off-by: minsung.cho <ms98.cho@gmail.com>
 ---
- lib/bb/tests/fetch.py | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ lib/bb/fetch2/crate.py |  39 +++++++++++--
+ lib/bb/tests/fetch.py  | 122 ++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 156 insertions(+), 5 deletions(-)
 
+diff --git a/lib/bb/fetch2/crate.py b/lib/bb/fetch2/crate.py
+index bb12f4e..a6dfc6b 100644
+--- a/lib/bb/fetch2/crate.py
++++ b/lib/bb/fetch2/crate.py
+@@ -77,12 +77,43 @@ class Crate(Wget):
+         # host (this is to allow custom crate registries to be specified
+         host =3D '/'.join(parts[2:-2])
+=20
+-        # If using crates.io use the CDN directly as per https://crates.=
+io/data-access
++        # Allow overriding the registry and index URLs via bitbake varia=
+bles.
++        # Example:
++        # BB_CRATE_REGISTRY_URL[my-host] =3D "https://my-host.com/crates=
+/{crate}/{version}/download"
++        #          BB_CRATE_INDEX_URL[my-host] =3D "https://my-host.com/=
+index/{index_path}"
++        dl_url =3D d.getVarFlag('BB_CRATE_REGISTRY_URL', host)
++        index_url =3D d.getVarFlag('BB_CRATE_INDEX_URL', host)
++
+         if host =3D=3D 'crates.io':
+-            ud.url =3D "https://static.crates.io/crates/%s/%s/download" =
+% (name, version)
+-            ud.versionsurl =3D 'https://index.crates.io/' + self._genera=
+te_index_path(name)
++            if not dl_url:
++                dl_url =3D "https://static.crates.io/crates/{crate}/{ver=
+sion}/download"
++            if not index_url:
++                index_url =3D "https://index.crates.io/"
++
++        if dl_url:
++            ud.url =3D dl_url.replace('{crate}', name).replace('{version=
+}', version)
+         else:
+             ud.url =3D "https://%s/%s/%s/download" % (host, name, versio=
+n)
++
++        ud.crate_index_format =3D 'api'
++        if index_url:
++            index_path =3D self._generate_index_path(name)
++            # Support {index_path} for sparse index registries. If not p=
+resent
++            # and it's crates.io, append it for backward compatibility.
++            if '{index_path}' in index_url:
++                ud.versionsurl =3D index_url.replace('{index_path}', ind=
+ex_path)
++                ud.crate_index_format =3D 'sparse'
++            elif host =3D=3D 'crates.io' or index_url.startswith('https:=
+//index.crates.io/'):
++                if not index_url.endswith('/'):
++                    index_url +=3D '/'
++                ud.versionsurl =3D index_url + index_path
++                ud.crate_index_format =3D 'sparse'
++            else:
++                ud.versionsurl =3D index_url
++
++            # Apply other placeholders
++            ud.versionsurl =3D ud.versionsurl.replace('{crate}', name).r=
+eplace('{version}', version)
++        else:
+             ud.versionsurl =3D "https://%s/%s/versions" % (host, name)
+=20
+         ud.parm['downloadfilename'] =3D "%s-%s.crate" % (name, version)
+@@ -160,7 +191,7 @@ class Crate(Wget):
+         Return the latest upstream version, dispatching to the appropria=
+te
+         parser based on the versionsurl format.
+         """
+-        if ud.versionsurl.startswith('https://index.crates.io/'):
++        if getattr(ud, 'crate_index_format', None) =3D=3D 'sparse':
+             return self._latest_versionstring_from_index(ud, d)
+         return self._latest_versionstring_from_api(ud, d)
+=20
 diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index b57cf511a..3775ab0f3 100644
+index 86dd929..0dff3fc 100644
 --- a/lib/bb/tests/fetch.py
 +++ b/lib/bb/tests/fetch.py
-@@ -1107,7 +1107,7 @@ class FetcherNetworkTest(FetcherTest):
-         # URL with ssh submodules
-         url = "gitsm://git.yoctoproject.org/git-submodule-test;branch=ssh-gitsm-tests;rev=049da4a6cb198d7c0302e9e8b243a1443cb809a7;branch=master;protocol=https"
-         # Original URL (comment this if you have ssh access to git.yoctoproject.org)
--        url = "gitsm://git.yoctoproject.org/git-submodule-test;branch=master;rev=a2885dd7d25380d23627e7544b7bbb55014b16ee;branch=master;protocol=https"
-+        url = "gitsm://git.yoctoproject.org/git-submodule-test;branch=master;rev=38e61644af90dccd73c03ed3acaed98c8dda9294;branch=master;protocol=https"
-         fetcher = bb.fetch.Fetch([url], self.d)
-         fetcher.download()
-         # Previous cwd has been deleted
-@@ -3267,6 +3267,7 @@ class FetchPremirroronlyNetworkTest(FetcherTest):
-         self.reponame = "fstests"
-         self.clonedir = os.path.join(self.tempdir, "git")
-         self.gitdir = os.path.join(self.tempdir, "git", "{}.git".format(self.reponame))
-+        self.giturl = "https://git.yoctoproject.org/fstests"
-         self.recipe_url = "git://git.yoctoproject.org/fstests;protocol=https"
-         self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")
-         self.d.setVar("BB_NO_NETWORK", "0")
-@@ -3276,7 +3277,7 @@ class FetchPremirroronlyNetworkTest(FetcherTest):
-         import shutil
-         self.mirrorname = "git2_git.yoctoproject.org.fstests.tar.gz"
-         os.makedirs(self.clonedir)
--        self.git("clone --bare --shallow-since=\"01.01.2013\" {}".format(self.recipe_url), self.clonedir)
-+        self.git("clone --bare --shallow-since=\"01.01.2013\" {}".format(self.giturl), self.clonedir)
-         bb.process.run('tar -czvf {} .'.format(os.path.join(self.mirrordir, self.mirrorname)), cwd =  self.gitdir)
-         shutil.rmtree(self.clonedir)
- 
+@@ -424,7 +424,7 @@ class FetcherTest(unittest.TestCase):
+         if os.environ.get("BB_TMPDIR_NOCLEAN") =3D=3D "yes":
+             print("Not cleaning up %s. Please remove manually." % self.t=
+empdir)
+         else:
+-            bb.process.run('chmod u+rw -R %s' % self.tempdir)
++            bb.process.run('chmod -R u+rw %s' % self.tempdir)
+             bb.utils.prunedir(self.tempdir)
+=20
+     def git(self, cmd, cwd=3DNone):
+@@ -2590,6 +2590,126 @@ class FetchLocallyMissingTagFromRemote(FetcherTes=
+t):
+=20
+=20
+ class CrateTest(FetcherTest):
++    def test_crate_url_uses_crates_io_defaults(self):
++        ud =3D bb.fetch2.FetchData("crate://crates.io/glob/0.2.11", self=
+.d)
++
++        self.assertEqual(ud.url,
++                         "https://static.crates.io/crates/glob/0.2.11/do=
+wnload")
++        self.assertEqual(ud.versionsurl, "https://index.crates.io/gl/ob/=
+glob")
++        self.assertEqual(ud.crate_index_format, "sparse")
++        self.assertEqual(ud.parm["downloadfilename"], "glob-0.2.11.crate=
+")
++        self.assertEqual(ud.parm["name"], "glob-0.2.11")
++
++    def test_crate_url_supports_custom_registry_templates(self):
++        self.d.setVarFlag("BB_CRATE_REGISTRY_URL", "registry.example.com=
+",
++                          "https://registry.example.com/api/v1/crates/{c=
+rate}/{version}/download")
++        self.d.setVarFlag("BB_CRATE_INDEX_URL", "registry.example.com",
++                          "https://registry.example.com/api/v1/crates/{c=
+rate}/versions")
++
++        ud =3D bb.fetch2.FetchData("crate://registry.example.com/glob/0.=
+2.11", self.d)
++
++        self.assertEqual(ud.url,
++                         "https://registry.example.com/api/v1/crates/glo=
+b/0.2.11/download")
++        self.assertEqual(ud.versionsurl,
++                         "https://registry.example.com/api/v1/crates/glo=
+b/versions")
++        self.assertEqual(ud.crate_index_format, "api")
++
++    def test_crate_url_supports_custom_sparse_index_templates(self):
++        self.d.setVarFlag("BB_CRATE_REGISTRY_URL", "registry.example.com=
+",
++                          "https://registry.example.com/crates/{crate}/{=
+version}/download")
++        self.d.setVarFlag("BB_CRATE_INDEX_URL", "registry.example.com",
++                          "https://registry.example.com/index/{index_pat=
+h}")
++
++        ud =3D bb.fetch2.FetchData("crate://registry.example.com/aho-cor=
+asick/0.7.20", self.d)
++
++        self.assertEqual(ud.url,
++                         "https://registry.example.com/crates/aho-corasi=
+ck/0.7.20/download")
++        self.assertEqual(ud.versionsurl,
++                         "https://registry.example.com/index/ah/o-/aho-c=
+orasick")
++        self.assertEqual(ud.crate_index_format, "sparse")
++
++    def test_crate_url_adds_sparse_index_path_with_missing_trailing_slas=
+h(self):
++        self.d.setVarFlag("BB_CRATE_INDEX_URL", "crates.io", "https://in=
+dex.crates.io")
++
++        ud =3D bb.fetch2.FetchData("crate://crates.io/glob/0.2.11", self=
+.d)
++
++        self.assertEqual(ud.versionsurl, "https://index.crates.io/gl/ob/=
+glob")
++        self.assertEqual(ud.crate_index_format, "sparse")
++
++    def test_crate_latest_versionstring_supports_custom_sparse_index(sel=
+f):
++        self.d.setVarFlag("BB_CRATE_INDEX_URL", "registry.example.com",
++                          "https://registry.example.com/index/{index_pat=
+h}")
++        ud =3D bb.fetch2.FetchData("crate://registry.example.com/glob/0.=
+2.11", self.d)
++        index =3D '\n'.join([
++            '{"vers":"0.2.10","yanked":false}',
++            '{"vers":"0.2.11","yanked":true}',
++            '{"vers":"0.2.12","yanked":false}',
++        ])
++
++        with unittest.mock.patch("bb.fetch2.crate.Crate._fetch_index", r=
+eturn_value=3Dindex):
++            self.assertEqual(ud.method.latest_versionstring(ud, self.d),=
+ ("0.2.12", ""))
++
++    def test_crate_latest_versionstring_supports_custom_api_index(self):
++        self.d.setVarFlag("BB_CRATE_INDEX_URL", "registry.example.com",
++                          "https://registry.example.com/api/v1/crates/{c=
+rate}/versions")
++        ud =3D bb.fetch2.FetchData("crate://registry.example.com/glob/0.=
+2.11", self.d)
++        index =3D '{"versions":[{"num":"0.2.10"},{"num":"0.2.12"}]}'
++
++        with unittest.mock.patch("bb.fetch2.crate.Crate._fetch_index", r=
+eturn_value=3Dindex):
++            self.assertEqual(ud.method.latest_versionstring(ud, self.d),=
+ ("0.2.12", ""))
++
++    def test_crate_fetches_from_local_sparse_registry(self):
++        registry =3D os.path.join(self.tempdir, "registry")
++        crate_name =3D "dummycrate"
++        crate_version =3D "1.0.0"
++        crate_basename =3D "%s-%s" % (crate_name, crate_version)
++        crate_path =3D os.path.join(registry, "crates", crate_name,
++                                  crate_version, "download")
++        index_path =3D os.path.join(registry, "index", "du", "mm", crate=
+_name)
++        source_dir =3D os.path.join(self.tempdir, "crate-source", crate_=
+basename)
++        bb.utils.mkdirhier(os.path.join(source_dir, "src"))
++        bb.utils.mkdirhier(os.path.dirname(crate_path))
++        bb.utils.mkdirhier(os.path.dirname(index_path))
++
++        with open(os.path.join(source_dir, "Cargo.toml"), "w") as f:
++            f.write('[package]\nname =3D "%s"\nversion =3D "%s"\n' %
++                    (crate_name, crate_version))
++        with open(os.path.join(source_dir, "src", "lib.rs"), "w") as f:
++            f.write("pub fn answer() -> u32 { 42 }\n")
++        with tarfile.open(crate_path, "w:gz") as tar:
++            tar.add(source_dir, arcname=3Dcrate_basename)
++        with open(crate_path, "rb") as f:
++            crate_checksum =3D hashlib.sha256(f.read()).hexdigest()
++        with open(index_path, "w") as f:
++            f.write('{"name":"%s","vers":"%s","yanked":false}\n' %
++                    (crate_name, crate_version))
++
++        server =3D HTTPService(registry, host=3D"127.0.0.1")
++        server.start()
++        try:
++            host =3D "127.0.0.1:%s" % server.port
++            self.d.setVarFlag("BB_CRATE_REGISTRY_URL", host,
++                              "http://%s/crates/{crate}/{version}/downlo=
+ad" % host)
++            self.d.setVarFlag("BB_CRATE_INDEX_URL", host,
++                              "http://%s/index/{index_path}" % host)
++            self.d.setVarFlag("SRC_URI", "%s.sha256sum" % crate_basename=
+,
++                              crate_checksum)
++            uri =3D "crate://%s/%s/%s" % (host, crate_name, crate_versio=
+n)
++
++            fetcher =3D bb.fetch2.Fetch([uri], self.d)
++            ud =3D fetcher.ud[fetcher.urls[0]]
++            self.assertEqual(ud.crate_index_format, "sparse")
++            self.assertEqual(ud.method.latest_versionstring(ud, self.d),
++                             (crate_version, ""))
++
++            fetcher.download()
++            fetcher.unpack(self.tempdir)
++            unpacked_file =3D os.path.join(self.tempdir, "cargo_home", "=
+bitbake",
++                                         crate_basename, "src", "lib.rs"=
+)
++            self.assertTrue(os.path.exists(unpacked_file))
++        finally:
++            server.stop()
++
+     @skipIfNoNetwork()
+     def test_crate_url(self):
+=20
+--=20
+2.50.1 (Apple Git-155)
+
 
