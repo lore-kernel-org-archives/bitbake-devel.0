@@ -1,94 +1,117 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <marciohenriques84@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF315CD4851
-	for <webhook@archiver.kernel.org>; Thu, 14 May 2026 10:58:55 +0000 (UTC)
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.8099.1778756325741366559
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81956CD4F25
+	for <webhook@archiver.kernel.org>; Thu, 14 May 2026 16:43:46 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.15985.1778777018638109263
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 14 May 2026 03:58:46 -0700
+ Thu, 14 May 2026 09:43:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=IRdgPIOj;
- spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 071EF1A35A2
-	for <bitbake-devel@lists.openembedded.org>; Thu, 14 May 2026 10:58:44 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id D143960495;
-	Thu, 14 May 2026 10:58:43 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7F1CC11AFA05C;
-	Thu, 14 May 2026 12:58:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1778756323; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=VCd3Bxo3KVKah4UaafuZvLTXuboenslTEFgArk9Fb3Q=;
-	b=IRdgPIOjyFPG6LyetGckjQ+dmUzv5choJgvf5zUC0YlHR1TLsAtJJSVzh9ar9HFF2Olnkc
-	cwJjC19PwrIDWO4AYXkLrlola2M0ff2/wIAU7ctFJs1MsLlJf4/8N/CHpkM7I0pTK2rrBu
-	IQ21FnrWby3FlV/KCZ+L0blKdDEQK0C07EBeMrNbYVJVDOVtjtcyqtbEkKQ5ut75QSmeBc
-	jnk9qffqMRvDVvy0CQhbFJXCVjAb1mxVe/wva38OA+7u++b9ty29OIJQjoIv/VavRg17oD
-	Yo1NAhTTjr51Xr+AlkveiRT9wCnb8Kedrd62pc2hxIrJhlVqmj7ckgBqm/SfeQ==
-From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Thu, 14 May 2026 12:53:15 +0200
-Subject: [PATCH 2/2] doc/setversions.py: use older lts series to check tag
- existence
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260514-set-versions-fixes-v1-2-70b1fcdda8ee@bootlin.com>
-References: <20260514-set-versions-fixes-v1-0-70b1fcdda8ee@bootlin.com>
-In-Reply-To: <20260514-set-versions-fixes-v1-0-70b1fcdda8ee@bootlin.com>
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=GrTka13h;
+ spf=pass (domain: gmail.com, ip: 209.85.128.43, mailfrom: marciohenriques84@gmail.com)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4893940bb5eso51297925e9.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 14 May 2026 09:43:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778777017; x=1779381817; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LoeWRdcon/Cm1LIqdOmZUDt8JLPMOaxz/JW2z38KlxU=;
+        b=GrTka13hCw+xqlM2tIzBzWWLs6aEgOL0h2+y871k0YhqjSAewfBPMhwfezHf35z210
+         ITuTsZruY5lGpWjJKB3eGs3+dtJUSXluOk9zxxIx5DoBkqYWIeIMAZlmT45imuMeH18g
+         vYkwGdSz7RztBgLmW5z5cWX/gO7tliGQwzKXy4uA1sbZ6djIa46QIKqvGhUrgATLe/Gf
+         URv92m7K2SW+ptPOmNu7TJcodqNp3JFSAhxHhWFgpyidHsQP++Fyi8iCOb+lSLpCsGIv
+         b2OQGJoSYVbrfdxg0VexCSdohDJslaGBXFfUsP5ggiseTf5nEfhCiXkEq0A4j8qw7P2q
+         8awg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778777017; x=1779381817;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LoeWRdcon/Cm1LIqdOmZUDt8JLPMOaxz/JW2z38KlxU=;
+        b=lJIy/lYbT4JJLlh3NItpRQMdg80YeZ5jnaRHQUNnriBZJr79sZFNQFlKPg9RyX2oEF
+         KiOapXPo+j5reAfhHHEIt6OvYjLfTAHCFLdDLX1RxIbvE2uPlwYL4MBodZXwLNsHNvBg
+         B3yO15aQhXmhSBN/EM69GZ+Q3Fh5qCSxQwxfvkeqnFuMUvVnr/UHzUYOZ+N48w4q016F
+         rQMW+SYGxpjuRj3II4CZSB11NkN2upYB555eck/aXVL05Vhfzlp0TddHvK8z6VxlgXyN
+         M8/p4NftGF4J1hlZwMsP8SV0+7CroVb0/d+ehmFYRGvueWWkVlhPqaVh3rXD3dwprh36
+         wucA==
+X-Gm-Message-State: AOJu0Yw4rBJoVP+k+WVZYF4oNXnmolgcat3PMH5ZOMNFUbUlxeflBfjS
+	RZIkuFDKo65ZCafo78+QzA1SRVGSJclrsB6iwFWVM95s1ZLP1U1P4VQvIPlLz0mH
+X-Gm-Gg: Acq92OGPYSvwOZholiJLIbixHBxikUPxAT1LPW5rjYNLS7lyMTGm/trpAeUYGw12iR4
+	uoOIKBNAq2CVU2mRaSSaWB2Qg9yCru3RcJmXvWsfWnQx1KijQxx2FU09VTzk6pHAOrYLF2rmUcD
+	ndb8kbXsD5wkLFrhyJfR77uyJPv0N/hbGH0rTV0hg2/OFqQwOQ9+u6Ms0hy1M/mZJiPhD0evnLI
+	ZIg6empc2L3QCayl/mItIhJ6lTYcsHjVfVthdXKkfMz3yypK/hM5kYXD5Z5StE6PgU/rRVxBBGZ
+	0uVmvqtIo68Pocl8vnIL6nL5A4LpWymTqj0WHwExfDmV57ysivL0tZN6Df9j6wOxockXUkQb4Jh
+	cj4hX+aaJ9DIUgqIpaDKuzPoqyrBLNQlxL6Lz8QCB4QEiSyWUaHbAGzASKqkHiJ1ZBNcYTKH1+C
+	a1tvd/JkqYxOwYHD4l88IldOQdYxE8W9xIjDdI+qBTLt1i/Gpkw7JZiaBe11JuOfYG7Hmfrxk4A
+	dgDRyBLikAFKHeraNy77DqelpaukqV9Ubw07tQCl2CJepKOJaBQMmfh
+X-Received: by 2002:a05:600c:a11c:b0:48a:5970:2003 with SMTP id 5b1f17b1804b1-48fe5fd483amr2193165e9.3.1778777016967;
+        Thu, 14 May 2026 09:43:36 -0700 (PDT)
+Received: from PT-PF3LTRXS.critical.pt ([213.205.68.220])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fe4c8344asm8866125e9.1.2026.05.14.09.43.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2026 09:43:36 -0700 (PDT)
+From: Marcio Henriques <marciohenriques84@gmail.com>
+X-Google-Original-From: Marcio Henriques <marcio.henriques@ctw.bmwgroup.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=908;
- i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=o3u2I34lMFRXZi+YZ1KgDByPhMRDF3yC3XWsMAAaPoU=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBqBarAWucjO7ln4AX+iuO7Br2iDW4zpq0ooV/Ly
- SRLkXUkrW+JAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCagWqwAAKCRDRgEFAKaOo
- NsTxD/0SSoWAsxDAN/a0KvhopO523zc1pJv7P+G8aHslsOXUVbvA5Q619mzBMobl+4fgSqKK4GH
- M6b0j7CHMPklK5yXIHExuTBdGjy6RU6yHPXwJRKZLwOWt38C5akx2Q4FZD7jQu2ItPFWapfWaNi
- zhNPf0IWXeyVYir3E6pdCq9WVDgX7wre/BUoqIAf2qF0Rik/tYhV7rSe4XSFanOXep36COPGZer
- q5O/2NUIWuI12Q6UVfx4gTw9ZPFARenJrnhK/M+oVIF5YdspqM685Kn3MaDsIulveGKTHokJPGu
- uyjRTyctpT5AP053fQqegJongQttGyebaclPyNIfzSdUj/tDkOHjDNISpVb9Dk91Z66rA1RnayB
- 8KDKBuX94MFnlJpc/KcOtqBgSwn4DM6HOnpnB2HqdvSP660wDt0FsxXYZ3BMCCCDuh0A8JQYXk2
- qtBRXdgDVTb0OnmnMX4UT6ngsvUTVcwe2K506hITyziGNQeP7xUadehF4s/Q9quecyoW0YDoqNR
- O5AzoPvUgh0g8+9RizixBhl8wXb8LUNIPenKeL5XCg9AjIrvorlgx3uApl1vDq70p8u9YYwhMvE
- vdO80A0fP71XflWoaB+uLJIYrDkYxGIukK74/rXwPYnXWKJXI5TTzBTET9UeJeF1qH06NYUyH9c
- i7FMg8wNMXJnJZQ==
-X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
- fpr=8648725188DD401BB9A0D3FFD180414029A3A836
-X-Last-TLS-Session-Version: TLSv1.3
+Cc: Marcio Henriques <marciohenriques84@gmail.com>,
+	Marcio Henriques <marcio.henriques@ctw.bmwgroup.com>,
+	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [2.8][scarthgap][PATCH] data: fix issue with varflag exclusion
+Date: Thu, 14 May 2026 17:43:31 +0100
+Message-ID: <20260514164331.3588-1-marcio.henriques@ctw.bmwgroup.com>
+X-Mailer: git-send-email 2.43.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 14 May 2026 10:58:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19521
+ <bitbake-devel@lists.openembedded.org>; Thu, 14 May 2026 16:43:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19522
 
-Using the most recent LTS series to check if a tag exist may fail if the
-LTS was recently created. Use the older one instead.
+From: Marcio Henriques <marciohenriques84@gmail.com>
 
-Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+This patch fixes an issue when checking if a varflag
+can be safely excluded.
+
+BB_SIGNATURE_EXCLUDE_FLAGS lists variable flags that
+can be safely excluded from checksum and dependency
+data for keys in the datastore.
+
+When bitbake checks if a varflag must be excluded it
+checks if the varflag name is part of the string stored
+in BB_SIGNATURE_EXCLUDE_FLAGS.
+
+As an example, if the varflag 'filename' is in
+BB_SIGNATURE_EXCLUDE_FLAGS, the varflag 'name'
+will also be excluded because the check will return 'True'
+when checking if the varflag is part of the string with
+the varflags to exclude.
+
+To fix this issue the string from BB_SIGNATURE_EXCLUDE_FLAGS
+is converted to a list before checking if a varflag is part of it.
+
+Signed-off-by: Marcio Henriques <marcio.henriques@ctw.bmwgroup.com>
+Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit 8ab71d0ce302521da6a7e18c887cd85d9a94e8ee)
 ---
- doc/setversions.py | 2 +-
+ lib/bb/data.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/doc/setversions.py b/doc/setversions.py
-index 8e934667f93..2df384e9117 100755
---- a/doc/setversions.py
-+++ b/doc/setversions.py
-@@ -109,7 +109,7 @@ def main():
- def get_current_version():
-     # Test tags exist and inform the user to fetch if not
-     try:
--        subprocess.run(["git", "show", f"{LTSSERIES[0]}.0"],
-+        subprocess.run(["git", "show", f"{LTSSERIES[-1]}.0"],
-                        stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-     except subprocess.CalledProcessError:
-         sys.exit("Please run 'git fetch --tags' before building the documentation")
-
--- 
-2.54.0
-
+diff --git a/lib/bb/data.py b/lib/bb/data.py
+index f672a844..53a7a092 100644
+--- a/lib/bb/data.py
++++ b/lib/bb/data.py
+@@ -377,7 +377,7 @@ def generate_dependencies(d, ignored_vars):
+     mod_funcs = set(bb.codeparser.modulecode_deps.keys())
+     keys = set(key for key in d if not key.startswith("__")) | mod_funcs
+     shelldeps = set(key for key in d.getVar("__exportlist", False) if bb.utils.to_boolean(d.getVarFlag(key, "export")) and not bb.utils.to_boolean(d.getVarFlag(key, "unexport")))
+-    varflagsexcl = d.getVar('BB_SIGNATURE_EXCLUDE_FLAGS')
++    varflagsexcl = (d.getVar('BB_SIGNATURE_EXCLUDE_FLAGS') or "").split()
+ 
+     codeparserd = d.createCopy()
+     for forced in (d.getVar('BB_HASH_CODEPARSER_VALS') or "").split():
 
