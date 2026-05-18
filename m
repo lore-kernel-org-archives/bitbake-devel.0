@@ -1,186 +1,151 @@
-Return-Path: <quentin.schulz@cherry.de>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4307CD4F3C
-	for <webhook@archiver.kernel.org>; Mon, 18 May 2026 10:37:57 +0000 (UTC)
-Received: from OSPPR02CU001.outbound.protection.outlook.com (OSPPR02CU001.outbound.protection.outlook.com [40.107.159.19])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.5691.1779100669285379629
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA8ACD4F49
+	for <webhook@archiver.kernel.org>; Mon, 18 May 2026 14:51:22 +0000 (UTC)
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.10133.1779115879374175550
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 18 May 2026 03:37:49 -0700
+ Mon, 18 May 2026 07:51:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@cherry.de header.s=selector1 header.b=eqypRJXZ;
- spf=pass (domain: cherry.de, ip: 40.107.159.19, mailfrom: quentin.schulz@cherry.de)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WczUCSnIg0SWM8FhTvZ5f4iMsjqfbqqZJuqWIB9HH+ycsdg9CAUtR5spkluHWyWWgyszXE+vTeMbYbqOSmACb4D7ap2uz1/FEsnoXw6rUOJcQXXxeRE5tOIft/A18TCHIUwP69bWy/DgjK6yvrDi8rb4fVm2AsXbmFmAygWILUXkxBeMSVSCOWPXLNRkOQ2Obc6QSbt0AH6nmEhCMQcYjfZNLrGgxajMUdFPyOQNceimh8ZjX9qNMVTwojFmgJv96twMe52nM4FPQN1Tcolo3Wx2WME6O/g392HWnWq3AKGfMFWzk7xWurF7JYtsANr7lMiP0kAGTr1jP5Q8Ktlviw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0mcws5m0xuCgU+IzS0x7Dgvygow6mcaAy5ok6nsg+Nw=;
- b=DB4uyvQ8m9MuTLiwhgW3CFrg+GzHP73a8BBie8aLa5AxNSI+4gjzPaSWoN6SvgPMdzpApnQu2e5bC+ziycTd+vTvH9mSSbb5Q7p33YlMrXBnnc0dDMEsGrjGMtCq36ny0IUz7S06CDDV9903NmfeWWPepMWjfDjZk/PE95V4FjodCSB3Z5jBBOKa+vWW0WE0r+UW34xKJxQWuZbrRu5xVf2ukf1VSr/LTyFBYjrAtWfrCLjBqOp9stiNp+QWNKEUxzv2rPfVdaKZMS2I31GTcTBgkf0PecSltKlIApXqxXFAdqKKYZPCm+KnWTV6fHql8ISHcTS3dSIAEYgiI7zSeg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0mcws5m0xuCgU+IzS0x7Dgvygow6mcaAy5ok6nsg+Nw=;
- b=eqypRJXZrlz2WnXR2If32HCrrXLGnbrQ4MCtb3jkh6HP2FlZ9G3YfXBEpTXDFqlpSL2LjyN3zI8IZEErlXyBBXpNYKHp3oQDo179FLizxaLMoZb7jTlLbhUCHb096EAX/RCo8n+jPIxoiXgUmFH1oo9z36n9HdKVsKApn4+41Ic=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from DBBPR04MB7737.eurprd04.prod.outlook.com (2603:10a6:10:1e5::22)
- by VI1PR04MB7038.eurprd04.prod.outlook.com (2603:10a6:800:12d::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.23; Mon, 18 May
- 2026 10:37:42 +0000
-Received: from DBBPR04MB7737.eurprd04.prod.outlook.com
- ([fe80::5960:fb4b:9313:2b00]) by DBBPR04MB7737.eurprd04.prod.outlook.com
- ([fe80::5960:fb4b:9313:2b00%3]) with mapi id 15.20.9913.009; Mon, 18 May 2026
- 10:37:42 +0000
-Message-ID: <0a69ffa7-6a98-49bf-b8fe-09a2195226c1@cherry.de>
-Date: Mon, 18 May 2026 12:37:41 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel] [PATCH] prserv/Dockerfile: Update to Alpine 3.23
-To: Paul Barker <paul@pbarker.dev>, bitbake-devel@lists.openembedded.org
-References: <20260518-prserv-v1-1-9625c3239954@pbarker.dev>
- <b3f4a0e2-7ea1-49c4-9825-377b94e3b788@cherry.de>
- <1396d06122a97c5e712b1d15f36c6b841d07187c.camel@pbarker.dev>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <1396d06122a97c5e712b1d15f36c6b841d07187c.camel@pbarker.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ dkim=pass header.i=@smile.fr header.s=google header.b=nJUiJOTc;
+ spf=pass (domain: smile.fr, ip: 209.85.128.48, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-488b0e1b870so35820705e9.2
+        for <bitbake-devel@lists.openembedded.org>; Mon, 18 May 2026 07:51:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smile.fr; s=google; t=1779115878; x=1779720678; darn=lists.openembedded.org;
+        h=in-reply-to:references:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FSuw+DAuRyBcKeLTByd7B3n6yEb9EdykXWvLXa5JRkg=;
+        b=nJUiJOTc9Is+PxgtBfX6F1EGxwMijIV+G7bCLy4jW0+p4wCEVdVwIuBq3nt9T9G67T
+         v5xJA2W9sRlZMlUoVdanQ+fPURHYcykcTerwVbDjbAs9AWgxnfNqFy7h4RpHsljJZtGU
+         FPFz2xkv0gP4q1mqq98ZZGSkUW2Hm3yFjnHks=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779115878; x=1779720678;
+        h=in-reply-to:references:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FSuw+DAuRyBcKeLTByd7B3n6yEb9EdykXWvLXa5JRkg=;
+        b=SIwyqy60D3eotPnVQnYF6Rkd5OG4R43pbpLg1r9BAwsTS6689N6ymJY3eTEZXEa8s9
+         AMmHuspMrzOO3IP4Ltj4h1AUYJcwxt7F3ekNZ8Elfqnpdmm7/a5/kqjYiCpuEaefgFw2
+         lagVShpDg4BmTVs6YDa16OgP4JIYpwtoz1VWxg4tKcQFDpgKL31rTW7l5tDuGIoqObno
+         xAmc4Le1SvgFRhNkjFKau5n6fUG/3h5DSchAwRCuklpcqWqzquxN8yhAbnK8kXfo6qmX
+         z3zcUATAcxxFvFk95CYrYRFvgRJ/vw1ruIkA+5mruoj8zEqCCptL1rsGcWy7p/kHigmN
+         9SEA==
+X-Forwarded-Encrypted: i=1; AFNElJ9dZ/AM94fkswzLhEzEMa+aMH1S1yjemjjP8KN9dKzVuzIgxsaT/oR1kVOwdOVVOKv+HV435EQbky+Id80C@lists.openembedded.org
+X-Gm-Message-State: AOJu0YzxOrF8PpdR7lQh/Z2IvMUcopapPNOtKv1fw0YIlbXmYPINi00a
+	/y6HNjQHBb4jeeprqlS1lbao2ifY2RiS57/JQFf3xkQd5jMRC/7V8NJmwsbqHPx+o5Y=
+X-Gm-Gg: Acq92OGEh3dL9IzzlTuaR4GIYm4pLXw2v91SE0KoP/wRIXmIRqLZ+FJIRlj//9Y3cOb
+	Za31T/xUuRMroMhKTOV4G0HRQEtMXWsE9Xk6ZLlwtpfaAM2De3y18uCo2K6QaZLjTHq/RGuWvLV
+	QIPdSnkXf41dpknoAgyFYl5aTH14AVzOr+4YXPRnbD2l+Ynk5mwwHAUqnfBQhtuJA/irdFRmQIX
+	X1mtY3hBN2nFj1uxSK0vd566hQPeel4Ri61+7bJvZro72Ry5tTHPWkh5Jz3MANx+wyCSeykHRv3
+	6Q2TPU/SWRhekYJZK5FI5OL1CEMvrFxcCMQcg11kaAcuUdI1Wt+z8f6cuvFWF1mrtcCnRAthii2
+	2Uw5YpwyYN5nD2PDvaMzQ/j3j9j3GPDCRu9v68KyrjLAc1sH0px9KFnuHzdWSxYwL3AV3PfMF1k
+	LtBQVQdjk78ZJb1/LVC+n09YyuNOIQS/wamWth+hG12aYAj7MZhr1Uk7uZjbd8d5oezvghWByHk
+	BOuTfuaurQ=
+X-Received: by 2002:a05:600c:c0db:b0:48e:8499:4be0 with SMTP id 5b1f17b1804b1-48fe60ee481mr175717985e9.15.1779115877629;
+        Mon, 18 May 2026 07:51:17 -0700 (PDT)
+Received: from localhost (static-css-ccs-204145.business.bouyguestelecom.com. [176.157.204.145])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48feaf0fb46sm84820175e9.11.2026.05.18.07.51.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2026 07:51:17 -0700 (PDT)
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: VIZP296CA0011.AUTP296.PROD.OUTLOOK.COM
- (2603:10a6:800:2a1::12) To DBBPR04MB7737.eurprd04.prod.outlook.com
- (2603:10a6:10:1e5::22)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DBBPR04MB7737:EE_|VI1PR04MB7038:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b83b17e-d672-4609-1d56-08deb4c97dbf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|366016|376014|1800799024|56012099003|18002099003|22082099003|11063799003|4143699003;
-X-Microsoft-Antispam-Message-Info: 
-	1QXv6H1zXTFvrc3S9MzXWWf+6FYvC3xvXus4ixlhG+kpE87Ts2KyZZ0a7E+X+bqI2a9QPOtMnrr3N89MWIxSsjjSd1xxaYEEY7saBvcZlsTDYw5yr82CSvK+gx2JZPogDI4o9RAqFW1feJSi3jF5CbaYsB35PmnLS/Fm0mw+oyQmHGjY4MIRe9pTObA1Wxt3NzgS7Hd56nPrSl11c+2+jRBzstnFRVDWYpbL1D33di3H1BUDqQFxJeVgg03o2AcgXm5B+uVXMUJGHmk7N27/O76j9RQrHYrhIpNui7yrzyFlUyZ9gLAgamlyEdOaurJkRs5AFPWA+C3nW5fYN/oso+DvpPTZ+MFrLI04dwrKgQwBREr4saE2foiWOnUmpXwMNegQCUge5b+D5Rhas8cyUV4/8rQ1/KlXWixyb93+oAoGTE91ckMLyaBCVFWXNcIt5hlh4Z0ZKz18KWkC6riAWs2Ff9Y4xMg8x90dntgtSjbhe5LEvXK7kqxJG8oBEZRxKgwDKKPnxokiZzxKW7TtkPNV8D8kZDKwJCCqD4XVS65gatbKyWv3hCMFlIh+nv0kwniOR3Nx26N4ocHeZwHEwSoYl9zU0PKXyhgWjRHHBuUNX4ZB2h7TBJJe1SSHtYxu4+/wM5gw7kiPzTKjlPyUFNmX3g//RvZpUC8Gy0V2D8vH6E5XCaE6v5a2Ln0UAeYU
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR04MB7737.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(56012099003)(18002099003)(22082099003)(11063799003)(4143699003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?OPxNZkEyKqzHZZistyKD05rdN7kvLU2CkulySn2qxceZ4xBeMx+lHTMohExZ?=
- =?us-ascii?Q?e4svIZhMvAcbDz4cD/FHiHoZD6fuBoJ2tSmjhX5EvysI9jStKO2h0iJDmnC3?=
- =?us-ascii?Q?p/Lgmw63HbF4Bp6p1sfGWYfAelPyyBqzRBX35oC4fBpdFvW1/h2cpbSRJZwy?=
- =?us-ascii?Q?5WHjOIZD3JMztQVNXOSIc8ahN/ygtJ9F4cWTCycIIwiQQ9zK/NjeT01RQ86o?=
- =?us-ascii?Q?33P5IG5NONh5Ombka2Xzx3BVe9QKh3tS473ZXgiC6nlXpYp8kGxl4LLOW8Mp?=
- =?us-ascii?Q?LoRj+RH4gy4x8elgeXO+KYdxYHTyjSnQgMoYEz6Yre1rPr3IanoZAhDmAoPN?=
- =?us-ascii?Q?WYV5hGj8vGtbcLql2MfNtxnHumP4laBH+tkraE8vWUsTdH6PbdmGbiYpoeJh?=
- =?us-ascii?Q?h2eOKGOtYsfCrggNHjPLZj4T3RWybbs1EPdC5kiKxqI2/5s8SGVTmETqH8KH?=
- =?us-ascii?Q?DR51bBww7ZNeUjwLs9SkaHwPPbvQe21ADrtPGGqKxfEEpJPI/hPFQDCfDMze?=
- =?us-ascii?Q?oiFn4swhvHx9pPUs0B7JLWOpRfDGfLx8Bl1gla0RfBXufjYcXDMY94dDVtav?=
- =?us-ascii?Q?kjAola93rQaPuMwifkBQGRX+fmV3tSiutrQ+FV4aEvdEpReowaFsplKwtvnF?=
- =?us-ascii?Q?NfSCqeMrh3NSmSJLf4v0OKftGH+JwUrnGmCrCEV0IfriLirNaouBGtMRATKX?=
- =?us-ascii?Q?qvobvwGafwLn66+D9QMEmK5nnHALWNJS00CfkW4suhEw3Zk2d1TxPVr3Bn9o?=
- =?us-ascii?Q?gDPRUbjb+g5dTBOB3Q6iqNNoMUpye6NE2SLfNLr1EBQaBPESExGZcskbBBmi?=
- =?us-ascii?Q?gcj4wTdbfKRmGRHQoTafXUtaVFfRX+NFjtqdm/RRb13fUVSbMkD4ff3whtiY?=
- =?us-ascii?Q?jY+bjq4Ek3bAa5HYd+4ZePMVucnl09r3YN80MxvUsX9pWU9xraMZSh9LdK79?=
- =?us-ascii?Q?D5MPgQbQISOhU5Isla5b9V15al1dyspigZTnFZmwmHRCewohzU+Z1QvMp+Hn?=
- =?us-ascii?Q?j7d+9+ODFqDfKtzUfaL5iGL2fVkgMm8bfH5mPITJ5lF6auURGg/fSH50tW2G?=
- =?us-ascii?Q?iDsMHzRTqd9WZJC3SXWoDk/Kx0DL1x/ZrkLa9qs8q3UOHQdunfhS/eflKUM0?=
- =?us-ascii?Q?4rhEChtViFA1nRNAfnfMUxA4gKZ5EC37xAsdbTvnuTq4f1X3sCy2OfKL8r/6?=
- =?us-ascii?Q?NRLGZw3CRByeCe7QYsqIBgpsEtfKzCEzQdnZvkGchwJyp0QeRHoZlPdj1AKd?=
- =?us-ascii?Q?jn0yflFbQ1cIeDazGpAiGnQqUJ37oO4BsB47JBTe6cjhwhsOgu5vCyXnNTjT?=
- =?us-ascii?Q?WJDLHUYgIgA+gaAWBvWLJGnz8uF/IOEM9vgTN8PpqUC7ueL+C9rhJg9lkWQD?=
- =?us-ascii?Q?4wr2ByzQMHhEuSyLV5sl8+oD1w0hukeAE9v9og7aApMnapESmcXs9DhfxKRu?=
- =?us-ascii?Q?fOlL+PLc8IeXRrplUUhujxiYREHb66ucoV5mvMl9P70pDzCa3RGR1rfRuGNp?=
- =?us-ascii?Q?52F9YUdok73FQnXKuKwGMKl3yVFVO1CKW5jxILKgQ+Oq+kEg8hArHB8K+EPB?=
- =?us-ascii?Q?GrchR5WOLCKgJGPdUe2c8Cj5wXWmL04XeVsLDtJyP9C8adZEL5LpPsXQ0X8S?=
- =?us-ascii?Q?wVhw8uGKl5zWxYgZ9kmCmIQOLM+T0EQF644kQGkhwmgPNXYvZhrUsvFIub3d?=
- =?us-ascii?Q?JwHpnVXo/WV7Sl87NYHXRVve77qnOssMi5o3xuLK5pbdNyJSo9svrB/Cdj5k?=
- =?us-ascii?Q?Xdj4+D5/Ag=3D=3D?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b83b17e-d672-4609-1d56-08deb4c97dbf
-X-MS-Exchange-CrossTenant-AuthSource: DBBPR04MB7737.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2026 10:37:42.5409
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OyXiHBfuOEY8EAuFoTYg8cJzjqDdaOQIiznNeSdUDiM1Fni1B87gbey90oDMfMannwhdDKwjuvyKbk1Nnir7FjoLT6bfyrzCjKS2w93CLUc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7038
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 18 May 2026 16:51:16 +0200
+Message-Id: <DILVXYLZNSFQ.F22AETY6RSWE@smile.fr>
+Subject: Re: [bitbake][wrynose][2.18][PATCH 0/3] Pull request (cover letter
+ only)
+From: "Yoann Congal" <yoann.congal@smile.fr>
+To: "Richard Purdie" <richard.purdie@linuxfoundation.org>,
+ <bitbake-devel@lists.openembedded.org>
+X-Mailer: aerc 0.20.0
+References: <cover.1778576715.git.yoann.congal@smile.fr>
+ <4d3807d067376d11bd13b5ccd1abf28f77c13ce0.camel@linuxfoundation.org>
+In-Reply-To: <4d3807d067376d11bd13b5ccd1abf28f77c13ce0.camel@linuxfoundation.org>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 18 May 2026 10:37:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19537
+ <bitbake-devel@lists.openembedded.org>; Mon, 18 May 2026 14:51:22 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19538
 
-Hi Paul,
+On Wed May 13, 2026 at 11:21 AM CEST, Richard Purdie wrote:
+> On Tue, 2026-05-12 at 11:07 +0200, Yoann Congal wrote:
+>> Those are the patches from the last patch review:
+>> https://lore.kernel.org/bitbake-devel/cover.1778197991.git.yoann.congal@=
+smile.fr/T/#t
+>>=20
+>> Passed a-full on autobuilder with 3 AB-INT issues:
+>> https://autobuilder.yoctoproject.org/valkyrie/#/builders/29/builds/3795
+>> * qemuarm-tc: 15698 =E2=80=93 AB-INT: runqemu.QemuTest.test_qemu_can_shu=
+tdown hangs with "Data received serial thread"
+>> =C2=A0 Retried in https://autobuilder.yoctoproject.org/valkyrie/#/builde=
+rs/42/builds/3689
+>> * qemuriscv64-ptest: https://autobuilder.yoctoproject.org/valkyrie/#/bui=
+lders/56/builds/1562
+>> =C2=A0 This is a ptest failure in procps: 'pgrep_match_against_full_proc=
+ess_name'
+>> =C2=A0 This particular ptest later passed in https://autobuilder.yoctopr=
+oject.org/valkyrie/#/builders/56/builds/1564
+>> =C2=A0 (I have yet to properly report this one)
+>> * qemuarmv5: 16217 =E2=80=93 AB-INT: boot hang in qemu (amba chip errors=
+?)
+>> =C2=A0 Retried in https://autobuilder.yoctoproject.org/valkyrie/#/builde=
+rs/80/builds/3559
+>>=20
+>> The following changes since commit a2dd9be788274d9c7280be5b1be5eb5c3990c=
+f54:
+>>=20
+>> =C2=A0 fetch2/crate: use CDN endpoint for version checking if possible (=
+2026-04-30 10:08:54 +0100)
+>>=20
+>> are available in the Git repository at:
+>>=20
+>> =C2=A0 https://git.openembedded.org/bitbake-contrib=C2=A0stable/2.18-nex=
+t
+>> =C2=A0 https://git.openembedded.org/bitbake-contrib/log/?h=3Dstable/2.18=
+-next
+>>=20
+>> for you to fetch changes up to 87dcc2935137558ac236676ab7bcbc3cc4883c2c:
+>>=20
+>> =C2=A0 lib: Replace codegen with ast.unparse() (2026-05-05 17:36:57 +020=
+0)
+>>=20
+>> ----------------------------------------------------------------
+>>=20
+>> Alexander Kanavin (1):
+>> =C2=A0 fetch/wget: in upstream version checks, match versioned directori=
+es
+>> =C2=A0=C2=A0=C2=A0 exactly
+>>=20
+>> Paul Barker (1):
+>> =C2=A0 doc: Fix description of git shallow mirror tarball creation
+>>=20
+>> Richard Purdie (1):
+>> =C2=A0 lib: Replace codegen with ast.unparse()
+>
+> This breaks the hashequiv docker file so we may want to hold off on
+> this until we have the other fixes in master?
+>
+> I'm a little torn on backporting it. Yes, it is a nice cleanup but it
+> does introduce risk, as that other issue shows. It is all relatively
+> minor but...
 
-On 5/18/26 12:31 PM, Paul Barker wrote:
-> On Mon, 2026-05-18 at 12:28 +0200, Quentin Schulz wrote:
->> Hi Paul,
->>
->> On 5/18/26 11:15 AM, Paul Barker via lists.openembedded.org wrote:
->>> Alpine 3.13 is long obsolete, update to use the current version of
->>> Alpine as our base image
->>>
->>> Signed-off-by: Paul Barker <paul@pbarker.dev>
->>> ---
->>>    contrib/prserv/Dockerfile | 2 +-
->>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/contrib/prserv/Dockerfile b/contrib/prserv/Dockerfile
->>> index 9585fe3f076c..c630ce99722f 100644
->>> --- a/contrib/prserv/Dockerfile
->>> +++ b/contrib/prserv/Dockerfile
->>> @@ -28,7 +28,7 @@
->>>    # prserv
->>>    #
->>>   =20
->>> -FROM alpine:3.14.4
->>> +FROM alpine:3.23
->>>   =20
->>
->> FYI, these are "tags" but they have the same meaning as in git. They
->> aren't immutable and they actually are very often changed to point to a
->> different layer.
->>
->> e.g. 3.23 currently points at the same layer as 3.23.4, but a month ago
->> it very likely was pointing at 3.23.3.
->>
->> The only way to work around this limitation (if desired) is to use the
->> digest value of the tag as argument, this guarantees that alpine:3.23 is
->> the same from any machine and does not depend on when it was first
->> pulled or whether --pull=3Dalways was passed.
->>
->> I'm not sure this is a necessity here but wanted to bring this up :)
->=20
-> Hi Quentin,
->=20
-> We do want to pick up the latest updates in the Alpine 3.23 series when
-> this container image is built. What we don't want is to automatically
-> jump to 3.24 or later without some human review as that may need some
-> other changes to be made in the Dockerfile.
->=20
+Let's drop it. I was a little too enthusiastic with my backport
+requests. I'll go back to being more conservative.
 
-Yup, :latest for sure is a bad idea.
+Regards,
 
-Note that by default docker/podman will not pull a newer image base if=20
-there's one available locally already. The pull policy for podman-build=20
-by default is missing:
+>
+> Cheers,
+>
+> Richard
 
-        =E2=80=A2 missing: Only pull the image when it does not exist in th=
-e=20
-local containers storage.
-          Throw an error if no image is found and the pull fails.
 
-You likely want --pull=3Dalways or --pull=3Dnewer.
+--=20
+Yoann Congal
+Smile ECS
 
-docker-buildx has a --pull argument (which doesn't accept an argument)=20
-to "Always attempt to pull all referenced images" which I'm assuming=20
-means the default is the same as podman-build's and passing --pull would=20
-be equivalent to podman-build's --pull=3Dalways.
-
-Cheers,
-Quentin
 
