@@ -1,149 +1,238 @@
-Return-Path: <anders.heimer@est.tech>
+Return-Path: <paul@pbarker.dev>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE65CD4F50
-	for <webhook@archiver.kernel.org>; Mon, 18 May 2026 14:59:22 +0000 (UTC)
-Received: from AS8PR04CU009.outbound.protection.outlook.com (AS8PR04CU009.outbound.protection.outlook.com [52.101.70.20])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.10317.1779116357389699772
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFE0CD4F50
+	for <webhook@archiver.kernel.org>; Mon, 18 May 2026 18:55:10 +0000 (UTC)
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.4656.1779130506698484022
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 18 May 2026 07:59:17 -0700
+ Mon, 18 May 2026 11:55:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@est.tech header.s=selector1 header.b=Whir7P4h;
- spf=pass (domain: est.tech, ip: 52.101.70.20, mailfrom: anders.heimer@est.tech)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wNDqoPY10ScP2JPaSvuUd9eUuWTi85rHtG9WtXMGzxWdSCnv6Fqqq7YYxa/uW26rOioNVjHb8X//I8JolKHwb8CSWC36oeIa1oEm0/FFBaXH3FKide57e1vjGn8PeDqLEXi1RjRFbp875ZsWr6W+FBzepf9GYbjQI9sZV9qDqjcNUC+NS5CuzlxXAoluASKKwhdYMgjvCC7VSrXGDZgUC2ummfpn24eaMxQ8ZMxgstksWRXsbpaCDcQl6Kk3pj6c2aabP4t6zjSBagq4lvnrP5XdAwovu3rvpxpNkWcymTjOovXBd9wtR6eYGBbq4lfHkjajDX3UwbIwokONip7yQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DIjMSk6uVa7pozlTGW3U1hDJxaw+wJ7m/UXBwsu9Jho=;
- b=s+dVGkumUtpD7B8nNriC8ArtsibX7psnPFMBboSpF49rfpK9WfD7W+xCk5Z2HraJsd90i2uBVeKx+XnEc68nvUNo6wE2U0898xtzNqBvFtCAgzpE8iRXgl7uQNpGkDBOeuJsv3bFuYtGfXtX9sC7FmwmG5jZFBTbxDHWHfJRqj8g3qZPgEjB9/UByW82rApaaMNCb38FhC8ZwZ2wsnSzi231bL70xL8dHH0mgl2kay3s1CXVsF0lP2EZX/BRn/yIEUEgWaWWm6wrUHz3mqLT6sHJF7xI/PJbgqz5eZ6sDc4hbreB0OFncV+7iz/T8YLRJ2rNLgCBjWNB1/F6MgVejQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=est.tech; dmarc=pass action=none header.from=est.tech;
- dkim=pass header.d=est.tech; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=est.tech; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DIjMSk6uVa7pozlTGW3U1hDJxaw+wJ7m/UXBwsu9Jho=;
- b=Whir7P4hJFeB5pk3M9f7gHTo9bvdI81Cw1uzEHTsP4Qat5ySdKTT2/LwsVYyTF/s4OBfWLw5wMufecG9sp3FBDIReq7pvce/+h0atjvy6xuHRfsm3r19HKm9ypCxFTnDulNrO+7gCPaAljqEiuUbRpvSFaDU75BKtuUIE7wX95HlpzUKemW87siCVvaPNvnHxBTQUVagvAR7Y9c45nSDExCvwPMPK/1sbcExObX3FOYg3pVfqPNElUigfzZejEqp3ekxFf7YBfbr7WCLKBo3bq3Phz5OtvAWPjDHvC4AOehTC6EIH1OEmUsX5+p/C918msyKHBMa2wceT2kHc8FmWw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=est.tech;
-Received: from DB9P189MB1641.EURP189.PROD.OUTLOOK.COM (2603:10a6:10:2ac::9) by
- DU0P189MB3274.EURP189.PROD.OUTLOOK.COM (2603:10a6:10:59f::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.25.23; Mon, 18 May 2026 14:59:13 +0000
-Received: from DB9P189MB1641.EURP189.PROD.OUTLOOK.COM
- ([fe80::90da:b700:f102:5c82]) by DB9P189MB1641.EURP189.PROD.OUTLOOK.COM
- ([fe80::90da:b700:f102:5c82%6]) with mapi id 15.21.0025.022; Mon, 18 May 2026
- 14:59:13 +0000
-From: Anders Heimer <anders.heimer@est.tech>
-To: bitbake-devel@lists.openembedded.org
-CC: Anders Heimer <anders.heimer@est.tech>
-Subject: [PATCH 0/2] fetch2: harden deb/ipk unpack command argument
-Date: Mon, 18 May 2026 16:59:07 +0200
-Message-ID: <20260518145909.1132755-1-anders.heimer@est.tech>
-X-Mailer: git-send-email 2.43.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: DUZPR01CA0143.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4bd::8) To DB9P189MB1641.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:10:2ac::9)
+ dkim=pass header.i=@pbarker.dev header.s=fm2 header.b=bSQJEswo;
+ dkim=pass header.i=@messagingengine.com header.s=fm3 header.b=U4lV3EaL;
+ spf=pass (domain: pbarker.dev, ip: 202.12.124.152, mailfrom: paul@pbarker.dev)
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id B02C77A00A6;
+	Mon, 18 May 2026 14:55:05 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Mon, 18 May 2026 14:55:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1779130505; x=1779216905; bh=AezZ6M6dae
+	JDr40AQre3NgzFr63OBGJEfoTWhr7ndwg=; b=bSQJEswo3KFmrvoQR5+DRrAGJ9
+	l83hgn1UQ0AYJSagKhL9cP4KwdzlpSZSlMTlj9tVX+Vz2P9zCQJoCnQnvZ5Ayzgg
+	45ooKhUTz/YWFCC5LUfZPEP54EQjon2nXKNSGmHGqACnb3LJrGvMu389mLAR+7L+
+	d/H7Q0rzjy3EaQBw+6ja5b+L/onoWThW3ejxam1s2q0k8kYiraNJXssfPePIWLai
+	QxXvGe2N6s4DoqmkLiQ+1aUF6UclOJ++GUCfzb9VWEkwlOSNJuu+jZnJ8hYU40Fj
+	ployb0oLfQm219IsZ5WvHsTuuhoKFTd1Phh6ECdc47GvzWlNsO2vFmFOJhdw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1779130505; x=1779216905; bh=AezZ6M6daeJDr40AQre3NgzFr63OBGJEfoT
+	Whr7ndwg=; b=U4lV3EaLIUtvY1N9YaigImcjBz+Ax0Uh7eXk24Irc1Yh9DDcm06
+	ftfMYnFN/d48qdWNsKgZuSNw5c60lbe32iz9gtV6gFiJocFIOS9GkREj3sSXslsj
+	MOnW72fuqXPhXGXWzeFCojRK84T4kboz4cW/KA7jZIpFfN5O0pD56w1SmfGQGTmA
+	FTi0s69isHpuYKBknktQDGO3Uz3HIBYaDUqLnjzXQZchRGpyIC1gFbAFnNuDzxhs
+	/hA50jrhiLEKTOai2sHBrbhLH28KNc+FE3+c27VTXtZPEOabTCkFN4OYSvAy5tgI
+	+LEfocgj2QTG8eZ/0rp8VJuB16Rd9FBkcdg==
+X-ME-Sender: <xms:iWALagiUQPbfi8fN6Da6_t9hMEOu3CjGLBDJsvdEwdbjKcynUxJj4g>
+    <xme:iWALav4dC2H6u-k7cr5hZBcThgyZXNv9FExWn71f_jwhsWZi9syRPscyYKqKfJQPA
+    M6g-hP1nbEI-aZrr7mktuZyocoQ8jIjEI0TGzEjBL_-mbN3X6F2Zh0m>
+X-ME-Received: <xmr:iWALagaM6NssdpbvdYGgcZw5yL9gH2VFyd-Lluahj-6sxDuBGqNWuozoMuOvZQ8ROQ_7cP9PrzuqHR1r1mlc89xkNPZtkYsL9GmqM3JfWzv->
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddufeelieegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepkffuhffvveffjghftggfggesghdtreertderjeenucfhrhhomheprfgruhhluceu
+    rghrkhgvrhcuoehprghulhesphgsrghrkhgvrhdruggvvheqnecuggftrfgrthhtvghrnh
+    epfffhgefhveeguedtgeeuhffguedthfdvffeliedvvdektdevieeiudethfevvdeunecu
+    ffhomhgrihhnpehgihhthhhusgdrtghomhdphihotghtohhprhhojhgvtghtrdhorhhgne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepphgruhhl
+    sehpsggrrhhkvghrrdguvghvpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmthhpoh
+    huthdprhgtphhtthhopehjhhhonhgrthgrrdhpohhmrgesghhmrghilhdrtghomhdprhgt
+    phhtthhopegsihhtsggrkhgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmhgsvgguug
+    gvugdrohhrghdprhgtphhtthhopehrihgthhgrrhgurdhpuhhrughivgeslhhinhhugihf
+    ohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehnihhqihhnghhlihgrnhhgvddttd
+    efsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghlvgigrdhkrghnrghvihhnsehgmhgr
+    ihhlrdgtohhm
+X-ME-Proxy: <xmx:iWALas4s-l6ZZJoYxB13L4dEoqCMwNSU363Pdp59ELedryJ5yLv_Eg>
+    <xmx:iWALarDkw1vwhUdvtcUKmQeoBbhKdwCUf9HjiwBYR9OzHfVIz83v6w>
+    <xmx:iWALaqfYGojToTDQQNbPMpTlPnOSOiH2ekE-Ems_W_LuN33yZt4n8g>
+    <xmx:iWALaiKRQfSN6Kvm1bjVtNLxJg7qBW0w4k6TydaQxEHOiV-58zb1FQ>
+    <xmx:iWALaheFzdTiT4miSNAZ7TLd2hRBorm8bXVV8VNLimFir4aijpwoNwEA>
+Feedback-ID: i51494658:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 18 May 2026 14:55:04 -0400 (EDT)
+Message-ID: <dd8c10dda0eec610d1084a92fa383fecee45c67a.camel@pbarker.dev>
+Subject: Re: [PATCH] fetch2: honour PATH placeholder on cross-scheme
+ PREMIRROR rewrites
+From: Paul Barker <paul@pbarker.dev>
+To: Jhonata Poma-Hansen <jhonata.poma@gmail.com>, 
+	bitbake-devel@lists.openembedded.org
+Cc: richard.purdie@linuxfoundation.org, niqingliang2003@gmail.com, 
+	alex.kanavin@gmail.com
+Date: Mon, 18 May 2026 19:55:00 +0100
+In-Reply-To: <20260510-b4-yocto-14156-v1-1-b31433816463@gmail.com>
+References: <20260510-b4-yocto-14156-v1-1-b31433816463@gmail.com>
+Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
+ keydata=mQINBGC756sBEADXL6cawsZRrDvICz9Y1SG0/lW1me4xpq36obh7a0IGAzp3ywNRb/4MO
+ DTqP4+DD0cIFuDY41/N17g0sNlp8z+/k/IIDmNPtYQOTVmAkrkdDU4BP8dD3Cp1PUw6nrbInfujAJ
+ NrVM0IVDkwKTbL2Nu1P+xns4MIpF9Kj4XN5celYJ9vEJ2n0Bo0nO5T5vg46dihIaDl+24iNIHSsHq
+ YyEdMBfY8kY2RulpaAyFOuaaHdIeDkejVvO5xLSiYLjB5qrRhgH134lJXsuLOsFQ64ybGECuOasnb
+ auevsPBAaroQW0pqVb9FneGrWHxMCLlQHJRqQJRdVa6bsUdp6NWra8/0msPawSrFwGQdfJBTA3aXJ
+ C2CG1JxEgj6QQjEQA49DSjgzdhInbiIK8Vbp/zedM4aVue7qJnwPMTFQM9lYx63b7wLN4Tu8B9YZ0
+ UFdSwMCJuqmYGsYRUYdwM3ArjS0VO6WpU+HBKvzLK5GQfUTSM8KaZ5eA2Uo2ain8SSZb+WptUYKpx
+ F9jbtCPbjpZKzGuX4iHFl9eT75TM9iXJNGAjB5xigkADLwVfPoJ5E53S+KdNVuOWHugyLMPNAQHOw
+ pw5Rey+0zxyzPd4wphutc93UIU5g/029ngAc7DuKCq12jl7fhkjqFlFtYPIc1k7nd+RSezmH/qRes
+ bMErHSX1MBSZQARAQABtB5QYXVsIEJhcmtlciA8cGF1bEBwYmFya2VyLmRldj6JAlcEEwEIAEECGw
+ EFCwkIBwIGFQoJCAsCBBYCAwECHgECF4ACGQEWIQSYsqrBAKw/grtdVGd0l1yBt+ZrrAUCaWoNAgU
+ JCxiQFgAKCRB0l1yBt+ZrrLhdD/sH+qTaxCDUg47eW329yJWCDZmO+iuYzNSyHMs1x0DHKNIQQ8zN
+ pA2S/de4jElQuPHjw/IS8B3VmM62Wuq5vHuxNlFv9IMwrwqi6zhCDui8+nCN/AQGGXousJI/SeZjm
+ Y5gS9cqh4vNY+huqEEfdTFXIfTBRkmnvYozSO2uDB3EMuiWgBlw2uLrtmkvPLn/m/GvEouLNox6wv
+ tcJcIbL59a0+3jv/m7pnWoZXOkWmKQnfFWikqjuKCISNU0gzBSL4UOj8gtQ2z+vu7ffi29b6SV5IL
+ m1yzdbkigEn4HL44lz3N+oHZ3wWsRqqeyGSX5fCfx3tGWg6scZQrpsjT5yq+LiffiXVNpjeJ9KzQw
+ 0cbAZ/9uhk1sWBroP+/gMhsWjlbFYXVlRvkNKGPI22eZtOEz4jF6OrOONyOoY3i26niJUyIgdBpca
+ H0hKUSVQ8VnG7qVTNrQk9BbeoSszqRwViN7lfyVtK9b1TCFuGewOETGn0TPvSzruYCtD3CLm7mjuX
+ AMBpIGoRUiCFVmF1hlOgqDyH4F6zRTHhKLpfmNzfQcg+Uo147Q2IHpoh0mJsL4FEZEI8hFyecX1Pq
+ 7HqnvxGD2OhCof1Z6LDxptX0wbgocnYFNxN5S1owcXZUQOFnzYLlLugrcEjlGCm4Gn7k4SiFERSBj
+ UFsQgIhw/7lVVn4o4rQjUGF1bCBCYXJrZXIgPHBhdWxAcGF1bGJhcmtlci5tZS51az6JAlQEEwEIA
+ D4CGwEFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AWIQSYsqrBAKw/grtdVGd0l1yBt+ZrrAUCaWoNAw
+ UJCxiQFgAKCRB0l1yBt+ZrrHy+EADNMt+ewz8H7BUKpEMMhpaA1VxyXO5IqlKXS0gElMgHYXl7L7C
+ 0/qLfRH96vwVD33zM+f0Vl9aWWkom/k8s42tLyPvX7D5zTrj3r5muJ+d9dXWGwBFXxXlE9YjSP26K
+ bYfRusmRHbbEPlLPSnrr9KYS2FGVD6ViRNhhVguflgPv2i18+fNBE3YyByfNCiQgO/SgaSdh172Ql
+ tuYE1Chk6FD45tCUv3dI9lO2PlVwrciiVYvIv/jiTDEwZOISOClTE/Ha18pxDJfLhS8QQnLWuBNX6
+ HUkLi78fVmVYbcWIkTuSHjfNoGTMaFijMg9Wl6poFrY++Pl0S40681zEIrwZhW5pKoqXoaElt29Yf
+ OwVo6BIsSOLEqKiWsdP7PJTaJYU1ovnshBcOmuXMgc13AjQ4AhEGqI1TaEJ/E1jEDDyTQFeWgrfew
+ YaWdqpgiDmRMTj/tIGVj9iy7qZQICUUtlfm0QK6w6M7qq0GdO2o+S3uVF6y2AxQo8l9LSHiW9O35I
+ juR37zeqv72puYyOteVYJsJaw999HUmhXc/X/J9FQFw8twxPKDLLu+w8MqDo9bhllzR93Zy/OShuG
+ yGybcX3DKO2R+AQ90tXLbxKmHLtrnG/zyDPhLv/LGD480v5hEoT+IS0u9wPD2vP5q36a5DtzqXA/7
+ t9PCamLoCvZLleg7GY7QbUGF1bCBCYXJrZXIgPHBhdWxAcGJya3IudWs+iQJeBDABCgBIFiEEmLKq
+ wQCsP4K7XVRndJdcgbfma6wFAmlqDRwqHSBwYnJrci51ayBkb21haW4gd2lsbCBiZSBhbGxvd2VkI
+ HRvIGxhcHNlAAoJEHSXXIG35muspk0P/1G08N6zGSdw2p8+8f/1HhaYEb9KdQHT1JmQfZUrIHIpD2
+ ELNb91Z6Pz197d/igGpox1dzYOwE0WolWo44ZHX2yw+p9V+HJAUKRe0SPc1iNLkTzaAZ7oYJ1DnFh
+ aaqZi4VtKKabKeorJjcDvl2apMwT0agRuDklU97n++ZUuXIEo1Z9uRqEvXz0iTSY7wPxwfoVOQsgf
+ dN1cBLd9OpoOtJRdDJzQUYqjNoQi+5M6KRfBxPLZkmYb4uCGlp1H4AV50eC61j84LBg1ItvU2u+Fx
+ X2JB7lHTswubprD2ZsSwp1VziU6pUj3vtslMWKpBGslpLtnaO561dihGyElayMd4VFg7VR/TsglJv
+ A10EDs2DMhoYPfRQWvwlr5+jPP6s9H8KSTCGFvQt438rP/gk0lcEZUJK0iE2/yq5gQfaCNI5FLN7C
+ q8LVr00oS4doXfmFFxMq6z1rs5SXZorWssjG7v5DILnPxLqYloQK/ebM5Ixbzm0Lq/8vWL7sw7yOH
+ JVYCHCApGzKNii6rYyHdi0K8UwvpD++GCWLyvbgP/H3l5FqL63gAN0Rw1CO5r22+SmG7aOmekJH3N
+ ChZPI3NMLnKZPJC8ZQZ4S8yb5oA3rqTA2DMODvsrEVlaB2cQ6IWHSa/mvBwA8Ias3771cp4fZS7W7
+ LUewj8JVy0aJsGTwI4invl
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-5WVwe+VSqZDNKolBsPhP"
+User-Agent: Evolution 3.52.3-0ubuntu1.1 
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9P189MB1641:EE_|DU0P189MB3274:EE_
-X-MS-Office365-Filtering-Correlation-Id: a540e2a2-f935-41b3-709f-08deb4ee0643
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|376014|366016|1800799024|11063799003|56012099003|18002099003;
-X-Microsoft-Antispam-Message-Info: 
-	tYe3p4uzq7ads0XQDKtDrAhBCGCO26tQ0fL19rh4oBk6Z3lSixBoc8O+oQGFNwNJ3bjTxl9VoL59CE7JziTZkGbAegknoPonJpGIowXl+2QIcUiOs+pKRRrM9EEUc6tdMQrF8UcvwEEYvE2ZysQ6F9QijrFL6s0jbY1WA8LmKvFzbwo8HrbD2uqpSnCVUL/wEU7YGdmiPUwK8vO+gIwZXYNLDWEaPdrXA/P+otFwjmo8mT6fjR/GbHfK6uFhi+GtZd9JAxwo0BAqPiTDh0FXTDsCgYlnek6/O+/vu5MYuWxr94/IqU+jKGiEA028a/AWQNjZoZaF0V7bG5OEnHWe6qNb7no2NIYUQlRRkC2r7MCqPOkMawcucZnfgVhDwSN/X/LpfihP4pxOCRMtzn7z9l+A+W4cTkd6PtC7RcbHD59l47pVo1ue0Cip4/Pb2vTld3mMZGK4PMc0e+OsG80UcsZ95DNUzJ82KB49+rB3LXjsApurBuIuQaDMIz4KXj9Nf7E/bCa2P1EnoRkHzc+0xQSYtPc+SvZ5ERkyH5QQ+85IrXUmNdTtPpMkPBNzBf1AbDRJBY7jPPfmb3RYmViwbbmfw2ji2ohH32qr87PowEagJT82EBZiaQXOK/24I5GsqZ7j27E03OrF0sJH1Z7FR+VZkiAC1Ubb1adD1lvQEFbtiZHcW8leSY1iAXcsHN8JLdjWNQX3Wb6NnF5kCfKGPg==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9P189MB1641.EURP189.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(11063799003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?1bepG6XvRxOJEN7Avz/MRtJD7k8iMOsdOYP9XQJHDBE0/vqHPftzjrsn0JnN?=
- =?us-ascii?Q?LlXgVEvbGT63fHGxQmAa25o6yeMmguqD6pe44khukjXXe1Axgm1BLRHGUPHr?=
- =?us-ascii?Q?8avXhWI1DjCq7m9onYNYNpf1Qxaa9CIgPpxX4oFwWSMoTwEMWlV4PGFx5Mef?=
- =?us-ascii?Q?jhDv+JNaVta9x9uJJDt+rLXvmcbsfc4z5FcnMZ6XW3A0CQNBejv36arRE790?=
- =?us-ascii?Q?iiGS3njAC1TZz2tTFFlJvuA+k1NJUTdCkWdY2iYS3SuMaTERwQjcnPaZZVR5?=
- =?us-ascii?Q?gMDk/6Njre0v52Oa/gevugRXyfUc+WJCdqV1INBJPCkGVf43w/8JVoueHref?=
- =?us-ascii?Q?HsyL4O6eJ70PNB3nugKbrHF6bkRfM/nl0Hwt3UJB2eq3e3rQC/2lEpzTe1uc?=
- =?us-ascii?Q?mRlQV5Ka+kbdFfC/jIV/6koGFDuAymk0P64FpiKV/NFXcGIh9Tkx3YunBW/+?=
- =?us-ascii?Q?KK1kc02Bq4ivyR4PKQorrD8M8eQatW9sRjBqGABGgVpbW/lX1DNAbDdgg4I7?=
- =?us-ascii?Q?Wtjvk2u4A+zTVuqRdKlGsVOos2mpzbJbZJOXZqSgavt4Y/MQcnkcC4RItYnB?=
- =?us-ascii?Q?8C26EpWCq+SeVBDYdrL5yrrTluiLGC7AFj8vJJwjgj4IKJlplt1/IcxGe9Zf?=
- =?us-ascii?Q?shQ3VIPgqXM1Bxb9az0RQYcgujrF04fcKBQwpwjJupkmY/xMQeG8xOuwLICE?=
- =?us-ascii?Q?hkIvCcTC9S8+6lEMWES2PYsEYdHbxj+gOsYNWoOG1l974O86uOav9CeRI1wR?=
- =?us-ascii?Q?CJfY6A0NM1ZvdfNk7SVHQY2/umtZv5GVWCMBjWhONWu7HHOOD/3Ll3s6zcd8?=
- =?us-ascii?Q?iLje5yQq0oVRKwQ9uwTBJEKFLItd33utFFh/eLOMWdqqlQKpuUHpaKeOB9ws?=
- =?us-ascii?Q?LY7z02fkYJXUQ5nZoVkz+WzKhwaCU2VoKEFyTs7j7dkLZfaC4c0ImZA/XlxZ?=
- =?us-ascii?Q?gDpDG9ChyeThkPdhOKUOmBiujLSjBW5PYMP/jogOmwRF/f6v49DQEN7+yFTv?=
- =?us-ascii?Q?mzpPmnJzXeGDxnq5cLAX9YvYcBcq3FCNeBY+UD+JcUl2FkB8UgzfTMENV7cm?=
- =?us-ascii?Q?Y/KoeoCerhEzBfGzZxQQDLn/nHHcw9MI89Dw6XUKQZ5cG527ruxwct8GP4Pr?=
- =?us-ascii?Q?OiJLLjJ9pexRZRMKTkR4It96sQ99s/8clfR2OwWRqu0TxuK77RlcJCfuCp6v?=
- =?us-ascii?Q?vg0mFazEIz40rSecL32Q9L9pp4vUwNM8bDSM1pcvqQsbrQQLQBNLYCvCUQKA?=
- =?us-ascii?Q?g4va+ZEreaowL0HoU/+uE0mcraXbbNYV6TziB+aui6keFVYNY3hu5D3VNGt8?=
- =?us-ascii?Q?IYlpAsSmhKqdFxt57bKB2gtZsvcuO2Fle+t1my2KoR6Ljq3Ap4cVnHwPfzoM?=
- =?us-ascii?Q?0lCmEQWwYzw230fRPF040/NnD6kovQnb8I8BQFs8HclKglx6ls3XuTrjT8Ra?=
- =?us-ascii?Q?kVaLP64O20a4OiagXzSzHg+cC8Q88TH44g8IAbH4ERHHj1dYFy5xalH2TXvu?=
- =?us-ascii?Q?PyzhlwrLm287+QzBNgwj4x5AND4KGekUdIjDuFkHFlgjhZl9l8VUFfbnWzC/?=
- =?us-ascii?Q?YUOzf1Tp9WNKaIjg1EQFYTjS/8QSsz2UHuWdBZoTNnBHcYcvaTJeiph2dJkW?=
- =?us-ascii?Q?JnQqCOs6aIDXJ0EdMo2ez7E5UrXdHay4BPhITNOi+Elf7NtHJhjWle/1YmX+?=
- =?us-ascii?Q?eOK+pEGAkdENavPttDY4aWHafog94XxS8bNdMOsZ1LV6YS1N/lW/Rd0NPCvz?=
- =?us-ascii?Q?VGhyVqpbqQ=3D=3D?=
-X-OriginatorOrg: est.tech
-X-MS-Exchange-CrossTenant-Network-Message-Id: a540e2a2-f935-41b3-709f-08deb4ee0643
-X-MS-Exchange-CrossTenant-AuthSource: DB9P189MB1641.EURP189.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2026 14:59:13.4543
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d2585e63-66b9-44b6-a76e-4f4b217d97fd
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YdNd4GNFAZ+s37cnWIwH43+4Q4e+Ekcnig/CGQSDqDS1lFlAvZBBFpHG6kvZneqtQsLKnT2UkRUXgtIKtrgsNg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0P189MB3274
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 18 May 2026 14:59:22 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19539
-
-  Hi,
-
-  This series hardens fetch2 unpack handling in two small, separate steps.
-
-  The first patch fixes deb/ipk unpack handling by selecting the data archi=
-ve
-  member only from the set of supported data member names. This avoids pass=
-ing
-  unsupported ar member names through to the shell command. It also quotes =
-the
-  package path used by the deb/ipk unpack command.
-
-  The second patch is separate hardening for the striplevel parameter,
-  which is appended to tar arguments before the unpack command is run. It
-  validates striplevel as a decimal component count before using it.
-
-  Regression coverage is added to FetcherLocalTest for supported deb/ipk da=
-ta
-  members, unsupported data member names, quoted package filenames, and inv=
-alid
-  striplevel values.
-
-  Tests run:
-      BB_SKIP_NETTESTS=3Dyes bin/bitbake-selftest bb.tests.fetch.FetcherLoc=
-alTest
+ <bitbake-devel@lists.openembedded.org>; Mon, 18 May 2026 18:55:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19542
 
 
-Anders Heimer (2):
-  fetch2: validate deb/ipk data member names
-  fetch2: validate striplevel parameter
+--=-5WVwe+VSqZDNKolBsPhP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
- lib/bb/fetch2/__init__.py | 15 +++++++---
- lib/bb/tests/fetch.py     | 63 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 74 insertions(+), 4 deletions(-)
+On Sun, 2026-05-10 at 14:00 +0200, Jhonata Poma-Hansen wrote:
+> When a PREMIRROR rule rewrites a fetch URL to a different scheme
+> (typically gitsm:// -> git:// for an on-disk checkout), uri_replace()
+> unconditionally treats the rewrite as a mirrortarball mapping: it
+> substitutes the source URL's path basename with the canonical mirror
+> tarball name (git2_<host>.<repo>.tar.gz) and drops the source URL
+> parameters. That is correct for tarball mirrors but breaks the case
+> where the user redirects to a checkout location using HOST/PATH
+> placeholders.
+>=20
+> niqingliang2003 reported this on YOCTO #14156 (2025-07-18) with a
+> PREMIRROR of:
+>=20
+>   gitsm://.*/.*  git:///mnt/datum/repositories/HOST/PATH;protocol=3Dfile
+>=20
+> For the input:
+>=20
+>   gitsm://github.com/libjxl/libjxl.git;protocol=3Dhttps;nobranch=3D1
+>=20
+> the rewrite produces:
+>=20
+>   git:///mnt/datum/repositories/github.com/libjxl/git2_github.com.libjxl.=
+libjxl.git.tar.gz;protocol=3Dfile
+>=20
+> instead of the user-intended:
+>=20
+>   git:///mnt/datum/repositories/github.com/libjxl/libjxl.git;protocol=3Df=
+ile;nobranch=3D1
+
+Hi Jhonata,
+
+This fixes the use case in the referenced bug, but is this universally
+true whenever PATH is used in a PREMIRRORS entry? In the past I have
+typically generated mirror tarballs, hosted them on a HTTP service and
+put that URL in PREMIRRORS, so in that case I would expect the mirror
+tarballs to be downloaded.
+
+What you may actually want to do is handle git:// URLs in the target of
+a PREMIRRORS entry, instead of looking for PATH in the URL.
+
+>=20
+> The mirror fetch then fails because the resulting URL has no nobranch
+> or branch parameter and no actual tarball exists at the path.
+>=20
+> When the replacement template references the PATH placeholder, the
+> user has explicitly asked for the source path to appear in the
+> rewritten URL. In that case, skip the mirrortarball-basename override
+> and carry the source URL parameters through. Existing PREMIRROR rules
+> that do not use PATH (the canonical tarball-mirror layout) continue
+> to work unchanged.
+>=20
+> A new selftest, MirrorUriTest.test_gitsm_premirror_path_placeholder,
+> captures the exact niqingliang2003 repro shape so a regression in
+> this area becomes a unit-level failure rather than a runtime mirror
+> fetch error.
+>=20
+> The dict-driven test_urireplace and the broader
+> GitDownloadDirectoryNamingTest / TarballNamingTest /
+> GitShallowTarballNamingTest / CleanTarballTest / FetcherLocalTest /
+> FetcherNoNetworkTest suites all stay green with this change (42 of
+> 42 relevant fetch tests pass on master + this patch; network-only
+> tests not run).
+>=20
+> Note for reviewers: a wider bitbake-selftest run shows 4 pre-existing
+> GitShallowTest errors triggered by local git environment
+> (commit.gpgsign + empty editor config); they reproduce on the parent
+> commit and are not related to this change.
+>=20
+> Signed-off-by: Jhonata Poma-Hansen <jhonata.poma@gmail.com>
+
+The commit message and comments here are way too verbose, please tidy
+these up to be more readable. Please see the docs [1] on how to
+reference Yocto bugs in commit messages and check if the section on AI
+generated code applies here [2].
+
+[1]: https://docs.yoctoproject.org/contributor-guide/submit-changes.html#im=
+plement-and-commit-changes
+[2]: https://docs.yoctoproject.org/contributor-guide/submit-changes.html#ac=
+ceptance-of-ai-generated-code
+
+Best regards,
 
 --=20
-2.34.1
+Paul Barker
 
+
+--=-5WVwe+VSqZDNKolBsPhP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCagtghBEccGF1bEBwYmFy
+a2VyLmRldgAKCRCrY1Tsnbr0buAMAP4szMihcdkarZ2Dl5rP26kPDwfPR0Ua3UKz
+RsW13LXWpwD+ORrwT4trJbwIQJrmxbD2FLcLQzD9d/dsVXVHjQ1t0Qk=
+=RY5d
+-----END PGP SIGNATURE-----
+
+--=-5WVwe+VSqZDNKolBsPhP--
 
