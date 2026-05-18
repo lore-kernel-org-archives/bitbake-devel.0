@@ -1,163 +1,201 @@
-Return-Path: <quentin.schulz@cherry.de>
+Return-Path: <paul@pbarker.dev>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A970CD4F3C
-	for <webhook@archiver.kernel.org>; Mon, 18 May 2026 10:28:37 +0000 (UTC)
-Received: from AS8PR04CU009.outbound.protection.outlook.com (AS8PR04CU009.outbound.protection.outlook.com [52.101.70.47])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.5584.1779100112079819571
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A376FCD4F52
+	for <webhook@archiver.kernel.org>; Mon, 18 May 2026 10:31:47 +0000 (UTC)
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.5624.1779100306202551162
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 18 May 2026 03:28:33 -0700
+ Mon, 18 May 2026 03:31:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@cherry.de header.s=selector1 header.b=EMAytTTI;
- spf=pass (domain: cherry.de, ip: 52.101.70.47, mailfrom: quentin.schulz@cherry.de)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=W1DyWB6Qc9+E42QoFe1JVLl+q3V/Ku/CBWD6RhkwtKBzItWNa3EAzZS4E3TaI2BWbyEInUGALPszyWzp9AMaivmVsWwbPXRTEhZrjTWpT5ijNXYeFdRVG/grv2BDnJsNUW4i9bCieW/239B56bWN3ZUjAaH7ipneKAemAsWerM1vt5kH7zH7joYx3lmgpyWui9FpdmgWd1ALTwpvpsGgVIMiWLxid4dGJxe4Oh6ZvFhOqO8Gs3nA4Uf60dIjmIienQEZCMSeLIQ5OlrwmlIdjOq7GvmZkcDl3ERCXqL+lx5ug5bZoFfv2orIh5NK1xx5u/De1tLns8/6TP406AESBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TtUuinG4r6YjcK2YCLdhrPBEF2EOP7MUzRnlOboQNQs=;
- b=m6kH/xXJLI7kLTjF9Jxn8ngDR0YHm8J7lVNErJe4ddDy37g34WPDN7hOF+KGzU1fsYvD3oH9rZ5+tB2tPbzjp4ehcp/qXoGkRPyHy6TQxTiO99SJF7HKL6Tk/OnN2aBakEqQhqsfZmf+w9IOCwMmm8yFrKk1aEAThEU4neZgfjo5YJ3FBrNp7iEdzw5/xyAQZt02KAnjnHfgoCzaXxS+eHop+w8SYRg9kKMoeJErPJOcwnPAL7cLbT0LHb+NfewMXWWSersZFCuaDnk8IwNUrGv5OP7rmJVTgPIGgmRdd3gFTOiTm+uPyta83/YsfUg//RtkUy6EjHSyQF6JH31piA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TtUuinG4r6YjcK2YCLdhrPBEF2EOP7MUzRnlOboQNQs=;
- b=EMAytTTIGyVIWvUMOhrfkmf9b0VeJZ7uSnCGgCvn+CMdIQ3FA/pHBdvyiyzFVDashShvzCthgxCL2aHiJf25u5wIRFfhhgI7HN73e7VV2jtcz0qtfl4tnf0z3KxB/oRklt1bQ9b79t4KGK+K3hHiHowxap7m0fLlZp/eWqb7UFk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from DBBPR04MB7737.eurprd04.prod.outlook.com (2603:10a6:10:1e5::22)
- by DBBPR04MB7897.eurprd04.prod.outlook.com (2603:10a6:10:1e7::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.23; Mon, 18 May
- 2026 10:28:24 +0000
-Received: from DBBPR04MB7737.eurprd04.prod.outlook.com
- ([fe80::5960:fb4b:9313:2b00]) by DBBPR04MB7737.eurprd04.prod.outlook.com
- ([fe80::5960:fb4b:9313:2b00%3]) with mapi id 15.20.9913.009; Mon, 18 May 2026
- 10:28:24 +0000
-Message-ID: <b3f4a0e2-7ea1-49c4-9825-377b94e3b788@cherry.de>
-Date: Mon, 18 May 2026 12:28:23 +0200
-User-Agent: Mozilla Thunderbird
+ dkim=pass header.i=@pbarker.dev header.s=fm2 header.b=pqR1mcMa;
+ dkim=pass header.i=@messagingengine.com header.s=fm3 header.b=aiYWb9UQ;
+ spf=pass (domain: pbarker.dev, ip: 202.12.124.156, mailfrom: paul@pbarker.dev)
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 3BF607A005F;
+	Mon, 18 May 2026 06:31:45 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Mon, 18 May 2026 06:31:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
+	cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1779100305; x=1779186705; bh=MoB5dwXL6Z
+	CcFXgS8wIC+TLlw5TIE+T2byx+CGXUGm4=; b=pqR1mcMai6DUoFUdqDw5/Re+Xb
+	cYixgcHGXXXy25P7BczQfQN5RpKDN71RrImOp2vg7Qh7i/0paVlxcAV1MvL1v9PW
+	pud0xFqRQSzWkuhlDQ4/JEO6c+Tchhx2/r2Mum+Owq3sjtQQFZ+arcCnG7HSgOnK
+	uNjtmBxqTvqheTa3xA7oa8tYXQKGGbqK4uKQhLvQerH0gMgRNJR3rgewyz4AecwH
+	S65xmEh7feKjMn3UGVslKy2mY7BeEYhJ1FYIUuBXKO2D02W6NT08HC7JzwygmNnS
+	WNLnjccLqbxOXr21KCmeWYo+dIco3N1/cxuhwZaXIJP8/aw6jRbFlZnuYu5A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1779100305; x=1779186705; bh=MoB5dwXL6ZCcFXgS8wIC+TLlw5TIE+T2byx
+	+CGXUGm4=; b=aiYWb9UQkVvg21V22HlftQqs7EdFZoDyjq5fHCXn2klSbGZh3Rc
+	mnhRfdzsGb1o8VpKIktisACiqnkoJtZWmYSO3GA7UQg8VxS2gWmcmgvh+72WHSR4
+	4tShAKSRYDVq/mq+ohDrCb1QJ2qvRayltPnuYFqhUkNunWSnDe/ygbjGOoo1CkO4
+	bI8zVMxW/+0hQwh3geTTMJgijg5wvn7Rs5NfpCA1kqFZPAlTAPyo5/UgZvRGr2sS
+	zttAv3wMRJgsOhQ/rG0D2mi1RQir+ZxeXt84iRJxAPBsWDvSUo6aub34ruqp2+2s
+	rsD9jGEEQL03TjHE/64rqG6+4luhGUxKwCw==
+X-ME-Sender: <xms:kOoKanfVyhWAlpK3olZmS7-_YIfyXq0Q2mIe9_uDOi2bLVLiuWLU0g>
+    <xme:kOoKajNtbVfouInp73iCz50WB4kK9gwE0ri_tdxbEKtd6tPT07VTVRv4cj5DnACba
+    _B6hm_ZfzzVzudgnSIkoEbmCI5hIrM2KS2pAZKesm8vLufIBi-65S8>
+X-ME-Received: <xmr:kOoKauJGAKMylAGN3F_AhT4jKjFFCIRn2g7gB9JM6VQGVNS2EUn0NjtWToOFP6bEbfKMOJSVlAEHxa0inJMANL6ecGbGm0FA9t03qQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddufeekieegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepkffuhffvffgjfhgtfgggsehgtderredtreejnecuhfhrohhmpefrrghulhcuuegr
+    rhhkvghruceophgruhhlsehpsggrrhhkvghrrdguvghvqeenucggtffrrghtthgvrhhnpe
+    egfefhudethfffveehveekjefhgeffgeeikedtfeektdethfduvdffueeiieetffenucff
+    ohhmrghinhepohhpvghnvghmsggvugguvggurdhorhhgnecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomhepphgruhhlsehpsggrrhhkvghrrdguvghv
+    pdhnsggprhgtphhtthhopedvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehquh
+    gvnhhtihhnrdhstghhuhhliiestghhvghrrhihrdguvgdprhgtphhtthhopegsihhtsggr
+    khgvqdguvghvvghlsehlihhsthhsrdhophgvnhgvmhgsvgguuggvugdrohhrgh
+X-ME-Proxy: <xmx:kOoKakGD_yKhzSf1SeZDAXpjJl1bJQluNVLDsqUVDNpiCeAXdAToSg>
+    <xmx:kOoKamTGab78kaVDLLfbE_UTkrWo4cKohFcJAPLzL7G7jo0g81c5Ig>
+    <xmx:kOoKagE8D1U-QuJseBPdSGPMypsNGBtBxhZNAHNX1LI4dC3_PSwqkw>
+    <xmx:kOoKai8l5vG6UN9F1BPrcplQSkyXgENqcphwNCVPLlVI1gvaFk1X7g>
+    <xmx:keoKapHJDuje8YrAjM3AkZLv_FK_6S9yfh-deAtqLGCQjdxsFtiRFUNY>
+Feedback-ID: i51494658:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 18 May 2026 06:31:44 -0400 (EDT)
+Message-ID: <1396d06122a97c5e712b1d15f36c6b841d07187c.camel@pbarker.dev>
 Subject: Re: [bitbake-devel] [PATCH] prserv/Dockerfile: Update to Alpine 3.23
-To: paul@pbarker.dev, bitbake-devel@lists.openembedded.org
+From: Paul Barker <paul@pbarker.dev>
+To: Quentin Schulz <quentin.schulz@cherry.de>, 
+	bitbake-devel@lists.openembedded.org
+Date: Mon, 18 May 2026 11:31:41 +0100
+In-Reply-To: <b3f4a0e2-7ea1-49c4-9825-377b94e3b788@cherry.de>
 References: <20260518-prserv-v1-1-9625c3239954@pbarker.dev>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <20260518-prserv-v1-1-9625c3239954@pbarker.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: VIZP296CA0006.AUTP296.PROD.OUTLOOK.COM
- (2603:10a6:800:2a1::7) To DBBPR04MB7737.eurprd04.prod.outlook.com
- (2603:10a6:10:1e5::22)
+	 <b3f4a0e2-7ea1-49c4-9825-377b94e3b788@cherry.de>
+Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
+ keydata=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
+ LUewj8JVy0aJsGTwI4invl
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-dcnav5iT/lOaeXXld7TY"
+User-Agent: Evolution 3.52.3-0ubuntu1.1 
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DBBPR04MB7737:EE_|DBBPR04MB7897:EE_
-X-MS-Office365-Filtering-Correlation-Id: e305cb56-9c0f-4fb9-f613-08deb4c8311f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|1800799024|376014|366016|11063799003|22082099003|18002099003|56012099003;
-X-Microsoft-Antispam-Message-Info: 
-	ZQowkipro0/PdQwwTcIF5g3oNZFmelgqK7yk9f7LKO6Uivk7iPJ/ziwb5ItpCVonqgXQojvJCCqnKhGW6UpnUFdKFLePygqVhodP0eN/IV5v7+K6OEu7ZklowciBpPkjTDNRHWnZA5PKfz71+NBIV8aQSvR1V85Ox8mN13nnoXpOfXkNSoPutik9u9ZGp7W6hB7gEaVNvA4BJ3FGYmjwYAdw6E21xTyCAzJnPXlCLytBsr5clfoHL0OAOr6lF1eywAy3T06aoru7k6YlIGk4rR11B1BqxuK+8rtIY6/xemxCN7/BD5i7A0BCs85qBjK2jPhKF8Pp1m+tgCuuH1ZF9iahoHBkzklE2+cyjhXvcRPvb1KAn40W9ajdVAz3RN+AfaLm0IZkv6BYBWjV6icOo54RUO0+o9b/aqTqJc1PhU+NIrEKG1ZimxSt0U2Vn1KR1k9n6IDs9+YfSfebsF0ZtmWhiVXJCq4MiYK0Y0QUO0JlvTOexd9DWtRTwYh5e3I4Lmr6M7CDZGeZPNUCLU5qiRNtQ0XNMLTzMjTBznguv2VsEE0shFG78rGa+f3nI9Nh+Um21/IOfozYbPCjrbHTFuUD+zFqCNEKYgc9flon738D/6z/Jk9X9l+JQ74XnmDwNstvOZKujuvgRTRX/77vdCzkxTjaYZOn/7Sz19plbAFg4eh0RXMp4NlsZ3Kt/cbA
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR04MB7737.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(11063799003)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?NEFLV1Zrc2orbmlYMm1rbUROeU1HSHVyWk5rRFg2czQ3dWNRelpJYUZxZWZj?=
- =?utf-8?B?YjhMa1U5V2c4c0lvK3hzK21ueTkzMU1NaHVlM1o0bW8xdkpSa2tpajRqZG5o?=
- =?utf-8?B?dEE3dFgzMDRjbGFQc3RPU1dkQksydk9VMDlUYkxyVW9IWjJFTzJDc3JBcENW?=
- =?utf-8?B?NWd4K0hFWkVpWk9mejhIaFVMeVkzNVhodFcrUVk4UU9GRnBweUpEVzNsL3I2?=
- =?utf-8?B?UlVRWXNZaFVpQm9qdjFDbTZnajBBbWRQMEUvYnEzWCtVU2pWKzVYMng3YVFv?=
- =?utf-8?B?UHRldENCRnA4alNFcXRxcXBmMGJQRVhPK1dGcDdNcmpzVTgwVEYxM3l0bC81?=
- =?utf-8?B?OXhhRnF6K0FpTllEREkyTW9FNDFXUTAraU1QcXAzbnhtUDVKSmdTaVFXcXVj?=
- =?utf-8?B?ekNGWmx4cWgyVWFSbWU0SVJ6TytkQlZlbGViZWZJeDc3SEVGZTZ4UGRxbUNp?=
- =?utf-8?B?SXZmbXkySnlUS3hhWGZWMGZ0NWMwNWRzbklPYnBYYVRHbG1HRkh2YjVwMkh0?=
- =?utf-8?B?Z3dmWnhBaEVBbnJwZEthNmE0K0cydWtKcEpKSWhuY0lNQ0szQVlvYXltZlZq?=
- =?utf-8?B?UWhEeEduUjYxNW5PaElrZGRJMG1NeUlaSmNmMno3d3hETjlVL21kL3RBVTg4?=
- =?utf-8?B?YlRHUlkvU2w1c1JmN2VVRjJ3dC82T3NEQkRmQ2NTSTNpWCtQY0YrNVFDUTZ4?=
- =?utf-8?B?czN4VUd2Mks2WENySmtMVGNCdGFwZTZSR015ck9lSGFwQng2dEg3ZSsxYWsv?=
- =?utf-8?B?N3NGTGVHTU5rTEZuQXFqVUNGcmxIT2ZjcFdQWUZiUzhodGQyc0RINlphV2Vp?=
- =?utf-8?B?b2RxL2txZllXNzdoWE5GWkl5QmhlTC81TkYxTHgxZDhBbW80UGV6MFdKajJh?=
- =?utf-8?B?SytKdW4zckpQN3p6K3d3TEptdGY5VFowUjVKamUrTVlCK1JkR0h6Uks1ZnNZ?=
- =?utf-8?B?ajA1VCtaQjVHRGQyNHFEbHNzNitOV1ZMTmwzSHBOcjdvMThidmlsWS8vNGF1?=
- =?utf-8?B?cWZEQlRvcUtIS0lCb2t6QlR3RVFmRG9hK3Q0b0tERHM0ZDZJcnl5dXl2M2Uy?=
- =?utf-8?B?c3Zob3BlNlhMTnBFS2FUOU44eXJmZmY3OUhlZC9UTG5xcTh4c2E1THFWMzMr?=
- =?utf-8?B?V1dwU0JVSWZYTVB5NFM1TjBWZVh6Y0Z1MUdWSDd4OVZpa0ZndnEwU1NMcG5I?=
- =?utf-8?B?ZE13YW16L2tNSS9yd2VwQ1p5Tmg2TmxqZGxINFl0TEg2dG9kWVNoN29Bb0JM?=
- =?utf-8?B?TXFpK0Erem0rSXlTZXl3R0gzZTI1TWYzcXpDZHRZYkpnMktOM0xpeGlvWVBs?=
- =?utf-8?B?Q2tGT3RLMWhhcVB6UmlnODFzZWk1akFPb0lEenA0dnRETEtIdjgvMDhBUndq?=
- =?utf-8?B?QktoamdienM3a01jVWdqdzh5bjFWYS9ISExMWEh0QTlVZGNIaUFENThWVGlk?=
- =?utf-8?B?VFM4RWxZN3lqWjRPanV1VjNHay9uMjVTb0NlQkI1ZGNFOU1DQnoyOXRkTXk2?=
- =?utf-8?B?KzdwOXBiN2VPWkVPWENFNXpuRUNEU1dVdkluVGhQTFpNSlNTY1dmOS83T1hP?=
- =?utf-8?B?U3BYcTJVMlNYdmlqeHRFbzJJTWxVQ0R1Umd2VEJFQjJMS1NGMXkycWNmWE1r?=
- =?utf-8?B?bWdVRExMU2pNaDMzS0t1MlF4NHQwWUt0dkhMbXF4aUU1enY3eFZzZlZmNkRO?=
- =?utf-8?B?NmVRODZYYTcwdlQzN0NoUkJJUzdSVjNOMngwUERDY1p0NnAxSXMwUXE1SlRE?=
- =?utf-8?B?d1R2RVlVYmdjYzFFN2hIclg0M3J2dGhQU3NLaXF1Q2xPYlVwd0k0dDNQM0dv?=
- =?utf-8?B?TGVaeDRwTXdXVWlpM1VHWnQ5ZnJ3ZjNLUTFJMkV1U3VWVk9VMDJRc214cmwv?=
- =?utf-8?B?c1YvazZVNm1VQno4R0UycDZvN1hTaEdmdWUza0RZaGs0L2w5OHNTYW1SRG10?=
- =?utf-8?B?VjBhWFo1TDFnQnBmQlozWTJuMGFoZ0JOU1J3RXNlRXg5QWJrR2kvUUtEZW41?=
- =?utf-8?B?bk9TRTBOU3ZpZkpkMEdiMUN6Z2VnL1JoZldMMlJMVUNTbkRvcUI1Nnpyckh2?=
- =?utf-8?B?VzYvWEZNRzkxRkllWXFLVWRiQXorN3lKSmVEclpFSzZkT1BMTWM3Y0JlNlNx?=
- =?utf-8?B?OVRlb0NFakFzeFBocEFmZkFjVXBRYXB2ZSthZ2pocm5Ra1lSemZpTHpTaC9C?=
- =?utf-8?B?NElCSVZsZERmWml0RHdBcG1IZitjdGJCWm94cm9Sc1JEazFhVHUvUVJYU1B4?=
- =?utf-8?B?VlFJUU1KMVR5UHVCbU1wQTJ0UHBPQjNaY1g2QUJJWUVKYXBVdk0wUUZya0Q2?=
- =?utf-8?B?ZW95dnpMOFJNWGt4RlhVOEt1N3BldlNRc3E1WjVoNUpJNm9PTGpRQT09?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: e305cb56-9c0f-4fb9-f613-08deb4c8311f
-X-MS-Exchange-CrossTenant-AuthSource: DBBPR04MB7737.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2026 10:28:24.5460
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: l7boXMDaIw0SiF2KK5zesMwohX958fe4CjVaFhBuHPs8YlXkZXto2uxOXtdeBybL1fR6v1SI3jbfqAgXnRs37wS9iscKCMAU8K3LUNYQ/YQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7897
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 18 May 2026 10:28:37 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19535
+ <bitbake-devel@lists.openembedded.org>; Mon, 18 May 2026 10:31:47 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19536
 
-Hi Paul,
 
-On 5/18/26 11:15 AM, Paul Barker via lists.openembedded.org wrote:
-> Alpine 3.13 is long obsolete, update to use the current version of
-> Alpine as our base image
-> 
-> Signed-off-by: Paul Barker <paul@pbarker.dev>
-> ---
->   contrib/prserv/Dockerfile | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/contrib/prserv/Dockerfile b/contrib/prserv/Dockerfile
-> index 9585fe3f076c..c630ce99722f 100644
-> --- a/contrib/prserv/Dockerfile
-> +++ b/contrib/prserv/Dockerfile
-> @@ -28,7 +28,7 @@
->   # prserv
->   #
->   
-> -FROM alpine:3.14.4
-> +FROM alpine:3.23
->   
+--=-dcnav5iT/lOaeXXld7TY
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-FYI, these are "tags" but they have the same meaning as in git. They 
-aren't immutable and they actually are very often changed to point to a 
-different layer.
+On Mon, 2026-05-18 at 12:28 +0200, Quentin Schulz wrote:
+> Hi Paul,
+>=20
+> On 5/18/26 11:15 AM, Paul Barker via lists.openembedded.org wrote:
+> > Alpine 3.13 is long obsolete, update to use the current version of
+> > Alpine as our base image
+> >=20
+> > Signed-off-by: Paul Barker <paul@pbarker.dev>
+> > ---
+> >   contrib/prserv/Dockerfile | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/contrib/prserv/Dockerfile b/contrib/prserv/Dockerfile
+> > index 9585fe3f076c..c630ce99722f 100644
+> > --- a/contrib/prserv/Dockerfile
+> > +++ b/contrib/prserv/Dockerfile
+> > @@ -28,7 +28,7 @@
+> >   # prserv
+> >   #
+> >  =20
+> > -FROM alpine:3.14.4
+> > +FROM alpine:3.23
+> >  =20
+>=20
+> FYI, these are "tags" but they have the same meaning as in git. They=20
+> aren't immutable and they actually are very often changed to point to a=
+=20
+> different layer.
+>=20
+> e.g. 3.23 currently points at the same layer as 3.23.4, but a month ago=
+=20
+> it very likely was pointing at 3.23.3.
+>=20
+> The only way to work around this limitation (if desired) is to use the=
+=20
+> digest value of the tag as argument, this guarantees that alpine:3.23 is=
+=20
+> the same from any machine and does not depend on when it was first=20
+> pulled or whether --pull=3Dalways was passed.
+>=20
+> I'm not sure this is a necessity here but wanted to bring this up :)
 
-e.g. 3.23 currently points at the same layer as 3.23.4, but a month ago 
-it very likely was pointing at 3.23.3.
+Hi Quentin,
 
-The only way to work around this limitation (if desired) is to use the 
-digest value of the tag as argument, this guarantees that alpine:3.23 is 
-the same from any machine and does not depend on when it was first 
-pulled or whether --pull=always was passed.
+We do want to pick up the latest updates in the Alpine 3.23 series when
+this container image is built. What we don't want is to automatically
+jump to 3.24 or later without some human review as that may need some
+other changes to be made in the Dockerfile.
 
-I'm not sure this is a necessity here but wanted to bring this up :)
+Best regards,
 
-Cheers,
-Quentin
+--=20
+Paul Barker
+
+
+--=-dcnav5iT/lOaeXXld7TY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCagrqjREccGF1bEBwYmFy
+a2VyLmRldgAKCRCrY1Tsnbr0bsoNAQCoZ3+lKED5f3XQG9uzwXMMKWusDuKfaIfN
+3+eYh4nSJgEA98Rd9gqkoJibYGKBsbLx8CYX4gdUFc1kbuPgbip9EgA=
+=D6QX
+-----END PGP SIGNATURE-----
+
+--=-dcnav5iT/lOaeXXld7TY--
 
