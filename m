@@ -2,61 +2,60 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F5ACD6E52
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3308CD6E61
 	for <webhook@archiver.kernel.org>; Sun, 31 May 2026 18:27:58 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.12245.1780252071709472966
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.12305.1780252070226742570
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 31 May 2026 11:27:52 -0700
+ Sun, 31 May 2026 11:27:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=AKeGFpf9;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-490a765f47aso4853825e9.1
-        for <bitbake-devel@lists.openembedded.org>; Sun, 31 May 2026 11:27:51 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=RSVlE07D;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.49, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-45ee6d32402so1796341f8f.1
+        for <bitbake-devel@lists.openembedded.org>; Sun, 31 May 2026 11:27:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1780252070; x=1780856870; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1780252068; x=1780856868; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=K9X7cGqUK8AmAgRDoJtLn3MCtDvT1QTgn7YxTpdXFBA=;
-        b=AKeGFpf91/kHTotrOs3gCCE4E6gk1ryZu1SnSf11WpYM7MNNMIaUiNq3y5TLDsGdEZ
-         6ItXjJDgiZ0PnoDrZ8IMHQBBNEmcxb3m73iHlCwrQY0uprqq4RjNPdeW+cL3+J96YhDc
-         84Jnf2uyhq2bE/tAUtWFSj93PCnOaOc6zCSVE=
+        bh=OAhk2t2u1b/BBq2YHbGtaHwwS5uj7SENGEaRAX0KsT0=;
+        b=RSVlE07DvkkxndtkCxwgQ/p7T5VwlT4ewQooDmdGCTGglddZxbN13cX4A0uiPRnMGI
+         +KgVZiZe6BqlQaSRDlpQjW6FuobfaphT6lNSVVS5LJcmkORgdQn8ZwzhE+BR5ZidCd4Z
+         ON0Mtz0i0KjRkTUXjvfP4XO7gKbBI7Jm2kR08=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780252070; x=1780856870;
+        d=1e100.net; s=20251104; t=1780252068; x=1780856868;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=K9X7cGqUK8AmAgRDoJtLn3MCtDvT1QTgn7YxTpdXFBA=;
-        b=Bo+CO4y0gYEivX+R35UQED+/35ZpInTfBgHsQ9gUZAbZsqFes0eF+NcyCNs4+7a6RD
-         //zam3Qtpi7pnMTa0ocAdX6gzGZ3Uxv0mHLVJLbWFMMC0f8hEAugqgHcrw4h8ltAIrPq
-         ImsBn2EA4sfvKcRyURAO4utAvzwQbRZhrUsm7lupsuqWniNakq/3rdEX1oAai7+PuDI3
-         CaUD2TsOzXd1swlsov5wXLLfKLDnzy5FoGUHmd/KNbPtNY6IN0pNk3neWE8GhQ9eCLrY
-         uJe3qM5PMNVXp6EGcBsvvWFrraKcTO06xfunvm1EIC7PJ+IxMOgP4b8LehueqUDhDNV0
-         A0Ng==
-X-Gm-Message-State: AOJu0YwmYzlUmhVr3P5UgQNXYxyUFEQEb9QpYmpUIkWwcBxHxbkcn0X/
-	QwNS72Jq3zvoq9nIKjiR9JLp1z4ysUTx13fF1zduu7DB10ZRP4qYDY1+01mTmouooh1cOzTqcmW
-	T4lLn
-X-Gm-Gg: Acq92OGMnPNaA/3ZCouzFF9auFpP4LHeyM5shzML2E6GyYLgxkg+/UKdoKCaXjfj8VC
-	PjIDgTCkOmdinTBLelk5hQIQL6/8doJsOQVAMXpDLmwRf5MfQ1W8aeAqO3AwlzNqxVsXgqDmiq2
-	kqbBSZCGkEjAb5KolhLP+/f64zE/GwEbFpTB7rym3eNI1NDKt7v5fxVg0zL3J4fLi7pA2MRXjTl
-	aK3YB4U3a5tHoSUayo4wy1OW4Q0BCYE3i1ZC5ThJ/xAlfErxe0KjlNcaV9ZTMd4W5UN548d8lt9
-	j19MMtZYg8FFC1h9anmf4pyPp3iV9kUqv9PT0uF5bcy3zHazY+BXjVNs5NbeHnc+akkJG7E59mr
-	VNmJ44CBvikPZfI/f6KAEZCksOft5O7ZkvbFsGAjq9E+sk0M9HZp+YxOsjO3MMH/4p42BDepQ8G
-	TtGrPE2cLXfQhRKES36RG0AgYCg6OpJ74fKf7mE+wy9f3dX0b/SO7BXW3kKsjXrAYc6i9pHlR4d
-	A==
-X-Received: by 2002:a05:600d:8499:10b0:48a:525b:e148 with SMTP id 5b1f17b1804b1-490a29122d3mr109986635e9.4.1780252070077;
-        Sun, 31 May 2026 11:27:50 -0700 (PDT)
+        bh=OAhk2t2u1b/BBq2YHbGtaHwwS5uj7SENGEaRAX0KsT0=;
+        b=AMKTXtkDNaT10IT3B8HQSlKX6aWqJ9e0nC96zyfOCWk1xTukLZIolAofDyLZI39Y7v
+         HSsCqClGTWmsqPH9TjTYjdwQ0YF6RhWerMGBczA31yeU8mFJDriaGTOeJAU0y6kg3Rh4
+         PmGuvWGVY4kDaHRe5tAEkEjxxxf4NBm32QFhnIQfk1I8A2gABELPP6gWA861FeunTLgA
+         XaAo9NucCyrJFReKID+C/kWyd+Ga8smUbXmzF4Brjbp8wiHQvQQMUxOhlFeoa4TQS5jr
+         3dGGlsm6Wr4TWjdjiFLoxtBBEgTP/OkJbJv9Cm+qH6pFiCw2puKUNolD/7KZozmnacRg
+         EKDQ==
+X-Gm-Message-State: AOJu0Yz0ddehvhZkYgFnrme5LMHwzLrK1AF1u1UkCiWFpgzkY7lXTe7C
+	sjwXZqfbmfv4/6OmdB0nBzHwhoRkHjC3fOx5ZY77KKsb5U5CoYKUwxwsM1/RWyueIfUgB/0xNq6
+	FiIV9
+X-Gm-Gg: Acq92OEc2KWdcPYQUJukhwYQsBQVzBOJ6mycFtUwEOU/LroSn7IJ8xKxsnxbXjEuznF
+	CMzneEm7LGFSdfS1D3E1qnI2Q18WYCyyh5MTrm2bDEHhIsMvLQW/blezAJ91dTKFtt9MMUUKWxi
+	fSZSqS/rJtb1LUHDB49WeVUtuzKEz1qndGsbjZo8m0qvUtLTAdoCi1eTl2imoMfilYzZi3C7GQ7
+	w6h7Nta+RnsSrnvnDO4kdKpNF6RvIhjl9vn7BQusYsFpj4N6S3MP1jjITfiTdX7rkOnR/CbHzAi
+	4PfzWhdjJKoJapGCE78HZRy/RLILE8ud+Vg4F5dQumE3AC9W5VQSm7RKHJsNm1igDQoqJK0QSdS
+	0pEKLlNybx2tZWcDfNj+BfZ4Zskp9eUsxJ784rq/fEp1DExmix6YHwzOxGKRS5W8qJQRPBQ6Ptj
+	0QRRlnHQFzrooeNcudOL0qK58+NOHQj3XKsu0YwOehlrMNsIXPF4ohz3h1EsoNiW4=
+X-Received: by 2002:a05:6000:2812:b0:45e:f29d:d42d with SMTP id ffacd0b85a97d-45ef6b5fd92mr11260898f8f.25.1780252068336;
+        Sun, 31 May 2026 11:27:48 -0700 (PDT)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:229e:2449:eb7c:dbd2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45ef354bb62sm18563488f8f.19.2026.05.31.11.27.49
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45ef354bb62sm18563488f8f.19.2026.05.31.11.27.47
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2026 11:27:49 -0700 (PDT)
+        Sun, 31 May 2026 11:27:47 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 5/6] lib/layerindex/cooker: Convert string commands to lists where possible
-Date: Sun, 31 May 2026 19:27:42 +0100
-Message-ID: <20260531182743.2412946-5-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 3/6] lib/bb: Convert string commands to bb.process.run to lists where possible
+Date: Sun, 31 May 2026 19:27:40 +0100
+Message-ID: <20260531182743.2412946-3-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260531182743.2412946-1-richard.purdie@linuxfoundation.org>
 References: <20260531182743.2412946-1-richard.purdie@linuxfoundation.org>
@@ -66,7 +65,7 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Sun, 31 May 2026 18:27:58 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19576
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19574
 
 String commands have to be processed by subprocess using shell=True which
 is suboptimal for all kinds of reasons, including quoting. Convert to use
@@ -75,45 +74,144 @@ also means copy and paste will be more likely to use the preferred form.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/layerindexlib/cooker.py | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ lib/bb/tests/fetch.py | 32 ++++++++++++++++----------------
+ lib/bb/tests/setup.py |  2 +-
+ lib/bb/utils.py       |  2 +-
+ 3 files changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/lib/layerindexlib/cooker.py b/lib/layerindexlib/cooker.py
-index ced3e063604..82d77335f9a 100644
---- a/lib/layerindexlib/cooker.py
-+++ b/lib/layerindexlib/cooker.py
-@@ -55,10 +55,10 @@ class CookerPlugin(layerindexlib.plugin.IndexPlugin):
-         bb_path = os.path.dirname(bb_path)  # .../bitbake/lib/layerindex
-         bb_path = os.path.dirname(bb_path)  # .../bitbake/lib
-         bb_path = os.path.dirname(bb_path)  # .../bitbake
--        bb_path = self._run_command('git rev-parse --show-toplevel', os.path.dirname(__file__), default=bb_path)
--        bb_branch = self._run_command('git rev-parse --abbrev-ref HEAD', bb_path, default="<unknown>")
--        bb_rev = self._run_command('git rev-parse HEAD', bb_path, default="<unknown>")
--        for remotes in self._run_command('git remote -v', bb_path, default="").split("\n"):
-+        bb_path = self._run_command(['git', 'rev-parse', '--show-toplevel'], os.path.dirname(__file__), default=bb_path)
-+        bb_branch = self._run_command(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], bb_path, default="<unknown>")
-+        bb_rev = self._run_command(['git', 'rev-parse', 'HEAD'], bb_path, default="<unknown>")
-+        for remotes in self._run_command(['git', 'remote', '-v'], bb_path, default="").split("\n"):
-             remote = remotes.split("\t")[1].split(" ")[0]
-             if "(fetch)" == remotes.split("\t")[1].split(" ")[1]:
-                 bb_remote = self._handle_git_remote(remote)
-@@ -118,14 +118,14 @@ class CookerPlugin(layerindexlib.plugin.IndexPlugin):
-             layerbranch = "<unknown>"
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 626876ed07b..95cf6c414bb 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -425,7 +425,7 @@ class FetcherTest(unittest.TestCase):
+         if os.environ.get("BB_TMPDIR_NOCLEAN") == "yes":
+             print("Not cleaning up %s. Please remove manually." % self.tempdir)
+         else:
+-            bb.process.run('chmod u+rw -R %s' % self.tempdir)
++            bb.process.run(['chmod', 'u+rw', '-R', self.tempdir])
+             bb.utils.prunedir(self.tempdir)
  
-             if os.path.isdir(layerpath):
--                layerbasepath = self._run_command('git rev-parse --show-toplevel', layerpath, default=layerpath)
-+                layerbasepath = self._run_command(['git', 'rev-parse', '--show-toplevel'], layerpath, default=layerpath)
-                 if os.path.abspath(layerpath) != os.path.abspath(layerbasepath):
-                     layersubdir = os.path.abspath(layerpath)[len(layerbasepath) + 1:]
+     def git(self, cmd, cwd=None):
+@@ -698,7 +698,7 @@ class CleanTarballTest(FetcherTest):
+         fetcher.download()
  
--                layerbranch = self._run_command('git rev-parse --abbrev-ref HEAD', layerpath, default="<unknown>")
--                layerrev = self._run_command('git rev-parse HEAD', layerpath, default="<unknown>")
-+                layerbranch = self._run_command(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], layerpath, default="<unknown>")
-+                layerrev = self._run_command(['git', 'rev-parse', 'HEAD'], layerpath, default="<unknown>")
+         fetcher.unpack(self.unpackdir)
+-        mtime = bb.process.run('git log --all -1 --format=%ct',
++        mtime = bb.process.run(['git', 'log', '--all', '-1', '--format=%ct'],
+                 cwd=os.path.join(self.unpackdir, 'git'))
+         self.assertEqual(len(mtime), 2)
+         mtime = int(mtime[0])
+@@ -733,9 +733,9 @@ class FetcherLocalTest(FetcherTest):
+         os.makedirs(os.path.join(self.localsrcdir, 'dir', 'subdir'))
+         touch(os.path.join(self.localsrcdir, 'dir', 'subdir', 'e'))
+         touch(os.path.join(self.localsrcdir, r'backslash\x2dsystemd-unit.device'))
+-        bb.process.run('tar cf archive.tar -C dir .', cwd=self.localsrcdir)
+-        bb.process.run('tar czf archive.tar.gz -C dir .', cwd=self.localsrcdir)
+-        bb.process.run('tar cjf archive.tar.bz2 -C dir .', cwd=self.localsrcdir)
++        bb.process.run(['tar', 'cf', 'archive.tar', '-C', 'dir', '.'], cwd=self.localsrcdir)
++        bb.process.run(['tar', 'czf', 'archive.tar.gz', '-C', 'dir', '.'], cwd=self.localsrcdir)
++        bb.process.run(['tar', 'cjf', 'archive.tar.bz2', '-C', 'dir', '.'], cwd=self.localsrcdir)
+         self.d.setVar("FILESPATH", self.localsrcdir)
  
--                for remotes in self._run_command('git remote -v', layerpath, default="").split("\n"):
-+                for remotes in self._run_command(['git', 'remote', '-v'], layerpath, default="").split("\n"):
-                     if not remotes:
-                         layerurl = self._handle_git_remote(layerpath)
-                     else:
+     def make_ar_package(self, package_name, data_member="data.tar"):
+@@ -1341,18 +1341,18 @@ class SVNTest(FetcherTest):
+         repo_dir = tempfile.mkdtemp(dir=self.tempdir,
+                                    prefix='svnfetch_localrepo_')
+         repo_dir = os.path.abspath(repo_dir)
+-        bb.process.run("svnadmin create project", cwd=repo_dir)
++        bb.process.run(['svnadmin', 'create', 'project'], cwd=repo_dir)
+ 
+         self.repo_url = "file://%s/project" % repo_dir
+-        bb.process.run("svn import --non-interactive -m 'Initial import' %s %s/trunk" % (src_dir, self.repo_url),
++        bb.process.run(['svn', 'import', '--non-interactive', '-m', 'Initial import', src_dir, "%s/trunk" % self.repo_url],
+                        cwd=repo_dir)
+ 
+-        bb.process.run("svn co %s svnfetch_co" % self.repo_url, cwd=self.tempdir)
++        bb.process.run(['svn', 'co', self.repo_url, 'svnfetch_co'], cwd=self.tempdir)
+         # Github won't emulate SVN anymore (see https://github.blog/2023-01-20-sunsetting-subversion-support/)
+         # Use still accessible svn repo (only trunk to avoid longer downloads)
+-        bb.process.run("svn propset svn:externals 'bitbake https://svn.apache.org/repos/asf/serf/trunk' .",
++        bb.process.run(['svn', 'propset', 'svn:externals', "'bitbake https://svn.apache.org/repos/asf/serf/trunk'", "."],
+                        cwd=os.path.join(self.tempdir, 'svnfetch_co', 'trunk'))
+-        bb.process.run("svn commit --non-interactive -m 'Add external'",
++        bb.process.run(['svn', 'commit', '--non-interactive', '-m', 'Add external'],
+                        cwd=os.path.join(self.tempdir, 'svnfetch_co', 'trunk'))
+ 
+         self.src_dir = src_dir
+@@ -1854,7 +1854,7 @@ class GitShallowTest(FetcherTest):
+         # fetch and unpack, from the shallow tarball
+         bb.utils.remove(self.gitdir, recurse=True)
+         if os.path.exists(ud.clonedir):
+-            bb.process.run('chmod u+w -R "%s"' % ud.clonedir)
++            bb.process.run(['chmod', 'u+w', '-R', ud.clonedir])
+             bb.utils.remove(ud.clonedir, recurse=True)
+             bb.utils.remove(ud.clonedir.replace('gitsource', 'gitsubmodule'), recurse=True)
+ 
+@@ -2086,13 +2086,13 @@ class GitShallowTest(FetcherTest):
+             open(os.path.join(self.srcdir, 'c'), 'w').close()
+             self.git(['annex', 'add', 'c'], cwd=self.srcdir)
+             self.git(['commit', '--author', '"Foo Bar <foo@bar>"', '-m', 'annex-c', '-a'], cwd=self.srcdir)
+-            bb.process.run('chmod u+w -R %s' % self.srcdir)
++            bb.process.run(['chmod', 'u+w', '-R', self.srcdir])
+ 
+             uri = 'gitannex://%s;protocol=file;subdir=${S};branch=master' % self.srcdir
+             fetcher, ud = self.fetch_shallow(uri)
+ 
+             self.assertRevCount(1)
+-            assert './.git/annex/' in bb.process.run('tar -tzf %s' % os.path.join(self.dldir, ud.mirrortarballs[0]))[0]
++            assert './.git/annex/' in bb.process.run(['tar', '-tzf', os.path.join(self.dldir, ud.mirrortarballs[0])])[0]
+             assert os.path.exists(os.path.join(self.gitdir, 'c'))
+ 
+     def test_shallow_clone_preferred_over_shallow(self):
+@@ -3492,7 +3492,7 @@ class FetchPremirroronlyLocalTest(FetcherTest):
+         self.git_init(cwd=self.gitdir)
+         for i in range(0):
+             self.git_new_commit()
+-        bb.process.run('tar -czvf {} .'.format(os.path.join(self.mirrordir, self.mirrorname)), cwd =  self.gitdir)
++        bb.process.run(['tar', '-czvf', os.path.join(self.mirrordir, self.mirrorname), '.'], cwd=self.gitdir)
+ 
+     def git_new_commit(self):
+         import random
+@@ -3502,7 +3502,7 @@ class FetchPremirroronlyLocalTest(FetcherTest):
+             testfile.write("File {} from branch {}; Useless random data {}".format(self.testfilename, branch, random.random()))
+         self.git(['add', self.testfilename], self.gitdir)
+         self.git(['commit', '-a', '-m', "\"This random commit {} in branch {}. I'm useless.\"".format(random.random(), branch)], self.gitdir)
+-        bb.process.run('tar -czvf {} .'.format(os.path.join(self.mirrordir, self.mirrorname)), cwd =  self.gitdir)
++        bb.process.run(['tar', '-czvf', os.path.join(self.mirrordir, self.mirrorname), '.'], cwd=self.gitdir)
+         return self.git(["rev-parse", "HEAD"], self.gitdir).strip()
+ 
+     def git_new_branch(self, name):
+@@ -3572,7 +3572,7 @@ class FetchPremirroronlyNetworkTest(FetcherTest):
+         os.makedirs(self.clonedir)
+         self.git(["clone", "--bare", self.giturl], self.clonedir)
+         self.git(["update-ref", "HEAD", "15413486df1f5a5b5af699b6f3ba5f0984e52a9f"], self.gitdir)
+-        bb.process.run('tar -czvf {} .'.format(os.path.join(self.mirrordir, self.mirrorname)), cwd =  self.gitdir)
++        bb.process.run(['tar', '-czvf', os.path.join(self.mirrordir, self.mirrorname), '.'], cwd=self.gitdir)
+         shutil.rmtree(self.clonedir)
+ 
+     @skipIfNoNetwork()
+diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
+index ad829c7ab65..57d5752b0ed 100644
+--- a/lib/bb/tests/setup.py
++++ b/lib/bb/tests/setup.py
+@@ -92,7 +92,7 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+ 
+     def runbbsetup(self, cmd):
+         bbsetup = os.path.abspath(os.path.dirname(__file__) +  "/../../../bin/bitbake-setup")
+-        return bb.process.run("{} --global-settings {} {}".format(bbsetup, os.path.join(self.tempdir, 'global-config'), cmd))
++        return bb.process.run([bbsetup, '--global-settings', os.path.join(self.tempdir, 'global-config')] + cmd)
+ 
+ 
+     def _add_json_config_to_registry_helper(self, name, sources):
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index b04ff6ffc76..f03c950af5a 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -2293,5 +2293,5 @@ def is_path_on_nfs(path):
+             path = os.path.dirname(path)
+ 
+     import bb.process
+-    fstype = bb.process.run("stat -f -c %T {}".format(path))[0].strip()
++    fstype = bb.process.run(['stat', '-f', '-c', '%T', path])[0].strip()
+     return fstype == "nfs"
 
