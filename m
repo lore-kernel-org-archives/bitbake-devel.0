@@ -1,162 +1,111 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 798BDCD6E65
-	for <webhook@archiver.kernel.org>; Mon,  1 Jun 2026 13:21:50 +0000 (UTC)
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.28429.1780320106972701382
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 758FDCD5BD1
+	for <webhook@archiver.kernel.org>; Mon,  1 Jun 2026 13:31:10 +0000 (UTC)
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.28733.1780320661164919610
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 01 Jun 2026 06:21:48 -0700
+ Mon, 01 Jun 2026 06:31:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=TIRAoM+b;
- spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id D01F04E42DE4
-	for <bitbake-devel@lists.openembedded.org>; Mon,  1 Jun 2026 13:21:44 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 9DD546026B;
-	Mon,  1 Jun 2026 13:21:44 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 053F71088822D;
-	Mon,  1 Jun 2026 15:21:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1780320104; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=xOjlAhIN6xQdXVDHMyoY3IIY0oqSTR5gVkqVhwI4R64=;
-	b=TIRAoM+bW4oMeolExUHLwxuD0tLv36BuWsy4RWj+ySvDc5G4PMu35KZ9Fmf/3cz/M4ABne
-	JI8d4rzDpdemdsCv6PINk9iZSaHKpBR0e95Wq1EM+5s5xK8xSusSz0N/Me61POpnxCArkK
-	fKeZh1QBnQsuXm+PHZohPxBetl+5j3GrEmqJUd8oE7m8naWKcF2XOIDdBsuuCmJjUEC6ka
-	o9EJvfWx+aNkFV58T6sZt2UakEGUsRqlE9j37N4In3ZT09BaI84RLXgnuTXkue1IDuoIrB
-	dOSUPIW4ihtEgx+ijawsIRyQP15pKLVDJzVEPzs81aJyLwcngcwnXB+wXmP/Tw==
-From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Mon, 01 Jun 2026 15:21:29 +0200
-Subject: [PATCH] doc/bitbake-user-manual-ref-variables: extend the MIRRORS
- documentation
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=YoxTdx9m;
+ spf=pass (domain: gmail.com, ip: 209.85.128.172, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-7e1916922b9so15990537b3.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 01 Jun 2026 06:31:01 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780320660; cv=none;
+        d=google.com; s=arc-20240605;
+        b=c4UtmNeRDkeDVW4RvIU3FamHmxcnTNLYbedpyQsM+rUa8Fjvq21R1P4bRZVO8UoQot
+         srg0QieaSJe/tdPgoSwqxx++4yUWuNbJPld2JK4SmP0mKlAlZtEjUEB+kpTVbstyEm/i
+         TFkovDjPcANWSloGGza0YnI4MTt2eNxlCEENn7fHP8eyBI1h9yfmgeTtVeus129zDEVC
+         MbRHDpMH42aSDE4a2vH2q+kRnACNYhEFZUurcmXXW+XG/o15aDFEVJfDJmzR7sWeB+O4
+         D000OSJfO8WrF69gqe7MtUOw5bnCdtxz1JVC7puymt5KYnglZ1m5gz6CzFAlg5TjQtMu
+         Fl3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=Rx0qeAhYPl3GXaFN07BHks95TydvlEkG6uOdr/3uFyQ=;
+        fh=Ycj+feykXR5zpu3uQ9TqbI89XB3RYofe7rHcJDyviQY=;
+        b=VNsLxh3eie1oOznec0fGhSogJA7Lq/AglOPY+T8/c7kTCK9aSHMCHUK2dceChsMFjZ
+         aQCHHvkN1zUDEpz5I2DvMm+91ZvK86LroCmnkP9K1/wVZduBniYFXMH5nxqLYKZY6iis
+         E/rRqS+aMYIvul90/yl5Tt00mRXsodlCYJ50gLnV4ZtFdaJbWUQ2dDHutW9wmPiPgjTt
+         Vhd5ZG5kmZ0uws0uqPe8tv7wyjAtgfctNiHKFTE8Z7GujDpgywzCucIGq6ZcGt8xJwC+
+         0ydWnQiLPkJw04gL7d17oX+Dz4YvXUZvJ3hbuqKH2E8obSG+2/dRcjNwzhHE4KzXoKSl
+         524g==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780320660; x=1780925460; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rx0qeAhYPl3GXaFN07BHks95TydvlEkG6uOdr/3uFyQ=;
+        b=YoxTdx9mTU5Q38aZh28bD9T+Yh81kZWMQG6RZvCZeHtoq+5ipVdnD1yS17nuk5cXzQ
+         mZPxFU+jiSztP8gZB2lULkH1HgBgqyR32vXlfIjYFuswRHpMS4sbd/HvCr00+H872XTV
+         XKgauWFPy5iYCDyjXuhPcPiuQXX1utMubanzaHqs1CgKhhj+sYxLxG3jhwFmBZkYCOsd
+         xth/JUDjHYaHNpZKucXK1EyD/j//u0qBBbCfFIOROZnLGtEHCJFFoRp0TB2lDLuVX5Ev
+         eIIbuC9HtvHhDIfNolT26jXTXAcukBvJgWdOqBnp+KEecNRvFhUQ4gCP8C8+D/Z/uvbJ
+         OKug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780320660; x=1780925460;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rx0qeAhYPl3GXaFN07BHks95TydvlEkG6uOdr/3uFyQ=;
+        b=EfWA53mlCqK7e2jUXRdPBeNdI2lPzBt+SR6XmbpBEAR1F/lAat+O2W92Fo3zUw+Wiv
+         KFpRw7Xzh1qn9JDeSWfs1aJ8sQBK4y8k5O1rNn6KCrTgfbSIB93+uUvmvuHNnHkR0Ov3
+         /OvTcQES+nQ1MXSVGleYI/hlOCSH5q8R7OorBimgCk8chXdjjKON7ptWEEJ2cg5aCLpY
+         NSKrkLKjN21YlIQptT6433dEh0yEQaHJmAwjMBvLtNVzTcS/sLQGsiR1oo7L7URfDS+4
+         T+hkYvuzr9doVmCKpCel1LDhczY6A1jec9OIkc7It1MaCqetsXVGCyIOkQTxf6SgjkIv
+         p2Kw==
+X-Forwarded-Encrypted: i=1; AFNElJ+/x6SfwpTFov/16g/tpIFw+bcl6yPInd0537M3NSVTVNYPrUivIbTQMLflvRAzxza2a1IOm3IZA/3PP3+F@lists.openembedded.org
+X-Gm-Message-State: AOJu0YyQhUUYVxbpMp1SMMBtrjfgtNyvYS/+c1UodOzdqra57HLEMgs3
+	PVzw4xuWV/AFizlK5HOgvv/EYQQbxAWK4uF7LvS4v7ne/HciYVra2ZFrtP99mb88YLGTonrxobq
+	zTlTgE8fEIBTdYJCZg7zcBSHlRSc3WHIGUA==
+X-Gm-Gg: Acq92OEaWDpNwdTECdVJ6YgT+/TzEdW0G5lBB4ZhUCuqofP91KfIiHwxwBBSsjbsk9m
+	D3wwURL1Uh82+5mEkjyyVH2WybY8x5VfuCHrKdd3quv6T094LjL6OVG5fYvlIOqLgfXEA+nn4RJ
+	RGqAPNffi7HaIlsdV6ycLL+bgUbHkDmEZrbA8wBY3YO624rIdqiEM/vMV3jKQoJ/eYgWMwnzK4m
+	3YHxj3hPXSU/PigKEX+7TRBANDtSqSoKVmfj7CJe17t7SQo/rc3iIFRKKdqDlkkh+1rsIQeA5XX
+	ywbD8Q8JWPDM8QevyLjgJvECIsRF1tprM/HrVGEMRPvd/Qpe73D4
+X-Received: by 2002:a05:690c:4b90:b0:7b3:18ff:1060 with SMTP id
+ 00721157ae682-7e05c94e1a8mr103934247b3.27.1780320660048; Mon, 01 Jun 2026
+ 06:31:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260601-clarify-mirrors-syntax-v1-1-d9dbdbaf037f@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMQQqDMBBA0avIrDsQrVjqVaSLJE50So0yo0UR7
- 95Ul2/x/w5KwqRQZzsIfVl5jAn5LQPf29gRcpsMhSkqU5kc/ccKhw0HFhlFUbc42xXpbp0LD2+
- ofEKKJ6HA6zluXpd1cW/y8/8Gx/EDRSiCWXoAAAA=
-X-Change-ID: 20260601-clarify-mirrors-syntax-e3abbf7c0e49
-To: bitbake-devel@lists.openembedded.org
-Cc: Ross Burton <ross.burton@arm.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4361;
- i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=kBSiQZ/bNTqh0/lUHlq1N6fQn2OE9JRL5D2bEWKC9eQ=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBqHYdm/Yp4WWNRwp9VRCM+wkJRfxLm76SJ1BGvn
- 8J9RpjML1yJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCah2HZgAKCRDRgEFAKaOo
- Nk8/EADJpoWaP3lY2J+MpgfVYWmvVNYnQxSEaPYJOm9LyHIGriGDDFpEqfNrwWypNjO5QOSA28r
- 9nKfVekIdNOrLNECwDk7D2/68HnLE8q03T8pW2OuxsTg7IEu6zhVSX/fbS2lAmg7J9UQiV+GWdE
- YKtbMy7i7ihOqiAPppP1japJC25/mQH71pMvV0/wqaWiZsGzWXr1lsQVgEp4QFEN0/eRmqdyVm3
- /0yUOkz8tuwji0Xl7jE/vSQH0fbgEmPSgG1LcyCTORPvr7FW8MlsKLDA28BArHPmQZ9iI4bVbrL
- aPlG1LNx4JLfvh+I/5U2SgbeY2bCMhfuMkN9BNEXZSO88JRI4TeDWicfMhHLeI6CpfpDwtdBq1B
- U1MX4+kQVvVPCrNarEHOzzePI8LHq134WOX1I3oeH/FfubAz5bEHdbXyhnFYC/wrM83DesxgjCw
- Ifm8KSJ/c4Qb7Bm2qT8U3e/JAi83tzgiF+s8FTG38DFuf4uGIf017Nl0gp3cJvQSqBMBU0/vO5P
- i3nSeJ+KspRfnjUv7mhfy57aalebQgKEV3CKsKArosU4EWdHKd6CG8K2bj7uyJuBG/Ejz1hVcoG
- hCDCJdhKSPLY7iAFAttgJr2pSdG6geNWXwi7BnrgVOYv2gKzvUfS6HofQb5oVLs/H3iQq9ZPq+V
- ATrWXsc1AXP+sjw==
-X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
- fpr=8648725188DD401BB9A0D3FFD180414029A3A836
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20260529-bb-setup-notes-v1-0-a251ef1c5af4@toradex.com>
+ <20260529-bb-setup-notes-v1-2-a251ef1c5af4@toradex.com> <DIXISSZ5047B.PSMH6SMC4CF8@bootlin.com>
+ <3kgay5cukb3dd6ojc7ysbtd5jgglbe7i4shvcksa2wb3kh2zyc@3oegr7dacucw>
+In-Reply-To: <3kgay5cukb3dd6ojc7ysbtd5jgglbe7i4shvcksa2wb3kh2zyc@3oegr7dacucw>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Mon, 1 Jun 2026 15:30:48 +0200
+X-Gm-Features: AVHnY4IMMmf8o6qLHOjplFQAxL3zkVKdEOpRqG2YlKHCwRgcT9ulnNQ3eUTv7Bc
+Message-ID: <CANNYZj8+ToTjrpgXMzFfDB5k4Xc637ORzY7LdzW0Kn6fBGs_BA@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 2/2] bitbake-setup: write notes for
+ generated build configs
+To: ernestvanhoecke@gmail.com
+Cc: Antonin Godard <antonin.godard@bootlin.com>, bitbake-devel@lists.openembedded.org, 
+	Alexander Kanavin <alex@linutronix.de>, docs@lists.yoctoproject.org, 
+	Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 01 Jun 2026 13:21:50 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19583
+ <bitbake-devel@lists.openembedded.org>; Mon, 01 Jun 2026 13:31:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19584
 
-The MIRRORS variable wasn't properly documented as Ross highlighted in
-bug 16297. Give it a proper description detailing its usage and which
-keywords are available. Also link PREMIRRORS to MIRRORS as they use the
-same syntax.
+On Mon, 1 Jun 2026 at 14:53, Ernest Van Hoecke via
+lists.openembedded.org
+<ernestvanhoecke=gmail.com@lists.openembedded.org> wrote:
 
-[YOCTO #16297]
+> Yes, I tested with some newlines explicitly written and this worked fine.
+> Since it just comes from a json string and is passed to `f.write()` I
+> don't believe any special escaping is necessary, just "\n" is fine.
+>
+> My understanding is that the Python json library should handle this well
+> and converts it to a real newline in the python string.
 
-Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
----
- .../bitbake-user-manual-ref-variables.rst          | 56 ++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+I need to ask though: how practical and readable is it going to be,
+when written into the json? Notes are meant as multiple paragraphs of
+text, and it would be good to be able to write them that way, instead
+of some specially-formatted single string.
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index 9824b58ef27..753e9a38f90 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -1416,6 +1416,58 @@ overview of their function and contents.
-       upstream source, and then locations specified by :term:`MIRRORS` in that
-       order.
- 
-+      This variable has a specific syntax. Each line must contain a regular
-+      expression matching the original source URL on the leftmost part and a
-+      replacement URL for it on the rightmost part. For example::
-+
-+         MIRRORS:prepend = " \
-+             git://git.openembedded.org/.* git:///mirrors/openembedded/BASENAME \
-+         "
-+
-+      In the above example:
-+
-+      -  The leftmost part means that any Git repository (``git://`` fetcher)
-+         whose URL starts with ``git.openembedded.org/`` will be matched.
-+
-+      -  The rightmost part is the replacement URL for the original repository,
-+         which is hosted locally in the ``/mirrors/openembedded`` directory. It
-+         also uses the ``BASENAME`` keyword which is detailed below.
-+
-+      The rightmost part of each line can contain keywords which are
-+      automatically replaced by BitBake. These keywords can contain either a
-+      sub-part of the original URL or meta-information about it.
-+
-+      For what follows, let's take the following URL as an example for the
-+      original source (matched by the leftmost part of the line):
-+      ``git://git.openembedded.org/project/repo.git``.
-+
-+      A replacement for this URL can be created using the following keywords:
-+
-+      -  ``TYPE``: the URL scheme or fetcher type. For the example above: ``git``.
-+      -  ``HOST``: the URL host. For the example above: ``git.openembedded.org``.
-+      -  ``PATH``: the URL path. For the example above: ``/project/repo.git``.
-+      -  ``BASENAME``: the URL basename. For the example above: ``repo.git``.
-+      -  ``MIRRORNAME``: a translation of the host and path with common
-+         characters substituted to dots (``.``). For the example above:
-+         ``git.openembedded.org.project.repo.git``.
-+
-+      The rightmost part of the line can also be a bare URL that uses no special
-+      keywords (usually ``https://`` or ``file://``). For example::
-+
-+         MIRRORS:prepend = " \
-+             git://git.openembedded.org/.* file:///mirrors/openembedded/ \
-+         "
-+
-+      In the above example, the fetcher will try to find a mirror tarball in the
-+      ``/mirrors/openembedded`` directory. The name of this tarball should follow
-+      the name of the tarball created by BitBake (for Git repositories,
-+      the :term:`BB_GENERATE_MIRROR_TARBALLS` variable must be set to "1" to
-+      generate them).
-+
-+      If we take ``git://git.openembedded.org/project/repo.git`` as an example,
-+      the tarball would have to be named
-+      ``git2_git.openembedded.org.project.repo.git.tar.gz``.
-+
-    :term:`OVERRIDES`
-       A colon-separated list that BitBake uses to control what variables are
-       overridden after BitBake parses recipes and configuration files.
-@@ -1544,6 +1596,10 @@ overview of their function and contents.
-       use ``file://`` URLs to point to local directories or network shares as
-       well.
- 
-+      The syntax of the :term:`PREMIRRORS` variable is the same as
-+      :term:`MIRRORS`. See the definition of the :term:`MIRRORS` for more
-+      details on it.
-+
-    :term:`PROVIDES`
-       A list of aliases by which a particular recipe can be known. By
-       default, a recipe's own :term:`PN` is implicitly already in its
-
----
-base-commit: e9a06f79d9ec767c9d95470be78b006d6fd0d59c
-change-id: 20260601-clarify-mirrors-syntax-e3abbf7c0e49
-
+Alex
 
