@@ -1,119 +1,161 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <ernestvanhoecke@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF92ECD6E57
-	for <webhook@archiver.kernel.org>; Mon,  1 Jun 2026 14:09:50 +0000 (UTC)
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.29555.1780322984778207726
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F92CD5BD1
+	for <webhook@archiver.kernel.org>; Mon,  1 Jun 2026 19:21:33 +0000 (UTC)
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.7502.1780341690588981598
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 01 Jun 2026 07:09:44 -0700
+ Mon, 01 Jun 2026 12:21:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=Xzsd8IXH;
- spf=pass (domain: gmail.com, ip: 209.85.221.180, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5873983d19eso8843169e0c.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 01 Jun 2026 07:09:44 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780322984; cv=none;
-        d=google.com; s=arc-20240605;
-        b=VVSOv/OZjDajqJODcOe2Ye28QWPIjnJh0q/kQ/XXCp63rqNiH1aMRKfrKurZiuz41i
-         DtPdc7EJ4Ro5RIPoBuvcxQe2MEb9qo5QwIM6iRr6HJ6sJSnaBNQsgoB0srL36rPwDtzU
-         DKtWK7aHfowgtbR+cMCbU5GFABwK1xNlck3T1075UZvrv7nd7BvGbLWc5kQDmCywlbdb
-         yWYnfXRdaF7Gk9sy1YTZJmoM5Lp2+hELWcocZKEuQ2kxWWUL0u/CNtkk6STEQGdGBLw0
-         9vOkw9CjeC5KYV6y8esAWcvdTLut1dDFtNfRn0yAsa14C3QmAbfb6xfQwUMPR1V297tc
-         a2yA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=FrAxFsP4cW4T2VuKat6K3FjXZL/KR17AD9B4Ow5sk0M=;
-        fh=6IxTdy6nKF7jRDjDTacz0d11gQJUFQbZp405S0bMMdY=;
-        b=Dwq+0/R3GPz2S8H88qsP3RmpWwMdWNuCv+sRQNpm8arIAF65YCm248SkKLwpp81YA4
-         hiVTFQ/2Bh9X1rEeH5z4CseYvgPxWTyCNCl28XM4MdSwmQuxt7ttFRjqVzTLNEgnKZ9r
-         S++hfsx/2ChDzzG9qrQjQcmcJUWwZG/E7m9RGWZL1sp3SI6iQ2ax/tUSCVF8nPyBBLnJ
-         ZoHa+CeZNIeSLodV3guh6yAAitHg2irCItxjjVG7z+eEpwFUltVfnsORPB0f8LQ3Wl/w
-         X5a2wUogl6uPriqjUI5kxGmzNm2PaIbaxSlGqCjUwDIT1AOpXKFelg3IYvAis7hzOE7L
-         Fl2Q==;
-        darn=lists.openembedded.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=E1UqzIBm;
+ spf=pass (domain: gmail.com, ip: 209.85.221.50, mailfrom: ernestvanhoecke@gmail.com)
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-460166910e6so478272f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Mon, 01 Jun 2026 12:21:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780322984; x=1780927784; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FrAxFsP4cW4T2VuKat6K3FjXZL/KR17AD9B4Ow5sk0M=;
-        b=Xzsd8IXH1SBYshaGWJjQrfbIaQ0y49C2ssI9oRsx2u24xT+hdqmxxaFv/NiBYKdgdH
-         kaqgivTIWiLILDS5alpvS/n1sn24qIWjJ5tVP9qYoHhog8IEm3050hbtUGEoZVfduR5b
-         oTfYz71gufjKwibupHgbgObt//xGUh1UEk5R9BSNUmctj+EN3eboEifGD4CrrS4zomv7
-         kInU1j+qNZQ/6tpb6fgay7A19dCGrQLcvTw5mhp3RG4ScB6eRHDo+km1L591b8qtHEBv
-         q/aQSR5MttyQx6GpICTMf47aiSb/dn6LnUg2eXdHPKR7GeCbuT+Tas/17khKZ/1Q1zin
-         v2Gw==
+        d=gmail.com; s=20251104; t=1780341689; x=1780946489; darn=lists.openembedded.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zZFtSHXGC1dneVvdUJbUhoYoZVS39Jn4sUKCTCAHmQk=;
+        b=E1UqzIBmIO/aYsn3GYBqBgClvnEUfAIoOvJH3i+MDPa8L1nftk0QYxU6Q5rr91AzF/
+         qyQy6f947mfydyGyjoV9RrjKifqBz2IQTQdqB4PbypByXl4AkBzuwawz4wpfGPruCgoZ
+         CmysTQMRpLcEMaBTSLeaSXJtRmQtKoE74B68QZ2SjMrIetBGRPnnaUnUilKo32dWdl7M
+         m20eoUn6hAS8paKKEy6241fOcXxD5xutsv9ddeP5mFUbiNU0qaaIFDTVFMog+NWYy+zI
+         sWgrVZqGSYe5bofv6si6yg+OtcaAzu2fF0qe2Txo9SO2h76XYr6LSL3K7PESCXAMYLSV
+         bXWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780322984; x=1780927784;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FrAxFsP4cW4T2VuKat6K3FjXZL/KR17AD9B4Ow5sk0M=;
-        b=AzVMcepwNCBc7xVBpGxnnSWE9alYNxLD3BE0A5Lp5FYIUsxeRZPvo+U9BK4n3daZ5z
-         lAJnGdVZHJzmjZ3EbpPFlPWWvuB7QxfVccPm+hO9bCXdAaNg0E9rrpu7jPFUIAuP2/tH
-         O4OdBtaA5z8Bu+QwYb5zoXsxghBqs66DWfyeAwpFLi4w4TOvb2IallWLHMp69lw19VnZ
-         8IGsL3sFaJpNWKtJkf7gaBtJhp82Aihv/93znqF59JPV879pujkSr/dVSClSwljPqgdE
-         sSAuiTtI2icmfocJXxzg/MnseemYUamwZUpbzoD7CJtTNdhehuUMK5YHdQGU6UXICpkU
-         rHNg==
-X-Forwarded-Encrypted: i=1; AFNElJ9htX77u1/HvttzJlo12ZwJGXcQlZgPcY6UBffws61atn1GePkaW4L7/sQyONBy8zuzev/B3fFZHfgpuWT4@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yz+7ck56j1p1jE+E63MdG0dMFmfvrGuxQ394s4PK13ePwtMy9PF
-	HIEJYGFFPg1j6D2FWyAh52Fe4+ThUwzDx/3OLyxcAEK8rlXWTf0fgU46pYQRIGPVCRWZQLIkdmt
-	WW5HU91wVTIDo6isvHiPhjbJ3RDyRGRU=
-X-Gm-Gg: Acq92OHjxpsgS4bub20ccYt6hDbWOXcSEExAaVExCkRbuf4TbQkalS9N6aDtdjaC/Qe
-	dvM+bMQIMdX1HZMzqu9E8av3TeeEpJxW4SPGQn7304viOvje2+QWrQafP164Hbk6k+uj/yXFQ8k
-	ivL71T/GaXI/Z5nGS9kafmJ25fb12Dh7bX9bH93Eza+dTux4CVMCOGq8ahJILnyLf85aBr322rC
-	UbAVxiN7PhgGoHBwKVSZOcjIaphZdSzMSPMu0R5IMn4863nzVnCe9EsjXTSbYylqGaqGja+ReUb
-	TY6phXX9rlo5aQrtO9h/Yjb1mML2a/z4Oih58aC7SaofVavqT6EAp4Qp3WPer2w=
-X-Received: by 2002:a05:6122:3a19:b0:5a3:1088:51c0 with SMTP id
- 71dfb90a1353d-5a310885f41mr946740e0c.6.1780322983687; Mon, 01 Jun 2026
- 07:09:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20260529-bb-setup-notes-v1-0-a251ef1c5af4@toradex.com>
- <20260529-bb-setup-notes-v1-2-a251ef1c5af4@toradex.com> <DIXISSZ5047B.PSMH6SMC4CF8@bootlin.com>
- <3kgay5cukb3dd6ojc7ysbtd5jgglbe7i4shvcksa2wb3kh2zyc@3oegr7dacucw>
- <CANNYZj8+ToTjrpgXMzFfDB5k4Xc637ORzY7LdzW0Kn6fBGs_BA@mail.gmail.com> <3yo5dz6bcwiwkwzqe7ucg3u4lkfpgjhzgmwqnehllgehxrmopt@vtqynopxxjug>
-In-Reply-To: <3yo5dz6bcwiwkwzqe7ucg3u4lkfpgjhzgmwqnehllgehxrmopt@vtqynopxxjug>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Mon, 1 Jun 2026 16:09:32 +0200
-X-Gm-Features: AVHnY4L3N5XC4nNjRk0PEx4Kytq5uSlStZidfZU2OYTtMPuOFSSBSrcBbJR-hDQ
-Message-ID: <CANNYZj_fQbdbKw2h5CAz83vPswpM25_oWoDpAL=+rEVJMtp_Ow@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 2/2] bitbake-setup: write notes for
- generated build configs
-To: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
-Cc: Antonin Godard <antonin.godard@bootlin.com>, bitbake-devel@lists.openembedded.org, 
+        d=1e100.net; s=20251104; t=1780341689; x=1780946489;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zZFtSHXGC1dneVvdUJbUhoYoZVS39Jn4sUKCTCAHmQk=;
+        b=HyBOILsNhrxV0Ots1v6kNOnP/tAn+ElLR+EASELIAuWrxkW/rSLI8gjjAGN78kP2i+
+         6Bn2dFdCyez2QGddHUt63oouzQK9m2KOknMsBvYmvBSoOiiarhPd+7xKYcgvIWNiX30G
+         LzbAOJ6BhP8wM/NTqx26jmgeD6bQFx0nXbvq1fHs/rxbmD1UNQEoYEhLbPipn1CCVBav
+         rmEBAEsqoa8ayIRkpOIkg1YpysHCYSu5Oc32guk+PchnCly+nW3855CH9fOM9VHeNpEJ
+         c1AyIx1O0yAtKIY0O7PLsfa0hNIlz9Gwssy8h/xqlv9akPi4S3XU4L8o4ykDzYDF7V1K
+         mX9w==
+X-Gm-Message-State: AOJu0Yw/F7PUTYUbNONrLxjjEqLWNa84RNwW9FPFipL8KKh74Vkp3IHs
+	MujMnvNYmt4hsuI71iANOGl4aCmjgVshQoxVfG9319QlgHkCG+K7PkgL
+X-Gm-Gg: Acq92OHOU3K7AF3DUIF08mo1345aGHcTMRJJ4QhnVDtelar9Xb/OD9AvZuBvSo8J6J/
+	oEGQUXwTuD5SGWI55n5dlc6uz85MDO51Zs+hOe2w6JyJ1M6TAz8zmEKvGyXPs6ZVfzh/lW5tuYn
+	bh+Qx+Vj9cDxJ9MvI4U3dQF4s85Fz4KUeiZlhR6ZNxc5i9C7tSQ+GptrJwrTAVTBbEjG8oKDpHm
+	i0QpLRbuv3HBBLCbWTf5/K73kwd3uxC9+fOTl3wng74AKrKWRblfROcn9JOkw1HBfmPCae+Rt/Z
+	96KCGJdEpYMr5LCyNvXOI7RUbs8tVdj6/Wg1K4LEs3+/KuST8ZR249mAt9CSTqcTUHPgYTBO9P2
+	AuTvIpv8lNWXhbe2iexWoc7qWKw47A547npGY3XEXxMZMjabdF8BlH2ESxMQoIgU/8XBstYFUaj
+	y0OYhGRqCK7lD63Yqzoc516bqmQgO7CIcMK/18+kGtVRQhhBZrU9YqC0pB76yCCPPL97irE82gH
+	heD8sO+0+Gv4KiLQqAZNZr2kR3OdAKDaK9q2N8OMEquNGlbLeM3RvPra5vphQMA
+X-Received: by 2002:a05:6000:4c8:b0:45e:ea3a:47d6 with SMTP id ffacd0b85a97d-45ef6b93b94mr16581326f8f.32.1780341688655;
+        Mon, 01 Jun 2026 12:21:28 -0700 (PDT)
+Received: from ernest.hoecke-nb (static-2a02-1368-6200-2fbc-d7b4-25e5-cfdd-1870.cust.swissbackbone.net. [2a02:1368:6200:2fbc:d7b4:25e5:cfdd:1870])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45ef35601d7sm38735930f8f.28.2026.06.01.12.21.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2026 12:21:28 -0700 (PDT)
+Date: Mon, 1 Jun 2026 21:21:27 +0200
+From: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
+To: Alexander Kanavin <alex.kanavin@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org, 
 	Alexander Kanavin <alex@linutronix.de>, docs@lists.yoctoproject.org, 
 	Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [bitbake-devel] [PATCH 1/2] bitbake-setup: support multiple
+ source override files
+Message-ID: <epsie6ihulfecgum6rju6azeyhzv34544bvw3tmyqeznycq3pk@fmmew2m6ahcw>
+References: <20260529-bb-setup-override-improvements-v1-0-91db62e0149e@toradex.com>
+ <20260529-bb-setup-override-improvements-v1-1-91db62e0149e@toradex.com>
+ <CANNYZj_iZGyJQo-OrTXfH1rBSxtrQtOcCT9Mfnb3uiBJpwQL3Q@mail.gmail.com>
+ <o2tur4mf7vfsmx2qkizqhhxjnz34vifjtxeschtjvueskuzrcy@5hmfaoevpek6>
+ <CANNYZj-ajQ_2LJnTHMvC82JjtNxLRMPKEJO1ez_Paj6vb9NBdA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANNYZj-ajQ_2LJnTHMvC82JjtNxLRMPKEJO1ez_Paj6vb9NBdA@mail.gmail.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 01 Jun 2026 14:09:50 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19588
+ <bitbake-devel@lists.openembedded.org>; Mon, 01 Jun 2026 19:21:33 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19589
 
-On Mon, 1 Jun 2026 at 15:55, Ernest Van Hoecke
-<ernestvanhoecke@gmail.com> wrote:
-> I considered this and agree, there's no true beautiful solution here.
-> The description field also has this issue, granted, that's meant to be
-> much shorter than notes.
+On Mon, Jun 01, 2026 at 03:50:05PM +0200, Alexander Kanavin wrote:
+> On Mon, 1 Jun 2026 at 14:43, Ernest Van Hoecke
+> <ernestvanhoecke@gmail.com> wrote:
+> > I arrived at this from a real use case. Admittedly, that might now be
+> > semi-artifical if we don't want the other default-source-overrides
+> > patch.
+> >
+> > My setup idea was to have all sources move, then use a fixed revisions
+> > override to create a "release" setup at known pins, and then apply
+> > another override on top of that one to create an "integration" setup for
+> > CI where most sources are at known pins, but some repos are at latest.
+> >
+> > By overriding again, it prevents needing to maintain a "release" and
+> > "integration" sources override files, that are mostly duplication of
+> > each other.
+> 
+> But why can't 'release' be a full json config? If that leads to
+> multiple duplicated configs for each release, then we should pursue
+> the 'souces-one-of' idea to have multiple source sets in configs.
 >
-> Since json doesn't support multiline strings, the only alternative is
-> making this field a list of strings and concatenating them in code. I'm
-> certainly open to that and can send a v2 doing it that way (it'd look
-> like an extra "\n".join()).
 
-Yes. We're basically restricted by json's original purpose of being a
-data transfer format, and not a config file format. (the "no comments"
-restriction is in the same vein). It's a lot more human friendly than
-xml, but still not friendly enough, by modern standards.
+Agreed, I'm playing with this idea now. How would you feel about a
+top-level definition of:
 
-It's tempting to make it a reference to an external file, but this
-wouldn't work well when the config is fetched with http:
-$ bitbake-setup init https://my.server/some-build.conf.json
-would have to also fetch the notes file.
+    "source-override-sets": {
+        "release": { "sources": { ... } },
+        "dev": { "sources": { ... } }
+    }
 
-A list of strings isn't horrible, perhaps either can be supported?
+That can then be selected by a config with
 
-Alex
+    "source-override-set": "release"
+
+I don't really see the use case of having this be user selectable such
+as the "oe-template-one-of" property. Seems to me that it'd just create
+another axis of choice for the setup but at least for me, the sources
+would always be tied to a certain config. For example, my dev config
+also applies some other templates that differentiate it from the release
+config, so release+"dev sources" is not enough, and I'm not interested
+in creating a dev setup with release sources or vice versa.
+
+I'm struggling a bit with the semantics of this new approach tho. It
+makes me think that we really just want multiple sources nodes, not
+overrides.
+ 
+> > You're right that this can easily be managed with other tools, the small
+> > risk I see is that lots of custom solutions start growing around
+> > bitbake-setup, but with your feedback on the other patch I also see less
+> > value in this one.
+> >
+> > In short, the expectation here is that people use their own tooling to
+> > manage the .conf.json and source overrides .json files? If so I'll send
+> > a patch later to remove the multiple --source-overrides option from the
+> > docs.
+> 
+> Overiddes are meant as something local and throw-away, and not
+> something that is ever checked into a public git repo or otherwise
+> shared. They're not self-describing for example, if you look at the
+> content, there's no way to tell what is it for. Allowing multiple
+> overrides that are overlaid on top of each other also makes it more
+> difficult to tell what would be the final result, it's hard enough to
+> figure how bitbake variables get their final values, and we don't need
+> to repeat that :)
+> 
+
+That is a very compelling argument :) 
+
+> So if a certain set of sources is reused between many builds, it
+> should really be in a config. Bitbake-setup could help with that, e.g.
+> 'take this override and add it to this config' command.
+> 
+> Alex
+> 
+
+Agreed and I've experimented with just using jq to overwrite the sources
+node, I see this as the way forward. If I find a reason maybe I'll
+integrate the behaviour straight  into bitbake-setup once we have an
+idea on the multiple source sets/overrides concept. Thanks for your
+thinking on this.                     
+                                                                         
+Ernest
+
 
