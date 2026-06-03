@@ -1,232 +1,156 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <ernestvanhoecke@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CD6CD6E55
-	for <webhook@archiver.kernel.org>; Wed,  3 Jun 2026 13:21:49 +0000 (UTC)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.20125.1780492905890463625
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DE1CD6E55
+	for <webhook@archiver.kernel.org>; Wed,  3 Jun 2026 15:39:00 +0000 (UTC)
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.23138.1780501137820941381
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 03 Jun 2026 06:21:46 -0700
+ Wed, 03 Jun 2026 08:38:58 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=aZJdonlC;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-49068493267so75774025e9.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 03 Jun 2026 06:21:45 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=RXy4us6b;
+ spf=pass (domain: gmail.com, ip: 209.85.221.51, mailfrom: ernestvanhoecke@gmail.com)
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-45efa80e0afso3646723f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 03 Jun 2026 08:38:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1780492904; x=1781097704; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MfE7/TElbXR1ZuprQkaJMOSBiQHOiX+8qx0lRf7fJQM=;
-        b=aZJdonlCxY89MhASnRzJ7WvFgc31F04uTShcQC3C2pg0mnuUQcBJ9a1VSqE6Rj5EiN
-         hhWPxcwRybF4SX4YfkKMg6drseIcef7pDHiLScb/ikYn5Ecs/mgxc2DzU8Ur7jWFQhAd
-         sY+SGP8xM0RZrk1lOQszUOxP9LDOwuM5E9Zkw=
+        d=gmail.com; s=20251104; t=1780501136; x=1781105936; darn=lists.openembedded.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1CogeWA6oZPHOjZBxB9XcPLs83Ivc7cmpdk3JTS6YIo=;
+        b=RXy4us6bvrZPrHj3IhFlqZfKeHam4fbrp8khDuN8lyIeG21l6oRicl/tbtlOjUIDQD
+         VBIfl4v4RpmWRpW1rXLj9Q6vLblauJOBuuLNLu7MM3Pn/BT2SS1Abt0Gn1RfPpQpJbAU
+         NpxYHjoaiK3WxrrOQFKGz8CNOAgzbjMN9fEoNzJ5mvLY/FQoH8qaiFnxeNDv4slEWK5U
+         0Yu0jeAb2TobQaXIygWaZXqh8d4XyLKoihllHH/syUaNA9rA/hrmUCykz39GZ/9lst60
+         Sn5pN+OQRU8bLzw04xgfArpQgp4PUbHub/Q+FMNU9itbVvCEtXCv8YUdhzQK/OicpgJi
+         nPaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780492904; x=1781097704;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MfE7/TElbXR1ZuprQkaJMOSBiQHOiX+8qx0lRf7fJQM=;
-        b=k7onuTKFAJTX8vLTN3OH8SEMf7XZD9pqPdhmbmj5fHuUGaKUCr7C9h/s9McEA1rGVQ
-         sg6FuAtavxGraw6W4H04dax7UqjRaM4tlo1dNV1MgC6esMZ+4QUK3jQZuccW4Z2Ew2Yc
-         uBhvBHv7gKEgB3gJoZBUiYgAw+5nJ9auqUNeiqbSsa9eF9QTtV+V0gT9W7apHyCq5v5L
-         1qfwBJLr0m5VVgXpjdKlw1wsvU3YCJ1jXbxmD6WWILLnEUhixfmC+gzCVgRgYkpeoflq
-         0ghxIIo0JfR0WqEwJ9NImHgxRw4r/2qlszzlfGEIysWlLA/V0t2CiAN5TfCwnl+cCg6Z
-         lwoQ==
-X-Gm-Message-State: AOJu0YwmYdhYq5Cvn5Y4+ooMFl/dFnSj7t6tVfJtwZRJkzfq3T2SxF/X
-	zKCn+g3iySsMPQHXVWAUbTd4sCT2rp4fJrEjUeMQggOykHTd199Dgx52fV7z4bcvU/4TxpOrJhb
-	IPjO8
-X-Gm-Gg: Acq92OFA0nRtApIr87ORNqlla69SoJB4E6UbZq3ILWH1hZJ8atOy8+9cVqrQj1qBGXq
-	tLmZJA1wbt7KFT0quU2dsvSIhARnFM3za0yqjK9kPVKP9EF6aeMHDo9S+Ty+r//UMutVmpaQuCz
-	22OX2R9R9fqMBfBKPjxY/Ea89w/dEBUrLYyg50sB/t973NKiWT+6ZGIaRt4JVr452fhVZYe71V7
-	IF6Lq6jMBQCV3y6X45cQRSmoLSWtP0wXlbK321nPmbfiKE6cPusxy7K/3n4ln4PZhINYyqvObRd
-	7V/CB8WvmM4f0eYvufgsItwlNyDq0nmyGNChhvSFlq2kudTBYkvPLI0jOY/aU4rOHHvZPq7uVT3
-	C1yLGuTd8ZF+MkkjnOSIrPE5/Wwr4WvMg/QdX+F2s1hUtktJwkIla6BYC4eN8uvacBgDOxHwlCp
-	i5XiV3N/hL+B0maOu6VKtO4CqT8Tp62Iu/o1v5ylOoFeYHSlKtHcSypO60MmuICA==
-X-Received: by 2002:a05:600c:35ce:b0:490:b9c3:6c49 with SMTP id 5b1f17b1804b1-490b9c36d9dmr41054635e9.29.1780492903921;
-        Wed, 03 Jun 2026 06:21:43 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:202c:df88:9261:8b8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490b7d6b990sm26761725e9.2.2026.06.03.06.21.43
-        for <bitbake-devel@lists.openembedded.org>
+        d=1e100.net; s=20251104; t=1780501136; x=1781105936;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1CogeWA6oZPHOjZBxB9XcPLs83Ivc7cmpdk3JTS6YIo=;
+        b=JeqteMTi1lVCqIT59CBwK5cbyBJVkQsTZjypnsDHWDwaHn/hm13XRUl5XPBJXwFxb4
+         72xi1UHNnNer7zAag+ILQIXPuDP9PIUUuVDpiskrgu5BLbz3u1joI5jF6lA7XlVy39hW
+         5A3iuAw7PYl8QYYTdubJdQz5au4PBVtfVueq4lqZhIaNZy5WHGJnKiuMp6aVE6lzhC6X
+         L21ohLRtMObbWDqZ5KhDy7HggwiOh2+MV0dIsiLv4Dz4zr1fm1Nt8Tn+lFWlVsDO2iuy
+         F+Y9MpFBczJXERIcrqNUgYNzNe8D79PAeN3o6C2WxWTFBP+Xr38f/x3Nif+KzBxBgIDT
+         CIIw==
+X-Gm-Message-State: AOJu0YxyoDH8tbzQtohhUAINU+K8MnyzTtW7Vu4yq3RxrGBUjVZS2eC2
+	7PzeE9UzzEzac0NpibTzv849qynna1kmIzw/3vpdHAX6fSHalmZ3tzYn
+X-Gm-Gg: Acq92OFJKx8e7bQ0zgH/9MB0uwgUzPPdrSjN/Unka6oJY6EH8ANaQwCieUzPlz0DXZW
+	tiPSByMg/qyI6UACbZLDLtyxlHos00/f6LOcMzfmefcUgFyOm9t7hN7b5eOiAT+l4qHcEB6QGP4
+	DQA9SE70VNML0G+v5iRYrAy74vND8UeuM1nVV8BUg8PM7NtsKlXmDRA46LydMux3nIZ2pd/hOF2
+	WeF98oE+uPmS/dtIRHIgJKu55t8J8kDDaKOx4b6W2pjbIMlmzg+KHaF3Xf0roviKc0gXMX5bNcb
+	UokcvK8W39ndIOFa6s7hVd1Gwi7FMhBTq5EKBQ1yss+fMiwkKr42jf5trq2rx8ABMBWY0AlgP0J
+	I/kXk1CiRwKN1dm/anRJ3Vs+14iAGYQodtq6ehyYTKiDv9iBO8vdug2gUSEtWw2hPjqaIv8PiDV
+	Zu1+7jq8oagoAgquemyKdrY+FICShcAjCXVkj06VesX1a8STJMHtORGGlSZffSLcASdE46Zk6ud
+	PnGkoDjgucsmWTUIrlf3RxR/f+53nEG9/9ZoDTmg9hIGO6Q
+X-Received: by 2002:a05:6000:e12:b0:439:c18f:5aaf with SMTP id ffacd0b85a97d-46021759d88mr4766247f8f.34.1780501136023;
+        Wed, 03 Jun 2026 08:38:56 -0700 (PDT)
+Received: from ernest.hoecke-nb (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch. [83.173.201.248])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f351ac0sm13684473f8f.27.2026.06.03.08.38.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2026 06:21:43 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] fetch2: Convert parts of unpack() to use parameter lists
-Date: Wed,  3 Jun 2026 14:21:42 +0100
-Message-ID: <20260603132142.1076020-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.53.0
+        Wed, 03 Jun 2026 08:38:55 -0700 (PDT)
+Date: Wed, 3 Jun 2026 17:38:54 +0200
+From: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
+To: Alexander Kanavin <alex.kanavin@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org, 
+	Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+Subject: Re: [bitbake-devel] [PATCH 1/2] bitbake-setup: support multiple
+ source override files
+Message-ID: <nt34wvdpwl7fzvw6dm2awzfc2mxfswua2mey76zxovjsb7vyl3@enxihzd4dzm5>
+References: <20260529-bb-setup-override-improvements-v1-0-91db62e0149e@toradex.com>
+ <20260529-bb-setup-override-improvements-v1-1-91db62e0149e@toradex.com>
+ <CANNYZj_iZGyJQo-OrTXfH1rBSxtrQtOcCT9Mfnb3uiBJpwQL3Q@mail.gmail.com>
+ <o2tur4mf7vfsmx2qkizqhhxjnz34vifjtxeschtjvueskuzrcy@5hmfaoevpek6>
+ <CANNYZj-ajQ_2LJnTHMvC82JjtNxLRMPKEJO1ez_Paj6vb9NBdA@mail.gmail.com>
+ <epsie6ihulfecgum6rju6azeyhzv34544bvw3tmyqeznycq3pk@fmmew2m6ahcw>
+ <CANNYZj9rKRS0CD-LGq=phvB_T1XS+SmR5Uti0p8tu49PtTm-QA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANNYZj9rKRS0CD-LGq=phvB_T1XS+SmR5Uti0p8tu49PtTm-QA@mail.gmail.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 03 Jun 2026 13:21:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19603
+ <bitbake-devel@lists.openembedded.org>; Wed, 03 Jun 2026 15:39:00 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19604
 
-The unpack function makes heavy use of shell pipelines but start the
-conversion to avoid shell=True where possible.
+On Tue, Jun 02, 2026 at 10:03:50AM +0200, Alexander Kanavin wrote:
+> On Mon, 1 Jun 2026 at 21:21, Ernest Van Hoecke
+> <ernestvanhoecke@gmail.com> wrote:
+> > Agreed, I'm playing with this idea now. How would you feel about a
+> > top-level definition of:
+> >
+> >     "source-override-sets": {
+> >         "release": { "sources": { ... } },
+> >         "dev": { "sources": { ... } }
+> >     }
+> >
+> > That can then be selected by a config with
+> >
+> >     "source-override-set": "release"
+> >
+> > I don't really see the use case of having this be user selectable such
+> > as the "oe-template-one-of" property. Seems to me that it'd just create
+> > another axis of choice for the setup but at least for me, the sources
+> > would always be tied to a certain config. For example, my dev config
+> > also applies some other templates that differentiate it from the release
+> > config, so release+"dev sources" is not enough, and I'm not interested
+> > in creating a dev setup with release sources or vice versa.
+> >
+> > I'm struggling a bit with the semantics of this new approach tho. It
+> > makes me think that we really just want multiple sources nodes, not
+> > overrides.
+> 
+> I wouldn't call them 'override sets' as they're actually the starting
+> point, I'd go with something like 'source-choices'.
+> 
+> The use case for making them user selectable can be seen right here:
+> https://git.openembedded.org/bitbake/tree/default-registry/configurations
+> 
+> There's a lot of copy-paste in these configs, because each can hold
+> only one set of sources, and folding different yocto releases (plus
+> master) into a single config file would be great, so that actual build
+> configurations need to be written only once. I can imagine downstream
+> users could use it in a similar way: share configs between different
+> releases.
+> 
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/fetch2/__init__.py | 82 ++++++++++++++++++++++-----------------
- 1 file changed, 46 insertions(+), 36 deletions(-)
+That makes sense to me, in this case I'd add "source-choices" that
+contain multiple "sources" nodes as you proposed. I'd like to start with
+just that and the ability for a (leaf) config to select that with a
+property "source-choice" so it does not have to be specified by the
+user. That would already solve my use case, and also allow for folding
+all these OE distros into one.
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 93d8b1820d8..191049f2127 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -1539,6 +1539,32 @@ class FetchMethod(object):
-             bb.fatal("Invalid value for 'unpack' parameter for %s: %s" %
-                      (file, urldata.parm.get('unpack')))
- 
-+        env = os.environ.copy()
-+        path = data.getVar('PATH')
-+        if path:
-+            env['PATH'] = path
-+
-+        # If 'subdir' param exists, create a dir and use it as destination for unpack cmd
-+        if 'subdir' in urldata.parm:
-+            subdir = urldata.parm.get('subdir')
-+            if os.path.isabs(subdir):
-+                if not os.path.realpath(subdir).startswith(os.path.realpath(rootdir)):
-+                    raise UnpackError("subdir argument isn't a subdirectory of unpack root %s" % rootdir, urldata.url)
-+                unpackdir = subdir
-+            else:
-+                unpackdir = os.path.join(rootdir, subdir)
-+            bb.utils.mkdirhier(unpackdir)
-+        else:
-+            unpackdir = rootdir
-+
-+        def _run(cmd):
-+            if isinstance(cmd, str):
-+                ret = subprocess.call(cmd, preexec_fn=subprocess_setup, shell=True, cwd=unpackdir, env=env)
-+            else:
-+                ret = subprocess.call(cmd, preexec_fn=subprocess_setup, cwd=unpackdir, env=env)
-+            if ret != 0:
-+                raise UnpackError("Unpack command %s failed with return value %s" % (cmd, ret), urldata.url)
-+
-         base, ext = os.path.splitext(file)
-         if ext in ['.gz', '.bz2', '.Z', '.xz', '.lz', '.zst']:
-             efile = os.path.join(rootdir, os.path.basename(base))
-@@ -1547,36 +1573,36 @@ class FetchMethod(object):
-         cmd = None
- 
-         if unpack:
--            tar_cmd = 'tar --extract --no-same-owner'
-+            tar_cmd = ['tar', '--extract', '--no-same-owner']
-             if 'striplevel' in urldata.parm:
-                 striplevel = urldata.parm['striplevel']
-                 if not striplevel.isdigit():
-                     raise UnpackError("Invalid striplevel parameter: %s" % striplevel, urldata.url)
--                tar_cmd += ' --strip-components=%s' % striplevel
-+                tar_cmd.append('--strip-components=%s' % striplevel)
-             if file.endswith('.tar'):
--                cmd = '%s -f %s' % (tar_cmd, file)
-+                cmd = tar_cmd + ['-f', file]
-             elif file.endswith('.tgz') or file.endswith('.tar.gz') or file.endswith('.tar.Z'):
--                cmd = '%s -z -f %s' % (tar_cmd, file)
-+                cmd = tar_cmd + ['-z', '-f', file]
-             elif file.endswith('.tbz') or file.endswith('.tbz2') or file.endswith('.tar.bz2'):
--                cmd = 'bzip2 -dc %s | %s -f -' % (file, tar_cmd)
-+                cmd = 'bzip2 -dc %s | %s -f -' % (file, shlex.join(tar_cmd))
-             elif file.endswith('.gz') or file.endswith('.Z') or file.endswith('.z'):
-                 cmd = 'gzip -dc %s > %s' % (file, efile)
-             elif file.endswith('.bz2'):
-                 cmd = 'bzip2 -dc %s > %s' % (file, efile)
-             elif file.endswith('.txz') or file.endswith('.tar.xz'):
--                cmd = 'xz -dc %s | %s -f -' % (file, tar_cmd)
-+                cmd = 'xz -dc %s | %s -f -' % (file, shlex.join(tar_cmd))
-             elif file.endswith('.xz'):
-                 cmd = 'xz -dc %s > %s' % (file, efile)
-             elif file.endswith('.tar.lz'):
--                cmd = 'lzip -dc %s | %s -f -' % (file, tar_cmd)
-+                cmd = 'lzip -dc %s | %s -f -' % (file, shlex.join(tar_cmd))
-             elif file.endswith('.lz'):
-                 cmd = 'lzip -dc %s > %s' % (file, efile)
-             elif file.endswith('.tar.7z'):
--                cmd = '7z x -so %s | %s -f -' % (file, tar_cmd)
-+                cmd = '7z x -so %s | %s -f -' % (file, shlex.join(tar_cmd))
-             elif file.endswith('.7z'):
-                 cmd = '7za x -y %s 1>/dev/null' % file
-             elif file.endswith('.tzst') or file.endswith('.tar.zst'):
--                cmd = 'zstd --decompress --stdout %s | %s -f -' % (file, tar_cmd)
-+                cmd = 'zstd --decompress --stdout %s | %s -f -' % (file, shlex.join(tar_cmd))
-             elif file.endswith('.zst'):
-                 cmd = 'zstd --decompress --stdout %s > %s' % (file, efile)
-             elif file.endswith('.zip') or file.endswith('.jar'):
-@@ -1585,10 +1611,10 @@ class FetchMethod(object):
-                 except ValueError as exc:
-                     bb.fatal("Invalid value for 'dos' parameter for %s: %s" %
-                              (file, urldata.parm.get('dos')))
--                cmd = 'unzip -q -o'
-+                cmd = ['unzip', '-q', '-o']
-                 if dos:
--                    cmd = '%s -a' % cmd
--                cmd = "%s '%s'" % (cmd, file)
-+                    cmd.append('-a')
-+                cmd.append(file)
-             elif file.endswith('.rpm') or file.endswith('.srpm'):
-                 if 'extract' in urldata.parm:
-                     unpack_file = urldata.parm.get('extract')
-@@ -1598,7 +1624,7 @@ class FetchMethod(object):
-                 else:
-                     cmd = 'rpm2cpio.sh %s | cpio --no-absolute-filenames -id' % (file)
-             elif file.endswith('.deb') or file.endswith('.ipk'):
--                output = subprocess.check_output(['ar', '-t', file], preexec_fn=subprocess_setup)
-+                output = subprocess.check_output(['ar', '-t', file], preexec_fn=subprocess_setup, env=env)
-                 datafile = None
-                 valid_datafiles = ('data.tar', 'data.tar.gz', 'data.tar.xz',
-                                    'data.tar.zst', 'data.tar.bz2', 'data.tar.lzma')
-@@ -1611,21 +1637,11 @@ class FetchMethod(object):
-                         raise UnpackError("Unable to unpack deb/ipk package - does not contain supported data.tar* file", urldata.url)
-                 else:
-                     raise UnpackError("Unable to unpack deb/ipk package - could not list contents", urldata.url)
--                quoted_datafile = shlex.quote(datafile)
--                cmd = 'ar x %s %s && %s -p -f %s && rm %s' % (shlex.quote(file), quoted_datafile, tar_cmd, quoted_datafile, quoted_datafile)
--
--        # If 'subdir' param exists, create a dir and use it as destination for unpack cmd
--        if 'subdir' in urldata.parm:
--            subdir = urldata.parm.get('subdir')
--            if os.path.isabs(subdir):
--                if not os.path.realpath(subdir).startswith(os.path.realpath(rootdir)):
--                    raise UnpackError("subdir argument isn't a subdirectory of unpack root %s" % rootdir, urldata.url)
--                unpackdir = subdir
--            else:
--                unpackdir = os.path.join(rootdir, subdir)
--            bb.utils.mkdirhier(unpackdir)
--        else:
--            unpackdir = rootdir
-+                bb.note("Unpacking %s to %s/" % (file, unpackdir))
-+                _run(['ar', 'x', file, datafile])
-+                _run(tar_cmd + ['-p' ,'-f', datafile])
-+                os.remove(os.path.join(unpackdir, datafile))
-+                return
- 
-         if not unpack or not cmd:
-             urldata.unpack_tracer.unpack("file-copy", unpackdir)
-@@ -1642,21 +1658,15 @@ class FetchMethod(object):
-                     if urlpath.find("/") != -1:
-                         destdir = urlpath.rsplit("/", 1)[0] + '/'
-                         bb.utils.mkdirhier("%s/%s" % (unpackdir, destdir))
--                cmd = 'cp --force --preserve=timestamps --no-dereference --recursive -H "%s" "%s"' % (file, destdir)
-+                cmd = ['cp', '--force', '--preserve=timestamps', '--no-dereference', '--recursive', '-H', file, destdir]
-         else:
-             urldata.unpack_tracer.unpack("archive-extract", unpackdir)
- 
-         if not cmd:
-             return
- 
--        path = data.getVar('PATH')
--        if path:
--            cmd = "PATH=\"%s\" %s" % (path, cmd)
-         bb.note("Unpacking %s to %s/" % (file, unpackdir))
--        ret = subprocess.call(cmd, preexec_fn=subprocess_setup, shell=True, cwd=unpackdir)
--
--        if ret != 0:
--            raise UnpackError("Unpack command %s failed with return value %s" % (cmd, ret), urldata.url)
-+        _run(cmd)
- 
-         if iterate is True:
-             iterate_urldata = urldata
+I can see how you might prefer the choice so you do not even need to 
+specify multiple leaf configs, but then indeed we might (later) want
+allow lists. I'll send an RFC or PATCH for this and we can see how it
+feels.
+
+> Adding restrictions on what config can be used with what set of
+> sources can be done as a followup, and doesn't need to be decided and
+> agreed up front. Until then you'd have to maintain that restriction
+> externally, by ensuring bitbake-setup is called with matching items:
+> 
+> $ bitbake-setup init my-mega-config-file dev-sources dev-config
+> 
+> I'm considering whether the source sets should hold optional allow
+> lists and deny lists of what configs they can be used with:
+> 
+>     "source-choices": {
+>          "release": { "sources": { ... }, "configs-allow":
+> ["release"], "description": "...", "expires": "yyyymmdd" },
+>          "dev": { "sources": { ... }, "configs-allow": ["dev"],
+> "description": "..." }
+>      }
+> 
+> This feels more elegant and flexible. But again, it doesn't have to be
+> implemented up front. The best way to add new features is incremental
+> and iterative.
+> 
+> Alex
+> 
 
