@@ -2,60 +2,60 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4052CD6E56
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6697CD6E55
 	for <webhook@archiver.kernel.org>; Wed,  3 Jun 2026 10:48:58 +0000 (UTC)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.17313.1780483730483795100
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.17311.1780483729051124556
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 03 Jun 2026 03:48:50 -0700
+ Wed, 03 Jun 2026 03:48:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=WDDWSW5o;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.44, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-460166910e6so1661292f8f.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 03 Jun 2026 03:48:50 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Gn59smDU;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-46015dc517aso2371497f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 03 Jun 2026 03:48:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1780483729; x=1781088529; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1780483727; x=1781088527; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=m/NoUBj09rXP6qscXGRUm68Bx4twS8Pqds3hkylzAqU=;
-        b=WDDWSW5orKqkWyEGC2/6GHBTqa0Ik1oxICP3ifQKYlMFwd8KvMJcCgUf50AfJgLmrj
-         Td5mo/9TujCxPBMWF0xcqYbDwOJ87uQylCbRzDpCKkTnr24XnldWog/F3Is2B7YGHQ13
-         nivyYnf/0KI9uLTajYrqFuMqEJ+iZhuxz8RD4=
+        bh=ECwLOKzEL1DPg7svBOpvAa7iKJDZb5pYLvIEmH3sy6Q=;
+        b=Gn59smDU2yCJpI62Ak+EH7tNSHqtQNa8PVYq+m4xADxHO/nHHM505U89vNfPjWmaki
+         K4Zuy9ov5GQFQg2RVzlWHU/Vf+sPuUdZLFtEqPiZZXAbMtuD+wMVKYS1V0kuB/oR/6cx
+         h/lOVcHtUS8khwGUYsjou7YWAdLAeHf5e7Q6M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780483729; x=1781088529;
+        d=1e100.net; s=20251104; t=1780483727; x=1781088527;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=m/NoUBj09rXP6qscXGRUm68Bx4twS8Pqds3hkylzAqU=;
-        b=JiX10OxigSqdtLdVUmP0LrRWknfmhQFfG8cupphIpNV1f+MMlgbMx7Q7IUZbAufqzW
-         3sv5aa8A10CnRyNM79Z0u9X8QDzbYRyB8JLcsN/2pnK7Xc8Ic/XCFR3TwEu4xiI//KZ5
-         upCvIg304HFUWKsL3NvtoDjTJrKERMceUxIMRY+2d6Rim1IPffKRBXjyBZJ2FLeYWrrR
-         qiSSbRLZVYK2tg907ysR4fJeIPrXXUPNIzYUPE+JrHWPxTjtvjxtWkSo3ctqe7aosJR1
-         idxSyRlL9pD58ZjmZ2RzM4rCua2cVPpjSbQPWpC+HRX5Z2yzHNE7vi2nbgGx9rAkUBHz
-         9KHA==
-X-Gm-Message-State: AOJu0Yx/YWtfeidm+8CIb0Z6/LzvY6AiTD48fawCl0vBtgBECeUw20YK
-	P6LKnSToCd76xwI67Z87nd+zrhUnhTyegz3EckY/bfo5SIi6UHuocTWQQf4UBGv44fgClI7IUR7
-	p9BdU
-X-Gm-Gg: Acq92OFnYas2QWpZ2ZTE6Bta1vQqsDQGffyK8ivo/EjXO4bHsx/tnw+V0CAMCqprD0r
-	r9SlLSxyF/BL8mzb5ILakTFzverZMq7OX05oHiQuhjVJkXU8IV9cMWRUmHMlibjwtv6sNkmSTpa
-	c1kSlCzbuzFzLkAFGiqMs2KZkWLKOJh7XWUhJXrqp5nFGMCc9quOZ9xL4oFNpINAGnYz4qVZxYj
-	2y0epFNQZtGgYK676AxJH205UdqPcOFISJv6FqSgYhpU5Xzfi1lU/5wlPeHktukCbzu8R1P8Yvi
-	C7QK27qJYCG03AHC0M6vBm2+HUUJkN01twlLgc+WzYThnM8EcrXkRe+y2Xax6onQbTGd9YZ6KBX
-	cZoVjmOLQAQu8cc5/V2v343CFbQq/em7AWLj9zvbdli2nC6znjdjk1I0z4w4exki1Wiqj5u60sX
-	ie25dpHjfOeVw0yRSprJC8I4VrWEfBV/xUOdiH/Rs5mHfuc1o72113whfhwZ6oIw==
-X-Received: by 2002:adf:f64f:0:b0:446:96b1:f5f with SMTP id ffacd0b85a97d-46021783c0fmr2735813f8f.8.1780483728861;
-        Wed, 03 Jun 2026 03:48:48 -0700 (PDT)
+        bh=ECwLOKzEL1DPg7svBOpvAa7iKJDZb5pYLvIEmH3sy6Q=;
+        b=eQCZk0IOt03u81FW7tDv7Y86FRgdXg1kTbtgrcmVW5p5f0bjopGQkBSera3BGyHhgZ
+         iRwmM6mdZw09R9cntXo8jLEgM651p/J6/0tf/+DZarLk1SDCQjfSLCzM4sm1fIR8Z/Dg
+         OErw0teRtZZGXn5EoUNSJEOKJVt35Od5YOtJF6DPufX96aRdoayY/AtQipSpbCsplk4x
+         IfEABSGZIWWH9rX/IjnGQ7Xf5HQiz1A+wCI54a54WhoLDXfjyYLRmXAZ3KXPXaNzL+vv
+         CLET19G0BAKIY/TXYbRWiGo3TXohpVXOnrVXLZThbOCrjWttcRIKHYu7Cw9hWKHpWBXH
+         /VgA==
+X-Gm-Message-State: AOJu0YyWjvdzPEFM0MrtVMIByomkycZjffdk9fOyGVNZTIqKePc7SEmt
+	ffu1ak92cwJwmlhTSjw/ry9awPn7sFkj6Ej08yM3Uju81CVDIeoBRDGLgiPOaoHcdNfRVKo/5jG
+	z9OH6
+X-Gm-Gg: Acq92OEHDR2JkIycldYXRJKBr57HulSla2Xnb1FImB6KHdBTeF697hW74efNLqfYb26
+	mqVQO1N5q21y951L8emRkQYZf9fJDZ8j5larKq7EtVCQAwtD6Re83y7wpXOJvYtD5zQzj8FoBMe
+	T4sgPWZ4VKWFFb8A4HQRhqejegYHTzN/OnyYfba0KglhEEZZ8korg3OLe72PayQK1b5wNVgoioR
+	XyMPD5sQ2JUhQ0ezfWQFJnjfgBma75T2SCc3d/6d+I++pQ/0A64XsU7VES7EGABl31r64GZHAqq
+	WsJg8kxnpBdBqlsf9EFc6r9KwG2v10sWKeTZSALOxSUSzkGB0t6kTgoQzaER7WMZPQNE6nE3B2Z
+	fvQi0CZE5ivkLVtVMhJoIASYUHD6Veua1vuBAojl2+xFUWCCXjKYixf/Cwplv2xOw5o+ZUCzlfI
+	wK9khD9YLU2qZ0mJI4o4W2yZi+hkpEZLEuXgnT7q5z/DKf3iXiaZpwAQ2zCN2Bh3XWu3e6a1eh
+X-Received: by 2002:a05:6000:1818:b0:45e:9421:4ca8 with SMTP id ffacd0b85a97d-4602184bfe7mr3359279f8f.28.1780483727291;
+        Wed, 03 Jun 2026 03:48:47 -0700 (PDT)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:202c:df88:9261:8b8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f35ee64sm8090759f8f.30.2026.06.03.03.48.47
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f35ee64sm8090759f8f.30.2026.06.03.03.48.45
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2026 03:48:47 -0700 (PDT)
+        Wed, 03 Jun 2026 03:48:45 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 6/8] fetch/{npm,npmsw}: Convert to use lists of command arguments
-Date: Wed,  3 Jun 2026 11:48:38 +0100
-Message-ID: <20260603104840.815399-6-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 5/8] fetch/svn: Convert to use lists of command arguments
+Date: Wed,  3 Jun 2026 11:48:37 +0100
+Message-ID: <20260603104840.815399-5-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260603104840.815399-1-richard.purdie@linuxfoundation.org>
 References: <20260603104840.815399-1-richard.purdie@linuxfoundation.org>
@@ -65,7 +65,7 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Wed, 03 Jun 2026 10:48:58 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19599
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19598
 
 To follow best practises and avoid shell=True subprocess usage, convert
 the fetcher commands to use lists instead of strings. This improves variable
@@ -73,86 +73,161 @@ quoting and models modern coding standards.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/fetch2/npm.py   | 24 +++++++++++-------------
- lib/bb/fetch2/npmsw.py |  2 +-
- 2 files changed, 12 insertions(+), 14 deletions(-)
+ lib/bb/fetch2/svn.py | 71 +++++++++++++++++++++++++-------------------
+ 1 file changed, 40 insertions(+), 31 deletions(-)
 
-diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-index ed9ed167946..3c0cd9ff098 100644
---- a/lib/bb/fetch2/npm.py
-+++ b/lib/bb/fetch2/npm.py
-@@ -75,12 +75,9 @@ def npm_integrity(integrity):
- def npm_unpack(tarball, destdir, d):
-     """Unpack a npm tarball"""
-     bb.utils.mkdirhier(destdir)
--    cmd = "tar --extract --gzip --file=%s" % shlex.quote(tarball)
--    cmd += " --no-same-owner"
--    cmd += " --delay-directory-restore"
--    cmd += " --strip-components=1"
-+    cmd = ['tar', '--extract', '--gzip', '--file=%s' % tarball, '--no-same-owner', '--delay-directory-restore', '--strip-components=1']
-     runfetchcmd(cmd, d, workdir=destdir)
--    runfetchcmd("chmod -R +X '%s'" % (destdir), d, quiet=True, workdir=destdir)
-+    runfetchcmd(['chmod', '-R', '+X', destdir], d, quiet=True, workdir=destdir)
+diff --git a/lib/bb/fetch2/svn.py b/lib/bb/fetch2/svn.py
+index b5862139fac..84e15c02d3c 100644
+--- a/lib/bb/fetch2/svn.py
++++ b/lib/bb/fetch2/svn.py
+@@ -13,6 +13,7 @@ BitBake 'Fetch' implementation for svn.
+ import os
+ import bb
+ import re
++import shlex
+ from   bb.fetch2 import FetchMethod
+ from   bb.fetch2 import FetchError
+ from   bb.fetch2 import MissingParameterError
+@@ -34,7 +35,7 @@ class Svn(FetchMethod):
+         if not "module" in ud.parm:
+             raise MissingParameterError('module', ud.url)
  
- class NpmEnvironment(object):
-     """
-@@ -129,19 +126,20 @@ class NpmEnvironment(object):
-                 workdir = tmpdir
+-        ud.basecmd = d.getVar("FETCHCMD_svn") or "/usr/bin/env svn --non-interactive"
++        ud.basecmd = shlex.split(d.getVar("FETCHCMD_svn") or "") or ['svn', '--non-interactive']
  
-             def _run(cmd):
--                cmd = "NPM_CONFIG_USERCONFIG=%s " % (self.user_config.name) + cmd
--                cmd = "NPM_CONFIG_GLOBALCONFIG=%s " % (self.global_config_name) + cmd
--                return runfetchcmd(cmd, d, workdir=workdir)
-+                extraenv = {}
-+                extraenv['NPM_CONFIG_USERCONFIG'] = self.user_config.name
-+                extraenv['NPM_CONFIG_GLOBALCONFIG'] = self.global_config_name
-+                return runfetchcmd(cmd, d, workdir=workdir, extraenv=extraenv)
+         ud.module = ud.parm["module"]
  
-             if configs:
-                 bb.warn("Use of configs argument of NpmEnvironment.run() function"
-                     " is deprecated. Please use args argument instead.")
-                 for key, value in configs:
--                    cmd += " --%s=%s" % (key, shlex.quote(value))
-+                    cmd.append('--%s=%s' % (key, value))
+@@ -83,15 +84,17 @@ class Svn(FetchMethod):
+         options.append("--no-auth-cache")
  
-             if args:
-                 for key, value in args:
--                    cmd += " --%s=%s" % (key, shlex.quote(value))
-+                    cmd.append('--%s=%s' % (key, value))
+         if ud.user:
+-            options.append("--username %s" % ud.user)
++            options.append("--username")
++            options.append(ud.user)
  
-             return _run(cmd)
+         if ud.pswd:
+-            options.append("--password %s" % ud.pswd)
++            options.append("--password")
++            options.append(ud.pswd)
  
-@@ -190,7 +188,7 @@ class Npm(FetchMethod):
-             ud.localfile = npm_localfile(ud.package, ud.version)
+         if command == "info":
+-            svncmd = "%s info %s %s://%s/%s/" % (ud.basecmd, " ".join(options), proto, svnroot, ud.module)
++            svncmd = ud.basecmd + ['info'] + options + ['%s://%s/%s/' % (proto, svnroot, ud.module)]
+         elif command == "log1":
+-            svncmd = "%s log --limit 1 --quiet %s %s://%s/%s/" % (ud.basecmd, " ".join(options), proto, svnroot, ud.module)
++            svncmd = ud.basecmd + ['log', '--limit', '1', '--quiet'] + options + ['%s://%s/%s/' % (proto, svnroot, ud.module)]
+         else:
+             suffix = ""
  
-         # Get the base 'npm' command
--        ud.basecmd = d.getVar("FETCHCMD_npm") or "npm"
-+        ud.basecmd = shlex.split(d.getVar("FETCHCMD_npm") or "") or ["npm"]
+@@ -102,22 +105,24 @@ class Svn(FetchMethod):
+                 options.append("--ignore-externals")
  
-         # This fetcher resolves a URI from a npm package name and version and
-         # then forwards it to a proxy fetcher. A resolve file containing the
-@@ -206,8 +204,8 @@ class Npm(FetchMethod):
-             args = []
-             args.append(("json", "true"))
-             args.append(("registry", ud.registry))
--            pkgver = shlex.quote(ud.package + "@" + ud.version)
--            cmd = ud.basecmd + " view %s" % pkgver
-+            pkgver = ud.package + "@" + ud.version
-+            cmd = ud.basecmd + ['view', pkgver]
-             env = NpmEnvironment(d)
-             check_network_access(d, cmd, ud.registry)
-             view_string = env.run(cmd, args=args)
-diff --git a/lib/bb/fetch2/npmsw.py b/lib/bb/fetch2/npmsw.py
-index 85f4482ad7d..5255e8b465e 100644
---- a/lib/bb/fetch2/npmsw.py
-+++ b/lib/bb/fetch2/npmsw.py
-@@ -276,7 +276,7 @@ class NpmShrinkWrap(FetchMethod):
-                     npm_unpack(depsrcdir, depdestdir, d)
-                 else:
-                     bb.utils.mkdirhier(depdestdir)
--                    cmd = 'cp -fpPRH "%s/." .' % (depsrcdir)
-+                    cmd = ['cp', '-fpPRH', '%s/.' % depsrcdir, "."]
-                     runfetchcmd(cmd, d, workdir=depdestdir)
+             if ud.revision:
+-                options.append("-r %s" % ud.revision)
++                options.append("-r")
++                options.append(ud.revision)
+                 if ud.pegrevision:
+                     suffix = "@%s" % (ud.revision)
  
-     def clean(self, ud, d):
+             if command == "fetch":
+                 transportuser = ud.parm.get("transportuser", "")
+-                svncmd = "%s co %s %s://%s%s/%s%s %s" % (ud.basecmd, " ".join(options), proto, transportuser, svnroot, ud.module, suffix, ud.path_spec)
++                svncmd = ud.basecmd + ['co'] + options + ['%s://%s%s/%s%s' % (proto, transportuser, svnroot, ud.module, suffix), ud.path_spec]
+             elif command == "update":
+-                svncmd = "%s update %s" % (ud.basecmd, " ".join(options))
++                svncmd = ud.basecmd + ['update'] + options
+             else:
+                 raise FetchError("Invalid svn command %s" % command, ud.url)
+ 
++        extraenv = {}
+         if svn_ssh:
+-            svncmd = "SVN_SSH=\"%s\" %s" % (svn_ssh, svncmd)
++            extraenv['SVN_SSH'] = svn_ssh
+ 
+-        return svncmd
++        return svncmd, extraenv
+ 
+     def download(self, ud, d):
+         """Fetch url"""
+@@ -128,45 +133,47 @@ class Svn(FetchMethod):
+ 
+         try:
+             if os.access(os.path.join(ud.moddir, '.svn'), os.R_OK):
+-                svncmd = self._buildsvncommand(ud, d, "update")
++                svncmd, extraenv = self._buildsvncommand(ud, d, "update")
+                 logger.info("Update " + ud.url)
+                 # We need to attempt to run svn upgrade first in case its an older working format
+                 try:
+-                    runfetchcmd(ud.basecmd + " upgrade", d, workdir=ud.moddir)
++                    runfetchcmd(ud.basecmd + ["upgrade"], d, workdir=ud.moddir)
+                 except FetchError:
+                     pass
+                 logger.debug("Running %s", svncmd)
+                 bb.fetch2.check_network_access(d, svncmd, ud.url)
+-                runfetchcmd(svncmd, d, workdir=ud.moddir)
++                runfetchcmd(svncmd, d, workdir=ud.moddir, extraenv=extraenv)
+             else:
+-                svncmd = self._buildsvncommand(ud, d, "fetch")
++                svncmd, extraenv = self._buildsvncommand(ud, d, "fetch")
+                 logger.info("Fetch " + ud.url)
+                 # check out sources there
+                 bb.utils.mkdirhier(ud.pkgdir)
+                 logger.debug("Running %s", svncmd)
+                 bb.fetch2.check_network_access(d, svncmd, ud.url)
+-                runfetchcmd(svncmd, d, workdir=ud.pkgdir)
++                runfetchcmd(svncmd, d, workdir=ud.pkgdir, extraenv=extraenv)
+ 
+             if not ("externals" in ud.parm and ud.parm["externals"] == "nowarn"):
+                 # Warn the user if this had externals (won't catch them all)
+-                output = runfetchcmd("svn propget svn:externals || true", d, workdir=ud.moddir)
+-                if output:
+-                    if "--ignore-externals" in svncmd.split():
+-                        bb.warn("%s contains svn:externals." % ud.url)
+-                        bb.warn("These should be added to the recipe SRC_URI as necessary.")
+-                        bb.warn("svn fetch has ignored externals:\n%s" % output)
+-                        bb.warn("To disable this warning add ';externals=nowarn' to the url.")
+-                    else:
+-                        bb.debug(1, "svn repository has externals:\n%s" % output)
+-
++                try:
++                    output = runfetchcmd(['svn', 'propget', 'svn:externals'], d, workdir=ud.moddir)
++                    if output:
++                        if "--ignore-externals" in svncmd:
++                            bb.warn("%s contains svn:externals." % ud.url)
++                            bb.warn("These should be added to the recipe SRC_URI as necessary.")
++                            bb.warn("svn fetch has ignored externals:\n%s" % output)
++                            bb.warn("To disable this warning add ';externals=nowarn' to the url.")
++                        else:
++                            bb.debug(1, "svn repository has externals:\n%s" % output)
++                except bb.fetch2.FetchError:
++                    passs
+             scmdata = ud.parm.get("scmdata", "")
+             if scmdata == "keep":
+-                tar_flags = ""
++                tar_flags = []
+             else:
+-                tar_flags = "--exclude='.svn'"
++                tar_flags = ["--exclude='.svn'"]
+ 
+             # tar them up to a defined filename
+-            runfetchcmd("tar %s -czf %s %s" % (tar_flags, ud.localpath, ud.path_spec), d,
++            runfetchcmd(['tar'] + tar_flags + ['-czf', ud.localpath, ud.path_spec], d,
+                         cleanup=[ud.localpath], workdir=ud.pkgdir)
+         finally:
+             bb.utils.unlockfile(lf)
+@@ -191,9 +198,11 @@ class Svn(FetchMethod):
+         """
+         Return the latest upstream revision number
+         """
+-        bb.fetch2.check_network_access(d, self._buildsvncommand(ud, d, "log1"), ud.url)
+-
+-        output = runfetchcmd(self._buildsvncommand(ud, d, "log1"), d, True, extraenv={'LANG':'C', 'LC_ALL': 'C'})
++        cmd, extraenv = self._buildsvncommand(ud, d, "log1")
++        bb.fetch2.check_network_access(d, cmd, ud.url)
++        extraenv['LANG'] = 'C'
++        extraenv['LC_ALL'] = 'C'
++        output = runfetchcmd(cmd, d, True, extraenv=extraenv)
+ 
+         # skip the first line, as per output of svn log
+         # then we expect the revision on the 2nd line
 
