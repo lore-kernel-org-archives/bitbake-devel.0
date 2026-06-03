@@ -1,466 +1,182 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3637CD6E64
-	for <webhook@archiver.kernel.org>; Wed,  3 Jun 2026 10:48:58 +0000 (UTC)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.17314.1780483733996951656
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A36CD6E4A
+	for <webhook@archiver.kernel.org>; Wed,  3 Jun 2026 11:32:09 +0000 (UTC)
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (DB3PR0202CU003.outbound.protection.outlook.com [52.101.84.9])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.17967.1780486323761743321
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 03 Jun 2026 03:48:54 -0700
+ Wed, 03 Jun 2026 04:32:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ZySg0gNK;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.53, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-45ef4223be7so3134099f8f.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 03 Jun 2026 03:48:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1780483732; x=1781088532; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xtViTKhp8sOT8aYJdmN20Ng3709hzsfdUlUIqXxK0qw=;
-        b=ZySg0gNKp+pNJEWBmZ7x/Txx8b6Hs6oEK7FUQz09a6S80V5EiHax0CVEGyYDkvsVri
-         TE2I9N3xJUjk08WZRa0+AeMEvS3DhlHPMI8FavIr8Kekv0yQiRZM4sI+tpDhbX+IBwVN
-         Yu3eB+e1VwWcrQftWCxmaOJ83RumXKoG397RM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780483732; x=1781088532;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xtViTKhp8sOT8aYJdmN20Ng3709hzsfdUlUIqXxK0qw=;
-        b=Fvv2Zk9cL0nZek9/KKRKnMjRp8cpxLliYhbqjgRE67WhW35qpcGSM9R0zw8cpYRX1b
-         lry9emJEY8xiCQPgGf8xm9401jMpajD2Ix4BkdxZk6MjMGThtxKtCZ+qfhWYE+aA4UKF
-         cg9bP/Yv+GIWLLI0yysoOhx9rc5RnRb+XasspWy9796rE5U1GepUGoCB4Q67WV5CY5NE
-         r0bPm34AxH+TKx5FJ8VqOFkAXQrq8OcW+lRca0i+nKAbLfP+szdFxIbCUAyeZ+1K1bRJ
-         NJX7CequSUM4iss0p2PO4PHkwLInP0B5fF5RqBwlJsY13y+f0yO3FITVbuOUxkUuvS/j
-         VsFw==
-X-Gm-Message-State: AOJu0YzZu8YRy4r6EbJ1rD/MV9MguhelEb984r8Km1QY59lqk7DBhXjr
-	h/Nc7xReD1XsxmvdZaH29ZJH9qaJgW+0hIEmoXKP3k3nF0deTMgqrS6dF+KpKKEq5x3sNbwRS23
-	/OmEz
-X-Gm-Gg: Acq92OFn3m66cy0ggojHxQz+527daugh0lnF+ow3PWbnfPjL8+F4uA830sb/Wme155R
-	zMgYhJRgT6sROOjs7LIvpMeOeOuqQkEFBjMltV9ZsGdPjQEVeU7OzN6TF69mMVXRZxpY8JqoFqo
-	FyFFftDau0pf3YufsiIGW4AQR3U458CMXjxPYfktWn8STSNXGUgJf1UTgk5Y+pSOWwL9pF5d1X+
-	I/oAcE3jMSMAtZfAxNwT9V870LyXmSO6Roats5hjrKZP2zBmKxkZDls9DOsvNKHGIhH0RUszs1F
-	pU1LXsRZBS20om+6tEKFcpI1NkY8D+EMUPunNhSNxSfnW2ucGjXq0bx0kd47+9N5Nqx/Ejv74dZ
-	O44jGDoc0odTsOO1/4avXbZOJwE+iPfD5IvFqSsYiyRCpAswM68TOSkhPvVlD9A9RTp6B+nBsVr
-	q8sfYcI4sOpErWrNpSqfo5M7wI2l6/Y86dMj172T6g7KZa7z4X6yPzB01S/keahQCiQwMaBTNi
-X-Received: by 2002:a05:6000:144e:b0:45e:a19f:22c1 with SMTP id ffacd0b85a97d-460217e3018mr4130573f8f.15.1780483732154;
-        Wed, 03 Jun 2026 03:48:52 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:202c:df88:9261:8b8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f35ee64sm8090759f8f.30.2026.06.03.03.48.48
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2026 03:48:49 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 7/8] fetch/{clearcase,gomod,hg,perforce,repo,s3}: Convert to use lists of command arguments
-Date: Wed,  3 Jun 2026 11:48:39 +0100
-Message-ID: <20260603104840.815399-7-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260603104840.815399-1-richard.purdie@linuxfoundation.org>
-References: <20260603104840.815399-1-richard.purdie@linuxfoundation.org>
+ dkim=pass header.i=@arm.com header.s=selector1 header.b=KVSTHesh;
+ dkim=pass header.i=@arm.com header.s=selector1 header.b=KVSTHesh;
+ spf=pass (domain: arm.com, ip: 52.101.84.9, mailfrom: ross.burton@arm.com)
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=kVRh5FunbznrV7JhbCL//KWVTd5z2sz0eTfcni+5xvmJJqXxn8oextYQ4RjpsGPx70t7IwI4Aofvrnqj6bU7o3LdiYBK3UV+i3gcC6T4JFTKWp3WqJY32O4CyRlZKhjbTsJZfYap9ylRKUYkAJH8XU9br2FHQYjPsqrF2PNkbh7c2uyMStFocUnXAfrF74w/3yZ6zl4wSPiq8ElPyOp6ERr1vblaZkq0c5p1Ud3gA37Wd19qNOVlus4NkrY+pp8Hy6/gC8nUASs+/5WomzgWw9yp45BYgPjUTMPQTUvCdienLfuUTcWcW62PL5+RATRGHP7cdOFh6UtA+Kv2PDfX/A==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aRxUyx8+HL5UZVHwyoXc++uBoDWFbc2wHMMcgvyNW+c=;
+ b=kdMs29TUdY0CMVsFgAp/s0LEx3CxsRGsrEvWSfgl8jrEfaxxUiUxEkm4W+KsixAzajIzyzHlHE8XSxNORZak6/ht151VCbWiZC+no17rKzH7FrZJRP1RKuqJQNyPLGYuXVf43P4kKbtRYkB/Uv08hQmbxkCSzMRnsxRDuefzHvYpxl+78Jgl0uA6gFgqfHEl/BI4Xwd6wZNf/0rL5aUElujBw1rW3ORfD4bEzDh6FjmSAISDQJfKdroyRkGMwEtBs6k2nOyTNymShrXAjJHAkZqG6EK5swBjo+u9TCqWPdFxKv66UInpLrtkVaL7AFCGLH8jl6BxUHIKEujIjxLOBA==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=gmail.com smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aRxUyx8+HL5UZVHwyoXc++uBoDWFbc2wHMMcgvyNW+c=;
+ b=KVSTHeshlWG8+oIaRI6ofaGIJyNrWSaTmzOQmhf16ZFnPZN+aCFEWP8//0j7mB9ZmEfhKMEmw0OoyE3IKyoNodCDv1B3IZAifJIL8S42m6DPS6GNWiL/NkKX/q1ddz7SB69pkVPZrKmbIUNr9dK3kyjvErmGcmpcUIeC8b6T018=
+Received: from DBBPR09CA0030.eurprd09.prod.outlook.com (2603:10a6:10:d4::18)
+ by DBBPR08MB10652.eurprd08.prod.outlook.com (2603:10a6:10:531::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.7; Wed, 3 Jun 2026
+ 11:31:54 +0000
+Received: from DB1PEPF00050A00.eurprd03.prod.outlook.com
+ (2603:10a6:10:d4:cafe::6d) by DBBPR09CA0030.outlook.office365.com
+ (2603:10a6:10:d4::18) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.92.7 via Frontend Transport; Wed, 3
+ Jun 2026 11:31:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ DB1PEPF00050A00.mail.protection.outlook.com (10.167.242.42) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.92.5 via
+ Frontend Transport; Wed, 3 Jun 2026 11:31:54 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gZpAYelUcjqeSqS9Q9d+CwMavUaPBKra+frDaxPD1FnboW5+x8JUu3AWL4fCjBHCLz22jJ0lkbLIaK7OWGuFhYnou0PIFheyBEZtOx7likaAAB8zpu/xUVjCaKz68VogtcRgDtYFSEL40eXgyeU/q/5Pg0HhhLR96usd1mvoM0H3CLRDtoI4HGgBZqamK3g9pPhC++b4ugoVVf8embf0kk179RXG+k1RSRr94juLVsGR1Y8mcoicyqJ/SKgarBBGS/wHadBTmIIgrLqAPY/3cSzufTS3LJFIly3Fh0TPv6J6KcqWNTMD3aWivl14kXQ8Hv/JDHWdD5b94Yw3aWZBsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aRxUyx8+HL5UZVHwyoXc++uBoDWFbc2wHMMcgvyNW+c=;
+ b=Z80IfD2eJx3dN6Y1xgaBunC+xhwzCb01NUOX925sQbqlROowGWsb6YiYmGgrhc6PITbgZvteCt12cd41TcwIQUaZfzFo9bhfcMkzfqOJww9Kn5tkcXviO8UNtW+O6cCVh/VuXBh0MNNYav7yH1Egt9/x63t8BHHAqsRccFpt/5RxRTKaiDxb9cMpF6M6EuEGpzfHOwCW5q9BOsqJ8uEnrR6GdjCrSR5P+EOv/2HcGaLoJifo8aAZRhU3YkIIS1kmewyIW0O6a+S7qzOKrg+bsH/37SyCmMLQH58CoIYaxdQfz1/9aPSpHTpJV9945EB/QOEfDRAN0zFjJtv7oFFpbg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aRxUyx8+HL5UZVHwyoXc++uBoDWFbc2wHMMcgvyNW+c=;
+ b=KVSTHeshlWG8+oIaRI6ofaGIJyNrWSaTmzOQmhf16ZFnPZN+aCFEWP8//0j7mB9ZmEfhKMEmw0OoyE3IKyoNodCDv1B3IZAifJIL8S42m6DPS6GNWiL/NkKX/q1ddz7SB69pkVPZrKmbIUNr9dK3kyjvErmGcmpcUIeC8b6T018=
+Received: from AM9PR08MB6258.eurprd08.prod.outlook.com (2603:10a6:20b:287::19)
+ by DBBPR08MB6124.eurprd08.prod.outlook.com (2603:10a6:10:202::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.7; Wed, 3 Jun 2026
+ 11:30:50 +0000
+Received: from AM9PR08MB6258.eurprd08.prod.outlook.com
+ ([fe80::171d:1f8b:720d:7a1b]) by AM9PR08MB6258.eurprd08.prod.outlook.com
+ ([fe80::171d:1f8b:720d:7a1b%6]) with mapi id 15.21.0092.006; Wed, 3 Jun 2026
+ 11:30:50 +0000
+From: Ross Burton <Ross.Burton@arm.com>
+To: "ms98.cho@gmail.com" <ms98.cho@gmail.com>
+CC: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH v3] fetch2/crate: support configurable
+ registry and index URLs
+Thread-Topic: [bitbake-devel] [PATCH v3] fetch2/crate: support configurable
+ registry and index URLs
+Thread-Index: AQHc6T+6BsgV26xyGkaglNXmyEhbqLYsxk+A
+Date: Wed, 3 Jun 2026 11:30:49 +0000
+Message-ID: <406442B9-5A67-4CF0-94A1-51A4E9577F65@arm.com>
+References: <20260514200526.98596-1-ms98.cho@gmail.com>
+ <20260521163033.40871-1-ms98.cho@gmail.com>
+In-Reply-To: <20260521163033.40871-1-ms98.cho@gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3826.700.81.1.8)
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+x-ms-traffictypediagnostic: 
+	AM9PR08MB6258:EE_|DBBPR08MB6124:EE_|DB1PEPF00050A00:EE_|DBBPR08MB10652:EE_
+X-MS-Office365-Filtering-Correlation-Id: 815509ef-e134-4608-7f95-08dec163b6e2
+x-checkrecipientrouted: true
+nodisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: 
+ BCL:0;ARA:13230040|366016|1800799024|376014|38070700021|13003099007|22082099003|18002099003|11063799006|4143699003|56012099006;
+X-Microsoft-Antispam-Message-Info-Original: 
+ 9020K+kqbX78YobP82BgnOm0FpHNP8ngFv09tJ48poDWODZYc0d/KRP689XuyNw+Cg1RRKVCIVqUyUpJIvaAChQ+Gt6hLvcxN6zfbSMAbGD3g/lcFbGn59G9bVW99FbzNifKq2wzkkpJ6Z9kDfzuYNTG8hsd+RO6T61nh7DDhXRR3jHnXs4iZNjN0l49WrBacyHy8jLzNgsE6qi0KnWYnYKyceGpUf4mUkdgmoFhlUh/mHcdplg58McdrfeOuUGd/PI/4mo2qwV2D5kYABO6f3cVe9D5bAi1+jAa9IPPtaU5FqM5NKUTdxZIVsENAzwEnYR4pPrXlIfosL/CwUcqkzIC00htnYDAi9R+hg92nNkEjHXdHi6vJggKfhgBayNYA60cdCxocpthMTUHdpMpxGiYUJgsASwElJh563lOqFu50bUC5RuWwXdGdj+/9RdWsirp8jOCIziYtB3gtCpt0OKSSPA3Iut0tLXeiRMCipn4EnS8SnMwPvlTV0bYFKkP5jlFDgxZG8/8fqUL70315gMZYpaSsOL2N2hyzClWV1SY+hkw9XPjiL+E02Y3bzyDT2M0cH+FJz0sWjyHMHJsK3e9RHzp69mLL9nWxoCxjG7hhxOvkXAt/yCw0lVbs0vn0rCJ6n3DMnZeSx01yYfBZSezLvOyZR51c5X8q6kIVxNsMqiDSk5ULel1E5F8TFCu
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB6258.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700021)(13003099007)(22082099003)(18002099003)(11063799006)(4143699003)(56012099006);DIR:OUT;SFP:1101;
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C1A1751452C9874397067502EC6B70F4@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Exchange-RoutingPolicyChecked: 
+ ijHm8OTbQXqZxU9XD43fF8sGn9V3yZhQbM2WxF4g1np9/G1jFVO1s5c/Y+PTwQsCfVVHq5qfeaefdJWeofPt4gq2MRfk3kj5VzB59zf7lVzj8RE+OvD41z3iylwzcmnaiQphg1X+tXcuIT/McR5I2OC0kYB7P7VWWh8XrQpXl+He/XFfiGTsBBpwWTss5LRxP1p5gceVtjNHS8ifHBiWoWmpGkVNYw9sNEtJXBzp/ouJCqbA8UDL/6LXYoTJ4abI2ghAj9whK30SzPVOXnwMNznizbTfZ0RhpFSr2bj28dxy0eeJ8t3nDhbmJPHiqh+TbmF+h/ku6vZZMdX+iYQYEQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB6124
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ DB1PEPF00050A00.eurprd03.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	5666e228-8c48-4a70-4f97-08dec163904b
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|36860700016|82310400026|1800799024|14060799003|376014|35042699022|13003099007|22082099003|18002099003|4143699003|11063799006|56012099006;
+X-Microsoft-Antispam-Message-Info: 
+	aePPIoVJ0C3R+vkh+u0ho8VbKBqE0BLDVXg3qp+ZObzPhGs+MAxpUNlXZ0jlaUlgTMILOxzZvB0TGXPH7FOFRo9qxDha4PFjY5mOBIclkQSAiOtIXMQyFeDR+/4llZCBrhACS6KtfAQ4ISR8PeGiCMBQHRJYvIR/IhBEeF9n0PDOFRJFPkjat9r3TWTuva1IUyYAdVfguwSrB/PeRdY9kvu71/0pqxkL2BQTeK73OEbhZycZk0Zgc72wk051DZMiDpSRHrHmYYEWPbUJfmSpfOFVM7XZpE0MYyPznT8efFMxgslj/MpKGkLCIENIX6IWNFQT8v275xogOaEENiJabJFhkNNAhbJer8EaV0lnaKRfOBmTyBlg8pbgJiY8nD4mBxRj+y/cD2oAvUnVss0MozrpZnpYjNpSjJ3T0Q1z7Bdo9Sr6A5E4on09EiEpa2ooVn8CXAuGMleKr7nzR7BLVrQg8rq+OP/b0chEPnxd1TcKa/WEL1ExeskNuy/L/40gDa4mGyu4X1YVQXl98dukbB9TWnSHC7ahu7JuaM+nqQExk8d7tcJwn25mm0eu1z0VCfux0z6Twh4TgWqAsT9NwC19TFEwiTPgqHnvVrCsz/YAsAC4H9lv4q/wpl+HHR1Mcv6qNlf74nr++yMjE9EclJoyH0QUu9Xa3wGgNAf4iJXsujPgohNpH5yQPd3JA1w3
+X-Forefront-Antispam-Report: 
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(82310400026)(1800799024)(14060799003)(376014)(35042699022)(13003099007)(22082099003)(18002099003)(4143699003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	jyWDARZWV4/mFm4Jcl+z+N8/C0xNMaXnh/Mzsjc6wrZC3PosQN4uLKo8o3hh9mbFXGr7rE4MyD8kPz4Hivs08mj9CbASJ5XWNLiqjNyY1WDozDV2nuAILD1dTV/PdD17Jc3zbfJtQQsrMSiX0NqUP7oYMSbgrF1AkOWgPjMvGXJp7e42g9bMygmAr0woH91g7QHVjdndaZfyFPg/z4cx971dh4f/wiiYpjI7O17Unx9tIwx2JgrzfeXB8t3EkVHKJgnzJujz0FSoO7VK0p+d4RlzlOrNUG5mw/5wgqegazLUAnUgWjXgz3THhXR9E2pX25zVRPpsOGs8I/RLdExHJTs5qE5sZ9V6s9Zt85ovR23xEw+7iD+52EmZbTQUN6yV1ucVgaXcAqs7IdeKSL4WsNpH0lnRtSAjPl7OPQraGCjeMfIjW6iAMEClWMrXDbmD
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2026 11:31:54.6831
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 815509ef-e134-4608-7f95-08dec163b6e2
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	DB1PEPF00050A00.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB10652
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 03 Jun 2026 10:48:58 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19600
+ <bitbake-devel@lists.openembedded.org>; Wed, 03 Jun 2026 11:32:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19602
 
-To follow best practises and avoid shell=True subprocess usage, convert
-the fetcher commands to use lists instead of strings. This improves variable
-quoting and models modern coding standards.
-
-Some of these fetchers could not be tested so the changes are made blind.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/fetch2/clearcase.py | 39 ++++++++++++++++---------------
- lib/bb/fetch2/gomod.py     |  4 ++--
- lib/bb/fetch2/hg.py        | 47 ++++++++++++++++----------------------
- lib/bb/fetch2/perforce.py  | 30 ++++++++++++++----------
- lib/bb/fetch2/repo.py      | 14 ++++++------
- lib/bb/fetch2/s3.py        |  7 +++---
- 6 files changed, 71 insertions(+), 70 deletions(-)
-
-diff --git a/lib/bb/fetch2/clearcase.py b/lib/bb/fetch2/clearcase.py
-index 17500daf952..cb3f8b650c7 100644
---- a/lib/bb/fetch2/clearcase.py
-+++ b/lib/bb/fetch2/clearcase.py
-@@ -49,6 +49,7 @@ User credentials:
- #
- 
- import os
-+import shlex
- import shutil
- import bb
- from   bb.fetch2 import FetchMethod
-@@ -94,7 +95,7 @@ class ClearCase(FetchMethod):
-         else:
-             ud.module = ""
- 
--        ud.basecmd = d.getVar("FETCHCMD_ccrc") or "/usr/bin/env cleartool || rcleartool"
-+        ud.fallbackcmd = shlex.split(d.getVar("FETCHCMD_ccrc") or "")
- 
-         if d.getVar("SRCREV") == "INVALID":
-           raise FetchError("Set a valid SRCREV for the clearcase fetcher in your recipe, e.g. SRCREV = \"/main/LATEST\" or any other label of your choice.")
-@@ -122,7 +123,6 @@ class ClearCase(FetchMethod):
-         self.debug("type            = %s" % ud.type)
-         self.debug("vob             = %s" % ud.vob)
-         self.debug("module          = %s" % ud.module)
--        self.debug("basecmd         = %s" % ud.basecmd)
-         self.debug("label           = %s" % ud.label)
-         self.debug("ccasedir        = %s" % ud.ccasedir)
-         self.debug("viewdir         = %s" % ud.viewdir)
-@@ -135,34 +135,35 @@ class ClearCase(FetchMethod):
-         Build up a commandline based on ud
-         command is: mkview, setcs, rmview
-         """
--        options = []
-+        cmd = [shutil.which("cleartool"), command]
-+        if cmd[0] is None:
-+            cmd = [shutil.which("rcleartool"), command]
-+        if cmd[0] is None:
-+            cmd = ud.fallbackcmd + [command]
- 
--        if "rcleartool" in ud.basecmd:
--            options.append("-server %s" % ud.server)
--
--        basecmd = "%s %s" % (ud.basecmd, command)
-+        if cmd[0].endswith("rcleartool"):
-+            cmd += ['-server', ud.server]
- 
-         if command == 'mkview':
--            if not "rcleartool" in ud.basecmd:
-+            if not cmd[0].endswith("rcleartool"):
-                 # Cleartool needs a -snapshot view
--                options.append("-snapshot")
--            options.append("-tag %s" % ud.viewname)
--            options.append(ud.viewdir)
-+                cmd.append("-snapshot")
-+            cmd += ["-tag", ud.viewname]
-+            cmd.append(ud.viewdir)
- 
-         elif command == 'rmview':
--            options.append("-force")
--            options.append("%s" % ud.viewdir)
-+            cmd.append("-force")
-+            cmd.append(ud.viewdir)
- 
-         elif command == 'setcs':
--            options.append("-overwrite")
--            options.append(ud.configspecfile)
-+            cmd.append("-overwrite")
-+            cmd.append(ud.configspecfile)
- 
-         else:
-             raise FetchError("Invalid ccase command %s" % command)
- 
--        ccasecmd = "%s %s" % (basecmd, " ".join(options))
--        self.debug("ccasecmd = %s" % ccasecmd)
--        return ccasecmd
-+        self.debug("ccasecmd = %s" % cmd)
-+        return cmd
- 
-     def _write_configspec(self, ud, d):
-         """
-@@ -235,7 +236,7 @@ class ClearCase(FetchMethod):
- 
-         # Clean clearcase meta-data before tar
- 
--        runfetchcmd('tar -czf "%s" .' % (ud.localpath), d, cleanup = [ud.localpath], workdir = ud.viewdir)
-+        runfetchcmd(['tar', '-czf', ud.localpath, '.'], d, cleanup = [ud.localpath], workdir = ud.viewdir)
- 
-         # Clean up so we can create a new view next time
-         self.clean(ud, d);
-diff --git a/lib/bb/fetch2/gomod.py b/lib/bb/fetch2/gomod.py
-index 53c1d8d115b..8a64f644dfd 100644
---- a/lib/bb/fetch2/gomod.py
-+++ b/lib/bb/fetch2/gomod.py
-@@ -242,9 +242,9 @@ class GoModGit(Git):
-         srcrev = ud.parm['srcrev']
-         version = ud.parm['version']
-         escaped_version = escape(version)
--        cmd = f"git ls-tree -r --name-only '{srcrev}'"
-+        cmd = ['git', 'ls-tree', '-r', '--name-only', srcrev]
-         if 'subpath' in ud.parm:
--            cmd += f" '{ud.parm['subpath']}'"
-+            cmd.append(ud.parm['subpath'])
-         files = runfetchcmd(cmd, d, workdir=repodir).split()
-         name = escaped_version + '.mod'
-         bb.note(f"Unpacking {name} to {unpackdir}/")
-diff --git a/lib/bb/fetch2/hg.py b/lib/bb/fetch2/hg.py
-index cbff8c490c9..5c65a1985bb 100644
---- a/lib/bb/fetch2/hg.py
-+++ b/lib/bb/fetch2/hg.py
-@@ -15,6 +15,7 @@ BitBake 'Fetch' implementation for mercurial DRCS (hg).
- import os
- import bb
- import errno
-+import shlex
- from bb.fetch2 import FetchMethod
- from bb.fetch2 import FetchError
- from bb.fetch2 import MissingParameterError
-@@ -63,7 +64,7 @@ class Hg(FetchMethod):
-         ud.pkgdir = os.path.join(hgdir, hgsrcname)
-         ud.moddir = os.path.join(ud.pkgdir, ud.module)
-         ud.localfile = ud.moddir
--        ud.basecmd = d.getVar("FETCHCMD_hg") or "/usr/bin/env hg"
-+        ud.basecmd = shlex.split(d.getVar("FETCHCMD_hg") or "") or ["hg"]
- 
-         ud.setup_revisions(d)
- 
-@@ -113,7 +114,7 @@ class Hg(FetchMethod):
-                 hgroot = ud.user + "@" + host + ud.path
- 
-         if command == "info":
--            return "%s identify -i %s://%s/%s" % (ud.basecmd, proto, hgroot, ud.module)
-+            return ud.basecmd + ['identify', '-i', '%s://%s/%s' % (proto, hgroot, ud.module)]
- 
-         options = [];
- 
-@@ -122,26 +123,21 @@ class Hg(FetchMethod):
-         # the tag actually exists in the specified revision + 1, so it won't
-         # be available when used in any successive commands.
-         if ud.revision and command != "fetch":
--            options.append("-r %s" % ud.revision)
-+            options += ["-r", ud.revision]
-+
-+        authconfig = []
-+        if ud.user and ud.pswd:
-+            authconfig = ['--config', 'auth.default.prefix=*', '--config', 'auth.default.username=' + ud.user, '--config', 'auth.default.password=' + ud.pswd, '--config', 'auth.default.schemes=' + proto]
- 
-         if command == "fetch":
--            if ud.user and ud.pswd:
--                cmd = "%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" clone %s %s://%s/%s %s" % (ud.basecmd, ud.user, ud.pswd, proto, " ".join(options), proto, hgroot, ud.module, ud.module)
--            else:
--                cmd = "%s clone %s %s://%s/%s %s" % (ud.basecmd, " ".join(options), proto, hgroot, ud.module, ud.module)
-+            cmd = ud.basecmd + authconfig + ['clone'] + options + ['%s://%s/%s' % (proto, hgroot, ud.module), ud.module]
-         elif command == "pull":
-             # do not pass options list; limiting pull to rev causes the local
-             # repo not to contain it and immediately following "update" command
-             # will crash
--            if ud.user and ud.pswd:
--                cmd = "%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" pull" % (ud.basecmd, ud.user, ud.pswd, proto)
--            else:
--                cmd = "%s pull" % (ud.basecmd)
-+            cmd = ud.basecmd + authconfig + ['pull']
-         elif command == "update" or command == "up":
--            if ud.user and ud.pswd:
--                cmd = "%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" update -C %s" % (ud.basecmd, ud.user, ud.pswd, proto, " ".join(options))
--            else:
--                cmd = "%s update -C %s" % (ud.basecmd, " ".join(options))
-+            cmd = ud.basecmd + authconfig + ['update', '-C'] + options
-         else:
-             raise FetchError("Invalid hg command %s" % command, ud.url)
- 
-@@ -155,7 +151,7 @@ class Hg(FetchMethod):
-         # If the checkout doesn't exist and the mirror tarball does, extract it
-         if not os.path.exists(ud.pkgdir) and os.path.exists(ud.fullmirror):
-             bb.utils.mkdirhier(ud.pkgdir)
--            runfetchcmd("tar -xzf %s" % (ud.fullmirror), d, workdir=ud.pkgdir)
-+            runfetchcmd(['tar', '-xzf', ud.fullmirror], d, workdir=ud.pkgdir)
- 
-         if os.access(os.path.join(ud.moddir, '.hg'), os.R_OK):
-             # Found the source, check whether need pull
-@@ -228,8 +224,8 @@ class Hg(FetchMethod):
-                 os.unlink(ud.fullmirror)
- 
-             logger.info("Creating tarball of hg repository")
--            runfetchcmd("tar -czf %s %s" % (ud.fullmirror, ud.module), d, workdir=ud.pkgdir)
--            runfetchcmd("touch %s.done" % (ud.fullmirror), d, workdir=ud.pkgdir)
-+            runfetchcmd(['tar', '-czf', ud.fullmirror, ud.module], d, workdir=ud.pkgdir)
-+            runfetchcmd(['touch', '%s.done' % ud.fullmirror], d, workdir=ud.pkgdir)
- 
-     def localpath(self, ud, d):
-         return ud.pkgdir
-@@ -249,16 +245,13 @@ class Hg(FetchMethod):
-             proto = ud.parm.get('protocol', 'http')
-             if not os.access(os.path.join(codir, '.hg'), os.R_OK):
-                 logger.debug2("Unpack: creating new hg repository in '" + codir + "'")
--                runfetchcmd("%s init %s" % (ud.basecmd, codir), d)
-+                runfetchcmd(ud.basecmd + ['init', codir], d)
-             logger.debug2("Unpack: updating source in '" + codir + "'")
-+            authconfig = []
-             if ud.user and ud.pswd:
--                runfetchcmd("%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" pull %s" % (ud.basecmd, ud.user, ud.pswd, proto, ud.moddir), d, workdir=codir)
--            else:
--                runfetchcmd("%s pull %s" % (ud.basecmd, ud.moddir), d, workdir=codir)
--            if ud.user and ud.pswd:
--                runfetchcmd("%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" up -C %s" % (ud.basecmd, ud.user, ud.pswd, proto, revflag), d, workdir=codir)
--            else:
--                runfetchcmd("%s up -C %s" % (ud.basecmd, revflag), d, workdir=codir)
-+                authconfig = ['--config', 'auth.default.prefix=*', '--config', 'auth.default.username=' + ud.user, '--config', 'auth.default.password=' + ud.pswd, '--config', 'auth.default.schemes=' + proto]
-+            runfetchcmd(ud.basecmd + authconfig + ['pull', ud.moddir], d, workdir=codir)
-+            runfetchcmd(ud.basecmd + authconfig + ['up', '-C', revflag], d, workdir=codir)
-         else:
-             logger.debug2("Unpack: extracting source to '" + codir + "'")
--            runfetchcmd("%s archive -t files %s %s" % (ud.basecmd, revflag, codir), d, workdir=ud.moddir)
-+            runfetchcmd(ud.basecmd + ['archive', '-t', 'files', revflag, codir], d, workdir=ud.moddir)
-diff --git a/lib/bb/fetch2/perforce.py b/lib/bb/fetch2/perforce.py
-index 3b6fa4b1ec9..52ea061c04b 100644
---- a/lib/bb/fetch2/perforce.py
-+++ b/lib/bb/fetch2/perforce.py
-@@ -26,6 +26,7 @@ Supported SRC_URI options are:
- 
- import os
- import bb
-+import shlex
- from   bb.fetch2 import FetchMethod
- from   bb.fetch2 import FetchError
- from   bb.fetch2 import logger
-@@ -73,7 +74,7 @@ class Perforce(FetchMethod):
-         provided by the env, use it.  If P4PORT is specified by the recipe, use
-         its values, which may override the settings in P4CONFIG.
-         """
--        ud.basecmd = d.getVar("FETCHCMD_p4") or "/usr/bin/env p4"
-+        ud.basecmd = shlex.split(d.getVar("FETCHCMD_p4") or "") or ["p4"]
- 
-         ud.dldir = d.getVar("P4DIR") or (d.getVar("DL_DIR") + "/p4")
- 
-@@ -95,10 +96,15 @@ class Perforce(FetchMethod):
-         else:
-             logger.debug('Trying to use P4CONFIG to automatically set P4PORT...')
-             ud.usingp4config = True
--            p4cmd = '%s info | grep "Server address"' % ud.basecmd
-+            p4cmd = ud.basecmd + ['info']
-             bb.fetch2.check_network_access(d, p4cmd, ud.url)
--            ud.host = runfetchcmd(p4cmd, d, True)
--            ud.host = ud.host.split(': ')[1].strip()
-+            output = runfetchcmd(p4cmd, d, True)
-+            ud.host = None
-+            for line in output.splitlines():
-+                if "Server address" in line:
-+                    ud.host = line.split(': ')[1].strip()
-+                    break
-+
-             logger.debug('Determined P4PORT to be: %s' % ud.host)
-             if not ud.host:
-                 raise FetchError('Could not determine P4PORT from P4CONFIG')
-@@ -142,16 +148,16 @@ class Perforce(FetchMethod):
-         "files".  depot_filename is the full path to the file in the depot
-         including the trailing '#rev' value.
-         """
--        p4opt = ""
-+        p4opt = []
- 
-         if ud.user:
--            p4opt += ' -u "%s"' % (ud.user)
-+            p4opt += ['-u', ud.user]
- 
-         if ud.pswd:
--            p4opt += ' -P "%s"' % (ud.pswd)
-+            p4opt += ['-P', ud.pswd]
- 
-         if ud.host and not ud.usingp4config:
--            p4opt += ' -p %s' % (ud.host)
-+            p4opt += ['-p', ud.host]
- 
-         if hasattr(ud, 'revision') and ud.revision:
-             pathnrev = '%s@%s' % (ud.path, ud.revision)
-@@ -176,14 +182,14 @@ class Perforce(FetchMethod):
-             filename = filename[:filename.find('#')] # Remove trailing '#rev'
- 
-         if command == 'changes':
--            p4cmd = '%s%s changes -m 1 //%s' % (ud.basecmd, p4opt, pathnrev)
-+            p4cmd = ud.basecmd + p4opt + ['changes', '-m', '1', '//%s' % pathnrev]
-         elif command == 'print':
-             if depot_filename is not None:
--                p4cmd = '%s%s print -o "p4/%s" "%s"' % (ud.basecmd, p4opt, filename, depot_filename)
-+                p4cmd = ud.basecmd + p4opt + ['print', '-o', 'p4/%s' % filename, depot_filename]
-             else:
-                 raise FetchError('No depot file name provided to p4 %s' % command, ud.url)
-         elif command == 'files':
--            p4cmd = '%s%s files //%s' % (ud.basecmd, p4opt, pathnrev)
-+            p4cmd = ud.basecmd + p4opt + ['files', '//%s' % pathnrev]
-         else:
-             raise FetchError('Invalid p4 command %s' % command, ud.url)
- 
-@@ -231,7 +237,7 @@ class Perforce(FetchMethod):
-             bb.fetch2.check_network_access(d, p4fetchcmd, ud.url)
-             runfetchcmd(p4fetchcmd, d, workdir=ud.pkgdir, log=progresshandler)
- 
--        runfetchcmd('tar -czf %s p4' % (ud.localpath), d, cleanup=[ud.localpath], workdir=ud.pkgdir)
-+        runfetchcmd(['tar', '-czf', ud.localpath, 'p4'], d, cleanup=[ud.localpath], workdir=ud.pkgdir)
- 
-     def clean(self, ud, d):
-         """ Cleanup p4 specific files and dirs"""
-diff --git a/lib/bb/fetch2/repo.py b/lib/bb/fetch2/repo.py
-index fa4cb8149b7..1f9ede04430 100644
---- a/lib/bb/fetch2/repo.py
-+++ b/lib/bb/fetch2/repo.py
-@@ -33,7 +33,7 @@ class Repo(FetchMethod):
-         "master".
-         """
- 
--        ud.basecmd = d.getVar("FETCHCMD_repo") or "/usr/bin/env repo"
-+        ud.basecmd = shlex.split(d.getVar("FETCHCMD_repo") or "") or ["repo"]
- 
-         ud.proto = ud.parm.get('protocol', 'git')
-         ud.branch = ud.parm.get('branch', 'master')
-@@ -63,19 +63,19 @@ class Repo(FetchMethod):
-         bb.utils.mkdirhier(repodir)
-         if not os.path.exists(os.path.join(repodir, ".repo")):
-             bb.fetch2.check_network_access(d, "%s init -m %s -b %s -u %s://%s%s%s" % (ud.basecmd, ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), ud.url)
--            runfetchcmd("%s init -m %s -b %s -u %s://%s%s%s" % (ud.basecmd, ud.manifest, ud.branch, ud.proto, username, ud.host, ud.path), d, workdir=repodir)
-+            runfetchcmd(ud.basecmd + ['init', '-m', ud.manifest, '-b', ud.branch, '-u', '%s://%s%s%s' % (ud.proto, username, ud.host, ud.path)], d, workdir=repodir)
- 
--        bb.fetch2.check_network_access(d, "%s sync %s" % (ud.basecmd, ud.url), ud.url)
--        runfetchcmd("%s sync" % ud.basecmd, d, workdir=repodir)
-+        bb.fetch2.check_network_access(d, ud.basecmd + ['sync'], ud.url)
-+        runfetchcmd(ud.basecmd + ['sync'], d, workdir=repodir)
- 
-         scmdata = ud.parm.get("scmdata", "")
-         if scmdata == "keep":
--            tar_flags = ""
-+            tar_flags = []
-         else:
--            tar_flags = "--exclude='.repo' --exclude='.git'"
-+            tar_flags = ["--exclude='.repo'", "--exclude='.git'"]
- 
-         # Create a cache
--        runfetchcmd("tar %s -czf %s %s" % (tar_flags, ud.localpath, os.path.join(".", "*") ), d, workdir=codir)
-+        runfetchcmd(['tar'] + tar_flags + ['-czf', ud.localpath, os.path.join(".", "*")], d, workdir=codir)
- 
-     def supports_srcrev(self):
-         return False
-diff --git a/lib/bb/fetch2/s3.py b/lib/bb/fetch2/s3.py
-index 22c05381392..05935101471 100644
---- a/lib/bb/fetch2/s3.py
-+++ b/lib/bb/fetch2/s3.py
-@@ -19,6 +19,7 @@ import os
- import bb
- import urllib.request, urllib.parse, urllib.error
- import re
-+import shlex
- from bb.fetch2 import FetchMethod
- from bb.fetch2 import FetchError
- from bb.fetch2 import runfetchcmd
-@@ -79,7 +80,7 @@ class S3(FetchMethod):
- 
-         ud.localfile = ud.basename
- 
--        ud.basecmd = d.getVar("FETCHCMD_s3") or "/usr/bin/env aws s3"
-+        ud.basecmd = shlex.split(d.getVar("FETCHCMD_s3") or "") or ["aws", "s3"]
- 
-     def download(self, ud, d):
-         """
-@@ -87,7 +88,7 @@ class S3(FetchMethod):
-         Assumes localpath was called first
-         """
- 
--        cmd = '%s cp s3://%s%s %s' % (ud.basecmd, ud.host, ud.path, ud.localpath)
-+        cmd = ud.basecmd + ['cp', 's3://%s%s' % (ud.basecmd, ud.host, ud.path), ud.localpath]
-         bb.fetch2.check_network_access(d, cmd, ud.url)
- 
-         progresshandler = S3ProgressHandler(d)
-@@ -111,7 +112,7 @@ class S3(FetchMethod):
-         Check the status of a URL
-         """
- 
--        cmd = '%s ls s3://%s%s' % (ud.basecmd, ud.host, ud.path)
-+        cmd = ud.basecmd + ['ls', 's3://%s%s' % (ud.basecmd, ud.host, ud.path)]
-         bb.fetch2.check_network_access(d, cmd, ud.url)
-         output = runfetchcmd(cmd, d)
- 
+SGksDQoNCk9uIDIxIE1heSAyMDI2LCBhdCAxNzozMCwgbWluc3VuZy5jaG8gdmlhIGxpc3RzLm9w
+ZW5lbWJlZGRlZC5vcmcgPG1zOTguY2hvPWdtYWlsLmNvbUBsaXN0cy5vcGVuZW1iZWRkZWQub3Jn
+PiB3cm90ZToNCj4gKyAgICAgICAgaWYgZGxfdXJsOg0KPiArICAgICAgICAgICAgdWQudXJsID0g
+ZGxfdXJsLnJlcGxhY2UoJ3tjcmF0ZX0nLCBuYW1lKS5yZXBsYWNlKCd7dmVyc2lvbn0nLCB2ZXJz
+aW9uKQ0KPiAgICAgICAgIGVsc2U6DQo+ICAgICAgICAgICAgIHVkLnVybCA9ICJodHRwczovLyVz
+LyVzLyVzL2Rvd25sb2FkIiAlIChob3N0LCBuYW1lLCB2ZXJzaW9uKQ0KDQpJbnN0ZWFkIG9mIHVz
+aW5nIHJlcGxhY2UoKSBjYWxscywgd2UgY2FuIHRyZWF0IHRoZSBzdHJpbmcgdGhhdCBsb29rcyBl
+eGFjdGx5IGxpa2UgYSBmLXN0cmluZyBhcyBhbiBmLXN0cmluZywgYW5kIHVzZSBmb3JtYXQoKS4g
+ZWc6DQoNCnVkLnVybCA9IGRsX3VybC5mb3JtYXQodmVyc2lvbj12ZXJzaW9uLCBjcmF0ZT1uYW1l
+KQ0KDQo+ICsgICAgICAgICAgICBlbGlmIGhvc3QgPT0gJ2NyYXRlcy5pbycgb3IgaW5kZXhfdXJs
+LnN0YXJ0c3dpdGgoJ2h0dHBzOi8vaW5kZXguY3JhdGVzLmlvLycpOg0KPiArICAgICAgICAgICAg
+ICAgIGlmIG5vdCBpbmRleF91cmwuZW5kc3dpdGgoJy8nKToNCj4gKyAgICAgICAgICAgICAgICAg
+ICAgaW5kZXhfdXJsICs9ICcvJw0KPiArICAgICAgICAgICAgICAgIHVkLnZlcnNpb25zdXJsID0g
+aW5kZXhfdXJsICsgaW5kZXhfcGF0aA0KPiArICAgICAgICAgICAgICAgIHVkLmNyYXRlX2luZGV4
+X2Zvcm1hdCA9ICdzcGFyc2UnDQoNCkl0IGxvb2tzIGxpa2Ugc2V0dGluZyBpbmRleF91cmwgdG8g
+aW5jbHVkZSB7aW5kZXhfcGF0aH0gaW4gdGhlIGNyYXRlcy5pbyA8aHR0cDovL2NyYXRlcy5pby8+
+IHNwZWNpYWwtY2FzaW5nIHdvdWxkIG1lYW4gdGhpcyBlbnRpcmUgYmxvY2sgY2FuIGJlIGRlbGV0
+ZWQsIGFzIHRoZSBibG9jayBhYm92ZSB3b3VsZCBoYW5kbGUgaXQ/DQoNCj4gKyAgICAgICAgICAg
+IHVkLnZlcnNpb25zdXJsID0gdWQudmVyc2lvbnN1cmwucmVwbGFjZSgne2NyYXRlfScsIG5hbWUp
+LnJlcGxhY2UoJ3t2ZXJzaW9ufScsIHZlcnNpb24pDQoNCkFnYWluLCB1c2UgZm9ybWF0KCkuDQoN
+Cj4gLSAgICAgICAgaWYgdWQudmVyc2lvbnN1cmwuc3RhcnRzd2l0aCgnaHR0cHM6Ly9pbmRleC5j
+cmF0ZXMuaW8vJyk6DQo+ICsgICAgICAgIGlmIGdldGF0dHIodWQsICdjcmF0ZV9pbmRleF9mb3Jt
+YXQnLCBOb25lKSA9PSAnc3BhcnNlJzoNCg0KV2hlbiBpcyBjcmF0ZV9pbmRleF9mb3JtYXQgbm90
+IHNldD8gIElmIGl04oCZcyBub3QgYmVlbiBzZXQgaW4gdGhlIGNvZGVwYXRocyBhYm92ZSwgdGhl
+IG90aGVyIHZhcmlhYmxlcyBoYXZlbuKAmXQgYmVlbiBzZXQgZWl0aGVyLiAgSSB0aGluayB0aGlz
+IGNhbiBiZSBhIG5vcm1hbCBhdHRyaWJ1dGUgbG9va3VwLg0KDQo+IC0gICAgICAgICAgICBiYi5w
+cm9jZXNzLnJ1bignY2htb2QgdStydyAtUiAlcycgJSBzZWxmLnRlbXBkaXIpDQo+ICsgICAgICAg
+ICAgICBiYi5wcm9jZXNzLnJ1bignY2htb2QgLVIgdStydyAlcycgJSBzZWxmLnRlbXBkaXIpDQoN
+ClNlcGFyYXRlIGNvbW1pdCBwbGVhc2UsIGFzIHRoaXMgaXMgdW5yZWxhdGVkIHRvIGNyYXRlIHJl
+Z2lzdHJ5IGZldGNoaW5nLiAgQWxzbywgYXMgeW914oCZcmUgY2hhbmdpbmcgdGhpcyBjb21tYW5k
+IHBsZWFzZSBzd2l0Y2ggaXQgdG8gdXNlIGEgbGlzdCBpbnN0ZWFkIG9mIGEgc3RyaW5nLCB0aGF0
+IGlzIFvigJhjaG1vZOKAmSwg4oCYLVLigJksIOKAmHUrcnfigJksIHNlbGYudGVtcGRpcl0uDQoN
+Ck1hbnkgdGhhbmtzIGZvciB3cml0aW5nIGFuIGFjdHVhbCB0ZXN0IGNhc2UhDQoNClRoYW5rcywN
+ClJvc3M=
 
