@@ -2,61 +2,61 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8687CCD8C83
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C60CCD6E7C
 	for <webhook@archiver.kernel.org>; Fri,  5 Jun 2026 22:12:53 +0000 (UTC)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.5826.1780697564771390728
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.5972.1780697563263236895
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 05 Jun 2026 15:12:45 -0700
+ Fri, 05 Jun 2026 15:12:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=FSIMa5PJ;
- spf=pass (domain: smile.fr, ip: 209.85.128.44, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-490b64c8311so27369205e9.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 05 Jun 2026 15:12:44 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=wlZwCZi0;
+ spf=pass (domain: smile.fr, ip: 209.85.221.52, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-45efa80e0afso1844142f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 05 Jun 2026 15:12:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1780697563; x=1781302363; darn=lists.openembedded.org;
+        d=smile.fr; s=google; t=1780697562; x=1781302362; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=60g9egT3/DS+InHaazxkLVGr0N3CVnZgWUMKI05kvow=;
-        b=FSIMa5PJqa8udpqeLB+QObpPTzvKL411aTq6vXJejyh2QlIA8QOEpevwMJjW2YfGhJ
-         eMEH+TboEKSPpEpkVF4a1yxE9Xt9rvrwY7J8SzXsvTBG3/lmZVam0F6RyF7YqfVBxDrP
-         dMVYwOF73DU3C2P1ZBmzG8I8CU/0g7tL98DIw=
+        bh=ogLWri3rXVVY3NE9hPz9ea7ZKs0uTgP/N5Q/GLUwReg=;
+        b=wlZwCZi0l8F2bBRQDc5+yu9l2SPH2uvI/hzvNVtp5U5j2ozTEnwI+AimkBiVF9B0XZ
+         S7t/DnkSsLMMPYANmFKAJ9tdv5pLWFZsrObQqmm4KtHHhoMtHsq251iMgBc1WIilLldx
+         rby+k0xXJKckNWak7oHkaOVjYn5iACq2BTGts=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780697563; x=1781302363;
+        d=1e100.net; s=20251104; t=1780697562; x=1781302362;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=60g9egT3/DS+InHaazxkLVGr0N3CVnZgWUMKI05kvow=;
-        b=ge2J+bqtHptihM/Bh8aWNSzPP65QLt/9EHmpP2e7/L5yIEQXNy9lFg0vudhootZy0H
-         w+okYWYZBoN6tb4X2zHcywwNZHINvprcNsxArsUSqs4Kkts9Gj4Em2nVqs1ZY8eG/GQX
-         qkJquaiocjt0ficUxpCKxLs9lck4BLusbVITi686nrYBv/i+pNa1IxvHaIPekNMrX6/6
-         kablfx2wu/2GCLWn8K5MhdtUef3PoD2kzh2LaGSHlzz3i5qx6v0UkTRLAadv6kcnNWaG
-         f+3gvNvOSS0NDOSuSMPTaI+ZmiCHU7erL9t10DB+5s6glpIJhMm6OWH4Pe2oERwC76ba
-         iY3Q==
-X-Gm-Message-State: AOJu0YwgjeiqH5rgsZwg3rClMQiXPpxVD2gQXVuUxIiL5hykg9HkTR2g
-	WoiuI1JpyT8YhdmwwSZJin5SFS9Zx6QgZ1ae+vY4v0mhmCo6lEDHAntdoa3wyrlnLV4ZYRkywjx
-	UJDPC
-X-Gm-Gg: Acq92OEOLA7+9oFDa/4+kn9PNCxtziFVH60WPxQW0wCEUnnCzV58d0J7l0L5gZlTE5E
-	G+sa4lk/dSjSdHCz3MmnVBZ1pHWmjBcwgbLoNaKF7YXDKFQlSobaJsa3vjKi+2PilalFtSFcrQp
-	2uUmo6SfLTppApQz/r9yrZXxFfV2YQtqtCHCyVqKYs+lk20wYya5aosfSfVFSjCCUmw1JXojkT6
-	PwM/bxJxgaU2hw0gmLnVGQhCk2cKtn8C3yLpvfB935YZmYANixdnY7URL1xOgYqW1rnENW+rUYa
-	HuC0RcGwppxthkBmQOYDCMGtSoCtZxD1fQ1L1praQ6QR8peX5DomIwHkbfCZPxcaPxhOPqrJawK
-	BiroLcrvEWHEU0L99czAPy3lJFMVye/7tq2Tua4TFlbmiYPRapnt9ue869ZoVczCzB3BHiZn7Oe
-	yxQ13bY13z3/0XIKknQhCoOdILMSZ9LDJmXHTZbe1olPxm3YSwWCFBGoXwKj6jO5vmuhKv3Q0Oe
-	YgvMfRW7slL8qcmyv6b47ztptJoxMmmIG3fNd0=
-X-Received: by 2002:a5d:5270:0:b0:446:96b1:f53 with SMTP id ffacd0b85a97d-4603051261dmr6909114f8f.26.1780697563096;
-        Fri, 05 Jun 2026 15:12:43 -0700 (PDT)
+        bh=ogLWri3rXVVY3NE9hPz9ea7ZKs0uTgP/N5Q/GLUwReg=;
+        b=dPxeIZjIySlYLo1j/YS7brAKOe7SYyFFZ/869hZ2EQSuXxz2AkvJF745WxV737u4tg
+         fo9htVYM7bQinhVQdf06YBQ7GuGo9KHt+amFCOFLss5hwTdPyUBEMMbTKzDz9DeDfAwW
+         tEehkJ4eftEvi+zCI3l7rF6lElq47LNDbgYmdjcl5wUA3qumdOmmkkKdqiOkHxW77aev
+         pmcuKMWHrkEZ6RBiRHFdGmOPIQpcfVZePprBCTO5PT5AOQEjpzOG7NJ7oVuCjaB/K5u9
+         Iyesux7SOBqGNOaGf2Q76GBmKd3Lx625rZzPjrFvPtFym6cW7KlakuhwL80H9CaOAhZg
+         dInw==
+X-Gm-Message-State: AOJu0Yzw/dRah6c4tgDAiAm6jI4obJQmBuHQKmVt493BC55JuDiFe7C6
+	u7XSHOaGW1wx4qsEAbg49xwkKQQeVpmlQGK9K1OeNiqIvXJAl3IHHU/yhm6Qc4DFnThki3b2iov
+	IzBpm
+X-Gm-Gg: Acq92OE6uUscWWBfeSezE0GFHGS29KBz7v109QjFDTIWuBWzGrPOcxAkKnskTjvGfOV
+	zp90bMp9qYllcGA3IwXPww/F6A3z8SU74Vx5vSbyvYo+H2dd4k434PVDEiuP0rXSUtAZLNQksFH
+	iTHC/o+HgIFTr3OKT53SEP1NisHYrveU0sBFbcVzbOZdpi0v2NqdmXMojAP8tErkDzGSNF9iGPT
+	uYz1b172pEY9e5bbBEGoHqjCxWyNPBTruVk+IaoZ/n6lXTjur1YBIspPxEmtmVRBI6uWGjWgtUl
+	OGgLfHS+r4V5f19BwE5yrRx2CUebaWMI/40EJTQxgNAbVYj8g1vkkA2pUNmjWslsWZ6wLFLKC9I
+	sMhDwoOOcVyjTp0f+xsneUjyceD1//ifNzMhTOBora9i/weeHjzUdiYgj5qJYnskliqehYkxX0H
+	jyaoi/nZ+cVqt7T96wwJlfnrE0Y+u8yqz9QL1MXVWuFYjchJ3mi3rAO2pBE8Autak5JLu0TdrEV
+	gYUsTnmM9o3c1pC3B27AgX61Mu1fnqZwFVTAiZggtvHvXkRow==
+X-Received: by 2002:adf:f911:0:b0:439:c18f:5aaf with SMTP id ffacd0b85a97d-460307625cbmr6553797f8f.34.1780697561609;
+        Fri, 05 Jun 2026 15:12:41 -0700 (PDT)
 Received: from FRSMI25-LASER.home (2a01cb001331aa00b3e1ccc1be2b2798.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:b3e1:ccc1:be2b:2798])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2dcae2sm30770393f8f.6.2026.06.05.15.12.42
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2dcae2sm30770393f8f.6.2026.06.05.15.12.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2026 15:12:42 -0700 (PDT)
+        Fri, 05 Jun 2026 15:12:41 -0700 (PDT)
 From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
 Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [bitbake][scarthgap][2.8][PATCH 3/4] fetch2/git: quote shallow extra ref arguments
-Date: Sat,  6 Jun 2026 00:12:27 +0200
-Message-ID: <6d3f8bd4ddc955b49eaa124e0724ea589da30646.1780697470.git.yoann.congal@smile.fr>
+Subject: [bitbake][scarthgap][2.8][PATCH 1/4] fetch2: validate deb/ipk data member names
+Date: Sat,  6 Jun 2026 00:12:25 +0200
+Message-ID: <a32064d0f10b9f5a163a25f410a4e39dccf9cb93.1780697470.git.yoann.congal@smile.fr>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <cover.1780697470.git.yoann.congal@smile.fr>
 References: <cover.1780697470.git.yoann.congal@smile.fr>
@@ -66,82 +66,142 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 05 Jun 2026 22:12:53 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19624
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19622
 
 From: Anders Heimer <anders.heimer@est.tech>
 
-BB_GIT_SHALLOW_EXTRA_REFS can include wildcard entries. Matching refs
-advertised by the remote are later passed to git fetch and update-ref
-while creating shallow tarballs.
+The deb/ipk unpack path selects a data archive member from 'ar -t'
+output and then passes that member name to a shell command. Previously,
+any member beginning with data.tar. was selected.
 
-Quote the generated command arguments and pass the fetched ref after --
-so shell metacharacters and option-like ref names are not interpreted as
-command syntax or git fetch options.
+Only select known deb/ipk data archive member names when datafile is
+created. Quote the package path used in the shell command as it can come
+from the local fetch path.
+
+Add local fetcher regression coverage for quoted package filenames,
+valid compressed data members, and unsupported or unsafe data member
+names.
 
 Signed-off-by: Anders Heimer <anders.heimer@est.tech>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit e9a06f79d9ec767c9d95470be78b006d6fd0d59c)
-[YC: Only the quote part of the master patch applies.
-The "--" part does not. This part is handled by bin/git-make-shallow
-which only pass arguments to git rev-list and rev-parse through arrays]
+(cherry picked from commit 73ae3a2447ec93df39bc66cf3d8f9b2ea1bfe3bf)
 Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
 ---
- lib/bb/fetch2/git.py  |  2 +-
- lib/bb/tests/fetch.py | 30 ++++++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+), 1 deletion(-)
+ lib/bb/fetch2/__init__.py | 10 +++++---
+ lib/bb/tests/fetch.py     | 53 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 60 insertions(+), 3 deletions(-)
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index a3b1a2ada..d8e31284e 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -602,7 +602,7 @@ class Git(FetchMethod):
-         shallow_cmd = [self.make_shallow_path, '-s']
-         for b in shallow_branches:
-             shallow_cmd.append('-r')
--            shallow_cmd.append(b)
-+            shallow_cmd.append(shlex.quote(b))
-         shallow_cmd.extend(shallow_revisions)
-         runfetchcmd(subprocess.list2cmdline(shallow_cmd), d, workdir=dest)
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 224408de0..2f54cb86e 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -23,6 +23,7 @@ import collections
+ import subprocess
+ import pickle
+ import errno
++import shlex
+ import bb.persist_data, bb.utils
+ import bb.checksum
+ import bb.process
+@@ -1567,16 +1568,19 @@ class FetchMethod(object):
+             elif file.endswith('.deb') or file.endswith('.ipk'):
+                 output = subprocess.check_output(['ar', '-t', file], preexec_fn=subprocess_setup)
+                 datafile = None
++                valid_datafiles = ('data.tar', 'data.tar.gz', 'data.tar.xz',
++                                   'data.tar.zst', 'data.tar.bz2', 'data.tar.lzma')
+                 if output:
+                     for line in output.decode().splitlines():
+-                        if line.startswith('data.tar.'):
++                        if line in valid_datafiles:
+                             datafile = line
+                             break
+                     else:
+-                        raise UnpackError("Unable to unpack deb/ipk package - does not contain data.tar.* file", urldata.url)
++                        raise UnpackError("Unable to unpack deb/ipk package - does not contain supported data.tar* file", urldata.url)
+                 else:
+                     raise UnpackError("Unable to unpack deb/ipk package - could not list contents", urldata.url)
+-                cmd = 'ar x %s %s && %s -p -f %s && rm %s' % (file, datafile, tar_cmd, datafile, datafile)
++                quoted_datafile = shlex.quote(datafile)
++                cmd = 'ar x %s %s && %s -p -f %s && rm %s' % (shlex.quote(file), quoted_datafile, tar_cmd, quoted_datafile, quoted_datafile)
  
+         # If 'subdir' param exists, create a dir and use it as destination for unpack cmd
+         if 'subdir' in urldata.parm:
 diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 37e4eb9f4..2d95ef87d 100644
+index 3775ab0f3..5735cf8f4 100644
 --- a/lib/bb/tests/fetch.py
 +++ b/lib/bb/tests/fetch.py
-@@ -2206,6 +2206,36 @@ class GitShallowTest(FetcherTest):
-         self.assertRefs(['master', 'origin/master', 'v1.0'])
-         self.assertRevCount(1)
+@@ -13,6 +13,7 @@ import tempfile
+ import collections
+ import os
+ import signal
++import subprocess
+ import tarfile
+ from bb.fetch2 import URI
+ from bb.fetch2 import FetchMethod
+@@ -731,6 +732,34 @@ class FetcherLocalTest(FetcherTest):
+         bb.process.run('tar cjf archive.tar.bz2 -C dir .', cwd=self.localsrcdir)
+         self.d.setVar("FILESPATH", self.localsrcdir)
  
-+    def test_shallow_extra_refs_wildcard_shell_quoted(self):
-+        self.add_empty_file('a')
-+        marker = os.path.join(self.tempdir, 'ref-command-marker')
-+        ref = 'refs/tags/poc;touch${IFS}%s' % marker
-+        self.git(['update-ref', ref, 'HEAD'], cwd=self.srcdir)
++    def make_ar_package(self, package_name, data_member="data.tar"):
++        if not shutil.which("ar"):
++            self.skipTest("ar not installed")
 +
-+        self.d.setVar('BB_GIT_SHALLOW_EXTRA_REFS', 'refs/tags/*')
-+        self.fetch_shallow()
++        workdir = tempfile.mkdtemp(dir=self.tempdir)
++        payload = os.path.join(workdir, "payload")
++        with open(payload, "w") as f:
++            f.write("payload\n")
 +
-+        self.assertFalse(os.path.exists(marker))
-+        self.assertRefs(['master', 'origin/master', ref])
++        data_path = os.path.join(workdir, data_member)
++        mode = "w:gz" if data_member.endswith(".gz") else "w"
++        with tarfile.open(data_path, mode) as archive:
++            archive.add(payload, arcname="payload")
 +
-+    def test_shallow_extra_refs_wildcard_fetch_options(self):
-+        self.add_empty_file('a')
-+        marker = os.path.join(self.tempdir, 'ref-option-marker')
-+        helper = os.path.join(self.tempdir, 'upload-pack-helper')
-+        with open(helper, 'w') as f:
-+            f.write('#!/bin/sh\n')
-+            f.write('touch "%s"\n' % marker)
-+            f.write('exec git-upload-pack "$@"\n')
-+        os.chmod(helper, 0o755)
-+        ref = 'refs/tags/--upload-pack=%s' % helper
-+        self.git(['update-ref', ref, 'HEAD'], cwd=self.srcdir)
++        with open(os.path.join(workdir, "debian-binary"), "w") as f:
++            f.write("2.0\n")
 +
-+        self.d.setVar('BB_GIT_SHALLOW_EXTRA_REFS', 'refs/tags/*')
-+        self.fetch_shallow()
++        control = os.path.join(workdir, "control")
++        with open(control, "w") as f:
++            f.write("Package: fetch-test\nVersion: 1\nArchitecture: all\n")
++        with tarfile.open(os.path.join(workdir, "control.tar"), "w") as archive:
++            archive.add(control, arcname="control")
 +
-+        self.assertFalse(os.path.exists(marker))
-+        self.assertRefs(['master', 'origin/master', ref])
++        package_path = os.path.join(self.localsrcdir, package_name)
++        subprocess.check_call(["ar", "r", package_path, "debian-binary", "control.tar", data_member],
++                              cwd=workdir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
++        return package_name
 +
-     def test_shallow_missing_extra_refs(self):
-         self.add_empty_file('a')
-         self.add_empty_file('b')
+     def fetchUnpack(self, uris):
+         fetcher = bb.fetch.Fetch(uris, self.d)
+         fetcher.download()
+@@ -800,6 +829,30 @@ class FetcherLocalTest(FetcherTest):
+         tree = self.fetchUnpack(['file://archive.tar.bz2;subdir=bar;striplevel=1'])
+         self.assertEqual(tree, ['bar/c', 'bar/d', 'bar/subdir/e'])
+ 
++    def test_local_deb_quoted_filename(self):
++        package = self.make_ar_package("archive$(id).deb")
++        tree = self.fetchUnpack(['file://%s' % package])
++        self.assertEqual(tree, ['payload'])
++
++    def test_local_ipk_gz_data_member(self):
++        package = self.make_ar_package("archive.ipk", data_member="data.tar.gz")
++        tree = self.fetchUnpack(['file://%s' % package])
++        self.assertEqual(tree, ['payload'])
++
++    def test_local_deb_rejects_unknown_data_member_suffix(self):
++        package = self.make_ar_package("archive.deb", data_member="data.tar.foo")
++        with self.assertRaises(bb.fetch2.UnpackError) as context:
++            self.fetchUnpack(['file://%s' % package])
++
++        self.assertIn("does not contain supported data.tar* file", str(context.exception))
++
++    def test_local_deb_rejects_unsafe_data_member(self):
++        package = self.make_ar_package("archive.deb", data_member="data.tar.xz;id")
++        with self.assertRaises(bb.fetch2.UnpackError) as context:
++            self.fetchUnpack(['file://%s' % package])
++
++        self.assertIn("does not contain supported data.tar* file", str(context.exception))
++
+     def dummyGitTest(self, suffix):
+         # Create dummy local Git repo
+         src_dir = tempfile.mkdtemp(dir=self.tempdir,
 
