@@ -1,171 +1,102 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4A6CD6E7C
-	for <webhook@archiver.kernel.org>; Fri,  5 Jun 2026 13:23:28 +0000 (UTC)
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.7936.1780665798114733746
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC7BCD6E6E
+	for <webhook@archiver.kernel.org>; Fri,  5 Jun 2026 22:09:23 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.5777.1780697361658750970
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 05 Jun 2026 06:23:19 -0700
+ Fri, 05 Jun 2026 15:09:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=FoFBbcAO;
- spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 08E8C1A092B;
-	Fri,  5 Jun 2026 13:23:16 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id D29E35FED1;
-	Fri,  5 Jun 2026 13:23:15 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5B023106A242D;
-	Fri,  5 Jun 2026 15:23:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1780665795; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=KxWHkLzwZJQJh+TQ575Vw7+W7/t/sgYJHKG/1moLw74=;
-	b=FoFBbcAO0pxpTIbghM4x2bpYQWy3jvQ72x9xDbXyxmqIxNNsGGheQuo3euEGF9o836Wvzn
-	JzJdYn5XnkPCK83K1ipyl+uXqkMHNwTH2/zoIPsZSuHgujyvRBsQ+OoOG/aO6ULCDtoJUh
-	FZESCxoiKgduiEwCz1Dn+MUjMQE0xTIFO7Mm+hQu2XH82L1fCEfrhk4AXPYBCOv/4JKfBo
-	Gqo/rQAAC40orz8v8XtWFo5Lu+me0NUSyJ9YiH2gwRDhJ3Cgi+k50i0uZVI/UIA8udw1JW
-	6LtpgrTT4UkMaQEEicKE80QO3z8X2LWHJU8T4Jb1SqgyYcMhg8yAoB69vASg4Q==
-From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Fri, 05 Jun 2026 15:23:03 +0200
-Subject: [PATCH v2] doc/bitbake-user-manual-ref-variables: extend the
- MIRRORS documentation
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260605-clarify-mirrors-syntax-v2-1-d833dc56c900@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/4WNTQ6CMBBGr2K6tqYFA8GV9zAs+jOVMdCamUogh
- LsLeACXL3nf+xbBQAgsbqdFEIzImOIGxfkkXGfiEyT6jUWhikpVSkvXG8IwywGJErHkOWYzSSi
- NtaF2Cq6N2MZvgoDTEX60P+aPfYHLe203OuScaD6eR717f09GLbX0jbfemqDKOtxtSrnHeHFpE
- O26rl/fb/Dd0AAAAA==
-X-Change-ID: 20260601-clarify-mirrors-syntax-e3abbf7c0e49
+ dkim=pass header.i=@smile.fr header.s=google header.b=piDxxEwL;
+ spf=pass (domain: smile.fr, ip: 209.85.128.43, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-490ac357c55so28863335e9.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 05 Jun 2026 15:09:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smile.fr; s=google; t=1780697360; x=1781302160; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=y2cZ7v8MxTwzdxmZ7/ls4cGdd8MDX7KgJPiDypKRdok=;
+        b=piDxxEwLyRgayjp7UcRlvPW8UdR24pMqxkUMGGUJm3e3nJr6nutsD86uY03hTXmsFE
+         ssRoG08kvKJ4U4zWweKm1bnEnO+VI+E6VlLNg+dhqqc6WQFkKUHP5eWLDGj6iPYQBMAR
+         KXYJnFORo32/fuMo3DM41mT5FZzT92aWP92VM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780697360; x=1781302160;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y2cZ7v8MxTwzdxmZ7/ls4cGdd8MDX7KgJPiDypKRdok=;
+        b=kfDJP+L9qtySR0PigZHiwOXZfW7b3mibuEImwNIx20g/0+Ob7anZYi7ZPO6L2Jhay+
+         +tPNtfKo21RWQ/R+EjqlHQAENIi7/ObrCTAqwbpIheud0ijRJt0XhdSSuK3Ic2rEzb2f
+         DgpkZpzdHTdBYn/jeNevUuG3tdK3jUdCtN8kzwDYsVjPu04Z80Bi/wX9y5KyawFAmswt
+         p/wJUvkh/JLAjz+7e1B8lyXuKGBjANOSkOW2HJtaW8roAIYdV6C34obnFD/93hOmktOk
+         moydqHxNCst06VhN4hcqqbs4lVEpEjIjDdwSrgWzeYIbgzddxGo3MUy1xRFaMCUB3SuQ
+         5nOA==
+X-Gm-Message-State: AOJu0Yxar4r+VWS8qWL6lyv83im0NEsRZqVILWWx38Ue7W6di1ySdq/P
+	GMzwiMBsKs0mEzUmYdXJB4ENaZe0E0Xa9eL/dxjpHiynr6avXyOMpyG7FoNgv3uohRS4hjZ4w+U
+	k6HTE
+X-Gm-Gg: Acq92OFqfUeGMLh4UYfsG1QCbgZtFsPavtdoooTVPhU/788Nksq6mtjj1iPvuJ6sORx
+	TG1HraLIlwVvctB9J8pTjnMQya2uKzueH76SyFMgTPDlS6s36mFkwOhewqmL3L9PPF0ENjGqQj3
+	NMx+sgxWGLH7qku2VTB8btBR/4yrfCuZLKfxCaUIkr/912NI5az+i+F6363BHgUOLIJR7k55Jf0
+	/zU9f/RwXZD2OGZafIJTh3pOqc5fm2x36LUsKIbAe6SvrGIm8ahmmSV0O/ltp7GuA6Sme/Zjvws
+	i/GQ+BeMrFr6g96amYQA6SwQYoGbNLSkJ4mNIMDoMUv0oPDeXziDx1tuIWlgCuiv9Tl6QzYcfXo
+	2pekGL3iSjYnTMz4yhYOQbk2D5f252tvwGjho8IubSXTPWE/6RRE8nCjOjTF8y/9vp3WRcBhJlA
+	2B+bcqBgAhRY9u/orN+i/6KHXhco9JUH9Fhg0f4qyqToj/c6sxHwJ2zccMOniY/6TpuwUrnph32
+	UuVkh+/eyM5MjDkV9hd7fL0a3abXrytd72vY7gtpwEzUq0UuA==
+X-Received: by 2002:a05:600c:5020:b0:48f:e230:d5ab with SMTP id 5b1f17b1804b1-490c260f495mr92567445e9.31.1780697360042;
+        Fri, 05 Jun 2026 15:09:20 -0700 (PDT)
+Received: from FRSMI25-LASER.home (2a01cb001331aa00b3e1ccc1be2b2798.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:b3e1:ccc1:be2b:2798])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3fd502sm182367015e9.11.2026.06.05.15.09.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2026 15:09:19 -0700 (PDT)
+From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Cc: Ross Burton <ross.burton@arm.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4596;
- i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=vKayYielkXeShQjrGqN0nr6/QvoFKhmkNM/aFStsHHs=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBqIs3BsV4dtijCdejNoKDYRPxT3E9U9nihc6iOP
- z1TJLRWSwiJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaiLNwQAKCRDRgEFAKaOo
- Nn0gD/0RdA07enlDmdP8hhkD6okdmhbc5YI14k2lw5vIRCU3FXV9rn0E6IodbTmfgMpjnoNlgwJ
- C8w7rOfZ5dBiJN22gaYe+zfgAgkIy2lxWwA9VdWW6ZxjnO7fFYGmt0jCYGm+5QMBL7kbXRjZDom
- nifRKztnMr6XOHzYJTQILMPPRo97VGNuraDf0BxLAFFcfAbXvPbcj9uy9RtY9peakcjyP/scHgS
- kc1mNQl+1jl6BcXD8VuJ+smYDxeL80qGLWeFK7ZKdT+PlUd7i5up2yjGTo3Cl/o/BmD8RBDfYZW
- 4gNMBu8Y5DwzTMvdk6bZjkdMUtRLAqJPAlFX+YiSE9aIA8BVgmSfHQEw9vbatmb5em8E00gGRoJ
- 95wsV2h/yIhlW6O05w8NEilTMsCeyNk1Qm8mg8ulUEd6m4w13yKqmi6m/mR7CGjmXQ+1e0IPmky
- ebbdF2MwzGQwIrYRi3W7FHXKYhrH/KapXZROXBfJy6t0b2ctV7ODTv2QEeeYXbejysqBygMFYSK
- 2lLdOL0dnRrZM0qK1xE+vHLxrfrgQqipaAGZqTO2MsJcKxZeq2PtwV+WMepPt+eqJcHQZJhgk5p
- GnPFRMRoN1pSg2y2QzeTNna+7RwR1S0f3VMnhtPqJfG4rxIEg7PaTWfBTCfRzYA4svqxMUy9lXb
- HEnzRqpbvN0W0fQ==
-X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
- fpr=8648725188DD401BB9A0D3FFD180414029A3A836
-X-Last-TLS-Session-Version: TLSv1.3
+Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [bitbake][wrynose][2.18][PATCH 0/4] Pull request
+Date: Sat,  6 Jun 2026 00:08:54 +0200
+Message-ID: <cover.1780696925.git.yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.47.3
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 05 Jun 2026 13:23:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19615
+ <bitbake-devel@lists.openembedded.org>; Fri, 05 Jun 2026 22:09:23 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19616
 
-The MIRRORS variable wasn't properly documented as Ross highlighted in
-bug 16297. Give it a proper description detailing its usage and which
-keywords are available. Also link PREMIRRORS to MIRRORS as they use the
-same syntax.
+Passed a-full on autobuilder with 2 AB-INT failures:
+https://autobuilder.yoctoproject.org/valkyrie/?#/builders/29/builds/3934
+* qemuarm64-ptest failed with #16241 – AB-INT PTEST: util-linux ptest failure: timeout
+  -> retried in https://autobuilder.yoctoproject.org/valkyrie/?#/builders/61/builds/3760
+* oe-selftest-fedora failed with #16308 – AB-INT: selftest: xterm: Xt error: Can't open display: :1
+  -> retried in https://autobuilder.yoctoproject.org/valkyrie/?#/builders/48/builds/3832
 
-[YOCTO #16297]
+The following changes since commit 22021758e66737bcf68dfd2b74adc6a0cb1d42d9:
 
-Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
----
-Changes in v2:
-- Address comments by Quentin
-- Link to v1: https://patch.msgid.link/20260601-clarify-mirrors-syntax-v1-1-d9dbdbaf037f@bootlin.com
+  README: Add "2.18" subject-prefix to git-send-email suggestion (2026-05-19 11:08:15 +0200)
 
-To: bitbake-devel@lists.openembedded.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: docs@lists.yoctoproject.org
----
- .../bitbake-user-manual-ref-variables.rst          | 56 ++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+are available in the Git repository at:
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index 9824b58ef27..721450496b9 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -1416,6 +1416,58 @@ overview of their function and contents.
-       upstream source, and then locations specified by :term:`MIRRORS` in that
-       order.
- 
-+      This variable has a specific syntax. Each line must contain a regular
-+      expression matching the original source URL and a replacement URL for it.
-+      For example::
-+
-+         MIRRORS:prepend = " \
-+             git://git.openembedded.org/.* git:///mirrors/openembedded/BASENAME \
-+         "
-+
-+      In the above example:
-+
-+      -  The leftmost part means that any Git repository (``git://`` fetcher)
-+         whose URL starts with ``git.openembedded.org/`` will be matched.
-+
-+      -  The rightmost part is the replacement URL for the original repository,
-+         which is hosted locally in the ``/mirrors/openembedded`` directory. It
-+         also uses the ``BASENAME`` keyword which is detailed below.
-+
-+      The rightmost part of each line can contain keywords which are
-+      automatically replaced by BitBake. These keywords can contain either a
-+      sub-part of the original URL or meta-information about it.
-+
-+      For what follows, let's take the following URL as an example for the
-+      original source (matched by the leftmost part of the line):
-+      ``git://git.openembedded.org/project/repo.git``.
-+
-+      A replacement for this URL can be created using the following keywords:
-+
-+      -  ``TYPE``: the URL scheme or fetcher type. For the example above: ``git``.
-+      -  ``HOST``: the URL host. For the example above: ``git.openembedded.org``.
-+      -  ``PATH``: the URL path. For the example above: ``/project/repo.git``.
-+      -  ``BASENAME``: the URL basename. For the example above: ``repo.git``.
-+      -  ``MIRRORNAME``: a translation of the host and path with common
-+         characters substituted to dots (``.``). For the example above:
-+         ``git.openembedded.org.project.repo.git``.
-+
-+      The rightmost part of the line can also be a bare URL that uses no special
-+      keywords (usually ``https://`` or ``file://``). For example::
-+
-+         MIRRORS:prepend = " \
-+             git://git.openembedded.org/.* file:///mirrors/openembedded/ \
-+         "
-+
-+      In the above example, the fetcher will try to find a mirror tarball in the
-+      ``/mirrors/openembedded`` directory. The name of this tarball should follow
-+      the name of the tarball created by BitBake (for Git repositories,
-+      the :term:`BB_GENERATE_MIRROR_TARBALLS` variable must be set to "1" to
-+      generate them).
-+
-+      If we take ``git://git.openembedded.org/project/repo.git`` as an example,
-+      the tarball would have to be named
-+      ``git2_git.openembedded.org.project.repo.git.tar.gz``.
-+
-    :term:`OVERRIDES`
-       A colon-separated list that BitBake uses to control what variables are
-       overridden after BitBake parses recipes and configuration files.
-@@ -1544,6 +1596,10 @@ overview of their function and contents.
-       use ``file://`` URLs to point to local directories or network shares as
-       well.
- 
-+      The syntax of the :term:`PREMIRRORS` variable is the same as
-+      :term:`MIRRORS`. See the definition of the :term:`MIRRORS` for more
-+      details.
-+
-    :term:`PROVIDES`
-       A list of aliases by which a particular recipe can be known. By
-       default, a recipe's own :term:`PN` is implicitly already in its
+  https://git.openembedded.org/bitbake-contrib stable/2.18-nut
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.18-nut
 
----
-base-commit: e74cfd03afe5aff1f81cbff8c6efcef77c9af618
-change-id: 20260601-clarify-mirrors-syntax-e3abbf7c0e49
+for you to fetch changes up to edd1cd43eee1a1f87dcd1ca356ae4247c41eac8f:
+
+  fetch2: Unpack RPMs with --no-absolute-filenames (2026-06-05 12:57:05 +0200)
+
+----------------------------------------------------------------
+
+Anders Heimer (4):
+  fetch2: validate deb/ipk data member names
+  fetch2: validate striplevel parameter
+  fetch2/git: quote shallow extra ref arguments
+  fetch2: Unpack RPMs with --no-absolute-filenames
+
+ lib/bb/fetch2/__init__.py | 19 +++++---
+ lib/bb/fetch2/git.py      |  6 ++-
+ lib/bb/tests/fetch.py     | 93 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 110 insertions(+), 8 deletions(-)
 
 
