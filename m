@@ -2,61 +2,61 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E1FCD8C85
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 778E6CD8C8E
 	for <webhook@archiver.kernel.org>; Sat,  6 Jun 2026 21:12:46 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.23078.1780780360081909799
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.23181.1780780360714646129
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 06 Jun 2026 14:12:40 -0700
+ Sat, 06 Jun 2026 14:12:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=lJnIhhDI;
- spf=pass (domain: smile.fr, ip: 209.85.128.45, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-490b64c8311so34554215e9.3
-        for <bitbake-devel@lists.openembedded.org>; Sat, 06 Jun 2026 14:12:39 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=2MEWjrP/;
+ spf=pass (domain: smile.fr, ip: 209.85.128.50, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-490ac357c55so35998415e9.1
+        for <bitbake-devel@lists.openembedded.org>; Sat, 06 Jun 2026 14:12:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1780780358; x=1781385158; darn=lists.openembedded.org;
+        d=smile.fr; s=google; t=1780780359; x=1781385159; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+R9ur8pGg2LpMD6L7r9pekHtgOw+sa4q2jp7gYrtSOU=;
-        b=lJnIhhDINQ7YYgI3EGWa0RNHOu7n2sfaliZE7fZ7EBWbLL9Jq/67Zb/vc/pArL/2/y
-         pK7zzn3FKC5Mar+FNCEeoqPSi35pQxR0hiDUmp8oZIyeVgm0PkH6Vs2JYEvZaKFgUwoi
-         s0DGjrg25FAl4hGaBX+EkGggNAtwqgeiscMLA=
+        bh=yYZ7AuE5PgfVSRKP6ha4prXK+ktOjhiSwi1C0yWN6uk=;
+        b=2MEWjrP/8NJJQiQpd8uz7YezbcT9nhXzs6B+p0d+bhhoR3kHij2xTNBTIPNgXp0QZM
+         o3GWx+37wjTiiXOOx6Lb7Fb3Mu/tX8lrz0MsltnB2xWXe8bOQesepGqdyQ+Ic5gsZ2vL
+         uJ77k/fyWJv7TxjSOvsxI+BzHzx4EQbSpjpIo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780780358; x=1781385158;
+        d=1e100.net; s=20251104; t=1780780359; x=1781385159;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=+R9ur8pGg2LpMD6L7r9pekHtgOw+sa4q2jp7gYrtSOU=;
-        b=Tfgi98JNdnfd/qm0TItRkK2cWfggeZ+s2uElkJsCd6ZfX8uicByWabHuxkiJuYuBnO
-         h3AQFFfEqimTYfAC0rZOy6AU1n3oSjObbaA93FN+RDcdoasjd6PUGnQTehhJblMSWcgu
-         PgTSqGGYvGgPykznhIT0lZyfrUbrJnmHgCScej6B8G/eMLh4rRhJab+b7LjiaWvYVzc8
-         NGjkf9/sJhdoDGnj6JEk9Fc21SFpLCd2R8rJgu2uCyT62XQBpLL2uDrMHB/NFWSQP//h
-         MlWaoGJR7E9xK/9nr5CjVzKhHEHtYn3MMkQGCAbPEicE2AT0cOX4CMUsls8x4huKvMrk
-         5ccw==
-X-Gm-Message-State: AOJu0YzEmWP2GHDsZ/6E7kkVEBJS9qnmFMnz05IObvkhHVCj5LdFwK9u
-	0wBA7WMrvSCIt9PFFpmlI36VDtj0alyoG+dy2jfSVIqKIn6Usuah0rRfq1W/fcMMLgx8icrP68X
-	1V4hH
-X-Gm-Gg: Acq92OEC239X7eUuNR/PhGVWZEf+ImD6VZP1AUOf8a0rKIA0n7FeBCgoGanWg0Bggqu
-	nNzkNcXwOnWkQS6jPyj1eeWUsnX94cX49CU8HzN+PhlcKE4yrxIXrkAISff3RtuXW4Yglf+gGQL
-	caNqmcYGsROGL3JgSNMM7oPBtUWkhnIP0rzySx3uNeKmK9Q41ja+Lirh1y1g5DRAbQwX3qHS7kI
-	LyC5KMMBRdnQ6mfeapVDSghe/TUXbkraErUUmT/3UoxoV8VgrFCXpXTM0sPPH5TrdlD8JLI+/r6
-	+4iE0uu+DYQD0jOgwcPXSUy52uLFgBty8wsLLHuH6hGkVBl6BIzcset44/+2tKuCguXll4SjGfB
-	4lVIuT2znHpxCH9NsBD+23CCXuQJJTrMrZoLpRzohoPxTPbSOBxiwKip9fmEpImaBzhfR06jNCP
-	7/BTUfprs62rVQwvJFv7t/PJz/NV8CxjPU5Ymhh6II2uEqGRk3mVtCidLWug8fsS8sjZVcBKCaG
-	wqdPEsua/M2NyOf+dYCDQumcChSO5x8Eb4Xwg==
-X-Received: by 2002:a05:600c:529b:b0:490:5380:f2cb with SMTP id 5b1f17b1804b1-490c2528b6amr153693815e9.0.1780780358377;
-        Sat, 06 Jun 2026 14:12:38 -0700 (PDT)
+        bh=yYZ7AuE5PgfVSRKP6ha4prXK+ktOjhiSwi1C0yWN6uk=;
+        b=L+rHlVjQ8cELik1+CdM2wVX4397XtihlyljF7Y1y6nUFBwWJXkkJr/ZaOQsZOInt5o
+         Q04EKtNfA0mMVRZ6m025fVdbDB7R2BJBm+YzL7+AUjcmjuTm+IImFW9jtkQtVVyE1Hl7
+         B1doIUL6AvVignkbX4/vEak+KpkQm1txTJnL2U07L4FD493kyBBCcUbk2ADbvD7V6Aj/
+         K4rwXgL9uUS4ybkR9Vx+5tNH1dGKvO4jC7EnE2BbfcuDeWMZPKmV2freQ8tdPaoESp6N
+         8hvixlrJUcmxR91lTwwyUZwl3hOyK39Rd0VA8pQU8AfhBFpCLjzkKPh0fy8DeVs0pkyO
+         vlaw==
+X-Gm-Message-State: AOJu0YyF4x/FKBOwWV+H2juCnJe8OEsCJEfgkAXs0k+mHyR/VQVC4sga
+	Rwzy7bexMqSyTQ45xeujtED5nXZ2uSOBipIOyhHpk0TFnV1sbjHY1KMQQz9ZgUJsCpsE29F5ZUS
+	dhL/O
+X-Gm-Gg: Acq92OERHDlVQsnjp5YorQYkT3vVODZMDP3+3k7TZ29W5vmeJKUfBs1iUuHiL6/2o9y
+	JTSqwS8WckwlA11IwLH3WsvfzJhRtJxAhFdpHwRwBCJbtDbvTjREFfFFbqYKCeKnj4EoKhNbyWw
+	kiKmW8EYGaQi1W5phMmwcxWzFSbtYXxTO5DktUbitbWD+borzfcs+G7Ii5Zxkx6916p7v8QG9hY
+	2I2gSKzZmcPa2t1N1kE70yrQG0ekhhSRRb99CqWyKElLLC7D0QznR7II/8Svmq9a6/1mNkkbRoX
+	MHuxJ1dZCu+kL248FID2UwmjlXZBdBZnzyXQN71CFiRi0D4e5Zfj+GzYJjBToqNaTsLsQsYvYOw
+	V/+3LRK9wG44YFT+wRNaV6o4NBgayLE3gp05Lp/DIhnzdAJwdkxxdCDAjtbOpXfUkD8pLrLGvfu
+	NN2u/yNPMj+o7WuzCa4fq78lJyzh3OT1505CySMnHnf1E/0ysYYVc9pL13qI87BT6lfLwiFKTW2
+	mDFbABqmDi3lKzV4TpDqB59aKO8d7IB3TZjkL1dHvyO2D+4
+X-Received: by 2002:a05:600c:1549:b0:490:c7dd:7cc2 with SMTP id 5b1f17b1804b1-490c7dd7defmr65055455e9.24.1780780359024;
+        Sat, 06 Jun 2026 14:12:39 -0700 (PDT)
 Received: from FRSMI25-LASER.home (2a01cb001331aa000f4f58971dfc8e81.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:f4f:5897:1dfc:8e81])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490c2d37edbsm169994915e9.2.2026.06.06.14.12.37
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490c2d37edbsm169994915e9.2.2026.06.06.14.12.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jun 2026 14:12:37 -0700 (PDT)
+        Sat, 06 Jun 2026 14:12:38 -0700 (PDT)
 From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
 Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [bitbake][scarthgap][2.8][PATCH 1/2] hashserv/tests: use valid 64-character unihashes
-Date: Sat,  6 Jun 2026 23:12:12 +0200
-Message-ID: <d0bc6eafbefcbc20657028640cd1e17584434ad3.1780780220.git.yoann.congal@smile.fr>
+Subject: [bitbake][scarthgap][2.8][PATCH 2/2] hashserv: validate unihash values
+Date: Sat,  6 Jun 2026 23:12:13 +0200
+Message-ID: <a4daa14312d659333984aa1ae58ddfe0c96392f1.1780780220.git.yoann.congal@smile.fr>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <cover.1780780220.git.yoann.congal@smile.fr>
 References: <cover.1780780220.git.yoann.congal@smile.fr>
@@ -66,490 +66,286 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Sat, 06 Jun 2026 21:12:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19627
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19628
 
 From: Anders Heimer <anders.heimer@est.tech>
 
 Signed-off-by: Anders Heimer <anders.heimer@est.tech>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 16ef07c851f3438c0e6034b9a2fe2c708b766aa2)
-[YC: migrated some more hash values with new_value = sha256(old_value)
-matching what was done in the original patch]
+(cherry picked from commit f9b817d8017e5d5a1d22b9aa10a3c974bc7fa33d)
 Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
 ---
- lib/hashserv/tests.py | 205 ++++++++++++++++++++++++++----------------
- 1 file changed, 130 insertions(+), 75 deletions(-)
+ lib/bb/siggen.py         |  9 +++++++-
+ lib/bb/tests/siggen.py   | 48 ++++++++++++++++++++++++++++++++++++++++
+ lib/hashserv/__init__.py |  7 ++++++
+ lib/hashserv/server.py   | 27 +++++++++++++++++-----
+ lib/hashserv/tests.py    | 30 +++++++++++++++++++++++++
+ 5 files changed, 115 insertions(+), 6 deletions(-)
 
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index 65ca0811d..fcf164aec 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -43,6 +43,10 @@ def check_siggen_version(siggen):
+     if siggen.find_siginfo_version < siggen.find_siginfo_minversion:
+         bb.fatal("Siggen from metadata (OE-Core?) is too old, please update it (%s vs %s)" % (siggen.find_siginfo_version, siggen.find_siginfo_minversion))
+ 
++def check_hashserv_unihash(unihash):
++    if not hashserv.is_valid_unihash(unihash):
++        bb.fatal("Hash Equivalence Server returned invalid unihash")
++
+ class SetEncoder(json.JSONEncoder):
+     def default(self, obj):
+         if isinstance(obj, set) or isinstance(obj, frozenset):
+@@ -753,6 +757,7 @@ class SignatureGeneratorUniHashMixIn(object):
+             #    the unique hash.
+             taskhash = self.taskhash[tid]
+             if unihash:
++                check_hashserv_unihash(unihash)
+                 # A unique hash equal to the taskhash is not very interesting,
+                 # so it is reported it at debug level 2. If they differ, that
+                 # is much more interesting, so it is reported at debug level 1
+@@ -772,7 +777,7 @@ class SignatureGeneratorUniHashMixIn(object):
+         import importlib
+ 
+         taskhash = d.getVar('BB_TASKHASH')
+-        unihash = d.getVar('BB_UNIHASH')
++        unihash = d.getVar('BB_UNIHASH', expand=False)
+         report_taskdata = d.getVar('SSTATE_HASHEQUIV_REPORT_TASKDATA') == '1'
+         tempdir = d.getVar('T')
+         mcfn = d.getVar('BB_FILENAME')
+@@ -834,6 +839,7 @@ class SignatureGeneratorUniHashMixIn(object):
+                     data = client.report_unihash(taskhash, method, outhash, unihash, extra_data)
+ 
+                 new_unihash = data['unihash']
++                check_hashserv_unihash(new_unihash)
+ 
+                 if new_unihash != unihash:
+                     hashequiv_logger.debug('Task %s unihash changed %s -> %s by server %s' % (taskhash, unihash, new_unihash, self.server))
+@@ -873,6 +879,7 @@ class SignatureGeneratorUniHashMixIn(object):
+                 return False
+ 
+             finalunihash = data['unihash']
++            check_hashserv_unihash(finalunihash)
+ 
+             if finalunihash == current_unihash:
+                 hashequiv_logger.verbose('Task %s unihash %s unchanged by server' % (tid, finalunihash))
+diff --git a/lib/bb/tests/siggen.py b/lib/bb/tests/siggen.py
+index 0dc67e6cc..ae5d0f300 100644
+--- a/lib/bb/tests/siggen.py
++++ b/lib/bb/tests/siggen.py
+@@ -9,7 +9,9 @@
+ import unittest
+ import logging
+ import bb
++import bb.data
+ import time
++from contextlib import contextmanager
+ 
+ logger = logging.getLogger('BitBake.TestSiggen')
+ 
+@@ -26,3 +28,49 @@ class SiggenTest(unittest.TestCase):
+         for t in tests:
+             self.assertEqual(bb.siggen.build_pnid(*t), tests[t])
+ 
++    def test_get_unihashes_rejects_invalid_hashserv_unihash(self):
++        class TestClient:
++            def get_unihash_batch(self, query):
++                list(query)
++                return ["${@os.system('true')}"]
++
++        class TestSiggen(bb.siggen.SignatureGeneratorUniHashMixIn):
++            def __init__(self):
++                self.server = "test-server"
++                self.method = "test-method"
++                self.extramethod = {}
++                self.taskhash = {"test.bb:do_compile": "a" * 64}
++                self.unihash = {}
++                self.unitaskhashes = {}
++                self.tidtopn = {}
++                self.setscenetasks = set()
++                self.max_parallel = 1
++
++            @contextmanager
++            def client(self):
++                yield TestClient()
++
++        siggen = TestSiggen()
++
++        with self.assertRaises(bb.BBHandledException):
++            siggen.get_unihashes(["test.bb:do_compile"])
++
++        self.assertEqual(siggen.unihash, {})
++        self.assertEqual(siggen.unitaskhashes, {})
++
++    def test_report_unihash_reads_bb_unihash_without_expansion(self):
++        class TestSiggen(bb.siggen.SignatureGeneratorUniHashMixIn):
++            def __init__(self):
++                self.setscenetasks = set()
++                self.taskhash = {"test.bb:do_compile": "b" * 64}
++
++        d = bb.data.init()
++        d.setVar("BB_TASKHASH", "a" * 64)
++        d.setVar("BB_UNIHASH", "${@d.setVar('EXPANDED_UNIHASH', '1') or 'bad'}")
++        d.setVar("SSTATE_HASHEQUIV_REPORT_TASKDATA", "0")
++        d.setVar("T", "/tmp")
++        d.setVar("BB_FILENAME", "test.bb")
++
++        TestSiggen().report_unihash(".", "compile", d)
++
++        self.assertIsNone(d.getVar("EXPANDED_UNIHASH"))
+diff --git a/lib/hashserv/__init__.py b/lib/hashserv/__init__.py
+index 74367eb6b..8ed00d532 100644
+--- a/lib/hashserv/__init__.py
++++ b/lib/hashserv/__init__.py
+@@ -7,12 +7,19 @@ import asyncio
+ from contextlib import closing
+ import itertools
+ import json
++import re
+ from collections import namedtuple
+ from urllib.parse import urlparse
+ from bb.asyncrpc.client import parse_address, ADDR_TYPE_UNIX, ADDR_TYPE_WS
+ 
+ User = namedtuple("User", ("username", "permissions"))
+ 
++UNIHASH_REGEX = re.compile(r"^[0-9a-f]{64}$")
++
++
++def is_valid_unihash(value):
++    return isinstance(value, str) and UNIHASH_REGEX.fullmatch(value) is not None
++
+ def create_server(
+     addr,
+     dbname,
+diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
+index 68f64f983..ce7db064c 100644
+--- a/lib/hashserv/server.py
++++ b/lib/hashserv/server.py
+@@ -12,6 +12,7 @@ import os
+ import base64
+ import hashlib
+ from . import create_async_client
++from . import is_valid_unihash
+ import bb.asyncrpc
+ 
+ logger = logging.getLogger("hashserv.server")
+@@ -172,6 +173,11 @@ def hash_token(algo, salt, token):
+     return ":".join([algo, salt, h.hexdigest()])
+ 
+ 
++def validate_unihash(value):
++    if not is_valid_unihash(value):
++        raise bb.asyncrpc.InvokeError("Invalid unihash")
++
++
+ def permissions(*permissions, allow_anon=True, allow_self_service=False):
+     """
+     Function decorator that can be used to decorate an RPC function call and
+@@ -343,7 +349,7 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+                 d = {k: row[k] for k in row.keys()}
+             elif self.upstream_client is not None:
+                 d = await self.upstream_client.get_taskhash(method, taskhash)
+-                await self.db.insert_unihash(d["method"], d["taskhash"], d["unihash"])
++                await self.insert_unihash(d["method"], d["taskhash"], d["unihash"])
+ 
+         return d
+ 
+@@ -375,9 +381,13 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+         if data is None:
+             return
+ 
+-        await self.db.insert_unihash(data["method"], data["taskhash"], data["unihash"])
++        await self.insert_unihash(data["method"], data["taskhash"], data["unihash"])
+         await self.db.insert_outhash(data)
+ 
++    async def insert_unihash(self, method, taskhash, unihash):
++        validate_unihash(unihash)
++        return await self.db.insert_unihash(method, taskhash, unihash)
++
+     async def _stream_handler(self, handler):
+         await self.socket.send_message("ok")
+ 
+@@ -465,6 +475,8 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+     # report is made inside the function
+     @permissions(READ_PERM)
+     async def handle_report(self, data):
++        validate_unihash(data.get("unihash"))
++
+         if self.server.read_only or not self.user_has_permissions(REPORT_PERM):
+             return await self.report_readonly(data)
+ 
+@@ -507,7 +519,7 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+                     if upstream_data is not None:
+                         unihash = upstream_data["unihash"]
+ 
+-            await self.db.insert_unihash(data["method"], data["taskhash"], unihash)
++            await self.insert_unihash(data["method"], data["taskhash"], unihash)
+ 
+         unihash_data = await self.get_unihash(data["method"], data["taskhash"])
+         if unihash_data is not None:
+@@ -523,7 +535,9 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
+ 
+     @permissions(READ_PERM, REPORT_PERM)
+     async def handle_equivreport(self, data):
+-        await self.db.insert_unihash(data["method"], data["taskhash"], data["unihash"])
++        validate_unihash(data.get("unihash"))
++
++        await self.insert_unihash(data["method"], data["taskhash"], data["unihash"])
+ 
+         # Fetch the unihash that will be reported for the taskhash. If the
+         # unihash matches, it means this row was inserted (or the mapping
+@@ -859,7 +873,10 @@ class Server(bb.asyncrpc.AsyncServer):
+                 method, taskhash = item
+                 d = await client.get_taskhash(method, taskhash)
+                 if d is not None:
+-                    await db.insert_unihash(d["method"], d["taskhash"], d["unihash"])
++                    if is_valid_unihash(d.get("unihash")):
++                        await db.insert_unihash(d["method"], d["taskhash"], d["unihash"])
++                    else:
++                        self.logger.warning("Upstream server returned invalid unihash")
+                 self.backfill_queue.task_done()
+ 
+     def start(self):
 diff --git a/lib/hashserv/tests.py b/lib/hashserv/tests.py
-index ed1ade749..5b42b9e11 100644
+index 5b42b9e11..1c6a57274 100644
 --- a/lib/hashserv/tests.py
 +++ b/lib/hashserv/tests.py
-@@ -128,7 +128,7 @@ class HashEquivalenceTestSetup(object):
-         # Simple test that hashes can be created
-         taskhash = '35788efcb8dfb0a02659d81cf2bfd695fb30faf9'
-         outhash = '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f'
--        unihash = 'f46d3fbb439bd9b921095da657a4de906510d2cd'
-+        unihash = 'a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9'
+@@ -295,6 +295,36 @@ class HashEquivalenceCommonTests(object):
+         self.assertEqual(result_outhash['outhash'], outhash)
+         self.assertEqual(result_outhash['outhash_siginfo'], siginfo)
  
-         self.assertClientGetHash(client, taskhash, None)
- 
-@@ -182,7 +182,7 @@ class HashEquivalenceCommonTests(object):
-         # assigned the same unihash
-         taskhash = '53b8dce672cb6d0c73170be43f540460bfc347b4'
-         outhash = '5a9cb1649625f0bf41fc7791b635cd9c2d7118c7f021ba87dcd03f72b67ce7a8'
--        unihash = 'f37918cc02eb5a520b1aff86faacbc0a38124646'
-+        unihash = '46edb5140d2613049332d0bf3745d9fafec9c559dac8cc61813739a28007fcdf'
- 
-         result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
-         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
-@@ -190,7 +190,7 @@ class HashEquivalenceCommonTests(object):
-         # Report a different task with the same outhash. The returned unihash
-         # should match the first task
-         taskhash2 = '3bf6f1e89d26205aec90da04854fbdbf73afe6b4'
--        unihash2 = 'af36b199320e611fbb16f1f277d3ee1d619ca58b'
-+        unihash2 = 'bf6e81926066f770e960f9f777cd088c62bea9addb7745f3e77deaa81a645747'
-         result = self.client.report_unihash(taskhash2, self.METHOD, outhash, unihash2)
-         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
- 
-@@ -200,19 +200,19 @@ class HashEquivalenceCommonTests(object):
-         # taskhash
-         taskhash = '8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a'
-         outhash = 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e'
--        unihash = '218e57509998197d570e2c98512d0105985dffc9'
-+        unihash = '5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380'
-         self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
- 
-         self.assertClientGetHash(self.client, taskhash, unihash)
- 
-         outhash2 = '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d'
--        unihash2 = 'ae9a7d252735f0dafcdb10e2e02561ca3a47314c'
-+        unihash2 = 'a37541b54fd22440e292f617eb30ba07455e88fb0b9f0952eca229b6356290e3'
-         self.client.report_unihash(taskhash, self.METHOD, outhash2, unihash2)
- 
-         self.assertClientGetHash(self.client, taskhash, unihash)
- 
-         outhash3 = '77623a549b5b1a31e3732dfa8fe61d7ce5d44b3370f253c5360e136b852967b4'
--        unihash3 = '9217a7d6398518e5dc002ed58f2cbbbc78696603'
-+        unihash3 = '6842f1f2daccd96ddef15c9154d4e41ac8a2300d781ac9a9db7f8afeb8a96808'
-         self.client.report_unihash(taskhash, self.METHOD, outhash3, unihash3)
- 
-         self.assertClientGetHash(self.client, taskhash, unihash)
-@@ -272,7 +272,7 @@ class HashEquivalenceCommonTests(object):
-         # Simple test that hashes can be created
-         taskhash = 'c665584ee6817aa99edfc77a44dd853828279370'
-         outhash = '3c979c3db45c569f51ab7626a4651074be3a9d11a84b1db076f5b14f7d39db44'
--        unihash = '90e9bc1d1f094c51824adca7f8ea79a048d68824'
-+        unihash = '06f89b8f329ba8124ff73c56d09ef921b42624747c421277bddaf5e23f136e57'
- 
-         self.assertClientGetHash(self.client, taskhash, None)
- 
-@@ -365,7 +365,7 @@ class HashEquivalenceCommonTests(object):
-         # Basic report
-         taskhash = '8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a'
-         outhash = 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e'
--        unihash = '218e57509998197d570e2c98512d0105985dffc9'
-+        unihash = '5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380'
-         self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
- 
-         check_hash(taskhash, unihash, None)
-@@ -373,7 +373,7 @@ class HashEquivalenceCommonTests(object):
-         # Duplicated taskhash with multiple output hashes and unihashes.
-         # All servers should agree with the originally reported hash
-         outhash2 = '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d'
--        unihash2 = 'ae9a7d252735f0dafcdb10e2e02561ca3a47314c'
-+        unihash2 = 'a37541b54fd22440e292f617eb30ba07455e88fb0b9f0952eca229b6356290e3'
-         self.client.report_unihash(taskhash, self.METHOD, outhash2, unihash2)
- 
-         check_hash(taskhash, unihash, unihash)
-@@ -381,7 +381,7 @@ class HashEquivalenceCommonTests(object):
-         # Report an equivalent task. The sideload will originally report
-         # no unihash until backfilled
-         taskhash3 = "044c2ec8aaf480685a00ff6ff49e6162e6ad34e1"
--        unihash3 = "def64766090d28f627e816454ed46894bb3aab36"
-+        unihash3 = "aca636d800aef40e6ddcea4b2262cc4ea0d1180a6783e5b4653a20c7dd73458d"
-         self.client.report_unihash(taskhash3, self.METHOD, outhash, unihash3)
- 
-         check_hash(taskhash3, unihash, None)
-@@ -390,7 +390,7 @@ class HashEquivalenceCommonTests(object):
-         # propagating to the upstream server
-         taskhash4 = "e3da00593d6a7fb435c7e2114976c59c5fd6d561"
-         outhash4 = "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a"
--        unihash4 = "3b5d3d83f07f259e9086fcb422c855286e18a57d"
-+        unihash4 = "7aebef07d66a8c0f92d0c4f65ec8b1fbb850a3693c53827b8774b64fa9a8a9fe"
-         down_client.report_unihash(taskhash4, self.METHOD, outhash4, unihash4)
-         down_client.backfill_wait()
- 
-@@ -402,18 +402,18 @@ class HashEquivalenceCommonTests(object):
-         # match which was previously reported to the upstream server
-         taskhash5 = '35788efcb8dfb0a02659d81cf2bfd695fb30faf9'
-         outhash5 = '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f'
--        unihash5 = 'f46d3fbb439bd9b921095da657a4de906510d2cd'
-+        unihash5 = 'a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9'
-         result = self.client.report_unihash(taskhash5, self.METHOD, outhash5, unihash5)
- 
-         taskhash6 = '35788efcb8dfb0a02659d81cf2bfd695fb30fafa'
--        unihash6 = 'f46d3fbb439bd9b921095da657a4de906510d2ce'
-+        unihash6 = 'eabc7a98e0c12bbeb8394dbdf055eb81aac60e4a14cca5c1f069d36efc933b23'
-         result = down_client.report_unihash(taskhash6, self.METHOD, outhash5, unihash6)
-         self.assertEqual(result['unihash'], unihash5, 'Server failed to copy unihash from upstream')
- 
-         # Tests read through from server with
-         taskhash7 = '9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74'
-         outhash7 = '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69'
--        unihash7 = '05d2a63c81e32f0a36542ca677e8ad852365c538'
-+        unihash7 = '7521a98a0c645341bc51559b234ef37a097e8f3a01665e0303a317925ab7b4d5'
-         self.client.report_unihash(taskhash7, self.METHOD, outhash7, unihash7)
- 
-         result = down_client.get_taskhash(self.METHOD, taskhash7, True)
-@@ -424,7 +424,7 @@ class HashEquivalenceCommonTests(object):
- 
-         taskhash8 = '86978a4c8c71b9b487330b0152aade10c1ee58aa'
-         outhash8 = 'ca8c128e9d9e4a28ef24d0508aa20b5cf880604eacd8f65c0e366f7e0cc5fbcf'
--        unihash8 = 'd8bcf25369d40590ad7d08c84d538982f2023e01'
-+        unihash8 = '83386d9385b0bf3ba25693127ddcaaadeaa1c4bf8cb0baecfb5314b9a20072a1'
-         self.client.report_unihash(taskhash8, self.METHOD, outhash8, unihash8)
- 
-         result = down_client.get_outhash(self.METHOD, outhash8, taskhash8)
-@@ -435,7 +435,7 @@ class HashEquivalenceCommonTests(object):
- 
-         taskhash9 = 'ae6339531895ddf5b67e663e6a374ad8ec71d81c'
-         outhash9 = 'afc78172c81880ae10a1fec994b5b4ee33d196a001a1b66212a15ebe573e00b5'
--        unihash9 = '6662e699d6e3d894b24408ff9a4031ef9b038ee8'
-+        unihash9 = 'cc74784b2c0ad5b378a6b783c74c518d2c46b8b52fba29cb39a8430d742440d7'
-         self.client.report_unihash(taskhash9, self.METHOD, outhash9, unihash9)
- 
-         result = down_client.get_taskhash(self.METHOD, taskhash9, False)
-@@ -446,7 +446,7 @@ class HashEquivalenceCommonTests(object):
-     def test_unihash_exsits(self):
-         taskhash, outhash, unihash = self.create_test_hash(self.client)
-         self.assertTrue(self.client.unihash_exists(unihash))
--        self.assertFalse(self.client.unihash_exists('6662e699d6e3d894b24408ff9a4031ef9b038ee8'))
-+        self.assertFalse(self.client.unihash_exists('cc74784b2c0ad5b378a6b783c74c518d2c46b8b52fba29cb39a8430d742440d7'))
- 
-     def test_ro_server(self):
-         rw_server = self.start_server()
-@@ -458,7 +458,7 @@ class HashEquivalenceCommonTests(object):
-         # Report a hash via the read-write server
-         taskhash = '35788efcb8dfb0a02659d81cf2bfd695fb30faf9'
-         outhash = '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f'
--        unihash = 'f46d3fbb439bd9b921095da657a4de906510d2cd'
-+        unihash = 'a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9'
- 
-         result = rw_client.report_unihash(taskhash, self.METHOD, outhash, unihash)
-         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
-@@ -469,7 +469,7 @@ class HashEquivalenceCommonTests(object):
-         # Ensure that reporting via the read-only server fails
-         taskhash2 = 'c665584ee6817aa99edfc77a44dd853828279370'
-         outhash2 = '3c979c3db45c569f51ab7626a4651074be3a9d11a84b1db076f5b14f7d39db44'
--        unihash2 = '90e9bc1d1f094c51824adca7f8ea79a048d68824'
-+        unihash2 = '06f89b8f329ba8124ff73c56d09ef921b42624747c421277bddaf5e23f136e57'
- 
-         result = ro_client.report_unihash(taskhash2, self.METHOD, outhash2, unihash2)
-         self.assertEqual(result['unihash'], unihash2)
-@@ -559,15 +559,15 @@ class HashEquivalenceCommonTests(object):
-     def test_client_pool_get_unihashes(self):
-         TEST_INPUT = (
-             # taskhash                                   outhash                                                            unihash
--            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e','218e57509998197d570e2c98512d0105985dffc9'),
-+            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e','5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380'),
-             # Duplicated taskhash with multiple output hashes and unihashes.
--            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', 'ae9a7d252735f0dafcdb10e2e02561ca3a47314c'),
-+            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', 'a37541b54fd22440e292f617eb30ba07455e88fb0b9f0952eca229b6356290e3'),
-             # Equivalent hash
--            ("044c2ec8aaf480685a00ff6ff49e6162e6ad34e1", '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', "def64766090d28f627e816454ed46894bb3aab36"),
--            ("e3da00593d6a7fb435c7e2114976c59c5fd6d561", "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a", "3b5d3d83f07f259e9086fcb422c855286e18a57d"),
--            ('35788efcb8dfb0a02659d81cf2bfd695fb30faf9', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2cd'),
--            ('35788efcb8dfb0a02659d81cf2bfd695fb30fafa', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2ce'),
--            ('9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74', '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69', '05d2a63c81e32f0a36542ca677e8ad852365c538'),
-+            ("044c2ec8aaf480685a00ff6ff49e6162e6ad34e1", '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', "aca636d800aef40e6ddcea4b2262cc4ea0d1180a6783e5b4653a20c7dd73458d"),
-+            ("e3da00593d6a7fb435c7e2114976c59c5fd6d561", "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a", "7aebef07d66a8c0f92d0c4f65ec8b1fbb850a3693c53827b8774b64fa9a8a9fe"),
-+            ('35788efcb8dfb0a02659d81cf2bfd695fb30faf9', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9'),
-+            ('35788efcb8dfb0a02659d81cf2bfd695fb30fafa', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'eabc7a98e0c12bbeb8394dbdf055eb81aac60e4a14cca5c1f069d36efc933b23'),
-+            ('9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74', '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69', '7521a98a0c645341bc51559b234ef37a097e8f3a01665e0303a317925ab7b4d5'),
-         )
-         EXTRA_QUERIES = (
-             "6b6be7a84ab179b4240c4302518dc3f6",
-@@ -584,28 +584,56 @@ class HashEquivalenceCommonTests(object):
-             result = client_pool.get_unihashes(query)
- 
-             self.assertDictEqual(result, {
--                0: "218e57509998197d570e2c98512d0105985dffc9",
--                1: "218e57509998197d570e2c98512d0105985dffc9",
--                2: "218e57509998197d570e2c98512d0105985dffc9",
--                3: "3b5d3d83f07f259e9086fcb422c855286e18a57d",
--                4: "f46d3fbb439bd9b921095da657a4de906510d2cd",
--                5: "f46d3fbb439bd9b921095da657a4de906510d2cd",
--                6: "05d2a63c81e32f0a36542ca677e8ad852365c538",
-+                0: "5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380",
-+                1: "5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380",
-+                2: "5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380",
-+                3: "7aebef07d66a8c0f92d0c4f65ec8b1fbb850a3693c53827b8774b64fa9a8a9fe",
-+                4: "a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9",
-+                5: "a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9",
-+                6: "7521a98a0c645341bc51559b234ef37a097e8f3a01665e0303a317925ab7b4d5",
-                 7: None,
-             })
- 
-     def test_get_unihash_batch(self):
-         TEST_INPUT = (
-             # taskhash                                   outhash                                                            unihash
--            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e','218e57509998197d570e2c98512d0105985dffc9'),
-+            (
-+                '8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a',
-+                'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e',
-+                '5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380',
-+            ),
-             # Duplicated taskhash with multiple output hashes and unihashes.
--            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', 'ae9a7d252735f0dafcdb10e2e02561ca3a47314c'),
-+            (
-+                '8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a',
-+                '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d',
-+                'a37541b54fd22440e292f617eb30ba07455e88fb0b9f0952eca229b6356290e3',
-+            ),
-             # Equivalent hash
--            ("044c2ec8aaf480685a00ff6ff49e6162e6ad34e1", '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', "def64766090d28f627e816454ed46894bb3aab36"),
--            ("e3da00593d6a7fb435c7e2114976c59c5fd6d561", "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a", "3b5d3d83f07f259e9086fcb422c855286e18a57d"),
--            ('35788efcb8dfb0a02659d81cf2bfd695fb30faf9', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2cd'),
--            ('35788efcb8dfb0a02659d81cf2bfd695fb30fafa', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2ce'),
--            ('9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74', '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69', '05d2a63c81e32f0a36542ca677e8ad852365c538'),
-+            (
-+                "044c2ec8aaf480685a00ff6ff49e6162e6ad34e1",
-+                '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d',
-+                "aca636d800aef40e6ddcea4b2262cc4ea0d1180a6783e5b4653a20c7dd73458d",
-+            ),
-+            (
-+                "e3da00593d6a7fb435c7e2114976c59c5fd6d561",
-+                "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a",
-+                "7aebef07d66a8c0f92d0c4f65ec8b1fbb850a3693c53827b8774b64fa9a8a9fe",
-+            ),
-+            (
-+                '35788efcb8dfb0a02659d81cf2bfd695fb30faf9',
-+                '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f',
-+                'a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9',
-+            ),
-+            (
-+                '35788efcb8dfb0a02659d81cf2bfd695fb30fafa',
-+                '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f',
-+                'eabc7a98e0c12bbeb8394dbdf055eb81aac60e4a14cca5c1f069d36efc933b23',
-+            ),
-+            (
-+                '9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74',
-+                '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69',
-+                '7521a98a0c645341bc51559b234ef37a097e8f3a01665e0303a317925ab7b4d5',
-+            ),
-         )
-         EXTRA_QUERIES = (
-             "6b6be7a84ab179b4240c4302518dc3f6",
-@@ -621,28 +649,28 @@ class HashEquivalenceCommonTests(object):
-         )
- 
-         self.assertListEqual(result, [
--            "218e57509998197d570e2c98512d0105985dffc9",
--            "218e57509998197d570e2c98512d0105985dffc9",
--            "218e57509998197d570e2c98512d0105985dffc9",
--            "3b5d3d83f07f259e9086fcb422c855286e18a57d",
--            "f46d3fbb439bd9b921095da657a4de906510d2cd",
--            "f46d3fbb439bd9b921095da657a4de906510d2cd",
--            "05d2a63c81e32f0a36542ca677e8ad852365c538",
-+            "5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380",
-+            "5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380",
-+            "5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380",
-+            "7aebef07d66a8c0f92d0c4f65ec8b1fbb850a3693c53827b8774b64fa9a8a9fe",
-+            "a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9",
-+            "a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9",
-+            "7521a98a0c645341bc51559b234ef37a097e8f3a01665e0303a317925ab7b4d5",
-             None,
-         ])
- 
-     def test_client_pool_unihash_exists(self):
-         TEST_INPUT = (
-             # taskhash                                   outhash                                                            unihash
--            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e','218e57509998197d570e2c98512d0105985dffc9'),
-+            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e','5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380'),
-             # Duplicated taskhash with multiple output hashes and unihashes.
--            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', 'ae9a7d252735f0dafcdb10e2e02561ca3a47314c'),
-+            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', 'a37541b54fd22440e292f617eb30ba07455e88fb0b9f0952eca229b6356290e3'),
-             # Equivalent hash
--            ("044c2ec8aaf480685a00ff6ff49e6162e6ad34e1", '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', "def64766090d28f627e816454ed46894bb3aab36"),
--            ("e3da00593d6a7fb435c7e2114976c59c5fd6d561", "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a", "3b5d3d83f07f259e9086fcb422c855286e18a57d"),
--            ('35788efcb8dfb0a02659d81cf2bfd695fb30faf9', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2cd'),
--            ('35788efcb8dfb0a02659d81cf2bfd695fb30fafa', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2ce'),
--            ('9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74', '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69', '05d2a63c81e32f0a36542ca677e8ad852365c538'),
-+            ("044c2ec8aaf480685a00ff6ff49e6162e6ad34e1", '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', "aca636d800aef40e6ddcea4b2262cc4ea0d1180a6783e5b4653a20c7dd73458d"),
-+            ("e3da00593d6a7fb435c7e2114976c59c5fd6d561", "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a", "7aebef07d66a8c0f92d0c4f65ec8b1fbb850a3693c53827b8774b64fa9a8a9fe"),
-+            ('35788efcb8dfb0a02659d81cf2bfd695fb30faf9', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9'),
-+            ('35788efcb8dfb0a02659d81cf2bfd695fb30fafa', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'eabc7a98e0c12bbeb8394dbdf055eb81aac60e4a14cca5c1f069d36efc933b23'),
-+            ('9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74', '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69', '7521a98a0c645341bc51559b234ef37a097e8f3a01665e0303a317925ab7b4d5'),
-         )
-         EXTRA_QUERIES = (
-             "6b6be7a84ab179b4240c4302518dc3f6",
-@@ -676,15 +704,43 @@ class HashEquivalenceCommonTests(object):
-     def test_unihash_exists_batch(self):
-         TEST_INPUT = (
-             # taskhash                                   outhash                                                            unihash
--            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e','218e57509998197d570e2c98512d0105985dffc9'),
-+            (
-+                '8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a',
-+                'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e',
-+                '5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380',
-+            ),
-             # Duplicated taskhash with multiple output hashes and unihashes.
--            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', 'ae9a7d252735f0dafcdb10e2e02561ca3a47314c'),
-+            (
-+                '8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a',
-+                '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d',
-+                'a37541b54fd22440e292f617eb30ba07455e88fb0b9f0952eca229b6356290e3',
-+            ),
-             # Equivalent hash
--            ("044c2ec8aaf480685a00ff6ff49e6162e6ad34e1", '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', "def64766090d28f627e816454ed46894bb3aab36"),
--            ("e3da00593d6a7fb435c7e2114976c59c5fd6d561", "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a", "3b5d3d83f07f259e9086fcb422c855286e18a57d"),
--            ('35788efcb8dfb0a02659d81cf2bfd695fb30faf9', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2cd'),
--            ('35788efcb8dfb0a02659d81cf2bfd695fb30fafa', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2ce'),
--            ('9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74', '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69', '05d2a63c81e32f0a36542ca677e8ad852365c538'),
-+            (
-+                "044c2ec8aaf480685a00ff6ff49e6162e6ad34e1",
-+                '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d',
-+                "aca636d800aef40e6ddcea4b2262cc4ea0d1180a6783e5b4653a20c7dd73458d",
-+            ),
-+            (
-+                "e3da00593d6a7fb435c7e2114976c59c5fd6d561",
-+                "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a",
-+                "7aebef07d66a8c0f92d0c4f65ec8b1fbb850a3693c53827b8774b64fa9a8a9fe",
-+            ),
-+            (
-+                '35788efcb8dfb0a02659d81cf2bfd695fb30faf9',
-+                '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f',
-+                'a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9',
-+            ),
-+            (
-+                '35788efcb8dfb0a02659d81cf2bfd695fb30fafa',
-+                '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f',
-+                'eabc7a98e0c12bbeb8394dbdf055eb81aac60e4a14cca5c1f069d36efc933b23',
-+            ),
-+            (
-+                '9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74',
-+                '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69',
-+                '7521a98a0c645341bc51559b234ef37a097e8f3a01665e0303a317925ab7b4d5',
-+            ),
-         )
-         EXTRA_QUERIES = (
-             "6b6be7a84ab179b4240c4302518dc3f6",
-@@ -1024,14 +1080,14 @@ class HashEquivalenceCommonTests(object):
-     def test_gc(self):
-         taskhash = '53b8dce672cb6d0c73170be43f540460bfc347b4'
-         outhash = '5a9cb1649625f0bf41fc7791b635cd9c2d7118c7f021ba87dcd03f72b67ce7a8'
--        unihash = 'f37918cc02eb5a520b1aff86faacbc0a38124646'
-+        unihash = '46edb5140d2613049332d0bf3745d9fafec9c559dac8cc61813739a28007fcdf'
- 
-         result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
-         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
- 
-         taskhash2 = '3bf6f1e89d26205aec90da04854fbdbf73afe6b4'
-         outhash2 = '77623a549b5b1a31e3732dfa8fe61d7ce5d44b3370f253c5360e136b852967b4'
--        unihash2 = 'af36b199320e611fbb16f1f277d3ee1d619ca58b'
-+        unihash2 = 'bf6e81926066f770e960f9f777cd088c62bea9addb7745f3e77deaa81a645747'
- 
-         result = self.client.report_unihash(taskhash2, self.METHOD, outhash2, unihash2)
-         self.assertClientGetHash(self.client, taskhash2, unihash2)
-@@ -1057,14 +1113,14 @@ class HashEquivalenceCommonTests(object):
-     def test_gc_switch_mark(self):
-         taskhash = '53b8dce672cb6d0c73170be43f540460bfc347b4'
-         outhash = '5a9cb1649625f0bf41fc7791b635cd9c2d7118c7f021ba87dcd03f72b67ce7a8'
--        unihash = 'f37918cc02eb5a520b1aff86faacbc0a38124646'
-+        unihash = '46edb5140d2613049332d0bf3745d9fafec9c559dac8cc61813739a28007fcdf'
- 
-         result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
-         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
- 
-         taskhash2 = '3bf6f1e89d26205aec90da04854fbdbf73afe6b4'
-         outhash2 = '77623a549b5b1a31e3732dfa8fe61d7ce5d44b3370f253c5360e136b852967b4'
--        unihash2 = 'af36b199320e611fbb16f1f277d3ee1d619ca58b'
-+        unihash2 = 'bf6e81926066f770e960f9f777cd088c62bea9addb7745f3e77deaa81a645747'
- 
-         result = self.client.report_unihash(taskhash2, self.METHOD, outhash2, unihash2)
-         self.assertClientGetHash(self.client, taskhash2, unihash2)
-@@ -1102,14 +1158,14 @@ class HashEquivalenceCommonTests(object):
-     def test_gc_switch_sweep_mark(self):
-         taskhash = '53b8dce672cb6d0c73170be43f540460bfc347b4'
-         outhash = '5a9cb1649625f0bf41fc7791b635cd9c2d7118c7f021ba87dcd03f72b67ce7a8'
--        unihash = 'f37918cc02eb5a520b1aff86faacbc0a38124646'
-+        unihash = '46edb5140d2613049332d0bf3745d9fafec9c559dac8cc61813739a28007fcdf'
- 
-         result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
-         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
- 
-         taskhash2 = '3bf6f1e89d26205aec90da04854fbdbf73afe6b4'
-         outhash2 = '77623a549b5b1a31e3732dfa8fe61d7ce5d44b3370f253c5360e136b852967b4'
--        unihash2 = 'af36b199320e611fbb16f1f277d3ee1d619ca58b'
-+        unihash2 = 'bf6e81926066f770e960f9f777cd088c62bea9addb7745f3e77deaa81a645747'
- 
-         result = self.client.report_unihash(taskhash2, self.METHOD, outhash2, unihash2)
-         self.assertClientGetHash(self.client, taskhash2, unihash2)
-@@ -1132,7 +1188,7 @@ class HashEquivalenceCommonTests(object):
-     def test_gc_new_hashes(self):
-         taskhash = '53b8dce672cb6d0c73170be43f540460bfc347b4'
-         outhash = '5a9cb1649625f0bf41fc7791b635cd9c2d7118c7f021ba87dcd03f72b67ce7a8'
--        unihash = 'f37918cc02eb5a520b1aff86faacbc0a38124646'
-+        unihash = '46edb5140d2613049332d0bf3745d9fafec9c559dac8cc61813739a28007fcdf'
- 
-         result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
-         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
-@@ -1149,7 +1205,7 @@ class HashEquivalenceCommonTests(object):
- 
-         taskhash2 = '3bf6f1e89d26205aec90da04854fbdbf73afe6b4'
-         outhash2 = '77623a549b5b1a31e3732dfa8fe61d7ce5d44b3370f253c5360e136b852967b4'
--        unihash2 = 'af36b199320e611fbb16f1f277d3ee1d619ca58b'
-+        unihash2 = 'bf6e81926066f770e960f9f777cd088c62bea9addb7745f3e77deaa81a645747'
- 
-         result = self.client.report_unihash(taskhash2, self.METHOD, outhash2, unihash2)
-         self.assertClientGetHash(self.client, taskhash2, unihash2)
-@@ -1205,7 +1261,7 @@ class TestHashEquivalenceClient(HashEquivalenceTestSetup, unittest.TestCase):
- 
-         p = self.run_hashclient([
-             "--address", self.server_address,
--            "unihash-exists", '6662e699d6e3d894b24408ff9a4031ef9b038ee8',
-+            "unihash-exists", 'cc74784b2c0ad5b378a6b783c74c518d2c46b8b52fba29cb39a8430d742440d7',
-         ], check=True)
-         self.assertEqual(p.stdout.strip(), "false")
- 
-@@ -1222,7 +1278,7 @@ class TestHashEquivalenceClient(HashEquivalenceTestSetup, unittest.TestCase):
- 
-         p = self.run_hashclient([
-             "--address", self.server_address,
--            "unihash-exists", '6662e699d6e3d894b24408ff9a4031ef9b038ee8',
-+            "unihash-exists", 'cc74784b2c0ad5b378a6b783c74c518d2c46b8b52fba29cb39a8430d742440d7',
-             "--quiet",
-         ])
-         self.assertEqual(p.returncode, 1)
-@@ -1448,14 +1504,14 @@ class TestHashEquivalenceClient(HashEquivalenceTestSetup, unittest.TestCase):
-     def test_gc(self):
-         taskhash = '53b8dce672cb6d0c73170be43f540460bfc347b4'
-         outhash = '5a9cb1649625f0bf41fc7791b635cd9c2d7118c7f021ba87dcd03f72b67ce7a8'
--        unihash = 'f37918cc02eb5a520b1aff86faacbc0a38124646'
-+        unihash = '46edb5140d2613049332d0bf3745d9fafec9c559dac8cc61813739a28007fcdf'
- 
-         result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
-         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
- 
-         taskhash2 = '3bf6f1e89d26205aec90da04854fbdbf73afe6b4'
-         outhash2 = '77623a549b5b1a31e3732dfa8fe61d7ce5d44b3370f253c5360e136b852967b4'
--        unihash2 = 'af36b199320e611fbb16f1f277d3ee1d619ca58b'
-+        unihash2 = 'bf6e81926066f770e960f9f777cd088c62bea9addb7745f3e77deaa81a645747'
- 
-         result = self.client.report_unihash(taskhash2, self.METHOD, outhash2, unihash2)
-         self.assertClientGetHash(self.client, taskhash2, unihash2)
-@@ -1498,7 +1554,7 @@ class TestHashEquivalenceUnixServerLongPath(HashEquivalenceTestSetup, unittest.T
-         # Simple test that hashes can be created
-         taskhash = '35788efcb8dfb0a02659d81cf2bfd695fb30faf9'
-         outhash = '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f'
--        unihash = 'f46d3fbb439bd9b921095da657a4de906510d2cd'
-+        unihash = 'a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9'
- 
-         self.assertClientGetHash(self.client, taskhash, None)
- 
-@@ -1585,4 +1641,3 @@ class TestHashEquivalenceExternalServer(HashEquivalenceTestSetup, HashEquivalenc
- 
-     def test_auth_get_all_users(self):
-         self.skipTest("Cannot test all users with external server")
--
++    def test_report_rejects_invalid_unihash(self):
++        taskhash = '68a9206490b2321bb033fb3eab013a4ec62c41f9'
++        outhash = 'bf5f2efaf1ca351f3b4c3d079363540ab48f7c58db3d23cfbb069cf4ff1ea8f7'
++        invalid_unihashes = (
++            "${@os.system('true')}",
++            'a' * 63,
++            'a' * 65,
++            'A' * 64,
++            None,
++        )
++
++        for unihash in invalid_unihashes:
++            with self.subTest(unihash=unihash):
++                with self.start_client(self.server_address) as client:
++                    with self.assertRaises(InvokeError) as context:
++                        client.report_unihash(taskhash, self.METHOD, outhash, unihash)
++
++                self.assertEqual(str(context.exception), "Invalid unihash")
++
++        self.assertClientGetHash(self.client, taskhash, None)
++
++    def test_equivreport_rejects_invalid_unihash(self):
++        taskhash = 'ae6339531895ddf5b67e663e6a374ad8ec71d81c'
++
++        with self.assertRaises(InvokeError) as context:
++            self.client.report_unihash_equiv(taskhash, self.METHOD, "${@os.system('true')}")
++
++        self.assertEqual(str(context.exception), "Invalid unihash")
++        self.assertClientGetHash(self.start_client(self.server_address), taskhash, None)
++
+     def test_stress(self):
+         def query_server(failures):
+             client = Client(self.server_address)
 
