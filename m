@@ -2,350 +2,274 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 778E6CD8C8E
-	for <webhook@archiver.kernel.org>; Sat,  6 Jun 2026 21:12:46 +0000 (UTC)
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.23181.1780780360714646129
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8739ACD8C88
+	for <webhook@archiver.kernel.org>; Sat,  6 Jun 2026 21:20:06 +0000 (UTC)
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.23176.1780780804354673243
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 06 Jun 2026 14:12:41 -0700
+ Sat, 06 Jun 2026 14:20:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=2MEWjrP/;
- spf=pass (domain: smile.fr, ip: 209.85.128.50, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-490ac357c55so35998415e9.1
-        for <bitbake-devel@lists.openembedded.org>; Sat, 06 Jun 2026 14:12:40 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=mtsl5/pL;
+ spf=pass (domain: smile.fr, ip: 209.85.128.48, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-490af320e2aso34501265e9.2
+        for <bitbake-devel@lists.openembedded.org>; Sat, 06 Jun 2026 14:20:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1780780359; x=1781385159; darn=lists.openembedded.org;
+        d=smile.fr; s=google; t=1780780803; x=1781385603; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yYZ7AuE5PgfVSRKP6ha4prXK+ktOjhiSwi1C0yWN6uk=;
-        b=2MEWjrP/8NJJQiQpd8uz7YezbcT9nhXzs6B+p0d+bhhoR3kHij2xTNBTIPNgXp0QZM
-         o3GWx+37wjTiiXOOx6Lb7Fb3Mu/tX8lrz0MsltnB2xWXe8bOQesepGqdyQ+Ic5gsZ2vL
-         uJ77k/fyWJv7TxjSOvsxI+BzHzx4EQbSpjpIo=
+        bh=nL6rTahIveE4PvuaZzyfh6+r7oH81+klNujgEqgGhQ8=;
+        b=mtsl5/pLI2YLuPjvkLvf8Q0zMLrK5w3EhkovFApNHNAiqh81C6yzYz90b9ViXlF9Dm
+         JLr0Wbcuaj8FP+FZ2RduF7CL0s3VuVfCUVR3oXkB9cYoIVPFdO2VHrG1CxM4tpgYJ8NM
+         Jlk8qR8toSaO+TUbcCI7NR+YRMMAhK580060o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780780359; x=1781385159;
+        d=1e100.net; s=20251104; t=1780780803; x=1781385603;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=yYZ7AuE5PgfVSRKP6ha4prXK+ktOjhiSwi1C0yWN6uk=;
-        b=L+rHlVjQ8cELik1+CdM2wVX4397XtihlyljF7Y1y6nUFBwWJXkkJr/ZaOQsZOInt5o
-         Q04EKtNfA0mMVRZ6m025fVdbDB7R2BJBm+YzL7+AUjcmjuTm+IImFW9jtkQtVVyE1Hl7
-         B1doIUL6AvVignkbX4/vEak+KpkQm1txTJnL2U07L4FD493kyBBCcUbk2ADbvD7V6Aj/
-         K4rwXgL9uUS4ybkR9Vx+5tNH1dGKvO4jC7EnE2BbfcuDeWMZPKmV2freQ8tdPaoESp6N
-         8hvixlrJUcmxR91lTwwyUZwl3hOyK39Rd0VA8pQU8AfhBFpCLjzkKPh0fy8DeVs0pkyO
-         vlaw==
-X-Gm-Message-State: AOJu0YyF4x/FKBOwWV+H2juCnJe8OEsCJEfgkAXs0k+mHyR/VQVC4sga
-	Rwzy7bexMqSyTQ45xeujtED5nXZ2uSOBipIOyhHpk0TFnV1sbjHY1KMQQz9ZgUJsCpsE29F5ZUS
-	dhL/O
-X-Gm-Gg: Acq92OERHDlVQsnjp5YorQYkT3vVODZMDP3+3k7TZ29W5vmeJKUfBs1iUuHiL6/2o9y
-	JTSqwS8WckwlA11IwLH3WsvfzJhRtJxAhFdpHwRwBCJbtDbvTjREFfFFbqYKCeKnj4EoKhNbyWw
-	kiKmW8EYGaQi1W5phMmwcxWzFSbtYXxTO5DktUbitbWD+borzfcs+G7Ii5Zxkx6916p7v8QG9hY
-	2I2gSKzZmcPa2t1N1kE70yrQG0ekhhSRRb99CqWyKElLLC7D0QznR7II/8Svmq9a6/1mNkkbRoX
-	MHuxJ1dZCu+kL248FID2UwmjlXZBdBZnzyXQN71CFiRi0D4e5Zfj+GzYJjBToqNaTsLsQsYvYOw
-	V/+3LRK9wG44YFT+wRNaV6o4NBgayLE3gp05Lp/DIhnzdAJwdkxxdCDAjtbOpXfUkD8pLrLGvfu
-	NN2u/yNPMj+o7WuzCa4fq78lJyzh3OT1505CySMnHnf1E/0ysYYVc9pL13qI87BT6lfLwiFKTW2
-	mDFbABqmDi3lKzV4TpDqB59aKO8d7IB3TZjkL1dHvyO2D+4
-X-Received: by 2002:a05:600c:1549:b0:490:c7dd:7cc2 with SMTP id 5b1f17b1804b1-490c7dd7defmr65055455e9.24.1780780359024;
-        Sat, 06 Jun 2026 14:12:39 -0700 (PDT)
+        bh=nL6rTahIveE4PvuaZzyfh6+r7oH81+klNujgEqgGhQ8=;
+        b=X9jkpWxX+M5lf5SuSAMpdAiGThZm0sihubwffjWzUiwPzHP0fgMzBa2pooDTDvYRpE
+         wPZTu4JomyNvlq/dkfPyTuIm6wZXt7D1SCR8q7s5DPbYZOlPzngH5qO2tQVFHd2ySIs1
+         lZSwEsa6Uzt4ZduYvytrg+bVqx/kd/f8hyj3MN9MfHRTIFf/7ifm/lVEROpvZYdp4YhZ
+         cbMubzLHAFAKLqKUivhrCSUTHjH7vOEHYQjcUSFMGP3iiJnDbIaeLJHy2/oIBwQIBhEf
+         c7vsx2HVlPc+Px2E++hTmq7IgcV+58sFdJ3hqwEXQGoxYB8F0lY+T6Sun8AG2wu07KI0
+         52Bg==
+X-Gm-Message-State: AOJu0Yw3eqe3bqQ+Cgj8SYR/l74kIX8BrihDyihPu1DhL5iWvhPVGnh8
+	ptGgCcNb+exnko2JmLf3O1UU4Bg0db32IYUnfxk4A21dqc7p9hlTdQ52+nJJRseNKo+7ujSbSNf
+	j8Vpd
+X-Gm-Gg: Acq92OFVly0Bdesq19J1oY1kJB1Muos8PwPJZ1pz42eAQGGWpMs9dnklnrofnAD/MgV
+	WMOhNFCUM6stLDhrmC88ggPihq1POB/Uqalw6h7YptyitZf3rifyDbazsNOACVtIhoeqtB5aDc9
+	VJ0/UKDZnhjJFsq1kd193Uu8MqsPRT5ieUw+edXFVk7F1h7wDDolB1sUJAWYqTmVU8NYnuodq/8
+	cl6XMp08xWoc+1ocaJ1l91dkMtTqWCQVxjv5VsdQIMDaOypasc0oxu2NrQB1XcIQY6BduoTOHQD
+	DBbMCgyMC66zjFQREu7Rm6wYiNVtFhgc4qLx/aWOB47n2DdIDipkjNl83tVyImV02eQXs9CAJhE
+	DlDu0ndX3CbdSIKNGt1N+MqWSMBqlGcONu0x7E/ATaJD9snz6lc8LPWENYU2cYF6HvWgbdup0Vy
+	kvP3+dWDU6iW3F0OYnbShWGoje0nQzl4aHQRlKjoGyhpKXbSzRAY6fODrib+6slGiI9opt5P1vs
+	oqz7eM35CnupRGSUvG7141wKsA+whVR6TKw/pykl6V+7nWf
+X-Received: by 2002:a05:600c:1549:b0:490:c7dd:7cc2 with SMTP id 5b1f17b1804b1-490c7dd7defmr65259455e9.24.1780780802684;
+        Sat, 06 Jun 2026 14:20:02 -0700 (PDT)
 Received: from FRSMI25-LASER.home (2a01cb001331aa000f4f58971dfc8e81.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:f4f:5897:1dfc:8e81])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490c2d37edbsm169994915e9.2.2026.06.06.14.12.38
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3cc140sm314340625e9.9.2026.06.06.14.20.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jun 2026 14:12:38 -0700 (PDT)
+        Sat, 06 Jun 2026 14:20:02 -0700 (PDT)
 From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
 Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [bitbake][scarthgap][2.8][PATCH 2/2] hashserv: validate unihash values
-Date: Sat,  6 Jun 2026 23:12:13 +0200
-Message-ID: <a4daa14312d659333984aa1ae58ddfe0c96392f1.1780780220.git.yoann.congal@smile.fr>
+Subject: [bitbake][wrynose][2.18][PATCH 3/3] toaster: use https for clones, remove cgit in links in defaults
+Date: Sat,  6 Jun 2026 23:19:39 +0200
+Message-ID: <294074e65f37822a0f31bb11eb968d311b54a66a.1780780690.git.yoann.congal@smile.fr>
 X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1780780220.git.yoann.congal@smile.fr>
-References: <cover.1780780220.git.yoann.congal@smile.fr>
+In-Reply-To: <cover.1780780690.git.yoann.congal@smile.fr>
+References: <cover.1780780690.git.yoann.congal@smile.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 06 Jun 2026 21:12:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19628
+ <bitbake-devel@lists.openembedded.org>; Sat, 06 Jun 2026 21:20:06 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19632
 
-From: Anders Heimer <anders.heimer@est.tech>
+From: David Reyna <mailto:David.Reyna@windriver.com>
 
-Signed-off-by: Anders Heimer <anders.heimer@est.tech>
+The YP and OE repos have moved to "https:" instead of "git:" for cloning. YP has
+removed the "cgit/cgit.cgi" from web URLs for layers. This patch updates the
+fixture files that bootstrap these values for bitbake and the default layers.
+Also, fix Wrynose bitbake version.
+
+Note that Toaster is dependent on these values also fixed in the Layer
+Index (#16240).
+
+[YOCTO #16304]
+
+Signed-off-by: David Reyna <mailto:David.Reyna@windriver.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit f9b817d8017e5d5a1d22b9aa10a3c974bc7fa33d)
+(cherry picked from commit d73feaf8d0cafa35a14e95457918de99c9d5552b)
 Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
 ---
- lib/bb/siggen.py         |  9 +++++++-
- lib/bb/tests/siggen.py   | 48 ++++++++++++++++++++++++++++++++++++++++
- lib/hashserv/__init__.py |  7 ++++++
- lib/hashserv/server.py   | 27 +++++++++++++++++-----
- lib/hashserv/tests.py    | 30 +++++++++++++++++++++++++
- 5 files changed, 115 insertions(+), 6 deletions(-)
+ lib/toaster/orm/fixtures/gen_fixtures.py | 31 +++++++++++-------
+ lib/toaster/orm/fixtures/poky.xml        | 40 ++++++++++++------------
+ 2 files changed, 39 insertions(+), 32 deletions(-)
 
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 65ca0811d..fcf164aec 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -43,6 +43,10 @@ def check_siggen_version(siggen):
-     if siggen.find_siginfo_version < siggen.find_siginfo_minversion:
-         bb.fatal("Siggen from metadata (OE-Core?) is too old, please update it (%s vs %s)" % (siggen.find_siginfo_version, siggen.find_siginfo_minversion))
+diff --git a/lib/toaster/orm/fixtures/gen_fixtures.py b/lib/toaster/orm/fixtures/gen_fixtures.py
+index 9488ce852..bd2c03383 100755
+--- a/lib/toaster/orm/fixtures/gen_fixtures.py
++++ b/lib/toaster/orm/fixtures/gen_fixtures.py
+@@ -35,7 +35,7 @@ verbose = False
+ # [0=Codename, 1=Yocto Project Version, 2=Release Date, 3=Current Version, 4=Support Level, 5=Poky Version, 6=BitBake branch]
+ current_releases = [
+     # Release slot #1
+-    ['Wrynose','6.0','April 2026','6.0 (April 2026)','Long Term Support (until April 2030)','','2.16'],
++    ['Wrynose','6.0','April 2026','6.0 (April 2026)','Long Term Support (until April 2030)','','2.18'],
+     # Release slot #2 'local'
+     ['HEAD','HEAD','','Local Yocto Project','HEAD','','HEAD'],
+     # Release slot #3 'master'
+@@ -81,7 +81,7 @@ prolog_template = '''\
+ bitbakeversion_poky_template = '''\
+   <object model="orm.bitbakeversion" pk="{{bitbake_id}}">
+     <field type="CharField" name="name">{{name}}</field>
+-    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
++    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
+     <field type="CharField" name="branch">{{branch}}</field>
+     <field type="CharField" name="dirpath"></field>
+   </object>
+@@ -89,7 +89,7 @@ bitbakeversion_poky_template = '''\
+ bitbakeversion_oecore_template = '''\
+   <object model="orm.bitbakeversion" pk="{{bitbake_id}}">
+     <field type="CharField" name="name">{{name}}</field>
+-    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
++    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
+     <field type="CharField" name="branch">{{bitbakeversion}}</field>
+   </object>
+ '''
+@@ -247,7 +247,7 @@ def generate_poky():
+             params['description'] = 'Local Yocto Project'
+             params['name'] = 'local'
+         else:
+-            params['help_source'] = 'using the tip of the &lt;a href="https://git.yoctoproject.org/cgit/cgit.cgi/poky/log/{{h_release}}"&gt;Yocto Project {{Release}} branch&lt;/a&gt;'
++            params['help_source'] = 'using the tip of the &lt;a href="https://git.yoctoproject.org/meta-yocto/log/{{h_release}}"&gt;Yocto Project {{Release}} branch&lt;/a&gt;'
+             params['description'] = 'Yocto Project {{release_version}} "{{Release}}"'
+         if 'master' == params['release']:
+             params['h_release'] = ''
+@@ -280,10 +280,17 @@ def generate_poky():
+         params = {}
+         params['layer'] = layer
+         params['layer_id'] = str(i+1)
+-        params['vcs_url'] = 'git://git.yoctoproject.org/poky'
+-        params['vcs_web_url'] = 'https://git.yoctoproject.org/cgit/cgit.cgi/poky'
+-        params['vcs_web_tree_base_url'] = 'https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%'
+-        params['vcs_web_file_base_url'] = 'https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%'
++        if 'openembedded-core' == layer:
++            params['vcs_url'] = 'https://git.openembedded.org/openembedded-core'
++            params['vcs_web_url'] = 'https://git.openembedded.org/openembedded-core'
++            params['vcs_web_tree_base_url'] = 'https://git.openembedded.org/openembedded-core/tree/%path%?h=%branch%'
++            params['vcs_web_file_base_url'] = 'https://git.openembedded.org/openembedded-core/tree/%path%?h=%branch%'
++        else:
++            # Yocto Project layers: meta-poky, meta-yocto-bsp
++            params['vcs_url'] = 'https://git.yoctoproject.org/meta-yocto'
++            params['vcs_web_url'] = 'https://git.yoctoproject.org/meta-yocto/tree'
++            params['vcs_web_tree_base_url'] = 'https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%'
++            params['vcs_web_file_base_url'] = 'https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%'
  
-+def check_hashserv_unihash(unihash):
-+    if not hashserv.is_valid_unihash(unihash):
-+        bb.fatal("Hash Equivalence Server returned invalid unihash")
-+
- class SetEncoder(json.JSONEncoder):
-     def default(self, obj):
-         if isinstance(obj, set) or isinstance(obj, frozenset):
-@@ -753,6 +757,7 @@ class SignatureGeneratorUniHashMixIn(object):
-             #    the unique hash.
-             taskhash = self.taskhash[tid]
-             if unihash:
-+                check_hashserv_unihash(unihash)
-                 # A unique hash equal to the taskhash is not very interesting,
-                 # so it is reported it at debug level 2. If they differ, that
-                 # is much more interesting, so it is reported at debug level 1
-@@ -772,7 +777,7 @@ class SignatureGeneratorUniHashMixIn(object):
-         import importlib
- 
-         taskhash = d.getVar('BB_TASKHASH')
--        unihash = d.getVar('BB_UNIHASH')
-+        unihash = d.getVar('BB_UNIHASH', expand=False)
-         report_taskdata = d.getVar('SSTATE_HASHEQUIV_REPORT_TASKDATA') == '1'
-         tempdir = d.getVar('T')
-         mcfn = d.getVar('BB_FILENAME')
-@@ -834,6 +839,7 @@ class SignatureGeneratorUniHashMixIn(object):
-                     data = client.report_unihash(taskhash, method, outhash, unihash, extra_data)
- 
-                 new_unihash = data['unihash']
-+                check_hashserv_unihash(new_unihash)
- 
-                 if new_unihash != unihash:
-                     hashequiv_logger.debug('Task %s unihash changed %s -> %s by server %s' % (taskhash, unihash, new_unihash, self.server))
-@@ -873,6 +879,7 @@ class SignatureGeneratorUniHashMixIn(object):
-                 return False
- 
-             finalunihash = data['unihash']
-+            check_hashserv_unihash(finalunihash)
- 
-             if finalunihash == current_unihash:
-                 hashequiv_logger.verbose('Task %s unihash %s unchanged by server' % (tid, finalunihash))
-diff --git a/lib/bb/tests/siggen.py b/lib/bb/tests/siggen.py
-index 0dc67e6cc..ae5d0f300 100644
---- a/lib/bb/tests/siggen.py
-+++ b/lib/bb/tests/siggen.py
-@@ -9,7 +9,9 @@
- import unittest
- import logging
- import bb
-+import bb.data
- import time
-+from contextlib import contextmanager
- 
- logger = logging.getLogger('BitBake.TestSiggen')
- 
-@@ -26,3 +28,49 @@ class SiggenTest(unittest.TestCase):
-         for t in tests:
-             self.assertEqual(bb.siggen.build_pnid(*t), tests[t])
- 
-+    def test_get_unihashes_rejects_invalid_hashserv_unihash(self):
-+        class TestClient:
-+            def get_unihash_batch(self, query):
-+                list(query)
-+                return ["${@os.system('true')}"]
-+
-+        class TestSiggen(bb.siggen.SignatureGeneratorUniHashMixIn):
-+            def __init__(self):
-+                self.server = "test-server"
-+                self.method = "test-method"
-+                self.extramethod = {}
-+                self.taskhash = {"test.bb:do_compile": "a" * 64}
-+                self.unihash = {}
-+                self.unitaskhashes = {}
-+                self.tidtopn = {}
-+                self.setscenetasks = set()
-+                self.max_parallel = 1
-+
-+            @contextmanager
-+            def client(self):
-+                yield TestClient()
-+
-+        siggen = TestSiggen()
-+
-+        with self.assertRaises(bb.BBHandledException):
-+            siggen.get_unihashes(["test.bb:do_compile"])
-+
-+        self.assertEqual(siggen.unihash, {})
-+        self.assertEqual(siggen.unitaskhashes, {})
-+
-+    def test_report_unihash_reads_bb_unihash_without_expansion(self):
-+        class TestSiggen(bb.siggen.SignatureGeneratorUniHashMixIn):
-+            def __init__(self):
-+                self.setscenetasks = set()
-+                self.taskhash = {"test.bb:do_compile": "b" * 64}
-+
-+        d = bb.data.init()
-+        d.setVar("BB_TASKHASH", "a" * 64)
-+        d.setVar("BB_UNIHASH", "${@d.setVar('EXPANDED_UNIHASH', '1') or 'bad'}")
-+        d.setVar("SSTATE_HASHEQUIV_REPORT_TASKDATA", "0")
-+        d.setVar("T", "/tmp")
-+        d.setVar("BB_FILENAME", "test.bb")
-+
-+        TestSiggen().report_unihash(".", "compile", d)
-+
-+        self.assertIsNone(d.getVar("EXPANDED_UNIHASH"))
-diff --git a/lib/hashserv/__init__.py b/lib/hashserv/__init__.py
-index 74367eb6b..8ed00d532 100644
---- a/lib/hashserv/__init__.py
-+++ b/lib/hashserv/__init__.py
-@@ -7,12 +7,19 @@ import asyncio
- from contextlib import closing
- import itertools
- import json
-+import re
- from collections import namedtuple
- from urllib.parse import urlparse
- from bb.asyncrpc.client import parse_address, ADDR_TYPE_UNIX, ADDR_TYPE_WS
- 
- User = namedtuple("User", ("username", "permissions"))
- 
-+UNIHASH_REGEX = re.compile(r"^[0-9a-f]{64}$")
-+
-+
-+def is_valid_unihash(value):
-+    return isinstance(value, str) and UNIHASH_REGEX.fullmatch(value) is not None
-+
- def create_server(
-     addr,
-     dbname,
-diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
-index 68f64f983..ce7db064c 100644
---- a/lib/hashserv/server.py
-+++ b/lib/hashserv/server.py
-@@ -12,6 +12,7 @@ import os
- import base64
- import hashlib
- from . import create_async_client
-+from . import is_valid_unihash
- import bb.asyncrpc
- 
- logger = logging.getLogger("hashserv.server")
-@@ -172,6 +173,11 @@ def hash_token(algo, salt, token):
-     return ":".join([algo, salt, h.hexdigest()])
- 
- 
-+def validate_unihash(value):
-+    if not is_valid_unihash(value):
-+        raise bb.asyncrpc.InvokeError("Invalid unihash")
-+
-+
- def permissions(*permissions, allow_anon=True, allow_self_service=False):
-     """
-     Function decorator that can be used to decorate an RPC function call and
-@@ -343,7 +349,7 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-                 d = {k: row[k] for k in row.keys()}
-             elif self.upstream_client is not None:
-                 d = await self.upstream_client.get_taskhash(method, taskhash)
--                await self.db.insert_unihash(d["method"], d["taskhash"], d["unihash"])
-+                await self.insert_unihash(d["method"], d["taskhash"], d["unihash"])
- 
-         return d
- 
-@@ -375,9 +381,13 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-         if data is None:
-             return
- 
--        await self.db.insert_unihash(data["method"], data["taskhash"], data["unihash"])
-+        await self.insert_unihash(data["method"], data["taskhash"], data["unihash"])
-         await self.db.insert_outhash(data)
- 
-+    async def insert_unihash(self, method, taskhash, unihash):
-+        validate_unihash(unihash)
-+        return await self.db.insert_unihash(method, taskhash, unihash)
-+
-     async def _stream_handler(self, handler):
-         await self.socket.send_message("ok")
- 
-@@ -465,6 +475,8 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-     # report is made inside the function
-     @permissions(READ_PERM)
-     async def handle_report(self, data):
-+        validate_unihash(data.get("unihash"))
-+
-         if self.server.read_only or not self.user_has_permissions(REPORT_PERM):
-             return await self.report_readonly(data)
- 
-@@ -507,7 +519,7 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-                     if upstream_data is not None:
-                         unihash = upstream_data["unihash"]
- 
--            await self.db.insert_unihash(data["method"], data["taskhash"], unihash)
-+            await self.insert_unihash(data["method"], data["taskhash"], unihash)
- 
-         unihash_data = await self.get_unihash(data["method"], data["taskhash"])
-         if unihash_data is not None:
-@@ -523,7 +535,9 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
- 
-     @permissions(READ_PERM, REPORT_PERM)
-     async def handle_equivreport(self, data):
--        await self.db.insert_unihash(data["method"], data["taskhash"], data["unihash"])
-+        validate_unihash(data.get("unihash"))
-+
-+        await self.insert_unihash(data["method"], data["taskhash"], data["unihash"])
- 
-         # Fetch the unihash that will be reported for the taskhash. If the
-         # unihash matches, it means this row was inserted (or the mapping
-@@ -859,7 +873,10 @@ class Server(bb.asyncrpc.AsyncServer):
-                 method, taskhash = item
-                 d = await client.get_taskhash(method, taskhash)
-                 if d is not None:
--                    await db.insert_unihash(d["method"], d["taskhash"], d["unihash"])
-+                    if is_valid_unihash(d.get("unihash")):
-+                        await db.insert_unihash(d["method"], d["taskhash"], d["unihash"])
-+                    else:
-+                        self.logger.warning("Upstream server returned invalid unihash")
-                 self.backfill_queue.task_done()
- 
-     def start(self):
-diff --git a/lib/hashserv/tests.py b/lib/hashserv/tests.py
-index 5b42b9e11..1c6a57274 100644
---- a/lib/hashserv/tests.py
-+++ b/lib/hashserv/tests.py
-@@ -295,6 +295,36 @@ class HashEquivalenceCommonTests(object):
-         self.assertEqual(result_outhash['outhash'], outhash)
-         self.assertEqual(result_outhash['outhash_siginfo'], siginfo)
- 
-+    def test_report_rejects_invalid_unihash(self):
-+        taskhash = '68a9206490b2321bb033fb3eab013a4ec62c41f9'
-+        outhash = 'bf5f2efaf1ca351f3b4c3d079363540ab48f7c58db3d23cfbb069cf4ff1ea8f7'
-+        invalid_unihashes = (
-+            "${@os.system('true')}",
-+            'a' * 63,
-+            'a' * 65,
-+            'A' * 64,
-+            None,
-+        )
-+
-+        for unihash in invalid_unihashes:
-+            with self.subTest(unihash=unihash):
-+                with self.start_client(self.server_address) as client:
-+                    with self.assertRaises(InvokeError) as context:
-+                        client.report_unihash(taskhash, self.METHOD, outhash, unihash)
-+
-+                self.assertEqual(str(context.exception), "Invalid unihash")
-+
-+        self.assertClientGetHash(self.client, taskhash, None)
-+
-+    def test_equivreport_rejects_invalid_unihash(self):
-+        taskhash = 'ae6339531895ddf5b67e663e6a374ad8ec71d81c'
-+
-+        with self.assertRaises(InvokeError) as context:
-+            self.client.report_unihash_equiv(taskhash, self.METHOD, "${@os.system('true')}")
-+
-+        self.assertEqual(str(context.exception), "Invalid unihash")
-+        self.assertClientGetHash(self.start_client(self.server_address), taskhash, None)
-+
-     def test_stress(self):
-         def query_server(failures):
-             client = Client(self.server_address)
+         if i:
+             print_str('',fd)
+@@ -392,10 +399,10 @@ def generate_oe_core():
+         params = {}
+         params['layer'] = layer
+         params['layer_id'] = str(i+1)
+-        params['vcs_url'] = 'git://git.openembedded.org/openembedded-core'
+-        params['vcs_web_url'] = 'https://cgit.openembedded.org/openembedded-core'
+-        params['vcs_web_tree_base_url'] = 'https://cgit.openembedded.org/openembedded-core/tree/%path%?h=%branch%'
+-        params['vcs_web_file_base_url'] = 'https://cgit.openembedded.org/openembedded-core/tree/%path%?h=%branch%'
++        params['vcs_url'] = 'https://git.openembedded.org/openembedded-core'
++        params['vcs_web_url'] = 'https://git.openembedded.org/openembedded-core'
++        params['vcs_web_tree_base_url'] = 'https://git.openembedded.org/openembedded-core/tree/%path%?h=%branch%'
++        params['vcs_web_file_base_url'] = 'https://git.openembedded.org/openembedded-core/tree/%path%?h=%branch%'
+         if i:
+             print_str('',fd)
+         print_template(layer_oe_core_template,params,fd)
+diff --git a/lib/toaster/orm/fixtures/poky.xml b/lib/toaster/orm/fixtures/poky.xml
+index 3648170bb..cadb48b06 100644
+--- a/lib/toaster/orm/fixtures/poky.xml
++++ b/lib/toaster/orm/fixtures/poky.xml
+@@ -9,25 +9,25 @@
+   <!-- Bitbake versions which correspond to the metadata release -->
+   <object model="orm.bitbakeversion" pk="1">
+     <field type="CharField" name="name">wrynose</field>
+-    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
+-    <field type="CharField" name="branch">2.16</field>
++    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
++    <field type="CharField" name="branch">2.18</field>
+     <field type="CharField" name="dirpath"></field>
+   </object>
+   <object model="orm.bitbakeversion" pk="2">
+     <field type="CharField" name="name">HEAD</field>
+-    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
++    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
+     <field type="CharField" name="branch">HEAD</field>
+     <field type="CharField" name="dirpath"></field>
+   </object>
+   <object model="orm.bitbakeversion" pk="3">
+     <field type="CharField" name="name">master</field>
+-    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
++    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
+     <field type="CharField" name="branch">master</field>
+     <field type="CharField" name="dirpath"></field>
+   </object>
+   <object model="orm.bitbakeversion" pk="4">
+     <field type="CharField" name="name">scarthgap</field>
+-    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
++    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
+     <field type="CharField" name="branch">2.8</field>
+     <field type="CharField" name="dirpath"></field>
+   </object>
+@@ -51,7 +51,7 @@
+     <field type="CharField" name="description">Yocto Project 6.0 "Wrynose"</field>
+     <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">1</field>
+     <field type="CharField" name="branch_name">wrynose</field>
+-    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/cgit/cgit.cgi/poky/log/?h=wrynose"&gt;Yocto Project Wrynose branch&lt;/a&gt;.</field>
++    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/meta-yocto/log/?h=wrynose"&gt;Yocto Project Wrynose branch&lt;/a&gt;.</field>
+   </object>
+   <object model="orm.release" pk="2">
+     <field type="CharField" name="name">local</field>
+@@ -65,14 +65,14 @@
+     <field type="CharField" name="description">Yocto Project master</field>
+     <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">3</field>
+     <field type="CharField" name="branch_name">master</field>
+-    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/cgit/cgit.cgi/poky/log/"&gt;Yocto Project Master branch&lt;/a&gt;.</field>
++    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/meta-yocto/log/"&gt;Yocto Project Master branch&lt;/a&gt;.</field>
+   </object>
+   <object model="orm.release" pk="4">
+     <field type="CharField" name="name">scarthgap</field>
+     <field type="CharField" name="description">Yocto Project 5.0 "Scarthgap"</field>
+     <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
+     <field type="CharField" name="branch_name">scarthgap</field>
+-    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/cgit/cgit.cgi/poky/log/?h=scarthgap"&gt;Yocto Project Scarthgap branch&lt;/a&gt;.</field>
++    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/meta-yocto/log/?h=scarthgap"&gt;Yocto Project Scarthgap branch&lt;/a&gt;.</field>
+   </object>
+   <object model="orm.release" pk="5">
+     <field type="CharField" name="name">kirkstone</field>
+@@ -171,10 +171,10 @@
+   <object model="orm.layer" pk="1">
+     <field type="CharField" name="name">openembedded-core</field>
+     <field type="CharField" name="layer_index_url"></field>
+-    <field type="CharField" name="vcs_url">git://git.yoctoproject.org/poky</field>
+-    <field type="CharField" name="vcs_web_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky</field>
+-    <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
+-    <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
++    <field type="CharField" name="vcs_url">https://git.openembedded.org/openembedded-core</field>
++    <field type="CharField" name="vcs_web_url">https://git.openembedded.org/openembedded-core</field>
++    <field type="CharField" name="vcs_web_tree_base_url">https://git.openembedded.org/openembedded-core/tree/%path%?h=%branch%</field>
++    <field type="CharField" name="vcs_web_file_base_url">https://git.openembedded.org/openembedded-core/tree/%path%?h=%branch%</field>
+   </object>
+   <object model="orm.layer_version" pk="1">
+     <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
+@@ -223,10 +223,10 @@
+   <object model="orm.layer" pk="2">
+     <field type="CharField" name="name">meta-poky</field>
+     <field type="CharField" name="layer_index_url"></field>
+-    <field type="CharField" name="vcs_url">git://git.yoctoproject.org/poky</field>
+-    <field type="CharField" name="vcs_web_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky</field>
+-    <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
+-    <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
++    <field type="CharField" name="vcs_url">https://git.yoctoproject.org/meta-yocto</field>
++    <field type="CharField" name="vcs_web_url">https://git.yoctoproject.org/meta-yocto/tree</field>
++    <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%</field>
++    <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%</field>
+   </object>
+   <object model="orm.layer_version" pk="7">
+     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
+@@ -275,10 +275,10 @@
+   <object model="orm.layer" pk="3">
+     <field type="CharField" name="name">meta-yocto-bsp</field>
+     <field type="CharField" name="layer_index_url"></field>
+-    <field type="CharField" name="vcs_url">git://git.yoctoproject.org/poky</field>
+-    <field type="CharField" name="vcs_web_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky</field>
+-    <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
+-    <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
++    <field type="CharField" name="vcs_url">https://git.yoctoproject.org/meta-yocto</field>
++    <field type="CharField" name="vcs_web_url">https://git.yoctoproject.org/meta-yocto/tree</field>
++    <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%</field>
++    <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%</field>
+   </object>
+   <object model="orm.layer_version" pk="13">
+     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
 
