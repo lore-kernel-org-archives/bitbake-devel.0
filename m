@@ -2,61 +2,61 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8739ACD8C88
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AF1CD8C85
 	for <webhook@archiver.kernel.org>; Sat,  6 Jun 2026 21:20:06 +0000 (UTC)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.23176.1780780804354673243
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.23174.1780780803381087874
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 06 Jun 2026 14:20:04 -0700
+ Sat, 06 Jun 2026 14:20:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=mtsl5/pL;
- spf=pass (domain: smile.fr, ip: 209.85.128.48, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-490af320e2aso34501265e9.2
-        for <bitbake-devel@lists.openembedded.org>; Sat, 06 Jun 2026 14:20:04 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=yPd+ra2z;
+ spf=pass (domain: smile.fr, ip: 209.85.128.51, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-490aebf33e9so16778995e9.3
+        for <bitbake-devel@lists.openembedded.org>; Sat, 06 Jun 2026 14:20:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1780780803; x=1781385603; darn=lists.openembedded.org;
+        d=smile.fr; s=google; t=1780780802; x=1781385602; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nL6rTahIveE4PvuaZzyfh6+r7oH81+klNujgEqgGhQ8=;
-        b=mtsl5/pLI2YLuPjvkLvf8Q0zMLrK5w3EhkovFApNHNAiqh81C6yzYz90b9ViXlF9Dm
-         JLr0Wbcuaj8FP+FZ2RduF7CL0s3VuVfCUVR3oXkB9cYoIVPFdO2VHrG1CxM4tpgYJ8NM
-         Jlk8qR8toSaO+TUbcCI7NR+YRMMAhK580060o=
+        bh=cvDQi7YbCH6y0AL6xHuestWEttdw0jIbjoT1fSuyMDw=;
+        b=yPd+ra2zTU/a5iEgvEEK2VS8/3sRD1bCIJpYzHeLG/AZYlYaHOV/tif0NavV++YwIW
+         8yZoDoE0lsEoQQUUU/Ms6r5ZbPy6uUYnDBzMtT6x/2NtbiEnrIoDOcDYcSkFaF4gXlV3
+         bCmMncakrk1u4k7cxX1H7Py5cuu+IKOb00H2o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780780803; x=1781385603;
+        d=1e100.net; s=20251104; t=1780780802; x=1781385602;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=nL6rTahIveE4PvuaZzyfh6+r7oH81+klNujgEqgGhQ8=;
-        b=X9jkpWxX+M5lf5SuSAMpdAiGThZm0sihubwffjWzUiwPzHP0fgMzBa2pooDTDvYRpE
-         wPZTu4JomyNvlq/dkfPyTuIm6wZXt7D1SCR8q7s5DPbYZOlPzngH5qO2tQVFHd2ySIs1
-         lZSwEsa6Uzt4ZduYvytrg+bVqx/kd/f8hyj3MN9MfHRTIFf/7ifm/lVEROpvZYdp4YhZ
-         cbMubzLHAFAKLqKUivhrCSUTHjH7vOEHYQjcUSFMGP3iiJnDbIaeLJHy2/oIBwQIBhEf
-         c7vsx2HVlPc+Px2E++hTmq7IgcV+58sFdJ3hqwEXQGoxYB8F0lY+T6Sun8AG2wu07KI0
-         52Bg==
-X-Gm-Message-State: AOJu0Yw3eqe3bqQ+Cgj8SYR/l74kIX8BrihDyihPu1DhL5iWvhPVGnh8
-	ptGgCcNb+exnko2JmLf3O1UU4Bg0db32IYUnfxk4A21dqc7p9hlTdQ52+nJJRseNKo+7ujSbSNf
-	j8Vpd
-X-Gm-Gg: Acq92OFVly0Bdesq19J1oY1kJB1Muos8PwPJZ1pz42eAQGGWpMs9dnklnrofnAD/MgV
-	WMOhNFCUM6stLDhrmC88ggPihq1POB/Uqalw6h7YptyitZf3rifyDbazsNOACVtIhoeqtB5aDc9
-	VJ0/UKDZnhjJFsq1kd193Uu8MqsPRT5ieUw+edXFVk7F1h7wDDolB1sUJAWYqTmVU8NYnuodq/8
-	cl6XMp08xWoc+1ocaJ1l91dkMtTqWCQVxjv5VsdQIMDaOypasc0oxu2NrQB1XcIQY6BduoTOHQD
-	DBbMCgyMC66zjFQREu7Rm6wYiNVtFhgc4qLx/aWOB47n2DdIDipkjNl83tVyImV02eQXs9CAJhE
-	DlDu0ndX3CbdSIKNGt1N+MqWSMBqlGcONu0x7E/ATaJD9snz6lc8LPWENYU2cYF6HvWgbdup0Vy
-	kvP3+dWDU6iW3F0OYnbShWGoje0nQzl4aHQRlKjoGyhpKXbSzRAY6fODrib+6slGiI9opt5P1vs
-	oqz7eM35CnupRGSUvG7141wKsA+whVR6TKw/pykl6V+7nWf
-X-Received: by 2002:a05:600c:1549:b0:490:c7dd:7cc2 with SMTP id 5b1f17b1804b1-490c7dd7defmr65259455e9.24.1780780802684;
-        Sat, 06 Jun 2026 14:20:02 -0700 (PDT)
+        bh=cvDQi7YbCH6y0AL6xHuestWEttdw0jIbjoT1fSuyMDw=;
+        b=ohBzZebamCOAEKyYOqVk+ZunblPkvNpoucsw9zP918F9Dqfk7Cv7kJDMXH5iqSHCwT
+         T7UbXnriFxr0BIY2A78OgM1PeTiYjEkBlQ2H1Lq5jv3zdFiYUMV0WVHipaVpZIih2Iv3
+         DuCtCwKLGVFeW7T7mZG5CbEfsu5uupgA8jIu6VcQjGNVcaODvHtgkOsvcR9JNyFWxecL
+         OXr6jz+TobMol7IZ5jQmDLqGkfohoFA9dFZsNYWQcPf92Uwrd5mK79vuUmDAnM8TaKy5
+         nAhw6tu2wa2llQTjA3k+9fdO2vN2pg9JlQtxjoal4ZcJEwtHP6iSCiaprLbZRK6gln4H
+         DfhQ==
+X-Gm-Message-State: AOJu0YwlTrHSikMgCx+Q9YQ2FeelePiE7VVTKD/h7Oix30sFxR70tRz9
+	K/h45l/EVRuEv7vbzsWPkULezq9SOgMuFzWo6C6gYQQmhpFLQ+EPbTrcN+KTMlLp87b9xGeO8gP
+	YMr18
+X-Gm-Gg: Acq92OEMge5cMJmYDpFcsV+209BSKCSttVPGT8SU2h7AwlXzd8NBvAAQYLmfYqX7DQP
+	9gR1YmuAWqZRvZWyB1wcH0dxUYA2h/uNsXTQN8dfr+3ib1oKXk8QrrAOBlAr8L8qiAMN4u6tNoH
+	hbHKKnqhWUgRW4bSvpuVNoJoIS56Am8zPzGxDUFlztlJq7iid0NNu2GtZxe4LXP+aKaXjuaK4kA
+	DKMBOfhaZHA8WCi8m4LJ5V/gZSevQPRCLE5CFRY55TSrktkQDuSajMADcnh/AHWHjV8PKWUCCvk
+	Zwr/YG1Wjmf5WWdvwcHyey/FpHlDRqHG8ijuiZbnfa8eS86sytuBriQq7pVoUcV+GvBlWFVT1qN
+	hVrJjp2RWbMaRHsoV2r0mumrB3oxJn/UQ9YKme2h6aFqLoGJQpSWYRzomTkjQuT4Z+7urzioTkz
+	fdttoSnsUNpeFbxslEsV/4FYfAGiuP1MLbCRZSXMKVJiqeFU+ThVhhrN4dS1HaBYjLpfRVbJg0w
+	Rhlz26I6/Sx/vZa74kzUTByzcmw9f2H1HW1cQ==
+X-Received: by 2002:a05:600c:8705:b0:488:ac01:72de with SMTP id 5b1f17b1804b1-490c25898efmr189313805e9.5.1780780801684;
+        Sat, 06 Jun 2026 14:20:01 -0700 (PDT)
 Received: from FRSMI25-LASER.home (2a01cb001331aa000f4f58971dfc8e81.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:f4f:5897:1dfc:8e81])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3cc140sm314340625e9.9.2026.06.06.14.20.02
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3cc140sm314340625e9.9.2026.06.06.14.20.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jun 2026 14:20:02 -0700 (PDT)
+        Sat, 06 Jun 2026 14:20:01 -0700 (PDT)
 From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
 Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [bitbake][wrynose][2.18][PATCH 3/3] toaster: use https for clones, remove cgit in links in defaults
-Date: Sat,  6 Jun 2026 23:19:39 +0200
-Message-ID: <294074e65f37822a0f31bb11eb968d311b54a66a.1780780690.git.yoann.congal@smile.fr>
+Subject: [bitbake][wrynose][2.18][PATCH 1/3] hashserv/tests: use valid 64-character unihashes
+Date: Sat,  6 Jun 2026 23:19:37 +0200
+Message-ID: <b6070b5c23fbee20e13d710b1b7b403c6fba31f0.1780780690.git.yoann.congal@smile.fr>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <cover.1780780690.git.yoann.congal@smile.fr>
 References: <cover.1780780690.git.yoann.congal@smile.fr>
@@ -66,210 +66,420 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Sat, 06 Jun 2026 21:20:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19632
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19630
 
-From: David Reyna <mailto:David.Reyna@windriver.com>
+From: Anders Heimer <anders.heimer@est.tech>
 
-The YP and OE repos have moved to "https:" instead of "git:" for cloning. YP has
-removed the "cgit/cgit.cgi" from web URLs for layers. This patch updates the
-fixture files that bootstrap these values for bitbake and the default layers.
-Also, fix Wrynose bitbake version.
-
-Note that Toaster is dependent on these values also fixed in the Layer
-Index (#16240).
-
-[YOCTO #16304]
-
-Signed-off-by: David Reyna <mailto:David.Reyna@windriver.com>
+Signed-off-by: Anders Heimer <anders.heimer@est.tech>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit d73feaf8d0cafa35a14e95457918de99c9d5552b)
+(cherry picked from commit 16ef07c851f3438c0e6034b9a2fe2c708b766aa2)
 Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
 ---
- lib/toaster/orm/fixtures/gen_fixtures.py | 31 +++++++++++-------
- lib/toaster/orm/fixtures/poky.xml        | 40 ++++++++++++------------
- 2 files changed, 39 insertions(+), 32 deletions(-)
+ lib/hashserv/tests.py | 163 ++++++++++++++++++++++++++++--------------
+ 1 file changed, 109 insertions(+), 54 deletions(-)
 
-diff --git a/lib/toaster/orm/fixtures/gen_fixtures.py b/lib/toaster/orm/fixtures/gen_fixtures.py
-index 9488ce852..bd2c03383 100755
---- a/lib/toaster/orm/fixtures/gen_fixtures.py
-+++ b/lib/toaster/orm/fixtures/gen_fixtures.py
-@@ -35,7 +35,7 @@ verbose = False
- # [0=Codename, 1=Yocto Project Version, 2=Release Date, 3=Current Version, 4=Support Level, 5=Poky Version, 6=BitBake branch]
- current_releases = [
-     # Release slot #1
--    ['Wrynose','6.0','April 2026','6.0 (April 2026)','Long Term Support (until April 2030)','','2.16'],
-+    ['Wrynose','6.0','April 2026','6.0 (April 2026)','Long Term Support (until April 2030)','','2.18'],
-     # Release slot #2 'local'
-     ['HEAD','HEAD','','Local Yocto Project','HEAD','','HEAD'],
-     # Release slot #3 'master'
-@@ -81,7 +81,7 @@ prolog_template = '''\
- bitbakeversion_poky_template = '''\
-   <object model="orm.bitbakeversion" pk="{{bitbake_id}}">
-     <field type="CharField" name="name">{{name}}</field>
--    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
-+    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
-     <field type="CharField" name="branch">{{branch}}</field>
-     <field type="CharField" name="dirpath"></field>
-   </object>
-@@ -89,7 +89,7 @@ bitbakeversion_poky_template = '''\
- bitbakeversion_oecore_template = '''\
-   <object model="orm.bitbakeversion" pk="{{bitbake_id}}">
-     <field type="CharField" name="name">{{name}}</field>
--    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
-+    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
-     <field type="CharField" name="branch">{{bitbakeversion}}</field>
-   </object>
- '''
-@@ -247,7 +247,7 @@ def generate_poky():
-             params['description'] = 'Local Yocto Project'
-             params['name'] = 'local'
-         else:
--            params['help_source'] = 'using the tip of the &lt;a href="https://git.yoctoproject.org/cgit/cgit.cgi/poky/log/{{h_release}}"&gt;Yocto Project {{Release}} branch&lt;/a&gt;'
-+            params['help_source'] = 'using the tip of the &lt;a href="https://git.yoctoproject.org/meta-yocto/log/{{h_release}}"&gt;Yocto Project {{Release}} branch&lt;/a&gt;'
-             params['description'] = 'Yocto Project {{release_version}} "{{Release}}"'
-         if 'master' == params['release']:
-             params['h_release'] = ''
-@@ -280,10 +280,17 @@ def generate_poky():
-         params = {}
-         params['layer'] = layer
-         params['layer_id'] = str(i+1)
--        params['vcs_url'] = 'git://git.yoctoproject.org/poky'
--        params['vcs_web_url'] = 'https://git.yoctoproject.org/cgit/cgit.cgi/poky'
--        params['vcs_web_tree_base_url'] = 'https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%'
--        params['vcs_web_file_base_url'] = 'https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%'
-+        if 'openembedded-core' == layer:
-+            params['vcs_url'] = 'https://git.openembedded.org/openembedded-core'
-+            params['vcs_web_url'] = 'https://git.openembedded.org/openembedded-core'
-+            params['vcs_web_tree_base_url'] = 'https://git.openembedded.org/openembedded-core/tree/%path%?h=%branch%'
-+            params['vcs_web_file_base_url'] = 'https://git.openembedded.org/openembedded-core/tree/%path%?h=%branch%'
-+        else:
-+            # Yocto Project layers: meta-poky, meta-yocto-bsp
-+            params['vcs_url'] = 'https://git.yoctoproject.org/meta-yocto'
-+            params['vcs_web_url'] = 'https://git.yoctoproject.org/meta-yocto/tree'
-+            params['vcs_web_tree_base_url'] = 'https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%'
-+            params['vcs_web_file_base_url'] = 'https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%'
+diff --git a/lib/hashserv/tests.py b/lib/hashserv/tests.py
+index 124d8aa00..9993fc9f3 100644
+--- a/lib/hashserv/tests.py
++++ b/lib/hashserv/tests.py
+@@ -124,7 +124,7 @@ class HashEquivalenceTestSetup(object):
+         # Simple test that hashes can be created
+         taskhash = '35788efcb8dfb0a02659d81cf2bfd695fb30faf9'
+         outhash = '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f'
+-        unihash = 'f46d3fbb439bd9b921095da657a4de906510d2cd'
++        unihash = 'a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9'
  
-         if i:
-             print_str('',fd)
-@@ -392,10 +399,10 @@ def generate_oe_core():
-         params = {}
-         params['layer'] = layer
-         params['layer_id'] = str(i+1)
--        params['vcs_url'] = 'git://git.openembedded.org/openembedded-core'
--        params['vcs_web_url'] = 'https://cgit.openembedded.org/openembedded-core'
--        params['vcs_web_tree_base_url'] = 'https://cgit.openembedded.org/openembedded-core/tree/%path%?h=%branch%'
--        params['vcs_web_file_base_url'] = 'https://cgit.openembedded.org/openembedded-core/tree/%path%?h=%branch%'
-+        params['vcs_url'] = 'https://git.openembedded.org/openembedded-core'
-+        params['vcs_web_url'] = 'https://git.openembedded.org/openembedded-core'
-+        params['vcs_web_tree_base_url'] = 'https://git.openembedded.org/openembedded-core/tree/%path%?h=%branch%'
-+        params['vcs_web_file_base_url'] = 'https://git.openembedded.org/openembedded-core/tree/%path%?h=%branch%'
-         if i:
-             print_str('',fd)
-         print_template(layer_oe_core_template,params,fd)
-diff --git a/lib/toaster/orm/fixtures/poky.xml b/lib/toaster/orm/fixtures/poky.xml
-index 3648170bb..cadb48b06 100644
---- a/lib/toaster/orm/fixtures/poky.xml
-+++ b/lib/toaster/orm/fixtures/poky.xml
-@@ -9,25 +9,25 @@
-   <!-- Bitbake versions which correspond to the metadata release -->
-   <object model="orm.bitbakeversion" pk="1">
-     <field type="CharField" name="name">wrynose</field>
--    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
--    <field type="CharField" name="branch">2.16</field>
-+    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
-+    <field type="CharField" name="branch">2.18</field>
-     <field type="CharField" name="dirpath"></field>
-   </object>
-   <object model="orm.bitbakeversion" pk="2">
-     <field type="CharField" name="name">HEAD</field>
--    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
-+    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
-     <field type="CharField" name="branch">HEAD</field>
-     <field type="CharField" name="dirpath"></field>
-   </object>
-   <object model="orm.bitbakeversion" pk="3">
-     <field type="CharField" name="name">master</field>
--    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
-+    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
-     <field type="CharField" name="branch">master</field>
-     <field type="CharField" name="dirpath"></field>
-   </object>
-   <object model="orm.bitbakeversion" pk="4">
-     <field type="CharField" name="name">scarthgap</field>
--    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
-+    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
-     <field type="CharField" name="branch">2.8</field>
-     <field type="CharField" name="dirpath"></field>
-   </object>
-@@ -51,7 +51,7 @@
-     <field type="CharField" name="description">Yocto Project 6.0 "Wrynose"</field>
-     <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">1</field>
-     <field type="CharField" name="branch_name">wrynose</field>
--    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/cgit/cgit.cgi/poky/log/?h=wrynose"&gt;Yocto Project Wrynose branch&lt;/a&gt;.</field>
-+    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/meta-yocto/log/?h=wrynose"&gt;Yocto Project Wrynose branch&lt;/a&gt;.</field>
-   </object>
-   <object model="orm.release" pk="2">
-     <field type="CharField" name="name">local</field>
-@@ -65,14 +65,14 @@
-     <field type="CharField" name="description">Yocto Project master</field>
-     <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">3</field>
-     <field type="CharField" name="branch_name">master</field>
--    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/cgit/cgit.cgi/poky/log/"&gt;Yocto Project Master branch&lt;/a&gt;.</field>
-+    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/meta-yocto/log/"&gt;Yocto Project Master branch&lt;/a&gt;.</field>
-   </object>
-   <object model="orm.release" pk="4">
-     <field type="CharField" name="name">scarthgap</field>
-     <field type="CharField" name="description">Yocto Project 5.0 "Scarthgap"</field>
-     <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
-     <field type="CharField" name="branch_name">scarthgap</field>
--    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/cgit/cgit.cgi/poky/log/?h=scarthgap"&gt;Yocto Project Scarthgap branch&lt;/a&gt;.</field>
-+    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/meta-yocto/log/?h=scarthgap"&gt;Yocto Project Scarthgap branch&lt;/a&gt;.</field>
-   </object>
-   <object model="orm.release" pk="5">
-     <field type="CharField" name="name">kirkstone</field>
-@@ -171,10 +171,10 @@
-   <object model="orm.layer" pk="1">
-     <field type="CharField" name="name">openembedded-core</field>
-     <field type="CharField" name="layer_index_url"></field>
--    <field type="CharField" name="vcs_url">git://git.yoctoproject.org/poky</field>
--    <field type="CharField" name="vcs_web_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky</field>
--    <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
--    <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
-+    <field type="CharField" name="vcs_url">https://git.openembedded.org/openembedded-core</field>
-+    <field type="CharField" name="vcs_web_url">https://git.openembedded.org/openembedded-core</field>
-+    <field type="CharField" name="vcs_web_tree_base_url">https://git.openembedded.org/openembedded-core/tree/%path%?h=%branch%</field>
-+    <field type="CharField" name="vcs_web_file_base_url">https://git.openembedded.org/openembedded-core/tree/%path%?h=%branch%</field>
-   </object>
-   <object model="orm.layer_version" pk="1">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
-@@ -223,10 +223,10 @@
-   <object model="orm.layer" pk="2">
-     <field type="CharField" name="name">meta-poky</field>
-     <field type="CharField" name="layer_index_url"></field>
--    <field type="CharField" name="vcs_url">git://git.yoctoproject.org/poky</field>
--    <field type="CharField" name="vcs_web_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky</field>
--    <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
--    <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
-+    <field type="CharField" name="vcs_url">https://git.yoctoproject.org/meta-yocto</field>
-+    <field type="CharField" name="vcs_web_url">https://git.yoctoproject.org/meta-yocto/tree</field>
-+    <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%</field>
-+    <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%</field>
-   </object>
-   <object model="orm.layer_version" pk="7">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-@@ -275,10 +275,10 @@
-   <object model="orm.layer" pk="3">
-     <field type="CharField" name="name">meta-yocto-bsp</field>
-     <field type="CharField" name="layer_index_url"></field>
--    <field type="CharField" name="vcs_url">git://git.yoctoproject.org/poky</field>
--    <field type="CharField" name="vcs_web_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky</field>
--    <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
--    <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/%path%?h=%branch%</field>
-+    <field type="CharField" name="vcs_url">https://git.yoctoproject.org/meta-yocto</field>
-+    <field type="CharField" name="vcs_web_url">https://git.yoctoproject.org/meta-yocto/tree</field>
-+    <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%</field>
-+    <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%</field>
-   </object>
-   <object model="orm.layer_version" pk="13">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
+         self.assertClientGetHash(client, taskhash, None)
+ 
+@@ -178,7 +178,7 @@ class HashEquivalenceCommonTests(object):
+         # assigned the same unihash
+         taskhash = '53b8dce672cb6d0c73170be43f540460bfc347b4'
+         outhash = '5a9cb1649625f0bf41fc7791b635cd9c2d7118c7f021ba87dcd03f72b67ce7a8'
+-        unihash = 'f37918cc02eb5a520b1aff86faacbc0a38124646'
++        unihash = '46edb5140d2613049332d0bf3745d9fafec9c559dac8cc61813739a28007fcdf'
+ 
+         result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
+         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
+@@ -186,7 +186,7 @@ class HashEquivalenceCommonTests(object):
+         # Report a different task with the same outhash. The returned unihash
+         # should match the first task
+         taskhash2 = '3bf6f1e89d26205aec90da04854fbdbf73afe6b4'
+-        unihash2 = 'af36b199320e611fbb16f1f277d3ee1d619ca58b'
++        unihash2 = 'bf6e81926066f770e960f9f777cd088c62bea9addb7745f3e77deaa81a645747'
+         result = self.client.report_unihash(taskhash2, self.METHOD, outhash, unihash2)
+         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
+ 
+@@ -196,19 +196,19 @@ class HashEquivalenceCommonTests(object):
+         # taskhash
+         taskhash = '8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a'
+         outhash = 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e'
+-        unihash = '218e57509998197d570e2c98512d0105985dffc9'
++        unihash = '5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380'
+         self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
+ 
+         self.assertClientGetHash(self.client, taskhash, unihash)
+ 
+         outhash2 = '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d'
+-        unihash2 = 'ae9a7d252735f0dafcdb10e2e02561ca3a47314c'
++        unihash2 = 'a37541b54fd22440e292f617eb30ba07455e88fb0b9f0952eca229b6356290e3'
+         self.client.report_unihash(taskhash, self.METHOD, outhash2, unihash2)
+ 
+         self.assertClientGetHash(self.client, taskhash, unihash)
+ 
+         outhash3 = '77623a549b5b1a31e3732dfa8fe61d7ce5d44b3370f253c5360e136b852967b4'
+-        unihash3 = '9217a7d6398518e5dc002ed58f2cbbbc78696603'
++        unihash3 = '6842f1f2daccd96ddef15c9154d4e41ac8a2300d781ac9a9db7f8afeb8a96808'
+         self.client.report_unihash(taskhash, self.METHOD, outhash3, unihash3)
+ 
+         self.assertClientGetHash(self.client, taskhash, unihash)
+@@ -268,7 +268,7 @@ class HashEquivalenceCommonTests(object):
+         # Simple test that hashes can be created
+         taskhash = 'c665584ee6817aa99edfc77a44dd853828279370'
+         outhash = '3c979c3db45c569f51ab7626a4651074be3a9d11a84b1db076f5b14f7d39db44'
+-        unihash = '90e9bc1d1f094c51824adca7f8ea79a048d68824'
++        unihash = '06f89b8f329ba8124ff73c56d09ef921b42624747c421277bddaf5e23f136e57'
+ 
+         self.assertClientGetHash(self.client, taskhash, None)
+ 
+@@ -361,7 +361,7 @@ class HashEquivalenceCommonTests(object):
+         # Basic report
+         taskhash = '8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a'
+         outhash = 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e'
+-        unihash = '218e57509998197d570e2c98512d0105985dffc9'
++        unihash = '5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380'
+         self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
+ 
+         check_hash(taskhash, unihash, None)
+@@ -369,7 +369,7 @@ class HashEquivalenceCommonTests(object):
+         # Duplicated taskhash with multiple output hashes and unihashes.
+         # All servers should agree with the originally reported hash
+         outhash2 = '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d'
+-        unihash2 = 'ae9a7d252735f0dafcdb10e2e02561ca3a47314c'
++        unihash2 = 'a37541b54fd22440e292f617eb30ba07455e88fb0b9f0952eca229b6356290e3'
+         self.client.report_unihash(taskhash, self.METHOD, outhash2, unihash2)
+ 
+         check_hash(taskhash, unihash, unihash)
+@@ -377,7 +377,7 @@ class HashEquivalenceCommonTests(object):
+         # Report an equivalent task. The sideload will originally report
+         # no unihash until backfilled
+         taskhash3 = "044c2ec8aaf480685a00ff6ff49e6162e6ad34e1"
+-        unihash3 = "def64766090d28f627e816454ed46894bb3aab36"
++        unihash3 = "aca636d800aef40e6ddcea4b2262cc4ea0d1180a6783e5b4653a20c7dd73458d"
+         self.client.report_unihash(taskhash3, self.METHOD, outhash, unihash3)
+ 
+         check_hash(taskhash3, unihash, None)
+@@ -386,7 +386,7 @@ class HashEquivalenceCommonTests(object):
+         # propagating to the upstream server
+         taskhash4 = "e3da00593d6a7fb435c7e2114976c59c5fd6d561"
+         outhash4 = "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a"
+-        unihash4 = "3b5d3d83f07f259e9086fcb422c855286e18a57d"
++        unihash4 = "7aebef07d66a8c0f92d0c4f65ec8b1fbb850a3693c53827b8774b64fa9a8a9fe"
+         down_client.report_unihash(taskhash4, self.METHOD, outhash4, unihash4)
+         down_client.backfill_wait()
+ 
+@@ -398,18 +398,18 @@ class HashEquivalenceCommonTests(object):
+         # match which was previously reported to the upstream server
+         taskhash5 = '35788efcb8dfb0a02659d81cf2bfd695fb30faf9'
+         outhash5 = '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f'
+-        unihash5 = 'f46d3fbb439bd9b921095da657a4de906510d2cd'
++        unihash5 = 'a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9'
+         result = self.client.report_unihash(taskhash5, self.METHOD, outhash5, unihash5)
+ 
+         taskhash6 = '35788efcb8dfb0a02659d81cf2bfd695fb30fafa'
+-        unihash6 = 'f46d3fbb439bd9b921095da657a4de906510d2ce'
++        unihash6 = 'eabc7a98e0c12bbeb8394dbdf055eb81aac60e4a14cca5c1f069d36efc933b23'
+         result = down_client.report_unihash(taskhash6, self.METHOD, outhash5, unihash6)
+         self.assertEqual(result['unihash'], unihash5, 'Server failed to copy unihash from upstream')
+ 
+         # Tests read through from server with
+         taskhash7 = '9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74'
+         outhash7 = '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69'
+-        unihash7 = '05d2a63c81e32f0a36542ca677e8ad852365c538'
++        unihash7 = '7521a98a0c645341bc51559b234ef37a097e8f3a01665e0303a317925ab7b4d5'
+         self.client.report_unihash(taskhash7, self.METHOD, outhash7, unihash7)
+ 
+         result = down_client.get_taskhash(self.METHOD, taskhash7, True)
+@@ -420,7 +420,7 @@ class HashEquivalenceCommonTests(object):
+ 
+         taskhash8 = '86978a4c8c71b9b487330b0152aade10c1ee58aa'
+         outhash8 = 'ca8c128e9d9e4a28ef24d0508aa20b5cf880604eacd8f65c0e366f7e0cc5fbcf'
+-        unihash8 = 'd8bcf25369d40590ad7d08c84d538982f2023e01'
++        unihash8 = '83386d9385b0bf3ba25693127ddcaaadeaa1c4bf8cb0baecfb5314b9a20072a1'
+         self.client.report_unihash(taskhash8, self.METHOD, outhash8, unihash8)
+ 
+         result = down_client.get_outhash(self.METHOD, outhash8, taskhash8)
+@@ -431,7 +431,7 @@ class HashEquivalenceCommonTests(object):
+ 
+         taskhash9 = 'ae6339531895ddf5b67e663e6a374ad8ec71d81c'
+         outhash9 = 'afc78172c81880ae10a1fec994b5b4ee33d196a001a1b66212a15ebe573e00b5'
+-        unihash9 = '6662e699d6e3d894b24408ff9a4031ef9b038ee8'
++        unihash9 = 'cc74784b2c0ad5b378a6b783c74c518d2c46b8b52fba29cb39a8430d742440d7'
+         self.client.report_unihash(taskhash9, self.METHOD, outhash9, unihash9)
+ 
+         result = down_client.get_taskhash(self.METHOD, taskhash9, False)
+@@ -454,7 +454,7 @@ class HashEquivalenceCommonTests(object):
+         # Report a hash via the read-write server
+         taskhash = '35788efcb8dfb0a02659d81cf2bfd695fb30faf9'
+         outhash = '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f'
+-        unihash = 'f46d3fbb439bd9b921095da657a4de906510d2cd'
++        unihash = 'a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9'
+ 
+         result = rw_client.report_unihash(taskhash, self.METHOD, outhash, unihash)
+         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
+@@ -465,7 +465,7 @@ class HashEquivalenceCommonTests(object):
+         # Ensure that reporting via the read-only server fails
+         taskhash2 = 'c665584ee6817aa99edfc77a44dd853828279370'
+         outhash2 = '3c979c3db45c569f51ab7626a4651074be3a9d11a84b1db076f5b14f7d39db44'
+-        unihash2 = '90e9bc1d1f094c51824adca7f8ea79a048d68824'
++        unihash2 = '06f89b8f329ba8124ff73c56d09ef921b42624747c421277bddaf5e23f136e57'
+ 
+         result = ro_client.report_unihash(taskhash2, self.METHOD, outhash2, unihash2)
+         self.assertEqual(result['unihash'], unihash2)
+@@ -554,15 +554,43 @@ class HashEquivalenceCommonTests(object):
+     def test_get_unihash_batch(self):
+         TEST_INPUT = (
+             # taskhash                                   outhash                                                            unihash
+-            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e','218e57509998197d570e2c98512d0105985dffc9'),
++            (
++                '8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a',
++                'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e',
++                '5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380',
++            ),
+             # Duplicated taskhash with multiple output hashes and unihashes.
+-            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', 'ae9a7d252735f0dafcdb10e2e02561ca3a47314c'),
++            (
++                '8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a',
++                '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d',
++                'a37541b54fd22440e292f617eb30ba07455e88fb0b9f0952eca229b6356290e3',
++            ),
+             # Equivalent hash
+-            ("044c2ec8aaf480685a00ff6ff49e6162e6ad34e1", '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', "def64766090d28f627e816454ed46894bb3aab36"),
+-            ("e3da00593d6a7fb435c7e2114976c59c5fd6d561", "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a", "3b5d3d83f07f259e9086fcb422c855286e18a57d"),
+-            ('35788efcb8dfb0a02659d81cf2bfd695fb30faf9', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2cd'),
+-            ('35788efcb8dfb0a02659d81cf2bfd695fb30fafa', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2ce'),
+-            ('9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74', '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69', '05d2a63c81e32f0a36542ca677e8ad852365c538'),
++            (
++                "044c2ec8aaf480685a00ff6ff49e6162e6ad34e1",
++                '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d',
++                "aca636d800aef40e6ddcea4b2262cc4ea0d1180a6783e5b4653a20c7dd73458d",
++            ),
++            (
++                "e3da00593d6a7fb435c7e2114976c59c5fd6d561",
++                "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a",
++                "7aebef07d66a8c0f92d0c4f65ec8b1fbb850a3693c53827b8774b64fa9a8a9fe",
++            ),
++            (
++                '35788efcb8dfb0a02659d81cf2bfd695fb30faf9',
++                '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f',
++                'a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9',
++            ),
++            (
++                '35788efcb8dfb0a02659d81cf2bfd695fb30fafa',
++                '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f',
++                'eabc7a98e0c12bbeb8394dbdf055eb81aac60e4a14cca5c1f069d36efc933b23',
++            ),
++            (
++                '9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74',
++                '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69',
++                '7521a98a0c645341bc51559b234ef37a097e8f3a01665e0303a317925ab7b4d5',
++            ),
+         )
+         EXTRA_QUERIES = (
+             "6b6be7a84ab179b4240c4302518dc3f6",
+@@ -578,28 +606,56 @@ class HashEquivalenceCommonTests(object):
+         )
+ 
+         self.assertListEqual(result, [
+-            "218e57509998197d570e2c98512d0105985dffc9",
+-            "218e57509998197d570e2c98512d0105985dffc9",
+-            "218e57509998197d570e2c98512d0105985dffc9",
+-            "3b5d3d83f07f259e9086fcb422c855286e18a57d",
+-            "f46d3fbb439bd9b921095da657a4de906510d2cd",
+-            "f46d3fbb439bd9b921095da657a4de906510d2cd",
+-            "05d2a63c81e32f0a36542ca677e8ad852365c538",
++            "5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380",
++            "5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380",
++            "5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380",
++            "7aebef07d66a8c0f92d0c4f65ec8b1fbb850a3693c53827b8774b64fa9a8a9fe",
++            "a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9",
++            "a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9",
++            "7521a98a0c645341bc51559b234ef37a097e8f3a01665e0303a317925ab7b4d5",
+             None,
+         ])
+ 
+     def test_unihash_exists_batch(self):
+         TEST_INPUT = (
+             # taskhash                                   outhash                                                            unihash
+-            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', 'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e','218e57509998197d570e2c98512d0105985dffc9'),
++            (
++                '8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a',
++                'afe240a439959ce86f5e322f8c208e1fedefea9e813f2140c81af866cc9edf7e',
++                '5b521d8a12683086cc08bc2c6d94a7a2dcff17eba53b9911e145d51164689380',
++            ),
+             # Duplicated taskhash with multiple output hashes and unihashes.
+-            ('8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a', '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', 'ae9a7d252735f0dafcdb10e2e02561ca3a47314c'),
++            (
++                '8aa96fcffb5831b3c2c0cb75f0431e3f8b20554a',
++                '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d',
++                'a37541b54fd22440e292f617eb30ba07455e88fb0b9f0952eca229b6356290e3',
++            ),
+             # Equivalent hash
+-            ("044c2ec8aaf480685a00ff6ff49e6162e6ad34e1", '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d', "def64766090d28f627e816454ed46894bb3aab36"),
+-            ("e3da00593d6a7fb435c7e2114976c59c5fd6d561", "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a", "3b5d3d83f07f259e9086fcb422c855286e18a57d"),
+-            ('35788efcb8dfb0a02659d81cf2bfd695fb30faf9', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2cd'),
+-            ('35788efcb8dfb0a02659d81cf2bfd695fb30fafa', '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f', 'f46d3fbb439bd9b921095da657a4de906510d2ce'),
+-            ('9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74', '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69', '05d2a63c81e32f0a36542ca677e8ad852365c538'),
++            (
++                "044c2ec8aaf480685a00ff6ff49e6162e6ad34e1",
++                '0904a7fe3dc712d9fd8a74a616ddca2a825a8ee97adf0bd3fc86082c7639914d',
++                "aca636d800aef40e6ddcea4b2262cc4ea0d1180a6783e5b4653a20c7dd73458d",
++            ),
++            (
++                "e3da00593d6a7fb435c7e2114976c59c5fd6d561",
++                "1cf8713e645f491eb9c959d20b5cae1c47133a292626dda9b10709857cbe688a",
++                "7aebef07d66a8c0f92d0c4f65ec8b1fbb850a3693c53827b8774b64fa9a8a9fe",
++            ),
++            (
++                '35788efcb8dfb0a02659d81cf2bfd695fb30faf9',
++                '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f',
++                'a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9',
++            ),
++            (
++                '35788efcb8dfb0a02659d81cf2bfd695fb30fafa',
++                '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f',
++                'eabc7a98e0c12bbeb8394dbdf055eb81aac60e4a14cca5c1f069d36efc933b23',
++            ),
++            (
++                '9d81d76242cc7cfaf7bf74b94b9cd2e29324ed74',
++                '8470d56547eea6236d7c81a644ce74670ca0bbda998e13c629ef6bb3f0d60b69',
++                '7521a98a0c645341bc51559b234ef37a097e8f3a01665e0303a317925ab7b4d5',
++            ),
+         )
+         EXTRA_QUERIES = (
+             "6b6be7a84ab179b4240c4302518dc3f6",
+@@ -939,14 +995,14 @@ class HashEquivalenceCommonTests(object):
+     def test_gc(self):
+         taskhash = '53b8dce672cb6d0c73170be43f540460bfc347b4'
+         outhash = '5a9cb1649625f0bf41fc7791b635cd9c2d7118c7f021ba87dcd03f72b67ce7a8'
+-        unihash = 'f37918cc02eb5a520b1aff86faacbc0a38124646'
++        unihash = '46edb5140d2613049332d0bf3745d9fafec9c559dac8cc61813739a28007fcdf'
+ 
+         result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
+         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
+ 
+         taskhash2 = '3bf6f1e89d26205aec90da04854fbdbf73afe6b4'
+         outhash2 = '77623a549b5b1a31e3732dfa8fe61d7ce5d44b3370f253c5360e136b852967b4'
+-        unihash2 = 'af36b199320e611fbb16f1f277d3ee1d619ca58b'
++        unihash2 = 'bf6e81926066f770e960f9f777cd088c62bea9addb7745f3e77deaa81a645747'
+ 
+         result = self.client.report_unihash(taskhash2, self.METHOD, outhash2, unihash2)
+         self.assertClientGetHash(self.client, taskhash2, unihash2)
+@@ -972,21 +1028,21 @@ class HashEquivalenceCommonTests(object):
+     def test_gc_stream(self):
+         taskhash = '53b8dce672cb6d0c73170be43f540460bfc347b4'
+         outhash = '5a9cb1649625f0bf41fc7791b635cd9c2d7118c7f021ba87dcd03f72b67ce7a8'
+-        unihash = 'f37918cc02eb5a520b1aff86faacbc0a38124646'
++        unihash = '46edb5140d2613049332d0bf3745d9fafec9c559dac8cc61813739a28007fcdf'
+ 
+         result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
+         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
+ 
+         taskhash2 = '3bf6f1e89d26205aec90da04854fbdbf73afe6b4'
+         outhash2 = '77623a549b5b1a31e3732dfa8fe61d7ce5d44b3370f253c5360e136b852967b4'
+-        unihash2 = 'af36b199320e611fbb16f1f277d3ee1d619ca58b'
++        unihash2 = 'bf6e81926066f770e960f9f777cd088c62bea9addb7745f3e77deaa81a645747'
+ 
+         result = self.client.report_unihash(taskhash2, self.METHOD, outhash2, unihash2)
+         self.assertClientGetHash(self.client, taskhash2, unihash2)
+ 
+         taskhash3 = 'a1117c1f5a7c9ab2f5a39cc6fe5e6152169d09c0'
+         outhash3 = '7289c414905303700a1117c1f5a7c9ab2f5a39cc6fe5e6152169d09c04f9a53c'
+-        unihash3 = '905303700a1117c1f5a7c9ab2f5a39cc6fe5e615'
++        unihash3 = 'f5966c8588a69948a89131d3aa63b914c5a63a8cb4820cb1c58694135ba77f0b'
+ 
+         result = self.client.report_unihash(taskhash3, self.METHOD, outhash3, unihash3)
+         self.assertClientGetHash(self.client, taskhash3, unihash3)
+@@ -1014,14 +1070,14 @@ class HashEquivalenceCommonTests(object):
+     def test_gc_switch_mark(self):
+         taskhash = '53b8dce672cb6d0c73170be43f540460bfc347b4'
+         outhash = '5a9cb1649625f0bf41fc7791b635cd9c2d7118c7f021ba87dcd03f72b67ce7a8'
+-        unihash = 'f37918cc02eb5a520b1aff86faacbc0a38124646'
++        unihash = '46edb5140d2613049332d0bf3745d9fafec9c559dac8cc61813739a28007fcdf'
+ 
+         result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
+         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
+ 
+         taskhash2 = '3bf6f1e89d26205aec90da04854fbdbf73afe6b4'
+         outhash2 = '77623a549b5b1a31e3732dfa8fe61d7ce5d44b3370f253c5360e136b852967b4'
+-        unihash2 = 'af36b199320e611fbb16f1f277d3ee1d619ca58b'
++        unihash2 = 'bf6e81926066f770e960f9f777cd088c62bea9addb7745f3e77deaa81a645747'
+ 
+         result = self.client.report_unihash(taskhash2, self.METHOD, outhash2, unihash2)
+         self.assertClientGetHash(self.client, taskhash2, unihash2)
+@@ -1059,14 +1115,14 @@ class HashEquivalenceCommonTests(object):
+     def test_gc_switch_sweep_mark(self):
+         taskhash = '53b8dce672cb6d0c73170be43f540460bfc347b4'
+         outhash = '5a9cb1649625f0bf41fc7791b635cd9c2d7118c7f021ba87dcd03f72b67ce7a8'
+-        unihash = 'f37918cc02eb5a520b1aff86faacbc0a38124646'
++        unihash = '46edb5140d2613049332d0bf3745d9fafec9c559dac8cc61813739a28007fcdf'
+ 
+         result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
+         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
+ 
+         taskhash2 = '3bf6f1e89d26205aec90da04854fbdbf73afe6b4'
+         outhash2 = '77623a549b5b1a31e3732dfa8fe61d7ce5d44b3370f253c5360e136b852967b4'
+-        unihash2 = 'af36b199320e611fbb16f1f277d3ee1d619ca58b'
++        unihash2 = 'bf6e81926066f770e960f9f777cd088c62bea9addb7745f3e77deaa81a645747'
+ 
+         result = self.client.report_unihash(taskhash2, self.METHOD, outhash2, unihash2)
+         self.assertClientGetHash(self.client, taskhash2, unihash2)
+@@ -1089,7 +1145,7 @@ class HashEquivalenceCommonTests(object):
+     def test_gc_new_hashes(self):
+         taskhash = '53b8dce672cb6d0c73170be43f540460bfc347b4'
+         outhash = '5a9cb1649625f0bf41fc7791b635cd9c2d7118c7f021ba87dcd03f72b67ce7a8'
+-        unihash = 'f37918cc02eb5a520b1aff86faacbc0a38124646'
++        unihash = '46edb5140d2613049332d0bf3745d9fafec9c559dac8cc61813739a28007fcdf'
+ 
+         result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
+         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
+@@ -1106,7 +1162,7 @@ class HashEquivalenceCommonTests(object):
+ 
+         taskhash2 = '3bf6f1e89d26205aec90da04854fbdbf73afe6b4'
+         outhash2 = '77623a549b5b1a31e3732dfa8fe61d7ce5d44b3370f253c5360e136b852967b4'
+-        unihash2 = 'af36b199320e611fbb16f1f277d3ee1d619ca58b'
++        unihash2 = 'bf6e81926066f770e960f9f777cd088c62bea9addb7745f3e77deaa81a645747'
+ 
+         result = self.client.report_unihash(taskhash2, self.METHOD, outhash2, unihash2)
+         self.assertClientGetHash(self.client, taskhash2, unihash2)
+@@ -1405,14 +1461,14 @@ class TestHashEquivalenceClient(HashEquivalenceTestSetup, unittest.TestCase):
+     def test_gc(self):
+         taskhash = '53b8dce672cb6d0c73170be43f540460bfc347b4'
+         outhash = '5a9cb1649625f0bf41fc7791b635cd9c2d7118c7f021ba87dcd03f72b67ce7a8'
+-        unihash = 'f37918cc02eb5a520b1aff86faacbc0a38124646'
++        unihash = '46edb5140d2613049332d0bf3745d9fafec9c559dac8cc61813739a28007fcdf'
+ 
+         result = self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
+         self.assertEqual(result['unihash'], unihash, 'Server returned bad unihash')
+ 
+         taskhash2 = '3bf6f1e89d26205aec90da04854fbdbf73afe6b4'
+         outhash2 = '77623a549b5b1a31e3732dfa8fe61d7ce5d44b3370f253c5360e136b852967b4'
+-        unihash2 = 'af36b199320e611fbb16f1f277d3ee1d619ca58b'
++        unihash2 = 'bf6e81926066f770e960f9f777cd088c62bea9addb7745f3e77deaa81a645747'
+ 
+         result = self.client.report_unihash(taskhash2, self.METHOD, outhash2, unihash2)
+         self.assertClientGetHash(self.client, taskhash2, unihash2)
+@@ -1455,7 +1511,7 @@ class TestHashEquivalenceUnixServerLongPath(HashEquivalenceTestSetup, unittest.T
+         # Simple test that hashes can be created
+         taskhash = '35788efcb8dfb0a02659d81cf2bfd695fb30faf9'
+         outhash = '2765d4a5884be49b28601445c2760c5f21e7e5c0ee2b7e3fce98fd7e5970796f'
+-        unihash = 'f46d3fbb439bd9b921095da657a4de906510d2cd'
++        unihash = 'a69ec97f5af2e21e1a1f9cc8896965515d5559425666f734e245a3d40cee33d9'
+ 
+         self.assertClientGetHash(self.client, taskhash, None)
+ 
+@@ -1542,4 +1598,3 @@ class TestHashEquivalenceExternalServer(HashEquivalenceTestSetup, HashEquivalenc
+ 
+     def test_auth_get_all_users(self):
+         self.skipTest("Cannot test all users with external server")
+-
 
