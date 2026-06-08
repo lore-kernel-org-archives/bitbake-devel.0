@@ -1,350 +1,154 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <joerg.sommer@navimatix.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2891FCD8C9A
-	for <webhook@archiver.kernel.org>; Sat,  6 Jun 2026 21:20:07 +0000 (UTC)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.23175.1780780803870615000
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3759CD8C92
+	for <webhook@archiver.kernel.org>; Mon,  8 Jun 2026 14:40:10 +0000 (UTC)
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (DB3PR0202CU003.outbound.protection.outlook.com [52.101.84.92])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.56208.1780929600378540772
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 06 Jun 2026 14:20:04 -0700
+ Mon, 08 Jun 2026 07:40:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=PWiXziLn;
- spf=pass (domain: smile.fr, ip: 209.85.128.41, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-490b64c8311so34586105e9.3
-        for <bitbake-devel@lists.openembedded.org>; Sat, 06 Jun 2026 14:20:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1780780802; x=1781385602; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ovJCRAw45fskTwqYbbyjS4itBvLfVHhv71aVXPtC9GI=;
-        b=PWiXziLnFg3FpoFRh2nhH+gCf9gTnQN8VWwd+L39/hY4urpxKmu9yB3S3tHOjIpt66
-         6LLcEInTC9OGf5Wa4Z/SbtG7v8Ake39wch83COR+8cnTnXqC0goDtfrUcqy4KuU1goLf
-         7qQb841Mi+SE0gfIrpZMP0TZyhXipTYOJ0kJ8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780780802; x=1781385602;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ovJCRAw45fskTwqYbbyjS4itBvLfVHhv71aVXPtC9GI=;
-        b=iSV7gfvmeXQ2CujAAGZ3HPLxtxP0TnQt6/TE9ywTOT4a8nhTxw+pYSKc/KObl0mJGs
-         GUX0XibS5wDSLyKl3Gt5NaiUp4mHMCyCmU2JP4Bl3thjPLEZM1IHfuFt+3RI+rFy9mdM
-         mu7xv6e85l6R1Lv/IHkLU7MP6j5ayliNO0BiTxXzjqiYb0T3gMG3cuULFxKydJa/RSHX
-         z0l7egBLXRpTuSag5TfD+OKc+h9o0cZlu/cNOzWQo+BR/EG8M3Xnr5kGWhuW5ePoc0jc
-         btsbYZ/DfSCSK7fdEZe3QH2kuKQGtxJ1b41nFqJRSd2eRQQ/wuK2UsRy3NGTzLTjmjlc
-         1a0g==
-X-Gm-Message-State: AOJu0YxL0YhoO7ApxDpXzPoE9fiJaPApNDWaGXZYIuDEjg0yL2Qx2yJj
-	zPpWGF2+Mq08X7BQi4fhxofE1LXxf1aoWShD1Dvdgm8xo4Sj6s9In1taiA4ftT4d8v54wrNo2LZ
-	l1DkG
-X-Gm-Gg: Acq92OGtS6o9IewaeRUHLJ0hiYzSKSexeu+b0/pkOJoIT05xRsNMekhNKwkGKC6WlUo
-	BYqNMhDyShbZA/G3m09+Bqo/bjg4o+8tW1QWdpntbSoxrISwAnW6J8oU4zPxupPxNccWuVNAvK0
-	Jgph2Rz+DDTzgKolWcAVX32LtjDnJB+sLMTirNCxoKPn3p6BY8xaMWBqc2/iHiMCk1xaBcyZH+u
-	yGD3VHQopPxemR9g13Vv1eC0Ial09s6+h5k+vADSfxVZHhi6IppDAugneoc3LMMtsqduW0+Fjjd
-	avO+leCp42Wg1ydhlQKh4fQ5dR4wGwhWkRth9MahKI3EGt/UfhrBZRZN7H4FQOm2+cbxFZKUrOQ
-	vdzfGYJXQTqF70/o5x5LNfZRhUDMM7R8qW14rm29ScebQv8YpKjVVy/ME7uxJ8MYoBOp8NDkx19
-	ApNxQHr570+m8s2k4Z213gBjMBCFl2dG3FIRl1vmb8w7i943rYpNObwDidBpYYJg4BG1OCJe8c4
-	iz3oQ+0DboAsjbSPsTYOb8sIXMx5LgXh6iCtg==
-X-Received: by 2002:a05:600c:8183:b0:490:5cd8:d213 with SMTP id 5b1f17b1804b1-490c25c4898mr137377815e9.15.1780780802154;
-        Sat, 06 Jun 2026 14:20:02 -0700 (PDT)
-Received: from FRSMI25-LASER.home (2a01cb001331aa000f4f58971dfc8e81.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:f4f:5897:1dfc:8e81])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3cc140sm314340625e9.9.2026.06.06.14.20.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jun 2026 14:20:01 -0700 (PDT)
-From: Yoann Congal <yoann.congal@smile.fr>
-To: bitbake-devel@lists.openembedded.org
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [bitbake][wrynose][2.18][PATCH 2/3] hashserv: validate unihash values
-Date: Sat,  6 Jun 2026 23:19:38 +0200
-Message-ID: <01195988915a26da5c2fc6b1571279a707d50be9.1780780690.git.yoann.congal@smile.fr>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1780780690.git.yoann.congal@smile.fr>
-References: <cover.1780780690.git.yoann.congal@smile.fr>
+ dkim=fail reason="dkim: body hash did not verify" header.i=@navimatix.de header.s=selector1 header.b=psv50Jkn;
+ spf=pass (domain: navimatix.de, ip: 52.101.84.92, mailfrom: joerg.sommer@navimatix.de)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XG7gKrLeW4OcVFqMUnXGcRJsiRG6+Aov/4nDC9JMR6bOt8XO33+poPjsUwbmiaOXaj641XjkuIZr7wxvbcKfKQ3gp8ye7bKLhg9TQZA/6Qrais2+cW9cjmtF4Ko302PhkQqvR0G7ybIIz8IQkL8UUtkPzX19o7Hla30GHhhWabhIXymIuxfn2sYrTw1J/AoaWPfvv/WpiYF59Uj5kTYkwFZduYqs9JOzeDtSMjWcIMWP2vhhhK16B1GyRrouGLlULa7crW39ncEMVQto29EHHJBjxKYbtSRxyAws72gQJI1xAF0aC9tsda1P8EhKtNISr2rILum02tDGeHR26IwUYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JqQVUVZYktZjBQ/Dw6D7ACgUeDkoMOrYSUIxRrvr+mU=;
+ b=niburyFQ67gCGrnoF+hNEtFfLYkcLp5e1ina0GRiRdwSWdATIZk88wO2/p81eJqW+xumaWyL7Pznybudv3tH7jp9+7DGcB9b30MgttimV+FxUlfAg3uXHVErjZZGboDwpunTRxvpTcgX/KsQdxReXPoS1R7KyFqxBYjCRaq7FJKtfE4iaV3caqJsdCpaPSWz38MlJwVLThR/hiqGFI6mpw+dj2pG3YIgGZHywWC7lp3Hu4K1J69E+DFKGH6HH8Q0xRnDFqljYSEYE2CjKKHoA3r/9pnIefYVvfU1YxMMJeya2t2cXPjayZ8/Sois6JG3nlp9uzIOGNIyUcHSkoIe7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=navimatix.de; dmarc=pass action=none header.from=navimatix.de;
+ dkim=pass header.d=navimatix.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=navimatix.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JqQVUVZYktZjBQ/Dw6D7ACgUeDkoMOrYSUIxRrvr+mU=;
+ b=psv50JknuzhDS6Ojm6qgKV+luDJyA4v1e+eM244b69Fjd83dLue9TfBEBk/bSrp3WTADn00V7AyxwWfbRarnJEgY7QFomuwKpo8hcmS7XmSf0uaHM7MaWXMASkpdqqI7/ZbfYwUSSNdWqsG6PUgKC57FrUq7mTTe8Es1rishqxE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=navimatix.de;
+Received: from GV2PR01MB11835.eurprd01.prod.exchangelabs.com
+ (2603:10a6:150:2cb::8) by DB9PR01MB7868.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:21f::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.12; Mon, 8 Jun 2026
+ 14:39:56 +0000
+Received: from GV2PR01MB11835.eurprd01.prod.exchangelabs.com
+ ([fe80::d5c3:2dea:3d98:25fd]) by
+ GV2PR01MB11835.eurprd01.prod.exchangelabs.com ([fe80::d5c3:2dea:3d98:25fd%3])
+ with mapi id 15.21.0092.011; Mon, 8 Jun 2026 14:39:55 +0000
+Date: Mon, 8 Jun 2026 16:39:54 +0200
+From: =?utf-8?B?SsO2cmc=?= Sommer <joerg.sommer@navimatix.de>
+To: bitbake-devel@lists.openembedded.org, joerg.sommer@navimatix.de
+CC: =?utf-8?B?SsO2cmc=?= Sommer <joerg.sommer@navimatix.de>
+Subject: [PATCH] utils.contains,_any: Fix description of return value
+Message-ID: <63bcd3253c3f7cb372c4e9a85f86473ffa1633f7.1780929593.git.joerg.sommer@navimatix.de>
+X-Mailer: git-send-email 2.53.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: BE1P281CA0143.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:7c::17) To GV2PR01MB11835.eurprd01.prod.exchangelabs.com
+ (2603:10a6:150:2cb::8)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: GV2PR01MB11835:EE_|DB9PR01MB7868:EE_
+X-MS-Office365-Filtering-Correlation-Id: 77d4f8ff-17b9-4e72-8589-08dec56bcef1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|1800799024|366016|376014|18002099003|56012099006;
+X-Microsoft-Antispam-Message-Info: 
+	4RdTgqK4aJWQGo95S/MwWXHC93mYmuf2qjyp8peWV8AYon5o9ZHeUi9JdocEg6/Caei94BQ446DfL/O4soWS9cNXzhozNcxIyX5xZ9emd1kwW3oKW20UKKwaomtSWxZnBTglSvp53pLJwq+FMW10C6mrrUAO/E3S4F7iiZFmPfDKywN0tvN6w7f49RnxZ8epTl0geZaRxO/bIkH8KACubeVWxnwnk7jSLaPELFQAzHYtH8aAOH9TZYLSMtHoDHIdJrXxrsuxljzLn9j3awEe+rFplB4sBTbMtN/Iy4Q1xnbBJ/yhP2hsRRbd1RlXu9isbCXgi0ba7YrTF6W1kmhlW1Ycmx4bQn7pib60qJH2rlQLafBOYzat6k0bqFf00OiA9Qi/cKWXs3xnQY8CfHIorFRpkuXD7GV8PoRXq1yW77XhZupPILfTPINLaTrzpF1Py2YKBq0GdlDvBtt9HX/17rX2FjFRJvE2HJRZFkpv+By+/2L04K8dRaWfvT0xdob17Frm7RxkMfO+izahX+e1BMK8a1WQbtQZyucFvGJkrTx/Dv5tzpGBq39OlbwVhPfHwuOyhmOjdoPSSaP35TAEviJDHI7ZKZtaHVOW3v6TWTiyZT8SToJWMMPTLhChRMq6YDKZr4sOQMO4QnO7hcyZB8/tdqngGFoMNC/WjApt9qYlQU0yhY/F6peAzIDyX0SQ
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR01MB11835.eurprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(18002099003)(56012099006);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?RdNBH5/8nqZzqoNsV+p1hG8O8/ataFM5KfC0gwZQwFvnazxzRE6gJntAE/WK?=
+ =?us-ascii?Q?YrfnC2w5ZzMkAUu/wAeF5kQVVRYQu0njz7u4ky/vknKn3Vx1EKsiop2wAJ3t?=
+ =?us-ascii?Q?d9NAjjjQBoJP/Qy3lcVrh+lrrssGRs545zHYBHE6MO2JonRLhSTxOxj8dsf9?=
+ =?us-ascii?Q?cKmKwwjwBtchM/PDlx9+Zmy4PePdl3kyCgYw95sz59CJVulx3XnmJ8Yhb0/A?=
+ =?us-ascii?Q?A2wQrmthW4ldeqtr3HXlS143PK2Ta8VCmZuEZEM17VIrBhWqI0hc0teH9ozk?=
+ =?us-ascii?Q?iQDseCCrcts2FtKNd9b+yyGZ8fWLKlwXUc4605upY0M4E1aEJS7g1Doj5y8t?=
+ =?us-ascii?Q?F5CGKXYpeeG5I69kHjgRosVB/1elthp/9sFRIj20QxU5DigRd/SObY/JFLbS?=
+ =?us-ascii?Q?c8N2wYYslcS+BO9nKZVyp3jvIQemFjkR5J0WHTSZ1lnUBRX+cb6QJOFayqdt?=
+ =?us-ascii?Q?7/epOzB32r/EFnbWfUpt0nd9rfNwaCEk9+FpjlSxsfadE2U9dB/8IEXEbR/N?=
+ =?us-ascii?Q?4oPLPoWWC4mJInlfJxGxV3aXGosQ66EwYqSYERX/0BZSz8A6lEw/Q6utxxoW?=
+ =?us-ascii?Q?Vcid5BCKer684Ss2N1fRVqneXQh1r7DKroD7T4YIfwooU8dv8EGBTsK0HUxy?=
+ =?us-ascii?Q?BJLPPgkVaYZBVf+RgSlxiWoNFU4vZGBJnMsxFfzUQBA527+b5pSkMjnUsFlN?=
+ =?us-ascii?Q?2PJtd1cjrhg9bClrUjGLjXwzpFgN3d1tSCnDlApTncYfSeITBan6SGhvikUK?=
+ =?us-ascii?Q?hJLLe/ygvjaXzdHmlj6QPQCMDLnpb6C4EOoHgTUrSww5hsr/rfSNLBF2OUH9?=
+ =?us-ascii?Q?fVB9a6jiL+qtLfUgHcDLHFwpABJXmWxeEFVc+taq/0FDr3gR8iwvvzNtzxrm?=
+ =?us-ascii?Q?zG5Jqy3emWxiydpkkxbGNZy5nkwqmo7LlE7ML7C++Ega7wCrp1XUfej2/ChH?=
+ =?us-ascii?Q?HF6ustLWbot16mYLAf8yKvQodIdkPtSti76IurOX+q0sN/ZQnBluytBrrm9G?=
+ =?us-ascii?Q?x5YPlrB2zvLfUEKSLhnwGjvWwmblb7G8VKDr6ywSVNjMcqL3EO2w0gFbQQUG?=
+ =?us-ascii?Q?uqgatboixLq+vEM6eslFRLgrrBCnC/rt0SS76OB1Me7TJrGMaNTt7O9Wb1Ou?=
+ =?us-ascii?Q?6qYmSYHvNpRCUBuRnQk0SGJvwQgvSOt/zUfyJz9HrR4puPwuZQOPxz+2TOKm?=
+ =?us-ascii?Q?qaQh/V8civezuo5XY+2yQ+3ooYqBvRKUPp6Cyf1N4842a74XA5WWRPTOJhFQ?=
+ =?us-ascii?Q?rxYZpBGzgNUREbIb8m55BUQnXSteU5MyCfVA1nAzO1rKy3ZFdb76ofVE+olz?=
+ =?us-ascii?Q?IMfIC0bu98PjIoqJ1NDrL/2NlkNYlre0WpIFsRVzkrJby5T/NfgEcSJW4Hgh?=
+ =?us-ascii?Q?aQ0cFc3mb5oMJ0w/N1r5TosN+JBY9iZ2W1RSMYaxKplIeJUZQweTJjKPoTIV?=
+ =?us-ascii?Q?1DW0eq3vqnpp/gIqhxYJmXUt9ixLIj9B/FprzfeHyne6NfUH4q+epSBrN6DB?=
+ =?us-ascii?Q?58pEGxqoSlpPKKpvRldFCkfXjygCK+PgP0h/BvvUa8bgw7vecKT/FKUH6sd4?=
+ =?us-ascii?Q?qNu0OiplVT8Sd/9B7G5Ds0a8xvuMMj7KnddrOULvoxFSBqlwNYMqCmiPMo1K?=
+ =?us-ascii?Q?xX6ggPVvl2oOEo6s1zf1U6RbMttg7bydV3xrGaHWUTS5M2kfauitg3BVEptC?=
+ =?us-ascii?Q?UAZZ+mjquyo0btxDUiPv3WVUZLFcSFejYGc7w45Qj1ietqYgq30zI3GBtVVn?=
+ =?us-ascii?Q?7K7ZqFSqWqyZ4BIFe7+dIFJhfX2mcJc=3D?=
+X-OriginatorOrg: navimatix.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77d4f8ff-17b9-4e72-8589-08dec56bcef1
+X-MS-Exchange-CrossTenant-AuthSource: GV2PR01MB11835.eurprd01.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2026 14:39:55.8590
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: c87b4f54-b992-4813-8f3f-4a876324197f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: z0l0J4g8kGULM1AbDrAguLQTlMByldQc1+48OS9GdJoQpZ06wgWzvDqw5sriQ7VOqPipGAGWmy8lDzNlYYCt2q/mOXYAi+K3bAM/O+ezHQQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR01MB7868
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 06 Jun 2026 21:20:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19631
+ <bitbake-devel@lists.openembedded.org>; Mon, 08 Jun 2026 14:40:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19633
 
-From: Anders Heimer <anders.heimer@est.tech>
+From: J=F6rg Sommer <joerg.sommer@navimatix.de>
 
-Signed-off-by: Anders Heimer <anders.heimer@est.tech>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit f9b817d8017e5d5a1d22b9aa10a3c974bc7fa33d)
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+Signed-off-by: J=F6rg Sommer <joerg.sommer@navimatix.de>
 ---
- lib/bb/siggen.py         |  9 +++++++-
- lib/bb/tests/siggen.py   | 47 ++++++++++++++++++++++++++++++++++++++++
- lib/hashserv/__init__.py |  7 ++++++
- lib/hashserv/server.py   | 27 ++++++++++++++++++-----
- lib/hashserv/tests.py    | 30 +++++++++++++++++++++++++
- 5 files changed, 114 insertions(+), 6 deletions(-)
+ lib/bb/utils.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 985fa7e4c..3a203676e 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -43,6 +43,10 @@ def check_siggen_version(siggen):
-     if siggen.find_siginfo_version < siggen.find_siginfo_minversion:
-         bb.fatal("Siggen from metadata (OE-Core?) is too old, please update it (%s vs %s)" % (siggen.find_siginfo_version, siggen.find_siginfo_minversion))
- 
-+def check_hashserv_unihash(unihash):
-+    if not hashserv.is_valid_unihash(unihash):
-+        bb.fatal("Hash Equivalence Server returned invalid unihash")
-+
- class SetEncoder(json.JSONEncoder):
-     def default(self, obj):
-         if isinstance(obj, set) or isinstance(obj, frozenset):
-@@ -729,6 +733,7 @@ class SignatureGeneratorUniHashMixIn(object):
- 
-             if unihashes and unihashes[idx]:
-                 unihash = unihashes[idx]
-+                check_hashserv_unihash(unihash)
-                 # A unique hash equal to the taskhash is not very interesting,
-                 # so it is reported it at debug level 2. If they differ, that
-                 # is much more interesting, so it is reported at debug level 1
-@@ -747,7 +752,7 @@ class SignatureGeneratorUniHashMixIn(object):
-         import importlib
- 
-         taskhash = d.getVar('BB_TASKHASH')
--        unihash = d.getVar('BB_UNIHASH')
-+        unihash = d.getVar('BB_UNIHASH', expand=False)
-         report_taskdata = d.getVar('SSTATE_HASHEQUIV_REPORT_TASKDATA') == '1'
-         tempdir = d.getVar('T')
-         mcfn = d.getVar('BB_FILENAME')
-@@ -809,6 +814,7 @@ class SignatureGeneratorUniHashMixIn(object):
-                     data = client.report_unihash(taskhash, method, outhash, unihash, extra_data)
- 
-                 new_unihash = data['unihash']
-+                check_hashserv_unihash(new_unihash)
- 
-                 if new_unihash != unihash:
-                     hashequiv_logger.debug('Task %s unihash changed %s -> %s by server %s' % (taskhash, unihash, new_unihash, self.server))
-@@ -848,6 +854,7 @@ class SignatureGeneratorUniHashMixIn(object):
-                 return False
- 
-             finalunihash = data['unihash']
-+            check_hashserv_unihash(finalunihash)
- 
-             if finalunihash == current_unihash:
-                 hashequiv_logger.verbose('Task %s unihash %s unchanged by server' % (tid, finalunihash))
-diff --git a/lib/bb/tests/siggen.py b/lib/bb/tests/siggen.py
-index 0dc67e6cc..eb07cc920 100644
---- a/lib/bb/tests/siggen.py
-+++ b/lib/bb/tests/siggen.py
-@@ -9,7 +9,9 @@
- import unittest
- import logging
- import bb
-+import bb.data
- import time
-+from contextlib import contextmanager
- 
- logger = logging.getLogger('BitBake.TestSiggen')
- 
-@@ -26,3 +28,48 @@ class SiggenTest(unittest.TestCase):
-         for t in tests:
-             self.assertEqual(bb.siggen.build_pnid(*t), tests[t])
- 
-+    def test_get_unihashes_rejects_invalid_hashserv_unihash(self):
-+        class TestClient:
-+            def get_unihash_batch(self, query):
-+                list(query)
-+                return ["${@os.system('true')}"]
-+
-+        class TestSiggen(bb.siggen.SignatureGeneratorUniHashMixIn):
-+            def __init__(self):
-+                self.server = "test-server"
-+                self.method = "test-method"
-+                self.extramethod = {}
-+                self.taskhash = {"test.bb:do_compile": "a" * 64}
-+                self.unihash = {}
-+                self.unitaskhashes = {}
-+                self.tidtopn = {}
-+                self.setscenetasks = set()
-+
-+            @contextmanager
-+            def client(self):
-+                yield TestClient()
-+
-+        siggen = TestSiggen()
-+
-+        with self.assertRaises(bb.BBHandledException):
-+            siggen.get_unihashes(["test.bb:do_compile"])
-+
-+        self.assertEqual(siggen.unihash, {})
-+        self.assertEqual(siggen.unitaskhashes, {})
-+
-+    def test_report_unihash_reads_bb_unihash_without_expansion(self):
-+        class TestSiggen(bb.siggen.SignatureGeneratorUniHashMixIn):
-+            def __init__(self):
-+                self.setscenetasks = set()
-+                self.taskhash = {"test.bb:do_compile": "b" * 64}
-+
-+        d = bb.data.init()
-+        d.setVar("BB_TASKHASH", "a" * 64)
-+        d.setVar("BB_UNIHASH", "${@d.setVar('EXPANDED_UNIHASH', '1') or 'bad'}")
-+        d.setVar("SSTATE_HASHEQUIV_REPORT_TASKDATA", "0")
-+        d.setVar("T", "/tmp")
-+        d.setVar("BB_FILENAME", "test.bb")
-+
-+        TestSiggen().report_unihash(".", "compile", d)
-+
-+        self.assertIsNone(d.getVar("EXPANDED_UNIHASH"))
-diff --git a/lib/hashserv/__init__.py b/lib/hashserv/__init__.py
-index ac891e017..ba8e0acce 100644
---- a/lib/hashserv/__init__.py
-+++ b/lib/hashserv/__init__.py
-@@ -7,12 +7,19 @@ import asyncio
- from contextlib import closing
- import itertools
- import json
-+import re
- from collections import namedtuple
- from urllib.parse import urlparse
- from bb.asyncrpc.client import parse_address, ADDR_TYPE_UNIX, ADDR_TYPE_WS
- 
- User = namedtuple("User", ("username", "permissions"))
- 
-+UNIHASH_REGEX = re.compile(r"^[0-9a-f]{64}$")
-+
-+
-+def is_valid_unihash(value):
-+    return isinstance(value, str) and UNIHASH_REGEX.fullmatch(value) is not None
-+
- 
- def create_server(
-     addr,
-diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
-index 58f95c7bc..3ff434785 100644
---- a/lib/hashserv/server.py
-+++ b/lib/hashserv/server.py
-@@ -13,6 +13,7 @@ import base64
- import json
- import hashlib
- from . import create_async_client
-+from . import is_valid_unihash
- import bb.asyncrpc
- 
- logger = logging.getLogger("hashserv.server")
-@@ -173,6 +174,11 @@ def hash_token(algo, salt, token):
-     return ":".join([algo, salt, h.hexdigest()])
- 
- 
-+def validate_unihash(value):
-+    if not is_valid_unihash(value):
-+        raise bb.asyncrpc.InvokeError("Invalid unihash")
-+
-+
- def permissions(*permissions, allow_anon=True, allow_self_service=False):
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index f03c950af..181082c95 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -1291,8 +1291,8 @@ def contains(variable, checkvalues, truevalue, falsev=
+alue, d):
+        not a subset of variable.
+     -  ``d``: the data store.
+=20
+-    Returns ``True`` if the variable contains the values specified, ``Fals=
+e``
+-    otherwise.
++    Returns ``truevalue`` if the variable contains the values specified,
++    ``falsevalue`` otherwise.
      """
-     Function decorator that can be used to decorate an RPC function call and
-@@ -345,7 +351,7 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-                 d = {k: row[k] for k in row.keys()}
-             elif self.upstream_client is not None:
-                 d = await self.upstream_client.get_taskhash(method, taskhash)
--                await self.db.insert_unihash(d["method"], d["taskhash"], d["unihash"])
-+                await self.insert_unihash(d["method"], d["taskhash"], d["unihash"])
- 
-         return d
- 
-@@ -377,9 +383,13 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-         if data is None:
-             return
- 
--        await self.db.insert_unihash(data["method"], data["taskhash"], data["unihash"])
-+        await self.insert_unihash(data["method"], data["taskhash"], data["unihash"])
-         await self.db.insert_outhash(data)
- 
-+    async def insert_unihash(self, method, taskhash, unihash):
-+        validate_unihash(unihash)
-+        return await self.db.insert_unihash(method, taskhash, unihash)
-+
-     async def _stream_handler(self, handler):
-         await self.socket.send_message("ok")
- 
-@@ -467,6 +477,8 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-     # report is made inside the function
-     @permissions(READ_PERM)
-     async def handle_report(self, data):
-+        validate_unihash(data.get("unihash"))
-+
-         if self.server.read_only or not self.user_has_permissions(REPORT_PERM):
-             return await self.report_readonly(data)
- 
-@@ -509,7 +521,7 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-                     if upstream_data is not None:
-                         unihash = upstream_data["unihash"]
- 
--            await self.db.insert_unihash(data["method"], data["taskhash"], unihash)
-+            await self.insert_unihash(data["method"], data["taskhash"], unihash)
- 
-         unihash_data = await self.get_unihash(data["method"], data["taskhash"])
-         if unihash_data is not None:
-@@ -525,7 +537,9 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
- 
-     @permissions(READ_PERM, REPORT_PERM)
-     async def handle_equivreport(self, data):
--        await self.db.insert_unihash(data["method"], data["taskhash"], data["unihash"])
-+        validate_unihash(data.get("unihash"))
-+
-+        await self.insert_unihash(data["method"], data["taskhash"], data["unihash"])
- 
-         # Fetch the unihash that will be reported for the taskhash. If the
-         # unihash matches, it means this row was inserted (or the mapping
-@@ -888,7 +902,10 @@ class Server(bb.asyncrpc.AsyncServer):
-                 method, taskhash = item
-                 d = await client.get_taskhash(method, taskhash)
-                 if d is not None:
--                    await db.insert_unihash(d["method"], d["taskhash"], d["unihash"])
-+                    if is_valid_unihash(d.get("unihash")):
-+                        await db.insert_unihash(d["method"], d["taskhash"], d["unihash"])
-+                    else:
-+                        self.logger.warning("Upstream server returned invalid unihash")
-                 self.backfill_queue.task_done()
- 
-     def start(self):
-diff --git a/lib/hashserv/tests.py b/lib/hashserv/tests.py
-index 9993fc9f3..7c736d6cc 100644
---- a/lib/hashserv/tests.py
-+++ b/lib/hashserv/tests.py
-@@ -291,6 +291,36 @@ class HashEquivalenceCommonTests(object):
-         self.assertEqual(result_outhash['outhash'], outhash)
-         self.assertEqual(result_outhash['outhash_siginfo'], siginfo)
- 
-+    def test_report_rejects_invalid_unihash(self):
-+        taskhash = '68a9206490b2321bb033fb3eab013a4ec62c41f9'
-+        outhash = 'bf5f2efaf1ca351f3b4c3d079363540ab48f7c58db3d23cfbb069cf4ff1ea8f7'
-+        invalid_unihashes = (
-+            "${@os.system('true')}",
-+            'a' * 63,
-+            'a' * 65,
-+            'A' * 64,
-+            None,
-+        )
-+
-+        for unihash in invalid_unihashes:
-+            with self.subTest(unihash=unihash):
-+                with self.start_client(self.server_address) as client:
-+                    with self.assertRaises(InvokeError) as context:
-+                        client.report_unihash(taskhash, self.METHOD, outhash, unihash)
-+
-+                self.assertEqual(str(context.exception), "Invalid unihash")
-+
-+        self.assertClientGetHash(self.client, taskhash, None)
-+
-+    def test_equivreport_rejects_invalid_unihash(self):
-+        taskhash = 'ae6339531895ddf5b67e663e6a374ad8ec71d81c'
-+
-+        with self.assertRaises(InvokeError) as context:
-+            self.client.report_unihash_equiv(taskhash, self.METHOD, "${@os.system('true')}")
-+
-+        self.assertEqual(str(context.exception), "Invalid unihash")
-+        self.assertClientGetHash(self.start_client(self.server_address), taskhash, None)
-+
-     def test_stress(self):
-         def query_server(failures):
-             client = Client(self.server_address)
+=20
+     val =3D d.getVar(variable)
+@@ -1321,8 +1321,8 @@ def contains_any(variable, checkvalues, truevalue, fa=
+lsevalue, d):
+        not a subset of variable.
+     -  ``d``: the data store.
+=20
+-    Returns ``True`` if the variable contains any of the values specified,
+-    ``False`` otherwise.
++    Returns ``truevalue`` if the variable contains any of the values speci=
+fied,
++    ``falsevalue`` otherwise.
+     """
+     val =3D d.getVar(variable)
+     if not val:
+--=20
+2.53.0
+
 
