@@ -1,154 +1,195 @@
-Return-Path: <joerg.sommer@navimatix.de>
+Return-Path: <ernestvanhoecke@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3759CD8C92
-	for <webhook@archiver.kernel.org>; Mon,  8 Jun 2026 14:40:10 +0000 (UTC)
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (DB3PR0202CU003.outbound.protection.outlook.com [52.101.84.92])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.56208.1780929600378540772
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2880CD8C92
+	for <webhook@archiver.kernel.org>; Tue,  9 Jun 2026 11:59:24 +0000 (UTC)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.77819.1781006361615253785
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 08 Jun 2026 07:40:01 -0700
+ Tue, 09 Jun 2026 04:59:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@navimatix.de header.s=selector1 header.b=psv50Jkn;
- spf=pass (domain: navimatix.de, ip: 52.101.84.92, mailfrom: joerg.sommer@navimatix.de)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XG7gKrLeW4OcVFqMUnXGcRJsiRG6+Aov/4nDC9JMR6bOt8XO33+poPjsUwbmiaOXaj641XjkuIZr7wxvbcKfKQ3gp8ye7bKLhg9TQZA/6Qrais2+cW9cjmtF4Ko302PhkQqvR0G7ybIIz8IQkL8UUtkPzX19o7Hla30GHhhWabhIXymIuxfn2sYrTw1J/AoaWPfvv/WpiYF59Uj5kTYkwFZduYqs9JOzeDtSMjWcIMWP2vhhhK16B1GyRrouGLlULa7crW39ncEMVQto29EHHJBjxKYbtSRxyAws72gQJI1xAF0aC9tsda1P8EhKtNISr2rILum02tDGeHR26IwUYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JqQVUVZYktZjBQ/Dw6D7ACgUeDkoMOrYSUIxRrvr+mU=;
- b=niburyFQ67gCGrnoF+hNEtFfLYkcLp5e1ina0GRiRdwSWdATIZk88wO2/p81eJqW+xumaWyL7Pznybudv3tH7jp9+7DGcB9b30MgttimV+FxUlfAg3uXHVErjZZGboDwpunTRxvpTcgX/KsQdxReXPoS1R7KyFqxBYjCRaq7FJKtfE4iaV3caqJsdCpaPSWz38MlJwVLThR/hiqGFI6mpw+dj2pG3YIgGZHywWC7lp3Hu4K1J69E+DFKGH6HH8Q0xRnDFqljYSEYE2CjKKHoA3r/9pnIefYVvfU1YxMMJeya2t2cXPjayZ8/Sois6JG3nlp9uzIOGNIyUcHSkoIe7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=navimatix.de; dmarc=pass action=none header.from=navimatix.de;
- dkim=pass header.d=navimatix.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=navimatix.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JqQVUVZYktZjBQ/Dw6D7ACgUeDkoMOrYSUIxRrvr+mU=;
- b=psv50JknuzhDS6Ojm6qgKV+luDJyA4v1e+eM244b69Fjd83dLue9TfBEBk/bSrp3WTADn00V7AyxwWfbRarnJEgY7QFomuwKpo8hcmS7XmSf0uaHM7MaWXMASkpdqqI7/ZbfYwUSSNdWqsG6PUgKC57FrUq7mTTe8Es1rishqxE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=navimatix.de;
-Received: from GV2PR01MB11835.eurprd01.prod.exchangelabs.com
- (2603:10a6:150:2cb::8) by DB9PR01MB7868.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:21f::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.12; Mon, 8 Jun 2026
- 14:39:56 +0000
-Received: from GV2PR01MB11835.eurprd01.prod.exchangelabs.com
- ([fe80::d5c3:2dea:3d98:25fd]) by
- GV2PR01MB11835.eurprd01.prod.exchangelabs.com ([fe80::d5c3:2dea:3d98:25fd%3])
- with mapi id 15.21.0092.011; Mon, 8 Jun 2026 14:39:55 +0000
-Date: Mon, 8 Jun 2026 16:39:54 +0200
-From: =?utf-8?B?SsO2cmc=?= Sommer <joerg.sommer@navimatix.de>
-To: bitbake-devel@lists.openembedded.org, joerg.sommer@navimatix.de
-CC: =?utf-8?B?SsO2cmc=?= Sommer <joerg.sommer@navimatix.de>
-Subject: [PATCH] utils.contains,_any: Fix description of return value
-Message-ID: <63bcd3253c3f7cb372c4e9a85f86473ffa1633f7.1780929593.git.joerg.sommer@navimatix.de>
-X-Mailer: git-send-email 2.53.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: BE1P281CA0143.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:b10:7c::17) To GV2PR01MB11835.eurprd01.prod.exchangelabs.com
- (2603:10a6:150:2cb::8)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=TJ906SGZ;
+ spf=pass (domain: gmail.com, ip: 209.85.128.54, mailfrom: ernestvanhoecke@gmail.com)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-490acbb0f89so36561305e9.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 09 Jun 2026 04:59:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781006360; x=1781611160; darn=lists.openembedded.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sXACDy1usanGLzgexJZ7Qc4+QIVsn9WfNhi9Wd2EdAY=;
+        b=TJ906SGZUmkz3kbNEQtWhnKN3pnEpYr0cRcduyFZSj8irCNqkRkKYUrpEj44VM+yKp
+         oOz0QduAnYcQYr1gqozWQnAgI734VLfUYipssAhVU3EI+F3OOSpMvx6sOWX8A6XdPmgs
+         E0SNedIPIaT2y7ChzQlkK2piuXXmJHksC/qp8kDgOmD3LchBHbKI+j/MkGuxGqRo4n/K
+         0WdtpUqV4vLhKG4pnLyb1kazYu9gylzVUfl4IvKNiS4HPFKKGamO1jUgxz0k09E1L5Jx
+         JJWJ+DJuffN+HuaDiN/bVIiM+mec5QYFU9heBek2TZgspWv1yGvErqlzN9jjxe6B2yvL
+         Na0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781006360; x=1781611160;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sXACDy1usanGLzgexJZ7Qc4+QIVsn9WfNhi9Wd2EdAY=;
+        b=E2txviD3c+Rrc3xO/n4FejNhyS7Aa4h9/NMHq/KydoGn4WrG5SHsjBB9ww5wQabiu8
+         LTeanEMu9r68AHDjBrcRVDjXX/+mx3U5W9SDfwABN6eP/pQxGeDK6C+Zveub+HleeAc5
+         CE2bXZ+5rCgnpGen5la7jys0WX0Bw6Q+Eb7A6/Dm1annjxz8Wcsfmmxt4n/lv+AdpNXF
+         OvPG47xBFzvOmv0KA4t2w6yxyt9Z2YkLvbtyD9nYg+onHIOwMV+1DOFrr/9YWeNvc7UN
+         HhmZDVFOGpZeiHD6ibD+/7c9+22S9pZUhlKBE69OskU+sHmLq0x8W1aPXObDrYWz9u1J
+         toxA==
+X-Gm-Message-State: AOJu0YzO7PomCX8qIVjTUZIlqXboUP8Hg6JeYAZu2NEMjNSk01CS7O0M
+	pJAJI5Kix4mPnTwwpWG9jcEEm73gc/lk7+g+scqFJa/tzPupW+IcFe5eQ4nOKfxd
+X-Gm-Gg: Acq92OEqZnnjaJRmyRvksamjXcAqbsVW8jDIJKriI4nEjKsYHYN8S7g/Z0Fxn5KgcmR
+	f3pCR5Gpbz5yCW54bR7HPEPU3aAyJDYxnLwFvlheT2elYGn/R9b22xdI7YWys9Mcf4NGpp0v/VB
+	jty4OvTvEw+zFQn//fMlvxxUeB3GfEWmCTL9FqiiG4FKCbLjuJ5/yJAZ4S3HH+UOLaDI38V1oiC
+	yg47rKszTrla53iqnC9yryT6zmxRs5XWPiw9/lKvsPrjnsAE+Whj8b00Q8OAmgFzqGKBsju0knr
+	bY6LUw8/N2zG5rJ9ETATFJhnZRG2yHOxjTsPKLam7VFlsXe02mzD2B6Z5NYrA87PqI6mxK+3Q1u
+	VIVEK+5alSlOTZY+LOtb6ftKibfwOL+qedkcRWCYspAR233++u88eouEKn3s2pJf3Y0YD8iPOZT
+	ZDMuytZ6q8vkAeNcwDTsnBs5k3saXcY5AjOdgB6nraBk3SunQUqlrRzwgQYklL2GAUSQYPXErkH
+	2QSPmi859UJKsYGc8VJdjndFPhaB7zIbdfmh/dm1YeKLc/6
+X-Received: by 2002:a05:600c:8b85:b0:490:9d5b:d721 with SMTP id 5b1f17b1804b1-490c25f166fmr330208505e9.16.1781006359592;
+        Tue, 09 Jun 2026 04:59:19 -0700 (PDT)
+Received: from ernest.hoecke-nb (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch. [83.173.201.248])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3cc140sm567509995e9.9.2026.06.09.04.59.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2026 04:59:18 -0700 (PDT)
+From: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
+Date: Tue, 09 Jun 2026 13:59:14 +0200
+Subject: [PATCH v2] bitbake-setup: write notes for generated build configs
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR01MB11835:EE_|DB9PR01MB7868:EE_
-X-MS-Office365-Filtering-Correlation-Id: 77d4f8ff-17b9-4e72-8589-08dec56bcef1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|1800799024|366016|376014|18002099003|56012099006;
-X-Microsoft-Antispam-Message-Info: 
-	4RdTgqK4aJWQGo95S/MwWXHC93mYmuf2qjyp8peWV8AYon5o9ZHeUi9JdocEg6/Caei94BQ446DfL/O4soWS9cNXzhozNcxIyX5xZ9emd1kwW3oKW20UKKwaomtSWxZnBTglSvp53pLJwq+FMW10C6mrrUAO/E3S4F7iiZFmPfDKywN0tvN6w7f49RnxZ8epTl0geZaRxO/bIkH8KACubeVWxnwnk7jSLaPELFQAzHYtH8aAOH9TZYLSMtHoDHIdJrXxrsuxljzLn9j3awEe+rFplB4sBTbMtN/Iy4Q1xnbBJ/yhP2hsRRbd1RlXu9isbCXgi0ba7YrTF6W1kmhlW1Ycmx4bQn7pib60qJH2rlQLafBOYzat6k0bqFf00OiA9Qi/cKWXs3xnQY8CfHIorFRpkuXD7GV8PoRXq1yW77XhZupPILfTPINLaTrzpF1Py2YKBq0GdlDvBtt9HX/17rX2FjFRJvE2HJRZFkpv+By+/2L04K8dRaWfvT0xdob17Frm7RxkMfO+izahX+e1BMK8a1WQbtQZyucFvGJkrTx/Dv5tzpGBq39OlbwVhPfHwuOyhmOjdoPSSaP35TAEviJDHI7ZKZtaHVOW3v6TWTiyZT8SToJWMMPTLhChRMq6YDKZr4sOQMO4QnO7hcyZB8/tdqngGFoMNC/WjApt9qYlQU0yhY/F6peAzIDyX0SQ
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR01MB11835.eurprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(18002099003)(56012099006);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?RdNBH5/8nqZzqoNsV+p1hG8O8/ataFM5KfC0gwZQwFvnazxzRE6gJntAE/WK?=
- =?us-ascii?Q?YrfnC2w5ZzMkAUu/wAeF5kQVVRYQu0njz7u4ky/vknKn3Vx1EKsiop2wAJ3t?=
- =?us-ascii?Q?d9NAjjjQBoJP/Qy3lcVrh+lrrssGRs545zHYBHE6MO2JonRLhSTxOxj8dsf9?=
- =?us-ascii?Q?cKmKwwjwBtchM/PDlx9+Zmy4PePdl3kyCgYw95sz59CJVulx3XnmJ8Yhb0/A?=
- =?us-ascii?Q?A2wQrmthW4ldeqtr3HXlS143PK2Ta8VCmZuEZEM17VIrBhWqI0hc0teH9ozk?=
- =?us-ascii?Q?iQDseCCrcts2FtKNd9b+yyGZ8fWLKlwXUc4605upY0M4E1aEJS7g1Doj5y8t?=
- =?us-ascii?Q?F5CGKXYpeeG5I69kHjgRosVB/1elthp/9sFRIj20QxU5DigRd/SObY/JFLbS?=
- =?us-ascii?Q?c8N2wYYslcS+BO9nKZVyp3jvIQemFjkR5J0WHTSZ1lnUBRX+cb6QJOFayqdt?=
- =?us-ascii?Q?7/epOzB32r/EFnbWfUpt0nd9rfNwaCEk9+FpjlSxsfadE2U9dB/8IEXEbR/N?=
- =?us-ascii?Q?4oPLPoWWC4mJInlfJxGxV3aXGosQ66EwYqSYERX/0BZSz8A6lEw/Q6utxxoW?=
- =?us-ascii?Q?Vcid5BCKer684Ss2N1fRVqneXQh1r7DKroD7T4YIfwooU8dv8EGBTsK0HUxy?=
- =?us-ascii?Q?BJLPPgkVaYZBVf+RgSlxiWoNFU4vZGBJnMsxFfzUQBA527+b5pSkMjnUsFlN?=
- =?us-ascii?Q?2PJtd1cjrhg9bClrUjGLjXwzpFgN3d1tSCnDlApTncYfSeITBan6SGhvikUK?=
- =?us-ascii?Q?hJLLe/ygvjaXzdHmlj6QPQCMDLnpb6C4EOoHgTUrSww5hsr/rfSNLBF2OUH9?=
- =?us-ascii?Q?fVB9a6jiL+qtLfUgHcDLHFwpABJXmWxeEFVc+taq/0FDr3gR8iwvvzNtzxrm?=
- =?us-ascii?Q?zG5Jqy3emWxiydpkkxbGNZy5nkwqmo7LlE7ML7C++Ega7wCrp1XUfej2/ChH?=
- =?us-ascii?Q?HF6ustLWbot16mYLAf8yKvQodIdkPtSti76IurOX+q0sN/ZQnBluytBrrm9G?=
- =?us-ascii?Q?x5YPlrB2zvLfUEKSLhnwGjvWwmblb7G8VKDr6ywSVNjMcqL3EO2w0gFbQQUG?=
- =?us-ascii?Q?uqgatboixLq+vEM6eslFRLgrrBCnC/rt0SS76OB1Me7TJrGMaNTt7O9Wb1Ou?=
- =?us-ascii?Q?6qYmSYHvNpRCUBuRnQk0SGJvwQgvSOt/zUfyJz9HrR4puPwuZQOPxz+2TOKm?=
- =?us-ascii?Q?qaQh/V8civezuo5XY+2yQ+3ooYqBvRKUPp6Cyf1N4842a74XA5WWRPTOJhFQ?=
- =?us-ascii?Q?rxYZpBGzgNUREbIb8m55BUQnXSteU5MyCfVA1nAzO1rKy3ZFdb76ofVE+olz?=
- =?us-ascii?Q?IMfIC0bu98PjIoqJ1NDrL/2NlkNYlre0WpIFsRVzkrJby5T/NfgEcSJW4Hgh?=
- =?us-ascii?Q?aQ0cFc3mb5oMJ0w/N1r5TosN+JBY9iZ2W1RSMYaxKplIeJUZQweTJjKPoTIV?=
- =?us-ascii?Q?1DW0eq3vqnpp/gIqhxYJmXUt9ixLIj9B/FprzfeHyne6NfUH4q+epSBrN6DB?=
- =?us-ascii?Q?58pEGxqoSlpPKKpvRldFCkfXjygCK+PgP0h/BvvUa8bgw7vecKT/FKUH6sd4?=
- =?us-ascii?Q?qNu0OiplVT8Sd/9B7G5Ds0a8xvuMMj7KnddrOULvoxFSBqlwNYMqCmiPMo1K?=
- =?us-ascii?Q?xX6ggPVvl2oOEo6s1zf1U6RbMttg7bydV3xrGaHWUTS5M2kfauitg3BVEptC?=
- =?us-ascii?Q?UAZZ+mjquyo0btxDUiPv3WVUZLFcSFejYGc7w45Qj1ietqYgq30zI3GBtVVn?=
- =?us-ascii?Q?7K7ZqFSqWqyZ4BIFe7+dIFJhfX2mcJc=3D?=
-X-OriginatorOrg: navimatix.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 77d4f8ff-17b9-4e72-8589-08dec56bcef1
-X-MS-Exchange-CrossTenant-AuthSource: GV2PR01MB11835.eurprd01.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2026 14:39:55.8590
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: c87b4f54-b992-4813-8f3f-4a876324197f
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: z0l0J4g8kGULM1AbDrAguLQTlMByldQc1+48OS9GdJoQpZ06wgWzvDqw5sriQ7VOqPipGAGWmy8lDzNlYYCt2q/mOXYAi+K3bAM/O+ezHQQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR01MB7868
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260609-bb-setup-notes-v2-1-a697d76a7ecf@toradex.com>
+X-B4-Tracking: v=1; b=H4sIABEAKGoC/3WMQQ7CIBAAv9Ls2TVAAbUn/2F6oHSxHCwNYFPT8
+ Hexd48zycwOiaKnBF2zQ6TVJx/mCuLUgJ3M/CT0Y2UQTGimxA2HARPl94JzyJSQad22kg9MXq5
+ QoyWS89sxfPSVJ59yiJ/jv/Kf/btaOTI0QnFy3Crj5L2WZqTtbMML+lLKF4C4QWCuAAAA
+To: bitbake-devel@lists.openembedded.org
+Cc: Alexander Kanavin <alex@linutronix.de>, 
+ Antonin Godard <antonin.godard@bootlin.com>, docs@lists.yoctoproject.org, 
+ Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+X-Mailer: b4 0.13.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 08 Jun 2026 14:40:10 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19633
+ <bitbake-devel@lists.openembedded.org>; Tue, 09 Jun 2026 11:59:24 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19634
 
-From: J=F6rg Sommer <joerg.sommer@navimatix.de>
+From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
 
-Signed-off-by: J=F6rg Sommer <joerg.sommer@navimatix.de>
+For bb-layers configurations, bitbake-setup currently writes an empty
+"conf-notes.txt". Configurations using "oe-template" get this file from
+the template.
+
+Add an optional field called "notes" to configurations that populates
+this field when "bb-layers" is used instead of "oe-template".
+
+Signed-off-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
 ---
- lib/bb/utils.py | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Add a "notes" string property that can be used to populate
+"conf-notes.txt" when bb-layers is used instead of oe-template.
+---
+Changes in v2:
+- The "notes" field can now either be an array of strings (lines) or
+  just a string. 
+- Link to v1: https://lore.kernel.org/r/20260529-bb-setup-notes-v1-0-a251ef1c5af4@toradex.com
+---
+ bin/bitbake-setup                                          |  5 ++++-
+ .../bitbake-user-manual-environment-setup.rst              |  6 ++++++
+ lib/bb/tests/setup.py                                      |  9 +++++++++
+ setup-schema/bitbake-setup.schema.json                     | 14 ++++++++++++++
+ 4 files changed, 33 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index f03c950af..181082c95 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -1291,8 +1291,8 @@ def contains(variable, checkvalues, truevalue, falsev=
-alue, d):
-        not a subset of variable.
-     -  ``d``: the data store.
-=20
--    Returns ``True`` if the variable contains the values specified, ``Fals=
-e``
--    otherwise.
-+    Returns ``truevalue`` if the variable contains the values specified,
-+    ``falsevalue`` otherwise.
-     """
-=20
-     val =3D d.getVar(variable)
-@@ -1321,8 +1321,8 @@ def contains_any(variable, checkvalues, truevalue, fa=
-lsevalue, d):
-        not a subset of variable.
-     -  ``d``: the data store.
-=20
--    Returns ``True`` if the variable contains any of the values specified,
--    ``False`` otherwise.
-+    Returns ``truevalue`` if the variable contains any of the values speci=
-fied,
-+    ``falsevalue`` otherwise.
-     """
-     val =3D d.getVar(variable)
-     if not val:
---=20
-2.53.0
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index 69c9882f4c45..fe3b6b0e67d0 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -301,7 +301,10 @@ def setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_c
+             f.write(bitbake_config["description"] + "\n")
+ 
+         with open(os.path.join(build_conf_dir, "conf-notes.txt"), 'w') as f:
+-            f.write("")
++            notes = bitbake_config.get("notes")
++            if isinstance(notes, list):
++                notes = "\n".join(notes)
++            f.write(notes + "\n" if notes else "")
+ 
+     def _make_init_build_env(builddir, oeinitbuildenvdir):
+         builddir = os.path.realpath(builddir)
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+index 1252f22c823a..aa546c30b9c9 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
+@@ -1057,6 +1057,12 @@ They contain the following sections:
+       snippet. This is what is prompted during the
+       :ref:`ref-bbsetup-command-init` command execution.
+ 
++   -  ``notes`` (*optional*): additional information written to
++      ``build/conf/conf-notes.txt`` when ``bitbake-setup`` generates the build
++      configuration from ``bb-layers``. This can be a string, or a list of
++      strings which will be written one per line. For ``oe-template``
++      configurations, this file is provided by the template.
++
+    -  ``configurations``: Configurations can recursively contain as many nested
+       configurations as needed. This will create more choices when running the
+       :ref:`ref-bbsetup-command-init` command.
+diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
+index b30168ed61de..5592e81965d2 100644
+--- a/lib/bb/tests/setup.py
++++ b/lib/bb/tests/setup.py
+@@ -136,6 +136,10 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+             {
+                 "name": "gadget-notemplate",
+                 "description": "Gadget notemplate configuration",
++                "notes": [
++                    "Gadget notemplate notes",
++                    "Second line"
++                ],
+                 "bb-layers": ["layerA","layerB/meta-layer"],
+                 "oe-fragments": ["test-fragment-1"]
+             },
+@@ -249,6 +253,11 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
+         else:
+             with open(os.path.join(bb_conf_path, 'conf-summary.txt')) as f:
+                 self.assertIn(bitbake_config["description"], f.read())
++            with open(os.path.join(bb_conf_path, 'conf-notes.txt')) as f:
++                expected_notes = bitbake_config.get("notes")
++                if isinstance(expected_notes, list):
++                    expected_notes = "\n".join(expected_notes)
++                self.assertEqual(f.read(), expected_notes + "\n" if expected_notes else "")
+             with open(os.path.join(bb_conf_path, 'bblayers.conf')) as f:
+                 bblayers = f.read()
+                 for l in bitbake_config["bb-layers"]:
+diff --git a/setup-schema/bitbake-setup.schema.json b/setup-schema/bitbake-setup.schema.json
+index be8772db1b2d..99f47f73d0a6 100644
+--- a/setup-schema/bitbake-setup.schema.json
++++ b/setup-schema/bitbake-setup.schema.json
+@@ -41,6 +41,20 @@
+                                 "type": "string",
+                                 "description": "Human-readable description of the configuration"
+                             },
++                            "notes": {
++                                "oneOf": [
++                                    {
++                                        "type": "string"
++                                    },
++                                    {
++                                        "type": "array",
++                                        "items": {
++                                            "type": "string"
++                                        }
++                                    }
++                                ],
++                                "description": "Extra notes that populate conf-notes.txt when bb-layers is used"
++                            },
+                             "bb-layers": {
+                                 "type": "array",
+                                 "description": "List of BitBake layer paths to include, relative to the layers download directory",
+
+---
+base-commit: 26978d55eab18278cc6a527072e8015cfbced9de
+change-id: 20260529-bb-setup-notes-0663341b0478
+
+Best regards,
+-- 
+Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
 
 
