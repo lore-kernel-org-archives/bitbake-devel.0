@@ -1,195 +1,105 @@
-Return-Path: <ernestvanhoecke@gmail.com>
+Return-Path: <nate@nexthop.ai>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2880CD8C92
-	for <webhook@archiver.kernel.org>; Tue,  9 Jun 2026 11:59:24 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.77819.1781006361615253785
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF27CD8CA4
+	for <webhook@archiver.kernel.org>; Tue,  9 Jun 2026 13:21:26 +0000 (UTC)
+Received: from mail-dy1-f172.google.com (mail-dy1-f172.google.com [74.125.82.172])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.79703.1781011284911224541
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 09 Jun 2026 04:59:21 -0700
+ Tue, 09 Jun 2026 06:21:25 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=TJ906SGZ;
- spf=pass (domain: gmail.com, ip: 209.85.128.54, mailfrom: ernestvanhoecke@gmail.com)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-490acbb0f89so36561305e9.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 09 Jun 2026 04:59:21 -0700 (PDT)
+ dkim=pass header.i=@nexthop.ai header.s=google header.b=IInD45i9;
+ spf=pass (domain: nexthop.ai, ip: 74.125.82.172, mailfrom: nate@nexthop.ai)
+Received: by mail-dy1-f172.google.com with SMTP id 5a478bee46e88-304df7ff4c2so3823639eec.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 09 Jun 2026 06:21:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781006360; x=1781611160; darn=lists.openembedded.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sXACDy1usanGLzgexJZ7Qc4+QIVsn9WfNhi9Wd2EdAY=;
-        b=TJ906SGZUmkz3kbNEQtWhnKN3pnEpYr0cRcduyFZSj8irCNqkRkKYUrpEj44VM+yKp
-         oOz0QduAnYcQYr1gqozWQnAgI734VLfUYipssAhVU3EI+F3OOSpMvx6sOWX8A6XdPmgs
-         E0SNedIPIaT2y7ChzQlkK2piuXXmJHksC/qp8kDgOmD3LchBHbKI+j/MkGuxGqRo4n/K
-         0WdtpUqV4vLhKG4pnLyb1kazYu9gylzVUfl4IvKNiS4HPFKKGamO1jUgxz0k09E1L5Jx
-         JJWJ+DJuffN+HuaDiN/bVIiM+mec5QYFU9heBek2TZgspWv1yGvErqlzN9jjxe6B2yvL
-         Na0g==
+        d=nexthop.ai; s=google; t=1781011284; x=1781616084; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KSDaUrU4k7l/bdidJGJ1xqK8Zkv18JXsdF7iQo0/trs=;
+        b=IInD45i9XnO29WCPUImyBhC8aCbnayElC+BliLB3knt0hiQJGEUebtolyQp5ODJoKa
+         MtTyC/9k3mdFSin8/2cC8qEMz/kaCg3XTO6j2CZ2t51XUyq/mrGmUaXDzQ+6fDIHwaZk
+         mqLJWZiM7YmKkodRSxFz72dUkvCiATmxQE/aGyM3SZBvMzcOZmInU7V1yhtvIigjiKBx
+         pAXue6+c2ILXVYKBfht4aAaRJvX9R+9ou8y8enqImA30Zi1FiRPrLsGmrmWLmKWoLb48
+         k/30xi8XJ5wNj9Nkb/dFz9j4dqBfdG8ayT007It/fmHkzX0mHIpLQVhsudatuoeSzj5G
+         9Uxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781006360; x=1781611160;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20251104; t=1781011284; x=1781616084;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sXACDy1usanGLzgexJZ7Qc4+QIVsn9WfNhi9Wd2EdAY=;
-        b=E2txviD3c+Rrc3xO/n4FejNhyS7Aa4h9/NMHq/KydoGn4WrG5SHsjBB9ww5wQabiu8
-         LTeanEMu9r68AHDjBrcRVDjXX/+mx3U5W9SDfwABN6eP/pQxGeDK6C+Zveub+HleeAc5
-         CE2bXZ+5rCgnpGen5la7jys0WX0Bw6Q+Eb7A6/Dm1annjxz8Wcsfmmxt4n/lv+AdpNXF
-         OvPG47xBFzvOmv0KA4t2w6yxyt9Z2YkLvbtyD9nYg+onHIOwMV+1DOFrr/9YWeNvc7UN
-         HhmZDVFOGpZeiHD6ibD+/7c9+22S9pZUhlKBE69OskU+sHmLq0x8W1aPXObDrYWz9u1J
-         toxA==
-X-Gm-Message-State: AOJu0YzO7PomCX8qIVjTUZIlqXboUP8Hg6JeYAZu2NEMjNSk01CS7O0M
-	pJAJI5Kix4mPnTwwpWG9jcEEm73gc/lk7+g+scqFJa/tzPupW+IcFe5eQ4nOKfxd
-X-Gm-Gg: Acq92OEqZnnjaJRmyRvksamjXcAqbsVW8jDIJKriI4nEjKsYHYN8S7g/Z0Fxn5KgcmR
-	f3pCR5Gpbz5yCW54bR7HPEPU3aAyJDYxnLwFvlheT2elYGn/R9b22xdI7YWys9Mcf4NGpp0v/VB
-	jty4OvTvEw+zFQn//fMlvxxUeB3GfEWmCTL9FqiiG4FKCbLjuJ5/yJAZ4S3HH+UOLaDI38V1oiC
-	yg47rKszTrla53iqnC9yryT6zmxRs5XWPiw9/lKvsPrjnsAE+Whj8b00Q8OAmgFzqGKBsju0knr
-	bY6LUw8/N2zG5rJ9ETATFJhnZRG2yHOxjTsPKLam7VFlsXe02mzD2B6Z5NYrA87PqI6mxK+3Q1u
-	VIVEK+5alSlOTZY+LOtb6ftKibfwOL+qedkcRWCYspAR233++u88eouEKn3s2pJf3Y0YD8iPOZT
-	ZDMuytZ6q8vkAeNcwDTsnBs5k3saXcY5AjOdgB6nraBk3SunQUqlrRzwgQYklL2GAUSQYPXErkH
-	2QSPmi859UJKsYGc8VJdjndFPhaB7zIbdfmh/dm1YeKLc/6
-X-Received: by 2002:a05:600c:8b85:b0:490:9d5b:d721 with SMTP id 5b1f17b1804b1-490c25f166fmr330208505e9.16.1781006359592;
-        Tue, 09 Jun 2026 04:59:19 -0700 (PDT)
-Received: from ernest.hoecke-nb (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch. [83.173.201.248])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3cc140sm567509995e9.9.2026.06.09.04.59.18
+        bh=KSDaUrU4k7l/bdidJGJ1xqK8Zkv18JXsdF7iQo0/trs=;
+        b=cHhWjJaynBH7Xo1Ed8EBfAYjD5iI7kGSajAANG2NVKCaROCTgiXJS6TfYhKkFXQ6ZB
+         03z1vZLa3VM6wP8t+6mpmH7fHs3WAGVw0zODe7blKq5ZdZAEzReP9hBc1/woTwW5+V1k
+         J77yZ9CuajjyhlOPrjjQeCYjp9Aje1/Fs5wUQPqYJkxsM5F5If6faJY/UAfskKjMjs3E
+         0wujUs/M7dYC+Xz6n51QuxJdYKw/783TuGrqgEH1XFP/r2zyhkygrKvuzylyZ71MAT+P
+         yCf7nRBXlmVXYd943whXKpqhgGUOaLat6yepj22Mv/aWYNBE7ty8h/KhWMfJ37rQBKkP
+         W/XQ==
+X-Gm-Message-State: AOJu0YwGr+qvURWSc6Rj1Z/E12GRwTrRR5H6ufmDnlyfvt5uLwPr1IKy
+	ZqSIQy5hTjTPALg3sHoP0T26kJksoJs+VmnGCmAFZI5Tz3dwZZi0qEBDgWxnWFnQJlCrsbKyRZ/
+	2P6R5c7AdVw==
+X-Gm-Gg: Acq92OG/DgZPAzV9imXIeZK3pyQBJDHM6IPhe0xBoChXiY2f6DWyyeyKnRLUSMccOfQ
+	vQYqnYIsoHB9m/1WX4qkP9ydXUxCbZgAD18EMrT0J3yLgcywvjNuxfjgbAFgjAIOAxDfV/+SfVB
+	TTYwpRNqG92DmJ35GdKpNYkS73Rqtkrw0lCqTesLPizp2tWxhBMZLKmCSoKOpV5VyvGxBPE3BQD
+	vVq1rN3VWegpf6Q0UBe4Agx805NIchiPqWPn+8RB6WLGCvzX81rC6YWCE4SdLbzXyx6w+NeIliE
+	u3m3cTKEIRYjITxpHBbJ/GY3yuBBBogXmdPI9k69AuSj3gpCdfAynpAAsrtlRObjRf1Dow5ZAKD
+	9lMNIt8xiRUpJBrMtgBHV1cILjsPn59OD94LtRDigeAmv5ktTWltWnQyDi7U5i2OfGn5eyQGpLW
+	R1MHDbtlV26CHCYgHdhc+1x2R8KHhHzqEvU7+yBUPaoyi5io7o0jXwrIry8MwmKlGV
+X-Received: by 2002:a05:7301:fd07:b0:2c6:67b6:3acc with SMTP id 5a478bee46e88-3077fff04afmr6431190eec.15.1781011284218;
+        Tue, 09 Jun 2026 06:21:24 -0700 (PDT)
+Received: from nate-dev3.us-west-1.nexthop.ai ([50.145.100.174])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3074db528dcsm25316012eec.3.2026.06.09.06.21.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 04:59:18 -0700 (PDT)
-From: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
-Date: Tue, 09 Jun 2026 13:59:14 +0200
-Subject: [PATCH v2] bitbake-setup: write notes for generated build configs
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260609-bb-setup-notes-v2-1-a697d76a7ecf@toradex.com>
-X-B4-Tracking: v=1; b=H4sIABEAKGoC/3WMQQ7CIBAAv9Ls2TVAAbUn/2F6oHSxHCwNYFPT8
- Hexd48zycwOiaKnBF2zQ6TVJx/mCuLUgJ3M/CT0Y2UQTGimxA2HARPl94JzyJSQad22kg9MXq5
- QoyWS89sxfPSVJ59yiJ/jv/Kf/btaOTI0QnFy3Crj5L2WZqTtbMML+lLKF4C4QWCuAAAA
+        Tue, 09 Jun 2026 06:21:23 -0700 (PDT)
+From: Nate White <nate@nexthop.ai>
 To: bitbake-devel@lists.openembedded.org
-Cc: Alexander Kanavin <alex@linutronix.de>, 
- Antonin Godard <antonin.godard@bootlin.com>, docs@lists.yoctoproject.org, 
- Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
-X-Mailer: b4 0.13.0
+Cc: Nate White <nate@nexthop.ai>
+Subject: [PATCH] fetch/s3: Fix number of format string arguments
+Date: Tue,  9 Jun 2026 13:20:50 +0000
+Message-ID: <20260609132050.519370-1-nate@nexthop.ai>
+X-Mailer: git-send-email 2.51.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 09 Jun 2026 11:59:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19634
+ <bitbake-devel@lists.openembedded.org>; Tue, 09 Jun 2026 13:21:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19635
 
-From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+basecmd was moved out of the format string args but was missed being
+removed from the list of arguments resulting in a runtime error.
 
-For bb-layers configurations, bitbake-setup currently writes an empty
-"conf-notes.txt". Configurations using "oe-template" get this file from
-the template.
+Remove the argument to fix this.
 
-Add an optional field called "notes" to configurations that populates
-this field when "bb-layers" is used instead of "oe-template".
-
-Signed-off-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+Signed-off-by: Nate White <nate@nexthop.ai>
 ---
-Add a "notes" string property that can be used to populate
-"conf-notes.txt" when bb-layers is used instead of oe-template.
----
-Changes in v2:
-- The "notes" field can now either be an array of strings (lines) or
-  just a string. 
-- Link to v1: https://lore.kernel.org/r/20260529-bb-setup-notes-v1-0-a251ef1c5af4@toradex.com
----
- bin/bitbake-setup                                          |  5 ++++-
- .../bitbake-user-manual-environment-setup.rst              |  6 ++++++
- lib/bb/tests/setup.py                                      |  9 +++++++++
- setup-schema/bitbake-setup.schema.json                     | 14 ++++++++++++++
- 4 files changed, 33 insertions(+), 1 deletion(-)
+ lib/bb/fetch2/s3.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index 69c9882f4c45..fe3b6b0e67d0 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -301,7 +301,10 @@ def setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_c
-             f.write(bitbake_config["description"] + "\n")
+diff --git a/lib/bb/fetch2/s3.py b/lib/bb/fetch2/s3.py
+index 059351014..fdd450429 100644
+--- a/lib/bb/fetch2/s3.py
++++ b/lib/bb/fetch2/s3.py
+@@ -88,7 +88,7 @@ class S3(FetchMethod):
+         Assumes localpath was called first
+         """
  
-         with open(os.path.join(build_conf_dir, "conf-notes.txt"), 'w') as f:
--            f.write("")
-+            notes = bitbake_config.get("notes")
-+            if isinstance(notes, list):
-+                notes = "\n".join(notes)
-+            f.write(notes + "\n" if notes else "")
+-        cmd = ud.basecmd + ['cp', 's3://%s%s' % (ud.basecmd, ud.host, ud.path), ud.localpath]
++        cmd = ud.basecmd + ['cp', 's3://%s%s' % (ud.host, ud.path), ud.localpath]
+         bb.fetch2.check_network_access(d, cmd, ud.url)
  
-     def _make_init_build_env(builddir, oeinitbuildenvdir):
-         builddir = os.path.realpath(builddir)
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-index 1252f22c823a..aa546c30b9c9 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-environment-setup.rst
-@@ -1057,6 +1057,12 @@ They contain the following sections:
-       snippet. This is what is prompted during the
-       :ref:`ref-bbsetup-command-init` command execution.
+         progresshandler = S3ProgressHandler(d)
+@@ -112,7 +112,7 @@ class S3(FetchMethod):
+         Check the status of a URL
+         """
  
-+   -  ``notes`` (*optional*): additional information written to
-+      ``build/conf/conf-notes.txt`` when ``bitbake-setup`` generates the build
-+      configuration from ``bb-layers``. This can be a string, or a list of
-+      strings which will be written one per line. For ``oe-template``
-+      configurations, this file is provided by the template.
-+
-    -  ``configurations``: Configurations can recursively contain as many nested
-       configurations as needed. This will create more choices when running the
-       :ref:`ref-bbsetup-command-init` command.
-diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
-index b30168ed61de..5592e81965d2 100644
---- a/lib/bb/tests/setup.py
-+++ b/lib/bb/tests/setup.py
-@@ -136,6 +136,10 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
-             {
-                 "name": "gadget-notemplate",
-                 "description": "Gadget notemplate configuration",
-+                "notes": [
-+                    "Gadget notemplate notes",
-+                    "Second line"
-+                ],
-                 "bb-layers": ["layerA","layerB/meta-layer"],
-                 "oe-fragments": ["test-fragment-1"]
-             },
-@@ -249,6 +253,11 @@ print("BBPATH is {{}}".format(os.environ["BBPATH"]))
-         else:
-             with open(os.path.join(bb_conf_path, 'conf-summary.txt')) as f:
-                 self.assertIn(bitbake_config["description"], f.read())
-+            with open(os.path.join(bb_conf_path, 'conf-notes.txt')) as f:
-+                expected_notes = bitbake_config.get("notes")
-+                if isinstance(expected_notes, list):
-+                    expected_notes = "\n".join(expected_notes)
-+                self.assertEqual(f.read(), expected_notes + "\n" if expected_notes else "")
-             with open(os.path.join(bb_conf_path, 'bblayers.conf')) as f:
-                 bblayers = f.read()
-                 for l in bitbake_config["bb-layers"]:
-diff --git a/setup-schema/bitbake-setup.schema.json b/setup-schema/bitbake-setup.schema.json
-index be8772db1b2d..99f47f73d0a6 100644
---- a/setup-schema/bitbake-setup.schema.json
-+++ b/setup-schema/bitbake-setup.schema.json
-@@ -41,6 +41,20 @@
-                                 "type": "string",
-                                 "description": "Human-readable description of the configuration"
-                             },
-+                            "notes": {
-+                                "oneOf": [
-+                                    {
-+                                        "type": "string"
-+                                    },
-+                                    {
-+                                        "type": "array",
-+                                        "items": {
-+                                            "type": "string"
-+                                        }
-+                                    }
-+                                ],
-+                                "description": "Extra notes that populate conf-notes.txt when bb-layers is used"
-+                            },
-                             "bb-layers": {
-                                 "type": "array",
-                                 "description": "List of BitBake layer paths to include, relative to the layers download directory",
-
----
-base-commit: 26978d55eab18278cc6a527072e8015cfbced9de
-change-id: 20260529-bb-setup-notes-0663341b0478
-
-Best regards,
+-        cmd = ud.basecmd + ['ls', 's3://%s%s' % (ud.basecmd, ud.host, ud.path)]
++        cmd = ud.basecmd + ['ls', 's3://%s%s' % (ud.host, ud.path)]
+         bb.fetch2.check_network_access(d, cmd, ud.url)
+         output = runfetchcmd(cmd, d)
+ 
 -- 
-Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+2.51.2
 
 
