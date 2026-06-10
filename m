@@ -2,61 +2,61 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E71BCD98D1
-	for <webhook@archiver.kernel.org>; Wed, 10 Jun 2026 22:53:29 +0000 (UTC)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.33615.1781132004327087769
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D06CD98C7
+	for <webhook@archiver.kernel.org>; Wed, 10 Jun 2026 22:53:28 +0000 (UTC)
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.33445.1781132007080319077
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 10 Jun 2026 15:53:24 -0700
+ Wed, 10 Jun 2026 15:53:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=U0/2INfO;
- spf=pass (domain: smile.fr, ip: 209.85.128.48, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-490ac357c55so76931935e9.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 15:53:24 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=GZpCO7+t;
+ spf=pass (domain: smile.fr, ip: 209.85.221.47, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-45ef41adbc1so5470943f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 15:53:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1781132003; x=1781736803; darn=lists.openembedded.org;
+        d=smile.fr; s=google; t=1781132005; x=1781736805; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=4CjKr0qX1d668HabZpFzG+MHiddz0rIE6LgKXx4FAjA=;
-        b=U0/2INfOgYBDLaRfVBPSTZ3DxG3hVLgYQBYlxe7G+894KI6amg3W7IloGbKoEESME6
-         pGoDl6RlRrxkAOCrf66A45/ZgUnmhMimgYdFC/806n/LZP0h6LKjFT04lKs3+IXOBqw0
-         5lMVZftcJpAlfIP7KEDtUyuPjkjl3Md3XdNIw=
+        bh=H7Z+52ZsMLn6kreMATMSA74FA0v92/MujOswIIy+QuE=;
+        b=GZpCO7+t/yoSGkYzFnQCtbJji9ntsWTB27sADH1K7pmIYO1E5LrEBf5ttOLKneDRgC
+         I223YK8RIHbUJt2JocdU3I6muzhoncwscNrx6BcR+8gXxTeIWGS0lV2jERlbYPuaPNYA
+         CI1AIaIa143xLE1Nx/mgNnOasmcQoSuGeC07U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781132003; x=1781736803;
+        d=1e100.net; s=20251104; t=1781132005; x=1781736805;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=4CjKr0qX1d668HabZpFzG+MHiddz0rIE6LgKXx4FAjA=;
-        b=LVFQP055yAWx0xAfg+mIWQn6MqqcqW8ekoTRUG/3AOxD2rZSDqf8tEKlnUgt+rOpcI
-         Td7XZjczvrptHyNVLq0vAN77UBQTWKsXoaixtSctCopaAfEffT8YaxaHO+05X7W2z9KI
-         w24OrZ0yEIIOw0TTEa5fp882HiBYzQo8xGy8aHCkpf0JH0JB4yNbU8117vtfgM+eHvuW
-         qMXtJ9naZ+RH3GMlGtHpgCEP6+24BMB1mLeV2L5zX2onq/SXHbLuvoUi8QomaJdWrYjC
-         4FxM8w8CLSNwVLcbykfBBHNJJuJasTlw0HBSXOcoDoAEsfH4LwGr3SP+7Vxm//do2t+D
-         wNeg==
-X-Gm-Message-State: AOJu0YyLdj4ws8xE3GCOCJZ/PIL+/X2u+4x164tH5b99DwXfovzFiW07
-	eBpwhPI3VaadnNEwM/clr0SrFgDJeAzoN0IFn/redZFhfU/c+fF3IifephzVNHOsn3We/bWNz++
-	iIi5x
-X-Gm-Gg: Acq92OG3lZNlF6n/rlOzvjEcVSzCX5gPPNWNCdE8KKpC9ra6WibqcRNnaVw5P8Rc8Q/
-	1SypGuAkmvWixgtirBJKFDr5oMsCeUHK0yD3tvHbpNKSoZj5eMgBgZFIlKd5xZGu4LbNDCUgATh
-	2gEur4pEXq1FucuLmi+LnbZLWDydXo8IRjfR0JaZYToY7YdFFtyUBmfkTXKijE5vitjybXAS+6/
-	qWn4as/tGm6NRJ4faxZ5YEGighOJ6B/6UnipSYwHBLPcxhRP0inn2WXn2jD8CkBcX5X6i4E0O51
-	AeVgz3Tb4lzhKQklTV0t9L/KApVJmOM0fQnvs6hMBnX5Av5lvnrw7A/b4+uw0y1kBC5mayvDe88
-	wjv3uyaURT3+O+xtQSVPTvSnqPx8nQ6dkL5Mrtfg7KVW9sy2N6w1AFATi2z3TucxplBqkesVq6q
-	ofG6mGCTJtHFngXeKdjFKzMo80A5jQuhHC5dlxWyxTKVjSW9Zf8QfBfDbtK0JMK6xK5yl6/bJFN
-	vvsIZ604dPP0X7AgxGw/0Jb3Ch30wBbuQFI0Ec=
-X-Received: by 2002:a05:600c:c493:b0:490:ae52:499c with SMTP id 5b1f17b1804b1-490c25f1ab6mr459391815e9.21.1781132002610;
-        Wed, 10 Jun 2026 15:53:22 -0700 (PDT)
+        bh=H7Z+52ZsMLn6kreMATMSA74FA0v92/MujOswIIy+QuE=;
+        b=JQKS8cXSkGRUpupsPkmT8lnmCZBBpBwPvikHXcKR/xSIUF409OTaZOJQJnO0hfI+T5
+         BWtXjVwaarM0adtRbZF9jwU7cXaY8r9Cv9drWWlminEk8dmXjJDZ9LqsmuJjGRIen3D5
+         7mQ8UFx7mDMrZHNLdKKPi/Yy/tAHKT5/pnGjYvm2hqbZUN0KESdqahvFTcxCXmK7vPfs
+         IE50mlILxWomXicxNHLSCfLh9oHiMjxtPAQGDm4KrJa/WUR8PVde7lO+b2L2nANbyi9h
+         YHfG26500K2+76stZm5GCgGr1yNmEzUJi9HUvskJgWZZILN+8h0FAoif5zz/zlOy3VqB
+         v33g==
+X-Gm-Message-State: AOJu0YxPyCNPuUJq0Xx5h8Vy0Nuvk2zTyoMHfya7KpCLUk1N88W8opLL
+	4VfLCNigkKVfhtpPHfvwGW8sxr3MXxGEIJJf2MQ44h5u+NYzoqJuumpaZlKn6gMI5CMHKh1+jqO
+	BFORL
+X-Gm-Gg: Acq92OHa48WkgbwHBV+o1nM7ov+px/RCOPqtMSWQAc7ha2aCVA3I4eTGSuM2oWYAkHp
+	lQ6pTWzPRyZuMJdnIQ4lL4dViBUMO+baLw4SLQ9SAlakuQZaErq+WUEJTi/kdhzYEi/ewue9p03
+	3cjzpgnwabbaLeG/WBON+VJ8Sn/ivGnPc/gA91MMqFHDBK/whddfX7X3MgmYSLwCZ2nbRF4tExm
+	reOXlTrHlZ2VqKCHLloMgRok6KwwpQYXqOn+OlK8UHoCP7+Bd23ufYO2q7TXCnKWIkm+OIFbWH8
+	CFwd8k5wBZCe1K32Uz3M5lLCuEqR0QfB5rxSaGpRby25GF8qwD/QiidWbdTPqwkZeRqyAesH3gQ
+	8lntKQlmdR3N5JDqxRP9uvzB8JJOw4QM2Hvsnp7kOitWyu4FqXHJGI7TIi4ki38a//STXefu3LF
+	hxganjHANxljXy02t00oGqlOBEVZxv2pMmBGqifNMZsCjmFLmebedQGqf181dLiuoi2D4DQdhew
+	cKG3WVLqzHet+swe/uIw0IgGDINNCQLGNEYBm0=
+X-Received: by 2002:a5d:5f47:0:b0:45e:f266:f4cb with SMTP id ffacd0b85a97d-460677cea88mr235385f8f.22.1781132005410;
+        Wed, 10 Jun 2026 15:53:25 -0700 (PDT)
 Received: from FRSMI25-LASER.home (2a01cb001331aa00bb749f54eeb85d7b.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:bb74:9f54:eeb8:5d7b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f351d69sm132348771f8f.29.2026.06.10.15.53.22
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f351d69sm132348771f8f.29.2026.06.10.15.53.24
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 15:53:22 -0700 (PDT)
+        Wed, 10 Jun 2026 15:53:24 -0700 (PDT)
 From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][wrynose][2.18][PATCH 1/6] fetch2: reraise IOError during download
-Date: Thu, 11 Jun 2026 00:53:03 +0200
-Message-ID: <69e22a5f95d650ed83e6064d4e99b8dc067a6659.1781131922.git.yoann.congal@smile.fr>
+Subject: [bitbake][wrynose][2.18][PATCH 6/6] fetch2: allow empty value for params while formatting URI string.
+Date: Thu, 11 Jun 2026 00:53:08 +0200
+Message-ID: <52b3bff42f17933595af48654098b172ea10baff.1781131922.git.yoann.congal@smile.fr>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <cover.1781131922.git.yoann.congal@smile.fr>
 References: <cover.1781131922.git.yoann.congal@smile.fr>
@@ -65,39 +65,106 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 22:53:29 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19648
+ <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 22:53:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19653
 
-From: Anthony Squires <me@anthonysquires.ca>
+From: hongxu <hongxu.jia@windriver.com>
 
-Fixes [YOCTO #16268]
+While using PREMIRRORS to gets source code, recipe sbom-cve-check-update-nvd-native
+do fetch failed:
 
-Adds a missing "raise" statement to download that ensures when there
-is an IOError/OSError that is is correctly reported and not silently
-discarded.
+$ bitbake sbom-cve-check-update-nvd-native  -cfetch -f
+...
+ERROR: sbom-cve-check-update-nvd-native-1.0-r0 do_fetch: Bitbake Fetcher Error: MalformedUrl('git:///path-to-premirror/git/github.com.fkie-cad.nvd-json-data-feeds.git;branch=main;protocol=file;destsuffix')
+ERROR: Logfile of failure stored in: tmp/work/x86_64-linux/sbom-cve-check-update-nvd-native/1.0/temp/log.do_fetch.4135595
+ERROR: Task (oe-core/meta/recipes-devtools/sbom-cve-check/sbom-cve-check-update-nvd-native.bb:do_fetch) failed with exit code '1'
+...
 
-When an IOError is thrown in this case do_fetch silently passes which
-then leads to downstream failures in do_unpack when the file doesn't
-exist.
+In oe-core commit [1], destsuffix was configured to empty string through SRC_URI,
+but in bitbake commit [2], it removed `=' from destsuffix in which value is empty,
+and trigger MalformedUrl failure, see sbom-cve-check-update-nvd-native do_fetch log:
 
-Signed-off-by: Anthony Squires <me@anthonysquires.ca>
+...log.do_fetch...
+DEBUG: For url git://github.com/fkie-cad/nvd-json-data-feeds.git;branch=main;protocol=https;destsuffix= returning git:///path-to-premirror/git/github.com.fkie-cad.nvd-json-data-feeds.git;branch=main;protocol=file;destsuffix
+...log.do_fetch...
+
+This commit use function _query_str_join for query as usual (if a value is
+None then it isn't a key-value pair, but a bare key.), and use function
+_param_str_join for params to allow value is empty string and still key-value
+pair, after applying this commit
+...log.do_fetch...
+DEBUG: For url git://github.com/fkie-cad/nvd-json-data-feeds.git;branch=main;protocol=https;destsuffix= returning git:///path-to-premirror/git/github.com.fkie-cad.nvd-json-data-feeds.git;branch=main;protocol=file;destsuffix=
+...log.do_fetch...
+
+$ bitbake-selftest -v bb.tests.fetch.URITest.test_uri
+test_uri (bb.tests.fetch.URITest) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+
+[1] https://github.com/openembedded/openembedded-core/commit/131e024a6688074347e08879718221fbfb69033f
+[2] https://github.com/openembedded/bitbake/commit/eac583bd4c46f3bb9661852cb6a1448f16147ff1
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 0460038e4705934e614b26ba5febc09293924cd4)
+(cherry picked from commit b3867e6d35ef57239c7ba961a00fa45577600301)
 Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
 ---
- lib/bb/fetch2/__init__.py | 1 +
- 1 file changed, 1 insertion(+)
+ lib/bb/fetch2/__init__.py | 7 +++++--
+ lib/bb/tests/fetch.py     | 6 +++---
+ 2 files changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 0e4f491ce..d913d7511 100644
+index d913d7511..e0494b3cb 100644
 --- a/lib/bb/fetch2/__init__.py
 +++ b/lib/bb/fetch2/__init__.py
-@@ -1969,6 +1969,7 @@ class Fetch(object):
-                 if e.errno in [errno.ESTALE]:
-                     logger.error("Stale Error Observed %s." % u)
-                     raise ChecksumError("Stale Error Detected")
-+                raise
+@@ -304,7 +304,7 @@ class URI(object):
  
-             except BBFetchException as e:
-                 if isinstance(e, NoChecksumError):
+     def _query_str(self):
+         return (
+-            ''.join(['?', self._param_str_join(self.query, "&")])
++            ''.join(['?', self._query_str_join(self.query, "&")])
+             if self.query else '')
+ 
+     def _param_str_split(self, string, elmdelim, kvdelim="="):
+@@ -313,9 +313,12 @@ class URI(object):
+             ret[k] = v
+         return ret
+ 
+-    def _param_str_join(self, dict_, elmdelim, kvdelim="="):
++    def _query_str_join(self, dict_, elmdelim, kvdelim="="):
+         return elmdelim.join([kvdelim.join([k, v]) if v else k for k, v in dict_.items()])
+ 
++    def _param_str_join(self, dict_, elmdelim, kvdelim="="):
++        return elmdelim.join([kvdelim.join([k, v]) for k, v in dict_.items()])
++
+     @property
+     def hostport(self):
+         if not self.port:
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index cc133c1f5..e661ff0d8 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -292,8 +292,8 @@ class URITest(unittest.TestCase):
+             'query': {},
+             'relative': True
+         },
+-        "https://www.innodisk.com/Download_file?9BE0BF6657;downloadfilename=EGPL-T101.zip": {
+-            'uri': 'https://www.innodisk.com/Download_file?9BE0BF6657;downloadfilename=EGPL-T101.zip',
++        "https://www.innodisk.com/Download_file?9BE0BF6657;downloadfilename=EGPL-T101.zip;someparam=": {
++            'uri': 'https://www.innodisk.com/Download_file?9BE0BF6657;downloadfilename=EGPL-T101.zip;someparam=',
+             'scheme': 'https',
+             'hostname': 'www.innodisk.com',
+             'port': None,
+@@ -303,7 +303,7 @@ class URITest(unittest.TestCase):
+             'userinfo': '',
+             'username': '',
+             'password': '',
+-            'params': {"downloadfilename" : "EGPL-T101.zip"},
++            'params': {"downloadfilename" : "EGPL-T101.zip", "someparam" : ""},
+             'query': {"9BE0BF6657": None},
+             'relative': False
+         },
 
