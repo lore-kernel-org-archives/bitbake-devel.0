@@ -1,89 +1,122 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <thomas.perrot@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E7ECD8CB2
-	for <webhook@archiver.kernel.org>; Wed, 10 Jun 2026 14:11:47 +0000 (UTC)
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.21306.1781100706076455218
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 178BECD8CB2
+	for <webhook@archiver.kernel.org>; Wed, 10 Jun 2026 15:47:10 +0000 (UTC)
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.23621.1781106426011574308
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 10 Jun 2026 07:11:46 -0700
+ Wed, 10 Jun 2026 08:47:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=L70moPKH;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.218.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-bebde89cfd3so873548366b.2
-        for <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 07:11:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1781100704; x=1781705504; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=aPtlgJSOeSoAL1Zo9lPaQhkuh8EDhnUPlL4uSmCCvlA=;
-        b=L70moPKHn3/0zpk2Nh+3uIyKo9UP3cHhrmQhQD7DNg58OTXwxH/DUqfoNIQt55KUZU
-         /UNLfFiexVKfOWyy5sk5uWYZlav/HPM0Bq2yPQ79vRu9Kzio4P8cYtl3bjsKqBzYXzTC
-         vmSr7hPAdbP53RoKpmZSb0gZxia9FyAXNQ3KE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781100704; x=1781705504;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aPtlgJSOeSoAL1Zo9lPaQhkuh8EDhnUPlL4uSmCCvlA=;
-        b=M/4hiRHZBZNW1QidrcqDdltpZOa9crynUgZqTAm14pMb/7Qk/Der7XCkdK3UiixdLg
-         PVOnG7mpd7WHqQp9p7rF+ThK9+cQ9VRC+tgWe/+x4hIV1T/oP+a+1tHoeMxvwCAUNLQa
-         Th8dGSAlBUImlt8CDj1BJY2tO5SJ5WPFaHnn4+nLWYfMhnrk4SxHK+0dUWwhuqWb+emE
-         KkLXJ7p/VsJ5HYsz4qbKtjxUsFav93i+NJr9dzCPYtKLr70Bnw3J5agsUFsfua6Hfznl
-         WDXbqJckqGOPUcc6SlN7WQ4Q25f5gscm7OETAOELoGPFkRawh8Slzit+VlVXjqzBzfVk
-         547w==
-X-Gm-Message-State: AOJu0YzHMpgSlLRMwIrHoqM79lWNocuD3/ssCc3ueLlmlUqDKJjevzOl
-	SUlYJVRCM47auKHUh0En7I8dsll6MFtncOrKJLouaRQxBEK0KUYWWrc5P8PfDmEPzuI=
-X-Gm-Gg: Acq92OFvLX3aCD/UO5ALynxhsCn9TbauWLIgtwKkxVMEEvVGZA7QoXpCCC1Rb/UbQYD
-	L5ezyNNV3RR6Z94Eub58FzwK4bEapINOWwnbVqsNdzlTsvHzbkSKNAo1+H/Q8awt3WOjIQ/xafK
-	FikxVAU3+Gad4jsQzsNjRqK64mLN4jZUJBnZrAwdA7gfMqAlGCHZYJJV8GViDVcmmKhg7/U6wn3
-	pI01hcxT1EsZJ6djIOlY5KKtUoD7A7bUVeZWmsiBhSqc2Mle7kLLhRzivzh1nVhZ5xMj9cLzFpf
-	wVQpc7Bc1KIVSJian854i9JMYp+oYMydwiM1L1VUqGR02oMbi0nlHIy4f1AGLmPkC7CsB7Awb6l
-	L7eMW/AMd6awVD4ewoEm5cGvKII8FkUo82QZ0cKQyZqRfTdgbqv0KdCzCaTlivjkRFOfxVeXF/D
-	Q1eC3BlToAf1aOQ2nRdrTqWG9hlzypUV1F8NVZWvUj2ODTsNXpLdw5nufbi+uHVh0w0qOQct3eY
-	c0uuKzeVyqeq9EHg9H1r09F
-X-Received: by 2002:a17:907:96a2:b0:bec:ab0c:243c with SMTP id a640c23a62f3a-bf370f5afa4mr1396972066b.21.1781100704245;
-        Wed, 10 Jun 2026 07:11:44 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:e996:5a7:2609:813f? ([2001:8b0:aba:5f3c:e996:5a7:2609:813f])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bf0559f1aaasm1190584566b.59.2026.06.10.07.11.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 07:11:43 -0700 (PDT)
-Message-ID: <1971a10419fb289fdca2c0bd82d19998467c4cc0.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 0/2] fetch2/wget: limit auth headers on
- checkstatus redirects
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: alex.kanavin@gmail.com, anders.heimer@est.tech
-Cc: bitbake-devel@lists.openembedded.org
-Date: Wed, 10 Jun 2026 15:11:42 +0100
-In-Reply-To: <CANNYZj-=MA6L1w8_zOEngOZqHDqmbuuz74v9Fy=pgxr1D+Vs9A@mail.gmail.com>
-References: <20260610074013.558709-1-anders.heimer@est.tech>
-	 <CANNYZj-=MA6L1w8_zOEngOZqHDqmbuuz74v9Fy=pgxr1D+Vs9A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-9 
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=Hg6RrjiX;
+ spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: thomas.perrot@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 324BCC4FEE2
+	for <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 15:47:06 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 3CDC25FFC9
+	for <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 15:47:04 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 957D9106B9B10;
+	Wed, 10 Jun 2026 17:47:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1781106423; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=KQ7QAOZ5rBEuaGkDgs8R1jtxCbesWFDzxDQNctSpyvU=;
+	b=Hg6RrjiXjA8nRSjTVlzaPsXQiVt1WCu8TgBGNrb2HKLcpkb30KUjiIhfhYEdRtECb+mPkF
+	0wbvUZAUPi1wvoibFgEG4hNJPTF22bafO5aOHI6Mi1shJ6bfgjRfQR2bvY5kEKwTpZVa36
+	xozI34fHtYUmKSkvF9RrfXN5DhGQ/oPoa0OXUbPTf0FPTXKfRV7w5KqfjEwiYjCXsmGtVq
+	/dP+hz//NZSsu4D7Kke0i6uoP17LaO8CyytB+4XCHe9ORLlzthAemzUDskNRrAU5WxXb7e
+	PnWsHcJvFDc74O3xUGlATZT60ApxJOFPGO0XtxLQtuk5YLma1ZcZDDbnM47nHQ==
+From: Thomas Perrot <thomas.perrot@bootlin.com>
+Date: Wed, 10 Jun 2026 17:47:00 +0200
+Subject: [bitbake-devel][PATCH 1/2] fetch/npmsw: fix security issue and
+ re-enable fetcher
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260610-dev-tprrt-fix-npm-v1-1-9bf501d4ee0e@bootlin.com>
+References: <20260610-dev-tprrt-fix-npm-v1-0-9bf501d4ee0e@bootlin.com>
+In-Reply-To: <20260610-dev-tprrt-fix-npm-v1-0-9bf501d4ee0e@bootlin.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Thomas Perrot <thomas.perrot@bootlin.com>
+X-Mailer: b4 0.15.2
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 14:11:47 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19642
+ <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 15:47:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19643
 
-On Wed, 2026-06-10 at 09:54 +0200, Alexander Kanavin via
-lists.openembedded.org wrote:
-> Unusually, this was rapidly merged to master almost immediately after
-> the patches were posted. Is this a sensitive security issue, or what
-> is the rationale?
+The npmsw fetcher was disabled in 355cd226 (Jan 2026) along with the npm
+fetcher, but its security model is already correct: checksums come from
+the locally-committed npm-shrinkwrap.json file, not from the network.
 
-I did actually mean to merge it to master-next, test, then merge to
-master in a bit but there is a security issue in there unfortunately
-:(.=C2=A0
+Re-enable it with the following fixes:
+- Add the missing FetchError import that would cause a NameError on
+  malformed shrinkwrap files.
+- Change 'if not packages' to 'if packages is None' in
+  foreach_dependencies so a valid zero-dependency shrinkwrap
+  (packages={}) no longer raises FetchError.
+- Add 'elif resolved is None' guard before the startswith chain in
+  _resolve_dependency so missing 'resolved' fields raise ParameterError
+  instead of AttributeError.
 
-Basically we could lead auth headers to the wrong servers.
+[YOCTO #16105]
 
-Cheers,
+Fixes: 355cd226e072 ("fetch2/npm: Disable npm/npmsw fetchers due to security issues")
+Signed-off-by: Thomas Perrot <thomas.perrot@bootlin.com>
+---
+ lib/bb/fetch2/npmsw.py | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Richard
+diff --git a/lib/bb/fetch2/npmsw.py b/lib/bb/fetch2/npmsw.py
+index 5255e8b465e1..f09ea5794856 100644
+--- a/lib/bb/fetch2/npmsw.py
++++ b/lib/bb/fetch2/npmsw.py
+@@ -21,6 +21,7 @@ import json
+ import os
+ import re
+ import bb
++from bb.fetch2 import FetchError
+ from bb.fetch2 import Fetch
+ from bb.fetch2 import FetchMethod
+ from bb.fetch2 import ParameterError
+@@ -44,7 +45,7 @@ def foreach_dependencies(shrinkwrap, callback=None, dev=False):
+             location = the location of the package (string)
+     """
+     packages = shrinkwrap.get("packages")
+-    if not packages:
++    if packages is None:
+         raise FetchError("Invalid shrinkwrap file format")
+ 
+     for location, data in packages.items():
+@@ -63,11 +64,7 @@ class NpmShrinkWrap(FetchMethod):
+ 
+     def supports(self, ud, d):
+         """Check if a given url can be fetched with npmsw"""
+-        #return ud.type in ["npmsw"]
+-        if ud.type in ["npmsw"]:
+-            from bb.parse import SkipRecipe
+-            raise SkipRecipe("The npmsw fetcher has been disabled due to security issues and there is no maintainer to address them")
+-        return False
++        return ud.type in ["npmsw"]
+ 
+     def urldata_init(self, ud, d):
+         """Init npmsw specific variables within url data"""
+@@ -126,6 +123,9 @@ class NpmShrinkWrap(FetchMethod):
+                 extrapaths.append(resolvefile)
+ 
+             # Handle http tarball sources
++            elif resolved is None:
++                raise ParameterError("Missing 'resolved' field for dependency '%s'" % name, ud.url)
++
+             elif resolved.startswith("http") and integrity:
+                 localfile = npm_localfile(os.path.basename(resolved))
+ 
+
+-- 
+2.54.0
 
 
