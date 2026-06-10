@@ -1,106 +1,126 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD0ACD98CC
-	for <webhook@archiver.kernel.org>; Wed, 10 Jun 2026 08:29:26 +0000 (UTC)
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.15490.1781080155781847663
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC835CD98C7
+	for <webhook@archiver.kernel.org>; Wed, 10 Jun 2026 10:08:23 +0000 (UTC)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.16762.1781086094994106352
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 10 Jun 2026 01:29:16 -0700
+ Wed, 10 Jun 2026 03:08:15 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=ha1+QTvU;
- spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id A433B4E4082F
-	for <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 08:29:13 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 79BCF5FFC9;
-	Wed, 10 Jun 2026 08:29:13 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 1F94A106B9153;
-	Wed, 10 Jun 2026 10:29:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1781080152; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=IPK27e3KqtrzDztNyMoJ7eMH5jYJ5s0eQqVu9yM1wZI=;
-	b=ha1+QTvUjbkMJQ6MBIuymvxVuLqhqcBbDf2p0GOeJRiimSI/bi2CO9mjI+uPUEYElgeiH5
-	Z281n0uwkSKJrSd5vXQKoBqFGVnLaLO4Zc24smyfdk+607ec4WpT1MNi/lj/mhbqABG17I
-	S/DeFaONLa6eTQ7EeMeN15zn4PuwA3j4O36QabeUZ0rJsPTDQ91UozrBaiIOeIoEKfg1yc
-	3+Nh+I513ENJaUxf52x3mqWnOTo2JTx4ed9OJBhWZVzG7T5HSvi1fptufRNQ8xopl/2pA4
-	4I7SfWfPZgRozLdBamVkGl47JJRJkV46Zuux5Hv5XJk88ryrthMkS2rOrbcXXQ==
-From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Wed, 10 Jun 2026 10:28:51 +0200
-Subject: [PATCH] doc/bitbake-user-manual-ref-variables: document
+ dkim=pass header.i=@smile.fr header.s=google header.b=jPg5P3+i;
+ spf=pass (domain: smile.fr, ip: 209.85.128.54, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-490b4e1ade7so70075565e9.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 03:08:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smile.fr; s=google; t=1781086093; x=1781690893; darn=lists.openembedded.org;
+        h=in-reply-to:references:from:subject:to:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5WUUXnXoVwER610lf7p4ZMCb43FIfromimGDMbNp4gI=;
+        b=jPg5P3+iO/DHus8hfeuXa+tj424c1phxDKQ6YOJIGpB1etYqsrjSEahVa7o24tTRKi
+         0ADeFgbGQKtZ4Nvu2gbwGw5mQU34iwEdXBU36x5hW8vyIEVClH8V5O7ge3Xa1vni7LxO
+         v/72FlCHfT88uFQvS9R2bbpoy/hOsdJ/YuB4g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781086093; x=1781690893;
+        h=in-reply-to:references:from:subject:to:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5WUUXnXoVwER610lf7p4ZMCb43FIfromimGDMbNp4gI=;
+        b=H016OuaKfngardBv+Bk9xvBNvfuu59Ose/EPw3njSBNfhTHtBumrQyPZPNMxKpvw3S
+         UjzTfPylgcaW+8uRp+PwLBeH/dS/GBGraXlkpJ0nrZtH8bNRWSw3BloXabhf1VSb5/e+
+         GVnHtdU4tuh1z4iidIrAMFNOAAp6TcDy7Haa9U3ZBwTMTEiH02C+ZpqXCkVDCfjmld/K
+         j7yT0q/+lBwVPF4A1ozTFhgaptOWXewOfAfqLsuCtrnKcq/wCEIC+hT5KOE8PHFNOqKm
+         AlvAZlP7Hy99iEboGDjuR+iGjoi4sfbfZMENAATP8yY/fz22Xch8sSHxSJ+2WYDMZDIT
+         WAwQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8eNG0kY+UYIijvvSFBomf6XSwKtR6fBN7lfK64Tt+oQtsI/G1QvUsie07KgwpfiTBJ/4XYgtg2ISkdS9cA@lists.openembedded.org
+X-Gm-Message-State: AOJu0YxWSKH5/qTfu7f5YCw4iKBt3DzVPBv0ZcSsM7Wskpu+t3p+ZGvL
+	Dt6MLj6uKCtR01zE9MhKc/gMmIeiDwvwZdeKgrOW5/VB2JMj9cKEocS8kMUXymTdG+c=
+X-Gm-Gg: Acq92OFHjTva2kwO7jNJirDht5jkxfuOnnERVjzOD14uEgNwNZUXrnOknbsrKeYG4XF
+	LoNxqzz2dVq8BD9VbAuyWtSbXN9aVDi/a6C5QiM7kT+7nUKBpmUZTeeqUEsA+o/2d/s/2g93LC8
+	YGkXrCTUfO/uWS01Nl6ckXQ23Vdul2rOsmgmII59ejyCz9n6xjPKAQF6LHztySD2MYL+RjCnVZ8
+	LDwpGTfrUHoWoBQTCDYYDiPCdrIIoKQxeFH/Nkx6A/8RCadBrspbhZWo/nBmzgDwDcGAEF8zHWi
+	cG1/C5Dsx5Ztt6Vt1iO5op+IolSn74yn1kCGoQPB1h1OxvGr05cp5QwNbkjMdpYgN5o9s1mg3pM
+	3PpbFAadsNtCc68KQ766qZf+X8EkfCiBGwb3aUdnJFkKbo31Tc97mIgZrGz3L9DSq9CTDwPA2Yf
+	2+4oE/wN08iPKAYzyeG7PyRAQZOqLGQdOu9AxA3SQ8W1l/um8F/DwbH7sN4cCj9MPMv9jTAJz0t
+	w1vfd9wALJSiM6CYnjrTfuoyOs=
+X-Received: by 2002:a05:600c:45ce:b0:490:b35c:88ea with SMTP id 5b1f17b1804b1-490c25e74b7mr355694085e9.15.1781086091546;
+        Wed, 10 Jun 2026 03:08:11 -0700 (PDT)
+Received: from localhost (2a01cb001331aa00bb749f54eeb85d7b.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:bb74:9f54:eeb8:5d7b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3d66c8sm526604025e9.10.2026.06.10.03.08.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jun 2026 03:08:11 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 10 Jun 2026 12:08:10 +0200
+Message-Id: <DJ5ABQHS3CCX.1HSTYR4LCU4YH@smile.fr>
+Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
+ <docs@lists.yoctoproject.org>
+To: "Antonin Godard" <antonin.godard@bootlin.com>,
+ <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] doc/bitbake-user-manual-ref-variables: document
  BB_CONSOLE_LOG's persistence
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260610-bb-console-log-persistent-v1-1-5430d24061c3@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMQQrCMBBG4auUWTuQVCmtVxEXZvxbR0pSMqkIp
- Xc36vJbvLeRISuMzs1GGS81TbHCHxqSxy1OYL1XU+vaznXecQgsKVqawXOaeEE2tYJYWAYvOJ7
- 82A891X7JGPX9e1+uf9sanpDyHdK+fwD0pIlPfQAAAA==
-X-Change-ID: 20260610-bb-console-log-persistent-c91ce341f898
-To: bitbake-devel@lists.openembedded.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- docs@lists.yoctoproject.org, Yoann Congal <yoann.congal@smile.fr>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1476;
- i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=FNXwukiNliKbSNOisBezSc314NnOUxnxeI6v3bvCLU4=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBqKSBXRlllfJNgsjSP+sfEJwdnQHAnymTVv9aOr
- lqOpHC15vOJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaikgVwAKCRDRgEFAKaOo
- Ni4ED/4/l0nlmGMiHLc8dImeTPMbRDBmueKZXJCC/Y5mCr3F6J8mXRpoYhfmRf46rr+BHecQS9u
- ztrJwTlNssSN+5OldnUTcdQjHkgwQ5JOqkX9YbXbHcpzBzUx1QT5uGNY1IvemukHMdW2ZdK9TR5
- B7CZW0lTgEnuveZeV+7E1IklyEEQz3C6yB2SWDLbFAeCT3s+8zYvnqpu3ggZ2K+6ayct51mm7rP
- eJAmR9G8St649H54z3XjkKz2F9WrOdV7xroxmOPgm8u9h6k00yN1OoY4r3FhmhxiuRmHokK6K5w
- UA53s6eGDrLEJt4mdVfb1ayFwcew41lcu//dzKBNkeRDYJXq6DXovrGWe6aCA7DIcuCznhS3mcn
- lt0s6Fqx5pdssz7ZLl/27cSXEyUsznYP83iArencbCromeK0C/QtiDHFAXJxNPUy5rIXGvLRLvQ
- zEU76gOn4CdLruV65+4zFd73rXenregYmVLnz1+FXTHlJT9q97mbEAllP/2Rc14GmR60iosiYjG
- ncTB5HxRZM4rOcB7QzXPWqfq1OHqVA2/oiBw+qVUtOJdZU738tJsfscyjpBa7ZTwtXNcTt9q0LV
- elv8WaOnE9yYZMhMeAwiQLxeaHyKOl990NDLDIECpAvC3HF1fVcwsbiepzy8Re2VNZrb1oB8jQ3
- wrcge2m8cSjyKhQ==
-X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
- fpr=8648725188DD401BB9A0D3FFD180414029A3A836
-X-Last-TLS-Session-Version: TLSv1.3
+From: "Yoann Congal" <yoann.congal@smile.fr>
+X-Mailer: aerc 0.20.0
+References: <20260610-bb-console-log-persistent-v1-1-5430d24061c3@bootlin.com>
+In-Reply-To: <20260610-bb-console-log-persistent-v1-1-5430d24061c3@bootlin.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 08:29:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19640
+ <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 10:08:23 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19641
 
-Changes to this variable only take effect after a server restart.
-Document this behavior.
+On Wed Jun 10, 2026 at 10:28 AM CEST, Antonin Godard wrote:
+> Changes to this variable only take effect after a server restart.
+> Document this behavior.
+>
+> [YOCTO #15641]
+>
+> Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+> ---
 
-[YOCTO #15641]
+Looks good to me, thanks!
 
-Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
----
- doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+>  doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst | 10 +++++=
++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rs=
+t b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> index 9824b58ef27..f3e1a3a38c9 100644
+> --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> @@ -135,6 +135,16 @@ overview of their function and contents.
+>        Specifies the path to a log file into which BitBake's user interfa=
+ce
+>        writes output during the build.
+> =20
+> +      This variable's value remains persistent during the entire executi=
+on of
+> +      the BitBake server. Changes to this variable will only take effect
+> +      after a server restart, which can be accomplished with the ``bitba=
+ke
+> +      --kill-server`` command.
+> +
+> +      .. note::
+> +
+> +         For more details on how to make the BitBake server persistent, =
+see the
+> +         :term:`BB_SERVER_TIMEOUT` variable.
+> +
+>     :term:`BB_CURRENTTASK`
+>        Contains the name of the currently running task. The name does not
+>        include the ``do_`` prefix.
+>
+> ---
+> base-commit: c687d42b81b17e7a2399099cab0f1a6aafcf6520
+> change-id: 20260610-bb-console-log-persistent-c91ce341f898
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-index 9824b58ef27..f3e1a3a38c9 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-@@ -135,6 +135,16 @@ overview of their function and contents.
-       Specifies the path to a log file into which BitBake's user interface
-       writes output during the build.
- 
-+      This variable's value remains persistent during the entire execution of
-+      the BitBake server. Changes to this variable will only take effect
-+      after a server restart, which can be accomplished with the ``bitbake
-+      --kill-server`` command.
-+
-+      .. note::
-+
-+         For more details on how to make the BitBake server persistent, see the
-+         :term:`BB_SERVER_TIMEOUT` variable.
-+
-    :term:`BB_CURRENTTASK`
-       Contains the name of the currently running task. The name does not
-       include the ``do_`` prefix.
 
----
-base-commit: c687d42b81b17e7a2399099cab0f1a6aafcf6520
-change-id: 20260610-bb-console-log-persistent-c91ce341f898
+--=20
+Yoann Congal
+Smile ECS
 
 
