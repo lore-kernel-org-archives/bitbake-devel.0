@@ -1,123 +1,106 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A183CCD8CB2
-	for <webhook@archiver.kernel.org>; Wed, 10 Jun 2026 07:54:46 +0000 (UTC)
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.15170.1781078083155936230
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD0ACD98CC
+	for <webhook@archiver.kernel.org>; Wed, 10 Jun 2026 08:29:26 +0000 (UTC)
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.15490.1781080155781847663
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 10 Jun 2026 00:54:43 -0700
+ Wed, 10 Jun 2026 01:29:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=lN3KrDuM;
- spf=pass (domain: gmail.com, ip: 209.85.160.170, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-51764768c36so84422191cf.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 00:54:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781078082; cv=none;
-        d=google.com; s=arc-20240605;
-        b=M8NgBf1a0Rrw1nuUPWnLF0JxLdk9BWgRzRfO+ErI7T9Mz5l89CLKJYLVQNoNZw7dxf
-         Zo9yLhbFz0GlcZdxx2MoX7gc7BXNxOv2OVsW8T33lHEyMWD8E1B7LWWHs6ZYY1zLBFMP
-         RSWriHdovI+LyhXsFknigN5KirLz0FjTmJt48cMLHjmrzE3iciiUUJBcmgk7EVT8Mr5o
-         G5VGhJKG4oDoQCdCPRC5vLfVzxJh5RRtwi9sBPl+Hy4CfC8Qlois7OEzPv6rcEDNq/M4
-         iqMr8276TtyWbKRp0VWRjEGQMyPb6APG0jdYSGucYNSNRYgAlzMa1HA8PWERc46bMb1y
-         OI0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=yrrbwmNqyJZ36bc7SvZG8D4TLK47KtV9WOL77su247o=;
-        fh=C7wwA6xcYwG5x3JYjkOTBI4vfyehQD5IL7gDxv3rPm4=;
-        b=lbC/0n8SHST6tkKNlAYCzzGUHV002VnsEERwC7+/MHyIbEbPG8c8t/VJvbhaWH9z7l
-         +FD5KGA6bTS4is3GNiG7dt3wtHjv6Ebk6sq5g3FpDX3Rz4UwHUafPl20mjp7UkJzl5WT
-         mgaJLAaQinxK/kI9mtrU8LCcpw2TUwgRof01E5qaXVNQ+/HhdF2W2BqK4iU7Rt++BM1f
-         aHhad5yVGk3PBc4+vW/mxyC/ho5qt/VdrmbWjwfZVN4iC+UEsJz3eix47u3+pNO+8PIc
-         JoU/gjS1r6nj4ilv5tYwbG+UbCCVe0JpWLUbjD4SP9FIB69BM5ZI8UqFyW71oNw6LsT+
-         5Vvg==;
-        darn=lists.openembedded.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781078082; x=1781682882; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=yrrbwmNqyJZ36bc7SvZG8D4TLK47KtV9WOL77su247o=;
-        b=lN3KrDuMSvqoADA+r3G2NAcTy31qwrj/dIWi2iR9sF6k0eSC8gIAZGhH1/d/U77RcW
-         HBq25XzYYyewpQoOa9opWABbSUwa1WJRMhK/QYulEiyexhwrhN/QuejKOAEYEGY/qJKq
-         yGogc5g8rHwmeFlPHuVwyjGbCVm+GN6wCDLUpyLYufmnabGvFb7gq+dlayA3wLxysSY+
-         UTyaAoQ9U7O5ZdvryotRPx8yk8PpJ830SAojc1yyXdx+iHJcmXvpKPRwD/q1Fi74pjzO
-         T3VwjrICHwnr+9CELNGfK51pQ4ZLOF2q6dzS5BolSEsHzjG31atOkb86BgioOrtCU121
-         pyiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781078082; x=1781682882;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yrrbwmNqyJZ36bc7SvZG8D4TLK47KtV9WOL77su247o=;
-        b=Wiq1uOC1tw4E1eEcEp5qDc/LpUedIa3G5skUvZIt98UpBQonu2FMkkPURPGi8nBN50
-         fXE7rXxrQwTrNkf2dBOhsfJoW3TOTEqLNSuIejX8zvvGpZGd+2S7xzWrlPKWwCm8Wfnx
-         XHqRjo6c7AVBBe4+LXWfr8EdSDyhDM+MMoqaeHZiu47CVIbYuBt9VGsvDCp6N8GBLUom
-         eDp77DPn+fjJcPztBb5P/Db4ccQvLqfsXrm2IsqPJ3fHn6xDQVfpE80Iix3CZH904szb
-         1DqnikkigZySsPe3oP9aMj2zG8fq40a0nRCJF0QinVB/Ilc1dWshAQfkVGIcnIla3r5J
-         L1Xg==
-X-Gm-Message-State: AOJu0YwjvSg6CEpR09Qk7dyj8hV9tJ+ugJa7SHYKf93XHvDFUso5HQQx
-	k4HpwHNzi6y3PT2ez3nnA6ciCKcPwwey9xW/gpICkV1Jc5IgZlShR1ItSPwQHGY3er13LvxYvCu
-	vPt2zoHZtYWOgMLt5msE6WJbCTNwAsH0=
-X-Gm-Gg: Acq92OEUGhvoYa86rVPMMq/bxXtE0c9Hsc1WUBDw05KNu/+7Jlm9OyO0Am2HjW10lWY
-	guX8jyNhXgas2yDdtx9q72Q1Ita4TRxzaGTCFEjWQobTFgqavZWtB4SzbJp7hUiyHLNDcPO4zGR
-	Wwi9THKu8WOAXY6JAh1N7gHvKMAEb/ldOfT4KJKHaLC3XoHZpC/tWAkFyL8gGnX1W7cbj4+DYDp
-	/XxIMXBgySj3ViPUO+JieBr/kbddItXDgnisT1CoZ26+8GwlLXKw8tADy9hcdB4TeDdL43UNNpz
-	m3P/pGyx6HMAel0eihY=
-X-Received: by 2002:a05:622a:14b:b0:516:e3df:c10a with SMTP id
- d75a77b69052e-51795b9fa29mr358546191cf.24.1781078081955; Wed, 10 Jun 2026
- 00:54:41 -0700 (PDT)
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=ha1+QTvU;
+ spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id A433B4E4082F
+	for <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 08:29:13 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 79BCF5FFC9;
+	Wed, 10 Jun 2026 08:29:13 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 1F94A106B9153;
+	Wed, 10 Jun 2026 10:29:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1781080152; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=IPK27e3KqtrzDztNyMoJ7eMH5jYJ5s0eQqVu9yM1wZI=;
+	b=ha1+QTvUjbkMJQ6MBIuymvxVuLqhqcBbDf2p0GOeJRiimSI/bi2CO9mjI+uPUEYElgeiH5
+	Z281n0uwkSKJrSd5vXQKoBqFGVnLaLO4Zc24smyfdk+607ec4WpT1MNi/lj/mhbqABG17I
+	S/DeFaONLa6eTQ7EeMeN15zn4PuwA3j4O36QabeUZ0rJsPTDQ91UozrBaiIOeIoEKfg1yc
+	3+Nh+I513ENJaUxf52x3mqWnOTo2JTx4ed9OJBhWZVzG7T5HSvi1fptufRNQ8xopl/2pA4
+	4I7SfWfPZgRozLdBamVkGl47JJRJkV46Zuux5Hv5XJk88ryrthMkS2rOrbcXXQ==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Date: Wed, 10 Jun 2026 10:28:51 +0200
+Subject: [PATCH] doc/bitbake-user-manual-ref-variables: document
+ BB_CONSOLE_LOG's persistence
 MIME-Version: 1.0
-References: <20260610074013.558709-1-anders.heimer@est.tech>
-In-Reply-To: <20260610074013.558709-1-anders.heimer@est.tech>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 10 Jun 2026 09:54:30 +0200
-X-Gm-Features: AVVi8CfIarO29e2-bs2YVl-0H6h5LwbNmxl6eQo-S3TfYOpNl2AlQJkZ_PWL1rk
-Message-ID: <CANNYZj-=MA6L1w8_zOEngOZqHDqmbuuz74v9Fy=pgxr1D+Vs9A@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 0/2] fetch2/wget: limit auth headers on
- checkstatus redirects
-To: anders.heimer@est.tech
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260610-bb-console-log-persistent-v1-1-5430d24061c3@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMQQrCMBBG4auUWTuQVCmtVxEXZvxbR0pSMqkIp
+ Xc36vJbvLeRISuMzs1GGS81TbHCHxqSxy1OYL1XU+vaznXecQgsKVqawXOaeEE2tYJYWAYvOJ7
+ 82A891X7JGPX9e1+uf9sanpDyHdK+fwD0pIlPfQAAAA==
+X-Change-ID: 20260610-bb-console-log-persistent-c91ce341f898
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ docs@lists.yoctoproject.org, Yoann Congal <yoann.congal@smile.fr>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1476;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=FNXwukiNliKbSNOisBezSc314NnOUxnxeI6v3bvCLU4=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBqKSBXRlllfJNgsjSP+sfEJwdnQHAnymTVv9aOr
+ lqOpHC15vOJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCaikgVwAKCRDRgEFAKaOo
+ Ni4ED/4/l0nlmGMiHLc8dImeTPMbRDBmueKZXJCC/Y5mCr3F6J8mXRpoYhfmRf46rr+BHecQS9u
+ ztrJwTlNssSN+5OldnUTcdQjHkgwQ5JOqkX9YbXbHcpzBzUx1QT5uGNY1IvemukHMdW2ZdK9TR5
+ B7CZW0lTgEnuveZeV+7E1IklyEEQz3C6yB2SWDLbFAeCT3s+8zYvnqpu3ggZ2K+6ayct51mm7rP
+ eJAmR9G8St649H54z3XjkKz2F9WrOdV7xroxmOPgm8u9h6k00yN1OoY4r3FhmhxiuRmHokK6K5w
+ UA53s6eGDrLEJt4mdVfb1ayFwcew41lcu//dzKBNkeRDYJXq6DXovrGWe6aCA7DIcuCznhS3mcn
+ lt0s6Fqx5pdssz7ZLl/27cSXEyUsznYP83iArencbCromeK0C/QtiDHFAXJxNPUy5rIXGvLRLvQ
+ zEU76gOn4CdLruV65+4zFd73rXenregYmVLnz1+FXTHlJT9q97mbEAllP/2Rc14GmR60iosiYjG
+ ncTB5HxRZM4rOcB7QzXPWqfq1OHqVA2/oiBw+qVUtOJdZU738tJsfscyjpBa7ZTwtXNcTt9q0LV
+ elv8WaOnE9yYZMhMeAwiQLxeaHyKOl990NDLDIECpAvC3HF1fVcwsbiepzy8Re2VNZrb1oB8jQ3
+ wrcge2m8cSjyKhQ==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 07:54:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19639
+ <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 08:29:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19640
 
-Unusually, this was rapidly merged to master almost immediately after
-the patches were posted. Is this a sensitive security issue, or what
-is the rationale?
+Changes to this variable only take effect after a server restart.
+Document this behavior.
 
-Alex
+[YOCTO #15641]
 
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+---
+ doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-On Wed, 10 Jun 2026 at 09:40, Anders Heimer via lists.openembedded.org
-<anders.heimer=est.tech@lists.openembedded.org> wrote:
->
-> FixedHTTPRedirectHandler currently copies request headers when following
-> redirects. The first patch drops Authorization and Cookie when the
-> redirect target has a different origin.
->
-> The second patch adds local HTTP server tests covering both same-origin
-> and different-origin redirects.
->
-> Anders Heimer (2):
->   fetch2/wget: limit auth on checkstatus redirects
->   tests/fetch: cover checkstatus redirect auth handling
->
->  lib/bb/fetch2/wget.py | 27 +++++++++++++++++--
->  lib/bb/tests/fetch.py | 62 +++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 87 insertions(+), 2 deletions(-)
->
->
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#19636): https://lists.openembedded.org/g/bitbake-devel/message/19636
-> Mute This Topic: https://lists.openembedded.org/mt/119736443/1686489
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [alex.kanavin@gmail.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+index 9824b58ef27..f3e1a3a38c9 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+@@ -135,6 +135,16 @@ overview of their function and contents.
+       Specifies the path to a log file into which BitBake's user interface
+       writes output during the build.
+ 
++      This variable's value remains persistent during the entire execution of
++      the BitBake server. Changes to this variable will only take effect
++      after a server restart, which can be accomplished with the ``bitbake
++      --kill-server`` command.
++
++      .. note::
++
++         For more details on how to make the BitBake server persistent, see the
++         :term:`BB_SERVER_TIMEOUT` variable.
++
+    :term:`BB_CURRENTTASK`
+       Contains the name of the currently running task. The name does not
+       include the ``do_`` prefix.
+
+---
+base-commit: c687d42b81b17e7a2399099cab0f1a6aafcf6520
+change-id: 20260610-bb-console-log-persistent-c91ce341f898
+
 
