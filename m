@@ -1,154 +1,113 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9981FCD8CB9
-	for <webhook@archiver.kernel.org>; Wed, 10 Jun 2026 16:27:11 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.24652.1781108829476362476
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDE1CD98C5
+	for <webhook@archiver.kernel.org>; Wed, 10 Jun 2026 22:53:28 +0000 (UTC)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.33614.1781132004214593902
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 10 Jun 2026 09:27:09 -0700
+ Wed, 10 Jun 2026 15:53:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=GLzngfOQ;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-490b915ded5so61494655e9.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 09:27:09 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=15GqDTtr;
+ spf=pass (domain: smile.fr, ip: 209.85.128.49, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-490acbb0f89so50063905e9.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 15:53:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1781108828; x=1781713628; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1XDuyMQfP7BjsdhmoUxgNh0WBfUM+mppX8UnIHbMiBw=;
-        b=GLzngfOQmDwzr+VxEQMY38WvBaRvEp1IuT03I4I+A0JkqFxQXMWcPv00U7A6lgn3vL
-         LkF9eakHAdd+bq8H503bjkdrU6knc8FZOoP/lbHKpcRfs6u6cC07u+Wu4gZCW56ecv9i
-         BjMbAcETzVwovLObPtUYGN1U8QfHGGroEoLgU=
+        d=smile.fr; s=google; t=1781132002; x=1781736802; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LLVPTjkqosh1wJaBP69LS8t1/GcfX/Zz4SlkTIkeHRo=;
+        b=15GqDTtr2B5mnW2cYSn5XiAXDGnAu5LXB8AgARIKcAKdoaZ/Zzf87hLewUFoUePElo
+         J+ZUxxpICS08oINE2jkJ+A35G2JljuhMoVwdeh/kCQtdnxROrFtpHoATcd5We69xgI8C
+         npiYaaTE7EJs475p1wjKvbO8mX5oWxis/pcUg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781108828; x=1781713628;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1XDuyMQfP7BjsdhmoUxgNh0WBfUM+mppX8UnIHbMiBw=;
-        b=W4m4ShHNIBFRnlnivAETC8q3TDkfgEIUAfUqFyT9fH69PCpX3Hplqm53vdx4tCIQL7
-         wWVhdseQD+PZlVsTihZd40jR1d0Sd2HRLfMmY9qvsFe8D/kvTyP6nNn2gmspW6uRp+kH
-         eU5cdibv4vlgY/zjkhX4vFFjp90Vw0iuNaTny9XNwA+7DEQd/RuFDDsPRaUMhWP3uCpn
-         Yr5zmTaV63ugnNynFRVXB4EsEeFgxnO2471pyjLcJADIjc+e/ZS0/oevht3suQqcAgZt
-         vgwOKcOm4I0tsiIxqW1YQbEU2DSXVNqRpr96uDmt+d+H/q9tRcpky4/Lge3It4IiEvhn
-         kZsg==
-X-Forwarded-Encrypted: i=1; AFNElJ9vapfrtJnueFFufyGGh6MSoYWVC7HMICS9t9FxWiVhYeRcbiesK5rpHXhwZVN4JILWiw8f3kGI9Fzr8vqw@lists.openembedded.org
-X-Gm-Message-State: AOJu0YxAekfC/elIUDnL05COPAqvjHtXPkNQFZM0qszAHSxUPr8yDc4B
-	Wuavp/BbbtYE+uN2foUt+AFbg82ErcTteDF5e8il6lg6njsBWny9TpT/knmo9uNSf4g=
-X-Gm-Gg: Acq92OFtWfT18a+U4T8AcloE6SwMPpzqYQTlw5BgW7enI5YJxRlXXG7zV/lcZvjL1Vm
-	BQZkARO5Iku19Sgur+djK5W7GI6UC5IVOWpDsUgxiEc/h5RnZjmRGxveb/1ewohx0rUpU13fwly
-	rZ5c93wgWxwDigYDu++XQXCr6+AejQY0Gis2RmMc2vdiFpEzXpxxohvRtpdg+Z/LE8fgZJ1QqTc
-	ykAG91G7+GP9nrrRD1YxYRdtvLSWnlMiSTBmnomRAurW/q+0In9y0E8ZosIG3qAppqlVgr2xz/W
-	pc3rAPgJsreRHyxGLOG0uZyNkoR/M02yiastM4mF5CMW9muiGRmoTAcpmU/Mt+fEUoU0ika4br4
-	EMvpeRkXphtc9PS0HeBgOzv7MYIUX2TB7H3GKDiiRDUASAdX3ikIkNlWN/QjKxgfkeiCUscYFVz
-	Us6C+k2eJd9cxvJnmFXfNQnVYo5lSy2VHjZLPL7oIHijPktz81Zt1nx1Y5w6i7Wfs85/BT6IzKw
-	69MpqS0MmVl3UinqTKORMmK
-X-Received: by 2002:a05:600c:4e04:b0:490:cc1b:15c7 with SMTP id 5b1f17b1804b1-490cc1b1631mr279614945e9.30.1781108827790;
-        Wed, 10 Jun 2026 09:27:07 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:e996:5a7:2609:813f? ([2001:8b0:aba:5f3c:e996:5a7:2609:813f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490e285f4d9sm379235e9.12.2026.06.10.09.27.06
+        d=1e100.net; s=20251104; t=1781132002; x=1781736802;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LLVPTjkqosh1wJaBP69LS8t1/GcfX/Zz4SlkTIkeHRo=;
+        b=eWCXjh9SrWn2p8db+0JZazo39tBzkYmJHnaVIWrjOcoxnB2M8ioQ5hvhVsB7Ti+BZo
+         63rhqLH1qfpDpeG0mLAQFGQ065/IlrcwVEaTDocksVA8+qCJ4xCv+Xm7poWjYi5mrYCo
+         9IFIvhxnkZyWc1RQ/cGkhZRCyn6kTfVYvh9MpW3aDCsOtLSnO1sQZPEQHOOmHinKF8TC
+         Ovxvdd3EMx5AvReY7FZyjfa2BDFnFdqhFqyvSPx93Pf+V5RgJ0AHMzBY+c3NitKJ7Fsc
+         6bRFhXN8BI22it2rc6Gs5Mp0twYzbF1uhQTnrBYI6tKib3KFKL0NvKgHXYLGvmylO+Nu
+         zLSg==
+X-Gm-Message-State: AOJu0YwPKMpNjGmzYTQKBS6JlqGdGXkKGv4TiYruluw9XfzzAEiErHuh
+	xPRaJmS3qnXa6mNO2rtE124mB1ciJaEIj0MTq+4xcdGHHd+ZmpCDiWascaI7c6adC/ZGdrhPX3a
+	J9dWH
+X-Gm-Gg: Acq92OEIRonNtdJ/LIIIAU1r7x4N4vst8Hyw/yyM5sBgM9ByExd1gr8SMLWZEgP5uli
+	DvSc2v3+iIoci88VuRn9hPfHaYklYnCNa+KyaPqZxWArqwVT5mA+83rOm/ftFK0IbPG9dnjYoIN
+	mBz3cAuRJ2DmK4x0RR//oOUtlqqeBFsYtGMxwyvnO7Jn6zm5YpvaLnjJaKdmuUBowtBP1s85OMz
+	W901Q1RnLFR/VWEO4J0+X/IAeaiAxAgrb4Eidf/TbTt6NMyB95xN14BfQXD5sdk4y5T5cUpGTAG
+	R9HRI7YST/Fva8D0khJcGOSS2WnT1Gyq3e1xsCZktao2/skmhSfhMbM7AamVN0YFGiV2HAimTHo
+	XJwkQJU9r5lqSKrbHwl62QgcxjRwO+q6d56VqHGvOZd0YCTwsnH0BT0culHLI7LKVXQlF1w67Ug
+	j5stR8Q01mzWWniUWVCYrfAjYvXg5Spu12wM/eBE9w+qW4yWpWh6YKUy53CzDSK79/wyjVvBy6n
+	p4ZxfjP5pIi6BPeY0iup2XWjFCwD2jvZeL0bR4=
+X-Received: by 2002:a5d:4f0d:0:b0:45e:f188:393d with SMTP id ffacd0b85a97d-460677b572amr189436f8f.29.1781132002219;
+        Wed, 10 Jun 2026 15:53:22 -0700 (PDT)
+Received: from FRSMI25-LASER.home (2a01cb001331aa00bb749f54eeb85d7b.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:bb74:9f54:eeb8:5d7b])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f351d69sm132348771f8f.29.2026.06.10.15.53.21
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 09:27:07 -0700 (PDT)
-Message-ID: <411bfc4142ad6d577df4b9350d6a18ca977b7127.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel][PATCH 0/2] fetch/npm: fix security issue and
- re-enable fetcher
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: thomas.perrot@bootlin.com, bitbake-devel@lists.openembedded.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Date: Wed, 10 Jun 2026 17:27:06 +0100
-In-Reply-To: <20260610-dev-tprrt-fix-npm-v1-0-9bf501d4ee0e@bootlin.com>
-References: <20260610-dev-tprrt-fix-npm-v1-0-9bf501d4ee0e@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-9 
+        Wed, 10 Jun 2026 15:53:21 -0700 (PDT)
+From: Yoann Congal <yoann.congal@smile.fr>
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake][wrynose][2.18][PATCH 0/6] Patch review
+Date: Thu, 11 Jun 2026 00:53:02 +0200
+Message-ID: <cover.1781131922.git.yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.47.3
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 16:27:11 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19646
+ <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 22:53:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19647
 
-On Wed, 2026-06-10 at 17:46 +0200, Thomas Perrot via lists.openembedded.org=
- wrote:
-> The npm fetcher was disabled in 355cd226 (Jan 2026) because it retrieved
-> checksums from the remote registry rather than from the recipe.=C2=A0 A
-> compromised registry controls both the tarball and its advertised hash,
-> making checksum verification meaningless.
->=20
-> Fix the root cause by separating URL resolution from checksum handling:
-> - _resolve_proxy_url now stores only the bare tarball URL in the .resolve=
-d
-> =C2=A0 file; the registry-supplied dist.integrity / dist.shasum values ar=
-e
-> =C2=A0 ignored entirely.
-> - _setup_proxy builds the proxy URL from that bare tarball URL and inject=
-s
-> =C2=A0 the checksum from the recipe's own SRC_URI parameters (sha512sum=
-=3D,
-> =C2=A0 sha256sum=3D, etc.).=C2=A0 When no checksum is provided the proxy =
-URL carries
-> =C2=A0 none, and BitBake's standard BB_STRICT_CHECKSUM machinery handles =
-the
-> =C2=A0 missing-checksum case the same way the wget fetcher does.=C2=A0 A =
-bb.warn()
-> =C2=A0 is emitted so recipe authors get a clear signal instead of a silen=
-t
-> =C2=A0 unsigned download.
-> - version=3Dlatest is now a hard ParameterError instead of a warning; it =
-is
-> =C2=A0 inherently non-reproducible.
-> - Narrow the broad 'except Exception' in _npm_view to json.JSONDecodeErro=
-r
-> =C2=A0 so that FetchError and ParameterError propagate typed to callers.=
-=C2=A0 Also
-> =C2=A0 fall back to str(error) when 'summary' is absent in the registry e=
-rror
-> =C2=A0 dict so the message is never silently None.
-> - Clear uri.params before rebuilding the proxy URL to prevent a
-> =C2=A0 .resolved file written by the npmsw fetcher (which stores the full=
- URI
-> =C2=A0 with checksum params) from contaminating the npm proxy URL with a
-> =C2=A0 registry-sourced checksum, bypassing the security invariant that o=
-nly
-> =C2=A0 recipe-provided checksums are trusted.
-> - Remove dead 'if ud.version =3D=3D "latest": return True' branch from
-> =C2=A0 need_update(); version=3Dlatest is rejected at urldata_init time.
->=20
-> Migration note: recipes using npm:// must now supply a checksum in
-> SRC_URI, e.g.:
->=20
-> =C2=A0 SRC_URI =3D "npm://registry.npmjs.org;package=3Dlodash;version=3D4=
-.17.21;sha512sum=3D<hex>"
->=20
-> On the first build without a checksum BitBake will download the tarball,
-> compute the hash, and instruct the author to add it.=C2=A0 Any stale .res=
-olved
-> files under DL_DIR/npm2/ written by the old fetcher (which embedded
-> registry-sourced checksums) must be deleted before rebuilding.
->=20
-> [YOCTO #16105]
->=20
-> Fixes: 355cd226e072 ("fetch2/npm: Disable npm/npmsw fetchers due to secur=
-ity issues")
-> Signed-off-by: Thomas Perrot <thomas.perrot@bootlin.com>
-> ---
-> Thomas Perrot (2):
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fetch/npmsw: fix security issue and re-ena=
-ble fetcher
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tests/fetch: restore and extend npm/npmsw =
-test coverage
->=20
-> =C2=A0lib/bb/fetch2/npmsw.py | 12 +++++-----
-> =C2=A0lib/bb/tests/fetch.py=C2=A0 | 64 ++++++++++++++++++++++++++++++++++=
-+---------------
-> =C2=A02 files changed, 51 insertions(+), 25 deletions(-)
+Please review this set of changes for 2.18/wrynose and have comments back by
+end of day Friday, June 12.
 
-I suspect there is a patch missing or something here as it doesn't
-touch npm.py and half the changes above appear missing...
+Passed a-full on autobuilder:
+https://autobuilder.yoctoproject.org/valkyrie/?#/builders/29/builds/3963
 
-Cheers,
+The following changes since commit 294074e65f37822a0f31bb11eb968d311b54a66a:
 
-Richard
+  toaster: use https for clones, remove cgit in links in defaults (2026-06-06 01:17:50 +0200)
+
+are available in the Git repository at:
+
+  https://git.openembedded.org/bitbake-contrib stable/2.18-nut
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.18-nut
+
+for you to fetch changes up to 52b3bff42f17933595af48654098b172ea10baff:
+
+  fetch2: allow empty value for params while formatting URI string. (2026-06-10 14:11:31 +0200)
+
+----------------------------------------------------------------
+
+Anthony Squires (1):
+  fetch2: reraise IOError during download
+
+João Marcos Costa (1):
+  layerindexlib: restapi.py: fix unbound variable
+
+Marcio Henriques (1):
+  bitbake: fix issue with varflag exclusion
+
+Thomas Perrot (2):
+  fetch2/crate: skip yanked versions when reading cargo index
+  fetch2/crate: guard against empty version list
+
+hongxu (1):
+  fetch2: allow empty value for params while formatting URI string.
+
+ lib/bb/data.py               | 2 +-
+ lib/bb/fetch2/__init__.py    | 8 ++++++--
+ lib/bb/fetch2/crate.py       | 7 ++++---
+ lib/bb/tests/fetch.py        | 6 +++---
+ lib/layerindexlib/restapi.py | 2 +-
+ 5 files changed, 15 insertions(+), 10 deletions(-)
+
 
