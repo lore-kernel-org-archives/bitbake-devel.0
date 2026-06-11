@@ -1,218 +1,250 @@
-Return-Path: <thomas.perrot@bootlin.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62803CD98CC
-	for <webhook@archiver.kernel.org>; Thu, 11 Jun 2026 07:16:59 +0000 (UTC)
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.40087.1781162215936945806
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEE7CD98D2
+	for <webhook@archiver.kernel.org>; Thu, 11 Jun 2026 11:05:29 +0000 (UTC)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.42942.1781175928266271750
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Jun 2026 00:16:56 -0700
+ Thu, 11 Jun 2026 04:05:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=LM90H8M2;
- spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: thomas.perrot@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 2EEBE1A38A1
-	for <bitbake-devel@lists.openembedded.org>; Thu, 11 Jun 2026 07:16:54 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id E82435FF03;
-	Thu, 11 Jun 2026 07:16:53 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 48F2A106B9E11;
-	Thu, 11 Jun 2026 09:16:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1781162213; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references:autocrypt;
-	bh=yVUKr8sgZWuqCWUh4MHrNYwIOk44P1keYZSmgsxJdcE=;
-	b=LM90H8M2KIHA4HNvt8lFb8k0KovuPcWE1XdTBvtWIIjSMIp1RWuV57ZuqPTVfFZPBCGD+j
-	ENCKJDKs5DnfDzzXEPiJv8zyDH2SzTL73y+mJ+cPF5Q3uwpCa12iSPYQIQcISFIypUv0lR
-	GcfdJ/9EGwtKvZ7qbyDEFixIFshExPd2PkIOrPztGcO3M4wo4kz3CWqQJgymD45eAKtz6b
-	q95rmFIWfrGMga1bxPSsWnIvQ7lfV8u7LujGoZmUlOwiC2f9csRSTQu+TQi4mzVfDzE8kw
-	73/IMsetWpZ5YJOaucF68KUNC7jrVo7MN0hrtSM9U0lu+2PVdr+2l1RLhco0SQ==
-Message-ID: <b792862b45f9fdb57cba31418d8a18c68dd2e70e.camel@bootlin.com>
-Subject: Re: [bitbake-devel][PATCH 0/2] fetch/npm: fix security issue and
- re-enable fetcher
-From: Thomas Perrot <thomas.perrot@bootlin.com>
-To: richard.purdie@linuxfoundation.org, bitbake-devel@lists.openembedded.org
-Cc: thomas.perrot@bootlin.com, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Date: Thu, 11 Jun 2026 09:16:50 +0200
-In-Reply-To: <411bfc4142ad6d577df4b9350d6a18ca977b7127.camel@linuxfoundation.org>
-References: <20260610-dev-tprrt-fix-npm-v1-0-9bf501d4ee0e@bootlin.com>
-	 <411bfc4142ad6d577df4b9350d6a18ca977b7127.camel@linuxfoundation.org>
-Autocrypt: addr=thomas.perrot@bootlin.com; prefer-encrypt=mutual;
- keydata=mQGNBF+/ZOUBDAC2DghCjZvmgYcve02OG7dGZ7Iy58uEwne3LB7w7nRwdAxKw7ZaiVqwY
- O+yNGVi+GVx7oA6Wn4pv46z+QDRLQiq6OseuXhkSGCg7U/yBCUq12B/GRGO1Qt2Qi1mJJT1s+1qZ5
- Gxv6Nypz9qKVn94GM2bR1hXBga0t87vBpebThOHmX5d/0dqIcVxRCM7onNb0dDyRoVgLS5rBhQzrL
- CMrJaCy39xZUy0J1SOlH4Mgk6EhJIPYY4wlzikGX6urg+Tc9EjGd78ry0e0p5U5qgjFR5QGJDy1Gn
- U3CfwbT9sowdCASDbQDUoltlv2iWJCLa0xl97KVchCa0pr7HKbFA3J5SLKqFYUBCkFL+5WudYlz2n
- XxiUgyviMQxyK+ij66kEi6/2zFDAecd43pHV7790ptqZBC3Jc67Emj7Vo3ShX6RXPPxxbeCTOF2uk
- I45aJ9XcVFH/MFE96NjXj8uahnIsiTPyuCUoJu8tj7TSQyue874qJqVQvqlFyt2aZYJZ8ruq8AEQE
- AAbQpVGhvbWFzIFBlcnJvdCA8dGhvbWFzLnBlcnJvdEBib290bGluLmNvbT6JAc4EEwEIADgCGwMF
- CwkIBwIGFQoJCAsCBBYCAwECHgECF4AWIQSHQHfGpqMKIwOoEiGfwAsFcf4K7QUCX79mdwAKCRCfw
- AsFcf4K7fhbC/wP0kSl6id2E/K3+UdXk6CLMVRbCFLCREzQs5WFpQ6l/I0WGOamhrOgegdszheiVF
- orlUP8d37XSpFAqydhKGaN78V5Dps0Wmwm4lIlS4MtQXJtSLUHXDJLIZLW0pw8tiPLKsd1o/yDkXE
- dnpsjJTRG6SdDSHnyOB2/gh4p+yTaLytFdARk/r4/P26+L+FiH0fFl+RnBt19LPklfKgeDc7GwIif
- ja+nIWpp3W23DAUuI6xduEut25Q89yu7Ci8CliLfAiLy9bIGjBQWU2Y+1/j/7KuPj6VbBsZWLTZY0
- hUmpJSTnWAqc9SMsNxo7NSQuddgviz5e2tqucaRqxP02FGzNa8U4NAKdWaXrlHG5Dglj9XH0DK+SH
- +c96qqFewYD8VPQ6XAGxQcXbrtJmiMor1R2DfziispLRvJcfYs8xqabbCtoS3ouXB9XRi8hn7A2kh
- ME1ryS+Oh63JshXHnw6bmjCpVd/p+fGLIGU6A47pJOpviKR4jEO84pl2ejtDZ3Tc=
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-2VVxvBduIEgF5n2Klw5F"
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=WOAnWDIv;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-490b43e2b95so64298825e9.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 11 Jun 2026 04:05:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1781175927; x=1781780727; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XJjovn7dwoRAD70YNDkfkg634ry85efpc7MuxzqjQ1U=;
+        b=WOAnWDIvk3wqFkZYPSb+SGhvWfoKbC/7NF+SvRrJJwtl8tmydSp2nwfKmEhlDNS3a1
+         hDMzyn8lfMzUQUJGO9cOo/4qgNZLbLgJy9QMXrDcSNERUJ1fzBf8C0aowhuk1QnRkeNM
+         y0rtXqMLHdWxqpnm2W24V7fKh9JjrxdlVJSuM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781175927; x=1781780727;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XJjovn7dwoRAD70YNDkfkg634ry85efpc7MuxzqjQ1U=;
+        b=GzEyNlp2ypr3DmC+RkWfZv1eVpS91U+hpBKSa7+ahT3kfCjZMk7irbrg1LgJEYCvtC
+         +aWLfvFvn1kvqI3CPYgAphv/2jv3aAQcxQfK3pcvIsga3dg5Fugr08wBaxtTqDuOSp9y
+         KFKAXu7oHt8gltEhBo5PpWbo++P1FNjV0ZWfKnY4rXnbkbbzkYjMgVFBUrpRChiqoKSd
+         1z7jKjaiKnYIwEfxt3EpQo+aUs6dz4ofrd91HNZ7OtPAZkFH+8XyY9kN1NP+f5hG0mLt
+         e9xkxz4ST6R3HP/gy5McrJHTewUn6uj9muofzb0U7lujyob3m7v6T+a4LWaORzFAuRKf
+         +fgw==
+X-Gm-Message-State: AOJu0YxFBZi2Df45EzZJQzywoZbihOFstwDyPs5eK/1XnL3Zyv8Ao8ZY
+	vgjhOJpckEHku+79j4nuNswLW57s5nVQCeZCj+is1gFwqyMB6IYwPWVMl2pdF2zQUpPxxJinHn5
+	+Y8Td
+X-Gm-Gg: Acq92OGUaMG41JXNpJCMQO5iAKaYB+upIaGxgDAJF7iKXgtJIYp4nrLekEUa+B4pQfg
+	syIgrt+v4KxI+JO6nLUJsKIJ9E9+ZPR+krCx2jEMGVNczSbfhgfHj6UpHcf3JnOLgZA7gJKOMJ4
+	qboi9MeC6JAqUalZB/cp3vmyvrstUGcDUIk7VTN/VWh+fLfDje7Z3vb8RW7FkvpBd6qAXgIrQA6
+	nsOxuVgNOPYPHeZRkrimHg82kUTb1G+ugO5+UZfk1nPdIv4U6gc1nR+Eihqb1khA5ujweKHtxyb
+	I17Nqvkf8ttSRCbEz20UTHrcltv6dSyVGFbUXdX2eM/9+vN8G53bWIXH9M9KMfzPeIAcChisbKF
+	8IWy1crA8XEkId75I9wKw1Zu2LaYso0UIFPR98tZ6sN0JxVndYntJFXDiMPPDxdGRhHwdp77fqJ
+	B343ES5W4cuiRSDJJz13b5kwsBnSmuH+45HbPSI56rgULNjYE0lZ68xTNqsblc3r8=
+X-Received: by 2002:a05:600c:8b56:b0:490:be44:32ea with SMTP id 5b1f17b1804b1-490e55c264fmr29201965e9.7.1781175926300;
+        Thu, 11 Jun 2026 04:05:26 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:e596:3a72:77cb:f054])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f3529e0sm81147411f8f.28.2026.06.11.04.05.25
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2026 04:05:25 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 2/2] lib/bb: Further shell=True cleanups
+Date: Thu, 11 Jun 2026 12:05:23 +0100
+Message-ID: <20260611110523.322273-2-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260611110523.322273-1-richard.purdie@linuxfoundation.org>
+References: <20260611110523.322273-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 11 Jun 2026 07:16:59 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19654
+ <bitbake-devel@lists.openembedded.org>; Thu, 11 Jun 2026 11:05:29 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19655
 
+Go through the remaining shell=True references in bitbake and clean them up
+to use lists where possible. By using existing helpers, chdir and PATH
+settings can be dropped.
 
---=-2VVxvBduIEgF5n2Klw5F
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In toaster, the current branch can be obtained more easily with modern git
+commands.
 
-Hello Richard,
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/fetch2/crate.py                        | 21 ++++---------------
+ lib/bb/fetch2/gomod.py                        |  7 ++-----
+ lib/bb/ui/ncurses.py                          |  2 +-
+ .../bldcontrol/localhostbecontroller.py       | 21 +++++++++++--------
+ lib/toaster/toastermain/settings.py           |  4 ++--
+ 5 files changed, 21 insertions(+), 34 deletions(-)
 
-On Wed, 2026-06-10 at 17:27 +0100, Richard Purdie via
-lists.openembedded.org wrote:
-> On Wed, 2026-06-10 at 17:46 +0200, Thomas Perrot via
-> lists.openembedded.org wrote:
-> > The npm fetcher was disabled in 355cd226 (Jan 2026) because it
-> > retrieved
-> > checksums from the remote registry rather than from the recipe.=C2=A0 A
-> > compromised registry controls both the tarball and its advertised
-> > hash,
-> > making checksum verification meaningless.
-> >=20
-> > Fix the root cause by separating URL resolution from checksum
-> > handling:
-> > - _resolve_proxy_url now stores only the bare tarball URL in the
-> > .resolved
-> > =C2=A0 file; the registry-supplied dist.integrity / dist.shasum values
-> > are
-> > =C2=A0 ignored entirely.
-> > - _setup_proxy builds the proxy URL from that bare tarball URL and
-> > injects
-> > =C2=A0 the checksum from the recipe's own SRC_URI parameters
-> > (sha512sum=3D,
-> > =C2=A0 sha256sum=3D, etc.).=C2=A0 When no checksum is provided the prox=
-y URL
-> > carries
-> > =C2=A0 none, and BitBake's standard BB_STRICT_CHECKSUM machinery handle=
-s
-> > the
-> > =C2=A0 missing-checksum case the same way the wget fetcher does.=C2=A0 =
-A
-> > bb.warn()
-> > =C2=A0 is emitted so recipe authors get a clear signal instead of a
-> > silent
-> > =C2=A0 unsigned download.
-> > - version=3Dlatest is now a hard ParameterError instead of a warning;
-> > it is
-> > =C2=A0 inherently non-reproducible.
-> > - Narrow the broad 'except Exception' in _npm_view to
-> > json.JSONDecodeError
-> > =C2=A0 so that FetchError and ParameterError propagate typed to
-> > callers.=C2=A0 Also
-> > =C2=A0 fall back to str(error) when 'summary' is absent in the registry
-> > error
-> > =C2=A0 dict so the message is never silently None.
-> > - Clear uri.params before rebuilding the proxy URL to prevent a
-> > =C2=A0 .resolved file written by the npmsw fetcher (which stores the
-> > full URI
-> > =C2=A0 with checksum params) from contaminating the npm proxy URL with =
-a
-> > =C2=A0 registry-sourced checksum, bypassing the security invariant that
-> > only
-> > =C2=A0 recipe-provided checksums are trusted.
-> > - Remove dead 'if ud.version =3D=3D "latest": return True' branch from
-> > =C2=A0 need_update(); version=3Dlatest is rejected at urldata_init time=
-.
-> >=20
-> > Migration note: recipes using npm:// must now supply a checksum in
-> > SRC_URI, e.g.:
-> >=20
-> > =C2=A0 SRC_URI =3D
-> > "npm://registry.npmjs.org;package=3Dlodash;version=3D4.17.21;sha512sum=
-=3D
-> > <hex>"
-> >=20
-> > On the first build without a checksum BitBake will download the
-> > tarball,
-> > compute the hash, and instruct the author to add it.=C2=A0 Any stale
-> > .resolved
-> > files under DL_DIR/npm2/ written by the old fetcher (which embedded
-> > registry-sourced checksums) must be deleted before rebuilding.
-> >=20
-> > [YOCTO #16105]
-> >=20
-> > Fixes: 355cd226e072 ("fetch2/npm: Disable npm/npmsw fetchers due to
-> > security issues")
-> > Signed-off-by: Thomas Perrot <thomas.perrot@bootlin.com>
-> > ---
-> > Thomas Perrot (2):
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fetch/npmsw: fix security issue and re-e=
-nable fetcher
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tests/fetch: restore and extend npm/npms=
-w test coverage
-> >=20
-> > =C2=A0lib/bb/fetch2/npmsw.py | 12 +++++-----
-> > =C2=A0lib/bb/tests/fetch.py=C2=A0 | 64 ++++++++++++++++++++++++++++++++=
-+++---
-> > ------------
-> > =C2=A02 files changed, 51 insertions(+), 25 deletions(-)
->=20
-> I suspect there is a patch missing or something here as it doesn't
-> touch npm.py and half the changes above appear missing...
-
-Sorry, that=E2=80=99s strange, it seems I made a mistake with b4. I=E2=80=
-=99ll resend
-them.
-
-Kind regards,
-Thomas=20
-
->=20
-> Cheers,
->=20
-> Richard
->=20
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#19646):
-> https://lists.openembedded.org/g/bitbake-devel/message/19646
-> Mute This Topic: https://lists.openembedded.org/mt/119741992/5443093
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe:
-> https://lists.openembedded.org/g/bitbake-devel/unsub=C2=A0[thomas.perrot@=
-bootlin.com
-> ]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-
---=20
-Thomas Perrot, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---=-2VVxvBduIEgF5n2Klw5F
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCAAdFiEEh0B3xqajCiMDqBIhn8ALBXH+Cu0FAmoqYOIACgkQn8ALBXH+
-Cu2vxwv/WtXK0fladdp7Bb69RXWJo81KyU7uaRA+chQ7d7L23GNRuc6lmp3p/CKV
-f2QITVstItb6rTuJONmO3/cJR5JqFF7dE1ASDhMA609WSYxuXl+PuJC/kGB9wmDd
-torgtgnXKJfbvO7c5NkNBEbSlkZgWeEv3ncUZYIMLGYQmDKXKSlWzivA8bXd4eHT
-GgsPJUGUKPD/UjBFUeQCQqqBrapImoFiFoKk7+yry1TOgbB9m0Bn2rvQyr8eWM2b
-5SgLe8a8bSSEQJOnasjxn0U5l7GPhyZIDpAkhQtCvNYUqzIOWkd6DRK7tbl53rcv
-MPjF0XhFRZEtU4143hkwhRcO7iBMe/fSWJ/6z/pzt4MAGszL7Nylu0NiVEK3HPY3
-2+mdZLa3cl4COB3UfCEyT10j6e7iylR+guAH4y53HptE1XMVRtzEwGfskwPflTAP
-IGpbA6sLgE896vuaSb4Ygvt2icFmCQPhwMptXO1O19YSQ9nkDaYoil5X5DuMVXx3
-ZO9QWlhg
-=5Hsf
------END PGP SIGNATURE-----
-
---=-2VVxvBduIEgF5n2Klw5F--
+diff --git a/lib/bb/fetch2/crate.py b/lib/bb/fetch2/crate.py
+index 8f928ea6b4d..f94e153ee3b 100644
+--- a/lib/bb/fetch2/crate.py
++++ b/lib/bb/fetch2/crate.py
+@@ -17,7 +17,7 @@ import subprocess
+ import re
+ from functools import cmp_to_key
+ import bb
+-from   bb.fetch2 import logger, subprocess_setup, UnpackError
++from   bb.fetch2 import logger, subprocess_setup, UnpackError, runfetchcmd
+ from   bb.fetch2.wget import Wget
+ 
+ 
+@@ -110,19 +110,15 @@ class Crate(Wget):
+         # possible metadata we need to write out
+         metadata = {}
+ 
+-        # change to the rootdir to unpack but save the old working dir
+-        save_cwd = os.getcwd()
+-        os.chdir(rootdir)
+-
+         bp = d.getVar('BP')
+         if bp == ud.parm.get('name'):
+-            cmd = "tar -xz --no-same-owner -f %s" % thefile
++            cmd = ['tar', '-xz', '--no-same-owner', '-f', thefile]
+             ud.unpack_tracer.unpack("crate-extract", rootdir)
+         else:
+             cargo_bitbake = self._cargo_bitbake_path(rootdir)
+             ud.unpack_tracer.unpack("cargo-extract", cargo_bitbake)
+ 
+-            cmd = "tar -xz --no-same-owner -f %s -C %s" % (thefile, cargo_bitbake)
++            cmd = ['tar', '-xz', '--no-same-owner', '-f', thefile, '-C', cargo_bitbake]
+ 
+             # ensure we've got these paths made
+             bb.utils.mkdirhier(cargo_bitbake)
+@@ -135,17 +131,8 @@ class Crate(Wget):
+             metadata['files'] = {}
+             metadata['package'] = tarhash
+ 
+-        path = d.getVar('PATH')
+-        if path:
+-            cmd = "PATH=\"%s\" %s" % (path, cmd)
+         bb.note("Unpacking %s to %s/" % (thefile, os.getcwd()))
+-
+-        ret = subprocess.call(cmd, preexec_fn=subprocess_setup, shell=True)
+-
+-        os.chdir(save_cwd)
+-
+-        if ret != 0:
+-            raise UnpackError("Unpack command %s failed with return value %s" % (cmd, ret), ud.url)
++        runfetchcmd(cmd, d, workdir=rootdir)
+ 
+         # if we have metadata to write out..
+         if len(metadata) > 0:
+diff --git a/lib/bb/fetch2/gomod.py b/lib/bb/fetch2/gomod.py
+index 8a64f644dfd..5cdf8f99814 100644
+--- a/lib/bb/fetch2/gomod.py
++++ b/lib/bb/fetch2/gomod.py
+@@ -135,13 +135,10 @@ class GoMod(Wget):
+         unpackdir = os.path.dirname(unpackpath)
+         bb.utils.mkdirhier(unpackdir)
+         ud.unpack_tracer.unpack("file-copy", unpackdir)
+-        cmd = f"cp {ud.localpath} {unpackpath}"
+-        path = d.getVar('PATH')
+-        if path:
+-            cmd = f"PATH={path} {cmd}"
++        cmd = ['cp', ud.localpath, unpackpath]
+         name = os.path.basename(unpackpath)
+         bb.note(f"Unpacking {name} to {unpackdir}/")
+-        subprocess.check_call(cmd, shell=True, preexec_fn=subprocess_setup)
++        runfetchcmd(cmd, d)
+ 
+         if name.endswith('.zip'):
+             # Unpack the go.mod file from the zip file
+diff --git a/lib/bb/ui/ncurses.py b/lib/bb/ui/ncurses.py
+index 18a706547aa..228fa9a6dc7 100644
+--- a/lib/bb/ui/ncurses.py
++++ b/lib/bb/ui/ncurses.py
+@@ -291,7 +291,7 @@ class NCursesUI:
+ #                            bb.error("log data follows (%s)" % logfile)
+ #                            number_of_lines = data.getVar("BBINCLUDELOGS_LINES", d)
+ #                            if number_of_lines:
+-#                                subprocess.check_call('tail -n%s %s' % (number_of_lines, logfile), shell=True)
++#                                subprocess.check_call(['tail', '-n' + number_of_lines, logfile])
+ #                            else:
+ #                                f = open(logfile, "r")
+ #                                while True:
+diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
+index 50069d47a4c..dcbd9a8260d 100644
+--- a/lib/toaster/bldcontrol/localhostbecontroller.py
++++ b/lib/toaster/bldcontrol/localhostbecontroller.py
+@@ -51,7 +51,10 @@ class LocalhostBEController(BuildEnvironmentController):
+             env=os.environ.copy()
+ 
+         logger.debug("lbc_shellcmd: (%s) %s" % (cwd, command))
+-        p = subprocess.Popen(command, cwd = cwd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
++        if isinstance(command, str):
++            p = subprocess.Popen(command, cwd = cwd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
++        else:
++            p = subprocess.Popen(command, cwd = cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
+         if nowait:
+             return
+         (out,err) = p.communicate()
+@@ -136,7 +139,7 @@ class LocalhostBEController(BuildEnvironmentController):
+         cached_layers = {}
+ 
+         try:
+-            for remotes in self._shellcmd("git remote -v", self.be.sourcedir,env=git_env).split("\n"):
++            for remotes in self._shellcmd(['git', 'remote', '-v'], self.be.sourcedir, env=git_env).split("\n"):
+                 try:
+                     remote = remotes.split("\t")[1].split(" ")[0]
+                     if remote not in cached_layers:
+@@ -172,8 +175,7 @@ class LocalhostBEController(BuildEnvironmentController):
+             # see if our directory is a git repository
+             if os.path.exists(localdirname):
+                 try:
+-                    localremotes = self._shellcmd("git remote -v",
+-                                                  localdirname,env=git_env)
++                    localremotes = self._shellcmd(['git' ,'remote', '-v'], localdirname, env=git_env)
+                     # NOTE: this nice-to-have check breaks when using git remaping to get past firewall
+                     #       Re-enable later with .gitconfig remapping checks
+                     #if not giturl in localremotes and commit != 'HEAD':
+@@ -186,12 +188,12 @@ class LocalhostBEController(BuildEnvironmentController):
+             else:
+                 if giturl in cached_layers:
+                     logger.debug("localhostbecontroller git-copying %s to %s" % (cached_layers[giturl], localdirname))
+-                    self._shellcmd("git clone \"%s\" \"%s\"" % (cached_layers[giturl], localdirname),env=git_env)
+-                    self._shellcmd("git remote remove origin", localdirname,env=git_env)
+-                    self._shellcmd("git remote add origin \"%s\"" % giturl, localdirname,env=git_env)
++                    self._shellcmd(['git', 'clone', cached_layers[giturl]], localdirname], env=git_env)
++                    self._shellcmd(['git', 'remote', 'remove', 'origin'], localdirname, env=git_env)
++                    self._shellcmd(['git', 'remote', 'add', 'origin', giturl], localdirname, env=git_env)
+                 else:
+                     logger.debug("localhostbecontroller: cloning %s in %s" % (giturl, localdirname))
+-                    self._shellcmd('git clone "%s" "%s"' % (giturl, localdirname),env=git_env)
++                    self._shellcmd(['git', 'clone', giturl, localdirname], env=git_env)
+ 
+             # branch magic name "HEAD" will inhibit checkout
+             if commit != "HEAD":
+@@ -199,7 +201,8 @@ class LocalhostBEController(BuildEnvironmentController):
+                 ref = commit if re.match('^[a-fA-F0-9]+$', commit) else 'origin/%s' % commit
+                 # DEBUGGING NOTE: this is the 'git fetch" to disable after the initial clone to
+                 # prevent inserted debugging commands from being lost
+-                self._shellcmd('git fetch && git reset --hard "%s"' % ref, localdirname,env=git_env)
++                self._shellcmd(['git', 'fetch'], localdirname, env=git_env)
++                self._shellcmd(['git', 'reset', '--hard', ref], localdirname, env=git_env)
+ 
+             # verify our repositories
+             for name, dirpath, index in gitrepos[(giturl, commit)]:
+diff --git a/lib/toaster/toastermain/settings.py b/lib/toaster/toastermain/settings.py
+index d2a449627f8..9d2dbc464ec 100644
+--- a/lib/toaster/toastermain/settings.py
++++ b/lib/toaster/toastermain/settings.py
+@@ -229,8 +229,8 @@ from os.path import dirname as DN
+ SITE_ROOT=DN(DN(os.path.abspath(__file__)))
+ 
+ import subprocess
+-TOASTER_BRANCH = subprocess.Popen('git branch | grep "^* " | tr -d "* "', cwd = SITE_ROOT, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
+-TOASTER_REVISION = subprocess.Popen('git rev-parse HEAD ', cwd = SITE_ROOT, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
++TOASTER_BRANCH = subprocess.check_output(['git', 'branch', '--show-current'], cwd=SITE_ROOT, text=True).strip()
++TOASTER_REVISION = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=SITE_ROOT, text=True).strip()
+ 
+ ROOT_URLCONF = 'toastermain.urls'
+ 
 
