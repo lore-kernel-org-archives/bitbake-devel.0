@@ -1,124 +1,179 @@
-Return-Path: <ernestvanhoecke@gmail.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACACCD98CE
-	for <webhook@archiver.kernel.org>; Thu, 11 Jun 2026 12:41:45 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.44454.1781181702592124586
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6CECD98CE
+	for <webhook@archiver.kernel.org>; Thu, 11 Jun 2026 13:11:55 +0000 (UTC)
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.45178.1781183513293881046
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Jun 2026 05:41:42 -0700
+ Thu, 11 Jun 2026 06:11:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=qWl95p4m;
- spf=pass (domain: gmail.com, ip: 209.85.128.54, mailfrom: ernestvanhoecke@gmail.com)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-490b8a97b11so88569395e9.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 11 Jun 2026 05:41:42 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=cHh11Mc5;
+ spf=pass (domain: smile.fr, ip: 209.85.221.44, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-46013161068so4014322f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 11 Jun 2026 06:11:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781181701; x=1781786501; darn=lists.openembedded.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jt2zy/JNNL0LpeQtU+bESkacj/g4D71Y5PjGQARcBq0=;
-        b=qWl95p4mBnzRQxD1oviVV+yBvhuWF5Eb5foVXaYeOqBnLfLZPo3Y9F0682MTMU/u9Z
-         MVhiIC9/TB96RnXtrBUQg0zPHmLFNHETddAMiwk+OSKC1lZINTvhkySIHYrGjSl/MYZ/
-         hASXi9Eh1Gv314EvW8YycbbeBn4Fx6acwGJjILBed1aoaQo2AydvSIbHZ7XUE190OReQ
-         AjYkC8XNsbhjkUgMyQ1RQpPMXIjiTN6X/12/Fgw7vn7jp2xTf390dLGcPBxwgPNDGVt4
-         ov9gt3OEeLwg5OP+wpbQmLkQaITLUgUVKCs8zj+ByCD1vOIJdu1HI5JKNqdWKT5x+IRh
-         vCuA==
+        d=smile.fr; s=google; t=1781183512; x=1781788312; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/0l5raLZI/cTBQPEQqb5ISjnvVLvXFrYmIo76D6Huhg=;
+        b=cHh11Mc5dSr6qcflV66CIai1aqybokwVGx03p9pQz69kbptI4ob1yT1O/Yv37glyyR
+         yC5gDgIZc5b3jXJN9Zi9fCPbjmXC+6QC+7Ewc56gp74vcI/4WvVJ/2rG7iAz1UGptG1/
+         Dczp+MbZZMTT4+3Pm7VKkK/sVDika5ZIuW0NM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781181701; x=1781786501;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jt2zy/JNNL0LpeQtU+bESkacj/g4D71Y5PjGQARcBq0=;
-        b=p1GS1DIsGI9+0jwv7aqZQ8Sv+ycLlZxhZ0yifbkoiLEpVYmxd4WJ7Ggxx3kgxpJ2Yo
-         hHanOc261/lVE7LP1lFKT7nvFzXD0XlVMv0cICTfXwNq7OwXgrKx19wI6+vgxiUwGdl8
-         5IbGTSknGAk6xEEvyMwV26g12cOKkGBJJMtiXeL4IyC2ONfkPQc7DFcua2mdLDkalYrH
-         Xy/8T6w21lqvSfwX72PZJs1iK91vA9aYWLyG4U0F886rR6oUbQtjTFhN+Zj/0aijYjg5
-         0ly67Q6Qp9S31kit0HStgPejT6PlQReBkWuT1fxw141ga38jISDWuoWsvJR7XVbwX3V3
-         7QcA==
-X-Gm-Message-State: AOJu0Ywf46C7m5gj3on+yjmK1eVMBaV7ZhWPiGBiJ7P1H3BZXWmrfU5j
-	p/sTe8F7bnXVhWKDBn0slqIdhzZ25UBKe7let3PMxiyHR3OevRIK1ZGui0cGZQ==
-X-Gm-Gg: Acq92OG0QIun3jIvy4lP1B1yZ78JhGMz1EkffAI1hKyLLd30VO1KCgdx8z2LIkACASy
-	8fphtoeHhWCZ6KCLoHlSPPDGsCQhr8QId1fIJV8oft1s5rHcFvWJ6jvFhIeWtlvtC0xlKfdPb6l
-	LDDxst6vRSBYQMb2qobkLyE1qso4cBTJQ7hKqEyRI9WB5AOMB25kf94BnyWVtDE3+W6mRX4fL2i
-	IXhg5TE6aArSes9w3eHRFzan7wOpDXmKVxKeiEZxhhq6lueQApCGARWsZ9Ult/t4YUIg+cFsFbm
-	QffZPUzKsiw8YQGvgFO2/Dv1ZtBJDIU5BkCcZVvv9I8mQ6SE1IYUIAbHBDynghDdcuOA0FMSW9w
-	Ti5MFsISGZEVLB356Y3x/9Qcw6/GIGIYenyVKVjKcu1AX9c64tBVR7ixAdkwX+AwwdAg6tlPR0C
-	/Boq4+htxfz8s5fN2uP11EGZdVkOqbfxT/bS+5782PBr/wK+oPncBeSUsh/FaIyl26ZWY86Zx8y
-	NwIYaVJOjSw1wspuQy7dduA1+V9d1r9rDtu+e6dmGMs8kE/
-X-Received: by 2002:a05:600c:8b29:b0:48a:7a10:4f17 with SMTP id 5b1f17b1804b1-490e55d0b08mr36954795e9.6.1781181700671;
-        Thu, 11 Jun 2026 05:41:40 -0700 (PDT)
-Received: from ernest.hoecke-nb (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch. [83.173.201.248])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4602cda363bsm68665423f8f.31.2026.06.11.05.41.39
+        d=1e100.net; s=20251104; t=1781183512; x=1781788312;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/0l5raLZI/cTBQPEQqb5ISjnvVLvXFrYmIo76D6Huhg=;
+        b=Wh/gn050/WxuX28+wMtumlbSbDeMG0yUbgmtDfNJg8pBQOUWSPqx0W3cqwOP3nbjhA
+         JdHe+NCaVcISnzjvX/laqXf8BZyBaSHEqoIm7qjaqhC76gG81Me0SbadyzZhGQ/fFDcy
+         iNfyvcIYOL/j6HXzzWq/3vFjtBbWuisT7hFnyS/m/0XLME2qkg5ECPo/PjJo1m/uLOZU
+         1s5hW5JDXpzQmArD1m4zzqzd/i4HPVXhCmldLgl0G6irkEZykCxxAqp7+yNqD8BPZgmJ
+         uKxlFTjRIo1OahlWPxB6BB0KP0fHborbiyyn9bUd2E8lmFLQyQ29qvo0LnqVFjkDprYW
+         88+A==
+X-Gm-Message-State: AOJu0YzwAtCpmUx8fCYHvw6yS69/rQGPHj/b1VA/GDEI5+1qaZXQzLqn
+	19I/n5WZm2gb6ReJ2OqO/c1eK76nD064EyxuPICNw9fgleRRueJfgtB0COw6PCmxWeU+azG4OM9
+	jY0jy
+X-Gm-Gg: Acq92OFPeK6AafuHvZjdwZFIsv8eEInfNJkuHbLjy86uBc8SxlSe7BdTPKNxIzlpQtF
+	X1x74uI/ZPMycA0U3+hVvuDKOQse7Om1WxUL9/aDkVAiXSUTysvnhslt7r6qSbXfxjmsDJBnDnC
+	X/Pmn1X/tDae8VnTOGYOb6psgw9k29V9sWOkw+Vr+ZopA/t5hA5MhozzyDt9+5Myk+kbMUloiwV
+	gTJrDe6yUXbQUv7yQsi6XQNxIVq7fGrgpYltgFQ6+GB5zXDzfpoxQpy8n/RQRwtOnFbYLPVMSEa
+	Ex72cEZBsmUG2c01pvgd/MaFjaoZEqcn1K3+LVsC6XhC6wwC9TR08xmmxYV8qqsPRctGRGuQVu/
+	Nn/c8Pa9aQCCgpyn+jbRlbjRdaYB5bLv7I84BdFNOIuC53ZXTdbKm2n4I7COAjQEAwcKhoGEYnF
+	oiEXyWKVVPaHVX5LV+5Zh+pBeVrJLaI6+FD/mG8P743ZI72MVydtJexUNCM4bcivW3EwicgOy7Z
+	cgd1/r+Kq4erlOA5fUflz6sP6ST2W5JCpMs2xw=
+X-Received: by 2002:a05:6000:1104:b0:460:ff2:63e5 with SMTP id ffacd0b85a97d-460675a61d1mr3647578f8f.18.1781183511623;
+        Thu, 11 Jun 2026 06:11:51 -0700 (PDT)
+Received: from FRSMI25-LASER.home (2a01cb001331aa0084744357c26c6744.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:8474:4357:c26c:6744])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f3529e0sm82048251f8f.28.2026.06.11.06.11.51
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2026 05:41:40 -0700 (PDT)
-From: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
-Date: Thu, 11 Jun 2026 14:41:32 +0200
-Subject: [PATCH] bitbake-setup: always write newline at end of the README
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260611-bb-setup-fix-readme-newline-v1-1-5f5dfc57ff28@toradex.com>
-X-B4-Tracking: v=1; b=H4sIAPusKmoC/x3M2woCIRRG4VeRfT0b1ECsV4kuNP+pDWWinUB89
- 5G5/GCxOjVUQaOT6lTxlSavPGEWRdd7yDewpGmy2jrtjOEYueH9KbzKnytCeoIzfg/J4AN8Ohp
- tfUSieSgVs9rv58sYG/wWnYRtAAAA
+        Thu, 11 Jun 2026 06:11:51 -0700 (PDT)
+From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Cc: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>, 
- Adrian Freihofer <adrian.freihofer@siemens.com>
-X-Mailer: b4 0.13.0
+Subject: [bitbake][wrynose][2.18][PATCH v2 8/8] tests/fetch: cover checkstatus redirect auth handling
+Date: Thu, 11 Jun 2026 15:11:30 +0200
+Message-ID: <acfe02fa38b5da9e6a36c6cedcf91d4fcbefbfbd.1781183212.git.yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <cover.1781183212.git.yoann.congal@smile.fr>
+References: <cover.1781183212.git.yoann.congal@smile.fr>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 11 Jun 2026 12:41:45 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19659
+ <bitbake-devel@lists.openembedded.org>; Thu, 11 Jun 2026 13:11:55 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19668
 
-From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+From: Anders Heimer <anders.heimer@est.tech>
 
-When the "readme_extra" string was introduced, we dropped a newline in
-the "readme" multiline string. In a Python multiline string, this counts
-and therefore we dropped the newline at the end of the README unless
-readme_extra is not empty (i.e.: unless the VS Code string is included
-which includes a newline).
+Add local HTTP server tests for Wget.checkstatus() redirects. They check
+that Authorization is kept for same-origin redirects and dropped when the
+target has a different origin.
 
-Put the newline back into the readme string and edit the VS Code extra
-string accordingly.
-
-Fixes: 92fd721941fd ("bitbake-setup: generate config files for VSCode")
-Signed-off-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+Signed-off-by: Anders Heimer <anders.heimer@est.tech>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+(cherry picked from commit c687d42b81b17e7a2399099cab0f1a6aafcf6520)
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
 ---
-To: bitbake-devel@lists.openembedded.org
-Cc: Adrian Freihofer <adrian.freihofer@siemens.com>
----
- bin/bitbake-setup | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ lib/bb/tests/fetch.py | 62 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index 69c9882f4c45..767b7e3f739b 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -415,12 +415,13 @@ def setup_bitbake_build(bitbake_config, layerdir, setupdir, thisdir, update_bb_c
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index e661ff0d8..c071401e6 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -7,6 +7,7 @@
+ #
  
-     readme_extra = ""
-     if init_vscode:
--        readme_extra = "\n\nTo edit the code in VSCode, open the workspace: code {}\n".format(workspace_file)
-+        readme_extra = "\nTo edit the code in VSCode, open the workspace: code {}\n".format(workspace_file)
+ import contextlib
++import http.server
+ import shutil
+ import unittest
+ import unittest.mock
+@@ -18,6 +19,7 @@ import os
+ import signal
+ import subprocess
+ import tarfile
++import threading
+ from bb.fetch2 import URI
+ import bb
+ import bb.utils
+@@ -1643,6 +1645,41 @@ class FetchCheckStatusTest(FetcherTest):
+                       "ftp://sourceware.org/pub/libffi/libffi-1.20.tar.gz",
+                       ]
  
-     readme = """{}\n\nAdditional information is in {} and {}\n
- Source the environment using '. {}' to run builds from the command line.\n
- {}\n
--The bitbake configuration files (local.conf, bblayers.conf and more) can be found in {}/conf{}""".format(
-+The bitbake configuration files (local.conf, bblayers.conf and more) can be found in {}/conf
-+{}""".format(
-         bitbake_config["description"],
-         os.path.join(bitbake_builddir,'conf/conf-summary.txt'),
-         os.path.join(bitbake_builddir,'conf/conf-notes.txt'),
-
----
-base-commit: c687d42b81b17e7a2399099cab0f1a6aafcf6520
-change-id: 20260611-bb-setup-fix-readme-newline-3e8d91028bed
-
-Best regards,
--- 
-Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
-
++    def _start_checkstatus_server(self):
++        class CheckStatusHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
++            def do_HEAD(self):
++                self.server.requests.append((self.path, dict(self.headers)))
++                if self.path == "/a" and self.server.redirect_url:
++                    self.send_response(302)
++                    self.send_header("Location", self.server.redirect_url)
++                    self.end_headers()
++                    return
++                self.send_response(200)
++                self.end_headers()
++
++            def log_message(self, format_str, *args):
++                pass
++
++        server = http.server.HTTPServer(("127.0.0.1", 0), CheckStatusHTTPRequestHandler)
++        server.redirect_url = None
++        server.requests = []
++        thread = threading.Thread(target=server.serve_forever, kwargs={"poll_interval": 0.05})
++        thread.daemon = True
++        thread.start()
++
++        def stop_server():
++            server.shutdown()
++            thread.join()
++            server.server_close()
++
++        self.addCleanup(stop_server)
++        return server
++
++    def _checkstatus(self, url):
++        fetch = bb.fetch2.Fetch([url], self.d)
++        ud = fetch.ud[url]
++        return ud.method.checkstatus(fetch, ud, self.d)
++
+     @skipIfNoNetwork()
+     def test_wget_checkstatus(self):
+         fetch = bb.fetch2.Fetch(self.test_wget_uris, self.d)
+@@ -1670,6 +1707,31 @@ class FetchCheckStatusTest(FetcherTest):
+ 
+         connection_cache.close_connections()
+ 
++    def test_wget_checkstatus_same_origin_redirect_keeps_auth(self):
++        server = self._start_checkstatus_server()
++        server.redirect_url = "http://127.0.0.1:%s/b" % server.server_port
++
++        url = "http://127.0.0.1:%s/a;user=user;pswd=pass" % server.server_port
++        self.assertTrue(self._checkstatus(url))
++
++        self.assertEqual(len(server.requests), 2)
++        redirected_headers = {k.lower(): v for k, v in server.requests[1][1].items()}
++        self.assertIn("authorization", redirected_headers)
++
++    def test_wget_checkstatus_different_origin_redirect_drops_auth(self):
++        origin = self._start_checkstatus_server()
++        target = self._start_checkstatus_server()
++        # Same host but different port is a different origin.
++        origin.redirect_url = "http://127.0.0.1:%s/b" % target.server_port
++
++        url = "http://127.0.0.1:%s/a;user=user;pswd=pass" % origin.server_port
++        self.assertTrue(self._checkstatus(url))
++
++        self.assertEqual(len(origin.requests), 1)
++        self.assertEqual(len(target.requests), 1)
++        redirected_headers = {k.lower(): v for k, v in target.requests[0][1].items()}
++        self.assertNotIn("authorization", redirected_headers)
++
+ 
+ class GitMakeShallowTest(FetcherTest):
+     def setUp(self):
 
