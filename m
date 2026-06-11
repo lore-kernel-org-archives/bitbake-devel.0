@@ -1,170 +1,218 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <thomas.perrot@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D06CD98C7
-	for <webhook@archiver.kernel.org>; Wed, 10 Jun 2026 22:53:28 +0000 (UTC)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.33445.1781132007080319077
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62803CD98CC
+	for <webhook@archiver.kernel.org>; Thu, 11 Jun 2026 07:16:59 +0000 (UTC)
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.40087.1781162215936945806
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 10 Jun 2026 15:53:27 -0700
+ Thu, 11 Jun 2026 00:16:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=GZpCO7+t;
- spf=pass (domain: smile.fr, ip: 209.85.221.47, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-45ef41adbc1so5470943f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 15:53:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1781132005; x=1781736805; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=H7Z+52ZsMLn6kreMATMSA74FA0v92/MujOswIIy+QuE=;
-        b=GZpCO7+t/yoSGkYzFnQCtbJji9ntsWTB27sADH1K7pmIYO1E5LrEBf5ttOLKneDRgC
-         I223YK8RIHbUJt2JocdU3I6muzhoncwscNrx6BcR+8gXxTeIWGS0lV2jERlbYPuaPNYA
-         CI1AIaIa143xLE1Nx/mgNnOasmcQoSuGeC07U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781132005; x=1781736805;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=H7Z+52ZsMLn6kreMATMSA74FA0v92/MujOswIIy+QuE=;
-        b=JQKS8cXSkGRUpupsPkmT8lnmCZBBpBwPvikHXcKR/xSIUF409OTaZOJQJnO0hfI+T5
-         BWtXjVwaarM0adtRbZF9jwU7cXaY8r9Cv9drWWlminEk8dmXjJDZ9LqsmuJjGRIen3D5
-         7mQ8UFx7mDMrZHNLdKKPi/Yy/tAHKT5/pnGjYvm2hqbZUN0KESdqahvFTcxCXmK7vPfs
-         IE50mlILxWomXicxNHLSCfLh9oHiMjxtPAQGDm4KrJa/WUR8PVde7lO+b2L2nANbyi9h
-         YHfG26500K2+76stZm5GCgGr1yNmEzUJi9HUvskJgWZZILN+8h0FAoif5zz/zlOy3VqB
-         v33g==
-X-Gm-Message-State: AOJu0YxPyCNPuUJq0Xx5h8Vy0Nuvk2zTyoMHfya7KpCLUk1N88W8opLL
-	4VfLCNigkKVfhtpPHfvwGW8sxr3MXxGEIJJf2MQ44h5u+NYzoqJuumpaZlKn6gMI5CMHKh1+jqO
-	BFORL
-X-Gm-Gg: Acq92OHa48WkgbwHBV+o1nM7ov+px/RCOPqtMSWQAc7ha2aCVA3I4eTGSuM2oWYAkHp
-	lQ6pTWzPRyZuMJdnIQ4lL4dViBUMO+baLw4SLQ9SAlakuQZaErq+WUEJTi/kdhzYEi/ewue9p03
-	3cjzpgnwabbaLeG/WBON+VJ8Sn/ivGnPc/gA91MMqFHDBK/whddfX7X3MgmYSLwCZ2nbRF4tExm
-	reOXlTrHlZ2VqKCHLloMgRok6KwwpQYXqOn+OlK8UHoCP7+Bd23ufYO2q7TXCnKWIkm+OIFbWH8
-	CFwd8k5wBZCe1K32Uz3M5lLCuEqR0QfB5rxSaGpRby25GF8qwD/QiidWbdTPqwkZeRqyAesH3gQ
-	8lntKQlmdR3N5JDqxRP9uvzB8JJOw4QM2Hvsnp7kOitWyu4FqXHJGI7TIi4ki38a//STXefu3LF
-	hxganjHANxljXy02t00oGqlOBEVZxv2pMmBGqifNMZsCjmFLmebedQGqf181dLiuoi2D4DQdhew
-	cKG3WVLqzHet+swe/uIw0IgGDINNCQLGNEYBm0=
-X-Received: by 2002:a5d:5f47:0:b0:45e:f266:f4cb with SMTP id ffacd0b85a97d-460677cea88mr235385f8f.22.1781132005410;
-        Wed, 10 Jun 2026 15:53:25 -0700 (PDT)
-Received: from FRSMI25-LASER.home (2a01cb001331aa00bb749f54eeb85d7b.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:bb74:9f54:eeb8:5d7b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f351d69sm132348771f8f.29.2026.06.10.15.53.24
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 15:53:24 -0700 (PDT)
-From: Yoann Congal <yoann.congal@smile.fr>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][wrynose][2.18][PATCH 6/6] fetch2: allow empty value for params while formatting URI string.
-Date: Thu, 11 Jun 2026 00:53:08 +0200
-Message-ID: <52b3bff42f17933595af48654098b172ea10baff.1781131922.git.yoann.congal@smile.fr>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1781131922.git.yoann.congal@smile.fr>
-References: <cover.1781131922.git.yoann.congal@smile.fr>
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=LM90H8M2;
+ spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: thomas.perrot@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 2EEBE1A38A1
+	for <bitbake-devel@lists.openembedded.org>; Thu, 11 Jun 2026 07:16:54 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id E82435FF03;
+	Thu, 11 Jun 2026 07:16:53 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 48F2A106B9E11;
+	Thu, 11 Jun 2026 09:16:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1781162213; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references:autocrypt;
+	bh=yVUKr8sgZWuqCWUh4MHrNYwIOk44P1keYZSmgsxJdcE=;
+	b=LM90H8M2KIHA4HNvt8lFb8k0KovuPcWE1XdTBvtWIIjSMIp1RWuV57ZuqPTVfFZPBCGD+j
+	ENCKJDKs5DnfDzzXEPiJv8zyDH2SzTL73y+mJ+cPF5Q3uwpCa12iSPYQIQcISFIypUv0lR
+	GcfdJ/9EGwtKvZ7qbyDEFixIFshExPd2PkIOrPztGcO3M4wo4kz3CWqQJgymD45eAKtz6b
+	q95rmFIWfrGMga1bxPSsWnIvQ7lfV8u7LujGoZmUlOwiC2f9csRSTQu+TQi4mzVfDzE8kw
+	73/IMsetWpZ5YJOaucF68KUNC7jrVo7MN0hrtSM9U0lu+2PVdr+2l1RLhco0SQ==
+Message-ID: <b792862b45f9fdb57cba31418d8a18c68dd2e70e.camel@bootlin.com>
+Subject: Re: [bitbake-devel][PATCH 0/2] fetch/npm: fix security issue and
+ re-enable fetcher
+From: Thomas Perrot <thomas.perrot@bootlin.com>
+To: richard.purdie@linuxfoundation.org, bitbake-devel@lists.openembedded.org
+Cc: thomas.perrot@bootlin.com, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Date: Thu, 11 Jun 2026 09:16:50 +0200
+In-Reply-To: <411bfc4142ad6d577df4b9350d6a18ca977b7127.camel@linuxfoundation.org>
+References: <20260610-dev-tprrt-fix-npm-v1-0-9bf501d4ee0e@bootlin.com>
+	 <411bfc4142ad6d577df4b9350d6a18ca977b7127.camel@linuxfoundation.org>
+Autocrypt: addr=thomas.perrot@bootlin.com; prefer-encrypt=mutual;
+ keydata=mQGNBF+/ZOUBDAC2DghCjZvmgYcve02OG7dGZ7Iy58uEwne3LB7w7nRwdAxKw7ZaiVqwY
+ O+yNGVi+GVx7oA6Wn4pv46z+QDRLQiq6OseuXhkSGCg7U/yBCUq12B/GRGO1Qt2Qi1mJJT1s+1qZ5
+ Gxv6Nypz9qKVn94GM2bR1hXBga0t87vBpebThOHmX5d/0dqIcVxRCM7onNb0dDyRoVgLS5rBhQzrL
+ CMrJaCy39xZUy0J1SOlH4Mgk6EhJIPYY4wlzikGX6urg+Tc9EjGd78ry0e0p5U5qgjFR5QGJDy1Gn
+ U3CfwbT9sowdCASDbQDUoltlv2iWJCLa0xl97KVchCa0pr7HKbFA3J5SLKqFYUBCkFL+5WudYlz2n
+ XxiUgyviMQxyK+ij66kEi6/2zFDAecd43pHV7790ptqZBC3Jc67Emj7Vo3ShX6RXPPxxbeCTOF2uk
+ I45aJ9XcVFH/MFE96NjXj8uahnIsiTPyuCUoJu8tj7TSQyue874qJqVQvqlFyt2aZYJZ8ruq8AEQE
+ AAbQpVGhvbWFzIFBlcnJvdCA8dGhvbWFzLnBlcnJvdEBib290bGluLmNvbT6JAc4EEwEIADgCGwMF
+ CwkIBwIGFQoJCAsCBBYCAwECHgECF4AWIQSHQHfGpqMKIwOoEiGfwAsFcf4K7QUCX79mdwAKCRCfw
+ AsFcf4K7fhbC/wP0kSl6id2E/K3+UdXk6CLMVRbCFLCREzQs5WFpQ6l/I0WGOamhrOgegdszheiVF
+ orlUP8d37XSpFAqydhKGaN78V5Dps0Wmwm4lIlS4MtQXJtSLUHXDJLIZLW0pw8tiPLKsd1o/yDkXE
+ dnpsjJTRG6SdDSHnyOB2/gh4p+yTaLytFdARk/r4/P26+L+FiH0fFl+RnBt19LPklfKgeDc7GwIif
+ ja+nIWpp3W23DAUuI6xduEut25Q89yu7Ci8CliLfAiLy9bIGjBQWU2Y+1/j/7KuPj6VbBsZWLTZY0
+ hUmpJSTnWAqc9SMsNxo7NSQuddgviz5e2tqucaRqxP02FGzNa8U4NAKdWaXrlHG5Dglj9XH0DK+SH
+ +c96qqFewYD8VPQ6XAGxQcXbrtJmiMor1R2DfziispLRvJcfYs8xqabbCtoS3ouXB9XRi8hn7A2kh
+ ME1ryS+Oh63JshXHnw6bmjCpVd/p+fGLIGU6A47pJOpviKR4jEO84pl2ejtDZ3Tc=
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-2VVxvBduIEgF5n2Klw5F"
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 10 Jun 2026 22:53:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19653
+ <bitbake-devel@lists.openembedded.org>; Thu, 11 Jun 2026 07:16:59 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19654
 
-From: hongxu <hongxu.jia@windriver.com>
 
-While using PREMIRRORS to gets source code, recipe sbom-cve-check-update-nvd-native
-do fetch failed:
+--=-2VVxvBduIEgF5n2Klw5F
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-$ bitbake sbom-cve-check-update-nvd-native  -cfetch -f
-...
-ERROR: sbom-cve-check-update-nvd-native-1.0-r0 do_fetch: Bitbake Fetcher Error: MalformedUrl('git:///path-to-premirror/git/github.com.fkie-cad.nvd-json-data-feeds.git;branch=main;protocol=file;destsuffix')
-ERROR: Logfile of failure stored in: tmp/work/x86_64-linux/sbom-cve-check-update-nvd-native/1.0/temp/log.do_fetch.4135595
-ERROR: Task (oe-core/meta/recipes-devtools/sbom-cve-check/sbom-cve-check-update-nvd-native.bb:do_fetch) failed with exit code '1'
-...
+Hello Richard,
 
-In oe-core commit [1], destsuffix was configured to empty string through SRC_URI,
-but in bitbake commit [2], it removed `=' from destsuffix in which value is empty,
-and trigger MalformedUrl failure, see sbom-cve-check-update-nvd-native do_fetch log:
+On Wed, 2026-06-10 at 17:27 +0100, Richard Purdie via
+lists.openembedded.org wrote:
+> On Wed, 2026-06-10 at 17:46 +0200, Thomas Perrot via
+> lists.openembedded.org wrote:
+> > The npm fetcher was disabled in 355cd226 (Jan 2026) because it
+> > retrieved
+> > checksums from the remote registry rather than from the recipe.=C2=A0 A
+> > compromised registry controls both the tarball and its advertised
+> > hash,
+> > making checksum verification meaningless.
+> >=20
+> > Fix the root cause by separating URL resolution from checksum
+> > handling:
+> > - _resolve_proxy_url now stores only the bare tarball URL in the
+> > .resolved
+> > =C2=A0 file; the registry-supplied dist.integrity / dist.shasum values
+> > are
+> > =C2=A0 ignored entirely.
+> > - _setup_proxy builds the proxy URL from that bare tarball URL and
+> > injects
+> > =C2=A0 the checksum from the recipe's own SRC_URI parameters
+> > (sha512sum=3D,
+> > =C2=A0 sha256sum=3D, etc.).=C2=A0 When no checksum is provided the prox=
+y URL
+> > carries
+> > =C2=A0 none, and BitBake's standard BB_STRICT_CHECKSUM machinery handle=
+s
+> > the
+> > =C2=A0 missing-checksum case the same way the wget fetcher does.=C2=A0 =
+A
+> > bb.warn()
+> > =C2=A0 is emitted so recipe authors get a clear signal instead of a
+> > silent
+> > =C2=A0 unsigned download.
+> > - version=3Dlatest is now a hard ParameterError instead of a warning;
+> > it is
+> > =C2=A0 inherently non-reproducible.
+> > - Narrow the broad 'except Exception' in _npm_view to
+> > json.JSONDecodeError
+> > =C2=A0 so that FetchError and ParameterError propagate typed to
+> > callers.=C2=A0 Also
+> > =C2=A0 fall back to str(error) when 'summary' is absent in the registry
+> > error
+> > =C2=A0 dict so the message is never silently None.
+> > - Clear uri.params before rebuilding the proxy URL to prevent a
+> > =C2=A0 .resolved file written by the npmsw fetcher (which stores the
+> > full URI
+> > =C2=A0 with checksum params) from contaminating the npm proxy URL with =
+a
+> > =C2=A0 registry-sourced checksum, bypassing the security invariant that
+> > only
+> > =C2=A0 recipe-provided checksums are trusted.
+> > - Remove dead 'if ud.version =3D=3D "latest": return True' branch from
+> > =C2=A0 need_update(); version=3Dlatest is rejected at urldata_init time=
+.
+> >=20
+> > Migration note: recipes using npm:// must now supply a checksum in
+> > SRC_URI, e.g.:
+> >=20
+> > =C2=A0 SRC_URI =3D
+> > "npm://registry.npmjs.org;package=3Dlodash;version=3D4.17.21;sha512sum=
+=3D
+> > <hex>"
+> >=20
+> > On the first build without a checksum BitBake will download the
+> > tarball,
+> > compute the hash, and instruct the author to add it.=C2=A0 Any stale
+> > .resolved
+> > files under DL_DIR/npm2/ written by the old fetcher (which embedded
+> > registry-sourced checksums) must be deleted before rebuilding.
+> >=20
+> > [YOCTO #16105]
+> >=20
+> > Fixes: 355cd226e072 ("fetch2/npm: Disable npm/npmsw fetchers due to
+> > security issues")
+> > Signed-off-by: Thomas Perrot <thomas.perrot@bootlin.com>
+> > ---
+> > Thomas Perrot (2):
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fetch/npmsw: fix security issue and re-e=
+nable fetcher
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tests/fetch: restore and extend npm/npms=
+w test coverage
+> >=20
+> > =C2=A0lib/bb/fetch2/npmsw.py | 12 +++++-----
+> > =C2=A0lib/bb/tests/fetch.py=C2=A0 | 64 ++++++++++++++++++++++++++++++++=
++++---
+> > ------------
+> > =C2=A02 files changed, 51 insertions(+), 25 deletions(-)
+>=20
+> I suspect there is a patch missing or something here as it doesn't
+> touch npm.py and half the changes above appear missing...
 
-...log.do_fetch...
-DEBUG: For url git://github.com/fkie-cad/nvd-json-data-feeds.git;branch=main;protocol=https;destsuffix= returning git:///path-to-premirror/git/github.com.fkie-cad.nvd-json-data-feeds.git;branch=main;protocol=file;destsuffix
-...log.do_fetch...
+Sorry, that=E2=80=99s strange, it seems I made a mistake with b4. I=E2=80=
+=99ll resend
+them.
 
-This commit use function _query_str_join for query as usual (if a value is
-None then it isn't a key-value pair, but a bare key.), and use function
-_param_str_join for params to allow value is empty string and still key-value
-pair, after applying this commit
-...log.do_fetch...
-DEBUG: For url git://github.com/fkie-cad/nvd-json-data-feeds.git;branch=main;protocol=https;destsuffix= returning git:///path-to-premirror/git/github.com.fkie-cad.nvd-json-data-feeds.git;branch=main;protocol=file;destsuffix=
-...log.do_fetch...
+Kind regards,
+Thomas=20
 
-$ bitbake-selftest -v bb.tests.fetch.URITest.test_uri
-test_uri (bb.tests.fetch.URITest) ... ok
+>=20
+> Cheers,
+>=20
+> Richard
+>=20
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#19646):
+> https://lists.openembedded.org/g/bitbake-devel/message/19646
+> Mute This Topic: https://lists.openembedded.org/mt/119741992/5443093
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe:
+> https://lists.openembedded.org/g/bitbake-devel/unsub=C2=A0[thomas.perrot@=
+bootlin.com
+> ]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 
-----------------------------------------------------------------------
-Ran 1 test in 0.001s
+--=20
+Thomas Perrot, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
-OK
+--=-2VVxvBduIEgF5n2Klw5F
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-[1] https://github.com/openembedded/openembedded-core/commit/131e024a6688074347e08879718221fbfb69033f
-[2] https://github.com/openembedded/bitbake/commit/eac583bd4c46f3bb9661852cb6a1448f16147ff1
+-----BEGIN PGP SIGNATURE-----
 
-Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit b3867e6d35ef57239c7ba961a00fa45577600301)
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
----
- lib/bb/fetch2/__init__.py | 7 +++++--
- lib/bb/tests/fetch.py     | 6 +++---
- 2 files changed, 8 insertions(+), 5 deletions(-)
+iQGzBAABCAAdFiEEh0B3xqajCiMDqBIhn8ALBXH+Cu0FAmoqYOIACgkQn8ALBXH+
+Cu2vxwv/WtXK0fladdp7Bb69RXWJo81KyU7uaRA+chQ7d7L23GNRuc6lmp3p/CKV
+f2QITVstItb6rTuJONmO3/cJR5JqFF7dE1ASDhMA609WSYxuXl+PuJC/kGB9wmDd
+torgtgnXKJfbvO7c5NkNBEbSlkZgWeEv3ncUZYIMLGYQmDKXKSlWzivA8bXd4eHT
+GgsPJUGUKPD/UjBFUeQCQqqBrapImoFiFoKk7+yry1TOgbB9m0Bn2rvQyr8eWM2b
+5SgLe8a8bSSEQJOnasjxn0U5l7GPhyZIDpAkhQtCvNYUqzIOWkd6DRK7tbl53rcv
+MPjF0XhFRZEtU4143hkwhRcO7iBMe/fSWJ/6z/pzt4MAGszL7Nylu0NiVEK3HPY3
+2+mdZLa3cl4COB3UfCEyT10j6e7iylR+guAH4y53HptE1XMVRtzEwGfskwPflTAP
+IGpbA6sLgE896vuaSb4Ygvt2icFmCQPhwMptXO1O19YSQ9nkDaYoil5X5DuMVXx3
+ZO9QWlhg
+=5Hsf
+-----END PGP SIGNATURE-----
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index d913d7511..e0494b3cb 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -304,7 +304,7 @@ class URI(object):
- 
-     def _query_str(self):
-         return (
--            ''.join(['?', self._param_str_join(self.query, "&")])
-+            ''.join(['?', self._query_str_join(self.query, "&")])
-             if self.query else '')
- 
-     def _param_str_split(self, string, elmdelim, kvdelim="="):
-@@ -313,9 +313,12 @@ class URI(object):
-             ret[k] = v
-         return ret
- 
--    def _param_str_join(self, dict_, elmdelim, kvdelim="="):
-+    def _query_str_join(self, dict_, elmdelim, kvdelim="="):
-         return elmdelim.join([kvdelim.join([k, v]) if v else k for k, v in dict_.items()])
- 
-+    def _param_str_join(self, dict_, elmdelim, kvdelim="="):
-+        return elmdelim.join([kvdelim.join([k, v]) for k, v in dict_.items()])
-+
-     @property
-     def hostport(self):
-         if not self.port:
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index cc133c1f5..e661ff0d8 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -292,8 +292,8 @@ class URITest(unittest.TestCase):
-             'query': {},
-             'relative': True
-         },
--        "https://www.innodisk.com/Download_file?9BE0BF6657;downloadfilename=EGPL-T101.zip": {
--            'uri': 'https://www.innodisk.com/Download_file?9BE0BF6657;downloadfilename=EGPL-T101.zip',
-+        "https://www.innodisk.com/Download_file?9BE0BF6657;downloadfilename=EGPL-T101.zip;someparam=": {
-+            'uri': 'https://www.innodisk.com/Download_file?9BE0BF6657;downloadfilename=EGPL-T101.zip;someparam=',
-             'scheme': 'https',
-             'hostname': 'www.innodisk.com',
-             'port': None,
-@@ -303,7 +303,7 @@ class URITest(unittest.TestCase):
-             'userinfo': '',
-             'username': '',
-             'password': '',
--            'params': {"downloadfilename" : "EGPL-T101.zip"},
-+            'params': {"downloadfilename" : "EGPL-T101.zip", "someparam" : ""},
-             'query': {"9BE0BF6657": None},
-             'relative': False
-         },
+--=-2VVxvBduIEgF5n2Klw5F--
 
