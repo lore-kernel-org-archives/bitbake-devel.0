@@ -2,114 +2,124 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A66CD98D8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 685C6CD98DA
 	for <webhook@archiver.kernel.org>; Thu, 11 Jun 2026 13:11:56 +0000 (UTC)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.45067.1781183509251983706
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.45172.1781183508331333378
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 11 Jun 2026 06:11:49 -0700
+ Thu, 11 Jun 2026 06:11:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=pXbChp8I;
- spf=pass (domain: smile.fr, ip: 209.85.221.45, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-45ef82204c6so4471233f8f.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 11 Jun 2026 06:11:49 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=DJfJCDpQ;
+ spf=pass (domain: smile.fr, ip: 209.85.128.52, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-490a76757e5so53234395e9.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 11 Jun 2026 06:11:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1781183508; x=1781788308; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1bJTm+x7gsnTZIqc/fMU92sr9KNTqmmtFPtCs2sPVEo=;
-        b=pXbChp8IJeGuL22/Qz5KCt0DtG/hC/nB8Jg6FzBW/enxQoIYEBmFhK3HFSlKD4RJXV
-         hlcuxwQs0r0kHeAD8k8TDQ5bMZDNuZD2Yxfhjl/YD1/OD4DnR5a1DZsX5IxUE9gnFE9z
-         L1B6QJgmYWWOew4Q3d0N+Y0vIZozGc3zDooKY=
+        d=smile.fr; s=google; t=1781183507; x=1781788307; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=s3x1GjmXSapYaV4rpLaKM5FPSkkxhhN6W0614ZD40VQ=;
+        b=DJfJCDpQF/6kTaFAMDvlDMuaBAELRLFuN3Po/8O2Vs9wLMuig/USLH2rcCERtqPTCi
+         XmX1vIqrYExRzmh+Hv1mecDpjSncEQ2WMeQaeKw1UDpOjTZJrKVA8gDYNt9FUxBD54X/
+         OATCDA41o/93eeP8hRJ0PI9b3H5LgBAu6wsfE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781183508; x=1781788308;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1bJTm+x7gsnTZIqc/fMU92sr9KNTqmmtFPtCs2sPVEo=;
-        b=NsHje1hU5crCHOOA1gRFzgAeU5jbDkfnPXNIJ77M95C0YYIhRJN5o5flNj0WeePWHI
-         gmSu61RXg12D75CUmU+IAF+Gmv8EcvovKsEmpooIIkmi4JcazmFpMtiKfiRCrku/gzPt
-         o0mbt1GSk9jUg/C8Z+lGUf46AiRJsjwTHCukE1cgXXrT/+vuHxeHAoY9otPDZu4Nj80K
-         b5RcM85bHUz9JcabjRHwTIMBxgMyFxEshfXjRrDVBdMEcIKo6iZgYYjeXGkhtzZ/3rAg
-         P35EMvSpHyJPap7hGTzU9R9diIW5CWqJ19xUFd69+9TdUAjYUy25VFU0q7fHUzx52t5t
-         sCiw==
-X-Gm-Message-State: AOJu0Yw5WTflLwJeNhPYwxLMFzFW68ZyEL1thxuJSnuiH/UM+U7gaaSr
-	sxC7UZupP8VGOSp0dWMo/gs8OX/GHFA1r5Vo322rwp67kVPJIDMFb+HewYphx8thck5x+GL0cq+
-	aDPei
-X-Gm-Gg: Acq92OHk3FWC8HmPWLsYtQqvjaEvdMhBUWxhU3jkNvkzKIqEYQpDVqcs4SYMgvash84
-	i+JQoCoqV7O7SKtZlRkUXNk0unh73y67BU7qjV5BJ+pgSmNXw7KRMFR6QEgNKJ0/k7yM+VLDxBG
-	lfGp4OSGRBLTemBfd2JBqsGJOcnirNwU/pjuPI/2fhDu0dVMF+cX7l87QoonkUtZ1gjfmmTtpnj
-	7t29/hH3Yopr++qt8v93a7nxa7Pngmu63/5uJxJ3UHdGfhx7GfzeRXOa/R74UPm78gnS9efT0R2
-	Y0N1Ahi8AaN1bN5+C+X4GztyIGeHuiQkX5cjUgKZgnyEQIVpUQ2jWg9QU+ddED3e97h5BU1Y/gS
-	0Jj+rodf+koUu4E/NuqNLG0iCfe4koN3c7JiVE05PoQuhMvgafLEn5kw6BnncuhLWpzA+pcVHW8
-	8LD6UWl2gTWusrXagNgOsneFEZAtmenCq/LhdkBz3U73487m3Bj64AM3Z0V+x040WR1gXvRqWn2
-	FeqW5lfPE92LSMAdyvgCI0jijSE5CIs9MaPSpkLlFbRiZs4cQ==
-X-Received: by 2002:a05:6000:2993:10b0:45f:f142:d571 with SMTP id ffacd0b85a97d-46067475b65mr3234677f8f.13.1781183507576;
-        Thu, 11 Jun 2026 06:11:47 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1781183507; x=1781788307;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s3x1GjmXSapYaV4rpLaKM5FPSkkxhhN6W0614ZD40VQ=;
+        b=Jfdl27nyRYPeMo0wK2UG06OK3v4e/BX55Zvg5G67bzY/YxFfAyUgqf/5tsnPL7lVRP
+         7Logxid6Wo/NKxRGFl1HF2eidqlaTBqFC1uM4PKlDR/2xK5sszk20lBV3jU2oaiJkibY
+         +AnJRs/k3z1GGBQC2cpIVg5XKDsmGjCS5LFRxltjzdpoIfWIhR1U5gZRqu3dVZHSlOGx
+         JSJud3uONlsXNNKaJgSUzOiEdHIVHpkf/X1CdlOH/lCHd+P/M5+0aI1tB0a85lpneriQ
+         s8JuDSm/LANC+hFphr3c4r26solObovPsXui8RdMjcdQfJBAE/zRixZdsQT5X0hwAxX9
+         JIcw==
+X-Gm-Message-State: AOJu0YzcpnKoNPkOunAJ36LWHtNLF9VjoRuLZTzq6uQE04RrvWSJX1g0
+	Vvp9miGbwlP1VVfZhm4vA7jXAXGbPmF3D1oSkiSN48VIAHBLQ27dqH4+ph0bVKD0FC/B3+2bnCH
+	+/aaD
+X-Gm-Gg: Acq92OGpxlwkzfzUpoIs/4kNKDF9b7SsCf2Edq+hS6ByDRdBZb2rR6PaellCRyfamK7
+	f7Q5/IY0JPrcYBm69FC2Fpv7NN+xsgu84YPW06zK3xQJDZjdd3XPX9AsHZFZ6Z8GZNgfGGRz05M
+	Kc3Dx3+eeZW3CXJBQq8dEyTVY+BR+1YUzUKUQuvmHln9/UqKiX/hy9BfeyWP7qfYWX9kJGSHuvD
+	lMhvTi4vTxiGkyAzUz9D5MQtpnLTFQpjyZrtNTNyo9QelmzEU3HXz3J5A2qgn/kKRakn00Tyg7g
+	nUUGrnr3UlebtW8oX7GzsvfeczsNN7CxjW/AnHskiUJEBh9TQ9oAiV+T3/sPdasgbuIpIWZcOFb
+	eSMO/yM8nYdiWY+/Zapsc4RgueSsPTBw+pUVQ29pRzPT5SAjo9cz+DSnCpA+M/XTBZfiI0gTmRH
+	3bAUhkU1THue2T2zsJGQwzHJ84dbaQdobCimxpnT7+ZmxFGr3aVJ2gq5OT1I9qxD6gN8icAngqe
+	yq9T9udGnN5wLZGG2qbP+0VW1AZMrsvrjdsVWk=
+X-Received: by 2002:a05:600c:c054:b0:490:4b89:5362 with SMTP id 5b1f17b1804b1-490e56146admr24318945e9.24.1781183506503;
+        Thu, 11 Jun 2026 06:11:46 -0700 (PDT)
 Received: from FRSMI25-LASER.home (2a01cb001331aa0084744357c26c6744.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:8474:4357:c26c:6744])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f3529e0sm82048251f8f.28.2026.06.11.06.11.47
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f3529e0sm82048251f8f.28.2026.06.11.06.11.45
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2026 06:11:47 -0700 (PDT)
+        Thu, 11 Jun 2026 06:11:45 -0700 (PDT)
 From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][wrynose][2.18][PATCH v2 2/8] bitbake: fix issue with varflag exclusion
-Date: Thu, 11 Jun 2026 15:11:24 +0200
-Message-ID: <ddb97b7c5e40bf4f375f2dcf46ceb9f36e7b1584.1781183212.git.yoann.congal@smile.fr>
+Subject: [bitbake][wrynose][2.18][PATCH v2 0/8] Patch review
+Date: Thu, 11 Jun 2026 15:11:22 +0200
+Message-ID: <cover.1781183212.git.yoann.congal@smile.fr>
 X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1781183212.git.yoann.congal@smile.fr>
-References: <cover.1781183212.git.yoann.congal@smile.fr>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 11 Jun 2026 13:11:56 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19662
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19660
 
-From: Marcio Henriques <marciohenriques84@gmail.com>
+Please review this set of changes for 2.18/wrynose and have comments back by
+end of day Friday, June 12.
 
-This patch fixes an issue when checking if a varflag
-can be safely excluded.
+Passed a-full on autobuilder:
+https://autobuilder.yoctoproject.org/valkyrie/?#/builders/29/builds/3975
+* the meta-qcom warning is not related to this series and has been
+  reported upstream:
+  https://github.com/qualcomm-linux/meta-qcom/issues/2436
 
-BB_SIGNATURE_EXCLUDE_FLAGS lists variable flags that
-can be safely excluded from checksum and dependency
-data for keys in the datastore.
+v1->v2:
+* Added security fix "fetch2/wget: limit auth on checkstatus redirects"
+  and associated test.
 
-When bitbake checks if a varflag must be excluded it
-checks if the varflag name is part of the string stored
-in BB_SIGNATURE_EXCLUDE_FLAGS.
+The following changes since commit 294074e65f37822a0f31bb11eb968d311b54a66a:
 
-As an example, if the varflag 'filename' is in
-BB_SIGNATURE_EXCLUDE_FLAGS, the varflag 'name'
-will also be excluded because the check will return 'True'
-when checking if the varflag is part of the string with
-the varflags to exclude.
+  toaster: use https for clones, remove cgit in links in defaults (2026-06-06 01:17:50 +0200)
 
-To fix this issue the string from BB_SIGNATURE_EXCLUDE_FLAGS
-is converted to a list before checking if a varflag is part of it.
+are available in the Git repository at:
 
-Signed-off-by: Marcio Henriques <marcio.henriques@ctw.bmwgroup.com>
-Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 8ab71d0ce302521da6a7e18c887cd85d9a94e8ee)
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
----
- lib/bb/data.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  https://git.openembedded.org/bitbake-contrib stable/2.18-nut
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.18-nut
 
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index 5fdcdb04a..b12972c03 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -378,7 +378,7 @@ def generate_dependencies(d, ignored_vars):
-     mod_funcs = set(bb.codeparser.modulecode_deps.keys())
-     keys = set(key for key in d if not key.startswith("__")) | mod_funcs
-     shelldeps = set(key for key in d.getVar("__exportlist", False) if bb.utils.to_boolean(d.getVarFlag(key, "export")) and not bb.utils.to_boolean(d.getVarFlag(key, "unexport")))
--    varflagsexcl = d.getVar('BB_SIGNATURE_EXCLUDE_FLAGS')
-+    varflagsexcl = (d.getVar('BB_SIGNATURE_EXCLUDE_FLAGS') or "").split()
- 
-     codeparserd = d.createCopy()
-     for forced in (d.getVar('BB_HASH_CODEPARSER_VALS') or "").split():
+for you to fetch changes up to acfe02fa38b5da9e6a36c6cedcf91d4fcbefbfbd:
+
+  tests/fetch: cover checkstatus redirect auth handling (2026-06-11 11:50:29 +0200)
+
+----------------------------------------------------------------
+
+Anders Heimer (2):
+  fetch2/wget: limit auth on checkstatus redirects
+  tests/fetch: cover checkstatus redirect auth handling
+
+Anthony Squires (1):
+  fetch2: reraise IOError during download
+
+João Marcos Costa (1):
+  layerindexlib: restapi.py: fix unbound variable
+
+Marcio Henriques (1):
+  bitbake: fix issue with varflag exclusion
+
+Thomas Perrot (2):
+  fetch2/crate: skip yanked versions when reading cargo index
+  fetch2/crate: guard against empty version list
+
+hongxu (1):
+  fetch2: allow empty value for params while formatting URI string.
+
+ lib/bb/data.py               |  2 +-
+ lib/bb/fetch2/__init__.py    |  8 +++--
+ lib/bb/fetch2/crate.py       |  7 ++--
+ lib/bb/fetch2/wget.py        | 27 ++++++++++++--
+ lib/bb/tests/fetch.py        | 68 ++++++++++++++++++++++++++++++++++--
+ lib/layerindexlib/restapi.py |  2 +-
+ 6 files changed, 102 insertions(+), 12 deletions(-)
+
 
