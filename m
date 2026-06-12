@@ -2,60 +2,60 @@ Return-Path: <jeremy.rosen@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB89CD98CE
-	for <webhook@archiver.kernel.org>; Fri, 12 Jun 2026 14:29:20 +0000 (UTC)
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.71950.1781274551701508991
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F533CD98DB
+	for <webhook@archiver.kernel.org>; Fri, 12 Jun 2026 14:29:21 +0000 (UTC)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.71948.1781274551053191349
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 12 Jun 2026 07:29:12 -0700
+ Fri, 12 Jun 2026 07:29:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=tYHg3Oc0;
- spf=pass (domain: smile.fr, ip: 209.85.128.43, mailfrom: jeremy.rosen@smile.fr)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-490b8a97b11so12191665e9.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 12 Jun 2026 07:29:11 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=OtsrmnBY;
+ spf=pass (domain: smile.fr, ip: 209.85.128.42, mailfrom: jeremy.rosen@smile.fr)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-490aebf33e9so4905745e9.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 12 Jun 2026 07:29:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1781274550; x=1781879350; darn=lists.openembedded.org;
+        d=smile.fr; s=google; t=1781274549; x=1781879349; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=4ag61jpVTuVQdwQg3PmsDrkph34VaeiPdikM7E+xxxo=;
-        b=tYHg3Oc0TZZmctGR7enmtdsZMNkBNg536A5IFYXkvjUfqlRbDupjPrWjgZlLYQTUw4
-         ho2sFbv12QtQuDlreQV+WH/V9h6d+vcuA7EO0SDWfZ6cydWUdWkfhzFa6CGUSQbTJA/z
-         AuNBuXfiaQp90I/ccoQ0P4TUTm9TmfYdxedEM=
+        bh=0t9lZjhmmYXRY2a0YE8VQ7+4h3wgBklg4tjE30aPZJU=;
+        b=OtsrmnBYz0+kjJdRnyo37Jqv9QxgdT6nz1MQe4FDz04UF3k2YG/PYQqHg3UsQhYmAg
+         hc56/NJvjCA4xAWtmnL+2qBuKfINMd8SeYhbeLxGVHgmhKWhHoQpFQ7F/dORj/gx/xuI
+         llj5X7WY8C6q9/T3i1DfB2xIzFtp1NNy4I+Gg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781274550; x=1781879350;
+        d=1e100.net; s=20251104; t=1781274549; x=1781879349;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=4ag61jpVTuVQdwQg3PmsDrkph34VaeiPdikM7E+xxxo=;
-        b=FkIcibfU83JQfBX86eLCIG3hsiBVwz/1ATCf1NTV2yNTiXxuzwle6mZ0Edqnyz9lOO
-         QLNE3djwMV4EicCvCqzBB5bswRO7wNDRyvSxqS2KPYdN26qxwCdyytvZ6V2HksNcUTwD
-         i4Yf6Y5mgVBMPqEkiHUdJzh+xQ1+GU/wIgrApk69c8fZZlcCUG4cd/cuMvBHBue+L7JV
-         BdzXE796SK6vt6XDwREhYDRHhYNTG9TsWxHBycporleFABOU+hJz0HHVVioSVpOv9SK3
-         TC+X8minS0hG15s8b5yThGS8WBTY5OLbZvoIwuPbiHKoVOUnBlxWawRynPsZ2gSIV1c6
-         nAFg==
-X-Gm-Message-State: AOJu0Yx1tAsPsomxXsvWnvWeIgl79YgGHm12t8jAxvFVY71zjjaZaycG
-	5vtkXvQ3I/NY8BLRxFA7PxZx/MvFbE5Fo56ABdZkzXqGdvS+HXy0tpQdbtxNNi+UZO5Wkazdg/Q
-	8najVfg==
-X-Gm-Gg: Acq92OHmHVUf+4+olc1uFMB4fdYrvzeXwuvtzii/9vtkJ9rHA2swPcEN9KCufsVGGNG
-	jFBJ8z3hSu/YEEN1uGJg9qTA2OeJ1HtgSUkmGzllhaWC8Lq4rkdBT2/idQShZkenovQ5zXa/GRw
-	Nf3EhqllwpBGQKA9nBvvTlUjxRApdikBTSXgs5q6Tmk/IjxWflMfSzVn4gpYXkRee0dqSGVntJI
-	+rLMh3rvcOmipRjU2UqBu5DpzFO2Jw4hSja75LLsrx1+0NEO8o+KknHFPoxkbj/NGmJPViH0Xh1
-	U/Dd3ygLlwXLR6/fpZJjB5nw2Q5xAZo75hlHUB0NrERfELFus6ViAbLzTT6CmWx+93LJKGSh/5a
-	NzDi0JfSoufRiz0M5HfMDrN/laGgIBiRmEYlAhIE5Bt78ROR/0JcGX/piLYu+FM0Lfd68x53geL
-	SrG2cFCIVWa8RHoQfUi3Nvbtk=
-X-Received: by 2002:a05:600c:4f94:b0:490:bad9:de43 with SMTP id 5b1f17b1804b1-490ec3388dfmr47241725e9.0.1781274549867;
+        bh=0t9lZjhmmYXRY2a0YE8VQ7+4h3wgBklg4tjE30aPZJU=;
+        b=XTDvSInaXPWImzFEvVD/3MYFwwqUQwAnyOkmVKlR1BX8siQQYTDxYF/ihyUtasdvBc
+         xs7gyallZHVYEVWDgc3r25amgrtdzr5SjlA0eVsWugyoV8lP0TRwpFLRy2WzsWxJr0Ke
+         gxSOzOn63vf+x66Hd6XlgZhRvHscASVhdD7W7vqWv41iBuITlk6EN83/sc1eGVQcn9cV
+         2qUfqMSXyqs9Y0ZqArCLVP4ccOPSLdWx0YQxkaCmk0i2AEABisCGFaTp3MOPunmOBG5U
+         HkWjH5MKmcqnb7ZNmyw7OLr0Rb/lTlEpROoW5JYAxpCQcZgJyXg4bqbZivolarkpdgNK
+         MpQQ==
+X-Gm-Message-State: AOJu0YyoImtw/cr1Z6B63eUuXmykO/c5/uLdLLfOwpLir1ijJ/veZoFh
+	PymP1JzzTJavnpHSdelpWgNcOYlwKaWCkcR8NfbuH8Oo1bpSThw8NOTp0oc0n2DpRDZvbfEZMYD
+	p1Py8rw==
+X-Gm-Gg: Acq92OG+sWho7zW1wUBPEGxx46jxKH3FVp2GUk93hwPm6I+En1wNMq+yaOK7LR09EEM
+	7RFWvZ7mUbBd0AfbvSFaFIk7ty7EjmR1CTR4AAthT/fvqfg3QT2/H31UDymXGcP731MS9syw7tz
+	EpQviZ+C5bpf9rnpSzFxsAZLCk63Q4tdWTe43yzY4NLG6jBAKRhsJJjqRxYoiItARrGHaQM9k1O
+	XUYjDdnOsRw1blrotlE8o1I9bNCgaEP/g/ceyQTz/T0Fes88Zj2xKhlYAD+uQOFbYidCokUZQXD
+	xljiodk9R9alNsHxLv0Dz1o1sW4Fvu9A9D6Ofk4kMS3aNzpZrpDtY9X/GzmbCNvq7rYDDnZpswZ
+	IKaqi2BU9U65WwKSaGKUzjXdRRWSyUYPy/tLTiz/YAG8vPi3pUUqugXZ4HWplqgLALpN1p7cupl
+	xp+wGaXcat/1/6zSOmp3sJMfcffX2WdmX53w==
+X-Received: by 2002:a05:600c:214e:b0:490:e180:2ed with SMTP id 5b1f17b1804b1-490ec4bfe4cmr25268765e9.4.1781274549346;
         Fri, 12 Jun 2026 07:29:09 -0700 (PDT)
 Received: from Logrus.lan ([2001:861:560f:240:8dd0:2c2:7492:641b])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-490ea8123e1sm74072065e9.0.2026.06.12.07.29.09
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-490ea8123e1sm74072065e9.0.2026.06.12.07.29.08
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 12 Jun 2026 07:29:09 -0700 (PDT)
 From: Jeremy Rosen <jeremy.rosen@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][scarthgap][2.8][PATCH 2/4] fetch2/wget: limit auth on checkstatus redirects
-Date: Fri, 12 Jun 2026 16:29:01 +0200
-Message-ID: <348edecf9e663c3b432c6cf76c3f911354e83487.1781271084.git.jeremy.rosen@smile.fr>
+Subject: [bitbake][scarthgap][2.8][PATCH 1/4] fetch2/wget: handle HTTP 308 Permanent Redirect
+Date: Fri, 12 Jun 2026 16:29:00 +0200
+Message-ID: <5ca465fc4ac49dc2f4172c83da651f316c0b4a7c.1781271084.git.jeremy.rosen@smile.fr>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1781271084.git.jeremy.rosen@smile.fr>
 References: <cover.1781271084.git.jeremy.rosen@smile.fr>
@@ -64,80 +64,81 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 12 Jun 2026 14:29:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19677
+ <bitbake-devel@lists.openembedded.org>; Fri, 12 Jun 2026 14:29:21 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19676
 
-From: Anders Heimer <anders.heimer@est.tech>
+From: Ross Burton <ross.burton@arm.com>
 
-FixedHTTPRedirectHandler copies request headers when checkstatus()
-follows a redirect, including Authorization from SRC_URI or .netrc.
+urllib2.HTTPRedirectHandler.redirect_request doesn't handle HTTP reponse
+code 308 (Permanent Redirect). This was fixed in c379bc5 but can't be
+worked around without copying the entire redirect_request() method.
 
-Keep same-origin redirects unchanged, but drop Authorization and Cookie
-for different-origin targets (scheme, host and effective port), following
-RFC 9110 redirect guidance for resource-specific headers. This only
-affects the Python checkstatus() path; normal wget downloads are
-unchanged.
+When we can depend on Python 3.13, FixedHTTPRedirectHandler can be
+removed.
 
-Signed-off-by: Anders Heimer <anders.heimer@est.tech>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 1019d5a5c42c672ea673ae9d22363d626b57ccb9)
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+(cherry picked from commit 365829a2803b954ee6cb0364749551a91d806075)
 Signed-off-by: Jeremy Rosen <jeremy.rosen@smile.fr>
 ---
- lib/bb/fetch2/wget.py | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+ lib/bb/fetch2/wget.py | 42 +++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 37 insertions(+), 5 deletions(-)
 
 diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index 55b2ca2fe..14a1a80ea 100644
+index 2345ba6b4..55b2ca2fe 100644
 --- a/lib/bb/fetch2/wget.py
 +++ b/lib/bb/fetch2/wget.py
-@@ -303,6 +303,18 @@ class Wget(FetchMethod):
-             http_error_403 = http_error_405
+@@ -305,13 +305,45 @@ class Wget(FetchMethod):
  
- 
-+        def _url_origin(url):
-+            parsed = urllib.parse.urlsplit(url)
-+            scheme = parsed.scheme.lower()
-+            host = parsed.hostname.lower() if parsed.hostname else ""
-+            port = parsed.port
-+            if port is None:
-+                port = {"http": 80, "https": 443}.get(scheme)
-+            return (scheme, host, port)
-+
-+        def _same_origin(url_a, url_b):
-+            return _url_origin(url_a) == _url_origin(url_b)
-+
          class FixedHTTPRedirectHandler(urllib.request.HTTPRedirectHandler):
              """
-             urllib2.HTTPRedirectHandler before 3.13 has two flaws:
-@@ -316,6 +328,9 @@ class Wget(FetchMethod):
- 
-             Until we depend on Python 3.13 onwards, copy the redirect_request
-             method to fix these issues.
+-            urllib2.HTTPRedirectHandler resets the method to GET on redirect,
+-            when we want to follow redirects using the original method.
++            urllib2.HTTPRedirectHandler before 3.13 has two flaws:
++            
++            It resets the method to GET on redirect when we want to follow
++            redirects using the original method (typically HEAD). This was fixed
++            in 759e8e7.
 +
-+            Additionally, strip sensitive headers (Authorization, Cookie) when
-+            redirecting to a different origin to avoid credential leaks.
++            It also doesn't handle 308 (Permanent Redirect). This was fixed in
++            c379bc5.
++
++            Until we depend on Python 3.13 onwards, copy the redirect_request
++            method to fix these issues.
              """
              def redirect_request(self, req, fp, code, msg, headers, newurl):
-                 m = req.get_method()
-@@ -335,8 +350,16 @@ class Wget(FetchMethod):
-                 newurl = newurl.replace(' ', '%20')
+-                newreq = urllib.request.HTTPRedirectHandler.redirect_request(self, req, fp, code, msg, headers, newurl)
+-                newreq.get_method = req.get_method
+-                return newreq
++                m = req.get_method()
++                if (not (code in (301, 302, 303, 307, 308) and m in ("GET", "HEAD")
++                    or code in (301, 302, 303) and m == "POST")):
++                    raise urllib.HTTPError(req.full_url, code, msg, headers, fp)
++
++                # Strictly (according to RFC 2616), 301 or 302 in response to
++                # a POST MUST NOT cause a redirection without confirmation
++                # from the user (of urllib.request, in this case).  In practice,
++                # essentially all clients do redirect in this case, so we do
++                # the same.
++
++                # Be conciliant with URIs containing a space.  This is mainly
++                # redundant with the more complete encoding done in http_error_302(),
++                # but it is kept for compatibility with other callers.
++                newurl = newurl.replace(' ', '%20')
++
++                CONTENT_HEADERS = ("content-length", "content-type")
++                newheaders = {k: v for k, v in req.headers.items()
++                            if k.lower() not in CONTENT_HEADERS}
++                return urllib.request.Request(newurl,
++                            method="HEAD" if m == "HEAD" else "GET",
++                            headers=newheaders,
++                            origin_req_host=req.origin_req_host,
++                            unverifiable=True)
++
++            http_error_308 = urllib.request.HTTPRedirectHandler.http_error_302
  
-                 CONTENT_HEADERS = ("content-length", "content-type")
--                newheaders = {k: v for k, v in req.headers.items()
--                            if k.lower() not in CONTENT_HEADERS}
-+                SENSITIVE_REDIRECT_HEADERS = ("authorization", "cookie")
-+                same_origin = _same_origin(req.get_full_url(), newurl)
-+                newheaders = {}
-+                for k, v in req.headers.items():
-+                    header = k.lower()
-+                    if header in CONTENT_HEADERS:
-+                        continue
-+                    if not same_origin and header in SENSITIVE_REDIRECT_HEADERS:
-+                        continue
-+                    newheaders[k] = v
-                 return urllib.request.Request(newurl,
-                             method="HEAD" if m == "HEAD" else "GET",
-                             headers=newheaders,
+         # We need to update the environment here as both the proxy and HTTPS
+         # handlers need variables set. The proxy needs http_proxy and friends to
 -- 
 2.53.0
 
