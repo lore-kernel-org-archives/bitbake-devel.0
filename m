@@ -1,125 +1,128 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E91CD98C5
-	for <webhook@archiver.kernel.org>; Sat, 13 Jun 2026 11:52:33 +0000 (UTC)
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.89698.1781351547549932796
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CF6CD8CA8
+	for <webhook@archiver.kernel.org>; Sat, 13 Jun 2026 14:26:43 +0000 (UTC)
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.91952.1781360794224883971
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 13 Jun 2026 04:52:27 -0700
+ Sat, 13 Jun 2026 07:26:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=N35S/fI4;
- spf=pass (domain: gmail.com, ip: 209.85.219.46, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-8ccea53f35cso22253586d6.1
-        for <bitbake-devel@lists.openembedded.org>; Sat, 13 Jun 2026 04:52:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781351546; cv=none;
-        d=google.com; s=arc-20240605;
-        b=fcq19fN1OLWXCtbpb7Rxgz5WcFRg8hwURBIUjS+cZWQvyT0PAaTGsLOs9kP1H0oAd8
-         2fx3us8JHFpVMBKcPb1vtSHrUbPbJH06HJfmTFFf3oGYGRtIJGzG2mfm/Z2prLRcN/E8
-         RmA6uoyprnsFEyplrbjVU+TkDbu8L6uWrVIbYf3cKVlWvleuuAdOQh89+xCHyedQpcIq
-         W+b997RGoa4sLqaiW8awFJVudNf4108+DFlTz1otlXScPSK0XMKkYWp7Ug4gqIkNYVH0
-         8ARzRrrM2dVsbmLqr1JcvNEnT/stmEGuDKq3H2y2ghxMLmQgSdRtsaxZSR9qaQ6tp9QH
-         GEwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=PWHqNFWNWPbESp20tmIm/5swOSmvuoZ6VbXDA325l6Y=;
-        fh=WOWCrZxEhHmiJ69XyVWZHmP77adXc+d5cjYrilytvsw=;
-        b=k+pyOmpPjYNgywuE69lsRnFlyLhNOOJv5XeDcERWpu0k3tJEjLi9wspD2z0QaFLxDV
-         cmQyQqeIqDGw8dyhb2dHh7sCqPh1+oqh8wVXyJMiS+alN+VR0i0gRxNDHLN5+9KiwHcK
-         DX9Zfc4hh4RrSSngvdz1uEzxJgDkVz7mb2Uo+DUoJFDPYG9vm+JJtT8JLu0Dt86SveiA
-         SFiYRhuk0SA2GUasfANfyzz7pjFFP8Bmo/kvnTL+BtgffNGco4jU1XepUQ02FJyMuUn7
-         9faVSu5SB2F+oSVkqUFMHAEjuHNIY4AxVKQ/hr1P8bsq3qHTlLqij9qvosDvL9KTO1uJ
-         axqg==;
-        darn=lists.openembedded.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=PU3S6QBx;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.51, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-490b3637b90so14085375e9.3
+        for <bitbake-devel@lists.openembedded.org>; Sat, 13 Jun 2026 07:26:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781351546; x=1781956346; darn=lists.openembedded.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PWHqNFWNWPbESp20tmIm/5swOSmvuoZ6VbXDA325l6Y=;
-        b=N35S/fI4rFlnXKp54ZCVMNbku4elaKGFZa8Do8TqtTWmWfLrN0XxaYWQkjQDhPJWBS
-         /hUu4w4XnJxqu75erDi1hv7ySVypOqWxXKQawHob1oTj/NwuQ2U11lmqhGdg6Ig4tvXi
-         VUoKSAPld6PB24U+YxJCMi5bx9kj/NO8J6ePW4Ps9g0ft3q5c5W3+0lqTcFdEpDcl1Dy
-         idgURaIV9Goa8cMkUJ7s/Scth3UyrXLIOAhhoIeDf50jrWSyOpaWxjvzIba5rX2k6icy
-         MOaA5crSTyIfXeyQCC3NtdaZmgT4ij52jrTdZdRkyyb1x4BHHl8EQ9TGoadqciqkDfaG
-         TjUg==
+        d=linuxfoundation.org; s=google; t=1781360792; x=1781965592; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ev/ASkGlB1ioRQh4T5pl2x6YWaXqH040w2Bt/UOTqOA=;
+        b=PU3S6QBxfuqVtxMaS9yWpFEPt7MS9/13cCTeOpX0QV7WTBam1ORdLpsybBjjFpnCD6
+         Mns7wY6Xia+IB854VgJDrcV8+JYJQWbya9nA4wCqvVLAFqfEihH6lmkVYj77rt+dZj+u
+         EJecxJqBSU7q7LZn7wJmmCM8ITyn13u9m3azk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781351546; x=1781956346;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=PWHqNFWNWPbESp20tmIm/5swOSmvuoZ6VbXDA325l6Y=;
-        b=chGkyO81wpQ140lJQ4K2Gbk4eGucnqPeDbQYyppt4ukKICoMMr9eHvBdx6k6uC+ptN
-         RVv9AIVB8dRsSLEAtaWBTEhu4m2g557RcU3xIak/3KW2GZ3gYJ9RT//siG0Dpjw3oPkQ
-         5IyCGNRfwmXszxv3Jkl8nwvYkq9Ux5/h+1RlPfXSRDihR9euZh8S0Deak/2zftpSv7Bc
-         MbNbEwbCkdlReU03pJ58Cci01qh9V/6Sz5va6+DSTI1Gl8orL5TKOmxFXGdJ+GBMW7YS
-         rk65ZR4OpCRC5EuzuGqELWRjWyCYp4zvIarzUeWnl1aIfP9stiRoQhUjQ/snoYgyEiOt
-         J8Tw==
-X-Gm-Message-State: AOJu0YwJHYY3lZSDV+X21YSmSr1JlbrQ8QSwQy5WolwtsymOWwnYn7/P
-	YqyWGLW/yx8yy1CQUOyER6ojaXVwFUHrWXULOoEkL57kczLbLfySn6lrjcK9JVSKxApAWUcwESv
-	bm7qrBqec8oXvWviGrEG/2HPonhRiiKc=
-X-Gm-Gg: Acq92OEmygcxRVcYtm4E8b/1cyb0rYnPFP0/EhUdRYSUy3uTYE/TofmIjJNm+Nebcr8
-	zOCB3bPTgUmjvGkZtKqToE8EpJiNWCplyDfacCWKuwRekubheUlM6dz8eDN3xCUt9DadX/ReV7X
-	SCfyBzr1EGEH66MuWd8WhmScAif6k5g0ZDuPdhFjmf5v2vfHV2F9yKmZ4lDVkPHkF4Exd3897zS
-	t7yCjaZiKZow6WLCS33Se9/I3TRK1vC0oIWLMBHyknF/zCoEzmG6TQtL5pjaYkMQYwtdXW26nOT
-	IifMoyf+5AHlV2OrTP+fq0/WyxzwRwmiYhUixxSrqQ==
-X-Received: by 2002:a05:6214:3d06:b0:8ce:a542:361 with SMTP id
- 6a1803df08f44-8d44dcded4dmr67419036d6.13.1781351546438; Sat, 13 Jun 2026
- 04:52:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20260612-landlock-v1-0-77891f63ed7f@est.tech> <20260612-landlock-v1-1-77891f63ed7f@est.tech>
-In-Reply-To: <20260612-landlock-v1-1-77891f63ed7f@est.tech>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Sat, 13 Jun 2026 13:52:15 +0200
-X-Gm-Features: AVVi8CcibaZ9r8nYYI1R0cUefi8zC9yogPxIdOJvCd0-mQAClqEUVY-8qs040-M
-Message-ID: <CANNYZj_gX=vNggcmyS0CtPoE+dYc0AjOf4=Z0QwcU46-Ccx4EA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH [RFC] 1/2] utils: Add landlock_restrict_network
- function
-To: david.nystrom@est.tech
+        d=1e100.net; s=20251104; t=1781360792; x=1781965592;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ev/ASkGlB1ioRQh4T5pl2x6YWaXqH040w2Bt/UOTqOA=;
+        b=gZ/ABd33fBSiGBKf0A7qa9HqSpb+6mHUiJCYBW2nj/jydqOSeFOzh7VLDbqw6l4moi
+         kXwoAm4y9MML3/D6FOAc8oPPwDOuhwVXDAEF8MJom41hMMP3pihK7ZLe1S+fIF6MwcWL
+         cUwFR5XNW0H6iXQC14bM8m1XS932R8a1xF/locl9fn+ByQGz72doOmMfV8+EjCeZuQ37
+         ukdzQVHb8cuHLfzh+BYG/8NSZjkgHiwjlxeClal5MzusMpixwtXGlK8s9NW65v+k1BeA
+         y4URv5LQE/TvFuMxPywXJ9NCnO1BoEuTx+etxTNt6wFjzl/dI1/0IwQ7OB9971HSuWPx
+         ubCA==
+X-Gm-Message-State: AOJu0YwEyuvWHDxW8LwkRyup71473b1D8i73Z38tFEr+5UqulnLNPuS5
+	Hyo864zIeikaZHvgwaGwM+Xo4yWuyrRmhQGgiLqn6GvhPK9TgUcI8Co5t/bTALlFT+c=
+X-Gm-Gg: Acq92OHAMspsLDt7Mmm6McOBpB/WlsslVulZ2O9Aw0RLM/phn0RRQtoirOCl1/cibEr
+	nFF4Q2bi9Yg1SPpchf77+yEkWLK/RFpTUUheZs4DMoZzJCxJ8xu4kaG4zPcKOVAgRvSkGgvGoko
+	B8vnCyeJY1myPfNa8ic5LqYLNNEo+xpfgV46ntyjth09ruWbbqJpI8CVdW8v3mAuykChbq4xswW
+	6ce2c2KP1BBSyJWqH1rmkV5EhAVEQVBd85DvLLCEcgkF1XXWDu2poaE168VP4S5opXPvVtO3n8e
+	pTu3EYD/Q278grSbfydwwGFh+XEQdJyx7qGWp6cD8HyKCdLoOQpOzmPYl8kuy8bWshwmeu1KiYP
+	k0H1yD27XFSLsNYW+IxcNz8iQ8iVWIes6E0SFLaN5jsfEQmRM4b1y5UtyXVX2ir2bVPmeRrAN5w
+	1S/CaQpW+Wowlx8Jo/BJ3jqeI68oyXao4QtW6V+F78QE8QiAVh2M+emz3CzKONgjz+lHE7MAAuY
+	ZIwXzz2pYKZcTpV
+X-Received: by 2002:a05:600c:1d04:b0:490:b58a:e6ff with SMTP id 5b1f17b1804b1-4922011dfe2mr38582025e9.22.1781360792395;
+        Sat, 13 Jun 2026 07:26:32 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:4437:5798:e78b:2888? ([2001:8b0:aba:5f3c:4437:5798:e78b:2888])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49220304180sm79348345e9.4.2026.06.13.07.26.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jun 2026 07:26:30 -0700 (PDT)
+Message-ID: <4c36de09175dced8cd0ede2b52208671b30695a0.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH [RFC] 1/2] utils: Add
+ landlock_restrict_network function
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: alex.kanavin@gmail.com, david.nystrom@est.tech
 Cc: bitbake-devel@lists.openembedded.org
+Date: Sat, 13 Jun 2026 15:26:29 +0100
+In-Reply-To: <CANNYZj_gX=vNggcmyS0CtPoE+dYc0AjOf4=Z0QwcU46-Ccx4EA@mail.gmail.com>
+References: <20260612-landlock-v1-0-77891f63ed7f@est.tech>
+	 <20260612-landlock-v1-1-77891f63ed7f@est.tech>
+	 <CANNYZj_gX=vNggcmyS0CtPoE+dYc0AjOf4=Z0QwcU46-Ccx4EA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-9 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 13 Jun 2026 11:52:33 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19681
+ <bitbake-devel@lists.openembedded.org>; Sat, 13 Jun 2026 14:26:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19682
 
-On Fri, 12 Jun 2026 at 14:01, David Nystr=C3=B6m via lists.openembedded.org
-<david.nystrom=3Dest.tech@lists.openembedded.org> wrote:
-> +def landlock_restrict_network():
-> +    """Block TCP bind/connect using Landlock LSM (ABI v4+, kernel 6.7+).
-> +    Gracefully skipped on older kernels. Stacks with disable_network()."=
-""
-> +
-> +    NR_CREATE =3D 444  # landlock_create_ruleset
-> +    NR_SELF   =3D 446  # landlock_restrict_self
-> +    NET_TCP   =3D 0x3  # BIND_TCP | CONNECT_TCP
-> +
-> +    libc =3D ctypes.CDLL('libc.so.6')
-> +
-> +    abi =3D libc.syscall(NR_CREATE, 0, 0, 1)
-> +    if abi < 4:
-> +        return False
-> +
-> +    attr =3D struct.pack("QQ", 0, NET_TCP)
-> +    buf =3D ctypes.create_string_buffer(attr)
-> +    fd =3D libc.syscall(NR_CREATE, buf, len(attr), 0)
-> +    if fd < 0:
-> +        return False
-> +
-> +    libc.prctl(38, 1, 0, 0, 0)  # PR_SET_NO_NEW_PRIVS
-> +    r =3D libc.syscall(NR_SELF, fd, 0)
-> +    os.close(fd)
-> +    return r =3D=3D 0
+On Sat, 2026-06-13 at 13:52 +0200, Alexander Kanavin via
+lists.openembedded.org wrote:
+> On Fri, 12 Jun 2026 at 14:01, David Nystr=C3=B6m via
+> lists.openembedded.org
+> <david.nystrom=3Dest.tech@lists.openembedded.org> wrote:
+> > +def landlock_restrict_network():
+> > +=C2=A0=C2=A0=C2=A0 """Block TCP bind/connect using Landlock LSM (ABI v=
+4+, kernel
+> > 6.7+).
+> > +=C2=A0=C2=A0=C2=A0 Gracefully skipped on older kernels. Stacks with
+> > disable_network()."""
+> > +
+> > +=C2=A0=C2=A0=C2=A0 NR_CREATE =3D 444=C2=A0 # landlock_create_ruleset
+> > +=C2=A0=C2=A0=C2=A0 NR_SELF=C2=A0=C2=A0 =3D 446=C2=A0 # landlock_restri=
+ct_self
+> > +=C2=A0=C2=A0=C2=A0 NET_TCP=C2=A0=C2=A0 =3D 0x3=C2=A0 # BIND_TCP | CONN=
+ECT_TCP
+> > +
+> > +=C2=A0=C2=A0=C2=A0 libc =3D ctypes.CDLL('libc.so.6')
+> > +
+> > +=C2=A0=C2=A0=C2=A0 abi =3D libc.syscall(NR_CREATE, 0, 0, 1)
+> > +=C2=A0=C2=A0=C2=A0 if abi < 4:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return False
+> > +
+> > +=C2=A0=C2=A0=C2=A0 attr =3D struct.pack("QQ", 0, NET_TCP)
+> > +=C2=A0=C2=A0=C2=A0 buf =3D ctypes.create_string_buffer(attr)
+> > +=C2=A0=C2=A0=C2=A0 fd =3D libc.syscall(NR_CREATE, buf, len(attr), 0)
+> > +=C2=A0=C2=A0=C2=A0 if fd < 0:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return False
+> > +
+> > +=C2=A0=C2=A0=C2=A0 libc.prctl(38, 1, 0, 0, 0)=C2=A0 # PR_SET_NO_NEW_PR=
+IVS
+> > +=C2=A0=C2=A0=C2=A0 r =3D libc.syscall(NR_SELF, fd, 0)
+> > +=C2=A0=C2=A0=C2=A0 os.close(fd)
+> > +=C2=A0=C2=A0=C2=A0 return r =3D=3D 0
+>=20
+> Far too many magic numbers. I would really want to do this with an
+> API.
+>=20
+> This also needs some kind of test, e.g. that the function indeed has
+> the desired effect.
 
-Far too many magic numbers. I would really want to do this with an API.
+Unfortunately, to use tech like this, we do end up needing to do
+something like that and utils.py already has quite a bit of it. The
+plus side is that the kernel is really good about maintaining these
+APIs so the numbers are unlikely to change.
 
-This also needs some kind of test, e.g. that the function indeed has
-the desired effect.
+I wouldn't take something like this unless there was a really good case
+for using it. Network isolation in more builds probably is a strong
+enough use case...
 
-Alex
+Cheers,
+
+Richard
 
