@@ -2,75 +2,75 @@ Return-Path: <paul@pbarker.dev>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 151AACD98DE
-	for <webhook@archiver.kernel.org>; Mon, 15 Jun 2026 08:28:27 +0000 (UTC)
-Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.125236.1781512097233703850
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FA2CD98DE
+	for <webhook@archiver.kernel.org>; Mon, 15 Jun 2026 08:30:17 +0000 (UTC)
+Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.125258.1781512207991193265
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 15 Jun 2026 01:28:17 -0700
+ Mon, 15 Jun 2026 01:30:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=YMo2Q3nW;
- dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=gqglEp5H;
- spf=pass (domain: pbarker.dev, ip: 202.12.124.153, mailfrom: paul@pbarker.dev)
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 5EC847A0156;
-	Mon, 15 Jun 2026 04:28:16 -0400 (EDT)
+ dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=ObwASrJt;
+ dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=RtaoASG1;
+ spf=pass (domain: pbarker.dev, ip: 202.12.124.150, mailfrom: paul@pbarker.dev)
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.stl.internal (Postfix) with ESMTP id 4B3111D00128;
+	Mon, 15 Jun 2026 04:30:07 -0400 (EDT)
 Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Mon, 15 Jun 2026 04:28:16 -0400
+  by phl-compute-02.internal (MEProxy); Mon, 15 Jun 2026 04:30:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
 	cc:content-type:content-type:date:date:from:from:in-reply-to
 	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1781512096; x=1781598496; bh=7eAyMnXeCt
-	OG8ruDd6OZFzlV84J5WxJjiLqKrygQpuk=; b=YMo2Q3nWUXDyl94HVq0TzqW+53
-	HPYWdLk+B167wUnb05L+M3UUrqAOc85Okg9kXwdeNCjOYvJha4/ZWAP9qoGSZ39p
-	Tc8Sn1uySOtHtd01+zf8rqzhTlBSXZkcnDpQpmWGWwrsb/YRRdzAakR+iEuk/iMn
-	4hvPs8itReLqZIaSYGMUmUBxdxpVh5/kJRUSwSRLjxrTjW5RItD3SrXJXyziDo+I
-	aQu/ESEKChX1M8MfGGBTovvS9FivVQhpufIIXtvjT9O9rFJ3LslJsp65ZcO2nCTq
-	z5YvEtZjh4vFSgV6xoTOp5DPTSPPiIm50WQP9JY0cW0seTvBQ4semCrSKKsw==
+	:subject:to:to; s=fm3; t=1781512207; x=1781598607; bh=WgS74LMFk2
+	ojXrmXp0wV0UJlaqRYIcCO3PhbAFag520=; b=ObwASrJtg05VLcyN6ZT/OIQYsq
+	mEGC4tcmJo8kqcwNA3tjPUKZk2HwasWy/VjKYX8SFANgdZAvhub/ff3k7RdF3Co+
+	/HgYaZyAb66bq35uuHNnlKWnX1o+Bg9WjK/JdA89u0WD2zh8znYx4BkeOWfEog0x
+	rjr1srXa715vY07Mr4B5ppjhshyw83qZI0Hv0pCwNPtrH4w0afVGzOh8I8hkJyrw
+	tLqbJmRJzTK7ndSubz8vdS+XrpA6Cl4x2qOTj8ujLzG/YU7/14dVWDD+YUXrIJJa
+	aDfIxJNuU8CT3xo8YZ2vjj1SE/sbyK9c9wd1fdwDvd/A3BasudwAp6yLsXsQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:content-type:content-type:date:date
 	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
 	:message-id:mime-version:references:reply-to:subject:subject:to
 	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1781512096; x=1781598496; bh=7eAyMnXeCtOG8ruDd6OZFzlV84J5WxJjiLq
-	KrygQpuk=; b=gqglEp5HeNgCzFPuQ14sI98HW84ItgcMSUbAX1BQ5q0w+jtXJ9F
-	kFaozLnHAth8FSQEALQRaV/cPA5IU5R5cZxi5H5FxgCSvNI2vuWfYESt0E2zwrZk
-	5eJxkcoQgde8lecs+cHwPMCGncru1mI4X59+GkALC3ob+9R6vbqbRbZ5tWHp0TAV
-	p0/Lnkb8P572HunuhhzTby5E8vV1kv2J5RlNrOYsrFcd1TZx9F2WZ62KN80Nifdt
-	8nDPZwTUt4l6ll/ZLGU09Tn5k/esIo/nRquaxc+0vRoEil7a8ejzQOvZnIVY2HrD
-	QMuIOnSU/JgMK8IwquH1i2JM6VP+DrUewRg==
-X-ME-Sender: <xms:oLcvakpCcwofx1BI9qmkQuC1MxLD1qF6ecVNxcfq6IcXsGxRQ1Obmw>
-    <xme:oLcvagpVbSE5jzwvudGGL1Rs1D0x76q6bzya1pMMCSKHT7ZwzH1DrdKpUCx5JSEgV
-    mbMPza4ODxQHfckX-_lgtr_DJaPDpDmd758zJqpcY4y7jk2pQe9KzKT>
-X-ME-Received: <xmr:oLcvam0ndbtKtlsGzPe8-SA89aVnVwd3YI9pNGE5eCFQ8tIdkh0AUJmT5tlgirskh3sp0C72tsWc3OvxqzhSmpUaY7_hWni0UAiIl7Mz2Luq>
+	1781512207; x=1781598607; bh=WgS74LMFk2ojXrmXp0wV0UJlaqRYIcCO3Ph
+	bAFag520=; b=RtaoASG1RGVshi5z25Jhn7LMZEP5UUDOUlOncucUU5iL7pATLpD
+	5PlfTdikw/fuaotn2OkSlG5UDJwzn9JoHZmQgRHZDz2iLAPblEZ5fmOhpitkldJ4
+	7YiZjpWHMrQgGjO317QcJ04tzu+Frnc2hUZfAyVfmZ7fEv/gWdQmqCp3xMTE2uww
+	o+XzhiT5qzQR4DzgdbQg0BJD1R58DMLaHWLqPxgx1sm1GYjqmKZcYalXJKu6vyOf
+	gAP2SI6OlowOrjnd53cCa66GSZJ9ov4FqCYNjZu7TcVsCo0AP2OW+HY5XTXs2JMO
+	kzqM7Pl0GqPD7Jv4EVghvDJ2ZJslRPvViRQ==
+X-ME-Sender: <xms:D7gvarm0NFPjVljgw3KJyUU_LbTA0wRc1IiqVjlixRq4r123XPVLJA>
+    <xme:D7gvak3I7qgARkX-b8LMj18GmqfQ99guniiPOM-Qe0JiJ-HuMo1xWKIygJ2McR2Yh
+    Fhnk9WdDcPvqzR6zgjANTYP6j_E8H1T_wLWdpqrfQkIxE9-83N9fA>
+X-ME-Received: <xmr:D7gvavRs5RbIZpNqtTDiwsSD1NbMM3wxxo_aSmyRo3zF1XOIko9g4BF2Tg5rNcyW_L_Pb0Uk9J0cIOM1RSXX5z8uKpzbAc2ofDY5jHdmjxU0>
 X-ME-Proxy-Cause: dmFkZTF0Ot2lTMY/QFsGxbMCAM14Krj9z3CjpeeqxwR2a6glJrKu2/v/632jA0/P/B5mLI
     1kwFOd4fqVevHcLKYikgm498DmRIH06jJH9UjymjOf1nIPxGf8Dl8t5hMTEn97PbQRHqm3
     RTCwui1MwJwDRAG7t4tm6QG5VThiqMyveriRNEVN+RH46d6NL/qhYNJcteMxoAdp1iBlrs
     YniyG/h5R4JZP8XGnUbgc/mum2tpwLVqbZCE9mz9U6e1pu0sNaV1TER+ueW/kmu6496Bx2
-    rqQvoKhmg0biMpH38np7cbJKhi2M5aPwKlcHjwf/6dwEyFB/AejMfOqWUsv6X2Jn7VwzPQ
-    Kfmejkx0D5fzTlPmaZ4ch+HjYOvdZmDMjRmHgbVd6N8mANXLr3x6z5qC8TmuqvVJ+0S2Uo
-    VvIvPgEQjClif/1pDCBQpUQRT+irTYk9n4xaibzBgvxgbc5k+v0l3tmpmgGkc1X9SK1yVa
-    7lYzIuMYqh2BtCJt3OITluUB+yROp/D/mL4S6E7o+/0Jpkz7FSutOUFGeCnA/9MQFpAGTI
-    gyxEVSeLX2uAZGQFBSQK9K4mGQsoUl1wc5r6XXgToe8zPoKgVHO4jau0EeDh2hCZ2WcQKc
-    uw2Eg/b9fJ/gADC86PbKGwD5/V/XiYiun3u2QhK1echJkHQxh0x4NKwAitEg
-X-ME-Proxy: <xmx:oLcvanAApBhFEBYu5HJPHNRjlzayT0E5F3rFZF8qY83tlzmsUZthug>
-    <xmx:oLcvamdNP0cHFtxQfYiJd9YxUlVZTCtYa81Gy_VFNhfXZJ1y0CfPxw>
-    <xmx:oLcvakhqCoDbt_26oSyJT4cUpkTKdGCz2o_HdMYiRyEZKFpBs2P0Lw>
-    <xmx:oLcvamqj4CWL3zo4SeYsi8I3r9mgAcSSK5vQz9aIB7WQTLH3hsJszQ>
-    <xmx:oLcvapzLLeu8SvSF6aH-N13avnV8AdJqwGTbqtOS0w9y4Ur_LBa0Ccb_>
+    rqQvoKhmg0biMpH38np7cbJKhi2M5aPwKlcHjwf/6dwEyFB/AejMfOqWUsv6X2Jn7VwzQL
+    NTVrfpL8CNbYJduVu/yxELHsKYCEWqjKfL85T56pWUBTKTIb8F2q5+bBYlurSMVPu0wXdT
+    279jwfq379pi/p+6513v9gnwizGV2mzFZlJpzpcztE0+BC9CC/zSikkD3tZNYSRT01hE2W
+    NG25DcrTcidoCef/Ee2leNgR/nsFbSps66ISyk3fL3A9jf+IlRbvdRGQan/qwMfQGQxZny
+    3BD4haMt9SZ/dEJWW90kXWcBt4cyukRY5s29gFJ75YdhlslsY5GwuhmuurodZs3P/9sr3X
+    GQzitvmEpRoZgpuq+pvH5QaKr8ZI75PYPgDaXrBAxYgAQWXR5wvhBIEYRqaA
+X-ME-Proxy: <xmx:D7gvauvkXBDk4paXSrgLnp2c2k0eD7T6lRW_PpTn47419K3DQPceYQ>
+    <xmx:D7gvasYXoykkfAoptrXtct_BGLjx8KdysjH1xlJ3-L-i4McjVdLTaw>
+    <xmx:D7gvarvu7H2120q0ClKsOhrzlHIBsO_Fb0RfWkezOr8tdn2-oC9RJQ>
+    <xmx:D7gvamFaVpZwRUw2xHn4QxGTcU42M9U_S-3-bQXlm7_JLIVOFV6mdg>
+    <xmx:D7gvaqNgKqjUlXrco9b7qnn3QS6O551UQftUXeKZC6gPczv0hh9MFYd6>
 Feedback-ID: i51494658:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 15 Jun 2026 04:28:15 -0400 (EDT)
-Message-ID: <8d50983b587b19901608279ee8fd946a6503ff97.camel@pbarker.dev>
-Subject: Re: [bitbake-devel] [PATCH [RFC] 1/2] utils: Add
- landlock_restrict_network function
+ 15 Jun 2026 04:30:06 -0400 (EDT)
+Message-ID: <d0e431f8bab663642342ad0bbb732b7c99cd09eb.camel@pbarker.dev>
+Subject: Re: [bitbake-devel] [PATCH [RFC] 2/2] bitbake-worker: Call
+ landlock_restrict_network for tasks without network
 From: Paul Barker <paul@pbarker.dev>
 To: David =?ISO-8859-1?Q?Nystr=F6m?= <david.nystrom@est.tech>, 
 	bitbake-devel@lists.openembedded.org
-Date: Mon, 15 Jun 2026 09:28:12 +0100
-In-Reply-To: <20260612-landlock-v1-1-77891f63ed7f@est.tech>
+Date: Mon, 15 Jun 2026 09:30:00 +0100
+In-Reply-To: <20260612-landlock-v1-2-77891f63ed7f@est.tech>
 References: <20260612-landlock-v1-0-77891f63ed7f@est.tech>
-	 <20260612-landlock-v1-1-77891f63ed7f@est.tech>
+	 <20260612-landlock-v1-2-77891f63ed7f@est.tech>
 Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  keydata=mQINBGC756sBEADXL6cawsZRrDvICz9Y1SG0/lW1me4xpq36obh7a0IGAzp3ywNRb/4MO
  DTqP4+DD0cIFuDY41/N17g0sNlp8z+/k/IIDmNPtYQOTVmAkrkdDU4BP8dD3Cp1PUw6nrbInfujAJ
@@ -116,130 +116,72 @@ Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  ChZPI3NMLnKZPJC8ZQZ4S8yb5oA3rqTA2DMODvsrEVlaB2cQ6IWHSa/mvBwA8Ias3771cp4fZS7W7
  LUewj8JVy0aJsGTwI4invl
 Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-tVTNbaA8we48DqqOGQQz"
+	protocol="application/pgp-signature"; boundary="=-7jVdNx33hXKDTPCaUWIG"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 15 Jun 2026 08:28:27 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19683
+ <bitbake-devel@lists.openembedded.org>; Mon, 15 Jun 2026 08:30:17 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19684
 
 
---=-tVTNbaA8we48DqqOGQQz
+--=-7jVdNx33hXKDTPCaUWIG
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Fri, 2026-06-12 at 13:38 +0200, David Nystr=C3=B6m wrote:
-> Add landlock_restrict_network() which blocks TCP bind/connect using
-> Landlock LSM (ABI v4+, kernel 6.7+). Designed to stack with the
-> existing disable_network() namespace isolation, covering the case
-> where disable_network() is skipped for non-local UIDs.
->=20
-> Gracefully returns False on older kernels (ABI < 4).
+> Call bb.utils.landlock_restrict_network() for tasks without the 'network'
+> varflag. This to support basic network restrictions in unprivileged
+> docker containers.
 >=20
 > Signed-off-by: David Nystr=C3=B6m <david.nystrom@est.tech>
-
-Hi David,
-
-I think adding this is a good idea, but the code needs a few changes to
-ensure it is maintainable.
-
 > ---
->  lib/bb/utils.py | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
+>  bin/bitbake-worker | 2 ++
+>  1 file changed, 2 insertions(+)
 >=20
-> diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-> index 181082c95..1347c29d0 100644
-> --- a/lib/bb/utils.py
-> +++ b/lib/bb/utils.py
-> @@ -2054,6 +2054,32 @@ def disable_network(uid=3DNone, gid=3DNone):
->      with open("/proc/self/gid_map", "w") as f:
->          f.write("%s %s 1" % (gid, gid))
+> diff --git a/bin/bitbake-worker b/bin/bitbake-worker
+> index aa14ef191..5f3fd9933 100755
+> --- a/bin/bitbake-worker
+> +++ b/bin/bitbake-worker
+> @@ -287,6 +287,8 @@ def fork_off_task(cfg, data, databuilder, workerdata,=
+ extraconfigdata, runtask):
+>                          bb.utils.disable_network(uid, gid)
+>                      else:
+>                          logger.debug("Skipping disable network for %s si=
+nce %s is not a local uid." % (taskname, uid))
+> +                    if not bb.utils.landlock_restrict_network():
+> +                        logger.debug("Skipping Landlock network restrict=
+ion for %s since kernel lacks ABI v4+ support." % taskname)
+
+In disable_network, the logger.debug() calls for failure are handled
+within the function instead of by the caller. We should do the same for
+landlock_restrict_network() as suggested in my reply to patch 1/2 and
+drop the debug print from here.
+
 > =20
-> +def landlock_restrict_network():
-> +    """Block TCP bind/connect using Landlock LSM (ABI v4+, kernel 6.7+).
-> +    Gracefully skipped on older kernels. Stacks with disable_network()."=
-""
-> +
-> +    NR_CREATE =3D 444  # landlock_create_ruleset
-> +    NR_SELF   =3D 446  # landlock_restrict_self
-> +    NET_TCP   =3D 0x3  # BIND_TCP | CONNECT_TCP
+>                  # exported_vars() returns a generator which *cannot* be =
+passed to os.environ.update()=20
+>                  # successfully. We also need to unset anything from the =
+environment which shouldn't be there=20
 
-We should base these on the names used in the Linux kernel so it's easy
-to search for things and compare with example C code in the docs. So,
-
-    NR_landlock_create_ruleset =3D 444
-    NR_landlock_add_rule =3D 445
-
-    LANDLOCK_ACCESS_NET_BIND_TCP =3D 0x1
-    LANDLOCK_ACCESS_NET_CONNECT_TCP =3D 0x2
-
-    LANDLOCK_CREATE_RULESET_VERSION =3D 1
-
-> +
-> +    libc =3D ctypes.CDLL('libc.so.6')
-> +
-> +    abi =3D libc.syscall(NR_CREATE, 0, 0, 1)
-> +    if abi < 4:
-> +        return False
-
-    # Check that landlock is enabled and supports network access
-    # restriction (added in ABI version 4)
-    abi =3D libc.syscall(NR_landlock_create_ruleset,
-                       0, 0,
-                       LANDLOCK_CREATE_RULESET_VERSION)
-    if abi < 4:
-        logger.debug("System doesn't support disabling network via landlock=
-")
-        return False
-
-That's a little more verbose, but much clearer.
-
-> +
-> +    attr =3D struct.pack("QQ", 0, NET_TCP)
-> +    buf =3D ctypes.create_string_buffer(attr)
-> +    fd =3D libc.syscall(NR_CREATE, buf, len(attr), 0)
-> +    if fd < 0:
-> +        return False
-
-We probably also want a logger.debug() call to log the failure here as
-well.
-
-> +
-> +    libc.prctl(38, 1, 0, 0, 0)  # PR_SET_NO_NEW_PRIVS
-
-The commit message only describes use of landlock, not no_new_privs. We
-need constants for this call as well.
-
-> +    r =3D libc.syscall(NR_SELF, fd, 0)
-> +    os.close(fd)
-> +    return r =3D=3D 0
-> +
-> +
->  def export_proxies(d):
->      from bb.fetch2 import get_fetcher_environment
->      """ export common proxies variables from datastore to environment ""=
-"
-
-Thanks,
+Best regards,
 
 --=20
 Paul Barker
 
 
-
---=-tVTNbaA8we48DqqOGQQz
+--=-7jVdNx33hXKDTPCaUWIG
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 
 -----BEGIN PGP SIGNATURE-----
 
-iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCai+3nBEccGF1bEBwYmFy
-a2VyLmRldgAKCRCrY1Tsnbr0bpsCAQDcS3mR8up3qIDULC2BNelDMWQcK6zP9OQD
-cauEld0NTgEAzCqWY55hjhD+wp7S/5rr8ZaB6BxThhlDuBW1DSHVeQQ=
-=3v2U
+iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCai+4CBEccGF1bEBwYmFy
+a2VyLmRldgAKCRCrY1Tsnbr0bp0EAQCRxMbcrPFxVfm8gi/THejsaZyO3kJTKKb0
+0Pdio4QCkAEAs30A5if+HUPWp5kufrdbuMyeWbIz8Dg+EMAqZCZ+sQM=
+=8wH9
 -----END PGP SIGNATURE-----
 
---=-tVTNbaA8we48DqqOGQQz--
+--=-7jVdNx33hXKDTPCaUWIG--
 
