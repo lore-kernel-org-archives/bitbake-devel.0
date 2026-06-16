@@ -1,319 +1,125 @@
-Return-Path: <jaipaul.cheernam@est.tech>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF65ACD98E1
-	for <webhook@archiver.kernel.org>; Tue, 16 Jun 2026 14:18:38 +0000 (UTC)
-Received: from DUZPR83CU001.outbound.protection.outlook.com (DUZPR83CU001.outbound.protection.outlook.com [52.101.66.4])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.155568.1781619509412828525
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D79FECD98E1
+	for <webhook@archiver.kernel.org>; Tue, 16 Jun 2026 14:26:48 +0000 (UTC)
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.155771.1781620003135572677
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 16 Jun 2026 07:18:29 -0700
+ Tue, 16 Jun 2026 07:26:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@est.tech header.s=selector1 header.b=obk/ihPJ;
- spf=pass (domain: est.tech, ip: 52.101.66.4, mailfrom: jaipaul.cheernam@est.tech)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jaVHlxCba6ZW0wF36aJU9xZabQG09CHJNDhFGJ0fsn2a+SJ2poAOoCKRayBrlBbF0XAtNtsnpHzVMIVupJmfh88VbwcdR/9vkqcze69LA+ndpPkPTLuF/OWaoMS/0lmuXCSCqIi83v/hYP42zSCXCwO+LfKZkV1dG5UcWLFRTTtB6hO+gbhSyZQZbuQFXo0rKCwk9ixkCHVqJP4LlmmFzFebiZ59vBKn4jTr6sbKWMYrOOf4XxvTyvNTcQjWse9CwcjqR/UQUWV/bvyxUV6sDoRTMLxOYTFmXfo1Qqxs+K+mGEEgNuighMRuXhSVui658PWfn5OaY7SQBhSmnQCUVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Dp0J58dj5K4Lg83vUPkuwQ3AfA4DY7b6ekY4Cm9ivI8=;
- b=uXfxD/e9C3xA1lJPr0Plrm5Yo16vB5irZJ1rFxTenp+/EV1sF90lj2DsnkR10m5HbxJ8pGWSYA54CO8MXeA11L/qVXyFBn/xHCPQo0tY+P1/34PmdO89fZPU5X+i+e+dTkJkGJlEwZkfZRQMb0+QwYfuUXEGS6fc+iXqjxhkN5UIy80DiCmtVrRhGb7TekSG5xRaJuFxReNTVljtAMYXiOk/lRghD6aHmRDlABN9hID4Z0MXb4r6VuRIDPoaHbE7c9PVQTrRiNYVU8Axs45LiXfx2InzlkB28jAEXgwqHaZJqqvrrwRTdPReXmNLefbFZ5qtgIaYDVhSz0Fsvhi/CQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=est.tech; dmarc=pass action=none header.from=est.tech;
- dkim=pass header.d=est.tech; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=est.tech; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dp0J58dj5K4Lg83vUPkuwQ3AfA4DY7b6ekY4Cm9ivI8=;
- b=obk/ihPJvOfaHKmYCCLlI1ZXWUjA5pFVx/a98fyna9p+PjqyoECJss6TCsLWVwaBzTMtqQjtbhGCSo4qEVJhR/Vm/bgYn49J/v3oc8p+tKa43VEWUv5uyjsaImfJXr1vlPl4k3e6hp8GOCbIs7j+TzJrmloqLtKjSNxg2fgiexu9wGmLAGmbrZY1+bPDYbPFA2KXCKLjquTAuAXe8PqYdu4LsTdoSD+R2Kbtjs3bYS5pI8UiSkmrnRnWoDQWhj1TFh3oqHZW7NP8oiwQoTulEVcmzZ4oPqXvv18VRzVUhuttLowCfjary6Yf1X4FZfB22V0zQ5KImjlXubvMIo/EuA==
-Received: from DU7PPF66507B2D7.EURP189.PROD.OUTLOOK.COM (2603:10a6:18:3::ad4)
- by VE1P189MB0910.EURP189.PROD.OUTLOOK.COM (2603:10a6:800:16f::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.18; Tue, 16 Jun
- 2026 14:18:24 +0000
-Received: from DU7PPF66507B2D7.EURP189.PROD.OUTLOOK.COM
- ([fe80::566d:7425:a795:5560]) by DU7PPF66507B2D7.EURP189.PROD.OUTLOOK.COM
- ([fe80::566d:7425:a795:5560%7]) with mapi id 15.21.0113.015; Tue, 16 Jun 2026
- 14:18:23 +0000
-From: Jaipaul Cheernam <jaipaul.cheernam@est.tech>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=oy8WXX+c;
+ spf=pass (domain: gmail.com, ip: 209.85.219.47, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-8ce65629acaso54287646d6.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 16 Jun 2026 07:26:43 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781620002; cv=none;
+        d=google.com; s=arc-20240605;
+        b=XNhXKOfLgPm6XSiLfCf4Y9M/fk4N3LIs2DSAuVzo/SSN1ECHiT/9V5UXd0VK+sxLp1
+         dl8HvcHvmG8CQioO/9evoEvpUecWfVE9cAmpUqKg+MtQSJ3VXuUpD2RCb5ln4nOqSj8D
+         LgOP0ZxoHxcV0DzhPtKwAYqTF4mge8IsrHleuh7lYrB2ZvhvbnZrl4CSbvuow5qdxv+Q
+         vQ/hjX4zx5oCbBM4FLzQGt4TAPpvt20ywbRWTyaUIkD1xIq+F61kSLIsPeyZhXp0dK0V
+         4CSMnkvmr85oiRUHxjoyLEL7Hndpjn9p58UlEpv2FB1eoOQGVJzeqhPYqUD+dAP4QVqo
+         q1MA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=G/nlRMvHYl+qzhnLdHIAFGlHaOSoxYsIuHafd9R8P90=;
+        fh=KpRHvgqWW61aEsjGeK4POuCheHSQY0FDOA87uagZ87g=;
+        b=ectMjOYaL5FogkpzALS4D+CjvmGQ8KDBPSl0IJoXONtTLNmMnvIPouV9OyqLhifwX3
+         6E7soZ3M5ScmYHxlwGOnebohjePUcx44mZa9qf8pBhLz2MqRsMfCFTeC2xrVTsLIcvzV
+         NH4bxX90voCM9Zy2Nu9Rs3slNm1eZ2tjK3h0+lxGg0v/n4jA8GUzgIQlAci8Ea2nbCdY
+         XpAyuzroiQ8HYO6X67XDM66cvP3WWVfPXpWGOv6VgnUm9B3bHQL+ENBrZGA3xoclBNg2
+         z8KkTS/5rDuei7vWa28utqMP/RU7x0BPVD5lmpKrdsVaRCUO8x/bt1xc4brw9PPNhERM
+         9F3w==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781620002; x=1782224802; darn=lists.openembedded.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G/nlRMvHYl+qzhnLdHIAFGlHaOSoxYsIuHafd9R8P90=;
+        b=oy8WXX+cKIPYrSZIdjwGPvbziaoi5NV8zW4IPkWyKOMLMj02EILlQ3zcQl8tmo0iUT
+         lSKxAFKIFGGBAaKBzjVEJHKGe1KDmU72auFHhvpPcAbbczmnrqSfASMT3I5Xu5byvT7T
+         wtvmX/byikyISRK0TuWhBEJySzuJKJZaRN+XmAMGyU/Wlx/eHowxTXfNQtknOM/ze5rp
+         iinxpONQNYtqw6hdMFY6qqrnqaS+W31eirZZ6dL/afpAsijurNklZIFFUqUt61AVPNBE
+         YRM2ShDN9cCCNR0F4OX00g6fjzJ90dKnysm6ghxX2YQNFqM3vThgbiIkMz7OKmPddiee
+         m91w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781620002; x=1782224802;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=G/nlRMvHYl+qzhnLdHIAFGlHaOSoxYsIuHafd9R8P90=;
+        b=XrrY2UE5xbyYxFYI7onZk2HaZA0L9GjNPPcTUIT0eIIF5v+ZgdLfdsJ39StJMMqzQu
+         nyq+l8B3U/TcqrA6h7vcfipyQnRJlvr43KCWLmhdMZNoK3z6TOc7a//PiUmuQm+CTPf1
+         OzsKVT/mAikgMkQ1Few5BgjsrkrUZ/DR0qZRIKIoEu7NY7k1qkIWCTHrjEIZJa+Ouwuv
+         71eRCyF1axTXiSzva/wTDsnWifLeFv79u0SWDHoLwPbAGFbMCU2zPyIyDSkEHplo8MxR
+         vWMppVy3wPtXWfijHZyoD/DIgdPTeQ4L/z4xUvrZsOo7EHMIrCbdjQ/1Q/DljevcRlAU
+         Nq3A==
+X-Forwarded-Encrypted: i=1; AFNElJ/BC+6jkKtwC08bVo8jF/0J1w+f7wL7rAVudjFGal6GqbTaO/uWp8zQ418UeFQRTS1eiImhmD4rIq7tvYnh@lists.openembedded.org
+X-Gm-Message-State: AOJu0Yyyh5YvDl1WX2uzOjEkyb/NjVPIzkgGI6G1ES1jcJmD0ILVEzl5
+	UfI3SpwWakXhgvrkZDPT4X7gpKo7FCu2GAitT1L/LOrPbla7BC79u1sbNAD0ZRdUVjCsBUlTrBn
+	BxJeRzlUm59+K/dXsuPHgaSdgFUGfqoU=
+X-Gm-Gg: Acq92OEd/NX5Zu4LZF0gmYR4YQ18FRcfNPxrdY6ST56GDxyAv3q9uv1N2kUIg5++dwv
+	35x3+euitm6rRQXtIlO2Umv4Fj0zaFhoJg/tHNQXwW9Di/o8YJGVdGYUxN4/nCAjVJ9hX1TYhOx
+	4/ZxQ3RFSZuTbFevZWJdVqvLy4BvH2BPueAhq89BZKl5mWYlYjMstJGTRT6TdyXgjbtE+Wi/+AH
+	NrVZ8MrpH09+glhZmNxlKA/feU7C9QtNNedE/GvdX8jG7stLlEQuHquaMwbAuIDDQw7DA0N0cAj
+	2vSr1V1F3PDvUpDGe31Qd2/nRCCoQGCdDEi53K/BFg==
+X-Received: by 2002:a05:6214:590d:b0:8cc:ed49:bdd4 with SMTP id
+ 6a1803df08f44-8da1b439235mr61842936d6.7.1781620001941; Tue, 16 Jun 2026
+ 07:26:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20260615121856.96250-1-jaipaul.cheernam@est.tech>
+ <4beac8227f89f57e5ae0984a5163685132577583.camel@linuxfoundation.org> <DU7PPF66507B2D7CFA2CD308AAA2C04622AF3E52@DU7PPF66507B2D7.EURP189.PROD.OUTLOOK.COM>
+In-Reply-To: <DU7PPF66507B2D7CFA2CD308AAA2C04622AF3E52@DU7PPF66507B2D7.EURP189.PROD.OUTLOOK.COM>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Tue, 16 Jun 2026 16:26:29 +0200
+X-Gm-Features: AVVi8CcCzCMy5avPhq0seETLpniSgg6pgeXsg-C13NxI43g5kxPcDEr5YgXXGb8
+Message-ID: <CANNYZj_j7irKNRdeGDpF6mfKit_78ML5=XQJ3CeZckcM3924ZA@mail.gmail.com>
 Subject: Re: [bitbake-devel] [PATCH] bitbake-setup: pass install-buildtools
  options from config and CLI
-Thread-Topic: [bitbake-devel] [PATCH] bitbake-setup: pass install-buildtools
- options from config and CLI
-Thread-Index: AQHc/MEmemh0KfEkr0iryPC9iD+ZPrZA9jiAgABA4kU=
-Date: Tue, 16 Jun 2026 14:18:23 +0000
-Message-ID: 
- <DU7PPF66507B2D7CFA2CD308AAA2C04622AF3E52@DU7PPF66507B2D7.EURP189.PROD.OUTLOOK.COM>
-References: <20260615121856.96250-1-jaipaul.cheernam@est.tech>
- <4beac8227f89f57e5ae0984a5163685132577583.camel@linuxfoundation.org>
-In-Reply-To: 
- <4beac8227f89f57e5ae0984a5163685132577583.camel@linuxfoundation.org>
-Accept-Language: en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-reactions: allow
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=est.tech;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU7PPF66507B2D7:EE_|VE1P189MB0910:EE_
-x-ms-office365-filtering-correlation-id: 81903c89-8908-439e-d923-08decbb22039
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230040|1800799024|366016|23010399003|376014|38070700021|18002099003|22082099003|11063799006|4143699003|3023799007|6133799003|8096899003|56012099006;
-x-microsoft-antispam-message-info: 
- ooinerxHABUWmyJUsdA0fDYJPYCq9BE4bJwXzBBBh9yYj1O3ugq3emcLGMAhfN3itfWSmReTgYAOLPirEJMQmzyWnqj6cjJsTGfYa0y7YMz+gDdjBGl6Ri8A7E6rQDkACCTdVAGLoNwfRI+O6aiuf1KYhzYMJXsTtCbhkfBQdF+/VnXF1DOSoZI4qukRIdZHhGW74nYibd/tpf+4Term8pOyKUzosvw3bSHzKSfN9ApXCr1TcrneClt65Q/PPtNgMhT4GmrsC3pbHn9bo+4bAYhwJW0dRojSH+cOiu7ntKMzfloP9Wbg9Sn7OJQofCo9U2hJHRZXcjA9qdAqREnr4Ng1y3YAsjVrnhPsZo5+oNYyDyIwU6ggWEO/JZxJr2l05aHes1Mixujcbns1iUlAjgbKAUK8qcTRkKCx2+o4pRYL1921Xyit6W+HmzU6Y6lr3jGh/3/nZoMkMFEsURyQBeL5XeelsuVu6Rwm76i8PsJOspOLAibkVXw8YaBocNUJIMZaH4LM/DiTIjKWHmD49aXtRjZdIQpaFa8uyUK2V21o2uFvcc+WyGLCof2dotsFg7bglAW8oJHTn1PQrlwYmVwrL3KczTQ9wrJK1Tp1AOocDR42bhVT8ji9mgU32MjDKE5IqvyjiIipp8qlPnvV/khbow2kX+mUHGiZ98+CydO0TqWfSnABxshQgsyJr7qDUNc8w7ssNFpCOBDRtePSW2y9eLBvsZuwsYTeyN4HnAPuYOsabuBDlXnmV9SDKBqg
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU7PPF66507B2D7.EURP189.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(23010399003)(376014)(38070700021)(18002099003)(22082099003)(11063799006)(4143699003)(3023799007)(6133799003)(8096899003)(56012099006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?Windows-1252?Q?Dv8LMbVvabf7/4gGRKh0O91N7jh3SDSNegpEMMwFdth0907pMLGLq2jQ?=
- =?Windows-1252?Q?AS4fQAluaFmOc9FWsCo4KxP28gcKmxiKE2L5EcW/XEr0iUWoU2Zm6ZIS?=
- =?Windows-1252?Q?DDRZ0UXS35EgaROEbZbOOhNpPTC0eka/syZaVD5NJsmZ5oTbh6Szqoyt?=
- =?Windows-1252?Q?AtqqWoIe7z31KoH5nJFjc845PgLU+RZwmDCXk/wcWIfyRict0Kb4gSyO?=
- =?Windows-1252?Q?9OZNVRTqsfzhZIf6el72K7jd/+OVgdhsGRSAd1ruLa42ESyqHFIrUGlT?=
- =?Windows-1252?Q?rQwxtsMOMgLKxFme1UUos+7bD00xWMhN0yoxg4JZE32hsIng+JuRa6x4?=
- =?Windows-1252?Q?Ddo4Be3FPmgrLoKH44xeOf3UQzYcc74P/Yr8wNh8BDC8zq+Pe4VFpMY8?=
- =?Windows-1252?Q?rTBILwq0l4p/pYoIZPp+jN6fi5dhDSviHWBk5MXmtR+HJ7HrluMTZeo3?=
- =?Windows-1252?Q?Xt5rxnknh8YsCqzIfBCT7h0T8JQax4zy4GfbzY6jRcnfu+Xy2BfiaK3R?=
- =?Windows-1252?Q?uwphGrY+YaY/9ROSLZN/1upoawAdIvthG7F2SvIP31kdkQfu3vSKdEHy?=
- =?Windows-1252?Q?d5SFxXjbIhmHHVYuEuLLhsjkRW8u5Y/eviR2+XPEHRBwhnGjuFUiF5dZ?=
- =?Windows-1252?Q?oY6IXqtGz1kyXVOfSGT1vvQlXeHxKcSI5y4EKC4Z79BYctagEqQguHzC?=
- =?Windows-1252?Q?TqdmOTCwj51KhM1dQafumdINR5ap0SRFV+8659RZqYjtAiImjq1MgZJM?=
- =?Windows-1252?Q?KBSZVthZTttyrLWDRtDVlM0IeIEfysjhveFFho2CQpZDX0u8dQrQ7xxL?=
- =?Windows-1252?Q?g+GATKbhkhMyXs6maK1IgXIGpBtEuQ+PGaFKIr4zAa9yPL3OHVUOxqxP?=
- =?Windows-1252?Q?jLskNFNBQ/RKhWEbuYoVZI6VfaTEItwAYOngP3KwD7sXLW/AFpo8xrBM?=
- =?Windows-1252?Q?5k7mVFljF6VvYIdRtZKLonBp1EEKEM6d3ogeoZ5DTtkIflVpGhvkygpV?=
- =?Windows-1252?Q?HgBQTy3TGCoc40h9AGdtuFLQR6XCQTWsCsmaBU3jhG0pRj2d7w929cIw?=
- =?Windows-1252?Q?tfxx1GtrFAmCPoNDQeCz+Dhs0aSACvNwLcD1V4zWWvOrEE3+PkTWQvZq?=
- =?Windows-1252?Q?/0YrHrMWVkxFIvuYPmTbggb6zZeoZ5imISum1M2PmPTTUxsv4yudjvQS?=
- =?Windows-1252?Q?b0veSCFSHICHWug1J9fa2VytzWZsikObtpvpI0Qgjbtu2H4wLKONnXJz?=
- =?Windows-1252?Q?r4oHVgYdqcOoTJGfiZgm5IuSEWfQv+wZquQrPGhA+sCi9UyX+tlMbvRq?=
- =?Windows-1252?Q?hEovYSoCAEhzB4psiDQGj+JQoQUi/kg1noO6jkwPPJhrjlQiJStPsRFD?=
- =?Windows-1252?Q?xZ37yWuiveiGODmaobaodiC7cKaMyATXjkKGSuXZCt13ky3vv1dRtpbS?=
- =?Windows-1252?Q?6VMUyXTEsBh8WS0C+FMMSpg63Oz03N/a6X0s+OI0kBfP0Ohnn9cU0Phu?=
- =?Windows-1252?Q?3sn7tETru3J0hJO7MztZJrzLh9fDXWFqzJ8MXUUSt46OSLGHHLjlwQGw?=
- =?Windows-1252?Q?oax0ahy0LEUfe7Hkdf48six0qLmkJYoCAZSYWQumhedLo8gsqD5b+LXV?=
- =?Windows-1252?Q?AT1Hcb4kEqizMNBVZIsAec18gEJ2kSmGRoCJS3osKWqI+wgxQHdTxuOC?=
- =?Windows-1252?Q?xdc+3LbsjyA3rwudIg5xewc8YU1YogZzn+oQAOfOkMOvXV7dpJ7e+iuQ?=
- =?Windows-1252?Q?KQxMZZebZUjIBYXV9WfiMWsamKKkk+eVRSB8f7h5P5yF3TJQla93CTSv?=
- =?Windows-1252?Q?fJ4/YgdUJCbg+XvzPicvQppkScXInu5fxYA4EoW7WEF40lNtUH01FKs1?=
- =?Windows-1252?Q?9GXsYtNdI4kWYUBzZ7wR/uTKxeDgJLjkVTY=3D?=
-Content-Type: multipart/alternative;
-	boundary="_000_DU7PPF66507B2D7CFA2CD308AAA2C04622AF3E52DU7PPF66507B2D7_"
-MIME-Version: 1.0
-X-OriginatorOrg: est.tech
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU7PPF66507B2D7.EURP189.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81903c89-8908-439e-d923-08decbb22039
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2026 14:18:23.8431
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d2585e63-66b9-44b6-a76e-4f4b217d97fd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mly9rZ+zYfy+t+8/T54X76fPFjDKzr8fWWpHeku6cQ0/IzOAeROtHhgkUkF6CJAJeRPRRZEVbn4bCoOeZ+ktRZg3t8CYXDXk8g9thEycRic=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1P189MB0910
+To: jaipaul.cheernam@est.tech
+Cc: Richard Purdie <richard.purdie@linuxfoundation.org>, 
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 16 Jun 2026 14:18:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19708
+ <bitbake-devel@lists.openembedded.org>; Tue, 16 Jun 2026 14:26:48 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19709
 
---_000_DU7PPF66507B2D7CFA2CD308AAA2C04622AF3E52DU7PPF66507B2D7_
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Richard,
-
-Agreed on removing --sdk-name  and I have sent Patch v2 for review in oe-co=
-re.
-
-For --no-check =97 I'm fine removing it and having the install-buildtools a=
-uto-detect, but we need to decide on the failure mode: if the checksum file=
- can't be fetched
-(404 or network error), should we:
-
-(a) warn and continue the install without verification, or
-(b) hard fail and refuse to install?
-
-If (a), we're effectively auto---no-check on failure, which may silently sk=
-ip validation on transient network issues. If (b), users with custom/local
-URLs that don't host checksum files would have no way to install without us=
- re-adding an override flag or having them to add checksum file.
-
-I checked the history why "--no-check=94 was added and it was part of bf902=
-a810f98f55dd9e8cb9e6c6b0903f9902157
-
-What's your preference?
-
-Based on review verdict on oe-core patch, I will send patch v2 here.
-
-Regards,
-Jaipaul Cheernam
-
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date: Tuesday, 16 June 2026 at 12:07
-To: Jaipaul Cheernam <jaipaul.cheernam@est.tech>; bitbake-devel@lists.opene=
-mbedded.org <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH] bitbake-setup: pass install-buildtools=
- options from config and CLI
-
-On Mon, 2026-06-15 at 14:18 +0200, Jaipaul Cheernam via lists.openembedded.=
-org wrote:
-> Allow distro-specific buildtools to be configured with a custom URL,
-> filename, and SDK name via an install-buildtools section in
-> config-upstream.json. Expose the same options as CLI arguments: --url,
-> --filename, --sdk-name, --no-check. CLI arguments take precedence over
-> config values.
+On Tue, 16 Jun 2026 at 16:18, Jaipaul Cheernam via
+lists.openembedded.org
+<jaipaul.cheernam=3Dest.tech@lists.openembedded.org> wrote:
+> Agreed on removing --sdk-name  and I have sent Patch v2 for review in oe-=
+core.
 >
-> This requires the --sdk-name option to be available in
-> oe-scripts/install-buildtools from openembedded-core.
-
-I replied to the oe-core patch, lets just remove the need to have --
-sdk-name, I don't think we need that. I also don't understand why you
-want/need the --no-check option, we should be able to tell if we should
-be checking the checksum or not? If that means fixing the install
-script, so be it.
-
-Cheers,
-
-Richard
-
---_000_DU7PPF66507B2D7CFA2CD308AAA2C04622AF3E52DU7PPF66507B2D7_
-Content-Type: text/html; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3DWindows-1=
-252">
-</head>
-<body>
-<div style=3D"direction: ltr; font-family: Aptos, Arial, Helvetica, sans-se=
-rif; font-size: 12pt; color: rgb(0, 0, 0);">
-Hi Richard,</div>
-<div style=3D"direction: ltr; font-family: Aptos, Arial, Helvetica, sans-se=
-rif; font-size: 12pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"direction: ltr; font-family: Aptos, Arial, Helvetica, sans-se=
-rif; font-size: 12pt; color: rgb(0, 0, 0);">
-Agreed on removing --sdk-name &nbsp;and I have sent Patch v2 for review in =
-oe-core.&nbsp;</div>
-<div style=3D"font-family: Aptos, Arial, Helvetica, sans-serif; font-size: =
-12pt; color: rgb(0, 0, 0);">
-&nbsp;&nbsp;</div>
-<div style=3D"font-family: Aptos, Arial, Helvetica, sans-serif; font-size: =
-12pt; color: rgb(0, 0, 0);">
-For --no-check =97 I'm fine removing it and having the install-buildtools a=
-uto-detect, but we need to decide on the failure mode: if the checksum file=
- can't be fetched</div>
-<div style=3D"font-family: Aptos, Arial, Helvetica, sans-serif; font-size: =
-12pt; color: rgb(0, 0, 0);">
-(404 or network error), should we:</div>
-<div style=3D"font-family: Aptos, Arial, Helvetica, sans-serif; font-size: =
-12pt; color: rgb(0, 0, 0);">
-&nbsp;&nbsp;</div>
-<div style=3D"font-family: Aptos, Arial, Helvetica, sans-serif; font-size: =
-12pt; color: rgb(0, 0, 0);">
-(a) warn and continue the install without verification, or</div>
-<div style=3D"font-family: Aptos, Arial, Helvetica, sans-serif; font-size: =
-12pt; color: rgb(0, 0, 0);">
-(b) hard fail and refuse to install?</div>
-<div style=3D"font-family: Aptos, Arial, Helvetica, sans-serif; font-size: =
-12pt; color: rgb(0, 0, 0);">
-&nbsp;&nbsp;</div>
-<div style=3D"font-family: Aptos, Arial, Helvetica, sans-serif; font-size: =
-12pt; color: rgb(0, 0, 0);">
-If (a), we're effectively auto---no-check on failure, which may silently sk=
-ip validation on transient network issues. If (b), users with custom/local<=
-/div>
-<div style=3D"font-family: Aptos, Arial, Helvetica, sans-serif; font-size: =
-12pt; color: rgb(0, 0, 0);">
-URLs that don't host checksum files would have no way to install without us=
- re-adding an override flag or having them to add checksum file.&nbsp;</div=
+> For --no-check =E2=80=94 I'm fine removing it and having the install-buil=
+dtools auto-detect, but we need to decide on the failure mode: if the check=
+sum file can't be fetched
+> (404 or network error), should we:
 >
-<div style=3D"direction: ltr; font-family: Aptos, Arial, Helvetica, sans-se=
-rif; font-size: 12pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"font-family: Aptos, Arial, Helvetica, sans-serif; font-size: =
-12pt; color: rgb(0, 0, 0);">
-I checked the history why &quot;--no-check=94 was added and it was part of =
-bf902a810f98f55dd9e8cb9e6c6b0903f9902157</div>
-<div style=3D"direction: ltr; font-family: Aptos, Arial, Helvetica, sans-se=
-rif; font-size: 12pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"direction: ltr; font-family: Aptos, Arial, Helvetica, sans-se=
-rif; font-size: 12pt; color: rgb(0, 0, 0);">
-What's your preference?</div>
-<div style=3D"direction: ltr; font-family: Aptos, Arial, Helvetica, sans-se=
-rif; font-size: 12pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-<div style=3D"direction: ltr; font-family: Aptos, Arial, Helvetica, sans-se=
-rif; font-size: 12pt; color: rgb(0, 0, 0);">
-Based on review verdict on oe-core patch, I will send patch v2 here.&nbsp;<=
-/div>
-<div style=3D"direction: ltr; font-family: Aptos, Arial, Helvetica, sans-se=
-rif; font-size: 12pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-<div id=3D"ms-outlook-mobile-signature">
-<div>Regards,</div>
-<div style=3D"direction: ltr; font-family: Aptos, Arial, Helvetica, sans-se=
-rif; font-size: 12pt; color: rgb(0, 0, 0);">
-Jaipaul Cheernam</div>
-<div style=3D"direction: ltr; font-family: Aptos, Arial, Helvetica, sans-se=
-rif; font-size: 12pt; color: rgb(0, 0, 0);">
-<br>
-</div>
-</div>
-<div id=3D"mail-editor-reference-message-container">
-<div style=3D"padding: 3pt 0in 0in; border-width: 1pt medium medium; border=
--style: solid none none; border-color: rgb(181, 196, 223) currentcolor curr=
-entcolor;">
-<div class=3D"ms-outlook-mobile-reference-message skipProofing" style=3D"te=
-xt-align: left; font-family: Aptos; font-size: 12pt; color: black;">
-<b>From: </b>Richard Purdie &lt;richard.purdie@linuxfoundation.org&gt;<br>
-<b>Date: </b>Tuesday, 16 June 2026 at 12:07<br>
-<b>To: </b>Jaipaul Cheernam &lt;jaipaul.cheernam@est.tech&gt;; bitbake-deve=
-l@lists.openembedded.org &lt;bitbake-devel@lists.openembedded.org&gt;<br>
-<b>Subject: </b>Re: [bitbake-devel] [PATCH] bitbake-setup: pass install-bui=
-ldtools options from config and CLI<br>
-<br>
-</div>
-</div>
-<div class=3D"PlainText" style=3D"font-size: 11pt;">On Mon, 2026-06-15 at 1=
-4:18 +0200, Jaipaul Cheernam via lists.openembedded.org wrote:<br>
-&gt; Allow distro-specific buildtools to be configured with a custom URL,<b=
-r>
-&gt; filename, and SDK name via an install-buildtools section in<br>
-&gt; config-upstream.json. Expose the same options as CLI arguments: --url,=
-<br>
-&gt; --filename, --sdk-name, --no-check. CLI arguments take precedence over=
-<br>
-&gt; config values.<br>
-&gt;<br>
-&gt; This requires the --sdk-name option to be available in<br>
-&gt; oe-scripts/install-buildtools from openembedded-core.<br>
-<br>
-I replied to the oe-core patch, lets just remove the need to have --<br>
-sdk-name, I don't think we need that. I also don't understand why you<br>
-want/need the --no-check option, we should be able to tell if we should<br>
-be checking the checksum or not? If that means fixing the install<br>
-script, so be it.<br>
-<br>
-Cheers,<br>
-<br>
-Richard<br>
-</div>
-</div>
-</body>
-</html>
+> (a) warn and continue the install without verification, or
+> (b) hard fail and refuse to install?
+>
+> If (a), we're effectively auto---no-check on failure, which may silently =
+skip validation on transient network issues. If (b), users with custom/loca=
+l
+> URLs that don't host checksum files would have no way to install without =
+us re-adding an override flag or having them to add checksum file.
+>
+> I checked the history why "--no-check=E2=80=9D was added and it was part =
+of bf902a810f98f55dd9e8cb9e6c6b0903f9902157
+>
+> What's your preference?
 
---_000_DU7PPF66507B2D7CFA2CD308AAA2C04622AF3E52DU7PPF66507B2D7_--
+Please note my comment in this thread. If we use bitbake fetcher with
+checksum in a bitbake-setup config file, then the checksum would be
+enforced in a way that is secure against tampering or accidental
+replacement.
+
+Alex
 
