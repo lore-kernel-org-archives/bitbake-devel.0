@@ -1,112 +1,93 @@
-Return-Path: <rob.woolley@windriver.com>
+Return-Path: <david.partain@est.tech>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2661ECD98ED
-	for <webhook@archiver.kernel.org>; Mon, 15 Jun 2026 17:38:22 +0000 (UTC)
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.135398.1781545090506427083
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0A6CD98D2
+	for <webhook@archiver.kernel.org>; Tue, 16 Jun 2026 07:13:42 +0000 (UTC)
+Received: from mx1.emlix.com (mx1.emlix.com [178.63.209.131])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.148154.1781592475749067222
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 15 Jun 2026 10:38:11 -0700
+ Mon, 15 Jun 2026 23:47:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=YJGUm19r;
- spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=0626ff78a0=rob.woolley@windriver.com)
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65FFej761186413;
-	Mon, 15 Jun 2026 17:38:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=cc:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	PPS06212021; bh=2xL1bwPrgSMIObjjOfJqa/ZLZCCmrEjRMEofZSThJZA=; b=
-	YJGUm19reiXe7CnfPoVUwJMLtLrZwP1agySZNF1ZA+IcDDiAYuPBX7dj5tuS4bcM
-	IkH6JEhQ/+34oriWdyvJ6yFB0mSlNWyW7wU7FCNB114EizbQj5PmaycIqBorj7Oo
-	5UTFDQNGlYwG7plggELh+2MaeM79yXP9A+e70FFbfHb+mC+rMnQ2xGYDkV6kZaEU
-	fTyfHASjzfxRgS7bKCiWtZmaLECXJ5AHxTKNdHWWO4UHAkUfcYgcypUmo+6Fw8zQ
-	nfNz4Z0xmxrMB4lfhJjjnvYGf4bt7N8hXWvKQz8hErVQLcdh5a5B7/NeJLk63XzM
-	aqoVibNBc65mzr5d8xQ1hA==
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [128.224.246.37])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4ervkp38se-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 15 Jun 2026 17:38:09 +0000 (GMT)
-Received: from ala-exchng01.corp.ad.wrs.com (10.11.224.121) by
- ALA-EXCHNG02.corp.ad.wrs.com (10.11.224.122) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.61; Mon, 15 Jun 2026 10:38:06 -0700
-Received: from ala-lpggp3.wrs.com (10.11.232.110) by
- ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server id
- 15.1.2507.61 via Frontend Transport; Mon, 15 Jun 2026 10:38:06 -0700
-From: Rob Woolley <rob.woolley@windriver.com>
-Date: Mon, 15 Jun 2026 10:37:43 -0700
-Subject: [PATCH v3 01/10] bitbake-setup.schema.json: Add title for schema
+ dkim=fail reason="dkim: body hash did not verify" header.i=@emlix.com header.s=20250930 header.b=nFwBY/oB;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@emlix.com header.s=20250930 header.b=nFwBY/oB;
+ spf=pass (domain: emlix.com, ip: 178.63.209.131, mailfrom: andreas.muetzel@emlix.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emlix.com;
+	s=20250930; t=1781592473;
+	bh=mFyXWYUgkVTXcnneY/qUqHE0GPk5F+khL6Hpos3O4hw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nFwBY/oBXGm9PhonvLciriThOrJEHml9JQSxni48ezalVL3BoSaYF9t0fd+gdbuQZ
+	 M8GW8hlg/YKphjmbkfbfhEHc9tvU2Ia6P2LRHun6YGQmAj0q6lu0ccU/jYhhB+rhGQ
+	 P7Z5RdCm2dpNg1t3FF8PoNwmg52Pryd+ARCPbyhbZTlKwL9Y3jjNrSnEoUSBKV6dk2
+	 EypdJ3aJMNGMEDYedmIJcO7s2Yc9TE2LdxexvTHBbywBVO2lg863togUoQhZGMkwrQ
+	 83Lmk4wxshnzuaFoJzk4QvXRPEA/Q2TIsWZgH2oeUu3bIy+aqs9UTeIzCvKjsXTF6z
+	 yMiqU3P/37/nQ==
+Received: from mx1.emlix.com (localhost [127.0.0.1])
+	by mx1.emlix.com (Postfix) with ESMTP id 36AC95F9D3
+	for <bitbake-devel@lists.openembedded.org>; Tue, 16 Jun 2026 08:47:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emlix.com;
+	s=20250930; t=1781592473;
+	bh=mFyXWYUgkVTXcnneY/qUqHE0GPk5F+khL6Hpos3O4hw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nFwBY/oBXGm9PhonvLciriThOrJEHml9JQSxni48ezalVL3BoSaYF9t0fd+gdbuQZ
+	 M8GW8hlg/YKphjmbkfbfhEHc9tvU2Ia6P2LRHun6YGQmAj0q6lu0ccU/jYhhB+rhGQ
+	 P7Z5RdCm2dpNg1t3FF8PoNwmg52Pryd+ARCPbyhbZTlKwL9Y3jjNrSnEoUSBKV6dk2
+	 EypdJ3aJMNGMEDYedmIJcO7s2Yc9TE2LdxexvTHBbywBVO2lg863togUoQhZGMkwrQ
+	 83Lmk4wxshnzuaFoJzk4QvXRPEA/Q2TIsWZgH2oeUu3bIy+aqs9UTeIzCvKjsXTF6z
+	 yMiqU3P/37/nQ==
+Received: from mailer.emlix.com (p5098be52.dip0.t-ipconnect.de [80.152.190.82])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.emlix.com (Postfix) with ESMTPS id 1D3035F921
+	for <bitbake-devel@lists.openembedded.org>; Tue, 16 Jun 2026 08:47:53 +0200 (CEST)
+From: =?UTF-8?B?QW5kcmVhcyBNw7x0emVs?= <andreas.muetzel@emlix.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: =?UTF-8?q?Andreas=20M=C3=BCtzel?= <andreas.muetzel@emlix.com>
+Subject: [PATCH] bitbake: fetch2: make unpack_tracer available when fetching mirror URLs
+Date: Tue, 16 Jun 2026 08:47:39 +0200
+Message-ID: <20260616064749.36789-1-andreas.muetzel@emlix.com>
+X-Mailer: git-send-email 2.54.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20260615-fix-bitbake-schema-v3-1-8dbb07d8765c@windriver.com>
-References: <20260615-fix-bitbake-schema-v3-0-8dbb07d8765c@windriver.com>
-In-Reply-To: <20260615-fix-bitbake-schema-v3-0-8dbb07d8765c@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-CC: Rob Woolley <rob.woolley@windriver.com>,
-        Yoann Congal
-	<yoann.congal@smile.fr>
-X-Mailer: b4 0.15.2
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE1MDE4NiBTYWx0ZWRfX9i3NWNex0ZWu
- mSKis5DILMDF+EnMss4N1L9FyWaOdKVZxUs/RJHy4yu1m5RADO6EnGpRK7iQz2O3Y9bG2iwGeSM
- Bje9vedQ/CmrlBTqNwcWUajiYgO4Nnvw83VCFT3+b+eMIbx9jI0ZXylT6ltdRI/smM9yM0D2DXZ
- HWVOGSqQCultK2sXUCvI6Tk9Hk+9Rb/bi//zxOv7Rq8hlKSkaSLGir2ywP4bu8QCCb4Dsvry7cM
- l5ZOk9XtJY6cmJWyJZAIIN/7y6+EzUvC3pxFtBxaD17h0+Trw/smHVBANveKZjHgH3gByPrGa1z
- dZEJRW9rmkcuFT9qeXhX09qT41yn1G+883aLmt4vq5gn6VGYoO/YkNNamEvSctsDJLhySOZMBuJ
- eM7rGFI4wmPFTZ4iUWY6d73MHZgEB1AHDb+FcaUD1IzADRYbq8W+kBiUZhi7Z66lqqPpjOthvxU
- JhapK90hHP2btswBWUQ==
-X-Authority-Analysis: v=2.4 cv=BK+DalQG c=1 sm=1 tr=0 ts=6a303881 cx=c_pps
- a=Lg6ja3A245NiLSnFpY5YKQ==:117 a=Lg6ja3A245NiLSnFpY5YKQ==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=bi6dqmuHe4P4UrxVR6um:22 a=klDOsUkWDRETUCZYPvoE:22 a=eRc3Im3UAAAA:8
- a=t7CeM3EgAAAA:8 a=p6DkDQ3WC7ss2oXzR5gA:9 a=QEXdDO2ut3YA:10
- a=6K7LhGdg8M_A9WyCZdwM:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE1MDE4NiBTYWx0ZWRfXz3miLAeb5vPa
- FOqdpTr0wTf9eGkC59FB/Kxw8LSGt0ODffaNkpB/XM4TfWbIwj7H9ak+Pd5BycFkWv+RP+3z2VH
- wguF514sWZcOenWsTJLwZnmgm3KtBKDXjsi/ti1pEUh4YU/AnBjO
-X-Proofpoint-GUID: 0pAvT2s7lYeT4-HBitw7yo5YoqrDy9Nx
-X-Proofpoint-ORIG-GUID: 0pAvT2s7lYeT4-HBitw7yo5YoqrDy9Nx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-15_04,2026-06-15_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 lowpriorityscore=0 priorityscore=1501 malwarescore=0
- clxscore=1015 bulkscore=0 suspectscore=0 impostorscore=0 spamscore=0
- phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606040000
- definitions=main-2606150186
+X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 15 Jun 2026 17:38:22 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19691
+ <bitbake-devel@lists.openembedded.org>; Tue, 16 Jun 2026 07:13:42 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19700
 
-Resolves the jsonschema linting error:
-  Set a concise non-empty title at the top level of the schema to
-  explain what the definition is about (top_level_title)
+When building the FetchData for fetching from mirrors, pass any
+available unpack_tracer to the newly-created object.
 
-Reviewed-by: Yoann Congal <yoann.congal@smile.fr>
-Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
+This fixes the following error that occurs in the git fetcher's
+unpack() method when fetching repos that use git-lfs from MIRRORS
+or PREMIRRORs:
+
+AttributeError: 'FetchData' object has no attribute 'unpack_tracer'
+
+[YOCTO #15948]
+
+Signed-off-by: Andreas M=C3=BCtzel <andreas.muetzel@emlix.com>
 ---
- setup-schema/bitbake-setup.schema.json | 1 +
- 1 file changed, 1 insertion(+)
+ lib/bb/fetch2/__init__.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/setup-schema/bitbake-setup.schema.json b/setup-schema/bitbake-setup.schema.json
-index 99f47f73d..309088348 100644
---- a/setup-schema/bitbake-setup.schema.json
-+++ b/setup-schema/bitbake-setup.schema.json
-@@ -1,6 +1,7 @@
- {
-     "$schema": "https://json-schema.org/draft/2020-12/schema",
-     "description": "Schema for bitbake-setup configuration files",
-+    "title": "bitbake-setup configuration file",
-     "type": "object",
-     "required": [
-         "description",
-
--- 
-2.49.0
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 1a6ff25d4d..60bdd32681 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1010,6 +1010,8 @@ def build_mirroruris(origud, mirrors, ld):
+                     newud =3D FetchData(newuri, ld)
+                     newud.ignore_checksums =3D True
+                     newud.setup_localpath(ld)
++                    if ud.unpack_tracer:
++                        newud.unpack_tracer =3D ud.unpack_tracer
+                 except bb.fetch2.BBFetchException as e:
+                     logger.debug("Mirror fetch failure for url %s (origi=
+nal url: %s)" % (newuri, origud.url))
+                     logger.debug(str(e))
+--=20
+2.52.0
 
 
