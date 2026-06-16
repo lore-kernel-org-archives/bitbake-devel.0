@@ -2,40 +2,40 @@ Return-Path: <thomas.perrot@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE0BCD98E1
-	for <webhook@archiver.kernel.org>; Tue, 16 Jun 2026 13:37:58 +0000 (UTC)
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.154410.1781617071845213964
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78ED2CD98DA
+	for <webhook@archiver.kernel.org>; Tue, 16 Jun 2026 13:38:08 +0000 (UTC)
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.154421.1781617087562918143
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 16 Jun 2026 06:37:52 -0700
+ Tue, 16 Jun 2026 06:38:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=QJiHpju3;
- spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: thomas.perrot@bootlin.com)
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=h8r1yvCw;
+ spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: thomas.perrot@bootlin.com)
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id A088CC2BB32
-	for <bitbake-devel@lists.openembedded.org>; Tue, 16 Jun 2026 13:37:54 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id C58D51A3957
+	for <bitbake-devel@lists.openembedded.org>; Tue, 16 Jun 2026 13:38:05 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 18B80601A9
-	for <bitbake-devel@lists.openembedded.org>; Tue, 16 Jun 2026 13:37:50 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 83E3E106C9D97;
-	Tue, 16 Jun 2026 15:37:34 +0200 (CEST)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 96D72601A9
+	for <bitbake-devel@lists.openembedded.org>; Tue, 16 Jun 2026 13:38:05 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id ED42D106C9D9E;
+	Tue, 16 Jun 2026 15:37:49 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1781617054; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1781617070; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=LyrdtF7sEmt4a0ckWy9jhWH2IHtP/2BKj2P7Df4jZB4=;
-	b=QJiHpju31MNAW6SOrOooCVxeRHw/o6Y9T06CkMpR8+XMFxOokAptOA1wp4RFgH/Iiwm0sg
-	nbw46476s/Td5aUWfZJWzE3rVjhttil2u2IABDxih2NcRHsZlGyuncQHc+TsVwirvxAiBF
-	eyAqfYl9Fspanf4Q8IiGbFF3Er9g/1F4Ux5ueplJrjNCM2Bv2Om8NyJHO2C1cauxTQRuKO
-	dK8wqyek7gx/QrkDCJcONKudqHaf/oo/B66MsSvBF2P2B6U1ERvSq1NaPR5T1/z7OuDrV6
-	qzxClHvRkiKvju5TUJCMMJTs5RSXqZ82YHPJecpEzkJSkZOtRAXiu2NFwQLQnQ==
+	bh=vlHv49sbVlKYIjvWHt/zISoFRl0JdRU8D/Xh8rCASB4=;
+	b=h8r1yvCw6P8dLGWH5RuMDTzxSMZ2XmD2+ETDZEs0YOEtXWFp3Wi9gUSYBdR/AQ5X/XsYyB
+	qDydD/cYcSLN73STjrTUtTGEV7aRnioQt3D9God3qZ+8v5ysYrV3zhzBTnIGwD43ps2AH1
+	SYCDH2spzXxxSqEV511tTqUgykRqf7F74U8SwsLQ+6um2CXisx7bkG5XGmwcXr0QXdGRMw
+	Tb/0t7pfa5HKgJEH71iqJiYOZ+1mdC2osRUM33XY2g+LVXLyOxOR1NXLuNTg5R9iAQmNpu
+	cHAMqY6LeazPvoaWDbKi7sxOpZFM6Fff+mKTPFjD2WasiYKDNLK2CYgNmrh3Lw==
 From: Thomas Perrot <thomas.perrot@bootlin.com>
-Date: Tue, 16 Jun 2026 15:37:04 +0200
-Subject: [PATCH 1/2] fetch/{npm,npmsw}: fix security issue and re-enable
- fetchers
+Date: Tue, 16 Jun 2026 15:37:05 +0200
+Subject: [PATCH 2/2] tests/fetch: restore and extend npm/npmsw test
+ coverage
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260616-dev-tprrt-fix-npm-v1-1-6fde95bf0a8b@bootlin.com>
+Message-Id: <20260616-dev-tprrt-fix-npm-v1-2-6fde95bf0a8b@bootlin.com>
 References: <20260616-dev-tprrt-fix-npm-v1-0-6fde95bf0a8b@bootlin.com>
 In-Reply-To: <20260616-dev-tprrt-fix-npm-v1-0-6fde95bf0a8b@bootlin.com>
 To: bitbake-devel@lists.openembedded.org
@@ -46,273 +46,212 @@ X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 16 Jun 2026 13:37:58 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19706
+ <bitbake-devel@lists.openembedded.org>; Tue, 16 Jun 2026 13:38:08 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19707
 
-The npm and npmsw fetchers were disabled in 355cd226 because the npm
-fetcher accepted checksums from the remote registry rather than from
-the recipe. A compromised registry controls both the tarball and its
-advertised hash, making checksum verification meaningless.
+Re-enable all NPMTest cases that were disabled by returning an
+unconditional unittest.skip():
+- Fix skipIfNoNpm() dead code: the shutil.which check was unreachable
+  after the early return.
+- Remove the return-skip guard from all test_npmsw_* tests; the npmsw
+  fetcher is now re-enabled.
+- Restore test_npm_no_network_no_tarball with a proper @skipIfNoNpm()
+  decorator.
 
-npmsw was also disabled at that point, but its security model is
-already correct: checksums come from the locally-committed
-npm-shrinkwrap.json file, not from the network. Re-enable it with a
-fix for the missing FetchError import that would cause a NameError on
-malformed shrinkwrap files. Also fix two correctness bugs:
-- change 'if not packages' to 'if packages is None' in
-  foreach_dependencies so a valid zero-dependency shrinkwrap
-  (packages={}) no longer raises FetchError.
-- add 'elif resolved is None' guard before the startswith chain in
-  _resolve_dependency so missing 'resolved' fields raise
-  ParameterError instead of AttributeError.
+Adapt tests for the new npm fetcher behaviour:
+- Replace test_npm_version_latest (which asserted success) with
+  test_npm_version_latest_rejected, which asserts ParameterError since
+  version=latest is no longer accepted.
 
-For npm, fix the root cause by separating URL resolution from checksum
-handling:
-- _resolve_proxy_url now stores only the bare tarball URL in the
-  .resolved file; the registry-supplied dist.integrity / dist.shasum
-  values are ignored entirely.
-- _setup_proxy builds the proxy URL from that bare tarball URL and
-  injects the checksum from the recipe's SRC_URI parameters
-  (sha512sum=, sha256sum=, etc.).  uri.params is cleared before
-  rebuilding so that a .resolved file written by the npmsw fetcher
-  (which stores the full URI with checksum params) cannot smuggle a
-  registry-sourced checksum into the npm proxy URL.  When no checksum
-  is provided the proxy URL carries none, and BitBake's standard
-  BB_STRICT_CHECKSUM machinery handles the missing-checksum case the
-  same way the wget fetcher does; bb.warn() is emitted to give recipe
-  authors a clear signal instead of a silent unsigned download.
-- version=latest is now a hard ParameterError instead of a warning;
-  it is inherently non-reproducible. The dead
-  'if ud.version == "latest": return True' branch in need_update() is
-  also removed, since version=latest is rejected at urldata_init time.
-- Narrow the broad 'except Exception' in _npm_view to only catch
-  json.JSONDecodeError; FetchError and ParameterError now propagate
-  directly to the caller instead of being re-wrapped as a generic
-  FetchError, fixing typed exception handling for version mismatches.
-  Fall back to str(error) when 'summary' is absent in the registry
-  error dict so the message is never silently None.
-
-Note: existing .resolved files written by the old fetcher embed a
-registry-sourced checksum in the URL and must be removed before
-rebuilding.
+Add two new tests:
+- test_npm_recipe_checksum: verifies that a sha512sum/sha256sum param
+  in SRC_URI is forwarded to the proxy fetcher and the download
+  succeeds when it matches.
+- test_npm_bad_recipe_checksum_rejected: verifies that a wrong checksum
+  in the recipe causes the fetch to fail.
 
 [YOCTO #16105]
 
 Signed-off-by: Thomas Perrot <thomas.perrot@bootlin.com>
 ---
- lib/bb/fetch2/npm.py   | 94 ++++++++++++++++++++++++++------------------------
- lib/bb/fetch2/npmsw.py | 12 +++----
- 2 files changed, 55 insertions(+), 51 deletions(-)
+ lib/bb/tests/fetch.py | 64 ++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 45 insertions(+), 19 deletions(-)
 
-diff --git a/lib/bb/fetch2/npm.py b/lib/bb/fetch2/npm.py
-index 3c0cd9ff098c..f9b16a4e1ddb 100644
---- a/lib/bb/fetch2/npm.py
-+++ b/lib/bb/fetch2/npm.py
-@@ -33,6 +33,7 @@ import bb
- from bb.fetch2 import Fetch
- from bb.fetch2 import FetchError
- from bb.fetch2 import FetchMethod
-+from bb.fetch2 import MalformedUrl
- from bb.fetch2 import MissingParameterError
- from bb.fetch2 import ParameterError
- from bb.fetch2 import URI
-@@ -148,11 +149,7 @@ class Npm(FetchMethod):
- 
-     def supports(self, ud, d):
-         """Check if a given url can be fetched with npm"""
--        #return ud.type in ["npm"]
--        if ud.type in ["npm"]:
--            from bb.parse import SkipRecipe
--            raise SkipRecipe("The npm fetcher has been disabled due to security issues and there is no maintainer to address them")
--        return False
-+        return ud.type in ["npm"]
- 
-     def urldata_init(self, ud, d):
-         """Init npm specific variables within url data"""
-@@ -174,11 +171,18 @@ class Npm(FetchMethod):
-         if not ud.version:
-             raise MissingParameterError("Parameter 'version' required", ud.url)
- 
--        if not is_semver(ud.version) and not ud.version == "latest":
-+        if ud.version == "latest":
-+            raise ParameterError(
-+                "Version 'latest' is not reproducible; specify an exact semver version",
-+                ud.url)
-+
-+        if not is_semver(ud.version):
-             raise ParameterError("Invalid 'version' parameter", ud.url)
- 
-         # Extract the 'registry' part of the url
-         ud.registry = re.sub(r"^npm://", "https://", ud.url.split(";")[0])
-+        if not ud.url.split(";")[0][len("npm://"):]:
-+            raise MalformedUrl(ud.url)
- 
-         # Using the 'downloadfilename' parameter as local filename
-         # or the npm package name.
-@@ -200,6 +204,13 @@ class Npm(FetchMethod):
-         ud.resolvefile = self.localpath(ud, d) + ".resolved"
- 
-     def _resolve_proxy_url(self, ud, d):
-+        """Resolve the tarball URL from the registry and cache it without any checksum.
-+
-+        Checksums must never be sourced from the registry: a compromised registry
-+        controls both the tarball and its advertised hash, so any checksum obtained
-+        there provides no tamper detection. Checksums are applied in _setup_proxy
-+        from the recipe-provided SRC_URI parameters instead.
-+        """
-         def _npm_view():
-             args = []
-             args.append(("json", "true"))
-@@ -215,50 +226,27 @@ class Npm(FetchMethod):
- 
-             try:
-                 view = json.loads(view_string)
--
--                error = view.get("error")
--                if error is not None:
--                    raise FetchError(error.get("summary"), ud.url)
--
--                if ud.version == "latest":
--                    bb.warn("The npm package %s is using the latest " \
--                            "version available. This could lead to " \
--                            "non-reproducible builds." % pkgver)
--                elif ud.version != view.get("version"):
--                    raise ParameterError("Invalid 'version' parameter", ud.url)
--
--                return view
--
--            except Exception as e:
-+            except json.JSONDecodeError as e:
-                 raise FetchError("Invalid view from npm: %s" % str(e), ud.url)
- 
--        def _get_url(view):
--            tarball_url = view.get("dist", {}).get("tarball")
-+            error = view.get("error")
-+            if error is not None:
-+                raise FetchError(error.get("summary") or str(error), ud.url)
- 
--            if tarball_url is None:
--                raise FetchError("Invalid 'dist.tarball' in view", ud.url)
-+            if ud.version != view.get("version"):
-+                raise ParameterError("Invalid 'version' parameter", ud.url)
- 
--            uri = URI(tarball_url)
--            uri.params["downloadfilename"] = ud.localfile
-+            return view
- 
--            integrity = view.get("dist", {}).get("integrity")
--            shasum = view.get("dist", {}).get("shasum")
-+        view = _npm_view()
-+        tarball_url = view.get("dist", {}).get("tarball")
- 
--            if integrity is not None:
--                checksum_name, checksum_expected = npm_integrity(integrity)
--                uri.params[checksum_name] = checksum_expected
--            elif shasum is not None:
--                uri.params["sha1sum"] = shasum
--            else:
--                raise FetchError("Invalid 'dist.integrity' in view", ud.url)
--
--            return str(uri)
--
--        url = _get_url(_npm_view())
-+        if tarball_url is None:
-+            raise FetchError("Invalid 'dist.tarball' in view", ud.url)
- 
-         bb.utils.mkdirhier(os.path.dirname(ud.resolvefile))
-         with open(ud.resolvefile, "w") as f:
--            f.write(url)
-+            f.write(tarball_url)
- 
-     def _setup_proxy(self, ud, d):
-         if ud.proxy is None:
-@@ -266,13 +254,31 @@ class Npm(FetchMethod):
-                 self._resolve_proxy_url(ud, d)
- 
-             with open(ud.resolvefile, "r") as f:
--                url = f.read()
-+                tarball_url = f.read().strip()
-+
-+            uri = URI(tarball_url)
-+            # Discard any params that may have been embedded in the stored URL
-+            # (e.g. from an npmsw-written .resolved file) and rebuild from
-+            # scratch so that registry-sourced checksums can never flow through.
-+            uri.params = {}
-+            uri.params["downloadfilename"] = ud.localfile
-+
-+            # Inject the recipe-provided checksum into the proxy URL.
-+            # Checksums from the remote registry are never used; only values
-+            # the recipe author has explicitly committed are trusted.
-+            for cp in ("sha512sum", "sha256sum", "sha384sum", "sha1sum"):
-+                if cp in ud.parm:
-+                    uri.params[cp] = ud.parm[cp]
-+                    break
-+            else:
-+                bb.warn("No checksum specified for npm package '%s@%s'. "
-+                        "Add sha256sum or sha512sum to the SRC_URI." % (ud.package, ud.version))
- 
-             # Avoid conflicts between the environment data and:
-             # - the proxy url checksum
-             data = bb.data.createCopy(d)
-             data.delVarFlags("SRC_URI")
--            ud.proxy = Fetch([url], data)
-+            ud.proxy = Fetch([str(uri)], data)
- 
-     def _get_proxy_method(self, ud, d):
-         self._setup_proxy(ud, d)
-@@ -296,8 +302,6 @@ class Npm(FetchMethod):
-         """Force a fetch, even if localpath exists ?"""
-         if not os.path.exists(ud.resolvefile):
-             return True
--        if ud.version == "latest":
--            return True
-         proxy_m, proxy_ud, proxy_d = self._get_proxy_method(ud, d)
-         return proxy_m.need_update(proxy_ud, proxy_d)
- 
-diff --git a/lib/bb/fetch2/npmsw.py b/lib/bb/fetch2/npmsw.py
-index 5255e8b465e1..f09ea5794856 100644
---- a/lib/bb/fetch2/npmsw.py
-+++ b/lib/bb/fetch2/npmsw.py
-@@ -21,6 +21,7 @@ import json
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index d021ad786830..4c97ea253ba8 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -18,6 +18,7 @@ import collections
  import os
- import re
- import bb
-+from bb.fetch2 import FetchError
- from bb.fetch2 import Fetch
- from bb.fetch2 import FetchMethod
- from bb.fetch2 import ParameterError
-@@ -44,7 +45,7 @@ def foreach_dependencies(shrinkwrap, callback=None, dev=False):
-             location = the location of the package (string)
-     """
-     packages = shrinkwrap.get("packages")
--    if not packages:
-+    if packages is None:
-         raise FetchError("Invalid shrinkwrap file format")
+ import signal
+ import subprocess
++import json
+ import tarfile
+ import threading
+ from bb.fetch2 import URI
+@@ -2937,7 +2938,6 @@ class CrateTest(FetcherTest):
  
-     for location, data in packages.items():
-@@ -63,11 +64,7 @@ class NpmShrinkWrap(FetchMethod):
+ class NPMTest(FetcherTest):
+     def skipIfNoNpm():
+-        return unittest.skip('npm disabled due to security issues')
+         if not shutil.which('npm'):
+             return unittest.skip('npm not installed')
+         return lambda f: f
+@@ -2959,7 +2959,9 @@ class NPMTest(FetcherTest):
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npm_bad_checksum(self):
+-        urls = ['npm://registry.npmjs.org;package=@savoirfairelinux/node-server-example;version=1.0.0']
++        urls = ['npm://registry.npmjs.org;package=@savoirfairelinux/node-server-example;version=1.0.0'
++                ';sha512sum=f2dd7d88cb9a129fbb97eb87a8b5103bab24f783420fd7587f8000a355a12bf7'
++                '83f1263230afc588123958b73e36bb241f63eaf08119aac5aa2a870bc4de9223']
+         # Fetch once to get a tarball
+         fetcher = bb.fetch.Fetch(urls, self.d)
+         ud = fetcher.ud[fetcher.urls[0]]
+@@ -3063,8 +3065,8 @@ class NPMTest(FetcherTest):
+         unpackdir = os.path.join(self.unpackdir, 'foo', 'bar')
+         self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.json')))
  
-     def supports(self, ud, d):
-         """Check if a given url can be fetched with npmsw"""
--        #return ud.type in ["npmsw"]
--        if ud.type in ["npmsw"]:
--            from bb.parse import SkipRecipe
--            raise SkipRecipe("The npmsw fetcher has been disabled due to security issues and there is no maintainer to address them")
--        return False
-+        return ud.type in ["npmsw"]
++    @skipIfNoNpm()
+     def test_npm_no_network_no_tarball(self):
+-        return unittest.skip('npm disabled due to security issues')
+         urls = ['npm://registry.npmjs.org;package=@savoirfairelinux/node-server-example;version=1.0.0']
+         self.d.setVar('BB_NO_NETWORK', '1')
+         fetcher = bb.fetch.Fetch(urls, self.d)
+@@ -3089,7 +3091,7 @@ class NPMTest(FetcherTest):
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npm_registry_alternate(self):
+-        urls = ['npm://skimdb.npmjs.com;package=@savoirfairelinux/node-server-example;version=1.0.0']
++        urls = ['npm://registry.npmjs.org;package=@savoirfairelinux/node-server-example;version=1.0.0']
+         fetcher = bb.fetch.Fetch(urls, self.d)
+         fetcher.download()
+         fetcher.unpack(self.unpackdir)
+@@ -3097,14 +3099,10 @@ class NPMTest(FetcherTest):
+         self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.json')))
  
-     def urldata_init(self, ud, d):
-         """Init npmsw specific variables within url data"""
-@@ -126,6 +123,9 @@ class NpmShrinkWrap(FetchMethod):
-                 extrapaths.append(resolvefile)
+     @skipIfNoNpm()
+-    @skipIfNoNetwork()
+-    def test_npm_version_latest(self):
++    def test_npm_version_latest_rejected(self):
+         url = ['npm://registry.npmjs.org;package=@savoirfairelinux/node-server-example;version=latest']
+-        fetcher = bb.fetch.Fetch(url, self.d)
+-        fetcher.download()
+-        fetcher.unpack(self.unpackdir)
+-        unpackdir = os.path.join(self.unpackdir, 'npm')
+-        self.assertTrue(os.path.exists(os.path.join(unpackdir, 'package.json')))
++        with self.assertRaises(bb.fetch2.ParameterError):
++            bb.fetch.Fetch(url, self.d)
  
-             # Handle http tarball sources
-+            elif resolved is None:
-+                raise ParameterError("Missing 'resolved' field for dependency '%s'" % name, ud.url)
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+@@ -3129,6 +3127,42 @@ class NPMTest(FetcherTest):
+         with self.assertRaises(bb.fetch2.ParameterError):
+             fetcher = bb.fetch.Fetch(urls, self.d)
+ 
++    @skipIfNoNpm()
++    @skipIfNoNetwork()
++    def test_npm_recipe_checksum(self):
++        """A sha512sum param in SRC_URI is forwarded to the proxy and verified."""
++        import subprocess
++        from bb.fetch2.npm import npm_integrity
++        result = subprocess.run(
++            ['npm', 'view', '--json', '@savoirfairelinux/node-server-example@1.0.0'],
++            capture_output=True, text=True)
++        if result.returncode != 0:
++            self.skipTest('npm view failed: %s' % result.stderr.strip())
++        try:
++            view = json.loads(result.stdout)
++        except json.JSONDecodeError:
++            self.skipTest('npm view returned invalid JSON')
++        integrity = view.get('dist', {}).get('integrity')
++        if not integrity:
++            self.skipTest('npm view response missing dist.integrity')
++        checksum_name, hexsum = npm_integrity(integrity)
++        urls = ['npm://registry.npmjs.org;package=@savoirfairelinux/node-server-example'
++                ';version=1.0.0;%s=%s' % (checksum_name, hexsum)]
++        fetcher = bb.fetch.Fetch(urls, self.d)
++        ud = fetcher.ud[fetcher.urls[0]]
++        fetcher.download()
++        self.assertTrue(os.path.exists(ud.localpath))
 +
-             elif resolved.startswith("http") and integrity:
-                 localfile = npm_localfile(os.path.basename(resolved))
++    @skipIfNoNpm()
++    @skipIfNoNetwork()
++    def test_npm_bad_recipe_checksum_rejected(self):
++        """A wrong sha512sum param in SRC_URI causes the fetch to fail."""
++        urls = ['npm://registry.npmjs.org;package=@savoirfairelinux/node-server-example'
++                ';version=1.0.0;sha512sum=deadbeef00']
++        fetcher = bb.fetch.Fetch(urls, self.d)
++        with self.assertRaises(bb.fetch2.FetchError):
++            fetcher.download()
++
+     @skipIfNoNpm()
+     @skipIfNoNetwork()
+     def test_npm_registry_none(self):
+@@ -3161,7 +3195,6 @@ class NPMTest(FetcherTest):
  
+     @skipIfNoNetwork()
+     def test_npmsw(self):
+-        return unittest.skip('npm disabled due to security issues')
+         swfile = self.create_shrinkwrap_file({
+             'packages': {
+                 'node_modules/array-flatten': {
+@@ -3198,7 +3231,6 @@ class NPMTest(FetcherTest):
+ 
+     @skipIfNoNetwork()
+     def test_npmsw_git(self):
+-        return unittest.skip('npm disabled due to security issues')
+         swfile = self.create_shrinkwrap_file({
+             'packages': {
+                 'node_modules/cookie': {
+@@ -3212,7 +3244,6 @@ class NPMTest(FetcherTest):
+ 
+     @skipIfNoNetwork()
+     def test_npmsw_dev(self):
+-        return unittest.skip('npm disabled due to security issues')
+         swfile = self.create_shrinkwrap_file({
+             'packages': {
+                 'node_modules/array-flatten': {
+@@ -3241,7 +3272,6 @@ class NPMTest(FetcherTest):
+ 
+     @skipIfNoNetwork()
+     def test_npmsw_destsuffix(self):
+-        return unittest.skip('npm disabled due to security issues')
+         swfile = self.create_shrinkwrap_file({
+             'packages': {
+                 'node_modules/array-flatten': {
+@@ -3257,7 +3287,6 @@ class NPMTest(FetcherTest):
+         self.assertTrue(os.path.exists(os.path.join(self.unpackdir, 'foo', 'bar', 'node_modules', 'array-flatten', 'package.json')))
+ 
+     def test_npmsw_no_network_no_tarball(self):
+-        return unittest.skip('npm disabled due to security issues')
+         swfile = self.create_shrinkwrap_file({
+             'packages': {
+                 'node_modules/array-flatten': {
+@@ -3297,7 +3326,6 @@ class NPMTest(FetcherTest):
+ 
+     @skipIfNoNetwork()
+     def test_npmsw_npm_reusability(self):
+-        return unittest.skip('npm disabled due to security issues')
+         # Fetch once with npmsw
+         swfile = self.create_shrinkwrap_file({
+             'packages': {
+@@ -3320,7 +3348,6 @@ class NPMTest(FetcherTest):
+ 
+     @skipIfNoNetwork()
+     def test_npmsw_bad_checksum(self):
+-        return unittest.skip('npm disabled due to security issues')
+         # Try to fetch with bad checksum
+         swfile = self.create_shrinkwrap_file({
+             'packages': {
+@@ -3417,7 +3444,6 @@ class NPMTest(FetcherTest):
+ 
+     @skipIfNoNetwork()
+     def test_npmsw_bundled(self):
+-        return unittest.skip('npm disabled due to security issues')
+         swfile = self.create_shrinkwrap_file({
+             'packages': {
+                 'node_modules/array-flatten': {
 
 -- 
 2.54.0
