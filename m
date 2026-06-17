@@ -1,258 +1,284 @@
-Return-Path: <Gabriel.Smith@belden.com>
+Return-Path: <rob.woolleywr@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0425ACD98E2
-	for <webhook@archiver.kernel.org>; Wed, 17 Jun 2026 18:59:40 +0000 (UTC)
-Received: from mx0b-00015a02.pphosted.com (mx0b-00015a02.pphosted.com [205.220.178.250])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.2576.1781722770197839075
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E90CD98F6
+	for <webhook@archiver.kernel.org>; Wed, 17 Jun 2026 19:14:40 +0000 (UTC)
+Received: from mail-yx1-f42.google.com (mail-yx1-f42.google.com [74.125.224.42])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.2907.1781723671051370370
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 17 Jun 2026 11:59:30 -0700
+ Wed, 17 Jun 2026 12:14:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@belden.com header.s=podpps1 header.b=Qud0SKDx;
- spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: belden.com, ip: 205.220.178.250, mailfrom: prvs=462805845a=gabriel.smith@belden.com)
-Received: from pps.filterd (m0382793.ppops.net [127.0.0.1])
-	by mx0b-00015a02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65HHhL2v3122593
-	for <bitbake-devel@lists.openembedded.org>; Wed, 17 Jun 2026 14:59:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=belden.com; h=
-	content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=podpps1; bh=z3PuvO378vowuToLBSlDK06B
-	weHjK06FBcbujDrpRmQ=; b=Qud0SKDxVlINGzbJQeBmhkB81ild6G7G/yv6TEpq
-	19nPh/Kij+cVgSAowC+GZmDW14xuJ4IrCFsWR0uBDPpwRtJxAN5xK5XsUQh1Iy2i
-	hVBK2wS+ukjV/Q1v8ZahaH6hbkTA49VFd4/xwxElu0+jBHgi0d0J7khCcQDiWg+a
-	d+jxnYlQy6FYWeI50l0kFKKx86eoOQI9E3LPQNfD8KsOWo5gBQwObK02dZA9EnxI
-	i6q3lw2dPGBjq4sSqPOqAJvkN8vE5vQTb6ssSr6pAl01Zty6JiG97VZ71vTvWY+T
-	hIfz4qGzy3TrCi4waUvWEjgUfRMMVm8kmJxa7TEIXyliVg==
-Received: from ch4pr04cu002.outbound.protection.outlook.com (mail-northcentralusazon11013001.outbound.protection.outlook.com [40.107.201.1])
-	by mx0b-00015a02.pphosted.com (PPS) with ESMTPS id 4euefr2psk-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK)
-	for <bitbake-devel@lists.openembedded.org>; Wed, 17 Jun 2026 14:59:28 -0400 (EDT)
-Received: from LV8PR18MB5783.namprd18.prod.outlook.com (2603:10b6:408:1ee::7)
- by CH3PR18MB5548.namprd18.prod.outlook.com (2603:10b6:610:1a8::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.11; Wed, 17 Jun
- 2026 18:59:24 +0000
-Received: from LV8PR18MB5783.namprd18.prod.outlook.com
- ([fe80::29ac:d0ba:6581:49c9]) by LV8PR18MB5783.namprd18.prod.outlook.com
- ([fe80::29ac:d0ba:6581:49c9%4]) with mapi id 15.21.0113.015; Wed, 17 Jun 2026
- 18:59:24 +0000
-From: Gabriel A Smith <Gabriel.Smith@belden.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: [PATCH] fetch2/crate: support user-defined protocols
-Thread-Topic: [PATCH] fetch2/crate: support user-defined protocols
-Thread-Index: Adz+it1ciEWyYGSUR4y0gnoqQpn2SA==
-Date: Wed, 17 Jun 2026 18:59:24 +0000
-Message-ID: 
- <LV8PR18MB5783EC1D3247161CBB9FFFB482E42@LV8PR18MB5783.namprd18.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LV8PR18MB5783:EE_|CH3PR18MB5548:EE_
-x-ms-office365-filtering-correlation-id: ca64952f-f29c-482a-88f8-08decca28c90
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230040|23010399003|366016|376014|1800799024|56012099006|11063799006|3023799007|18002099003|38070700021;
-x-microsoft-antispam-message-info: 
- RoM2aSw2VucxoMCaeyQcrbkxYTfBPFS4T3eHiX3BkFQdANa1DtLc4TsDCMYccKkJJuy68bpXG1PwbwMiL6J4ucHhUYsXyCyxv+fKsYpj+1XIdL9gcAdiVjQrz/HavFkcV1BOjDWCrPtvwY6qKqXbsCeTRrjArwvg0/5PSeV2Es3Wj5zTFZzqsqe9C+/4kJhwoOZ396MsRKj3C4gQQ9iLcynf0CfjxC8lNJx7Nld4y/miPWJcioQGCnQYlXHiFhwqSC92A67vXBCkjclRah76OQv9uHWWYUTER1VPqmwpUTGsaoqwSZJ6ZQ95JXnioM3CMzjHbmHFc0eyClnxFfTxyHw8kWCugj6eT998ymkXNTXRJ6xwKX6c0PBkd2MJZ1s4MpW/4H+KoPesaAnoxLjZCLMcOcGobLqbt2ykYhavuY/8LLwUzD9iZCE77mWcXZ61AFOdNAE+GyI+dKUsTK2GlCGzO+uaTQGQyffM7bEya/9ko8ZV+MQcjP4CAbEJ7GGwxGlp9oJFR8jK8plZHfJ+0EeG7AXvUj+mDA9VAjuQAWTPeMQaZSHEql6pxtRUQHWkof0mxOX2W4F0pFOPAqzjsOVs35+1hPwD0/PdO6f5JDzl3H+wH5zXElLhLsFsNVCo/tO+8NNuGFXpi3YSm52Ghn/Tbxf37T3xOEW4Vz9Wi3/n8ZXxM+ryl7oINb0EljWu
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR18MB5783.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(376014)(1800799024)(56012099006)(11063799006)(3023799007)(18002099003)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?6RpmtRF4S0fi7PGchK5wTqxt7S/iGu0iVsSsY8NNQVrTki88Ehyx432fWpuW?=
- =?us-ascii?Q?zFSUK9rzTtpHBdU8oPnY3qxz7khGAj3QAT6Tc92hYNosJePFV9bEZMD/c0/C?=
- =?us-ascii?Q?8Z7bjooJT/lOBpt/FWdIVBYX/9YmeuKfUjCs4hPOTKuzYXso9iXdm6Iuh91t?=
- =?us-ascii?Q?W/Y2gcsKQ6/RaR8K2FSMVrt4zuxyhLZH1vYpMC74I9okudEsY1O6BifmWEvf?=
- =?us-ascii?Q?kOtVcZucSO9W7j8ySJuvhu94G3sgZIh5AX/PQ1/5mYuoOgMiq+ImzfYewSvn?=
- =?us-ascii?Q?yi479CQMXQy/ouAoZDdksnTJISFhWAeNuQgy23ExlEa9GZMSy2cEpIYy3zfa?=
- =?us-ascii?Q?AuZgMtETh19OhfFRwMMExjTheIlbqp7Hs8Ng4MfgMSJ0c8mksRVCPrHSc/Da?=
- =?us-ascii?Q?mw35dZz5DIdnMEqvXB0PMGS6H9amq82iBVa/UzvSLxw+LvMGZ5SnDi7WUydi?=
- =?us-ascii?Q?mb+91W1cNroAx1gRV/zL7CaUtZO8Rs6PNBgVkIlHhX/egBroc+WUejhY7PIS?=
- =?us-ascii?Q?RR1E2s1FTvw1cI4FtiAecxE47ew9tAv7z7RJtUwaw1LvzGzJ7yUujp9OxdeD?=
- =?us-ascii?Q?aYZwNBZR1plD6QA7U3EDvMp6ujLQv2PLfITfppaK/d9PwttD26eEvnJU4Ssk?=
- =?us-ascii?Q?1bIVm4zGefjHLzckanNK+GYMJYMyOkPffszxS0oZkTwXlmT+hDuMqIHMIPrD?=
- =?us-ascii?Q?Uf/NzIMPZv/0psF4ibCPZ6PeBU1W5pPuFVnBhJaE2i5iuXE8vmUBXzQ1daHA?=
- =?us-ascii?Q?NfMOWLijfLTIV7e7Hufm0R5OtTKYrZ0lTWu/lkHrRGgFimtzIPMqcF4CFhLR?=
- =?us-ascii?Q?4piHRyOL/829MVeU78fIDsmcp3uTexMgBAJhoUcz0hCOrk3ebELQFkTtVleH?=
- =?us-ascii?Q?OUyphZsjuU7SvtD6kNqLD8oYoCs5qk+qYTAIhJoRlVcGewGibchvUez+/TNL?=
- =?us-ascii?Q?hdaI6Yl+VWuIMqvktg4QcFt6pD6naVdpkBioHxV6NqF6lvA+aYUakuqTLr7u?=
- =?us-ascii?Q?PRTBypQa+Umx0EgIaPHBbV5le1YLoQ9TKF4ofEmHjdXTj9R2Bvy9zdnd6fnf?=
- =?us-ascii?Q?NyuPVLO/beUi2EtG8m/fHiJTVQGa0G/IJ1x+fWWzH+4KygdURacg0dnVkMPi?=
- =?us-ascii?Q?JKK62WiEuQKXkM3KIfSppG73oHA7o2Jy5myPZo7R24Buy2w2UhwrMSPXVMlE?=
- =?us-ascii?Q?QI3HsfRyK2xjGb48sQodsiqO2SI+n44CnFdMELG40GY7FyBf3KJYZSC+UcMn?=
- =?us-ascii?Q?w4oB5avvxtgkS7m1e5XwS3mF4nfXqNpo+vTQ59DZIYzORYkVuLKsOfqX+pKO?=
- =?us-ascii?Q?PyrbhT0jUiZdKTM3Dg20I3zsgAAi3ANbmpZfHibkEr/M6AmZykW8Ox5MFMr7?=
- =?us-ascii?Q?8ZQhN4kYENprBuT6FjbRvq1XYhP4mOA8mdo8qfectZLuv5DS1mPa4cUDs2GD?=
- =?us-ascii?Q?3oicC+FPz9D9szTYPLSz3GJgSuCbLqvr//QGRz9pRn9eBj84xIZfemsIfGXc?=
- =?us-ascii?Q?pKCNPiKcgAjrnK+sNAJUBxN5pRYGX31HMAdyDcN9aUB8rclAzw1BrGu+R8e2?=
- =?us-ascii?Q?6oeB1+fesZ4hZBeSlgT2VbMz63yornkqKMcVl6DX+imnVBb2OiNaynIsmsZz?=
- =?us-ascii?Q?kbUvzVzneyqr4m2dfyYwwMnhrWyL7HGf+WPWNi5BqykHZqCaxeQoaQeNA1dT?=
- =?us-ascii?Q?a3a9G+CSRyGxMthAflm/g9f+/rqdJkhX1BHhmIqrQ6hDDPA0tlDujszpET+x?=
- =?us-ascii?Q?NPBgw5QFtg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=m0zfvcmu;
+ spf=pass (domain: gmail.com, ip: 74.125.224.42, mailfrom: rob.woolleywr@gmail.com)
+Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-660390acd71so1391668d50.1
+        for <bitbake-devel@lists.openembedded.org>; Wed, 17 Jun 2026 12:14:30 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781723670; cv=none;
+        d=google.com; s=arc-20240605;
+        b=IHGuEMuluj+xBZdr6GOp83ZS60iBviFNpUQBiYzz2A/D0YcRuI5EDoodvp5zH0pr7Y
+         Yov2xeP96VNVt1G5oDQOlhOl0gxTa3Oo+W+5KRjKiEDe5EfPEaePDczKl6BfwmMJQ0ci
+         0zWVgMgh93H893v346G31O04R2LmI4+qpY2JpRKgxWtZnezVCV2E0vVagWx5JYVsiY+3
+         8wZE82vJl8hZJSLzQi3pQ3TAImyXB5BXPqkJQdwAR48zAmSkAC0ELExUBW5/5hPf2rxe
+         SPhA4U9I5uWbSBok7LEEuOJK+MemF3oYCTElBazEKoCp/mgoFfCjOvbjjeS5emMtFCon
+         COXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=0O1QLZv2xxbAuzPylaVfHnNjWEnkut93NeBUkoZ1oz4=;
+        fh=2BaMlckdRBZn8mz+QEoiT/Cil/N4O8kIotYyQ4fi5Fg=;
+        b=ZU5U+VOSzaLB3nUw8xHN9rX+E2DR42+ru7GgI1UUTz0eTmLH1oCe5kTHtOGCJKuoM7
+         G5PjatCQyk81QoINLxzA1AQKDYJX2W+YscC/JPtx6pqPVp4xDhH+McALAw2oYqbEPMfu
+         AjlCenFXt9y7HRoYmyefnPlHsCdSY+Qp0MAm8cCAa1IUdJWc5fWOiwoQ3En7x6hA1ITi
+         DJwEQwMskRgIu8498FDZp/cR6tj65TvCM4rmolrswrOupbGCXVV7lk7pwSc7ShhqtBO1
+         GmI5yJaXKeqb+XHg1a3wRCwOnEh/ItPDA+IVMP+J5cenBKclfjQyzLowQGszkoHgYSED
+         s3IA==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781723670; x=1782328470; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0O1QLZv2xxbAuzPylaVfHnNjWEnkut93NeBUkoZ1oz4=;
+        b=m0zfvcmuxY3Ot3IIouXjvFSQZldrjseVczPlvT10GT6ZmshrQbkV1OgB1ZwIT2a0KU
+         xPd6ZTBSTuB3HzuKehyM23RMfiQn/EsmTf9Cy5IwtVdmcLswE/tw78+4ZGoRIL32jKeW
+         ZpAx9yb4Pco9bnOwcPknVmBHvgXF3mqs6kpiwlSw72bsxnb/Q2nVcyy7orgMiHTr3Mwe
+         VKhyKtd5FxfPqikz6UXSIMqUOVqI0PYntF1iPfca5vPHwdLcnb98cNXn3/dxdwj4yKDu
+         wIjhxU4w7U/vZOsi8O8iUV71ICzyC1aNMf3yzkBGdWzdBMfMi+qil640Dvn07K645ov8
+         /9Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781723670; x=1782328470;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0O1QLZv2xxbAuzPylaVfHnNjWEnkut93NeBUkoZ1oz4=;
+        b=ggPQlquuKTLLsfbSe8x/sX9rkRXIuZnMnJGkIdeFLwDu3EM0wKxIO26lwlF0XdNeWO
+         jGEEd6pI/sboFM6RXHO/HnKwvXLB1z4MeLB8vx0w6w4PXoUyumZ7763x6JQ27wWAWnlj
+         DHGvuu08TktQlFKJuNEYD8HKAVqxUvRKooNwfJ4JDQNpJ6S+urifHPBFJyrCFtoPV2Yq
+         ca2D2oxe1uUSlT0SKw6mpIZJxhFRrjJcCqEu4mHsQHbUOSwV2ZBiduqFOTRdhSVAYtDN
+         CDRVT0Sk6mCUpnnQqCSHOJBjBUJTUY+n2tDNSIavtrT6Cr7UjmnCs+J8B1PSuzLW5vrY
+         u/oQ==
+X-Gm-Message-State: AOJu0YxX7fEOXGx2ElNk4M5dBSFv7dvafjqzB5Y1INMrit+I7J9EOoNV
+	aOhYsNaHxmg5iDGr7s6qPkkt/mjNrAnTAwyXowtJkAX9SGYSD4Lv41RUvHZHQC2RrXlPdqFD+UO
+	OuqSS9VFC6YKBvURjrI9tg4yYWyo3iHsorIAP
+X-Gm-Gg: AfdE7cldDmynM0cPudKmBpd+HVwLxptfxX/A8fzYWz3gp6d73+9yeNVBuRgWNaQswo/
+	rFZR9SnP/CelDKe2ebq0TCNgYDJFPU0LDSATr4hov4o3OCjwoufRLsiornYjkwtBuzezc4OTQUs
+	gRTjquOrJb9hO9HLzxIMQW4T2Owwwd56d2poS/ul6fuabB2f90w3AZie6V8pow4jI9N2VCuVmKB
+	EHpF/AU/uUn4Ph/wrwdGHm/MFaEViNMA8TocYNbjC/MTjynXQA6+1yD2aCbXgkZ0tPzukMrTlMv
+	3HUTKG4BoISqeLYkjtP20BwH8MOo
+X-Received: by 2002:a05:690e:1686:b0:662:c78e:3943 with SMTP id
+ 956f58d0204a3-662e3e2b50bmr795415d50.38.1781723669923; Wed, 17 Jun 2026
+ 12:14:29 -0700 (PDT)
 MIME-Version: 1.0
-X-Exchange-RoutingPolicyChecked: 
-	fhCL0voJ+MgRP1thgJJHN5bMu9Hyg0kIUSvaWASJu/I7Xyf6p3AStIWEcpG+Z39hbSV9fDzv6R9Lu7K18lYqTT7wlgmbjrHDmDq/WTNj+t0VBb0ENHc9hW+eiquOiANjsMQtTHeXT7ZRHMX8uieIdmIA57NXTQ5+1JXKh5b4/2Evf8ZiD0n5hpSWYnHZ2RiuZweMCLFCifNSBPQyEqzhW8YkqeCHaTL58i6bTrgUqrpKUh0mIfhsrO+xaVpyAC3GAymi1obY/urhBbgu1W2tHpYOiCQEWA2evQjeJt+cBglgkhuEPmA/nbxe8V3jDGChuJvSu4kP3IS9Hid521xIZg==
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	qYI7XT5hdspjkPIaBp3DnLxqn9KZz2A8xlsV71MrpRTPtO8guhDJwNYt7i1y35wrn79ETj74Qtknp6yIJZ1ss/2tnCGYi+n1z4+tFwZ8rw45rfPve10Mlx2jxZI+5KZ76zzYQj6r79NFwddBQzVaZS67mLIvAHnmbB3SgVTpkBYRL6ddDMNs+hT9jRA0cfIeSK+elhx9aDONxe8kQTzaEhT/cvWZoywIybROPrxcbA6wJqoqKfUuXlVxcWB6SPL3vqGnYh8KEvEQmmjZMmDgiFNv8nykYn+1V9QA+jZJEf3yRxypa8goY9fQbqfCkPO+gWLGlG27EDHT+KNkNgTlR2+LjTWYPKoVIw+5QPfgtLHFO29U7Z7Dx6NzEoUHvqXK0C6Lu7A5xoU5wkwBvI6FsWzvj7kirFHoyJ5Iuc6H0wSJ2dzK+N9HhCKCRfxHwX4odmiP4VSf20BoTKL181MGdUk4WEXgamoLOqLbcgHPt2iVCMHi7QtQBwQi6dAMXCBnNZbfiCPyMYeK20HqiQUyU29I14OPVHPNuWONGRTOL+Mf0DwZ3//nMu92Zeyo4JKZjM3KckhPpXvKgjgKqAUr50/Ki+LK/4+DIM9CuPdXE6let5StIv9qrEIDPS6sPI/7UbCl106Fn8/LYIHzrLZ3zg==
-X-OriginatorOrg: belden.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR18MB5783.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca64952f-f29c-482a-88f8-08decca28c90
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2026 18:59:24.7962
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0f7367b1-44f7-45a7-bb10-563965c5f2e5
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: M6AN+pmi3VgVkzpugP4yRVmRbKg3FfrZNF7vdmxOVvanWhmkSFTg2pK2hfX0J9xAMH8sj2wUmuJMd8K1QE1Nxmu+FeCBlhfQlEnv/j9pPwg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR18MB5548
-X-Proofpoint-GUID: fHGQGK-PnWq4ErFq0ZC38kM5SNkrvpew
-X-Authority-Analysis: v=2.4 cv=Bs+tB4X5 c=1 sm=1 tr=0 ts=6a32ee90 cx=c_pps
- a=3079EDIPZoP+OxznWXLZSg==:117 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=FelO9ux0wxsA:10 a=mCf63rc527wA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=l-oUmhW3RMErs0E8rZCB:22 a=408dvcsKgvW3Vj-g96bp:22 a=OcE5tU-iAAAA:8
- a=WDlp8lUfAAAA:8 a=rTBFlHIACeVy1l0DLesA:9 a=r-HJ9bD__24A:10 a=Wpz8ju6o9T4A:10
- a=CjuIK1q_8ugA:10 a=s5zKW874KtQA:10 a=BooMQqvJ4ork6bmEOYlM:22
- a=qwkNQZnGtIHGNKTLT1RO:22
-X-Proofpoint-ORIG-GUID: fHGQGK-PnWq4ErFq0ZC38kM5SNkrvpew
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE3MDE4MyBTYWx0ZWRfX++A4RGvfiQoq
- I1jm07NjWxgacK8M8GrVCd994oXVTz4nqopfYIFwD86+kAiZIC0+s4FinW30VW/DdKOA2UscUoq
- tSv2qMISPHQ6WWoV7yURsLFTWDwAHxUQ/QL3hhv8INP4hCLRXKL7
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE3MDE4MyBTYWx0ZWRfXxZT3a+97Q+Td
- DwQqy/aoKecmDzlQe9R7uZSXpb5LUxFwJG4Ijn2XOPW0l5iyRc3CMWXyeZVQ4QwhRhdMZvINc8G
- AM3vyykV2I8fUDbuKPLm89999beBDsRzgXDo6yNzUtggwzL0K2TobS1janHgZqF/dTIZxeyH+SF
- QuuXbFtXPZ05ZQeG0k7DZDYaIF4zdELtS/ZhhBuj+1cyBoZq1xkT6pn/b8OQ25qokRGUJfbMFIQ
- wDwhKPa6mWUGaC2FhaRnyqYzpejccjpsbkKBRGeeI0c5hwg1/spHhBpIYvx+IIUvQrHFOmAGRZo
- MB0HXYR+dRTHlue9bTrhy1CFr54+hQ+wFJ3oidGn3yBOS+3EPHy32pXNwihpoa/mWkFSjEi1Cc5
- fMpVKYyP3v5mOoOGgfzmcW+7kMGlEVdLhmMUGbtZSy0bHaSzZ3nFNc3XdHANXB3z/nSGRRXHwxu
- /SKq/9QVv586h/W+HMQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-17_02,2026-06-17_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 lowpriorityscore=0 phishscore=0 impostorscore=0 bulkscore=0
- spamscore=0 priorityscore=1501 suspectscore=0 adultscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606170183
-X-Proofpoint-TriggeredRule: module.spam.rule.outbound_notspam
+References: <20260331145319.3125456-1-rob.woolley@windriver.com>
+ <20260331145319.3125456-6-rob.woolley@windriver.com> <5A75C01A-3B75-4531-AEEE-63A308978CF7@arm.com>
+In-Reply-To: <5A75C01A-3B75-4531-AEEE-63A308978CF7@arm.com>
+From: Rob Woolley <rob.woolleywr@gmail.com>
+Date: Wed, 17 Jun 2026 15:14:18 -0400
+X-Gm-Features: AVVi8Cc7wNxOwfvQD75wJ5fT_d3q0b-mKDmm73WbY5xGdQqYaohhZvSYYnmHu_g
+Message-ID: <CAGAhMBzX7unc5kcm4wixTJaQNeUF5cESxc2FWu2YC3Z+NUftaw@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 5/6] lib: Vendorize bundled third-party
+ libraries under bb._vendor
+To: ross.burton@arm.com
+Cc: "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="0000000000006f09f7065477de32"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 17 Jun 2026 18:59:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19729
+ <bitbake-devel@lists.openembedded.org>; Wed, 17 Jun 2026 19:14:40 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19730
 
-From cd89f0c841d9611d79047c70045a05f6ac41da56 Mon Sep 17 00:00:00 2001
-From: Gabriel Smith <gabriel.smith@belden.com>
-Date: Wed, 17 Jun 2026 17:53:56 +0000
-Subject: [PATCH] fetch2/crate: support user-defined protocols
+--0000000000006f09f7065477de32
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-By default HTTPS is used for crate downloads, but both HTTP and FTP are
-also supported by wget. FTP is not supported by crate registries so
-it is not recommended. This adds a protocol parameter similar to the
-git fetcher to allow a user to specify a different protocol.
+Hi Ross,
 
-Documentation has been updated to mention the new parameter.
+I followed your advice and added support for vendoring:
+https://github.com/robwoolley/bitbake/commits/vendoring/  Is this what you
+had in mind?
 
-Signed-off-by: Gabriel Smith <gabriel.smith@belden.com>
----
- .../bitbake-user-manual-fetching.rst          |  5 ++++
- lib/bb/fetch2/crate.py                        | 24 +++++++++++++++----
- 2 files changed, 25 insertions(+), 4 deletions(-)
+I reviewed the patches for the vendored modules:
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc=
-/bitbake-user-manual/bitbake-user-manual-fetching.rst
-index c2747c401..b96018a4e 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
-@@ -716,6 +716,11 @@ The format for the :term:`SRC_URI` setting must be::
-=20
-    SRC_URI =3D "crate://REGISTRY/NAME/VERSION"
-=20
-+This fetcher supports the following parameters:
-+
-+-  *"protocol":* The protocol used to fetch the crates. The default is "ht=
-tps".
-+   You can also use "http".
-+
- Here is an example URL::
-=20
-    SRC_URI =3D "crate://crates.io/glob/0.2.11"
-diff --git a/lib/bb/fetch2/crate.py b/lib/bb/fetch2/crate.py
-index f94e153ee..830612c98 100644
---- a/lib/bb/fetch2/crate.py
-+++ b/lib/bb/fetch2/crate.py
-@@ -1,7 +1,16 @@
- # ex:ts=3D4:sw=3D4:sts=3D4:et
- # -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
- """
--BitBake 'Fetch' implementation for crates.io
-+BitBake 'Fetch' implementation for cargo registries, e.g. crates.io
-+
-+SRC_URI =3D "crate://some.host/crate_name/version;OptionA=3Dxxx;OptionB=3D=
-xxx;..."
-+
-+Supported SRC_URI options are:
-+
-+- protocol
-+   The method to use to download the crate file. Common options are "http",
-+   "https", and "ftp". The default is "https".
-+
- """
-=20
- # Copyright (C) 2016 Doug Goldstein
-@@ -63,7 +72,7 @@ class Crate(Wget):
-         Sets up the download for a crate
-         """
-=20
--        # URL syntax is: crate://NAME/VERSION
-+        # URL syntax is: crate://HOST/NAME/VERSION
-         # break the URL apart by /
-         parts =3D ud.url.split('/')
-         if len(parts) < 5:
-@@ -78,13 +87,20 @@ class Crate(Wget):
-         # host (this is to allow custom crate registries to be specified
-         host =3D '/'.join(parts[2:-2])
-=20
-+        if 'protocol' in ud.parm:
-+            proto =3D ud.parm['protocol']
-+        else:
-+            proto =3D 'https'
-+
-         # If using crates.io use the CDN directly as per https://crates.io=
-/data-access
-         if host =3D=3D 'crates.io':
-+            if proto !=3D 'https':
-+                bb.warn("URL: %s does the %s protocol which is not support=
-ed by crates.io. Please change to ;protocol=3Dhttps in the url." % (ud.url,=
- proto))
-             ud.url =3D "https://static.crates.io/crates/%s/%s/download" % =
-(name, version)
-             ud.versionsurl =3D 'https://index.crates.io/' + self._generate=
-_index_path(name)
-         else:
--            ud.url =3D "https://%s/%s/%s/download" % (host, name, version)
--            ud.versionsurl =3D "https://%s/%s/versions" % (host, name)
-+            ud.url =3D "%s://%s/%s/%s/download" % (proto, host, name, vers=
-ion)
-+            ud.versionsurl =3D "%s://%s/%s/versions" % (proto, host, name)
-=20
-         ud.parm['downloadfilename'] =3D "%s-%s.crate" % (name, version)
-         if 'name' not in ud.parm:
---=20
-2.54.0
+*beautifulsoup4*
 
-**********************************************************************
-DISCLAIMER:
-Privileged and/or Confidential information may be contained in this message=
-. If you are not the addressee of this message, you may not copy, use or de=
-liver this message to anyone. In such event, you should destroy the message=
- and kindly notify the sender by reply e-mail. It is understood that opinio=
-ns or conclusions that do not relate to the official business of the compan=
-y are neither given nor endorsed by the company. Thank You.
+   - most patches seemed to be for Python 3 support
+   - I brought forward 2 patches into vendor/patches:
+      - lib/bs4: Avoid soupsieve warning
+      - lib: Remove double imports
+
+*ply*
+
+   - patches were all removed
+   - some had been merged upgrade
+   - patches related to FIPS issues in the signature function were no
+   longer necessary due to refactoring upstream
+   - ply is no longer maintained
+
+*simplediff*
+
+   - No changes were made, the version remains the same
+
+*progressbar*
+
+   - all 6 patches were refreshed
+
+
+One drawback is that I had to add pyproject.toml for "vendoring sync ." to
+work.  I wonder if this could cause confusion for people that expect it to
+be a full Python project configuration file and try to use "python3 -m
+build".
+
+We may want to consider adding a complete pyproject.toml at the top-level.
+
+Here are my testing instructions for anyone who wishes to follow along:
+```
+git clone -b vendoring https://github.com/robwoolley/bitbake
+bitbake-vendoring
+cd bitbake-vendoring
+bin/bitbake-setup init poky-master
+# Accept the options
+# Source the build env:    .
+/ala-lpggp31/rwoolley/bitbake-vendoring/bitbake-builds/poky-master/build/in=
+it-build-env
+cd ../layers/bitbake
+git remote add robwoolley https://github.com/robwoolley/bitbake
+git remote update robwoolley
+git checkout vendoring
+cd $BUILDDIR
+bitbake core-image-minimal
+```
+
+Regards,
+Rob
+
+On Thu, Apr 30, 2026 at 6:10=E2=80=AFAM Ross Burton via lists.openembedded.=
+org
+<ross.burton=3Darm.com@lists.openembedded.org> wrote:
+
+> On 31 Mar 2026, at 15:53, Rob Woolley via lists.openembedded.org
+> <rob.woolley=3Dwindriver.com@lists.openembedded.org> wrote:
+> >
+> > Move ply, progressbar, simplediff, and bs4 from lib/ into
+> > lib/bb/_vendor/ to avoid conflicts with system-installed versions
+> > and to support proper packaging. These libraries contain local
+> > modifications from their upstream versions.
+>
+> I=E2=80=99d like to see the vendoring done with a tool that lets us updat=
+e the
+> bundled libraries easily in the future, to be honest.
+>
+> When I wrote picobuild (now redundant as pypa/build can bootstrap itself)
+> I used the same tool that pip uses to vendor its dependencies:
+> https://github.com/pradyunsg/vendoring.  So
+> https://gitlab.com/rossburton/picobuild is a minimal example of using
+> vendoring: a few lines of configuration in pyproject.toml and a separate
+> requirements file.
+>
+> Obviously if we sync from upstream we=E2=80=99ll drop our local changes, =
+so the
+> question then is why do we have forks?  Note that vendoring can apply
+> patches when it updates, so if there=E2=80=99s a simple but not-upstreama=
+ble change
+> we can carry the patch in-tree.
+>
+> Ross
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#19419):
+> https://lists.openembedded.org/g/bitbake-devel/message/19419
+> Mute This Topic: https://lists.openembedded.org/mt/118597577/556952
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
+> rob.woolleywr@gmail.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
+>
+
+--0000000000006f09f7065477de32
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi Ross,<div><br></div><div>I followed your advice and add=
+ed support for vendoring:=C2=A0<a href=3D"https://github.com/robwoolley/bit=
+bake/commits/vendoring/">https://github.com/robwoolley/bitbake/commits/vend=
+oring/</a>=C2=A0 Is this what you had in mind?</div><div><br></div><div>I r=
+eviewed=C2=A0the patches for the vendored modules:</div><div><br></div><div=
+><span style=3D"background-color:transparent"><b>beautifulsoup4</b></span><=
+/div><div><ul><li>most patches seemed to be for Python 3 support</li><li>I =
+brought forward 2 patches into vendor/patches:</li><ul><li>lib/bs4:=C2=A0Av=
+oid soupsieve warning</li><li>lib: Remove double imports</li></ul></ul></di=
+v><div><b>ply</b></div><div><ul><li>patches were all removed</li><li>some h=
+ad been merged upgrade</li><li>patches related to FIPS issues in the signat=
+ure function were no longer necessary due to refactoring upstream</li><li>p=
+ly is no longer maintained</li></ul><div><b>simplediff</b></div></div><div>=
+<ul><li>No changes were made, the version remains the same</li></ul><div><b=
+>progressbar</b></div><div><ul><li>all 6 patches were refreshed</li></ul></=
+div><div><br>One drawback is that I had to add pyproject.toml for &quot;ven=
+doring sync .&quot; to work.=C2=A0 I wonder if this could cause=C2=A0confus=
+ion for people that expect it to be a full Python project configuration fil=
+e and try to use &quot;python3 -m build&quot;.<br><br>We may want to consid=
+er adding a complete pyproject.toml at the top-level.<br><br>Here are my te=
+sting instructions for anyone who wishes to follow along:</div><div>```</di=
+v><div>git clone -b vendoring <a href=3D"https://github.com/robwoolley/bitb=
+ake">https://github.com/robwoolley/bitbake</a> bitbake-vendoring<br>cd bitb=
+ake-vendoring<br>bin/bitbake-setup init poky-master<br># Accept the options=
+<br># Source the build env:=C2=A0 =C2=A0 . /ala-lpggp31/rwoolley/bitbake-ve=
+ndoring/bitbake-builds/poky-master/build/init-build-env<br>cd ../layers/bit=
+bake<br>git remote add robwoolley <a href=3D"https://github.com/robwoolley/=
+bitbake">https://github.com/robwoolley/bitbake</a><br>git remote update rob=
+woolley<br>git checkout vendoring<br>cd $BUILDDIR<br>bitbake core-image-min=
+imal<br>```</div><div><br>Regards,</div></div><div>Rob</div></div><br><div =
+class=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" class=3D"gmail=
+_attr">On Thu, Apr 30, 2026 at 6:10=E2=80=AFAM Ross Burton via <a href=3D"h=
+ttp://lists.openembedded.org">lists.openembedded.org</a> &lt;ross.burton=3D=
+<a href=3D"mailto:arm.com@lists.openembedded.org">arm.com@lists.openembedde=
+d.org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"ma=
+rgin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:=
+1ex">On 31 Mar 2026, at 15:53, Rob Woolley via <a href=3D"http://lists.open=
+embedded.org" rel=3D"noreferrer" target=3D"_blank">lists.openembedded.org</=
+a> &lt;rob.woolley=3D<a href=3D"mailto:windriver.com@lists.openembedded.org=
+" target=3D"_blank">windriver.com@lists.openembedded.org</a>&gt; wrote:<br>
+&gt; <br>
+&gt; Move ply, progressbar, simplediff, and bs4 from lib/ into<br>
+&gt; lib/bb/_vendor/ to avoid conflicts with system-installed versions<br>
+&gt; and to support proper packaging. These libraries contain local<br>
+&gt; modifications from their upstream versions.<br>
+<br>
+I=E2=80=99d like to see the vendoring done with a tool that lets us update =
+the bundled libraries easily in the future, to be honest.<br>
+<br>
+When I wrote picobuild (now redundant as pypa/build can bootstrap itself) I=
+ used the same tool that pip uses to vendor its dependencies: <a href=3D"ht=
+tps://github.com/pradyunsg/vendoring" rel=3D"noreferrer" target=3D"_blank">=
+https://github.com/pradyunsg/vendoring</a>.=C2=A0 So <a href=3D"https://git=
+lab.com/rossburton/picobuild" rel=3D"noreferrer" target=3D"_blank">https://=
+gitlab.com/rossburton/picobuild</a> is a minimal example of using vendoring=
+: a few lines of configuration in pyproject.toml and a separate requirement=
+s file.<br>
+<br>
+Obviously if we sync from upstream we=E2=80=99ll drop our local changes, so=
+ the question then is why do we have forks?=C2=A0 Note that vendoring can a=
+pply patches when it updates, so if there=E2=80=99s a simple but not-upstre=
+amable change we can carry the patch in-tree.<br>
+<br>
+Ross<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+Links: You receive all messages sent to this group.<br>
+View/Reply Online (#19419): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/19419" rel=3D"noreferrer" target=3D"_blank">https://list=
+s.openembedded.org/g/bitbake-devel/message/19419</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/118597577/556=
+952" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
+/118597577/556952</a><br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
+b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
+tbake-devel/unsub</a> [<a href=3D"mailto:rob.woolleywr@gmail.com" target=3D=
+"_blank">rob.woolleywr@gmail.com</a>]<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+<br>
+</blockquote></div>
+
+--0000000000006f09f7065477de32--
 
