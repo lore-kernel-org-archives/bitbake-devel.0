@@ -1,284 +1,241 @@
-Return-Path: <rob.woolleywr@gmail.com>
+Return-Path: <david.reyna@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E90CD98F6
-	for <webhook@archiver.kernel.org>; Wed, 17 Jun 2026 19:14:40 +0000 (UTC)
-Received: from mail-yx1-f42.google.com (mail-yx1-f42.google.com [74.125.224.42])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.2907.1781723671051370370
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5581CD98E4
+	for <webhook@archiver.kernel.org>; Thu, 18 Jun 2026 03:23:09 +0000 (UTC)
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.11700.1781752983994755443
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 17 Jun 2026 12:14:31 -0700
+ Wed, 17 Jun 2026 20:23:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=m0zfvcmu;
- spf=pass (domain: gmail.com, ip: 74.125.224.42, mailfrom: rob.woolleywr@gmail.com)
-Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-660390acd71so1391668d50.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 17 Jun 2026 12:14:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781723670; cv=none;
-        d=google.com; s=arc-20240605;
-        b=IHGuEMuluj+xBZdr6GOp83ZS60iBviFNpUQBiYzz2A/D0YcRuI5EDoodvp5zH0pr7Y
-         Yov2xeP96VNVt1G5oDQOlhOl0gxTa3Oo+W+5KRjKiEDe5EfPEaePDczKl6BfwmMJQ0ci
-         0zWVgMgh93H893v346G31O04R2LmI4+qpY2JpRKgxWtZnezVCV2E0vVagWx5JYVsiY+3
-         8wZE82vJl8hZJSLzQi3pQ3TAImyXB5BXPqkJQdwAR48zAmSkAC0ELExUBW5/5hPf2rxe
-         SPhA4U9I5uWbSBok7LEEuOJK+MemF3oYCTElBazEKoCp/mgoFfCjOvbjjeS5emMtFCon
-         COXg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=0O1QLZv2xxbAuzPylaVfHnNjWEnkut93NeBUkoZ1oz4=;
-        fh=2BaMlckdRBZn8mz+QEoiT/Cil/N4O8kIotYyQ4fi5Fg=;
-        b=ZU5U+VOSzaLB3nUw8xHN9rX+E2DR42+ru7GgI1UUTz0eTmLH1oCe5kTHtOGCJKuoM7
-         G5PjatCQyk81QoINLxzA1AQKDYJX2W+YscC/JPtx6pqPVp4xDhH+McALAw2oYqbEPMfu
-         AjlCenFXt9y7HRoYmyefnPlHsCdSY+Qp0MAm8cCAa1IUdJWc5fWOiwoQ3En7x6hA1ITi
-         DJwEQwMskRgIu8498FDZp/cR6tj65TvCM4rmolrswrOupbGCXVV7lk7pwSc7ShhqtBO1
-         GmI5yJaXKeqb+XHg1a3wRCwOnEh/ItPDA+IVMP+J5cenBKclfjQyzLowQGszkoHgYSED
-         s3IA==;
-        darn=lists.openembedded.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781723670; x=1782328470; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0O1QLZv2xxbAuzPylaVfHnNjWEnkut93NeBUkoZ1oz4=;
-        b=m0zfvcmuxY3Ot3IIouXjvFSQZldrjseVczPlvT10GT6ZmshrQbkV1OgB1ZwIT2a0KU
-         xPd6ZTBSTuB3HzuKehyM23RMfiQn/EsmTf9Cy5IwtVdmcLswE/tw78+4ZGoRIL32jKeW
-         ZpAx9yb4Pco9bnOwcPknVmBHvgXF3mqs6kpiwlSw72bsxnb/Q2nVcyy7orgMiHTr3Mwe
-         VKhyKtd5FxfPqikz6UXSIMqUOVqI0PYntF1iPfca5vPHwdLcnb98cNXn3/dxdwj4yKDu
-         wIjhxU4w7U/vZOsi8O8iUV71ICzyC1aNMf3yzkBGdWzdBMfMi+qil640Dvn07K645ov8
-         /9Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781723670; x=1782328470;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0O1QLZv2xxbAuzPylaVfHnNjWEnkut93NeBUkoZ1oz4=;
-        b=ggPQlquuKTLLsfbSe8x/sX9rkRXIuZnMnJGkIdeFLwDu3EM0wKxIO26lwlF0XdNeWO
-         jGEEd6pI/sboFM6RXHO/HnKwvXLB1z4MeLB8vx0w6w4PXoUyumZ7763x6JQ27wWAWnlj
-         DHGvuu08TktQlFKJuNEYD8HKAVqxUvRKooNwfJ4JDQNpJ6S+urifHPBFJyrCFtoPV2Yq
-         ca2D2oxe1uUSlT0SKw6mpIZJxhFRrjJcCqEu4mHsQHbUOSwV2ZBiduqFOTRdhSVAYtDN
-         CDRVT0Sk6mCUpnnQqCSHOJBjBUJTUY+n2tDNSIavtrT6Cr7UjmnCs+J8B1PSuzLW5vrY
-         u/oQ==
-X-Gm-Message-State: AOJu0YxX7fEOXGx2ElNk4M5dBSFv7dvafjqzB5Y1INMrit+I7J9EOoNV
-	aOhYsNaHxmg5iDGr7s6qPkkt/mjNrAnTAwyXowtJkAX9SGYSD4Lv41RUvHZHQC2RrXlPdqFD+UO
-	OuqSS9VFC6YKBvURjrI9tg4yYWyo3iHsorIAP
-X-Gm-Gg: AfdE7cldDmynM0cPudKmBpd+HVwLxptfxX/A8fzYWz3gp6d73+9yeNVBuRgWNaQswo/
-	rFZR9SnP/CelDKe2ebq0TCNgYDJFPU0LDSATr4hov4o3OCjwoufRLsiornYjkwtBuzezc4OTQUs
-	gRTjquOrJb9hO9HLzxIMQW4T2Owwwd56d2poS/ul6fuabB2f90w3AZie6V8pow4jI9N2VCuVmKB
-	EHpF/AU/uUn4Ph/wrwdGHm/MFaEViNMA8TocYNbjC/MTjynXQA6+1yD2aCbXgkZ0tPzukMrTlMv
-	3HUTKG4BoISqeLYkjtP20BwH8MOo
-X-Received: by 2002:a05:690e:1686:b0:662:c78e:3943 with SMTP id
- 956f58d0204a3-662e3e2b50bmr795415d50.38.1781723669923; Wed, 17 Jun 2026
- 12:14:29 -0700 (PDT)
+ dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=Pos/gxwB;
+ spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.166.238, mailfrom: prvs=06294e593f=david.reyna@windriver.com)
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65I2jl3k3549282
+	for <bitbake-devel@lists.openembedded.org>; Wed, 17 Jun 2026 20:23:03 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=PPS06212021; bh=UdYyw1I3ZYZ1PhJkt2oo
+	6LMVqnqrEaZGu8N3RRD0D+c=; b=Pos/gxwBlw3Aozl8T/2+GvkAolb9RuvOpHhp
+	uaUZv4iQmBe83iSyf/4p2e/hn4AhM1SNHtu8xw8i4wHrAGGueeGhVZQ2AZ37A5PK
+	dWp0OqJGYrFdc0h7FRE7XEei1zCQCN3SMT0z7z4GzZvuHzlbGYHAhlRSIN2OLNYt
+	0x/wFr4wREozQOwl+xCQeojnbcXwruyNC+LAiAzrXi/OVXy1N2jha3uKdciiUmq2
+	rXmEvvVtJOaumuB4ab9TRSPbvWxJqDT51RKivtDaQqFnQbKpLhYATIdDhCtJoTo4
+	ETw79ppBpLdNr6P8cfXUIMmTZAI8IBcTe11pcFup2tWDiOEScQ==
+Received: from dm1pr04cu001.outbound.protection.outlook.com (mail-centralusazon11010018.outbound.protection.outlook.com [52.101.61.18])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4eueft23a4-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Wed, 17 Jun 2026 20:23:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vxrkSVl/fZREuLpBH0DGBEAvzTWXnxycg97s+SrHq8Puvh0Xa859Uocgu2JG6Q75G6U0DToCfEbyFJgGbOOVuILIILJ+hZDNCDyn1fj/ps4KCAcRBxDDqKPiCu3aLpu6l+y/Ws8hKZqgvTYoP3KCLgY0qXetjKPedNGjqXaLlHGYy5IDz+iockj5UjvZCMPm29kdXTo8MsnMFtqwEHxNkyzdBzIY/DCJAhwXvkySZdYUZlHloCh1Ou4uVPYC5vDGTzUIxHI9rkEXS54hMzUVMgXPbsjJWYqz1S6OpjfwNCTWru+LCM5Rs4tpNuBzrbCx/y6mg5XqwrefE4MEibbClA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UdYyw1I3ZYZ1PhJkt2oo6LMVqnqrEaZGu8N3RRD0D+c=;
+ b=gGGgg4U5GQ+p5u9bVqCGC+NNM+BZX4gSNNRTBufDryJ3r8NLUmRRiDBmgiIktyIWqPNC8Wfrv5o/pC8XwfPYern6axT+8h8FtOnoqUhM4715timZ0IKgz5Dpv1pQ4RelvNLHweAh/WvnWI2/mHlvRnpE6QUuXSFgN7Kt9teHw6XZJDPVi/cA7UoEln0Lf0cnzemY553nme66MC1y0brpFVoHZUZwitauVO2Kr9AXF1OczvN5caSZyW4JT+MMwqdQdSB7N/u8dzyuOvwgSB05vuxptOZRm26Lsyvr9ikKnIV5wtq261my0JZ5kvcmvzKADsliW8UKuSVg7ChmInXz+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from IA1PR11MB7677.namprd11.prod.outlook.com (2603:10b6:208:3fd::5)
+ by DS0PR11MB8052.namprd11.prod.outlook.com (2603:10b6:8:122::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.16; Thu, 18 Jun
+ 2026 03:22:55 +0000
+Received: from IA1PR11MB7677.namprd11.prod.outlook.com
+ ([fe80::d8e5:e930:6a48:871e]) by IA1PR11MB7677.namprd11.prod.outlook.com
+ ([fe80::d8e5:e930:6a48:871e%6]) with mapi id 15.21.0139.009; Thu, 18 Jun 2026
+ 03:22:54 +0000
+From: "Reyna, David" <david.reyna@windriver.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: [bitbake-devel] [PATCH] toaster: confirm bitbake versions
+Thread-Topic: [bitbake-devel] [PATCH] toaster: confirm bitbake versions
+Thread-Index: Adz+0YD1AHEtQiC0QiuxdbihN5+4MQ==
+Date: Thu, 18 Jun 2026 03:22:54 +0000
+Message-ID: 
+ <IA1PR11MB7677339C22226DD69F513388EAE32@IA1PR11MB7677.namprd11.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: 
+ MSIP_Label_3ea094ce-8c76-406f-84c8-0af1663f74b7_ActionId=e7aa1850-3d4c-44bb-bfab-ab57cff81682;MSIP_Label_3ea094ce-8c76-406f-84c8-0af1663f74b7_ContentBits=0;MSIP_Label_3ea094ce-8c76-406f-84c8-0af1663f74b7_Enabled=true;MSIP_Label_3ea094ce-8c76-406f-84c8-0af1663f74b7_Method=Standard;MSIP_Label_3ea094ce-8c76-406f-84c8-0af1663f74b7_Name=INTERNAL;MSIP_Label_3ea094ce-8c76-406f-84c8-0af1663f74b7_SetDate=2026-06-18T03:20:50Z;MSIP_Label_3ea094ce-8c76-406f-84c8-0af1663f74b7_SiteId=8ddb2873-a1ad-4a18-ae4e-4644631433be;MSIP_Label_3ea094ce-8c76-406f-84c8-0af1663f74b7_Tag=10,
+ 3, 0, 1;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA1PR11MB7677:EE_|DS0PR11MB8052:EE_
+x-ms-office365-filtering-correlation-id: 36006398-c71e-4b11-6e25-08decce8e2cf
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: 
+ BCL:0;ARA:13230040|376014|1800799024|366016|23010399003|10070799003|38070700021|3023799007|18002099003|56012099006|11063799006|6133799003;
+x-microsoft-antispam-message-info: 
+ 164FuqsHSuSZ06zA5T2YHZtUotHlRe3X4mhIA73pYbLSRr9Xb0apchEYV/N5m1OXgLftFtKdg96oidm+ISW6vPtUUf49fQB7IUjmy/RwbdTSvyvF+y69GWP5l5TSzn0DDQlwSmLqqZj5h/s+jSZYd+oM/+jGJ3O79Ha1ohiuyTgNk7o1PsRWdEka/jjgG2c+/o1H4Xm70FaAgcsxyF+R5MiYDnIo/zB0RuOZVoEXUi4BYhfvg0zQztZtqbbioYm+V8PS428oqiQIATUvjGOeqVws2ObVADcUlprIkSVwsRO7u1rj9IZghgX7eyJLf8cmkL6MZ8A/FxhKHj/ZTjIT/EnvJdSSChkcofBjqwFCzvUBPSdsDEGYLtyKIeOdYifz5inC2VNlP9vvYu4TqdlbB4rdu/YPEQysROq4JSvGB2yj0L902ar6O2EMgCG1/hoASofEGc69NIv8gTftLgnadVxurGfcFXJ0LUg9DVvt3veHmB50b64977qj5VLuU26KFsOsaWN6BR4SSA5hlNOCvTFhTrqYycpUpAIZC/sJXQSkp7GHpPVhjAXMcvR1ZD49gQueETIdyT6dQKd5y8o+ixDE0ZITVBY4svS7MNMkZNW3CJjcxwU3/Z2eSVmq0lbpjYgFdsS8tp9SPU1VIQQPcYsnXWzYi9oz0xrRSs7X/4KQUvXB4Paw89glSb4XW+eTCFgeR8sguLGYDPxezgTffcJDn8eHhq/51iV41zyT3OqNBL8MIFkf5k24z5ZSIXgf
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7677.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(23010399003)(10070799003)(38070700021)(3023799007)(18002099003)(56012099006)(11063799006)(6133799003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 2
+x-ms-exchange-antispam-messagedata-0: 
+ =?us-ascii?Q?sfs4+q+K5+Xds0o8qXpva1RH0mZhoK5cK1rMv3Q6vgY4sVsOw8fMjbF+p4IK?=
+ =?us-ascii?Q?e2nlT4iy0U281HbIMNO/gXqhHdBO+dMefDJLOKWb7miXBNOL5mJWxZXdN++t?=
+ =?us-ascii?Q?lR8LmgNZOOMCEvC/uCislwrYk7YjNoeSu4Fm9lHijqG/uxTqC4LvmP21GMs5?=
+ =?us-ascii?Q?Cf1ryc+9hpSmniqkDNHBGjK5xb2XSZA5X8QVPdmTfI2YIdsT7A+tjDz0BqPL?=
+ =?us-ascii?Q?1IxCg2kMmvqYMZ1jdLqAv8UCxlNtwjn5CmtZv6e+HF3Ke1zeRLpSruvP5hVb?=
+ =?us-ascii?Q?9x5u8JcmeVaX+aHjOhvfcrJCHt529ThW2SosDUXxTWv3EYeVquA6A5aF5EO9?=
+ =?us-ascii?Q?sel/s4I1CFm/UqeDPlRwqN13G1J6tSLZWLjakmKlCgtmSgJGPDWuTEIeiERZ?=
+ =?us-ascii?Q?3znYgsciVF5+SITr5NpvtxCwWqCzr5293OMjmbuR7I7nJ/Kyk5gX9zkDcSu+?=
+ =?us-ascii?Q?KpiSAVgTsw0bmdpH2Y2ZLNRjH9gEhLs/Pq8CcnxK0GisRmRIHsaXPaPU4WiH?=
+ =?us-ascii?Q?qHZulroyvgpo22hJyVTopeovXQYbV58uI5liXQj+6CMYl+SNMtuYuhxEeVRh?=
+ =?us-ascii?Q?v9F4QPruxyfmznnEMKnsmyhKLgfdvwt0ggXK1IhcXmmzlgVNre38Um0ab5a/?=
+ =?us-ascii?Q?kRL237xyco/3JF/0C9o2cloJkRge1ZWP6Xa7Zxfu2MdyxeaRqZ+0cFynkBxG?=
+ =?us-ascii?Q?YwgkqwRfITswRU6aOk8l1GZET2TsPMHxMWLtiJil4owTgwDAEf473kmh6QzV?=
+ =?us-ascii?Q?NjxhzlJWJsLF8muGvqA13UkwQBPEy2jeK/7cOKFZo0QqkkFPJW5/rzZ+ngmy?=
+ =?us-ascii?Q?CJtzqx71oxF8/QCNX7kJwUQem02lvBWnRKbn3/Rg5L6ejbEU0XoT8C0FTzmo?=
+ =?us-ascii?Q?m23mcGLsQrgnMnlnWIBIsF7hU1fP+VkRDJeB+nUt+B6ctiFLCqtkLfthrQR/?=
+ =?us-ascii?Q?9wFf9apxBuBVhGmAVrvBrYfIhf0qWQzqQnBNLq/1h9b5//+diHmA7ZtRYpD+?=
+ =?us-ascii?Q?CSPysXVLDm+RQBIjtyQHrYf0pHh54GueFze/KRw/ZWhdkcOYBwq+W4V7OR6P?=
+ =?us-ascii?Q?Bz/t7EoKPvPlxNdSrRac3cXMx0FVR+phbi4IyA2PWG/Vnt377fkVbjrLICSB?=
+ =?us-ascii?Q?LjIXEkhSlkhH8hPzjtH217rR3V3eCPW1GsidZ/3LZWJxTfEs/RK+78huV7WO?=
+ =?us-ascii?Q?neDk2o6UJPubfhm9dzjXTAa/FGcamsrKAPBvmKso4kWfK+ai7v2eVzoJ/n9w?=
+ =?us-ascii?Q?qraHjdkuq22RRkbsfTWaPRy3mwQBKyaRNHTczrQkwyWbcfntRbDGOXyqOc4K?=
+ =?us-ascii?Q?BWL8CLhcyZYUIdj/GFdymlvTwnSsFepWsqXU4UY7NlGQZB3l43EMz+EZ77Nu?=
+ =?us-ascii?Q?kJof0Op3hv99V4b8vb3PKrNmwHPMdjlAkqZkALCQWyMcj+wWNVCyzcywz7qd?=
+ =?us-ascii?Q?peIjmTTogVG5foDJA+176Kb2euEJFrOvVOvXqb3R3+zoOnmqK+++3+SYSMnV?=
+ =?us-ascii?Q?GkbiRcA16g5g3rjFmmufJD+3q/ra/QKEKCEilGr26H+NW9BT6PbTKiqyClga?=
+ =?us-ascii?Q?E/yEuQoLT3yDDRl79xnNQYGUt4pw11YAu3vuMHfAvzgLqh5YLCP5xNDDrYNo?=
+ =?us-ascii?Q?CdTA6vIejq/8w6GTJx+X93FU+ealTZlrPGB8dnePmNKJ6dsat8vkNIY09g0u?=
+ =?us-ascii?Q?JDRefQLhYBn9rqxKzgOzIgsF7acgKthnEAC070DEO2xXC8dZRRyf+7jptrQZ?=
+ =?us-ascii?Q?lplXWky0vfxO9nxmzFMzjo68TJ7Llck/IvXGqcXseMUxEJBMb8Crk8/jEasl?=
+x-ms-exchange-antispam-messagedata-1: Ojjmy/72FKW8uw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20260331145319.3125456-1-rob.woolley@windriver.com>
- <20260331145319.3125456-6-rob.woolley@windriver.com> <5A75C01A-3B75-4531-AEEE-63A308978CF7@arm.com>
-In-Reply-To: <5A75C01A-3B75-4531-AEEE-63A308978CF7@arm.com>
-From: Rob Woolley <rob.woolleywr@gmail.com>
-Date: Wed, 17 Jun 2026 15:14:18 -0400
-X-Gm-Features: AVVi8Cc7wNxOwfvQD75wJ5fT_d3q0b-mKDmm73WbY5xGdQqYaohhZvSYYnmHu_g
-Message-ID: <CAGAhMBzX7unc5kcm4wixTJaQNeUF5cESxc2FWu2YC3Z+NUftaw@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH 5/6] lib: Vendorize bundled third-party
- libraries under bb._vendor
-To: ross.burton@arm.com
-Cc: "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="0000000000006f09f7065477de32"
+X-Exchange-RoutingPolicyChecked: 
+	n/K8gG/UautehJlvVL6e26M87w6mrYffa4oC60aUyjtUiHumSszW/TZwKsFT5AOFHnMSAeiP4Q1ki5IwJG9yj79/tLQIOtYpVWCZFxMFMzysLcUUwZnSP8KrsqK4w9/NcMtJnzklawNS8RcDUzxVcuxakuaKoXC8cR/NRnJRVXlvT0fZqUMUHGwLujN0XzydkKAxbEtYjnY8Iv0gv1pA0+pgA2b6oXB2Y4pfzBhPeUOHtWS3B30rn8YKc7gjX6vb8t5d2ffntvJP5GcgRcLBKvHsjLC8UrNGluxJJIPuEqSSD8UEw4wTXa8Fa8yxLUoC71EquIBSG6tzShKNqm5VPg==
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7677.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36006398-c71e-4b11-6e25-08decce8e2cf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2026 03:22:54.2108
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nBfNdUmVHSziCL3kPVXUe+zSS2COzCBlp5TjYOs1vyWuFNoUedCOr1qNpoemQgihS3Zi6SyOtBEeVndg4XMQfJC7CbOfb835a3ACcQmCr9A=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8052
+X-Proofpoint-ORIG-GUID: fjlaErxqumCRguBH_2C1TrxXPIjmo_pH
+X-Authority-Analysis: v=2.4 cv=B+2JFutM c=1 sm=1 tr=0 ts=6a336497 cx=c_pps
+ a=+TgAdn5i6nn1e/5/V9fTSg==:117 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=bi6dqmuHe4P4UrxVR6um:22
+ a=iKiJcTA2PjBS6x5JeXcw:22 a=t7CeM3EgAAAA:8 a=qnkBIS5oBtQzA4cjTToA:9
+ a=CjuIK1q_8ugA:10 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: fjlaErxqumCRguBH_2C1TrxXPIjmo_pH
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE4MDAyNyBTYWx0ZWRfX3BXcN5hyEgf3
+ lEe6syN0uwExfdRb7c81fs+XlaK8RqCg1YqYPsi3tZ73Ya4gBE78MOi2hP9vd4dFkpgRTYL+jKP
+ e3MrKPgBgrDU07MBpCmbfczZE/NcDPmb+e2Dh6AgHZxkHFnOUO5q
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE4MDAyNyBTYWx0ZWRfX47/dlWHg/KUh
+ pRWHcQCJFQxgcc9CuzFVIxcyeyDoArnlD3mhGN1Mc+Ytb1M837oSoDe4purPB74V6BHHOj/on/0
+ 1hmyJp33OxqINg8DHEtdcKyPVPPOeE4X2vrFqyjO6JQBiadRsAxbyT0nuUeYElK1fEl2mb+JG3Z
+ 1IqdHh5yaXhFIodH5MCx4NvSD9NDGsUOz258kkYdYhTBSHEGugbZ3DO53uqQ6HoBFmegg+N2hvB
+ qjJeUdlzrmo8QJpgzp+kJiS2m3S7BgdohkkuaG4O+c3HQ5kFPv+4GH6K4fumHa7mch2q+EDu6Xz
+ legzbR9m0T0jpRJQZKc4F2VF7HAO6fytEYFhmh/re8aqdhe/kT+L9xMDC/N7OEBdKwHebn3FmyK
+ haF7btL3fwp1Aw5+/B25KTONGXPlUzQtl2bqGm0UWj4mBbhsSUKVXZeRu9Wwecwo4LsArEgQx/n
+ fVDUG1UrigHsI8l839g==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-17_02,2026-06-17_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 spamscore=0 suspectscore=0 clxscore=1015
+ priorityscore=1501 bulkscore=0 impostorscore=0 phishscore=0
+ lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2606180027
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 17 Jun 2026 19:14:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19730
+ <bitbake-devel@lists.openembedded.org>; Thu, 18 Jun 2026 03:23:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19731
 
---0000000000006f09f7065477de32
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From 7c5ec0b95f9dba932f74983f34d245646a371b7f Mon Sep 17 00:00:00 2001
+From: David Reyna <David.Reyna@windriver.com>
+Date: Wed, 17 Jun 2026 20:13:11 -0700
+Subject: [PATCH] toaster: confirm bitbake version in 'gen_fixtures.py'
 
-Hi Ross,
+Also test that the version of bitbake in the release table in
+'gen_fixtures.py' matches the registered version in the YP
+releases URL.
 
-I followed your advice and added support for vendoring:
-https://github.com/robwoolley/bitbake/commits/vendoring/  Is this what you
-had in mind?
+Example output with induced error:
+  $ ./check_fixtures.py
+  Note: Active releases that are not yet in the Layer Index: ['blacksail']
+  ERROR: Bitbake version mismatch for 'wrynose': 2.18 versus 2.16
+  $
 
-I reviewed the patches for the vendored modules:
+[YOCTO #16280]
 
-*beautifulsoup4*
+Signed-off-by: David Reyna <David.Reyna@windriver.com>
+---
+ lib/toaster/orm/fixtures/check_fixtures.py | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-   - most patches seemed to be for Python 3 support
-   - I brought forward 2 patches into vendor/patches:
-      - lib/bs4: Avoid soupsieve warning
-      - lib: Remove double imports
+diff --git a/lib/toaster/orm/fixtures/check_fixtures.py b/lib/toaster/orm/f=
+ixtures/check_fixtures.py
+index 386c2da40..b33c093da 100755
+--- a/lib/toaster/orm/fixtures/check_fixtures.py
++++ b/lib/toaster/orm/fixtures/check_fixtures.py
+@@ -31,6 +31,7 @@ index_branches =3D [
+ # Grab the recent release branches and add master, so we can ignore old br=
+anches
+ releases =3D fetch_json(RELEASE_URL)
+ active_releases =3D []
++active_releases_bitbake =3D {}
+ active_but_not_index =3D []
+ for e in releases:
+     if e["series"] !=3D "current":
+@@ -40,6 +41,7 @@ for e in releases:
+         active_but_not_index.append(release)
+     else:
+         active_releases.append(release)
++    active_releases_bitbake[release] =3D e["bitbake_version"]
+ active_releases.append("master")
+ active_releases.append("head")
+ active_releases.sort()
+@@ -48,14 +50,27 @@ if active_but_not_index:
+     print(f"Note: Active releases that are not yet in the Layer Index: {ac=
+tive_but_not_index}" )
+=20
+ # Get the list of releases instantiated in the Toaster fixtures
+-fixtures_releases =3D [x[0].lower() for x in fixtures.current_releases]
++fixtures_releases =3D []
++fixtures_releases_bitbake =3D {}
++for fixture in fixtures.current_releases:
++    release =3D fixture[0].lower()
++    fixtures_releases.append(release)
++    fixtures_releases_bitbake[release] =3D fixture[6]
+ fixtures_releases.sort()
+=20
+ # Report the resulting status
++ok =3D True
++for release in active_releases:
++    if release in ("master","head"):
++        continue
++    if active_releases_bitbake[release] !=3D fixtures_releases_bitbake[rel=
+ease]:
++        print(f"ERROR: Bitbake version mismatch for '{release}': {active_r=
+eleases_bitbake[release]} versus {fixtures_releases_bitbake[release]}")
++        ok =3D False
+ if set(active_releases) !=3D set(fixtures_releases):
+     print(f"WARNING: Active releases don't match toaster configured releas=
+es, the difference is: {set(active_releases).difference(set(fixtures_releas=
+es))}")
+     print(f"Active releases: {sorted(active_releases)}")
+     print(f"Toaster configured releases: {sorted(fixtures_releases)}")
+-else:
++    ok =3D False
++if ok:
+     print("Success, configuration matches")
+=20
+--=20
+2.43.0
 
-*ply*
-
-   - patches were all removed
-   - some had been merged upgrade
-   - patches related to FIPS issues in the signature function were no
-   longer necessary due to refactoring upstream
-   - ply is no longer maintained
-
-*simplediff*
-
-   - No changes were made, the version remains the same
-
-*progressbar*
-
-   - all 6 patches were refreshed
-
-
-One drawback is that I had to add pyproject.toml for "vendoring sync ." to
-work.  I wonder if this could cause confusion for people that expect it to
-be a full Python project configuration file and try to use "python3 -m
-build".
-
-We may want to consider adding a complete pyproject.toml at the top-level.
-
-Here are my testing instructions for anyone who wishes to follow along:
-```
-git clone -b vendoring https://github.com/robwoolley/bitbake
-bitbake-vendoring
-cd bitbake-vendoring
-bin/bitbake-setup init poky-master
-# Accept the options
-# Source the build env:    .
-/ala-lpggp31/rwoolley/bitbake-vendoring/bitbake-builds/poky-master/build/in=
-it-build-env
-cd ../layers/bitbake
-git remote add robwoolley https://github.com/robwoolley/bitbake
-git remote update robwoolley
-git checkout vendoring
-cd $BUILDDIR
-bitbake core-image-minimal
-```
-
-Regards,
-Rob
-
-On Thu, Apr 30, 2026 at 6:10=E2=80=AFAM Ross Burton via lists.openembedded.=
-org
-<ross.burton=3Darm.com@lists.openembedded.org> wrote:
-
-> On 31 Mar 2026, at 15:53, Rob Woolley via lists.openembedded.org
-> <rob.woolley=3Dwindriver.com@lists.openembedded.org> wrote:
-> >
-> > Move ply, progressbar, simplediff, and bs4 from lib/ into
-> > lib/bb/_vendor/ to avoid conflicts with system-installed versions
-> > and to support proper packaging. These libraries contain local
-> > modifications from their upstream versions.
->
-> I=E2=80=99d like to see the vendoring done with a tool that lets us updat=
-e the
-> bundled libraries easily in the future, to be honest.
->
-> When I wrote picobuild (now redundant as pypa/build can bootstrap itself)
-> I used the same tool that pip uses to vendor its dependencies:
-> https://github.com/pradyunsg/vendoring.  So
-> https://gitlab.com/rossburton/picobuild is a minimal example of using
-> vendoring: a few lines of configuration in pyproject.toml and a separate
-> requirements file.
->
-> Obviously if we sync from upstream we=E2=80=99ll drop our local changes, =
-so the
-> question then is why do we have forks?  Note that vendoring can apply
-> patches when it updates, so if there=E2=80=99s a simple but not-upstreama=
-ble change
-> we can carry the patch in-tree.
->
-> Ross
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#19419):
-> https://lists.openembedded.org/g/bitbake-devel/message/19419
-> Mute This Topic: https://lists.openembedded.org/mt/118597577/556952
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> rob.woolleywr@gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
->
-
---0000000000006f09f7065477de32
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hi Ross,<div><br></div><div>I followed your advice and add=
-ed support for vendoring:=C2=A0<a href=3D"https://github.com/robwoolley/bit=
-bake/commits/vendoring/">https://github.com/robwoolley/bitbake/commits/vend=
-oring/</a>=C2=A0 Is this what you had in mind?</div><div><br></div><div>I r=
-eviewed=C2=A0the patches for the vendored modules:</div><div><br></div><div=
-><span style=3D"background-color:transparent"><b>beautifulsoup4</b></span><=
-/div><div><ul><li>most patches seemed to be for Python 3 support</li><li>I =
-brought forward 2 patches into vendor/patches:</li><ul><li>lib/bs4:=C2=A0Av=
-oid soupsieve warning</li><li>lib: Remove double imports</li></ul></ul></di=
-v><div><b>ply</b></div><div><ul><li>patches were all removed</li><li>some h=
-ad been merged upgrade</li><li>patches related to FIPS issues in the signat=
-ure function were no longer necessary due to refactoring upstream</li><li>p=
-ly is no longer maintained</li></ul><div><b>simplediff</b></div></div><div>=
-<ul><li>No changes were made, the version remains the same</li></ul><div><b=
->progressbar</b></div><div><ul><li>all 6 patches were refreshed</li></ul></=
-div><div><br>One drawback is that I had to add pyproject.toml for &quot;ven=
-doring sync .&quot; to work.=C2=A0 I wonder if this could cause=C2=A0confus=
-ion for people that expect it to be a full Python project configuration fil=
-e and try to use &quot;python3 -m build&quot;.<br><br>We may want to consid=
-er adding a complete pyproject.toml at the top-level.<br><br>Here are my te=
-sting instructions for anyone who wishes to follow along:</div><div>```</di=
-v><div>git clone -b vendoring <a href=3D"https://github.com/robwoolley/bitb=
-ake">https://github.com/robwoolley/bitbake</a> bitbake-vendoring<br>cd bitb=
-ake-vendoring<br>bin/bitbake-setup init poky-master<br># Accept the options=
-<br># Source the build env:=C2=A0 =C2=A0 . /ala-lpggp31/rwoolley/bitbake-ve=
-ndoring/bitbake-builds/poky-master/build/init-build-env<br>cd ../layers/bit=
-bake<br>git remote add robwoolley <a href=3D"https://github.com/robwoolley/=
-bitbake">https://github.com/robwoolley/bitbake</a><br>git remote update rob=
-woolley<br>git checkout vendoring<br>cd $BUILDDIR<br>bitbake core-image-min=
-imal<br>```</div><div><br>Regards,</div></div><div>Rob</div></div><br><div =
-class=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" class=3D"gmail=
-_attr">On Thu, Apr 30, 2026 at 6:10=E2=80=AFAM Ross Burton via <a href=3D"h=
-ttp://lists.openembedded.org">lists.openembedded.org</a> &lt;ross.burton=3D=
-<a href=3D"mailto:arm.com@lists.openembedded.org">arm.com@lists.openembedde=
-d.org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"ma=
-rgin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:=
-1ex">On 31 Mar 2026, at 15:53, Rob Woolley via <a href=3D"http://lists.open=
-embedded.org" rel=3D"noreferrer" target=3D"_blank">lists.openembedded.org</=
-a> &lt;rob.woolley=3D<a href=3D"mailto:windriver.com@lists.openembedded.org=
-" target=3D"_blank">windriver.com@lists.openembedded.org</a>&gt; wrote:<br>
-&gt; <br>
-&gt; Move ply, progressbar, simplediff, and bs4 from lib/ into<br>
-&gt; lib/bb/_vendor/ to avoid conflicts with system-installed versions<br>
-&gt; and to support proper packaging. These libraries contain local<br>
-&gt; modifications from their upstream versions.<br>
-<br>
-I=E2=80=99d like to see the vendoring done with a tool that lets us update =
-the bundled libraries easily in the future, to be honest.<br>
-<br>
-When I wrote picobuild (now redundant as pypa/build can bootstrap itself) I=
- used the same tool that pip uses to vendor its dependencies: <a href=3D"ht=
-tps://github.com/pradyunsg/vendoring" rel=3D"noreferrer" target=3D"_blank">=
-https://github.com/pradyunsg/vendoring</a>.=C2=A0 So <a href=3D"https://git=
-lab.com/rossburton/picobuild" rel=3D"noreferrer" target=3D"_blank">https://=
-gitlab.com/rossburton/picobuild</a> is a minimal example of using vendoring=
-: a few lines of configuration in pyproject.toml and a separate requirement=
-s file.<br>
-<br>
-Obviously if we sync from upstream we=E2=80=99ll drop our local changes, so=
- the question then is why do we have forks?=C2=A0 Note that vendoring can a=
-pply patches when it updates, so if there=E2=80=99s a simple but not-upstre=
-amable change we can carry the patch in-tree.<br>
-<br>
-Ross<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-Links: You receive all messages sent to this group.<br>
-View/Reply Online (#19419): <a href=3D"https://lists.openembedded.org/g/bit=
-bake-devel/message/19419" rel=3D"noreferrer" target=3D"_blank">https://list=
-s.openembedded.org/g/bitbake-devel/message/19419</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/118597577/556=
-952" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
-/118597577/556952</a><br>
-Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
-" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
-Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
-b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:rob.woolleywr@gmail.com" target=3D=
-"_blank">rob.woolleywr@gmail.com</a>]<br>
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
-<br>
-</blockquote></div>
-
---0000000000006f09f7065477de32--
 
