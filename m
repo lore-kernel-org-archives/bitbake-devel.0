@@ -2,64 +2,65 @@ Return-Path: <ernestvanhoecke@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6C1CD98ED
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FF0CD98F2
 	for <webhook@archiver.kernel.org>; Thu, 18 Jun 2026 18:04:30 +0000 (UTC)
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.25846.1781805863691147893
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.25621.1781805864510996231
  for <bitbake-devel@lists.openembedded.org>;
  Thu, 18 Jun 2026 11:04:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=Eh+hI0k5;
- spf=pass (domain: gmail.com, ip: 209.85.128.50, mailfrom: ernestvanhoecke@gmail.com)
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-490b7866869so11660705e9.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 18 Jun 2026 11:04:23 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=sRmQ99KH;
+ spf=pass (domain: gmail.com, ip: 209.85.128.51, mailfrom: ernestvanhoecke@gmail.com)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-490cdae130cso6887025e9.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 18 Jun 2026 11:04:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781805862; x=1782410662; darn=lists.openembedded.org;
+        d=gmail.com; s=20251104; t=1781805863; x=1782410663; darn=lists.openembedded.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=nHndwTHzfB+3eu8K2CCyTayy9Oih0y97irr4BtqaIxA=;
-        b=Eh+hI0k5MLAunM1lF4Lqh7Ngp6/2cP5r0nh+EZZBAXrH07NwFDwfqgDGDcvL6QPKOG
-         UrvB9sZ8GuXnqLML578P2mTu9/xG2yUE8LPo8gAWb5j7/l9A2ME6vuNk5waY2M6gzMdY
-         9XifQ2Imh0jHjkhtC81mlK3Q5ax8htMRO/ueIq9jTCyVeLQz//1sLGWO6enIX9N3PJAn
-         PyM+6A4C624hE1TYDn/f54IkgnZ/mVl2Pi9qxvQx7TSYpPKjxLm+LHrSITYIUSlzzLiV
-         k9aBPPu6Wp6O68f3N1xc/EWisx1PRT8Kw9IhGJwPMs63wF8KiVjCMcBNF12hhXoOPYGD
-         7hXw==
+        bh=YL30OI4WmxSOO0M0zsOxxSU0PfLi+oRqbji9Yx0txQ0=;
+        b=sRmQ99KHkW9Vw8HJozrwJp65l5KzMxnHdZV5f+nkS8BXyOIcRh5NL6uf95O4t9nsuA
+         urka2eZDo6OT+AdUdRz6IaRF3Ef7Y1Zud/QqnopcbyR11b8TxC0IboIGnj8+wJE9wktC
+         RzJpOkGqmjo9f8jtvRsM5skjXQhloWZqWqFuXilBCrh+1trDl1GZ9tErDTjtUBJE6Rf2
+         M6dimG8NgceskQzdQbfgTRKHZ0ndnNPIpIWhQ16pCjhLikgac7ous12lTNaezXCVc+bZ
+         dN53stc928ztXSyRclFCHFiMZLchMywkYjc6dMmPsm/TvZwscDA6PeYz1kijBybxbXHW
+         YsEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781805862; x=1782410662;
+        d=1e100.net; s=20251104; t=1781805863; x=1782410663;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=nHndwTHzfB+3eu8K2CCyTayy9Oih0y97irr4BtqaIxA=;
-        b=ijlAozijai/onNkMsEf+XbCwRd9ocAd1xOqnSbyix5l4w7NGs8RsN6upb077o0zSxB
-         CJzit27iWNDh1QwGebA+Cs6oXWmFz6M1C7IPRh11v0Yj7qPLISRPnGopHvUNvwUSV2s+
-         lSVWMLNcrBs4ZIqvg60e9v5fo04REDuCfdobUu0l9BYdM3y/UYNQhLcmnPIudtmFJOa3
-         b9i2IFTef3u08/F4tlhv7riMHqI6rOe24DKMXzYQV3cv+uWIneg0r9mFfBa2vVQ10BbS
-         P5dtpohHC4OJ67e4p0aKEtSSv1AmDqi/UYGAyPOCBma0kEucluG1fdA9pUFl1kT8IYAK
-         tzKg==
-X-Gm-Message-State: AOJu0YxrFEUNaiEUXhE4IoRtHFHg4LByVAvnFblmlDvA2zv/OGNnsbrX
-	h5SV4uZKGd81UBgEWCe3UWYUH9ZMwETQZJm1wfuRA3uwfVTzD6ASW/LNX/L4vvUq
-X-Gm-Gg: AfdE7ckPYwWGYBQMznxGIseLz1ZC0z9gnhQcEo51GlvjwQd0EYErRSV4Kruemc9whIi
-	UEQnpyugc5OhwZzbDBMjg6BpyQ28bTmx2pnFvPGyrGj40m6Izan67nfLsKe0zQZSoU8qPbfg2JH
-	dJaUiC9OLwA9zRJKLygOA8UQTOV7/C6GNmtntVokMlZIFEHYIx/uj0aU8wcsU+qOjo3iYhpAyh8
-	K2WCUJJkE48sw0jm9NKh3/2C9ZUWC7ufOrKcS2AMpzxWifu7YM1rmwtUv7Xyshg5pcOAPEGVoRf
-	OUyQMYX/MUAXF5xuafFFza+eRum/T8BhtDN4f67jMKgOvFbQaIIhz4hOPhY746oWpNZsELw9Ovz
-	3rminNLfQlSaR1eCA7HgjpeosjWIXGMrucDsKLKeTBRxro3gB6RRxs05V8L814cpHwUz8yQZcFO
-	yacsUiXG1Tg5CSQuNCoW7e1Lrk8aZ0nHV3Zd2C2JbgXGD6KenedqgAbMp//PQjmEf1Gjsz2LBlC
-	gQDS0sIlTk0LZgg
-X-Received: by 2002:a05:600c:528c:b0:490:9588:bdb6 with SMTP id 5b1f17b1804b1-4923f6baae0mr10420025e9.33.1781805861570;
-        Thu, 18 Jun 2026 11:04:21 -0700 (PDT)
+        bh=YL30OI4WmxSOO0M0zsOxxSU0PfLi+oRqbji9Yx0txQ0=;
+        b=HbR3XDLj6SSpKMlKu9DEO5z848OIBI6hAWZQVBUtFxkITO9bUSLGN34UWQuj6kRGse
+         si7mNASwdKcX2jO2n1+Ng555YNY68/87rDfs0KwdXAB13H/rMJ8wq+kzDAZ38p535j25
+         J4aZyyWUuaImH0o0dt/1GR1HIUS64DNGHBcZarvlGcZffha8Jm+hfpAM/zlGcnBBhbdc
+         +RfPkrJUOWziC8Fbxf3qH2bk6ZtMuOB5zjkCtfTs+HNp7D14AsJeiJHHqwaF9vXVtkYD
+         XggFXv3eDrqjWOe+lsWSedmOmzbppmucxaD7HpgChV63vdkfhtJwbfVsi/3LIaKFuVoG
+         sEBg==
+X-Gm-Message-State: AOJu0Yxj8aiawPkAEKBp4qaztWrUMM6RgniIg4wqrGG8zE0klJddZjEG
+	oGOLf6HAK16swKLCeW2E0Qi5dAmkFlMii8UDagR6RiwBAwYESmOMpdegzA5O9llQ
+X-Gm-Gg: AfdE7clDs4iriFkFgR/U1NWqLkEA2FW5AeGrI5fVsCoPbRe1wYyB/NJI2xpOmLdpEjU
+	hGVOvM1DitK1MBAy/GsZKxdbjuTIjlV1Db18AGt8AAEOma/4CuKzWS9gUD5om8lCewzeos7zRAA
+	84KaIGVkcnNBt3PTFD1WWEmafvXSeGfcZZbojkNAHzmVOopbqqi+sNREfqwi5AgWnKvRRGpIuxZ
+	E6/yhWQ/3CHI3zeBuWn+As3ljJhHPxJh58+SntyqksXp6G4uZ4iEnkGEYEwvOy3TVTKezuSX9cD
+	EiSwyDU6xR1S/PMK+zvUeMF6bM+KIr3VNvE9iNh2C5XXpnSXBwyFgcfppHIM7vFpldBxRyWfFVk
+	FvS9xabq2bjQ8G8HCoBlBJytzn3D2Hn15tiEYObboVqDYEWxvpMs6ja/6WolFGokMWD9pYHxAcC
+	IMIMGqIfXYbTixZfmAWVY869IyYtlAB7/AGzyil/EUKqYdRmHFxUYUF3LHZ+cz12G0PuxC6Yib+
+	ZGBCWjKWg/naB4G
+X-Received: by 2002:a05:600c:c4a4:b0:48f:e26a:1744 with SMTP id 5b1f17b1804b1-4923f1503bfmr14453275e9.9.1781805862395;
+        Thu, 18 Jun 2026 11:04:22 -0700 (PDT)
 Received: from ernest.hoecke-nb (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch. [83.173.201.248])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4923fc47b48sm7813665e9.0.2026.06.18.11.04.20
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4923fc47b48sm7813665e9.0.2026.06.18.11.04.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2026 11:04:20 -0700 (PDT)
+        Thu, 18 Jun 2026 11:04:21 -0700 (PDT)
 From: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
-Date: Thu, 18 Jun 2026 20:04:04 +0200
-Subject: [PATCH RFC v2 1/2] bitbake-setup: add source choices
+Date: Thu, 18 Jun 2026 20:04:05 +0200
+Subject: [PATCH RFC v2 2/2] default-registry: consolidate OE and Poky
+ release configs
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260618-bb-setup-source-choices-integrated-tests-v2-1-66b3b438f073@toradex.com>
+Message-Id: <20260618-bb-setup-source-choices-integrated-tests-v2-2-66b3b438f073@toradex.com>
 References: <20260618-bb-setup-source-choices-integrated-tests-v2-0-66b3b438f073@toradex.com>
 In-Reply-To: <20260618-bb-setup-source-choices-integrated-tests-v2-0-66b3b438f073@toradex.com>
 To: bitbake-devel@lists.openembedded.org
@@ -70,199 +71,733 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 18 Jun 2026 18:04:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19743
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19744
 
 From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
 
-Allow configuration files to define source-choices instead of sources.
-A source choice is selected before the BitBake configuration and then
-used as the source set for checkout, status and update operations.
+Replace the release-specific OE nodistro and Poky registry files with
+one configuration file for each project. The new files use
+source-choices to select the master, whinlatter or wrynose source set.
 
-The positional command line grammar becomes source-first for configs
-that use source-choices:
-
-  bitbake-setup init <config> [source-choice] [bitbake-config] [fragments...]
-
-This keeps parsing deterministic when source choice names, BitBake
-configuration names and fragment choice names overlap. The selected
-source choice is stored in config-upstream.json and included in the
-recorded non-interactive command line options so replay remains explicit.
-
-Source choices can carry their own expires field. Expired choices are
-not offered during interactive selection or auto-selection, but an
-explicit expired choice is still accepted with the same warning style as
-expired configurations.
+This keeps the shared setup configuration in one place while preserving
+the different source revisions and expiry metadata for each release.
 
 Signed-off-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
 ---
- bin/bitbake-setup                      | 71 ++++++++++++++++++++++++++++++++--
- setup-schema/bitbake-setup.schema.json | 41 ++++++++++++++++++++
- 2 files changed, 109 insertions(+), 3 deletions(-)
+ .../configurations/oe-nodistro-master.conf.json    |  47 ------
+ .../oe-nodistro-whinlatter.conf.json               |  56 -------
+ .../configurations/oe-nodistro-wrynose.conf.json   |  48 ------
+ .../configurations/oe-nodistro.conf.json           | 117 +++++++++++++++
+ .../configurations/poky-master.conf.json           |  73 ----------
+ .../configurations/poky-whinlatter.conf.json       |  80 ----------
+ .../configurations/poky-wrynose.conf.json          |  74 ----------
+ default-registry/configurations/poky.conf.json     | 161 +++++++++++++++++++++
+ 8 files changed, 278 insertions(+), 378 deletions(-)
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index 664bffee310d..1594d6f00dfb 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -462,8 +462,14 @@ def merge_overrides_into_sources(sources, overrides):
-             layers[k] = v
-     return layers
- 
-+def get_selected_sources(config):
-+    source_choices = config["data"].get("source-choices")
-+    if source_choices is not None:
-+        return source_choices[config["selected-source-choice"]]["sources"]
-+    return config["data"]["sources"]
-+
- def update_build(config, confdir, setupdir, layerdir, d, update_bb_conf="prompt", init_vscode=False, rebase_conflicts_strategy='abort'):
--    layer_config = merge_overrides_into_sources(config["data"]["sources"], config["source-overrides"]["sources"])
-+    layer_config = merge_overrides_into_sources(get_selected_sources(config), config["source-overrides"]["sources"])
-     sources_fixed_revisions = checkout_layers(layer_config, confdir, layerdir, d, rebase_conflicts_strategy=rebase_conflicts_strategy)
-     bitbake_config = config["bitbake-config"]
-     thisdir = os.path.dirname(config["path"]) if config["type"] == 'local' else None
-@@ -594,6 +600,44 @@ def choose_fragments(possibilities, parameters, non_interactive, skip_selection)
-         choices[k] = options_enumerated[option_n][1]["name"]
-     return choices
- 
-+def choose_source_choice(source_choices, source_choice_arg, non_interactive):
-+    if not source_choices:
-+        raise Exception("Configuration template must define at least one source choice.")
-+
-+    source_choice_names = sorted(source_choices.keys())
-+    not_expired_choices = [k for k in source_choice_names if not has_expired(source_choices[k].get("expires", None))]
-+    if source_choice_arg is not None:
-+        if source_choice_arg in source_choices:
-+            return source_choice_arg
-+        raise Exception("Source choice {} not found; replace with one of {}".format(source_choice_arg, source_choice_names))
-+
-+    if len(not_expired_choices) == 1:
-+        only_choice = not_expired_choices[0]
-+        logger.plain("\nSelecting the only available source choice {}".format(only_choice))
-+        return only_choice
-+
-+    if not not_expired_choices:
-+        raise Exception("No unexpired source choices available.")
-+
-+    if non_interactive:
-+        raise Exception("Unable to choose from source choices in non-interactive mode: {}".format(not_expired_choices))
-+
-+    descs = []
-+    for c in not_expired_choices:
-+        d = source_choices[c]["description"]
-+        expiry_date = source_choices[c].get("expires", None)
-+        if expiry_date:
-+            d += f" (supported until {expiry_date})"
-+        descs.append(d)
-+
-+    logger.plain("")
-+    print_configs("Available source choices",
-+                  not_expired_choices,
-+                  descs)
-+    choice_n = int_input([i[0] for i in list(enumerate(not_expired_choices, 1))],
-+                         "\nPlease select one of the above source choices by its number: ") - 1
-+    return not_expired_choices[choice_n]
-+
- def obtain_config(top_dir, registry, args, source_overrides, d):
-     if args.config:
-         config_id = args.config[0]
-@@ -632,9 +676,30 @@ def obtain_config(top_dir, registry, args, source_overrides, d):
-         config_parameters = []
-         upstream_config = {'type':'registry','registry':registry,'name':config_id,'data':json.load(open(get_registry_config(registry_path,config_id)))}
- 
-+    selected_source_choice = None
-+    has_sources = 'sources' in upstream_config['data']
-+    has_source_choices = 'source-choices' in upstream_config['data']
-+    if has_sources == has_source_choices:
-+        raise Exception("Configuration template must define exactly one of 'sources' or 'source-choices'.")
-+    if has_source_choices:
-+        source_choices = upstream_config['data']['source-choices']
-+        source_choice_arg = config_parameters[0] if config_parameters else None
-+        selected_source_choice = choose_source_choice(source_choices, source_choice_arg, args.non_interactive)
-+        if source_choice_arg is not None:
-+            config_parameters = config_parameters[1:]
-+        expiry_date = source_choices[selected_source_choice].get("expires", None)
-+        if has_expired(expiry_date):
-+            logger.warning("The selected source choice {} is no longer supported after {}. Please consider changing to a supported source choice.".format(selected_source_choice, expiry_date))
-+        upstream_config['selected-source-choice'] = selected_source_choice
-+
-     upstream_config['bitbake-config'] = choose_bitbake_config(upstream_config['data']['bitbake-setup']['configurations'], config_parameters, args.non_interactive)
-     upstream_config['bitbake-config']['oe-fragment-choices'] = choose_fragments(upstream_config['bitbake-config'].get('oe-fragments-one-of',{}), config_parameters[1:], args.non_interactive, args.skip_selection)
--    upstream_config['non-interactive-cmdline-options'] = [config_id, upstream_config['bitbake-config']['name']] + sorted(upstream_config['bitbake-config']['oe-fragment-choices'].values())
-+    upstream_config['non-interactive-cmdline-options'] = (
-+        [config_id] +
-+        ([selected_source_choice] if selected_source_choice is not None else []) +
-+        [upstream_config['bitbake-config']['name']] +
-+        sorted(upstream_config['bitbake-config']['oe-fragment-choices'].values())
-+    )
-     upstream_config['source-overrides'] = source_overrides
-     upstream_config['skip-selection'] = args.skip_selection
-     return upstream_config
-@@ -952,7 +1017,7 @@ def build_status(top_dir, settings, args, d, update=False):
-             bb.process.run(["git", "-C", confdir, "restore", "config-upstream.json"])
-         return
- 
--    layer_config = merge_overrides_into_sources(current_upstream_config["data"]["sources"], current_upstream_config["source-overrides"]["sources"])
-+    layer_config = merge_overrides_into_sources(get_selected_sources(current_upstream_config), current_upstream_config["source-overrides"]["sources"])
-     if are_layers_changed(layer_config, layerdir, d):
-         if update:
-             update_build(current_upstream_config, confdir, setupdir, layerdir,
-diff --git a/setup-schema/bitbake-setup.schema.json b/setup-schema/bitbake-setup.schema.json
-index 99f47f73d0a6..bf5065eb496b 100644
---- a/setup-schema/bitbake-setup.schema.json
-+++ b/setup-schema/bitbake-setup.schema.json
-@@ -15,6 +15,35 @@
-         "sources": {
-             "$ref": "layers.schema.json#/properties/sources"
-         },
-+        "source-choices": {
-+            "type": "object",
-+            "description": "Named choices of sources to select from",
-+            "minProperties": 1,
-+            "patternProperties": {
-+                ".+": {
-+                    "type": "object",
-+                    "required": [
-+                        "description",
-+                        "sources"
-+                    ],
-+                    "properties": {
-+                        "description": {
-+                            "type": "string",
-+                            "description": "Human-readable description of the source choice"
+diff --git a/default-registry/configurations/oe-nodistro-master.conf.json b/default-registry/configurations/oe-nodistro-master.conf.json
+deleted file mode 100644
+index 5aa148d4217e..000000000000
+--- a/default-registry/configurations/oe-nodistro-master.conf.json
++++ /dev/null
+@@ -1,47 +0,0 @@
+-{
+-    "description": "OpenEmbedded - 'nodistro' basic configuration",
+-    "sources": {
+-        "bitbake": {
+-            "git-remote": {
+-                "uri": "https://git.openembedded.org/bitbake",
+-                "branch": "master",
+-                "rev": "master"
+-            }
+-        },
+-        "openembedded-core": {
+-            "git-remote": {
+-                "uri": "https://git.openembedded.org/openembedded-core",
+-                "branch": "master",
+-                "rev": "master"
+-            }
+-        },
+-        "yocto-docs": {
+-            "git-remote": {
+-                "uri": "https://git.yoctoproject.org/yocto-docs",
+-                "branch": "master",
+-                "rev": "master"
+-            }
+-        }
+-    },
+-    "bitbake-setup": {
+-        "configurations": [
+-        {
+-            "name": "nodistro",
+-            "description": "OpenEmbedded 'nodistro'",
+-            "setup-dir-name": "oe-nodistro-master",
+-            "bb-layers": ["openembedded-core/meta"],
+-            "oe-fragments-one-of": {
+-                "machine": {
+-                    "description": "Target machines",
+-                    "options" : [
+-                        { "name": "machine/qemux86-64", "description": "x86-64 system on QEMU" },
+-                        { "name": "machine/qemuarm64", "description": "ARMv8 system on QEMU" },
+-                        { "name": "machine/qemuriscv64", "description": "RISC-V system on QEMU" }
+-                    ]
+-                }
+-            }
+-        }
+-        ]
+-    },
+-    "version": "1.0"
+-}
+diff --git a/default-registry/configurations/oe-nodistro-whinlatter.conf.json b/default-registry/configurations/oe-nodistro-whinlatter.conf.json
+deleted file mode 100644
+index 7b183ae1c438..000000000000
+--- a/default-registry/configurations/oe-nodistro-whinlatter.conf.json
++++ /dev/null
+@@ -1,56 +0,0 @@
+-{
+-    "description": "OpenEmbedded - 'nodistro' basic configuration, release 5.3 'whinlatter'",
+-    "expires": "2026-05-31",
+-    "sources": {
+-        "bitbake": {
+-            "git-remote": {
+-                "remotes": {
+-                    "origin": {
+-                        "uri": "https://git.openembedded.org/bitbake"
+-                    }
+-                },
+-                "branch": "2.16",
+-                "rev": "2.16"
+-            }
+-        },
+-        "openembedded-core": {
+-            "git-remote": {
+-                "remotes": {
+-                    "origin": {
+-                        "uri": "https://git.openembedded.org/openembedded-core"
+-                    }
+-                },
+-                "branch": "whinlatter",
+-                "rev": "whinlatter"
+-            }
+-        },
+-        "yocto-docs": {
+-            "git-remote": {
+-                "remotes": {
+-                    "origin": {
+-                        "uri": "https://git.yoctoproject.org/yocto-docs"
+-                    }
+-                },
+-                "branch": "whinlatter",
+-                "rev": "whinlatter"
+-            }
+-        }
+-    },
+-    "bitbake-setup": {
+-        "configurations": [
+-        {
+-            "name": "nodistro",
+-            "description": "OpenEmbedded 'nodistro'",
+-            "setup-dir-name": "oe-nodistro-whinlatter",
+-            "bb-layers": ["openembedded-core/meta"],
+-            "oe-fragments-one-of": {
+-                "machine": {
+-                    "description": "Target machines",
+-                    "options" : ["machine/qemux86-64", "machine/qemuarm64", "machine/qemuriscv64"]
+-                }
+-            }
+-        }
+-        ]
+-    },
+-    "version": "1.0"
+-}
+diff --git a/default-registry/configurations/oe-nodistro-wrynose.conf.json b/default-registry/configurations/oe-nodistro-wrynose.conf.json
+deleted file mode 100644
+index 278ce4dd0296..000000000000
+--- a/default-registry/configurations/oe-nodistro-wrynose.conf.json
++++ /dev/null
+@@ -1,48 +0,0 @@
+-{
+-    "description": "OpenEmbedded - 'nodistro' basic configuration, release 6.0 'wrynose'",
+-    "expires": "2030-05-31",
+-    "sources": {
+-        "bitbake": {
+-            "git-remote": {
+-                "uri": "https://git.openembedded.org/bitbake",
+-                "branch": "2.18",
+-                "rev": "2.18"
+-            }
+-        },
+-        "openembedded-core": {
+-            "git-remote": {
+-                "uri": "https://git.openembedded.org/openembedded-core",
+-                "branch": "wrynose",
+-                "rev": "wrynose"
+-            }
+-        },
+-        "yocto-docs": {
+-            "git-remote": {
+-                "uri": "https://git.yoctoproject.org/yocto-docs",
+-                "branch": "wrynose",
+-                "rev": "wrynose"
+-            }
+-        }
+-    },
+-    "bitbake-setup": {
+-        "configurations": [
+-        {
+-            "name": "nodistro",
+-            "description": "OpenEmbedded 'nodistro'",
+-            "setup-dir-name": "oe-nodistro-wrynose",
+-            "bb-layers": ["openembedded-core/meta"],
+-            "oe-fragments-one-of": {
+-                "machine": {
+-                    "description": "Target machines",
+-                    "options" : [
+-                        { "name": "machine/qemux86-64", "description": "x86-64 system on QEMU" },
+-                        { "name": "machine/qemuarm64", "description": "ARMv8 system on QEMU" },
+-                        { "name": "machine/qemuriscv64", "description": "RISC-V system on QEMU" }
+-                    ]
+-                }
+-            }
+-        }
+-        ]
+-    },
+-    "version": "1.0"
+-}
+diff --git a/default-registry/configurations/oe-nodistro.conf.json b/default-registry/configurations/oe-nodistro.conf.json
+new file mode 100644
+index 000000000000..02554cbf10aa
+--- /dev/null
++++ b/default-registry/configurations/oe-nodistro.conf.json
+@@ -0,0 +1,117 @@
++{
++    "description": "OpenEmbedded - 'nodistro' basic configuration",
++    "source-choices": {
++        "master": {
++            "description": "OpenEmbedded 'nodistro' development branch",
++            "sources": {
++                "bitbake": {
++                    "git-remote": {
++                        "uri": "https://git.openembedded.org/bitbake",
++                        "branch": "master",
++                        "rev": "master"
++                    }
++                },
++                "openembedded-core": {
++                    "git-remote": {
++                        "uri": "https://git.openembedded.org/openembedded-core",
++                        "branch": "master",
++                        "rev": "master"
++                    }
++                },
++                "yocto-docs": {
++                    "git-remote": {
++                        "uri": "https://git.yoctoproject.org/yocto-docs",
++                        "branch": "master",
++                        "rev": "master"
++                    }
++                }
++            }
++        },
++        "whinlatter": {
++            "description": "OpenEmbedded 'nodistro', release 5.3 'whinlatter'",
++            "expires": "2026-05-31",
++            "sources": {
++                "bitbake": {
++                    "git-remote": {
++                        "remotes": {
++                            "origin": {
++                                "uri": "https://git.openembedded.org/bitbake"
++                            }
 +                        },
-+                        "sources": {
-+                            "$ref": "layers.schema.json#/properties/sources"
++                        "branch": "2.16",
++                        "rev": "2.16"
++                    }
++                },
++                "openembedded-core": {
++                    "git-remote": {
++                        "remotes": {
++                            "origin": {
++                                "uri": "https://git.openembedded.org/openembedded-core"
++                            }
 +                        },
-+                        "expires": {
-+                            "type": "string",
-+                            "description": "End of life date for this source choice, in ISO 8601 format (YYYY-MM-DD)"
-+                        }
-+                    },
-+                    "additionalProperties": false
++                        "branch": "whinlatter",
++                        "rev": "whinlatter"
++                    }
++                },
++                "yocto-docs": {
++                    "git-remote": {
++                        "remotes": {
++                            "origin": {
++                                "uri": "https://git.yoctoproject.org/yocto-docs"
++                            }
++                        },
++                        "branch": "whinlatter",
++                        "rev": "whinlatter"
++                    }
++                }
++            }
++        },
++        "wrynose": {
++            "description": "OpenEmbedded 'nodistro', release 6.0 'wrynose'",
++            "expires": "2030-05-31",
++            "sources": {
++                "bitbake": {
++                    "git-remote": {
++                        "uri": "https://git.openembedded.org/bitbake",
++                        "branch": "2.18",
++                        "rev": "2.18"
++                    }
++                },
++                "openembedded-core": {
++                    "git-remote": {
++                        "uri": "https://git.openembedded.org/openembedded-core",
++                        "branch": "wrynose",
++                        "rev": "wrynose"
++                    }
++                },
++                "yocto-docs": {
++                    "git-remote": {
++                        "uri": "https://git.yoctoproject.org/yocto-docs",
++                        "branch": "wrynose",
++                        "rev": "wrynose"
++                    }
++                }
++            }
++        }
++    },
++    "bitbake-setup": {
++        "configurations": [
++        {
++            "name": "nodistro",
++            "description": "OpenEmbedded 'nodistro'",
++            "bb-layers": ["openembedded-core/meta"],
++            "oe-fragments-one-of": {
++                "machine": {
++                    "description": "Target machines",
++                    "options" : [
++                        { "name": "machine/qemux86-64", "description": "x86-64 system on QEMU" },
++                        { "name": "machine/qemuarm64", "description": "ARMv8 system on QEMU" },
++                        { "name": "machine/qemuriscv64", "description": "RISC-V system on QEMU" }
++                    ]
++                }
++            }
++        }
++        ]
++    },
++    "version": "1.0"
++}
+diff --git a/default-registry/configurations/poky-master.conf.json b/default-registry/configurations/poky-master.conf.json
+deleted file mode 100644
+index 58d379648a31..000000000000
+--- a/default-registry/configurations/poky-master.conf.json
++++ /dev/null
+@@ -1,73 +0,0 @@
+-{
+-    "description": "Poky - The Yocto Project testing distribution configurations and hardware test platforms",
+-    "sources": {
+-        "bitbake": {
+-            "git-remote": {
+-                "uri": "https://git.openembedded.org/bitbake",
+-                "branch": "master",
+-                "rev": "master"
+-            }
+-        },
+-        "openembedded-core": {
+-            "git-remote": {
+-                "uri": "https://git.openembedded.org/openembedded-core",
+-                "branch": "master",
+-                "rev": "master"
+-            }
+-        },
+-        "meta-yocto": {
+-            "git-remote": {
+-                "uri": "https://git.yoctoproject.org/meta-yocto",
+-                "branch": "master",
+-                "rev": "master"
+-            }
+-        },
+-        "yocto-docs": {
+-            "git-remote": {
+-                "uri": "https://git.yoctoproject.org/yocto-docs",
+-                "branch": "master",
+-                "rev": "master"
+-            }
+-        }
+-    },
+-    "bitbake-setup": {
+-        "configurations": [
+-        {
+-            "bb-layers": ["openembedded-core/meta","meta-yocto/meta-yocto-bsp","meta-yocto/meta-poky"],
+-            "setup-dir-name": "$distro-master",
+-            "oe-fragments-one-of": {
+-                "machine": {
+-                    "description": "Target machines",
+-                    "options" : [
+-                        { "name": "machine/qemux86-64", "description": "x86-64 system on QEMU" },
+-                        { "name": "machine/qemuarm64", "description": "ARMv8 system on QEMU" },
+-                        { "name": "machine/qemuriscv64", "description": "RISC-V system on QEMU" },
+-                        { "name": "machine/genericarm64", "description": "Arm64 SystemReady IR/ES platforms" },
+-                        { "name": "machine/genericx86-64", "description": "x86_64 (64-bit) PCs and servers" }
+-                    ]
+-                },
+-                "distro": {
+-                    "description": "Target distributions",
+-                    "options" : [
+-                        { "name": "distro/poky", "description": "Yocto Project Reference Distro" },
+-                        { "name": "distro/poky-altcfg", "description": "Poky alternative with systemd as init manager" },
+-                        { "name": "distro/poky-tiny", "description": "Poky alternative optimized for size" }
+-                    ]
+-                }
+-            },
+-            "configurations": [
+-            {
+-                "name": "poky",
+-                "description": "Poky - The Yocto Project testing distribution"
+-            },
+-            {
+-                "name": "poky-with-sstate",
+-                "description": "Poky - The Yocto Project testing distribution with internet sstate acceleration. Use with caution as it requires a completely robust local network with sufficient bandwidth.",
+-                "oe-fragments": ["core/yocto/sstate-mirror-cdn"]
+-            }
+-            ]
+-        }
+-        ]
+-    },
+-    "version": "1.0"
+-}
+diff --git a/default-registry/configurations/poky-whinlatter.conf.json b/default-registry/configurations/poky-whinlatter.conf.json
+deleted file mode 100644
+index 4827ebe11483..000000000000
+--- a/default-registry/configurations/poky-whinlatter.conf.json
++++ /dev/null
+@@ -1,80 +0,0 @@
+-{
+-    "description": "Poky - The Yocto Project testing distribution configurations and hardware test platforms, release 5.3 'whinlatter'",
+-    "expires": "2026-05-31",
+-    "sources": {
+-        "bitbake": {
+-            "git-remote": {
+-                "remotes": {
+-                    "origin": {
+-                        "uri": "https://git.openembedded.org/bitbake"
+-                    }
+-                },
+-                "branch": "2.16",
+-                "rev": "2.16"
+-            }
+-        },
+-        "openembedded-core": {
+-            "git-remote": {
+-                "remotes": {
+-                    "origin": {
+-                        "uri": "https://git.openembedded.org/openembedded-core"
+-                    }
+-                },
+-                "branch": "whinlatter",
+-                "rev": "whinlatter"
+-            }
+-        },
+-        "meta-yocto": {
+-            "git-remote": {
+-                "remotes": {
+-                    "origin": {
+-                        "uri": "https://git.yoctoproject.org/meta-yocto"
+-                    }
+-                },
+-                "branch": "whinlatter",
+-                "rev": "whinlatter"
+-            }
+-        },
+-        "yocto-docs": {
+-            "git-remote": {
+-                "remotes": {
+-                    "origin": {
+-                        "uri": "https://git.yoctoproject.org/yocto-docs"
+-                    }
+-                },
+-                "branch": "whinlatter",
+-                "rev": "whinlatter"
+-            }
+-        }
+-    },
+-    "bitbake-setup": {
+-        "configurations": [
+-        {
+-            "bb-layers": ["openembedded-core/meta","meta-yocto/meta-yocto-bsp","meta-yocto/meta-poky"],
+-            "setup-dir-name": "$distro-whinlatter",
+-            "oe-fragments-one-of": {
+-                "machine": {
+-                    "description": "Target machines",
+-                    "options" : ["machine/qemux86-64", "machine/qemuarm64", "machine/qemuriscv64", "machine/genericarm64", "machine/genericx86-64"]
+-                },
+-                "distro": {
+-                    "description": "Target Distributions",
+-                    "options" : ["distro/poky", "distro/poky-altcfg", "distro/poky-tiny"]
+-                }
+-            },
+-            "configurations": [
+-            {
+-                "name": "poky",
+-                "description": "Poky - The Yocto Project testing distribution"
+-            },
+-            {
+-                "name": "poky-with-sstate",
+-                "description": "Poky - The Yocto Project testing distribution with internet sstate acceleration. Use with caution as it requires a completely robust local network with sufficient bandwidth.",
+-                "oe-fragments": ["core/yocto/sstate-mirror-cdn"]
+-            }
+-            ]
+-        }
+-        ]
+-    },
+-    "version": "1.0"
+-}
+diff --git a/default-registry/configurations/poky-wrynose.conf.json b/default-registry/configurations/poky-wrynose.conf.json
+deleted file mode 100644
+index d27928437735..000000000000
+--- a/default-registry/configurations/poky-wrynose.conf.json
++++ /dev/null
+@@ -1,74 +0,0 @@
+-{
+-    "description": "Poky - The Yocto Project testing distribution configurations and hardware test platforms, release 6.0 'wrynose'",
+-    "expires": "2030-05-31",
+-    "sources": {
+-        "bitbake": {
+-            "git-remote": {
+-                "uri": "https://git.openembedded.org/bitbake",
+-                "branch": "2.18",
+-                "rev": "2.18"
+-            }
+-        },
+-        "openembedded-core": {
+-            "git-remote": {
+-                "uri": "https://git.openembedded.org/openembedded-core",
+-                "branch": "wrynose",
+-                "rev": "wrynose"
+-            }
+-        },
+-        "meta-yocto": {
+-            "git-remote": {
+-                "uri": "https://git.yoctoproject.org/meta-yocto",
+-                "branch": "wrynose",
+-                "rev": "wrynose"
+-            }
+-        },
+-        "yocto-docs": {
+-            "git-remote": {
+-                "uri": "https://git.yoctoproject.org/yocto-docs",
+-                "branch": "wrynose",
+-                "rev": "wrynose"
+-            }
+-        }
+-    },
+-    "bitbake-setup": {
+-        "configurations": [
+-        {
+-            "bb-layers": ["openembedded-core/meta","meta-yocto/meta-yocto-bsp","meta-yocto/meta-poky"],
+-            "setup-dir-name": "$distro-wrynose",
+-            "oe-fragments-one-of": {
+-                "machine": {
+-                    "description": "Target machines",
+-                    "options" : [
+-                        { "name": "machine/qemux86-64", "description": "x86-64 system on QEMU" },
+-                        { "name": "machine/qemuarm64", "description": "ARMv8 system on QEMU" },
+-                        { "name": "machine/qemuriscv64", "description": "RISC-V system on QEMU" },
+-                        { "name": "machine/genericarm64", "description": "Arm64 SystemReady IR/ES platforms" },
+-                        { "name": "machine/genericx86-64", "description": "x86_64 (64-bit) PCs and servers" }
+-                    ]
+-                },
+-                "distro": {
+-                    "description": "Target distributions",
+-                    "options" : [
+-                        { "name": "distro/poky", "description": "Yocto Project Reference Distro" },
+-                        { "name": "distro/poky-altcfg", "description": "Poky alternative with systemd as init manager" },
+-                        { "name": "distro/poky-tiny", "description": "Poky alternative optimized for size" }
+-                    ]
+-                }
+-            },
+-            "configurations": [
+-            {
+-                "name": "poky",
+-                "description": "Poky - The Yocto Project testing distribution"
+-            },
+-            {
+-                "name": "poky-with-sstate",
+-                "description": "Poky - The Yocto Project testing distribution with internet sstate acceleration. Use with caution as it requires a completely robust local network with sufficient bandwidth.",
+-                "oe-fragments": ["core/yocto/sstate-mirror-cdn"]
+-            }
+-            ]
+-        }
+-        ]
+-    },
+-    "version": "1.0"
+-}
+diff --git a/default-registry/configurations/poky.conf.json b/default-registry/configurations/poky.conf.json
+new file mode 100644
+index 000000000000..ea4c7a0660e7
+--- /dev/null
++++ b/default-registry/configurations/poky.conf.json
+@@ -0,0 +1,161 @@
++{
++    "description": "Poky - The Yocto Project testing distribution configurations and hardware test platforms",
++    "source-choices": {
++        "master": {
++            "description": "Poky development branch",
++            "sources": {
++                "bitbake": {
++                    "git-remote": {
++                        "uri": "https://git.openembedded.org/bitbake",
++                        "branch": "master",
++                        "rev": "master"
++                    }
++                },
++                "openembedded-core": {
++                    "git-remote": {
++                        "uri": "https://git.openembedded.org/openembedded-core",
++                        "branch": "master",
++                        "rev": "master"
++                    }
++                },
++                "meta-yocto": {
++                    "git-remote": {
++                        "uri": "https://git.yoctoproject.org/meta-yocto",
++                        "branch": "master",
++                        "rev": "master"
++                    }
++                },
++                "yocto-docs": {
++                    "git-remote": {
++                        "uri": "https://git.yoctoproject.org/yocto-docs",
++                        "branch": "master",
++                        "rev": "master"
++                    }
++                }
++            }
++        },
++        "whinlatter": {
++            "description": "Poky, release 5.3 'whinlatter'",
++            "expires": "2026-05-31",
++            "sources": {
++                "bitbake": {
++                    "git-remote": {
++                        "remotes": {
++                            "origin": {
++                                "uri": "https://git.openembedded.org/bitbake"
++                            }
++                        },
++                        "branch": "2.16",
++                        "rev": "2.16"
++                    }
++                },
++                "openembedded-core": {
++                    "git-remote": {
++                        "remotes": {
++                            "origin": {
++                                "uri": "https://git.openembedded.org/openembedded-core"
++                            }
++                        },
++                        "branch": "whinlatter",
++                        "rev": "whinlatter"
++                    }
++                },
++                "meta-yocto": {
++                    "git-remote": {
++                        "remotes": {
++                            "origin": {
++                                "uri": "https://git.yoctoproject.org/meta-yocto"
++                            }
++                        },
++                        "branch": "whinlatter",
++                        "rev": "whinlatter"
++                    }
++                },
++                "yocto-docs": {
++                    "git-remote": {
++                        "remotes": {
++                            "origin": {
++                                "uri": "https://git.yoctoproject.org/yocto-docs"
++                            }
++                        },
++                        "branch": "whinlatter",
++                        "rev": "whinlatter"
++                    }
++                }
++            }
++        },
++        "wrynose": {
++            "description": "Poky, release 6.0 'wrynose'",
++            "expires": "2030-05-31",
++            "sources": {
++                "bitbake": {
++                    "git-remote": {
++                        "uri": "https://git.openembedded.org/bitbake",
++                        "branch": "2.18",
++                        "rev": "2.18"
++                    }
++                },
++                "openembedded-core": {
++                    "git-remote": {
++                        "uri": "https://git.openembedded.org/openembedded-core",
++                        "branch": "wrynose",
++                        "rev": "wrynose"
++                    }
++                },
++                "meta-yocto": {
++                    "git-remote": {
++                        "uri": "https://git.yoctoproject.org/meta-yocto",
++                        "branch": "wrynose",
++                        "rev": "wrynose"
++                    }
++                },
++                "yocto-docs": {
++                    "git-remote": {
++                        "uri": "https://git.yoctoproject.org/yocto-docs",
++                        "branch": "wrynose",
++                        "rev": "wrynose"
++                    }
++                }
++            }
++        }
++    },
++    "bitbake-setup": {
++        "configurations": [
++        {
++            "bb-layers": ["openembedded-core/meta","meta-yocto/meta-yocto-bsp","meta-yocto/meta-poky"],
++            "oe-fragments-one-of": {
++                "machine": {
++                    "description": "Target machines",
++                    "options" : [
++                        { "name": "machine/qemux86-64", "description": "x86-64 system on QEMU" },
++                        { "name": "machine/qemuarm64", "description": "ARMv8 system on QEMU" },
++                        { "name": "machine/qemuriscv64", "description": "RISC-V system on QEMU" },
++                        { "name": "machine/genericarm64", "description": "Arm64 SystemReady IR/ES platforms" },
++                        { "name": "machine/genericx86-64", "description": "x86_64 (64-bit) PCs and servers" }
++                    ]
++                },
++                "distro": {
++                    "description": "Target distributions",
++                    "options" : [
++                        { "name": "distro/poky", "description": "Yocto Project Reference Distro" },
++                        { "name": "distro/poky-altcfg", "description": "Poky alternative with systemd as init manager" },
++                        { "name": "distro/poky-tiny", "description": "Poky alternative optimized for size" }
++                    ]
 +                }
 +            },
-+            "additionalProperties": false
-+        },
-         "expires": {
-             "type": "string",
-             "description": "End of life date for this configuration, in ISO 8601 format (YYYY-MM-DD)"
-@@ -152,5 +181,17 @@
-             ]
-         }
-     },
-+    "oneOf": [
-+        {
-+            "required": [
-+                "sources"
-+            ]
-+        },
-+        {
-+            "required": [
-+                "source-choices"
++            "configurations": [
++            {
++                "name": "poky",
++                "description": "Poky - The Yocto Project testing distribution"
++            },
++            {
++                "name": "poky-with-sstate",
++                "description": "Poky - The Yocto Project testing distribution with internet sstate acceleration. Use with caution as it requires a completely robust local network with sufficient bandwidth.",
++                "oe-fragments": ["core/yocto/sstate-mirror-cdn"]
++            }
 +            ]
 +        }
-+    ],
-     "additionalProperties": false
- }
++        ]
++    },
++    "version": "1.0"
++}
 
 -- 
 2.43.0
