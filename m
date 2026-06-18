@@ -1,134 +1,148 @@
-Return-Path: <mischief@offblast.org>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B29A9CD98F2
-	for <webhook@archiver.kernel.org>; Thu, 18 Jun 2026 10:09:37 +0000 (UTC)
-Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.16163.1781777371761144078
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF36BCD98ED
+	for <webhook@archiver.kernel.org>; Thu, 18 Jun 2026 10:20:27 +0000 (UTC)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.16302.1781778022484068065
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 18 Jun 2026 03:09:31 -0700
+ Thu, 18 Jun 2026 03:20:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@offblast-org.20251104.gappssmtp.com header.s=20251104 header.b=CNfwjIyz;
- spf=pass (domain: offblast.org, ip: 74.125.82.46, mailfrom: mischief@offblast.org)
-Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-13986d61b4fso899591c88.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 18 Jun 2026 03:09:31 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=vBClds8f;
+ spf=pass (domain: smile.fr, ip: 209.85.221.48, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-4602e2a0372so600203f8f.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 18 Jun 2026 03:20:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=offblast-org.20251104.gappssmtp.com; s=20251104; t=1781777371; x=1782382171; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=21MhppHC58E5R7eRWZaY8bWY8d/IhyNnDHho4iDZmiw=;
-        b=CNfwjIyzkR65oo4sCjPCzW3/p5BJ0xsAnZktu5c2soUK4RSd9gqyqC0DkmGdTfjEmz
-         xDjoE+kHxBcMmm/8B4VaQDoMwRuzapJTUtIFR4LvvCLYwg/ohnL4SbLdkUUnHgFxQioU
-         WQcYnEu++2S5XLITCmKu33Uv83Ut5iKbDK3+3mvghA1mcPyiW4oGeurqlBnku3EztYTh
-         KDxIxPwqpeZnffX0hVCMFED2YJNZmxz72yQ85L6GESKH11I3vaZnR3iAkZh9zndbQfvM
-         QpW6WcpRjnNw3lQILzmScj02PRskTRnIKOSK2wurCmSL8Y3gN/Ib4eET1f0k113OiSSU
-         ukzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781777371; x=1782382171;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=smile.fr; s=google; t=1781778021; x=1782382821; darn=lists.openembedded.org;
+        h=in-reply-to:references:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=21MhppHC58E5R7eRWZaY8bWY8d/IhyNnDHho4iDZmiw=;
-        b=Z9QO1GFwFa/NX8UDrBQlqUSagyRV8znj4CyTtNDMrx4gtHZ7TZuM9dqD1KTAcmQYJU
-         7SYoIm/BdXB0QTg+FxteAJOOeXwks+m4SxnZyWvJXO+6I0EgrMuhqPddk1kTcCTBnahD
-         1lAlJvZ16bx/lGUVt2hhkt7kUfaFxEdLrsC0hWZ4jlvcUTVUCpUdy04pmJPGh4jklO6L
-         aG+qZb5yRnTpcqFHGyZR8WHFntzzxfE6WdRQyniW+LQnLlf4YkeSaMQdNFh5X284ZX9l
-         skIpUev1hWAJoKykj01+tKTD9lMEvhF0wSVVE+yE6J7Sw3F1cW0GhV8+i5Z6FNJ6UwkA
-         Vt3A==
-X-Gm-Message-State: AOJu0YwT6d6AW0NuTxOebQi2i5kmNqT+ipP6KhOeUyotZdH6K6tIoaFO
-	lEXdIxXerSk1ifOttUNJ3D26bke6qzi0fkAPVXEMqwrLPrPJPv6/8gQYH/HromXVhg==
-X-Gm-Gg: Acq92OHKMwxpzeNFXJW3zjSBgTMiXvIwJmSynjiIn0f+7999H4owk2doLYtnfDLKs54
-	CKBVKzPJA8C439e2hWGaQ5PrJN/oaG9okAediYxMXJewReFPocwxd0/sReuwaQmWI8/pH6FQfYV
-	kP/Nu5TA0vxYwdMQQcB9qWS7WZKl3ax9b8Z/3p2afGkjPvEoCtS7A+P4s4JX5+uQIMqOx9gqzx6
-	HV5v1obIZVMY8dfBvxXS3ynEhuUVUPm2U39hq4x4l4lrFlV2qruulVB8naP2KghMCMom30HhOdw
-	zR2li96FML/QEVB+Q4UWPCHctEwMYtkwRdYZCFozCYll1AXeJ91vPktYdQ80/7NbApGe4vW7qFb
-	jiay8uTUYhy+nANHFhNjDm7LnTFrtP/IWHBbsGS08FKCceXFsS0L+B0541tU26hVNpSyevpMUqF
-	9xfsp9vXfWp2Sx0L5C
-X-Received: by 2002:a05:7022:386:b0:139:89ad:8de6 with SMTP id a92af1059eb24-13997c5c054mr1630531c88.35.1781777370814;
-        Thu, 18 Jun 2026 03:09:30 -0700 (PDT)
-Received: from fugu.offblast.org ([136.25.5.185])
-        by smtp.googlemail.com with ESMTPSA id a92af1059eb24-1384b8fbde7sm18177489c88.2.2026.06.18.03.09.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2026 03:09:30 -0700 (PDT)
-Received: from beast (<unknown> [192.168.0.12])
-	by fugu.offblast.org (OpenSMTPD) with SMTP id c3d35029;
-	Thu, 18 Jun 2026 03:09:29 -0700 (PDT)
-Received: (nullmailer pid 231457 invoked by uid 1000);
-	Thu, 18 Jun 2026 10:09:29 -0000
-From: Nick Owens <mischief@offblast.org>
-To: bitbake-devel@lists.openembedded.org
-Cc: mischief@offblast.org
-Subject: [PATCH] fetch2: accept sha256 revisions
-Date: Thu, 18 Jun 2026 03:09:04 -0700
-Message-ID: <20260618100903.231245-2-mischief@offblast.org>
-X-Mailer: git-send-email 2.52.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        bh=lnfsD5pTaP7dVI8NeTINLZtxhcBYmGWvxOWUrUfK8kw=;
+        b=vBClds8fgA/GnD2yAspsZiWFYiffEUBKTYhTeG95dCJcccWzKHfN+ltUQv9LddH0Vu
+         P5oJRFhT4NPGDEOWKXFDpEy2n/aKxg6vmdVtreDWPZNam8UmU+GeVY5+IQRb5xlp+JB1
+         DdXqPsfHz6LyqeWLatnvRAfxLbt8YNpYhgeMs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781778021; x=1782382821;
+        h=in-reply-to:references:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lnfsD5pTaP7dVI8NeTINLZtxhcBYmGWvxOWUrUfK8kw=;
+        b=qv/dvdznR+3X2Ay+AlTM/MGsQKr4vfdHJCcfXvZfnsbDJB9/RLKV0GwgZPBgs/V/mQ
+         dC7lAmD1376sL2y15JUP+kZF6oL0Lx8pshPBvZ1B9p0nDcNUFTfzdY2QaK+mvDddXH5n
+         wbbYTRqqU2IMKKxSGlqvZoPH+MYewWpBTjtQY5kXltOEoGEKot+502Pdn1GVXhLC0Cxw
+         QCjDyBqEZcCNsm5leVdQ2PTxv4NCIksDY3jqSv3YIeKS+gHy+pGTh9w1DtHXwZargKZU
+         mx/43C8tM54T24Rp9a2svrJLzfLdPrha4gbyZ2ge/KaxIbU0ilD9ao9b/3OSrwHXGmir
+         N5Zw==
+X-Forwarded-Encrypted: i=1; AFNElJ8uoANiRbJXGPd9E7N50Zc6TxnJ5i/h0Qm1IfomK1f1bHSSAVYEMQ/+I1HG68mWojS/uMY/884B4InU0o7M@lists.openembedded.org
+X-Gm-Message-State: AOJu0YwmagC0HzJUoJZeIkyoHRK1jzsw+qoXrfIPUxN6z4cKMsZS/AKU
+	zkXFy4ZeZhOdiEkyAuT5WV/Tv1yj1jxh/oNylLPl73bJOOcUve1fKLLjoU+10vb7KC8xCgjH51C
+	Y0Fl8
+X-Gm-Gg: AfdE7cknZrRcmjWMdAxddPxyIEWzfWlLYYfv5Fri56nouJcNBKngN2ZNiWIySFyl77M
+	zkXqhZQKe1eS2aHCRGltnzg3m0ngBOHdIE6wEjMp4FGdjKkCqxRsUnZ/u2O6DFRd5HsbkObixLy
+	hlF1rfpTa8bz76FBTQWbLGhqMDT72CnNoi9C0zZoQJJ1OIoAkBjQsnsK2gzxFdUtRzSAdheUl7Q
+	c3Iou4d4Z86vV2Cozc+v3bObxBQJqas0Pv33v6ciROOdt3gtEitUxSsOzUX8hkaIiS/INOp7qBe
+	MVNEBoe8WX0tpFVIAOCoUHVR9ba4ilu/JCPqcGLhtviQ7tb3oKYNlXcL342i7KHhpqAHCpI/T4P
+	dglXertf9+AczjdcnknfPvr7KjJXJBS6N4LVcCOkp9YcwgblYOKmlg+5RZq179+XsfjLkngZImd
+	Lds4hyk9rXuhkteNLefA2rJ0/GA9lANsktWcGE0AWeSQLWm8QYGS2QMMejvOKgeV/S6m1Hs9L5q
+	6WSWg==
+X-Received: by 2002:a05:6000:4602:b0:460:70d1:c75 with SMTP id ffacd0b85a97d-4623f3e0a31mr12204940f8f.13.1781778020444;
+        Thu, 18 Jun 2026 03:20:20 -0700 (PDT)
+Received: from localhost (2a01cb001331aa00e7e9bab757cf3530.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:e7e9:bab7:57cf:3530])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4619b9b7750sm33988422f8f.6.2026.06.18.03.20.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2026 03:20:20 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 18 Jun 2026 12:20:19 +0200
+Message-Id: <DJC3LE7K3NQ4.37FU3ZR3DH8PT@smile.fr>
+Subject: Re: [bitbake-devel] [PATCH v3 02/10] bitbake-setup.schema.json: Add
+ examples property
+From: "Yoann Congal" <yoann.congal@smile.fr>
+To: <rob.woolley@windriver.com>, <bitbake-devel@lists.openembedded.org>
+X-Mailer: aerc 0.20.0
+References: <20260615-fix-bitbake-schema-v3-0-8dbb07d8765c@windriver.com>
+ <20260615-fix-bitbake-schema-v3-2-8dbb07d8765c@windriver.com>
+In-Reply-To: <20260615-fix-bitbake-schema-v3-2-8dbb07d8765c@windriver.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 18 Jun 2026 10:09:37 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19733
+ <bitbake-devel@lists.openembedded.org>; Thu, 18 Jun 2026 10:20:27 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19734
 
-regexes in fetch2's git support currently don't allow for fetching git
-repos with the sha256 object format.
+On Mon Jun 15, 2026 at 7:37 PM CEST, Rob Woolley via lists.openembedded.org=
+ wrote:
+> This resolves the jsonschema linting error:
+>     Set a non-empty examples array at the top level of the schema
+>     to illustrate the expected data (top_level_examples)
+>
+> This example intentionally only references bitbake as a minimal
+> example that focuses on the tool itself.
 
-to allow fetching sha256 git repos, adjust the regular expression and
-fix all of the references.
+Nitpick: The commit message does not match the content anymore.
 
-tested on my gitea server with a sha256 repo
+>
+> Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
 
-fixes https://bugzilla.yoctoproject.org/show_bug.cgi?id=16322
+Reviewed-by: Yoann Congal <yoann.congal@smile.fr>
 
-Signed-off-by: Nick Owens <mischief@offblast.org>
----
- lib/bb/fetch2/git.py | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+> ---
+>  setup-schema/bitbake-setup.schema.json | 33 ++++++++++++++++++++++++++++=
++++++
+>  1 file changed, 33 insertions(+)
+>
+> diff --git a/setup-schema/bitbake-setup.schema.json b/setup-schema/bitbak=
+e-setup.schema.json
+> index 309088348..1830d16df 100644
+> --- a/setup-schema/bitbake-setup.schema.json
+> +++ b/setup-schema/bitbake-setup.schema.json
+> @@ -1,6 +1,39 @@
+>  {
+>      "$schema": "https://json-schema.org/draft/2020-12/schema",
+>      "description": "Schema for bitbake-setup configuration files",
+> +    "examples" : [
+> +        {
+> +            "description": "Example bitbake-setup configuration file",
+> +            "sources": {
+> +                "bitbake": {
+> +                    "git-remote": {
+> +                        "uri": "https://git.openembedded.org/bitbake",
+> +                        "rev": "master"
+> +                    },
+> +                    "path": "bitbake"
+> +                },
+> +                "openembedded-core": {
+> +                    "git-remote": {
+> +                        "uri": "https://git.openembedded.org/openembedde=
+d-core",
+> +                        "rev": "master"
+> +                    },
+> +                    "path": "openembedded-core"
+> +                }
+> +            },
+> +            "bitbake-setup": {
+> +                "configurations": [
+> +                    {
+> +                        "name" : "qemux86-64-nodistro",
+> +                        "description": "OpenEmbedded 'nodistro' build fo=
+r qemux86-64",
+> +                        "setup-dir-name": "oe-nodistro-master",
+> +                        "bb-layers": ["openembedded-core/meta"],
+> +                        "oe-fragments": ["machine/qemux86-64"]
+> +                    }
+> +                ]
+> +            },
+> +            "version": "1.0"
+> +        }
+> +    ],
+>      "title": "bitbake-setup configuration file",
+>      "type": "object",
+>      "required": [
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index cd045a3a9..0fbd85441 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -82,7 +82,7 @@ from   bb.fetch2 import logger
- from   bb.fetch2 import trusted_network
- 
- 
--sha1_re = re.compile(r'^[0-9a-f]{40}$')
-+git_hash_re = re.compile(r'^[0-9a-f]{40,64}$')
- slash_re = re.compile(r"/+")
- 
- class GitProgressHandler(bb.progress.LineFilterProgressHandler):
-@@ -257,8 +257,8 @@ class Git(FetchMethod):
- 
-         ud.setup_revisions(d)
- 
--        # Ensure any revision that doesn't look like a SHA-1 is translated into one
--        if not sha1_re.match(ud.revision or ''):
-+        # Ensure any revision that doesn't look like a git hash (SHA-1 or SHA-256) is resolved
-+        if not git_hash_re.match(ud.revision or ''):
-             if ud.revision:
-                 ud.unresolvedrev = ud.revision
-             ud.revision = self.latest_revision(ud, d, ud.name)
-@@ -752,7 +752,7 @@ class Git(FetchMethod):
- 
-         # If there is a tag parameter in the url and we also have a fixed srcrev, check the tag
-         # matches the revision
--        if 'tag' in ud.parm and sha1_re.match(ud.revision):
-+        if 'tag' in ud.parm and git_hash_re.match(ud.revision):
-             output = runfetchcmd(ud.basecmd + ['rev-list', '-n', '1', ud.parm['tag']], d, workdir=destdir, extraenv=extraenv)
-             output = output.strip()
-             if output != ud.revision:
-@@ -976,7 +976,7 @@ class Git(FetchMethod):
-             bb.note("Could not list remote: %s" % str(e))
-             return pupver
- 
--        rev_tag_re = re.compile(r"([0-9a-f]{40})\s+refs/tags/(.*)")
-+        rev_tag_re = re.compile(r"([0-9a-f]{40,64})\s+refs/tags/(.*)")
-         pver_re = re.compile(d.getVar('UPSTREAM_CHECK_GITTAGREGEX') or r"(?P<pver>([0-9][\.|_]?)+)")
-         nonrel_re = re.compile(r"(alpha|beta|rc|final)+")
- 
--- 
-2.52.0
+
+--=20
+Yoann Congal
+Smile ECS
 
 
