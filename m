@@ -2,81 +2,80 @@ Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F43CD98F6
-	for <webhook@archiver.kernel.org>; Fri, 19 Jun 2026 10:50:48 +0000 (UTC)
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.39712.1781866239355567233
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D378ACD98F6
+	for <webhook@archiver.kernel.org>; Fri, 19 Jun 2026 10:58:28 +0000 (UTC)
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.39802.1781866704292749276
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 19 Jun 2026 03:50:39 -0700
+ Fri, 19 Jun 2026 03:58:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=D8JrtOUK;
- spf=pass (domain: gmail.com, ip: 209.85.219.54, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-8df26121c88so852676d6.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 19 Jun 2026 03:50:39 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781866238; cv=none;
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=fufHoqJJ;
+ spf=pass (domain: gmail.com, ip: 209.85.219.47, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-8dd17d7308bso13000956d6.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 19 Jun 2026 03:58:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781866703; cv=none;
         d=google.com; s=arc-20240605;
-        b=SalagURTTaIs+lDQ+frXLbLxM0n6ipP97ZIefigSbyfN1fQD8ydPVfvS4mynEd4M7J
-         Yv6uJ5a74XpyU5lTyikqzLrVmEGEdbyBLSsKYh4Q8HlOCL/RtCoVzP3+cxtns+tkWooj
-         yddK1Wt/GJkHtMQVUyIWJgZFSpCjLCrob7qPFHaV9v5EJO+LY8eOM5umtjU0XA5g91wF
-         2ecQ2ixpf8/HDumeUTy/Deu6sxK05egBFO84x4lo+BS81bINDOhNXiTQQNXEfY5S1nD4
-         9YEQvlkPZO8vtAfATMybMT0iIHlUzF40+dyZ9++aQ3cWcdHtTC2zly1WSIEt/yS8swnT
-         5pqg==
+        b=PLbL8XkyULq/NaulHtZF3SYTY5LTXLcNcxiHAyiv2Wve7frzsOmJM3dZOAP4xN/Hb/
+         bTURfsEAPXLoZQYfQsMRNBGdhvIGh31L4gC2rbDwrAAvWsa81QAwCoPoai7PPCm6slxF
+         bBRSOzuIAp6mxqRcoczju/vuPbOttc92UAqv7ajx+uH58XbpjJrU8eEwxyx2yQfQWIx3
+         LmIJP/dtuDLmT/GtWO9XRepTtbhVGtow6MELkkoiVc9GIcsXy+fPlv40cnOclYcFWAkG
+         PI/+0Pgu/D6NAVD4juN2cfpRv6FeenBrAANdZqVP0O2dAH6c9/Le4hv9fbu2HNuH3vdY
+         1LKw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=ORnGmTCRtf+JaUjxSpaQqAJRqR88cjR8Mi5YSjkhbKk=;
+        bh=BD3b1C8xvDmqdnDc4mrewItY9ho6v/m+LBpPm8m+I1Q=;
         fh=S70EIw5I6KnwG2JXmyE4WkvLU4aK+s9Srxw9jTjAdcY=;
-        b=Zty9qyENZE+6RYATnE6ubg4suajwCIIUlotooJ6+I8gwdnMe1JZkKvZOavb0NIIe7G
-         fiDJjdI1q/C8O2ElKuoFpnxtGg1fxjOwTHhNsy7BB3euDt2khbM9PRg7piMifyV+oPIK
-         Nk0zCBiMDWtW8dRkijk0WfPVJLDZqSZ0SxnBquR0fSFE1C8xccvJHnvCPk1jBl/3oqO6
-         bGvm10FfnWUScWGzNfuvYrL7tzxJnNm+6NhGqCtaG4kPhGxb8VkRHJ/pK1m6s3gKq0NN
-         T00TI+33f/GSbCzt8KfMnYWr7QmfV5qRmnnFMhcKRw0lz+9nyhEuUMN6HVdqAVr+o/UM
-         1htA==;
+        b=llKYhusKY0RIvO1OiUaoUvS6Du79y5qYzvwy0Je/oJLL2LvPKZ7tTEeBQmToyR4u/x
+         pSQLq5diirLQ+VS68MN0naL1d53Q/NpDD9hRvrOvMmM8qC+8M5ewBNnih5n8goU5TSHp
+         PH8E9O+H0kidcvL6wjaRF2d6mdouFeIUrUmOPPozVkw8m29dbIoaIXH8RSti9WeiVBOX
+         f4exm4nSU86I7Ku5LWil469b8KnfTJ+arq/5GU7sTW70neDPasjuA6QkzmhBqxPSaFoB
+         DUKLRpAHOippxJLUJUreHR30N8TbANFbCS8/24+IJI/JAr/u/94VbrZAE2Jhh0+qrkSj
+         vGqQ==;
         darn=lists.openembedded.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781866238; x=1782471038; darn=lists.openembedded.org;
+        d=gmail.com; s=20251104; t=1781866703; x=1782471503; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ORnGmTCRtf+JaUjxSpaQqAJRqR88cjR8Mi5YSjkhbKk=;
-        b=D8JrtOUKvuZUT0ig8zbBA7i1D9Rn1EeOmmK4v/+7tApmIocsdHocLB8Qaj73QWVNQH
-         lep/cSKi2FZBwvUiHFQlV9nMLioUX29w9kUQTwTdXwiwSiQa4++kxye8U/IIITLIqO/y
-         6+BXdRE3/4GnVVYKPlgCzBRW6brHl0m97OOsFvyTe2f6R5U4RPeF10tN325cGuF1tABl
-         0HpHU3w3FbUEc37/DzfKWWfRI8R9kRJA+ob4HMZb7TPhgoOKemhL4DzM37AX52b8JtMG
-         yCbDCIMN3XP654M+xGKj+7iPF31VOvWPz93UCjV1CnolwLAIlDpktsautetfAyZ7rwhh
-         9IXg==
+        bh=BD3b1C8xvDmqdnDc4mrewItY9ho6v/m+LBpPm8m+I1Q=;
+        b=fufHoqJJ13Zw51gBBkTG1GFYYe1ldyH1WongM6xcT9EV1F5w0xeuScnv4tf7YP/532
+         3guZ3ejNH5g0cMC3/OkGSu+Yz8fjBm/e7F5bnyPFlES8Yu4oxhH7Lqxd2aMKFaWTNI90
+         Mm8yMtX3YrhQjOKGkNI5AC50yW8N7hhod8JRRKv86OtzlAk4AAGDS2m/V4etlnnVdWI0
+         NtR1cumwRcjwD1HuSP7VWw42ZBCL80cRYTm0e3dCViy0j6QXg5cv4O1l2+QxIHOvhpQW
+         NkvumGXHqN6Usidrg9F6qjZykD0dVUs1Uj3OPJ6HDiIyUcWc1ouxX2qaX6+gvpbR2YEq
+         JaAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781866238; x=1782471038;
+        d=1e100.net; s=20251104; t=1781866703; x=1782471503;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ORnGmTCRtf+JaUjxSpaQqAJRqR88cjR8Mi5YSjkhbKk=;
-        b=jW9ouhgMTzJ3JrKGlSzSlHPX7SUihGKZEEIIsM5cxBNTB0qCwCnl7q8AhcmaonKWjT
-         PKgHnyYZVghZ8s6lNJ6v2Pp7MEB8kurYUB5oIfny/IT9YOXesl0tXHV3FZg9E/hWWC3n
-         7vcgqdnzaQtvGSrga9EfJpn+zAA/vRdKJkoN0z+CeXqsweX2twV2dt9ak3OWu8ZLCyea
-         QIx22J5SebqgFVnH0aZJvEfmCrzeICJsBtHp0iRUn5VAlf01W/yahGXdtvahQQ44ohH5
-         e5IzNEASBd0LqfHOjpuRa9hZs1DoP7W7ypzdBqJ5fsYHaPgRPVf09OSsQ/1MM0vitQLC
-         EnMw==
-X-Gm-Message-State: AOJu0YxUPne8clBI0amhK76AWjMtPxeKiOKOLX66ygoyfwZvy2qj8EQI
-	y6Zy/V177nnvK7KVwvvFYr+/XaDQHfzXNwH7ENSE6dxCv/UyVpEu2Ezo7iqrvNO/zx/vzLxvwmW
-	ko4yjovYHVYFlCevg9JEHtMTR9vQkOQY=
-X-Gm-Gg: AfdE7cmtBUX3+3Y/K7XJtCAz73AgiuXMLTBUy/RmVWJYZPDToEqD1IqU5yErIVK50/O
-	78c0GMRRJZc8Wc2xOjU8voRCYNKnj93vNu7i3+/dpvimHXVzH0lTKNVukNXq8HBkmsQE7IQz/7F
-	AUD3jHo608po4POmHa4Tu++3CfGwvKGGF7+7Pkjr2s/ohIoBLXrJsbO9YHRJgoVK49sML0zmtH9
-	3yoghC7vMXxYZkgdMBGevNLlW3je/hKVYXaJ0EYL5lHBpjrzCcckJoygDK8Sew1LjFMeKh7KS2v
-	D493s60Lcf7YFR0l4NrWrZTAHppS6rO6t1ATVfmWow==
-X-Received: by 2002:a05:6214:1bc6:b0:8cc:ed49:bdc9 with SMTP id
- 6a1803df08f44-8de3b43e008mr51775416d6.5.1781866238149; Fri, 19 Jun 2026
- 03:50:38 -0700 (PDT)
+        bh=BD3b1C8xvDmqdnDc4mrewItY9ho6v/m+LBpPm8m+I1Q=;
+        b=BF0xo/MLBsFQbOd1cRTjmDmiaiRxeWSuIJ7VgmQ0mjjDeGtbHTmX0QZIIyGHjb3uGE
+         CrPEAh8ZykUvZ4iD4kjsUBKeuzo2wIlAKznTwzsvtw9Yseoh7dtXh93kpPbC03ZY4Niy
+         wUQnOvc8HiIX35t8TgXajALxndDD1DnmcgYW8I78PV+XHLjlA8qON7Baj1l74duS8mWI
+         n1VW18ZTKGCCfahzLUG3DqJTO1qs4Xj86EMvD1YVKeazCiTUvzbWPj94qO7jjFnoIOXw
+         dsFS3RcfPlaYU31L7v/tOcWMKK8Dccflo+ZafdNU03A5sut48PzGKNhNk1yxGMo705hx
+         hTHQ==
+X-Gm-Message-State: AOJu0YwqcS+bsY2cqeDSRZ+iN6Rv9kYB9j7dYwhvpkZabI4CgFINzF+r
+	C7h7BL6iu+fYbPzoZPpaH5NWCkTwjzeVtNhpcwOFezFY16kP0ofwfmK4i0Es8auvV9Vm1GKsgx5
+	g8I17GZj73eSiU7ysEGjTjZGF66lhhS0=
+X-Gm-Gg: AfdE7clQ8gGVVs5LNJDkKUGPyVDrK8KZDTGB07yxRQRnOBb4MWvPcbRg/EUQ3AReUWm
+	VXcZH0t2lGV532NqWOBWIQWq2aWiQD5DSYdZPLTs/xQu7QmSU/Ta4ue/scywkbvdBZGXiQL/rZ8
+	M5Mj+P01UOGBzcMGuk94Xl8PBVRIkYQeu2MLj0WhyriPnV7eUOQ6moJ+GMzeakeBGLMHLIFSrCI
+	4in1uonXlRxK7Qe+P0thRaH6fUFUEvhhNShzpSuClND6lLLutAlYCaNeaJ/tlJoLn5OD+6inNrr
+	xGC+HYjsPThy6AvkQ9m5KEAZa/UR7Cs=
+X-Received: by 2002:a05:6214:810b:b0:8ce:cc34:e604 with SMTP id
+ 6a1803df08f44-8de40718cd5mr45982976d6.35.1781866703184; Fri, 19 Jun 2026
+ 03:58:23 -0700 (PDT)
 MIME-Version: 1.0
 References: <20260618-bb-setup-source-choices-integrated-tests-v2-0-66b3b438f073@toradex.com>
- <20260618-bb-setup-source-choices-integrated-tests-v2-1-66b3b438f073@toradex.com>
-In-Reply-To: <20260618-bb-setup-source-choices-integrated-tests-v2-1-66b3b438f073@toradex.com>
+In-Reply-To: <20260618-bb-setup-source-choices-integrated-tests-v2-0-66b3b438f073@toradex.com>
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Fri, 19 Jun 2026 12:50:27 +0200
-X-Gm-Features: AVVi8CeWuJTdo9H46RoNBIA55GA0T5hPYeXtdMhNomxE7W_psTQhIfUbC-sS7bI
-Message-ID: <CANNYZj-=UpcXUeN_44uumiT67vmAPR-LrYkRvVhgGxHZFFdDSQ@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 1/2] bitbake-setup: add source choices
+Date: Fri, 19 Jun 2026 12:58:11 +0200
+X-Gm-Features: AVVi8CcxB-at--Ucss_PLcmNLtRJivUw52fVSmf6UaHhu740J0XsRpdiXeSbUXc
+Message-ID: <CANNYZj8wU4-Qh-EgB1ukobjqs9sOvjDSjOs6fEFCNqCSgTXBjw@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 0/2] bitbake-setup: add source choices
 To: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
 Cc: bitbake-devel@lists.openembedded.org, 
 	Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
@@ -84,20 +83,24 @@ Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 19 Jun 2026 10:50:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19747
+ <bitbake-devel@lists.openembedded.org>; Fri, 19 Jun 2026 10:58:28 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19748
 
 On Thu, 18 Jun 2026 at 20:04, Ernest Van Hoecke
 <ernestvanhoecke@gmail.com> wrote:
->
-> From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
->
-> Allow configuration files to define source-choices instead of sources.
-> A source choice is selected before the BitBake configuration and then
-> used as the source set for checkout, status and update operations.
+> The consolidated registry examples intentionally do not preserve the
+> exact setup-dir-name behavior of the existing release-specific files.
+> Today, setup-dir-name can substitute oe-fragments-one-of selections, but
+> it has no way to refer to the selected source choice. Possible follow-ups
+> include a built-in source-choice substitution variable or a different way
+> to model source/config combination metadata. For a substitution variable,
+> we have to prevent collision with a fragment choice.
 
-Thanks, I think this is more or less what I had in mind. For the other
-two emails I'll write separate responses, as I have some notes.
+Yes, there probably should be a 'special' variable for substituting
+the selected source, and a check that there's no fragment selection
+that has the name (in the unlikely case there's an accidental clash -
+it's easy to address by tweaking the name of the fragment selection
+block).
 
 Alex
 
