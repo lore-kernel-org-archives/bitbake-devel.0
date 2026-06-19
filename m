@@ -1,79 +1,103 @@
-Return-Path: <thune.a.tran@boeing.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0672CD98F0
-	for <webhook@archiver.kernel.org>; Thu, 18 Jun 2026 23:00:06 +0000 (UTC)
-Received: from phx-mbsout-02.mbs.boeing.net (phx-mbsout-02.mbs.boeing.net [130.76.184.179])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.31689.1781823599853945026
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F43CD98F6
+	for <webhook@archiver.kernel.org>; Fri, 19 Jun 2026 10:50:48 +0000 (UTC)
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.39712.1781866239355567233
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 18 Jun 2026 16:00:00 -0700
+ Fri, 19 Jun 2026 03:50:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@boeing.com header.s=boeing-s1912 header.b=TUtBH2MH;
- spf=pass (domain: boeing.com, ip: 130.76.184.179, mailfrom: thune.a.tran@boeing.com)
-Received: from localhost (localhost [127.0.0.1])
-	by phx-mbsout-02.mbs.boeing.net (8.15.2/8.15.2/DOWNSTREAM_MBSOUT) with SMTP id 65IMxvjX017024;
-	Thu, 18 Jun 2026 15:59:58 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=boeing.com;
-	s=boeing-s1912; t=1781823598;
-	bh=1YYyPRL9j5Pr0CAy6+yLq1C0zYAogQtQepDzvzpu68k=;
-	h=From:To:Cc:Subject:Date:From;
-	b=TUtBH2MH+6EZ2N+lf7bEtCcl3HcC6FK0HgkSqVKfu5uhlMYAdNqe6TfNDfIHKJf6h
-	 sG78uBIzV0HmQ7QkVwEpWAU6pg4QpF6Cj55LZlxGkzQmqVxnc1YBSPQkDvf3uL/8De
-	 iPP1pjqQ6rG1Vrm4HVnw2/WjI4zUN5JBRW75jfAmJ7bQziDXawAJ75ENjXi00+WvPI
-	 PvN8TCeqqfQ+qPHmUEFr9DfoqKwetIIaTasBu8xiQ+CNT1MvgcRILIIGtJf4AX8zi6
-	 AaHn4SV+kls78xz//B2iAH2yP+/SPychCQmHEcapvU6nzM5Rc8RETtL3dY2z+z9LL8
-	 TkNLtrSp96h/A==
-Received: from ewa-av-01.mbs.boeing.net (ewa-av-01.mbs.boeing.net [137.137.51.75])
-	by phx-mbsout-02.mbs.boeing.net (8.15.2/8.15.2/8.15.2/UPSTREAM_MBSOUT) with ESMTPS id 65IMxqrs016980
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <bitbake-devel@lists.openembedded.org>; Thu, 18 Jun 2026 15:59:53 -0700
-Received: from localhost (localhost [127.0.0.1])
-	by ewa-av-01.mbs.boeing.net (8.15.2/8.15.2/DOWNSTREAM_RELAY) with SMTP id 65IMxoei004196;
-	Thu, 18 Jun 2026 15:59:52 -0700
-Received: from A6637002.nos.boeing.com (a6637002.nos.boeing.com [10.35.210.187])
-	by ewa-av-01.mbs.boeing.net (8.15.2/8.15.2/UPSTREAM_RELAY) with ESMTP id 65IMxkDg003979;
-	Thu, 18 Jun 2026 15:59:47 -0700
-From: Thune Tran <thune.a.tran@boeing.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Thune Tran <thune.a.tran@boeing.com>,
-        Chuck Wolber <chuck.wolber@boeing.com>
-Subject: [PATCH] fetch2: export AWS_SHARED_CREDENTIALS_FILE for S3 fetches
-Date: Thu, 18 Jun 2026 22:59:43 +0000
-Message-Id: <20260618225943.48724-1-thune.a.tran@boeing.com>
-X-Mailer: git-send-email 2.34.1
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=D8JrtOUK;
+ spf=pass (domain: gmail.com, ip: 209.85.219.54, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-8df26121c88so852676d6.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 19 Jun 2026 03:50:39 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781866238; cv=none;
+        d=google.com; s=arc-20240605;
+        b=SalagURTTaIs+lDQ+frXLbLxM0n6ipP97ZIefigSbyfN1fQD8ydPVfvS4mynEd4M7J
+         Yv6uJ5a74XpyU5lTyikqzLrVmEGEdbyBLSsKYh4Q8HlOCL/RtCoVzP3+cxtns+tkWooj
+         yddK1Wt/GJkHtMQVUyIWJgZFSpCjLCrob7qPFHaV9v5EJO+LY8eOM5umtjU0XA5g91wF
+         2ecQ2ixpf8/HDumeUTy/Deu6sxK05egBFO84x4lo+BS81bINDOhNXiTQQNXEfY5S1nD4
+         9YEQvlkPZO8vtAfATMybMT0iIHlUzF40+dyZ9++aQ3cWcdHtTC2zly1WSIEt/yS8swnT
+         5pqg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=ORnGmTCRtf+JaUjxSpaQqAJRqR88cjR8Mi5YSjkhbKk=;
+        fh=S70EIw5I6KnwG2JXmyE4WkvLU4aK+s9Srxw9jTjAdcY=;
+        b=Zty9qyENZE+6RYATnE6ubg4suajwCIIUlotooJ6+I8gwdnMe1JZkKvZOavb0NIIe7G
+         fiDJjdI1q/C8O2ElKuoFpnxtGg1fxjOwTHhNsy7BB3euDt2khbM9PRg7piMifyV+oPIK
+         Nk0zCBiMDWtW8dRkijk0WfPVJLDZqSZ0SxnBquR0fSFE1C8xccvJHnvCPk1jBl/3oqO6
+         bGvm10FfnWUScWGzNfuvYrL7tzxJnNm+6NhGqCtaG4kPhGxb8VkRHJ/pK1m6s3gKq0NN
+         T00TI+33f/GSbCzt8KfMnYWr7QmfV5qRmnnFMhcKRw0lz+9nyhEuUMN6HVdqAVr+o/UM
+         1htA==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781866238; x=1782471038; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ORnGmTCRtf+JaUjxSpaQqAJRqR88cjR8Mi5YSjkhbKk=;
+        b=D8JrtOUKvuZUT0ig8zbBA7i1D9Rn1EeOmmK4v/+7tApmIocsdHocLB8Qaj73QWVNQH
+         lep/cSKi2FZBwvUiHFQlV9nMLioUX29w9kUQTwTdXwiwSiQa4++kxye8U/IIITLIqO/y
+         6+BXdRE3/4GnVVYKPlgCzBRW6brHl0m97OOsFvyTe2f6R5U4RPeF10tN325cGuF1tABl
+         0HpHU3w3FbUEc37/DzfKWWfRI8R9kRJA+ob4HMZb7TPhgoOKemhL4DzM37AX52b8JtMG
+         yCbDCIMN3XP654M+xGKj+7iPF31VOvWPz93UCjV1CnolwLAIlDpktsautetfAyZ7rwhh
+         9IXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781866238; x=1782471038;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ORnGmTCRtf+JaUjxSpaQqAJRqR88cjR8Mi5YSjkhbKk=;
+        b=jW9ouhgMTzJ3JrKGlSzSlHPX7SUihGKZEEIIsM5cxBNTB0qCwCnl7q8AhcmaonKWjT
+         PKgHnyYZVghZ8s6lNJ6v2Pp7MEB8kurYUB5oIfny/IT9YOXesl0tXHV3FZg9E/hWWC3n
+         7vcgqdnzaQtvGSrga9EfJpn+zAA/vRdKJkoN0z+CeXqsweX2twV2dt9ak3OWu8ZLCyea
+         QIx22J5SebqgFVnH0aZJvEfmCrzeICJsBtHp0iRUn5VAlf01W/yahGXdtvahQQ44ohH5
+         e5IzNEASBd0LqfHOjpuRa9hZs1DoP7W7ypzdBqJ5fsYHaPgRPVf09OSsQ/1MM0vitQLC
+         EnMw==
+X-Gm-Message-State: AOJu0YxUPne8clBI0amhK76AWjMtPxeKiOKOLX66ygoyfwZvy2qj8EQI
+	y6Zy/V177nnvK7KVwvvFYr+/XaDQHfzXNwH7ENSE6dxCv/UyVpEu2Ezo7iqrvNO/zx/vzLxvwmW
+	ko4yjovYHVYFlCevg9JEHtMTR9vQkOQY=
+X-Gm-Gg: AfdE7cmtBUX3+3Y/K7XJtCAz73AgiuXMLTBUy/RmVWJYZPDToEqD1IqU5yErIVK50/O
+	78c0GMRRJZc8Wc2xOjU8voRCYNKnj93vNu7i3+/dpvimHXVzH0lTKNVukNXq8HBkmsQE7IQz/7F
+	AUD3jHo608po4POmHa4Tu++3CfGwvKGGF7+7Pkjr2s/ohIoBLXrJsbO9YHRJgoVK49sML0zmtH9
+	3yoghC7vMXxYZkgdMBGevNLlW3je/hKVYXaJ0EYL5lHBpjrzCcckJoygDK8Sew1LjFMeKh7KS2v
+	D493s60Lcf7YFR0l4NrWrZTAHppS6rO6t1ATVfmWow==
+X-Received: by 2002:a05:6214:1bc6:b0:8cc:ed49:bdc9 with SMTP id
+ 6a1803df08f44-8de3b43e008mr51775416d6.5.1781866238149; Fri, 19 Jun 2026
+ 03:50:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
+References: <20260618-bb-setup-source-choices-integrated-tests-v2-0-66b3b438f073@toradex.com>
+ <20260618-bb-setup-source-choices-integrated-tests-v2-1-66b3b438f073@toradex.com>
+In-Reply-To: <20260618-bb-setup-source-choices-integrated-tests-v2-1-66b3b438f073@toradex.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Fri, 19 Jun 2026 12:50:27 +0200
+X-Gm-Features: AVVi8CeWuJTdo9H46RoNBIA55GA0T5hPYeXtdMhNomxE7W_psTQhIfUbC-sS7bI
+Message-ID: <CANNYZj-=UpcXUeN_44uumiT67vmAPR-LrYkRvVhgGxHZFFdDSQ@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 1/2] bitbake-setup: add source choices
+To: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
+Cc: bitbake-devel@lists.openembedded.org, 
+	Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 18 Jun 2026 23:00:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19746
+ <bitbake-devel@lists.openembedded.org>; Fri, 19 Jun 2026 10:50:48 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19747
 
-The S3 fetcher cannot use AWS credentials from a credential file
-other than the default ~/.aws/credentials because fetch2 does not
-export AWS_SHARED_CREDENTIALS_FILE.
+On Thu, 18 Jun 2026 at 20:04, Ernest Van Hoecke
+<ernestvanhoecke@gmail.com> wrote:
+>
+> From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+>
+> Allow configuration files to define source-choices instead of sources.
+> A source choice is selected before the BitBake configuration and then
+> used as the source set for checkout, status and update operations.
 
-Signed-off-by: Thune Tran <thune.a.tran@boeing.com>
-Signed-off-by: Chuck Wolber <chuck.wolber@boeing.com>
----
- lib/bb/fetch2/__init__.py | 1 +
- 1 file changed, 1 insertion(+)
+Thanks, I think this is more or less what I had in mind. For the other
+two emails I'll write separate responses, as I have some notes.
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index f7d5dfe9a..4efa35a49 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -907,6 +907,7 @@ FETCH_EXPORT_VARS = ['HOME', 'PATH',
-                      'SSL_CERT_FILE',
-                      'NODE_EXTRA_CA_CERTS',
-                      'AWS_PROFILE',
-+                     'AWS_SHARED_CREDENTIALS_FILE',
-                      'AWS_ACCESS_KEY_ID',
-                      'AWS_SECRET_ACCESS_KEY',
-                      'AWS_ROLE_ARN',
--- 
-2.34.1
-
+Alex
 
