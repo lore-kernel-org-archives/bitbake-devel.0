@@ -2,159 +2,139 @@ Return-Path: <anders.heimer@est.tech>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A73CDB466
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3649ECDE002
 	for <webhook@archiver.kernel.org>; Thu, 25 Jun 2026 07:08:05 +0000 (UTC)
 Received: from DB3PR0202CU003.outbound.protection.outlook.com (DB3PR0202CU003.outbound.protection.outlook.com [52.101.84.5])
  by mx.groups.io with SMTP id smtpd.msgproc02-g2.6004.1782371281365926738
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 25 Jun 2026 00:08:02 -0700
+ Thu, 25 Jun 2026 00:08:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@est.tech header.s=selector1 header.b=dgL2Q0LZ;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@est.tech header.s=selector1 header.b=lQLKPB7r;
  spf=pass (domain: est.tech, ip: 52.101.84.5, mailfrom: anders.heimer@est.tech)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ufGnl55WGvvM/njA+PcTbO5U46OXblwCsYeMcBRZ0VJsFT7ET9rJLrw84Q/59gPCsGjiTbWNdlGiRyy2JHek4eBPOjxN+ZZu8RvxdKIPt2dATadT7nNgU7X1mbGvrQOv28uDZeGuSOO4NRogmdwGlLppvIG1/0AxTHRdyQQtiZJvacR7upYjS2tJiA8GTNf4fMQ+0BaT9l9kxRvcDxgiQP0U1GbLjzliTFiZOmvvz8lNZdUU+Ghu7Rf9G0icM/u6l6Q5v7mib90ejLNKasj1mcUh8Cp8r2+gP94JZC6D0pcYZqDJZmw65EHbnq3q80Z88x7GQr6DS0h+AWMjiRNhRw==
+ b=UysKi7I1OpWa1IpPaO1vmN16dM9ns8EJbiuSCctekycZL9/MY51P569HdC3/ajv6qyFvDFenkeW6oznzYlKFJmrkEOKWAdc+RMuOGeJ92AljIZkCu565ZAK2NmgEfuZe+LMKLATMwdRNUJQL/hdqkDuMTzHlyaqb1oM0JQOAH/PVhhTq6Gipo4Fayv0KeJ+KSO99FcSM8gF4g2re4Y0Jqip0M1oz0jNtei5Tumb0wGGmtTNt2Z3yrbAc58qtvYCiuh8LCHy11g0TRiSlRMyeHfkTkdhn2dkb0E9RqiUjS/9cgFZpHzmqTYGGRqvMUfgE7IPAjJXPOrse/E4JCk6MBg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UAqMZMLb45uAMQBj599NHBzCnAZFe5SB3Un0VPULUmA=;
- b=LGaZ0BYnTvl3MjF4ZRpL2XaM7HW0J9ScnDEETfZELI81TxWw+uLRt2bQtm0dp2M9zKDr/k0nCYyTcma5ZACNp5fyLuGLV+4YEGHkj6nBlyewXxAQJDZXxZtTgC3gOwnfKxH45l/EYsOhswMSvnbfBOKB/HW6ebDR3boU0TtEc7X+I9x1KvePluqqtjM/KMEMIcyzmLNxMfyULO3AZHJlFkKQopbPCax0bYKK2z4SDnWLkVit/EEk7RFO3d5Oc5CKVn4nLFNdAska2+kECiKmyBKNZyvKL9TrqHF7bqyRYHxgDWRR3tjJqISUAIWKjOlHXDX21k6aRFHwnLnZwVaHUQ==
+ bh=MQbGgqXhM1JB4QZjPNvRfr2FPpb7qkef9CNcshgY4Jk=;
+ b=SJzfdSbf93PfRvgJwtltPBlbsfhmSKa2JbfvOsLXl+KT75psDHgpEkp5Cu/f1DoWh1uds3+kTCbulpURLtvvZVqlQO+BYYEs/bKdN+ZWipHksg3KwOynwQTIjSyF8KEXZxka8326fo2EfMI4dhVWUqzZ4cik+ciClbArzMp0SBzY1+KFKuj2tElvBDsptCwXtepHwuSJf4ZVR7NrXSQXYyYCiSZ90tQn3q1O9WIGY1xjEvQkGF14Uy8UwVKN9x50xvAsaoyORvyTzjpO/qmnuPLR6hDQz/lyZu+EddcADm8MzltO/CWCbm5ac56vVlliX5eoVGsZngalQM4ZwqsYyQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=est.tech; dmarc=pass action=none header.from=est.tech;
  dkim=pass header.d=est.tech; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=est.tech; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UAqMZMLb45uAMQBj599NHBzCnAZFe5SB3Un0VPULUmA=;
- b=dgL2Q0LZJV8Li5fdUOYGSjJaA9AkTGMn6iHh7KcKKfKhYhYSMUx3+iedhpnku/H+5pVwykCVoFQsiqpxAFd2ouGh/vHcqd7bnehPR+2yVJ15Zz81gVQ00Ed62wgG0U89vpTxwx+WkDeHzYp69Kl2H7u6lMnBOQ/wmD1n+E8CJsz0BTQzy/FRKb9OWxsJA+5UTxf9C2LBv/CggGdDgYsovONT6NN6hsI61QgCSHh18swaep94CnuyPlCz58ldFOCSrslgMiqJ+TTNPflf71NmB13b+LiRlU5Pb+01MKtLSMxrrrQpRtNt7R+mq4BySAHN7JbWzwt/Os6ncZ4Uz9LPDg==
+ bh=MQbGgqXhM1JB4QZjPNvRfr2FPpb7qkef9CNcshgY4Jk=;
+ b=lQLKPB7rYIcbM/+lM+D56Gw55iVMeRlti4CW2rs8EwalSWlEZBJ7/uF2nFjdVPrIr+X0mhAGkouIBri7o0KSebcf0IZ0lQ1071+H/J9x2Td81n1Nze6UFCrjRZvk3JcFE7eKciCExsi27cHR1lXtUKNmwNp326yYH85c3OJrKFwXEVnwKmKkIkKwCeqslc57JVbKuuD7/ddivGUqBwxYjfviC7BHZKHm4s3kkGq11gANTEF+XzzJfhtOWWN32Xj2MyHSeNJaH5q3+kn3wLZkV4FztHu3VHlStupV8srnz6MEe/9xz/qDi/RZTH4LBcgwxdB/6z32tfbLgiwS1mshhQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=est.tech;
 Received: from DB9P189MB1641.EURP189.PROD.OUTLOOK.COM (2603:10a6:10:2ac::9) by
  AM8P189MB1316.EURP189.PROD.OUTLOOK.COM (2603:10a6:20b:246::24) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.159.16; Thu, 25 Jun 2026 07:07:58 +0000
+ 15.21.159.16; Thu, 25 Jun 2026 07:08:01 +0000
 Received: from DB9P189MB1641.EURP189.PROD.OUTLOOK.COM
  ([fe80::90da:b700:f102:5c82]) by DB9P189MB1641.EURP189.PROD.OUTLOOK.COM
  ([fe80::90da:b700:f102:5c82%6]) with mapi id 15.21.0159.015; Thu, 25 Jun 2026
- 07:07:58 +0000
+ 07:08:00 +0000
 From: Anders Heimer <anders.heimer@est.tech>
 To: bitbake-devel@lists.openembedded.org
 CC: Anders Heimer <anders.heimer@est.tech>
-Subject: [PATCH 1/9] fetch2/az: fix wget command argument construction
-Date: Thu, 25 Jun 2026 09:07:42 +0200
-Message-ID: <20260625070750.2757558-2-anders.heimer@est.tech>
+Subject: [PATCH 2/9] fetch2/git: avoid an empty argument to git lfs fetch
+Date: Thu, 25 Jun 2026 09:07:43 +0200
+Message-ID: <20260625070750.2757558-3-anders.heimer@est.tech>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20260625070750.2757558-1-anders.heimer@est.tech>
 References: <20260625070750.2757558-1-anders.heimer@est.tech>
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
-X-ClientProxiedBy: LO4P123CA0134.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:193::13) To DB9P189MB1641.EURP189.PROD.OUTLOOK.COM
+X-ClientProxiedBy: LO4P265CA0130.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c6::19) To DB9P189MB1641.EURP189.PROD.OUTLOOK.COM
  (2603:10a6:10:2ac::9)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DB9P189MB1641:EE_|AM8P189MB1316:EE_
-X-MS-Office365-Filtering-Correlation-Id: f29724cb-25a1-4aef-2f61-08ded2887ce2
+X-MS-Office365-Filtering-Correlation-Id: 02de5b57-1357-4cdf-c844-08ded2887dbe
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
 	BCL:0;ARA:13230040|366016|1800799024|376014|23010399003|18002099003|22082099003|56012099006|11063799006;
 X-Microsoft-Antispam-Message-Info: 
-	9VbtWTq2QV6F/lzkxih8czXFJxy09phfVCCJjDDQU8iQNycxpE0y1LrR+2/sYbAsd+zbfE7T46Zt0ikTQICIuXz+3xtgFBHc07BLy9wwnTc5HdBELzX0wq3Cp4A81nFYBkq3XFNBIBzzeqQHGfEuyy/kS7D8DDi/ePLorfOWpyeT0tM7kQHH/YIHUulnm1nzuplXNlD8jjcHFGqhYW58GwiMyJBzU89gq6/U6v2RnYpyN96SVXxAOlVhaLWlPKMkRbVLt1tOdrAWcaSq6dEsiOIZw9x/3brQ3xjs/TLBy7vMhAOpqVB4kOcvpgfTKudtwljGzMCoYcK+B3aU6wtWEBI27669cI+yRHFcagKFJexI7pMpf8zYbamCct59IC7rLyddiea1zYy3nbTBs8UvEFeviC+xhQwXJcaraM7qur3YzbzNOzKCwBvL0rbJt2/ClBSVWAKcNH89vEFvblUtvm/LFZ6J7FLP7r5+CCYUtsCoGSVLy6+f7BDB5F1Zm5WS8zvQ2ISJyuF4zyq0GEr6o/mxSvBAuk0FUnlDaQvNKjHGDLEvhEjTi62qKNZ9GQSAppnjhjR6QzaU7m8yc4SXwLk7WLgMcgR0GGizvLJndDEt77moX4/SrVmo2FPlfvFeUlGUkzGbHQQTjRrsxaxWqaWNxa9QJqcnNWuTquJSgI8=
+	mexoZtBYT7rMAMGlA2zNO8zWON7EcF7iTPkOke6FUrYqcqhqQIOV8S1IqEY5TVygvPsoR9MYEgsMWMQwjDlSfZ3nP8tPzcgd/fRZSJKO0RPCUzRhzdz3bH034RqTyKRhVkbznn89bx02QrNZ4dzF5JykxXazNVl1m3yDUouU7F2TXhGKBuQApyMM4wj0AV4SJezFdwANMVXPpSph3c6e0bxV+8rZPmr73gf4CvOyai9uKf9O5HWZevV2T8Oiu/EOUlbWL4LEpPW2e9bEnpnXIS7P+pIeZJTHBxYcS4fiPDmAmBQK2JKq8fHcstF874+3psZ+ar02LkuskmlcaorU+tWz87Z9xD2zsOdrwqc/HM7lLHC50MqPRLlteF34T6+8IjARTmnwn8GeI3lqzUR494tNTunaS2ICPPrrDJggUH3A7LocFhbYF9kzYBFOxD9kyu/I4Gbg53VNL/Fn7XxuBwEPoqSDDhiWvXsg7ayT7OOnd9W2548vkdnBXNpYWK26L3IL41c5e8o891n1EYfOiz8JysMqcVsepPSPhWtzcz6EyetfrBQ16qrYM72HvyeK3J/gFFBG0QABSxNUOsFSYqag6D7+JrE+3G1FDNjglt2/oiKSK4KzZHFtxgeNOvqDXBhWcvJzqzjAnvVjRu1sjpMB3CBAsBiCSo5xByiANxI=
 X-Forefront-Antispam-Report: 
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9P189MB1641.EURP189.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(23010399003)(18002099003)(22082099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?nViZVmk9HLXicnAojzsbCWl+jq0qAhYBD5dA1AMUrUK4eSDXEppRVVVua59g?=
- =?us-ascii?Q?NUoqmfO1Qv8INax9gVq5UFjc8P6nVQzaS8Zx4wRB+uS4S52lflUDT61dt/Jy?=
- =?us-ascii?Q?vBDQGSlFLLXX9OSwCkDXH7yEzOishHXB1+gpdx5Nhn/D0d26EAqja9lIxdVy?=
- =?us-ascii?Q?+6Mch1hjUoS7DJdAVXw6CaqGT03IFkOvEiELHMmzz3ON/Pb8w9V4eCQH0VYf?=
- =?us-ascii?Q?2AtLuUl1PtKylU64u9/sTZjJjuEUf33YIBxqS5mREziBPDW1+HWgOtOaxIgo?=
- =?us-ascii?Q?wPzgTIGxzt0ZPpEP2YgeqeR9yNMwnxJr66IwMQF+XotGgwkiePJodbRVaSpH?=
- =?us-ascii?Q?O0sTkSUi2EU5XaWBc7DpTxGOgUUzoAyjs1V37CZiepKetKzVN4aTmZb6//NX?=
- =?us-ascii?Q?FnF1kHvsBwUZchJGKSDTqxLtJbsfMkTjrBRh85mFqQY6eYfwvqMJBoIPrAqt?=
- =?us-ascii?Q?FPjnZwhmgMP7Cepn2rOmBXm4QryasXDvvpfnzi8gyX5CmFVtWhMRAo7Uv4hC?=
- =?us-ascii?Q?kgJFTiEA9c4wA+AfhABvBmYQbyUx8tEEafz6zKDpJ4xh4WYjWz1hi1L2Y4DI?=
- =?us-ascii?Q?6rLha0SYw5kw3d2s7KfkLQhbYLlW5GuqoEYfPhR+8iZtHAdpOnjqA/isBwj1?=
- =?us-ascii?Q?Xkzlbth6Uhq1wZxcX1Fe8icFOndqKrZTlx85aZf5i8ZGJKfWSKU34mdGJKNU?=
- =?us-ascii?Q?InfaPs9VH5gmsTsdaocTaod8RfVzMqgO7mc9k5QikS4P8PuyjDeKuFvmMJLH?=
- =?us-ascii?Q?I3Y6b/uhmWk4WEEkiwtG6qJ3Q+COMHmfxDBgjXDInB8EjdquypOScdX2yIjf?=
- =?us-ascii?Q?jEcnSj0Yezc3lVCpr3G54y4rUyVqtz5YVEkeKywWbqXE717cxMHU3DD41kre?=
- =?us-ascii?Q?T1CxrfrdIJJctXAT3GG8wZJYlAOtX2TauJH8fVfsBz07BmM6JvZ3taYR1pci?=
- =?us-ascii?Q?p5sADqKbiXFxxNIoFLefx1QjGSovWbwX40dBcIL55EWAW4flyYx89Yh+kSHA?=
- =?us-ascii?Q?n3izuY2AZpY0T7p5IMinTWKvyLXyeuWskt6imATMhmGJCAO8FgKKMiJXjO3T?=
- =?us-ascii?Q?MDxhK/LwrLLwZ0ii1MXSbml/JabtwgVVtJPXPFkRdlmlJvbkcUt7+JWRvCaQ?=
- =?us-ascii?Q?NoXKLqne5gTCrnzs2PgfES+vS35VPyZkaEu5GaiK2xvinuw/s8MxZsIWa1Rj?=
- =?us-ascii?Q?dw26/ZMATNWBsb16Uw+HrsGGZnE+UBJAX37730uQk2m7t6gYH29L0ZsFdy9B?=
- =?us-ascii?Q?MZ60RkGU37LyOvwiWrf7Dy2/J6scMDdfrwK0svV3yusrYcLuKRcJXzT4d+li?=
- =?us-ascii?Q?j/T/1oNHf8GZKGShvQJoSbOU9HGRwW+J96FM3Nds+uoZzX9Nx4oDoDifpfkW?=
- =?us-ascii?Q?CRVO1u/o3MSrRA4Wwa9DZ93QIVtBcZGADbVQciPXP4tYPRw9XfdSNqIgCzzv?=
- =?us-ascii?Q?6KeiM3klvIQn+Czvz3UEIPd+gTophAfBdNmx+9bhHfPaFngz1jgrnG8fetAL?=
- =?us-ascii?Q?csQopP+rzgMB4202uPupfwHnjbMy+YloMpTw6uVKHbvRqS3HipZkz8lA9jq5?=
- =?us-ascii?Q?o4MizA+YxYPgsWb8HXmqiwA9LJa4H/BmI8GDjzF4i2BP9kZdjSq1inrExe+I?=
- =?us-ascii?Q?1/bQU7XoOeusmuEw0HOV4bLkKAZvjBhW3Doz0z0JwmPIuMU5HgkyTVHpl3gw?=
- =?us-ascii?Q?A1dORfBNnvDZ8NeUrq5r4aChCaF82snBsccLIPAFbY52f60813II6b+kKd21?=
- =?us-ascii?Q?LkpHPPL4QA=3D=3D?=
+	=?us-ascii?Q?dyAmBm1NWmFeTdJQZsR+JclgPNiZ7l+kRQTvSn1u4I1E/q04E3BJKPlp/0D7?=
+ =?us-ascii?Q?r4yMPxZXN+GWSKX46lfQCOr798Yv+LlgiJgGFhA2sRkK40v1i2cNQzikRo9O?=
+ =?us-ascii?Q?EKREh395SRkqkwRT6e+P59+H1AXsPJMGqUuCkVk46tIwJEuURW402ebzDEsA?=
+ =?us-ascii?Q?V19QhJeQaIXzFLUVxIAahrb0cjQezYlGqm1KsZukQ2YtDKg3dMxwW1G/aDk6?=
+ =?us-ascii?Q?EsX/xzQBH1S9ojSOh6GIrvNCnjFRnCRWlOkbPdVoIDQgfRakbydAmdMLkmBo?=
+ =?us-ascii?Q?HAKlhvHTRHLcDcemfmaZJu04RTfJLQvHYtvaMDYML+/epKMSqzPuZwVb2OpY?=
+ =?us-ascii?Q?MrBKS5lmcD/07Z7RiIRewIRDsQBtJS8rGkqVGYwUNxgn9nZ5fjl9Mo+D80pb?=
+ =?us-ascii?Q?C5KZbERIVDmYjmaLNd8ZJKWwjMbIvh4UstdNhz6bvuRgHWIL9Ju+5e+T9Gyq?=
+ =?us-ascii?Q?0tH4VjJRB71s/5JSSR+48f/DhZ2eGQ6TjlaxesbzAc8eZ+dpHwqF3KOKWWZv?=
+ =?us-ascii?Q?OXBNgQWkxmgRDlA0ukrxvvamIEK3DtvtXM250VfqO24ZTdQkRVbenFrhdgRU?=
+ =?us-ascii?Q?W9RA7Yi5c7TqyIJ+Pg7VJch+xtAxb9ASaL8XmT84TC/fG2xv6a1xNdT5ejVK?=
+ =?us-ascii?Q?BR8OgQlA+ngjkQnbIS/s79lFdtOnN+/cTRtlYuxRhTvSrnd2fummDXYkXQPt?=
+ =?us-ascii?Q?yRpr/IHvP/ylga1eW2PkJoHKu2na3fj4c57aXghPkcYnqbTokD5fulGEVz/4?=
+ =?us-ascii?Q?9qCsZkrbiUfNTN0NVSxJmduSbd+OYtWSiPvHnoIpyMse1prqfIWQ8q7fuYCE?=
+ =?us-ascii?Q?qC5cCdZjofqwGqIT9eIbAU17uEZhh/W18Imio88J6BcmSTyefMxvaqO65Uhe?=
+ =?us-ascii?Q?gu8l8PXUpEb9/tWDLYElDJgxsKWZ3ftf3sIu1+24HfsS+1UL9y8qAuU6LJWb?=
+ =?us-ascii?Q?o8Oe6wuU5MFPSg5fstCias1Odoel0WTSu/XWK6kTy7xUxm0Sb1mmJYcM7UGx?=
+ =?us-ascii?Q?U+j7KrW1oIA9SoAUv/I5IxcEWBAHevc7ECZVnpg+FyJ/NSjzIQkKybtWArVg?=
+ =?us-ascii?Q?AHlaQGNv3T3qpMIMwen7W0hJcJWnsNyNWEHpi32CC8ezWJ/8bvZx9G7pnv14?=
+ =?us-ascii?Q?JlOyfDNlZAGe7mJQktmn5rRbn9vdUoSlSRU0vEHRsHGUPjuXy2+ASqcWmyBy?=
+ =?us-ascii?Q?L+sD01D36lI3LIUrFaceVG+FJq8ppie2E5R7piGEQ8fe5RjW4TJ3bGkNi8Ko?=
+ =?us-ascii?Q?jElEESFNtbjKpUbsm6J/Yr5je2/cxTtPjlmswRekWfhdGeYmlF17D25cbtS9?=
+ =?us-ascii?Q?OEoQDUe/a8qi4u4B7xb7tO8zErJko8o8YwoBWlMNUsEPJjF3nm/XKEnV7nEk?=
+ =?us-ascii?Q?xbpz1zqghRzcaYkPRX7eXwCRznvdnbVxOxV6iUqI5feVe7aGf2bht52ypDlL?=
+ =?us-ascii?Q?HghBMBtj8y8aB4Z7l7d45qDi8M4Iy0ehk03eqMXZ10K/+uuxis49JGKK5qC4?=
+ =?us-ascii?Q?xH2QLHu3TrCMcNm8XdwQcGrdqchnVUeUIv95md1YsdZ6/2sdTb0A5Dgyt6Zp?=
+ =?us-ascii?Q?1exFVM2eqVTfFiPLc/ps4MSCwvdV/xlhw476G6KQZLJ1o7qu8DR/qsNFVfiK?=
+ =?us-ascii?Q?bBTBAMvOjVSe4MEX+DYaXFr6JU4YxiURDllH2dkHxhdd5anBIB4PuyUZm+Xd?=
+ =?us-ascii?Q?AROh1r1Alf6RyXR+szzv5914uaiiZCEu/hmA7h0fNaHks0ihuuWHHZuul9hx?=
+ =?us-ascii?Q?C3fdwzgzZw=3D=3D?=
 X-OriginatorOrg: est.tech
-X-MS-Exchange-CrossTenant-Network-Message-Id: f29724cb-25a1-4aef-2f61-08ded2887ce2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02de5b57-1357-4cdf-c844-08ded2887dbe
 X-MS-Exchange-CrossTenant-AuthSource: DB9P189MB1641.EURP189.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2026 07:07:58.6505
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2026 07:08:00.1432
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: d2585e63-66b9-44b6-a76e-4f4b217d97fd
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5uUBoeFRMJCPT+9wu2Hi33jHayQFaWr8vwTiclT3FHL48mG4DiCQHOkrtReg941br+SuWijfXJ20q9eTvF48cQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: hoh744azNFIBQAL1d1se1839c7Z3X0C2jwK9jzEn1/pYRQM9cedTlbN15THmFnNI5HqOMbU04R9bIhPcMymz2Q==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8P189MB1316
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 25 Jun 2026 07:08:05 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19780
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19781
 
 Signed-off-by: Anders Heimer <anders.heimer@est.tech>
 ---
- lib/bb/fetch2/az.py | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ lib/bb/fetch2/git.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/fetch2/az.py b/lib/bb/fetch2/az.py
-index 1d3664f21..81fd14468 100644
---- a/lib/bb/fetch2/az.py
-+++ b/lib/bb/fetch2/az.py
-@@ -48,17 +48,17 @@ class Az(Wget):
-=20
-         # If were reaching the account transaction limit we might be refus=
-ed a connection,
-         # retrying allows us to avoid false negatives since the limit chan=
-ges over time
--        fetchcmd =3D self.basecmd + ' --retry-connrefused --waitretry=3D5'
-+        fetchcmd =3D self.basecmd + ['--retry-connrefused', '--waitretry=
-=3D5']
-=20
-         # We need to provide a localpath to avoid wget using the SAS
-         # ud.localfile either has the downloadfilename or ud.path
-         localpath =3D os.path.join(d.getVar("DL_DIR"), ud.localfile)
-         bb.utils.mkdirhier(os.path.dirname(localpath))
--        fetchcmd +=3D " -O %s" % shlex.quote(localpath)
-+        fetchcmd +=3D ["-O", localpath]
-=20
-=20
-         if ud.user and ud.pswd:
--            fetchcmd +=3D " --user=3D%s --password=3D%s --auth-no-challeng=
-e" % (ud.user, ud.pswd)
-+            fetchcmd +=3D ["--user=3D%s" % ud.user, "--password=3D%s" % ud=
-.pswd, "--auth-no-challenge"]
-=20
-         # Check if a Shared Access Signature was given and use it
-         az_sas =3D d.getVar('AZ_SAS')
-@@ -73,9 +73,9 @@ class Az(Wget):
-         dldir =3D d.getVar("DL_DIR")
-         if os.path.exists(ud.localpath):
-             # file exists, but we didnt complete it.. trying again.
--            fetchcmd +=3D " -c -P %s '%s'" % (dldir, azuri)
-+            fetchcmd +=3D ["-c", "-P", dldir, azuri]
-         else:
--            fetchcmd +=3D " -P %s '%s'" % (dldir, azuri)
-+            fetchcmd +=3D ["-P", dldir, azuri]
-=20
-         try:
-             self._runwget(ud, d, fetchcmd, False)
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 0fbd85441..a456465e6 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -505,7 +505,9 @@ class Git(FetchMethod):
+                 # Using worktree with the revision because .lfsconfig may =
+exists
+                 worktree_add_cmd =3D ud.basecmd + ['worktree', 'add', 'wt'=
+, revision]
+                 runfetchcmd(worktree_add_cmd, d, log=3Dprogresshandler, wo=
+rkdir=3Dclonedir)
+-                lfs_fetch_cmd =3D ud.basecmd + ['lfs', 'fetch', "--all" if=
+ fetchall else ""]
++                lfs_fetch_cmd =3D ud.basecmd + ['lfs', 'fetch']
++                if fetchall:
++                    lfs_fetch_cmd.append('--all')
+                 runfetchcmd(lfs_fetch_cmd, d, log=3Dprogresshandler, workd=
+ir=3D(clonedir + "/wt"))
+                 worktree_rem_cmd =3D ud.basecmd + ['worktree', 'remove', '=
+-f', 'wt']
+                 runfetchcmd(worktree_rem_cmd, d, log=3Dprogresshandler, wo=
+rkdir=3Dclonedir)
 
