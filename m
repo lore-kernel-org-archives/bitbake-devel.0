@@ -1,352 +1,355 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <jaipaul.cheernam@est.tech>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EFAC43458
-	for <webhook@archiver.kernel.org>; Fri, 26 Jun 2026 17:00:49 +0000 (UTC)
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.39461.1782493248163877348
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87945C43458
+	for <webhook@archiver.kernel.org>; Fri, 26 Jun 2026 19:05:19 +0000 (UTC)
+Received: from DUZPR83CU001.outbound.protection.outlook.com (DUZPR83CU001.outbound.protection.outlook.com [52.101.66.15])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.41780.1782500709513964861
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 26 Jun 2026 10:00:48 -0700
+ Fri, 26 Jun 2026 12:05:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=NE0p78AU;
- spf=pass (domain: gmail.com, ip: 209.85.210.53, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-7e93a16acc6so721728a34.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 26 Jun 2026 10:00:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782493247; x=1783098047; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UQigsD1RRMH3ZhVeRtkl5OFMIyalpvEhn8EsyHHRE8c=;
-        b=NE0p78AU9cL+kv2S0uTbHhSV9q6FRIohvGeYi2K9cFnM3gMbZN9vBup+nP4h+Jk3lj
-         9pRwx5hJWfmgsyATHF5Ai5gchmUwUHIqVTc6CdhA9riaxee0Jigi2Ox3V6q5T6fqkkmn
-         J1P7Hl6EUiZk664dJrI/sLhYdpaxZuQRf/UTpGq8r8hUBaZANDCsglTX+05HtJxUyLZz
-         i+va+f9sJtxPQ1TXEma8GJprYGOxNyZWr3YBc8YN1xz2zFJcHERkFNmMkm9RQRklj1P4
-         nyb5FPy74gAU/ibCQdBZV99iEsX6ndYtjXl2NNKh/HpKt3N2YsrjL9uRcISNQ3GqvLta
-         KQuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782493247; x=1783098047;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UQigsD1RRMH3ZhVeRtkl5OFMIyalpvEhn8EsyHHRE8c=;
-        b=B3XG8pb40YBafCuPc7i/SygV72Nz36OCfoYbbOrv2m4zRyeM7DIOTuHMTZxU4WoVF+
-         h5tCbs213CyPafjreya0UQAKrBjBC0mwrnZN3RRPtXG7iptuIzjzcLQS7EJpiEjmbozH
-         gjM1c7kB36pM5fiHT3HSN44EfGuPx3Odpo865iQ9+/8P2QcshGU4El3uqriTfq371Tne
-         CfKIc9RNIY5GI+pjZLt4tCsughZUTKBpdYG9iWiHlwCiGA+F5VR+FzYMd3lz1jJ3f8ni
-         4evPASzsOnrk21iPoLgwJjN1m3bNCC5xWIbhSQcodOCu14WN485FU7ETgNXUehLQo7+Z
-         AZSg==
-X-Gm-Message-State: AOJu0YzpqzriadunhrAOSn+aoDO+YJKwwH4iL90sOckicq00RX94jFPo
-	QFxMYtEwUDZNCfVCFZykeYvfobpOeTKzWcFAbDpaPdOPFEKlO4uJH1woUQwXBw==
-X-Gm-Gg: AfdE7cld5TR0JQ4CSUQGOlam/ivPi0jfCVoLuDVyw3cMFFDineAPsci4J84mVRfa6mF
-	2dWYQNgILidaiMDvbSHfOtr6ZlhqGs7dHFUrdBJxeAIjcT8EMXG908JngZsTBGo7rEAr6bvUE1e
-	87rlhHTOI143wj5FjOLOucadpro3SiUhbTXYu3peRmbzEhkxdXiguHCpMgFZzoTIbFxvgrzpWeB
-	nAEp3+39Aa1zOeTDgeOvYrR31nb86dElKGo8MWPBflhOsi2AkkTvbAx/DyJ8mV0fLNobmN7aDPA
-	NXW5KShtkfHi/W9SQqlHNlDm9wIhpNUZNFRKlgkV3PFVMLFGSeDrp6P7TBAIHTxfSqow0uBxM6J
-	i7G4dm6B+tHViL7j8XdtgOsPu231PqB8w6vaj2sC1DofzxU7sPKSbtsnd2cltww1bKiz+sYaDln
-	85RDmTwa5Vlsggnci3j/mZ
-X-Received: by 2002:a05:6830:2113:b0:7d7:58b0:7685 with SMTP id 46e09a7af769-7e9b4f38faamr758819a34.13.1782493246916;
-        Fri, 26 Jun 2026 10:00:46 -0700 (PDT)
-Received: from localhost.localdomain ([2601:283:4b02:22d0::51a2])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7e9aa5d3500sm2034714a34.8.2026.06.26.10.00.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2026 10:00:46 -0700 (PDT)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH] bb: Add prefuncs and postfuncs ordering
-Date: Fri, 26 Jun 2026 11:00:44 -0600
-Message-ID: <20260626170044.3829734-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.54.0
+ dkim=pass header.i=@est.tech header.s=selector1 header.b=bQB1Emi/;
+ spf=pass (domain: est.tech, ip: 52.101.66.15, mailfrom: jaipaul.cheernam@est.tech)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qi8WafaHdnoVk9LzfykJgVkypjaJ4nQVsBx5dB9KngF0zwQWgdwvI8W1uas1bDMBrp/oBwRXbQ7CTtTDC4J96gGkOvVQTLd1Sd/Lju28d7TmFf2M2ctvH43CgjJChdKSQZ/LjfWtWz+Ejxz5Fp2fGspMIUIu4GNFYnA/ion5Jmj+QebGbkGodRTLR9YCoeOrSM40NQD7P+neM5RA+UdqJJqGxwx7KxHmJzIWTO0d/yHLIQ1ikFQZ1Si8DZ+h4ja9RPGqY6f0rHFPGxSubqtwTY7AVT3YgK7pHXqajTVeUfxRR3Xpbv8kvl85jQV9cYs4MReE8VRKLcad6agUIRbTYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=G3Sw8dWHaX0bR5JsZqlA+Fura2/GLgzbtOoPX7pFA8Q=;
+ b=yeDvwV5UIiD/G36qYcQbg5ito7632nYgkjer1vOnsrANlIKjmtKd6dUCp6OHXFxnrC7mNKT8EMfR9TKzaycUTTrQ4LE4cvUEwWccxZ1MPNA//5bVBKfUUnmEtKeaaFKDBhhv2V5CCazZezOk/31M8tYP85zaeyyuFXIc18YVi2k8CAl9HG77e4JkVMHLobXFZkaNKlqO9cvZSIAVc8cqYhQZm4JLj1rWpchRek9wpTE+ZIhzZ82wRx36QsTTtE4ab9iZEiYuLexyaDB5eTahUUuYsO8NZ4P0936YcGbcZvA3PT80+BhVvUb4uB3qKtTVyjimeZt14138Hp44+SetGg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=est.tech; dmarc=pass action=none header.from=est.tech;
+ dkim=pass header.d=est.tech; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=est.tech; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G3Sw8dWHaX0bR5JsZqlA+Fura2/GLgzbtOoPX7pFA8Q=;
+ b=bQB1Emi/hPpCm5CkLZ2C95sy1u4+lhzcdQX2StCTExU++0Q9dMPlhVMmlYYDiSSr+yQV8KSjzjvkhkPI6sVk3mdqYFZ/E/+886Koetf6AWvLXD7lXs7c2+ka/h78LmnFLAsrj50Gkf9S9qhMGCo+aD1Tn8hIi259ZL8H8VGHXSMJxgdyzrhSWOujIuxztRRW8F9s2hZ9NdeZlfljUfvZjUHhSgp6kG+mtP6wUtxVAIrUEdwisQGQhmRCjTM+NCPPbrMexd/8r5at69EYPrCuWXFuf+6LbiMQWoAJ/MF6NnKFiwJfI2/UCPUmB+BgGuG0ypTS+0g90icunyOCHjvykA==
+Received: from GV1P189MB2954.EURP189.PROD.OUTLOOK.COM (2603:10a6:150:263::18)
+ by PAWP189MB2803.EURP189.PROD.OUTLOOK.COM (2603:10a6:102:469::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.17; Fri, 26 Jun
+ 2026 19:05:04 +0000
+Received: from GV1P189MB2954.EURP189.PROD.OUTLOOK.COM
+ ([fe80::a7e4:7d5b:ab4a:4b96]) by GV1P189MB2954.EURP189.PROD.OUTLOOK.COM
+ ([fe80::a7e4:7d5b:ab4a:4b96%3]) with mapi id 15.21.0159.016; Fri, 26 Jun 2026
+ 19:05:03 +0000
+From: Jaipaul Cheernam <jaipaul.cheernam@est.tech>
+To: Alexander Kanavin <alex.kanavin@gmail.com>
+CC: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [bitbake-devel] [PATCH v2] bitbake-setup: use bb.fetch for
+ buildtools installer download
+Thread-Topic: [bitbake-devel] [PATCH v2] bitbake-setup: use bb.fetch for
+ buildtools installer download
+Thread-Index: AQHdBXHCKy8QwT/LZk6UI5uAvsT6u7ZRDF8AgAAk80s=
+Date: Fri, 26 Jun 2026 19:05:03 +0000
+Message-ID: 
+ <GV1P189MB295481E22DAF24DA987F5B25F3EB2@GV1P189MB2954.EURP189.PROD.OUTLOOK.COM>
+References: <20260615121856.96250-1-jaipaul.cheernam@est.tech>
+ <20260626134320.36433-1-jaipaul.cheernam@est.tech>
+ <CANNYZj9buYV07NENuJZQo3NTznrVhhW2T4pruhrEo=+xyiH7Sg@mail.gmail.com>
+In-Reply-To: 
+ <CANNYZj9buYV07NENuJZQo3NTznrVhhW2T4pruhrEo=+xyiH7Sg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-GB
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-reactions: allow
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=est.tech;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: GV1P189MB2954:EE_|PAWP189MB2803:EE_
+x-ms-office365-filtering-correlation-id: 3b13459f-f3ea-48f6-56cf-08ded3b5d42a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: 
+ BCL:0;ARA:13230040|23010399003|1800799024|376014|366016|8096899003|13003099007|3023799007|6133799003|18002099003|22082099003|11063799006|38070700021|56012099006|4143699003;
+x-microsoft-antispam-message-info: 
+ bwGF121uPJdop2dr2ZwNnmziYGZQv+MK2jwuCagwZWHfQ39lAyksMebKmiGNB0K9GpAiMDXLIWKV3QakrTfk40fXaykT3v0NBqt1o9UY+wT+G7zu6xLx0fIL0Gc+orZiNItTzHFbjUv/SZmRLJKHs3cvOVPrjQvy1kqDLsWoVMaE+HcYNwPuuyDwrbrfJ/4SN3xaruGwgZ+YMzZS5BRr7j0DUUFGgCIGJykZzHAQylVbHHZvSHZm7+H2HXjXMTLG5rABx73ZS/STyXE8xC+vxY3SbM33TrDmA1UbU7ygElOwJ+F3g6yOUK+bj4zpcz+pTWfm7rvidUU2i24WGVFB5gy+JKHnP8tR8aEXCVlplZzQyB18O0wgxjoekiuhYTUNVgRG66fuHPrH6XGkWV3tZ8eOdFgpSvFP2o6mKqmND7k90UVEEMPZcwKNFr94TXolSRYToTmGmJ/r0UrW7Gz14Akb8zbET0Asl0o6/bhyHubtkun9Bvc+HS/xX6eSpJtXezvlZoe1g1TwiAFl2KQguD5nrIGzdHE1S062QzZAhCLT1703hUaccGRKcc+yKpjqpEukQRrgRpFH7xyeYpJIenkTyyZjbDqwiYy1edQgWww4YP/wEFGmOh1J2jPoTYkhF2Ka+3cr6vKxlQCSPY8QvMtgxRLMi1A7Y/k0B0Ymeks=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1P189MB2954.EURP189.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(376014)(366016)(8096899003)(13003099007)(3023799007)(6133799003)(18002099003)(22082099003)(11063799006)(38070700021)(56012099006)(4143699003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?utf-8?B?NENINklJZy9weFl4MGxKQTJ3THJzZVpYV01FRXc2NjlzQTFlNXUxLy8wdnpF?=
+ =?utf-8?B?ZzBJK3dMRUUrOHA4Mk5ZWGpIVXl4ZEI4clJPTUpwYTdLOTdZeXQ1aitpU2xS?=
+ =?utf-8?B?UG1jYzRuVEhkZUZaWFVPNmFhUTZvV1VtTSttamRSeG9PazVZZEE5S05yV0FF?=
+ =?utf-8?B?ZHZXWERZdHdQWUlLK09ZenlENlhQQlNkbm4wSGFMZE5NTGFpNzFicytPUmRz?=
+ =?utf-8?B?UkNnNmJ6NlJ2b2tXQS84b21xV2R2Z3pLQ1JrUFc1SFFVc0g3czNUSEhKUG81?=
+ =?utf-8?B?SmtvR2lFV3RjSEpvMEtBRDlWN1grbEpDZFF1WGRLMWxZT1A3VDN2SUFpbkx5?=
+ =?utf-8?B?VXc2TmpuaXAzT29wcmF4eXJxSkFSa2lLWXdSSDFhTG84RzBucWdmbUw3enRw?=
+ =?utf-8?B?MDE3RFA3ak5ZZ0FDaGhINnhkRjR5ejVrblAwc0Zhd0E2WXhGeUdIbm4xbkZj?=
+ =?utf-8?B?WjhOY0hLMFRPTm9oZW5kSjJ3VHFTR1YveWdOU3ZEZXVGTnpYeGRVZWVnNnVB?=
+ =?utf-8?B?TFNvcDhHOWtMQlNOVnZIY3lkZE9oU2lFVlI1VkxhcnYzZko2VTZrZXRSRmZw?=
+ =?utf-8?B?ZG9FZ0VIZFNSaUoxeHRNMHdTakxWcXhaTXZFY1VaN1VUVGxPdllPUXRqampm?=
+ =?utf-8?B?dkxUaEpDbk42VFMrZGVCVjVwYmpWelJMRlFVSDZGdmhmZTUzT016K2s3ZC8w?=
+ =?utf-8?B?cnNJWk1Ha01KTUdrSUNTN3ZrcFIxSUlUYUx2WFZKalZJM0RXakxFWkIzS1Nu?=
+ =?utf-8?B?WWxqS0FQWDhRKzFQTG9iR09qRzJPUFc2aVpLM1pDTGpQQWp1YThDNGlnWlhO?=
+ =?utf-8?B?UGlNb2JKRmloM0krUFRQbEVjWjBSU29vbEp0Tms3VGUrQk80NjMvL2krdEZ6?=
+ =?utf-8?B?MFpLR3BKSzBrSGhzRHVDVDhpR3YySGxIZlBQdW1HMjZoZHp5ZkNvS0N6cjJu?=
+ =?utf-8?B?OXA5STFEOFVuTjNYaW50a3Z4MzhDUDZzL3pwQk9DVVdZdUdKSTltek5jbnc1?=
+ =?utf-8?B?UjRMOUdjb1dxcVVrRkxmalVWWC96VXNkQ0REUHp3WXB6SUNOcHBLUUo5Yng2?=
+ =?utf-8?B?S053QkJndmtPZ0JYUFJDZERqWFF0V2FvdU00MW0vcVo3TzlXTmE4WEZtNWlI?=
+ =?utf-8?B?c1RKVXU4cXJBWjBGM1MvR25PSXMreU9DT3cvSXNNTlg2bk85SHdDTG1OOTlx?=
+ =?utf-8?B?dmhFRWFBVXk1YVdpM3laM0hvSDVTMmZzM1RpOTlESGFyaVUwRmdTdm0yWkdr?=
+ =?utf-8?B?QWhWMllraHBLVlBTS1NZZ29EYy9tLzl5ak9Mak9sM0FiZWQ4ZUVSblN0dHBo?=
+ =?utf-8?B?OXVuekkrR2dxQjRQb211MDVDVm9RRExxdjc2MmxpM2xkT05qaVlXRXNjVHR5?=
+ =?utf-8?B?V2lnV1pBVHZCcXhscWJyTUxMY1ZRZE5LTklTRERnMWIzb1JLZlRLWlBRRzR0?=
+ =?utf-8?B?THFkMG91UEIxeDBQSEtxK04xZWIxSVhsWTZPL05YY0g0T3YxYU9veXNNNGNB?=
+ =?utf-8?B?UWlaVk5VeXlXcXNvcWp4TzBBV1hxcmE5R05vcVowMFhjbjlsZnRsK3N0bDcz?=
+ =?utf-8?B?NTZiUXhRVXM2eFlyLzN3bUw2NW9YUjhHUm43NUIwR24xYng4T1VDeGlWbWZp?=
+ =?utf-8?B?K1AyT2ZWVXVwUDBBWUdaLzEyQm9wUFI2Nk5DYTQ5RC9SUHJ5QjFaRnZRYTAz?=
+ =?utf-8?B?MVR1NksraU8wMjJ3VjBicHFrVlpINU1oMW5hZVlMTXpJU3NYR3RJSWF5MlFo?=
+ =?utf-8?B?THAyaEo1aU0ycnpYZ2JBWEVwM01zcEUzS05tL2Y1M243TFRWR3RkV1dGc2NZ?=
+ =?utf-8?B?Z2M2MkFMUjlhQjJ3NStpUTR2YVRNaHJ3VnRjdjM1MC9QMzZpWUtEQUhCRGdp?=
+ =?utf-8?B?RGs3WHlpZHlnRFQwU3E4elJaWnFoVUQ2YTE4WFpkZGUxQWVnbG96VWJhMXAx?=
+ =?utf-8?B?cGFyVjVjTFNLSDNxK1Q0MWVlS293OUhRQnoyNGJJWE5CUE1BWjhjdkxPOHZB?=
+ =?utf-8?B?dFYwcytaYjQ0UURsTnNUN2M4dUloWmpwdHhJWFpJZUdYRGtReG9VREl6V21F?=
+ =?utf-8?B?bDlkWEh2Nm1vdkRES0N4TVBxeXVTZi9EVGtydEhRbjh1aHZVQ3dER3hJb0lr?=
+ =?utf-8?B?dFFVVkRSaFlnUVdGYkMxQm11b3gvM1VCRXVaemdTdkt4d2lmUE15QXo2RFA3?=
+ =?utf-8?B?RlVKeTFyVURRVTRzSSt3cjU3Njd0SG9ReGJpY1BPRGtCNTZvOEZDZ3ZkeTVB?=
+ =?utf-8?B?TlQ5YWIwN0Qvc2VkNVo3VVVoZjhNQVd5YlEyc2NmWThNSmc5S2ZZdGZTYjlM?=
+ =?utf-8?B?d0xvNmErSkJGMGtYNVZiT3gweDdNa2UzdWFJcUxKaUdSWVBOZHdDWVh4Rno0?=
+ =?utf-8?Q?utCokN5hZoKCnWHE=3D?=
+Content-Type: multipart/alternative;
+	boundary="_000_GV1P189MB295481E22DAF24DA987F5B25F3EB2GV1P189MB2954EURP_"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: est.tech
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: GV1P189MB2954.EURP189.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b13459f-f3ea-48f6-56cf-08ded3b5d42a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2026 19:05:03.4669
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d2585e63-66b9-44b6-a76e-4f4b217d97fd
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 26ipUS+y73BS90q4vPqkQDob6ZaDADdk36Be2Whyq0JrmTqKhu5wb/3a+lSBIM3NQizAxnY2EMoFq8ZK5ovcHgLVV8RapxbPqJAZy3HGoc4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWP189MB2803
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 26 Jun 2026 17:00:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19792
+ <bitbake-devel@lists.openembedded.org>; Fri, 26 Jun 2026 19:05:19 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19793
 
-Adds the ability for functions specified in prefuncs and postfuncs to
-specify the order in which they must execute. This allows specific
-functions to indicate that they must run first or last (or second,
-second to last, etc.) without needing all places in the code that
-manipulate the function list to have to agree on how to order them
-(a good example of this is sstate.bbclass and buildhistory.bbclass).
+--_000_GV1P189MB295481E22DAF24DA987F5B25F3EB2GV1P189MB2954EURP_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Ordering is done similar to how python list indices work; 0 is always
-sorted first, 1 is second, -2 is second to last, -1 is last, etc. In the
-event of functions having duplicate values, they are grouped together,
-but keep their same relative ordering. If one or more functions do not
-have an order assigned, they executed between the positive order
-functions and the negative order functions, and keep their same relative
-order (this means that existing behavior is preserved in the absence of
-any ordering information).
+SGkgQWxleCwNCg0KVGhhbmtzIGZvciB0aGUgcmV2aWV3Lg0KDQoxLiAtLWRlZmF1bHQg4oCUIHN1
+cmUsIHdpbGwgYWRkLg0KMi4gZmV0Y2hlci4gVW5wYWNrKCkg4oCUIGdvb2QgcG9pbnQsIEknbGwg
+dXNlIHRoYXQgaW5zdGVhZCBvZiByZWFjaGluZyBpbnRvIERMX0RJUiBkaXJlY3RseQ0KMy4gVGhl
+IGV4cGxpY2l0IHNoYTI1NiBjaGVjayDigJQgeW91J3JlIHJpZ2h0LCB0aGlzIHdhcyBhZGRlZCBi
+ZWNhdXNlIGF1dG9tYXRlZCByZXZpZXdlcnMgcG9pbnRlZCBvdXQgdGhhdCBmaWxlOi8vDQogIGRv
+ZXNuJ3QgZW5mb3JjZSBjaGVja3N1bXMuICBJJ2xsIGRyb3AgdGhlIGV4cGxpY2l0IGNoZWNrDQo0
+LiBQdXR0aW5nIGluc3RhbGwtYnVpbGR0b29scyBpbnNpZGUgY29uZmlndXJhdGlvbnMg4oCUIG1h
+a2VzIHNlbnNlIGZvciB0aGUgZnV0dXJlLiBXYW50IG1lIHRvIGRvIHRoYXQgbm93IG9yIGFzIGEN
+CiAgZm9sbG93LXVwPw0KDQpJIHdpbGwgc2VuZCB2MyB3aXRoIGFib3ZlIGNvcnJlY3Rpb25zLg0K
+DQpSZWdhcmRzLA0KSmFpcGF1bCBDaGVlcm5hbQ0KDQrwn5SXIEVTVCBXZWJzaXRlPGh0dHBzOi8v
+d3d3LmVzdC50ZWNoLz4NCvCflJcgRVNUIExpbmtlZEluPGh0dHBzOi8vd3d3LmxpbmtlZGluLmNv
+bS9jb21wYW55L2VyaWNzc29uLXNvZnR3YXJlLXRlY2hub2xvZ3kvPg0KDQpGcm9tOiBBbGV4YW5k
+ZXIgS2FuYXZpbiA8YWxleC5rYW5hdmluQGdtYWlsLmNvbT4NCkRhdGU6IEZyaWRheSwgMjYgSnVu
+ZSAyMDI2IGF0IDE4OjQ4DQpUbzogSmFpcGF1bCBDaGVlcm5hbSA8amFpcGF1bC5jaGVlcm5hbUBl
+c3QudGVjaD4NCkNjOiBiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcgPGJpdGJh
+a2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZz4NClN1YmplY3Q6IFJlOiBbYml0YmFrZS1k
+ZXZlbF0gW1BBVENIIHYyXSBiaXRiYWtlLXNldHVwOiB1c2UgYmIuZmV0Y2ggZm9yIGJ1aWxkdG9v
+bHMgaW5zdGFsbGVyIGRvd25sb2FkDQoNCk9uIEZyaSwgMjYgSnVuIDIwMjYgYXQgMTU6NDMsIEph
+aXBhdWwgQ2hlZXJuYW0gdmlhDQpsaXN0cy5vcGVuZW1iZWRkZWQub3JnDQo8amFpcGF1bC5jaGVl
+cm5hbT1lc3QudGVjaEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPiB3cm90ZToNCj4gV2hlbiB1cmwg
+YW5kIHNoYTI1NnN1bSBhcmUgY29uZmlndXJlZCwgZG93bmxvYWQgdGhlIGJ1aWxkdG9vbHMNCj4g
+aW5zdGFsbGVyIHZpYSBiYi5mZXRjaCB3aXRoIGNoZWNrc3VtIGVuZm9yY2VtZW50LiBUaGUgZmls
+ZSBpcw0KPiBjYWNoZWQgaW4gRExfRElSIGFuZCBwYXNzZWQgdG8gaW5zdGFsbC1idWlsZHRvb2xz
+IHZpYSAtLWxvY2FsLWZpbGUuDQoNClRoYW5rcywgdGhpcyBiYXNpY2FsbHkgbG9va3Mgb2ssIGJ1
+dCBJIGhhdmUgYSBmZXcgcmV2aWV3IHBvaW50cy4NCg0KPiBJZiBubyBpbnN0YWxsLWJ1aWxkdG9v
+bHMgY29uZmlnIGlzIHByZXNlbnQsIGZhbGwgYmFjayB0byBjYWxsaW5nDQo+IGluc3RhbGwtYnVp
+bGR0b29scyBkaXJlY3RseSAocHJlc2VydmluZyBleGlzdGluZyBkZWZhdWx0IGJlaGF2aW91ciku
+DQo+DQo+IENMSSBvdmVycmlkZXMgYXZhaWxhYmxlIHZpYSAtLXVybCBhbmQgLS1zaGEyNTYuDQoN
+CkkgdGhpbmsgdGhlcmUgc2hvdWxkIGFsc28gYmUgYSAtLWRlZmF1bHQgY29tbWFuZCBsaW5lIG9w
+dGlvbiwgd2hpY2gNCndvdWxkIHNpbWlsYXJseSBmYWxsIGJhY2sgdG8gZ2V0dGluZyBhbmQgaW5z
+dGFsbGluZyB0aGUgZGVmYXVsdA0KYnVpbGR0b29scyBldmVuIGlmIGNvbmZpZyBmaWxlIHNwZWNp
+ZmllcyBzb21ldGhpbmcgZWxzZS4NCg0KPiArICAgICMgTG9jYXRlIHRoZSBkb3dubG9hZGVkIGZp
+bGUNCj4gKyAgICBsb2NhbF9wYXRoID0gZmV0Y2hlci5sb2NhbHBhdGgoc3JjX3VyaSkNCj4gKw0K
+PiArICAgIGlmIG5vdCBvcy5wYXRoLmV4aXN0cyhsb2NhbF9wYXRoKToNCj4gKyAgICAgICAgbG9n
+Z2VyLmVycm9yKCJEb3dubG9hZGVkIGZpbGUgbm90IGZvdW5kIGF0IGV4cGVjdGVkIGxvY2F0aW9u
+IikNCj4gKyAgICAgICAgc3lzLmV4aXQoMSkNCg0KSSB3b3VsZCByYXRoZXIgdXNlIGZldGNoZXIu
+dW5wYWNrKCksIHRoYW4gdXNlIHRoZSBmaWxlIGRpcmVjdGx5IGZyb20NCkRMX0RJUi4gSXQncyBi
+ZXR0ZXIgdG8gb25seSBhbGxvdyB0aGUgZmV0Y2hlciB0byB0b3VjaCBjb250ZW50IG9mDQpETF9E
+SVIuDQoNCj4gKyAgICAjIFZlcmlmeSBjaGVja3N1bSBleHBsaWNpdGx5IChmaWxlOi8vIGZldGNo
+ZXIgZG9lcyBub3QgZW5mb3JjZSBjaGVja3N1bXMpDQo+ICsgICAgYWN0dWFsX3NoYTI1NiA9IGJi
+LnV0aWxzLnNoYTI1Nl9maWxlKGxvY2FsX3BhdGgpDQo+ICsgICAgaWYgYWN0dWFsX3NoYTI1NiAh
+PSBzaGEyNTY6DQo+ICsgICAgICAgIGxvZ2dlci5lcnJvcigiQ2hlY2tzdW0gbWlzbWF0Y2ggZm9y
+IGJ1aWxkdG9vbHMgaW5zdGFsbGVyOlxuIg0KPiArICAgICAgICAgICAgICAgICAgICAgIiAgZXhw
+ZWN0ZWQ6ICVzXG4iDQo+ICsgICAgICAgICAgICAgICAgICAgICAiICBhY3R1YWw6ICAgJXMiICUg
+KHNoYTI1NiwgYWN0dWFsX3NoYTI1NikpDQo+ICsgICAgICAgIHN5cy5leGl0KDEpDQoNClRoaXMg
+SSBkb24ndCBxdWl0ZSB1bmRlcnN0YW5kLiBXaHkgaXMgdGhlIGNoZWNrc3VtIHZlcmlmaWVkIGFn
+YWluIGlmDQp0aGUgZmV0Y2hlciBhbHJlYWR5IGRpZCBpdD8gV2h5IGlzIGZpbGU6Ly8gZmV0Y2hl
+ciBtZW50aW9uZWQ/IEFJDQpjb25mdXNpb24/DQoNCj4gKyAgICJiaXRiYWtlLXNldHVwIjogew0K
+PiArICAgICAgICJpbnN0YWxsLWJ1aWxkdG9vbHMiOiB7DQo+ICsgICAgICAgICAgICJ1cmwiOiAi
+aHR0cHM6Ly9leGFtcGxlLmNvbS9idWlsZHRvb2xzL3g4Nl82NC1idWlsZHRvb2xzLWV4dGVuZGVk
+LW5hdGl2ZXNkay1zdGFuZGFsb25lLTUuMC5zaCIsDQo+ICsgICAgICAgICAgICJzaGEyNTZzdW0i
+OiAiYWY3NjY0OGIuLi4iDQo+ICsgICAgICAgfSwNCj4gKyAgICAgICAiY29uZmlndXJhdGlvbnMi
+OiBbIC4uLiBdDQo+ICsgICB9DQoNCkkgd29uZGVyIGlmIHRoZSAnaW5zdGFsbC1idWlsZHRvb2xz
+JyBibG9jayBzaG91bGQgYmUgZGVmaW5lZCBpbnNpZGUgYQ0KcGFydGljdWxhciBjb25maWd1cmF0
+aW9uLiBDb25maWd1cmF0aW9ucyBjYW4gYmUgbmVzdGVkLCBzbyB0aGF0IHN0aWxsDQphbGxvd3Mg
+ZGVmaW5pbmcgYSBzaW5nbGUgYnVpbGR0b29scyBmb3IgYWxsIG9mIHRoZW0sIGJ1dCB0aGlzIHdv
+dWxkDQphbHNvIGFsbG93IHNwZWNpZnlpbmcgc2VwYXJhdGUgYnVpbGR0b29scyBmb3IgcGFydGlj
+dWxhcg0KY29uZmlndXJhdGlvbnMuIEknbSBub3Qgc3VyZSBpZiBhIHVzZSBjYXNlIGZvciB0aGF0
+IHdpbGwgYXJpc2UsIGJ1dCBhdA0KbGVhc3QgYml0YmFrZS1zZXR1cCB3aWxsIGJlIHJlYWR5IGZv
+ciBpdC4gV2hhdCB5b3UgdGhpbms/DQoNCkFsZXgNCg==
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- .../bitbake-user-manual-metadata.rst          | 31 ++++++++++-
- lib/bb/build.py                               | 52 ++++++++++++++++++-
- lib/bb/tests/runqueue-tests/recipes/funcs.inc | 44 ++++++++++++++++
- .../tests/runqueue-tests/recipes/postfuncs.bb | 10 ++++
- .../tests/runqueue-tests/recipes/prefuncs.bb  | 10 ++++
- lib/bb/tests/runqueue.py                      | 26 +++++++++-
- 6 files changed, 168 insertions(+), 5 deletions(-)
- create mode 100644 lib/bb/tests/runqueue-tests/recipes/funcs.inc
- create mode 100644 lib/bb/tests/runqueue-tests/recipes/postfuncs.bb
- create mode 100644 lib/bb/tests/runqueue-tests/recipes/prefuncs.bb
+--_000_GV1P189MB295481E22DAF24DA987F5B25F3EB2GV1P189MB2954EURP_
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-index 0c7c3ff99..607f98d02 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-@@ -1827,10 +1827,37 @@ functionality of the task:
-          the :term:`BB_NUMBER_THREADS` variable causes ``number_threads`` to
-          have no effect.
- 
---  ``[postfuncs]``: List of functions to call after the completion of
--   the task.
-+-  ``[postfuncs]``: List of functions to call after the completion of the task.
-+   Functions specified may set a ``[postfunc-order]`` flag to specify the order
-+   in which they will execute. The ordering is based on the way that python
-+   does list indexes. The first group of functions executed are those with a
-+   positive or zero ``[postfunc-order]`` flag, in increasing order (i.e.  "0"
-+   is first, "1" is second, etc.). The next group executed are functions that
-+   do not have a ``[postfunc-order]`` flag set, in the relative order they are
-+   specified in ``[postfuncs]``. The last group are functions with a negative
-+   ``[postfunc-order]`` flag, in increasing order (i.e. "-2" is the second to
-+   last, "-1" is the last). If two functions have the same ``[postfunc-order]``
-+   value, they will be grouped together, but keep the same relative order they
-+   had in ``[postfuncs]``.
-+
-+-  ``[postfunc-order]``: The order this function will be executed in when
-+   listed in ``[postfuncs]``.
- 
- -  ``[prefuncs]``: List of functions to call before the task executes.
-+   Functions specified may set a ``[prefunc-order]`` flag to specify the order
-+   in which they will execute.  The ordering is based on the way that python
-+   does list indexes. The first group of functions executed are those with a
-+   positive or zero ``[prefunc-order]`` flag, in increasing order (i.e.  "0" is
-+   first, "1" is second, etc.). The next group executed are functions that do
-+   not have a ``[prefunc-order]`` flag set, in the relative order they are
-+   specified in ``[prefuncs]``. The last group are functions with a negative
-+   ``[prefunc-order]`` flag, in increasing order (i.e. "-2" is the second to
-+   last, "-1" is the last). If two functions have the same ``[prefunc-order]``
-+   value, they will be grouped together, but keep the same relative order they
-+   had in ``[prefuncs]``.
-+
-+-  ``[prefunc-order]``: The order this function will be executed in when
-+   listed in ``[prefuncs]``.
- 
- -  ``[rdepends]``: Controls inter-task runtime dependencies. See the
-    :term:`RDEPENDS` variable, the
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 40839a81b..7f8eda083 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -596,6 +596,54 @@ def _task_data(fn, task, d):
-     bb.data.expandKeys(localdata)
-     return localdata
- 
-+
-+def _sort_funcs(d, funcs, key):
-+    """
-+    Sorts pre/post functions based on a priority flag of the function. The
-+    function can define its order using one of three buckets:
-+        1) A positive or zero priority
-+        2) No priority
-+        3) A negative priority
-+
-+    When sorting the functions, they are sorted in the following order:
-+        1) Functions with positive or zero priority in ascending order
-+        2) Functions with no priority in the order they were defined (e.g.
-+           their relative priority is preserved)
-+        3) Functions with negative priority, in ascending order
-+
-+    Practically speaking, this implements a similar sorting scheme to python
-+    list indexing. "0" will always be the first function exeucted, "1" will be
-+    the second (assuming there is a "0"), "-1" will always be the last function
-+    executed, and "-2" will be the second to last (assuming there is a "-1").
-+
-+    Functions with no priority are preserved in their defined order, which keeps
-+    this algorithm compatible with simply defining to execution order based on
-+    the order in the variable.
-+    """
-+    # MAX_ORDER_VALUE is arbitrary; it just limits the maximum order priority
-+    # that can be assigned to any function
-+    MAX_ORDER_VALUE = 10000
-+
-+    def get_func_key(f):
-+        v = d.getVarFlag(f, key, False)
-+        if v is None or v == "":
-+            return MAX_ORDER_VALUE
-+
-+        try:
-+            v = int(v)
-+        except ValueError as e:
-+            bb.fatal(f"Invalid value for {prefix}-order varflag on function {f}: {e}")
-+
-+        if v >= MAX_ORDER_VALUE or v <= -MAX_ORDER_VALUE:
-+            bb.fatal(f"Invalid value for {prefix}-order varflag on function {f}: {v} is out of range")
-+
-+        if v < 0:
-+            return (2 * MAX_ORDER_VALUE) + v
-+        return v
-+
-+    return sorted(funcs, key=get_func_key)
-+
-+
- def _exec_task(fn, task, d, quieterr):
-     """Execute a BB 'task'
- 
-@@ -708,10 +756,10 @@ def _exec_task(fn, task, d, quieterr):
-         try:
-             event.fire(TaskStarted(task, fn, logfn, flags, localdata), localdata)
- 
--            for func in (prefuncs or '').split():
-+            for func in _sort_funcs(localdata, (prefuncs or '').split(), "prefunc-order"):
-                 exec_func(func, localdata)
-             exec_func(task, localdata)
--            for func in (postfuncs or '').split():
-+            for func in _sort_funcs(localdata, (postfuncs or '').split(), "postfunc-order"):
-                 exec_func(func, localdata)
-         finally:
-             # Need to flush and close the logs before sending events where the
-diff --git a/lib/bb/tests/runqueue-tests/recipes/funcs.inc b/lib/bb/tests/runqueue-tests/recipes/funcs.inc
-new file mode 100644
-index 000000000..5e72b819e
---- /dev/null
-+++ b/lib/bb/tests/runqueue-tests/recipes/funcs.inc
-@@ -0,0 +1,44 @@
-+TASKS = ""
-+
-+python do_build:append() {
-+    d.appendVar("TASKS", " build")
-+}
-+
-+python func_1() {
-+    d.appendVar("TASKS", " 1")
-+}
-+
-+python func_2() {
-+    d.appendVar("TASKS", " 2")
-+}
-+
-+python func_3() {
-+    d.appendVar("TASKS", " 3")
-+}
-+
-+python func_4() {
-+    d.appendVar("TASKS", " 4")
-+}
-+
-+python func_5() {
-+    d.appendVar("TASKS", " 5")
-+}
-+
-+python func_6() {
-+    d.appendVar("TASKS", " 6")
-+}
-+
-+python func_7() {
-+    d.appendVar("TASKS", " 7")
-+}
-+
-+python func_8() {
-+    d.appendVar("TASKS", " 8")
-+}
-+
-+python write_log() {
-+    with open(d.getVar("ORDER_LOG"), "w") as f:
-+        f.write(d.getVar("TASKS"))
-+}
-+write_log[postfunc-order] = "-1"
-+do_build[postfuncs] += "write_log"
-diff --git a/lib/bb/tests/runqueue-tests/recipes/postfuncs.bb b/lib/bb/tests/runqueue-tests/recipes/postfuncs.bb
-new file mode 100644
-index 000000000..be82b7302
---- /dev/null
-+++ b/lib/bb/tests/runqueue-tests/recipes/postfuncs.bb
-@@ -0,0 +1,10 @@
-+require funcs.inc
-+
-+do_build[postfuncs] += "func_8 func_6 func_7 func_4 func_5 func_2 func_3 func_1"
-+
-+func_1[postfunc-order] = "0"
-+func_2[postfunc-order] = "1"
-+func_3[postfunc-order] = "1"
-+func_6[postfunc-order] = "-3"
-+func_7[postfunc-order] = "-3"
-+func_8[postfunc-order] = "-2"
-diff --git a/lib/bb/tests/runqueue-tests/recipes/prefuncs.bb b/lib/bb/tests/runqueue-tests/recipes/prefuncs.bb
-new file mode 100644
-index 000000000..6c8d1e380
---- /dev/null
-+++ b/lib/bb/tests/runqueue-tests/recipes/prefuncs.bb
-@@ -0,0 +1,10 @@
-+require funcs.inc
-+
-+do_build[prefuncs] += "func_8 func_6 func_7 func_4 func_5 func_2 func_3 func_1"
-+
-+func_1[prefunc-order] = "0"
-+func_2[prefunc-order] = "1"
-+func_3[prefunc-order] = "1"
-+func_6[prefunc-order] = "-3"
-+func_7[prefunc-order] = "-3"
-+func_8[prefunc-order] = "-2"
-diff --git a/lib/bb/tests/runqueue.py b/lib/bb/tests/runqueue.py
-index 74f5ded2e..ecc6ab6db 100644
---- a/lib/bb/tests/runqueue.py
-+++ b/lib/bb/tests/runqueue.py
-@@ -12,6 +12,7 @@ import tempfile
- import subprocess
- import sys
- import time
-+from contextlib import contextmanager
- 
- #
- # TODO:
-@@ -53,6 +54,14 @@ class RunQueueTests(unittest.TestCase):
-                 os.remove(tasklog)
-         return tasks
- 
-+    @contextmanager
-+    def tempdir(self):
-+        with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
-+            try:
-+                yield tempdir
-+            finally:
-+                self.shutdown(tempdir)
-+
-     def test_no_setscenevalid(self):
-         with tempfile.TemporaryDirectory(prefix="runqueuetest") as tempdir:
-             cmd = ["bitbake", "a1"]
-@@ -403,8 +412,23 @@ class RunQueueTests(unittest.TestCase):
- 
-             self.shutdown(tempdir)
- 
-+    def test_postfuncs(self):
-+        with self.tempdir() as tempdir:
-+            log = f"{tempdir}/postlog.txt"
-+            tasks = self.run_bitbakecmd(["bitbake", "postfuncs"], tempdir, extraenv={"ORDER_LOG": log})
-+            self.assertTrue(os.path.exists(log), "Log file not written")
-+            with open(log, "r") as f:
-+                self.assertEqual(f.read(), " build 1 2 3 4 5 6 7 8")
-+
-+    def test_prefuncs(self):
-+        with self.tempdir() as tempdir:
-+            log = f"{tempdir}/prelog.txt"
-+            tasks = self.run_bitbakecmd(["bitbake", "prefuncs"], tempdir, extraenv={"ORDER_LOG": log})
-+            self.assertTrue(os.path.exists(log), "Log file not written")
-+            with open(log, "r") as f:
-+                self.assertEqual(f.read(), " 1 2 3 4 5 6 7 8 build")
-+
-     def shutdown(self, tempdir):
-         # Wait for the hashserve socket to disappear else we'll see races with the tempdir cleanup
-         while (os.path.exists(tempdir + "/hashserve.sock") or os.path.exists(tempdir + "cache/hashserv.db-wal") or os.path.exists(tempdir + "/bitbake.lock")):
-             time.sleep(0.5)
--
--- 
-2.54.0
+PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
+dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjwvaGVhZD4NCjxib2R5Pg0KPGRpdiBzdHlsZT0i
+ZGlyZWN0aW9uOiBsdHI7IGZvbnQtZmFtaWx5OiBBcHRvcywgQXJpYWwsIEhlbHZldGljYSwgc2Fu
+cy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+DQpIaSBBbGV4
+LCZuYnNwOzwvZGl2Pg0KPGRpdiBzdHlsZT0iZGlyZWN0aW9uOiBsdHI7IGZvbnQtZmFtaWx5OiBB
+cHRvcywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xv
+cjogcmdiKDAsIDAsIDApOyI+DQo8YnI+DQo8L2Rpdj4NCjxkaXYgc3R5bGU9ImRpcmVjdGlvbjog
+bHRyOyBmb250LWZhbWlseTogQXB0b3MsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZv
+bnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPg0KVGhhbmtzIGZvciB0aGUgcmV2
+aWV3LjwvZGl2Pg0KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IEFwdG9zLCBBcmlhbCwgSGVsdmV0
+aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4N
+CiZuYnNwOyAmbmJzcDsmbmJzcDs8L2Rpdj4NCjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBBcHRv
+cywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjog
+cmdiKDAsIDAsIDApOyI+DQoxLiAtLWRlZmF1bHQg4oCUIHN1cmUsIHdpbGwgYWRkLjwvZGl2Pg0K
+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IEFwdG9zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNl
+cmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4NCjIuIGZldGNoZXIu
+IFVucGFjaygpIOKAlCBnb29kIHBvaW50LCBJJ2xsIHVzZSB0aGF0IGluc3RlYWQgb2YgcmVhY2hp
+bmcgaW50byBETF9ESVIgZGlyZWN0bHk8L2Rpdj4NCjxkaXYgc3R5bGU9ImRpcmVjdGlvbjogbHRy
+OyBmb250LWZhbWlseTogQXB0b3MsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQt
+c2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPg0KMy4gVGhlIGV4cGxpY2l0IHNoYTI1
+NiBjaGVjayDigJQgeW91J3JlIHJpZ2h0LCB0aGlzIHdhcyBhZGRlZCBiZWNhdXNlIGF1dG9tYXRl
+ZCByZXZpZXdlcnMgcG9pbnRlZCBvdXQgdGhhdCBmaWxlOi8vPC9kaXY+DQo8ZGl2IHN0eWxlPSJm
+b250LWZhbWlseTogQXB0b3MsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6
+ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPg0KJm5ic3A7IGRvZXNuJ3QgZW5mb3JjZSBj
+aGVja3N1bXMuICZuYnNwO0knbGwgZHJvcCB0aGUgZXhwbGljaXQgY2hlY2s8L2Rpdj4NCjxkaXYg
+c3R5bGU9ImZvbnQtZmFtaWx5OiBBcHRvcywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsg
+Zm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+DQo0LiBQdXR0aW5nIGluc3Rh
+bGwtYnVpbGR0b29scyBpbnNpZGUgY29uZmlndXJhdGlvbnMg4oCUIG1ha2VzIHNlbnNlIGZvciB0
+aGUgZnV0dXJlLiBXYW50IG1lIHRvIGRvIHRoYXQgbm93IG9yIGFzIGE8L2Rpdj4NCjxkaXYgc3R5
+bGU9ImZvbnQtZmFtaWx5OiBBcHRvcywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9u
+dC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+DQombmJzcDsgZm9sbG93LXVwPzwv
+ZGl2Pg0KPGRpdiBzdHlsZT0iZGlyZWN0aW9uOiBsdHI7IGZvbnQtZmFtaWx5OiBBcHRvcywgQXJp
+YWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAs
+IDAsIDApOyI+DQo8YnI+DQo8L2Rpdj4NCjxkaXYgc3R5bGU9ImRpcmVjdGlvbjogbHRyOyBmb250
+LWZhbWlseTogQXB0b3MsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTog
+MTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPg0KSSB3aWxsIHNlbmQgdjMgd2l0aCBhYm92ZSBj
+b3JyZWN0aW9ucy4mbmJzcDs8L2Rpdj4NCjxkaXYgc3R5bGU9ImRpcmVjdGlvbjogbHRyOyBmb250
+LWZhbWlseTogQXB0b3MsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTog
+MTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPg0KPGJyPg0KPC9kaXY+DQo8ZGl2IGlkPSJtcy1v
+dXRsb29rLW1vYmlsZS1zaWduYXR1cmUiPg0KPGRpdj5SZWdhcmRzLDwvZGl2Pg0KPGRpdiBzdHls
+ZT0iZGlyZWN0aW9uOiBsdHI7IGZvbnQtZmFtaWx5OiBBcHRvcywgQXJpYWwsIEhlbHZldGljYSwg
+c2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+DQpKYWlw
+YXVsIENoZWVybmFtPC9kaXY+DQo8ZGl2IHN0eWxlPSJkaXJlY3Rpb246IGx0cjsgZm9udC1mYW1p
+bHk6IEFwdG9zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7
+IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4NCjxicj4NCjwvZGl2Pg0KPGRpdiBzdHlsZT0iZGlyZWN0
+aW9uOiBsdHI7IGZvbnQtZmFtaWx5OiBBcHRvcywgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJp
+ZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+DQo8c3BhbiBzdHlsZT0i
+dGV4dC10cmFuc2Zvcm06IG5vbmU7Ij7wn5SXIDxhIGhyZWY9Imh0dHBzOi8vd3d3LmVzdC50ZWNo
+LyIgaWQ9Im1lbnVyMnE3IiBjbGFzcz0iZnVpLUxpbmsgX19fMXExc2hpYiBmMmhrdzF3IGYzcm10
+dmEgZjFld3RxY2wgZnlpbmQ4ZSBmMWs2ZmR1aCBmMXc3Z3BkdiBmazZmb3VjIGZqb3k1NjggZmln
+c29rNiBmMXMxODRhbyBmMW1rOGxhaSBmbmJtam45IGYxbzcwMGF2IGYxM212ZjM2IGYxY21sdWZ4
+IGY5bjNkaTYgZjFpZHMxOHkgZjF0eDN5ejcgZjFkZW84NnYgZjFlaDA2bTEgZjFpZXNjdmggZmhn
+cXgxOSBmMW9seXJqZSBmMXA5M2VpciBmMW5ldjQxYSBmMWg4aGI3NyBmMWxxdno2dSBmMTBhdzc1
+dCBmc2xlM2ZxIGYxN2FlNXpuIiB0aXRsZT0iaHR0cHM6Ly93d3cuZXN0LnRlY2gvIiByZWw9Im5v
+cmVmZXJyZXIgbm9vcGVuZXIiIGRhdGEtb3V0bG9vay1pZD0iNWExMzE1NzktYmUyYi00OTFhLWEy
+MmMtNWQ0ODNmYzFhOTEzIj4NCkVTVCBXZWJzaXRlPC9hPjxicj4NCvCflJcgPGEgaHJlZj0iaHR0
+cHM6Ly93d3cubGlua2VkaW4uY29tL2NvbXBhbnkvZXJpY3Nzb24tc29mdHdhcmUtdGVjaG5vbG9n
+eS8iIGlkPSJtZW51cjJxOSIgY2xhc3M9ImZ1aS1MaW5rIF9fXzFxMXNoaWIgZjJoa3cxdyBmM3Jt
+dHZhIGYxZXd0cWNsIGZ5aW5kOGUgZjFrNmZkdWggZjF3N2dwZHYgZms2Zm91YyBmam95NTY4IGZp
+Z3NvazYgZjFzMTg0YW8gZjFtazhsYWkgZm5ibWpuOSBmMW83MDBhdiBmMTNtdmYzNiBmMWNtbHVm
+eCBmOW4zZGk2IGYxaWRzMTh5IGYxdHgzeXo3IGYxZGVvODZ2IGYxZWgwNm0xIGYxaWVzY3ZoIGZo
+Z3F4MTkgZjFvbHlyamUgZjFwOTNlaXIgZjFuZXY0MWEgZjFoOGhiNzcgZjFscXZ6NnUgZjEwYXc3
+NXQgZnNsZTNmcSBmMTdhZTV6biIgdGl0bGU9Imh0dHBzOi8vd3d3LmxpbmtlZGluLmNvbS9jb21w
+YW55L2VyaWNzc29uLXNvZnR3YXJlLXRlY2hub2xvZ3kvIiByZWw9Im5vcmVmZXJyZXIgbm9vcGVu
+ZXIiIGRhdGEtb3V0bG9vay1pZD0iYTU0ZDcxYTQtN2QyYS00ZjI5LWJjZjEtZjk1NzYwNGYzNzVl
+Ij4NCkVTVCBMaW5rZWRJbjwvYT48L3NwYW4+PC9kaXY+DQo8ZGl2IHN0eWxlPSJkaXJlY3Rpb246
+IGx0cjsgZm9udC1mYW1pbHk6IEFwdG9zLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBm
+b250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4NCjxicj4NCjwvZGl2Pg0KPC9k
+aXY+DQo8ZGl2IGlkPSJtYWlsLWVkaXRvci1yZWZlcmVuY2UtbWVzc2FnZS1jb250YWluZXIiPg0K
+PGRpdiBjbGFzcz0ibXMtb3V0bG9vay1tb2JpbGUtcmVmZXJlbmNlLW1lc3NhZ2Ugc2tpcFByb29m
+aW5nIj4NCjxtZXRhIG5hbWU9IkdlbmVyYXRvciIgY29udGVudD0iTWljcm9zb2Z0IEV4Y2hhbmdl
+IFNlcnZlciI+DQo8L2Rpdj4NCjxkaXYgc3R5bGU9InBhZGRpbmc6IDNwdCAwaW4gMGluOyBib3Jk
+ZXItd2lkdGg6IDFwdCBtZWRpdW0gbWVkaXVtOyBib3JkZXItc3R5bGU6IHNvbGlkIG5vbmUgbm9u
+ZTsgYm9yZGVyLWNvbG9yOiByZ2IoMTgxLCAxOTYsIDIyMykgY3VycmVudGNvbG9yIGN1cnJlbnRj
+b2xvcjsiPg0KPGRpdiBjbGFzcz0ibXMtb3V0bG9vay1tb2JpbGUtcmVmZXJlbmNlLW1lc3NhZ2Ug
+c2tpcFByb29maW5nIiBzdHlsZT0idGV4dC1hbGlnbjogbGVmdDsgZm9udC1mYW1pbHk6IEFwdG9z
+OyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiBibGFjazsiPg0KPGI+RnJvbTogPC9iPkFsZXhhbmRl
+ciBLYW5hdmluICZsdDthbGV4LmthbmF2aW5AZ21haWwuY29tJmd0Ozxicj4NCjxiPkRhdGU6IDwv
+Yj5GcmlkYXksIDI2IEp1bmUgMjAyNiBhdCAxODo0ODxicj4NCjxiPlRvOiA8L2I+SmFpcGF1bCBD
+aGVlcm5hbSAmbHQ7amFpcGF1bC5jaGVlcm5hbUBlc3QudGVjaCZndDs8YnI+DQo8Yj5DYzogPC9i
+PmJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZyAmbHQ7Yml0YmFrZS1kZXZlbEBs
+aXN0cy5vcGVuZW1iZWRkZWQub3JnJmd0Ozxicj4NCjxiPlN1YmplY3Q6IDwvYj5SZTogW2JpdGJh
+a2UtZGV2ZWxdIFtQQVRDSCB2Ml0gYml0YmFrZS1zZXR1cDogdXNlIGJiLmZldGNoIGZvciBidWls
+ZHRvb2xzIGluc3RhbGxlciBkb3dubG9hZDxicj4NCjxicj4NCjwvZGl2Pg0KPC9kaXY+DQo8ZGl2
+IGNsYXNzPSJQbGFpblRleHQiIHN0eWxlPSJmb250LXNpemU6IDExcHQ7Ij5PbiBGcmksIDI2IEp1
+biAyMDI2IGF0IDE1OjQzLCBKYWlwYXVsIENoZWVybmFtIHZpYTxicj4NCmxpc3RzLm9wZW5lbWJl
+ZGRlZC5vcmc8YnI+DQombHQ7amFpcGF1bC5jaGVlcm5hbT1lc3QudGVjaEBsaXN0cy5vcGVuZW1i
+ZWRkZWQub3JnJmd0OyB3cm90ZTo8YnI+DQomZ3Q7IFdoZW4gdXJsIGFuZCBzaGEyNTZzdW0gYXJl
+IGNvbmZpZ3VyZWQsIGRvd25sb2FkIHRoZSBidWlsZHRvb2xzPGJyPg0KJmd0OyBpbnN0YWxsZXIg
+dmlhIGJiLmZldGNoIHdpdGggY2hlY2tzdW0gZW5mb3JjZW1lbnQuIFRoZSBmaWxlIGlzPGJyPg0K
+Jmd0OyBjYWNoZWQgaW4gRExfRElSIGFuZCBwYXNzZWQgdG8gaW5zdGFsbC1idWlsZHRvb2xzIHZp
+YSAtLWxvY2FsLWZpbGUuPGJyPg0KPGJyPg0KVGhhbmtzLCB0aGlzIGJhc2ljYWxseSBsb29rcyBv
+aywgYnV0IEkgaGF2ZSBhIGZldyByZXZpZXcgcG9pbnRzLjxicj4NCjxicj4NCiZndDsgSWYgbm8g
+aW5zdGFsbC1idWlsZHRvb2xzIGNvbmZpZyBpcyBwcmVzZW50LCBmYWxsIGJhY2sgdG8gY2FsbGlu
+Zzxicj4NCiZndDsgaW5zdGFsbC1idWlsZHRvb2xzIGRpcmVjdGx5IChwcmVzZXJ2aW5nIGV4aXN0
+aW5nIGRlZmF1bHQgYmVoYXZpb3VyKS48YnI+DQomZ3Q7PGJyPg0KJmd0OyBDTEkgb3ZlcnJpZGVz
+IGF2YWlsYWJsZSB2aWEgLS11cmwgYW5kIC0tc2hhMjU2Ljxicj4NCjxicj4NCkkgdGhpbmsgdGhl
+cmUgc2hvdWxkIGFsc28gYmUgYSAtLWRlZmF1bHQgY29tbWFuZCBsaW5lIG9wdGlvbiwgd2hpY2g8
+YnI+DQp3b3VsZCBzaW1pbGFybHkgZmFsbCBiYWNrIHRvIGdldHRpbmcgYW5kIGluc3RhbGxpbmcg
+dGhlIGRlZmF1bHQ8YnI+DQpidWlsZHRvb2xzIGV2ZW4gaWYgY29uZmlnIGZpbGUgc3BlY2lmaWVz
+IHNvbWV0aGluZyBlbHNlLjxicj4NCjxicj4NCiZndDsgKyZuYnNwOyZuYnNwOyZuYnNwOyAjIExv
+Y2F0ZSB0aGUgZG93bmxvYWRlZCBmaWxlPGJyPg0KJmd0OyArJm5ic3A7Jm5ic3A7Jm5ic3A7IGxv
+Y2FsX3BhdGggPSBmZXRjaGVyLmxvY2FscGF0aChzcmNfdXJpKTxicj4NCiZndDsgKzxicj4NCiZn
+dDsgKyZuYnNwOyZuYnNwOyZuYnNwOyBpZiBub3Qgb3MucGF0aC5leGlzdHMobG9jYWxfcGF0aCk6
+PGJyPg0KJmd0OyArJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGxv
+Z2dlci5lcnJvcigmcXVvdDtEb3dubG9hZGVkIGZpbGUgbm90IGZvdW5kIGF0IGV4cGVjdGVkIGxv
+Y2F0aW9uJnF1b3Q7KTxicj4NCiZndDsgKyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyBzeXMuZXhpdCgxKTxicj4NCjxicj4NCkkgd291bGQgcmF0aGVyIHVzZSBmZXRj
+aGVyLnVucGFjaygpLCB0aGFuIHVzZSB0aGUgZmlsZSBkaXJlY3RseSBmcm9tPGJyPg0KRExfRElS
+LiBJdCdzIGJldHRlciB0byBvbmx5IGFsbG93IHRoZSBmZXRjaGVyIHRvIHRvdWNoIGNvbnRlbnQg
+b2Y8YnI+DQpETF9ESVIuPGJyPg0KPGJyPg0KJmd0OyArJm5ic3A7Jm5ic3A7Jm5ic3A7ICMgVmVy
+aWZ5IGNoZWNrc3VtIGV4cGxpY2l0bHkgKGZpbGU6Ly8gZmV0Y2hlciBkb2VzIG5vdCBlbmZvcmNl
+IGNoZWNrc3Vtcyk8YnI+DQomZ3Q7ICsmbmJzcDsmbmJzcDsmbmJzcDsgYWN0dWFsX3NoYTI1NiA9
+IGJiLnV0aWxzLnNoYTI1Nl9maWxlKGxvY2FsX3BhdGgpPGJyPg0KJmd0OyArJm5ic3A7Jm5ic3A7
+Jm5ic3A7IGlmIGFjdHVhbF9zaGEyNTYgIT0gc2hhMjU2Ojxicj4NCiZndDsgKyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBsb2dnZXIuZXJyb3IoJnF1b3Q7Q2hlY2tz
+dW0gbWlzbWF0Y2ggZm9yIGJ1aWxkdG9vbHMgaW5zdGFsbGVyOlxuJnF1b3Q7PGJyPg0KJmd0OyAr
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7ICZxdW90OyZuYnNwOyBleHBlY3RlZDogJXNcbiZxdW90Ozxicj4NCiZndDsgKyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyAmcXVvdDsmbmJzcDsgYWN0dWFsOiZuYnNwOyZuYnNwOyAlcyZxdW90OyAlIChzaGEyNTYsIGFj
+dHVhbF9zaGEyNTYpKTxicj4NCiZndDsgKyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyBzeXMuZXhpdCgxKTxicj4NCjxicj4NClRoaXMgSSBkb24ndCBxdWl0ZSB1bmRl
+cnN0YW5kLiBXaHkgaXMgdGhlIGNoZWNrc3VtIHZlcmlmaWVkIGFnYWluIGlmPGJyPg0KdGhlIGZl
+dGNoZXIgYWxyZWFkeSBkaWQgaXQ/IFdoeSBpcyBmaWxlOi8vIGZldGNoZXIgbWVudGlvbmVkPyBB
+STxicj4NCmNvbmZ1c2lvbj88YnI+DQo8YnI+DQomZ3Q7ICsmbmJzcDsmbmJzcDsgJnF1b3Q7Yml0
+YmFrZS1zZXR1cCZxdW90Ozogezxicj4NCiZndDsgKyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyAmcXVvdDtpbnN0YWxsLWJ1aWxkdG9vbHMmcXVvdDs6IHs8YnI+DQomZ3Q7ICsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsgJnF1b3Q7dXJsJnF1b3Q7OiAmcXVvdDs8YSBocmVmPSJodHRwczovL2V4YW1wbGUuY29tL2J1
+aWxkdG9vbHMveDg2XzY0LWJ1aWxkdG9vbHMtZXh0ZW5kZWQtbmF0aXZlc2RrLXN0YW5kYWxvbmUt
+NS4wLnNoIiBkYXRhLW91dGxvb2staWQ9IjI4YWZlY2Q5LTUwZDAtNGJkOS05N2RmLTM0YWViY2I5
+NGMyMiI+aHR0cHM6Ly9leGFtcGxlLmNvbS9idWlsZHRvb2xzL3g4Nl82NC1idWlsZHRvb2xzLWV4
+dGVuZGVkLW5hdGl2ZXNkay1zdGFuZGFsb25lLTUuMC5zaDwvYT4mcXVvdDssPGJyPg0KJmd0OyAr
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7ICZxdW90O3NoYTI1NnN1bSZxdW90OzogJnF1b3Q7YWY3NjY0OGIuLi4mcXVvdDs8YnI+DQom
+Z3Q7ICsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgfSw8YnI+DQomZ3Q7ICsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgJnF1b3Q7Y29uZmlndXJhdGlvbnMm
+cXVvdDs6IFsgLi4uIF08YnI+DQomZ3Q7ICsmbmJzcDsmbmJzcDsgfTxicj4NCjxicj4NCkkgd29u
+ZGVyIGlmIHRoZSAnaW5zdGFsbC1idWlsZHRvb2xzJyBibG9jayBzaG91bGQgYmUgZGVmaW5lZCBp
+bnNpZGUgYTxicj4NCnBhcnRpY3VsYXIgY29uZmlndXJhdGlvbi4gQ29uZmlndXJhdGlvbnMgY2Fu
+IGJlIG5lc3RlZCwgc28gdGhhdCBzdGlsbDxicj4NCmFsbG93cyBkZWZpbmluZyBhIHNpbmdsZSBi
+dWlsZHRvb2xzIGZvciBhbGwgb2YgdGhlbSwgYnV0IHRoaXMgd291bGQ8YnI+DQphbHNvIGFsbG93
+IHNwZWNpZnlpbmcgc2VwYXJhdGUgYnVpbGR0b29scyBmb3IgcGFydGljdWxhcjxicj4NCmNvbmZp
+Z3VyYXRpb25zLiBJJ20gbm90IHN1cmUgaWYgYSB1c2UgY2FzZSBmb3IgdGhhdCB3aWxsIGFyaXNl
+LCBidXQgYXQ8YnI+DQpsZWFzdCBiaXRiYWtlLXNldHVwIHdpbGwgYmUgcmVhZHkgZm9yIGl0LiBX
+aGF0IHlvdSB0aGluaz88YnI+DQo8YnI+DQpBbGV4PGJyPg0KPC9kaXY+DQo8L2Rpdj4NCjwvYm9k
+eT4NCjwvaHRtbD4NCg==
 
+--_000_GV1P189MB295481E22DAF24DA987F5B25F3EB2GV1P189MB2954EURP_--
 
