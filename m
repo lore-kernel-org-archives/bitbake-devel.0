@@ -1,111 +1,94 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B762EC43458
-	for <webhook@archiver.kernel.org>; Mon, 29 Jun 2026 12:52:34 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.36867.1782737552113278932
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA03C43458
+	for <webhook@archiver.kernel.org>; Mon, 29 Jun 2026 13:03:34 +0000 (UTC)
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.91645.1782738206965288990
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 29 Jun 2026 05:52:32 -0700
+ Mon, 29 Jun 2026 06:03:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=Jq0zLE70;
- spf=pass (domain: gmail.com, ip: 209.85.128.45, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-49241dbf9c1so29038795e9.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 29 Jun 2026 05:52:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782737550; x=1783342350; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=J266ZeTUpVUelN2GR70w1xEsw8YRXu++JZIBF0GQmHs=;
-        b=Jq0zLE706ue8225Tv90LATkjxBih5YKmzKKNX8za0UZlgm77tmpKxzt+LjJqfseGcI
-         fBAuUbUrGmtGHTnNRflK9pFx62LyuMXywFpfnzesPSORjjYVY+mT/qJXVGj+hQoPYcIU
-         JnSU3G7d04julnBJig2vuAZRI0f91DEJpOuUz++vMyip6bPT0YIJBctG2VP0V+QuCO1M
-         LlE90uyugmn132T7jCk+2dOXFCGpVmOZq1fMroDUCZSh0EcG8BiLmgBmT18yzHAyvK2p
-         1FvcQKG0qdaxGHEpDnpqdj36788+u2P4I0Y0QIl9izEA2sksoilZaW6uJ5ttsnc5Zqkl
-         3ajA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782737550; x=1783342350;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J266ZeTUpVUelN2GR70w1xEsw8YRXu++JZIBF0GQmHs=;
-        b=gHpAPXyLU+e9lSIozge1tyUgWnEJrJ7EO4GdJ1N1qZQK8yW7mgz4xYiKMvSTeGiV52
-         S3tEoIn6Ey4bR0gU0qcsyrUrxC1owXg2MeKySWGxUthsAeEM65BqNDq5EwqcFA8rcG31
-         LZ6K7qbFq4h2pmeo7p5kpz/wrPG+dIWw+Uj3YZKvIDf/26N1NE6EQP6U+XMoyI6mtKe0
-         TMDdo57XaxUTvCR6n8uSZM1INrDxy8OJkrqY5BoMTq06W9YI3d8f0UVhyklv09P8l8X8
-         3/10QG+5SjkQPMkNAuhQJ864knnljg4RAUOb+ADK5U9PFANRv+VHb+rWNradiUet3kuK
-         gCaw==
-X-Gm-Message-State: AOJu0YzAbkXg2km0cf2+Dya0KDrOF+Xc+RCzav3j8r6dKk8eAXbKpCMX
-	HaMtCbqkUKexPN/WU2ATy2OL71b/0tj7k1DxnWOAf9D7CZagI8heKkXFsCJfNOCp3Q4=
-X-Gm-Gg: AfdE7ckYEdnRfTvaII5/2Spa0FtS1ATMiJRjeUf+KFNkox926sRcVce04/jXKAaOpS1
-	u3VoceSfdPrxuCplLqE/K2gFDnX6xdC3gDYGjScdqgvijJDS8A+oq6l1MVKNeF/ZgemSR9pIhu7
-	pMEcJ6TQpAp37/SM8wJzvkbIXfI+DsvnHbVI6X/nRSGTpAnc7MNxaIYqQaudvjYlSALTCMfcNi0
-	sdcyRTYA/2mjD33uCEwfQLd0nx4+DxY76g7P9wJfzKlOrInlUnRmmMgotYyU1K5r3l4CZT2A7Sr
-	aoQr0cl1PixEJAzqPPLFpqa/8G63JKGhgSsp9c0yRGGQkUmdQ0RD3o2EdQIofcT91zKjewRFwYo
-	6t2Myj6ib3cZfk1UbF/uA+QYEaJJPNHayvp9iQmh+qR+WjTqen/OI8EPcCvZQchTGOjhg6SQxaF
-	aDrlLl2uurX4m4t/hw9xdLH5DXPw5ipSZ1TVkFu1b0kcPCjWTD
-X-Received: by 2002:a05:600c:1f91:b0:490:abef:dae6 with SMTP id 5b1f17b1804b1-492668857d3mr243066495e9.19.1782737550108;
-        Mon, 29 Jun 2026 05:52:30 -0700 (PDT)
-Received: from Zen2.lab.linutronix.de. (drugstore.linutronix.de. [80.153.143.164])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49268f700c0sm359459215e9.0.2026.06.29.05.52.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2026 05:52:29 -0700 (PDT)
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Alexander Kanavin <alex@linutronix.de>
-Subject: [PATCH] fetch/wget/_check_latest_version_by_dir: correct iterative check of versioned directories
-Date: Mon, 29 Jun 2026 14:52:26 +0200
-Message-ID: <20260629125226.3931549-1-alex.kanavin@gmail.com>
-X-Mailer: git-send-email 2.47.3
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=KIsuRWjr;
+ spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id A7AF74E40B66
+	for <bitbake-devel@lists.openembedded.org>; Mon, 29 Jun 2026 13:03:24 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 76A625FF96
+	for <bitbake-devel@lists.openembedded.org>; Mon, 29 Jun 2026 13:03:24 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 86CD4106F1799;
+	Mon, 29 Jun 2026 15:03:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1782738202; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=EkxFqZrvbYZ4ngC5Cud0UE8dJ2CaG4XKugZX5wHyjzo=;
+	b=KIsuRWjrCulnhp0NuifnPXmytBqIf6Or58f2TCWG35j5OaQh95xTGRTzMIgk5u9vgVyQpO
+	Twv3oL6u83WgHZpRMi/Uqg/PMIuUtYu5SvhAUcGSpYtyS31+6G2AGKopEl3xdte0RmBtEh
+	foGPd16EsxGyGKvblxuiLT5zLfHYrfXWFONAWt0xjM0Esh45GRjGVsSo2MPI8H6Bu4Vz+8
+	G9FF9Ox0ekPGkYwcJtsbu4nMqLbVa+Sc4cMv0pFL7by1Sl5VJmz6YC6qr+AWYYWaaeEfES
+	gcD98ml2fnRS8l2Lo6wIRtb/oqgRldg+ti4r4V7c03X1dJBQsEw4TDAgnT9XcA==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Date: Mon, 29 Jun 2026 15:03:11 +0200
+Subject: [PATCH] contrib/prserv/Dockerfile: remove non-existent codegen.py
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260629-fix-prserv-dockerfile-v1-1-7db4b32288ce@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMQQqDMBAAvyJ7dkFTVPQr4sEkG7ttUdlYEcS/u
+ +pxYGZ2iCRMEZpkB6GVI0+jQp4m4N79OBCyVwaTmTIrTY2BN5xFqxX95L4kgX+EhQ155W1livo
+ F2s5CKt7ftns4/u2H3HLN4DhO8gcqunkAAAA=
+X-Change-ID: 20260629-fix-prserv-dockerfile-5bf17db72593
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=863;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=UhX4TlWouznbz9E6BnP1XmUQoH+8/BTDRM5rTynO1AI=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBqQm0YxiXubgWGTGTSHSyqUzzq3FCNos4RqahOR
+ 8JJhoHi+WOJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCakJtGAAKCRDRgEFAKaOo
+ Nqa/D/9Kuik5ylXETjIO2Cw+IUvc+oBpPfbOI6rCPtsiU2nxOQ6vCa0yIMOB9Ts1axg2UcOWrx0
+ bj7eQprh8kfxnH1KgjEi+iaqk4P+JwzGj81EajYhVb6Yso9MmFf/vsaKa5xugamxrfeZ2SJahjy
+ q6FZBILYUBQBrgK85aDVzYuQeP2n7rxL5BC8ORBgc3JvojVth7Y03pXe3YvScXvKH8lc17IN26B
+ i260VyJTkwjEh+GajQsDPH+xlUa4L6T3oSHNiyCGC9sQykKGYaFDrci+Q804UVnqvwu3mSoHEyA
+ kunuwmI9wKtKfxD92JEnsKOMuab03HPcHxhltHQ2+Aqq4REByr4USbvSLz4MwzCKct99RFbyMGS
+ KmqfVL4V1wRDHv6Pl8YjCBkRqx7U7xx243Cr+g2s2mowRSO7fu90z7Rtz0hT5mxm3AD8jB5ARCa
+ BoloFiOIgto7Wv0rq6R9m5psBSt4WvVi5n2sQVdm292GNK9P8NnU/jnK0fv5iBNsEazYEowqHRB
+ zYm1yDYruy3wqOiIT2U91A8VISX4S7GhV8ugdo3J/QvcghsrwNqsx5+Bm7O7MiJUcrenjugoCL9
+ Kme+P8CgtGoHsIYWuiYH6lpL8+Tm0+bOHuCBt0QSQtktUhAj3HFf4AlbKTGOnw4DzvLAuRj2rF1
+ kiXSYKt+J4oJcPw==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 29 Jun 2026 12:52:34 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19805
+ <bitbake-devel@lists.openembedded.org>; Mon, 29 Jun 2026 13:03:34 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19806
 
-From: Alexander Kanavin <alex@linutronix.de>
+codegen was replace by ast.unparse() with 76dd6d69c59c ("lib: Replace
+codegen with ast.unparse()"). Remove this COPY instruction.
 
-The versioned directories check runs a loop, only considering a directory
-if it is bigger or equal to the biggest directory found so far. The
-criteria for 'biggest directory found so far' wasn't entirely correct:
-it was set even if no valid tarballs were found in it.
-
-This broke libadwaita's version check, when upstream released
-1.10.apha (not a valid version) and made a separate directory for it.
-1.10 comes ahead of 1.9, and so 1.9 would not be looked into, resulting
-in the overall check failing to find any valid versions:
-
-https://download.gnome.org/sources/libadwaita/
-
-This corrects the 'biggest directory' criteria to also include
-'contains valid versions'.
-
-I have confirmed that overall oe-core check for latest versions still works
-and reports the same versions, except libadwait check which is no longer broken.
-
-Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
 ---
- lib/bb/fetch2/wget.py | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ contrib/prserv/Dockerfile | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index 71667dd2b..141c2d062 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -610,8 +610,7 @@ class Wget(FetchMethod):
-                             package, package_regex, current_version, ud, d, filter_regex)
-                     if pupver:
-                         version[1] = pupver
--
--                    version_dir = version_dir_new
-+                        version_dir = version_dir_new
+diff --git a/contrib/prserv/Dockerfile b/contrib/prserv/Dockerfile
+index c630ce99722..694b9b9fead 100644
+--- a/contrib/prserv/Dockerfile
++++ b/contrib/prserv/Dockerfile
+@@ -35,7 +35,6 @@ RUN apk add --no-cache python3
+ COPY bin/bitbake-prserv /opt/bbprserv/bin/
+ COPY lib/prserv /opt/bbprserv/lib/prserv/
+ COPY lib/bb /opt/bbprserv/lib/bb/
+-COPY lib/codegen.py /opt/bbprserv/lib/codegen.py
+ COPY lib/ply /opt/bbprserv/lib/ply/
+ COPY lib/bs4 /opt/bbprserv/lib/bs4/
  
-         return version[1]
- 
--- 
-2.47.3
+
+---
+base-commit: 7e3489ab3ec39b2dcf4e50eff54d36d42e5a7307
+change-id: 20260629-fix-prserv-dockerfile-5bf17db72593
 
 
