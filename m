@@ -1,135 +1,174 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <paul@pbarker.dev>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A680CC43458
-	for <webhook@archiver.kernel.org>; Sun, 28 Jun 2026 10:11:16 +0000 (UTC)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.15956.1782641469272990718
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0ECC43458
+	for <webhook@archiver.kernel.org>; Mon, 29 Jun 2026 08:45:15 +0000 (UTC)
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.87985.1782722711535807323
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 28 Jun 2026 03:11:09 -0700
+ Mon, 29 Jun 2026 01:45:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=PUOsu9PZ;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-49270caa5c0so16334735e9.3
-        for <bitbake-devel@lists.openembedded.org>; Sun, 28 Jun 2026 03:11:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1782641467; x=1783246267; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FSDtRalgFMjXqBspRBCj6xc9mg6Plu1YWPA1Sh6esBU=;
-        b=PUOsu9PZv3MCMOrpiBUKG2hv7XmTruLqrsk8dBDG5hdmbxBuSHSZAdw1DEJ/RMFpWb
-         o52v5XJDTvQ0iqn/zHGCclm2ALkPlxZilmcNGZrcTcRbQOXVMQBjsZuBQhia0aQfT+4y
-         yb7XAqwaSu4tWZblbS0feAJEKPkOJsLFxG5F0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782641467; x=1783246267;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FSDtRalgFMjXqBspRBCj6xc9mg6Plu1YWPA1Sh6esBU=;
-        b=UvqtuW62tyuJzg3SIkDFjbZiEMlsk8dxv9snspLTYYShcrzwhn4CjFrQzjOEHRkmyX
-         KEZrO+o+VqniVlbhMHi+DzvebRHlh4LeD/Q5ucUIET18NBzK5bDk6kG/eq8f+78EePoL
-         Rk2/OgfxBdZii/gkyP7F02LONjcH3ulUnYVoyMTinGMmAyWb55EqXJUVSDWAqQwgK+U+
-         3AruCRyBiOGrpEx6rs1f2omOOz95iSwnPm4m0oQ/acbRRrxm8WQKCmSyGk3f1mAGENgC
-         4JmRp+Y/SyKyF687X/049KQyojzQIIYMCR+FhKaeFWUWmD7RLem4Q/herv+828iB/ocs
-         Baag==
-X-Forwarded-Encrypted: i=1; AFNElJ/PMw/dbdylm73GxsQ/QUBX6zXledNcm4lQNXsWC4/Z2+BxxACs2KDM8cfEvYemypbV85gNqtQ4pO230dLh@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yw3AjNlYeMPTDk/qFT/NI/+8w9PABGKV0U1UWMgVoSJHJK631F3
-	ij+IbpyRH2VM0LZ0pYRR81+UOIS/k2CS7+1YrJQuon5P7FzabIFhhOtzt4n4tf0+gpY=
-X-Gm-Gg: AfdE7ckK4jP++iIRkF+Vr/gr4RkQz1X4YnY5lDcjW8xLK/SMaEIMOAx9hyoW58/etde
-	8iWwQoJl7ZM2j958Nkd+49+Jy5rYBwabqHQe2cW+UcVLGZiKg5p6E+JGhAf6JoF3McBVGljpysH
-	7X/tpXFdLVl9/pyr7C2UqB6BP+QJBimvYGiUBl+mzTuW1JuQUkcKNfS8fxadHRHcA3PGrkHCKqE
-	Eg4dNYyy8F8S+G4zBlSWxZMcP0sFYMHj0MLgoyWPENpYZ1scYzDKPyoAr6Ff4O9MB9OUzgxsW8i
-	EYevPF+aP6BkahCc1+8JG9vR1PvuA6c0+koFF5/tP185sOGQP22FQo50fYzINCdkKWqce9+GccT
-	IkJnF4NQRbLLg5eNllVQIcNIP/olLVLG2Mx1G5tYzgLMFtJrUo3JBjOmk4m/MNzHLMVhXewt6lb
-	/rfD2BAQ05xjnRHymUe6aREAfP4erzByWJuGSQgVMdEDZWwbXkXduh51bEK6FcB/9EeRoqRxPE6
-	7Qa/SyaOvVap7f5
-X-Received: by 2002:a05:600c:4e45:b0:492:6f6f:fa42 with SMTP id 5b1f17b1804b1-4926f6ffa8emr118078365e9.37.1782641467342;
-        Sun, 28 Jun 2026 03:11:07 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:a165:6d61:c7bd:48ff? ([2001:8b0:aba:5f3c:a165:6d61:c7bd:48ff])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4730937e18dsm3733136f8f.21.2026.06.28.03.11.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2026 03:11:06 -0700 (PDT)
-Message-ID: <672671c32a5845e923ef216fd1a15483328def3c.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel][PATCH] bb: Add prefuncs and postfuncs ordering
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: JPEWhacker@gmail.com, bitbake-devel@lists.openembedded.org
-Date: Sun, 28 Jun 2026 11:11:05 +0100
-In-Reply-To: <18BD2E2AC79FBB10.1079487@lists.openembedded.org>
-References: <20260626170044.3829734-1-JPEWhacker@gmail.com>
-	 <18BD2E2AC79FBB10.1079487@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-9 
+ dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=B6WWbFt0;
+ dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=ZCtwbaUI;
+ spf=pass (domain: pbarker.dev, ip: 202.12.124.145, mailfrom: paul@pbarker.dev)
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfout.stl.internal (Postfix) with ESMTP id B1D071D0007F;
+	Mon, 29 Jun 2026 04:45:10 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Mon, 29 Jun 2026 04:45:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
+	cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1782722710; x=1782809110; bh=Yi1y8HFCp1
+	celJPUFZSKRy18XvPsxsD+g4cpDqRWFw4=; b=B6WWbFt0SxWx+4PJTNAtz/ma2/
+	G0Fex+thGx1CehLRm6tRVYuwSg4L7qccYK5Q9fmtsRRBFW09IRUZ15cTgkKg0f+l
+	x12c9jSlplyqTMjTJR/My+ghJuCpxv/22+mkLcVuV+UzTTNDc/qEenuJtLl/Frr8
+	BYPAuFYpCqjx1ViwcDqRHT4kApZHh9el9JmVUMC5qQpSzw7FIn90DcZbLAC0CS+4
+	Hs0Fb+nLpvmvBP2rKzUm9xhtvZVqPaMR4Mqt/LPGWLP6oMV3zAcTjNiweqko6yNP
+	youHvQnrspVaNqYxeLHUEZnBBbyhtL5X62Mu8LjDit+G7ww0B7EY0twutsWQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1782722710; x=1782809110; bh=Yi1y8HFCp1celJPUFZSKRy18XvPsxsD+g4c
+	pDqRWFw4=; b=ZCtwbaUIi4G9Ms4M3UpW1IP1KZbe+smeyY3U85Ozi7B1jtFT3IK
+	Gth8S+oqtVQVi4ARexG+yzxjEUuGNskvCEpTWrZ0lpO/SQw7gDCcHMIGIYedyjbp
+	Rhf9+6amSD+hKbuLbTgCpPU9un1YS4OdRZ1un6dCMmkHG3aYEyAODe1T9tIHVBlr
+	lIiPuAf6va5Bnpi0FPnYCO1NlVHpS1kEbb/Jy2d3wwWsM7N+hGQzwWau6KBN8XUq
+	rfJjhhTGkMYGQ1pimqeLgfd77SboJkvyL4O7jvnpaXuFDiDjxwLSWtGprsAQpETs
+	qVcXp2lr6OmbVv4s9c2MUp+gKV1+wtBqdKA==
+X-ME-Sender: <xms:ljBCall9wWqkmTk_ToyeRqQVtEZ_MSB9E81JcSOHC2Pb-1BMga_n0Q>
+    <xme:ljBCam30n98hOudi1-8X6mTFLkxRDuXcbqJ2XWLn_ld_2TFpt8W1lT2_iwuZIEycZ
+    iLJqGNX26lHDyBAF5R5AZwF47khdO-IV5aflLL6ZlWE7IbypP6aSYQ>
+X-ME-Received: <xmr:ljBCapT2efsF4sbAtIo996tUOVT7l8oGerybn84vzml25jBjwPyMUr4ZUVkN1G80NRXn5Ga2udVV_Se6uF_MtVH1F1gGC2S0win0mzI>
+X-ME-Proxy-Cause: dmFkZTFIYtUNKQKZ7CxMXP8e3FQ4IN75FjzZEdObQjCFeZ5IVt2T8mmZy250zjh9k4Ylug
+    YpwCX0xjVetHZVOpsokMsqAdxv2+J9ygl514CmGZZ9nJFvG+XfTbYMSy8dLUO28GlOu7sF
+    TUILdBtQSS8DtzkALGpcg9/ZKrxKQLMAG2aNpz/w3N2IPrckEo+BhU2KT7+dYjpz0/sQlv
+    hqcLIGpf5VcF0/s4nxNUrvNT0ix2mGBYQH3k1l9Qbu93o3XlwCpZrfu1UwqBgiQaSYQDb0
+    M1pgee5efZtMLEUuQ/2K/SfLBR1wopbQuPa1gVlirvRk2TlR3zN3Ye6LX/VreUYw/3bue0
+    OfqvQ2wBr37xHAPVtUql4TafHcXX18zAgLqY/U3SM5OP/Ym6kD8cLsz0oLQBVAnecIHVHa
+    dZkXQEzNVy+WZm0rrrH9EitI0tzYH1eLIUY3U6MONYdbG6s193ly1EM21mu1KYXmseo8Z2
+    tUq2EIzu40Ri7k06Yy/iVCDQ8/H9Yy3nUPRI9jCuZ2iccHJJV2lhYIx4UMS0E6Rxe7lfwL
+    ETdAGhXLYEHJnuheGjD5L8G0yryN8bBpLnWvX/pcNgElr+6wYExi2/jJ/90dCLbIWM4xMs
+    qCx0sVlgMjPu2F0GHO+lPM4qrKrlGNoWMk8wxxvsb5KonovJwz2Hqp4F65Yg
+X-ME-Proxy: <xmx:ljBCags-wXZ2bpn1yx3MarR3wG_Y3V8tsqkYf3_zKfxMwTl2c0ofDg>
+    <xmx:ljBCambK79OKRb_a5iwe4GJ36lFZBiX37Aq6G_C1VWTpQhWyZLZCcg>
+    <xmx:ljBCatu8kFSfRDzznqNzi82uCzJxqZfK5jJwe6Unt0CPe9lSDldN_A>
+    <xmx:ljBCagHexepFwxmG3XQ-DFv9Uf4Aoo7ambmNNOD0yMhsKGqa4EqoTg>
+    <xmx:ljBCanFQFASlxc5ZRteW4xMTgZ6nddJXn3l_QT40LJXHb4MHcj3tvEDN>
+Feedback-ID: i51494658:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 29 Jun 2026 04:45:09 -0400 (EDT)
+Message-ID: <7aee6564b4eec81ffb64526a3c82820a8d0d0f60.camel@pbarker.dev>
+Subject: Re: [bitbake-devel] [PATCH v4 07/11] Add vendor patches
+From: Paul Barker <paul@pbarker.dev>
+To: rob.woolley@windriver.com, bitbake-devel@lists.openembedded.org
+Date: Mon, 29 Jun 2026 09:45:05 +0100
+In-Reply-To: <20260624-add-pypi-v8-v4-7-ff499f1fd5a5@windriver.com>
+References: <20260624-add-pypi-v8-v4-0-ff499f1fd5a5@windriver.com>
+	 <20260624-add-pypi-v8-v4-7-ff499f1fd5a5@windriver.com>
+Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
+ keydata=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
+ LUewj8JVy0aJsGTwI4invl
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-sv8BLRs5jvur+w/4xLHa"
+User-Agent: Evolution 3.52.3-0ubuntu1.1 
 MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 28 Jun 2026 10:11:16 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19800
-
-On Sun, 2026-06-28 at 08:29 +0100, Richard Purdie via lists.openembedded.or=
-g wrote:
-> On Fri, 2026-06-26 at 11:00 -0600, Joshua Watt via lists.openembedded.org=
- wrote:
-> > Adds the ability for functions specified in prefuncs and postfuncs to
-> > specify the order in which they must execute. This allows specific
-> > functions to indicate that they must run first or last (or second,
-> > second to last, etc.) without needing all places in the code that
-> > manipulate the function list to have to agree on how to order them
-> > (a good example of this is sstate.bbclass and buildhistory.bbclass).
-> >=20
-> > Ordering is done similar to how python list indices work; 0 is always
-> > sorted first, 1 is second, -2 is second to last, -1 is last, etc. In th=
-e
-> > event of functions having duplicate values, they are grouped together,
-> > but keep their same relative ordering. If one or more functions do not
-> > have an order assigned, they executed between the positive order
-> > functions and the negative order functions, and keep their same relativ=
-e
-> > order (this means that existing behavior is preserved in the absence of
-> > any ordering information).
-> >=20
-> > Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
->=20
-> I've wondered about something like this for a long time, the trouble is
-> it does not scale well and I've always concluded it wouldn't really
-> help overall and solve the real problem.
->=20
-> It solves an immediate issue of making one thing run first, or last. If
-> a second comes along, it can just about handle that. The trouble is
-> when you have three or more and they all want to be "last", or "first",
-> you can't define that in the metadata. This just gets worse when you
-> think of independent layers trying to pick numeric values. This is
-> already a pain with layer priorities and I wish we'd never used
-> numbers.
->=20
-> You can already get some idea of ordering just by the +=3D and =3D+
-> operations ordering the data, or reordering the variable contents using
-> anon python.
->=20
-> You could even define a filter function for the variable which could
-> reorder things with a custom order function.
->=20
-> So I'm probably against adding this level of complexity when we already
-> have enough of it and it doesn't fully solve the issue anyway.
->=20
-> If we did something, I'd probably look in the direction of "after" and
-> "before" operations like tasks, trying to avoid some of the issues we
-> have there.
-
-I couldn't help thinking about this more, the syntax I was wondering
-about was something along the lines of:
-
-do_xxx[postfuncs] +=3D "functionC[after-functionB,after-functionA,before-fu=
-nctionD]"
-
-which is horrible, but at least explicit.
-
-Cheers,
-
-Richard
+ <bitbake-devel@lists.openembedded.org>; Mon, 29 Jun 2026 08:45:15 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19801
 
 
+--=-sv8BLRs5jvur+w/4xLHa
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, 2026-06-24 at 10:20 -0700, Rob Woolley via
+lists.openembedded.org wrote:
+> Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
+> ---
+>  vendor/licenses/ply/LICENSE                        |  32 ++++++
+>  .../bs4-0010-lib-bs4-Avoid-soupsieve-warning.patch |  40 +++++++
+>  vendor/patches/bs4-remove-double-imports.patch     |  23 ++++
+>  ...lib-implement-basic-task-progress-support.patch | 126 +++++++++++++++=
+++++++
+>  ...-initial-pass-of-SPDX-license-headers-to-.patch |  80 +++++++++++++
+>  ...gressbar-accept-value-over-initial-maxval.patch |  55 +++++++++
+>  ...-Add-self._fd_console-to-use-for-self._ha.patch |  54 +++++++++
+>  ...ar-Make-bars-show-correctly-with-maxval-0.patch |  32 ++++++
+>  ...-knotty-Allow-mixing-log-messages-and-pro.patch |  32 ++++++
+>  9 files changed, 474 insertions(+)
+
+Hi Rob,
+
+Thanks for sending this series!
+
+I think this commit needs a bit more explanation of these patch files -
+where do they come from and how are they used? How do we need to
+maintain them going forward?
+
+Best regards,
+
+--=20
+Paul Barker
+
+
+--=-sv8BLRs5jvur+w/4xLHa
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCakIwkREccGF1bEBwYmFy
+a2VyLmRldgAKCRCrY1Tsnbr0bqXXAQCsdw+KLMm4p7PFgiyoOgwPM4RSeyz4XMYq
+nejC/duScAD/Y2wpgpOYV+JnedgVPUpTsESQm9rygi0YoDYqH/uMLwk=
+=aJde
+-----END PGP SIGNATURE-----
+
+--=-sv8BLRs5jvur+w/4xLHa--
 
