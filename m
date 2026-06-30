@@ -2,167 +2,160 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 278C8C43458
-	for <webhook@archiver.kernel.org>; Thu,  2 Jul 2026 14:23:15 +0000 (UTC)
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.60708.1782959141722044998
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0429CC43602
+	for <webhook@archiver.kernel.org>; Thu,  2 Jul 2026 14:23:25 +0000 (UTC)
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.13353.1782788323253025489
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 01 Jul 2026 19:25:42 -0700
+ Mon, 29 Jun 2026 19:58:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=TMeTERc8;
- spf=pass (domain: gmail.com, ip: 209.85.218.44, mailfrom: dchvs11@gmail.com)
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-c126eb4e003so115383666b.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 01 Jul 2026 19:25:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782959140; cv=none;
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=q4oWArHV;
+ spf=pass (domain: gmail.com, ip: 209.85.218.50, mailfrom: dchvs11@gmail.com)
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-c126b8118afso223324666b.2
+        for <bitbake-devel@lists.openembedded.org>; Mon, 29 Jun 2026 19:58:43 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782788321; cv=none;
         d=google.com; s=arc-20260327;
-        b=eZNr54RS2/875+MkwU/SN7RCsxL9J6kEgj03KlWsbJTfNqfwyxf5OvseHo8f94EC98
-         fG0R9hzeU1+TL/5x8TCn4kOhTVdzFUaiS/FzOAg0nhGHnbnZUfMgthQg6LUZqz4gYmsm
-         S6wPgbgW9hnbaIIya8eolukH8zUzJs3cK/VgLsRpS6F3XB2kiLubw4nzv1oeSOSkRHw9
-         VJKk+bHiFqFVbEqFRTce2knm4hlCWGLG5Adt9anIttL+KJdB4jdopPycLUe2D0cRWSO5
-         /n0/KakQrvk6iHyjx6WZ55/0OTYrWV1v0ml3bot0cc/dhFFB5yQhkHA+n5lddkV7Z2st
-         iicA==
+        b=lJn/8588ntgxoacPf1JAab73ltr3PDTHX+T1GW3RiwLJ6QL/hzWv/KJdLrI+AyNCNm
+         8zz4eQDz/NbBGns77oVphVGLrTyyFUR47hXVNLW2cXgtpgj5ZzzzReyPbrfVD9921gjn
+         P7AVhlxh0a07vJRTXJniMmU3DTOJ3HLN6HlSfiuCxlEjrAr8qR38fRRbFfKovJenJ9jL
+         EYSc/egU+RJObOosDDLGxvM+qu8hQLV3gHF66svwBakk1se54a15MKH3i9cdbJ+unYob
+         ko55XFe7tK09Cavvkiua/js4H23zrmpBNnI1cM4Gg8R2gaWM6fIZfeDkpSbxlDn+mHtu
+         fdag==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=+I5moibnu0Uek061+5qYhh/omIGkLha6tAeVf0VX8QM=;
-        fh=ZYcwCaqfhSVL6aqQEereyJKILpVTA7dZeRdqvWG/C7s=;
-        b=LNV5upe7+k8PeBJv0p1CUdXZaircThwU0mBmu62JFrqiSOEus2gnwhjIWclseMFX9z
-         g/Zemfqt21P0VSZ5LtnQ6pDNow5OG3YO53SiZMoi1s7a6u+oGUQH2XagDMyW1sc2a3xz
-         vMvkXR6soe+R7OKy+HVPweLnVqtkyUUJg79YLZqeHul7qdKewMwH4Uld+UgNGiZnS3r4
-         jfPe/cbBACGsLbdBkO22FKgRghVCCuT8JDnjXpRBiXT+ow1yAwWDvF4sdX1UiXLbgXto
-         L3DuC3YoQrfsvcfwCIUqjdZGCZWdXNrwz0syZq2eTXeIpfL/B28wGRvkXJIDJJOKmjJw
-         Ajzg==;
+        bh=eveqaQ81BC1wcdCKsIemx2Nfa5FTyNjibtGpz1y1TVg=;
+        fh=xlJr4eUX1DlAYk6Ppr40xqLOKfw5/svXuQb7Bs4sV88=;
+        b=SiJcCBerPzUqEwHi27TrcJ9zW9tlRfLnbVNb8XcpcPO+YhRKwiOuOzH4/cZRwYjA6y
+         J7I2lSfD+l1u+f3zQBlbtCQXog0/3aQz1b7rAWkP7fQmDVQWSr1e1NZ5BVzwO62qgqsx
+         G49px90g/dgvLZR3wmkLTG692JGuh5D3hZExQ3hAqIEyvxqM3JL7VpzdQ5FCLKsBIesl
+         gxeM2qHMVBAyGyHJ0FNFTzljWfumoxzXfN7KS/zQQ5Sx32aWghRLLckQPaDUDzCR2k2m
+         v1IfIt+UhevnaWQclHwY2jSHGUtBC4ikrX1KCCZ8TGoAjx8JzcQuDgxtQwuvvjMraJjO
+         1ZXA==;
         darn=lists.openembedded.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782959140; x=1783563940; darn=lists.openembedded.org;
+        d=gmail.com; s=20251104; t=1782788321; x=1783393121; darn=lists.openembedded.org;
         h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=+I5moibnu0Uek061+5qYhh/omIGkLha6tAeVf0VX8QM=;
-        b=TMeTERc8s/5Ucu8RDlyQIo4IxsI0cgrb05VAIGwKwxuUjN43M5+/ltoJn7HHMuWQPW
-         eUOnb2s7Kg0lek7lm4G3ASG5mFi+4tccNvmZOQnbKPHELgYKdHbbcLyefZYVh5pFFsFi
-         PUIzVaL1m0WOAzJdCEY/Ic1OqwDNre5cv3xBLM+zLCrKzxs9Spvkb6AXTuSsr2r0Qw92
-         nm6QWW5E5nRsrx0rsKKtwDMZw9/TGCC6E0sni0Kv5VG4VRDju9T8L1px+Vd1slAWS9P7
-         e0twXnTHBWEs3QOR2PgObum5sYP3e6AJu8q3twxRNpN1WEi2u4Acat8pLDEqHPqQ9+WO
-         DqIw==
+        bh=eveqaQ81BC1wcdCKsIemx2Nfa5FTyNjibtGpz1y1TVg=;
+        b=q4oWArHV4HdXHn+Rdh4KEaDXWX3K8Qui+RcBBYPoMcYSgy6sOAhwy/VVwVdmx7R5Ru
+         bbsz0RFF4n/9Ohjm7bGKh392I4aD97v7WCVDQnQx4k8/7HZ/8d3ZDr2U6DSI1+6M6bPs
+         RLZzutIvpBlgrNtqVx6lMlrMmw49CjAj/pxfhzmL96gQ1ZTxpG1o/Oo9+Fw5yqYfmgFU
+         C2ItFY3uhmNvqQiDBXHonL8zTFQs67FxBmhENqnY5XMfKBzIVZIgsotKXjwAsH8ZUMFY
+         yGt+ZdJTd4Za5mzK8djU+w0Vh/D2FvS9olnhnVmmB2yE9Fsr1TvwyKmAKE0Ox/T6Qivu
+         68Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782959140; x=1783563940;
+        d=1e100.net; s=20251104; t=1782788321; x=1783393121;
         h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+I5moibnu0Uek061+5qYhh/omIGkLha6tAeVf0VX8QM=;
-        b=MP91zyEHCftL7G07C1HFTZOkmaFL3NJNubrK4Fu+t1gzrsXmBKUxz7LfgXe7MZtYvQ
-         NiTmCLUjU+vSOOxbud3HK/mef4rTBiVTjgG4pQUUwUaoarFRDwWhclDKNEr8W7fENh4I
-         pHR/rcoo3YmoAchFpt+1JWH7JDooRuYO3c9I0mCSaIJKVJTA5awi1AVXHD36Qfp1ETG0
-         +rtN15Q+ruHe49TIwA/DhLGK/r56Dx+ZCWEW7u5TNHzH5fpV7vK3ROerE8gDbMj1wc6t
-         K+3qebZMXIltEwRFUSa5b2KrNgWdYcbajbcQ5EMg9cDmAURLKY9qlhIjcmZJZViYP8RZ
-         s2DQ==
-X-Gm-Message-State: AOJu0YxBgVgC//jd4yxeZBgFCUoW6vGuHYVjCD2PEIEQY2u34qm5Ayfj
-	hxwWgJe4tzmztDNuiUHBHzNe3Fq84EeEGAfRsCOpEXcjy/h6FDpa24V9JUJKEo7EBBIQj/RJHqn
-	/KD0ezy7BHQWIy1j6aYH/7veI3bJ7FwRBOhgR
-X-Gm-Gg: AfdE7clT61EkTtbclaRmQilL47z1cKu0puHyoJjvVEF/cS3rOw8C2BYCDK8poe2RqRQ
-	Xb/vgw6QSZtsO7YlFNOvN/uGd6xF7dIwbwsvYyl6VD95NjSFVmUkAOhdzvg3IWVbhXg6vcpJ2KY
-	Zet1LuxaeWKban/741sRqEm2f/buZajPXGT8BuZJS/OtC0GxvMKwJEkAAwZOVWIloje2hPpT4kZ
-	ucwnbGsmdv0/P7UaBD5XBFmuUJ7aVSy59FDGmFef81cgnZhblwauoqCDXs+z0BNeWlzkX+MOuuN
-	+WuIIWRjDw==
-X-Received: by 2002:a17:907:9694:b0:c12:a999:ab with SMTP id
- a640c23a62f3a-c12aa4aca96mr209785866b.63.1782959139906; Wed, 01 Jul 2026
- 19:25:39 -0700 (PDT)
+        bh=eveqaQ81BC1wcdCKsIemx2Nfa5FTyNjibtGpz1y1TVg=;
+        b=OwYOVJKAX+KggaHG0tNy2pSBlRMNiDQRWx6aMJCjQmaCPqBVCFG0dH8yikRk5uPiuo
+         Hg0IeFdkJiPqBxp4i9czqS7lQGirAXvmhfd5Y8ULZWjeBN/GWPBUPYAsGitGf35Tuzhf
+         Brc20TdrSPdu+aojQHTSrbmuZRHQ3UpzluYjT22Y5gK0iT490Ek7a2iWtS0gg8ywJqgs
+         ou8TlTTCvQ63qCb9IIbXWiumWZ7zJBX0JHTTJgVMIa0LiL18sAO1AADpLt7/lPIyHqLG
+         JFzj0iCrecGD8L8Ny3ZN61VZeAXUsnW4r/THhZ7k03HJPIb0urf1/ilLzczVjdDLQ964
+         gASQ==
+X-Gm-Message-State: AOJu0YyLtgafRBL+K+46ZGHmG/Q+oD1T7FRqT/KSHj3KjBDelnnsf7me
+	fojqas/rtA8uBdcjJVLG9DQSvDMvMncYha+UcKrNlxia7Hto0FKTrCIfoSvp4P8XA9ZqLfjXx7W
+	UvY3wJ314G1JP3UZZ9UUdwf+C6PO1gZdNuPWTq60=
+X-Gm-Gg: AfdE7cm+kUy4ZXFb5cfkqkyOu0O04RXQ3IG0DeHLZYW6HW0BTpwL7aBkEiZ81wKRQwo
+	0iAblvGK9PPJlcGr88MP3K/sKzOgDQtGKP6kKVkvrmDauKHyPDghDuQgTJoFMwDg0zxjlmASXiv
+	ZqkHQvpQReo17QqKsgH1xPaz54OBXtYB/Dn7zEgv3KTH5m8jT950VpzAd5BWvEzNsRpA+h9FqUa
+	hFjfr50jDmWCGqhKQdoMZcjIngydGWB7CJBmNXB8U/xgokdCWBstHcLkn5qRu2Glzip6cbIT/g=
+X-Received: by 2002:a17:907:1b15:b0:c12:4c5b:f170 with SMTP id
+ a640c23a62f3a-c1287444ea3mr69933566b.62.1782788320972; Mon, 29 Jun 2026
+ 19:58:40 -0700 (PDT)
 MIME-Version: 1.0
 From: "Daniel" <dchvs11@gmail.com>
-Date: Wed, 1 Jul 2026 20:25:28 -0600
-X-Gm-Features: AVVi8CevvSPrb93dQ4Ht8TxyNF33qIt6zuQ_KzSjFgCe9x0QPXX5XrNADOfqUyU
-Message-ID: <CANDCFSymKLKTANt3dti9YW+OncTfCQyArCjoSY=EzvBLyoi1WQ@mail.gmail.com>
-Subject: [PATCH] bitbake-setup: support --update-bb-conf on init and fix site.conf symlink for setup-dir == top-dir #bitbake #yocto
+Date: Mon, 29 Jun 2026 20:58:28 -0600
+X-Gm-Features: AVVi8CcoIAifz0F8VA7Zjuvl3JeOigUM8gt_-LR00xSBCnI64g62-kYpMrj5p_M
+Message-ID: <CANDCFSwD88aPfsKDqZE_SdybCn5xYBF1VpRqgwmhTEuJK=eLcQ@mail.gmail.com>
+Subject: [PATCH] bitbake-setup: support --update-bb-conf on init and fix site.conf symlink for setup-dir == top-dir
 To: bitbake-devel@lists.openembedded.org
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>, alex.kanavin@gmail.com
-Content-Type: multipart/mixed; boundary="0000000000002f272006559786aa"
+Cc: Alexander Kanavin <alex@linutronix.de>, Richard Purdie <richard.purdie@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 02 Jul 2026 14:23:15 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19813
+ <bitbake-devel@lists.openembedded.org>; Thu, 02 Jul 2026 14:23:25 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19814
 
---0000000000002f272006559786aa
-Content-Type: text/plain; charset="UTF-8"
+  Two fixes that work together to let "bitbake-setup init" preserve an
+  existing bitbake build configuration (local.conf, bblayers.conf):
 
+  1. Expose the existing update_bb_conf parameter through a new
+     --update-bb-conf CLI flag on init, matching the semantics of
+     "bitbake-setup update". This lets downstream projects re-run init
+     (e.g. to refresh layers via --source-overrides) without losing
+     their tracked conf files. The default remains "yes" for backward
+     compatibility, so a fresh init is unaffected.
 
+  2. Fix the site.conf symlink target when the setup directory is the
+     same as the top directory. The target was always computed as
+     setupdir/../site.conf, which only matches the actual site.conf
+     location (top_dir/site.conf) when the setup directory is exactly
+     one level below the top directory. When --setup-dir-name is given
+     an absolute path equal to the top directory, the symlink ends up
+     broken, which causes "diff -uNr" to fail with exit code 2 inside
+     setup_bitbake_build(). That exception is raised before the
+     update_bb_conf == 'no' branch can restore the original conf,
+     defeating the new flag from #1. Prefer setupdir/site.conf when it
+     exists, falling back to the previous behaviour otherwise.
 
---0000000000002f272006559786aa
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-bitbake-setup-support-update-bb-conf-on-init-and-fix.patch"
-Content-Disposition: attachment; 
-	filename="0001-bitbake-setup-support-update-bb-conf-on-init-and-fix.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mr2vo45r0>
-X-Attachment-Id: f_mr2vo45r0
+  Together these changes make "bitbake-setup init --update-bb-conf=no"
+  behave like Yocto's oe-init-build-env: the build environment is
+  preserved across re-initializations.
 
-RnJvbSA0NzI4YzY5ZDY4MjQ1MWIxYjUwOTMwY2NiMzdkYWVkY2ZkMTJmZTgzIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBEYW5pZWwgQ2hhdmVzIDxkY2h2czExQGdtYWlsLmNvbT4KRGF0
-ZTogV2VkLCAxIEp1bCAyMDI2IDIwOjAxOjQ2IC0wNjAwClN1YmplY3Q6IFtQQVRDSF0gYml0YmFr
-ZS1zZXR1cDogc3VwcG9ydCAtLXVwZGF0ZS1iYi1jb25mIG9uIGluaXQgYW5kIGZpeAogc2l0ZS5j
-b25mIGZvciBzZXR1cC1kaXIgPT0gdG9wLWRpcgoKVHdvIGZpeGVzIHRoYXQgd29yayB0b2dldGhl
-ciB0byBsZXQgYGJpdGJha2Utc2V0dXAgaW5pdGAgcHJlc2VydmUgYW4KZXhpc3RpbmcgYml0YmFr
-ZSBidWlsZCBjb25maWd1cmF0aW9uIChsb2NhbC5jb25mLCBiYmxheWVycy5jb25mKToKCjEuIEV4
-cG9zZSB0aGUgZXhpc3RpbmcgYHVwZGF0ZV9iYl9jb25mYCBwYXJhbWV0ZXIgdGhyb3VnaCBhIG5l
-dwogICBgLS11cGRhdGUtYmItY29uZmAgQ0xJIGZsYWcgb24gYGluaXRgLCBtYXRjaGluZyB0aGUg
-c2VtYW50aWNzIG9mCiAgIGBiaXRiYWtlLXNldHVwIHVwZGF0ZWAuIFRoaXMgbGV0cyBkb3duc3Ry
-ZWFtIHByb2plY3RzIHJlLXJ1biBpbml0CiAgIChlLmcuLCB0byByZWZyZXNoIGxheWVycyB2aWEg
-LS1zb3VyY2Utb3ZlcnJpZGVzKSB3aXRob3V0IGxvc2luZwogICB0aGVpciB0cmFja2VkIGNvbmYg
-ZmlsZXMuIERlZmF1bHQgcmVtYWlucyAieWVzIiBmb3IgYmFja3dhcmQKICAgY29tcGF0aWJpbGl0
-eS4KCjIuIEZpeCB0aGUgc2l0ZS5jb25mIHN5bWxpbmsgdGFyZ2V0IHdoZW4gdGhlIHNldHVwIGRp
-cmVjdG9yeSBpcyB0aGUKICAgc2FtZSBhcyB0aGUgdG9wIGRpcmVjdG9yeS4gVGhlIHN5bWxpbmsg
-dGFyZ2V0IHdhcyBhbHdheXMgY29tcHV0ZWQKICAgYXMgYHNldHVwZGlyLy4uL3NpdGUuY29uZmAs
-IHdoaWNoIG9ubHkgbWF0Y2hlcyB0aGUgYWN0dWFsIHNpdGUuY29uZgogICBsb2NhdGlvbiAodG9w
-X2Rpci9zaXRlLmNvbmYpIHdoZW4gdGhlIHNldHVwIGRpcmVjdG9yeSBpcyBleGFjdGx5CiAgIG9u
-ZSBsZXZlbCBiZWxvdyB0aGUgdG9wIGRpcmVjdG9yeS4gV2hlbiBgLS1zZXR1cC1kaXItbmFtZWAg
-aXMgZ2l2ZW4KICAgYW4gYWJzb2x1dGUgcGF0aCBlcXVhbCB0byB0aGUgdG9wIGRpcmVjdG9yeSwg
-dGhlIHN5bWxpbmsgZW5kcyB1cAogICBicm9rZW4sIHdoaWNoIGNhdXNlcyBgZGlmZiAtdU5yYCB0
-byBmYWlsIHdpdGggZXhpdCBjb2RlIDIgaW5zaWRlCiAgIHNldHVwX2JpdGJha2VfYnVpbGQoKS4g
-VGhhdCBleGNlcHRpb24gaXMgcmFpc2VkIGJlZm9yZSB0aGUKICAgYHVwZGF0ZV9iYl9jb25mID09
-ICdubydgIGJyYW5jaCBjYW4gcmVzdG9yZSB0aGUgb3JpZ2luYWwgY29uZiwKICAgZGVmZWF0aW5n
-IHRoZSBuZXcgZmxhZyBmcm9tICMxLgoKVG9nZXRoZXIsIHRoZXNlIGNoYW5nZXMgbWFrZSBgYml0
-YmFrZS1zZXR1cCBpbml0IC0tdXBkYXRlLWJiLWNvbmY9bm9gCmJlaGF2ZSBsaWtlIFlvY3RvJ3Mg
-YG9lLWluaXQtYnVpbGQtZW52YDogdGhlIGJ1aWxkIGVudmlyb25tZW50IGlzCnByZXNlcnZlZCBh
-Y3Jvc3MgcmUtaW5pdGlhbGl6YXRpb25zLgoKU2lnbmVkLW9mZi1ieTogRGFuaWVsIENoYXZlcyA8
-ZGNodnMxMUBnbWFpbC5jb20+Ci0tLQogYmluL2JpdGJha2Utc2V0dXAgfCA5ICsrKysrKystLQog
-MSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1n
-aXQgYS9iaW4vYml0YmFrZS1zZXR1cCBiL2Jpbi9iaXRiYWtlLXNldHVwCmluZGV4IDk3ZWEwOGQx
-MS4uOWE1OWE1YWFhIDEwMDc1NQotLS0gYS9iaW4vYml0YmFrZS1zZXR1cAorKysgYi9iaW4vYml0
-YmFrZS1zZXR1cApAQCAtMzcxLDcgKzM3MSwxMCBAQCBkZWYgc2V0dXBfYml0YmFrZV9idWlsZChi
-aXRiYWtlX2NvbmZpZywgbGF5ZXJkaXIsIHNldHVwZGlyLCB0aGlzZGlyLCB1cGRhdGVfYmJfYwog
-ICAgIF9wcmVwZW5kX3Bhc3N0aHJvdWdoX3RvX2luaXRfYnVpbGRfZW52KGJpdGJha2VfYnVpbGRk
-aXIpCiAKICAgICBzaXRlY29uZl9zeW1saW5rID0gb3MucGF0aC5qb2luKGJpdGJha2VfY29uZmRp
-ciwgInNpdGUuY29uZiIpCi0gICAgc2l0ZWNvbmYgPSBvcy5wYXRoLm5vcm1wYXRoKG9zLnBhdGgu
-am9pbihzZXR1cGRpciwgJy4uJywgInNpdGUuY29uZiIpKQorICAgIGlmIG9zLnBhdGguZXhpc3Rz
-KG9zLnBhdGguam9pbihzZXR1cGRpciwgInNpdGUuY29uZiIpKToKKyAgICAgICAgc2l0ZWNvbmYg
-PSBvcy5wYXRoLmpvaW4oc2V0dXBkaXIsICJzaXRlLmNvbmYiKQorICAgIGVsc2U6CisgICAgICAg
-IHNpdGVjb25mID0gb3MucGF0aC5ub3JtcGF0aChvcy5wYXRoLmpvaW4oc2V0dXBkaXIsICcuLics
-ICJzaXRlLmNvbmYiKSkKICAgICBpZiBvcy5wYXRoLmxleGlzdHMoc2l0ZWNvbmZfc3ltbGluayk6
-CiAgICAgICAgIG9zLnJlbW92ZShzaXRlY29uZl9zeW1saW5rKQogICAgIG9zLnN5bWxpbmsob3Mu
-cGF0aC5yZWxwYXRoKHNpdGVjb25mLCBiaXRiYWtlX2NvbmZkaXIpLCBzaXRlY29uZl9zeW1saW5r
-KQpAQCAtODcwLDcgKzg3Myw3IEBAIGRlZiBpbml0X2NvbmZpZyh0b3BfZGlyLCBzZXR0aW5ncywg
-YXJncyk6CiAgICAgYmIuZXZlbnQucmVnaXN0ZXIoImJiLmJ1aWxkLlRhc2tQcm9ncmVzcyIsIGhh
-bmRsZV90YXNrX3Byb2dyZXNzLCBkYXRhPWQpCiAKICAgICB3cml0ZV91cHN0cmVhbV9jb25maWco
-Y29uZmRpciwgdXBzdHJlYW1fY29uZmlnKQotICAgIHVwZGF0ZV9idWlsZCh1cHN0cmVhbV9jb25m
-aWcsIGNvbmZkaXIsIHNldHVwZGlyLCBsYXllcmRpciwgZCwgdXBkYXRlX2JiX2NvbmY9InllcyIs
-IGluaXRfdnNjb2RlPWFyZ3MuaW5pdF92c2NvZGUpCisgICAgdXBkYXRlX2J1aWxkKHVwc3RyZWFt
-X2NvbmZpZywgY29uZmRpciwgc2V0dXBkaXIsIGxheWVyZGlyLCBkLCB1cGRhdGVfYmJfY29uZj1h
-cmdzLnVwZGF0ZV9iYl9jb25mLCBpbml0X3ZzY29kZT1hcmdzLmluaXRfdnNjb2RlKQogCiAgICAg
-YmIuZXZlbnQucmVtb3ZlKCJiYi5idWlsZC5UYXNrUHJvZ3Jlc3MiLCBOb25lKQogCkBAIC0xMjY4
-LDYgKzEyNzEsOCBAQCBkZWYgbWFpbigpOgogICAgICAgICAgICAgICAgICAgICAgICAgaGVscD0n
-U3ltbGluayBsb2NhbCBzb3VyY2UgaW50byBhIGJ1aWxkLCBpbnN0ZWFkIG9mIGdldHRpbmcgaXQg
-YXMgcHJlc2NyaWJlZCBieSBhIGNvbmZpZ3VyYXRpb24gKHVzZWZ1bCBmb3IgbG9jYWwgZGV2ZWxv
-cG1lbnQpLicpCiAgICAgcGFyc2VyX2luaXQuYWRkX2FyZ3VtZW50KCctLWluaXQtdnNjb2RlJywg
-YWN0aW9uPWFyZ3BhcnNlLkJvb2xlYW5PcHRpb25hbEFjdGlvbiwgZGVmYXVsdD1ib29sKHNodXRp
-bC53aGljaCgnY29kZScpKSwKICAgICAgICAgICAgICAgICAgICAgICAgIGhlbHA9J0dlbmVyYXRl
-IFZTQ29kZSB3b3Jrc3BhY2UgY29uZmlndXJhdGlvbiAoZGVmYXVsdDogJShkZWZhdWx0KXMpJykK
-KyAgICBwYXJzZXJfaW5pdC5hZGRfYXJndW1lbnQoJy0tdXBkYXRlLWJiLWNvbmYnLCBjaG9pY2Vz
-PVsncHJvbXB0JywgJ3llcycsICdubyddLCBkZWZhdWx0PSd5ZXMnLAorICAgICAgICAgICAgICAg
-ICAgICAgICAgaGVscD0nVXBkYXRlIGJpdGJha2UgY29uZmlndXJhdGlvbiBmaWxlcyAoYmJsYXll
-cnMuY29uZiwgbG9jYWwuY29uZikgd2hlbiByZS1pbml0aWFsaXppbmcgYW4gZXhpc3Rpbmcgc2V0
-dXAgKGRlZmF1bHQ6ICUoZGVmYXVsdClzKScpCiAgICAgcGFyc2VyX2luaXQuc2V0X2RlZmF1bHRz
-KGZ1bmM9aW5pdF9jb25maWcpCiAKICAgICBwYXJzZXJfc3RhdHVzID0gc3VicGFyc2Vycy5hZGRf
-cGFyc2VyKCdzdGF0dXMnLCBoZWxwPSdDaGVjayBpZiB0aGUgc2V0dXAgbmVlZHMgdG8gYmUgc3lu
-Y2hyb25pemVkIHdpdGggY29uZmlndXJhdGlvbicpCg==
+  Signed-off-by: Daniel Chaves <dchvs11@gmail.com>
+  ---
+   bin/bitbake-setup | 9 +++++++--
+   1 file changed, 7 insertions(+), 2 deletions(-)
 
---0000000000002f272006559786aa--
+  diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+  index 97ea08d..9a59a5a 100755
+  --- a/bin/bitbake-setup
+  +++ b/bin/bitbake-setup
+  @@ -371,7 +371,10 @@ def setup_bitbake_build(bitbake_config,
+layerdir, setupdir, thisdir, update_bb_c
+       _prepend_passthrough_to_init_build_env(bitbake_builddir)
+
+       siteconf_symlink = os.path.join(bitbake_confdir, "site.conf")
+  -    siteconf = os.path.normpath(os.path.join(setupdir, '..', "site.conf"))
+  +    if os.path.exists(os.path.join(setupdir, "site.conf")):
+  +        siteconf = os.path.join(setupdir, "site.conf")
+  +    else:
+  +        siteconf = os.path.normpath(os.path.join(setupdir, '..',
+"site.conf"))
+       if os.path.lexists(siteconf_symlink):
+           os.remove(siteconf_symlink)
+       os.symlink(os.path.relpath(siteconf, bitbake_confdir), siteconf_symlink)
+  @@ -870,7 +873,7 @@ def init_config(top_dir, settings, args):
+       bb.event.register("bb.build.TaskProgress", handle_task_progress, data=d)
+
+       write_upstream_config(confdir, upstream_config)
+  -    update_build(upstream_config, confdir, setupdir, layerdir, d,
+update_bb_conf="yes", init_vscode=args.init_vscode)
+  +    update_build(upstream_config, confdir, setupdir, layerdir, d,
+update_bb_conf=args.update_bb_conf, init_vscode=args.init_vscode)
+
+       bb.event.remove("bb.build.TaskProgress", None)
+
+  @@ -1268,6 +1271,8 @@ def main():
+                           help='Symlink local source into a build,
+instead of getting it as prescribed by a configuration (useful for
+local development).')
+       parser_init.add_argument('--init-vscode',
+action=argparse.BooleanOptionalAction,
+default=bool(shutil.which('code')),
+                           help='Generate VSCode workspace
+configuration (default: %(default)s)')
+  +    parser_init.add_argument('--update-bb-conf', choices=['prompt',
+'yes', 'no'], default='yes',
+  +                        help='Update bitbake configuration files
+(bblayers.conf, local.conf) when re-initializing an existing setup
+(default: %(default)s)')
+       parser_init.set_defaults(func=init_config)
+
+       parser_status = subparsers.add_parser('status', help='Check if
+the setup needs to be synchronized with configuration')
 
