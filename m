@@ -1,161 +1,137 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0429CC43602
-	for <webhook@archiver.kernel.org>; Thu,  2 Jul 2026 14:23:25 +0000 (UTC)
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.13353.1782788323253025489
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED65EC43458
+	for <webhook@archiver.kernel.org>; Thu,  2 Jul 2026 17:29:49 +0000 (UTC)
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.74717.1783013384771363369
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 29 Jun 2026 19:58:43 -0700
+ Thu, 02 Jul 2026 10:29:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=q4oWArHV;
- spf=pass (domain: gmail.com, ip: 209.85.218.50, mailfrom: dchvs11@gmail.com)
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-c126b8118afso223324666b.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 29 Jun 2026 19:58:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782788321; cv=none;
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=qSoc2Vsh;
+ spf=pass (domain: gmail.com, ip: 209.85.219.46, mailfrom: alex.kanavin@gmail.com)
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-8f23e851626so17301496d6.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 02 Jul 2026 10:29:44 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783013384; cv=none;
         d=google.com; s=arc-20260327;
-        b=lJn/8588ntgxoacPf1JAab73ltr3PDTHX+T1GW3RiwLJ6QL/hzWv/KJdLrI+AyNCNm
-         8zz4eQDz/NbBGns77oVphVGLrTyyFUR47hXVNLW2cXgtpgj5ZzzzReyPbrfVD9921gjn
-         P7AVhlxh0a07vJRTXJniMmU3DTOJ3HLN6HlSfiuCxlEjrAr8qR38fRRbFfKovJenJ9jL
-         EYSc/egU+RJObOosDDLGxvM+qu8hQLV3gHF66svwBakk1se54a15MKH3i9cdbJ+unYob
-         ko55XFe7tK09Cavvkiua/js4H23zrmpBNnI1cM4Gg8R2gaWM6fIZfeDkpSbxlDn+mHtu
-         fdag==
+        b=nLUh1y0zjrMjN/V1blG/VRYdhCuJokc/AJZsRjYL+5/D8PmcTkbWN/R1lJ4U9y0UMK
+         IMTVfGsMgfdhL+Ax60Ohxm3KewA0QpH+Hq4vtAmIZNcfOWUTjpPQEekekTsny2GT7H8v
+         nJLjv94ukgodb+8FB2aVO7hIzyiX2TbD78WuCdlG7jKDBaqLjM64vWxxjuHTgpFLiy51
+         6S8oPVyVVfy6iSRgCJQ2P/IDBobkUylNcOSF/XmwgcQRUmyh+MR9hJiek5FvnL1j8bEx
+         5eOUdh2K4VkFFTjDeEbvxsavCJ/DFQYRW71y+an6FeDO07dgOEkJlv7FfGrnw4nlW+PI
+         MfNg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=eveqaQ81BC1wcdCKsIemx2Nfa5FTyNjibtGpz1y1TVg=;
-        fh=xlJr4eUX1DlAYk6Ppr40xqLOKfw5/svXuQb7Bs4sV88=;
-        b=SiJcCBerPzUqEwHi27TrcJ9zW9tlRfLnbVNb8XcpcPO+YhRKwiOuOzH4/cZRwYjA6y
-         J7I2lSfD+l1u+f3zQBlbtCQXog0/3aQz1b7rAWkP7fQmDVQWSr1e1NZ5BVzwO62qgqsx
-         G49px90g/dgvLZR3wmkLTG692JGuh5D3hZExQ3hAqIEyvxqM3JL7VpzdQ5FCLKsBIesl
-         gxeM2qHMVBAyGyHJ0FNFTzljWfumoxzXfN7KS/zQQ5Sx32aWghRLLckQPaDUDzCR2k2m
-         v1IfIt+UhevnaWQclHwY2jSHGUtBC4ikrX1KCCZ8TGoAjx8JzcQuDgxtQwuvvjMraJjO
-         1ZXA==;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=ErKCOxbj9tBWCfsdmlbm02mtxRSN5PQBR22ABWcXpRU=;
+        fh=cEZwQmRD5QCvvS/ITJgi2zXY9cGcfoQhcZanEtMKQAs=;
+        b=J/7wTmd48NXhlp3PtCBW7LPdinP34jrghUGUKeLXnrQVcHOkX8hYHhBTiutjo3Uz7r
+         rl0GwtNK7YJ+l//OgrxWD9y9kYTrHyGElwkpb841x4hD0xRiBaUSS1FcxT+Dp84ns7pr
+         kdeeYNnyyoan9Uzgij1R07P9f98++LWUcUaapSwxkAPFCHRboiorqXCsA+BmQIT/c6qA
+         7U3yNllfMVB7bjRvWPrk67BnuElfFY0QYw8JBCCCM/s4NvgftvMWe/OSy+lrNS3hgbgf
+         eUARLzHYZSHDNt7s+eBfgIISiwNmuiU3HnPOGBxdRONrXvg37/Mp37GFHUQ50VLyYxOm
+         HPlw==;
         darn=lists.openembedded.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782788321; x=1783393121; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=eveqaQ81BC1wcdCKsIemx2Nfa5FTyNjibtGpz1y1TVg=;
-        b=q4oWArHV4HdXHn+Rdh4KEaDXWX3K8Qui+RcBBYPoMcYSgy6sOAhwy/VVwVdmx7R5Ru
-         bbsz0RFF4n/9Ohjm7bGKh392I4aD97v7WCVDQnQx4k8/7HZ/8d3ZDr2U6DSI1+6M6bPs
-         RLZzutIvpBlgrNtqVx6lMlrMmw49CjAj/pxfhzmL96gQ1ZTxpG1o/Oo9+Fw5yqYfmgFU
-         C2ItFY3uhmNvqQiDBXHonL8zTFQs67FxBmhENqnY5XMfKBzIVZIgsotKXjwAsH8ZUMFY
-         yGt+ZdJTd4Za5mzK8djU+w0Vh/D2FvS9olnhnVmmB2yE9Fsr1TvwyKmAKE0Ox/T6Qivu
-         68Dg==
+        d=gmail.com; s=20251104; t=1783013384; x=1783618184; darn=lists.openembedded.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ErKCOxbj9tBWCfsdmlbm02mtxRSN5PQBR22ABWcXpRU=;
+        b=qSoc2Vshew3qjzXVNwjZvRNE+LGAcLgD28PkM1Oo3roD/kLvHioK8Y6s+o/EHJh2uv
+         FCEonYfTgwJMTOcgu8ebc/driqeToF2mAfa3sBgqjddh7RoF754u2rRRLFCGwSZP971W
+         YKGrKb3+ch5tAStpTo3HlA3bRFQne/CMGSlniiIRNQSji7EmV21bqG16j5WXrQp4NuJW
+         JOXLDL2QYMbGYnSPXxNt49JDyUHYTZLLJ5DBnjWnBwPKHVW2ta//EaQ3dB5yTPNceCGj
+         B4xD0Eez90vR9xNUUkLMauE2qaC2p8iA3SSfLLE0PHjac79Z4hrObZmbQj/cCBwGVXuj
+         9mmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782788321; x=1783393121;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eveqaQ81BC1wcdCKsIemx2Nfa5FTyNjibtGpz1y1TVg=;
-        b=OwYOVJKAX+KggaHG0tNy2pSBlRMNiDQRWx6aMJCjQmaCPqBVCFG0dH8yikRk5uPiuo
-         Hg0IeFdkJiPqBxp4i9czqS7lQGirAXvmhfd5Y8ULZWjeBN/GWPBUPYAsGitGf35Tuzhf
-         Brc20TdrSPdu+aojQHTSrbmuZRHQ3UpzluYjT22Y5gK0iT490Ek7a2iWtS0gg8ywJqgs
-         ou8TlTTCvQ63qCb9IIbXWiumWZ7zJBX0JHTTJgVMIa0LiL18sAO1AADpLt7/lPIyHqLG
-         JFzj0iCrecGD8L8Ny3ZN61VZeAXUsnW4r/THhZ7k03HJPIb0urf1/ilLzczVjdDLQ964
-         gASQ==
-X-Gm-Message-State: AOJu0YyLtgafRBL+K+46ZGHmG/Q+oD1T7FRqT/KSHj3KjBDelnnsf7me
-	fojqas/rtA8uBdcjJVLG9DQSvDMvMncYha+UcKrNlxia7Hto0FKTrCIfoSvp4P8XA9ZqLfjXx7W
-	UvY3wJ314G1JP3UZZ9UUdwf+C6PO1gZdNuPWTq60=
-X-Gm-Gg: AfdE7cm+kUy4ZXFb5cfkqkyOu0O04RXQ3IG0DeHLZYW6HW0BTpwL7aBkEiZ81wKRQwo
-	0iAblvGK9PPJlcGr88MP3K/sKzOgDQtGKP6kKVkvrmDauKHyPDghDuQgTJoFMwDg0zxjlmASXiv
-	ZqkHQvpQReo17QqKsgH1xPaz54OBXtYB/Dn7zEgv3KTH5m8jT950VpzAd5BWvEzNsRpA+h9FqUa
-	hFjfr50jDmWCGqhKQdoMZcjIngydGWB7CJBmNXB8U/xgokdCWBstHcLkn5qRu2Glzip6cbIT/g=
-X-Received: by 2002:a17:907:1b15:b0:c12:4c5b:f170 with SMTP id
- a640c23a62f3a-c1287444ea3mr69933566b.62.1782788320972; Mon, 29 Jun 2026
- 19:58:40 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1783013384; x=1783618184;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ErKCOxbj9tBWCfsdmlbm02mtxRSN5PQBR22ABWcXpRU=;
+        b=eWCAdda8BqFs2fvhSkbzBVia8su9qPYN9Z7ZsTX+jSmBzvb0Rn+ETrqudjK/0ykopN
+         CwnJ9icXrulN+bCHw0vX6SjF6K7FSaG22Jm/lPQfUlDmzo+DEVao/irbTyGFwM4KnTak
+         kD03d0dkrRvPvDALyRCBRVQsCYbDdIslvCWSGr0+kNh0QKJ9KbOS2mOenxA1Q8wJvLQ6
+         QVyfwc+oEHNxw/7BOUDvLtnRGUYb7kgEBQEzYhl3CvQZUASdFefMoFPQjltfEVhmENBu
+         91whwL+3azidwgTmP4M9XGHMSt+QBhK5hF/x2l3cvgjEkdhC2yK/o320HUU1tmyrzLn/
+         6ASQ==
+X-Gm-Message-State: AOJu0Yy0HiRzuzux7Px6FMzo7odx7Xli6A077s0WGe8/bJMF1M9Vagu1
+	yAVedvsVu6ELEV8jIgEd/+aIDv5nh/RhzhRaezojmQL9HaQnucNHksmiiCdi6FnpCSqZnU/q6YV
+	cibt/+TqNfl2Vd63THUgKsssmIpsxiLc=
+X-Gm-Gg: AfdE7cn5ExxCUhqxKUTG8aqGupcq9b7qyQHNIGTDT2hmk6UiJYt5NFg1HPH6CzRwgbm
+	UkoAeGPTQX/QVqE+p2jyf3kZgk8Y8akegO5QQ278F4k2u5OY5+6tSTxkT2qhIft7vXX3Y8yqkTt
+	pUHOtF7WpctBylY2oew76puRY6d48krRXgrpFXdZRDn5OAKM6R1NEPb6zr/U/6GT561dGIcNXte
+	MaI+CTl2/IppYQUMxhEQeKDzNycdX+zNkMRhEs0g5vSVPAL8fSylRDcHtcgeGfgbSO6zpyY5fqW
+	NXfwkkK0dw/Fw/7i26GvixJX9Q+3
+X-Received: by 2002:a0c:c351:0:b0:8dc:40bc:b593 with SMTP id
+ 6a1803df08f44-8f3c70b6576mr74172176d6.10.1783013383414; Thu, 02 Jul 2026
+ 10:29:43 -0700 (PDT)
 MIME-Version: 1.0
-From: "Daniel" <dchvs11@gmail.com>
-Date: Mon, 29 Jun 2026 20:58:28 -0600
-X-Gm-Features: AVVi8CcoIAifz0F8VA7Zjuvl3JeOigUM8gt_-LR00xSBCnI64g62-kYpMrj5p_M
-Message-ID: <CANDCFSwD88aPfsKDqZE_SdybCn5xYBF1VpRqgwmhTEuJK=eLcQ@mail.gmail.com>
-Subject: [PATCH] bitbake-setup: support --update-bb-conf on init and fix site.conf symlink for setup-dir == top-dir
-To: bitbake-devel@lists.openembedded.org
-Cc: Alexander Kanavin <alex@linutronix.de>, Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <CANDCFSwD88aPfsKDqZE_SdybCn5xYBF1VpRqgwmhTEuJK=eLcQ@mail.gmail.com>
+In-Reply-To: <CANDCFSwD88aPfsKDqZE_SdybCn5xYBF1VpRqgwmhTEuJK=eLcQ@mail.gmail.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Thu, 2 Jul 2026 19:29:31 +0200
+X-Gm-Features: AVVi8CfobjzB0nzq3UqrK-97V0qX_Lmxg3Cyxse49YykMsk-5EQZoZJ5zGRH39Y
+Message-ID: <CANNYZj86QwsETbi-Lq8r_8BX4UnadF+02jNrJ1BVT2cw785Rjg@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] bitbake-setup: support --update-bb-conf
+ on init and fix site.conf symlink for setup-dir == top-dir
+To: dchvs11@gmail.com
+Cc: bitbake-devel@lists.openembedded.org, 
+	Alexander Kanavin <alex@linutronix.de>, Richard Purdie <richard.purdie@linuxfoundation.org>
 Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 02 Jul 2026 14:23:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19814
+ <bitbake-devel@lists.openembedded.org>; Thu, 02 Jul 2026 17:29:49 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19815
 
-  Two fixes that work together to let "bitbake-setup init" preserve an
-  existing bitbake build configuration (local.conf, bblayers.conf):
+On Thu, 2 Jul 2026 at 16:23, Daniel via lists.openembedded.org
+<dchvs11=gmail.com@lists.openembedded.org> wrote:
+>   Two fixes that work together to let "bitbake-setup init" preserve an
+>   existing bitbake build configuration (local.conf, bblayers.conf):
+>
+>   1. Expose the existing update_bb_conf parameter through a new
+>      --update-bb-conf CLI flag on init, matching the semantics of
+>      "bitbake-setup update". This lets downstream projects re-run init
+>      (e.g. to refresh layers via --source-overrides) without losing
+>      their tracked conf files. The default remains "yes" for backward
+>      compatibility, so a fresh init is unaffected.
 
-  1. Expose the existing update_bb_conf parameter through a new
-     --update-bb-conf CLI flag on init, matching the semantics of
-     "bitbake-setup update". This lets downstream projects re-run init
-     (e.g. to refresh layers via --source-overrides) without losing
-     their tracked conf files. The default remains "yes" for backward
-     compatibility, so a fresh init is unaffected.
+'Init' is explicitly meant for initializing a new setup, not for
+operating on something that was already initialized before. There's
+even code to check for it:
 
-  2. Fix the site.conf symlink target when the setup directory is the
-     same as the top directory. The target was always computed as
-     setupdir/../site.conf, which only matches the actual site.conf
-     location (top_dir/site.conf) when the setup directory is exactly
-     one level below the top directory. When --setup-dir-name is given
-     an absolute path equal to the top directory, the symlink ends up
-     broken, which causes "diff -uNr" to fail with exit code 2 inside
-     setup_bitbake_build(). That exception is raised before the
-     update_bb_conf == 'no' branch can restore the original conf,
-     defeating the new flag from #1. Prefer setupdir/site.conf when it
-     exists, falling back to the previous behaviour otherwise.
+    if os.path.exists(os.path.join(setupdir, "layers")):
+        logger.info(f"Setup already initialized in:\n
+{setupdir}\nUse 'bitbake-setup status' to check if it needs to be
+updated, or 'bitbake-setup update' to perform the update.\nIf you
+would like to start over and re-initialize in this directory, remove
+it, and run 'bitbake-setup init' again.")
+        return
 
-  Together these changes make "bitbake-setup init --update-bb-conf=no"
-  behave like Yocto's oe-init-build-env: the build environment is
-  preserved across re-initializations.
+So I think such after-the-fact tweaks should be in 'update'.
 
-  Signed-off-by: Daniel Chaves <dchvs11@gmail.com>
-  ---
-   bin/bitbake-setup | 9 +++++++--
-   1 file changed, 7 insertions(+), 2 deletions(-)
+>   2. Fix the site.conf symlink target when the setup directory is the
+>      same as the top directory. The target was always computed as
+>      setupdir/../site.conf, which only matches the actual site.conf
+>      location (top_dir/site.conf) when the setup directory is exactly
+>      one level below the top directory. When --setup-dir-name is given
+>      an absolute path equal to the top directory, the symlink ends up
+>      broken, which causes "diff -uNr" to fail with exit code 2 inside
+>      setup_bitbake_build(). That exception is raised before the
+>      update_bb_conf == 'no' branch can restore the original conf,
+>      defeating the new flag from #1. Prefer setupdir/site.conf when it
+>      exists, falling back to the previous behaviour otherwise.
 
-  diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-  index 97ea08d..9a59a5a 100755
-  --- a/bin/bitbake-setup
-  +++ b/bin/bitbake-setup
-  @@ -371,7 +371,10 @@ def setup_bitbake_build(bitbake_config,
-layerdir, setupdir, thisdir, update_bb_c
-       _prepend_passthrough_to_init_build_env(bitbake_builddir)
+Setup directory is as well meant to be exactly one level under the top
+directory, not the same as the top directory or somewhere else
+entirely. We probably should add more guards and useful messages when
+that is not the case, but we shouldn't try to support that.
 
-       siteconf_symlink = os.path.join(bitbake_confdir, "site.conf")
-  -    siteconf = os.path.normpath(os.path.join(setupdir, '..', "site.conf"))
-  +    if os.path.exists(os.path.join(setupdir, "site.conf")):
-  +        siteconf = os.path.join(setupdir, "site.conf")
-  +    else:
-  +        siteconf = os.path.normpath(os.path.join(setupdir, '..',
-"site.conf"))
-       if os.path.lexists(siteconf_symlink):
-           os.remove(siteconf_symlink)
-       os.symlink(os.path.relpath(siteconf, bitbake_confdir), siteconf_symlink)
-  @@ -870,7 +873,7 @@ def init_config(top_dir, settings, args):
-       bb.event.register("bb.build.TaskProgress", handle_task_progress, data=d)
+Apologies if this answer is not what you expected, but perhaps you can
+describe the use case first?
 
-       write_upstream_config(confdir, upstream_config)
-  -    update_build(upstream_config, confdir, setupdir, layerdir, d,
-update_bb_conf="yes", init_vscode=args.init_vscode)
-  +    update_build(upstream_config, confdir, setupdir, layerdir, d,
-update_bb_conf=args.update_bb_conf, init_vscode=args.init_vscode)
-
-       bb.event.remove("bb.build.TaskProgress", None)
-
-  @@ -1268,6 +1271,8 @@ def main():
-                           help='Symlink local source into a build,
-instead of getting it as prescribed by a configuration (useful for
-local development).')
-       parser_init.add_argument('--init-vscode',
-action=argparse.BooleanOptionalAction,
-default=bool(shutil.which('code')),
-                           help='Generate VSCode workspace
-configuration (default: %(default)s)')
-  +    parser_init.add_argument('--update-bb-conf', choices=['prompt',
-'yes', 'no'], default='yes',
-  +                        help='Update bitbake configuration files
-(bblayers.conf, local.conf) when re-initializing an existing setup
-(default: %(default)s)')
-       parser_init.set_defaults(func=init_config)
-
-       parser_status = subparsers.add_parser('status', help='Check if
-the setup needs to be synchronized with configuration')
+Alex
 
