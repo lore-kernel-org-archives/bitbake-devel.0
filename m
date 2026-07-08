@@ -1,101 +1,110 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871BDC43458
-	for <webhook@archiver.kernel.org>; Tue,  7 Jul 2026 16:53:48 +0000 (UTC)
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.2564.1783443226750251532
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 061F9C43602
+	for <webhook@archiver.kernel.org>; Wed,  8 Jul 2026 12:00:47 +0000 (UTC)
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.6541.1783512038890641792
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 07 Jul 2026 09:53:46 -0700
+ Wed, 08 Jul 2026 05:00:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=f61WOwNL;
- spf=pass (domain: gmail.com, ip: 209.85.222.179, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-92e65e18969so68162385a.1
-        for <bitbake-devel@lists.openembedded.org>; Tue, 07 Jul 2026 09:53:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783443226; cv=none;
-        d=google.com; s=arc-20260327;
-        b=l4b12ULUziCcJxK4B9zT0jrDSLrnCst5zdoh6nq58MPsbbFAn96VL0W+en6g/w8u3W
-         SpczDu3RrZ79iz+FFaM2pif65nQtRJrpeJN6AXkngUU120Fs5Cp6DG6JlYb5K29JtSQ1
-         uA7XwzJ+AB+VeGNiUu4G/nZn8+TaJDMUlh3MFq3wY55XISsctoHtxQY3+SPbt5NRWjba
-         mFu2KMncbMw/D6MCajbIWpFid4B88dxaq2DvbLhVsQIOQeoJ+XpfpgeYwyyvqJzCUVPO
-         mLuaxhRvwsVnZmpWbksy0durH1FOr5zV+MubboAtob4qxvEzNdIzt/wgtMBv4jdIOxAk
-         tYRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=smHuo/2mSLc8pAej/fgfu1ukWJSiBLUJvfXXmiXpFQU=;
-        fh=jtPWzpo31wky6UZf6hPox3o/x6kshybWwk1f+TaZiCY=;
-        b=epifdACw0l5EhaNFB7pl7pi3SyucNUXtqvUpmVlpm/MZ8abpXihUQpMyVFA6CAoRys
-         jHbrDQJDRaAZUWP3WcYk6l9PRZ0LwZS4LrpB/ep450L7OKL+iER7FwsG38ux80nJfOfJ
-         Ewah6CrIeg4ttElmwUkJhd2gRA+9G5XT4TKtOAaYxDPfNPWGUNR6DgQWV6ZZYnuj4FaO
-         bDzDsUlWPFJC14jIpACD12g2EC0C+JLKXY4iIn7SvJmuq+VG1GEKTKcpHzgSCCYjq6W5
-         LxIXQ9lSqYM7YsI4OZ1D49e19QPkDkbtUuhllipiN+eKiy/rtwl87u6m0bmwpOdJmD8k
-         +zGQ==;
-        darn=lists.openembedded.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=LkIFuT03;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.42, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-46ed4f66256so515672f8f.3
+        for <bitbake-devel@lists.openembedded.org>; Wed, 08 Jul 2026 05:00:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783443226; x=1784048026; darn=lists.openembedded.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=smHuo/2mSLc8pAej/fgfu1ukWJSiBLUJvfXXmiXpFQU=;
-        b=f61WOwNLIAEh+aNaybVchDtzfjJsqW2xzpNRfL+2SWSlaynXMFVPuIEvaErGgWx9Gz
-         Q6GqnZqPDaS8CUozV63AljJK8q1TKhSVMhZR2mBGEHI7T+U1ORqnVw7SGNwQMTJIiXPg
-         7GgFQG92D0p5yONrXuTI/PSgKzUwEZ9RibWKMcDKbS5hA9Tj1ScEiqwc3HYlp6WPHWe5
-         hQa13VEa1x5FuTyJzm8z/fpAXVY0vLc3KtJGQ65MZHCBLyC0ba/OEO8e8XFYf7Ya24di
-         iMMe4JgNy4YneinD5wucVisIoDiNzka1q1hIhWFXB1pSJUYhxeX+JYgCKqLX79sdqZqn
-         2aJQ==
+        d=linuxfoundation.org; s=google; t=1783512037; x=1784116837; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=f4SvZ65bC0priVQv5eAscEk4fzuV2sxPV+gbGB6V4RQ=;
+        b=LkIFuT03brYPVRELh8pB3nVKpHvi2sXV4FQTsyiGRUFxdhiWKCjEM8psSJ8SgNLBFm
+         HcP0u8xP4Y95uH/U5dCtf/8pGIh7H8G5GQTbXd7hu/uDH3LybJzvm2PyMXPYGaH3Vnf6
+         Knz+jLFdEbUHeRLNo6sf3iG7w4pGD9yqOHtW0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783443226; x=1784048026;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=smHuo/2mSLc8pAej/fgfu1ukWJSiBLUJvfXXmiXpFQU=;
-        b=SK39IJRj11/Z+vPjmx8dTPal+j5C/JvVJier7vmc/7I/c+QZYKwR41lGi/eUV/dmvN
-         yLAWB3fysBiuK87wkx38eEb3qExCtOs0af7m/NCgFd2impoRbXtm3GhthSzGxGfpjjLd
-         ErLCr/hrO226/15IdI80jDgybN8G3pSGLrBwe2B/wyPtawV85x7sOUSk+BJx9oPq/Lix
-         umIx1lQMryvmFCA+qTNqTkF6PPrDz0ux3AkjDmeP4/+goctwk23s161RWVtgezJYj8U0
-         yQkuy1vFzIS6zkoRnBBFmukJKv+wszvCjOxsFomxuMcm2CjHB4d6oTH07ggim24epGIG
-         gOUg==
-X-Gm-Message-State: AOJu0Yz3GUxKdk8ZSUt4Rsw4lp+B9fnicUQJc0lDpeqmg7IC18Juxbqk
-	87E0CnftM9UWVFPeyulX1YYlFgGwEaDc2m6iS0Bx2hp/7uqTsZDGjliLtTjBNxhHurkE02bAkP7
-	oo75sxP4tfWDERT6XUHnp1ov6H+JiAkQ=
-X-Gm-Gg: AfdE7ckOGBsuUqDE3qOhxYuOoJa63L7ToYtT+cSqLVtsj3Z4KZhnvQ1Yjl1K1HW+Rr2
-	2oUwnlGcKbF591YmW8kJKETuYLePJvZBslj3D4nzcyJ8q2ecvuHRz4cWNfLiTzzMixqtnHPyE3b
-	e8YQ2VkSHZAEXOOaqs7Eo8cAUeZBt7BKl++Kz1Qa5XF4HAXUkgP6oKvJp7PmJaL4SAMDUmrvhWg
-	is3kb0lAzMf+/oPc9c3e0w7SGaH6OKl8y5q0oCR+Om6GXxmDgrTUlIJo+oJPLewGd2ZpM6UZhYo
-	WBTdNzQ8Qjx2lrI3eLKAcMP+AJL7VtVhyCZt//UOng==
-X-Received: by 2002:a05:620a:4503:b0:915:9931:3a3e with SMTP id
- af79cd13be357-92ec0c86769mr347971385a.27.1783443225327; Tue, 07 Jul 2026
- 09:53:45 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1783512037; x=1784116837;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=f4SvZ65bC0priVQv5eAscEk4fzuV2sxPV+gbGB6V4RQ=;
+        b=h2OhuG44YFXP+OFlhN7XrCbQnLSteovCPF3L/ETpE9NnTgWB784ePGGnOQejjxpoyj
+         j3xXnTypJcs5ypMDr4q8q6ZRMyEAV5PAsg2+d0EqKzVp8IDi1WIflrr3GK6t8pwxKH2v
+         usrHLrqyVTe2vI3Y56WbX/OtKCfZ2/B1l+bRVjSuwCsDy7FOFR238+Szq4UR+FshwwkY
+         74Okyq3U0JEUj7LU8ZnPaykKJDKXGcdJyCc2hlOwqXH4oRfy8Tj6B7eypeFVE4+gMeix
+         aQ9t0+YQcI9Pgj+r/9x6pD0dChzJb7mzFYgHUl2pvTilnv6IfJ6JuqMJ6Hbt2OJFFEUD
+         L7Aw==
+X-Gm-Message-State: AOJu0YyXC3SsAmPsDX3wS65f5uXmYiZZVrPfQKceey0YudeOdj8ZDgup
+	xp89Sb7xpZXFe9r7ikKWcfEgXwqg2J+gbZSACBdUNdf68Lg3PWce7vkFTqQqw0cPmMzahvA27Xb
+	0jJvmBqs=
+X-Gm-Gg: AfdE7cnVd7JvAmUH7t1JiLmn5j8Q/pXEJGlKxiBxfkLLfaW43gq0IPSVa44EF5N6tWl
+	0INcSIPZC0p6B12J4axp24oucC8UaS5nQfqYAc3/7EV6iBehljpy8IYBBHKePWc1U1jCN6fI0iT
+	EeBbY4O83pj3lorQ1zKhPnlhREiRweYoLIdzRMnJ/4aGqZv56UsvCiRoW1kFKM/LsEvTMTDDh0W
+	F0q4dbZbylfOTbf/tWfpL+F4mnD7KfOOok+xjDE6sUUFwWvOYcGDer944GrjG8mGxWfNRJWgz+0
+	PsvQcUArrJ2znKBtGhWpk02EIvuOROmE1YKdGso6VnvVSyjyJfFYEq+VVAp5eyHE4fYmySQlhnp
+	n/x2UZ/XO1rXVfzLmKtDaJg1ORg6Jl6xyUoiwScC2agMFxoqwfimLmFuSi6vUC7Py+QGFNrF77t
+	lrtRKbuZkKmPq2pgEDsfARRKlhtOkJUdSzsSDhzgFIMA==
+X-Received: by 2002:a05:6000:1841:b0:475:f0d1:eb66 with SMTP id ffacd0b85a97d-47df07c1423mr2648312f8f.51.1783512036546;
+        Wed, 08 Jul 2026 05:00:36 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:b60a:b356:19ef:1131])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47a9de1d905sm43760525f8f.2.2026.07.08.05.00.35
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2026 05:00:35 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] utils: Add NFS EEXISTS/isdir failure workaround
+Date: Wed,  8 Jul 2026 13:00:35 +0100
+Message-ID: <20260708120035.3530343-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.53.0
 MIME-Version: 1.0
-References: <20260707163424.678708-1-fabien.lehoussel@smile.fr>
-In-Reply-To: <20260707163424.678708-1-fabien.lehoussel@smile.fr>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Tue, 7 Jul 2026 18:53:34 +0200
-X-Gm-Features: AVVi8CfzNXNiqB_0b2czRQpJB2viqIwxfTLZpQGFReK0IkzheVXjcdraPTsCtKw
-Message-ID: <CANNYZj-kCKJ2h4QfWDq8e-cFX=vyTCi0ojR3kunmQcQayKySyA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] bitbake-setup: handle dict entries in oe-fragments
-To: fabien.lehoussel@smile.fr
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 07 Jul 2026 16:53:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19820
+ <bitbake-devel@lists.openembedded.org>; Wed, 08 Jul 2026 12:00:47 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19821
 
-On Tue, 7 Jul 2026 at 18:34, Fabien Lehoussel via
-lists.openembedded.org
-<fabien.lehoussel=smile.fr@lists.openembedded.org> wrote:
->      fragments = bitbake_config.get("oe-fragments", []) + sorted(bitbake_config.get("oe-fragment-choices",{}).values())
-> +    # oe-fragments entries can be strings or dicts with 'name'/'description' keys
-> +    fragments = [f["name"] if isinstance(f, dict) else f for f in fragments]
+We're seeing cases where we see tracebacks when creating directories in
+SSTATE_DIR on an NFS server. The issue is that we see EEXISTS being returned
+but isdir() is False, likely when multiple clients try and create the same
+directory at the same time.
 
-This should only fix up oe-fragments, and then concatenate with the
-choices. Doing the 'fixing' over the complete final list may work ok,
-but it is odd logically, as it creates a point in the code flow where
-that list contains inconsistent entries.
+This is likely a relatively well known issue with NFS's attribute cache.
+There is also a way to clear the attribute cache, which is to call
+opendir() on the parent directory. That is what this workaround does. In
+the rare case we're about to fail, try that using os.listdir() and
+see if it helps. Testing showed that it would "fix" several cases
+where we'd have had failures otherwise.
 
-Alex
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/utils.py | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 1347c29d020..8b8d381faa5 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -944,8 +944,20 @@ def mkdirhier(directory):
+     try:
+         os.makedirs(directory)
+     except OSError as e:
+-        if e.errno != errno.EEXIST or not os.path.isdir(directory):
++        if e.errno != errno.EEXIST:
+             raise e
++        if os.path.isdir(directory):
++            return
++        # We can end up here if there is a race between two mkdirs on an NFS mount,
++        # which happens more often with sstate that you'd think. The server returns
++        # EEXIST but the local attribute cache is out of date. It can be refreshed with
++        # an opendir call, so try that (via listdir) and check the directory again
++        # before we really fail.
++        os.listdir(os.path.dirname(directory))
++        if os.path.isdir(directory):
++            return
++        bb.warn("mkdir: %s is not a directory?")
++        raise e
+ 
+ def movefile(src, dest, newmtime = None, sstat = None):
+     """Moves a file from ``src`` to ``dest``, preserving all permissions and
 
