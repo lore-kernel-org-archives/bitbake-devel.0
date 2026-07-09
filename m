@@ -2,69 +2,70 @@ Return-Path: <rob.woolley@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5D1C44501
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7476CC44508
 	for <webhook@archiver.kernel.org>; Thu,  9 Jul 2026 02:03:56 +0000 (UTC)
 Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.404.1783562630728256954
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.402.1783562632864076159
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 08 Jul 2026 19:03:52 -0700
+ Wed, 08 Jul 2026 19:03:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=RlVfNZz+;
+ dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=nQPopu+C;
  spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=1650fcb189=rob.woolley@windriver.com)
 Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6691gLph1094724
-	for <bitbake-devel@lists.openembedded.org>; Thu, 9 Jul 2026 02:03:49 GMT
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6691gLpl1094724
+	for <bitbake-devel@lists.openembedded.org>; Thu, 9 Jul 2026 02:03:51 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
 	 h=cc:content-transfer-encoding:content-type:date:from
 	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	PPS06212021; bh=Rd0uScq6RhcuIqqNnuSE0D90xGjr+2/VIkBK7T0O2MU=; b=
-	RlVfNZz+oWvW9CYGOui/W/LSauZxqJPVvEWlAaeld6Kvfciw4I2FzzsoLsjnepr2
-	ara0/IHKyPwAQnjpyqHqcOAxmxGGgq7BPk9Dr3DDB+cTWBxLIdUgIwMhzNqfXpEi
-	xeDH75H2DflynYhLHgdVLkW7p7+zMOC9dNduCIBLjsFgyJReiiDIFlOeUIdSWlHC
-	ykoIYTRRs22YWpCk2Dp/8LPyfeQkYDQiexknYgO0srl9kxdpsm8GQZim2EgAMMVi
-	XcXI16EnZAjud2vLplDl3Ao0kZtoYRe22lFDYiUl81CmXDLID1Qq8+swhG5bb6DE
-	GblBqDuFy1fRTN564iphzQ==
+	PPS06212021; bh=oDv9X9weBwQUpIx/I9WQodEEmFSBZ+IFbGQOmzBlkWQ=; b=
+	nQPopu+CtsYNgJOHso1i3jFusOcW5JObTzJ6etoUEfhHJ2TY2ZJU+bFQ47WMLZcn
+	DxNysGEOFgjocw4Eukm4dErvJ4XxxV78HHjMX6wB95aC9pCndZEoVzBIZrU7oOMu
+	rMlVDq0DySxy2w0Ew7jEXrdMh2el3pyKHGx3oKPeBXV5+Eq4xSon9Oa2aNprLOx8
+	voGmoaFTPH/ytNPVAWbBsuKrmqq/SWhektgOZBIwajIshoWuyU2GmGjeXAicrwsY
+	34i04VeS3OCj+Hv7vOcPd2W6K290DB9Qc8L5kVpaV8ZKQdoiYaPzYHWB/m733lOi
+	ZWje9P+RB86hzrkGr1uuIA==
 Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [128.224.246.37])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4fa1h202nm-2
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4fa1h202nm-6
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Thu, 09 Jul 2026 02:03:49 +0000 (GMT)
+	for <bitbake-devel@lists.openembedded.org>; Thu, 09 Jul 2026 02:03:51 +0000 (GMT)
 Received: from ala-exchng01.corp.ad.wrs.com (10.11.224.121) by
  ALA-EXCHNG02.corp.ad.wrs.com (10.11.224.122) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.61; Wed, 8 Jul 2026 19:03:47 -0700
+ 15.1.2507.61; Wed, 8 Jul 2026 19:03:48 -0700
 Received: from ala-lpggp3.wrs.com (10.11.232.110) by
  ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server id
- 15.1.2507.61 via Frontend Transport; Wed, 8 Jul 2026 19:03:47 -0700
+ 15.1.2507.61 via Frontend Transport; Wed, 8 Jul 2026 19:03:48 -0700
 From: Rob Woolley <rob.woolley@windriver.com>
-Date: Wed, 8 Jul 2026 19:03:33 -0700
-Subject: [PATCH v5 1/9] bitbake-setup: Add version option
+Date: Wed, 8 Jul 2026 19:03:37 -0700
+Subject: [PATCH v5 5/9] Add pyproject.toml and vendor.txt for vendoring
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20260708-add-pypi-v10-v5-1-7d5f457f4b9c@windriver.com>
+Message-ID: <20260708-add-pypi-v10-v5-5-7d5f457f4b9c@windriver.com>
 References: <20260708-add-pypi-v10-v5-0-7d5f457f4b9c@windriver.com>
 In-Reply-To: <20260708-add-pypi-v10-v5-0-7d5f457f4b9c@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
 CC: Rob Woolley <rob.woolley@windriver.com>
 X-Mailer: b4 0.15.2
-X-Authority-Analysis: v=2.4 cv=LbIMLDfi c=1 sm=1 tr=0 ts=6a4f0185 cx=c_pps
+X-Authority-Analysis: v=2.4 cv=LbIMLDfi c=1 sm=1 tr=0 ts=6a4f0187 cx=c_pps
  a=Lg6ja3A245NiLSnFpY5YKQ==:117 a=Lg6ja3A245NiLSnFpY5YKQ==:17
  a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=bi6dqmuHe4P4UrxVR6um:22 a=fTW__CHxibyLmBMfj2wP:22 a=t7CeM3EgAAAA:8
- a=3MZ2cW2_6ngPcrpQ0mEA:9 a=QEXdDO2ut3YA:10 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA5MDAxNiBTYWx0ZWRfX4vHxC7LzRSRk
- nNs6h80yaK0CyE9ksOb2RrRKSJ39ebvT5VRmotjWtJuB55MNKFjcvEy0Oq7cl4lswXbvzENerc/
- AdamGINVJrKcnWYHPcEUi+Xc3QZmPqBEZVZB4vUby+//UyB1AU6U
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDAxNiBTYWx0ZWRfXzWCqP33IuvHZ
- UrUM5lIxbVTcJqk4fAf4VG9VbLS0oFehmcQTTVtXxdcpFV9wHM/+hm8htI+RiEQoeSEersiT2CK
- qxH4MI4tL7zccqaRTPcD8hTM2S1EUOUng0kH4HqNttFmFa+BwdrlnpXtd//QIOmoqtOMxEsI7P6
- P4zwZXWP/9rB2rzEbfAmfpieehcJKWRCZobb4clH+KxLco/um8RGcQSQBAlH03OV2hRIh3lleF4
- 85kdfqDzMqKvKaBRp5QvmHnQE9j2/J6jMY5zEj0nJhcQp6pApmMkNxEzY0iD5p8kI19KyXOFQDh
- WuRrEzGXau/JTZFF7OhEN9XdfqsrmeFt2xadHCGPQjKYH34yx6uDkzKbxhijnVzOuf0NPA4i+oq
- I7NaXxo2tplPTFcPPIEYjh4BoVVWknVZgpJ5eIHJUO6lvqMDkwWKMSWvUShWoAmI37H9UNNWoJH
- 9u+pU/N9gg/lgO44dxw==
-X-Proofpoint-ORIG-GUID: nmqJ2QCJZ1hM3hw62iA_Uk5CCkImRi-Q
-X-Proofpoint-GUID: nmqJ2QCJZ1hM3hw62iA_Uk5CCkImRi-Q
+ a=bi6dqmuHe4P4UrxVR6um:22 a=fTW__CHxibyLmBMfj2wP:22 a=-SJoDt46AAAA:20
+ a=t7CeM3EgAAAA:8 a=adcO8tCN0-mKZzeWj3YA:9 a=QEXdDO2ut3YA:10
+ a=FdTzh2GWekK77mhwV6Dw:22 a=bA3UWDv6hWIuX7UZL3qL:22
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA5MDAxNiBTYWx0ZWRfX3GrhGa2RxhvY
+ AXfoA/4NhBXJGnye5LP4B0om3mrJGR3X0S3MmeS+eXsflTFpEhNJngBlcAfc69UP3REEtWmNWcV
+ dM6A2ETVUJvrWn1qHktX99/xzAsoFHRdKRKxpe4X9DRJt9C4cIQL
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDAxNiBTYWx0ZWRfXyKFuDAOJ6X6O
+ tiyUtrM+nP2mRy6xBfb9AVxemuwxyYZRuQHkNdjbygsvohThDj84pzQnsuoXnfcNPtwgD+1P8D6
+ 0bEiLtEoUASaVPrE0aTXNy7DilaRVDeollyZ0vta5Ln/byf7YQaJTCb0kfDCP1KZUtNtvp7ejf9
+ fFzP11NZyeUm5wp9tg4QBzEDwcL+dCUg99AafkRtES2sAVTqSR7afhbo+jOhklXIp/W9oxnNESP
+ x0dscGQl7wwUEWnhtDTbAy4CYQ1+liQqAqErcq2AyqeoiQYlNyw0hCTvpJ38WGzOvPry/9FMLMs
+ M1U1i14tnvt2Bfc4gPowuBPtES+i6X0MZH+ajPSWXQI5fi+0FW3PLccpCec9OfO/70w2Dvv1TRp
+ sM+ht1uUI17e2OH27lMSvv4e+TCVXvC/Rh2GVb11fvUv7fMOs/iy2wgzn0xL5I6MHVKy4Q2l9v6
+ sFqJnJHBCg2qF7M41VQ==
+X-Proofpoint-ORIG-GUID: qScmYz1tNXGnF4ab2KntZ4dlAjAHhaI_
+X-Proofpoint-GUID: qScmYz1tNXGnF4ab2KntZ4dlAjAHhaI_
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-08_05,2026-07-08_01,2025-10-01_01
@@ -77,27 +78,52 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 09 Jul 2026 02:03:56 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19827
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19829
 
-This adds the long-form version option to match bitbake.
+Used for updateing the vendorized modules with:
+    vendoring sync .
 
 Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
 ---
- bin/bitbake-setup | 1 +
- 1 file changed, 1 insertion(+)
+ pyproject.toml | 19 +++++++++++++++++++
+ vendor.txt     |  4 ++++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/bin/bitbake-setup b/bin/bitbake-setup
-index b81d3ad11..d105fb43d 100755
---- a/bin/bitbake-setup
-+++ b/bin/bitbake-setup
-@@ -1250,6 +1250,7 @@ def main():
-         )
-     parser.add_argument('-d', '--debug', help='Enable debug output', action='store_true')
-     parser.add_argument('-q', '--quiet', help='Print only errors', action='store_true')
-+    parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
-     parser.add_argument('--color', choices=['auto', 'always', 'never'], default='auto', help='Colorize output (where %(metavar)s is %(choices)s)', metavar='COLOR')
-     parser.add_argument('--no-network', action='store_true', help='Do not check whether configuration repositories and layer repositories have been updated; use only the local cache.')
-     parser.add_argument('--global-settings', action='store', metavar='PATH', help='Path to the global settings file.')
+diff --git a/pyproject.toml b/pyproject.toml
+new file mode 100644
+index 000000000..93508d92e
+--- /dev/null
++++ b/pyproject.toml
+@@ -0,0 +1,19 @@
++[build-system]
++requires = []
++build-backend = "setuptools.build_meta"
++
++[project]
++name = "bitbake"
++version = "2.19.0"
++
++[tool.vendoring]
++destination = "lib/bb/_vendor"
++requirements = "vendor.txt"
++namespace = "bb._vendor"
++patches-dir = "vendor/patches"
++
++[tool.vendoring.license.directories]
++ply = "vendor/licenses/ply/LICENSE"
++
++[tool.vendoring.license.fallback-urls]
++ply = "https://raw.githubusercontent.com/dabeaz/ply/refs/heads/master/src/ply/lex.py"
+diff --git a/vendor.txt b/vendor.txt
+new file mode 100644
+index 000000000..c60d43092
+--- /dev/null
++++ b/vendor.txt
+@@ -0,0 +1,4 @@
++beautifulsoup4==4.15.0
++ply==3.10
++progressbar==2.5
++simplediff==1.1
 
 -- 
 2.49.0
