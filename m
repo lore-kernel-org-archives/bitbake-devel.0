@@ -1,100 +1,100 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <rob.woolley@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856A3C43458
-	for <webhook@archiver.kernel.org>; Wed,  8 Jul 2026 15:26:52 +0000 (UTC)
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.11092.1783524405199926389
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF50C44506
+	for <webhook@archiver.kernel.org>; Thu,  9 Jul 2026 02:03:56 +0000 (UTC)
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.408.1783562633778440973
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 08 Jul 2026 08:26:45 -0700
+ Wed, 08 Jul 2026 19:03:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=pKCH6tkd;
- spf=pass (domain: gmail.com, ip: 209.85.219.48, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-8f23e851626so6647226d6.3
-        for <bitbake-devel@lists.openembedded.org>; Wed, 08 Jul 2026 08:26:45 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783524404; cv=none;
-        d=google.com; s=arc-20260327;
-        b=R2/25EvDKLgDJSI1bcOzOnmA/jQPELbvU4AN8SWdvizOkfdsFpRZY4BrM63pM6cjbS
-         CwGdHwXVJSXfSlkqDrAwJto56G5KeVjWTN8+glFc7KELFmmj4uxVsK07Zg3ph/y6QA/m
-         tFY/C+MdMGWxRkPAPhyyddpv/finoYf0P3vcAIAKr0HKXLHBBPe43mxYPB6N2Q1zu9Ic
-         2VUqWQ0AB5z/Wiqu/DBB6sdZ45AQyRsfKTOn1Xj84Nu6PPw7T2N0YzlQG4CqMMUhbatS
-         5H0abSqBoYqu8k+mznuX8LZc4glbdYp0xeSpnHIvBHX6stAdZw6MDJkZzAMoXMCTlZMt
-         EIHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=H11hyAY6zSWEb0VxIKZS6AtVRiU4K0c2dcrVXLey+N8=;
-        fh=1sPeGJstHoXKVbb5/jKcge0GMtYJBQA5lpzd8iKNszQ=;
-        b=qqH1ZR5AqctiATN7vr85U4eSyVIKG7LrRobrbz9ngpCxXOY9q4h8gCw6EocKtD7/I7
-         LKUQiAVPTz0tPZL6DqqI2nWe+OrmtzGTKhZmrbCt6kTnUqaEPCzrbrti8O4IzF90+QQN
-         oTyehasTeNXSspFOPGaIyrtZ9InlMgNsao+dAgNyKYqAGneb13Qo5Y0gJN6S6FTJWAiC
-         6dH+ADkz4QowdWJRaycWEV00rPr/QSyzPD3VsI6h+Mf/N2BR/8Hel1L+ULx4t+tF8P64
-         qgtc9wqj46r45KgPfOZ1M//ZkxHDiMDNkwpp33c7QLKNavlfFiv6UZ02apSaTSxJzU6X
-         Ggxw==;
-        darn=lists.openembedded.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783524404; x=1784129204; darn=lists.openembedded.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=H11hyAY6zSWEb0VxIKZS6AtVRiU4K0c2dcrVXLey+N8=;
-        b=pKCH6tkdTASIx6hb3yLGQK8Ydj+i5lmTw19mdVIBz8qlnYOkMplhEG52LIOW3bh5BO
-         L1jjPeD/ax9f1TITsk2ea3xD34111Eh3Lv+liVoBJes4mk+kEgq1csAaXK+goBWchhtM
-         c473+ieC/0zQgu+Cz0Jbl0YdAhB51z//vQCGoBdE52qR8ITpZfx0aotl22R1zzKBQ1Yt
-         YKoeA7lI25I4KUf180dXvxvPlzDfcoUctH+nfq8bZs6IDxenIv9/wGeCLJQPaBIJSFnn
-         LU6uiKYPj3y674aenGk2SlRnJ6h52ydZVI2YPqzanRdQ+IZqXCYyIFo79oaqUm6Cm+OI
-         fBnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783524404; x=1784129204;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=H11hyAY6zSWEb0VxIKZS6AtVRiU4K0c2dcrVXLey+N8=;
-        b=Bkinhre05tQip6qDUvI/3Bx7OZ3WyUiCUtUeuSJoLCFMQkRYaP2b2q6MScnod+BzM9
-         kY8YOaMnhCmFVUA/0HScFexDx2YDJxSOWCeSnT6vK7xUclF/K/jpl76daBxKiOrsZiB0
-         f5oWGppWVENORgS3T7MFv0K5TQYIzjcOZRgqRT0aSJRwSONbWTcIjJBYXCZA0ByqMpIp
-         8PiE8sU6r3ZlJPNU8PJk4lDN2sUfUewlpwh39noWXS/wC6MuOnFF+Q2+f2anOJMqmqVN
-         A3nAV0BgQXyfkjFWGfMXPk/GDZP0BIquJr2xbYOnd6WXj3rbWJjLqcF4nMFSibM+Mlv8
-         GQlw==
-X-Gm-Message-State: AOJu0YwHBcUj3zH4sziBEPGLZx/SIWU1KoKBk04DczsbaKtMk5g2lzN4
-	eEwqOQGUAkBCLOArFKBzyK3rFdIm3Y9kVSrbTNh72BlDQFlpEHwPdtp5MqzMNaXBVQz49bOALQD
-	TbyRe3vQToxhQXDPJD5HafqSCxJ8R2IQ=
-X-Gm-Gg: AfdE7cnyQhpBe+imqHeMETNKxY1PF67SJua8uacyLxyR9q41Gki5BKvrwYYtiQxxTAn
-	84Qtjpu75mfS4avWLC1pX878SJBhC3UUW3ywDRLTsv2I020u2F4ghqIRuQWehZebm0EVjLT+B2w
-	a6kel6eBuOKnbGIZhQXpk0cUxbqOmqzT1PmfoYGqFXu19J7aRAHKDEP2PolFwshsKYFkUdxBbXo
-	2tAGWn7J5ye/58RyJN2Qj7t7bUFcZRAd/IoEx58o+y6KXw9OEB8cxyQVfWMplT5ogw/lkJwGZ4h
-	atTw3bC5dbCQgoCDBn70hrLOFapWWWw3slyZrPK4yg==
-X-Received: by 2002:a05:6214:1d09:b0:8ef:b23a:d741 with SMTP id
- 6a1803df08f44-8fec21799bfmr31057996d6.28.1783524403824; Wed, 08 Jul 2026
- 08:26:43 -0700 (PDT)
+ dkim=pass header.i=@windriver.com header.s=PPS06212021 header.b=rmPhQaNi;
+ spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=1650fcb189=rob.woolley@windriver.com)
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6691gLpn1094724
+	for <bitbake-devel@lists.openembedded.org>; Thu, 9 Jul 2026 02:03:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=cc:content-transfer-encoding:content-type:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to; s=
+	PPS06212021; bh=sLdluIFPn/oSxLzNpYY522wQBZaZjZ5tOco9E5ECa0s=; b=
+	rmPhQaNiouo07Xo0NNEy1QkRIKJQb4MxPJ5hnqN/zvT+GNXoBBYax2LYqnDcCWE9
+	uX+3UvzE6hdEhPTYIzcgEHtNcQrVDk8ACD/htnwCDIEW13OZOmiZzqmb+lbKu2Wd
+	DBQi/HxKyC5MLjHQEFxphjAfyz46txd7vdDvSk3N3INphqBgbXlN8btHZInyCnn0
+	RGakw+htF/GlHIUF01wYNyhRvh3/4GwgSh7MaiRWqJuQEPxfIUSM9L0EqRrHVfJE
+	0MDdKL9WxBcUM52Uky1XtqOvH0VTNE0b37LaFDyOT/ICCLpcdT+n8zPpD3l7yr5Y
+	/7NdULyipEXSlWCBznMHFw==
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [128.224.246.37])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4fa1h202nm-8
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Thu, 09 Jul 2026 02:03:52 +0000 (GMT)
+Received: from ala-exchng01.corp.ad.wrs.com (10.11.224.121) by
+ ALA-EXCHNG02.corp.ad.wrs.com (10.11.224.122) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.61; Wed, 8 Jul 2026 19:03:49 -0700
+Received: from ala-lpggp3.wrs.com (10.11.232.110) by
+ ala-exchng01.corp.ad.wrs.com (10.11.224.121) with Microsoft SMTP Server id
+ 15.1.2507.61 via Frontend Transport; Wed, 8 Jul 2026 19:03:49 -0700
+From: Rob Woolley <rob.woolley@windriver.com>
+Date: Wed, 8 Jul 2026 19:03:40 -0700
+Subject: [PATCH v5 8/9] vendor.txt: Add typing_extensions for bs4
 MIME-Version: 1.0
-References: <20260615121856.96250-1-jaipaul.cheernam@est.tech>
- <20260630120221.1560-1-jaipaul.cheernam@est.tech> <562226.1783523796689358265@lists.openembedded.org>
-In-Reply-To: <562226.1783523796689358265@lists.openembedded.org>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 8 Jul 2026 17:26:32 +0200
-X-Gm-Features: AVVi8CchQQKRdj6eQWC8Lgh3vL74_VE9jGPuZG5WMBoDJCO4sLSQ1KI5prq2inQ
-Message-ID: <CANNYZj__v9snkFZCUPpng7f7BKfMyspo07mcARLTVpRO_j33TA@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH v5] bitbake-setup: use bb.fetch for
- buildtools installer download
-To: jaipaul.cheernam@est.tech
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20260708-add-pypi-v10-v5-8-7d5f457f4b9c@windriver.com>
+References: <20260708-add-pypi-v10-v5-0-7d5f457f4b9c@windriver.com>
+In-Reply-To: <20260708-add-pypi-v10-v5-0-7d5f457f4b9c@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+CC: Rob Woolley <rob.woolley@windriver.com>
+X-Mailer: b4 0.15.2
+X-Authority-Analysis: v=2.4 cv=LbIMLDfi c=1 sm=1 tr=0 ts=6a4f0188 cx=c_pps
+ a=Lg6ja3A245NiLSnFpY5YKQ==:117 a=Lg6ja3A245NiLSnFpY5YKQ==:17
+ a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=bi6dqmuHe4P4UrxVR6um:22 a=fTW__CHxibyLmBMfj2wP:22 a=t7CeM3EgAAAA:8
+ a=xWQbeOxxGysSZDUvVC8A:9 a=QEXdDO2ut3YA:10 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA5MDAxNiBTYWx0ZWRfX464lb/DUVQAO
+ uTQGW71HEDPYjOE1V8aW+pRONLXopH/vnfL7Od8KjCvSiwO7eB7Ns2UmX+HVwK+g4966Z7BNljY
+ UK+HddvgJYKr6Uy0h6ve16HX5WeZ6hngPqFl6YHDvDgYQCpAsJEM
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDAxNiBTYWx0ZWRfX4N8cV6A9iYlu
+ pl30p93LjtstFDgZMqF3qOzenu82kf/UgEcLACxfTwG1qp62nYNttGnkeWMdyrHyhoB/mhpI5+r
+ TJmD+HLHfkgltifENSyMSryFJMCdT9dPLPHWwq0nAhCw+MJ+8bmjGeR9Ve2NVRjT6M9Vc4qlgGy
+ 1rv3AkQcFCO0LSOSKjkGzpHk9qDkIJbNFLwPNzVaRktSg4O7y/YVvSNzkJU66q+nUk9cuunE9cU
+ 992Pr8pHMeDgVKV4pbFt5I7KUYqnDX3e0ZXtL97mzlMEvoJr2GXJD8n9cgXNeGl4to54mOX8sK0
+ 3W5hK4LKkXq2rPz9b7BehQ2JaXbf8kNEPnodMI9WdACpnFoC21qdjZC0j3qJvumecxnA9Gx2Njg
+ Cw0GjQ0Tz8qxxJ6KPlr6VAaRYSHWkIqqkkRisPisl26z7PrOQkjWe8///zp9vo0SP7KuX6Z8263
+ 5zvo7lJtxUlPNeiBafA==
+X-Proofpoint-ORIG-GUID: Hg0dKru4kvhcGfsBucWoKIT8etUYRazN
+X-Proofpoint-GUID: Hg0dKru4kvhcGfsBucWoKIT8etUYRazN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-08_05,2026-07-08_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 phishscore=0 priorityscore=1501 malwarescore=0 clxscore=1015
+ lowpriorityscore=0 bulkscore=0 suspectscore=0 spamscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607090016
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 08 Jul 2026 15:26:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19823
+ <bitbake-devel@lists.openembedded.org>; Thu, 09 Jul 2026 02:03:56 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19831
 
-On Wed, 8 Jul 2026 at 17:16, Jaipaul Cheernam via
-lists.openembedded.org
-<jaipaul.cheernam=est.tech@lists.openembedded.org> wrote:
-> Could you please share feedback  on my patch ?
+Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
+---
+ vendor.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-It's in master-next and due for review. If everything is okay, it will
-be quietly merged.
+diff --git a/vendor.txt b/vendor.txt
+index c60d43092..6ce8846c8 100644
+--- a/vendor.txt
++++ b/vendor.txt
+@@ -2,3 +2,4 @@ beautifulsoup4==4.15.0
+ ply==3.10
+ progressbar==2.5
+ simplediff==1.1
++typing_extensions==4.15.0
 
-Alex
+-- 
+2.49.0
+
 
