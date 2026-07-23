@@ -2,134 +2,93 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7DBC4453E
-	for <webhook@archiver.kernel.org>; Thu, 23 Jul 2026 06:06:28 +0000 (UTC)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.17766.1784786778298853119
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE97C531CF
+	for <webhook@archiver.kernel.org>; Thu, 23 Jul 2026 13:49:41 +0000 (UTC)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.23886.1784814580286522259
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 22 Jul 2026 23:06:18 -0700
+ Thu, 23 Jul 2026 06:49:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=CFOsdkoq;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.54, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-4798bea72f9so133100f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 22 Jul 2026 23:06:17 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Z1d1Oqti;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4954c0833b4so4930375e9.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 23 Jul 2026 06:49:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1784786776; x=1785391576; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=u23gj8qlKECEjihf5vrqmcdU6FD9eP6uIeBqoC0kX30=;
-        b=CFOsdkoquVeDfZ0H4r1Tk9CvPV+SO3BSayRUAQkPy2/093hOTXM/ypFp/Id03xcbc+
-         jSZUfUXAKkvD8trZPE9eyco7C0GxsUJHCcwhwf1jK0JNsPE0nuenAQzriitDLmA4osJT
-         vUgwdjb+0M4zAQ4AnXn598TUaH4RdCT/uFsAM=
+        d=linuxfoundation.org; s=google; t=1784814578; x=1785419378; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=mA3ySwD11Orf7/RQ3PnLo82KTsSmBrzcQSPQ46xv4Is=;
+        b=Z1d1OqtifJ4C6vVcjsjNzEpTu24+veE4RlGkmSY2EfthgZtfQz427Pbr2y6Pl3p/7Z
+         nP29jkAcRJCZF9y+4U5anfLpwPf4gi/jO5XzW3qTjIQColMbn1DeDB5DockGdY4w/0SV
+         eKXig3CNtMAJyqMNVbALdnbbzjrLPOU8FqCfI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784786776; x=1785391576;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=u23gj8qlKECEjihf5vrqmcdU6FD9eP6uIeBqoC0kX30=;
-        b=SCyek4a8zTt4f5aJBP3JZlHIuq7NbaNQ94Y7WZOpJ7ltO/qtIszJn69oQsVKJZvjY5
-         FhUOHAxwaeyv9YR/K/q26K2aM2q6qAre+YB/Sb5tI53c5X90pL5zY+BmhqnuDYF8kKHW
-         tCqnt31R4vCNxYQ27CrE0x6QZN3cQ3JMg2xV7vaTPUMVZTK0ses4AplcE8zeufeTpUKm
-         lguARSx6FihTGCR5NcM37T4BX42fvIU/lytAVG1AIMaTBftEgbo2eu7pN7wyi5Ab8jWA
-         S+SlX8Ajne+BxqLzerl+z6JbxhNg+tFNLX4uKPcZ7mwkkvHKML2dRaEXoXUau0mYS5MK
-         HtUA==
-X-Forwarded-Encrypted: i=1; AHgh+RocRGWMtInVu4512+0Q5osq8jfsBJJhpPuVb3UGZ8wcSvTNrY7RqO4gRofKmkhuDmTrJJwmRxvS6jtxo46/@lists.openembedded.org
-X-Gm-Message-State: AOJu0Yz+2gTY5zrnYFVbSiujeaWfglKlYBNpI2a2jrcKuX1ij9cYl202
-	m/ZFEQNTXsw6tkE4SC380YQs4BDAQmqN9yXTCJ5yeCEayvomaFUzCvvrm3hZuC6bm5dBRCOd6oU
-	WXjM9UNI=
-X-Gm-Gg: AR+sD10nSRjuzMexKh8EENwsxplf3wQ7jFRSWfdw6XdnduOFp+t7XeFwEYz6aLiJG1S
-	9XFC1Z4cMceMgIHM284v9K5OBylMn9azIsnIVexZms/yD8EVnognuOEeSfeSR1IOZtHqDnmYEdP
-	RQCsA2TouvJqNNyJ8vU0bTh9vtsVwE046xeEF7KAWeXTuItdWhcVpALyW/aBGBNTI5sdSfbKoKQ
-	o3vAXHD4WPcqG2x/jpcIzRV2P8stvrW3qeT0dOByy4+31EZoB+Hiqq42JIZj0G0xmMrxncx/CVv
-	rWw++Q/JeAWP6o3IAx29xf6KSaX8jq4sOOXs+ok4hDRELMWW7IHHIy4GQGpYx2HNWFi+QfJbnA5
-	Cc0yIia0oYIchPYR/jkLKGj4xoprWuftc9bsQpyeH1uMHMVPFfYHFEdbrbQ3MYE4GTGR5YKztfW
-	zMHyBNa0btoFsMORUZjKBITF31xo1/dihIoSnzlraLt+0XqHZz7+MLCieRWP3G+o+uX+Y=
-X-Received: by 2002:a05:6000:288a:b0:462:e086:35f with SMTP id ffacd0b85a97d-47f8da6663fmr1844960f8f.21.1784786776039;
-        Wed, 22 Jul 2026 23:06:16 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:2205:d253:2df6:b9d5? ([2001:8b0:aba:5f3c:2205:d253:2df6:b9d5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47f8fd04192sm3352575f8f.26.2026.07.22.23.06.14
+        d=1e100.net; s=20251104; t=1784814578; x=1785419378;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=mA3ySwD11Orf7/RQ3PnLo82KTsSmBrzcQSPQ46xv4Is=;
+        b=gS2doA1zBslesZswb5jYplCP2txtpSKhtx7Aqy6QUWj65HurXQv2l+AVbYjhtFvDsE
+         nR2fMtcYt/ypjfO7HWaVH91PT1HPR91iT207SQCHkgkYwUCGogxbitwQG/o8PN0Ul7er
+         mTaYagLbSKBXJEPgIuqoCYdzYAYh8LPwdBAxBCZrMJ4Q3n2/y/Q/2E8zi/+Dn6QzLaCm
+         xMig7LnKndKLSn/U2vQA2xM+SjhrCIkFQeSrMvP9IjKbY2Sybu6P42yvF+FY6iMhChUG
+         UHRz5GBx2djAR7Fc0wTcYfwVjqIV7Nl5eKAqF2VWmnvPRIhpxx6J70QU44XjWPQAV8SK
+         40Xg==
+X-Gm-Message-State: AOJu0Yzw8ikJnXPLQvVGxOoa4WdFXsFSUpYqeTiSFLkIhtb2BTbHIvKf
+	8lYd2Pp8jlf0k/zvL2PBFyYAEQl7R8kMQzXw2M7GwkTx9ziEEyfHoBdxVf/aDhJlfM2ZCuYCFQY
+	FGdZVftk=
+X-Gm-Gg: AR+sD13RxJ42kzYPfnJJiLF9OZxuaDhlzWfQDAMkfC35qF4j2CMuAlEBm44eGYBITRj
+	4qChPGJLBei4KzyftbrPPDpuRu1BuZjP9hOVvURKXfJEzztcxvwi9tmhurqEjjED+ceVBDeEbuT
+	bhPpLnYS3a5qXj3lsuuLt51I0b7Hl0BVyBr7XUEdWMbPc8GVpMWT7tWCyfL8bqHrI3b0iTvxHSe
+	tXcJ5noBIKl8V6Z4uGW1gELaDkyEN6oUPrV6dcjB55iUySbu4gpQGAyST5NibWe7SQ207c/QIgQ
+	qwkZndpRAiftasDyWgdBw3sS5+/dNpIaaAfed0QqU/tqxh/z3humx50t+maBhlmckVBPs7il8hf
+	Dyt4GHCELNqejXbdJ0Ood0a6kwXYaqrWSlOBgLtOIlrxQj2IB4LgjB+phWYJU6WhZf5Si1uXv6R
+	E7/BCfZ+SwhMeMNLAVDB7gU8QFViWVjys=
+X-Received: by 2002:a05:600c:3107:b0:493:b87c:c87d with SMTP id 5b1f17b1804b1-49573cce8eamr31653635e9.11.1784814578262;
+        Thu, 23 Jul 2026 06:49:38 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:2205:d253:2df6:b9d5])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4956b7483f0sm128103045e9.3.2026.07.23.06.49.37
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2026 23:06:15 -0700 (PDT)
-Message-ID: <859e14e2c6da1c914ae3ec7f2c2065424cde8f10.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [2.18][PATCH] bitbake-worker: Evaluate
- exported_vars() before emptying the environment
+        Thu, 23 Jul 2026 06:49:37 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: amery@apptly.co, bitbake-devel@lists.openembedded.org
-Date: Thu, 23 Jul 2026 07:06:13 +0100
-In-Reply-To: <20260720195834.2496647-1-amery@apptly.co>
-References: <20260720195834.2496647-1-amery@apptly.co>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-9 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] tests/setup: Drop win32 platform reference
+Date: Thu, 23 Jul 2026 14:49:36 +0100
+Message-ID: <20260723134936.928230-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.53.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 23 Jul 2026 06:06:28 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19848
+ <bitbake-devel@lists.openembedded.org>; Thu, 23 Jul 2026 13:49:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19849
 
-On Mon, 2026-07-20 at 19:58 +0000, Alejandro Mery via lists.openembedded.or=
-g wrote:
-> exported_vars() returns a lazy generator. It was bound before
-> empty_environment() cleared the process environment and only iterated
-> afterwards, so any datastore expansion deferred until iteration ran with
-> PATH already wiped.
->=20
-> Recipes whose exported variables expand a command during that loop hit
-> this. A gitver-style PV such as "${@get_git_pv(d, ...)}" runs git while
-> PATH is empty, so the git wrapper on PATH is bypassed and the real git
-> runs directly. Under pseudo this fakes uid 0 against a repository owned
-> by the real user, and git aborts with "detected dubious ownership",
-> failing do_package intermittently (only on reparse, when the value is
-> re-expanded rather than served from cache).
->=20
-> Materialise the generator into a list before emptying the environment so
-> every expansion happens while PATH is still intact.
->=20
-> Signed-off-by: Alejandro Mery <amery@apptly.co>
-> ---
-> =C2=A0bin/bitbake-worker | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-> index aa14ef191..0db1531e0 100755
-> --- a/bin/bitbake-worker
-> +++ b/bin/bitbake-worker
-> @@ -290,7 +290,7 @@ def fork_off_task(cfg, data, databuilder, workerdata,=
- extraconfigdata, runtask):
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 # exported_vars() returns a generator which *canno=
-t* be passed to os.environ.update()=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 # successfully. We also need to unset anything fro=
-m the environment which shouldn't be there=20
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 exports =3D bb.data.exported_vars(the_data)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 exports =3D list(bb.data.exported_vars(the_data))
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 bb.utils.empty_environment()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 for e, v in exports:
+bitbake doesn't run on win32 and likely never will so we don't need
+this reference.
 
-Thanks for this. Nice work in tracking it down!
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/tests/setup.py | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-I think in this case we need a couple of things, firstly will be a bit
-more explination in the code with a comment about why we need a list
-there.
-
-The failure case is so unusual we should also probably write a test
-case to make sure we test for and don't regress that issue which we'd
-add to the existing tests in bitbake-selftest.
-
-Help with that would be welcome or we'll get to it when we can...
-
-Cheers,
-
-Richard
-
+diff --git a/lib/bb/tests/setup.py b/lib/bb/tests/setup.py
+index 5fcbcbcf0e2..53a07ee3a68 100644
+--- a/lib/bb/tests/setup.py
++++ b/lib/bb/tests/setup.py
+@@ -907,12 +907,8 @@ class PyPIPackagingTest(unittest.TestCase):
+         venv.create(self.venv_dir, with_pip=False, symlinks=True)
+ 
+         # Get paths to venv python and bin directory
+-        if sys.platform == 'win32':
+-            self.venv_python = os.path.join(self.venv_dir, 'Scripts', 'python.exe')
+-            self.venv_bin = os.path.join(self.venv_dir, 'Scripts')
+-        else:
+-            self.venv_python = os.path.join(self.venv_dir, 'bin', 'python')
+-            self.venv_bin = os.path.join(self.venv_dir, 'bin')
++        self.venv_python = os.path.join(self.venv_dir, 'bin', 'python')
++        self.venv_bin = os.path.join(self.venv_dir, 'bin')
+ 
+         # Install wheel using pip from the outer environment (offline, no-deps)
+         site_packages = self._get_site_packages()
 
