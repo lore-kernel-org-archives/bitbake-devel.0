@@ -2,64 +2,64 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCA0C5321A
-	for <webhook@archiver.kernel.org>; Fri, 24 Jul 2026 21:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C13EC531C9
+	for <webhook@archiver.kernel.org>; Fri, 24 Jul 2026 21:28:41 +0000 (UTC)
 Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.28920.1784928510597662444
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.28981.1784928511376313270
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 24 Jul 2026 14:28:30 -0700
+ Fri, 24 Jul 2026 14:28:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=q3MtA4ib;
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=i67ktGzV;
  spf=pass (domain: gmail.com, ip: 209.85.160.47, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-4513435cdd2so399346fac.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Jul 2026 14:28:30 -0700 (PDT)
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-4563ac048f4so494093fac.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Jul 2026 14:28:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20251104; t=1784928510; x=1785533310; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=IPuFqV+fsZTcQsNuHhGmmdXtXVUrpvyQg/hP39CHzIA=;
-        b=q3MtA4ibSne1DNBv12rNwcIMKAnbhwaQLG0iGcS/Zw/7DdSrCuQExKs+I2wEObXQLa
-         dqYEqzyT/D9EMH7c1wzkeI3P1GXTNoSyYaGACr0vj6UrDQD610Vx5O6ZXG7n93bn/ewx
-         YJG1wirUJxm7aNOJcYaFDrbNi+hg4LJeR15w80+Npbv4jHarra8VmnBqheq0J/dVuN/w
-         ETRoyCHNrAi/eHxfXjKtQkxYuNiHyU4fwlQpr1OtS87valr46m+hPuGhwF5eI2q634/+
-         X7LrA6kSe1gkvSzvGiIYS8FSOShhvm5/aLLfyMI1ksTXCMd0Rna9sOy/Jz0SX6sBQ8kr
-         1mdQ==
+        bh=ZpKwBLV5BxsmWBXTu0qLwGCa5/4EAPrutBLij9MoUVY=;
+        b=i67ktGzVrt62taxIEl7VEqYJUhsqiIT0+ChpmXctLPoP4U/tU7s4cENkOHxZUkI/X9
+         8Lv8wk7+cc3nh2IxFm7AUS/Fs54ZdnkK8Z4ScrYtLHRAdTfDEeRmQslBSn0a5jnlGJLT
+         lTXBPaGu9OvTfy1OfJIS8D2n4ovXusm16h/QaeWOk6BPKSnjUL63u0bLl7B64E8Fm2AD
+         Z7cNn3UD0JhVhsu6eB+bkei3ly0/TO8EUzbQqWmc0mI2E7a0ZbxEdxNtkGS6sZ5ZwIAg
+         xuK//wyjH+Tw6RJ7yQe4YR22FXd51KNT1bqrCvQDV4U3t7uz1a6WdUtnx5bThaPJT88A
+         aLHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20251104; t=1784928510; x=1785533310;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=IPuFqV+fsZTcQsNuHhGmmdXtXVUrpvyQg/hP39CHzIA=;
-        b=jF68Ah/RhrEExOFOJTvzU6JQY3kjqF4+Ux331HgFhjz/seEdtxIznupoQN96pWC0go
-         zBFp5FaEsf1tdrdwwFwkQBQolDQTqwWb3KkHz3+ZZhONzdPi/WMZZYNe6Eh+o8J3eUPF
-         XdI1XIG2Mu5Hhl282tqW7udRC5u44FRdu8Pza98BDEFES9xHKvj7vI/CC+XPEljXeAsb
-         h3vmNQUaNSDXSQ5wQH7zTqX9upwxBPf8IM5WAUoLwPro/OR8xE7/eVT4DN1Cm33/r4da
-         bUyk2HBewMX+VTMkzwdRpDgWxCyMCvo2ir3E0cDpDph3yvwL9/77FNfcwVsCzCHfM6Uv
-         eunw==
-X-Gm-Message-State: AOJu0YzzfoGx7y+LYLoInf3dy/Our/kPh+ZYhQx0zpyKG+IM5llGMBB4
-	6AoWMiuGiYy+91FPdgWDsGf4DuENAp4mTIWbuasXa9+TkkEZDf4K2KstlC8Z/Q==
-X-Gm-Gg: AR+sD11JHnUzt8HEq0TlbAO+JTKDNyJXjYqyqCui5d56QVo59Yk7pK92EqkqjA49e+0
-	TrugHok7rFQybMrmKeBnbB3NhxqR2god3VNeM3OhNVnbBJwlr9DF4uH2qaqeXlfC41CFKOwdNl2
-	nc8tPQgFARmI1mfRgkDkenzZJhaVx3oKPTwxNDPvr60pEhv1YX1gXh3LFTZrpSm+CunbZxLm5Ys
-	4X/34Zj/pq9z1U48DCE5HoY9xzlNdbW0fP6A2Cz6cZxXKil0xdhTkIrbKZ9MRtD3Inx8J3vj5cB
-	NRC1YzZW0XvHglakp/YDY+M3fZW2zZlEtp9SwtcK+fd1dsHJ2Rlt+JSYKN2Bnmfajdu66+VXmI4
-	VNum/sfGzCsafDjxjpX6qKzj1moPHjOdPr6B06MASbi+aAclMJsgKOYhfQa9EzAE3vMeknH/H7v
-	fxqBvftFIQYA==
-X-Received: by 2002:a05:6870:488:b0:448:a0cf:5afd with SMTP id 586e51a60fabf-457f23900bfmr182899fac.4.1784928509681;
-        Fri, 24 Jul 2026 14:28:29 -0700 (PDT)
+        bh=ZpKwBLV5BxsmWBXTu0qLwGCa5/4EAPrutBLij9MoUVY=;
+        b=Ars9nu2njzg4FdriQqQp7Z658wduE8q+MpOIKCTJQN4ooPtlcpcqRLixCsyItgRCq7
+         2u2Bn35BZAVHeBNTagEfAb9uhBBuPmnEnc5eE7VCSQgMe6LEBnQ8ryeoqGx7cFAQu9gW
+         32RUBZasT0Pj0jWMXGVU++NI4bKm0btJIRQCW2HX/u4WmBE5c66XnOan1vXfTrGppATK
+         w13uwOZEd9+Tey4JPSxR283F7JY5D/xf9Hrlfwx4sAcCH9CrtocBDJdoeDKib4tX7x2i
+         hA5XjUNzy5NWrXczonNS6nwUBvYgoIECfxejTSy5eGJ1oylv8ZP0dNoOaqZ9d9LnOzq1
+         q3vQ==
+X-Gm-Message-State: AOJu0YxdeZlx+wMX9b/F52M0Eb4HsSPfvVyLV7lCM+eAYcyWPYRzEY2l
+	r6Kllq682EaeNV7MlFR41MhFD44C8wwohqfyqkNmvh3Frdjo6Kyd7+f2+GZqHA==
+X-Gm-Gg: AR+sD11jaUTI7x0iaaNf5bjDE578a9TfJau/H3Dk23Yf/MlYR3YjJdKxSfx8olJA6b0
+	k1lQzdV441npOXG09p6PzyoxDcP3FyxcaaXesod4uU3h9E5+xEcn5bKUQvWBU/vT+fkIrJ52vJJ
+	2cny5GXrE51tGlKH+2dffATj69YIlLuSKyBrrkhbibpPyJsaYf4axuM7OeLvjULHuK+2lV93crk
+	vLKtr89eOvlfH+m1YIlpGIz+MCX4/nhSCwGYcOjC+cE+DPTO7tS7ZafRXxIqfpVAw15ns97BLte
+	65E+r/uQOiVOhzXNXscacwncvD53kt5Ido2gExDwuFDXJKPwgsoqvMIkPUHsPNR/w02CyuiAJYV
+	Z9J/hCLNLrme8opHayeTQiv6a0iZDgQjiOQExoa6Y1Ik6RGIGH2d3AW8T2TC2QmE3MLp2QtKL9Q
+	g=
+X-Received: by 2002:a05:6870:34d:b0:456:ae13:5583 with SMTP id 586e51a60fabf-457f27758ffmr179363fac.31.1784928510535;
+        Fri, 24 Jul 2026 14:28:30 -0700 (PDT)
 Received: from localhost.localdomain ([2601:283:4b02:22d0::5d97])
         by smtp.gmail.com with ESMTPSA id 586e51a60fabf-457673d2dc1sm8183883fac.10.2026.07.24.14.28.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2026 14:28:29 -0700 (PDT)
+        Fri, 24 Jul 2026 14:28:30 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Michal Sieron <michal.sieron@nokia.com>,
 	Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH 5/6] hashserv: server: Use streaming and queue API for upstream exist queries
-Date: Fri, 24 Jul 2026 15:25:13 -0600
-Message-ID: <20260724212822.1165552-6-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH 6/6] hashserv: tests: Add test for upstream pipelining
+Date: Fri, 24 Jul 2026 15:25:14 -0600
+Message-ID: <20260724212822.1165552-7-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260724212822.1165552-1-JPEWhacker@gmail.com>
 References: <20260724212822.1165552-1-JPEWhacker@gmail.com>
@@ -68,97 +68,126 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 24 Jul 2026 21:28:31 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19855
+ <bitbake-devel@lists.openembedded.org>; Fri, 24 Jul 2026 21:28:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19856
 
-Reworks the "unihash-exists" handler to use the new server queue API and
-client streaming API to efficiently stream requests to the upstream
-server instead of having to wait for a roundtrip on the requests.
+Adds a test that verifies that pipelining to an upstream server works as
+expected.
 
+AI-Generated: Uses Cursor, Claude Sonnet 5
+Co-authored-by: Michal Sieron <michal.sieron@nokia.com>
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/hashserv/server.py | 31 ++++++++++++++++++++++++++-----
- lib/hashserv/tests.py  |  5 +++++
- 2 files changed, 31 insertions(+), 5 deletions(-)
+ lib/hashserv/tests.py | 96 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 96 insertions(+)
 
-diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
-index d392ac19f..5017320c1 100644
---- a/lib/hashserv/server.py
-+++ b/lib/hashserv/server.py
-@@ -526,17 +526,38 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
- 
-     @permissions(READ_PERM)
-     async def handle_exists_stream(self, request):
--        async def handler(l):
-+        async def exists_handler(l):
-             if await self.db.unihash_exists(l):
-                 return "true"
-+            return "false"
-+
-+        if not self.upstream_client:
-+            return await self._stream_handler(exists_handler)
- 
--            if self.upstream_client is not None:
--                if await self.upstream_client.unihash_exists(l):
-+        async with self.upstream_client.unihash_exists_stream() as stream:
-+
-+            async def get_local_result(m):
-+                if await self.db.unihash_exists(m):
-                     return "true"
-+                return None
- 
--            return "false"
-+            async def get_upstream_result(m):
-+                exists = await stream.get_result()
-+                return "true" if exists else "false"
- 
--        return await self._stream_handler(handler)
-+            queue = asyncio.Queue()
-+            upstream = UpstreamQueue(
-+                queue,
-+                get_local_result,
-+                stream.send_query,
-+                get_upstream_result,
-+            )
-+
-+            await asyncio.gather(
-+                self._stream_queue_handler(upstream.handler, queue),
-+                upstream.process_results(),
-+            )
-+        return self.NO_RESPONSE
- 
-     async def report_readonly(self, data):
-         method = data["method"]
 diff --git a/lib/hashserv/tests.py b/lib/hashserv/tests.py
-index 3acfdcd8c..0fbc19c1d 100644
+index 0fbc19c1d..41c1f249f 100644
 --- a/lib/hashserv/tests.py
 +++ b/lib/hashserv/tests.py
-@@ -372,20 +372,25 @@ class HashEquivalenceCommonTests(object):
-             nonlocal side_client
+@@ -1561,6 +1561,102 @@ class TestHashEquivalenceTCPServer(HashEquivalenceTestSetup, HashEquivalenceComm
+         # case it is more reliable to resolve the IP address explicitly.
+         return socket.gethostbyname("localhost") + ":0"
  
-             # check upstream server
-+            self.assertTrue(self.client.unihash_exists(unihash))
-             self.assertClientGetHash(self.client, taskhash, unihash)
++    def test_get_stream_upstream_pipelined(self):
++        # Verify that, with an upstream configured, the get-stream handler
++        # pipelines its upstream queries instead of doing one blocking
++        # round-trip per task. A latency proxy injects RTT between this server
++        # and its upstream; a serial (one round-trip per task) implementation
++        # could not beat N * RTT, so finishing far faster proves the queries
++        # are pipelined.
++        import asyncio
++
++        LATENCY = 0.01  # 10ms each direction => ~20ms round trip
++        upstream_host, upstream_port = self.server_address.rsplit(":", 1)
++        upstream_port = int(upstream_port)
++
++        ready = threading.Event()
++        proxy = {}
++
++        def run_proxy():
++            loop = asyncio.new_event_loop()
++            asyncio.set_event_loop(loop)
++
++            async def handle(creader, cwriter):
++                ureader, uwriter = await asyncio.open_connection(upstream_host, upstream_port)
++
++                async def pipe(r, w):
++                    try:
++                        while True:
++                            data = await r.read(65536)
++                            if not data:
++                                break
++                            await asyncio.sleep(LATENCY)
++                            w.write(data)
++                            await w.drain()
++                    except Exception:
++                        pass
++                    finally:
++                        try:
++                            w.close()
++                        except Exception:
++                            pass
++
++                await asyncio.gather(pipe(creader, uwriter), pipe(ureader, cwriter))
++
++            stop_event = asyncio.Event()
++            proxy["stop_event"] = stop_event
++            proxy["loop"] = loop
++
++            async def main():
++                server = await asyncio.start_server(handle, "127.0.0.1", 0)
++                proxy["port"] = server.sockets[0].getsockname()[1]
++                ready.set()
++                async with server:
++                    await stop_event.wait()
++
++            try:
++                loop.run_until_complete(main())
++            except Exception:
++                pass
++            finally:
++                loop.close()
++
++        proxy_thread = threading.Thread(target=run_proxy, daemon=True)
++        proxy_thread.start()
++        self.assertTrue(ready.wait(10), "latency proxy did not start")
++        self.addCleanup(proxy_thread.join, 10)
++        self.addCleanup(lambda: proxy["loop"].call_soon_threadsafe(proxy["stop_event"].set))
++        proxy_addr = "127.0.0.1:%d" % proxy["port"]
++
++        N = 400
++        expected = []
++        for i in range(N):
++            taskhash = hashlib.sha256(("task%d" % i).encode()).hexdigest()
++            outhash = hashlib.sha256(("out%d" % i).encode()).hexdigest()
++            unihash = hashlib.sha256(("uni%d" % i).encode()).hexdigest()
++            self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
++            expected.append((self.METHOD, taskhash, unihash))
++
++        # Downstream server with an EMPTY local DB whose upstream is the slow proxy.
++        down_server = self.start_server(upstream=proxy_addr)
++        down_client = self.start_client(down_server.address)
++
++        args = [(m, th) for (m, th, _uh) in expected]
++        start = time.time()
++        results = down_client.get_unihash_batch(args)
++        elapsed = time.time() - start
++
++        self.assertEqual(results, [uh for (_m, _th, uh) in expected])
++
++        # A serial (one round-trip per task) implementation cannot beat N*RTT.
++        # Allow a generous margin to avoid flakiness on loaded CI machines.
++        serial_lower_bound = N * 2 * LATENCY
++        self.assertLess(elapsed, serial_lower_bound / 4,
++                        "Upstream queries are not being pipelined "
++                        "(%.3fs for %d queries at %.0fms injected RTT)"
++                        % (elapsed, N, 2 * LATENCY * 1000))
++
++
  
-             # Hash should *not* be present on the side server
-+            if old_sidehash and unihash != old_sidehash:
-+                self.assertFalse(side_client.unihash_exists(unihash))
-             self.assertClientGetHash(side_client, taskhash, old_sidehash)
- 
-             # Hash should be present on the downstream server, since it
-             # will defer to the upstream server. This will trigger
-             # the backfill in the downstream server
-+            self.assertTrue(down_client.unihash_exists(unihash))
-             self.assertClientGetHash(down_client, taskhash, unihash)
- 
-             # After waiting for the downstream client to finish backfilling the
-             # task from the upstream server, it should appear in the side server
-             # since the database is populated
-             down_client.backfill_wait()
-+            self.assertTrue(side_client.unihash_exists(unihash))
-             self.assertClientGetHash(side_client, taskhash, unihash)
- 
-         # Basic report
+ class TestHashEquivalenceWebsocketServer(HashEquivalenceTestSetup, HashEquivalenceCommonTests, unittest.TestCase):
+     def setUp(self):
 -- 
 2.54.0
 
