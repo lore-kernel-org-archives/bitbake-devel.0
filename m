@@ -2,216 +2,95 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC22C531F9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD42C53219
 	for <webhook@archiver.kernel.org>; Fri, 24 Jul 2026 21:28:31 +0000 (UTC)
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.28919.1784928508896857307
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.28917.1784928506720973698
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 24 Jul 2026 14:28:29 -0700
+ Fri, 24 Jul 2026 14:28:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=F5XdI5AD;
- spf=pass (domain: gmail.com, ip: 209.85.210.45, mailfrom: jpewhacker@gmail.com)
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-7eb9b427da2so1172301a34.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Jul 2026 14:28:28 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=fxm/mJhL;
+ spf=pass (domain: gmail.com, ip: 209.85.210.46, mailfrom: jpewhacker@gmail.com)
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7ee37dc91f5so494630a34.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Jul 2026 14:28:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784928508; x=1785533308; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=cJgDGOKrgOhO4GqIerRQ7ja2rXw7cSOKtYqO0XqDjnU=;
-        b=F5XdI5AD5GF5e+t9fXticu+COuALLT/1pwBAV8DGno2qdwolxDfwpmecE7s8K69oGx
-         N9noCJw3UoG+alXHQna40J+u8UJ/mX8d9/seEF4rD+GV8uynbdERNnzyosNacsxfRfLG
-         uevOcitlca/1p2Vfnk0FzwA2qNZ+8slJlgc5+JYqErGUxhuaISR1douKzJAjMAT0FiT3
-         LWVv0wwQoZQXfqFbRu+GrgbPq2SOORoAnmKjO7P4xbUVwizSJLtldKJv0rkloqcfm0Eg
-         fET6ZUZRLB9e4lPiVaEe27cjYo6HytoeanscbAq6JLNI0x/Z2Ndg/+HWXFDlQndXOLxR
-         zrQg==
+        d=gmail.com; s=20251104; t=1784928506; x=1785533306; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=U7dPMeFbRtTh/kwy0v7vISQWTQs14M0pwHEAB3cL9XY=;
+        b=fxm/mJhLnqi3Fn+dlb0jsUJiDGYbslQ3BS4n4qZm2kwxiBocJCFOyBySXe58R3Nwik
+         1c96PrEvyFHg4X8gxtY3YNY5LzqRFWV1xK/UrasReTH4Qp9PE/OIPj2h6bOpVvSqmv6+
+         JSG2UDETHCAfzxck6pibi6Vd8gZNxqtE9b8Nal6C84fG+6Ge2icBmJl0Cm1ANeNBbIlV
+         zdBF+sLNcTC0TxyxZa4uFzISFzIcl6WAVbGtDA8XCJOlys/oB8kcEI1a/QFBC9QwQnPZ
+         omj8zA1KjOWcY7vFK+ERpFx8MjmMJYoe4OX2t4wAUT7QgbP5HmPN8dKFhT/1xVqHDP/2
+         54Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784928508; x=1785533308;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=cJgDGOKrgOhO4GqIerRQ7ja2rXw7cSOKtYqO0XqDjnU=;
-        b=pJte5n346JBuFFbGYyJHRvfYvAQfyjplhzZ7AXjbC4h8/rJf+e1Llx4FNe0AXCW5xz
-         EMF/0MKp0pEE1Q5t3NLHmtb+W0DNwANMoSefBo2XGDZOzWnqfD6LqFJTcMy33A7AiY3V
-         dBCZvNbRC+Ket0VMi9dDGokzL8JtGYmkmrvSaDKEDGhkfqVH+itmq616fpkTKYADPntY
-         zVYgQfJYM86wtwbcNjB5YPE2yk2k1astkV2uI5+qz9Z4VfiKivVJ4yIGjuXbMHCRRLq3
-         qB8g6nud1q86djNhtvjxPzkndfivEAKmUrX8cRbSjcAU0xnCFq4ZdVtdZGMPcQ+DctfG
-         rR8g==
-X-Gm-Message-State: AOJu0YzEG/5OEqzL9uB821R3LVW7LDP9z9kVriZiWz/B00RqkhB2IxGQ
-	rbtjYbGJAQgkODbqa3Vp+wsZn6zCDwG+d3leM8PFxgCV/1oviBhqYeE7sYw4Kg==
-X-Gm-Gg: AR+sD12B7RZKs47IQcsmIURVpsgxiMFYK/Nd1MpW+yNPjGZavmpdRyuqzROayjNB/8z
-	J7NxXCCzUQmjWm6NMKMrDP8N4Eh0JduL5CDjkMpqRC/qH8RBzTj6xQRQjznKF4o/nQJ8YTVuC9o
-	M8y1tMSzhAC3f5EVd1IYFDS+/q3KVXX4AgTWVNvTzEzwaNu+2EPfDaM+dnG7CIaDOdZmVXyb61l
-	R6dTrU8QGJB0QhkZQjPlyIpENnP1dfC/6C3v4kLrGuKBUZ5uojcVlhQvpuqM1gVSf9KhVH9rk7w
-	khno0UjDqELghkYI9XeUVeYijeA1isjglNQVphzIw6/oxiVynJyPRnAzbTCzVCJuUG7AMZWBbud
-	x0ir/zT9ddhviebMa6RGfM+x2abcVvjnkW0k7l4tijz4BNe4eQz3PUajCiLB2cJgeXgBn3bNiUY
-	U=
-X-Received: by 2002:a05:6808:c2b8:b0:496:9ee:e538 with SMTP id 5614622812f47-4ab5e33b438mr2336213b6e.5.1784928508048;
-        Fri, 24 Jul 2026 14:28:28 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1784928506; x=1785533306;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=U7dPMeFbRtTh/kwy0v7vISQWTQs14M0pwHEAB3cL9XY=;
+        b=tJusFGDYwnK7bZ9CJfB0j9Y1PgvyKBrrMTZRHoauPT1L62x0ogD7m5Ak/BtIYrpd6m
+         1NgDeKB/PGuVml8LNc1I7taLwR50o6hSDSoLlIVRFVZP0Fv5hKzW1WNlwJg5/7aV4zGG
+         bcqEcPC2SlUuUjDbsTxANPPvXHV1EPZljZWGmTnfhrr0G9qqLsLwUX83p0HOqXxXdV4W
+         X7/xSkpfsv7ThEGmvOb97+649zaRvavNzykqOzg5KG22p0LU7r3EE+yus9uGrMza5Trq
+         qH6nDNC7DdCYjQp8o3z/g/q7HXsRzkwIlK1KilpoWqQzW2lOb+RCfaqSP0AAqLq3dhTJ
+         LRIg==
+X-Gm-Message-State: AOJu0YyEutYeHDVXnhicKH+PHYIrqwFkcPSZCPqwtXhCn6Me9L/bd2jX
+	CCjzQU1CvaWkDzTUPoKhVbluyORISkC9e5m1LWoO3RdNaujD4i/AoDx90qJ7QQ==
+X-Gm-Gg: AR+sD12kZlIBvSTJ/oDQwKdIHC0l8fs5+GkrRWSgWCCe/3kL4hmLIVoVy5nG7PpH0NN
+	+4Z6pXQDGv6rwX63Qnn9j+5dJ/zK8QgCtVnw40ctfsreaiYjBRdtn0XjnBaH5eVulO0SYFFZbPd
+	2DdIOQ2Bz2iJeIgYnjEGaXP6hLaFOyE2NlMTpVQbAyjmmDXjE5EXFmK1gMkfplJfztphBKDnpgU
+	CzKRgSdoZ3RL4KQOINsambUkvu+OAxvlqtIc+uiKrP7vSLqajGTJLQqJns2fNKO+NxHyei4m5DU
+	2gN43okg23fqi0gYike+MExtrcNM/QHRmYjvXXBCL+tNUKBDOoW6bTsq7BDHE2tJfc7t+11Odse
+	oBKD0flItCBQK3501qSe6JY5MTOM/KThOcm7QWKT+OO+1bXbbNYey8a0HGbOIDoQyAGHEJSwVgH
+	E=
+X-Received: by 2002:a05:6820:f026:b0:6aa:f7ac:faf3 with SMTP id 006d021491bc7-6aaff95a51emr26086eaf.19.1784928505807;
+        Fri, 24 Jul 2026 14:28:25 -0700 (PDT)
 Received: from localhost.localdomain ([2601:283:4b02:22d0::5d97])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-457673d2dc1sm8183883fac.10.2026.07.24.14.28.27
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-457673d2dc1sm8183883fac.10.2026.07.24.14.28.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2026 14:28:27 -0700 (PDT)
+        Fri, 24 Jul 2026 14:28:25 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Michal Sieron <michal.sieron@nokia.com>,
 	Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH 3/6] hashserv: server: Add queued streaming API
-Date: Fri, 24 Jul 2026 15:25:11 -0600
-Message-ID: <20260724212822.1165552-4-JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH 0/6] hashserv: Pipeline Upstream Queries
+Date: Fri, 24 Jul 2026 15:25:08 -0600
+Message-ID: <20260724212822.1165552-1-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260724212822.1165552-1-JPEWhacker@gmail.com>
-References: <20260724212822.1165552-1-JPEWhacker@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 24 Jul 2026 21:28:31 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19853
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19850
 
-Adds an API that allows a stream handler to more precisely control when
-a response is sent to the client. The new API does not directly send the
-response from the handler to the remote client, but instead the handler
-is expected to put the result in a provided queue when the response is
-ready. In particular, this allows a stream handler to defer to an
-upstream server (utilizing the new client streaming API) in an efficient
-way that does not require waiting on a roundtrip with the upstream
-server. Instead, several queries to the upstream can be in-flight at
-once.
+Adds a true asynchronous streaming API to the hash equivalence clients,
+then uses that streaming API to pipeline requests to an upstream server.
+This means that when a server wants to defer a request to an upstream,
+it no longer has to wait for a complete round-trip API call. Instead, it
+can use the faster streaming API to send the requests, and continue
+processing other requests while a response inbound.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- lib/hashserv/server.py | 100 ++++++++++++++++++++++++++++++++---------
- 1 file changed, 79 insertions(+), 21 deletions(-)
+Joshua Watt (6):
+  hashserv: client: Add asynchronous streaming API
+  hashserv: server: Fix formatting
+  hashserv: server: Add queued streaming API
+  hashserv: server: Use streaming and queue API for upstream unihash
+    queries
+  hashserv: server: Use streaming and queue API for upstream exist
+    queries
+  hashserv: tests: Add test for upstream pipelining
 
-diff --git a/lib/hashserv/server.py b/lib/hashserv/server.py
-index e7e79196f..991b99b86 100644
---- a/lib/hashserv/server.py
-+++ b/lib/hashserv/server.py
-@@ -229,6 +229,58 @@ def permissions(*permissions, allow_anon=True, allow_self_service=False):
-     return wrapper
- 
- 
-+class UpstreamQueue(object):
-+    UPSTREAM_NONCE = object()
-+
-+    def __init__(self, queue, get_local_result, send_upstream, get_upstream_result):
-+        self.queue = queue
-+        self.pending = []
-+        self.cond = asyncio.Condition()
-+        self.done = False
-+        self.get_local_result = get_local_result
-+        self.send_upstream = send_upstream
-+        self.get_upstream_result = get_upstream_result
-+
-+    async def process_results(self):
-+        try:
-+            while True:
-+                async with self.cond:
-+                    await self.cond.wait_for(lambda: self.pending or self.done)
-+                    if not self.pending:
-+                        if self.done:
-+                            return
-+                        continue
-+
-+                    value, m = self.pending.pop(0)
-+
-+                if value is self.UPSTREAM_NONCE:
-+                    value = await self.get_upstream_result(m)
-+
-+                await self.queue.put(value)
-+        finally:
-+            await self.queue.put(None)
-+
-+    async def handler(self, m):
-+        try:
-+            if m is None:
-+                return
-+
-+            value = await self.get_local_result(m)
-+            if value is None:
-+                await self.send_upstream(m)
-+                value = self.UPSTREAM_NONCE
-+
-+            async with self.cond:
-+                self.pending.append((value, m))
-+                self.cond.notify_all()
-+
-+        finally:
-+            async with self.cond:
-+                self.done = True
-+                self.cond.notify_all()
-+                # await stream.done()
-+
-+
- class ServerClient(bb.asyncrpc.AsyncServerConnection):
-     def __init__(self, socket, server):
-         super().__init__(socket, "OEHASHEQUIV", server.logger)
-@@ -390,35 +442,41 @@ class ServerClient(bb.asyncrpc.AsyncServerConnection):
-         validate_unihash(unihash)
-         return await self.db.insert_unihash(method, taskhash, unihash)
- 
--    async def _stream_handler(self, handler):
-+    async def _stream_queue_handler(self, handler, queue):
-         await self.socket.send_message("ok")
- 
--        while True:
--            upstream = None
-+        async def recv():
-+            try:
-+                while True:
-+                    m = await self.socket.recv()
-+                    if not m or m == "END":
-+                        break
- 
--            l = await self.socket.recv()
--            if not l:
--                break
-+                    await handler(m)
-+            finally:
-+                await handler(None)
- 
--            try:
--                # This inner loop is very sensitive and must be as fast as
--                # possible (which is why the request sample is handled manually
--                # instead of using 'with', and also why logging statements are
--                # commented out.
--                self.request_sample = self.server.request_stats.start_sample()
--                request_measure = self.request_sample.measure()
--                request_measure.start()
--
--                if l == "END":
-+        async def process():
-+            while True:
-+                m = await queue.get()
-+                if m is None:
-                     break
- 
--                msg = await handler(l)
--                await self.socket.send(msg)
--            finally:
--                request_measure.end()
--                self.request_sample.end()
-+                await self.socket.send(m)
- 
-+        await asyncio.gather(recv(), process())
-         await self.socket.send("ok")
-+
-+    async def _stream_handler(self, handler):
-+        queue = asyncio.Queue(1000)
-+
-+        async def h(m):
-+            if m is None:
-+                await queue.put(None)
-+            else:
-+                await queue.put(await handler(m))
-+
-+        await self._stream_queue_handler(h, queue)
-         return self.NO_RESPONSE
- 
-     @permissions(READ_PERM)
+ bin/bitbake-hashclient |   2 +-
+ lib/hashserv/client.py | 306 ++++++++++++++++++++++++++++++++---------
+ lib/hashserv/server.py | 191 +++++++++++++++++++------
+ lib/hashserv/tests.py  | 105 +++++++++++++-
+ 4 files changed, 492 insertions(+), 112 deletions(-)
+
 -- 
 2.54.0
 
