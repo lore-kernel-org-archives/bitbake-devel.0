@@ -1,107 +1,100 @@
-Return-Path: <zizuzacker@gmail.com>
+Return-Path: <amery@apptly.co>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C75C53200
-	for <webhook@archiver.kernel.org>; Sat, 25 Jul 2026 14:30:14 +0000 (UTC)
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.311.1784989808479753755
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1EEC531C9
+	for <webhook@archiver.kernel.org>; Sat, 25 Jul 2026 18:01:52 +0000 (UTC)
+Received: from v5234.v57ae4e16.euw1.send.eu.mailgun.net (v5234.v57ae4e16.euw1.send.eu.mailgun.net [161.38.204.234])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.2113.1785002505990704445
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 25 Jul 2026 07:30:08 -0700
+ Sat, 25 Jul 2026 11:01:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=Q+U4pujD;
- spf=pass (domain: gmail.com, ip: 209.85.215.171, mailfrom: zizuzacker@gmail.com)
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-c9eefcf9175so1338730a12.3
-        for <bitbake-devel@lists.openembedded.org>; Sat, 25 Jul 2026 07:30:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784989808; x=1785594608; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=M4h9Uv5etWF1FfZya79L8HoVhbl/EQXThMlkI7rkvrI=;
-        b=Q+U4pujDyuqNMfY9oO1OFqaRvlPIGgbakkvEMXwuBqgP+U0qTVnDBqxHFY+eyhJMtM
-         5f8pQS7EO5R/CiQJqs0/ccPMQWyo8cTF1vSO8zFmosq0QK/2cb54w5pub5USCtG5j1hH
-         a/4jKrGmZBaRqzcNv75qxsDQHIr6ikysxDXtgNedFLF5cXxeiBwNcSq4wrt4rXtgHoF2
-         OzJNS10RxSeB/VE7BVT+MPMm/3fmwhtV/+2wxwzNoT+jWJ9xsEFCxizFTQSXkwYmNcol
-         YTT3fLiPa22In6NAIsgkjzY71K+4Yik/O9QTHpu0qkaIc4xlGapIVj8Xt+KNwZGoGZQc
-         K/FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784989808; x=1785594608;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=M4h9Uv5etWF1FfZya79L8HoVhbl/EQXThMlkI7rkvrI=;
-        b=hRUFBYBFi5q/JQnxsVqcRtC209Svu6BpFLO0Q3lD9NKNdvOMNFNy4UJbTRi3CtEXiL
-         7xhg7ZP/G3k8rlF+otj3v/sCMtesD5NmpeTZuiLh+q8qCqCPPwjQ7go3sEhotbIM/GM5
-         V+K47QmaNIqDleSmY9Y53fKfmb5MzR6vm30NPWrYTUAOhGlSHu6beXGpvEwk3NTO73cA
-         84/9ALip1Iu3QMOZqKKrlB/W4SpDaPdcDALlImuAMHd+Nm3hXWcvzYhRcnWCDmufkuDv
-         GsZXhb/uC+WQw10Nj1bAoWOtzNLcczh1P3VUnmf9z/PosGABsRn12WNWhOIzvTO+zimY
-         Sa+g==
-X-Gm-Message-State: AOJu0YxGvfu2XYf5Zp6dtOwITkK6vwZpopbuCJPq7lforjEJIAhmwTby
-	96xnCrgQQZbCC3qdDnNgZP1MNSfnWphBddPS5tCf2hnqQRFqgAIVaEJDYSp//2ED
-X-Gm-Gg: AR+sD11QpAIrOUC2RRjo00hbK8QRD+cmIXgfEVrPEHOpRcMsfwq70JZ0jamQyHoZtrl
-	ma3zxZRL4AtSe0KWbJKTglPkjR1kuZBZErWcoTwUaL0bzNZc2CS5f4HfNTiTWqP9Ot5mfhE81oP
-	78ceKNp03Vnqy9Ihfhw1LZfFFiB29V8C5kXk/P+WTzMKKI2tWC87IhpeMUa0prgBXPLoucwr7YK
-	SYGUvGjokrmtCEIN9ZtOq4ncFqkY/g5/LAyIvSam5Uv4OVM/eMnjHJLvW4p1659khRWp1gp2N8X
-	eCDOm91tgbdB6PxEPzhzbppsKfDmbNk14hHIXkNU4brrCG/BFrBWXHfJI/9jKl8Qw1elGZNEFcS
-	cRiToqRBiv4Xal73Snw5hyJWUv/bJy+wuKg0AMxQ7XgmXM3NyaIUVcKLy10YmuFR57k2qOg==
-X-Received: by 2002:a05:6a20:4324:b0:3c4:3321:4ffd with SMTP id adf61e73a8af0-3c67da310ddmr2505589637.20.1784989807681;
-        Sat, 25 Jul 2026 07:30:07 -0700 (PDT)
-Received: from ltu.. ([2001:ee0:4041:efc5:bfb0:104e:8f:340f])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-314bc5cb670sm16909480eec.31.2026.07.25.07.30.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2026 07:30:06 -0700 (PDT)
-From: Nguyen Minh Tien <zizuzacker@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: zizuzacker@gmail.com
-Subject: [PATCH 0/1] data_smart: fix key expansion in conditional overrides
-Date: Sat, 25 Jul 2026 21:30:01 +0700
-Message-Id: <20260725143002.23596-1-zizuzacker@gmail.com>
-X-Mailer: git-send-email 2.34.1
+ dkim=pass header.i=@e.apptly.co header.s=mta header.b=CPpYxpRv;
+ spf=pass (domain: e.apptly.co, ip: 161.38.204.234, mailfrom: bounce+ec7242.b6604b-bitbake-devel=lists.openembedded.org@e.apptly.co)
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=e.apptly.co; q=dns/txt; s=mta; t=1785002504; x=1785009704;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: From: References: To: To: Subject: Subject: MIME-Version: Date: Message-ID: Sender: Sender;
+ bh=xXU9qozE2S2qKP0AbjVyAuye3YpSqVbzML4yLxnwwBc=;
+ b=CPpYxpRvh9RBRsAAcNCCqzvUJ5nPN3n8V6S750WzKz2q2Ib6dMpqVma4ySWV4+baFceXjqp+jGAgNbLIuNouY9GJftK6bjpFdcO9ZDI3gDnb/gce1blRlBieoWypkWI0MbGKpC1ULNQspnBDqsdcYF1tLbFh/EQwmYMB+gavOcg=
+X-Mailgun-Sid: WyI5YTJmMyIsImJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZyIsImI2NjA0YiJd
+Received: from [192.168.52.36] (brig-22-b2-v4wan-169287-cust1029.vm14.cable.virginm.net
+ [81.97.100.6]) by
+ 88e476566652c835c870029fa9cc541267c98436d6f97deb6be8d815d37cf5ca with SMTP id
+ 6a64fa08599bd22e95504bb5 (version=TLS1.3, cipher=TLS_AES_128_GCM_SHA256);
+ Sat, 25 Jul 2026 18:01:44 GMT
+X-Mailgun-Sending-Ip: 161.38.204.234
+Sender: amery=apptly.co@e.apptly.co
+Message-ID: <1d7573cc-035a-49d0-b978-d8bf06dbbfea@apptly.co>
+Date: Sat, 25 Jul 2026 19:01:24 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [bitbake-devel] [2.18][PATCH] bitbake-worker: Evaluate
+ exported_vars() before emptying the environment
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+ bitbake-devel@lists.openembedded.org
+References: <20260720195834.2496647-1-amery@apptly.co>
+ <859e14e2c6da1c914ae3ec7f2c2065424cde8f10.camel@linuxfoundation.org>
+Content-Language: en-US
+From: Alejandro Mery <amery@apptly.co>
+Organization: Apptly Software Ltd
+In-Reply-To: <859e14e2c6da1c914ae3ec7f2c2065424cde8f10.camel@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 25 Jul 2026 14:30:14 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19857
+ <bitbake-devel@lists.openembedded.org>; Sat, 25 Jul 2026 18:01:52 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19859
 
-An :append whose override name still contains a variable is silently
-dropped. From the report:
 
-    RDEPENDS:${PN}:append:pn-packagegroup-cross-canadian-${MACHINE} = " ..."
+On 23/07/2026 07:06, Richard Purdie wrote:
+> On Mon, 2026-07-20 at 19:58 +0000, Alejandro Mery via lists.openembedded.org wrote:
+>> exported_vars() returns a lazy generator. It was bound before
+>> empty_environment() cleared the process environment and only iterated
+>> afterwards, so any datastore expansion deferred until iteration ran with
+>> PATH already wiped.
+>>
+>> Recipes whose exported variables expand a command during that loop hit
+>> this. A gitver-style PV such as "${@get_git_pv(d, ...)}" runs git while
+>> PATH is empty, so the git wrapper on PATH is bypassed and the real git
+>> runs directly. Under pseudo this fakes uid 0 against a repository owned
+>> by the real user, and git aborts with "detected dubious ownership",
+>> failing do_package intermittently (only on reparse, when the value is
+>> re-expanded rather than served from cache).
+>>
+>> Materialise the generator into a list before emptying the environment so
+>> every expansion happens while PATH is still intact.
+>>
+>> Signed-off-by: Alejandro Mery <amery@apptly.co>
+>> ---
+>>   bin/bitbake-worker | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/bin/bitbake-worker b/bin/bitbake-worker
+>> index aa14ef191..0db1531e0 100755
+>> --- a/bin/bitbake-worker
+>> +++ b/bin/bitbake-worker
+>> @@ -290,7 +290,7 @@ def fork_off_task(cfg, data, databuilder, workerdata, extraconfigdata, runtask):
+>>   
+>>                   # exported_vars() returns a generator which *cannot* be passed to os.environ.update()
+>>                   # successfully. We also need to unset anything from the environment which shouldn't be there
+>> -                exports = bb.data.exported_vars(the_data)
+>> +                exports = list(bb.data.exported_vars(the_data))
+>>   
+>>                   bb.utils.empty_environment()
+>>                   for e, v in exports:
+> Thanks for this. Nice work in tracking it down!
+>
+> I think in this case we need a couple of things, firstly will be a bit
+> more explination in the code with a comment about why we need a list
+> there.
+>
+> The failure case is so unusual we should also probably write a test
+> case to make sure we test for and don't regress that issue which we'd
+> add to the existing tests in bitbake-selftest.
+>
+> Help with that would be welcome or we'll get to it when we can...
 
-Still reproduces on master (c251833d2). The mechanism is in the patch;
-briefly, renameVar() rebuilds dependent override keys with a string
-replace, so renaming RDEPENDS:${PN} leaves the ${MACHINE} behind and the
-append lands on a key no override can ever match.
 
-The part worth flagging is the '${' not in newkey guard. Expanding
-unconditionally looks like the obvious fix but regresses parsing:
-native.bbclass renames to a key that is itself still unexpanded, before
-expandKeys() runs, and expanding the dependent keys there turns the later
-rename into a no-op. oe-core then parses with three warnings master does
-not have, in dbus and python3-psutil. The second of the two added tests
-covers this and fails without the guard.
-
-Tested against bitbake c251833d2 and oe-core 9d89b3b802:
-
- - bitbake-selftest: 790 tests, no failures. Six bb.tests.fetch errors
-   remain, host issues that occur identically on master
- - all 952 oe-core recipes parse with no warnings, same as master
- - bitbake -e for dbus-native and python3-psutil-native, the two recipes
-   that hit this path, identical to master
- - same parse with multilib enabled, exercising multilib_global.bbclass
- - core-image-minimal builds for qemux86-64, 5275 tasks
-
-Nguyen Minh Tien (1):
-  data_smart: fix operations lost when an override name contains a
-    variable
-
- lib/bb/data_smart.py | 11 +++++++++--
- lib/bb/tests/data.py | 25 +++++++++++++++++++++++++
- 2 files changed, 34 insertions(+), 2 deletions(-)
-
--- 
-2.34.1
+I'll send a v2 soon
 
 
