@@ -1,194 +1,156 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <zizuzacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C13EC531C9
-	for <webhook@archiver.kernel.org>; Fri, 24 Jul 2026 21:28:41 +0000 (UTC)
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.28981.1784928511376313270
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC60C531C9
+	for <webhook@archiver.kernel.org>; Sat, 25 Jul 2026 14:30:14 +0000 (UTC)
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.260.1784989810718328479
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 24 Jul 2026 14:28:31 -0700
+ Sat, 25 Jul 2026 07:30:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=i67ktGzV;
- spf=pass (domain: gmail.com, ip: 209.85.160.47, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-4563ac048f4so494093fac.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 24 Jul 2026 14:28:31 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=HDJ4Urnb;
+ spf=pass (domain: gmail.com, ip: 209.85.215.178, mailfrom: zizuzacker@gmail.com)
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-ca80d708489so916810a12.1
+        for <bitbake-devel@lists.openembedded.org>; Sat, 25 Jul 2026 07:30:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784928510; x=1785533310; darn=lists.openembedded.org;
+        d=gmail.com; s=20251104; t=1784989810; x=1785594610; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=ZpKwBLV5BxsmWBXTu0qLwGCa5/4EAPrutBLij9MoUVY=;
-        b=i67ktGzVrt62taxIEl7VEqYJUhsqiIT0+ChpmXctLPoP4U/tU7s4cENkOHxZUkI/X9
-         8Lv8wk7+cc3nh2IxFm7AUS/Fs54ZdnkK8Z4ScrYtLHRAdTfDEeRmQslBSn0a5jnlGJLT
-         lTXBPaGu9OvTfy1OfJIS8D2n4ovXusm16h/QaeWOk6BPKSnjUL63u0bLl7B64E8Fm2AD
-         Z7cNn3UD0JhVhsu6eB+bkei3ly0/TO8EUzbQqWmc0mI2E7a0ZbxEdxNtkGS6sZ5ZwIAg
-         xuK//wyjH+Tw6RJ7yQe4YR22FXd51KNT1bqrCvQDV4U3t7uz1a6WdUtnx5bThaPJT88A
-         aLHw==
+        bh=bVSBmN6aUz7nQ6RXgq0TXfcW2Ftw0KUnER98RrK9+Hs=;
+        b=HDJ4UrnbLIvAAKc1JLp5A7jPqO7LI9N+xj/dMjlPZcm+IXYwPpEVsy1wmCdOfoVkkh
+         QbJVJywItPx76omEYVaVxdh4LnDotg3iIHNIYMCKAE5xHORLIqq9WQTS1GZwwtbaQ2za
+         rWPI14j1K1E5R/TigCNtNk5m/6eyprJ6wLYf8Q0a4HQrDvZLMrprCrE37WEvHS7FCe7b
+         TMXhFg3XkG3+pPvscKAX463LZXh2IgTww9Pez23/1lWQTUdOgNi5ggoSfmF/e99VRWBx
+         PWucKEB917FCpsG931QJ+yN78rO2LjDbsrWGrIOgLLwyjK522etdypW7NOXRTQcrFP6E
+         pTSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784928510; x=1785533310;
+        d=1e100.net; s=20251104; t=1784989810; x=1785594610;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ZpKwBLV5BxsmWBXTu0qLwGCa5/4EAPrutBLij9MoUVY=;
-        b=Ars9nu2njzg4FdriQqQp7Z658wduE8q+MpOIKCTJQN4ooPtlcpcqRLixCsyItgRCq7
-         2u2Bn35BZAVHeBNTagEfAb9uhBBuPmnEnc5eE7VCSQgMe6LEBnQ8ryeoqGx7cFAQu9gW
-         32RUBZasT0Pj0jWMXGVU++NI4bKm0btJIRQCW2HX/u4WmBE5c66XnOan1vXfTrGppATK
-         w13uwOZEd9+Tey4JPSxR283F7JY5D/xf9Hrlfwx4sAcCH9CrtocBDJdoeDKib4tX7x2i
-         hA5XjUNzy5NWrXczonNS6nwUBvYgoIECfxejTSy5eGJ1oylv8ZP0dNoOaqZ9d9LnOzq1
-         q3vQ==
-X-Gm-Message-State: AOJu0YxdeZlx+wMX9b/F52M0Eb4HsSPfvVyLV7lCM+eAYcyWPYRzEY2l
-	r6Kllq682EaeNV7MlFR41MhFD44C8wwohqfyqkNmvh3Frdjo6Kyd7+f2+GZqHA==
-X-Gm-Gg: AR+sD11jaUTI7x0iaaNf5bjDE578a9TfJau/H3Dk23Yf/MlYR3YjJdKxSfx8olJA6b0
-	k1lQzdV441npOXG09p6PzyoxDcP3FyxcaaXesod4uU3h9E5+xEcn5bKUQvWBU/vT+fkIrJ52vJJ
-	2cny5GXrE51tGlKH+2dffATj69YIlLuSKyBrrkhbibpPyJsaYf4axuM7OeLvjULHuK+2lV93crk
-	vLKtr89eOvlfH+m1YIlpGIz+MCX4/nhSCwGYcOjC+cE+DPTO7tS7ZafRXxIqfpVAw15ns97BLte
-	65E+r/uQOiVOhzXNXscacwncvD53kt5Ido2gExDwuFDXJKPwgsoqvMIkPUHsPNR/w02CyuiAJYV
-	Z9J/hCLNLrme8opHayeTQiv6a0iZDgQjiOQExoa6Y1Ik6RGIGH2d3AW8T2TC2QmE3MLp2QtKL9Q
-	g=
-X-Received: by 2002:a05:6870:34d:b0:456:ae13:5583 with SMTP id 586e51a60fabf-457f27758ffmr179363fac.31.1784928510535;
-        Fri, 24 Jul 2026 14:28:30 -0700 (PDT)
-Received: from localhost.localdomain ([2601:283:4b02:22d0::5d97])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-457673d2dc1sm8183883fac.10.2026.07.24.14.28.29
+        bh=bVSBmN6aUz7nQ6RXgq0TXfcW2Ftw0KUnER98RrK9+Hs=;
+        b=Drx5RmTnENKaLJHP+nggInzAeQ/D2cMfMg9KCLa5r5PLocVXpuzRHvJ/l6ROxwUeZ6
+         1O7oDgcTudFsc6AUfyfvdjYwIL9JgfcrMvYdTS0ixELcRefqBzrYtXe7KcQue8twfLYO
+         sW5A+rZZnRUti7dLugN3/Q5CRfFD5JLojX2y8Ord/RPMXArZGHf8vFisZ58b41qLB3JX
+         EBYKHHcF1Ah/dkWP6A/3AHlUsroJBe+JiiRCE4M2YJ5SWXjyAFguQJx98TGUPRyFnVa/
+         m/hx/wPe5aC9JNnHYU1zKAsM4SbxTb2OVWaFuuGTvQUCZgSUT/nvTWri/rhjOdu5ix/O
+         /+9g==
+X-Gm-Message-State: AOJu0Yx6FjhSTIZkcdiCSpPJk5KXKJwFEUU1YzI8rL2XcXZqbkYslQKt
+	UPUAQGD4Pqw6K+Xzqz9ssJNqgv26I/KeUFWl8AM97RxuYD0QHkkvjOs+uAlNQjcO
+X-Gm-Gg: AR+sD12AuKe4ae2427+oGtmOo0I4iy+fD338xLLRdyeUEe7pc/dOgms2gN2yz17JHNW
+	nHsXsBRBE0CzcUyFpfiVKqcoYyBqFrxnFULdsAAqvlFK49TSDKxSHCnqLuGSglBLJBFosV8Peox
+	ESQeFKIirYSX9WQL1YEg4ReO+gL6dYMlS53j8hEAi7ULnXkfFdxhMAjxvlYLGLT5hvXPz71oh4i
+	16rL1XQT7/ApLoPGsYXC5y4A81Q9eYwNFH1+Dz78qr6wWxFqzLmOt2tKj3EJ21KodfI5ezKyxDy
+	Z2zwe7VO4btaMdJu9AK0MKKUUEg0420lCk6HH2CP/BK3r3RS/e0vDB/hUwGbtyYjQbhqqnC3qIi
+	qkGPNXnPHQUM0SSnNTorrw2K4MEA0UcygQTfYJfdmvRgwaKEaWZnjnwiW9giW1aZ0c6TN5g==
+X-Received: by 2002:a05:6a20:2d10:b0:3c4:320a:737 with SMTP id adf61e73a8af0-3c67242ad29mr4922071637.16.1784989809904;
+        Sat, 25 Jul 2026 07:30:09 -0700 (PDT)
+Received: from ltu.. ([2001:ee0:4041:efc5:bfb0:104e:8f:340f])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-314bc5cb670sm16909480eec.31.2026.07.25.07.30.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2026 14:28:30 -0700 (PDT)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+        Sat, 25 Jul 2026 07:30:09 -0700 (PDT)
+From: Nguyen Minh Tien <zizuzacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Michal Sieron <michal.sieron@nokia.com>,
-	Joshua Watt <JPEWhacker@gmail.com>
-Subject: [bitbake-devel][PATCH 6/6] hashserv: tests: Add test for upstream pipelining
-Date: Fri, 24 Jul 2026 15:25:14 -0600
-Message-ID: <20260724212822.1165552-7-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260724212822.1165552-1-JPEWhacker@gmail.com>
-References: <20260724212822.1165552-1-JPEWhacker@gmail.com>
+Cc: zizuzacker@gmail.com
+Subject: [PATCH 1/1] data_smart: fix operations lost when an override name contains a variable
+Date: Sat, 25 Jul 2026 21:30:02 +0700
+Message-Id: <20260725143002.23596-2-zizuzacker@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260725143002.23596-1-zizuzacker@gmail.com>
+References: <20260725143002.23596-1-zizuzacker@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 24 Jul 2026 21:28:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19856
+ <bitbake-devel@lists.openembedded.org>; Sat, 25 Jul 2026 14:30:14 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19858
 
-Adds a test that verifies that pipelining to an upstream server works as
-expected.
+An operation whose override name needs key expansion is silently dropped:
 
-AI-Generated: Uses Cursor, Claude Sonnet 5
-Co-authored-by: Michal Sieron <michal.sieron@nokia.com>
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+    RDEPENDS:${PN}:append:pn-foo-${MACHINE} = " bar"
+
+renameVar() rebuilds the dependent override keys with a plain string
+replace, so renaming RDEPENDS:${PN} leaves the append attached to
+RDEPENDS:foo:append:pn-foo-${MACHINE}, which never matches an active
+override. expandKeys() cannot fix that up afterwards either, as it works
+from a list of keys collected before any renaming happened.
+
+Expand the derived name before renaming it. Only do so once newkey is
+itself expanded, otherwise expandKeys() has still to rename newkey and
+handles the dependent keys along with it.
+
+Add regression tests for both cases.
+
+Fixes [YOCTO #14867]
+
+Signed-off-by: Nguyen Minh Tien <zizuzacker@gmail.com>
 ---
- lib/hashserv/tests.py | 96 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 96 insertions(+)
+ lib/bb/data_smart.py | 11 +++++++++--
+ lib/bb/tests/data.py | 25 +++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+), 2 deletions(-)
 
-diff --git a/lib/hashserv/tests.py b/lib/hashserv/tests.py
-index 0fbc19c1d..41c1f249f 100644
---- a/lib/hashserv/tests.py
-+++ b/lib/hashserv/tests.py
-@@ -1561,6 +1561,102 @@ class TestHashEquivalenceTCPServer(HashEquivalenceTestSetup, HashEquivalenceComm
-         # case it is more reliable to resolve the IP address explicitly.
-         return socket.gethostbyname("localhost") + ":0"
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index 9961269a3..5738aff95 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -697,8 +697,15 @@ class DataSmart(MutableMapping):
+             found = True
+             self.overridedata[newkey] = []
+             for (v, o) in self.overridedata[key]:
+-                self.overridedata[newkey].append([v.replace(key, newkey), o])
+-                self.renameVar(v, v.replace(key, newkey))
++                newv = v.replace(key, newkey)
++                # The derived name may still hold a variable reference which
++                # expandKeys() will never revisit, so expand it here. Only once
++                # newkey is expanded though, otherwise expandKeys() has still to
++                # rename newkey and handles the dependent keys along with it.
++                if '${' in newv and '${' not in newkey:
++                    newv = self.expand(newv)
++                self.overridedata[newkey].append([newv, o])
++                self.renameVar(v, newv)
  
-+    def test_get_stream_upstream_pipelined(self):
-+        # Verify that, with an upstream configured, the get-stream handler
-+        # pipelines its upstream queries instead of doing one blocking
-+        # round-trip per task. A latency proxy injects RTT between this server
-+        # and its upstream; a serial (one round-trip per task) implementation
-+        # could not beat N * RTT, so finishing far faster proves the queries
-+        # are pipelined.
-+        import asyncio
-+
-+        LATENCY = 0.01  # 10ms each direction => ~20ms round trip
-+        upstream_host, upstream_port = self.server_address.rsplit(":", 1)
-+        upstream_port = int(upstream_port)
-+
-+        ready = threading.Event()
-+        proxy = {}
-+
-+        def run_proxy():
-+            loop = asyncio.new_event_loop()
-+            asyncio.set_event_loop(loop)
-+
-+            async def handle(creader, cwriter):
-+                ureader, uwriter = await asyncio.open_connection(upstream_host, upstream_port)
-+
-+                async def pipe(r, w):
-+                    try:
-+                        while True:
-+                            data = await r.read(65536)
-+                            if not data:
-+                                break
-+                            await asyncio.sleep(LATENCY)
-+                            w.write(data)
-+                            await w.drain()
-+                    except Exception:
-+                        pass
-+                    finally:
-+                        try:
-+                            w.close()
-+                        except Exception:
-+                            pass
-+
-+                await asyncio.gather(pipe(creader, uwriter), pipe(ureader, cwriter))
-+
-+            stop_event = asyncio.Event()
-+            proxy["stop_event"] = stop_event
-+            proxy["loop"] = loop
-+
-+            async def main():
-+                server = await asyncio.start_server(handle, "127.0.0.1", 0)
-+                proxy["port"] = server.sockets[0].getsockname()[1]
-+                ready.set()
-+                async with server:
-+                    await stop_event.wait()
-+
-+            try:
-+                loop.run_until_complete(main())
-+            except Exception:
-+                pass
-+            finally:
-+                loop.close()
-+
-+        proxy_thread = threading.Thread(target=run_proxy, daemon=True)
-+        proxy_thread.start()
-+        self.assertTrue(ready.wait(10), "latency proxy did not start")
-+        self.addCleanup(proxy_thread.join, 10)
-+        self.addCleanup(lambda: proxy["loop"].call_soon_threadsafe(proxy["stop_event"].set))
-+        proxy_addr = "127.0.0.1:%d" % proxy["port"]
-+
-+        N = 400
-+        expected = []
-+        for i in range(N):
-+            taskhash = hashlib.sha256(("task%d" % i).encode()).hexdigest()
-+            outhash = hashlib.sha256(("out%d" % i).encode()).hexdigest()
-+            unihash = hashlib.sha256(("uni%d" % i).encode()).hexdigest()
-+            self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
-+            expected.append((self.METHOD, taskhash, unihash))
-+
-+        # Downstream server with an EMPTY local DB whose upstream is the slow proxy.
-+        down_server = self.start_server(upstream=proxy_addr)
-+        down_client = self.start_client(down_server.address)
-+
-+        args = [(m, th) for (m, th, _uh) in expected]
-+        start = time.time()
-+        results = down_client.get_unihash_batch(args)
-+        elapsed = time.time() - start
-+
-+        self.assertEqual(results, [uh for (_m, _th, uh) in expected])
-+
-+        # A serial (one round-trip per task) implementation cannot beat N*RTT.
-+        # Allow a generous margin to avoid flakiness on loaded CI machines.
-+        serial_lower_bound = N * 2 * LATENCY
-+        self.assertLess(elapsed, serial_lower_bound / 4,
-+                        "Upstream queries are not being pipelined "
-+                        "(%.3fs for %d queries at %.0fms injected RTT)"
-+                        % (elapsed, N, 2 * LATENCY * 1000))
-+
-+
+         if not found:
+             # No variable to rename so not worth the work in writing extra
+diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
+index fd690a9e2..5ef159eae 100644
+--- a/lib/bb/tests/data.py
++++ b/lib/bb/tests/data.py
+@@ -406,6 +406,31 @@ class TestOverrides(unittest.TestCase):
+         bb.data.expandKeys(self.d)
+         self.assertEqual(self.d.getVar("VERSION"), "2")
  
- class TestHashEquivalenceWebsocketServer(HashEquivalenceTestSetup, HashEquivalenceCommonTests, unittest.TestCase):
-     def setUp(self):
++    # Test an :append whose override name is only resolved by key expansion
++    def test_append_in_expanded_override(self):
++        self.d.setVar("MACHINE", "qemux86")
++        self.d.setVar("PN", "gizmo")
++        self.d.setVar("OVERRIDES", "gizmo:pn-gizmo-qemux86")
++        self.d.setVar("TEST:${PN}", "base")
++        self.d.setVar("TEST:${PN}:append:pn-gizmo-${MACHINE}", " appended")
++        bb.data.expandKeys(self.d)
++        self.assertEqual(self.d.getVar("TEST"), "base appended")
++
++    # Test renaming to a key which is itself not expanded yet, as native.bbclass
++    # does. The dependent override keys must be left for expandKeys() to rename.
++    def test_rename_to_unexpanded_key_with_override(self):
++        self.d.setVar("BPN", "gizmo")
++        self.d.setVar("PN", "gizmo-native")
++        self.d.setVar("OVERRIDES", "class-target")
++        self.d.setVar("TEST:${PN}-lib", "base")
++        self.d.setVar("TEST:${PN}-lib:class-target", "target")
++        with LogRecord() as logs:
++            self.d.renameVar("TEST:${PN}-lib", "TEST:${BPN}-lib-native")
++            bb.data.expandKeys(self.d)
++            self.assertFalse(logContains("renameVar with equivalent keys", logs))
++            self.assertFalse(logContains("replaces original key", logs))
++        self.assertEqual(self.d.getVar("TEST:gizmo-lib-native"), "target")
++
+     def test_remove_with_override(self):
+         self.d.setVar("TEST:bar", "testvalue2")
+         self.d.setVar("TEST:some_val", "testvalue3 testvalue5")
 -- 
-2.54.0
+2.34.1
 
 
