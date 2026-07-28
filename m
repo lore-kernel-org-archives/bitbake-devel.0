@@ -1,142 +1,95 @@
-Return-Path: <amery@apptly.co>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD1AC531D0
-	for <webhook@archiver.kernel.org>; Mon, 27 Jul 2026 17:29:06 +0000 (UTC)
-Received: from v523.v5ed9ac7d.euw1.send.eu.mailgun.net (v523.v5ed9ac7d.euw1.send.eu.mailgun.net [141.193.32.23])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.36784.1785173338709964665
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAA2C54F4C
+	for <webhook@archiver.kernel.org>; Tue, 28 Jul 2026 07:20:22 +0000 (UTC)
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.6525.1785223218707878997
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 27 Jul 2026 10:28:59 -0700
+ Tue, 28 Jul 2026 00:20:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@e.apptly.co header.s=mta header.b=QeZaNnE7;
- spf=pass (domain: e.apptly.co, ip: 141.193.32.23, mailfrom: bounce+ec7242.b6604b-bitbake-devel=lists.openembedded.org@e.apptly.co)
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=e.apptly.co; q=dns/txt; s=mta; t=1785173336; x=1785180536;
- h=Content-Transfer-Encoding: MIME-Version: Message-ID: Date: Subject: Subject: Cc: To: To: From: From: Sender: Sender;
- bh=AwTLqwsPFz6fO9sDYlCx1hERwmpluBJ2KIxUsWuFEZc=;
- b=QeZaNnE7tNwMtXwgOs+RAk5V7YaV+2hXhjLJkUBOH0V+bF6MrLEtuupJz6MXC2ULdhX0GzKdeBb8P8cB+LJYaQSMQmJX+6kjG9IXnslob6BhbjGz7RpjqqpRNigQeigvrcP8JWU7tqX0sdsVhbbaDIU7hxFQ0IvX6EMxZfSYs9A=
-X-Mailgun-Sid: WyI5YTJmMyIsImJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZyIsImI2NjA0YiJd
-Received: from localhost (unknown [51.179.224.164]) by
- fe660923a79b87cf0cad4ce5af71efb1327ed2fd002ac585f8bb2d664fb51f5a with SMTP id
- 6a679558599bd22e9500bfb0 (version=TLS1.3, cipher=TLS_AES_128_GCM_SHA256);
- Mon, 27 Jul 2026 17:28:56 GMT
-X-Mailgun-Sending-Ip: 141.193.32.23
-Sender: amery=apptly.co@e.apptly.co
-From: Alejandro Mery <amery@apptly.co>
-To: bitbake-devel@lists.openembedded.org
-Cc: Alejandro Mery <amery@apptly.co>
-Subject: [PATCH v2] bitbake-worker: Evaluate exported_vars() before emptying the environment
-Date: Mon, 27 Jul 2026 17:28:56 +0000
-Message-ID: <20260727172856.2304118-1-amery@apptly.co>
-X-Mailer: git-send-email 2.47.3
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=QZPv4fAe;
+ spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 80B504E40FBA
+	for <bitbake-devel@lists.openembedded.org>; Tue, 28 Jul 2026 07:20:16 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 559E1601BF;
+	Tue, 28 Jul 2026 07:20:16 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4944911C13DB6;
+	Tue, 28 Jul 2026 09:20:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1785223211; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=5JxV6ZxjZaQ41faIUi/Hd+fQb0Fs/uDDGPnuC36NOc4=;
+	b=QZPv4fAeQ9n+tg/77uH5PKG0d+eyesqHPdx9ilXVTJt1k1BjE3e5QJan2+JrS82NwD78Kd
+	Flrs3k0WUJAy3GrkQOmz++kDwmEIh3aYHrgSAr9wriNuXKA0XM21CM3jQT5Y69mgNi91IM
+	rcVXJN9CYXvO5uaDRQYi61tUW1mJsyOaCzSEujLA1Gw7F/Q3wm0/Ksm0bTs+BLLeB1QHZx
+	SayoWOdjEkj21f6MAsWr5DLFNrgzYGb+0kRxbScc1jWWyYJpdgiyJKIObliLn8qoUTzUYI
+	PbJHbAmaCxuuTmuEY4wSjkqp3Bu1cCT4nIs6k/qTFnQjkdzWL9SOWzAAkcQS8g==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Date: Tue, 28 Jul 2026 09:19:46 +0200
+Subject: [PATCH] doc: bitbake-user-manual-metadata.rst: fix append example
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260728-fix-append-example-v1-1-b590f9e91d38@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMwQ6CMBCE4Vche3aT0kMRX8V4WMogS7A2LRoSw
+ rtT8fglM/9GGUmR6VZtlPDVrO9QUF8q8qOEJ1j7YrLGOtPYKw+6ssSI0DNWecUZLLVxtnWNDJ2
+ ncowJZXVG74+/86eb4Jdfifb9AMXjwEF2AAAA
+X-Change-ID: 20260728-fix-append-example-a1062967afbc
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=972;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=NBog2HwDnVfiTYt7yPVawFPG0UmqR60bFFSjsz6fM+0=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBqaFgq9HUSYcbjmV8CrVLnm20OuyGZJcwyxyJ34
+ Mm0ID3HwgaJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCamhYKgAKCRDRgEFAKaOo
+ NnRdEAC2rYoA1piPdXp0IC/luUCKZ4hBWF7a9vxOfBrhb1TVpTKq+St3vm8Xhv0ghk0S9Wcgpwx
+ Vhce5IMB+TWf750fF7bEYcfhNnekEAjOSqMNck3RQyu8nEwdBkcFRoHSc82mTHhCapy41ixmc61
+ kzKahZdIFMYPkElgB4RQ9fMR9aSckrFFjExk2sohM7oILGdbAbpCuuZ1Pb1te+5PRoDoVENDGOF
+ cOVXOjhD2/RS9z6T3KXpKpee9Z5D3faV8ZoP12EeByR1pF+gg3+MmrNODzZRovNDQ0WX2ihVADw
+ JrqGqvECSQSh2WjzEG5rzudtOnj2CKznKgs1XzbkID1A+KSdcROe0pEdD1tmOzWI4xJNsyjg1ND
+ a/lviv4MvrJJkzbyYAZ5j9aHvTQic1MYJfUPdDQt6+/oufSfjI/x2T7p3aXGqdUveER8790PV+m
+ ZxnPcW9rdskozSW4T0WszjdY0kgHPTJhfskoJW7ZoiUPLOs4k8Y+NuIcjEip1rQK/1Jdn06TFfy
+ c5RiJc912z0LXitkl5i+Rt7/B1gpMSjP6S7Wn/OLV6eg1GE3psF7JJIlOeRrE2S9PoVVh91b8GU
+ achXoiyKpabitybOiBJtxcxoW6bhnxjfDYIDHKYm1sF3pxGX885QL1PWW+3FJDWxoLrxdUrDqsJ
+ vdluXv+xL9g+zFw==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 27 Jul 2026 17:29:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19865
+ <bitbake-devel@lists.openembedded.org>; Tue, 28 Jul 2026 07:20:22 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19866
 
-exported_vars() returns a lazy generator. It was bound before
-empty_environment() cleared the process environment and only iterated
-afterwards, so any datastore expansion deferred until iteration ran
-against the wiped environment rather than the one bitbake started with.
+Add the missing whitespace in the combined override example, so it
+matches the evaluation we give afterwards.
 
-The corruption is not uniform. The loop writes each variable into
-os.environ as it goes, so only the first value expands against a fully
-empty environment and the rest see it partially rebuilt, in
-exported_keys() order.
-
-Recipes whose exported variables expand a command during that loop hit
-this. A gitver-style PV such as "${@get_git_pv(d, ...)}" runs git while
-PATH is empty, so the git wrapper on PATH is bypassed and the real git
-runs directly. Under pseudo this fakes uid 0 against a repository owned
-by the real user, and git aborts with "detected dubious ownership",
-failing do_package intermittently (only on reparse, when the value is
-re-expanded rather than served from cache).
-
-Materialise the generator into a list before emptying the environment so
-every expansion happens while that environment is still intact. Add
-tests for the expansion timing this relies on: values materialised
-before empty_environment() survive it, a generator consumed after it
-does not.
-
-- v2: comment the ordering at the call site, and add the tests.
-- v1: the list() wrap alone.
-
-Signed-off-by: Alejandro Mery <amery@apptly.co>
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
 ---
- bin/bitbake-worker   |  5 ++++-
- lib/bb/tests/data.py | 42 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 46 insertions(+), 1 deletion(-)
+ doc/bitbake-user-manual/bitbake-user-manual-metadata.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-index 4ad716975..b8dc9c862 100755
---- a/bin/bitbake-worker
-+++ b/bin/bitbake-worker
-@@ -296,7 +296,10 @@ def fork_off_task(cfg, data, databuilder, workerdata, extraconfigdata, runtask):
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+index 0c7c3ff99b2..de62fc3b219 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+@@ -608,7 +608,7 @@ variable.
  
-                 # exported_vars() returns a generator which *cannot* be passed to os.environ.update() 
-                 # successfully. We also need to unset anything from the environment which shouldn't be there 
--                exports = bb.data.exported_vars(the_data)
-+                # Iterating it expands each value, so materialise the generator before
-+                # empty_environment() below: an expansion deferred past that point runs
-+                # against the wiped environment, not the one bitbake started with.
-+                exports = list(bb.data.exported_vars(the_data))
+       DEPENDS = "glibc ncurses"
+       OVERRIDES = "machine:local"
+-      DEPENDS:append:machine = "libmad"
++      DEPENDS:append:machine = " libmad"
  
-                 bb.utils.empty_environment()
-                 for e, v in exports:
-diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
-index fd690a9e2..06c88ffc6 100644
---- a/lib/bb/tests/data.py
-+++ b/lib/bb/tests/data.py
-@@ -723,3 +723,45 @@ class EmitVar(unittest.TestCase):
-         self.assertEqual(self.get_output(out), ['bad_chars="a\\"b \\',
-                                                 'c\\`d \\',
-                                                 'e\\$f"'])
-+
-+class ExportedVars(unittest.TestCase):
-+    """bb.data.exported_vars() expands each value as it is iterated.
-+
-+    bitbake-worker's fork_off_task() therefore materialises the generator
-+    with list() before it calls bb.utils.empty_environment(): an exported
-+    variable whose value expands from the environment (e.g. a gitver-style
-+    PV that runs git and needs the real PATH) has to be expanded while that
-+    environment still exists. bitbake-worker runs on import (only its
-+    version check sits behind a __main__ guard), so these tests reproduce
-+    its sequence against bb.data and pin the behaviour the worker relies
-+    on, not the worker itself.
-+    """
-+
-+    def setUp(self):
-+        self.saved_environment = dict(os.environ)
-+        os.environ["BB_TEST_EXPORTED_VARS"] = "intact"
-+
-+        self.d = bb.data.init()
-+        self.d.setVar("TESTEXPORT",
-+                      "${@os.environ.get('BB_TEST_EXPORTED_VARS', 'wiped')}")
-+        self.d.setVarFlag("TESTEXPORT", "export", "1")
-+
-+    def tearDown(self):
-+        # empty_environment() wipes the environment of this process, not a
-+        # copy of it, so put it back whatever the test did.
-+        os.environ.clear()
-+        os.environ.update(self.saved_environment)
-+
-+    def test_materialised_before_empty_environment(self):
-+        # What bitbake-worker does: list() expands every value while the
-+        # environment is still intact, so the wipe cannot reach them.
-+        exports = list(bb.data.exported_vars(self.d))
-+        bb.utils.empty_environment()
-+        self.assertEqual(dict(exports)["TESTEXPORT"], "intact")
-+
-+    def test_lazy_generator_expands_after_empty_environment(self):
-+        # Why the list() is required: a generator bound before the wipe but
-+        # consumed after it expands against the wiped environment instead.
-+        exports = bb.data.exported_vars(self.d)
-+        bb.utils.empty_environment()
-+        self.assertEqual(dict(exports)["TESTEXPORT"], "wiped")
--- 
-2.47.3
+    In this example, :term:`DEPENDS` becomes "glibc ncurses libmad".
+ 
+
+---
+base-commit: ee6143138f1cd810669c4057df2b24efe6f46f1a
+change-id: 20260728-fix-append-example-a1062967afbc
 
 
