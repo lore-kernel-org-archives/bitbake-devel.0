@@ -1,120 +1,112 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FA0C54F5C
-	for <webhook@archiver.kernel.org>; Wed, 29 Jul 2026 07:57:57 +0000 (UTC)
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.6437.1785311868975892284
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A5AC54F51
+	for <webhook@archiver.kernel.org>; Wed, 29 Jul 2026 08:01:36 +0000 (UTC)
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.6391.1785312092622811377
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 29 Jul 2026 00:57:49 -0700
+ Wed, 29 Jul 2026 01:01:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=hpKqS5FF;
- spf=pass (domain: smile.fr, ip: 209.85.128.46, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-49550ec592cso11314575e9.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 29 Jul 2026 00:57:48 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=hYIWLoP1;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.218.50, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-c15e03c2763so123858566b.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 29 Jul 2026 01:01:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1785311867; x=1785916667; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=FHn3QuK8lFeOJ+WqtlC9F0ia2MuWgClUScatM174WSE=;
-        b=hpKqS5FFvK3HA8b9GlqnGaT4HmNAsxztXdgLcAYxdeeh7NC5638G95vKJyy5DMAQIP
-         swWswTJTUfcMOiOO8UjO8md/CAKgANVqSUAWRi2cFGYH//KVgLRH22P8Anc2R6OqRsc+
-         yaHXzYVrV2fvd+khIuFBYEMCCnWnatX7wmQ6k=
+        d=linuxfoundation.org; s=google; t=1785312091; x=1785916891; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=fgjpeU6EyIfm332KAlua6wAllck+T+S8E1E2Jf26sig=;
+        b=hYIWLoP1V2K67diSXsDCqyGztYYHXct8B+vpSDZ5VqyEpJN4qlDYmeux93PkdShwCq
+         BRYgxyGNDo20nOnKT0dFEIy+aKeakKT6e8wLG00uZY4LHWvFANQayd5LLFOr3FlDij6Q
+         kUJdFWvTxjIR37cDCI0ZC4Bky+4bIGdzcSNeE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785311867; x=1785916667;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=FHn3QuK8lFeOJ+WqtlC9F0ia2MuWgClUScatM174WSE=;
-        b=cCOUGVrWEDWL7ILqYuCe7/mQwe79IKWkZxA4+EZl8/ynw8VskCOOLigiOxixJjJ+XN
-         DglSmH8/z6M4+IYQQcd+XXcgN6zUbhB16A2PdsNE0MFfLIqY/LhYEz889+portS9JztB
-         iwR2d4NapArsM175OFO1KbgL+NpYq3CLKoesFV6q66w0j4gw6B7i+2kW96fPzM+hs+Yt
-         6yEK1KHo979yB/GxNzLIChyuEQ8qLWwio2ZK1ciZ6oziMNv4/fJg9+0Q/dfU4WAzazuy
-         Xb5ES7v79+5MzHugojZhMV4znJVODDcAc5BbL2l8SLv356G+8RVMiK+EAoyg2b77Ax2i
-         BVkA==
-X-Gm-Message-State: AOJu0YwgEkA2ukAtagtIfAN99cQEbl6TBr2WpEnbi6Bs7LlXc+SJBM45
-	mbUdZq905c9OxOhHq/TDZWGhCv7FiiyUAP64/ss9JLGTq26ER+efsJU4V5x51hPfIezskbFE020
-	smHZ/MW8=
-X-Gm-Gg: AR+sD11SanzRj26EzdmFnU8sCJoT2mIBYIz8KveJ3GjhxVT8/AILSvh+7v5s6oc6CbA
-	MREE6VWbdRibh3KSj67R4f/Kp2IlFvBS15lCJ9sO/R6gIswNtFpB3iNMdNueKVyo9iLzAWVhzmV
-	uiZLRla68JW4Vuh62aKPtfzaWVJphs0tYnP3wrpOpXLJ2be+V64OL3F9alckokSXdXaETWs+QR1
-	twPxTxuLssMllgAAih6/rHxryMvsSTrPjSTl44O1rX8kt9nhsurhims6EDyW+z7/sP0VFtXj4Ui
-	lHdSaVZ/j1tyvnXj6aYk9llmRisa0QT7G4MtlgPBDxnq23w68yoX31cQV66Uc6okwHuJtcgDeD3
-	/j8xhoYAhcr8AJeZVdGJZJ/f82q3CkIDoJ+QP6XMXB4oKOcsw4xs8D+j21HHPFqxGojq5Z5/M1A
-	PN50epLUaRx598jIQ/Whb2qTOSuMTTm3PFA4JvRFvHFSZkSOoQOvsUwbeCu6TVCdbq8gzUDlKb6
-	kGzhnVO+4MjMTTgH0iQvEY6puu0Kb6PGGTRF6QDNMbB7sND7+zjdWTtgZJrzBNK
-X-Received: by 2002:a05:600c:4746:b0:495:3c6f:7c18 with SMTP id 5b1f17b1804b1-497fd2f50bbmr11998585e9.3.1785311867250;
-        Wed, 29 Jul 2026 00:57:47 -0700 (PDT)
-Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49764d77970sm39189595e9.5.2026.07.29.00.57.46
+        d=1e100.net; s=20251104; t=1785312091; x=1785916891;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=fgjpeU6EyIfm332KAlua6wAllck+T+S8E1E2Jf26sig=;
+        b=crjLJEYtnpz0qgIvTuhg9Ao4GniwPb0QvJkF6lDIm+rBr/X8gsuMCwHWO23lHAWw9U
+         mBZQIYWZDw+lv1bAxx6+RniCHkdaY/QIhuJQLu2t0TPQS+hvXhp2IgYKKHTTDV94mnuu
+         8HXjYDR9Ya8nSHbw4+jZj5MgHVZmkKCNa+h+Rl0oylSa7ywDjLlJpPkCUEc6KumveBmY
+         3Gr5Hzs68nKSeRZbzmDyfvPXYIdYYbetQM6JRjqKlg8k+pO/dqg8/V9K338vhN1iDrl5
+         a/wLFfOQHOlke1RQ6IzKMh9g8EjpRikEzVOTgNDhIpGrBDy7xBUX2QCL4nWqNGY1dAhp
+         ZdBw==
+X-Forwarded-Encrypted: i=1; AHgh+RolJAexTtmMhs1jTSCzraAPfR/z50INcLCg6n4decD3wQN4I4bfICwMo93W5IrELwv4MDAUwZFkbe+sL2bG@lists.openembedded.org
+X-Gm-Message-State: AOJu0YxD8wRgy84cPpgMKzgpxfD1rHtxIAEi0BtTpD2R7ACZ0/k0q5Jz
+	y0/iuUdP9rDEelbqBohQplo9zurrLlCTgyM/kZh4mCzvKZiHLoDoe2Z0RSkcTDTLRgKjRdpucLw
+	B297G0BA=
+X-Gm-Gg: AR+sD12zjLi/5/ayG46aa3nTB360uwdYpRFtFOibJ4hiTXKNioLcsvmxIkn414SOG+q
+	n5QsCa7gGwwRdFIs+NrgoYh13V6ex6qFQTMUzA4Xbo9E8bTBC/0H7p7egkEuFeTvx6+8I7cfwOr
+	N0G2jXj5TeiH4YK7i6I0h0lhqfgxkS5ExsMPPFe5K93gd7erreIke+sNjRinV2Tyc7Xluw1DaJt
+	GueXhUhjfpQOLh2pAQ7vNvyMNA485b3ZhmHKQhMPDfmP9NOYHdkb9wwbtsiC8imVYmgyr5JYEQX
+	hyuOR7hpijISjfx/2igFDIOl2wvVi0erl3hu02yxGcEuh5QcQZHNsoCMJme+l/iTZlCFBniI7zC
+	/uWW/017BCQcDg08JAVwrhkL+brJ48DOmJRoogssVqTQkV7SxbjCboJ5g7gVXSbS7KZg96uToOh
+	0D58y3rsBRFFcfgwUCIr/ZoV5jxjr+ncbAgTtg7BSo+Fzplhs++fS+JyLefEuCmRa+0YQPjd5e4
+	BBVuXAyRjn8aiK8Mk5u7uVTP9hh4S8l6sSetHCWuAfvmVkKyF2zyw==
+X-Received: by 2002:a17:907:3f04:b0:c12:8ede:77 with SMTP id a640c23a62f3a-c1f8cc9661bmr66629066b.22.1785312090474;
+        Wed, 29 Jul 2026 01:01:30 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:3647:86f2:68ea:efc7? ([2001:8b0:aba:5f3c:3647:86f2:68ea:efc7])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c1f83f50a4dsm76046266b.32.2026.07.29.01.01.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2026 00:57:46 -0700 (PDT)
-From: Yoann Congal <yoann.congal@smile.fr>
-To: bitbake-devel@lists.openembedded.org
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [bitbake][scarthgap][2.8][PATCH 2/2] utils: Add NFS EEXISTS/isdir failure workaround
-Date: Wed, 29 Jul 2026 09:57:22 +0200
-Message-ID: <cff3be6f664f8f07a40727ff63eeeb24d6f5e00b.1785311679.git.yoann.congal@smile.fr>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1785311679.git.yoann.congal@smile.fr>
-References: <cover.1785311679.git.yoann.congal@smile.fr>
+        Wed, 29 Jul 2026 01:01:29 -0700 (PDT)
+Message-ID: <f72749cd66f1f9783ceea7586da2320d06c5b3d4.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH v2] bitbake-worker: Evaluate
+ exported_vars() before emptying the environment
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alejandro Mery <amery@apptly.co>, bitbake-devel@lists.openembedded.org
+Date: Wed, 29 Jul 2026 09:01:28 +0100
+In-Reply-To: <45e074c4-c23e-4416-9f18-e9198de17c7b@apptly.co>
+References: <20260727172856.2304118-1-amery@apptly.co>
+	 <8b324e07c0501a6e613fe197aa6e462422360d93.camel@linuxfoundation.org>
+	 <45e074c4-c23e-4416-9f18-e9198de17c7b@apptly.co>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-9 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 29 Jul 2026 07:57:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19871
+ <bitbake-devel@lists.openembedded.org>; Wed, 29 Jul 2026 08:01:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19872
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+On Wed, 2026-07-29 at 01:28 +0100, Alejandro Mery wrote:
+> On 28/07/2026 22:15, Richard Purdie wrote:
+> > On Mon, 2026-07-27 at 17:28 +0000, Alejandro Mery via lists.openembedde=
+d.org wrote:
+> >=20
+> > I did a bit more research and thinking about this and I think I
+> > might
+> > suggest a new approach. I've noticed that this is the only user of
+> > exported_vars() in the codebase, so perhaps we just stop returning
+> > a
+> > generator?
+> >=20
+> > It does appear to be causing a lot more problems than it solves,
+> > particularly if we just turn it into a list anyway!
+> >=20
+> > If we change things that way, it seems much more unlikely we can
+> > break
+> > it in future and the need for the comments is removed.
+> >=20
+> > Does that seem reasonable? Sorry about the change in direction but
+> > this
+> > patch just doesn't look/feel right now I realise there is only one
+> > user
+> > of the function.
+>=20
+> absolutely. I blindly assumed you wanted it to be a generator.
+>=20
+> so, for v3 exported_vars() returns a materialised list. what would
+> you want the tests t do?
 
-We're seeing cases where we see tracebacks when creating directories in
-SSTATE_DIR on an NFS server. The issue is that we see EEXISTS being returned
-but isdir() is False, likely when multiple clients try and create the same
-directory at the same time.
+We probably don't need the test case now the problem we were trying to
+protect against isn't there.
 
-This is likely a relatively well known issue with NFS's attribute cache.
-There is also a way to clear the attribute cache, which is to call
-opendir() on the parent directory. That is what this workaround does. In
-the rare case we're about to fail, try that using os.listdir() and
-see if it helps. Testing showed that it would "fix" several cases
-where we'd have had failures otherwise.
+Thanks,
 
-[YOCTO #16351]
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 3a99c26fa581d70ed67bd08a5e0e0d0b18369a7c)
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
----
- lib/bb/utils.py | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 1b4fb93a3..976fe73bc 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -763,8 +763,20 @@ def mkdirhier(directory):
-     try:
-         os.makedirs(directory)
-     except OSError as e:
--        if e.errno != errno.EEXIST or not os.path.isdir(directory):
-+        if e.errno != errno.EEXIST:
-             raise e
-+        if os.path.isdir(directory):
-+            return
-+        # We can end up here if there is a race between two mkdirs on an NFS mount,
-+        # which happens more often with sstate that you'd think. The server returns
-+        # EEXIST but the local attribute cache is out of date. It can be refreshed with
-+        # an opendir call, so try that (via listdir) and check the directory again
-+        # before we really fail.
-+        os.listdir(os.path.dirname(directory))
-+        if os.path.isdir(directory):
-+            return
-+        bb.warn("mkdir: %s is not a directory?")
-+        raise e
- 
- def movefile(src, dest, newmtime = None, sstat = None):
-     """Moves a file from src to dest, preserving all permissions and
+Richard
 
