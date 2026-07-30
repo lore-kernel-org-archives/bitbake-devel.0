@@ -2,64 +2,63 @@ Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00DAC55176
-	for <webhook@archiver.kernel.org>; Thu, 30 Jul 2026 18:33:06 +0000 (UTC)
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.18823.1785436385113950930
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0968CC55179
+	for <webhook@archiver.kernel.org>; Thu, 30 Jul 2026 18:33:07 +0000 (UTC)
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.18453.1785436377875696463
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 30 Jul 2026 11:33:05 -0700
+ Thu, 30 Jul 2026 11:32:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=GBrmDLJN;
- spf=pass (domain: gmail.com, ip: 209.85.167.169, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-4864ebb6268so95057b6e.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 30 Jul 2026 11:33:05 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=V0ar03f8;
+ spf=pass (domain: gmail.com, ip: 209.85.167.177, mailfrom: jpewhacker@gmail.com)
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-4a456e44e01so109744b6e.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 30 Jul 2026 11:32:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785436384; x=1786041184; darn=lists.openembedded.org;
+        d=gmail.com; s=20251104; t=1785436377; x=1786041177; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=BZcxZ3UaMHTn38iuVdLYUP8pryE3wcTDVvswqZpNd+k=;
-        b=GBrmDLJNhxstrvmnq+4Dg+jtczLo3jtpXZ4Mpk7Jvj+aDXYwSHw/06u0LfkpakSd7R
-         QbMZuG0vnCfOfwipzZ6fpa5YSinDSku4Rj6del/DtE5GIY9l5Pxm9AerwCMAfZCStWWd
-         9jVyY3nPea2eE95vhAKEAe6euRXI35ZQABymfjEhTI459KEde+AwhgZQFUKawKhaSjYH
-         CQUSM2hGQs/B69LpFULmVgKsjnV7O3KU4+uOUPyXSNeDXhdMQ0InCdzc4oGCvBl0gChG
-         1XyfvujChKPGaBJJkfwiJgPU6hE4zskkiSvcTelyQgSCDxelV6FOOHfX3xi4mlPWbRP3
-         tIgA==
+        bh=dIIcAB25BFKFt5slf26rijE6SlRoyuK/mAAVE1tb+Wk=;
+        b=V0ar03f8HmMNeJMChXEmrO2ozy02iPptm8sv4v70ykH+WaeozAl6gzio4oYdQ1DfDn
+         O4k+WhPoGLZwpWa/zc4TQQQXvVNZFNBPRcUNNQV1IzVDzmoY9PcheoKLiMNxhXbu0qEB
+         Tkb2uopAwesuzauOVLsCMSIlZLouFwhokBep+5Ra42e1oZN2Rou2CLUghjIm8EZmD4Ki
+         d3+0Gak6DWxkybUlnU65f/8fxPSEL8dM+MOM8aAS2wW68uAGF60LNVr60Z0Mg2NFQEQI
+         uaDBlgJ+ASwLhmL0nBhy9AA4XTwLzj1oNpKJSNlGkm5sXm5aUq3aW0rYikwTNem+yQQs
+         25yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785436384; x=1786041184;
+        d=1e100.net; s=20251104; t=1785436377; x=1786041177;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=BZcxZ3UaMHTn38iuVdLYUP8pryE3wcTDVvswqZpNd+k=;
-        b=pV13DGI7m0jMNdsjHcdC54Vh4+iJVy2wUZpgW1FvUz7eSBzBeNiOn7egzjEz64pYxi
-         2NjEp37fvoczWkT5owOtgYWiBv/hT/gfM2NyRSJEYOv5cjb9n1Lmc/VH/tBRhjb4ITER
-         B/2/o3ihrdTUK9w6tkL1A3DzMpUD6U+JLx7md0c1xFaZhv+n4q0/u5ozdp+iPSVPuJlF
-         voBKeregCBCwGq+ZjO6cbGffhr347JRYzbwF/k423HvatkhcAQVYK7/+AURyrTNeFqIa
-         K8ISnWt2Hksp9M+/NK6s8x5dtb8/eh6ANxwP8W/wB9Z/cAUl/FAUHbEPpLn61x5y6+xH
-         18sw==
-X-Gm-Message-State: AOJu0Yxt/PyLdKG29xofEfSxOFji+RZ1FmYaT1B5oGzajMPYKBH4OI9L
-	ZlH1yDRL541YXfcAipEPQjs5hDn3MvVkFp0qgFusW8CSs8H90ZRvPEOmkFZ1IA==
-X-Gm-Gg: AR+sD13dnSjWSDeEzwtC9lVsi9y9cA4YePKYMKaHL/5k3fVJBX2wYfxGOzdem/O4Unl
-	puJGrIXz09Hi88eJhFZuXscl/qXl/A0WpKgKmjhSFjun7oMcexviKl1vkH0TDdUVgWT3Qn+5MpF
-	kGFHJmGi8df4Ze7XtNU3o1nB63tv9YN/P1y7EJ4l5cNeAcUvLQV8hvxe5n64M8G3K0rRB0tNZAr
-	dJsdJdDteencZ9it1YICvix+A7usBT/FydFgsSm50s/lyCi0hcyp5RvTaOSVBGVi3QVZ/QMSMkr
-	NxcWj/hFxYsRgba4wceGks8qmbdkYh10ZLFe0dfTdh/9/iFJ2PNxKK8HAL1ftLTc8Yk9ohA9+e3
-	TL5m1m6zPgjYIt0bFOtcqlc2CweeYmu7h10/4Uv02BFtBwpKpBtxhoEH7zOcjgOMEqycTBvgMbN
-	nwt26YFea2+Aa8iWlX+rpTw5baoY8osCvNKTnMrvCMU0X3SLy3I9TgZa9vNQ==
-X-Received: by 2002:a05:6808:30a3:b0:4a3:cea7:4ab4 with SMTP id 5614622812f47-4ad877fc162mr3161720b6e.14.1785436384204;
-        Thu, 30 Jul 2026 11:33:04 -0700 (PDT)
+        bh=dIIcAB25BFKFt5slf26rijE6SlRoyuK/mAAVE1tb+Wk=;
+        b=cqFLSd41R/FGwztmSoUmjfVa60Loo6UIx0K73K6CxyGdEdkLqlmklYVOVccRx2JPwY
+         3JwsQlJWEp1o4mQuXdjaJkt+QOM9yhNeO9PKS8rQEA65GTJzYkDOe46yC5Ig94ZRRHC+
+         goItt0+kCgnCu3SBW0aelyfenbHFjmJF2863W81q/y54+e6lImkkcrPIda6Isq49Zuvg
+         w4GPNCfldmrgkkAoLvi2RCmduQ6tR89QqQuaJv8nYoNbwTOAgx/3FEJ63di3A6Mq/oZd
+         iju4OP/kHnOarRPS1Cc+W4ptYpg9tmEL16y5wgaRigUng60cArw1dOeD4nHk3mqdo1II
+         Ihdg==
+X-Gm-Message-State: AOJu0Yw7Arf8GFbCEJXdKU1TqBXcHtOujBlSVmzPQDoOCz+ytkdbd6tV
+	0FW0WxnSRvYT0vw5EX4n08iB7suHVtExCwaVuZmehNR7PF+xJl07dR8Gfpg85w==
+X-Gm-Gg: AR+sD13QMO+ONL8yUYpCBT5fUN6H5DCBAWd8h6FIotBx4jLi67AAkYhlc19yKvIr30x
+	CLuMTISZ5lidHHySWONI4hjPYNsapnquUpt2A4HJfWEpawDIBp+7u8EM8SaRY9bJniKDaEPrqQu
+	AGRTmXXEUwz3sfTFEEvIrllhxXrkI0D0xTEs18wJ5pknnEv6JL97mFSf46yIBi7QwUaefzkveoM
+	urkkI5f+hvI2bZxQbb8hZ/c/iPqt3CRwyKqCqakUfBdiv3BfJ1crBh4vDVkgY9dCZKoQAPKmLF+
+	sq8Qc3KkGPE1vYuwxk80r8Ht3qnqHeKH5OzUMf6J+iSLNsk9afx32S3TvEMlKyXu/CEWlPi62JB
+	hnN9IyEJFnaIW/0HrSek90W5n4IbsDv2QgDLZETGpb/x4B6Xhsw+loj4GixMiOCzQTInGgkliBp
+	9IGDumWsrDpAP8dL+KA+03RyIKHvEedm4tOD3HKrVYm8ZLaflJK6sdVpCZiQ==
+X-Received: by 2002:a05:6808:1687:b0:4a4:ed9a:e790 with SMTP id 5614622812f47-4ad9533b9b2mr1399100b6e.29.1785436376875;
+        Thu, 30 Jul 2026 11:32:56 -0700 (PDT)
 Received: from localhost.localdomain ([2601:283:4b02:22d0::10c9])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4ad6efc5c3fsm4593047b6e.13.2026.07.30.11.33.03
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4ad6efc5c3fsm4593047b6e.13.2026.07.30.11.32.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2026 11:33:03 -0700 (PDT)
+        Thu, 30 Jul 2026 11:32:56 -0700 (PDT)
 From: Joshua Watt <jpewhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>,
-	Michal Sieron <michal.sieron@nokia.com>
-Subject: [bitbake-devel][PATCH v2 10/10] hashserv: tests: Add test for upstream pipelining
-Date: Thu, 30 Jul 2026 12:31:03 -0600
-Message-ID: <20260730183254.793698-11-JPEWhacker@gmail.com>
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH v2 01/10] asyncrpc: Add Task Group
+Date: Thu, 30 Jul 2026 12:30:54 -0600
+Message-ID: <20260730183254.793698-2-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260730183254.793698-1-JPEWhacker@gmail.com>
 References: <20260724212822.1165552-1-JPEWhacker@gmail.com>
@@ -69,126 +68,86 @@ Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 30 Jul 2026 18:33:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19890
+ <bitbake-devel@lists.openembedded.org>; Thu, 30 Jul 2026 18:33:07 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19881
 
-Adds a test that verifies that pipelining to an upstream server works as
-expected.
+Adds a Task Group object which can be used to manage multiple
+asynchronous tasks and correctly cancel them if an exception is raised
 
-AI-Generated: Uses Cursor, Claude Sonnet 5
-Co-authored-by: Michal Sieron <michal.sieron@nokia.com>
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/hashserv/tests.py | 96 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 96 insertions(+)
+ lib/bb/asyncrpc/__init__.py  |  1 +
+ lib/bb/asyncrpc/taskgroup.py | 52 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 53 insertions(+)
+ create mode 100644 lib/bb/asyncrpc/taskgroup.py
 
-diff --git a/lib/hashserv/tests.py b/lib/hashserv/tests.py
-index bb227c161..6201ce3bd 100644
---- a/lib/hashserv/tests.py
-+++ b/lib/hashserv/tests.py
-@@ -1693,6 +1693,102 @@ class TestHashEquivalenceTCPServer(HashEquivalenceTestSetup, HashEquivalenceComm
-         # case it is more reliable to resolve the IP address explicitly.
-         return socket.gethostbyname("localhost") + ":0"
- 
-+    def test_get_stream_upstream_pipelined(self):
-+        # Verify that, with an upstream configured, the get-stream handler
-+        # pipelines its upstream queries instead of doing one blocking
-+        # round-trip per task. A latency proxy injects RTT between this server
-+        # and its upstream; a serial (one round-trip per task) implementation
-+        # could not beat N * RTT, so finishing far faster proves the queries
-+        # are pipelined.
-+        import asyncio
+diff --git a/lib/bb/asyncrpc/__init__.py b/lib/bb/asyncrpc/__init__.py
+index a4371643d..2f0956dfa 100644
+--- a/lib/bb/asyncrpc/__init__.py
++++ b/lib/bb/asyncrpc/__init__.py
+@@ -14,3 +14,4 @@ from .exceptions import (
+     ConnectionClosedError,
+     InvokeError,
+ )
++from .taskgroup import TaskGroup
+diff --git a/lib/bb/asyncrpc/taskgroup.py b/lib/bb/asyncrpc/taskgroup.py
+new file mode 100644
+index 000000000..b61f40385
+--- /dev/null
++++ b/lib/bb/asyncrpc/taskgroup.py
+@@ -0,0 +1,52 @@
++#
++# Copyright BitBake Contributors
++#
++# SPDX-License-Identifier: GPL-2.0-only
++#
++import asyncio
++import logging
 +
-+        LATENCY = 0.01  # 10ms each direction => ~20ms round trip
-+        upstream_host, upstream_port = self.server_address.rsplit(":", 1)
-+        upstream_port = int(upstream_port)
++logger = logging.getLogger("asyncio.TaskGroup")
 +
-+        ready = threading.Event()
-+        proxy = {}
 +
-+        def run_proxy():
-+            loop = asyncio.new_event_loop()
-+            asyncio.set_event_loop(loop)
++class TaskGroup(object):
++    def __init__(self):
++        self._tasks = []
 +
-+            async def handle(creader, cwriter):
-+                ureader, uwriter = await asyncio.open_connection(upstream_host, upstream_port)
++    def create_task(self, coro, **kwargs):
++        self._tasks.append(asyncio.create_task(coro, **kwargs))
 +
-+                async def pipe(r, w):
-+                    try:
-+                        while True:
-+                            data = await r.read(65536)
-+                            if not data:
-+                                break
-+                            await asyncio.sleep(LATENCY)
-+                            w.write(data)
-+                            await w.drain()
-+                    except Exception:
-+                        pass
-+                    finally:
++    async def __aenter__(self):
++        return self
++
++    async def __aexit__(self, exc_type, exc, tb):
++        try:
++            if exc is None:
++                while self._tasks:
++                    done, pending = await asyncio.wait(
++                        self._tasks, return_when=asyncio.FIRST_COMPLETED
++                    )
++                    self._tasks = pending
++
++                    for t in done:
 +                        try:
-+                            w.close()
-+                        except Exception:
++                            await t
++                        except asyncio.CancelledError:
 +                            pass
 +
-+                await bb.asyncrpc.TaskGroup.run(pipe(creader, uwriter), pipe(ureader, cwriter))
++        finally:
++            for t in self._tasks:
++                t.cancel()
++                try:
++                    await t
++                except:
++                    # Ignore exceptions
++                    pass
 +
-+            stop_event = asyncio.Event()
-+            proxy["stop_event"] = stop_event
-+            proxy["loop"] = loop
++        return False
 +
-+            async def main():
-+                server = await asyncio.start_server(handle, "127.0.0.1", 0)
-+                proxy["port"] = server.sockets[0].getsockname()[1]
-+                ready.set()
-+                async with server:
-+                    await stop_event.wait()
-+
-+            try:
-+                loop.run_until_complete(main())
-+            except Exception:
-+                pass
-+            finally:
-+                loop.close()
-+
-+        proxy_thread = threading.Thread(target=run_proxy, daemon=True)
-+        proxy_thread.start()
-+        self.assertTrue(ready.wait(10), "latency proxy did not start")
-+        self.addCleanup(proxy_thread.join, 10)
-+        self.addCleanup(lambda: proxy["loop"].call_soon_threadsafe(proxy["stop_event"].set))
-+        proxy_addr = "127.0.0.1:%d" % proxy["port"]
-+
-+        N = 400
-+        expected = []
-+        for i in range(N):
-+            taskhash = hashlib.sha256(("task%d" % i).encode()).hexdigest()
-+            outhash = hashlib.sha256(("out%d" % i).encode()).hexdigest()
-+            unihash = hashlib.sha256(("uni%d" % i).encode()).hexdigest()
-+            self.client.report_unihash(taskhash, self.METHOD, outhash, unihash)
-+            expected.append((self.METHOD, taskhash, unihash))
-+
-+        # Downstream server with an EMPTY local DB whose upstream is the slow proxy.
-+        down_server = self.start_server(upstream=proxy_addr)
-+        down_client = self.start_client(down_server.address)
-+
-+        args = [(m, th) for (m, th, _uh) in expected]
-+        start = time.time()
-+        results = down_client.get_unihash_batch(args)
-+        elapsed = time.time() - start
-+
-+        self.assertEqual(results, [uh for (_m, _th, uh) in expected])
-+
-+        # A serial (one round-trip per task) implementation cannot beat N*RTT.
-+        # Allow a generous margin to avoid flakiness on loaded CI machines.
-+        serial_lower_bound = N * 2 * LATENCY
-+        self.assertLess(elapsed, serial_lower_bound / 4,
-+                        "Upstream queries are not being pipelined "
-+                        "(%.3fs for %d queries at %.0fms injected RTT)"
-+                        % (elapsed, N, 2 * LATENCY * 1000))
-+
-+
- 
- class TestHashEquivalenceWebsocketServer(HashEquivalenceTestSetup, HashEquivalenceCommonTests, unittest.TestCase):
-     def setUp(self):
++    @classmethod
++    async def run(cls, *coros):
++        async with cls() as group:
++            for c in coros:
++                group.create_task(c)
 -- 
 2.54.0
 
