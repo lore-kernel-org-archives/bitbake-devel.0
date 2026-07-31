@@ -1,167 +1,157 @@
-Return-Path: <amery@apptly.co>
+Return-Path: <thomas.perrot@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F64C5516E
-	for <webhook@archiver.kernel.org>; Thu, 30 Jul 2026 19:08:57 +0000 (UTC)
-Received: from v523.v5ed9ac7d.euw1.send.eu.mailgun.net (v523.v5ed9ac7d.euw1.send.eu.mailgun.net [141.193.32.23])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.19227.1785438536619839415
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE87BC5516D
+	for <webhook@archiver.kernel.org>; Fri, 31 Jul 2026 12:46:06 +0000 (UTC)
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.5663.1785501962825079127
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 30 Jul 2026 12:08:57 -0700
+ Fri, 31 Jul 2026 05:46:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@e.apptly.co header.s=mta header.b=Roz8jlFb;
- spf=pass (domain: e.apptly.co, ip: 141.193.32.23, mailfrom: bounce+ec7242.b6604b-bitbake-devel=lists.openembedded.org@e.apptly.co)
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=e.apptly.co; q=dns/txt; s=mta; t=1785438534; x=1785445734;
- h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To: Message-ID: Date: Subject: Subject: Cc: To: To: From: From: Sender: Sender;
- bh=0bR/ncc7c0Yowv2boy0S6eoo1oBA0JrEDZaZOR9K4jw=;
- b=Roz8jlFbXsxQIIEuM3pIbMHX7iCP26oHJrwKF9tvpmFXE1vUZDDygHCRgxKAoIzxdlM8ubSGFnTI5F7DzWSMMSaFVMjnP96RGx1fJ9UTLa2hzXyxABjANF2dnuYr6FYkaBi99ufg+l1Z6cMc3G7RDnYI73gmJacHpikOw3BWgzQ=
-X-Mailgun-Sid: WyI5YTJmMyIsImJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZyIsImI2NjA0YiJd
-Received: from localhost (unknown [51.179.224.164]) by
- 772b360a620e4ff484b5525d355201868234cd0114b5fe212f4b9c1458dd20b8 with SMTP id
- 6a6ba146b21b1de9f383859e (version=TLS1.3, cipher=TLS_AES_128_GCM_SHA256);
- Thu, 30 Jul 2026 19:08:54 GMT
-X-Mailgun-Sending-Ip: 141.193.32.23
-Sender: amery=apptly.co@e.apptly.co
-From: Alejandro Mery <amery@apptly.co>
-To: bitbake-devel@lists.openembedded.org
-Cc: Alejandro Mery <amery@apptly.co>
-Subject: [PATCH v3] data: Return a list from exported_vars()
-Date: Thu, 30 Jul 2026 19:08:54 +0000
-Message-ID: <20260730190854.2456522-1-amery@apptly.co>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260727172856.2304118-1-amery@apptly.co>
-References: <20260727172856.2304118-1-amery@apptly.co>
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=tpMrBVS1;
+ spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: thomas.perrot@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 8B8481A135E
+	for <bitbake-devel@lists.openembedded.org>; Fri, 31 Jul 2026 12:46:00 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 5870F603C2
+	for <bitbake-devel@lists.openembedded.org>; Fri, 31 Jul 2026 12:46:00 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CF3D811C16807;
+	Fri, 31 Jul 2026 14:45:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1785501955; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=5l1/o0VZF3r0NmddfwO5pdvo3Ij5yUZb/kHB7PBg4Xo=;
+	b=tpMrBVS1nqOrQZjYrUid0zanUey81LsN6EFf1/2/VKs5YXqSJlo7CCZ1ykAeTlns3jOOdb
+	IKvK6M5cEg20BDKMnoKqsODHq4zO+4paMVc70TlycO81GQWg6WxiOB91vKfKnpBte7jASa
+	L5w0K3CxfFphQlvsF/rSr2f9P1nLReypAas7nGHzzTnTFUALOqRaObyzWl5GvbSbUCcWN2
+	54BaPMLT0uF37BzzVBqORv64sAQF+PWb2hRT64DApyHKTIV+6aZY1aj8JrhHRTDdXDUu5f
+	eUA09L2SOkWCiJG+OvkDVgSSlmcssGfe5sbJrZfWFMFfi4lCnwES2P/2sjWlTQ==
+From: Thomas Perrot <thomas.perrot@bootlin.com>
+Subject: [PATCH v2 0/2] fetch/{npm,npmsw}: fix security issue and re-enable
+ fetchers
+Date: Fri, 31 Jul 2026 14:45:50 +0200
+Message-Id: <20260731-dev-tprrt-fix-npm-v2-0-67b65c67de4e@bootlin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/22OQQ7CIBBFr9KwdgxFi9WV92i6KDC1aAsNINE0v
+ btQXbp8mbz3ZyEenUZPLsVCHEbttTUJ2K4gcujMDUGrxIRRximnFSiMEGbnAvT6BWae4HCsJWc
+ nVKxnJHmzw3Tamk37Zf8Ud5Qhhxqhg+gemEM4tlkYtA/WvbcfYpm131zJ/8zFEijwXuG5Ej3ta
+ nEV1oZRm720E2nXdf0AGztx59UAAAA=
+X-Change-ID: 20260605-dev-tprrt-fix-npm-348c627ed2f2
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Thomas Perrot <thomas.perrot@bootlin.com>
+X-Mailer: b4 0.14.3
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 30 Jul 2026 19:08:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19891
+ <bitbake-devel@lists.openembedded.org>; Fri, 31 Jul 2026 12:46:06 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19892
 
-exported_vars() was a generator, so each value expanded when the result
-was iterated rather than when it was called. bitbake-worker binds it
-before bb.utils.empty_environment() and iterates it afterwards, so any
-expansion deferred until iteration ran against the wiped environment
-rather than the one bitbake started with.
+The npm and npmsw fetchers were disabled in 355cd226 (Jan 2026) because
+the npm fetcher retrieved checksums from the remote registry rather than
+from the recipe. This series fixes the root cause and re-enables both
+fetchers.
 
-The corruption is not uniform. The worker writes each variable into
-os.environ as it goes, so only the first value expands against a fully
-empty environment and the rest see it partially rebuilt, in
-exported_keys() order.
+Root cause analysis
+-------------------
 
-Recipes whose exported variables expand a command during that loop hit
-this. A gitver-style PV such as "${@get_git_pv(d, ...)}" runs git while
-PATH is empty, so the git wrapper on PATH is bypassed and the real git
-runs directly. Under pseudo this fakes uid 0 against a repository owned
-by the real user, and git aborts with "detected dubious ownership",
-failing do_package intermittently (only on reparse, when the value is
-re-expanded rather than served from cache).
+The npm fetcher called `npm view` to resolve the tarball URL and then
+embedded the registry-supplied dist.integrity / dist.shasum directly into
+the proxy URL. Since the same party controls both the tarball and the
+checksum, a compromised registry could serve a modified tarball with a
+matching hash and bypass BitBake's tamper detection completely.
 
-Build and return the list in exported_vars() itself, so the expansion is
-complete before it returns and no caller has to know it was ever
-deferred. A value that fails to expand now warns at that point rather
-than during iteration, and a result nothing consumes is expanded anyway;
-neither is a change for the one caller, which consumes all of it. Update
-the comment at the worker's call site, which documented the generator
-that is now gone, and add tests for the expansion timing and for the
-warning that moved with it.
+The npmsw (shrinkwrap) fetcher was caught in the same disable sweep, but
+its security model is already correct: checksums come from a locally
+committed npm-shrinkwrap.json file, not from the network. It needed only
+a missing FetchError import fix and re-enabling.
 
-- v3: materialise in exported_vars() itself, not at the call site; two
-  tests, using bb.utils.environment() rather than touching os.environ
-  directly.
-- v2: comment the ordering at the call site, and add the tests.
-- v1: the list() wrap alone.
+What changes
+------------
 
-Signed-off-by: Alejandro Mery <amery@apptly.co>
+On the fetcher side, npmsw is re-enabled after adding the missing
+FetchError import and fixing two correctness bugs: an empty packages dict
+no longer raises FetchError ('if packages is None' replaces 'if not
+packages'), and a missing 'resolved' field now raises ParameterError
+instead of AttributeError.
+
+The npm fetcher is fixed at its root: _resolve_proxy_url now stores only
+the bare tarball URL in .resolved, discarding any registry-provided
+checksum. _setup_proxy injects the checksum from the recipe's own SRC_URI
+parameters (sha512sum= or sha256sum=) instead; uri.params is cleared
+before rebuilding the proxy URL to prevent an npmsw-written .resolved
+file from contaminating the npm fetcher with a registry-sourced checksum.
+A checksum is now mandatory: urldata_init raises MissingParameterError
+if none of sha512sum/sha256sum/sha384sum/sha1sum is present in SRC_URI.
+Unlike wget, npm has no independent anchor for the fetched content (no
+pinned commit, no fixed path) -- the registry is exactly the party this
+fetcher was disabled for not trusting -- so, unlike the rest of
+BitBake's fetchers, this requirement is unconditional and does not
+depend on BB_STRICT_CHECKSUM.
+version=latest is now a hard ParameterError rather than a warning, and
+the dead 'if ud.version == "latest": return True' branch in need_update()
+is removed since version=latest is rejected at urldata_init time. The
+broad 'except Exception' in _npm_view is narrowed to json.JSONDecodeError
+so that FetchError and ParameterError propagate typed to callers; the
+error message falls back to str(error) when 'summary' is absent from the
+registry error dict so it is never silently None.
+
+On the test side, skipIfNoNpm() dead code is fixed, all unconditional
+return-skip guards are removed from test_npmsw_* tests, and new tests
+cover version=latest rejection, recipe-checksum injection, and
+wrong-checksum rejection.
+
+Migration note for recipe authors
+----------------------------------
+
+Recipes using npm:// must now supply a checksum in SRC_URI, e.g.:
+
+  SRC_URI = "npm://registry.npmjs.org;package=lodash;version=4.17.21;sha512sum=<hex>"
+
+Unlike the usual missing-checksum flow for other fetchers, this is not
+a warn-then-continue: a recipe without one fails immediately at parse
+time (MissingParameterError), before any network access is attempted.
+Any stale .resolved files under DL_DIR/npm2/ written by the old fetcher
+(which embedded registry-sourced checksums) must be deleted before
+rebuilding.
+
+[YOCTO #16105]
+
+Fixes: 355cd226e072 ("fetch2/npm: Disable npm/npmsw fetchers due to security issues")
+Bugzilla: https://bugzilla.yoctoproject.org/show_bug.cgi?id=16105
+Signed-off-by: Thomas Perrot <thomas.perrot@bootlin.com>
 ---
- bin/bitbake-worker   |  6 ++++--
- lib/bb/data.py       | 10 +++++++++-
- lib/bb/tests/data.py | 28 ++++++++++++++++++++++++++++
- 3 files changed, 41 insertions(+), 3 deletions(-)
+Changes in v2:
+- npm: require a checksum (sha512sum/sha256sum/sha384sum/sha1sum) in
+  SRC_URI unconditionally, instead of falling back to a bb.warn() and
+  an unverified download. This was raised by Richard: test_npm and
+  test_npm_premirrors passed with no checksum in v1, which meant
+  nothing was actually being verified for recipes that don't set one.
+- tests/fetch: add a checksum to every direct npm:// fetch in the
+  test suite; add test_npm_no_checksum_rejected, which confirms the
+  missing-checksum error fires regardless of BB_STRICT_CHECKSUM
+  (unset, '0', '1', or 'ignore').
+- Link to v1: https://lore.kernel.org/r/20260616-dev-tprrt-fix-npm-v1-0-6fde95bf0a8b@bootlin.com
 
-diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-index 4ad716975..1bde9d261 100755
---- a/bin/bitbake-worker
-+++ b/bin/bitbake-worker
-@@ -294,8 +294,10 @@ def fork_off_task(cfg, data, databuilder, workerdata, extraconfigdata, runtask):
-                     else:
-                         logger.debug("Skipping disable network for %s since %s is not a local uid." % (taskname, uid))
- 
--                # exported_vars() returns a generator which *cannot* be passed to os.environ.update() 
--                # successfully. We also need to unset anything from the environment which shouldn't be there 
-+                # exported_vars() expands each value, so it must be called before
-+                # empty_environment() below: an expansion that shells out needs the
-+                # environment bitbake was started with. We also need to unset
-+                # anything from the environment which shouldn't be there
-                 exports = bb.data.exported_vars(the_data)
- 
-                 bb.utils.empty_environment()
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index b12972c03..7c01e6bf8 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -193,6 +193,12 @@ def exported_keys(d):
-                                       not bb.utils.to_boolean(d.getVarFlag(key, 'unexport')))
- 
- def exported_vars(d):
-+    """Return the exported variables as a list of (key, value) pairs.
-+
-+    Every value is expanded before returning, so a caller that changes the
-+    environment afterwards still gets what the expansion saw.
-+    """
-+    exported = []
-     k = list(exported_keys(d))
-     for key in k:
-         try:
-@@ -202,7 +208,9 @@ def exported_vars(d):
-             continue
- 
-         if value is not None:
--            yield key, str(value)
-+            exported.append((key, str(value)))
-+
-+    return exported
- 
- def emit_func(func, o=sys.__stdout__, d = init()):
-     """Emits all items in the data store in a format such that it can be sourced by a shell."""
-diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
-index fd690a9e2..a83c71e2c 100644
---- a/lib/bb/tests/data.py
-+++ b/lib/bb/tests/data.py
-@@ -723,3 +723,31 @@ class EmitVar(unittest.TestCase):
-         self.assertEqual(self.get_output(out), ['bad_chars="a\\"b \\',
-                                                 'c\\`d \\',
-                                                 'e\\$f"'])
-+
-+class ExportedVars(unittest.TestCase):
-+    def test_expanded_before_returning(self):
-+        # Called while the variable is set, read once it is gone: the value
-+        # has to be the one from the call, not from the read.
-+        d = bb.data.init()
-+        d.setVar("TESTVAR", "${@os.environ.get('BB_TEST_EXPORT', 'gone')}")
-+        d.setVarFlag("TESTVAR", "export", "1")
-+
-+        with bb.utils.environment(BB_TEST_EXPORT="present"):
-+            exported = bb.data.exported_vars(d)
-+
-+        self.assertEqual(dict(exported), {"TESTVAR": "present"})
-+        self.assertIsInstance(exported, list)
-+
-+    def test_unexpandable_value_warns_and_is_skipped(self):
-+        # The warning belongs to the call, not to a later iteration.
-+        d = bb.data.init()
-+        d.setVar("TESTVAR", "value")
-+        d.setVarFlag("TESTVAR", "export", "1")
-+        d.setVar("TESTBROKEN", "${@int('not a number')}")
-+        d.setVarFlag("TESTBROKEN", "export", "1")
-+
-+        with LogRecord() as logs:
-+            exported = bb.data.exported_vars(d)
-+
-+        self.assertEqual(dict(exported), {"TESTVAR": "value"})
-+        self.assertTrue(logContains("Unable to export ${TESTBROKEN}", logs))
+---
+Thomas Perrot (2):
+      fetch/{npm,npmsw}: re-enable fetchers now that checksums come from SRC_URI
+      tests/fetch: restore and extend npm/npmsw test coverage
+
+ lib/bb/fetch2/npm.py   | 111 +++++++++++++++++++++++++-----------------
+ lib/bb/fetch2/npmsw.py |  12 ++---
+ lib/bb/tests/fetch.py  | 129 +++++++++++++++++++++++++++++++++++++------------
+ 3 files changed, 169 insertions(+), 83 deletions(-)
+---
+base-commit: 7e6466f48191c1e4ab9b91705deb237eff2c7f01
+change-id: 20260605-dev-tprrt-fix-npm-348c627ed2f2
+
+Best regards,
 -- 
-2.47.3
+Thomas Perrot <thomas.perrot@bootlin.com>
 
 
