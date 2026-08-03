@@ -1,214 +1,95 @@
-Return-Path: <michalwsieron@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5732C5516D
-	for <webhook@archiver.kernel.org>; Fri, 31 Jul 2026 13:05:49 +0000 (UTC)
-Subject: Re: [PATCH v2 00/10] hashserv: Pipeline Upstream Queries
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BEDC55196
+	for <webhook@archiver.kernel.org>; Mon,  3 Aug 2026 21:20:37 +0000 (UTC)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.3462.1785792034333740344
+ for <bitbake-devel@lists.openembedded.org>;
+ Mon, 03 Aug 2026 14:20:34 -0700
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=B16XAKfc;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4954df200ddso17033615e9.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 03 Aug 2026 14:20:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1785792032; x=1786396832; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=2bYVXj8Hqf8KcP1xg8EECS+lmIn6y1BS2U/062PTBMg=;
+        b=B16XAKfcGR0rDYGvirVwJfiGkN+Z863FPs/czltkERQr6eOjpXuZOwqGEewXqBS42E
+         4tXu9wXgYEeERNqISR31kE6osCtDCz4aiW3l+Ka/hWnaSqSg3MFko3XwGRF+d5SO84nl
+         LlEp1uireVP8wQFczPgFwEx9uwc8jcGUmRMkg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785792032; x=1786396832;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=2bYVXj8Hqf8KcP1xg8EECS+lmIn6y1BS2U/062PTBMg=;
+        b=bqJ3rrwjW6Xjoeve1rD9tnihdqSTpd51YvIRxgCNY5EEZ9xhCyoC4qbFBnzoW4WDpW
+         TYPDAGSAT+Uq5YbLN6WjLiiYEvnYfHfYbDFtrSuc91CSzxSRO6tNKkfkl0jrH0kqhkOP
+         Vfo6GSDJY1Qbz8LYhsR2KnumQTiX9+OpTieXmUltHXz51daSplHCD5vDwxb1w/PvMkUw
+         Uj9CLTHvSYQZ8Ld2GKvyQfvPex88VWMq4olm1S+L3b2ED3HdtSxaZKV8LuiSdgHrZPPZ
+         wgCWLRNKNdRpHGrh+eCmm8gNSP9jBgzrA415m+zJIJ0Gnf1gEI8B9Xiiw5ZnpmTXKlit
+         hC6Q==
+X-Gm-Message-State: AOJu0YzgTQFijwEVWKG0T3J/lfl+XDcN81J9FiviTvA0swSF2EzKTrAN
+	uFseMhgR+7/emir++EMQR+0RC1JekXsCwDOvdhTmeCaf1eUMqub7GTan22Fh+CN282KxPlLrbzP
+	hyDiSigk=
+X-Gm-Gg: AR+sD13i40Z05TOLw4ws1SPfrcPRxV6v/NK7d7EF7uuPWIF/hVFEPIkL+i3aYAdmBJc
+	QAX2lTcYB5D1at6ijMKeK3y+KWxj2Iw1lM3MohU1m2dM89zdiYunelOC7jM8G/xBQlyPkwuzEOb
+	rWC8XL2d1Ot6SPAiFNYVDn9359XY0QU+UAF+IOfbFBf0kBtQdN8T3c/L/Ye8n/BSattuv6iIiW1
+	XhyYlP+KQhrPZszqucMDHx5GtWIdrp3lJ/HrqC/SSlTqvapavuBVCTQW2TADeWadVZF5oy4LAIE
+	ZopijP9dTcqi8857aBB0rQpwE6ccGrmTXwos50jhfDNpZLQ8VHIkWaCRpbII7mfBum4pqu8c1Lt
+	mKLnla04RI+J03xfq6o3xy0wCC2owHb+Quy3ChJOFnpSFAOWqLEQNXD/m/HHyghVRSKmo7AOxxR
+	/cx8RF8JKrfl9Up6istW4kwVIM8jkrlHOaRcfFGj/x2mSEVRwntGvcZgjbWQG5drPhIBsaFptzn
+	GIjGGCEJj/R2CFkpw==
+X-Received: by 2002:a05:600c:1548:b0:498:ff3:71ed with SMTP id 5b1f17b1804b1-4980ff372a8mr237852085e9.17.1785792032301;
+        Mon, 03 Aug 2026 14:20:32 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:c231:bb8c:3cc5:6216])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49949fcb46esm31878635e9.5.2026.08.03.14.20.31
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2026 14:20:31 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-From: "Michal Sieron" <michalwsieron@gmail.com>
-X-Originating-Location: Frankfurt am Main, Hesse, DE (136.226.162.169)
-X-Originating-Platform: Linux Edge 148
-User-Agent: GROUPS.IO Web Poster
+Subject: [PATCH] bitbake-setup: Allow overrides to add sources
+Date: Mon,  3 Aug 2026 22:20:29 +0100
+Message-ID: <20260803212029.1921860-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.53.0
 MIME-Version: 1.0
-Date: Fri, 31 Jul 2026 06:05:45 -0700
-References: <20260724212822.1165552-1-JPEWhacker@gmail.com> <20260730183254.793698-1-JPEWhacker@gmail.com>
-In-Reply-To: <20260730183254.793698-1-JPEWhacker@gmail.com>
-Message-ID: <1147544.1785503145144982751@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="LrZL8Fc0VlhJ5VIUxVkf"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 31 Jul 2026 13:05:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19895
+ <bitbake-devel@lists.openembedded.org>; Mon, 03 Aug 2026 21:20:37 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19896
 
---LrZL8Fc0VlhJ5VIUxVkf
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+It would be useful to be able to add extra sources to setup to an
+existing setup config. If we could do this on the autobuilder, it means
+we can move all the layer fetching into bitbake-setup's control
+and minimise the other fetching code in autobuilder-helper.
 
-Hi,
+To to this, we need a small tweak to the way the overrides file is
+merged in.
 
-something is not working for me...
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ bin/bitbake-setup | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-In the first run I got it stuck for an hour at:
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 192 messages but only received 49
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 115 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 115 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 165 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 9 messages but only received 4
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 99 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 15 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 9 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 1 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 4 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 47 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 1 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 116 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 112 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 117 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 277 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 66 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 72 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 157 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 45 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 52 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 75 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 18 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 10 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 98 messages but only received 0
-Initialising tasks: =C2=A044% |############################################=
-############## =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 | ETA: =C2=A01:03:30
-
-Then in another run, after reporting that 8 messages were sent, but 0 recei=
-ved, hashserve.sock disappeared!
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: Sent 8 messages but only received 0
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: [Errno 2] No such file or directory
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: [Errno 2] No such file or directory
-WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdi=
-r/builds/yoctobuild/hashserve.sock: [Errno 2] No such file or directory
-Although that might be a different issue after killing previous run and not=
- making sure all Cooker processes are actually dead?
-
-Anyway, after properly making sure there are no lingering processes, I am s=
-till getting stuck at:
-WARNING: [...] Sent 192 messages but only received 26
-WARNING: [...] Sent 115 messages but only received 0
-WARNING: [...] Sent 115 messages but only received 0
-WARNING: [...] Sent 165 messages but only received 0
-WARNING: [...] Sent 9 messages but only received 1
-
-I will be going on vacation now, so unfortunately, I won't be able to test =
-more if you come up with anything new.
-
-Best regards,
-Michal
-
---LrZL8Fc0VlhJ5VIUxVkf
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div>Hi,</div>
-<div>&nbsp;</div>
-<div>something is not working for me...</div>
-<div>&nbsp;</div>
-<div>In the first run I got it stuck for an hour at:</div>
-<div>WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/w=
-orkdir/builds/yoctobuild/hashserve.sock: Sent 192 messages but only receive=
-d 49<br />WARNING: Error contacting Hash Equivalence Server unix:///path/to=
-/my/workdir/builds/yoctobuild/hashserve.sock: Sent 115 messages but only re=
-ceived 0<br />WARNING: Error contacting Hash Equivalence Server unix:///pat=
-h/to/my/workdir/builds/yoctobuild/hashserve.sock: Sent 115 messages but onl=
-y received 0<br />WARNING: Error contacting Hash Equivalence Server unix://=
-/path/to/my/workdir/builds/yoctobuild/hashserve.sock: Sent 165 messages but=
- only received 0<br />WARNING: Error contacting Hash Equivalence Server uni=
-x:///path/to/my/workdir/builds/yoctobuild/hashserve.sock: Sent 9 messages b=
-ut only received 4<br />WARNING: Error contacting Hash Equivalence Server u=
-nix:///path/to/my/workdir/builds/yoctobuild/hashserve.sock: Sent 99 message=
-s but only received 0<br />WARNING: Error contacting Hash Equivalence Serve=
-r unix:///path/to/my/workdir/builds/yoctobuild/hashserve.sock: Sent 15 mess=
-ages but only received 0<br />WARNING: Error contacting Hash Equivalence Se=
-rver unix:///path/to/my/workdir/builds/yoctobuild/hashserve.sock: Sent 9 me=
-ssages but only received 0<br />WARNING: Error contacting Hash Equivalence =
-Server unix:///path/to/my/workdir/builds/yoctobuild/hashserve.sock: Sent 1 =
-messages but only received 0<br />WARNING: Error contacting Hash Equivalenc=
-e Server unix:///path/to/my/workdir/builds/yoctobuild/hashserve.sock: Sent =
-4 messages but only received 0<br />WARNING: Error contacting Hash Equivale=
-nce Server unix:///path/to/my/workdir/builds/yoctobuild/hashserve.sock: Sen=
-t 47 messages but only received 0<br />WARNING: Error contacting Hash Equiv=
-alence Server unix:///path/to/my/workdir/builds/yoctobuild/hashserve.sock: =
-Sent 1 messages but only received 0<br />WARNING: Error contacting Hash Equ=
-ivalence Server unix:///path/to/my/workdir/builds/yoctobuild/hashserve.sock=
-: Sent 116 messages but only received 0<br />WARNING: Error contacting Hash=
- Equivalence Server unix:///path/to/my/workdir/builds/yoctobuild/hashserve.=
-sock: Sent 112 messages but only received 0<br />WARNING: Error contacting =
-Hash Equivalence Server unix:///path/to/my/workdir/builds/yoctobuild/hashse=
-rve.sock: Sent 117 messages but only received 0<br />WARNING: Error contact=
-ing Hash Equivalence Server unix:///path/to/my/workdir/builds/yoctobuild/ha=
-shserve.sock: Sent 277 messages but only received 0<br />WARNING: Error con=
-tacting Hash Equivalence Server unix:///path/to/my/workdir/builds/yoctobuil=
-d/hashserve.sock: Sent 66 messages but only received 0<br />WARNING: Error =
-contacting Hash Equivalence Server unix:///path/to/my/workdir/builds/yoctob=
-uild/hashserve.sock: Sent 72 messages but only received 0<br />WARNING: Err=
-or contacting Hash Equivalence Server unix:///path/to/my/workdir/builds/yoc=
-tobuild/hashserve.sock: Sent 157 messages but only received 0<br />WARNING:=
- Error contacting Hash Equivalence Server unix:///path/to/my/workdir/builds=
-/yoctobuild/hashserve.sock: Sent 45 messages but only received 0<br />WARNI=
-NG: Error contacting Hash Equivalence Server unix:///path/to/my/workdir/bui=
-lds/yoctobuild/hashserve.sock: Sent 52 messages but only received 0<br />WA=
-RNING: Error contacting Hash Equivalence Server unix:///path/to/my/workdir/=
-builds/yoctobuild/hashserve.sock: Sent 75 messages but only received 0<br /=
->WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/workd=
-ir/builds/yoctobuild/hashserve.sock: Sent 18 messages but only received 0<b=
-r />WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/wo=
-rkdir/builds/yoctobuild/hashserve.sock: Sent 10 messages but only received =
-0<br />WARNING: Error contacting Hash Equivalence Server unix:///path/to/my=
-/workdir/builds/yoctobuild/hashserve.sock: Sent 98 messages but only receiv=
-ed 0<br />Initialising tasks: &nbsp;44% |##################################=
-######################## &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &=
-nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbs=
-p; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | ETA: &nbsp;1:0=
-3:30</div>
-<div>&nbsp;</div>
-<div>Then in another run, after reporting that 8 messages were sent, but 0 =
-received, hashserve.sock disappeared!</div>
-<div>WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/w=
-orkdir/builds/yoctobuild/hashserve.sock: Sent 8 messages but only received =
-0<br />WARNING: Error contacting Hash Equivalence Server unix:///path/to/my=
-/workdir/builds/yoctobuild/hashserve.sock: [Errno 2] No such file or direct=
-ory<br />WARNING: Error contacting Hash Equivalence Server unix:///path/to/=
-my/workdir/builds/yoctobuild/hashserve.sock: [Errno 2] No such file or dire=
-ctory</div>
-<div>WARNING: Error contacting Hash Equivalence Server unix:///path/to/my/w=
-orkdir/builds/yoctobuild/hashserve.sock: [Errno 2] No such file or director=
-y</div>
-<div>Although that might be a different issue after killing previous run an=
-d not making sure all Cooker processes are actually dead?</div>
-<div>&nbsp;</div>
-<div>Anyway, after properly making sure there are no lingering processes, I=
- am still getting stuck at:</div>
-<div>WARNING: [...] Sent 192 messages but only received 26<br />WARNING: [.=
-..] Sent 115 messages but only received 0</div>
-<div>WARNING: [...] Sent 115 messages but only received 0</div>
-<div>WARNING: [...] Sent 165 messages but only received 0</div>
-<div>WARNING: [...] Sent 9 messages but only received 1</div>
-<div>&nbsp;</div>
-<div>I will be going on vacation now, so unfortunately, I won't be able to =
-test more if you come up with anything new.</div>
-<div>&nbsp;</div>
-<div>Best regards,</div>
-<div>Michal</div>
-
---LrZL8Fc0VlhJ5VIUxVkf--
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index 34260139c2d..92ed563c277 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -466,8 +466,7 @@ def get_registry_config(registry_path, id):
+ def merge_overrides_into_sources(sources, overrides):
+     layers = copy.deepcopy(sources)
+     for k,v in overrides.items():
+-        if k in layers:
+-            layers[k] = v
++        layers[k] = v
+     return layers
+ 
+ def update_build(config, confdir, setupdir, layerdir, d, update_bb_conf="prompt", init_vscode=False, rebase_conflicts_strategy='abort'):
 
