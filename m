@@ -1,95 +1,99 @@
-Return-Path: <JPEWhacker@gmail.com>
+Return-Path: <anibal@limonsoftware.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3CDC56205
-	for <webhook@archiver.kernel.org>; Thu,  6 Aug 2026 16:33:10 +0000 (UTC)
-Received: from mail-yx1-f43.google.com (mail-yx1-f43.google.com [74.125.224.43])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.23960.1786033985712536901
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE02C5AC7C
+	for <webhook@archiver.kernel.org>; Thu,  6 Aug 2026 17:43:31 +0000 (UTC)
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.25107.1786038204025267237
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 06 Aug 2026 09:33:05 -0700
+ Thu, 06 Aug 2026 10:43:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=ZW5ScEDK;
- spf=pass (domain: gmail.com, ip: 74.125.224.43, mailfrom: jpewhacker@gmail.com)
-Received: by mail-yx1-f43.google.com with SMTP id 956f58d0204a3-6682259cae6so2624755d50.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 06 Aug 2026 09:33:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786033985; cv=none;
+ dkim=pass header.i=@limonsoftware-com.20251104.gappssmtp.com header.s=20251104 header.b=pcXeeynN;
+ spf=pass (domain: limonsoftware.com, ip: 209.85.128.172, mailfrom: anibal@limonsoftware.com)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-81e9f7491ffso38545957b3.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 06 Aug 2026 10:43:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786038203; cv=none;
         d=google.com; s=arc-20260327;
-        b=NWnPG8g16VO2c8yDMaSrTX9BuYqm6XwUe0uaXfcwzWL2LwisIwpa+T3UUHDmaCPSqW
-         cOfR06xHOCOBTDLdypgv3HJbXdBXqdogz1oa4VpueYUtn2MfxY/FTh5FWdWBhy2DwLTh
-         KLAdzY9PhGoBWvM+MnryHu9Km2hgMdrOvY9G8JsTHEFeydNol6beOXGyGSWCj5zmam73
-         enBG99sxcRLrXqfiHwznKvibUhtT5li+Le4hS8f7V0y5XVt7QridXHlnV4ZuIxDPd0kc
-         0FZKL56e258Kw0t5mpcJW86A7cNGPFLcGgwVJUmx1VogfVIrcFe6cZZ+NAwbQQRVh5W6
-         2kGQ==
+        b=OtAGvhFCUlQx/Ep5cLaKKmcNSPWOYM43vZCoO+kxVM5JDiiikmDLzCvLUk3PlwtMW/
+         uCMApmejbemSjzMi+1sZ3dzxXf8+u2praqzlonjYYQX2iH3rzNBHT5WJGDFqXxS1GKVo
+         hVTOw4B3b0ni7/TWQK9CO0rnwFMNb7U4cNZDC1F9zDGDB9VWAc/NityG9tUt4c1opKpf
+         Ha1fyvdhpQDr0R6rgVsYkLLOs92DrChVm4NBgxO2VtYim0gLgAqbm82MbBbDytJd+Ar8
+         gtkBMBKJ9Bm37nIk8MMp1zMGmrgiH0Wr2p1w87f+6vYeeFhqv+u7tzhqQZ38lb3XLC4l
+         hLVg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=p3AkDZYIa0QPLqfE7pXI3H1UDKZnlYX5JeUn6MEI5QU=;
+        bh=680W1VhxnTJoU6QKNFFibVtOHMyHJp4n5e5JZy/tn5I=;
         fh=kWj4CD2Qyq9Hx4Tqu+8PaaNpMzg0FurgEt+AK4hIWyU=;
-        b=jQPGuvBIiQoQeCKcgcWkK54ZluhT21WHVMdrs2gcpfqfWqV0e46clc8hD+KlRUIHsM
-         zMSynBW2JoyTNQbOiS2gODSW+yZVMmHja2oJ2K+zqVm1QMBSdNGyT944f7Jqnh5peVnj
-         aEG6CIid5isq/d1zq7a2XxuFQ94WOZj0LU6Jl0r9qMugdcM6qo3UQmj/2BqSAbXJbzD4
-         aSF/4pFBeyVIW8osOtOfMCHgNqU8sWCCmxi7D85j+dwL6+9VeQUU5JoiOXgdYJB4o9a4
-         Gy742A4NuPvrMYCHE1BsMkRiYk5j+fPCPLZX9VmmjXEfDCwSoUuHjztxvWSLANyM6EQy
-         2Q9w==;
+        b=sXzJSfgmFV2j6xUKHHLSF1//Zo6I/b3Fh/TG7O+/xg5bgqRC7h8MITNHc9wKgjB/hf
+         U30KmS7GNargRAwS2NGBarf/HplA85vhWfLgsLACzmgTFrqSfi5bJMT2kA1nJaW+xzH+
+         Jjt/u7TYKQQvukea7NopbnSPoFffpKtBKWxt19XAQ82ZBZUfXZtgl2gTU0KLFIDpGHpV
+         SLmLX7GpZ/BRLMyL42pmq3Ui4hPnQR3uhTRsYNajPsRa23HrDb+VvwFwlNmftOWeGBEA
+         LS5fdslJVLsu3GHxXv9BtN2uSXP2qOUctuo1qAmd/RVUGM7WVZTwDMd/vwFOoDFK2O1u
+         s7JQ==;
         darn=lists.openembedded.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786033985; x=1786638785; darn=lists.openembedded.org;
+        d=limonsoftware-com.20251104.gappssmtp.com; s=20251104; t=1786038203; x=1786643003; darn=lists.openembedded.org;
         h=content-type:cc:to:subject:message-id:date:from:in-reply-to
          :references:mime-version:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=p3AkDZYIa0QPLqfE7pXI3H1UDKZnlYX5JeUn6MEI5QU=;
-        b=ZW5ScEDKfnPLDcVUGju4lZop28TtkUVPbTHZJaDgY9lPF7hQHiPEdrGXVj2vkvbJnE
-         G+fG8NCSE0zJ/a4Mc7LAU8ZRl5kBa6+M5waFqyHNAwoOvrT5AJNWNOgP9fTe4t6hTm5U
-         txWDY60Mn5TTzoupqKmGmYLVfrXSVnTKBwGRR1Bj+ooOOhcGvj2b6GH0SMI+D5tB6/Ys
-         I5iElQG/nX+fSsXVVmArMW7c73SGfUMspXtpqNuc6E8iE8BG1JzyrD/jXC+qgADX4aVK
-         nlR0qDJ+rQGbmFKrLRKCW+m7bxQl8rjdX+6xVj/+GQB/UlIwjuJ1Acz8Jaxm6m/eMxPK
-         kWhw==
+        bh=680W1VhxnTJoU6QKNFFibVtOHMyHJp4n5e5JZy/tn5I=;
+        b=pcXeeynNv00QertBTIRqQoB4KiMVv4r/5E2nqPtIQaw8vJv64pv3E0iLFMyyJ7sQvi
+         kJjrJrB68a8kgJ5HR5LDtgitlUAa5jTBkcmUGxfw7FjblDA/iJ4TIKSDsOe32N4ASqzn
+         x65inKmwIDXlAfQh8LqBTVx9Sc8HpycJzLiF9NM0FmSqo8V+YREDhI5KA/o+YAbphFwt
+         qreLpT2g58PQGOomJgXp1i1+bhcAB355zHEdkD7naEGOiJfPqwif3LCRL3OG5mvnJ5Tf
+         IY6S5Sat8rR0n4nwlWvQq0gkboBm04bxD6Cs5iPjeHX7t9xnskJjf5D4ZvosjaZcaCJx
+         Oqhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786033985; x=1786638785;
+        d=1e100.net; s=20251104; t=1786038203; x=1786643003;
         h=content-type:cc:to:subject:message-id:date:from:in-reply-to
          :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=p3AkDZYIa0QPLqfE7pXI3H1UDKZnlYX5JeUn6MEI5QU=;
-        b=BUMkX4m9+j48KQxjS+3BDf+fSpht6XewKXdLnLY2Yei1Xab13eyOs9CnOftMW3qoOf
-         rPIFA7MfMFZ+i1lWcFvO3Z2EVpVcwH+di+Ld5b+NDm/7L50jQLuA5oBE06fwjDA7SuiF
-         Em6OKg937aQsZuJn2uAUFQUUEQ/Qcnzmbqc5XCzvea2f3hzFRAFL8v5WjISz5q4p9YSA
-         bvtvm6Bd7of0If8pRY7/9T5uw/KwoJNC6MR6G4AhQWsTQ4l+JnbK1HFz1XKhTF343G+r
-         cY5bMg3Q5DUWcYyk+0WRIP5ErfloN91HVQftZs4WkGvkhs76fNhN3OqP/vFYDDjme5XX
-         2glg==
-X-Gm-Message-State: AOJu0Yz+Sk6AMEeWV1sX6Fihe7q5hpUrmP3Eu85Al7jn6YkCioM2QzfO
-	fpHjLUe3R2ChZPCr3VmzY7Z9mRC4dWCqCpJ1FuEEuY2tHbBwTUWWcGEDHkyywvubOvlC/GbsVC7
-	y9ApFzAFE9s4Q181rTtuD71PZzdKu2TefIg==
-X-Gm-Gg: AR+sD134yHQlFxgZ3aJzRzKer8RPw+/X8G/cPh1nd9iuHlN1TJtr5BoaTnelKm3frmo
-	te6imuc5e1h4cMHC5QXl1YA/P9yO8LHtDkT75XBAjDhwYoKPIK/KVPfAnVNkHRZA9dblAfAcTqq
-	ccbwC3sEuAAfWCdeG47P/pnn/uE3nGs28gLrgXOzfGvWwLidTFS273FuE8jOCl+PBmNFqgzWxh2
-	oir2vaS1ZQxDiOHKxJgNf+Q9t7pVf5CYvcAIZ2TeTwI6q1NFBA8VMRFa2zBBQQGlvzwGWtoLGvc
-	jAdcB23PUwVRMuHewXGhWPh2MKP+Sd43pSa3ZKWdGQ+MSqiyDsCTv1EiGRg=
-X-Received: by 2002:a53:b647:0:b0:667:b314:aeba with SMTP id
- 956f58d0204a3-6699a837161mr6930587d50.5.1786033984538; Thu, 06 Aug 2026
- 09:33:04 -0700 (PDT)
+        bh=680W1VhxnTJoU6QKNFFibVtOHMyHJp4n5e5JZy/tn5I=;
+        b=SXru9/VZsEc7WybBJGtdSZxJykjJ2VoEUdNN+F5GKnEPI071nJEhb/e7nhotKq5Jkp
+         eo4VCDyJKtkgm+cqeB87cNIhyv718DRfIzP7n+auK7g3QR/zSy845I9MUBnCWOiswGut
+         98l6tG9cCuyiXS4B2WXMB3Y/7N5U2ZXBUdrMa3sn6I2M3uDvsTxP7pE7fxppP8p9JQN5
+         jDXpnRzboxQbBcnt6Kk6fChTOSgUFbMwOLX8ivdas67iEKQG3IIUTcHiPU0TbuRtRN+F
+         /c/3dty/drbpfplikb1v6yh8SiwJ55t2S1K7iYKYPMWA4bmgjOiui+5CHPum+vmWYEA2
+         dqVA==
+X-Gm-Message-State: AOJu0Yzc+pbYMwtFb6nsFLF11HZCmmlo+/xVBQmqWwoDKo8j/q/uvUvv
+	Uaz6/FiWHDsDvPZ+h/EAubU/u1qbJYjvJgEJAZldDTucWfMgjhL+t46teRm3qM8r3i36T1ZqmIq
+	ovJ1HM4h2aVSDPpD5Hpox5QLbZNNKay5x84rzH/TD68yZTVabZoznXWw0Yw==
+X-Gm-Gg: AR+sD10Z1iJ48gt/c0PRDmjNb8apPpdv96w8HUzO3sFoWebcFDxvQvHzDXRrNUcJdVc
+	mtvnFczaK0R0nnlmyZ1i2peazfF6ZmQDl0n4mK8IeUSHbT0tqRfnFhK9++y1pRWW5ycZMxFfPfh
+	uASvFQCDFdFaZlVtcBcvrMJ1vWvh7lDkbLLqrTEq88zIB2pcEh3l8fWV0/ra3boz9NhCdfu0ImA
+	ZNBIj80PW8zopTS4a50lcyRE6W2MWHp/wFG/blC9HGoj0XJSxi7fuS5RXKGxZN0iaKPxQCtEZOB
+	Pm4Gcmqufw3mXTeiyUlBPCPP4sSWCWHHSBu1eF/LzzE2SrQdbJejU4/YX6OPBgGSFjCbSFpL/QF
+	Vu00oQ4xaKfaiWnd5u+ua/b5JiXRNYE8L
+X-Received: by 2002:a05:690c:dd0:b0:80b:9f4e:a70 with SMTP id
+ 00721157ae682-8202250ee6fmr98181467b3.26.1786038202903; Thu, 06 Aug 2026
+ 10:43:22 -0700 (PDT)
 MIME-Version: 1.0
 References: <20260806161258.3815426-1-fjpedrazag@gmail.com>
 In-Reply-To: <20260806161258.3815426-1-fjpedrazag@gmail.com>
-From: Joshua Watt <jpewhacker@gmail.com>
-Date: Thu, 6 Aug 2026 10:32:53 -0600
-X-Gm-Features: AUfX_mz9oGBDja0AT-zAgOdgUrzDUhgBmvBOrswl0611nqvmRaNpzn6C_TeX1Og
-Message-ID: <CAJdd5GZ6oMzBmkPCA7u4hkQEZ_N=2sADV4=78wKOT39K=RfKOA@mail.gmail.com>
+From: Anibal Limon <anibal@limonsoftware.com>
+Date: Thu, 6 Aug 2026 11:43:10 -0600
+X-Gm-Features: AUfX_mwwj24dNKMwHByvoEhxHGbMxCUcCFKMrBZPJ1uRRQqCb60q_5FWJOGAqAY
+Message-ID: <CAOU5ZMsdhMkOULLwYqsCh3BFLRT71ohRLi7kcoH1cmquh2SfLg@mail.gmail.com>
 Subject: Re: [bitbake-devel] [PATCH] asyncrpc: Close the client event loop
  when the client is collected
 To: fjpedrazag@gmail.com
 Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="000000000000348cbe06586371c1"
+Content-Type: multipart/alternative; boundary="000000000000a3be370658646cf8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 06 Aug 2026 16:33:10 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19906
+ <bitbake-devel@lists.openembedded.org>; Thu, 06 Aug 2026 17:43:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19907
 
---000000000000348cbe06586371c1
+--000000000000a3be370658646cf8
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+
+Only a small comment below.
+
 
 On Thu, Aug 6, 2026 at 10:13=E2=80=AFAM Francisco Pedraza via lists.openemb=
 edded.org
@@ -121,13 +125,6 @@ edded.org
 > 3.10 with websockets 10.4 and on python 3.14 with websockets 17.0.1.
 > Both report the warnings without this change and neither does with it.
 > bitbake-selftest hashserv.tests passes.
->
-
-LGTM Thanks
-
-Reviewed-by: Joshua Watt <JPEWhacker@gmail.com>
-
-
 >
 > Fixes [YOCTO #16236]
 >
@@ -177,6 +174,12 @@ Reviewed-by: Joshua Watt <JPEWhacker@gmail.com>
 > +        try:
 > +            loop.run_until_complete(client.close())
 > +            loop.run_until_complete(loop.shutdown_asyncgens())
+>
+
+Maybe it's a good idea to add an exception to handle certain types of
+errors and log when they happen.
+
+
 > +        finally:
 > +            loop.close()
 > +
@@ -203,26 +206,27 @@ Reviewed-by: Joshua Watt <JPEWhacker@gmail.com>
 > Links: You receive all messages sent to this group.
 > View/Reply Online (#19904):
 > https://lists.openembedded.org/g/bitbake-devel/message/19904
-> Mute This Topic: https://lists.openembedded.org/mt/120629140/3616693
+> Mute This Topic: https://lists.openembedded.org/mt/120629140/8181911
 > Group Owner: bitbake-devel+owner@lists.openembedded.org
 > Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> JPEWhacker@gmail.com]
+> anibal@limonsoftware.com]
 > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 >
 >
 
---000000000000348cbe06586371c1
+--000000000000a3be370658646cf8
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote g=
-mail_quote_container"><div dir=3D"ltr" class=3D"gmail_attr">On Thu, Aug 6, =
-2026 at 10:13=E2=80=AFAM Francisco Pedraza via <a href=3D"http://lists.open=
-embedded.org">lists.openembedded.org</a> &lt;fjpedrazag=3D<a href=3D"mailto=
-:gmail.com@lists.openembedded.org">gmail.com@lists.openembedded.org</a>&gt;=
- wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px =
-0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">Client c=
-reates its own event loop and installs it with<br>
+<div dir=3D"ltr"><div>Only a small comment below.<br></div><div><br></div><=
+br><div class=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" class=
+=3D"gmail_attr">On Thu, Aug 6, 2026 at 10:13=E2=80=AFAM Francisco Pedraza v=
+ia <a href=3D"http://lists.openembedded.org">lists.openembedded.org</a> &lt=
+;fjpedrazag=3D<a href=3D"mailto:gmail.com@lists.openembedded.org">gmail.com=
+@lists.openembedded.org</a>&gt; wrote:<br></div><blockquote class=3D"gmail_=
+quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,=
+204);padding-left:1ex">Client creates its own event loop and installs it wi=
+th<br>
 asyncio.set_event_loop(), so a client dropped without close() being<br>
 called keeps the loop, and any transport that loop owns, alive. The<br>
 loop only becomes collectable once a later client replaces the global<br>
@@ -247,11 +251,7 @@ does the same work as before.<br>
 Reproduced with two clients where the first is never closed, on python<br>
 3.10 with websockets 10.4 and on python 3.14 with websockets 17.0.1.<br>
 Both report the warnings without this change and neither does with it.<br>
-bitbake-selftest hashserv.tests passes.<br></blockquote><div><br></div><div=
->LGTM Thanks</div><div><br></div><div>Reviewed-by: Joshua Watt &lt;<a href=
-=3D"mailto:JPEWhacker@gmail.com">JPEWhacker@gmail.com</a>&gt;</div><div>=C2=
-=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8e=
-x;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+bitbake-selftest hashserv.tests passes.<br>
 <br>
 Fixes [YOCTO #16236]<br>
 <br>
@@ -307,7 +307,11 @@ p, self.client<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 loop.run_until_complete(client.c=
 lose())<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 loop.run_until_complete(loop.shu=
-tdown_asyncgens())<br>
+tdown_asyncgens())<br></blockquote><div><br></div><div>Maybe it&#39;s a goo=
+d idea to add an exception to handle certain types of errors and log when t=
+hey happen.</div><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=
+=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
+-left:1ex">
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 finally:<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 loop.close()<br>
 +<br>
@@ -338,18 +342,18 @@ Links: You receive all messages sent to this group.<br>
 View/Reply Online (#19904): <a href=3D"https://lists.openembedded.org/g/bit=
 bake-devel/message/19904" rel=3D"noreferrer" target=3D"_blank">https://list=
 s.openembedded.org/g/bitbake-devel/message/19904</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/120629140/361=
-6693" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/m=
-t/120629140/3616693</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/120629140/818=
+1911" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/m=
+t/120629140/8181911</a><br>
 Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
 " target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
 Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
 b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:JPEWhacker@gmail.com" target=3D"_b=
-lank">JPEWhacker@gmail.com</a>]<br>
+tbake-devel/unsub</a> [<a href=3D"mailto:anibal@limonsoftware.com" target=
+=3D"_blank">anibal@limonsoftware.com</a>]<br>
 -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
 <br>
 </blockquote></div></div>
 
---000000000000348cbe06586371c1--
+--000000000000a3be370658646cf8--
 
