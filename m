@@ -1,98 +1,98 @@
-Return-Path: <fjpedrazag@gmail.com>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68417C56208
-	for <webhook@archiver.kernel.org>; Thu,  6 Aug 2026 16:14:30 +0000 (UTC)
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.23081.1786032863581655560
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3CDC56205
+	for <webhook@archiver.kernel.org>; Thu,  6 Aug 2026 16:33:10 +0000 (UTC)
+Received: from mail-yx1-f43.google.com (mail-yx1-f43.google.com [74.125.224.43])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.23960.1786033985712536901
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 06 Aug 2026 09:14:23 -0700
+ Thu, 06 Aug 2026 09:33:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=CZ+XjoAi;
- spf=pass (domain: gmail.com, ip: 209.85.221.171, mailfrom: fjpedrazag@gmail.com)
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-5bfb1151c8aso148492e0c.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 06 Aug 2026 09:14:23 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786032862; cv=none;
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=ZW5ScEDK;
+ spf=pass (domain: gmail.com, ip: 74.125.224.43, mailfrom: jpewhacker@gmail.com)
+Received: by mail-yx1-f43.google.com with SMTP id 956f58d0204a3-6682259cae6so2624755d50.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 06 Aug 2026 09:33:05 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786033985; cv=none;
         d=google.com; s=arc-20260327;
-        b=JoQy5FWo/UMSa4VfhU7CgLyFvQU5C9vpL8xFgLKg17GEz90/ugxtVq1bkgRpEbkDmP
-         84TJ59W0VLqUFZKTG/YREhKXLnSlx6ZX5zSzrq9AZJjsamQvTv4rKaq+X1OxRLaawSVH
-         Zv//ArDdlQ1deepuMf2XvahuqKWCBejU8WxAprRRz99rKUxkJ6/uvfUCI0m2kqXdclG9
-         khGuLAiZo4k7pG+22sDJIIAmBOMdTc8nYSm/+aQXFXuTb74IbIBYwPVh2NRk1FAVOsgf
-         V+WTqT+MRCyyNvSNE7vOV1K3Dr8ysF8/zXSU70jFRS/JwGYEvw2lo3pyaKigb46NM5oV
-         S18A==
+        b=NWnPG8g16VO2c8yDMaSrTX9BuYqm6XwUe0uaXfcwzWL2LwisIwpa+T3UUHDmaCPSqW
+         cOfR06xHOCOBTDLdypgv3HJbXdBXqdogz1oa4VpueYUtn2MfxY/FTh5FWdWBhy2DwLTh
+         KLAdzY9PhGoBWvM+MnryHu9Km2hgMdrOvY9G8JsTHEFeydNol6beOXGyGSWCj5zmam73
+         enBG99sxcRLrXqfiHwznKvibUhtT5li+Le4hS8f7V0y5XVt7QridXHlnV4ZuIxDPd0kc
+         0FZKL56e258Kw0t5mpcJW86A7cNGPFLcGgwVJUmx1VogfVIrcFe6cZZ+NAwbQQRVh5W6
+         2kGQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=Q1RZDpbXbPDQxPsUDxppgCUg3WhzslZnAF/WHn9srXE=;
-        fh=gTVkUnL3FnX9JHTAY0+xyxQ0+AjtwFKEFhdivB6fyeo=;
-        b=l4iDR6gh/ihi5b3/arnM4mTbM5a9aLTMyyjpS9YZQ5Xtukrv4/DPcf3WF7yzRUNkao
-         /C3nrIBSQIgtkYEcTB2PknPocvY32/f00RMNNrvKecrZgbTjbyw3h2bhnayozz3xhvbm
-         vdqquKJ6kWTceHOi2rnXtpTKq0ab7J2B81jhUmqO1J14Jt9Lm0Z8Sxc0KpMK+zPbdvAi
-         XRwkBULeOs1+Z9jkGK1pccIFNSaMXNDwECQgHw8QnRgoPFuEvIhTFcqDogADSRrC0xjJ
-         sagRGPDIM1ZSUdUlWKSizMptN+vJ8YVIsR3kTERYpcwyzBOSA9O5Qetk3zTwCR6hM8ZF
-         wXDQ==;
+        bh=p3AkDZYIa0QPLqfE7pXI3H1UDKZnlYX5JeUn6MEI5QU=;
+        fh=kWj4CD2Qyq9Hx4Tqu+8PaaNpMzg0FurgEt+AK4hIWyU=;
+        b=jQPGuvBIiQoQeCKcgcWkK54ZluhT21WHVMdrs2gcpfqfWqV0e46clc8hD+KlRUIHsM
+         zMSynBW2JoyTNQbOiS2gODSW+yZVMmHja2oJ2K+zqVm1QMBSdNGyT944f7Jqnh5peVnj
+         aEG6CIid5isq/d1zq7a2XxuFQ94WOZj0LU6Jl0r9qMugdcM6qo3UQmj/2BqSAbXJbzD4
+         aSF/4pFBeyVIW8osOtOfMCHgNqU8sWCCmxi7D85j+dwL6+9VeQUU5JoiOXgdYJB4o9a4
+         Gy742A4NuPvrMYCHE1BsMkRiYk5j+fPCPLZX9VmmjXEfDCwSoUuHjztxvWSLANyM6EQy
+         2Q9w==;
         darn=lists.openembedded.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786032862; x=1786637662; darn=lists.openembedded.org;
+        d=gmail.com; s=20251104; t=1786033985; x=1786638785; darn=lists.openembedded.org;
         h=content-type:cc:to:subject:message-id:date:from:in-reply-to
          :references:mime-version:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Q1RZDpbXbPDQxPsUDxppgCUg3WhzslZnAF/WHn9srXE=;
-        b=CZ+XjoAijdSrvYcaZmLHmUBhN85u17Fu5jsUgiyUk2xpcNyJsJEuYvskPeV4bfs9C3
-         +gqq1jZ6Z74OnA/IyEuZFuL1z5mQsHG8Bbq4RNpfH1ZVl61L0r8SZ93TsTNULNkc8R2N
-         QPf1dWjH7Hguryu1CMnameErx5GoMx9Nvta5brc6HkpeiJcpafN1wxmJnfQwGWhcHqkZ
-         NfuwO9U6+RC8QvebEMGUCpwgelNiwUwvOA3wyPl+/v7nASZAfQTDbPfkqk8dEXbyeikJ
-         wgeN174z5d/KGamtunXoN7+eADaR3oEQIs5n7aF0VxX8FV7P8OWlKfiGsKzherDMftFu
-         Lk2g==
+        bh=p3AkDZYIa0QPLqfE7pXI3H1UDKZnlYX5JeUn6MEI5QU=;
+        b=ZW5ScEDKfnPLDcVUGju4lZop28TtkUVPbTHZJaDgY9lPF7hQHiPEdrGXVj2vkvbJnE
+         G+fG8NCSE0zJ/a4Mc7LAU8ZRl5kBa6+M5waFqyHNAwoOvrT5AJNWNOgP9fTe4t6hTm5U
+         txWDY60Mn5TTzoupqKmGmYLVfrXSVnTKBwGRR1Bj+ooOOhcGvj2b6GH0SMI+D5tB6/Ys
+         I5iElQG/nX+fSsXVVmArMW7c73SGfUMspXtpqNuc6E8iE8BG1JzyrD/jXC+qgADX4aVK
+         nlR0qDJ+rQGbmFKrLRKCW+m7bxQl8rjdX+6xVj/+GQB/UlIwjuJ1Acz8Jaxm6m/eMxPK
+         kWhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786032862; x=1786637662;
+        d=1e100.net; s=20251104; t=1786033985; x=1786638785;
         h=content-type:cc:to:subject:message-id:date:from:in-reply-to
          :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=Q1RZDpbXbPDQxPsUDxppgCUg3WhzslZnAF/WHn9srXE=;
-        b=eOI+MzEhyIjCfLRAW5eu75EfU7pPe431UcNdzT5Hh1Tp7NsG23KplIrQ2tq5H0k1Ha
-         YTC0OxdTFjlOwb8TKQ0iCYQVc9VKYf8wWvXKHANGfqwluMA25RPlw3UIqJ8cMZV2GeZP
-         N/pkytxTQk1Bmsu0fZIfW1gQu+EzaDygOjwGKNNgihTZuKtzQjoC68OH1llHzBVG/942
-         0GCR//al9Y7Xer/GJFQehUyYSsKwLffnvIc35WP+uKDjYdFxQGU80vqgEevfnAhzXmmb
-         chfXobDHLjYkFxqAzhe2Rn/+I3RsaNgjQfCJMdFKpwwjE5QzSOPijwGzEkeU+TSY99TA
-         cPow==
-X-Gm-Message-State: AOJu0YyT7cG0dU61OTWPFA8cbiaMsl/3PC9o7sHpAFx6ghMx2LjDA3Re
-	qmVk0Ae62270tQKRIkcS7J45+2Vn5zNecjFiw4Q0ehGfMPnhkMcvbEL2YzU9CVMOnwloCxuo2Rg
-	2CB94ZK+pfa2Ml1S9l9nZ6Ny/jtnUnWKAuo5ZnTg=
-X-Gm-Gg: AR+sD12dl7ej2Uo5aAOLdOgAaA3/4k1gVrHF1DW0v0t9Ya1at+FsMDqWXRYzWin3kAP
-	LOa7xdK+QlJ1p5L4Fbpi2ODW7uQ5/T1cqQJ6PdKaXufm0HhwIMpP+DNQ6l50MhRF2g8Bj6hi6+Y
-	3dZvKc877Yci+UEox9Yj+/cO+UfDwxQJY5aV+wWMHlQy7bDOKJs1xo5QSNmDyiOO/s+fi6A7BVm
-	X6yKboxYvnD9YkF4pryghyrD5zR81sKcoU1pWEyzFfl1R5EUznuxsjJm1o0zehzTUP46bxnhQ9O
-	KtWvJONvNYDB62ZX9vEwO0BoI43Y70O4WmZgUmJcufzydt/8Do4yYghL
-X-Received: by 2002:a05:6122:6851:10b0:5c1:24b6:a1e1 with SMTP id
- 71dfb90a1353d-5c3d9216ad2mr1319546e0c.2.1786032862297; Thu, 06 Aug 2026
- 09:14:22 -0700 (PDT)
+        bh=p3AkDZYIa0QPLqfE7pXI3H1UDKZnlYX5JeUn6MEI5QU=;
+        b=BUMkX4m9+j48KQxjS+3BDf+fSpht6XewKXdLnLY2Yei1Xab13eyOs9CnOftMW3qoOf
+         rPIFA7MfMFZ+i1lWcFvO3Z2EVpVcwH+di+Ld5b+NDm/7L50jQLuA5oBE06fwjDA7SuiF
+         Em6OKg937aQsZuJn2uAUFQUUEQ/Qcnzmbqc5XCzvea2f3hzFRAFL8v5WjISz5q4p9YSA
+         bvtvm6Bd7of0If8pRY7/9T5uw/KwoJNC6MR6G4AhQWsTQ4l+JnbK1HFz1XKhTF343G+r
+         cY5bMg3Q5DUWcYyk+0WRIP5ErfloN91HVQftZs4WkGvkhs76fNhN3OqP/vFYDDjme5XX
+         2glg==
+X-Gm-Message-State: AOJu0Yz+Sk6AMEeWV1sX6Fihe7q5hpUrmP3Eu85Al7jn6YkCioM2QzfO
+	fpHjLUe3R2ChZPCr3VmzY7Z9mRC4dWCqCpJ1FuEEuY2tHbBwTUWWcGEDHkyywvubOvlC/GbsVC7
+	y9ApFzAFE9s4Q181rTtuD71PZzdKu2TefIg==
+X-Gm-Gg: AR+sD134yHQlFxgZ3aJzRzKer8RPw+/X8G/cPh1nd9iuHlN1TJtr5BoaTnelKm3frmo
+	te6imuc5e1h4cMHC5QXl1YA/P9yO8LHtDkT75XBAjDhwYoKPIK/KVPfAnVNkHRZA9dblAfAcTqq
+	ccbwC3sEuAAfWCdeG47P/pnn/uE3nGs28gLrgXOzfGvWwLidTFS273FuE8jOCl+PBmNFqgzWxh2
+	oir2vaS1ZQxDiOHKxJgNf+Q9t7pVf5CYvcAIZ2TeTwI6q1NFBA8VMRFa2zBBQQGlvzwGWtoLGvc
+	jAdcB23PUwVRMuHewXGhWPh2MKP+Sd43pSa3ZKWdGQ+MSqiyDsCTv1EiGRg=
+X-Received: by 2002:a53:b647:0:b0:667:b314:aeba with SMTP id
+ 956f58d0204a3-6699a837161mr6930587d50.5.1786033984538; Thu, 06 Aug 2026
+ 09:33:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <18C9435B69834F73.3556697@lists.openembedded.org>
-In-Reply-To: <18C9435B69834F73.3556697@lists.openembedded.org>
-From: Francisco Pedraza <fjpedrazag@gmail.com>
-Date: Thu, 6 Aug 2026 09:14:11 -0700
-X-Gm-Features: AUfX_mx_hh8rWXRzIvwwIKcqBRpUZ_HrQ8uLA2EdzHM2uH7vAnZt7PHOwkvEv7c
-Message-ID: <CANoLGeM+f570iDbh3ARbT6ALCDoCkdsATpeUxE0k7kdjRxi4MA@mail.gmail.com>
+References: <20260806161258.3815426-1-fjpedrazag@gmail.com>
+In-Reply-To: <20260806161258.3815426-1-fjpedrazag@gmail.com>
+From: Joshua Watt <jpewhacker@gmail.com>
+Date: Thu, 6 Aug 2026 10:32:53 -0600
+X-Gm-Features: AUfX_mz9oGBDja0AT-zAgOdgUrzDUhgBmvBOrswl0611nqvmRaNpzn6C_TeX1Og
+Message-ID: <CAJdd5GZ6oMzBmkPCA7u4hkQEZ_N=2sADV4=78wKOT39K=RfKOA@mail.gmail.com>
 Subject: Re: [bitbake-devel] [PATCH] asyncrpc: Close the client event loop
  when the client is collected
 To: fjpedrazag@gmail.com
-Cc: bitbake-devel@lists.openembedded.org, limon.anibal@gmail.com
-Content-Type: multipart/alternative; boundary="0000000000005082fc0658632ee8"
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="000000000000348cbe06586371c1"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 06 Aug 2026 16:14:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19905
+ <bitbake-devel@lists.openembedded.org>; Thu, 06 Aug 2026 16:33:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19906
 
---0000000000005082fc0658632ee8
+--000000000000348cbe06586371c1
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 6, 2026 at 9:13=E2=80=AFAM Francisco Pedraza via lists.openembe=
-dded.org
+On Thu, Aug 6, 2026 at 10:13=E2=80=AFAM Francisco Pedraza via lists.openemb=
+edded.org
 <fjpedrazag=3Dgmail.com@lists.openembedded.org> wrote:
 
 > Client creates its own event loop and installs it with
@@ -121,6 +121,13 @@ dded.org
 > 3.10 with websockets 10.4 and on python 3.14 with websockets 17.0.1.
 > Both report the warnings without this change and neither does with it.
 > bitbake-selftest hashserv.tests passes.
+>
+
+LGTM Thanks
+
+Reviewed-by: Joshua Watt <JPEWhacker@gmail.com>
+
+
 >
 > Fixes [YOCTO #16236]
 >
@@ -196,26 +203,26 @@ dded.org
 > Links: You receive all messages sent to this group.
 > View/Reply Online (#19904):
 > https://lists.openembedded.org/g/bitbake-devel/message/19904
-> Mute This Topic: https://lists.openembedded.org/mt/120629140/10567948
+> Mute This Topic: https://lists.openembedded.org/mt/120629140/3616693
 > Group Owner: bitbake-devel+owner@lists.openembedded.org
 > Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
-> fjpedrazag@gmail.com]
+> JPEWhacker@gmail.com]
 > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
 >
 >
 
---0000000000005082fc0658632ee8
+--000000000000348cbe06586371c1
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote gmail_quote_contai=
-ner"><div dir=3D"ltr" class=3D"gmail_attr">On Thu, Aug 6, 2026 at 9:13=E2=
-=80=AFAM Francisco Pedraza via <a href=3D"http://lists.openembedded.org">li=
-sts.openembedded.org</a> &lt;fjpedrazag=3D<a href=3D"mailto:gmail.com@lists=
-.openembedded.org">gmail.com@lists.openembedded.org</a>&gt; wrote:<br></div=
-><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border=
--left:1px solid rgb(204,204,204);padding-left:1ex">Client creates its own e=
-vent loop and installs it with<br>
+<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote g=
+mail_quote_container"><div dir=3D"ltr" class=3D"gmail_attr">On Thu, Aug 6, =
+2026 at 10:13=E2=80=AFAM Francisco Pedraza via <a href=3D"http://lists.open=
+embedded.org">lists.openembedded.org</a> &lt;fjpedrazag=3D<a href=3D"mailto=
+:gmail.com@lists.openembedded.org">gmail.com@lists.openembedded.org</a>&gt;=
+ wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px =
+0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">Client c=
+reates its own event loop and installs it with<br>
 asyncio.set_event_loop(), so a client dropped without close() being<br>
 called keeps the loop, and any transport that loop owns, alive. The<br>
 loop only becomes collectable once a later client replaces the global<br>
@@ -240,7 +247,11 @@ does the same work as before.<br>
 Reproduced with two clients where the first is never closed, on python<br>
 3.10 with websockets 10.4 and on python 3.14 with websockets 17.0.1.<br>
 Both report the warnings without this change and neither does with it.<br>
-bitbake-selftest hashserv.tests passes.<br>
+bitbake-selftest hashserv.tests passes.<br></blockquote><div><br></div><div=
+>LGTM Thanks</div><div><br></div><div>Reviewed-by: Joshua Watt &lt;<a href=
+=3D"mailto:JPEWhacker@gmail.com">JPEWhacker@gmail.com</a>&gt;</div><div>=C2=
+=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8e=
+x;border-left:1px solid rgb(204,204,204);padding-left:1ex">
 <br>
 Fixes [YOCTO #16236]<br>
 <br>
@@ -327,18 +338,18 @@ Links: You receive all messages sent to this group.<br>
 View/Reply Online (#19904): <a href=3D"https://lists.openembedded.org/g/bit=
 bake-devel/message/19904" rel=3D"noreferrer" target=3D"_blank">https://list=
 s.openembedded.org/g/bitbake-devel/message/19904</a><br>
-Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/120629140/105=
-67948" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/=
-mt/120629140/10567948</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/120629140/361=
+6693" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/m=
+t/120629140/3616693</a><br>
 Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
 " target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
 Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
 b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
-tbake-devel/unsub</a> [<a href=3D"mailto:fjpedrazag@gmail.com" target=3D"_b=
-lank">fjpedrazag@gmail.com</a>]<br>
+tbake-devel/unsub</a> [<a href=3D"mailto:JPEWhacker@gmail.com" target=3D"_b=
+lank">JPEWhacker@gmail.com</a>]<br>
 -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
 <br>
-</blockquote></div>
+</blockquote></div></div>
 
---0000000000005082fc0658632ee8--
+--000000000000348cbe06586371c1--
 
