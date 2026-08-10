@@ -1,205 +1,106 @@
-Return-Path: <fjpedrazag@gmail.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC807C56208
-	for <webhook@archiver.kernel.org>; Thu,  6 Aug 2026 21:59:26 +0000 (UTC)
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.30412.1786053562164418036
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A15C5AC82
+	for <webhook@archiver.kernel.org>; Mon, 10 Aug 2026 11:12:45 +0000 (UTC)
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.27295.1786360354967307903
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 06 Aug 2026 14:59:22 -0700
+ Mon, 10 Aug 2026 04:12:35 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=NuOhOwgM;
- spf=pass (domain: gmail.com, ip: 209.85.210.174, mailfrom: fjpedrazag@gmail.com)
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-84e4e98d2cfso495432b3a.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 06 Aug 2026 14:59:22 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=csnnzi1r;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.41, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4953de5be0aso12781695e9.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 10 Aug 2026 04:12:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786053561; x=1786658361; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=d2LpEULHSetkDBQKf26I6jGV7vp1brawepaX50rSuE0=;
-        b=NuOhOwgMiBqXWuD7ntxzi/AYsIdax+pO3LG5JJUBX4sNMoetSkeXMAx03QOZ2IY/9q
-         2d8heZ+Z/vn2Gyiay9uFzys6ogEhIWsBHaMc7FP/NsYqi3iJG5xMNes7aDTO07ju0fhZ
-         JhgNPp9IGOXlH3XUzS6g7iA9we+gXwtHkhq2w/ZivDgWL7gEdgl5mFAo2ResJ/NIEbkc
-         cnyjXoRliD84ZB6KQ8ECZnvYtH8/PhskVRND1kFinf6iSJACTRJU+ZJyl6DTQ1svgsTv
-         BLsR6PGLhGwb6xxV4BitFThIlJ+JPx0tkgeE0hjZOKnQBahiEdUknC4S4KBtqnBaKbgr
-         R9zQ==
+        d=linuxfoundation.org; s=google; t=1786360353; x=1786965153; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=oMU1gugGvOYBSRPFi70naI8sRXeTQCvb04NMTn6Ds20=;
+        b=csnnzi1rtG+GhPIapz/NQolSfSBtLp1x6En+3Raqmg7BEArg0i3bX47jJnbDZX6U48
+         KUZCHTwnqmQqoWGPktzF1H0s05wLCOQCUyQEIL8KUZyIWqN9+fBXmhLOSR1PcwlyOfuT
+         +Zyf0v8f5fHHBmpNg79fXoYyu6J4zpP4jxd+A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786053561; x=1786658361;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=d2LpEULHSetkDBQKf26I6jGV7vp1brawepaX50rSuE0=;
-        b=GOCAcB4drImz0c/aTinLgfuFVYU8ixeQRJOBrvvP65HvmCEs51BL2NYwPvMlJuk9BP
-         sXGrKFW15zY2BHvP2BcGh01DScearwUwJDAW9dh5iBQOeM0hroAfj8UX3aKth4P/KOFg
-         qtu+Supq4O+vxKlSu9BPiTHIN7bvZPN+awQ19BJ8LFMcixbEmRRXT6tN/wbuJIjfkVeT
-         ls0V7/fI0BLHewrfoWIif9lrcPC0iFYZCuzmZFn8S614Lw16QwtmskXGJ8tLDuZwEVml
-         bjrwxzzhOhhsSadSygrsJkA1mb+u7cWY+E8iUOzFSv2TzKZy6ZIpdXjD3bEUbJBa8yJ+
-         kKIw==
-X-Gm-Message-State: AOJu0YxTObVZ8elDgIjV3osCKYpuzCLgZBaFhRdzCJZsv759vfjbF06J
-	Dyq40r4GBf2C34x6uk/h/Jo1KF2L3Fc2UZVNu1gJuA+J+4HCwu8A7rlbvwTFuTsUcLA=
-X-Gm-Gg: AR+sD125vUmIZSKMgRuQtiGom2WbO1gEGCxP7K33/vjmxXgssixa2SNXviZcGklha+X
-	2cK9hgxOHHjCHOoZ6qFde7w4pRRJNVrnBUpCignalXP4B4uFInAytr5zpHtCBGWt0Vv0YkUG4Yf
-	Z/8O23HgjkuiOKHa2lUmL+cPYdub+ufh6IvGImgFmKP6dSIXEgqNvqhDF2cQxvmb+JQJzaNRt6w
-	lDD/vYMlSHnNpm/iwjSVhFktIB9hbLVjPZPgMNTMoQNIT/pZ+uLcU2HBMeCki+hkrwt3m2shg7l
-	QaKVHRRUMVzEDDycoARJIhLP607/Fr3KB9niuBSETOfu8fSZH9FmWOuhgPawUKlZAXfClIRWal2
-	m9GK/v2paBEtIUck+CnwZBQnqF4UFKpyvQgljs79gdQnTVl4BPavmJPqkiet727zi4eXbyQ6aXi
-	sx5DJmfQofWmDmqr9jEZZRwsiL+m6DArlkUXZC6AzMMlqbdQC5p0wGUgtajGRqs+guPJ6RwjArP
-	ohpS7ronPJzcF4KKfFBUvc2pUOxWgc=
-X-Received: by 2002:a05:6a20:4321:b0:3c6:673d:b5d8 with SMTP id adf61e73a8af0-3cb863f3bb0mr14339230637.3.1786053561370;
-        Thu, 06 Aug 2026 14:59:21 -0700 (PDT)
-Received: from fedora (c-73-63-238-177.hsd1.ca.comcast.net. [73.63.238.177])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84f5a51f187sm25774b3a.39.2026.08.06.14.59.20
+        d=1e100.net; s=20251104; t=1786360353; x=1786965153;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=oMU1gugGvOYBSRPFi70naI8sRXeTQCvb04NMTn6Ds20=;
+        b=ZtCprNIzPbXDdglAhXAsfMALtGt1Rcc5B7Jhr8FJbaavkjlDWOo1EVh3K6Nv0uIl63
+         NUe83JyrGfZy4X5odHrGwSdxcSDQt85TobfgN1oPc+N3LjTBm/cxlWxmC5eXblhnkHyl
+         g4RhOQ42/VbtWXTKlhVuQp6Q9GZnQsAxQF0aMur05a+6yiJW9TrN09koB5+ky2iZpwOq
+         n6HppW7n9527lhPbiInqpUa+AtF4MQXiM2G7m7aFOlzwo8xpwPKtI5nZyBEkrYCUefcS
+         q71RQFILjq2FM/M5RW0vkTe6bYOPDzL0Kxx6XGNatxjeEwlBvvRGme3ShqduYFNZq15K
+         aBgw==
+X-Gm-Message-State: AOJu0Yzh3ckDUMrPUTIv6lvYVIt/eZJCOTA1qX1N3WVUPKkyM6nJSCge
+	qDTOovqAkzf2cyGCzxuemJe8HjGE2ptBEhboEJ4vZDulQPFsXLJ+fZaHNT4fwAyB6nUcVYMYB33
+	tZbXFz3w=
+X-Gm-Gg: AR+sD1097wlAxb+aSErNl3WsxVIr1r5/9+P9Mapp0tzSX45Tm++/L80jw3NozoHwBia
+	HBYJXs0akQF6RKPB/d8c5g03/h6uVNprrIHb0WwINPM9Xokwhuqgk6n3gKpas4Dw3mGslhqVjwN
+	033mYyd2lDacNgscS1OgHXO6LH8uaVwzxHEHzdp8Or9+PB0vWrzsR7y09VwRAf+NYj1QZPnc7VB
+	BZJUCq5xzCz65G729TyGSiL7zKDHlXsik5F+r5BRCe7lcUOkYNtAi0Fq8iyI4IgMgRAoyiYR8cB
+	dDJopOZq36HDR4BgYzY1RK0HiIbXfmfuDKZlV9ZmY94MKIEPL/xCjlfrKnaBocGOqIVpttQoVV7
+	rETVH5H9klH+S1xeepDcgOwOWe7I4MTjc9gCC5lQQh8a3tPfaHXVsUCiocoi6nJqYtCbGSrn+yL
+	AFlUrLcByK7RORGt36Qw3+CuId67edU/qAH67uJmlIJ64aD3q+3KJ4s2P1U/f7uPboFQfHkeqmA
+	5HHlc7YyGY+Od8yFQ==
+X-Received: by 2002:a05:600c:8b4b:b0:495:5fdf:2075 with SMTP id 5b1f17b1804b1-4995e0254cemr285139635e9.0.1786360353019;
+        Mon, 10 Aug 2026 04:12:33 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:96ae:4423:ae88:ca02])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4995421fee8sm361632475e9.7.2026.08.10.04.12.31
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2026 14:59:20 -0700 (PDT)
-From: Francisco Pedraza <fjpedrazag@gmail.com>
+        Mon, 10 Aug 2026 04:12:32 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: JPEWhacker@gmail.com,
-	limon.anibal@gmail.com,
-	Francisco Pedraza <fjpedrazag@gmail.com>
-Subject: [PATCH v2] asyncrpc: Close the client event loop when the client is collected
-Date: Thu,  6 Aug 2026 14:58:49 -0700
-Message-ID: <20260806215913.3910602-1-fjpedrazag@gmail.com>
-X-Mailer: git-send-email 2.55.0
+Subject: [PATCH] fetch/wget: Handle long filenames correctly
+Date: Mon, 10 Aug 2026 12:12:31 +0100
+Message-ID: <20260810111231.2610507-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.53.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 06 Aug 2026 21:59:26 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19908
+ <bitbake-devel@lists.openembedded.org>; Mon, 10 Aug 2026 11:12:45 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19909
 
-Client creates its own event loop and installs it with
-asyncio.set_event_loop(), so a client dropped without close() being
-called keeps the loop, and any transport that loop owns, alive. The
-loop only becomes collectable once a later client replaces the global
-reference, and asyncio then reports the transport and the loop as
-unclosed:
+Long filenames, which may happen through sstate, were being handled incorrectly
+as they could exceed max path lengths when '.tmp' was added.
 
-  ResourceWarning: unclosed transport <asyncio.sslproto._SSLProtocolTransport object>
-  ResourceWarning: unclosed event loop <_UnixSelectorEventLoop running=False closed=False>
+Handle those cases by using slightly shorter filenames if that happens for the
+intermediate tmp file.
 
-This is why the warning shows up at an unrelated later point rather
-than where the client was leaked.
+[YOCTO #16293]
 
-SignatureGeneratorUniHashMixIn caches its client and only closes it
-from reset() and exit(), so any teardown path missing those leaks it.
-
-Register a weakref.finalize() to close the loop when the client is
-collected. close() detaches the finalizer first, so the explicit path
-does the same work as before.
-
-Shutdown errors are logged rather than raised, since an exception from
-the finalizer would otherwise be discarded by the interpreter and
-reported only as "Exception ignored in". A peer that has gone away or
-stopped responding is expected for a client that was never closed and
-is logged at debug; anything else, including a loop that cannot be run,
-is logged at warning. The exceptions raised by websockets fall into the
-latter case as they cannot be named here, websockets being imported
-lazily in connect_websocket(). The loop is closed in every case.
-
-Reproduced with two clients where the first is never closed, on python
-3.10 with websockets 10.4 and on python 3.14 with websockets 17.0.1.
-Both report the warnings without this change and neither does with it.
-Each handled exception type was checked to not escape the finalizer, to
-still close the loop and to log at the intended level.
-bitbake-selftest hashserv.tests passes.
-
-Fixes [YOCTO #16236]
-
-Reviewed-by: Joshua Watt <JPEWhacker@gmail.com>
-Signed-off-by: Francisco Pedraza <fjpedrazag@gmail.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/asyncrpc/client.py | 50 ++++++++++++++++++++++++++++++++++++---
- 1 file changed, 47 insertions(+), 3 deletions(-)
+ lib/bb/fetch2/wget.py | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/asyncrpc/client.py b/lib/bb/asyncrpc/client.py
-index 17b72033b..dd28fa730 100644
---- a/lib/bb/asyncrpc/client.py
-+++ b/lib/bb/asyncrpc/client.py
-@@ -7,15 +7,19 @@
- import abc
- import asyncio
- import json
-+import logging
- import os
- import socket
- import sys
- import re
- import contextlib
-+import weakref
- from threading import Thread
- from .connection import StreamConnection, WebsocketConnection, DEFAULT_MAX_CHUNK
- from .exceptions import ConnectionClosedError, InvokeError
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index 141c2d062d0..1e5d20132c3 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -106,7 +106,10 @@ class Wget(FetchMethod):
+         fetchcmd = self.basecmd.copy()
  
-+logger = logging.getLogger("bb.asyncrpc.client")
-+
- UNIX_PREFIX = "unix://"
- WS_PREFIX = "ws://"
- WSS_PREFIX = "wss://"
-@@ -224,8 +228,49 @@ class Client(object):
-         # required (but harmless) with it.
-         asyncio.set_event_loop(self.loop)
+         dldir = os.path.realpath(d.getVar("DL_DIR"))
+-        localpath = os.path.join(dldir, ud.localfile) + ".tmp"
++        # Where we ultimately want the file
++        finalpath = os.path.join(dldir, ud.localfile)
++        # A temp location while processing, keeping in mind max path lengths
++        localpath = finalpath[:250] + ".tmp"
+         bb.utils.mkdirhier(os.path.dirname(localpath))
+         fetchcmd.append("--output-document=%s" % localpath)
  
-+        # The loop and its transports must be closed even if the caller never
-+        # calls close(). Since set_event_loop() above replaces the reference
-+        # held by the previous client, an unclosed loop only becomes reachable
-+        # for collection once another client is created, at which point
-+        # asyncio reports "unclosed transport" and "unclosed event loop"
-+        # ResourceWarnings. The finalizer is detached by close() so that the
-+        # normal path is unaffected.
-+        self._finalizer = weakref.finalize(
-+            self, self._close_loop, self.loop, self.client
-+        )
-+
-         self._add_methods("connect_tcp", "ping")
+@@ -146,7 +149,7 @@ class Wget(FetchMethod):
  
-+    @staticmethod
-+    def _close_loop(loop, client):
-+        if loop.is_closed():
-+            return
-+        try:
-+            loop.run_until_complete(client.close())
-+            loop.run_until_complete(loop.shutdown_asyncgens())
-+        # This can be called from the finalizer, where an exception would be
-+        # discarded by the interpreter and reported only as "Exception ignored
-+        # in", so report the error here instead. The loop is closed below in
-+        # every case.
-+        except (OSError, ConnectionClosedError, asyncio.TimeoutError) as exc:
-+            # The peer has gone away or is not responding. That is expected
-+            # for a client that was never closed, so it is not worth warning
-+            # about. asyncio.TimeoutError is only distinct from OSError on
-+            # python older than 3.11.
-+            logger.debug("Client connection already closed or unreachable: %s" % exc)
-+        except RuntimeError as exc:
-+            # The loop could not be run, for example because another loop is
-+            # already running in this thread. Unlike the above, this means
-+            # something is wrong with how the client is being used.
-+            logger.warning("Could not shut down client event loop: %s" % exc)
-+        except Exception as exc:
-+            # Also covers the exceptions raised by websockets, which cannot be
-+            # named here as it is imported lazily in connect_websocket(), and
-+            # whatever may be raised while the interpreter is shutting down.
-+            logger.warning("Error shutting down client connection: %s" % exc)
-+        finally:
-+            loop.close()
-+
-     @abc.abstractmethod
-     def _get_async_client(self):
-         pass
-@@ -258,9 +303,8 @@ class Client(object):
+         # Remove the ".tmp" and move the file into position atomically
+         # Our lock prevents multiple writers but mirroring code may grab incomplete files
+-        os.rename(localpath, localpath[:-4])
++        os.rename(localpath, finalpath)
  
-     def close(self):
-         if self.loop:
--            self.loop.run_until_complete(self.client.close())
--            self.loop.run_until_complete(self.loop.shutdown_asyncgens())
--            self.loop.close()
-+            self._finalizer.detach()
-+            self._close_loop(self.loop, self.client)
-         self.loop = None
+         return True
  
-     def __enter__(self):
--- 
-2.55.0
-
 
