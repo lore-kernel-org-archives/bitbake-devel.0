@@ -1,165 +1,165 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <JPEWhacker@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A49C5AD55
-	for <webhook@archiver.kernel.org>; Mon, 10 Aug 2026 14:47:03 +0000 (UTC)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.31289.1786373217056177492
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6DAC5AD55
+	for <webhook@archiver.kernel.org>; Mon, 10 Aug 2026 16:16:03 +0000 (UTC)
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.33427.1786378556613922574
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 10 Aug 2026 07:46:57 -0700
+ Mon, 10 Aug 2026 09:15:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=CvynrirA;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-47de0093c42so1421009f8f.3
-        for <bitbake-devel@lists.openembedded.org>; Mon, 10 Aug 2026 07:46:56 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=HWYeU6Sq;
+ spf=pass (domain: gmail.com, ip: 209.85.161.44, mailfrom: jpewhacker@gmail.com)
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-6ae6e407bfdso712973eaf.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 10 Aug 2026 09:15:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1786373215; x=1786978015; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=bn4YtsHYru3GFr65QiFlDcl0xkECV+uzio4JN/dKj9o=;
-        b=CvynrirAPlp6Gf5qyHyWK4Ty9hBpaq1ZeBJAVaYukuL2bgKSdsNgYcl+Yreq+KZHwk
-         O16yeoVs3uv6flwza4joFeOlaLNSmGhnLXDqS+qD1uYuVf9F75vF4fHj0WlMPaFOJkRF
-         m1/ZM7Cj87gMdNT5fPMc7fbTqDAQjlLamoIGY=
+        d=gmail.com; s=20251104; t=1786378556; x=1786983356; darn=lists.openembedded.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=HTBCb+UUD+x8Mqu2gV9z7uqBGXCgfPn11EzsIZAFWz8=;
+        b=HWYeU6SqMoVSPWL4jYq07LxUzHRzXLOXI37RkwQW1yIcSz1LRrdYFaE9LNIc3i8NDP
+         5qHyx1XcmmBZUpMzvZWqj5WibbHIzOY22Gek14AvjEPdozpWV6qBrxryLoPEPfyfE0+k
+         wFuZqzJJjfKD1uA9/LX/Ki5Lt+8dxqoRuJIb5UX/aEWqhCjXVq6PDwE0nJa7iPkOsfMc
+         lXBxRJbre9zM3iQk1M4XjVP0O7cGFlx+AvOIH2gAFadXqK4dAQjpO2R+MBYuaYEawDJL
+         azIixA8UqWrqCNzWLSMHb70foVZfe7d1lGUz7gMo+RHtQKGfCn3UUZn0/GhfwfV1LD+6
+         HVfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786373215; x=1786978015;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=bn4YtsHYru3GFr65QiFlDcl0xkECV+uzio4JN/dKj9o=;
-        b=F3z0UHB1/5JNfCt62tcgM4CPToP+2Zsnj/2BKPv+irT5o0J4YOkODq6efYOh7GXs8g
-         bYKMBFQw4j3bdDyqJpUqAyLz6HWyiNxp8xfk8KsplwDdepLvI5boqwEipcXZkrrgvmTd
-         GRQEvyW6toluvxktdkxnIwM+KJzhz8ke7fZkTUCfqvmaFGvf0lNbkEFgHnsLvQbd991o
-         i99y0XoOdIGLUUskkMctUqlq0ilYCCclRs3kS5exGzrCNDim2Fj8NceOa8N6rStZxWYe
-         BGLLe/jySdlv0uKf9YWLRe+leDQsjKKtfK5P8euYdlJ2sM3ISjkSL8oE0ZyJe+/x9mHN
-         6mzA==
-X-Gm-Message-State: AOJu0YxoUCZuSmI5OiFC0A2Gfm8xRYBBGTDFY/Z8ihKdM76rZdw/UBiY
-	Da3gNO1NE/s7b+xYs6CZc5pFv4xWVjDiQostuPgTmQdEQMPqe2C58a5ElY6QLHhSUy4dh0zazgj
-	6eSNo0kc=
-X-Gm-Gg: AR+sD11aDBnDTcbot79pvglJeiDbOq5RAp8BOCa2Jt2LIuhK/HYSbJ+7ZFEuCyjIsEI
-	IYVbgKyNIUFKlmkrd+gF5tDxJAUQ3LfAg0k07n+XHDJPsJRIYk0LW6Tf2M1oxM7u3ViN4yeVyYj
-	Qyw26SHwXC8BsROZ8QtlZscccQzaGdvKmj98uSzYXCkBz8ifjHdFNXDNZyqs7xcX3ProgoFOdYa
-	Ex3UA2KHKxm49BKq63NSVInibetC3xJSuht2qxWxzqiWJkc/7Il+qjLaLKjIkVJjfAuST944Ycs
-	kZFq1/c6jjHyTwHKuad0OvkN5rQocp2+YItzvQuxan52V2UacCQSZk05L8AE1mjvz5qwe+VXuFm
-	3R2V/UOXAaS3nDpJQ19XMvMjlQgjqccHhoCWOZLekFOm7HMde8ZfKWyBd57h8HZy8OmT4aGAvNT
-	KQ/I/1nMm3dtFWIVvs+M/1NPNzrkwz26Uoc4a+8+WohV/E45EcaKqRs7ItoO3lQV2KFKknMJH5C
-	Vtc09ZmGdLM8uv49UU/pf9paiO0
-X-Received: by 2002:adf:e9ca:0:b0:47f:fe71:ef24 with SMTP id ffacd0b85a97d-48130efae6fmr23907045f8f.27.1786373215176;
-        Mon, 10 Aug 2026 07:46:55 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:96ae:4423:ae88:ca02])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4800220ab11sm37431563f8f.35.2026.08.10.07.46.54
-        for <bitbake-devel@lists.openembedded.org>
+        d=1e100.net; s=20251104; t=1786378556; x=1786983356;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=HTBCb+UUD+x8Mqu2gV9z7uqBGXCgfPn11EzsIZAFWz8=;
+        b=dbvXGrB+mW1hwiY5J6x2LKc4AxU81HMfxPsxIryP133QZgFJwAM5STRHT3AWJQ532a
+         /zfrgzYKzEawSVcK/FCgFwXVIH4tKKjhDUNxP9p1XjzmUEU7B4istM+2Pngk/yWFRGIh
+         0LM56pLM8fBNVf06MFdtMLlg0UsOrp/EQZmW56ZvLQ1cbx6I+EjsSEfwiDPC1FsPqEg8
+         IXwXYGfkdsVIj+UvgcFcypiyWIr8MpbeqThoW8rt7jaCKv29Z8DcnAaXVKshPqTBETxQ
+         sZZQoMq01SIgLtPufWoYNvH/MaEpRJ3MIEs5iMcTM+tqLkh6bRxQRoq2GtyqR8c4lf+Q
+         JWcA==
+X-Gm-Message-State: AOJu0Yw6EKlX2NW+Suom3kij7BCrWprXOpkTI3+36zi8yyFpuUl8qr+e
+	e91uA2lS2Ym/VCTyoxhC9HlApWxm8lYD7gcPlfrE3M3hVkWAmTNfTdXxRpmnWA==
+X-Gm-Gg: AR+sD13wb1qdZ+oJpY4PgP/Fnhi+ahEbsmQK2qXovO+hCssYcjIhIZbNRk52oR5DPD8
+	yOYj1iUnX57H2FOGwrrY+RngkB9vVuIJRkoEgG1f/chudCNuDnMKRpDbT252+0CUDvQcNjeleCl
+	a7g6urY7FLAmFrx/oxVQNWAXAbHwYdUOG1z0ago+bRyJ5Oqj5fnN3T/ys5Ec3Y1znePUApTBLsh
+	pV3dZIhhyKrF7awmE7V/L+iz9DdVybwpYH7rx7b0WrR1OZ5b6f9kGRj1FIOwcLOyB8cewrTT3qA
+	HJN0OGpc7wLfARurYmF+LC96VeqnFaSt1AC8iIKI07WR9kAys7RucEVIUuZSVSq9Yaf3JNlUBW7
+	G5hvOOZvebxJYmdjst2VQC2zPTWHr1mg9ex6NwExrc1Vg4m111sAV+namKbAMmRCxTCvQZVAOpR
+	EVA95XMk+o0HK5SsDk7Yn6kJQybGd0QvoT5m4xEGxRwwjdthmkjC4Ru52RRQ==
+X-Received: by 2002:a05:6820:1508:b0:6ae:4913:7d11 with SMTP id 006d021491bc7-6b04213ea4dmr10750916eaf.22.1786378555573;
+        Mon, 10 Aug 2026 09:15:55 -0700 (PDT)
+Received: from localhost.localdomain ([2601:283:4b01:ba50::abb5])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6b02bc2631esm10009511eaf.4.2026.08.10.09.15.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2026 07:46:54 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Mon, 10 Aug 2026 09:15:55 -0700 (PDT)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] data: Fix expandKeys recursion issue
-Date: Mon, 10 Aug 2026 15:46:53 +0100
-Message-ID: <20260810144653.2803105-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.53.0
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [bitbake-devel][PATCH] AGENTS.md: Add file
+Date: Mon, 10 Aug 2026 10:15:50 -0600
+Message-ID: <20260810161551.632465-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.54.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 10 Aug 2026 14:47:03 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19910
+ <bitbake-devel@lists.openembedded.org>; Mon, 10 Aug 2026 16:16:03 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19911
 
-Using an variable expansion in override such as:
+Adds an AGENTS.md file to direct agents about better commit practices.
+This is specifically *not* attempting to improve or direct agents about
+the code that they generate. It has been noted that when AI is used to
+write code and commit code, the commit messages that it generates can be
+long and draw out (e.g. a "wall of text") which affects maintainer
+ability to review the patches. Therefore, this AGENTS.md text file is
+only focused on instructing the agents to produce commits that are more
+suitable for our review process.
 
-RDEPENDS:${PN}:append:pn-packagegroup-cross-canadian-${MACHINE} = ' XXX'
+This file is intended to help agents comply with the existing project
+document (and specifically, the AI Policy[1]), and does not constitute a
+new policy. Any subsequent changes to this file should derive and comply
+with the project documentation and policies.
 
-wasn't functioning correctly. Looking through the code, renameVar does
-work correctly but it doesn't work if called multiple times on the sub
-components of the variable.
+It what can only be described as the most bizarre interaction with a
+computer I've ever experienced, the best way to get an AGENTS.md file
+that AI agents actually respect as intended is to instruct one to write
+it for you (as opposed to writing one by hand). Future edits to this
+file will likely be most effective if written by an Agent.
 
-expandKeys will already recurse variables so we need to ensure renameVar
-doesn't also do that as things break if we do it multiple times.
+[1]: https://docs.yoctoproject.org/contributor-guide/submit-changes.html#acceptance-of-ai-generated-code
+AI-Generated: Uses Claude Sonnet 5
 
-Change the code to avoid recursion in renameVar which should also have
-a small performance improvement.
-
-Test case from Nguyen Minh Tien <zizuzacker@gmail.com>
-
-[YOCTO #14867]
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- lib/bb/data.py       |  2 +-
- lib/bb/data_smart.py |  5 +++--
- lib/bb/tests/data.py | 25 +++++++++++++++++++++++++
- 3 files changed, 29 insertions(+), 3 deletions(-)
+ AGENTS.md | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 AGENTS.md
 
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index 7c01e6bf81c..f81f44eaccd 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -94,7 +94,7 @@ def expandKeys(alterdata, readdata = None):
-             val = alterdata.getVar(key, False)
-             if val is not None:
-                 bb.warn("Variable key %s (%s) replaces original key %s (%s)." % (key, val, ekey, newval))
--        alterdata.renameVar(key, ekey)
-+        alterdata.renameVar(key, ekey, recurse=False)
- 
- def inheritFromOS(d, savedenv, permitted):
-     """Inherit variables from the initial environment."""
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 9961269a3f8..cbace852021 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -661,7 +661,7 @@ class DataSmart(MutableMapping):
-     def getVar(self, var, expand=True, noweakdefault=False, parsing=False):
-         return self.getVarFlag(var, "_content", expand, noweakdefault, parsing)
- 
--    def renameVar(self, key, newkey, **loginfo):
-+    def renameVar(self, key, newkey, recurse=True, **loginfo):
-         """
-         Rename the variable key to newkey
-         """
-@@ -698,7 +698,8 @@ class DataSmart(MutableMapping):
-             self.overridedata[newkey] = []
-             for (v, o) in self.overridedata[key]:
-                 self.overridedata[newkey].append([v.replace(key, newkey), o])
--                self.renameVar(v, v.replace(key, newkey))
-+                if recurse:
-+                    self.renameVar(v, v.replace(key, newkey))
- 
-         if not found:
-             # No variable to rename so not worth the work in writing extra
-diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
-index a83c71e2c25..49177474778 100644
---- a/lib/bb/tests/data.py
-+++ b/lib/bb/tests/data.py
-@@ -406,6 +406,31 @@ class TestOverrides(unittest.TestCase):
-         bb.data.expandKeys(self.d)
-         self.assertEqual(self.d.getVar("VERSION"), "2")
- 
-+    # Test an :append whose override name is only resolved by key expansion
-+    def test_append_in_expanded_override(self):
-+        self.d.setVar("MACHINE", "qemux86")
-+        self.d.setVar("PN", "gizmo")
-+        self.d.setVar("OVERRIDES", "gizmo:pn-gizmo-qemux86")
-+        self.d.setVar("TEST:${PN}", "base")
-+        self.d.setVar("TEST:${PN}:append:pn-gizmo-${MACHINE}", " appended")
-+        bb.data.expandKeys(self.d)
-+        self.assertEqual(self.d.getVar("TEST"), "base appended")
+diff --git a/AGENTS.md b/AGENTS.md
+new file mode 100644
+index 000000000..9fb4560b0
+--- /dev/null
++++ b/AGENTS.md
+@@ -0,0 +1,55 @@
++# AGENTS.md — BitBake
 +
-+    # Test renaming to a key which is itself not expanded yet, as native.bbclass
-+    # does. The dependent override keys must be left for expandKeys() to rename.
-+    def test_rename_to_unexpanded_key_with_override(self):
-+        self.d.setVar("BPN", "gizmo")
-+        self.d.setVar("PN", "gizmo-native")
-+        self.d.setVar("OVERRIDES", "class-target")
-+        self.d.setVar("TEST:${PN}-lib", "base")
-+        self.d.setVar("TEST:${PN}-lib:class-target", "target")
-+        with LogRecord() as logs:
-+            self.d.renameVar("TEST:${PN}-lib", "TEST:${BPN}-lib-native")
-+            bb.data.expandKeys(self.d)
-+            self.assertFalse(logContains("renameVar with equivalent keys", logs))
-+            self.assertFalse(logContains("replaces original key", logs))
-+        self.assertEqual(self.d.getVar("TEST:gizmo-lib-native"), "target")
++Guidance for AI agents working in the `bitbake` repository.
 +
-     def test_remove_with_override(self):
-         self.d.setVar("TEST:bar", "testvalue2")
-         self.d.setVar("TEST:some_val", "testvalue3 testvalue5")
++## Making changes
++
++- No web PR workflow. Both projects use **patches on mailing lists**
++  (bitbake-devel@lists.openembedded.org), tracked via patchwork. Don't assume
++  GitHub PR conventions apply.
++- One Git commit per logical change (e.g., one commit per recipe added/upgraded).
++- Commit message format:
++  - Summary line prefixed with the recipe name or short file path,
++    e.g. `openssl: upgrade to 3.2.1` or `classes/rootfs-postcommands: fix typo`.
++    Check `git log --oneline <path>` for the prefix convention already in use.
++  - Body explains what/why/how, and how it was tested.
++  - Prefer explaining *why* a change was made over restating what's
++    already visible in the diff, unless the diff is long/hard to follow
++    or the reason for the change isn't known — in those cases, summarize
++    what changed instead.
++  - Be succinct: use as few sentences and lines as possible while still
++    covering what/why/how. Cut restatements, filler, and any detail a
++    reviewer wouldn't need (e.g. exact test-run counts, step-by-step
++    narration). One short paragraph is usually enough; only add a second
++    if a distinct point (e.g. testing) needs it.
++  - The most relevant information about the change should be presented first.
++  - Reference bugs as `Fixes [YOCTO #1234]` when applicable.
++  - Use `Reported-by`, `Suggested-by`, `Tested-by`, `Reviewed-by`, `Cc` tags
++    where relevant.
++
++### AI-generated code
++
++- **Mandatory**: any AI-generated code/commit must add an `AI-Generated:`
++  tag line in the commit message, placed *before* `Signed-off-by` (if present),
++  naming the tool used, e.g.:
++
++  ```
++  component: Add the ability to ...
++
++  AI-Generated: Uses GitHub Copilot
++  ```
++
++- Also add a code comment or other in-patch indication that the code is
++  AI-generated (recommended, not just the commit tag).
++- **Mandatory** Do not automatically add a `Signed-off-by`. This tag must
++  always be written by the human contributor, never by the AI tool — the
++  DCO/Developer's Statement of Origin still applies in full.
++- Contributor is responsible for confirming the AI tool's terms don't
++  conflict with the project's open source license/IP policy, and that
++  any third-party copyrighted material in the AI output is properly
++  licensed before contributing it. See the Linux Foundation generative AI
++  guidance: https://www.linuxfoundation.org/legal/generative-ai.
++- `Co-authored-by` should be omitted in favor of the `AI-generated` tag.
++
++When in doubt about a convention, grep `git log --oneline <path>` in the
++target repo for precedent before inventing a new style.
+-- 
+2.54.0
+
 
