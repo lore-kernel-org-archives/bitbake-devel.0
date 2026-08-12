@@ -2,403 +2,493 @@ Return-Path: <svsvenss@cisco.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719C9C5B572
-	for <webhook@archiver.kernel.org>; Wed, 12 Aug 2026 17:00:48 +0000 (UTC)
-Received: from alln-iport-4.cisco.com (alln-iport-4.cisco.com [173.37.142.91])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.202.1786554047070030207
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81606C5B572
+	for <webhook@archiver.kernel.org>; Wed, 12 Aug 2026 17:04:08 +0000 (UTC)
+Received: from alln-iport-7.cisco.com (alln-iport-7.cisco.com [173.37.142.94])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.294.1786554240792293007
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 12 Aug 2026 10:00:47 -0700
+ Wed, 12 Aug 2026 10:04:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: message contains an insecure body length tag" header.i=@cisco.com header.s=iport01 header.b=cARKHrPl;
- spf=pass (domain: cisco.com, ip: 173.37.142.91, mailfrom: svsvenss@cisco.com)
+ dkim=fail reason="dkim: message contains an insecure body length tag" header.i=@cisco.com header.s=iport01 header.b=ajLA/BL8;
+ spf=pass (domain: cisco.com, ip: 173.37.142.94, mailfrom: svsvenss@cisco.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=cisco.com; i=@cisco.com; l=8424; q=dns/txt;
-  s=iport01; t=1786554047; x=1787763647;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   mime-version;
-  bh=mZbYCmJqF49V7v/ErSRQrDkgOaBhb8EogdpBzPkiBtQ=;
-  b=cARKHrPl1mKM157VPJQAymdUYTsJZX2YDyAGz1hU5PRZUPODd7kjhqwe
-   vOZaR+QPigfPnsQP2DL+t7chIaBVYsgXWU/ZPrSIF5pppy9SmjErbyx6n
-   w1Sky18bhcYfHlMA+OIY2m5DeuR+1fDBf8LEv6YWqySvGHlYkPTXm0yuJ
-   NE/5TVs047t3hKekVYVLPSAnfZkl8zJSrwT/w0B64g/vH3XIwil+80z1h
-   yoHTspUXMq+zjIMIBNUa7s5B8Jj6xcxw/UQC5+Rsq56hgIkgEIDT/DFR1
-   uvyDMxWVWwh9W/TnKsa76JxT52qyPbsVC+B1v+sLbNGgmm20ifBtXmM3b
-   A==;
-X-CSE-ConnectionGUID: O91IltUhTMSY1kczEIJ1CQ==
-X-CSE-MsgGUID: RZKNNEaBQQ+q7y3HrVp6Rg==
-X-IPAS-Result: =?us-ascii?q?A0ANAADGpXxq/5AQJK1aGwEBAQEBAQEBBQEBARIBAQEDA?=
- =?us-ascii?q?wEBAWWBFwYBAQELAYE8ATBTgQgCgSFJhjqBaQOETF+GWIIhA54bFIFgCg8BA?=
- =?us-ascii?q?QENAi4BDhQEAQGDToE3Ao1nAiY0CQ4BAgQDAgMBAQEBAQEBAQEBAQsBAQUBA?=
- =?us-ascii?q?QECAQcFgQ4Thk8NhloBAQEBAwGBCAIBCBEEAQEBLicKHQgCBAESCIJ7gh0WQ?=
- =?us-ascii?q?QMBAg63bwKJSxo3eIE0gQHgOBWBOAGFPoMdAQEqgTWCXYEjGRuEYScbgg2BF?=
- =?us-ascii?q?UKCaT6CYQQBgUMchBOCMASCInoSG4IxPYJqjQ1SciIDJjMsAVUTFwsHBYEjE?=
- =?us-ascii?q?DMDKi8tI0sFLR1wDCcSDx0XFx5YGwYFEiAqQUQjAz44gUgCgXU/Ixk2fIEJY?=
- =?us-ascii?q?YErKmYCEBdGLhWCJAKCdoEqA14CAR4LbT03Bg4ZAwSBNQWNGwdcIIJDAQJSB?=
- =?us-ascii?q?gEaBxQqASAPgQVQLaMJR44Zk1mBPgqEHoo+gWOIYYRdiDIXhASBV4s9mVSZC?=
- =?us-ascii?q?COFMYg2lTRMhQ4CBAIEBQIQAQEGgWg8gVlwFTuCZwlKGQ+SI4UTxwZ5PQEBB?=
- =?us-ascii?q?wIHDgMLgWiRfgEB?=
-IronPort-PHdr: A9a23:EekLER13Pfb09hn/smDPmlBlVkEcU/3cNwoR7N8gk71RN/7l9JX5N
- 0uZ7vJo3xfFXoTevupNkPGe87vhVmoJ/YubvTgcfYZNWR4IhYRenwEpDMOfT0yuBPXrdCc9W
- s9FUTdY
-IronPort-Data: A9a23:Hi8OYaOQ4Yi/CUzvrR35lsFynXyQoLVcMsEvi/4bfWQNrUpz1jJRz
- zRKCmzUPfaOazOnLtAjb9uw9h4CupfRxoNmTnM5pCpnJ55oRWUpJjg4wmPYZX76whjrFRo/h
- ykmQoCeaphyFTmE+kvF3oHJ9RFUzbuPSqf3FNnKMyVwQR4MYCo6gHqPocZh6mJTqYb/WV7lV
- e/a+ZWFZgf1gmQsaQr41orawP9RlKWq0N8nlgRWicBj5Df2i3QTBZQDEqC9R1OQapVUBOOzW
- 9HYx7i/+G7Dlz91Yj9yuu+mGqGiaue60Tmm0hK6aYD76vRxjnBaPpIACRYpQRw/ZwNlMDxG4
- I4lWZSYEW/FN0BX8QgXe0Ew/ypWZcWq9FJbSJSymZT78qHIT5fj69I/VWAyIbAYxsNMMDhN/
- u41CRJURSnW0opawJrjIgVtrs0nKM+uOMYUvWttiGmGS/0nWpvEBa7N4Le03h9p2ZsIRqiYP
- pRfMGYzBPjDS0Un1lM/E4wlguqunWLXeDxDo1XTrq0yi4TW5FwpjeW8aIGOILRmQ+1vrGW+g
- E/P1V3AQQhFJYe/0wSdrEij07qncSTTHdh6+KeD3vRrnFeaxWFWBBAIWF+TpfiillX4XMpSL
- UER8CcioaU+skuxQbHAswaQqXqAuFsYHtFXCeB/sF7LwavP6AHfDW8BJtJcVOEbWAYNbWVC/
- neCnsjiAnpkt7j9dJ5X3u38Qe+aUcTNEVI/WA==
-IronPort-HdrOrdr: A9a23:/ytAtaCZTT/iUDflHeilsseALOsnbusQ8zAXPh9KOH9om52j9/
- xGws576fatskdvZJhBo7y90dq7MA3hHP9OkMUs1NiZLXLbUQeTXeVfBM7ZskHd8k7Fh6FgPM
- VbAtJD4bTLZDAQ47eZkWyF+pQbsaS6GcuT9IHjJgJWPHlXgtZbnn5E42igYypLbTgDL6AUUL
- Cb4c1KrSehf3M4UuSXb0NuY8Hz4/fwuNbDexApOz4LgTPisRqYrJLqGRmR2RkTFwhI3aoj9m
- b9lQn47LWIsv2wyBPQvlWjoai+nuGP9vJzQOi3zuQFIDTljQilIK57XaeZgTwzqOazrH43jd
- jluX4bToROwkKUWlvwjQrm2gHm3jprwWTl00WkjXzqptG8bC4mCvBGmZlSfnLimgkdVZBHoe
- B2NlCixt5q5CD77WPADh/zJldXf3+P0D8feCgo/iViuMUlGedsRMckjTJo+d87bVLHAcYcYa
- hTJfCZwupKelWHaH2clGxuzNuwGkkXJH69MxM/Ugj/6UkKoJi/pHFonvD2kho7heEAYogB6O
- LePqtykrZSCscQcKJmHe8EBdC6E2rXXHv3QSmvyHncZeg60kj22tbKyaRw4PvvdI0DzZM0lp
- iEWFREtXQqc0arDcGVxpVE/h3EXW34BF3Wu4xjzok8vqe5SKvgMCWFRlxrm8y8o+8HCsmeX/
- qoIppZD/LqMGOrE4dU2A/1XYVUNBAlIYcok8d+X0jLrtPAK4XsuOCeePHPJKD1GTJhQW/7Cm
- trZkmEGCyB1DHdZpbVummkZ5q2QD2MwXtZKtmuw9Qu
-X-Talos-CUID: =?us-ascii?q?9a23=3AcIVCimtESNMZgTs8DPsvRCvk6IsCIyT8yGvtI3O?=
- =?us-ascii?q?dMlcwS7aHZH6yoYhdxp8=3D?=
-X-Talos-MUID: 9a23:DC3W8wny8I/A4n0yibEAdnpYBuROxYmnInk00oxZqpKkLxJoZQ2S2WE=
+  d=cisco.com; i=@cisco.com; l=11342; q=dns/txt;
+  s=iport01; t=1786554240; x=1787763840;
+  h=from:to:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=mc0ELW5hfqVYZ+MGeVxFQrh2kWqiNhiHpkwMMxavzPY=;
+  b=ajLA/BL8u0IGcQnx076cBIqTziH0gK6loAmSsZbjgK0Xx1K9sUMEKB3Q
+   mcdF/VAJQBAREXeqQYA5QHDRjBLEIlnH3QKA7UOHHLslv2psJEBRIKmLb
+   +g0XZlgFDTcGz6aYrktOLEDUt1zWZ+w/pvB7Ug4O/fBJ95oi4u459SvKe
+   +GXGEMKv9Gj8zW+a46IY4x9ylYvBHmsVL/8DbD05EEImuFrTgJsIZt03U
+   siJQj8dxCrZ6OW8xDyMocKuqoCSbHHCIR7XgEcrbdVCejNoyGmKM+8+z5
+   i8cofRF+NZZfgMleno9K459F4FfVLoBFJKZwvKE6v8pQqiHiZ0Biu5va5
+   g==;
+X-CSE-ConnectionGUID: ODOUdFENSYCEw7y5iZLtkQ==
+X-CSE-MsgGUID: UYfC1dMdS7WrbMFgBaCRUQ==
+X-IPAS-Result: =?us-ascii?q?A0AoAADGpXxq/48QJK1aHQEBAQEJARIBBQUBZYEXCAELA?=
+ =?us-ascii?q?YFtUxZyAoEhSYgjA4RMX4ZYgiGBFp0IgX4PAQEBDQIxIAQBAYUFAo1nAiY0C?=
+ =?us-ascii?q?Q4BAgQDAgMBAQEBAQEBAQEBAQsBAQUBAQECAQcFgQ4Thk8BDIdsAX8nBBMIg?=
+ =?us-ascii?q?nuCdAMBArd9AolLGjd4gTSBAeAsAQsUAYE4AYhcAYV4hHwnG4INgRVCgjF2h?=
+ =?us-ascii?q?CsahBOCMASCIoEMgkiCFIEXjQ2BShwDWSwBVRMXCwcFgWYDKi8tbjIdgSM+F?=
+ =?us-ascii?q?zVYGwYFgR2BKIQ2Ixk2fIEJYYErKmYSF4EJgiQCgnaBKmECAR4LbT03FBkDB?=
+ =?us-ascii?q?IE1BY1+IIJDAQEBWSEUKgGBIIERkwyReaF7CoQejCGVcBeFW6URmQgjo2eFD?=
+ =?us-ascii?q?gIEAgQFAhABAQY2gTI8gVlwFYMiCUoZD5gHxjV5PQEBBwIHDgMLgWiRfgEB?=
+IronPort-PHdr: A9a23:M6rTVRZLWHnCr8dAqgiEFib/LTAchN3EVzX9orIuj7ZIN6O78IunY
+ ArU5O5mixnCWoCIo/5Hiu+Dq6n7QiRA+peOtnkebYZBHwEIk8QYngEsQYaFBET3IeSsbnkSF
+ 8VZX1gj9Ha+WXU=
+IronPort-Data: A9a23:/p5y3q9r6nc4IkVMGWnNDrUD3H+TJUtcMsCJ2f8bNWPcYEJGY0x3n
+ 2VNWW6OaPqPNGGhc9EjaYTi/ENV75+AytNlT1c++3xEQiMRo6IpJzg2wmQcns+2BpeeJK6yx
+ 5xGMrEsFOhtEDmE4EzrauS9xZVF/fngbqLmD+LZMTxGSwZhSSMw4TpugOdRbrRA2bBVOCvT/
+ 4mvyyHjEAX9gWAsYjtOs/nrRC5H5ZwehhtJ5jTSWtgT1LPuvyF9JI4SI6i3M0z5TuF8dsamR
+ /zOxa2O5WjQ+REgELuNyt4XpWVTH9Y+lSDX4pZnc/DKbipq/0Te4Y5nXBYoUnq7vh3S9zxHJ
+ HqhgrTrIeshFvWkdO3wyHC0GQkmVUFN0OevzXRSLaV/wmWeG0YAzcmCA2kREaol9shaJ1p/3
+ tEHdyFQbyKnm+GPlefTpulE3qzPLeHiOIcZ/3UlxjbDALN+H9bIQr7B4plT2zJYasJmRKmFI
+ ZFHL2MxKk2cOHWjOX9PYH46tPy2nWfydSZDgFmUvqEwpWPUyWSd1ZC9aIaFJIPRHZU9ckCwm
+ 1PI1D31Jx0ha+OFwx+r/VilrdXypHauMG4VPPjinhJwu3WZx3AZAR4bEFe2v/S9okq/QM5Eb
+ UsM9ywjqKI/+ECmQp/6RRLQnZKflhcYX9wVF6gx7xuAj/KKpQ2YHWMDCDVGbbTKqfMLeNDj7
+ XfQ9/vBDj10u7rTQnWYnop4ZxvrUcTJBQfuvRM5cDY=
+IronPort-HdrOrdr: A9a23:hyCuyax3JTA+StmuEV1tKrPxP+gkLtp133Aq2lEZdPULSL36qy
+ n+ppQmPEHP6Qr5AEtQ5OxoWJPtfZquz+8I3WB3B8buYOCGghrjEGgM1/qY/9SNIVybygc/79
+ YtT0EdMqyLMbESt6+Ti2fIcadE/DDtytHPuQ6q9QYUcegcUdAY0+4WMHf9LmRGACN9Kd4SEp
+ 2a6sBbpzymV0g2Q62AbEUtbqzonfGOsIjpTyInKncchTWmvHeF+bT6Gx+X0lMkVS9TwbAtyG
+ 7BkwbozKSuufO2x3bnpiDuBpJt9+fJ+59mPoihm8IVIjLjhkKDf4J6QYCPuzgzvaWG9EsquM
+ OkmWZgA+1Dr1fqOk2lqxrk3AftlBw07WX59FOeiXz/5eTkWTMBDdZbj44xSGqY16NghqA+7E
+ t45RPdi3NlN2KFoM073amOa/herDv3nZPlq59Us5UQa/pGVFYbl/1hwKocKuZ/IMu90vFoLM
+ BeSOfB+f1RbVSWK1rdvmVp3ZiQe05bJGbffqDH0fbliQS/WxtCvhAlLMBzpAZwyLstD5ZD/O
+ jKKaJuifVHSdIXd7t0AKMbTdKwEXGle2OEDIu+GyWRKEg8AQO6l7fnpLEuoO26cp0By5U/3J
+ zHTVNDrGY3P0bjE9eH0pFH+g3EBDzVZ0Wn9uhOo5xi/rHsTrviNiOODFgojsu7uv0aRsnWQe
+ y6Np5aC+LqaWHuBYFK1QvjXIQ6EwhXbOQF/tIgH16eqMPCLYPn8uTdbfbIPbLoVS0pX2vua0
+ FzKAQb5P8wm3xDdkWI8iQ5AUmdCnAX1agAY5Tnww==
+X-Talos-CUID: =?us-ascii?q?9a23=3AKSlyNWvtu3SCWJfK2cmcyWQ76IsCXlrgwFn9BXS?=
+ =?us-ascii?q?JIkt2F6zISG205KBdxp8=3D?=
+X-Talos-MUID: 9a23:bokDkwmiK//D0t1KM6PudnpfBclDuqiLBHtSro8MnueLHyVbAQqk2WE=
 X-IronPort-Anti-Spam-Filtered: true
-Received: from alln-l-core-07.cisco.com ([173.36.16.144])
-  by alln-iport-4.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 12 Aug 2026 17:00:45 +0000
-Received: from alln-opgw-2.cisco.com (alln-opgw-2.cisco.com [173.37.147.250])
+Received: from alln-l-core-06.cisco.com ([173.36.16.143])
+  by alln-iport-7.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 12 Aug 2026 17:03:59 +0000
+Received: from alln-opgw-4.cisco.com (alln-opgw-4.cisco.com [173.37.147.252])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by alln-l-core-07.cisco.com (Postfix) with ESMTPS id D5A1218000BCD
-	for <bitbake-devel@lists.openembedded.org>; Wed, 12 Aug 2026 17:00:44 +0000 (GMT)
-X-CSE-ConnectionGUID: lDjRddOARuafsnG+3B+Q/w==
-X-CSE-MsgGUID: ZZRD4I68T5Sy2hHMg5adpA==
-Authentication-Results: alln-opgw-2.cisco.com; dkim=pass (signature verified) header.i=@cisco.com
+	by alln-l-core-06.cisco.com (Postfix) with ESMTPS id B12D118000255
+	for <bitbake-devel@lists.openembedded.org>; Wed, 12 Aug 2026 17:03:59 +0000 (GMT)
+X-CSE-ConnectionGUID: 3rNRDeo6RUijwDpWfPt+WA==
+X-CSE-MsgGUID: zAIn70ZkRryqwsFkJ4YgTg==
+Authentication-Results: alln-opgw-4.cisco.com; dkim=pass (signature verified) header.i=@cisco.com
 X-IronPort-AV: E=Sophos;i="6.25,219,1779148800"; 
-   d="scan'208,217";a="58319119"
-Received: from mail-eastusazon11011055.outbound.protection.outlook.com (HELO BL2PR02CU003.outbound.protection.outlook.com) ([52.101.52.55])
-  by alln-opgw-2.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 12 Aug 2026 17:00:44 +0000
+   d="scan'208";a="83503717"
+Received: from mail-eastus2azon11011042.outbound.protection.outlook.com (HELO BN8PR05CU002.outbound.protection.outlook.com) ([52.101.57.42])
+  by alln-opgw-4.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 12 Aug 2026 17:03:59 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oed00yJqNPLuGGfpTFGyzw8BAtkf5QMHP7EBDgzvE3j/yPcswE9iFYh44IJB7fk89XsT9brtQflm8/TEYRWbIqrsmwDs0L8Bz1Gs+CUQwr1fywcQgO22D734H/cGb6yfFXY81SfBVeXxpXK2lkRzG5OpgYzsFT1Msy+eiWQMv71APytSGi/peJAjxd7PDyiWI92MaIeO0aSCCsXTlrYS4bV3GTVtRi0Pw3wnYLXu1AdHAT27gtmRVMBIQXqZ7wMPt2TlrGpm4S5GyaLu2NovgBFkUWhlUWUrl+MbS8wgR4WOtomZJs8E4jmMuDqKZoc+2F77nmq1H99UBlwrhtQ9JA==
+ b=s8q3AChgOtWc/r8oQWbqMMLcICyH6v+M8rTRznFKNX8QYJwlo8JLnC/imn9Oj0Ek7F3g9bFgnk559VmIilbUSzFkXZA6+tiJOZdxdkMfd2+/KnsoxJh64DzzuD9nQvHitpt6tCKv5IPTzRsGXQYIg8C9bLrw84U2Xx81arBFUseP/ckd+skWoIBzLOOhl99VXwcKQTw+/4sSM+euJDRlHYcOV9qo8iLUhwrDAOwe1QtV6uy10NRw7KeUSNF8WeNUeeuYFK5XmD0HbWHF+RjczIaprq9e9KwPS8MZolxp4bKvcJ0K3RIwRe0a95+jMvOSlSy0IMBcDRK3b3oXPTGWog==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mZbYCmJqF49V7v/ErSRQrDkgOaBhb8EogdpBzPkiBtQ=;
- b=MOfLxj3vEW63Pq1wkjGU1JujXsk9TAbhWEnSOtjVFpA1Pe678Jb31Rx0AzksUGX3cTsi5I+BHBbOYP1hyd9DRzf48yBbd/GhHk6pyNzvtiHiu+tGdSyBa0jmiLC4b4dqrRvP2R2ONfulitR0vpUGZ/7kxiOKhqBV99tcxlvj6KdSh+Yn+8OpIjeYb9yY5tFr/a8ghey3QULOVXXxcYeSiHf2+kK0Jf6vns0NEYKOqFR7zSr3qsmHt2cd9gzc2N6KckVl8L+/7jlekLAEa+5DBgkapxogmVdQgseE8k/+xLzGtoTDpc+Sd/hheRSX5liWqvHMmymfQL0hPeYzXWm5BA==
+ bh=mc0ELW5hfqVYZ+MGeVxFQrh2kWqiNhiHpkwMMxavzPY=;
+ b=VZlaUyH3tiSPb2+faJO2Gyk1kaS+Aw+GM+mypLFdEJWac8FWhsC+3jDJPGOsR306EMK3WXabNi/pLpjKng1y6NtgvMs+4I7En3YnUxYGEKiZatIPBugKRfgTeA7Fst+vD1vCYeNLmU4uH7DiiAXLhV0PZfAJcc1bToR5lC5Lo5Sk1JiX8tb+/4Pzwc8zxCW3pTkwJrI5T1FeC4cgySRHwpuKiP0+X2YSJHh7n9x5MJTzfFFTK5SZgm/4hvPFme52Sro/8Bzm2UpzA89q0jRRW+putyU6wge2HORoE2SGBb3jlRBot33PdsF8HdHGu63gQeaSuBZUnGZaweE9Whf5UQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=cisco.com; dmarc=pass action=none header.from=cisco.com;
  dkim=pass header.d=cisco.com; arc=none
 Received: from DM6PR11MB3962.namprd11.prod.outlook.com (2603:10b6:5:192::26)
- by CY8PR11MB7337.namprd11.prod.outlook.com (2603:10b6:930:9d::22) with
+ by MN2PR11MB4517.namprd11.prod.outlook.com (2603:10b6:208:24e::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.14; Wed, 12 Aug
- 2026 17:00:41 +0000
+ 2026 17:03:57 +0000
 Received: from DM6PR11MB3962.namprd11.prod.outlook.com
  ([fe80::47f3:254:87ca:5161]) by DM6PR11MB3962.namprd11.prod.outlook.com
  ([fe80::47f3:254:87ca:5161%5]) with mapi id 15.21.0315.012; Wed, 12 Aug 2026
- 17:00:41 +0000
+ 17:03:57 +0000
 From: "Fredrik Svensson (svsvenss)" <svsvenss@cisco.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH] fetch2/wget: reuse cached HTTPS
- connections
-Thread-Topic: [bitbake-devel] [PATCH] fetch2/wget: reuse cached HTTPS
- connections
-Thread-Index: AQHdKjIcRsOrUi4UUESHej0HaYuU+LaaaqYAgAA41dE=
-Date: Wed, 12 Aug 2026 17:00:41 +0000
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: 
+ =?iso-8859-1?Q?[PATCH=A0v2]=A0fetch2/wget:=A0reuse=A0cached=A0HTTPS=A0con?=
+ =?iso-8859-1?Q?nections?=
+Thread-Topic: 
+ =?iso-8859-1?Q?[PATCH=A0v2]=A0fetch2/wget:=A0reuse=A0cached=A0HTTPS=A0con?=
+ =?iso-8859-1?Q?nections?=
+Thread-Index: AQHdKnxaqgOfbFZ0Nk+1fTBcZToMqw==
+Date: Wed, 12 Aug 2026 17:03:57 +0000
 Message-ID: 
- <DM6PR11MB39622631465C058DE729DC36CBDC2@DM6PR11MB3962.namprd11.prod.outlook.com>
-References: 
- <DM6PR11MB39629DE24C8A6EDFBBF5B89ECBDC2@DM6PR11MB3962.namprd11.prod.outlook.com>
- <DKN0784SKJ24.PJP5ZNBXS2UO@bootlin.com>
-In-Reply-To: <DKN0784SKJ24.PJP5ZNBXS2UO@bootlin.com>
+ <DM6PR11MB39625FB901F43B181E8B7C38CBDC2@DM6PR11MB3962.namprd11.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 msip_labels: 
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM6PR11MB3962:EE_|CY8PR11MB7337:EE_
-x-ms-office365-filtering-correlation-id: 73af0dc6-4ba8-4ca9-fc8e-08def8933df2
+x-ms-traffictypediagnostic: DM6PR11MB3962:EE_|MN2PR11MB4517:EE_
+x-ms-office365-filtering-correlation-id: 7601d747-236b-4467-5a5b-08def893b2d4
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: 
- BCL:0;ARA:13230040|376014|23010399003|366016|1800799024|56012099006|11063799006|5023799004|10067099003|6133799003|8096899003|4143699003|13003099007|18002099003|22082099003|38070700021;
+ BCL:0;ARA:13230040|23010399003|376014|1800799024|366016|38070700021|10067099003|11063799006|18002099003|56012099006|3023799007;
 x-microsoft-antispam-message-info: 
- FiZKqveEpK1MeaCons4+egBHeV67ch0vFnAE61fdj9K7Bdb6+vEPiC+SSlaLbwfzcbGaDkW5tm85W7+8Q5zSMeLx6UvYbVCXpxa5ZYOHIfjrxGdBE067rdmCMoFQ4gWQUzExfW+bB6XR4dygeXQVkaRK7L2TVMY0Ljm9ILXdj3elD9r/09hqeqbL/RvGBYd3zQpneTL8DaTYlzkemceBACsVk+S8lAxW9Ukwi06mHx4W4Fm9I8ZKTyIVumzXFcFT/l9KkTuyXdW8Mm3eo/MO2IS4ipOzwabZIK0Mp0Uu53PiFNACIQ1B7wpqx0BgQqV8sCzGNqqXgRgLzE55aKIe8/GSu+Ggz8VA1G3HBajlt4J2oTW9InPx/necdF4pARNkfXJtUw7dFvGYN0qolo3xzxcPjmgAGqvGV8tocmCrgVViF2J9HmLDPAmj6NUxFRQKpXLtWAFQYiF7Is8UC10x2pNvkYTVYvM+iUUVoBXlKwPOt/1r3xpYUnahC9YRe3sK+VyE2QMPWJqZM0QgT8I4SeWp/CfE3P43W0DVw76yiq/rApH9SLEoHBoOQMLoDhqriWCN7PHQRwazHf8W2h9zBjF7MHEW2vMU5wH1bkqzNP37SYtmcgKjX7KkZCmTd2Idt+JIeWXgTGjzBVW1NoRVZ1FBkmNqpbsDIoew7qaioMg=
+ U0CnEkl/iu6EwLSQdA+xxaXOWKafEQ6hVmSiwVdp2E/5oKQae2BbmBvqzsyU6bAOoKxNUHdGHc9zaAUnCGaNitBtw6XPhkSTv76zcyTGXYFrPWRsHgFA1BavSYRlupI0QM/sTvTCDd/RebLmleetDkEIKj6fxeHpvi25BZ2Z5GOOrTe5MOCP4R2T3fxpBQreqjfM+JXYL+tOCi+lOqPbkp/1YpD4DS2xsTICze+Wp4LSdFwEEd/TpOaGQalQCF1HuOTuH9jBYvCCil+i7kCXMc1efCGhezp25mdxJTCrR/oEZ6VJwDq4zxnSshA/U83OQV8gAhaD7S4SgyCkUQXOOApUi8ey4lzdBMhXNxrrHmPE2QCmNjCB6L5hG1YVVe+rr5kM38IyjAW8YoIPo9KWOpvzQfzP1trySGFaGMBmgXWw68NWD3LTH2EvpThFNKO0sfcYonjDpjUa+lTv+czQY4KJh9/Pcp1Sxgu/HU5EcoDJFUYSd6LpfW+VazYfWmlodHvzHd6dMcR93vAmAvDpe8T8hU5XJmO0Fqhl85cHN+reHk/au+iOJcughMRHJZpGlfq1pwkKy6jUGn3o4qmxkF4yIFez7LU4bYkUTZ/aJJmLxHPzTYsW2oqDzD/PDvGqJtRGmc6Jq6inUXhESoymcdALKEJEh7Z9H7JFhHApOsYmRVKmdTKkMy7uWAKUl2YPTgABoByWyNjWbLmqwX9/By2XpwJSRw3RhgsbzEMXG6E=
 x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3962.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(366016)(1800799024)(56012099006)(11063799006)(5023799004)(10067099003)(6133799003)(8096899003)(4143699003)(13003099007)(18002099003)(22082099003)(38070700021);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3962.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(1800799024)(366016)(38070700021)(10067099003)(11063799006)(18002099003)(56012099006)(3023799007);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?6Evc89ojKfExEt8xSyTnoD4iVd5kk92d1goFrxgC5++wiJe19urRL1t+rnB3?=
- =?us-ascii?Q?c7tUa/15/ZkuDeUArQVPvMFevbLikU2NQ7TJhlWUf1Y9ZvBioLJ9cOCGZRmM?=
- =?us-ascii?Q?sGPwf4zThP7cMpRHSsKD+1qszNfUSlKWuVNIMYCIvyKxR0tpNjUxJkkNmFdq?=
- =?us-ascii?Q?LiHz7ikyeWCH0jWDyg7xqIbtSD3HjFQyBclKQ8dI+qJ6FX2ZmYHpapp7Exgg?=
- =?us-ascii?Q?J94WD7Y4lodCoNwG6KjIRu22IANryA1bHyGQfyCC4zxBudootXCeozD74R2P?=
- =?us-ascii?Q?r6tYNPs5WG0/C00Ey2E2ncnZdMy2ZVPYAA7fev3cEG5MevVfUf4Aq6ElcHve?=
- =?us-ascii?Q?Vx1kMDSJVhpFMlVbcFRPLFebjvP783G3fYDIqVfaGXNwEu2GrnovaB/8Eyso?=
- =?us-ascii?Q?47g9kBY/aG+nNLendYL+tdNNiHfUvBq7/WlGQf+DkFab6yYmml7UlZmVJWDz?=
- =?us-ascii?Q?j+ElEPbCSxVvyZaMWe8ifvrYkuRQBJoNg4PzRh1W7iO9v/sWWyXSWiHbw86u?=
- =?us-ascii?Q?hVoNzJt4+tkZKkfrwlL049csTDR9ktnu1jyv15Br/PFImKVQGfcV1OHbLN7Y?=
- =?us-ascii?Q?pilkZAaDyTC6tQUGjRuyl3lMBc8wY0+w+S3JXpLGRrkOl2EMQX1IWiGLWboI?=
- =?us-ascii?Q?g63W7WteoNuAQw0dik1GcQEAdBKqjp7icGSHnM5z8+5aKhC5gXdoF9QCSUMF?=
- =?us-ascii?Q?uvsLe/w/MwW0vX4DwciJ6da+91Db+axZ3IkBplD/+2BUNqcuRo5cLoZ/jBWS?=
- =?us-ascii?Q?0VU4Rt6aEOQHDb4T//qV7K1/7eYhyCLocDNkvI75wbAM6Wl9NjejkZUC1XM7?=
- =?us-ascii?Q?QCqEfQ9XMrvt6EKAE1jxctWGt6y5MudLBD6fzsd5zkC43XAFmjeSCu0y4dUl?=
- =?us-ascii?Q?O8anGMaudmtprtesWKdFdGjrqFD52vDxa3jfjzcIbzQwaQgOpHLJt6ECdGi6?=
- =?us-ascii?Q?KlOwdn02HSfiErRyiztesqBTA5fCzEald5S3KyvQ6Oex6HqNV1wR+b9c8pbo?=
- =?us-ascii?Q?vizx8hwxtCVtylHbYdWxZDtYgtD3qaEeNZnc7dbLL4taIA73se0DUleMez2m?=
- =?us-ascii?Q?y2NgEChvFV1FhTtSrnyF4rOUSV0IvlydK71DhOR1GuIKHrmxCQKaitThEd/p?=
- =?us-ascii?Q?47/dqgZqaRbPNCYQ8kEc37fcA6nkTpqWc3vx7++zIVJaCEa3JUEyRiG/1zRW?=
- =?us-ascii?Q?fUTlw142BEHuNCZIEVeieAHo10wdF3G1ZzPaNZkgIjIg9iIUnDQ0XkMOVMYQ?=
- =?us-ascii?Q?NPiAKr4Yb69vxAF03MVqQo0afKMb7rcFNYSSUW2IvpkMfjGCuPCkkuPfG58I?=
- =?us-ascii?Q?2ypzoEIbZxE59VRdC7lAwwfmBEkjd1i03QOBsUGvdvMi7ZdIxS7krR/21zTw?=
- =?us-ascii?Q?opbstZupLzobpqClv9TGdbrf08CFmGGCDMo+m+aT7rHhlrbBlTa6Qn29BnnG?=
- =?us-ascii?Q?5gNUnw/YdqXmJJufhg/2hTVWAsv+T5PNNL/GnQlOfyT16oU/5oI5xFLpYkLW?=
- =?us-ascii?Q?hPn0ErxuQGs/zUCinjZRbl5Z+Ks1ZIO7SJFVBgfrTlMtGme0ERjha3WXcxkl?=
- =?us-ascii?Q?ABkwQVjWzqC5HVZ2F3F43r+2M4RN3SWn9WJesVMgky42UkzdYafXC+OyEpMm?=
- =?us-ascii?Q?5O9E3y4a3mKBwR9nPfUhAkwsKc1vx0pehV6iZrIkdW8tO+2KeDRnkPB21026?=
- =?us-ascii?Q?4LXJnZbSYMTiBYZQpaVt7hUzEVnB+QfzUeVYrQ6bKXzm+CJ2?=
-Content-Type: multipart/alternative;
-	boundary="_000_DM6PR11MB39622631465C058DE729DC36CBDC2DM6PR11MB3962namp_"
+ =?iso-8859-1?Q?Mw/D7B4mjvuDfAs7M4LEYtNx5YU4/Bs5z1YGBrgf0AhX32srUy26P2sSst?=
+ =?iso-8859-1?Q?tv+VWClxK5vii4Nuh0wUNHt0XdmVyyKuc8rXlyet8wO5wKSy7ZaBq60sV2?=
+ =?iso-8859-1?Q?R9XrrpS72F1Yur6HjOMjLh55iW1TM1xWRji7ZNQl45Q0Aea2mUt8c8xdsb?=
+ =?iso-8859-1?Q?l063Sd2Vdc/s0angtjaoZxxpHy1hE5L5db3ifqrUl+O1kFkgmGNrKiS12S?=
+ =?iso-8859-1?Q?DFVPwyFD3f5gCLvuTdXJ8joSqP1zRxOKVrjOIW7a5NPFmvVAaM0UraED1Q?=
+ =?iso-8859-1?Q?oldQKgA/0ve7jQJZBOhYy8eiIU5GfMIQ9xDjdUaKGNVqR+UGDFTG2ickt/?=
+ =?iso-8859-1?Q?rQI6hXbYZgqTpQ9g+Y7c/c5w9MCVE4BJpX9lDlZkY5xikgBtuanGRpk1Ea?=
+ =?iso-8859-1?Q?w+ae3sXabxBZE5qwRGTaR5mkIVGWwwobnKzXqRGazTj2kC/eOUwRsRQJsT?=
+ =?iso-8859-1?Q?vmtQzOzLqjBI+PlOgSTcWWuyKIvG+68DUYTDGh61ZtMMN4xsyKhB1D8JDz?=
+ =?iso-8859-1?Q?PbE8gan2GPpmesZgpDI9zbJ9qZfRXVsSPwth0c0i+fh6I4jfSH0ULw6Oqi?=
+ =?iso-8859-1?Q?MEL98uJ85dHMM7bYOwxRzqBweaDU3PHWUXn05pV3cfYqOf/8ktWvEpIgER?=
+ =?iso-8859-1?Q?/YbfR/UQQSqDDNvIdvRklnppPuMUF5m2cG4ei4lgZFcKurrXWqpSPdtiIT?=
+ =?iso-8859-1?Q?FVEIU+Bg9VKwbZnAfTjo0nV2RMqxGLtSC1lxAxL+p4fxp8aJ1u5sO1tKLT?=
+ =?iso-8859-1?Q?BRc3IvKIKGG+iF+vSIv+sG0bSgZCMSKTqjclSCP9QcNiw/c4bV18R7L35P?=
+ =?iso-8859-1?Q?QW16ul0USyAaNN9KWsssdeJOcsSHqfD9d/GjfiD4O7FkH7a0HAC2OHxcNL?=
+ =?iso-8859-1?Q?L4J1/o0jkjTb0LCgL5WYL/81gxSUHwaAZ8m07l+d/7lazGSKz8dKL1v6Rw?=
+ =?iso-8859-1?Q?hZpEKy24goxsAW1gSqJ3ggEmaY2hCxwVadYaOoXkKQzA4RjMhZWM7nBsNr?=
+ =?iso-8859-1?Q?KCslawJVShWeAEAnmECtNWMXwlLmtXglFGV6NPdmp3yxWGxNNw8w8EyWkr?=
+ =?iso-8859-1?Q?nAFIkvSy6LS+zj88/8BpEcJcwF8TWxEzut7MotZE9i1g7UCDC2Iygz0ZbG?=
+ =?iso-8859-1?Q?vO/tuCbJLYvFx1Ou6fx6dSTmcgdAjzrppViohYsKGPxDqTJalGoGfDHU/2?=
+ =?iso-8859-1?Q?os0FjOLVLuT/TA8535lyiaB44kubERn1AGdMKG1RlFphbNcDIirQnCGvZk?=
+ =?iso-8859-1?Q?prS2wDYIzS1FhqKnwW/CtOc7hVksXE2vCbFwwoNLqGtOAdW/eexZUSHndi?=
+ =?iso-8859-1?Q?MivituX5UxjOBjAbyabnU2w2maao8VANKHXLfFDQQr1qNoYDe4hD1jsqOP?=
+ =?iso-8859-1?Q?e6wtCJXlSZxejiFVtD7MuNIlMeGn36zkrffBPQDWiNMyzHmnG89F09SaU2?=
+ =?iso-8859-1?Q?KdpQ/9b/uwDK6OGX9h7rQAVFAsTFhyANbA70+ZXeaHWG8rntgdnn2BB8UU?=
+ =?iso-8859-1?Q?8qTh664G5FUKLAIaNt5miMfu8B0LCGs717DA/tZ2Wv4vQ+4Ulvt1SBRh7V?=
+ =?iso-8859-1?Q?2DmzWRMnYRgFocYjJpgL/GzY4HWXBD2LFQO9REEvfyZ6rOo/O3LaTsGFX6?=
+ =?iso-8859-1?Q?IdpUVcRILbPiMCNGsLDaCwXwkbfOnGijrRKy3s4Z41c7nYcW/qXR+oN17d?=
+ =?iso-8859-1?Q?iQqZXCLjwdStP2BA9bfLVKSyh8d6urzPJu5+KsJTtwjeYQ0rhbCu6Episi?=
+ =?iso-8859-1?Q?rCxBCf9O6meJfYwSe7Msq8eoc3z4ZgE481O9PqEgNkbatO?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-Exchange-RoutingPolicyChecked: 
-	BInfNrkscjdpVFfkDU10hbSAMUIsBuuhPkteXE3IOxoaGFdMocNBaPvehwrswQVQVbwcd+Wn+aaZxOiUZeGz+/mwSG1tMm3fsHr9jon9U1fadAeG9xjsMNPh61NQhCqeTY1Cu/JCEo5Mc9KGbr4w3Lb5srrGI/OTT5+KfA2PlB/zOVrEUgW7kmO6GnP9k2SBaK/XEstMj+sf5E4vJcHRa7iPRMrD9esNjrTElvnQtdp3XjVdy/9K5JK0sjQU5M+s4u15Lx3CsE+FlJSh2GipypRmIK2yWAJgKOF2gC1MK3wPcjTkbJe5r3aqq6yZfvzNGiiCvz9z4eGTNzjD1DUNEA==
+	qtLtm/rVOujDxSriq94RXnc2DwrAVmnr3zrpFiQen8rwpZUoyb6AU+iCftDLu+ET0Rjqp8FdW1BjY4ptKVwvUgULiD5tLI5YvKwH6VcAIYFWts118slQxaHjvZ1TXp010S6+7jIcpUd9F5kM4aY4G/vZFCosoyynD8Gv01wLM/qiDLNrl9UEuI1zN9BfrvqDF/pk8qc+N1FeyAARm8GoSsaeUuMbob7KMo75PtScdeAdDSZ9GBZf6h8gj5cknrwypnt1e1WTjxynEiSn5BAFD2zmSe/q6anMDASwxLisG5lLCCfjJZROm25sYO3DRiy6jjvvNk+esEVN5E61tnHKIA==
 X-OriginatorOrg: cisco.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3962.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73af0dc6-4ba8-4ca9-fc8e-08def8933df2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2026 17:00:41.6217
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7601d747-236b-4467-5a5b-08def893b2d4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2026 17:03:57.6892
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wbCWXIFv5uxTagwaUQLBY4bOBJlmGlfWJex3CZM+cRYFIj0d4ltHJ/3+0HLkJa8WZqhTv/cOWBLJzD/VyaqXsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7337
-X-Outbound-Client-TLS: ANONYMOUS;alln-opgw-2.cisco.com [173.37.147.250];TLSv1.3;TLS_AES_256_GCM_SHA384;256
-X-Outbound-SMTP-Client: 173.37.147.250, alln-opgw-2.cisco.com
-X-Outbound-Node: alln-l-core-07.cisco.com
+X-MS-Exchange-CrossTenant-userprincipalname: Tg6AZxeAeVqSTUJlqtiJzVbnFSNam5Qln47Lhs4tajK/giEzDeaKgCqNi+neQLiaDFR6RngbfDNGKUpYPt430Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4517
+X-Outbound-Client-TLS: ANONYMOUS;alln-opgw-4.cisco.com [173.37.147.252];TLSv1.3;TLS_AES_256_GCM_SHA384;256
+X-Outbound-SMTP-Client: 173.37.147.252, alln-opgw-4.cisco.com
+X-Outbound-Node: alln-l-core-06.cisco.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 12 Aug 2026 17:00:48 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19917
+ <bitbake-devel@lists.openembedded.org>; Wed, 12 Aug 2026 17:04:08 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19918
 
---_000_DM6PR11MB39622631465C058DE729DC36CBDC2DM6PR11MB3962namp_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-Thanks Mathieu,
-Python 3.12 removed the HTTPSHandler._check_hostname attribute, I'm will po=
-st a v2 patch shortly.
-
-Kind regards
-Fredrik
-________________________________
-From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Sent: Wednesday, August 12, 2026 3:36 PM
-To: Fredrik Svensson (svsvenss) <svsvenss@cisco.com>; bitbake-devel@lists.o=
-penembedded.org <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH] fetch2/wget: reuse cached HTTPS connec=
-tions
-
-On Wed Aug 12, 2026 at 10:17 AM CEST, Fredrik Svensson via lists.openembedd=
-ed.org wrote:
-> The checkstatus() path reuses cached connections for HTTP requests, but
-> uses urllib's standard HTTPSHandler for HTTPS. Each HTTPS availability
-> check therefore creates a new TCP connection and performs a new TLS
-> handshake.
->
-> Add HTTPS equivalents of the existing cached connection and request
-> handler. Preserve the SSL context selected by BB_CHECK_SSL_CERTS and
-> extend FetchConnectionCache keys so HTTPS connections are kept separate
-> from HTTP connections, different certificate policies and CA files, and
-> different proxy tunnels.
->
-> Add a local TLS self-test which proves two HTTPS HEAD requests use one
-> TCP/TLS connection. The test also verifies that a connection established
-> with certificate checking disabled is not reused after checking is
-> enabled.
->
-> In an ABBA benchmark against BitBake master, 4,283 remote sstate
-> availability misses averaged 761.639 seconds without this change and
-> 254.742 seconds with it. This reduced the check by 66.55%, a 2.990x
-> speedup. The benchmark had no matching mirror objects, so it isolates
-> availability checks rather than download and unpack time.
->
-> Signed-off-by: Fredrik Svensson <svsvenss@cisco.com>
-> ---
-
-Hi Fredrik,
-
-Thanks for your patch.
-
-It looks like this is failing to build here:
-ERROR:  OE-core's config sanity checker detected a potential misconfigurati=
-on.
-    Either fix the cause of this error or at your own risk disable the chec=
-ker (see sanity.conf).
-    Following is the list of potential problems / advisories:
-
-    'CacheHTTPSHandler' object has no attribute '_check_hostname'.
-    Please ensure your host's network is configured correctly.
-    Please ensure CONNECTIVITY_CHECK_URIS is correct and specified URIs are=
- available.
-    If your ISP or network is blocking the above URL,
-    try with another domain name, for example by setting:
-    CONNECTIVITY_CHECK_URIS =3D "https://www.example.com/"    You could als=
-o set BB_NO_NETWORK =3D "1" to disable network
-    access if all required sources are on local disk.
-
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/2/builds/4382
-
-Can you have a look at the issue?
-
-Thanks,
-Mathieu
-
---
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
-
---_000_DM6PR11MB39622631465C058DE729DC36CBDC2DM6PR11MB3962namp_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
->
-<style type=3D"text/css" style=3D"display:none;"> P {margin-top:0;margin-bo=
-ttom:0;} </style>
-</head>
-<body dir=3D"ltr">
-<div class=3D"elementToProof" style=3D"font-family: Aptos, Aptos_EmbeddedFo=
-nt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=
-olor: rgb(0, 0, 0);">
-Thanks Mathieu,</div>
-<div class=3D"elementToProof" style=3D"font-family: Aptos, Aptos_EmbeddedFo=
-nt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=
-olor: rgb(0, 0, 0);">
-Python 3.12 removed the HTTPSHandler._check_hostname attribute, I'm will po=
-st a v2 patch shortly.</div>
-<div class=3D"elementToProof" style=3D"font-family: Aptos, Aptos_EmbeddedFo=
-nt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=
-olor: rgb(0, 0, 0);">
-<br>
-</div>
-<div class=3D"elementToProof" style=3D"font-family: Aptos, Aptos_EmbeddedFo=
-nt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=
-olor: rgb(0, 0, 0);">
-Kind regards</div>
-<div class=3D"elementToProof" style=3D"font-family: Aptos, Aptos_EmbeddedFo=
-nt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=
-olor: rgb(0, 0, 0);">
-Fredrik</div>
-<div id=3D"appendonsend"></div>
-<hr style=3D"display:inline-block;width:98%" tabindex=3D"-1">
-<div id=3D"divRplyFwdMsg" dir=3D"ltr"><font face=3D"Calibri, sans-serif" st=
-yle=3D"font-size:11pt" color=3D"#000000"><b>From:</b> Mathieu Dubois-Briand=
- &lt;mathieu.dubois-briand@bootlin.com&gt;<br>
-<b>Sent:</b> Wednesday, August 12, 2026 3:36 PM<br>
-<b>To:</b> Fredrik Svensson (svsvenss) &lt;svsvenss@cisco.com&gt;; bitbake-=
-devel@lists.openembedded.org &lt;bitbake-devel@lists.openembedded.org&gt;<b=
-r>
-<b>Subject:</b> Re: [bitbake-devel] [PATCH] fetch2/wget: reuse cached HTTPS=
- connections</font>
-<div>&nbsp;</div>
-</div>
-<div class=3D"BodyFragment"><font size=3D"2"><span style=3D"font-size:11pt;=
-">
-<div class=3D"PlainText">On Wed Aug 12, 2026 at 10:17 AM CEST, Fredrik Sven=
-sson via lists.openembedded.org wrote:<br>
-&gt; The checkstatus() path reuses cached connections for HTTP requests, bu=
-t<br>
-&gt; uses urllib's standard HTTPSHandler for HTTPS. Each HTTPS availability=
-<br>
-&gt; check therefore creates a new TCP connection and performs a new TLS<br=
->
-&gt; handshake.<br>
-&gt;<br>
-&gt; Add HTTPS equivalents of the existing cached connection and request<br=
->
-&gt; handler. Preserve the SSL context selected by BB_CHECK_SSL_CERTS and<b=
-r>
-&gt; extend FetchConnectionCache keys so HTTPS connections are kept separat=
-e<br>
-&gt; from HTTP connections, different certificate policies and CA files, an=
-d<br>
-&gt; different proxy tunnels.<br>
-&gt;<br>
-&gt; Add a local TLS self-test which proves two HTTPS HEAD requests use one=
-<br>
-&gt; TCP/TLS connection. The test also verifies that a connection establish=
-ed<br>
-&gt; with certificate checking disabled is not reused after checking is<br>
-&gt; enabled.<br>
-&gt;<br>
-&gt; In an ABBA benchmark against BitBake master, 4,283 remote sstate<br>
-&gt; availability misses averaged 761.639 seconds without this change and<b=
-r>
-&gt; 254.742 seconds with it. This reduced the check by 66.55%, a 2.990x<br=
->
-&gt; speedup. The benchmark had no matching mirror objects, so it isolates<=
-br>
-&gt; availability checks rather than download and unpack time.<br>
-&gt;<br>
-&gt; Signed-off-by: Fredrik Svensson &lt;svsvenss@cisco.com&gt;<br>
-&gt; ---<br>
-<br>
-Hi Fredrik,<br>
-<br>
-Thanks for your patch.<br>
-<br>
-It looks like this is failing to build here:<br>
-ERROR:&nbsp; OE-core's config sanity checker detected a potential misconfig=
-uration.<br>
-&nbsp;&nbsp;&nbsp; Either fix the cause of this error or at your own risk d=
-isable the checker (see sanity.conf).<br>
-&nbsp;&nbsp;&nbsp; Following is the list of potential problems / advisories=
-:<br>
-<br>
-&nbsp;&nbsp;&nbsp; 'CacheHTTPSHandler' object has no attribute '_check_host=
-name'.<br>
-&nbsp;&nbsp;&nbsp; Please ensure your host's network is configured correctl=
-y.<br>
-&nbsp;&nbsp;&nbsp; Please ensure CONNECTIVITY_CHECK_URIS is correct and spe=
-cified URIs are available.<br>
-&nbsp;&nbsp;&nbsp; If your ISP or network is blocking the above URL,<br>
-&nbsp;&nbsp;&nbsp; try with another domain name, for example by setting:<br=
->
-&nbsp;&nbsp;&nbsp; CONNECTIVITY_CHECK_URIS =3D &quot;<a href=3D"https://www=
-.example.com/">https://www.example.com/</a>&quot;&nbsp;&nbsp;&nbsp; You cou=
-ld also set BB_NO_NETWORK =3D &quot;1&quot; to disable network<br>
-&nbsp;&nbsp;&nbsp; access if all required sources are on local disk.<br>
-<br>
-<a href=3D"https://autobuilder.yoctoproject.org/valkyrie/#/builders/2/build=
-s/4382">https://autobuilder.yoctoproject.org/valkyrie/#/builders/2/builds/4=
-382</a><br>
-<br>
-Can you have a look at the issue?<br>
-<br>
-Thanks,<br>
-Mathieu<br>
-<br>
--- <br>
-Mathieu Dubois-Briand, Bootlin<br>
-Embedded Linux and Kernel engineering<br>
-<a href=3D"https://bootlin.com">https://bootlin.com</a><br>
-<br>
-</div>
-</span></font></div>
-</body>
-</html>
-
---_000_DM6PR11MB39622631465C058DE729DC36CBDC2DM6PR11MB3962namp_--
+The checkstatus() path reuses cached connections for HTTP requests, but=0A=
+uses urllib's standard HTTPSHandler for HTTPS. Each HTTPS availability=0A=
+check therefore creates a new TCP connection and performs a new TLS=0A=
+handshake.=0A=
+=0A=
+Add HTTPS equivalents of the existing cached connection and request=0A=
+handler. Preserve the SSL context selected by BB_CHECK_SSL_CERTS and=0A=
+extend FetchConnectionCache keys so HTTPS connections are kept separate=0A=
+from HTTP connections, different certificate policies and CA files, and=0A=
+different proxy tunnels.=0A=
+=0A=
+Add a local TLS self-test which proves two HTTPS HEAD requests use one=0A=
+TCP/TLS connection. The test also verifies that a connection established=0A=
+with certificate checking disabled is not reused after checking is=0A=
+enabled.=0A=
+=0A=
+In an ABBA benchmark against BitBake master, 4,283 remote sstate=0A=
+availability misses averaged 761.639 seconds without this change and=0A=
+254.742 seconds with it. This reduced the check by 66.55%, a 2.990x=0A=
+speedup. The benchmark had no matching mirror objects, so it isolates=0A=
+availability checks rather than download and unpack time.=0A=
+=0A=
+Signed-off-by: Fredrik Svensson <svsvenss@cisco.com>=0A=
+---=0A=
+Changes in v2:=0A=
+- Avoid urllib.request.HTTPSHandler's private _check_hostname attribute,=0A=
+  which is no longer present with Python 3.12 and newer.=0A=
+=0A=
+ lib/bb/fetch2/__init__.py | 18 ++++++-----=0A=
+ lib/bb/fetch2/wget.py     | 56 +++++++++++++++++++++++++++------=0A=
+ lib/bb/tests/fetch.py     | 66 +++++++++++++++++++++++++++++++++++++++=0A=
+ 3 files changed, 122 insertions(+), 18 deletions(-)=0A=
+=0A=
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py=0A=
+index a5772f8a..ea007f36 100644=0A=
+--- a/lib/bb/fetch2/__init__.py=0A=
++++ b/lib/bb/fetch2/__init__.py=0A=
+@@ -2127,26 +2127,28 @@ class FetchConnectionCache(object):=0A=
+     def __init__(self):=0A=
+         self.cache =3D {}=0A=
+ =0A=
+-    def get_connection_name(self, host, port):=0A=
+-        return host + ':' + str(port)=0A=
++    def get_connection_name(self, host, port, connection_id=3DNone):=0A=
++        if connection_id is None:=0A=
++            return host + ':' + str(port)=0A=
++        return (host, port, connection_id)=0A=
+ =0A=
+-    def add_connection(self, host, port, connection):=0A=
+-        cn =3D self.get_connection_name(host, port)=0A=
++    def add_connection(self, host, port, connection, connection_id=3DNone)=
+:=0A=
++        cn =3D self.get_connection_name(host, port, connection_id)=0A=
+ =0A=
+         if cn not in self.cache:=0A=
+             self.cache[cn] =3D connection=0A=
+ =0A=
+-    def get_connection(self, host, port):=0A=
++    def get_connection(self, host, port, connection_id=3DNone):=0A=
+         connection =3D None=0A=
+ =0A=
+-        cn =3D self.get_connection_name(host, port)=0A=
++        cn =3D self.get_connection_name(host, port, connection_id)=0A=
+         if cn in self.cache:=0A=
+             connection =3D self.cache[cn]=0A=
+ =0A=
+         return connection=0A=
+ =0A=
+-    def remove_connection(self, host, port):=0A=
+-        cn =3D self.get_connection_name(host, port)=0A=
++    def remove_connection(self, host, port, connection_id=3DNone):=0A=
++        cn =3D self.get_connection_name(host, port, connection_id)=0A=
+         if cn in self.cache:=0A=
+             self.cache[cn].close()=0A=
+             del self.cache[cn]=0A=
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py=0A=
+index 141c2d06..c4534b05 100644=0A=
+--- a/lib/bb/fetch2/wget.py=0A=
++++ b/lib/bb/fetch2/wget.py=0A=
+@@ -151,27 +151,54 @@ class Wget(FetchMethod):=0A=
+         return True=0A=
+ =0A=
+     def checkstatus(self, fetch, ud, d, try_again=3DTrue):=0A=
++        check_certs =3D self.check_certs(d)=0A=
++        newenv =3D bb.fetch2.get_fetcher_environment(d)=0A=
++=0A=
+         class HTTPConnectionCache(http.client.HTTPConnection):=0A=
++            def cache_id(self):=0A=
++                return None=0A=
++=0A=
+             if fetch.connection_cache:=0A=
+                 def connect(self):=0A=
+                     """Connect to the host and port specified in __init__.=
+"""=0A=
+ =0A=
+-                    sock =3D fetch.connection_cache.get_connection(self.ho=
+st, self.port)=0A=
++                    sock =3D fetch.connection_cache.get_connection(=0A=
++                        self.host, self.port, self.cache_id())=0A=
+                     if sock:=0A=
+                         self.sock =3D sock=0A=
+                     else:=0A=
+                         self.sock =3D socket.create_connection((self.host,=
+ self.port),=0A=
+                                     self.timeout, self.source_address)=0A=
+-                        fetch.connection_cache.add_connection(self.host, s=
+elf.port, self.sock)=0A=
++                        fetch.connection_cache.add_connection(=0A=
++                            self.host, self.port, self.sock, self.cache_id=
+())=0A=
+ =0A=
+                     if self._tunnel_host:=0A=
+                         self._tunnel()=0A=
+ =0A=
++        class HTTPSConnectionCache(http.client.HTTPSConnection):=0A=
++            def cache_id(self):=0A=
++                return ("https", check_certs,=0A=
++                        newenv.get("SSL_CERT_FILE"),=0A=
++                        self._tunnel_host, self._tunnel_port)=0A=
++=0A=
++            if fetch.connection_cache:=0A=
++                def connect(self):=0A=
++                    """Reuse an established TLS connection when available.=
+"""=0A=
++=0A=
++                    sock =3D fetch.connection_cache.get_connection(=0A=
++                        self.host, self.port, self.cache_id())=0A=
++                    if sock:=0A=
++                        self.sock =3D sock=0A=
++                    else:=0A=
++                        super().connect()=0A=
++                        fetch.connection_cache.add_connection(=0A=
++                            self.host, self.port, self.sock, self.cache_id=
+())=0A=
++=0A=
+         class CacheHTTPHandler(urllib.request.HTTPHandler):=0A=
+             def http_open(self, req):=0A=
+                 return self.do_open(HTTPConnectionCache, req)=0A=
+ =0A=
+-            def do_open(self, http_class, req):=0A=
++            def do_open(self, http_class, req, **http_conn_args):=0A=
+                 """Return an addinfourl object for the request, using http=
+_class.=0A=
+ =0A=
+                 http_class must implement the HTTPConnection API from http=
+lib.=0A=
+@@ -185,7 +212,7 @@ class Wget(FetchMethod):=0A=
+                 if not host:=0A=
+                     raise urllib.error.URLError('no host given')=0A=
+ =0A=
+-                h =3D http_class(host, timeout=3Dreq.timeout) # will parse=
+ host:port=0A=
++                h =3D http_class(host, timeout=3Dreq.timeout, **http_conn_=
+args) # will parse host:port=0A=
+                 h.set_debuglevel(self._debuglevel)=0A=
+ =0A=
+                 headers =3D dict(req.unredirected_hdrs)=0A=
+@@ -231,7 +258,8 @@ class Wget(FetchMethod):=0A=
+                     # If it still fails, we give up, which can happen for =
+bad=0A=
+                     # HTTP proxy settings.=0A=
+                     if fetch.connection_cache:=0A=
+-                        fetch.connection_cache.remove_connection(h.host, h=
+.port)=0A=
++                        fetch.connection_cache.remove_connection(=0A=
++                            h.host, h.port, h.cache_id())=0A=
+                     h.close()=0A=
+                     raise=0A=
+ =0A=
+@@ -265,10 +293,20 @@ class Wget(FetchMethod):=0A=
+                 # Close connection when server request it.=0A=
+                 if fetch.connection_cache is not None:=0A=
+                     if 'Connection' in r.msg and r.msg['Connection'] =3D=
+=3D 'close':=0A=
+-                        fetch.connection_cache.remove_connection(h.host, h=
+.port)=0A=
++                        fetch.connection_cache.remove_connection(=0A=
++                            h.host, h.port, h.cache_id())=0A=
+ =0A=
+                 return resp=0A=
+ =0A=
++        class CacheHTTPSHandler(CacheHTTPHandler, urllib.request.HTTPSHand=
+ler):=0A=
++            def __init__(self, debuglevel=3D0, context=3DNone, check_hostn=
+ame=3DNone):=0A=
++                urllib.request.HTTPSHandler.__init__(self, debuglevel, con=
+text,=0A=
++                                                     check_hostname)=0A=
++=0A=
++            def https_open(self, req):=0A=
++                return self.do_open(HTTPSConnectionCache, req,=0A=
++                                    context=3Dself._context)=0A=
++=0A=
+         class HTTPMethodFallback(urllib.request.BaseHandler):=0A=
+             """=0A=
+             Fallback to GET if HEAD is not allowed (405 HTTP error)=0A=
+@@ -370,12 +408,10 @@ class Wget(FetchMethod):=0A=
+         # Avoid tramping the environment too much by using bb.utils.enviro=
+nment=0A=
+         # to scope the changes to the build_opener request, which is when =
+the=0A=
+         # environment lookups happen.=0A=
+-        newenv =3D bb.fetch2.get_fetcher_environment(d)=0A=
+-=0A=
+         with bb.utils.environment(**newenv):=0A=
+             import ssl=0A=
+ =0A=
+-            if self.check_certs(d):=0A=
++            if check_certs:=0A=
+                 context =3D ssl.create_default_context()=0A=
+             else:=0A=
+                 context =3D ssl._create_unverified_context()=0A=
+@@ -384,7 +420,7 @@ class Wget(FetchMethod):=0A=
+                         HTTPMethodFallback,=0A=
+                         urllib.request.ProxyHandler(),=0A=
+                         CacheHTTPHandler(),=0A=
+-                        urllib.request.HTTPSHandler(context=3Dcontext)]=0A=
++                        CacheHTTPSHandler(context=3Dcontext)]=0A=
+             opener =3D urllib.request.build_opener(*handlers)=0A=
+ =0A=
+             try:=0A=
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py=0A=
+index cd50c37a..fd064743 100644=0A=
+--- a/lib/bb/tests/fetch.py=0A=
++++ b/lib/bb/tests/fetch.py=0A=
+@@ -1781,6 +1781,72 @@ class FetchCheckStatusTest(FetcherTest):=0A=
+ =0A=
+         connection_cache.close_connections()=0A=
+ =0A=
++    @unittest.skipUnless(shutil.which("openssl"), "openssl not installed")=
+=0A=
++    def test_wget_checkstatus_https_connection_cache(self):=0A=
++        import ssl=0A=
++        from socketserver import ThreadingMixIn=0A=
++        from bb.fetch2 import FetchConnectionCache=0A=
++=0A=
++        class HTTPSRequestHandler(http.server.BaseHTTPRequestHandler):=0A=
++            protocol_version =3D "HTTP/1.1"=0A=
++=0A=
++            def do_HEAD(self):=0A=
++                self.send_response(200)=0A=
++                self.send_header("Content-Length", "0")=0A=
++                self.end_headers()=0A=
++=0A=
++            def log_message(self, format_str, *args):=0A=
++                pass=0A=
++=0A=
++        class HTTPSServer(ThreadingMixIn, http.server.HTTPServer):=0A=
++            daemon_threads =3D True=0A=
++=0A=
++            def __init__(self, *args, **kwargs):=0A=
++                self.connection_count =3D 0=0A=
++                super().__init__(*args, **kwargs)=0A=
++=0A=
++            def get_request(self):=0A=
++                request, client_address =3D super().get_request()=0A=
++                self.connection_count +=3D 1=0A=
++                return request, client_address=0A=
++=0A=
++        certificate =3D os.path.join(self.tempdir, "certificate.pem")=0A=
++        private_key =3D os.path.join(self.tempdir, "private-key.pem")=0A=
++        subprocess.check_call(=0A=
++            ["openssl", "req", "-x509", "-newkey", "rsa:2048", "-nodes",=
+=0A=
++             "-keyout", private_key, "-out", certificate, "-days", "1",=0A=
++             "-subj", "/CN=3D127.0.0.1"],=0A=
++            stdout=3Dsubprocess.DEVNULL, stderr=3Dsubprocess.DEVNULL)=0A=
++=0A=
++        server =3D HTTPSServer(("127.0.0.1", 0), HTTPSRequestHandler)=0A=
++        context =3D ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)=0A=
++        context.load_cert_chain(certificate, private_key)=0A=
++        server.socket =3D context.wrap_socket(server.socket, server_side=
+=3DTrue)=0A=
++        server_thread =3D threading.Thread(target=3Dserver.serve_forever)=
+=0A=
++        server_thread.daemon =3D True=0A=
++        server_thread.start()=0A=
++=0A=
++        connection_cache =3D FetchConnectionCache()=0A=
++        try:=0A=
++            url =3D "https://127.0.0.1:%s/test" % server.server_port=0A=
++            self.d.setVar("BB_CHECK_SSL_CERTS", "0")=0A=
++            fetch =3D bb.fetch2.Fetch([url], self.d,=0A=
++                                    connection_cache=3Dconnection_cache)=
+=0A=
++            ud =3D fetch.ud[url]=0A=
++            self.assertTrue(ud.method.checkstatus(fetch, ud, self.d))=0A=
++            self.assertTrue(ud.method.checkstatus(fetch, ud, self.d))=0A=
++            self.assertEqual(server.connection_count, 1)=0A=
++=0A=
++            # A connection established without certificate checks must not=
+ be=0A=
++            # reused after certificate checking is enabled.=0A=
++            self.d.setVar("BB_CHECK_SSL_CERTS", "1")=0A=
++            self.assertFalse(ud.method.checkstatus(fetch, ud, self.d))=0A=
++        finally:=0A=
++            connection_cache.close_connections()=0A=
++            server.shutdown()=0A=
++            server_thread.join()=0A=
++            server.server_close()=0A=
++=0A=
+     def test_wget_checkstatus_same_origin_redirect_keeps_auth(self):=0A=
+         server =3D self._start_checkstatus_server()=0A=
+         server.redirect_url =3D "http://127.0.0.1:%s/b" % server.server_po=
+rt=0A=
+-- =0A=
+2.55.0=0A=
 
