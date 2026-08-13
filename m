@@ -1,275 +1,272 @@
-Return-Path: <jaipaul.cheernam@est.tech>
+Return-Path: <rob.woolleywr@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BA1C5CFCF
-	for <webhook@archiver.kernel.org>; Thu, 13 Aug 2026 16:54:25 +0000 (UTC)
-Received: from AS8PR04CU009.outbound.protection.outlook.com (AS8PR04CU009.outbound.protection.outlook.com [52.101.70.26])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.23729.1786640055631717152
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAB3C5DF66
+	for <webhook@archiver.kernel.org>; Thu, 13 Aug 2026 23:37:21 +0000 (UTC)
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.2745.1786664232833106883
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 13 Aug 2026 09:54:16 -0700
+ Thu, 13 Aug 2026 16:37:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@est.tech header.s=selector1 header.b=PNUSNLzI;
- spf=pass (domain: est.tech, ip: 52.101.70.26, mailfrom: jaipaul.cheernam@est.tech)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yrEhx3EpqgmPIuro9WahXPBGZAHbnTC03zpuNl2Pd0Lo8HubVx+hGEXtNG9F2oJ108BuUZnhD5/WtMbRAIq4Qfgxt7jW7wtjLUAQa7EL3/3hUzjENz7xJuEdcvWyPVA4qjGkU4HCPQMq3DXXPcywn65JOlHMGm+xGjF5mSjFljzNTPuKpNJO+dOZIt03p5BwJDLiPuDdUas+8ppkvBl8gPhg7eFu2dsg9hZqhvEygkIJS5u2Uj++ZqQ0AlifiNej7CGohhNJI5EVQM2J3rTlyfU/02dc3o3UoxupWz2BDCMJ/Ls37ltlHdc1rlHNvgIy1f33zj1iiWlANfvrHlYnUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nfd6s53UN9N+xpaGkVH1htN2CozS/Woxatd0+XJ2MPg=;
- b=xIMEj+ZjiCFSNHYNkwOHlWzphu2uRIdwaCVMA1gdORSC5FYtBgiMl+e/4q+qUODRm4KTIVQLxipczxlINNLrUgCLicd+ocPXpUhbcxkzneASau+LANGUEaa/5bYYkkQY7Sdt+Y9+NzMq5njLNXY1AVZzH8yhf6gWJ1XNHes0TwjPZBkMUpCWo59HR5dcg5UK6FTck5TdbS0ycM/nkCa3Gjn8ObyV1y85EWCmT6b2AwhQXXrywP6/WQFNhTNbXPcim+VZV5/kY4UG4U/DakfN7bFY4DYW8Ww7jq+hth7X9O50hid+yVRxv16/I5ZO0LucAdFSQIHiJYmj7s+r6nuSqg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=est.tech; dmarc=pass action=none header.from=est.tech;
- dkim=pass header.d=est.tech; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=est.tech; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nfd6s53UN9N+xpaGkVH1htN2CozS/Woxatd0+XJ2MPg=;
- b=PNUSNLzIqyUCITdkwkFK7eYUwQ3EZIGKMyAXDf9fu5Os8QDcHzCo8I3KD664aytxxORy5A0vE2eZPNCsPFp7QHJxpsMtelzbZ5FFvaWNB9DhXJFHSxk/+O9CTqmIhXf3/loXvIAyZU3EY3phxRdItjjqhL8PI8TSZFHgt0d8Z+v6kNZgWQ75wdQq5XniGyiAINZY/AtkWIjsVwpdO25noXzQIsGABm4rjP8jP9l1iongOrN5T+5rlNgXLcJPDVlg9M2LKyGvO84mAtI8d14yH+Pz6IP8FgvqXjzWX8niklfhTMXfBppIw4Q2oM39VuoA9mymUiiAS+kMSti1tk2hKA==
-Received: from DU7PPF66507B2D7.EURP189.PROD.OUTLOOK.COM (2603:10a6:18:3::ad4)
- by DB8P189MB0811.EURP189.PROD.OUTLOOK.COM (2603:10a6:10:12b::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.4; Thu, 13 Aug
- 2026 16:54:11 +0000
-Received: from DU7PPF66507B2D7.EURP189.PROD.OUTLOOK.COM
- ([fe80::7ab2:c6af:6760:5c85]) by DU7PPF66507B2D7.EURP189.PROD.OUTLOOK.COM
- ([fe80::7ab2:c6af:6760:5c85%7]) with mapi id 15.21.0339.002; Thu, 13 Aug 2026
- 16:54:11 +0000
-From: Jaipaul Cheernam <jaipaul.cheernam@est.tech>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH v2] parse: warn on trailing whitespace in
- parsed lines
-Thread-Topic: [bitbake-devel] [PATCH v2] parse: warn on trailing whitespace in
- parsed lines
-Thread-Index: AQHdJZYq4OH5AlzAMUCwdlT/mgvVNbacH8MAgAAdHW0=
-Date: Thu, 13 Aug 2026 16:54:11 +0000
-Message-ID: 
- <DU7PPF66507B2D7DF3AD4504715A950243CF3DB2@DU7PPF66507B2D7.EURP189.PROD.OUTLOOK.COM>
-References: <20260804090834.99906-1-jaipaul.cheernam@est.tech>
- <20260806112435.25128-1-jaipaul.cheernam@est.tech>
- <DKNWRTWPZT8T.1ZLGV8S99L5N9@bootlin.com>
-In-Reply-To: <DKNWRTWPZT8T.1ZLGV8S99L5N9@bootlin.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=est.tech;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU7PPF66507B2D7:EE_|DB8P189MB0811:EE_
-x-ms-office365-filtering-correlation-id: 864914f6-c414-45ad-ba80-08def95b7fbc
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230040|1800799024|10070799003|376014|23010399003|366016|13003099007|38070700021|22082099003|18002099003|56012099006|8096899003|4143699003|11063799006|10067099003;
-x-microsoft-antispam-message-info: 
- gOKbGjuc6hJxjU7B38n5Ro3bORkXYYmWtfGkHk0GUOLHA4lel4H7ipslGv/mIM/N8ePhjQMmyPvrp7JJlp+vmBgrZoPGvU3KTV4BcrmdmVniIAnl9f0N0NOm2p05t9DA4omk87e58Xn/EmJKooKCGD72tqYtszI/cRAvI7KTqKPrdI5j8Ff0rW4uYixddOTHfeqDPHSwRkohRNgAZpOgNekozBvIb/YMqblCCtCxnEBtl9aEqSVcpklMPlubf3jGJMKBO/rSTQBjAiPRhITfuxyyRr6xpxVMUBysJrV2MK/T+sLfGSpZuBuAZTpSIq2YsYmRyox7YG+MFJioN1OTXu5GJWkBHn9WgY22T5RCliTMKelJdC8Od5uooETKrZptHSFygls3dtaLcXdHw1kyogkgkQoKsPDF7Ro6UbaxrvLJCI7P6HO8bI+p8OMd044J/O4WU5e7CUvKkzD7GPWVdyBmHkz8//G5/446JygH2/rs2PW0U/aCq9639aLooI8iNvA52pP3ozRHgTk43SNBxAo9Yg01D04MfTh0jpv5A08ZMWSNj0E703QCw7SLlX24oBMx4ANKEAg+8gXLTiY8IsbploqmN1Y76esa2xLHfIOGrrhRf3fxoKqYF86Cwol2Z/qwtJIMeYdIqyROWkgAY362SOYW2bZJGIiPlgfY18k=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU7PPF66507B2D7.EURP189.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(376014)(23010399003)(366016)(13003099007)(38070700021)(22082099003)(18002099003)(56012099006)(8096899003)(4143699003)(11063799006)(10067099003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 2
-x-ms-exchange-antispam-messagedata-0: 
- =?iso-8859-1?Q?B0ojkBAejZ5197mIM8DqqeJWz176vKBuJXo7UmgE0V7Oa1qEzAqmzjwplF?=
- =?iso-8859-1?Q?Tvw1cG1XWmjAdRiK6YjSDam+W1+JftI8phXgBnkaPAIAIj7lAQky3Cbom3?=
- =?iso-8859-1?Q?YFdisD2HDGdchfYXz7yaUWSfLrC0qyIENhTTv4QzcDuUiz3SAwiwo0m13T?=
- =?iso-8859-1?Q?w+aCFUWiU5ZTs3pwyao2vAdMc0Re+Xzt+QC0cWEX3mHyncBbE7v4wZtF4D?=
- =?iso-8859-1?Q?v4t6/oTLIvmLjAZ32LLEUm2FXa2dOLwG2K/5Jyhdp7tjliWjhaXVfY937m?=
- =?iso-8859-1?Q?zuhntGj4cCi9qrvGA+OezYFilnwfEp57cIFldIVpN8vcaAnjrFxQc2/Hhv?=
- =?iso-8859-1?Q?+NDPIfbCJFORfpGOOTfKl7S69U050KiLQXXIjVPDusVRYaOEQcS4xHbVYT?=
- =?iso-8859-1?Q?6MST9UBQTnmKLzWjZxwXAwDb3JQndeuHHpwjMmjbJnLRTmD5fwx2HuJsZG?=
- =?iso-8859-1?Q?nTGLiapyvzvJFe+3TR8esm0qehz6uKpa9Ka2e4xUhxhYsW3E5e0dJyusuW?=
- =?iso-8859-1?Q?iGSHPfPb+2YvEqEiqn9zx6pjtVAvG4fqNkTK6Vjengi4LVR9XiTcQZlwZt?=
- =?iso-8859-1?Q?+YFs0ThA56MNK26skOfFy2ikDwQQBxxWVYNUy3m2jtjJeoblfoTQXAz9Sw?=
- =?iso-8859-1?Q?dyHRgYkS+q0j2aKYx4szxY4YWsfp8v88KJMaPGMXRDGTDib5ZouAkUmQ6M?=
- =?iso-8859-1?Q?DlqTI3qRCMuCLX3uiUBxtX1AuSX6qe1PUHu+GeZDCOjfFJ54yn3EekltTq?=
- =?iso-8859-1?Q?v+DJ9Nvqz5/IfbhEU+IN2UgvhpCsttRD13g7iMw1TO2IvoI+RokOXhP2NT?=
- =?iso-8859-1?Q?ORxOh89pKTG3fR3JJz4eIT5EcI8c6TrwPEvBvsQABN211fN9J9+ySIEMZT?=
- =?iso-8859-1?Q?NqON4y0qRL9UNYeu3tESJNMfxdszKGm7336xdZEmO2XreZ9X/ECtIhMztw?=
- =?iso-8859-1?Q?V2w3q5bysSp7AjRXlfyDr4SXQsQEktOXOLWjEQBl9Lmes01xLkguTkR7z2?=
- =?iso-8859-1?Q?piZi4Upb/zjlRDiD1RPz6aR/OcX562May5MHpR5qXY+EOp1XfiIKGAdun0?=
- =?iso-8859-1?Q?csAHjEdjVocP8e60kIH36+MgW7RzIPJuZt0OGXUfvL6KkqrRVGad8+q8eX?=
- =?iso-8859-1?Q?yTzxcm4KFlOKtzO+D437eSn2A1Q3wgrRVof/rWQVSMFl1PkH9BeobRaT7D?=
- =?iso-8859-1?Q?SkrOdB4bvlQcX2NYS4WUA83RXC5f5EjuQ7D/GIarArIB1kL6P9SwW3TCDg?=
- =?iso-8859-1?Q?70NFqg5l36wX5VPSqoMigEuEVx/fT3ypUBQpvPD32lOKniwOqYGvXa8dkU?=
- =?iso-8859-1?Q?U/Nunypu6h/yl7yRiihIdeFl9lyap2BglwUNGyUZQ3X6h9t6qnJ/zJLbC2?=
- =?iso-8859-1?Q?orJh4UxO00xet8Jvosn/MAKm7vTO2PHfXrU9QjseYu9A7650Dhc3vnO4GP?=
- =?iso-8859-1?Q?JqKpD72R24ZKglIG2sj/TvTzu1ZyU4Fj/6uNXuPHLbzpELv2mC4/XicPC8?=
- =?iso-8859-1?Q?aK+d5XppPUE0d/dhc15NqT+/xwkBl2KfM4Ihz9ZmEwrs7Y9oCTci3InYVu?=
- =?iso-8859-1?Q?/YJq5nd+8qZ8DOhrT2IoX3ML4ulhAbtbA2zjhAUewOx50CONJG1TuUBTB+?=
- =?iso-8859-1?Q?WwFaxRzmi2cbxJKSnc6o0hia7hBlfExlYVn3DiKwp1xMBcLkNaLKyj0Mff?=
- =?iso-8859-1?Q?YWCHjFJIJyvnv+aQLHjYA3gTt4Z4etV8nX67rE6T87H/MsmRBRPirOotzq?=
- =?iso-8859-1?Q?0DXIVfpvqLBDn5p9+F2zWVlRuyxLw/3GDi13SNBJYJLlrkhTGDDZ5/t0yY?=
- =?iso-8859-1?Q?T/0K6cGHriJl1jCeKr/nBKrqzqKX6Pd7aV9eD49eiSfHDH3PfVWfmGiZiQ?=
- =?iso-8859-1?Q?ib?=
-x-ms-exchange-antispam-messagedata-1: qtU6pmYtvuQVlw==
-Content-Type: multipart/alternative;
-	boundary="_000_DU7PPF66507B2D7DF3AD4504715A950243CF3DB2DU7PPF66507B2D7_"
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=juhkC7BF;
+ spf=pass (domain: gmail.com, ip: 209.85.128.175, mailfrom: rob.woolleywr@gmail.com)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-81ed2a06b9eso4085007b3.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 13 Aug 2026 16:37:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786664232; cv=none;
+        d=google.com; s=arc-20260327;
+        b=lclaDZYLWpdEuPV3HMEUxpmpZAtPMYVdm0/DZWnl/qPGCXTIv86Qcb0sHRQpAixWrd
+         e9gGQ+PiFmjVr7cO6WanrxovXsMXO4cktwK44SVE5jzO2r2XJZjBt87pR1dIN85YAgXu
+         UQv8Q2Dtsc7PRX977ox/vHeVcdP6bFlMrR69eJv5+hmMJD0ULMuYx/aE9a8EAMXNyTnM
+         hsHMHScJnyUTY5T2dry0maYDh+NNVwJoeyNqXyP5VZizILsnbnZKhOwX2ecJdR/NyklJ
+         Wyfe343rY2fu5E7LIKyU9lSFld/iwbugnt83pTIFgVI8Z1AUPdiGsxBrvmQYhViG5tum
+         KEuA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=Dl6QR05XJHMmqDr/Pj5up+Hw5Oyd6De68gYrS1ywymI=;
+        fh=eXhDJDsIfFzCgyQ0Q2WLQFoLX1rIBonapojPdzUIvqQ=;
+        b=N6SWfCLhptmWRc4ffTLI7fnJxvDat5Hkk3ELRn7ZjCW26FYOyiOigtMqsZkhsqgxZx
+         UAVc1m50ZinBeGR0QsR9USpDPEYil6FIIy4pwQxMcukDh5HjAh3n/kin7cjhrS+ltv/G
+         mhDm749tkk3d5jx/WIkx9zPqqgObVBCfzzhECWvi8xKXpX5WRox7OIcTRpJe/nPxB95u
+         GS/U7OnxspgSUVkpfJkBX05fFzQg6Gw3FgvC47kr5Q6ITq5e1aSNMCtxC9Fszihuv2VY
+         cuuQn61+bpjtGS3K/zF/V0IkRt/u9IMnuG0hwLrhQnbyxaG6Ua9nAwSKdfetl5DY84Gm
+         mQSg==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786664232; x=1787269032; darn=lists.openembedded.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Dl6QR05XJHMmqDr/Pj5up+Hw5Oyd6De68gYrS1ywymI=;
+        b=juhkC7BFENf4zuzXt5806NFrrBAg0tWUYDuPaWi+XCkfm60j/2LpXk00VFwlwWGHCx
+         L6EOZtbOXIyXe/5hS74Y2YibX5TvPODzHTDxhR9IeCVaaSa+Gi/7pSn3R1d+ouTP8e84
+         hxQNFljd4ZMdkxl6B8nf+TvVgo1i6f8Ewe9gl1Pl/aApT+vH7G6W0wPJ1XWFdeMifAJr
+         8TylnW1QKfwZxc05byF7tEvDyXINiaX2+X9z4j+gcNSrJj3pXiVqmyw7Ybl70kWWgr5s
+         Hyb0VjX6xnD79pvgn1j/qOffB8JWBf//gP2rC1M3t4iIrfK3bVw6a5EIzZ4i/bP/Gl4U
+         ZgYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786664232; x=1787269032;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=Dl6QR05XJHMmqDr/Pj5up+Hw5Oyd6De68gYrS1ywymI=;
+        b=ff4pTJF8bHXoubreser4OAV6Yn6JWH8A9MZ53V616OK5Z/ALQgQte2M2I2Dj1awZUx
+         xWsLg8E++cP+7ptxXliYrJd2VyQiRqcsr8Rv3HO2yDa+XXgm6k4Z4bTBqq6Y7euNUPrc
+         FAlyeA6lo3vdN4hJtElfPpLTGVC7uXGoCrpk0AmXOGyznB+zzcVKyahWwHUCk87FLKGN
+         2jlhmn/N9I1uyoEIWEpBajVoeAAx/ntSmiwyJHYMk60o2pxhKEejAi+a4OTIekbAzLUr
+         bJ2nT8xGO7RIyW9+HkVCT+I/cNbJpBPBJaMEWnL5S7jzwtdYEdH0JHv0CYLql94gHTr3
+         KCtA==
+X-Gm-Message-State: AOJu0YwyPvW3hj1qvHxIm6f+8WtQOu9ArdNunAowrZqU3WXowVqOXNVE
+	McBQSmDqMiAbr7tTCvjeSAlCrkdUliPdJr+397upGC8FNPfcH5PKRdiInOKvllrTykJGvPgCEXL
+	xm7Xi+d6RuCREOmdCX+jVe85CLIVSDRKSOg==
+X-Gm-Gg: AR+sD11xcHXy4ORd8sr3nMHkKK7uHZzzZI32+j4imBiY5Z4iKuViFNjT/zhZ9EqQuvN
+	hL5e/YHihA6arNQiAYUT+nCazaGt5l/h3pST3y043HWtPI2uLbY4xBzzhJMAuwX2cI1GXFbgPWG
+	cY7OYyRfN8/H1vq8fdW+iLFWEUBP9bMoJxVGqEjJqPDYGqRq+8+eYANZfOaumrfXauSIfHaNRo/
+	5Ppx8zaoMF7fx3XTqhjR5CP2UcQPC7ZpclDrqnEjnGzk5ebHTinIM3mMiBfRfy5B5bpaFo7af0S
+	oM9yWkisFQ+eUme7Od2XkPbW+IZc3Zj/eAKeAwJDvPgAUN2OcLKnqy2jQQW4bbzxJf3A/OYZY6A
+	SO4h0id3T0rX8
+X-Received: by 2002:a05:690c:e295:20b0:81f:b410:b214 with SMTP id
+ 00721157ae682-837124e9cc0mr5955667b3.27.1786664231608; Thu, 13 Aug 2026
+ 16:37:11 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: est.tech
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU7PPF66507B2D7.EURP189.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 864914f6-c414-45ad-ba80-08def95b7fbc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2026 16:54:11.3380
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d2585e63-66b9-44b6-a76e-4f4b217d97fd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3l0HIo0uwARzKCXd2bQlm9jQEHMWWaWhWHvSZzHSsfq9lTxFdks5gC3Gv/eBhbhpCLYcWuCQJ4rVL7KggFSac+TvhUwGLwwlBjvy6eS0698=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8P189MB0811
+References: <20260812194433.40594-1-chris.laplante@agilent.com>
+In-Reply-To: <20260812194433.40594-1-chris.laplante@agilent.com>
+From: Rob Woolley <rob.woolleywr@gmail.com>
+Date: Thu, 13 Aug 2026 19:37:00 -0400
+X-Gm-Features: AUfX_mzl8P__NUi4GQEpu-0sJ-tsFRQlcKnTqUpcdQz0PmE2f0LCei6PMLx6cuU
+Message-ID: <CAGAhMBw3AeCPhybRpGBz+z-vp3xs8wWzaUvkCWaPwWhHqpxCrA@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH 1/2] pyproject.toml: add setuptools to
+ requires; fix project structure
+To: chris.laplante@agilent.com
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="000000000000dba7000658f62ecb"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 13 Aug 2026 16:54:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19932
+ <bitbake-devel@lists.openembedded.org>; Thu, 13 Aug 2026 23:37:21 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19933
 
---_000_DU7PPF66507B2D7DF3AD4504715A950243CF3DB2DU7PPF66507B2D7_
-Content-Type: text/plain; charset="iso-8859-1"
+--000000000000dba7000658f62ecb
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mathieu,
+Hi Chris,
 
-Yes , if we agree on solution, I will send patch series to oe-core and meta=
-openembedded as well .
+Thanks for pointing this out!
 
-I will prepare and send them tomorrow .
+I think it was a mistake for me to include the project and build-system
+sections in pyproject.toml.  I had it in there originally to try to improve
+the versioning, but we chose to implement it a different way.  It is only
+needed if you intend to do packaging which is something we are trying not
+to do with bitbake itself.
 
+We have a separate pyproject.toml file for bitbake-setup, which we do want
+to package for convenience.
+
+If we remove those sections does that fix the problem you see with PyCharm?
 
 Regards,
-Jaipaul
+Rob
 
-________________________________
-From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Sent: Thursday, August 13, 2026 5:07 PM
-To: Jaipaul Cheernam <jaipaul.cheernam@est.tech>; bitbake-devel@lists.opene=
-mbedded.org <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH v2] parse: warn on trailing whitespace =
-in parsed lines
 
-On Thu Aug 6, 2026 at 1:24 PM CEST, Jaipaul Cheernam wrote:
-> rstrip() silently strips trailing whitespace before processing. This
-> hides invisible spaces or tabs that end up in patch context and cause
-> patches to fail to apply across branches.
+On Wed, Aug 12, 2026 at 3:44=E2=80=AFPM Chris Laplante via lists.openembedd=
+ed.org
+<chris.laplante=3Dagilent.com@lists.openembedded.org> wrote:
+
+> From: Chris Laplante <chris.laplante@agilent.com>
 >
-> Warn on any line with trailing whitespace so developers can fix it early.
+> setuptools is listed as the build backend but wasn't in 'requires'.
 >
-> Signed-off-by: Jaipaul Cheernam <jaipaul.cheernam@est.tech>
+> We also need to tell setuptools to look for our modules in 'lib' since
+> otherwise
+> it chokes on our non-standard layout with:
+>
+> [stderr]
+>       error: Multiple top-level packages discovered in a flat-layout:
+> ['lib', 'conf', 'vendor', 'contrib', 'classes'].
+>
+> With these changes, 'uv sync' works and IDEs such as PyCharm can
+> properly analyze the project.
+>
+> Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
 > ---
+>  pyproject.toml | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/pyproject.toml b/pyproject.toml
+> index 93508d92e..886753f14 100644
+> --- a/pyproject.toml
+> +++ b/pyproject.toml
+> @@ -1,10 +1,17 @@
+>  [build-system]
+> -requires =3D []
+> +requires =3D ["setuptools>=3D64"]
+>  build-backend =3D "setuptools.build_meta"
+>
+>  [project]
+>  name =3D "bitbake"
+>  version =3D "2.19.0"
+> +requires-python =3D ">=3D 3.9"
+> +
+> +[tool.setuptools]
+> +package-dir =3D {"" =3D "lib"}
+> +
+> +[tool.setuptools.packages.find]
+> +where =3D ["lib"]
+>
+>  [tool.vendoring]
+>  destination =3D "lib/bb/_vendor"
+> --
+> 2.43.0
+>
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#19919):
+> https://lists.openembedded.org/g/bitbake-devel/message/19919
+> Mute This Topic: https://lists.openembedded.org/mt/120723537/556952
+> Group Owner: bitbake-devel+owner@lists.openembedded.org
+> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [
+> rob.woolleywr@gmail.com]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
+>
 
-Hi Jaipaul,
-
-Thanks for the v2. I forgot to ask: do you plan to provide an oe-core
-patch fixing all whitespace issues? As so far, this is adding a lot of
-warnings during the build:
-
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/4/builds/4405
-
-Thanks,
-Mathieu
-
---
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
-
---_000_DU7PPF66507B2D7DF3AD4504715A950243CF3DB2DU7PPF66507B2D7_
-Content-Type: text/html; charset="iso-8859-1"
+--000000000000dba7000658f62ecb
+Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<html>
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
-1">
-</head>
-<body>
-<div style=3D"font-family: inherit; font-size: inherit; color: inherit; bac=
-kground-color: transparent;">
-</div>
-<div style=3D"font-family: inherit; font-size: inherit; color: inherit; bac=
-kground-color: transparent;">
-Hi Mathieu,</div>
-<div style=3D"font-family: inherit; font-size: inherit; color: inherit; bac=
-kground-color: transparent;">
+<div dir=3D"ltr">Hi Chris,<div><br></div><div>Thanks for pointing this out!=
+</div><div><span style=3D"background-color:transparent"><br></span></div><d=
+iv><span style=3D"background-color:transparent">I think it was a mistake fo=
+r me to include the project and build-system sections in pyproject.toml.=C2=
+=A0 I had it in there originally to try to improve the versioning, but we c=
+hose to implement it a different way.=C2=A0=C2=A0</span><span style=3D"back=
+ground-color:transparent">It is only needed if you intend to do packaging w=
+hich is something we are trying not to do with bitbake itself.</span></div>=
+<div><span style=3D"background-color:transparent"><br></span></div><div><sp=
+an style=3D"background-color:transparent">We have a separate pyproject.toml=
+ file for bitbake-setup, which we do want to package for convenience.</span=
+></div><div><br>If we remove those sections does that fix the problem you s=
+ee with PyCharm?<br><br>Regards,</div><div>Rob</div><div><div><div><br></di=
+v></div></div></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=
+=3D"gmail_attr">On Wed, Aug 12, 2026 at 3:44=E2=80=AFPM Chris Laplante via =
+<a href=3D"http://lists.openembedded.org" target=3D"_blank">lists.openembed=
+ded.org</a> &lt;chris.laplante=3D<a href=3D"mailto:agilent.com@lists.openem=
+bedded.org" target=3D"_blank">agilent.com@lists.openembedded.org</a>&gt; wr=
+ote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px=
+ 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">From: Chris=
+ Laplante &lt;<a href=3D"mailto:chris.laplante@agilent.com" target=3D"_blan=
+k">chris.laplante@agilent.com</a>&gt;<br>
 <br>
-</div>
-<div style=3D"font-family: inherit; font-size: inherit; color: inherit; bac=
-kground-color: transparent;">
-Yes , if we agree on solution, I will send patch series to oe-core and meta=
-openembedded as well .&nbsp;</div>
-<div style=3D"font-family: inherit; font-size: inherit; color: inherit; bac=
-kground-color: transparent;">
+setuptools is listed as the build backend but wasn&#39;t in &#39;requires&#=
+39;.<br>
 <br>
-</div>
-<div style=3D"font-family: inherit; font-size: inherit; color: inherit; bac=
-kground-color: transparent;">
-I will prepare and send them tomorrow .&nbsp;</div>
-<div><br>
-</div>
-<div><br>
-</div>
-<div id=3D"editor-signature">
-<div>
-<div style=3D"font-family:Aptos,&quot;Aptos_EmbeddedFont&quot;,&quot;Aptos_=
-MSFontService&quot;,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb=
-(0,0,0)">
-Regards,</div>
-<div style=3D"font-family:Aptos,&quot;Aptos_EmbeddedFont&quot;,&quot;Aptos_=
-MSFontService&quot;,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb=
-(0,0,0)">
-Jaipaul</div>
-</div>
-</div>
-<div></div>
+We also need to tell setuptools to look for our modules in &#39;lib&#39; si=
+nce otherwise<br>
+it chokes on our non-standard layout with:<br>
 <br>
-<hr style=3D"display:inline-block;width:98%" tabindex=3D"-1">
-<div id=3D"divRplyFwdMsg" dir=3D"ltr"><font face=3D"Calibri, sans-serif" st=
-yle=3D"font-size:11pt" color=3D"#000000"><b>From:</b> Mathieu Dubois-Briand=
- &lt;mathieu.dubois-briand@bootlin.com&gt;<br>
-<b>Sent:</b> Thursday, August 13, 2026 5:07 PM<br>
-<b>To:</b> Jaipaul Cheernam &lt;jaipaul.cheernam@est.tech&gt;; bitbake-deve=
-l@lists.openembedded.org &lt;bitbake-devel@lists.openembedded.org&gt;<br>
-<b>Subject:</b> Re: [bitbake-devel] [PATCH v2] parse: warn on trailing whit=
-espace in parsed lines</font>
-<div>&nbsp;</div>
-</div>
-<div class=3D"BodyFragment"><font size=3D"2"><span style=3D"font-size:11pt;=
-">
-<div class=3D"PlainText">On Thu Aug 6, 2026 at 1:24 PM CEST, Jaipaul Cheern=
-am wrote:<br>
-&gt; rstrip() silently strips trailing whitespace before processing. This<b=
-r>
-&gt; hides invisible spaces or tabs that end up in patch context and cause<=
-br>
-&gt; patches to fail to apply across branches.<br>
-&gt;<br>
-&gt; Warn on any line with trailing whitespace so developers can fix it ear=
-ly.<br>
-&gt;<br>
-&gt; Signed-off-by: Jaipaul Cheernam &lt;jaipaul.cheernam@est.tech&gt;<br>
-&gt; ---<br>
+[stderr]<br>
+=C2=A0 =C2=A0 =C2=A0 error: Multiple top-level packages discovered in a fla=
+t-layout: [&#39;lib&#39;, &#39;conf&#39;, &#39;vendor&#39;, &#39;contrib&#3=
+9;, &#39;classes&#39;].<br>
 <br>
-Hi Jaipaul,<br>
+With these changes, &#39;uv sync&#39; works and IDEs such as PyCharm can<br=
+>
+properly analyze the project.<br>
 <br>
-Thanks for the v2. I forgot to ask: do you plan to provide an oe-core<br>
-patch fixing all whitespace issues? As so far, this is adding a lot of<br>
-warnings during the build:<br>
+Signed-off-by: Chris Laplante &lt;<a href=3D"mailto:chris.laplante@agilent.=
+com" target=3D"_blank">chris.laplante@agilent.com</a>&gt;<br>
+---<br>
+=C2=A0pyproject.toml | 9 ++++++++-<br>
+=C2=A01 file changed, 8 insertions(+), 1 deletion(-)<br>
 <br>
-<a href=3D"https://autobuilder.yoctoproject.org/valkyrie/#/builders/4/build=
-s/4405" data-auth=3D"NotApplicable" target=3D"_blank">https://autobuilder.y=
-octoproject.org/valkyrie/#/builders/4/builds/4405</a><br>
+diff --git a/pyproject.toml b/pyproject.toml<br>
+index 93508d92e..886753f14 100644<br>
+--- a/pyproject.toml<br>
++++ b/pyproject.toml<br>
+@@ -1,10 +1,17 @@<br>
+=C2=A0[build-system]<br>
+-requires =3D []<br>
++requires =3D [&quot;setuptools&gt;=3D64&quot;]<br>
+=C2=A0build-backend =3D &quot;setuptools.build_meta&quot;<br>
 <br>
-Thanks,<br>
-Mathieu<br>
+=C2=A0[project]<br>
+=C2=A0name =3D &quot;bitbake&quot;<br>
+=C2=A0version =3D &quot;2.19.0&quot;<br>
++requires-python =3D &quot;&gt;=3D 3.9&quot;<br>
++<br>
++[tool.setuptools]<br>
++package-dir =3D {&quot;&quot; =3D &quot;lib&quot;}<br>
++<br>
++[tool.setuptools.packages.find]<br>
++where =3D [&quot;lib&quot;]<br>
 <br>
+=C2=A0[tool.vendoring]<br>
+=C2=A0destination =3D &quot;lib/bb/_vendor&quot;<br>
 -- <br>
-Mathieu Dubois-Briand, Bootlin<br>
-Embedded Linux and Kernel engineering<br>
-<a href=3D"https://bootlin.com" data-auth=3D"NotApplicable" target=3D"_blan=
-k">https://bootlin.com</a><br>
+2.43.0<br>
 <br>
-</div>
-</span></font></div>
-</body>
-</html>
+<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+Links: You receive all messages sent to this group.<br>
+View/Reply Online (#19919): <a href=3D"https://lists.openembedded.org/g/bit=
+bake-devel/message/19919" rel=3D"noreferrer" target=3D"_blank">https://list=
+s.openembedded.org/g/bitbake-devel/message/19919</a><br>
+Mute This Topic: <a href=3D"https://lists.openembedded.org/mt/120723537/556=
+952" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/mt=
+/120723537/556952</a><br>
+Group Owner: <a href=3D"mailto:bitbake-devel%2Bowner@lists.openembedded.org=
+" target=3D"_blank">bitbake-devel+owner@lists.openembedded.org</a><br>
+Unsubscribe: <a href=3D"https://lists.openembedded.org/g/bitbake-devel/unsu=
+b" rel=3D"noreferrer" target=3D"_blank">https://lists.openembedded.org/g/bi=
+tbake-devel/unsub</a> [<a href=3D"mailto:rob.woolleywr@gmail.com" target=3D=
+"_blank">rob.woolleywr@gmail.com</a>]<br>
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
+<br>
+</blockquote></div>
 
---_000_DU7PPF66507B2D7DF3AD4504715A950243CF3DB2DU7PPF66507B2D7_--
+--000000000000dba7000658f62ecb--
 
