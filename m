@@ -2,548 +2,524 @@ Return-Path: <paolo.wattebled@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A965AC5CFC1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5ECC5CFCF
 	for <webhook@archiver.kernel.org>; Fri, 14 Aug 2026 15:36:23 +0000 (UTC)
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.15785.1786721773449096641
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.15786.1786721773491087293
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 14 Aug 2026 08:36:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=lJwik8tl;
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=EgvLfwKD;
  spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: paolo.wattebled@savoirfairelinux.com)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 458783D8185E
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id A15563D8189E
 	for <bitbake-devel@lists.openembedded.org>; Fri, 14 Aug 2026 11:36:12 -0400 (EDT)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id 1saMAWK8khzD; Fri, 14 Aug 2026 11:36:08 -0400 (EDT)
+ with ESMTP id yCWV2-FWbcsO; Fri, 14 Aug 2026 11:36:08 -0400 (EDT)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 04CC43D818E9;
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 3A58D3D818A9;
 	Fri, 14 Aug 2026 11:36:08 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 04CC43D818E9
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 3A58D3D818A9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1786721768; bh=fJVLWX8G1x8kU0shDbYZJQHJi2eKHblfJIgxyftUwWc=;
+	t=1786721768; bh=uMhOOIMdte8VwwUUE2ApI9jIkbzzw5NZjzwMrOoG/gM=;
 	h=From:To:Date:Message-ID:MIME-Version;
-	b=lJwik8tlu2G+6xk1fAPYdNq5V8vt3RujDLB4XtzekkqJo3+qNfKHBYXSnFzrbvo7Q
-	 Tb6LjhxuKG9OACMrZNLIOdJbF9Mtf9avzacsH/fprc75ff/hJb4jlC+mzrODtYp2Bk
-	 q02HHRELR2duOkS3107AsgsQpnCcvSKw/pXeCjQubJorQ1VAT0//4MhgheqKKxsCPe
-	 4nI23MDOUzOq5mz2hBpTEuCUu2Y1c8siHiAoWyLwpoQyyixv1y2a3uRSNujpKR9YTn
-	 PJearvhfDnfexkd9GZF+N7jjv9QHyj0Ve50FvU8/hAZzmxWPQ/DnyieP0Ht7CQUEkj
-	 HxUCDE3dnDtqg==
+	b=EgvLfwKDuIKMRB1qiO5AVc9ShxZfU0WvOP2dUAdKCufGS6/uqFPXpL/+LJgu0scI3
+	 NVMWz52POXHMcGDsyZNBo+dFaGtiC/c2Nl1gsrGIRA4IFBknZzzNO9MMiEkZFcOuf5
+	 C1LVLRj1wZ4OumUdC8sXFBdFGQW5/mfkNkCLpgXFcnYi8DdHg8GGFBWCu8Estdbmy+
+	 I1fypPQvy9u02Cbory3j7KGpupmyYDPh+1hqekGVXeO/BnC8bSvRNMqxcwk1DFPxww
+	 cRSO18w9nHRedMdZvlWP/sP6nCTyNjAF91U7ftPbgqBTu4G0apmw09E7iVWkvsfbOe
+	 iHm1x1NThbnhQ==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id tU3ZQll3BR9I; Fri, 14 Aug 2026 11:36:07 -0400 (EDT)
+ with ESMTP id n24ilhdkweI9; Fri, 14 Aug 2026 11:36:08 -0400 (EDT)
 Received: from pwattebled.mtl.sfl (unknown [192.168.51.254])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id CED623D818A9;
-	Fri, 14 Aug 2026 11:36:07 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 09CE83D818FA;
+	Fri, 14 Aug 2026 11:36:08 -0400 (EDT)
 From: Paolo Wattebled <paolo.wattebled@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Paolo Wattebled <paolo.wattebled@savoirfairelinux.com>
-Subject: [PATCH v2 1/5] cache_extra: Collect recipe variable snapshots
-Date: Fri, 14 Aug 2026 11:35:54 -0400
-Message-ID: <20260814153602.2107764-2-paolo.wattebled@savoirfairelinux.com>
+Subject: [PATCH v2 5/5] toaster: Add recipe variables view on UI
+Date: Fri, 14 Aug 2026 11:35:58 -0400
+Message-ID: <20260814153602.2107764-6-paolo.wattebled@savoirfairelinux.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260814153602.2107764-1-paolo.wattebled@savoirfairelinux.com>
 References: <20260814153602.2107764-1-paolo.wattebled@savoirfairelinux.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 14 Aug 2026 15:36:23 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19944
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19943
 
-Collect final values defined or modified by recipes, matching bbappends
-and recipe include files. Preserve active override and variable flag
-values while excluding inherited-only metadata and functions.
+Expose build-specific recipe variable snapshots through a searchable and
+paginated Variables tab. Show snapshot counts in the built recipes table
+and recipe package navigation.
 
-Enable variable tracking while recipe metadata is parsed, add focused
-extraction tests and invalidate stale recipe information caches.
+Cover build and recipe scoping, pagination, ordering, escaping, empty
+states and query parameter validation with view tests.
 
 AI-Generated: Uses GitHub Copilot and OpenCode with GPT-5.6 Sol
 Signed-off-by: Paolo Wattebled <paolo.wattebled@savoirfairelinux.com>
 ---
- bin/bitbake-selftest        |   1 +
- lib/bb/cache.py             |   2 +-
- lib/bb/cache_extra.py       | 101 +++++++++++++++-
- lib/bb/cookerdata.py        |   5 +-
- lib/bb/tests/cache_extra.py | 235 ++++++++++++++++++++++++++++++++++++
- 5 files changed, 340 insertions(+), 4 deletions(-)
- create mode 100644 lib/bb/tests/cache_extra.py
+ lib/toaster/tests/views/test_views.py         | 155 +++++++++++++++++-
+ lib/toaster/toastergui/buildtables.py         |  11 +-
+ lib/toaster/toastergui/templates/recipe.html  |  32 ++++
+ .../toastergui/templates/recipe_packages.html |   7 +
+ lib/toaster/toastergui/views.py               |  68 +++++++-
+ 5 files changed, 269 insertions(+), 4 deletions(-)
 
-diff --git a/bin/bitbake-selftest b/bin/bitbake-selftest
-index fb7c57dd8..1b09815cd 100755
---- a/bin/bitbake-selftest
-+++ b/bin/bitbake-selftest
-@@ -21,6 +21,7 @@ except RuntimeError as exc:
-     sys.exit(str(exc))
-
- tests =3D ["bb.tests.codeparser",
-+         "bb.tests.cache_extra",
-          "bb.tests.color",
-          "bb.tests.cooker",
-          "bb.tests.cow",
-diff --git a/lib/bb/cache.py b/lib/bb/cache.py
-index 2361c5684..33fa61936 100644
---- a/lib/bb/cache.py
-+++ b/lib/bb/cache.py
-@@ -28,7 +28,7 @@ import shutil
-
- logger =3D logging.getLogger("BitBake.Cache")
-
--__cache_version__ =3D "156"
-+__cache_version__ =3D "157"
-
- def getCacheFile(path, filename, mc, data_hash):
-     mcspec =3D ''
-diff --git a/lib/bb/cache_extra.py b/lib/bb/cache_extra.py
-index bf4226d16..78ef6b638 100644
---- a/lib/bb/cache_extra.py
-+++ b/lib/bb/cache_extra.py
-@@ -13,7 +13,65 @@
- # SPDX-License-Identifier: GPL-2.0-only
- #
-
-+import logging
-+import json
+diff --git a/lib/toaster/tests/views/test_views.py b/lib/toaster/tests/vi=
+ews/test_views.py
+index e1adfcf86..bed572c76 100644
+--- a/lib/toaster/tests/views/test_views.py
++++ b/lib/toaster/tests/views/test_views.py
+@@ -10,14 +10,16 @@
+ """Test cases for Toaster GUI and ReST."""
+=20
+ import os
 +import zlib
-+
- from bb.cache import RecipeInfoCommon
-+logger =3D logging.getLogger("BitBake.CacheExtra")
-+
-+
-+def _winning_override(metadata, variable_name):
-+    active =3D {}
-+    metadata.need_overrides()
-+    for override_variable, override in metadata.overridedata.get(variabl=
-e_name, ()):
-+        if (override in metadata.overridesset or
-+                ':' in override and
-+                set(override.split(':')).issubset(metadata.overridesset)=
-):
-+            active[override] =3D override_variable
-+
-+    match =3D None
-+    modified =3D True
-+    while modified:
-+        modified =3D False
-+        for override in metadata.overrides:
-+            for candidate in active.copy():
-+                if candidate.endswith(':' + override):
-+                    active[candidate.removesuffix(':' + override)] =3D a=
-ctive.pop(candidate)
-+                    modified =3D True
-+                elif candidate =3D=3D override:
-+                    match =3D active.pop(candidate)
-+    return match
-+
-+
-+def _recipe_includes(metadata, filename):
-+    includes =3D set()
-+
-+    def collect(node):
-+        for child in node.children:
-+            if child.filename.endswith('.bbclass'):
-+                continue
-+            if child.filename.endswith('.inc'):
-+                includes.add(child.filename)
-+            collect(child)
-+
-+    for child in metadata.inchistory.children:
-+        if child.filename =3D=3D filename:
-+            collect(child)
-+    return includes
-+
-+
-+def _recipe_value_event(metadata, event, recipe_includes):
-+    event_file =3D event.get('file', '')
-+    if (not event_file.endswith(('.bb', '.bbappend')) and
-+            event_file not in recipe_includes):
-+        return False
-+    operation =3D event.get('op', '')
-+    if '[' not in operation:
-+        return True
-+    override =3D operation.rsplit('[', 1)[1].removesuffix(']')
-+    return set(override.split(':')).issubset(metadata.overridesset)
-+
-
- class HobRecipeInfo(RecipeInfoCommon):
-     __slots__ =3D ()
-@@ -27,7 +85,7 @@ class HobRecipeInfo(RecipeInfoCommon):
-     # that this class will provide
-     cachefields =3D ['summary', 'license', 'section',
-             'description', 'homepage', 'bugtracker',
--            'prevision', 'files_info']
-+            'prevision', 'files_info', 'recipe_variables']
-
-     def __init__(self, filename, metadata):
-
-@@ -39,6 +97,45 @@ class HobRecipeInfo(RecipeInfoCommon):
-         self.bugtracker =3D self.getvar('BUGTRACKER', metadata)
-         self.prevision =3D self.getvar('PR', metadata)
-         self.files_info =3D self.getvar('FILES_INFO', metadata)
-+        recipe_variables =3D {}
-+        recipe_includes =3D _recipe_includes(metadata, filename)
-+        for variable_name in metadata:
-+            try:
-+                if ':' in variable_name:
-+                    continue
-+                winning_override =3D _winning_override(metadata, variabl=
-e_name)
-+                history =3D metadata.varhistory.variable(variable_name)
-+                if winning_override:
-+                    history +=3D metadata.varhistory.variable(winning_ov=
-erride)
-+                if not any(_recipe_value_event(metadata, event, recipe_i=
-ncludes)
-+                           for event in history):
-+                    # Keep this snapshot limited to recipe metadata.
-+                    continue
-+                if (metadata.getVarFlag(variable_name, 'func', False) or
-+                        winning_override and
-+                        metadata.getVarFlag(winning_override, 'func', Fa=
-lse)):
-+                    continue
-+                value =3D metadata.getVar(variable_name, True)
-+                recipe_variables[variable_name] =3D '' if value is None =
-else str(value)
-+                flag_sources =3D [variable_name]
-+                if winning_override and winning_override !=3D variable_n=
-ame:
-+                    flag_sources.append(winning_override)
-+                for flag_source in flag_sources:
-+                    for flag in metadata.getVarFlags(flag_source) or {}:
-+                        if flag =3D=3D 'func':
-+                            continue
-+                        try:
-+                            flag_value =3D metadata.getVarFlag(flag_sour=
-ce, flag, True)
-+                            if flag_value is not None:
-+                                recipe_variables['%s[%s]' % (variable_na=
-me, flag)] =3D str(flag_value)
-+                        except Exception as exc:
-+                            logger.debug("Omitting recipe variable flag =
-%s[%s] from %s after %s",
-+                                         variable_name, flag, filename, =
-type(exc).__name__)
-+            except Exception as exc:
-+                logger.debug("Omitting recipe variable %s from %s after =
-%s",
-+                             variable_name, filename, type(exc).__name__=
-)
-+        self.recipe_variables =3D zlib.compress(
-+            json.dumps(recipe_variables, separators=3D(',', ':')).encode=
-('utf-8'))
-
-     @classmethod
-     def init_cacheData(cls, cachedata):
-@@ -51,6 +148,7 @@ class HobRecipeInfo(RecipeInfoCommon):
-         cachedata.bugtracker =3D {}
-         cachedata.prevision =3D {}
-         cachedata.files_info =3D {}
-+        cachedata.recipe_variables =3D {}
-
-     def add_cacheData(self, cachedata, fn):
-         cachedata.summary[fn] =3D self.summary
-@@ -61,3 +159,4 @@ class HobRecipeInfo(RecipeInfoCommon):
-         cachedata.bugtracker[fn] =3D self.bugtracker
-         cachedata.prevision[fn] =3D self.prevision
-         cachedata.files_info[fn] =3D self.files_info
-+        cachedata.recipe_variables[fn] =3D self.recipe_variables
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index 59f808c96..e68829813 100644
---- a/lib/bb/cookerdata.py
-+++ b/lib/bb/cookerdata.py
-@@ -507,8 +507,9 @@ class CookerDataBuilder(object):
-
-         return data
-
--    @staticmethod
--    def _parse_recipe(bb_data, bbfile, appends, mc, layername):
-+    def _parse_recipe(self, bb_data, bbfile, appends, mc, layername):
-+        if self.tracking:
-+            bb_data.enableTracking()
-         bb_data.setVar("__BBMULTICONFIG", mc)
-         bb_data.setVar("FILE_LAYERNAME", layername)
-
-diff --git a/lib/bb/tests/cache_extra.py b/lib/bb/tests/cache_extra.py
-new file mode 100644
-index 000000000..c695bb185
---- /dev/null
-+++ b/lib/bb/tests/cache_extra.py
-@@ -0,0 +1,235 @@
-+#
-+# BitBake Tests for extra cache data
-+#
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+
-+import unittest
-+import json
-+import os
-+import tempfile
-+import zlib
-+
-+import bb.data
-+import bb.parse
-+import bb.siggen
-+from bb.cookerdata import CookerDataBuilder
-+from bb.cache_extra import HobRecipeInfo
-+
-+
-+class HobRecipeInfoTest(unittest.TestCase):
-+
+ import pytest
+ from django.test import TestCase
+ from django.test.client import RequestFactory
+ from django.urls import reverse
+ from django.db.models import Q
+=20
+-from orm.models import Project, Package
++from orm.models import Build, Project, Package
+ from orm.models import Layer_Version, Recipe
++from orm.models import RecipeVariable
+ from orm.models import CustomImageRecipe
+ from orm.models import CustomImagePackage
+=20
+@@ -61,6 +63,14 @@ class ViewTests(TestCase):
+         if BuildEnvironment.objects.count() =3D=3D 0:
+             BuildEnvironment.objects.create(betype=3DBuildEnvironment.TY=
+PE_LOCAL)
+=20
 +    @staticmethod
-+    def metadata():
-+        metadata =3D bb.data.init()
-+        metadata.enableTracking()
-+        return metadata
++    def _recipe_variables(build, recipe, values):
++        return RecipeVariable(
++            build=3Dbuild, recipe=3Drecipe,
++            variable_count=3Dlen(values),
++            variables=3Dzlib.compress(json.dumps(
++                values, separators=3D(',', ':')).encode('utf-8')))
 +
-+    def test_recipe_variables(self):
-+        metadata =3D self.metadata()
-+        metadata.setVar('TEXT', '${VALUE}', file=3D'test.bb', line=3D1)
-+        metadata.setVar('VALUE', 'expanded', file=3D'test.bb', line=3D2)
-+        metadata.setVar('EMPTY', '', file=3D'test.bb', line=3D3)
-+        metadata.setVar('NUMBER', 7, file=3D'test.bbappend', line=3D1)
-+        metadata.setVar('SPECIAL', 'caf=C3=A9\nline\x00end',
-+                        file=3D'test.bb', line=3D4)
-+        metadata.setVar('INHERITED', 'global', file=3D'test.inc', line=3D=
-1)
-+        metadata.setVar('__INTERNAL', 'internal', file=3D'test.bbclass',=
- line=3D1)
-+        metadata.setVar('FROM_CONFIG', 'config', file=3D'conf/local.conf=
-', line=3D1)
-+        metadata.setVar('do_function', 'echo test', file=3D'test.bb', li=
-ne=3D5)
-+        metadata.setVarFlag('do_function', 'func', True)
+=20
+     def test_get_base_call_returns_html(self):
+         """Basic test for all-projects view"""
+@@ -90,6 +100,149 @@ class ViewTests(TestCase):
+         self.assertTrue(name_found,
+                         "project name not found in projects table")
+=20
++    def test_recipe_variables_tab_scopes_searches_and_escapes(self):
++        build =3D Build.objects.get(pk=3D1)
++        other_build =3D Build.objects.get(pk=3D2)
++        other_recipe =3D Recipe.objects.exclude(pk=3Dself.recipe1.pk).fi=
+rst()
++        RecipeVariable.objects.bulk_create([
++            self._recipe_variables(build, self.recipe1, {
++                'SRC_URI': 'git://example.invalid/src',
++                'SPECIAL': '<script>alert(1)</script>',
++            }),
++            self._recipe_variables(other_build, self.recipe1, {
++                'OTHER_BUILD': 'hidden',
++            }),
++            self._recipe_variables(build, other_recipe, {
++                'OTHER_RECIPE': 'hidden',
++            }),
++        ])
++        url =3D reverse('recipe', args=3D(build.pk, self.recipe1.pk, '5'=
+))
 +
-+        info =3D HobRecipeInfo('test.bb', metadata)
-+        variables =3D json.loads(zlib.decompress(info.recipe_variables))
++        response =3D self.client.get(url, {
++            'count': 100,
++            'page': 1,
++            'orderby': 'variable_name:+',
++            'search': 'SRC_URI',
++        })
 +
-+        self.assertEqual(variables['TEXT'], 'expanded')
-+        self.assertEqual(variables['EMPTY'], '')
-+        self.assertEqual(variables['NUMBER'], '7')
-+        self.assertEqual(variables['SPECIAL'], 'caf=C3=A9\nline\x00end')
-+        self.assertNotIn('INHERITED', variables)
-+        self.assertNotIn('__INTERNAL', variables)
-+        self.assertNotIn('FROM_CONFIG', variables)
-+        self.assertNotIn('do_function', variables)
++        self.assertEqual(response.status_code, 200)
++        self.assertTemplateUsed(response, 'recipe.html')
++        self.assertContains(response, 'SRC_URI')
++        self.assertContains(response, 'git://example.invalid/src')
++        self.assertNotContains(response, 'OTHER_BUILD')
++        self.assertNotContains(response, 'OTHER_RECIPE')
 +
-+    def test_parsed_recipe_variables_include_recipe_inc_but_not_class(se=
-lf):
-+        metadata =3D self.metadata()
-+        metadata.setVar('__bbclasstype', 'recipe')
-+        bb.parse.siggen =3D bb.siggen.init(metadata)
-+        metadata.disableTracking()
-+        builder =3D object.__new__(CookerDataBuilder)
-+        builder.tracking =3D True
++        response =3D self.client.get(url, {
++            'count': 100,
++            'page': 1,
++            'orderby': 'variable_name:+',
++        })
++        self.assertContains(response, 'Variables (2)')
++        self.assertContains(response, '&lt;script&gt;alert(1)&lt;/script=
+&gt;')
++        self.assertNotContains(response, '<script>alert(1)</script>')
 +
-+        with tempfile.TemporaryDirectory() as tempdir:
-+            recipe =3D os.path.join(tempdir, 'test.bb')
-+            include =3D os.path.join(tempdir, 'test.inc')
-+            classes =3D os.path.join(tempdir, 'classes')
-+            os.mkdir(classes)
-+            metadata.setVar('BBPATH', tempdir)
-+            with open(include, 'w') as handle:
-+                handle.write('FROM_INC =3D "inc"\n')
-+            with open(os.path.join(tempdir, 'class.inc'), 'w') as handle=
-:
-+                handle.write('FROM_CLASS_INC =3D "class-inc"\n')
-+            with open(os.path.join(classes, 'testclass.bbclass'), 'w') a=
-s handle:
-+                handle.write('require class.inc\nFROM_CLASS =3D "class"\=
-n')
-+            with open(recipe, 'w') as handle:
-+                handle.write('require test.inc\ninherit testclass\nFROM_=
-RECIPE =3D "recipe"\n')
++    def test_recipe_variables_tab_redirects_paginates_and_handles_empty(=
+self):
++        build =3D Build.objects.get(pk=3D1)
++        url =3D reverse('recipe', args=3D(build.pk, self.recipe1.pk, '5'=
+))
 +
-+            parsed =3D builder._parse_recipe(metadata, recipe, [], '', '=
-')['']
-+            info =3D HobRecipeInfo(recipe, parsed)
++        response =3D self.client.get(url)
++        self.assertEqual(response.status_code, 302)
++        self.assertIn('count=3D100', response.url)
++        self.assertIn('orderby=3Dvariable_name%3A%2B', response.url)
 +
-+        variables =3D json.loads(zlib.decompress(info.recipe_variables))
-+        self.assertEqual(variables['FROM_RECIPE'], 'recipe')
-+        self.assertEqual(variables['FROM_INC'], 'inc')
-+        self.assertNotIn('FROM_CLASS', variables)
-+        self.assertNotIn('FROM_CLASS_INC', variables)
++        RecipeVariable.objects.bulk_create([
++            self._recipe_variables(build, self.recipe1, {
++                'VAR_%02d' % index: str(index) for index in range(12)
++            })
++        ])
++        response =3D self.client.get(url, {
++            'count': 10,
++            'page': 2,
++            'orderby': 'variable_name:+',
++        })
++        self.assertEqual(response.status_code, 200)
++        self.assertEqual(response.context['objects'].paginator.count, 12=
+)
++        self.assertEqual(response.context['objects'].number, 2)
++        self.assertContains(response, 'VAR_10')
++        self.assertContains(response, 'VAR_11')
++        self.assertNotContains(response, 'VAR_00')
 +
-+    def test_recipe_variable_operations_are_included(self):
-+        metadata =3D self.metadata()
-+        metadata.setVar('TEXT', 'global', file=3D'conf/bitbake.conf', li=
-ne=3D1)
-+        metadata.setVar('TEXT:append', ' recipe', file=3D'test.bb', line=
-=3D1)
-+        metadata.setVar('TEXT:remove', 'global', file=3D'test.bbappend',=
- line=3D1)
++        RecipeVariable.objects.filter(build=3Dbuild, recipe=3Dself.recip=
+e1).delete()
++        response =3D self.client.get(url, {
++            'count': 100,
++            'page': 1,
++            'orderby': 'variable_name:+',
++        })
++        self.assertContains(response, 'No resolved recipe datastore vari=
+ables are available.')
 +
-+        info =3D HobRecipeInfo('test.bb', metadata)
-+        variables =3D json.loads(zlib.decompress(info.recipe_variables))
++    def test_recipe_variables_tab_bounds_query_parameters(self):
++        build =3D Build.objects.get(pk=3D1)
++        RecipeVariable.objects.bulk_create([
++            self._recipe_variables(build, self.recipe1, {'SRC_URI': 'val=
+ue'})
++        ])
++        url =3D reverse('recipe', args=3D(build.pk, self.recipe1.pk, '5'=
+))
 +
-+        self.assertEqual(variables['TEXT'], ' recipe')
++        response =3D self.client.get(url, {
++            'count': 'alert(document.domain)',
++            'page': 1,
++            'orderby': 'variable_value:+',
++            'filter': 'variable_value__regex:(a+)+$',
++        })
 +
-+    def test_only_effective_overrides_are_included(self):
-+        metadata =3D self.metadata()
-+        metadata.setVar('OVERRIDES', 'machine', file=3D'conf/bitbake.con=
-f', line=3D1)
-+        metadata.setVar('ACTIVE:machine', 'recipe', file=3D'test.bb', li=
-ne=3D1)
-+        metadata.setVar('INACTIVE:other', 'recipe', file=3D'test.bb', li=
-ne=3D2)
-+        metadata.setVar('GLOBAL', 'global', file=3D'conf/bitbake.conf', =
-line=3D2)
-+        metadata.setVar('GLOBAL:append:other', ' recipe', file=3D'test.b=
-b', line=3D3)
++        self.assertEqual(response.status_code, 200)
++        self.assertEqual(response.context['objects'].paginator.per_page,=
+ 100)
++        self.assertNotContains(response, 'alert(document.domain)')
++        self.assertEqual(
++            [variable['variable_name']
++             for variable in response.context['objects'].object_list],
++            ['SRC_URI'])
 +
-+        info =3D HobRecipeInfo('test.bb', metadata)
-+        variables =3D json.loads(zlib.decompress(info.recipe_variables))
++        response =3D self.client.get(url, {
++            'count': 100,
++            'page': 1,
++            'orderby': 'variable_name:+',
++            'search': ('SRC_URI ' * 20) + ('x' * 300),
++        })
++        self.assertLessEqual(len(response.context['search_term']), 256)
++        self.assertLessEqual(len(response.context['search_term'].split()=
+), 16)
 +
-+        self.assertEqual(variables['ACTIVE'], 'recipe')
-+        self.assertNotIn('ACTIVE:machine', variables)
-+        self.assertNotIn('INACTIVE', variables)
-+        self.assertNotIn('INACTIVE:other', variables)
-+        self.assertNotIn('GLOBAL', variables)
++    def test_built_recipes_table_shows_variable_count(self):
++        build =3D Build.objects.get(pk=3D1)
++        self._recipe_variables(build, self.recipe1, {
++            'FOO': 'one',
++            'BAR': 'two',
++        }).save()
++        url =3D reverse('recipes', args=3D(build.pk,))
 +
-+    def test_weak_default_is_included(self):
-+        metadata =3D self.metadata()
-+        metadata.setVarFlag('PACKAGECONFIG', '_defaultval', 'feature',
-+                            file=3D'test.bb', line=3D1)
++        response =3D self.client.get(url, {
++            'format': 'json',
++            'limit': 25,
++            'page': 1,
++        })
++        data =3D json.loads(response.content)
++        row =3D next(row for row in data['rows']
++                   if self.recipe1.name in row['name'])
 +
-+        info =3D HobRecipeInfo('test.bb', metadata)
-+        variables =3D json.loads(zlib.decompress(info.recipe_variables))
++        self.assertIn('Variables', [column['title'] for column in data['=
+columns']])
++        self.assertIn('>2</a>', row['variable_count'])
 +
-+        self.assertEqual(variables['PACKAGECONFIG'], 'feature')
++    def test_recipe_packages_tab_shows_variable_count(self):
++        build =3D Build.objects.get(pk=3D1)
++        self._recipe_variables(build, self.recipe1, {
++            'FOO': 'one',
++            'BAR': 'two',
++        }).save()
 +
-+    def test_variable_flags_are_included(self):
-+        metadata =3D self.metadata()
-+        metadata.setVar('PACKAGECONFIG', 'feature', file=3D'test.bb', li=
-ne=3D1)
-+        metadata.setVarFlag('PACKAGECONFIG', 'feature', '--enable-featur=
-e',
-+                            file=3D'test.inc', line=3D1)
++        response =3D self.client.get(reverse(
++            'recipe_packages', args=3D(build.pk, self.recipe1.pk)), {
++                'count': 10,
++                'page': 1,
++                'orderby': 'name:+',
++            })
 +
-+        info =3D HobRecipeInfo('test.bb', metadata)
-+        variables =3D json.loads(zlib.decompress(info.recipe_variables))
++        self.assertEqual(response.status_code, 200)
++        self.assertContains(response, 'Variables (2)')
 +
-+        self.assertEqual(variables['PACKAGECONFIG[feature]'], '--enable-=
-feature')
+     def test_typeaheads(self):
+         """Test typeahead ReST API"""
+         layers_url =3D reverse('xhr_layerstypeahead', args=3D(self.proje=
+ct.id,))
+diff --git a/lib/toaster/toastergui/buildtables.py b/lib/toaster/toasterg=
+ui/buildtables.py
+index 327059d00..52c3dd779 100644
+--- a/lib/toaster/toastergui/buildtables.py
++++ b/lib/toaster/toastergui/buildtables.py
+@@ -239,7 +239,10 @@ class BuiltRecipesTable(BuildTablesMixin):
+     def setup_queryset(self, *args, **kwargs):
+         build =3D Build.objects.get(pk=3Dkwargs['build_id'])
+         self.static_context_extra['build'] =3D build
+-        self.queryset =3D build.get_recipes()
++        self.queryset =3D build.get_recipes().annotate(
++            variable_count=3DSum(
++                'recipevariable__variable_count',
++                filter=3DQ(recipevariable__build=3Dbuild), default=3D0))
+         self.queryset =3D self.queryset.order_by(self.default_orderby)
+=20
+     def setup_columns(self, *args, **kwargs):
+@@ -323,6 +326,12 @@ class BuiltRecipesTable(BuildTablesMixin):
+                         hideable=3DFalse,
+                         field_name=3D"version")
+=20
++        self.add_column(
++            title=3D"Variables",
++            field_name=3D"variable_count",
++            static_data_name=3D"variable_count",
++            static_data_template=3D'<a href=3D"{% url "recipe" extra.bui=
+ld.pk data.pk "5" %}">{{data.variable_count|default:0}}</a>')
 +
-+    def test_active_override_flags_are_included(self):
-+        metadata =3D self.metadata()
-+        metadata.setVar('OVERRIDES', 'machine', file=3D'test.inc', line=3D=
-1)
-+        metadata.setVar('PACKAGECONFIG:machine', 'feature',
-+                        file=3D'test.bbappend', line=3D2)
-+        metadata.setVarFlag('PACKAGECONFIG:machine', 'feature',
-+                            '--enable-feature', file=3D'test.bbappend', =
-line=3D3)
+         self.add_column(title=3D"Dependencies",
+                         static_data_name=3D"dependencies",
+                         static_data_template=3Ddepends_on_tmpl)
+diff --git a/lib/toaster/toastergui/templates/recipe.html b/lib/toaster/t=
+oastergui/templates/recipe.html
+index 4b5301b54..be99ebc54 100644
+--- a/lib/toaster/toastergui/templates/recipe.html
++++ b/lib/toaster/toastergui/templates/recipe.html
+@@ -52,6 +52,13 @@
+                 Reverse build dependencies ({{object.r_dependencies_depe=
+nds.all.count}})
+             </a>
+         </li>
++        <li class=3D"{{tab_states.5}}">
++            <a href=3D"{% url "recipe" build.pk object.id "5" %}">
++                <span class=3D"glyphicon glyphicon-question-sign get-hel=
+p" title=3D"Final values
++                    from BitBake's resolved recipe datastore"></span>
++                Variables ({{recipe_variable_count}})
++            </a>
++        </li>
+     </ul>
+     <div class=3D"tab-content">
+         <div class=3D"tab-pane {{tab_states.1}}" id=3D"information">
+@@ -277,6 +284,31 @@
+             {% endif %}
+=20
+         </div>
++        <div class=3D"tab-pane {{tab_states.5}}" id=3D"variables">
++            {% if not objects and not request.GET.search %}
++            <div class=3D"alert alert-info">
++                No resolved recipe datastore variables are available.
++            </div>
++            {% else %}
++                {% with "variables" as search_what %}
++                {% include "detail_search_header.html" %}
++                {% endwith %}
++                {% if objects %}
++                <table class=3D"table table-bordered table-hover tableso=
+rter" id=3D"otable">
++                    {% include "detail_sorted_header.html" %}
++                    <tbody>
++                    {% for variable in objects %}
++                        <tr>
++                            <td>{{variable.variable_name}}</td>
++                            <td>{{variable.variable_value}}</td>
++                        </tr>
++                    {% endfor %}
++                    </tbody>
++                </table>
++                {% include "detail_pagination_bottom.html" %}
++                {% endif %}
++            {% endif %}
++        </div>
+     </div>
+ </div>
+=20
+diff --git a/lib/toaster/toastergui/templates/recipe_packages.html b/lib/=
+toaster/toastergui/templates/recipe_packages.html
+index 37a586f38..abd64ca7e 100644
+--- a/lib/toaster/toastergui/templates/recipe_packages.html
++++ b/lib/toaster/toastergui/templates/recipe_packages.html
+@@ -51,6 +51,13 @@
+                 Reverse build dependencies ({{recipe.r_dependencies_depe=
+nds.all.count}})
+             </a>
+         </li>
++        <li>
++            <a href=3D"{% url "recipe" build.pk recipe.id "5" %}">
++                <span class=3D"glyphicon glyphicon-question-sign get-hel=
+p" title=3D"Final values
++                    from BitBake's resolved recipe datastore"></span>
++                Variables ({{variable_count}})
++            </a>
++        </li>
+     </ul>
+     <div class=3D"tab-content">
+ {#        <div class=3D"tab-pane active" id=3D"packages-built" name=3D"p=
+ackages-built">#}
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/vie=
+ws.py
+index 061e6436c..26cf5ca26 100644
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -10,6 +10,7 @@ import ast
+ import re
+ import subprocess
+ import sys
++import zlib
+=20
+ import bb.cooker
+ from bb.ui import toasterui
+@@ -20,6 +21,7 @@ from django.db import IntegrityError
+ from django.shortcuts import render, redirect, get_object_or_404, HttpRe=
+sponseRedirect
+ from django.utils.http import urlencode
+ from orm.models import Build, Target, Task, Layer, Layer_Version, Recipe
++from orm.models import RecipeVariable
+ from orm.models import LogMessage, Variable, Package_Dependency, Package
+ from orm.models import Task_Dependency, Package_File
+ from orm.models import Target_Installed_Package, Target_File
+@@ -619,10 +621,13 @@ def recipe(request, build_id, recipe_id, active_tab=
+=3D"1"):
+     layer  =3D Layer.objects.get(pk=3Dlayer_version.layer_id)
+     tasks_list  =3D Task.objects.filter(recipe_id =3D recipe_id, build_i=
+d =3D build_id).exclude(order__isnull=3DTrue).exclude(task_name__endswith=
+=3D'_setscene').exclude(outcome=3DTask.OUTCOME_NA)
+     package_count =3D Package.objects.filter(recipe_id =3D recipe_id).fi=
+lter(build_id =3D build_id).filter(size__gte=3D0).count()
++    recipe_variable_count =3D RecipeVariable.objects.filter(
++        build_id=3Dbuild_id, recipe_id=3Drecipe_id).values_list(
++            'variable_count', flat=3DTrue).first() or 0
+=20
+-    if active_tab !=3D '1' and active_tab !=3D '3' and active_tab !=3D '=
+4' :
++    if active_tab not in ('1', '3', '4', '5'):
+         active_tab =3D '1'
+-    tab_states =3D {'1': '', '3': '', '4': ''}
++    tab_states =3D {'1': '', '3': '', '4': '', '5': ''}
+     tab_states[active_tab] =3D 'active'
+=20
+     context =3D {
+@@ -632,8 +637,63 @@ def recipe(request, build_id, recipe_id, active_tab=3D=
+"1"):
+             'layer'   : layer,
+             'tasks'   : tasks_list,
+             'package_count' : package_count,
++            'recipe_variable_count' : recipe_variable_count,
+             'tab_states' : tab_states,
+     }
 +
-+        info =3D HobRecipeInfo('test.bb', metadata)
-+        variables =3D json.loads(zlib.decompress(info.recipe_variables))
++    if active_tab =3D=3D '5':
++        (requested_pagesize, requested_orderby) =3D _get_parameters_valu=
+es(
++            request, 100, 'variable_name:+')
++        pagesize =3D requested_pagesize \
++            if str(requested_pagesize) in ('10', '25', '50', '100', '150=
+') \
++            else 100
++        orderby =3D requested_orderby \
++            if requested_orderby in ('variable_name:+', 'variable_name:-=
+') \
++            else 'variable_name:+'
++        mandatory_parameters =3D {
++            'count': pagesize,
++            'page': 1,
++            'orderby': orderby,
++        }
++        if _verify_parameters(request.GET, mandatory_parameters):
++            return _redirect_parameters(
++                'recipe', request.GET, mandatory_parameters,
++                build_id=3Dbuild_id, recipe_id=3Drecipe_id, active_tab=3D=
+'5')
 +
-+        self.assertEqual(variables['PACKAGECONFIG'], 'feature')
-+        self.assertEqual(variables['PACKAGECONFIG[feature]'], '--enable-=
-feature')
++        search_term =3D request.GET.get('search', '')[:256]
++        search_term =3D ' '.join(search_term.split()[:16])
++        snapshot =3D RecipeVariable.objects.filter(
++            build_id=3Dbuild_id, recipe_id=3Drecipe_id).first()
++        variables =3D []
++        if snapshot:
++            values =3D json.loads(zlib.decompress(snapshot.variables).de=
+code('utf-8'))
++            variables =3D [
++                {'variable_name': name, 'variable_value': value}
++                for name, value in values.items()
++                if not search_term or search_term.lower() in name.lower(=
+)
++                or search_term.lower() in value.lower()
++            ]
++        variables.sort(
++            key=3Dlambda variable: variable['variable_name'],
++            reverse=3Dorderby.endswith(':-'))
++        context['variable_count'] =3D len(variables)
++        context['objects'] =3D _build_page_range(
++            Paginator(variables, pagesize), request.GET.get('page', 1))
++        context['object_count'] =3D context['variable_count']
++        context['validated_pagesize'] =3D pagesize
++        context['search_term'] =3D search_term
++        context['search_orderby'] =3D 'variable_name:+'
++        context['tablecols'] =3D [
++            {
++                'name': 'Variable',
++                'orderfield': _get_toggle_order(request, 'variable_name'=
+),
++                'ordericon': _get_toggle_order_icon(request, 'variable_n=
+ame'),
++                'orderkey': 'variable_name',
++            },
++            {'name': 'Value'},
++        ]
++        _set_parameters_values(pagesize, orderby, request)
 +
-+    def test_active_override_flag_wins_over_base_flag(self):
-+        metadata =3D self.metadata()
-+        metadata.setVar('OVERRIDES', 'machine', file=3D'conf/local.conf'=
-, line=3D1)
-+        metadata.setVar('PACKAGECONFIG:machine', 'feature',
-+                        file=3D'test.bb', line=3D2)
-+        metadata.setVarFlag('PACKAGECONFIG', 'feature', '--base',
-+                            file=3D'test.inc', line=3D3)
-+        metadata.setVarFlag('PACKAGECONFIG:machine', 'feature', '--machi=
-ne',
-+                            file=3D'test.bbappend', line=3D4)
-+
-+        info =3D HobRecipeInfo('test.bb', metadata)
-+        variables =3D json.loads(zlib.decompress(info.recipe_variables))
-+
-+        self.assertEqual(variables['PACKAGECONFIG[feature]'], '--machine=
-')
-+
-+    def test_inherited_only_values_are_excluded(self):
-+        metadata =3D self.metadata()
-+        metadata.setVar('FROM_INC', 'inc', file=3D'test.inc', line=3D1)
-+        metadata.setVar('FROM_CLASS', 'class', file=3D'test.bbclass', li=
-ne=3D2)
-+        metadata.setVar('FROM_CONFIG', 'config', file=3D'conf/local.conf=
-', line=3D3)
-+
-+        info =3D HobRecipeInfo('test.bb', metadata)
-+        variables =3D json.loads(zlib.decompress(info.recipe_variables))
-+
-+        self.assertNotIn('FROM_INC', variables)
-+        self.assertNotIn('FROM_CLASS', variables)
-+        self.assertNotIn('FROM_CONFIG', variables)
-+
-+    def test_combined_override_is_included_under_logical_name(self):
-+        metadata =3D self.metadata()
-+        metadata.setVar('OVERRIDES', 'foo:bar:local',
-+                        file=3D'conf/bitbake.conf', line=3D1)
-+        metadata.setVar('COMBINED:local:foo:bar', 'recipe',
-+                        file=3D'test.bb', line=3D1)
-+
-+        info =3D HobRecipeInfo('test.bb', metadata)
-+        variables =3D json.loads(zlib.decompress(info.recipe_variables))
-+
-+        self.assertEqual(variables['COMBINED'], 'recipe')
-+        self.assertNotIn('OVERRIDES', variables)
-+
-+    def test_active_override_function_is_omitted(self):
-+        metadata =3D self.metadata()
-+        metadata.setVar('OVERRIDES', 'machine', file=3D'conf/bitbake.con=
-f', line=3D1)
-+        metadata.setVar('do_work:machine', 'echo test', file=3D'test.bb'=
-, line=3D1)
-+        metadata.setVarFlag('do_work:machine', 'func', True,
-+                            file=3D'test.bb', line=3D1)
-+
-+        info =3D HobRecipeInfo('test.bb', metadata)
-+        variables =3D json.loads(zlib.decompress(info.recipe_variables))
-+
-+        self.assertNotIn('do_work', variables)
-+
-+    def test_recipe_variables_survive_extra_cache_mapping(self):
-+        metadata =3D self.metadata()
-+        metadata.setVar('EMPTY', '', file=3D'test.bb', line=3D1)
-+        info =3D HobRecipeInfo('test.bb', metadata)
-+        cachedata =3D type('CacheData', (), {})()
-+
-+        HobRecipeInfo.init_cacheData(cachedata)
-+        info.add_cacheData(cachedata, 'test.bb')
-+
-+        self.assertIn('recipe_variables', HobRecipeInfo.cachefields)
-+        variables =3D json.loads(zlib.decompress(
-+            cachedata.recipe_variables['test.bb']))
-+        self.assertEqual(variables['EMPTY'], '')
-+
-+    def test_recipe_variables_are_compressed_before_caching(self):
-+        metadata =3D self.metadata()
-+        metadata.setVar('LARGE', 'repeated-value-' * 1000,
-+                        file=3D'test.bb', line=3D1)
-+
-+        info =3D HobRecipeInfo('test.bb', metadata)
-+
-+        self.assertLess(len(info.recipe_variables), len(metadata.getVar(=
-'LARGE')))
-+
-+    def test_unexpandable_variable_is_omitted(self):
-+        metadata =3D self.metadata()
-+        metadata.setVar('BROKEN', '${BROKEN}', file=3D'test.bb', line=3D=
-1)
-+
-+        info =3D HobRecipeInfo('test.bb', metadata)
-+
-+        variables =3D json.loads(zlib.decompress(info.recipe_variables))
-+        self.assertNotIn('BROKEN', variables)
-+
-+if __name__ =3D=3D '__main__':
-+    unittest.main()
---
+     return toaster_render(request, template, context)
+=20
+ def recipe_packages(request, build_id, recipe_id):
+@@ -651,6 +711,9 @@ def recipe_packages(request, build_id, recipe_id):
+     recipe_object =3D Recipe.objects.get(pk=3Drecipe_id)
+     queryset =3D Package.objects.filter(recipe_id =3D recipe_id).filter(=
+build_id =3D build_id).filter(size__gte=3D0)
+     package_count =3D queryset.count()
++    variable_count =3D RecipeVariable.objects.filter(
++        build_id=3Dbuild_id, recipe_id=3Drecipe_id).values_list(
++            'variable_count', flat=3DTrue).first() or 0
+     queryset =3D _get_queryset(Package, queryset, filter_string, search_=
+term, ordering_string, 'name')
+=20
+     packages =3D _build_page_range(Paginator(queryset, pagesize),request=
+.GET.get('page', 1))
+@@ -660,6 +723,7 @@ def recipe_packages(request, build_id, recipe_id):
+             'recipe'  : recipe_object,
+             'objects'  : packages,
+             'object_count' : package_count,
++            'variable_count' : variable_count,
+             'tablecols':[
+                 {
+                     'name':'Package',
+--=20
 2.55.0
 
 
