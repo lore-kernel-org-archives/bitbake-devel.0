@@ -2,48 +2,48 @@ Return-Path: <paolo.wattebled@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69ED5C5CFDB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A869C5CFCF
 	for <webhook@archiver.kernel.org>; Fri, 14 Aug 2026 15:36:13 +0000 (UTC)
 Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.15782.1786721771470651839
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.15781.1786721770308435080
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 14 Aug 2026 08:36:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=O2fu98MH;
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=tZJxyPRT;
  spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: paolo.wattebled@savoirfairelinux.com)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 889513D8185E
-	for <bitbake-devel@lists.openembedded.org>; Fri, 14 Aug 2026 11:36:10 -0400 (EDT)
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 27E733D818BB
+	for <bitbake-devel@lists.openembedded.org>; Fri, 14 Aug 2026 11:36:09 -0400 (EDT)
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id 9xljp5a8teHL; Fri, 14 Aug 2026 11:36:09 -0400 (EDT)
+ with ESMTP id TqKjW2fOyT8N; Fri, 14 Aug 2026 11:36:08 -0400 (EDT)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 4AC213D818B5;
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 0859F3D818F3;
 	Fri, 14 Aug 2026 11:36:08 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 4AC213D818B5
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 0859F3D818F3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1786721768; bh=tsoPw+pvdQM1mJ8+hKpGH3S1RnNdrd6GL2U2MESIiIc=;
+	t=1786721768; bh=u/PuuYVfW9CdEuMtJt0hKZJZqy3DzY2bRprAgD99BiA=;
 	h=From:To:Date:Message-ID:MIME-Version;
-	b=O2fu98MH1OM6KMxuHQlMZfwFsN6BQgssNiREOxxsjJkHsDkbqcndZvz+ALbJbMK1b
-	 kXnekCqETIvU7gC1VqTraCD5POi/PqF0y2rqsngGgBDIBCJH2AawWZuoevK71nH+ZU
-	 uoGI9+eapnKkpeKcLxNk70M/wn8MpqlAh76EyeEXFq9D5XB1ODt3Y6JzVW9AgkbwIm
-	 rRY3TVAQjvwpNPhXWlUuX0xYUNhU9SEPLRvnep77e0gJUnDDWVzkgFQlU+S1UsY/va
-	 2nfrTPFc5Re79XpJauMSeqXIWaxTANe0OdcKOTxIZ/z4Zdh59N94f5jR9YNvv6fa+6
-	 YGBRBCebxyEVA==
+	b=tZJxyPRTDvMSdJU0p+HMer8N8vgf0znWMQc3Uj/dkoTtdNfT2617jKI5DdM8+lvdM
+	 6S2lW0MIf+wUVGi/BlNl91A0e7qzkJic+WVucZHIRamilNV4hpf0ddHTk9UDdzRqO2
+	 tzAWeciID+kdmn3WB/7qSfmMHILWBF/jCgjNuLOUoJpPIjmvQptj+gh6nCEZQLhVR+
+	 sq2oc4f876+KulTIbSMtmUTDN4orRP8iVLS5R3+GY+iGV9beIrhJP085FA3XBDbINZ
+	 XwWYClGUmqnaGbn36hxK+O5tsYAK1PCGLOJNoHoI/OtTwE+9aw7tjXXnR4hp5pK0RW
+	 2sRdSOEJFSsAQ==
 X-Virus-Scanned: amavis at mail.savoirfairelinux.com
 Received: from mail.savoirfairelinux.com ([127.0.0.1])
  by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id X4xlCnYJ3zE3; Fri, 14 Aug 2026 11:36:08 -0400 (EDT)
+ with ESMTP id MJBcZlGKC_OS; Fri, 14 Aug 2026 11:36:07 -0400 (EDT)
 Received: from pwattebled.mtl.sfl (unknown [192.168.51.254])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id EFFDD3D818D3;
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id DE6883D818B5;
 	Fri, 14 Aug 2026 11:36:07 -0400 (EDT)
 From: Paolo Wattebled <paolo.wattebled@savoirfairelinux.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Paolo Wattebled <paolo.wattebled@savoirfairelinux.com>
-Subject: [PATCH v2 4/5] toaster: Generalize detail table controls
-Date: Fri, 14 Aug 2026 11:35:57 -0400
-Message-ID: <20260814153602.2107764-5-paolo.wattebled@savoirfairelinux.com>
+Subject: [PATCH v2 2/5] toaster: Add recipe variable snapshot model
+Date: Fri, 14 Aug 2026 11:35:55 -0400
+Message-ID: <20260814153602.2107764-3-paolo.wattebled@savoirfairelinux.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260814153602.2107764-1-paolo.wattebled@savoirfairelinux.com>
 References: <20260814153602.2107764-1-paolo.wattebled@savoirfairelinux.com>
@@ -53,52 +53,80 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 14 Aug 2026 15:36:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19941
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19940
 
-Allow detail tables to provide their validated page size and default
-ordering while preserving existing defaults for current users.
+Add one compressed variable snapshot per build and recipe. Store the
+entry count separately so recipe list queries do not need to decompress
+each snapshot.
 
 AI-Generated: Uses GitHub Copilot and OpenCode with GPT-5.6 Sol
 Signed-off-by: Paolo Wattebled <paolo.wattebled@savoirfairelinux.com>
 ---
- .../toastergui/templates/detail_pagination_bottom.html        | 4 ++--
- lib/toaster/toastergui/templates/detail_search_header.html    | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ .../orm/migrations/0022_recipevariable.py     | 27 +++++++++++++++++++
+ lib/toaster/orm/models.py                     | 10 +++++++
+ 2 files changed, 37 insertions(+)
+ create mode 100644 lib/toaster/orm/migrations/0022_recipevariable.py
 
-diff --git a/lib/toaster/toastergui/templates/detail_pagination_bottom.ht=
-ml b/lib/toaster/toastergui/templates/detail_pagination_bottom.html
-index 15adfbc91..ddcba133e 100644
---- a/lib/toaster/toastergui/templates/detail_pagination_bottom.html
-+++ b/lib/toaster/toastergui/templates/detail_pagination_bottom.html
-@@ -41,8 +41,8 @@
- <script>
-  $(document).ready(function() {
-     // load data for number of entries to be displayed on page
--    if ({{request.GET.count}} !=3D "") {
--      pagesize =3D {{request.GET.count}};
-+    if ({{validated_pagesize|default:request.GET.count}} !=3D "") {
-+      pagesize =3D {{validated_pagesize|default:request.GET.count}};
-     }
-     $('.pagesize option').prop('selected', false)
-                          .filter('[value=3D"' + pagesize + '"]')
-diff --git a/lib/toaster/toastergui/templates/detail_search_header.html b=
-/lib/toaster/toastergui/templates/detail_search_header.html
-index 7a9865908..0205b88f6 100644
---- a/lib/toaster/toastergui/templates/detail_search_header.html
-+++ b/lib/toaster/toastergui/templates/detail_search_header.html
-@@ -31,7 +31,7 @@ $(document).ready(function() {
-         <div class=3D"form-group">
-           <div class=3D"btn-group">
-             <input id=3D"search" class=3D"form-control" type=3D"text" pl=
-aceholder=3D"Search {{search_what}}" name=3D"search" value=3D"{% if reque=
-st.GET.search %}{{request.GET.search}}{% endif %}">
--            <input type=3D"hidden" value=3D"name:+" name=3D"orderby">
-+            <input type=3D"hidden" value=3D"{{search_orderby|default:'na=
-me:+'}}" name=3D"orderby">
-             <input type=3D"hidden" value=3D"l" name=3D"page">
-             {% if request.GET.search %}
-             <span class=3D"remove-search-btn-detail-search search-clear =
-glyphicon glyphicon-remove-circle"></span>
+diff --git a/lib/toaster/orm/migrations/0022_recipevariable.py b/lib/toas=
+ter/orm/migrations/0022_recipevariable.py
+new file mode 100644
+index 000000000..455a8ce23
+--- /dev/null
++++ b/lib/toaster/orm/migrations/0022_recipevariable.py
+@@ -0,0 +1,27 @@
++# Generated by Django 4.2.5 on 2026-08-11 00:00
++
++from django.db import migrations, models
++import django.db.models.deletion
++
++
++class Migration(migrations.Migration):
++
++    dependencies =3D [
++        ('orm', '0021_eventlogsimports'),
++    ]
++
++    operations =3D [
++        migrations.CreateModel(
++            name=3D'RecipeVariable',
++            fields=3D[
++                ('id', models.BigAutoField(auto_created=3DTrue, primary_=
+key=3DTrue, serialize=3DFalse, verbose_name=3D'ID')),
++                ('variables', models.BinaryField()),
++                ('variable_count', models.PositiveIntegerField(default=3D=
+0)),
++                ('build', models.ForeignKey(on_delete=3Ddjango.db.models=
+.deletion.CASCADE, to=3D'orm.build')),
++                ('recipe', models.ForeignKey(on_delete=3Ddjango.db.model=
+s.deletion.CASCADE, to=3D'orm.recipe')),
++            ],
++            options=3D{
++                'unique_together': {('build', 'recipe')},
++            },
++        ),
++    ]
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index e2f488ed8..c240836cc 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -1346,6 +1346,16 @@ class Recipe(models.Model):
+         unique_together =3D (("layer_version", "file_path", "pathflags")=
+, )
+=20
+=20
++class RecipeVariable(models.Model):
++    build =3D models.ForeignKey(Build, on_delete=3Dmodels.CASCADE)
++    recipe =3D models.ForeignKey(Recipe, on_delete=3Dmodels.CASCADE)
++    variables =3D models.BinaryField()
++    variable_count =3D models.PositiveIntegerField(default=3D0)
++
++    class Meta:
++        unique_together =3D (("build", "recipe"), )
++
++
+ class Recipe_DependencyManager(models.Manager):
+     use_for_related_fields =3D True
+=20
 --=20
 2.55.0
 
