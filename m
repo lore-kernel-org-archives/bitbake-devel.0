@@ -1,117 +1,183 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <paolo.wattebled@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C18DCC5B572
-	for <webhook@archiver.kernel.org>; Fri, 14 Aug 2026 13:21:37 +0000 (UTC)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.12850.1786713690391799106
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05D5C5CFCF
+	for <webhook@archiver.kernel.org>; Fri, 14 Aug 2026 14:31:42 +0000 (UTC)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.14135.1786717893738406039
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 14 Aug 2026 06:21:30 -0700
+ Fri, 14 Aug 2026 07:31:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=CVTyrLjN;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.51, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-480033bdcf4so582185f8f.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 14 Aug 2026 06:21:30 -0700 (PDT)
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=PzVG0FBj;
+ spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: paolo.wattebled@savoirfairelinux.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 65A053D817DF;
+	Fri, 14 Aug 2026 10:31:32 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id 6iUEb305zhXD; Fri, 14 Aug 2026 10:31:31 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id E03EE3D81898;
+	Fri, 14 Aug 2026 10:31:30 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com E03EE3D81898
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1786713688; x=1787318488; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=NmnvY8+sBm5P+La/Q9bKGhaH0/+JfcTx2TXX+22XGwg=;
-        b=CVTyrLjNqyCIIFJi3/GDPDUt2RQldvFwtLntWvwOxl33ohEdLpCGAGqMEXJtjXPLGp
-         BkVaAWY4CtEsUkZIgf1WBl6zgEGwefYyvnHa7jkU6Iy34lRpusqnampkGR8wTc4ii23P
-         UU08v8TqP6Mf+GsL6XJPRU2pdw03lwih3Pq1w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786713688; x=1787318488;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=NmnvY8+sBm5P+La/Q9bKGhaH0/+JfcTx2TXX+22XGwg=;
-        b=LbN5G50klMhgstv2Ujc77pk9VgZ6PTwoDvRGqK+1l5VOfaRtRcLmwn3fpW3K+7exlO
-         mpGzUpMvzkWtqa/u8woSxiUSMhpS6FuthIiH3I+xbeztmtudtlDprr2FqeHJ04PDnDzJ
-         Csthg005pcpQ1nqjsAgmlUQgYKSzglJ9D4tm1llIdOhdFJkSWcSGdiEd9zxYPVv9rOR9
-         Y9ZJe2TKLm71rozuk99e9KwvglV59acqdwSK0QklFg80ZwQTTej+RKsjwR3x+AL4RZ1/
-         vbAnsP4T5PgquXKWegiKo8k+zSmZAkEZTpC4XIpOQgG9kFz/36n0gCWNkKtRios7G9TA
-         qrCA==
-X-Forwarded-Encrypted: i=1; AHgh+RrGBM89kIut0YMH8E4zVweyQAJGA2tKVAjbGVwiyxy1TTrcJ9f5MUa8PAoH1Wl6Z7By/iPu269teH41OF9r@lists.openembedded.org
-X-Gm-Message-State: AOJu0YyhDJwpblIqII+SM5whGOGJGUt24C0iz1kJSyj1vLRh9mCpD1Fc
-	xDk7HEYo10UoRoQYVv5OCPzGvt7qtbBeQBm3j0p4AN7Un+HgX0GR6Lk1Jvv9Tzn6fd8=
-X-Gm-Gg: AR+sD13iVVybo1i3lK9x6jeQoSNlp742Vl6DFa6OVBYyM6UaWhG6mLDcYdjjnNM3CuV
-	FwDrjXZ+PMOqGaVOnrciIJQcoSOfw70EzK68Pxn7R02C+JBrEnKvBb1IUaNByRd3rTEl5hBe8+M
-	0InOL6zqr4noDgAh7Wwwik3OUrTUuEQef/uarY/yOoWhTO4mrDMlamcN7yGOX7Sxt3TEq1xV0q0
-	S8s5koAeEh8Zc+b//U/sSLsPn8y7PU/z8Nqsw6hShSIRiCg+IHGv9DKYdRMGZvkplIFCUNrBYyA
-	DqxUlqXTIC1kZOYo+sJVNebX0Kn+6qfj0NQjCjMXUCTHSMXta4zEqz6ntFcc56KRV/xrIyNq0Mv
-	cYH1VMcSBLMBun6rMRE9IZCPO+n1OAnQtZX9Nxl9BGlIhtxxgO6XvP9GvESeE17mkKlinxf3N8N
-	IGuy1LWPFPcgnufMSxvQl3lEt5sV4rF8zM848Ww3bVvWT8gRRgD7I5GG+/YQULi2VoJsXeDoaU9
-	c5OdPok42YU79uxvdigDVCj+MTvCdEiuM74pMKCZS+l//lAsSoQ1w==
-X-Received: by 2002:a5d:5f4c:0:b0:481:3db1:a62f with SMTP id ffacd0b85a97d-481607627bamr8013066f8f.17.1786713688401;
-        Fri, 14 Aug 2026 06:21:28 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:9095:412f:3012:ddca? ([2001:8b0:aba:5f3c:9095:412f:3012:ddca])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4815f2b1d90sm8545463f8f.22.2026.08.14.06.21.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2026 06:21:27 -0700 (PDT)
-Message-ID: <02b6e335731bb1bd9ddce4ce8867144c9491a2ed.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel]
- =?ISO-8859-1?Q?=5BPATCH=A0v2=5D=A0fetch2=2Fwget?=
- =?ISO-8859-1?Q?=3A=A0reuse=A0cached=A0HTTPS?=
- =?ISO-8859-1?Q?=A0connections?=
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: svsvenss@cisco.com, "bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Cc: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Date: Fri, 14 Aug 2026 14:21:27 +0100
-In-Reply-To: <DM6PR11MB39625FB901F43B181E8B7C38CBDC2@DM6PR11MB3962.namprd11.prod.outlook.com>
-References: 
-	<DM6PR11MB39625FB901F43B181E8B7C38CBDC2@DM6PR11MB3962.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-9 
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1786717890; bh=Jy9MDqHTXHT9/S2+JRJUduVOJ9r0f0v5szy8pesN4ds=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=PzVG0FBj+cLtNqAc1hyf71RnDU5khWtDd6syQHJiqzkxyOd9tCAF3MCuHPY3MYr28
+	 cTEXTWw6ZsJyTcj/Y4Eh16yOL+8ECWBF3puIWYQNMw8a+CwaLkALrvSB228x8rG8/B
+	 xq3v5DzeY18KMR1G5yDZr98/CZuqPiASR7IMrWgxFxQ3V1X6PPF9kXqR7TzocB3LUY
+	 V4EDTO2IoRkUHIJml1hrcFo+bGDEHto9rdVfMwHLye/LBlTlRtgFHX+p9NLxS917Fi
+	 MphM3pm4GY2nj6uYlXPf61VumDLkoO4bBGsrl1ZCAWn5+u9evCSDPPF8xAz/rAXYoI
+	 vws8z8TSLbDUQ==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id OdB5iAukrgOs; Fri, 14 Aug 2026 10:31:30 -0400 (EDT)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id AA0F03D8182A;
+	Fri, 14 Aug 2026 10:31:30 -0400 (EDT)
+Date: Fri, 14 Aug 2026 10:31:30 -0400 (EDT)
+From: Paolo Wattebled <paolo.wattebled@savoirfairelinux.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Message-ID: <453789479.1044718.1786717890540.JavaMail.zimbra@savoirfairelinux.com>
+In-Reply-To: <fbc8c6306856f3be07a2e6aa3ec76b9070a35897.camel@linuxfoundation.org>
+References: <20260812150448.2343308-1-paolo.wattebled@savoirfairelinux.com> <2434d54e4295573c9632a1fbcd0cef7ae6a0d413.camel@linuxfoundation.org> <252742809.992447.1786635089054.JavaMail.zimbra@savoirfairelinux.com> <fbc8c6306856f3be07a2e6aa3ec76b9070a35897.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] toaster: Add recipe variables view
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 10.1.15_GA_0126 (ZimbraWebClient - FF153 (Linux)/10.1.15_GA_0126)
+Thread-Topic: toaster: Add recipe variables view
+Thread-Index: FzqigGXBd+t8/KHi1qPc/wmlGo3Gxw==
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 14 Aug 2026 13:21:37 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19935
+ <bitbake-devel@lists.openembedded.org>; Fri, 14 Aug 2026 14:31:42 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19936
 
-Hi,
+Hi Richard,
 
-On Wed, 2026-08-12 at 17:03 +0000, Fredrik Svensson via lists.openembedded.=
-org wrote:
-> The checkstatus() path reuses cached connections for HTTP requests, but
-> uses urllib's standard HTTPSHandler for HTTPS. Each HTTPS availability
-> check therefore creates a new TCP connection and performs a new TLS
-> handshake.
->=20
-> Add HTTPS equivalents of the existing cached connection and request
-> handler. Preserve the SSL context selected by BB_CHECK_SSL_CERTS and
-> extend FetchConnectionCache keys so HTTPS connections are kept separate
-> from HTTP connections, different certificate policies and CA files, and
-> different proxy tunnels.
->=20
-> Add a local TLS self-test which proves two HTTPS HEAD requests use one
-> TCP/TLS connection. The test also verifies that a connection established
-> with certificate checking disabled is not reused after checking is
-> enabled.
->=20
-> In an ABBA benchmark against BitBake master, 4,283 remote sstate
-> availability misses averaged 761.639 seconds without this change and
-> 254.742 seconds with it. This reduced the check by 66.55%, a 2.990x
-> speedup. The benchmark had no matching mirror objects, so it isolates
-> availability checks rather than download and unpack time.
->=20
-> Signed-off-by: Fredrik Svensson <svsvenss@cisco.com>
+Thanks for the feedback.
 
-Thanks for the patch, this looked good to me and we did merge it. We then s=
-tarted seeing:
+The 598 figure is the number of recipes in that build, not the number of
+variables. Each recipe has its own build-specific snapshot, giving 19,756
+variable and flag entries in total=E2=80=94around 33 per recipe on average.
 
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/48/builds/4378/ste=
-ps/15/logs/stdio
+Each snapshot contains the final resolved values specific to that recipe,
+including changes from its .bb, matching .bbappend and included .inc files,=
+ as
+well as flags such as PACKAGECONFIG[...]. Values inherited unchanged from
+global configuration or classes are excluded, along with functions and inac=
+tive
+overrides.
 
-which is probably worker specific and occuring on alma8 (which we do
-use buildtools tarball on). Have you any idea why that might be
-breaking?
+Screenshots of the linux-imx variables, bluez5 PACKAGECONFIG values and fla=
+gs,
+and variable counts in the recipes table are available here:
+
+https://imgur.com/a/u20rf3O
+
+Regarding history, the current implementation stores one resolved snapshot =
+per
+build. If build 1 resolves A to 1 and build 2 resolves it to 2, both builds
+retain their respective values. It uses BitBake variable history for select=
+ion,
+but does not persist the complete assignment and operation history.
+
+To provide a little more context, this work supports vulnerability assessme=
+nt
+in VulnScout through its new MCP functionality.
+
+Build metadata and resolved variables provide useful context for producing =
+an
+accurate assessment. For example, PACKAGECONFIG can help identify the featu=
+res
+enabled in a recipe and the resulting attack surface.
+
+Our longer-term goal is to expose relevant recipe and global variables thro=
+ugh
+Toaster and MCP, together with selected layer configuration such as kernel
+defconfigs. This should give an agent enough build-specific context to prod=
+uce
+a more informed vulnerability assessment. For more information on VulnScout=
+:
+
+https://github.com/savoirfairelinux/vulnscout
+
+Thank you also for the encouragement regarding the Toaster use case. I will
+prepare v2 as an incremental series, separating data collection, database
+storage and the user interface.
+
+Cheers,
+Paolo
+
+
+----- Original Message -----
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: "Paolo Wattebled" <paolo.wattebled@savoirfairelinux.com>
+Cc: "bitbake-devel" <bitbake-devel@lists.openembedded.org>
+Sent: Thursday, August 13, 2026 11:58:45 AM
+Subject: Re: [bitbake-devel] [PATCH] toaster: Add recipe variables view
+
+On Thu, 2026-08-13 at 11:31 -0400, Paolo Wattebled wrote:
+> Thanks for raising this. I ran a quick comparison with and without the ch=
+ange.
+> Toaster startup and recipe parsing were effectively unchanged (2m46.554s =
+vs
+> 2m46.835s). A cached imx-image-core build took 4m23.648s versus 4m07.387s=
+,
+> about 16 seconds slower. After vacuuming, both SQLite databases rounded t=
+o 74
+> MiB, including 598 per-recipe variable snapshots. I understand that some =
+of
+> this data is stored twice. However, I only store variables changed by rec=
+ipes
+> or bbappends, and I compress them before saving them. In my test, this di=
+d not
+> noticeably increase the database size.
+
+This does raise a few more questions. I don't think you're covering all
+the cases where variables change in recipes as *every* recipe will have
+recipe specific values and 598 seems like a low number.
+
+You appear to be only considering where overrides are used but
+overrides aren't the only way variables can be changed as =3D+ and so on
+are possible, or the value can just be overwritten.
+
+I don't mind toaster reading out and storing the data but you may as
+well just read the data, there is little point in changing the cache
+structures to add/cache it?
+
+It does also raise questions about whether you want the variable
+history information too? (or will in future?)
+
+> Our intended use of Toaster is as the backend for an MCP server for AI ag=
+ents.
+> Rather than having agents repeatedly parse and search recipe files or inv=
+oke
+> bitbake-getvar, the server would expose resolved, build-specific metadata
+> through a stable API. The MCP layer is still under development, but per-r=
+ecipe
+> variable values are one of its planned endpoints. We chose Toaster becaus=
+e it
+> already models builds, recipes, packages and variables; extending it avoi=
+ds
+> creating a separate metadata store. It will run headlessly in this use ca=
+se,
+> with the MCP server translating between Toaster=E2=80=99s API and the age=
+nt.
+
+Thanks for the info, that does sound like an interesting use case for
+it. It is reasons like this I've pushed back against deleting toaster!
+Knowing a bit about your plans here does help me keep fighting to keep
+that code!
+
+I'd also note that your original patch is quite large and really should
+make more increamental separte changes given the breadth of what it is
+doing.
 
 Cheers,
 
