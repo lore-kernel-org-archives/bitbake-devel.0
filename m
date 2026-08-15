@@ -2,33 +2,33 @@ Return-Path: <adrian.freihofer@siemens.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97272C5DF6E
-	for <webhook@archiver.kernel.org>; Sat, 15 Aug 2026 13:47:40 +0000 (UTC)
-Received: from mta-65-226.siemens.flowmailer.net (mta-65-226.siemens.flowmailer.net [185.136.65.226])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.9199.1786801649528025338
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1536FC5DF74
+	for <webhook@archiver.kernel.org>; Sat, 15 Aug 2026 13:47:41 +0000 (UTC)
+Received: from mta-64-227.siemens.flowmailer.net (mta-64-227.siemens.flowmailer.net [185.136.64.227])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.9195.1786801649527364720
  for <bitbake-devel@lists.openembedded.org>;
  Sat, 15 Aug 2026 06:47:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=adrian.freihofer@siemens.com header.s=fm2 header.b=XMuY+nbG;
- spf=pass (domain: rts-flowmailer.siemens.com, ip: 185.136.65.226, mailfrom: fm-1329275-20260815134726403ac30869000207dc-txpyuo@rts-flowmailer.siemens.com)
-Received: by mta-65-226.siemens.flowmailer.net with ESMTPSA id 20260815134726403ac30869000207dc
+ dkim=pass header.i=adrian.freihofer@siemens.com header.s=fm2 header.b=k3p90txv;
+ spf=pass (domain: rts-flowmailer.siemens.com, ip: 185.136.64.227, mailfrom: fm-1329275-202608151347264c54d623e700020780-3khgmh@rts-flowmailer.siemens.com)
+Received: by mta-64-227.siemens.flowmailer.net with ESMTPSA id 202608151347264c54d623e700020780
         for <bitbake-devel@lists.openembedded.org>;
         Sat, 15 Aug 2026 15:47:26 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
  d=siemens.com; i=adrian.freihofer@siemens.com;
  h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=Z80GARX2coisDMT58FFgCiS2Mdk+Hz2R7++QHzW0Fzs=;
- b=XMuY+nbG9kJHuv7H8ANfch5MsT1X2jTjGNCPO9sy6POXZZxV0RhUWtGRvj8c4lWIL+L4d3
- MdjqDim0/QnKpiWFTYay6uc7z5TPz9dHOJUAiK/RS+AysYXn+eV1Lai9YO/q/nuutM3yfeYS
- LX7Zs9F/t4heYMKQV6w+MxEH5am95HQEGV+H7Rmwv/+cxgzrIueq+0FQ/5LRRoGU7QaApUEh
- d/J3kDrIgc6slT94gsS+vt+crgIUAQJYzwhMD9z15OHt8TFcBqURSBZaXO6LstwAlaFkH49z
- WZPnD2AGlbXM9S1tuNZAt7RVqJjNjNRW6hClDhXmHzV2vn2kG6L8XgNg==;
+ bh=QHLo+BKxXu33FplVcx1AVuUamysT79lwxjYsH68bsdc=;
+ b=k3p90txvjTzxECdYOaQQF9gODIssJcPj9mHw2UFEZ96Xkwm9tOHTh5UK2a79Y1yCsTZ8r5
+ JjZlT9FmNymOqptZSQX49mwFREOYtI3ZircZ5ZQBHyayRM9srfJ0+TeNpmJV0rVXhjIPI5Gn
+ AlwMNlpKIZ1yneLWAIGS14OLbtVW/hz4i9QrmZJ7dONQd6xVjsY5SV9kKsTVkKlRea5BZ32A
+ PYWCNPBloUWA4EqkLb0p1RragsGg5071rR4C1GC/pP81P73aS6Gjr7fmkOGuCqxNpxdudn9H
+ wn54PC2lIknHLqqSnY3lQy9oHO3KFJ0rB/IdY2wl2qGYIMVqe6taFIZw==;
 From: AdrianF <adrian.freihofer@siemens.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Adrian Freihofer <adrian.freihofer@siemens.com>
-Subject: [PATCH 3/7] command: fix setConfig coercing bool config values to truthy strings
-Date: Sat, 15 Aug 2026 15:46:54 +0200
-Message-ID: <20260815134722.497586-4-adrian.freihofer@siemens.com>
+Subject: [PATCH 1/7] cooker: fix bitbake -b silently ignoring bbappends
+Date: Sat, 15 Aug 2026 15:46:52 +0200
+Message-ID: <20260815134722.497586-2-adrian.freihofer@siemens.com>
 In-Reply-To: <20260815134722.497586-1-adrian.freihofer@siemens.com>
 References: <20260815134722.497586-1-adrian.freihofer@siemens.com>
 MIME-Version: 1.0
@@ -38,46 +38,51 @@ Feedback-ID: 519:519-1329275:519-21489:flowmailer
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 15 Aug 2026 13:47:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19954
+ <bitbake-devel@lists.openembedded.org>; Sat, 15 Aug 2026 13:47:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19953
 
 From: Adrian Freihofer <adrian.freihofer@siemens.com>
 
-CommandsSync.setConfig() unconditionally stringified the value with
-str(params[1]) before assigning it to the cooker configuration
-attribute. This breaks boolean values, since str(True) and str(False)
-are both non-empty and therefore both truthy.
+"bitbake -b <recipe.bb>" builds the recipe without applying any of its
+.bbappend files.
 
-That makes it impossible to turn a boolean option back off over the
-command interface: setting 'force' to False leaves configuration.force
-holding the truthy string "False", so it stays effectively enabled for
-the rest of the bitbake server session and spuriously invalidates tasks
-in later, unrelated builds sharing that session.
+buildFileInternal() resolves appends via
+self.collections[mc].get_file_appends(fn), but self.collections[mc] is
+only ever filled in by collect_bbfiles(), called from updateCache() -
+a path -b deliberately skips. matchFiles(), the one -b-path function
+that does call collect_bbfiles(), built a fresh CookerCollectFiles into
+a throwaway local instead of self.collections[mc], so the append list
+stayed empty (or, on a memory-resident server, stale from the last
+full parse - e.g. missing a devtool/externalsrc workspace .bbappend
+added since). Nothing warns that the built metadata differs from disk.
 
-Preserve the caller's original type instead of coercing to str. The
-only other caller (cookerdata.py) already passes a plain string, so
-this does not change behavior for it.
+Make matchFiles() refresh self.collections[mc] itself so the later
+append lookup for the same fn sees the same fresh collection.
 
 AI-Generated: Uses GitHub Copilot
 
 Signed-off-by: Adrian Freihofer <adrian.freihofer@siemens.com>
 ---
- lib/bb/command.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/cooker.py | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index 59a979ee9..b57c5d4a3 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -228,7 +228,7 @@ class CommandsSync:
-         Set the value of variable in configuration
-         """
-         varname = params[0]
--        value = str(params[1])
-+        value = params[1]
-         setattr(command.cooker.configuration, varname, value)
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 4b6ba3196..108551a60 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1322,8 +1322,10 @@ You can also remove the BB_HASHSERVE_UPSTREAM setting, but this may result in si
+         if bf.startswith("/") or bf.startswith("../"):
+             bf = os.path.abspath(bf)
  
-     def enableDataTracking(self, command, params):
+-        collections = {mc: CookerCollectFiles(self.bbfile_config_priorities, mc)}
+-        filelist, masked, searchdirs = collections[mc].collect_bbfiles(self.databuilder.mcdata[mc], self.databuilder.mcdata[mc])
++        # The only place the "bitbake -b" path fills in the bbappends which
++        # buildFileInternal() then reads back from self.collections[mc].
++        self.collections[mc] = CookerCollectFiles(self.bbfile_config_priorities, mc)
++        filelist, masked, searchdirs = self.collections[mc].collect_bbfiles(self.databuilder.mcdata[mc], self.databuilder.mcdata[mc])
+         try:
+             os.stat(bf)
+             bf = os.path.abspath(bf)
 -- 
 2.55.0
 
