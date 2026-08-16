@@ -2,33 +2,35 @@ Return-Path: <adrian.freihofer@siemens.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 855D7C5DF66
-	for <webhook@archiver.kernel.org>; Sun, 16 Aug 2026 22:15:19 +0000 (UTC)
-Received: from mta-65-226.siemens.flowmailer.net (mta-65-226.siemens.flowmailer.net [185.136.65.226])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.18659.1786918513769898357
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCBFC5DF74
+	for <webhook@archiver.kernel.org>; Sun, 16 Aug 2026 22:15:20 +0000 (UTC)
+Received: from mta-65-225.siemens.flowmailer.net (mta-65-225.siemens.flowmailer.net [185.136.65.225])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.18662.1786918513787792485
  for <bitbake-devel@lists.openembedded.org>;
  Sun, 16 Aug 2026 15:15:15 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=adrian.freihofer@siemens.com header.s=fm2 header.b=N0H5Yyw8;
- spf=pass (domain: rts-flowmailer.siemens.com, ip: 185.136.65.226, mailfrom: fm-1329275-202608162215106ac2250a6700020784-rbonnh@rts-flowmailer.siemens.com)
-Received: by mta-65-226.siemens.flowmailer.net with ESMTPSA id 202608162215106ac2250a6700020784
+ dkim=pass header.i=adrian.freihofer@siemens.com header.s=fm2 header.b=XCX5hBcK;
+ spf=pass (domain: rts-flowmailer.siemens.com, ip: 185.136.65.225, mailfrom: fm-1329275-20260816221511a2d9ae8261000207c4-v4ewgi@rts-flowmailer.siemens.com)
+Received: by mta-65-225.siemens.flowmailer.net with ESMTPSA id 20260816221511a2d9ae8261000207c4
         for <bitbake-devel@lists.openembedded.org>;
         Mon, 17 Aug 2026 00:15:11 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
  d=siemens.com; i=adrian.freihofer@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
- bh=RVbM+/kqEzwzExX7Zk5WYJknyBR6on170sRIxqKKVjo=;
- b=N0H5Yyw8Jq9vb6ZnQwEd540+FCL9VAo1jOhHWnJiwc1EcKVTtuthCjD4jay4w7TZjrYfGt
- Z3MI/vMAiSncdGwAkjTf+hc9BdAoWrdv5+nDIQSfW358vMWHWYB7l16VsCVaIjtcrDcSqXcN
- ZrhyQoFf6HC+x92NLDNoJnZTWlhXHQk4f2WrQYe13kgNB7TpWnlDNYrRnkfTrW0IpfV+ut/3
- gCn6GOKDFf3csR3hHAQ/fPNKmczoqH5G5tcZBoJNLvC3LC+cKHdR2CWaZchByNRgXUIfr8WZ
- eeKq/2ftblyLpT74VRGgYMrTknajOL4CpI/a3tj+0F3JJXRKzXutlDdA==;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=N1l4n262KqRN8BUlD795V5kG6BfqJ1qcsaC3kwKrVwI=;
+ b=XCX5hBcKJTh+eLURTVryjW8dyWtq9HdjX9XnHqwPRVCV2RhQcCEsjY+3PcbDqR07gP0mG3
+ wpDy4zeS5m/2XriZnhtj3LXwcU8wcKNgsX+dxDcwz7YzXSPf51LEaI22wwQHvsUeY2ykCLyE
+ /H9ugDPBLnLJNqsPVKLvX9KIjZSiorPdhHNTQATnWypjAmHW/4F4fFl/KFAagl8zVAVic4hW
+ HRDI+xB07bgfWtVf2HgJ+6OBv1zx/fq1/ATLusfIru1ATa5cDhWCrWo9hmZbt++F1JzkdRXW
+ YREmiIG6p+MW27CEHWAovUtt2mHPfFqhIocQ6jGkkTHLFIvBQ9oC4FVg==;
 From: AdrianF <adrian.freihofer@siemens.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Adrian Freihofer <adrian.freihofer@siemens.com>
-Subject: [PATCH v2 0/8] cooker/tinfoil: fix -b bbappend handling and add single-task prepared-task API
-Date: Mon, 17 Aug 2026 00:14:39 +0200
-Message-ID: <20260816221507.155861-1-adrian.freihofer@siemens.com>
+Subject: [PATCH v2 2/8] tests/cooker: add a shared bitbake-subprocess test base class
+Date: Mon, 17 Aug 2026 00:14:41 +0200
+Message-ID: <20260816221507.155861-3-adrian.freihofer@siemens.com>
+In-Reply-To: <20260816221507.155861-1-adrian.freihofer@siemens.com>
+References: <20260816221507.155861-1-adrian.freihofer@siemens.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Flowmailer-Platform: Siemens
@@ -36,44 +38,98 @@ Feedback-ID: 519:519-1329275:519-21489:flowmailer
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 16 Aug 2026 22:15:19 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19964
+ <bitbake-devel@lists.openembedded.org>; Sun, 16 Aug 2026 22:15:20 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19963
 
 From: Adrian Freihofer <adrian.freihofer@siemens.com>
 
-Hi Richard,
+Tests that run bitbake or tinfoil in a subprocess against a temporary
+build directory can leave behind a memory-resident bitbake server (and,
+if BB_HASHSERVE=auto, a hashserv) rooted at TOPDIR. That server must
+release the directory before the caller's TemporaryDirectory context
+manager can safely remove it, or cleanup can race a still-running
+server holding files open there.
 
-This v2 should answer your question:
-  doesn't this only add limited collections data so whilst it fixes -b,
-  it potentially corrupts the cache for the non -b cases?
-  https://lists.openembedded.org/g/bitbake-devel/message/19957
+Add _BitbakeSubprocessTestCase with _run_subprocess()/_shutdown() to
+provide this consistently, so the tests added on top of it in the next
+commits don't each have to hand-roll the subprocess/wait boilerplate -
+and, more importantly, don't get a chance to forget the wait.
 
-The test case test_run_prepared_task_recipecache_self_heals should
-prove that this works as expected.
+AI-Generated: Uses GitHub Copilot
 
-The commits going into bitbake do not change in comparison to v1.
-Only the test changed.
+Signed-off-by: Adrian Freihofer <adrian.freihofer@siemens.com>
+---
+ lib/bb/tests/cooker.py | 52 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 51 insertions(+), 1 deletion(-)
 
-Regards,
-Adrian
-
-Adrian Freihofer (8):
-  cooker: fix bitbake -b silently ignoring bbappends
-  tests/cooker: add a shared bitbake-subprocess test base class
-  tests/cooker: add a bitbake -b bbappend test
-  command: fix setConfig coercing bool config values to truthy strings
-  cooker: add a buildFile mode that runs a single task
-  tinfoil: add a prepared task runner
-  tests/cooker: add TinfoilTests for run_prepared_task
-  parse/ast: skip empty BBPATH segments in include_all
-
- lib/bb/command.py      |   8 +-
- lib/bb/cooker.py       |  14 +-
- lib/bb/parse/ast.py    |   4 +
- lib/bb/tests/cooker.py | 342 ++++++++++++++++++++++++++++++++++++++++-
- lib/bb/tinfoil.py      |  23 ++-
- 5 files changed, 383 insertions(+), 8 deletions(-)
-
+diff --git a/lib/bb/tests/cooker.py b/lib/bb/tests/cooker.py
+index 9e524ae34..c49375ed8 100644
+--- a/lib/bb/tests/cooker.py
++++ b/lib/bb/tests/cooker.py
+@@ -7,12 +7,62 @@
+ #
+ 
+ import unittest
++import contextlib
+ import os
++import subprocess
++import sys
++import tempfile
++import time
+ import bb, bb.cooker
+ import re
+ import logging
+ 
+-# Cooker tests
++
++class _BitbakeSubprocessTestCase(unittest.TestCase):
++    """Common helpers for tests that run bitbake/tinfoil in a subprocess.
++
++    Shared because every such subprocess can start a memory-resident bitbake
++    server (and, if BB_HASHSERVE=auto, a hashserv) rooted at TOPDIR, and both
++    must release that directory before the caller's TemporaryDirectory can be
++    safely removed.
++    """
++
++    def _run_subprocess(self, cmd, env, cwd):
++        proc = subprocess.run(
++            cmd,
++            env=env,
++            stdout=subprocess.PIPE,
++            stderr=subprocess.STDOUT,
++            universal_newlines=True,
++            cwd=cwd,
++        )
++        if proc.returncode:
++            self.fail('%s failed: %s' % (cmd, proc.stdout))
++        return proc.stdout
++
++    def _shutdown(self, builddir):
++        """Wait for the bitbake server and hashserv to release builddir.
++
++        Must run before the caller's TemporaryDirectory is removed, so it
++        cannot be a tearDown().
++        """
++        deadline = time.monotonic() + 30
++        while time.monotonic() < deadline:
++            if not any(os.path.exists(os.path.join(builddir, p))
++                       for p in ('hashserve.sock', 'bitbake.lock')):
++                return
++            time.sleep(0.5)
++
++    @contextlib.contextmanager
++    def _build_dir(self, prefix='tinfoiltest'):
++        """TemporaryDirectory that also waits out _shutdown() before removal."""
++        with tempfile.TemporaryDirectory(prefix=prefix) as builddir:
++            try:
++                yield builddir
++            finally:
++                self._shutdown(builddir)
++
++
+ class CookerTest(unittest.TestCase):
+     def setUp(self):
+         # At least one variable needs to be set
 -- 
 2.55.0
 
