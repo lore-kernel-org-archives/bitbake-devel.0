@@ -2,33 +2,33 @@ Return-Path: <adrian.freihofer@siemens.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43786C5DF7B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC25C5DF7D
 	for <webhook@archiver.kernel.org>; Sun, 16 Aug 2026 22:15:21 +0000 (UTC)
 Received: from mta-64-228.siemens.flowmailer.net (mta-64-228.siemens.flowmailer.net [185.136.64.228])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.18820.1786918513981367473
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.18819.1786918513979435499
  for <bitbake-devel@lists.openembedded.org>;
  Sun, 16 Aug 2026 15:15:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=adrian.freihofer@siemens.com header.s=fm2 header.b=lKTJ2PXr;
- spf=pass (domain: rts-flowmailer.siemens.com, ip: 185.136.64.228, mailfrom: fm-1329275-202608162215111c66f403060002071e-0ishme@rts-flowmailer.siemens.com)
-Received: by mta-64-228.siemens.flowmailer.net with ESMTPSA id 202608162215111c66f403060002071e
+ dkim=pass header.i=adrian.freihofer@siemens.com header.s=fm2 header.b=Xl0CmDWx;
+ spf=pass (domain: rts-flowmailer.siemens.com, ip: 185.136.64.228, mailfrom: fm-1329275-2026081622151137320fd7b0000207ba-eaxmd6@rts-flowmailer.siemens.com)
+Received: by mta-64-228.siemens.flowmailer.net with ESMTPSA id 2026081622151137320fd7b0000207ba
         for <bitbake-devel@lists.openembedded.org>;
         Mon, 17 Aug 2026 00:15:11 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
  d=siemens.com; i=adrian.freihofer@siemens.com;
  h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=6J85fSpDKPsXWHDTZZ7Xe8eirjAj37YNt4RskIzRLjY=;
- b=lKTJ2PXrk74HnyJfrZXS26A5lIfn7LCcjPss1j77BolLiRy7sLqidbQVMz62UoJN4wOrGK
- BFJko/v3iw/K8V83fJi5eD2YhJONWgTAYYc2W2GCb9l8MYPn+oIj5SffV7k8J16i6W2eLv0e
- CDRLRQ2VlM5d0CDQK8zva/PLDVHMAKpkJwbVHsfG0hGE6iCyXLRT2FAw2CFsVB/CBf+7cG9T
- 6cWitr7Bk5OGH25PTJe1N8yNlFrnh9B9yarIoBhrqJoGr3NEF8oJnotqQAfRMfiFSKfLlCTP
- SIpsad3cvF/DhDKb+zWy1//4qjq1kRwugJGwpVEi6mb4p3N0sRFiP/CA==;
+ bh=OEv6tFJRl4U/kYGr7+7L3KMeFAhUjQDCluBqS8sTTU0=;
+ b=Xl0CmDWxxtFKAlOgtMcr0mmxDRji591JvqYnjeMZq093JxHlir4NLM2NUNlGFJzdTJdlm2
+ Z5OJn75sqry0x2M9DLGdq2hLydHoumdB1Jycc66Z13BH0OZVsHnSeZmshBnQIdGsS3eXWpxt
+ 5SCaOm86xfu9sXaEhT1W5AMdnkzUt4WLEAvacKq3MokCdd2aku79ngxKFoFPKTTIykxBaXva
+ 6EP50Os3d+XPaTsLe3KtAQv/6GL/yFko0lm4kKfR4OXU7lQICsvjtX+gc16drYy/oNOP2c9r
+ JhcHb8aTCSFINrXwix0bAcUB97HJzMiAA1Vr3JZkQUHIQAQyxjqUgtYQ==;
 From: AdrianF <adrian.freihofer@siemens.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Adrian Freihofer <adrian.freihofer@siemens.com>
-Subject: [PATCH v2 3/8] tests/cooker: add a bitbake -b bbappend test
-Date: Mon, 17 Aug 2026 00:14:42 +0200
-Message-ID: <20260816221507.155861-4-adrian.freihofer@siemens.com>
+Subject: [PATCH v2 5/8] cooker: add a buildFile mode that runs a single task
+Date: Mon, 17 Aug 2026 00:14:44 +0200
+Message-ID: <20260816221507.155861-6-adrian.freihofer@siemens.com>
 In-Reply-To: <20260816221507.155861-1-adrian.freihofer@siemens.com>
 References: <20260816221507.155861-1-adrian.freihofer@siemens.com>
 MIME-Version: 1.0
@@ -39,90 +39,88 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Sun, 16 Aug 2026 22:15:21 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19959
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19960
 
 From: Adrian Freihofer <adrian.freihofer@siemens.com>
 
-Add BuildFileTest.test_buildfile_applies_bbappends() to cover the
-buildfile ("bitbake -b") mode, which had no test coverage at all.
+devtool ide-sdk lets the IDE build directly (e.g. via cmake or meson,
+outside of bitbake). do_install still needs bitbake: it needs pseudo,
+and it usually does more than the underlying build tool's own install
+step (e.g. `cmake --build --target install`) would - packaging-related
+fixups the recipe or its classes add on top. It must run as only that
+one already-prepared task against the source the developer just edited
+- not the whole recipe: predecessors, if they ran again, would
+rebuild/overwrite the very output the caller is about to inspect or has
+already staged.
 
-The test writes a recipe plus a matching .bbappend into a temporary
-directory, points EXTRA_BBFILES at both, and runs a task that records
-the value of a variable the bbappend overrides. It then asserts the
-bbappend's value was the one in effect.
+Add a taskonly argument to buildFileInternal(), plumbed through the
+buildFile command, that also clears the intra-recipe task parents,
+leaving the requested task as the runqueue's only entry. Default
+unchanged, so "bitbake -b" behaviour is unaffected.
 
-It uses the parse-tests BBPATH rather than runqueue-tests because its
-bitbake.conf already globs *.bbappend and the recipe needs no task
-scaffolding beyond its own.
-
-Without the preceding fix the recorded value is the recipe's default,
-i.e. -b built the recipe with the bbappend silently dropped.
-
-Built on _BitbakeSubprocessTestCase so the "bitbake -b" subprocess's
-server is properly waited on before the TemporaryDirectory cleanup
-runs.
+Note that for example:
+- buildFileInternal() cannot do this: it drops external dependencies but
+  keeps intra-recipe task ordering ('addtask X after Y'), so requesting
+  do_install on an unbuilt recipe still pulls in do_fetch, do_unpack,
+  do_patch, do_prepare_recipe_sysroot, do_configure and do_compile.
+  That's the right default for "bitbake -b", but not here.
+- --runonly can't express this either: mark_active() ignores its depth
+  argument and recurses over depends, so the whole chain stays active
+  regardless.
 
 AI-Generated: Uses GitHub Copilot
 
 Signed-off-by: Adrian Freihofer <adrian.freihofer@siemens.com>
 ---
- lib/bb/tests/cooker.py | 46 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ lib/bb/command.py | 6 +++++-
+ lib/bb/cooker.py  | 8 +++++++-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/tests/cooker.py b/lib/bb/tests/cooker.py
-index c49375ed8..c32694cc5 100644
---- a/lib/bb/tests/cooker.py
-+++ b/lib/bb/tests/cooker.py
-@@ -119,3 +119,49 @@ class CookerTest(unittest.TestCase):
-         expected = []
+diff --git a/lib/bb/command.py b/lib/bb/command.py
+index b57c5d4a3..1b16884fa 100644
+--- a/lib/bb/command.py
++++ b/lib/bb/command.py
+@@ -622,9 +622,13 @@ class CommandsAsync:
+             internal = params[2]
+         else:
+             internal = False
++        if len(params) > 3:
++            taskonly = params[3]
++        else:
++            taskonly = False
  
-         self.assertEqual(log_handler.logdata, expected)
+         if internal:
+-            command.cooker.buildFileInternal(bfile, task, fireevents=False, quietlog=True)
++            command.cooker.buildFileInternal(bfile, task, fireevents=False, quietlog=True, taskonly=taskonly)
+         else:
+             command.cooker.buildFile(bfile, task)
+     buildFile.needcache = False
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 108551a60..0321478d3 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1368,7 +1368,7 @@ You can also remove the BB_HASHSERVE_UPSTREAM setting, but this may result in si
+ 
+         self.buildFileInternal(buildfile, task)
+ 
+-    def buildFileInternal(self, buildfile, task, fireevents=True, quietlog=False):
++    def buildFileInternal(self, buildfile, task, fireevents=True, quietlog=False, taskonly=False):
+         """
+         Build the file matching regexp buildfile
+         """
+@@ -1418,6 +1418,12 @@ You can also remove the BB_HASHSERVE_UPSTREAM setting, but this may result in si
+         self.recipecaches[mc].rundeps[fn] = defaultdict(list)
+         self.recipecaches[mc].runrecs[fn] = defaultdict(list)
+ 
++        if taskonly:
++            # Drop the intra-recipe task ordering too ('addtask X after Y'), so
++            # that task is the only entry left in the runqueue.
++            task_deps = self.recipecaches[mc].task_deps[fn]
++            task_deps['parents'] = {t: [] for t in task_deps['tasks']}
 +
-+
-+class BuildFileTest(_BitbakeSubprocessTestCase):
-+    """Tests for the buildfile ("bitbake -b") mode."""
-+
-+    # parse-tests BBPATH: minimal bitbake.conf whose BBFILES honours
-+    # EXTRA_BBFILES and already includes *.bbappend
-+    _parsetests = os.path.realpath(os.path.join(os.path.dirname(__file__), "parse-tests"))
-+
-+    recipe = """\
-+MARKER ??= "no-bbappend"
-+python do_marker() {
-+    with open(d.expand("${TOPDIR}/marker.log"), "w") as f:
-+        f.write(d.getVar("MARKER"))
-+}
-+addtask marker
-+"""
-+
-+    bbappend = 'MARKER = "bbappend-applied"\n'
-+
-+    def test_buildfile_applies_bbappends(self):
-+        """bitbake -b must build the recipe with its bbappends applied.
-+
-+        buildFileInternal() looks the appends up in self.collections[mc], which
-+        on the -b path is only ever populated by matchFiles().
-+        """
-+        with tempfile.TemporaryDirectory(prefix="buildfilerecipes") as recipes, \
-+             self._build_dir(prefix="buildfiletest") as builddir:
-+            recipe = os.path.join(recipes, "appendtest.bb")
-+            with open(recipe, "w") as f:
-+                f.write(self.recipe)
-+            with open(os.path.join(recipes, "appendtest.bbappend"), "w") as f:
-+                f.write(self.bbappend)
-+
-+            env = os.environ.copy()
-+            env["BBPATH"] = self._parsetests
-+            env["BB_ENV_PASSTHROUGH_ADDITIONS"] = "TOPDIR EXTRA_BBFILES"
-+            env["TOPDIR"] = builddir
-+            env["EXTRA_BBFILES"] = "%s/*.bb %s/*.bbappend" % (recipes, recipes)
-+
-+            cmd = ["bitbake", "-b", recipe, "-c", "marker"]
-+            self._run_subprocess(cmd, env, builddir)
-+
-+            with open(os.path.join(builddir, "marker.log")) as f:
-+                self.assertEqual(f.read(), "bbappend-applied",
-+                                 "bitbake -b did not apply the recipe's bbappend")
+         bb.parse.siggen.setup_datacache(self.recipecaches)
+ 
+         # Invalidate task for target if force mode active
 -- 
 2.55.0
 
