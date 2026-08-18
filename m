@@ -1,120 +1,172 @@
-Return-Path: <chris.laplante@agilent.com>
+Return-Path: <paolo.wattebled@savoirfairelinux.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8369BC5DF81
-	for <webhook@archiver.kernel.org>; Tue, 18 Aug 2026 17:36:35 +0000 (UTC)
-Received: from PH0PR06CU001.outbound.protection.outlook.com (PH0PR06CU001.outbound.protection.outlook.com [40.107.208.15])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.14431.1787074587353912887
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F55C5DF82
+	for <webhook@archiver.kernel.org>; Tue, 18 Aug 2026 18:33:57 +0000 (UTC)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.15704.1787078033305031560
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 18 Aug 2026 10:36:27 -0700
+ Tue, 18 Aug 2026 11:33:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@agilent.com header.s=selector1 header.b=zV+dvux+;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.208.15, mailfrom: chris.laplante@agilent.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=F5iwEZkSs2mjqf97/YFQo2XBxlZc6gAiGhltx8bU5nCcXf4laX3EPR454jzw9zhmR9wBjKQCs001Goi4U9i+XuGA+itwPTbai1eAPLK41Z5BQHRaPG4taseU8HnYfoGkCyDF37udUcbADJcSunSGoAIcUPaAJPfg9H0SbiFfckUAXySouB4qW957Mo4McVlUivDM9c8HseoNF5Nz+xN+ZIsUpNA9qSnJ48pgtvWcYZoXESBUiKAzyts6dLSnLqKWdjmUOKnKxQN3IIejFx+LYcSH6BZH3rk0VkDXAAo1wI/7BLxfrg605//9ot3CeekdtAwaIJBFUYetIHDshV8Nww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KAauqCGPpg58vEBIWuyjPP2Jy/Yv1YoX4uMG1S5uK6s=;
- b=ZTcZ0+aukBnrFYNrJ7TFXDATnQEpWUPx17MMHg1LpAoaAWgDbN80tL6tQ9SiCtV2/ngyTzBhoPX6wjK3b12jaYBkqbyEQmeRVqi1RP16gkLu+IwKWsRDhKQg13sIPgHvoLTmHpaSdJ2ekc+P8fFtqNUHDoDflIs6tmA6QfMZJcAcPJU/P8QInJ5KT5Dm064eiqg29isSrqcEAWFMlfNfSO7H0eDARrm0+Ta9W9jzi4wKlJsf+P3+qS1mKgh/RbIP22/1sOXrsLaoPAVWeZUuNRSk4oRBhcWPNDAsnlvJ3mZlbmrNtpFX0LwD96c5r1D6OtqVHRbBIESOg1Fvc+4xkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 192.25.218.39) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
- action=none header.from=agilent.com; dkim=none (message not signed); arc=none
- (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KAauqCGPpg58vEBIWuyjPP2Jy/Yv1YoX4uMG1S5uK6s=;
- b=zV+dvux+mrdkMHYJHyYVKkrzM1gJ1AjBeMLqhdy1mTpPXi8OxOl0PPcZ2DJD2dArDHQUZAj+1ME4WmVkWuVkhgRau9+584o/H/1pWrYrcdvhUEyuq+ZNTDuOHsyU93bgEExbJW/H38/MSzgyXVwPoqT1Gn3VfOBvfeZWECdhVOP3TBL58RAB2q2LUEq0pFpG/xwne7dt/Meic1wB+ChT1cyjsn+7doAwGW7HkM267gePcIq6cVz9+FmM7izlTcPyd1ExRaLkHmRJ3A/nvySFXh+vvHpRCAbsw3o3jppBYFSOXNi9TWoYVV/XnhB+ryYHKBM3BHHPcATgIU6A4xhanw==
-Received: from BN9PR03CA0235.namprd03.prod.outlook.com (2603:10b6:408:f8::30)
- by CH3PR12MB8994.namprd12.prod.outlook.com (2603:10b6:610:171::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.8; Tue, 18 Aug
- 2026 17:36:23 +0000
-Received: from BN1PEPF00004685.namprd03.prod.outlook.com
- (2603:10b6:408:f8:cafe::15) by BN9PR03CA0235.outlook.office365.com
- (2603:10b6:408:f8::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.339.8 via Frontend Transport; Tue, 18
- Aug 2026 17:36:21 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.39)
- smtp.mailfrom=agilent.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=agilent.com;
-Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
- 192.25.218.39 as permitted sender) receiver=protection.outlook.com;
- client-ip=192.25.218.39; helo=wpcosapexchedg6.windmz.agilent.com; pr=C
-Received: from wpcosapexchedg6.windmz.agilent.com (192.25.218.39) by
- BN1PEPF00004685.mail.protection.outlook.com (10.167.243.86) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.339.3 via Frontend Transport; Tue, 18 Aug 2026 17:36:20 +0000
-Received: from laplante-B650.lfs.agilent.com (192.25.126.4) by
- edgeappmail.agilent.com (192.25.218.39) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.41; Tue, 18 Aug 2026 11:36:13 -0600
-From: <chris.laplante@agilent.com>
-To: <bitbake-devel@lists.openembedded.org>
-CC: <rob.woolleywr@gmail.com>, Chris Laplante <chris.laplante@agilent.com>
-Subject: [PATCH 2/2] pyproject.toml: specify min Python version for project
-Date: Tue, 18 Aug 2026 13:34:07 -0400
-Message-ID: <20260818173407.2657441-2-chris.laplante@agilent.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260818173407.2657441-1-chris.laplante@agilent.com>
-References: <20260818173407.2657441-1-chris.laplante@agilent.com>
+ dkim=pass header.i=@savoirfairelinux.com header.s=DFC430D2-D198-11EC-948E-34200CB392D2 header.b=ayoaCanC;
+ spf=pass (domain: savoirfairelinux.com, ip: 208.88.110.44, mailfrom: paolo.wattebled@savoirfairelinux.com)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 110C03D81738;
+	Tue, 18 Aug 2026 14:33:52 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id avAxXdH_b-46; Tue, 18 Aug 2026 14:33:50 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id A99E33D81928;
+	Tue, 18 Aug 2026 14:33:50 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com A99E33D81928
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1787078030; bh=pTXZuAvDWXjTS0VPCfCgGAx0ePP5KxAiGrWkocLQn7o=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=ayoaCanCtrV0HQ3CRmyoHuVP33bmpipSwikYo6b6c/3TnPO4447zTY6tGE/CE/x61
+	 no8BFxRmXSzNOL/vbvKF0q0FTGugMZGLj4bDqa28q0IVw0SogksWYF6bZZW5+YKcDA
+	 eczDzle2PG4em/bDMFjtD32QsM3Za1M2m1BLOk74kDyQKm2l7v3/L/GNclm/nGoGJO
+	 924L1d8j4a/fJWrL+L9t62csqM+nBsYuY/5+CNAnDKuWfOOLLJNfA9jYnBGbRA5JR8
+	 FKTTuTj+WYNSI/ltMum8KrjZEZ28leh+hXVHTE2j6U8kCuYJMJwPu2lji3q09GuiJ7
+	 YnUknUkmAReQw==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id alH7Ka9KGgDJ; Tue, 18 Aug 2026 14:33:50 -0400 (EDT)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 745203D81738;
+	Tue, 18 Aug 2026 14:33:50 -0400 (EDT)
+Date: Tue, 18 Aug 2026 14:33:50 -0400 (EDT)
+From: Paolo Wattebled <paolo.wattebled@savoirfairelinux.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Message-ID: <515257189.1172159.1787078030404.JavaMail.zimbra@savoirfairelinux.com>
+In-Reply-To: <8558d54fda8e977ea6e677693db0586b8e10e80a.camel@linuxfoundation.org>
+References: <20260812150448.2343308-1-paolo.wattebled@savoirfairelinux.com> <2434d54e4295573c9632a1fbcd0cef7ae6a0d413.camel@linuxfoundation.org> <252742809.992447.1786635089054.JavaMail.zimbra@savoirfairelinux.com> <fbc8c6306856f3be07a2e6aa3ec76b9070a35897.camel@linuxfoundation.org> <453789479.1044718.1786717890540.JavaMail.zimbra@savoirfairelinux.com> <2417b94a9c5734b9e9b54f9d1eb3133cab4c0ff1.camel@linuxfoundation.org> <1200355947.1128688.1786996086820.JavaMail.zimbra@savoirfairelinux.com> <8558d54fda8e977ea6e677693db0586b8e10e80a.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] toaster: Add recipe variables view
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00004685:EE_|CH3PR12MB8994:EE_
-X-MS-Office365-Filtering-Correlation-Id: ad6e185a-f769-4808-3037-08defd4f3776
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|82310400026|376014|23010399003|36860700016|1800799024|56012099006|10067099003|11063799006|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info: 
-	a0Tvang6hm0vB3d2GO99Dsj4CffQGdY0mhegsWI43dUw/KK2RzAeZDxayTxKnUQWAEz3YhOhB60VE0OhnrAFt5KBbrFJ7qYQgt9SePUtvRHERPn6KA54Up9QPJ2TMtzwIwXdsxcJyTNZNkQ9mGLoddhYnwMGE5h5pnTu3rNzDx3BAKxdb2pvJx1kz3jZKAFm9xmpFznhPCPyG1t5S+4dRVGcl9YTDVLYm+VrI0XdDAxn+TctVOfuDCmcbgojyfx8mgjsDFi1fy9MSLzz3wPQf7mCuKkViWYRS62ol5OYq/QO73brDM8/i3UoJQeXyF3hyc4FWqr7it47e5/Ee7PKfm7t8u4kdkKxCuEh4/qXbsRbg43ldEqdQu8ttbGjoyoJ9av437F08Sd/EwnqaCMSPNMN4PnHm1Gjm6KBugwGVBFlYHXmTNGi4btQOdy/fDWSH58STn7AD8xdLxrsr57tgoPTi5SmOtSDKV1egPmmqoTnMaPqHyt9+PvIMLLYZAlA34B6fbgP3Kyki30O9aJSygwEqjP1yVP6AM8yi2oxcX0bxFN8ToU1DeUM3V2ZjfcEpcZuNprY5uDk+Ol5xzr89L3S0kNooYTE4DZgnV5LyGca95MxEbPsV30c5Cs58K1KikNHgaYTFkImxeUUU4YX5f2Cfw6Za6pvZDSv2k4Hzz1qWLkILw+dnChGGCwR47HcxY/MvdLSeWB8n3QDICkfAA==
-X-Forefront-Antispam-Report: 
-	CIP:192.25.218.39;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:wpcosapexchedg6.windmz.agilent.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(23010399003)(36860700016)(1800799024)(56012099006)(10067099003)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	CNtsHP2rYo3EYvI1koXXfKoDqmfXfLiiSEHTbGRK8SDuUvjBF9EJg6yOK5oliM5J8LFqSfIMvtssQbjmqlJmb+OkLlOZYL7JhtZ89WhKeaqZsfx/d2bPmtZ1XeiWyMfLCjIYHvq5ChPNhhEGFFW1PY9vtuQEsDsm+kbVCPu8ZyB8li3T2Usy3PchmK0f4FEH1WLYZEZ26Y91L6R0P2H+8GzLbXK2pSTgB43UhzSdu1Aey3VvQ+eW4jVbhxJwLHZa1RrvwhdQtyHn5EAWPpO84aAFESBL+pppmsWmp/3xnwwcQdFTxWeQ1aOkTzKeFnMjC6CcK6V9Zb1vfVvt981zLbKYlo88AbrT+8aivsKUm9hKy9tTCd5HUvp+pgsxnwvj0OrwYKHfOfkK/HgvtYm1+saq1XZ+IDPo2p8GWivez/09PBQwnP8AOaY7Zt/wnmvy
-X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2026 17:36:20.5610
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad6e185a-f769-4808-3037-08defd4f3776
-X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.39];Helo=[wpcosapexchedg6.windmz.agilent.com]
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-BN1PEPF00004685.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8994
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 10.1.15_GA_0126 (ZimbraWebClient - FF153 (Linux)/10.1.15_GA_0126)
+Thread-Topic: toaster: Add recipe variables view
+Thread-Index: nE1LfSlb5RsGy1irLs6BQCrYX5l87g==
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 18 Aug 2026 17:36:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19981
+ <bitbake-devel@lists.openembedded.org>; Tue, 18 Aug 2026 18:33:57 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19982
 
-From: Chris Laplante <chris.laplante@agilent.com>
+Hi Richard,
 
-Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
----
- pyproject.toml | 1 +
- 1 file changed, 1 insertion(+)
+> For example if the core metadata has:
+>
+> X = "${Y}"
+> Y = "Z"
+>
+> then the recipe sets Y = "A", the variable history for X doesn't change
+> but the value does.
 
-diff --git a/pyproject.toml b/pyproject.toml
-index 4725e860b..c14a547a8 100644
---- a/pyproject.toml
-+++ b/pyproject.toml
-@@ -1,6 +1,7 @@
- [project]
- name =3D "bitbake"
- version =3D "2.19.0"
-+requires-python =3D ">=3D3.9"
-=20
- [tool.vendoring]
- destination =3D "lib/bb/_vendor"
---=20
-2.43.0
+You are right. My filtering happened before expansion and relied on
+`VariableHistory`, which records direct operations but not changes caused by
+references to other variables. It could therefore omit `X`, even though its
+effective value had changed.
 
+I removed this history-based filter. The implementation now iterates the
+parsed recipe datastore and stores the expanded value of each included
+variable. I added your example as a regression test, and the snapshot contains
+both `X = "A"` and `Y = "A"`.
+
+Variables marked as functions and explicit override keys are not stored.
+Active overrides are represented under their logical variable names, and
+non-function flags are stored as `VAR[flag]` entries. Values detected as
+involving inline Python are also omitted to avoid expansion side effects.
+
+On an `imx-image-core` build, Toaster persisted 598 recipe snapshots with an
+average of 1663 entries, a minimum of 1627 and a maximum of 1944. The compressed
+payload was about 86 MB in total, or 145 kB per recipe on average.
+
+If you agree with the current scope and semantics, I will generate and send a
+v3 of the series.
+
+Thanks for pointing this out.
+
+Cheers,
+Paolo
+
+----- Original Message -----
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: "Paolo Wattebled" <paolo.wattebled@savoirfairelinux.com>
+Cc: "bitbake-devel" <bitbake-devel@lists.openembedded.org>
+Sent: Monday, August 17, 2026 5:08:38 PM
+Subject: Re: [bitbake-devel] [PATCH] toaster: Add recipe variables view
+
+On Mon, 2026-08-17 at 15:48 -0400, Paolo Wattebled wrote:
+> > The cache you've added is per parsed recipe, not per recipe used in the
+> > build. Was the patch AI assisted?
+> 
+> The new `recipe_variables` field is collected in the recipe parse cache for
+> every parsed recipe. `buildDependTree()` copies cache fields into the
+> dependency graph only for recipes in the runqueue, and Toaster persists only
+> those entries. Thus the cache is per parsed recipe, while persisted Toaster
+> rows are runqueue-selected.
+> 
+> Yes, the patch was AI-assisted, as disclosed in the commit messages. I used
+> AI tools to assist with code generation, but I reviewed and tested the
+> changes, and I take responsibility for the design and the submitted commits.
+
+Sorry, I did somehow miss the tag in the commit. Nonetheless, I am
+worried that the changes here aren't quite right.
+
+> > 33 differences per recipe seems very low as well.
+> > 
+> > bitbake -e bash | grep -v ^# > a
+> > bitbake -e quilt | grep -v ^# > b
+> > diff -u a b | grep ^-[A-Z] | grep -v : | wc
+> > 
+> > So I've filtered only variables not functions, nothing with an override
+> > and I still get 132 differences.
+> 
+> > I think you're missing a lot of values.
+> 
+> The current code records only variables whose BitBake `VariableHistory` has an
+> operation from the recipe, a matching `.bbappend`, or a recipe-owned `.inc`.
+> It excludes class- and configuration-only values, functions, inactive
+> overrides, and values that fail expansion.
+> 
+> Therefore the count reflects this source filter, not the complete effective
+> recipe datastore. I agree that describing the result as a resolved recipe
+> variable snapshot was misleading.
+> 
+> This raises a question about the intended scope of the feature. In your view,
+> which variables should Toaster expose here? Should it provide the complete
+> effective recipe datastore, including values inherited from configuration and
+> classes and values selected through overrides, or should it expose a clearly
+> defined subset? If you expect a subset, which inclusion or exclusion criteria
+> would you consider useful and correct?
+
+I'm not sure what the right answer is, but I don't think your current
+criteria works as you think it does.
+
+> > Ok, how does it use variable history for selection?
+> 
+> Variable history is used only as a provenance filter: it selects variables
+> touched by recipe metadata. The stored value is then obtained separately from
+> the parsed recipe datastore using `metadata.getVar(..., True)`. The history
+> itself is not stored. The compressed snapshot is carried through the dependency
+> graph for runqueue recipes and then stored in Toaster's `RecipeVariable` table.
+
+For example if the core metadata has:
+
+X = "${Y}"
+Y = "Z"
+
+then the recipe sets Y = "A", the variable history for X doesn't change
+but the value does. That is a simple example, there are much more
+complex ones.
+
+Cheers,
+
+Richard
 
