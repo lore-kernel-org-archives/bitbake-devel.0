@@ -1,143 +1,131 @@
-Return-Path: <WXbet@proton.me>
+Return-Path: <giancarlo.cicellyn@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C83C5DF6D
-	for <webhook@archiver.kernel.org>; Wed, 19 Aug 2026 09:33:49 +0000 (UTC)
-Received: from mail-wr2-f2.google.com (mail-wr2-f2.google.com [74.125.225.66])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.3217.1787132022709636178
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0ABDC5DF6D
+	for <webhook@archiver.kernel.org>; Wed, 19 Aug 2026 10:09:34 +0000 (UTC)
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.3819.1787134174342125229
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 19 Aug 2026 02:33:43 -0700
+ Wed, 19 Aug 2026 03:09:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=j4dLBfnq;
- spf=pass (domain: gmail.com, ip: 74.125.225.66, mailfrom: wxbet.oe@gmail.com)
-Received: by mail-wr2-f2.google.com with SMTP id ffacd0b85a97d-470713a9053so183853f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 19 Aug 2026 02:33:42 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=tCH6aH72;
+ spf=pass (domain: gmail.com, ip: 209.85.161.53, mailfrom: giancarlo.cicellyn@gmail.com)
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-6b13496112cso694441eaf.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 19 Aug 2026 03:09:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787134173; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ZWYbqFNzeQCuSq45PMacuRG8WTOInWvahHX+Bs/clcZWYMt5qsT4+nsUb4BilTJLbo
+         vVtU27aGaO5tzgCZ3SWEcPC94H3eKGzYNHoMmCuA01LnzvGxov9XWW+2sinJxJYKHF0k
+         SUNw8cygGHWgdOy2H/qoUYFvIFukKRyzubpTPabcIzbxgAlBRrMb6EdmccOPpotgCBSh
+         l7eC3D+MaW8uEYCqmp+jYJwNCYtLWOmVrTz9ZV/kdjRY6f7mUTaj+n2BUmIPUdoH4eJa
+         HBVHuz2TP3UQ3bdj4iYZgQ/Tgz1Q4XVsgIAagmDC58vpDH7fdtPCfY6RCtfKhEI3zExm
+         GFrA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:references
+         :in-reply-to:dkim-signature;
+        bh=FETZY6BaW7DAn6SN5+R49wTA++jZzHcLGuyisZmOSN8=;
+        fh=Da0VcnEWTsEJFcxSqb8W58S9DB5DKFhcwZoV1ZLH5nU=;
+        b=r/3tLt57bq2G+IxYC1txZeNgqkphxur+oY97JkxAlwU2ehBnyiXtzLoq8faTS59ztk
+         fIAGFNx0bYgopdJaFfSptV/39vUVMjYfXXfj2lBBObq0pKsprwq+CkmX/NJCWC9ytQZP
+         HjeXGMnGg+R9uYoMCwXpkEFgRSLHpdmvUg+i1k+xPO6ZFaCtlr5bZJIZJb7OSEVOJCli
+         L0sueYR4k22lKirT1HdOuQuoZwh2mqkX5JqzuAF5KT8rSdyWBicWCKzMDgccI5JA9Wba
+         NZvZbbdlU4o93RnMnlm2I7UVAiPvhsRMtx5nj6iHvlfV9wZkpRfC3O2hVMMJpTJ4m5eP
+         ycew==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787132021; x=1787736821; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=FSsB7s1iBbEGvcMZXGoFe/LUBq3Rg8D/0j4Y+gR+/Ag=;
-        b=j4dLBfnq4UfExWqIPzFjBdXdsu8flG0BxY2gbxE262/YCcO0IOKCsO2LnRsjPzMC+l
-         PpCdZesjk730S+Oz7AgvWBLtswRPwuBJVlZui8fWkkHhJggSqvu+PVXg86mnJ7Nlb3Ne
-         nzbr4yga29T7dBRornNaAcERddEeD1tqxFx7kcEhRYzOlaNUyvgDMiHLeUlYef/rlDJF
-         s4KWtaJxLhwMcc+Um8K1JeFgwNk7vb4bo4dp32mFQ2QHu2I1HOIfK8cHMd9AThHbg496
-         Qw2Y17Z3QkutDQtLJprXpTUwSMUNFJFtD+2H/Muzh7HLJpIQwPWOeY4qjdykLhz4QBBg
-         j+aw==
+        d=gmail.com; s=20251104; t=1787134173; x=1787738973; darn=lists.openembedded.org;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :references:in-reply-to:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=FETZY6BaW7DAn6SN5+R49wTA++jZzHcLGuyisZmOSN8=;
+        b=tCH6aH72+QK+3i0ym5moYt+ISvNn6AqMuis/hjzI2ETvBCY0mAsC3de2pTCm5FPnwq
+         sEm/vfLf5lVSdSr8jWf07YSt1pI2ZlbZ5z6T1TJX0Ny+kCIG64P6jm71w/85MdIsQQq6
+         k7fpwuV+MvaOZ2a6bPn9osiRcTpnt2x1C90ItLptuOpUHSHYvFlCHTaC6SBJrbtyJNxW
+         e0bH/eJ0MJ+yqdDj88TzA5B5hMTeKFhhG2xGhaOtEKnvEcx8A3tGnuVQfDZg+iOwzi/w
+         mAaq1LYwxG/ADBbalqsQdV59GfUD8jVwNZcdMvSeCWki6g6nN6heywue1gy1uoO4/scM
+         RN+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787132021; x=1787736821;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=FSsB7s1iBbEGvcMZXGoFe/LUBq3Rg8D/0j4Y+gR+/Ag=;
-        b=SOjDMeBova/FSEBLzCp2oInIH+fdjRcauC3uVv+GYlWMBIQ0jWRefmAxl1J/WuScUx
-         2YDrE0YNN0+YBedLFmyKcLoRBt8c6M8fGaMApTaiDb0kwIbtVJzNBUzMqMBkFrnByMY5
-         hL8MWJ9YJeNVksjgVH2kgl1MVORk8kSC84uSook/sm4cgAbsLVm0lNtFeteyqIvVaCDL
-         GMS7ITro+eltnqpbPRe5D01ToscpdWVfnQWQP2nnl7xDIm+hi4NjwC2u5vPUqc3C4h6n
-         NZWhp/mWBePyuH9328at9gseOmTtKzrSI89/T0JML1iv5dMUeXAY44xIsLh2twf6D0yG
-         hViw==
-X-Gm-Message-State: AOJu0YwNhegQqas1b1AUS+EK1BVhkAsofBQK+SOs5J5iBJHdUhwLUwxw
-	DM5UeVp4zTWWYLlLbG6UVOGJNM2hMpAUkubl8oXSiVwDpFZFTUc2biGT5s3z0hBGiVdfgNJw5N8
-	=
-X-Gm-Gg: AR+sD11wfcMBjoctz+kJ/T6fcyZzsxsobWDirFQLguo1ztS10t+wJcRpq6gpSr6nEUY
-	AuECnXuIbqcRGWznKIdN8XNVCWK2JoJu494Ak4g1PR7U9uyvqmOpQPgTzAbr1rdy9+SsuKVe747
-	05y1H+9/C84IyJnFTAcw3eLW/Kv/626sXV05ui5iuGxx0v+KU9UQtWu5s0zs3PbsZ2MLQRRwW1W
-	Pok73IsHj5CwRmpYbZ2VXvUB1AGgPxnA8osvkCZuu6uQzbw6A7PQn39+BLfD4lp8M3OMzj2m2MD
-	J00TCWkfcbhElJgXdF4kx8EvjJ36KtJW+/dzrLv3vFM+0w7atFVEx+3DfTio3soBq7b6K7XuRFb
-	+POIT27UMZpJ0uuelmw0Vn9AxvcDOGv3tcNx801HcBBGhtTD8YvQQ0+m0OMhCQTezGkwXTxV3sz
-	fOGZvX9rbTzS9S+h1PvCFwcio1preG2xo0UpWBwvmgWBJbpDxoDqbwZ0hQ89sFmOVVDBzTdQ==
-X-Received: by 2002:a05:6000:25f3:b0:481:4810:d701 with SMTP id ffacd0b85a97d-482b1feb276mr5983082f8f.19.1787132020710;
-        Wed, 19 Aug 2026 02:33:40 -0700 (PDT)
-Received: from localhost.localdomain ([94.31.114.216])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482b14b80a5sm4563016f8f.24.2026.08.19.02.33.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2026 02:33:39 -0700 (PDT)
-From: WXbet <wxbet.oe@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: WXbet <wxbet.oe@gmail.com>
-Subject: [PATCH] knotty: show elapsed time on the task progress bar
-Date: Wed, 19 Aug 2026 11:33:21 +0200
-Message-ID: <20260819093321.3451-1-wxbet.oe@gmail.com>
-X-Mailer: git-send-email 2.47.1.windows.1
-In-Reply-To: <CANNYZj9uDoKqqx_WV2CZ0-Q99AdRWzVUXD4idpcrZMf2Zpw28Q@mail.gmail.com>
-References: <CANNYZj9uDoKqqx_WV2CZ0-Q99AdRWzVUXD4idpcrZMf2Zpw28Q@mail.gmail.com>
+        d=1e100.net; s=20251104; t=1787134173; x=1787738973;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :references:in-reply-to:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=FETZY6BaW7DAn6SN5+R49wTA++jZzHcLGuyisZmOSN8=;
+        b=QOVegE0ts18kU868jyVhGAci2ItPuSFFJ1Ivm4FIMsf0na2OdwXGpGiOpT6lv8xFVo
+         X18ErI9qELVrTT6tlNAExYPnUb76Rj5TbPiA+lU79ugWRhX6SNLDcVpQmd5SLITS5yqS
+         vKYqL62V/G0xL/W3HQQPJjYYrw//Oo9Wm5h8ykxaG1gQYkIbIE+h3JyunbZeV+jKv+Xv
+         OsBqp+X3rMRX7SxJQss/Hj6LJqoEPU+OxdzaAga9+Re+xLyqgVSvvm4ID+Ti+oFyoGh+
+         NmfKXmKKznfsoe1MKJU6PcXwtmc9o4nGyIjQw8zgdqbi5JDRWrI1ODdQt1M8uAMbQQUy
+         t6Lw==
+X-Gm-Message-State: AOJu0YzOUFURPmeVdpDvbFeT3s6QGgYhGdgwdKvt74rPKoE72/eyOOe4
+	MrioM1HrQWR4i0RN5JuTbzI3vepf9FfaRs4BstSs9Dp4hiC+XbKxTzbNy+XUe6aSfd1POaHlCWj
+	24doK6HVU92b6irSlrfkrreXsynonT5NYcA==
+X-Gm-Gg: AR+sD12r4ypwfK9QJPmPTFKXr2vxDFlJsoyPJgC4qf2vuRFILzDU7wNKMG1Sax1saZQ
+	cwMhBaFHXmz2sn/iWw4iPJoHkcjLuWrpaT06VS1Zu/rWywEIOIY326xZMZz12C3FMJKdYQ/HWhI
+	7DpR3PsQPT8oM669/xGSzpnGtQACxiE8o539+ZfJNN4216wupA008xjAbRLsUhml2DQzZ/PZdXE
+	1ir17p7NuiX/K5hauM8tu00jXLMKj3706loqjWZF3usoJAyOX3W8U2w1sv72P7xX8pOmJ/OtD1L
+	iZvHRc91SqyhVi8bYKu0fd2xNY/0EuHIfn0OSfchmQMuQTPLiEZA9h1xwUctgmZ0Yl1zmymoi7p
+	+Z/o1ukTgOuLij0u86Hiu2eHlEAbSISqX2UBakcH4uDZsedUPXLg+nRUKnAjson+F90He1QZc2w
+	4ahKjZRC0gDujDj8BIx3FWtXoT6IPjum7oKbbRl0hK0A==
+X-Received: by 2002:a4a:e911:0:b0:6b0:3572:38b1 with SMTP id
+ 006d021491bc7-6b13c3877d0mr3427731eaf.13.1787134173425; Wed, 19 Aug 2026
+ 03:09:33 -0700 (PDT)
+Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
+ Wed, 19 Aug 2026 03:09:32 -0700
+Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
+ Wed, 19 Aug 2026 03:09:32 -0700
+In-Reply-To: <CANNYZj9S=CZzqBFOBdGzSZvyaUMA_+nsDDhf-3siOGxMNVBAdg@mail.gmail.com>
+References: <20260818203658.90975-1-giancarlo.cicellyn@gmail.com> <CANNYZj9S=CZzqBFOBdGzSZvyaUMA_+nsDDhf-3siOGxMNVBAdg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Giancarlo Cicellyn Comneno <giancarlo.cicellyn@gmail.com>
+Date: Wed, 19 Aug 2026 03:09:32 -0700
+X-Gm-Features: AcwNN1V6Cqq8ib8aKekJrkFcg_cuf1As_P8I0bvc-G4XdCmkSIXuK6oSHqd4bVU
+Message-ID: <CAK46CgQSvLe=1U+Xd_6pL_aWC2_940HXdJTwCmzKqhL_RhVvug@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] bitbake-setup: preserve VSCode extension recommendation
+To: alex.kanavin@gmail.com
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 19 Aug 2026 09:33:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19991
+ <bitbake-devel@lists.openembedded.org>; Wed, 19 Aug 2026 10:09:34 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/19992
 
-The progress bar for the overall build shows a percentage and a bar but no
-elapsed time, even though the individual running-task lines below it each
-show one.
+Hi Alex,
 
-Add a Timer widget to the bar. The time formatting in
-TerminalFilter.elapsed() is hoisted to a module-level bb_elapsed() helper and
-reused by a small progressbar.Timer subclass, so the bar prints the same
-"%dh%dm%ds" style as the rest of the UI.
+Thanks, you're right to question this.
 
-Signed-off-by: WXbet <wxbet.oe@gmail.com>
----
- lib/bb/ui/knotty.py | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+I went back through the history of the VSCode workspace support and I
+can't establish a convincing real-world case for this patch.
 
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 15025e8dd..343045881 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -37,6 +37,21 @@ featureSet = [bb.cooker.CookerFeatures.SEND_SANITYEVENTS, bb.cooker.CookerFeatur
- logger = logging.getLogger("BitBake")
- interactive = sys.stdout.isatty()
- 
-+def bb_elapsed(sec):
-+    hrs = int(sec / 3600.0)
-+    sec -= hrs * 3600
-+    min = int(sec / 60.0)
-+    sec -= min * 60
-+    if hrs > 0:
-+        return "%dh%dm%ds" % (hrs, min, sec)
-+    elif min > 0:
-+        return "%dm%ds" % (min, sec)
-+    else:
-+        return "%ds" % (sec)
-+
-+class BBTimer(progressbar.Timer):
-+    format_time = staticmethod(bb_elapsed)
-+
- class BBProgress(progressbar.ProgressBar):
-     def __init__(self, msg, maxval, widgets=None, extrapos=-1, resize_handler=None):
-         self.id = msg
-@@ -250,16 +265,7 @@ class TerminalFilter(object):
-         self._footer_lines = None
- 
-     def elapsed(self, sec):
--        hrs = int(sec / 3600.0)
--        sec -= hrs * 3600
--        min = int(sec / 60.0)
--        sec -= min * 60
--        if hrs > 0:
--            return "%dh%dm%ds" % (hrs, min, sec)
--        elif min > 0:
--            return "%dm%ds" % (min, sec)
--        else:
--            return "%ds" % (sec)
-+        return bb_elapsed(sec)
- 
-     def keepAlive(self, t):
-         if not self.cuu:
-@@ -354,7 +360,7 @@ class TerminalFilter(object):
-                 msg = "Currently %2s running tasks (%s)" % (len(activetasks), cur_tasks)
-             maxtask = self.helper.tasknumber_total
-             if not self.main_progress or self.main_progress.maxval != maxtask:
--                widgets = [' ', progressbar.Percentage(), ' ', progressbar.Bar()]
-+                widgets = [' ', progressbar.Percentage(), ' ', progressbar.Bar(), ' ', BBTimer(format='Elapsed: %s')]
-                 self.main_progress = BBProgress("Running tasks", maxtask, widgets=widgets, resize_handler=self.sigwinch_handle)
-                 self.main_progress.fd = self._footer_buf
-                 self.main_progress.start(False)
--- 
-2.53.0
+The workspace feature was introduced with the
+`yocto-project.yocto-bitbake` recommendation already present, and the
+original test explicitly verifies it. I also couldn't find an
+established contract that treats `extensions.recommendations` as
+managed state that bitbake-setup should restore after a user changes
+it.
 
+So the scenario in my test was effectively assuming policy that
+bitbake-setup doesn't currently define.
+
+Please disregard this patch. Thanks for catching that.
+
+Giancarlo
+
+On Wed, 19 Aug 2026 10:32:26 +0200, Alexander Kanavin
+<alex.kanavin@gmail.com> wrote:
+> On Tue, 18 Aug 2026 at 22:37, Giancarlo Cicellyn Comneno via
+> lists.openembedded.org
+> <giancarlo.cicellyn=gmail.com@lists.openembedded.org> wrote:
+> > configure_vscode() initializes the Yocto BitBake extension recommendation
+> > when creating a new workspace. When an existing workspace is loaded, its
+> > extensions section replaces that initial value, so the managed
+> > recommendation can disappear.
+>
+> The existing workspace was also created by bitbake-setup, so what is
+> the scenario where it doesn't have the yocto-bitbake extension and it
+> needs to be re-added?
+>
+> Alex
 
