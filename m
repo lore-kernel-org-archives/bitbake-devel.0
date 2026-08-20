@@ -1,92 +1,97 @@
-Return-Path: <amery@apptly.co>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5A6C5DF81
-	for <webhook@archiver.kernel.org>; Wed, 19 Aug 2026 20:01:25 +0000 (UTC)
-Received: from v523.v5ed9ac7d.euw1.send.eu.mailgun.net (v523.v5ed9ac7d.euw1.send.eu.mailgun.net [141.193.32.23])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.4905.1787169677587484243
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A74C5DF81
+	for <webhook@archiver.kernel.org>; Thu, 20 Aug 2026 10:08:47 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.3789.1787220524489043919
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 19 Aug 2026 13:01:18 -0700
+ Thu, 20 Aug 2026 03:08:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@e.apptly.co header.s=mta header.b=gfenGGo2;
- spf=pass (domain: e.apptly.co, ip: 141.193.32.23, mailfrom: bounce+ec7242.b6604b-bitbake-devel=lists.openembedded.org@e.apptly.co)
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=e.apptly.co; q=dns/txt; s=mta; t=1787169675; x=1787176875;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: From: Cc: References: To: To: Subject: Subject: MIME-Version: Date: Message-ID: Sender: Sender;
- bh=kWhsNdrdsHcy7KFvqt6x6YL3wAI7EK3/Q+GIH8x2pdM=;
- b=gfenGGo2nPHu83NBv0Tdl1u0PEhsAZAlvJymv+/22aOSw1pZT53q+W7chhk1gKxJYuwvxnGaTa07wZDq385U6WHGd+gTTghTENlWCsaanal5bjr53yAFA8Hai5CcUDL8IpSW05aywEa03EK+fVv9MpFAYNXgX54Y76PkVQd8CVU=
-X-Mailgun-Sid: WyI5YTJmMyIsImJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZyIsImI2NjA0YiJd
-Received: from [10.1.16.191] (unknown [51.179.224.164]) by
- ba4ca66762c64c012a62cd489d7522b5eca30b2dadf4eac50dd3b3ca7e41976f with SMTP id
- 6a860b8b61b96f7ac0f42c24 (version=TLS1.3, cipher=TLS_AES_128_GCM_SHA256);
- Wed, 19 Aug 2026 20:01:15 GMT
-X-Mailgun-Sending-Ip: 141.193.32.23
-Sender: amery=apptly.co@e.apptly.co
-Message-ID: <bae58165-fd11-432b-832e-26d244415fa8@apptly.co>
-Date: Wed, 19 Aug 2026 21:01:14 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] data: Return a list from exported_vars()
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fQAN98v2;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4954dff6536so17377225e9.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 20 Aug 2026 03:08:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1787220523; x=1787825323; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=4gselgP+NK6i5jJoHGYb2SNoHFdenBx0hgtYRV4BKXU=;
+        b=fQAN98v2e0/QyEmK07TZWDptvC1R4BSfOVxsiOeA4MLeI40izBp2T8KDOk+YILcQTl
+         Sj9c3JRM4bpcKutyF8P/lEhzipLKlAa8jFi5r44dB9dgHM+dF6JxTSo8NY/Wtp/+gQQU
+         l+93vmAvhqRYbc4e/CxISbs1VmNHEq4aaTEVI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787220523; x=1787825323;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=4gselgP+NK6i5jJoHGYb2SNoHFdenBx0hgtYRV4BKXU=;
+        b=iQqdweZW1H83bS8RtyG40SJYX/fOQ8bk0he9p0jsH4/O88PzZEj3CryZupm/BamVNE
+         A+GtWCqoJjFp2IvaHQdr4a5G0tLh4g5vIjSxnpw/kZ8h8Bfxd57mBo/hiOd8ZTtMRsB0
+         zo4y2gGbMhxjo+HiD8jJf7s3A8+fwxJkEB4zJY+Q4PctZg8Rfvkm/sSwTFQ9HkwJtGnb
+         eE+YKdIJKfcFvXsz/Z+KfCR2+IxMOAyKrWXR9u57b8BtuG6gibWIPgVxNfSa5gMWKVHL
+         FZv3+VRPBKWSQzAlMpWqSD/DKYpBKESkVk9sHKl1A4CEsdcKuA8fuxAkK4gOfdl3jryZ
+         QQZQ==
+X-Gm-Message-State: AOJu0YzA3AjXYGmttx38ademfadEkQsgLRFuyNbvaLy5v46rzQcWdKnm
+	4njeTWfcawm2S2bK45cdMHUegMGmmEoTMpZHiF64Qd7+sX0LZEo0mZzUGRJ+YHtOkvdrXsCvJcV
+	wBtAkLTE=
+X-Gm-Gg: AR+sD11aYmEt2+/CHvXY9W4+zemZ4NjfI1npY3xnfI0NS4A/MYKiyWmgS/wUSR6Nitz
+	BA096yz4hKbuypKO63WB2eS3VtNFnK5rPg+YBymEOh5ZUPTXr++TnUcjDrETFOI9muiUywKqgyU
+	PVkNuOTb9X2orPvnx4uu6/ffyrYqjLWyeFTqmq2s2wmia+vFFmQ9ldXn0B7vXVoO3ufmZxMeBwZ
+	hbxGw4gLkucA+1lYh2Oxj+QScWGDf4Jj/JdI9BuKzt7fRpi3oEV2yk81Cz8RmPCZubh/ev/b8gE
+	eEMdT+qy88cu/kbCm88Kc+lwPNHp2lCj0rn+BpJSGO8sZlCEVDWccc2qqF0fFXRZTtEtgw2JamZ
+	QvpqW8clEYovm9B58yPzUvjXVWCcgDsuV+8Pz3SLifPfjeAwfbS3/2/DjwE2ys6rlVoNqzS78Au
+	JeDinbRsMioNiOGxmaEqTZHBpRkmap/iQyNWAE87rKiWiEusvOCcgSEuGlHHSjKvq6wDzfIj8OU
+	9TaoE43hmEQb9FyFs/8TunbWAEH
+X-Received: by 2002:a05:600c:4f54:b0:499:84fe:ca8c with SMTP id 5b1f17b1804b1-499aa16e9a9mr165642825e9.5.1787220522659;
+        Thu, 20 Aug 2026 03:08:42 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:9334:47ad:4624:539c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-499b2148727sm37221825e9.3.2026.08.20.03.08.41
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2026 03:08:41 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-References: <20260727172856.2304118-1-amery@apptly.co>
- <20260730190854.2456522-1-amery@apptly.co>
-Content-Language: en-US
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
-From: Alejandro Mery <amery@apptly.co>
-Organization: Apptly Software Ltd
-In-Reply-To: <20260730190854.2456522-1-amery@apptly.co>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH] utils: Fix lockfile_to_exclusive to avoid deadlock
+Date: Thu, 20 Aug 2026 11:08:40 +0100
+Message-ID: <20260820100840.2591098-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.53.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 19 Aug 2026 20:01:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20004
+ <bitbake-devel@lists.openembedded.org>; Thu, 20 Aug 2026 10:08:47 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20005
 
-Hi,
+We need to drop the existing lock when trying to get the exclusive lock
+else we'd deadlock with another process trying to do the same thing.
 
-On 30/07/2026 20:08, Alejandro Mery wrote:
-> exported_vars() was a generator, so each value expanded when the result
-> was iterated rather than when it was called. bitbake-worker binds it
-> before bb.utils.empty_environment() and iterates it afterwards, so any
-> expansion deferred until iteration ran against the wiped environment
-> rather than the one bitbake started with.
->
-> The corruption is not uniform. The worker writes each variable into
-> os.environ as it goes, so only the first value expands against a fully
-> empty environment and the rest see it partially rebuilt, in
-> exported_keys() order.
->
-> Recipes whose exported variables expand a command during that loop hit
-> this. A gitver-style PV such as "${@get_git_pv(d, ...)}" runs git while
-> PATH is empty, so the git wrapper on PATH is bypassed and the real git
-> runs directly. Under pseudo this fakes uid 0 against a repository owned
-> by the real user, and git aborts with "detected dubious ownership",
-> failing do_package intermittently (only on reparse, when the value is
-> re-expanded rather than served from cache).
->
-> Build and return the list in exported_vars() itself, so the expansion is
-> complete before it returns and no caller has to know it was ever
-> deferred. A value that fails to expand now warns at that point rather
-> than during iteration, and a result nothing consumes is expanded anyway;
-> neither is a change for the one caller, which consumes all of it. Update
-> the comment at the worker's call site, which documented the generator
-> that is now gone, and add tests for the expansion timing and for the
-> warning that moved with it.
->
-> - v3: materialise in exported_vars() itself, not at the call site; two
->    tests, using bb.utils.environment() rather than touching os.environ
->    directly.
-> - v2: comment the ordering at the call site, and add the tests.
-> - v1: the list() wrap alone.
->
-> Signed-off-by: Alejandro Mery <amery@apptly.co>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/utils.py | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-now that this is merged (c870f5bd96ad02efc02c58133c27bdae3a300e3e), 
-could it get cherry-picked into 2.18?
-
-Thanks,
-Alejandro Mery
-
-
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index b635f68a153..37edd435350 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -587,12 +587,13 @@ def lockfile(name, shared=False, retry=True, block=False):
+         if not retry:
+             return None
+ 
++# We have to drop the existing lock to avoid deadlocks
+ def lockfile_to_exclusive(lf):
+     if not lf:
+         return
+-    fileno = lf.fileno()
+-    fcntl.flock(fileno, fcntl.LOCK_EX)
+-    return
++    name = lf.name
++    unlockfile(lf)
++    return lockfile(name)
+ 
+ def unlockfile(lf):
+     """
 
