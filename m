@@ -1,121 +1,112 @@
-Return-Path: <chris.laplante@agilent.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554E3C5DF8C
-	for <webhook@archiver.kernel.org>; Fri, 21 Aug 2026 20:49:37 +0000 (UTC)
-Received: from SA9PR02CU001.outbound.protection.outlook.com (SA9PR02CU001.outbound.protection.outlook.com [40.93.196.7])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.98.1787345375953928328
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA12C5DF8C
+	for <webhook@archiver.kernel.org>; Fri, 21 Aug 2026 21:27:37 +0000 (UTC)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.865.1787347654348129208
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 21 Aug 2026 13:49:36 -0700
+ Fri, 21 Aug 2026 14:27:35 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@agilent.com header.s=selector1 header.b=qKA9dVzu;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.93.196.7, mailfrom: chris.laplante@agilent.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WGCxbBkUvu0w53WlzCDImjgn9maxvkQL9Yu+sJ8mP72Trge8JWyo6fK4aWjV8l9ohloUvosoDp192A11EBT7N6izqW/aXQxDD7CEs/fodHDBldDrKf1hJKibpv6T7ObOens7ZmsunfutnT5o0ZVaFDEXuSAP7tUCF3fWyeoJsVit6LJgcjMToFE8cxTAXvFEUKower3xaurzSrRgvFJS/A/ML6zBHxIJOdRg2+RlUGtUC2Ysdcy7Fu7GXLKDAFm9/H4R5zzbgxXHh9CN69wE7PTXnoucWJKsrVMsgebbLX2LnHeFVUjOItR5TC4de7jfYbOUYMVS8Jy7JDdfy3Dpng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lUbldKkI+B0XRYrC3eUAVMwn9q9vctFimuCToJNS0Yg=;
- b=LRPsrxawj37gFFaZrULxhmRIaINmEuaNtageAngmhZKPUe9r8C3V+JpDGB8ccJXgI7H6pSlZqQbiX5Myoi3yZfMplvrPO83lzhOeSi5JG3IAwsS8FEn3Bhv/Kefu+0rcIYX+fMOI/wbSNnB5WPfzc1AAhqcNg9oZKX7G1kZwnc6IhmfRTGuv2YXE759+nd2jriyzGWCKIz/JFxdhi4YyyeQB1PmX/UN8gTtemrJfHJh06qLI0eVr6FS/d6EiblijXgWj5+XQJUQGPQVmGbIj/vQ1r+dJgKrqmc5R65ps/qzLyxJ+EleZ9D/UOFeo7r4mIR+goJRvsLmlAa68lU1eBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 192.25.218.35) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
- action=none header.from=agilent.com; dkim=none (message not signed); arc=none
- (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lUbldKkI+B0XRYrC3eUAVMwn9q9vctFimuCToJNS0Yg=;
- b=qKA9dVzugrRvSaB7kTfnpTRRg6WtqtCddVxHEgh13CilQfPXEbci13j0TOIfv8c6qkNhlYFxaQuhlGG+CpOeLFOlSDt9+7QVbLuKPKc9pRfAOc8K8etf6Dontiqy2ZmI73TWUTjShD4z3WdxtHejm7wo+Wm3PG8loIiMwRpZV2hLa8rUvadgV14JnVs8xwOGKmY1rkHftwVunRusYwRPZF+eGveHeX1szrEhnwUYujEl6kJp+aXwIzURBKvvs7c8oxJWMxg7Ownayx1dz5/f/4rhJzKT7L1AKHZlRsexZVG/xIILA/Hs//uMpETQ2x+rq1whWf1iQuWAnBBzDYq/xQ==
-Received: from BN9PR03CA0939.namprd03.prod.outlook.com (2603:10b6:408:108::14)
- by SJ2PR12MB9163.namprd12.prod.outlook.com (2603:10b6:a03:559::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.11; Fri, 21 Aug
- 2026 20:49:27 +0000
-Received: from BN5PEPF0004698B.namprd02.prod.outlook.com
- (2603:10b6:408:108:cafe::4d) by BN9PR03CA0939.outlook.office365.com
- (2603:10b6:408:108::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.339.8 via Frontend Transport; Fri, 21
- Aug 2026 20:49:26 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.35)
- smtp.mailfrom=agilent.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=agilent.com;
-Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
- 192.25.218.35 as permitted sender) receiver=protection.outlook.com;
- client-ip=192.25.218.35; helo=wpcosapexchedg4.windmz.agilent.com; pr=C
-Received: from wpcosapexchedg4.windmz.agilent.com (192.25.218.35) by
- BN5PEPF0004698B.mail.protection.outlook.com (10.167.245.40) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.360.3 via Frontend Transport; Fri, 21 Aug 2026 20:49:25 +0000
-Received: from laplante-B650.lfs.agilent.com (192.25.126.4) by
- edgeappmail.agilent.com (192.25.218.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.41; Fri, 21 Aug 2026 14:49:17 -0600
-From: <chris.laplante@agilent.com>
-To: <bitbake-devel@lists.openembedded.org>
-CC: Chris Laplante <chris.laplante@agilent.com>
-Subject: [PATCH] runqueue: Fix pending_hash_index not including taskname
-Date: Fri, 21 Aug 2026 16:49:01 -0400
-Message-ID: <20260821204901.48802-1-chris.laplante@agilent.com>
-X-Mailer: git-send-email 2.43.0
-MIME-Version: 1.0
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=EFIYfMW+;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4954f5e8020so6725425e9.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 21 Aug 2026 14:27:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1787347652; x=1787952452; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=sRwQ8ZdRguaIvMKDqGYv265AmZAnT7uiFGRLZa/uO6Q=;
+        b=EFIYfMW+1ecp5k+EPm5YMk4E+u0IEmgyamHS985FNh9Zzsrf+2Xa+urNwkiz3tsCnF
+         mY4Cu3/1y5ZFp7sp8fkJy0XHHnXbEBh9WXoRcN8GswXw8ZFN5jpDcmPCzq65PEXI8edS
+         UfmbgWPW5Ro99qryr53eLb6MEIGDEp4zJOZ00=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787347652; x=1787952452;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=sRwQ8ZdRguaIvMKDqGYv265AmZAnT7uiFGRLZa/uO6Q=;
+        b=HAOl3vqe8ImCKlANLTybG6+bhcwFUCK8xRGgP76kK5xnAQbG9a4W7vm+i6HSn/m+F4
+         SweZO0E+uBxiknoM4Of2ebZ3j4e1N/XcbHFLr3QG8kM8+jZZ4pWBTGLoo5eCq5K3fcim
+         WQfvpICUDRV34fBi+szCIJN46WpAo80M2MLSFL6A+EulepUtHZdC1TvPm5M4pFZzi8Jf
+         gI0CI/7wgOOre/P3YVNaU38J6GCrwKa0YaqH28LfoMa77ST+9KHCOgYylFp6/UsFRh2V
+         iEDXROSR0uLm+jv6IcxhNw79SqYRoZSHFV3qITpsdJGmzFNdSeaHa1xwMGDrLFjnlnhB
+         FL6w==
+X-Gm-Message-State: AFuF++lsW+A/zMqDwJ9z8ttjNSp78MHTQyuKnnqTnILUeISq9fRV3pDr
+	RvPyW80/buBOLeieB+dZmiziv/z4ICaIJgWMl/mX3ylxNidjpDqxMT8DUpLoFj0J57IPi1v9r2z
+	SLc1+/Yk=
+X-Gm-Gg: AR+sD123DPs7m98msgFN7Pxxz2sBlZSgJFF05XN/x+L85DqBUTgEk2TcQZcBAB3Gt9x
+	nTF6kjZPAYqXbkqFCyJQ7CYG/wI8yPzXWgotsJJBTDAHkCxMRfb2a842K3L10rJzD/p5PWafWg9
+	gyKRApaY7s2jAbVMBD5uehclX+CjLb5jEqwFVc4CR4vHBIhvdM4klQXR18l2Prq7MaaSrvQ2S/u
+	wRQqpjz/S/8+0pcrz6mQOZyvPgM4ILVGD8DMup/2DDGGOG9M4dkdVwI0GPK9JQIKOOYVIMhWI6r
+	6P6f22Bgf8HpbN8ishwMPtIKQX8vO3rI+HBAsjddKSN7Bvi4VaLCJtzD9NPB3h6i97UZmLwQNuQ
+	/U89HL7DeFotD5uhSDjeFjpFvo4lf3gH+ee5WCO4zXlJaSVuA5TISetZwHxoZCedl8OO+xxOcw7
+	xIOMakWpZzaEj6jbCFYIpA3aJWXi4I3ZazNuIPMPhfUSZ78u18AlE3xGnKXT/iZIFEOG/X5aPGD
+	jcNLo16ZtD1GW0MX/9REOvrMdbiNa2PSU6nl2mNzc0gOsLuRR1E1g==
+X-Received: by 2002:a05:600c:a313:b0:499:bf8c:cfd1 with SMTP id 5b1f17b1804b1-499bf8cd003mr43296385e9.2.1787347652491;
+        Fri, 21 Aug 2026 14:27:32 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:e5fd:eed9:eff8:d030? ([2001:8b0:aba:5f3c:e5fd:eed9:eff8:d030])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-499c01b90casm7680345e9.2.2026.08.21.14.27.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2026 14:27:30 -0700 (PDT)
+Message-ID: <e9b1c5a8825756040472ac48bfbb61db4009ac31.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH 0/3] Remove bb.fetch compatibility shim
+ module
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: chris.laplante@agilent.com, "alex.kanavin@gmail.com"
+	 <alex.kanavin@gmail.com>
+Cc: "bitbake-devel@lists.openembedded.org"
+	 <bitbake-devel@lists.openembedded.org>
+Date: Fri, 21 Aug 2026 22:27:28 +0100
+In-Reply-To: <DM8PR12MB54303D8EC454EA621D9171028BA32@DM8PR12MB5430.namprd12.prod.outlook.com>
+References: <20260821170624.436725-1-chris.laplante@agilent.com>
+	 <CANNYZj9wrRh4JR3cuwKchRFXEKEKa+oyCSh1XMN=tWJihY-8Ug@mail.gmail.com>
+	 <DM8PR12MB54303D8EC454EA621D9171028BA32@DM8PR12MB5430.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN5PEPF0004698B:EE_|SJ2PR12MB9163:EE_
-X-MS-Office365-Filtering-Correlation-Id: a22e4f88-839b-46c7-f0a3-08deffc5b010
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|376014|36860700016|1800799024|82310400026|23010399003|18002099003|56012099006|10067099003|11063799006;
-X-Microsoft-Antispam-Message-Info: 
-	zt6CTsBEpQH85gNfA4GA1Vb9AbCdAMRFYcXvZmCrG/1FdsIoWSHRW4yVWVp0bnFKsfsYTGfLjSOhEJBx+plq5j4bmIx++bpto7GF4/9J8eMmc1NT0Hs3f4uxzkAhEQfg0iJa5Lj3WvUF2TRh3kGmiGJHPoB97uNNCx1gM+HMmVQEMrMgKxe853R/UPD44moXopyuoMUAy1rupn9dIm0kNsJ8N/FKpyxfHY4InQ48v/dsc2qgtydOzkcMdz5HUl6DQCBo8sKNBSD/bL5XEPaHrM1W20B87l1EcAy3tZU3MDi0Z2jirbf3ShXkQ0OB6euqf3TIvxpX07GzRFF1LeFrEy4LGIKdnGUIt+1tMhRVj/ltZ2cOlQe6Y7MCJO1QUGkLgq8hPEPI/gPA8GGX6HBqWI897TAsBhcf6U5rV+5WbbOgRGm2Nma5B+XjMmUz09ZuVLwQv29rOL+IGsm5INQO7t8GmDk6P0o6W/tlYlhxl3cwmxSCr1CPNvAiiIQp20Q51fMRtCr9c7kxFlDgTAXyQcUAvs0bc/3oK+NhYNYhuZu1bpjIi3siYH9CIUpdxnOmHL31tSWpeoW+o3U7NB3rHiyjh5eA33zYZjJ/pybsg0M8UrQ6uvTux+Ujwzm8d7N0NCuIS2tHtP/iBaOCBGtTRCNliWX5XuIco4JU2rR4oJZ/zrElyzhcT2Vvuc/qONXff4qiWUWQvKQRRrkT8hgi0Q==
-X-Forefront-Antispam-Report: 
-	CIP:192.25.218.35;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:wpcosapexchedg4.windmz.agilent.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700016)(1800799024)(82310400026)(23010399003)(18002099003)(56012099006)(10067099003)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	KoK1tG9C++mP59MOGVROV6RCFscJNdf6v6kXRMjQ4UnKZfr0eUwg+W8LUY2PpNkhfWMT5E1KN/NsAWYUZY/v/r3UX2m93pQVRxiiZv9vt3feWpFLL7/riD49XxX14lSE63Cflk+BmM+6JcAY+fUDgrAX+zvrSMOziScB6lZ/46mqdIw/z5Ki6re49wgO2hpsod+XIFyIIiZKLcgUr0MCioP/8ZPSlZ0qN3i6VhcXyhzvPefwyeCO93QLbBHZicmdLjFbKCvfNtxn6ycDbthrHOsG6yk1wJZPTe26lXmrptZibY1qHdW8mtlCxpjUzvKuROo6nAUMtw/RoaFdyupd3zqShg55QRh9I/yd8WVMfUm5vyG0EengW6B/IBjQzVUulOB6+TRvRmbt+acao2BogVFomy3uv90AIyhUWA+M5RAT3a0lauMspkLG4/hnxz1p
-X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2026 20:49:25.9315
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a22e4f88-839b-46c7-f0a3-08deffc5b010
-X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.35];Helo=[wpcosapexchedg4.windmz.agilent.com]
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-BN5PEPF0004698B.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9163
+User-Agent: Evolution 3.56.2-9 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 21 Aug 2026 20:49:37 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20014
+ <bitbake-devel@lists.openembedded.org>; Fri, 21 Aug 2026 21:27:37 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20015
 
-From: Chris Laplante <chris.laplante@agilent.com>
+On Fri, 2026-08-21 at 17:26 +0000, Chris Laplante via lists.openembedded.or=
+g wrote:
+> Hi Alex,
+>=20
+> > On Fri, 21 Aug 2026 at 19:06, Chris Laplante via lists.openembedded.org
+> > <chris.laplante=3Dagilent.com@lists.openembedded.org> wrote:
+> > > fetch2 replaced fetch a long time ago (2012) so I argue it is time to
+> > > say goodbye the bb.fetch shim.
+> >=20
+> > Why not instead rename fetch2 to fetch and drop the unneeded '2'? Is th=
+ere a
+> > reason to keep the number?
+>=20
+> I thought about it, but I'd bet 'fetch2' is more prevalent than
+> 'fetch' in third-party layers. We also document the naming choice:
+> https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user-ma=
+nual-fetching.html#file-download-support
+> . So I think it would result in breaking a bunch of layers. Whereas
+> if people are still using bb.fetch, we can point to the manual if
+> they complain.=20
+>=20
+> That being said, I'm not opposed to going the 'fetch' route if people
+> prefer it.=C2=A0=20
 
-The intention was probably not to use the literal string, "taskname"
+I'd probably lean towards moving to "bb.fetch" but leaving fetch2
+working for a short while as things get updated. The "2" is fairly
+meaningless.
 
-Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
----
- lib/bb/runqueue.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The key question is whether we'd ever have a fetch3 but I suspect we'd
+handle things differently with fetcher changes than that...
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index a4689e134..544081053 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -84,7 +84,7 @@ def pending_hash_index(tid, rqdata):
-     (mc, fn, taskname, taskfn) =3D split_tid_mcfn(tid)
-     pn =3D rqdata.dataCaches[mc].pkg_fn[taskfn]
-     h =3D rqdata.runtaskentries[tid].unihash
--    return pn + ":" + "taskname" + h
-+    return pn + ":" + taskname + h
-=20
- class RunQueueStats:
-     """
---=20
-2.43.0
+Cheers,
 
+Richard
 
