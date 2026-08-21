@@ -2,69 +2,64 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA12C5DF8C
-	for <webhook@archiver.kernel.org>; Fri, 21 Aug 2026 21:27:37 +0000 (UTC)
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.865.1787347654348129208
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EEFC5DF8C
+	for <webhook@archiver.kernel.org>; Fri, 21 Aug 2026 21:29:37 +0000 (UTC)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.871.1787347776400442228
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 21 Aug 2026 14:27:35 -0700
+ Fri, 21 Aug 2026 14:29:37 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=EFIYfMW+;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4954f5e8020so6725425e9.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 21 Aug 2026 14:27:34 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ekVEobpq;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-493b966dd74so7029135e9.3
+        for <bitbake-devel@lists.openembedded.org>; Fri, 21 Aug 2026 14:29:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1787347652; x=1787952452; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1787347774; x=1787952574; darn=lists.openembedded.org;
         h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=sRwQ8ZdRguaIvMKDqGYv265AmZAnT7uiFGRLZa/uO6Q=;
-        b=EFIYfMW+1ecp5k+EPm5YMk4E+u0IEmgyamHS985FNh9Zzsrf+2Xa+urNwkiz3tsCnF
-         mY4Cu3/1y5ZFp7sp8fkJy0XHHnXbEBh9WXoRcN8GswXw8ZFN5jpDcmPCzq65PEXI8edS
-         UfmbgWPW5Ro99qryr53eLb6MEIGDEp4zJOZ00=
+         :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=nbiChZiWjPWabIydsOEx3EAG2l6BVzoi+EZ5H8Q3S04=;
+        b=ekVEobpqvEPk75wFumwily3HTM9DnPh+HsFufzplRixIYIXER6+Seeq+BFWlRxyj0K
+         BWgnCza/kUG9TnZYeNmvHYL3JsUFRRKWTrz7XARcLgaOio2NvOPhdEoqeUC/x/FtWnz4
+         XHMhAiFTy1RkUqT1NZkd9RgsFmbXKJ1ZIk/aI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787347652; x=1787952452;
+        d=1e100.net; s=20251104; t=1787347774; x=1787952574;
         h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :references:in-reply-to:date:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=sRwQ8ZdRguaIvMKDqGYv265AmZAnT7uiFGRLZa/uO6Q=;
-        b=HAOl3vqe8ImCKlANLTybG6+bhcwFUCK8xRGgP76kK5xnAQbG9a4W7vm+i6HSn/m+F4
-         SweZO0E+uBxiknoM4Of2ebZ3j4e1N/XcbHFLr3QG8kM8+jZZ4pWBTGLoo5eCq5K3fcim
-         WQfvpICUDRV34fBi+szCIJN46WpAo80M2MLSFL6A+EulepUtHZdC1TvPm5M4pFZzi8Jf
-         gI0CI/7wgOOre/P3YVNaU38J6GCrwKa0YaqH28LfoMa77ST+9KHCOgYylFp6/UsFRh2V
-         iEDXROSR0uLm+jv6IcxhNw79SqYRoZSHFV3qITpsdJGmzFNdSeaHa1xwMGDrLFjnlnhB
-         FL6w==
-X-Gm-Message-State: AFuF++lsW+A/zMqDwJ9z8ttjNSp78MHTQyuKnnqTnILUeISq9fRV3pDr
-	RvPyW80/buBOLeieB+dZmiziv/z4ICaIJgWMl/mX3ylxNidjpDqxMT8DUpLoFj0J57IPi1v9r2z
-	SLc1+/Yk=
-X-Gm-Gg: AR+sD123DPs7m98msgFN7Pxxz2sBlZSgJFF05XN/x+L85DqBUTgEk2TcQZcBAB3Gt9x
-	nTF6kjZPAYqXbkqFCyJQ7CYG/wI8yPzXWgotsJJBTDAHkCxMRfb2a842K3L10rJzD/p5PWafWg9
-	gyKRApaY7s2jAbVMBD5uehclX+CjLb5jEqwFVc4CR4vHBIhvdM4klQXR18l2Prq7MaaSrvQ2S/u
-	wRQqpjz/S/8+0pcrz6mQOZyvPgM4ILVGD8DMup/2DDGGOG9M4dkdVwI0GPK9JQIKOOYVIMhWI6r
-	6P6f22Bgf8HpbN8ishwMPtIKQX8vO3rI+HBAsjddKSN7Bvi4VaLCJtzD9NPB3h6i97UZmLwQNuQ
-	/U89HL7DeFotD5uhSDjeFjpFvo4lf3gH+ee5WCO4zXlJaSVuA5TISetZwHxoZCedl8OO+xxOcw7
-	xIOMakWpZzaEj6jbCFYIpA3aJWXi4I3ZazNuIPMPhfUSZ78u18AlE3xGnKXT/iZIFEOG/X5aPGD
-	jcNLo16ZtD1GW0MX/9REOvrMdbiNa2PSU6nl2mNzc0gOsLuRR1E1g==
-X-Received: by 2002:a05:600c:a313:b0:499:bf8c:cfd1 with SMTP id 5b1f17b1804b1-499bf8cd003mr43296385e9.2.1787347652491;
-        Fri, 21 Aug 2026 14:27:32 -0700 (PDT)
+        bh=nbiChZiWjPWabIydsOEx3EAG2l6BVzoi+EZ5H8Q3S04=;
+        b=AoBHFqwdkMtBiTMr2hb6yuwt4lrTUILgW/+ocgei/XS+4VJYt8Vq+lwUBvLdCgnJmL
+         ShozzucMaYoCIUGXH3MbN5OcOPQuTV/gXHdPtrs08T0tQY1MLu/kb4ZcQpisbeOBtzyH
+         AUL0XQMnFc2fspUKuhF7phMqnOD2AzPkEEoCVLJj5H1PNfl3ME3Mx951oGJf3c28qG4r
+         TGH7M+lQv3qs39rd0KoraUBOtfQnNjSZtMHvsnkC0RPx3Iv1xcYSZxRg0FWLXiqunwnK
+         0RfS+4INSxLazad9nMXxblohMNj36R0FhpsmnDjJwGGhs2/MF84HabyaazOlibqAlFNT
+         Kaqg==
+X-Forwarded-Encrypted: i=1; AHgh+Rp5UuqQd4FhWNwVL+0X9CfyijnuFqojOv3JGmFthdrr7P3U1XZKgCemg/JeKREJmhi527iM/Yh7/jF5Y4gc@lists.openembedded.org
+X-Gm-Message-State: AFuF++n1kUzT0isO5w+ks0W2tmjKe1NBPLkSc2U7odEBh3cHWtKTOvkU
+	nGn+fEp/0d2tVr9ueI87oxCx/ClW1LKTg0S3mBTJj9diUg+d3yRRBOye6l7ZfUWjzjQ=
+X-Gm-Gg: AR+sD12Ofz6KvluDf0afgGmg5FapLoebcwX0RRIUeqR8iI9Srwk7ejoSI0fX5ZyCY5Y
+	MMUOwhytQ2axI3Usqu5MmJKWFrgU82IrSQ34BHqwxmWAYEdLtQyo1UOLNgtTpgSfPjeCVhtH3lS
+	hMfDCWcN4/mPRz0kjULNrLWhcON0jkDwfntcrrf7P943HnYGmQUkq7+1++5ChrtnHbi8/2S5EeS
+	lp3gFjo1Zp4NcFUk6fPAIrZt+un3fmJO91h4Ir9b5COOqtl2Lw4NWGmPJZ/I6E3m3rJeck5Izc3
+	dzjpqaNJGBuASNbYdyuON+Qbwc5a/Nf8Q9ZtOYZzRpn3RguVgdkZEICEk7/Du4KjmrPOl87yJ/G
+	31iMBTfLtTStpuImN79OszoxXjvtfsa45aAS/3FqnEbiIqHMhK2xbx83lJXdOKBxbGu30XliVCT
+	c0F4hpSlRczC9Wz8rl3mOzl94Sbk/hsv9adugJpaWEFF2uUH4CWt3kuBJ8ByOJHz+XW6ZIbDJYy
+	PT3RQWDcGzGw8mlWuY9nTTWJW4Y+WalRID2eSsI+lPJhO150wGUMlTRlV+1uEHM
+X-Received: by 2002:a05:600c:1909:b0:493:aa0a:45ad with SMTP id 5b1f17b1804b1-499c19bfd22mr11686525e9.2.1787347774462;
+        Fri, 21 Aug 2026 14:29:34 -0700 (PDT)
 Received: from ?IPv6:2001:8b0:aba:5f3c:e5fd:eed9:eff8:d030? ([2001:8b0:aba:5f3c:e5fd:eed9:eff8:d030])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-499c01b90casm7680345e9.2.2026.08.21.14.27.28
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482c9c0869bsm124290f8f.25.2026.08.21.14.29.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2026 14:27:30 -0700 (PDT)
-Message-ID: <e9b1c5a8825756040472ac48bfbb61db4009ac31.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 0/3] Remove bb.fetch compatibility shim
- module
+        Fri, 21 Aug 2026 14:29:32 -0700 (PDT)
+Message-ID: <80f16c343f0b695970c6c93218e67eabd9648914.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] runqueue: Fix pending_hash_index not
+ including taskname
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: chris.laplante@agilent.com, "alex.kanavin@gmail.com"
-	 <alex.kanavin@gmail.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Date: Fri, 21 Aug 2026 22:27:28 +0100
-In-Reply-To: <DM8PR12MB54303D8EC454EA621D9171028BA32@DM8PR12MB5430.namprd12.prod.outlook.com>
-References: <20260821170624.436725-1-chris.laplante@agilent.com>
-	 <CANNYZj9wrRh4JR3cuwKchRFXEKEKa+oyCSh1XMN=tWJihY-8Ug@mail.gmail.com>
-	 <DM8PR12MB54303D8EC454EA621D9171028BA32@DM8PR12MB5430.namprd12.prod.outlook.com>
+To: chris.laplante@agilent.com, bitbake-devel@lists.openembedded.org
+Date: Fri, 21 Aug 2026 22:29:30 +0100
+In-Reply-To: <20260821204901.48802-1-chris.laplante@agilent.com>
+References: <20260821204901.48802-1-chris.laplante@agilent.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.2-9 
@@ -72,39 +67,36 @@ MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 21 Aug 2026 21:27:37 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20015
+ <bitbake-devel@lists.openembedded.org>; Fri, 21 Aug 2026 21:29:37 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20016
 
-On Fri, 2026-08-21 at 17:26 +0000, Chris Laplante via lists.openembedded.or=
-g wrote:
-> Hi Alex,
+On Fri, 2026-08-21 at 16:49 -0400, Chris Laplante via
+lists.openembedded.org wrote:
+> From: Chris Laplante <chris.laplante@agilent.com>
 >=20
-> > On Fri, 21 Aug 2026 at 19:06, Chris Laplante via lists.openembedded.org
-> > <chris.laplante=3Dagilent.com@lists.openembedded.org> wrote:
-> > > fetch2 replaced fetch a long time ago (2012) so I argue it is time to
-> > > say goodbye the bb.fetch shim.
-> >=20
-> > Why not instead rename fetch2 to fetch and drop the unneeded '2'? Is th=
-ere a
-> > reason to keep the number?
+> The intention was probably not to use the literal string, "taskname"
 >=20
-> I thought about it, but I'd bet 'fetch2' is more prevalent than
-> 'fetch' in third-party layers. We also document the naming choice:
-> https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user-ma=
-nual-fetching.html#file-download-support
-> . So I think it would result in breaking a bunch of layers. Whereas
-> if people are still using bb.fetch, we can point to the manual if
-> they complain.=20
+> Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
+> ---
+> =C2=A0lib/bb/runqueue.py | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
 >=20
-> That being said, I'm not opposed to going the 'fetch' route if people
-> prefer it.=C2=A0=20
+> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+> index a4689e134..544081053 100644
+> --- a/lib/bb/runqueue.py
+> +++ b/lib/bb/runqueue.py
+> @@ -84,7 +84,7 @@ def pending_hash_index(tid, rqdata):
+> =C2=A0=C2=A0=C2=A0=C2=A0 (mc, fn, taskname, taskfn) =3D split_tid_mcfn(ti=
+d)
+> =C2=A0=C2=A0=C2=A0=C2=A0 pn =3D rqdata.dataCaches[mc].pkg_fn[taskfn]
+> =C2=A0=C2=A0=C2=A0=C2=A0 h =3D rqdata.runtaskentries[tid].unihash
+> -=C2=A0=C2=A0=C2=A0 return pn + ":" + "taskname" + h
+> +=C2=A0=C2=A0=C2=A0 return pn + ":" + taskname + h
+> =C2=A0
+> =C2=A0class RunQueueStats:
+> =C2=A0=C2=A0=C2=A0=C2=A0 """
 
-I'd probably lean towards moving to "bb.fetch" but leaving fetch2
-working for a short while as things get updated. The "2" is fairly
-meaningless.
-
-The key question is whether we'd ever have a fetch3 but I suspect we'd
-handle things differently with fetcher changes than that...
+Yes, that looks like a fun bug. Was that breaking multiconfig?
 
 Cheers,
 
