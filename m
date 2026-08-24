@@ -1,106 +1,177 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <quentin.schulz@cherry.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2533BC5DF94
-	for <webhook@archiver.kernel.org>; Mon, 24 Aug 2026 10:16:12 +0000 (UTC)
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.13520.1787566564012994188
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1BCC5DF9C
+	for <webhook@archiver.kernel.org>; Mon, 24 Aug 2026 10:26:32 +0000 (UTC)
+Received: from AM0PR02CU008.outbound.protection.outlook.com (AM0PR02CU008.outbound.protection.outlook.com [52.101.72.9])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.13624.1787567183340253803
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 24 Aug 2026 03:16:04 -0700
+ Mon, 24 Aug 2026 03:26:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=ng3PrptN;
- spf=pass (domain: gmail.com, ip: 209.85.219.43, mailfrom: alex.kanavin@gmail.com)
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-8ef1dc934d1so19381366d6.0
-        for <bitbake-devel@lists.openembedded.org>; Mon, 24 Aug 2026 03:16:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787566563; cv=none;
-        d=google.com; s=arc-20260327;
-        b=NbWyAefHSzU7+BPASktZfh+zi4Z0CDC6xf8yxPu0eyw1GY131F4bK/SVirJ/QeSOCp
-         tMwURtFy5pTfW7qkqPHX6GOBYCaV6J6sJqBFH+o61NAJbUlcBqlQxlGQJutEhKFKh4Qi
-         oM1tA6Zp719Isba0eTPOOdONNusmGCHboe+vuYVrDNHGtVa8+habRLQsu0wU7+LMwbIE
-         sZ5iQXJ9lj6pEslkQIS3aVC/ufSV2H8j5AusP/I7LVTfmM0lJJfRS3bkArK9NuEjoFdj
-         wgo1uL+jw8GDuQ3qrRq9L/6Fs7E//QiMmTalfl8B40p7fFhI3phxl2It9dW8mnY4wIBj
-         1xFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=Fc1UbR7vcDWf8Hj3k6HNdcAqVik5987uImkmKAg3aBk=;
-        fh=f49lLjeJkvE2imx8fsyjK2l2IV6/fC9NiYrgSGCPzDs=;
-        b=lhES4L89By5ylamDBEkw6duRulwsW9iVW70somwULVgOW6ZhxZQezgHUQ2ljNxQ6dp
-         /FLOBvm5hKB3Js+pTvXDPxmJCJKjMpGvyn71IB4b+DyfB75zOm73Ilgr5AlUISi9+tvF
-         MAuWcjAhVwFGt5NT6efupfErqco0ywo+Vdyo6jkTneHfNk5Xp5ANdmx4V1RkcDR1HleN
-         YhHUorAFSBgHI7LSyJk9FWsgNUlV5Bv9K4Hd2ELRtcTd/lsBRTHBJvf6Hwt5OUZVjLl6
-         fbzYQWMolYqwVPxwFPGw+IOplsCGFuHa/c2zRhKrcO5b3mpn1x9j282tyJYIbt87Ejw1
-         Ac8w==;
-        darn=lists.openembedded.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787566563; x=1788171363; darn=lists.openembedded.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Fc1UbR7vcDWf8Hj3k6HNdcAqVik5987uImkmKAg3aBk=;
-        b=ng3PrptNIRPB4G6/8YJTvlwl6SyNLMyL7wECroM42ui6VE6JfX1+0nwhEbo0gSuxvP
-         K+VK06v8G+4vO/toE2QoUCtUV5Wntbx0LPCRPsJXlXLJfJ0rr25t/C8YgtrJZxCLhY/A
-         Ps2AcaxZM42LZpO2+LYa0t0CUKqUnfxDcdayTwqiVX1yq8G/PPVljty5p6YK1ikjjH9A
-         cOB6jiI69DvK9cH1BrmvIsABF/BMll3qqyln0aFRTmZYW+40PBGBWmOtGk2mUMCABAFD
-         X3I6GPQaE2pjHHXO1myNflgmclZmhjOsYx2O9cdSmv2MvjURTA0AvGsgeoHAPbJzCPYF
-         9msg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787566563; x=1788171363;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=Fc1UbR7vcDWf8Hj3k6HNdcAqVik5987uImkmKAg3aBk=;
-        b=rrusgKn7KhIxXqcJX6dOlS+nvvrnw/WzgaTMpJjH0ueu0474hq8WhldEw0y31r+x9s
-         RLvJrK+86jw9aQfhoFycHlLGPcOP8lzRD0dhsdMiK0/AbMf87Cuz2bs9+96T7E1NZQDG
-         psLkFsdkpK/MSGGyqRMCHps6r+8gHJ9i1ZPSqJDO3hQ5v/gkgOgU7p4m/h/Z3kTbgyz9
-         zHGq1cGGpuyY9w+IYlW8Y1Pxo4cuX1uXgyF8PSZS2GUhRsBktZIZpc4jkUe6mzkzgwSz
-         ct3RJniCNMsiA6rlpetZ/gspyXo3fm3NabC8gOF7RsU6r5+8N4lkoNYbE8BCoJQjPRFy
-         hrgw==
-X-Gm-Message-State: AFuF++kayJX1t/LTXXk4GUKp4JHSuy8JvOO30mgBp3cU1sHGps3fgW0s
-	z2Sv0+DgE5xZFPKsaHhE03C1o6cbLc4HZngj5AJxmu65V6QRLu3o4IIFdOLkpGDM0aHRN0/RI5q
-	8XHEAKRpKA0t8CuX+2dD5lOF10AbuLxA=
-X-Gm-Gg: AR+sD11eHik2qsmBKjiUW41nhS+qIDSoPPmlrgUeW9lsKZw62K2xNNl9qq5kr8fn1QV
-	2PzgQxIPFzPpZoCEvn8/vVunZSUY0orkryOx/k9lXkQ/rv2oOVsW5IovtOqn3TnRpqipMIxpl+K
-	kkvYq3avsH73DTzNyr0czrOYCfVQWdXdeJiLdcgAVVuLuneZBF+C/eIwXqr6Uq4YeDfdpxLflnw
-	VqrQYySR/RnWkKr8C2thWD63+7rqV01QIja0Jt0+py/ljRjRKvlJrYuAl5QSk7eC/2IjJcBHHOW
-	DoLNcgkkwC/6/Fg53O9BWF4yL2oBQxqib4sUiKlAYySd34yH8CRmdzrK4xli355RiXS3DMIsvdh
-	jc6L/rvOBzRN04Q==
-X-Received: by 2002:a05:6214:2608:b0:90c:6948:9191 with SMTP id
- 6a1803df08f44-90c6abb7db1mr303902746d6.12.1787566562855; Mon, 24 Aug 2026
- 03:16:02 -0700 (PDT)
+ dkim=pass header.i=@cherry.de header.s=selector1 header.b=mt2Hwrh5;
+ spf=pass (domain: cherry.de, ip: 52.101.72.9, mailfrom: quentin.schulz@cherry.de)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ft10G4gScaSVeHk7P7ejAGUrJaRZSz2Gi0TT39XEX/jhCoH977bETiW/lfSATEo0jGd9mq7a+5BEI5KsC6gK3xc5T8wAzGXW6QlEcfcuVHLjMFyrxMg9OqZQyJtipiZ/JRREF19PGCVcNTYLBf+JHOhPBUvoig/nJXfFmLRBVQ7bs4mw4aa98ukKtWKkXTdwppNkhHzbHnoSGLq4Zye/U9XwO8wQjSq8jrF+G03tXaAmfK9RJRzp42GuamsukKSCDMkqsgbzGv3gJhW/bO81KDwSJ1mz61o3l+bB443qZHIXArsyx8aU1s491lkeA1p+zWmGEl6s0BmWKzXJSkGI/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7oIPbbeaRKDta5l01QwUcyHb1ajb15DkDXxHhVDxvmo=;
+ b=vNyIEOAF4p+TnDsQneaLOrmavfpIbEmY91xeelhqIGzn9261gFBEF+ZWy1LHEvftLnZxV6hWF4NZopgS+NOX+8ZTaIqetvHmQqwiVrGofyY/AHJvwKECGDULtqIfw7vHtet2O2DYpvG5pUzoR00GazopDnuzjtTosifV4lZky9TB9AkhDguZn4UqOT00r/OIHfVxCpLc3/LVjxgW5gEaIyqqzV1jUqHp0NXm861PxdnuXENg0Hc94J1clyPMKZmEcp5Su29C7keFbGvRnkNFiez5DGD2ef1mDNTEOP5n+W1RUSdovLNUzXMCbtwabgpo+KUkWK9Cjr4nZtiubatkgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7oIPbbeaRKDta5l01QwUcyHb1ajb15DkDXxHhVDxvmo=;
+ b=mt2Hwrh5A5p0FkboujQZ8Yejvoe6MO9rOfTV0iZkyCUxM/SNyE1RdLVckPpnAWleUo5sXZYZ/5bnhRQ2Lhq75BSxvctHzcTJUHQQOWJcbbteREkKggWSASkPxu787/6foaGupzLm43Bo47ZcqbdBWzSYW8nQYX2wWMmiF122S5g=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from PA3PR04MB11153.eurprd04.prod.outlook.com (2603:10a6:102:4ab::7)
+ by PA4PR04MB7759.eurprd04.prod.outlook.com (2603:10a6:102:c6::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.12; Mon, 24 Aug
+ 2026 10:26:17 +0000
+Received: from PA3PR04MB11153.eurprd04.prod.outlook.com
+ ([fe80::6b02:c0eb:95a4:3c3d]) by PA3PR04MB11153.eurprd04.prod.outlook.com
+ ([fe80::6b02:c0eb:95a4:3c3d%4]) with mapi id 15.21.0339.012; Mon, 24 Aug 2026
+ 10:26:17 +0000
+Message-ID: <ac19f181-f193-4a84-8ec3-94a374c9ee56@cherry.de>
+Date: Mon, 24 Aug 2026 12:26:16 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [bitbake-devel] [PATCH] doc/bitbake-user-manual-ref-variables:
+ document PREFERRED_RPROVIDER
+To: yann.dirson@vates.tech, bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org
+References: <1787566358.8631fc262581453bbf619ec5b2062170.1a033420133000c4f3@vates.tech>
+Content-Language: en-US
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <1787566358.8631fc262581453bbf619ec5b2062170.1a033420133000c4f3@vates.tech>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: VI1PR07CA0265.eurprd07.prod.outlook.com
+ (2603:10a6:803:b4::32) To PA3PR04MB11153.eurprd04.prod.outlook.com
+ (2603:10a6:102:4ab::7)
 MIME-Version: 1.0
-References: <20260822012007.189830-1-sh0127.shin@lge.com>
-In-Reply-To: <20260822012007.189830-1-sh0127.shin@lge.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Mon, 24 Aug 2026 12:15:51 +0200
-X-Gm-Features: AcwNN1XeOGMGketCNRDKNRwCxPw342ZolqDGsrNxFpziK4NvdEUZDmr_0pn9LJk
-Message-ID: <CANNYZj9w9h-7v9YrC9AY9Vgm9anhpb+U4kyC_UT+Efo=D2zSgQ@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] fetch2: add 'fixperms' option for tar
- archives with restrictive permissions
-To: sh0127.shin@lge.com
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA3PR04MB11153:EE_|PA4PR04MB7759:EE_
+X-MS-Office365-Filtering-Correlation-Id: 79003792-0fb2-4316-6ff4-08df01ca21e0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|10070799003|366016|23010399003|376014|1800799024|6133799003|56012099006|11063799006|10067099003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info: 
+	CpnJTxnAtEwtNYSnIqEXM7jkiANzI/RkYAbscDv4qTQdYK061hmIB7fcrfqTPHwMR+K+xbLQ9ak4eLbt4UMuvhBNAODhWrciApqrSjzK+VqO/Wm+W2yeVcFyzq6Y7VBTGLzfR0mrmmrh3u6IjflnfGH4tl6c0Z3boKyKk6xjI6BHVwCD0byL6CZBvCIaSFeVubuxjz/hYuZ9Xau6LviBrVJIAyZEZqk042R8RD5L5l9Z3MWnICeGOLWUptCFH/8cqf4GZL17EUxdWCwE1tgEERLFGNUzw6n7aCxtZ6qhS3ps6rirqaMB175Bn30VJ/1h+2gT2BE67TzuoWoZ+Z0jGrTU+sqb9Y6+7hASXo6lB0wE8rEkWQLXdeidzHzeApTAST++zwTIFVNByQDV56aRn3ENu75IHoY/G0uPotOi+MGyIJWfgciU5RaYz/gr9sPrCfbU6OfMmiaUQAHQ76PE7hYnsIo3vyspB1ieUDBL8uA8OLkWdGB1481NACkf6en9dkIDgDcjF4xXPxmoxaYbyPzlrlXm8kqLObgWSLSynoWkdyumKVR6kI7wR3a5Od702udFo1n8exicsA9BtpZD4lxxsikHkb/BicYmaEWfPDl31U3j99a/ynrJgY34y59XGCODcXL2PaSaD48zgIDlEj03O9wMqCMQtiwuI5SKF4w=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA3PR04MB11153.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(23010399003)(376014)(1800799024)(6133799003)(56012099006)(11063799006)(10067099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?KzIwN0dRWXVka2FWYUg2TDBDMGVpKzlyaTVYOHhVVlVCa1hYdkQ0bHM2OEFH?=
+ =?utf-8?B?MnRRc0VMZUUwM3hleDN4OEdNRFFraDBHWXJGc0hzRzRlNjdSaUhKTlIxTWg1?=
+ =?utf-8?B?YzRtVmR3TUg3bnR4cVFJSzRmaGNVSnREUWx3a29tblh1am1ZMHIyVVJRZTBO?=
+ =?utf-8?B?WGl5amUvTjNZeTFqdFBrOG1QMHFPWS91ZGN6eG95UnpPRDRvU2FCRUJVUVp1?=
+ =?utf-8?B?SDhaSGd2SHowR2laVS9aWlphd0tZbTB1aytFVVdvUDNYUnJ4RVh3aVNVS1dy?=
+ =?utf-8?B?TWxHaTdoMXZwMGlLdWtpN0gzSVA0ZlBEWE9ydGhLQmNzblhWV0dORVB5Q1k3?=
+ =?utf-8?B?dks3TmpsaSs2eUpRbXBMOWxaQXhra0VBWm1PV3RkRWFzcHBiUWl1QmpnYjR2?=
+ =?utf-8?B?eHp5NjFCK0JIZUdPMU1RTklvblNPb3I5djdnb1BKcnhMd2tWVjRBNWVnZ3Zl?=
+ =?utf-8?B?KytVMDdvd0R0elo3ajdyQkhzUERFRHRnR1cwSHlDbFNZN2ZQRHZUUnQ0dCtj?=
+ =?utf-8?B?WHlNM1cxb1ZKN1dHOGdzOEsxbng5QU51N0kwN3RNb29tdGpVeWNRWkdQVjBw?=
+ =?utf-8?B?aDE2T2FXblNlRVB4K28vMWxzdW5JR3VDVGJ3YU5vMGszdDFoc3YrOW13b1Vx?=
+ =?utf-8?B?WXNxMFlEWEFPcXhHVk5BeDZnTDJjVVMxYlgyam1BcWlDYUZuRUVjSjBVMzE2?=
+ =?utf-8?B?Mng4S0xwanpEVkZGOGQ1WFVmZmZzU0oyNzJQdWh0WTN2cE8zUzBUUHJyNUpo?=
+ =?utf-8?B?TGpicjFZUDRVcTk1QnUxTjA1QTF3TEpYUy9uRVFHSzdkSW52KzlyL2xKSmNQ?=
+ =?utf-8?B?Z0d3cFQ5OGRRSDNrVWNrUjVVMkFEMDBVZHhiNnMxb1M4ZDV2UDBvZTVvMVI5?=
+ =?utf-8?B?RGdXOFdJQmRFaVdtZEtPRlptTjhUaXJXdEVIMThodVFwV2ExTy92cXF2bEVF?=
+ =?utf-8?B?aUpzK3RNc3NiMTBKUnlpWUpHMmZHS3QzcER0NE5XMEg2TUV2NzlyMDBocnVk?=
+ =?utf-8?B?ak5CODdmS28wdVQyK1VEcnVPOHBpSytZMDJ5SWo2Qnk2MCtLcnlybUdZUFlK?=
+ =?utf-8?B?cThpTHJNYUJNMnNibmhGdEM5RVZhaWJlNnhwQVV6TU5nZnlkQzdvZUJvRjVl?=
+ =?utf-8?B?cFcxRWdwQzhGbEtaamRKQUVmZHVxT2ZpSEZBeDBEcGlSZnIxanRjNVFFeGtm?=
+ =?utf-8?B?dzVMVlVEc3ZhN1Jld2lwdmxQMk5EUXp0K1A4MFZGV1hTRnpMNWFyelJ3L2xU?=
+ =?utf-8?B?TExsM2htazJhcCtZWm5CV0pIdjBabDZhSXovbWgvYzVIYTI1aGloSTVtU0Fl?=
+ =?utf-8?B?VlRDem1yUHJGTkJkMVcyb2lpeG95Mkl5cFMwbVRPVDVQZG1YVEdLMU9qWUFT?=
+ =?utf-8?B?aThqSTIwZ1BCMVBXNzVwSjUwNEx1ektsbGdDTWZXTW1rZXUveEllaWt4UGtQ?=
+ =?utf-8?B?NzJpWTViQ09KMFFGTVNsY1FpTmU1b1lHMUZkMi9lVHJSZEdwWVhrUHRiWDU0?=
+ =?utf-8?B?ckNkaGhTQWd2SldXQlN2a0ZkWkVtMnFVcHlSdlFMaVZIQzB6THVUSTlVREFw?=
+ =?utf-8?B?MDJyU1JIRTg4OVdMUTFhN2x1YnoxVlJDbk9oWFhsSktOZVYvcEFnbVJWYXdS?=
+ =?utf-8?B?Tzl2L0ZadGlDL2Z5a0cvT0lVZTVnWlRROGVaQ2xablY3ZTNqMDQyUGxQUzBx?=
+ =?utf-8?B?Z1hHekFGZWVPdHV1QnFEYXRVOTFzTHdvRkZLaWRpN2dSTFpEamtpTTNUREZQ?=
+ =?utf-8?B?THBodTRkSDRCSWkybjJ3NGRkZ0daSEJ5dDY5OExrMHpYT2tGaDhVM1JpTG5w?=
+ =?utf-8?B?ZmRrNHRhdTlodG44cWE1dkNiQWxYMDF6NWNMSGlhVThNTndDUTkyTkdJUkpr?=
+ =?utf-8?B?TUxLMjAzUkNOTXZMVDJ1dUlGYkxhMTFhWkVYZHlQajlpL1ZWRzFzMEdCTlNP?=
+ =?utf-8?B?TFRDK1A0ek51R28yc2dROFRFckZNNVZhYnhUeGdXdU0rbnlsQkcxY21jTEIz?=
+ =?utf-8?B?QjB1alJqakJqbVVTUC8vZTdzbVo1Q1VDbFVDZkdyTDRDZ1RJU1JWSE5PMzJV?=
+ =?utf-8?B?U2syZFFSaGw5SnNOc0M3bGkybHI2eVBGY2ozTHpHRGlQK1JGK3Fwc2FYQldx?=
+ =?utf-8?B?K3BlMmlMY21zak1BRDJpdzhYZmtIeFRzWXFUdysvNjhsRzc3QWV5dVk5eEdi?=
+ =?utf-8?B?MlU1MXZOTEJxWElKRUNCZDFwWkxFM3BYU3dDZU45RUNHR2ZOMitCc1Q3WDdH?=
+ =?utf-8?B?ZUc2dWUzWFJWVmx6cmVNUjRYN0lBZkdwZmRDaWtsVUZqTi9DWUFFZEF6Yll0?=
+ =?utf-8?B?Q2hFOTFYOGt4cmQ0VjR0SDEzTXUxcHAvSjVwV295MWtBeTNwRGtwRW9RNUpl?=
+ =?utf-8?Q?Sd8aZRVtlnkw8eCYgASIE7s+GIolm73UegRvSZLUTl/pM?=
+X-MS-Exchange-AntiSpam-MessageData-1: 2gSBsly/2/dJAA==
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79003792-0fb2-4316-6ff4-08df01ca21e0
+X-MS-Exchange-CrossTenant-AuthSource: PA3PR04MB11153.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2026 10:26:17.5044
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: huvr4bP5FQl6K4ITd8YUYiU0WkQ0axdfqvrqBveOMvt1VxGKIMnBc+DqHMPomkPPfDjmexl0YqrVriMc27W84LeYoAabDCsfBSfwUqcD2Kg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7759
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 24 Aug 2026 10:16:12 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20022
+ <bitbake-devel@lists.openembedded.org>; Mon, 24 Aug 2026 10:26:32 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20023
 
-On Sat, 22 Aug 2026 at 03:20, sh0127shin via lists.openembedded.org
-<sh0127.shin=lge.com@lists.openembedded.org> wrote:
-> Some tar archives contain directories with restrictive
-> permissions (e.g. drw-r--r--) that can prevent extraction
-> or subsequent processing from completing successfully.
+Hi Yann,
 
-Hello,
+On 8/24/26 12:12 PM, Yann Dirson via lists.openembedded.org wrote:
+> [You don't often get email from yann.dirson=vates.tech@lists.openembedded.org. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+> 
+> Signed-off-by: Yann Dirson <yann.dirson@vates.tech>
+> ---
+>   .../bitbake-user-manual-ref-variables.rst                | 9 +++++++++
+>   1 file changed, 9 insertions(+)
+> 
+> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> index 5395ce5e3..2756fc0c4 100644
+> --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
+> @@ -1558,6 +1558,15 @@ overview of their function and contents.
+>            PREFERRED_PROVIDER_xxx = "yyy"
+>            PREFERRED_PROVIDER_aaa = "bbb"
+> 
+> +   :term:`PREFERRED_RPROVIDER` Determines which recipe should be given
 
-I think this can be solved by adding unpack=0 to SRC_URI, and then
-adding a custom task that runs between unpack and patch that extracts
-the tarball with a special procedure. Tarballs can contains all kinds
-of esoteric problems like this one, I don't think bitbake should try
-to accommodate them.
+Please be consistent with the rest of the file. 
+:term:`PREFERRED_RPROVIDER` should be on its own on the first line.
 
-Alex
+> +      preference when multiple packages rprovide the same item. Beware
+
+rprovide is not an English term so all readers won't necessarily know 
+what this means. I can suggest:
+
+"""
+Determines which *recipe* generating a package runtime-providing 
+(:term:`RPROVIDES`) the same item as other packages should be given 
+preference. Some examples::
+[...]
+
+
+"""
+
+> +      this should contain the name of the *recipe* producing the
+> +      package that rprovides the item, not that of the package. Some
+> +      examples::
+> +
+> +         PREFERRED_RPROVIDER_initd-functions ?= "initscripts"
+> +         PREFERRED_RPROVIDER_virtual-libegl-icd ?= "mesa"
+
+Are you sure this is still valid? I don't see an RPROVIDES for 
+virtual-libegl-icd so maybe this is not doing anything?
+
+Cheers,
+Quentin
 
