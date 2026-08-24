@@ -1,177 +1,313 @@
-Return-Path: <quentin.schulz@cherry.de>
+Return-Path: <svsvenss@cisco.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1BCC5DF9C
-	for <webhook@archiver.kernel.org>; Mon, 24 Aug 2026 10:26:32 +0000 (UTC)
-Received: from AM0PR02CU008.outbound.protection.outlook.com (AM0PR02CU008.outbound.protection.outlook.com [52.101.72.9])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.13624.1787567183340253803
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC501C5DF94
+	for <webhook@archiver.kernel.org>; Mon, 24 Aug 2026 11:15:05 +0000 (UTC)
+Received: from alln-iport-8.cisco.com (alln-iport-8.cisco.com [173.37.142.95])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.14240.1787570095472890116
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 24 Aug 2026 03:26:23 -0700
+ Mon, 24 Aug 2026 04:14:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@cherry.de header.s=selector1 header.b=mt2Hwrh5;
- spf=pass (domain: cherry.de, ip: 52.101.72.9, mailfrom: quentin.schulz@cherry.de)
+ dkim=fail reason="dkim: message contains an insecure body length tag" header.i=@cisco.com header.s=iport01 header.b=M8wu4FAM;
+ spf=pass (domain: cisco.com, ip: 173.37.142.95, mailfrom: svsvenss@cisco.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=cisco.com; i=@cisco.com; l=5326; q=dns/txt;
+  s=iport01; t=1787570095; x=1788779695;
+  h=from:to:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=xl/w9PrqwdtjLrcBQswi00puMK2updWWxXSjulz3M/s=;
+  b=M8wu4FAMgl6CD4ZEqIZBg2KcCsCEuYkLlafqy4RQxZfEfOpNql1BeN0r
+   jegimml0V9HESuByUIn50FDDCsYOMlQBcUX0hhZ8DFdo87gOR81oAwMcP
+   qEzXe98Vz3zEJyN2rlc1ZiP+pOnQ1A9ZRuxeeg92u4/E8Nrja8y9eYPXm
+   B8MEwf2YIPvipbpek+PeVJjo/lVoguD5K0Z32TsuyVef3jkdIIiN26wg2
+   dmXXXSb6Qo18zMWDXf6Vimt8NAjVntqpdvG11u34pFGmmpNkXy0t5B3oq
+   kALWVo7IaeiLxy/wGGZYzVm2qUxpOAN5XONlfFv/7clRrWpaqvTJSLBeI
+   w==;
+X-CSE-ConnectionGUID: EuSsdrM+QxmKWkdt5Vtx5Q==
+X-CSE-MsgGUID: d3jSELZITPuyKQSpSfAsRg==
+X-IPAS-Result: =?us-ascii?q?A0DiAgCPJoxq/48QJK1agS6BK4FuUxZyAoEhSYgjA4Urh?=
+ =?us-ascii?q?liCIZ4egX4PAQEBDQIxIAQBAYUFAo1sAiY1CA4BAgQDAgMBAQEBAQEBAQEBA?=
+ =?us-ascii?q?QsBAQUBAQECAQcFgQ4Thk8BDIdsAX8nBBuCe4J0AwECt0QCiUsaN3iBNIEB4?=
+ =?us-ascii?q?C0BCxQBgTiIXgGFeIR8JxuCDYEVQoMnhEWEE4IwBIMuhESBF41/gUocA1ksA?=
+ =?us-ascii?q?VUTFwsHBYFmAyovLW4yHYEjPhc1WBsGBYEdgSiEECMZNnyBCV6BKyllEheBC?=
+ =?us-ascii?q?YIHAoJaggUCAUlDDgdHIgttPTcUGQMEgTUFjlQfgXpGBwEVXhoBKxc5QQcII?=
+ =?us-ascii?q?zpCDyykPKF7CoQejCKVcBeFW6UQAZkII6NohQ0CBAIEBQIQAQEGgWkBOoFZc?=
+ =?us-ascii?q?BWDIglKGQ+YB8Y1eT0BAQcCBw4DC4FokX4BAQ?=
+IronPort-PHdr: A9a23:MInPMRyFqsHUpETXCzPsngc9DxPP8539OgoTr50/hK0LK+Ko/o/pO
+ wrU4vA+xFPKXICO8/tfkKKWqKHvX2Uc/IyM+G4Pap1CVhIJyI0WkgUsDdTDCBjTJ//xZCt8F
+ 8NHPGI=
+IronPort-Data: A9a23:InE4qKrD+CXzCEHyxQ4DfHAESSxeBmJEZBIvgKrLsJaIsI4StFCzt
+ garIBnVOa3fZ2Ojc9tzatyx8kJT6pCEzIc1HVM9ri43E35HpePIVI+TRqvS04x+DSFioGZPt
+ Zh2hgzodZhsJpPkjk7zdOCn9j8kif3gqoPUUIbsIjp2SRJvVBAvgBdin/9RqoNziLBVOSvV0
+ T/Ji5OZYgLNNwJcaDpOtfrT8k835ZwehRtB1rAATaET1LPhvyF94KI3fcmZM3b+S49IKe+2L
+ 86r5K255G7Q4yA2AdqjlLvhGmVSKlIFFVHT4pb+c/HKbilq/kTe4I5iXBYvQRs/ZwGyojxE4
+ I4lWapc5useFvakdOw1C3G0GszlVEFM0OevzXOX6aR/w6BaGpfh660GMa04AWEX0stqOnpC7
+ 9lbESAITS+Ai/7r/q6rF9A506zPLOGzVG8eknhkyTecCbMtRorOBv2Uo9RZxzw3wMtJGJ4yZ
+ eJANmEpN0qGOkMJYwtMYH49tL/Aan3XaCNDtl+TvrEf6GnIxws327/oWDbQUozTFZgIwB3J/
+ Qoq+Uz1WRMhGfit6Aa972OPv9TXpi3SQ7gdQejQGvlCxQf7KnYoIBcXSVGyovT8hkOgVtZ3L
+ 00P5jFoqrA/8kGuRNTxUxC05nmesXYht8F4Guk+7kSJj6HT+QvcXjZCRT9aY9tgv8gzLdA36
+ mK0cxrSLWUHmJWeSGmW8fGfqjbaBMTfBTVqifMsJefd3+TenQ==
+IronPort-HdrOrdr: A9a23:pO8MW6qWjAJNe7icDjPPZnwaV5s4LNV00zEX/kB9WHVpm5Oj5q
+ OTdaUgtSMc1gxxZJh5o6H8BEDhex/hHO1OkPUs1NCZLUTbUQqTXctfBOTZskbd8kHFh4pgPM
+ RbAuRD4b/LfCJHZK/BiWHSfadDsby6GcuT9IHjJgJWPHlXgtZbnn5E42igYypLbTgDL6AUUL
+ Cb4c1KrSehf3M4UuSXb0NuY8Hz4/fwuNbDexApOz4LgTPisRqYrJLqGRmR2RkTFwhI3aoj9m
+ b9lQn47LWIsv2wyBPQvlWjoKi+nuGP9vJzQOi3zuQFIDTljQilIK57XaeZgTwzqOazrH43jd
+ jluX4bToVOwkKUWlvwjQrm2gHm3jprwWTl00WkjXzqptG8bC4mCvBGmZlSfnLimgodVZBHoe
+ F2NlCixt9q5CD77WDADh/zJlZXf3+P0DgfeCgo/jpiuMUlGeZsRMckjTxo+d87bVzHAcYcYa
+ dTJfCZwupKelWHaH2clGxuzNuwGkkXJH69MxA/Ugj/6UkNoJi/pHFon/D2kho7heMAYogB6O
+ LePqtykrZSCscQcKJmHe8EBdC6E2rXXHv3QSuvyHncZdY60kj22ujKyaRw4PvvdI0DzZM0lp
+ iEWFREtXQqc0arDcGVxpVE/h3EXW34BF3Wu4pjzok8vqe5SKvgMCWFRlxrm8y8o+8HCsmeX/
+ qoIppZD/LqMGOrE4dU2A/1XYVUNBAlIYUok8d+X0jLrtPAK4XsuOCeePHPJKD1GTJhQW/7Cm
+ trZkmGGCyB1DHfZpbVummiZ5q2QD2OwXtZKtmow9Qu
+X-Talos-CUID: =?us-ascii?q?9a23=3AtGeCFWo6gVbbZUPSddiwIUXmUe04SWbR1lKTGl+?=
+ =?us-ascii?q?9KllqRKHId0OApZoxxg=3D=3D?=
+X-Talos-MUID: 9a23:PxDfYQQZkTo8kmnHRXTg3zNZGeNawpiWFVEuqK4egMetLhZ/bmI=
+X-IronPort-Anti-Spam-Filtered: true
+Received: from alln-l-core-06.cisco.com ([173.36.16.143])
+  by alln-iport-8.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 24 Aug 2026 11:14:54 +0000
+Received: from alln-opgw-1.cisco.com (alln-opgw-1.cisco.com [173.37.147.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by alln-l-core-06.cisco.com (Postfix) with ESMTPS id 9A19F18000116
+	for <bitbake-devel@lists.openembedded.org>; Mon, 24 Aug 2026 11:14:54 +0000 (GMT)
+X-CSE-ConnectionGUID: QDZCidysSCqkK1/w2m76HA==
+X-CSE-MsgGUID: dOnpaqSbREOyj4FmMfOkDA==
+Authentication-Results: alln-opgw-1.cisco.com; dkim=pass (signature verified) header.i=@cisco.com
+X-IronPort-AV: E=Sophos;i="6.25,240,1779148800"; 
+   d="scan'208";a="84257237"
+Received: from mail-westus3azon11012052.outbound.protection.outlook.com (HELO PH8PR06CU001.outbound.protection.outlook.com) ([40.107.209.52])
+  by alln-opgw-1.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 24 Aug 2026 11:14:54 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ft10G4gScaSVeHk7P7ejAGUrJaRZSz2Gi0TT39XEX/jhCoH977bETiW/lfSATEo0jGd9mq7a+5BEI5KsC6gK3xc5T8wAzGXW6QlEcfcuVHLjMFyrxMg9OqZQyJtipiZ/JRREF19PGCVcNTYLBf+JHOhPBUvoig/nJXfFmLRBVQ7bs4mw4aa98ukKtWKkXTdwppNkhHzbHnoSGLq4Zye/U9XwO8wQjSq8jrF+G03tXaAmfK9RJRzp42GuamsukKSCDMkqsgbzGv3gJhW/bO81KDwSJ1mz61o3l+bB443qZHIXArsyx8aU1s491lkeA1p+zWmGEl6s0BmWKzXJSkGI/Q==
+ b=dZHJwNjLO6xaAQI41leaYWdZHFN6R7e8sYDrNk2yHa3UuquYkMcn1/B90+cbxNkg8caUvPhBOZRH5lH4gArRhg60nohmB/bBGUuHeB5JfuyrX7GUo+621dYWH+mA1xwxo37n1roA4KZ09Z1VP+Rv6peMPZrHkNXG/iYeVNOVy/GvuO3iQIilB7IjMWTtK356zkaPRnNgNZ2+mitYylvUKl8p1YQV6/ZaYwlLkcDyQryMytCToHzKXIDjtpUMzlSX9uivmXJFX3tDBHct4NkiT1hL6sOAaSVGh5LaOYVJszEm4Qe164zSZNcfC6E6xiERQP+Vka6yz+kDT5BcDFg+7w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7oIPbbeaRKDta5l01QwUcyHb1ajb15DkDXxHhVDxvmo=;
- b=vNyIEOAF4p+TnDsQneaLOrmavfpIbEmY91xeelhqIGzn9261gFBEF+ZWy1LHEvftLnZxV6hWF4NZopgS+NOX+8ZTaIqetvHmQqwiVrGofyY/AHJvwKECGDULtqIfw7vHtet2O2DYpvG5pUzoR00GazopDnuzjtTosifV4lZky9TB9AkhDguZn4UqOT00r/OIHfVxCpLc3/LVjxgW5gEaIyqqzV1jUqHp0NXm861PxdnuXENg0Hc94J1clyPMKZmEcp5Su29C7keFbGvRnkNFiez5DGD2ef1mDNTEOP5n+W1RUSdovLNUzXMCbtwabgpo+KUkWK9Cjr4nZtiubatkgw==
+ bh=xl/w9PrqwdtjLrcBQswi00puMK2updWWxXSjulz3M/s=;
+ b=cabOWCUVqKhPplPCyBSI0Uc25sKy+U2LIYMDYlirvoiFJbkDIlm4QZlddFprVWLszJvze28fFGVleR3zWpmL8GYHicUPB5AYru5IwU/YgXN8pHyhXBhkfX6on5A4QVLVTM5oubleKWdp4xpfc7yLkdbSq6/pb4jf1Xtz87Z3OFh6v+9v2s61LgDPag9sQot0g4Bk31Aff7XGfsyvelsRR5Uo9UMZ8K5hDiIGlbYM1Dohe2vVhVT1Lr/jzmkjNUjqFWlhjdgkp0eg5K3Ow7A/5YCrwLZsUivK1KNskel/QyPd9xRYBKeH+pKEE5NMHqobmJ7akcoI8qNyzM88A2tFsg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7oIPbbeaRKDta5l01QwUcyHb1ajb15DkDXxHhVDxvmo=;
- b=mt2Hwrh5A5p0FkboujQZ8Yejvoe6MO9rOfTV0iZkyCUxM/SNyE1RdLVckPpnAWleUo5sXZYZ/5bnhRQ2Lhq75BSxvctHzcTJUHQQOWJcbbteREkKggWSASkPxu787/6foaGupzLm43Bo47ZcqbdBWzSYW8nQYX2wWMmiF122S5g=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from PA3PR04MB11153.eurprd04.prod.outlook.com (2603:10a6:102:4ab::7)
- by PA4PR04MB7759.eurprd04.prod.outlook.com (2603:10a6:102:c6::7) with
+ smtp.mailfrom=cisco.com; dmarc=pass action=none header.from=cisco.com;
+ dkim=pass header.d=cisco.com; arc=none
+Received: from DM6PR11MB3962.namprd11.prod.outlook.com (2603:10b6:5:192::26)
+ by IA3PR11MB138852.namprd11.prod.outlook.com (2603:10b6:208:549::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.12; Mon, 24 Aug
- 2026 10:26:17 +0000
-Received: from PA3PR04MB11153.eurprd04.prod.outlook.com
- ([fe80::6b02:c0eb:95a4:3c3d]) by PA3PR04MB11153.eurprd04.prod.outlook.com
- ([fe80::6b02:c0eb:95a4:3c3d%4]) with mapi id 15.21.0339.012; Mon, 24 Aug 2026
- 10:26:17 +0000
-Message-ID: <ac19f181-f193-4a84-8ec3-94a374c9ee56@cherry.de>
-Date: Mon, 24 Aug 2026 12:26:16 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel] [PATCH] doc/bitbake-user-manual-ref-variables:
- document PREFERRED_RPROVIDER
-To: yann.dirson@vates.tech, bitbake-devel@lists.openembedded.org
-Cc: docs@lists.yoctoproject.org
-References: <1787566358.8631fc262581453bbf619ec5b2062170.1a033420133000c4f3@vates.tech>
+ 2026 11:14:52 +0000
+Received: from DM6PR11MB3962.namprd11.prod.outlook.com
+ ([fe80::47f3:254:87ca:5161]) by DM6PR11MB3962.namprd11.prod.outlook.com
+ ([fe80::47f3:254:87ca:5161%5]) with mapi id 15.21.0339.012; Mon, 24 Aug 2026
+ 11:14:51 +0000
+From: "Fredrik Svensson (svsvenss)" <svsvenss@cisco.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: [PATCH] fetch2/git: replace stale clones when using premirrors
+Thread-Topic: [PATCH] fetch2/git: replace stale clones when using premirrors
+Thread-Index: AQHdM7k6U+ZE35+6pU6fW7r4ql32Lg==
+Date: Mon, 24 Aug 2026 11:14:51 +0000
+Message-ID: 
+ <DM6PR11MB396228CA1F541EEEB9C9F04CCBA02@DM6PR11MB3962.namprd11.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <1787566358.8631fc262581453bbf619ec5b2062170.1a033420133000c4f3@vates.tech>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: VI1PR07CA0265.eurprd07.prod.outlook.com
- (2603:10a6:803:b4::32) To PA3PR04MB11153.eurprd04.prod.outlook.com
- (2603:10a6:102:4ab::7)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM6PR11MB3962:EE_|IA3PR11MB138852:EE_
+x-ms-office365-filtering-correlation-id: 014c3bbe-025f-4914-477f-08df01d0eb15
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: 
+ BCL:0;ARA:13230040|376014|1800799024|23010399003|366016|38070700021|3023799007|56012099006|10067099003|11063799006|18002099003;
+x-microsoft-antispam-message-info: 
+ A8eZCEBz8HkJ3LbxeTiE57AG03ir4cE8YOJAW2BQ23DrphJ8CKEwkIUSbVTMOH40gt1Ytvw3DCVzI4a2vUicrxPkwV/aOjfkX3fFHqZzfNuN3CffTb8P6XhAghNzHpSStMV436tcDRIPQqyFvG6ISYbrtGGLD73JmZYkKzZ575PUvQgqr78AAGYAPnQ7vWg4Gv+4FhgBfCwZQs56rivfWP6PxLdeOtM9KieuLdJ1ApiDxMY6A6kcgn/mCJu4cG9YgP4ZUzQRCj7TC7LJB2goWn1K5Z/0ImhTSgJeMAb6rOy/COFHU8draUb6BxECQ+gPtS0HfPmTLSXBsNNyW7Af6IqP0vbwZ8AWBOAh8EbUJtUR+UB6oitm1q3mFOFFSQZSqjc6g3ItcR4i3atCo+iVWmR5fit+sNDWqCd9Uf790MGLQtJKalf7e1C0CbI1+TQJKRTo3OUk2bj6Huqz2APBauCbG9e1sv1RfwdXFQmmk973pT8eI01UyYu0TmMjMhIVF/HaJRbJ7mcvMa0AWgOm9lFPBUORpLmHNWgZqbKQTnwex0RdOdRe7ZtH7hBDaZnvxaBs76rJmzoOU8GGK259L95WNcZYKuE7Oqm5WQS2vb+/lelxsSGJy9XoCYPPtxNdRTzckKgNrX8qLbModn/S+eloHXjJdYbp+CsWKHoQqAWvRVwRdJz/GYvCk7fLJ134CStsVJvqNZzqyaxD4k0dgqzOVQxjVn4hWuTMiofbTe4=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3962.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(23010399003)(366016)(38070700021)(3023799007)(56012099006)(10067099003)(11063799006)(18002099003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?iso-8859-1?Q?1fWHXLt1BCy34xpUzBTe+Kxl8NZ8dRMc8hFyhHEyA8HlkvGeq5AzHMwJxO?=
+ =?iso-8859-1?Q?scPoMpyZGMe2zbwx6rj5VRWnbkkPg7asat9Gj/0q6KLpHDVOBJtv1j9cTg?=
+ =?iso-8859-1?Q?wiBpKXMtIyYeFPYoec+tZl4PZVCEVfJm8C2tkzW7s6WTGH+9taV/m5/wXo?=
+ =?iso-8859-1?Q?UEYtCj2LwXlB23a/KQ5WRU3Z2Bmv1wAOPH/tA53zABzHzoeuVB95ltc74B?=
+ =?iso-8859-1?Q?JRkqJ4xjaEXH29ANhqkJg49nGsCqdLRUEQ4zNHfImntp1KNnydPct/pn4r?=
+ =?iso-8859-1?Q?Gz5G3NjjWvU2VlBsjpEYEMrTb+U3YNKCez0edh7OA1G3KNUHrL4K6uSirX?=
+ =?iso-8859-1?Q?e44HbNw04cBdOSuOwCKx5Yj4jiUIR7zEL9midiUcnVreLk+2+ZHvx3XCCj?=
+ =?iso-8859-1?Q?b6aJuUmZnA+b4lJJbXdzKGPUORK1lhZ7YUHbuxZ3CRNN0/VmKznmpY3pnB?=
+ =?iso-8859-1?Q?5peJjROkUr5hMVNAsbjEHH8ScsAIzICHXGnCTIrSR/OoUjzicyanuZxZp+?=
+ =?iso-8859-1?Q?zMQZbf07BJZteO4SDB1ikjCoU1T+CzpZVv/Uuzh6BNhZtFQnlt3Y0RTLxO?=
+ =?iso-8859-1?Q?uundffWI9RGQ34jWgX2sC5vtFe6hX64t+TrsLor9WM7YwjSHLAG4/rVBKs?=
+ =?iso-8859-1?Q?/3YIAYsM78WfX9tMMqvQqr3FOrkcQLaxhTuwEsw+1IhZGMWXkBYomL0Dz+?=
+ =?iso-8859-1?Q?MN8xAGGyXXEl0yogbMcObWBaaGSc74lk73vM/4fBgsOQLXINaaC7mTCb2z?=
+ =?iso-8859-1?Q?zBUrXC0XN7psiVOAjeDBL9TlOvVR0V8lBhV5oBOye7B7fDLj4cT8fr/xnP?=
+ =?iso-8859-1?Q?dwRN8zYanSb4Vr8LFstc9aDn48UFhMGk1N95IwXLxG5JfFbcoJwiMmKeJW?=
+ =?iso-8859-1?Q?/1WKhyt8Y/QYpgd8Ics4i5To0DjhWeZGiWbZd65H2lw957Z7bL6Ea4km8M?=
+ =?iso-8859-1?Q?E6GvxXFow51TcKhNxRHpxM5oCw+CcFjhgvXo8CYjIusOvL9mAV/nNbleTl?=
+ =?iso-8859-1?Q?LAvrsMDeVJ6GBGVFfIv6FQU97eIspI4/U/4Qpn86iKdva63JhOYj+TBbP5?=
+ =?iso-8859-1?Q?+4NgGLRLd6/ubZhSfDjzZsq+usB4EmrFpww3ijLarD+8H43rxvqyTEwzkK?=
+ =?iso-8859-1?Q?4lRsl9EWqDob1MHvf+uXXcfF8wkJtdZhP9O5IS9bzpThzhzIqbHp/SRPph?=
+ =?iso-8859-1?Q?kmXDFK5q3A9Peiz1TZ/tbCftW3r23mJf5RiRaMtwH/sTu9k8al5hYQQ25g?=
+ =?iso-8859-1?Q?cgZZZo/1VhhEaYCYwc/7vAobFLocz+IUc2S+poxkfdm+MX5rBun7KmE/bn?=
+ =?iso-8859-1?Q?lAvzMZlSDFMXndxQEUQ89rsJENSznAHVJ2lkQDS0pj9bNiw1zwqmGncH9p?=
+ =?iso-8859-1?Q?m2wleQASH0gyZ5pxi7US7ka0KpEZ8A2JjomB4rKGOc+Qbc+DAWAcOspEOz?=
+ =?iso-8859-1?Q?x51R+d+CZmHJtXDnoJ9Tn0YO8Dbai2eW/Nm9LPnplASmC4atyIs5gLvrPT?=
+ =?iso-8859-1?Q?U8aGGq2uDip87wo+4VVXtUCEH04M6B22VB3xDig93AMB9yeIBDV1YelV4q?=
+ =?iso-8859-1?Q?4SdtK+EzlP9qY5uqD9wsh48CoXUS4eIjre4iG9wt0e25X2HufusB3uIS5U?=
+ =?iso-8859-1?Q?beQIzKDSqMT19Fl/04IgDtdPdFpTeWa2BPGecvU3bktjpgwOxH6s1fVa+8?=
+ =?iso-8859-1?Q?z3OwxpU5OXCa9cZ6iFT3OK1x+/x22uI/HZ3x27n1guia9EUfr15kBycePN?=
+ =?iso-8859-1?Q?DLdLay3Hg6kUIxj9dyRFGQEZgVJYC/WNUVmso9H2pcfl4M?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA3PR04MB11153:EE_|PA4PR04MB7759:EE_
-X-MS-Office365-Filtering-Correlation-Id: 79003792-0fb2-4316-6ff4-08df01ca21e0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|10070799003|366016|23010399003|376014|1800799024|6133799003|56012099006|11063799006|10067099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info: 
-	CpnJTxnAtEwtNYSnIqEXM7jkiANzI/RkYAbscDv4qTQdYK061hmIB7fcrfqTPHwMR+K+xbLQ9ak4eLbt4UMuvhBNAODhWrciApqrSjzK+VqO/Wm+W2yeVcFyzq6Y7VBTGLzfR0mrmmrh3u6IjflnfGH4tl6c0Z3boKyKk6xjI6BHVwCD0byL6CZBvCIaSFeVubuxjz/hYuZ9Xau6LviBrVJIAyZEZqk042R8RD5L5l9Z3MWnICeGOLWUptCFH/8cqf4GZL17EUxdWCwE1tgEERLFGNUzw6n7aCxtZ6qhS3ps6rirqaMB175Bn30VJ/1h+2gT2BE67TzuoWoZ+Z0jGrTU+sqb9Y6+7hASXo6lB0wE8rEkWQLXdeidzHzeApTAST++zwTIFVNByQDV56aRn3ENu75IHoY/G0uPotOi+MGyIJWfgciU5RaYz/gr9sPrCfbU6OfMmiaUQAHQ76PE7hYnsIo3vyspB1ieUDBL8uA8OLkWdGB1481NACkf6en9dkIDgDcjF4xXPxmoxaYbyPzlrlXm8kqLObgWSLSynoWkdyumKVR6kI7wR3a5Od702udFo1n8exicsA9BtpZD4lxxsikHkb/BicYmaEWfPDl31U3j99a/ynrJgY34y59XGCODcXL2PaSaD48zgIDlEj03O9wMqCMQtiwuI5SKF4w=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA3PR04MB11153.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(23010399003)(376014)(1800799024)(6133799003)(56012099006)(11063799006)(10067099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?KzIwN0dRWXVka2FWYUg2TDBDMGVpKzlyaTVYOHhVVlVCa1hYdkQ0bHM2OEFH?=
- =?utf-8?B?MnRRc0VMZUUwM3hleDN4OEdNRFFraDBHWXJGc0hzRzRlNjdSaUhKTlIxTWg1?=
- =?utf-8?B?YzRtVmR3TUg3bnR4cVFJSzRmaGNVSnREUWx3a29tblh1am1ZMHIyVVJRZTBO?=
- =?utf-8?B?WGl5amUvTjNZeTFqdFBrOG1QMHFPWS91ZGN6eG95UnpPRDRvU2FCRUJVUVp1?=
- =?utf-8?B?SDhaSGd2SHowR2laVS9aWlphd0tZbTB1aytFVVdvUDNYUnJ4RVh3aVNVS1dy?=
- =?utf-8?B?TWxHaTdoMXZwMGlLdWtpN0gzSVA0ZlBEWE9ydGhLQmNzblhWV0dORVB5Q1k3?=
- =?utf-8?B?dks3TmpsaSs2eUpRbXBMOWxaQXhra0VBWm1PV3RkRWFzcHBiUWl1QmpnYjR2?=
- =?utf-8?B?eHp5NjFCK0JIZUdPMU1RTklvblNPb3I5djdnb1BKcnhMd2tWVjRBNWVnZ3Zl?=
- =?utf-8?B?KytVMDdvd0R0elo3ajdyQkhzUERFRHRnR1cwSHlDbFNZN2ZQRHZUUnQ0dCtj?=
- =?utf-8?B?WHlNM1cxb1ZKN1dHOGdzOEsxbng5QU51N0kwN3RNb29tdGpVeWNRWkdQVjBw?=
- =?utf-8?B?aDE2T2FXblNlRVB4K28vMWxzdW5JR3VDVGJ3YU5vMGszdDFoc3YrOW13b1Vx?=
- =?utf-8?B?WXNxMFlEWEFPcXhHVk5BeDZnTDJjVVMxYlgyam1BcWlDYUZuRUVjSjBVMzE2?=
- =?utf-8?B?Mng4S0xwanpEVkZGOGQ1WFVmZmZzU0oyNzJQdWh0WTN2cE8zUzBUUHJyNUpo?=
- =?utf-8?B?TGpicjFZUDRVcTk1QnUxTjA1QTF3TEpYUy9uRVFHSzdkSW52KzlyL2xKSmNQ?=
- =?utf-8?B?Z0d3cFQ5OGRRSDNrVWNrUjVVMkFEMDBVZHhiNnMxb1M4ZDV2UDBvZTVvMVI5?=
- =?utf-8?B?RGdXOFdJQmRFaVdtZEtPRlptTjhUaXJXdEVIMThodVFwV2ExTy92cXF2bEVF?=
- =?utf-8?B?aUpzK3RNc3NiMTBKUnlpWUpHMmZHS3QzcER0NE5XMEg2TUV2NzlyMDBocnVk?=
- =?utf-8?B?ak5CODdmS28wdVQyK1VEcnVPOHBpSytZMDJ5SWo2Qnk2MCtLcnlybUdZUFlK?=
- =?utf-8?B?cThpTHJNYUJNMnNibmhGdEM5RVZhaWJlNnhwQVV6TU5nZnlkQzdvZUJvRjVl?=
- =?utf-8?B?cFcxRWdwQzhGbEtaamRKQUVmZHVxT2ZpSEZBeDBEcGlSZnIxanRjNVFFeGtm?=
- =?utf-8?B?dzVMVlVEc3ZhN1Jld2lwdmxQMk5EUXp0K1A4MFZGV1hTRnpMNWFyelJ3L2xU?=
- =?utf-8?B?TExsM2htazJhcCtZWm5CV0pIdjBabDZhSXovbWgvYzVIYTI1aGloSTVtU0Fl?=
- =?utf-8?B?VlRDem1yUHJGTkJkMVcyb2lpeG95Mkl5cFMwbVRPVDVQZG1YVEdLMU9qWUFT?=
- =?utf-8?B?aThqSTIwZ1BCMVBXNzVwSjUwNEx1ektsbGdDTWZXTW1rZXUveEllaWt4UGtQ?=
- =?utf-8?B?NzJpWTViQ09KMFFGTVNsY1FpTmU1b1lHMUZkMi9lVHJSZEdwWVhrUHRiWDU0?=
- =?utf-8?B?ckNkaGhTQWd2SldXQlN2a0ZkWkVtMnFVcHlSdlFMaVZIQzB6THVUSTlVREFw?=
- =?utf-8?B?MDJyU1JIRTg4OVdMUTFhN2x1YnoxVlJDbk9oWFhsSktOZVYvcEFnbVJWYXdS?=
- =?utf-8?B?Tzl2L0ZadGlDL2Z5a0cvT0lVZTVnWlRROGVaQ2xablY3ZTNqMDQyUGxQUzBx?=
- =?utf-8?B?Z1hHekFGZWVPdHV1QnFEYXRVOTFzTHdvRkZLaWRpN2dSTFpEamtpTTNUREZQ?=
- =?utf-8?B?THBodTRkSDRCSWkybjJ3NGRkZ0daSEJ5dDY5OExrMHpYT2tGaDhVM1JpTG5w?=
- =?utf-8?B?ZmRrNHRhdTlodG44cWE1dkNiQWxYMDF6NWNMSGlhVThNTndDUTkyTkdJUkpr?=
- =?utf-8?B?TUxLMjAzUkNOTXZMVDJ1dUlGYkxhMTFhWkVYZHlQajlpL1ZWRzFzMEdCTlNP?=
- =?utf-8?B?TFRDK1A0ek51R28yc2dROFRFckZNNVZhYnhUeGdXdU0rbnlsQkcxY21jTEIz?=
- =?utf-8?B?QjB1alJqakJqbVVTUC8vZTdzbVo1Q1VDbFVDZkdyTDRDZ1RJU1JWSE5PMzJV?=
- =?utf-8?B?U2syZFFSaGw5SnNOc0M3bGkybHI2eVBGY2ozTHpHRGlQK1JGK3Fwc2FYQldx?=
- =?utf-8?B?K3BlMmlMY21zak1BRDJpdzhYZmtIeFRzWXFUdysvNjhsRzc3QWV5dVk5eEdi?=
- =?utf-8?B?MlU1MXZOTEJxWElKRUNCZDFwWkxFM3BYU3dDZU45RUNHR2ZOMitCc1Q3WDdH?=
- =?utf-8?B?ZUc2dWUzWFJWVmx6cmVNUjRYN0lBZkdwZmRDaWtsVUZqTi9DWUFFZEF6Yll0?=
- =?utf-8?B?Q2hFOTFYOGt4cmQ0VjR0SDEzTXUxcHAvSjVwV295MWtBeTNwRGtwRW9RNUpl?=
- =?utf-8?Q?Sd8aZRVtlnkw8eCYgASIE7s+GIolm73UegRvSZLUTl/pM?=
-X-MS-Exchange-AntiSpam-MessageData-1: 2gSBsly/2/dJAA==
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79003792-0fb2-4316-6ff4-08df01ca21e0
-X-MS-Exchange-CrossTenant-AuthSource: PA3PR04MB11153.eurprd04.prod.outlook.com
+X-Exchange-RoutingPolicyChecked: 
+	WLAT0/9zaMpXL70EnAMqcnA8BLfNhf35tn0jjZpt1WJGFxFoO5VsQ1hlYydGdCNl6BfZUMYencq710/w3cppKsUSLTwpAB+rwXK4lqVQLCW+YcuVRcE8LV8/wzksk7OLCAllEe5EMRMwO90vpOTEtBu9tlz4+gkUVrrZSxhZoIPzIgSV4lCUzj+hYWlSGfD0grDsn3tGl9XyFBzn7wBqQF3GTqxAVgLiRGJhYlNpf0P2O/sXRGaiyNDFgspbBGCtbyVUdlrT2wVEUgVxw/GddZABeIT7mc3iRAxkAR0ejUuDxk3lCSahZW6AqOFhpWPbrg9i6AQkjsJVsxTs5E+tiQ==
+X-OriginatorOrg: cisco.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2026 10:26:17.5044
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3962.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 014c3bbe-025f-4914-477f-08df01d0eb15
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Aug 2026 11:14:51.8225
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: huvr4bP5FQl6K4ITd8YUYiU0WkQ0axdfqvrqBveOMvt1VxGKIMnBc+DqHMPomkPPfDjmexl0YqrVriMc27W84LeYoAabDCsfBSfwUqcD2Kg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7759
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: C377bWVfu6zwtVv+hmVga88kLaGSNXsTNFyjesf9b5H+D3vyD15bxguYi2jXbNEWhpS95OFm2pUSJcJSpnB8FQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR11MB138852
+X-Outbound-Client-TLS: ANONYMOUS;alln-opgw-1.cisco.com [173.37.147.229];TLSv1.3;TLS_AES_256_GCM_SHA384;256
+X-Outbound-SMTP-Client: 173.37.147.229, alln-opgw-1.cisco.com
+X-Outbound-Node: alln-l-core-06.cisco.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 24 Aug 2026 10:26:32 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20023
+ <bitbake-devel@lists.openembedded.org>; Mon, 24 Aug 2026 11:15:05 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20024
 
-Hi Yann,
-
-On 8/24/26 12:12 PM, Yann Dirson via lists.openembedded.org wrote:
-> [You don't often get email from yann.dirson=vates.tech@lists.openembedded.org. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
-> 
-> Signed-off-by: Yann Dirson <yann.dirson@vates.tech>
-> ---
->   .../bitbake-user-manual-ref-variables.rst                | 9 +++++++++
->   1 file changed, 9 insertions(+)
-> 
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> index 5395ce5e3..2756fc0c4 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst
-> @@ -1558,6 +1558,15 @@ overview of their function and contents.
->            PREFERRED_PROVIDER_xxx = "yyy"
->            PREFERRED_PROVIDER_aaa = "bbb"
-> 
-> +   :term:`PREFERRED_RPROVIDER` Determines which recipe should be given
-
-Please be consistent with the rest of the file. 
-:term:`PREFERRED_RPROVIDER` should be on its own on the first line.
-
-> +      preference when multiple packages rprovide the same item. Beware
-
-rprovide is not an English term so all readers won't necessarily know 
-what this means. I can suggest:
-
-"""
-Determines which *recipe* generating a package runtime-providing 
-(:term:`RPROVIDES`) the same item as other packages should be given 
-preference. Some examples::
-[...]
-
-
-"""
-
-> +      this should contain the name of the *recipe* producing the
-> +      package that rprovides the item, not that of the package. Some
-> +      examples::
-> +
-> +         PREFERRED_RPROVIDER_initd-functions ?= "initscripts"
-> +         PREFERRED_RPROVIDER_virtual-libegl-icd ?= "mesa"
-
-Are you sure this is still valid? I don't see an RPROVIDES for 
-virtual-libegl-icd so maybe this is not doing anything?
-
-Cheers,
-Quentin
+A successful premirror fetch can leave an existing clone at the original=0A=
+download path even when it lacks SRCREV. The fetch is then stamped=0A=
+complete before unpack rejects the stale clone.=0A=
+=0A=
+Pass the datastore to update_mirror_links() and remove the original=0A=
+clone only when the Git validity check says it needs updating, allowing=0A=
+the successful mirror to be linked.=0A=
+=0A=
+The new self-test creates a stale clone at the original download path=0A=
+and a local premirror containing a newer SRCREV. Without the fix it=0A=
+reproduces the UnpackError; with the fix it verifies that the mirror is=0A=
+linked and the requested revision is unpacked.=0A=
+=0A=
+Tested with bitbake-selftest on Python 3.11, 3.12, 3.13, and 3.14.=0A=
+=0A=
+AI-Generated: OpenAI Codex=0A=
+---=0A=
+ lib/bb/fetch2/__init__.py |  4 ++--=0A=
+ lib/bb/fetch2/git.py      |  8 ++++++--=0A=
+ lib/bb/tests/fetch.py     | 42 +++++++++++++++++++++++++++++++++++++++=0A=
+ 3 files changed, 50 insertions(+), 4 deletions(-)=0A=
+=0A=
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py=0A=
+index 9cb268be..68a0225f 100644=0A=
+--- a/lib/bb/fetch2/__init__.py=0A=
++++ b/lib/bb/fetch2/__init__.py=0A=
+@@ -1150,7 +1150,7 @@ def try_mirror_url(fetch, origud, ud, ld, check =3D F=
+alse):=0A=
+         # This may also be a link to a shallow archive=0A=
+         # When using shallow mode, add a symlink to the original fullshall=
+ow=0A=
+         # path to ensure a valid symlink even in the `PREMIRRORS` case=0A=
+-        origud.method.update_mirror_links(ud, origud)=0A=
++        origud.method.update_mirror_links(ud, origud, ld)=0A=
+         update_stamp(origud, ld)=0A=
+         return ud.localpath=0A=
+ =0A=
+@@ -1692,7 +1692,7 @@ class FetchMethod(object):=0A=
+             except FileExistsError:=0A=
+                 pass=0A=
+ =0A=
+-    def update_mirror_links(self, ud, origud):=0A=
++    def update_mirror_links(self, ud, origud, d):=0A=
+         # For local file:// results, create a symlink to them=0A=
+         # This may also be a link to a shallow archive=0A=
+         self.ensure_symlink(ud.localpath, origud.localpath)=0A=
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py=0A=
+index 0bb2ea39..a1f9cb33 100644=0A=
+--- a/lib/bb/fetch2/git.py=0A=
++++ b/lib/bb/fetch2/git.py=0A=
+@@ -353,8 +353,12 @@ class Git(FetchMethod):=0A=
+     def tarball_need_update(self, ud):=0A=
+         return ud.write_tarballs and not os.path.exists(ud.fullmirror)=0A=
+ =0A=
+-    def update_mirror_links(self, ud, origud):=0A=
+-        super().update_mirror_links(ud, origud)=0A=
++    def update_mirror_links(self, ud, origud, d):=0A=
++        # Replace a stale clone which would prevent linking the successful=
+ mirror.=0A=
++        if self.clonedir_need_update(origud, d) and os.path.exists(origud.=
+localpath) \=0A=
++                and not os.path.samefile(ud.localpath, origud.localpath):=
+=0A=
++            bb.utils.remove(origud.localpath, recurse=3DTrue)=0A=
++        super().update_mirror_links(ud, origud, d)=0A=
+         # When using shallow mode, add a symlink to the original fullshall=
+ow=0A=
+         # path to ensure a valid symlink even in the `PREMIRRORS` case=0A=
+         if origud.shallow and not os.path.exists(origud.fullshallow):=0A=
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py=0A=
+index a1e4b45f..65483570 100644=0A=
+--- a/lib/bb/tests/fetch.py=0A=
++++ b/lib/bb/tests/fetch.py=0A=
+@@ -616,6 +616,48 @@ class GitDownloadDirectoryNamingTest(FetcherTest):=0A=
+         self.assertIn(self.recipe_dir, dir)=0A=
+ =0A=
+ =0A=
++class GitPremirrorStaleCloneTest(FetcherTest):=0A=
++=0A=
++    def test_premirror_replaces_stale_clone(self):=0A=
++        source =3D os.path.join(self.tempdir, "source")=0A=
++        os.mkdir(source)=0A=
++        self.git_init(cwd=3Dsource)=0A=
++=0A=
++        testfile =3D os.path.join(source, "testfile")=0A=
++        with open(testfile, "w") as f:=0A=
++            f.write("first\n")=0A=
++        self.git(["add", "testfile"], cwd=3Dsource)=0A=
++        self.git(["commit", "-m", "first commit"], cwd=3Dsource)=0A=
++=0A=
++        recipe_url =3D "git://upstream.invalid/project.git;branch=3Dmaster=
+;protocol=3Dhttps"=0A=
++        self.d.setVar("SRCREV", self.git(["rev-parse", "HEAD"], cwd=3Dsour=
+ce).strip())=0A=
++        fetcher =3D bb.fetch.Fetch([recipe_url], self.d)=0A=
++        ud =3D fetcher.ud[recipe_url]=0A=
++        ud.setup_localpath(self.d)=0A=
++        os.makedirs(os.path.dirname(ud.clonedir), exist_ok=3DTrue)=0A=
++        self.git(["clone", "--bare", "--mirror", source, ud.clonedir], cwd=
+=3Dself.tempdir)=0A=
++=0A=
++        with open(testfile, "a") as f:=0A=
++            f.write("second\n")=0A=
++        self.git(["commit", "-am", "second commit"], cwd=3Dsource)=0A=
++        revision =3D self.git(["rev-parse", "HEAD"], cwd=3Dsource).strip()=
+=0A=
++=0A=
++        self.d.setVar("SRCREV", revision)=0A=
++        self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")=0A=
++        self.d.setVar("BB_NO_NETWORK", "1")=0A=
++        self.d.setVar("PREMIRRORS", "%s git://%s;protocol=3Dfile" % (recip=
+e_url, source))=0A=
++=0A=
++        fetcher =3D bb.fetch.Fetch([recipe_url], self.d)=0A=
++        ud =3D fetcher.ud[recipe_url]=0A=
++        fetcher.download()=0A=
++        fetcher.unpack(self.unpackdir)=0A=
++=0A=
++        self.assertTrue(os.path.islink(ud.clonedir))=0A=
++        unpack_revision =3D self.git(["rev-parse", "HEAD"],=0A=
++                                   cwd=3Dos.path.join(self.unpackdir, "git=
+")).strip()=0A=
++        self.assertEqual(revision, unpack_revision)=0A=
++=0A=
++=0A=
+ class TarballNamingTest(FetcherTest):=0A=
+     def setUp(self):=0A=
+         super(TarballNamingTest, self).setUp()=0A=
+-- =0A=
+2.55.0=0A=
 
