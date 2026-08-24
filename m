@@ -1,177 +1,106 @@
-Return-Path: <bbnpreetsingh@gmail.com>
+Return-Path: <yann.dirson@vates.tech>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3653C5DF8C
-	for <webhook@archiver.kernel.org>; Mon, 24 Aug 2026 04:50:13 +0000 (UTC)
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.10002.1787547013324282741
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31428C5DF94
+	for <webhook@archiver.kernel.org>; Mon, 24 Aug 2026 10:12:52 +0000 (UTC)
+Received: from prod-mta-13-01.swg-srv.net (prod-mta-13-01.swg-srv.net [185.255.28.34])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.13530.1787566365021728176
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 23 Aug 2026 21:50:13 -0700
+ Mon, 24 Aug 2026 03:12:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=B7Vr1q25;
- spf=pass (domain: gmail.com, ip: 209.85.216.53, mailfrom: bbnpreetsingh@gmail.com)
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-38e041ea211so2423903a91.0
-        for <bitbake-devel@lists.openembedded.org>; Sun, 23 Aug 2026 21:50:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787547013; x=1788151813; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=PxwFa5os9cLo3QhvuBTfHC4VAX97dvALYGXqoKs5MB0=;
-        b=B7Vr1q25sO+7pJhR56AvygDw87msaqcP9mho8g4qaB73IsEuQ87gW5qy7rym7lRRUI
-         aXtJVZ9uXuCIKOjMPWdFAg9hcp9iJTFyGBvlCJjIHLov0XVkouH0NaHFlj1rdo2B3IpG
-         r/pihI74Ki59oP/kRu9UA9V5Cgs3oXJ+Q2FrzmYQi7vh7k2HYK5IEiYH7q3UPckC9Fg+
-         6Et61E4rsAyIIzBOZWJCiSYg9lXRnlKnRNhGo0c6nTB3QiIWa3rihRga2BAbJDyg6AHA
-         y79MFajZjvmzbsKZ7PzbqujPhKO0TCiGHJrjlJkS91XpRIziQt2pxy0j/Jl2GekFAuD6
-         ei7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787547013; x=1788151813;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=PxwFa5os9cLo3QhvuBTfHC4VAX97dvALYGXqoKs5MB0=;
-        b=Cj08wWypHTCp85CIqUQz97ZdeYZp/0Sp+lKFFvMs5krOybk0cXH14Lj+Yua4BeKhjP
-         i3bI8iuiBk1XFnW3qGim53z61nAK+F4N11Gj9p1TUrdth0cBEKKmqXyYb8w94Gk1M0S4
-         g+x8z8FXiPcr5i6RJAxKZnUnENZy+Phthk//Jx4+vO731eOB7W43PCNBEtv7tCZVULGn
-         o5GlUOZQz3vd5eO5Wd7h44x/EVH7C3Br3A42Z3huUCJd1ufdn8obXjcfbsJSpdSfbiYn
-         6VR/HZlo9kyJ7hstFuj7f2tYm8OZaD37nncID8xMSZ5MXg1n8/SIUBJkwubmZZv2MNtG
-         Qc5Q==
-X-Gm-Message-State: AFuF++ln/NeI7kuKx7e5FsL6wpzv61jUtpp6Bx7mvgn4oRdD/UDpaD+6
-	tolJmcAwPzLOjjdcPcaGaarFsxLl456TFJfW9Gw971G2DJaJgFycT4VhaEHXiTpb/n0=
-X-Gm-Gg: AR+sD105CzJm8mh9YkIU5tdtREyq4Nl5h3Zl7I2h9xs06xwtrdRBLoPrXX1e2HAQOTC
-	fJ2LtyD2TkAHFlZ2Q6y0mPdmXtJHTizKznY4zX9ApsyTTtqeYsOYaRGjmrOQoBnLugl3K36sXnH
-	x52bM7T+yGp/62Nh1j75VXJX+puDSskkjkO0qWqz2+Dx9Au7NFuNf5CyIOrI/podafum96tgLO+
-	d5SQ7sLy5unH7yocukAkj+3EqMXE8/XeGWz5u7edcoHa9pWBSSem4i/gGK+drERSHyQCEc3Jbxp
-	Zup5eteTO6GVJ5CBjf32jLAVW0OJuCoV4XjVSQytFSTGI1gR7XjIMiWV/AD9jXs+rrJlbIOjnkU
-	h3YfQ1MuzG0QWvQIGZFhsbkv/eEP1S40H8PLIycgouNSU1yHXxXAE3HCBZxmycc9Lxf4vmB4zXJ
-	bHPfV2EQQ+tVUi5rssctjZKQcjHY4eO5gCqv6QN3iALJDnd1rzFTCGMAXm1miR
-X-Received: by 2002:a17:90b:57e5:b0:381:11eb:d78e with SMTP id 98e67ed59e1d1-395c35f0a79mr43013415a91.14.1787547012421;
-        Sun, 23 Aug 2026 21:50:12 -0700 (PDT)
-Received: from ydev.. ([108.180.130.139])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-395c92b5528sm3307335a91.4.2026.08.23.21.50.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Aug 2026 21:50:12 -0700 (PDT)
-From: Babanpreet Singh <bbnpreetsingh@gmail.com>
+ dkim=pass header.i=@vates.tech header.s=selector1 header.b=MmWlI5zT;
+ spf=pass (domain: swg.vates.tech, ip: 185.255.28.34, mailfrom: prod-mta-13.8631fc262581453bbf619ec5b2062170.1a033420133000c4f3@swg.vates.tech)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vates.tech;
+ q=dns/txt; s=selector1; bh=l8Qv4koCPMJOp8FyqW9TLxha4CnMRAL+SK6rvfSt4KM=;
+ h=from:subject:date:message-id:to:cc:mime-version:content-type:feedback-id;
+ b=MmWlI5zTO6kC2cuj7YVu0r4E85eOPUy6aX7vnhEW80LcBb5FdHQkhO6TuyqyJEeLEEuqrIYnR
+ M65bHN6VtxqGo7fW3s3zUmF1eM/76W+r4xcHIv5IvQRDgj7mCyiBRMcpp/NvCCN1jRHpvv4lhWu
+ LK1BSO6yBG+5cCY7glEKJ+xp24TLxqZggTKeiPIBOiIsrT3CDDExc5xQ/Hyhxk2VbMQOgjJZMkn
+ w8O+t1suobjTkOEmoJLYD0j3nIMtKPC0jJQI5yGonTfri+0CdDwEWxIcs+QqM1yC3o/Cu2OUlZF
+ aVP7lry8VVUbChIBczmmM1RCZZ3skMBTE3PDImrvEBng==
+Received: from mail2.vates.fr ([37.26.189.201] mail2.vates.fr)
+ (Authenticated sender: 8631fc262581453bbf619ec5b2062170/smtp/7773de5a-2839-4720-82ee-e06722ae1d3e)
+ by prod-mta-13-01.swg-srv.net (ZoneMTA - prod-mta-13) with ESMTPSA id 1a033420133000c4f3.001
+ for <bitbake-devel@lists.openembedded.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Mon, 24 Aug 2026 10:12:38 +0000
+X-Zone-Loop: c21db4f66a4fd617724d1f90f1b8e913dcc3a7d009ae
+x-campaign-type: default
+x-transaction-id: 922b10f0-5393-4589-a6e9-b7bb353cc059
+x-swg-uid: 01-f2117c9b-125e-4eff-a4ee-be8952a53578
+X-Mailer: Sweego
+Message-ID: 
+ <1787566358.8631fc262581453bbf619ec5b2062170.1a033420133000c4f3@vates.tech>
+x-swg-bid: 1787566358.8631fc262581453bbf619ec5b2062170.1a033420133000c4f3
+Feedback-ID: default:8631fc262581453bbf619ec5b2062170:Sweego
+x-campaign-id: default
+x-client-id: 8631fc262581453bbf619ec5b2062170
+X-Originating-IP: [37.26.189.201]
+Received: from work-vates.gpn.vates.fr (88-161-245-20.subs.proxad.net [88.161.245.20])
+	(Authenticated sender: yann.dirson)
+	by mail2.vates.fr (Postfix) with ESMTPSA id CB38A82083;
+	Mon, 24 Aug 2026 12:12:37 +0200 (CEST)
+From: Yann Dirson <yann.dirson@vates.tech>
 To: bitbake-devel@lists.openembedded.org
-Cc: Michael Opdenacker <michael.opdenacker@rootcommit.com>,
-	Babanpreet Singh <bbnpreetsingh@gmail.com>
-Subject: [PATCH] prserv: add --status to list running servers
-Date: Mon, 24 Aug 2026 04:50:11 +0000
-Message-ID: <20260824045011.7-1-bbnpreetsingh@gmail.com>
-X-Mailer: git-send-email 2.43.0
+Cc: docs@lists.yoctoproject.org,
+	Yann Dirson <yann.dirson@vates.tech>
+Subject: [PATCH] doc/bitbake-user-manual-ref-variables: document PREFERRED_RPROVIDER
+Date: Mon, 24 Aug 2026 12:12:19 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-BM-Disclaimer: Yes
+Content-Type: multipart/alternative; boundary="-=Part.29af.77d4775ab564adc.1a03341fd9d.9af5d1a67d6a0560=-"
+X-Bm-Milter-Handled: 4ffbd6c1-ee69-4e1b-aabd-f977039bd3e2
+X-Bm-Transport-Timestamp: 1787566357918
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 24 Aug 2026 04:50:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20020
+ <bitbake-devel@lists.openembedded.org>; Mon, 24 Aug 2026 10:12:52 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20021
 
-bitbake-prserv could start and stop a server but not say what is
-running. Add --status: it reads every /tmp/PRServer_<ip>_<port>.pid,
-reports each server as running (with its pid) or as a stale pidfile,
-and exits 0 if at least one server is alive, 1 otherwise.
+---=Part.29af.77d4775ab564adc.1a03341fd9d.9af5d1a67d6a0560=-
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Extend the ScriptTests start/stop lifecycle with status checks in
-both states.
-
-[YOCTO #10865]
-
-Signed-off-by: Babanpreet Singh <bbnpreetsingh@gmail.com>
+Signed-off-by: Yann Dirson <yann=2Edirson@vates=2Etech>
 ---
- bin/bitbake-prserv  |  7 +++++++
- lib/prserv/serv.py  | 23 +++++++++++++++++++++++
- lib/prserv/tests.py | 16 +++++++++++++++-
- 3 files changed, 45 insertions(+), 1 deletion(-)
+ =2E=2E=2E/bitbake-user-manual-ref-variables=2Erst                | 9 ++++=
++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/bin/bitbake-prserv b/bin/bitbake-prserv
-index c26362b2e..8413c585f 100755
---- a/bin/bitbake-prserv
-+++ b/bin/bitbake-prserv
-@@ -64,6 +64,11 @@ def main():
-         action="store_true",
-         help="stop daemon",
-     )
-+    parser.add_argument(
-+        "--status",
-+        action="store_true",
-+        help="list PR servers running on this machine",
-+    )
-     parser.add_argument(
-         "--host",
-         help="ip address to bind",
-@@ -102,6 +107,8 @@ def main():
-         )
-     elif args.stop:
-         ret=prserv.serv.stop_daemon(args.host, args.port)
-+    elif args.status:
-+        ret=prserv.serv.status_daemon()
-     else:
-         ret=parser.print_help()
-     return ret
-diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
-index e17588630..322c22a0f 100644
---- a/lib/prserv/serv.py
-+++ b/lib/prserv/serv.py
-@@ -388,6 +388,29 @@ def stop_daemon(host, port):
- 
-     return 0
- 
-+def status_daemon():
-+    import glob
-+    running = 0
-+    for pidfile in sorted(glob.glob(PIDPREFIX % ("*", "*"))):
-+        root, _ = os.path.splitext(os.path.basename(pidfile))
-+        parts = root.split("_")
-+        ip, port = "_".join(parts[1:-1]), parts[-1]
-+        try:
-+            with open(pidfile) as pf:
-+                pid = int(pf.readline().strip())
-+        except (IOError, ValueError):
-+            sys.stderr.write("Ignoring unreadable pidfile %s\n" % pidfile)
-+            continue
-+        if is_running(pid):
-+            print("PRServer running at %s:%s (pid %s)" % (ip, port, pid))
-+            running += 1
-+        else:
-+            print("Stale pidfile %s (pid %s not running)" % (pidfile, pid))
-+    if not running:
-+        print("No PRServer running.")
-+        return 1
-+    return 0
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables=2Er=
+st b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables=2Erst
+index 5395ce5e3=2E=2E2756fc0c4 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables=2Erst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables=2Erst
+@@ -1558,6 +1558,15 @@ overview of their function and contents=2E
+          PREFERRED_PROVIDER_xxx =3D "yyy"
+          PREFERRED_PROVIDER_aaa =3D "bbb"
+=20
++   :term:`PREFERRED_RPROVIDER` Determines which recipe should be given
++      preference when multiple packages rprovide the same item=2E Beware
++      this should contain the name of the *recipe* producing the
++      package that rprovides the item, not that of the package=2E Some
++      examples::
 +
- def is_running(pid):
-     try:
-         os.kill(pid, 0)
-diff --git a/lib/prserv/tests.py b/lib/prserv/tests.py
-index df0c00300..518d5c441 100644
---- a/lib/prserv/tests.py
-+++ b/lib/prserv/tests.py
-@@ -381,8 +381,22 @@ class ScriptTests(unittest.TestCase):
-         except subprocess.CalledProcessError as e:
-             self.fail("Failed to start bitbake-prserv: %s" % e.returncode)
- 
--    def test_2_stop_bitbake_prserv(self):
-+    def test_2_status_bitbake_prserv(self):
-+        result = subprocess.run([BIN_DIR / "bitbake-prserv", "--status"],
-+                                capture_output=True, text=True)
-+        self.assertEqual(result.returncode, 0,
-+                         "Expected a running PRServer: %s" % result.stdout)
-+        self.assertIn(":8585 (pid ", result.stdout)
++         PREFERRED_RPROVIDER_initd-functions ?=3D "initscripts"
++         PREFERRED_RPROVIDER_virtual-libegl-icd ?=3D "mesa"
 +
-+    def test_3_stop_bitbake_prserv(self):
-         try:
-             subprocess.check_call([BIN_DIR / "bitbake-prserv", "--stop"])
-         except subprocess.CalledProcessError as e:
-             self.fail("Failed to stop bitbake-prserv: %s" % e.returncode)
-+
-+    def test_4_status_stopped_bitbake_prserv(self):
-+        result = subprocess.run([BIN_DIR / "bitbake-prserv", "--status"],
-+                                capture_output=True, text=True)
-+        self.assertEqual(result.returncode, 1,
-+                         "Expected no running PRServer: %s" % result.stdout)
-+        self.assertNotIn(":8585 (pid ", result.stdout)
+    :term:`PREFERRED_VERSION`
+       If there are multiple versions of a recipe available, this variable
+       determines which version should be given preference=2E You must alw=
+ays
+--=20
+2=2E47=2E3
+
+
+
 -- 
-2.43.0
+Yann Dirson | Vates Platform Developer
 
+XCP-ng & Xen Orchestra - Vates=
+ solutions
+
+web: https://vates=2Etech
+---=Part.29af.77d4775ab564adc.1a03341fd9d.9af5d1a67d6a0560=---
 
