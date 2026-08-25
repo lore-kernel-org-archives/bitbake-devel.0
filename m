@@ -2,143 +2,178 @@ Return-Path: <chris.laplante@agilent.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9360BC61DB9
-	for <webhook@archiver.kernel.org>; Tue, 25 Aug 2026 19:30:06 +0000 (UTC)
-Received: from BYAPR05CU005.outbound.protection.outlook.com (BYAPR05CU005.outbound.protection.outlook.com [52.101.85.65])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.30112.1787686200474320108
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63ABC61DB9
+	for <webhook@archiver.kernel.org>; Tue, 25 Aug 2026 19:46:46 +0000 (UTC)
+Received: from SA9PR02CU001.outbound.protection.outlook.com (SA9PR02CU001.outbound.protection.outlook.com [40.93.196.32])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.30465.1787687198606239027
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 25 Aug 2026 12:30:00 -0700
+ Tue, 25 Aug 2026 12:46:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@agilent.com header.s=selector1 header.b=CzBZIPJx;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 52.101.85.65, mailfrom: chris.laplante@agilent.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@agilent.com header.s=selector1 header.b=m+u3hcqm;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.93.196.32, mailfrom: chris.laplante@agilent.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rzLptC7rCnPqlFdmDHrRZhIAsLXN/WN8bX6tOcP5bV79GDqbwoH3dHjHVIS66i40N2IT/nMluvUYeyXq+0cibEZDMpZERQW+sUQvw4WKToLdOFWyUU7sRGYoL3GlKfXNM62+gmUYakH9JxDbIDci8VJ4wU4WmIH5oTf/WV3ZG+MZEN6NMgx5m05dkm9D9HV+3prWevy2z4Rsr9a/5M+wTU5znIq4a2d0pM/q/0bS5p/fOfWFfqLKnn47vJz3NkwhHyHBunLMcB7KIRcsnKI700WRlgg1Sbb5H7yMQYvDQ9DKzFI1T1JUo8HRUkOY4sMZr967c7wWewD2FULAnwTx/g==
+ b=jUgQmdghDMa5e696PwdVfKjTRC0iBgkfiDg9tVkqUFAZ0jX6HjaVehIv4BZIv5dh52x3/CjdTxXLNBlfXTdq+I3TDSFnFNxxZ7t7oE1SsEl4fCuvqeZVoPASzMvcg1eKUESN8bBXTRPL80twnuI/dLwjG3a7laejKLofQd9+hVmmpx8TLCPJypQ+qm8syz1j7s2JQcS1ySjR8QWyrxfIb233TWircWP4soaxkb2qLUvA5P/UWz7tc4xUr3FP3P/7qjXhlwJL+k694yjE4bQtXnUSu/PN8SYtDgHT3XYZjUkxQuaWnNC6ntjl26RCvN5zjNVVYvlk4XU9709nkEAeHg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I9fH++aEYtSOm6wdbZBsSCR5CrJRqxRIUY5IIEkpE5Y=;
- b=jN6IY3+N/UV8BCsk+XP5OcUPQ/2HKljhuSkgrWMGmjP4x4t6jmQvU4ZoaJqYq31UUMcwDrMxfnVJdzmR7hvyCe3KMQ5ZBCKdWfCpUw26QCvsr7FVyqxXawORVisB6WQzamk7CqvsVi0KIweiD7q9Jfd+qOWxndAdzpjwCh8itTKkxhNUZIWDmDQDAwPfNzfcDmtHRa+oQLtXk//nUBO+fWkgVK8C/7eBV5f1AMEdnkPoAbWDeeHLwxI3Lrha+7+Rs1vk2588/kr9i+sbduYhSRyJChKyQNQgOttdg4Ovqs/28HOo9ej4AzZIzO5VGN5cBAzvn4SJ8conwJYFGBC/Sw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=agilent.com; dmarc=pass action=none header.from=agilent.com;
- dkim=pass header.d=agilent.com; arc=none
+ bh=P1CDrfiiDIi1hfhehpACijiumzQY2lYgw7SkexyEG7c=;
+ b=gw9NtEyl7eNTBPefhWDZS6OPi83qSEGOP45EBMnrL4Gy1stoBvBpWoQkyLk1Z9S/YylEROsIigIyEzRGnTe4ATL+cV8zZOaM0fd2XZ0CskIr2/JVJUTifjfB3xkkpUZywkJ/2SBMxuRSxiz5HKPUG95tV6KcHGiuIoMXSHze15Yz8g/0ffJ/25wRNmyqG9rkY0yAMgNQMt1LmSzh/mpGauLN5DsBSJn2F8M9eOb7JOg7BZ4b0XSze+Hoovm8TrXWP6zYdXsvdLckcJPXg5Q/hZh7rs6A+0T2yRYcTH//NggAWaWFrL/K8T0ur4Txch2gVsk1Ld/pdOlrXbxbU/DsIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 192.25.218.36) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
+ action=none header.from=agilent.com; dkim=none (message not signed); arc=none
+ (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I9fH++aEYtSOm6wdbZBsSCR5CrJRqxRIUY5IIEkpE5Y=;
- b=CzBZIPJxOGXELa1fus8hpyYYqxJR1Jx/7Xfy2whJrd2r2eZKK8JiN7Qd9GcwQmUOKA5F5ocsl0VvF7bUoskzQqEjVnHoT4C8dzf2SSfBSlnQP28V/2R9J4MO/HoqroucFimOuXFjaVtcKF26iuHSwmEnZlu096LmKjmkZc170m/tK48wpwySAXkzPJlX/CTZCUuzMoU7+Xg4R2EYfCVgR25eJGyT+CIofSWLA2tCM8St2GSIopFxbtCHiQ9BuHmGPhvT+jIKRYjEoqlTHlxj470/9BOJBubZEThZL8FpAB0kq26hx5X0bYYvZ/NLbnzABnzxF2S8vF4eHndtBVQK2w==
-Received: from DM8PR12MB5430.namprd12.prod.outlook.com (2603:10b6:8:28::6) by
- IA1PR12MB6354.namprd12.prod.outlook.com (2603:10b6:208:3e2::11) with
+ bh=P1CDrfiiDIi1hfhehpACijiumzQY2lYgw7SkexyEG7c=;
+ b=m+u3hcqmJdkhEdiHJuucDPRm3I/DSuB+8xWn1D9BgqHt4A/8aWNfh8eSq6HFM0vzgNL4I+5MXcdjbvp2lwyPd7f84FowShXhebUGIuofjPYEzmlekWitXY55VyY+uojowRuwccTx5GlKgZB7pLHqh4Y48G/w/zSGnGIJ1SHuDTGDb5zISnIdFV1b5cATLQy4UNn/y2vxnPjJs2QnrtA8+N3UGEne5+kvgUZyENXxJkbRl+JmaWA9SHH2x2KVPLn4ifZVff7D5EoZJrR0xWmvilxbtVQbI8A3Q0h/ZzGBKcUtnNtQZg1xFsbvQHPKugzBQhOFCktJ9rBK5WXRVGzMcg==
+Received: from SJ0PR03CA0027.namprd03.prod.outlook.com (2603:10b6:a03:33a::32)
+ by DS0PR12MB7703.namprd12.prod.outlook.com (2603:10b6:8:130::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.6; Tue, 25 Aug
- 2026 19:29:47 +0000
-Received: from DM8PR12MB5430.namprd12.prod.outlook.com
- ([fe80::152b:7346:321d:4a2]) by DM8PR12MB5430.namprd12.prod.outlook.com
- ([fe80::152b:7346:321d:4a2%6]) with mapi id 15.21.0360.006; Tue, 25 Aug 2026
- 19:29:46 +0000
-From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>,
-	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-Subject: RE: [bitbake-devel] [PATCH 3/3] lib: remove bb.fetch shim module;
- cleanup fallout
-Thread-Topic: [bitbake-devel] [PATCH 3/3] lib: remove bb.fetch shim module;
- cleanup fallout
-Thread-Index: AQHdMY96b7k/tzWQW0W/TmDkBQeZsbavF1IAgAAL/tCAAAeLgIAAAZpg
-Date: Tue, 25 Aug 2026 19:29:46 +0000
-Message-ID: 
- <DM8PR12MB54309ACE3083EBD81F6EF2158BAF2@DM8PR12MB5430.namprd12.prod.outlook.com>
-References: <20260821170624.436725-1-chris.laplante@agilent.com>
- <20260821170624.436725-4-chris.laplante@agilent.com>
- <DB5PR02MB102134543E3418DA8C1C06E4FEFAF2@DB5PR02MB10213.eurprd02.prod.outlook.com>
- <DM8PR12MB5430D033816F4121D4BB00E38BAF2@DM8PR12MB5430.namprd12.prod.outlook.com>
- <DB5PR02MB102130F2BF988F3933E6A98BFEFAF2@DB5PR02MB10213.eurprd02.prod.outlook.com>
-In-Reply-To: 
- <DB5PR02MB102130F2BF988F3933E6A98BFEFAF2@DB5PR02MB10213.eurprd02.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
- MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_ActionId=22348d46-684e-4df6-84e7-c3399a48c65f;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_ContentBits=0;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Enabled=true;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Method=Standard;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Name=General;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_SetDate=2026-08-25T18:54:55Z;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_SiteId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;MSIP_Label_8fcaca1c-04b8-40d7-944e-e72f4105afe1_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=agilent.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR12MB5430:EE_|IA1PR12MB6354:EE_
-x-ms-office365-filtering-correlation-id: fcf2cf33-bf29-431d-6e02-08df02df38db
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230040|376014|1800799024|366016|23010399003|38070700021|10067099003|56012099006|11063799006|4143699003|18002099003|22082099003;
-x-microsoft-antispam-message-info: 
- sBS+3d0IYomMTiDCVOuh6v06MuhFPPJraMb9W9/IwUqVrf1w7T4lunxMfzn6x8vQo7yTIl+taUlBwnpQ23pr5NDET5IA8BolagKSEOFeVZkYIPZTzgiWz38AD/UGegRMOmxJVwbXdVjsga7qj0oZ2+xOtirF/xnq5oyikLZvxGCSVWvR2q9vnboDbg1mbbws+xXp4tW+ig77Ft8xbbWUHq3x6l/173//TRFZPKvh16RIJ42wo9oK4DriocL8tVAoRTip2Gj90djJ5ubzz4bZipt1hgApLE6TDTCd7ltNtm5VmXZvpquQyIZinl7+XrKW51Bdcn8eRTBXM5B7uT2xRjtBT3JZMVfx3ctQOAhHtH4dsymfalt+cS9sIp/xTOG02ZTPepEcqt7txiP+Rtn8H36gQBwb4OAeaTw/l/aWzL0A3iFYc0rDFYUPH5FTuFXiXQxk6Ttzo6Ct4hjtPQAVHsa7VHsVYx01gTiVAEuF+vvnyxWaOmHaO96W1nChcZwI5SdjZatT/D6w7Q0jlEhaEBO6eejGsrKdog6HPEkgyegTiBhWAyy/2CEleW/DHAPGx3tCt2Pj6GnCPLzxbSPAIzKlhzjWo6kI+AmJ00tVtWqAc7BGbEbK9gaiwYeFukTParUM8XdI48snxO2e3upkNVgtUZVb41EOxo7kPcW/5hfqvcfcan5AvYw+8Ow5QCI5GVp8coPLm9Sj+7z+B78xKw==
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR12MB5430.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(23010399003)(38070700021)(10067099003)(56012099006)(11063799006)(4143699003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?yGARbj0LH5JgkOhTJV3q1+TD3BvZTJ0/XdHO4nPmOFY+XFZEW96Xu0NkBrNc?=
- =?us-ascii?Q?6KWKuGpFVtoBP6cr9Odi1zpgBqDhA4m4u2zK8ccNxKAyGnJG2h4mry9Q2mIQ?=
- =?us-ascii?Q?s0oA4GMjc89fLKUfQe/QIszVE5jSsMJmGywGgh7fhGKImonT7PM1yIp03jBi?=
- =?us-ascii?Q?MDW8HsveH5mJkxrrFW434zQVjeK+dvA0YH/+FOXzyxd/w1F9ZqvvS3iuygPL?=
- =?us-ascii?Q?EdNHepxkp3Rr3DFWOcV1JXEdewBDnO4sO6wKq8Qno4vHCzFuRJCX96auwCGW?=
- =?us-ascii?Q?0ahUJTv6VsVmzLJAhVJtPeBkGPb5G0wdJ11YlnzIoZIVYpAbNI5zok5XLWfZ?=
- =?us-ascii?Q?l6GllJiLfF4MXVySHBlK4pd692sCIeyE8EwM3RQ5RXd+AwBOBAYqgyER30j3?=
- =?us-ascii?Q?F0UhawQSdXqsbbfvoTywjE+ULB39ZDjXfdqoaYbbrhsqkMJXqh0/M0PYp70J?=
- =?us-ascii?Q?bodjcTWxi6YQ9CYeDtanyakqIdvubFHA+7n3bqR0cXFchBhU+QNGlPIvi+A/?=
- =?us-ascii?Q?7o2lxu7DPRb5n4e8RlQUDfnuRWN5cOd3mfUEyRCbJC7z7kYWkdia5s/srbUc?=
- =?us-ascii?Q?7NXhaseM5QwSY+XKTuee4BW+6UWgkR144ScbhhEkuL4/cVthWUIFqoGyTmka?=
- =?us-ascii?Q?mpDvmhy/E47EtrY8m3wPV8i6TRLZk1X5Lp+tiYjVJ39r08nIJycnnHfg0JO9?=
- =?us-ascii?Q?k5XutDForIyjPSwmad/J2sU0iZxui3Y2CMq80wdsQodNT/ddSXiIQCqKBUXd?=
- =?us-ascii?Q?t07Op7255+LEqxt102SxOI48cKe3bmNNyMw2YQAZRDwGTGeYQhn/kkXQEL6R?=
- =?us-ascii?Q?nhNh7KmNrOu89Kv5W9cZtGwSN7srVkbmpH8F2uExphB+is4IXULwlKKwrMcx?=
- =?us-ascii?Q?6Gp1DC3IDbhwDWxrDQydUKKCVhcC8c9z70VFdF3L+jCZkmNuxx40NKPUN6OX?=
- =?us-ascii?Q?zSDpsGduU+Yvq3QKYnodLoTg6ZsO+JmG5YWHq/PsZemHEj+1VR+7Ffehxo2I?=
- =?us-ascii?Q?UcMNiTfemIKN7Lg/MHENSr6rWJHDJ8m8xTIjJphmw+xCXAX3Rx90smRUIFDB?=
- =?us-ascii?Q?K/k0+MDeBvioMt0R/oqiuCeNojhhZ0ZUhTtSHy21zKGfoz2cXE8CGqSGrSDf?=
- =?us-ascii?Q?Bz5fZ0/9TXq8UIXnc6Z9WkIvGXVUT+fT4dsOkENjxAreVktFzPbmX3YaILdt?=
- =?us-ascii?Q?p6gfsSt2Ycx+zksP7yxiiXLeGTJGmSEEuPK34SAMdUi+USykMjFrrv9pgeuI?=
- =?us-ascii?Q?7ISCdg8g7EE0hmIWdN1hGom+9YRkOaytP3aSduQKa4e0BZCWjuMvQIIUS6TG?=
- =?us-ascii?Q?QoFqFs0QP3QK6InqQyR/reYwOyUHj4aDlylRqt2lh5nEaNd4kt67ethNPXE1?=
- =?us-ascii?Q?puPaIOxy5S5so9vpFcLzyl7VUZ78URUjCUQe92FJU3SxL+Xri878Y984kBQs?=
- =?us-ascii?Q?HljYN7Wj73ozAHvVzjPBVkVaLPJ/4APq1QiL1UtSJFpe4pZh/eAxrBGkINv3?=
- =?us-ascii?Q?2wboUwrBj1NX9gcQ3pz5KInJFO/Y6r6xciEf5TmpWgU4393o/rhvU/tPg0cr?=
- =?us-ascii?Q?w5MVzjRGQYHZmPIwuVAZcrj+P9Cg1VfmWhMO9WsqMVTSDdE2/wcOxARyJTWZ?=
- =?us-ascii?Q?Tbll8c7dEP7MNEXejEpdeMfTHc8v2yZjmu17VC7tHRX3NYEzjbC5yeEz7W1b?=
- =?us-ascii?Q?hCnyOg6Wl3Tp1wtYOE37mxq5dGtlc3AaIXk7gJzhcwCMMlGGcgs/40Q5QeU4?=
- =?us-ascii?Q?wrg6GHqZgg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.12; Tue, 25 Aug
+ 2026 19:46:30 +0000
+Received: from BY1PEPF000264B1.namprd02.prod.outlook.com
+ (2603:10b6:a03:33a:cafe::7b) by SJ0PR03CA0027.outlook.office365.com
+ (2603:10b6:a03:33a::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.339.12 via Frontend Transport; Tue,
+ 25 Aug 2026 19:46:29 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.36)
+ smtp.mailfrom=agilent.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=agilent.com;
+Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
+ 192.25.218.36 as permitted sender) receiver=protection.outlook.com;
+ client-ip=192.25.218.36; helo=wpcosapexchedg5.windmz.agilent.com; pr=C
+Received: from wpcosapexchedg5.windmz.agilent.com (192.25.218.36) by
+ BY1PEPF000264B1.mail.protection.outlook.com (10.167.242.117) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.360.3 via Frontend Transport; Tue, 25 Aug 2026 19:46:29 +0000
+Received: from laplante-B650.lfs.agilent.com (192.25.126.5) by
+ edgeappmail.agilent.com (192.25.218.36) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.41; Tue, 25 Aug 2026 13:45:57 -0600
+From: <chris.laplante@agilent.com>
+To: <bitbake-devel@lists.openembedded.org>
+CC: Chris Laplante <chris.laplante@agilent.com>
+Subject: [PATCH 2/6] runqueue: fix init of RunQueueScheduler.prio_map; add test for 'basic' scheduler
+Date: Tue, 25 Aug 2026 15:45:45 -0400
+Message-ID: <20260825194549.152553-2-chris.laplante@agilent.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260825194549.152553-1-chris.laplante@agilent.com>
+References: <20260825194549.152553-1-chris.laplante@agilent.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY1PEPF000264B1:EE_|DS0PR12MB7703:EE_
+X-MS-Office365-Filtering-Correlation-Id: 459cc9e4-ea65-47cc-e66d-08df02e18ee7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|376014|23010399003|82310400026|1800799024|36860700016|10067099003|56012099006|6133799003|22082099003|18002099003|11063799006;
+X-Microsoft-Antispam-Message-Info: 
+	sIErtkjx7F+azVjROQZan811SfvFeWdKeiVSwa0sIZbLnvzh8SvRRYQ8R3KDwppzwJFeo8sJZulKa+niBhXInRiMvtIp+wbTaWBSy0BLeqFc6c+qHqRmu6uE7SRbdOkkacbL7VffQKReDh5OXXJiyGSR1noz9qgV3aYD6eFcqnpuB9zs4klA1UlZOsy5Hb/4F28m62VDfjbVMYKHFlWAXJ6IxVxOVLGCQTdgvkLqaFMf4SSU4sIpBohEmge9m3ljIPisWb7dPGWnKj0qGjWfS+C3KjCSDFD8Dp0QRIhr522X3Owl8o1/DTfCt9p4/WGQ53UKM1ubYXuuhN7jsfEZsI0mZwuJ+qO4Wwr0Hg8yt0mpKUNoyiFG8kpAoMuRypMeQaxGgy2NJBr7TFadTUlgrNb+iVhiTVrTicQg0oNGecx7MTRRKEKsCXMES8aO8Af+xXDZEyNrbIVnxT7rhMAiQrRxnJ40J2oazwEKX0kUd/HxAJNnAtMABpk7XkrjzlnKtLwK65qx5K7UuciiduT7em+/flS12wZ5SmXzu8sQkpxTmJ2bkV/0T1uu9/zoPA5n6qrgBCjfyc7JUPcnBzSraoqpUQ5NcpUXKdujjuZ2lHiG6/Y7sMFc46n0jEmhqtlf4oUOXtegiDNE/f0NflTXts+gNVQhUG/IFhzzedQL7eLMr++6vC1zWvBNdrKisE9TtCw7HD7SwOo+YPEZl/4tWg==
+X-Forefront-Antispam-Report: 
+	CIP:192.25.218.36;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:wpcosapexchedg5.windmz.agilent.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(23010399003)(82310400026)(1800799024)(36860700016)(10067099003)(56012099006)(6133799003)(22082099003)(18002099003)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	i96fHtYgKNN7W4uJQ7ODMDJg1AtAC9uBJ0ltzTYG7iNY3i4oX4Qf3Z9lWhdtsMqyBTp4MjsGXkh6KmmZEQFYU/eC8IrvDw4JwmUutq6z3j9EXQlInND0bTk+8Fj9k54OdvLDmnSMpsymKMGIOdP/fG8wAHZaOmqQDfzNj79lm6CAG1yGZ5WGpdrfBvyU8u6dtvPd+PePCczmGz7smGj/jCfmBsW/Ade54UBH+YbDnrZTRuamPWQPd6F++hN8zyE4+7fyWh3pUjavfZmfoMsZ8pC5QwxFNrsqZlsj8vUjuKAM/79cvRwTqOvN8jUMSUKsbs7RcHiMurl0krOT4h7VqNUtTFQn8FW2WhcfMbapO5ReClpBSppAoL0GVkCY6fNfswvByVePac+BKaEnFCtr3RGnRBZr4Xo3dHOftsIB0wwx8nRkQQMaSOND4JWxJtNI
 X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR12MB5430.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fcf2cf33-bf29-431d-6e02-08df02df38db
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Aug 2026 19:29:46.4280
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2026 19:46:29.7325
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: R1rUBBC9W9j/AA22I1/MIaZnoXA/VfH4YLlAyX3xElOPEKWxSKlT/dwFx97bHE2qHd3InVb5UEiQHUk2Agxva54dKUYU9kqsBRxtgvUp6S4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6354
+X-MS-Exchange-CrossTenant-Network-Message-Id: 459cc9e4-ea65-47cc-e66d-08df02e18ee7
+X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.36];Helo=[wpcosapexchedg5.windmz.agilent.com]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-BY1PEPF000264B1.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7703
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 25 Aug 2026 19:30:06 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20042
+ <bitbake-devel@lists.openembedded.org>; Tue, 25 Aug 2026 19:46:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20044
 
-> > > Double import of bb.data.
-> >
-> > Good catch, thanks. Though I think we are not going with this patchset.
-> >
-> > Thanks,
-> > Chris
->=20
-> Well, I assumed (most of) this would be used even if bb.fetch2 is renamed=
- to
-> bb.fetch instead.
->
+From: Chris Laplante <chris.laplante@agilent.com>
 
-Very true... I will submit these parts soon before I forget about them.=20
+Before this patch, RunQueueScheduler.prio_map was incorrectly
+initialized as a list with a single element, the dictionary keys view.
 
-Thanks,
-Chris
+It broke like so:
+
+ERROR: An uncaught exception occurred in runqueue
+Traceback (most recent call last):
+  File "/home/laplante/repos/bitbake/lib/bb/runqueue.py", line 1663, in exe=
+cute_runqueue
+    return self._execute_runqueue()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/laplante/repos/bitbake/lib/bb/runqueue.py", line 1629, in _ex=
+ecute_runqueue
+    retval =3D self.rqexe.execute()
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/home/laplante/repos/bitbake/lib/bb/runqueue.py", line 2357, in exe=
+cute
+    task =3D self.sched.next()
+           ^^^^^^^^^^^^^^^^^
+  File "/home/laplante/repos/bitbake/lib/bb/runqueue.py", line 308, in next
+    return self.next_buildable_task()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/laplante/repos/bitbake/lib/bb/runqueue.py", line 285, in next=
+_buildable_task
+    self.rev_prio_map[tid] =3D self.prio_map.index(tid)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: '/home/laplante/repos/bitbake/lib/bb/tests/runqueue-tests/recip=
+es/a1.bb:do_fetch' is not in list
+
+The other schedulers don't have this problem because they overwrite
+prio_map.
+
+AI-Generated: GPT-5.6 Sol
+
+Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
+---
+ lib/bb/runqueue.py       | 2 +-
+ lib/bb/tests/runqueue.py | 9 +++++++++
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 544081053..c2e6561ec 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -154,7 +154,7 @@ class RunQueueScheduler(object):
+         self.rqdata =3D rqdata
+         self.numTasks =3D len(self.rqdata.runtaskentries)
+=20
+-        self.prio_map =3D [self.rqdata.runtaskentries.keys()]
++        self.prio_map =3D list(self.rqdata.runtaskentries.keys())
+=20
+         self.buildable =3D set()
+         self.skip_maxthread =3D {}
+diff --git a/lib/bb/tests/runqueue.py b/lib/bb/tests/runqueue.py
+index 74f5ded2e..42c02cd15 100644
+--- a/lib/bb/tests/runqueue.py
++++ b/lib/bb/tests/runqueue.py
+@@ -63,6 +63,15 @@ class RunQueueTests(unittest.TestCase):
+=20
+             self.shutdown(tempdir)
+=20
++    def test_basic_scheduler(self):
++        with tempfile.TemporaryDirectory(prefix=3D"runqueuetest") as tempd=
+ir:
++            cmd =3D ["bitbake", "a1"]
++            tasks =3D self.run_bitbakecmd(cmd, tempdir, extraenv=3D{"BB_SC=
+HEDULER": "basic"})
++            expected =3D ['a1:' + task for task in self.alltasks]
++            self.assertEqual(set(tasks), set(expected))
++
++            self.shutdown(tempdir)
++
+     def test_single_setscenevalid(self):
+         with tempfile.TemporaryDirectory(prefix=3D"runqueuetest") as tempd=
+ir:
+             cmd =3D ["bitbake", "a1"]
+--=20
+2.43.0
+
 
