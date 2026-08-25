@@ -1,169 +1,178 @@
-Return-Path: <amery@apptly.co>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1DEC5DF81
-	for <webhook@archiver.kernel.org>; Mon, 24 Aug 2026 22:04:38 +0000 (UTC)
-Received: from v523.v5ed9ac7d.euw1.send.eu.mailgun.net (v523.v5ed9ac7d.euw1.send.eu.mailgun.net [141.193.32.23])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.9046.1787609073640864170
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD027C61DB6
+	for <webhook@archiver.kernel.org>; Tue, 25 Aug 2026 08:59:48 +0000 (UTC)
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.17566.1787648387993553583
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 24 Aug 2026 15:04:34 -0700
+ Tue, 25 Aug 2026 01:59:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@e.apptly.co header.s=mta header.b=x5F2BpuD;
- spf=pass (domain: e.apptly.co, ip: 141.193.32.23, mailfrom: bounce+ec7242.b6604b-bitbake-devel=lists.openembedded.org@e.apptly.co)
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=e.apptly.co; q=dns/txt; s=mta; t=1787609071; x=1787616271;
- h=Content-Transfer-Encoding: MIME-Version: Message-ID: Date: Subject: Subject: Cc: To: To: From: From: Sender: Sender;
- bh=GoKbiJnR4cJQnrABMKgQWGKGiLn61GnnCg6Mi1+9ZWg=;
- b=x5F2BpuDSoKXeDhUoLyWF3e6Z9iR1u+s84L+f7C2yI6dkVeIoFuyxRPX5rfz2Hy5AV4BASjzzVYBO1T8dS7ia1PPpm4BDkHbVGNReYRlNaUfnWc8kLOjNeSTAj3h6ChE2gRMofvQVhORT/uQ3eeSRk8BlYIXmaP4C9kTBwuG9CQ=
-X-Mailgun-Sid: WyI5YTJmMyIsImJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZyIsImI2NjA0YiJd
-Received: from localhost (unknown [51.179.224.164]) by
- e6e7b238216ee9f3d6acd43b7d0a3467c039a51d7a119265d0e5f1e0d0364192 with SMTP id
- 6a8cbfef50483608cd3943c7 (version=TLS1.3, cipher=TLS_AES_128_GCM_SHA256);
- Mon, 24 Aug 2026 22:04:31 GMT
-X-Mailgun-Sending-Ip: 141.193.32.23
-Sender: amery=apptly.co@e.apptly.co
-From: Alejandro Mery <amery@apptly.co>
-To: bitbake-devel@lists.openembedded.org
-Cc: Alejandro Mery <amery@apptly.co>,
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [2.18][PATCH] data: Return a list from exported_vars()
-Date: Mon, 24 Aug 2026 22:04:31 +0000
-Message-ID: <20260824220431.350438-1-amery@apptly.co>
-X-Mailer: git-send-email 2.47.3
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=OOFUFCTP;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.42, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-47f703a9e5dso1441944f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 25 Aug 2026 01:59:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1787648386; x=1788253186; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=vrbDELCDfNNf166RlzHNHYAK40jdcV60dpYaOFKq+Bo=;
+        b=OOFUFCTPgiD7JvW5v8ekUSGz6qW9l91tPBWBXGT07dKIXEcyS26Q+7542pPXd74BaH
+         pjYO/BniSzZQ7ExSktTmXi7wjfWZ0sAsNFHI+fQeL3papIh1wG0EH+9qkwE0AGMdltIr
+         RT2v3cvTatwnXgvNtHff5g/l+r6g+aOTpG3IQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787648386; x=1788253186;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=vrbDELCDfNNf166RlzHNHYAK40jdcV60dpYaOFKq+Bo=;
+        b=bGerjdDuhvppBhYQ+YYL7h0SM68x86zZwG++0AHfKvC2ZOHuO/vpRFxYIjraHsOAI+
+         EM31jwJlNMESyNUR5e7i8IXHLaJZ/ohYuEbM6e2CJvOhOMhgIBOjtJ7INXOUQDMU66PQ
+         woOkB0vtPQwlnz9CbsJBzz5B1ULiDbMYWLZSBgelXbrDsdqcxcvh8/ZAHQ+/y8tg6ewC
+         LGbLYBCt3j2a1KOka/ywqKaY5LtRxYPBhfunjajP3dvGLJpw01xztj3zo/GZnFBnZe/F
+         9jSyhrf0NqoC71175aggAQpJC/HkVoqjoHDOlM6s4Od7pPX6pQMZ4PDP30sOFa++c8id
+         aQtQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqFHRuRyfJcHENHrepAhb90iIeFYfDP4egnANDVjaxp78UUfpbrzZZDIuy4FlMyj7Br8ltRUCtxLPEGJd3E@lists.openembedded.org
+X-Gm-Message-State: AFuF++laew5oJcHVOZk0fo8Wl24575vVymZVyHGBdkA5CcUDIdo9dXvI
+	wFXa9g16FoFf/oyO7Q8a8Q5ivpVQSsrzGml15T4w1T6/EU+aA7rcu0d4YJEBO+1noqk=
+X-Gm-Gg: AR+sD10h4+cxypqBk86Z46PGKV1QEiIZsH5KQT89GmTCdC0h2p+AsWbfc/Th1FYF4xw
+	8V2J9EbqiitM/9OoNwR0c10NcVLfyOoIYhn0vO+d/v0CeuLyliKl7rfDOk/DOvxIzKcTC8wEzbQ
+	xKjBvhdJuIC6eY5YjpwT3JchAKixg/e27XO0rOmn08heyaDFrR7f1ibEUkNwCi3cx1U6nE+z6l9
+	3sULFXXmWuDuvgDbmvGJlnufCi8L7opR8tbMaxPM7Xv7WZ3pI8zusbvyuaSTO12HqFGytlOJIIy
+	hFh2Ad6NLDNaUZk+Bo23ufVhG1L+5yuUMjduxh7SPLquJrsC0XCt4dDAW/tEcWHLwivj4hp4/Ko
+	lIH7kh9racvzupa57utZR340AYzlIN8zZmD8vwxi0aGzONG0UG0LX+YX2dLR/Oci+SxbL6336Tk
+	LQdFVT79eJLsws7V2B4GOkSNwWWDUS7dnkJTHp6VddqHi6gwcQrF8W8FGJUDSq05Z99/Ln07/zS
+	5GdSpTbQvPmD91p859vHVMYW7uChACtJQy0RS98sSg2VwakYSs+Dg==
+X-Received: by 2002:a05:6000:200c:b0:47f:96e6:70a with SMTP id ffacd0b85a97d-482c0b0b360mr36736493f8f.0.1787648385863;
+        Tue, 25 Aug 2026 01:59:45 -0700 (PDT)
+Received: from ?IPv6:2001:8b0:aba:5f3c:1d9d:dbf1:7ccf:7617? ([2001:8b0:aba:5f3c:1d9d:dbf1:7ccf:7617])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482c9c0ad06sm11230399f8f.27.2026.08.25.01.59.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2026 01:59:44 -0700 (PDT)
+Message-ID: <bb2d438e38745bd6679bbad08aa826f2c07019fa.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH v2 1/8] cooker: fix bitbake -b silently
+ ignoring bbappends
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: adrian.freihofer@siemens.com, bitbake-devel@lists.openembedded.org
+Date: Tue, 25 Aug 2026 09:59:43 +0100
+In-Reply-To: <20260816221507.155861-2-adrian.freihofer@siemens.com>
+References: <20260816221507.155861-1-adrian.freihofer@siemens.com>
+	 <20260816221507.155861-2-adrian.freihofer@siemens.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-9 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 24 Aug 2026 22:04:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20031
+ <bitbake-devel@lists.openembedded.org>; Tue, 25 Aug 2026 08:59:48 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20032
 
-exported_vars() was a generator, so each value expanded when the result
-was iterated rather than when it was called. bitbake-worker binds it
-before bb.utils.empty_environment() and iterates it afterwards, so any
-expansion deferred until iteration ran against the wiped environment
-rather than the one bitbake started with.
+On Mon, 2026-08-17 at 00:14 +0200, Adrian Freihofer via lists.openembedded.=
+org wrote:
+> From: Adrian Freihofer <adrian.freihofer@siemens.com>
+>=20
+> "bitbake -b <recipe.bb>" builds the recipe without applying any of its
+> .bbappend files.
+>=20
+> buildFileInternal() resolves appends via
+> self.collections[mc].get_file_appends(fn), but self.collections[mc] is
+> only ever filled in by collect_bbfiles(), called from updateCache() -
+> a path -b deliberately skips. matchFiles(), the one -b-path function
+> that does call collect_bbfiles(), built a fresh CookerCollectFiles into
+> a throwaway local instead of self.collections[mc], so the append list
+> stayed empty (or, on a memory-resident server, stale from the last
+> full parse - e.g. missing a devtool/externalsrc workspace .bbappend
+> added since). Nothing warns that the built metadata differs from disk.
+>=20
+> Make matchFiles() refresh self.collections[mc] itself so the later
+> append lookup for the same fn sees the same fresh collection.
+>=20
+> AI-Generated: Uses GitHub Copilot
+>=20
+> Signed-off-by: Adrian Freihofer <adrian.freihofer@siemens.com>
+> ---
+> =C2=A0lib/bb/cooker.py | 6 ++++--
+> =C2=A01 file changed, 4 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+> index 4b6ba3196..108551a60 100644
+> --- a/lib/bb/cooker.py
+> +++ b/lib/bb/cooker.py
+> @@ -1322,8 +1322,10 @@ You can also remove the BB_HASHSERVE_UPSTREAM sett=
+ing, but this may result in si
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if bf.startswith("/") or=
+ bf.startswith("../"):
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+bf =3D os.path.abspath(bf)
+> =C2=A0
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 collections =3D {mc: CookerCo=
+llectFiles(self.bbfile_config_priorities, mc)}
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 filelist, masked, searchdirs =
+=3D collections[mc].collect_bbfiles(self.databuilder.mcdata[mc], self.datab=
+uilder.mcdata[mc])
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # The only place the "bitbake=
+ -b" path fills in the bbappends which
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # buildFileInternal() then re=
+ads back from self.collections[mc].
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.collections[mc] =3D Cook=
+erCollectFiles(self.bbfile_config_priorities, mc)
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 filelist, masked, searchdirs =
+=3D self.collections[mc].collect_bbfiles(self.databuilder.mcdata[mc], self.=
+databuilder.mcdata[mc])
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+os.stat(bf)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+bf =3D os.path.abspath(bf)
 
-The corruption is not uniform. The worker writes each variable into
-os.environ as it goes, so only the first value expands against a fully
-empty environment and the rest see it partially rebuilt, in
-exported_keys() order.
+I've had some time to stare at the code and I'm not convinced this is
+the right way to fix things.
 
-Recipes whose exported variables expand a command during that loop hit
-this. A gitver-style PV such as "${@get_git_pv(d, ...)}" runs git while
-PATH is empty, so the git wrapper on PATH is bypassed and the real git
-runs directly. Under pseudo this fakes uid 0 against a repository owned
-by the real user, and git aborts with "detected dubious ownership",
-failing do_package intermittently (only on reparse, when the value is
-re-expanded rather than served from cache).
+self.collections is usually setup by parseConfiguration, which does so:
 
-Build and return the list in exported_vars() itself, so the expansion is
-complete before it returns and no caller has to know it was ever
-deferred. A value that fails to expand now warns at that point rather
-than during iteration, and a result nothing consumes is expanded anyway;
-neither is a change for the one caller, which consumes all of it. Update
-the comment at the worker's call site, which documented the generator
-that is now gone, and add tests for the expansion timing and for the
-warning that moved with it.
+    def parseConfiguration(self):
+        [...]
+        self.handleCollections(self.data.getVar("BBFILE_COLLECTIONS"))
+        self.collections =3D {}
+        for mc in self.multiconfigs:
+            self.collections[mc] =3D CookerCollectFiles(self.bbfile_config_=
+priorities, mc)
 
-- v3: materialise in exported_vars() itself, not at the call site; two
-  tests, using bb.utils.environment() rather than touching os.environ
-  directly.
-- v2: comment the ordering at the call site, and add the tests.
-- v1: the list() wrap alone.
+The call site you're patching in matchFiles() is only called by
+matchFile(). matchFile() can be called as a tinfoil command directly,
+by buildFileInternal() or by showEnvironment(). The last two both call
+parseConfiguration() before matchFile.
 
-Signed-off-by: Alejandro Mery <amery@apptly.co>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit c870f5bd96ad02efc02c58133c27bdae3a300e3e)
-Signed-off-by: Alejandro Mery <amery@apptly.co>
----
- bin/bitbake-worker   |  6 ++++--
- lib/bb/data.py       | 10 +++++++++-
- lib/bb/tests/data.py | 28 ++++++++++++++++++++++++++++
- 3 files changed, 41 insertions(+), 3 deletions(-)
+matchFile from command.py set "matchFile.needconfig =3D False" so that
+does not need a configuration. I'm not seeing anything using the
+matchFile api call so perhaps we could just change needconfig to True.
 
-diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-index aa14ef191..ae21f277f 100755
---- a/bin/bitbake-worker
-+++ b/bin/bitbake-worker
-@@ -288,8 +288,10 @@ def fork_off_task(cfg, data, databuilder, workerdata, extraconfigdata, runtask):
-                     else:
-                         logger.debug("Skipping disable network for %s since %s is not a local uid." % (taskname, uid))
- 
--                # exported_vars() returns a generator which *cannot* be passed to os.environ.update() 
--                # successfully. We also need to unset anything from the environment which shouldn't be there 
-+                # exported_vars() expands each value, so it must be called before
-+                # empty_environment() below: an expansion that shells out needs the
-+                # environment bitbake was started with. We also need to unset
-+                # anything from the environment which shouldn't be there
-                 exports = bb.data.exported_vars(the_data)
- 
-                 bb.utils.empty_environment()
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index b12972c03..7c01e6bf8 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -193,6 +193,12 @@ def exported_keys(d):
-                                       not bb.utils.to_boolean(d.getVarFlag(key, 'unexport')))
- 
- def exported_vars(d):
-+    """Return the exported variables as a list of (key, value) pairs.
-+
-+    Every value is expanded before returning, so a caller that changes the
-+    environment afterwards still gets what the expansion saw.
-+    """
-+    exported = []
-     k = list(exported_keys(d))
-     for key in k:
-         try:
-@@ -202,7 +208,9 @@ def exported_vars(d):
-             continue
- 
-         if value is not None:
--            yield key, str(value)
-+            exported.append((key, str(value)))
-+
-+    return exported
- 
- def emit_func(func, o=sys.__stdout__, d = init()):
-     """Emits all items in the data store in a format such that it can be sourced by a shell."""
-diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
-index fd690a9e2..a83c71e2c 100644
---- a/lib/bb/tests/data.py
-+++ b/lib/bb/tests/data.py
-@@ -723,3 +723,31 @@ class EmitVar(unittest.TestCase):
-         self.assertEqual(self.get_output(out), ['bad_chars="a\\"b \\',
-                                                 'c\\`d \\',
-                                                 'e\\$f"'])
-+
-+class ExportedVars(unittest.TestCase):
-+    def test_expanded_before_returning(self):
-+        # Called while the variable is set, read once it is gone: the value
-+        # has to be the one from the call, not from the read.
-+        d = bb.data.init()
-+        d.setVar("TESTVAR", "${@os.environ.get('BB_TEST_EXPORT', 'gone')}")
-+        d.setVarFlag("TESTVAR", "export", "1")
-+
-+        with bb.utils.environment(BB_TEST_EXPORT="present"):
-+            exported = bb.data.exported_vars(d)
-+
-+        self.assertEqual(dict(exported), {"TESTVAR": "present"})
-+        self.assertIsInstance(exported, list)
-+
-+    def test_unexpandable_value_warns_and_is_skipped(self):
-+        # The warning belongs to the call, not to a later iteration.
-+        d = bb.data.init()
-+        d.setVar("TESTVAR", "value")
-+        d.setVarFlag("TESTVAR", "export", "1")
-+        d.setVar("TESTBROKEN", "${@int('not a number')}")
-+        d.setVarFlag("TESTBROKEN", "export", "1")
-+
-+        with LogRecord() as logs:
-+            exported = bb.data.exported_vars(d)
-+
-+        self.assertEqual(dict(exported), {"TESTVAR": "value"})
-+        self.assertTrue(logContains("Unable to export ${TESTBROKEN}", logs))
--- 
-2.47.3
+The bottom line is that tinfoil probably needs that
+CookerCollectFiles() call but the rest don't, self.collections should
+be ok for the others.
 
+The collect_bbfiles() call is harder. That comes from updateCache()
+when parsing finishes, so it needs a full recipe parse.
+
+Looking at the code in collect_bbfiles(), I'm not convinced it does
+need a full parse first, it can run without that. The code in that
+function is horrible as it sets self.overlayed and self.bbappends but
+also gives return values.
+
+My feeling is that the function should either return values, or set
+self.* things, but not both. We might be able to make collect_bbfiles
+run earlier in parseConfiguration and then skip calling it at all in
+matchFiles if it is already available?
+
+Regardless, just making this unconditionally overwrite self.collections
+is definitely not an improvement to the current mess, it will just make
+it harder to disentangle things later...
+
+Cheers,
+
+Richard
 
