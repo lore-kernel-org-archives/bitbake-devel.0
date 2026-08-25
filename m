@@ -1,137 +1,100 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C30C61DC7
-	for <webhook@archiver.kernel.org>; Tue, 25 Aug 2026 13:03:15 +0000 (UTC)
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.20922.1787662987774845801
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C82C61DB9
+	for <webhook@archiver.kernel.org>; Tue, 25 Aug 2026 13:10:45 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.21525.1787663443967052462
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 25 Aug 2026 06:03:09 -0700
+ Tue, 25 Aug 2026 06:10:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=KtObPjxb;
- spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 8D4DE4E4137A;
-	Tue, 25 Aug 2026 13:03:05 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 615AE604C4;
-	Tue, 25 Aug 2026 13:03:05 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B9A9211C794A6;
-	Tue, 25 Aug 2026 15:03:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1787662984; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=9m7nOoiAEPttx8sU69Yc1kBYF5niWiHcqbA8+hyr4Gc=;
-	b=KtObPjxbfmYu1v+laKQL9FLN6KOruGz8StSZgAit0lhQ3ViOcIQ+efuJjivj7HxYa4MCe7
-	fIfMbzfSGtPv6DxvHoDhks9mCsdW4Hc/ku1glQTF/ROgk8R8VuyJ3Furoenj8ekEq6BXRs
-	rc+kN0xamiU8DW4NUlHPDZGtHCBUt2RoJtpbZjOGiA+6VcrbuDct4SFePsYUhI18V3U6X9
-	DqcLSFsLp5GhLhba9kM+VMGcJ8Sb4asZQpGWkcwbK3yPlch34BN184r8iSMu2Bo8KBj0bI
-	zAGu6xVBSK2YcW5cXD61G5oRSrhlEy6KLBnGOSLB//lxoc0HIUKC0i32BICMMg==
-From: Antonin Godard <antonin.godard@bootlin.com>
-Subject: [2.18][PATCH 0/2] fetch/{npm,npmsw}: fix security issue and
- re-enable fetchers
-Date: Tue, 25 Aug 2026 15:02:56 +0200
-Message-Id: <20260825-enable-npmsw-fetcher-wrynose-v1-0-425c8cc1e111@bootlin.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMQQ6CMBAF0KuQWTsGRrHEqxAWtHykRgvpoGgId
- 7fq8m3eSorooXTOVop4evVjSCh2GbmhDRew75JJcjnllZSM0NobOEx3XbjH7AZEXuI7jAqW0hy
- 7gzFwYikVU0TvX7++bv7Wh73Czd+zln1RNbRtH4NOaveGAAAA
-X-Change-ID: 20260825-enable-npmsw-fetcher-wrynose-2574d377ec2b
-To: bitbake-devel@lists.openembedded.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Thomas Perrot <thomas.perrot@bootlin.com>, 
- Antonin Godard <antonin.godard@bootlin.com>, 
- Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, 
- Richard Purdie <richard.purdie@linuxfoundation.org>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3855;
- i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=Gy2tXHMVd9r0jHfNONhBQQcIFcK4TAiII3v+fNy7H04=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBqjZKGxwQOuWzxOHOHBOJhYwau7Qe1YFajGYhNh
- /4lesYRd8mJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCao2ShgAKCRDRgEFAKaOo
- NhXWEACnbspG6lYm2H+lCxN8aNk1rjSTYowGN0gwI1RSLdRT+8M/F0LbBbndJblbF3krNI1ujnf
- boEkqqPuVGLlAp+Hqa3qT4nSCbw/2rloXrOEfFrmG2VXpwmm3jC1kLUSsIfozDoIPJ1if1cFNs1
- s4m/nfpPs+RICwJhHFWz93Nd89p5wLk/PLtG0AHjTlbqSYIhmiJiFnZdKeFrBsSER9Xq7+jIAta
- gGi7eymJKemB5sXDukfbpYm95YCWEMkjJznzk0hHjZtWs2eIDUoln3+6CEE0l7DL0wcQ3+0MeON
- VNY3wmV27NjT6V1seV6dfCFMmiy5mxJyZeYNgPXFO2DgFPusZYmjuia31AXMcc+oL7BrvYBwvXg
- aTJjo3heqRJcRihGS0pKR7q89H8ISAQb119f5PIB9a1PEc3SGKILtq4G9P7PuUSpvVrtnKzLO1e
- TsOBJ3XTSG2qYeDAyi7+NVsaQ2VFMxvixdXRSWbdmNwIVXjvJDdMqCPP1EW7XmsqjxYNfZdXZdb
- sKLNlXqRM9IpvwxeQOHoqxKws3jwjK1k4naUegTyuvB1cIezAr93HZxK5kKvckKAbe9bmCbOF6G
- 6mCe2W3FnxbWJ+GZQ0LZ3EwzX19n7u5oEbzJfqBD3J1W0fE8Cp6MJ5pTNmYoN0+LtjBg6GN00j6
- zavHz3NTyrdWKeQ==
-X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
- fpr=8648725188DD401BB9A0D3FFD180414029A3A836
-X-Last-TLS-Session-Version: TLSv1.3
+ dkim=pass header.i=@smile.fr header.s=google header.b=2kcCeX1W;
+ spf=pass (domain: smile.fr, ip: 209.85.128.43, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4998590d392so20263165e9.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 25 Aug 2026 06:10:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smile.fr; s=google; t=1787663442; x=1788268242; darn=lists.openembedded.org;
+        h=in-reply-to:references:to:cc:from:subject:message-id:date
+         :content-type:content-transfer-encoding:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=YrPGWiNMaIPnwUhxNZ2nMH7jlrH6bqNYgGBa135H7ts=;
+        b=2kcCeX1W99VA5US+92zD/T2+gYaJ6oRR/bW8aEHP11CQS1uJw/8Qq05uQnok3hDDLl
+         79N2psrMtKdRLa5/OqHcdTALHQEEoVMTadwejmJw8ommlVOxxk58fWLD5yG+689V8oZu
+         8aQ2REYO5Ga3AXBh2TldVshMk43xeqb8u9+mU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787663442; x=1788268242;
+        h=in-reply-to:references:to:cc:from:subject:message-id:date
+         :content-type:content-transfer-encoding:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=YrPGWiNMaIPnwUhxNZ2nMH7jlrH6bqNYgGBa135H7ts=;
+        b=cUuRlgzQ6rGjFAmM/oKXAx7qEWGoTUaWvQHSZbkCOU5y5A7xj2Y/DIaLbbt+BGKHyU
+         XJhFRunW+l/zZG4zClj1bbEJ2NjkQgr80HUEwBZ0TaU6oT7nZQEDw+lGHJ1u34Hi7fOt
+         GnEQqr2ZjvPaIpjShX+1t/IDjUN7P7XCtxXmPDH+SVW327rMiamKlVN4CVnUriMmC+on
+         a/0GmgVYAEDiZUxVj4fGQzKGp6fMqeX46tRGBVUwHFfUtiPZ8qOlpev433eGZ8Mb/Eyq
+         RLJ+6hcYl/J0pU8HxLVfEfMSejnnWY7G29fNa5zLq30dkM6NuUMWug6RhMM0rGeGFnxU
+         dk9Q==
+X-Forwarded-Encrypted: i=1; AHgh+RpmHvUp9VeY2UBsBg0U22oqbxg0FMuMH0pCdq0WIIb8vtvPQg/Am19B+2vHnn3TAme4xhGiln5KofXSB82L@lists.openembedded.org
+X-Gm-Message-State: AFuF++l2pSm4BrldLmbt2nPRIZL05kDYe1d9VQaW2gXvb1dOl9T9H6dc
+	6dzMnnLtQn3SbAUlOQifEPBQLRkVnVX/8ntSzhOHbkjAvuwrLYJxk7O/k2vobH97vJU=
+X-Gm-Gg: AR+sD13zC4aaEn9NkkREIkPMwe9xQTbOduDaCVAp2xtjNxuPQM5DGFQKje8a3SWvADd
+	BZqlkq9O9BrP1+pdF7hi4YYffQxh7wnBlXD7r3g2yJPl0/jE5WA5JYJNxlJa8grjO0rnm6Kan7I
+	GIsZlF1e//aYg4vQBRAYiMof/6G/NEKqe2tr7omfMPJpPr3fDHnZFzIoSoTlUIIYK4b6k++T16H
+	9hHxLQOrTSsFpagDq0hs9zmf2jWFJcOMvMVEtbGgzVn5XTN+UU396o6psFiVQ+inU7El09XhRRs
+	l5NpNIanpGng13v50DHAsGeRB2sOpdCE4OjdAtxpm3uIQcYyRrnbNg9Rnb4komcp4AgAYsvKZIa
+	kodGvgZtZblRxU5rNL1dusp0Y0pA1Hfi8XMFVy8qOi+X+xWKJgr1eE1VzhQBiN7tMvnuk/MAXkJ
+	IaNVTaXOTCVzyWFq5tslNB6ilc1jxkdHW39JW2e5oWCfjTqThEGPPPcsHIluSHSaA6mqADmdZy9
+	63z7R9CX1u55J7ja72LALSH1RMrGrNMIkbaEyjQRNM1ktg7
+X-Received: by 2002:a05:600c:3485:b0:499:83f1:398 with SMTP id 5b1f17b1804b1-499b8343de0mr451022805e9.9.1787663442010;
+        Tue, 25 Aug 2026 06:10:42 -0700 (PDT)
+Received: from localhost (static-css-ccs-204145.business.bouyguestelecom.com. [176.157.204.145])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-499d5d64ffdsm22753755e9.2.2026.08.25.06.10.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2026 06:10:41 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 25 Aug 2026 15:10:41 +0200
+Message-Id: <DKY1SVKSA25G.1G4STPIKU99KZ@smile.fr>
+Subject: Re: [bitbake-devel] [2.18][PATCH 0/2] fetch/{npm,npmsw}: fix
+ security issue and re-enable fetchers
+From: "Yoann Congal" <yoann.congal@smile.fr>
+Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>, "Thomas Perrot"
+ <thomas.perrot@bootlin.com>, "Mathieu Dubois-Briand"
+ <mathieu.dubois-briand@bootlin.com>, "Richard Purdie"
+ <richard.purdie@linuxfoundation.org>
+To: <antonin.godard@bootlin.com>, <bitbake-devel@lists.openembedded.org>
+X-Mailer: aerc 0.20.0
+References: <20260825-enable-npmsw-fetcher-wrynose-v1-0-425c8cc1e111@bootlin.com>
+In-Reply-To: <20260825-enable-npmsw-fetcher-wrynose-v1-0-425c8cc1e111@bootlin.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 25 Aug 2026 13:03:15 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20034
+ <bitbake-devel@lists.openembedded.org>; Tue, 25 Aug 2026 13:10:45 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20036
 
-This is a proposal to backport patches re-enabling the npm and npmsw
-fetcher on 2.18 (Wrynose). The two patches from this series are simple
-cherry-picks, and had no conflicts applying.
+Hello,
 
-Applying these two patches locally is also fine to me, but as this seems
-to be working as-is I figured this might be helpful to others - up to the
-maintainer(s) to decide.
+On Tue Aug 25, 2026 at 3:02 PM CEST, Antonin Godard via lists.openembedded.=
+org wrote:
+> This is a proposal to backport patches re-enabling the npm and npmsw
+> fetcher on 2.18 (Wrynose). The two patches from this series are simple
+> cherry-picks, and had no conflicts applying.
+>
+> Applying these two patches locally is also fine to me, but as this seems
+> to be working as-is I figured this might be helpful to others - up to the
+> maintainer(s) to decide.
 
-Tests are passing locally:
+I understand this is tempting but that'd be a feature addition from
+wrynose point of view and so, unacceptable per stable policy.
 
-$ bitbake-selftest -v bb.tests.fetch.NPMTest
-test_npm (bb.tests.fetch.NPMTest.test_npm) ... ok
-test_npm_bad_checksum (bb.tests.fetch.NPMTest.test_npm_bad_checksum) ... ok
-test_npm_bad_recipe_checksum_rejected (bb.tests.fetch.NPMTest.test_npm_bad_recipe_checksum_rejected)
-A wrong sha512sum param in SRC_URI causes the fetch to fail. ... ok
-test_npm_destsuffix_downloadfilename (bb.tests.fetch.NPMTest.test_npm_destsuffix_downloadfilename) ... ok
-test_npm_mirrors (bb.tests.fetch.NPMTest.test_npm_mirrors) ... ok
-test_npm_no_checksum_rejected (bb.tests.fetch.NPMTest.test_npm_no_checksum_rejected)
-A missing checksum in SRC_URI is rejected regardless of BB_STRICT_CHECKSUM. ... ok
-test_npm_no_network_no_tarball (bb.tests.fetch.NPMTest.test_npm_no_network_no_tarball) ... ok
-test_npm_no_network_with_tarball (bb.tests.fetch.NPMTest.test_npm_no_network_with_tarball) ... ok
-test_npm_package_invalid (bb.tests.fetch.NPMTest.test_npm_package_invalid) ... ok
-test_npm_package_none (bb.tests.fetch.NPMTest.test_npm_package_none) ... ok
-test_npm_premirrors (bb.tests.fetch.NPMTest.test_npm_premirrors) ... ok
-test_npm_premirrors_with_specified_filename (bb.tests.fetch.NPMTest.test_npm_premirrors_with_specified_filename) ... ok
-test_npm_recipe_checksum (bb.tests.fetch.NPMTest.test_npm_recipe_checksum)
-A sha512sum param in SRC_URI is forwarded to the proxy and verified. ... ok
-test_npm_registry_alternate (bb.tests.fetch.NPMTest.test_npm_registry_alternate) ... ok
-test_npm_registry_invalid (bb.tests.fetch.NPMTest.test_npm_registry_invalid) ... ok
-test_npm_registry_none (bb.tests.fetch.NPMTest.test_npm_registry_none) ... ok
-test_npm_version_invalid (bb.tests.fetch.NPMTest.test_npm_version_invalid) ... ok
-test_npm_version_latest_rejected (bb.tests.fetch.NPMTest.test_npm_version_latest_rejected) ... ok
-test_npm_version_none (bb.tests.fetch.NPMTest.test_npm_version_none) ... ok
-test_npmsw (bb.tests.fetch.NPMTest.test_npmsw) ... ok
-test_npmsw_bad_checksum (bb.tests.fetch.NPMTest.test_npmsw_bad_checksum) ... ok
-test_npmsw_bundled (bb.tests.fetch.NPMTest.test_npmsw_bundled) ... ok
-test_npmsw_destsuffix (bb.tests.fetch.NPMTest.test_npmsw_destsuffix) ... ok
-test_npmsw_dev (bb.tests.fetch.NPMTest.test_npmsw_dev) ... ok
-test_npmsw_git (bb.tests.fetch.NPMTest.test_npmsw_git) ... ok
-test_npmsw_mirrors (bb.tests.fetch.NPMTest.test_npmsw_mirrors) ... ok
-test_npmsw_no_network_no_tarball (bb.tests.fetch.NPMTest.test_npmsw_no_network_no_tarball) ... ok
-test_npmsw_no_network_with_tarball (bb.tests.fetch.NPMTest.test_npmsw_no_network_with_tarball) ... ok
-test_npmsw_npm_reusability (bb.tests.fetch.NPMTest.test_npmsw_npm_reusability) ... ok
-test_npmsw_premirrors (bb.tests.fetch.NPMTest.test_npmsw_premirrors) ... ok
+Without exception to the rules, we'll have to live with wrynose not
+having a NPM fetcher.
 
-----------------------------------------------------------------------
-Ran 30 tests in 101.185s
-
-OK
-
-Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
----
-Thomas Perrot (2):
-      fetch/{npm,npmsw}: re-enable fetchers now that checksums come from SRC_URI
-      tests/fetch: restore and extend npm/npmsw test coverage
-
- lib/bb/fetch2/npm.py   | 111 +++++++++++++++++++++++++-----------------
- lib/bb/fetch2/npmsw.py |  12 ++---
- lib/bb/tests/fetch.py  | 129 +++++++++++++++++++++++++++++++++++++------------
- 3 files changed, 169 insertions(+), 83 deletions(-)
----
-base-commit: 0ad6c1c34a5e07a5f8dd66ab248c1e7b37b69fa9
-change-id: 20260825-enable-npmsw-fetcher-wrynose-2574d377ec2b
+Regards,
+--=20
+Yoann Congal
+Smile ECS
 
 
