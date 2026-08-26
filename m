@@ -1,132 +1,194 @@
-Return-Path: <chris.laplante@agilent.com>
+Return-Path: <twoerner@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2354C61DBD
-	for <webhook@archiver.kernel.org>; Tue, 25 Aug 2026 19:46:56 +0000 (UTC)
-Received: from BN1PR04CU002.outbound.protection.outlook.com (BN1PR04CU002.outbound.protection.outlook.com [52.101.56.59])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.30473.1787687210782652885
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DC1C61DBD
+	for <webhook@archiver.kernel.org>; Wed, 26 Aug 2026 01:31:31 +0000 (UTC)
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.3352.1787707882865318517
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 25 Aug 2026 12:46:50 -0700
+ Tue, 25 Aug 2026 18:31:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@agilent.com header.s=selector1 header.b=qwPDzCVG;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 52.101.56.59, mailfrom: chris.laplante@agilent.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FWxNcpsJscy3aBmtuGkheKAl8NfPUSRkiZA06LVGDoYp4w8HPA1qJIo888DgpfU431NfRcZc+xvnucDFgE/tymRDk8u0/FlE6g/QxFhk3wj8W1jRfmPgV97ISl2uVsYkYyyhwEhWgTk0MxeokhOJ6elHrTZJppcd3yYlV/wmkUqCWHbwZbXPbIoH8XIsfS7Uu7Jr0CHHeAFFp/PGajwOsiwL7mg8/WT8uc5lYj3IwL2G4dZu4tvBBIcHYrv5fngOhvS9P+yDZG8DvsJv3wZizNk31Pn2JlSNelHqi8XL6Wgss1zL4cDKPPNO2A95vYjck7ZTbp3DlhT910OA/KzYgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZzFT6f1BwYJEGw52P0vqlgd6oELZ46KARJ4+7DpKiaw=;
- b=yCpqHwypRBjMhvNGKE+O60j1q4zJAkfNrEvJmZklEO07nW5UU9tMbFR2hvecUPO56laz7wr/GneF7mU1WQJiOhazLOnujNTfdHqN3Xpn2dnKniJ+5i9Lqrnk2zCvZ8fjbcm+QbbN2URBauMv+PN0/CsYSvEtZ0FFRm6z97SrOo6ehGDHVavZ26JsVzBDdh7UncK8Olae1yLB8wZG5SLsFTeufjBbn8vguad4rYpKVWmc7QeYk1PLCW2acAo3iquQG6O7EFlVwIBgNeihAQRhObj3fjzW8To7X+Egi0lsiORmJfBT8mYM/pKsGTJGIsBSF4eCfNCKugYSRiiSuY5Duw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 192.25.218.36) smtp.rcpttodomain=lists.openembedded.org
- smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
- action=none header.from=agilent.com; dkim=none (message not signed); arc=none
- (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZzFT6f1BwYJEGw52P0vqlgd6oELZ46KARJ4+7DpKiaw=;
- b=qwPDzCVG05f3WK1ANo0F5fEyVRiWxDmI9B/KPnYL9d5kqk5M7f2f/ws2FTaDqzOxPq7JcitIQtczRN4464CTITnaoxdubt3GliXY6oAt/I4UybqIlgX7hPqZX8rN/nZ/3X3z1Dpd0WqM58pMopSqjBS4aX85l1fjPU1K8uigtX0G2um6dLjiQ9ZHlmOrFHO9ONUKe+O3fwi08G0eH2Qj6CAxg4+bzOgv1VTeIOZ/rrY/PJnfAu44/7W6+HEiAjPw4UtMih66XMNGVGpu61KKrhS/35aW6vIpO5gT5VYixObEDiz7QQ6L+O2HrcqB0OF1qYxVfKUbrBGKf2waSA+LFg==
-Received: from SJ2PR07CA0015.namprd07.prod.outlook.com (2603:10b6:a03:505::28)
- by DM4PR12MB6565.namprd12.prod.outlook.com (2603:10b6:8:8c::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.7; Tue, 25 Aug
- 2026 19:46:30 +0000
-Received: from BY1PEPF000264B5.namprd02.prod.outlook.com
- (2603:10b6:a03:505:cafe::5e) by SJ2PR07CA0015.outlook.office365.com
- (2603:10b6:a03:505::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.360.7 via Frontend Transport; Tue, 25
- Aug 2026 19:46:30 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.36)
- smtp.mailfrom=agilent.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=agilent.com;
-Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
- 192.25.218.36 as permitted sender) receiver=protection.outlook.com;
- client-ip=192.25.218.36; helo=wpcosapexchedg5.windmz.agilent.com; pr=C
-Received: from wpcosapexchedg5.windmz.agilent.com (192.25.218.36) by
- BY1PEPF000264B5.mail.protection.outlook.com (10.167.242.122) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.360.3 via Frontend Transport; Tue, 25 Aug 2026 19:46:30 +0000
-Received: from laplante-B650.lfs.agilent.com (192.25.126.5) by
- edgeappmail.agilent.com (192.25.218.36) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.41; Tue, 25 Aug 2026 13:45:58 -0600
-From: <chris.laplante@agilent.com>
-To: <bitbake-devel@lists.openembedded.org>
-CC: Chris Laplante <chris.laplante@agilent.com>
-Subject: [PATCH 4/6] build: localize import of bb.progress
-Date: Tue, 25 Aug 2026 15:45:47 -0400
-Message-ID: <20260825194549.152553-4-chris.laplante@agilent.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260825194549.152553-1-chris.laplante@agilent.com>
-References: <20260825194549.152553-1-chris.laplante@agilent.com>
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=AbITU23v;
+ spf=pass (domain: gmail.com, ip: 209.85.222.181, mailfrom: twoerner@gmail.com)
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-92e65e18969so35758085a.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 25 Aug 2026 18:31:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787707882; x=1788312682; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=dYedTuHIpyrsWrzGe833NzqIravMuWMM7NgdSj5Afdc=;
+        b=AbITU23vVEg125ln1o65jLiyh4Phr//wyGPxuRFgPAw6o2Oxlo5lWyh0FxE1xUF3hw
+         I0HArZzegOBgV84yTie7N8RZ+avhugkqf3vaOvdgXrgTlfxbIagAMR+gqDFNNs8rjwl+
+         JiQkM7xqbDLRNzOfYh9GhOQ/NoCvdjfsFS1q7Qw7wdXcALr0eT7lWmZM8T9tD1AggUl3
+         EfX/49S7EWCXZJ1nKs/W77DYo6+auU2swTFLreZ49FAtxer6rEoRGAByN1l4vVviuQPo
+         NeekzfyHsqTka74E2OSYelcqEaPvWYt0qBdfc4oyavL8tZKAlSX2o5/EZ9ld16z7jBxa
+         Tqew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787707882; x=1788312682;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=dYedTuHIpyrsWrzGe833NzqIravMuWMM7NgdSj5Afdc=;
+        b=c2rjsKrP9jtF2HfqHCOmc7QBIP7VXS6go0wyBLyZjq1nskGBPtOP5kO6uoqpddVByZ
+         kDi7tW0NsVNbkAgOY+6w1iOiq3nDy6Y6pFF9gFB9z3L+QDpXF7jmO2MQUrMBy7bDiQL7
+         /oemQYrwPVFzhFlpxmkTyfJA5X0y7wtuEr9zn0J//AB0oQjfT6kqDlkPdfbSLYqU8xgo
+         gJC7Zy0eyl8Ndmxi5sPuSkNZnh9uwvJPhZ0eOgbLCosBYxI6MIVPvF7UxhMGM1pxu3F0
+         DAaps2UWKvV+diQN/C3pqJa/TP7YNBd4kKSE4mGHuYZ9iQfnHI0GexP0i+YUeH4VKUlv
+         Ao0g==
+X-Gm-Message-State: AFuF++kZVHhdgIUkir7FL+2F6gsnCCCM0cm5HgCeSIYamicZlAiODBhX
+	qRuGGWzRT7BOiQYfJvevFHigDJl13yH3cVKrFaCVC1W7d/y7An0gzxWi
+X-Gm-Gg: AR+sD123lgshXlsAOrYNUxf0UKG1zyrplV47TCZQBTAqyAVypUKDZBNxHQSg8Wk9zPN
+	yPNIXr9qeFh4rJJp1iqBn9Zuq/G/LWSXg8JeOVdujyaQvXGx8KsFWnTCmxMfojGksfZ339MxR1Y
+	/BKVLhT3I+G1LJyA10y2b7K5Tapl645y3JV99vIJJWCm5N0gf5Jx4aahsoSR8BOmPdMYE2PTiT3
+	Tr0UeHVtDVpzi9hoR3E+4xx1iTWhCpptGbl+PT21Xi7wCPY26onjZqc30+tpfAihmlxwyWsD3J5
+	Qbr2JjLEb7WsqxoNPoV3gRHVl9xmXENdi5lGJh+bjD008m+UvQXyYCWCy3zJVzl5BcXIOMk/vOB
+	M+YlzQqAHLUNZ2CU6xBknPjUpwMGs00YIGZgVc/wqto63PUeK2IPnVtC6Y2FIkJ0RdxWtb37F2N
+	6dnq3+Bt9qJknxn67dzxaTSMNLuHRuVx0KIzp6CV6s5Hx96YHJI8fwFxpFVO6DIHPYT+E0QupfQ
+	elHPA6DHUgIic8vU1radR/9gfhEg/s=
+X-Received: by 2002:a05:620a:700c:b0:937:783f:4fa5 with SMTP id af79cd13be357-937783f54e3mr702291585a.19.1787707876878;
+        Tue, 25 Aug 2026 18:31:16 -0700 (PDT)
+Received: from localhost.localdomain (pppoe-209-91-167-254.vianet.ca. [209.91.167.254])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9377e36879asm105857785a.17.2026.08.25.18.31.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2026 18:31:15 -0700 (PDT)
+From: Trevor Woerner <twoerner@gmail.com>
+To: docs@lists.yoctoproject.org
+Cc: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] doc: state the language of six Python blocks explicitly
+Date: Tue, 25 Aug 2026 21:31:13 -0400
+Message-ID: <20260826013113.2673355-1-twoerner@gmail.com>
+X-Mailer: git-send-email 2.51.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY1PEPF000264B5:EE_|DM4PR12MB6565:EE_
-X-MS-Office365-Filtering-Correlation-Id: 84d55545-2d44-4b5e-096d-08df02e18f81
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|82310400026|36860700016|23010399003|376014|1800799024|10067099003|56012099006|11063799006|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info: 
-	dwHOPwNAC2nrg7ayuMX6sQf7jWX21l1WN6iKwy/axlnt7FVgKhZjWs27cFE5dWUROVclUo04TxYkA9P+lKkdlSb+h8XvfWXl+jkZZRZStr+HdpHcy7EPNi1j8GiojK/G3K+0zQbXACJfMckUB5pFjksPq43FCq+4R70Enrm0ezl6SmoB3yGbvINuE36ekM2ACHD+4Qnc47/LzHy49CUod/ZefTQq4YimU/Vo5UytISenNdXrYfAIpjb34TXhI4ikeTBNPtoXj+kMVeL8XbBsY8yH/lpnB69phkScy+9AkF9bqbdg84+1YKWd6vpMYLhVhS1/C/hGCsxcBDo45vg2wXzQm32l4oAP9KY88QNbR46DAH+/3b616gFp1QsSd6nDw7He9CLXhXoNfshSPKvrK6J0zxQAj1ojTBxcuFY4xMties2ixafkpB3L13fnd8br6TOvwgv/gBHJkA58NGB8N6iqtHqB1wdt7NbefdCi3fBOknWOdX6J+ALnVymbe8yHws7LuNpHx0C0422K8VoJYZOToj6GakyfRhqREiHrl4eU9EMLHBV5Z9qyvMgbTJz7EgYuM3X63UMKg4jfgVel2eVcsEdMV+fQXRKK0gdwhJ8Es3JF9zCEgYNiGzrY8N9ptU4YfLITF2jlbB1vYIpVc5N2YjNCgzW62sRMqoh9IHXgfnPu4LbEOOnz4c5S5LzKrTJqXlm9Qi0Jmn7s5eUVyQ==
-X-Forefront-Antispam-Report: 
-	CIP:192.25.218.36;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:wpcosapexchedg5.windmz.agilent.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(23010399003)(376014)(1800799024)(10067099003)(56012099006)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	0OwLvO+SklLmL20xGLP9aPEkNI6QE6Mr6jtVzKZxqFCqK7Q8oW7VtsGOakxHjpPcPYcnntB3OhDoajrRNYtLIOyKxJ6oHXzDSoiijE1hxECe2KKci9HNKSrMUzYqloLlcconTppHEHq/IgcQA5tMXHw9uXiAYZcBekKMDYn/DN9pEG1nNB+ig705MjXgZnoIklQ/jDJSES/zeNcetDB0ZYqj71NDoAq8K0OC2rkRUpKqSsEhohyvd7ENMnVae1h3k38GjGiEDafS5MPgg7TlMIHMxdGhGkRlIcXK0AnIX0oT29ayJjjpLytDNmx0yb/5GNPaUqWx+CAwkUBSQJJ9S4mf5bqFmqzJpEWMJYxS5Nb3veGab67dmeC/RoK6oW59rdviBeDIEXUy2pWbY+rAojCqAyG71JjvmWuOXiAsbZfJ3TSoCZ3rY9rcRyPAxTdE
-X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2026 19:46:30.7317
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84d55545-2d44-4b5e-096d-08df02e18f81
-X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.36];Helo=[wpcosapexchedg5.windmz.agilent.com]
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-BY1PEPF000264B5.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6565
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 25 Aug 2026 19:46:56 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20048
+ <bitbake-devel@lists.openembedded.org>; Wed, 26 Aug 2026 01:31:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20049
 
-From: Chris Laplante <chris.laplante@agilent.com>
+Six blocks show BitBake datastore and library calls - d.getVar,
+d.getVarFlags, bb.fetch2.Fetch, bb.fatal - written in Python, and carry
+no language:
 
-It is only needed by create_progress_handler so just move it in there.
-This resolves a circular import between bb.build and bb.progress (currently
-being masked by the 'fetch' vs 'fetch2' shim in bb __init__.py) as well.
+  fetching.rst              "the code to execute the first part of this
+                            process", the fetcher instantiation and the
+                            two unpack calls
+  metadata.rst              the BB_ORIGENV datastore example and the
+                            getVarFlags/setVarFlags pair
+  library-functions.rst     the f-string example, introduced with
+                            "Python f-strings may also be used"
 
-Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
+These are BitBake snippets, but "bitbake" is the wrong language for
+them. In a recipe this code lives inside a python task, and the BitBake
+lexer hands task bodies to the Python lexer; wrapping each of these in a
+python task and comparing tokens by offset gives a result identical to
+lexing it as Python directly. Presented as a bare block instead, the
+BitBake lexer reads each line as a variable assignment at column 0 and
+renders d.getVar( as part of a string value. BitBake's own parser agrees
+it is not an assignment: there is no quoted value, so it would be a
+parse error. So "python" is what the BitBake lexer itself produces for
+this code in the context where it belongs.
+
+Nothing renders differently today. Sphinx maps an untagged block to
+"default", which is the Python lexer, so these are already highlighted -
+by accident. The difference is what happens when that lexer raises:
+
+  except ErrorToken as err:
+      if lang == 'default':
+          lang = 'none'   # automatic highlighting failed.
+      else:
+          logger.warning('Lexing literal_block %r as "%s" resulted in
+                          an error at token: %r ...')
+
+"default" is dropped silently to "none"; a named language warns, and -W
+puts that in front of whoever made the edit. Naming the language turns a
+guess that happens to be right into a statement that stays checked.
+
+AI-Generated: codex/claude-opus 5 (xhigh)
+Signed-off-by: Trevor Woerner <twoerner@gmail.com>
 ---
- lib/bb/build.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../bitbake-user-manual-fetching.rst                 | 12 +++++++++---
+ .../bitbake-user-manual-library-functions.rst        |  4 +++-
+ .../bitbake-user-manual-metadata.rst                 |  8 ++++++--
+ 3 files changed, 18 insertions(+), 6 deletions(-)
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 40839a81b..8b49721d6 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -24,7 +24,6 @@ import datetime
- import bb
- import bb.msg
- import bb.process
--import bb.progress
- from io import StringIO
- from bb import data, event, utils
-=20
-@@ -387,6 +386,7 @@ esac
- '''
-=20
- def create_progress_handler(func, progress, logfile, d):
-+    import bb.progress
-     if progress =3D=3D 'percent':
-         # Use default regex
-         return bb.progress.BasicProgressHandler(d, outfile=3Dlogfile)
---=20
-2.43.0
-
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+index b96018a4edcf..2993eda49439 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+@@ -27,7 +27,9 @@ and unpacking the files is often optionally followed by patching.
+ Patching, however, is not covered by this module.
+ 
+ The code to execute the first part of this process, a fetch, looks
+-something like the following::
++something like the following:
++
++.. code-block:: python
+ 
+    src_uri = (d.getVar('SRC_URI') or "").split()
+    fetcher = bb.fetch2.Fetch(src_uri, d)
+@@ -37,7 +39,9 @@ This code sets up an instance of the fetch class. The instance uses a
+ space-separated list of URLs from the :term:`SRC_URI`
+ variable and then calls the ``download`` method to download the files.
+ 
+-The instantiation of the fetch class is usually followed by::
++The instantiation of the fetch class is usually followed by:
++
++.. code-block:: python
+ 
+    rootdir = l.getVar('UNPACKDIR')
+    fetcher.unpack(rootdir)
+@@ -203,7 +207,9 @@ that updates an existing checkout *in place* rather than removing and
+ re-cloning it. This is useful when the target directory may contain
+ local commits that should be preserved across updates.
+ 
+-The code to call the non-destructive update looks like the following::
++The code to call the non-destructive update looks like the following:
++
++.. code-block:: python
+ 
+    rootdir = l.getVar('UNPACKDIR')
+    fetcher.unpack_update(rootdir)
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-library-functions.rst b/doc/bitbake-user-manual/bitbake-user-manual-library-functions.rst
+index 09e353945bb6..8c9d9003dd7b 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-library-functions.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-library-functions.rst
+@@ -29,7 +29,9 @@ Formatted string can also be used directly::
+ 
+    bb.error("%s, we have a %s" % ("Houston", "big problem"))
+ 
+-Python f-strings may also be used::
++Python f-strings may also be used:
++
++.. code-block:: python
+ 
+    h = "Houston"
+    bb.fatal(f"{h}, we have a critical problem")
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+index b0535b5dd459..a146b897c884 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+@@ -1719,7 +1719,9 @@ environment into a special variable named :term:`BB_ORIGENV`.
+ The :term:`BB_ORIGENV` variable returns a datastore object that can be
+ queried using the standard datastore operators such as
+ ``getVar(, False)``. The datastore object is useful, for example, to
+-find the original ``DISPLAY`` variable. Here is an example::
++find the original ``DISPLAY`` variable. Here is an example:
++
++.. code-block:: python
+ 
+    origenv = d.getVar("BB_ORIGENV", False)
+    bar = origenv.getVar("BAR", False)
+@@ -1732,7 +1734,9 @@ Variable Flags
+ 
+ Variable flags (varflags) help control a task's functionality and
+ dependencies. BitBake reads and writes varflags to the datastore using
+-the following command forms::
++the following command forms:
++
++.. code-block:: python
+ 
+    variable = d.getVarFlags("variable")
+    self.d.setVarFlags("FOO", {"func": True})
 
