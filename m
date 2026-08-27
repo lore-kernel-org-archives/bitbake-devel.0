@@ -2,22 +2,22 @@ Return-Path: <chris.laplante@agilent.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F99C61DD6
-	for <webhook@archiver.kernel.org>; Thu, 27 Aug 2026 20:07:36 +0000 (UTC)
-Received: from CH5PR02CU005.outbound.protection.outlook.com (CH5PR02CU005.outbound.protection.outlook.com [40.107.200.31])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.3447.1787861255347863697
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F022C61DC4
+	for <webhook@archiver.kernel.org>; Thu, 27 Aug 2026 20:07:46 +0000 (UTC)
+Received: from BN1PR04CU002.outbound.protection.outlook.com (BN1PR04CU002.outbound.protection.outlook.com [52.101.56.39])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.3296.1787861259500976342
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 27 Aug 2026 13:07:35 -0700
+ Thu, 27 Aug 2026 13:07:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@agilent.com header.s=selector1 header.b=qKIhuRu1;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.107.200.31, mailfrom: chris.laplante@agilent.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@agilent.com header.s=selector1 header.b=qmWtr5pk;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 52.101.56.39, mailfrom: chris.laplante@agilent.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SmGdSh5tqaF2AS9G2xKPaCgC+ssJE1FHx0xPgM/JiQBzA0Ep4sTl6HEelbOKEIGL4pjvVCP1tVG08BhEC+M+pI3im++0kR4FQIeMHWjU/4I5nIILekc5aLfxf7m1Aq2yIDkohhXi3aiMMgWb2W3ZZEWXcKcw3wDCpsRNb9mo66Q1SUJbud0WNZ3hLj3+QNsS9pUuvEooAlu9DcRDyibv+wTKna+nlt7ly3RTPZby8bCHAVOyxY/ALqcN1oR7z9u3a0kyIJa5lMEiEsbNQmFfdqJ3hozIQdaGTMiUYd9FSwKq0bubIG3mTpvr/vfLKxX6OpgHsDyoIdn20ZiWvC5KAQ==
+ b=ekOcrHAy/bjDSaYb97sdgcr9498YO5z2r9kCUrONtvg9yCkajwocendKjHTZ/vkyG93LGC3yMiqZg4PXcW3b2/4/9zVr28SK0BF8y7/8fHNvOTpNQZ0693vbA5QzD7vKCMhEYJFP3HudFrPmF7lRbFxrcxpgW+LF6Buo5PAoQiBMf28IrLwJUukxk/p/v/C/hDoaZaycQezBKBPV2DBXI5hEaMzggmax9+3b4uNFMp+m4EJSa5a0J9M2x+j+CLkoLxpDXkNYYNFTz2rCxzoqYi4Y0Zn/sYbiFBK4DaYO420ujN/RbXgIyNXxjFVNNzF7Q7d3XZyOdEDmyr2u5a1fbQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4KfzDITMcT/dMOtgAorjEMl11ILAgKuBKO0ANvlr+DU=;
- b=akTM6LAeYJ651LB9z6xZtklRHFDNgmroNdkp0+eVw8koa4rLmVYoKBycV3nCULl/2xibUxDjE5Z5mFsF3BM9sMMPimQwTuCfAsSADSfo5WM0LkpwcdBTJI1iX7aD/k/QdKtx7lmFRqtSWXAKezWE8vIByBOdFDsEX9lQrfK7MTGMsBogI/jjZDXSJbYIL3006zyo0mfjwj1XzoOPTTA/J66OX+4ruC8IDp7FMXLsBTKT0hx5wtNzPGOkrK842tNd/uTIOv8Kom5CAZ3jJ9iIPUm12pnzwYbYlw+wtmdETlqrL8veUfMY/iDUjbkczkRLHDvB2mTQ5rufbfGmzRdbkw==
+ bh=Ykq/7vYypGbZnsC8+zUfDZtVB0kwoJ4V97ca9UhNs9M=;
+ b=hlLwmZQjG6tjXlxYWOK0FZL8/Y0eE0gpk0JQHqB6F46aRXzJoE/EsWhuu8lF0g7kmN1VTq0cCTeO/frSe9mhFUT2LNWWylxK6/p3OAfslA9kiKJxr0NgHYZCOCLCGkSBcCHrLfvpfYH+ZJDLfP3hWMzpMl5o80aJen+5fKt+WNYw9LNloeQk0DCA/0M6sqBHE5okG8UXtI9MLFZ4o60WXQiELuUPX8gPltFK6SXAx4S6w/iMT44EUigKv/eXquhowMHlBOQIUS798RxdqW/jM7+u6Z9q/iZUyn3e9bJy6AoA9taiGRffUcffP7h3Lt/Py/FmB8w7liTX4wAz+IrUrA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  192.25.218.39) smtp.rcpttodomain=lists.openembedded.org
  smtp.mailfrom=agilent.com; dmarc=pass (p=reject sp=reject pct=100)
@@ -26,16 +26,16 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4KfzDITMcT/dMOtgAorjEMl11ILAgKuBKO0ANvlr+DU=;
- b=qKIhuRu1JOipTw/ZnugRENikTkV1L/5ZjgjpuKke1u71whRemrs8gHvJjKpjyGmOS22CWnmD3zgUmc/gZhzwssMhhYgiJkaqmhymnyWjSB3Wh/OlIIIvzvjebbS5yWLO6Y6hOYaySy2cq2ayhc53Elx1AW8Av/cm28nyrYL0Cnf5JW/7OMtvIGKBVwSTcUZ/CqqlBPdDvBZrW2uAYA0xO8RfOPsBP3t0M84GWtncSaMIQD6U3AxU1I5TM9OepkhLecI/lUgnwG6yM6LVWnot0mq+to/AnnOlNn0cuXGTnUysMbKKxN+xJZEWHELQl7pRBDoti/6tLa2hFRD+EyifjQ==
-Received: from CH5PR02CA0017.namprd02.prod.outlook.com (2603:10b6:610:1ed::19)
- by PH7PR12MB8179.namprd12.prod.outlook.com (2603:10b6:510:2b8::20) with
+ bh=Ykq/7vYypGbZnsC8+zUfDZtVB0kwoJ4V97ca9UhNs9M=;
+ b=qmWtr5pk9vMMXBO4iovcehhAEFC86iCjitMapaAmFGZy1MsyXGbSUR5oljU6Cw3KdW+zeL3gcLB8mD+touf7hFATpMPB3EnGvY9fK8rRz/DBk/SQv7veQSE0UpBbhgdoMZkZuIws3xguS9w3T7Xt1qMJfCAfB+gUUn7D4JY0t3V0rer0mN0QZ2eM0NIkHLDc+v0/FzRxH2UF8EQb2533cDpPywEgG2qQfgqV7f7p2L3htczPv52EYLJpzSKYtC2BcQ133ct1VGHnnZrNWLLVcM7AEobKGAHlOs1vA3PWwt6Kx/e7DBfc0km7kTR5ElW5OT4G6JAbKZyTOhosxLPYug==
+Received: from CH5PR02CA0006.namprd02.prod.outlook.com (2603:10b6:610:1ed::16)
+ by BY5PR12MB4131.namprd12.prod.outlook.com (2603:10b6:a03:212::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.7; Thu, 27 Aug
- 2026 20:07:30 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.10; Thu, 27 Aug
+ 2026 20:07:31 +0000
 Received: from MN1PEPF0000ECD7.namprd02.prod.outlook.com
- (2603:10b6:610:1ed:cafe::82) by CH5PR02CA0017.outlook.office365.com
- (2603:10b6:610:1ed::19) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:610:1ed:cafe::21) by CH5PR02CA0006.outlook.office365.com
+ (2603:10b6:610:1ed::16) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.360.10 via Frontend Transport; Thu,
  27 Aug 2026 20:07:30 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.25.218.39)
@@ -47,17 +47,17 @@ Received-SPF: Pass (protection.outlook.com: domain of agilent.com designates
 Received: from wpcosapexchedg6.windmz.agilent.com (192.25.218.39) by
  MN1PEPF0000ECD7.mail.protection.outlook.com (10.167.242.136) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.382.8 via Frontend Transport; Thu, 27 Aug 2026 20:07:29 +0000
+ 15.21.382.8 via Frontend Transport; Thu, 27 Aug 2026 20:07:30 +0000
 Received: from laplante-B650.lfs.agilent.com (192.25.126.5) by
  edgeappmail.agilent.com (192.25.218.39) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.41; Thu, 27 Aug 2026 14:07:03 -0600
+ 15.2.2562.41; Thu, 27 Aug 2026 14:07:04 -0600
 From: <chris.laplante@agilent.com>
 To: <bitbake-devel@lists.openembedded.org>
 CC: Chris Laplante <chris.laplante@agilent.com>
-Subject: [PATCH 09/11] runqueue: wait for covered tasks before setscene
-Date: Thu, 27 Aug 2026 16:06:01 -0400
-Message-ID: <20260827200603.688796-10-chris.laplante@agilent.com>
+Subject: [PATCH 10/11] runqueue: clean up dumpsigs polling
+Date: Thu, 27 Aug 2026 16:06:02 -0400
+Message-ID: <20260827200603.688796-11-chris.laplante@agilent.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260827200603.688796-1-chris.laplante@agilent.com>
 References: <20260827200603.688796-1-chris.laplante@agilent.com>
@@ -66,69 +66,69 @@ Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECD7:EE_|PH7PR12MB8179:EE_
-X-MS-Office365-Filtering-Correlation-Id: 196bd5cd-a237-4ff6-c16d-08df0476d2e9
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECD7:EE_|BY5PR12MB4131:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4b80439d-9921-4a92-6ad1-08df0476d363
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|1800799024|36860700016|82310400026|376014|23010399003|18002099003|22082099003|10067099003|11063799006|56012099006|6133799003;
+	BCL:0;ARA:13230040|23010399003|36860700016|376014|1800799024|82310400026|10067099003|6133799003|56012099006|11063799006|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info: 
-	4CXwG4BoTYpr9vcZVea4Vs3WZs/tzcp+oyLudJlCY/kbHgasUc8WXJoHiP9bjY8mxgSTzA39dw4wZCUHKdz/ooJtsEeZ5YB9n/rKQK4gDlcnCq2IZF0wFkWTQAULjnaamnZDyR++HxWC6Ubg/fJYguv2rhHeRe592P10oG7YxRigvH4li+zpUIepy9I8WXwPCWJ07Qq+iR5Yu1VmJEdvtVgxMj/VZQWCcBEDN1AcA6oBOrEQMeJyn8Dea2nZnBaMDgrEH4IXp5aJub3tVyL3qC0q2pZxzvS/0wczqh7qAvddJewyyA0fMtH2SvBArMox7NOZJNqnIVRTD9lm186ihqnaem1YnHhnTukJIKEtVhDzU/E7giEZ1V0+aZMTZwwHlN1EfiaFkVIIbzYrCJIQ6nFFfSoj9wLXHj8HBtjjN5BJQtFjrmLUfsfyJqiJ52SeTH78OwAVP4uJ+6akY22U3s8H5Y0a0oHmBfjBeUvhyqLLfKFEOgGUQODJOv0aDOfV/mnVezMxjxHhpV0NEBK6FcOQjEcy7gH/y5PmNOgWqsxDxAzDUU/JjxtMPaNSmRhGQKe+pivfzdzvM45592PAwiNiRfLeO0Gs7CYK8YDM3U0CopWDUbJRn4ezG9svsiEEWoJqgcqubGHnuE+OTrTiTOIQFNgsTn4dXlbNDzoYNX3ox0+AJGvBGxAExghYtXNFQpiBkrzbab4kpfrcAqfcjg==
+	ui/WL7KPe58VA5MPLqgVwLexTWyBTLmQ42i428Eor3nzO27MpiG6kS/QuWYm0n2L/QLTpLdNXyaH5V2hk8FhgDI6VrxSFQcEVV+bejQNZHz8Yx+FVeL6yykTniWGjtYGY1HgWe1ctqRQ5Ba1tb5MUO0GutvBpW8zTb04imgzJeVx+dCStbSUB22uLPP0UqbnLVvNfje3+78UEoag93A6bIUh1dM5ZvZav/UHURPsXG3hrI3e03SewlT2eLeouzelkWvG7vshH7pqLhJEJNaQezex4INIfQaWb07SLidy7WoxD8vWWSTPLOuPfweWUv8kBG1TsLo6svE7v6mz25YReRPaob05SaMVW3D4vvIiFjOv1WcWVGd6tIxu0mGR+Txm54Z1Roma0TX3QCD/fivKt+0HfWNjGPFX+Pu9Chdb50EuXXwpBzSrkMSiPdZishlwdT4y26Au0RaROyRx0NPaDCywwqkXdQzxQ4aqX7ibReB9N1b60mzWmxm6tFubfUrdNORh4UKqBgmbRrU5VTCxOao4WTQg4FEg7M7TDepcMNtWPeyylYu11Yk7h8lZDJnmF4IIKnopWQsGLjR4TAkUF54pJb4r+VdoMYclbXgiSQ0sYNImUKDd4xiCPSkZSCu4RByBIc85aOT0X8jFnB751mJJRVqrGluot2GlX6wgzIWBBjHA6A5gf2AtMloPqy0cYuDJ7sng5txFG+1gEoQQZw==
 X-Forefront-Antispam-Report: 
-	CIP:192.25.218.39;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:wpcosapexchedg6.windmz.agilent.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700016)(82310400026)(376014)(23010399003)(18002099003)(22082099003)(10067099003)(11063799006)(56012099006)(6133799003);DIR:OUT;SFP:1101;
+	CIP:192.25.218.39;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:wpcosapexchedg6.windmz.agilent.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(36860700016)(376014)(1800799024)(82310400026)(10067099003)(6133799003)(56012099006)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	10aAme6QaP03E9JOL4pmAMZDLLQGiCC4RScME3ekEEAIe+L2WHDGKr3ShUeE/tYPKUi2He+Yy1g5OWgmzxoEC5G4XXcHMC7wh7pjhWxAO5yVD6MTSVCloF/SAh5rfQHXGTohHGufnu2lzXPIYIsF5VBbJnO4Rjf+D1sXLTOUURv4isPUzz1wbSneXyUJ9z+8HdlBWVLGxXku6rSfoDaqLbbWCRLwqN8P5OKx+fsiBz5SO8JnyZgX1eDq1wGY+osGxqrMlDyN5oXTCUBUIFXb/lX/THhhsztk0SFACxy1Jvn6WXobixUKsTFKwoSterP7n7EpjoRcW8z4lXIB/6Q3dp/0ISiSW80XZmfFJ/jFgb7CCxc71fOf2A3TZhnwIqkulc4rowVPY4zjAY6aVdIOv7IcbImUhlXF6/HLZ6c/MDAjcpE/m3+CPdO7Sz53Q8d4
+	626XsevPs3b0YGwDc4G9wWL3UkAJyVQWFXsh3k+Wkh4CVNM8haE5C+5wwKJlGnJMRcpqAgw0Qd2ZCZAY30UQ3rET48yoXihyP3rxzdcFi2vJlZ3cqatq3ajOyUkFX/+j00f8EI/ulLa4sXvSxAOmbTF/8zHMcNOHNhuPcxWNHU8UqH3JpyNaeDIKwd79jV572/lW6v4bUr2xlt40lf134V+H0NRnJuYR1VwkuDPKJrXEGfhEGPlBCflJfjWrwXf/ROD8pwidSgVJpofpg/0bUIX5SYcBq1LtDkLD2gUfCuB/bdJxBn1Ghp1bVGAZ4mwOFlVeB3ZYgm/+U8fj0LNKUNGeYfH83cBPFchbRxBADnM+8Q2jmk2SKIlfWJERTCX46krW53rwp5a4WpEP+7NGfxZ/rp9KDtqsR1339L06IfTqjL/Qy6cxEn/9mZuAoXYw
 X-OriginatorOrg: agilent.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2026 20:07:29.9813
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2026 20:07:30.7675
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 196bd5cd-a237-4ff6-c16d-08df0476d2e9
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b80439d-9921-4a92-6ad1-08df0476d363
 X-MS-Exchange-CrossTenant-Id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a9c0bc09-8b46-4206-9351-2ba12fb4a5c0;Ip=[192.25.218.39];Helo=[wpcosapexchedg6.windmz.agilent.com]
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-MN1PEPF0000ECD7.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8179
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4131
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 27 Aug 2026 20:07:36 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20083
+ <bitbake-devel@lists.openembedded.org>; Thu, 27 Aug 2026 20:07:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20085
 
 From: Chris Laplante <chris.laplante@agilent.com>
 
-The existing continue only affected the inner loop, allowing setscene
-execution while covered tasks were still running. Check the collection
-directly so candidate selection waits as intended.
+Iterate over a shallow copy so removing completed processes cannot skip
+adjacent entries.
 
 AI-Generated: GPT-5.6 Sol
 
 Signed-off-by: Chris Laplante <chris.laplante@agilent.com>
 ---
- lib/bb/runqueue.py | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ lib/bb/runqueue.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 826801855..7de6c8636 100644
+index 7de6c8636..43a7f17a6 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -2252,9 +2252,8 @@ class RunQueueExecute:
-                             return True
-                         continue
-                     # If covered tasks are running, need to wait for them =
-to complete
--                    for t in self.sqdata.sq_covered_tasks[nexttask]:
--                        if t in self.runq_running and t not in self.runq_c=
-omplete:
--                            continue
-+                    if any(t in self.runq_running and t not in self.runq_c=
-omplete for t in self.sqdata.sq_covered_tasks[nexttask]):
-+                        continue
-                     if nexttask in self.sq_deferred:
-                         # Deferred tasks that were still deferred were ski=
-pped above so we now need to process
-                         logger.debug("Task %s no longer deferred" % nextta=
-sk)
+@@ -1724,7 +1724,7 @@ class RunQueue:
+=20
+             return 1.0
+=20
+-        for q in self.dumpsigs_launched:
++        for q in self.dumpsigs_launched.copy():
+             # The finished processes are joined when calling is_alive()
+             if not q.is_alive():
+                 self.dumpsigs_launched.remove(q)
+@@ -1733,7 +1733,7 @@ class RunQueue:
+             return 1.0
+=20
+         for p in self.dumpsigs_launched:
+-                p.join()
++            p.join()
+=20
+         bb.parse.siggen.dump_sigs(self.rqdata.dataCaches, options)
+=20
 --=20
 2.43.0
 
