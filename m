@@ -2,91 +2,110 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8037AC61DCB
-	for <webhook@archiver.kernel.org>; Fri, 28 Aug 2026 20:47:39 +0000 (UTC)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.4327.1787950052912360514
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DACCCC61DD7
+	for <webhook@archiver.kernel.org>; Fri, 28 Aug 2026 21:33:43 +0000 (UTC)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.690.1787952820842227651
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 28 Aug 2026 13:47:33 -0700
+ Fri, 28 Aug 2026 14:33:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=QDX+HLoo;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-499ac87c92bso12689795e9.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 28 Aug 2026 13:47:32 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=eNvFwxXV;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.50, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4980fe6b3beso16873115e9.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 28 Aug 2026 14:33:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1787950051; x=1788554851; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=yzyRHPWMf7YrKHE9mWe9QeYU4YfX5A98hllSdh720Qk=;
-        b=QDX+HLooJTFu31Sm/f+hljq1OqPywo1jKdgjYbhIHZwL2bZGz15WWxxVJyiQTvoAwa
-         al31ZZoAF5AtZSpGHG9w1nYaqW5gLgvAI1EY8yYMvYH3cjtxt95j5EWmNB2oNl83lNEa
-         jYnYJuXh2JzBsvKm538F7qWvtDppRQ/P/dHlY=
+        d=linuxfoundation.org; s=google; t=1787952819; x=1788557619; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=CtFl+QN5SS92KXij4LqQGQvLBR4BypubXKuaJsGyUw4=;
+        b=eNvFwxXVgIosfhN2xdBRzJ0pWIjnhIQaZsJXrh0r9n6HlDGzJMoxz+cAVEbl3RRVKp
+         xBStAtBbxPeclG4C1H4jpKp0s3wqmmkV/jCRCyT6WxROwteLW3uUYiRZ8pIg126zJBmK
+         S+MDXxy5qba4J+u7cCeYmmxRZhh05sUc9ne+M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787950051; x=1788554851;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=yzyRHPWMf7YrKHE9mWe9QeYU4YfX5A98hllSdh720Qk=;
-        b=rVcob8OayBopSzZf36rraSppwpQtk/OF88tiNMut2o5EfNgDUJIQiIaTQBnrLJ2TN/
-         cYb+MiNInDGLHRpWLHEbcbHY/lZZ6aSm2clcEOb/SErBHrwZbSfamVM9Fcj19fhBIMXG
-         Vo4J1q/kvM0D+Z2Qo0gaDumOjUj9n/plSkNy14ZxUDhX/zJU4j2tYg1uxN4T/PFrvQ4V
-         HWBwUzGIW9ZTQWanqFnCMPyOutWKIVHEUw/R0XujZRwjfFDJzAYINHki+oK8a5JQQfad
-         c1EsDv2krLrVsLJGlgL14ysWg3wAhQpH1BNZurvahjc5fDRxkkyDF14mFzAAfppMa+am
-         CqQA==
-X-Forwarded-Encrypted: i=1; AHgh+RrkSnr82YiMZlskdT+nEdtFivqiBwR2ct3hs7gBBXNSt5tC/zOQjKcVxSeCIZh9Wq4n5x3qgUV9Dr/dgrd7@lists.openembedded.org
-X-Gm-Message-State: AFuF++lNl+m8+xNZnBhXbMt9biz4g2nAPeaxs3WkF3XqT3XSrBVU3wwU
-	gln3BSCaL/OsM5arneCMOAa9/jVUqgwVk0fg5pzDr9z3M72lyR/GQCHfm652BUysX+M=
-X-Gm-Gg: AR+sD10ielG6UijjHW7leIL4xPTq/l1gjmAQUR5Kh9Dw4JuBdgfn5X5p8uyy02xqGrs
-	vBQg0e2hCml+Fo/ZZog7BVFgKzkJRSf+dTdyNcuDj7HKQ6fTpXb/RWmx8gE9RSNhKCtU736orIr
-	406HqlnaWWSexYhIdEuqrZszJ7bMQiuSWKv36fwwaNKKReHpDsigPBnsVTdf7kyzyV3wtPM0/fh
-	bQcUnZIJvEH7SpX7x7N32h1O1cz6fbjQz1RVIhCXEdkKhTdwsngf2QUpryXx7uW/FVJXp0oVk9A
-	BBFTMphPk0okWpezK6t3XzjJrUUMrnulJDsL4g0soN+Ske91yPKUj2N5l2sbb3QFzXeA9LXO0K1
-	o6P07bi98F4woXl2VO6Yg5oz39Ujw5HB0q3MtVQgVgwJh/dkLGZtRa9/uIkk+uldCeuzWvTrA5/
-	zYmM/b45w7bG4pU2cnc3gLkkKHMwihPWAVC8gr6/4H5VzGqUBCghdWSj3n3EsoeY7LTKxu+cOLL
-	rNzleRviK+givCI39/5UtFBhZ8jvs6ubv3sbxkGHxamnIRTAJuLQJNRics7tC98
-X-Received: by 2002:a05:600c:4443:b0:499:b3f0:ff05 with SMTP id 5b1f17b1804b1-49b91c56f41mr116345035e9.13.1787950051010;
-        Fri, 28 Aug 2026 13:47:31 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:c3f1:c7b4:8368:83c1? ([2001:8b0:aba:5f3c:c3f1:c7b4:8368:83c1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49b95018ee8sm78600835e9.15.2026.08.28.13.47.29
+        d=1e100.net; s=20251104; t=1787952819; x=1788557619;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=CtFl+QN5SS92KXij4LqQGQvLBR4BypubXKuaJsGyUw4=;
+        b=AcTeNr1Gxm5o0yhniB/G/zthrLSWM7SoxtXn3e1o3cXIwLsZ3EewDc+HP8R+eYwg0m
+         GoER4SYfasnNkK459Krfa/owVto1PMZAVF7hN83lwXLP+4EoToyuhn+b4rRA/7Kg38UJ
+         NSVvlCCEzMXV0WbbxT/up12enyICU+nCo0TU+xk5hZY3MCcp5fNGjS/5VrfIYaEK5yHo
+         xLRUQMFn8/aKQkfgFxZCZV24gSwZQlq0Xa+WgbnDFOdvfji3teYFF8X5K7VkIPu7LAiq
+         YafSOt465hAF+GXzUYj5WmZBeIEUMiVRZ6O5bJare2wxZkoePhiN05R2R7QPsol9B4gc
+         umrQ==
+X-Gm-Message-State: AFuF++k1jjW8h0dMJ4h3ahoV+h2HJjpjyH2r4PH80t3XZtQjeCdqthOD
+	yjV9K6pGzvWlx56xuxHZB/inZNT1/e+W7ZyPYEt+t0gXKQf+onrLVPOU5y+W6jx9WnKfD2NNF1H
+	91sF9MMk=
+X-Gm-Gg: AR+sD12YtClGssXMGjz59mqBc/6rjFe7p5huIBzI2fdz3smQezRV+7o2w1LGFudAUQT
+	XmwMA4bkRRjRTl8ry0KOOOoZhVuRRZ838Xe90/ctMWDFtW7NqRk3Pb7I8wCxGFn8Oy5t/DAe0ue
+	mL3Z7kyFco79JtOgvCr8SbrVLZWb7EKOxNHnYsSZJREVBxNCP7ckjZAJu5b33mLx1q0SgYeds2T
+	R1P2q96Al15X3b82O6HMlG45vElnrkNPF2l9pI0yarXYmOo7C4jZWII6z3nhHxJCrCSdqKWlpXP
+	2msgpRNG59shfKIj+B2eQI6ZO+irkEmyxgEABHRxsw13ytH9y87Vp7Re6zBXmYiaZkY2X2UBsfL
+	H73HORs18xu/b3+8Hb0I1IbdGOYB0fxSDQgDcbkaNLT2tKjT1dEQaiCGmM15FWXwFLwm8F8IdyA
+	QTsi97MdqyGK31Bf0Oe1SF2FImlQOtlVc/3If0XkBEigvvFnDlOi5TCEQQFufnWwkHxlXBXPwlZ
+	8cgLbX1RCIWxQqDdg==
+X-Received: by 2002:a05:600c:3b27:b0:49c:a2f3:fe9a with SMTP id 5b1f17b1804b1-49cca312bc5mr34050645e9.7.1787952819018;
+        Fri, 28 Aug 2026 14:33:39 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:c3f1:c7b4:8368:83c1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49b926874fdsm88321505e9.4.2026.08.28.14.33.37
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2026 13:47:29 -0700 (PDT)
-Message-ID: <f6e8e40b847ff7e79f865e4223e6a131a88603ed.camel@linuxfoundation.org>
-Subject: Re: [PATCH] cooker: Clean up collect_bbfiles handling
+        Fri, 28 Aug 2026 14:33:38 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Freihofer, Adrian" <adrian.freihofer@siemens.com>, 
- "bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Date: Fri, 28 Aug 2026 21:47:28 +0100
-In-Reply-To: <6cdb0405632935cfe1c97600ceb741e88ab16fc1.camel@siemens.com>
-References: <20260826162530.2483331-1-richard.purdie@linuxfoundation.org>
-	 <6cdb0405632935cfe1c97600ceb741e88ab16fc1.camel@siemens.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-9 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 2/2] toaster/orm/lsupdates: Improve error handling
+Date: Fri, 28 Aug 2026 22:33:36 +0100
+Message-ID: <20260828213336.2038983-2-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260828213336.2038983-1-richard.purdie@linuxfoundation.org>
+References: <20260828213336.2038983-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 28 Aug 2026 20:47:39 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20122
+ <bitbake-devel@lists.openembedded.org>; Fri, 28 Aug 2026 21:33:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20124
 
-On Fri, 2026-08-28 at 13:11 +0000, Freihofer, Adrian wrote:
-> This looks very good. Thank you so much.
->=20
-> I tested master-next manually with remote debugging from the IDE.
-> I also created one more test case in the openembedded-core tinfoil
-> test suite:
-> https://git.openembedded.org/openembedded-core-contrib/commit/?h=3Dadrian=
-f/ide-sdk-improvements-quick-install&id=3Db3d2e53c431dfe12a0194e5976e2d6dc3=
-4cd5cdb
-> which could be added after bitbake will be updated to the version
-> with these patches merged.
+Recent layer index changes are causing a KeyError in this code. Rather
+than crash and break everything, show a warning and move on, which unbreaks
+everything else, just skipping the problematic distro entry.
 
-Thanks for testing, I'll get this merged :)
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ .../orm/management/commands/lsupdates.py      | 20 +++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-Cheers,
-
-Richard
+diff --git a/lib/toaster/orm/management/commands/lsupdates.py b/lib/toaster/orm/management/commands/lsupdates.py
+index 153b26f60a5..1f36906eeef 100644
+--- a/lib/toaster/orm/management/commands/lsupdates.py
++++ b/lib/toaster/orm/management/commands/lsupdates.py
+@@ -226,14 +226,18 @@ class Command(BaseCommand):
+ 
+         total = len(index.distros)
+         for i, id in enumerate(index.distros):
+-            distro, created = Distro.objects.get_or_create(
+-                name=index.distros[id].name,
+-                layer_version=Layer_Version.objects.get(
+-                    pk=li_layer_branch_id_to_toaster_lv_id[index.distros[id].layerbranch_id]))
+-            distro.up_date = index.distros[id].updated
+-            distro.name = index.distros[id].name
+-            distro.description = index.distros[id].description
+-            distro.save()
++            try:
++                distro, created = Distro.objects.get_or_create(
++                    name=index.distros[id].name,
++                    layer_version=Layer_Version.objects.get(
++                        pk=li_layer_branch_id_to_toaster_lv_id[index.distros[id].layerbranch_id]))
++                distro.up_date = index.distros[id].updated
++                distro.name = index.distros[id].name
++                distro.description = index.distros[id].description
++                distro.save()
++            except KeyError as e:
++                logger.warning("Couldn't process %s (%s)" % (i, repr(e)))
++                continue
+             self.mini_progress("distros", i, total)
+ 
+         # update machines
 
