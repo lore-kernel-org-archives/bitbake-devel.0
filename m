@@ -2,38 +2,38 @@ Return-Path: <chris.laplante@agilent.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DA5C61DD3
-	for <webhook@archiver.kernel.org>; Fri, 28 Aug 2026 14:45:24 +0000 (UTC)
-Received: from MW6PR02CU001.outbound.protection.outlook.com (MW6PR02CU001.outbound.protection.outlook.com [52.101.48.29])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.2381.1787928322256658825
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB09C61DD9
+	for <webhook@archiver.kernel.org>; Fri, 28 Aug 2026 14:59:24 +0000 (UTC)
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (SN4PR0501CU005.outbound.protection.outlook.com [40.93.194.69])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.2682.1787929163689962669
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 28 Aug 2026 07:45:22 -0700
+ Fri, 28 Aug 2026 07:59:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@agilent.com header.s=selector1 header.b=Z3CyPMr5;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 52.101.48.29, mailfrom: chris.laplante@agilent.com)
+ dkim=pass header.i=@agilent.com header.s=selector1 header.b=rci/4iMC;
+ spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: agilent.com, ip: 40.93.194.69, mailfrom: chris.laplante@agilent.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iVoatTvLCl0BzM9rde+7b9OxNCBloIcl5N9SAaClW4n80HgDxWUMw8L0joCJjy4PxAmuwQdVWTnWFRUUT8Ng1sZdXXn6l3m93Ay3NBG9yif9g46QghmVy75l7PIMNvLosJX+UyLGIUJNE8WOlF01e2V8czS2lC2Fmjr4NQM8w03mP2cqlPwnoo4effjx0iGHLHp0Tl1XP8Lmvt2TrydtVbctOMs8sIaBxdAAJ3STLjsIwZzE32z7giZO0HHvGJ1E8mNxkGMD2Iw/0+kPCYpxFFz2pcNFThFINyGTwBjNRKB79+2SmYg/msZni3klPnbdyzdQsO32zYT4Fmy6TmtAEg==
+ b=S3fbyaYBVU9MFMzYMSzwM5kVpsYvuSAJfsDiX9MOWaerHfmKnzvSashRroWuGp1iUeYbeAXf2QqsLFuZdrQKYNZixdfd+LiA/pT05Gu2i5ZLZsD+4xGFzskBW7T/96g3rUnQq/hEAvfCO1pjW4QDT8QB6tr3Os8gWk9Om1BLCyONIR/02nC6pli4R+jZvmA4I9Bw2uXJDym7zrQ7zu+yfLp8+abZdQfpD5xQojpN4W0uzArlK+rmclpC9QAbHt2BOUhjlF9tiXSJqLM1otu3jUqEWLAq8PsIBzgj/3lzHH08HP0pYcbsw4mIDjJbvWdM+pKxBMmcvISx2K7390P14g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wd9CHIxoLEOV8BQ38L18P2E/BLdD+Z52/v9SHMPujdc=;
- b=Z8hgOd8zPSRo69X0OF/XuhcxEkyuJ7MCfo9/iDWXsSJJR4I1Nc2XxGo4f7uLRPOJP/L1I2lajw23VqYWpGDcwvvqSmgwW9dZ42ynLs2IPOsjKgYOdTd1tgf7sGIP/3GlO6xbDCgdppXZyuVre0HCjouyPRkXE0XAMvl7rCQwnhcOgKEAH7krGhGHWdp3Afb6k2gzKUYk8hjIa9SlaJI1+65ss29uJzDZx8k9h9lXrPXb7s5CO2pAdtsrG3aUsYdagKGGQ1shl2QU6kqVWTf6VQfcc8tHIJdI1hhRo2SC25gQqd8mhcVjk850lO/j++hqepDWitT95kiM8ZCPqILwbQ==
+ bh=vlimArr8fXNtjucQfrAAzHDTXYCVvvrUwY6+PcTx1zg=;
+ b=Hqr0tPY/rMWK85Cfpfbq9+D4bQo1BWL+ZJTg+LsHfyq37GXmoBRRKVgMb6rXSTrCsZ1l+CcRk5C9JAWwnOXMNZ/lbUy07P8B6OOKHEEljpnqTiMdjxzoL5hLM2K6L2t8WO891oaMbmY2qbhObnUiYYL3vjMr9cv0sL/0es4oxqFZA8cD6COJdt0HQM44Np3RXAYd76TfqPd1Xik5NHo7B29Y6h6CVNbtySxBsIzD2Jdc4a0lhKZuxSAdi45kEugQTZgdYcDpdbZtvFZMm5I8Aus7CFttkqFoDS6qc4kXBN1PrUqvbupedkmU6K4KldQ4qFC40OmfXRgZHVFQcbbR3Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=agilent.com; dmarc=pass action=none header.from=agilent.com;
  dkim=pass header.d=agilent.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agilent.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wd9CHIxoLEOV8BQ38L18P2E/BLdD+Z52/v9SHMPujdc=;
- b=Z3CyPMr5JrCXUvfJXAoeirzsbdHBBh2jXJcbWbAaZb7FEMO7Ep7cXQmbHpv/i1PbQySU8Pj3H/d9kTAoJWAdbS3XVR0KkscYqY9w+esDBMFjFRj8o2qF3b+hyJOjnBZbDFflTI6CryvIcCs51JaVsnyk/uue6xkdcjtVSahvhcBYaDnCvTd/v6eyPWZlUBEU1MvuoL5P03bz4u+WS6grP9nJGpF7EMXW6g8oNoLL2PWmkVMInDpVypuvmVjrs/ZLRxl6gvy032NlRpG9S2BfGhGeO48Xm606iV5fM4JTyp3N0kAwhPtDg+yvSk/bDUyh2hQOy3S91jwVGaX98X58Ow==
+ bh=vlimArr8fXNtjucQfrAAzHDTXYCVvvrUwY6+PcTx1zg=;
+ b=rci/4iMC+p1jJvwufIBLg0GWr6Yd1Pfa+w3nfRxqZwp5P6du7AFRkCYyR6IPtaEBmx7XMptZXmDhp2y8RKVDKwT5GBFCgRFFyEV2APZfgTCSq65ErVjL4qJDSA0rghl7frmUXSjyEcsn4DzGlvr/t7l87yLN7QCFjXYZxiqvZx+oTbpTGxxvZjhvNJ7jC9kvIQS9pgXoxmaipaFeorVCHl9zVS1jt5NPGZwyckYymxbx4geu03Rpq0bH6p5r2yEeU3KUlVGj1J2S9QprfTxqheURZYkZnOkroVMw9d1Acl9/aEkIpG1QlSn2KcBvIsZen8S4Gc+0JVsWuFcGagnu9A==
 Received: from DM8PR12MB5430.namprd12.prod.outlook.com (2603:10b6:8:28::6) by
- IA0PR12MB8328.namprd12.prod.outlook.com (2603:10b6:208:3dd::5) with Microsoft
+ DM6PR12MB4251.namprd12.prod.outlook.com (2603:10b6:5:21e::12) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.360.11; Fri, 28 Aug 2026 14:45:17 +0000
+ 15.21.360.11; Fri, 28 Aug 2026 14:59:17 +0000
 Received: from DM8PR12MB5430.namprd12.prod.outlook.com
  ([fe80::152b:7346:321d:4a2]) by DM8PR12MB5430.namprd12.prod.outlook.com
  ([fe80::152b:7346:321d:4a2%6]) with mapi id 15.21.0360.008; Fri, 28 Aug 2026
- 14:45:16 +0000
+ 14:59:17 +0000
 From: "chris.laplante@agilent.com" <chris.laplante@agilent.com>
 To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>,
 	"mathieu.dubois-briand@bootlin.com" <mathieu.dubois-briand@bootlin.com>,
@@ -43,16 +43,17 @@ Subject: RE: [bitbake-devel] [docs] [PATCH 1/4] lib: rename fetch2 as fetch;
  invert compat shim to make bb.fetch2 = bb.fetch
 Thread-Topic: [bitbake-devel] [docs] [PATCH 1/4] lib: rename fetch2 as fetch;
  invert compat shim to make bb.fetch2 = bb.fetch
-Thread-Index: AQHdNjCzG0PhMvCD4UuJ/onN4EB8c7ay9jmAgABnJYCAACt20IAAAjSw
-Date: Fri, 28 Aug 2026 14:45:16 +0000
+Thread-Index: AQHdNjCzG0PhMvCD4UuJ/onN4EB8c7ay9jmAgABnJYCAACt20IAAAjSwgAABhgA=
+Date: Fri, 28 Aug 2026 14:59:17 +0000
 Message-ID: 
- <DM8PR12MB54305B0839AB4F9311B518AD8BAC2@DM8PR12MB5430.namprd12.prod.outlook.com>
+ <DM8PR12MB5430125B330B74A614D61D8A8BAC2@DM8PR12MB5430.namprd12.prod.outlook.com>
 References: <20260827142958.547182-1-chris.laplante@agilent.com>
  <DL0CCF115T08.227YUHOXXHLP3@bootlin.com>
  <AS8PR02MB10201CF48B8F8DD1675237AD3EFAC2@AS8PR02MB10201.eurprd02.prod.outlook.com>
  <DM8PR12MB5430838E898C61E85CBF14818BAC2@DM8PR12MB5430.namprd12.prod.outlook.com>
+ <DM8PR12MB54305B0839AB4F9311B518AD8BAC2@DM8PR12MB5430.namprd12.prod.outlook.com>
 In-Reply-To: 
- <DM8PR12MB5430838E898C61E85CBF14818BAC2@DM8PR12MB5430.namprd12.prod.outlook.com>
+ <DM8PR12MB54305B0839AB4F9311B518AD8BAC2@DM8PR12MB5430.namprd12.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -63,80 +64,92 @@ msip_labels:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=agilent.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR12MB5430:EE_|IA0PR12MB8328:EE_
-x-ms-office365-filtering-correlation-id: 867cca0d-27b5-4117-7b3f-08df0512f993
+x-ms-traffictypediagnostic: DM8PR12MB5430:EE_|DM6PR12MB4251:EE_
+x-ms-office365-filtering-correlation-id: af882ce3-aaf7-488b-13ae-08df0514ef12
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: 
- BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|22082099003|18002099003|56012099006|4143699003|38070700021|11063799006|10067099003;
+ BCL:0;ARA:13230040|366016|376014|23010399003|1800799024|22082099003|18002099003|38070700021|56012099006|4143699003|5023799004|11063799006|10067099003;
 x-microsoft-antispam-message-info: 
- wU6b1XpKlXioLzbZ9312OU3nj8ZtwbybZ+PlB9MgVSe4cNRIIpCacCZQdB0PnwGe1dF9xc/GKIEOWQIrwjnYGp0MvgT9kfgAJYGMS59FhszEFwaklfF/Et3oMROmb49aSGe7jylRr+/zrrjSQ38D5SoBMTvUxoSjKXW12x7f/QK8UP9kr+O+Sok/yTVttHdwvSBpI79xUw+uS5EsG4KFAkLVDfxE7Hl/XNBn130P5V8/pZY85oFwko+Ld5UeDSlnWm5jZ6rVfz8Gd/eW5gYZ2Np2rg3HJP5sEl+FfbKgJb+DCXLSk0nnUInsHn4D/eE6St9UwNzSaICi6rzSPX3BJTbfxlpjcgReeiaLnOjuiR/G18FkYFanFnfV6PMgrLHKlRb8ACmRcOtpIkoFczuR+MbmvECYxPmLNPvfQ3mnEHuTsdXMozjuJaog4mXXdWVr3k1PDMDqVb7cexlc+T6tCS8rpFvQohpv6XGN8a4ADoPotZ+iyf0MdhU6V6qHaxVU9pxRQdNn6TGTawSs5TdwDhErJCeIQw+l2aCx1XBZvlAYWgFQLTuoPjfCp0C0h5GT7g/PHN/lW5j3H5CoBL9ElpsgQc28xicQ1cwDFkrI2nKC47qKW+rXu24mOslB2R4PVFEHh91Z57qQO5MB3nCVPAYgCRZ9iJ5Q3SfsaVXQvRyHZjkDMs3wbVG+Vuuoec392c0+jlnpxYJ7Swso1/eJkxA/fb4BR3PAe0dl9EIcwPU=
+ 9K+iyAGSpRdsfqk38nC+ufdc8xnv0+WGUG1dNXTxfc1ZLoVIKQrgOkoTQLh3UXNVOqfgrAzf8KIb781T/ftK1+L2NX9x+fRI3zXlXO0pcLaaH2Y0U3VQaO08D9PrMgHVHVeFSaqFJq0mO7trrpXoqWh1lbYz3sMJnLlor+qd6+V/peVg1RbFtRPDsmloVQO/N7AH1LYEpCJ9/Q1JYsCV44blA4e6BYHNsBm7y+oNdoSjvj19DNzBoAjdqZrW5WIifooRj6Ccm/ecAGl1uf1fnoK4MrEMBleP1gXTjGOXH69ONA+K9J6a1qG+X8jtWsqmXVZCnfSZLTF5OmEhZULMn+2cbmaI9jA1ojnhpd2Gkoe2tzsSp1st5TW0+HXKtUtCrFigFHi/V0QcuECOlMq+F2OCtCKEYnsQ/QPfAGR+RET5Gj4jf5rcL8mGJ0SGN4ObAK/5neJ0vRplt3P2UwTlJlN16GNGqitJy0hk2NLbKp5RyM72Jl0GBAe9vUendfRV+ji6JkGJ2ksp+fwrErPfcJr1dYn4/5HxOyYTsG2rbCg3GI4omCr8gUa4Ic1EUEPBli8zYa8frdPvSUQHOLHOnhyCeuxVBVfDq6efZKLqTrA2+GUu1/bSr18KCquSc7+Gcfm1CmfrSvAdICLlzEKv1jnGKKUCYIikLmDmp8feKR1YfwwJ46dhiJuEJRgKUPijOBQ9os9uhGaWSzHNiqc8hx5c3i6o6brw8REiM+NXf7g=
 x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR12MB5430.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(22082099003)(18002099003)(56012099006)(4143699003)(38070700021)(11063799006)(10067099003);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR12MB5430.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(23010399003)(1800799024)(22082099003)(18002099003)(38070700021)(56012099006)(4143699003)(5023799004)(11063799006)(10067099003);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?D95CdU8jjF2SPFdnkqPbUY2/fVE8RLIlAvwTNEeCwFzzKwkR89YGI+zque9v?=
- =?us-ascii?Q?yE5j3k1Lnq+6Rv7KGbaZAIjtXSDU/RFqXVj87XM7wkLnkoIm7Ou6QkUgOlgx?=
- =?us-ascii?Q?BKZCokhDumRbZrcWnKCRZhMGdkHouAAUAJ5J1IGRHaHcwiH33pVqiOGNDgsR?=
- =?us-ascii?Q?wpWu6VmfXnMAHa97C1kzcQ8zJGAah2QvbFvnpSkiVVx9kp1V5pKwKvOsbb9k?=
- =?us-ascii?Q?fNoQlbI4peGNRJIMQiMPRFPng4WaMsYhZPd1JIDlbdRXqGdb7Nin7SYXvW15?=
- =?us-ascii?Q?xhbhfwN+G4E61SDw2otd5lsHaBavcPe2BkMLJMFs7Edw7k8OJnhWVnZTPYxX?=
- =?us-ascii?Q?Oy1vkkqY44r/62aG9dUsT5GAivlk+KjxM8MBGBQ5M3ZQuSVwqQnlNdr1TXKx?=
- =?us-ascii?Q?7R1OWOIRBC6gcVvFr4Q8KqB63DnndbfQKnROyQLhahtRNqN24uyEhgGuSM1j?=
- =?us-ascii?Q?j3Oz0ldJYmtuI8V5Ptkl27iVIVZdGmyoOy4fDhaaGXo38RjBPCaQ2REbXLlw?=
- =?us-ascii?Q?tIfn7ANzGISU2VqaaOMLx2mTVTXx7FirFp0awUmPLSSjxg1wNAfO8gfDHXQh?=
- =?us-ascii?Q?3b74D/30PP1ydYGB0ryWA27e+ltKvC8tGykVAVOSYWB8omX0O1SOdzCtMJAv?=
- =?us-ascii?Q?6RDMZ6SsT8YlCw3kSJSUoBA8Fk95wVhNBI+skl+Pw95uSnEjAU4sFsdiIKYZ?=
- =?us-ascii?Q?bkcVLIHjSnNlbW595SFTgwVtpxiEw/wcSiCs8PHI0xYW9ODRLhffi0G9OGT4?=
- =?us-ascii?Q?2ZdWWtZG9zmgs3INoDPVMNEpArKbAaklERGzxEZ/XI9itkLF4AG+kGRSf86c?=
- =?us-ascii?Q?ph+FgbSNv2IxSCRssdyH94PaTrhsIVSe/x59uC8y/YLMWlVj5QUy52uSd9zp?=
- =?us-ascii?Q?YpnrN/zXfElebI5xyP/kILhDmdZAak/DNNQxAkg6EYXYd3Z6D12ltrTxJ9vm?=
- =?us-ascii?Q?BDEm6ZhdE+Xs0Q1G2wwNGsX0sWQj6xYsd+RmVRaUxcqw5hCZX6aU8WjByqdc?=
- =?us-ascii?Q?ioHB7ASQsE4nA5p/JNVmQhOHO8kIY7+BvERJGSTQ66XNz7KEiL7IgB45KPA5?=
- =?us-ascii?Q?HzGSCsSKuohYNuYqTzL8+kd7eRHTQtcK5o00/gsEQyrw3auxCc1xWhZmR5NZ?=
- =?us-ascii?Q?ZMkJwuQiWS9uiIeQxQa3Dfg+wnK5UsHHJiI0logk1V9gN0bwCzlBZGC18S7V?=
- =?us-ascii?Q?otDG98j5La3ishohF41EgvrUX12vyi6PbE7uQnShpE+vrACN5KjU5xKWunUP?=
- =?us-ascii?Q?3u/ZTS96BG/IXP63BuwWl0FjZTalyhJ/76a+IePbS2D7x0+OuacpV7XkaPXj?=
- =?us-ascii?Q?Ts0VX5xM9NJogP2ihmypMhz+eEZ4MyzxuNxmOCWYn7Ugu+86dz/pZH6p+eAi?=
- =?us-ascii?Q?j/FAaWWHFgqQX4q2CxRIbnxL0ot62q9P+sT+ENZ2IWwKcYAiNiUyyvhTA1e/?=
- =?us-ascii?Q?8n9EeZLSnpS5ygiphwNvi1PdT1p/xmc3ft2zLa+sFROhLa18K8j2HrTpveFY?=
- =?us-ascii?Q?efvsRSEBKZaVkNMt+L3Nz9pmb32Qyg+sJXrLlmBrkkTMKQNW8/W8g4MO1FiN?=
- =?us-ascii?Q?LTbgAKJlY+8Kl5cXeiGQOstD3zK/ru6P663xREvYYYAOuojRg8GBMTuOFBxS?=
- =?us-ascii?Q?+jYynZ4T6f99q4/sEljnH2BKdVPIUV5M11a/HmeF5NI/Pz4GdK/r0aDnWvpJ?=
- =?us-ascii?Q?XIYNLjw9B7v5MT8id8liSH12eTh//TB9V8rkO23+tuH5Y16EYRbC15OBHmjG?=
- =?us-ascii?Q?JJ+1a+sn+w=3D=3D?=
+ =?us-ascii?Q?ETaTvjNUKdkknl7rYGvNgBbo9zj8ciYdJ0uEm85nhfN8PueDcN3I6fHBo78X?=
+ =?us-ascii?Q?kR3jm8SGT1uMk9FJ+YpxOcs2MJucZ/AjvwwEZI5LM1I0ta1HJBjmo9b/CWaV?=
+ =?us-ascii?Q?x5XgPeyAlDLY46qWZ9uWuDN7dFlGYdb5mIDC9zid9siII9b4vWy8blZb83Pj?=
+ =?us-ascii?Q?/cf86mKATnfVt51wllMy3shxfkxFYHKW4JuWZFBg7qauuEYBi1niw3Rd22Lv?=
+ =?us-ascii?Q?/8xzaJTOwJ3ogoFWZPfEN3rJce9XfLgeil/JjAPrB9E5rAQPMqwWj4e7CAsO?=
+ =?us-ascii?Q?OeRruaxUm9pPtSMtziL80578ivW5pVp9FgF/icnXmH38xAz2N9uxd1bI75k+?=
+ =?us-ascii?Q?pwkPt/6x5IozEp9Rll1L5Jhe4xU8YZ9G5O2S304Sr7+C/Ap+7UGWyCEAgIkr?=
+ =?us-ascii?Q?gx+01bQBOs4asXZoB0+FLdQte0+slnccN/jhOgxifbBIFmyhiiT6YcT0HRxk?=
+ =?us-ascii?Q?Wm15OEN9r3K3ruXM366E82OhfWJLUOYtV10crjjALHzl3yYvJXiiD5XRy4XG?=
+ =?us-ascii?Q?A6LO/ucx4xJ76RUTOCwjljZXgb5hWs4w5YDMF0obtf+JjjoWZfLPohfPSpln?=
+ =?us-ascii?Q?iZiITJ2J8pQQZhfYfpEPH2/OEkfTbDpSpc/YpnG9+BEyaNFc9XIOyH4x/oZy?=
+ =?us-ascii?Q?Y5WNR0GhG+vdJO7RkSlNwmSV/h21oj1BVf8V0klKIl9AIYqboc9wizfdpwa3?=
+ =?us-ascii?Q?2h1qRF7WVMepMacaPs4F6DadL2dBIxZO7YcV4gZkqMgxrZetTy0ZIjVNGWUy?=
+ =?us-ascii?Q?nFrHpUD0XSEx7i/OimtY+z//BQFgoXhq+vX5YAxfIm/r6qT1SL5/+Anxw/6Z?=
+ =?us-ascii?Q?2Y1eRwYJtdY7ckpCTU1V1Y112vaG4/uU3f0L/xg8bodTIldOBzo0rixQSRjf?=
+ =?us-ascii?Q?MyxzzPDSkhqg5UlPC+9mmLCyJcef19lYszBEoJtox/hTnLOR1Rc4rorTa+hY?=
+ =?us-ascii?Q?irdlC4zWTxnVdjNj7a5IgrlzDBEXAKjYGQR3B+OgARd4qjcY11z+dq9ErzFf?=
+ =?us-ascii?Q?p19VoSYdbkpthsUyx49cJm4ABwgfYIjRg6A9BPucJYzO++OeLQ+EZEKHsS8f?=
+ =?us-ascii?Q?XZbPOdfhKAs4BYSsjE+C4Dz5sfjG/m8M85Vh8rDPgCjMY3dj2u1jkqxKs7eP?=
+ =?us-ascii?Q?q7BOZAaH0yTERaPsWoxIPOA2fNFddIAnfLUXheJka7PYoMexF3gFuPuB6jdy?=
+ =?us-ascii?Q?yiKMLjWM4u9egORV8AUEpN3K+UM11UruR4qqPZxnZ3b3/FsBl/8YOZ/dOU7S?=
+ =?us-ascii?Q?dzciaqwSRzowxRXxHsmwuwkb5I19IAXJFF/G/JLEIBEtv8/2DFyvnczFkYrO?=
+ =?us-ascii?Q?32FZNFkIoBZjJZ1Z7Ra7WPTCJvlOzFyey0lEg0JP0qSw/PzaRUcsh3/FcrSc?=
+ =?us-ascii?Q?f+se7IRwhaGNMQSAWoFguYN5ObSQPzvS5+R3L18iy9xy87GQWwFKvdD2EkQo?=
+ =?us-ascii?Q?Gf9G3mDZ1jRiQCjxptPeTvqvrzLfV6iXTbLDElcRw6IUdEK0CIDdtBSlEtHO?=
+ =?us-ascii?Q?vQVdRjDV6LmbLI+lMDevRnto7Fjpe0YvDUjUne+UpXivkwxMhuwiGQgxDho/?=
+ =?us-ascii?Q?/B3VG5ESE6V24nvMiB43dZvh1fBmp9bN2elFsELY7NGOXJDeSwxroWC1/xQ8?=
+ =?us-ascii?Q?7FpxBpGHM39tDdKG4GtPeOoyJ0284lvOMaTG04bR6qAj3LGapxK/b/x+02GN?=
+ =?us-ascii?Q?k1WL8Ru4FXu+6bYRo1/rQgjJpzdqwRoApG9jtLApNOkPWQDLMfoeb8heoR2G?=
+ =?us-ascii?Q?Fzu9IqKJGg=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: agilent.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: DM8PR12MB5430.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 867cca0d-27b5-4117-7b3f-08df0512f993
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2026 14:45:16.4350
+X-MS-Exchange-CrossTenant-Network-Message-Id: af882ce3-aaf7-488b-13ae-08df0514ef12
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2026 14:59:17.7905
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: a9c0bc09-8b46-4206-9351-2ba12fb4a5c0
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eshZL15hfiCp3PSBq5Nk33RDFKyqsz2rPTkOqG+l2kr7iVCJFs7LlQYxD7KDzuWAcvyq/POlJjxMW6LmIAr++QdT6i42uemcKXP41dBfP+M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8328
+X-MS-Exchange-CrossTenant-userprincipalname: iEkyCMsCU0Whk/9O9ROB70RTp2LVTQQwQ/q1a6oogFOLDM3XmDOUao0AseYxGNsVPjSE3o2O6T6x6skL6eAJZbphARhsdXtBAC/wLH5pewo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4251
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 28 Aug 2026 14:45:24 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20104
+ <bitbake-devel@lists.openembedded.org>; Fri, 28 Aug 2026 14:59:24 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20105
 
-> %7C&sdata=3DNM5g2OmqXtTBYvIZEK%2BZhXJEgw3kUdwosF6Ptn8heOo%3D&rese
-> > rved=3D0
 > >
-> > Isn't the bb.fetch2 shim expected to take care of that?
+> %7C&sdata=3DNM5g2OmqXtTBYvIZEK%2BZhXJEgw3kUdwosF6Ptn8heOo%3D&rese
+> > > rved=3D0
+> > >
+> > > Isn't the bb.fetch2 shim expected to take care of that?
+> >
+> > Yes, this is what the shim is for.  With the full patchset applied
+> > things should work (TM).
 >=20
-> Yes, this is what the shim is for.  With the full patchset applied things=
- should
-> work (TM).
+> I take that back, the shim should already be in place as of this patch :(=
+. I will
+> investigate.
 
-I take that back, the shim should already be in place as of this patch :(. =
-I will investigate.
+I see the issue. Nothing in sanity.py imports bb.fetch2 (or even bb for tha=
+t matter), so it's relying on transitive imports and also the fact that the=
+ old shim inserted 'fetch2' and 'fetch' into 'bb' as essentially attributes=
+.=20
+
+The short-term fix is to just add a __getattr__ to __init__.py that lazily =
+makes fetch2 available. Then we can work on manually fixing up things to ac=
+tually import bb.fetch, rather than relying on transitive imports. I'll sub=
+mit a v2.
 
 Thanks,
 Chris=20
+
 
