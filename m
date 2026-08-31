@@ -1,82 +1,94 @@
-Return-Path: <bbnpreetsingh@gmail.com>
+Return-Path: <twoerner@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A04C61DE8
-	for <webhook@archiver.kernel.org>; Sun, 30 Aug 2026 21:55:18 +0000 (UTC)
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.17229.1788126909513490898
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F893C61DE2
+	for <webhook@archiver.kernel.org>; Mon, 31 Aug 2026 02:12:39 +0000 (UTC)
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.21069.1788142355184997077
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 30 Aug 2026 14:55:09 -0700
+ Sun, 30 Aug 2026 19:12:35 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=MC4ZsESI;
- spf=pass (domain: gmail.com, ip: 209.85.210.181, mailfrom: bbnpreetsingh@gmail.com)
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-85339ed040aso2361174b3a.1
-        for <bitbake-devel@lists.openembedded.org>; Sun, 30 Aug 2026 14:55:09 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=TLCZneJi;
+ spf=pass (domain: gmail.com, ip: 209.85.219.53, mailfrom: twoerner@gmail.com)
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-90cd7ad71a9so39260526d6.3
+        for <bitbake-devel@lists.openembedded.org>; Sun, 30 Aug 2026 19:12:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788126909; x=1788731709; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=92E8kCCpmBxScevPyTAihoWNS1Pd46VoxObe0h27Zfk=;
-        b=MC4ZsESIYZASWkiddhn2D43yZnmuno8FQZRfmlmHuGG5cXaIqEY8s5wg0Sr69wfkbR
-         2RcnnzM8QeSxCkDl3c6Z6em95HD7snEeePptevPeU0Bh5Fq8uEANZ7Iw0E/gwO5QjA/f
-         6m988Q1pHRWxX7fOBGOoswOh4XdTMa/XUA8gdV9t2d4SgD12sz30E4uPMH8ckjWAqVVQ
-         25DGsy6/wZSiys4Bttd7lZ2061+PMDrIMCrFdBf2ApqNye6NSGy/BJxChkPX3SNhaZFs
-         c9db/DXB23wxqw4uf7P8jYCPKIrX5Dif0lZb9pA5e+NB0rH/EJHTeqmReOcs4+wg9uY4
-         28HQ==
+        d=gmail.com; s=20251104; t=1788142354; x=1788747154; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=EvkX6pAN78HXVqLNw5QsVVCER8Wim0MykhfoUK/Xgaw=;
+        b=TLCZneJiAf4vzoHeTgqfJ8Q0XOUmUmMm1O3lT41r6Wb6qm5guSusqQCJazcBWchgRF
+         3iZ0hYy6oCk8oLCIc+vOTPDjWMa+l8olbvgAAGuHYEosWMnXnathJzRBdlUoKoA933+2
+         oGXCBH+jvMVF1fkwwqPmfMiovgPirTOmFiD8rOlFTZGCPNVGIxFvaE3tlxwWTST+VWP6
+         IeYhHxAjEp12vVcArJA3C/TaHk1D9yd+g2nB+/xhDntmEwEzKQozrazLGo64bMyPDpRY
+         tiuv+u2X69gZOUzqqz/FlN6mBJ5+tjf6p6Dwyw4UsMdut4E2jxb0e9Ujs/ZEbfXbgB+d
+         hQXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788126909; x=1788731709;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=92E8kCCpmBxScevPyTAihoWNS1Pd46VoxObe0h27Zfk=;
-        b=Qrq1C3JBT74ZbpnfhX78dIDggWLpVfZ9YKrk4NihdKcYr5SEDgBzGkehMW443yr07T
-         3Y7djQ9GX2NX/rOQokMCt+K3WJHhFL4vgZH1DwajH2KTeMnPp0LIEC4zG8vy6lXUNSRo
-         Ze+TQHiGllUAeVqpLMli/8JNDYydHvtP4DG9FhC6ahJ3WE8rGHLlhbm3eTUZmnetSz71
-         ufb5R8szLeI+KtgYDi4+am/d/IDYSqMMe5JRyaWhRKQV+S51Sos+iD5DaTYQe7e0y4ms
-         jC+9C+1UeqemgNCVC037SNceuTcw+8bm8ZtaqVVU4JZVpt4BCIHNSM5gnNSajyZzSUnS
-         T+Ug==
-X-Gm-Message-State: AFuF++lg5FdzchUxEabvLvQcvSOLZ3wxAqqQsiRKB2aI8Odq/ApIKybW
-	H/UXIMb4XgzdI68pU4pyQk58YqZxvFG/aySX1WeJ6ZsKiswEOBVOh38I3u0kGPRGlxE=
-X-Gm-Gg: AR+sD10YF4jDmFmJvBKRgZ9cw3JjeCGht4YJRyccZnqKXUukucKtQIN+y5AEQRJWvBR
-	NAikRxAmbJLishbupCqVnvcD+JGwuWXNxGeKM/2cI8Bg39Ct7g6t9xekokRv/zAA0mohqOE0bsW
-	bv57s19tj6UPeov3SuzXkhpOptDixduz9LhEfWFmeVdakLePyGL++LxuTG76DpYXOHjoxsuskeQ
-	IHIcE3GFsJYoCw+v3zRqcuY727mIAAkBP/gzcsffGzpIWLwU8f7o8BuxkmqfkwymSpRTOYi+iiH
-	YrTfULBMFUnu3td6kV2AQ9IaCSJdxJwsOymEb//MpNA1O7E6FOyTs6WvaTlJcEKFCmTj4sLz1Sq
-	thVzy/fbEZvVyqkxNAgBvlXOLmOlMG9yjPPSpfhU1pKeZ2Ih4mZsZpAA/+cuTqPKnmp4kQYJqp5
-	7JDQr0Kl8JII2l5qbxqiJa/iaY/aFdIJxB/slAEuKRw1cDonVgH8KaWxuZmRS0
-X-Received: by 2002:a05:6a00:6c99:b0:857:7384:b5f8 with SMTP id d2e1a72fcca58-85aa76cfd8amr36562b3a.20.1788126908779;
-        Sun, 30 Aug 2026 14:55:08 -0700 (PDT)
-Received: from ydev.. ([108.180.130.139])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc1f341dd18sm3139375a12.14.2026.08.30.14.55.08
+        d=1e100.net; s=20251104; t=1788142354; x=1788747154;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=EvkX6pAN78HXVqLNw5QsVVCER8Wim0MykhfoUK/Xgaw=;
+        b=aY8kvFq6q+ObQS5iumNWq44rd+JasgaCCppWSbbsJK9ifxL5nnwmVHcugJD5uZMcLD
+         +mYE3seA+Dvmg4rXlg/GO6Hvi2snUyHqub79E18MMGISRV7cwOW2/GCRvBaVEImPLfSm
+         DfVMD2F46lGqv+AMPwB+qugUAtj6B1fvurRRbio+aSpwZ1T7SFlKsthZ9eDfAoQNLaDE
+         gXsXAK0EiZpTeIPKKz9zXNPInuBMXtl/N1/DmPYGzpuWrD4XiPs9TYoSmjJZ1mXXeIv4
+         S11TjqIY76jMRAvi5zZhGWTcYfJaDpgebh9PBiUdw0T/XWVqcx+ZapSYhzRXkCwCtY8e
+         g7TQ==
+X-Gm-Message-State: AFuF++lhkRC5hNkTRClkh9HYKBsFRQle8Zs6Vgs3tlJpo6uE5xbcM1lw
+	km8BPNcenyiN/oKWkclilj+TFXpi4FAFYc2Tdyck9A8ftGw93ebTrX4H
+X-Gm-Gg: AYBFou2ik7ncGw/40dPA5IIJuqSmCWXWPRDmmrWKSzh8E76nBXw+FqZz4R81RLoPkmB
+	sYCixdwMoZDYd5rgNCZS6NMzoC9Ycnd1IfclOakN/GadTqO9juhfhpFz2g5hcSbuqrAgRwUf4eF
+	Nnp8Irw2QwMoNALThgGcPEy/QnG4WCf3Ev4McGSzHqvmTF4oXsjZ8qsE89vrQC8pUwmX2dO+fZj
+	7s7HwywgCNR+fVLEqmWaakr10wUiHnYxcYzTi51k+o4Pe+nI6tLnJHi6PIlQqSnBCSLTvrzq/kz
+	zKswAZDn6VCrat0Too/VWT2GhHK9qbZqObw1UQYxTuN1B3+Szrz2qLkONsv2qsOCtjnQPzSOZS9
+	1QekzzPvn3/cyiKSKxzqaisvF3FAyOrOYIpUTiJ8KdL9oGnCNyylMOCMwMPKtlHwtQnJlXcwRzi
+	7JjXXyVPIrT7UJVmSIjwZ/XAEoBWJ7DXHT9kdyWw/dbd3tQrnu9OLqAvto9kQODQY+/cd8wuYc7
+	rr60aeRk5jGzW/5NvxSlqkFxpZzzg==
+X-Received: by 2002:a05:6214:588b:b0:90e:7e02:cc42 with SMTP id 6a1803df08f44-90e7e02cef4mr157530996d6.23.1788142353919;
+        Sun, 30 Aug 2026 19:12:33 -0700 (PDT)
+Received: from localhost.localdomain (pppoe-209-91-167-254.vianet.ca. [209.91.167.254])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90ce444db01sm73848066d6.7.2026.08.30.19.12.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2026 14:55:08 -0700 (PDT)
-From: Babanpreet Singh <bbnpreetsingh@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	Michael Opdenacker <michael.opdenacker@rootcommit.com>,
-	Babanpreet Singh <bbnpreetsingh@gmail.com>
-Subject: Re: [PATCH] prserv: add --status to list running servers
-Date: Sun, 30 Aug 2026 21:55:06 +0000
-Message-ID: <20260830215506.7-1-bbnpreetsingh@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260824045011.7-1-bbnpreetsingh@gmail.com>
-References: <20260824045011.7-1-bbnpreetsingh@gmail.com>
+        Sun, 30 Aug 2026 19:12:33 -0700 (PDT)
+From: Trevor Woerner <twoerner@gmail.com>
+To: docs@lists.yoctoproject.org
+Cc: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] doc: quote the value in the named-checksum example
+Date: Sun, 30 Aug 2026 22:12:29 -0400
+Message-ID: <20260831021229.4063996-1-twoerner@gmail.com>
+X-Mailer: git-send-email 2.51.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 30 Aug 2026 21:55:18 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20129
+ <bitbake-devel@lists.openembedded.org>; Mon, 31 Aug 2026 02:12:39 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20130
 
-Hi,
+BitBake requires a quoted value.
 
-A gentle ping on this one. bitbake master has moved since the send
-(now 18cca50ba); I've checked the patch still applies cleanly, so no
-rebase is needed. Happy to rebase and resend if that's more convenient.
+AI-Generated: codex/claude opus 5 (xhigh)
+Signed-off-by: Trevor Woerner <twoerner@gmail.com>
+---
+ doc/bitbake-user-manual/bitbake-user-manual-fetching.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Baban
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+index b96018a4edcf..476672bbb95b 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-fetching.rst
+@@ -123,7 +123,7 @@ in the previous example, or you can name the URLs. The following syntax
+ shows how you name the URIs::
+ 
+    SRC_URI = "http://example.com/foobar.tar.bz2;name=foo"
+-   SRC_URI[foo.md5sum] = 4a8e0f237e961fd7785d19d07fdb994d
++   SRC_URI[foo.md5sum] = "4a8e0f237e961fd7785d19d07fdb994d"
+ 
+ After a file has been downloaded and
+ has had its checksum checked, a ".done" stamp is placed in :term:`DL_DIR`.
+-- 
+2.50.0.173.g8b6f19ccfc3a
+
 
