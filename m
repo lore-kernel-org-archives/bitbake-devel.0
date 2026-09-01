@@ -2,110 +2,180 @@ Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D7EC61DD3
-	for <webhook@archiver.kernel.org>; Mon, 31 Aug 2026 10:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E72C61DD3
+	for <webhook@archiver.kernel.org>; Tue,  1 Sep 2026 07:53:14 +0000 (UTC)
 Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.26490.1788171847140346487
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.2709.1788249187667922970
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 31 Aug 2026 03:24:08 -0700
+ Tue, 01 Sep 2026 00:53:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=FsrOLLMe;
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=CgK8JOJz;
  spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: antonin.godard@bootlin.com)
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 0CBEF4E41441
-	for <bitbake-devel@lists.openembedded.org>; Mon, 31 Aug 2026 10:24:05 +0000 (UTC)
+	by smtpout-03.galae.net (Postfix) with ESMTPS id DAA9E4E4148E
+	for <bitbake-devel@lists.openembedded.org>; Tue,  1 Sep 2026 07:53:05 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id CEE6860231
-	for <bitbake-devel@lists.openembedded.org>; Mon, 31 Aug 2026 10:24:04 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7F19911C78AE0;
-	Mon, 31 Aug 2026 12:23:59 +0200 (CEST)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id B00086053C
+	for <bitbake-devel@lists.openembedded.org>; Tue,  1 Sep 2026 07:53:05 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C67A211C78C5E;
+	Tue,  1 Sep 2026 09:53:04 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1788171840; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=18GPdCgK2TdUulky/W1x0Wlo02zufEcing3S2CBkEvo=;
-	b=FsrOLLMe5g3YWacECp6gS4AWddFkN0s7GOwWq92d7i1XvxQEYFKyW/cwk0NRViKs52iuN3
-	9tqEzPZrCjG5V19ELnJ6R0nmhuSd1ppUmwMGCv31jU3taD/UIWn3F0RqptPCfFyz/cHuRP
-	fyTE2cOvYXl4KjKTR18JK4heMx8kzIWJIc5HY2E4314Ja202qL7UCMxsV3pP1UAWG5EVcr
-	8HV+YCFYGv/y615NCaVaESrqPAI+ZmmbwNKAFT0fQIlTqW0lp+LLc/ooLYwT1tZHiiwo2e
-	OUO0qZX6jgtg3OCW4moukL1cpkrl218NzV76OarIkS/XtYG7zx2cRxRVy16tXg==
+	t=1788249185; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=KXknYp1pzbSTNMs5WLN7NaZBNVg3f2PNfsHygqJ1zDc=;
+	b=CgK8JOJzkkvz/bTAB6b5DT6FsRAtYsYnn3daFleAbK45XFdR4HCFitJYGZWlH+Xq5sgyoV
+	AvSbIo/q3qq0hRTPh0MFSejIFRLXjg/1OoICmEnohlvZf5lpT6Yqw+Dxv1Ee6HS/MVaaxd
+	yPemKJJVs6nL3FJS00iLazS0SS0RgI7lvYdusRqsWoCVQbtLo9miZELt3Vi5u/SABpVCnM
+	v8sNV/HDBngCH5BNWfBhYnWK2qhVpjklxd/n74XzNmKLAhCKiEb5NlmA7WG5Ac0cD60PXh
+	y+QVlJn4HYYhqVeDqVJaUi7TAE0/Ulbs0yGBT7s4nf9E2J6GjgtejB4U1vXMiQ==
 From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Mon, 31 Aug 2026 12:23:45 +0200
-Subject: [PATCH] default-registry: use core/yocto/monitor-disk-space
- fragment by default
+Date: Tue, 01 Sep 2026 09:52:51 +0200
+Subject: [PATCH RFC] parse/ast: add support for additive built-in fragments
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260831-monitor-disk-space-v1-1-feaf88e16a0e@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMTQqDMBBA4avIrDuQaIk/Vyku0jjqKCaSUSmId
- 29al9/ivROEIpNAk50Q6WDh4BP0IwM3Wj8QcpcMucqNqgqNS/C8hYgdy4yyWkdYFcYaVWrt6ie
- kcI3U8+c/fbW3ZX9P5LbfCa7rC8H+SiR2AAAA
-X-Change-ID: 20260831-monitor-disk-space-836a60711c94
+Message-Id: <20260901-appending-fragments-v1-1-2e359cf751ce@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMQQrCMBAAv1L2bCAm0IZeBR/gVTwkzTZdwTVkq
+ xRK/95ojzMws4JgIRTomxUKfknozRXOpwaGyXNCRbEyGG1a7UynfM7IkTipsfj0Qp5FOW+1wxB
+ Day3UMhccaflf73C7XuBxSPmEJw7z7wfbtgNp7ppdfAAAAA==
+X-Change-ID: 20260827-appending-fragments-8a308ebdb633
 To: bitbake-devel@lists.openembedded.org
 Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
  Antonin Godard <antonin.godard@bootlin.com>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1984;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5359;
  i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=fLK2EXhJCoRo8Hxuu6Ox+G1mixHkHxZhxI1d5PufqGs=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBqlVY/NljfjpujrTRjRjx2TS370MizjCbs4I/Oo
- GXCNd6uTK2JAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCapVWPwAKCRDRgEFAKaOo
- NvRLEADNhjLw53/ngejuiMGzcDgdVOzb7sUaq6QqJuEo+mCTBNGQo6D4FO449sVeMsjtfuJsP5W
- Oc0crG67UKuaze2yrxQTHrZqn7oykDMUpyVSu0ta+PPMo/a07M+tCECN1Ql5/wNU1kuwE+SOJxl
- xFuX1UUDeFIPbeE24c/6GSW5tuGCUe312QGY0Lr0O/J5D7zFaycgsaMQ/cMvT1Cc/NTPXy/MF76
- eNKjIDnMFPOsmJABd6zbLvkqqDOgFjgSQbw9rpet4lztPgoOYPA1DaKwhY3jZVYh7LGKLu9xIhw
- V5sdz1Md5uadR6W2Mwq3BvjRw01wd8cZhbImXyCugyGugCaehVPwOXGAkACINPniMkXLpccvBE1
- TiAAvD7bta7BmqPw4tLwEpHrytmQFA8oltCvcLd6+HN04dJRGdfM5LI9YGmbpQ4ZsITDEAPAamx
- Irb3unTEKZIx/4ABXYqAzKXOCaDbVftoppTOkPBua6gWX5tPk5n6ncJJVWvTfSfpGj2WPhpXKZq
- DYlfbiUAkNAIKov9/113QrNTpYPSuAu1uKnCVYXRHe+7OOZv0Q8e5N5nDyt27J3b51NJgk9yb7U
- 97KFglVYoTI/djFQHxST1mHUK7hg6du4eizn9BaJpkVsIQzzITOCAHII/ns618b4iJ7c4fPR0Kk
- 7irAvzrMjidN9iw==
+ bh=xbEZ6zyPihwsLlvLUUGYmTDbY/QSnGrCp5BcaqG1yrM=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBqloRfGNb6DeEEKCTPIZGiN4vqQeiuYoNURtuG/
+ r1H5hFOFYOJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCapaEXwAKCRDRgEFAKaOo
+ NjEBD/4yEWLfbl6iWK/hdc3YeLxFrxWYgC4PM7CnhGvAqJmLgw0X2Hoi8y91Q+8+FbFWlElWpp8
+ iLGSGLeYNJ3Rxu/bjQKn0FQAkpRrHK+ceePDF8HbZb8n4BO3DJCRzQBfku26uvdURBv04HpttcB
+ IVr0CFQ8f9kXLzyfvwblNSg6hP/k11HVQp0BT8XkLuN+5BRpIVYoa+U33niYDMboYNtNUiIoAwU
+ tYEKulHlJdqRZAn/spu2U/wjMwzxNML7GYVDc2uRNHO9XZkZwhYtNS/NyR16Hp4IVthAYptvW3E
+ fetpNC0slkHF8UFQJ7kt8/m307MjRv93G088aQpnc9bwm0FG73kwG1Vm+BFyPArug1sj5s6qSer
+ GZuas0SQvMl8uytHyeV/RE2jwpNeUk/reXINH3V2ZmLCLRsh689dY2FNsHMaXssNPasL+Ny+ooM
+ ePXdNIWrKdkiPs4/jVsVDlpr90gn8/tLH83cPUc7EH4XuvH6vKkBV2tz2vpGGaNDPINhW2mLorx
+ UFplRZjUM5l4xsImRX6JIIsJSK0+C7V9BARf155GaDlfPEWP+hbf9ZD06UbW5Chm57AI2VvMNg/
+ tvbNTIDnyGP/mPSRzbPMytc7xM1bTgRkzfb9qigO0kZosiOSviBcL1O5r45L17uHSY6olwtkUMj
+ 8IPPhM/wq4cnUuw==
 X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
  fpr=8648725188DD401BB9A0D3FFD180414029A3A836
 X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 31 Aug 2026 10:24:10 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20135
+ <bitbake-devel@lists.openembedded.org>; Tue, 01 Sep 2026 07:53:14 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20136
 
-This fragment is now part of OE-Core[1] so we can use it by default in
-our bitbake-setup configurations. This matches the local.conf.sample
-file provided by OE-Core.
+Add support for the following syntax specified in a fragment list
+definition:
 
-[1]: https://git.openembedded.org/openembedded-core/commit/?id=df3cc9f85f9921c6585d9a69cb5351689680f659
+  fragmentname:VARIABLE:add
+
+Setting this fragment appends to VARIABLE instead of setting its value.
+This does not break pre-existing fragments which still set a variable's
+value entirely.
+
+For example, in OE-Core consider the following definition:
+
+  OE_FRAGMENTS_BUILTIN = "class:INHERIT:add"
+
+Then one could specify the following:
+
+  OE_FRAGMENTS = "class/buildstats class/rm_work"
+
+Which would result in appending " buildstats rm_work" to the INHERIT
+variable.
+
+This would also allow bitbake-setup configurations to come with a list
+of pre-enabled classes, for example.
+
+Note: The "add" suffix was chosen in the definition to avoid confusion
+with the existing "append" usage in Bitbake.
 
 Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
 ---
- default-registry/configurations/oe-nodistro-master.conf.json | 1 +
- default-registry/configurations/poky-master.conf.json        | 1 +
- 2 files changed, 2 insertions(+)
+Note: The bitbake-config-build OE-Core utility would require adaptations
+as it currently removes any pre-existing built-in fragment with the
+same suffix. I can also send the associated OE-Core patches.
 
-diff --git a/default-registry/configurations/oe-nodistro-master.conf.json b/default-registry/configurations/oe-nodistro-master.conf.json
-index 5aa148d4217..c5d966618d4 100644
---- a/default-registry/configurations/oe-nodistro-master.conf.json
-+++ b/default-registry/configurations/oe-nodistro-master.conf.json
-@@ -30,6 +30,7 @@
-             "description": "OpenEmbedded 'nodistro'",
-             "setup-dir-name": "oe-nodistro-master",
-             "bb-layers": ["openembedded-core/meta"],
-+            "oe-fragments": ["core/yocto/monitor-disk-space"],
-             "oe-fragments-one-of": {
-                 "machine": {
-                     "description": "Target machines",
-diff --git a/default-registry/configurations/poky-master.conf.json b/default-registry/configurations/poky-master.conf.json
-index 58d379648a3..452d933a576 100644
---- a/default-registry/configurations/poky-master.conf.json
-+++ b/default-registry/configurations/poky-master.conf.json
-@@ -35,6 +35,7 @@
-         {
-             "bb-layers": ["openembedded-core/meta","meta-yocto/meta-yocto-bsp","meta-yocto/meta-poky"],
-             "setup-dir-name": "$distro-master",
-+            "oe-fragments": ["core/yocto/monitor-disk-space"],
-             "oe-fragments-one-of": {
-                 "machine": {
-                     "description": "Target machines",
+Note 2: We could also have these fragments specified as:
+
+  OE_FRAGMENTS = "class/add/buildstats class/add/retain"
+
+To avoid confusing them with original built-in fragments. While I
+agree it disambiguates them from original built-ins, I also think from a
+user point of view, being able to set:
+
+  OE_FRAGMENTS = "machine/qemuarm distro/poky class/buildstats class/retain"
+
+feels a bit more natural. Discussion is open :)
+---
+ lib/bb/parse/ast.py | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index a372b3534e4..a828c49c937 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -367,12 +367,13 @@ class AddFragmentsNode(AstNode):
+         def check_and_set_builtin_fragment(fragment, data, builtin_fragments):
+             prefix, value = fragment.split('/', 1)
+             if prefix in builtin_fragments.keys():
+-                if data.getVar(builtin_fragments[prefix], noweakdefault=True) != None:
++                fragment_var, fragment_type = builtin_fragments[prefix][0], builtin_fragments[prefix][1]
++                if fragment_type == "set" and data.getVar(fragment_var, noweakdefault=True) is not None:
+                     bb.fatal(
+                         ("A builtin fragment '%s' is used while %s has already got an assignment.\n"
+                          "Please either disable the fragment or remove the value assignment.\n"
+                          "To disable the fragment, use 'bitbake-config-build disable-fragment %s'."
+-                         ) % (fragment, builtin_fragments[prefix], fragment))
++                         ) % (fragment, fragment_var, fragment))
+                 fragment_history = data.varhistory.variable(self.fragments_variable)
+                 loginfo={}
+                 for fh in fragment_history[::-1]:
+@@ -381,15 +382,27 @@ class AddFragmentsNode(AstNode):
+                         loginfo["line"]   = fh["line"]
+                         loginfo["detail"] = f"{value} ({self.fragments_variable} contains \"{fragment}\")"
+                         break
+-                # parsing=True since we want to emulate X=Y and allow X:override=Z to continue to exist
+-                data.setVar(builtin_fragments[prefix], value, parsing=True, **loginfo)
++                if fragment_type == "set":
++                    # parsing=True since we want to emulate X=Y and allow X:override=Z to continue to exist
++                    data.setVar(fragment_var, value, parsing=True, **loginfo)
++                elif fragment_type == "add":
++                    data.appendVar(fragment_var, f" {value.strip()}", **loginfo)
++                else:
++                    bb.fatal(f"Unknown fragment type '{fragment_type}' "
++                             f"(from '{prefix}:{fragment_var}:{fragment_type}' in {self.builtin_fragments_variable})")
+                 return True
+             return False
+ 
+         fragments = data.getVar(self.fragments_variable)
+         layers = data.getVar('BBLAYERS')
+         flagged_variables = data.getVar(self.flagged_variables_list_variable).split()
+-        builtin_fragments = {f[0]:f[1] for f in [f.split(':') for f in data.getVar(self.builtin_fragments_variable).split()] }
++        builtin_fragments = {}
++        for fragment in data.getVar(self.builtin_fragments_variable).split():
++            fragment = fragment.split(':')
++            builtin_fragments[fragment[0]] = (
++                fragment[1],
++                "set" if len(fragment) < 3 else fragment[2],
++            )
+ 
+         if not fragments:
+             return
+@@ -402,7 +415,7 @@ class AddFragmentsNode(AstNode):
+                     fragments.split(),
+                 )
+             )
+-            if len(builtin_fragments_list) > 1:
++            if len(builtin_fragments_list) > 1 and not builtin_fragments[builtin_fragment_key][1] == "add":
+                 bb.warn(
+                     ("Multiple builtin fragments are enabled for %s via variable %s: %s. "
+                      "This likely points to a mis-configuration in the metadata, as only "
 
 ---
 base-commit: 18cca50ba3da5ce27bc674478957bb08e7536b9a
-change-id: 20260831-monitor-disk-space-836a60711c94
+change-id: 20260827-appending-fragments-8a308ebdb633
 
 
