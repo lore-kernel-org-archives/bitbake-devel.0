@@ -2,131 +2,136 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E213C61DD3
-	for <webhook@archiver.kernel.org>; Tue,  1 Sep 2026 19:23:00 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.3073.1788290571746880900
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD6FC61DD3
+	for <webhook@archiver.kernel.org>; Tue,  1 Sep 2026 22:56:03 +0000 (UTC)
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.217.1788303361041677075
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 01 Sep 2026 12:22:52 -0700
+ Tue, 01 Sep 2026 15:56:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=I1ONXttJ;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-49b0eab380eso2140185e9.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 01 Sep 2026 12:22:51 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=BepRbcKf;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.51, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-47f96c5b722so286812f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 01 Sep 2026 15:56:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1788290570; x=1788895370; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=4o7O7oOn5ONOyl/CzyRDzUpHF+3bNOwoDx/azzvjIgg=;
-        b=I1ONXttJSjR5xJQ3Bpojc8JUSIEsi4qivUyFQjOMUwkefE1Jr2mftsoF/LL10o9nCb
-         CkTawTvpGF+BcfiE+D5OV1DMoh0qcFXqzOPvvH6Us9NTweFvscxq1n+32Vk+iXhGMs7R
-         2lWlZIP3KS43hc8BKFUsMTJxL7LYBDix+WASw=
+        d=linuxfoundation.org; s=google; t=1788303359; x=1788908159; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=hxX4agm2BuRUlLZT0afoMbx4+nUAf+dcDLHyYvZ2mZI=;
+        b=BepRbcKf2B/pscn1BJOKQsP/lb2Zwt2h0kEjdwTpXeY7xXNqsoEXWh6tlmmfhDRvJr
+         298OHC/ycf6rQ5RzxaeFNZWIYe8iVwFmunJ1kW2c04clRCQ6M2Zd8jOHwZKCepZfB9sz
+         Z8xmPhlvYGfDra+UA0kIx14+in6livXZYVMsA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788290570; x=1788895370;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=4o7O7oOn5ONOyl/CzyRDzUpHF+3bNOwoDx/azzvjIgg=;
-        b=IVkjRtGSfYM8fEcOxL8jXPMqE4n6lUM55Y88OkPCmXc3McGnYnZSFYCknlJcQI24hN
-         nswb+SspFV0jZx7kJDyvDTJ0EFz522LAofKZ3Nmk253XxID3/nBs7ROwcqxS0pIy8MbW
-         q+iFkffFZiSEPNcK+/28LO636nUaAWUFrpy0sxK+G1VD3xWhRwy/KcHVD4DnTJgvq06a
-         fPWD+O2bMbzrAuCuMZdkaWgAl44IwWr02UkMQ4pHt/+NLV4Gns+Udm4+m+CC7bj2CUfU
-         PJmkcjKECbc6Gmq3B+rdNO2982/poJs4S/QFlmSZWnskFDs2gdJhEz1hzX/FBC85QYkl
-         RK9Q==
-X-Forwarded-Encrypted: i=1; AHgh+RpGkLbcB68mMPvp97wt/Jb0Nt4Gz+vDbbA45hkn6rVonjCki9msBeKte0x/yDps+NO/2T7DRXuFb7o507rJ@lists.openembedded.org
-X-Gm-Message-State: AFuF++kQ99XFycoptB+xoxp84eyZ4HS0KS0MZLVGJyY70/vsLlFCBz6W
-	v78Ps0dmS37DOrlmIvN/z6+zYeTVxUKv/2VzBdbz/HcEFIOQSBC5/dGEtXxGe+vNOJ8=
-X-Gm-Gg: AR+sD11LhmihVdb0PnIg0U0NVQAWAy3vxTGTAj+f2m0Ma2TJPnZaptB1jFdaX5nKTP8
-	jK7eXUNj0tMfVTikKnXvpDdsIxNFEWPYj+3EiTv1gEj/agMuXmVcw/9/ucm0wj5y3P5fRMLwPIn
-	8lzSXBxRYNzAsN48loIOmZy1I2sesqxRyNp48Uje0ziKnwlNdZc3SifWnEf0L6W3ucXaiGyLoG2
-	jBbOLaL+SNECWzWxvwH0sgD2Sih36K5MF+m6RVLR5KiLvGMgLzg/Bg33+F4mB8fXKGlI0j/WhiO
-	dEtt3hcEsGWEnQff7Xh7d4tUpsbbf2PZl3cljfVRfc1Q/fDveUNBCrYtH9F4spylOa/vlcR2zgj
-	sRiHONEp0ElPmpAbR0BD7jWOSVWSc4Vom5ZV/f8zpv83bhJmUJZrAgjJ6JwjoaypBLcqXyDPzTc
-	ajsxJHT5g+SO8w5eeL0cvPOK4Fk1Ortst8aNro0jfqvjxTmDtOtbezZotHkzrNKft+vztnalknY
-	2ozfap3GIoaqD1az4R18cmnxhJxYf/nPVW09czDZ9YrKxC3oTXeyQ==
-X-Received: by 2002:a05:600c:8b74:b0:49c:e37e:4389 with SMTP id 5b1f17b1804b1-49ce37e4a2amr51548325e9.4.1788290569783;
-        Tue, 01 Sep 2026 12:22:49 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:9e4b:8577:fa6f:4727? ([2001:8b0:aba:5f3c:9e4b:8577:fa6f:4727])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49ce478daf6sm14229395e9.15.2026.09.01.12.22.48
+        d=1e100.net; s=20251104; t=1788303359; x=1788908159;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=hxX4agm2BuRUlLZT0afoMbx4+nUAf+dcDLHyYvZ2mZI=;
+        b=GdNsk7A68TPs4YQ6LTJc0FRKssHMnCOgQLnc4PbsSbxbolKyz+5r1nJimYtkfkogbl
+         KLXkaWX7BrHqpECnrXhAJK0wFPe1ffx4YgthwdzQ4rpbb0ko4gGawnjC9N7GUV6Ez/+Z
+         Pdkj67RKoiaPZg9UolvbTSJMcwIzD6dKYSz8LzcQzj9ZLC0ahy+nTOQOWd+ttpm0Sr7v
+         ZuuUD/wfjk1FUm+LaDMAVy3Y07AqE3h8AsvEuIl9HVGGql6aIfkY8W0WzJUQS79pekSq
+         uKlr7qktVjD9mYhjuBnZuFlWxUitz7TodsNw0963yHiU6ntMQCXiwdriR6yOFSgyKGLZ
+         P//w==
+X-Gm-Message-State: AFuF++lirlBUdPe/8NBkkNY5azdbM2Jn4+5rCIWpAv0prHcYuN/zZWCD
+	OqLrFRss1cPJGVWk7jKkaQKJqUaXQsixfNhMNUQcG09Is7LzL3eGEgUM14SE2ieCJ8AJmCltSNJ
+	Q3jQpXGk=
+X-Gm-Gg: AYBFou3nNi7jcSnab5pHNf6Pz7Ef5vFuv4FWk9n/vBCuUbdQ3tbwkcUphdGxTabaNgr
+	wbe3qilDp7tPPQFK/vfZ9Cr0ychhlgPfP6gmcjEBQe2RGgMdJboqO81KkkbK0TLWU3pv14aj67v
+	Wc7tjWJQ/n4/34RAePBFxiIQhu7HFebkLyCqC4KWhaTfuTxL5MJXBaGnUq+kHGMdQsqB6IKkmiy
+	YnrqJnX0+8gSSCSvd6wQesrdDZsBNr9QsHI0wIjdSgKq5Y/2yxOLi9JPQWynSKlz2rK9hTCIz4f
+	w+PCpet8UVg+2hkcgz2u/BDBL735U7HowYjxXsEfMLMJdT0F9UMvpkE00+25LYPIfn1/8+D+ljp
+	nT3CT1dsuYguBYh/lwumldEzUv5MmQ3GjChqDBBa/Rx7r7nAP1oF+yVGv2vsyYNnZO+On6ajyb3
+	HAuQ2pi3VPlBgQKFJrheUmUsDg8inGvgp8ZPW8w4NPYhonp8VPCZW+SJf8pGjnasohw74fnS3pX
+	q3teLTjhZ0VI8TY6w==
+X-Received: by 2002:a05:6000:41d8:b0:484:3621:6341 with SMTP id ffacd0b85a97d-484913b97fbmr965915f8f.15.1788303359225;
+        Tue, 01 Sep 2026 15:55:59 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:9e4b:8577:fa6f:4727])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48448ed37c4sm1644388f8f.21.2026.09.01.15.55.58
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2026 12:22:48 -0700 (PDT)
-Message-ID: <bd9bf095e420c01a261a4464b3fb28f96be9a45d.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH RFC] parse/ast: add support for additive
- built-in fragments
+        Tue, 01 Sep 2026 15:55:58 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: antonin.godard@bootlin.com, bitbake-devel@lists.openembedded.org, Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>
-Date: Tue, 01 Sep 2026 20:22:48 +0100
-In-Reply-To: <CANNYZj8cso=2X3Wi3u=59Xzt92g5V6CvuDtLD-Y8r3HycKBOVQ@mail.gmail.com>
-References: <20260901-appending-fragments-v1-1-2e359cf751ce@bootlin.com>
-	 <afffba8970ad228db773766f7f6c894cbb021279.camel@linuxfoundation.org>
-	 <CANNYZj8cso=2X3Wi3u=59Xzt92g5V6CvuDtLD-Y8r3HycKBOVQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-9 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 2/5] toaster: Update to django 5.2
+Date: Tue,  1 Sep 2026 23:55:52 +0100
+Message-ID: <20260901225555.2254932-2-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260901225555.2254932-1-richard.purdie@linuxfoundation.org>
+References: <20260901225555.2254932-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 01 Sep 2026 19:23:00 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20139
+ <bitbake-devel@lists.openembedded.org>; Tue, 01 Sep 2026 22:56:03 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20141
 
-On Tue, 2026-09-01 at 20:28 +0200, Alexander Kanavin wrote:
-> On Tue, 1 Sept 2026 at 14:15, Richard Purdie via
-> lists.openembedded.org
-> <richard.purdie=3Dlinuxfoundation.org@lists.openembedded.org> wrote:
->=20
-> > It is definitely an interesting one and the syntax isn't too bad..
-> > Are
-> > there uses beyond class inherit though?
-> >=20
-> > machine/distro were added as they are clear variables in common use
-> > which avoided tons of boilerplate in layer definitions. Do we have
-> > similar needs here or are these inherits better captured in config
-> > fragments?
->=20
-> Antonin first wanted to just add 'real' fragments (that are defined
-> in
-> files) for common class inherits, and it was my idea to implement
-> additive built-ins that make it generic. It's something we can
-> consider and discuss, I don't necessarily insist on a generic
-> implementation.
->=20
-> I guess we can all look at our various local.conf lying around, and
-> check what's piled up in them over the years. In mine, two variables
-> immediately jump out as candidates for additions: IMAGE_INSTALL,
-> IMAGE_FEATURES. Those certainly will not work with regular fragments.
+Run django-update against the code, which still passes testing afterwards.
 
-I guess there are a few things to keep in mind.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/toaster/bldcollector/admin.py | 8 ++++----
+ lib/toaster/bldcontrol/admin.py   | 2 +-
+ toaster-requirements.txt          | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-Firstly, we're never going to replace local.conf, there are always
-going to be some things which users need to do locally for their work
-and these do belong there.
-
-The alternative is a fragment language which is an abbreviated short
-form of the main bitbake syntax and I'm not sure that is feasible or
-desirable.
-
-The things which should become fragments are commonly used groups of
-settings, things which set set as a group.
-
-The machine/distro shortcuts are nice as they cover the biggest control
-everyone sets immediately but beyond that, is there a pressing case?
-
-I guess some of the "classes" are in fact policy "selections" and kind
-of like fragments in their own right but are there enough of them to
-justify specific syntax.
-
-Once you get above a handful of image features or image install
-packages, that is a packagegroup or a config fragment in their own
-right and I'm worried about the abuse such things might get...
-
-I'm not saying "no" but I do have worries.
-
-Cheers,
-
-Richard
+diff --git a/lib/toaster/bldcollector/admin.py b/lib/toaster/bldcollector/admin.py
+index feaa888c73a..e5677a2a217 100644
+--- a/lib/toaster/bldcollector/admin.py
++++ b/lib/toaster/bldcollector/admin.py
+@@ -8,6 +8,7 @@ from django import forms
+ import django.db.models as models
+ 
+ 
++@admin.register(BitbakeVersion)
+ class BitbakeVersionAdmin(admin.ModelAdmin):
+ 
+     # we override the formfield for db URLField
+@@ -20,18 +21,17 @@ class BitbakeVersionAdmin(admin.ModelAdmin):
+             db_field, **kwargs)
+ 
+ 
++@admin.register(Release)
+ class ReleaseAdmin(admin.ModelAdmin):
+     pass
+ 
+ 
++@admin.register(ToasterSetting)
+ class ToasterSettingAdmin(admin.ModelAdmin):
+     pass
+ 
+ 
++@admin.register(Layer_Version)
+ class LayerVersionsAdmin(admin.ModelAdmin):
+     pass
+ 
+-admin.site.register(Layer_Version, LayerVersionsAdmin)
+-admin.site.register(BitbakeVersion, BitbakeVersionAdmin)
+-admin.site.register(Release, ReleaseAdmin)
+-admin.site.register(ToasterSetting, ToasterSettingAdmin)
+diff --git a/lib/toaster/bldcontrol/admin.py b/lib/toaster/bldcontrol/admin.py
+index 1754bc11ccb..04dd4e164eb 100644
+--- a/lib/toaster/bldcontrol/admin.py
++++ b/lib/toaster/bldcontrol/admin.py
+@@ -5,7 +5,7 @@
+ from django.contrib import admin
+ from .models import BuildEnvironment
+ 
++@admin.register(BuildEnvironment)
+ class BuildEnvironmentAdmin(admin.ModelAdmin):
+     pass
+ 
+-admin.site.register(BuildEnvironment, BuildEnvironmentAdmin)
+diff --git a/toaster-requirements.txt b/toaster-requirements.txt
+index d8e48b7f3ae..6941719fc0e 100644
+--- a/toaster-requirements.txt
++++ b/toaster-requirements.txt
+@@ -1,4 +1,4 @@
+-Django>4.2,<4.3
++Django>5.2,<5.3
+ beautifulsoup4>=4.4.0
+ pytz
+ django-log-viewer==1.1.7
 
