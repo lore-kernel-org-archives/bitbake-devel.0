@@ -2,143 +2,148 @@ Return-Path: <philip.lorenz@bmw.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A97C61DD6
-	for <webhook@archiver.kernel.org>; Wed,  2 Sep 2026 08:10:35 +0000 (UTC)
-Received: from esa3.hc324-48.eu.iphmx.com (esa3.hc324-48.eu.iphmx.com [207.54.68.121])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.7406.1788336625337257354
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1A5C61DFD
+	for <webhook@archiver.kernel.org>; Wed,  2 Sep 2026 08:32:45 +0000 (UTC)
+Received: from esa7.hc324-48.eu.iphmx.com (esa7.hc324-48.eu.iphmx.com [207.54.71.126])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.7890.1788337962909257962
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 02 Sep 2026 01:10:27 -0700
+ Wed, 02 Sep 2026 01:32:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bmw.de header.s=mailing1 header.b=G93NitN6;
- spf=permerror, err=parse error for token &{10 18 256wvd6dc.spf.checkpoint-spf.com}: parse error for token &{10 18 %{ir}.256wvd6dc.spf.checkpoint-spf.com}: invalid domain name (domain: bmw.de, ip: 207.54.68.121, mailfrom: prvs=698d5dd81=philip.lorenz@bmw.de)
+ dkim=pass header.i=@bmw.de header.s=mailing1 header.b=BDdVyM24;
+ spf=permerror, err=parse error for token &{10 18 256wvd6dc.spf.checkpoint-spf.com}: parse error for token &{10 18 %{ir}.256wvd6dc.spf.checkpoint-spf.com}: invalid domain name (domain: bmw.de, ip: 207.54.71.126, mailfrom: prvs=698d5dd81=philip.lorenz@bmw.de)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=bmw.de; i=@bmw.de; q=dns/txt; s=mailing1;
-  t=1788336629; x=1819872629;
+  t=1788337967; x=1819873967;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=1hQtiCXKow7/gUIiZhi/xs5rH9Qf0jLEV3sSLSRi5Mo=;
-  b=G93NitN6Qy7H/bAuRPn8UR3wYxq+bX4n2pPyyDsa7cmG+ws5W36JqsIO
-   ZFp3UrhkgyDtSNVV6PB66QKO4ZI7Xf4kf8qN9JqMG6OJxMk4PlkiEh/wP
-   NId9SzjcN1slEq2mXddn6KHct5tSDzUZXxlgItnwek97h2DDLnMq/PG3L
-   A=;
-X-CSE-ConnectionGUID: pfykY4FqRBimM7QOmHiFog==
-X-CSE-MsgGUID: WgwpZwKOQ/CGR8tMScZxBw==
-Received: from esagw2.bmwgroup.com (HELO esagw2.muc) ([160.46.252.38]) by
- esa3.hc324-48.eu.iphmx.com with ESMTP/TLS; 02 Sep 2026 10:10:27 +0200
-Received: from unknown (HELO esabb4.muc) ([10.31.187.135]) by esagw2.muc with
- ESMTP/TLS; 02 Sep 2026 10:10:23 +0200
+  bh=KK009R/8hGEhOrpbVeBeAcYs008M6m9fXexQ+Sipuyg=;
+  b=BDdVyM24da1LF98f2z5akc/+xWhk6ZKC4uGa8jJ3eYuldd/ncbS4f+98
+   6iZpE0CSiVNvJcejt5IRRut0ZO47rolY7a53WWuG3yiGaY/FrB+27W8m9
+   g184JgB5ih7y5LjdumIPreCPrecbob7IKNLt+v0SIxzK5yOwVou9shtfR
+   U=;
+X-CSE-ConnectionGUID: T4N1o4cHQaasVP6kaTOl+g==
+X-CSE-MsgGUID: RdsMdcJfQfaoO6V/CsUrmg==
+Received: from esagw4.bmwgroup.com (HELO esagw4.muc) ([160.46.252.39]) by
+ esa7.hc324-48.eu.iphmx.com with ESMTP/TLS; 02 Sep 2026 10:32:44 +0200
+Received: from unknown (HELO esabb4.muc) ([10.31.187.135]) by esagw4.muc with
+ ESMTP/TLS; 02 Sep 2026 10:32:40 +0200
 Received: from smucmp21a.bmwgroup.net (HELO smucmp21a.europe.bmw.corp)
- ([10.100.172.92]) by esabb4.muc with ESMTP/TLS; 02 Sep 2026 10:10:24 +0200
-Received: from marvin-ws (10.30.85.214) by smucmp21a.europe.bmw.corp
+ ([10.100.172.92]) by esabb4.muc with ESMTP/TLS; 02 Sep 2026 10:32:40 +0200
+Received: from marvin-ws (10.30.85.210) by smucmp21a.europe.bmw.corp
  (2a03:1e80:a01:524::1:44) with Microsoft SMTP Server (version=TLS;
- Wed, 2 Sep 2026 10:10:23 +0200
-X-CSE-ConnectionGUID: 9mo7u60PSi6GS1gDskAJpQ==
-X-CSE-MsgGUID: t82oqK1eSN2ugHbC5fmsAQ==
-X-CSE-ConnectionGUID: CGwwHVgJSom1Rf3hwH3kFQ==
-X-CSE-MsgGUID: 2SPrwnMvRR+SbFIOKsLPQg==
+ Wed, 2 Sep 2026 10:32:40 +0200
+X-CSE-ConnectionGUID: WgsU/WHGTPKPDpiwTI9rcg==
+X-CSE-MsgGUID: LGRQYj6DQRWyPHhNIDCf4g==
+X-CSE-ConnectionGUID: qYtC6EgJTbqOOy71uEc19g==
+X-CSE-MsgGUID: cSkwRMj1TbSwYEelalXAxg==
 From: Philip Lorenz <philip.lorenz@bmw.de>
 To: <bitbake-devel@lists.openembedded.org>
 CC: Philip Lorenz <philip.lorenz@bmw.de>
-Subject: [PATCH] fetch2: Raise on git lfs fetch failures
-Date: Wed, 2 Sep 2026 10:10:12 +0200
-Message-ID: <20260902081012.793563-1-philip.lorenz@bmw.de>
+Subject: [RFC PATCH] fetch: `touch` mirror tarball stamp files on download
+Date: Wed, 2 Sep 2026 10:32:32 +0200
+Message-ID: <20260902083232.825826-1-philip.lorenz@bmw.de>
 X-Mailer: git-send-email 2.55.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: smucmp15e.europe.bmw.corp (2a03:1e80:a15:58f::1:61) To
+X-ClientProxiedBy: smucmp18a.europe.bmw.corp (2a03:1e80:a15:58f::1:50) To
  smucmp21a.europe.bmw.corp (2a03:1e80:a01:524::1:44)
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 02 Sep 2026 08:10:35 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20146
+ <bitbake-devel@lists.openembedded.org>; Wed, 02 Sep 2026 08:32:45 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20147
 
-LFS fetching can fail and ignoring this will lead to an incomplete
-download cache (which in turn will lead to errors when smudging the LFS
-files during `unpack`). Avoid this by removing the exception silencing
-code.
+The mirror tarball stamp file's mtime is currently only updated on
+creation / initial download. This makes it difficult to detect whether a
+mirror tarball is still relevant in a given build.
 
-In addition, this change disables smudging during worktree creation so
-LFS related errors are now raised during the execution of `git lfs
-fetch` rather than during worktree creation.
-
-LFS fetching is only performed on repositories which are considered LFS
-enabled and can be disabled by parametrizing the repository URL with
-`lfs=0`.
+Improve this by also `touch`ing the mirror tarball stamp files alongside
+the sources primary stamp file.
 
 Signed-off-by: Philip Lorenz <philip.lorenz@bmw.de>
 ---
- lib/bb/fetch2/git.py  | 28 ++++++++++++++--------------
- lib/bb/tests/fetch.py | 15 +++++++++++++++
- 2 files changed, 29 insertions(+), 14 deletions(-)
+ lib/bb/fetch2/__init__.py | 17 ++++++++++++++---
+ lib/bb/tests/fetch.py     | 15 +++++++++++++++
+ 2 files changed, 29 insertions(+), 3 deletions(-)
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 0bb2ea39a..796a54324 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -498,21 +498,21 @@ class Git(FetchMethod):
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 9cb268be5..7b981b0f3 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -755,13 +755,24 @@ def update_stamp(ud, d):
+     if not ud.needdonestamp:
+         return
  
-     def lfs_fetch(self, ud, d, clonedir, revision, fetchall=False, progresshandler=None):
-         """Helper method for fetching Git LFS data"""
--        try:
--            if self._need_lfs(ud) and self._contains_lfs(ud, d, clonedir) and len(revision):
--                self._ensure_git_lfs(d, ud)
-+        if self._need_lfs(ud) and self._contains_lfs(ud, d, clonedir) and len(revision):
-+            self._ensure_git_lfs(d, ud)
+-    if os.path.exists(ud.donestamp):
+-        # Touch the done stamp file to show active use of the download
++    def bump_utime(path):
+         try:
+-            os.utime(ud.donestamp, None)
++            os.utime(path, None)
+         except:
+             # Errors aren't fatal here
+             pass
 +
-+            # Using worktree with the revision because .lfsconfig may exists
-+            worktree_add_cmd = ud.basecmd + ['worktree', 'add', 'wt', revision]
-+            # Disable LFS smudging on worktree creation to make it easier
-+            # to understand which operation actually failed.
-+            runfetchcmd(worktree_add_cmd, d, log=progresshandler, workdir=clonedir, extraenv={'GIT_LFS_SKIP_SMUDGE':'1'})
-+            lfs_fetch_cmd = ud.basecmd + ['lfs', 'fetch']
-+            if fetchall:
-+                lfs_fetch_cmd.append('--all')
-+            runfetchcmd(lfs_fetch_cmd, d, log=progresshandler, workdir=(clonedir + "/wt"))
-+            worktree_rem_cmd = ud.basecmd + ['worktree', 'remove', '-f', 'wt']
-+            runfetchcmd(worktree_rem_cmd, d, log=progresshandler, workdir=clonedir)
- 
--                # Using worktree with the revision because .lfsconfig may exists
--                worktree_add_cmd = ud.basecmd + ['worktree', 'add', 'wt', revision]
--                runfetchcmd(worktree_add_cmd, d, log=progresshandler, workdir=clonedir)
--                lfs_fetch_cmd = ud.basecmd + ['lfs', 'fetch']
--                if fetchall:
--                    lfs_fetch_cmd.append('--all')
--                runfetchcmd(lfs_fetch_cmd, d, log=progresshandler, workdir=(clonedir + "/wt"))
--                worktree_rem_cmd = ud.basecmd + ['worktree', 'remove', '-f', 'wt']
--                runfetchcmd(worktree_rem_cmd, d, log=progresshandler, workdir=clonedir)
--        except:
--            logger.warning("Fetching LFS did not succeed.")
- 
-     @contextmanager
-     def create_atomic(self, filename):
++    if os.path.exists(ud.donestamp):
++        # Touch the done stamp file to show active use of the download
++        bump_utime(ud.donestamp)
++
++        # Also mark any mirror tarballs related to the download as being active.
++        dl_dir = d.getVar("DL_DIR")
++        for mirrortarball in ud.mirrortarballs:
++            mirrortarball = os.path.join(dl_dir, mirrortarball) + ".done"
++            # There's no need to check if the file exists as `bump_utime` will
++            # ignore non-existent files.
++            bump_utime(mirrortarball)
+     else:
+         try:
+             checksums = verify_checksum(ud, d)
 diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index a1e4b45f8..813d401b6 100644
+index a1e4b45f8..b29d5909f 100644
 --- a/lib/bb/tests/fetch.py
 +++ b/lib/bb/tests/fetch.py
-@@ -2807,6 +2807,21 @@ class GitLfsTest(FetcherTest):
-             shutil.rmtree(self.gitdir, ignore_errors=True)
-             fetcher.unpack(self.d.getVar('WORKDIR'))
+@@ -21,6 +21,7 @@ import subprocess
+ import json
+ import tarfile
+ import threading
++import time
+ from bb.fetch2 import URI
+ import bb
+ import bb.utils
+@@ -1101,18 +1102,32 @@ class FetcherNetworkTest(FetcherTest):
+                                 cwd=os.path.join(self.unpackdir, 'git')).strip()
+             self.assertEqual(revision, "270a05b0b4ba0959fe0624d2a4885d7b70426da5")
  
-+    @skipIfNoGitLFS()
-+    def test_lfs_fetch_failure_raises(self):
-+        self.commit_file("a.mp3", "version 1")
++        def checkdonestamp(fetcher, url, download_timestamp):
++            ud = fetcher.ud[url]
++            self.assertGreaterEqual(os.stat(ud.donestamp).st_mtime, download_timestamp)
 +
-+        uri = 'git://%s;protocol=file;lfs=1;branch=master' % self.srcdir
-+        self.d.setVar('SRC_URI', uri)
++            dldir = self.d.getVar("DL_DIR")
++            for mirrortarball in ud.mirrortarballs:
++                mirrortarball = os.path.join(dldir, mirrortarball) + ".done"
++                if os.path.exists(mirrortarball):
++                    self.assertGreaterEqual(os.stat(mirrortarball).st_mtime, download_timestamp)
 +
-+        # Simulate a fetch failure by removing the .git/lfs/objects directory
-+        # from the source repository
-+        shutil.rmtree(os.path.join(self.srcdir, ".git", "lfs", "objects"))
-+
-+        # Test than exception is raised when LFS objects could not be fetched
-+        with self.assertRaises(bb.fetch2.FetchError):
-+            self.fetch()
-+
- class GitURLWithSpacesTest(FetcherTest):
-     test_git_urls = {
-         "git://tfs-example.org:22/tfs/example%20path/example.git;branch=master" : {
+         self.d.setVar("BB_GENERATE_MIRROR_TARBALLS", "1")
+         self.d.setVar("SRCREV", "270a05b0b4ba0959fe0624d2a4885d7b70426da5")
+         fetcher = bb.fetch.Fetch([url1], self.d)
++        download_timestamp = time.time()
+         fetcher.download()
+         checkrevision(self, fetcher)
++        checkdonestamp(fetcher, url1, download_timestamp)
+         # Wipe out the dldir clone and the unpacked source, turn off the network and check mirror tarball works
+         bb.utils.prunedir(self.dldir + "/git2/")
+         bb.utils.prunedir(self.unpackdir)
+         self.d.setVar("BB_NO_NETWORK", "1")
+         fetcher = bb.fetch.Fetch([url2], self.d)
++        download_timestamp = time.time()
+         fetcher.download()
+         checkrevision(self, fetcher)
++        checkdonestamp(fetcher, url2, download_timestamp)
+ 
+     @skipIfNoNetwork()
+     def test_gitfetch(self):
 -- 
 2.55.0
 
