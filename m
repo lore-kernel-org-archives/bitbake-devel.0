@@ -1,238 +1,132 @@
-Return-Path: <daniel.turull@ericsson.com>
+Return-Path: <peter.kjellerstedt@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3555AC624D7
-	for <webhook@archiver.kernel.org>; Wed,  2 Sep 2026 09:58:13 +0000 (UTC)
-Received: from PA4PR04CU001.outbound.protection.outlook.com (PA4PR04CU001.outbound.protection.outlook.com [40.107.162.64])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.9218.1788343082701461412
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A77FC624D0
+	for <webhook@archiver.kernel.org>; Wed,  2 Sep 2026 12:27:14 +0000 (UTC)
+Received: from DU2PR03CU002.outbound.protection.outlook.com (DU2PR03CU002.outbound.protection.outlook.com [52.101.65.2])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.11649.1788352025720735364
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 02 Sep 2026 02:58:03 -0700
+ Wed, 02 Sep 2026 05:27:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@ericsson.com header.s=selector2 header.b=PPCM2W2Q;
- spf=pass (domain: ericsson.com, ip: 40.107.162.64, mailfrom: edaturu@ericsson.com)
+ dkim=fail reason="dkim: body hash did not verify" header.i=@axis.com header.s=selector1 header.b=azqSspUs;
+ spf=pass (domain: axis.com, ip: 52.101.65.2, mailfrom: peter.kjellerstedt@axis.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CpBzMRc9NrF3UpWUDGFkJd2O2s5hY9f9b0OCfuacMYM37m0sK+RISWgRbPD8x1ebC+2iFdoabmY8Ede4XfyBS11wqBZ4PpVkArgFhdVWE6JTEyuIyWz4SJJCoRMfM/Ftn8smxJ+2/ogdNCxm4vgiN4hPRDrwnXMtngvBq6rz4Qjiw4bdmyh/XUf8zRlqyZcyLBI5PYdBsogInkPayShDqAMiZNP1qVkdfAfYs4nDBs7ECHNXBZV6zkcgfC4IgJ0LFBCDSaAaQvyUUSOVm1Eee7wsnZBqegoFX6eacgRVRKesRVNEnWn7wE5GEgVQckBguTXZZh7xuqUMElLogTQgpA==
+ b=X868Q3PKIqBiGbQmrHeYHFeLzTw36tLMq4u3H/AOb7SgDMDg0iHskQRnbnfbak/Oo6lGzUyUkrNUYYicuffN9mFDGsNq+mQ3GUa73Cr7K+5f1B7hDFUtU/xlYJCeWljyf+O/rWHi/abmbkMQyFpYNsDhKIZ6Kcom4vS22WvFHoMA1JHCkZc8iU9k+9QtunDJzSsrKvbc4kWNkS/MLJs4eISobrD9TmsKTwpc102iwdRKwClqZIo7WKKFV8BMumAurW7aOCr8WXUPUcDPPKGGffPF6TVq+vUY/3PsxGW72J9SRnM0nKqG3i5aexzpb3KRFv+nPr2xPUtvg2GZNnjAaA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cdIndbGZH7EkciV3sZyME1h7TPjx6C9tO2bqnpMlbak=;
- b=ZH/cWhnik5MUF1Cbi4ZN3MqxDdHsc5gWUht0QzPFuDHw3Xlq6Vi/ljMe5NS/VgB53ef1Am9ZMYj0NuDsxaIYJcM0as6P3orMsIXCmz7YB/5lxvPA4rWYN7NmMjAaSLfhYEMq8xxwfooKO8lskzGdZ6MhoYc6j5kTkwxB8qXGEw/txVKubAi5JETFm8EwRcta2x95T9qaRmemsIJyscn79B0BoaOcCFvxxTAxwkiTopYW8aKmVeIuoj81aatxn6DLZOeHdXf24aEamiWpN4YGr3FeQ0ZCluTtpNN9QJzgvjqwFXUh0ntNF+ceSnflTImnDa6B50yFl9Gp/qJtJwnFPw==
+ bh=iyQxLMETdNSN3PhnvYfnN4/F5NkZUfM1sbQ+k8FmVts=;
+ b=Ga4tDG75rRORkwfWaHGx4SadUWvLUjpq1HoLNmYOt2ok6CRSHrel9k25VmXxFNjT9LAfNR4Amca4udLgrT5jBmCWMFjjU+rTkW3nGz2kYN0qRxuE7RPCGPIT6OqGBkjomhVNEt0IMJb8AiGc861kemeMI8pFoIaHRrP/gQn+L7iKAQAFpzpBkS3ClnhIRmKaTl66h/7XU5AhqAIfNT08dPDsAgx0EzsufD280tDbiz+S7B40jZd6erVTrqzVrAp5GtyPF79TrlgPucLhwe8xiSnENt9q9P/wHyRBZYdborWB2AEUkaVsx54bPefRobA1OwXoMZLzgJUiClzpFahChw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 192.176.1.74) smtp.rcpttodomain=bootlin.com smtp.mailfrom=ericsson.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=ericsson.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ericsson.com;
- s=selector2;
+ 195.60.68.100) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=axis.com; dmarc=pass (p=none sp=none pct=100) action=none
+ header.from=axis.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cdIndbGZH7EkciV3sZyME1h7TPjx6C9tO2bqnpMlbak=;
- b=PPCM2W2QS4C1aJ81Pi1DF/pjg0N/n51ODGEdUN3DzkhZkH1OfXIVngzLS4tO10kPAUgiHAAPzKJjunKyptKeK6vj7tpnl39MYIVsqoo34gi3KDXatw0TdB99mnVg/lTDkBaoVCfR3iA2EEZcAm0nNjsprDAsCw/yJLs9fppYOE8Y+FYy7V0dzgKQLLFRteJuUrqVLtif1rTjYONhmEc08iC2sGEyGTY8ful06AcaACC22rAEy4/paVRtqORJlTcr1k3Vy131BOpnnmuooZjAmV50776C0/T44Kxs/yprLUyPwjMhxd4h5D8Q1Ab5Zt12qZUd55j/o2ykImDNq+NmTQ==
-Received: from AM0PR02CA0133.eurprd02.prod.outlook.com (2603:10a6:20b:28c::30)
- by PA4PR07MB7069.eurprd07.prod.outlook.com (2603:10a6:102:f4::6) with
+ bh=iyQxLMETdNSN3PhnvYfnN4/F5NkZUfM1sbQ+k8FmVts=;
+ b=azqSspUsgZc/APUyNirGcIrexM+uRJs9r2F5GrsUDl33ZHkYhgVbx2BKp6LxNm7wVHM8m6LhqnKptLdK9cqZYL4p48X0Zf41sZWbZzJC7RVFAP2rVZXtFoqUTuShgHe0lLbk0ptCrzm9M9T0RlCu+DbmA7t7QsK4nFXqHwCBA8w=
+Received: from AS4P195CA0034.EURP195.PROD.OUTLOOK.COM (2603:10a6:20b:65a::22)
+ by PA1PR02MB10984.eurprd02.prod.outlook.com (2603:10a6:102:480::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.13; Wed, 2 Sep
- 2026 09:57:57 +0000
-Received: from AM3PEPF00009B9F.eurprd04.prod.outlook.com
- (2603:10a6:20b:28c:cafe::76) by AM0PR02CA0133.outlook.office365.com
- (2603:10a6:20b:28c::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.360.13 via Frontend Transport; Wed, 2
- Sep 2026 09:57:57 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 192.176.1.74)
- smtp.mailfrom=ericsson.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=ericsson.com;
-Received-SPF: Pass (protection.outlook.com: domain of ericsson.com designates
- 192.176.1.74 as permitted sender) receiver=protection.outlook.com;
- client-ip=192.176.1.74; helo=oa.msg.ericsson.com; pr=C
-Received: from oa.msg.ericsson.com (192.176.1.74) by
- AM3PEPF00009B9F.mail.protection.outlook.com (10.167.16.24) with Microsoft
+ 2026 12:26:57 +0000
+Received: from CPH1EPF00000525.eurprd05.prod.outlook.com
+ (2603:10a6:20b:65a:cafe::a8) by AS4P195CA0034.outlook.office365.com
+ (2603:10a6:20b:65a::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.382.11 via Frontend Transport; Wed, 2
+ Sep 2026 12:26:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ CPH1EPF00000525.mail.protection.outlook.com (10.167.241.136) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.382.8 via Frontend Transport; Wed, 2 Sep 2026 09:57:57 +0000
-Received: from seroius18814.sero.gic.ericsson.se (153.88.142.248) by
- smtp-central.internal.ericsson.com (100.87.178.60) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Wed, 2 Sep 2026 11:57:57 +0200
-Received: from seroius08462.sero.gic.ericsson.se (seroius08462.sero.gic.ericsson.se [10.63.237.245])
-	by seroius18814.sero.gic.ericsson.se (Postfix) with ESMTP id 7C6384020B41;
-	Wed,  2 Sep 2026 11:57:56 +0200 (CEST)
-Received: by seroius08462.sero.gic.ericsson.se (Postfix, from userid 160155)
-	id 59601700CF25; Wed,  2 Sep 2026 11:57:56 +0200 (CEST)
-From: <daniel.turull@ericsson.com>
+ 15.21.382.8 via Frontend Transport; Wed, 2 Sep 2026 12:26:56 +0000
+Received: from SE-MAILARCH01W.axis.com (10.20.40.15) by se-mail10w.axis.com
+ (10.20.40.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1748.39; Wed, 2 Sep
+ 2026 14:26:55 +0200
+Received: from se-mail10w.axis.com (10.20.40.10) by SE-MAILARCH01W.axis.com
+ (10.20.40.15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.61; Wed, 2 Sep
+ 2026 14:26:55 +0200
+Received: from se-intmail01x.se.axis.com (10.4.0.28) by se-mail10w.axis.com
+ (10.20.40.10) with Microsoft SMTP Server id 15.2.1748.39 via Frontend
+ Transport; Wed, 2 Sep 2026 14:26:55 +0200
+Received: from pc56063-2339.se.axis.com (pc56063-2339.se.axis.com [10.92.3.2])
+	by se-intmail01x.se.axis.com (Postfix) with ESMTP id 09CA18E0
+	for <bitbake-devel@lists.openembedded.org>; Wed,  2 Sep 2026 14:26:56 +0200 (CEST)
+Received: by pc56063-2339.se.axis.com (Postfix, from userid 14323)
+	id 0450B129A18; Wed,  2 Sep 2026 14:26:55 +0200 (CEST)
+From: Peter Kjellerstedt <pkj@axis.com>
 To: <bitbake-devel@lists.openembedded.org>
-CC: Chen Qi <Qi.Chen@windriver.com>, Mathieu Dubois-Briand
-	<mathieu.dubois-briand@bootlin.com>, Richard Purdie
-	<richard.purdie@linuxfoundation.org>, Daniel Turull
-	<daniel.turull@ericsson.com>
-Subject: [2.18][PATCH 5/5] bb/tests/fetch.py: add case for filter_regex parameter in latest_versionstring
-Date: Wed, 2 Sep 2026 11:57:38 +0200
-Message-ID: <20260902095738.2840120-6-daniel.turull@ericsson.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260902095738.2840120-1-daniel.turull@ericsson.com>
-References: <20260902095738.2840120-1-daniel.turull@ericsson.com>
+Subject: [PATCH] fetch2/git: Clarify error about missing LFS support
+Date: Wed, 2 Sep 2026 14:26:49 +0200
+Message-ID: <20260902122649.1466784-1-pkj@axis.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM3PEPF00009B9F:EE_|PA4PR07MB7069:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3b0e59da-3f39-43e4-ee7f-08df08d8aa71
-X-SMTP-Server: smtp-central.internal.ericsson.com
+X-MS-TrafficTypeDiagnostic: CPH1EPF00000525:EE_|PA1PR02MB10984:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2fc2e861-af75-48c7-d254-08df08ed7a8c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|376014|1800799024|82310400026|23010399003|36860700016|10067099003|3023799007|11063799006|56012099006|22082099003|18002099003;
+	BCL:0;ARA:13230040|36860700016|82310400026|23010399003|376014|1800799024|18002099003|11063799006|56012099006|10067099003;
 X-Microsoft-Antispam-Message-Info: 
-	j7znjHfF3zFZoLLiL1QbCCRZDPZfJeymKS1xGOIk1NjAJLtQgy6bqYqqeU+3VXT8Npz7n3jp/dkJOzZS3f2ykzeVyC6F1TX9rsJ+OByQOeO7AsWErw+lphJx8fJ8Zf3JmYpkpi6JJGZygBLVPndLJ1lzbeR8k7bwMC4Y2Lvx2yeXOlUrHUPeIJG4RqSYpQHCdg69gbRV2nC2L1mUDoq2icwDGa8vzIamfDZHi2jT6K8v6Qs66MfPH8/Auj972EhV2FOQPjjvMsHsP9Ko2ze8QuBHPXN5x/ALH4XF0NrGOqzyCW6YePGH8GeSMWUcQRYzjz9C5mGbD/4wUDauugiAPCRtNEtqpdQvMTNQkYHCMqycGcKMyTnSgP4BlJMey3GqqjNed0ai4ccbfq01c9aDz1HYwxBX+aE9yx9FT9as1w5Ktn77HycsR/LaAAlTmDdrUhCeUTVZXBG/SxpnhbFhiziu4oA2Gu0CVWTSsMvxI3H2kAg6GlewR1J2XdS9QciMz2euTZpiz8DZPp8qcB22UtQNbdZkzGZm4YhQ+ldeCKRf1HGEHerbZFxF/NMAy+7y79zhOPZzcjpGbKCORlPjfZOKGRfHRW5gGFZn0iI2VpaDaMmiVXcMn1mnD18dm1Hf4lPoh+svxxJox7GtgF9nM/sA1WkpYUTEJSusXy9WaB4=
+	PETBnApEeDUyRqU9Nkjv8GlTPq55Kj8Gq+nhBeXBipVkOUikZ5M2quv6Ngmn/vwPF5GrhHboJXIbIulfhsSQWW+XIfBwYYa+SDGqUMgJEguNPpX5ESVhR5r1GUsPkSQ/Z+0BdsbHM7UPuG18h0yOhJVHO9o+2vcTOBR1Pu7RwaUD65szMCa0wVEgR8fNQsElvIkdd8BE8fg2+I3xFapnd0xR/gyWlCa2bjeMOGrwv75jY94TifEQBsCye7eLKaOpmvxlSL7VQlEUJ5JmWkqp/TVcQLPb0+GWHAyv2h82dvNV7S2wy8Uokbru7KUEGQUmf25Jx/+hqqCo+C+mM5ndJheIdtdmlS6sKoIRRSDiYGYM8h8kxQt4FSqEu007kon32NXCecry7oFui9o/94F+mJkb36DAowF9lPrwyK099aT6GBfYQF+F4JQMVvfICTINXN16jcgSTERuuVJt4Q/1dIVZU4VXwOA3I4cd4WBl29ty9e3ObE6P8H9Q4y3eGdctQO+F0kA3OPYAoqX3F5y6ojqPhAp1kOcdlqsQhfwt/QBfJOl+7aLxCSdHlYUcu5YY9Ailt3wiJa3n7cgKjA9RhxJnYCaynu4W2LTYaXYwHQtwQ0qa+Vdlo0lrlUtcQuiUhs2Q9QuEghkevAAsYEkTakwGJ6aKTGnMwbTS5p7Cc9Grh5ndKGrRwuvoN10+4qY0ft1cYGajaO43Ja482fkOrQ==
 X-Forefront-Antispam-Report: 
-	CIP:192.176.1.74;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:oa.msg.ericsson.com;PTR:office365.se.ericsson.net;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(23010399003)(36860700016)(10067099003)(3023799007)(11063799006)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(82310400026)(23010399003)(376014)(1800799024)(18002099003)(11063799006)(56012099006)(10067099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	I4Vfig/6WZt1z5zoTdjlw6j+1LplpvOdsATOSItK/0WOAnztnubSlv6dob+d/PwMazHgmTZVQ4JiDcnGvLPP5fZgwhD2U9MIQO8EYTkYWQZTRs/fUPAu/dR2JjfFSJUIRg31nYFa4yJuaoLzKKN3Nwn39vfhZhB3Y6gnOevOM25WFZfpeuv0VL8cxMUEyqOip3ZIsWAVxgyiUBB/cv+xN4jtAXYvyiXhLu/j0p1UIOcghHRQqbazPq5qqhebeFjSaqhte0iwB5qeN5Z5+r1QhFW4amwebZT2HGxYlxDHvezUT8s5tEUnxSBB4nXEXIlHa9PflgjxUWR3RccBMOkHUBiQ02GUm36XBHsx66G3GR9zOadE98DTdJciTnU3wcA0LfATTm8dhrELh+vL/QPP5u+nKfYFhixpahMvkgWO1N0yTL/9to2vUEcEtGr1+ijt
-X-OriginatorOrg: ericsson.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2026 09:57:57.4858
+	qM0SqdvEYkU6T8v5QY8WZu0Y0IevBqBH20maGA37E6c9k+WP8DIi+sVpMXWE0HCtD4NXsYhY01IfVAZILVXVN9su0JrhDIy4ZEV47WO5DtI62hpPL+SfKXFeH+TW0FMqgYAJK9ufn/z0q1ee5WSqf4OQWzS3MccxcEOJop5nMU14KghuEMZzgxPn039LIXZU5siIdyN7NJsuEHkX/a99oH9mhJS7VspS9I1yDSfhG7yz/4sbiLQ1sg0PqW40OpIVKLB4Y1tbYEN0fkdap8znrcMORtXeVzv0ZqywZmWdF4xYlcsaSllQ9sQD5bEvk2Kv2EFJ722RBR5O/s5to3n6fiaM0jScDTo6IPL3yHD4vhNYphKQDZDwfb58+H/PWPAFEF7r/c1TdEtWYBgBkWvmPyDoED06doP1QuKeisjQM7wrKtL7oBIUZKp1K1LaJLjj
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2026 12:26:56.5801
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b0e59da-3f39-43e4-ee7f-08df08d8aa71
-X-MS-Exchange-CrossTenant-Id: 92e84ceb-fbfd-47ab-be52-080c6b87953f
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=92e84ceb-fbfd-47ab-be52-080c6b87953f;Ip=[192.176.1.74];Helo=[oa.msg.ericsson.com]
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fc2e861-af75-48c7-d254-08df08ed7a8c
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	AM3PEPF00009B9F.eurprd04.prod.outlook.com
+	CPH1EPF00000525.eurprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR07MB7069
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR02MB10984
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 02 Sep 2026 09:58:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20152
+ <bitbake-devel@lists.openembedded.org>; Wed, 02 Sep 2026 12:27:14 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20155
 
-From: Chen Qi <Qi.Chen@windriver.com>
+Not everyone knows that lfs=3D0 is a parameter that shall be added to the
+URL to ignore the LFS contents.
 
-Add bitbake selftest case for fitler_regex parameter in
-latest_versionstring to ensure no regression.
-
-Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
-Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 63a51b543e17d44c26a82e6ca911ed23e517fc33)
-Signed-off-by: Daniel Turull <daniel.turull@ericsson.com>
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 ---
- lib/bb/tests/fetch.py | 78 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 77 insertions(+), 1 deletion(-)
+ lib/bb/fetch2/git.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index c071401e6..2ebfd6680 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -1577,7 +1577,24 @@ class FetchLatestVersionTest(FetcherTest):
-         # basic example; version pattern "A.B.C+cargo-D.E.F"
-         ("cargo-c", "crate://crates.io/cargo-c/0.9.18+cargo-0.69")
-             : "0.9.29"
--   }
-+    }
-+
-+    test_git_stable_uris =3D {
-+        ("dtc", "git://git.yoctoproject.org/bbfetchtests-dtc.git;branch=3D=
-master;protocol=3Dhttps", "65cc4d2748a2c2e6f27f1cf39e07a5dbabd80ebf", "", r=
-"^1\.4\.\d+$")
-+            : ("1.4.0", "1.5.0"),
-+        ("systemd", "git://github.com/systemd/systemd.git;protocol=3Dhttps=
-;branch=3Dstable/v259-stable", "b3d8fc43e9cb531d958c17ef2cd93b374bc14e8a", =
-"", r"^259\.\d+$")
-+            : ("259.5", "260")
-+    }
-+
-+    test_wget_stable_uris =3D {
-+        ("openssh", "https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/=
-openssh-10.2p1.tar.gz", "10.2p1", "", "", r"^10\.2p\d+$")
-+            : ("10.2p1", "10.3")
-+    }
-+
-+    test_crate_stable_uris =3D {
-+        ("cargo-c", "crate://crates.io/cargo-c/0.9.18+cargo-0.69", r"^0\.9=
-\.\d+")
-+            : ("0.9.29", "0.10.0")
-+    }
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 0bb2ea39a..924a8f7ae 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -886,8 +886,8 @@ class Git(FetchMethod):
+         """
+         if shutil.which("git-lfs", path=3Dd.getVar('PATH')) is None:
+             raise bb.fetch2.FetchError(
+-                "Repository %s has LFS content, install git-lfs on host to=
+ download (or set lfs=3D0 "
+-                "to ignore it)" % self._get_repo_url(ud))
++                "Repository %s has LFS content, either install git-lfs on =
+the host to download it, "
++                "or ignore it by adding lfs=3D0 as a parameter to the URL"=
+ % self._get_repo_url(ud))
 =20
-     @skipIfNoNetwork()
-     def test_git_latest_versionstring(self):
-@@ -1634,6 +1651,65 @@ class FetchLatestVersionTest(FetcherTest):
-                 r =3D bb.utils.vercmp_string(v, verstring)
-                 self.assertTrue(r =3D=3D -1 or r =3D=3D 0, msg=3D"Package =
-%s, version: %s <=3D %s" % (k[0], v, verstring))
-=20
-+    @skipIfNoNetwork()
-+    def test_git_latest_versionstring_stable(self):
-+        for k, v in self.test_git_stable_uris.items():
-+            with self.subTest(pn=3Dk[0]):
-+                self.d.setVar("PN", k[0])
-+                self.d.setVar("SRCREV", k[2])
-+                self.d.setVar("UPSTREAM_CHECK_GITTAGREGEX", k[3])
-+                filter_regex =3D k[4]
-+                ud =3D bb.fetch2.FetchData(k[1], self.d)
-+                pupver=3D ud.method.latest_versionstring(ud, self.d, filte=
-r_regex=3Dfilter_regex)
-+                verstring =3D pupver[0]
-+                self.assertTrue(verstring, msg=3D"Could not find upstream =
-version for %s" % k[0])
-+                v_less_or_equal =3D v[0]
-+                v_larger =3D v[1]
-+                r =3D bb.utils.vercmp_string(v_less_or_equal, verstring)
-+                self.assertTrue(r =3D=3D -1 or r =3D=3D 0, msg=3D"Package =
-%s, version: %s < %s" % (k[0], v_less_or_equal, verstring))
-+                r =3D bb.utils.vercmp_string(verstring, v_larger)
-+                self.assertTrue(r =3D=3D -1, msg=3D"Package %s, version: %=
-s <=3D %s" % (k[0], v_larger, verstring))
-+
-+    @skipIfNoNetwork()
-+    def test_wget_latest_versionstring_stable(self):
-+        for k, v in self.test_wget_stable_uris.items():
-+            with self.subTest(pn=3Dk[0]):
-+                self.d.setVar("PN", k[0])
-+                url =3D k[1]
-+                self.d.setVar("PV", k[2])
-+                if k[3]:
-+                    self.d.setVar("UPSTREAM_CHECK_URI", k[3])
-+                if k[4]:
-+                    self.d.setVar("UPSTREAM_CHECK_REGEX", k[4])
-+                filter_regex =3D k[5]
-+                ud =3D bb.fetch2.FetchData(url, self.d)
-+                pupver=3D ud.method.latest_versionstring(ud, self.d, filte=
-r_regex=3Dfilter_regex)
-+                verstring =3D pupver[0]
-+                self.assertTrue(verstring, msg=3D"Could not find upstream =
-version for %s" % k[0])
-+                v_less_or_equal =3D v[0]
-+                v_larger =3D v[1]
-+                r =3D bb.utils.vercmp_string(v_less_or_equal, verstring)
-+                self.assertTrue(r =3D=3D -1 or r =3D=3D 0, msg=3D"Package =
-%s, version: %s < %s" % (k[0], v_less_or_equal, verstring))
-+                r =3D bb.utils.vercmp_string(verstring, v_larger)
-+                self.assertTrue(r =3D=3D -1, msg=3D"Package %s, version: %=
-s <=3D %s" % (k[0], v_larger, verstring))
-+
-+    @skipIfNoNetwork()
-+    def test_crate_latest_versionstring_stable(self):
-+        for k, v in self.test_crate_stable_uris.items():
-+            with self.subTest(pn=3Dk[0]):
-+                self.d.setVar("PN", k[0])
-+                ud =3D bb.fetch2.FetchData(k[1], self.d)
-+                filter_regex =3D k[2]
-+                pupver =3D ud.method.latest_versionstring(ud, self.d, filt=
-er_regex=3Dfilter_regex)
-+                verstring =3D pupver[0]
-+                self.assertTrue(verstring, msg=3D"Could not find upstream =
-version for %s" % k[0])
-+                v_less_or_equal =3D v[0]
-+                v_larger =3D v[1]
-+                r =3D bb.utils.vercmp_string(v_less_or_equal, verstring)
-+                self.assertTrue(r =3D=3D -1 or r =3D=3D 0, msg=3D"Package =
-%s, version: %s < %s" % (k[0], v_less_or_equal, verstring))
-+                r =3D bb.utils.vercmp_string(verstring, v_larger)
-+                self.assertTrue(r =3D=3D -1, msg=3D"Package %s, version: %=
-s <=3D %s" % (k[0], v_larger, verstring))
-+
- class FetchCheckStatusTest(FetcherTest):
-     test_wget_uris =3D ["https://downloads.yoctoproject.org/releases/sato/=
-sato-engine-0.1.tar.gz",
-                       "https://downloads.yoctoproject.org/releases/sato/sa=
-to-engine-0.2.tar.gz",
+     def _get_repo_url(self, ud):
+         """
 
