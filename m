@@ -1,112 +1,147 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <antonin.godard@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8C5C79F89
-	for <webhook@archiver.kernel.org>; Mon,  7 Sep 2026 13:10:41 +0000 (UTC)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.34331.1788786637758692842
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB9BC79F9E
+	for <webhook@archiver.kernel.org>; Mon,  7 Sep 2026 13:23:12 +0000 (UTC)
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.34608.1788787388042277535
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 07 Sep 2026 06:10:38 -0700
+ Mon, 07 Sep 2026 06:23:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ILvP+6lm;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-49d05d51553so15413345e9.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 07 Sep 2026 06:10:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1788786636; x=1789391436; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=eiFig5tqMHGxaT9fhbtlb2ML9JN1onVtkW3iRJR+wnE=;
-        b=ILvP+6lml+L1QvDuEQTQ9A5gVtpeG7+JHEEXr65SP0YyKJxUx7dpcFOgVZgVQQr5UT
-         pEvzpGkShOAXlFr3jI81uISiT5rLrwWuuoiosLrr9nZM/RNPcEj1ItQfX8fhCCIwgo/C
-         hj94H5wA8ac1B88z7Iyc9bybZDWStBj8srgMQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788786636; x=1789391436;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=eiFig5tqMHGxaT9fhbtlb2ML9JN1onVtkW3iRJR+wnE=;
-        b=gZEdtzKgsKJ96TtZrWDU3MqFjVJiSRAutvoDg+QoBczw1vxiJIyfacMdKoGZb734sj
-         vjipG/UPjf03YQLP1NYaB9VBRG+o3coIrIgudUpzLH2hMf/0bqZcsMEIhHcnB4d3lyku
-         JghTDk27Xef9zNQP3f4luj5+BD84CfQV7m45Y/EDlyCbY0lwdCHHztvOiVfVpbIrl+N3
-         hdHkqyp+73U0zORUmL5qGrtaXhEYwprnhSFqLGd652uq4Ulq+TMsN+0nC5nlCtjMRWw0
-         0mn6xs9Cnp+RR8fgr4QnZcIaiBWBG/OhD+tAUr2K+JVwRyPqJMESf31HmkKQtkPazge+
-         Bz8g==
-X-Gm-Message-State: AFuF++mJ52++wOIzDeHHYkMFJhvPqKCLAHqbVoi+1ce44kHLtS7zL79c
-	/wuoO3qYuOSyn6HmN1Ki6A3ik70FoG7f3MRhap1O43ExPk5bx9UTHzAJTokus3GQDJIaHnxs/nT
-	mcdcBEOE=
-X-Gm-Gg: AYBFou1gHRvoCMEUmdvrg35lQTyvYdK6Wj6pL6NdFQAkCFEUIqBKAUw56J3FoBPnE9A
-	b5o6QTg0AeMXenX33TkpoicjYMtJWV6OeAlaF/QJN45UpWYwdA/FS0nRbLHCnSbi33RmAoMTqNC
-	/+DIRbfgoYyUf0JTF0fKrRZkDK7ZAmuFA5ZTL0lIL9bIHxvKHl8tQky/0of1Z3pb+zU3G5hDYLT
-	/OCj+NadhxjGGLxv031XImojDp0oHIJbC+OUYzjb96DCD4V+JG9LsihJgVydtvmv1K2FOQBpevu
-	6A8Hh/y9Ha4LtDoTGqu9gyCPmU9tcB4+0KDSGGabULrs0py9p5LG/bSOaXaj7yprJQjt5muattc
-	m51KriEb2YWLCSvmthYOC/Po0v1I7iv2yEeQpOVZB5GboZxj7W5LLh92nbjDergXmQEMZuBWwCt
-	xlfxRARafeiT3aySOEYDw6WWj6gtgSOtujWRtVFZcs76qSnan7NpE1F7bMDAgNdZOdJB8wr0a+a
-	TDV4MmfJC/PvIkRwg==
-X-Received: by 2002:a05:600c:83c4:b0:499:db6d:bc97 with SMTP id 5b1f17b1804b1-49cf7f5058emr229592825e9.0.1788786635860;
-        Mon, 07 Sep 2026 06:10:35 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:e2ae:fec4:d03e:3153])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cf770fcf5sm307037555e9.6.2026.09.07.06.10.35
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2026 06:10:35 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 1/2] fetch/gitsm: Store the original url data to fix relative gitsm paths
-Date: Mon,  7 Sep 2026 14:10:33 +0100
-Message-ID: <20260907131034.3989354-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.53.0
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=B1Umn8AO;
+ spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 01EAD1A1A0C;
+	Mon,  7 Sep 2026 13:23:06 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id BFDE960383;
+	Mon,  7 Sep 2026 13:23:05 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B237B11C79257;
+	Mon,  7 Sep 2026 15:23:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1788787385; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=/Rl4PYonVRFCb1GVkgFmxe/VG0rwE7tfLncwo8fl7TI=;
+	b=B1Umn8AOfwtiSSRNaQxIIn5oszjF+eNOvAiiHTSVD0NRnp0W6/ilC1EIXS3m6N1PHKwTrg
+	9B0uqvnH60pUopD4U+XGU5F2ueiyGaHl3HnbNZL2h58zY5ltCDpRs1c1zO+zmHo+cfGF6P
+	MKhe7Kbm0G1KQCJx4pBtnCs5T/gv5stVQeBu20n/Y1Sr62kVJ3gbM5lTbhXiLSCbP/b27l
+	u2EpzAMruL5Fxv2WFufc5fp1EeSQuU5iFh2dKwxGYWfhEADJZDrJK6EU+3CKucKDBTWDz3
+	Z49i7UW1ZSD08M5oZqGvgM9w5mWIJCvhOgw8RW0njPz18B73G5Rwq84TQoQucQ==
+From: Antonin Godard <antonin.godard@bootlin.com>
+Date: Mon, 07 Sep 2026 15:22:41 +0200
+Subject: [PATCH] doc/bitbake-user-manual-metadata: move := section before
+ ??=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260907-move-immediation-expansion-section-v1-1-bec1783e32ea@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWNSQqEMBBFryK17kAUB+yrNL2ISdmWkIGUiiDe3
+ dJevscfDmDMhAzv4oCMGzHFIFC+CrCTCT9U5ISh0lWre90pHzdx3qMjs0hY4Z5MuGuK0T5mHEp
+ nG2vapq5BhlLGkfbn5PP9M6/DLOl7Gc7zAuzEEMaGAAAA
+X-Change-ID: 20260907-move-immediation-expansion-section-fb1dc5ca6544
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2882;
+ i=antonin.godard@bootlin.com; h=from:subject:message-id;
+ bh=Mw9zBNJ3LoNXugyEpMBKWpFGN7wNv/FE1AwMLhj63/c=;
+ b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBqnrq2kAMx7J/sStTAkLVIp+YuQul9MrfxUYLQz
+ EVvAYjiO+OJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCap66tgAKCRDRgEFAKaOo
+ NrnvEACOTJsfFBtxCxkdjQfosN9k6bJb6UxoFYXvPH2h+x9iHoDFTdN4RvhxYxREd5tjgEi3om+
+ tIypVsMDE6E8Dg2JUIvXtwpd0ww0/xFN+GpZl0XsrzZagcqvbuSPa19IzUQNJqfQTEu92V2Bx8W
+ NuWD7DKjD1fLl13ApkPytXOZb/UcW1FGtjmZxJGUnxEjOYQWf1ctX1gXsFX0loLzXKs6hPcA5Vv
+ BaszwM4nGZhePpSTvtslj6qCNK3K4mMF/1CQ3vxpFa/foGVVWJQJ7xcDPhssz8w4IHuOXFyX77G
+ DZyDeXIR4Ouu84qhU0G2plH4jzIIfDBVdmQE8LPK0zc53xUJ/lZeOICgeLkrNC1y56q5plfUFFT
+ euDZiwTaYlZ8vQ/bHIE+07cS3WGhC1jk4/PMsPalYc/vopwCjW+7iatMavImSz6HHty00/DrWgm
+ ggIPVvSEWkGSMokLVxYufHxHP0Cn2OttVpvW1kQcCzxX7ZK0oID85PYIaciVkMFQ6115l4aGnFj
+ +U4zqirIlGneKsQwRUJQtLkF57AHWi8MFoesbC2Hw5qkiRSrwP/iQwH2LadQx3Ht5aL7eEa3KXU
+ 2T1nSDSrCqgGz0qYM6xYN6Ck4v7eWeGS+NXTt0r0YgrVeo1eTmnMjMnxK0FgyMI+gwzXjU7QA8d
+ QOSB7RuiHX/sARw==
+X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
+ fpr=8648725188DD401BB9A0D3FFD180414029A3A836
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 07 Sep 2026 13:10:41 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20159
+ <bitbake-devel@lists.openembedded.org>; Mon, 07 Sep 2026 13:23:12 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20161
 
-If the gitsm:// url contains a git submodule with a relative "../" path
-and the fetcher is configured to use a premirror, it will fail as the
-host name encoded in the original url is lost and the correct paths
-can't be found.
+Move the immediate expansion section to be after the normal expansion
+section and before default value section. This improves the reading flow
+for two reasons:
 
-Save the original url data in the new data so that it can be consulted to
-fix this kind of edge case.
+- the reader can compare it with normal expansion directly.
+- the weak default value section's example makes use of the
+  immediate expansion operator, so it makes sense to already have it
+  introduced at this point.
 
-The test case change that follows this provides a test of this functionality.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
 ---
- lib/bb/fetch/__init__.py | 1 +
- lib/bb/fetch/gitsm.py    | 5 ++++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ .../bitbake-user-manual-metadata.rst               | 40 +++++++++++-----------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/lib/bb/fetch/__init__.py b/lib/bb/fetch/__init__.py
-index 153700dfb4f..55ab710f3d3 100644
---- a/lib/bb/fetch/__init__.py
-+++ b/lib/bb/fetch/__init__.py
-@@ -1059,6 +1059,7 @@ def build_mirroruris(origud, mirrors, ld):
-                     newud.setup_localpath(ld)
-                     if hasattr(ud, 'unpack_tracer'):
-                         newud.unpack_tracer = ud.unpack_tracer
-+                    newud.origud = ud
-                 except bb.fetch.BBFetchException as e:
-                     logger.debug("Mirror fetch failure for url %s (original url: %s)" % (newuri, origud.url))
-                     logger.debug(str(e))
-diff --git a/lib/bb/fetch/gitsm.py b/lib/bb/fetch/gitsm.py
-index 734b35364d9..d9facdd2706 100644
---- a/lib/bb/fetch/gitsm.py
-+++ b/lib/bb/fetch/gitsm.py
-@@ -88,7 +88,10 @@ class GitSM(Git):
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+index b0535b5dd45..5c49cf37e1e 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
+@@ -172,6 +172,26 @@ assignment, ``BAR`` expands to the literal string "${FOO}" as long as
  
-             # Convert relative to absolute uri based on parent uri
-             if  uris[m].startswith('..') or uris[m].startswith('./'):
--                newud = copy.copy(ud)
-+                if hasattr(ud, "origud"):
-+                    newud = copy.copy(ud.origud)
-+                else:
-+                    newud = copy.copy(ud)
-                 newud.path = os.path.normpath(os.path.join(newud.path, uris[m]))
-                 uris[m] = Git._get_repo_url(self, newud)
+    BAR = "${FOO}"
  
++Immediate variable expansion (:=)
++---------------------------------
++
++The ":=" operator results in a variable's contents being expanded
++immediately, rather than when the variable is actually used::
++
++   T = "123"
++   A := "test ${T}"
++   T = "456"
++   B := "${T} ${C}"
++   C = "cval"
++   C := "${C}append"
++
++In this example, ``A`` contains "test 123", even though the final value
++of :term:`T` is "456". The variable :term:`B` will end up containing "456
++cvalappend". This is because references to undefined variables are
++preserved as is during (immediate)expansion. This is in contrast to GNU
++Make, where undefined variables expand to nothing. The variable ``C``
++contains "cvalappend" since ``${C}`` immediately expands to "cval".
++
+ Setting a default value (?=)
+ ----------------------------
+ 
+@@ -235,26 +255,6 @@ After parsing we will have::
+ 
+    W = "xy"
+ 
+-Immediate variable expansion (:=)
+----------------------------------
+-
+-The ":=" operator results in a variable's contents being expanded
+-immediately, rather than when the variable is actually used::
+-
+-   T = "123"
+-   A := "test ${T}"
+-   T = "456"
+-   B := "${T} ${C}"
+-   C = "cval"
+-   C := "${C}append"
+-
+-In this example, ``A`` contains "test 123", even though the final value
+-of :term:`T` is "456". The variable :term:`B` will end up containing "456
+-cvalappend". This is because references to undefined variables are
+-preserved as is during (immediate)expansion. This is in contrast to GNU
+-Make, where undefined variables expand to nothing. The variable ``C``
+-contains "cvalappend" since ``${C}`` immediately expands to "cval".
+-
+ .. _appending-and-prepending:
+ 
+ Appending (+=) and prepending (=+) With Spaces
+
+---
+base-commit: 18cca50ba3da5ce27bc674478957bb08e7536b9a
+change-id: 20260907-move-immediation-expansion-section-fb1dc5ca6544
+
 
