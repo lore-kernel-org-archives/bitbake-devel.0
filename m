@@ -2,91 +2,122 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFB5C79F9E
-	for <webhook@archiver.kernel.org>; Mon,  7 Sep 2026 13:53:57 +0000 (UTC)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.35615.1788789234593327872
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0E6C79F89
+	for <webhook@archiver.kernel.org>; Mon,  7 Sep 2026 14:06:49 +0000 (UTC)
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.35644.1788790004728451795
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 07 Sep 2026 06:53:55 -0700
+ Mon, 07 Sep 2026 07:06:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=gI9AdpoN;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.218.48, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-c2530cabcf4so547200066b.0
-        for <bitbake-devel@lists.openembedded.org>; Mon, 07 Sep 2026 06:53:54 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Jf1zpcGy;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.44, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-49557167508so43789105e9.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 07 Sep 2026 07:06:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1788789233; x=1789394033; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=Jzc2bYtABgcWbOUlkihfQKwwI/nimllt/ojWxYphjSY=;
-        b=gI9AdpoNDF52FgZPAuIjczhKYCbqkIWmseDsndrYYUXidtywz4nL61rpgldKq2FvIl
-         i1JuB8Uztt6dWl0ei7pC30fZ5u9dbsmVWh3twZb6gKRLs9AT+fB6TUx+uNf4GhojhXsZ
-         Oa17PDsG8YyRM/A9rQj855fg+k+cuYtU4/Uxc=
+        d=linuxfoundation.org; s=google; t=1788790003; x=1789394803; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=KNvCv4JK8U9rvwbTQmrY8VgFfvyMpetGsHBaOmcg6sw=;
+        b=Jf1zpcGyap6HnBzLFw43O/9WuqoAVQA8CT7J+/i5BUjUNsHeLQViwfVvlu6kD+2RNc
+         mUGztxz4GlxCQL5bunTTdStUQ1xzdfU5Gt8CEOEpQ7NGoqBLxkuPDq8ow4KgIV6s0T/k
+         MZJXx0Zknt+vce5iuiubYafudCn4XEUXYFOEQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788789233; x=1789394033;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Jzc2bYtABgcWbOUlkihfQKwwI/nimllt/ojWxYphjSY=;
-        b=oxU9XjJ2eYLR307O8f5pxkcZ0VpFqj++LJHf1kF0gx4sEBH/VcIPo6/B7C6A5Wdlnc
-         nqnx2+he0LHNw2Q8loZ5/w1zlyHGcB+H79PbUEIfKh5UWbpRHpQ/t+pWJf1ztWjjd0dx
-         DoFw/jnTQyWZJHq0zwBeyCvahxG8f9qLJ8k8vsR+nzHUfoOXR4asViXg2qfJBih30NsW
-         LcxGxgqPoIb4yElTBpQrFc9O/RBQlb4gB343qCrOpwC1Zz1TA5UWoafvDGXRuJEP8pN0
-         iYr/m7JOxBTLrJX+NKwk81n+Lfl6kuG2OL4/uxZbJuEgEHlYhx6BZVAbS/8dkhfQWk6Q
-         AJAQ==
-X-Gm-Message-State: AFuF++kVfcAeLz9vbjfszHb9FnRg4udGtGGPoH3gOwiiSTzuGiGZ73p3
-	nPvjyYHU5MT4zDaiiPLE9SwaNPQFB/YiQ1LblurZue8sgYJoKb0o1aU+o6Ei0E2lmcrCw8QxOi2
-	FxWy8g+U=
-X-Gm-Gg: AYBFou32rHrVhv7WW2Mo41dOCIvpSjcubgp83lTUOZ80YSOhuzp9/OMtMmyVOyT2ajs
-	gJjF3jOfIiRXgF01PfuPXpa7X2gVKIvah1eq6JS3fYZb8egreAjwN6eFbRFXX0pkKZuraqmUjh0
-	zpZPxpxMSQ8tyOzRoyGREfnNG03Z579R4JE0foCKXQ+BM81t/aUoypGaGRraUAdv6+qOlILhgBQ
-	QnwipeXZ2VAznaXD59Cih7fpAZSNwJ0oqwyTKyoZP9AYzr+sQUvkJkUR212xgJF7nzarkjYXsHH
-	24fUkzEtCCqku5i4BWztoZHzT0fEE2pbB3YcspSn6rOumSVKi0AK1vc3vagbz6SPNGuU6AGPk7u
-	3g/A1MKUNCE3moD9xfx3NEKyCTvBYrgM28COaNLpUBt9RQvgqzNzizYZcM6dXejRAIaIK2FDh8V
-	1+u0F9RQplz40VTJKp06hjXPC3xW6PPQDbgZ11tb5RZQe1/yra4YvmmlkefJnyiVJS2vthyJdYW
-	dY+kC23bVHhb9uCmVJMAwzvIsp4w24OrRlrmARO3W8tnAR0hdEeuU8=
-X-Received: by 2002:a17:907:3e1a:b0:c24:87e5:6491 with SMTP id a640c23a62f3a-c260c971f12mr1486976066b.2.1788789232683;
-        Mon, 07 Sep 2026 06:53:52 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:e2ae:fec4:d03e:3153? ([2001:8b0:aba:5f3c:e2ae:fec4:d03e:3153])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c260d582304sm476201766b.43.2026.09.07.06.53.51
+        d=1e100.net; s=20251104; t=1788790003; x=1789394803;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=KNvCv4JK8U9rvwbTQmrY8VgFfvyMpetGsHBaOmcg6sw=;
+        b=tTa9MMfTlq1YQDw+rwN2VTebqJ1yHb8rcJF03BZv0oZnduIehbe1lOYkXY+Y1WTjNs
+         auHerwVVTGPINVmZeIaNkmOlwzefifNxVSTisIDbSzvPgXI6N8XI7oMbFksE28kyITf0
+         U6kH3kVGel3jbh32huO+GjOhbjJeBczqrPEyghV4kDG4/BnZ/GhfFcG8D0DRx46PjJLy
+         YczCfZXr1IVricF3JNhgoBAvaS7j3x3EbglXHuzK47ehE9YBKWGciFZQboENBd1r+FDK
+         s4Pxql7RFz2R/P1P9rbrIpPWK2yA1aCcEhdUnZ53oL0db7E2rBvi/2qU8JFZ4PLbDqZU
+         RmEQ==
+X-Gm-Message-State: AFuF++khMvqqcKqR2VscTXMjFQtQ4x0LaV+FHwOBHsVGdZK/e880tXhQ
+	Ssa+A+unObKncy7vUTquFCBBsc0geVokEKEbWmITes4/wvlYcS13i2N0vWQSreGFQzAvkObSjWq
+	8QsoUv9I=
+X-Gm-Gg: AYBFou1Sw8OLI5AWDO6jtUt/6aGXRaKidNzh5wmqfSF6kSCnJL2zylMhquj4Uvn+wZX
+	qAqnevIl/zCplQoR2S5rLzKccSRw32eDVvQLk6DTLJtYQWkwcv+sRx+3C64q5ndD/y6inBxKT4V
+	WvXROZ+thgOQagV2iJZXO8Z5eC/aLRSleEztixZdMTWpQhxPC34PPcg1Ubu9C2LyHMjcNxpRGHV
+	+1VqPxfULb296y6HzPGF3wT3VtU5yiSjBTOurQ+oORppGspXDNzuffxOTeTJ/pFoEVcbgy9CzKz
+	YL3j8kZzA0GEfh1gWK3KlKIu0b7WhB4AmnrFYmQkdhUyPrAACAQwhS/JJIyUdbnR/Za0HePq/F+
+	WUgpeMVoC5kOy0CGCL8D9YtRNxK/GkYBuJVFvgXr6jXGd62nRQffZVcEahhnNHGSJu4QDJbqtz/
+	hYfqCszQyQtpWaK4pUFM5Te6QeDy4obMtE2N+ZynGe1u5UK9fuFTKTJQjSnvrJIHpCVu7YXycYp
+	G5J7mDSMPOTf5To9EZqHNueVKxm
+X-Received: by 2002:a05:600c:8b09:b0:499:b65e:49c9 with SMTP id 5b1f17b1804b1-49cf823f57fmr476559365e9.10.1788790002841;
+        Mon, 07 Sep 2026 07:06:42 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:e2ae:fec4:d03e:3153])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-485881353e8sm28944564f8f.1.2026.09.07.07.06.41
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2026 06:53:51 -0700 (PDT)
-Message-ID: <77729bcd7a222489deb4175fe61bda24da0f25f0.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] tests/fetch: Swap bitbake github mirror
- for YP one
+        Mon, 07 Sep 2026 07:06:42 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 07 Sep 2026 14:53:51 +0100
-In-Reply-To: <18D30CBDF6C61D5C.4159725@lists.openembedded.org>
-References: <18D30CBDF6C61D5C.4159725@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-9 
+Subject: [PATCH v2] tests/fetch: Swap bitbake github mirror for YP one
+Date: Mon,  7 Sep 2026 15:06:41 +0100
+Message-ID: <20260907140641.4044711-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.53.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 07 Sep 2026 13:53:57 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20163
+ <bitbake-devel@lists.openembedded.org>; Mon, 07 Sep 2026 14:06:49 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20164
 
-On Mon, 2026-09-07 at 14:24 +0100, Richard Purdie via lists.openembedded.or=
-g wrote:
-> We need a reliable mirror of the bitbake repo and github is no longer tha=
-t. Swap
-> to use git.yoctoproject.org which happens to also carry bitbake. We only =
-really need
-> two different urls.
->=20
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
-> =C2=A0lib/bb/tests/fetch.py | 14 +++++++-------
-> =C2=A01 file changed, 7 insertions(+), 7 deletions(-)
+We need a reliable mirror of the bitbake repo and github is no longer that. Swap
+to use the bitbake-contrib repo which carrys enough bitbake data to work for the
+tests we need.
 
-This used to work but doesn't. Back to the drawing board...
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/tests/fetch.py | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Cheers,
-
-Richard
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 4d15a8a235c..e8c1c62175a 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -573,8 +573,8 @@ class GitDownloadDirectoryNamingTest(FetcherTest):
+         super(GitDownloadDirectoryNamingTest, self).setUp()
+         self.recipe_url = "git://git.openembedded.org/bitbake;branch=master;protocol=https"
+         self.recipe_dir = "git.openembedded.org.bitbake"
+-        self.mirror_url = "git://github.com/openembedded/bitbake.git;protocol=https;branch=master"
+-        self.mirror_dir = "github.com.openembedded.bitbake.git"
++        self.mirror_url = "git://git.openembedded.org/bitbake-contrib.git;protocol=https;branch=master"
++        self.mirror_dir = "git.openembedded.org.bitbake-contrib.git"
+ 
+         self.d.setVar('SRCREV', '82ea737a0b42a8b53e11c9cde141e9e9c0bd8c40')
+ 
+@@ -621,8 +621,8 @@ class TarballNamingTest(FetcherTest):
+         super(TarballNamingTest, self).setUp()
+         self.recipe_url = "git://git.openembedded.org/bitbake;branch=master;protocol=https"
+         self.recipe_tarball = "git2_git.openembedded.org.bitbake.tar.gz"
+-        self.mirror_url = "git://github.com/openembedded/bitbake.git;protocol=https;branch=master"
+-        self.mirror_tarball = "git2_github.com.openembedded.bitbake.git.tar.gz"
++        self.mirror_url = "git://git.openembedded.org/bitbake-contrib.git;protocol=https;branch=master"
++        self.mirror_tarball = "git2_git.openembedded.org.bitbake-contrib.git.tar.gz"
+ 
+         self.d.setVar('BB_GENERATE_MIRROR_TARBALLS', '1')
+         self.d.setVar('SRCREV', '82ea737a0b42a8b53e11c9cde141e9e9c0bd8c40')
+@@ -655,8 +655,8 @@ class GitShallowTarballNamingTest(FetcherTest):
+         super(GitShallowTarballNamingTest, self).setUp()
+         self.recipe_url = "git://git.openembedded.org/bitbake;branch=master;protocol=https"
+         self.recipe_tarball = "gitshallow_git.openembedded.org.bitbake_82ea737-1_master.tar.gz"
+-        self.mirror_url = "git://github.com/openembedded/bitbake.git;protocol=https;branch=master"
+-        self.mirror_tarball = "gitshallow_github.com.openembedded.bitbake.git_82ea737-1_master.tar.gz"
++        self.mirror_url = "git://git.openembedded.org/bitbake-contrib.git;protocol=https;branch=master"
++        self.mirror_tarball = "gitshallow_git.openembedded.org.bitbake-contrib.git_82ea737-1_master.tar.gz"
+ 
+         self.d.setVar('BB_GIT_SHALLOW', '1')
+         self.d.setVar('BB_GENERATE_SHALLOW_TARBALLS', '1')
+@@ -2461,7 +2461,7 @@ class GitShallowTest(FetcherTest):
+ 
+     @skipIfNoNetwork()
+     def test_bitbake(self):
+-        self.git(['remote', 'add', '--mirror=fetch', 'origin', 'https://github.com/openembedded/bitbake'], cwd=self.srcdir)
++        self.git(['remote', 'add', '--mirror=fetch', 'origin', 'https://git.openembedded.org/bitbake-contrib'], cwd=self.srcdir)
+         self.git(['config', 'core.bare', 'true'], cwd=self.srcdir)
+         self.git(['fetch'], cwd=self.srcdir)
+ 
 
