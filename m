@@ -1,147 +1,123 @@
-Return-Path: <antonin.godard@bootlin.com>
+Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB9BC79F9E
-	for <webhook@archiver.kernel.org>; Mon,  7 Sep 2026 13:23:12 +0000 (UTC)
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.34608.1788787388042277535
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135E0C79F89
+	for <webhook@archiver.kernel.org>; Mon,  7 Sep 2026 13:24:52 +0000 (UTC)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.34642.1788787486324932978
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 07 Sep 2026 06:23:09 -0700
+ Mon, 07 Sep 2026 06:24:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=B1Umn8AO;
- spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: antonin.godard@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 01EAD1A1A0C;
-	Mon,  7 Sep 2026 13:23:06 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id BFDE960383;
-	Mon,  7 Sep 2026 13:23:05 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B237B11C79257;
-	Mon,  7 Sep 2026 15:23:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1788787385; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=/Rl4PYonVRFCb1GVkgFmxe/VG0rwE7tfLncwo8fl7TI=;
-	b=B1Umn8AOfwtiSSRNaQxIIn5oszjF+eNOvAiiHTSVD0NRnp0W6/ilC1EIXS3m6N1PHKwTrg
-	9B0uqvnH60pUopD4U+XGU5F2ueiyGaHl3HnbNZL2h58zY5ltCDpRs1c1zO+zmHo+cfGF6P
-	MKhe7Kbm0G1KQCJx4pBtnCs5T/gv5stVQeBu20n/Y1Sr62kVJ3gbM5lTbhXiLSCbP/b27l
-	u2EpzAMruL5Fxv2WFufc5fp1EeSQuU5iFh2dKwxGYWfhEADJZDrJK6EU+3CKucKDBTWDz3
-	Z49i7UW1ZSD08M5oZqGvgM9w5mWIJCvhOgw8RW0njPz18B73G5Rwq84TQoQucQ==
-From: Antonin Godard <antonin.godard@bootlin.com>
-Date: Mon, 07 Sep 2026 15:22:41 +0200
-Subject: [PATCH] doc/bitbake-user-manual-metadata: move := section before
- ??=
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260907-move-immediation-expansion-section-v1-1-bec1783e32ea@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWNSQqEMBBFryK17kAUB+yrNL2ISdmWkIGUiiDe3
- dJevscfDmDMhAzv4oCMGzHFIFC+CrCTCT9U5ISh0lWre90pHzdx3qMjs0hY4Z5MuGuK0T5mHEp
- nG2vapq5BhlLGkfbn5PP9M6/DLOl7Gc7zAuzEEMaGAAAA
-X-Change-ID: 20260907-move-immediation-expansion-section-fb1dc5ca6544
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Klgw+8Zy;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.50, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-49556f97a9dso30267435e9.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 07 Sep 2026 06:24:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1788787484; x=1789392284; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=CJBG49a9yYMjv8dgR9mC7KWKS7SRhmoQ1mBUU3sUDHU=;
+        b=Klgw+8ZyXxSZKi9e2B6B+LaHwNH7cExh9six1MpyJJxyq5YGOUtauOJ0HGWMY6EsGN
+         +PNESb8K4bTOzir9/AJ36KtWiv6qcufVqRgoC9GAqNpO5rP6dgzI+0NcxXETYxZ12A0U
+         XJGg3ALpThynBcZF+f8UvUtm0z8L3qoZDH6yQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788787484; x=1789392284;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=CJBG49a9yYMjv8dgR9mC7KWKS7SRhmoQ1mBUU3sUDHU=;
+        b=Gdu3zruUMx81unobul/Qtkpb++SsZSqzh1TmG3lIDdYMZindQfqpywzPnq9SYrGxEh
+         +bBabgeMQC3wn53P5iT9+rg8hY9aW8WsVAvq+9f8kJo4FlPG29kjMioR07Bx0+qRQC8H
+         EqzuhvStdcGI4uRJL+F342rJRqgt/dOF8DCQDiznW+H/9cPUDvP7yAh0NNEAA13wVPPV
+         EYB/R2dq2euiRKDm4bceUZ5h+ZL8lUegtteTCD+gHO7RJYnrDCfPanEnkvePCilUAUO0
+         rx43mEoXgBXY5OcrqEpuqQY+DeL1L6piS24lUW/NNU2d8K04M2xMwzmC44mGtICWRZOr
+         oUZw==
+X-Gm-Message-State: AFuF++nloml8Sr4rMa/7iVtZ01q8F0Kxp3Nn320s7ZPvQQB9SdFR6XZe
+	hlwHqGs6eKX7UC7OWd0s2qln7l/ZhjUmAQh6c+K6SGBNUrW6dappQ/hyIsZU89UhIadq1pYHB2C
+	FhIkqn58=
+X-Gm-Gg: AYBFou3bLU1MBpDQd8mP91PUt8MXE+n9Sa1hh/sfCI4S0htWFIy2EvFtWK6eJ+8+efz
+	F55/N4Naak29pKj9O0l90Df6XCYAA+LloD+Chs78ap134qay90gNUmvjibmr8A3HIMXzTLoL3MB
+	smLVaXXOcWY9oY0Z2Bc4hoT2clcIv7itEhHFngUwVfM4rt7ArZYR8AeW8eYd+o3HQ3b/4K2QFQV
+	aL3c82e8mCSD+gK2wsE0DaGpp8StDllKHecGLEX5boZQzPL71e+oEBvwCS7yAf1ZzcXVm5NSLBO
+	yQi80yPA7NIUUqkTfblvSKC9epF63INOTqvCHN2vbuTWONXCOGmojzAPfZe2dYss8uRpjZt7r3z
+	1DzITjTJAhGJHVsnMU4d9py31x7k9APYSNeaVGZdtV+0bafKQayvq1hgdHPmZ5wucLkOsvOiqPo
+	3qMptI1vANu+6ttbqrScskVgQJQdNfh64U6kPVjb0ySVsE/+9GnAN6vxmVVnfr3WmXwUcWMESm6
+	tpYvgMiMJTLeKCJPw==
+X-Received: by 2002:a05:600c:c48f:b0:497:fecd:5b00 with SMTP id 5b1f17b1804b1-49cf825d507mr232442185e9.9.1788787484213;
+        Mon, 07 Sep 2026 06:24:44 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:e2ae:fec4:d03e:3153])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-485883c5bc5sm30165095f8f.24.2026.09.07.06.24.43
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2026 06:24:43 -0700 (PDT)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- docs@lists.yoctoproject.org, Antonin Godard <antonin.godard@bootlin.com>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2882;
- i=antonin.godard@bootlin.com; h=from:subject:message-id;
- bh=Mw9zBNJ3LoNXugyEpMBKWpFGN7wNv/FE1AwMLhj63/c=;
- b=owEBbQKS/ZANAwAKAdGAQUApo6g2AcsmYgBqnrq2kAMx7J/sStTAkLVIp+YuQul9MrfxUYLQz
- EVvAYjiO+OJAjMEAAEKAB0WIQSGSHJRiN1AG7mg0//RgEFAKaOoNgUCap66tgAKCRDRgEFAKaOo
- NrnvEACOTJsfFBtxCxkdjQfosN9k6bJb6UxoFYXvPH2h+x9iHoDFTdN4RvhxYxREd5tjgEi3om+
- tIypVsMDE6E8Dg2JUIvXtwpd0ww0/xFN+GpZl0XsrzZagcqvbuSPa19IzUQNJqfQTEu92V2Bx8W
- NuWD7DKjD1fLl13ApkPytXOZb/UcW1FGtjmZxJGUnxEjOYQWf1ctX1gXsFX0loLzXKs6hPcA5Vv
- BaszwM4nGZhePpSTvtslj6qCNK3K4mMF/1CQ3vxpFa/foGVVWJQJ7xcDPhssz8w4IHuOXFyX77G
- DZyDeXIR4Ouu84qhU0G2plH4jzIIfDBVdmQE8LPK0zc53xUJ/lZeOICgeLkrNC1y56q5plfUFFT
- euDZiwTaYlZ8vQ/bHIE+07cS3WGhC1jk4/PMsPalYc/vopwCjW+7iatMavImSz6HHty00/DrWgm
- ggIPVvSEWkGSMokLVxYufHxHP0Cn2OttVpvW1kQcCzxX7ZK0oID85PYIaciVkMFQ6115l4aGnFj
- +U4zqirIlGneKsQwRUJQtLkF57AHWi8MFoesbC2Hw5qkiRSrwP/iQwH2LadQx3Ht5aL7eEa3KXU
- 2T1nSDSrCqgGz0qYM6xYN6Ck4v7eWeGS+NXTt0r0YgrVeo1eTmnMjMnxK0FgyMI+gwzXjU7QA8d
- QOSB7RuiHX/sARw==
-X-Developer-Key: i=antonin.godard@bootlin.com; a=openpgp;
- fpr=8648725188DD401BB9A0D3FFD180414029A3A836
-X-Last-TLS-Session-Version: TLSv1.3
+Subject: [PATCH] tests/fetch: Swap bitbake github mirror for YP one
+Date: Mon,  7 Sep 2026 14:24:42 +0100
+Message-ID: <20260907132442.3997276-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.53.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 07 Sep 2026 13:23:12 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20161
+ <bitbake-devel@lists.openembedded.org>; Mon, 07 Sep 2026 13:24:52 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20162
 
-Move the immediate expansion section to be after the normal expansion
-section and before default value section. This improves the reading flow
-for two reasons:
+We need a reliable mirror of the bitbake repo and github is no longer that. Swap
+to use git.yoctoproject.org which happens to also carry bitbake. We only really need
+two different urls.
 
-- the reader can compare it with normal expansion directly.
-- the weak default value section's example makes use of the
-  immediate expansion operator, so it makes sense to already have it
-  introduced at this point.
-
-Signed-off-by: Antonin Godard <antonin.godard@bootlin.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- .../bitbake-user-manual-metadata.rst               | 40 +++++++++++-----------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+ lib/bb/tests/fetch.py | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-index b0535b5dd45..5c49cf37e1e 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata.rst
-@@ -172,6 +172,26 @@ assignment, ``BAR`` expands to the literal string "${FOO}" as long as
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 4d15a8a235c..7ae7a1c15a8 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -573,8 +573,8 @@ class GitDownloadDirectoryNamingTest(FetcherTest):
+         super(GitDownloadDirectoryNamingTest, self).setUp()
+         self.recipe_url = "git://git.openembedded.org/bitbake;branch=master;protocol=https"
+         self.recipe_dir = "git.openembedded.org.bitbake"
+-        self.mirror_url = "git://github.com/openembedded/bitbake.git;protocol=https;branch=master"
+-        self.mirror_dir = "github.com.openembedded.bitbake.git"
++        self.mirror_url = "git://git.yoctoproject.org/bitbake.git;protocol=https;branch=master"
++        self.mirror_dir = "git.yoctoproject.org.bitbake.git"
  
-    BAR = "${FOO}"
+         self.d.setVar('SRCREV', '82ea737a0b42a8b53e11c9cde141e9e9c0bd8c40')
  
-+Immediate variable expansion (:=)
-+---------------------------------
-+
-+The ":=" operator results in a variable's contents being expanded
-+immediately, rather than when the variable is actually used::
-+
-+   T = "123"
-+   A := "test ${T}"
-+   T = "456"
-+   B := "${T} ${C}"
-+   C = "cval"
-+   C := "${C}append"
-+
-+In this example, ``A`` contains "test 123", even though the final value
-+of :term:`T` is "456". The variable :term:`B` will end up containing "456
-+cvalappend". This is because references to undefined variables are
-+preserved as is during (immediate)expansion. This is in contrast to GNU
-+Make, where undefined variables expand to nothing. The variable ``C``
-+contains "cvalappend" since ``${C}`` immediately expands to "cval".
-+
- Setting a default value (?=)
- ----------------------------
+@@ -621,8 +621,8 @@ class TarballNamingTest(FetcherTest):
+         super(TarballNamingTest, self).setUp()
+         self.recipe_url = "git://git.openembedded.org/bitbake;branch=master;protocol=https"
+         self.recipe_tarball = "git2_git.openembedded.org.bitbake.tar.gz"
+-        self.mirror_url = "git://github.com/openembedded/bitbake.git;protocol=https;branch=master"
+-        self.mirror_tarball = "git2_github.com.openembedded.bitbake.git.tar.gz"
++        self.mirror_url = "git://git.yoctoproject.org/bitbake.git;protocol=https;branch=master"
++        self.mirror_tarball = "git2_git.yoctoproject.org.bitbake.git.tar.gz"
  
-@@ -235,26 +255,6 @@ After parsing we will have::
+         self.d.setVar('BB_GENERATE_MIRROR_TARBALLS', '1')
+         self.d.setVar('SRCREV', '82ea737a0b42a8b53e11c9cde141e9e9c0bd8c40')
+@@ -655,8 +655,8 @@ class GitShallowTarballNamingTest(FetcherTest):
+         super(GitShallowTarballNamingTest, self).setUp()
+         self.recipe_url = "git://git.openembedded.org/bitbake;branch=master;protocol=https"
+         self.recipe_tarball = "gitshallow_git.openembedded.org.bitbake_82ea737-1_master.tar.gz"
+-        self.mirror_url = "git://github.com/openembedded/bitbake.git;protocol=https;branch=master"
+-        self.mirror_tarball = "gitshallow_github.com.openembedded.bitbake.git_82ea737-1_master.tar.gz"
++        self.mirror_url = "git://git.yoctoproject.org/bitbake.git;protocol=https;branch=master"
++        self.mirror_tarball = "gitshallow_git.yoctoproject.org.bitbake.git_82ea737-1_master.tar.gz"
  
-    W = "xy"
+         self.d.setVar('BB_GIT_SHALLOW', '1')
+         self.d.setVar('BB_GENERATE_SHALLOW_TARBALLS', '1')
+@@ -2461,7 +2461,7 @@ class GitShallowTest(FetcherTest):
  
--Immediate variable expansion (:=)
-----------------------------------
--
--The ":=" operator results in a variable's contents being expanded
--immediately, rather than when the variable is actually used::
--
--   T = "123"
--   A := "test ${T}"
--   T = "456"
--   B := "${T} ${C}"
--   C = "cval"
--   C := "${C}append"
--
--In this example, ``A`` contains "test 123", even though the final value
--of :term:`T` is "456". The variable :term:`B` will end up containing "456
--cvalappend". This is because references to undefined variables are
--preserved as is during (immediate)expansion. This is in contrast to GNU
--Make, where undefined variables expand to nothing. The variable ``C``
--contains "cvalappend" since ``${C}`` immediately expands to "cval".
--
- .. _appending-and-prepending:
+     @skipIfNoNetwork()
+     def test_bitbake(self):
+-        self.git(['remote', 'add', '--mirror=fetch', 'origin', 'https://github.com/openembedded/bitbake'], cwd=self.srcdir)
++        self.git(['remote', 'add', '--mirror=fetch', 'origin', 'https://git.yoctoproject.org/bitbake'], cwd=self.srcdir)
+         self.git(['config', 'core.bare', 'true'], cwd=self.srcdir)
+         self.git(['fetch'], cwd=self.srcdir)
  
- Appending (+=) and prepending (=+) With Spaces
-
----
-base-commit: 18cca50ba3da5ce27bc674478957bb08e7536b9a
-change-id: 20260907-move-immediation-expansion-section-fb1dc5ca6544
-
 
