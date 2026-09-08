@@ -2,107 +2,89 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C699C79FA0
-	for <webhook@archiver.kernel.org>; Mon,  7 Sep 2026 19:58:37 +0000 (UTC)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.3958.1788811109948039634
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B06FC79F82
+	for <webhook@archiver.kernel.org>; Tue,  8 Sep 2026 21:20:59 +0000 (UTC)
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.263.1788902451577557117
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 07 Sep 2026 12:58:30 -0700
+ Tue, 08 Sep 2026 14:20:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=YDaifLm/;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.47, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-499ac87c92bso42985735e9.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 07 Sep 2026 12:58:29 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Ojd9UUzZ;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.50, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-484392e3d33so3650689f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Tue, 08 Sep 2026 14:20:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1788811108; x=1789415908; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=z+TLm8tfOVHgNaSRj0ED6eM+EC/NtEA0T3+RMmFg/VU=;
-        b=YDaifLm/hSl14XknihBEDMmlDwDhdCFXqaHTAY/dDSk0N/468DL3vKFzj4wPVzgDbo
-         XpQrP8uvrcuwT9byxXeS5kAIJQcYWPfeqHXQQf5p0/s4JkrQ8N1bb1D5fnQ5sSJOj12K
-         BMU1wKMjL5lYIhIyM5jleUFXjA5DtPWbwiaQQ=
+        d=linuxfoundation.org; s=google; t=1788902450; x=1789507250; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Be/6q+FJfMkQAW3B+ArlISS9Pakcf65fKhPuB70Rrnc=;
+        b=Ojd9UUzZ3z/sxhbL0b4BzibvWgJobrImmL1VL6Of3c+as0AZTelMn8nNa1d97GE1gm
+         gNitXFaJXFI6Ex0sm76s2aPXDT8KWIcNNf9DYmrbBWHsPDjWnNSLS0qeW/DlmFxOMMAm
+         i+jY4wI67CrR1T2ykgAplNin/3r052HQgk7BU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788811108; x=1789415908;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=z+TLm8tfOVHgNaSRj0ED6eM+EC/NtEA0T3+RMmFg/VU=;
-        b=Vqve+BnphMtTnhQ8HubG9400ppYkWbcg+M0vq+8EVEj0n6jxIvfpzuKrl8zV1Rh31X
-         aoipMTKkQbFJBn/2bFzW7OLPY/lPzq4nlBFtG1tT2nCVXM3Mz8iQErMLL7IavmcVNQMf
-         Bz8WNVuCPwZLXfgiCYo2mrF/SjC0MdnLxiKZ1HGYsaH+r6ioDFR9fMNWJjoFDvRzomis
-         Q6EcNTURtP/e04DcsT565swxKCRir/3GmbxnqoiNTdkFtNCrgge6qefC4AcfjsPEKLJo
-         paQXmmyS3yD0KDuaD6hHvsaKKXrg55ofTlpDZ7aIZVhsL2pN8N0ti5idoJuxDLKF7HN6
-         oZOw==
-X-Forwarded-Encrypted: i=1; AKwUvByAThbuPUq/k9Efrh63wqEd08hkN79cmujYA1tsUL83b3+QBLNCvEtbmQby5OsOrLJSHrjPrNZaiQZi7El4@lists.openembedded.org
-X-Gm-Message-State: AFuF++lKOE1dwvENe5IukA9X5acKH1DdlEHsedhDgm/ash67wW5v8lu/
-	8UbnNrKhZ78aJj31BVILK4SbMP0QmNgxtQV3ne9O7hIKfw93Bl8vrUqNdzdvlrL9ZJg=
-X-Gm-Gg: AYBFou2YlVAcWjvsfRyCo355b4JsSJJtxSI42+r8DBo/pVITrzGO2t2pjzJVPSLzmhV
-	0bsXntTnalyx4dHiTPWG5z8+oN3gYEMzh6uG8Qh87YzB15fcOu4L1zLw0M1wofTXAioTg1tKXLr
-	/2EZmLfxzJCGgapXnNuLIBkFQ0yL5WbwHyDnzaaKQc4kMuL8XhQxaNM9NfZrvaoaUFDo2f8nrx8
-	t1hF57nIMZoo07ExnkhbiaEjThbF7f+17xyn0jXmBs02pUO5qHj9S9yHcFc7hBMsNjmeEGOGZhh
-	sh0FkEe7vLQFxWK4eH0sgMaKSy8p3+v2+bEAz537ySj/KYxOsGhxerb9RCuCpuWej0yEjWJb4MP
-	pZIucCraw5T8mrL4h0WUAAwGg2R/Ab1rhsfnn6y98ZAvBF2tCudGIPeh24pck6JkUN36+gbddrC
-	UH8dF85fwW9NhzrzzrlHkSXnHzJETZgzoJzbKUC8xc8o2EHudsAtbPVRh242DSs/WSBvu5HApBt
-	b/ZBHyVqcIq1HDh0hzNKgcZAif2u/nCC9ma9cpalM1ML1N6FPt/xBUsLL0cRfjC
-X-Received: by 2002:a05:600c:3f0a:b0:49c:e27c:6b10 with SMTP id 5b1f17b1804b1-49cf81e4a10mr242563565e9.3.1788811107975;
-        Mon, 07 Sep 2026 12:58:27 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:e2ae:fec4:d03e:3153? ([2001:8b0:aba:5f3c:e2ae:fec4:d03e:3153])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cfbe5b252sm289060175e9.3.2026.09.07.12.58.26
+        d=1e100.net; s=20251104; t=1788902450; x=1789507250;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=Be/6q+FJfMkQAW3B+ArlISS9Pakcf65fKhPuB70Rrnc=;
+        b=H7sJfv0jFesC8hw6YZKIIcbgXzdn2L9Jsw7xDsb860zw4W/PS43TRQxQL8/oEE6lcb
+         VPIxoKvn2OGhYnjoLmkNyt1gw0+cxlipwxvm2d6IJH6wv8cj8fQe3VMi/dDZHbfjzhtQ
+         CiZzbKXotNe69JRKpMcBaSKjKCHo+cun0z0R/WANt/3Gz2QwQF50twTJCxXBI/07iBnN
+         57fUKAN4P4HHX6vR+21ov8QP48w3LI7q6KC9k6zeuvFy5R1S/fje8uJoTsSdcIJJGPGP
+         6QwPoT6I4X+091McXJevMx/5PXaQwiP9Ymg312O5nugh1S9+5PeSeZ6PWpCOmB0owAXy
+         HnWw==
+X-Gm-Message-State: AFuF++n2ME+ZoOhtQ1D+VMRNPqsqNW/wZeEqbc21atcTx8oSAGzreSiq
+	4EGm96oHzt+AGvrWTtSQDVL/shNyXXurXnuIwM0Z8szKReFFF4Ex3QAjrfeBxI4q0GymXXOPSuo
+	UW0BJ+Og=
+X-Gm-Gg: AYBFou1WGI++fOrD15HdaKUtp4slK5qGwuGY7Mg8Pk5zfnve500fpIQDcQUwLgEXj1/
+	FipPG59OdHkQ+efv/PZqbkuRp6GfHRVJKNSEterD4iEKinx7Ru5NWOT+zkjh0wP8uJG4p+S5GRd
+	LH+Gd7qwQr4qXr1ZAGxDPIxQRqiELtuXSzfY3tKO8ip7gCyncoNBnvnUdBdWRBeWoh2TPlAKsyo
+	LSujIqumQYBlvLus1AXViL/ZGKtqGRmILG38/VeDYwOwDTQSn5F9LJ+elz6QyGpRz1IJFf4smY3
+	/wxVjfEldpESDYlKDKPOrX2O/muySRcrVAQpijAa6EmEOImVRfaCoulRe4wZ6FGikGkWTY7VZU/
+	voXVCZ66/RlPLVoHGuzZQr7ybD3nE4mnsyFpQJsqmnV+j3uaBg0PTITBpHEvOHZFwB8ABCf3VPA
+	DM52effKRBHaSlX9tf++nrw32YAFn5h4WesUGOQQj5XRsOUOUIsG2epLan53dhzanPbjy5r/dop
+	Ng1Er/d/eCrxbR+UO/X+ysVbs3J
+X-Received: by 2002:a05:6000:2584:b0:482:b813:8315 with SMTP id ffacd0b85a97d-485872ac3b1mr35592273f8f.21.1788902449829;
+        Tue, 08 Sep 2026 14:20:49 -0700 (PDT)
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:3b52:472d:bd88:cdf3])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4858d312ca0sm40285771f8f.4.2026.09.08.14.20.48
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2026 12:58:27 -0700 (PDT)
-Message-ID: <c842e0a047d06841610d0087df00b76b94cc1114.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] prserv: add --status to list running
- servers
+        Tue, 08 Sep 2026 14:20:49 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bbnpreetsingh@gmail.com, bitbake-devel@lists.openembedded.org
-Cc: Michael Opdenacker <michael.opdenacker@rootcommit.com>
-Date: Mon, 07 Sep 2026 20:58:26 +0100
-In-Reply-To: <20260824045011.7-1-bbnpreetsingh@gmail.com>
-References: <20260824045011.7-1-bbnpreetsingh@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-9 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 2/2] asyncrpc/serv: Add missing import
+Date: Tue,  8 Sep 2026 22:20:47 +0100
+Message-ID: <20260908212047.1788760-2-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260908212047.1788760-1-richard.purdie@linuxfoundation.org>
+References: <20260908212047.1788760-1-richard.purdie@linuxfoundation.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 07 Sep 2026 19:58:37 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20169
+ <bitbake-devel@lists.openembedded.org>; Tue, 08 Sep 2026 21:20:59 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20171
 
-On Mon, 2026-08-24 at 04:50 +0000, Baban via lists.openembedded.org wrote:
-> bitbake-prserv could start and stop a server but not say what is
-> running. Add --status: it reads every /tmp/PRServer_<ip>_<port>.pid,
-> reports each server as running (with its pid) or as a stale pidfile,
-> and exits 0 if at least one server is alive, 1 otherwise.
->=20
-> Extend the ScriptTests start/stop lifecycle with status checks in
-> both states.
->=20
-> [YOCTO #10865]
->=20
-> Signed-off-by: Babanpreet Singh <bbnpreetsingh@gmail.com>
-> ---
-> =C2=A0bin/bitbake-prserv=C2=A0 |=C2=A0 7 +++++++
-> =C2=A0lib/prserv/serv.py=C2=A0 | 23 +++++++++++++++++++++++
-> =C2=A0lib/prserv/tests.py | 16 +++++++++++++++-
-> =C2=A03 files changed, 45 insertions(+), 1 deletion(-)
+Add missing import of bb since the code references it.
 
-Thanks for this, I've been meaning to do this for a long time!
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/asyncrpc/serv.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-Unfortunately this patch does seem to be causing failures in our
-automated testing:
-
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/48/builds/4607
-
-I did wonder if the code needs to cope with the port already being in
-use too?
-
-Cheers,
-
-Richard
-
-
-
+diff --git a/lib/bb/asyncrpc/serv.py b/lib/bb/asyncrpc/serv.py
+index dd77ed0a43b..67fdc44dbf6 100644
+--- a/lib/bb/asyncrpc/serv.py
++++ b/lib/bb/asyncrpc/serv.py
+@@ -11,6 +11,7 @@ import os
+ import signal
+ import socket
+ import sys
++import bb
+ from bb import multiprocessing
+ import logging
+ from .connection import StreamConnection, WebsocketConnection
 
