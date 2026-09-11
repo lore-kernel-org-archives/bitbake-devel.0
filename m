@@ -2,62 +2,61 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBDCC88E4D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DE1C88E50
 	for <webhook@archiver.kernel.org>; Fri, 11 Sep 2026 22:18:22 +0000 (UTC)
-Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.50928.1789165092640360076
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.50927.1789165091942869887
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 11 Sep 2026 15:18:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=P7mWoMQA;
- spf=pass (domain: smile.fr, ip: 74.125.225.76, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-4843cedd129so180721f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 11 Sep 2026 15:18:12 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=QYfB0q0h;
+ spf=pass (domain: smile.fr, ip: 209.85.128.41, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4998b5a63e2so15587015e9.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 11 Sep 2026 15:18:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1789165091; x=1789769891; darn=lists.openembedded.org;
+        d=smile.fr; s=google; t=1789165090; x=1789769890; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=loeJ5fVOWhUbPJHW+NFKkRMe/jUZcegdPqWwrAB0h+s=;
-        b=P7mWoMQAHl/AEnApHaS4xT7umqWqzL/jljmSwaJDXflg4zQGhB/0Rvm4k3axdiTdHZ
-         tQdovyzY0acznxH0mqAkYy4ddQiL5kzjhswCyPy0w7362ea8Cd2gECobiK+VtPhHMc3h
-         2ngQxwOsPq1aWrspp8JMOgvG89U1ZOi9CFMxU=
+        bh=kkI2oZvPkujyEJtYMkC2DwOuibdL1lKhe8C44FKDAeA=;
+        b=QYfB0q0hodJ47ZSw35UhpmRnpLUjx2EfUDRvDamtpOpnd9nAvfTe23Y+59VBQjUUlZ
+         faNGeHWdrS3Kqk7e80DNTqkC6tYrbkUnjLDFnnyyYkQPgR1SR2cVQxSmTZbHwOmZYyst
+         2B133cEa/aOUTr7a7ZeS37WdRM8STR6SznLuQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789165091; x=1789769891;
+        d=1e100.net; s=20251104; t=1789165090; x=1789769890;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to:content-type;
-        bh=loeJ5fVOWhUbPJHW+NFKkRMe/jUZcegdPqWwrAB0h+s=;
-        b=rpeOjjjulQmavJ/pafgA/ciiFA8WvUmoCBXzns9451O3ibI4/tV6D3ImZxr8G7UMIF
-         utSNkoI2hY9Q95e72wDxoycLZv24h7gDKtaPsi1d9A6+c3PJrR3oy0qCr2bdB05uWmtT
-         V+c04p/TynMDhXSq5Dlz/t3XfWbrazBxgPw7oFcWPiFGsebXZGUl9wDsp9+QUU+Dw8lK
-         aun/siNoRRtn6dQGxnXlVg93ckBt2+TTj/gALULTYO/huYOeo0H8P+Aempv24RF88JRo
-         2B6vGzOllfmAz72+4ufvw/8Wak7SMmBfkrACBOuYLcW9RG2QG15lHwRoWxKc8tCX6XdR
-         Uyvw==
-X-Gm-Message-State: AFuF++lH+eKvhlNdbEBvRAxS0Ln09G2X0N+t6/ucd2SKQun8XEceyMR+
-	SkeOGn50oY8aSzfKrF4MtcABZqFhNel6UQ6stgXXC+R8N4dDTQZ77qo8n1SLU3Xxw4PYgjODtkR
-	NTkOKNuI=
-X-Gm-Gg: AYBFou2FFJiD4OGFP4tsk1eafSE30v/74nOkNcLAAcBVkEmod8INXA/LZXq9RBDnToe
-	vUQ7Y/qeDLzyeXNj0uMS6XtHL9yoI2+s3d5aIONuLMgUF5JMf6sHD2+S5ER26XV3x4Aa0eF+3ln
-	UOUTs4B0TfrBBmMsC2IgFdsttBVxof+VPoQp+noqTAwuOjkbQ/efH6L2b68fQt+eRyCiUHH5bYQ
-	H+V0JBOUGSYsjL2JEYYtF9BsP87kpTG9HGg+Y/dchEHf4qWSLKaAB5z+92eFCrGeQCMmhgsE7dl
-	WKu8Nn9m9Yzli+X2TG8QwE56lroIG1FlGVSo9b1T1z47hE0cKxWhwdBRJbtAn+0nPZ8GYNB/4Tg
-	EISFL3R0zT0PAVEJE6vRTyKbdJZoReB/qolutkyu1+1CATs1Xkcti/aQA5U4W9Tnd4vVu6jiOJ8
-	lC6JpaGedfvzIeNgo9WeRPhT8Wm5aUFYzBqJoi2OhPV9XgfnL3HjsoQn+ml3Km7aDQGnRBqrTvT
-	1HJKkVHq86AHx6WsCs3MWx8epgg6rZdZfdJL6X4n2wwoOfoFrEXjgiyzSe38ptU0kfEZUYCt1mj
-	MxtWm94oLQ==
-X-Received: by 2002:a05:600c:a0b:b0:49c:e1f1:3dd5 with SMTP id 5b1f17b1804b1-49e618863bcmr130283265e9.4.1789165090724;
+        bh=kkI2oZvPkujyEJtYMkC2DwOuibdL1lKhe8C44FKDAeA=;
+        b=H8cVsYIP3BuCR5nIYxuKHiUX3Pq0Vl09LzZYuFHWvot5fSIi1GPEjQygMtVeqeHHX8
+         FLnw4aZ4/VdR82XbZdWwbrLV0Nt6Wm7o/MLodmccpbhOXkxRyt832xWsxON+gVmbUSO6
+         iI2gjGjXwfuD7UIO3NGze7Kt5w1vGnhlXqw1sWt+76/UXHS4H9uAsYAhKePEgH1jxVvm
+         V9TkWDA4M+iQo6m6LyS0ChyMhy69uIf6/X6nkdHQljMYP26nXh50goEG0blUHvtqg6mj
+         +A5KqMKdjn5I6HPltRuj927hqlBMfeyDod5Cu/60UwopnOhSx1MpknAPUIfMSlvkmUNK
+         TOnw==
+X-Gm-Message-State: AFuF++l8lvXB58UHQtZErv3BobD4JDI8ljMvEzFE0EEV84HwpDBDtr1G
+	OwKjqA7GUxghZucGZOMR+PWoUib6LGWgLKX6Qpl3FQJ1pDV4F653NZGZXG5/Hx/eaujKcc2xcJM
+	blA881mk=
+X-Gm-Gg: AYBFou2XrgqxDy28j5pW4XP/YlkEL0Gy2SMrjPnjhko0gqERciZP/LJ82T8hzvNAQak
+	AEPyTqcj3nkIYo23HfAvjLyRCsa1yrry7CrcZLfSklXFXbB7H42rqpXmSJ9l5KW2lOydC7ZxV9p
+	DvUccV2Yw2loEIYL+HPO3ffdHTn8zMDNdv60w295vxEQ8Qv5umfHIg0uP+NzLB1YF+DY2XZXX6U
+	UTmwJocmAGWtLR0CNKownYvSE8PZdLFGxHA+ll/Jjwees5c491kgyWpUpvwaMnTeB7WVMkLQtv3
+	AzVPkxC6RQ3ccRfdz55ejYMnrtaW6XMtYSSkLMdDttHRVCHBte11t0qy6C6LnpKBkAMlJZreax3
+	44JXZOFEINiwfobZL2xZUkBr2l4pjkjQoWJ6ou+VAcwxhrh0KwrwaWTQCixslStaUz+F9zBhxpY
+	zPVHU5MjtZgNCuK7uahaUQ9HuUW2KJt6NjxP30sj/yM3tc3oDK++npmE8kaPQgkXVvkprxTWfe+
+	HDb5U2YAC8tC4r0TlnnKeJpOELmcXaetpiHPQaj90wZqLu6nnA77344NtVJsi+51Bfq0Li+Sag=
+X-Received: by 2002:a05:600d:6501:20b0:495:48d7:f178 with SMTP id 5b1f17b1804b1-49e61988e73mr53699555e9.11.1789165090122;
         Fri, 11 Sep 2026 15:18:10 -0700 (PDT)
 Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49e61a33e34sm78235165e9.0.2026.09.11.15.18.10
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49e61a33e34sm78235165e9.0.2026.09.11.15.18.09
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2026 15:18:10 -0700 (PDT)
+        Fri, 11 Sep 2026 15:18:09 -0700 (PDT)
 From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][scarthgap][2.8][PATCH 3/4] tests/fetch: Swap github grpc repo for our own small test repo
-Date: Sat, 12 Sep 2026 00:18:05 +0200
-Message-ID: <24b0e0bf27183cfb5ca61984c4d8f4b02242b9f6.1789165002.git.yoann.congal@smile.fr>
+Subject: [bitbake][scarthgap][2.8][PATCH 2/4] fetch/gitsm: Store the original url data to fix relative gitsm paths
+Date: Sat, 12 Sep 2026 00:18:04 +0200
+Message-ID: <ecfde933b848b5120858b922236f57238a6e1fed.1789165002.git.yoann.congal@smile.fr>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <cover.1789165002.git.yoann.congal@smile.fr>
 References: <cover.1789165002.git.yoann.congal@smile.fr>
@@ -67,34 +66,54 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 11 Sep 2026 22:18:22 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20186
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20185
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-The grpc repo is 1GB in size and makes a poor choice of test repo. With github
-rate limiting, it is proving probematic.
+If the gitsm:// url contains a git submodule with a relative "../" path
+and the fetcher is configured to use a premirror, it will fail as the
+host name encoded in the original url is lost and the correct paths
+can't be found.
 
-Swap if for our own gitsm test repo which is smaller but can serve the purposes
-of the test.
+Save the original url data in the new data so that it can be consulted to
+fix this kind of edge case.
+
+The test case change that follows this provides a test of this functionality.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit a64b3157d74f883002318cc46c70bfa1c3609110)
+(cherry picked from commit 58872250f72f5760b4126552bdec5497f5a1a1f4)
 Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
 ---
- lib/bb/tests/fetch.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/fetch2/__init__.py | 1 +
+ lib/bb/fetch2/gitsm.py    | 5 ++++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index a658b89a8..3ed98593d 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -1193,7 +1193,7 @@ class FetcherNetworkTest(FetcherTest):
-     def test_git_submodule_restricted_network_premirrors(self):
-         # this test is to ensure that premirrors will be tried in restricted network
-         # that is, BB_ALLOWED_NETWORKS does not contain the domain the url uses
--        url = "gitsm://github.com/grpc/grpc.git;protocol=https;name=grpc;branch=v1.60.x;rev=0ef13a7555dbaadd4633399242524129eef5e231"
-+        url = "gitsm://git.yoctoproject.org/git-submodule-test;branch=master;rev=38e61644af90dccd73c03ed3acaed98c8dda9294;branch=master;protocol=https"
-         # create a download directory to be used as premirror later
-         tempdir = tempfile.mkdtemp(prefix="bitbake-fetch-")
-         dl_premirror = os.path.join(tempdir, "download-premirror")
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index f2835397a..e89f5be2a 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1011,6 +1011,7 @@ def build_mirroruris(origud, mirrors, ld):
+                     newud = FetchData(newuri, ld)
+                     newud.ignore_checksums = True
+                     newud.setup_localpath(ld)
++                    newud.origud = ud
+                 except bb.fetch2.BBFetchException as e:
+                     logger.debug("Mirror fetch failure for url %s (original url: %s)" % (newuri, origud.url))
+                     logger.debug(str(e))
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index ef1905333..e866edeb8 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -89,7 +89,10 @@ class GitSM(Git):
+ 
+                 # Convert relative to absolute uri based on parent uri
+                 if  uris[m].startswith('..') or uris[m].startswith('./'):
+-                    newud = copy.copy(ud)
++                    if hasattr(ud, "origud"):
++                        newud = copy.copy(ud.origud)
++                    else:
++                        newud = copy.copy(ud)
+                     newud.path = os.path.normpath(os.path.join(newud.path, uris[m]))
+                     uris[m] = Git._get_repo_url(self, newud)
+ 
 
