@@ -2,149 +2,111 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F516C88E50
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4296CC88E4D
 	for <webhook@archiver.kernel.org>; Fri, 11 Sep 2026 22:18:12 +0000 (UTC)
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.50926.1789165091507943916
+Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.51007.1789165091093915002
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 11 Sep 2026 15:18:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=U8NX83xv;
- spf=pass (domain: smile.fr, ip: 209.85.128.43, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-49e6bad7b79so2060405e9.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 11 Sep 2026 15:18:11 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=DUb7bvrr;
+ spf=pass (domain: smile.fr, ip: 74.125.225.140, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49ce364488dso1044075e9.0
+        for <bitbake-devel@lists.openembedded.org>; Fri, 11 Sep 2026 15:18:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1789165090; x=1789769890; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=axi61h0WHCdVUY9vUSJp256LW2U73rjmepsQYD4aJX8=;
-        b=U8NX83xvZ8HoMy1gAzooi4jtNENCiEpg4+rua+kaDYI5G8d/Q8ClLkpvQmr3+sKnnL
-         rncBcgdLD9HMT8Oyj0mpyeNU3wPOGfSRvBiIxR72FNAGGqDcP7o+vvAl4calvh08Q7B6
-         NVwYD011NcUR166W5jbN3CldKQBgpiENg64Uo=
+        d=smile.fr; s=google; t=1789165089; x=1789769889; darn=lists.openembedded.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=CGyMZKMpI7nicczezWNPLgDbwwWP/ivH+WqFKXRolIs=;
+        b=DUb7bvrrLcLpJvyVrt4PAF1apI53D+9j859PZFYj6XHVaQkuvCN2TK2ETVZ+8OhGgb
+         c13Sxe+iURhJuKb/DQf2lW267v5X4tBxlgUu26SR/JAzjlavIQ87BL1P+ri9U7KadYAR
+         L29Lih/ZnPdsgbOcyo+MN50Iw00DgabBD/aAc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789165090; x=1789769890;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=axi61h0WHCdVUY9vUSJp256LW2U73rjmepsQYD4aJX8=;
-        b=NU+4yY7oSQuG+C0kbkkCglCfckDOO9790W4fJ1dLBN7A4isUDda411R/XS/4WkwOt8
-         GxhAZtlyfSL2Vo2imXInSEmF4ohmVEahMLBqjOcQD+1T2onxv1JeKj+NiE12zD8TjePx
-         gBPQ/gaofPQ/kwvm6dT0gvXf7pR46yBuzwiH/hRtSKbKGsGiAMARwFNIJQaHZILfRqaU
-         jrMiwtvlebnVp6BqcHU+zYuXd0R44z/qnjUyUTsXL32qmRnPWc90p8wegzOlWyo+hNFa
-         +NaVD8GFgVU+Es/X7LXn+nY852SBh/8pcZ/IOuElGEmoc+Ym0Fe9kXD5aPJDDI5iKiio
-         Ctlg==
-X-Gm-Message-State: AFuF++ljDp8hU7urtxg1NrZtnQ9j6Z5QIIj7Wk0v8XXbx2aGX+Bv147T
-	qYTOOVgREECEYYOFPDcrnxDCJKbrf0SIyEAS84amcTC7jD8kXGUdNb7ND8/OXMUwurKHw9t13Mj
-	6W71R7dQ=
-X-Gm-Gg: AYBFou3tZQoeiPgjbumidg51Bn+esS2Z03WBrFTiPQ8Gd4cgy6FF8XPFSxG1viqGxal
-	AaPQXqObhhywTsgPcHfhPWbRLSV2AFy/TFG4p6z5zAgwoULXzg2l8coKWBIvx5/SJGwj2NxfXyy
-	299hzcjI6JOtyeOR23kAO2qWyvvdlIEWOQQBqcEEZ3ZndKR0eTpIXNI+oqF1ylIsoW1QSrfQgMl
-	5XcEFlRcR0tFSaxQytabNKvC3L0ue8Pi0+nKkWQoxa7xoPqLF8GPfHD5R9IR4v5/RW0q9xJKmRH
-	paxCC78yNcdQlbFMxcQ7puks3J4J+AfQVDJ1NDlVXA4pAThty1+Te7RxigvI8SGtu38l3dp1Jq3
-	f695mPP9AE0Eig1VdI0Elfw6iM1+HV+1QHSmQRK563+zElFjOL4wjVQ1yh5r0sibXyaKuT+i+Zk
-	gQ/7RZhlwCaMh1xtMrPgTQU7JdGs35VjDGTLtbOoW4IS5bXiwTHf3hDtT/C0BAahovnJbeg9frk
-	pSYX59Jrowg5msIJDE6hhQb2ntWhjLbvU3C1Py7/vp07CM0pSOOt5gbcg/xrTZgpLICyTI4AOI=
-X-Received: by 2002:a05:600d:8485:20b0:49d:1e3d:3b3f with SMTP id 5b1f17b1804b1-49e6198bd27mr19422855e9.8.1789165089709;
+        d=1e100.net; s=20251104; t=1789165089; x=1789769889;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=CGyMZKMpI7nicczezWNPLgDbwwWP/ivH+WqFKXRolIs=;
+        b=XS3bkUuYoisI1pmMVvzLCpZ9tGrX2FsBzKrrpqCMgoWWEVE6B/aGDUQLld5hY1uM0V
+         O91x/mh+1duXEUO4m6mkRon33Thq4eqNuukmWjilwuG7OUx9vPs6sXtHj1lCUO2zecwe
+         UDgg9QaZ5dIekFPWCn8hOHZ4YvwJkUgBJ+CVsbmSJAHbpe7eLq/EhnWQRwBWYAgUapZv
+         H1twXFcqTGM7ascXz/v/5htA53oibLMbNr1g24tBuoMkXVZFCLBRZzuYDTO6bN/pxkkO
+         LBsDVCb6132dkNINUuaXAzCqNdVCHhS16ye0qcGGuNplWAN9O/fRqfdJr9zmqfPnG6kn
+         E4xQ==
+X-Gm-Message-State: AFuF++lBSBvoMUmca+Wg+HSBPSUIArzE+doh3i2k6LLR7BtzRu6QWVVq
+	5tr+gXWbUusXs0gMeCDvCrYALb13Pj6mUmWnCLR0weDhr782nN06+Ock/cOGShhhY2lLkfs1fp1
+	5DSwyCAg=
+X-Gm-Gg: AYBFou1mCHY86NNjZmN0DHSnbRnTDKXNkAkK8125xLgt/dmSbJylJggWFXTXgB1z1ll
+	tKXtDgGqgEwSXzvQPWNtnps9ysNxOmtCO+v/Wvj+pgKqP+AeYXd4gDl9CIeL9N6mrxtSkX8YZuX
+	tGUMHKZqDhxjx7I5x0VX5UqVp284NRN3bdUzc7y1LB+cMpQIJTLdXb0cty1FMB430QJI2RqiU5C
+	DcrZKcstotQd4194i8DTf7NZO5CuQT7F/CZDpIskYj8dUI2ITxThrGt3Tdi+wAujoHdxiHTt6n3
+	Ww91LWddmE2Z7KTVO7uq13PDewC6+xfRTCfcFMmeHf8A5zdi0j48LEh8zAd9/1gmRKYlYoX3qmU
+	Yr295XD+JgCE2Qd1Wup9yKA6iwJZU/s6f0PyUawlINq5/ystxlzdgbAWoI5t8h4ILVaRlQasJ+A
+	RcAmM/fZV+a443F8Q+pq8zxN4fOpOzZnTtbYn9FrDwFZ2qfIEke9MjZ0oSfv+9D+Lku//IsDTD4
+	a3CYtXbt/zwRkaHFBWHKD63U0z5/geKmjw7ByQxnClR2cqbu4+4muzeFCxK2YMOBuFDiyfOl3VV
+	4kFPTnW/Cw==
+X-Received: by 2002:a05:600c:3f08:b0:49c:f13e:e50 with SMTP id 5b1f17b1804b1-49e6108c75dmr73303685e9.13.1789165089268;
         Fri, 11 Sep 2026 15:18:09 -0700 (PDT)
 Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49e61a33e34sm78235165e9.0.2026.09.11.15.18.09
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49e61a33e34sm78235165e9.0.2026.09.11.15.18.08
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2026 15:18:09 -0700 (PDT)
+        Fri, 11 Sep 2026 15:18:08 -0700 (PDT)
 From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][scarthgap][2.8][PATCH 1/4] fetch2/gcp: treat GatewayTimeout as fetch failure
-Date: Sat, 12 Sep 2026 00:18:03 +0200
-Message-ID: <c085e5e2a91cda2b10f14b72d6f5fac8b8c209b6.1789165002.git.yoann.congal@smile.fr>
+Subject: [bitbake][scarthgap][2.8][PATCH 0/4] Patch review
+Date: Sat, 12 Sep 2026 00:18:02 +0200
+Message-ID: <cover.1789165002.git.yoann.congal@smile.fr>
 X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1789165002.git.yoann.congal@smile.fr>
-References: <cover.1789165002.git.yoann.congal@smile.fr>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Fri, 11 Sep 2026 22:18:12 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20184
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20183
 
-From: Sebastian Muxel <smuxel@snap.com>
+Please review this set of changes for scarthgap and have comments back by
+end of day Tuesday, September 15.
 
-blob.exists() and blob.download_to_filename() can raise
-google.api_core.exceptions.GatewayTimeout after the GCS client's own
-retries. Uncaught, that escapes as a hard error instead of a normal
-fetch/checkstatus failure (and blocks mirror fallback on download).
+Passed a-full on autobuilder:
+https://autobuilder.yoctoproject.org/valkyrie/?#/builders/29/builds/4718
+* oe-selftest-fedora fails with 16415 – AB-INT: github infrastructure issues
+  I still need to backport fixes from master to wrynose, and then,
+  scarthgap.
+* qemuarm64-ptest failed with 16267 – [scarthgap] AB-INT PTEST: python3 failure (test_wrong_cert_tls13)
+  retried in https://autobuilder.yoctoproject.org/valkyrie/?#/builders/61/builds/4516
 
-Catch GatewayTimeout in checkstatus() and download(), log a warning so
-the timeout is visible, and raise FetchError.
 
-(cherry-picked from commit 251f01e9afa1dcb9a49f8a31981e698017a43754)
+The following changes since commit cff3be6f664f8f07a40727ff63eeeb24d6f5e00b:
 
-AI-Generated: Cursor with Grok 4.5
-Signed-off-by: Sebastian Muxel <smuxel@snap.com>
-Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
-Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
----
- lib/bb/fetch2/gcp.py | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+  utils: Add NFS EEXISTS/isdir failure workaround (2026-07-19 18:02:05 +0200)
 
-diff --git a/lib/bb/fetch2/gcp.py b/lib/bb/fetch2/gcp.py
-index 2ee9ed219..c3cbc948f 100644
---- a/lib/bb/fetch2/gcp.py
-+++ b/lib/bb/fetch2/gcp.py
-@@ -57,7 +57,7 @@ class GCP(FetchMethod):
-         Fetch urls using the GCP API.
-         Assumes localpath was called first.
-         """
--        from google.api_core.exceptions import NotFound
-+        from google.api_core.exceptions import GatewayTimeout, NotFound
-         logger.debug2(f"Trying to download gs://{ud.host}{ud.path} to {ud.localpath}")
-         if self.gcp_client is None:
-             self.get_gcp_client()
-@@ -71,6 +71,13 @@ class GCP(FetchMethod):
-             blob.download_to_filename(ud.localpath)
-         except NotFound:
-             raise FetchError("The GCP API threw a NotFound exception")
-+        except GatewayTimeout as e:
-+            # The GCS client already retries GatewayTimeout internally.
-+            # Raise FetchError so mirror fallback can proceed.
-+            logger.warning(
-+                f"GCP API GatewayTimeout while downloading gs://{ud.host}{ud.path}: {e}"
-+            )
-+            raise FetchError(f"Transient GCP API GatewayTimeout for gs://{ud.host}{ud.path}")
- 
-         # Additional sanity checks copied from the wget class (although there
-         # are no known issues which mean these are required, treat the GCP API
-@@ -88,6 +95,8 @@ class GCP(FetchMethod):
-         """
-         Check the status of a URL.
-         """
-+        from google.api_core.exceptions import GatewayTimeout
-+
-         logger.debug2(f"Checking status of gs://{ud.host}{ud.path}")
-         if self.gcp_client is None:
-             self.get_gcp_client()
-@@ -96,7 +105,18 @@ class GCP(FetchMethod):
- 
-         # Path sometimes has leading slash, so strip it
-         path = ud.path.lstrip("/")
--        if self.gcp_client.bucket(ud.host).blob(path).exists() == False:
-+        try:
-+            exists = self.gcp_client.bucket(ud.host).blob(path).exists()
-+        except GatewayTimeout as e:
-+            # The GCS client already retries GatewayTimeout internally.
-+            # Surface a normal checkstatus failure and warn so the timeout
-+            # is visible to operators.
-+            logger.warning(
-+                f"GCP API GatewayTimeout while checking gs://{ud.host}{ud.path}; treating as unavailable: {e}"
-+            )
-+            raise FetchError(f"Transient GCP API GatewayTimeout for gs://{ud.host}{ud.path}")
-+
-+        if exists == False:
-             raise FetchError(f"The GCP API reported that gs://{ud.host}{ud.path} does not exist")
-         else:
-             return True
+are available in the Git repository at:
+
+  https://git.openembedded.org/bitbake-contrib stable/2.8-nut
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.8-nut
+
+for you to fetch changes up to cd50c3481e32afff995a143c3459cfa5ae25abd5:
+
+  tests/fetch: Swap bitbake github mirror for YP one (2026-09-09 17:57:33 +0200)
+
+----------------------------------------------------------------
+
+Richard Purdie (3):
+  fetch/gitsm: Store the original url data to fix relative gitsm paths
+  tests/fetch: Swap github grpc repo for our own small test repo
+  tests/fetch: Swap bitbake github mirror for YP one
+
+Sebastian Muxel (1):
+  fetch2/gcp: treat GatewayTimeout as fetch failure
+
+ lib/bb/fetch2/__init__.py |  1 +
+ lib/bb/fetch2/gcp.py      | 24 ++++++++++++++++++++++--
+ lib/bb/fetch2/gitsm.py    |  5 ++++-
+ lib/bb/tests/fetch.py     | 16 ++++++++--------
+ 4 files changed, 35 insertions(+), 11 deletions(-)
+
 
