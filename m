@@ -1,153 +1,155 @@
-Return-Path: <zhangqiang.zq307@gmail.com>
+Return-Path: <quentin.schulz@cherry.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2685C88E50
-	for <webhook@archiver.kernel.org>; Mon, 14 Sep 2026 11:44:04 +0000 (UTC)
-Received: from mail-pz2-f12.google.com (mail-pz2-f12.google.com [74.125.228.12])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.18071.1789386242467403371
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93405C88E72
+	for <webhook@archiver.kernel.org>; Mon, 14 Sep 2026 15:21:57 +0000 (UTC)
+Received: from AS8PR04CU009.outbound.protection.outlook.com (AS8PR04CU009.outbound.protection.outlook.com [52.101.70.71])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.222.1789399313973129604
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 14 Sep 2026 04:44:02 -0700
+ Mon, 14 Sep 2026 08:21:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=hKpKBqGt;
- spf=pass (domain: gmail.com, ip: 74.125.228.12, mailfrom: zhangqiang.zq307@gmail.com)
-Received: by mail-pz2-f12.google.com with SMTP id 41be03b00d2f7-cc4b29fa803so1422578a12.1
-        for <bitbake-devel@lists.openembedded.org>; Mon, 14 Sep 2026 04:44:02 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789386242; cv=none;
-        d=google.com; s=arc-20260327;
-        b=YQuKM+Z7POdPgqm3NFL3Fn3IhuaA57VJM+tzHSsFkPazTV9WVPVQcrzdaLN5z9NJJp
-         vPbg84IiDqRznVv0fEnOWRY4Usg6dD5g4da6XaLh0yhOcKL2r5VPzVXBIpdfsACxT+zF
-         sfk/OsBegjxp9jI+9jHTtVvvbtExIYr6bO9jZ4E1eBzy2jphmnHtK/+iOjK+xNOiXKF2
-         CSU3p97BL55lJmZeQd62OsIWCRmjxWrOelEZOLso9UIA9UD7SGnN/4mz6XqwJUEfh5ym
-         pIyNJjG1IwAoIFOMuzywTkjXANAgkFovQhQgi/U5CW8joTQNr183gR6TT/gO1LKSPt6r
-         4KFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=dzIQZwEz1FbNNrMB3hVJyUGyNwn+CZZvceAYZ3H8d/8=;
-        fh=SK27jGDeuPIF+dJJVhVhn4KziPt8/7C8VJxx6bxT9oA=;
-        b=MRL5vLMBjGlzFQSG1BLvvEJRirWLTHTQD3a3u0aDVTO+ALddv7czro8RAyoDwU4N/A
-         o2vVgC7ypRGN2kwtTNFlnfvgYV9bLGOJ2i3jVcLH3gZYEErbqWlDIlwLqXr0xIjzacqE
-         QVwnl84qbOS1yFKlbXE7S81FjcFXKrd0gj0s0Da35DavwOGkAKVCwTV+Q7yKCP37qngj
-         lLBybS8dbdi2G2grMxkZ9qa7vyTTkX2f2A7mp4ufh3F2x70FTq4MCpJUOJ5oaC+EgII3
-         nnj/H4HT2n2KiIeRJEwNeiAwdKx0m4gi4X7RI42jsIomY3U1zwK3dIrJAlMoAGKO7pFr
-         yteg==;
-        darn=lists.openembedded.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789386242; x=1789991042; darn=lists.openembedded.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=dzIQZwEz1FbNNrMB3hVJyUGyNwn+CZZvceAYZ3H8d/8=;
-        b=hKpKBqGtYtjf0S08NSkQLcOKGdCa/j7ZK4MfhmTcOOZ2Ld/Z+tTM60i1+SEWAYPE1d
-         eWpJ0FUpOmLKXSQUt5QZfjMSZjN1so6PQflVmWsGZ62o+6xzd6xdwIiBbQZnQfU1GZ3S
-         3q6O8X9emIS9fTA2XLFVzN5pyhaVc686M26Jh0tWsXNOPpC3VnENDMO1zp7ifwCcjBij
-         ppPRnjxF+21eM2gcG5AvRd8iOnRB28XkQRG12jt68MBXBjxWbK6zuVm1t/naPNCW8rVd
-         igYQptb+i/y68grgXvlQSvp65o9IbmggG5SlGlWcdRaHyzOCEUIPLW7hmVeBsRL8AvEh
-         wwUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789386242; x=1789991042;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=dzIQZwEz1FbNNrMB3hVJyUGyNwn+CZZvceAYZ3H8d/8=;
-        b=cKMSvInQgdHZuue5fFfKbinEPZHqOeY4Az0tO3onSYEShjDGuwcumhD9Wp6XATmEUH
-         q0IYH14Ex92jX554Q2uNUGz4ybAV8H/trW5hjcAZ6J9f017mew2MLynzv9aL+hznGRBi
-         a+iEtxpIKck5wzqYmOlNg/xnujFgHbE6Xxd1uIgK1ESyMR+qo+SbLBATgoIYAxBCg94D
-         MFFkOneGtA5IJW6twtT5gMX4Ppv7hCqedyybcwVPonvmET2MylEhGXyNBqs36jKSoOTQ
-         bsMcqUYD4Twh1MyUT92oQ077jJf5tEqM7vSADJ/nUKLdqzFgEVHH0CHhT/DSrlwcqQwi
-         Nd7Q==
-X-Forwarded-Encrypted: i=1; AKwUvBxtr/eZrBsD/klx4kVAYU7q8kPTFsQJfQxeYFgd1UCdMI4e55SsXWYC98MDSfJipoScX4sFHICMvIzEQN3n@lists.openembedded.org
-X-Gm-Message-State: AFuF++mlYua7gRnVH/bkg6RT0gTOFVw5xFj5XtMivP3yLtNpeGZ5t2Sm
-	GUrwmnq+dqkv7SEcswZXeQaKY/Qesh3TvN4pZkauPJr5RSsfO1eFjrnANx+z+7uLKmoMnuuefe6
-	NJD/Mi2IBX0cT0mlrgg/i8P0RLIusGRc=
-X-Gm-Gg: AYBFou3+m2UMXEK9OSnzcpSdc97p8pegEaRMC9hkOr6M6ikGRbwdB9JHHNRj01CruOM
-	0yiVUwuSqIxLwcp9ilqJZwc2t26aiGomBfFJEVo6sMp78Z3Vs47SVoV24MaFOeGluCMq3NpSCHB
-	MmSRXQFJqzT4pEpGN9sQt9HxriDkH+z3C9DINXnMh8LpydMJKDD4ZlBqY0uX+8EyPsyM9tssGNC
-	Z2mzoi+/L2Pg1/kDcadnUXOBs6ETl4oXC5g7mhxIVFoAV+lDfjibZtuMyzwBo8e1sniNPvzRsi9
-	t2bmqMCmWG3aCSWPAlnvLF3cszklH57E35XP9r44OAL13nlUMv/oEqqy
-X-Received: by 2002:a05:6a21:4612:b0:3d3:aec2:4dce with SMTP id
- adf61e73a8af0-3db4063b182mr4070156637.26.1789386241532; Mon, 14 Sep 2026
- 04:44:01 -0700 (PDT)
+ dkim=pass header.i=@cherry.de header.s=selector1 header.b=coQt0B0p;
+ spf=pass (domain: cherry.de, ip: 52.101.70.71, mailfrom: quentin.schulz@cherry.de)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NWaiWJLqhk8XFk6sIILphxdTvnzHogdii+zW7aKki1a8PQcYkKJ9HV7MmO702p9W/32zth/tmit2m7Bgr9M3m0MuWy5S/9B/FKcqDSgkDRSdEULR0PAariUAI1c7Gl2xMRdYTxQ/SRsBp6J+8kA/xyd0F966fnxyBA2ngpq5VQ9JG2lERMBs/qvqzuFFheVDVdZsDSyBZ9qHtnVoL2wWGeU/iwV/si3z99dt6G+5O/Jx58Vz4JLaEnFbjbWDppMfSA8OIlJAfbT7cv3teEz8uMUxI73N1mJ1cZ+1ZqfVpLRaHiA+rOl93C3ox8Qk9XuxymrQ9+bS0YmFJUD97AoH9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=otFE/+XqgKf65/XFyvkqJ1ERNjJ8zq/tBu37YnzAyYY=;
+ b=GvnFyiM5kqS18m7fFiaw1lner1FwN8jY0e1LrsOhadpBecLVsZreKlbQ3V7FXSmnTk87+iHZ+bpeF4yXogpkgfBEaH0Yakr6Em0Fh0qri2fQvuxGulXu4Ul3AZCyTiQaHYby0o8waPXrCgymqngGRAIBryZRAu5GcgXV9TxqEE+y54CDxKwXG4pJR6sS8gmSPxpJ+k51YX5zGj91Ex7UceL0+yM8UJ0i0k7+3rJSSzvuIsHkWila9gKIYjzSJJ7cpLNlbkekbD7l5qVTXHmGk8+ITh0Wgxljzl4CziUI+fjg7t1yknXhs9FQZckdZKasT/5JrLTgKq2vducxOW277w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=otFE/+XqgKf65/XFyvkqJ1ERNjJ8zq/tBu37YnzAyYY=;
+ b=coQt0B0pv8IBYYu8sqVjCnlC/FABQB5mFBh0vmNF40iDaYOdxOJB+izqVubKcKIdCFUKe1GKRrrcvTxDJtRZQAMlfPJCET0oTuFdODpq103l7tRHWNIjPIs7B27GUUDziSVH2US2e/ctdGMhWx3GM1CB4d1av648GLgp4661XVQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from PA3PR04MB11153.eurprd04.prod.outlook.com (2603:10a6:102:4ab::7)
+ by PA1PR04MB11508.eurprd04.prod.outlook.com (2603:10a6:102:4e0::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.12; Mon, 14 Sep
+ 2026 15:21:48 +0000
+Received: from PA3PR04MB11153.eurprd04.prod.outlook.com
+ ([fe80::6b02:c0eb:95a4:3c3d]) by PA3PR04MB11153.eurprd04.prod.outlook.com
+ ([fe80::6b02:c0eb:95a4:3c3d%4]) with mapi id 15.21.0406.007; Mon, 14 Sep 2026
+ 15:21:48 +0000
+Message-ID: <d8eedd54-51b2-4d71-a8c8-4dabe0437c63@cherry.de>
+Date: Mon, 14 Sep 2026 17:21:47 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [docs] [PATCH v2 1/4] lib: rename fetch2 as fetch; invert compat
+ shim to make bb.fetch2 = bb.fetch
+To: chris.laplante@agilent.com, bitbake-devel@lists.openembedded.org
+Cc: docs@lists.yoctoproject.org
+References: <20260828162612.753815-1-chris.laplante@agilent.com>
+Content-Language: en-US
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <20260828162612.753815-1-chris.laplante@agilent.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: VIVP296CA0094.AUTP296.PROD.OUTLOOK.COM
+ (2603:10a6:800:35b::9) To PA3PR04MB11153.eurprd04.prod.outlook.com
+ (2603:10a6:102:4ab::7)
 MIME-Version: 1.0
-References: <20260914051148.1445323-1-zhangqiang.zq307@gmail.com>
- <1166440fd2b4a63232ad5959369f7602a43de82f.camel@linuxfoundation.org>
- <CAFb4brP7OpopstkUKCCGyFPEaGwjab+AR+FFPh0pvGjK+Uhsxw@mail.gmail.com> <CANNYZj-2Wxevg8NM5ODrztE6rh3NrvjAwFR=BPcBWFffM0zsUQ@mail.gmail.com>
-In-Reply-To: <CANNYZj-2Wxevg8NM5ODrztE6rh3NrvjAwFR=BPcBWFffM0zsUQ@mail.gmail.com>
-From: =?UTF-8?B?5byg5by6?= <zhangqiang.zq307@gmail.com>
-Date: Mon, 14 Sep 2026 19:43:50 +0800
-X-Gm-Features: AcwNN1UsfJct_2GkAaOQAesy2Isma8IQiaRxzFksUR4zd45MHmwO07Nhe8UKhZY
-Message-ID: <CAFb4brN8fd624Qdfs_A6mcPM9M8SWxEs8f1FX4hdDHY6B5Zhag@mail.gmail.com>
-Subject: Re: [bitbake-devel] [PATCH] fetch: Add log_errors parameter to Fetch.download()
-To: Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>, 
-	bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="0000000000004ae677065b6ff329"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA3PR04MB11153:EE_|PA1PR04MB11508:EE_
+X-MS-Office365-Filtering-Correlation-Id: bd96c8cd-0ea1-40fe-c690-08df1273e508
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|23010399003|366016|376014|1800799024|10067099003|56012099006|11063799006|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info: 
+	P1Y390fA7tkSzowk1Yx2fMeQWz1rZw6k2QD6OEVEvG7cIyZBpb7V2Kg8yIBJ1sKHoSgt16hcVLcesZsyJOFqLixhcW2RWLAPWc4+W4S3OVVi9VOXqQj2XQV2RDPA+BAAfmeFws/nf732NyV/rVACuoczREK27DjxkYYWXuR8kUbRBXdFgIcDXJopkpEzRj2hfmYy5XaHxQsIWXn5okExbjfaVV0xAH4opaZm+3aW1fc3K/O5zF9BMMf+L9pEXGQREWmCizjgN6STU3+5mhutgp5LxGTX12UZ3py8ZXefsVLZ57GaOQ+T7DwTE76GT66sTed+jia9mtUa6Cwvhgne4Oi+r7Swu2+1GKvuBbpla84/2fBZSvwQqFUixU7hALXckoxHHHdkfUT/0xSXRlVQQFanZLV7D83QzHDBsltppJVWL4ENx4Xk5sIgGjza4SGqF96/zta4JyiUsnJ76D/SZPRu/qmwk8pLGsY5BMit9DD5QdHa0I7lLf1kXJ7ijlCnxwJCDXGqMExjOWPszbIWBmMyAOwAHlUJ8U/ReNfy1XGC8eogFzmkz6jfS/Hn4Hojts76cDUrFEmiGFyJMx7OPua7cYV5Xn49V2VFlAAB3JO2/X0cfqb61Aev2f4UfBCycmkGhUY0hKgeV+GnHpVtHLfaXwQgSmI8z9uieOZ5V5A=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA3PR04MB11153.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(376014)(1800799024)(10067099003)(56012099006)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?ZEtVYXAvMVFhRFFWd1UzWHRnWVVRQ2dqNkdkSmVleThtWHg4bGV2L1FTNDd5?=
+ =?utf-8?B?MkV3YjYzVkNZbFhCUEh5NllyQVdyZFZLWnJMbGFHWlk5b0YvRk1qbzltU3V5?=
+ =?utf-8?B?dTNnOUI2NTlIT1V6M0tReDZ3a3B1cGF0cWVrU0s5TWVtWUxvZDdhcmprbWcz?=
+ =?utf-8?B?S0RoQWRqVzJodmtJcWRDOVJERG5IWkdYLy8yd1lVbExweFJVS1p1ZWVPUEFh?=
+ =?utf-8?B?eHd6WS9TbWJIb3YwUlNNR0NNa3JLR1pYMVh1Ry93YnJxNjFTUnhPNFFCVE05?=
+ =?utf-8?B?aFlJcVRaaEYvUTNWSFkrMnJxUjlLeExJYVFzbG5CNDNWNlp1R1BCU3JXSHRs?=
+ =?utf-8?B?QmkrU3pDK3I3VDBZa3B6SS9XUWpqNTV5UTRPZE4xQzZsNXJLYWRaZTFyd3hX?=
+ =?utf-8?B?RGx4Mk1zM05VMDllVGxxaklYKzZqczNQNDlLU01IQktRenhjQmNGYWhxRnQ3?=
+ =?utf-8?B?Q1lPQnE0dW56c2Y0QmtDaXBQZjE5dUEvdE9ZRHpMS0xVTFJmYzR6MTYzVWlF?=
+ =?utf-8?B?dGYvcndaUEUyQit0QTA5M1ByS01OV0NYY0w0dFlNbDRMNVJ5WWpkRXRhajVa?=
+ =?utf-8?B?bFYwWExWYm5La29ablhqUks3UXhRS1VOWXdlSmF5d2gwY2FrMS91M2FQU1Bm?=
+ =?utf-8?B?MWp3c2VXb0pHUi8rR0VVOVZ6cTJ2ZVp6Z293WWRiNE1oZTU5WFpFMHJ1dlNw?=
+ =?utf-8?B?dDRCUFpUUTJjWHlzVVd1Y1BoK08yRE9jMWUweEhmU2tVZzlNVVZSMDFsbXds?=
+ =?utf-8?B?U2E2NG5MV0NjUGZqSWRFM2xvT1N0cmJLU0dRK0lGQ0ZDTUlPRXNMVFQ1VWNr?=
+ =?utf-8?B?cFd0alFVY2ZhQjd3TXNYVlA1Wi83U0tZUmlkS2RnWksyWjZqMzFCdDU5cFln?=
+ =?utf-8?B?c2RCVmJqclI4eVZtVXBEZzRud1lERmIvOU5FVHdhck0rUmxoMVIxT0dmTXEv?=
+ =?utf-8?B?WnFMaG1RR09OUWc3aDlPQ3dtNEhyN3RTeXFYRkFJeTE1NVp4R0ttSVR4MXZJ?=
+ =?utf-8?B?MlR0WitSUHdmN0hGTzZiVE9paTVjeHl1SUttWDQxaDFaQkRwajRwRkV3OU9R?=
+ =?utf-8?B?c1ZuVE4vdDMwMCtDU2NFSnllWlNaRi9sTURkZ3IrbFFZUWZsVGZCc3NGWDlO?=
+ =?utf-8?B?dkpqQXR2UlRJZHI1bXY3dVpzdVR1dmJxNEwrWjJCM2RTRURJclhZalR3NVE4?=
+ =?utf-8?B?dFJQazByMlBXNGpvNDRXTVdLUTc0b1FDZlFKUjhXVTB1U2E2UEcybEY3M0hR?=
+ =?utf-8?B?eEhxVStYS0xHYTJsc3JiMmpKRW81dnNsNGlITkFpQ1loc0FwcUVKK0tjV20y?=
+ =?utf-8?B?TFp5VkJaZ2F4cVVORE10UHVqYXMzazVYRUQ4ZXhoUHZzV3NPc1hrWXNSNS9y?=
+ =?utf-8?B?cG4vemU2cVF1TFZqRUNnMkg4MTgvS3NRR3NsNFFhRFhTOW5jUHRtOGEydDZV?=
+ =?utf-8?B?Y0xJUmZjWE5GYTF5RmJ3T1pJRSs1TzQ5K1hFUW5PbjRkMXY2MDluL0RXcytG?=
+ =?utf-8?B?NUFXdzhhTDVtanhOZDRtTnhCd1M3Z1pod1k1UGZ4OVE1bDlYWVFFRXAwTGJk?=
+ =?utf-8?B?cU4zaFZhb05LeHNmbEI1NU95ZGZsVWl0RHhqckdoL0F0TFpiUXhWTzd5djBj?=
+ =?utf-8?B?U3ZmQWwvdHdDK2l5enh2eGYyT0IzOXhwem5aQ3h1MkUzL2NnZ2REVXE5aC9L?=
+ =?utf-8?B?aVBFQm9jM3dybWErUHY3ekxzM1p3OEFwczM5YU5wK0JHMnBxZEJ3YlI4R3Br?=
+ =?utf-8?B?TWhkSXFwc3M3eDd3MHF3bjlaMjBGZ2xnYWYxVnRWRU1XbjN1bnhnNzBFMDd5?=
+ =?utf-8?B?cHFCWmZONkhMeE1OaVpsd0pOdVl5M1RGanZGdTBJek1MK3RtaTVGaEdhZHdy?=
+ =?utf-8?B?ZnB2UHhTMjFVSjFmanpQVVdYUWF6RVg4RTltV2UyczV6WEJibGJmR3dMOHlD?=
+ =?utf-8?B?ZlhsTVFldVNWbktSeXhZSTBsMHlIV1hJM2tLZXVqb2NlV2NkdktncXo4RFNI?=
+ =?utf-8?B?d1hxUVRwVkYwa2pUb3lwV0hTT3VhRk5pcFJDRUJiOFhkTHh0ZFMrV1BJRnln?=
+ =?utf-8?B?UEJ1NFZ1dXhnYXc3VGlBbEY4TGw2dWdYL1U2NmdBSC94N0V5dGhpUmcxdWdF?=
+ =?utf-8?B?a2FyTjFNVE8yNWloQkl4MlVqL0wySjhoUnNrb3NKR1hOVWxCNEVHRkh4NG96?=
+ =?utf-8?B?TW9rM1VCck04Nkt4L3VvcUdHTzZKcDZnSUNKMDdQaW5SbW9GeFUzUXJTK2h2?=
+ =?utf-8?B?VUNsbXVxK1V2UFZ3OEZrU3FoclhkOVhiWnpPcE1yT01ZdTlyT2xVcisxQkU3?=
+ =?utf-8?B?elI0SDFNdU5JSitDeTY0T1c4aFhvTnc4S1hQOEEvME1Ybnk3UTFkQT09?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd96c8cd-0ea1-40fe-c690-08df1273e508
+X-MS-Exchange-CrossTenant-AuthSource: PA3PR04MB11153.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Sep 2026 15:21:48.5632
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xNKXZp11hLbVcc3lAtFrTFtN+1EpeIIyX6Tb7s4Lp/Jy4/9G2ZBT6YkQRM6mfG26xdq5uEz3v/pnf2AU4aM84PAsNx2wHg6CISkqVeE4vqk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB11508
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 14 Sep 2026 11:44:04 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20196
+ <bitbake-devel@lists.openembedded.org>; Mon, 14 Sep 2026 15:21:57 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20197
 
---0000000000004ae677065b6ff329
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Chris,
 
-Understood, thanks both. I'll look into the mirror/network side and handle
-the exit-code concern on our infrastructure instead.
+On 8/28/26 6:26 PM, Chris Laplante via lists.yoctoproject.org wrote:
+> From: Chris Laplante <chris.laplante@agilent.com>
+> 
+> bb.fetch2 replaced bb.fetch back in 2012, and the compatibility shim of
+> bb.fetch = bb.fetch2 has been in place ever since. There's no longer a
+> good reason to keep the '2' suffix, so lets drop it.
+> 
+> We also invert the bb.fetch = bb.fetch2 compatibility shim to now make
+> bb.fetch2 = bb.fetch. We do this by creating a new lib/bb/fetch2.py.
+> 
+> Layers are accustomed to accessing bb.fetch2 without first importing
+> bb.fetch2, so we declare a module __getattr__
+> (https://peps.python.org/pep-0562/) to keep this working.
+> 
+> Finally, we add a deprecation warning for good measure.
+> 
 
-Alexander Kanavin <alex.kanavin@gmail.com> =E4=BA=8E2026=E5=B9=B49=E6=9C=88=
-14=E6=97=A5=E5=91=A8=E4=B8=80 18:20=E5=86=99=E9=81=93=EF=BC=9A
+I see this has merged already but I cannot help but ask "why". You don't 
+explain what is the issue with having fetch2 instead of fetch or what 
+this is helping with. The only thing I see this changing is adding a 
+deprecation warning if you're using bb.fetch2 in a third-party layer, 
+and I'm assuming at some point it'll be removed and layers will need to 
+adapt or be broken. What's the context? If it works, why "fix" it and 
+potentially introduce issues?
 
-> On Mon, 14 Sept 2026 at 12:04, =E5=BC=A0=E5=BC=BA via lists.openembedded.=
-org
-> <zhangqiang.zq307=3Dgmail.com@lists.openembedded.org> wrote:
-> > Both keep real mirror problems loud while not failing a build over a
-> > network blip. Happy to respin the patch in whichever direction you
-> > prefer.
->
-> 'Network blips' are just as real problems as missing cache objects.
-> They're not 'problems that can be recovered from', they're
-> infrastructure errors that need fixing and should be reported as such,
-> regardless of whether the build process can find a way to produce the
-> needed artefacts in the end.
->
-> Alex
->
-
---0000000000004ae677065b6ff329
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div><span class=3D"gmail-universal-card-text">Understood,=
- thanks both. I&#39;ll look into the mirror/network side and handle the exi=
-t-code concern on our infrastructure instead.</span></div></div><br><div cl=
-ass=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" class=3D"gmail_a=
-ttr">Alexander Kanavin &lt;<a href=3D"mailto:alex.kanavin@gmail.com">alex.k=
-anavin@gmail.com</a>&gt; =E4=BA=8E2026=E5=B9=B49=E6=9C=8814=E6=97=A5=E5=91=
-=A8=E4=B8=80 18:20=E5=86=99=E9=81=93=EF=BC=9A<br></div><blockquote class=3D=
-"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(2=
-04,204,204);padding-left:1ex">On Mon, 14 Sept 2026 at 12:04, =E5=BC=A0=E5=
-=BC=BA via <a href=3D"http://lists.openembedded.org" rel=3D"noreferrer" tar=
-get=3D"_blank">lists.openembedded.org</a><br>
-&lt;zhangqiang.zq307=3D<a href=3D"mailto:gmail.com@lists.openembedded.org" =
-target=3D"_blank">gmail.com@lists.openembedded.org</a>&gt; wrote:<br>
-&gt; Both keep real mirror problems loud while not failing a build over a<b=
-r>
-&gt; network blip. Happy to respin the patch in whichever direction you<br>
-&gt; prefer.<br>
-<br>
-&#39;Network blips&#39; are just as real problems as missing cache objects.=
-<br>
-They&#39;re not &#39;problems that can be recovered from&#39;, they&#39;re<=
-br>
-infrastructure errors that need fixing and should be reported as such,<br>
-regardless of whether the build process can find a way to produce the<br>
-needed artefacts in the end.<br>
-<br>
-Alex<br>
-</blockquote></div>
-
---0000000000004ae677065b6ff329--
+Cheers,
+Quenitn
 
