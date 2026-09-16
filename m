@@ -1,132 +1,112 @@
-Return-Path: <bbnpreetsingh@gmail.com>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F167C88E7F
-	for <webhook@archiver.kernel.org>; Tue, 15 Sep 2026 16:06:46 +0000 (UTC)
-Received: from mail-pj2-f12.google.com (mail-pj2-f12.google.com [74.125.227.140])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.456.1789488398453294831
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA31DC88E77
+	for <webhook@archiver.kernel.org>; Wed, 16 Sep 2026 08:38:39 +0000 (UTC)
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.10319.1789547910465168562
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 15 Sep 2026 09:06:38 -0700
+ Wed, 16 Sep 2026 01:38:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=KSEyo7hj;
- spf=pass (domain: gmail.com, ip: 74.125.227.140, mailfrom: bbnpreetsingh@gmail.com)
-Received: by mail-pj2-f12.google.com with SMTP id 98e67ed59e1d1-396ccdaea76so1381089a91.0
-        for <bitbake-devel@lists.openembedded.org>; Tue, 15 Sep 2026 09:06:38 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=CWax+4CJ;
+ spf=pass (domain: smile.fr, ip: 74.125.225.141, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49e721b5503so7322925e9.0
+        for <bitbake-devel@lists.openembedded.org>; Wed, 16 Sep 2026 01:38:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789488398; x=1790093198; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=31ghfM750/FltrKM6hs6zjlTUSqDtyvdkojsG6Pmd4I=;
-        b=KSEyo7hjjwOdNE5/8Bi7XFNMZjsGYecib/IzERAD0eWdSecnaXtDeIe1s2mxAGerLk
-         hJ04WjXH1uDxH9puumcJng5m+l9D0trtueOa9L5JRDGtPbjIG/WCTlxezqQUeXmutNsz
-         i4nM1KIJAHlmDnfzDF4TBZQ9yjpwogG0TB7DWLfymnMLvIzLYHc1BlOTCOmj+/cEgmLk
-         C1bmIdTG10gGL4BtLpboTjSydsjbU1KUrGLZFoXKLiGo+HNJeXx8DfmT+Pv1YA/Ewoar
-         VL1H6Dn1glNHB0TIj/H4jyCC6xQDT4WmZvDlgGxo25K30aQyZWqsMmlhusAVXWhCHIaE
-         Yqew==
+        d=smile.fr; s=google; t=1789547909; x=1790152709; darn=lists.openembedded.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=MOND0rWdzcNLmcqf9jzD9nInXRDBDS0Kj+cbZ+aWWbI=;
+        b=CWax+4CJP3y1Z0wFxu6OMZ8tO7t01jSm9r4zxEAuMEwvRotv3ur3ZFg11iJvYnK+eQ
+         u5uOvg1oifrTp5Qq8E54XqScLC8j4y5+Qp8q18MtHyni00x4iFEF5fw3tfVo8qMVOmHO
+         NTHn1AqfPtOlmKjR8qV5vM+SVK/WPQom6XxZ0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789488398; x=1790093198;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=31ghfM750/FltrKM6hs6zjlTUSqDtyvdkojsG6Pmd4I=;
-        b=G2PYNs3q+2MwwJ4xAJxfG4dRP43n9yD27NhvFQ3JS0/dz/y3jhkIb4V5TaRsqZrjOq
-         EX2zLsuEV42FsnUX/8HThY1WiQgUfaTsZlXAEY9h9GgDbJaNmJp9vutKeHpRI+2Fm1vt
-         IXPh5XC+Rrcyppe6Jy+NMGn3M3DAO8OjOeuHL2Z4gCR6V7NDhlzbxr8s91ETLmMkRydP
-         UrkmpP/yyq2chvrm69fdxLFyPAwBu0vA513Zh08lK68zv/YQ1OKM2tJtJ4j7oevtdIOe
-         0LzhHd0pym0WoybkHNO7pG/9+5L6XOiww7dvP7XmoauDndsvxVIvofnrLkprNBEodQ+r
-         KALg==
-X-Gm-Message-State: AFuF++lC44nu/oht4PRLafbpvwng1TiVSJ47eamPdvlEiLWy93cR0Z2M
-	S04vSQ3e0GffLHAFohRZdWhyBnJmuSYj1b/n0KPkaz2yfM+dOsmmlp/8CCwyQMoq
-X-Gm-Gg: AYBFou0K9RYfyD4kK02Af9JhOIi3fk0qUTj3KqpuuH02Vl1PhHY4xCfNP/aWXgC4csy
-	VmZMEnnBo8L6makmfkxrvqn4epZBVT2QsDA/Gd0e3UwrJ9T/MWtjCRapD6vFugvInXxEPhIcxqr
-	J9duFkt8AkzbheJkEtwfIeI9/WR9P6ralE0NuuA708WJWz8G+aqEjKNKX2Z8xGIr4RrUJK90dO5
-	CL79VjdiI28ZBtVmBZJNeOlofB3553G/Pci9lv7Onb3vi+7nhkv7DqLiwx+H9g8NTIBzXXV34rU
-	YTDsApcYAWPAQ2LHQsMh7fxWSf0tRKkuPLOEfqI+5iBK639nBK/jWt1zlj+O+0/sukUOZx/runD
-	4a27zp8tcrlzXiFR3vW7g+mqCjr2O5p/gZvlSSNFVhVQADzSsW2jge9dEusgp+4u1pcXt9ZtqIP
-	gZhSEkfiwdZO7ej0LdCCwaMGIV2wUct+ka5Cs9ut0VMy1KquKdGDyoKl1+M5OWU1sYesqEuQ8=
-X-Received: by 2002:a17:90b:3d8e:b0:39d:e1da:81e5 with SMTP id 98e67ed59e1d1-39dfe11c04dmr5141363a91.11.1789488397619;
-        Tue, 15 Sep 2026 09:06:37 -0700 (PDT)
-Received: from ydev.. ([108.180.130.139])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39dfba020d1sm2605678a91.2.2026.09.15.09.06.36
+        d=1e100.net; s=20260707; t=1789547909; x=1790152709;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=MOND0rWdzcNLmcqf9jzD9nInXRDBDS0Kj+cbZ+aWWbI=;
+        b=2IWskbgAZP84piceYQpshyE6TF8+yNC2QmP9sbooQlBeiKLPmiiIY8bvWCujCDIdUh
+         Mg5/H8hU8zYIuSiWQlK2T5M7vHT2InkWWN0RCO3IWR4VH3hH2v4svgcbrayKOTWh0Vgv
+         3J86UfyfcZHulxVILLelKoVrnIGme8wl7+9hPR9KKfMqbReltnQPZj331ctepzpTE+f0
+         xK211k7WjCUfHgDeyZsO44lOcLwRah89l3oe+tM5hLzqcmS+FYHui8ZuQR2XewcK3ctM
+         njEd5LZGXALYW8zPj3Aa45KBsMFUHlp2LMZjdPGFPIr3nPc09Jx/dyTnOiQa3HFfcoS5
+         8bog==
+X-Gm-Message-State: AFuF++kOXnW2X88yoSJ0+5qKS5ev/ShrNzVR+w/UEp6nZHItisBW9s3j
+	M39VU3Kjer72DAagkQYhXq/XYTnfU26bXahyCMEGSBpUBQEGPR4+MZ3JHrVsef75BkgU79ae9pm
+	RlbuSloo=
+X-Gm-Gg: AYBFou3a6ibOgMuMHIQwAUntB5AjRQ68k0TPhACyVu2cJcxZxWc2AFYMs9dmY5WFpJb
+	uwZUvcngWBxD3zfUWVFDFy4P1qd0LkNxFgL5xFfjrsFGIxB2IB1SWszOWntvYKZuv/8O3mfL/IL
+	VzfENWCHPS7oDNM9pTAfWoOzK+5jeGdYEiLWyOPh24mCzcxRE6oy15kVEOKIT1suIsiiAgCYsvi
+	N6gWsYb1gBf5EvwcRSnnGA4Kof222wXEVUssV8J02USgLkrWfskHAwGFSvIBrfu4ys26GVX6Pk4
+	cmxW5AJRw6idzQKDAMFxJgBXQK9tiju1gYNIw72kTCA6wGpHOeHGFeOxmv5Vh0MkfmnrqLpVEhi
+	4VqRhdqOw+reZJzcaC/BJyECkmfGTwvbXMrb6Lmy8uTXXjVO1pUM/cKDaLeaJpCiEonZ6Uy1n4j
+	vA7wcYS6aXiNWXrwNIKBg0laYkYhjZd+/wJ8xDLf9h4MmssFRV61MeplX2ckejA3IV7YseEfJb8
+	zlwz9UjqA2qAQsPIV+4o2KqneovzYTM4C0BO64N+Zy6M0kCiYoA/9U48fTia5RKZwlaQ7gP4a/s
+	cm/iC2U=
+X-Received: by 2002:a05:600c:3547:b0:49e:7423:687c with SMTP id 5b1f17b1804b1-49eac46377amr17117705e9.1.1789547908646;
+        Wed, 16 Sep 2026 01:38:28 -0700 (PDT)
+Received: from FRSMI25-LASER.idf.intranet (static-css-ccs-204145.business.bouyguestelecom.com. [176.157.204.145])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49e83add1casm60619535e9.3.2026.09.16.01.38.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2026 09:06:37 -0700 (PDT)
-From: Babanpreet Singh <bbnpreetsingh@gmail.com>
+        Wed, 16 Sep 2026 01:38:28 -0700 (PDT)
+From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	Michael Opdenacker <michael.opdenacker@rootcommit.com>,
-	Babanpreet Singh <bbnpreetsingh@gmail.com>
-Subject: [PATCH v2 1/3] prserv/tests: run ScriptTests on a free port with one database
-Date: Tue, 15 Sep 2026 16:06:31 +0000
-Message-ID: <20260915160633.7-2-bbnpreetsingh@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260915160633.7-1-bbnpreetsingh@gmail.com>
-References: <20260915160633.7-1-bbnpreetsingh@gmail.com>
+Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [bitbake][scarthgap][2.8][PATCH 0/4] Pull request (cover letter only)
+Date: Wed, 16 Sep 2026 10:38:03 +0200
+Message-ID: <cover.1789547778.git.yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.47.3
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 15 Sep 2026 16:06:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20214
+ <bitbake-devel@lists.openembedded.org>; Wed, 16 Sep 2026 08:38:39 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20217
 
-ScriptTests starts bitbake-prserv on the default port (8585) and gives
-each test its own temporary directory for the database. Anything
-already listening on 8585 on the test machine stops the daemon from
-binding.
+Those are the patches from the last patch review:
+https://lore.kernel.org/all/cover.1789165002.git.yoann.congal@smile.fr/
+(No changes, no reviews)
 
-Pick a free port in setUpClass and keep one database directory for the
-whole class, which is what the oe-selftest prservice test already does
-for its port.
+Passed a-full on autobuilder:
+https://autobuilder.yoctoproject.org/valkyrie/?#/builders/29/builds/4718
+* oe-selftest-fedora fails with 16415 – AB-INT: github infrastructure issues
+  I still need to backport fixes from master to wrynose, and then,
+  scarthgap.
+* qemuarm64-ptest failed with 16267 – [scarthgap] AB-INT PTEST: python3 failure (test_wrong_cert_tls13)
+  retried in https://autobuilder.yoctoproject.org/valkyrie/?#/builders/61/builds/4516
 
-AI-Generated: Uses Claude (claude-fable-5-1)
-Signed-off-by: Babanpreet Singh <bbnpreetsingh@gmail.com>
----
- lib/prserv/tests.py | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+The following changes since commit cff3be6f664f8f07a40727ff63eeeb24d6f5e00b:
 
-diff --git a/lib/prserv/tests.py b/lib/prserv/tests.py
-index df0c00300..f3b2aae45 100644
---- a/lib/prserv/tests.py
-+++ b/lib/prserv/tests.py
-@@ -369,20 +369,28 @@ class PRUpstreamTests(PRTestSetup, unittest.TestCase):
- 
- class ScriptTests(unittest.TestCase):
- 
--    def setUp(self):
--
--        self.temp_dir = tempfile.TemporaryDirectory(prefix='bb-prserv')
--        self.addCleanup(self.temp_dir.cleanup)
--        self.dbfile = os.path.join(self.temp_dir.name, "prtest.sqlite3")
-+    @classmethod
-+    def setUpClass(cls):
-+        cls.temp_dir = tempfile.TemporaryDirectory(prefix='bb-prserv')
-+        cls.dbfile = os.path.join(cls.temp_dir.name, "prtest.sqlite3")
-+        # The server test_1 starts runs until test_2 stops it, so use a
-+        # port nothing else on the machine is listening on
-+        with socket.socket() as s:
-+            s.bind(("0.0.0.0", 0))
-+            cls.port = str(s.getsockname()[1])
-+
-+    @classmethod
-+    def tearDownClass(cls):
-+        cls.temp_dir.cleanup()
- 
-     def test_1_start_bitbake_prserv(self):
-         try:
--            subprocess.check_call([BIN_DIR / "bitbake-prserv", "--start", "-f", self.dbfile])
-+            subprocess.check_call([BIN_DIR / "bitbake-prserv", "--start", "-f", self.dbfile, "--port", self.port])
-         except subprocess.CalledProcessError as e:
-             self.fail("Failed to start bitbake-prserv: %s" % e.returncode)
- 
-     def test_2_stop_bitbake_prserv(self):
-         try:
--            subprocess.check_call([BIN_DIR / "bitbake-prserv", "--stop"])
-+            subprocess.check_call([BIN_DIR / "bitbake-prserv", "--stop", "--port", self.port])
-         except subprocess.CalledProcessError as e:
-             self.fail("Failed to stop bitbake-prserv: %s" % e.returncode)
--- 
-2.43.0
+  utils: Add NFS EEXISTS/isdir failure workaround (2026-07-19 18:02:05 +0200)
+
+are available in the Git repository at:
+
+  https://git.openembedded.org/bitbake-contrib stable/2.8-next
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.8-next
+
+for you to fetch changes up to cd50c3481e32afff995a143c3459cfa5ae25abd5:
+
+  tests/fetch: Swap bitbake github mirror for YP one (2026-09-09 17:57:33 +0200)
+
+----------------------------------------------------------------
+
+Richard Purdie (3):
+  fetch/gitsm: Store the original url data to fix relative gitsm paths
+  tests/fetch: Swap github grpc repo for our own small test repo
+  tests/fetch: Swap bitbake github mirror for YP one
+
+Sebastian Muxel (1):
+  fetch2/gcp: treat GatewayTimeout as fetch failure
+
+ lib/bb/fetch2/__init__.py |  1 +
+ lib/bb/fetch2/gcp.py      | 24 ++++++++++++++++++++++--
+ lib/bb/fetch2/gitsm.py    |  5 ++++-
+ lib/bb/tests/fetch.py     | 16 ++++++++--------
+ 4 files changed, 35 insertions(+), 11 deletions(-)
 
 
