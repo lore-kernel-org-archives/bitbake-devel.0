@@ -1,268 +1,214 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <svsvenss@cisco.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DD1C88E72
-	for <webhook@archiver.kernel.org>; Thu, 17 Sep 2026 13:48:13 +0000 (UTC)
-Received: from mail-wr2-f35.google.com (mail-wr2-f35.google.com [74.125.225.99])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.40124.1789652886378736002
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767C6C982D6
+	for <webhook@archiver.kernel.org>; Thu, 17 Sep 2026 14:06:03 +0000 (UTC)
+Received: from rcdn-iport-9.cisco.com (rcdn-iport-9.cisco.com [173.37.86.80])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.40364.1789653954801652066
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 17 Sep 2026 06:48:07 -0700
+ Thu, 17 Sep 2026 07:05:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=aEANmHO4;
- spf=pass (domain: linuxfoundation.org, ip: 74.125.225.99, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr2-f35.google.com with SMTP id ffacd0b85a97d-4858bc96fabso686998f8f.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 17 Sep 2026 06:48:06 -0700 (PDT)
+ dkim=fail reason="dkim: message contains an insecure body length tag" header.i=@cisco.com header.s=iport01 header.b=Lfini+48;
+ spf=pass (domain: cisco.com, ip: 173.37.86.80, mailfrom: svsvenss@cisco.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1789652884; x=1790257684; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=QYy50OvmHqc2hMxV9ZUzSxzAirYLnvVFpdvqI7jwc6A=;
-        b=aEANmHO4NDYordWWcXCoZiH0bKg0WDN/GDTpQMoyEj955nrD4AbyBcHLr0d1kYOzzp
-         Cr+5O8am/o6NpYGEztkRQygFw6yykEEC6LJRYdIqpHJIsQvKHG5J1UODpvRDmdFEPEWY
-         oervuCK9PHWExVmVYpwiK86SKzJ2CI/cnRybc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789652884; x=1790257684;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=QYy50OvmHqc2hMxV9ZUzSxzAirYLnvVFpdvqI7jwc6A=;
-        b=bPdCfvEb65U5dbARcjEb2EwwQsSz/+5u6hI7Ylkg+nRKSYy06ENCP+Nu8OYWj1hVvA
-         O71ZuA07VkDhQ/gQkFxTktiCCCfYMEdUB+cy6EDu7W98GvMQs0tHEKQtiUd9i1RruqDB
-         sCfsEir/BH+kBgt3qSOI67kLfpbunId+g8dTQO9RADlQi1xkNDkT1ljQl+lhEA03LC4B
-         5/WNA9rOS7SCCbolK/jM5b0VmsVIGt1162G95G6NHTrcBgWvcdY/YQjg/mYOLjU1cfUl
-         fxRwUX0gno5fyWPer7n62HFFTpq2EQ6JfGOK5+E0m7pI5wFUiXHnmRz7wTDR1h4Wsn0j
-         i1Sw==
-X-Forwarded-Encrypted: i=1; AKwUvBxd7i5trOM+Jji4RdjJ9KpHFsPr9ohI3fa4tai7x/UXuWp4Mm3AsyMA6IEicXCmQI7HRhNysVGefgByEv25@lists.openembedded.org
-X-Gm-Message-State: AFuF++kHwnjEe8St7CHK4hVA6O1lGPjXQEAdExrf9JtVzw0I9CJHykfP
-	uKNWlTLHsO0tip+A1+/0Qe54/SS7z3jGi5yzPk77Wraf1pvQEy9hic9XRaaFLTBZAuw=
-X-Gm-Gg: AYBFou19FjIOZVhKiU6Dt8wcxQyazFkwrCxUcO4uIqOushEcFsgSC70bhsRIMa2J2ll
-	pVblBoYQ+dmdmxOU1eyze6SvmpBo+No8/A6wXGPCb80J+STDKSfg5a3a/QP79qf2sAX0x5rZoY8
-	bsD8ruM4YwWGxHixr+ezslpLP2GJPh+sbHRSVEObMLzrsPnjcFYuDH9cJosCX//I8W7AIQfgm74
-	CufCnEBvYCKza1ZZ7vin5SweelREMmSGyhvsz6ioZyyC6JbV14sFO9QW/D67RHwBxVAD2qopLdL
-	7ujXiQt+vO7gPZE5+H+slAWl8ANsoH4Fn4SCUT0s/NxoZW1PSK/xDIYEh9qidz63Lb42w80ZL7n
-	i9MTk1nEUFOUdJvkfGI3PCDApnQrSk7Q/G9dwes2UzdyxrOF3Y5z+KYkmSqzlUk4zadLK1AG9Ej
-	gVSyR5emH3uFqx5LoAyRTOEqSk2jtdOCwOtvqCl5MxeH4qX8Gw2bI8dVSIasFdnf0oWv5ftrs6E
-	Qv3Ma8ZY9BHGdT1gG+LoT2XBUb1YxfKaQkomUmucpElTm2436DsXwBhexj4AYo8
-X-Received: by 2002:a05:6000:40de:b0:485:8a46:7057 with SMTP id ffacd0b85a97d-4870d048028mr8503355f8f.41.1789652884460;
-        Thu, 17 Sep 2026 06:48:04 -0700 (PDT)
-Received: from ?IPv6:2001:8b0:aba:5f3c:4507:59aa:c79a:ecab? ([2001:8b0:aba:5f3c:4507:59aa:c79a:ecab])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4870bef7678sm16440393f8f.2.2026.09.17.06.48.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Sep 2026 06:48:02 -0700 (PDT)
-Message-ID: <df5f2f7e6a2de4cc9fc819696b87f17ec62b6f69.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH v3] fetch/git: unpack from premirror
- when cached clone is stale
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Fredrik Svensson (svsvenss)" <svsvenss@cisco.com>, 
- "bitbake-devel@lists.openembedded.org"
-	 <bitbake-devel@lists.openembedded.org>
-Date: Thu, 17 Sep 2026 14:48:01 +0100
-In-Reply-To: <18D61ACAADC01AEF.668921@lists.openembedded.org>
+  d=cisco.com; i=@cisco.com; l=880; q=dns/txt;
+  s=iport01; t=1789653954; x=1790863554;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=pAGBdDLqItjbRnhpivlN7aW6gIdSMujLKEnF+CpHg7o=;
+  b=Lfini+48j9f1M/cgtebnOZATuuPfWT2Jb6sysgWAEnzK01OzPyK7ea5S
+   yMTZy2vWOxfaUttfiG2VWulAZOuPYhG7RnN65Oq0BqVSL3G4fV4firM5R
+   PuTgdbJFnseOSSdZyB/Atyymk2fDpfjsO7jkffJ0Fd7F3rzy6W+bA813n
+   tarPTrISp0DEDeADRXrEwaJaL8UjsH4dNHihrYNEffgmb+1BJ5WqPafqn
+   WK/YbrM3AYrrQg+R30Z0AG2vZOb7lYWBBw941FP8zVtWHzMrdH6mGAseT
+   QpaaY+1SIhgc/+nL7nx0eT3it4KUqZGBp3LZH0Xu9BRAWFmO/0FppumLB
+   w==;
+X-CSE-ConnectionGUID: 7GmfmnmCSlWjTnexQ5cakA==
+X-CSE-MsgGUID: 9CXuF0ubSxe5nlni4qgj8w==
+X-IPAS-Result: =?us-ascii?q?A0A6AAAD86tq/5H/Ja1aHQEBAQEJARIBBQUBZYEXCAELA?=
+ =?us-ascii?q?YFtU4EJgSWIbAOETF+GWIIhnh6Bfg8BAQENAlEEAQGFBQKOBwImNAkOAQIEA?=
+ =?us-ascii?q?wIDAQEBAQEBAQEBAQEBCgEBBQEBAQIBBwWBDhOGXJATAgEDbB0CAQhGMSUCB?=
+ =?us-ascii?q?AEahW8DAQK3bgKJSxs3eIE0gQHgPBWBOAGIXQGFeIR8JxuCDYFXgjE4PoRDA?=
+ =?us-ascii?q?oQTgjAEgiKBDJQ6UngcA1ksAVUTFwsHBYEjEDMDKi8tIw88BS0dcAwnEg8dF?=
+ =?us-ascii?q?xEeWBsGBRIgKkFDIwM+gV4/Ixk2eoEJXoErKWECDhdGLhWCCAKCVIF/AgFJQ?=
+ =?us-ascii?q?w4HRVMJJ0EDBxJJKSIIEgkBExoyC0ptPTcGDxkDBIE1BZFMLWIdMRFdJaZio?=
+ =?us-ascii?q?XsKhB6VA40PF4QEpmmZCCOCNqETH4UNAgQCBAUCEAEBBoFoPIFZcBWDI1IZD?=
+ =?us-ascii?q?949gTYCBwIHDgMLk2YBAQ?=
+IronPort-PHdr: A9a23:qC2lqB8mMEbsaP9uWBDoyV9kXcBvk6//MghQ7YIolPcXNK+i5J/le
+ kfY4KYlgFzIWNDD4ulfw6rNsq/mUHAd+5vJrn0YcZJNWhNEwcUblgAtGoiEXGXwLeXhaGoxG
+ 8EqaQ==
+IronPort-Data: A9a23:W8FWUa5/BuM/8azhrx+i+AxRtGfGchMFZxGqfqrLsTDasY5as4F+v
+ mAaWWvSa67cZzTwKNx/YISy9EpU6pWEzdExSQJkpXxgZn8b8sCt6fZ1gavT04J+CuWZESqLO
+ u1HMoGowPgcFyGa+1H1dOex9RGQ7InQLpLkEunIJyttcgFtTSYlmHpLlvUw6mJSqYDR7zil5
+ 5Wo/KUzBHf/g2QqajNNt/rZwP9SlK2aVA0w7wRWic9j5Dcyp1FNZLoDKKe4KWfPQ4U8NoaSW
+ +bZwbilyXjS9hErB8nNuu6TnpoiG+O60aCm0xK6aoD66vRwjnVaPpUTaJLwXXxqZwChxLid/
+ jniWauYEm/FNoWU8AgUvoIx/ytWZcWq85efSZSzXFD6I0DuKxPRL/tS4E4eYqId9ONxBEp18
+ cMaFDYAfinejOu16efuIgVsrpxLwMjDJogTvDRkiDreF/tjGcCFSKTR7tge1zA17ixMNa+BP
+ IxCNnw1MUmGOkESUrsUIMpWcOOAnWfkbTBes0m9rqss6G+Vxwt0uFToGIePIY3RH5oOwS50o
+ EqX1FTkLEkHPuePxGeD9nSt2vbAn3PkDdd6+LqQs6QCbEeo7mYSFBcfVlb+rfSnh0qWX9NEN
+ 1dS/TIjq6U3/kGnQtTxGRqirxa5UgU0QdFcFag+rQqK0KeRu1bfDWkfRTkHY9sj3CMreQEXO
+ payt4qBLRRksaaeTjSW8bL8kN94EXF9wbMqDcPccTY43g==
+IronPort-HdrOrdr: A9a23:xl8/Jqu/P77PphsMgCeVcmHF7skCeYAji2hC6mlwRA09TyXGrb
+ HMoB1L73/JYWgqOU3IwerwR5VoIUmxyXcH2/huAV7EZniohILIFvAv0WKM+UyaJ8STzJ846U
+ 4kSdkDNDSSNyk1sS+Z2njDLz9I+rDum87Y55a6854ud3AWV0gK1XYeNu/vKDwPeOAwP+tBKH
+ Pz3LshmxOQPV4sQoCQAH4DU+Lfp9vNuq7HTHc9bSIP2U2ltx/tzKT1PSS5834lPg9n8PMP4G
+ LFmwv26uGZte2nyhjT7mnX755HstrswNlOCaW3+4kowzPX5TqAVcBEYfmvrTo1qOag5BIBi9
+ /XuSotOMx19jf4Yny1iQGF4Xii7B8er1vZjXOIi3rqpsL0ABggDdBauI5fehzFr2I9odBH1r
+ 5R1W7xjesUMfqAplW52zH7bWAsqqOGmwtlrQfVtQ0HbWIqUs4UkWXYxjIMLH5PJlOg1GltKp
+ geMCiV3ocnTbrdVQGYgkBfhPqxQ380AhCKBmIGusCTznxquUoR9TpD+CTa9U1wqK7UjPJ/lr
+ n52qgErsA8cuYGKa16H+sPWs2xFyjERg/NKnubJRD9GLgAIG+lke+93FwZ3pDiRHUz9up7pL
+ 3RFFdD8WIicUPnDsODmJVN7xDWWW24GTDg0NtX6ZR1sqD1AOODC1zPdHk+18+75/kPCMzSXP
+ i+fJpQHv/4NGPrXYJExRf3VZVeIWQXFMcVptE4UVSTpd+jEPyhisXLNPLIYLb9GzctXW3yRn
+ MFQTjoPc1FqlumX3fp6SKhLU8FunaPiq6YPJKqi9T7krJ9RLGkmjJl/GiE2g==
+X-Talos-CUID: =?us-ascii?q?9a23=3AqBxVmGmpDW+5EQbutnjdKSiXVv7XOSLyyXnVJUq?=
+ =?us-ascii?q?TMmJWSoGTRE+ppahtkOM7zg=3D=3D?=
+X-Talos-MUID: 9a23:p0DyDwmW/SdhW5+PQxVmdnozH/d1zfyzAnsdnMgAv8+FaTV/OWeC2WE=
+X-IronPort-Anti-Spam-Filtered: true
+Received: from rcdn-l-core-08.cisco.com ([173.37.255.145])
+  by rcdn-iport-9.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 17 Sep 2026 14:05:54 +0000
+Received: from rcdn-opgw-1.cisco.com (rcdn-opgw-1.cisco.com [72.163.7.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by rcdn-l-core-08.cisco.com (Postfix) with ESMTPS id D8EBD180001C8
+	for <bitbake-devel@lists.openembedded.org>; Thu, 17 Sep 2026 14:05:53 +0000 (GMT)
+X-CSE-ConnectionGUID: +NfdIRbORf2Gzbdb4XKlsQ==
+X-CSE-MsgGUID: 3XcPuCb9Q2mcY8GBCHwsyw==
+Authentication-Results: rcdn-opgw-1.cisco.com; dkim=pass (signature verified) header.i=@cisco.com
+X-IronPort-AV: E=Sophos;i="6.27,103,1787011200"; 
+   d="scan'208";a="70354189"
+Received: from mail-centralusazon11010019.outbound.protection.outlook.com (HELO DM1PR04CU001.outbound.protection.outlook.com) ([52.101.61.19])
+  by rcdn-opgw-1.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 17 Sep 2026 14:05:53 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=r2tK13yjU1n02Bwli8FiuktWq7REeN703MOZFjxKbIARRG3ck+jQLWRZ0fjwdUR7KsqyrDxBG9hIS7zx9Y308D0aXYpKCUM9MnTdAz4UdiuFc7Iw8+qZneF4KF4Rt85SKwv743sdPMuj8/Q0RCemStbTgw1+o/AOGLcYYkkGVTNNvjGsmv1i8mKeJlnzhLo7eyV9muy9Al1haUiQYKahS7Unoo01FJrmyDueeV8r2KoXgbrk6Njc04yuPSX+JEicsC/E+Z5EYu/seT3nUfIY0004RdqVdaQzCZOM8Mmmj4cTUUcF9TZLUFoLtLgGOL3k+po66fSzHGqmEEmPSvdf1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pAGBdDLqItjbRnhpivlN7aW6gIdSMujLKEnF+CpHg7o=;
+ b=YooidJ7/qSKBhxykdSK7Qs4nH7mog7dAlnXsL+OlqO9GV5lQ+BOx0vmYLAerYLW4GWT6ywcj3JQNcbalap40HSOM2mqLqz7Vh7l4OGwxijXtO+ilqxsbWjAtVpxaEthUEeq82eedKykYHJ+T7Ygz6OqOaYTde/jIPTy6+GSJjs/p+rWp+NErj90Xi6sMkQJWTc4mBYT0eeEfbIyIsDr5/CEL3OIeFp/GpHYRGnAGTRtP2ml1LhPsPreUpr7K7S8MTWUT1ZZaYuPeIwpGsJZczftMGlyltjWD5nG8W09UaaieREtYGXhWUJUGk1FUaskwSLNQiW9zeIVYzHldRd46rA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cisco.com; dmarc=pass action=none header.from=cisco.com;
+ dkim=pass header.d=cisco.com; arc=none
+Received: from DM6PR11MB3962.namprd11.prod.outlook.com (2603:10b6:5:192::26)
+ by PH0PR11MB7421.namprd11.prod.outlook.com (2603:10b6:510:281::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.12; Thu, 17 Sep
+ 2026 14:05:50 +0000
+Received: from DM6PR11MB3962.namprd11.prod.outlook.com
+ ([fe80::47f3:254:87ca:5161]) by DM6PR11MB3962.namprd11.prod.outlook.com
+ ([fe80::47f3:254:87ca:5161%5]) with mapi id 15.21.0406.007; Thu, 17 Sep 2026
+ 14:05:49 +0000
+From: "Fredrik Svensson (svsvenss)" <svsvenss@cisco.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
+	"bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH v3] fetch/git: unpack from premirror when cached clone is
+ stale
+Thread-Topic: [PATCH v3] fetch/git: unpack from premirror when cached clone is
+ stale
+Thread-Index: AQHdRDXrwr9uhxYuSEeZA19OEZk54bbStCiAgAAeKWI=
+Date: Thu, 17 Sep 2026 14:05:49 +0000
+Message-ID: 
+ <DM6PR11MB3962C3B7731F3653247433CFCBB82@DM6PR11MB3962.namprd11.prod.outlook.com>
 References: 
-	<DM6PR11MB39620862AF1ED3401C93F429CBBB2@DM6PR11MB3962.namprd11.prod.outlook.com>
-	 <18D61ACAADC01AEF.668921@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
+ <DM6PR11MB39620862AF1ED3401C93F429CBBB2@DM6PR11MB3962.namprd11.prod.outlook.com>
+ <83ebfdbf46526c150dcda4d027a5217800113c36.camel@linuxfoundation.org>
+In-Reply-To: 
+ <83ebfdbf46526c150dcda4d027a5217800113c36.camel@linuxfoundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM6PR11MB3962:EE_|PH0PR11MB7421:EE_
+x-ms-office365-filtering-correlation-id: f7480d15-8c55-4f60-e871-08df14c4c72c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: 
+ BCL:0;ARA:13230040|23010399003|366016|376014|1800799024|56012099006|4143699003|10067099003|11063799006|22082099003|18002099003|38070700021;
+x-microsoft-antispam-message-info: 
+ jbUlcFX63qopgTMIm1KpK9JClMvrRacuh1JEqOAYCfWgfGeSKWYfhbxMHmZ/wRN8doevMbGhFfUkpwZyccFhUfcQRKan6DkikrzF5lmM7IGdmSNpSb2W4UYtUOpaOAA27YQkAto9lO6vTQFSPPvvGSnU0Ke1vLGROQzoERg1f6TryzoGs7GVcAFBylm8WVcBP4ukZNkJtoopqua1f39v/Wb/0t3KJK5pVBmvhcf+v5BHOETqLvDasY5w3e2LEDW6ZmRSJbkPxzGG6mVSIdifSWq1aspNWhzrU2OR86p63zdS/lcpT3xAZxQkp83QjuLTZ7lJZEF+WwrhLGMDKUOwlzZIxBcF1aeLsbhtYQ6g3TukDcMIhsHdXUuwN1RpHHLk0buHlK0ZrUe+KlqwYEGHvfw+FsZUBHcDlN0bhAV0EzthN3l0vKegltwWWQwLZKDSAkBfdCk+xPqy1CPLXV5DXqzczc/A1uk4g3VZfaRGpkh8c4UQgYSqZ36ym7vMpxOBNKZEwMhJvIILNBDQfAr5SIhhe1YfzuyKCE/dNaGso23CHy+vnaFl4delg5VzyXBddIQyZ1Rup02JeWG/WQioAv3x3gD6rP5glSsa2fsfmAx0v+ntnG5cZd3X8uIFQ4Db5tPatQqyHzRUTmtEgGD1kGCqofoLLZG2RFR2nrR33yNJUtlmNTix1uywMrZi9WzppF2gpvwKbVYhxh0VxhEW8CwxkxjFRhOW+70z+HjCOIg=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3962.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(376014)(1800799024)(56012099006)(4143699003)(10067099003)(11063799006)(22082099003)(18002099003)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?iso-8859-1?Q?lUmtpNOXZTiDzoWOyKZNoqqYC4+d0w0NwjNw/qBCa8vvnbH9RKtfcO+PhL?=
+ =?iso-8859-1?Q?NaiR6rJGzAGLQtNmwrDpQ7Ohq7U2uS6i3mMwVaBFkXliCP6Ksc7nCEoTzO?=
+ =?iso-8859-1?Q?cbkeuV4Xc06l0SdMm0YGepHMIH29lZw2KCauPplUrhr7d3nKD6uRbpKJWG?=
+ =?iso-8859-1?Q?LiSnpCrVQFe4lUv4snLO7my0KJDgADEMLf8/GZN+csrCYaWBRGk2rGZQQM?=
+ =?iso-8859-1?Q?dskJBRap2j1kcXbxAqUI0D3jdD8OFlz3I6AMUvTNJhwR68aE/Lo8lA7j0V?=
+ =?iso-8859-1?Q?3mI/cpwchY6d1VYF9rMnWURk3rqbLTyt35HrMVfcolOQn3Y/1uyvayo5G4?=
+ =?iso-8859-1?Q?INUTVpNkv5FyHO1KnZytuPXPpJdDAVTKffI+z1c84Vj3xCk7zJZL1+rLdq?=
+ =?iso-8859-1?Q?fR3lVdy33mA7JqxBgZGXnLhnoOTyBBxcaiZUexHanRMasQmQqekhVk53io?=
+ =?iso-8859-1?Q?6MVbWaG7SL2c1yRX4X7PxTHI57Cvk3cl/8SbPqKA/5l25CmO4Vypl+ZSaz?=
+ =?iso-8859-1?Q?tLoQy7gzDjxI9CK+n9IaS3B7zioAOoeArCA9kCNC/TYjPBfM28tOm1vq+A?=
+ =?iso-8859-1?Q?K7VE2K2xnVxA2B+xZAEEa8jjt2XovXIjOuD4hrftBOmmHgKKoe+UQbhfsP?=
+ =?iso-8859-1?Q?lpq43VaFVkZl93fnYcIJrv5BSejZrTCedN5edHv2Fq4ll8ASF8tXceo6T3?=
+ =?iso-8859-1?Q?Edg/MfhR+oGw0RzHm+3SEAorogOAPkW2wopurca/PsGvHQkWkvTwDCnFaF?=
+ =?iso-8859-1?Q?r49b8B/rrPf5bIKu5k0WQZGFVxyLuTkA8wqLBW2PmtYDV65d1/8+vucw05?=
+ =?iso-8859-1?Q?GKBOyfTfx/CUNrsxHKr58821QCwUj22/p+WLAP3W45/fBGIDpotQYFsi/A?=
+ =?iso-8859-1?Q?sR7krK89HAgz4HpR3s4+CDXbKeh/tZybWrF/pESgoExD+UxcI3FjB0vpfg?=
+ =?iso-8859-1?Q?bl6BgSlJTxTjj6TuEtFfVappgHejtNqSE+lra8MAMHBH6HOZBPXDcZLzrH?=
+ =?iso-8859-1?Q?EoS4PNvgMXhCJa2So23dGs3BEPzSFqQWgtwgmlzaxX6R2XsxfdX8XD7UiN?=
+ =?iso-8859-1?Q?9cJvhO2im15xgj3wc2/G1LP9Qj5kl6/UITwdGr25VZPABETizegHH35Gua?=
+ =?iso-8859-1?Q?TfVM783Fh9ZsYccutUy7h06WuPou2IlOODnRSfyAXNBV0vbpEgqK+CKxHN?=
+ =?iso-8859-1?Q?rsKVZayeSzTlx0uQgJtMVDyq4fTA18BLQE3XWe9oyyUjlVdp4BZD3FK5HJ?=
+ =?iso-8859-1?Q?Yk7UnirZ9Ayym4M0mfOPr2VsalUMjxy1AYj9dwI3nPTeFPEICBSZEvCq1v?=
+ =?iso-8859-1?Q?8H2W2zyFpXc/qVNuAPpQVs3yo83QQxaN7SIQteOBsO7RTQbDf5Tjab6o6t?=
+ =?iso-8859-1?Q?8kUN/V3iw7M//MbfC97pjRfv3nz4rICmOfZemIk5EC/qC33rDrUH2gG1NV?=
+ =?iso-8859-1?Q?9+nSCNvy6dDYgfWGSCB2t0ZjUBaO21UqqRhQOKIpARCmWMXmiJrBN1txFP?=
+ =?iso-8859-1?Q?mnHJvXEuLFQ3lFpLfZcNHbcwKRyXCABUqadALFvSGCQQ2AlHNTk9kqKg2E?=
+ =?iso-8859-1?Q?4vscqL/vh2+hy3u5qXPjzha4xF0BxF/TJzhmvv71LVnH5q5vO2EcBFrRS3?=
+ =?iso-8859-1?Q?dSLqIDDqWMThEMR1SXox79xYwH7MiCNBrDOvzwfn3AYoWmOhgtiqtvE1eP?=
+ =?iso-8859-1?Q?Z+X3kb3WhT0L8YrWGzocG8/KsyTj/EpFlIPixFRIkgIRNkWxAsm7Y8Me5B?=
+ =?iso-8859-1?Q?gyGknoeoMDAXpaV6ZESPk3WngrMHaWEgd0UrvnTOsotzKJ?=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-9 
 MIME-Version: 1.0
+X-Exchange-RoutingPolicyChecked: 
+	fIN8sp4AYai95RmADpw72hmrex33J/Ra6EzP8sF2th4ZTxiKm3rcJf7XxA32ZZrHJFltKfSw4IdHW00I69rl0LnDvLsbbdx2jXdhFE/X3b5NJUaXMm31l3r99ZGwuJ5Zoa53O06O2HWjJnI0JMOhMU4k8nvVEYzNsrVELHWI7Jcd/xoGdju+e2ye06g23Cghe7iCLpwWs3spshqxN/CkwoxjAS4wLstfLBsAkpx2fC9rPFtS1uwA/ddhtt/RCAKNtJHJs7ofDDDmm/NPbujrKTUUG6fF1PTsuYm70fqCouHKpd9GMRJii9shc3IHoggCnwNRm5Log1fc6OzrOxpOMQ==
+X-OriginatorOrg: cisco.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3962.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7480d15-8c55-4f60-e871-08df14c4c72c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2026 14:05:49.7624
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5DB/GCMdNN4eJVq1QEHIDNuZ3Hde9IaIYurppNWuaYYZ/rXLgq4FyGegLaxUfyaeMlYvVlehZ4PPLQqfYcx+Hg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7421
+X-Outbound-Client-TLS: ANONYMOUS;rcdn-opgw-1.cisco.com [72.163.7.162];TLSv1.3;TLS_AES_256_GCM_SHA384;256
+X-Outbound-SMTP-Client: 72.163.7.162, rcdn-opgw-1.cisco.com
+X-Outbound-Node: rcdn-l-core-08.cisco.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 17 Sep 2026 13:48:13 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20219
+ <bitbake-devel@lists.openembedded.org>; Thu, 17 Sep 2026 14:06:03 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20220
 
-On Thu, 2026-09-17 at 13:15 +0100, Richard Purdie via lists.openembedded.or=
-g wrote:
-> On Mon, 2026-09-14 at 11:00 +0000, Fredrik Svensson (svsvenss) wrote:
-> > The failure happens as follows:
-> >=20
-> > 1. BitBake has an old Git clone for the original URL.
-> > 2. That clone does not contain the commit being built.
-> > 3. BitBake successfully fetches the commit from a premirror into anothe=
-r clone.
-> > 4. BitBake tries to unpack from the old clone and fails.
-> >=20
-> > Remember the clone used by the successful premirror fetch and unpack fr=
-om it.
-> > Leave both clones unchanged and preserve the premirror clone during cle=
-an.
-> >=20
-> > Add a test for this case.
-> >=20
-> > Signed-off-by: Fredrik Svensson <fredriks@meraki.com>
-> > ---
-> > Thanks for the feedback.
-> >=20
-> > This version leaves the stale clone untouched. It remembers the clone u=
-sed by
-> > the successful premirror fetch and uses that clone for unpacking.
-> >=20
-> > It also removes update_mirror_links. A symlink is still created when th=
-e
-> > original clone path is absent, but clean no longer follows that symlink=
-, so it
-> > does not remove the premirror clone.
-> >=20
-> > The updated self-test verifies that unpack uses the premirror revision,=
- the old
-> > clone is unchanged, and clean preserves the premirror clone.
-> >=20
-> > Changes in v3:
-> > - do not delete or replace the stale clone;
-> > - use origud to remember the successful premirror path;
-> > - remove update_mirror_links;
-> > - preserve the premirror clone during clean; and
-> > - update the self-test for the new behavior.
-> >=20
-> > lib/bb/fetch/__init__.py | 48 +++++++++++++-------------------
-> > =C2=A0lib/bb/fetch/git.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 60 ++++++++++=
-+++++++++---------------------
-> > =C2=A0lib/bb/tests/fetch.py=C2=A0=C2=A0=C2=A0 | 49 ++++++++++++++++++++=
-++++++++++++
-> > =C2=A03 files changed, 97 insertions(+), 60 deletions(-)
->=20
-> Thanks, I spent quite a bit of time looking at this and I'm not
-> convinced the code will work well. You're adjusting localpath to
-> mirrorpath deep in try_mirror_url and there is no guarantee that the
-> codepath will always run and adjust ud.localpath before it gets
-> referenced. Yes, the test case works but the code is full of
-> assumptions about what localpath means and we can't just change the
-> behaviour like this. I therefore cannot merge this.
->=20
-> I did caveat that you were pressuring me for review and I did my best
-> but didn't dive into details. I'm not entirely convinced I've given you
-> good advice on the route to take :(.
->=20
-> Perhaps the best approach may be to take the original v2 patch approach
-> but error if the directory overlap occurs rather than delete anything?
-> At least that way the user can get a clear error message about the
-> issue.
->=20
-> The better option would be to update the out of date clone from the
-> premirror but I'm not quite sure which part of the codepaths would need
-> tweaking for that or how invasive it would be.
-
-The patch below is perhaps more what I was thinking. The difference is
-that it only changes the internal mirror urldata entry and causes the
-code to update the original clone directory. It uses your own testcase,
-with the link check removed as there isn't one but that doesn't matter.
-
-Cheers,
-
-Richard
-
-diff --git a/lib/bb/fetch/__init__.py b/lib/bb/fetch/__init__.py
-index 55ab710f3..60045b04b 100644
---- a/lib/bb/fetch/__init__.py
-+++ b/lib/bb/fetch/__init__.py
-@@ -1054,12 +1054,12 @@ def build_mirroruris(origud, mirrors, ld):
-                 localmirrors.remove(line)
-=20
-                 try:
--                    newud =3D FetchData(newuri, ld)
-+                    newud =3D FetchData(newuri, ld, origud=3Dorigud)
-                     newud.ignore_checksums =3D True
-                     newud.setup_localpath(ld)
-                     if hasattr(ud, 'unpack_tracer'):
-                         newud.unpack_tracer =3D ud.unpack_tracer
--                    newud.origud =3D ud
-+
-                 except bb.fetch.BBFetchException as e:
-                     logger.debug("Mirror fetch failure for url %s (origina=
-l url: %s)" % (newuri, origud.url))
-                     logger.debug(str(e))
-@@ -1321,7 +1321,7 @@ class FetchData(object):
-     """
-     A class which represents the fetcher state for a given URI.
-     """
--    def __init__(self, url, d, localonly =3D False):
-+    def __init__(self, url, d, localonly=3DFalse, origud=3DNone):
-         # localpath is the location of a downloaded result. If not set, th=
-e file is local.
-         self.donestamp =3D None
-         self.needdonestamp =3D True
-@@ -1373,6 +1373,9 @@ class FetchData(object):
-         if not self.method:
-             raise NoMethodError(url)
-=20
-+        if origud:
-+            self.origud =3D origud
-+
-         if localonly and not isinstance(self.method, local.Local):
-             raise NonLocalMethod()
-=20
-diff --git a/lib/bb/fetch/git.py b/lib/bb/fetch/git.py
-index dc1b31b58..fa43e1d5d 100644
---- a/lib/bb/fetch/git.py
-+++ b/lib/bb/fetch/git.py
-@@ -277,6 +277,8 @@ class Git(FetchMethod):
-         dl_dir =3D d.getVar("DL_DIR")
-         gitdir =3D d.getVar("GITDIR") or (dl_dir + "/git2")
-         ud.clonedir =3D os.path.join(gitdir, gitsrcname)
-+        if hasattr(ud, "origud") and ud.origud.type =3D=3D "git":
-+            ud.clonedir =3D ud.origud.clonedir
-         ud.localfile =3D ud.clonedir
-=20
-         mirrortarball =3D 'git2_%s.tar.gz' % gitsrcname
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 773876453..d69ad6bbd 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -616,6 +616,48 @@ class GitDownloadDirectoryNamingTest(FetcherTest):
-         self.assertIn(self.recipe_dir, dir)
-=20
-=20
-+class GitPremirrorStaleCloneTest(FetcherTest):
-+
-+    def test_premirror_replaces_stale_clone(self):
-+        source =3D os.path.join(self.tempdir, "source")
-+        os.mkdir(source)
-+        self.git_init(cwd=3Dsource)
-+
-+        testfile =3D os.path.join(source, "testfile")
-+        with open(testfile, "w") as f:
-+            f.write("first\n")
-+        self.git(["add", "testfile"], cwd=3Dsource)
-+        self.git(["commit", "-m", "first commit"], cwd=3Dsource)
-+
-+        recipe_url =3D "git://upstream.invalid/project.git;branch=3Dmaster=
-;protocol=3Dhttps"
-+        self.d.setVar("SRCREV", self.git(["rev-parse", "HEAD"], cwd=3Dsour=
-ce).strip())
-+        fetcher =3D bb.fetch.Fetch([recipe_url], self.d)
-+        ud =3D fetcher.ud[recipe_url]
-+        ud.setup_localpath(self.d)
-+        os.makedirs(os.path.dirname(ud.clonedir), exist_ok=3DTrue)
-+        self.git(["clone", "--bare", "--mirror", source, ud.clonedir], cwd=
-=3Dself.tempdir)
-+
-+        with open(testfile, "a") as f:
-+            f.write("second\n")
-+        self.git(["commit", "-am", "second commit"], cwd=3Dsource)
-+        revision =3D self.git(["rev-parse", "HEAD"], cwd=3Dsource).strip()
-+
-+        self.d.setVar("SRCREV", revision)
-+        self.d.setVar("BB_FETCH_PREMIRRORONLY", "1")
-+        self.d.setVar("BB_NO_NETWORK", "1")
-+        self.d.setVar("PREMIRRORS", "%s git://%s;protocol=3Dfile" % (recip=
-e_url, source))
-+
-+        fetcher =3D bb.fetch.Fetch([recipe_url], self.d)
-+        ud =3D fetcher.ud[recipe_url]
-+        fetcher.download()
-+        fetcher.unpack(self.unpackdir)
-+
-+        self.assertTrue(os.path.islink(ud.clonedir))
-+        unpack_revision =3D self.git(["rev-parse", "HEAD"],
-+                                   cwd=3Dos.path.join(self.unpackdir, "git=
-")).strip()
-+        self.assertEqual(revision, unpack_revision)
-+
-+
- class TarballNamingTest(FetcherTest):
-     def setUp(self):
-         super(TarballNamingTest, self).setUp()
+Thanks for reviewing Richard,=0A=
+I agree that reporting an error would be safe, but it would still leave=0A=
+the build broken until someone manually cleans the worker's download cache.=
+=0A=
+This is not great for automated CI builds.=0A=
+=0A=
+I would like to investigate the other option you mentioned: after a premirr=
+or=0A=
+fetch succeeds, update the existing clone by fetching from the premirror cl=
+one=0A=
+while the existing download lock is held. That would preserve localpath,=0A=
+without deleting or renaming either clone, and normal unpacking could then=
+=0A=
+continue.=0A=
+=0A=
+I would add a test which verifies that the existing clone gains the request=
+ed=0A=
+commit, unpack succeeds, and the premirror clone remains unchanged.=0A=
+=0A=
+Does that sound like the right direction before I submit a new patch?=0A=
+=0A=
+Kind regards,=0A=
+Fredrik=
 
