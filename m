@@ -2,61 +2,61 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E324C982DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5573AC982DD
 	for <webhook@archiver.kernel.org>; Thu, 17 Sep 2026 22:17:21 +0000 (UTC)
-Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.1874.1789683435102233444
+Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.1873.1789683434765494600
  for <bitbake-devel@lists.openembedded.org>;
  Thu, 17 Sep 2026 15:17:15 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=QVmfTxjn;
- spf=pass (domain: smile.fr, ip: 74.125.225.141, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49e79a408deso521725e9.2
+ dkim=pass header.i=@smile.fr header.s=google header.b=2KvuD1eq;
+ spf=pass (domain: smile.fr, ip: 74.125.225.140, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49b912d3931so877275e9.3
         for <bitbake-devel@lists.openembedded.org>; Thu, 17 Sep 2026 15:17:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=smile.fr; s=google; t=1789683433; x=1790288233; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=4p06dazv7lsL4h5jv8LyDYtG4pQpyAhvuN7/g1+0Gi8=;
-        b=QVmfTxjn7Yd7gr155Vgz+5JtYcmUmYoTmM8IGpTEq2/hADvE1XGCuj4NmVxDPD+FAa
-         /wuqqe4uDJSIvedcvJFE65kWwiEncoIMryLxJYHBYCE9VMkJmGfGqg7Rv54n+T+XKyEj
-         wizSOB6Qm+3XWdlQ5htN47CNXALcf5SHI9p8s=
+        bh=IbNm2GWtD3aZGg1aVHDtPUgwbtMwLOdA87VtMcfVh/g=;
+        b=2KvuD1eqsuYGsRvpCWwVLwo2dnPDd8UYGuksbnjtZ1ULj4m/4DE72CBU7vE8UTIujR
+         TZ1lkEGMc1VTFaJfo6SGQl52h3tZ+nv2O4hNR3clF4Gu/TCWlssw8lKGQX2KAGpTOvqD
+         dwC2/BiZ1fFfL6YXZ3ZY/kKGHq98KiP+4TNFA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20260707; t=1789683433; x=1790288233;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to:content-type;
-        bh=4p06dazv7lsL4h5jv8LyDYtG4pQpyAhvuN7/g1+0Gi8=;
-        b=NPcKzTqGI8RGra5x1fQAQ5mNx9O4BF3nMA4qg6Ffcpgg8b06iMtxTDAb+DmPhgdPEH
-         SiClmWOOR/4ZfdwRQLMyTyn/UWyyK9hUn/OELLnxlLDqdEe0ZqcoxwURUtOhTpU04IUS
-         fvJ5iNQnMCSuIRcnJ2UL4CxY2v+4V+1fVE4wunlXqKIC23NPWB09h7HfHCEgtWC2xxwY
-         IjLThl5FHjrQZvnBwP7n9AKnxhyz0vx30MD7rPIWMpwu3YHEIbpSoz0w4GI10M2iT1vM
-         urg0kpJBxm+0oncw5efRcs/nYc0FaaoEJedVb8CpNI2x+WWO+RP7/itAqXjO5nIz79GW
-         /yhg==
-X-Gm-Message-State: AFuF++k3kl2+5Dw5sfjtB9o63pmXkoYVDrznpToz8uW+KHDk4l2m4NdA
-	6USW7EITk/WdbUwGTSu1Kt7zhpTfU6S7P5X4cSBrXiQTEwMuueavsH6+l58veelibhgcD+987z9
-	Pauc56nI=
-X-Gm-Gg: AYBFou3ppTSRtOMBdmsltX4cqQmITRUwgCY42NnUVaIxJIIarpyhztEPRLuGnfb5sna
-	HRd6zWUnT3s4cMxQEQa2bmdTHliyVXrye3eTN/DTjmU9k86Yv6aPJRoHqSTH3eO07NgiTfZHOol
-	oMhuDBK0YueFNU+C1a0m1fS5RyfD0C7Lvgi4eeyeg3yFz5Wtv6XWg4ENf6ymALLDTTkO54RFqLD
-	gLvwNCtcBLoXWnqyszDSs1c/1YBeaqu67JjTlqwOFWrVaA51qKKA1cTVE31gWcZPHr6YHOYYCXw
-	9DtKV4UJTXIHeUQ8x8Su1jedVYrJew0quMqzlZWh8lmGVMCsauUb+9/Ok4ZA2OiioH1bMo6xeyb
-	+h5+FNFbx4BX8GDIMbHiCdGEjYD4BtPCkM6UPDVFLOWlZ8MlMnlmbHkhGgKQDPRSnTpA6kjOB8r
-	NU2b8XkTurG8m2jLLv02Ey2suBRamjJnYWsFukQyuepJJQgqSzNEKUgCHBM7Yw94q4v36yI+XpM
-	aaLZ9awvu3fTwGGPw88Kx840q5OZXrSzjfvmqZLf2BNBrac42ybmaXE68dVDkPz60JN4w4GO/I=
-X-Received: by 2002:a05:600c:34d0:b0:495:6e68:5df2 with SMTP id 5b1f17b1804b1-49fc56ef520mr3417955e9.12.1789683433370;
-        Thu, 17 Sep 2026 15:17:13 -0700 (PDT)
+        bh=IbNm2GWtD3aZGg1aVHDtPUgwbtMwLOdA87VtMcfVh/g=;
+        b=kEoJxgCERpAoP7ZyMeBGmWPhwNbxuUFUliHj+EImSPl8++GY0DCqYu9HmNqz5T8fJd
+         /DfvE4hdTwx5og8mxHKb5iU0u+xixbBFD1J4DjtDngP1e69BRAy/4DniW+gB50/FiveU
+         QNGOVBR+z0FkIh/Tb5s8MR69OynMHfSlQgb3c9i5gjxHwsBarinkDDCJLAUv0myYGIJc
+         GMrNi9N/OksS95qhbTegGzZrszyfdngFo8Hfkz2euavXnVmzkqMLpxKuzh/aN30CdepZ
+         1dVDiWVgJ/+lZYpRHfxuWj1tYwDNqQL1v8lYQ3GMbfNJoRfPMpT7BUH3P+RRL/iIXJxn
+         8f8w==
+X-Gm-Message-State: AFuF++lfHhfwGlqNP4f0E7Ctuzfnmuk+jHcEJDifyjnY/Wjucd8I03M/
+	xuyoWTg/Y0cA1CW5WV+uFWiLlizMBw6nTuw8ZLZjaqPuXltZELKCzEN4Lix8QL66HEd2BrP2qlo
+	JmA8qqPI=
+X-Gm-Gg: AYBFou2hZMjsuuhb8v2vthUpOT8f/HwGHLFfslk75QltqkNY5IZNWOUb3qmLSfPJ4Ce
+	kaDqIev5NoORR7q0xVrnpYTePz8NX3KFf1uIM7ywKyJScm2zcDKLQ92W7ENrVLdJar3olEH5Sfc
+	xtHOREr43Qx21G2iwY0ql7xdtuOUFfoczzSvB2rNZvubEmJCnSs+EuxiohUOLBZzKdeLmyh5UoD
+	tKFGsRdTbKlSNBU4GOPKSXZOxtxnM9zdGFuFpEu+qtG3L+IU6Y3Wv8DZkAj0QbZi2swKLse90h/
+	ZyMNVc7uBjo5xxobuVJPuC0pVi2F5RTLnxVuG+C9J9PfsWSm5LkrMG9JyWjEdQftLk/ELr0DRTc
+	St6gFniludA33J+vbEtxJyORvL3efWwNDYEmE5ZcFZiNvbS8YxnGuzElIhDBmGJlBplY7J+J/wr
+	uTZM420ztCc7I0sfK+J6bsTLiLUbckHT05VTx6/fZXqMuvLHIVNwV3a66MFU+jTOMdnkSgmHfQ+
+	BLxdI7cBmsYKQYxk8mQN/hpBrRNcUR2Dnz4ohFI/3URXEnEDiOa4r/txLfg/+ffy7wIV+QTSEg=
+X-Received: by 2002:a05:600c:3f0b:b0:49b:d45:703e with SMTP id 5b1f17b1804b1-49fc56aa68amr3374645e9.8.1789683432938;
+        Thu, 17 Sep 2026 15:17:12 -0700 (PDT)
 Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fbd247809sm185737725e9.11.2026.09.17.15.17.13
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fbd247809sm185737725e9.11.2026.09.17.15.17.12
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Sep 2026 15:17:13 -0700 (PDT)
+        Thu, 17 Sep 2026 15:17:12 -0700 (PDT)
 From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][wrynose][2.18][PATCH 3/7] fetch2/crate.py: add filter_regex parameter to latest_versionstring
-Date: Fri, 18 Sep 2026 00:17:01 +0200
-Message-ID: <e4e3fb0852029da0d24084debe6f84ac1b2e3b58.1789683244.git.yoann.congal@smile.fr>
+Subject: [bitbake][wrynose][2.18][PATCH 2/7] fetch2/wget.py: add filter_regex parameter to latest_versionstring
+Date: Fri, 18 Sep 2026 00:17:00 +0200
+Message-ID: <9a668f8fff0266a51f49968968cccb2cfa52156c.1789683244.git.yoann.congal@smile.fr>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <cover.1789683244.git.yoann.congal@smile.fr>
 References: <cover.1789683244.git.yoann.congal@smile.fr>
@@ -66,7 +66,7 @@ List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <bitbake-devel@lists.openembedded.org>; Thu, 17 Sep 2026 22:17:21 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20226
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20225
 
 From: Chen Qi <Qi.Chen@windriver.com>
 
@@ -80,55 +80,77 @@ has the advantage of adapting to different version schemes.
 Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit 592477f225868e227110477f52691e031903430a)
+(cherry picked from commit b1c4a431b080ee328fbf21543258e226a464c118)
 Signed-off-by: Daniel Turull <daniel.turull@ericsson.com>
 Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
 ---
- lib/bb/fetch2/crate.py | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ lib/bb/fetch2/wget.py | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/lib/bb/fetch2/crate.py b/lib/bb/fetch2/crate.py
-index eb1fd5719..6133d3756 100644
---- a/lib/bb/fetch2/crate.py
-+++ b/lib/bb/fetch2/crate.py
-@@ -13,6 +13,7 @@ BitBake 'Fetch' implementation for crates.io
- import hashlib
- import json
- import os
-+import re
- import subprocess
- import bb
- from   bb.fetch2 import logger, subprocess_setup, UnpackError
-@@ -155,18 +156,20 @@ class Crate(Wget):
-             with open(mdpath, "w") as f:
-                 json.dump(metadata, f)
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index fc83b301a..c292dfe7e 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -515,7 +515,7 @@ class Wget(FetchMethod):
+ 
+         return fetchresult
+ 
+-    def _check_latest_version(self, url, package, package_regex, current_version, ud, d):
++    def _check_latest_version(self, url, package, package_regex, current_version, ud, d, filter_regex=None):
+         """
+         Return the latest version of a package inside a given directory path
+         If error or no version, return ""
+@@ -538,6 +538,11 @@ class Wget(FetchMethod):
+                 newver = self._parse_path(package_regex, str(line))
+ 
+             if newver:
++                if filter_regex:
++                    # filter_regex is derived from PV, and uses . as separator
++                    # while upstream may be using _ as separator
++                    if not re.match(filter_regex, re.sub('_', '.', newver[1])):
++                        continue
+                 bb.debug(3, "Upstream version found: %s" % newver[1])
+                 if valid == 0:
+                     version = newver
+@@ -555,7 +560,7 @@ class Wget(FetchMethod):
+ 
+         return ""
+ 
+-    def _check_latest_version_by_dir(self, dirver, package, package_regex, current_version, ud, d):
++    def _check_latest_version_by_dir(self, dirver, package, package_regex, current_version, ud, d, filter_regex=None):
+         """
+         Scan every directory in order to get upstream version.
+         """
+@@ -599,7 +604,7 @@ class Wget(FetchMethod):
+                         ud.user, ud.pswd, {}])
+ 
+                     pupver = self._check_latest_version(uri,
+-                            package, package_regex, current_version, ud, d)
++                            package, package_regex, current_version, ud, d, filter_regex)
+                     if pupver:
+                         version[1] = pupver
+ 
+@@ -660,7 +665,7 @@ class Wget(FetchMethod):
+ 
+         return package_custom_regex_comp
  
 -    def latest_versionstring(self, ud, d):
 +    def latest_versionstring(self, ud, d, filter_regex=None):
          """
-         Return the latest version available when versionsurl is the [name]/versions URL.
-         """
-         from functools import cmp_to_key
-         json_data = json.loads(self._fetch_index(ud.versionsurl, ud, d))
-         versions = [(0, i["num"], "") for i in json_data["versions"]]
-+        if filter_regex:
-+            versions = [v for v in versions if re.match(filter_regex, v[1])]
-         versions = sorted(versions, key=cmp_to_key(bb.utils.vercmp))
+         Manipulate the URL and try to obtain the latest package version
  
-         return (versions[-1][1], "") if versions else ("", "")
+@@ -701,11 +706,11 @@ class Wget(FetchMethod):
+                 dirver_pn_regex = re.compile(r"%s\d?" % (re.escape(pn)))
+                 if not dirver_pn_regex.search(dirver):
+                     return (self._check_latest_version_by_dir(dirver,
+-                        package, package_regex, current_version, ud, d), '')
++                        package, package_regex, current_version, ud, d, filter_regex), '')
  
--    def latest_versionstring_from_index(self, ud, d):
-+    def latest_versionstring_from_index(self, ud, d, filter_regex=None):
-         """
-         Return the latest version available when versionsurl is a Cargo index
-         file.
-@@ -181,5 +184,8 @@ class Crate(Wget):
-             if not data.get("yanked", False):
-                 versions.append((0, data["vers"], ""))
+             uri = bb.fetch.encodeurl([ud.type, ud.host, path, ud.user, ud.pswd, {}])
+         else:
+             uri = regex_uri
  
-+        if filter_regex:
-+            versions = [v for v in versions if re.match(filter_regex, v[1])]
-+
-         versions = sorted(versions, key=cmp_to_key(bb.utils.vercmp))
-         return (versions[-1][1], "") if versions else ("", "")
+         return (self._check_latest_version(uri, package, package_regex,
+-                current_version, ud, d), '')
++                current_version, ud, d, filter_regex), '')
 
