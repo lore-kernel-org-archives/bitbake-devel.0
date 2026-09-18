@@ -1,156 +1,142 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <peter.kjellerstedt@axis.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5573AC982DD
-	for <webhook@archiver.kernel.org>; Thu, 17 Sep 2026 22:17:21 +0000 (UTC)
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.1873.1789683434765494600
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D999C982DD
+	for <webhook@archiver.kernel.org>; Fri, 18 Sep 2026 19:48:06 +0000 (UTC)
+Received: from GVXPR05CU001.outbound.protection.outlook.com (GVXPR05CU001.outbound.protection.outlook.com [52.101.83.16])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.18943.1789760884445458091
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 17 Sep 2026 15:17:15 -0700
+ Fri, 18 Sep 2026 12:48:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=2KvuD1eq;
- spf=pass (domain: smile.fr, ip: 74.125.225.140, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49b912d3931so877275e9.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 17 Sep 2026 15:17:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1789683433; x=1790288233; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=IbNm2GWtD3aZGg1aVHDtPUgwbtMwLOdA87VtMcfVh/g=;
-        b=2KvuD1eqsuYGsRvpCWwVLwo2dnPDd8UYGuksbnjtZ1ULj4m/4DE72CBU7vE8UTIujR
-         TZ1lkEGMc1VTFaJfo6SGQl52h3tZ+nv2O4hNR3clF4Gu/TCWlssw8lKGQX2KAGpTOvqD
-         dwC2/BiZ1fFfL6YXZ3ZY/kKGHq98KiP+4TNFA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789683433; x=1790288233;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=IbNm2GWtD3aZGg1aVHDtPUgwbtMwLOdA87VtMcfVh/g=;
-        b=kEoJxgCERpAoP7ZyMeBGmWPhwNbxuUFUliHj+EImSPl8++GY0DCqYu9HmNqz5T8fJd
-         /DfvE4hdTwx5og8mxHKb5iU0u+xixbBFD1J4DjtDngP1e69BRAy/4DniW+gB50/FiveU
-         QNGOVBR+z0FkIh/Tb5s8MR69OynMHfSlQgb3c9i5gjxHwsBarinkDDCJLAUv0myYGIJc
-         GMrNi9N/OksS95qhbTegGzZrszyfdngFo8Hfkz2euavXnVmzkqMLpxKuzh/aN30CdepZ
-         1dVDiWVgJ/+lZYpRHfxuWj1tYwDNqQL1v8lYQ3GMbfNJoRfPMpT7BUH3P+RRL/iIXJxn
-         8f8w==
-X-Gm-Message-State: AFuF++lfHhfwGlqNP4f0E7Ctuzfnmuk+jHcEJDifyjnY/Wjucd8I03M/
-	xuyoWTg/Y0cA1CW5WV+uFWiLlizMBw6nTuw8ZLZjaqPuXltZELKCzEN4Lix8QL66HEd2BrP2qlo
-	JmA8qqPI=
-X-Gm-Gg: AYBFou2hZMjsuuhb8v2vthUpOT8f/HwGHLFfslk75QltqkNY5IZNWOUb3qmLSfPJ4Ce
-	kaDqIev5NoORR7q0xVrnpYTePz8NX3KFf1uIM7ywKyJScm2zcDKLQ92W7ENrVLdJar3olEH5Sfc
-	xtHOREr43Qx21G2iwY0ql7xdtuOUFfoczzSvB2rNZvubEmJCnSs+EuxiohUOLBZzKdeLmyh5UoD
-	tKFGsRdTbKlSNBU4GOPKSXZOxtxnM9zdGFuFpEu+qtG3L+IU6Y3Wv8DZkAj0QbZi2swKLse90h/
-	ZyMNVc7uBjo5xxobuVJPuC0pVi2F5RTLnxVuG+C9J9PfsWSm5LkrMG9JyWjEdQftLk/ELr0DRTc
-	St6gFniludA33J+vbEtxJyORvL3efWwNDYEmE5ZcFZiNvbS8YxnGuzElIhDBmGJlBplY7J+J/wr
-	uTZM420ztCc7I0sfK+J6bsTLiLUbckHT05VTx6/fZXqMuvLHIVNwV3a66MFU+jTOMdnkSgmHfQ+
-	BLxdI7cBmsYKQYxk8mQN/hpBrRNcUR2Dnz4ohFI/3URXEnEDiOa4r/txLfg/+ffy7wIV+QTSEg=
-X-Received: by 2002:a05:600c:3f0b:b0:49b:d45:703e with SMTP id 5b1f17b1804b1-49fc56aa68amr3374645e9.8.1789683432938;
-        Thu, 17 Sep 2026 15:17:12 -0700 (PDT)
-Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fbd247809sm185737725e9.11.2026.09.17.15.17.12
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Sep 2026 15:17:12 -0700 (PDT)
-From: Yoann Congal <yoann.congal@smile.fr>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][wrynose][2.18][PATCH 2/7] fetch2/wget.py: add filter_regex parameter to latest_versionstring
-Date: Fri, 18 Sep 2026 00:17:00 +0200
-Message-ID: <9a668f8fff0266a51f49968968cccb2cfa52156c.1789683244.git.yoann.congal@smile.fr>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1789683244.git.yoann.congal@smile.fr>
-References: <cover.1789683244.git.yoann.congal@smile.fr>
+ dkim=fail reason="dkim: body hash did not verify" header.i=@axis.com header.s=selector1 header.b=NsRCMPeB;
+ spf=pass (domain: axis.com, ip: 52.101.83.16, mailfrom: peter.kjellerstedt@axis.com)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JiZv/IXyrDv8aWXXqgsQ63YDqivhcga/1cVDA/akOQJ1O4n9S2ydI4v9V9DWTr0gQWtAGDBeIJfLzU2KRQYLdDIA538KLsLJ2flOvxJP+0XEsL/ocMvCvi6S7e+BwuwTZlPmqo7m1E2GFgbjHlBzuTKGxyJ4pUDVeXuhf6ogr5I9FLApd/GiDW3NzX3eb0kitsvAwEQCpV5BDgWD9jV/Hum6TXh2/lph5mIlvwUS6V8IBb+7Ow94fxZtVfEhcj5i56/IEwIZ1Kywn2sBZeSSF79BHqDo8SXMpAbMQw5Yk3ndUFNAANKGISahAWlIV7cZOvFGn85diYtJNurUAo8e8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=y4EA+mZfVqxcPg1HU6xFe6eSYiFYH3B5wK2vJXXcshA=;
+ b=yMTeywfU6J70c3YpxKQ4927QFntHuYw54JyzzR/Ip8MujFj+WNQ/jQYsJj364nHdq2xCb4L4iVkNnOELznokx/fLknLyqn8QJt1ODEeYhkdDqHZDOMGb4VNjapKBa7VmgupzcMuoB/3/BPmqKA14O9YbBa5ZGNwW9SNtTM3xFiL9FRDD34X/WfQlzIt3AeO8BI3e1Iyd//bAmcgvPoEGXABqay5YGvBcsujowp8xVomG7d9kATjH8j5AawD7FEv02a/A1QPN0WiaLemYEODeivZ2zlzPv7+X+h2IdHvkv3lqwV6k+kwUhyc5GuMLC+LdOhUQm3STOHU0/03zAzw9yw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=lists.openembedded.org
+ smtp.mailfrom=axis.com; dmarc=pass (p=none sp=none pct=100) action=none
+ header.from=axis.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y4EA+mZfVqxcPg1HU6xFe6eSYiFYH3B5wK2vJXXcshA=;
+ b=NsRCMPeBBLjX8AuvVClD82ZNI9DxbjN0bH8kLHKt3K86dBha9VE134bjzVtTpa6Oe1+CTDZOeEIH5R2062jNYTWLpd+wTsFVr2e+d0vtH9TyZmzKr0T7H8CjX2HaubO7fvgfkPxoOs2Dp5WuYKLIMlob98u74ixqAkZqjfmeBY8=
+Received: from DUZPR01CA0165.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:4b3::6) by VI0PR02MB10766.eurprd02.prod.outlook.com
+ (2603:10a6:800:202::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.12; Fri, 18 Sep
+ 2026 19:47:58 +0000
+Received: from DB5PEPF00014B9B.eurprd02.prod.outlook.com
+ (2603:10a6:10:4b3:cafe::20) by DUZPR01CA0165.outlook.office365.com
+ (2603:10a6:10:4b3::6) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.428.13 via Frontend Transport; Fri,
+ 18 Sep 2026 19:47:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ DB5PEPF00014B9B.mail.protection.outlook.com (10.167.8.168) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.451.8 via Frontend Transport; Fri, 18 Sep 2026 19:47:58 +0000
+Received: from SE-MAILARCH01W.axis.com (10.20.40.15) by se-mail10w.axis.com
+ (10.20.40.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1748.39; Fri, 18 Sep
+ 2026 21:47:57 +0200
+Received: from se-mail11w.axis.com (10.20.40.11) by SE-MAILARCH01W.axis.com
+ (10.20.40.15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.61; Fri, 18 Sep
+ 2026 21:47:57 +0200
+Received: from se-intmail02x.se.axis.com (10.4.0.28) by se-mail11w.axis.com
+ (10.20.40.11) with Microsoft SMTP Server id 15.2.1748.39 via Frontend
+ Transport; Fri, 18 Sep 2026 21:47:57 +0200
+Received: from pc56063-2339.se.axis.com (pc56063-2339.se.axis.com [10.92.3.2])
+	by se-intmail02x.se.axis.com (Postfix) with ESMTP id 8DA392884
+	for <bitbake-devel@lists.openembedded.org>; Fri, 18 Sep 2026 21:47:57 +0200 (CEST)
+Received: by pc56063-2339.se.axis.com (Postfix, from userid 14323)
+	id 7B0A612A893; Fri, 18 Sep 2026 21:48:09 +0200 (CEST)
+From: Peter Kjellerstedt <pkj@axis.com>
+To: <bitbake-devel@lists.openembedded.org>
+Subject: [PATCH] ast: Make PyLibNode support submodules in BBIMPORTS
+Date: Fri, 18 Sep 2026 21:48:06 +0200
+Message-ID: <20260918194806.510401-1-pkj@axis.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB5PEPF00014B9B:EE_|VI0PR02MB10766:EE_
+X-MS-Office365-Filtering-Correlation-Id: a204c9fe-253d-4962-ee94-08df15bdbd78
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|82310400026|36860700016|1800799024|23010399003|376014|10067099003|18002099003|11063799006|56012099006;
+X-Microsoft-Antispam-Message-Info: 
+	u2zhOEHo0ZEMD1TUmLPX4mX7/4BHVB1EnymQ6EFnqNvlGumH8wj+vvmp6bcmuvOwqJhMS6CGxJjdWV0ot0QMxBonAQrtOMNbL339WKqCCmsWLDaTjgOh57+X+VQO0FRUL9sHhdvosvf+QmGGRp0ad9acFUcj3hKsv4NpBYlfroOBZxxGJfhV6tIntINK6124jhI1QFNSE0EOc+pTKJtP4HoYtemit09lzCQnnxI+soi7Lt2rPkF3S6AsDTOl07chjHGyK1i1YNwRhgbsR8UTJQ84IAjjzaWF6FwNLKcY1SCRo0lAMF2hUM4R7xvBHuYYyerT1/1AiQiNNV0crrqY7DoSvOAnPkv5tCeotiHcfjgqfiSSofQPCZy88q+pIUeFoRaCYIELCvs+m4vR7vJHjBjYVA5bAem51elp0LycMHza/NALfvVvZ1hRpZxnC3D6TOv6omTGL4lfuhzMyisf11qvKo+ugk7dT7ZfnTDjKTsAQXOqNtm6UdVO1D6zI37tQ4xW0YgBkhU/gayYuDS0uOqD3SpvJR0wm40Q7ZJfMZHBUIUEKCp1J+PgxO+ZNu83NlNI9+2MvQYORHqKYIHU14uUm5dqoRb7p5bB+oLlBuNRrJRuKXlBZOFYt9Sv5jPXHIBFu3hjMSt7FxqKnp5PlIQC5ScahaW5Ozasw3Llhw4uoFUW2OTJKEOBZsVOIb6sfQqq8m8n7GajU9orMDTXCA==
+X-Forefront-Antispam-Report: 
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(1800799024)(23010399003)(376014)(10067099003)(18002099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	qNdNY4h/2agcbpuqnpJtD4TrRSJojSW3PYkfVYOi3dUKU173LiitSE26ejD3wIxk4t5/1N1HKbQZRTpjPPGtqJo13++UznbNxwSsB2qUwjuXHH3lmySOoG4ffPnLcSo4+Ntj1FdoPlySstiM2+g65abfzIWrC6SKtx5WIUXYDsfbd/X7eDy7DACSJA75uVUdXyt2ab22JPYpyFPqQMkmTbsCyBNuTYUQjrmZBKFZ0RN/P+88/8jpjoBw3scDFCl/Bvl+gHsfSy5xmeQSTQjDLxePj2xsUbTGOxdoC7psuoGe3h61QMP5XGt/LAvSzgXe3YtKuhBMffSgy0f49xXDDESWlxVm/jZVMwG084YIRghzP6d2Qaddm27RzmuGor3IYRxpt6wsf+QEvkg/ZVlqfoVTo8fvMFGS9K32t95Oi58BUZe0nweYrzkrS6KHOO2s
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2026 19:47:58.1214
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a204c9fe-253d-4962-ee94-08df15bdbd78
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	DB5PEPF00014B9B.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR02MB10766
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 17 Sep 2026 22:17:21 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20225
+ <bitbake-devel@lists.openembedded.org>; Fri, 18 Sep 2026 19:48:06 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20231
 
-From: Chen Qi <Qi.Chen@windriver.com>
+For a given `addpylib <path> <namespace>`, the existing code would
+import all modules specified in `BBIMPORTS` with the assumption that
+there are no submodules. This adds support for specifying submodules as
+well. E.g., `BBIMPORTS =3D "foo.bar"` will now make `<namespace>.foo.bar`
+available.
 
-We want to be able to do stable version upgrade for recipes. For
-example, 1.0.0 -> 1.0.1 instead of 1.0.0 -> 1.1.0.
-
-To to this, we need an extra paramter to latest_versionstring
-so that we are able to filter out the versions we need. Using regex
-has the advantage of adapting to different version schemes.
-
-Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
-Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit b1c4a431b080ee328fbf21543258e226a464c118)
-Signed-off-by: Daniel Turull <daniel.turull@ericsson.com>
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 ---
- lib/bb/fetch2/wget.py | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index fc83b301a..c292dfe7e 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -515,7 +515,7 @@ class Wget(FetchMethod):
- 
-         return fetchresult
- 
--    def _check_latest_version(self, url, package, package_regex, current_version, ud, d):
-+    def _check_latest_version(self, url, package, package_regex, current_version, ud, d, filter_regex=None):
-         """
-         Return the latest version of a package inside a given directory path
-         If error or no version, return ""
-@@ -538,6 +538,11 @@ class Wget(FetchMethod):
-                 newver = self._parse_path(package_regex, str(line))
- 
-             if newver:
-+                if filter_regex:
-+                    # filter_regex is derived from PV, and uses . as separator
-+                    # while upstream may be using _ as separator
-+                    if not re.match(filter_regex, re.sub('_', '.', newver[1])):
-+                        continue
-                 bb.debug(3, "Upstream version found: %s" % newver[1])
-                 if valid == 0:
-                     version = newver
-@@ -555,7 +560,7 @@ class Wget(FetchMethod):
- 
-         return ""
- 
--    def _check_latest_version_by_dir(self, dirver, package, package_regex, current_version, ud, d):
-+    def _check_latest_version_by_dir(self, dirver, package, package_regex, current_version, ud, d, filter_regex=None):
-         """
-         Scan every directory in order to get upstream version.
-         """
-@@ -599,7 +604,7 @@ class Wget(FetchMethod):
-                         ud.user, ud.pswd, {}])
- 
-                     pupver = self._check_latest_version(uri,
--                            package, package_regex, current_version, ud, d)
-+                            package, package_regex, current_version, ud, d, filter_regex)
-                     if pupver:
-                         version[1] = pupver
- 
-@@ -660,7 +665,7 @@ class Wget(FetchMethod):
- 
-         return package_custom_regex_comp
- 
--    def latest_versionstring(self, ud, d):
-+    def latest_versionstring(self, ud, d, filter_regex=None):
-         """
-         Manipulate the URL and try to obtain the latest package version
- 
-@@ -701,11 +706,11 @@ class Wget(FetchMethod):
-                 dirver_pn_regex = re.compile(r"%s\d?" % (re.escape(pn)))
-                 if not dirver_pn_regex.search(dirver):
-                     return (self._check_latest_version_by_dir(dirver,
--                        package, package_regex, current_version, ud, d), '')
-+                        package, package_regex, current_version, ud, d, filter_regex), '')
- 
-             uri = bb.fetch.encodeurl([ud.type, ud.host, path, ud.user, ud.pswd, {}])
-         else:
-             uri = regex_uri
- 
-         return (self._check_latest_version(uri, package, package_regex,
--                current_version, ud, d), '')
-+                current_version, ud, d, filter_regex), '')
+In theory, one could do `addpylib <lib>/<namespace> foo` and then use
+`BBIMPORTS =3D "bar"`. However, any existing `import <namespace>.foo.bar`
+in the code would not match the import made via `BBIMPORTS`.
+
+ lib/bb/parse/ast.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index a372b3534..5f2aaadfb 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -310,8 +310,9 @@ class PyLibNode(AstNode):
+             bb.utils._context[self.namespace] =3D __import__(self.namespac=
+e)
+             toimport =3D getattr(bb.utils._context[self.namespace], "BBIMP=
+ORTS", [])
+             for i in toimport:
+-                bb.utils._context[self.namespace] =3D __import__(self.name=
+space + "." + i)
+-                mod =3D getattr(bb.utils._context[self.namespace], i)
++                mod =3D bb.utils._context[self.namespace] =3D __import__(s=
+elf.namespace + "." + i)
++                for submod in i.split("."):
++                    mod =3D getattr(mod, submod)
+                 fn =3D getattr(mod, "__file__")
+                 funcs =3D {}
+                 for f in dir(mod):
 
