@@ -2,218 +2,110 @@ Return-Path: <ecordonnier@snap.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E49C9830B
-	for <webhook@archiver.kernel.org>; Wed, 23 Sep 2026 17:08:56 +0000 (UTC)
-Received: from mail-dy2-f12.google.com (mail-dy2-f12.google.com [74.125.229.12])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.474.1790183333841603305
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 950FCC98302
+	for <webhook@archiver.kernel.org>; Wed, 23 Sep 2026 17:09:46 +0000 (UTC)
+Received: from mail-dl2-f42.google.com (mail-dl2-f42.google.com [74.125.229.170])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.514.1790183383790151393
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 23 Sep 2026 10:08:54 -0700
+ Wed, 23 Sep 2026 10:09:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@snap.com header.s=google header.b=ap7ktW3Q;
- spf=pass (domain: snapchat.com, ip: 74.125.229.12, mailfrom: ecordonnier@snapchat.com)
-Received: by mail-dy2-f12.google.com with SMTP id 5a478bee46e88-33be7dfcfc1so1310118eec.1
-        for <bitbake-devel@lists.openembedded.org>; Wed, 23 Sep 2026 10:08:53 -0700 (PDT)
+ dkim=pass header.i=@snap.com header.s=google header.b=bM4KSg9h;
+ spf=pass (domain: snapchat.com, ip: 74.125.229.170, mailfrom: ecordonnier@snapchat.com)
+Received: by mail-dl2-f42.google.com with SMTP id a92af1059eb24-144e32aaa1cso721926c88.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 23 Sep 2026 10:09:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=snap.com; s=google; t=1790183333; x=1790788133; darn=lists.openembedded.org;
+        d=snap.com; s=google; t=1790183383; x=1790788183; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=yc1rO+UTMpZUJ4u+1sXfL0qRJxJUlEDJre8DfttgHWs=;
-        b=ap7ktW3QFpHpE1dmUO8Cqn9gyxdVpH1rW1HPzxdGPu8wLtrVl79C8o+xfpvbZ2V964
-         AJGqdchnSFvwiVyofexSsdPZt/yegkoF0rMNproX3Eay1avDq9hZJ+pEY65mkcSHZA1z
-         0UkUJ1ixX7GVeK5rIbU8xCQHIT+JlaRbVxBPg=
+        bh=GxEqHdGiFs1Tl5WYmZZIzf6pLNFT969g1CLnMkxxwn4=;
+        b=bM4KSg9h1xY1eg2T3RAfRV6g9V9eLk/O+p1LEGPuZ/+fIu2v5ZJw9B/hsqb7FCpuxs
+         taJk/HCOC3WcE169zuN63ikEZKofpMXDc6E83Yu12wWc6lmrnv+e0TWUL3gLf6Xu/DtA
+         C3UNWxBgUKfT4uycRedny7xPKXG7dpNSUqe2o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790183333; x=1790788133;
+        d=1e100.net; s=20260707; t=1790183383; x=1790788183;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=yc1rO+UTMpZUJ4u+1sXfL0qRJxJUlEDJre8DfttgHWs=;
-        b=lnzFexNLjuc+L02o41FvBNnOV0FBCx17zJDrRsGzmF7GVmH6sN/04gXPFWDq5s9LwI
-         US2l1nqIzBtsYkqY9xB6FOvtwEW0hLN0c0iejSxV0uPF1MOu1/e3kphtJVzyn5XOvF7K
-         lxvM1CE/vrfeOkCI8EFTI/A0TaX1R3TOF1X0LAPQJkqU5AElbWZ4uUaYZg0HBfsXowAa
-         mpdRRysFYd6VIYxZn6wxr7I46k/ujgnNrboCBBB0MopMYpNdnw/dUZWR9y3kPQpqqnRZ
-         BIiBJ1zQRNkqWSAMONYQw8T2MErtTAkyMxLFktKwp3kXB9kkLNa0BoF6JrfodXiCDWS5
-         7qsg==
-X-Gm-Message-State: AFuF++m+tcWGl1yRzOkyXs/8NDW9rtFYrfWV2tmyZ8XgZcsO1Qti8tMB
-	7kfWKUV7Cu7/h9YqfPBMfZHBgeEb80+g1WoZtSUiHH9enL6QPQB36IXiuWCxUoWUS23G+XoUZ3b
-	G+JK8dbg=
-X-Gm-Gg: AYBFou26RCNjbcOhB2xU8KJcSpeuaLdvZ5hCiST6cGxD9yapeyQHrM6sDh1MODi43Zd
-	kboHLBPNOgz0vxs9T9rHERcQIs8Rbt8QZtluT4D1kWD5Z49pMdz9ay1+nFJJyYcTBft76GxdVvt
-	70HbPD3XvBVmk1VsXLSwrBz7RQTYIgFNpBYbhUYuKpmd5WEH8bEQjTovlf5HOAhXXELLKWwxw7D
-	s+3clHvm7nFruLS+DKq4r6RUHnnetpdqrFyaPmP03QdEW4sTaXL+9RoyvVyOWxFeQg1UI476qkz
-	t+L3bHK2YmjIePBBCOmfVKWO/tpVJ4GpaAEnksDQwd9G3OX4mj/8Qui9D64zcCOKcz7Y1szeqnY
-	lTkr5HF0dIWA09u/3ErprS20r7GOZT95KMJs2xXNH6RDXRfx/Ye3ViWxCSks95qsFvg6qNdkwvl
-	rpkTBkmhhShd3G0jJ946Np92EmRmYHwPWuu0Q9KJNQR4ewuRqd/trqLylTrJ/RNqN5t3Mq4GBje
-	FEehlh5ToBCjcFRcexjO+APgk9lpyY/rZG9pE78whJ3OG0ne4/kGQ==
-X-Received: by 2002:a05:7300:b291:b0:33e:538c:c3f1 with SMTP id 5a478bee46e88-33e8d6cff7dmr3202698eec.25.1790183332757;
-        Wed, 23 Sep 2026 10:08:52 -0700 (PDT)
+        bh=GxEqHdGiFs1Tl5WYmZZIzf6pLNFT969g1CLnMkxxwn4=;
+        b=tOvmNj51z66rox0zka915iECgyvhEDCYxETt35kN9LMxkEvkdpogxGPR11aXPpXJds
+         uKBC381Qh4hSHiklAspD5N3RKTd+8DAfjgrB3KytRVyhqOubKMYZ7VJh027qM7mxLsWq
+         yjMO4H9NqCnddMmiuohKjJEACHa7SmRpjM6qGCPToS5cdSddKPwA8WsfywdZ6Q6FIEDn
+         6cziXmWmj0RYa4ebzNdkDTXZ7GPV9e/73HnGAE1wsIIFdm8XXc1XxvonyQiXhvp/1WPF
+         ARv6X0n7KlKpaUMbGCXVdy6/aUa+mMsf8qkGzfbXyPzAF+gz5HLpGNAkF7ePQV2A9BGu
+         vFew==
+X-Gm-Message-State: AFuF++mxv+vvsAlOGzVuOwkctwNXEpCdT6rMXdR8ulQKUEq6rvUNKwy/
+	erLfRgWYo+ii2hV/Y5GBto1S97LpfY6LuTmi66FvQiRJ+VBIVuWDfYD61Z6/3NDoD2NxuKivRjj
+	ErqIgXRY=
+X-Gm-Gg: AYBFou0UVbFq48JJhtpsHR+CdQ+BDL5u7mQZgHtGP8mkfkuxVyxUMWNWOMlDDodvL3L
+	RCDhgR3SRRYL6B0pCYlt3m6iT7qQsscGn+P/qT2ofqxGFUGThE7MeNt5tiE8RdgYkkIXsk/UWJE
+	QTOIRyyWBWVyWYJSJ4y6yASMWGYumLBJtLX+dE6sBNZOFcDDIe7avuEPb4ZT9biQORYGzcvfaKT
+	zeriLgRzSgFL3SU30LHYKlZB/Guw6GXascOeO/B/56uRVuzQRlNQ2kmCMkkIxHssexT+AQzv6Zg
+	XBwufGllV97CqdDJ6/fLvVD5Ciqp2R8kjlcMiuXnNwb6rUwSmkpHki8YuHfbOcuW/QotaxHvSe2
+	CKV2FXcrxStGVz4do/8vFyxTj25gRmEL57boGa9KycqzCuv6s09NOqBakxDmKuuKxlIRxid7Mv+
+	MBdGp+554gkkAQg7SYR0f/fqECWynMejOIdc7Pko5/iXsO8OY/JZlXKAitr3M2v7pApOXgaiz51
+	EoUS1dPfLRUjK6nTCCjF7UhyhVptmSwVe0jP1HyuQaZ4+Ghuqrvew==
+X-Received: by 2002:a05:7023:a5c:20b0:138:243e:ceb1 with SMTP id a92af1059eb24-144f9086f6dmr3036634c88.6.1790183382605;
+        Wed, 23 Sep 2026 10:09:42 -0700 (PDT)
 Received: from lj8k2dq3.sc-core.net ([213.249.125.50])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-33e96358e2bsm7406609eec.16.2026.09.23.10.08.51
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-144f983d73fsm9253706c88.6.2026.09.23.10.09.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Sep 2026 10:08:52 -0700 (PDT)
+        Wed, 23 Sep 2026 10:09:42 -0700 (PDT)
 From: ecordonnier@snap.com
 To: bitbake-devel@lists.openembedded.org
 Cc: Etienne Cordonnier <ecordonnier@snap.com>
-Subject: [PATCH] fetch/wget: Reuse the checkstatus() urllib opener
-Date: Wed, 23 Sep 2026 19:08:46 +0200
-Message-ID: <20260923170846.1360600-1-ecordonnier@snap.com>
+Subject: [PATCH] fetch: Avoid truth-testing the original environment
+Date: Wed, 23 Sep 2026 19:09:36 +0200
+Message-ID: <20260923170936.1362930-1-ecordonnier@snap.com>
 X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 23 Sep 2026 17:08:56 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20246
+ <bitbake-devel@lists.openembedded.org>; Wed, 23 Sep 2026 17:09:46 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20247
 
 From: Etienne Cordonnier <ecordonnier@snap.com>
 
-checkstatus() builds a new urllib opener with its redirect, proxy and
-connection cache handlers on every call, although sstate.bbclass calls it
-for every object in an sstate mirror check with the same settings. Keep
-the opener on the FetchConnectionCache, keyed on the certificate checking
-setting and the fetcher environment, and rebuild it only when those
-change. The handlers now refer to the connection cache directly rather
-than through the first Fetch object, so a cached opener does not keep it
-alive. A connection cache is only used by one thread at a time, so no
-locking is needed.
+get_fetcher_environment() and runfetchcmd() check BB_ORIGENV with a truth
+test for every export variable that is not set in the datastore. Truth
+testing a DataSmart calls __len__(), which builds the set of all its keys,
+so this repeatedly enumerates the whole original environment. BB_ORIGENV
+is always a datastore when set, so compare it against None instead.
 
-Checking 2,114 objects on the Yocto sstate mirror with BB_NUMBER_THREADS = "8"
-reduced the time to task execution from 26.9s to 25.1s on average.
+This reduces get_fetcher_environment(), called once per sstate object
+checked on an HTTP mirror, from 753us to 24us. Checking 2,114 objects on
+the Yocto sstate mirror with BB_NUMBER_THREADS = "8" reduced the time to
+task execution from 26.6s to 24.5s on average.
 
 AI-Generated: Uses Claude Code (Claude Opus 5.5)
 Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
 ---
- lib/bb/fetch/__init__.py |  2 ++
- lib/bb/fetch/wget.py     | 45 ++++++++++++++++++++++++----------------
- 2 files changed, 29 insertions(+), 18 deletions(-)
+ lib/bb/fetch/__init__.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/lib/bb/fetch/__init__.py b/lib/bb/fetch/__init__.py
-index 55ab710f3..0eb660685 100644
+index 55ab710f3..fb6278439 100644
 --- a/lib/bb/fetch/__init__.py
 +++ b/lib/bb/fetch/__init__.py
-@@ -2090,6 +2090,8 @@ class FetchConnectionCache(object):
-     """
-     def __init__(self):
-         self.cache = {}
-+        # urllib openers built by the wget fetcher, see Wget.checkstatus()
-+        self.opener_cache = {}
+@@ -928,7 +928,7 @@ def get_fetcher_environment(d):
+     origenv = d.getVar("BB_ORIGENV")
+     for name in bb.fetch.FETCH_EXPORT_VARS:
+         value = d.getVar(name)
+-        if not value and origenv:
++        if not value and origenv is not None:
+             value = origenv.getVar(name)
+         if value:
+             newenv[name] = value
+@@ -961,7 +961,7 @@ def runfetchcmd(cmd, d, quiet=False, cleanup=None, log=None, workdir=None, extra
+     origenv = d.getVar("BB_ORIGENV", False)
+     env = os.environ.copy()
+     for var in exportvars:
+-        val = d.getVar(var) or (origenv and origenv.getVar(var))
++        val = d.getVar(var) or (origenv is not None and origenv.getVar(var))
+         if val:
+             env[var] = val
  
-     def get_connection_name(self, host, port, connection_id=None):
-         if connection_id is None:
-diff --git a/lib/bb/fetch/wget.py b/lib/bb/fetch/wget.py
-index 972c84048..9cb4a4f32 100644
---- a/lib/bb/fetch/wget.py
-+++ b/lib/bb/fetch/wget.py
-@@ -178,23 +178,24 @@ class Wget(FetchMethod):
-     def checkstatus(self, fetch, ud, d, try_again=True):
-         check_certs = self.check_certs(d)
-         newenv = bb.fetch.get_fetcher_environment(d)
-+        connection_cache = fetch.connection_cache
- 
-         class HTTPConnectionCache(http.client.HTTPConnection):
-             def cache_id(self):
-                 return None
- 
--            if fetch.connection_cache:
-+            if connection_cache:
-                 def connect(self):
-                     """Connect to the host and port specified in __init__."""
- 
--                    sock = fetch.connection_cache.get_connection(
-+                    sock = connection_cache.get_connection(
-                         self.host, self.port, self.cache_id())
-                     if sock:
-                         self.sock = sock
-                     else:
-                         self.sock = socket.create_connection((self.host, self.port),
-                                     self.timeout, self.source_address)
--                        fetch.connection_cache.add_connection(
-+                        connection_cache.add_connection(
-                             self.host, self.port, self.sock, self.cache_id())
- 
-                     if self._tunnel_host:
-@@ -206,17 +207,17 @@ class Wget(FetchMethod):
-                         newenv.get("SSL_CERT_FILE"),
-                         self._tunnel_host, self._tunnel_port)
- 
--            if fetch.connection_cache:
-+            if connection_cache:
-                 def connect(self):
-                     """Reuse an established TLS connection when available."""
- 
--                    sock = fetch.connection_cache.get_connection(
-+                    sock = connection_cache.get_connection(
-                         self.host, self.port, self.cache_id())
-                     if sock:
-                         self.sock = sock
-                     else:
-                         super().connect()
--                        fetch.connection_cache.add_connection(
-+                        connection_cache.add_connection(
-                             self.host, self.port, self.sock, self.cache_id())
- 
-         class CacheHTTPHandler(urllib.request.HTTPHandler):
-@@ -252,7 +253,7 @@ class Wget(FetchMethod):
-                 # request.
- 
-                 # Don't close connection when connection_cache is enabled,
--                if fetch.connection_cache is None:
-+                if connection_cache is None:
-                     headers["Connection"] = "close"
-                 else:
-                     headers["Connection"] = "Keep-Alive" # Works for HTTP/1.0
-@@ -282,8 +283,8 @@ class Wget(FetchMethod):
-                     # with the dead connection removed from the cache.
-                     # If it still fails, we give up, which can happen for bad
-                     # HTTP proxy settings.
--                    if fetch.connection_cache:
--                        fetch.connection_cache.remove_connection(
-+                    if connection_cache:
-+                        connection_cache.remove_connection(
-                             h.host, h.port, h.cache_id())
-                     h.close()
-                     raise
-@@ -316,9 +317,9 @@ class Wget(FetchMethod):
-                 resp.msg = r.reason
- 
-                 # Close connection when server request it.
--                if fetch.connection_cache is not None:
-+                if connection_cache is not None:
-                     if 'Connection' in r.msg and r.msg['Connection'] == 'close':
--                        fetch.connection_cache.remove_connection(
-+                        connection_cache.remove_connection(
-                             h.host, h.port, h.cache_id())
- 
-                 return resp
-@@ -434,13 +435,21 @@ class Wget(FetchMethod):
-         # to scope the changes to the build_opener request, which is when the
-         # environment lookups happen.
-         with bb.utils.environment(**newenv):
--            context = self.ssl_context(d)
--            handlers = [FixedHTTPRedirectHandler,
--                        HTTPMethodFallback,
--                        urllib.request.ProxyHandler(),
--                        CacheHTTPHandler(),
--                        CacheHTTPSHandler(context=context)]
--            opener = urllib.request.build_opener(*handlers)
-+            opener = None
-+            if connection_cache is not None:
-+                opener_key = (check_certs, tuple(sorted(newenv.items())))
-+                opener = connection_cache.opener_cache.get(opener_key)
-+
-+            if opener is None:
-+                context = self.ssl_context(d)
-+                handlers = [FixedHTTPRedirectHandler,
-+                            HTTPMethodFallback,
-+                            urllib.request.ProxyHandler(),
-+                            CacheHTTPHandler(),
-+                            CacheHTTPSHandler(context=context)]
-+                opener = urllib.request.build_opener(*handlers)
-+                if connection_cache is not None:
-+                    connection_cache.opener_cache[opener_key] = opener
- 
-             try:
-                 parts = urllib.parse.urlparse(ud.url.split(";")[0])
 -- 
 2.43.0
 
