@@ -1,517 +1,260 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <setairidis@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE289C9830E
-	for <webhook@archiver.kernel.org>; Thu, 24 Sep 2026 15:34:55 +0000 (UTC)
-Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.1290.1790264090771529066
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E039AC9830E
+	for <webhook@archiver.kernel.org>; Thu, 24 Sep 2026 20:45:54 +0000 (UTC)
+Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.8235.1790282747795828828
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 24 Sep 2026 08:34:51 -0700
+ Thu, 24 Sep 2026 13:45:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ew/pjJ1C;
- spf=pass (domain: linuxfoundation.org, ip: 74.125.225.141, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49e7bcb94d3so15689335e9.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 24 Sep 2026 08:34:50 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=FZjYgw46;
+ spf=pass (domain: gmail.com, ip: 74.125.225.76, mailfrom: setairidis@gmail.com)
+Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-4843f22dcb8so172469f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Thu, 24 Sep 2026 13:45:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1790264089; x=1790868889; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ap3Auzabngw09bAWi7N4aaRhRglyqQyUXr040twurak=;
-        b=ew/pjJ1CeqKYeYA3HaZf9pzbL/d0laHObQNLdhrkJfM/oodAAeSKNBYzaJdJVtpEtJ
-         BGz0NUPMXZPg3bB79hIUj5C1a1iap0q4qIXWtciyt8l8ibf0uJy1/LegQwnIzoOWAK9P
-         vKOtj/lk/EtRZhgqFs+iUafNEUZkVAMtVEG+U=
+        d=gmail.com; s=20251104; t=1790282746; x=1790887546; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Ht7u8u3o/KQUGR4EyumjRYjGtIKkgMHrAdfV936Gp6g=;
+        b=FZjYgw46tgJWRcQsItyXDM7a4EQmZm9/a0DrbPIbNxBfZWta8lKFGCa78obQ7gqNZm
+         Y2JBywZywtPp/VuW/OCyc4ZkDNz+YBRQiH2sAzXHOYfC2JFKSrrehyh2CA7AjF9LeH8h
+         5jGgkeaNDNfpA+Fmx/6hZ+VOxYxUe1bAKGDosiFkLI4SklV+dRbZ1fhDvz0aWDW4g3PZ
+         f4+lOw+un7Q3umy4Mcj0dOQokLuacUeupJYecKpMrndT1nbpT6Lj0r/aR1w4eRtL1rNi
+         OsKRvy77gbvZO1qaQYyeqCv4uqi+5oNivs3G+xFzWg2SmSz0pvsDWvLPadTRBK1J/EbD
+         /QGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790264089; x=1790868889;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=ap3Auzabngw09bAWi7N4aaRhRglyqQyUXr040twurak=;
-        b=BpjByO8z4y/JOX3r4GbpmUjt/hAgdmpz2JmXmSdJV6G5cCyiTXffXy8XCF24I0x+m9
-         PKKwfAdGBklBX2sxXufQUqFEDo5Nci9tXC6FUqNaK1oLC8Abbkk/g6AZ4KJmy+UfaTSf
-         SflEkH+jGHNmquTESc/UqD0aKj3iIR0mDX7AVNL29lRQkgl9hNkNIKrHhSP4SwCymuyO
-         0jYOBYp5L1tcbvnNNDH35TGnkxqhLHvTirQrGyeyGRCunzrK7F1x6LjkiRkSHat/bI4k
-         4PhJrpd+JZyaLVGJxEzJEJCPQzOS/yiBD0rxGyCKf/x7A/eNG4g0ILvPlj3PDqRQGlKe
-         ftHA==
-X-Gm-Message-State: AFuF++kKL0LFVVW9W6+cF5stFFqtc766Aw3eWogpKcihxdRLswhl3msN
-	N/ypLoyX2z8/7jsX7qY76yiVs4gKpT0lrC1D90Ex8rv5q6eUvk0pXqqAxt0bXIQLxK7miBxbyhd
-	nc0O5a+E=
-X-Gm-Gg: AYBFou1iMqmY3ESYA7MXQDnYEIqFogbUHslgoFyt4tpAXN/DRDKuLoE4RuNghlmZhRl
-	+k7ZuySIQyFHQoWHNxdhtTHpq13HKXxV76yT0Rcpb0EjUsV+5WS1ozGRxFnhH75x6REnLOqMPRr
-	bOCf7Vd3+mQTU1CbDx45oWZiTEAaYtbxK/VzsoEAuI/C3H/2Nl4ZInsdqDefsAVxFR+DZXjui3F
-	GczRkM+L8dAwC2t2r92hj35dXG0DtMynHe8Jw18Tj4mQrjchxtorVfmrCnv431oolkPYI5gXRtH
-	OaE55RAvLcAuEex6cpNbihopaA+blkDjG7uRypXV9FtsQoS1vvQt2I7liT1O6TYJAOrSCfKuZn0
-	7KCeZALYjgtEJcr6r0pYDDMHPVTGMGVc5tIWM0iMHw/T52GsN5u3wkNjOP/clbZdVH0BtjcFrBc
-	pYflAJ43JCK0W5uv/S7DhAgU9sEYiX02EfD3SMc/rD60x2P15YS0rtjvXEqx5K9zRlpiXUjc8nJ
-	eSMdvgXcSe1El/lsJqaL0gxvQ==
-X-Received: by 2002:a05:600c:3514:b0:49f:ce72:e931 with SMTP id 5b1f17b1804b1-49fe6701e7emr48094575e9.35.1790264088635;
-        Thu, 24 Sep 2026 08:34:48 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:d896:f63e:1133:71e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fe5cc9a37sm86302135e9.11.2026.09.24.08.34.47
-        for <bitbake-devel@lists.openembedded.org>
+        d=1e100.net; s=20260707; t=1790282746; x=1790887546;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Ht7u8u3o/KQUGR4EyumjRYjGtIKkgMHrAdfV936Gp6g=;
+        b=EfnLndw+WQMIV41hLakg+eyaQqXUQ9Mmf++M041ryv6vsl0kXPphRnxjazk88HvYv7
+         t5SrS2FOQCCgKFaKgJVdgeTpgctMLZNNFx3W1BGPF3Id3jaNBgAYCy2xsgcmzB3tckB4
+         pXs6gnprz6K7Klk/QiaDBsUtTYtOjRt78i3895tYj7TjvDTPyyQPFfrgRshT6pJH8vkq
+         9+KU3y7xHd8RMEQ+NbMlc1DDBmUj3Hl+UD22K9D1R7FhbPWghQJsq/yGRZwaufBx5bJe
+         I795xdMhJ9CYuvIDt2Oh0l6mGDD/xcZZ3aDl/JZ19/K6tcb8VasGykqYSs61fFZ3gbHu
+         IJVg==
+X-Gm-Message-State: AFuF++lSo3AhB7sCqpOuXHsCU2eGFO2K4FPV5UV3wihSIFUHeoHcQ+7X
+	ubCeWrxP3rtUON4BMPpcZaLOYbPnZVfpkhkJaXUAXocPFGB/r0rofGUP24pvKyEy
+X-Gm-Gg: AYBFou1WieLA/+EKRDaIKj+EWRhzTrbhvrX9xt4bis/3OBlhvu1ZfSTyj9dUtdg6Smi
+	hOwtelpVN5Xc+rRAoBJ5CiYsatwDpzVbynkXL6qass1AwbrAxecZtQh6qH2cclynhFjtxQw25lD
+	G6u5E+QNNolH99sT4+4S2fJp5Mo5U8CFJSHUFH05ZWPuSB5V/cyiKM0eeKUFSCzeT+uHZhJKmvZ
+	hikE4OdwKWH2O8KdwfIX7nciZSR683g2wo93Ytfghz9wN0eRXzHMmgyDJyRZZ42guhV3beDx8pp
+	eRPFws31awhnlP5ywm2w18r49kJ69LvGR2Vb3BZ0jC49kt/N/MWEl4agV84EOSDYuMaYNllPL6X
+	FQ+j9Hb8NLLWvLy1sEg8GHmhU1uNMWaNkTobtOhVsz3gRzt8ZEyAoWxAT52dC6BIx5GV1maiz8B
+	zltiTCh7Qdu79yZGDfVg6a2RZF1UaK/m2A6xVSgNzqP9N9FsJKm6x442i1GPK0B7+6RgBha0bxN
+	K+e87V8fIcvOXFyAXEAJ05iVFOzGeER8yC3tf18S+wUud1xgVuyqONCTLygREDU2mQWL1/U6ue4
+	96SvreO4DzzYgVtswQ==
+X-Received: by 2002:a05:6000:1887:b0:487:b00:3853 with SMTP id ffacd0b85a97d-4887175fc07mr6492753f8f.27.1790282745739;
+        Thu, 24 Sep 2026 13:45:45 -0700 (PDT)
+Received: from DESKTOP-LR19VKC.localdomain (ipservice-092-209-186-036.092.209.pools.vodafone-ip.de. [92.209.186.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a6470b7sm1484859f8f.27.2026.09.24.13.45.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Sep 2026 08:34:48 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Thu, 24 Sep 2026 13:45:45 -0700 (PDT)
+From: Savvas Etairidis <setairidis@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] toaster: Update fixtures for blacksail
-Date: Thu, 24 Sep 2026 16:34:47 +0100
-Message-ID: <20260924153447.1091145-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.53.0
+Cc: jhonata.poma@gmail.com,
+	paul@pbarker.dev,
+	Savvas Etairidis <setairidis@gmail.com>
+Subject: [PATCH v4] fetch/local: verify checksums for file:// urls
+Date: Thu, 24 Sep 2026 22:45:19 +0200
+Message-Id: <20260924204518.19931-1-setairidis@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <DLNC7K9T9IRB.3TSABE8ZFLIZF@bootlin.com>
+References: <DLNC7K9T9IRB.3TSABE8ZFLIZF@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 24 Sep 2026 15:34:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20252
+ <bitbake-devel@lists.openembedded.org>; Thu, 24 Sep 2026 20:45:54 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20253
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+[YOCTO #9993]
+
+Local.urldata_init() always cleared needdonestamp, so a checksum given
+in a file:// url (e.g. UNINATIVE_CHECKSUM when UNINATIVE_URL points at
+a local file://) was never verified. Keep the donestamp when the url
+carries a checksum so verify_checksum runs, and make
+rename_bad_checksum() a FetchMethod method that Local overrides as a
+no-op, so a mismatch doesn't rename the user's source file.
+
+Based on a patch by Jhonata Poma-Hansen.
+
+Signed-off-by: Savvas Etairidis <setairidis@gmail.com>
 ---
- lib/toaster/orm/fixtures/gen_fixtures.py      |   8 +-
- lib/toaster/orm/fixtures/oe-core.xml          |  54 ++++++----
- lib/toaster/orm/fixtures/poky.xml             | 102 +++++++++++++-----
- .../functional/test_create_new_project.py     |  32 ++++--
- 4 files changed, 138 insertions(+), 58 deletions(-)
+ lib/bb/fetch/__init__.py | 36 ++++++++++++++++++------------------
+ lib/bb/fetch/local.py    | 18 ++++++++++++++++--
+ lib/bb/tests/fetch.py    | 30 ++++++++++++++++++++++++++++++
+ 3 files changed, 64 insertions(+), 20 deletions(-)
 
-diff --git a/lib/toaster/orm/fixtures/gen_fixtures.py b/lib/toaster/orm/fixtures/gen_fixtures.py
-index 937f1ff882e..58961d8ebb4 100755
---- a/lib/toaster/orm/fixtures/gen_fixtures.py
-+++ b/lib/toaster/orm/fixtures/gen_fixtures.py
-@@ -35,12 +35,14 @@ verbose = False
- # [0=Codename, 1=Yocto Project Version, 2=Release Date, 3=Current Version, 4=Support Level, 5=Poky Version, 6=BitBake branch]
- current_releases = [
-     # Release slot #1
--    ['Wrynose','6.0','April 2026','6.0 (April 2026)','Long Term Support (until April 2030)','','2.18'],
-+    ['Blacksail','6.1','October 2026','6.1 (October 2026)','Support for 7 months (until April 2027)','','2.20'],
-     # Release slot #2 'local'
--    ['HEAD','HEAD','','Local Yocto Project','HEAD','','HEAD'],
-+    ['Wrynose','6.0','April 2026','6.0 (April 2026)','Long Term Support (until April 2030)','','2.18'],
-     # Release slot #3 'master'
--    ['Master','master','','Yocto Project master','master','','master'],
-+    ['HEAD','HEAD','','Local Yocto Project','HEAD','','HEAD'],
-     # Release slot #4
-+    ['Master','master','','Yocto Project master','master','','master'],
-+    # Release slot #5
-     ['Scarthgap','5.0','April 2024','5.0 (April 2024)','Long Term Support (until April 2028)','','2.8'],
-     #['Whinlatter','5.3','October 2025','5.3 (October 2024)','Support for 7 months (until May 2026)','','2.14'],
-     #['Styhead','5.1','November 2024','5.1.0 (November 2024)','Support for 7 months (until May 2025)','','2.10'],
-diff --git a/lib/toaster/orm/fixtures/oe-core.xml b/lib/toaster/orm/fixtures/oe-core.xml
-index 9197e160c67..ccd8457a2db 100644
---- a/lib/toaster/orm/fixtures/oe-core.xml
-+++ b/lib/toaster/orm/fixtures/oe-core.xml
-@@ -8,52 +8,64 @@
+diff --git a/lib/bb/fetch/__init__.py b/lib/bb/fetch/__init__.py
+index 55ab710f3..a9f0add78 100644
+--- a/lib/bb/fetch/__init__.py
++++ b/lib/bb/fetch/__init__.py
+@@ -742,7 +742,7 @@ def verify_donestamp(ud, d, origud=None):
+         logger.warning("Checksum mismatch for local file %s\n"
+                        "Cleaning and trying again." % ud.localpath)
+         if os.path.exists(ud.localpath):
+-            rename_bad_checksum(ud, e.checksum)
++            ud.method.rename_bad_checksum(ud, e.checksum)
+         bb.utils.remove(ud.donestamp)
+     return False
  
-   <!-- Bitbake versions which correspond to the metadata release -->
-   <object model="orm.bitbakeversion" pk="1">
--    <field type="CharField" name="name">wrynose</field>
--    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
--    <field type="CharField" name="branch">2.16</field>
-+    <field type="CharField" name="name">blacksail</field>
-+    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
-+    <field type="CharField" name="branch">2.20</field>
-   </object>
-   <object model="orm.bitbakeversion" pk="2">
-+    <field type="CharField" name="name">wrynose</field>
-+    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
-+    <field type="CharField" name="branch">2.18</field>
-+  </object>
-+  <object model="orm.bitbakeversion" pk="3">
-     <field type="CharField" name="name">HEAD</field>
--    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
-+    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
-     <field type="CharField" name="branch">HEAD</field>
-   </object>
--  <object model="orm.bitbakeversion" pk="3">
-+  <object model="orm.bitbakeversion" pk="4">
-     <field type="CharField" name="name">master</field>
--    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
-+    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
-     <field type="CharField" name="branch">master</field>
-   </object>
--  <object model="orm.bitbakeversion" pk="4">
-+  <object model="orm.bitbakeversion" pk="5">
-     <field type="CharField" name="name">scarthgap</field>
--    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
-+    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
-     <field type="CharField" name="branch">2.8</field>
-   </object>
+@@ -775,7 +775,7 @@ def update_stamp(ud, d):
+             logger.warning("Checksum mismatch for local file %s\n"
+                            "Cleaning and trying again." % ud.localpath)
+             if os.path.exists(ud.localpath):
+-                rename_bad_checksum(ud, e.checksum)
++                ud.method.rename_bad_checksum(ud, e.checksum)
+             bb.utils.remove(ud.donestamp)
+             raise
  
-   <!-- Releases available -->
-   <object model="orm.release" pk="1">
-+    <field type="CharField" name="name">blacksail</field>
-+    <field type="CharField" name="description">Openembedded Blacksail</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">1</field>
-+    <field type="CharField" name="branch_name">blacksail</field>
-+    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"https://cgit.openembedded.org/openembedded-core/log/?h=blacksail\"&gt;OpenEmbedded Blacksail&lt;/a&gt; branch.</field>
-+  </object>
-+  <object model="orm.release" pk="2">
-     <field type="CharField" name="name">wrynose</field>
-     <field type="CharField" name="description">Openembedded Wrynose</field>
--    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">1</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">2</field>
-     <field type="CharField" name="branch_name">wrynose</field>
-     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"https://cgit.openembedded.org/openembedded-core/log/?h=wrynose\"&gt;OpenEmbedded Wrynose&lt;/a&gt; branch.</field>
-   </object>
--  <object model="orm.release" pk="2">
-+  <object model="orm.release" pk="3">
-     <field type="CharField" name="name">local</field>
-     <field type="CharField" name="description">Local Openembedded</field>
--    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">2</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">3</field>
-     <field type="CharField" name="branch_name">HEAD</field>
-     <field type="TextField" name="helptext">Toaster will run your builds with the version of OpenEmbedded that you have cloned or downloaded to your computer.</field>
-   </object>
--  <object model="orm.release" pk="3">
-+  <object model="orm.release" pk="4">
-     <field type="CharField" name="name">master</field>
-     <field type="CharField" name="description">OpenEmbedded core master</field>
--    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">3</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
-     <field type="CharField" name="branch_name">master</field>
-     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"https://cgit.openembedded.org/openembedded-core/log/\"&gt;OpenEmbedded master&lt;/a&gt; branch.</field>
-   </object>
--  <object model="orm.release" pk="4">
-+  <object model="orm.release" pk="5">
-     <field type="CharField" name="name">scarthgap</field>
-     <field type="CharField" name="description">Openembedded Scarthgap</field>
--    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">5</field>
-     <field type="CharField" name="branch_name">scarthgap</field>
-     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"https://cgit.openembedded.org/openembedded-core/log/?h=scarthgap\"&gt;OpenEmbedded Scarthgap&lt;/a&gt; branch.</field>
-   </object>
-@@ -75,15 +87,19 @@
-     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
-     <field type="CharField" name="layer_name">openembedded-core</field>
-   </object>
-+  <object model="orm.releasedefaultlayer" pk="5">
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-+    <field type="CharField" name="layer_name">openembedded-core</field>
-+  </object>
+@@ -1079,20 +1079,6 @@ def build_mirroruris(origud, mirrors, ld):
  
+     return uris, uds
  
-   <!-- Layer for the Local release -->
-   <object model="orm.layer" pk="1">
-     <field type="CharField" name="name">openembedded-core</field>
--    <field type="CharField" name="vcs_url">git://git.openembedded.org/openembedded-core</field>
--    <field type="CharField" name="vcs_web_url">https://cgit.openembedded.org/openembedded-core</field>
--    <field type="CharField" name="vcs_web_tree_base_url">https://cgit.openembedded.org/openembedded-core/tree/%path%?h=%branch%</field>
--    <field type="CharField" name="vcs_web_file_base_url">https://cgit.openembedded.org/openembedded-core/tree/%path%?h=%branch%</field>
-+    <field type="CharField" name="vcs_url">https://git.openembedded.org/openembedded-core</field>
-+    <field type="CharField" name="vcs_web_url">https://git.openembedded.org/openembedded-core</field>
-+    <field type="CharField" name="vcs_web_tree_base_url">https://git.openembedded.org/openembedded-core/tree/%path%?h=%branch%</field>
-+    <field type="CharField" name="vcs_web_file_base_url">https://git.openembedded.org/openembedded-core/tree/%path%?h=%branch%</field>
-   </object>
-   <object model="orm.layer_version" pk="1">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
-diff --git a/lib/toaster/orm/fixtures/poky.xml b/lib/toaster/orm/fixtures/poky.xml
-index b1b3861d687..d4c1ddfd5d9 100644
---- a/lib/toaster/orm/fixtures/poky.xml
-+++ b/lib/toaster/orm/fixtures/poky.xml
-@@ -8,24 +8,30 @@
- 
-   <!-- Bitbake versions which correspond to the metadata release -->
-   <object model="orm.bitbakeversion" pk="1">
-+    <field type="CharField" name="name">blacksail</field>
-+    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
-+    <field type="CharField" name="branch">2.20</field>
-+    <field type="CharField" name="dirpath"></field>
-+  </object>
-+  <object model="orm.bitbakeversion" pk="2">
-     <field type="CharField" name="name">wrynose</field>
-     <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
-     <field type="CharField" name="branch">2.18</field>
-     <field type="CharField" name="dirpath"></field>
-   </object>
--  <object model="orm.bitbakeversion" pk="2">
-+  <object model="orm.bitbakeversion" pk="3">
-     <field type="CharField" name="name">HEAD</field>
-     <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
-     <field type="CharField" name="branch">HEAD</field>
-     <field type="CharField" name="dirpath"></field>
-   </object>
--  <object model="orm.bitbakeversion" pk="3">
-+  <object model="orm.bitbakeversion" pk="4">
-     <field type="CharField" name="name">master</field>
-     <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
-     <field type="CharField" name="branch">master</field>
-     <field type="CharField" name="dirpath"></field>
-   </object>
--  <object model="orm.bitbakeversion" pk="4">
-+  <object model="orm.bitbakeversion" pk="5">
-     <field type="CharField" name="name">scarthgap</field>
-     <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
-     <field type="CharField" name="branch">2.8</field>
-@@ -35,30 +41,37 @@
- 
-   <!-- Releases available -->
-   <object model="orm.release" pk="1">
-+    <field type="CharField" name="name">blacksail</field>
-+    <field type="CharField" name="description">Yocto Project 6.1 "Blacksail"</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">1</field>
-+    <field type="CharField" name="branch_name">blacksail</field>
-+    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/meta-yocto/log/?h=blacksail"&gt;Yocto Project Blacksail branch&lt;/a&gt;.</field>
-+  </object>
-+  <object model="orm.release" pk="2">
-     <field type="CharField" name="name">wrynose</field>
-     <field type="CharField" name="description">Yocto Project 6.0 "Wrynose"</field>
--    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">1</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">2</field>
-     <field type="CharField" name="branch_name">wrynose</field>
-     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/meta-yocto/log/?h=wrynose"&gt;Yocto Project Wrynose branch&lt;/a&gt;.</field>
-   </object>
--  <object model="orm.release" pk="2">
-+  <object model="orm.release" pk="3">
-     <field type="CharField" name="name">local</field>
-     <field type="CharField" name="description">Local Yocto Project</field>
--    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">2</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">3</field>
-     <field type="CharField" name="branch_name">HEAD</field>
-     <field type="TextField" name="helptext">Toaster will run your builds with the version of the Yocto Project you have cloned or downloaded to your computer.</field>
-   </object>
--  <object model="orm.release" pk="3">
-+  <object model="orm.release" pk="4">
-     <field type="CharField" name="name">master</field>
-     <field type="CharField" name="description">Yocto Project master</field>
--    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">3</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
-     <field type="CharField" name="branch_name">master</field>
-     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/meta-yocto/log/"&gt;Yocto Project Master branch&lt;/a&gt;.</field>
-   </object>
--  <object model="orm.release" pk="4">
-+  <object model="orm.release" pk="5">
-     <field type="CharField" name="name">scarthgap</field>
-     <field type="CharField" name="description">Yocto Project 5.0 "Scarthgap"</field>
--    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
-+    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">5</field>
-     <field type="CharField" name="branch_name">scarthgap</field>
-     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/meta-yocto/log/?h=scarthgap"&gt;Yocto Project Scarthgap branch&lt;/a&gt;.</field>
-   </object>
-@@ -112,6 +125,18 @@
-     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
-     <field type="CharField" name="layer_name">meta-yocto-bsp</field>
-   </object>
-+  <object model="orm.releasedefaultlayer" pk="13">
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-+    <field type="CharField" name="layer_name">openembedded-core</field>
-+  </object>
-+  <object model="orm.releasedefaultlayer" pk="14">
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-+    <field type="CharField" name="layer_name">meta-poky</field>
-+  </object>
-+  <object model="orm.releasedefaultlayer" pk="15">
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-+    <field type="CharField" name="layer_name">meta-yocto-bsp</field>
-+  </object>
- 
-   <!-- Default layers provided by poky
-        openembedded-core
-@@ -130,28 +155,35 @@
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">1</field>
--    <field type="CharField" name="branch">wrynose</field>
-+    <field type="CharField" name="branch">blacksail</field>
-     <field type="CharField" name="dirpath">meta</field>
-   </object>
-   <object model="orm.layer_version" pk="2">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">2</field>
--    <field type="CharField" name="branch">HEAD</field>
--    <field type="CharField" name="commit">HEAD</field>
-+    <field type="CharField" name="branch">wrynose</field>
-     <field type="CharField" name="dirpath">meta</field>
-   </object>
-   <object model="orm.layer_version" pk="3">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">3</field>
--    <field type="CharField" name="branch">master</field>
-+    <field type="CharField" name="branch">HEAD</field>
-+    <field type="CharField" name="commit">HEAD</field>
-     <field type="CharField" name="dirpath">meta</field>
-   </object>
-   <object model="orm.layer_version" pk="4">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
-+    <field type="CharField" name="branch">master</field>
-+    <field type="CharField" name="dirpath">meta</field>
-+  </object>
-+  <object model="orm.layer_version" pk="5">
-+    <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
-+    <field type="IntegerField" name="layer_source">0</field>
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-     <field type="CharField" name="branch">scarthgap</field>
-     <field type="CharField" name="dirpath">meta</field>
-   </object>
-@@ -164,32 +196,39 @@
-     <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%</field>
-     <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%</field>
-   </object>
--  <object model="orm.layer_version" pk="5">
-+  <object model="orm.layer_version" pk="6">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">1</field>
--    <field type="CharField" name="branch">wrynose</field>
-+    <field type="CharField" name="branch">blacksail</field>
-     <field type="CharField" name="dirpath">meta-poky</field>
-   </object>
--  <object model="orm.layer_version" pk="6">
-+  <object model="orm.layer_version" pk="7">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">2</field>
-+    <field type="CharField" name="branch">wrynose</field>
-+    <field type="CharField" name="dirpath">meta-poky</field>
-+  </object>
-+  <object model="orm.layer_version" pk="8">
-+    <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-+    <field type="IntegerField" name="layer_source">0</field>
-+    <field rel="ManyToOneRel" to="orm.release" name="release">3</field>
-     <field type="CharField" name="branch">HEAD</field>
-     <field type="CharField" name="commit">HEAD</field>
-     <field type="CharField" name="dirpath">meta-poky</field>
-   </object>
--  <object model="orm.layer_version" pk="7">
-+  <object model="orm.layer_version" pk="9">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-     <field type="IntegerField" name="layer_source">0</field>
--    <field rel="ManyToOneRel" to="orm.release" name="release">3</field>
-+    <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
-     <field type="CharField" name="branch">master</field>
-     <field type="CharField" name="dirpath">meta-poky</field>
-   </object>
--  <object model="orm.layer_version" pk="8">
-+  <object model="orm.layer_version" pk="10">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
-     <field type="IntegerField" name="layer_source">0</field>
--    <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-     <field type="CharField" name="branch">scarthgap</field>
-     <field type="CharField" name="dirpath">meta-poky</field>
-   </object>
-@@ -202,32 +241,39 @@
-     <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%</field>
-     <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%</field>
-   </object>
--  <object model="orm.layer_version" pk="9">
-+  <object model="orm.layer_version" pk="11">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">1</field>
--    <field type="CharField" name="branch">wrynose</field>
-+    <field type="CharField" name="branch">blacksail</field>
-     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
-   </object>
--  <object model="orm.layer_version" pk="10">
-+  <object model="orm.layer_version" pk="12">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
-     <field type="IntegerField" name="layer_source">0</field>
-     <field rel="ManyToOneRel" to="orm.release" name="release">2</field>
-+    <field type="CharField" name="branch">wrynose</field>
-+    <field type="CharField" name="dirpath">meta-yocto-bsp</field>
-+  </object>
-+  <object model="orm.layer_version" pk="13">
-+    <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
-+    <field type="IntegerField" name="layer_source">0</field>
-+    <field rel="ManyToOneRel" to="orm.release" name="release">3</field>
-     <field type="CharField" name="branch">HEAD</field>
-     <field type="CharField" name="commit">HEAD</field>
-     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
-   </object>
--  <object model="orm.layer_version" pk="11">
-+  <object model="orm.layer_version" pk="14">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
-     <field type="IntegerField" name="layer_source">0</field>
--    <field rel="ManyToOneRel" to="orm.release" name="release">3</field>
-+    <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
-     <field type="CharField" name="branch">master</field>
-     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
-   </object>
--  <object model="orm.layer_version" pk="12">
-+  <object model="orm.layer_version" pk="15">
-     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
-     <field type="IntegerField" name="layer_source">0</field>
--    <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
-+    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
-     <field type="CharField" name="branch">scarthgap</field>
-     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
-   </object>
-diff --git a/lib/toaster/tests/functional/test_create_new_project.py b/lib/toaster/tests/functional/test_create_new_project.py
-index f290f8b3eb7..294b6bc9885 100644
---- a/lib/toaster/tests/functional/test_create_new_project.py
-+++ b/lib/toaster/tests/functional/test_create_new_project.py
-@@ -15,13 +15,29 @@ from selenium.webdriver.common.by import By
- 
- class TestCreateNewProject(SeleniumFunctionalTestCase):
- 
--    def test_create_new_project_wrynose(self):
-+    def test_create_new_project_blacksail(self):
-         """ Test create new project using:
-           - Project Name: Any string
--          - Release: Yocto Project 6.0 "Wrynose" (option value: 1)
-+          - Release: Yocto Project 6.1 "Blacksail" (option value: 1)
-           - Merge Toaster settings: True
+-def rename_bad_checksum(ud, suffix):
+-    """
+-    Renames files to have suffix from parameter
+-    """
+-
+-    if ud.localpath is None:
+-        return
+-
+-    new_localpath = "%s_bad-checksum_%s" % (ud.localpath, suffix)
+-    bb.warn("Renaming %s to %s" % (ud.localpath, new_localpath))
+-    if not bb.utils.movefile(ud.localpath, new_localpath):
+-        bb.warn("Renaming %s to %s failed, grep movefile in log.do_fetch to see why" % (ud.localpath, new_localpath))
+-
+-
+ def try_mirror_url(fetch, origud, ud, ld, check = False):
+     # Return of None or a value means we're finished
+     # False means try another url
+@@ -1163,7 +1149,7 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
+             logger.warning("Mirror checksum failure for url %s (original url: %s)\nCleaning and trying again." % (ud.url, origud.url))
+             logger.warning(str(e))
+             if os.path.exists(ud.localpath):
+-                rename_bad_checksum(ud, e.checksum)
++                ud.method.rename_bad_checksum(ud, e.checksum)
+         elif isinstance(e, NoChecksumError):
+             raise
+         else:
+@@ -1479,6 +1465,20 @@ class FetchMethod(object):
          """
-         release = '1'
-+        release_title = 'Yocto Project 6.1 "Blacksail"'
-+        project_name = 'projectblacksail'
-+        self.create_new_project(
-+            project_name,
-+            release,
-+            release_title,
-+            True,
-+        )
-+
-+    def test_create_new_project_wrynose(self):
-+        """ Test create new project using:
-+          - Project Name: Any string
-+          - Release: Yocto Project 6.0 "Wrynose" (option value: 2)
-+          - Merge Toaster settings: True
+         return True
+ 
++    def rename_bad_checksum(self, ud, suffix):
 +        """
-+        release = '2'
-         release_title = 'Yocto Project 6.0 "Wrynose"'
-         project_name = 'projectwrynose'
-         self.create_new_project(
-@@ -34,10 +50,10 @@ class TestCreateNewProject(SeleniumFunctionalTestCase):
-     def test_create_new_project_local(self):
-         """ Test create new project using:
-           - Project Name: Any string
--          - Release: Yocto Project "Local" (option value: 2)
-+          - Release: Yocto Project "Local" (option value: 3)
-           - Merge Toaster settings: True
++        Rename ud.localpath with the given suffix on checksum mismatch.
++        Local overrides this to a no-op since its localpath points at the
++        user's source tree.
++        """
++        if ud.localpath is None:
++            return
++
++        new_localpath = "%s_bad-checksum_%s" % (ud.localpath, suffix)
++        bb.warn("Renaming %s to %s" % (ud.localpath, new_localpath))
++        if not bb.utils.movefile(ud.localpath, new_localpath):
++            bb.warn("Renaming %s to %s failed, grep movefile in log.do_fetch to see why" % (ud.localpath, new_localpath))
++
+     def verify_donestamp(self, ud, d):
          """
--        release = '2'
-+        release = '3'
-         release_title = 'Local Yocto Project'
-         project_name = 'projectlocal'
-         self.create_new_project(
-@@ -50,10 +66,10 @@ class TestCreateNewProject(SeleniumFunctionalTestCase):
-     def test_create_new_project_master(self):
-         """ Test create new project using:
-           - Project Name: Any string
--          - Release: Yocto Project "Master" (option value: 3)
-+          - Release: Yocto Project "Master" (option value: 4)
-           - Merge Toaster settings: False
+         Verify the donestamp file
+@@ -1943,7 +1943,7 @@ class Fetch(object):
+                             logger.warning("Checksum failure encountered with download of %s - will attempt other sources if available" % u)
+                             logger.debug(str(e))
+                             if os.path.exists(ud.localpath):
+-                                rename_bad_checksum(ud, e.checksum)
++                                ud.method.rename_bad_checksum(ud, e.checksum)
+                         elif isinstance(e, NoChecksumError):
+                             raise
+                         else:
+diff --git a/lib/bb/fetch/local.py b/lib/bb/fetch/local.py
+index dfc5b564c..a92c0d267 100644
+--- a/lib/bb/fetch/local.py
++++ b/lib/bb/fetch/local.py
+@@ -17,7 +17,7 @@ import os
+ import urllib.request, urllib.parse, urllib.error
+ import bb
+ import bb.utils
+-from   bb.fetch import FetchMethod, FetchError, ParameterError
++from   bb.fetch import CHECKSUM_LIST, FetchMethod, FetchError, ParameterError
+ from   bb.fetch import logger
+ 
+ class Local(FetchMethod):
+@@ -31,11 +31,25 @@ class Local(FetchMethod):
+         # We don't set localfile as for this fetcher the file is already local!
+         ud.basename = os.path.basename(ud.path)
+         ud.basepath = ud.path
+-        ud.needdonestamp = False
++        # Honor explicit checksum params (UNINATIVE_CHECKSUM, recipe
++        # ;sha256sum=) by leaving needdonestamp at FetchData's default so
++        # verify_checksum runs.
++        name = ud.parm.get("name")
++        ud.needdonestamp = any(
++            (name and "%s.%ssum" % (name, a) in ud.parm)
++            or "%ssum" % a in ud.parm
++            for a in CHECKSUM_LIST
++        )
+         if "*" in ud.path:
+             raise bb.fetch.ParameterError("file:// urls using globbing are no longer supported. Please place the files in a directory and reference that instead.", ud.url)
+         return
+ 
++    def rename_bad_checksum(self, ud, suffix):
++        # file:// urls point at the user's source tree (recipe-shipped files
++        # under FILESPATH or an absolute path the user passed in); skip the
++        # rename so a ChecksumError surfaces without mutating their files.
++        return
++
+     def localpath(self, urldata, d):
          """
--        release = '3'
-+        release = '4'
-         release_title = 'Yocto Project master'
-         project_name = 'projectmaster'
-         self.create_new_project(
-@@ -66,10 +82,10 @@ class TestCreateNewProject(SeleniumFunctionalTestCase):
-     def test_create_new_project_scarthgap(self):
-         """ Test create new project using:
-           - Project Name: Any string
--          - Release: Yocto Project 5.0 "Scarthgap" (option value: 4)
-+          - Release: Yocto Project 5.0 "Scarthgap" (option value: 5)
-           - Merge Toaster settings: True
-         """
--        release = '4'
-+        release = '5'
-         release_title = 'Yocto Project 5.0 "Scarthgap"'
-         project_name = 'projectscarthgap'
-         self.create_new_project(
+         Return the local filename of a given url assuming a successful fetch.
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 71b0a63fe..60d356fc6 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -876,6 +876,36 @@ class FetcherLocalTest(FetcherTest):
+             with self.subTest(striplevel=repr(value)):
+                 self.assertInvalidStriplevel(value)
+ 
++    def test_local_checksum_match(self):
++        # Correct sha256 must run verify_checksum to completion; donestamp
++        # lands in DL_DIR.
++        import hashlib
++        content = b"file:// checksum match test\n"
++        with open(os.path.join(self.localsrcdir, 'sumfile'), 'wb') as f:
++            f.write(content)
++        good = hashlib.sha256(content).hexdigest()
++        fetcher = bb.fetch.Fetch(['file://sumfile;sha256sum=' + good], self.d)
++        ud = fetcher.ud[fetcher.urls[0]]
++        self.assertTrue(ud.needdonestamp)
++        fetcher.download()
++        self.assertTrue(os.path.exists(ud.donestamp))
++
++    def test_local_checksum_mismatch(self):
++        # Bad sha256 raises ChecksumError without renaming the user's
++        # source file to the <localpath>_bad-checksum_<sha> sibling.
++        content = b"file:// checksum mismatch test\n"
++        srcpath = os.path.join(self.localsrcdir, 'sumfile')
++        with open(srcpath, 'wb') as f:
++            f.write(content)
++        bad = "0" * 64
++        fetcher = bb.fetch.Fetch(['file://sumfile;sha256sum=' + bad], self.d)
++        with self.assertRaises(bb.fetch.FetchError):
++            fetcher.download()
++        self.assertTrue(os.path.exists(srcpath))
++        with open(srcpath, 'rb') as f:
++            self.assertEqual(f.read(), content)
++        self.assertFalse(os.path.exists(srcpath + '_bad-checksum_' + bad))
++
+     def dummyGitTest(self, suffix):
+         # Create dummy local Git repo
+         src_dir = tempfile.mkdtemp(dir=self.tempdir,
+-- 
+2.34.1
+
 
