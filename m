@@ -2,209 +2,516 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CD7C98318
-	for <webhook@archiver.kernel.org>; Thu, 24 Sep 2026 15:31:25 +0000 (UTC)
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.1210.1790263879045666227
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE289C9830E
+	for <webhook@archiver.kernel.org>; Thu, 24 Sep 2026 15:34:55 +0000 (UTC)
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.1290.1790264090771529066
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 24 Sep 2026 08:31:19 -0700
+ Thu, 24 Sep 2026 08:34:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=KMEgGcD2;
- spf=pass (domain: linuxfoundation.org, ip: 74.125.225.140, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49e620fa473so13696815e9.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 24 Sep 2026 08:31:18 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=ew/pjJ1C;
+ spf=pass (domain: linuxfoundation.org, ip: 74.125.225.141, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49e7bcb94d3so15689335e9.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 24 Sep 2026 08:34:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1790263877; x=1790868677; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1790264089; x=1790868889; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=qYsKvP/x4uH6MkVRZVZ6uuPsSpPj+sE+cjMY3tI+Ib0=;
-        b=KMEgGcD2KxbDyafVK5wsxo61P5sBi/Uiuvm1WOXYfP/TnId1Kb0fkSE1dN/eQE4dxg
-         qa59rbIpGuV/4krltv81h2jVeTTMm+MY94ICH3SYjJT0J3bdLZPwzG3gyijpzoajItSY
-         vAtSFNt4VExSgpodCLqZp09H1Hsr/Q436O900=
+        bh=ap3Auzabngw09bAWi7N4aaRhRglyqQyUXr040twurak=;
+        b=ew/pjJ1CeqKYeYA3HaZf9pzbL/d0laHObQNLdhrkJfM/oodAAeSKNBYzaJdJVtpEtJ
+         BGz0NUPMXZPg3bB79hIUj5C1a1iap0q4qIXWtciyt8l8ibf0uJy1/LegQwnIzoOWAK9P
+         vKOtj/lk/EtRZhgqFs+iUafNEUZkVAMtVEG+U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790263877; x=1790868677;
+        d=1e100.net; s=20260707; t=1790264089; x=1790868889;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=qYsKvP/x4uH6MkVRZVZ6uuPsSpPj+sE+cjMY3tI+Ib0=;
-        b=VIfYVP7KGJewS6d2HsSGEdkSBkFGqWdlpD4PB47rZU7kj+m7qjYsIo+DoQfPp3BfEf
-         4cH1CquQTtLpj8yqZgcMncwiKmd2wHDUimurfiP7GGNmhE+RAj4CyMPOEJK7ZrlAIgKV
-         DSKCkSpuPfAcZhtLps8E8w36fbyWud4dzhhnACH7EXvSGxa+41N6x3hHmGqCpc+O/IWe
-         aB+c9vUOl3qiQErbb6QxPQCBFD4KMLb3K6YxJ+1guVqALM83XERNyPDeFhMsldvGPbMY
-         NJ/IpYMTDWd8FIq4aluF+wXotBTqQ1w7C6hNRhE7+moTxh6X6rCL2jC7ugfIHC/l48CH
-         IVGQ==
-X-Gm-Message-State: AFuF++lvCtE6Ua2iXfnWFCUO3qVCu6iGj39uOc87Hu4oWhbkubbogwR7
-	yt6pv/xVP+w0o9SQkXlcSWQn5rBSmPivbAauPXji1yEMaTG47Fm+1c9lFdE0UeuGCz5TmKpErYL
-	KBeGNfqU=
-X-Gm-Gg: AYBFou2U3lBpLh+oM3ni2Wrhrs6K555ENkT0qRtdtkTX/xpSgKdKqj1eYyyYUJ7E9gC
-	k9EzKoG34myHiPtnz5ZqCFmzxajfYNqpHKPezH075Jpjo+2uOinnvOGIRiYor79rVbhLoml2uX/
-	VU53wvtZbFmK6kaiMcNPT6w36OU0QQSGijLhgDg66VXlDDuvb+E87wwx/u3BkBWCjhyxdIYlK0u
-	yTJ/cJpReAOj6GmI1zMEVaqkBjf4mCZzGFm4dQ2VYnV69/4CVbwcO3QxIKtJEyGtUbeTp2ZHSOn
-	UCPiLxS76PiUULBmlh90dudnVMp+9Ex/mku50Iqw0kgFZtAp66asV2WWtBIh2TrSUN34sJkLaF3
-	7SWn/HqGKVbpWpoIiQ2i1jEhbZ2EHQhhTlRzwXFTZNNrr18xmSMFl36cZQFLfmpxPjDvZkBNcwe
-	IlMCUiFEHHs1ScxC/IXMk3ivWl6E8iuXg7pP3/Y/9FVkaTfLq+4pJcJA39lzHKjAFQedrkFcgHv
-	rkZXmOVAPO1xDUyxJDCdTff5w==
-X-Received: by 2002:a05:600c:34c7:b0:49c:dca2:ac47 with SMTP id 5b1f17b1804b1-49fe66c8e71mr47744715e9.2.1790263869835;
-        Thu, 24 Sep 2026 08:31:09 -0700 (PDT)
+        bh=ap3Auzabngw09bAWi7N4aaRhRglyqQyUXr040twurak=;
+        b=BpjByO8z4y/JOX3r4GbpmUjt/hAgdmpz2JmXmSdJV6G5cCyiTXffXy8XCF24I0x+m9
+         PKKwfAdGBklBX2sxXufQUqFEDo5Nci9tXC6FUqNaK1oLC8Abbkk/g6AZ4KJmy+UfaTSf
+         SflEkH+jGHNmquTESc/UqD0aKj3iIR0mDX7AVNL29lRQkgl9hNkNIKrHhSP4SwCymuyO
+         0jYOBYp5L1tcbvnNNDH35TGnkxqhLHvTirQrGyeyGRCunzrK7F1x6LjkiRkSHat/bI4k
+         4PhJrpd+JZyaLVGJxEzJEJCPQzOS/yiBD0rxGyCKf/x7A/eNG4g0ILvPlj3PDqRQGlKe
+         ftHA==
+X-Gm-Message-State: AFuF++kKL0LFVVW9W6+cF5stFFqtc766Aw3eWogpKcihxdRLswhl3msN
+	N/ypLoyX2z8/7jsX7qY76yiVs4gKpT0lrC1D90Ex8rv5q6eUvk0pXqqAxt0bXIQLxK7miBxbyhd
+	nc0O5a+E=
+X-Gm-Gg: AYBFou1iMqmY3ESYA7MXQDnYEIqFogbUHslgoFyt4tpAXN/DRDKuLoE4RuNghlmZhRl
+	+k7ZuySIQyFHQoWHNxdhtTHpq13HKXxV76yT0Rcpb0EjUsV+5WS1ozGRxFnhH75x6REnLOqMPRr
+	bOCf7Vd3+mQTU1CbDx45oWZiTEAaYtbxK/VzsoEAuI/C3H/2Nl4ZInsdqDefsAVxFR+DZXjui3F
+	GczRkM+L8dAwC2t2r92hj35dXG0DtMynHe8Jw18Tj4mQrjchxtorVfmrCnv431oolkPYI5gXRtH
+	OaE55RAvLcAuEex6cpNbihopaA+blkDjG7uRypXV9FtsQoS1vvQt2I7liT1O6TYJAOrSCfKuZn0
+	7KCeZALYjgtEJcr6r0pYDDMHPVTGMGVc5tIWM0iMHw/T52GsN5u3wkNjOP/clbZdVH0BtjcFrBc
+	pYflAJ43JCK0W5uv/S7DhAgU9sEYiX02EfD3SMc/rD60x2P15YS0rtjvXEqx5K9zRlpiXUjc8nJ
+	eSMdvgXcSe1El/lsJqaL0gxvQ==
+X-Received: by 2002:a05:600c:3514:b0:49f:ce72:e931 with SMTP id 5b1f17b1804b1-49fe6701e7emr48094575e9.35.1790264088635;
+        Thu, 24 Sep 2026 08:34:48 -0700 (PDT)
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:d896:f63e:1133:71e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fe0c50da7sm96446975e9.3.2026.09.24.08.31.08
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fe5cc9a37sm86302135e9.11.2026.09.24.08.34.47
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Sep 2026 08:31:09 -0700 (PDT)
+        Thu, 24 Sep 2026 08:34:48 -0700 (PDT)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] default-registry: Add blacksail configs
-Date: Thu, 24 Sep 2026 16:31:08 +0100
-Message-ID: <20260924153108.1090791-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH] toaster: Update fixtures for blacksail
+Date: Thu, 24 Sep 2026 16:34:47 +0100
+Message-ID: <20260924153447.1091145-1-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.53.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Thu, 24 Sep 2026 15:31:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20251
+ <bitbake-devel@lists.openembedded.org>; Thu, 24 Sep 2026 15:34:55 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20252
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- .../oe-nodistro-blacksail.conf.json           | 48 ++++++++++++
- .../configurations/poky-blacksail.conf.json   | 74 +++++++++++++++++++
- 2 files changed, 122 insertions(+)
- create mode 100644 default-registry/configurations/oe-nodistro-blacksail.conf.json
- create mode 100644 default-registry/configurations/poky-blacksail.conf.json
+ lib/toaster/orm/fixtures/gen_fixtures.py      |   8 +-
+ lib/toaster/orm/fixtures/oe-core.xml          |  54 ++++++----
+ lib/toaster/orm/fixtures/poky.xml             | 102 +++++++++++++-----
+ .../functional/test_create_new_project.py     |  32 ++++--
+ 4 files changed, 138 insertions(+), 58 deletions(-)
 
-diff --git a/default-registry/configurations/oe-nodistro-blacksail.conf.json b/default-registry/configurations/oe-nodistro-blacksail.conf.json
-new file mode 100644
-index 00000000000..c970a96e27f
---- /dev/null
-+++ b/default-registry/configurations/oe-nodistro-blacksail.conf.json
-@@ -0,0 +1,48 @@
-+{
-+    "description": "OpenEmbedded - 'nodistro' basic configuration, release 6.0 'blacksail'",
-+    "expires": "2027-05-31",
-+    "sources": {
-+        "bitbake": {
-+            "git-remote": {
-+                "uri": "https://git.openembedded.org/bitbake",
-+                "branch": "2.20",
-+                "rev": "2.20"
-+            }
-+        },
-+        "openembedded-core": {
-+            "git-remote": {
-+                "uri": "https://git.openembedded.org/openembedded-core",
-+                "branch": "blacksail",
-+                "rev": "blacksail"
-+            }
-+        },
-+        "yocto-docs": {
-+            "git-remote": {
-+                "uri": "https://git.yoctoproject.org/yocto-docs",
-+                "branch": "blacksail",
-+                "rev": "blacksail"
-+            }
-+        }
-+    },
-+    "bitbake-setup": {
-+        "configurations": [
-+        {
-+            "name": "nodistro",
-+            "description": "OpenEmbedded 'nodistro'",
-+            "setup-dir-name": "oe-nodistro-blacksail",
-+            "bb-layers": ["openembedded-core/meta"],
-+            "oe-fragments-one-of": {
-+                "machine": {
-+                    "description": "Target machines",
-+                    "options" : [
-+                        { "name": "machine/qemux86-64", "description": "x86-64 system on QEMU" },
-+                        { "name": "machine/qemuarm64", "description": "ARMv8 system on QEMU" },
-+                        { "name": "machine/qemuriscv64", "description": "RISC-V system on QEMU" }
-+                    ]
-+                }
-+            }
-+        }
-+        ]
-+    },
-+    "version": "1.0"
-+}
-diff --git a/default-registry/configurations/poky-blacksail.conf.json b/default-registry/configurations/poky-blacksail.conf.json
-new file mode 100644
-index 00000000000..ff09df99412
---- /dev/null
-+++ b/default-registry/configurations/poky-blacksail.conf.json
-@@ -0,0 +1,74 @@
-+{
-+    "description": "Poky - The Yocto Project testing distribution configurations and hardware test platforms, release 6.1 'blacksail'",
-+    "expires": "2027-05-31",
-+    "sources": {
-+        "bitbake": {
-+            "git-remote": {
-+                "uri": "https://git.openembedded.org/bitbake",
-+                "branch": "2.20",
-+                "rev": "2.20"
-+            }
-+        },
-+        "openembedded-core": {
-+            "git-remote": {
-+                "uri": "https://git.openembedded.org/openembedded-core",
-+                "branch": "blacksail",
-+                "rev": "blacksail"
-+            }
-+        },
-+        "meta-yocto": {
-+            "git-remote": {
-+                "uri": "https://git.yoctoproject.org/meta-yocto",
-+                "branch": "blacksail",
-+                "rev": "blacksail"
-+            }
-+        },
-+        "yocto-docs": {
-+            "git-remote": {
-+                "uri": "https://git.yoctoproject.org/yocto-docs",
-+                "branch": "blacksail",
-+                "rev": "blacksail"
-+            }
-+        }
-+    },
-+    "bitbake-setup": {
-+        "configurations": [
-+        {
-+            "bb-layers": ["openembedded-core/meta","meta-yocto/meta-yocto-bsp","meta-yocto/meta-poky"],
-+            "setup-dir-name": "$distro-blacksail",
-+            "oe-fragments-one-of": {
-+                "machine": {
-+                    "description": "Target machines",
-+                    "options" : [
-+                        { "name": "machine/qemux86-64", "description": "x86-64 system on QEMU" },
-+                        { "name": "machine/qemuarm64", "description": "ARMv8 system on QEMU" },
-+                        { "name": "machine/qemuriscv64", "description": "RISC-V system on QEMU" },
-+                        { "name": "machine/genericarm64", "description": "Arm64 SystemReady IR/ES platforms" },
-+                        { "name": "machine/genericx86-64", "description": "x86_64 (64-bit) PCs and servers" }
-+                    ]
-+                },
-+                "distro": {
-+                    "description": "Target distributions",
-+                    "options" : [
-+                        { "name": "distro/poky", "description": "Yocto Project Reference Distro" },
-+                        { "name": "distro/poky-altcfg", "description": "Poky alternative with systemd as init manager" },
-+                        { "name": "distro/poky-tiny", "description": "Poky alternative optimized for size" }
-+                    ]
-+                }
-+            },
-+            "configurations": [
-+            {
-+                "name": "poky",
-+                "description": "Poky - The Yocto Project testing distribution"
-+            },
-+            {
-+                "name": "poky-with-sstate",
-+                "description": "Poky - The Yocto Project testing distribution with internet sstate acceleration. Use with caution as it requires a completely robust local network with sufficient bandwidth.",
-+                "oe-fragments": ["core/yocto/sstate-mirror-cdn"]
-+            }
-+            ]
-+        }
-+        ]
-+    },
-+    "version": "1.0"
-+}
+diff --git a/lib/toaster/orm/fixtures/gen_fixtures.py b/lib/toaster/orm/fixtures/gen_fixtures.py
+index 937f1ff882e..58961d8ebb4 100755
+--- a/lib/toaster/orm/fixtures/gen_fixtures.py
++++ b/lib/toaster/orm/fixtures/gen_fixtures.py
+@@ -35,12 +35,14 @@ verbose = False
+ # [0=Codename, 1=Yocto Project Version, 2=Release Date, 3=Current Version, 4=Support Level, 5=Poky Version, 6=BitBake branch]
+ current_releases = [
+     # Release slot #1
+-    ['Wrynose','6.0','April 2026','6.0 (April 2026)','Long Term Support (until April 2030)','','2.18'],
++    ['Blacksail','6.1','October 2026','6.1 (October 2026)','Support for 7 months (until April 2027)','','2.20'],
+     # Release slot #2 'local'
+-    ['HEAD','HEAD','','Local Yocto Project','HEAD','','HEAD'],
++    ['Wrynose','6.0','April 2026','6.0 (April 2026)','Long Term Support (until April 2030)','','2.18'],
+     # Release slot #3 'master'
+-    ['Master','master','','Yocto Project master','master','','master'],
++    ['HEAD','HEAD','','Local Yocto Project','HEAD','','HEAD'],
+     # Release slot #4
++    ['Master','master','','Yocto Project master','master','','master'],
++    # Release slot #5
+     ['Scarthgap','5.0','April 2024','5.0 (April 2024)','Long Term Support (until April 2028)','','2.8'],
+     #['Whinlatter','5.3','October 2025','5.3 (October 2024)','Support for 7 months (until May 2026)','','2.14'],
+     #['Styhead','5.1','November 2024','5.1.0 (November 2024)','Support for 7 months (until May 2025)','','2.10'],
+diff --git a/lib/toaster/orm/fixtures/oe-core.xml b/lib/toaster/orm/fixtures/oe-core.xml
+index 9197e160c67..ccd8457a2db 100644
+--- a/lib/toaster/orm/fixtures/oe-core.xml
++++ b/lib/toaster/orm/fixtures/oe-core.xml
+@@ -8,52 +8,64 @@
+ 
+   <!-- Bitbake versions which correspond to the metadata release -->
+   <object model="orm.bitbakeversion" pk="1">
+-    <field type="CharField" name="name">wrynose</field>
+-    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
+-    <field type="CharField" name="branch">2.16</field>
++    <field type="CharField" name="name">blacksail</field>
++    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
++    <field type="CharField" name="branch">2.20</field>
+   </object>
+   <object model="orm.bitbakeversion" pk="2">
++    <field type="CharField" name="name">wrynose</field>
++    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
++    <field type="CharField" name="branch">2.18</field>
++  </object>
++  <object model="orm.bitbakeversion" pk="3">
+     <field type="CharField" name="name">HEAD</field>
+-    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
++    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
+     <field type="CharField" name="branch">HEAD</field>
+   </object>
+-  <object model="orm.bitbakeversion" pk="3">
++  <object model="orm.bitbakeversion" pk="4">
+     <field type="CharField" name="name">master</field>
+-    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
++    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
+     <field type="CharField" name="branch">master</field>
+   </object>
+-  <object model="orm.bitbakeversion" pk="4">
++  <object model="orm.bitbakeversion" pk="5">
+     <field type="CharField" name="name">scarthgap</field>
+-    <field type="CharField" name="giturl">git://git.openembedded.org/bitbake</field>
++    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
+     <field type="CharField" name="branch">2.8</field>
+   </object>
+ 
+   <!-- Releases available -->
+   <object model="orm.release" pk="1">
++    <field type="CharField" name="name">blacksail</field>
++    <field type="CharField" name="description">Openembedded Blacksail</field>
++    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">1</field>
++    <field type="CharField" name="branch_name">blacksail</field>
++    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"https://cgit.openembedded.org/openembedded-core/log/?h=blacksail\"&gt;OpenEmbedded Blacksail&lt;/a&gt; branch.</field>
++  </object>
++  <object model="orm.release" pk="2">
+     <field type="CharField" name="name">wrynose</field>
+     <field type="CharField" name="description">Openembedded Wrynose</field>
+-    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">1</field>
++    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">2</field>
+     <field type="CharField" name="branch_name">wrynose</field>
+     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"https://cgit.openembedded.org/openembedded-core/log/?h=wrynose\"&gt;OpenEmbedded Wrynose&lt;/a&gt; branch.</field>
+   </object>
+-  <object model="orm.release" pk="2">
++  <object model="orm.release" pk="3">
+     <field type="CharField" name="name">local</field>
+     <field type="CharField" name="description">Local Openembedded</field>
+-    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">2</field>
++    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">3</field>
+     <field type="CharField" name="branch_name">HEAD</field>
+     <field type="TextField" name="helptext">Toaster will run your builds with the version of OpenEmbedded that you have cloned or downloaded to your computer.</field>
+   </object>
+-  <object model="orm.release" pk="3">
++  <object model="orm.release" pk="4">
+     <field type="CharField" name="name">master</field>
+     <field type="CharField" name="description">OpenEmbedded core master</field>
+-    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">3</field>
++    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
+     <field type="CharField" name="branch_name">master</field>
+     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"https://cgit.openembedded.org/openembedded-core/log/\"&gt;OpenEmbedded master&lt;/a&gt; branch.</field>
+   </object>
+-  <object model="orm.release" pk="4">
++  <object model="orm.release" pk="5">
+     <field type="CharField" name="name">scarthgap</field>
+     <field type="CharField" name="description">Openembedded Scarthgap</field>
+-    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
++    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">5</field>
+     <field type="CharField" name="branch_name">scarthgap</field>
+     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href=\"https://cgit.openembedded.org/openembedded-core/log/?h=scarthgap\"&gt;OpenEmbedded Scarthgap&lt;/a&gt; branch.</field>
+   </object>
+@@ -75,15 +87,19 @@
+     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
+     <field type="CharField" name="layer_name">openembedded-core</field>
+   </object>
++  <object model="orm.releasedefaultlayer" pk="5">
++    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
++    <field type="CharField" name="layer_name">openembedded-core</field>
++  </object>
+ 
+ 
+   <!-- Layer for the Local release -->
+   <object model="orm.layer" pk="1">
+     <field type="CharField" name="name">openembedded-core</field>
+-    <field type="CharField" name="vcs_url">git://git.openembedded.org/openembedded-core</field>
+-    <field type="CharField" name="vcs_web_url">https://cgit.openembedded.org/openembedded-core</field>
+-    <field type="CharField" name="vcs_web_tree_base_url">https://cgit.openembedded.org/openembedded-core/tree/%path%?h=%branch%</field>
+-    <field type="CharField" name="vcs_web_file_base_url">https://cgit.openembedded.org/openembedded-core/tree/%path%?h=%branch%</field>
++    <field type="CharField" name="vcs_url">https://git.openembedded.org/openembedded-core</field>
++    <field type="CharField" name="vcs_web_url">https://git.openembedded.org/openembedded-core</field>
++    <field type="CharField" name="vcs_web_tree_base_url">https://git.openembedded.org/openembedded-core/tree/%path%?h=%branch%</field>
++    <field type="CharField" name="vcs_web_file_base_url">https://git.openembedded.org/openembedded-core/tree/%path%?h=%branch%</field>
+   </object>
+   <object model="orm.layer_version" pk="1">
+     <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
+diff --git a/lib/toaster/orm/fixtures/poky.xml b/lib/toaster/orm/fixtures/poky.xml
+index b1b3861d687..d4c1ddfd5d9 100644
+--- a/lib/toaster/orm/fixtures/poky.xml
++++ b/lib/toaster/orm/fixtures/poky.xml
+@@ -8,24 +8,30 @@
+ 
+   <!-- Bitbake versions which correspond to the metadata release -->
+   <object model="orm.bitbakeversion" pk="1">
++    <field type="CharField" name="name">blacksail</field>
++    <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
++    <field type="CharField" name="branch">2.20</field>
++    <field type="CharField" name="dirpath"></field>
++  </object>
++  <object model="orm.bitbakeversion" pk="2">
+     <field type="CharField" name="name">wrynose</field>
+     <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
+     <field type="CharField" name="branch">2.18</field>
+     <field type="CharField" name="dirpath"></field>
+   </object>
+-  <object model="orm.bitbakeversion" pk="2">
++  <object model="orm.bitbakeversion" pk="3">
+     <field type="CharField" name="name">HEAD</field>
+     <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
+     <field type="CharField" name="branch">HEAD</field>
+     <field type="CharField" name="dirpath"></field>
+   </object>
+-  <object model="orm.bitbakeversion" pk="3">
++  <object model="orm.bitbakeversion" pk="4">
+     <field type="CharField" name="name">master</field>
+     <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
+     <field type="CharField" name="branch">master</field>
+     <field type="CharField" name="dirpath"></field>
+   </object>
+-  <object model="orm.bitbakeversion" pk="4">
++  <object model="orm.bitbakeversion" pk="5">
+     <field type="CharField" name="name">scarthgap</field>
+     <field type="CharField" name="giturl">https://git.openembedded.org/bitbake</field>
+     <field type="CharField" name="branch">2.8</field>
+@@ -35,30 +41,37 @@
+ 
+   <!-- Releases available -->
+   <object model="orm.release" pk="1">
++    <field type="CharField" name="name">blacksail</field>
++    <field type="CharField" name="description">Yocto Project 6.1 "Blacksail"</field>
++    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">1</field>
++    <field type="CharField" name="branch_name">blacksail</field>
++    <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/meta-yocto/log/?h=blacksail"&gt;Yocto Project Blacksail branch&lt;/a&gt;.</field>
++  </object>
++  <object model="orm.release" pk="2">
+     <field type="CharField" name="name">wrynose</field>
+     <field type="CharField" name="description">Yocto Project 6.0 "Wrynose"</field>
+-    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">1</field>
++    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">2</field>
+     <field type="CharField" name="branch_name">wrynose</field>
+     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/meta-yocto/log/?h=wrynose"&gt;Yocto Project Wrynose branch&lt;/a&gt;.</field>
+   </object>
+-  <object model="orm.release" pk="2">
++  <object model="orm.release" pk="3">
+     <field type="CharField" name="name">local</field>
+     <field type="CharField" name="description">Local Yocto Project</field>
+-    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">2</field>
++    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">3</field>
+     <field type="CharField" name="branch_name">HEAD</field>
+     <field type="TextField" name="helptext">Toaster will run your builds with the version of the Yocto Project you have cloned or downloaded to your computer.</field>
+   </object>
+-  <object model="orm.release" pk="3">
++  <object model="orm.release" pk="4">
+     <field type="CharField" name="name">master</field>
+     <field type="CharField" name="description">Yocto Project master</field>
+-    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">3</field>
++    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
+     <field type="CharField" name="branch_name">master</field>
+     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/meta-yocto/log/"&gt;Yocto Project Master branch&lt;/a&gt;.</field>
+   </object>
+-  <object model="orm.release" pk="4">
++  <object model="orm.release" pk="5">
+     <field type="CharField" name="name">scarthgap</field>
+     <field type="CharField" name="description">Yocto Project 5.0 "Scarthgap"</field>
+-    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">4</field>
++    <field rel="ManyToOneRel" to="orm.bitbakeversion" name="bitbake_version">5</field>
+     <field type="CharField" name="branch_name">scarthgap</field>
+     <field type="TextField" name="helptext">Toaster will run your builds using the tip of the &lt;a href="https://git.yoctoproject.org/meta-yocto/log/?h=scarthgap"&gt;Yocto Project Scarthgap branch&lt;/a&gt;.</field>
+   </object>
+@@ -112,6 +125,18 @@
+     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
+     <field type="CharField" name="layer_name">meta-yocto-bsp</field>
+   </object>
++  <object model="orm.releasedefaultlayer" pk="13">
++    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
++    <field type="CharField" name="layer_name">openembedded-core</field>
++  </object>
++  <object model="orm.releasedefaultlayer" pk="14">
++    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
++    <field type="CharField" name="layer_name">meta-poky</field>
++  </object>
++  <object model="orm.releasedefaultlayer" pk="15">
++    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
++    <field type="CharField" name="layer_name">meta-yocto-bsp</field>
++  </object>
+ 
+   <!-- Default layers provided by poky
+        openembedded-core
+@@ -130,28 +155,35 @@
+     <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
+     <field type="IntegerField" name="layer_source">0</field>
+     <field rel="ManyToOneRel" to="orm.release" name="release">1</field>
+-    <field type="CharField" name="branch">wrynose</field>
++    <field type="CharField" name="branch">blacksail</field>
+     <field type="CharField" name="dirpath">meta</field>
+   </object>
+   <object model="orm.layer_version" pk="2">
+     <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
+     <field type="IntegerField" name="layer_source">0</field>
+     <field rel="ManyToOneRel" to="orm.release" name="release">2</field>
+-    <field type="CharField" name="branch">HEAD</field>
+-    <field type="CharField" name="commit">HEAD</field>
++    <field type="CharField" name="branch">wrynose</field>
+     <field type="CharField" name="dirpath">meta</field>
+   </object>
+   <object model="orm.layer_version" pk="3">
+     <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
+     <field type="IntegerField" name="layer_source">0</field>
+     <field rel="ManyToOneRel" to="orm.release" name="release">3</field>
+-    <field type="CharField" name="branch">master</field>
++    <field type="CharField" name="branch">HEAD</field>
++    <field type="CharField" name="commit">HEAD</field>
+     <field type="CharField" name="dirpath">meta</field>
+   </object>
+   <object model="orm.layer_version" pk="4">
+     <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
+     <field type="IntegerField" name="layer_source">0</field>
+     <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
++    <field type="CharField" name="branch">master</field>
++    <field type="CharField" name="dirpath">meta</field>
++  </object>
++  <object model="orm.layer_version" pk="5">
++    <field rel="ManyToOneRel" to="orm.layer" name="layer">1</field>
++    <field type="IntegerField" name="layer_source">0</field>
++    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
+     <field type="CharField" name="branch">scarthgap</field>
+     <field type="CharField" name="dirpath">meta</field>
+   </object>
+@@ -164,32 +196,39 @@
+     <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%</field>
+     <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%</field>
+   </object>
+-  <object model="orm.layer_version" pk="5">
++  <object model="orm.layer_version" pk="6">
+     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
+     <field type="IntegerField" name="layer_source">0</field>
+     <field rel="ManyToOneRel" to="orm.release" name="release">1</field>
+-    <field type="CharField" name="branch">wrynose</field>
++    <field type="CharField" name="branch">blacksail</field>
+     <field type="CharField" name="dirpath">meta-poky</field>
+   </object>
+-  <object model="orm.layer_version" pk="6">
++  <object model="orm.layer_version" pk="7">
+     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
+     <field type="IntegerField" name="layer_source">0</field>
+     <field rel="ManyToOneRel" to="orm.release" name="release">2</field>
++    <field type="CharField" name="branch">wrynose</field>
++    <field type="CharField" name="dirpath">meta-poky</field>
++  </object>
++  <object model="orm.layer_version" pk="8">
++    <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
++    <field type="IntegerField" name="layer_source">0</field>
++    <field rel="ManyToOneRel" to="orm.release" name="release">3</field>
+     <field type="CharField" name="branch">HEAD</field>
+     <field type="CharField" name="commit">HEAD</field>
+     <field type="CharField" name="dirpath">meta-poky</field>
+   </object>
+-  <object model="orm.layer_version" pk="7">
++  <object model="orm.layer_version" pk="9">
+     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
+     <field type="IntegerField" name="layer_source">0</field>
+-    <field rel="ManyToOneRel" to="orm.release" name="release">3</field>
++    <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
+     <field type="CharField" name="branch">master</field>
+     <field type="CharField" name="dirpath">meta-poky</field>
+   </object>
+-  <object model="orm.layer_version" pk="8">
++  <object model="orm.layer_version" pk="10">
+     <field rel="ManyToOneRel" to="orm.layer" name="layer">2</field>
+     <field type="IntegerField" name="layer_source">0</field>
+-    <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
++    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
+     <field type="CharField" name="branch">scarthgap</field>
+     <field type="CharField" name="dirpath">meta-poky</field>
+   </object>
+@@ -202,32 +241,39 @@
+     <field type="CharField" name="vcs_web_tree_base_url">https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%</field>
+     <field type="CharField" name="vcs_web_file_base_url">https://git.yoctoproject.org/meta-yocto/tree/%path%?h=%branch%</field>
+   </object>
+-  <object model="orm.layer_version" pk="9">
++  <object model="orm.layer_version" pk="11">
+     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
+     <field type="IntegerField" name="layer_source">0</field>
+     <field rel="ManyToOneRel" to="orm.release" name="release">1</field>
+-    <field type="CharField" name="branch">wrynose</field>
++    <field type="CharField" name="branch">blacksail</field>
+     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
+   </object>
+-  <object model="orm.layer_version" pk="10">
++  <object model="orm.layer_version" pk="12">
+     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
+     <field type="IntegerField" name="layer_source">0</field>
+     <field rel="ManyToOneRel" to="orm.release" name="release">2</field>
++    <field type="CharField" name="branch">wrynose</field>
++    <field type="CharField" name="dirpath">meta-yocto-bsp</field>
++  </object>
++  <object model="orm.layer_version" pk="13">
++    <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
++    <field type="IntegerField" name="layer_source">0</field>
++    <field rel="ManyToOneRel" to="orm.release" name="release">3</field>
+     <field type="CharField" name="branch">HEAD</field>
+     <field type="CharField" name="commit">HEAD</field>
+     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
+   </object>
+-  <object model="orm.layer_version" pk="11">
++  <object model="orm.layer_version" pk="14">
+     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
+     <field type="IntegerField" name="layer_source">0</field>
+-    <field rel="ManyToOneRel" to="orm.release" name="release">3</field>
++    <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
+     <field type="CharField" name="branch">master</field>
+     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
+   </object>
+-  <object model="orm.layer_version" pk="12">
++  <object model="orm.layer_version" pk="15">
+     <field rel="ManyToOneRel" to="orm.layer" name="layer">3</field>
+     <field type="IntegerField" name="layer_source">0</field>
+-    <field rel="ManyToOneRel" to="orm.release" name="release">4</field>
++    <field rel="ManyToOneRel" to="orm.release" name="release">5</field>
+     <field type="CharField" name="branch">scarthgap</field>
+     <field type="CharField" name="dirpath">meta-yocto-bsp</field>
+   </object>
+diff --git a/lib/toaster/tests/functional/test_create_new_project.py b/lib/toaster/tests/functional/test_create_new_project.py
+index f290f8b3eb7..294b6bc9885 100644
+--- a/lib/toaster/tests/functional/test_create_new_project.py
++++ b/lib/toaster/tests/functional/test_create_new_project.py
+@@ -15,13 +15,29 @@ from selenium.webdriver.common.by import By
+ 
+ class TestCreateNewProject(SeleniumFunctionalTestCase):
+ 
+-    def test_create_new_project_wrynose(self):
++    def test_create_new_project_blacksail(self):
+         """ Test create new project using:
+           - Project Name: Any string
+-          - Release: Yocto Project 6.0 "Wrynose" (option value: 1)
++          - Release: Yocto Project 6.1 "Blacksail" (option value: 1)
+           - Merge Toaster settings: True
+         """
+         release = '1'
++        release_title = 'Yocto Project 6.1 "Blacksail"'
++        project_name = 'projectblacksail'
++        self.create_new_project(
++            project_name,
++            release,
++            release_title,
++            True,
++        )
++
++    def test_create_new_project_wrynose(self):
++        """ Test create new project using:
++          - Project Name: Any string
++          - Release: Yocto Project 6.0 "Wrynose" (option value: 2)
++          - Merge Toaster settings: True
++        """
++        release = '2'
+         release_title = 'Yocto Project 6.0 "Wrynose"'
+         project_name = 'projectwrynose'
+         self.create_new_project(
+@@ -34,10 +50,10 @@ class TestCreateNewProject(SeleniumFunctionalTestCase):
+     def test_create_new_project_local(self):
+         """ Test create new project using:
+           - Project Name: Any string
+-          - Release: Yocto Project "Local" (option value: 2)
++          - Release: Yocto Project "Local" (option value: 3)
+           - Merge Toaster settings: True
+         """
+-        release = '2'
++        release = '3'
+         release_title = 'Local Yocto Project'
+         project_name = 'projectlocal'
+         self.create_new_project(
+@@ -50,10 +66,10 @@ class TestCreateNewProject(SeleniumFunctionalTestCase):
+     def test_create_new_project_master(self):
+         """ Test create new project using:
+           - Project Name: Any string
+-          - Release: Yocto Project "Master" (option value: 3)
++          - Release: Yocto Project "Master" (option value: 4)
+           - Merge Toaster settings: False
+         """
+-        release = '3'
++        release = '4'
+         release_title = 'Yocto Project master'
+         project_name = 'projectmaster'
+         self.create_new_project(
+@@ -66,10 +82,10 @@ class TestCreateNewProject(SeleniumFunctionalTestCase):
+     def test_create_new_project_scarthgap(self):
+         """ Test create new project using:
+           - Project Name: Any string
+-          - Release: Yocto Project 5.0 "Scarthgap" (option value: 4)
++          - Release: Yocto Project 5.0 "Scarthgap" (option value: 5)
+           - Merge Toaster settings: True
+         """
+-        release = '4'
++        release = '5'
+         release_title = 'Yocto Project 5.0 "Scarthgap"'
+         project_name = 'projectscarthgap'
+         self.create_new_project(
 
