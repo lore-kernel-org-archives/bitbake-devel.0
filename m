@@ -1,111 +1,101 @@
-Return-Path: <git@cookiesoft.de>
+Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DABC98321
-	for <webhook@archiver.kernel.org>; Fri, 25 Sep 2026 16:56:49 +0000 (UTC)
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.2930.1790355407038860342
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CA5C9830E
+	for <webhook@archiver.kernel.org>; Fri, 25 Sep 2026 22:36:10 +0000 (UTC)
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.9499.1790375766637118843
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 25 Sep 2026 09:56:47 -0700
+ Fri, 25 Sep 2026 15:36:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@cookiesoft.de header.s=MBO0001 header.b=I9cq6F8W;
- spf=pass (domain: cookiesoft.de, ip: 80.241.56.172, mailfrom: git@cookiesoft.de)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4hrxgZ20PczMlNH;
-	Fri, 25 Sep 2026 18:56:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cookiesoft.de;
-	s=MBO0001; t=1790355402;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RvXuX2qJ3LKz3Gc3Csr6HLjN/GfPJf0ybR2Wru9+NGw=;
-	b=I9cq6F8W7qKjxvm7QTB17oOsapie6E6IvazQ7OUQ3nXM9bqT5PF4vr8z/cOwucCMfT0V+r
-	niWfFTNW1Jg//gH7BNypqqwoT76Kbv+zCHgjJj1L2DAEyB5+1cQ9uhgqd+dEjWU1vuhn2R
-	+1NSG/P80ezJKJxdd+0JaIKJFBdAiupjYHtMXfjie1j6IuNxKzalQFt+reyeFL12DKxYzy
-	t0HmzaqrsUHANY6auVmG10JiL+Q0NoL8ll4jVebe1QHOLksJdCJw2N/WhOf5x5Ub0pLBP3
-	RCrVDIKRmf9SahOjITiQacwGUdDIcW5eGLSKqz1KhDkwt3piB3zsRANwjRQyGg==
-Message-ID: <5a5a2a4c-b64b-4709-8596-f722485e4468@cookiesoft.de>
-Date: Fri, 25 Sep 2026 18:56:39 +0200
+ dkim=pass header.i=@smile.fr header.s=google header.b=h3883ddN;
+ spf=pass (domain: smile.fr, ip: 74.125.225.141, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49e79a408deso8014315e9.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 25 Sep 2026 15:36:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smile.fr; s=google; t=1790375765; x=1790980565; darn=lists.openembedded.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=67XVh2x36QIQMkrSQh7Ypb9twb/MULuL66wAHAI7J8Q=;
+        b=h3883ddNs/WmbyrnoxOS1NkcJGNYIn4VQqg751kzWUwmsYlrjc7OsFhPg/d6x1JcIE
+         lSkuZ7tMdkvt4YdCX7Xemw972cYUWv/0yBhhy7WChWH0eb4mJMC/jE8ZSZXtfeNXlWK9
+         YaCvAIPS7Yzg7jCBJnFk/qDLstIqIAzv8fCXY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790375765; x=1790980565;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=67XVh2x36QIQMkrSQh7Ypb9twb/MULuL66wAHAI7J8Q=;
+        b=j3Uo4PBwpfKW48A7kfMYxp99cFWGI8Yq3cP8ED2pFaFiCB3BOQa3eJtgFe9ga8OEg0
+         d3twCEpP8IPTDFaxlT20m2zPDW6QbbPG9WgfP3+OIbaKqPuqOf0WXKbanVcAjirMAqUQ
+         4QaA97Yh8qrIPUJv8JM0qxvB+248z/EBc9dVAG4UPicHnskE7Te84dcVeOjzBo0bIOd6
+         bgbW0Q5wvNyIxdokE+7gGAFF4OHXU38maBSJbVWp+87oXNgXJW+71Bvqyg+HTEg/F1LG
+         T3t9aZ9qecJdBWCIUIztZO8J6YiwDlDetpKpecsxiDLyZkiWUA2zRK+ePcnfMGsr0xc/
+         d9kw==
+X-Gm-Message-State: AFuF++kNK4JZsd7UNEe10N5lcG8h6iX2vUyoXpb1813Ghab6y43/Y7aV
+	Vg6d0B98e6eFl3e8sHZbbz1/r7w+qfxlbRiUHCeuyqpZhwWgOMb3OrgudJqEce9KkbOv+tNWvEG
+	jZjVcGQI=
+X-Gm-Gg: AYBFou3SWc9Y0FPVwsEqk/954291dqG1wTzyTGqQ/dMn4bwO2wu2nlEYWJiEjY5Qh5e
+	V6sn5V9nvs+5kB/MwQYMV0dCHq3Wz5pIc6WOARSsh1vSyoVYHva/ViOYVY2FtanvlBLol7w68SD
+	YrXXvuBOYFIokgOmfQUGu9AE3nZ5O0EE6CBnNcAfRINHdQnll499pJYmjdCPL3SwPIbcOuOn2Qk
+	Zjs1QkxJGkix7C0dJLOEXqt2K49MDLbWAT153DrPq50AAI1uPmNxnDYiOcPzYbLQffaG+jHwewF
+	KmZELOvuMDec60uP5CHBKFqaYIO9xS/dRepw0QNgwJuSC9T63+K4PwLr+71k08Eex/xYi+pnWbP
+	KtkKKn1nFMe0xlGSNkR+rW1oslYHKa97UBcO358wuEfpS6BfdQIVGHUtLVp/Dvrpjy4yKwHW6uI
+	FT3EeHccDQsEVb0Go7ikY6/q0SjCrkcqxehxqJjEPOEmSJ4omnPOrgs1AZDYHY67xEvjT2eU7j2
+	ZHDrptenW1ROGMGM0i4P20OQ/4RBfWW+kpAjYUfn93RiBZPQklUlZGFPL9IorXwP1SEtLncww==
+X-Received: by 2002:a05:600c:4ec6:b0:49d:e0c:e55e with SMTP id 5b1f17b1804b1-49fe66f9ddcmr125707215e9.23.1790375764640;
+        Fri, 25 Sep 2026 15:36:04 -0700 (PDT)
+Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a6470b7sm9935776f8f.27.2026.09.25.15.36.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Sep 2026 15:36:04 -0700 (PDT)
+From: Yoann Congal <yoann.congal@smile.fr>
+To: bitbake-devel@lists.openembedded.org
+Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [bitbake][scarthgap][2.8][PATCH 0/3] Pull request (cover letter only)
+Date: Sat, 26 Sep 2026 00:35:39 +0200
+Message-ID: <cover.1790375672.git.yoann.congal@smile.fr>
+X-Mailer: git-send-email 2.55.0
 MIME-Version: 1.0
-Subject: Re: [bitbake-devel] Add OSC 9;4 to bitbake terminal runner
-To: richard.purdie@linuxfoundation.org,
- "bitbake-devel@lists.openembedded.org" <bitbake-devel@lists.openembedded.org>
-References: <719659404.262685.1790338566452@app.mailbox.org>
- <9f14d7c0579a4e72521d0a8e52c5d5c14ea64e84.camel@linuxfoundation.org>
-Content-Language: en-US
-From: Marcel Hellwig <git@cookiesoft.de>
-In-Reply-To: <9f14d7c0579a4e72521d0a8e52c5d5c14ea64e84.camel@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 25 Sep 2026 16:56:49 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20257
+ <bitbake-devel@lists.openembedded.org>; Fri, 25 Sep 2026 22:36:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20258
 
-On 9/25/26 16:57, Richard Purdie via lists.openembedded.org wrote:
-> On Fri, 2026-09-25 at 14:16 +0200, git via lists.openembedded.org wrote=
-:
->> Hey everyone,
->>
->> BitBake runs can take quite some time, and it bothers me that I don't
->> have any visual feedback while a build is running.
->> So, I tried to make use of the OSC 9;4 feature[0] to get some visual
->> feedback on what is happening.
->>
->> I managed to get a first draft working, but honestly, I'm not really
->> happy with how I integrated it into BitBake yet, and I could use some
->> help with that.
->>
->> I uploaded a diff that can be applied to the scarthgap branch[1].
->>
->> I would really appreciate some feedback on the patch and on how I
->> should go about getting this merged. If someone is willing to take a
->> look at it and maybe merge it directly, that would of course also be
->> great.
->>
->> Thank you very much!
->> Marcel
->>
->>
->> [0]:
->> https://learn.microsoft.com/en-us/windows/terminal/tutorials/progress-=
-bar-sequences
->> [1]:=C2=A0https://gist.github.com/hellow554/257ffa02b4e236ede8f1a5a46c=
-c9ae
-> It looks like you might be able to make a subclass of ProgressBar with
-> OSC9;4 support.
-Yeah, that was my first thought too, but I did choose another (more=20
-convoluted) route, because
-a) there is a life before the first recipe task is started=C2=A0 -=20
-downloading uninative, parsing recipes, sstate, things I don't know.
- =C2=A0 =C2=A0 I wanted the animation to start nevertheless because it ca=
-n take=20
-some time.
-b) Detecting errors is not possible using a sole progressbar.
+Those are the patches from the last patch review:
+https://lore.kernel.org/all/cover.1790154568.git.yoann.congal@smile.fr/
 
-If you say my patch is way to noisy, then I will opt in for the subclass=20
-route, just let me know :)
+Passed a-full on autobuilder:
+https://autobuilder.yoctoproject.org/valkyrie/?#/builders/29/builds/4792
+oe-selftest-fedora failed with 16206 – [scarthgap] AB-INT: runtime_test.SystemTap.test_crosstap_* failures
+retried in https://autobuilder.yoctoproject.org/valkyrie/?#/builders/48/builds/4720
 
-> You'd then just need to detect when in a windows
-> powershell and trigger that. I don't use windows so I'm afraid I'm of l=
-ittle help on this.
-That's the neat part about the OSC codes - terminals that don't support=20
-will just ignore them.
-According to [this] for example konsole (kde terminal emulator) also=20
-supports it, so you might give it a try.
+The following changes since commit cd50c3481e32afff995a143c3459cfa5ae25abd5:
 
-If anyone else wants to comment on this, feel free I very much=20
-appreciate it!
+  tests/fetch: Swap bitbake github mirror for YP one (2026-09-09 17:57:33 +0200)
 
-thanks,
-Marcel
+are available in the Git repository at:
 
-[this]: https://rockorager.dev/misc/osc-9-4-progress-bars/
+  https://git.openembedded.org/bitbake-contrib stable/2.8-next
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.8-next
+
+for you to fetch changes up to 1b619d136c01c97ab1b76a75e8845cddc5e49735:
+
+  tests/fetch: Drop github url from testing (2026-09-18 15:48:17 +0200)
+
+----------------------------------------------------------------
+
+Richard Purdie (3):
+  tests/fetch: Drop ftp checkstatus test
+  tests/fetch: Switch to YP mirror repos instead of github
+  tests/fetch: Drop github url from testing
+
+ lib/bb/tests/fetch.py | 37 ++++++++++++++++---------------------
+ 1 file changed, 16 insertions(+), 21 deletions(-)
 
 
