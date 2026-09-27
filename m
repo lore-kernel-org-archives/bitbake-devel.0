@@ -2,100 +2,109 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CA5C9830E
-	for <webhook@archiver.kernel.org>; Fri, 25 Sep 2026 22:36:10 +0000 (UTC)
-Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.9499.1790375766637118843
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77591C9830E
+	for <webhook@archiver.kernel.org>; Sun, 27 Sep 2026 07:46:48 +0000 (UTC)
+Received: from mail-wr2-f35.google.com (mail-wr2-f35.google.com [74.125.225.99])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.33617.1790495199607800914
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 25 Sep 2026 15:36:07 -0700
+ Sun, 27 Sep 2026 00:46:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=h3883ddN;
- spf=pass (domain: smile.fr, ip: 74.125.225.141, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49e79a408deso8014315e9.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 25 Sep 2026 15:36:06 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=0MNxmNhj;
+ spf=pass (domain: smile.fr, ip: 74.125.225.99, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wr2-f35.google.com with SMTP id ffacd0b85a97d-488780459e2so2088249f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Sun, 27 Sep 2026 00:46:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1790375765; x=1790980565; darn=lists.openembedded.org;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=67XVh2x36QIQMkrSQh7Ypb9twb/MULuL66wAHAI7J8Q=;
-        b=h3883ddNs/WmbyrnoxOS1NkcJGNYIn4VQqg751kzWUwmsYlrjc7OsFhPg/d6x1JcIE
-         lSkuZ7tMdkvt4YdCX7Xemw972cYUWv/0yBhhy7WChWH0eb4mJMC/jE8ZSZXtfeNXlWK9
-         YaCvAIPS7Yzg7jCBJnFk/qDLstIqIAzv8fCXY=
+        d=smile.fr; s=google; t=1790495198; x=1791099998; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=u+b1dCwiOGg/IiTm3c566cdVEBdPz9EhznD8l6s/h9c=;
+        b=0MNxmNhjIUZ/iEICAJJDV+MW1Y9T9J6d3SdqYw99TW3bDUWwZd3PjBfqohOyrO4ke3
+         yGR5FYU+0ppja5+gxxjju37WGr1+9lI1xZKKR1ys4i277c1UwARWw6hgQekbEnjRAxDH
+         6350xhi7hrz1wQq+Q7F/N4lHupS4npaI6r/iA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790375765; x=1790980565;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=67XVh2x36QIQMkrSQh7Ypb9twb/MULuL66wAHAI7J8Q=;
-        b=j3Uo4PBwpfKW48A7kfMYxp99cFWGI8Yq3cP8ED2pFaFiCB3BOQa3eJtgFe9ga8OEg0
-         d3twCEpP8IPTDFaxlT20m2zPDW6QbbPG9WgfP3+OIbaKqPuqOf0WXKbanVcAjirMAqUQ
-         4QaA97Yh8qrIPUJv8JM0qxvB+248z/EBc9dVAG4UPicHnskE7Te84dcVeOjzBo0bIOd6
-         bgbW0Q5wvNyIxdokE+7gGAFF4OHXU38maBSJbVWp+87oXNgXJW+71Bvqyg+HTEg/F1LG
-         T3t9aZ9qecJdBWCIUIztZO8J6YiwDlDetpKpecsxiDLyZkiWUA2zRK+ePcnfMGsr0xc/
-         d9kw==
-X-Gm-Message-State: AFuF++kNK4JZsd7UNEe10N5lcG8h6iX2vUyoXpb1813Ghab6y43/Y7aV
-	Vg6d0B98e6eFl3e8sHZbbz1/r7w+qfxlbRiUHCeuyqpZhwWgOMb3OrgudJqEce9KkbOv+tNWvEG
-	jZjVcGQI=
-X-Gm-Gg: AYBFou3SWc9Y0FPVwsEqk/954291dqG1wTzyTGqQ/dMn4bwO2wu2nlEYWJiEjY5Qh5e
-	V6sn5V9nvs+5kB/MwQYMV0dCHq3Wz5pIc6WOARSsh1vSyoVYHva/ViOYVY2FtanvlBLol7w68SD
-	YrXXvuBOYFIokgOmfQUGu9AE3nZ5O0EE6CBnNcAfRINHdQnll499pJYmjdCPL3SwPIbcOuOn2Qk
-	Zjs1QkxJGkix7C0dJLOEXqt2K49MDLbWAT153DrPq50AAI1uPmNxnDYiOcPzYbLQffaG+jHwewF
-	KmZELOvuMDec60uP5CHBKFqaYIO9xS/dRepw0QNgwJuSC9T63+K4PwLr+71k08Eex/xYi+pnWbP
-	KtkKKn1nFMe0xlGSNkR+rW1oslYHKa97UBcO358wuEfpS6BfdQIVGHUtLVp/Dvrpjy4yKwHW6uI
-	FT3EeHccDQsEVb0Go7ikY6/q0SjCrkcqxehxqJjEPOEmSJ4omnPOrgs1AZDYHY67xEvjT2eU7j2
-	ZHDrptenW1ROGMGM0i4P20OQ/4RBfWW+kpAjYUfn93RiBZPQklUlZGFPL9IorXwP1SEtLncww==
-X-Received: by 2002:a05:600c:4ec6:b0:49d:e0c:e55e with SMTP id 5b1f17b1804b1-49fe66f9ddcmr125707215e9.23.1790375764640;
-        Fri, 25 Sep 2026 15:36:04 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1790495198; x=1791099998;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=u+b1dCwiOGg/IiTm3c566cdVEBdPz9EhznD8l6s/h9c=;
+        b=j3A8L8cysNIaMOaWtWOS2PBSkGd18HwCIZUFnCUe+GdbfLy0yGz5uBYpuTIyrDGArA
+         PaIi7RtuOoRcz9TMOlXa5Bh4NzSD3+LCJLS5q2wifYEhmu0MGb7ePlnA553VeTSWZxcT
+         +wVCCwG7eWxG3kMy3Kz190UT6ssok2Vdxf/EhXWraOfLMWE67A21RLdpzS6tUJ/fJ8YK
+         u9OhdaBEuc6PoKCx3kaxc7jqe0RcrYVFaAUrn6jEuAGoO0AJWvACjEnvU5/8z4+2oWGz
+         zzY56jJqmsn+rCTQDqfGdspXEKVyAXV9T2BVKs8HkLG20tLd6SaqgSCZuAKJz23WlH9z
+         kYSQ==
+X-Gm-Message-State: AFq9FYKfNUiEzCSuFqAQywmFmcByQV8MeFDWB1FvIp2LKLDCtG06ZIjd
+	G2nV3aVcL497PVccivfw6ddCKUBp8jvx6tTTrq5Bn98yKfYVp66V6FJpLIXh3Y+6XM4rZ14i3FE
+	vbnsThpw=
+X-Gm-Gg: AYBFou1MackDfN50VNDg22N/cvQgv9Nqb4wXgDCem1VKClgbSiOMBM+4dTRQcgdEhJ+
+	LcyEQZMeiNeDLsVnE/eXikUI9duw5+wEM1Dyj/ui92VVXZjb2yqXN4FZmR5808TlZFTOZm1P3ff
+	7Z5d7FU1DDvA/f3pqoLzZ9DIp/6xPkwWCZXOuG4tpm0zKgMmPLHrXr5Qbx0Jtlgp7BhKEbvPsXM
+	fQ2el2FQpXn5OeUotQ3xgzhWsJqgiQRz4i5Rm07qLBBemnS+X9DUjjwk0iw0U2EmzCdnuykF4hJ
+	MtxpDmuVf+LJadaXBLLiBY/jg1LUEC4FyfIIqgmaCgscDZjPU9N4fa7ljc3h5qc47brNt5bJGQ2
+	VPeMWVWXZHFZNfXRiwIudqEJbUv7rSp12pOeG01xmWsyxqT7CaOkYvQivoy/I2A9CSNPsagna7g
+	Oks6/PsVVs9uWS6m4y3gUzfPRx4DqVzZ85au9kOgnMOdlJE2Idz2uVlOeJfrdg44tR2+bTS0iBR
+	Z6JQR+BSl2CqWW0xmFu1xRbLdYL4K42adYKg5uSd10HoBn8JppZvRWzFZDRpa5nyMFRQ9tc2HxQ
+	MHkxVu1g
+X-Received: by 2002:a05:6000:2307:b0:488:9695:d15e with SMTP id ffacd0b85a97d-4889695d396mr1593449f8f.37.1790495197908;
+        Sun, 27 Sep 2026 00:46:37 -0700 (PDT)
 Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a6470b7sm9935776f8f.27.2026.09.25.15.36.04
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a30bcdbsm18485266f8f.2.2026.09.27.00.46.37
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Sep 2026 15:36:04 -0700 (PDT)
+        Sun, 27 Sep 2026 00:46:37 -0700 (PDT)
 From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Cc: Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [bitbake][scarthgap][2.8][PATCH 0/3] Pull request (cover letter only)
-Date: Sat, 26 Sep 2026 00:35:39 +0200
-Message-ID: <cover.1790375672.git.yoann.congal@smile.fr>
+Subject: [bitbake][wrynose][2.18][PATCH 0/6] Patch review
+Date: Sun, 27 Sep 2026 09:46:29 +0200
+Message-ID: <cover.1790495160.git.yoann.congal@smile.fr>
 X-Mailer: git-send-email 2.55.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Fri, 25 Sep 2026 22:36:10 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20258
+ <bitbake-devel@lists.openembedded.org>; Sun, 27 Sep 2026 07:46:48 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20259
 
-Those are the patches from the last patch review:
-https://lore.kernel.org/all/cover.1790154568.git.yoann.congal@smile.fr/
+Please review this set of changes for wrynose and have comments back by
+end of day Tuesday, September 29.
 
 Passed a-full on autobuilder:
-https://autobuilder.yoctoproject.org/valkyrie/?#/builders/29/builds/4792
-oe-selftest-fedora failed with 16206 – [scarthgap] AB-INT: runtime_test.SystemTap.test_crosstap_* failures
-retried in https://autobuilder.yoctoproject.org/valkyrie/?#/builders/48/builds/4720
+https://autobuilder.yoctoproject.org/valkyrie/?#/builders/29/builds/4811
 
-The following changes since commit cd50c3481e32afff995a143c3459cfa5ae25abd5:
+The following changes since commit 84a8d046593840df460c1312365031c817eb8918:
 
-  tests/fetch: Swap bitbake github mirror for YP one (2026-09-09 17:57:33 +0200)
+  tests/fetch: Drop ftp checkstatus test (2026-09-14 23:00:27 +0200)
 
 are available in the Git repository at:
 
-  https://git.openembedded.org/bitbake-contrib stable/2.8-next
-  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.8-next
+  https://git.openembedded.org/bitbake-contrib stable/2.18-review
+  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.18-review
 
-for you to fetch changes up to 1b619d136c01c97ab1b76a75e8845cddc5e49735:
+for you to fetch changes up to a8b1dd0aa61ad91716379cdad59c4a9206ebfd7f:
 
-  tests/fetch: Drop github url from testing (2026-09-18 15:48:17 +0200)
+  asyncrpc: Close the client event loop when the client is collected (2026-09-23 15:55:35 +0200)
 
 ----------------------------------------------------------------
 
-Richard Purdie (3):
-  tests/fetch: Drop ftp checkstatus test
-  tests/fetch: Switch to YP mirror repos instead of github
-  tests/fetch: Drop github url from testing
+Chris Laplante (3):
+  runqueue: Fix pending_hash_index not including taskname
+  runqueue: fix bad check in process_possible_migrations
+  runqueue: wait for covered tasks before setscene
 
- lib/bb/tests/fetch.py | 37 ++++++++++++++++---------------------
- 1 file changed, 16 insertions(+), 21 deletions(-)
+Francisco Pedraza (1):
+  asyncrpc: Close the client event loop when the client is collected
+
+Richard Purdie (2):
+  fetch/wget: Handle long filenames correctly
+  data: Fix expandKeys recursion issue
+
+ lib/bb/asyncrpc/client.py | 50 ++++++++++++++++++++++++++++++++++++---
+ lib/bb/data.py            |  2 +-
+ lib/bb/data_smart.py      |  5 ++--
+ lib/bb/fetch2/wget.py     |  7 ++++--
+ lib/bb/runqueue.py        |  9 ++++---
+ lib/bb/tests/data.py      | 25 ++++++++++++++++++++
+ 6 files changed, 85 insertions(+), 13 deletions(-)
 
 
