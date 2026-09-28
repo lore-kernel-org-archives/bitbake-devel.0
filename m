@@ -1,174 +1,123 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <paul@pbarker.dev>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1F0C9833F
-	for <webhook@archiver.kernel.org>; Sun, 27 Sep 2026 07:46:58 +0000 (UTC)
-Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.32882.1790495202344351560
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD7BC9833E
+	for <webhook@archiver.kernel.org>; Mon, 28 Sep 2026 09:31:07 +0000 (UTC)
+Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.53768.1790587859457357800
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 27 Sep 2026 00:46:42 -0700
+ Mon, 28 Sep 2026 02:30:59 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=Xp9Ink0d;
- spf=pass (domain: smile.fr, ip: 74.125.225.76, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-482f6351831so1149553f8f.1
-        for <bitbake-devel@lists.openembedded.org>; Sun, 27 Sep 2026 00:46:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1790495200; x=1791100000; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=gsk/KUe37wis/3Q8ZYT1cBkKFWsg+vh4xy4sd7h1+kI=;
-        b=Xp9Ink0d/ClGSndJhceK6h3/l8WlYWlk899fU2rWaaZv4D+AhWV/FnqgXB1NrrHzND
-         iAgOCmQFg+3jroUIGc53aIU0pk9NfKuScevuQThqo3bdZzVo2x5Q2cFcG/VFmC+s4I4M
-         0meW77B6cpx1hunIlY5znHremEPapd3MulmpQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790495200; x=1791100000;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=gsk/KUe37wis/3Q8ZYT1cBkKFWsg+vh4xy4sd7h1+kI=;
-        b=tPsAuPmGAUtmqsRP2BhAv4hwl2umT5MosF2JdhMjZ6On+uW2Z+M3kxhH+W/2TGhEya
-         hF4DxXPuJ0wIhAlUT9eewGESLqP+OgZWmRHoOWfqE6H9Y+XL6YMQTIK6BDXfOveG2cV2
-         imvlS61ockaOT5chYzfYxd9Q+IML0nsJWt1Dyi5yj75v1cTzlOj/QDRi1T3uYYb+efLE
-         DkgwAA9WLd/P73Nb6XR1dXez4+OXsXbJwlgwmF+1zwMcLuILTX5csh0GV9XGHA6KCeYI
-         pKmhk5PImt8Sh4Ic8mAvACHu85HuwRiCo1uqCDYqgGrbDiuVdTTK4teU8RRGXc7ERrSp
-         N4pw==
-X-Gm-Message-State: AFq9FYLHAWJohuLeWP46TkYfJCk/Rk6JocCyEiSpbjS8vFy8InXXFP26
-	uMDsYmQJb1L7Ghydc0kOzKhPklIgqk1Mng2VWLsnfZUaq71D7Hm7hVwtIsmZmygKv3bcdG3Uemg
-	XjR1Dt84=
-X-Gm-Gg: AYBFou0KX/yybrKENadsf0FVQ7PNEEu1mBoLV0zHxi4dJn4JFdmy04a4tdUgwXv8Y/d
-	qDJsDxXeJkyn7as3ZZNzAWnLzByqFDcZEtsWnmwjgT/NmnJcynwj9TyCZMRMNwTpjLFkGcVtfml
-	JO5u72toaoLTG6lh3YFOvW97ticCcRINlCYUG97hHI+5gViadiQaRXzlBzc1AHf2vPjoo3uaFcd
-	Rzx+3L3HnfhWqvnpRuIFZCilaKLu7X+GK60NB3DYFqMyzXj8qE2IlO7J3i8JjdBHcnQ7g+v3igt
-	aYCKpYKNamsYPoo9oLe9VI0Uxo3WEbYl7UhLkFoaWfrJevxgRJk90+lxhjJnZMAn5zJFmX8pj/t
-	xcqqj6qGyF3cJ7CaLWIKLXu7NDCPJi75a6Iz9tVog6v4Hceij3HWh7u9/Y9BEue8q0aPpWLQIe8
-	rKyQH0V/Q2/JMhKZsCP+khCjAcbl6F5A7pw3nxAt81YMuzwigEFNjAsi5XCNXu9Z2GY8WLlaMFo
-	gHfFjWb5bmgNqNR8iqzctB7kZlPxMLR6lSyMSYpu1fmMi1GibnKy3jrDo4Gu/NzpffP0yUlNA==
-X-Received: by 2002:a05:6000:2888:b0:488:8948:2187 with SMTP id ffacd0b85a97d-48889482da9mr5279506f8f.16.1790495200574;
-        Sun, 27 Sep 2026 00:46:40 -0700 (PDT)
-Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a30bcdbsm18485266f8f.2.2026.09.27.00.46.39
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Sep 2026 00:46:39 -0700 (PDT)
-From: Yoann Congal <yoann.congal@smile.fr>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][wrynose][2.18][PATCH 5/6] data: Fix expandKeys recursion issue
-Date: Sun, 27 Sep 2026 09:46:34 +0200
-Message-ID: <c7029045baa2fd986e7cb5b52f6ba74571cdf728.1790495161.git.yoann.congal@smile.fr>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <cover.1790495160.git.yoann.congal@smile.fr>
-References: <cover.1790495160.git.yoann.congal@smile.fr>
+ dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=T8HHt+Eo;
+ dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=ocHm+XXn;
+ spf=pass (domain: pbarker.dev, ip: 202.12.124.144, mailfrom: paul@pbarker.dev)
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 8A9B21D000B1;
+	Mon, 28 Sep 2026 05:30:58 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Mon, 28 Sep 2026 05:30:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1790587858;
+	 x=1790674258; bh=V44APMmaq6/GTDBWTbGJgwOr8wov27Z+G2UhZL4tWNI=; b=
+	T8HHt+Eovq7jO/bcT5N3Passa61o2Dm9E2KBfOV6OiMEWHqoxPjKAEp2CFIvdRwO
+	RjdXIs6cHKXPXYqyifgy4zrNrPzDVSi/Jx0kYkofrrQu3qo55w4FVnhh4adnaTme
+	KfCR2aMaPeGjh5t21SrHdh+vsMYjsLhtpBUCU9jmuVONfGWzCyYqLcMt3WfFudJO
+	qoj1JoUTIwMBg7Lr91Ur+c2oSJYStCDsPkkRkZL5oJ67iQbbE2uLY0JKqHP9+/a5
+	SRTYnFsC70PyG/NJvzrYXrlL5J93xW5y0GjDJ0MaWIyaChLk57nPpSEreQwK6yBq
+	CJP+577yLCNSKxP7yfoMFA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1790587858; x=
+	1790674258; bh=V44APMmaq6/GTDBWTbGJgwOr8wov27Z+G2UhZL4tWNI=; b=o
+	cHm+XXnp7rTfYA2zywd+oVyroZSxu/9Z7y93GO6o/O7CwceBMHN4XC3khXGbPCw0
+	KUOOwexh1lklVWL6y3HtW68RDpSFjDqHtCCHfdFi0NDMJJVMgmqR7HPzFVCcWO3R
+	NXPn9s6krYFoRoKdkzSSP7ns4l1x9Q7Rd7MVJtzPka0bVByZWQ50Qd1iyJnzvUpc
+	Yah2EPNsj7pjlBN7i2p1+rZ7ENPDWCbofM/dFLEgFEt6fFN9aTMkPQbRL4REBVfB
+	SY5/+D5ThoiElgAumKHqfb09Hfa7YqVYvd9cFgejr7kjlR7xxhYUqwRwgujPedPG
+	m6cPckrfBNRCst7tyU1VQ==
+X-ME-Sender: <xms:0jO6akvqu4-Sk7JQ7fywqBV5p5AsNXrTbxFVKjp4S1ToGWDEZLxj9w>
+    <xme:0jO6ao4beMDVVfGcehajvzydM4BzenjVGuxbpQAmc7ETXWKM51twp3DD3hSHPpvNe
+    CB5xjeu-BHzotIaxiOx_DSNHDmyv2rqz1vDxFt01EivYDD3hCPdV5tf>
+X-ME-Received: <xmr:0jO6atJXS5ugcFeMdDzdB4iFmms9yUe7NTUCVvXx8CpZCivI51gV63w9JP9xDCgvnL7MNPQtx-we7uwe3AVn9saAXe9Qfm4oB0adKMg>
+X-ME-Proxy-Cause: dmFkZTE9vOc2H1ehRq+BcpqJmRBpLbXR16pLFAH8zztI9PdvkiYXrA5N3NhRVYxgUxeX4i
+    3raZd0/Q+hodhrm8HOUT0j/5ydPwvLFWgA0sNj1RoaTlIfn9dZYkMYF58LeAllCiTiB9gc
+    xRqrRlukfXsJ7xVUlf9jATCV10E4ZxdRiiTWPK357qrmn1Oje5aBVY8g8OVsTI32+qqg0H
+    jB7cTwnxwbneKjz61QNGoJKRU5vxigtIya8vAmaqeuyqWXVcjTMXugAxWL6ohJasvQMM6d
+    C890uWPNZy3mTAKzmCke6tLMMwQ+nyF2/j9mfH1LvnWhV9rIHWzeiiWS+HjGaGrHQINKLt
+    OrRChgkq/rvaT7+bNxnJRZAFCMtvqozi0fGSirXWgcP8Jcy8ftt3fKqeAyPKemHaDrsQXz
+    ovC5/aSd82JiZI6bZbe0PqfsG2bSTutJH0CeMN931HMIi0BOk+FUsRRwUgjPOnpuKbje2m
+    eBQCSiIhDts9kFPRApZfAZvenclOcmBhtYd+BZl/CcK8YL62AgvKQ3LfQUOWQ6ekpmVd3t
+    2/ZZEz7TF7BbiNqK7inrDMzS7G8ToU7fMIzliH9FlqGEGioUyZYREgX9Y5eiHf7E+vuoME
+    0fByuhdJLPXhN3WIn1pS1oV9TMGyj6mTfpKpLQ1NK/c4yoLF6eF9OeVWxE3Q
+X-ME-Proxy: <xmx:0jO6ag6UXcoV67POpe6EuCa1qMIK1OqFuoc2qjo5Fb3F9mI5sqMh-g>
+    <xmx:0jO6aowZJkgtar_tQ-vJAgz65J0aSME21cy0Tdl7SuO64WWsSEicgA>
+    <xmx:0jO6asYpzvIT_8C15mEHFZjQP9RMMw5w0RI93a_MRCT497HCMUeSdw>
+    <xmx:0jO6aiS3qj-CFdnaemNHM6dXb9pH7Pzht4dyZu2zpGTSRJpaocdCog>
+    <xmx:0jO6aunh_Fm4OuNzdRZH_Pk5a6GGkhtPw2r5c8eb84_pMm641CNgFFzj>
+Feedback-ID: i51494658:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 28 Sep 2026 05:30:57 -0400 (EDT)
+Message-ID: <2b5b8d1a56b5db173667efa839208df83188a7ca.camel@pbarker.dev>
+Subject: Re: [PATCH v4] fetch/local: verify checksums for file:// urls
+From: Paul Barker <paul@pbarker.dev>
+To: Savvas Etairidis <setairidis@gmail.com>, 
+	bitbake-devel@lists.openembedded.org
+Cc: jhonata.poma@gmail.com
+Date: Mon, 28 Sep 2026 10:30:56 +0100
+In-Reply-To: <20260924204518.19931-1-setairidis@gmail.com>
+References: <DLNC7K9T9IRB.3TSABE8ZFLIZF@bootlin.com>
+	 <20260924204518.19931-1-setairidis@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 27 Sep 2026 07:46:58 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20264
+ <bitbake-devel@lists.openembedded.org>; Mon, 28 Sep 2026 09:31:07 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20266
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+On Thu, 2026-09-24 at 22:45 +0200, Savvas Etairidis wrote:
+> [YOCTO #9993]
+>=20
+> Local.urldata_init() always cleared needdonestamp, so a checksum given
+> in a file:// url (e.g. UNINATIVE_CHECKSUM when UNINATIVE_URL points at
+> a local file://) was never verified. Keep the donestamp when the url
+> carries a checksum so verify_checksum runs, and make
+> rename_bad_checksum() a FetchMethod method that Local overrides as a
+> no-op, so a mismatch doesn't rename the user's source file.
+>=20
+> Based on a patch by Jhonata Poma-Hansen.
+>=20
+> Signed-off-by: Savvas Etairidis <setairidis@gmail.com>
 
-Using an variable expansion in override such as:
+Hi,
 
-RDEPENDS:${PN}:append:pn-packagegroup-cross-canadian-${MACHINE} = ' XXX'
+Please include a list of changes since the previous version of the patch
+after the '---' separator. For an example see 'Changes from v2' in [1].
 
-wasn't functioning correctly. Looking through the code, renameVar does
-work correctly but it doesn't work if called multiple times on the sub
-components of the variable.
+[1]: https://lore.kernel.org/all/20260607-license-update-v2-1-877d92a588e0@=
+pbarker.dev/
 
-expandKeys will already recurse variables so we need to ensure renameVar
-doesn't also do that as things break if we do it multiple times.
+Have you spoken to Jhonata about these patches? It's good practice to
+ask some questions and engage in discussion before taking over a patch
+series someone else was working on.
 
-Change the code to avoid recursion in renameVar which should also have
-a small performance improvement.
+Also, please ensure that you're following our policy on AI-assisted
+contributions [2] if these patches were generated with AI.
 
-Test case from Nguyen Minh Tien <zizuzacker@gmail.com>
+[2]: https://docs.yoctoproject.org/contributor-guide/submit-changes.html#ac=
+ceptance-of-ai-generated-code
 
-[YOCTO #14867]
+Best regards,
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-(cherry picked from commit a3c6a020da9a352d0474e85bc0591b4a174cb0c0)
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
----
- lib/bb/data.py       |  2 +-
- lib/bb/data_smart.py |  5 +++--
- lib/bb/tests/data.py | 25 +++++++++++++++++++++++++
- 3 files changed, 29 insertions(+), 3 deletions(-)
+--=20
+Paul Barker
 
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index 7c01e6bf8..f81f44eac 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -94,7 +94,7 @@ def expandKeys(alterdata, readdata = None):
-             val = alterdata.getVar(key, False)
-             if val is not None:
-                 bb.warn("Variable key %s (%s) replaces original key %s (%s)." % (key, val, ekey, newval))
--        alterdata.renameVar(key, ekey)
-+        alterdata.renameVar(key, ekey, recurse=False)
- 
- def inheritFromOS(d, savedenv, permitted):
-     """Inherit variables from the initial environment."""
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 110dfa111..e26b0659a 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -661,7 +661,7 @@ class DataSmart(MutableMapping):
-     def getVar(self, var, expand=True, noweakdefault=False, parsing=False):
-         return self.getVarFlag(var, "_content", expand, noweakdefault, parsing)
- 
--    def renameVar(self, key, newkey, **loginfo):
-+    def renameVar(self, key, newkey, recurse=True, **loginfo):
-         """
-         Rename the variable key to newkey
-         """
-@@ -693,7 +693,8 @@ class DataSmart(MutableMapping):
-             self.overridedata[newkey] = []
-             for (v, o) in self.overridedata[key]:
-                 self.overridedata[newkey].append([v.replace(key, newkey), o])
--                self.renameVar(v, v.replace(key, newkey))
-+                if recurse:
-+                    self.renameVar(v, v.replace(key, newkey))
- 
-         if ':' in newkey and val is None:
-             self._setvar_update_overrides(newkey, **loginfo)
-diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
-index a83c71e2c..491774747 100644
---- a/lib/bb/tests/data.py
-+++ b/lib/bb/tests/data.py
-@@ -406,6 +406,31 @@ class TestOverrides(unittest.TestCase):
-         bb.data.expandKeys(self.d)
-         self.assertEqual(self.d.getVar("VERSION"), "2")
- 
-+    # Test an :append whose override name is only resolved by key expansion
-+    def test_append_in_expanded_override(self):
-+        self.d.setVar("MACHINE", "qemux86")
-+        self.d.setVar("PN", "gizmo")
-+        self.d.setVar("OVERRIDES", "gizmo:pn-gizmo-qemux86")
-+        self.d.setVar("TEST:${PN}", "base")
-+        self.d.setVar("TEST:${PN}:append:pn-gizmo-${MACHINE}", " appended")
-+        bb.data.expandKeys(self.d)
-+        self.assertEqual(self.d.getVar("TEST"), "base appended")
-+
-+    # Test renaming to a key which is itself not expanded yet, as native.bbclass
-+    # does. The dependent override keys must be left for expandKeys() to rename.
-+    def test_rename_to_unexpanded_key_with_override(self):
-+        self.d.setVar("BPN", "gizmo")
-+        self.d.setVar("PN", "gizmo-native")
-+        self.d.setVar("OVERRIDES", "class-target")
-+        self.d.setVar("TEST:${PN}-lib", "base")
-+        self.d.setVar("TEST:${PN}-lib:class-target", "target")
-+        with LogRecord() as logs:
-+            self.d.renameVar("TEST:${PN}-lib", "TEST:${BPN}-lib-native")
-+            bb.data.expandKeys(self.d)
-+            self.assertFalse(logContains("renameVar with equivalent keys", logs))
-+            self.assertFalse(logContains("replaces original key", logs))
-+        self.assertEqual(self.d.getVar("TEST:gizmo-lib-native"), "target")
-+
-     def test_remove_with_override(self):
-         self.d.setVar("TEST:bar", "testvalue2")
-         self.d.setVar("TEST:some_val", "testvalue3 testvalue5")
 
