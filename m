@@ -1,260 +1,271 @@
-Return-Path: <ecordonnier@snap.com>
+Return-Path: <setairidis@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20235CA5FA2
-	for <webhook@archiver.kernel.org>; Mon, 28 Sep 2026 12:52:22 +0000 (UTC)
-Received: from mail-wr2-f23.google.com (mail-wr2-f23.google.com [74.125.225.87])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.57724.1790599936915519649
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D9BCA5FA3
+	for <webhook@archiver.kernel.org>; Mon, 28 Sep 2026 20:59:50 +0000 (UTC)
+Received: from mail-wr2-f35.google.com (mail-wr2-f35.google.com [74.125.225.99])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.68425.1790629186306885271
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 28 Sep 2026 05:52:17 -0700
+ Mon, 28 Sep 2026 13:59:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@snap.com header.s=google header.b=AgHe2Th5;
- spf=pass (domain: snapchat.com, ip: 74.125.225.87, mailfrom: ecordonnier@snapchat.com)
-Received: by mail-wr2-f23.google.com with SMTP id ffacd0b85a97d-4888598e4f9so1739620f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Mon, 28 Sep 2026 05:52:16 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790599935; cv=none;
-        d=google.com; s=arc-20260327;
-        b=AXAVZxNDkSpshUBaR8Dday8EZab/74BUYk6ZWDz3HgTilx9YWWXsPrsm8aRxNXqCxl
-         rVpnkJ5SDofAxBrM1j+VIebR53FeVJVLPBHmG+ZOFxo678nfb0ZGUM4mZforrMD3SIYH
-         JRUjd5wsJmQkIPtCX4/Nedj2+sTlx7vOGbgr+epTwRLZwTX3s6+WeprNVqxIzEcq24VW
-         onbgYeEevZ5+EE+PJa0oY/m3kti/St8BYhBjQJXGHcnzuCAiO2NAOMZ6eFR7SKIqK1+u
-         u7Wvc4edvSjBp06rYF3/0twNvk+FUvsKqgaiEIZ4ty/M7o69Lpgf6CM+L8bV5rsbXz19
-         tsIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=U7NsppfnlRH9CE7Q7l0LVO3vYCVv96XFftTzMrgTf3Y=;
-        fh=RUGD4bteL4KXEV5W1w3o0UCMeIWQN52jxk18+UaWkxo=;
-        b=ZwIkyI0HX27xx4w3BqG9Fx7n36yDDotI8Vc6a3H1nuJhZjqBEJRjFZbGP7xJAoG4nr
-         +EvRRElfxbZ9xhTIKmQyMgR9ExAdCBIm43zMaq9nxVqbf9Wz1FBCoXTgRcIiC08HvKSb
-         iBW/GN0aN/zCnuc0U67ut2l8q1G9fe+T2Mc9A95LsnllbOFs386qzNkKJMVH4I05eS1N
-         az7R1iBA6f/+S3nHg8rAIdITzNuuzHuAO58mJ61B0QOHjtm8b2xVDUFEhYweKVYOZlRs
-         IxBSK/d79r27FoYEhR2X4HM16vtWFT+ItFA3gyc4sfDESc3V+tccpy9yDikP+gWTEFcp
-         6WTw==;
-        darn=lists.openembedded.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=AbVPlnB5;
+ spf=pass (domain: gmail.com, ip: 74.125.225.99, mailfrom: setairidis@gmail.com)
+Received: by mail-wr2-f35.google.com with SMTP id ffacd0b85a97d-48879d4fd8aso2056848f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Mon, 28 Sep 2026 13:59:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=snap.com; s=google; t=1790599935; x=1791204735; darn=lists.openembedded.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=U7NsppfnlRH9CE7Q7l0LVO3vYCVv96XFftTzMrgTf3Y=;
-        b=AgHe2Th5MfAqfFml2RBbbJh2hvx7adu9DndVbbCoTAIS64WRxrmeKw34o+rhqteiMN
-         gI0pmjTxLc9gUM11FAdYAHSFPD3U59R7FUFqfFxfAQqaYHjQQB8YwrtO63e3qrLoXid4
-         PN9mR6dQZSyXW2rTLBmWsR8uUvmv5vEtJ2TLc=
+        d=gmail.com; s=20251104; t=1790629184; x=1791233984; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Z/yX8ie3IWX+fbYmVJG7kEa/mgr3CR/DU8q/0/LvRLI=;
+        b=AbVPlnB5fHYp85YghpK5yaTUJla1wRyZTdlOde9YQAzJtER7kdksP5G75OcsuBhv59
+         Cfll8xaIDY80rxMDxR4nQbIJ1W4F0gKzzvCyqgBxqo/Jth5CDmPtnJuQql9NrfCIDFNB
+         0BQFBYFJR49Pgt3sOV9FBdoKh838THiWL5p5uwr5cefaC4oGh7oo7xIYezJKpw9HcYJG
+         n3ifWd3yhSlhdkvLyAXmY8jp/4qMJdH5cO7tqLEwtrSQae52x4ltPVxWHXJ9hueeSMQw
+         3Uv5rn7rj2rwkKBUhak9wjGE0P2cpJFM2kcA8MSIq3itJa2tGSVAwnX01MTbKKfPa2GY
+         HGPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790599935; x=1791204735;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=U7NsppfnlRH9CE7Q7l0LVO3vYCVv96XFftTzMrgTf3Y=;
-        b=vl++fHKv4/fP/jYpPIAPJHMcBdejkZKYZthD6utDBuzdgVPfgweDkCCMtUSKkpePvV
-         WQUtao7AA7tp7HDCaFCvVcHoY+Dq0rU815sL0u3O4JYMFAd19h8CRPFg2VWZi6TVe4wI
-         tk1bGUIpezeJBusec1+pDrhChfCwJI0YaF97LhVBOYsGLt924jG46fvQOAKP6EZUo/xs
-         86qRdFWN6dSFScR1a5DimUS7Jjzi7W0W7OmSI7P+pkOHqVS9q2xCPOmre+w62Cum3hOb
-         TkU+B/lgrstN7RmqoNX1vW083aQwnCNN6W6ZKtEMQ2hVcHfz9q05ucQy+82iRKdqdQx8
-         IJSQ==
-X-Gm-Message-State: AFq9FYLMcxceNtzRCxFV3Iz2Pt366hLlesgUgF7oaRbkQFvm3t10L1A8
-	JhtJGp1MDKQjNFzvic6vrT3BEDZq+N6XNyKTojpv4CAp1yH56bHGy9ArHnlbFCgVL7YOnIwKBDB
-	t6pdN2hAaWiRLuwYSk0bAN4ePKSjsqzwLH2fN6wfSZA==
-X-Gm-Gg: AYBFou36KPwM9m8hgk4pEGm3NJvGVXZGxrdxeAvoXcpXhaX6u8e1Yc12qxt+eT2Iw6G
-	LAtbcLo26ipY/eFkzWQ8/D6IXgDKmMZiKjVN8NqctOCoPGpHbl3Q1lDrJVcR7t2oO8cQDgx6rOA
-	gh/g3TrHb+5OeqPstJkgnCO+8cdy9cX+sdJz6BTTh2ElR4GN0KT+B1P8xSsM3cHrpCvPj98RrJw
-	nvFVqinnD3Ur20x1M8sL5W0vqssYchypP7sp7bSB0V7JqqBiN+ok1c7Np7gFKEoOeHMqITBdu4Z
-	pcOfkVNHkH2Tu561qUpqvI8vqBS2osfUpBWjA3vx69E1WZyhUd5/mmfSjD43SZNqUVsbvx/nx0O
-	GluUezyBc36U=
-X-Received: by 2002:a05:6000:2083:b0:487:27f9:844 with SMTP id
- ffacd0b85a97d-4887172ac0cmr22582166f8f.57.1790599934975; Mon, 28 Sep 2026
- 05:52:14 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1790629184; x=1791233984;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Z/yX8ie3IWX+fbYmVJG7kEa/mgr3CR/DU8q/0/LvRLI=;
+        b=09P8RzhUHqiHg7oUsLxXIF3EMJcPBqUd7ZY231dyh2FkHQNl5NfYwjDafG8lZgj5gi
+         R6q1iTUfW8swn7IMxThaigUNvLmdaXMEJJBpHzFk045mlo9foFHsPE7U0yMD7puYNAhn
+         Zq0PF09k6UaZUy6NYFYLOyul/XqertammB07pGlJAg1vKaeBAzKmm7omtw8ET61Z0Gk2
+         R6xh5wOWkkGnc8EysvA+BpV0ZHLuGSDoJUAmko4aWWJa2RYje/cPRYOH6uHeYYyoFefo
+         KrP7bTN6W/dBG3PIxzq9pRUGYsGuVLnBaO5024yGY/cssl0j6QOWy3MjETA1GWOQSNwN
+         9aFQ==
+X-Gm-Message-State: AFq9FYIpcPJcaJ/ODDkDQSM6H1vEwd69gEx+a1fQH4i+V8Fos8c18ZJf
+	zLf6wGRKNl9D+oYY8InePXFN1FYaOoOgrdnXN39X1FqzihOV4GI5Z38VIRafNP3gAWI=
+X-Gm-Gg: AYBFou1yrsPYdroJaonSOrmjHELJjRUUGWteD7nGeLej9KKr+4akJxEy1CYhvDU54ak
+	rvjAq1bDkhcLexMwEAdnHMhxPRAwbxj3Qq6uAT21F1iuIH+V8K5UhgHnaozM514AlxxFj+2psEC
+	G2FzoZp626QGSTh0l79j8bTmVGu/lxCklXpd7iRdhpXok3GldAgTtYR5MGJZzOFaizYFrx8q+0F
+	M0yKBIkzOdPA4Eab4DO6x/Uo9B/1dwkL4UFG5hHqGilv1qNFSqkx39QM88psUg1sk+Pv7RmRgeV
+	h/lLX2LnLFBk7MqwkPU1EKw92oXi/2H7OJPS1kjcS/SPXu9/2EfOZTBoCyWFhv18+Et/W+Ir2Gt
+	OSdkU2B7gPbS5TZgjBFxx164Oa7UM1SwnOTdcJB5S1YnmrxxnEHAt/ucADDAGnsPzBFenfPjarp
+	pA7vzgAKN7VwmhkV7LsNQg2Jq5XmS+YruyjjvmElZ2sptmhhF0ShWEhzBkLvmnMwlKtyLAHueW3
+	NpB3kix4O4qdsobCveSI729cLkxHO2eYzDdVr7vOJzvf4sF9a4RX/f7h98rLums8yQYF4SzXZX+
+	yU5aCoT0WalxENWPcFk=
+X-Received: by 2002:a5d:5e11:0:b0:488:773b:8650 with SMTP id ffacd0b85a97d-488773b8994mr15572938f8f.36.1790629184341;
+        Mon, 28 Sep 2026 13:59:44 -0700 (PDT)
+Received: from DESKTOP-LR19VKC.localdomain (ipservice-092-209-186-125.092.209.pools.vodafone-ip.de. [92.209.186.125])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a35607bsm27662163f8f.16.2026.09.28.13.59.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Sep 2026 13:59:43 -0700 (PDT)
+From: Savvas Etairidis <setairidis@gmail.com>
+To: bitbake-devel@lists.openembedded.org,
+	jhonata.poma@gmail.com
+Cc: Savvas Etairidis <setairidis@gmail.com>
+Subject: [PATCH v5] fetch/local: verify checksums for file:// urls
+Date: Mon, 28 Sep 2026 22:59:40 +0200
+Message-Id: <20260928205940.14169-1-setairidis@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <2b5b8d1a56b5db173667efa839208df83188a7ca.camel@pbarker.dev>
+References: <2b5b8d1a56b5db173667efa839208df83188a7ca.camel@pbarker.dev>
 MIME-Version: 1.0
-References: <20260923170846.1360600-1-ecordonnier@snap.com> <8af7260e8e2d80ff6c597c0598e37b2a01c97dea.camel@pbarker.dev>
-In-Reply-To: <8af7260e8e2d80ff6c597c0598e37b2a01c97dea.camel@pbarker.dev>
-From: Etienne Cordonnier <ecordonnier@snap.com>
-Date: Mon, 28 Sep 2026 14:52:02 +0200
-X-Gm-Features: AclHuK9enwzfEqQhBrsR39zJM2UmcoAaFG4tqDrDffLoDCeZ5n7V4ehq3QQv7X0
-Message-ID: <CAHUKmYbk=biGvm0uf44hiwA+gOA5OG0Eg-MG+0uExu0TigE9xw@mail.gmail.com>
-Subject: Re: [PATCH] fetch/wget: Reuse the checkstatus() urllib opener
-To: Paul Barker <paul@pbarker.dev>
-Cc: bitbake-devel@lists.openembedded.org
-Content-Type: multipart/alternative; boundary="0000000000000f73d1065c8a89ef"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 28 Sep 2026 12:52:22 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20274
+ <bitbake-devel@lists.openembedded.org>; Mon, 28 Sep 2026 20:59:50 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20275
 
---0000000000000f73d1065c8a89ef
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+[YOCTO #9993]
 
-Hi Paul,
+Local.urldata_init() always cleared needdonestamp, so a checksum given
+in a file:// url (e.g. UNINATIVE_CHECKSUM when UNINATIVE_URL points at
+a local file://) was never verified. Keep the donestamp when the url
+carries a checksum so verify_checksum runs, and make
+rename_bad_checksum() a FetchMethod method that Local overrides as a
+no-op, so a mismatch doesn't rename the user's source file.
 
-making the opener cache safe to use does depend on it: without the rename,
-caching the opener would leak a Fetch object per distinct opener built. So
-the two changes are tied together.
-I've split the change in 2 patches as you suggested.
+Based on a patch by Jhonata Poma-Hansen.
 
-=C3=89tienne
+Signed-off-by: Savvas Etairidis <setairidis@gmail.com>
 
-On Mon, Sep 28, 2026 at 11:59=E2=80=AFAM Paul Barker <paul@pbarker.dev> wro=
-te:
+---
+changes in v5:
+- Rebased on top of master, added changelog entry
 
-> On Wed, 2026-09-23 at 19:08 +0200, ecordonnier@snap.com wrote:
-> > From: Etienne Cordonnier <ecordonnier@snap.com>
-> >
-> > checkstatus() builds a new urllib opener with its redirect, proxy and
-> > connection cache handlers on every call, although sstate.bbclass calls =
-it
-> > for every object in an sstate mirror check with the same settings. Keep
-> > the opener on the FetchConnectionCache, keyed on the certificate checki=
-ng
-> > setting and the fetcher environment, and rebuild it only when those
-> > change. The handlers now refer to the connection cache directly rather
-> > than through the first Fetch object, so a cached opener does not keep i=
-t
-> > alive. A connection cache is only used by one thread at a time, so no
-> > locking is needed.
-> >
-> > Checking 2,114 objects on the Yocto sstate mirror with BB_NUMBER_THREAD=
-S
-> =3D "8"
-> > reduced the time to task execution from 26.9s to 25.1s on average.
-> >
-> > AI-Generated: Uses Claude Code (Claude Opus 5.5)
-> > Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
-> > ---
-> >  lib/bb/fetch/__init__.py |  2 ++
-> >  lib/bb/fetch/wget.py     | 45 ++++++++++++++++++++++++----------------
-> >  2 files changed, 29 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/lib/bb/fetch/__init__.py b/lib/bb/fetch/__init__.py
-> > index 55ab710f3..0eb660685 100644
-> > --- a/lib/bb/fetch/__init__.py
-> > +++ b/lib/bb/fetch/__init__.py
-> > @@ -2090,6 +2090,8 @@ class FetchConnectionCache(object):
-> >      """
-> >      def __init__(self):
-> >          self.cache =3D {}
-> > +        # urllib openers built by the wget fetcher, see
-> Wget.checkstatus()
-> > +        self.opener_cache =3D {}
-> >
-> >      def get_connection_name(self, host, port, connection_id=3DNone):
-> >          if connection_id is None:
-> > diff --git a/lib/bb/fetch/wget.py b/lib/bb/fetch/wget.py
-> > index 972c84048..9cb4a4f32 100644
-> > --- a/lib/bb/fetch/wget.py
-> > +++ b/lib/bb/fetch/wget.py
-> > @@ -178,23 +178,24 @@ class Wget(FetchMethod):
-> >      def checkstatus(self, fetch, ud, d, try_again=3DTrue):
-> >          check_certs =3D self.check_certs(d)
-> >          newenv =3D bb.fetch.get_fetcher_environment(d)
-> > +        connection_cache =3D fetch.connection_cache
->
-> Hi,
->
-> Is this refactoring a necessary part of the urllib opener caching? If
-> not it would be better to move it to a separate commit so that this
-> patch is easier to understand.
->
-> Best regards,
->
-> --
-> Paul Barker
->
->
+changes in v4:
+- Rebased on top of master
 
---0000000000000f73d1065c8a89ef
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+changes in v3:
+- Cherry-picked the patch from Jhonata Poma-Hansen
 
-<div dir=3D"ltr">Hi Paul,<br><br>making the opener cache safe to use does d=
-epend on it: without the rename, caching the opener would leak a Fetch obje=
-ct per distinct opener built. So the two changes are tied together.<br>I&#3=
-9;ve split the change in 2 patches as you suggested.<br><br>=C3=89tienne</d=
-iv><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On =
-Mon, Sep 28, 2026 at 11:59=E2=80=AFAM Paul Barker &lt;<a href=3D"mailto:pau=
-l@pbarker.dev" target=3D"_blank">paul@pbarker.dev</a>&gt; wrote:<br></div><=
-blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-l=
-eft:1px solid rgb(204,204,204);padding-left:1ex">On Wed, 2026-09-23 at 19:0=
-8 +0200, <a href=3D"mailto:ecordonnier@snap.com" target=3D"_blank">ecordonn=
-ier@snap.com</a> wrote:<br>
-&gt; From: Etienne Cordonnier &lt;<a href=3D"mailto:ecordonnier@snap.com" t=
-arget=3D"_blank">ecordonnier@snap.com</a>&gt;<br>
-&gt; <br>
-&gt; checkstatus() builds a new urllib opener with its redirect, proxy and<=
-br>
-&gt; connection cache handlers on every call, although sstate.bbclass calls=
- it<br>
-&gt; for every object in an sstate mirror check with the same settings. Kee=
-p<br>
-&gt; the opener on the FetchConnectionCache, keyed on the certificate check=
-ing<br>
-&gt; setting and the fetcher environment, and rebuild it only when those<br=
->
-&gt; change. The handlers now refer to the connection cache directly rather=
-<br>
-&gt; than through the first Fetch object, so a cached opener does not keep =
-it<br>
-&gt; alive. A connection cache is only used by one thread at a time, so no<=
-br>
-&gt; locking is needed.<br>
-&gt; <br>
-&gt; Checking 2,114 objects on the Yocto sstate mirror with BB_NUMBER_THREA=
-DS =3D &quot;8&quot;<br>
-&gt; reduced the time to task execution from 26.9s to 25.1s on average.<br>
-&gt; <br>
-&gt; AI-Generated: Uses Claude Code (Claude Opus 5.5)<br>
-&gt; Signed-off-by: Etienne Cordonnier &lt;<a href=3D"mailto:ecordonnier@sn=
-ap.com" target=3D"_blank">ecordonnier@snap.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 lib/bb/fetch/__init__.py |=C2=A0 2 ++<br>
-&gt;=C2=A0 lib/bb/fetch/wget.py=C2=A0 =C2=A0 =C2=A0| 45 +++++++++++++++++++=
-+++++----------------<br>
-&gt;=C2=A0 2 files changed, 29 insertions(+), 18 deletions(-)<br>
-&gt; <br>
-&gt; diff --git a/lib/bb/fetch/__init__.py b/lib/bb/fetch/__init__.py<br>
-&gt; index 55ab710f3..0eb660685 100644<br>
-&gt; --- a/lib/bb/fetch/__init__.py<br>
-&gt; +++ b/lib/bb/fetch/__init__.py<br>
-&gt; @@ -2090,6 +2090,8 @@ class FetchConnectionCache(object):<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 &quot;&quot;&quot;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 def __init__(self):<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.cache =3D {}<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 # urllib openers built by the wget fetche=
-r, see Wget.checkstatus()<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.opener_cache =3D {}<br>
-&gt;=C2=A0 <br>
-&gt;=C2=A0 =C2=A0 =C2=A0 def get_connection_name(self, host, port, connecti=
-on_id=3DNone):<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if connection_id is None:<br>
-&gt; diff --git a/lib/bb/fetch/wget.py b/lib/bb/fetch/wget.py<br>
-&gt; index 972c84048..9cb4a4f32 100644<br>
-&gt; --- a/lib/bb/fetch/wget.py<br>
-&gt; +++ b/lib/bb/fetch/wget.py<br>
-&gt; @@ -178,23 +178,24 @@ class Wget(FetchMethod):<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 def checkstatus(self, fetch, ud, d, try_again=3DTr=
-ue):<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 check_certs =3D self.check_certs(d)<=
-br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 newenv =3D bb.fetch.get_fetcher_envi=
-ronment(d)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 connection_cache =3D fetch.connection_cac=
-he<br>
-<br>
-Hi,<br>
-<br>
-Is this refactoring a necessary part of the urllib opener caching? If<br>
-not it would be better to move it to a separate commit so that this<br>
-patch is easier to understand.<br>
-<br>
-Best regards,<br>
-<br>
--- <br>
-Paul Barker<br>
-<br>
-</blockquote></div>
+---
+---
+ lib/bb/fetch/__init__.py | 36 ++++++++++++++++++------------------
+ lib/bb/fetch/local.py    | 18 ++++++++++++++++--
+ lib/bb/tests/fetch.py    | 30 ++++++++++++++++++++++++++++++
+ 3 files changed, 64 insertions(+), 20 deletions(-)
 
---0000000000000f73d1065c8a89ef--
+diff --git a/lib/bb/fetch/__init__.py b/lib/bb/fetch/__init__.py
+index 55ab710f3..a9f0add78 100644
+--- a/lib/bb/fetch/__init__.py
++++ b/lib/bb/fetch/__init__.py
+@@ -742,7 +742,7 @@ def verify_donestamp(ud, d, origud=None):
+         logger.warning("Checksum mismatch for local file %s\n"
+                        "Cleaning and trying again." % ud.localpath)
+         if os.path.exists(ud.localpath):
+-            rename_bad_checksum(ud, e.checksum)
++            ud.method.rename_bad_checksum(ud, e.checksum)
+         bb.utils.remove(ud.donestamp)
+     return False
+ 
+@@ -775,7 +775,7 @@ def update_stamp(ud, d):
+             logger.warning("Checksum mismatch for local file %s\n"
+                            "Cleaning and trying again." % ud.localpath)
+             if os.path.exists(ud.localpath):
+-                rename_bad_checksum(ud, e.checksum)
++                ud.method.rename_bad_checksum(ud, e.checksum)
+             bb.utils.remove(ud.donestamp)
+             raise
+ 
+@@ -1079,20 +1079,6 @@ def build_mirroruris(origud, mirrors, ld):
+ 
+     return uris, uds
+ 
+-def rename_bad_checksum(ud, suffix):
+-    """
+-    Renames files to have suffix from parameter
+-    """
+-
+-    if ud.localpath is None:
+-        return
+-
+-    new_localpath = "%s_bad-checksum_%s" % (ud.localpath, suffix)
+-    bb.warn("Renaming %s to %s" % (ud.localpath, new_localpath))
+-    if not bb.utils.movefile(ud.localpath, new_localpath):
+-        bb.warn("Renaming %s to %s failed, grep movefile in log.do_fetch to see why" % (ud.localpath, new_localpath))
+-
+-
+ def try_mirror_url(fetch, origud, ud, ld, check = False):
+     # Return of None or a value means we're finished
+     # False means try another url
+@@ -1163,7 +1149,7 @@ def try_mirror_url(fetch, origud, ud, ld, check = False):
+             logger.warning("Mirror checksum failure for url %s (original url: %s)\nCleaning and trying again." % (ud.url, origud.url))
+             logger.warning(str(e))
+             if os.path.exists(ud.localpath):
+-                rename_bad_checksum(ud, e.checksum)
++                ud.method.rename_bad_checksum(ud, e.checksum)
+         elif isinstance(e, NoChecksumError):
+             raise
+         else:
+@@ -1479,6 +1465,20 @@ class FetchMethod(object):
+         """
+         return True
+ 
++    def rename_bad_checksum(self, ud, suffix):
++        """
++        Rename ud.localpath with the given suffix on checksum mismatch.
++        Local overrides this to a no-op since its localpath points at the
++        user's source tree.
++        """
++        if ud.localpath is None:
++            return
++
++        new_localpath = "%s_bad-checksum_%s" % (ud.localpath, suffix)
++        bb.warn("Renaming %s to %s" % (ud.localpath, new_localpath))
++        if not bb.utils.movefile(ud.localpath, new_localpath):
++            bb.warn("Renaming %s to %s failed, grep movefile in log.do_fetch to see why" % (ud.localpath, new_localpath))
++
+     def verify_donestamp(self, ud, d):
+         """
+         Verify the donestamp file
+@@ -1943,7 +1943,7 @@ class Fetch(object):
+                             logger.warning("Checksum failure encountered with download of %s - will attempt other sources if available" % u)
+                             logger.debug(str(e))
+                             if os.path.exists(ud.localpath):
+-                                rename_bad_checksum(ud, e.checksum)
++                                ud.method.rename_bad_checksum(ud, e.checksum)
+                         elif isinstance(e, NoChecksumError):
+                             raise
+                         else:
+diff --git a/lib/bb/fetch/local.py b/lib/bb/fetch/local.py
+index dfc5b564c..a92c0d267 100644
+--- a/lib/bb/fetch/local.py
++++ b/lib/bb/fetch/local.py
+@@ -17,7 +17,7 @@ import os
+ import urllib.request, urllib.parse, urllib.error
+ import bb
+ import bb.utils
+-from   bb.fetch import FetchMethod, FetchError, ParameterError
++from   bb.fetch import CHECKSUM_LIST, FetchMethod, FetchError, ParameterError
+ from   bb.fetch import logger
+ 
+ class Local(FetchMethod):
+@@ -31,11 +31,25 @@ class Local(FetchMethod):
+         # We don't set localfile as for this fetcher the file is already local!
+         ud.basename = os.path.basename(ud.path)
+         ud.basepath = ud.path
+-        ud.needdonestamp = False
++        # Honor explicit checksum params (UNINATIVE_CHECKSUM, recipe
++        # ;sha256sum=) by leaving needdonestamp at FetchData's default so
++        # verify_checksum runs.
++        name = ud.parm.get("name")
++        ud.needdonestamp = any(
++            (name and "%s.%ssum" % (name, a) in ud.parm)
++            or "%ssum" % a in ud.parm
++            for a in CHECKSUM_LIST
++        )
+         if "*" in ud.path:
+             raise bb.fetch.ParameterError("file:// urls using globbing are no longer supported. Please place the files in a directory and reference that instead.", ud.url)
+         return
+ 
++    def rename_bad_checksum(self, ud, suffix):
++        # file:// urls point at the user's source tree (recipe-shipped files
++        # under FILESPATH or an absolute path the user passed in); skip the
++        # rename so a ChecksumError surfaces without mutating their files.
++        return
++
+     def localpath(self, urldata, d):
+         """
+         Return the local filename of a given url assuming a successful fetch.
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 71b0a63fe..60d356fc6 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -876,6 +876,36 @@ class FetcherLocalTest(FetcherTest):
+             with self.subTest(striplevel=repr(value)):
+                 self.assertInvalidStriplevel(value)
+ 
++    def test_local_checksum_match(self):
++        # Correct sha256 must run verify_checksum to completion; donestamp
++        # lands in DL_DIR.
++        import hashlib
++        content = b"file:// checksum match test\n"
++        with open(os.path.join(self.localsrcdir, 'sumfile'), 'wb') as f:
++            f.write(content)
++        good = hashlib.sha256(content).hexdigest()
++        fetcher = bb.fetch.Fetch(['file://sumfile;sha256sum=' + good], self.d)
++        ud = fetcher.ud[fetcher.urls[0]]
++        self.assertTrue(ud.needdonestamp)
++        fetcher.download()
++        self.assertTrue(os.path.exists(ud.donestamp))
++
++    def test_local_checksum_mismatch(self):
++        # Bad sha256 raises ChecksumError without renaming the user's
++        # source file to the <localpath>_bad-checksum_<sha> sibling.
++        content = b"file:// checksum mismatch test\n"
++        srcpath = os.path.join(self.localsrcdir, 'sumfile')
++        with open(srcpath, 'wb') as f:
++            f.write(content)
++        bad = "0" * 64
++        fetcher = bb.fetch.Fetch(['file://sumfile;sha256sum=' + bad], self.d)
++        with self.assertRaises(bb.fetch.FetchError):
++            fetcher.download()
++        self.assertTrue(os.path.exists(srcpath))
++        with open(srcpath, 'rb') as f:
++            self.assertEqual(f.read(), content)
++        self.assertFalse(os.path.exists(srcpath + '_bad-checksum_' + bad))
++
+     def dummyGitTest(self, suffix):
+         # Create dummy local Git repo
+         src_dir = tempfile.mkdtemp(dir=self.tempdir,
+-- 
+2.34.1
+
 
