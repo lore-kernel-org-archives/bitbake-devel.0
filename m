@@ -1,127 +1,85 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <ecordonnier@snap.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F7BCA5FA5
-	for <webhook@archiver.kernel.org>; Mon, 28 Sep 2026 11:12:20 +0000 (UTC)
-Received: from mail-wr2-f40.google.com (mail-wr2-f40.google.com [74.125.225.104])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.54962.1790593931812097246
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0941CA5FA5
+	for <webhook@archiver.kernel.org>; Mon, 28 Sep 2026 12:51:11 +0000 (UTC)
+Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.56689.1790599863295799033
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 28 Sep 2026 04:12:12 -0700
+ Mon, 28 Sep 2026 05:51:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=d3228JDe;
- spf=pass (domain: linuxfoundation.org, ip: 74.125.225.104, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr2-f40.google.com with SMTP id ffacd0b85a97d-488780459e2so2861826f8f.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 28 Sep 2026 04:12:11 -0700 (PDT)
+ dkim=pass header.i=@snap.com header.s=google header.b=bmyXo6BB;
+ spf=pass (domain: snapchat.com, ip: 74.125.225.140, mailfrom: ecordonnier@snapchat.com)
+Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49b912e4b11so16744505e9.3
+        for <bitbake-devel@lists.openembedded.org>; Mon, 28 Sep 2026 05:51:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1790593930; x=1791198730; darn=lists.openembedded.org;
+        d=snap.com; s=google; t=1790599861; x=1791204661; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=NApnLtIsfhx9GYSd/NXfddqxy2PVHGVNNzp6M9HD1AY=;
-        b=d3228JDetEDV1Stw+a44WJCgN2nGrH/XMguQZGbZYTaPDAFaqX906IRARGzeTV+p9+
-         hdVq8kAY2fmVi1QRGFF9ouk0CScHjHfZCUK8sz30ScgbGDckcE+kNKO+KmAp6GFhVPu4
-         3HQ0UNUvZUnt7FC8iPRM8RZyIrzoevNfyKcLM=
+        bh=pfEotD/hLYGf4BmE+RB89RKI/Rff7eblDHetRVyoDr0=;
+        b=bmyXo6BBMCozK4Moe2IS7HBeKpi0u3W1nI8kygWRK0hWrLIERp+7WolwCt5t2kHhnS
+         KiMQyFI+JiiBq6gQthhISz+e2v3Y2vk7T+duH+O4OoLzs0S+q7kofVliO7SO4iEyFdfy
+         rM7OhegLU4DiXQN7Wr+eKG+b5uzwvVMCqY+Y8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790593930; x=1791198730;
+        d=1e100.net; s=20260707; t=1790599861; x=1791204661;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=NApnLtIsfhx9GYSd/NXfddqxy2PVHGVNNzp6M9HD1AY=;
-        b=w8Nx1pC6LUgkjZ29NjZfF+Zeo/6BQhK/QqVVgYWQh5eKmYQPYR+IW814PlQASezKdq
-         IE1UAXIYwClE5knoXBMXTPaDrrfC1Ms8pkbQzY6NhKA5HV+yDYyFsnpVpzGYioIbjVAP
-         ErWIxHKjYWkXVAR6M/kc0thwg7qFGVHb2RAHVw76NQCfHbusxxEe1HcP5NLsxuNvjfz/
-         UTt4lQQudMvxbiUVDSdAjVgD7usIsyxqBWtUxyQr0fO5cKU8IpbWWubpgESY2FPTgcsf
-         ddJvlpAMC2ZbqJmFqoeT+U0W8yAZCL+p0mcNmt1hyN1MFgR/K9+zAx9An7M+JMky1B2t
-         hu5A==
-X-Gm-Message-State: AFq9FYLyyV8qpQlpoGgi9oGNFXpih/IEkI4EzZuv4be7gjzqPjGxQMce
-	DidmF1w+SnRshMvwyk4ixGduEoKB6rhkGdcPvtnA9ILrpPWe5IQjOwE+JbGXxEyjxLD/du/2EAe
-	Hg9rBZGw=
-X-Gm-Gg: AYBFou0BAUtTHw9ThMJ633Z/l5WQWvQLDe52coO63Lx5koheloKH0NVQoOd8um4wb7n
-	nbAf+qVfWmBx/YSDe7qA7JJ1U+bnu4aO0IZV9K3XITaju3A1cLSyEbD+ZTlLAUVZd8VQVlz2z6k
-	gWPs1+76VicjsxdF0fMvrofkcIRi00yJnzOZgLhXHJOip2MOQiiROXp+5HE132XXNhf/4DOZllh
-	o0SrsIVPdpAa4SThVFuDbppUgD1BFYjDLKtV5D1EBC6Vpne7784Z5+4eeWeb+8Vi7vuZg6WK/lF
-	dviTZ153hyW50SgXT3Vz6YLDvCEmMm1bSlmSgoypN28OiH26o3cjBhSadYouJJ/P7/p8KJvNX23
-	rqf6L3Zq71x2jhr/vyDQoq13x77DL4wcFTAtk9nNIyJCmSDNI/QnvmltmSDjc/kNHoJVDArYh6O
-	XsYKCgtfj8+83D4k6jreIY5XUl8b3K7PyDbdPmWryMfpiLsviZjkvjkSd1OVhOLWDVOoQ9mt47e
-	EQX8prnpDqqz5jfAzReaZoTmv0=
-X-Received: by 2002:a05:6000:384:b0:488:63f2:8766 with SMTP id ffacd0b85a97d-48871728c55mr22828525f8f.21.1790593929968;
-        Mon, 28 Sep 2026 04:12:09 -0700 (PDT)
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:e53f:c6ab:eb79:60b3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a35fb05sm29865076f8f.20.2026.09.28.04.12.09
+        bh=pfEotD/hLYGf4BmE+RB89RKI/Rff7eblDHetRVyoDr0=;
+        b=xovSK8OH8bfZlav7rS7tFT2oGhEzs59RemkejvXT8ZlwjWO4vjavFWB3n1eNMoFUg9
+         WHkrvy97RtYOkFJI1VD38dfTLWyryS00su8X7JvjVix8Or6jMxfnTw6Cwgb5dILD0M2B
+         eKQQ8SYpCPl1kzXKddovREDEBEDuFSH/oCV6bTDoKiJjerIemq3gB1ZYfCZk8rSCAsuS
+         LH4EEV49ggCvP8juZ/vtLd6VkdUfWvSWCEzu/l9ecGUw63HpaDLXLp54BAF3ELjwjN6g
+         3kW9Fta9LbPOqulxPZ5S+DH6CNzpSnrk7g+ogLpz9HaryD3g50yEh0eZh8FqCiM3Aoot
+         Pcrg==
+X-Gm-Message-State: AFuF++nbCSC+3nfhW3ILoZyz7ytv+F1webe5sx8r/NrgGbPjbtJgn35v
+	zGD7lf/dI/vzKKMbm586ko9sQpcfzxle0c5tK4c+ESY371HN7iqXffRkk3Gse7juLz+Su4dZLyX
+	/KUy+7WA=
+X-Gm-Gg: AYBFou2XyvA+cJIzSTmPiYhAXxd44M0gb2/gpTndJ/4iZmVE8FD+9evqTx3DkBM9TEQ
+	m8NzqZvGjz629JlA4h9GGHClo29kP8Y7s+U3YdNzYqkMRFNz+7+08Hjszn6bRHbiC8kBb1MI6JD
+	NVEDfJK98RtmzvhKUl2AI81s1s1WkhC0tmYmvrcUVuvwfjeasa52ScjF2+d3BlhkOdb12GQCtFL
+	dKubl6/QXdXuk/UEe/zniuMEr5Okdzhe/tr5IItnHdbGXf7+bxEfl0phe9sWLur+tsyF43SrW/g
+	UIL81v6EpXZj+j9ol262flNd4sMIOwfU7hUqBDNdiCENXBpKKGy/BfZCF4v2f+ovMTq3QX5vF4p
+	UHV7NDPjl4WXInEBLj36tPKtDox651szxKZ61gSuzDmMUj3vmd/pkOyiF4AcVvCH0+IyHhhu35z
+	MGB/Z7T3Y0Ri5CMq5FyTTXisePWH/hvUgPgysXf0N12egRYugvcmX6PCu+gUhWgVCZHxkOy2lpE
+	+559dBqBkkcJTyYEhP68nX0y9ime3+7DUOxntY1hQ==
+X-Received: by 2002:a05:600c:4703:b0:49c:fc6e:a3e1 with SMTP id 5b1f17b1804b1-49fe66fd374mr219519565e9.32.1790599861428;
+        Mon, 28 Sep 2026 05:51:01 -0700 (PDT)
+Received: from lj8k2dq3.sc-core.net ([85.237.126.22])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a007fd1a01sm37041925e9.0.2026.09.28.05.51.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Sep 2026 04:12:09 -0700 (PDT)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Mon, 28 Sep 2026 05:51:00 -0700 (PDT)
+From: ecordonnier@snap.com
 To: bitbake-devel@lists.openembedded.org
-Cc: Lei Zhang <18792670849@163.com>
-Subject: [PATCH] toastergui/views: Replace os.system call with improved parameter handling
-Date: Mon, 28 Sep 2026 12:12:08 +0100
-Message-ID: <20260928111208.3011807-1-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.53.0
+Cc: Etienne Cordonnier <ecordonnier@snap.com>
+Subject: [PATCH v2 0/2] fetch/wget: Reuse the checkstatus() urllib opener
+Date: Mon, 28 Sep 2026 14:50:49 +0200
+Message-ID: <20260928125051.2483039-1-ecordonnier@snap.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 28 Sep 2026 11:12:20 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20270
+ <bitbake-devel@lists.openembedded.org>; Mon, 28 Sep 2026 12:51:11 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20271
 
-Using bash to handle execution parameters isn't a great idea, particularly using
-os.system. In theory this could be exploited by injecting shell code through the
-placeholders although whether this can be done without security tokens is unclear.
+From: Etienne Cordonnier <ecordonnier@snap.com>
 
-Regardless, we have been cleaning up shell=True and similar calls in the codebase.
-Instead use shlex to parse the callback command, then we can iterate the parameters
-to perform any expansions needed and avoid the need to call any shell expansion.
-Any invalid data will then just become an invalid image target to bitbake.
+This is the v2 of the patch originally sent as "fetch/wget: Reuse the checkstatus() urllib opener".
+The patch has been split in 2 individual patches, as requested in the code review.
+The sum of the changes in the 2 patches is bytes-identical to the original patch.
 
-Reported-by: Lei Zhang <18792670849@163.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/toaster/toastergui/views.py | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Etienne Cordonnier (2):
+  fetch/wget: Have checkstatus() capture connection_cache, not fetch
+  fetch/wget: Reuse the checkstatus() urllib opener
 
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 061e6436c85..3192b7270d6 100644
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -8,6 +8,7 @@
- 
- import ast
- import re
-+import shlex
- import subprocess
- import sys
- 
-@@ -1556,7 +1557,7 @@ if True:
-     # perform the final actions for the project specific page
-     def project_specific_finalize(cmnd, pid):
-         project = Project.objects.get(pk=pid)
--        callback = project.get_variable(Project.PROJECT_SPECIFIC_CALLBACK)
-+        callback = shlex.split(project.get_variable(Project.PROJECT_SPECIFIC_CALLBACK) or "")
-         if "update" == cmnd:
-             # Delete all '_PROJECT_PREPARE_' builds
-             for b in Build.objects.all().filter(project=project):
-@@ -1569,16 +1570,15 @@ if True:
-                     management.call_command('builddelete', str(b.id), interactive=False)
-             # perform callback at this last moment if defined, in case Toaster gets shutdown next
-             default_target = project.get_variable(Project.PROJECT_SPECIFIC_DEFAULTIMAGE)
--            if callback:
--                callback = callback.replace("<IMAGE>",default_target)
-+            for i in range(len(callback)):
-+                callback[i] = callback[i].replace("<IMAGE>", default_target)
-         if "cancel" == cmnd:
--            if callback:
--                callback = callback.replace("<IMAGE>","none")
--                callback = callback.replace("--update","--cancel")
-+            for i in range(len(callback)):
-+                callback[i] = callback[i].replace("<IMAGE>", "none")
-+                callback[i] = callback[i].replace("--update", "--cancel")
-         # perform callback at this last moment if defined, in case this Toaster gets shutdown next
--        ret = ''
-         if callback:
--            ret = os.system('bash -c "%s"' % callback)
-+            subprocess.run(callback, shell=False)
-             project.set_variable(Project.PROJECT_SPECIFIC_CALLBACK,'')
-         # Delete the temp project specific variables
-         project.set_variable(Project.PROJECT_SPECIFIC_ISNEW,'')
+ lib/bb/fetch/__init__.py |  2 ++
+ lib/bb/fetch/wget.py     | 45 ++++++++++++++++++++++++----------------
+ 2 files changed, 29 insertions(+), 18 deletions(-)
+
+-- 
+2.43.0
+
 
