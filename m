@@ -1,142 +1,314 @@
-Return-Path: <paul@pbarker.dev>
+Return-Path: <ecordonnier@snap.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1E8C9833E
-	for <webhook@archiver.kernel.org>; Mon, 28 Sep 2026 09:59:17 +0000 (UTC)
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.54060.1790589555125663358
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E221FC9833F
+	for <webhook@archiver.kernel.org>; Mon, 28 Sep 2026 10:59:57 +0000 (UTC)
+Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.55813.1790593197088309645
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 28 Sep 2026 02:59:15 -0700
+ Mon, 28 Sep 2026 03:59:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=NDPwnfij;
- dkim=pass header.i=@messagingengine.com header.s=fm1 header.b=A9epsr9C;
- spf=pass (domain: pbarker.dev, ip: 202.12.124.159, mailfrom: paul@pbarker.dev)
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 3AB667A00FE;
-	Mon, 28 Sep 2026 05:59:14 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Mon, 28 Sep 2026 05:59:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
-	cc:content-transfer-encoding:content-type:content-type:date:date
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1790589554;
-	 x=1790675954; bh=fQPUdaDK92E6WppGRBLRe6sJ9+LOKXg8tdU3WPTbCKs=; b=
-	NDPwnfijF9a3rSg1eqj36fWCww6n9Jfy1JxBv4zpwvc3l7ndMYJE4wyN+avVa5qL
-	2bhehhR7H35u9ugB64dVelCpJa7hFnB8G9SZnScjj5rDYQMRzXrqfjtH75wn7MnH
-	XKUyy+eemzoXRsenoilJnUlRQrc+iLSEEj8U+mPW2MQ9++bzekO3oTOyQZjmWK7S
-	VPztEyNHevaOLSB4hlEhBiBJtUAWYOSPV2OSBGrV4C9ckHHdKpPigZkOvTGvL793
-	2aMRPSzz0cVgsJy1292wV9w/8RIbHS3cIEDnxyaEtdoJOvTLLPpF2HNZYBieRh0O
-	mOijseBOEB2ERLd+bbRVzQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1790589554; x=1790675954; bh=f
-	QPUdaDK92E6WppGRBLRe6sJ9+LOKXg8tdU3WPTbCKs=; b=A9epsr9CxXdShcAdc
-	JyABXjkwZIsK+DTdrmI2o0bbC/BY7qF5k1+9q0q9X7K/dDpwIHwrVbdeD2WmbjpD
-	EF9w6uQKTNHh2+FBsDq5gKZBq5v8+2YQhDqkO//u26LX/KMkhSGpgktRzm7SZ4tf
-	KupM2Y7c6XRwlaBX+AVaskaiuvig9x0biLSTPU85dcIUKhGNAk4Rt1sxtvY8a7sm
-	k08AhxE5HmBAYutcQhHZ6P+arYBVn9xU0SI8/qepFrQkJio5QVTQIL2GqPoc6NVS
-	dsyx4GNP/qqNF/I7F6jPtdtCSSpKVRUWXgRWSGR0NX//EQ0QXX+AioGBAB/4vA/q
-	1MSRg==
-X-ME-Sender: <xms:cTq6alM6JhyDKeQG69kI-pA4kfzCXEpCdj5F63weiUAogQaJUHHRnQ>
-    <xme:cTq6at8GxevRzyqLr7zycfmcsQYMZfbpf1m8nHNbnamEA6MCrF6bTySqqR_yOPSCY
-    DE34AvN77OLda0zXXNeLZxChlr2sD8_3VcEh3FfyqiGARehrGbt9n4o>
-X-ME-Received: <xmr:cTq6ah497VJjlvO6PRirDzgJvcL91HUStykOE1Uqo3O_4ovbw_Hqs7j69uZAEiV5W0e89KTSG3W5WO0UGexl33bWeJNsjUaHZQ7m18s>
-X-ME-Proxy-Cause: dmFkZTFS3WVCfeiCQ54/0lsY6kXL/YaA6QjmBar5o4CHIqeX6zwgC9ys/HM8srAfXHE/9Y
-    NNqePstXzHeRMVorJRBBgPCA+1KSHnI3lIcfEwPB2hz0fh80cGF08OJ5THwgixg0b/AJ0m
-    kiigS8dPvR1IoT4DCoJST8TE+Fsxtz7Khkyi++lRO640EViBkqHUEVMw0nmUrSdIkhVEgX
-    wwIKxXJfoF2V19c21reUOnoaxFTA2sNTp6BQZ8ruZ71+C5N42stE6TpjaN6IAYus0KXFw4
-    1xMKQvR687h+W+nJ8LftHhUqSYBQ0GXy5vi3pxqM2kMWG6nWziRoCTaeG+4WhXUh1FQ4gb
-    zqKZ2Q8LSXlHcDE14ryDyXwFyJ5C6sunD2ppdJlFthpMyJcZx+cxAhI3pbNkQVEhqhWtQU
-    sUaDFUDUV5gOuGg7BkPv8GSca4b2T9R6BGRjFwBPaPYGpCTANgHAnWi9qVrL55gwFFrHso
-    xzYoks743KBgbJ9yIIRcP4mhBBv/DZOYNMK/9iVxoeJAA8kzZEMHiVwZKRCdlcncwiCiz2
-    KDx+jdnEsjV6xFQuFpDLjx925qJMgbnTuoM1ucfk5isa0qQWnYAbIBIps77GtfLU6SrlZe
-    regI+wtcvAYKqs1uJH13/aZ9MInvkOPLl7A13pvpKtXoj1yrg4Jo5B4Mk+yw
-X-ME-Proxy: <xmx:cTq6as1CbvennEvhY0aN2Uptrh33f9lgCFp1_iP3KrKaBFSWj_p79w>
-    <xmx:cTq6agAdua4adUfEC2xTONjeU0aVitoq4MkzEhsSF1EKO-gU1hh78g>
-    <xmx:cTq6am1Edw5HZr9maDW6GwQBzN9MHNOWcAbY8CWI4QU4h3dk9b7XNQ>
-    <xmx:cTq6aivDUsZPmyZS2XA0fMhquSm0SikrNXB4KGLWctlLJxNJKuReLQ>
-    <xmx:cjq6atkQH_a9PoOz5mws5436NDXv03-qGL9lNvJq8RjiLatKkKd15U2G>
-Feedback-ID: i51494658:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 28 Sep 2026 05:59:13 -0400 (EDT)
-Message-ID: <8af7260e8e2d80ff6c597c0598e37b2a01c97dea.camel@pbarker.dev>
-Subject: Re: [PATCH] fetch/wget: Reuse the checkstatus() urllib opener
-From: Paul Barker <paul@pbarker.dev>
-To: ecordonnier@snap.com, bitbake-devel@lists.openembedded.org
-Date: Mon, 28 Sep 2026 10:59:12 +0100
-In-Reply-To: <20260923170846.1360600-1-ecordonnier@snap.com>
-References: <20260923170846.1360600-1-ecordonnier@snap.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1.1 
+ dkim=pass header.i=@snap.com header.s=google header.b=Jwv/ANQA;
+ spf=pass (domain: snapchat.com, ip: 74.125.225.140, mailfrom: ecordonnier@snapchat.com)
+Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49ffe281cb1so9933235e9.1
+        for <bitbake-devel@lists.openembedded.org>; Mon, 28 Sep 2026 03:59:56 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790593195; cv=none;
+        d=google.com; s=arc-20260327;
+        b=hCHfHMll2XosQjPiPcnWoJPJWN6vP8A/hUbfDuL1t3cbY88iuuhc0LSrjYy8TeU1vj
+         /SlMwiOZr39gtivNABcL046rZ/IDKx4ADcwYQWsHW3ris2HW8C657ggBuN3aI0Qm4f9h
+         3uG2UeambuW7lmqjB++Mwqy84IjtJGlmcBfrlHLPinCT8NdfFVxKNxD+pMMucP0Gdj93
+         1yEZRP8s2e6K5xtrwLLbqq2G5Z56/0u6LlvAK6k++mH7N43U7WegBZDjd4H0xH7QLkza
+         Iu5ajk/38SKR0iFWogeMFflBJZo5o2KdnugY61ZyE1hqJQYtLAyd7wdzf/+RmMDedqNL
+         498g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=DYUFVarRddUSrK5HDGNijmMVV5BGGVXiz+hjPtBD86E=;
+        fh=RUGD4bteL4KXEV5W1w3o0UCMeIWQN52jxk18+UaWkxo=;
+        b=S5JhjuYNGxhbYI8zGcpT6hOAb5aMIhBlFksMCQs0X6ZhdLeyuuC1a8tWUEi1O0Agt2
+         K+X9v53MJkUaqptFf7hsx72eFOksyIm209Kx62i6fPC7Lix27MRzgKuy2aN0XHxqRRI7
+         HW+o5m6pN7EIxIuSSRRwveyH82um3JCqiPkJW2q81eYVBlwju840bjWJRDNLNDdsEZ6P
+         lN2KWtigUR2hx2JAourYuT06WxQtYyeizzLuyRaRHqIIG0SfYR2VDIjNgXckAQ1k+vJJ
+         oYuZOI+VNmTm35HEXnPJZ42q/F9cB8vNdj/7DK8CN2dhlrsLMKSO2yleqj8RJx0zSDUk
+         cZRg==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=snap.com; s=google; t=1790593195; x=1791197995; darn=lists.openembedded.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=DYUFVarRddUSrK5HDGNijmMVV5BGGVXiz+hjPtBD86E=;
+        b=Jwv/ANQAR8pjkp4XoCTnTgK7Up2JpF5a4Ue4SH57vap0wbh21VIEhEEp6qRE6JeDFA
+         FdRP2Mq53Mbocn2MpA3sjNbLT8DxJgb8sXeeLh1Uw7odoh6fPEExtLDGJQPwBQS+Lw+O
+         G0lDD0rlVhRV5ZchA9cLnUP548g/SAthC99gY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790593195; x=1791197995;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=DYUFVarRddUSrK5HDGNijmMVV5BGGVXiz+hjPtBD86E=;
+        b=QfBDfvTGXT3KEfXxWLsLapIQK0qXpPxTtz1OfMxjiT02bi/3Ywdnsojsg6HuieGQOd
+         HHtCu8pXdjhw3fZAIDgZqwv81B17X+kkgcnmsBmYbAl+0n+flK7z1KB9+uBYr7jx/p3y
+         N9Wi/fq1xXSnELDuF0yH9dQUGVoo448rAbyrpO49vV0Z4WRGQ/8zzEuJLkOOGGOFbD+2
+         faPA7wrj+o92T3uo+eXg8wcEbFpTcJNtHvdx8iVpvhsSHMjiiqm2f0uA/TFCbtyY2PY2
+         2MbgJp1cdEbdePna7tPhfdXvqCzODdGg+ZTAzY+7dj7nzWUBSJVoonsQMJub+rdZOIE2
+         ZbRw==
+X-Gm-Message-State: AFuF++nJ2x+BwYXc+d3REwhhtH5iJVwA5VmIneiMrAjfnNJvcK753Xwd
+	dsDaejx5WfdzAa/Pr/UBT02E0VQ7pW3UyYA6OyVOiPLhOD18DC/5m6ylMmEryqu9ZwSpGgdY0+J
+	HSCGdJ2M+Ty49PyPSJ8D5plMnQw0gD35Xwp1eHTrhHg==
+X-Gm-Gg: AYBFou3g9nL/rlkHNB3LCJ3vnLrSHimdT4P0SWU1TaLEDrkxOsP+RklPl6l2G66j8uo
+	E2+9K7SCO6SBkmprMt+5lnEG3ZQKWEdyxI56Ag2eZyxO01Chsy/2VXSVoDm8MyzySSmNdUmRcdf
+	aZxkxIkdQgMtWaCey7HZVmXP9MPGTHVWjEMbmLHUS4Z4TBCaV3gWp0lZNDtwGXXGhZBYg7KW4T/
+	wP4yqLiODwDUeeyV5MiCFDedAUXpqb2AS+pgJEIJfcQNqFQySw9SLrH73gdOIXeie0UCaizb6xT
+	A76bo2ybEn1bsIN5TzrlSKovOY5Q5irjEeDuZgKQBcXEcWcIz3OF0+w5uQGb0lSK56fv002sNnQ
+	IYGL8QDHitoaxlDJwL2Xvn74=
+X-Received: by 2002:a05:600c:3b0f:b0:49e:7cc2:e6c2 with SMTP id
+ 5b1f17b1804b1-49ff06ed8a4mr155654415e9.27.1790593195064; Mon, 28 Sep 2026
+ 03:59:55 -0700 (PDT)
 MIME-Version: 1.0
+References: <20260923170633.1313487-1-ecordonnier@snap.com> <9ea48161f0ffb0ca0b0175631d0a5af9660e71f9.camel@pbarker.dev>
+In-Reply-To: <9ea48161f0ffb0ca0b0175631d0a5af9660e71f9.camel@pbarker.dev>
+From: Etienne Cordonnier <ecordonnier@snap.com>
+Date: Mon, 28 Sep 2026 12:59:43 +0200
+X-Gm-Features: AclHuK_bKOTpGntZzXaOAcf2B5AQvEstKATq0xH9fahaFPNZJ9VT6ukQa_h4g3M
+Message-ID: <CAHUKmYYHRy=kAbKoQgYX2cU6Nfv+d2rmwkNP5B=8Jr967fyy0w@mail.gmail.com>
+Subject: Re: [PATCH] cache: Reuse os.path.exists() results during dependency validation
+To: Paul Barker <paul@pbarker.dev>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="000000000000546a27065c88f7ba"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 28 Sep 2026 09:59:17 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20268
+ <bitbake-devel@lists.openembedded.org>; Mon, 28 Sep 2026 10:59:57 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20269
 
-On Wed, 2026-09-23 at 19:08 +0200, ecordonnier@snap.com wrote:
-> From: Etienne Cordonnier <ecordonnier@snap.com>
->=20
-> checkstatus() builds a new urllib opener with its redirect, proxy and
-> connection cache handlers on every call, although sstate.bbclass calls it
-> for every object in an sstate mirror check with the same settings. Keep
-> the opener on the FetchConnectionCache, keyed on the certificate checking
-> setting and the fetcher environment, and rebuild it only when those
-> change. The handlers now refer to the connection cache directly rather
-> than through the first Fetch object, so a cached opener does not keep it
-> alive. A connection cache is only used by one thread at a time, so no
-> locking is needed.
->=20
-> Checking 2,114 objects on the Yocto sstate mirror with BB_NUMBER_THREADS =
-=3D "8"
-> reduced the time to task execution from 26.9s to 25.1s on average.
->=20
-> AI-Generated: Uses Claude Code (Claude Opus 5.5)
-> Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
-> ---
->  lib/bb/fetch/__init__.py |  2 ++
->  lib/bb/fetch/wget.py     | 45 ++++++++++++++++++++++++----------------
->  2 files changed, 29 insertions(+), 18 deletions(-)
->=20
-> diff --git a/lib/bb/fetch/__init__.py b/lib/bb/fetch/__init__.py
-> index 55ab710f3..0eb660685 100644
-> --- a/lib/bb/fetch/__init__.py
-> +++ b/lib/bb/fetch/__init__.py
-> @@ -2090,6 +2090,8 @@ class FetchConnectionCache(object):
->      """
->      def __init__(self):
->          self.cache =3D {}
-> +        # urllib openers built by the wget fetcher, see Wget.checkstatus=
-()
-> +        self.opener_cache =3D {}
-> =20
->      def get_connection_name(self, host, port, connection_id=3DNone):
->          if connection_id is None:
-> diff --git a/lib/bb/fetch/wget.py b/lib/bb/fetch/wget.py
-> index 972c84048..9cb4a4f32 100644
-> --- a/lib/bb/fetch/wget.py
-> +++ b/lib/bb/fetch/wget.py
-> @@ -178,23 +178,24 @@ class Wget(FetchMethod):
->      def checkstatus(self, fetch, ud, d, try_again=3DTrue):
->          check_certs =3D self.check_certs(d)
->          newenv =3D bb.fetch.get_fetcher_environment(d)
-> +        connection_cache =3D fetch.connection_cache
+--000000000000546a27065c88f7ba
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Paul,
+in the commit with the LRU cache, it was a long-lived cache which could
+grow over time / over multiple builds (assuming a persistent server using
+BB_SERVER_TIMEOUT).
+In this case, it is a cache instance with a bounded size which can't grow
+over time and is reset after each bitbake command.
 
-Is this refactoring a necessary part of the urllib opener caching? If
-not it would be better to move it to a separate commit so that this
-patch is easier to understand.
+I've measured the dict with 48K entries to use about 13MiB (using
+sys.getsizeof()), so I'm assuming it's acceptable even for bigger BSPs.
 
-Best regards,
+I think in this particular case I think it makes sense to keep it
+unbounded. I am using such a huge BSP with many layers myself and the
+slowness of bitbake in this use-case is my motivation for those patches.
+Do you have a use-case in mind where the size of the cache would be an
+issue?
 
---=20
-Paul Barker
+=C3=89tienne
 
+On Mon, Sep 28, 2026 at 11:49=E2=80=AFAM Paul Barker <paul@pbarker.dev> wro=
+te:
+
+> On Wed, 2026-09-23 at 19:06 +0200, ecordonnier@snap.com wrote:
+> > From: Etienne Cordonnier <ecordonnier@snap.com>
+> >
+> > cacheValidUpdate() checks each recipe's file_checksums entries with
+> > os.path.exists(). Many recipes reference the same optional class or
+> > checksum candidate paths, so the same path is checked repeatedly within
+> > one validation pass. In a warm parse of 5,112 recipes (poky, meta-yocto=
+,
+> > meta-oe, meta-python), the real cache data shows 585,348 such calls
+> > against only 48,757 unique paths, with the hottest path checked 16,894
+> > times: 536,591 calls are redundant. At 3.5us per os.path.exists() call =
+on
+> > a nonexistent path on this machine, that is about 1.9s of avoidable
+> > syscall time per validation pass. Cache the result per Cache instance,
+> > which is discarded and recreated at the start of each validation pass, =
+so
+> > a filesystem change between passes is still observed.
+> >
+> > AI-Generated: Uses Claude Code (Claude Opus 5.5)
+> > Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
+> > ---
+> >  lib/bb/cache.py | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/lib/bb/cache.py b/lib/bb/cache.py
+> > index 2361c5684..01020f844 100644
+> > --- a/lib/bb/cache.py
+> > +++ b/lib/bb/cache.py
+> > @@ -401,6 +401,8 @@ class Cache(object):
+> >          self.clean =3D set()
+> >          self.checked =3D set()
+> >          self.depends_cache =3D {}
+> > +        # os.path.exists() results for this validation pass (see
+> file_exists())
+> > +        self.exists_cache =3D {}
+> >          self.data_fn =3D None
+> >          self.cacheclean =3D True
+> >          self.data_hash =3D data_hash
+> > @@ -619,7 +621,8 @@ class Cache(object):
+> >                      if not f:
+> >                          continue
+> >                      f, exist =3D f.rsplit(":", 1)
+> > -                    if (exist =3D=3D "True" and not os.path.exists(f))=
+ or
+> (exist =3D=3D "False" and os.path.exists(f)):
+> > +                    file_exists =3D self.file_exists(f)
+> > +                    if (exist =3D=3D "True" and not file_exists) or (e=
+xist
+> =3D=3D "False" and file_exists):
+> >                          self.logger.debug2("%s's file checksum list
+> file %s changed",
+> >                                               fn, f)
+> >                          self.remove(fn)
+> > @@ -657,6 +660,11 @@ class Cache(object):
+> >          self.clean.add(fn)
+> >          return True
+> >
+> > +    def file_exists(self, fn):
+> > +        if fn not in self.exists_cache:
+> > +            self.exists_cache[fn] =3D os.path.exists(fn)
+> > +        return self.exists_cache[fn]
+>
+> In the example given in the commit message this will result in a
+> dictionary with 48,757 entries. With more layers included this could be
+> larger still.
+>
+> Would it make sense to use an LRU cache with a maximum size here, as you
+> did in [1]?
+>
+> [1]:
+> https://lore.kernel.org/bitbake-devel/20260923140208.1915740-1-ecordonnie=
+r@snap.com/
+>
+> Best regards,
+>
+> --
+> Paul Barker
+>
+>
+
+--000000000000546a27065c88f7ba
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi Paul,<br>in the commit with the LRU cache, it was a lon=
+g-lived cache which could grow over time / over multiple builds (assuming a=
+ persistent server using BB_SERVER_TIMEOUT).<br>In this case, it is a cache=
+ instance with a bounded size which can&#39;t grow over time and is reset a=
+fter each bitbake command.<br><br>I&#39;ve measured the dict with 48K entri=
+es to use about 13MiB (using sys.getsizeof()), so I&#39;m assuming it&#39;s=
+ acceptable even for bigger BSPs.<br><br>I think in this particular case I =
+think it makes sense to keep it unbounded. I am using such a huge BSP with =
+many layers myself and the slowness of bitbake in this use-case is my motiv=
+ation for those patches.<br>Do you have a use-case in mind where the size o=
+f the cache would be an issue?<br><br>=C3=89tienne</div><br><div class=3D"g=
+mail_quote gmail_quote_container"><div dir=3D"ltr" class=3D"gmail_attr">On =
+Mon, Sep 28, 2026 at 11:49=E2=80=AFAM Paul Barker &lt;<a href=3D"mailto:pau=
+l@pbarker.dev">paul@pbarker.dev</a>&gt; wrote:<br></div><blockquote class=
+=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rg=
+b(204,204,204);padding-left:1ex">On Wed, 2026-09-23 at 19:06 +0200, <a href=
+=3D"mailto:ecordonnier@snap.com" target=3D"_blank">ecordonnier@snap.com</a>=
+ wrote:<br>
+&gt; From: Etienne Cordonnier &lt;<a href=3D"mailto:ecordonnier@snap.com" t=
+arget=3D"_blank">ecordonnier@snap.com</a>&gt;<br>
+&gt; <br>
+&gt; cacheValidUpdate() checks each recipe&#39;s file_checksums entries wit=
+h<br>
+&gt; os.path.exists(). Many recipes reference the same optional class or<br=
+>
+&gt; checksum candidate paths, so the same path is checked repeatedly withi=
+n<br>
+&gt; one validation pass. In a warm parse of 5,112 recipes (poky, meta-yoct=
+o,<br>
+&gt; meta-oe, meta-python), the real cache data shows 585,348 such calls<br=
+>
+&gt; against only 48,757 unique paths, with the hottest path checked 16,894=
+<br>
+&gt; times: 536,591 calls are redundant. At 3.5us per os.path.exists() call=
+ on<br>
+&gt; a nonexistent path on this machine, that is about 1.9s of avoidable<br=
+>
+&gt; syscall time per validation pass. Cache the result per Cache instance,=
+<br>
+&gt; which is discarded and recreated at the start of each validation pass,=
+ so<br>
+&gt; a filesystem change between passes is still observed.<br>
+&gt; <br>
+&gt; AI-Generated: Uses Claude Code (Claude Opus 5.5)<br>
+&gt; Signed-off-by: Etienne Cordonnier &lt;<a href=3D"mailto:ecordonnier@sn=
+ap.com" target=3D"_blank">ecordonnier@snap.com</a>&gt;<br>
+&gt; ---<br>
+&gt;=C2=A0 lib/bb/cache.py | 10 +++++++++-<br>
+&gt;=C2=A0 1 file changed, 9 insertions(+), 1 deletion(-)<br>
+&gt; <br>
+&gt; diff --git a/lib/bb/cache.py b/lib/bb/cache.py<br>
+&gt; index 2361c5684..01020f844 100644<br>
+&gt; --- a/lib/bb/cache.py<br>
+&gt; +++ b/lib/bb/cache.py<br>
+&gt; @@ -401,6 +401,8 @@ class Cache(object):<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.clean =3D set()<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.checked =3D set()<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.depends_cache =3D {}<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 # os.path.exists() results for this valid=
+ation pass (see file_exists())<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.exists_cache =3D {}<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.data_fn =3D None<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.cacheclean =3D True<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.data_hash =3D data_hash<br>
+&gt; @@ -619,7 +621,8 @@ class Cache(object):<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 if not f:<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 continue<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 f, exist =3D f.rsplit(&quot;:&quot;, 1)<br>
+&gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ if (exist =3D=3D &quot;True&quot; and not os.path.exists(f)) or (exist =3D=
+=3D &quot;False&quot; and os.path.exists(f)):<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ file_exists =3D self.file_exists(f)<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ if (exist =3D=3D &quot;True&quot; and not file_exists) or (exist =3D=3D &q=
+uot;False&quot; and file_exists):<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 self.logger.debug2(&quot;%s&#39;s file checksum list f=
+ile %s changed&quot;,<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0fn, f)<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 self.remove(fn)<br>
+&gt; @@ -657,6 +660,11 @@ class Cache(object):<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.clean.add(fn)<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return True<br>
+&gt;=C2=A0 <br>
+&gt; +=C2=A0 =C2=A0 def file_exists(self, fn):<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 if fn not in self.exists_cache:<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.exists_cache[fn] =3D o=
+s.path.exists(fn)<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 return self.exists_cache[fn]<br>
+<br>
+In the example given in the commit message this will result in a<br>
+dictionary with 48,757 entries. With more layers included this could be<br>
+larger still.<br>
+<br>
+Would it make sense to use an LRU cache with a maximum size here, as you<br=
+>
+did in [1]?<br>
+<br>
+[1]: <a href=3D"https://lore.kernel.org/bitbake-devel/20260923140208.191574=
+0-1-ecordonnier@snap.com/" rel=3D"noreferrer" target=3D"_blank">https://lor=
+e.kernel.org/bitbake-devel/20260923140208.1915740-1-ecordonnier@snap.com/</=
+a> <br>
+<br>
+Best regards,<br>
+<br>
+-- <br>
+Paul Barker<br>
+<br>
+</blockquote></div>
+
+--000000000000546a27065c88f7ba--
 
