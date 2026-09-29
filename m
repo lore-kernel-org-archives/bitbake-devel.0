@@ -1,621 +1,257 @@
-Return-Path: <setairidis@gmail.com>
+Return-Path: <ricardo.salveti@oss.qualcomm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0551ECA5FA2
-	for <webhook@archiver.kernel.org>; Mon, 28 Sep 2026 21:02:40 +0000 (UTC)
-Received: from mail-lf2-f13.google.com (mail-lf2-f13.google.com [74.125.229.205])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.68514.1790629350833399612
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5ACCA5FA1
+	for <webhook@archiver.kernel.org>; Tue, 29 Sep 2026 01:28:51 +0000 (UTC)
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.74540.1790645321711819543
  for <bitbake-devel@lists.openembedded.org>;
- Mon, 28 Sep 2026 14:02:31 -0700
+ Mon, 28 Sep 2026 18:28:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=QDAHuj8G;
- spf=pass (domain: gmail.com, ip: 74.125.229.205, mailfrom: setairidis@gmail.com)
-Received: by mail-lf2-f13.google.com with SMTP id 2adb3069b0e04-5b8d47b5987so3180097e87.2
-        for <bitbake-devel@lists.openembedded.org>; Mon, 28 Sep 2026 14:02:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790629349; cv=none;
-        d=google.com; s=arc-20260327;
-        b=b7UCyXIkwh4iCpVsCQyGZT5ysIY3Vk2O2mRUiA3QkLUDBtY1wV1RnzVCw+MqRZbIyB
-         ekdzzCabI7mKPIYpWF3HPCvYdJ6qbqIe2Q75myzn27mkCixRv4BbBpe4jh8bfQbYOD4B
-         dQ2CORKEGUKcpPtUDnouj+dZlg5aY/TlAtj1MOZiIC/D2DYu6s/d3G/4QbbCY6V9mgun
-         A1JTA1fdjPX+dfAMM5V4BnlAHgMAck4y3qKqwjyTp/XeZ2gNShh1or0T2Kvxc8PWU5pq
-         IKXxFkIIW3j5xvZriWPMbo8KumOkmO8DPdX4Av0iQMtTUFNWrwCLtORqtZHzQkw/3ABC
-         cksg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :dkim-signature;
-        bh=O0KDe88Rpf8h+L3zqzy3uNCTuOUNtrxweReSPzwCBv8=;
-        fh=xMmghtGxy1ZVs+Kfirz4rI+IRsJojXop3b7othHqLi4=;
-        b=cSqqN6Hj5FJ3PiGzMZlwtYzKsYUkxeVoBv33mTBLgGq/LWySTRRNZDgt5sgKDk5uwY
-         5QE9Ukm0KmccggdT/xJyuDtJGZ6sfF+rmuTXfFT9SZQcXgFGr7Hm/KxhKBE4a6LL1W+4
-         u328rbG6rOrG22ieVDWWhdz9KdjIhFlP51CWGKgfshngd1SQuPYnauQ/J9j7z6FAFuBR
-         YJiKZ0L3ytfNpbT7gRjwb3MGqOPQdBbN68oGmK7tImE9Ph6rFjT2r5nvKyrLj+vPt72h
-         iyHlPy0KvVCeatgWyNHdowlmRROTyAYqyNY7WLrHibqftfTUsyMyRZ9K8GNGCNdT7Gbw
-         OMUw==;
-        darn=lists.openembedded.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+ dkim=pass header.i=@qualcomm.com header.s=qcppdkim1 header.b=a89SgPYb;
+ dkim=pass header.i=@oss.qualcomm.com header.s=google header.b=ZCtMXQEs;
+ spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: oss.qualcomm.com, ip: 205.220.168.131, mailfrom: ricardo.salveti@oss.qualcomm.com)
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68T0jNj82342781
+	for <bitbake-devel@lists.openembedded.org>; Tue, 29 Sep 2026 01:28:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=fcnzxnAL0Agr2D0LR04S0srOziYIvdLRsrN
+	bOYeyBrU=; b=a89SgPYb+gz10h5Ga667eIM+hO1x5nQM3eFflPsYHnzzEMxLZxg
+	DZGhqMdGMPW2El/chsTVXCnWvXHn99i7DCVrYEbKCoZ4ZrZOE4ZC/z/oBfeGrbax
+	fhwBt6CLQ4Q66lY5GL5skJwFXTjg7n2kNRWE1iZK6BH4Qck/wDggGllxzGmoFoxy
+	p72G3kmuhnH4MFWfJ+ehOK+bxvhZXnTsMsRq6swUJOWylYCkGfRKTvVGmYKOTTxS
+	uNCKhAXttHqdqQJP06o5X8r2QVgXSibu2wpUME3gwrv40E4MsLzN8wK44WBfm1Dz
+	BGzm75uWlt9hHzAP1zbnA3qEOo4Y8j5W4cw==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4gyvw21jtv-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Tue, 29 Sep 2026 01:28:40 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2e124796da0so21393635ad.0
+        for <bitbake-devel@lists.openembedded.org>; Mon, 28 Sep 2026 18:28:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790629349; x=1791234149; darn=lists.openembedded.org;
-        h=content-type:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=O0KDe88Rpf8h+L3zqzy3uNCTuOUNtrxweReSPzwCBv8=;
-        b=QDAHuj8G0D3dHyDMj97CM2JG9i+ZM5mijHqvHF7IyIoUe1dXRSzUmX4zzAEkcMXXZj
-         EW3C9kNNW771qR7YkpyJh2bQdRjzMgTx4hVROTCvJr5xph0wbUNLvh2b6yPtGfVt4l0u
-         6g+aI619nbw6VExL54Skj4fpI67wcBariAUiu34Fg7dSNimnCpnsGcuLpF4IJKDYMKu4
-         0SsZhUag+XVuQ17L1C9t2W5Efh1M8yIkZBXqL61wwVB7lWsQm5J0mVQtbIDJY8jvzjtn
-         Az6v3yUds3aBEJ9ypmVrwBF32TMa6cQFOi7ur4h/nLBdDVOLMRc63BEbXe1beTUhoyWX
-         K4Mg==
+        d=oss.qualcomm.com; s=google; t=1790645320; x=1791250120; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=fcnzxnAL0Agr2D0LR04S0srOziYIvdLRsrNbOYeyBrU=;
+        b=ZCtMXQEso5wtJmpYHy+lFLQHkxO6DSgbrsrHYN9N69k0XOuigE+h6L1CgExERpwByp
+         t1bQzqOuWq0ERaUFGs/nXHSPNOdytxX5lgsycVZX+irFGN5QIVEnUFPFtaEji1nlxuoZ
+         fxaSFVtn6kK0HGC0Jn/3aS8lz7+QmpJ6KdzjAmEJhw1XkR/Wth6TEuVmhRQoRkYGA0Lh
+         pM6RfSwLoLn0A284CmS9mvgy6rXEe9cQJcq2NjE7xArRch3q0oemdicvj/dzmYGtSI9a
+         Hgyu23IPU9ztdumbXDjLz+WqxHAtm1B2EdQETv8Okz8VBvIoZ8A0cnzEgtLkmRBbUh+N
+         /osg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790629349; x=1791234149;
-        h=content-type:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20260707; t=1790645320; x=1791250120;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=O0KDe88Rpf8h+L3zqzy3uNCTuOUNtrxweReSPzwCBv8=;
-        b=PP54HU/Kj+ovoL/eq4+CitNylH0B3/mNz1DxnYf5QrTmNonhDJF/gfZG45dot9E267
-         fmuX1mQ7a09/H31pLpMZD2BRGC6VPFWxsl0bpXA87lH7dxWOBvFawPKEZwk7pzJiv9gH
-         I/L76xl/Ww1BOQimkfI7DJ10WMdiuIUJuqXG62/hqelVw3HaaDDZskQfoUX3wW17GnyY
-         yQxGUvPTf1Q4S6/T4uyqMhxvNhIVAZI9tM+DkcnfVlZ7DbhuoY8LIWYwMPIQyGmy95DB
-         2YUXBrRIuIesWmPJZ9vsoiulfpiCD4DfcGWqAMu6gpj89yXgEiVsEpTJCWuHlr1hnlQH
-         YkuA==
-X-Gm-Message-State: AFq9FYIx9ZNfTnRLkn7EFKYFovfnebZGNDieiEQJBVp4yZ1b4dYH4iqU
-	lyz4R1nUuy2qG1+enUDlhFeGzYsC0jpylxtSeRC9GhMb9ku4htgEvr52R6pap2OQIEEeyiytaUy
-	86Szog5GrztkuwDO5Kjl3AMKiAOAtSF5l1bEKEREEww==
-X-Gm-Gg: AYBFou0HQDSvEoNwon09/QdkTMIg0Q+QhFFn69D36QbGiM8Myp4BmDlsF1Am1rpFD7I
-	sIXMLxb5K+D0cSVoF0vSmfypTH9hMW25WvcoK52saw5TcPe9FitaeEiMNXbLdk3ZvLjQZFg9iw/
-	0yRXIBjkLNtzynN4v+CRfNz5qwWmShB5g8j4iR/y8oZeUnZRlWw83DJNmwITQ2xDUCt2HFgMF5W
-	Zynh7e+G2sKbSrVZBamI448vBgwdlkgAW+K7MzrEZoIPdyZ3sL7iQT/yELRO5CFAY6/ZplBAPD3
-	xwueyHVhFcKbVSlCrWYj8T7pTthiRd/Zi95lLzSsKGtIa+Jf8Wo5MK11ec+gF2g2uilScXrc43w
-	txxvosbeohReUvw==
-X-Received: by 2002:a05:6512:3416:b0:5b8:f279:88a7 with SMTP id
- 2adb3069b0e04-5b8f27989a4mr2616331e87.54.1790629348524; Mon, 28 Sep 2026
- 14:02:28 -0700 (PDT)
+        bh=fcnzxnAL0Agr2D0LR04S0srOziYIvdLRsrNbOYeyBrU=;
+        b=LE09cIbBOtO9n3ozG/iokL4Iku/QQgcHl0+RHpB6Mb/OIgkjWO8+QkK9bg/J3FG4Cm
+         //xiks4ed9Vk6ZdvV7wwLQgDoyLWAsfZjY+B6UPlSviTMczqR91motybBAIX8qoVdjcs
+         KLVYKMl/qF+2FhTSmGC8WMcA8Bng4cF7eGAwRoIQN1nI1VHxlsGgwfudWLDBiv1qrXAo
+         VAjuAX+QnSxt1zy9LFCZXDB3q4qQ+0v09B3wyWAI+rmTeAOindbmkVzDwbvqoYd5UnO1
+         uRJ6vyYQ40N5irxoVZRW/Qr7teYeD8Z4CX+5rWiY0WWqYzzpCZ1oOimgcHcfgu9zvtDx
+         s06w==
+X-Gm-Message-State: AFq9FYJES+5ofZKIjqpZXxqwlrrQthBsOua6KDEaNLX1sFfu0nx04EMi
+	GGADb2GiLs8RseH4MZ7kG09cpTeN3wonziKSw7Ze6KSJ4gLcQLyZ2g8A7tHIIvUXdC3Q0Ci/SC6
+	hTkQF60pe/UjM6sJ6rg2KEXpZWhCr2oUfpqiM4DFRuSNV2cDtFE2uam/G027o7Q84FSaIB72cEx
+	TD2EHISySPOQ==
+X-Gm-Gg: AYBFou2KKsL5HnndGAm7GlO49uFwMpQuRWn4PLOpQs3iDAWa2t84M15cHJViWhJ2Ykh
+	s3VfKbWjpdaT3qgYW+Ea4CYYceZus/Ag/Nvw8sof3BkYzdWNBgVmz83UiqM7Be1wo50+qSU9vHx
+	LUDZpNOEJlpbU7HcWc3Y71Kq+d72I2nAcuZcQJ53gnWVR7ZpTBNdTyPnPmb3poLw5mnpIhbGDtD
+	T+M8ujsiTx7gLDj6LStzI4/fbdjEWNLYSrHxXI2HaOdMd0Wx5jopJ9EdT3MxIYf9I1iEvbrIVLe
+	JU0DpE3U4kZ1fpLxnZyE1Wbmtr/bYsQGDgW8mK/N4vkYoksbxIA0TqOPSS6vHYd9QUiOe16EEIL
+	AF9WRoHLyaYQU2Hdkd5PLw2MqUtvD6xyq3Vina8x8HMOII0KFA8hx51MSs8BLUEHER33uT7icgn
+	gj5p9wJwPCoKKKpe5sv9TuRTHOdpsXNWGJQLBSBg==
+X-Received: by 2002:a17:90a:e7c4:b0:39e:6c6a:4b73 with SMTP id 98e67ed59e1d1-3a098e3eef6mr12866627a91.61.1790645320050;
+        Mon, 28 Sep 2026 18:28:40 -0700 (PDT)
+X-Received: by 2002:a17:90a:e7c4:b0:39e:6c6a:4b73 with SMTP id 98e67ed59e1d1-3a098e3eef6mr12866568a91.61.1790645319419;
+        Mon, 28 Sep 2026 18:28:39 -0700 (PDT)
+Received: from ip-172-31-25-255.us-west-2.compute.internal (ec2-35-83-207-173.us-west-2.compute.amazonaws.com. [35.83.207.173])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a497e90165sm2281976a91.1.2026.09.28.18.28.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Sep 2026 18:28:39 -0700 (PDT)
+From: Ricardo Salveti <ricardo.salveti@oss.qualcomm.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: jose.quaresma@oss.qualcomm.com
+Subject: [PATCH] fetch/wget: rename the partial download on checksum mismatch
+Date: Tue, 29 Sep 2026 01:28:31 +0000
+Message-ID: <20260929012831.4193448-1-ricardo.salveti@oss.qualcomm.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-References: <2b5b8d1a56b5db173667efa839208df83188a7ca.camel@pbarker.dev> <20260928205940.14169-1-setairidis@gmail.com>
-In-Reply-To: <20260928205940.14169-1-setairidis@gmail.com>
-From: Sawas Etairidis <setairidis@gmail.com>
-Date: Mon, 28 Sep 2026 23:02:19 +0200
-X-Gm-Features: AclHuK-b4_pP1Li7BClPWDYP4xP8aAEinOyl5r7ENvPTAAQvGOuYn9cqcShtcXg
-Message-ID: <CAKJXz6eaBv_9C9+4O0p=YN_NUJBBLsQo1Q1SN5uos41bcWt7qA@mail.gmail.com>
-Subject: Re: [PATCH v5] fetch/local: verify checksums for file:// urls
-To: bitbake-devel@lists.openembedded.org, jhonata.poma@gmail.com
-Content-Type: multipart/alternative; boundary="0000000000003e4584065c9162bf"
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=N6i8hG9B c=1 sm=1 tr=0 ts=6abb1448 cx=c_pps
+ a=IZJwPbhc+fLeJZngyXXI0A==:117 a=P2/bgbqRawb6I1+7fxbs5g==:17
+ a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=YMgV9FUhrdKAYTUUvYB2:22 a=LRLYrf9nAAAA:8
+ a=iGHA9ds3AAAA:8 a=EUspDBNiAAAA:8 a=vORqFKdVhVzt_H80W40A:9 a=lqcHg5cX4UMA:10
+ a=r-HJ9bD__24A:10 a=Wpz8ju6o9T4A:10 a=uG9DUKGECoFWVXl0Dc02:22
+ a=ctNd1-se8QBkj9sPkfQg:22 a=nM-MV4yxpKKO9kiQg6Ot:22
+X-Proofpoint-ORIG-GUID: 4wkUwazOqClWRjYCvTPEH0efWupw190y
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTI5MDAwNSBTYWx0ZWRfX6PhmVftu9DCD
+ 29kJ2cFX8I7lnRAGSI1lTbaOAT4K+BfwsZ31BBMAXd86CZL77IqcfUyZeuQNkG949ntYYMP7uCH
+ EXcCogx1oURoVpPKQ4V74JRyMq1Sw/TqQuWuZdtT8ZY7rBcsIHVHGZyUYgFdyJAsF6hgfz49lDP
+ C6yTuuRu84elLw0hq2DF18R6jvNdwCywwn6/3mSnZz3lALmNkpOuoWKLFFw+wVfg16myAgKlcNu
+ p6fie9NA4PYoDDWSfWjXCsAh2RQfzAxFtptidipJil6lUZqFTRisbTLyrDSfdJmvtU5/gf0C76w
+ SwS6l+dSKlIMlNbwOLMwW/rtYU/StW8wBA9rNE5z1STYnFPOXN8678XCVqnmRexSAgShHuNEUF0
+ /slGdv+AFikG3f/LWdGhXZCAw5Ue0U8cqQhqHICmkBIzLLWamupm63K41WeT05GknsUGFRbWtlW
+ GIOD1daz4x0YGriD40Q==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTI5MDAwNSBTYWx0ZWRfX2zIVWkWV3Kqj
+ OVxeanfYSc8Wpcs21OuuInNXg3kKY7r6P9YO7OS0o4Gp4IvHaaqqKnwlFvsVw7lK/lqr+/j4aPS
+ 6a2Zxh612jtvVe8dS1HwxvtyzjTdQFc=
+X-Proofpoint-GUID: 4wkUwazOqClWRjYCvTPEH0efWupw190y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-29_01,2026-09-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 bulkscore=0 spamscore=0 lowpriorityscore=0 phishscore=0
+ adultscore=0 impostorscore=0 priorityscore=1501 suspectscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609290005
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Mon, 28 Sep 2026 21:02:40 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20276
+ <bitbake-devel@lists.openembedded.org>; Tue, 29 Sep 2026 01:28:51 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20277
 
---0000000000003e4584065c9162bf
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The wget fetcher downloads into a .tmp file which is resumed with
+--continue and is shared with the mirrors of the same file. When it
+fails checksum verification it is left in place, so MIRRORS reuse the
+bad file instead of downloading their own copy and, without a mirror,
+every retry fails the same way until it is removed by hand. Rename it
+with rename_bad_checksum(), as done for any other file with a bad
+checksum, so it can be inspected and the next attempt starts from
+scratch. Mirror downloads skip this check and are still handled by the
+existing code once moved into place.
 
-Hi,
+Seen with parallel CI runners sharing DL_DIR on Amazon FSx for OpenZFS
+mounted over NFSv4.2. What corrupts the file there is not addressed,
+only the recovery on retry. Tested with the new tests, which fail
+without the fix.
 
-My bad I assumed that Jhonata stopped working on this based on the ticket
-comments.
-I send him a personal email about this.
+AI-Generated: Uses Claude Code (Claude Fable 5.1)
+Signed-off-by: Ricardo Salveti <ricardo.salveti@oss.qualcomm.com>
+---
+ lib/bb/fetch/__init__.py | 11 ++++++---
+ lib/bb/fetch/wget.py     |  8 +++++-
+ lib/bb/tests/fetch.py    | 53 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 67 insertions(+), 5 deletions(-)
 
-Regards,
-Savvas
+diff --git a/lib/bb/fetch/__init__.py b/lib/bb/fetch/__init__.py
+index fb6278439..eb3483a48 100644
+--- a/lib/bb/fetch/__init__.py
++++ b/lib/bb/fetch/__init__.py
+@@ -1079,7 +1079,7 @@ def build_mirroruris(origud, mirrors, ld):
+ 
+     return uris, uds
+ 
+-def rename_bad_checksum(ud, suffix):
++def rename_bad_checksum(ud, suffix, localpath=None):
+     """
+     Renames files to have suffix from parameter
+     """
+@@ -1087,10 +1087,13 @@ def rename_bad_checksum(ud, suffix):
+     if ud.localpath is None:
+         return
+ 
++    if localpath is None:
++        localpath = ud.localpath
++
+     new_localpath = "%s_bad-checksum_%s" % (ud.localpath, suffix)
+-    bb.warn("Renaming %s to %s" % (ud.localpath, new_localpath))
+-    if not bb.utils.movefile(ud.localpath, new_localpath):
+-        bb.warn("Renaming %s to %s failed, grep movefile in log.do_fetch to see why" % (ud.localpath, new_localpath))
++    bb.warn("Renaming %s to %s" % (localpath, new_localpath))
++    if not bb.utils.movefile(localpath, new_localpath):
++        bb.warn("Renaming %s to %s failed, grep movefile in log.do_fetch to see why" % (localpath, new_localpath))
+ 
+ 
+ def try_mirror_url(fetch, origud, ud, ld, check = False):
+diff --git a/lib/bb/fetch/wget.py b/lib/bb/fetch/wget.py
+index 972c84048..6259c1245 100644
+--- a/lib/bb/fetch/wget.py
++++ b/lib/bb/fetch/wget.py
+@@ -167,7 +167,13 @@ class Wget(FetchMethod):
+         # Try and verify any checksum now, meaning if it isn't correct, we don't remove the
+         # original file, which might be a race (imagine two recipes referencing the same
+         # source, one with an incorrect checksum)
+-        bb.fetch.verify_checksum(ud, d, localpath=localpath, fatal_nochecksum=False)
++        try:
++            bb.fetch.verify_checksum(ud, d, localpath=localpath, fatal_nochecksum=False)
++        except bb.fetch.ChecksumError as e:
++            # The download is resumed with --continue, so a bad file left in place
++            # would be reused by the mirrors and by every later attempt
++            bb.fetch.rename_bad_checksum(ud, e.checksum, localpath=localpath)
++            raise
+ 
+         # Remove the ".tmp" and move the file into position atomically
+         # Our lock prevents multiple writers but mirroring code may grab incomplete files
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 71b0a63fe..9627b3b1b 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -1706,6 +1706,59 @@ class FetchLatestVersionTest(FetcherTest):
+                 r = bb.utils.vercmp_string(verstring, v_larger)
+                 self.assertTrue(r == -1, msg="Package %s, version: %s <= %s" % (k[0], v_larger, verstring))
+ 
++class WgetChecksumTest(FetcherTest):
++    content = b"bitbake wget test data\n" * 64
++    # As large as the real file, so wget --continue has nothing left to fetch
++    # and keeps it as is
++    corrupt = b"x" * len(content)
++
++    def setUp(self):
++        super().setUp()
++        self.serverdir = os.path.join(self.tempdir, "server")
++        for subdir in ["upstream", "mirror"]:
++            os.makedirs(os.path.join(self.serverdir, subdir))
++        self.server = HTTPService(self.serverdir, host="127.0.0.1")
++        self.server.start()
++        self.baseurl = "http://127.0.0.1:%s" % self.server.port
++        self.url = "%s/upstream/test.bin;sha256sum=%s" % (
++            self.baseurl, hashlib.sha256(self.content).hexdigest())
++
++    def tearDown(self):
++        self.server.stop()
++        super().tearDown()
++
++    def write(self, path, data):
++        with open(path, "wb") as f:
++            f.write(data)
++
++    def assertDownloaded(self):
++        with open(os.path.join(self.dldir, "test.bin"), "rb") as f:
++            self.assertEqual(f.read(), self.content)
++        self.assertFalse(os.path.exists(os.path.join(self.dldir, "test.bin.tmp")))
++        self.assertTrue(os.path.exists(os.path.join(self.dldir,
++            "test.bin_bad-checksum_%s" % hashlib.sha256(self.corrupt).hexdigest())))
++
++    def test_wget_corrupt_partial_download(self):
++        self.write(os.path.join(self.serverdir, "upstream", "test.bin"), self.content)
++        self.write(os.path.join(self.dldir, "test.bin.tmp"), self.corrupt)
++
++        fetcher = bb.fetch.Fetch([self.url], self.d)
++        with self.assertRaises(bb.fetch.FetchError):
++            fetcher.download()
++        self.assertFalse(os.path.exists(os.path.join(self.dldir, "test.bin.tmp")))
++
++        fetcher.download()
++        self.assertDownloaded()
++
++    def test_wget_mirror_after_checksum_failure(self):
++        self.write(os.path.join(self.serverdir, "upstream", "test.bin"), self.corrupt)
++        self.write(os.path.join(self.serverdir, "mirror", "test.bin"), self.content)
++        self.d.setVar("MIRRORS", "%s/upstream/ %s/mirror/" % (self.baseurl, self.baseurl))
++
++        fetcher = bb.fetch.Fetch([self.url], self.d)
++        fetcher.download()
++        self.assertDownloaded()
++
+ class FetchCheckStatusTest(FetcherTest):
+     test_wget_uris = ["https://downloads.yoctoproject.org/releases/sato/sato-engine-0.1.tar.gz",
+                       "https://downloads.yoctoproject.org/releases/sato/sato-engine-0.2.tar.gz",
+-- 
+2.43.0
 
-
-=CE=A3=CF=84=CE=B9=CF=82 =CE=94=CE=B5=CF=85 28 =CE=A3=CE=B5=CF=80 2026 =CF=
-=83=CF=84=CE=B9=CF=82 10:59=E2=80=AF=CE=BC.=CE=BC., =CE=BF/=CE=B7 Savvas Et=
-airidis <
-setairidis@gmail.com> =CE=AD=CE=B3=CF=81=CE=B1=CF=88=CE=B5:
-
-> [YOCTO #9993]
->
-> Local.urldata_init() always cleared needdonestamp, so a checksum given
-> in a file:// url (e.g. UNINATIVE_CHECKSUM when UNINATIVE_URL points at
-> a local file://) was never verified. Keep the donestamp when the url
-> carries a checksum so verify_checksum runs, and make
-> rename_bad_checksum() a FetchMethod method that Local overrides as a
-> no-op, so a mismatch doesn't rename the user's source file.
->
-> Based on a patch by Jhonata Poma-Hansen.
->
-> Signed-off-by: Savvas Etairidis <setairidis@gmail.com>
->
-> ---
-> changes in v5:
-> - Rebased on top of master, added changelog entry
->
-> changes in v4:
-> - Rebased on top of master
->
-> changes in v3:
-> - Cherry-picked the patch from Jhonata Poma-Hansen
->
-> ---
-> ---
->  lib/bb/fetch/__init__.py | 36 ++++++++++++++++++------------------
->  lib/bb/fetch/local.py    | 18 ++++++++++++++++--
->  lib/bb/tests/fetch.py    | 30 ++++++++++++++++++++++++++++++
->  3 files changed, 64 insertions(+), 20 deletions(-)
->
-> diff --git a/lib/bb/fetch/__init__.py b/lib/bb/fetch/__init__.py
-> index 55ab710f3..a9f0add78 100644
-> --- a/lib/bb/fetch/__init__.py
-> +++ b/lib/bb/fetch/__init__.py
-> @@ -742,7 +742,7 @@ def verify_donestamp(ud, d, origud=3DNone):
->          logger.warning("Checksum mismatch for local file %s\n"
->                         "Cleaning and trying again." % ud.localpath)
->          if os.path.exists(ud.localpath):
-> -            rename_bad_checksum(ud, e.checksum)
-> +            ud.method.rename_bad_checksum(ud, e.checksum)
->          bb.utils.remove(ud.donestamp)
->      return False
->
-> @@ -775,7 +775,7 @@ def update_stamp(ud, d):
->              logger.warning("Checksum mismatch for local file %s\n"
->                             "Cleaning and trying again." % ud.localpath)
->              if os.path.exists(ud.localpath):
-> -                rename_bad_checksum(ud, e.checksum)
-> +                ud.method.rename_bad_checksum(ud, e.checksum)
->              bb.utils.remove(ud.donestamp)
->              raise
->
-> @@ -1079,20 +1079,6 @@ def build_mirroruris(origud, mirrors, ld):
->
->      return uris, uds
->
-> -def rename_bad_checksum(ud, suffix):
-> -    """
-> -    Renames files to have suffix from parameter
-> -    """
-> -
-> -    if ud.localpath is None:
-> -        return
-> -
-> -    new_localpath =3D "%s_bad-checksum_%s" % (ud.localpath, suffix)
-> -    bb.warn("Renaming %s to %s" % (ud.localpath, new_localpath))
-> -    if not bb.utils.movefile(ud.localpath, new_localpath):
-> -        bb.warn("Renaming %s to %s failed, grep movefile in log.do_fetch
-> to see why" % (ud.localpath, new_localpath))
-> -
-> -
->  def try_mirror_url(fetch, origud, ud, ld, check =3D False):
->      # Return of None or a value means we're finished
->      # False means try another url
-> @@ -1163,7 +1149,7 @@ def try_mirror_url(fetch, origud, ud, ld, check =3D
-> False):
->              logger.warning("Mirror checksum failure for url %s (original
-> url: %s)\nCleaning and trying again." % (ud.url, origud.url))
->              logger.warning(str(e))
->              if os.path.exists(ud.localpath):
-> -                rename_bad_checksum(ud, e.checksum)
-> +                ud.method.rename_bad_checksum(ud, e.checksum)
->          elif isinstance(e, NoChecksumError):
->              raise
->          else:
-> @@ -1479,6 +1465,20 @@ class FetchMethod(object):
->          """
->          return True
->
-> +    def rename_bad_checksum(self, ud, suffix):
-> +        """
-> +        Rename ud.localpath with the given suffix on checksum mismatch.
-> +        Local overrides this to a no-op since its localpath points at th=
-e
-> +        user's source tree.
-> +        """
-> +        if ud.localpath is None:
-> +            return
-> +
-> +        new_localpath =3D "%s_bad-checksum_%s" % (ud.localpath, suffix)
-> +        bb.warn("Renaming %s to %s" % (ud.localpath, new_localpath))
-> +        if not bb.utils.movefile(ud.localpath, new_localpath):
-> +            bb.warn("Renaming %s to %s failed, grep movefile in
-> log.do_fetch to see why" % (ud.localpath, new_localpath))
-> +
->      def verify_donestamp(self, ud, d):
->          """
->          Verify the donestamp file
-> @@ -1943,7 +1943,7 @@ class Fetch(object):
->                              logger.warning("Checksum failure encountered
-> with download of %s - will attempt other sources if available" % u)
->                              logger.debug(str(e))
->                              if os.path.exists(ud.localpath):
-> -                                rename_bad_checksum(ud, e.checksum)
-> +                                ud.method.rename_bad_checksum(ud,
-> e.checksum)
->                          elif isinstance(e, NoChecksumError):
->                              raise
->                          else:
-> diff --git a/lib/bb/fetch/local.py b/lib/bb/fetch/local.py
-> index dfc5b564c..a92c0d267 100644
-> --- a/lib/bb/fetch/local.py
-> +++ b/lib/bb/fetch/local.py
-> @@ -17,7 +17,7 @@ import os
->  import urllib.request, urllib.parse, urllib.error
->  import bb
->  import bb.utils
-> -from   bb.fetch import FetchMethod, FetchError, ParameterError
-> +from   bb.fetch import CHECKSUM_LIST, FetchMethod, FetchError,
-> ParameterError
->  from   bb.fetch import logger
->
->  class Local(FetchMethod):
-> @@ -31,11 +31,25 @@ class Local(FetchMethod):
->          # We don't set localfile as for this fetcher the file is already
-> local!
->          ud.basename =3D os.path.basename(ud.path)
->          ud.basepath =3D ud.path
-> -        ud.needdonestamp =3D False
-> +        # Honor explicit checksum params (UNINATIVE_CHECKSUM, recipe
-> +        # ;sha256sum=3D) by leaving needdonestamp at FetchData's default=
- so
-> +        # verify_checksum runs.
-> +        name =3D ud.parm.get("name")
-> +        ud.needdonestamp =3D any(
-> +            (name and "%s.%ssum" % (name, a) in ud.parm)
-> +            or "%ssum" % a in ud.parm
-> +            for a in CHECKSUM_LIST
-> +        )
->          if "*" in ud.path:
->              raise bb.fetch.ParameterError("file:// urls using globbing
-> are no longer supported. Please place the files in a directory and
-> reference that instead.", ud.url)
->          return
->
-> +    def rename_bad_checksum(self, ud, suffix):
-> +        # file:// urls point at the user's source tree (recipe-shipped
-> files
-> +        # under FILESPATH or an absolute path the user passed in); skip
-> the
-> +        # rename so a ChecksumError surfaces without mutating their file=
-s.
-> +        return
-> +
->      def localpath(self, urldata, d):
->          """
->          Return the local filename of a given url assuming a successful
-> fetch.
-> diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-> index 71b0a63fe..60d356fc6 100644
-> --- a/lib/bb/tests/fetch.py
-> +++ b/lib/bb/tests/fetch.py
-> @@ -876,6 +876,36 @@ class FetcherLocalTest(FetcherTest):
->              with self.subTest(striplevel=3Drepr(value)):
->                  self.assertInvalidStriplevel(value)
->
-> +    def test_local_checksum_match(self):
-> +        # Correct sha256 must run verify_checksum to completion; donesta=
-mp
-> +        # lands in DL_DIR.
-> +        import hashlib
-> +        content =3D b"file:// checksum match test\n"
-> +        with open(os.path.join(self.localsrcdir, 'sumfile'), 'wb') as f:
-> +            f.write(content)
-> +        good =3D hashlib.sha256(content).hexdigest()
-> +        fetcher =3D bb.fetch.Fetch(['file://sumfile;sha256sum=3D' + good=
-],
-> self.d)
-> +        ud =3D fetcher.ud[fetcher.urls[0]]
-> +        self.assertTrue(ud.needdonestamp)
-> +        fetcher.download()
-> +        self.assertTrue(os.path.exists(ud.donestamp))
-> +
-> +    def test_local_checksum_mismatch(self):
-> +        # Bad sha256 raises ChecksumError without renaming the user's
-> +        # source file to the <localpath>_bad-checksum_<sha> sibling.
-> +        content =3D b"file:// checksum mismatch test\n"
-> +        srcpath =3D os.path.join(self.localsrcdir, 'sumfile')
-> +        with open(srcpath, 'wb') as f:
-> +            f.write(content)
-> +        bad =3D "0" * 64
-> +        fetcher =3D bb.fetch.Fetch(['file://sumfile;sha256sum=3D' + bad]=
-,
-> self.d)
-> +        with self.assertRaises(bb.fetch.FetchError):
-> +            fetcher.download()
-> +        self.assertTrue(os.path.exists(srcpath))
-> +        with open(srcpath, 'rb') as f:
-> +            self.assertEqual(f.read(), content)
-> +        self.assertFalse(os.path.exists(srcpath + '_bad-checksum_' + bad=
-))
-> +
->      def dummyGitTest(self, suffix):
->          # Create dummy local Git repo
->          src_dir =3D tempfile.mkdtemp(dir=3Dself.tempdir,
-> --
-> 2.34.1
->
->
-
---0000000000003e4584065c9162bf
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hi,<div><br></div><div>My bad I assumed that=C2=A0<span st=
-yle=3D"background-color:transparent">Jhonata</span><span style=3D"backgroun=
-d-color:transparent">=C2=A0stopped working on this based on the ticket comm=
-ents.</span></div><div><span style=3D"background-color:transparent">I send =
-him a personal email about this.</span></div><div><span style=3D"background=
--color:transparent"><br></span></div><div><span style=3D"background-color:t=
-ransparent">Regards,</span></div><div><span style=3D"background-color:trans=
-parent">Savvas</span></div><div><span style=3D"background-color:transparent=
-"><br></span></div></div><br><div class=3D"gmail_quote gmail_quote_containe=
-r"><div dir=3D"ltr" class=3D"gmail_attr">=CE=A3=CF=84=CE=B9=CF=82 =CE=94=CE=
-=B5=CF=85 28 =CE=A3=CE=B5=CF=80 2026 =CF=83=CF=84=CE=B9=CF=82 10:59=E2=80=
-=AF=CE=BC.=CE=BC., =CE=BF/=CE=B7 Savvas Etairidis &lt;<a href=3D"mailto:set=
-airidis@gmail.com">setairidis@gmail.com</a>&gt; =CE=AD=CE=B3=CF=81=CE=B1=CF=
-=88=CE=B5:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0=
-px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">[YOCT=
-O #9993]<br>
-<br>
-Local.urldata_init() always cleared needdonestamp, so a checksum given<br>
-in a file:// url (e.g. UNINATIVE_CHECKSUM when UNINATIVE_URL points at<br>
-a local file://) was never verified. Keep the donestamp when the url<br>
-carries a checksum so verify_checksum runs, and make<br>
-rename_bad_checksum() a FetchMethod method that Local overrides as a<br>
-no-op, so a mismatch doesn&#39;t rename the user&#39;s source file.<br>
-<br>
-Based on a patch by Jhonata Poma-Hansen.<br>
-<br>
-Signed-off-by: Savvas Etairidis &lt;<a href=3D"mailto:setairidis@gmail.com"=
- target=3D"_blank">setairidis@gmail.com</a>&gt;<br>
-<br>
----<br>
-changes in v5:<br>
-- Rebased on top of master, added changelog entry<br>
-<br>
-changes in v4:<br>
-- Rebased on top of master<br>
-<br>
-changes in v3:<br>
-- Cherry-picked the patch from Jhonata Poma-Hansen<br>
-<br>
----<br>
----<br>
-=C2=A0lib/bb/fetch/__init__.py | 36 ++++++++++++++++++------------------<br=
->
-=C2=A0lib/bb/fetch/local.py=C2=A0 =C2=A0 | 18 ++++++++++++++++--<br>
-=C2=A0lib/bb/tests/fetch.py=C2=A0 =C2=A0 | 30 +++++++++++++++++++++++++++++=
-+<br>
-=C2=A03 files changed, 64 insertions(+), 20 deletions(-)<br>
-<br>
-diff --git a/lib/bb/fetch/__init__.py b/lib/bb/fetch/__init__.py<br>
-index 55ab710f3..a9f0add78 100644<br>
---- a/lib/bb/fetch/__init__.py<br>
-+++ b/lib/bb/fetch/__init__.py<br>
-@@ -742,7 +742,7 @@ def verify_donestamp(ud, d, origud=3DNone):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0logger.warning(&quot;Checksum mismatch fo=
-r local file %s\n&quot;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 &quot;Cleaning and trying again.&quot; % ud.localpath)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if os.path.exists(ud.localpath):<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 rename_bad_checksum(ud, e.checks=
-um)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ud.method.rename_bad_checksum(ud=
-, e.checksum)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.utils.remove(ud.donestamp)<br>
-=C2=A0 =C2=A0 =C2=A0return False<br>
-<br>
-@@ -775,7 +775,7 @@ def update_stamp(ud, d):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0logger.warning(&quot;Checks=
-um mismatch for local file %s\n&quot;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 &quot;Cleaning and trying again.&quot; % ud.localp=
-ath)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if os.path.exists(ud.localp=
-ath):<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 rename_bad_checksu=
-m(ud, e.checksum)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ud.method.rename_b=
-ad_checksum(ud, e.checksum)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.utils.remove(ud.donestam=
-p)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0raise<br>
-<br>
-@@ -1079,20 +1079,6 @@ def build_mirroruris(origud, mirrors, ld):<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0return uris, uds<br>
-<br>
--def rename_bad_checksum(ud, suffix):<br>
--=C2=A0 =C2=A0 &quot;&quot;&quot;<br>
--=C2=A0 =C2=A0 Renames files to have suffix from parameter<br>
--=C2=A0 =C2=A0 &quot;&quot;&quot;<br>
--<br>
--=C2=A0 =C2=A0 if ud.localpath is None:<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 return<br>
--<br>
--=C2=A0 =C2=A0 new_localpath =3D &quot;%s_bad-checksum_%s&quot; % (ud.local=
-path, suffix)<br>
--=C2=A0 =C2=A0 bb.warn(&quot;Renaming %s to %s&quot; % (ud.localpath, new_l=
-ocalpath))<br>
--=C2=A0 =C2=A0 if not bb.utils.movefile(ud.localpath, new_localpath):<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.warn(&quot;Renaming %s to %s failed, grep m=
-ovefile in log.do_fetch to see why&quot; % (ud.localpath, new_localpath))<b=
-r>
--<br>
--<br>
-=C2=A0def try_mirror_url(fetch, origud, ud, ld, check =3D False):<br>
-=C2=A0 =C2=A0 =C2=A0# Return of None or a value means we&#39;re finished<br=
->
-=C2=A0 =C2=A0 =C2=A0# False means try another url<br>
-@@ -1163,7 +1149,7 @@ def try_mirror_url(fetch, origud, ud, ld, check =3D F=
-alse):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0logger.warning(&quot;Mirror=
- checksum failure for url %s (original url: %s)\nCleaning and trying again.=
-&quot; % (ud.url, origud.url))<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0logger.warning(str(e))<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if os.path.exists(ud.localp=
-ath):<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 rename_bad_checksu=
-m(ud, e.checksum)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ud.method.rename_b=
-ad_checksum(ud, e.checksum)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0elif isinstance(e, NoChecksumError):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0raise<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0else:<br>
-@@ -1479,6 +1465,20 @@ class FetchMethod(object):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;&quot;&quot;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return True<br>
-<br>
-+=C2=A0 =C2=A0 def rename_bad_checksum(self, ud, suffix):<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;&quot;&quot;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 Rename ud.localpath with the given suffix on c=
-hecksum mismatch.<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 Local overrides this to a no-op since its loca=
-lpath points at the<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 user&#39;s source tree.<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 &quot;&quot;&quot;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if ud.localpath is None:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 new_localpath =3D &quot;%s_bad-checksum_%s&quo=
-t; % (ud.localpath, suffix)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.warn(&quot;Renaming %s to %s&quot; % (ud.lo=
-calpath, new_localpath))<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if not bb.utils.movefile(ud.localpath, new_loc=
-alpath):<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.warn(&quot;Renaming %s to %s =
-failed, grep movefile in log.do_fetch to see why&quot; % (ud.localpath, new=
-_localpath))<br>
-+<br>
-=C2=A0 =C2=A0 =C2=A0def verify_donestamp(self, ud, d):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;&quot;&quot;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Verify the donestamp file<br>
-@@ -1943,7 +1943,7 @@ class Fetch(object):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0logger.warning(&quot;Checksum failure encoun=
-tered with download of %s - will attempt other sources if available&quot; %=
- u)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0logger.debug(str(e))<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if os.path.exists(ud.localpath):<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 rename_bad_checksum(ud, e.checksum)<=
-br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ud.method.rename_bad_checksum(ud, e.=
-checksum)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0elif isinstance(e, NoChecksumError):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0raise<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0else:<br>
-diff --git a/lib/bb/fetch/local.py b/lib/bb/fetch/local.py<br>
-index dfc5b564c..a92c0d267 100644<br>
---- a/lib/bb/fetch/local.py<br>
-+++ b/lib/bb/fetch/local.py<br>
-@@ -17,7 +17,7 @@ import os<br>
-=C2=A0import urllib.request, urllib.parse, urllib.error<br>
-=C2=A0import bb<br>
-=C2=A0import bb.utils<br>
--from=C2=A0 =C2=A0bb.fetch import FetchMethod, FetchError, ParameterError<b=
-r>
-+from=C2=A0 =C2=A0bb.fetch import CHECKSUM_LIST, FetchMethod, FetchError, P=
-arameterError<br>
-=C2=A0from=C2=A0 =C2=A0bb.fetch import logger<br>
-<br>
-=C2=A0class Local(FetchMethod):<br>
-@@ -31,11 +31,25 @@ class Local(FetchMethod):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# We don&#39;t set localfile as for this =
-fetcher the file is already local!<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ud.basename =3D os.path.basename(ud.path)=
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ud.basepath =3D ud.path<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 ud.needdonestamp =3D False<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Honor explicit checksum params (UNINATIVE_CH=
-ECKSUM, recipe<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # ;sha256sum=3D) by leaving needdonestamp at F=
-etchData&#39;s default so<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # verify_checksum runs.<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 name =3D ud.parm.get(&quot;name&quot;)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 ud.needdonestamp =3D any(<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 (name and &quot;%s.%ssum&quot; %=
- (name, a) in ud.parm)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 or &quot;%ssum&quot; % a in ud.p=
-arm<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 for a in CHECKSUM_LIST<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 )<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if &quot;*&quot; in ud.path:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0raise bb.fetch.ParameterErr=
-or(&quot;file:// urls using globbing are no longer supported. Please place =
-the files in a directory and reference that instead.&quot;, ud.url)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return<br>
-<br>
-+=C2=A0 =C2=A0 def rename_bad_checksum(self, ud, suffix):<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # file:// urls point at the user&#39;s source =
-tree (recipe-shipped files<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # under FILESPATH or an absolute path the user=
- passed in); skip the<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # rename so a ChecksumError surfaces without m=
-utating their files.<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 return<br>
-+<br>
-=C2=A0 =C2=A0 =C2=A0def localpath(self, urldata, d):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;&quot;&quot;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Return the local filename of a given url =
-assuming a successful fetch.<br>
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py<br>
-index 71b0a63fe..60d356fc6 100644<br>
---- a/lib/bb/tests/fetch.py<br>
-+++ b/lib/bb/tests/fetch.py<br>
-@@ -876,6 +876,36 @@ class FetcherLocalTest(FetcherTest):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0with self.subTest(stripleve=
-l=3Drepr(value)):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.assertIn=
-validStriplevel(value)<br>
-<br>
-+=C2=A0 =C2=A0 def test_local_checksum_match(self):<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Correct sha256 must run verify_checksum to c=
-ompletion; donestamp<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # lands in DL_DIR.<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 import hashlib<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 content =3D b&quot;file:// checksum match test=
-\n&quot;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 with open(os.path.join(self.localsrcdir, &#39;=
-sumfile&#39;), &#39;wb&#39;) as f:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 f.write(content)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 good =3D hashlib.sha256(content).hexdigest()<b=
-r>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher =3D bb.fetch.Fetch([&#39;file://sumfil=
-e;sha256sum=3D&#39; + good], self.d)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 ud =3D fetcher.ud[fetcher.urls[0]]<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(ud.needdonestamp)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher.download()<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(os.path.exists(ud.donestamp))<=
-br>
-+<br>
-+=C2=A0 =C2=A0 def test_local_checksum_mismatch(self):<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # Bad sha256 raises ChecksumError without rena=
-ming the user&#39;s<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 # source file to the &lt;localpath&gt;_bad-che=
-cksum_&lt;sha&gt; sibling.<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 content =3D b&quot;file:// checksum mismatch t=
-est\n&quot;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 srcpath =3D os.path.join(self.localsrcdir, &#3=
-9;sumfile&#39;)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 with open(srcpath, &#39;wb&#39;) as f:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 f.write(content)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 bad =3D &quot;0&quot; * 64<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher =3D bb.fetch.Fetch([&#39;file://sumfil=
-e;sha256sum=3D&#39; + bad], self.d)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 with self.assertRaises(bb.fetch.FetchError):<b=
-r>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fetcher.download()<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertTrue(os.path.exists(srcpath))<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 with open(srcpath, &#39;rb&#39;) as f:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertEqual(f.read(), conte=
-nt)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 self.assertFalse(os.path.exists(srcpath + &#39=
-;_bad-checksum_&#39; + bad))<br>
-+<br>
-=C2=A0 =C2=A0 =C2=A0def dummyGitTest(self, suffix):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# Create dummy local Git repo<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0src_dir =3D tempfile.mkdtemp(dir=3Dself.t=
-empdir,<br>
--- <br>
-2.34.1<br>
-<br>
-</blockquote></div>
-
---0000000000003e4584065c9162bf--
 
