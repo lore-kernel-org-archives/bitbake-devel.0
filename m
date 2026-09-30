@@ -2,135 +2,196 @@ Return-Path: <ecordonnier@snap.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78A0CA5FB1
-	for <webhook@archiver.kernel.org>; Wed, 30 Sep 2026 08:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5ED4CA5FB1
+	for <webhook@archiver.kernel.org>; Wed, 30 Sep 2026 08:36:13 +0000 (UTC)
 Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.8946.1790757282097387269
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.8973.1790757363550016300
  for <bitbake-devel@lists.openembedded.org>;
- Wed, 30 Sep 2026 01:34:42 -0700
+ Wed, 30 Sep 2026 01:36:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@snap.com header.s=google header.b=G4au2R4j;
+ dkim=pass header.i=@snap.com header.s=google header.b=L4FCh0S1;
  spf=pass (domain: snapchat.com, ip: 74.125.225.140, mailfrom: ecordonnier@snapchat.com)
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-4a006bb267eso15726325e9.0
-        for <bitbake-devel@lists.openembedded.org>; Wed, 30 Sep 2026 01:34:41 -0700 (PDT)
+Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49b912d391aso38440545e9.2
+        for <bitbake-devel@lists.openembedded.org>; Wed, 30 Sep 2026 01:36:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790757362; cv=none;
+        d=google.com; s=arc-20260327;
+        b=pF89BfjkUYn5QvnOnpOXO9B2V9UPgI819z7JYTGwOKA6WOJjcDu7j0QeXXyYGlaT1t
+         FHYQuSqUpF64dAFaphz9jLeBu55/dE81vngGviibYnaK5zKRpeLgYlxQmqihfY3dyz5P
+         h4I2Ls33xzXWznrq4DV6hHwTeEf/COyLe26Zu2AVsb1CvrABndmTWwycm7CUd0RKuWTQ
+         Jj7NeYRm6NVUh7WR6HQVYpECfFIApwk3vUhobLhdiJ8d19iwV5hHIVCIt8+oulvtOWL+
+         H4pH7DrSXshUqZl+qwQGC1joIoPG6b9GFv/7Ybfcba4eZCFUuPRPOqL0RtiPkssSBaBe
+         +vbg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=uUMYRkEg0AYk91CYPLSgke3jSQsFtoVDbPStScrLJuw=;
+        fh=kwhZ3Li+yPVxdlH3ayfQoAuPa3/pJuSlz2Co5M6h6T8=;
+        b=UssP63lyPuIFhaUWyhdA+9NKDk5oUxjr53JiyQpyFgEmfWDxM0dFnYO7xXsUfanNRk
+         J9BPD1tuKuFzCE+s5X03M+RL+OGPNMTSsYLfNVpcuYY3PS0/YDhmxaAxmZvg0PeSB281
+         dm2t6ni6VIM+niGiyBLq5fRSHsk6FBAprA0S/QyEqRuvvF6/0U1S6FsafDauu+IpoJLR
+         I4cXWPqRxaVXA96d5eQ7r2O8NttgvktJbChJloM2y8J7wmPyEelIFDa+VNboXIn1iMEX
+         VSFxk7rNsUiDNAQ0AAjl647pD2RrUZ4JWig1UEFq6eudCNUqx9gRObKQN6UZx3yj0edd
+         eezQ==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=snap.com; s=google; t=1790757280; x=1791362080; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=jUXsmbEju44Biu6rx3QfljyBSwLJBg7uNl174w1vRwM=;
-        b=G4au2R4j5NSoBtU4fiT20Mc9PdnvGjLFaN5nceI/7WQ6zdmdTUpGlIi2zV46UtMrE/
-         Mn+HEph/YEpEg0rkLF8ZGZrq1RDqMu7j8nJOjEcc2/8bA1J0AtybjMCm08eFh6l4gucU
-         jG/3zTuERWZc5S9bw/I29fPYb3XpYB0X8B0Rs=
+        d=snap.com; s=google; t=1790757362; x=1791362162; darn=lists.openembedded.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=uUMYRkEg0AYk91CYPLSgke3jSQsFtoVDbPStScrLJuw=;
+        b=L4FCh0S1r3btsEhtpd+Nl9ALHJO5DP5X3JiWhCPSub8i+7tsR3KAEC2fND49gtYwnj
+         3GmXvpKpZH2OFdqQUitaUEYPK55l3+N70OEkYFbCG3qx1ERbL5ASLwKnVXdUi1Vivjay
+         U2ooVavDqCZbU/Pmr4EKxgLwaF4iRsL625fRE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790757280; x=1791362080;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=jUXsmbEju44Biu6rx3QfljyBSwLJBg7uNl174w1vRwM=;
-        b=MswtXBMvmgYmYRp8CD9hXMByjrg2ACmF5Vpqf1+YuO/jn/R059xBjYUd+QX5gEpzJe
-         BI84ySahT8dfGCWLcjJIfL3MeciS/dXgJecY/Z6eQ0fr0OzBrFFzxxCEipS9jN3Nq0td
-         BMbPzn6IZhzr7g6R+LDpcUbbG1i0ImGOpwhTzdSCgsXdjxb3LSc2P24dSJK4RZwPFTRC
-         zogsxq6tayk/XU05P/qW3KjVMmzl0TS9IpkccQnLrgweBfCWquey/wg90UwGxbE3j3gb
-         4uzzOVgEWbeyH2H8vLfHHnAWfqMeHwEoN6Cx2yUUeVMOxcciazWKi9mMLG2ihomwedFk
-         Vlsg==
-X-Gm-Message-State: AFuF++kz7O4SHqIpEaXNxsis3QLB7Klq19QQa8ioP0tAxKeGVifgmVDK
-	eL7onj2AjVtEc52JeTcQvqZo2VfMSZh3TQ2VMToonKgnDzjekb5xIdPHlPUo0T3nHoC8YR4Y++9
-	Jn/Y0h6U=
-X-Gm-Gg: AYBFou3jx3mG4J7xJOeIKS3FE0rpSrw9svfWKtUjdZQBT5bzhNkuN+BNSGrmMHnHSiF
-	bjvj5RpWh48fvj2vaIHZGqN2sZW+s+cUoq6RcdBWKYdoAgRF2SaaQ2GNWNzdWSRm+6JBhCK5JeH
-	dJet37XVHqbBbJIAaoYFA2v+d2AAmBDGspiYQtyUozWRWuIwBJonFtlhwBISbRaKZwyn3EI6Q+5
-	+W470IiaMkDA7Eg0BlB2A2IXNLDC0KdAkl1EPVaNVKp12RheGK9e+zHCt0xSub3CqEslNvjaNKx
-	m139vaRqWI4dn9tkuj/eqbv+/ADJ5QEvMbxyyaoKsmMmAY1cE+LHsTzCZzI62LzdaRFXKnFUGNP
-	espnm6/KaeXy53gxJbdfnyHN4nohp/f7k95nP7EsQdcs5vhSkoFPsVtOLoyU9ZhQ+J4rOQQ6Dam
-	UmBWE9xuelzwPhKhZG26doo6hEl6KQQteu2dQR2sPJcCEA40TBmxnTke1llGxw73bNlqOAP+Rvx
-	66EWMHJ/QBwG+rAsTwF1sBq67Y1VHikEkfx+JkinCM=
-X-Received: by 2002:a05:600c:1c20:b0:4a0:25c:8af2 with SMTP id 5b1f17b1804b1-4a01afe073bmr11539605e9.17.1790757280100;
-        Wed, 30 Sep 2026 01:34:40 -0700 (PDT)
-Received: from lj8k2dq3.sc-core.net ([213.249.125.50])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a0175161c2sm42632115e9.4.2026.09.30.01.34.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Sep 2026 01:34:39 -0700 (PDT)
-From: ecordonnier@snap.com
-To: bitbake-devel@lists.openembedded.org
-Cc: Etienne Cordonnier <ecordonnier@snap.com>
-Subject: [PATCH v2] cache: Cache missing files in the mtime cache
-Date: Wed, 30 Sep 2026 10:34:37 +0200
-Message-ID: <20260930083437.2242917-1-ecordonnier@snap.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20260707; t=1790757362; x=1791362162;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=uUMYRkEg0AYk91CYPLSgke3jSQsFtoVDbPStScrLJuw=;
+        b=05GycIUsGsGZQnlC877T8c6czTdHkkDBrd6fwWSKHB1kzWHtVZofVX4yQ3Q/5blkKf
+         vFNjf5LKjRkQBgcpFyqzxTUC6Xqe/JQ9swLvnFYvohJ9pICoAWPi1wI8pZBWfbJVcrrH
+         GY7n5Em0vfbZ1O+k5OD5YDt8055CVU2dXijHlEWvsGDCk+LdqQx+LO+g4o7eTojJIARg
+         2zeOo2bglG1gggTo5b+no7dC8eUaND1sOKTswkAyWu6OrDNyiDWikVIcXKzkOjbqvodE
+         Sr4YJvfcKPS6XB4xe2Zs9UtpeHDxgG9Qj5ekww6NTd1J//k9SosT0MjvSW50F/k72Mvn
+         89eg==
+X-Gm-Message-State: AFuF++kYG/NMpv+S89H3wdblUUfMjgbXJ/TmJtMSjx9+X976ZiPnihR/
+	sPWgcxpe7KzECuinhU7VNbCkEew7tc4py83k7x+XXBNRv9fKFnqqn/nOx7lKdYh38MkdIlviQ/K
+	AxRemGliki7PgsfNeloh46slrNOi6BOs010rxsIWp8Oiwqa6dGN1lDPRX0w==
+X-Gm-Gg: AYBFou39Wcx6TTN6VW6MJGU3tl9BHo9xnaPlv+LFVAzRWfp3sWLQ3di1CNhMVnRUl6v
+	ApvAsBvFz21D8SBrGwAGvh9ADsReukgrmaa32uzxVR7J+8bKLNNEocc8jhsLs8jWEI8uCVCJrtf
+	HYxTxMST+LHyVvzQ0dkRjPbb6WfuD61n3AoT0oPDDZUzUZKLYED6ZmG8ia5u+gdSDNnGtgbv9bD
+	kyhuJQsmw5HOM2pHyFFd7zJHpRwAJZOTsFY/ixML7QCsxHppXui4RQI3ufV3e2VwFNmbSQsf5DJ
+	FqikgmlfAbTrNldVvLKjYTG2lfFjklZkAdvgwTFWW5CZS9O/3QrnPGoMET8RLA9q20//MkIkDRi
+	W3i14zQ3ifgIk
+X-Received: by 2002:a05:600c:4691:b0:49e:799a:8951 with SMTP id
+ 5b1f17b1804b1-4a01aff4450mr9108905e9.11.1790757361656; Wed, 30 Sep 2026
+ 01:36:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260923170633.1313487-1-ecordonnier@snap.com> <1fe7b763a6e1731dc80fa311f9fe4463a21c35fa.camel@linuxfoundation.org>
+In-Reply-To: <1fe7b763a6e1731dc80fa311f9fe4463a21c35fa.camel@linuxfoundation.org>
+From: Etienne Cordonnier <ecordonnier@snap.com>
+Date: Wed, 30 Sep 2026 10:35:48 +0200
+X-Gm-Features: AclHuK9qpte6HD_pTMMKdL-oqxo08FgQYwxXmfQIwyySqTgV7Xh8tuWCXNyDO3s
+Message-ID: <CAHUKmYa80Q=1ZVPV_Kgd6y16SQqGkP=JwBPq3juTj8-n8awZZA@mail.gmail.com>
+Subject: Re: [bitbake-devel] [PATCH] cache: Reuse os.path.exists() results
+ during dependency validation
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Content-Type: multipart/alternative; boundary="0000000000006bd95a065caf3013"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Wed, 30 Sep 2026 08:34:43 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20282
+ <bitbake-devel@lists.openembedded.org>; Wed, 30 Sep 2026 08:36:13 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20283
 
-From: Etienne Cordonnier <ecordonnier@snap.com>
+--0000000000006bd95a065caf3013
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-cacheValidUpdate() looks up file_depends entries with
-bb.parse.cached_mtime_noerror() and file_checksums entries with
-os.path.exists(). Neither caches a missing file, so the same non-existent
-paths are stat()ed again on every lookup.
+Hi Richard,
+I have sent "cache: Cache missing files in the mtime cache" with your idea.
+It indeed improves the times a bit further.
 
-In a warm parse of 5,111 targets there are 585,773 file_checksums lookups
-for 48,907 unique paths, and 300,648 file_depends lookups for only 545
-missing files.
+=C3=89tienne
 
-Record failed lookups in the mtime cache (as 0) and use it for the
-file_checksums existence check as well. A warm 'bitbake -p' goes from 6.56s
-to 5.82s (median of 12 runs).
+On Tue, Sep 29, 2026 at 1:03=E2=80=AFPM Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
-AI-Generated: Uses Claude Code (Claude Sonnet 5.5)
-Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
----
- lib/bb/cache.py          | 3 ++-
- lib/bb/parse/__init__.py | 8 ++++++--
- 2 files changed, 8 insertions(+), 3 deletions(-)
+> On Wed, 2026-09-23 at 19:06 +0200, Etienne Cordonnier via
+> lists.openembedded.org wrote:
+> > From: Etienne Cordonnier <ecordonnier@snap.com>
+> >
+> > cacheValidUpdate() checks each recipe's file_checksums entries with
+> > os.path.exists(). Many recipes reference the same optional class or
+> > checksum candidate paths, so the same path is checked repeatedly within
+> > one validation pass. In a warm parse of 5,112 recipes (poky, meta-yocto=
+,
+> > meta-oe, meta-python), the real cache data shows 585,348 such calls
+> > against only 48,757 unique paths, with the hottest path checked 16,894
+> > times: 536,591 calls are redundant. At 3.5us per os.path.exists() call =
+on
+> > a nonexistent path on this machine, that is about 1.9s of avoidable
+> > syscall time per validation pass. Cache the result per Cache instance,
+> > which is discarded and recreated at the start of each validation pass, =
+so
+> > a filesystem change between passes is still observed.
+> >
+> > AI-Generated: Uses Claude Code (Claude Opus 5.5)
+> > Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
+> > ---
+> >  lib/bb/cache.py | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> I'm wondering if the existing mtime cache could be combined with this
+> so we only hit both once. That might improve the times a bit further
+> since any hit would then need the mtime data later anyway. I'd worry
+> about lifecycle of the data less too since we already clear the mtime
+> cache at the right times (I hope!).
+>
+> Cheers,
+>
+> Richard
+>
 
-diff --git a/lib/bb/cache.py b/lib/bb/cache.py
-index 24bde62a9..d05d341f4 100644
---- a/lib/bb/cache.py
-+++ b/lib/bb/cache.py
-@@ -619,7 +619,8 @@ class Cache(object):
-                     if not f:
-                         continue
-                     f, exist = f.rsplit(":", 1)
--                    if (exist == "True" and not os.path.exists(f)) or (exist == "False" and os.path.exists(f)):
-+                    file_exists = bb.parse.cached_mtime_noerror(f) != 0
-+                    if (exist == "True" and not file_exists) or (exist == "False" and file_exists):
-                         self.logger.debug2("%s's file checksum list file %s changed",
-                                              fn, f)
-                         self.remove(fn)
-diff --git a/lib/bb/parse/__init__.py b/lib/bb/parse/__init__.py
-index d428d8a4b..815ff1279 100644
---- a/lib/bb/parse/__init__.py
-+++ b/lib/bb/parse/__init__.py
-@@ -48,18 +48,22 @@ class SkipPackage(SkipRecipe):
- 
- __mtime_cache = {}
- def cached_mtime(f):
--    if f not in __mtime_cache:
-+    # A cached 0 is a failure recorded by cached_mtime_noerror(), stat again
-+    # to raise the real error (or pick up the file if it has appeared since)
-+    if __mtime_cache.get(f, 0) == 0:
-         res = os.stat(f)
-         __mtime_cache[f] = (res.st_mtime_ns, res.st_size, res.st_ino)
-     return __mtime_cache[f]
- 
- def cached_mtime_noerror(f):
-+    # Failures are cached as 0 so that repeated lookups of a missing file
-+    # don't hit the filesystem again
-     if f not in __mtime_cache:
-         try:
-             res = os.stat(f)
-             __mtime_cache[f] = (res.st_mtime_ns, res.st_size, res.st_ino)
-         except OSError:
--            return 0
-+            __mtime_cache[f] = 0
-     return __mtime_cache[f]
- 
- def check_mtime(f, mtime):
--- 
-2.43.0
+--0000000000006bd95a065caf3013
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr">Hi Richard,<br>I have sent &quot;cache: Cache missing file=
+s in the mtime cache&quot; with your idea. It indeed improves the times a b=
+it further.<br><br>=C3=89tienne</div><br><div class=3D"gmail_quote gmail_qu=
+ote_container"><div dir=3D"ltr" class=3D"gmail_attr">On Tue, Sep 29, 2026 a=
+t 1:03=E2=80=AFPM Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linux=
+foundation.org">richard.purdie@linuxfoundation.org</a>&gt; wrote:<br></div>=
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
+left:1px solid rgb(204,204,204);padding-left:1ex">On Wed, 2026-09-23 at 19:=
+06 +0200, Etienne Cordonnier via <a href=3D"http://lists.openembedded.org" =
+rel=3D"noreferrer" target=3D"_blank">lists.openembedded.org</a> wrote:<br>
+&gt; From: Etienne Cordonnier &lt;<a href=3D"mailto:ecordonnier@snap.com" t=
+arget=3D"_blank">ecordonnier@snap.com</a>&gt;<br>
+&gt; <br>
+&gt; cacheValidUpdate() checks each recipe&#39;s file_checksums entries wit=
+h<br>
+&gt; os.path.exists(). Many recipes reference the same optional class or<br=
+>
+&gt; checksum candidate paths, so the same path is checked repeatedly withi=
+n<br>
+&gt; one validation pass. In a warm parse of 5,112 recipes (poky, meta-yoct=
+o,<br>
+&gt; meta-oe, meta-python), the real cache data shows 585,348 such calls<br=
+>
+&gt; against only 48,757 unique paths, with the hottest path checked 16,894=
+<br>
+&gt; times: 536,591 calls are redundant. At 3.5us per os.path.exists() call=
+ on<br>
+&gt; a nonexistent path on this machine, that is about 1.9s of avoidable<br=
+>
+&gt; syscall time per validation pass. Cache the result per Cache instance,=
+<br>
+&gt; which is discarded and recreated at the start of each validation pass,=
+ so<br>
+&gt; a filesystem change between passes is still observed.<br>
+&gt; <br>
+&gt; AI-Generated: Uses Claude Code (Claude Opus 5.5)<br>
+&gt; Signed-off-by: Etienne Cordonnier &lt;<a href=3D"mailto:ecordonnier@sn=
+ap.com" target=3D"_blank">ecordonnier@snap.com</a>&gt;<br>
+&gt; ---<br>
+&gt; =C2=A0lib/bb/cache.py | 10 +++++++++-<br>
+&gt; =C2=A01 file changed, 9 insertions(+), 1 deletion(-)<br>
+<br>
+I&#39;m wondering if the existing mtime cache could be combined with this<b=
+r>
+so we only hit both once. That might improve the times a bit further<br>
+since any hit would then need the mtime data later anyway. I&#39;d worry<br=
+>
+about lifecycle of the data less too since we already clear the mtime<br>
+cache at the right times (I hope!).<br>
+<br>
+Cheers,<br>
+<br>
+Richard<br>
+</blockquote></div>
+
+--0000000000006bd95a065caf3013--
 
