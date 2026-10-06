@@ -1,132 +1,356 @@
-Return-Path: <wafgo01@gmail.com>
+Return-Path: <setairidis@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 351BFCA5FED
-	for <webhook@archiver.kernel.org>; Tue,  6 Oct 2026 13:41:07 +0000 (UTC)
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.45891.1791294057068501075
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B91CA5FED
+	for <webhook@archiver.kernel.org>; Tue,  6 Oct 2026 16:40:38 +0000 (UTC)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.518.1791304832680537549
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 06 Oct 2026 06:40:57 -0700
+ Tue, 06 Oct 2026 09:40:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20251104 header.b=R4X5ajAE;
- spf=pass (domain: gmail.com, ip: 209.85.208.42, mailfrom: wafgo01@gmail.com)
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6a9e5ba741aso1042777a12.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 06 Oct 2026 06:40:56 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=BAZ3HhOY;
+ spf=pass (domain: gmail.com, ip: 209.85.208.179, mailfrom: setairidis@gmail.com)
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-3a20c95e412so7554931fa.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 06 Oct 2026 09:40:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791304831; cv=none;
+        d=google.com; s=arc-20260327;
+        b=fP0N1lphnEKPRRbCSwjiP5N7eIdK5eEg++xK3BSoPuFxIBlktoo8QyDX2cIygwNJ9N
+         WP/baF75sdVnRyTssdO791TjfqXWNgL66x5+rE2AT6rHvFJP7wgp0dHcDurLwZXmERYI
+         i2z+YuixKXNkU01q9+0H1jH8nvanH9mscaXXOe5l0t6h46DXp3tCX0HOFLjE+SSWhw+3
+         N4GNOhS7eWR1LLwi02MGio2osRyFSieew5D/AJgLDmzxvUsEpUquBgPhlwQGWh75J4B4
+         X/AIMxxkOkAUNWixqdPRNly4Ri4cyq83Y8fhVjNEbzT1p7c13ufUpuMn+5U1bGupmOCp
+         divg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=pSAsFLvZ/ODh76ZdZ72cJU1CHYa3fvKBuXfNJRYh4Oo=;
+        fh=dtYYFBMK5CW3AibVUG9VO8wj3/FXF3iz2pjNzKpyonM=;
+        b=Tp/0coOpOiO4ibemCQgn3AwdmLb2Ppk8iLIu7QvaZvnis2M2aJgwKPd/VhxZK4+9FG
+         zwrI9jE7rnCw3tKzB1dLKUqShupLgRMAakdWJYdgMY/HZ956eqOECIGSOo7TnwrNS/7r
+         6DLPh8RqpfqjkpuqqInwiG9mV/tdp3kexelNOXPv6E1wNFqQc2eUlCisIS+vyAA4AWRW
+         BnyHhOKVaDOA9oQ8WL/P3C6NAO8SE71x55nqvrhzPvk3KOvBo22IKmJSUwILH4jFStPz
+         H1eMoI3yeHNdZZSusmdaSPY0qEJQ58j/aFVZ6Kt3tsISMbrp7itky8UbMd+i+ciBg3JU
+         ov4g==;
+        darn=lists.openembedded.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791294055; x=1791898855; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Kb4eVtK2uoY3+RmA+t3DmUHgxsFXAhOPVZbk4jq525Y=;
-        b=R4X5ajAElMUIfaSWAJEU0k3d+GnU78UgPZ7DfwCCqAu24Vy7oW1vgMWtlIaN+Ov2C9
-         mRz47MHLShjmS673TprzVxVZpawz2bRymzoPq/KDx0Zsw9m68keyd92Y5hyoogGBgN4v
-         r9GyrNP/HV53Ram5QBmvH96LHs/j7wanno/6WmU5a2qyY14jiPzTqV7ALcKTHL+nTaP2
-         vmOTq5YkCnrkhheXAs7JgFH8sI1/cm0pxSs953HiFZDVntSKRCvquWk7MYHjZARFPMDi
-         6CmdyU8inRYz/S5khy1UXZNpiZMuOUrlBaQHxMrRdjeG1R5jjqVfjuEeU6s4jkdJ4W/n
-         DQbw==
+        d=gmail.com; s=20251104; t=1791304831; x=1791909631; darn=lists.openembedded.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=pSAsFLvZ/ODh76ZdZ72cJU1CHYa3fvKBuXfNJRYh4Oo=;
+        b=BAZ3HhOYNG80bad6+m2VNls9TFcnQl468Bs06shzkzEMgw02/h1HgdZPMZai4iX0qr
+         aKvY70KFnAfXgEkeCgQ1HK4VWgFEaPHhHOtE6c0zXpDRSBuy2+CB+GYIJYjwpVE8NGJv
+         CufdYVJKvaCuFSvJXLKvWSOBgnzBXgC85AZabwAurACHmiOVb/GLS50EqXUvEr1PO485
+         abGkAjQ/YnST9ohV4xBfPb2xPF3yumheavQhsP0igaioqm7Nf2kxo/yRsfv/mOYGIOuM
+         jPRK81Cgo2nY6pDL/itwPz5W2rHyulypY0hl5nghAnUcWPeryHHcQVqkmdIFoVnQw4pD
+         DsMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791294055; x=1791898855;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Kb4eVtK2uoY3+RmA+t3DmUHgxsFXAhOPVZbk4jq525Y=;
-        b=GkW3tsdZ+qwK90xayMM/ZI3zCzDczK8UnSFUTo0dKsmsBRKvPNyFGnZxPMSdroyVqn
-         5LKhy4pisqt0avFizqpGO8jrNQE5Y/D3KVnimt2vaZg1IMp8qPI0vfc0mcARJlc9Mupp
-         37r8HY5IkbsnZFxbJrqzV3xLok8nyVr28CBfvI3bDKSYWKn3tc7LF4dx6EvzWylbvZic
-         vfjOWYqFzrJsWp5qN5O/AhwsN5sYpfWNXLWO+URZIhzZ8+XIfji/tOroMGotKfmo2c+o
-         vMf56tnOnc5YcNb+KB7MfXAJnxnMTeNgd2Q+24yn3ehm2rE92FfokAe4/EPSWrQE9DXr
-         jK4g==
-X-Gm-Message-State: AFq9FYJx7XV92Lm4tQGzHA+ak7a2J3XPyloXO17sqKy0P1MbWFjhfoy3
-	wK5JXYEIx//kSc9y7Z3FKZCJ1MqjJ2ke/ui3n2eZ+Dh2Nv7i3S/n4dIBlnikP+h8
-X-Gm-Gg: AYBFou2lsMScMW6LXoRRAakG0NYd9V5hsGQpXdvFvwylgCZoWAnIjYWRHDs35memxO8
-	0XKOOxn+QzAhThcTTIskydaj1I2FWb+jcTG8ngSy3OSI4+3o29xxt+eJywp6UV3gLKoyvwj/zZF
-	8xT3F2zCnfmSkZ7gzeFe4lcW6POz3/Ea1mUSp2U2hiHpfWXBFx8NxDvBU89o69e5z0baFHdlgGt
-	wB+vlg4rb37CaPC0t2uA4KcwMqgoBFzRnrd8K3yVMoGGfKVBnqLHcbPNDXsFivBoiYbRcMJKWms
-	T4h66zA/1WHZtHOaZWmawhEsWKuaNRU+S15ARTwPzTOKJ4z0/eE8me3cBcqm+60WbHMLkH8RUME
-	TF6+SCBUsadRw3OJlL6PXXPwkSTexPVkHim92ZjbgCZIssQD6S/TpumfljVE1RrzlNoGqgyxS94
-	dZ7aAJv1KHd+d6TW3+hUmo/X1+NZ07fV4J8TaP9Udnvg3npc+YLiOCBENua0Wc8wVn6ds21XB4h
-	7yLuMhmv4zd0O69Lg==
-X-Received: by 2002:a05:6402:52d3:b0:6ac:5e42:5b45 with SMTP id 4fb4d7f45d1cf-6afe29ea45amr1129174a12.34.1791294054958;
-        Tue, 06 Oct 2026 06:40:54 -0700 (PDT)
-Received: from DE-PF5B95TD.clients.cmblu.de ([87.129.199.250])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6afb021a5e9sm4884965a12.29.2026.10.06.06.40.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Oct 2026 06:40:54 -0700 (PDT)
-From: Wadim Mueller <wafgo01@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Cc: Wadim Mueller <wafgo01@gmail.com>
-Subject: [2.8][PATCH] prserv: commit new revisions when a request succeeds
-Date: Tue,  6 Oct 2026 15:40:52 +0200
-Message-ID: <20261006134052.1778484-1-wafgo01@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20260707; t=1791304831; x=1791909631;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=pSAsFLvZ/ODh76ZdZ72cJU1CHYa3fvKBuXfNJRYh4Oo=;
+        b=2m0r0ouDqw8mw1T7iPKfh+8fsjpM6RVRGDT3dTCCpFf4TBDo7xb9JEXFRNEEE0x9G6
+         /5rqp1rRo+wirwnRHZ8rftsXU8vzZPmTBN5a9aMhmHuDFVI2+u8gb/mDTduJ1/K+VrRk
+         lBTZS0LgtVVO406TiiXtSDZvYq7hr1NUxFXNBtv2xQHPk+8skiYwqKitZ7kMlppdj79M
+         1By3JNPqGRq3MlP5ys7s7PjlGuL7DLGprnwmSYAz7LFm3Medj+CDzcKsqlY8oKvkm5LP
+         63HH8NK9vFmsReN+JZkRpwXNBnfJJU1THrGMGJIMJqvlCnQNlk4GuISx1a4KcKTQ0LJr
+         a/jQ==
+X-Gm-Message-State: AFq9FYJUoVyIn0BpI67yi0MrUeT1ON2xnhIZBc0dNlR/1xtouvLwWkHq
+	WAh0iRA0M/XKXpfi0doFnBZtqd8I0Isa0Pqlw+PcgoK0SDOpcUmfEHnIQq9BL5c1FLqFcquFnqj
+	Chs0RWALZVMTTWIOjudf7243Hy/nBzCk=
+X-Gm-Gg: AYBFou2KsapBDf7Kk+RAGb2322apJ79G9ohtzwq3g580V6ARjmYCtQ+Fz4fDP6ahPU/
+	IUtQ42OljKwkmmcRn1SqgBwwGqBsdJCNLTlZSC6gv+697rMD/1DQOsmJcUVyb2VkjXr5LWECxka
+	IxFn9FupSLHbrXy0yJYHKmH8cBNtRXgv8tqJG8Tac7AmeHCdbsDKWez3LmxvaucXigyy4LIOSYS
+	+n+6YuIRE8pkLE+OFaYHH6zGh4zlVP8OY8OestbE6KXIlBeOZlDbxNoa/wpVD97ukwTDK3k2lj9
+	GXqSGJxSG6KyWDagFyKW9cTy89HRXbVr1fcsC43RMcpSthFVNYkFUgbXYM68IIfCca5wxhKL+9D
+	v4bhqhaodJg3pXw==
+X-Received: by 2002:a2e:be91:0:b0:3a4:9e40:d7fb with SMTP id
+ 38308e7fff4ca-3a99acf0edfmr4525091fa.7.1791304830556; Tue, 06 Oct 2026
+ 09:40:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAKJXz6ecab40e-HXeYqSNNLcMK=Prrrgytq6qiqus6pCb3vPGQ@mail.gmail.com>
+ <20261002205054.72441-1-setairidis@gmail.com> <4db70d3630cc76a86d7c388ef142af1a7699853e.camel@pbarker.dev>
+In-Reply-To: <4db70d3630cc76a86d7c388ef142af1a7699853e.camel@pbarker.dev>
+From: Sawas Etairidis <setairidis@gmail.com>
+Date: Tue, 6 Oct 2026 18:40:19 +0200
+X-Gm-Features: AclHuK-mg9VHr1zagU9ASvl4whfJI7yLZ7ZQz6sFsw2n8S0ygUMVJn11a67EolY
+Message-ID: <CAKJXz6fQSkK6_WhpWT5E3dfgxXSs8vtepQuESg2aXBZLvushcw@mail.gmail.com>
+Subject: Re: [PATCH v8] fetch/local: verify checksums for file:// urls
+To: Paul Barker <paul@pbarker.dev>
+Cc: bitbake-devel@lists.openembedded.org, 
+	Jhonata Poma-Hansen <jhonata.poma@gmail.com>
+Content-Type: multipart/alternative; boundary="0000000000001c1fba065d2ea8d4"
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Tue, 06 Oct 2026 13:41:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20298
+ <bitbake-devel@lists.openembedded.org>; Tue, 06 Oct 2026 16:40:38 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20299
 
-PRServerClient.dispatch_message() is meant to commit new PR values after
-every request that succeeds:
+--0000000000001c1fba065d2ea8d4
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-    try:
-        return await super().dispatch_message(msg)
-    except:
-        self.server.table.sync()
-        raise
-    else:
-        self.server.table.sync_if_dirty()
+Hi,
 
-The else clause of a try statement does not run when the try suite leaves
-through a return statement, so sync_if_dirty() is never called after a
-successful request. The database connection keeps an open EXCLUSIVE
-transaction and the values are written to the database file only when the
-server stops or receives a signal. Until then the file stays unchanged and
-other readers fail with "database is locked".
+Path of least resistance: I noticed the isinstance check above and thought
+it was acceptable.
+My bad I sends this as a personal response previously.
 
-A long running server therefore holds all revisions it has handed out since
-its start only in memory. After a crash, a kill or a power loss the file
-returns to the state of the last clean stop, the numbering restarts there and
-a client sees package revisions go backwards.
+Regards,
+Savvas
 
-Reproduced with a server started with --file on an empty database: three
-getPR() calls for new checksums leave the file untouched until the server is
-stopped. With this change the entries are in the file after each request.
+=CE=A3=CF=84=CE=B9=CF=82 =CE=94=CE=B5=CF=85 5 =CE=9F=CE=BA=CF=84 2026 =CF=
+=83=CF=84=CE=B9=CF=82 4:36=E2=80=AF=CE=BC.=CE=BC., =CE=BF/=CE=B7 Paul Barke=
+r <paul@pbarker.dev>
+=CE=AD=CE=B3=CF=81=CE=B1=CF=88=CE=B5:
 
-Keep the response, commit, then return it.
+> On Fri, 2026-10-02 at 22:50 +0200, Savvas Etairidis wrote:
+> > [YOCTO #9993]
+> >
+> > A checksum given in a file:// url (e.g. UNINATIVE_CHECKSUM when
+> > UNINATIVE_URL points at a local file://) was never verified, because
+> > Local disables the donestamp and so verify_checksum() was never called.
+> > Enable the donestamp for file:// urls that carry a checksum.
+> >
+> > Based on a patch by Jhonata Poma-Hansen.
+> >
+> > AI-Generated: Uses Claude Code (Claude Opus 5.5)
+> > Signed-off-by: Savvas Etairidis <setairidis@gmail.com>
+> >
+> > ---
+> > changes in v8:
+> > - Dropped the local-checksums stamps and re-used the regular donestamp,
+> >   enabled only for file:// urls with a checksum. local.py is unchanged
+> >   again.
+> > - Tests reduced to a checksum match and a mismatch test.
+> > - Tested with BB_SKIP_NETTESTS=3Dyes bin/bitbake-selftest bb.tests.fetc=
+h
+> >
+> > changes in v7:
+> > - We shouldn't assume that anything coming from a file:// URL is
+> >   "typically small", or that it is on fast local storage (it could be o=
+n
+> a
+> >   HDD array accessed over NFS).
+> > * Rework the code to avoid re-hashing the file on every fetch, and
+> >   instead only re-hash it when the checksum is actually expected to be
+> verified.
+> > - You don't need to mention this if it didn't result in actual change.
+> > * Wont do in the future.
+> > - Such as? This is a completely different approach so it's useful to kn=
+ow
+> >   which bits of feedback were actually relevant and which were made
+> >   obsolete by the change in approach.
+> > * Hoped I did better this time.
+> > - What does "edited with an old mtime" mean?
+> > * In that test the file attributes are modified to have an old mtime,
+> >   which is a corner case that was not handled correctly before.
+> >   This test was removed in v6 because the new approach doesn't have
+> >   that issue anymore.
+> > - Why complicate this by using different hash algorithms for the
+> different
+> >   tests?
+> >   The test wants to cover the case where we have a valid md5sum but an
+> >   invalid sha256sum or a invalid md5sum but a valid sha256sum.
+> > - Added a test to covern new functionality.
+> >
+> > changes in v6:
+> > - Rebased on top of master
+> > - Fixed issues reported by reviewer
+> > - Check the file directly in Local.verify_donestamp(), via a new
+> >   FetchData.verify_checksum_if_expected() helper, instead of enabling
+> >   the donestamp. Fixes stale checksums for files edited with an old
+> >   mtime and DL_DIR stamp/lock path collisions
+> > - Drop the rename_bad_checksum() refactor, no longer needed
+> > - Document the cost of re-hashing on every fetch
+> > - Tests: use a correct md5sum and a wrong sha256sum in the mismatch
+> >   test, add a test for a file edited with an old mtime, and check that
+> >   nothing is written to DL_DIR
+> > - Tested with BB_SKIP_NETTESTS=3Dyes bin/bitbake-selftest bb.tests.fetc=
+h
+> >
+> > changes in v5:
+> > - Rebased on top of master, added changelog entry
+> >
+> > changes in v4:
+> > - Rebased on top of master
+> >
+> > changes in v3:
+> > - Cherry-picked the patch from Jhonata Poma-Hansen
+> >
+> > ---
+> > ---
+> >  lib/bb/fetch/__init__.py | 16 ++++++++++++++++
+> >  lib/bb/tests/fetch.py    | 30 ++++++++++++++++++++++++++++++
+> >  2 files changed, 46 insertions(+)
+> >
+> > diff --git a/lib/bb/fetch/__init__.py b/lib/bb/fetch/__init__.py
+> > index eb3483a48..6401ce1b8 100644
+> > --- a/lib/bb/fetch/__init__.py
+> > +++ b/lib/bb/fetch/__init__.py
+> > @@ -1087,6 +1087,10 @@ def rename_bad_checksum(ud, suffix,
+> localpath=3DNone):
+> >      if ud.localpath is None:
+> >          return
+> >
+> > +    # A file:// url refers to the user's own file, leave it in place
+> > +    if isinstance(ud.method, local.Local):
+> > +        return
+>
+> Adding special cases in the base fetcher code is poor design and
+> complicates maintenance. Why have you taken this approach instead of
+> making rename_bad_checksum() a method of the Fetch class and overriding
+> it as you did in v4 of this patch? I'm looking for an explanation not a
+> v9 patch.
+>
+> Best regards,
+>
+> --
+> Paul Barker
+>
+>
 
-This is specific to the 2.8 branch. The server was reworked for master and
-2.10 ("prserv: enable database sharing" and the commits around it), which
-commits where values are stored and uses WAL, so master does not have this
-problem and the commit cannot be backported as it is.
+--0000000000001c1fba065d2ea8d4
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Wadim Mueller <wafgo01@gmail.com>
----
- lib/prserv/serv.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+<div dir=3D"ltr">Hi,<div><br></div><div>Path of least resistance: I noticed=
+ the isinstance check above and thought it was acceptable.</div><div>My bad=
+ I sends this as a personal response previously.</div><div><br></div><div>R=
+egards,</div><div>Savvas</div></div><br><div class=3D"gmail_quote gmail_quo=
+te_container"><div dir=3D"ltr" class=3D"gmail_attr">=CE=A3=CF=84=CE=B9=CF=
+=82 =CE=94=CE=B5=CF=85 5 =CE=9F=CE=BA=CF=84 2026 =CF=83=CF=84=CE=B9=CF=82 4=
+:36=E2=80=AF=CE=BC.=CE=BC., =CE=BF/=CE=B7 Paul Barker &lt;<a href=3D"mailto=
+:paul@pbarker.dev">paul@pbarker.dev</a>&gt; =CE=AD=CE=B3=CF=81=CE=B1=CF=88=
+=CE=B5:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px =
+0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">On Fri, =
+2026-10-02 at 22:50 +0200, Savvas Etairidis wrote:<br>
+&gt; [YOCTO #9993]<br>
+&gt; <br>
+&gt; A checksum given in a file:// url (e.g. UNINATIVE_CHECKSUM when<br>
+&gt; UNINATIVE_URL points at a local file://) was never verified, because<b=
+r>
+&gt; Local disables the donestamp and so verify_checksum() was never called=
+.<br>
+&gt; Enable the donestamp for file:// urls that carry a checksum.<br>
+&gt; <br>
+&gt; Based on a patch by Jhonata Poma-Hansen.<br>
+&gt; <br>
+&gt; AI-Generated: Uses Claude Code (Claude Opus 5.5)<br>
+&gt; Signed-off-by: Savvas Etairidis &lt;<a href=3D"mailto:setairidis@gmail=
+.com" target=3D"_blank">setairidis@gmail.com</a>&gt;<br>
+&gt; <br>
+&gt; ---<br>
+&gt; changes in v8:<br>
+&gt; - Dropped the local-checksums stamps and re-used the regular donestamp=
+,<br>
+&gt;=C2=A0 =C2=A0enabled only for file:// urls with a checksum. local.py is=
+ unchanged<br>
+&gt;=C2=A0 =C2=A0again.<br>
+&gt; - Tests reduced to a checksum match and a mismatch test.<br>
+&gt; - Tested with BB_SKIP_NETTESTS=3Dyes bin/bitbake-selftest bb.tests.fet=
+ch<br>
+&gt; <br>
+&gt; changes in v7:<br>
+&gt; - We shouldn&#39;t assume that anything coming from a file:// URL is<b=
+r>
+&gt;=C2=A0 =C2=A0&quot;typically small&quot;, or that it is on fast local s=
+torage (it could be on a<br>
+&gt;=C2=A0 =C2=A0HDD array accessed over NFS).<br>
+&gt; * Rework the code to avoid re-hashing the file on every fetch, and<br>
+&gt;=C2=A0 =C2=A0instead only re-hash it when the checksum is actually expe=
+cted to be verified.<br>
+&gt; - You don&#39;t need to mention this if it didn&#39;t result in actual=
+ change.<br>
+&gt; * Wont do in the future.<br>
+&gt; - Such as? This is a completely different approach so it&#39;s useful =
+to know<br>
+&gt;=C2=A0 =C2=A0which bits of feedback were actually relevant and which we=
+re made<br>
+&gt;=C2=A0 =C2=A0obsolete by the change in approach.<br>
+&gt; * Hoped I did better this time.<br>
+&gt; - What does &quot;edited with an old mtime&quot; mean?<br>
+&gt; * In that test the file attributes are modified to have an old mtime,<=
+br>
+&gt;=C2=A0 =C2=A0which is a corner case that was not handled correctly befo=
+re.<br>
+&gt;=C2=A0 =C2=A0This test was removed in v6 because the new approach doesn=
+&#39;t have<br>
+&gt;=C2=A0 =C2=A0that issue anymore.<br>
+&gt; - Why complicate this by using different hash algorithms for the diffe=
+rent<br>
+&gt;=C2=A0 =C2=A0tests?<br>
+&gt;=C2=A0 =C2=A0The test wants to cover the case where we have a valid md5=
+sum but an<br>
+&gt;=C2=A0 =C2=A0invalid sha256sum or a invalid md5sum but a valid sha256su=
+m.<br>
+&gt; - Added a test to covern new functionality.<br>
+&gt; <br>
+&gt; changes in v6:<br>
+&gt; - Rebased on top of master<br>
+&gt; - Fixed issues reported by reviewer<br>
+&gt; - Check the file directly in Local.verify_donestamp(), via a new<br>
+&gt;=C2=A0 =C2=A0FetchData.verify_checksum_if_expected() helper, instead of=
+ enabling<br>
+&gt;=C2=A0 =C2=A0the donestamp. Fixes stale checksums for files edited with=
+ an old<br>
+&gt;=C2=A0 =C2=A0mtime and DL_DIR stamp/lock path collisions<br>
+&gt; - Drop the rename_bad_checksum() refactor, no longer needed<br>
+&gt; - Document the cost of re-hashing on every fetch<br>
+&gt; - Tests: use a correct md5sum and a wrong sha256sum in the mismatch<br=
+>
+&gt;=C2=A0 =C2=A0test, add a test for a file edited with an old mtime, and =
+check that<br>
+&gt;=C2=A0 =C2=A0nothing is written to DL_DIR<br>
+&gt; - Tested with BB_SKIP_NETTESTS=3Dyes bin/bitbake-selftest bb.tests.fet=
+ch<br>
+&gt; <br>
+&gt; changes in v5:<br>
+&gt; - Rebased on top of master, added changelog entry<br>
+&gt; <br>
+&gt; changes in v4:<br>
+&gt; - Rebased on top of master<br>
+&gt; <br>
+&gt; changes in v3:<br>
+&gt; - Cherry-picked the patch from Jhonata Poma-Hansen<br>
+&gt; <br>
+&gt; ---<br>
+&gt; ---<br>
+&gt;=C2=A0 lib/bb/fetch/__init__.py | 16 ++++++++++++++++<br>
+&gt;=C2=A0 lib/bb/tests/fetch.py=C2=A0 =C2=A0 | 30 ++++++++++++++++++++++++=
+++++++<br>
+&gt;=C2=A0 2 files changed, 46 insertions(+)<br>
+&gt; <br>
+&gt; diff --git a/lib/bb/fetch/__init__.py b/lib/bb/fetch/__init__.py<br>
+&gt; index eb3483a48..6401ce1b8 100644<br>
+&gt; --- a/lib/bb/fetch/__init__.py<br>
+&gt; +++ b/lib/bb/fetch/__init__.py<br>
+&gt; @@ -1087,6 +1087,10 @@ def rename_bad_checksum(ud, suffix, localpath=
+=3DNone):<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 if ud.localpath is None:<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return<br>
+&gt;=C2=A0 <br>
+&gt; +=C2=A0 =C2=A0 # A file:// url refers to the user&#39;s own file, leav=
+e it in place<br>
+&gt; +=C2=A0 =C2=A0 if isinstance(ud.method, local.Local):<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 return<br>
+<br>
+Adding special cases in the base fetcher code is poor design and<br>
+complicates maintenance. Why have you taken this approach instead of<br>
+making rename_bad_checksum() a method of the Fetch class and overriding<br>
+it as you did in v4 of this patch? I&#39;m looking for an explanation not a=
+<br>
+v9 patch.<br>
+<br>
+Best regards,<br>
+<br>
+-- <br>
+Paul Barker<br>
+<br>
+</blockquote></div>
 
-diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
-index dc4be5b..cff57a8 100644
---- a/lib/prserv/serv.py
-+++ b/lib/prserv/serv.py
-@@ -39,12 +39,12 @@ class PRServerClient(bb.asyncrpc.AsyncServerConnection):
- 
-     async def dispatch_message(self, msg):
-         try:
--            return await super().dispatch_message(msg)
-+            response = await super().dispatch_message(msg)
-         except:
-             self.server.table.sync()
-             raise
--        else:
--            self.server.table.sync_if_dirty()
-+        self.server.table.sync_if_dirty()
-+        return response
- 
-     async def handle_test_pr(self, request):
-         '''Finds the PR value corresponding to the request. If not found, returns None and doesn't insert a new value'''
--- 
-2.43.0
-
+--0000000000001c1fba065d2ea8d4--
 
