@@ -2,96 +2,100 @@ Return-Path: <yoann.congal@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BA2CA9EBD
-	for <webhook@archiver.kernel.org>; Sun, 11 Oct 2026 08:49:00 +0000 (UTC)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.23563.1791708538168640314
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D28A4CA9EBD
+	for <webhook@archiver.kernel.org>; Sun, 11 Oct 2026 08:49:10 +0000 (UTC)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.23565.1791708541320119500
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 11 Oct 2026 01:48:58 -0700
+ Sun, 11 Oct 2026 01:49:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=BmGK9REh;
- spf=pass (domain: smile.fr, ip: 209.85.128.44, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4a16c1608faso12831705e9.0
-        for <bitbake-devel@lists.openembedded.org>; Sun, 11 Oct 2026 01:48:57 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=alkHZUgB;
+ spf=pass (domain: smile.fr, ip: 209.85.221.45, mailfrom: yoann.congal@smile.fr)
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-48b0ef9c76eso782518f8f.0
+        for <bitbake-devel@lists.openembedded.org>; Sun, 11 Oct 2026 01:49:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1791708536; x=1792313336; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=fbqKDPwW4pSCiZf5Isd/DcAxe9Z5Ow2CmRrxlleIGhs=;
-        b=BmGK9REhwFxb4J94owHc6y+beGANFIk6Mg1NBANmIomedSSah9VnXeas2Cz92rYkb1
-         emwXANFwmOWBu1G8F7UWy86dFUDJtT3kK/oxQSEXm5rdPUKR4F1Wqb9qu5ATHG0cvxyO
-         Z6YRopbSUmGGmehGyWhGd1aepegECkOrnqd2c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791708536; x=1792313336;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=smile.fr; s=google; t=1791708539; x=1792313339; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=fbqKDPwW4pSCiZf5Isd/DcAxe9Z5Ow2CmRrxlleIGhs=;
-        b=1uvIfJFBA+pLHLhsym1Fx1db1jqnYmBjQ/DnmCkKG14jlf2iuRVtYaf6BvKHwg6grT
-         4aywkhSdomr7YgXOGTAbMh5y/aG8IlN1i1El6iUVOm/ZikCvJBVZWoHs81zDbOgcTFb/
-         mGSSQPi15DjvN5zI7VKtE17aifEfJNJe6TXnk2g7ub2EQERBO6SxDIUscg58tCBKt65X
-         fpQSaP9e0NMiwjhQEaRH531MIqRmBFcxUlczzQpIBO/SlK03OzBhDna76jCoIuIQSYMH
-         RajGrTMmbg9oxCgxNfU+YrVBev2Lhs0zgSfbrmkVmwlu0XID0p4rWKlyseuIQqtls2td
-         RKYw==
-X-Gm-Message-State: AFq9FYJ3dd7U8YrPUk1Dl+ih7/EZA8pGy6kZJfRbP3TqELxVKU1TopWM
-	8pVf7gLfcVwDStzk0Hlqt76+oxQD8WOO0CDitYya2BwIQtvZDvrY5E67yql4/N2gbQgoqG9pwJi
-	OT6mDUEY=
-X-Gm-Gg: AYBFou0LcGvwzk6i9GGkTGBT33juZgP53H9bLa6mR5YSNAdM6pNRGWwGKZVhUNL+gk3
-	2FwtfnjuP5CYKHBex5DoEdrbuWJVdDYce46nbvDWd+/hc7UXXSEyzbpviVc2b4wvaWNW3CxLxjB
-	/6jEeEpfQcWtC/dOofYET9thxjDybFm6itiIybeOSsfVuYskpmnS1UOWH3ZMOKBcNF6uwSba+NR
-	HDie0WSBiMsaQDIjK1S/VJke8gKFLM3+ZGhrykuoo7aYeoVQo82h2IBGhpbAMAiCPf25ejQvwLT
-	BN24CIOXOaXoKXv4oiBc9CBchZ4ibvrZz4gRWPR768l233L6pTtnD5uyuvpSB+kMyTZ2echUUw3
-	1aO3zEmGkg5Ji3F30qcjdLEVVO9sK9D5UiJgpiGEH1bpqUnPi1ocK7wgQM/KucyB8W8Cg5UlvN/
-	VneItFvzCC+TilMvcuFklWxDZaUzpsQz8xj2yHuEiKW7HbMfBNONyp7b5K6jUdyXAOqPiZlcZLm
-	qU1A1AEuohgI7pefQ+J4Rp+y7WHEGuKtd0PK150Bpa1LJWwpwV6J61l049owSvK/+ND1Nyjig==
-X-Received: by 2002:a05:600c:8a09:20b0:4a1:9c98:b9b8 with SMTP id 5b1f17b1804b1-4a19c98c153mr8916005e9.11.1791708536325;
-        Sun, 11 Oct 2026 01:48:56 -0700 (PDT)
+        bh=ZjfTqqWWiJIVcIGCrQ25MXE26Zh2qK1XNIJMBDeZ3M8=;
+        b=alkHZUgBtSRyZS+DqNtWUuRmuaKip79GK3pKU0d3jRSIb5RcRq8doDX8maK6b5SwDJ
+         8hwPtGKPXyzPaUcH0folW7asFsH/98w3NSgcXB9/A14Hu3QPIdc9i1dP8Z84lNOVHYf2
+         1CBK6UbLxz5V79fkabAOLTCSqpgnkCVfSvsrs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791708539; x=1792313339;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=ZjfTqqWWiJIVcIGCrQ25MXE26Zh2qK1XNIJMBDeZ3M8=;
+        b=sm0JAf39TQ8Z5okJi4cVjw2PV8kvnDoMBzaQ71TjN6utiUWLO1Xa1HGnqp40jmQJQN
+         wp8wovPox75MMjfbtyosGJVFSs5hy2s5e/3bWRQzfxZlA80+9pJ7Vmyiu/bh2QDQl1Ka
+         4g8CGo3AM4VP3nBv14TLgu4Kc/gPlBdNekbLw0o/rgiuNGd7Z77yFR1ORcrgKv+0Vh97
+         5o17h9ONTiQfa+6ZVnSsRbYYzX9Aibyau/ysWwFc1/qSPKhQkJ3FwrEOzXf+cBSZMsXt
+         Xo1wi7TxDux7LJhjHQEETfquGNvkIW+GGAMKHuObzuCMYAcDungvKlyAUQqjBnk9VKuQ
+         xtQA==
+X-Gm-Message-State: AFq9FYIwr9IN8i1kmvNBiO9RYwBZhboW6Rg1AlvsmKQ+hHRPRX/NBOIs
+	r58Rvy9gMiBFqPs0VwDG0X7WxpuItf/VkD1fl+x2n5sAES5BvQ7itwmjJMQo/ylIq9L6/44PX/o
+	CU3TQMis=
+X-Gm-Gg: AYBFou1o0MJwyWpWpACGYNkPKO5LY3fdFlJB3BGC4yxOIxTceLwF+z8j0urwFUNMcib
+	gRqHg4tkT7LT8ASqrNJQVkqf7ZV25oyMCB93GI7IcRBEG23k4P/SqsKObcrdNG0VItXmVR5SPh7
+	mYA8tYn/e7REMQr1hV12TgTrnyrjtLummHsgP6outwVsvWM4I/FZgXtxxL+9J5PV1fICu9vI1U7
+	6TySldF1HkxGQKvfD0VP53Sbxgbn/73xsc17c+jM6GfVosvHR7a2ndUYZmYS81/WM09Vw7F1Oya
+	1Qx3jbyEgzXzyp8mTdyaFssYzT75AOL7hoRbGpBpU3TEiqBomM9Q1FI0ZEyjMXjLykf7Elux6ae
+	xsq5YE5cLclsMHOILMjn5jKxRkzZYFPRDkFUreRUDDv2K820HpiOtM+jRIP4xpgZm9QQjSrlJfE
+	snxlqWVKSNCIUeL0HmAwd08unJleHr7KdouSXDaUwv+svclFslz98ugOH9mW3d9e7HtcRJ3ZPlx
+	agM3XfTye8setvcP1S8dP+tXXSzcFjaXMxlMrkLdGPOBUjryjN1oRrq1nrkGusM7HPN0yW3Xw==
+X-Received: by 2002:a05:6000:27cc:10b0:48c:7ee3:e07f with SMTP id ffacd0b85a97d-48dba9de8damr8276558f8f.37.1791708539258;
+        Sun, 11 Oct 2026 01:48:59 -0700 (PDT)
 Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48db9aca657sm13276677f8f.43.2026.10.11.01.48.55
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48db9aca657sm13276677f8f.43.2026.10.11.01.48.58
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Oct 2026 01:48:55 -0700 (PDT)
+        Sun, 11 Oct 2026 01:48:58 -0700 (PDT)
 From: Yoann Congal <yoann.congal@smile.fr>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][wrynose][2.18][PATCH 0/1] Patch review
-Date: Sun, 11 Oct 2026 10:48:26 +0200
-Message-ID: <cover.1791708353.git.yoann.congal@smile.fr>
+Subject: [bitbake][wrynose][2.18][PATCH 1/1] ast: Make PyLibNode support submodules in BBIMPORTS
+Date: Sun, 11 Oct 2026 10:48:27 +0200
+Message-ID: <6e260eb6ab1631607ea414d9ff8ede1155faa5d9.1791708353.git.yoann.congal@smile.fr>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <cover.1791708353.git.yoann.congal@smile.fr>
+References: <cover.1791708353.git.yoann.congal@smile.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 11 Oct 2026 08:49:00 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20314
+ <bitbake-devel@lists.openembedded.org>; Sun, 11 Oct 2026 08:49:10 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20315
 
-Please review this set of changes for wrynose and have comments back by
-end of day Tuesday, October 13.
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 
-Passed a-full on autobuilder:
-https://autobuilder.yoctoproject.org/valkyrie/?#/builders/29/builds/4907
-qemuarm-tc failed due to disk space issue on the autobuilder worker.
-Retried in https://autobuilder.yoctoproject.org/valkyrie/?#/builders/42/builds/4782
+For a given `addpylib <path> <namespace>`, the existing code would
+import all modules specified in `BBIMPORTS` with the assumption that
+there are no submodules. This adds support for specifying submodules as
+well. E.g., `BBIMPORTS = "foo.bar"` will now make `<namespace>.foo.bar`
+available.
 
-The following changes since commit 51fd94a67fa17650a9ff623492005972bbc7d26f:
-
-  asyncrpc: Close the client event loop when the client is collected (2026-09-29 11:56:42 +0100)
-
-are available in the Git repository at:
-
-  https://git.openembedded.org/bitbake-contrib stable/2.18-review
-  https://git.openembedded.org/bitbake-contrib/log/?h=stable/2.18-review
-
-for you to fetch changes up to 6e260eb6ab1631607ea414d9ff8ede1155faa5d9:
-
-  ast: Make PyLibNode support submodules in BBIMPORTS (2026-10-07 14:54:15 +0200)
-
-----------------------------------------------------------------
-
-Peter Kjellerstedt (1):
-  ast: Make PyLibNode support submodules in BBIMPORTS
-
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+---
  lib/bb/parse/ast.py | 5 +++--
  1 file changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+index e23ef6db3..a9cfe75c3 100644
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -310,8 +310,9 @@ class PyLibNode(AstNode):
+             bb.utils._context[self.namespace] = __import__(self.namespace)
+             toimport = getattr(bb.utils._context[self.namespace], "BBIMPORTS", [])
+             for i in toimport:
+-                bb.utils._context[self.namespace] = __import__(self.namespace + "." + i)
+-                mod = getattr(bb.utils._context[self.namespace], i)
++                mod = bb.utils._context[self.namespace] = __import__(self.namespace + "." + i)
++                for submod in i.split("."):
++                    mod = getattr(mod, submod)
+                 fn = getattr(mod, "__file__")
+                 funcs = {}
+                 for f in dir(mod):
 
