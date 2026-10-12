@@ -1,101 +1,105 @@
-Return-Path: <yoann.congal@smile.fr>
+Return-Path: <yann.dirson@vates.tech>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D28A4CA9EBD
-	for <webhook@archiver.kernel.org>; Sun, 11 Oct 2026 08:49:10 +0000 (UTC)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.23565.1791708541320119500
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91119CA9ED2
+	for <webhook@archiver.kernel.org>; Mon, 12 Oct 2026 08:25:51 +0000 (UTC)
+Received: from prod-mta-13-01.swg-srv.net (prod-mta-13-01.swg-srv.net [185.255.28.34])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.8816.1791793546152054020
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 11 Oct 2026 01:49:01 -0700
+ Mon, 12 Oct 2026 01:25:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=alkHZUgB;
- spf=pass (domain: smile.fr, ip: 209.85.221.45, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-48b0ef9c76eso782518f8f.0
-        for <bitbake-devel@lists.openembedded.org>; Sun, 11 Oct 2026 01:49:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1791708539; x=1792313339; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=ZjfTqqWWiJIVcIGCrQ25MXE26Zh2qK1XNIJMBDeZ3M8=;
-        b=alkHZUgBtSRyZS+DqNtWUuRmuaKip79GK3pKU0d3jRSIb5RcRq8doDX8maK6b5SwDJ
-         8hwPtGKPXyzPaUcH0folW7asFsH/98w3NSgcXB9/A14Hu3QPIdc9i1dP8Z84lNOVHYf2
-         1CBK6UbLxz5V79fkabAOLTCSqpgnkCVfSvsrs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791708539; x=1792313339;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=ZjfTqqWWiJIVcIGCrQ25MXE26Zh2qK1XNIJMBDeZ3M8=;
-        b=sm0JAf39TQ8Z5okJi4cVjw2PV8kvnDoMBzaQ71TjN6utiUWLO1Xa1HGnqp40jmQJQN
-         wp8wovPox75MMjfbtyosGJVFSs5hy2s5e/3bWRQzfxZlA80+9pJ7Vmyiu/bh2QDQl1Ka
-         4g8CGo3AM4VP3nBv14TLgu4Kc/gPlBdNekbLw0o/rgiuNGd7Z77yFR1ORcrgKv+0Vh97
-         5o17h9ONTiQfa+6ZVnSsRbYYzX9Aibyau/ysWwFc1/qSPKhQkJ3FwrEOzXf+cBSZMsXt
-         Xo1wi7TxDux7LJhjHQEETfquGNvkIW+GGAMKHuObzuCMYAcDungvKlyAUQqjBnk9VKuQ
-         xtQA==
-X-Gm-Message-State: AFq9FYIwr9IN8i1kmvNBiO9RYwBZhboW6Rg1AlvsmKQ+hHRPRX/NBOIs
-	r58Rvy9gMiBFqPs0VwDG0X7WxpuItf/VkD1fl+x2n5sAES5BvQ7itwmjJMQo/ylIq9L6/44PX/o
-	CU3TQMis=
-X-Gm-Gg: AYBFou1o0MJwyWpWpACGYNkPKO5LY3fdFlJB3BGC4yxOIxTceLwF+z8j0urwFUNMcib
-	gRqHg4tkT7LT8ASqrNJQVkqf7ZV25oyMCB93GI7IcRBEG23k4P/SqsKObcrdNG0VItXmVR5SPh7
-	mYA8tYn/e7REMQr1hV12TgTrnyrjtLummHsgP6outwVsvWM4I/FZgXtxxL+9J5PV1fICu9vI1U7
-	6TySldF1HkxGQKvfD0VP53Sbxgbn/73xsc17c+jM6GfVosvHR7a2ndUYZmYS81/WM09Vw7F1Oya
-	1Qx3jbyEgzXzyp8mTdyaFssYzT75AOL7hoRbGpBpU3TEiqBomM9Q1FI0ZEyjMXjLykf7Elux6ae
-	xsq5YE5cLclsMHOILMjn5jKxRkzZYFPRDkFUreRUDDv2K820HpiOtM+jRIP4xpgZm9QQjSrlJfE
-	snxlqWVKSNCIUeL0HmAwd08unJleHr7KdouSXDaUwv+svclFslz98ugOH9mW3d9e7HtcRJ3ZPlx
-	agM3XfTye8setvcP1S8dP+tXXSzcFjaXMxlMrkLdGPOBUjryjN1oRrq1nrkGusM7HPN0yW3Xw==
-X-Received: by 2002:a05:6000:27cc:10b0:48c:7ee3:e07f with SMTP id ffacd0b85a97d-48dba9de8damr8276558f8f.37.1791708539258;
-        Sun, 11 Oct 2026 01:48:59 -0700 (PDT)
-Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48db9aca657sm13276677f8f.43.2026.10.11.01.48.58
-        for <bitbake-devel@lists.openembedded.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Oct 2026 01:48:58 -0700 (PDT)
-From: Yoann Congal <yoann.congal@smile.fr>
+ dkim=pass header.i=@vates.tech header.s=selector1 header.b=oNjMXjn0;
+ spf=pass (domain: swg.vates.tech, ip: 185.255.28.34, mailfrom: prod-mta-13.8631fc262581453bbf619ec5b2062170.1a12f37b16e00080d7@swg.vates.tech)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vates.tech;
+ q=dns/txt; s=selector1; bh=33m/fbTNjbrovSO/3F8yvQ1exDtaC56pkANzl24OxUI=;
+ h=from:subject:date:message-id:to:cc:mime-version:content-type:feedback-id;
+ b=oNjMXjn0AIYWGgMfmAb4N3cY92o/Sl4/R7bIABtCJZ1Z0jKRE5tyoB34qhslvfV39ROv+JOQp
+ iUF90ibspHSWduEd7DytxcGE+ZgZhupZDJ5embCVEIyGJkW6Znx3H0Ag7wW9MJX/VEcLNrQno7x
+ I4lAQUxdpp5y3CzhHs+rcZrgf3aSuUfPnDTz/LRVrqdBGztrzKNS36/UMx9oukpN1wVEpBVGJOk
+ nIyho8r7FRKIL3U84xlvfA/ffYvfzySYhABiYQN0Ww93wnECVJ6hRVo33pYtr5Lt/V2NnbqF6Pc
+ 2SgeeDQ0uA/u+hhKT4hQBVloVsTzyywAFs81IbHjLwXw==
+Received: from mail2.vates.fr ([37.26.189.201] mail2.vates.fr)
+ (Authenticated sender: 8631fc262581453bbf619ec5b2062170/smtp/7773de5a-2839-4720-82ee-e06722ae1d3e)
+ by prod-mta-13-01.swg-srv.net (ZoneMTA - prod-mta-13) with ESMTPSA id 1a12f37b16e00080d7.001
+ for <bitbake-devel@lists.openembedded.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Mon, 12 Oct 2026 08:25:41 +0000
+X-Zone-Loop: f3e44acef3f55a1626ba1ce8d0e1f55108f4e98397c8
+x-campaign-type: default
+x-transaction-id: 69bc3e1a-b96a-42e8-8c08-555621fedf97
+x-swg-uid: 01-1526dd87-cbb0-4339-874b-2da45253ad6c
+X-Mailer: Sweego
+Message-ID: 
+ <1791793541.8631fc262581453bbf619ec5b2062170.1a12f37b16e00080d7@vates.tech>
+x-swg-bid: 1791793541.8631fc262581453bbf619ec5b2062170.1a12f37b16e00080d7
+Feedback-ID: default:8631fc262581453bbf619ec5b2062170:Sweego
+x-campaign-id: default
+x-client-id: 8631fc262581453bbf619ec5b2062170
+X-Originating-IP: [37.26.189.201]
+Received: from work-vates.gpn.vates.fr (88-161-245-20.subs.proxad.net [88.161.245.20])
+	(Authenticated sender: yann.dirson)
+	by mail2.vates.fr (Postfix) with ESMTPSA id 9DADF829E5;
+	Mon, 12 Oct 2026 10:25:40 +0200 (CEST)
+From: Yann Dirson <yann.dirson@vates.tech>
 To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][wrynose][2.18][PATCH 1/1] ast: Make PyLibNode support submodules in BBIMPORTS
-Date: Sun, 11 Oct 2026 10:48:27 +0200
-Message-ID: <6e260eb6ab1631607ea414d9ff8ede1155faa5d9.1791708353.git.yoann.congal@smile.fr>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <cover.1791708353.git.yoann.congal@smile.fr>
-References: <cover.1791708353.git.yoann.congal@smile.fr>
+Cc: docs@lists.yoctoproject.org,
+	Yann Dirson <yann.dirson@vates.tech>
+Subject: [PATCH] doc: document dependency tracking associated with addpylib
+Date: Mon, 12 Oct 2026 10:25:24 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-BM-Disclaimer: Yes
+Content-Type: multipart/alternative; boundary="-=Part.b9.1a47236ed8edcda3.1a12f37aee7.820c85cfb7901669=-"
+X-Bm-Milter-Handled: 4ffbd6c1-ee69-4e1b-aabd-f977039bd3e2
+X-Bm-Transport-Timestamp: 1791793540846
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sun, 11 Oct 2026 08:49:10 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20315
+ <bitbake-devel@lists.openembedded.org>; Mon, 12 Oct 2026 08:25:51 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20316
 
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+---=Part.b9.1a47236ed8edcda3.1a12f37aee7.820c85cfb7901669=-
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-For a given `addpylib <path> <namespace>`, the existing code would
-import all modules specified in `BBIMPORTS` with the assumption that
-there are no submodules. This adds support for specifying submodules as
-well. E.g., `BBIMPORTS = "foo.bar"` will now make `<namespace>.foo.bar`
-available.
-
-Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+Reported-by: Claude Opus 5=2E5
+Signed-off-by: Yann Dirson <yann=2Edirson@vates=2Etech>
 ---
- lib/bb/parse/ast.py | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ doc/bitbake-user-manual/bitbake-user-manual-metadata=2Erst | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-index e23ef6db3..a9cfe75c3 100644
---- a/lib/bb/parse/ast.py
-+++ b/lib/bb/parse/ast.py
-@@ -310,8 +310,9 @@ class PyLibNode(AstNode):
-             bb.utils._context[self.namespace] = __import__(self.namespace)
-             toimport = getattr(bb.utils._context[self.namespace], "BBIMPORTS", [])
-             for i in toimport:
--                bb.utils._context[self.namespace] = __import__(self.namespace + "." + i)
--                mod = getattr(bb.utils._context[self.namespace], i)
-+                mod = bb.utils._context[self.namespace] = __import__(self.namespace + "." + i)
-+                for submod in i.split("."):
-+                    mod = getattr(mod, submod)
-                 fn = getattr(mod, "__file__")
-                 funcs = {}
-                 for f in dir(mod):
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-metadata=2Erst b/=
+doc/bitbake-user-manual/bitbake-user-manual-metadata=2Erst
+index 621aab253=2E=2Eeef1f9624 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-metadata=2Erst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-metadata=2Erst
+@@ -2264,6 +2264,14 @@ The specified <namespace> is imported automatically=
+, and if the imported
+ module specifies an attribute named ``BBIMPORTS``, that list of
+ sub-modules is iterated and imported too=2E
+=20
++Additionally, Bitbake will detect usage of functions from such a
++library and include them in task hashes, so changes in those functions
++trigger task rebuilds=2E  Note that only functions inside modules
++declared using ``BBIMPORTS`` benefit from this dependency tracking,
++any name defined directly in the specified namespace (e=2Eg=2E in
++`<namespace>/__init__=2Epy`, or in a library hat would be defined as
++`<namespace>=2Epy`) would *not* benefit from this tracking=2E
++
+ Testing and Debugging BitBake Python code
+ -----------------------------------------
+=20
+--=20
+2=2E47=2E3
+
+
+
+-- 
+Yann Dirson | Vates Platform Developer
+
+XCP-ng & Xen Orchestra - Vates=
+ solutions
+
+web: https://vates=2Etech
+---=Part.b9.1a47236ed8edcda3.1a12f37aee7.820c85cfb7901669=---
 
