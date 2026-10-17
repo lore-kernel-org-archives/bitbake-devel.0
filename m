@@ -2,74 +2,65 @@ Return-Path: <richard.purdie@linuxfoundation.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD22BCCF2C4
-	for <webhook@archiver.kernel.org>; Sat, 17 Oct 2026 15:02:33 +0000 (UTC)
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.7980.1792249351412686131
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A379CCF2C1
+	for <webhook@archiver.kernel.org>; Sat, 17 Oct 2026 15:19:04 +0000 (UTC)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.8245.1792250333698823168
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 17 Oct 2026 08:02:32 -0700
+ Sat, 17 Oct 2026 08:18:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=bWDLrUjy;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4a16aaf2067so10185715e9.0
-        for <bitbake-devel@lists.openembedded.org>; Sat, 17 Oct 2026 08:02:31 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=bZc5ecBM;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4a0213948d3so5602265e9.2
+        for <bitbake-devel@lists.openembedded.org>; Sat, 17 Oct 2026 08:18:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1792249349; x=1792854149; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1792250332; x=1792855132; darn=lists.openembedded.org;
         h=mime-version:user-agent:content-transfer-encoding:content-type
          :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=eCEQbtVnImFRGVqMSCTd8yE46Pz6mMTg9FcJ9aDUfvc=;
-        b=bWDLrUjyGpCcpHn1eg/1O0Avq5g4KB0txwBMBqUZRfOi0TmkaBiY8bJgwWTVy8+3TK
-         EOInTAHc/EIZoQryi0bFNzpCI58xfZ7YLxm2wLuiPIotwXNMt5rQv91p1WdONUAR/ID/
-         O6tEHnTfNyWlvmW6paHdXPX5igAmBkkaOIhU4=
+        bh=lbp/nGaLycenxMMvelPYbq1CqMNsRcBCPRH2sIjqYGM=;
+        b=bZc5ecBMt8zCBZ7lg0rmDIcrLs+rIzvQSLANyt1HipRAh6K7ZCmdqqg7sXwvjFMCIU
+         xRNiZS+tw8dWBqGhW0QEj+7Ck1DT7PWBZuGwEJhdmtL0fRAjLN77KUyTgfdK5S7Bx7IQ
+         vGq+SMfVEU1H8XO7azAe4LkaY0Bm9D0+s+H7A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792249349; x=1792854149;
+        d=1e100.net; s=20260707; t=1792250332; x=1792855132;
         h=mime-version:user-agent:content-transfer-encoding:content-type
          :references:in-reply-to:date:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=eCEQbtVnImFRGVqMSCTd8yE46Pz6mMTg9FcJ9aDUfvc=;
-        b=DRFN6VulYYC1qfxcj0LurgDG16kSPbi69sBHUS44xwzV4G9W6KNa0AQ6Zr8tkI/EVe
-         dRcFfv0Hf97oSIN351iZ9vpZLm7ep6Ms7whPwcH9O5jyE6Ui9Gxq98wgE+U6BWjGMbxa
-         jui2Pmmb0o4/vOC6iOdSBc2kS2DKUq1WdqIaogjvqG187ERPKZFCvqJ40qGyWnF7YSOT
-         2KGLXsq838kUSq4K1ND/I1bmt9yoYWLkqdq5GtJeam45dqi1BXqq/33qqofT9yEeDmwm
-         FYhCeV2qhvCgC3nU3cBxuFqWuqkDF3TiCcViT4bS0ONVmDOqFtI30Y+th0n/JUKYnR+R
-         TeMA==
-X-Forwarded-Encrypted: i=1; AKwUvBzYce1aUkBQ2x6ILVNU4cSEDQIhbYNYKg3vnAeoNMipmaTyZduqHnSggLimCWUNvEWC4D9URTMcl7tkIaVn@lists.openembedded.org
-X-Gm-Message-State: AFq9FYJFO5n29OxkOqU35Z67JQkb1ihee/4wdBwr8BV5KDMJJov690++
-	eRNnP20zPsZgtCpskXGEvA/9FjGnHKmgoEfCeghgo7EqkzL0wF+03hx0mP6wj0lLZPo=
-X-Gm-Gg: AYBFou0R6N4afKcZ9//Q3VJjvwxJ9jPlNPMBr1lb3Nzo4oPdJXZcJlcEggN7ZisIi9d
-	RFBFa25UYR39NJQFjCP3Wq8oUbjNhEywITGpLPH9LoN+NtdIhH0m0sVxDCv/yaXexj/dNjfSIU8
-	xqQUaI2dmwE3dWShKg++va0N8QEmvyYiOlFMcoqxyJyUGULIsQ1UFxU7qQuBCm9SErA2oIkeQPB
-	s5q2PGMhixVMTKqP7BMILXvmIvh0HQFkLdSxA8CwgtP0l4jYtvAS8kWD7PEgANeEugHMUkxYlhq
-	nbRzWovzE5yfv0OLjuo+17GH80BTuGKKgSJC6PFRfs267H6uLhffvt9jI5F5G05MHQA10OgSueH
-	cthuJBUj3yvibPezvCQxpaeCZDzbRixZoq6HazAHQ4FqgyqXcgHYlr8Adc9Fd8RxFeWvNA5X5+t
-	HRKm7oTIkdb7liIhPe5yKIlXDJq/OHhL+8gnTOt37xi1WCZgbLvZF1zO9B/cqXLcVAGcB1uV/5I
-	mJloXAw9oDxuYf1KMWNnDl1ePy606/ng6PFxUMGseNlhHNhbbdNX0Nqg8tfHxM=
-X-Received: by 2002:a05:6000:4021:b0:48e:cd3:b3ec with SMTP id ffacd0b85a97d-48e0cd3b575mr2946413f8f.28.1792249349334;
-        Sat, 17 Oct 2026 08:02:29 -0700 (PDT)
+        bh=lbp/nGaLycenxMMvelPYbq1CqMNsRcBCPRH2sIjqYGM=;
+        b=hvx1oAXExt8o4CTI6hctOZZ2TWFPDtgFE5xPS7UHtxz5Z/p1JW8E/BzyPtyzzIB2QK
+         irb6vpRY6dtZ2/gkxggjhsUUyIMU3iOo1Y2BsNl8ipU/Q/cg1ql1NxRcI6Dn9sGF4Q9q
+         BD5qxS1tjZMdEBkABJzNb+IU0arGcOz1iTuC4flm8aTsfeZh5IBcXAP0kZwBEltsT6Id
+         wms23IHgENMVCdGCaQ+Sns6udfE8IdMxFXe+qe6tRbw1Yhsx5qTRECu20sRjD5IcNdiz
+         LZinlX86Y9FVOn3i2AyMrt+dC8wp7czXXMv7JcLJaJvIIxzN/5rP76pXsuYpxCKiEr8q
+         /JKQ==
+X-Forwarded-Encrypted: i=1; AKwUvBz6XRHV7QdiUFgi6G0reyQueFxt6u0IQ9TJ8jBaz49zS/3C8SFHfV1bGK13mEbQodT4FTtVZTJxHbLgrpKt@lists.openembedded.org
+X-Gm-Message-State: AFq9FYKYc2ptwzirMJ8zErsy4kVag+uZbZdL8yVJJxBl7JOmbbyARel8
+	3Ywl6RBzHNmPBxj2I4CBm379UV0k+swy5tocEotV5mF9EVbO7HJQe9Qpkr6qwXDWXp4=
+X-Gm-Gg: AYBFou0m3B29ajy39n6KRAXz502eqvaiErh7anQ7QLkRNL8K74JK3Oo1RfZdRTlq96h
+	QlyeFsCq9g5jueMe2YGc8iUk4f874bhkH0M94zPkQDosEaOyPoMK1jPzmySL6ecJG+3uiskbjG2
+	kfcG1Yj7sV/M69bSSZG5r0Ay2JENfsFoFOFnZ3fRgZNJwZfrnEzG5+OezjZXy0Bk/CcvX6jiYaE
+	/yFaesEyWSv4Jca75OmOole8Rd8nWlpRSbGzJL1bkBG4K1AiJ9JGTV5uIVjB4pFxbQtQy9HEjUh
+	D3/x1YdyAYm4n74T4E4vAlayZTHFwsBt17VCgW70xb5g9lWSx0R7JecaAGaGUiTbUsO2rkJJMw5
+	w8uSKhngw0a4yDj/vwpxHQvRirmU4tviES6xXMb7I7QL0U3+nLqzdL9j6tQ26HECR98QiM/bFHI
+	jVbxGQ/It67o6WOxm3Z4pXi/JCStqXcWEilv1ZBERCcBnqPEKdumC2KQ4J3zDoIcOGF0d1E1X/k
+	MtdTbaK/c79c1IQtdjMlOShj36nhWxquuxWvetFaRTDfnrthst9bdKxD7vRdIQ=
+X-Received: by 2002:a05:600c:3b91:b0:4a1:e0b7:ff09 with SMTP id 5b1f17b1804b1-4a1e0b80060mr5725415e9.33.1792250331707;
+        Sat, 17 Oct 2026 08:18:51 -0700 (PDT)
 Received: from ?IPv6:2001:8b0:aba:5f3c:471d:9ae9:4cd8:a378? ([2001:8b0:aba:5f3c:471d:9ae9:4cd8:a378])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48dfd471a64sm12489786f8f.6.2026.10.17.08.02.27
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48dfd4f8bb6sm12456537f8f.34.2026.10.17.08.18.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Oct 2026 08:02:28 -0700 (PDT)
-Message-ID: <3cb5e5d5db79f81b58c943752dcff67e7c603308.camel@linuxfoundation.org>
-Subject: Re: [docs] [bitbake-devel] [PATCH 3/4] knotty: convert warnings to
- errors when -W is passed
+        Sat, 17 Oct 2026 08:18:51 -0700 (PDT)
+Message-ID: <8c77cdccbbef939d980d80c07376c9808e37fc5f.camel@linuxfoundation.org>
+Subject: Re: [bitbake][scarthgap][2.8][PATCH 0/1] Pull request (cover letter
+ only)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: antonin.godard@bootlin.com, michalwsieron@gmail.com, 
+To: Yoann Congal <yoann.congal@smile.fr>, 
 	bitbake-devel@lists.openembedded.org
-Date: Sat, 17 Oct 2026 16:02:27 +0100
-In-Reply-To: <DM6ADVADR7L1.F48JUYUSVTMF@bootlin.com>
-References: <20261013-warn-as-errors-v1-0-ab3658758ceb@bootlin.com>
-	 <20261013-warn-as-errors-v1-3-ab3658758ceb@bootlin.com>
-	 <5d6d74ea44bf61549823ccde83e4c4ed1e274dc4.camel@linuxfoundation.org>
-	 <DM5C7YSFK5Y8.14E684HX5TS18@bootlin.com>
-	 <6563fc5659f06a1a6b1eb72ec05b9109dfe9f64a.camel@linuxfoundation.org>
-	 <DM5EQUZ5TIGZ.1KG28FB6KB03G@bootlin.com>
-	 <7dbc1fbb0314b61bbc2913aa004f8ebfd968cc03.camel@linuxfoundation.org>
-	 <DM5GYBADXEX9.2UOTTZAL4JTT2@bootlin.com>
-	 <2040945.1792137545176168291@lists.openembedded.org>
-	 <DM6ADVADR7L1.F48JUYUSVTMF@bootlin.com>
+Date: Sat, 17 Oct 2026 16:18:49 +0100
+In-Reply-To: <cover.1792191269.git.yoann.congal@smile.fr>
+References: <cover.1792191269.git.yoann.congal@smile.fr>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.2-10build1 
@@ -77,67 +68,42 @@ MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <bitbake-devel@lists.openembedded.org>; Sat, 17 Oct 2026 15:02:33 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20354
+ <bitbake-devel@lists.openembedded.org>; Sat, 17 Oct 2026 15:19:04 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20355
 
-On Fri, 2026-10-16 at 15:11 +0200, Antonin Godard via lists.openembedded.or=
-g wrote:
-> Hi,
+On Sat, 2026-10-17 at 00:55 +0200, Yoann Congal wrote:
+> This is the patch from the last patch review:
+> https://lore.kernel.org/all/cover.1792020468.git.yoann.congal@smile.fr/
 >=20
-> On Fri Oct 16, 2026 at 9:59 AM CEST, Michal Sieron via lists.openembedded=
-.org wrote:
-> > Hi,
-> >=20
-> > two cents from my side. I think that warnings as errors would ideally w=
-ork like normal -Werror in compilers.
-> >=20
-> > 1. Regarding name: -W doesn't indicate anything about errors. Only some=
-thing
-> > =C2=A0=C2=A0 with warnings. I am not sure if having this short option i=
-s worth it.
+> Passed a-full on autobuilder:
+> https://autobuilder.yoctoproject.org/valkyrie/?#/builders/29/builds/4934
+> * reproducible failed with #15898 =E2=80=93 New sstate.yp.org CDN reveale=
+d partial sstate reproducibility tests false-positive error
+> =C2=A0 But the test warns about a missing sstate object from the reproduc=
+ibleB
+> =C2=A0 build that is supposed to rebuild everything anyway, then, rebuild=
+s the
+> =C2=A0 recipe. So, there is no issue with the series.
 >=20
-> I agree.
 >=20
-> > 2. This might be controversial, but ability to do -Wno-error, would be =
-great.
-> > =C2=A0=C2=A0 Problem is we don't have categorized/named warnings/errors=
-. But I think
-> > =C2=A0=C2=A0 that it could support a syntax where we use file name (or =
-partial match on
-> > =C2=A0=C2=A0 its path) and disable warnings-as-errors for that source f=
-ile. Or this
-> > =C2=A0=C2=A0 might be even easier to implement: regex for warning messa=
-ge. It it
-> > =C2=A0=C2=A0 matches, it won't be treated as an error.
+> The following changes since commit d3b32587c2314febf96897f97e0172790b4fc1=
+cf:
 >=20
-> That sounds like an interesting idea - but maybe as a follow-up of this t=
-hough?
+> =C2=A0 toastergui/views: Replace os.system call with improved parameter h=
+andling (2026-09-28 22:25:53 +0100)
 >=20
-> > 3. Exit code only change won't force developers to immediately fix thei=
-r code
-> > =C2=A0=C2=A0 as it's really easy to ignore in interactive terminals. Su=
-re, later CI
-> > =C2=A0=C2=A0 would catch it, but I would prefer early fail if possible.
+> are available in the Git repository at:
 >=20
-> That's true - however, I checked again, and error messages originating fr=
-om
-> bb.error (or bberror) do NOT stop the execution of bitbake. This is the r=
-ole of
-> bb.fatal (or bbfatal). bb.error only affects the return code of bitbake, =
-but
-> goes as far as possible - for example I was able to build an image recipe=
- even
-> though one of its recipes emitted a bb.error.
+> =C2=A0 https://git.openembedded.org/bitbake-contrib=C2=A0stable/2.8-next
+> =C2=A0 https://git.openembedded.org/bitbake-contrib/log/?h=3Dstable/2.8-n=
+ext
 >=20
-> So if we want warnings to act like errors, I think this is already what t=
-his
-> series does. If we want warnings/errors to act like bb.fatal, that's anot=
-her
-> question.
+> for you to fetch changes up to 6b443060ee96a62efb94723c97f22b51c9b20507:
+>=20
+> =C2=A0 prserv: commit new revisions when a request succeeds (2026-10-11 2=
+3:40:57 +0200)
 
-I should also mention that ERROR_QA and WARN_QA allow many warnings to
-actually become errors. That is the mechanism we should really be
-pointing people at if they want errors IMO...
+Do other branches need that patch?
 
 Cheers,
 
