@@ -1,81 +1,88 @@
-Received: from tim.rpsys.net (tim.rpsys.net [217.169.23.60])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.23656.1792938051259156902
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.33001.1792974056717033049
  for <bitbake-devel@lists.openembedded.org>;
- Sun, 25 Oct 2026 07:20:52 -0700
+ Sun, 25 Oct 2026 17:20:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@rpsys.net header.s=2021 header.b=MD3iNUwy;
- spf=pass (domain: rpsys.net, ip: 217.169.23.60, mailfrom: rpurdie@rpsys.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rpsys.net; s=2021;
-	t=1792938042; bh=DFyee73NRVn9hQKYJOfZtD5IGdpmdZgwtNA1wTmJYKg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=MD3iNUwyexq2sA1MhopWXDH/81NGPBdEJifBeNL/PK5mSyTwVFlRpHFSh8gRXe43L
-	 XOprlO7rFhLhjYbhIDqAmoq8ozx49ZN6bwUOMZki9GWe5QfhlOC9ym8ceJN/jBU70b
-	 h3SvRu+ck1To1wM3aqox0QZixIeNSL95znz1nJ6V5WocR3ag2P3LL9mTP+GxATYfv6
-	 PqdhpwybJvU+SoXeNCSi5qe04rQQTzkc9r/qhelCgp5Yag7rPP/Kc6efY33nnjpU4M
-	 5M0hDhiUlUiL3dpL0KVJ6yFpT+j3k5gep49O5bUkcH91foe25Na2munD4FlRTv4dSP
-	 W1VNyF3KuUBsw==
-Received: from [192.168.1.8] (tim.rpsys.net [217.169.23.61] (may be forged))
-	(authenticated bits=0)
-	by tim.rpsys.net (8.18.1/8.18.1/Debian-6~bpo12+1) with ESMTPSA id 69PEKfAP108550
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Sun, 25 Oct 2026 14:20:42 GMT
-Message-ID: <dbd7b348c19f311707890f325bf643d3b9b33cee.camel@rpsys.net>
-Subject: Re: [bitbake-devel] [PATCH RFC 3/3] runqueue: Hand each covered
- task's log to a single setscene task
-From: Richard Purdie <rpurdie@rpsys.net>
-To: mathieu.dubois-briand@bootlin.com, bitbake-devel@lists.openembedded.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Date: Sun, 25 Oct 2026 14:20:36 +0000
-In-Reply-To: <20261024-mathieu-debug-replay-v4-v1-3-3f7f52a3b8e6@bootlin.com>
-References: <20261024-mathieu-debug-replay-v4-v1-0-3f7f52a3b8e6@bootlin.com>
-	 <20261024-mathieu-debug-replay-v4-v1-3-3f7f52a3b8e6@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-10build1 
+ dkim=pass header.i=@gmail.com header.s=20251104 header.b=DxDLMdaX;
+ spf=pass (domain: gmail.com, ip: 209.85.214.171, mailfrom: ticotimo@gmail.com)
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2e985106c0cso20838145ad.2
+        for <bitbake-devel@lists.openembedded.org>; Sun, 25 Oct 2026 17:20:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792974056; x=1793578856; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=DHefE/RY1zM8aIWve3GlxX7h6RcXr6k/7rRMzWuB8BI=;
+        b=DxDLMdaXINRarUWJTA+/Ji9CEct2gKOItn3SO/3KpsRw3x7S1NQQPU3pSKKKxUD9ZH
+         99FMg2wNkDsITQTC1ltr+tSv1Tb8rELAQmdxKB96uelCkWTaaAR3v+YPpjj2ORsd0q+T
+         Rq2tWivEB44rsGGiSFP3ToCMJoTEJLBPt+5DoekEayjEm1BzSSAn3dZ7hneVAr+Z0Tlp
+         p/Bt0Ru9Ah9kHKA+idMET03OnUKljfmoVO2ntwHb43TANjeAo6y762RBY+UOWdh/Iwkx
+         SzJYwjvbR5tSTUk7Rfjvae51i0BDw4sogrp8Bav7OS0KiVMIpbwHdDex0vYaP9Dzij/0
+         MazQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792974056; x=1793578856;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=DHefE/RY1zM8aIWve3GlxX7h6RcXr6k/7rRMzWuB8BI=;
+        b=02C6Dh8mrS3eSSpIvJGR6OlvKg8JsAv36JhO22USJ8B0SBaycn0bEwrmoCi//dHBOn
+         gqmGfGkFOJfyeN18rcVVYrk/3p81L0pN2jdGDV1ZQ9hp+yFYxrawU+18C0+k8oT+34Rn
+         qhdtbAVRrJeJMudgAe3sQ6jEahyMYV45Cw9JhNg1rOEke/RhhuA8Li2iosqyema7qb6s
+         5tHOWBTwHa2nyzS02zj15LydVqxYIE9/aqTI4BbDLDGsukYh12Pbv4TgQPyQxWUpXfFS
+         IGyU9BJ+0jaKPQrm4grX2skG53YFncM+6aj7QkavN+/EP+88vg7C0pqCF5pThPchLkbj
+         5zmA==
+X-Gm-Message-State: AFq9FYIPICbj3p3S/Qt7FL3EPWP0OmF3T9nar0Sm+6pdDIpsRK+81M81
+	vHsHg/af2qs0xF39df5XSFAEppMKHomVDvRodw4az5IQ355lovDRrN+M6CwI8Ktp
+X-Gm-Gg: AYBFou1OO7TRiJjBsIGDyWyrkQQaOfYGmA+D1vN9UAIW9Kl1P7Y9/H6pglAaLS78Odn
+	En5oKP2NgNNkpILZ3BS6/7qhcBRtcQeYBc2D2sU0mDJIYSdQCCNPqcMSxRy4cc6FWtXSZ1nwfcM
+	c0NX5urBTUdWJXTG8sSV8QEsL2qWPK3mp08iTOZVO7gUoRKkyeytOon7McaAPj3IYv6kCFwS1GE
+	32mDzlyIScT2As+lEZrERUynn/GRfnye5jc5xTuETgK/K9fTQtv0xluu6dQTZsEkiNmIHA9hRGL
+	VA9a3+N0aF99Ew8jhX3jvu1vDt/0E54vMPpdJTcM/t7tHcJUeDh4cpAmnOSUOnenqEhVmXDDyto
+	Rpxbe4INUQ8ZwGcLWm6f1Dz8X1u7kIsFikLsjEkZw0Pbk7XeCJbrr+8f02IroXXQ2XzJYULJrNr
+	Ax0jSXjZ+wtoNRdDpEFftnusVa1DhrSRNSB4KLYACgid0zlNPv3ew7rcpbCRlEgAQTrUh2u3zN0
+	yPTg+8zYJnY2IEJmyMHjewRiqxou9+nlChxrtdfbuixwIM3Uwa+I7L7QaWFbTqF2ldbzJmNibj0
+	z3veDZMmghHCuN5hUCgVY9yardvCfahlXw==
+X-Received: by 2002:a17:902:ceca:b0:2df:aed3:2ac0 with SMTP id d9443c01a7336-2ea9c6442admr44097985ad.10.1792974055944;
+        Sun, 25 Oct 2026 17:20:55 -0700 (PDT)
+Return-Path: <ticotimo@gmail.com>
+Received: from localhost.localdomain ([69.9.132.159])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ea9b14c296sm9358475ad.30.2026.10.25.17.20.53
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sun, 25 Oct 2026 17:20:54 -0700 (PDT)
+From: Tim Orling <ticotimo@gmail.com>
+X-Google-Original-From: Tim Orling <tim.orling@konsulko.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Tim Orling <tim.orling@konsulko.com>
+Subject: [PATCH v2 0/2] Handle duplicate BBPATH entries
+Date: Sun, 25 Oct 2026 17:20:46 -0700
+Message-ID: <20261026002048.86208-1-tim.orling@konsulko.com>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <20261019020422.14365-1-tim.orling@konsulko.com>
+References: <20261019020422.14365-1-tim.orling@konsulko.com>
 MIME-Version: 1.0
-X-Virus-Scanned: clamav-milter 1.4.3 at tim
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Sun, 25 Oct 2026 14:20:55 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20378
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Mon, 26 Oct 2026 00:21:05 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20379
+Content-Type: text/plain; charset="utf-8"
 
-On Sat, 2026-10-24 at 14:33 +0200, Mathieu Dubois-Briand via lists.openembe=
-dded.org wrote:
-> When a setscene task starts, hand it the covered tasks of the same recipe
-> which were not yet handed to another setscene task, and pass their names
-> to the task through BB_SETSCENE_REPLAY_TASKS. Several setscene tasks can
-> cover the same task (e.g. do_populate_sysroot and do_package both cover
-> do_compile), so this lets metadata replay the log of each covered task
-> exactly once when restoring it from the sstate cache.
->=20
-> AI-Generated: Uses opencode (DeepSeek V4 Flash)
-> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-> ---
-> =C2=A0bin/bitbake-worker | 1 +
-> =C2=A0lib/bb/runqueue.py | 9 +++++++++
-> =C2=A02 files changed, 10 insertions(+)
+Following Richard's review of v1, patch 2 makes duplicate BBPATH
+entries a fatal error, so the problem is reported at its source.
+Patch 1 is kept so include_all stays correct if BBPATH changes later.
 
-This is a very specific piece of API, specifically tailored to what
-this particular task entails.
+Changes in v2:
+- Patch 1: commit message trimmed, code unchanged.
+- New patch 2.
 
-I'm a bit worried that it still doesn't cover everything it should, for
-example a warning from another recipe that is only covered by a given
-sstate task and nothing else.
+Tim Orling (2):
+  parse: only search each BBPATH directory once in include_all
+  cookerdata: error on duplicate BBPATH entries
 
-You can pobably calculate it from BB_TASKDEPDATA already too, if you
-know which tasks are sstate, which I think we know.
+ lib/bb/cookerdata.py  | 12 +++++++++++
+ lib/bb/parse/ast.py   |  3 ++-
+ lib/bb/tests/parse.py | 47 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 61 insertions(+), 1 deletion(-)
 
-There is also the potential for multiple log output from these covered
-tasks, e.g. do_package and do_populate_sysroot both 'cover' on
-do_install so a warning from do_install will be shown by both tasks at
-setscene time.
-
-So we should probably handle wider tasks than just the current
-recipe...
-
-Cheers,
-
-Richard
-
-
+-- 
+2.56.0
 
