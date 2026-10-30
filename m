@@ -1,79 +1,100 @@
-Received: from mx1.emlix.com (mx1.emlix.com [178.63.209.131])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.6895.1793349439250193081
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.13029.1793370961973677255
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 30 Oct 2026 01:37:20 -0700
+ Fri, 30 Oct 2026 07:36:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@emlix.com header.s=20250930 header.b=Gv2kY7mn;
- spf=pass (domain: emlix.com, ip: 178.63.209.131, mailfrom: andreas.muetzel@emlix.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emlix.com;
-	s=20250930; t=1793349425;
-	bh=1AgQnakmoUFV5xSbss5bojQww1+B+76kGEXWUWmVqtc=;
-	h=From:To:Subject:Date:From;
-	b=Gv2kY7mn8alBX8pywGozdWf6DEnLLizchPAFfm5YhQEr42wjnT0o0q4lXC9GujVLQ
-	 QK6+FGhhwJ8mBmx11pTQTpei+/YkO5OBzJUZ3bqofEoMLgWBu/E4/FWUmhazln5mlI
-	 wtE8wwSe+jtcszbRUj7AbfFbp0Hi52XD6caJrpmxn7xOcj8sWWqbu5Ydjkxd1+tm5c
-	 zeqeCUtW1FR6jm3NeIKc+/U+4mAB6lvsiKl7b7Jtwxtn8mIacBgN5I+c70QTRgINpx
-	 QJOb4UURitsYX7wuPhL5LL0oqPyXXsWfNQ3LHr584N6gFdqeSqcXPpo+E1L72L8Ug4
-	 0tZYDMC9XqitA==
-Received: from mailer.emlix.com (p5098be52.dip0.t-ipconnect.de [80.152.190.82])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.emlix.com (Postfix) with ESMTPS id B46005F864
-	for <bitbake-devel@lists.openembedded.org>; Fri, 30 Oct 2026 09:37:05 +0100 (CET)
-From: Andreas =?UTF-8?B?TcO8dHplbA==?= <andreas.muetzel@emlix.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: dump-signatures: argument mismatch between bitbake doc and oe-core code
-Date: Fri, 30 Oct 2026 09:37:05 +0100
-Message-ID: <xOOtQA9cT-CHOwye467idg@emlix.com>
-MIME-Version: 1.0
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=DoIgGQDI;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4a5177d78c7so7849505e9.2
+        for <bitbake-devel@lists.openembedded.org>; Fri, 30 Oct 2026 07:36:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1793370960; x=1793975760; darn=lists.openembedded.org;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=HtFthkkWna30marnjE9nd/5iv5kR3bpEAKBbjv8xpS4=;
+        b=DoIgGQDImLr+6AfVlvcPFfx4aWUQdD92tWs8pYcsi1ikayf6EMv9lYsBFsJ874mugC
+         Kd2QMIl5HYTO7NPFJLz8VtcmwDaXq8cbOikDDdolSIHvLgL7PO6HwbY5enPxEXKdIOjZ
+         Sx+leatY/JImRHm8KytO9YYXBUurvyBVM4CEU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793370960; x=1793975760;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=HtFthkkWna30marnjE9nd/5iv5kR3bpEAKBbjv8xpS4=;
+        b=HTR6T0l9heD/J4otYzRPu5/Di3zqC45QKgVAsMhHNvQKn2LHvXcF3vM7G167tGCCmo
+         wsECHLMLunCwH0WvnzzbaYIr1/9oCVOgmY/zr9g/P7kzu+X8hjffvZYBMBwSe8JjIbIl
+         pbpv7FWYffmoEWt+wf8S+k6cP6vBXY1HehzKgoEdLjUyN/wfi56nkDhfO8gvK9nLrB/J
+         5OmFbi2K9b7FuA+6o1fHESRC2GC13Jnmf2vMSLUqZMY6fyaqt8NtYEOJL3y8tklBKw6x
+         VmAJRc8oN0TemnOSEk9lT8B5rUJIoWje9s6FnRe2lkOyI2Yq17V3gQWiL9Tq4QITnzlQ
+         txTA==
+X-Forwarded-Encrypted: i=1; AKwUvByO0lcLaAg8UuyWAOlZnLbKjZbo5VQ6rw8hlpOgMZPOm3U7r/BiPnDxpEFcaUz9JumMVLNWnYTA73yMrPNJ@lists.openembedded.org
+X-Gm-Message-State: AFq9FYIajkUJQBHs7oTYPyDZhiw+40UtBSiEPxPp3Ud1bgnxcgI2pS98
+	PWilAp7fYWoNzzSNu/FRIdCxMVfBVyPbWWapRAeRZEMsAOKg56IimEBdvUrT6iLzO5s=
+X-Gm-Gg: AYBFou0limcguh03oMivB96c3hijZ7gjt/OS/xLw4/AyKtZGXZsIeRpM/acD6SEyuTd
+	826D+WXR/DDQp0SwMCR2AgadaXPBSCOQY3+pbiLvYJwIlb/jhb6CZdD3fbdhA/P14jrnzmwlFNr
+	9XG/P3Qe2WMdznwb0H98cuHzr7EFjuNMpcVxcnBjg4Wit/pWIA219DFtdBrvuPxF9UP4x+2RCDD
+	i2j3dwxJgA/hh+E4+iioXhxCygoUi4J1880i0NVarKX1KG39ur07ZNKcsVEXurtf04BvfOpDTDs
+	QlvjwhMSzczGqvZdMrLDTOMcc8b7GtZ1r4G365c0bXLSXAFwCJaBVdC+5p5pm4vP+Ez9l5e/rhT
+	EFi2RHxeLutI1LZyQZ7UStrsrF29DkFt3Z4WWYkHRw3pPszD+SYNC9+G3/x7rvkz2JwmH+O0LcX
+	5fKJP4WfXPVcjdqFyV5ZfV2vuelaNugKKZa/zRH4Y1ROZMqcWPUdhBuJVetuEgvuToVVNOQL+C5
+	eAdfrC03Bgz9/9pZONc/9bC9KwzyVBPSBbgaNOOllbQ9cCVhUwv9JQ4DydmJpATWyJ33kQkChXF
+	0mVq0jljUQXMc1JAGpqfqqU5SeNHUN7UgfwIYfCDUVvrFlud/lBMFoiSpazHqOjJKExFzylZ09v
+	sGuPhcUJ2iDU+0z/tiQ==
+X-Received: by 2002:a05:600c:4f0f:b0:4a1:e00b:a10b with SMTP id 5b1f17b1804b1-4ac17b2cde9mr62272245e9.7.1793370960145;
+        Fri, 30 Oct 2026 07:36:00 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from ?IPv6:2001:8b0:aba:5f3c:50a1:2666:faf3:9570? ([2001:8b0:aba:5f3c:50a1:2666:faf3:9570])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4abf5b27e46sm101395145e9.3.2026.10.30.07.35.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Oct 2026 07:35:59 -0700 (PDT)
+Message-ID: <486d4afedb19e2f7824cc9572434de927b34c894.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] dump-signatures: argument mismatch between
+ bitbake doc and oe-core code
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: andreas.muetzel@emlix.com, bitbake-devel@lists.openembedded.org
+Date: Fri, 30 Oct 2026 14:35:58 +0000
+In-Reply-To: <xOOtQA9cT-CHOwye467idg@emlix.com>
+References: <xOOtQA9cT-CHOwye467idg@emlix.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Virus-Scanned: clamav-milter 1.4.3 at mx1.emlix.com
-X-Virus-Status: Clean
+User-Agent: Evolution 3.56.2-10build1 
+MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Fri, 30 Oct 2026 08:37:23 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20383
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Fri, 30 Oct 2026 14:36:05 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20384
 
-Hi all,
-
-I just encountered an issue when trying to dump/lock sstate signatures in a=
+On Fri, 2026-10-30 at 09:37 +0100, Andreas M=C3=BCtzel via bitbake-devel wr=
+ote:
+> Hi all,
+>=20
+> I just encountered an issue when trying to dump/lock sstate signatures in=
+ a=20
+> project:=20
+> bitbake-user-manual-intro.rst and the bitbake help text say that
+> "bitbake -S none <recipe>" should create the file locked-sigs.inc contain=
+ing=20
+> the SSTATE signatures of all tasks required for the recipe. But this sile=
+ntly=20
+> does nothing - the file is not created.
+>=20
+> Since oe-core commit ad57c3cac2a8d3e60222e3cca0685f582dcea135, the actual=
+ call=20
+> is "bitbake -S lockedsigs <recipe>".
+>=20
+> Before sending a patch to update the bitbake documentation, I'd like to=
 =20
-project:=20
-bitbake-user-manual-intro.rst and the bitbake help text say that
-"bitbake -S none <recipe>" should create the file locked-sigs.inc containin=
-g=20
-the SSTATE signatures of all tasks required for the recipe. But this silent=
-ly=20
-does nothing - the file is not created.
+> confirm: This is a problem that should be fixed on the bitbake documentat=
+ion=20
+> side and not in oe-core, right?
+> The call from oe-core makes much more sense to me, but I may be missing s=
+ome=20
+> kind of bigger picture here.
 
-Since oe-core commit ad57c3cac2a8d3e60222e3cca0685f582dcea135, the actual c=
-all=20
-is "bitbake -S lockedsigs <recipe>".
+Yes, as you say, we added that mode and have forgotten to update the
+docs. A patch is very welcome, well spotted!
 
-Before sending a patch to update the bitbake documentation, I'd like to=20
-confirm: This is a problem that should be fixed on the bitbake documentatio=
-n=20
-side and not in oe-core, right?
-The call from oe-core makes much more sense to me, but I may be missing som=
-e=20
-kind of bigger picture here.
+Cheers,
 
-Best regards,
-Andreas
-
-
-=2D-=20
-emlix GmbH
-Headquarters: Berliner Str. 12, 37073 G=C3=B6ttingen, Germany
-Phone +49 (0)551 30664-0, e-mail info@emlix.com
-District Court of G=C3=B6ttingen, Registry Number HR B 3160
-Managing Directors: Heike Jordan, Dr. Uwe Kracke
-VAT ID No. DE 205 198 055
-Office Berlin: Panoramastr. 1, 10178 Berlin, Germany
-Office Bonn: Bachstr. 6, 53115 Bonn, Germany
-Office M=C3=BCnchen: Am Knie 16, 81241 M=C3=BCnchen, Germany
-http://www.emlix.com
-
-emlix - your embedded Linux partner
-
-
+Richard
