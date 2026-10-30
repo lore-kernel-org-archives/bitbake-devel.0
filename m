@@ -1,100 +1,115 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.13029.1793370961973677255
+Received: from mx1.emlix.com (mx1.emlix.com [178.63.209.131])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.13863.1793373266593001119
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 30 Oct 2026 07:36:02 -0700
+ Fri, 30 Oct 2026 08:14:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=DoIgGQDI;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4a5177d78c7so7849505e9.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 30 Oct 2026 07:36:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1793370960; x=1793975760; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=HtFthkkWna30marnjE9nd/5iv5kR3bpEAKBbjv8xpS4=;
-        b=DoIgGQDImLr+6AfVlvcPFfx4aWUQdD92tWs8pYcsi1ikayf6EMv9lYsBFsJ874mugC
-         Kd2QMIl5HYTO7NPFJLz8VtcmwDaXq8cbOikDDdolSIHvLgL7PO6HwbY5enPxEXKdIOjZ
-         Sx+leatY/JImRHm8KytO9YYXBUurvyBVM4CEU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793370960; x=1793975760;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=HtFthkkWna30marnjE9nd/5iv5kR3bpEAKBbjv8xpS4=;
-        b=HTR6T0l9heD/J4otYzRPu5/Di3zqC45QKgVAsMhHNvQKn2LHvXcF3vM7G167tGCCmo
-         wsECHLMLunCwH0WvnzzbaYIr1/9oCVOgmY/zr9g/P7kzu+X8hjffvZYBMBwSe8JjIbIl
-         pbpv7FWYffmoEWt+wf8S+k6cP6vBXY1HehzKgoEdLjUyN/wfi56nkDhfO8gvK9nLrB/J
-         5OmFbi2K9b7FuA+6o1fHESRC2GC13Jnmf2vMSLUqZMY6fyaqt8NtYEOJL3y8tklBKw6x
-         VmAJRc8oN0TemnOSEk9lT8B5rUJIoWje9s6FnRe2lkOyI2Yq17V3gQWiL9Tq4QITnzlQ
-         txTA==
-X-Forwarded-Encrypted: i=1; AKwUvByO0lcLaAg8UuyWAOlZnLbKjZbo5VQ6rw8hlpOgMZPOm3U7r/BiPnDxpEFcaUz9JumMVLNWnYTA73yMrPNJ@lists.openembedded.org
-X-Gm-Message-State: AFq9FYIajkUJQBHs7oTYPyDZhiw+40UtBSiEPxPp3Ud1bgnxcgI2pS98
-	PWilAp7fYWoNzzSNu/FRIdCxMVfBVyPbWWapRAeRZEMsAOKg56IimEBdvUrT6iLzO5s=
-X-Gm-Gg: AYBFou0limcguh03oMivB96c3hijZ7gjt/OS/xLw4/AyKtZGXZsIeRpM/acD6SEyuTd
-	826D+WXR/DDQp0SwMCR2AgadaXPBSCOQY3+pbiLvYJwIlb/jhb6CZdD3fbdhA/P14jrnzmwlFNr
-	9XG/P3Qe2WMdznwb0H98cuHzr7EFjuNMpcVxcnBjg4Wit/pWIA219DFtdBrvuPxF9UP4x+2RCDD
-	i2j3dwxJgA/hh+E4+iioXhxCygoUi4J1880i0NVarKX1KG39ur07ZNKcsVEXurtf04BvfOpDTDs
-	QlvjwhMSzczGqvZdMrLDTOMcc8b7GtZ1r4G365c0bXLSXAFwCJaBVdC+5p5pm4vP+Ez9l5e/rhT
-	EFi2RHxeLutI1LZyQZ7UStrsrF29DkFt3Z4WWYkHRw3pPszD+SYNC9+G3/x7rvkz2JwmH+O0LcX
-	5fKJP4WfXPVcjdqFyV5ZfV2vuelaNugKKZa/zRH4Y1ROZMqcWPUdhBuJVetuEgvuToVVNOQL+C5
-	eAdfrC03Bgz9/9pZONc/9bC9KwzyVBPSBbgaNOOllbQ9cCVhUwv9JQ4DydmJpATWyJ33kQkChXF
-	0mVq0jljUQXMc1JAGpqfqqU5SeNHUN7UgfwIYfCDUVvrFlud/lBMFoiSpazHqOjJKExFzylZ09v
-	sGuPhcUJ2iDU+0z/tiQ==
-X-Received: by 2002:a05:600c:4f0f:b0:4a1:e00b:a10b with SMTP id 5b1f17b1804b1-4ac17b2cde9mr62272245e9.7.1793370960145;
-        Fri, 30 Oct 2026 07:36:00 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:50a1:2666:faf3:9570? ([2001:8b0:aba:5f3c:50a1:2666:faf3:9570])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4abf5b27e46sm101395145e9.3.2026.10.30.07.35.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Oct 2026 07:35:59 -0700 (PDT)
-Message-ID: <486d4afedb19e2f7824cc9572434de927b34c894.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] dump-signatures: argument mismatch between
- bitbake doc and oe-core code
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: andreas.muetzel@emlix.com, bitbake-devel@lists.openembedded.org
-Date: Fri, 30 Oct 2026 14:35:58 +0000
-In-Reply-To: <xOOtQA9cT-CHOwye467idg@emlix.com>
-References: <xOOtQA9cT-CHOwye467idg@emlix.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-10build1 
+ dkim=fail reason="dkim: body hash did not verify" header.i=@emlix.com header.s=20250930 header.b=l9ymkYdg;
+ spf=pass (domain: emlix.com, ip: 178.63.209.131, mailfrom: andreas.muetzel@emlix.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emlix.com;
+	s=20250930; t=1793373259;
+	bh=sC+kMrTPoFd1vdN4xJEuQKlNaFznokfPYx2ajtR/AT4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=l9ymkYdgZb/8Rw+3YT2MNmTjyobYntu9bVIbAgVE5ZM2T9CchH00r/66oc4VEfpoH
+	 3CKZUgq+TfcnH89G8HeYwupwpP349xEbLa1BtQpuQodgrhvuVs8tCVi652GPedu4DH
+	 ARwNr5jkXrKT8LjbX37J5S4bRiDrdhOcuqBQX385P5YGv7hStr48PX8tGLaYd7oR9a
+	 N7xYtIXrTp2qiQKE2LJoF9VUSLC1JjVJQYpDTZFB6OuMlDewE4NHePh1LOoY/MeFm1
+	 ngfndNPl7i29IC/OVwGrymL7G0bY7yGPj1WRMEHZN1Qk0qKqr6BEmXpEWVXYd9cO8o
+	 ffIkh0FmXVOnA==
+Received: from mailer.emlix.com (p5098be52.dip0.t-ipconnect.de [80.152.190.82])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.emlix.com (Postfix) with ESMTPS id 8AB145F861;
+	Fri, 30 Oct 2026 16:14:19 +0100 (CET)
+From: =?UTF-8?q?Andreas=20M=C3=BCtzel?= <andreas.muetzel@emlix.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: =?UTF-8?q?Andreas=20M=C3=BCtzel?= <andreas.muetzel@emlix.com>
+Subject: [PATCH] bitbake: fix documentation of -S lockedsigs
+Date: Fri, 30 Oct 2026 16:14:41 +0100
+Message-ID: <20261030151441.2061-1-andreas.muetzel@emlix.com>
+X-Mailer: git-send-email 2.56.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Virus-Scanned: clamav-milter 1.4.3 at mx1.emlix.com
+X-Virus-Status: Clean
+Content-Transfer-Encoding: quoted-printable
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Fri, 30 Oct 2026 14:36:05 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20384
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Fri, 30 Oct 2026 15:14:36 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20385
 
-On Fri, 2026-10-30 at 09:37 +0100, Andreas M=C3=BCtzel via bitbake-devel wr=
-ote:
-> Hi all,
->=20
-> I just encountered an issue when trying to dump/lock sstate signatures in=
- a=20
-> project:=20
-> bitbake-user-manual-intro.rst and the bitbake help text say that
-> "bitbake -S none <recipe>" should create the file locked-sigs.inc contain=
-ing=20
-> the SSTATE signatures of all tasks required for the recipe. But this sile=
-ntly=20
-> does nothing - the file is not created.
->=20
-> Since oe-core commit ad57c3cac2a8d3e60222e3cca0685f582dcea135, the actual=
- call=20
-> is "bitbake -S lockedsigs <recipe>".
->=20
-> Before sending a patch to update the bitbake documentation, I'd like to=
-=20
-> confirm: This is a problem that should be fixed on the bitbake documentat=
-ion=20
-> side and not in oe-core, right?
-> The call from oe-core makes much more sense to me, but I may be missing s=
-ome=20
-> kind of bigger picture here.
+oe-core changed the arguments used to dump sstate signatures to the file
+locked-sigs.inc from -S none to -s lockedsigs. Adapt the documentation
+and help text accordingly.
 
-Yes, as you say, we added that mode and have forgotten to update the
-docs. A patch is very welcome, well spotted!
+Signed-off-by: Andreas M=C3=BCtzel <andreas.muetzel@emlix.com>
+---
+ .../bitbake-user-manual-intro.rst                 | 15 ++++++++-------
+ lib/bb/main.py                                    |  4 ++--
+ 2 files changed, 10 insertions(+), 9 deletions(-)
 
-Cheers,
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst b/doc/=
+bitbake-user-manual/bitbake-user-manual-intro.rst
+index 6801323e2..d77509796 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
++++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.rst
+@@ -475,13 +475,14 @@ Following is the usage and syntax for BitBake::
+      -S SIGNATURE_HANDLER, --dump-signatures SIGNATURE_HANDLER
+                            Dump out the signature construction informati=
+on, with
+                            no task execution. The SIGNATURE_HANDLER para=
+meter is
+-                           passed to the handler. Two common values are =
+none and
+-                           printdiff but the handler may define more/les=
+s. none
+-                           means only dump the signature, printdiff mean=
+s
+-                           recursively compare the dumped signature with=
+ the most
+-                           recent one in a local build or sstate cache (=
+can be
+-                           used to find out why tasks re-run when that i=
+s not
+-                           expected)
++                           passed to the handler. Two common values are
++                           lockedsigs and printdiff but the handler may =
+define
++                           more/less.
++                           lockedsigs means only dump the signature, pri=
+ntdiff
++                           means recursively compare the dumped signatur=
+e with
++                           the most recent one in a local build or sstat=
+e cache
++                           (can be used to find out why tasks re-run whe=
+n that
++                           is not expected)
+      --revisions-changed   Set the exit code depending on whether upstre=
+am
+                            floating revisions have changed or not.
+      -b BUILDFILE, --buildfile BUILDFILE
+diff --git a/lib/bb/main.py b/lib/bb/main.py
+index 73a66468f..5cce8eb27 100755
+--- a/lib/bb/main.py
++++ b/lib/bb/main.py
+@@ -217,8 +217,8 @@ def create_bitbake_parser():
+                         default=3D[], metavar=3D"SIGNATURE_HANDLER",
+                         help=3D"Dump out the signature construction info=
+rmation, with no task "
+                              "execution. The SIGNATURE_HANDLER parameter=
+ is passed to the "
+-                             "handler. Two common values are none and pr=
+intdiff but the handler "
+-                             "may define more/less. none means only dump=
+ the signature, printdiff"
++                             "handler. Two common values are lockedsigs =
+and printdiff but the handler "
++                             "may define more/less. lockedsigs means onl=
+y dump the signature, printdiff"
+                              " means recursively compare the dumped sign=
+ature with the most recent"
+                              " one in a local build or sstate cache (can=
+ be used to find out why tasks re-run"
+                              " when that is not expected)")
+--=20
+2.56.0
 
-Richard
