@@ -1,100 +1,97 @@
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.14953.1793375670269662285
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.15002.1793375785040847202
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 30 Oct 2026 08:54:31 -0700
+ Fri, 30 Oct 2026 08:56:25 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=hsFUvS4r;
- spf=pass (domain: bootlin.com, ip: 185.246.85.4, mailfrom: mathieu.dubois-briand@bootlin.com)
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=HZu1cFew;
+ spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: mathieu.dubois-briand@bootlin.com)
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id E111E4E4139F;
-	Fri, 30 Oct 2026 15:54:27 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 1B6821A13CA
+	for <bitbake-devel@lists.openembedded.org>; Fri, 30 Oct 2026 15:56:23 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id A5B92603C2;
-	Fri, 30 Oct 2026 15:54:27 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3FDE110329050;
-	Fri, 30 Oct 2026 16:54:21 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id D383B603C2;
+	Fri, 30 Oct 2026 15:56:22 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6D325103290DC;
+	Fri, 30 Oct 2026 16:56:21 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1793375663; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1793375782; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=tULvj7FXF7HEtbCEWHBjEyhCIX5Lg9EVWT7pTOzrZUs=;
-	b=hsFUvS4rwssdpDkg4IAb0TkCOD+3RXZ0uuYnAEPDscw2kYES44QCIhzT7SIUiQj/g2pa8T
-	CTJk0hK2+QZ5yEoACzoC2ImKm86tKNC6qphisKE3nXYYq7FqjXE9jslZFgdd5yhu52NAS3
-	mX2yUg7Bua/iHgRrGhHaAyIpN8TNmTVonngydPGzH/ACZNEQT/7gHPn5RtFFdzqKkZgJQs
-	NJ3PiDVOhXLAExhKqGKJNUCkVhBJxOsuga5Lmdi99jmelkn5awpJset5yT4XJl+7kmD3UZ
-	szIAePVMQoZVzY4WcZHkWzJh1fATC6gOjn1cmPZPnNZVOlKVsZs5MI4IfnCwVA==
+	bh=0C84hgy4848vMf83OUY1L7Yc+QnX0Gd8+5+4kxKzc/k=;
+	b=HZu1cFewuzu52Ad7OHGTMVsZPR5p5AMe7ZrFGsEtJsMoimcRGOJfYGHjRtyp1R9+Y436wX
+	wjC3pF6CLenrwxl97+Eo0veoIRuav4oFoSp87A8h/3lkpSWlS/Pv4x4IellyUHfTz1cd4p
+	ANUBvkrPi833WNaniXnVNyI2y0xIR1opixpy/cSwO5csxHEtBlUg+jww5eiYnMSWMh4iJT
+	3y4FHr2Rm0y8GaWgs8Mo7ngDJMbNxyNulWQ6sxlXtiAyOJF7dYSgpiUY6eQXdram7fcISS
+	aMr0cJkTha9wDMh25y4XZTw404Yti7Du0Uo5Mx/emXhiA4O07lYJTZfZlCF88A==
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 30 Oct 2026 16:54:21 +0100
-Message-Id: <DMIAM5878KKF.2UFLZ25JCPACZ@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Richard Purdie" <rpurdie@rpsys.net>,
+Date: Fri, 30 Oct 2026 16:56:21 +0100
+Message-Id: <DMIANO837A8R.PC0CY8WUO45E@bootlin.com>
+To: "Richard Purdie" <richard.purdie@linuxfoundation.org>,
  <bitbake-devel@lists.openembedded.org>
-Subject: Re: [bitbake-devel] [PATCH RFC 3/3] runqueue: Hand each covered
- task's log to a single setscene task
+Subject: Re: [bitbake-devel] [PATCH RFC 2/3] build: Attach a log catcher to
+ tasks and save their records
 Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
 X-Mailer: aerc 0.21.0-0-g5549850facc2
 References: <20261024-mathieu-debug-replay-v4-v1-0-3f7f52a3b8e6@bootlin.com>
- <20261024-mathieu-debug-replay-v4-v1-3-3f7f52a3b8e6@bootlin.com>
- <dbd7b348c19f311707890f325bf643d3b9b33cee.camel@rpsys.net>
-In-Reply-To: <dbd7b348c19f311707890f325bf643d3b9b33cee.camel@rpsys.net>
+ <20261024-mathieu-debug-replay-v4-v1-2-3f7f52a3b8e6@bootlin.com>
+ <1f4c6cf178dd2b78c6e970c5f46817da8838e13b.camel@linuxfoundation.org>
+In-Reply-To: <1f4c6cf178dd2b78c6e970c5f46817da8838e13b.camel@linuxfoundation.org>
 X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Fri, 30 Oct 2026 15:54:36 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20386
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Fri, 30 Oct 2026 15:56:26 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20387
 
-On Sun Oct 25, 2026 at 3:20 PM CET, Richard Purdie wrote:
+On Sun Oct 25, 2026 at 3:15 PM CET, Richard Purdie wrote:
 > On Sat, 2026-10-24 at 14:33 +0200, Mathieu Dubois-Briand via lists.openem=
 bedded.org wrote:
->> When a setscene task starts, hand it the covered tasks of the same recip=
-e
->> which were not yet handed to another setscene task, and pass their names
->> to the task through BB_SETSCENE_REPLAY_TASKS. Several setscene tasks can
->> cover the same task (e.g. do_populate_sysroot and do_package both cover
->> do_compile), so this lets metadata replay the log of each covered task
->> exactly once when restoring it from the sstate cache.
+>> Every task gets a LogCatcher which records its warnings and errors durin=
+g
+>> execution. Right after the task body, and before the postfuncs, the
+>> records are written to ${T}/logrecords.<task>.json. The sstate packaging
+>> postfunc reads the current task's file to bundle the messages for replay
+>> when the task is later restored from the sstate cache.
+>>=20
+>> Writing the file before the postfuncs makes both the current task's own
+>> record and the files of already finished dependency tasks readable from
+>> the same place.
 >>=20
 >> AI-Generated: Uses opencode (DeepSeek V4 Flash)
 >> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 >> ---
->> =C2=A0bin/bitbake-worker | 1 +
->> =C2=A0lib/bb/runqueue.py | 9 +++++++++
->> =C2=A02 files changed, 10 insertions(+)
+
+...
+
+>> @@ -711,6 +720,9 @@ def _exec_task(fn, task, d, quieterr):
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ for func in (prefuncs or '').split():
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 exec_func(func, localdata)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ exec_func(task, localdata)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if t=
+asklogcatcher.records:
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 with open(logrecords, 'w') as f:
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 json.dump(tasklogcatcher.reco=
+rds, f)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ for func in (postfuncs or '').split():
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 exec_func(func, localdata)
 >
-> This is a very specific piece of API, specifically tailored to what
-> this particular task entails.
+> I was going to ask if this should unconditionally rewrite the file even
+> if there are no records, else messages might persist if you fix
+> warnings output for example? I then see you delete the file above.
+>
+> If there is no log output, I guess the question is whether we should
+> write an empty file or not...
 >
 
-Just to make sure I fully understand this: I should rather try to rely
-more on existing API or introduce something a bit more generic. Is that
-right?
-
-> I'm a bit worried that it still doesn't cover everything it should, for
-> example a warning from another recipe that is only covered by a given
-> sstate task and nothing else.
-
-Indeed. Knowing we have to replay these logs should be easy, but
-accessing these logs in the first place might be a bit tricky. I will
-have to experiment a bit and understand what is possible.
-
->
-> You can pobably calculate it from BB_TASKDEPDATA already too, if you
-> know which tasks are sstate, which I think we know.
->
-> There is also the potential for multiple log output from these covered
-> tasks, e.g. do_package and do_populate_sysroot both 'cover' on
-> do_install so a warning from do_install will be shown by both tasks at
-> setscene time.
->
-
-This should not happen with the current code. But I will have to be
-careful when covering tasks from another recipe.
-
-In your example, only one of the two tasks should be assigned with the
-logs of do_install, either do_package or do_populate_sysroot, but not
-both. This is the point of the sq_replay_assigned set here.
-
-Also, it should be covered by my tests on the oe-core side.
+I had no strong opinion here, but based on your comment, I feel like we
+should indeed write an empty file when there is no log.
 
 Thanks,
 Mathieu
