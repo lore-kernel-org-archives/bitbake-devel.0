@@ -1,177 +1,215 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.29912.1793868568245253056
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.33018.1793881310015133789
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 05 Nov 2026 00:49:28 -0800
+ Thu, 05 Nov 2026 04:21:50 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google2 header.b=YI8mfa5X;
- spf=pass (domain: smile.fr, ip: 209.85.128.47, mailfrom: yoann.congal@smile.fr)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4a2d6cf958bso7331315e9.1
-        for <bitbake-devel@lists.openembedded.org>; Thu, 05 Nov 2026 00:49:28 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20260707 header.b=BTfH/0Ke;
+ spf=pass (domain: gmail.com, ip: 209.85.128.53, mailfrom: stondo@gmail.com)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4a214c5c4c0so16245475e9.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 05 Nov 2026 04:21:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google2; t=1793868566; x=1794473366; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=SdhyeBhA3+/CtUEmu9/DmUkNDOd8igNCUX45Ae/7hcM=;
-        b=YI8mfa5XwZYJghjpm01KIWFSS7AnJw5o8f6x9t/Wf+PUXNPavLumIKFpw3jcWqtBij
-         gw7xJBiyEELO4rI9gyWeM/ukpRRGaK/vfcW6dwjlb9Puc+5Gn2LTJShirh9PYDYtvYsP
-         C4sdFa9vuFKbBTP1BwdBiUTkXBHN+CC28PxC6gxc54eGnQbUnWfxi+RdR65TUfk2lxv9
-         qjuLHEV7ltWyP7Woj/xPnSK16XaSYBcbxkk6LDzRZ5qDOtTji/zk4QisKbX45nOwjmsd
-         ZvVLTvMUjENPmkfnojcaxsIVc/1qTYY9AU1O/WIG1NWBhn8raqH2/jBByxheL587+wcR
-         KOOw==
+        d=gmail.com; s=20260707; t=1793881308; x=1794486108; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ixqAVIffvGCp2dp11uEIS5r1WSq5s3wTH8OBderXmFI=;
+        b=BTfH/0KebYV8feo8kf1ncWEHJEcRwqjMK6ho4rpC+n5W+q/TX22Ldq81M2IrHgEnME
+         igahDC5LMtqozqnG8zP5qIpmQ1tSvNlmuVyCo92k8iCgDw6TL8t/1hTqAXf1sD6xKnaN
+         CIxEinLiN3kH4E4aGWoWyGBpRbn4irpgGAGeBDcLiROym8ZLg+PUpn5u1s6GA3Ify2Vx
+         IXA8vTwFkbOT2jT7IKF33Yf8YMxpgvWe6DsrZ75JZlmdzwQ6PdHtXD1s7twczYJXcmkX
+         rhuUCJiPpNmRauUVoPtiBg4OIW6X1P57ByNPrsYfSSpvI4uQV1QDaaaW+SZZDYAznPlQ
+         ybqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793868566; x=1794473366;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=SdhyeBhA3+/CtUEmu9/DmUkNDOd8igNCUX45Ae/7hcM=;
-        b=1BDtXLxNf+rAguQ9JL1QFk8vyqw4qTTkWXxqM2c068D5jL9mE+f74RrMr3ShEqHUXT
-         25LQnkdB/Jj5OPUfrhZanpfY8PTNFEapqobKyK9oxA/2QQ7QAiZAeRprsKWCqir/Zh6e
-         nXRVHPTz4HJudRarC+5w042v/m9mJyBfSvtbt7i0gGwv2kxnoeEdH9EdZ9Fiqev7Nf20
-         MXUDWk+pyUigPMnQQO4D1Hx3wQW9BcuiLriCl7ZiSqQ7p2a9GGnh2YV43jg464o4CJBH
-         JWREmFT41Dn4+gAh57XbLbbR1nxghGQCGOnycAyJPwCUZpvTasFn0od6nNejo1NzyAxf
-         P4zg==
-X-Gm-Message-State: APuU4Z8KmOlincxUKU7QqmxlKLcVlEbEtMnHeOcRay4mOZCAc4eqRZJW
-	nCLl5/v9fuu+lbuYR0MZdfqTiIP5Ne1AzcASkDy1pKNLrza1DPaqirRCmJBq9R4GST3IzRP5V6e
-	s5aDw0UE=
-X-Gm-Gg: AYBFou1XIBSNJiyt/g4POdcRxNDLv6cO2ClinUB1gJi6GEUIQL4kmTYJxw9DPqOnVCv
-	XcaA9BXlH4z3UtLNDbHQALhX+A8YVwzdAXupjTag36iokBCy6MVX9kwNvXl0xRBXFHMKBjcSqyp
-	vGBFywND1cFObb8OYLDk/epTmq8lDlcxaks0sVPJjAYJx2mIn1F6T7NrIiqNWQTuWBCJDI5iiMa
-	HXEHWJOgca+2aH8dAXkvl8P8M5bWCW2GSYMa7RWacY6QSx9lZmSVLOpjSt8dE4dZ3Or9RHcxbwr
-	bOv7fG03NPiavnBhs/71FfarxBHktZjfRXThRxAMGSNmCQUtdK01W9t3CXa4vvUUvNQMj2NNdGQ
-	hswZFfGdRNzfCxwGsQ82s3C4NoUbGjrsrtbED2EY46qmy4XeO7bJtdWCBlJKn7Z2eDTc9B1nRsL
-	fb6kPHHrbGKuD0H8wZiPojFxlR8ez76IuUM1x7x2KTi/XXNQiCZL7buuPugar73jvridYcWG+Xv
-	9GyOm954PVYJFPt0rxi4/1vh0YQnMRsDdTL8FDI/DRxqPyRbpy7YCi26J7hxr7eimkbQ0PJ8cqa
-	8IwBwWTKxHkCIXNH7yD4a0v6+Wb9SQd66wkLaimkQS64vRLODaF2/28OcHgbXyg7EWtye3vJA9d
-	jxH866aoP4E0zq4Vgk7YZ8MXHFmQY
-X-Received: by 2002:a05:600c:8b6a:b0:4a1:e6c8:ff74 with SMTP id 5b1f17b1804b1-4ac17e10acemr380032025e9.29.1793868566390;
-        Thu, 05 Nov 2026 00:49:26 -0800 (PST)
-Return-Path: <yoann.congal@smile.fr>
-Received: from FRSMI25-LASER.home (2a01cb001331aa00a2e4fb7b0d887544.ipv6.abo.wanadoo.fr. [2a01:cb00:1331:aa00:a2e4:fb7b:d88:7544])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48fedc09675sm8631012f8f.55.2026.11.05.00.49.26
-        for <bitbake-devel@lists.openembedded.org>
+        d=1e100.net; s=20260707; t=1793881308; x=1794486108;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ixqAVIffvGCp2dp11uEIS5r1WSq5s3wTH8OBderXmFI=;
+        b=yVJvBOZPCcrAHZ9Z/sn7YK56xDcpJQuFSsgEuZGNtX7HNlt+JQUyQPQGatMtyTxxzn
+         agt40YJIZUuCu4kg831MOZ5IOj5E5FslfW7fqaFrqCBX5fGBJya1BbhalEJ2nBp5y7/x
+         0CEdoZD3eiICLepc7W7GX2bxdbesmpMd0wL9VJZ5NywCj7iw3YC/HlHfe9xDc0aWwLGN
+         L5DBzvDx1sSAtjPWkTfUXxONOHS8gbHEaaPn0NI6RtX1Oi8lO9xzAzj4R7ddgHjD8oKh
+         csZTNE1Td0QSWBqe0ego+5ktGmeJNBirOojQv3Ykh/g1OoM9SOVWjlrjuYB1mEHbk1ef
+         vP3Q==
+X-Forwarded-Encrypted: i=1; AKwUvBxusqrhpIbcZhYlcn/0QV1ZPim8FB6O90kpIK/BRYhjL7m9RPHzcBa6kBP0o8QqyYCDk5c/uPCeOQr7ox72@lists.openembedded.org
+X-Gm-Message-State: APuU4Z+hdv/qDcHJqY/rMWPrV7UT8ZLyC8gYUTJL0qAjmhdmYMR8rMCm
+	gRGmtavRkqqwlH6SkRENSk9Y9RORmra2DK8OrFmNgP4MHt7GyNdRJ6tx
+X-Gm-Gg: AYBFou0ovnP3jQHAAXBwlNwlRoGBfAFEoq+Z9vCQuyj+2WqxaFo2EcEbVlw+0U/uu6T
+	p0DL1QP1FyTuavrSUfeQo/VmfsiV6Ne3jJxl3/nDAU3/Ao1YZ+NiDGRC26PfxoXi2r/gRn1kr7P
+	K8H7Fk/wAKuRTmNhKZKyIW9c1Kt+XYL1VVgCxtp9NC5EUqFQXkeuvqneIBzxzxBZDc82nvuvY7A
+	U50K0IaNhLdMzL/ojZWEIgt8z11gkK4E2tff34Lu+ZBrbLI/+PnF7EWLokHMZIgPBih8MOkIEf6
+	st0Z+6t5knXVk0UFfiJ7OQ438GuFqn6WHJy8GNDc2uHYfF03MAHHuZWKLJrwsmWBy6CdT9veDU4
+	keCYBekwowvBDoY0VDcT3rWBEK+l7y2YJs4gDnqAxzts8Obd6uysiZeuaK/6u/C87SFYTHOB8KK
+	ttRCtVJGRV0jKT3LEHPcgjOXjXkuXiFpGSKz5NO4kW4R6U1GUBP/pRMejqLDqKGP/Liz8+JRHku
+	Nt9Vd1t6g2Y1Qs1HXspTXqhdVocYBZ7D274nA4Q5771zMv1gupsSStCTdkGu8LI7eFjDjH5zCFe
+	bi5UOJmVSHk=
+X-Received: by 2002:a05:600c:6095:b0:4a3:7344:13b5 with SMTP id 5b1f17b1804b1-4ac182dcb98mr372756865e9.16.1793881307922;
+        Thu, 05 Nov 2026 04:21:47 -0800 (PST)
+Return-Path: <stondo@gmail.com>
+Received: from fedora ([165.225.94.251])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b56ea592fbsm53789855e9.4.2026.11.05.04.21.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2026 00:49:26 -0800 (PST)
-From: Yoann Congal <yoann.congal@smile.fr>
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake][blacksail][2.20][PATCH 1/1] server/process: Fix lock owner prefix check during shutdown
-Date: Thu,  5 Nov 2026 09:49:23 +0100
-Message-ID: <7f7ae8cd58993a389adbd130b07ea5de8415d2f9.1793868515.git.yoann.congal@smile.fr>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <cover.1793868515.git.yoann.congal@smile.fr>
-References: <cover.1793868515.git.yoann.congal@smile.fr>
+        Thu, 05 Nov 2026 04:21:46 -0800 (PST)
+From: "Stefano Tondo" <stondo@gmail.com>
+To: openembedded-core@lists.openembedded.org
+Cc: stefano.tondo.ext@siemens.com,
+	bitbake-devel@lists.openembedded.org,
+	Joshua Watt <JPEWhacker@gmail.com>,
+	Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>,
+	Alexander Kanavin <alex.kanavin@gmail.com>,
+	Peter Marko <peter.marko@siemens.com>,
+	Adrian Freihofer <adrian.freihofer@siemens.com>,
+	Patrick Wicki <patrick.wicki@siemens.com>
+Subject: [RFC] spdx30: name, version and purl for dependency downloads
+Date: Thu,  5 Nov 2026 13:21:45 +0100
+Message-ID: <20261105122145.543282-1-stondo@gmail.com>
+X-Mailer: git-send-email 2.56.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Thu, 05 Nov 2026 08:49:29 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20396
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Thu, 05 Nov 2026 12:35:07 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20397
 Content-Type: text/plain; charset="utf-8"
 
-From: Reda Maher <eng.redamaher@gmail.com>
+Hi all,
 
-Pass a tuple to str.startswith() when checking a contended lock during shutdown. The list raises TypeError before the server can retry its own lock or recognize a replacement server.
+I would like your opinion on a direction for the SPDX output of
+recipes with language dependencies. I have working patches for it,
+described below, but I would rather agree on the approach before
+sending them.
 
-Add a deterministic shutdown regression test covering PID-only and XML-RPC lock records, including a replacement PID sharing the old PID's prefix. Verified failure before the fix and success with bitbake-selftest bb.tests.server afterwards.
+Yocto already knows each language dependency at fetch time for the
+recipes that list them in SRC_URI (crate://, gomod://, gomodgit://, and
+npmsw:// through its shrinkwrap file). The SPDX output loses most of
+that: the downloads are recorded, but without a name, version or
+package URL that a scanner can use, and dependencies fetched
+implicitly (git submodules, shrinkwrap dependencies) are not recorded
+at all.
 
-AI-Generated: Uses GitHub Copilot
+Measured on current master (oe-core 3a3eef7afb, bitbake 0f33b68cb,
+meta-openembedded 33f74f5dc5), source downloads in the build SPDX of
+each recipe, today and with the patches:
 
-Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
-Signed-off-by: Reda Maher <eng.redamaher@gmail.com>
-Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-(cherry picked from commit 1763256342ae4d7f8028e8222400c6fc8c24d4a3)
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
----
- bin/bitbake-selftest     |  1 +
- lib/bb/server/process.py |  2 +-
- lib/bb/tests/server.py   | 57 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 59 insertions(+), 1 deletion(-)
- create mode 100644 lib/bb/tests/server.py
+                  today                   with the patches
+  python3-bcrypt  42 crates, none with    all 42 with name,
+                  version or purl         version and purl
+  crucible        36 Go modules, none     all 36 with name,
+                  with version or purl    version and purl
+  p11-kit         gitsm, submodule        submodule recorded with
+                  pkcs11-json missing     its own revision
+  webserver-oob   2 downloads, the 70     72 downloads, 71 with
+                  shrinkwrap packages     a purl
+                  missing
 
-diff --git a/bin/bitbake-selftest b/bin/bitbake-selftest
-index 855abb1f0..e5a68ba1d 100755
---- a/bin/bitbake-selftest
-+++ b/bin/bitbake-selftest
-@@ -35,6 +35,7 @@ tests = ["bb.tests.codeparser",
-          "bb.tests.fetch_import",
-          "bb.tests.parse",
-          "bb.tests.runqueue",
-+         "bb.tests.server",
-          "bb.tests.setup",
-          "bb.tests.siggen",
-          "bb.tests.utils",
-diff --git a/lib/bb/server/process.py b/lib/bb/server/process.py
-index d0f73590c..a103b0987 100644
---- a/lib/bb/server/process.py
-+++ b/lib/bb/server/process.py
-@@ -377,7 +377,7 @@ class ProcessServer():
-                 lock = bb.utils.lockfile(lockfile, shared=False, retry=False, block=False)
-                 if not lock:
-                     newlockcontents = get_lock_contents(lockfile)
--                    if not newlockcontents[0].startswith([f"{os.getpid()}\n", f"{os.getpid()} "]):
-+                    if not newlockcontents[0].startswith((f"{os.getpid()}\n", f"{os.getpid()} ")):
-                         # A new server was started, the lockfile contents changed, we can exit
-                         serverlog("Lockfile now contains different contents, exiting: " + str(newlockcontents))
-                         return
-diff --git a/lib/bb/tests/server.py b/lib/bb/tests/server.py
-new file mode 100644
-index 000000000..a1ec76e19
---- /dev/null
-+++ b/lib/bb/tests/server.py
-@@ -0,0 +1,57 @@
-+#
-+# BitBake Tests for server/process.py
-+#
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+
-+import os
-+import tempfile
-+import unittest
-+from unittest.mock import Mock, patch
-+
-+from bb.server.process import ProcessServer
-+
-+
-+class ProcessServerTests(unittest.TestCase):
-+    def test_shutdown_contended_lock(self):
-+        pid = os.getpid()
-+        for owner in (str(pid), str(pid) + "0"):
-+            for suffix in ("\n", " 127.0.0.1:12345\n"):
-+                with self.subTest(owner=owner, suffix=suffix):
-+                    with tempfile.TemporaryDirectory() as tmpdir:
-+                        lockname = os.path.join(tmpdir, "bitbake.lock")
-+                        sockname = os.path.join(tmpdir, "bitbake.sock")
-+                        with open(lockname, "w") as stream:
-+                            stream.write(owner + suffix)
-+                        with open(sockname, "w"):
-+                            pass
-+
-+                        lock = Mock()
-+                        sock = Mock()
-+                        server = ProcessServer(lock, lockname, sock, sockname,
-+                                               0, (None, None))
-+                        server.cooker = Mock()
-+                        server.quit = True
-+                        acquired_lock = Mock()
-+                        own_lock = owner == str(pid)
-+                        attempts = [None, acquired_lock] if own_lock else [None]
-+
-+                        with patch("bb.server.process.bb.utils.set_process_name"), \
-+                             patch("bb.server.process.os.path.exists", return_value=True), \
-+                             patch("bb.server.process.bb.utils.lockfile", side_effect=attempts) as acquire, \
-+                             patch("bb.server.process.bb.utils.unlockfile") as unlock, \
-+                             patch("bb.server.process.time.sleep") as sleep, \
-+                             patch("bb.server.process.serverlog"):
-+                            server.main()
-+
-+                        lock.close.assert_called_once_with()
-+                        sock.close.assert_called_once_with()
-+                        server.cooker.shutdown.assert_called_once_with(True, idle=False)
-+                        self.assertEqual(acquire.call_count, 2 if own_lock else 1)
-+                        acquire.assert_called_with(lockname, shared=False, retry=False, block=False)
-+                        if own_lock:
-+                            sleep.assert_called_once_with(0.1)
-+                            unlock.assert_called_once_with(acquired_lock)
-+                        else:
-+                            sleep.assert_not_called()
-+                            unlock.assert_not_called()
+webserver-oob is from TI's meta-tisdk, built on qemux86-64 without its
+am335x and meta-ti runtime dependencies and without one git.ti.com
+source that failed to clone, since neither oe-core nor
+meta-openembedded has an npmsw recipe. crucible also fetches 67
+go.mod-only entries (;mod=1), which are not compiled in and stay
+without an identity.
+
+Today a crate shows up as name "cipher-0.4.4.crate" with download
+location https://static.crates.io/crates/cipher/0.4.4/download, and a
+Go module as gomod://github.com/felixge/httpsnoop, with the version
+only in the file name "github.com.felixge.httpsnoop@v1.0.4.zip".
+Consumers end up parsing URLs and file names per ecosystem to recover
+what the fetcher already knew.
+
+I am aware of two earlier threads and would like to build on them, not
+reopen them:
+
+- Joshua's "lib: spdx30_tasks: Use Fetch.expanded_urldata()" (March
+  2025), which stalled on an intermittent edk2-firmware gitsm failure
+  on the autobuilder. I think I found the cause: the patch passes each
+  expanded URL to oe.patch.patch_path(), which calls
+  Fetch.localpath(url). For a URL that is not in SRC_URI, that creates
+  a new FetchData with the recipe datastore, where the
+  SRCREV_<submodule> that the gitsm fetcher sets in its own datastore
+  copy does not exist. A recipe with only named SRCREVs, like
+  edk2-firmware, then fails with "Please set a valid SRCREV". It
+  reproduces every time with meta-selftest's git-submodule-test given
+  a named SRCREV. My guess for the intermittency is that gitsm only
+  lists the submodules when the clone is in DL_DIR.
+- Stefan's "Concept for tightly coupled package manager" RFC (December
+  2024). My reading of that thread is that explicit SRC_URI lists
+  generated in layers (go-mod-update-modules,
+  cargo-update-recipe-crates) are the preferred model and that
+  fetchers should stay thin. This proposal assumes that model and does
+  not add any dependency resolution to bitbake.
+
+The patches have two parts.
+
+1. Record implicit downloads
+
+   add_download_files() also records what implicit_urldata() returns
+   for each SRC_URI entry, but keeps the patch check on the SRC_URI
+   entries, so implicit downloads are never set up again with the
+   recipe datastore. The npmsw fetcher gets an implicit_urldata(),
+   since it already builds the list of URLs internally (ud.proxy). The
+   gitsm fetcher warns when the repository is not in DL_DIR, instead
+   of silently returning no submodules.
+
+2. Let the fetcher state the identity of what it downloads
+
+   FetchData gets a package_identity attribute, None by default and
+   set in urldata_init() by the fetchers that know it:
+
+     crate     ("cargo", "cipher", "0.4.4", {})
+     gomod     ("golang", "github.com/felixge/httpsnoop", "v1.0.4", {})
+     gomodgit  same as gomod
+     npm       ("npm", "@scope/name", "1.2.3", {})
+     npmsw     the same for each registry dependency
+
+   The last element holds purl qualifiers, so a crate or npm package
+   from another registry gets a repository_url. go.mod-only entries
+   get None. create-spdx-3.0 sets the name, software_packageVersion and
+   software_packageUrl from it and builds the purl in oe-core, so
+   bitbake does not need to know the purl specification.
+
+   I first had a FetchMethod method in mind, but npmsw fetches its
+   dependencies through plain https URLs, so it has to attach the
+   identity to each of them, and an attribute is enough for that. No
+   URL syntax changes, unlike the dn=/dv= parameters in Stefan's
+   series.
+
+Both parts are small, about 35 lines in bitbake and 40 in oe-core plus
+tests. I tested them on master with new bitbake fetcher unit tests and
+new oe-selftest cases (submodules, including the named SRCREV case,
+and crate identity), which fail without the patches, and with the
+existing fetcher tests and the SPDX selftests closest to the change.
+Two bugs I found in the existing Git handling while doing this (gitsm
+skipped, changes not reaching the task signature) are fixed in a
+separate series, which the oe-core part builds on:
+https://lore.kernel.org/openembedded-core/20261104112257.866914-1-stondo@gmail.com/
+
+Questions:
+
+a) Is the fetcher the right place for the identity, or would you
+   prefer oe-core to derive it from each fetcher's FetchData? The
+   latter avoids touching bitbake, but for npmsw it means reading the
+   internals of its proxy fetcher.
+
+b) Should bitbake keep returning the parts and leave the purl to
+   oe-core, as above, or return a purl directly?
+
+c) For ecosystems without a fetcher (.NET/NuGet, Maven), would a
+   fetcher plus an update class following go-mod-update-modules be
+   welcome, or is that better kept in a layer?
+
+d) Dependency scope. Identity alone does not give a correct SBOM: a
+   lock file lists what may be needed on any platform. python3-bcrypt
+   fetches wasi, wasip2 and wit-bindgen (WebAssembly only) and r-efi
+   (UEFI), and with the patches they show up with a clean purl as if
+   they were part of the product. As a follow-up I tried running
+   cargo metadata --filter-platform ${RUST_HOST_SYS} in cargo.bbclass:
+   of the 42 crates, 25 are runtime, 12 only run at build time (build
+   scripts, proc-macros) and 5 are not used on the target. I recorded
+   them as LifecycleScopedRelationship dependsOn with scope runtime or
+   build, and an annotation on the unused ones. Go (go list -deps) and
+   npm (dev, optional, os and cpu in the shrinkwrap) could work the
+   same way. Does that split sound right: declared scope from the
+   fetcher where the lock file has it, observed scope from the
+   language classes? And is there a preferred SPDX representation for
+   "fetched but not built"?
+
+Thanks,
+Stefano
