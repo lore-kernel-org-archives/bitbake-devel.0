@@ -1,215 +1,156 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.33018.1793881310015133789
+Received: from OSPPR02CU001.outbound.protection.outlook.com (OSPPR02CU001.outbound.protection.outlook.com [40.107.159.39])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.35090.1793886956160056870
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 05 Nov 2026 04:21:50 -0800
+ Thu, 05 Nov 2026 05:55:56 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20260707 header.b=BTfH/0Ke;
- spf=pass (domain: gmail.com, ip: 209.85.128.53, mailfrom: stondo@gmail.com)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4a214c5c4c0so16245475e9.3
-        for <bitbake-devel@lists.openembedded.org>; Thu, 05 Nov 2026 04:21:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793881308; x=1794486108; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ixqAVIffvGCp2dp11uEIS5r1WSq5s3wTH8OBderXmFI=;
-        b=BTfH/0KebYV8feo8kf1ncWEHJEcRwqjMK6ho4rpC+n5W+q/TX22Ldq81M2IrHgEnME
-         igahDC5LMtqozqnG8zP5qIpmQ1tSvNlmuVyCo92k8iCgDw6TL8t/1hTqAXf1sD6xKnaN
-         CIxEinLiN3kH4E4aGWoWyGBpRbn4irpgGAGeBDcLiROym8ZLg+PUpn5u1s6GA3Ify2Vx
-         IXA8vTwFkbOT2jT7IKF33Yf8YMxpgvWe6DsrZ75JZlmdzwQ6PdHtXD1s7twczYJXcmkX
-         rhuUCJiPpNmRauUVoPtiBg4OIW6X1P57ByNPrsYfSSpvI4uQV1QDaaaW+SZZDYAznPlQ
-         ybqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793881308; x=1794486108;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=ixqAVIffvGCp2dp11uEIS5r1WSq5s3wTH8OBderXmFI=;
-        b=yVJvBOZPCcrAHZ9Z/sn7YK56xDcpJQuFSsgEuZGNtX7HNlt+JQUyQPQGatMtyTxxzn
-         agt40YJIZUuCu4kg831MOZ5IOj5E5FslfW7fqaFrqCBX5fGBJya1BbhalEJ2nBp5y7/x
-         0CEdoZD3eiICLepc7W7GX2bxdbesmpMd0wL9VJZ5NywCj7iw3YC/HlHfe9xDc0aWwLGN
-         L5DBzvDx1sSAtjPWkTfUXxONOHS8gbHEaaPn0NI6RtX1Oi8lO9xzAzj4R7ddgHjD8oKh
-         csZTNE1Td0QSWBqe0ego+5ktGmeJNBirOojQv3Ykh/g1OoM9SOVWjlrjuYB1mEHbk1ef
-         vP3Q==
-X-Forwarded-Encrypted: i=1; AKwUvBxusqrhpIbcZhYlcn/0QV1ZPim8FB6O90kpIK/BRYhjL7m9RPHzcBa6kBP0o8QqyYCDk5c/uPCeOQr7ox72@lists.openembedded.org
-X-Gm-Message-State: APuU4Z+hdv/qDcHJqY/rMWPrV7UT8ZLyC8gYUTJL0qAjmhdmYMR8rMCm
-	gRGmtavRkqqwlH6SkRENSk9Y9RORmra2DK8OrFmNgP4MHt7GyNdRJ6tx
-X-Gm-Gg: AYBFou0ovnP3jQHAAXBwlNwlRoGBfAFEoq+Z9vCQuyj+2WqxaFo2EcEbVlw+0U/uu6T
-	p0DL1QP1FyTuavrSUfeQo/VmfsiV6Ne3jJxl3/nDAU3/Ao1YZ+NiDGRC26PfxoXi2r/gRn1kr7P
-	K8H7Fk/wAKuRTmNhKZKyIW9c1Kt+XYL1VVgCxtp9NC5EUqFQXkeuvqneIBzxzxBZDc82nvuvY7A
-	U50K0IaNhLdMzL/ojZWEIgt8z11gkK4E2tff34Lu+ZBrbLI/+PnF7EWLokHMZIgPBih8MOkIEf6
-	st0Z+6t5knXVk0UFfiJ7OQ438GuFqn6WHJy8GNDc2uHYfF03MAHHuZWKLJrwsmWBy6CdT9veDU4
-	keCYBekwowvBDoY0VDcT3rWBEK+l7y2YJs4gDnqAxzts8Obd6uysiZeuaK/6u/C87SFYTHOB8KK
-	ttRCtVJGRV0jKT3LEHPcgjOXjXkuXiFpGSKz5NO4kW4R6U1GUBP/pRMejqLDqKGP/Liz8+JRHku
-	Nt9Vd1t6g2Y1Qs1HXspTXqhdVocYBZ7D274nA4Q5771zMv1gupsSStCTdkGu8LI7eFjDjH5zCFe
-	bi5UOJmVSHk=
-X-Received: by 2002:a05:600c:6095:b0:4a3:7344:13b5 with SMTP id 5b1f17b1804b1-4ac182dcb98mr372756865e9.16.1793881307922;
-        Thu, 05 Nov 2026 04:21:47 -0800 (PST)
-Return-Path: <stondo@gmail.com>
-Received: from fedora ([165.225.94.251])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b56ea592fbsm53789855e9.4.2026.11.05.04.21.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2026 04:21:46 -0800 (PST)
-From: "Stefano Tondo" <stondo@gmail.com>
-To: openembedded-core@lists.openembedded.org
-Cc: stefano.tondo.ext@siemens.com,
-	bitbake-devel@lists.openembedded.org,
-	Joshua Watt <JPEWhacker@gmail.com>,
-	Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>,
-	Alexander Kanavin <alex.kanavin@gmail.com>,
-	Peter Marko <peter.marko@siemens.com>,
-	Adrian Freihofer <adrian.freihofer@siemens.com>,
-	Patrick Wicki <patrick.wicki@siemens.com>
-Subject: [RFC] spdx30: name, version and purl for dependency downloads
-Date: Thu,  5 Nov 2026 13:21:45 +0100
-Message-ID: <20261105122145.543282-1-stondo@gmail.com>
-X-Mailer: git-send-email 2.56.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Thu, 05 Nov 2026 12:35:07 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20397
+ dkim=pass header.i=@arm.com header.s=selector1 header.b=d2fSpPto;
+ dkim=pass header.i=@arm.com header.s=selector1 header.b=d2fSpPto;
+ spf=pass (domain: arm.com, ip: 40.107.159.39, mailfrom: ross.burton@arm.com)
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=y6g/GH462wIaNWacOLxLX8dxec6zllpcfNmHmsrHYZhVs13MsHBo5Qp3BwyCfBzYuMFTMsl7uDmChjgY/reId9gyBFDqJ+Rid7kVQf/VnjP5XQSCRC9rQu0NHjjacShpLgEG+TAJlPHvm0dtQDUAVJADmyIa5YJlYlkVlFO+cyRvvIVY1zMhJXzFhY/ccr8eVVwj45RFywiBpyuyf83XudcvxHK+4IT2TQaT61zA9t4H0rNv2knFLDjiiAq9/LtBn8IG/CwopP61gHUcwbu0WSqypIZbox/13i5KaGxSGZqRosFxEhe16fikoS0tKlpwKMKdBaKhfM3lo7hgm3ykGw==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ewEN4RwhxavhQa9MQs1naWMu/KtaMFKqHQ4biLIt/ms=;
+ b=CASx8EWtcN3T+KpZSkMPcqglmxrTVlZaez5SPdw+4FRFxmO7l0BLjua1PZFfsZV1g9CAeOjn3lncY/uNOWfyX11Az9ELYqwtMHEqGnH1TpmfUqZcJNGKjounN5gf6rAM74tbGO6xRsNJEBKND2wrk2L77yK+T4SmPFx5IER4v78XOgARc1sbToGqc0iHe/3hpHnWVPyXQAXBhH+/okIoV0Kx2iAaK+BOTW6f0mN2iCD1alxO6RKdahHLscAZGjUuA3ZB9l8Y6oqFao721obA62bx0VcpqCXGw6jzPddHBHL8X6NKR5JfTn/qwBqsY2tkgxkdkZ3bkaR9btYLch2LeA==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=lab126.com smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ewEN4RwhxavhQa9MQs1naWMu/KtaMFKqHQ4biLIt/ms=;
+ b=d2fSpPtog4wZf4+DT5JghxzacQco5TSZFWRNwpoaTffJsCcBZ0ndScBVD8SVVJf/xc/vN3C8JfaiaIJL2vtiJBsWQslWaeFD/YOiNuGTZqS7gZ0DjkG40VgkAVdXw06cZqxJMUESACo3d97PL/x5iLepieQCyLRqEONFVz+r/cc=
+Received: from AS4P191CA0040.EURP191.PROD.OUTLOOK.COM (2603:10a6:20b:657::9)
+ by DU0PR08MB8256.eurprd08.prod.outlook.com (2603:10a6:10:410::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.10; Thu, 5 Nov
+ 2026 13:55:51 +0000
+Received: from AMS0EPF0000056C.eurprd02.prod.outlook.com
+ (2603:10a6:20b:657:cafe::14) by AS4P191CA0040.outlook.office365.com
+ (2603:10a6:20b:657::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.592.10 via Frontend Transport; Thu, 5
+ Nov 2026 13:55:51 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 4.158.2.129) smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ AMS0EPF0000056C.mail.protection.outlook.com (10.167.242.122) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.615.4
+ via Frontend Transport; Thu, 5 Nov 2026 13:55:50 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uZ5f/J9Ik+hCKqtJ/wJyqOOTnEypEFiNS4cTn9VClIZLPUjaRRvbNsb1jD+AKNkDrDj1hT6kdjpsp3gYSuYJkDxrEur0u1fQpYY0IwK+vYfbIDzX+4am9+7Il+44u3KHdRqMiPJqNeOhk3OazdqLyDHzNLp7IpXcKpVnFxxdzvexyHWrMjfWX8a5BHwIFkUefeHOb4yfYsBKcjieUh6duvMr9VGqlude05w5mct/xkyY7xw/uh0ML2pGsc9fkmY14T+iFemAiuNfuNYbTNLocyI/DhglnjJQiulGNk0o2y7jQVPEUQCZVWVnXp+63c14OQ/TrfSqATLZI1dVc4KD3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ewEN4RwhxavhQa9MQs1naWMu/KtaMFKqHQ4biLIt/ms=;
+ b=fHS5RQNkmVyCg1kAka6/BzOdatEwxO6kDd9N49KmGwUol17h0VOXxSXz/cbUcSDjeipiBS+7AxvFgOthoTHHshd+On5lyq7++/h8iAOOaqFA6jH29Qcu1e3QHUSl5JXhbkECRZlO+tyECZjpqAG4v4uXJqNY9kX88vnaw+cFPBdFZ7TvOui7NLDxJWM+y/p9QMcR5J7vxjx0kbkDO1CL13gLBWUvWxZi/ne/SWIPcGVYCcL+82BlgB9r+/U9Fn/FjZhoEz3QxJqtmGq1lNE3CgpTH5E5LBlkcYXEOpWvWfr2k3aMCiEmlC6JciFRVNk+4oSgwznsbpPEuLo/WRXn8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ewEN4RwhxavhQa9MQs1naWMu/KtaMFKqHQ4biLIt/ms=;
+ b=d2fSpPtog4wZf4+DT5JghxzacQco5TSZFWRNwpoaTffJsCcBZ0ndScBVD8SVVJf/xc/vN3C8JfaiaIJL2vtiJBsWQslWaeFD/YOiNuGTZqS7gZ0DjkG40VgkAVdXw06cZqxJMUESACo3d97PL/x5iLepieQCyLRqEONFVz+r/cc=
+Received: from AS8PR08MB9410.eurprd08.prod.outlook.com (2603:10a6:20b:5a9::13)
+ by GV1PR08MB7330.eurprd08.prod.outlook.com (2603:10a6:150:1d::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Thu, 5 Nov
+ 2026 13:55:17 +0000
+Received: from AS8PR08MB9410.eurprd08.prod.outlook.com
+ ([fe80::1f2c:bae7:a4d3:fefb]) by AS8PR08MB9410.eurprd08.prod.outlook.com
+ ([fe80::1f2c:bae7:a4d3:fefb%5]) with mapi id 15.21.0546.012; Thu, 5 Nov 2026
+ 13:55:17 +0000
+From: Ross Burton <Ross.Burton@arm.com>
+To: "kpoduval@lab126.com" <kpoduval@lab126.com>
+CC: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>, "armccurdy@gmail.com"
+	<armccurdy@gmail.com>, "richard.purdie@linuxfoundation.org"
+	<richard.purdie@linuxfoundation.org>,
+	"stefan.herbrechtsmeier@weidmueller.com"
+	<stefan.herbrechtsmeier@weidmueller.com>
+Subject: Re: [bitbake-devel] [PATCH 1/1] fetch/s3: fetch via boto3 by default,
+ falling back to the AWS CLI
+Thread-Topic: [bitbake-devel] [PATCH 1/1] fetch/s3: fetch via boto3 by
+ default, falling back to the AWS CLI
+Thread-Index: AQHdbMSRzw9yvTf0YEK+sStmVuQ2mLcfgP6A
+Date: Thu, 5 Nov 2026 13:55:17 +0000
+Message-ID: <A62B91DA-FE71-4D0B-9672-1AFCF0C0A2CA@arm.com>
+References: <20261105012522.878275-1-kpoduval@lab126.com>
+ <20261105012522.878275-2-kpoduval@lab126.com>
+In-Reply-To: <20261105012522.878275-2-kpoduval@lab126.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3864.700.51.1.3)
+Authentication-Results-Original: mx.microsoft.com 1; dkim=none (message not
+ signed) header.d=none;dmarc=none action=none header.from=arm.com;
+x-ms-traffictypediagnostic: AS8PR08MB9410:EE_|GV1PR08MB7330:EE_|AMS0EPF0000056C:EE_|DU0PR08MB8256:EE_
+X-MS-Office365-Filtering-Correlation-Id: d5e28719-f26b-4d17-8f9c-08df3b44805d
+x-checkrecipientrouted: true
+nodisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|18002099003|22082099003|38070700021|56012099006|261102123227099003|261022075727099003|261026121527099003|261021121427099003|261026140227099003|261028144727099003|261022105027099003|10067099003|11063799006|4143699003|6133799003;
+X-Microsoft-Antispam-Message-Info-Original: lwY3PZm0zKvCkmiF3SYEB1WIayfX7bwx2sPhDLtM0UoBxilWL6VvSoclOO+dSAqE9hE7gDX201Ot8QeIe4C8s9LJYHBUs6UAB01QXGd3i+DFXq5CsQ8iAdAeeFMh/V0wvWNL0l+OcMdA0vlEHF7vaMwu0SeaMppaBknm6tjIu6EVnIk7nNlzyASXhZlU+U3reGPl440PBgmQxmGPMM32WvkVPUNOIEdbG7nQwHIllaEwLjD2n31xC51NfFbs0902h+uSksuVNKwTeH4tg69S+aorzHIJBov8+b9RlF4xumjLtOtMpV7J0MNZLxm4lvriGnz2BV41mBlPgr83RUazwDth+JfP6MZOKolp7RlRjXrMlQuuOIGVsF0aZUvK9FS907eQxPREOkVHgYKNeXHVbYQ3hsULIPuwylwFvrHTGgE/toH+r28i6fnZgveUw0V47UXY4ZWfxd7DXyi5esKIa/H5KvutK7FHNsk0LcxAY4kHnrqwnQrv5HvAP6TeSUMUwsi4aldQ4Cj6+TbrTMspIapZm9ii0mDgED/bqO3/YtUnHokEOH2zsxFWxoS3AohiGf9tbSmqwPW2v/WEMNtEn6g9JFqhzwTfpQ5viyt/DUltecg6Ej/u8Ood7155LY06zFgw9JhmEmy6JmU1N0uKIXDZdyjf7TiMuA7wMSbwDSip1vswreVLQUIi3BkGXL/NwrYZSNQNjgwOJuMp5aaZMacPpX2fInN5xTZo4kMay4w=
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR08MB9410.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(18002099003)(22082099003)(38070700021)(56012099006)(261102123227099003)(261022075727099003)(261026121527099003)(261021121427099003)(261026140227099003)(261028144727099003)(261022105027099003)(10067099003)(11063799006)(4143699003)(6133799003);DIR:OUT;SFP:1101;
 Content-Type: text/plain; charset="utf-8"
+Content-ID: <DB0D5A259904624283047AF662C91AA6@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Exchange-RoutingPolicyChecked: Yq1bfzoUA9EM4xEFk98ZPP+NAhvWJFn13mEzv8E1UGyc7AXtgIaCE3yi83O1WrYxQLxUwZCLPs5PP/yzVNBGeqZ/VEXTqeWm/n0eqGPXdKzd05H8AT7/m848EpqjDtzQb+/YtnCbz1+Y0na5SF3XHJ1xpnpjgzeBdvohdDM5X5VSRKL8EzpCVWqXuln0l4WfJxpJeg0fNRH8Av3vO6lDhtMzAow+fc5+0YH2Nu0mkc4Hc2HX9fYCI7LYVvLVa2la+kiyFcnGchePqgMPUcDvyBIj5BaZqSffOE1xoQuL2bQWQG/xAGX5U0Y2lfOnfHe3NBEHvAJ4kl5AOtcY2BYLJQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR08MB7330
+Return-Path: Ross.Burton@arm.com
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AMS0EPF0000056C.eurprd02.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 300a6835-252d-4dfa-b97e-08df3b446c74
+X-Microsoft-Antispam: BCL:0;ARA:13230040|82310400026|36860700016|23010399003|376014|1800799024|14060799003|35042699022|18002099003|22082099003|6133799003|10067099003|4143699003|56012099006|11063799006|261026121527099003|261026140227099003|261028144727099003|261021121427099003|261102123227099003|261022105027099003|261022075727099003;
+X-Microsoft-Antispam-Message-Info: /JP8k/PqJRxkyEXGO/cS1fqgszfjAC5cWseyMat7/4ihJycLa/FiA6qNAEoXg2w/Lcjbi0yi4fmGRxrpQkx1AfqtheKjMLTyAJ7E9pqAPnGA3ObIHPwK2o2DMuHAuZrLPKMj4B2tJ4oVO5Sap3Z+n+0GYlF1jW+ESa7r1gpkQhEQxmeIIPmI2RQyGj/lCLzfO9RMqp6XuIpdEKDGDWDJEDcmnYfjWwTqgs8fODmQrHUQpbLkiGK7ArYzkGF5MPA6vgm4JuHxCHkwLBOtIDu/Ao/iLSHPSgPHHD/Irk1LprP9hqcI5QpyGJSF5+TakxOi2ey4Gz0t5xK4Jho/8jyvcZwpguKMmeYiBdvmiKhTLdlS+uApYX5yHAS//Vhpoi/oAGXROWHhBdr3XKM2PCcyhgQ2O3wsLpm/W3emM/77V20JoPU5VWrHzROUTf/tcKC+ZGoBKgXENsT/CieAIg4FuEg5IiAbgtXVEJ0T5WNp5A+HQEPciPXNfWQU5DECvQ7wJrbCXAaLNb0OGclCSeoBrVs6TeeuaujZCMGAnkknqe27QttRqB9XUBZaJSGlcK/UvvlVdHwgYlY5lw9XiMMDidQqm77BR/a9zICDIjQmPnNrkgmjSxLagfIKS6b78q2ouCFnfbCmEhz/eVKw5FYPzRGYvJiW9PdBBBvplDxi+/7XsceZxDWlKa9CDfflZjL2MJDNp/H13HQWRNrFjXDy3Q==
+X-Forefront-Antispam-Report: CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(23010399003)(376014)(1800799024)(14060799003)(35042699022)(18002099003)(22082099003)(6133799003)(10067099003)(4143699003)(56012099006)(11063799006)(261026121527099003)(261026140227099003)(261028144727099003)(261021121427099003)(261102123227099003)(261022105027099003)(261022075727099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: I7i7wHcHb7p2+sm0zLGcqjRNAFrnUhGMgKkqRbRwq5IkCC78MXz02+kfP5agiRHfOyC6t58CBeQZntJtru3Z2Hdmoph1ICy5TAZEsUwdCjXj5RdGsZI3Pq5Y4X1K78Nm/JllforY3RRLzzkHQWdtT02GuZ209/2flHGglyNC7WD6s0av4Kdfz7TFCzIxGEAmpMiy7Y/wlZlOtK698eQVNzG/bfblIFo2wtqCiGBhI+QZarHb9E4QWbt8v7sUVDQpp0GHdBOfMwEx/pV7mEQLQ2kfeaGJHa0MGWSvCsMQdjvoHel0xhxlL/4LaidGqYgRVFyg7OA3zk5uXQZcUYBwUB3iBH7xylgH/4UYL9pvjhkhueUQQcTWt9tmuBP9nx72YcaTUUocsnS3kamhWRXSO2pAOFjn9Ti77V/Nts8e6U13BoxHx4sh8UT4j8X/121I
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2026 13:55:50.6210
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5e28719-f26b-4d17-8f9c-08df3b44805d
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource: AMS0EPF0000056C.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB8256
+List-Id: <bitbake-devel.lists.openembedded.org>
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Thu, 05 Nov 2026 13:55:58 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20398
 
-Hi all,
-
-I would like your opinion on a direction for the SPDX output of
-recipes with language dependencies. I have working patches for it,
-described below, but I would rather agree on the approach before
-sending them.
-
-Yocto already knows each language dependency at fetch time for the
-recipes that list them in SRC_URI (crate://, gomod://, gomodgit://, and
-npmsw:// through its shrinkwrap file). The SPDX output loses most of
-that: the downloads are recorded, but without a name, version or
-package URL that a scanner can use, and dependencies fetched
-implicitly (git submodules, shrinkwrap dependencies) are not recorded
-at all.
-
-Measured on current master (oe-core 3a3eef7afb, bitbake 0f33b68cb,
-meta-openembedded 33f74f5dc5), source downloads in the build SPDX of
-each recipe, today and with the patches:
-
-                  today                   with the patches
-  python3-bcrypt  42 crates, none with    all 42 with name,
-                  version or purl         version and purl
-  crucible        36 Go modules, none     all 36 with name,
-                  with version or purl    version and purl
-  p11-kit         gitsm, submodule        submodule recorded with
-                  pkcs11-json missing     its own revision
-  webserver-oob   2 downloads, the 70     72 downloads, 71 with
-                  shrinkwrap packages     a purl
-                  missing
-
-webserver-oob is from TI's meta-tisdk, built on qemux86-64 without its
-am335x and meta-ti runtime dependencies and without one git.ti.com
-source that failed to clone, since neither oe-core nor
-meta-openembedded has an npmsw recipe. crucible also fetches 67
-go.mod-only entries (;mod=1), which are not compiled in and stay
-without an identity.
-
-Today a crate shows up as name "cipher-0.4.4.crate" with download
-location https://static.crates.io/crates/cipher/0.4.4/download, and a
-Go module as gomod://github.com/felixge/httpsnoop, with the version
-only in the file name "github.com.felixge.httpsnoop@v1.0.4.zip".
-Consumers end up parsing URLs and file names per ecosystem to recover
-what the fetcher already knew.
-
-I am aware of two earlier threads and would like to build on them, not
-reopen them:
-
-- Joshua's "lib: spdx30_tasks: Use Fetch.expanded_urldata()" (March
-  2025), which stalled on an intermittent edk2-firmware gitsm failure
-  on the autobuilder. I think I found the cause: the patch passes each
-  expanded URL to oe.patch.patch_path(), which calls
-  Fetch.localpath(url). For a URL that is not in SRC_URI, that creates
-  a new FetchData with the recipe datastore, where the
-  SRCREV_<submodule> that the gitsm fetcher sets in its own datastore
-  copy does not exist. A recipe with only named SRCREVs, like
-  edk2-firmware, then fails with "Please set a valid SRCREV". It
-  reproduces every time with meta-selftest's git-submodule-test given
-  a named SRCREV. My guess for the intermittency is that gitsm only
-  lists the submodules when the clone is in DL_DIR.
-- Stefan's "Concept for tightly coupled package manager" RFC (December
-  2024). My reading of that thread is that explicit SRC_URI lists
-  generated in layers (go-mod-update-modules,
-  cargo-update-recipe-crates) are the preferred model and that
-  fetchers should stay thin. This proposal assumes that model and does
-  not add any dependency resolution to bitbake.
-
-The patches have two parts.
-
-1. Record implicit downloads
-
-   add_download_files() also records what implicit_urldata() returns
-   for each SRC_URI entry, but keeps the patch check on the SRC_URI
-   entries, so implicit downloads are never set up again with the
-   recipe datastore. The npmsw fetcher gets an implicit_urldata(),
-   since it already builds the list of URLs internally (ud.proxy). The
-   gitsm fetcher warns when the repository is not in DL_DIR, instead
-   of silently returning no submodules.
-
-2. Let the fetcher state the identity of what it downloads
-
-   FetchData gets a package_identity attribute, None by default and
-   set in urldata_init() by the fetchers that know it:
-
-     crate     ("cargo", "cipher", "0.4.4", {})
-     gomod     ("golang", "github.com/felixge/httpsnoop", "v1.0.4", {})
-     gomodgit  same as gomod
-     npm       ("npm", "@scope/name", "1.2.3", {})
-     npmsw     the same for each registry dependency
-
-   The last element holds purl qualifiers, so a crate or npm package
-   from another registry gets a repository_url. go.mod-only entries
-   get None. create-spdx-3.0 sets the name, software_packageVersion and
-   software_packageUrl from it and builds the purl in oe-core, so
-   bitbake does not need to know the purl specification.
-
-   I first had a FetchMethod method in mind, but npmsw fetches its
-   dependencies through plain https URLs, so it has to attach the
-   identity to each of them, and an attribute is enough for that. No
-   URL syntax changes, unlike the dn=/dv= parameters in Stefan's
-   series.
-
-Both parts are small, about 35 lines in bitbake and 40 in oe-core plus
-tests. I tested them on master with new bitbake fetcher unit tests and
-new oe-selftest cases (submodules, including the named SRCREV case,
-and crate identity), which fail without the patches, and with the
-existing fetcher tests and the SPDX selftests closest to the change.
-Two bugs I found in the existing Git handling while doing this (gitsm
-skipped, changes not reaching the task signature) are fixed in a
-separate series, which the oe-core part builds on:
-https://lore.kernel.org/openembedded-core/20261104112257.866914-1-stondo@gmail.com/
-
-Questions:
-
-a) Is the fetcher the right place for the identity, or would you
-   prefer oe-core to derive it from each fetcher's FetchData? The
-   latter avoids touching bitbake, but for npmsw it means reading the
-   internals of its proxy fetcher.
-
-b) Should bitbake keep returning the parts and leave the purl to
-   oe-core, as above, or return a purl directly?
-
-c) For ecosystems without a fetcher (.NET/NuGet, Maven), would a
-   fetcher plus an update class following go-mod-update-modules be
-   welcome, or is that better kept in a layer?
-
-d) Dependency scope. Identity alone does not give a correct SBOM: a
-   lock file lists what may be needed on any platform. python3-bcrypt
-   fetches wasi, wasip2 and wit-bindgen (WebAssembly only) and r-efi
-   (UEFI), and with the patches they show up with a clean purl as if
-   they were part of the product. As a follow-up I tried running
-   cargo metadata --filter-platform ${RUST_HOST_SYS} in cargo.bbclass:
-   of the 42 crates, 25 are runtime, 12 only run at build time (build
-   scripts, proc-macros) and 5 are not used on the target. I recorded
-   them as LifecycleScopedRelationship dependsOn with scope runtime or
-   build, and an annotation on the unused ones. Go (go list -deps) and
-   npm (dev, optional, os and cpu in the shrinkwrap) could work the
-   same way. Does that split sound right: declared scope from the
-   fetcher where the lock file has it, observed scope from the
-   language classes? And is there a preferred SPDX representation for
-   "fetched but not built"?
-
-Thanks,
-Stefano
+SGkgS2FydGhpaywNCg0KSSBoYXZlIG5vIHByb2JsZW0gd2l0aCB0aGUgY2hvaWNlIG9mIHVzaW5n
+IGJvdG8gb3ZlciB0aGUgQ0xJLCAgdGhlIHBlcmZvcm1hbmNlIGdhaW5zIHlvdeKAmXJlIHNob3du
+IGFyZSBub3QgaW5zaWduaWZpY2FudC4gSG93ZXZlcuKApg0KDQpPbiA1IE5vdiAyMDI2LCBhdCAw
+MToyNSwgS2FydGhpayBQb2R1dmFsIHZpYSBiaXRiYWtlLWRldmVsIDxrcG9kdXZhbD1sYWIxMjYu
+Y29tQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc+IHdyb3RlOg0KPiArdHJ5Og0KPiArICAgIGltcG9y
+dCBib3RvMw0KPiArICAgIGltcG9ydCBib3RvY29yZQ0KPiArICAgIEhBVkVfQk9UTzMgPSBUcnVl
+DQo+ICtleGNlcHQgSW1wb3J0RXJyb3I6DQo+ICsgICAgSEFWRV9CT1RPMyA9IEZhbHNlDQoNCklu
+c3RlYWQgb2YgcmVzcGVjdGluZyBIQVZFX0JPVE8zIGluIGVhY2ggb2YgdGhlIGZ1bmN0aW9ucywg
+cmVzdWx0aW5nIGluIHF1aXRlIGEgbG90IG9mIGNvbXBsZXggY29kZSwgSSBzdWdnZXN0IGEgc2xp
+Z2h0bHkgZGlmZmVyZW50IGFwcHJvYWNoLiAgSW5zdGVhZCBvZiBoYXZpbmcgdGhlIGNvbmRpdGlv
+bmFsIGluIHRoZSBtZXRob2RzLCBoYXZlIHR3byBpbXBsZW1lbnRhdGlvbnMgb2YgdGhlIFMzIGZl
+dGNoZXIgKHNoYXJpbmcgY29kZSB2aWEgYSBjb21tb24gcGFyZW50LCBpZiBuZWVkZWQpLCBhbmQg
+dGhlbiBwaWNrIHdoYXQgb25lIGlzIHVzZWQgb24gdGhlIGZseS4gIFNvbWV0aGluZyBsaWtlIHRo
+aXM6DQoNCmNsYXNzIFMzQ29tbW9uKEZldGNoTWV0aG9kKToNCiAgIyBjb21tb24gbWV0aG9kcyBj
+YW4gZ28gaW4gdGhpcyBjbGFzcw0KICBkZWYgc3VwcG9ydHMoc2VsZiwgdWQsIGQpOg0KICAgIHJl
+dHVybiB1ZC50eXBlIGluIFsnczPigJldDQogICMgZXRjDQoNCmNsYXNzIFMzQ0xJKFMzQ29tbW9u
+KToNCiAgIyBjb25jcmV0ZSBpbXBsZW1lbnRhdGlvbiB1c2luZyB0aGUgQ0xJDQogIGRlZiBkb3du
+bG9hZChzZWxmLCB1ZCwgZCk6DQogICAgIyBkb3dubG9hZCB1c2luZyB0aGUgY2xpDQoNCmNsYXNz
+IFMzQm90byhTM0NvbW1vbik6DQogICMgY29uY3JldGUgaW1wbGVtZW50YXRpb24gdXNpbmcgYm90
+bw0KICBkZWYgZG93bmxvYWQoc2VsZiwgdWQsIGQpOg0KICAgICMgZG93bmxvYWQgdXNpbmcgYm90
+bw0KDQp0cnk6DQogIGltcG9ydCBib3RvMw0KICBTMyA9IFMzQm90bw0KZXhjZXB0IEltcG9ydEVy
+cm9yOg0KICBTMyA9IFMzQ0xJDQoNClRoaXMgc2hvdWxkIHJlc3VsdCBpbiBuZWF0ZXIgY29kZSBh
+cyB0aGVyZeKAmXMgYSBjbGVhciBzcGxpdCBiZXR3ZWVuIHRoZSB0d28gYmFja2VuZCBpbXBsZW1l
+bnRhdGlvbnMuDQoNCkNoZWVycywNClJvc3M=
