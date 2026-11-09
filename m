@@ -1,142 +1,291 @@
 Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.1562.1794210412383899729
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.1563.1794210412721894066
  for <bitbake-devel@lists.openembedded.org>;
  Sun, 08 Nov 2026 23:46:52 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kernel.org header.s=k20260515 header.b=orb7I5Q5;
+ dkim=pass header.i=@kernel.org header.s=k20260515 header.b=EFc3+GZZ;
  spf=pass (domain: kernel.org, ip: 172.234.252.31, mailfrom: devnull+patrick.vogelaar.belden.com@kernel.org)
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 747FC41905;
-	Mon,  9 Nov 2026 07:46:51 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 5EDD941952;
+	Mon,  9 Nov 2026 07:46:52 +0000 (UTC)
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1794210411;
-	b=o2Im0I3gLQh2fpdhRMt+dE/tGap43zuBCObsJnI/+viY1o7e+9UBAjdjChCAXRkv0Hkj
-	 zA5JEJ2EseyDP3bCj1GvrshWmukJAVjmpiqNe/1nSyzSRHNpb4ZprhH5uDzzLco4EoZeB
-	 5nrMxqbUSyLe8jiISR4ZtsCwwlK95squIkdwbtQyZJNAfuI8RBSAFAKt3frXx/cS5Fdk8
-	 BAHN3bu+kbdn3Wtvu/BMm6tXYlz1Ohw0M1vYFan85lWFeZslALnF38gQMwBSYM4qcvebT
-	 e7v/7QBrxIbTy5HRxOD/7SPp7JJo4K7BgAoNoS/DQ0VgjghBDjf9EFuQlObWOLSMlUg==
+	t=1794210412;
+	b=1oyCr5TstnVbHeeDBt3Cd3YJfXkSEphPTJ/1KQsM/o+nqEXpXOJhH/bxN5gIOQs8IqFK
+	 TimDFMIMSE5rHe3tRRQ0gW3FJHVnV54bpUowFwAsxlNWYeLzyy5+iI3ONx5uB5WQBJK2R
+	 9ygtu5S0Djberwkfcd8NJKPE6lgbYt+VOkHRXgvhFDJ123OCjYRPcYQdNiEJtHj5gUMte
+	 NdXidqcJX4GCXQoNLkPCKDk76wl5g7SklNrGQo94s6ceemtO79wuJqP71m4V/7sY8MvdD
+	 22TT18lmSuP9fY1k3yaCa/W0ISa97ii+GRzKDjMbNcylvfnxL2YWKoAtm0YZnq09GXw==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1794210411;
-	h=DKIM-Signature:Received:From:Subject:Date:Message-Id:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
-	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To;
-	bh=kyCUsKJM5Liwm98LvUReixMLxU7gf+l9kvCid5atfYE=;
-	b=VeEH35hVcWIA52iz+I9TzPlGHiq1+4se01Jsn2JejtX3NX3ZMhNKf0xwBmMOQpg42sKu
-	 rgRM6GYlzBL02A3w+9Ds5Wc8gLvRZAo5p+pVCskqG1q347jxGaJTO1we4EL07TxTwJuMZ
-	 BNsLInPyUIg5q32rhzOT530GS8F3OKV4p/TiTdNe7EegUhzro0e73X8kVq7YNP+T4fNtm
-	 fpLOW4c7euhqRUFyppw73qWDhI05dwiwq5qFG8CNzMunCWB/ss9wqS5j5ydcZiv7wwO3S
-	 On8ro4D9p+87M8RDGRmH7ygrcXfXrBsDR71ELgKH2Eu5BM8pYujaMN17EljpTPSIYwQ==
+	c=relaxed/relaxed; t=1794210412;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=uzgSpNaZ2aAv2c7a2YNXp0XGjhFje+lKXZvp4/vzKm8=;
+	b=XqJgn5YJbloMXiHOXq/j6yJ65UeoiI1rmveRiVcyfKDBge7UTaHpXKWSOiG0vfEO0YlE
+	 iYwtczHwAZHgSn2538GISlvy3lTGgO3P9n63T2JgSwnksnSTcZtBik4i5rFRqIOrwqP4b
+	 wPFgNTQiVqPaX5HPIuoWQ+Vv5TeGFv//yNA4W9fn4VxnX/yaBLBbozSCwA6eMzxsV+b+P
+	 t6WV+NI5kA75qttBSwQTBvexACZ/B1cUJpa2EbLNTJTiccTLE4nYDMCP6zgfAP8WUsFyB
+	 bZRxxgtYyheDzvEvhjGiM7HGTKuUMKmsyG9pDQa3XeBKPK3k97NtsLdC2nGClrX8a6A==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id C2CDA1F008A1;
+	by smtp.kernel.org (Postfix) with ESMTPS id ECC441F0089F;
 	Mon,  9 Nov 2026 07:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794210411;
-	bh=kyCUsKJM5Liwm98LvUReixMLxU7gf+l9kvCid5atfYE=;
-	h=From:Subject:Date:To:Cc:Reply-To;
-	b=orb7I5Q5XloHnTQ16dHL9Q0ebEgIXvBkdpozJKFNqTlr5YqofpaYEQiG3UNmEMgxG
-	 Btg9DJ5aBI763MdoB7nJUhFMLXecoF+QOBZUGQnppuoLUX58ZxHqqSXDs1ILCdgPoE
-	 VcUyUIATSjBKHMYOidk8iJ1TnmA6nsriMW7Q0XKDlcmowDJyvJ9BKB4Fm14zjO3YSG
-	 /yLu9FV6TE064NnFQPCnlOxoShGvsB84A71wr8IxhUd90mkAOb4Qmpj8Mc3RhSavA8
-	 AIMMYBa+KDSSZbHVI6MSVf+7zZE/vMyZRFdXrlcx+7+rOT5Q7p0bfZkjmxHkPTNcQY
-	 3ejW7qmbTSQNw==
+	s=k20260515; t=1794210412;
+	bh=uzgSpNaZ2aAv2c7a2YNXp0XGjhFje+lKXZvp4/vzKm8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
+	b=EFc3+GZZlTfVCbmIlJIhnj1/CZ4ctIjZyfZDueH1DQDwvP9rePFI7i8Xkrdb3DBV0
+	 imqU6g8fZvmZF0z0yOgVWlhmw7VQ3IrhQhaj3gGjBSQVuZH5Na+7fDpvUPAqemJPdY
+	 Qt45nY7RmJJhW0rzm/Burm6E345BeqHZIL8MzIfdM4kmTMJJ1s0okqoDDmLzNKiV18
+	 vXmRvyeEtSSCLfLM+G2/uCfr4kEUuAydVe63DQqDwS5t+sc4LERY0pq6GFLvviMQbF
+	 Nh1SFahEdKuOEWu6MM/sxL/15gfnbwpyt8+ML/Us9SCWxP7OSOHFK8GKuU3188XF3o
+	 CyLVCvjUygkxQ==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 4119848337;
+	by lkml.kernel.org (Postfix) with ESMTP id 755DD4833F;
 	Mon,  9 Nov 2026 07:46:50 +0000 (UTC)
 From: Patrick Vogelaar via B4 Relay <devnull+patrick.vogelaar.belden.com@kernel.org>
-Subject: [PATCH 0/3] toaster: changes with regards to read-only log viewer
-Date: Mon, 09 Nov 2026 08:46:36 +0100
-Message-Id: <20261109-toaster-projects-nobuild-v1-0-7e65cadc2d39@belden.com>
+Date: Mon, 09 Nov 2026 08:46:39 +0100
+Subject: [PATCH 3/3] toaster: take build times from the events
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFx68WoC/yXMQQqDMBBA0avIrDuQRLGlVyldmDhpp5REZqIUx
- Ls36vIt/l9BSZgU7s0KQgsr51RhLw2E95BehDxWgzOut9Z0WPKghQQnyR8KRTFlP/N3RO/a2F6
- 70Edzg5pPQpF/x/rxPK2z35v9B9v2B9SfUF98AAAA
-X-Change-ID: 20261104-toaster-projects-nobuild-b23f374c6f08
+Message-Id: <20261109-toaster-projects-nobuild-v1-3-7e65cadc2d39@belden.com>
+References: <20261109-toaster-projects-nobuild-v1-0-7e65cadc2d39@belden.com>
+In-Reply-To: <20261109-toaster-projects-nobuild-v1-0-7e65cadc2d39@belden.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Patrick Vogelaar <patrick.vogelaar@belden.com>, 
  patrick.vogelaar.dev@mailbox.org
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794210409; l=3007;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794210409; l=8373;
  i=patrick.vogelaar@belden.com; s=20240201; h=from:subject:message-id;
- bh=VCr0jHm4/PNvKc7k52uK8u8JX9Pb+Vwb6LJyxkNolO8=;
- b=darhvCPqPTqyRmQ4Kf9cmSRY8vH3aUxWSM3tAltXj5Pb3K1VRXcC2kNRiMpBUMANvb0Jj1FlE
- GgEYENzHeV3AtZtBfwBv9Yb9Au0Ys6yV22/Lx9GVRF8HMr6rsAOy84N
+ bh=1+rb0U/ViAKhPSGmYnDFoRt6HqkQtQj6qm/fr/2doic=;
+ b=W0vruMpuTECAFtgxqsp3gypMkCDi7cHRBOJeuAOnXx7XopS5jxY1Cl1LnqgTGm1dbYAGBo5jM
+ tZZnJHFGz2UCi6DtVsXPDmhASYJc+dQZ/IcPLhhLn83MR+hyj+qV4z5
 X-Developer-Key: i=patrick.vogelaar@belden.com; a=ed25519;
  pk=w0QU8RmOR3hQv1DxMcz6KmySeE8yqbvO0xC1ZSSUNqY=
 X-Endpoint-Received: by B4 Relay for patrick.vogelaar@belden.com/20240201
  with auth_id=125
 X-Original-From: Patrick Vogelaar <patrick.vogelaar@belden.com>
 Reply-To: patrick.vogelaar@belden.com
+Content-Transfer-Encoding: 7bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Mon, 09 Nov 2026 07:47:01 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20408
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20409
 
-We use Toaster as a read-only build viewer for CI. Every CI build
-uploads its bitbake event log to a shared Toaster instance, which
-imports it with toaster-eventreplay and is started without build mode.
-This works today, but has three limitations that this series removes:
+From: Patrick Vogelaar <patrick.vogelaar@belden.com>
 
-* All imported builds land in the "Command line builds" project, so
-  builds of differeent branches or CI instances cannot be told appart.
-* Whithuot the build mode. projects are hard to reach because the
-  "All projects" tab is hidden and project links lead to the configuration
-  page for builds.
-* And IMHO there was a bug that the time of the import instead of the
-  actual start time.
+Toaster sets the start and end time of a build to the time it processes
+the build's first and last event. For live builds this is the build
+time, but an event log replayed with toaster-eventreplay gets the time
+of the replay, so all replayed builds show when they were imported and
+how long the import took.
 
-Patch 1 shows projects and their builds without build mode and hides
-the configuration pages and build actions there.
+Remember the time of the latest event that carries one (log records and
+task events) and use it for the start and end of the build. Live builds
+get the time of the latest log or task event, which is at most seconds
+earlier than before. If no such event has been seen yet, the current
+time is used as before. Task times already come from the build
+statistics.
 
-Patch 2 adds the TOASTER_PROJECT variable: if it is set, a command line
-build or replayed event log goes into the project of that name, which
-is created if needed. Without the variable nothing changes. It also
-decides whether a build is a command line build from the absence of a
-BuildRequest instead of from the default project, so command line
-builds in named projects get no Rebuild/Cancel actions.
+Add tests/buildinfohelper/test_build_time.py.
 
-Patch 3 takes the build start and end time from the log and task
-events, so a replayed log keeps the times of the original build. Live
-builds are unchanged apart from at most a few seconds.
-
+AI-Generated: Uses Kiro (claude-opus-5.5)
 Signed-off-by: Patrick Vogelaar <patrick.vogelaar@belden.com>
 ---
-Patrick Vogelaar (3):
-      toaster: show projects and builds without build mode
-      toaster: group command line builds by TOASTER_PROJECT
-      toaster: take build times from the events
+ lib/bb/ui/buildinfohelper.py                       | 32 ++++++++---
+ lib/bb/ui/toasterui.py                             |  1 +
+ .../tests/buildinfohelper/test_build_time.py       | 62 ++++++++++++++++++++++
+ 3 files changed, 88 insertions(+), 7 deletions(-)
 
- bin/toaster                                        |   2 +-
- .../bitbake-user-manual-ref-variables.rst          |  13 ++
- lib/bb/ui/buildinfohelper.py                       |  54 +++++++--
- lib/bb/ui/toasterui.py                             |   1 +
- lib/toaster/tests/browser/test_all_builds_page.py  |   2 +
- lib/toaster/tests/buildinfohelper/__init__.py      |   0
- .../tests/buildinfohelper/test_build_time.py       |  62 ++++++++++
- .../tests/buildinfohelper/test_cli_project.py      | 131 +++++++++++++++++++++
- lib/toaster/tests/views/test_nobuild.py            |  94 +++++++++++++++
- lib/toaster/toastergui/templates/base.html         |   2 -
- .../toastergui/templates/basebuildpage.html        |   4 +
- lib/toaster/toastergui/templates/mrb_section.html  |   4 +-
- .../toastergui/templates/projecttopbar.html        |   2 +-
- .../toastergui/templatetags/project_url_tag.py     |  11 +-
- lib/toaster/toastergui/views.py                    |  13 ++
- lib/toaster/toastergui/widgets.py                  |   2 +-
- lib/toaster/tox.ini                                |   3 +-
- 17 files changed, 378 insertions(+), 22 deletions(-)
----
-base-commit: 0f33b68cbabab26c9ed1585e3ee109689d206812
-change-id: 20261104-toaster-projects-nobuild-b23f374c6f08
+diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
+index 787cab952..7cc8229d5 100644
+--- a/lib/bb/ui/buildinfohelper.py
++++ b/lib/bb/ui/buildinfohelper.py
+@@ -43,7 +43,7 @@ from bb.msg import BBLogFormatter as formatter
+ from django.db import models
+ from pprint import pformat
+ import logging
+-from datetime import datetime, timedelta
++from datetime import datetime, timedelta, timezone as dt_timezone
+ 
+ from django.db import transaction
+ 
+@@ -143,10 +143,12 @@ class ORMWrapper(object):
+     # pylint: disable=bad-continuation
+     # we do not follow the python conventions for continuation indentation due to long lines here
+ 
+-    def get_or_create_build_object(self, brbe, project_name=None):
++    def get_or_create_build_object(self, brbe, project_name=None,
++                                   started_on=None):
+         """
+         project_name: for command line builds, the project to put the build
+         into (created if needed); None or empty for the default project
++        started_on: start time of a new Build object; defaults to now
+         """
+         project_name = project_name.strip() if project_name else None
+         prj = None
+@@ -175,7 +177,7 @@ class ORMWrapper(object):
+             build.save()
+         else:
+             # create new Build object
+-            now = timezone.now()
++            now = started_on or timezone.now()
+             build = Build.objects.create(
+                 project=prj,
+                 started_on=now,
+@@ -217,7 +219,8 @@ class ORMWrapper(object):
+             result.append(obj)
+         return result
+ 
+-    def update_build_stats_and_outcome(self, build, errors, warnings, taskfailures):
++    def update_build_stats_and_outcome(self, build, errors, warnings, taskfailures,
++                                       completed_on=None):
+         assert isinstance(build,Build)
+         assert isinstance(errors, int)
+         assert isinstance(warnings, int)
+@@ -235,7 +238,7 @@ class ORMWrapper(object):
+         if errors or taskfailures:
+             outcome = Build.FAILED
+ 
+-        build.completed_on = timezone.now()
++        build.completed_on = completed_on or timezone.now()
+         build.outcome = outcome
+         build.save()
+ 
+@@ -922,6 +925,10 @@ class BuildInfoHelper(object):
+ 
+         self.project = None
+ 
++        # time of the latest event that has one; event logs can be replayed
++        # long after the build, so build times are taken from the events
++        self.event_time = None
++
+         logger.debug("buildinfohelper: Build info helper inited %s" % vars(self))
+ 
+ 
+@@ -940,7 +947,8 @@ class BuildInfoHelper(object):
+             if self.brbe is None:
+                 project_name, _ = self.server.runCommand(["getVariable", "TOASTER_PROJECT"])
+             self.internal_state['build'] = \
+-                self.orm_wrapper.get_or_create_build_object(self.brbe, project_name)
++                self.orm_wrapper.get_or_create_build_object(
++                    self.brbe, project_name, self.event_time)
+ 
+         build = self.internal_state['build']
+ 
+@@ -1103,6 +1111,15 @@ class BuildInfoHelper(object):
+             except NotExisting as nee:
+                 logger.warning("buildinfohelper: cannot identify layer exception:%s ", nee)
+ 
++    def update_event_time(self, event):
++        """Remember the time of events that carry one"""
++        if isinstance(event, logging.LogRecord):
++            secs = event.created
++        else:
++            secs = getattr(event, 'time', None)
++        if isinstance(secs, (int, float)):
++            self.event_time = datetime.fromtimestamp(secs, dt_timezone.utc)
++
+     def store_started_build(self):
+         self._ensure_build()
+ 
+@@ -1210,7 +1227,8 @@ class BuildInfoHelper(object):
+     def update_build_information(self, event, errors, warnings, taskfailures):
+         self._ensure_build()
+         self.orm_wrapper.update_build_stats_and_outcome(
+-            self.internal_state['build'], errors, warnings, taskfailures)
++            self.internal_state['build'], errors, warnings, taskfailures,
++            self.event_time)
+ 
+     def store_started_task(self, event):
+         assert isinstance(event, (bb.runqueue.sceneQueueTaskStarted, bb.runqueue.runQueueTaskStarted, bb.runqueue.runQueueTaskSkipped))
+diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
+index 6bd21f184..971d06c03 100644
+--- a/lib/bb/ui/toasterui.py
++++ b/lib/bb/ui/toasterui.py
+@@ -224,6 +224,7 @@ def main(server, eventHandler, params):
+                 continue
+ 
+             helper.eventHandler(event)
++            buildinfohelper.update_event_time(event)
+ 
+             # pylint: disable=protected-access
+             # the code will look into the protected variables of the event; no easy way around this
+diff --git a/lib/toaster/tests/buildinfohelper/test_build_time.py b/lib/toaster/tests/buildinfohelper/test_build_time.py
+new file mode 100644
+index 000000000..363eeeee3
+--- /dev/null
++++ b/lib/toaster/tests/buildinfohelper/test_build_time.py
+@@ -0,0 +1,62 @@
++#! /usr/bin/env python3
++#
++# BitBake Toaster Implementation
++#
++# SPDX-License-Identifier: GPL-2.0-only
++#
++
++"""Build start and end times are taken from the events."""
++
++import logging
++from datetime import datetime, timezone
++
++import bb.build
++import bb.data
++import bb.event
++from django.test import TransactionTestCase
++
++from bb.ui.buildinfohelper import BuildInfoHelper
++from bb.ui.eventreplay import EventPlayer
++from orm.models import Build
++
++START = 1700000000.5
++END = 1700001500.25
++
++
++def utc(secs):
++    return datetime.fromtimestamp(secs, timezone.utc)
++
++
++class BuildTimeTests(TransactionTestCase):
++    """A replayed event log keeps the times of the original build"""
++
++    def setUp(self):
++        variables = {name: {'v': name.lower()} for name in
++                     ('BUILDNAME', 'MACHINE', 'DISTRO', 'DISTRO_VERSION',
++                      'BB_VERSION', 'TMPDIR')}
++        server = EventPlayer(None, variables)
++        self.helper = BuildInfoHelper(server)
++
++    def test_times_from_events(self):
++        record = logging.LogRecord('BitBake', logging.INFO, '', 0, 'msg',
++                                   None, None)
++        record.created = START
++        self.helper.update_event_time(record)
++        self.helper.store_started_build()
++
++        task = bb.build.TaskSucceeded('do_build', 'test.bb', None,
++                                      bb.data.init())
++        task.time = END
++        self.helper.update_event_time(task)
++        self.helper.update_build_information(None, 0, 0, [])
++
++        build = Build.objects.get()
++        self.assertEqual(build.started_on, utc(START))
++        self.assertEqual(build.completed_on, utc(END))
++        self.assertEqual(build.outcome, Build.SUCCEEDED)
++
++    def test_events_without_time_keep_the_clock(self):
++        before = datetime.now(timezone.utc)
++        self.helper.update_event_time(bb.event.BuildStarted('build', []))
++        self.helper.store_started_build()
++        self.assertGreaterEqual(Build.objects.get().started_on, before)
 
-Best regards,
---  
-Patrick Vogelaar <patrick.vogelaar@belden.com>
+-- 
+2.43.0
 
 
