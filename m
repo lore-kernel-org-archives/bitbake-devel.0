@@ -1,223 +1,413 @@
-Received: from iad-out-006.esa.us-east-1.outbound.mail-perimeter.amazon.com (iad-out-006.esa.us-east-1.outbound.mail-perimeter.amazon.com [3.216.221.67])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.927.1794326788367896636
+Received: from pdx-out-004.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-004.esa.us-west-2.outbound.mail-perimeter.amazon.com [44.246.77.92])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.1057.1794329456008441105
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 10 Nov 2026 08:06:28 -0800
+ Tue, 10 Nov 2026 08:50:56 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@lab126.com header.s=amazoncorp2 header.b=nYSV0HVd;
- spf=pass (domain: lab126.com, ip: 3.216.221.67, mailfrom: prvs=7673f2358=kpoduval@lab126.com)
+ dkim=pass header.i=@lab126.com header.s=amazoncorp2 header.b=nMBZy3iY;
+ spf=pass (domain: lab126.com, ip: 44.246.77.92, mailfrom: prvs=7673f2358=kpoduval@lab126.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=lab126.com; i=@lab126.com; q=dns/txt; s=amazoncorp2;
-  t=1794326788; x=1825862788;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version:subject;
-  bh=IvSzI6eU3f9X2BifYJOyU7EXMY2sOOBszNNbYQGEyZQ=;
-  b=nYSV0HVdEDLSobynd1DV5W8I3XCEmLbzHQxfSdwEM4jVTbRRX21upFNG
-   Czj1yxxPc5IdoKVCXIQRzVHZRrxNcRVponMoMBtqCtC5G47H/P+y8JSI/
-   Gc3339mWUoZjq5NeupFA02tV0Ct5BnKeTy+YD21QC2nrqWB2oR77NBpWa
-   Vh+hGqFQ1GMIDPF9dQ+SCaxI35R16Icny/kOqoJpjmK3mlhOHeGxr251f
-   SjFQOAi3yHMsy6SIEeBDLUTCFW9pOI/NZ5vcwe6c0Y8CQhImyGKd+KLij
-   kkSQS/ZI6P4JFS86C58QrlHy/f9FBE+rIT9e6iu2c/He0GfmdjN/nv9yG
-   g==;
-X-CSE-ConnectionGUID: +ocLqcZtRxm5+QNaULoulA==
-X-CSE-MsgGUID: wHB65+7rRUiGdeSii7yLHA==
+  t=1794329456; x=1825865456;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Fi2ugG5TcFE7ytlkMSTjqC++duRf6SjOJciSqTTmIEQ=;
+  b=nMBZy3iYjgKnv4va+9SwmOKVKcTpfQYFWeK/RPOqvZoUuXJENgSNrK6O
+   93ZdSveu+l/VUnrTo68Ih3L8RydIy48fFIhJbURUd2Lv0kJgIy8HIIJXo
+   TkmSlJb1ZAx/L957UN6dJCVJJFlHJKgzwrud8KvGMAnowmRE++zdYweQ/
+   dFMsaeqpKGENTeczVOsMBX17X6uHnlOOiqslzna+8sm5uaJSVrYlPQNl9
+   QPiUXfCox9TvF/O6+hicQh1XFTUEjnSIry0TutnsidzVAdxoSmRBwryzM
+   h9DB9ByQc4Ng0uhWO9BTdfZOLqxdqeBN3o7SDUFYySPbH/HCNF24k2QCd
+   A==;
+X-CSE-ConnectionGUID: P63XA1NMSJytQz8ujOMeOw==
+X-CSE-MsgGUID: bWIVEWuiQDqLNIAsQ+gvBg==
 X-IronPort-AV: E=Sophos;i="6.27,206,1787011200"; 
-   d="scan'208";a="31606009"
-Subject: RE: [bitbake-devel] [PATCH 1/1] fetch/s3: fetch via boto3 by default,
- falling back to the AWS CLI
-Thread-Topic: [bitbake-devel] [PATCH 1/1] fetch/s3: fetch via boto3 by default,
- falling back to the AWS CLI
-Received: from ip-10-4-3-150.ec2.internal (HELO smtpout.naws.us-east-1.prod.farcaster.email.amazon.dev) ([10.4.3.150])
-  by internal-iad-out-006.esa.us-east-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 16:06:25 +0000
-Received: from EX19MTAUEB002.ant.amazon.com [72.21.198.67:5158]
- by smtpin.naws.us-east-1.prod.farcaster.email.amazon.dev [10.0.92.155:2525] with esmtp (Farcaster)
- id 2d72d5eb-4920-40cc-ad73-73f1822a1410; Tue, 10 Nov 2026 16:06:25 +0000 (UTC)
-X-Farcaster-Flow-ID: 2d72d5eb-4920-40cc-ad73-73f1822a1410
-Received: from EX19EXOUEC002.ant.amazon.com (10.252.135.179) by
- EX19MTAUEB002.ant.amazon.com (10.252.135.47) with Microsoft SMTP Server
+   d="scan'208";a="33631807"
+Received: from ip-10-5-9-48.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.9.48])
+  by internal-pdx-out-004.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 16:50:55 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [205.251.233.178:24785]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.34.255:2525] with esmtp (Farcaster)
+ id d2357355-8b55-4b83-85dd-978c229889bf; Tue, 10 Nov 2026 16:50:54 +0000 (UTC)
+X-Farcaster-Flow-ID: d2357355-8b55-4b83-85dd-978c229889bf
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.56;
- Tue, 10 Nov 2026 16:06:24 +0000
-Received: from DM5PR08CU004.outbound.protection.outlook.com (10.252.135.42) by
- EX19EXOUEC002.ant.amazon.com (10.252.135.179) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.56
- via Frontend Transport; Tue, 10 Nov 2026 16:06:23 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HrRqFLqrmOrrHAR0BeHHt+QDW6SxE1w/onkH4gpZcGkX5gZkjOIGKVO8/Al3yEoCkYM3uuA8Eqk0AllEG4WMoTw8GqOYVV7s+dKDGMImGv2JTyUGhQ/LGXl4VqdtSkDkS43p/329nXg7RYCEGXRo6+iwiKi0hRyfE1Kzvo+36fXsfya8c4dQHaVpJQueeRRvG1FvJjU2/i3+IoeNEbUL5H8HQI+Cuw3R5Feq39MqM6cHuAD33Yv8YK9rqCxtHaWwPuJWHxhnNHt6noKXkU5oBryP9AjEp7nruo4kcGzsspWhEnMh++DNlYgROS/ogzH9RQxWq97uFYpEP3VaDzTb7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IvSzI6eU3f9X2BifYJOyU7EXMY2sOOBszNNbYQGEyZQ=;
- b=gVXnltWfrH56cT7ppuc1K66N+vJ3dhpikO415jdfMOgR1Rqm0TNLzpr26FSFo2tEQ46h1IK04NAeqontvQlhpWZQmBM1MrxuB3WPMgIAe1S8R99Te1I1IiYr3qj7FCEb9ind2zPYNdRljfqKfKThe5gob+/JHQ9Ug73d6v5WFr2db5l0MvR+K3Pnp5w2L3P2E96ckpTOqhD1mPtUP/KQhZrNGrSAr5ApjvaLuBiAc7LVdQ3J3T4TPKAayg40qV6pfYn8RY2u9v+bVwny8RFQba5VYHiInFkEqDUNMgQt0o9Saq65dL+uWbK14Fj7+VkGiM+/b9vNO0w5Csa2DO28nw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=lab126.com; dmarc=pass action=none header.from=lab126.com;
- dkim=pass header.d=lab126.com; arc=none
-Received: from EA3PR18MB205973.namprd18.prod.outlook.com
- (2603:10b6:303:308::11) by MW3PR18MB3641.namprd18.prod.outlook.com
- (2603:10b6:303:2e::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.10; Tue, 10 Nov
- 2026 16:06:16 +0000
-Received: from EA3PR18MB205973.namprd18.prod.outlook.com
- ([fe80::96e8:4cd0:9d02:dd88]) by EA3PR18MB205973.namprd18.prod.outlook.com
- ([fe80::96e8:4cd0:9d02:dd88%4]) with mapi id 15.21.0615.007; Tue, 10 Nov 2026
- 16:06:16 +0000
-From: "Poduval, Karthik" <kpoduval@lab126.com>
-To: "rob.woolleywr@gmail.com" <rob.woolleywr@gmail.com>
-CC: "ross.burton@arm.com" <ross.burton@arm.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>, "armccurdy@gmail.com"
-	<armccurdy@gmail.com>, "richard.purdie@linuxfoundation.org"
+ Tue, 10 Nov 2026 16:50:54 +0000
+Received: from u1cb251c9c70150.ant.amazon.com (10.68.99.17) by
+ EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.56;
+ Tue, 10 Nov 2026 16:50:51 +0000
+From: <kpoduval@lab126.com>
+To: <bitbake-devel@lists.openembedded.org>
+CC: Karthik Poduval <kpoduval@lab126.com>, <armccurdy@gmail.com>,
 	<richard.purdie@linuxfoundation.org>,
-	"stefan.herbrechtsmeier@weidmueller.com"
 	<stefan.herbrechtsmeier@weidmueller.com>
-Thread-Index: AQHdbMSObm9hFVVmlEGd0nQvB3eQuLcfgQqAgADOMHCAALA+gIAGfmzQ
-Date: Tue, 10 Nov 2026 16:06:16 +0000
-Message-ID: <EA3PR18MB205973D907BBF182C49DD35648F1722@EA3PR18MB205973.namprd18.prod.outlook.com>
+Subject: [PATCH v2] fetch/s3: fetch via boto3 by default, falling back to the AWS CLI
+Date: Tue, 10 Nov 2026 08:50:38 -0800
+Message-ID: <20261110165039.504722-1-kpoduval@lab126.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20261105012522.878275-1-kpoduval@lab126.com>
 References: <20261105012522.878275-1-kpoduval@lab126.com>
- <20261105012522.878275-2-kpoduval@lab126.com>
- <A62B91DA-FE71-4D0B-9672-1AFCF0C0A2CA@arm.com>
- <EA3PR18MB205973294DDF2131E43CC49172F1762@EA3PR18MB205973.namprd18.prod.outlook.com>
- <CAGAhMBx_oCwz24qzoJUjbD3EwKVndyUdfN0gfCHsQx=_KecZmg@mail.gmail.com>
-In-Reply-To: <CAGAhMBx_oCwz24qzoJUjbD3EwKVndyUdfN0gfCHsQx=_KecZmg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=lab126.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: EA3PR18MB205973:EE_|MW3PR18MB3641:EE_
-x-ms-office365-filtering-correlation-id: 7ba2b625-55db-4244-4b23-08df3f448cf6
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|23010399003|376014|1800799024|22082099003|18002099003|10067099003|6133799003|38070700021|11063799006|261102123227099003|261021121427099003|261022075727099003|4143699003|261028144727099003|261026121527099003|261009223027099003|261022105027099003|56012099006|261026140227099003;
-x-microsoft-antispam-message-info: 8B6oO+QbDn71jWCUk9c0Y05lV1uZNokMas87Y6lgfQYFgHD5Rt9aGLtjvHjn7WR8R2nmIsVFD3eZM/JvjMhEvb/WJBBycAJ24Ovr3fWmJa8gixcwkzgMaqV7WZwJK1KU6M9b1+paTsVcVWUp5iHoDt15Zo4NyiUQtZnNu3X4hVNrvquPhAzMItuJNJQGD9nGYUYWnlul6sOYV6aBjIwFg1wH3PyJBol4W4DZejJ6HV9m1decPQEuDku3X5u/vZfOcHqZ4AUnSteua+tV4Z9nTCm4R0ZdWdSWkWXeqQCAPkNC3nJseR3cLJS5gc+ADjU/HDCfgvJOeBdsolH3LTEgEMy+CHqzCLX6HT7tuMRaLSF2gCul0+4by27JHkp1YJmGQQRM///ZZuDRjOvJ3+3GSwWK7ndWWOD0mhj18co7lAVw4HkE5iXM5XCO0mO42GPzCbJJpZ7Yj2GIRIJUPn1tKt5kg0b3C+D9MTg94kmL4bPXpwFGMqtt8/I0cdKVGL5up/Xeq+EeEKxQmERkswh5j+tSK5om2AXlgY3JXQPrPd7vJtN19l1ILQfCQsrEcrmcJ8SGPfjKWzxR0auWbfzv8HU3YrzCev6oc+ya2Hn7bmnG+RwiiUV0/mzm7XSOaDcsH7KdE/MRZ2irEuRAmASbKEuGcD6oYwincnfX4sGATqS50rjDGu/KVQidlNYpeKld9d9eR50Eu++xoU2h9xXYMZHt4H2A42wpk/6pt013vnw=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:EA3PR18MB205973.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(376014)(1800799024)(22082099003)(18002099003)(10067099003)(6133799003)(38070700021)(11063799006)(261102123227099003)(261021121427099003)(261022075727099003)(4143699003)(261028144727099003)(261026121527099003)(261009223027099003)(261022105027099003)(56012099006)(261026140227099003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?dzdvUklQS2tnSDNmQjJiQS9FSGYwV0EyRlBWdjZ1QjUrNWxHYjd0M0pKWlBG?=
- =?utf-8?B?QjZIemtJVHIyTkl4K2N5ZUxRUnZPV0NqWk9CVkpyQjFDSllaN1hqV3ZKRjd2?=
- =?utf-8?B?eEo5ZHpWWko0TzBYazZhV3BMMnc3dFlWSC81T2JRemVhUXRoZG01Z2NJZWVp?=
- =?utf-8?B?dzVWVGFMelArQ1N6OXFrV3hoUXB6SzRKb3BKUW5xZng3M05CQnJGZzIyTkxm?=
- =?utf-8?B?S3BXY2dUMjFzVS9tMGJPU2NIaWlxTlJtY3pVQTQ4UlJaa0lzNnlEWTNNeHhW?=
- =?utf-8?B?SHlWNHlmWE5hbi82QjFFZkd1enJnRUNGd1dpVWVMTXZlRnZXZmh0NVhxQjJ2?=
- =?utf-8?B?NkRXb2t3WGF6WmlEMElLVDFHdS9OZ2NhWS9NMmlsNkJGRFJ2SmV0bzRHSHhh?=
- =?utf-8?B?dUxhWnlPZEp5VXVsV3NSVm54UlZXcVZodWxMS2dmZUFmN2srVERHN1FiOU91?=
- =?utf-8?B?dERpRDAzdm9mSEZXMWJOVzVDdHdyT3J2Z3Z0SE02ZnpaZ2g5aUQvYXZRMjZQ?=
- =?utf-8?B?WTdWSHZMa3dDZlltT3lWcVd5K3FnVSt5WkZjc1BGSTQxQWErMHUrdlM0OVlL?=
- =?utf-8?B?WjRIM2NORFpLMHhXT2gyREM3dVowQ1VrenZvREcxM1hHQzdwUkhtTnNBYVc2?=
- =?utf-8?B?OEhScS9aYWt3UDMvWVlNYS9kU24zdFVUREc1YnRYak1DNWpjY2J2K1dYS1M4?=
- =?utf-8?B?ODRpZWh5ZS9MQUxXUzVzbDFNVEQwSXhWWXFJWVJINjFLRzFNLzZFQUF5YStU?=
- =?utf-8?B?Z3kxVXF5OFRTTTlYVC9Va1RNWlk4QklxMU95dWx2bzMwUTNVQlZ4aVJhZnZH?=
- =?utf-8?B?QlRWSDh3TjcyckNHNnV1dzhWaVFvdVNwN0ltZzdFdlJHMTFBRlRBWFpMRkZi?=
- =?utf-8?B?Q0tZM09WNUVoUUcwUU9iNWM3cmhmV2FiZjVZREdjRWtnd0VLaEY2RFMzYUk5?=
- =?utf-8?B?S0lXRjZBR0t0aEpPVkdLQ2xwRGtUQkFIb043b1hhVFR5NlQvWUlOUUNqOHJV?=
- =?utf-8?B?OVVQdGROSE95ZFZ1TE9pVU15T1FCTGpURGFybUtXeWowZjlkTmpOWXhFOXYv?=
- =?utf-8?B?QjFob0VqSUFMaU0yTWpUVXRuZk82QUIzcG9Edi8veTVxdWljb2FPbk8yVXM3?=
- =?utf-8?B?YmRSaVNPUktRV2VDMnJjUTJUSXpablBGTUQyd1pFNUxTTkg1SVBSVWZGbUdQ?=
- =?utf-8?B?cGgwMUY3M0tvU3RWMFR1T1JEOGJxTURDZUhaeXNHUXNybHlLQmxMUUhjVjZp?=
- =?utf-8?B?UHJRc2ZydmNRREpMVHdlejhQVlA2bTR5dUxsTTJYczhXeWRuT0FSQk12Tk13?=
- =?utf-8?B?NitNN1UzZWt3NTFaTWZuTXVvNmtFNVFwdm9vYUhaWElCSlkvZDlwWXFiNm1H?=
- =?utf-8?B?S1JlTENVdytrYkw3VnVQZ3pwNTBISHNJaDVvZlVybnBqM1Z2d1NqUW8rV2Jl?=
- =?utf-8?B?aXZzLzhyWEY4d3ZQN0I2YkZyUkswT21qcWlJUnR0bFdoTWc0djlEUGVlVE1s?=
- =?utf-8?B?Z09BZUtBNkpuUUR4eUZtTC8wOVBxb3FzM3c5Z1VSUjFjL2dXT0cwcDg5SHcw?=
- =?utf-8?B?dGZWa3ZReUhFRmxLUkd6ZDBQQ3ZLR3Jka1A5VWx2KzlNRVdFaXkvZkdyNGhT?=
- =?utf-8?B?bVorVnJMdGh2b2RPa0RyZmk4alZSc3FGR2IySUFCM0tTOUNPWnkvU29wbTNo?=
- =?utf-8?B?WTY4bmJvNUxkdnJRdmZHNUNjM2xTSzFZelZKdXQreWFEOVkwUkQ0dHFaNGxl?=
- =?utf-8?B?dmpTWmxBejZzVWNKWjRmUDdMR1UzaFBNR2JKeTh5NU1ZY1JRYldXaEhWL244?=
- =?utf-8?B?blVvbUpNQWRoZG1UUnF5WXBzNkd3aW9jZW0ySk91SnVDNkdzakU3UTZad0pK?=
- =?utf-8?B?L3J4STVoZUNGVmR4a2NybVNBTVFkdWNiY0YycVBIVFZoeVZUWlFORGd4NHVQ?=
- =?utf-8?B?R0k2RHcxVVY0RTVnZ25TVVZURjJpWXAyK0l0MTg1SjRCRkN0OG1mZ2tGOHhC?=
- =?utf-8?B?ZENYNEFmaTdIdTZUejluTWQxMEZXVFhINm5Pd2MwVFlpU2QyeXh5RGc3Zndq?=
- =?utf-8?B?RUd0RmpmZlhpZXpFWGVqQ2pkenhiSTRsdWhZODYrNU9mNjR1SWxCR3grSHJ2?=
- =?utf-8?B?WC9qV2FyZ2dHbk9HQW5iTmJHWnpCSFB6SHpJOUhQU0tmVzNYWm1NaGR1S280?=
- =?utf-8?B?cmU4d05aVlY0M2pNSTlBd2ljZExFdHp1bU9GNjFXckJNMkFGMG5ORVhWVlpa?=
- =?utf-8?B?OFNReTQxMW5vNk5JSlp6OTdyaXhtYW5JcDBJWHhYSG9ZNWFDQUxkYXlhdExR?=
- =?utf-8?Q?MTZhcHmxtoSc+hDUzh?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Exchange-RoutingPolicyChecked: MdTRLSkcodcgZqcmeziih6YVt+O/DdTXR/0GvaZl+SyWf9LnIC06qxQEbL6tmJKI97HoIdr1pS+qaaYLPPL5inu8m67q+Tg/8qkC9V1KCaGB25nsRew+cTkfLK8dWqGmdVkWqA9PtE8DxX0zuNkjrsuggvu+fCaiOn2ZfzdfXGjW3cKuLQHc8RxA85IFojGQnmyiKlR9EhCi47Ly62oNR1sDOZvg8/Zg5o5v+ZsGeeMcMRG/u3E9Q9KcIXPNyx7eeegIpTDr11XNnipaY6OCoBvJP+1lC5zxC55JXTSTyGPW4oJ5FoGLPgWhvVZU30jC0rOfcF9GGI43hRp2vt0GdQ==
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: EA3PR18MB205973.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ba2b625-55db-4244-4b23-08df3f448cf6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Nov 2026 16:06:16.4327
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5280104a-472d-4538-9ccf-1e1d0efe8b1b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bCaxO3F4ax7aJYukSB21XIMsw7PxN5JWu1o95WB/Y3+lsNUAtlavKgvdyieVPXWF94+s5cHDDRnu5JRW7wLuRg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR18MB3641
+Content-Transfer-Encoding: 8bit
 Return-Path: kpoduval@lab126.com
-X-OriginatorOrg: lab126.com
+X-Originating-IP: [10.68.99.17]
+X-ClientProxiedBy: EX19D031UWC004.ant.amazon.com (10.13.139.246) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Tue, 10 Nov 2026 16:06:29 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20413
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Tue, 10 Nov 2026 16:50:57 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20414
+Content-Type: text/plain; charset="utf-8"
 
-VGhhbmtzLCBSb2IuIEJldHdlZW4geW91ciBtZXNzYWdlLCB0aGUgT0U0VCByZWZlcmVuY2VzLCBh
-bmQgc29tZSBjb252ZXJzYXRpb25zIHdpdGggY29sbGVhZ3VlcyBpbnRlcm5hbGx5LCBpdCdzIGNs
-ZWFyIHRoZSBib3RvMy1iYXNlZCBmZXRjaGVyIGdpdmVzIGEgc29saWQgcGVyZm9ybWFuY2UgZ2Fp
-biBvdmVyIHRoZSBDTEktYmFzZWQgcGF0aC4NCg0KVGhlIG1pcnJvci11cGxvYWQgc2lkZSBpbiBP
-RTRUIGlzIGludGVyZXN0aW5nIGhvd2V2ZXIgSSdtIG5vdCBzdXJlIGl0J3MgaW4gc2NvcGUgZm9y
-IHRoZXNlIHBhdGNoZXMsIHdoaWNoIGZvY3VzIG9uIHRoZSBmZXRjaCBwYXRoLCBidXQgaXQncyB3
-b3J0aCBkaXNjdXNzaW5nIHNlcGFyYXRlbHkgb24gYSBzcGVyYXRlIHRocmVhZC4NCg0KVGVzdGlu
-ZyBhbmQgZmVlZGJhY2sgZnJvbSB5b3Ugd291bGQgYmUgdmVyeSB3ZWxjb21lLiBJJ20gdGVzdGlu
-ZyB2MiBvbiBteSBzaWRlIGFscmVhZHksIGJ1dCBhbiBleHRlcm5hbCBkYXRhIHBvaW50IGFsd2F5
-cyBoZWxwcy4gSSdtIGFsbW9zdCByZWFkeSB0byBzdWJtaXQgdjIsIHdoaWNoIGFkZHJlc3NlcyBS
-b3NzJ3MgY29tbWVudHMuDQoNCi0tDQpSZWdhcmRzLA0KS2FydGhpayBQb2R1dmFsDQoNCkZyb206
-IFJvYiBXb29sbGV5IHZpYSBiaXRiYWtlLWRldmVsIDxyb2Iud29vbGxleXdyPWdtYWlsLmNvbUBs
-aXN0cy5vcGVuZW1iZWRkZWQub3JnPiANClNlbnQ6IEZyaWRheSwgTm92ZW1iZXIgNiwgMjAyNiA0
-OjQ0IEFNDQpUbzogUG9kdXZhbCwgS2FydGhpayA8a3BvZHV2YWxAbGFiMTI2LmNvbT4NCkNjOiBy
-b3NzLmJ1cnRvbkBhcm0uY29tOyBiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc7
-IGFybWNjdXJkeUBnbWFpbC5jb207IHJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5vcmc7
-IHN0ZWZhbi5oZXJicmVjaHRzbWVpZXJAd2VpZG11ZWxsZXIuY29tDQpTdWJqZWN0OiBSRTogW0VY
-VEVSTkFMXSBbYml0YmFrZS1kZXZlbF0gW1BBVENIIDEvMV0gZmV0Y2gvczM6IGZldGNoIHZpYSBi
-b3RvMyBieSBkZWZhdWx0LCBmYWxsaW5nIGJhY2sgdG8gdGhlIEFXUyBDTEkNCg0KQ0FVVElPTjog
-VGhpcyBlbWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0aGUgb3JnYW5pemF0aW9uLiBE
-byBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IGNhbiBjb25m
-aXJtIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4NCg0KR2xhZCB0byBz
-ZWUgd29yayBiZWluZyBkb25lIGluIHRoaXMgYXJlYS4gDQoNCkkgaGF2ZSBiZWVuIHVzaW5nIHRo
-ZSBTMyBib3RvMyB3b3JrIGRvbmUgYnkgT0U0VC7CoCBBcmUgeW91IGF3YXJlIG9mIHRoZWlyIHdv
-cms/wqBodHRwczovL2dpdGh1Yi5jb20vT0U0VC90ZWdyYS1kZW1vLWRpc3Ryby90cmVlL21hc3Rl
-ci9sYXllcnMvbWV0YS1kZW1vLWNpL2xpYi9vZWF3cw0KDQpPbmUgb2YgdGhlIGJlbmVmaXRzIG9m
-IHRoZWlyIGFwcHJvYWNoIGlzIHRoYXQgcmVzdWx0cyBnZXQgbWlycm9yZWQgaW5jcmVtZW50YWxs
-eSByYXRoZXIgdGhhbiBhdCB0aGUgZW5kIHNvIHlvdSBjYW4gdXNlIGl0IHdpdGggc3BvdCBpbnN0
-YW5jZXMgdGhhdCBnZXQgcmVjbGFpbWVkIGluIHRoZSBtaWRkbGUgb2YgYSBidWlsZC4NCkxldCBt
-ZSBrbm93IGlmIEkgY2FuIGhlbHAgdGVzdCBpdC4NCg0KUmVnYXJkcywNClJvYg0KDQpPbiBUaHUs
-IE5vdiA1LCAyMDI2IGF0IDk6MTTigK9QTSBLYXJ0aGlrIFBvZHV2YWwgdmlhIGJpdGJha2UtZGV2
-ZWwgPGtwb2R1dmFsPW1haWx0bzpsYWIxMjYuY29tQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmc+IHdy
-b3RlOg0KVGhhbmtzIGZvciB0aGUgY29tbWVudHMgUm9zcywgbGV0IG1lIHJld29yayB0aGUgcGF0
-Y2ggYXMgeW91IHN1Z2dlc3RlZC4NCg0KLS0NClJlZ2FyZHMsDQpLYXJ0aGlrIFBvZHV2YWwNCg0K
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IFJvc3MgQnVydG9uIHZpYSBiaXRiYWtl
-LWRldmVsIDxyb3NzLmJ1cnRvbj1tYWlsdG86YXJtLmNvbUBsaXN0cy5vcGVuZW1iZWRkZWQub3Jn
-PiANClNlbnQ6IFRodXJzZGF5LCBOb3ZlbWJlciA1LCAyMDI2IDU6NTUgQU0NClRvOiBQb2R1dmFs
-LCBLYXJ0aGlrIDxtYWlsdG86a3BvZHV2YWxAbGFiMTI2LmNvbT4NCkNjOiBtYWlsdG86Yml0YmFr
-ZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnOyBtYWlsdG86YXJtY2N1cmR5QGdtYWlsLmNv
-bTsgbWFpbHRvOnJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5vcmc7IG1haWx0bzpzdGVm
-YW4uaGVyYnJlY2h0c21laWVyQHdlaWRtdWVsbGVyLmNvbQ0KU3ViamVjdDogUkU6IFtFWFRFUk5B
-TF0gW2JpdGJha2UtZGV2ZWxdIFtQQVRDSCAxLzFdIGZldGNoL3MzOiBmZXRjaCB2aWEgYm90bzMg
-YnkgZGVmYXVsdCwgZmFsbGluZyBiYWNrIHRvIHRoZSBBV1MgQ0xJDQoNCkNBVVRJT046IFRoaXMg
-ZW1haWwgb3JpZ2luYXRlZCBmcm9tIG91dHNpZGUgb2YgdGhlIG9yZ2FuaXphdGlvbi4gRG8gbm90
-IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNzIHlvdSBjYW4gY29uZmlybSB0
-aGUgc2VuZGVyIGFuZCBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUuDQoNCg0KDQpIaSBLYXJ0aGlr
-LA0KDQpJIGhhdmUgbm8gcHJvYmxlbSB3aXRoIHRoZSBjaG9pY2Ugb2YgdXNpbmcgYm90byBvdmVy
-IHRoZSBDTEkswqAgdGhlIHBlcmZvcm1hbmNlIGdhaW5zIHlvdeKAmXJlIHNob3duIGFyZSBub3Qg
-aW5zaWduaWZpY2FudC4gSG93ZXZlcuKApg0KDQpPbiA1IE5vdiAyMDI2LCBhdCAwMToyNSwgS2Fy
-dGhpayBQb2R1dmFsIHZpYSBiaXRiYWtlLWRldmVsIDxrcG9kdXZhbD1tYWlsdG86bGFiMTI2LmNv
-bUBsaXN0cy5vcGVuZW1iZWRkZWQub3JnPiB3cm90ZToNCj4gK3RyeToNCj4gK8KgIMKgIGltcG9y
-dCBib3RvMw0KPiArwqAgwqAgaW1wb3J0IGJvdG9jb3JlDQo+ICvCoCDCoCBIQVZFX0JPVE8zID0g
-VHJ1ZQ0KPiArZXhjZXB0IEltcG9ydEVycm9yOg0KPiArwqAgwqAgSEFWRV9CT1RPMyA9IEZhbHNl
-DQoNCkluc3RlYWQgb2YgcmVzcGVjdGluZyBIQVZFX0JPVE8zIGluIGVhY2ggb2YgdGhlIGZ1bmN0
-aW9ucywgcmVzdWx0aW5nIGluIHF1aXRlIGEgbG90IG9mIGNvbXBsZXggY29kZSwgSSBzdWdnZXN0
-IGEgc2xpZ2h0bHkgZGlmZmVyZW50IGFwcHJvYWNoLsKgIEluc3RlYWQgb2YgaGF2aW5nIHRoZSBj
-b25kaXRpb25hbCBpbiB0aGUgbWV0aG9kcywgaGF2ZSB0d28gaW1wbGVtZW50YXRpb25zIG9mIHRo
-ZSBTMyBmZXRjaGVyIChzaGFyaW5nIGNvZGUgdmlhIGEgY29tbW9uIHBhcmVudCwgaWYgbmVlZGVk
-KSwgYW5kIHRoZW4gcGljayB3aGF0IG9uZSBpcyB1c2VkIG9uIHRoZSBmbHkuwqAgU29tZXRoaW5n
-IGxpa2UgdGhpczoNCg0KY2xhc3MgUzNDb21tb24oRmV0Y2hNZXRob2QpOg0KwqAgIyBjb21tb24g
-bWV0aG9kcyBjYW4gZ28gaW4gdGhpcyBjbGFzcw0KwqAgZGVmIHN1cHBvcnRzKHNlbGYsIHVkLCBk
-KToNCsKgIMKgIHJldHVybiB1ZC50eXBlIGluIFsnczPigJldDQrCoCAjIGV0Yw0KDQpjbGFzcyBT
-M0NMSShTM0NvbW1vbik6DQrCoCAjIGNvbmNyZXRlIGltcGxlbWVudGF0aW9uIHVzaW5nIHRoZSBD
-TEkNCsKgIGRlZiBkb3dubG9hZChzZWxmLCB1ZCwgZCk6DQrCoCDCoCAjIGRvd25sb2FkIHVzaW5n
-IHRoZSBjbGkNCg0KY2xhc3MgUzNCb3RvKFMzQ29tbW9uKToNCsKgICMgY29uY3JldGUgaW1wbGVt
-ZW50YXRpb24gdXNpbmcgYm90bw0KwqAgZGVmIGRvd25sb2FkKHNlbGYsIHVkLCBkKToNCsKgIMKg
-ICMgZG93bmxvYWQgdXNpbmcgYm90bw0KDQp0cnk6DQrCoCBpbXBvcnQgYm90bzMNCsKgIFMzID0g
-UzNCb3RvDQpleGNlcHQgSW1wb3J0RXJyb3I6DQrCoCBTMyA9IFMzQ0xJDQoNClRoaXMgc2hvdWxk
-IHJlc3VsdCBpbiBuZWF0ZXIgY29kZSBhcyB0aGVyZeKAmXMgYSBjbGVhciBzcGxpdCBiZXR3ZWVu
-IHRoZSB0d28gYmFja2VuZCBpbXBsZW1lbnRhdGlvbnMuDQoNCkNoZWVycywNClJvc3MNCg0KDQo=
+From: Karthik Poduval <kpoduval@lab126.com>
+
+From: Karthik Poduval <kpoduval@lab126.com>
+
+The S3 fetcher shells out to the AWS CLI ("aws s3 cp" / "aws s3 ls") once
+per object. For an sstate mirror made of many small objects this is slow:
+every invocation pays the Python interpreter + botocore import startup
+(~0.5s), re-resolves credentials and configuration, and opens a fresh TLS
+connection. Measured against an S3 sstate mirror, "aws s3 ls" costs ~0.9s
+per object; with thousands of setscene lookups this dominates wall time.
+
+Fetch with the boto3 SDK in-process instead. A single S3 client is cached
+for the lifetime of the (worker) process, so credentials are resolved once
+and the HTTPS connection pool stays warm across many fetches
+(max_pool_connections raised to 50). On a real build this cut per-object S3
+lookups from ~0.9s to ~0.08s warm (~11x) and reduced a core-image-minimal
+build from ~20 min to ~9 min with 100% sstate reuse and no fetch errors.
+
+The fetcher is split into two backends sharing a common base class (S3Boto
+and S3CLI, both deriving from S3Common); the concrete class is selected once
+at import time, preferring boto3 and falling back to the AWS CLI when boto3
+is not importable. There is therefore no new hard dependency for existing
+users.
+
+Also fix a double-encoding bug exposed by the SDK path: bitbake's mirror
+rewriting percent-encodes characters such as ':' in sstate object names (as
+%3A). The AWS CLI happened to tolerate this, but boto3 re-encodes the key
+when signing, so the object key must be unquoted before the boto3 call or S3
+returns 400 Bad Request on every lookup.
+
+Region and profile are resolved from the datastore and then the standard AWS
+environment variables, with ~/.aws/config honoured by boto3. Credential
+retrieval is retried with exponential backoff and jitter so a transient
+credential_process rate limit does not fail a setscene task. head_object
+404s (ordinary sstate misses) are logged at debug level; other errors are
+surfaced as notes.
+
+This change was developed with AI assistance; the AI-Generated tag below
+identifies the tooling used. The author has reviewed, tested and takes
+responsibility for the change.
+
+AI-Generated: Kiro, Claude Opus 4.8
+Signed-off-by: Karthik Poduval <kpoduval@lab126.com>
+---
+v2:
+- Split the fetcher into an S3Common base with S3Boto and S3CLI backends
+  selected once at import time, instead of branching on boto3 availability
+  inside each method (per review feedback from Ross Burton).
+- Reworded the credential-handling comments to describe the mechanism in
+  generic terms (a credential_process profile) rather than naming specific
+  credential tooling.
+- Built the AWS CLI commands as argument lists, matching the current
+  list-based fetcher convention, rather than shell strings.
+No change to the boto3 fetch behaviour.
+
+ lib/bb/fetch/s3.py | 227 ++++++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 209 insertions(+), 18 deletions(-)
+
+diff --git a/lib/bb/fetch/s3.py b/lib/bb/fetch/s3.py
+index ea3dc28fc..4df582a0b 100644
+--- a/lib/bb/fetch/s3.py
++++ b/lib/bb/fetch/s3.py
+@@ -1,8 +1,23 @@
+ """
+ BitBake 'Fetch' implementation for Amazon AWS S3.
+ 
+-Class for fetching files from Amazon S3 using the AWS Command Line Interface.
+-The aws tool must be correctly installed and configured prior to use.
++Class for fetching files from Amazon S3.
++
++Two backends are provided and one is selected automatically when the module is
++imported:
++
++  S3Boto (preferred)
++      Fetch in-process with the boto3 SDK, talking to S3 over HTTPS natively
++      (no per-object subprocess / AWS CLI startup cost). This is a big win for
++      sstate mirrors, where thousands of small objects are fetched and the AWS
++      CLI's interpreter + config/credential resolution startup dominates wall
++      time. Selected when boto3 is importable.
++
++  S3CLI (fallback)
++      Fetch by shelling out to the AWS CLI ("aws s3 cp" / "aws s3 ls"). This is
++      the original behaviour and requires no extra Python packages; the aws
++      tool must be installed and configured. Selected when boto3 is not
++      importable, so there is no new hard dependency.
+ 
+ """
+ 
+@@ -17,6 +32,8 @@ The aws tool must be correctly installed and configured prior to use.
+ 
+ import os
+ import bb
++import time
++import random
+ import urllib.request, urllib.parse, urllib.error
+ import re
+ import shlex
+@@ -24,6 +41,13 @@ from bb.fetch import FetchMethod
+ from bb.fetch import FetchError
+ from bb.fetch import runfetchcmd
+ 
++try:
++    import boto3
++    import botocore
++except ImportError:
++    boto3 = None
++
++
+ def convertToBytes(value, unit):
+     value = float(value)
+     if (unit == "KiB"):
+@@ -60,8 +84,107 @@ class S3ProgressHandler(bb.progress.LineFilterProgressHandler):
+         return True
+ 
+ 
+-class S3(FetchMethod):
+-    """Class to fetch urls via 'aws s3'"""
++# Cache a single boto3 S3 client for the lifetime of the (worker) process.
++# Creating a client resolves credentials and config once; reusing it keeps the
++# underlying HTTPS connection pool warm across many small fetches.
++#
++# NOTE: bitbake runs setscene fetches in SEPARATE worker processes, so this
++# cache is per-process, not global to the build. Credentials must come from a
++# source that AUTO-REFRESHES, because a Yocto build runs for hours and any
++# static/temporary credential (e.g. a fixed access key written into
++# ~/.aws/credentials [default]) can EXPIRE partway through -- after which S3
++# returns "400 Bad Request" on every call and all setscene tasks fail.
++#
++# The robust source is a `credential_process` profile: boto3 invokes it on
++# demand and re-vends when the token nears expiry. We therefore resolve
++# AWS_PROFILE from the bitbake datastore (or the environment) and pin it on the
++# session, so the worker uses that auto-refreshing profile instead of a stale
++# static [default]. Set AWS_PROFILE for the build (e.g. via
++# BB_ENV_PASSTHROUGH_ADDITIONS so it survives bitbake's worker env scrubbing)
++# to a profile whose [profile ...] entry in ~/.aws/config uses
++# credential_process.
++#
++# A credential_process helper that caches vended credentials on disk will
++# mostly serve them from that warm cache rather than from its backing service;
++# the backoff below still covers a transient "Rate exceeded" during a
++# cold-cache storm.
++_s3_client = None
++
++def _get_s3_client(d):
++    global _s3_client
++    if _s3_client is None:
++        # Resolve region from the usual env vars; boto3 also honours
++        # ~/.aws/config and AWS_CONFIG_FILE. (S3 handles cross-region HEAD/GET,
++        # so an exact match is not required, but pinning avoids surprises.)
++        region = (d.getVar("AWS_DEFAULT_REGION")
++                  or os.environ.get("AWS_DEFAULT_REGION")
++                  or os.environ.get("AWS_REGION"))
++        # Resolve the AWS profile to use. Pinning it defeats a stale/expired
++        # static [default] in ~/.aws/credentials shadowing the auto-refreshing
++        # credential_process -- the exact cause of mid-build "400 Bad Request"
++        # failures. d.getVar wins so it works even when the env is scrubbed in
++        # a worker; env is the fallback when it is passed through.
++        profile = (d.getVar("AWS_PROFILE")
++                   or os.environ.get("AWS_PROFILE")
++                   or os.environ.get("AWS_DEFAULT_PROFILE"))
++        # Allow more concurrent connections than the default (10) so parallel
++        # fetches within a process share a healthy pool. The 'retries' here
++        # applies to S3 API calls only, NOT to credential resolution.
++        cfg = botocore.config.Config(
++            max_pool_connections=50,
++            retries={"max_attempts": 5, "mode": "standard"},
++        )
++
++        # Credential resolution happens lazily on first API call OR eagerly in
++        # client(); either way a credential_process "Rate exceeded" surfaces as
++        # CredentialRetrievalError. Retry client creation + a cheap credential
++        # resolution with exponential backoff + jitter so a transient
++        # credential-service rate limit does not fail the whole setscene task.
++        attempts = int(d.getVar("S3_CRED_MAX_ATTEMPTS") or 6)
++        last_exc = None
++        for attempt in range(attempts):
++            try:
++                session = boto3.session.Session(profile_name=profile, region_name=region)
++                client = session.client("s3", config=cfg)
++                # Force credential resolution now so we retry it here rather
++                # than failing deep inside a download/head call.
++                creds = session.get_credentials()
++                # One-time-per-worker diagnostic: which credential source won,
++                # the profile, and the region. Tells us whether the worker
++                # picked the auto-refreshing credential_process profile or fell
++                # back to a stale static default.
++                try:
++                    method = getattr(creds, "method", None) if creds else "NONE"
++                    bb.debug(1, "S3 fetcher: credential method=%s profile=%s region=%s"
++                             % (method, profile, client.meta.region_name))
++                except Exception:
++                    pass
++                _s3_client = client
++                break
++            except botocore.exceptions.CredentialRetrievalError as e:
++                last_exc = e
++                if attempt == attempts - 1:
++                    break
++                # Exponential backoff with jitter: 0.5,1,2,4,8s (+/- jitter),
++                # capped. Spreads out many workers refreshing credentials at once.
++                delay = min(2.0 ** attempt * 0.5, 15.0)
++                delay += random.uniform(0, delay / 2.0)
++                bb.note("S3 fetcher: credential retrieval rate-limited "
++                        "(attempt %d/%d), backing off %.1fs: %s"
++                        % (attempt + 1, attempts, delay, e))
++                time.sleep(delay)
++        if _s3_client is None:
++            raise FetchError("S3 fetcher could not obtain AWS credentials after "
++                             "%d attempts. Set AWS_PROFILE to a profile whose "
++                             "~/.aws/config entry uses credential_process (which "
++                             "auto-refreshes), and ensure it is in the bitbake "
++                             "env passthrough. Last error: %s"
++                             % (attempts, last_exc))
++    return _s3_client
++
++
++class S3Common(FetchMethod):
++    """Behaviour shared by the S3 fetcher backends (S3Boto and S3CLI)."""
+ 
+     def supports(self, ud, d):
+         """
+@@ -80,46 +203,114 @@ class S3(FetchMethod):
+ 
+         ud.localfile = ud.basename
+ 
+-        ud.basecmd = shlex.split(d.getVar("FETCHCMD_s3") or "") or ["aws", "s3"]
+-
+     def download(self, ud, d):
+         """
+         Fetch urls
+         Assumes localpath was called first
+         """
+-
+-        cmd = ud.basecmd + ['cp', 's3://%s%s' % (ud.host, ud.path), ud.localpath]
+-        bb.fetch.check_network_access(d, cmd, ud.url)
+-
+-        progresshandler = S3ProgressHandler(d)
+-        runfetchcmd(cmd, d, False, log=progresshandler)
++        self._fetch(ud, d)
+ 
+         # Additional sanity checks copied from the wget class (although there
+-        # are no known issues which mean these are required, treat the aws cli
+-        # tool with a little healthy suspicion).
++        # are no known issues which mean these are required, treat the fetch
++        # result with a little healthy suspicion).
+ 
+         if not os.path.exists(ud.localpath):
+-            raise FetchError("The aws cp command returned success for s3://%s%s but %s doesn't exist?!" % (ud.host, ud.path, ud.localpath))
++            raise FetchError("The s3 fetch returned success for s3://%s%s but %s doesn't exist?!" % (ud.host, ud.path, ud.localpath))
+ 
+         if os.path.getsize(ud.localpath) == 0:
+             os.remove(ud.localpath)
+-            raise FetchError("The aws cp command for s3://%s%s resulted in a zero size file?! Deleting and failing since this isn't right." % (ud.host, ud.path))
++            raise FetchError("The s3 fetch for s3://%s%s resulted in a zero size file?! Deleting and failing since this isn't right." % (ud.host, ud.path))
+ 
+         return True
+ 
++
++class S3Boto(S3Common):
++    """Fetch urls in-process using the boto3 SDK."""
++
++    def _fetch(self, ud, d):
++        client = _get_s3_client(d)
++        # ud.host is the bucket; ud.path starts with "/" so strip it for the
++        # key. ud.path is percent-encoded (bitbake's mirror rewrite encodes the
++        # ':' in sstate names as %3A); boto3 wants the RAW, decoded key and does
++        # its own signing-time encoding, so decode here or S3 returns 400 Bad
++        # Request from the double-encoding.
++        bucket = ud.host
++        key = urllib.parse.unquote(ud.path.lstrip('/'))
++
++        bb.fetch.check_network_access(d, "boto3 get_object s3://%s/%s" % (bucket, key), ud.url)
++
++        try:
++            client.download_file(bucket, key, ud.localpath)
++        except (botocore.exceptions.ClientError, botocore.exceptions.BotoCoreError) as e:
++            raise FetchError("The boto3 download for s3://%s/%s failed: %s" % (bucket, key, e))
++
+     def checkstatus(self, fetch, ud, d):
+         """
+         Check the status of a URL
+         """
++        client = _get_s3_client(d)
++        bucket = ud.host
++        # See _fetch: decode the percent-encoded key for boto3.
++        key = urllib.parse.unquote(ud.path.lstrip('/'))
++
++        bb.fetch.check_network_access(d, "boto3 head_object s3://%s/%s" % (bucket, key), ud.url)
++
++        try:
++            client.head_object(Bucket=bucket, Key=key)
++        except botocore.exceptions.ClientError as e:
++            # A 404 is an ordinary sstate miss (object not in the mirror) and is
++            # expected for any task the mirror wasn't populated for -- log it at
++            # debug level only so normal misses don't flood the console. Any
++            # other code (400/403/5xx) is a real problem: surface it as a note.
++            err = e.response.get("Error", {})
++            meta = e.response.get("ResponseMetadata", {})
++            status = meta.get("HTTPStatusCode")
++            detail = ("head_object s3://%s/%s -> code=%s status=%s msg=%r reqid=%s"
++                      % (bucket, key, err.get("Code"), status,
++                         err.get("Message"), meta.get("RequestId")))
++            if status == 404:
++                bb.debug(2, "S3 fetcher: miss (404) s3://%s/%s" % (bucket, key))
++            else:
++                bb.note("S3 fetcher: %s" % detail)
++            raise FetchError("The boto3 head_object for s3://%s/%s failed: %s" % (bucket, key, e))
++        except botocore.exceptions.BotoCoreError as e:
++            raise FetchError("The boto3 head_object for s3://%s/%s failed: %s" % (bucket, key, e))
++        return True
++
++
++class S3CLI(S3Common):
++    """Fetch urls by shelling out to the AWS CLI ('aws s3')."""
++
++    def urldata_init(self, ud, d):
++        super().urldata_init(ud, d)
++        ud.basecmd = shlex.split(d.getVar("FETCHCMD_s3") or "") or ["aws", "s3"]
++
++    def _fetch(self, ud, d):
++        cmd = ud.basecmd + ['cp', 's3://%s%s' % (ud.host, ud.path), ud.localpath]
++        bb.fetch.check_network_access(d, cmd, ud.url)
+ 
++        progresshandler = S3ProgressHandler(d)
++        runfetchcmd(cmd, d, False, log=progresshandler)
++
++    def checkstatus(self, fetch, ud, d):
++        """
++        Check the status of a URL
++        """
+         cmd = ud.basecmd + ['ls', 's3://%s%s' % (ud.host, ud.path)]
+         bb.fetch.check_network_access(d, cmd, ud.url)
+         output = runfetchcmd(cmd, d)
+ 
+         # "aws s3 ls s3://mybucket/foo" will exit with success even if the file
+         # is not found, so check output of the command to confirm success.
+-
+         if not output:
+             raise FetchError("The aws ls command for s3://%s%s gave empty output" % (ud.host, ud.path))
+-
+         return True
++
++
++# Pick the backend once, at import time: prefer boto3, fall back to the AWS CLI
++# when boto3 is not importable. bb.fetch registers s3.S3, so this selection is
++# transparent to the rest of bitbake.
++if boto3 is not None:
++    S3 = S3Boto
++else:
++    S3 = S3CLI
+-- 
+2.43.0
+
