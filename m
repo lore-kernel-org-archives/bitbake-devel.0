@@ -1,205 +1,107 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.13744.1794492004725927726
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.14203.1794493164417973693
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 12 Nov 2026 06:00:05 -0800
+ Thu, 12 Nov 2026 06:19:25 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=cHCKZ+Lh;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.218.50, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-c4322d310e7so659951266b.0
-        for <bitbake-devel@lists.openembedded.org>; Thu, 12 Nov 2026 06:00:04 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=aeLRCcJ6;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.218.54, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-c505186727fso439522766b.3
+        for <bitbake-devel@lists.openembedded.org>; Thu, 12 Nov 2026 06:19:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1794492003; x=1795096803; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-type:references:in-reply-to:date:to
-         :from:subject:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=G1tqPDrIu96vvwgU6bm20GGrXzzbyJtkF2Qe5GiV6D4=;
-        b=cHCKZ+LhX9izUWKIDGKFDYmcBaKG6sHG7mQV27w/Ko9V1PkYh8zd20Xf085dHQSf9T
-         GQ8e7eKNnxIX86J1FGNXg1mjZr6eeu2lCZ86VtnSPFp+r8QpNrkG4pmb/A+iOtu/6uPV
-         rkKA1AogYMXc1scMOFMYEXO1w7Dgw39lB+zG8=
+        d=linuxfoundation.org; s=google; t=1794493162; x=1795097962; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=fVCQvd5+rtMV5DG/R8oJBel/CDnTkLmMflBL73+rI2Y=;
+        b=aeLRCcJ6cQcd52sEH3+jvjXRo6Aqn7yU7NtiIy42KVKSU0KJmMAZM5Fuy1qS1GAtGI
+         5TkySpsQouhaP2tZPIn3p3mJU+3KsO/vvkhHs5BxIPVMI+1CBDDzKtx1iWAXafrPz1x2
+         /uXXEWcsKw0GTPAljZ1ENKcgtpzvmWSxMqBL4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794492003; x=1795096803;
-        h=mime-version:user-agent:content-type:references:in-reply-to:date:to
-         :from:subject:message-id:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=G1tqPDrIu96vvwgU6bm20GGrXzzbyJtkF2Qe5GiV6D4=;
-        b=FYnG0Pg0I+yV/r/2WkPzVVdW4YCfWkkY+yiIOBhDQfzSk9lWd+qtJ/QGXcSZgQsJwM
-         nvYjzpaYRBtm5kZsozbF+UQaSDKJArAZVNNV6+xJd41CpaibyAELfRCaDxMSg2BBjLC9
-         4Zup4P+76paHRVRaKkKM1SVBwl9AjKuwWOjDxlBXJARJVH9C9yDglwJFM+8T8rtj/Wn+
-         4XzrElMxg0naJ7F8Vay/aJ+NxJV1Sf0m8TXp+ZVipNWjGP+cwTBu3bCFetEE1sTe01d7
-         m66uM8nmUka7LtFYwv3rjcglp2xuGxxAnhtbs47WENtID2252ry/o7+QDr1gjt8k0kUo
-         NcRA==
-X-Forwarded-Encrypted: i=1; AL+hErEwu66yEbgKLnH8NMyEOITe8Y/UZ7ONlyadwSIBHdIm0P/Jg73xfb7Cm9qnXg35xtsOgHUpDDPyEcc0PQN6@lists.openembedded.org
-X-Gm-Message-State: APuU4Z/q1e1stw6wxPuM3IX6kwBNMVUT6KrXz4s1RtjZMnw9eBeVvM+i
-	EnzfzF1L/HY4TmrYI9AIMidu+FqujlQEaomSj38j47pBlAMvwx+zQBGsm6p5y1UmMXY=
-X-Gm-Gg: AYBFou25VXRHUFkrXU3oVFDA6G0dXL4mRZeVhSa1S7Gs6ey+PPnDMU5Pe6sdrqAwyZQ
-	RiNsnIaVpoJSa95ILLffeS5A2R8QIhicEFMepym/cC4kHgE2atInnnCNHECmCGOm0cw4vQFXKTb
-	DIIR4d+nunLajkwMLlPNjL32hQZgr9rSh2+qS7/braj/JfYZWCFu2v2H/L9vK6foO1KHRknay5E
-	tlXqR1aItm9SJJft3Mp/wCNsgbubXIKZBBIp/TLyWgXgeYdnt0+lFLoH1WW2zgbnJqIC+RT2ce5
-	ED6RruBxPlWEw4zNAB/uv/Zet41ORigOXkhkbrwcNXxxxvZiS6cMj0vdfViQqwiHL4ZZQ4TrU8A
-	pRaR0cyxdyf3GNKNe0I8bBDWzhu8yoca8mO8ydUyAdRXja/WClb0rNOFXDRX741ssJasDg2lj7Q
-	gpxcnTN1CqQrV/cejcXnsZcf3+CLRJmv06wwIyRkvNRBzX73FZzILTdO7Uwz9pJCpcBFl3JWZCI
-	ULIF1HScinN4CvqBAHhfLu9lcxVIvkXHNo7ZFNRIxa4d4GN1ou4adesX/T3gwxYomqM4Kg8hs29
-	0+km3G9VFO8AhC8b7lfS5/uklZmXX5nsEq6W8O5fMxuIGUvLRrUSm6ty5NfWdwwf722C1fLbtKY
-	Uyars9ntkTsPKKhpAVA==
-X-Received: by 2002:a17:907:a08a:b0:c34:c5e8:1dc5 with SMTP id a640c23a62f3a-c5066af32ecmr477267666b.20.1794492002655;
-        Thu, 12 Nov 2026 06:00:02 -0800 (PST)
+        d=1e100.net; s=20260707; t=1794493162; x=1795097962;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=fVCQvd5+rtMV5DG/R8oJBel/CDnTkLmMflBL73+rI2Y=;
+        b=dxbqDzKjUmamb29gFup6XFgvx7KikddgZgORDq1WCUE2FEZmZY2ByjCDyW1CH3YNqN
+         1jdeh5dbuQrxt8YmP1Jqg8WhQFRdORgGG5dqWl5DXy6RRDwPDraST/abVTip67OFNcuI
+         ldtdDRBt2YxAcuYAhZt8yICOWU25V6iRbdaFPwD5YTvBQtf7kNjGcBBmbh3vQB5dsM0T
+         hUUD39cSbkX9XODqch2xsk63nhv6p0wyQDbzgIrwevAh5WfJ12oDBmZCL6TiOqDF+1L4
+         A3dG/oJq0RaBxBfHi0Q66ZfmqHhV+lyjVS+IRWeKg2LWwCGajFfUi/Fbx3RrPZxY3cK+
+         +rSA==
+X-Gm-Message-State: APuU4Z8q3xfyqvTUwvYgC8tDd5qYlYWeISAgmWHO/nJWv7YTe71p8fH8
+	fx+poTyXcmt6n5YZO5NVcc5dHJK/x1gWZsrWzwwyZxOyx7cC1ac2DT40wt9qxY4PSHQEQuEibaC
+	gImM3gxM=
+X-Gm-Gg: AYBFou2XdKn1e4hDLcfPIj5ri6WrTN/WngQofnWGt88OsSed+g5mZFGSwIPWYNopHpd
+	wsZsWh21tEk+q9a4j3BYHlhoFCFD98tA3YMKzeUQQ0sLrHWhD37qkG2Id3szfP4uewV6UhHdrdT
+	IgxGXYEzcjj1rz0IxLA/vbLKBb8va9+okrfrsmbarLYz3SxdGO0lw4TBBMtf2q+O8Qt4s5LWiNa
+	DrXYDbSTVuAyYLvB4sqzueUhLRdWLG2cuaXke1vS3epIh9sPa35NJg0QMTXUsuMnYM7x+muvtb6
+	+VI4+DolIxemF24DfFbm/GvdQEd7YONR0mBxxTQJf0Jou5o7R8+GdztsfiTAWLBVfXbC+fF3yZC
+	jtoTBPpEHMoWdYKkiUYsGwE8bJdXYEzumunt73n+xk5a38w6xUyYJs/2k2aEiWBozgQAtPPDOly
+	mnWRxQ4AapZUqrXhnXYT3O75hTTfov5135zvLq3abtVKVtw7rv5p4jpGN2XtygIOUTygynrJfMr
+	SbcAcKVZ9fkVpKSu/9Ll5/X7ylAK2mGgLgW6bqjP7Lt5vSoeSghFFN42pz7iXfy3vlNnZbcmrH/
+	b9F4E8J0RAlE4GbnRJ7YLvgs8o4aTJlprHLp5zALs/FpHb2bnZaRf72Rkg==
+X-Received: by 2002:a17:906:9c86:b0:c50:5996:5b89 with SMTP id a640c23a62f3a-c5066b3aa67mr493121566b.23.1794493162392;
+        Thu, 12 Nov 2026 06:19:22 -0800 (PST)
 Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:1562:9f61:e354:1b51? ([2001:8b0:aba:5f3c:1562:9f61:e354:1b51])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c504a6197b7sm353460666b.52.2026.11.12.06.00.00
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:1562:9f61:e354:1b51])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4983600bc9asm15864841f8f.29.2026.11.12.06.19.21
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Nov 2026 06:00:01 -0800 (PST)
-Message-ID: <87e95f4cadb6b4f0c5748124c013e0bbb83879e8.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] bitbake-worker: preserve embedded do_
- in task names
+        Thu, 12 Nov 2026 06:19:21 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: david.koch@wenuam.fr, bitbake-devel@lists.openembedded.org
-Date: Thu, 12 Nov 2026 14:00:00 +0000
-In-Reply-To: <db07641b-d67e-4f87-a0cb-a704950d7c7a@wenuam.fr>
-References: <a905add9-4600-4de3-8a3a-02ba3995234d@wenuam.fr>
-	 <db07641b-d67e-4f87-a0cb-a704950d7c7a@wenuam.fr>
-Content-Type: multipart/alternative; boundary="=-pLRDpKUMIClhL9rZMWq1"
-User-Agent: Evolution 3.56.2-10build1 
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] Revert "bitbake-setup: catch unexpected exceptions and show a clean error message"
+Date: Thu, 12 Nov 2026 14:19:20 +0000
+Message-ID: <20261112141920.3340431-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.55.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Thu, 12 Nov 2026 14:00:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20423
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Thu, 12 Nov 2026 14:19:29 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20424
+Content-Type: text/plain; charset="utf-8"
 
---=-pLRDpKUMIClhL9rZMWq1
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This reverts commit 9fb6b0011bae34a7c1feb53281e13364d85ddee8.
 
-Thanks for the report/patch! You're right this is a potential issue we
-should fix.
+When things fail, having a traceback is helpful and we're seeing cases such
+as exceptions within exceptions where it is hard to tell why things are breaking.
 
-On Thu, 2026-11-12 at 14:26 +0100, WM - David KOCH via bitbake-devel
-wrote:
-> =20
-> =20
-> Signed-off-by: WM - David KOCH <david.koch@wenuam.fr>
-> ---
->  bin/bitbake-worker | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-> index 61484a5c2..0be6f6eba 100755
-> --- a/bin/bitbake-worker
-> +++ b/bin/bitbake-worker
-> @@ -266,7 +266,7 @@ def fork_off_task(cfg, data, databuilder, workerdata,=
- extraconfigdata, runtask):
->                  the_data =3D databuilder.mcdata[mc]
->                  the_data.setVar("BB_WORKERCONTEXT", "1")
->                  the_data.setVar("BB_TASKDEPDATA", taskdepdata)
-> -                the_data.setVar('BB_CURRENTTASK', taskname.replace("do_"=
-, ""))
-> +                the_data.setVar('BB_CURRENTTASK', taskname[3:])
->                  if cfg.limited_deps:
->                      the_data.setVar("BB_LIMITEDDEPS", "1")
->                  the_data.setVar("BUILDNAME", workerdata["buildname"])
-> @@ -285,7 +285,7 @@ def fork_off_task(cfg, data, databuilder, workerdata,=
- extraconfigdata, runtask):
->                  the_data.setVar('BB_UNIHASH', unihash)
->                  bb.parse.siggen.setup_datacache_from_datastore(fn, the_d=
-ata)
-> =20
-> -                bb.utils.set_process_name("%s:%s" % (the_data.getVar("PN=
-"), taskname.replace("do_", "")))
-> +                bb.utils.set_process_name("%s:%s" % (the_data.getVar("PN=
-"), taskname[3:]))
-> =20
->                  if not bb.utils.to_boolean(the_data.getVarFlag(taskname,=
- 'network')):
->                      if bb.utils.is_local_uid(uid):
-> -
+I'd rather have debug data than not. Asking the user to rerun with --debug is hard
+for example in CI and isn't how we do things in other areas.
 
-I think this is nearly right but it is possible the taskname might not
-start with "do_". I'd therefore suggest using:
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ bin/bitbake-setup | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
 
-taskname.removeprefix('do_')
-
-instead.
-
-Thanks,
-
-Richard
-
-
-
---=-pLRDpKUMIClhL9rZMWq1
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-<html><head>
-
-   =20
-  <style>pre,code,address {
-  margin: 0px;
-}
-h1,h2,h3,h4,h5,h6 {
-  margin-top: 0.2em;
-  margin-bottom: 0.2em;
-}
-ol,ul {
-  margin-top: 0em;
-  margin-bottom: 0em;
-}
-blockquote {
-  margin-top: 0em;
-  margin-bottom: 0em;
-}
-</style></head>
-  <body><div>Thanks for the report/patch! You're right this is a potential =
-issue we should fix.</div><div><br></div><div>On Thu, 2026-11-12 at 14:26 +=
-0100, WM - David KOCH via bitbake-devel wrote:</div><blockquote type=3D"cit=
-e" style=3D"margin:0 0 0 .8ex; border-left:2px #729fcf solid;padding-left:1=
-ex"><div> </div><div class=3D"moz-forward-container"> <p style=3D"line-heig=
-ht: 116%; margin-bottom: 0.28cm">Signed-off-by: WM - David KOCH <a class=3D=
-"moz-txt-link-rfc2396E" href=3D"mailto:david.koch@wenuam.fr" moz-do-not-sen=
-d=3D"true">&lt;david.koch@wenuam.fr&gt;</a></p><pre wrap=3D"" class=3D"moz-=
-quote-pre">---
- bin/bitbake-worker | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-index 61484a5c2..0be6f6eba 100755
---- a/bin/bitbake-worker
-+++ b/bin/bitbake-worker
-@@ -266,7 +266,7 @@ def fork_off_task(cfg, data, databuilder, workerdata, e=
-xtraconfigdata, runtask):
-                 the_data =3D databuilder.mcdata[mc]
-                 the_data.setVar("BB_WORKERCONTEXT", "1")
-                 the_data.setVar("BB_TASKDEPDATA", taskdepdata)
--                the_data.setVar('BB_CURRENTTASK', taskname.replace("do_", =
-""))
-+                the_data.setVar('BB_CURRENTTASK', taskname[3:])
-                 if cfg.limited_deps:
-                     the_data.setVar("BB_LIMITEDDEPS", "1")
-                 the_data.setVar("BUILDNAME", workerdata["buildname<a class=
-=3D"moz-txt-link-rfc2396E" href=3D"mailto:])@@-285,7+285,7@@deffork_off_tas=
-k(cfg,data,databuilder,workerdata,extraconfigdata,runtask):the_data.setVar(=
-'BB_UNIHASH',unihash)bb.parse.siggen.setup_datacache_from_datastore(fn,the_=
-data)-bb.utils.set_process_name(" moz-do-not-send=3D"true">"])
-@@ -285,7 +285,7 @@ def fork_off_task(cfg, data, databuilder, workerdata, e=
-xtraconfigdata, runtask):
-                 the_data.setVar('BB_UNIHASH', unihash)
-                 bb.parse.siggen.setup_datacache_from_datastore(fn, the_dat=
-a)
-=20
--                bb.utils.set_process_name("</a>%s:%s" % (the_data.getVar("=
-PN"), taskname.replace("do_", "")))
-+                bb.utils.set_process_name("%s:%s" % (the_data.getVar("PN")=
-, taskname[3:]))
-=20
-                 if not bb.utils.to_boolean(the_data.getVarFlag(taskname, '=
-network')):
-                     if bb.utils.is_local_uid(uid):
-<div class=3D"moz-txt-sig">-</div></pre></div></blockquote><div><br></div><=
-div>I think this is nearly right but it is possible the taskname might not =
-start with "do_". I'd therefore suggest using:</div><div><br></div><div><di=
-v><span class=3D"sig-prename descclassname"><span class=3D"pre">taskname.</=
-span></span><span class=3D"sig-name descname"><span class=3D"pre">removepre=
-fix</span></span><span class=3D"sig-paren">('do_')</span></div></div><div><=
-br></div><div>instead.</div><div><br></div><div>Thanks,</div><div><br></div=
-><div>Richard</div><div><br></div><div><br></div><div><br></div><div><span>=
-</span></div></body></html>
-
---=-pLRDpKUMIClhL9rZMWq1--
+diff --git a/bin/bitbake-setup b/bin/bitbake-setup
+index 02a7257a515..27c7da146b6 100755
+--- a/bin/bitbake-setup
++++ b/bin/bitbake-setup
+@@ -1458,21 +1458,13 @@ def main():
+ 
+         logger.info('Bitbake-setup is using {} as top directory.'.format(top_dir))
+ 
+-        try:
+-            if args.func == init_config:
+-                init_config(top_dir, all_settings, args)
+-            else:
+-                d = init_bb_cache(top_dir, all_settings, args)
+-                args.func(top_dir, all_settings, args, d)
++        if args.func == init_config:
++            init_config(top_dir, all_settings, args)
++        else:
++            d = init_bb_cache(top_dir, all_settings, args)
++            args.func(top_dir, all_settings, args, d)
+ 
+-            save_bb_cache()
+-        except (SystemExit, KeyboardInterrupt):
+-            raise
+-        except Exception as e:
+-            if args.debug:
+-                raise
+-            logger.error(str(e))
+-            sys.exit(1)
++        save_bb_cache()
+     else:
+         parser.print_help()
+ 
