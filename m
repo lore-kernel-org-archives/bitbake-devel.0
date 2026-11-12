@@ -1,164 +1,135 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.14349.1794493681665015980
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.3272.1794508277095258290
  for <bitbake-devel@lists.openembedded.org>;
- Thu, 12 Nov 2026 06:28:02 -0800
+ Thu, 12 Nov 2026 10:31:17 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=d+LWHs1T;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.52, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4a3517554f7so45982735e9.2
-        for <bitbake-devel@lists.openembedded.org>; Thu, 12 Nov 2026 06:28:01 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20260707 header.b=u5d1fYyQ;
+ spf=pass (domain: gmail.com, ip: 209.85.208.173, mailfrom: damianfalkowski9@gmail.com)
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-3ab3b29a1d4so449631fa.1
+        for <bitbake-devel@lists.openembedded.org>; Thu, 12 Nov 2026 10:31:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1794493680; x=1795098480; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=Z5dmY5i+SI6llfk4KsgAqBZXwNSnRaA+vY1dL68qNK0=;
-        b=d+LWHs1TmpGpw+LmvKEHMn6/uqecYdEUDoOWpqLZXTaixRUAzt+KZTgL+Km7yewBbP
-         y6ZgdwHVlTxFz6yPSe7oVlbsxuN74vp3wflZjWs/0hjsgLT/XxJOMK9EzOqheJg46V9Q
-         Q18sY2lYFaUvadoUhP/b6QnLYRxGzQmhfLmng=
+        d=gmail.com; s=20260707; t=1794508275; x=1795113075; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Qhz2GWlJ98deD96fUoB0o+F9M3ddS6pZ0/UmahXXvUE=;
+        b=u5d1fYyQJdP2V5N0KIzYFpNSZCcO1VN+mii5jfHlIOVaSFgKX8WBrU1+cc59ux9u00
+         BhzFLd72KBlSobofH4soLeAXE2VYjskZI1ywM6N7ewNu8+FjHyYqREJwNxk/e5pX1/hu
+         eeIttuvE3TP3YsuJm/v/JBdBCRI3zLBhOLcJdwKP6QNeaA4Ui8b0Tg9KDOG/NN5jnV2s
+         Rbq6I3Uc1mWRxMKBqvMncgVP8tk0p6ZmHNnhnYJPybnXSFPMOcjqQKQcuQ1MVPmkxwD1
+         icC7Vz95oFe5KG19mwaPLb65vG9qCcvHosAs4rnPbwy/aVRpENWMljQR8iAh6LVBulfc
+         XKpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794493680; x=1795098480;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=Z5dmY5i+SI6llfk4KsgAqBZXwNSnRaA+vY1dL68qNK0=;
-        b=U009v4oXmSh0iNbFUaAAHncl72IkEfUzhlRGfXQ6kKXeoCL59xNEb2cBGYgfXm6/Ho
-         2xRXPOUzi2bzALRvjauA5rhi0ly3Eqp0i1FeU/eK6LM2GDsHTjoLSNZRkff//Chc6w4d
-         XYrGo10Ju2rOqG7QvVDHdWqttqnwXkOd15eLW1QbObkEilZrVV5zcgKYZX21WV7umnXh
-         0r8m04dgURqJmKjWRXydMHGMzQofiI/0dSiJhDHGddJOKHU0686AnwiF2riMJWHPxzPy
-         0rIh5N/YLAwITUpCydwM3RHC7oWVS2qh46jhx42OyGyFbmxMhEvS90PCcVNETHee9Q2F
-         d5fA==
-X-Gm-Message-State: APuU4Z+RHKDmFBpODIIYFQSJs3UoHlXbTbswtIjTBM2+m68uMqlCiddU
-	RnbbUgJX8CPGvvQtUZAU3C1bjqt8lIN1VBHYPtqcSznHst9yjR8+MAddjkpDaGQxpjqppHNMdoo
-	0pWXnjGs=
-X-Gm-Gg: AYBFou1C/l7GmtwN9WuwWdPpXBd0AqoIjX1Px1PcOlRlRJRBf150x4AvlIarXKdpvmo
-	MeY+xTQMqEvUM96RkU0RuQ4qOMgV03bhpvPNHTILczmNr7lz4f9/xxnmVxodDWuM4QGpcsYhBHc
-	DDlpWZVHOJ+eoC0Wq+OrM+jEcHUuAtY564wBHCFuejujCsX+J8+LeZioYIGrP1Vw38jiaijyJYm
-	oxkDv3txLyelmVIG27O/CUjTO9JPaVsQqpn9JfgV0S9mz8ixmUNF4NmrAKd0ii9qkSWIbEV+ycP
-	ouWdSXZtjsk77JESLFE4H5A2677rcKEwHHy3VdAKHr14t/CrY+HgpQ2SFe/HqN4VwE12fWHtWbz
-	y6NEEMVn0k8PWtkR6/NobogbJrdqm06ANxPoxV8OSBOlT5mKUpYlF2VNfyMMxrrFyO+g4+RHVWc
-	2tiqerfolvAL1TqicOBNDNzQSNmBxBYDAe/piRYqG19pp75/DSQTc7SYa4kvOXH1PaG5zQAqppL
-	/uc4ZwgIt25dfCRz2x4HcHqgk19DEyeVojjWGClGGp4oEleieesOR1+DTY5AujwL/IIqPAPv/F7
-	MyGkJjjVRPAHksSpt+vEOg8HkFWD6w1pkBH15dyE8PZFJOQSQfSv2wkSiA==
-X-Received: by 2002:a05:600c:3b86:b0:4a1:df52:3e36 with SMTP id 5b1f17b1804b1-4ba0939aef5mr125711225e9.27.1794493679733;
-        Thu, 12 Nov 2026 06:27:59 -0800 (PST)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:1562:9f61:e354:1b51])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb4e2593e4sm83090325e9.5.2026.11.12.06.27.58
+        d=1e100.net; s=20260707; t=1794508275; x=1795113075;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Qhz2GWlJ98deD96fUoB0o+F9M3ddS6pZ0/UmahXXvUE=;
+        b=feZ8+VT9yoL1Xg58goDQ8qymcDJPQOfCRkkhHZ1/TKqflg2l4UHNTLFsk75Pgz94s1
+         cdI8Y5hf+sjiMzkvqOiZ6bqOC8maIY1X6ocnU0WKgKOlrOp9FZHvpNlKmI6jqb1NojTu
+         7M+ZUDmZZB/uDrpKmPE7x7PQmaYiDuulLFIluggrfqTBWVV9jAG9NFo8Z5crNPXCy4+d
+         TdINEPf8yas3eWtPgWhPUXbg+i0dXfcqF7dCzAr/ffOhneJMKAz89VXWV7wdUpbn2F9z
+         l9u/FFSc893LdspxB4QMwHJgLNUlaUQxEoAujAGD5KdfzAtcs/EWxGXZaNKOKBOvQMA+
+         p1jA==
+X-Gm-Message-State: APuU4Z/ec7u+oNar/cbkfqeVQ3eNCrz8LHmdfE43pOpDk1YsvTQwnF90
+	knWKGEBlkrbe29t/B+CTL1IZ8fv8+0PQwZilC0JOrgjUDelSLniENC+EdUN8ZQYQqIXqEQ==
+X-Gm-Gg: AYBFou3EnBBkKmeb3JjdPa9lIpljiMXNEShtLxae/jTey+/JZuINP2Q1qyAGxdyUt1G
+	dhJ2QSjv5RHY8OZAvil7NpCTMWvJzqVCBYaZQLRrrgH/rhBH4evavRAZjSPzGDMfBfktlwxRcRc
+	XtnRAa7KxFKJWVOQcT/lBhS/IgjGyxXb1wfPDceswMFgZYz+6GFhrTt+HrGJ+LoUdCQZdkTUAHa
+	hmgJNbu16K5hp02bjMbods/2U0lEetQk3KR2C5pjI6puGSKQI0UtGp42i3RvTJTHKQsV+HLcQhM
+	dmJGDFjlXGLc5cGGe641ziVJ7QKIrXWDFh6Z9FRex7eMgTlU2qTMVkjKKQ11XD77ASxIAw53Vco
+	vx+ByhYKQoSarvnvaHgdorx5ZEejA7+kv/wt2mfr1CfpY62XJo51dMvRXQjfkwkX+fLNzLlwUkQ
+	dFTR7aenLl/+CMii/LvYqeGqPLHKLzs8eQUpjKr/qlI40h9pkP4KyH8VOcHmDlrBKK4KN6k9Qlc
+	aeMePrtO4QyUojz6vvsQIhIjwh7lznrxZ64Z8OAu5qWDx/tD3zotPg4bSFlaOsl5ve32+qk46Kw
+	sfkL0oNr77kkrbVFr73ylzAAd2G+/BsMS3lvQyP/SOAuQqfVoZSjwI13K7EeWmVG8A6omvgtvgx
+	w0iyeyaQM6CCUMTt9BMJgknpnEKxKJ7G5kTvovXC9elgo9wEOHxf3qOd59tOvU3DCxZg6dEc0lX
+	UPOyEvrqbbgC3s+Q==
+X-Received: by 2002:a05:651c:a328:b0:3ab:540b:f49f with SMTP id 38308e7fff4ca-3ae2b531484mr1164361fa.26.1794508274413;
+        Thu, 12 Nov 2026 10:31:14 -0800 (PST)
+Return-Path: <damianfalkowski9@gmail.com>
+Received: from wrlinb202.emea.nsn-net.net ([131.228.2.15])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3ae2b7aebd1sm932001fa.29.2026.11.12.10.31.12
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Nov 2026 06:27:58 -0800 (PST)
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+        Thu, 12 Nov 2026 10:31:13 -0800 (PST)
+From: Damian Falkowski <damianfalkowski9@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/2] cooker/runqueue: Add and switch to use get_layername API
-Date: Thu, 12 Nov 2026 14:27:55 +0000
-Message-ID: <20261112142755.3343305-2-richard.purdie@linuxfoundation.org>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20261112142755.3343305-1-richard.purdie@linuxfoundation.org>
-References: <20261112142755.3343305-1-richard.purdie@linuxfoundation.org>
+Subject: [PATCH] fetch/git: Remove the LFS worktree when git lfs fetch fails
+Date: Thu, 12 Nov 2026 19:31:11 +0100
+Message-Id: <20261112183111.3425042-1-damianfalkowski9@gmail.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Thu, 12 Nov 2026 14:28:09 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20426
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Thu, 12 Nov 2026 18:31:21 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20427
 Content-Type: text/plain; charset="utf-8"
 
-Rather that using one of the fields of calc_bbfile_priority, add
-a new dedicated function since we want the layername more often than
-not.
+Since commit d369bfd8e5b4 ("fetch2: Raise on git lfs fetch failures"), a
+failing "git lfs fetch" raises before the temporary "wt" worktree is
+removed. The worktree stays in the clone directory in DL_DIR, and every
+later fetch of the same repository fails at "git worktree add" with
+"fatal: 'wt' already exists" until someone deletes it by hand. A single
+temporary error from the LFS server, such as a short outage of its
+backing storage, thus breaks the download directory for good.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Remove the worktree also when "git lfs fetch" fails, and add a test
+that fetches again after a failed LFS fetch.
+
+AI-Generated: Cursor, Claude Opus 5.5
+Signed-off-by: Damian Falkowski <damianfalkowski9@gmail.com>
 ---
- lib/bb/command.py  |  2 +-
- lib/bb/cooker.py   | 14 ++++++++++----
- lib/bb/runqueue.py |  4 ++--
- 3 files changed, 13 insertions(+), 7 deletions(-)
+ lib/bb/fetch/git.py   |  6 ++++--
+ lib/bb/tests/fetch.py | 21 +++++++++++++++++++++
+ 2 files changed, 25 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index 068d95c1649..f49ebb19d8e 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -583,7 +583,7 @@ class CommandsSync:
-                 appendfiles = command.cooker.collections[mc].get_file_appends(fn)
-         else:
-             appendfiles = []
--        layername = command.cooker.collections[mc].calc_bbfile_priority(fn)[2]
-+        layername = command.cooker.collections[mc].get_layername(fn)
-         # We are calling bb.cache locally here rather than on the server,
-         # but that's OK because it doesn't actually need anything from
-         # the server barring the global datastore (which we have a remote
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index af53135353e..bac0e7205b8 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -590,7 +590,7 @@ You can also remove the BB_HASHSERVE_UPSTREAM setting, but this may result in si
+diff --git a/lib/bb/fetch/git.py b/lib/bb/fetch/git.py
+index dc1b31b58..75ce1eda0 100644
+--- a/lib/bb/fetch/git.py
++++ b/lib/bb/fetch/git.py
+@@ -509,9 +509,11 @@ class Git(FetchMethod):
+             lfs_fetch_cmd = ud.basecmd + ['lfs', 'fetch']
+             if fetchall:
+                 lfs_fetch_cmd.append('--all')
+-            runfetchcmd(lfs_fetch_cmd, d, log=progresshandler, workdir=(clonedir + "/wt"))
+             worktree_rem_cmd = ud.basecmd + ['worktree', 'remove', '-f', 'wt']
+-            runfetchcmd(worktree_rem_cmd, d, log=progresshandler, workdir=clonedir)
++            try:
++                runfetchcmd(lfs_fetch_cmd, d, log=progresshandler, workdir=(clonedir + "/wt"))
++            finally:
++                runfetchcmd(worktree_rem_cmd, d, log=progresshandler, workdir=clonedir)
  
-         if fn:
-             try:
--                layername = self.collections[mc].calc_bbfile_priority(fn)[2]
-+                layername = self.collections[mc].get_layername(fn)
-                 envdata = self.databuilder.parseRecipe(fn, self.collections[mc].get_file_appends(fn), layername)
-             except Exception as e:
-                 parselog.exception("Unable to read %s", fn)
-@@ -1391,7 +1391,7 @@ You can also remove the BB_HASHSERVE_UPSTREAM setting, but this may result in si
  
-         bb_caches = bb.cache.MulticonfigCache(self.databuilder, self.databuilder.data_hash, self.caches_array)
+     @contextmanager
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 0f29cdf11..7c93a6cbe 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -2872,6 +2872,27 @@ class GitLfsTest(FetcherTest):
+         with self.assertRaises(bb.fetch.FetchError):
+             self.fetch()
  
--        layername = self.collections[mc].calc_bbfile_priority(fn)[2]
-+        layername = self.collections[mc].get_layername(fn)
-         infos = bb_caches[mc].parse(fn, self.collections[mc].get_file_appends(fn), layername)
-         infos = dict(infos)
- 
-@@ -1825,6 +1825,12 @@ class CookerCollectFiles(object):
-                 return pri, regex, layername
-         return 0, None, None
- 
-+    def get_layername(self, filename):
-+        for layername, _, _, _ in self.bbfile_config_priorities:
-+            if regex.match(filename):
-+                return layername
-+        return None
++    @skipIfNoGitLFS()
++    def test_lfs_fetch_retry_after_failure(self):
++        """Test that a failed LFS fetch does not break later fetches of the same repository"""
++        self.git(["lfs", "install", "--local"], cwd=self.srcdir)
++        self.commit_file("a.mp3", "version 1")
 +
-     def get_bbfiles(self):
-         """Get list of default .bb files by reading out the current directory"""
-         path = os.getcwd()
-@@ -2181,7 +2187,7 @@ class CookerParser(object):
-         for mc in self.cooker.multiconfigs:
-             for filename in self.mcfilelist[mc]:
-                 appends = self.cooker.collections[mc].get_file_appends(filename)
--                layername = self.cooker.collections[mc].calc_bbfile_priority(filename)[2]
-+                layername = self.cooker.collections[mc].get_layername(filename)
-                 if not self.bb_caches[mc].cacheValid(filename, appends):
-                     self.willparse.append((mc, self.bb_caches[mc], filename, appends, layername))
-                 else:
-@@ -2426,7 +2432,7 @@ class CookerParser(object):
-         bb.cache.SiggenRecipeInfo.reset()
-         to_reparse = set()
-         for mc in self.cooker.multiconfigs:
--            layername = self.cooker.collections[mc].calc_bbfile_priority(filename)[2]
-+            layername = self.cooker.collections[mc].get_layername(filename)
-             to_reparse.add((mc, filename, self.cooker.collections[mc].get_file_appends(filename), layername))
- 
-         for mc, filename, appends, layername in to_reparse:
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index ef95eb46bf9..a1e6487a6de 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -2307,7 +2307,7 @@ class RunQueueExecute:
-                 'unihash' : self.rqdata.get_task_unihash(task),
-                 'quieterrors' : True,
-                 'appends' : self.cooker.collections[mc].get_file_appends(taskfn),
--                'layername' : self.cooker.collections[mc].calc_bbfile_priority(realfn)[2],
-+                'layername' : self.cooker.collections[mc].get_layername(realfn),
-                 'taskdepdata' : self.sq_build_taskdepdata(task),
-                 'dry_run' : False,
-                 'taskdep': taskdep,
-@@ -2401,7 +2401,7 @@ class RunQueueExecute:
-                 'unihash' : self.rqdata.get_task_unihash(task),
-                 'quieterrors' : False,
-                 'appends' : self.cooker.collections[mc].get_file_appends(taskfn),
--                'layername' : self.cooker.collections[mc].calc_bbfile_priority(realfn)[2],
-+                'layername' : self.cooker.collections[mc].get_layername(realfn),
-                 'taskdepdata' : self.build_taskdepdata(task),
-                 'dry_run' : self.rqdata.setscene_enforce,
-                 'taskdep': taskdep,
++        uri = 'git://%s;protocol=file;lfs=1;branch=master' % self.srcdir
++        self.d.setVar('SRC_URI', uri)
++
++        lfs_objects = os.path.join(self.srcdir, ".git", "lfs", "objects")
++        with hide_directory(lfs_objects):
++            with self.assertRaises(bb.fetch.FetchError):
++                self.fetch()
++
++        fetcher, ud = self.fetch()
++        with hide_directory(self.srcdir):
++            workdir = self.d.getVar('WORKDIR')
++            fetcher.unpack(workdir)
++            with open(os.path.join(workdir, "git", "a.mp3")) as f:
++                self.assertEqual(f.read(), "version 1")
++
+ class GitURLWithSpacesTest(FetcherTest):
+     test_git_urls = {
+         "git://tfs-example.org:22/tfs/example%20path/example.git;branch=master" : {
+
