@@ -1,102 +1,128 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.12795.1794580830805373702
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.2404.1794682535577550735
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 13 Nov 2026 06:40:31 -0800
+ Sat, 14 Nov 2026 10:55:35 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20260707 header.b=SswFgHGr;
- spf=pass (domain: gmail.com, ip: 209.85.128.42, mailfrom: michalwsieron@gmail.com)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4a215e64962so18381465e9.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 13 Nov 2026 06:40:30 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20260707 header.b=ODNdgWGr;
+ spf=pass (domain: gmail.com, ip: 209.85.215.177, mailfrom: bbnpreetsingh@gmail.com)
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-cc4aa0246b7so830849a12.3
+        for <bitbake-devel@lists.openembedded.org>; Sat, 14 Nov 2026 10:55:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794580829; x=1795185629; darn=lists.openembedded.org;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=KXIfh1QzjrhxglWm5VYll7ubt4I7l5YQyCdqiBe+DR0=;
-        b=SswFgHGrt2ESvGsYUcFC+82Qd2d+z940yCz9Q2DgyCMDRibxESK5BMfyw4BI2b4JjK
-         gvmAolYDyHerkN0fe0Qw6gxOxdAtQvbctmygjgScCEFiVf5ts/H0eKdh5bpHLErKpAhX
-         aYMVLoENMWfscGN5QiHnCWqGw6uomf1svZwYT8t0mmtxglHAW0T6rjuVRj/Vv8Z/gNBI
-         NPHJLYmDbS9GuIjAkRN9OabsfqXCVl8JvywDS82zJR5x518GI6e0B9GuhVwNfRteIMPj
-         afL1CGVR0Cm3AF7bolmsyeZ2T1OYozMKqqhFMPuAoTD5UYDE1glGIds9T/QCEqddsS2f
-         rP3w==
+        d=gmail.com; s=20260707; t=1794682535; x=1795287335; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=XM8UIT3LJaIzl9eVV5TThaExWE4kdKI+squ0H3z52eo=;
+        b=ODNdgWGriETTtqoPcve0XDE/JSawZ2/Y758g3kZ4PT5bYBWxp+vFHfV2auYnl1vVdq
+         r3g+cb1orFAN3c7Md5sZ4Jp91dJY/WCYKAX4RHoC5ORp/q0J2sx+8Ad0m812bR+Kb75U
+         vmK9PaYCFr0SRtAx6DglFGy5oAGkbP6ilhk2gzLEm64zxzDeXsZ8BHp2qxYXnwM8/RDB
+         sEbS1jVQzEnhltMrErzwJ+yzLsUX4XbPPskF6o7IRDjLDV/dRWObI/Ujloj5JdHJXnes
+         eQ1drRN49RtHJ7TXxcHnTfs/jXKZ7yowlcS/hZHBIYqr6QHgS7yM7gTwwB6AJKMkTuS1
+         takA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794580829; x=1795185629;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=KXIfh1QzjrhxglWm5VYll7ubt4I7l5YQyCdqiBe+DR0=;
-        b=wdzRwWI93dPfRJeBaPDw+5sRkjRc5MLOnSMdI/0nKiaBwHwJ+vSI8ClzwIe1Jlo1Zi
-         62ZDSkaTCuL33PEofAG45JpHs+4Ua6Xwc+xMzExT5k9xG0kKa7yZ0Ks39JDlaRvjLTuG
-         pxnXUZpZvMlYWd4okWlT1V8mQLdWjyAbsEUxUGoPCTilUMaUj/mInfxAOQNoLGNkTzX5
-         DN8ug8rlgXD5POi/3pBcw8Ud7tqTCBEk50A47zCaXAVoaHLzT7SeJQ+ZriicokXCGgj6
-         KP6KrWigapYkUUFfR8ZT9mEb+aRNLi6HiflrW7UpL3An/RZ+MXEbdj2I3x0DutQu51sJ
-         Wdqg==
-X-Gm-Message-State: APuU4Z/hP3icGJ7YXuPrXqEXhRWZ7xA1VX+nenRXAwLpa96qIbGjenJM
-	bDO7YoKPOdyfwH+gp+a2ibmJNNpMVN9TrBaR7BN9cEMu6EsDl3vBFZMEDlKYkchb
-X-Gm-Gg: AYBFou0fSBGTIWqKXmm2IK3D74k5tbQ9MFxttkA+IYdI2U6XVm/kkWfCXpenl1z/9it
-	OWBT4l/EoyB0jA04JotpxCnO6tK6SKyRWePgeog8HVyoDur1rYUrfBgbaEM1mgHyX9sEw3LBZi/
-	LgylZcTLKuq71B0zV+nQqUsbNLDWy2O7JJqjzOFajmDxh4HKNJRHnZLVhpJrsMLmKQWQzUaYwAk
-	kHxuwBYKtHQPQfrOvTF+6rU/rUGF2UMjiYBwGg4eSIGjM/AlqXJXK0GMakgKpwhb9ROXXJTHMtS
-	ROY58TKrXflW6mVtbEdc5ThYNMD14/Cw7OawjD6vTsi8PNQ2XwaAbGAjBmvFkrLX1Hy3UcMyw/p
-	Tlf7rjKqlX6cq1g/9TzJwSTBXs2OBJTOSkHG04CiSWqtBU+9AyZqIrsGqeJ6OejzBdePttNwOjN
-	pK43hgHgagWMoodKmPoVDKegTApDNozpSmll0ekSWRDYPXx7Zn/nQwdYA9WMeQ2dXVEwnLaYFYC
-	tqXFGKTi9f7tN9S+V3zoYJR53XhlXMBHMVUtykIsjLfIc7rcyrDaRmTqzWXOyGuZ9vI2ndMX80N
-	6JP04xBXCs+8sgDh+rfjCMAiYQhEjutPcA==
-X-Received: by 2002:a05:6000:4b06:b0:48d:ff06:c626 with SMTP id ffacd0b85a97d-49c71f33588mr5808799f8f.35.1794580828681;
-        Fri, 13 Nov 2026 06:40:28 -0800 (PST)
-Return-Path: <michalwsieron@gmail.com>
-Received: from [127.0.1.1] ([193.28.84.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-49c5f1c193fsm5951028f8f.13.2026.11.13.06.40.27
+        d=1e100.net; s=20260707; t=1794682535; x=1795287335;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=XM8UIT3LJaIzl9eVV5TThaExWE4kdKI+squ0H3z52eo=;
+        b=aFBGfIbNRFnVojGM1auc3iTilkE3JkjvKKAZQLVyWP/g0CUMLKHM+ZK1aWjE8oxcNW
+         5TUFNJOW2OIfWmA1YHCZmw6YjWHlK8Cdu7ligQUDXGVQSoaFM5qNlsOvMO7aYpws2eWr
+         GStZos6tE0XewvMhJeZt7Fc+cFXf2tEqYmn5Gn0ovVj2UiXf/3GMc9vi+zRdETtGXKyQ
+         9cuUTUc1mQlLa3GtUXr1pHyf5qeVfWGOFrXBl0a3KDZb4yPHTuGEPLMPrLEqCV3ZnKCX
+         eR4jdH2DFyXaPXb5b4b62PZrPIiooksHVDypu8n7u8TKyxgO80yO+Svn4kBh8HuF/vMT
+         t8SQ==
+X-Gm-Message-State: APuU4Z/Lol9o431eaRJMRW7PV2uOWWbcP2aZktEyoBBkRpG7IQqPERod
+	Wnb4bSGLJrbKcycW4qHdaV5xXXaJfXYpc7hKPf3Cm9bar5DFDTm/cTlOYigzGggKQKo=
+X-Gm-Gg: AYBFou0PhLpAEPuvIDWFvPY+Jw8v+Q1/PSzY8LqWQ2lLVmhPDass/jioPkZQ/bumnDH
+	6+1uDneM50IyQpzfAPIIr6EFnJyhRNYthMGP4SaqQbAWkO5xUw8WLOAYYocTv7A//76XQCcqF5l
+	/IoONnxInjeB6yo4Yj5nArPtsqg23htG/CGwcEI09fvJPicF6RRAGwhZhh5bYepX/V2HJRKQStq
+	952FaAEYPBQwaOl4Dj6ie1ZofkZ+7Uz9ee1IUKcyfNSaPSlhSA10ysiaR3d+Hr2lls76QgPm/xi
+	+Y10uLslMshKROUtd1awAoxtgICkFoEByZEygBzstQPBlLYzBuLz/VVQ0mm9c97FOB3t4Kiylk8
+	xSdp96Yfyqnmysc+oIaYc2u/1T9LOzwedYtXzmrnBO2gkzfke0LITmBCpbAgEs7zHg+mUbagDzY
+	Bfo7Kbz7gUzbg/YLQ6FKo6+KwRR+ZA3XiKB8P16xj6mmV75Rt9cfiNAoPuseOIaX49TsINMt3jO
+	27BwERO98vTWAey1++znYqTMcMXmUyEAlOpUrmm0Jg++5V+GdUgNxGjj3Q657vs1yzmndnUieNi
+	BY0+F6yAeV5VMlGt8pcg/cxgtZLG/2lhpobek4Mp4RQXGTPXILuIv4wFhc9S064=
+X-Received: by 2002:a17:90b:3806:b0:3a8:f70f:2437 with SMTP id 98e67ed59e1d1-3b1b0b53ad8mr5514175a91.50.1794682534897;
+        Sat, 14 Nov 2026 10:55:34 -0800 (PST)
+Return-Path: <bbnpreetsingh@gmail.com>
+Received: from localhost.localdomain ([108.180.159.198])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b1b3f09b92sm4437116a91.4.2026.11.14.10.55.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2026 06:40:28 -0800 (PST)
-From: Michal Sieron <michalwsieron@gmail.com>
-X-Google-Original-From: Michal Sieron <michal.sieron@nokia.com>
-Date: Fri, 13 Nov 2026 15:40:24 +0100
-Subject: [PATCH] data: Return frozenset from vardepvalueexclude
- dependencies
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261113-msieron-snone-fix-v1-1-cb901b3a7396@nokia.com>
-X-B4-Tracking: v=1; b=H4sIAFch92oC/yXMUQrCQAyE4auUPBvYtFKoVxEfbDraFMzKRkUov
- burPn4D868UKIagQ7NSwcvCslfIriGdz34F21RNbWp7Een4FoaSncOzgy/2ZtFhD+3SqGmi+rs
- X1PnXPJ7+jue4QB/fEG3bB/TiK0J1AAAA
-X-Change-ID: 20261113-msieron-snone-fix-1c94ec30bc0d
+        Sat, 14 Nov 2026 10:55:34 -0800 (PST)
+From: Babanpreet Singh <bbnpreetsingh@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Cc: Michal Sieron <michal.sieron@nokia.com>
-X-Mailer: b4 0.15.2
+Cc: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
+	Babanpreet Singh <bbnpreetsingh@gmail.com>
+Subject: [PATCH] cooker: fix -w with a file name that has no directory
+Date: Sat, 14 Nov 2026 18:55:34 +0000
+Message-ID: <20261114185534.7-1-bbnpreetsingh@gmail.com>
+X-Mailer: git-send-email 2.43.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Fri, 13 Nov 2026 14:40:38 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20431
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Sat, 14 Nov 2026 18:55:42 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20432
+Content-Type: text/plain; charset="utf-8"
 
-19475627c363a52da49ec144422c87448ff2a6c5 missed this one return point
-when converting deps to a frozenset, which results in KeyError when
-using `-Snone`.
+"bitbake -w events.json" fails with:
 
-Signed-off-by: Michal Sieron <michal.sieron@nokia.com>
+  FileNotFoundError: [Errno 2] No such file or directory: ''
+
+There is no directory to create for a bare file name, so don't try.
+
+Fixes: ee174b231897 ("cooker: Add support for BB_DEFAULT_EVENTLOG")
+Signed-off-by: Babanpreet Singh <bbnpreetsingh@gmail.com>
 ---
- lib/bb/data.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index f81f44eac..f7bdc3272 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -308,7 +308,7 @@ def build_dependencies(key, keys, mod_funcs, shelldeps, varflagsexcl, ignored_va
-         if key[-1] == ']':
-             vf = key[:-1].split('[')
-             if vf[1] == "vardepvalueexclude":
--                return deps, ""
-+                return frozenset(deps), ""
-             value, parser = d.getVarFlag(vf[0], vf[1], False, retparser=True)
-             deps |= parser.references
-             deps = deps | (keys & parser.execs)
+Notes:
+    Found while looking at YOCTO #16492. Applies with or without Mathieu's
+    patch for that bug.
 
----
-base-commit: f22df7e0e00be1f3c406138b8b7269d47ea491fe
-change-id: 20261113-msieron-snone-fix-1c94ec30bc0d
+ lib/bb/cooker.py       |  5 +++--
+ lib/bb/tests/cooker.py | 18 ++++++++++++++++++
+ 2 files changed, 21 insertions(+), 2 deletions(-)
 
-Best regards,
---  
-Michal Sieron <michal.sieron@nokia.com>
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 8a422e506..f79cd5e6c 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -457,8 +457,9 @@ You can also remove the BB_HASHSERVE_UPSTREAM setting, but this may result in si
+         if not self.eventlog or self.eventlog[0] != eventlog:
+             # we log all events to a file if so directed
+             # register the log file writer as UI Handler
+-            if not os.path.exists(os.path.dirname(eventlog)):
+-                bb.utils.mkdirhier(os.path.dirname(eventlog))
++            dirname = os.path.dirname(eventlog)
++            if dirname and not os.path.exists(dirname):
++                bb.utils.mkdirhier(dirname)
+             writer = EventWriter(self, eventlog)
+             EventLogWriteHandler = namedtuple('EventLogWriteHandler', ['event'])
+             self.eventlog = (eventlog, bb.event.register_UIHhandler(EventLogWriteHandler(writer)), writer)
+diff --git a/lib/bb/tests/cooker.py b/lib/bb/tests/cooker.py
+index db4104d40..c6a0cac2a 100644
+--- a/lib/bb/tests/cooker.py
++++ b/lib/bb/tests/cooker.py
+@@ -409,3 +409,21 @@ addtask marker
+             with open(os.path.join(builddir, "marker.log")) as f:
+                 self.assertEqual(f.read(), "bbappend-applied",
+                                  "bitbake -b did not apply the recipe's bbappend")
++
++
++class EventLogTest(_BitbakeSubprocessTestCase):
++    """Tests for the event log ("bitbake -w")."""
++
++    _parsetests = os.path.realpath(os.path.join(os.path.dirname(__file__), "parse-tests"))
++
++    def test_write_log_bare_filename(self):
++        """bitbake -w must accept a file name without a directory."""
++        with self._build_dir(prefix="eventlogtest") as builddir:
++            env = os.environ.copy()
++            env["BBPATH"] = self._parsetests
++            env["BB_ENV_PASSTHROUGH_ADDITIONS"] = "TOPDIR"
++            env["TOPDIR"] = builddir
++
++            self._run_subprocess(["bitbake", "-w", "events.json", "-e"], env, builddir)
++
++            self.assertTrue(os.path.exists(os.path.join(builddir, "events.json")))
+-- 
+2.43.0
 
