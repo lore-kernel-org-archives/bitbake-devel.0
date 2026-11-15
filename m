@@ -1,115 +1,146 @@
 Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.5872.1794742430001758845
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.5886.1794742429398214231
  for <bitbake-devel@lists.openembedded.org>;
  Sun, 15 Nov 2026 03:33:50 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=lgtFkinF;
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=SUHKRXuE;
  spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: mathieu.dubois-briand@bootlin.com)
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 5D7ED1A1672
-	for <bitbake-devel@lists.openembedded.org>; Sun, 15 Nov 2026 11:33:48 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id B8FD01A1671
+	for <bitbake-devel@lists.openembedded.org>; Sun, 15 Nov 2026 11:33:47 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 2C36160238
-	for <bitbake-devel@lists.openembedded.org>; Sun, 15 Nov 2026 11:33:48 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7C06B11BC1864;
-	Sun, 15 Nov 2026 12:33:47 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 8FDDE60238
+	for <bitbake-devel@lists.openembedded.org>; Sun, 15 Nov 2026 11:33:47 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id EEEB911BC16DA;
+	Sun, 15 Nov 2026 12:33:46 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
 	t=1794742427; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=U/cujteS6aPTmq+pXpC8plHFWbmbQHOulknXQEPWVVE=;
-	b=lgtFkinFgQ2JXPtV3WZdDkVxTTTNpcK54BhFWXODIZBVcxDbFeFF5VCsz4L1Ncte1cqb6u
-	nQHiDCCTYK+f6DwQ8yHR7u98UkyTZ4PlK4AoLl7yj2NICBO5gB+hBUh/iEKt4kNBFofaSV
-	GeispuM5yaTvnkzmFd5rJXNqPs7B47oK9jBAPXiVVO9Ppp1GGgEchJXuZ/3vQdC7WDa9pC
-	BiTFKTUMqK7fF8871Js9Y2Dt8zswl1pH74X1LKl2b0Ry2uRJ6DkDKxE39aPhL/D2jsuZce
-	JNKqC7pWRjjQ5l01epc71QZjRgRGtsGgLLnKu+kllj8gCFODyB8wNOzjoSLUEQ==
+	bh=ENY4eFKchaKfcmmHu8t7XTkAL9c7O5uNW7L7GzUN2bs=;
+	b=SUHKRXuEetwlQeVq8PzkK3KGBVgfpUd30SZ2caJacgQ2PypT2+mQrL3QfkElBd7Jmv0TzR
+	0DZdeh6VkAMr8FkIBbZ4A9luCGUYPDJlwy2cyXyXFUCugW/ZI6GYdXG+HohZxS4EAq2tPo
+	t8fMvAMEaeiptsnLTr4napvG8tF9nhNEPMsqLE3VnzWXPUl4iwiNDypa0SgVNNPDC8uQpg
+	IwIFM7vVhzkZLl3JSSpIsy1eU64S6aPXr+S9ES1tEEcO1S0sCIRSFw6E87Sbn/3cW8D9zm
+	Xwc67hrC2E1N1LtQeW+QfU1BMfoVfXSVa8tX9Vr2ZuOZqSgkj+MyVBOJe2MSZw==
 From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Date: Sun, 15 Nov 2026 12:33:41 +0100
-Subject: [PATCH RFC v2 3/3] runqueue: Hand each covered task's log to a
- single setscene task
+Date: Sun, 15 Nov 2026 12:33:40 +0100
+Subject: [PATCH RFC v2 2/3] build: Attach a log catcher to tasks and save
+ their records
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261115-mathieu-debug-replay-v4-v2-3-ad7d3c5cc213@bootlin.com>
+Message-Id: <20261115-mathieu-debug-replay-v4-v2-2-ad7d3c5cc213@bootlin.com>
 References: <20261115-mathieu-debug-replay-v4-v2-0-ad7d3c5cc213@bootlin.com>
 In-Reply-To: <20261115-mathieu-debug-replay-v4-v2-0-ad7d3c5cc213@bootlin.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
  Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794742425; l=3174;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794742425; l=3700;
  i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=WRk2l9urlrfG6XYZN456L0iRLr8CIMScVRk8Z5BWgl8=;
- b=hvhW8GoV5ybgW6qpPILYb3QwQ/eZXc6/aS89nqnfir8azPc/NgL60ErYxYgsLjB46JnRIvn00
- eQGf6cxbwfBDdJIRGr9Rvim30Js0j8k9zRi+vqssrrA1EFkoWPDBbNw
+ bh=pbNU/iTGqEwU3TNXPoIlNy4RAteFe6ntSYdwNrcL34c=;
+ b=uevNgUZrFbVUz76R7bZDxYjg0IdYAz+mR2qpr9sgf298Y+wTAtfLePgevCHwrEdxcoq4hE5an
+ OsVBIYt2DQBBgXKuHt9TC+yLyIoyKE6gcpJem9Jt41o8rdMeK2sNoyc
 X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
  pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
 X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Sun, 15 Nov 2026 11:33:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20436
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20437
 
-When a setscene task starts, hand it the covered tasks of any recipe
-which were not yet handed to another setscene task, and pass their tids
-to the task through BB_SETSCENE_CLAIMED_TASKS. Several setscene tasks
-can cover the same task (e.g. do_populate_sysroot and do_package both
-cover do_compile), so this lets metadata replay the log of each covered
-task exactly once when restoring it from the sstate cache.
+Every task gets a LogCatcher which records its warnings and errors
+during execution. Right after the task body, and before the postfuncs,
+the records are written to ${TMPDIR}/logrecords/[mc:<mc>/][<virtual
+class>/]<recipe>/logrecords.<task>.json, so records from other recipes
+can be bundled too. The sstate packaging postfunc reads the current
+task's file to bundle the messages for replay when the task is later
+restored from the sstate cache.
+
+Writing the file before the postfuncs makes both the current task's own
+record and the files of already finished dependency tasks readable from
+the same place.
 
 AI-Generated: Uses opencode (DeepSeek V4 Flash)
 Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 ---
- bin/bitbake-worker |  1 +
- lib/bb/runqueue.py | 11 +++++++++++
- 2 files changed, 12 insertions(+)
+ lib/bb/build.py | 15 +++++++++++++++
+ lib/bb/utils.py |  9 +++++++++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/bin/bitbake-worker b/bin/bitbake-worker
-index 61484a5c2522..8e0ff1a4f2c4 100755
---- a/bin/bitbake-worker
-+++ b/bin/bitbake-worker
-@@ -266,6 +266,7 @@ def fork_off_task(cfg, data, databuilder, workerdata, extraconfigdata, runtask):
-                 the_data = databuilder.mcdata[mc]
-                 the_data.setVar("BB_WORKERCONTEXT", "1")
-                 the_data.setVar("BB_TASKDEPDATA", taskdepdata)
-+                the_data.setVar("BB_SETSCENE_CLAIMED_TASKS", " ".join(runtask.get('claimedtasks', [])))
-                 the_data.setVar('BB_CURRENTTASK', taskname.replace("do_", ""))
-                 if cfg.limited_deps:
-                     the_data.setVar("BB_LIMITEDDEPS", "1")
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index ef95eb46bf95..84ad41da12eb 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1939,6 +1939,8 @@ class RunQueueExecute:
-         self.scenequeue_notcovered = set()
-         self.tasks_notcovered = set()
-         self.scenequeue_notneeded = set()
-+        # Covered tasks already handed to a setscene task for log replay
-+        self.sq_replay_assigned = set()
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index b38936fc360c..72f1c7bc72d2 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -21,6 +21,7 @@ import time
+ import re
+ import stat
+ import datetime
++import json
+ import bb
+ import bb.msg
+ import bb.process
+@@ -668,6 +669,13 @@ def _exec_task(fn, task, d, quieterr):
+         except OSError:
+            pass
  
-         self.setscene_tids_generator = None
- 
-@@ -2297,6 +2299,14 @@ class RunQueueExecute:
-             startevent = sceneQueueTaskStarted(task, self.stats, self.rq)
-             bb.event.fire(startevent, self.cfgData)
- 
-+            # Each covered task of any recipe is claimed by exactly one setscene
-+            # task across the build, so its log is replayed only once. Tasks
-+            # explicitly requested as targets run natively, so don't replay them.
-+            claimedtasks = (self.sqdata.sq_covered_tasks[task]
-+                            - self.sq_replay_assigned
-+                            - self.sqdata.cantskip)
-+            self.sq_replay_assigned |= claimedtasks
++    # Task log records, for sstate log replay. Written right after the task
++    # body, before the postfuncs, so the sstate packaging postfunc can read them.
++    # Stored under TMPDIR, keyed by multiconfig, virtual class and recipe, so
++    # any sstate task can reach the records of covered tasks from other recipes.
++    logrecords = bb.utils.logrecords_path(localdata, fn, task)
++    bb.utils.remove(logrecords)
 +
-             taskdep = self.rqdata.dataCaches[mc].task_deps[taskfn]
-             realfn = bb.cache.virtualfn2realfn(taskfn)[0]
-             runtask = {
-@@ -2305,6 +2315,7 @@ class RunQueueExecute:
-                 'taskname' : taskname,
-                 'taskhash' : self.rqdata.get_task_hash(task),
-                 'unihash' : self.rqdata.get_task_unihash(task),
-+                'claimedtasks' : sorted(claimedtasks),
-                 'quieterrors' : True,
-                 'appends' : self.cooker.collections[mc].get_file_appends(taskfn),
-                 'layername' : self.cooker.collections[mc].calc_bbfile_priority(realfn)[2],
+     prefuncs = localdata.getVarFlag(task, 'prefuncs', expand=True)
+     postfuncs = localdata.getVarFlag(task, 'postfuncs', expand=True)
+ 
+@@ -710,6 +718,9 @@ def _exec_task(fn, task, d, quieterr):
+     errchk = ErrorCheckHandler()
+     bblogger.addHandler(errchk)
+ 
++    tasklogcatcher = bb.utils.LogCatcher()
++    bblogger.addHandler(tasklogcatcher)
++
+     localdata.setVar('BB_LOGFILE', logfn)
+     localdata.setVar('BB_RUNTASK', task)
+     localdata.setVar('BB_TASK_LOGGER', bblogger)
+@@ -723,6 +734,9 @@ def _exec_task(fn, task, d, quieterr):
+             for func in (prefuncs or '').split():
+                 exec_func(func, localdata)
+             exec_func(task, localdata)
++            bb.utils.mkdirhier(os.path.dirname(logrecords))
++            with open(logrecords, 'w') as f:
++                json.dump(tasklogcatcher.records, f)
+             for func in (postfuncs or '').split():
+                 exec_func(func, localdata)
+         finally:
+@@ -732,6 +746,7 @@ def _exec_task(fn, task, d, quieterr):
+             sys.stderr.flush()
+ 
+             bblogger.removeHandler(handler)
++            bblogger.removeHandler(tasklogcatcher)
+ 
+             # Restore the backup fds
+             os.dup2(osi[0], osi[1])
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 4a4e911b0f8a..3728e8b6a02b 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -2150,6 +2150,15 @@ def load_plugins(logger, plugins, pluginpath):
+                 plugins.append(plugin)
+ 
+ 
++def logrecords_path(d, fn, task):
++    from bb.cache import virtualfn2realfn
++
++    realfn, cls, mc = virtualfn2realfn(fn)
++    mc = "mc:" + mc if mc else ""
++    recipe = os.path.splitext(os.path.basename(realfn))[0]
++    return os.path.join(d.getVar("TMPDIR"), "logrecords", mc, cls, recipe,
++                        "logrecords.%s.json" % task)
++
+ class LogCatcher(logging.Handler):
+     """Logging handler for collecting logged messages so you can check them later"""
+     def __init__(self):
 
 -- 
 2.47.3
