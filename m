@@ -1,83 +1,149 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.2400.1794682542696592804
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.5871.1794742428939566346
  for <bitbake-devel@lists.openembedded.org>;
- Sat, 14 Nov 2026 10:55:42 -0800
+ Sun, 15 Nov 2026 03:33:50 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20260707 header.b=WS+/2vL5;
- spf=pass (domain: gmail.com, ip: 209.85.216.47, mailfrom: bbnpreetsingh@gmail.com)
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3b09c07b3d2so1287189a91.3
-        for <bitbake-devel@lists.openembedded.org>; Sat, 14 Nov 2026 10:55:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794682542; x=1795287342; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=55xBxy1FmOrXNvaXHIAbEjfCE8xfzW72O9KhmQR/n24=;
-        b=WS+/2vL5dimG0bq2pp4qogTX8Y0JRQsgdvKSmlvmTfnifJogvzvVlNUmYTjXuIaHm8
-         9HxBXwOjrYDeLOaOIc+oUY4r2ZnHIApAtqjSACzn9bfJF/NyOeMuWuFJldVGKzlH2jj9
-         vz6GBaEP/Se7vIUTLmKsI+vbsCOLZ2k6etJSc299iBJUMjG9+3JbnOy1AL1x7h8x2Ew/
-         JEOrpDzfynpzJyFLSwIwkMqmH+iu9CzyX2qx+dpTrOncDzEqzKdATjjbteI3on/Hztxt
-         Q26iHiycWHKF/pnVphjSkCESbNpu9DM3OnJ6j+exZ+zyTJFxE9PaQCc6nSHUajeg0eUF
-         QLyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794682542; x=1795287342;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=55xBxy1FmOrXNvaXHIAbEjfCE8xfzW72O9KhmQR/n24=;
-        b=xWCUPgoCDKf0mxpBGZdsGGzrSp8vfeD0OT83lx0/vMu3ej5I/phFO6a2cGL0f8tpIp
-         5L2O/Zkb/hyBURS+t9KvZes9t4W9fzhRDzwJqywqgu81j36qHCbTNU3Wq6DlJML+vVNe
-         6aOr2EPr/IOUmN0RRjLzoqoJBDY+mRNqpO2iESOUpRvLSjZETsuw0OvmvrHcZCIax0vR
-         OPqhTKV6RflRBC5FeQYJ2x7ZdMyO1nHJBnMzUI9JLojhx4nf2h8Z5YHUiS6Qetq8kqFT
-         ojOZxVnPkoQoCLfBODdJAKJe7YxlwR+vhjPa+L1gOzjJlTsgJ1QR7kybZVrF9vGfTflu
-         wsWA==
-X-Gm-Message-State: APuU4Z86M/5Icbqu/9XP3uXo8VwH/DaPrloNh+5hZ4NSKDRKhKaLZHcn
-	Qr5fs8mjhgBJEhskFtKWT/lnybwJRD04xPLM4en109MaqxhmecXmOnzW
-X-Gm-Gg: AYBFou3r4tfuP8BJ/h8ZfwK6dslYsVTy4pDqAitJJncPTuBM1Ml5AyOcTQBJ0SVwIA8
-	wHqVUbYkMyOGEDpYGTSFWcIqE3OIjp33BsUYSRJ581v7cqbt9kVYUAY2BMGAH2fmzUqnjdNkrQI
-	3Gyxn3wb43N2QSO8N6TEMMWNMJYZoKauMWBdZ+rS2WtbOc6bPNpTeaG162ok6bPtrFr1XMY6RXC
-	GAQh1abAOwiuASekAim9hYb3JqS8MD+PHM+m6VQcjmfSTTBe7Mqzj5nekLBGqGxG7Al+WmIqLFN
-	aKSy55Dqf7P0EBvBBrE4cvwb8vYy7oMbDtZU1lnYAEb/gLCITDheo5znnfGMWooPfBRg6/6kU+K
-	TU2LVWtE8GAqRbItwxI0CVZVBKjFtYmIWtkiL/xdFgqVlqobWPVc4cX7zay9a3RDOnnFnYLfq1C
-	qF5JxjoRWsMifos+YkAJGV9RMKvQrrXsgGtx5PQrYu2qnEAAhqwmUezXP8yfR8MoUfa6W4Gpjm6
-	Lnm+gGcJR0OV+XO2EYyE4lcwL5MMooekKy2dGPLeS4Zs36UZV97c/SA9WjkvpxRG+R/EwytZTNE
-	0OZzjATxFOABnao7Iz1UW11Zebj/lE/2g6Ruv6SV0INgEvpHKFow0oAPsmTrHaQ=
-X-Received: by 2002:a17:90a:dfc6:b0:39e:6a7e:ee18 with SMTP id 98e67ed59e1d1-3b1b0b65a3cmr5760758a91.36.1794682542098;
-        Sat, 14 Nov 2026 10:55:42 -0800 (PST)
-Return-Path: <bbnpreetsingh@gmail.com>
-Received: from localhost.localdomain ([108.180.159.198])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b1aec3af2dsm9577581a91.9.2026.11.14.10.55.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Nov 2026 10:55:41 -0800 (PST)
-From: Babanpreet Singh <bbnpreetsingh@gmail.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: bitbake-devel@lists.openembedded.org,
-	Babanpreet Singh <bbnpreetsingh@gmail.com>
-Subject: Re: [PATCH] cooker: create missing eventlog directory
-Date: Sat, 14 Nov 2026 18:55:40 +0000
-Message-ID: <20261114185540.7-1-bbnpreetsingh@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261113-mathieu-b16492-write-variables-v1-1-9f1f86aebc8b@bootlin.com>
-References: <20261113-mathieu-b16492-write-variables-v1-1-9f1f86aebc8b@bootlin.com>
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=AeEoDy4z;
+ spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: mathieu.dubois-briand@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 424F11A1670
+	for <bitbake-devel@lists.openembedded.org>; Sun, 15 Nov 2026 11:33:47 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 18CA660238
+	for <bitbake-devel@lists.openembedded.org>; Sun, 15 Nov 2026 11:33:47 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 376DD11BC0C78;
+	Sun, 15 Nov 2026 12:33:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1794742426; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=BPI1boXRsi+aaNwyctXWaDwj3Y5vNjyk2HPL4DgItFE=;
+	b=AeEoDy4zgGpdG6MIn3MSiQQS+chZm7KiDD54lZC6iwFsX4S5cH+g7c81DwQDfYmhMDlLK3
+	/DdvPqvI0RU7/jDf2ymq4RIVOoTLU5B+qpUD6nAooULMrXocaMMaDVcOrJb+tCZp8lidDy
+	3/APqtHtHn2cA5Ht6SsgIkzSj0OW6b7gcQFNvhsK+S9jH4SVT2YEh1zmGQZROw92GEHgVl
+	sHIGq3sC6Dc3J4FNGG3MeO8BnWtk0y6xMk3ZCoGFfULUeU/Rdd8Z70rBuGP7hEqVHYtnM2
+	0e2GsLyCGObIZ+6SoDfsUBUuO+IqxHkzdyO+uAhzljbh/niML4sCXb4jpK8Ehg==
+From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Date: Sun, 15 Nov 2026 12:33:39 +0100
+Subject: [PATCH RFC v2 1/3] utils: Extend LogCatcher to record raw messages
+ and levels
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Sat, 14 Nov 2026 18:55:52 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20433
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261115-mathieu-debug-replay-v4-v2-1-ad7d3c5cc213@bootlin.com>
+References: <20261115-mathieu-debug-replay-v4-v2-0-ad7d3c5cc213@bootlin.com>
+In-Reply-To: <20261115-mathieu-debug-replay-v4-v2-0-ad7d3c5cc213@bootlin.com>
+To: bitbake-devel@lists.openembedded.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794742425; l=3537;
+ i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
+ bh=zn4aA6JzVFz39faIO4Fd9j6OZcfvz5Am6gIM0CJdChI=;
+ b=/mBYp1gVBwCqg0CvGunSUZrU4Krez+mImOhBjBjGinV7TmDbFZFqBNNmHuCYeqDQkXAM6vcm+
+ kzyEAgEP3ZKDlir6wjc5zSrm3iAAas5P3TSAYuFtC6k0Q6mXC6ZhmWr
+X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
+ pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
+X-Last-TLS-Session-Version: TLSv1.3
+List-Id: <bitbake-devel.lists.openembedded.org>
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Sun, 15 Nov 2026 11:33:50 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20434
 
-On Fri, 13 Nov 2026 at 15:34 +0100, Mathieu Dubois-Briand wrote:
-> If the eventlog folder is removed while bitbake is still resident in
-> memory, it will not be re-created on the next build and result in an
-> exception while trying to write event logs. Catch this exception and
-> create the folder as expected.
->
-> [YOCTO #16492]
->
-> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+LogCatcher stores only formatted messages, which strips the severity. Also
+record each log record's raw message and level, so callers can later
+replay them with their original severity. Lower the handler minimum level
+to WARNONCE so warnonce and erroronce messages are captured too.
 
-The steps from the bug pass here with this applied.
+Add unit tests covering the captured levels and raw messages, the
+formatted output and the level filtering.
 
-Tested-by: Babanpreet Singh <bbnpreetsingh@gmail.com>
+AI-Generated: Uses opencode (DeepSeek V4 Flash)
+Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+---
+ lib/bb/tests/utils.py | 42 ++++++++++++++++++++++++++++++++++++++++++
+ lib/bb/utils.py       |  4 +++-
+ 2 files changed, 45 insertions(+), 1 deletion(-)
 
-Baban
+diff --git a/lib/bb/tests/utils.py b/lib/bb/tests/utils.py
+index 52b7bf85bf47..a34f6d698225 100644
+--- a/lib/bb/tests/utils.py
++++ b/lib/bb/tests/utils.py
+@@ -8,9 +8,11 @@
+ 
+ import unittest
+ import bb
++import bb.build
+ import os
+ import tempfile
+ import re
++import logging
+ 
+ class VerCmpString(unittest.TestCase):
+ 
+@@ -693,6 +695,46 @@ class EnvironmentTests(unittest.TestCase):
+         self.assertEqual(os.environ["A"], "this is A")
+         self.assertNotIn("B", os.environ)
+ 
++class LogCatcherTests(unittest.TestCase):
++    def setUp(self):
++        self.logger = logging.getLogger("BitBake")
++        self.oldlevel = self.logger.level
++        self.logger.setLevel(logging.DEBUG)
++        self.catcher = bb.utils.LogCatcher()
++        self.logger.addHandler(self.catcher)
++
++    def tearDown(self):
++        self.logger.removeHandler(self.catcher)
++        self.logger.setLevel(self.oldlevel)
++
++    def test_records_capture_level_and_raw_message(self):
++        bb.warn("a warning")
++        bb.warnonce("a warn once")
++        bb.error("an error")
++        bb.erroronce("an error once")
++
++        self.assertEqual(self.catcher.records, [
++            (logging.WARNING, "a warning"),
++            (bb.msg.BBLogFormatter.WARNONCE, "a warn once"),
++            (logging.ERROR, "an error"),
++            (bb.msg.BBLogFormatter.ERRORONCE, "an error once"),
++        ])
++
++    def test_messages_are_formatted(self):
++        bb.warn("a warning")
++        self.assertEqual(self.catcher.messages, ["WARNING: a warning"])
++        self.assertTrue(self.catcher.contains("WARNING: a warning"))
++
++    def test_below_minimum_level_is_ignored(self):
++        bb.debug(1, "a debug")
++        bb.plain("a plain")
++        bb.note("a note")
++        bb.verbnote("a verb note")
++
++        self.assertEqual(self.catcher.records, [])
++        self.assertEqual(self.catcher.messages, [])
++
++
+ class FilemodeTests(unittest.TestCase):
+     def test_filemode_convert(self):
+         self.assertEqual(0o775, bb.utils.to_filemode("0o775"))
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index ec6eb2181aa8..4a4e911b0f8a 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -2154,9 +2154,11 @@ class LogCatcher(logging.Handler):
+     """Logging handler for collecting logged messages so you can check them later"""
+     def __init__(self):
+         self.messages = []
+-        logging.Handler.__init__(self, logging.WARNING)
++        self.records = []
++        logging.Handler.__init__(self, bb.msg.BBLogFormatter.WARNONCE)
+     def emit(self, record):
+         self.messages.append(bb.build.logformatter.format(record))
++        self.records.append((record.levelno, record.getMessage()))
+     def contains(self, message):
+         return (message in self.messages)
+ 
+
+-- 
+2.47.3
+
