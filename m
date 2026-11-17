@@ -1,238 +1,160 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.15031.1794913101023309254
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.15767.1794915954037210414
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 17 Nov 2026 02:58:21 -0800
+ Tue, 17 Nov 2026 03:45:54 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@snap.com header.s=google header.b=RLpFm1vr;
- spf=pass (domain: snapchat.com, ip: 209.85.221.41, mailfrom: ecordonnier@snapchat.com)
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-4a33359c1b3so608223f8f.3
-        for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 02:58:20 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=gmXfVE9r;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.47, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4bb61185057so20782185e9.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 03:45:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=snap.com; s=google; t=1794913099; x=1795517899; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=o90wfCEH2o8W42FKQ9O2tOtcUWe75P+6Pxri3+7UfME=;
-        b=RLpFm1vrEDmjzv6ZTTxNcloD6vsyOA0gUpNTNqYTFHfVL9Ga28hqaNXTUE5LySDNys
-         LhIYFOPl7hs/gaH5J934nsPBXwzBOdF3ZYaWXvUIMjnancrCkXrrU7OdlcbmiGQPERV4
-         wwz3lRwAbSHPRsfQcwx268DIs007vpYIGhj00=
+        d=linuxfoundation.org; s=google; t=1794915952; x=1795520752; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=4YTeCKI1vFObnOYKhg6m5upGXBqhtQnTUK3Z65y/ckA=;
+        b=gmXfVE9rDjkYDXV0ywLNCZOWkUnfArYi/0jum4U+I/aHAtozYLyU+ckgpP+q3NkgGX
+         0H0rQIyCnZg81+i7TyjqQES/+Pvm9FFQRtsYIKbvHge4R74abbb+Gs1AMsLre0z/xTw5
+         RA42mMR0ZOdogIDZPzWMK6ohH970k35K/a7Go=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794913099; x=1795517899;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=o90wfCEH2o8W42FKQ9O2tOtcUWe75P+6Pxri3+7UfME=;
-        b=M6IEg2Otw+FmlepCoj561dv+IwiwAiVgnts81cNEeZuJv4caiMd5+Is2u2TFdOVq+R
-         QO+EpsjKC7EX9WeteBRUJj4vm6LDE0xnDnzTvGLlce2GY041EYH90Pd7xLA312yDCVzX
-         8DqUXZjctTcQfKAbw3LYmTEdtdHaRTojRKJyyvRXbh/BO5060tur9+fTWXcCAkzC1kst
-         BYKZXBf1Q7pWAtY/q07ETXEUn0A2WPmNQJmxwnoJ92fLp1ukI0Ok4mCxol7iPlJK0ZOr
-         wQSX1yCRppLbPNY69+amjhdqlNbZATGYAGfcmnIrfa+wky1r+KxsZBLiiKhsVOgoKMIg
-         VOtw==
-X-Gm-Message-State: APuU4Z8kLqmHJzkd1kpsNoISTsiK+xEpQ4IhSacbkbB5BP36OhfeRIL7
-	M04XcXNew7amPLzTFxblp8FAzAJPykG04IqGIk6F4HhP29PxrlCeJOA+YSIjlXA52Jec9hL7kX/
-	CU2ZIsUg=
-X-Gm-Gg: AZFdTZcwogoKlEm6QpxPC8VYhwKV/iwq5yGQB4Mzz+gBxRD3eKuL+sdgC2tHjeywLTm
-	FJ03u/2yzOFU41WtmaI69hQhc4TwZz3+Th9K4UppapUtdkSFYFtPPIchoG17Kn+KSVfco+X5Tan
-	TnzlRX+IuYuh2oz2BguQlrTDksZWYbV+nD1WAIixgYvK2SQxciMAYdZo/5+xfb1iV7Tr+XiIVbs
-	Y3nUtiRLG06b65NGSxpnSKesbzGu3/c+8xqVPxr0uc/KDFxktXMDFlWC8qdMWxeaNW/RExlAvKl
-	/SFe5E50vyZNTQfCrpjgcuTkEKWR94TfEm4GV4EppSUupKkAFqVZrxSKNQ0gcvfL00jFvy47TIs
-	ExUFs7onvGmXEkMnXysSiuEbHsI9dD2rylf8WigTdek74YXXTwtk5Le7j7f7eBHZHG3MaMzwyWI
-	KlzIgoE/cSDtUbWCQUYh5R5LCdZbNbOPu2g8LUFioihz9XJyIA0mlDN97T7ZQN75QLes82r13ZU
-	suUaZTWm1im9wIjyzMCnjhQJYdMquW1+3eDOLMzDVz0Zjoaz+AUlY4l9wOsnfgbWGC5QW1Whafo
-	43JP89hEZ44Ftymw8ihZxiSB4LheENXTxJ53x9HFcWGsNyoP4QnzjAlAbVKN2RCnZIHOwiPv/u5
-	KM/JPMjGWErQs2VcdlPEupTQL3R6YQ65J
-X-Received: by 2002:a05:6000:26ce:b0:48b:e50:7159 with SMTP id ffacd0b85a97d-49c71b5bfbemr27633833f8f.30.1794913098907;
-        Tue, 17 Nov 2026 02:58:18 -0800 (PST)
-Return-Path: <ecordonnier@snapchat.com>
-Received: from lj8k2dq3.sc-core.net ([85.237.126.22])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-49c888b90d4sm27519460f8f.9.2026.11.17.02.58.18
+        d=1e100.net; s=20260707; t=1794915952; x=1795520752;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=4YTeCKI1vFObnOYKhg6m5upGXBqhtQnTUK3Z65y/ckA=;
+        b=FEruD2XIRdkcbkGs+t52T1qVUiumVOaHog1fDqW3JUQx8rkb9Qr8O8qiFnhiCx+0AA
+         zn5U4q0SgRShteWbt2H6wd8zZ/kU1p+kuGV4nEhkYpBCQTzGm6c7luYaac9EALF6cafx
+         48X0+uYnJDiW/qpULfKqEk+MG3RXcWCe0Up/OKiY125+gGjmSXoX4FDWckeaSWYTicD7
+         IcKVU3TI3nxOtOAvqno/HMto628wXahSQRySN9Gtl/oDe2DrgEIrTDVdI24hG3zcDS5K
+         0+/9anQ3kp8uLJDfXjfc9BQgjZ2h0o7FL3gxZCixsrUNt9hNrjkPozyYgEQvX2m3PlO6
+         eBnA==
+X-Gm-Message-State: APuU4Z/ml5Y5KtoPzU8VDGK6F1yzvK/AHtAzQIqWisp/huU86253FK7m
+	ap1PemQPgZ8BVIiZzN+OYRVoopaAEXYY6ZguJQYUjbGz7EQk3iq7EQExpVRgA6wPnm8mHrZyVx+
+	fu3VxGVk=
+X-Gm-Gg: AYBFou2X6IuifOEY30/jLjV9EzTm3TLX2KOLC3lYZkGZ3u6eE01IIdVnSm82qlAhPr/
+	3CyaN5pugyQhK+xNbMn3I479Md2LBKKdMgPQJzJHHEcsSRDrB2xGX0GuDBA7U/E9Bm5WVzV4QPR
+	7U9FKarLDPfdkvduAgKlUfen0NhrTWTmDW5zeCpm7HEF5tvVpJfCOwtOv90FfrkqVROiE5iWgCA
+	iXRdu+VaFZApV5j6751cnvcXK1W91D4C5SI257zk6niOfsK9NWvL+VZT/Uf4Qp4hrM4GsSFZD0p
+	8haqGlXl5/Y2DNrjiKdpt4BURxH1gfLMIakKNZ0j812zeAlDaIW7stm5D5O9QmLk13Jvme7DG16
+	P08ApHnMcY0k/gS08ocRQUJDobbyHFW+uZ0BcdPUlwHvqnkrh5lvgxAHSGWbRfN5fGTfkpmyjUr
+	WfYLiY6HyqNlqnsZWebtQH3SyE5pFiAM0r8C/8gG4fOw62m4ocqcZcNja+pH1nNST2Jqm6slNq0
+	m8lZFZxlXc9Pr0Wl9k6VFFVr9qmiyw+TYtfrC1xLeex3BVyEvKxFfmSYiUSxZxEM/zKGLzRKOhH
+	F0Bp2wF4X1RkJqsmIGcFzwJQMdlmepA7Wyue8bUDyWdZ6tQMKBFBtb8xvljkl+B9pecvoHVHjdx
+	epYo=
+X-Received: by 2002:a05:600c:6309:b0:4a2:5267:3cd4 with SMTP id 5b1f17b1804b1-4bb559f3bb9mr277695395e9.3.1794915951757;
+        Tue, 17 Nov 2026 03:45:51 -0800 (PST)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:5769:a004:a5af:24bf])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb7ad9426asm23650525e9.4.2026.11.17.03.45.50
+        for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Nov 2026 02:58:18 -0800 (PST)
-From: ecordonnier@snap.com
+        Tue, 17 Nov 2026 03:45:51 -0800 (PST)
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Cc: Etienne Cordonnier <ecordonnier@snap.com>
-Subject: [PATCH] fetch/git: return the shallow tarball as localpath when there is no clone
-Date: Tue, 17 Nov 2026 11:58:02 +0100
-Message-ID: <20261117105802.3828411-1-ecordonnier@snap.com>
-X-Mailer: git-send-email 2.43.0
+Subject: [PATCH 1/2] runqueue: Improve deferred task sorting
+Date: Tue, 17 Nov 2026 11:45:48 +0000
+Message-ID: <20261117114550.2306278-1-richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.55.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 10:58:27 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20444
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 11:45:59 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20445
 Content-Type: text/plain; charset="utf-8"
 
-From: Etienne Cordonnier <ecordonnier@snap.com>
+Whilst looking for other problems, I noticed the sorting used for deferring
+tasks isn't always consistent. It needs to be so that same multiconfig is
+always preferred over the others, which gives a much lower chance of
+deadlocking.
 
-Usually localpath() exists once do_fetch has completed, but not for a
-shallow fetch which uses the shallow tarball without creating the clone:
-either the fast initial shallow clone, or a restore from a mirror.
-download() sets ud.localpath to the tarball, but a new Fetch object, as in
-the archiver, gets the non-existent clone from localpath() again.
+Add a helper sorting function and use it in all the locations we need this
+sorting.
 
-Return the shallow tarball from localpath() when the clone does not exist.
-If the clone exists, even if it is outdated, localpath() still returns it.
+That means we can remove the weird looking looping code from the locations
+which did get this right.
 
-The names of the .done and .lock files are derived from localpath, so they
-would then depend on whether the clone exists, and fetchers of the same url
-would not exclude each other. Add FetchMethod.stamppath(), which defaults to
-localpath, and let git always use the clone.
-
-Do not follow the symlink of the shallow tarball in clean(), which would
-remove the tarball in the mirror.
-
-AI-Generated: Claude Sonnet 5.5
-Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/fetch/__init__.py | 17 ++++++++---
- lib/bb/fetch/git.py      | 14 +++++++--
- lib/bb/tests/fetch.py    | 66 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 91 insertions(+), 6 deletions(-)
+ lib/bb/runqueue.py | 42 +++++++++++++++++++++++-------------------
+ 1 file changed, 23 insertions(+), 19 deletions(-)
 
-diff --git a/lib/bb/fetch/__init__.py b/lib/bb/fetch/__init__.py
-index ce2bd62ad..88c244ba4 100644
---- a/lib/bb/fetch/__init__.py
-+++ b/lib/bb/fetch/__init__.py
-@@ -1387,10 +1387,11 @@ class FetchData(object):
-             return
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 63615ac6c92..4f80f1fde21 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -85,6 +85,13 @@ def build_tid(mc, fn, taskname):
+         return "mc:" + mc + ":" + fn + ":" + taskname
+     return fn + ":" + taskname
  
-         # Note: .done and .lock files should always be in DL_DIR whereas localpath may not be.
--        if self.localpath and self.localpath.startswith(dldir):
--            basepath = self.localpath
--        elif self.localpath:
--            basepath = dldir + os.sep + os.path.basename(self.localpath)
-+        stamppath = self.method.stamppath(self, d) if self.localpath else None
-+        if stamppath and stamppath.startswith(dldir):
-+            basepath = stamppath
-+        elif stamppath:
-+            basepath = dldir + os.sep + os.path.basename(stamppath)
-         elif self.basepath or self.basename:
-             basepath = dldir + os.sep + (self.basepath or self.basename)
-         else:
-@@ -1431,6 +1432,14 @@ class FetchMethod(object):
-         """
-         return 0
++def sort_tids_by_mc(tids, multiconfigs):
++    """
++    Return tids grouped by multiconfig, with the groups in sorted mc order
++    and the tids sorted within each group.
++    """
++    return [tid for _, tid in sorted(((mc_from_tid(tid), tid) for tid in tids))]
++
+ # Index used to pair up potentially matching multiconfig tasks
+ # We match on PN, taskname and hash being equal
+ def pending_hash_index(tid, rqdata):
+@@ -2109,7 +2116,7 @@ class RunQueueExecute:
+                 logger.debug("Marking task %s as buildable", revdep)
  
-+    def stamppath(self, urldata, d):
-+        """
-+        Return the path which the names of the .done and .lock files are based
-+        on. This must not change between calls, as the lock is only effective
-+        if every fetcher of the same url uses the same lock file.
-+        """
-+        return urldata.localpath
-+
-     def localpath(self, urldata, d):
-         """
-         Return the local filename of a given url assuming a successful fetch.
-diff --git a/lib/bb/fetch/git.py b/lib/bb/fetch/git.py
-index 75ce1eda0..4a12c4bfa 100644
---- a/lib/bb/fetch/git.py
-+++ b/lib/bb/fetch/git.py
-@@ -308,7 +308,16 @@ class Git(FetchMethod):
-             ud.fullshallow = os.path.join(dl_dir, ud.shallowtarball)
-             ud.mirrortarballs.insert(0, ud.shallowtarball)
+         found = None
+-        for t in sorted(self.sq_deferred.copy()):
++        for t in sort_tids_by_mc(self.sq_deferred.copy(), self.sqdata.multiconfigs):
+             if self.sq_deferred[t] == task:
+                 # Allow the next deferred task to run. Any other deferred tasks should be deferred after that task.
+                 # We shouldn't allow all to run at once as it is prone to races.
+@@ -2738,14 +2745,11 @@ class RunQueueExecute:
  
-+    def stamppath(self, ud, d):
-+        # localpath() depends on whether the clone exists, the stamp and lock
-+        # file names must not.
-+        return ud.clonedir
-+
-     def localpath(self, ud, d):
-+        # When do_fetch used the shallow tarball without creating the clone,
-+        # the tarball is the result of the fetch.
-+        if ud.shallow and not os.path.exists(ud.clonedir) and os.path.exists(ud.fullshallow):
-+            return ud.fullshallow
-         return ud.clonedir
+         if update_tasks2:
+             self.sqdone = False
+-            for mc in sorted(self.sqdata.multiconfigs):
+-                for tid in sorted([t[0] for t in update_tasks2]):
+-                    if mc_from_tid(tid) != mc:
+-                        continue
+-                    h = pending_hash_index(tid, self.rqdata)
+-                    if h in self.sqdata.hashes and tid != self.sqdata.hashes[h]:
+-                        self.sq_deferred[tid] = self.sqdata.hashes[h]
+-                        bb.note("Deferring %s after %s" % (tid, self.sqdata.hashes[h]))
++            for tid in sort_tids_by_mc([t[0] for t in update_tasks2], self.sqdata.multiconfigs):
++                h = pending_hash_index(tid, self.rqdata)
++                if h in self.sqdata.hashes and tid != self.sqdata.hashes[h]:
++                    self.sq_deferred[tid] = self.sqdata.hashes[h]
++                    bb.note("Deferring %s after %s" % (tid, self.sqdata.hashes[h]))
+             update_scenequeue_data([t[0] for t in update_tasks2], self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self, summary=False)
  
-     def need_update(self, ud, d):
-@@ -805,8 +814,9 @@ class Git(FetchMethod):
+         for (tid, harddepfail, origvalid) in update_tasks2:
+@@ -3101,6 +3105,9 @@ def build_scenequeue_data(sqdata, rqdata, sqrq):
+         if not sqdata.sq_revdeps[tid]:
+             sqrq.sq_buildable.add(tid)
  
-         to_remove = [ud.localpath, ud.fullmirror, ud.fullmirror + ".done"]
-         # The localpath is a symlink to clonedir when it is cloned from a
--        # mirror, so remove both of them.
--        if os.path.islink(ud.localpath):
-+        # mirror, so remove both of them. When it is the shallow tarball, it
-+        # can be a symlink to the tarball in the mirror, which must be kept.
-+        if not (ud.shallow and ud.localpath == ud.fullshallow) and os.path.islink(ud.localpath):
-             clonedir = os.path.realpath(ud.localpath)
-             to_remove.append(clonedir)
++    # Fix the ordering for determinism, sets are unordered
++    sqdata.multiconfigs = sorted(sqdata.multiconfigs)
++
+     rqdata.init_progress_reporter.next_stage()
  
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 61dc06660..5f8256fba 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -2335,6 +2335,72 @@ class GitShallowTest(FetcherTest):
-         self.fetch_and_unpack()
-         self.assertRevCount(1)
+     sqdata.noexec = set()
+@@ -3109,16 +3116,13 @@ def build_scenequeue_data(sqdata, rqdata, sqrq):
  
-+    def test_shallow_mirrors_localpath(self):
-+        self.add_empty_file('a')
-+        self.add_empty_file('b')
-+
-+        # Fetch once to generate the shallow tarball
-+        fetcher, ud = self.fetch()
-+        mirrortarball = ud.mirrortarballs[0]
-+
-+        # Set up the mirror
-+        mirrordir = os.path.join(self.tempdir, 'mirror')
-+        bb.utils.mkdirhier(mirrordir)
-+        self.d.setVar('PREMIRRORS', 'git://.*/.* file://%s/' % mirrordir)
-+
-+        bb.utils.rename(os.path.join(self.dldir, mirrortarball),
-+                  os.path.join(mirrordir, mirrortarball))
-+
-+        # Fetch from the mirror, which does not create a clone
-+        bb.utils.remove(self.dldir, recurse=True)
-+        bb.utils.remove(self.gitdir, recurse=True)
-+        fetcher, ud = self.fetch()
-+        self.assertFalse(os.path.exists(ud.clonedir))
-+
-+        # A new fetcher must find the result of the previous fetch
-+        url = self.d.getVar('SRC_URI').split()[0]
-+        fetcher = bb.fetch.Fetch([url], self.d)
-+        self.assertTrue(os.path.exists(fetcher.localpath(url)))
-+
-+        # The lock and done stamp must not depend on whether the clone exists,
-+        # or fetchers would not exclude each other.
-+        self.assertEqual(fetcher.ud[url].lockfile, ud.lockfile)
-+        self.assertEqual(fetcher.ud[url].donestamp, ud.donestamp)
-+        self.assertEqual(fetcher.ud[url].lockfile, ud.clonedir + '.lock')
-+
-+    def test_clean(self):
-+        self.add_empty_file('a')
-+
-+        # Cleaning must work with and without shallow tarballs
-+        for shallow in ('0', '1'):
-+            self.d.setVar('BB_GIT_SHALLOW', shallow)
-+            fetcher, ud = self.fetch()
-+            fetcher.clean()
-+            self.assertFalse(os.path.exists(ud.clonedir))
-+            self.assertFalse(os.path.exists(os.path.join(self.dldir, ud.mirrortarballs[0])))
-+
-+    def test_shallow_mirrors_clean_keeps_mirror(self):
-+        self.add_empty_file('a')
-+        self.add_empty_file('b')
-+
-+        fetcher, ud = self.fetch()
-+        mirrortarball = ud.mirrortarballs[0]
-+        mirrordir = os.path.join(self.tempdir, 'mirror')
-+        bb.utils.mkdirhier(mirrordir)
-+        self.d.setVar('PREMIRRORS', 'git://.*/.* file://%s/' % mirrordir)
-+        bb.utils.rename(os.path.join(self.dldir, mirrortarball),
-+                  os.path.join(mirrordir, mirrortarball))
-+
-+        # Fetch from the mirror, which links to the tarball in the mirror
-+        bb.utils.remove(self.dldir, recurse=True)
-+        bb.utils.remove(self.gitdir, recurse=True)
-+        fetcher, ud = self.fetch()
-+        fetcher = bb.fetch.Fetch([self.d.getVar('SRC_URI').split()[0]], self.d)
-+        fetcher.clean()
-+
-+        # Cleaning DL_DIR must not remove the tarball in the mirror
-+        self.assertTrue(os.path.exists(os.path.join(mirrordir, mirrortarball)))
-+
-     @skipIfNoNetwork()
-     def test_shallow_mirrors_with_multiple_same_urls(self):
-         url = "git://git.openembedded.org/bitbake;branch=master;protocol=https;rev=82ea737a0b42a8b53e11c9cde141e9e9c0bd8c40"
--- 
-2.43.0
-
+     sqdata.hashes = {}
+     sqrq.sq_deferred = {}
+-    for mc in sorted(sqdata.multiconfigs):
+-        for tid in sorted(sqdata.sq_revdeps):
+-            if mc_from_tid(tid) != mc:
+-                continue
+-            h = pending_hash_index(tid, rqdata)
+-            if h not in sqdata.hashes:
+-                sqdata.hashes[h] = tid
+-            else:
+-                sqrq.sq_deferred[tid] = sqdata.hashes[h]
+-                bb.debug(1, "Deferring %s after %s" % (tid, sqdata.hashes[h]))
++    for tid in sort_tids_by_mc(sqdata.sq_revdeps, sqdata.multiconfigs):
++        h = pending_hash_index(tid, rqdata)
++        if h not in sqdata.hashes:
++            sqdata.hashes[h] = tid
++        else:
++            sqrq.sq_deferred[tid] = sqdata.hashes[h]
++            bb.debug(1, "Deferring %s after %s" % (tid, sqdata.hashes[h]))
+ 
+ def check_setscene_stamps(tid, rqdata, rq, stampcache, noexecstamp=False):
+ 
