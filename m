@@ -1,184 +1,238 @@
-Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.13887.1794905902980857379
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.15031.1794913101023309254
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 17 Nov 2026 00:58:23 -0800
+ Tue, 17 Nov 2026 02:58:21 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@pbarker.dev header.s=fm2 header.b=UOLyfWlP;
- dkim=pass header.i=@messagingengine.com header.s=fm3 header.b=nT83gZjs;
- spf=pass (domain: pbarker.dev, ip: 103.168.172.157, mailfrom: paul@pbarker.dev)
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 00D421400105
-	for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 03:58:22 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-10.internal (MEProxy); Tue, 17 Nov 2026 03:58:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
-	cc:content-transfer-encoding:content-type:content-type:date:date
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1794905901;
-	 x=1794992301; bh=6NMJ1GLrsB0q74GMK+D5RThy9vialepBoJS3jcYqse0=; b=
-	UOLyfWlPn7G4Ls4Ps0+C8XnJ5nN8bqHGGbCX0A2ppV6+VmXCoAu8vqbC+D4HA+Yb
-	ppw8ubkjBuntOCUPH8q5I9QK9MOY0+7cVEY/MesXhxo/tgOIWH7SBqixFTFLIVpK
-	6Pz+hkP6xt0T1dc1URCJwoVhP08AasiOdN6ZwpjAZwpwBAO++rFG7GVg+7Ob20HU
-	0QlU78A2n6d8QRH97XMqUxEOjuCGPtqzp6g8x686RqJCLFHyRKK2iiDw+S4+cVsT
-	XT25DhNV7FmoYoA8mnKF86hnQy2Qx4cqyxm9guKsfYL/g2ua3Vi0QM3Ijj7x6XUd
-	Ft+u1xPDTfnRoTZ4PCNUlQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1794905901; x=1794992301; bh=6
-	NMJ1GLrsB0q74GMK+D5RThy9vialepBoJS3jcYqse0=; b=nT83gZjsecrHxUMPy
-	JE6FykJlK4IZE+OrNrr49Okfb9eMAOBFiKfmQCqxysZ98AHinc3H9FbG+iXhSDYS
-	EMcP33y2BzL0n3BEOo+fQd573aGmdBICYKapbOFgiI817j3nXD4FuTtgzgaJ9DeU
-	eVb+XBJJb1YuaVu373daPZq2y/vwjjlFiyB5/DX/f2aPFnfm4A2HYq6gj+JJkcuh
-	wcxIRODe3AYE3FCx6LTAsJRa6B3wfY3hyA3Wem7/oyeyHn1UAu+ossD+6syA9Cq1
-	Qlt76ao/JAxMz/D49zG4UHv0Lj1UPxsuBnS4J2ib8A3GgnQLxbXY4JaoP9xhShgF
-	bpDng==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=sign d=pbarker.dev a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1794905901; d=pbarker.dev;
-	mf=PHBhdWxAcGJhcmtlci5kZXY+;
-	rt=PGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZz4=;
-	s=fm2:rsa-sha256:h9PSQcT/bwQvwURILJlGxqbW7UAGVXsgdt/vqaVhiOOycYK
-	16Dhsa0zMhuApKaLLAHeGekeR+QCpeHtQIV9rlEVhZS0BMLPNg968lpqkV1/4jfM
-	WqT5oQnATfDPx/P2bASSlFA1iQhGtkcDr9X2E7tpC3FOC7aWC0B5waC2yDLc2WEA
-	R3H8/yvQPhqLzXTU+aFvAD9HfWaXTUbMYc7pxpffUBOtXoIylYb/YDFbxeQGV8RE
-	Gpxn4bp5tRTQ3LK1XzDh+uE5lIsne5tHn6S+5WorOoIio98Q2ktjZcyS6L2NoXK3
-	gSQxWhzsUNe7LY0BANlainbCvpDMGBrYRgk5Q3Q==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=mi-m=1; hc=11;
-	hn=content-transfer-encoding,content-type,date,feedback-id,from,
-	in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:/J9rcRU2sShfObivx5YxpsZp+fMxLBwhw+HhxHMqJDg=:UjwqaDoBKfKt/pF0gADXqacwCPNUJ8fy8XoYqO16q4Y=;
-X-ME-Sender: <xms:LRf8aszLWMW6wOGr8CdZvn_6lTpODN4NfSKVUynXl_nHIrtNlXOytA>
-    <xme:LRf8amSti24pjccpVsDk47YrXttSlo90l0Aq8ZZiqoqFbYzQff4_quzxL-cSQRh6b
-    CXEx9STtIq31jXPL9GQQTlxGAM88G4YiicUrCfXjfWmXKonEnVFVod7>
-X-ME-Received: <xmr:LRf8ar-huVMYt-NnEYAYFSxt0dxw42V2Rkor9rSmrBA-bCEopbsxF5bJpW1FHQJ4pReiqnMmAbmS_dX9_SQYzmEAnG8g>
-X-ME-Proxy-Cause: dmFkZTEe5iSoketnKAIFDhMPnjaPCyB7qQrSMdzhNh02saWxmy3uxkPeBiuZJOigV2onRJ
-    7o9MX3O6IE7I80AiSxK6iH0TLOCPRDwQ3LRRoMyYUDYxdzAYTC8DOWpE8xZw2Y94PHuUCO
-    iD/8L0cOMdmucG1K4ixWMI5un5kZHokE/W9XdMJyxOrNvMX10N5EobVzE6bnrpJYytib+T
-    svv3hh2/h9X3rXH+gXT9ljUwH86g4Ian38JM97Gb9RAovLXrU6Ap1cmAlRgSEj5M4KyUCF
-    /fpDcYKhFZnBAvfpmK2nk2NqYFjf1c02uM1o0ouiz32Z+Ax44lE6YxQImrdW4dJCjMVNq3
-    PM1ZCh8HAzD3eX11kmvN6ujJP9Pmn4EQU1bVuWSbMsVm7FJYnE85n7QKlVoaoA/R7CUweg
-    ppkfCOsH4KBhzsQhQKpdFzI5j+xjWMbR4RDxbpO7TxWQzRVioc2P2ej5DFtvIS1mni8jT0
-    2bv37hPH7t7XyHMsJJC6CFYDeyUwXCQc3isIqb491tXEywkT0ZLv+sJ+DnKnBwSEUXW/Yt
-    zDZKU07XB2eOyURj2WyfMzWzNrPC2bLTzlwfqanb+pGFXonzuwS7T4lcvZ3aUWgrJFPerO
-    tFLqCLazs9CNwiJ5T3ivqCLu2O9Jd2bKxptL8f4bMgDfTRnnbjhr+kYYkpWw
-X-ME-Proxy: <xmx:LRf8alrBSVPysbc6I0w18VvQ1Mj2WIhCQ09v6kKQih5BExnnvKa4qQ>
-    <xmx:LRf8agmt3O67crjgMksaDHxEm3z3Z1Kq_ogEySD0_rP3SClh458LmA>
-    <xmx:LRf8akKuT-frCdpgPuAL3B8n-3dI1vsHRiRPOVvV2qb91XS9qF2dsA>
-    <xmx:LRf8atww6c-cC-x08d7ovbTX_rMQTqu796tXQy98QYDYalRMyTcyFg>
-    <xmx:LRf8alJDiiI4qH5DU7VuFOfwiRq1P0r5Nu9-X0nEh4UK5U5isUp3Hole>
-Feedback-ID: i51494658:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 17 Nov 2026 03:58:21 -0500 (EST)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 17 Nov 2026 08:58:20 +0000
-Message-Id: <DMXD1FDZAIFH.170S6L7DXU6FC@pbarker.dev>
-To: <ecordonnier@snap.com>, <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH v2 2/2] fetch/wget: Reuse the checkstatus() urllib
- opener
-From: "Paul Barker" <paul@pbarker.dev>
-X-Mailer: aerc 0.22.0
-References: <20260928125051.2483039-1-ecordonnier@snap.com>
- <20260928125051.2483039-3-ecordonnier@snap.com>
-In-Reply-To: <20260928125051.2483039-3-ecordonnier@snap.com>
+ dkim=pass header.i=@snap.com header.s=google header.b=RLpFm1vr;
+ spf=pass (domain: snapchat.com, ip: 209.85.221.41, mailfrom: ecordonnier@snapchat.com)
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-4a33359c1b3so608223f8f.3
+        for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 02:58:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=snap.com; s=google; t=1794913099; x=1795517899; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=o90wfCEH2o8W42FKQ9O2tOtcUWe75P+6Pxri3+7UfME=;
+        b=RLpFm1vrEDmjzv6ZTTxNcloD6vsyOA0gUpNTNqYTFHfVL9Ga28hqaNXTUE5LySDNys
+         LhIYFOPl7hs/gaH5J934nsPBXwzBOdF3ZYaWXvUIMjnancrCkXrrU7OdlcbmiGQPERV4
+         wwz3lRwAbSHPRsfQcwx268DIs007vpYIGhj00=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794913099; x=1795517899;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=o90wfCEH2o8W42FKQ9O2tOtcUWe75P+6Pxri3+7UfME=;
+        b=M6IEg2Otw+FmlepCoj561dv+IwiwAiVgnts81cNEeZuJv4caiMd5+Is2u2TFdOVq+R
+         QO+EpsjKC7EX9WeteBRUJj4vm6LDE0xnDnzTvGLlce2GY041EYH90Pd7xLA312yDCVzX
+         8DqUXZjctTcQfKAbw3LYmTEdtdHaRTojRKJyyvRXbh/BO5060tur9+fTWXcCAkzC1kst
+         BYKZXBf1Q7pWAtY/q07ETXEUn0A2WPmNQJmxwnoJ92fLp1ukI0Ok4mCxol7iPlJK0ZOr
+         wQSX1yCRppLbPNY69+amjhdqlNbZATGYAGfcmnIrfa+wky1r+KxsZBLiiKhsVOgoKMIg
+         VOtw==
+X-Gm-Message-State: APuU4Z8kLqmHJzkd1kpsNoISTsiK+xEpQ4IhSacbkbB5BP36OhfeRIL7
+	M04XcXNew7amPLzTFxblp8FAzAJPykG04IqGIk6F4HhP29PxrlCeJOA+YSIjlXA52Jec9hL7kX/
+	CU2ZIsUg=
+X-Gm-Gg: AZFdTZcwogoKlEm6QpxPC8VYhwKV/iwq5yGQB4Mzz+gBxRD3eKuL+sdgC2tHjeywLTm
+	FJ03u/2yzOFU41WtmaI69hQhc4TwZz3+Th9K4UppapUtdkSFYFtPPIchoG17Kn+KSVfco+X5Tan
+	TnzlRX+IuYuh2oz2BguQlrTDksZWYbV+nD1WAIixgYvK2SQxciMAYdZo/5+xfb1iV7Tr+XiIVbs
+	Y3nUtiRLG06b65NGSxpnSKesbzGu3/c+8xqVPxr0uc/KDFxktXMDFlWC8qdMWxeaNW/RExlAvKl
+	/SFe5E50vyZNTQfCrpjgcuTkEKWR94TfEm4GV4EppSUupKkAFqVZrxSKNQ0gcvfL00jFvy47TIs
+	ExUFs7onvGmXEkMnXysSiuEbHsI9dD2rylf8WigTdek74YXXTwtk5Le7j7f7eBHZHG3MaMzwyWI
+	KlzIgoE/cSDtUbWCQUYh5R5LCdZbNbOPu2g8LUFioihz9XJyIA0mlDN97T7ZQN75QLes82r13ZU
+	suUaZTWm1im9wIjyzMCnjhQJYdMquW1+3eDOLMzDVz0Zjoaz+AUlY4l9wOsnfgbWGC5QW1Whafo
+	43JP89hEZ44Ftymw8ihZxiSB4LheENXTxJ53x9HFcWGsNyoP4QnzjAlAbVKN2RCnZIHOwiPv/u5
+	KM/JPMjGWErQs2VcdlPEupTQL3R6YQ65J
+X-Received: by 2002:a05:6000:26ce:b0:48b:e50:7159 with SMTP id ffacd0b85a97d-49c71b5bfbemr27633833f8f.30.1794913098907;
+        Tue, 17 Nov 2026 02:58:18 -0800 (PST)
+Return-Path: <ecordonnier@snapchat.com>
+Received: from lj8k2dq3.sc-core.net ([85.237.126.22])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-49c888b90d4sm27519460f8f.9.2026.11.17.02.58.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Nov 2026 02:58:18 -0800 (PST)
+From: ecordonnier@snap.com
+To: bitbake-devel@lists.openembedded.org
+Cc: Etienne Cordonnier <ecordonnier@snap.com>
+Subject: [PATCH] fetch/git: return the shallow tarball as localpath when there is no clone
+Date: Tue, 17 Nov 2026 11:58:02 +0100
+Message-ID: <20261117105802.3828411-1-ecordonnier@snap.com>
+X-Mailer: git-send-email 2.43.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 08:58:31 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20443
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 10:58:27 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20444
+Content-Type: text/plain; charset="utf-8"
 
-On Mon Sep 28, 2026 at 1:50 PM BST, ecordonnier wrote:
-> From: Etienne Cordonnier <ecordonnier@snap.com>
->
-> checkstatus() builds a new urllib opener with its redirect, proxy and
-> connection cache handlers on every call, although sstate.bbclass calls it
-> for every object in an sstate mirror check with the same settings. Keep
-> the opener on the FetchConnectionCache, keyed on the certificate checking
-> setting and the fetcher environment, and rebuild it only when those
-> change. A connection cache is only used by one thread at a time, so no
-> locking is needed.
->
-> Checking 2,114 objects on the Yocto sstate mirror with BB_NUMBER_THREADS =
-=3D "8"
-> reduced the time to task execution from 26.9s to 25.1s on average.
+From: Etienne Cordonnier <ecordonnier@snap.com>
 
-This is about a 7% performance improvement, so would be good to have.
+Usually localpath() exists once do_fetch has completed, but not for a
+shallow fetch which uses the shallow tarball without creating the clone:
+either the fast initial shallow clone, or a restore from a mirror.
+download() sets ud.localpath to the tarball, but a new Fetch object, as in
+the archiver, gets the non-existent clone from localpath() again.
 
-The question is, what state do the urlllib opener and the handler
-instances maintain across requests? Is there risk of credentials or
-headers intended for one host being inappropriately sent with the
-request to a different host?
+Return the shallow tarball from localpath() when the clone does not exist.
+If the clone exists, even if it is outdated, localpath() still returns it.
 
-Someone needs to look at this and confirm that it doesn't introduce any
-security risks.
+The names of the .done and .lock files are derived from localpath, so they
+would then depend on whether the clone exists, and fetchers of the same url
+would not exclude each other. Add FetchMethod.stamppath(), which defaults to
+localpath, and let git always use the clone.
 
->
-> AI-Generated: Uses Claude Code (Claude Opus 5.5)
-> Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
-> ---
->  lib/bb/fetch/__init__.py |  2 ++
->  lib/bb/fetch/wget.py     | 22 +++++++++++++++-------
->  2 files changed, 17 insertions(+), 7 deletions(-)
->
-> diff --git a/lib/bb/fetch/__init__.py b/lib/bb/fetch/__init__.py
-> index 55ab710f3..0eb660685 100644
-> --- a/lib/bb/fetch/__init__.py
-> +++ b/lib/bb/fetch/__init__.py
-> @@ -2090,6 +2090,8 @@ class FetchConnectionCache(object):
->      """
->      def __init__(self):
->          self.cache =3D {}
-> +        # urllib openers built by the wget fetcher, see Wget.checkstatus=
-()
-> +        self.opener_cache =3D {}
-> =20
->      def get_connection_name(self, host, port, connection_id=3DNone):
->          if connection_id is None:
-> diff --git a/lib/bb/fetch/wget.py b/lib/bb/fetch/wget.py
-> index fe2de25d3..9cb4a4f32 100644
-> --- a/lib/bb/fetch/wget.py
-> +++ b/lib/bb/fetch/wget.py
-> @@ -435,13 +435,21 @@ class Wget(FetchMethod):
->          # to scope the changes to the build_opener request, which is whe=
-n the
->          # environment lookups happen.
->          with bb.utils.environment(**newenv):
-> -            context =3D self.ssl_context(d)
-> -            handlers =3D [FixedHTTPRedirectHandler,
-> -                        HTTPMethodFallback,
-> -                        urllib.request.ProxyHandler(),
-> -                        CacheHTTPHandler(),
-> -                        CacheHTTPSHandler(context=3Dcontext)]
-> -            opener =3D urllib.request.build_opener(*handlers)
-> +            opener =3D None
-> +            if connection_cache is not None:
-> +                opener_key =3D (check_certs, tuple(sorted(newenv.items()=
-)))
-> +                opener =3D connection_cache.opener_cache.get(opener_key)
-> +
-> +            if opener is None:
-> +                context =3D self.ssl_context(d)
-> +                handlers =3D [FixedHTTPRedirectHandler,
-> +                            HTTPMethodFallback,
-> +                            urllib.request.ProxyHandler(),
-> +                            CacheHTTPHandler(),
-> +                            CacheHTTPSHandler(context=3Dcontext)]
-> +                opener =3D urllib.request.build_opener(*handlers)
-> +                if connection_cache is not None:
-> +                    connection_cache.opener_cache[opener_key] =3D opener
-> =20
->              try:
->                  parts =3D urllib.parse.urlparse(ud.url.split(";")[0])
+Do not follow the symlink of the shallow tarball in clean(), which would
+remove the tarball in the mirror.
 
+AI-Generated: Claude Sonnet 5.5
+Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
+---
+ lib/bb/fetch/__init__.py | 17 ++++++++---
+ lib/bb/fetch/git.py      | 14 +++++++--
+ lib/bb/tests/fetch.py    | 66 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 91 insertions(+), 6 deletions(-)
 
-
-Best regards,
-
---=20
-Paul Barker
+diff --git a/lib/bb/fetch/__init__.py b/lib/bb/fetch/__init__.py
+index ce2bd62ad..88c244ba4 100644
+--- a/lib/bb/fetch/__init__.py
++++ b/lib/bb/fetch/__init__.py
+@@ -1387,10 +1387,11 @@ class FetchData(object):
+             return
+ 
+         # Note: .done and .lock files should always be in DL_DIR whereas localpath may not be.
+-        if self.localpath and self.localpath.startswith(dldir):
+-            basepath = self.localpath
+-        elif self.localpath:
+-            basepath = dldir + os.sep + os.path.basename(self.localpath)
++        stamppath = self.method.stamppath(self, d) if self.localpath else None
++        if stamppath and stamppath.startswith(dldir):
++            basepath = stamppath
++        elif stamppath:
++            basepath = dldir + os.sep + os.path.basename(stamppath)
+         elif self.basepath or self.basename:
+             basepath = dldir + os.sep + (self.basepath or self.basename)
+         else:
+@@ -1431,6 +1432,14 @@ class FetchMethod(object):
+         """
+         return 0
+ 
++    def stamppath(self, urldata, d):
++        """
++        Return the path which the names of the .done and .lock files are based
++        on. This must not change between calls, as the lock is only effective
++        if every fetcher of the same url uses the same lock file.
++        """
++        return urldata.localpath
++
+     def localpath(self, urldata, d):
+         """
+         Return the local filename of a given url assuming a successful fetch.
+diff --git a/lib/bb/fetch/git.py b/lib/bb/fetch/git.py
+index 75ce1eda0..4a12c4bfa 100644
+--- a/lib/bb/fetch/git.py
++++ b/lib/bb/fetch/git.py
+@@ -308,7 +308,16 @@ class Git(FetchMethod):
+             ud.fullshallow = os.path.join(dl_dir, ud.shallowtarball)
+             ud.mirrortarballs.insert(0, ud.shallowtarball)
+ 
++    def stamppath(self, ud, d):
++        # localpath() depends on whether the clone exists, the stamp and lock
++        # file names must not.
++        return ud.clonedir
++
+     def localpath(self, ud, d):
++        # When do_fetch used the shallow tarball without creating the clone,
++        # the tarball is the result of the fetch.
++        if ud.shallow and not os.path.exists(ud.clonedir) and os.path.exists(ud.fullshallow):
++            return ud.fullshallow
+         return ud.clonedir
+ 
+     def need_update(self, ud, d):
+@@ -805,8 +814,9 @@ class Git(FetchMethod):
+ 
+         to_remove = [ud.localpath, ud.fullmirror, ud.fullmirror + ".done"]
+         # The localpath is a symlink to clonedir when it is cloned from a
+-        # mirror, so remove both of them.
+-        if os.path.islink(ud.localpath):
++        # mirror, so remove both of them. When it is the shallow tarball, it
++        # can be a symlink to the tarball in the mirror, which must be kept.
++        if not (ud.shallow and ud.localpath == ud.fullshallow) and os.path.islink(ud.localpath):
+             clonedir = os.path.realpath(ud.localpath)
+             to_remove.append(clonedir)
+ 
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 61dc06660..5f8256fba 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -2335,6 +2335,72 @@ class GitShallowTest(FetcherTest):
+         self.fetch_and_unpack()
+         self.assertRevCount(1)
+ 
++    def test_shallow_mirrors_localpath(self):
++        self.add_empty_file('a')
++        self.add_empty_file('b')
++
++        # Fetch once to generate the shallow tarball
++        fetcher, ud = self.fetch()
++        mirrortarball = ud.mirrortarballs[0]
++
++        # Set up the mirror
++        mirrordir = os.path.join(self.tempdir, 'mirror')
++        bb.utils.mkdirhier(mirrordir)
++        self.d.setVar('PREMIRRORS', 'git://.*/.* file://%s/' % mirrordir)
++
++        bb.utils.rename(os.path.join(self.dldir, mirrortarball),
++                  os.path.join(mirrordir, mirrortarball))
++
++        # Fetch from the mirror, which does not create a clone
++        bb.utils.remove(self.dldir, recurse=True)
++        bb.utils.remove(self.gitdir, recurse=True)
++        fetcher, ud = self.fetch()
++        self.assertFalse(os.path.exists(ud.clonedir))
++
++        # A new fetcher must find the result of the previous fetch
++        url = self.d.getVar('SRC_URI').split()[0]
++        fetcher = bb.fetch.Fetch([url], self.d)
++        self.assertTrue(os.path.exists(fetcher.localpath(url)))
++
++        # The lock and done stamp must not depend on whether the clone exists,
++        # or fetchers would not exclude each other.
++        self.assertEqual(fetcher.ud[url].lockfile, ud.lockfile)
++        self.assertEqual(fetcher.ud[url].donestamp, ud.donestamp)
++        self.assertEqual(fetcher.ud[url].lockfile, ud.clonedir + '.lock')
++
++    def test_clean(self):
++        self.add_empty_file('a')
++
++        # Cleaning must work with and without shallow tarballs
++        for shallow in ('0', '1'):
++            self.d.setVar('BB_GIT_SHALLOW', shallow)
++            fetcher, ud = self.fetch()
++            fetcher.clean()
++            self.assertFalse(os.path.exists(ud.clonedir))
++            self.assertFalse(os.path.exists(os.path.join(self.dldir, ud.mirrortarballs[0])))
++
++    def test_shallow_mirrors_clean_keeps_mirror(self):
++        self.add_empty_file('a')
++        self.add_empty_file('b')
++
++        fetcher, ud = self.fetch()
++        mirrortarball = ud.mirrortarballs[0]
++        mirrordir = os.path.join(self.tempdir, 'mirror')
++        bb.utils.mkdirhier(mirrordir)
++        self.d.setVar('PREMIRRORS', 'git://.*/.* file://%s/' % mirrordir)
++        bb.utils.rename(os.path.join(self.dldir, mirrortarball),
++                  os.path.join(mirrordir, mirrortarball))
++
++        # Fetch from the mirror, which links to the tarball in the mirror
++        bb.utils.remove(self.dldir, recurse=True)
++        bb.utils.remove(self.gitdir, recurse=True)
++        fetcher, ud = self.fetch()
++        fetcher = bb.fetch.Fetch([self.d.getVar('SRC_URI').split()[0]], self.d)
++        fetcher.clean()
++
++        # Cleaning DL_DIR must not remove the tarball in the mirror
++        self.assertTrue(os.path.exists(os.path.join(mirrordir, mirrortarball)))
++
+     @skipIfNoNetwork()
+     def test_shallow_mirrors_with_multiple_same_urls(self):
+         url = "git://git.openembedded.org/bitbake;branch=master;protocol=https;rev=82ea737a0b42a8b53e11c9cde141e9e9c0bd8c40"
+-- 
+2.43.0
 
