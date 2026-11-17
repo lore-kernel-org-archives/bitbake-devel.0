@@ -1,147 +1,90 @@
-Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.671.1794930581520379227
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.1555.1794945114798771692
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 17 Nov 2026 07:49:41 -0800
+ Tue, 17 Nov 2026 11:51:56 -0800
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: kernel.crashing.org, ip: 63.228.1.57, mailfrom: mark.hatle@kernel.crashing.org)
-Received: from kernel.crashing.org (70-99-78-136.nuveramail.net [70.99.78.136] (may be forged))
-	by gate.crashing.org (8.18.1/8.18.1/Debian-2) with ESMTP id 6AHFnd6r3683979;
-	Tue, 17 Nov 2026 09:49:39 -0600
-Received: from [192.168.2.97] ([192.168.2.97])
-	by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 6AHFncUS012459;
-	Tue, 17 Nov 2026 09:49:38 -0600
-Message-ID: <14f29a56-d2cf-482b-a1ed-f1871791fb71@kernel.crashing.org>
-Date: Tue, 17 Nov 2026 09:49:38 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bitbake-devel] [PATCH 1/2] runqueue: Improve deferred task
- sorting
-To: richard.purdie@linuxfoundation.org, bitbake-devel@lists.openembedded.org
-References: <20261117114550.2306278-1-richard.purdie@linuxfoundation.org>
-Content-Language: en-US
-From: Mark Hatle <mark.hatle@kernel.crashing.org>
-In-Reply-To: <20261117114550.2306278-1-richard.purdie@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=nEtX//Am;
+ spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: mathieu.dubois-briand@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 06FB1C4CBCE
+	for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 19:51:57 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 79AE85FDAD;
+	Tue, 17 Nov 2026 19:51:52 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3660911BC00A4;
+	Tue, 17 Nov 2026 20:51:47 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1794945108; h=from:subject:date:message-id:to:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=lzLp8vKSYt/KQoh1s8WRYg1hyKMgkh9kcI5awVETSZw=;
+	b=nEtX//AmW248wFN6ppXnvfDpMEHe2xcr8SSamdfdvpM/CwZD870H22WpVd9+ZPpThl9MPi
+	mkoh+kMmSE7eYl96oF6mqsTghqd3LsdjNTsCmhkuwG/8XxBYCTqJQhfbyTPVSLDFAGCnoz
+	xTpe4Sed8Y4yhdeEOM9cc5w7CAHESsGYl+8iRdx+VhGCdq1LrhWPMfkoy8KOZJ4XShIBiH
+	lhr7VA7YOdBO0w4/j0e/QqkXRUuDJrENi0K/GOmLdXd7EASRpVXiDfYVRx75aJ9Om/wGVl
+	tpjLP5G5tb+Na9QUrTi/7LCUnD2X4lchf8kiSKILtVD1mQVh+16KTKPZTB/fwQ==
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 17 Nov 2026 20:51:45 +0100
+Message-Id: <DMXQXPZQ4YNR.3169M33L22EZ4@bootlin.com>
+Subject: Re: [bitbake-devel] [PATCH] utils: Make set_context() replace the
+ global context
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: <maxime.roussinbelanger@gmail.com>,
+ <bitbake-devel@lists.openembedded.org>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20261117152318.2560775-1-maxime.roussinbelanger@gmail.com>
+In-Reply-To: <20261117152318.2560775-1-maxime.roussinbelanger@gmail.com>
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 15:49:46 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20450
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 19:52:00 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20451
 
-Verified this set resolves the problems I was seeing.
-
-If we can, I would love it to be backported to 2.18 (wrynose) where I've also 
-seen the problem a lot.
-
-Thanks for all of the help.
-
---Mark
-
-On 11/17/26 5:45 AM, Richard Purdie via bitbake-devel wrote:
-> Whilst looking for other problems, I noticed the sorting used for deferring
-> tasks isn't always consistent. It needs to be so that same multiconfig is
-> always preferred over the others, which gives a much lower chance of
-> deadlocking.
-> 
-> Add a helper sorting function and use it in all the locations we need this
-> sorting.
-> 
-> That means we can remove the weird looking looping code from the locations
-> which did get this right.
-> 
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+On Tue Nov 17, 2026 at 4:23 PM CET, Maxime Roussin-B=C3=A9langer via bitbak=
+e-devel wrote:
+> set_context() assigns to a local name, so the global context is never
+> replaced and keeps everything added to it. This has been the case since
+> commit 6c3281a14012 ("cooker/cookerdata/utils: Improve context
+> management") replaced a direct assignment to bb.utils._context with it,
+> which broke the two resets that rely on it:
+>
+> - Parser.parse() resets the context before each recipe, so a parser
+>   process accumulates the Python functions of every recipe it parsed
+>   before. A recipe calling a function from a class it does not inherit
+>   parses or fails depending on which process it lands in.
+> - CookerDataBuilder.__init__() resets the context when the
+>   configuration is parsed again, so a long-lived server keeps the
+>   functions and modules of the previous configuration.
+>
+> AI-Generated: Uses Claude Code (Claude Opus 5.5)
+> Signed-off-by: Maxime Roussin-Belanger <maxime.roussinbelanger@gmail.com>
 > ---
->   lib/bb/runqueue.py | 42 +++++++++++++++++++++++-------------------
->   1 file changed, 23 insertions(+), 19 deletions(-)
-> 
-> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-> index 63615ac6c92..4f80f1fde21 100644
-> --- a/lib/bb/runqueue.py
-> +++ b/lib/bb/runqueue.py
-> @@ -85,6 +85,13 @@ def build_tid(mc, fn, taskname):
->           return "mc:" + mc + ":" + fn + ":" + taskname
->       return fn + ":" + taskname
->   
-> +def sort_tids_by_mc(tids, multiconfigs):
-> +    """
-> +    Return tids grouped by multiconfig, with the groups in sorted mc order
-> +    and the tids sorted within each group.
-> +    """
-> +    return [tid for _, tid in sorted(((mc_from_tid(tid), tid) for tid in tids))]
-> +
->   # Index used to pair up potentially matching multiconfig tasks
->   # We match on PN, taskname and hash being equal
->   def pending_hash_index(tid, rqdata):
-> @@ -2109,7 +2116,7 @@ class RunQueueExecute:
->                   logger.debug("Marking task %s as buildable", revdep)
->   
->           found = None
-> -        for t in sorted(self.sq_deferred.copy()):
-> +        for t in sort_tids_by_mc(self.sq_deferred.copy(), self.sqdata.multiconfigs):
->               if self.sq_deferred[t] == task:
->                   # Allow the next deferred task to run. Any other deferred tasks should be deferred after that task.
->                   # We shouldn't allow all to run at once as it is prone to races.
-> @@ -2738,14 +2745,11 @@ class RunQueueExecute:
->   
->           if update_tasks2:
->               self.sqdone = False
-> -            for mc in sorted(self.sqdata.multiconfigs):
-> -                for tid in sorted([t[0] for t in update_tasks2]):
-> -                    if mc_from_tid(tid) != mc:
-> -                        continue
-> -                    h = pending_hash_index(tid, self.rqdata)
-> -                    if h in self.sqdata.hashes and tid != self.sqdata.hashes[h]:
-> -                        self.sq_deferred[tid] = self.sqdata.hashes[h]
-> -                        bb.note("Deferring %s after %s" % (tid, self.sqdata.hashes[h]))
-> +            for tid in sort_tids_by_mc([t[0] for t in update_tasks2], self.sqdata.multiconfigs):
-> +                h = pending_hash_index(tid, self.rqdata)
-> +                if h in self.sqdata.hashes and tid != self.sqdata.hashes[h]:
-> +                    self.sq_deferred[tid] = self.sqdata.hashes[h]
-> +                    bb.note("Deferring %s after %s" % (tid, self.sqdata.hashes[h]))
->               update_scenequeue_data([t[0] for t in update_tasks2], self.sqdata, self.rqdata, self.rq, self.cooker, self.stampcache, self, summary=False)
->   
->           for (tid, harddepfail, origvalid) in update_tasks2:
-> @@ -3101,6 +3105,9 @@ def build_scenequeue_data(sqdata, rqdata, sqrq):
->           if not sqdata.sq_revdeps[tid]:
->               sqrq.sq_buildable.add(tid)
->   
-> +    # Fix the ordering for determinism, sets are unordered
-> +    sqdata.multiconfigs = sorted(sqdata.multiconfigs)
-> +
->       rqdata.init_progress_reporter.next_stage()
->   
->       sqdata.noexec = set()
-> @@ -3109,16 +3116,13 @@ def build_scenequeue_data(sqdata, rqdata, sqrq):
->   
->       sqdata.hashes = {}
->       sqrq.sq_deferred = {}
-> -    for mc in sorted(sqdata.multiconfigs):
-> -        for tid in sorted(sqdata.sq_revdeps):
-> -            if mc_from_tid(tid) != mc:
-> -                continue
-> -            h = pending_hash_index(tid, rqdata)
-> -            if h not in sqdata.hashes:
-> -                sqdata.hashes[h] = tid
-> -            else:
-> -                sqrq.sq_deferred[tid] = sqdata.hashes[h]
-> -                bb.debug(1, "Deferring %s after %s" % (tid, sqdata.hashes[h]))
-> +    for tid in sort_tids_by_mc(sqdata.sq_revdeps, sqdata.multiconfigs):
-> +        h = pending_hash_index(tid, rqdata)
-> +        if h not in sqdata.hashes:
-> +            sqdata.hashes[h] = tid
-> +        else:
-> +            sqrq.sq_deferred[tid] = sqdata.hashes[h]
-> +            bb.debug(1, "Deferring %s after %s" % (tid, sqdata.hashes[h]))
->   
->   def check_setscene_stamps(tid, rqdata, rq, stampcache, noexecstamp=False):
->   
-> 
-> 
-> 
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#20445): https://lists.openembedded.org/g/bitbake-devel/message/20445
-> Mute This Topic: https://lists.openembedded.org/mt/122311783/3616948
-> Group Owner: bitbake-devel+owner@lists.openembedded.org
-> Unsubscribe: https://lists.openembedded.org/g/bitbake-devel/unsub [mark.hatle@kernel.crashing.org]
-> -=-=-=-=-=-=-=-=-=-=-=-
-> 
+
+Hi Maxime,
+
+Thanks for your patch. Yet it looks like one of the added test is
+failing here:
+
+FAIL: test_set_context_drops_methods (bb.tests.utils.ContextTests.test_set_=
+context_drops_methods)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/pokybuild/yocto-worker/oe-selftest-fedora/build/layers/bitbake=
+/lib/bb/tests/utils.py", line 752, in test_set_context_drops_methods
+    self.assertNotIn("testfunc", bb.utils.get_context())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'testfunc' unexpectedly found in {...}
+
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/48/builds/5093
+https://autobuilder.yoctoproject.org/valkyrie/#/builders/35/builds/5285
+
+Can you have a look at the issue?
+
+Thanks,
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
