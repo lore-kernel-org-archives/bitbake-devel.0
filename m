@@ -1,90 +1,93 @@
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.1555.1794945114798771692
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.2536.1794947839346965738
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 17 Nov 2026 11:51:56 -0800
+ Tue, 17 Nov 2026 12:37:19 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@bootlin.com header.s=dkim header.b=nEtX//Am;
- spf=pass (domain: bootlin.com, ip: 185.171.202.116, mailfrom: mathieu.dubois-briand@bootlin.com)
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 06FB1C4CBCE
-	for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 19:51:57 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 79AE85FDAD;
-	Tue, 17 Nov 2026 19:51:52 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3660911BC00A4;
-	Tue, 17 Nov 2026 20:51:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1794945108; h=from:subject:date:message-id:to:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=lzLp8vKSYt/KQoh1s8WRYg1hyKMgkh9kcI5awVETSZw=;
-	b=nEtX//AmW248wFN6ppXnvfDpMEHe2xcr8SSamdfdvpM/CwZD870H22WpVd9+ZPpThl9MPi
-	mkoh+kMmSE7eYl96oF6mqsTghqd3LsdjNTsCmhkuwG/8XxBYCTqJQhfbyTPVSLDFAGCnoz
-	xTpe4Sed8Y4yhdeEOM9cc5w7CAHESsGYl+8iRdx+VhGCdq1LrhWPMfkoy8KOZJ4XShIBiH
-	lhr7VA7YOdBO0w4/j0e/QqkXRUuDJrENi0K/GOmLdXd7EASRpVXiDfYVRx75aJ9Om/wGVl
-	tpjLP5G5tb+Na9QUrTi/7LCUnD2X4lchf8kiSKILtVD1mQVh+16KTKPZTB/fwQ==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 17 Nov 2026 20:51:45 +0100
-Message-Id: <DMXQXPZQ4YNR.3169M33L22EZ4@bootlin.com>
-Subject: Re: [bitbake-devel] [PATCH] utils: Make set_context() replace the
- global context
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: <maxime.roussinbelanger@gmail.com>,
- <bitbake-devel@lists.openembedded.org>
-X-Mailer: aerc 0.21.0-0-g5549850facc2
-References: <20261117152318.2560775-1-maxime.roussinbelanger@gmail.com>
+ dkim=pass header.i=@gmail.com header.s=20260707 header.b=t9lL1LJy;
+ spf=pass (domain: gmail.com, ip: 209.85.221.170, mailfrom: maxime.roussinbelanger@gmail.com)
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-5eaa5e03c47so1094855e0c.0
+        for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 12:37:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794947838; x=1795552638; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=MDr8KPFBvz/RqAqWaBffWXM4ZoGzh5OhHSyBrL2b1Fk=;
+        b=t9lL1LJyuRMl3RTSZqsP5mPmWjuaNCGB1CMXcmZQxrH28AOMPxhiRJyWiHMq/WPChs
+         hq9FV3ba8bC0xtmDTN5yyJNPHfjD2wvjHBQQj5D5IQ26AZwxqs2ayx7kWzXPzf4w85vq
+         m4zIrDICbCJrBNwgj3nDObSxBGS7r5yA72054Yvog/UGdz03RA09X/P4bCV4vNm3u8SN
+         u14CTPwSRTtXZvo8dAtBpT1OdunzPuIqGM8UtFjH8kVZluB1jsCFe4x8Ec4OtWWYNpAL
+         em2yy6EJ2Ypbvn43zZn9jUPtIE2PhTOzo+diZWhk4G1+R5o54ooVpKYBSCSNZ6UP7Y6Y
+         /pBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794947838; x=1795552638;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=MDr8KPFBvz/RqAqWaBffWXM4ZoGzh5OhHSyBrL2b1Fk=;
+        b=h/Vk/BtPzw1VmM/bTeAfVTg6ZcZ5vH6WE2tNSejzGaW4L1obftF+XP1T0fRqqkwS4E
+         jPilWGkZY9E20cHQeq72NHBV4Wu7Uvr6y+cmGyWNFbL5tkASsuKsenI4PDtV3+Abdd/u
+         9b2AOR8IwYUf/lKlVY8TScIZuNnvf7kK0iIICP3PlfQBRLXo5DkpsEAuQGbQZUIOFC3n
+         6J95UVqGRVHJ/EDn0xAttyGy7vvrz+pzCYPgN+2pzNykCjR+giNE+jmBvI9Psp5QYrMa
+         EDxh6nX4iG8MmsN5Vb7EFz5+lbEU8pBMKOqQpMfuOmMM7kCHofWRLC9RNj27eMlPD27R
+         8Txw==
+X-Gm-Message-State: APuU4Z9UImf+2N+X2yRiNyVSOT/I4DGDx1WhW3hDnaPUcH0ffW4n4rBs
+	FKTCMM/TEWrnpwOr1y8AkR4pLma2uCrRSYJ7xMgUYe2iwUCJDW7liAfQhzrWmA==
+X-Gm-Gg: AYBFou0WXu6bXlJn90UONJZZiMwgqRS+HdhYAOvNsoc25tcjifigDir5bVnx4CYTM4X
+	tV4i5vR3Ednh/PjWH7HknDmGGht1poMsx0I9UWzkAzxL6dYbSmggVt4QnLquNaGVw3W4NpaEwIz
+	5McmVNgz45ul7LXZAr5bYv7Iuwiyvehlzzt2b7PMzRoSQCBrfhKPOkYI2dSZcKEgJVBxRdhBswA
+	1QcxAWXOFTJGUZ49C2Xwy3JjBr8Cx/XJeZZ4+oLYqK3B2+d35hah3O7sS1+hTwnq2sf/LVyNxT3
+	uJTrLnArcu/AcXEWtCdl2zHzrJd2hwjT7mXN2+6T7RcE3cb5ET4KPsBvj9k7xmF+C5Ut4ShSQhm
+	2PJOeD4jlUcsV4QZgowM3j9zYEjYs8RfKjNfvwPtS7a+iG3aqJvu+U28rJHChIQbOSVcXT6mfVr
+	UehUvIfw3+w+hLJZp8mgFBD8H2SksRL1I6mXWEZj68n9UmnLrwloUd30cLIUl/tZelu/8sHNanW
+	Q9d4SVVaFbYGzFn1BwPYZniHpSyhFS/uITgfxuUitCOL/Le4YcCDh9P8hVpN+PrTGbOmfRcfAtT
+	17aR0ukGUn1GvKbvlU3xMIfkIfRdOvGz0mAW8cAS5O69F1OkdJKWkMSDixyLZaKgyH5T58VLFuC
+	4hiPQwFXARyPBAA==
+X-Received: by 2002:a05:6122:5c:b0:5ec:e7e4:a1b9 with SMTP id 71dfb90a1353d-5ee5b626fabmr1068694e0c.1.1794947838217;
+        Tue, 17 Nov 2026 12:37:18 -0800 (PST)
+Return-Path: <maxime.roussinbelanger@gmail.com>
+Received: from mbelap.can-explore.com ([70.54.251.90])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5ee64ed7adesm342572e0c.15.2026.11.17.12.37.17
+        for <bitbake-devel@lists.openembedded.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Nov 2026 12:37:17 -0800 (PST)
+From: Maxime Roussin-Belanger <maxime.roussinbelanger@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH v2 1/2] tests/data: Remove testfunc from the global context after use
+Date: Tue, 17 Nov 2026 15:37:15 -0500
+Message-ID: <20261117203716.3276852-1-maxime.roussinbelanger@gmail.com>
+X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261117152318.2560775-1-maxime.roussinbelanger@gmail.com>
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20261117152318.2560775-1-maxime.roussinbelanger@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 19:52:00 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20451
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 20:37:21 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20452
+Content-Type: text/plain; charset="utf-8"
 
-On Tue Nov 17, 2026 at 4:23 PM CET, Maxime Roussin-B=C3=A9langer via bitbak=
-e-devel wrote:
-> set_context() assigns to a local name, so the global context is never
-> replaced and keeps everything added to it. This has been the case since
-> commit 6c3281a14012 ("cooker/cookerdata/utils: Improve context
-> management") replaced a direct assignment to bb.utils._context with it,
-> which broke the two resets that rely on it:
->
-> - Parser.parse() resets the context before each recipe, so a parser
->   process accumulates the Python functions of every recipe it parsed
->   before. A recipe calling a function from a class it does not inherit
->   parses or fails depending on which process it lands in.
-> - CookerDataBuilder.__init__() resets the context when the
->   configuration is parsed again, so a long-lived server keeps the
->   functions and modules of the previous configuration.
->
-> AI-Generated: Uses Claude Code (Claude Opus 5.5)
-> Signed-off-by: Maxime Roussin-Belanger <maxime.roussinbelanger@gmail.com>
-> ---
+test_python_snippet_function_reference() adds testfunc to the global
+context and leaves it there, so every test that runs later in the same
+process sees it.
 
-Hi Maxime,
+AI-Generated: Uses Claude Code (Claude Opus 5.5)
+Signed-off-by: Maxime Roussin-Belanger <maxime.roussinbelanger@gmail.com>
+---
+ lib/bb/tests/data.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks for your patch. Yet it looks like one of the added test is
-failing here:
-
-FAIL: test_set_context_drops_methods (bb.tests.utils.ContextTests.test_set_=
-context_drops_methods)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/srv/pokybuild/yocto-worker/oe-selftest-fedora/build/layers/bitbake=
-/lib/bb/tests/utils.py", line 752, in test_set_context_drops_methods
-    self.assertNotIn("testfunc", bb.utils.get_context())
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: 'testfunc' unexpectedly found in {...}
-
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/48/builds/5093
-https://autobuilder.yoctoproject.org/valkyrie/#/builders/35/builds/5285
-
-Can you have a look at the issue?
-
-Thanks,
-Mathieu
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+diff --git a/lib/bb/tests/data.py b/lib/bb/tests/data.py
+index 491774747..a2b0f43cb 100644
+--- a/lib/bb/tests/data.py
++++ b/lib/bb/tests/data.py
+@@ -83,6 +83,7 @@ class DataExpansions(unittest.TestCase):
+         self.d.setVar("testfunc", 'd.getVar("TESTVAL")')
+         context = bb.utils.get_context()
+         context["testfunc"] = lambda d: d.getVar("TESTVAL")
++        self.addCleanup(context.pop, "testfunc")
+         val = self.d.expand("${@testfunc(d)}")
+         self.assertEqual(str(val), "testvalue")
+ 
+-- 
+2.56.1
 
