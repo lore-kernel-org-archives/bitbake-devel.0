@@ -1,235 +1,179 @@
-Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.13853.1794905621154679839
+Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.13887.1794905902980857379
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 17 Nov 2026 00:53:41 -0800
+ Tue, 17 Nov 2026 00:58:23 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@pbarker.dev header.s=fm2 header.b=Av9J1n63;
- dkim=pass header.i=@messagingengine.com header.s=fm3 header.b=QlFjJqkT;
- spf=pass (domain: pbarker.dev, ip: 103.168.172.147, mailfrom: paul@pbarker.dev)
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfout.phl.internal (Postfix) with ESMTP id 3B828EC011C
-	for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 03:53:40 -0500 (EST)
+ dkim=pass header.i=@pbarker.dev header.s=fm2 header.b=UOLyfWlP;
+ dkim=pass header.i=@messagingengine.com header.s=fm3 header.b=nT83gZjs;
+ spf=pass (domain: pbarker.dev, ip: 103.168.172.157, mailfrom: paul@pbarker.dev)
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 00D421400105
+	for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 03:58:22 -0500 (EST)
 Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Tue, 17 Nov 2026 03:53:40 -0500
+  by phl-compute-10.internal (MEProxy); Tue, 17 Nov 2026 03:58:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
 	cc:content-transfer-encoding:content-type:content-type:date:date
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1794905620;
-	 x=1794992020; bh=gJp9XtUVN8HXaeDplv05/rVBEBBKZPI/PuXYZUyDkUQ=; b=
-	Av9J1n63L34ZDrJNTGQl/tBUOWT81tSCN+fFuH0AM6Q6LHIvZvolOUkeD6mFZ8GN
-	yXuf7l0Y6JS/Z1zFofllY1/ffAkwUu5tpjTJ6kuekiJ3x/vW7m8L9mhszQEn5EYl
-	Nhpq9e/+NSAUOcdpriwJ+hSgh5+JD2cxNOSyx+Jnb32JwM/hduwKfT9r7a23lwqm
-	rMc8Oy0vS9fdvnBag0SVNh/xevNVwb0VL2Da+EEfmzXOv3wFlFWOIRJfkyvKUCrh
-	VvJsZkEmTxM9X5xkswlBmk120WjF08J3KVVDnH04PevI1ftLsq4m1r6bQAElMs/3
-	LnNAaW3pey6O7pVR0/RH0w==
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1794905901;
+	 x=1794992301; bh=6NMJ1GLrsB0q74GMK+D5RThy9vialepBoJS3jcYqse0=; b=
+	UOLyfWlPn7G4Ls4Ps0+C8XnJ5nN8bqHGGbCX0A2ppV6+VmXCoAu8vqbC+D4HA+Yb
+	ppw8ubkjBuntOCUPH8q5I9QK9MOY0+7cVEY/MesXhxo/tgOIWH7SBqixFTFLIVpK
+	6Pz+hkP6xt0T1dc1URCJwoVhP08AasiOdN6ZwpjAZwpwBAO++rFG7GVg+7Ob20HU
+	0QlU78A2n6d8QRH97XMqUxEOjuCGPtqzp6g8x686RqJCLFHyRKK2iiDw+S4+cVsT
+	XT25DhNV7FmoYoA8mnKF86hnQy2Qx4cqyxm9guKsfYL/g2ua3Vi0QM3Ijj7x6XUd
+	Ft+u1xPDTfnRoTZ4PCNUlQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:content-transfer-encoding:content-type
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1794905620; x=1794992020; bh=g
-	Jp9XtUVN8HXaeDplv05/rVBEBBKZPI/PuXYZUyDkUQ=; b=QlFjJqkT5oqhN51D3
-	Q9vqyu3KQreZG6aLr0RMZ4Xl+bpk7VQHjXhJnSQrFomq/VzQRS6ICTZPbTCNrbq4
-	JO05p0oLNQyBZcQHeFfkhMEwPnI66toyj5GVft9ptrI37kvhvJx2oue9munZOp2d
-	75ZADAmB837HlKhY7CwiqSH9SSU57ohd/AILGtFn/bxWpcXjFs5NM64pdQeeWkIO
-	hw593g1XgD6OCtpIJraA7pIVKqPVSHPkiMNCineQa/fyIuQFO6ypQiFBBKAMtoMe
-	XrdNUUbxXN11A/XlsBoxugXwqBv3JxkTbUoVMyoEvRXO8mCeJcn67qttjbLRdo73
-	jz3dQ==
+	:x-me-sender:x-sasl-enc; s=fm3; t=1794905901; x=1794992301; bh=6
+	NMJ1GLrsB0q74GMK+D5RThy9vialepBoJS3jcYqse0=; b=nT83gZjsecrHxUMPy
+	JE6FykJlK4IZE+OrNrr49Okfb9eMAOBFiKfmQCqxysZ98AHinc3H9FbG+iXhSDYS
+	EMcP33y2BzL0n3BEOo+fQd573aGmdBICYKapbOFgiI817j3nXD4FuTtgzgaJ9DeU
+	eVb+XBJJb1YuaVu373daPZq2y/vwjjlFiyB5/DX/f2aPFnfm4A2HYq6gj+JJkcuh
+	wcxIRODe3AYE3FCx6LTAsJRa6B3wfY3hyA3Wem7/oyeyHn1UAu+ossD+6syA9Cq1
+	Qlt76ao/JAxMz/D49zG4UHv0Lj1UPxsuBnS4J2ib8A3GgnQLxbXY4JaoP9xhShgF
+	bpDng==
 X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
 	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
 	action=sign d=pbarker.dev a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1794905620; d=pbarker.dev;
+DKIM2-Signature: i=1; m=1; t=1794905901; d=pbarker.dev;
 	mf=PHBhdWxAcGJhcmtlci5kZXY+;
 	rt=PGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZz4=;
-	s=fm2:rsa-sha256:iRRkaBgTLvTwON4e9MpgYg2UGvVd++H89zcxdo4qTFgFfMf
-	MiSEzzrAFu2xp0rO9MIpDQ/UAu+kFEF0OW3awOIvuqb0OTt2cNEwUXUvPplg/E01
-	heqEVz9rhYeVw0xQDYIUMF9FNdQVOIIVshEwxfKWmSCwmMuUUBjuCtBKXawIG+qc
-	1So91qid+aVD3Ja7IV09kkPOCjmxxYiXDHGb0nptT5opP4MjNKUSk27lLQhqjBgr
-	XTI4mr3zJKHavodq14ymNYdPA6uPHKYp53XQDZ3qph+/WbGPvVUB8fzIKFgOkICD
-	tKI66I6N4Lu0zk7nKW+Tbl8yu7xEvhgKCPrfcxw==;
+	s=fm2:rsa-sha256:h9PSQcT/bwQvwURILJlGxqbW7UAGVXsgdt/vqaVhiOOycYK
+	16Dhsa0zMhuApKaLLAHeGekeR+QCpeHtQIV9rlEVhZS0BMLPNg968lpqkV1/4jfM
+	WqT5oQnATfDPx/P2bASSlFA1iQhGtkcDr9X2E7tpC3FOC7aWC0B5waC2yDLc2WEA
+	R3H8/yvQPhqLzXTU+aFvAD9HfWaXTUbMYc7pxpffUBOtXoIylYb/YDFbxeQGV8RE
+	Gpxn4bp5tRTQ3LK1XzDh+uE5lIsne5tHn6S+5WorOoIio98Q2ktjZcyS6L2NoXK3
+	gSQxWhzsUNe7LY0BANlainbCvpDMGBrYRgk5Q3Q==;
 X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
 	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
 	action=mi-m=1; hc=11;
 	hn=content-transfer-encoding,content-type,date,feedback-id,from,
 	in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:uxmwlYGr5cGgtTaGNJYVfcGQxgKqpNsOKOXy6L5TcUU=:med2C8d8OcJfuX78VIadceFQOuF1b1RA10hiothi3c0=;
-X-ME-Sender: <xms:FBb8aoZO1CD-o2qo4VB-auhjT0bxv5YTKt1g2x-SGcceeMcIyKPTVw>
-    <xme:FBb8apZyDSlXKdnqBfjkBj-dFVl4pFpbLw-nA32Y7m5jeX1fBkd4lh4w45g32Igdh
-    OoCIz0hRNlBw5wo1VtYfpt9XB7tv1pl5xBCESW9JXScmJpofmoBHwO7>
-X-ME-Received: <xmr:FBb8agmEPXpj0tcjaoP6ma2gbb2_I-075-zTCfvwfVHg0Fvt2P0W0L3Bh9dayBZQYyCOYacDLz8_ZYVVx3cr-knwRgoJ>
-X-ME-Proxy-Cause: dmFkZTEAffJUUFrRvXR2WxinmsNucwJYddo8Fz120o9Z/AZelo5YT5uQSc7Go1S8h4hgG4
-    2OUKeDw0he3jcoUXo78vrmP2vfEf+C4cB9F1gS89KZmTohJVFK4iestcv/DI6ta1HT/GQm
-    ImN4p9o+hcJ79N2XhPGEQrcjZKwGLPM8nBGD2ZUXf2AKG97x1451o5bJM1Pbbceq9OMiJW
-    twl2kJljtloGtKOTy4ha4KUMsxD3r3DdamGyEnWL74hRV4xjH4a/5aks5p/KkqD6K/YiJA
-    xs8J3T8f9wgE8GYmOtYMkNMYlWSFjATEV0V8KZGuswVGVSsVHK8lm5UrZTLRSbHjDwTqLs
-    h+I1mUCf+XS9Bgxv3OVnQwJNg2OTVfwEvfYhn8E+vmT1jHwdsjArcJzO6W1I8WJmRh/yFS
-    SGFk/yLD39fIaGfCzE10SqSvSZyKbpOPy2uXRMDLE9SqEVAb9D8Qfg4ge7stxxyjYtHkWR
-    W1WB5mIyjXsaK7ygkOyUN+KoBM+bt29pk3ceH5UDpRkIJwwYkW5p7TfEDCzvmR3ACcyjjh
-    dNCDaOmWXWufwlDf5ezpTgUMif2GqghKBTDh0t9oxhJvb13Kc9VQWS2VUEDuxGAhtX1GTr
-    mQUgOqHVpeI90JDvUkdqK14/DpEiIs4Xz/nUAy6dLDkS782ENF0p3VmAwhfQ
-X-ME-Proxy: <xmx:FBb8atyW9_4qhks3YGMpheQL43UOvvrq_VOdIp3IAuAa_FGjWS8ojg>
-    <xmx:FBb8amNhi8XNo9wWe7mSSrDNDb_oRzCcb7H6eOv-aAXpecB8dwIFyg>
-    <xmx:FBb8apRUs5TCnVnYnq84uSQj2gxDxULFT_Y2OuoyF_qjs6xI7FAfqA>
-    <xmx:FBb8asatXJqUD54gRufD1YxreLncEgamObGKF51VvclFsO2LAwcbAw>
-    <xmx:FBb8asZu8J6_8bW6nZDLgafjIECf-krXDMc0frn-m3ON6dZvre4VE-Mr>
+Message-Instance: m=1; h=sha256:/J9rcRU2sShfObivx5YxpsZp+fMxLBwhw+HhxHMqJDg=:UjwqaDoBKfKt/pF0gADXqacwCPNUJ8fy8XoYqO16q4Y=;
+X-ME-Sender: <xms:LRf8aszLWMW6wOGr8CdZvn_6lTpODN4NfSKVUynXl_nHIrtNlXOytA>
+    <xme:LRf8amSti24pjccpVsDk47YrXttSlo90l0Aq8ZZiqoqFbYzQff4_quzxL-cSQRh6b
+    CXEx9STtIq31jXPL9GQQTlxGAM88G4YiicUrCfXjfWmXKonEnVFVod7>
+X-ME-Received: <xmr:LRf8ar-huVMYt-NnEYAYFSxt0dxw42V2Rkor9rSmrBA-bCEopbsxF5bJpW1FHQJ4pReiqnMmAbmS_dX9_SQYzmEAnG8g>
+X-ME-Proxy-Cause: dmFkZTEe5iSoketnKAIFDhMPnjaPCyB7qQrSMdzhNh02saWxmy3uxkPeBiuZJOigV2onRJ
+    7o9MX3O6IE7I80AiSxK6iH0TLOCPRDwQ3LRRoMyYUDYxdzAYTC8DOWpE8xZw2Y94PHuUCO
+    iD/8L0cOMdmucG1K4ixWMI5un5kZHokE/W9XdMJyxOrNvMX10N5EobVzE6bnrpJYytib+T
+    svv3hh2/h9X3rXH+gXT9ljUwH86g4Ian38JM97Gb9RAovLXrU6Ap1cmAlRgSEj5M4KyUCF
+    /fpDcYKhFZnBAvfpmK2nk2NqYFjf1c02uM1o0ouiz32Z+Ax44lE6YxQImrdW4dJCjMVNq3
+    PM1ZCh8HAzD3eX11kmvN6ujJP9Pmn4EQU1bVuWSbMsVm7FJYnE85n7QKlVoaoA/R7CUweg
+    ppkfCOsH4KBhzsQhQKpdFzI5j+xjWMbR4RDxbpO7TxWQzRVioc2P2ej5DFtvIS1mni8jT0
+    2bv37hPH7t7XyHMsJJC6CFYDeyUwXCQc3isIqb491tXEywkT0ZLv+sJ+DnKnBwSEUXW/Yt
+    zDZKU07XB2eOyURj2WyfMzWzNrPC2bLTzlwfqanb+pGFXonzuwS7T4lcvZ3aUWgrJFPerO
+    tFLqCLazs9CNwiJ5T3ivqCLu2O9Jd2bKxptL8f4bMgDfTRnnbjhr+kYYkpWw
+X-ME-Proxy: <xmx:LRf8alrBSVPysbc6I0w18VvQ1Mj2WIhCQ09v6kKQih5BExnnvKa4qQ>
+    <xmx:LRf8agmt3O67crjgMksaDHxEm3z3Z1Kq_ogEySD0_rP3SClh458LmA>
+    <xmx:LRf8akKuT-frCdpgPuAL3B8n-3dI1vsHRiRPOVvV2qb91XS9qF2dsA>
+    <xmx:LRf8atww6c-cC-x08d7ovbTX_rMQTqu796tXQy98QYDYalRMyTcyFg>
+    <xmx:LRf8alJDiiI4qH5DU7VuFOfwiRq1P0r5Nu9-X0nEh4UK5U5isUp3Hole>
 Feedback-ID: i51494658:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 17 Nov 2026 03:53:39 -0500 (EST)
+ 17 Nov 2026 03:58:21 -0500 (EST)
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 17 Nov 2026 08:53:38 +0000
-Message-Id: <DMXCXTQOM1ZW.1OMQYIZFM1ZTV@pbarker.dev>
-Subject: Re: [PATCH v2 1/2] fetch/wget: Have checkstatus() capture
- connection_cache, not fetch
+Date: Tue, 17 Nov 2026 08:58:20 +0000
+Message-Id: <DMXD1FDZAIFH.170S6L7DXU6FC@pbarker.dev>
+To: <ecordonnier@snap.com>, <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH v2 2/2] fetch/wget: Reuse the checkstatus() urllib
+ opener
 From: "Paul Barker" <paul@pbarker.dev>
-To: "Etienne Cordonnier" <ecordonnier@snap.com>,
- <bitbake-devel@lists.openembedded.org>
 X-Mailer: aerc 0.22.0
 References: <20260928125051.2483039-1-ecordonnier@snap.com>
- <20260928125051.2483039-2-ecordonnier@snap.com>
- <CAHUKmYYpvYHaAbFVoBk7XJivpQet0G3wQ5or0BohNBMhMNH26A@mail.gmail.com>
-In-Reply-To: <CAHUKmYYpvYHaAbFVoBk7XJivpQet0G3wQ5or0BohNBMhMNH26A@mail.gmail.com>
+ <20260928125051.2483039-3-ecordonnier@snap.com>
+In-Reply-To: <20260928125051.2483039-3-ecordonnier@snap.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 08:53:51 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20442
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 08:58:31 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20443
 
-On Mon Nov 16, 2026 at 7:51 PM GMT, Etienne Cordonnier wrote:
-> Hi,
-> is the patch OK? I see that it has been in master-next for a while. Is
-> there some potential issue I should address?
+On Mon Sep 28, 2026 at 1:50 PM BST, ecordonnier wrote:
+> From: Etienne Cordonnier <ecordonnier@snap.com>
+>
+> checkstatus() builds a new urllib opener with its redirect, proxy and
+> connection cache handlers on every call, although sstate.bbclass calls it
+> for every object in an sstate mirror check with the same settings. Keep
+> the opener on the FetchConnectionCache, keyed on the certificate checking
+> setting and the fetcher environment, and rebuild it only when those
+> change. A connection cache is only used by one thread at a time, so no
+> locking is needed.
+>
+> Checking 2,114 objects on the Yocto sstate mirror with BB_NUMBER_THREADS =
+=3D "8"
+> reduced the time to task execution from 26.9s to 25.1s on average.
 
-Hi =C3=89tienne,
+This is about a 7% performance improvement, so would be good to have.
 
-Unfortunately we have limited bandwidth for reviewing changes and there
-is a lot of work in progress. Apologies that this got stuck in the
-queue.
+The question is, what state do the urlllib opener and the handler
+instances maintain across requests? Is there risk of credentials or
+headers intended for one host being inappropriately sent with the
+request to a different host?
 
-This patch looks fine, I will take a look at the second patch in the
-series and give some feedback.
+Someone needs to look at this and confirm that it doesn't introduce any
+security risks.
 
 >
-> On Mon, Sep 28, 2026 at 2:51=E2=80=AFPM <ecordonnier@snap.com> wrote:
+> AI-Generated: Uses Claude Code (Claude Opus 5.5)
+> Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
+> ---
+>  lib/bb/fetch/__init__.py |  2 ++
+>  lib/bb/fetch/wget.py     | 22 +++++++++++++++-------
+>  2 files changed, 17 insertions(+), 7 deletions(-)
 >
->> From: Etienne Cordonnier <ecordonnier@snap.com>
->>
->> checkstatus()'s nested handler classes referenced fetch.connection_cache=
-,
->> so their methods closed over the fetch parameter itself rather than just
->> the connection cache. Capture connection_cache in a local variable inste=
-ad
->> and use that everywhere. No behaviour change; this makes the next commit=
-,
->> which caches the urllib opener built from these handlers, safe: a cached
->> opener's closures no longer keep the Fetch object that built it alive.
->>
->> AI-Generated: Uses Claude Code (Claude Opus 5.5)
->> Signed-off-by: Etienne Cordonnier <ecordonnier@snap.com>
->> ---
->>  lib/bb/fetch/wget.py | 23 ++++++++++++-----------
->>  1 file changed, 12 insertions(+), 11 deletions(-)
->>
->> diff --git a/lib/bb/fetch/wget.py b/lib/bb/fetch/wget.py
->> index 972c84048..fe2de25d3 100644
->> --- a/lib/bb/fetch/wget.py
->> +++ b/lib/bb/fetch/wget.py
->> @@ -178,23 +178,24 @@ class Wget(FetchMethod):
->>      def checkstatus(self, fetch, ud, d, try_again=3DTrue):
->>          check_certs =3D self.check_certs(d)
->>          newenv =3D bb.fetch.get_fetcher_environment(d)
->> +        connection_cache =3D fetch.connection_cache
->>
->>          class HTTPConnectionCache(http.client.HTTPConnection):
->>              def cache_id(self):
->>                  return None
->>
->> -            if fetch.connection_cache:
->> +            if connection_cache:
->>                  def connect(self):
->>                      """Connect to the host and port specified in
->> __init__."""
->>
->> -                    sock =3D fetch.connection_cache.get_connection(
->> +                    sock =3D connection_cache.get_connection(
->>                          self.host, self.port, self.cache_id())
->>                      if sock:
->>                          self.sock =3D sock
->>                      else:
->>                          self.sock =3D socket.create_connection((self.ho=
-st,
->> self.port),
->>                                      self.timeout, self.source_address)
->> -                        fetch.connection_cache.add_connection(
->> +                        connection_cache.add_connection(
->>                              self.host, self.port, self.sock,
->> self.cache_id())
->>
->>                      if self._tunnel_host:
->> @@ -206,17 +207,17 @@ class Wget(FetchMethod):
->>                          newenv.get("SSL_CERT_FILE"),
->>                          self._tunnel_host, self._tunnel_port)
->>
->> -            if fetch.connection_cache:
->> +            if connection_cache:
->>                  def connect(self):
->>                      """Reuse an established TLS connection when
->> available."""
->>
->> -                    sock =3D fetch.connection_cache.get_connection(
->> +                    sock =3D connection_cache.get_connection(
->>                          self.host, self.port, self.cache_id())
->>                      if sock:
->>                          self.sock =3D sock
->>                      else:
->>                          super().connect()
->> -                        fetch.connection_cache.add_connection(
->> +                        connection_cache.add_connection(
->>                              self.host, self.port, self.sock,
->> self.cache_id())
->>
->>          class CacheHTTPHandler(urllib.request.HTTPHandler):
->> @@ -252,7 +253,7 @@ class Wget(FetchMethod):
->>                  # request.
->>
->>                  # Don't close connection when connection_cache is enabl=
-ed,
->> -                if fetch.connection_cache is None:
->> +                if connection_cache is None:
->>                      headers["Connection"] =3D "close"
->>                  else:
->>                      headers["Connection"] =3D "Keep-Alive" # Works for
->> HTTP/1.0
->> @@ -282,8 +283,8 @@ class Wget(FetchMethod):
->>                      # with the dead connection removed from the cache.
->>                      # If it still fails, we give up, which can happen f=
-or
->> bad
->>                      # HTTP proxy settings.
->> -                    if fetch.connection_cache:
->> -                        fetch.connection_cache.remove_connection(
->> +                    if connection_cache:
->> +                        connection_cache.remove_connection(
->>                              h.host, h.port, h.cache_id())
->>                      h.close()
->>                      raise
->> @@ -316,9 +317,9 @@ class Wget(FetchMethod):
->>                  resp.msg =3D r.reason
->>
->>                  # Close connection when server request it.
->> -                if fetch.connection_cache is not None:
->> +                if connection_cache is not None:
->>                      if 'Connection' in r.msg and r.msg['Connection'] =
-=3D=3D
->> 'close':
->> -                        fetch.connection_cache.remove_connection(
->> +                        connection_cache.remove_connection(
->>                              h.host, h.port, h.cache_id())
->>
->>                  return resp
->> --
->> 2.43.0
->>
->>
+> diff --git a/lib/bb/fetch/__init__.py b/lib/bb/fetch/__init__.py
+> index 55ab710f3..0eb660685 100644
+> --- a/lib/bb/fetch/__init__.py
+> +++ b/lib/bb/fetch/__init__.py
+> @@ -2090,6 +2090,8 @@ class FetchConnectionCache(object):
+>      """
+>      def __init__(self):
+>          self.cache =3D {}
+> +        # urllib openers built by the wget fetcher, see Wget.checkstatus=
+()
+> +        self.opener_cache =3D {}
+> =20
+>      def get_connection_name(self, host, port, connection_id=3DNone):
+>          if connection_id is None:
+> diff --git a/lib/bb/fetch/wget.py b/lib/bb/fetch/wget.py
+> index fe2de25d3..9cb4a4f32 100644
+> --- a/lib/bb/fetch/wget.py
+> +++ b/lib/bb/fetch/wget.py
+> @@ -435,13 +435,21 @@ class Wget(FetchMethod):
+>          # to scope the changes to the build_opener request, which is whe=
+n the
+>          # environment lookups happen.
+>          with bb.utils.environment(**newenv):
+> -            context =3D self.ssl_context(d)
+> -            handlers =3D [FixedHTTPRedirectHandler,
+> -                        HTTPMethodFallback,
+> -                        urllib.request.ProxyHandler(),
+> -                        CacheHTTPHandler(),
+> -                        CacheHTTPSHandler(context=3Dcontext)]
+> -            opener =3D urllib.request.build_opener(*handlers)
+> +            opener =3D None
+> +            if connection_cache is not None:
+> +                opener_key =3D (check_certs, tuple(sorted(newenv.items()=
+)))
+> +                opener =3D connection_cache.opener_cache.get(opener_key)
+> +
+> +            if opener is None:
+> +                context =3D self.ssl_context(d)
+> +                handlers =3D [FixedHTTPRedirectHandler,
+> +                            HTTPMethodFallback,
+> +                            urllib.request.ProxyHandler(),
+> +                            CacheHTTPHandler(),
+> +                            CacheHTTPSHandler(context=3Dcontext)]
+> +                opener =3D urllib.request.build_opener(*handlers)
+> +                if connection_cache is not None:
+> +                    connection_cache.opener_cache[opener_key] =3D opener
+> =20
+>              try:
+>                  parts =3D urllib.parse.urlparse(ud.url.split(";")[0])
 
 
 
