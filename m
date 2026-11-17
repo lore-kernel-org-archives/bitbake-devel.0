@@ -1,105 +1,137 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.15959.1794916246133221974
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.16634.1794918756839754278
  for <bitbake-devel@lists.openembedded.org>;
- Tue, 17 Nov 2026 03:50:46 -0800
+ Tue, 17 Nov 2026 04:32:37 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=QpCCK0F9;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.53, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4a2000d5fb1so23306435e9.1
-        for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 03:50:45 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=XP6Xz59P;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.42, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4bb61185057so21109185e9.1
+        for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 04:32:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1794916244; x=1795521044; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1794918755; x=1795523555; darn=lists.openembedded.org;
         h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=bX2tO6rSChploXgF7loh/dJ+6IrSJl6OASKYC0bPtE4=;
-        b=QpCCK0F9McVmqdzCzlF69FFUPcVKWW4LcDPkEyUk+i8mm02kHaCXSla2juIIEmw7cf
-         5PNfPboo7S8mvrp+Gg7FXOZrSd7qDkhKuz9TBDYUhrfRWA+m498InzMghaj/ELWRrfB1
-         CccuXPjRpa0Zyfw45gNkwchxaUxQZyuAmZnlM=
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=HiM5VUSMGvzxMBgF6W0xWllfIYsf+7nge/qMYFjvr+o=;
+        b=XP6Xz59PJBuJbwAXRbmFNjPNHqQpe4IHb9FrgS1SRv/6WDeHAVh8DYtCZBAxeNf8o/
+         LlGmUN7XegFUTo8bbNJIil2fhfmBnAjJwwo74mVMvQW20jSigrVP4ZMzQGwQaebHhJPo
+         +wdzgO/0OjiOzh9deXudXWcmswHEJR3uEAu1o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794916244; x=1795521044;
+        d=1e100.net; s=20260707; t=1794918755; x=1795523555;
         h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:to:from:subject:message-id:x-gm-gg
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=bX2tO6rSChploXgF7loh/dJ+6IrSJl6OASKYC0bPtE4=;
-        b=RmjzalQ0VqYxDKh2rhaxkra3TfwAhTil/etXdTPUW8P66ZkOEgTOop2dBS6GPsPePx
-         4lRTvjG74ud1R8ri6WxOSMDtkkHZWnGewkRX8fWJ+wJFvAC3XD0VSPBtkrosYeMRiq+9
-         gfOhQX37/JpQp8Lvt4KPNLqbGmLUqzPlX10/eGq3iiRSnMY2tPNN/KJU7MouUkxDOyTT
-         tBRQ3rWU2KR6eMXUgASzgPhvXyOsz296l9BNOam+9R9Vc1Y8hw4tb/W+nG97j5g+T15T
-         wM6hWGHuiOi2Em4QB7Hnxv2AC0+jYvo52GYi9/rbpd9joUIP2IBMz5kVDoAGu3lM6plT
-         G4nA==
-X-Forwarded-Encrypted: i=1; AL+hErEXlC91Q1Z8xKNcS8poEx9zURQ8PKKsl6md/vNWRJSl4VNW2bvTzYGHOIs8vjRM7itCEsSd7amouO9RIg3o@lists.openembedded.org
-X-Gm-Message-State: APuU4Z9LuyFCuUrw+1pzRLcVrTKXDHLiG65cXbufSjL0d+eCAIjo1kf6
-	0USgSsWDCgmifwstJTGKlSV5ToS1hpccGnbaI5WIwT+julSyaq2Nq4tNhJu+b9rOWkU=
-X-Gm-Gg: AYBFou280Q2D8XO253x08xNDOHFiaGZW37cpRjcJ3tBNLLnFsPvKLaFxEeP27Zmy3tr
-	yemCZ2XZ31SluDcDTjykzDjbQ/+dra3+iDD0Pxsl81NZhlKQhYaxy8oWUyXnpfAPiAzWT7/Q8yh
-	gWxedfHpNUovBCwqx5tyojSV4SzMU8IREy3fnPnKMI7S6LF4HNfN1jQIX3phB+CUG4WIgGYrrVA
-	mM2fze9xpH4SmPumMySFA4gv8z2CDdiEi/t94bnrqoElfutIUjLqOtSsn7Ldb7qMOp1+XRxKtqV
-	0TedYsMqP17RoAF6P2ciHB9xG1m4zqICofKp7NKP76FfpsSobZqsuMyngFHRBQnmSn44ZqcdYps
-	DmnqOcqxJDl16P/Tpf2Euvk7NC6avOc3n2I6RXr7OVk0EcQAJLXfkKd0CX8a6o+NARiaX9Ug3DY
-	c0sBoBOicyCRU5ME6cHmgp/HmFJ4z+yd5NFbeqd5jI6HNmnP4Sg0mL43e7YfiI9Us95l4ZigSTU
-	P9yVqqh250V/RAuUyB0j5Wm8tUJcZ5Tu5rCYCfaemjS3wRrC021QHlvfCx3zVCAJ8mwIDl03SIy
-	33ZuTkqj7Pw8CCpvRIxUBW3m3ZpfmpE+opNmZBoVNXmgCMZ0Ea9TMVUZZXdL8SHU1+ahpbqN9cM
-	8yhqZ9iiGZhvcldI6rw==
-X-Received: by 2002:a05:600c:a00d:b0:4bb:6842:66ef with SMTP id 5b1f17b1804b1-4bb6842670dmr196824815e9.30.1794916244331;
-        Tue, 17 Nov 2026 03:50:44 -0800 (PST)
+        bh=HiM5VUSMGvzxMBgF6W0xWllfIYsf+7nge/qMYFjvr+o=;
+        b=s45idmBAt8Wu+NWpuCTA7/7bDl5ac9oJym6n/6C0Stg9i0j6P96w4t01pg6M9A9DVI
+         LxaaDcuOQN/ac5pgqQLz8v4/mFS6THm/nbqbY02i0lVDaz2TJNwzXDgoyTsLKvxhBegC
+         L4MtpixqW5EsMyzGvfkiYEK5j80aag5fmmuwbN7I+rGTNYarKS7KqUyQ5k/+KpgCGgtm
+         eFWv+6RMB4auNXdDkUQi8FkfxR0GJpwDDaST4C+/o1MazxLg62STgaAtRFndIvdDOLB/
+         scgPlZ4pHNAvZaQP6EtGzE7ezEaZZ3XlMBy+cGWf3dsEQZiXVK79isPkR80pPkZ2UVY2
+         NgFQ==
+X-Forwarded-Encrypted: i=1; AL+hErFrBmXfhMh9WJIZxxMTg11AgAill8agSGkCecI1ZPkHxAWVFfv8B6sRraZR1DVNOBU7zE/BzyQraFX9QRpk@lists.openembedded.org
+X-Gm-Message-State: APuU4Z/xiE/u4V9+24bh/+OTRAsBoD0t3gFrmP8DVVqvzm8e4VElTaAm
+	TAaPIpTcUfmQMv0UbK1FInGU+e84hRU75tJvkrbbTxilqkos5Oh/BCM7grBKxAOkMsUUCqDKEEI
+	YvnKqPR4=
+X-Gm-Gg: AYBFou2ueA7xS8FPvg0NECpKi33Z2pzwRd4y+Fj4+fmVrA/kvgzRqH4juX/enoZGaUD
+	oSatadErlW/6TerOmOWyEBmpPT3NQqtPzfy1n0kiZrn/u7JKvsxGh9F7v8s9iwxVfTo5w9SLZ5+
+	Ddd0NxkSoN9ewiMw6X4YGijHBx0GfQZbZTqk45ZD/DdekemIjXnXj5YEyxzO3ojbWeXqBHSVvN1
+	W9c22x7tzpsoLRk2BJ4jbmAka1c2h5+REb5QRhP9ZP+R2S6/sA6RU7aW90yf9NYErAyc9bKDkNu
+	izUfUDgkz570dsvK776TZYIHcqSJS1WWPHZ52oAFe1SKOA6BN/kL2CBiYVu7+42AORAnBPOmUZy
+	U5/jcabSgBcJm0M+u3Zl6f98MW8BC6vuUKH7Mm08uR+tBenILe8BwWZOAGpfE+mN5HpeIrWAz83
+	/rYJBV4yaQugmSaFiAuCdrJBGs79Ww5tqvR6zVc3IStG+JvR72TT85E8HFh3+1f3bZ8+s/teyO+
+	CyubQ/uiUHRPiR/y/2WSAAnuZy4BkOZzqH9D30jdv52uOwV3/1bjqMFnBSnpsAQ/0zTwg4ShtCh
+	MQ0i7b5o9kSqIv/8zDU6HkdNPqcr0C6CHSwuCKqj87r8iIrbSE+36womOF7vFiT4S3kOJ8Rt6wi
+	eKcM4QeBEqDSMiwACPQ==
+X-Received: by 2002:a05:600c:8b6c:b0:4a3:5a7b:6002 with SMTP id 5b1f17b1804b1-4bb649d4148mr187399255e9.28.1794918754909;
+        Tue, 17 Nov 2026 04:32:34 -0800 (PST)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from ?IPv6:2001:8b0:aba:5f3c:5769:a004:a5af:24bf? ([2001:8b0:aba:5f3c:5769:a004:a5af:24bf])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb78420edasm94547925e9.9.2026.11.17.03.50.43
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb7838c99bsm61691595e9.6.2026.11.17.04.32.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Nov 2026 03:50:43 -0800 (PST)
-Message-ID: <83b8af04f9ac91840f44f4e5a11b8f565245f94a.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH] runqueue: Don't defer setscene tasks
- behind already completed tasks
+        Tue, 17 Nov 2026 04:32:33 -0800 (PST)
+Message-ID: <a41c1517f39b3f6ea520094767ee2b98ab010b7a.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] [PATCH] cooker: fix -w with a file name that
+ has no directory
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: mark.hatle@amd.com, bitbake-devel@lists.openembedded.org
-Date: Tue, 17 Nov 2026 11:50:43 +0000
-In-Reply-To: <20261115220956.758312-1-mark.hatle@amd.com>
-References: <20261115220956.758312-1-mark.hatle@amd.com>
+To: bbnpreetsingh@gmail.com, bitbake-devel@lists.openembedded.org
+Cc: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Date: Tue, 17 Nov 2026 12:32:30 +0000
+In-Reply-To: <20261114185534.7-1-bbnpreetsingh@gmail.com>
+References: <20261114185534.7-1-bbnpreetsingh@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.2-10build1 
 MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 11:50:51 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20447
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Tue, 17 Nov 2026 12:32:44 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20448
 
-T24gU3VuLCAyMDI2LTExLTE1IGF0IDE1OjA5IC0wNzAwLCBNYXJrIEhhdGxlIHZpYSBiaXRiYWtl
-LWRldmVsIHdyb3RlOgo+IFdoZW4gYSB0YXNrIGNvbXBsZXRlcywgdGhlIGZpcnN0IHNldHNjZW5l
-IHRhc2sgZGVmZXJyZWQgYWdhaW5zdCBpdCBpcwo+IHJlbGVhc2VkIGFuZCBhbnkgb3RoZXJzIGFy
-ZSByZS1kZWZlcnJlZCBiZWhpbmQgdGhhdCB0YXNrLiBJZiB0aGUgcmVsZWFzZWQKPiB0YXNrIGhh
-ZCBhbHJlYWR5IGNvbXBsZXRlZCAoZS5nLiBpdHMgc2V0c2NlbmUgd2FzIHNraXBwZWQgZHVlIHRv
-IGEgdmFsaWQKPiBzdGFtcCksIGl0IG5ldmVyIGNvbXBsZXRlcyBhZ2Fpbiwgc28gdGhlIHJlLWRl
-ZmVycmVkIHRhc2tzIGFyZSBuZXZlcgo+IHJlbGVhc2VkLiBTZXRzY2VuZSB0aGVuIGNhbid0IGZp
-bmlzaCB1bnRpbCB0aGUgZGVhZGxvY2sgZmFsbGJhY2sgZm9yY2VzCj4gZWFjaCBvbmUsIHByaW50
-aW5nICJSdW5xdWV1ZSBkZWFkbG9ja2VkIG9uIGRlZmVycmVkIHRhc2tzIi4KPiAKPiBUaGlzIHNo
-b3dzIHVwIHdpdGggdGhyZWUgb3IgbW9yZSBtdWx0aWNvbmZpZ3Mgc2hhcmluZyBhIHRhc2sgaGFz
-aC4gU2tpcAo+IGFscmVhZHkgY29tcGxldGVkIHRhc2tzIHdoZW4gcGlja2luZyB0aGUgbmV3IGJs
-b2NrZXIuCj4gCj4gQUktR2VuZXJhdGVkOiBVc2VzIEdpdEh1YiBDb3BpbG90Cj4gU2lnbmVkLW9m
-Zi1ieTogTWFyayBIYXRsZSA8bWFyay5oYXRsZUBhbWQuY29tPgo+IC0tLQo+IMKgbGliL2JiL3J1
-bnF1ZXVlLnB5IHwgNCArKysrCj4gwqAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspCj4g
-Cj4gZGlmZiAtLWdpdCBhL2xpYi9iYi9ydW5xdWV1ZS5weSBiL2xpYi9iYi9ydW5xdWV1ZS5weQo+
-IGluZGV4IGVmOTVlYjQ2Yi4uMmE2YjA5OWI4IDEwMDY0NAo+IC0tLSBhL2xpYi9iYi9ydW5xdWV1
-ZS5weQo+ICsrKyBiL2xpYi9iYi9ydW5xdWV1ZS5weQo+IEBAIC0yMTEyLDYgKzIxMTIsMTAgQEAg
-Y2xhc3MgUnVuUXVldWVFeGVjdXRlOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgYmIuZGVidWcoMSwgIkRlZmVycmVkIHRhc2sgJXMgbm93IGJ1aWxkYWJsZSIgJSB0
-KQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZGVsIHNlbGYuc3Ff
-ZGVmZXJyZWRbdF0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHVw
-ZGF0ZV9zY2VuZXF1ZXVlX2RhdGEoW3RdLCBzZWxmLnNxZGF0YSwgc2VsZi5ycWRhdGEsIHNlbGYu
-cnEsIHNlbGYuY29va2VyLCBzZWxmLnN0YW1wY2FjaGUsIHNlbGYsIHN1bW1hcnk9RmFsc2UpCj4g
-K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICMgQSB0YXNrIHdoaWNoIGFs
-cmVhZHkgY29tcGxldGVkIHdpbGwgbmV2ZXIgY29tcGxldGUgYWdhaW4gc28gbXVzdAo+ICvCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjIG5vdCBiZWNvbWUgdGhlIG5ldyBi
-bG9ja2VyLCBlbHNlIHRoZSByZW1haW5pbmcgdGFza3MgbmV2ZXIgZ2V0IHJlbGVhc2VkCj4gK8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIHQgaW4gc2VsZi5ydW5xX2Nv
-bXBsZXRlOgo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IGNvbnRpbnVlCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBmb3Vu
-ZCA9IHQKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBlbHNlOgo+IMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYmIuZGVidWcoMSwgIkRlZmVycmluZyAl
-cyBhZnRlciAlcyIgJSAodCwgZm91bmQpKQoKSnVzdCB0byBjb25maXJtLCB0aGlzIGlzIG5vdCBx
-dWl0ZSB0aGUgcmlnaHQgZml4LiBJIGRpZCB3b3JrIG91dApleGFjdGx5IHdoeSBpdCB3YXMgYnJl
-YWtpbmcgYW5kIHdoaWxzdCB0aGlzIHdvcmtzIGFyb3VuZCB0aGUgcHJvYmxlbSwKdGhpcyBicmVh
-a3MgdGhpbmdzLiBUaGVyZSBpcyBhIGJldHRlciBmaXggYW5kIEkndmUgc2VudCBwYXRjaGVzLgoK
-Q2hlZXJzLAoKUmljaGFyZAo=
+On Sat, 2026-11-14 at 18:55 +0000, Baban via bitbake-devel wrote:
+> "bitbake -w events.json" fails with:
+>=20
+> =C2=A0 FileNotFoundError: [Errno 2] No such file or directory: ''
+>=20
+> There is no directory to create for a bare file name, so don't try.
+>=20
+> Fixes: ee174b231897 ("cooker: Add support for BB_DEFAULT_EVENTLOG")
+> Signed-off-by: Babanpreet Singh <bbnpreetsingh@gmail.com>
+> ---
+>=20
+> Notes:
+> =C2=A0=C2=A0=C2=A0 Found while looking at YOCTO #16492. Applies with or w=
+ithout Mathieu's
+> =C2=A0=C2=A0=C2=A0 patch for that bug.
+>=20
+> =C2=A0lib/bb/cooker.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 5 +++-=
+-
+> =C2=A0lib/bb/tests/cooker.py | 18 ++++++++++++++++++
+> =C2=A02 files changed, 21 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+> index 8a422e506..f79cd5e6c 100644
+> --- a/lib/bb/cooker.py
+> +++ b/lib/bb/cooker.py
+> @@ -457,8 +457,9 @@ You can also remove the BB_HASHSERVE_UPSTREAM setting=
+, but this may result in si
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if not self.eventlog or =
+self.eventlog[0] !=3D eventlog:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+# we log all events to a file if so directed
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+# register the log file writer as UI Handler
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if no=
+t os.path.exists(os.path.dirname(eventlog)):
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 bb.utils.mkdirhier(os.path.dirname(eventlog))
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dirna=
+me =3D os.path.dirname(eventlog)
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if di=
+rname and not os.path.exists(dirname):
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 bb.utils.mkdirhier(dirname)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+writer =3D EventWriter(self, eventlog)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+EventLogWriteHandler =3D namedtuple('EventLogWriteHandler', ['event'])
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+self.eventlog =3D (eventlog, bb.event.register_UIHhandler(EventLogWriteHand=
+ler(writer)), writer)
+
+Thanks for the patch. When reviewing this I realised that the current
+working directory in the server code might not be the same as the
+commandline.
+
+Would you be able to tweak the code in main.py where it sets=20
+"options.writeeventlog =3D eventlog" to resolve the path there to a full
+path?
+
+It can also be set via BB_DEFAULT_EVENTLOG and I think we should just
+show an error if that path isn't absolute?
+
+I think that would resolve my concerns.
+
+Thanks,
+
+Richard
 
