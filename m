@@ -1,203 +1,120 @@
-Subject: gitsm fetcher fails when `PREMIRRORS_ONLY` is set
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.4785.1795121340838308790
+ for <bitbake-devel@lists.openembedded.org>;
+ Thu, 19 Nov 2026 12:49:01 -0800
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@gmail.com header.s=20260707 header.b=u+mvqT3u;
+ spf=pass (domain: gmail.com, ip: 209.85.221.46, mailfrom: stondo@gmail.com)
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-498f5fa5103so85632f8f.2
+        for <bitbake-devel@lists.openembedded.org>; Thu, 19 Nov 2026 12:49:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795121339; x=1795726139; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ijw2flT7UO3h78B4/qb4oRoezXXLJbqeqx18Hi0sApg=;
+        b=u+mvqT3uvfo7PSUUX43xLeJveTLHtgHJoOl/+qJyLNayzD/OFDpBgpcM9KUuQfCqU6
+         gA44gCQgIIuLSlt+aqSPWqc6bwEf3WsKfnY2hufKyo+uoyKH3wfIhFHAM0DVNsA3G8Aj
+         pFJWHGrq5AsyyKSAmw2iDwrEcJB3u4y8ZxCXe4hBt+DpHBy9IgiLIvodOHjTyVUntNHb
+         OGAJfL7Wt+NuORohKuHShqX8V7FLVIwNJWIhMNwKipL60EWNiW3kD8SwaNGtbu+EUsOv
+         h8xZzqqi2NEGsfkhxQ7xXZ9Ycdh09+CZfyXhMqu4EDhWj4Z1NQnWFEQ5+LMhmm/y656b
+         Iilg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795121339; x=1795726139;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ijw2flT7UO3h78B4/qb4oRoezXXLJbqeqx18Hi0sApg=;
+        b=Q2AkEsljHT81Mmk8F8ZcUf/6riEtwjTNmkqH3zWWqkSYmvhbjs1fFRgJVjLPe3wqsm
+         p9jIGhhptSl4yfRoozY4kUdlnErMMoeP+PGqPcEsdi/SJTtXJOtI8qIbHiiFKjxu6Uux
+         ee2qq/6C9uNFCvLYNqu/1SEE4neN8/Dg7IpfQcT6Zpt4F3tzeZgkaOEl6yWMA97NXUzV
+         qrpVYg3IHcr/WVvB6egwI2dt+n11DSmoPEGdPtXBSqCFNVHSWreKtFoPyFureOLFBQMh
+         OQKjQeL++d6rg5uFJmlftDMM7LsiR5uRxFhJq+8RCEWwG4BspIHlQSRR9CRIxWYhZIBE
+         Iiew==
+X-Gm-Message-State: APuU4Z8iHFj5tGvImYz7/eO4ep+Diiyfpha217dvDJ2P8WOQ5otoYTFY
+	8/z0USSeGVVSiTJugtoa7/LErQfJbdkowKAX6Tc4XOhD+wIGSnQEDzmqG214KqlZ
+X-Gm-Gg: AZFdTZdnHqsYZTEctV2uG6iQrodsQMjJXCVy5aHTMPHP2vaUNlaUnTRLls7PrH5vGeO
+	NixVU6qZzfsRCCQbmD8yFanJSS0/k5vKfN4hWUfMJnQ9tVOD40r0BSamx/VX53fzeG4tbADASBM
+	iNl0xrChW4+wdh9EW3Lq5Hb5F1TjvRi/Ml/d8/+2RzI9rN8wHBadOn1lf3ZHA1HCHRJcdyMIMsk
+	E5GMWHz1OB6xTHykyrUs9XWySzgfEvdv5+lelsCpm6yTI03DxIUC0v3MWvyFhsPWMm36dcSZQDW
+	5UMbBhEMTZrAoTAVpjT1RQYGs+exXwY5iy8IMByEbG/6EiWdy5Q16rVhAOxDzrkCx8IHIX+Blb7
+	kHStBVsudGXGq+aXJoIS4eOXeF7oOlWlA1PuuOREpG26BMhe4CdlqeRe4xqR2q7S5XcFtJdsYx9
+	4iPXO3yChNosSaHWndp74f0bohNBevLHuMsYJphfpZOWAzw/HWFAGCRNUHOgAjaF0VXZP3HRPOq
+	sFeu2/s+ea5BVCpXr/QaB0GYt5nstnZ23TQNUU1Xmn3/8nL7fDaQ7wxDZBXo086An6DcVqbBOxL
+	RghPRizccIc=
+X-Received: by 2002:a5d:5888:0:b0:492:5ef7:5d98 with SMTP id ffacd0b85a97d-4abb6651686mr1045445f8f.38.1795121338819;
+        Thu, 19 Nov 2026 12:48:58 -0800 (PST)
+Return-Path: <stondo@gmail.com>
+Received: from fedora ([165.225.94.251])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab658e2c8csm1749597f8f.2.2026.11.19.12.48.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Nov 2026 12:48:58 -0800 (PST)
+From: Stefano Tondo <stondo@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-From: tiago.mlb.vasconcelos@gmail.com
-X-Originating-Location: Porto, PT (178.166.76.28)
-X-Originating-Platform: Windows Chrome 157
-User-Agent: GROUPS.IO Web Poster
+Cc: Joshua Watt <JPEWhacker@gmail.com>,
+	Alexander Kanavin <alex.kanavin@gmail.com>,
+	Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>,
+	Paul Barker <paul@pbarker.dev>,
+	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
+	Peter Marko <peter.marko@siemens.com>,
+	stefano.tondo.ext@siemens.com
+Subject: [PATCH v2 0/2] fetch: package identity of crate, gomod and npm URLs
+Date: Thu, 19 Nov 2026 21:48:54 +0100
+Message-ID: <20261119204856.2930668-1-stondo@gmail.com>
+X-Mailer: git-send-email 2.56.1
 MIME-Version: 1.0
-Date: Thu, 19 Nov 2026 06:13:03 -0800
-Message-ID: <9Kec.1795097583791318314.gZXu@lists.openembedded.org>
-Content-Type: multipart/alternative; boundary="RsQBOqB49sl0C4J0qllQ"
+Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Thu, 19 Nov 2026 14:13:08 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20461
-
---RsQBOqB49sl0C4J0qllQ
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Thu, 19 Nov 2026 20:49:09 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20462
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hi,
 
-I have encountered a gitsm submodule fetch failure that appears to be
-related to the following change:
+This series adds the fetcher API from the RFC "spdx30: name, version
+and purl for dependency downloads" [1]. Richard asked for a fetcher
+API that returns structured data with the purl, so that OE-Core does
+not read fetcher internals.
 
-https://lists.openembedded.org/g/bitbake-devel/message/17506
+Patch 1 adds FetchMethod.package_identity(). It returns a
+PackageIdentity dataclass with the name, the version and the purl of
+the downloaded package, or None. It uses only the URL and the
+datastore, so it works before the fetch and without network access.
 
-This change prevents Git fetcher to silently contact upstream
-despite BB_FETCH_PREMIRRORONLY being enabled.
+Patch 2 implements it for the crate, gomod, gomodgit and npm fetchers,
+with unit tests.
 
-However, for gitsm, this datastore is also passed to the nested submodule
-Fetch. The submodule therefore inherits BB_NO_NETWORK =3D "1", blocking its
-HTTP PREMIRROR download, even though the parent repository was downloaded f=
-rom
-the same PREMIRROR:
+The RFC also covered the downloads that gitsm and npmsw add by
+themselves. That part is not in this series. Richard and Alexander
+prefer to list those downloads in SRC_URI. I will send that change
+for npm in a separate series.
 
-The resulting error is:
+Changes in v2:
 
-gitsm: submodule download failed: NetworkAccess Network access disabled
-through BB_NO_NETWORK (or set indirectly due to use of
-BB_FETCH_PREMIRRORONLY) but access requested with command wget ...
+- package_identity() returns a PackageIdentity dataclass instead of a
+  dict, as Paul proposed [2]. The dataclass is frozen.
+- Rebased on master.
 
-I have considered the following approaches. The snippets below are
-illustrative examples, not complete patches.
+Tests: bitbake-selftest bb.tests.fetch.PackageIdentityTest passes.
+bb.tests.fetch without the network tests gives the same results as on
+master.
 
-*=20
+v3 of the OE-Core series that uses the API follows on the OE-Core
+list.
 
-Reset BB_NO_NETWORK in gitsm's download_submodule() at:
-https://git.openembedded.org/bitbake/tree/lib/bb/fetch/gitsm.py#n212
-Before creating the nested Fetch instance:
+[1] https://lore.kernel.org/openembedded-core/20261105122145.543282-1-stondo@gmail.com/
+[2] https://lore.kernel.org/bitbake-devel/DMZ3ERL47CEB.3KE9TOG6YIZPD@pbarker.dev/
 
-if bb.utils.to_boolean(d.getVar("BB_FETCH_PREMIRRORONLY")):
-   d.setVar("BB_NO_NETWORK", "0")
+Stefano Tondo (2):
+  fetch: Add package_identity() to the fetchers
+  fetch: Return the package identity of crate, gomod and npm URLs
 
-try:
-   newfetch =3D Fetch([url], d, cache=3DFalse)
-   newfetch.download()
-except Exception as e:
-   logger.error(
-       'gitsm: submodule download failed: %s %s'
-       % (type(e).__name__, str(e))
-   )
-   raise
+ lib/bb/fetch/__init__.py | 38 ++++++++++++++++++++++++
+ lib/bb/fetch/crate.py    |  7 +++++
+ lib/bb/fetch/gomod.py    | 16 ++++++++++
+ lib/bb/fetch/npm.py      |  7 +++++
+ lib/bb/tests/fetch.py    | 64 ++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 132 insertions(+)
 
-This allows the submodule to access the HTTP PREMIRROR.
+-- 
+2.56.1
 
-*=20
-
-Scope the restriction more narrowly:
-
-https://git.openembedded.org/bitbake/tree/lib/bb/fetch/__init__.py#n1160
-
-Instead of passing the modified BB_NO_NETWORK =3D "1" value to nested
-submodule fetches, apply the restriction specifically to the Git
-operations.
-
-*=20
-
-Preserve and restore the original BB_NO_NETWORK value at:
-https://git.openembedded.org/bitbake/tree/lib/bb/fetch/__init__.py#n1157
-
-In try_mirror_url(), preserve the original value before applying
-the temporary restriction:
-
-network =3D ld.getVarFlag("BB_NO_NETWORK", "original_bb_no_network")
-if network is None:
-   network =3D ld.getVar("BB_NO_NETWORK") or "0"
-   ld.setVarFlag(
-       "BB_NO_NETWORK", "original_bb_no_network", network
-   )
-
-Restore that value before downloading from the mirror:
-
-if not verify_donestamp(ud, ld, origud) or ud.method.need_update(ud, ld):
-   if bb.utils.to_boolean(ld.getVar("BB_FETCH_PREMIRRORONLY")):
-       ld.setVar("BB_NO_NETWORK", network)
-
-   ud.method.download(ud, ld)
-   if hasattr(ud.method, "build_mirror_data"):
-       ud.method.build_mirror_data(ud, ld)
-
-The intention is to distinguish the user's original network policy
-from the temporary restriction applied during mirror processing.
-
-The intended behaviour is to allow both the parent repository and its
-submodules to be fetched from configured PREMIRRORS, without permitting
-upstream access.
-
-I would appreciate your thoughts on these approaches.
-
-Best regards,
-Tiago Vasconcelos
-
---RsQBOqB49sl0C4J0qllQ
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div><!-- obsidian -->
-<p>Hi all,</p>
-<p>I have encountered a gitsm submodule fetch failure that appears to be<br=
- />related to the following change:</p>
-<p><a class=3D"external-link" href=3D"https://lists.openembedded.org/g/bitb=
-ake-devel/message/17506" target=3D"_blank" rel=3D"noopener nofollow">https:=
-//lists.openembedded.org/g/bitbake-devel/message/17506</a></p>
-<p>This change prevents Git fetcher to silently contact upstream<br />despi=
-te BB_FETCH_PREMIRRORONLY being enabled.</p>
-<p>However, for gitsm, this datastore is also passed to the nested submodul=
-e<br />Fetch. The submodule therefore inherits BB_NO_NETWORK =3D "1", block=
-ing its<br />HTTP PREMIRROR download, even though the parent repository was=
- downloaded from<br />the same PREMIRROR:</p>
-<p>The resulting error is:</p>
-<pre><code>gitsm: submodule download failed: NetworkAccess Network access d=
-isabled
-through BB_NO_NETWORK (or set indirectly due to use of
-BB_FETCH_PREMIRRORONLY) but access requested with command wget ...
-</code></pre>
-<p>I have considered the following approaches. The snippets below are<br />=
-illustrative examples, not complete patches.</p>
-<ol>
-<li>
-<p>Reset BB_NO_NETWORK in gitsm's download_submodule() at:<br /><a class=3D=
-"external-link" href=3D"https://git.openembedded.org/bitbake/tree/lib/bb/fe=
-tch/gitsm.py#n212" target=3D"_blank" rel=3D"noopener nofollow">https://git.=
-openembedded.org/bitbake/tree/lib/bb/fetch/gitsm.py#n212</a><br />Before cr=
-eating the nested Fetch instance:</p>
-<pre><code>if bb.utils.to_boolean(d.getVar("BB_FETCH_PREMIRRORONLY")):
-    d.setVar("BB_NO_NETWORK", "0")
-
-try:
-    newfetch =3D Fetch([url], d, cache=3DFalse)
-    newfetch.download()
-except Exception as e:
-    logger.error(
-        'gitsm: submodule download failed: %s %s'
-        % (type(e).__name__, str(e))
-    )
-    raise
-</code></pre>
-<p>This allows the submodule to access the HTTP PREMIRROR.</p>
-</li>
-<li>
-<p>Scope the restriction more narrowly:</p>
-<p>https://git.openembedded.org/bitbake/tree/lib/bb/fetch/__init__.py#n1160=
-</p>
-<p>Instead of passing the modified BB_NO_NETWORK =3D "1" value to nested<br=
- />submodule fetches, apply the restriction specifically to the Git<br />op=
-erations.</p>
-</li>
-<li>
-<p>Preserve and restore the original BB_NO_NETWORK value at:<br /><a class=
-=3D"external-link" href=3D"https://git.openembedded.org/bitbake/tree/lib/bb=
-/fetch/__init__.py#n1157" target=3D"_blank" rel=3D"noopener nofollow">https=
-://git.openembedded.org/bitbake/tree/lib/bb/fetch/__init__.py#n1157</a></p>
-<p>In try_mirror_url(), preserve the original value before applying<br />th=
-e temporary restriction:</p>
-<pre><code>network =3D ld.getVarFlag("BB_NO_NETWORK", "original_bb_no_netwo=
-rk")
-if network is None:
-    network =3D ld.getVar("BB_NO_NETWORK") or "0"
-    ld.setVarFlag(
-        "BB_NO_NETWORK", "original_bb_no_network", network
-    )
-</code></pre>
-<p>Restore that value before downloading from the mirror:</p>
-<pre><code>if not verify_donestamp(ud, ld, origud) or ud.method.need_update=
-(ud, ld):
-    if bb.utils.to_boolean(ld.getVar("BB_FETCH_PREMIRRORONLY")):
-        ld.setVar("BB_NO_NETWORK", network)
-
-    ud.method.download(ud, ld)
-    if hasattr(ud.method, "build_mirror_data"):
-        ud.method.build_mirror_data(ud, ld)
-</code></pre>
-<p>The intention is to distinguish the user's original network policy<br />=
-from the temporary restriction applied during mirror processing.</p>
-</li>
-</ol>
-<p>The intended behaviour is to allow both the parent repository and its<br=
- />submodules to be fetched from configured PREMIRRORS, without permitting<=
-br />upstream access.</p>
-<p>I would appreciate your thoughts on these approaches.</p>
-<p>Best regards,<br />Tiago Vasconcelos</p>
-</div>
-
---RsQBOqB49sl0C4J0qllQ--
