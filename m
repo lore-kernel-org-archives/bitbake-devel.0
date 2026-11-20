@@ -1,98 +1,92 @@
 Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.2325.1795200381854570314
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.6421.1795212989596688293
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 20 Nov 2026 10:46:22 -0800
+ Fri, 20 Nov 2026 14:16:30 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=UKdjbVI+;
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=cDlBRmyc;
  spf=pass (domain: linuxfoundation.org, ip: 209.85.128.50, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4bb666304fdso21813585e9.0
-        for <bitbake-devel@lists.openembedded.org>; Fri, 20 Nov 2026 10:46:21 -0800 (PST)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4bb85e07aadso15784635e9.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 20 Nov 2026 14:16:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1795200380; x=1795805180; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1795212988; x=1795817788; darn=lists.openembedded.org;
         h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=Mo4ekiQVgwxDvMCAoqnaJzR6CE5kxyyDSVj8LxoEzwI=;
-        b=UKdjbVI+eY1WDjoijlT8W/Gf1trpQVIBwxXCPIP6LzXJ8PdhD0j/hv+9VGjHk59ciD
-         qck91TumrHHAzqWFHBO3PDyh7+Sa1UsrU9BgLAv8WJMSNUrThgl/fGzbFPGrYY/x4pl0
-         fmZh7DE7joDXFMLGQhQMoWL2oEZWbHUBEvoJw=
+         :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=OvYNC7Cq1p85tkI+j0JJUg7FsrlaaCx45sr778TKsUg=;
+        b=cDlBRmycQv3+VpqcfBan4Te4kkScjyduVRlfxQzeACs0DFKf6NhvxWtRKLWxIKNC2r
+         t/80elvGCXFqjUdfh0nglB/mY1bJJRiVfQ92JXoemGdsZNgOBUVtZrPJBhdKpf/wBUa+
+         k2iFPgKoCfJcvgHbi/QmSN5nBKo9AGnHlZQQE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795200380; x=1795805180;
+        d=1e100.net; s=20260707; t=1795212988; x=1795817788;
         h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :references:in-reply-to:date:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Mo4ekiQVgwxDvMCAoqnaJzR6CE5kxyyDSVj8LxoEzwI=;
-        b=G1U/M6QHiyDOuOwsa5BcFNOf6pipq1+DH9jZd87Q46DqcDgeXCuA1JU3+hdeCTRPsu
-         uFoks5psE7gKRmUn4SHnQ+k5zyhhVWN1vStxCWv7veSmINF55fqo8MAA/29ChE+MMtzC
-         LYWeYSYwcOlR9UVjqmQ9P0chkN1jXxvNZGZ7gLsMRrKKx7OFJuBx1qXSqUarfAZqOlAP
-         5SxXBzuizUF8hDNtYBHgwDr+yczMzWVBQ00VNNwQHn9JXwx0EXnl/1ZpD5HLJ6IObZPp
-         LkTN57m3o1Cz86Nbp9MaXXAsaYOJWXK63rCb0VpwvdnfW9OJyVptOfSbKfvMTRMErQmD
-         wxlA==
-X-Forwarded-Encrypted: i=1; AL+hErFe4KTvmnVoPcgEX4UsCUSvS01d2c1ea3ZM+b4+SNUcINZG01lXGO1EJ8RN0bL9cBYDSzt17bFAt61b9G+P@lists.openembedded.org
-X-Gm-Message-State: APuU4Z/JHshJinwzmZhKtPv2hih6q0f42isaUWvvO/DeuYbPJqAMHMpA
-	LY/ciJLQrK6UFeIO4pWCHjqlTwUVPnufJ5RM1h+8O+bCdVoS+46k3/gsDSmcSc7PS9s=
-X-Gm-Gg: AYBFou3PeD+ZAKDTsNXYNiwXMj/u02LhHqka8OcqP1xCeovJ4EJgRKeFv8RWsy9XwK2
-	EwDRqho/gbUtnU/+pJ8bHaL9IiN2vd8Ho/JtZv5Z94tH3FMWfPLpX1GsiZJE3FUpff/QUTkbiIJ
-	H18k6GphkMTPoa8NS10kSYqXJliDqTtbkH/eMsRN43r7QStlFpnQoAchq/pUVs2TiujGWZZf65X
-	Ot10I7CHuiG6fi4gxE4V6LZDp7YKvYeLc6D4zoSHdeQw/o/Y/AlZ9cEuNz9xKYdBpLO/cyvnpcO
-	nXi89Y2zFhQbhhFMyKkdJLWe2gTWek5+qkRLIvPjUdbbIrmD+ShvYiizIFZAB2RUW4VWXH64Io1
-	PO08QBTpibMYLp0SKbF+Ge3SEvtWX18YlU6QHl3n4k0I0MIa2UJIzRd4Q3OU7syryiKIGQpBp18
-	Ch2r1FFFHPI8SWfUxk3zS59CNgUafy/a/iz0qWQUTPSe9uv9N4ADvjvo+1oqmIsxPbDCZLM1J89
-	GPHATDOB16IKrRuyBJJZihm+9BQqWZyRFiOAOQae/uONpk1r/sjaPbdpN/2iA3Xisul9Rl05Jon
-	pCnHRdwrC3+zjMHwdELxSV6eaV5ttsKaH5co1reZ1U0pBND7Dv3kSoyZjpmvDCqu/h4rbaTEe8G
-	ssr/SOKPOBvK7mImYhA==
-X-Received: by 2002:a05:600c:4504:b0:4b4:a551:681a with SMTP id 5b1f17b1804b1-4bb887fc396mr91130485e9.3.1795200380054;
-        Fri, 20 Nov 2026 10:46:20 -0800 (PST)
+        bh=OvYNC7Cq1p85tkI+j0JJUg7FsrlaaCx45sr778TKsUg=;
+        b=h/7hGddQMWHbO5QwwJj3yqjfl2NIn6nzW9i9cCugOskab3OibcJzdbuyaSuviN0l/X
+         8uC1d2DPdU92trKassln2gTTOz7znKvIfE1u4gfu53QWfXY45/OqrfUjWEOETYH2F1xe
+         NZPMi7RMypeb+235yqumFYKBPddJ5Xgyg8KHQZK9+E+6pCGSBn1w8j891bpu33YNMrvx
+         S3JPfDAattrkJdDG95m3KdqEIZXCxBihV9gRH1Ld9qzCJ/wtuI/xI1yEtcXQMKe/T2+B
+         Q2fyaolDvTglvt8QBXc/fMyEJsgvpWE8rSZ1x6NmVOQa3x6VgoS1Ohaj9ICwL2ReTZcY
+         biKg==
+X-Forwarded-Encrypted: i=1; AL+hErGTuxwLoWfzNN84GdUi8h4GtSITJ0SH+kc+t0XMdtuDcehkJVbk9fnEDaOrim3oOAP5866UmZYnem8Uce1J@lists.openembedded.org
+X-Gm-Message-State: APuU4Z/YozDimDojXm+pKh3VhBWwEIIh/A2LC9S2GV/2PSlazAoBhCPR
+	56BzkUf4zgs4hNYxSVuOco4QKe/+eAPkuQh3G0bI0d8jf3ItjsjKXvPFg4EQpjrH1vs=
+X-Gm-Gg: AYBFou0ZuF2ytib/3NZu9Vb7P30HeE2DH3IqrWWRaDvltlm/WbFMp7BlCliEyB5sYqD
+	/NX6lBarwguqfUdBiL8jiqE/lsGPDNPdMwe87X3uthLo2kvMxP+5zlCqIs1YjnoMIbicSWBZXGS
+	sxWWqZ650ztUZ2tY1pGrTjx7SsAQnclr8v+tyGOxZtrwM398c/hkuxf4oyDqSX6bRkIKA85oUKG
+	h/2ZLB0sIm8o/Keb6dgbvNE13fDF01PS4s0F93GTN83zzByKHqlB0W6iduUjlDyf9ll5TqYZSGo
+	wQCqQbw+ImhlaY7ti57kCzKU/UH9VhatCqAiWTxR9F76F9mpfAuxak1rCugPMJBxIIRot/ebNiN
+	yqHBp54UwPpVYvRGUL0C0lMoSMBN9SoeTPDyWzvZqs1h4C85fT1YE7yC8TM8+SBD/N0+nZIlah1
+	LM+npiVhZ897aTbkiW8U0z3si+Tzz6GiphLQILyAwkEhTum8WCOUiVEBXiudarOuDt3ceWpHlCR
+	l1dIMCATmlp3yvYeDEdKDO2xr0bgj6b9D0yPe24qI6ezVKmkFkcBwLTArdKQ9vve6+313tzWf+0
+	c2qP/QqpOILERhZCkvtC9NspcKKzjfjTS811z2h+6GuDaRkUeGE6rYzdfnGVDr7GtfJCHtNGfRY
+	z8bhF82ooxXoTDnEYuA==
+X-Received: by 2002:a05:600c:1d09:b0:4bb:6b59:aac3 with SMTP id 5b1f17b1804b1-4bb88816050mr104978345e9.29.1795212987648;
+        Fri, 20 Nov 2026 14:16:27 -0800 (PST)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from ?IPv6:2001:8b0:aba:5f3c:ade0:e24c:97d2:ceef? ([2001:8b0:aba:5f3c:ade0:e24c:97d2:ceef])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb9067a0e6sm4331995e9.4.2026.11.20.10.46.18
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb853a9687sm166131195e9.10.2026.11.20.14.16.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2026 10:46:19 -0800 (PST)
-Message-ID: <196178d920291fb292393e16233869c08f077760.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] [PATCH 1/2] cooker: Write variables that are
- not JSON types to the event log
+        Fri, 20 Nov 2026 14:16:26 -0800 (PST)
+Message-ID: <c5c653afd21314dc7d58248102fd23633fec54b6.camel@linuxfoundation.org>
+Subject: Re: [bitbake-devel] gitsm fetcher fails when `PREMIRRORS_ONLY` is
+ set
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: stondo@gmail.com, bitbake-devel@lists.openembedded.org
-Cc: Thomas Perrot <thomas.perrot@bootlin.com>, Alexander Kanavin	
- <alex.kanavin@gmail.com>, Stefan Herbrechtsmeier	
- <stefan.herbrechtsmeier@weidmueller.com>, Peter Marko
- <peter.marko@siemens.com>, 	stefano.tondo.ext@siemens.com
-Date: Fri, 20 Nov 2026 18:46:18 +0000
-In-Reply-To: <20261120135323.2627478-2-stondo@gmail.com>
-References: <20261120135323.2627478-1-stondo@gmail.com>
-	 <20261120135323.2627478-2-stondo@gmail.com>
+To: tiago.mlb.vasconcelos@gmail.com, bitbake-devel@lists.openembedded.org
+Date: Fri, 20 Nov 2026 22:16:24 +0000
+In-Reply-To: <9Kec.1795097583791318314.gZXu@lists.openembedded.org>
+References: <9Kec.1795097583791318314.gZXu@lists.openembedded.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.2-10build1 
 MIME-Version: 1.0
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Fri, 20 Nov 2026 18:46:25 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20468
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Fri, 20 Nov 2026 22:16:32 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20469
 
-On Fri, 2026-11-20 at 14:53 +0100, Stefano Tondo via bitbake-devel wrote:
-> From: Stefano Tondo <stefano.tondo.ext@siemens.com>
->=20
-> EventWriter.write_variables() writes the history of all variables to
-> the event log as JSON. A variable can hold a Python object. For
-> example, sstate.bbclass stores compiled regular expressions in
-> _SSTATE_EXCLUDEDEPS_SYSROOT during a build. When the same server runs
-> a second build, json.dumps() fails:
->=20
-> =C2=A0 TypeError: Object of type Pattern is not JSON serializable
->=20
-> This occurs with tinfoil, for example in "recipetool create", which
-> starts more than one build in one server.
->=20
-> Write such values as strings.
+On Thu, 2026-11-19 at 06:13 -0800, tiago.mlb.vasconcelos via bitbake-devel =
+wrote:
+> I have encountered a gitsm submodule fetch failure that appears to be
+> related to the following change:
+> https://lists.openembedded.org/g/bitbake-devel/message/17506
+> This change prevents Git fetcher to silently contact upstream
+> despite BB_FETCH_PREMIRRORONLY being enabled.
+> However, for gitsm, this datastore is also passed to the nested
+> submodule
+> Fetch. The submodule therefore inherits BB_NO_NETWORK =3D "1", blocking
+> its
+> HTTP PREMIRROR download, even though the parent repository was
+> downloaded from
+> the same PREMIRROR:
 
-This worries me a bit (well, a lot!), specifically the "second build"
-piece. Why is this persisting across builds? Does:
 
-https://git.openembedded.org/bitbake/commit/?id=3D606786d17351534ce35d1b0f8=
-9815461546a66fe
+The best advice I can give is to write a new test case for bitbake-
+selftest (in lib/bb/tests/fetch.py) which shows the issue you're
+seeing.
 
-have any effect on that?
+Once we have that, we can likely more easily understand it and try and
+come up with a solution.
 
 Cheers,
 
