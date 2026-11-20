@@ -1,53 +1,54 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.6316.1795182807818575535
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.6372.1795182809295546351
  for <bitbake-devel@lists.openembedded.org>;
- Fri, 20 Nov 2026 05:53:28 -0800
+ Fri, 20 Nov 2026 05:53:29 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20260707 header.b=JcnSUqBp;
- spf=pass (domain: gmail.com, ip: 209.85.128.51, mailfrom: stondo@gmail.com)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-49d05d51553so6180585e9.2
-        for <bitbake-devel@lists.openembedded.org>; Fri, 20 Nov 2026 05:53:27 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20260707 header.b=AE8fn37r;
+ spf=pass (domain: gmail.com, ip: 209.85.221.41, mailfrom: stondo@gmail.com)
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-49465892f7bso732769f8f.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 20 Nov 2026 05:53:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795182806; x=1795787606; darn=lists.openembedded.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=LIVXYE21YSy2WOJ3xvMs0pZzkyaukuKloO6zxOlId/M=;
-        b=JcnSUqBppsmqRO/7h+WJAPcRZxr8oUrh54B9eRFvfsuU6H8YreD4zn6aRVfXgm65TN
-         FHrIzojkjJwN6V1SG+NgK3sJFVplNEHOcMqkdYz9Sq8i9Pp2ytkFM5IyM7Bk5f4HGSpt
-         FScdRDGNyjoFb7MQ03MVCSRD7O7CtM9RRCcSncSy/E+sC06cU8woO44jFByB2ydCeA+v
-         6etKN92rP6Jni40tetUwftm0xO8YjDIHoomDpzDQJpzp7V44jhAy5s5VyXMtYoKaT6yW
-         xcFeMpXOztC9OkSaJopbJkUArUROtXjpoEJHCcrOdptPHl7LrqLzhzh+aWq7EL3sdIap
-         Xavw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795182806; x=1795787606;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20260707; t=1795182807; x=1795787607; darn=lists.openembedded.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=LIVXYE21YSy2WOJ3xvMs0pZzkyaukuKloO6zxOlId/M=;
-        b=MHW7QZO6BRZW1JmhFwLoMfg5NEoZI1evYP9iAfmmHmeIArkbHcYe7LkIAR4smAqgR+
-         KGjPxQwH5G5JKGjEdvdyUc93Vjcg5ACXsyZiT3i6hcs80yQKa0UsjVIaBRxRIw9mNwn0
-         OisHV/jwp3XK19O9eok2yex5OabxMGqCOz8HMGQxbkr+FK1nBuJDDxxL301fy/WkGTRt
-         hBfcZmBCXvO+66MCyDWs+SD/N2bmydf/rGClGKYl9EZEdiwO0Jc91KxL2nm4PlqMnYuJ
-         gPhvccaCzbcLwE108cdWaylmUnr8qbmR0YFBKYDIXnkCrgxbdmrQaTCahfFaH7KiSHJC
-         PFPg==
-X-Gm-Message-State: APuU4Z8WDBX1+gyRPEE7Vi89sfKcAbgPfhsNviCJTnlloZpY3isDvhR6
-	mo2LqhVLQTSI7dNF2OwMTDFcck7blzst3hySEgHJljlRdqqMx2ZyViRxikIgPTIH
-X-Gm-Gg: AYBFou1mI4MkYO2FSUys6uQyq3FtWyZlIoZwCFjhnUoNkXobAlOSSnaTRBop6ZZPD8W
-	+kTRd/MYlo9G3cWRnuxwzPr+ws3ZDjuipUKWbvHCOxBn6YNO4iT1CS+h5ncBO+2nvtErXCx4qaR
-	s30jHij7v3StLpRcPUwAHqMWkeUYK72DeT3KBtKUEHjO5OuhJTEwVPfyO5hImOpUvtkDFJoNbxT
-	4k5h3aeKBITkzo8V2P3lO8jormtJNxNaiJApFUMX8JOcVoQRdhYaoDruUjW9ABJM4rcd88qTYkd
-	HLUn8gC8FVQ+ylHFZY9EyH+echy78RGPor6CdZ5+cDws4+qL49W0CxblDjOWz0cJ0aUvOqbfsPr
-	jWhVqcIJpz0GIXQpKAmG+qWjS9IRWglirvgQOLLXLYp+XR0pOqFrv2DHUk8W4piD/3Ramy4hE8N
-	hHp8nxMd6gezZn1CwFmyLk6vJTty2Ks8sfgNYV/bvBylyOB/ozdENEXuuBYthjd0YuJ6omqyhzi
-	0c+fvbfPyloQtpwS+F4XpmKTEJg+2l0hdMLwC7GzJXSdEtxsH/WkkeQ7QQZVWTrSDe3DEDVHTyv
-	7qhgvzcWqTBp8+g/An4uzUPYNDlP+wL5
-X-Received: by 2002:a05:600c:5303:b0:4a2:fe11:9a8a with SMTP id 5b1f17b1804b1-4bb88786cfamr66491495e9.0.1795182805712;
-        Fri, 20 Nov 2026 05:53:25 -0800 (PST)
+        bh=3CbXOum2UDjBzAH/fJwr3HXZzgIW0YgYS5ZqDVktPEU=;
+        b=AE8fn37rTEJjX9UpRJEg5FY9jFJ7itkrVfbfvCTA2szYxU/PbSiJebOfcywxqkGaax
+         Ta/UtZhPjvAtmMAzPJN3E3hteEGAo2uaJGuWdjs1G4eI7fNRnLh+nqdrR19Rt7yR7llW
+         8X0iT81gV8Ye9ckxLcEgxQFusRiwlkP9QDVVoRtJXG1xVcFlf3GomQoHg8Uadjiu6ShA
+         5cjy2W4QFIvbMaFSKx2b9plewhjs+0OTlfvkkrwSFX7oYpwNuABHjFtSw+aqsq8h2R7T
+         5mdTVCYdYxzaDTf3MWPv3oCByiBcdaif4lD2ywmJdkJtwz3q1miLilqu6K3nt4Da17Lx
+         jggQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795182807; x=1795787607;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=3CbXOum2UDjBzAH/fJwr3HXZzgIW0YgYS5ZqDVktPEU=;
+        b=fCo/ugwHqIPg7/3g4s18VrjbgD6xfObgsYY/8/6jcVT6oF+Z0cmg9YhjdaW1PNBsvW
+         jl14xKXkgGQyrsapWNqDfUL0zgsI9fklLgcbLyDtYfM1s2ZjgtcSMNIhfSYL59R6zbn9
+         JW80GDeTFqVoSMJSrtc3tW05D9EMtgsGQIZInAE3RZKCGU06hsuy//SV4t+wH7QDpTzq
+         hVmoE8BRyEiU0duFzFopitCPKl7NLj4Ppg86ZeXhsKBc1rXuWMfuaFaaLtIjDtu4wF34
+         4Y6/tVxBjOG4bCzaOmfwlN8AQGjJxtAjLx+sbZ3VGIpnDylNj64lzN/vGonBbIn23ieA
+         g9Pw==
+X-Gm-Message-State: APuU4Z+ounurbr8dPnn2lWRWZyZEyyB2sKC2i/pPVy/BztPoZF76N7ge
+	HCYTktJxomqf/euSfiohK/+r3G7KaX+vGUeC1BLlXtefJa2CML525siIXOjB76D8
+X-Gm-Gg: AZFdTZe7VLS85CV+SoFmXlV64Rs2Bn/o0SDD5uz9RhtshZpdUOOlGeem8C4T6JUmVt1
+	L6WXAfzWNdfcgEDHWl8BSvPVzMdZaJoaBml3ZSmEsHTSf1UFTJKREdPQ1wvcdrxYwa4/ZrYULoZ
+	sJ8MDTQHVbOct0soJ+uzqGFKePH2RH3xBz1ddFHOhoVBSWWnPKP6fpOIZ3LzY0Xhl3tFTvbtXui
+	FBQOo/uJbtRIyCLVAdJntcnS9VYLo2VZ7rUn+mCnU+GqfDQKG3ncBzGAX3UtSsSGXO2BGWrO5Qt
+	lHdK6P5B1EcO4ZjbqJ9nsNYDS/PwiR/ZnMD4TnNr9a92B2vQaIgKI910E4/GU0RLABsprfP7Ig5
+	o2AgjeUXwAVQRshGJ5fRoY6JA3pYzcbhJREmJwWr4Lk2uqvjgeAE8oK/1U1Il+eJxhB5E2cJ9QT
+	UoEYBKPHMksHFaN8mUN87AvOdtYxQwPNwP0mmi9qpSfoWEkPGVv49+rd6WDYOG7047+QH/Ythph
+	vfGD8jQvMeqr5nOPVC/G9ZnMOgA2TE+ZOJnqXMjWWYiiU4gbeBeqwPwBqXLzfZmmL7eiTBRE+1X
+	UKrAItGNvb8lnFQ5VQOsy+h98YVgJMOU
+X-Received: by 2002:a05:6000:490b:b0:491:8462:20be with SMTP id ffacd0b85a97d-4abb1baaad9mr6277288f8f.12.1795182807455;
+        Fri, 20 Nov 2026 05:53:27 -0800 (PST)
 Return-Path: <stondo@gmail.com>
 Received: from fedora ([165.225.94.251])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6b110c3csm6018485f8f.36.2026.11.20.05.53.23
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6b110c3csm6018485f8f.36.2026.11.20.05.53.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2026 05:53:24 -0800 (PST)
+        Fri, 20 Nov 2026 05:53:26 -0800 (PST)
 From: Stefano Tondo <stondo@gmail.com>
 To: bitbake-devel@lists.openembedded.org
 Cc: Thomas Perrot <thomas.perrot@bootlin.com>,
@@ -55,47 +56,52 @@ Cc: Thomas Perrot <thomas.perrot@bootlin.com>,
 	Stefan Herbrechtsmeier <stefan.herbrechtsmeier@weidmueller.com>,
 	Peter Marko <peter.marko@siemens.com>,
 	stefano.tondo.ext@siemens.com
-Subject: [PATCH 0/2] fetch/npm: no npm executable, and an event log fix
-Date: Fri, 20 Nov 2026 14:53:21 +0100
-Message-ID: <20261120135323.2627478-1-stondo@gmail.com>
+Subject: [PATCH 1/2] cooker: Write variables that are not JSON types to the event log
+Date: Fri, 20 Nov 2026 14:53:22 +0100
+Message-ID: <20261120135323.2627478-2-stondo@gmail.com>
 X-Mailer: git-send-email 2.56.1
+In-Reply-To: <20261120135323.2627478-1-stondo@gmail.com>
+References: <20261120135323.2627478-1-stondo@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Fri, 20 Nov 2026 13:53:31 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20465
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Fri, 20 Nov 2026 13:53:41 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20466
 Content-Type: text/plain; charset="utf-8"
 
-Hi,
+From: Stefano Tondo <stefano.tondo.ext@siemens.com>
 
-The OE-Core series "npm: list the dependencies in SRC_URI" needs these
-two patches. I send that series at the same time. The two patches do
-not depend on each other.
+EventWriter.write_variables() writes the history of all variables to
+the event log as JSON. A variable can hold a Python object. For
+example, sstate.bbclass stores compiled regular expressions in
+_SSTATE_EXCLUDEDEPS_SYSROOT during a build. When the same server runs
+a second build, json.dumps() fails:
 
-1. cooker: "recipetool create" for npm runs two builds in one server.
-   The second build fails to write the event log, because
-   sstate.bbclass stores compiled regular expressions in the
-   datastore. The recipetool selftest of the OE-Core series shows this
-   failure.
-2. fetch/npm: Alexander asked for this in the RFC thread [1]. The npm
-   fetcher must work without the npm executable, as the crate fetcher
-   works without cargo. The npm tests now run without npm, and new
-   tests fetch a package from a premirror without network access.
+  TypeError: Object of type Pattern is not JSON serializable
 
-Tests: bitbake-selftest bb.tests.fetch.NPMTest passes, with an npm in
-PATH that always fails. bb.tests.event and bb.tests.cooker pass.
+This occurs with tinfoil, for example in "recipetool create", which
+starts more than one build in one server.
 
-[1] https://lore.kernel.org/openembedded-core/20261111115845.1940227-1-stondo@gmail.com/T/
+Write such values as strings.
 
-Stefano Tondo (2):
-  cooker: Write variables that are not JSON types to the event log
-  fetch/npm: Build the tarball URL without the npm executable
+Signed-off-by: Stefano Tondo <stefano.tondo.ext@siemens.com>
+---
+ lib/bb/cooker.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- lib/bb/cooker.py      |  2 +-
- lib/bb/fetch/npm.py   | 50 +++----------------------
- lib/bb/tests/fetch.py | 85 ++++++++++++++++++++++---------------------
- 3 files changed, 50 insertions(+), 87 deletions(-)
-
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index a6bc2827d..abc516649 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -124,7 +124,7 @@ class EventWriter:
+ 
+     def write_variables(self):
+         with self._open() as f:
+-            f.write("%s\n" % json.dumps({ "allvariables" : self.cooker.getAllKeysWithFlags(["doc", "func"])}))
++            f.write("%s\n" % json.dumps({ "allvariables" : self.cooker.getAllKeysWithFlags(["doc", "func"])}, default=str))
+ 
+     def send(self, event):
+         with self._open() as f:
 -- 
 2.56.1
 
