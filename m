@@ -1,93 +1,338 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.6421.1795212989596688293
- for <bitbake-devel@lists.openembedded.org>;
- Fri, 20 Nov 2026 14:16:30 -0800
-Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=cDlBRmyc;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.50, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4bb85e07aadso15784635e9.1
-        for <bitbake-devel@lists.openembedded.org>; Fri, 20 Nov 2026 14:16:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1795212988; x=1795817788; darn=lists.openembedded.org;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:to:from:subject:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=OvYNC7Cq1p85tkI+j0JJUg7FsrlaaCx45sr778TKsUg=;
-        b=cDlBRmycQv3+VpqcfBan4Te4kkScjyduVRlfxQzeACs0DFKf6NhvxWtRKLWxIKNC2r
-         t/80elvGCXFqjUdfh0nglB/mY1bJJRiVfQ92JXoemGdsZNgOBUVtZrPJBhdKpf/wBUa+
-         k2iFPgKoCfJcvgHbi/QmSN5nBKo9AGnHlZQQE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795212988; x=1795817788;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=OvYNC7Cq1p85tkI+j0JJUg7FsrlaaCx45sr778TKsUg=;
-        b=h/7hGddQMWHbO5QwwJj3yqjfl2NIn6nzW9i9cCugOskab3OibcJzdbuyaSuviN0l/X
-         8uC1d2DPdU92trKassln2gTTOz7znKvIfE1u4gfu53QWfXY45/OqrfUjWEOETYH2F1xe
-         NZPMi7RMypeb+235yqumFYKBPddJ5Xgyg8KHQZK9+E+6pCGSBn1w8j891bpu33YNMrvx
-         S3JPfDAattrkJdDG95m3KdqEIZXCxBihV9gRH1Ld9qzCJ/wtuI/xI1yEtcXQMKe/T2+B
-         Q2fyaolDvTglvt8QBXc/fMyEJsgvpWE8rSZ1x6NmVOQa3x6VgoS1Ohaj9ICwL2ReTZcY
-         biKg==
-X-Forwarded-Encrypted: i=1; AL+hErGTuxwLoWfzNN84GdUi8h4GtSITJ0SH+kc+t0XMdtuDcehkJVbk9fnEDaOrim3oOAP5866UmZYnem8Uce1J@lists.openembedded.org
-X-Gm-Message-State: APuU4Z/YozDimDojXm+pKh3VhBWwEIIh/A2LC9S2GV/2PSlazAoBhCPR
-	56BzkUf4zgs4hNYxSVuOco4QKe/+eAPkuQh3G0bI0d8jf3ItjsjKXvPFg4EQpjrH1vs=
-X-Gm-Gg: AYBFou0ZuF2ytib/3NZu9Vb7P30HeE2DH3IqrWWRaDvltlm/WbFMp7BlCliEyB5sYqD
-	/NX6lBarwguqfUdBiL8jiqE/lsGPDNPdMwe87X3uthLo2kvMxP+5zlCqIs1YjnoMIbicSWBZXGS
-	sxWWqZ650ztUZ2tY1pGrTjx7SsAQnclr8v+tyGOxZtrwM398c/hkuxf4oyDqSX6bRkIKA85oUKG
-	h/2ZLB0sIm8o/Keb6dgbvNE13fDF01PS4s0F93GTN83zzByKHqlB0W6iduUjlDyf9ll5TqYZSGo
-	wQCqQbw+ImhlaY7ti57kCzKU/UH9VhatCqAiWTxR9F76F9mpfAuxak1rCugPMJBxIIRot/ebNiN
-	yqHBp54UwPpVYvRGUL0C0lMoSMBN9SoeTPDyWzvZqs1h4C85fT1YE7yC8TM8+SBD/N0+nZIlah1
-	LM+npiVhZ897aTbkiW8U0z3si+Tzz6GiphLQILyAwkEhTum8WCOUiVEBXiudarOuDt3ceWpHlCR
-	l1dIMCATmlp3yvYeDEdKDO2xr0bgj6b9D0yPe24qI6ezVKmkFkcBwLTArdKQ9vve6+313tzWf+0
-	c2qP/QqpOILERhZCkvtC9NspcKKzjfjTS811z2h+6GuDaRkUeGE6rYzdfnGVDr7GtfJCHtNGfRY
-	z8bhF82ooxXoTDnEYuA==
-X-Received: by 2002:a05:600c:1d09:b0:4bb:6b59:aac3 with SMTP id 5b1f17b1804b1-4bb88816050mr104978345e9.29.1795212987648;
-        Fri, 20 Nov 2026 14:16:27 -0800 (PST)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from ?IPv6:2001:8b0:aba:5f3c:ade0:e24c:97d2:ceef? ([2001:8b0:aba:5f3c:ade0:e24c:97d2:ceef])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb853a9687sm166131195e9.10.2026.11.20.14.16.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2026 14:16:26 -0800 (PST)
-Message-ID: <c5c653afd21314dc7d58248102fd23633fec54b6.camel@linuxfoundation.org>
-Subject: Re: [bitbake-devel] gitsm fetcher fails when `PREMIRRORS_ONLY` is
- set
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: tiago.mlb.vasconcelos@gmail.com, bitbake-devel@lists.openembedded.org
-Date: Fri, 20 Nov 2026 22:16:24 +0000
-In-Reply-To: <9Kec.1795097583791318314.gZXu@lists.openembedded.org>
-References: <9Kec.1795097583791318314.gZXu@lists.openembedded.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-10build1 
+Subject: Re: gitsm fetcher fails when `PREMIRRORS_ONLY` is set
+To: bitbake-devel@lists.openembedded.org
+From: tiago.mlb.vasconcelos@gmail.com
+X-Originating-Location: Lisbon, PT (213.205.68.220)
+X-Originating-Platform: Windows Chrome 157
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
+Date: Mon, 23 Nov 2026 02:35:35 -0800
+References: <9Kec.1795097583791318314.gZXu@lists.openembedded.org> <c5c653afd21314dc7d58248102fd23633fec54b6.camel@linuxfoundation.org>
+In-Reply-To: <c5c653afd21314dc7d58248102fd23633fec54b6.camel@linuxfoundation.org>
+Message-ID: <1100827.1795430135720488922@lists.openembedded.org>
+Content-Type: multipart/alternative; boundary="tlvtmbFVm8PFhoUU4OeX"
 List-Id: <bitbake-devel.lists.openembedded.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Fri, 20 Nov 2026 22:16:32 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20469
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Mon, 23 Nov 2026 10:35:43 -0000
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20470
 
-On Thu, 2026-11-19 at 06:13 -0800, tiago.mlb.vasconcelos via bitbake-devel =
-wrote:
-> I have encountered a gitsm submodule fetch failure that appears to be
-> related to the following change:
-> https://lists.openembedded.org/g/bitbake-devel/message/17506
-> This change prevents Git fetcher to silently contact upstream
-> despite BB_FETCH_PREMIRRORONLY being enabled.
-> However, for gitsm, this datastore is also passed to the nested
-> submodule
-> Fetch. The submodule therefore inherits BB_NO_NETWORK =3D "1", blocking
-> its
-> HTTP PREMIRROR download, even though the parent repository was
-> downloaded from
-> the same PREMIRROR:
+--tlvtmbFVm8PFhoUU4OeX
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Richard,
 
-The best advice I can give is to write a new test case for bitbake-
-selftest (in lib/bb/tests/fetch.py) which shows the issue you're
-seeing.
+Thank you for the feedback. Below are new bitbake-selftest cases in
+lib/bb/tests/fetch.py that show the issue, together with a possible fix.
 
-Once we have that, we can likely more easily understand it and try and
-come up with a solution.
+Without the gitsm.py change, `test_submodule_premirroronly` and
+`test_shallow_submodule_premirroronly` will fail:
 
-Cheers,
+Signed-off-by: Tiago Vasconcelos <tiago.mlb.vasconcelos@gmail.com>
+---
 
-Richard
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index 5869e1b99..727462ea3 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -194,6 +194,12 @@ class GitSM(Git):
+# Is the following still needed?
+#url +=3D ";nocheckout=3D1"
+
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# BB_NO_NETWORK may have been se=
+t by the parent fetch for its mirror
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# tarball. The submodule Fetch a=
+pplies BB_FETCH_PREMIRRORONLY itself,
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# blocking upstream but still al=
+lowing PREMIRRORS.
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if bb.utils.to_boolean(d.getVar(=
+"BB_FETCH_PREMIRRORONLY")):
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0d.setVar("BB_NO_NE=
+TWORK", "0")
++
+try:
+newfetch =3D Fetch([url], d, cache=3DFalse)
+newfetch.download()
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index cc133c1f5..106643d82 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -2092,6 +2092,102 @@ class GitShallowTest(FetcherTest):
+# Verify the submodule is also shallow
+self.assertRevCount(1, cwd=3Dos.path.join(self.gitdir, 'gitsubmodule'))
+
++ =C2=A0 =C2=A0def use_http_premirror(self, mirrordir):
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0# Serve the prepared downloads locally and all=
+ow this host in mirror-only mode.
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0server =3D HTTPService(mirrordir, host=3D'127.=
+0.0.1')
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0server.start()
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.addCleanup(server.stop)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.d.setVar('PREMIRRORS', 'gitsm://.*/.* htt=
+p://127.0.0.1:%s/' % server.port)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.d.setVar('BB_FETCH_PREMIRRORONLY', '1')
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.d.setVar('BB_NO_NETWORK', '0')
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.d.setVar('BB_ALLOWED_NETWORKS', '127.0.0.=
+1')
++
++ =C2=A0 =C2=A0def check_submodule_premirroronly(self, shallow):
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0if not shallow:
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.d.setVar('BB_GIT_SHALLOW', =
+'0')
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.d.setVar('BB_GENERATE_MIRRO=
+R_TARBALLS', '1')
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.d.setVar('BB_GENERATE_SHALL=
+OW_TARBALLS', '0')
++
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0# Create a submodule with two commits so its f=
+etched history can be checked.
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.add_empty_file('a')
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.add_empty_file('b')
++
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0smdir =3D os.path.join(self.tempdir, 'gitsubmo=
+dule')
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.utils.mkdirhier(smdir)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.git_init(cwd=3Dsmdir)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0# Make this look like it was cloned from a rem=
+ote...
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.git('config --add remote.origin.url "%s"'=
+ % smdir, cwd=3Dsmdir)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.git('config --add remote.origin.fetch "+r=
+efs/heads/*:refs/remotes/origin/*"', cwd=3Dsmdir)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.add_empty_file('asub', cwd=3Dsmdir)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.add_empty_file('bsub', cwd=3Dsmdir)
++
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.git('submodule init', cwd=3Dself.srcdir)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.git('-c protocol.file.allow=3Dalways subm=
+odule add file://%s' % smdir, cwd=3Dself.srcdir)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.git('submodule update', cwd=3Dself.srcdir=
+)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.git('commit -m submodule -a', cwd=3Dself.=
+srcdir)
++
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0uri =3D 'gitsm://%s;protocol=3Dfile;subdir=3D$=
+{S};branch=3Dmaster' % self.srcdir
++
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0# Fetch once to generate the mirror tarballs
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.fetch(uri)
++
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0# Stop generating tarballs during the mirror-o=
+nly fetch.
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.d.setVar('BB_GENERATE_MIRROR_TARBALLS', '=
+0')
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.d.setVar('BB_GENERATE_SHALLOW_TARBALLS', =
+'0')
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0mirrordir =3D os.path.join(self.tempdir, 'mirr=
+or')
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.utils.rename(self.dldir, mirrordir)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.utils.mkdirhier(self.dldir)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0# Remove the original repositories so the fetc=
+h must use the premirror.
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.utils.remove(self.gitdir, recurse=3DTrue)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.utils.remove(self.srcdir, recurse=3DTrue)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.utils.remove(smdir, recurse=3DTrue)
++
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.use_http_premirror(mirrordir)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.fetch_and_unpack(uri)
++
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0# Shallow fetches retain only the tip commit; =
+full fetches retain all commits.
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0expected_revisions =3D 1 if shallow else 3
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.assertRevCount(expected_revisions)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.assertTrue(os.listdir(os.path.join(self.g=
+itdir, 'gitsubmodule')))
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0expected_submodule_revisions =3D 1 if shallow =
+else 2
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.assertRevCount(expected_submodule_revisio=
+ns, cwd=3Dos.path.join(self.gitdir, 'gitsubmodule'))
++
++ =C2=A0 =C2=A0def test_submodule_premirroronly(self):
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0"""Submodules must be fetched from a network P=
+REMIRRORS with BB_FETCH_PREMIRRORONLY"""
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.check_submodule_premirroronly(shallow=3DF=
+alse)
++
++ =C2=A0 =C2=A0def test_shallow_submodule_premirroronly(self):
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0"""Shallow submodules must be fetched from a n=
+etwork PREMIRRORS with BB_FETCH_PREMIRRORONLY"""
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.check_submodule_premirroronly(shallow=3DT=
+rue)
++
++ =C2=A0 =C2=A0def test_submodule_premirroronly_no_upstream(self):
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0"""A submodule missing from PREMIRRORS must no=
+t be fetched from upstream"""
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.add_empty_file('a')
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0sha =3D self.git('rev-parse HEAD', cwd=3Dself.=
+srcdir).strip()
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0# Point the submodule at an unavailable upstre=
+am and add its gitlink to the parent.
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0with open(os.path.join(self.srcdir, '.gitmodul=
+es'), 'w') as f:
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0f.write('[submodule "sub"]\n\tpa=
+th =3D sub\n\turl =3D https://git.invalid/sub.git\n')
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.git('add .gitmodules', cwd=3Dself.srcdir)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.git('update-index --add --cacheinfo 16000=
+0,%s,sub' % sha, cwd=3Dself.srcdir)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.git('commit -m submodule', cwd=3Dself.src=
+dir)
++
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.d.setVar('BB_GIT_SHALLOW', '0')
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.d.setVar('BB_GENERATE_MIRROR_TARBALLS', '=
+1')
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.d.setVar('BB_GENERATE_SHALLOW_TARBALLS', =
+'0')
++
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0_, ud =3D self.fetch('git://%s;protocol=3Dfile=
+;branch=3Dmaster' % self.srcdir)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0mirrordir =3D os.path.join(self.tempdir, 'mirr=
+or')
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.utils.rename(self.dldir, mirrordir)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.d.setVar('BB_GENERATE_MIRROR_TARBALLS', '=
+0')
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.utils.remove(self.srcdir, recurse=3DTrue)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.utils.mkdirhier(self.dldir)
++
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.use_http_premirror(mirrordir)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0# The missing submodule premirror must fail in=
+stead of falling back to upstream.
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0with self.assertRaises(bb.fetch2.NetworkAccess=
+) as cm:
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.fetch('gitsm://%s;protocol=
+=3Dfile;subdir=3D${S};branch=3Dmaster' % self.srcdir)
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0self.assertIn('git.invalid', cm.exception.url)
++
+if any(os.path.exists(os.path.join(p, 'git-annex')) for p in os.environ.get=
+('PATH').split(':')):
+def test_shallow_annex(self):
+self.add_empty_file('a')
+
+--tlvtmbFVm8PFhoUU4OeX
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div>Hi Richard,<br /><br />Thank you for the feedback. Below are new bitba=
+ke-selftest cases in<br />lib/bb/tests/fetch.py that show the issue, togeth=
+er with a possible fix.<br /><br />Without the gitsm.py change, `test_submo=
+dule_premirroronly` and<br />`test_shallow_submodule_premirroronly` will fa=
+il:<br /><br />Signed-off-by: Tiago Vasconcelos &lt;tiago.mlb.vasconcelos@g=
+mail.com&gt;<br />---</div>
+<div><br />diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py<br =
+/>index 5869e1b99..727462ea3 100644<br />--- a/lib/bb/fetch2/gitsm.py<br />=
++++ b/lib/bb/fetch2/gitsm.py<br />@@ -194,6 +194,12 @@ class GitSM(Git):<br=
+ />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# Is the following still=
+ needed?<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;#url +=3D ";n=
+ocheckout=3D1"<br />&nbsp;<br />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=
+# BB_NO_NETWORK may have been set by the parent fetch for its mirror<br />+=
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# tarball. The submodule Fetch ap=
+plies BB_FETCH_PREMIRRORONLY itself,<br />+ &nbsp; &nbsp; &nbsp; &nbsp; &nb=
+sp; &nbsp;# blocking upstream but still allowing PREMIRRORS.<br />+ &nbsp; =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if bb.utils.to_boolean(d.getVar("BB_FETCH=
+_PREMIRRORONLY")):<br />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
+&nbsp;d.setVar("BB_NO_NETWORK", "0")<br />+<br />&nbsp; &nbsp; &nbsp; &nbsp=
+; &nbsp; &nbsp; &nbsp;try:<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &=
+nbsp; &nbsp; &nbsp;newfetch =3D Fetch([url], d, cache=3DFalse)<br />&nbsp; =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;newfetch.download()<=
+br />diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py<br />index =
+cc133c1f5..106643d82 100644<br />--- a/lib/bb/tests/fetch.py<br />+++ b/lib=
+/bb/tests/fetch.py<br />@@ -2092,6 +2092,102 @@ class GitShallowTest(Fetche=
+rTest):<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# Verify the submodule is al=
+so shallow<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;self.assertRevCount(1, cw=
+d=3Dos.path.join(self.gitdir, 'gitsubmodule'))<br />&nbsp;<br />+ &nbsp; &n=
+bsp;def use_http_premirror(self, mirrordir):<br />+ &nbsp; &nbsp; &nbsp; &n=
+bsp;# Serve the prepared downloads locally and allow this host in mirror-on=
+ly mode.<br />+ &nbsp; &nbsp; &nbsp; &nbsp;server =3D HTTPService(mirrordir=
+, host=3D'127.0.0.1')<br />+ &nbsp; &nbsp; &nbsp; &nbsp;server.start()<br /=
+>+ &nbsp; &nbsp; &nbsp; &nbsp;self.addCleanup(server.stop)<br />+ &nbsp; &n=
+bsp; &nbsp; &nbsp;self.d.setVar('PREMIRRORS', 'gitsm://.*/.* http://127.0.0=
+.1:%s/' % server.port)<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.d.setVar('BB_=
+FETCH_PREMIRRORONLY', '1')<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.d.setVar(=
+'BB_NO_NETWORK', '0')<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.d.setVar('BB_A=
+LLOWED_NETWORKS', '127.0.0.1')<br />+<br />+ &nbsp; &nbsp;def check_submodu=
+le_premirroronly(self, shallow):<br />+ &nbsp; &nbsp; &nbsp; &nbsp;if not s=
+hallow:<br />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;self.d.setVar('BB_G=
+IT_SHALLOW', '0')<br />+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;self.d.se=
+tVar('BB_GENERATE_MIRROR_TARBALLS', '1')<br />+ &nbsp; &nbsp; &nbsp; &nbsp;=
+ &nbsp; &nbsp;self.d.setVar('BB_GENERATE_SHALLOW_TARBALLS', '0')<br />+<br =
+/>+ &nbsp; &nbsp; &nbsp; &nbsp;# Create a submodule with two commits so its=
+ fetched history can be checked.<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.add=
+_empty_file('a')<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.add_empty_file('b')=
+<br />+<br />+ &nbsp; &nbsp; &nbsp; &nbsp;smdir =3D os.path.join(self.tempd=
+ir, 'gitsubmodule')<br />+ &nbsp; &nbsp; &nbsp; &nbsp;bb.utils.mkdirhier(sm=
+dir)<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.git_init(cwd=3Dsmdir)<br />+ &n=
+bsp; &nbsp; &nbsp; &nbsp;# Make this look like it was cloned from a remote.=
+..<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.git('config --add remote.origin.u=
+rl "%s"' % smdir, cwd=3Dsmdir)<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.git('=
+config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"', cw=
+d=3Dsmdir)<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.add_empty_file('asub', cw=
+d=3Dsmdir)<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.add_empty_file('bsub', cw=
+d=3Dsmdir)<br />+<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.git('submodule ini=
+t', cwd=3Dself.srcdir)<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.git('-c proto=
+col.file.allow=3Dalways submodule add file://%s' % smdir, cwd=3Dself.srcdir=
+)<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.git('submodule update', cwd=3Dself=
+.srcdir)<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.git('commit -m submodule -a=
+', cwd=3Dself.srcdir)<br />+<br />+ &nbsp; &nbsp; &nbsp; &nbsp;uri =3D 'git=
+sm://%s;protocol=3Dfile;subdir=3D${S};branch=3Dmaster' % self.srcdir<br />+=
+<br />+ &nbsp; &nbsp; &nbsp; &nbsp;# Fetch once to generate the mirror tarb=
+alls<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.fetch(uri)<br />+<br />+ &nbsp;=
+ &nbsp; &nbsp; &nbsp;# Stop generating tarballs during the mirror-only fetc=
+h.<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.d.setVar('BB_GENERATE_MIRROR_TARB=
+ALLS', '0')<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.d.setVar('BB_GENERATE_SH=
+ALLOW_TARBALLS', '0')<br />+ &nbsp; &nbsp; &nbsp; &nbsp;mirrordir =3D os.pa=
+th.join(self.tempdir, 'mirror')<br />+ &nbsp; &nbsp; &nbsp; &nbsp;bb.utils.=
+rename(self.dldir, mirrordir)<br />+ &nbsp; &nbsp; &nbsp; &nbsp;bb.utils.mk=
+dirhier(self.dldir)<br />+ &nbsp; &nbsp; &nbsp; &nbsp;# Remove the original=
+ repositories so the fetch must use the premirror.<br />+ &nbsp; &nbsp; &nb=
+sp; &nbsp;bb.utils.remove(self.gitdir, recurse=3DTrue)<br />+ &nbsp; &nbsp;=
+ &nbsp; &nbsp;bb.utils.remove(self.srcdir, recurse=3DTrue)<br />+ &nbsp; &n=
+bsp; &nbsp; &nbsp;bb.utils.remove(smdir, recurse=3DTrue)<br />+<br />+ &nbs=
+p; &nbsp; &nbsp; &nbsp;self.use_http_premirror(mirrordir)<br />+ &nbsp; &nb=
+sp; &nbsp; &nbsp;self.fetch_and_unpack(uri)<br />+<br />+ &nbsp; &nbsp; &nb=
+sp; &nbsp;# Shallow fetches retain only the tip commit; full fetches retain=
+ all commits.<br />+ &nbsp; &nbsp; &nbsp; &nbsp;expected_revisions =3D 1 if=
+ shallow else 3<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.assertRevCount(expec=
+ted_revisions)<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.assertTrue(os.listdir=
+(os.path.join(self.gitdir, 'gitsubmodule')))<br />+ &nbsp; &nbsp; &nbsp; &n=
+bsp;expected_submodule_revisions =3D 1 if shallow else 2<br />+ &nbsp; &nbs=
+p; &nbsp; &nbsp;self.assertRevCount(expected_submodule_revisions, cwd=3Dos.=
+path.join(self.gitdir, 'gitsubmodule'))<br />+<br />+ &nbsp; &nbsp;def test=
+_submodule_premirroronly(self):<br />+ &nbsp; &nbsp; &nbsp; &nbsp;"""Submod=
+ules must be fetched from a network PREMIRRORS with BB_FETCH_PREMIRRORONLY"=
+""<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.check_submodule_premirroronly(sha=
+llow=3DFalse)<br />+<br />+ &nbsp; &nbsp;def test_shallow_submodule_premirr=
+oronly(self):<br />+ &nbsp; &nbsp; &nbsp; &nbsp;"""Shallow submodules must =
+be fetched from a network PREMIRRORS with BB_FETCH_PREMIRRORONLY"""<br />+ =
+&nbsp; &nbsp; &nbsp; &nbsp;self.check_submodule_premirroronly(shallow=3DTru=
+e)<br />+<br />+ &nbsp; &nbsp;def test_submodule_premirroronly_no_upstream(=
+self):<br />+ &nbsp; &nbsp; &nbsp; &nbsp;"""A submodule missing from PREMIR=
+RORS must not be fetched from upstream"""<br />+ &nbsp; &nbsp; &nbsp; &nbsp=
+;self.add_empty_file('a')<br />+ &nbsp; &nbsp; &nbsp; &nbsp;sha =3D self.gi=
+t('rev-parse HEAD', cwd=3Dself.srcdir).strip()<br />+ &nbsp; &nbsp; &nbsp; =
+&nbsp;# Point the submodule at an unavailable upstream and add its gitlink =
+to the parent.<br />+ &nbsp; &nbsp; &nbsp; &nbsp;with open(os.path.join(sel=
+f.srcdir, '.gitmodules'), 'w') as f:<br />+ &nbsp; &nbsp; &nbsp; &nbsp; &nb=
+sp; &nbsp;f.write('[submodule "sub"]\n\tpath =3D sub\n\turl =3D https://git=
+.invalid/sub.git\n')<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.git('add .gitmo=
+dules', cwd=3Dself.srcdir)<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.git('upda=
+te-index --add --cacheinfo 160000,%s,sub' % sha, cwd=3Dself.srcdir)<br />+ =
+&nbsp; &nbsp; &nbsp; &nbsp;self.git('commit -m submodule', cwd=3Dself.srcdi=
+r)<br />+<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.d.setVar('BB_GIT_SHALLOW',=
+ '0')<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.d.setVar('BB_GENERATE_MIRROR_T=
+ARBALLS', '1')<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.d.setVar('BB_GENERATE=
+_SHALLOW_TARBALLS', '0')<br />+<br />+ &nbsp; &nbsp; &nbsp; &nbsp;_, ud =3D=
+ self.fetch('git://%s;protocol=3Dfile;branch=3Dmaster' % self.srcdir)<br />=
++ &nbsp; &nbsp; &nbsp; &nbsp;mirrordir =3D os.path.join(self.tempdir, 'mirr=
+or')<br />+ &nbsp; &nbsp; &nbsp; &nbsp;bb.utils.rename(self.dldir, mirrordi=
+r)<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.d.setVar('BB_GENERATE_MIRROR_TARB=
+ALLS', '0')<br />+ &nbsp; &nbsp; &nbsp; &nbsp;bb.utils.remove(self.srcdir, =
+recurse=3DTrue)<br />+ &nbsp; &nbsp; &nbsp; &nbsp;bb.utils.mkdirhier(self.d=
+ldir)<br />+<br />+ &nbsp; &nbsp; &nbsp; &nbsp;self.use_http_premirror(mirr=
+ordir)<br />+ &nbsp; &nbsp; &nbsp; &nbsp;# The missing submodule premirror =
+must fail instead of falling back to upstream.<br />+ &nbsp; &nbsp; &nbsp; =
+&nbsp;with self.assertRaises(bb.fetch2.NetworkAccess) as cm:<br />+ &nbsp; =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;self.fetch('gitsm://%s;protocol=3Dfile;su=
+bdir=3D${S};branch=3Dmaster' % self.srcdir)<br />+ &nbsp; &nbsp; &nbsp; &nb=
+sp;self.assertIn('git.invalid', cm.exception.url)<br />+<br />&nbsp; &nbsp;=
+ &nbsp;if any(os.path.exists(os.path.join(p, 'git-annex')) for p in os.envi=
+ron.get('PATH').split(':')):<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;def tes=
+t_shallow_annex(self):<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp=
+;self.add_empty_file('a')</div>
+
+--tlvtmbFVm8PFhoUU4OeX--
