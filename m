@@ -1,58 +1,59 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.1413.1795801582520709541
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.1477.1795801581486622069
  for <bitbake-devel@lists.openembedded.org>;
  Fri, 27 Nov 2026 09:46:22 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=fTphmeLH;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.43, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4bb6886d30aso79791955e9.3
-        for <bitbake-devel@lists.openembedded.org>; Fri, 27 Nov 2026 09:46:22 -0800 (PST)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=Kn8FUN+o;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.45, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4b79502c27aso84834335e9.1
+        for <bitbake-devel@lists.openembedded.org>; Fri, 27 Nov 2026 09:46:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1795801581; x=1796406381; darn=lists.openembedded.org;
+        d=linuxfoundation.org; s=google; t=1795801580; x=1796406380; darn=lists.openembedded.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=BjqNqeA04lg1SVARpOAdL0o/Eyxw7GSZLxPxXicWbIc=;
-        b=fTphmeLHXn8FZwLmeUdVzkzbnc/GYecqDHZnaEOL3Grqhu1G4fsDq7HC3mXgJF+9/9
-         bI158+p7eXqc0n8tKXS7CPcKJP8abX0fxkbnPAta2CtCuBKM0JoSAmvgTJMB21d7N1DN
-         h9pR/jSecnkdREW4nCfdcQ70odfBU4283hJlg=
+        bh=VcZQoLfV/uT2c1x4SoXRb7+GGRNaFRY7hfq2W28crR0=;
+        b=Kn8FUN+oA2je7NSF2+4e1Ksv5Bw6Lhwkw8ToWpFnl8DjSW0S5/Q6+HXhdF8Eimouni
+         3RGbDdm7UfafW8Hvzd2QF4y3ab8Y9Y5sHwETCifJuhQ1v92ZAdc+eDt5887UR1CdvLXS
+         tPcgZAmo14iAqeESbdlD6YH4ORIikF7BWyn2o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795801581; x=1796406381;
+        d=1e100.net; s=20260707; t=1795801580; x=1796406380;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to:content-type;
-        bh=BjqNqeA04lg1SVARpOAdL0o/Eyxw7GSZLxPxXicWbIc=;
-        b=r7zBwm9U9dMgIkDrVsspvtIfitEsAZz2LNkmVVMCTcbZUfUXLtabaBTwE25N7oRtyT
-         VpcrUaXI6rnNd3OljGBdToozLf5RgjIF4lGpJ5HyH/ALU41e99IW0Cf2sodarnF1686y
-         FYcExo0I9qfmPbfPIAUit+HBauPxOT68JLQby1Dhux9VFfzCgUmQdBoNFEYz7L/xSqD8
-         47IuybduFXnwOj/x8tP0ZULYAswGtGFHYULiJMZlF+U2ShfuZWpqqdqWDSw/YYex0WHr
-         E+w7Ff2LXGqdy2jyCI2cLLnhXOD6LsqPSKCc2Tre3oZMkI+ELxyWRoSo0HIOvYMBDQUF
-         YEjQ==
-X-Gm-Message-State: APuU4Z93R+bdz8Qbe+BaxpQhpezRWGgg0ObHnBiKvtdWrV1sZvYmVp7c
-	Tmt6ftAOs9ZDilTHvWYvOkF0k1+R7bTiwxF0uEZYf0RBB4IouIk6hn68Oo367DoNSR+fOZ92M4I
-	v+OI/WLo=
-X-Gm-Gg: AZFdTZcAvZ2U4+Dg0E7vJej784T2tHFeJBw4cOPHteGkKVgpfmn7tSPhn77v496Pa+C
-	u7rSgye/bX6gOv9heD5p4xjYipDYlFGhtJDIehEDVWQUVrgS3WI8PqaD6Kn223nuW0FklAYE7AM
-	VvYt2M+/BWeoJ+HakxOrbrbiyJsh1TaDHSf8OppIUFOemqPcjRkDh8Lzd/BphqnUbAy6A9koVC9
-	SCkcYyswQNyam0FrcVtZlD9yAkwOTJp+hNQZSKtrfM9eJZdrBSHMt16YQpTYLPpf8VD1ke+FYSd
-	hz4DhvrE796wDFWEeWaUJqQ++Mz/CMfHxV+rfVfx3M2u/Q/R9JyMknd1ASLq/0QmePgyx7+hTgC
-	kxY5oG/KWZDUO9QAhrAeFDwIY1d2ee1E3pH+5/nejntRs+CZ+Uig3EA2Mb/zn/Uy2M92b1StBKV
-	d1p6WM2jgVRoeXCJgdzjFbZdHJQQPqvNdrfTqTWLZsqTbhZlsxWojSY0FvkZOIhz7VvF3Hr6Q5f
-	QwYyconh2Lb3RAszOtW9AX92YwRvZclb3U0gcYgvKOZJn1VGERO74OJQq0x+d7rl6srp0Os7r06
-	TEMUvmfxAgl6ewtIac5O013ZZi8GM0btRMQ0e8lY8ewsKlhn1cCMy4kgFA==
-X-Received: by 2002:a05:600c:5306:b0:4b7:6aac:7406 with SMTP id 5b1f17b1804b1-4bb887ca0bamr468296045e9.3.1795801580671;
-        Fri, 27 Nov 2026 09:46:20 -0800 (PST)
+        bh=VcZQoLfV/uT2c1x4SoXRb7+GGRNaFRY7hfq2W28crR0=;
+        b=01vx2e0f44eLgvvm+9Uc51o3BM69DCrfzCjpPWZi8hG/kWKXjoPKV4CNvOHxuAfHnx
+         ttAKlsikeeV7s8Zk2hd4oTnlGr1Kznn5bFR7tAeTo1NVNo78J7Ngv/ZQEbPPVXh4Rli1
+         Z67biH7qymT4Ol6QbuYssNfmzcMYu6tJa2rQrWsGae/Jaf33Mw1lklkuRu7KdWySzHkf
+         fWvzLsiy3ygtejBUWvne7sDUz2dnIVCj2VB0KWM5gse+WnOpQkkIYLD/Eih424ikymOo
+         UuULXED/4a1NKAymBuc21NEAs2forIrFF+PlePd6PPyo+xfV3IoFdz+NT2oYm+92OV/g
+         BVuw==
+X-Gm-Message-State: APuU4Z/gw6JhUdQoWoCxPS65bUMD1PLKvUTBQ7gX6dC7cU4oteuumelC
+	qDzwK+xoJsn91W0wONc9c0GDc83G6k69KR8N+hmpd8tF1so7i4mbLWdZ2sbpV27UDVdRtqMGFz1
+	Ez/pj0uU=
+X-Gm-Gg: AZFdTZfJ/F1b2YCBepJnD+6nsyWRE1qK4wABJwzY33pJTb3r7QOLH6cVCrUVx/l9Y4f
+	JiFLPf6vIXrU/83XvWNSkmfAt6tWqO+2FOV/ATSz0btpquicpuWAJYvR4NdAhlv+BoJS6OYYEm4
+	dca1RyqXTSDidvEDIxYVh0+17KB5M+AHv680Kvr8B4pVL1FGYdIYyPBOrOCKAvbsR6mRUm2BIm5
+	B557pot+Qm3/J84ebIuW4FU6x3mad1PBDKXSrU5Y7y8sdQVoEBr0CoUfUi+o3ZuDfdFiuSOT454
+	bX4iBRUFwcLwtNQGfnKWRqtNaAzcxk2LaSD149JHjiim9yGF4/Mae/UplKqZUgdRVgImcz3o3R2
+	5Io4OTr2/FtPMyIa3hvDBzbigWe/JNqNv7BOxuTgrsFEJfh0VW+uvCWj0Ln/NCxpkw2liKulgEv
+	2ozCpheOmare4BkjHHC/23snAQ6JmiP1UjxtbR24wHAzjElHnM/WV0+R5/UMEG9EvHIOyQeli7u
+	+7hcIzOZOxi4cHF4iR+wzajZSN+uCKdAn9i6Y6n00kFJS6OUTomzwsqpSBFxc5M/9D6PGLPJyIp
+	1k4L9lK8izIMuylhu+B9JUI/SI2gm3ewW3/ouhtXmmALE79Vq86vx62oDPbxp0aiEMlMV/vYhLt
+	ksDg=
+X-Received: by 2002:a05:600c:a11:b0:4a2:e0c:2b0a with SMTP id 5b1f17b1804b1-4bb888120famr519096175e9.16.1795801579697;
+        Fri, 27 Nov 2026 09:46:19 -0800 (PST)
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from max.int.rpsys.net ([2001:8b0:aba:5f3c:47cb:b596:3be3:8f97])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb8538b3a7sm790022715e9.3.2026.11.27.09.46.19
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb8538b3a7sm790022715e9.3.2026.11.27.09.46.18
         for <bitbake-devel@lists.openembedded.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Nov 2026 09:46:20 -0800 (PST)
+        Fri, 27 Nov 2026 09:46:19 -0800 (PST)
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 3/3] runqueue: Add a RecipeCheckEvent
-Date: Fri, 27 Nov 2026 17:46:16 +0000
-Message-ID: <20261127174616.2269186-3-richard.purdie@linuxfoundation.org>
+Subject: [PATCH 2/3] cache: Add support for BB_CACHE_EXTRAVARS
+Date: Fri, 27 Nov 2026 17:46:15 +0000
+Message-ID: <20261127174616.2269186-2-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261127174616.2269186-1-richard.purdie@linuxfoundation.org>
 References: <20261127174616.2269186-1-richard.purdie@linuxfoundation.org>
@@ -60,44 +61,64 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <bitbake-devel.lists.openembedded.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <bitbake-devel@lists.openembedded.org>; Fri, 27 Nov 2026 17:46:30 -0000
-X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20481
+X-Groupsio-URL: https://lists.openembedded.org/g/bitbake-devel/message/20480
 Content-Type: text/plain; charset="utf-8"
 
-This event triggers at the start of a build, once the task graph is known
-and provides a list of the recipes which will execure alongside any custom
-variable data that was requested to be cached in BB_CACHE_EXTRAVARS.
+This allows the metadata to specify that some variables should be cached on a per
+recipe basis.
+
+This is useful for example to allow RECIPE_HOSTTOOLS in OE-Core to error up front
+in a build if tools are missing rather than the build failing part way through.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/runqueue.py | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ lib/bb/cache.py | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 501fb92dc49..edb6c7d01ae 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1608,6 +1608,8 @@ class RunQueue:
-                                   ('bb.event.HeartbeatEvent',), data=self.cfgData)
-                 self.dm_event_handler_registered = True
+diff --git a/lib/bb/cache.py b/lib/bb/cache.py
+index 39d051402e1..492fc75e3ad 100644
+--- a/lib/bb/cache.py
++++ b/lib/bb/cache.py
+@@ -27,7 +27,7 @@ import shutil
  
-+            bb.event.fire(RecipeCheckEvent(self.rqdata), self.cooker.data)
+ logger = logging.getLogger("BitBake.Cache")
+ 
+-__cache_version__ = "156"
++__cache_version__ = "157"
+ 
+ def getCacheFile(path, filename, mc, data_hash):
+     mcspec = ''
+@@ -131,6 +131,14 @@ class CoreRecipeInfo(RecipeInfoCommon):
+         self.fakerootnoenv    = self.getvar('FAKEROOTNOENV', metadata)
+         self.extradepsfunc    = self.getvar('calculate_extra_depends', metadata)
+ 
++        self.extravars = self.listvar('BB_CACHE_EXTRAVARS', metadata)
++        if self.extravars:
++            for var in self.extravars:
++                val = self.getvar(var, metadata)
++                if val:
++                    bb.warn(str(val))
++                setattr(self, var, self.getvar(var, metadata))
 +
-             self.rqdata.init_progress_reporter.next_stage()
-             self.rqexe = RunQueueExecute(self)
+     @classmethod
+     def init_cacheData(cls, cachedata):
+         # CacheData in Core RecipeInfo Class
+@@ -168,6 +176,8 @@ class CoreRecipeInfo(RecipeInfoCommon):
+         cachedata.fakerootlogs = {}
+         cachedata.extradepsfunc = {}
  
-@@ -3316,6 +3318,15 @@ class PSIEvent(bb.event.Event):
-         self.pressure_state = pressure_state
-         self.pressure_values = pressure_values
- 
-+class RecipeCheckEvent(bb.event.Event):
-+    def __init__(self, rqdata):
-+        super().__init__()
-+        recipedata = {}
-+        for tid in rqdata.runtaskentries:
-+            (mc, fn, taskname, taskfn) = split_tid_mcfn(tid)
-+            recipedata[taskfn] = rqdata.dataCaches[mc].extravars[taskfn]
-+        self.recipedata = recipedata
++        cachedata.extravars = {}
 +
- class runQueuePipe():
-     """
-     Abstraction for a pipe between a worker thread and the server
+     def add_cacheData(self, cachedata, fn):
+         cachedata.task_deps[fn] = self.task_deps
+         cachedata.pkg_fn[fn] = self.pn
+@@ -237,6 +247,9 @@ class CoreRecipeInfo(RecipeInfoCommon):
+         cachedata.fakerootlogs[fn] = self.fakerootlogs
+         cachedata.extradepsfunc[fn] = self.extradepsfunc
+ 
++        cachedata.extravars[fn] = {}
++        for var in self.extravars:
++            cachedata.extravars[fn][var] = getattr(self, var)
+ 
+ class SiggenRecipeInfo(RecipeInfoCommon):
+     __slots__ = ()
